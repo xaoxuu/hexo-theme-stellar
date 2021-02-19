@@ -27,7 +27,7 @@ npm i hexo-theme-stellar
 
 ## Usage
 
-See docs: https://xaoxuu.com/wiki/stellar
+See docs: https://xaoxuu.com/wiki/stellar/
 
 ## Examples
 

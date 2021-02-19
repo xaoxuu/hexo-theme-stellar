@@ -1,6 +1,6 @@
 ######## Stellar info ########
 stellar:
-  version: '1.0.0-rc.1'
+  version: '1.0.0-rc.1' # This is theme's version.
   homepage: https://xaoxuu.com/wiki/stellar/
   repo: https://github.com/xaoxuu/hexo-theme-stellar
   # The cdn version needs to be consistent with the stellar version
