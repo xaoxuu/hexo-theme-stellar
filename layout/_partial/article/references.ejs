@@ -1,0 +1,23 @@
+<%
+function layoutDiv() {
+  if (page.references && page.references.length > 0) {
+    let wrapper = '';
+    wrapper += '<div class="references-wrap">';
+    wrapper += '<section class="header">';
+    wrapper += '<span>' + __('meta.references') + '</span>';
+    wrapper += '</section>';
+    wrapper += '<section class="body"><ul>';
+    page.references.forEach((item, i) => {
+      wrapper += '<li class="post-title">';
+      wrapper += '<a href="' + item.url + '">';
+      wrapper += item.title;
+      wrapper += '</a>';
+      wrapper += '</li>';
+    });
+    wrapper += '</ul></section>';
+    wrapper += '</div>';
+    return wrapper;
+  }
+}
+%>
+<%- layoutDiv(); %>

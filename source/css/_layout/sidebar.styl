@@ -1,0 +1,133 @@
+.l_left .wrap
+  display: flex
+  flex-direction: column
+  height: "calc(100% - 4 * %s)" % $gap
+  margin-top: $gap * 2
+  padding: $gap
+  @media screen and (max-width: $device-tablet)
+    height: "calc(100% - 2 * %s)" % $gap
+    margin-top: 0
+
+.logo-wrap
+  margin: $gap 0
+  display: flex
+  align-items: center
+  color: var(--text-p0)
+  &:hover
+    color: var(--text-p0)
+  .img
+    width: 40px
+    height: 40px
+    flex-shrink: 0
+    border-radius: 20px
+    overflow: hidden
+    margin-right: 1rem
+    img
+      object-fit: cover
+  .title
+    padding-top: 2px
+    font-size: 1.75rem
+    font-weight: 900
+    color: inherit
+    font-family: $ff-logo
+
+nav.menu
+  margin-top: 0
+  background: var(--block)
+  border-radius: 6px
+  disable-select()
+  display: flex
+  padding: 1px
+  flex-wrap: wrap
+  &::-webkit-scrollbar
+    display: none
+  &::-webkit-scrollbar-track-piece
+    background: transparent
+  &::-webkit-scrollbar-thumb
+    display: none
+  a.nav-item
+    text-overflow: ellipsis
+    word-break: keep-all
+    margin: 1px
+    border-radius: 4px
+    font-size: $fs14
+    font-weight: 500
+    trans2: color background
+    overflow: hidden
+    span
+      color: var(--text-p3)
+      display: block
+      padding: 6px 12px
+    &.active span, &:hover span
+      color: var(--text-p1)
+      background: var(--card)
+
+.l_left .widgets
+  margin: $gap 0
+  overflow: scroll
+  flex-grow: 1
+  scrollbar(0, 0)
+  .widget-wrap
+    margin: 1rem 0 2rem 0
+    .widget-header
+      display: flex
+      font-size: 1rem
+      color: var(--text-meta)
+      justify-content: space-between
+      align-items: center
+      font-weight: 600
+      position: sticky
+      position: -webkit-sticky
+      top: -2px
+      background: var(--site-bg)
+      padding: 2px 0
+      z-index 1
+      .name
+        font-size: 1rem
+      .cap-action
+        hover-block 4px 4px
+        line-height: 0
+        color: var(--text-meta)
+        trans2: color background
+        .icon
+          fill: var(--text-meta)
+        &:hover
+          color: $color-hover
+          .icon
+            fill: $color-hover
+
+    .widget-body
+      margin: 0.5rem 0
+      font-size: $fs14
+      color: var(--text-p2)
+      p
+        margin-top: 0.5em
+        margin-bottom: 0.5em
+        >a
+          &:not([class])
+            font-weight: 500
+            &:hover
+              text-decoration: underline
+
+
+
+.l_left .footer
+  margin-top: 0
+  margin-bottom: 1rem
+  line-height: 0
+  .social-wrap
+    display: grid
+    grid-gap: $gap * 0.5 $gap * 0.5
+    grid-template-columns: repeat(auto-fill, 32px)
+  a
+    display: inline-block
+    background: var(--card)
+    padding: 4px
+    border-radius: 4px
+    filter: grayscale(100%)
+    overflow: hidden
+    trans1: box-shadow
+    &:hover
+      color: $color-hover
+      filter: grayscale(0%)
+      box-shadow: $boxshadow-float

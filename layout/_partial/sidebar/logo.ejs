@@ -1,0 +1,6 @@
+<a class='logo-wrap' href='/'>
+  <% if (theme.sidebar.logo.avatar != false) { %>
+    <div class='img'><img no-lazy src='<%- theme.sidebar.logo.avatar || config.avatar %>'/></div>
+  <% } %>
+  <div class='title'><%- theme.sidebar.logo.title || config.title %></div>
+</a>

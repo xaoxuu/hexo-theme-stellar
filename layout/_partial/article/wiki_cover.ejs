@@ -1,0 +1,51 @@
+<%
+function layoutWikiCover() {
+  if (page.layout != 'wiki') {
+    return '';
+  }
+  if (page.cover == undefined || page.cover == false || page.cover == '[]') {
+    return '';
+  }
+  var cover = page.cover;
+  if (page.cover == true) {
+    cover = ['logo', 'title', 'description'];
+  }
+  var el = '';
+  el += '<div class="l_cover reveal">';
+  el += '<article class="cover-wrap md">';
+  if (page.logo && cover.includes('logo')) {
+    el += '<div class="logo">';
+    var height = '';
+    var src = '';
+    page.logo.split(' ').forEach(function(item) {
+      if (item.includes('px')) {
+        height = item;
+      } else {
+        src = item;
+      }
+    });
+    if (height.length > 0) {
+      el += '<img src="' + src + '" height="' + height + '">';
+    } else {
+      el += '<img src="' + src + '">';
+    }
+    el += '</div>';
+  }
+  if (page.title && cover.includes('title')) {
+    el += '<div class="cover-title">';
+    el += '<span>' + (page.wiki || page.title) + '</span>';
+    el += '</div>';
+  }
+  if (page.description && cover.includes('description')) {
+    el += '<div class="description">' + page.description + '</div>';
+  }
+  el += '<div class="start-wrap">';
+  el += '<a class="button cyan start" href="#start">' + __('btn.getting_started') + '</a>';
+  el += '</div>';
+  el += '</article>';
+  el += '</div>';
+  el += '<hr>';
+  return el;
+}
+%>
+<%- layoutWikiCover() %>

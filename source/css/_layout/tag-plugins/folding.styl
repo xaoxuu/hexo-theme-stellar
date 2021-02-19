@@ -1,0 +1,62 @@
+details
+  display: block
+  padding: 1rem
+  margin: 1rem 0
+  border-radius: $border-block
+  font-size: $fs15
+  background: var(--theme-bg)
+  border: 1px solid var(--theme)
+  summary
+    cursor: pointer
+    padding: 1rem
+    margin: 0 - 1rem
+    border-radius: $border-block
+    color: var(--text-p2)
+    font-size: $fs14
+    font-weight: 500
+    position: relative
+    line-height: normal
+    outline: none
+    >
+      p,h1,h2,h3,h4,h5,h6
+        display: inline
+        border-bottom: none !important
+    &:hover
+      color: var(--text-p0)
+      &:after
+        position: absolute
+        content: '+'
+        text-align: center
+        top: 50%
+        transform: translateY(-50%)
+        right: 1rem
+
+
+details[open]
+  >summary
+    border-bottom: 1px solid var(--theme)
+    border-bottom-left-radius: 0
+    border-bottom-right-radius: 0
+    color: var(--text-p1)
+    margin-bottom: 0
+    &:hover
+      &:after
+        content: '-'
+  >div.body
+    padding: 1rem
+    margin: 0 - 1rem
+    margin-top: 0
+    background: var(--card)
+    border-bottom-left-radius: $border-block
+    border-bottom-right-radius: $border-block
+    font-size: $fs15
+    inside-box()
+
+details[codeblock]>div.body
+  padding: 0
+  background: transparent
+  .highlight
+    border: none
+    border-radius: 0
+    background: transparent
+    margin: 0

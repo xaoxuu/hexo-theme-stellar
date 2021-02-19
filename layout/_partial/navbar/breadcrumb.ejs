@@ -1,0 +1,47 @@
+<% if (page.breadcrumb != false) { %>
+  <div class='breadcrumb-navigation'>
+  <% if (page.layout == 'post') { %>
+    <div class='cap'>
+      <a class='cap breadcrumb' href='/'><%- __('btn.home') %></a>
+      <span class="sep"></span>
+      <a class='cap breadcrumb' href='/'><%- __('btn.blog') %></a>
+      <% if (page.layout == 'post' && page.categories && page.categories.length > 0) { %>
+        <span class="sep"></span>
+        <%- list_categories(page.categories, {
+            class: 'cap breadcrumb cat',
+            show_count: false,
+            separator: ' <span class="sep"></span> ',
+            style: 'none'
+            }) %>
+      <% } %>
+    </div>
+    <div>
+      <time><%- date(page.date, config.date_format) %></time>
+    </div>
+  <% } else if (page.layout == 'wiki') { %>
+    <div>
+      <a class='cap breadcrumb' href='/'><%- __('btn.home') %></a>
+      <span class="sep"></span>
+      <a class='cap breadcrumb' href='/wiki/'><%- __('btn.wiki') %></a>
+      <% site.pages.filter(function (p) { %>
+        <% return p.layout == 'index' && p.title && p.wiki && p.wiki.includes(page.wiki) %>
+      <% }).limit(1).each(function(p) { %>
+        <span class="sep"></span>
+        <a class='cap breadcrumb' href='<%- url_for(p.path) %>'><%- p.title %></a>
+      <% }); %>
+      <% site.pages.filter(function (p) { %>
+        <% return p.layout == 'wiki' && p.wiki == page.wiki && !p.order %>
+      <% }).limit(1).each(function(p) { %>
+        <span class="sep"></span>
+        <a class='cap breadcrumb' href='<%- url_for(p.path) %>'><%- page.wiki %></a>
+      <% }); %>
+    </div>
+  <% } else { %>
+      <div>
+        <a class='cap breadcrumb' href='/'><%- __('btn.home') %></a>
+        <span class="sep"></span>
+        <a class='cap breadcrumb' href='<%- url_for(page.path) %>'><%- page.title || page.seo_title %></a>
+      </div>
+  <% } %>
+  </div>
+<% } %>

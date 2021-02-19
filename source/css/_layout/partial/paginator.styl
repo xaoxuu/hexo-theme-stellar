@@ -1,0 +1,22 @@
+.posts .paginator-wrap
+  display: flex
+  justify-content: space-between
+  align-items: center
+  disable-select()
+  font-weight: 500
+  svg.icon
+    font-size: 1.8rem
+  .paginator
+    text-align: center
+    padding: $gap
+  div.paginator
+    font-size: $fs14
+    color: var(--text-p2)
+  a.paginator
+    color: $color-link
+    trans1: color
+    &.disable
+      pointer-events: none
+      opacity: 0.25
+  a.paginator:hover
+    color: $color-hover

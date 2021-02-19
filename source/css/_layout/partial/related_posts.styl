@@ -1,0 +1,71 @@
+div.related-posts-wrap
+  padding: $gap * 2 $gap
+  &:empty
+    display: none
+  .related-posts
+    width: 100%
+    display: flex
+    margin: $gap 0
+    overflow-x: scroll
+    disable-select()
+    align-items: flex-start
+    scrollbar(8px, 4px)
+    padding-bottom: 4px
+    a
+      flex-grow: 0
+      flex-shrink: 0
+      background: var(--card)
+      border-radius: 0.5rem
+      padding-bottom: 1rem
+      line-height: 1.2
+      display: flex
+      flex-direction: column
+      overflow: hidden
+      width: 360px
+      opacity: 0.7
+      trans1: opacity 0.5s
+      border: 1px solid var(--hover-block)
+      .img
+        height: 180px
+        overflow: hidden
+        img
+          width: 100%
+          height: 100%
+          object-fit: cover
+      @media screen and (max-width: $device-tablet)
+        width: 300px
+        .img
+          height: 150px
+      @media screen and (max-width: $device-mobile)
+        width: 300px
+      .title
+        color: var(--text-p1)
+        font-weight: 500
+        font-size: $fs15
+        margin: 1rem 1rem 0 1rem
+        display: -webkit-box
+        -webkit-box-orient: vertical
+        overflow: hidden
+        -webkit-line-clamp: 2
+      .excerpt
+        color: var(--text-p2)
+        font-size: $fs13
+        margin: 0.4rem 1rem 0 1rem
+        display: -webkit-box
+        -webkit-box-orient: vertical
+        overflow: hidden
+        -webkit-line-clamp: 3
+      &:hover
+        opacity: 1
+    a+a
+      margin-left: $gap
+
+
+// // iPad 竖屏
+// @media screen and (max-width: $device-tablet)
+//   section.related-posts-wrap
+//     .related-posts
+//       a
+//         min-width: 280px
+//         .img
+//           height: 120px

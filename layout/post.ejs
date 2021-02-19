@@ -1,0 +1,15 @@
+<%
+if (page.class == undefined) {
+  page.class = 'post';
+}
+%>
+<% let post = page; %>
+<%- partial('_partial/navbar/breadcrumb') %>
+<article class='content md <%- post.layout %> reveal'>
+<h1 class='article-title'><span><%- post.h1 || post.title %></span></h1>
+<%- post.content %>
+</article>
+<%- partial('_partial/article/references') %>
+<%- partial('_partial/article/read_next') %>
+<%- partial('_partial/article/related_posts') %>
+<%- partial('_partial/plugins/comments/layout') %>

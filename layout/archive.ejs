@@ -1,0 +1,43 @@
+<%
+if (page.class == undefined) {
+  page.class = 'post';
+}
+%>
+<% if (page.posts && (is_category() || is_tag())) { %>
+  <%- partial('index') %>
+<% } else { %>
+  <% page.title = __('btn.archives'); %>
+  <%- partial('_partial/navbar/list_post') %>
+  <div class='post-list'>
+  	<% var years = []; %>
+  	<% site.posts.sort('date', -1).each(function(post) { %>
+  		<% post.year = date(post.date, 'YYYY'); %>
+  		<% if (post.year && (years.includes(post.year) == false) && (post.title || post.date)) { %>
+  			<% years.push(post.year); %>
+  		<% } %>
+  	<% }); %>
+    <div class='list-title'><%- __('page.archives', years.length, site.posts.length) %></div>
+  	<% years.forEach((year, i) => { %>
+  		<article class='post-card reveal' id='archive'>
+  			<div class='card-title'><%= year %></div>
+  			<% site.posts.sort('date', -1).filter(function (post) { %>
+  				<% post.year = date(post.date, 'YYYY'); %>
+  		    <% return post.year == year; %>
+  		  <% }).each(function(post) { %>
+  				<div>
+            <a class='post' href="<%= url_for(post.link || post.path) %>">
+    					<time><%= date(post.date, 'MM-DD') %></time>
+    					<span>
+                <% if (post.title) { %>
+      						<%- post.title %>
+      					<% } else if (post.date) { %>
+      						<%= date(post.date, config.date_format) %>
+      					<% } %>
+              </span>
+    				</a>
+          </div>
+  			<% }); %>
+  		</article>
+  	<% }); %>
+  </div>
+<% } %>

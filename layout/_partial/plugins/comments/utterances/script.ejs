@@ -1,0 +1,29 @@
+<script>
+  function pjax_utterances(){
+    if(!document.getElementById("utterances"))return;
+    setTimeout(function() {
+      var checkUtterances = setInterval(function () {
+        var HEAD = document.getElementById("utterances");
+        if (!HEAD) return
+        clearInterval(checkUtterances)
+        try {
+          HEAD.innerHTML="";
+        } catch (error) {}
+        var script = document.createElement('script');
+        script.setAttribute('src','https://utteranc.es/client.js');
+        script.setAttribute('repo','<%- theme.comments.utterances.repo %>');
+        let issuenumber = '<%- theme.comments.utterances['issue-number'] || page.comment_id %>';
+        if (issuenumber) {
+          script.setAttribute('issue-term', issuenumber);
+        } else {
+          script.setAttribute('issue-term', '<%- theme.comments.utterances['issue-term'] %>');
+        }
+        script.setAttribute('theme', '<%- page.dark ? theme.comments.utterances.theme.dark : theme.comments.utterances.theme.light %>' );
+        script.setAttribute('label','<%- theme.comments.utterances.label %>');
+        script.setAttribute('crossorigin','<%- theme.comments.utterances.crossorigin %>');
+        HEAD.appendChild(script);
+       }, 200)
+    });
+  }
+  pjax_utterances();
+</script>

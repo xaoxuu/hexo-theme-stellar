@@ -1,0 +1,83 @@
+article.md
+  max-width: 100%
+  padding: 1rem
+  overflow: hidden
+  color: var(--text-p1)
+  line-height: 1.7
+
+article.md.content
+  margin-bottom: $gap * 2
+
+// titles
+article.md
+  h1.article-title
+    margin-top: $gap * 0.5
+    line-height: 1.2
+  h1,h2,h3,h4,h5,h6
+    line-height: 1.8
+    color: var(--text-p0)
+    &:hover
+      a.headerlink:before
+        opacity: 1
+  a.headerlink:before
+    opacity: 0
+    content: '#'
+    position: absolute
+    width: 0.75em
+    margin-left: -0.75em
+  h2
+    margin-top: 3rem
+    border-bottom: 1px solid var(--block-border)
+    font-weight: 400
+  h3
+    margin-top: 3rem
+    margin-bottom: 0
+    font-weight: 500
+  h2+h3
+    margin-top: 1rem
+  h3+h4
+    margin-top: 1rem
+  h5
+    font-size: $fs14
+  h6
+    font-size: $fs12
+
+// a
+article.md
+  p>a
+    trans1: color
+    &:not([class])
+      font-weight: 500
+      &:hover
+        text-decoration: underline
+
+// code
+article.md code
+  color: $color-inlinecode
+  font-family: $ff-code
+  font-size: $fs14
+  word-break: break-all
+
+
+// div
+article.md>div
+  margin: 1rem 0
+// blockquote
+article.md blockquote
+  margin: 1rem 0
+  padding: 1rem
+  background: var(--block)
+  border-left: $border-block solid $color-theme
+  border-radius: 0 $border-block $border-block 0
+  color: var(--text-p2)
+  p
+    margin: 0.5em 0
+    font-size: $fs14
+
+article.md ul, article.md ol
+  padding-left: 2rem
+
+article.md img
+  border-radius: 4px
+  margin: auto
+  display: block

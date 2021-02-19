@@ -1,0 +1,27 @@
+<nav class='cap green'>
+  <% if (is_home()) { %>
+    <a class='active' href='/'><%- __('btn.recent_publish') %></a>
+  <% } else { %>
+    <a href='/'><%- __('btn.recent_publish') %></a>
+  <% } %>
+  <% if (page.category) { %>
+    <a class='active' href='<%- url_for(config.category_dir) %>'><%- __('btn.category') + __('symbol.colon') + page.category %></a>
+  <% } else if (page.layout == 'categories') { %>
+    <a class='active' href='<%- url_for(config.category_dir) %>'><%- __('btn.categories') %></a>
+  <% } else { %>
+    <a href='<%- url_for(config.category_dir) %>'><%- __('btn.categories') %></a>
+  <% } %>
+  <% if (page.tag) { %>
+    <a class='active' href='<%- url_for(config.tag_dir) %>'><%- __('btn.tag') + __('symbol.colon') + page.tag %></a>
+  <% } else if (page.layout == 'tags') { %>
+    <a class='active' href='<%- url_for(config.tag_dir) %>'><%- __('btn.tags') %></a>
+  <% } else { %>
+    <a href='<%- url_for(config.tag_dir) %>'><%- __('btn.tags') %></a>
+  <% } %>
+
+  <% if (is_archive()) { %>
+    <a class='active' href='<%- url_for(config.archive_dir) %>'><%- __('btn.archives') %></a>
+  <% } else { %>
+    <a href='<%- url_for(config.archive_dir) %>'><%- __('btn.archives') %></a>
+  <% } %>
+</nav>

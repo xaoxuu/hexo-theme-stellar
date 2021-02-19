@@ -1,0 +1,51 @@
+nav.cap
+  position: sticky
+  position: -webkit-sticky
+  margin-top: 1.75rem
+  top: -2px
+  display: flex
+  background: var(--site-bg)
+  padding: 0.5rem 1.25rem 0.38rem
+  z-index: 1
+  overflow: scroll
+  scrollbar(0, 0)
+  >p
+    margin: 0
+  a
+    padding: 0.5rem 0.75rem
+    color: var(--text-p3)
+    border-radius: 4px
+    font-weight: 600
+    white-space: nowrap
+    trans1 background
+    &:hover
+      background: var(--hover-block)
+      color: var(--text-p1)
+    &.active
+      font-weight: 700
+      color: inherit
+
+.md .tag-plugin.navbar
+  nav.cap
+    margin: 0
+    padding: 1px
+    background: var(--block)
+    border-radius: 6px
+    a
+      margin: 1px
+      padding: 0.5em 0.75rem
+      &:hover
+        background: #fff
+        color: var(--text-p1)
+
+// 面包屑导航
+.breadcrumb-navigation
+  padding: $gap $gap 0
+  margin-top: $gap
+  font-size: $fs-footnote
+  color: var(--text-p3)
+  font-weight: 500
+  a.cap:hover
+    color: $color-cat-hover
+  div+div
+    margin-top: 2px

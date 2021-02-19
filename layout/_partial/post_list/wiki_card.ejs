@@ -1,0 +1,41 @@
+<% if (post.logo) { %>
+  <%
+  var arr = post.logo.split(' ');
+  var height = '';
+  var src = '';
+  arr.forEach(function(item) {
+    var px = item.match(/[0-9]*px/i);
+    if (px && px.length > 0) {
+      px = px[0];
+      height = px;
+    } else {
+      src = item;
+    }
+  });
+  %>
+  <div class='logo'>
+  <% if (height.length > 0) { %>
+    <img src='<%- src %>' alt='logo' height='<%- height %>'>
+  <% } else { %>
+    <img src='<%- src %>' alt='logo'>
+  <% } %>
+  </div>
+<% } %>
+<div class='excerpt'>
+  <div class='cap breadcrumb'>
+    <% site.pages.filter(function (p) { %>
+      <% return p.layout == 'index' && p.title && p.wiki && p.wiki.includes(post.wiki) %>
+    <% }).limit(1).each(function(p) { %>
+      <span><%- p.title %></span>
+    <% }); %>
+  </div>
+  <h2 class='post-title'><%- post.wiki || post.title %></h2>
+  <% if (post.description) { %>
+    <p><%- post.description %></p>
+  <% } else if (post.excerpt) { %>
+    <%- strip_html(post.excerpt) %>
+  <% } %>
+  <div class='readmore cap'>
+    了解详情
+  </div>
+</div>

@@ -1,0 +1,129 @@
+*
+  outline: none
+html
+  font-family: $ff-body
+  font-size: $fs-root
+
+body
+  background: var(--site-bg)
+  margin: 0
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  text-rendering: optimizelegibility
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+
+
+h1
+  font-size: $fs-h1
+  font-weight: 600
+
+pre
+  font-family: $ff-code
+  font-size: $fs-code
+  tab-size: 4
+  -moz-tab-size: 4
+  -o-tab-size: 4
+  -webkit-tab-size: 4
+
+a
+  text-decoration: none
+  color: $color-link
+  &:hover
+    color: $color-hover
+
+a.button
+  font-weight: 500
+  line-height: 1
+  padding: 0.75rem 2rem
+  border-radius: 3px
+  trans1: background
+  font-size: $fs15
+  &.cyan
+    background: $color-mac-cyan
+    color: white
+    &:hover
+      background: $color-hover
+
+
+.cap
+  font-weight: 600
+  font-size: $fs12
+  color: var(--text-p3)
+  &.breadcrumb
+    color: $color-cat
+  &.blue
+    color: darken($color-md-blue, 6)
+  &.cyan
+    color: darken($color-mac-cyan, 6)
+  &.green
+    color: darken($color-mac-green, 4)
+
+
+span.dot,span.sep
+  font-size: 0.9em
+  margin: 0 .25em
+span.dot:before
+  content: '·'
+span.sep:before
+  content: '/'
+
+hr
+  color: var(--text-meta)
+  opacity: .1
+
+button
+  padding: 1em
+  border: none
+  font-weight: 600
+  outline: none
+  disable-select()
+  &:hover
+    color: $color-inner
+    background: $color-theme
+
+img
+  max-width: 100%
+
+
+li
+  font-size: $fs15
+
+svg.icon
+  width: 1em
+  height: 1em
+  vertical-align: middle
+  fill: currentColor
+  overflow: hidden
+
+ul,ol
+  padding-left: 1.5rem
+
+ul ul, ul ol
+  padding-left: 0
+ol ul, ol ol
+  padding-left: 0
+
+.dis-select
+  disable-select()
+
+
+// table
+table:not([class])
+  border-collapse: collapse
+  overflow: auto
+  display: inline-block
+  max-width: 100%
+  vertical-align: text-top
+  th
+    background: var(--hover-block)
+  td,th
+    padding: 8px 16px
+    border: 2px solid var(--hover-block)
+    line-height: 1.5
+    font-size: 90%
+  tr
+    word-break: keep-all
+    background: var(--block)
+    trans()
+    &:hover
+      background: var(--hover-block)

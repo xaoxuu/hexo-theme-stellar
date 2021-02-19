@@ -1,0 +1,38 @@
+<%
+// 默认组件
+if (page.sidebar == undefined) {
+  if (page.layout == 'post' && page.content) {
+    page.sidebar = ['toc', 'recent'];
+  } else if (page.layout == 'wiki' && page.content) {
+    page.sidebar = ['toc', 'wiki_more'];
+  } else {
+    page.sidebar = ['welcome', 'recent'];
+  }
+}
+function layoutFooterDiv() {
+  if (theme.footer.social && theme.footer.social.length > 0) {
+    var el = '<footer class="footer"><div class="social-wrap">';
+    theme.footer.social.forEach(item => {
+      if (item.icon && item.url) {
+        el += '<a class="social" href="' + url_for(item.url) + '">' + item.icon + '</a>';
+      }
+    });
+    el += '</div></footer>';
+    return el;
+  } else {
+    return '';
+  }
+}
+%>
+<div class='wrap'>
+  <%- partial('header') %>
+  <div class='widgets'>
+    <% page.sidebar.forEach(function(widget){ %>
+      <% if (widget in theme.sidebar.widgets) { %>
+        <% let w = theme.sidebar.widgets[widget]; %>
+        <%- partial('widgets/' + w.layout, {item: w}) %>
+      <% } %>
+    <% }) %>
+  </div>
+  <%- layoutFooterDiv() %>
+</div>

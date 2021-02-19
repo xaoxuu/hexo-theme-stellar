@@ -1,0 +1,30 @@
+.l_cover
+  height: 100vh
+  text-align: center
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+
+.l_cover .cover-wrap
+  margin-bottom: 0
+  max-width: 500px
+  .logo
+    margin-bottom: 2rem
+    img
+      object-fit: contain
+      max-height: 35vh
+      max-width: 100%
+  .cover-title
+    font-weight: 700
+    font-size: 1.5rem
+    margin: 1rem 0
+    &:first-child
+      font-size: 3rem
+  .description
+    margin: 1rem 0
+  .start-wrap
+    margin: $gap * 2 0
+    flex-shrink: 0
+    a.start
+      display: inline-block

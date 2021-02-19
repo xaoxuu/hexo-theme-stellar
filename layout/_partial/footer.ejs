@@ -1,0 +1,18 @@
+<%
+function layoutDiv() {
+  var wrapper = '';
+  wrapper += '<div><hr>';
+  if (theme.footer.license) {
+    wrapper += markdown(__('footer.license', theme.footer.license));
+  }
+  const author = '[' + config.author + '](' + config.url + config.root + ')';
+  if (theme.footer.source && theme.footer.source.where && theme.footer.source.url) {
+    wrapper += markdown(__('footer.info_open_source', author, theme.footer.source.where, theme.footer.source.url));
+  } else {
+    wrapper += markdown(__('footer.info_not_open_source', author));
+  }
+  wrapper += '</div>';
+  return wrapper;
+}
+%>
+<%- layoutDiv() %>

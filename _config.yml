@@ -1,0 +1,164 @@
+######## Stellar info ########
+stellar:
+  version: '1.0.0-rc.1'
+  homepage: https://xaoxuu.com/wiki/stellar/
+  repo: https://github.com/xaoxuu/hexo-theme-stellar
+  # The cdn version needs to be consistent with the stellar version
+  cdn_css: # https://cdn.jsdelivr.net/npm/hexo-theme-stellar@1.0/source/css/main.min.css
+  cdn_js: # https://cdn.jsdelivr.net/npm/hexo-theme-stellar@1.0/source/js/main.min.js
+
+
+######## head tags ########
+head:
+  open_graph: true
+  twitter: false
+
+
+######## Sidebar ########
+sidebar:
+  logo:
+    avatar: # default is config.avatar
+    title: # default is config.title
+  logo_action:
+    avatar: /about/
+    title: /
+  menu:
+    - class: post # post, wiki, about
+      name: btn.blog
+      url: /
+    - class: wiki
+      name: btn.wiki
+      url: /wiki/
+    - class: friends
+      name: 友链
+      url: /friends/
+    - class: about
+      name: 关于
+      url: /about/
+  # Sidebar widgets
+  widgets:
+    # Recent update
+    recent:
+      layout: recent
+      rss: /atom.xml # npm i hexo-generator-feed
+      limit: 5 # Count of posts
+    # TOC (valid only in layout:post/wiki)
+    toc:
+      layout: toc
+      list_number: false
+      min_depth: 2
+      max_depth: 5
+    # welcome
+    welcome:
+      layout: markdown
+      title: 欢迎
+      content:
+        - '欢迎光临小站，[Stellar](https://github.com/xaoxuu/hexo-theme-stellar/) 是一个支持 wiki 的 hexo 主题，适合综合型站点使用。同时也拥有简约而精美的视觉设计和丰富的标签插件，帮助您简单从容地应对各种场合。'
+
+
+
+######## Article ########
+article:
+  # 如果没有指定 excerpt 和 description，将自动取多长的内容作为文章摘要？
+  auto_excerpt: 200
+  # 相关文章，需要安装插件 (for layout: post)
+  # npm i hexo-related-popular-posts
+  related_posts:
+    enable: false
+    title: 您可能感兴趣的文章
+    max_count: 5
+    placeholder_img: https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/046.jpg
+  # 分享文章
+  share:
+    qq: https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png
+    qzone: https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png
+    weibo: https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png
+    # 需要安装插件  npm i hexo-helper-qrcode
+    wechat: https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/wechat.png
+
+
+######## Comments ########
+comments:
+  service: utterances # utterances
+  # utterances
+  # https://utteranc.es/
+  utterances:
+    repo: xxx/xxx
+    issue-term: pathname
+    issue-number:
+    theme:
+      light: github-light
+      dark: github-dark
+    label: ✨💬✨
+    crossorigin: anonymous
+
+
+######## Footer ########
+footer:
+  social:
+    - icon: '<img src="https://7.dusays.com/2021/02/14/25678f144c438.svg"/>'
+      url: /atom.xml
+    - icon: '<img src="https://7.dusays.com/2021/02/14/08a41b181ce68.svg"/>'
+      url: https://github.com/xaoxuu
+    - icon: '<img src="https://7.dusays.com/2021/02/14/cf1ae151f9e83.svg"/>'
+      url: https://music.163.com/#/user/home?id=63035382
+    - icon: '<img src="https://7.dusays.com/2021/02/14/942ebbf1a4b91.svg"/>'
+      url: /comments/
+  license: 'CC BY SA 4.0'
+  source:
+    where: GitHub
+    url: https://github.com/xaoxuu/site-source
+
+
+######## Tag Plugins ########
+tag_plugins:
+  # {% note text %}
+  note:
+    default_color: ''
+  # {% checkbox %}
+  checkbox:
+    interactive: false # enable interactive for user
+  # {% link title, url, img %}
+  link:
+    default_img: https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/256/safari.png
+
+
+######## JS Plugins ########
+plugins:
+  ## required plugins ##
+  # jquery
+  jquery: https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js
+
+  ## lazyload plugins ##
+  # fancybox
+  fancybox: https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css
+  # swiper
+  swiper:
+    enable: true
+    css: https://unpkg.com/swiper/swiper-bundle.min.css
+    js: https://unpkg.com/swiper/swiper-bundle.min.js
+  ## optional plugins ##
+  # preload
+  preload:
+    enable: #true
+    service: instant_page # instant_page, flying_pages
+    instant_page: https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@2/js/instant_page.js
+    flying_pages: https://cdn.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js
+
+  # image lazyload
+  # https://www.npmjs.com/package/vanilla-lazyload
+  lazyload:
+    enable: true
+    js: https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js
+    onlypost: false
+    loadingImg: # https://7.dusays.com/2021/02/14/e45d2469cdeaf.svg
+    blurIn: true # 模糊加载效果 （loadingImg为空时有效）
+
+  # https://scrollrevealjs.org/api/reveal.html
+  scrollreveal:
+    enable: true
+    js: https://cdn.jsdelivr.net/npm/scrollreveal@4.0.7/dist/scrollreveal.min.js
+    distance: 16px
+    duration: 800 # ms
+    interval: 80 # ms
+    scale: 1 # 0.1~1

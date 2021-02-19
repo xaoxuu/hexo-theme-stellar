@@ -1,0 +1,59 @@
+<%
+let showCat = false;
+if (post.categories && post.categories.length > 0) {
+  showCat = true;
+}
+%>
+<% if (post.cover) { %>
+  <div class='post-cover-wrap'>
+    <% if (theme.plugins.lazyload && theme.plugins.lazyload.enable) { %>
+      <% if (theme.plugins.lazyload.loadingImg) { %>
+        <div class='post-cover lazyload placeholder' data-bg='<%- post.cover %>'></div>
+      <% } else { %>
+        <div class='post-cover lazyload' data-bg='<%- post.cover %>'></div>
+      <% } %>
+    <% } else { %>
+      <div class='post-cover' style='background-image:url(<%- post.cover %>)'></div>
+    <% } %>
+  </div>
+<% } %>
+<h2 class="post-title">
+  <%- (post.title || post.seo_title) ? (post.title || post.seo_title) : date(post.date, config.date_format) %>
+</h2>
+<div class='excerpt'>
+  <% if (post.excerpt) { %>
+    <p><%- strip_html(post.excerpt) %></p>
+  <% } else if (post.description) { %>
+    <p><%- post.description %></p>
+  <% } else if (post.content && theme.article.auto_excerpt > 0) { %>
+    <p><%- truncate(strip_html(post.content), {length: theme.article.auto_excerpt}) %></p>
+  <% } %>
+</div>
+<div class='meta cap'>
+  <span class='cap'>
+    <time><%= date(post.date, config.date_format) %></time>
+  </span>
+  <% if (showCat) { %>
+    <% if (post.layout == 'post' && post.categories && post.categories.length > 0) { %>
+      <%
+      var cats = [];
+      if (post.categories) {
+        post.categories.forEach((cat, i) => {
+          cats.push(cat.name);
+        });
+      }
+      function layoutCats() {
+        if (cats.length > 0) {
+          var ret = '<span class="cap breadcrumb">';
+          ret += cats.shift()
+          ret += '</span>';
+          return ret;
+        } else {
+          return '';
+        }
+      }
+      %>
+      <%- layoutCats() %>
+    <% } %>
+  <% } %>
+</div>

@@ -1,0 +1,61 @@
+.friends-wrap
+  .group-header
+    margin: 1rem 0
+    p
+      margin: 0
+    p.title
+      font-size: 1.125rem
+      font-weight: 500
+    p.description
+      font-size: $fs14
+  .group-body
+    display: grid
+    grid-gap: 4px 4px
+    grid-template-columns: repeat(auto-fill, 96px)
+    margin-bottom: 2rem
+
+.friends-wrap .user-simple
+  a
+    margin: auto
+    color: var(--text-p1)
+    font-size: $fs12
+    display: flex
+    flex-direction: column
+    align-items: center
+    text-align: center
+    line-height: 1.2
+    border-radius: 4px
+    overflow: hidden
+    position: relative
+    background: var(--card)
+    img
+      object-fit: cover
+      display: block
+      width: 64px
+      height: 64px
+    .name
+      padding-top: 0.5em
+
+// style
+.friends-wrap.round .user-simple
+  a
+    padding: 0.5rem
+    trans1: background
+    img
+      border-radius: 64px
+    &:hover
+      background: var(--hover-block)
+
+.friends-wrap.rect .user-simple
+  a
+    padding: 0
+    display: block
+    trans1: box-shadow
+    img
+      width: 96px
+      height: 96px
+      border-radius: 0
+    .name
+      padding: 0.5em
+    &:hover
+      box-shadow: $boxshadow-card-float

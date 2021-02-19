@@ -1,0 +1,35 @@
+.img-wrap
+  margin-top: 1rem
+  margin-bottom: 1rem
+  .img-bg
+    line-height: 0
+    text-align: center
+    border-radius: 4px
+  img
+    display: inline-block
+    object-fit: contain
+  .image-meta
+    display: flex
+    justify-content: space-between
+    align-items: flex-start
+    padding-top: 0.5rem
+    .image-caption
+      display: inline-block
+      font-size: $fs-footnote
+      line-height: 1.4
+      color: var(--text-p3)
+      flex-grow: 1
+      &:empty
+        display: none
+      &.left
+        text-align: left
+      &.center
+        text-align: center
+    .image-download
+      margin-left: 4px
+      padding: 4px
+      line-height: 0
+      border-radius: 4px
+      trans2: color background
+      &:hover
+        background: var(--hover-block)

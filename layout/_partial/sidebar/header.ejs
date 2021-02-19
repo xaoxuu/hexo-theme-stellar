@@ -1,0 +1,17 @@
+<header class='header'>
+  <%- partial('logo') %>
+  <nav class='menu'>
+    <% theme.sidebar.menu.forEach((item, i) => { %>
+      <% if (item.class == page.class) { %>
+        <a class='nav-item active' href='<%- url_for(item.url) %>'>
+          <span><%- __(item.name) %></span>
+        </a>
+      <% } else { %>
+        <a class='nav-item' href='<%- url_for(item.url) %>'>
+          <span><%- __(item.name) %></span>
+        </a>
+      <% } %>
+    <% }); %>
+
+  </nav>
+</header>

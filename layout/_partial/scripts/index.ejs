@@ -1,0 +1,30 @@
+<!-- required -->
+<%- partial('global') %>
+<% if (theme.stellar.cdn_js) { %>
+  <%- js({src: theme.stellar.cdn_js, async: true}) %>
+<% } else { %>
+  <%- js({src: 'js/main.js', async: true}) %>
+<% } %>
+<%- js({src: theme.plugins.jquery || 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js'}) %>
+
+
+<!-- optional -->
+<%- partial('lazyload') %>
+<%- partial('preload') %>
+<%- partial('swiper') %>
+
+<%- partial('scrollreveal') %>
+
+
+<%- partial('../plugins/comments/script') %>
+
+<!-- inject -->
+<% if (config.inject && config.inject.script && config.inject.script.length > 0) { %>
+  <% config.inject.script.forEach(function(js) { %>
+    <%- js %>
+  <% }) %>
+<% } %>
+
+
+<!-- lazyload scripts -->
+<%- partial('issues') %>

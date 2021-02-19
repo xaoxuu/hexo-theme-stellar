@@ -1,0 +1,21 @@
+<%
+if (page.class == undefined) {
+  page.class = 'post';
+}
+%>
+<% if (site.tags.length) { %>
+  <% page.title = __('btn.tags'); %>
+  <% page.layout = 'tags'; %>
+  <%- partial('_partial/navbar/list_post') %>
+  <div class='post-list'>
+    <div class='list-title'><%- __('page.tags', site.tags.length) %></div>
+    <article class='post-card reveal' id='tags'>
+      <% site.tags.sort('length', -1).each(function(tag){ %>
+        <a class='tag' href="<%= url_for(tag.path) %>">
+          <span class='name'><%= tag.name %></span>
+          <span class='badge'>x<%- tag.length %></span>
+        </a>
+      <% }) %>
+    </article>
+  </div>
+<% } %>

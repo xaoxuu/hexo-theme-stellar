@@ -1,0 +1,46 @@
+btn:
+  home: Home
+  blog: Blog
+  wiki: Wiki
+  recent_publish: Recent
+  all_wiki: All
+  category: Category
+  categories: Categories
+  tag: Tag
+  tags: Tags
+  archives: Archives
+  learn_more: Learn more
+  getting_started: Getting Started
+
+meta:
+  recent_update: Recent Update
+  toc: TOC
+  read_prev: PREV
+  read_next: NEXT
+  older: Older
+  newer: Newer
+  references: References
+  comment_title: Join the discussion
+  back_to_top: Back to top
+  more: 'More %s'
+
+footer:
+  license: 'Unless otherwise specified, this site adopts the CC BY SA 4.0 license agreement.'
+  info_not_open_source: 'This site was created by %s, using [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) as the theme.'
+  info_open_source: 'This site was created by %s, using [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) as the theme. You can find the source code of this site in [%s](%s).'
+
+page:
+  error:
+    what: Page Not Found
+    why: The address may be entered incorrectly or the address has been deleted
+    action: Back to Home
+  categories: '%s Categories'
+  tags: '%s Tags'
+  archives: '%s Years, %s Archives'
+
+symbol:
+  comma: ", "
+  period: ". "
+  colon: ": "
+  brackets_l: "("
+  brackets_r: ")"

@@ -1,0 +1,51 @@
+
+
+scrollbar($w = 4px, $b = 2px, $c = var(--text-meta), $h = var(--text-p3))
+  &::-webkit-scrollbar
+    height: $w
+    width: $w
+  &::-webkit-scrollbar-track-piece
+    background: transparent
+  &::-webkit-scrollbar-thumb
+    background: $c
+    cursor: pointer
+    border-radius: $b
+    &:hover
+      background: $h
+
+
+scrollbar-codeblock()
+  &::-webkit-scrollbar
+    height: 4px
+    width: 4px
+  &::-webkit-scrollbar-track-piece
+    background: transparent
+  &::-webkit-scrollbar-thumb
+    background: transparent
+    cursor: pointer
+    border-radius: $border-block
+  &:hover
+    &::-webkit-scrollbar-thumb
+      background: var(--text-meta)
+      &:hover
+        background: var(--text-p3)
+
+
+hover-block($v, $h, $br = 4px)
+  border-radius: $br
+  padding: $v $h
+  trans2 color background
+  &:hover
+    background: var(--hover-block)
+
+
+inside-box($fs = $fs15)
+  p,ol,ul
+    margin-top: 0.5rem
+    margin-bottom: 0.5rem
+    &:first-child
+      margin-top: 0
+    &:last-child
+      margin-bottom: 0
+  p,li
+    font-size: $fs

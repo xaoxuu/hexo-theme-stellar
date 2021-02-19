@@ -1,0 +1,26 @@
+.l_main
+  position: relative
+  header
+    display: none
+    margin: $gap * 2 $gap $gap
+    padding: 0.25rem
+    background: var(--block)
+    border-radius: 8px
+    .logo-wrap
+      margin: 0.5rem 1rem
+      .img
+        width: 32px
+        height: 32px
+        display: none
+      .title
+        font-size: 1.5rem
+
+// pc上右边顶部留白
+@media screen and (min-width: $device-tablet)
+  .l_main
+    margin-top: $gap * 2
+
+// 移动端显示主导航栏
+@media screen and (max-width: $device-tablet)
+  .l_main.list header
+    display: block

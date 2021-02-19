@@ -1,0 +1,5 @@
+<% let post = page; %>
+<div class='related-posts-wrap'><%-
+popular_posts_wrapper(
+  popular_posts_json({ maxCount: 5 , ulClass: 'related-posts' , PPMixingRate: 0.2 , isImage: true , isExcerpt: true} , post )
+) %></div>

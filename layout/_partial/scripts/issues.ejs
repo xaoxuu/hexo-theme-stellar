@@ -1,0 +1,11 @@
+<script>
+  function loadIssuesJS() {
+      const issues = document.getElementById('issues-api');
+      if (issues != undefined) {
+        loadScript('<%- url_for("/js/issues.js") %>');
+      }
+    };
+  $(function () {
+    loadIssuesJS();
+  });
+</script>

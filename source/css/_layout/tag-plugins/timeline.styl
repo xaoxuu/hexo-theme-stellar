@@ -1,0 +1,82 @@
+div.timeline
+  position: relative
+  display: block
+  margin: 1rem 0
+  padding-top: 1rem
+  padding-bottom: 1rem
+  &:before
+    content: ''
+    z-index: 0
+    position: absolute
+    background: var(--block-border)
+    width: 2px
+    left: 16px
+    top: 1rem
+    bottom: 1rem
+  svg.top, svg.bottom
+    position: absolute
+    z-index: 1
+    fill: var(--block-border)
+    height 16px
+    width: 16px
+    margin-left: 9px
+  svg.top
+    margin-top: -1rem
+  svg.bottom
+    margin-bottom: 1rem
+
+div.timenode
+  position: relative
+  background: var(--card)
+  border: 1px solid var(--block-border)
+  border-radius: 6px
+  margin-top: 1rem
+  margin-bottom: 1rem
+  font-size: $fs14
+  .header
+    line-height: 1.2
+    background: var(--block)
+    border-top-left-radius: 5px
+    border-top-right-radius: 5px
+    border-bottom: 1px solid var(--block-border)
+    display: flex
+    justify-content: space-between
+    align-items: center
+    font-size: $fs14
+    span
+      font-weight: 500
+      color: var(--text-p1)
+      padding: 0.8rem 16px
+    a
+      visibility: hidden
+      margin-left: 4px
+      padding: 0.4rem 8px
+      margin-right: 8px
+      line-height: 0
+      border-radius: 4px
+      color: var(--text-p1)
+      &:hover
+        color: $color-link
+  .body
+    padding: 0.5rem 1rem
+    p,.highlight,ol,ul
+      margin: 0.5rem 0
+    li
+      font-size: $fs14
+
+div.timenode:hover
+  .header a
+    visibility: visible
+
+// div.timeline:hover
+//   &:before
+//     background: var(--block-border)
+//   svg.top, svg.bottom
+//     fill: var(--block-border)
+// div.timenode:hover
+//   border-color: var(--block-border)
+//   .header
+//     background: var(--block-border)
+//     border-color: var(--block-border)
+//     a
+//       visibility: visible

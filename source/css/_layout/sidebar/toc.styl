@@ -1,0 +1,74 @@
+// toc padding
+#toc .widget-body
+  line-height: 1.2
+  .toc
+    padding: 0
+    margin: 0
+    padding-left: 0.25rem
+    .toc-item .toc-link
+      padding: 0.5rem 0 0.5rem 1rem
+      font-weight: 500
+      font-size: $fs13
+      color: var(--text-p2)
+    .toc-child .toc-item .toc-link
+      padding: 0.25rem 0 0.25rem 1.8rem
+      font-weight: 400
+      color: var(--text-p2)
+    .toc-child .toc-child .toc-item .toc-link
+      padding-left: 2.6rem
+      font-size: $fs12
+      color: var(--text-p3)
+    .toc-child .toc-child .toc-child .toc-item .toc-link
+      padding-left: 3.4rem
+  .toc:only-child
+    .toc-item .toc-link
+      padding-left: 0.5rem
+    .toc-child .toc-item .toc-link
+      padding-left: 1.3rem
+    .toc-child .toc-child .toc-item .toc-link
+      padding-left: 2.1rem
+    .toc-child .toc-child .toc-child .toc-item .toc-link
+      padding-left: 2.9rem
+
+
+#toc .toc-item
+  color: var(--text-p2)
+  font-size: $fs12
+  padding: 0
+  list-style: none
+  &.active
+    color: $color-theme
+    border-left-color: @color
+  .toc-child .toc-item
+    padding: 0
+#toc a.toc-link
+  color: inherit
+  display: block
+  line-height: 1.2
+  border-radius: 4px
+  &:hover
+    background: var(--hover-block)
+  &.active
+    color: var(--theme-highlight) !important
+
+#toc .doc-tree
+  border-left: 2px solid var(--hover-block)
+  a.doc-tree-link
+    color: var(--text-p3)
+    padding: 0.5rem
+    display: block
+    border-top-right-radius: 4px
+    border-bottom-right-radius: 4px
+    font-size: $fs12
+    font-weight: 500
+    &.active
+      color: var(--text-p2)
+      font-size: $fs14
+    &:hover
+      background: var(--hover-block)
+
+#toc .widget-body.wiki
+  .doc-tree.active
+    border-color: var(--text-meta)
+  .doc-tree.active:only-child
+    border-color: var(--hover-block)

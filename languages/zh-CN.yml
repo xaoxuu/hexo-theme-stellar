@@ -1,0 +1,46 @@
+btn:
+  home: 主页
+  blog: 文章
+  wiki: 项目
+  recent_publish: 最新发布
+  all_wiki: 所有项目
+  category: 分类
+  categories: 分类
+  tag: 标签
+  tags: 标签
+  archives: 归档
+  learn_more: 了解详情
+  getting_started: 开始使用
+
+meta:
+  recent_update: 最近更新
+  toc: 本文目录
+  read_prev: 回顾上一篇
+  read_next: 接下来阅读
+  older: 较早文章
+  newer: 较新文章
+  references: 参考资料
+  comment_title: 快来参与讨论吧
+  back_to_top: 回到顶部
+  more: '更多%s'
+
+footer:
+  license: '除非特别说明，本站采用 CC BY SA 4.0 许可协议。'
+  info_not_open_source: '本站由 %s 创建，使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 作为主题。'
+  info_open_source: '本站由 %s 创建，使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 作为主题，您可以在 [%s](%s) 找到本站源码。'
+
+page:
+  error:
+    what: 很抱歉，您访问的页面不存在
+    why: 可能是输入地址有误或该地址已被删除
+    action: 返回主页
+  categories: '共%s个分类'
+  tags: '共%s个标签'
+  archives: 'TA在%s年间写了%s篇文章'
+
+symbol:
+  comma: "，"
+  period: "。"
+  colon: "："
+  brackets_l: "（"
+  brackets_r: "）"

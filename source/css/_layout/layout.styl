@@ -1,0 +1,79 @@
+.l_body
+  display: flex
+  margin: auto
+  padding: 0 $gap
+  justify-content: center
+
+.l_body .l_left
+  z-index: 8
+  width: $sidebar
+  flex-shrink: 0
+  height 100vh
+  position: sticky
+  position: -webkit-sticky
+  top: 0
+
+.l_body .l_main
+  flex-shrink: 1
+  flex-grow: 1
+  // margin: var(--gap) var(--gap) var(--gap) var(--gap_2)
+  // width: "calc(100% - %s)" % ($sidebar + 18 * $gap)
+  width: 320px
+  max-width: $layout-max-body-width
+  footer
+    margin-top: 4rem
+    margin-bottom: 2rem
+
+.float-panel
+  position: sticky
+  right: 0
+  bottom: 2rem
+  float: right
+  z-index: 9
+  display: flex
+  border-radius: 2rem 0 0 2rem
+  padding-right: 2rem
+  padding: 4px
+  overflow: hidden
+  background: var(--hover-block)
+.sidebar-toggle.mobile
+  cursor: pointer
+  color: var(--text-p2)
+  background: white
+  padding: 0.5rem
+  margin-right: 1rem
+  border-radius: 32px
+  line-height: 1
+  width: 2rem
+  height: 2rem
+  font-size: 13px
+
+.l_body.mobile.sidebar
+  .sidebar-toggle.mobile
+    background: $color-hover
+    color: white
+
+
+// iPad 竖屏
+@media screen and (max-width: $device-tablet)
+  .mobile-only
+    display: block !important
+  .l_body
+    padding: 0
+    .l_left
+      position: fixed
+      height: 100vh
+      width: 280px
+      transform: translateX(0 - $gap - 320px)
+      margin: 0
+      left: 0
+      background: var(--site-bg)
+      box-shadow: $boxshadow-card-float
+    .l_main
+      max-width: 100%
+  .l_body.mobile
+    .l_left
+      transition: transform .38s ease-out
+  .l_body.mobile.sidebar
+    .l_left
+      transform: translateX(0px)

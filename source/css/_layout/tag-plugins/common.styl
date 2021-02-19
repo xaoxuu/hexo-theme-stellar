@@ -1,0 +1,78 @@
+.tag-plugin
+  --theme: var(--block-border)
+  --theme-bg: var(--block)
+
+.tag-plugin[color='red']
+  --theme: mix($c-red, $c-card-light, 40)
+  --theme-bg: mix($c-red, $c-card-light, 10)
+
+.tag-plugin[color='orange']
+  --theme: mix($c-orange, $c-card-light, 40)
+  --theme-bg: mix($c-orange, $c-card-light, 10)
+
+.tag-plugin[color='yellow']
+  --theme: mix($c-yellow, $c-card-light, 40)
+  --theme-bg: mix($c-yellow, $c-card-light, 10)
+
+.tag-plugin[color='green']
+  --theme: mix($c-green, $c-card-light, 40)
+  --theme-bg: mix($c-green, $c-card-light, 10)
+
+.tag-plugin[color='cyan']
+  --theme: mix($c-cyan, $c-card-light, 40)
+  --theme-bg: mix($c-cyan, $c-card-light, 10)
+
+.tag-plugin[color='blue']
+  --theme: mix($c-blue, $c-card-light, 40)
+  --theme-bg: mix($c-blue, $c-card-light, 10)
+
+.tag-plugin[color='purple']
+  --theme: mix($c-purple, $c-card-light, 40)
+  --theme-bg: mix($c-purple, $c-card-light, 10)
+
+
+.tag-plugin[color='white']
+  --theme-bg: white
+
+
+.tag-plugin[color='dark']
+  --theme-bg: mix(black, $c-card-light, 75)
+  color: var(--card) !important
+
+body[theme='dark']
+  .tag-plugin[color='red']
+    --theme: mix($c-red, $c-card-dark, 40)
+    --theme-bg: mix($c-red, $c-card-dark, 10)
+
+  .tag-plugin[color='orange']
+    --theme: mix($c-orange, $c-card-dark, 40)
+    --theme-bg: mix($c-orange, $c-card-dark, 10)
+
+  .tag-plugin[color='yellow']
+    --theme: mix($c-yellow, $c-card-dark, 40)
+    --theme-bg: mix($c-yellow, $c-card-dark, 10)
+
+  .tag-plugin[color='green']
+    --theme: mix($c-green, $c-card-dark, 40)
+    --theme-bg: mix($c-green, $c-card-dark, 10)
+
+  .tag-plugin[color='cyan']
+    --theme: mix($c-cyan, $c-card-dark, 40)
+    --theme-bg: mix($c-cyan, $c-card-dark, 10)
+
+  .tag-plugin[color='blue']
+    --theme: mix($c-blue, $c-card-dark, 40)
+    --theme-bg: mix($c-blue, $c-card-dark, 10)
+
+  .tag-plugin[color='purple']
+    --theme: mix($c-purple, $c-card-dark, 40)
+    --theme-bg: mix($c-purple, $c-card-dark, 10)
+
+
+  .tag-plugin[color='white']
+    --theme-bg: white
+    color: var(--card)
+
+  .tag-plugin[color='dark']
+    --theme-bg: mix(black, $c-card-dark, 75)
+    color: var(--text-p0) !important

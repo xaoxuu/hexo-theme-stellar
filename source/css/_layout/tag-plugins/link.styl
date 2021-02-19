@@ -1,0 +1,70 @@
+.md .tag.link
+  margin-top: 1em
+  margin-bottom: 1em
+
+.md .link-card
+  margin-right: 1em
+  background: var(--card)
+  display: inline-flex
+  justify-content: space-between
+  align-items: center
+  cursor: pointer
+  min-width 250px
+  max-width: 100%
+  box-shadow: $boxshadow-card
+  transition: box-shadow
+  @media screen and (max-width: $device-mobile-l)
+    max-width: 100%
+    width: 100%
+  border-radius: 8px
+  &:hover
+    box-shadow: $boxshadow-float, $boxshadow-card-float
+
+
+.md .link-card
+  div.left,div.right
+    pointer-events: none
+  div.right
+    width: 54px
+    height: 54px
+    margin: 12px
+    overflow: hidden
+    flex-shrink: 0
+    position: relative
+    i
+      font-size: 32px
+      line-height: 48px
+      margin-left: 4px
+    img
+      display: block
+      position: absolute
+      border-radius: $border-card / 4
+      top: 50%
+      left: 50%
+      transform: translate(-50%, -50%)
+  div.left
+    overflow: hidden
+    margin-left: 16px
+  span
+    margin: 0
+    display: block
+    txt-ellipsis()
+  span.title
+    font-weight: 500
+    color: var(--text-p1)
+    font-size: $fs14
+  span.url
+    flex-shrink: 0
+    color: var(--text-p2)
+    font-size: $fs13
+
+.md .link-group
+  display: grid
+  grid-template-columns: 1fr 1fr
+  @media screen and (max-width: $device-mobile-l * 2)
+    grid-template-columns: 1fr
+  grid-gap: $gap
+  .tag.link
+    margin: 0
+  .link-card
+    width: 100%

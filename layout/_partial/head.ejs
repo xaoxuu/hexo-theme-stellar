@@ -1,0 +1,134 @@
+<%
+function genrateRobots() {
+  var el = '';
+  if (page.robots) {
+    el += '<meta name="robots" content="' + page.robots + '">';
+  } else if (is_home() == false) {
+    if (['post', 'wiki', 'index'].includes(page.layout) == false) {
+      el += '<meta name="robots" content="noindex,nofollow">';
+    }
+  }
+  return el;
+}
+
+function getTitle() {
+  if (page.seo_title || page.title || page.wiki || page.layout) {
+    return (page.seo_title || page.title || page.wiki || page.layout) + ' - ' + config.title;
+  } else if (page.category) {
+    return __('btn.category') + __('symbol.colon') + page.category + ' - ' + config.title;
+  } else if (page.tag) {
+    return __('btn.tag') + __('symbol.colon') + page.tag + ' - ' + config.title;
+  } else {
+    return config.title;
+  }
+  return '';
+}
+function getKeywords() {
+  if (page.keywords) {
+    return page.keywords;
+  } else if (page.tags && page.tags.length > 0) {
+    return page.tags.map(function(t){return t.name}).join(',');
+  }
+  return '';
+}
+function getDescription() {
+  if (page.description) {
+    return page.description;
+  } else {
+    if (['post', 'wiki'].includes(page.layout)) {
+      if (page.excerpt && page.excerpt.length > 0) {
+        return strip_html(page.excerpt);
+      } else if (page.content && page.content.length > 0) {
+        return truncate(strip_html(page.content), {length: 160});
+      }
+    }
+  }
+  return '';
+}
+function genrateKeywords() {
+  const keywords = getKeywords();
+  if (keywords && keywords.length > 0) {
+    return '<meta name="keywords" content="' + keywords + '">';
+  } else {
+    return '';
+  }
+}
+function genrateDescription() {
+  const description = getDescription();
+  if (description && description.length > 0) {
+    return '<meta name="description" content="' + description + '">';
+  } else {
+    return '';
+  }
+}
+function genrateOpenGraph() {
+  if (theme.head.open_graph == false) {
+    return '';
+  }
+  var el = '';
+  el += '<meta property="og:title" content="' + getTitle() + '">';
+  el += '<meta property="og:description" content="' + getDescription() + '">';
+  el += '<meta property="og:locale" content="' + page.lang.replace('-', '_') + '">';
+  el += '<meta property="og:url" content="' + page.permalink + '">';
+  el += '<meta property="og:type" content="website">';
+  el += '<meta property="og:site_name" content="' + config.title + '">';
+  if (page.layout == 'post' && page.cover && page.cover.length > 0) {
+    el += '<meta property="og:image" content="' + page.cover + '">';
+  }
+  return el;
+}
+function genrateTwitter() {
+  if (theme.head.twitter == undefined || theme.head.twitter.length == 0 || theme.head.twitter == false) {
+    return '';
+  }
+  var el = '';
+  if (theme.head.twitter != 'true') {
+    el += '<meta property="twitter:site" content="@' + theme.head.twitter + '">';
+  }
+  if (page.layout == 'post' && page.cover && page.cover.length > 0) {
+    el += '<meta name="twitter:image" content="' + page.cover + '">';
+    el += '<meta name="twitter:card" content="summary_large_image">';
+  }
+  return el;
+}
+%>
+<head hexo-theme='https://github.com/xaoxuu/hexo-theme-stellar/tree/<%- theme.stellar.version %>'>
+  <meta charset="utf-8">
+  <%- genrateRobots() %>
+  <meta http-equiv='x-dns-prefetch-control' content='on' />
+  <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+
+  <meta name="renderer" content="webkit">
+  <meta name="force-rendering" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="HandheldFriendly" content="True" >
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+  <title><%- getTitle() %></title>
+  <%- genrateKeywords() %>
+  <%- genrateDescription() %>
+  <%- genrateOpenGraph() %>
+  <%- genrateTwitter() %>
+
+
+  <!-- feed -->
+  <% if (config.feed && config.feed.path) { %>
+    <%- feed_tag(config.feed.path, {title: config.title}) %>
+  <% } %>
+
+  <% if (theme.stellar.cdn_css) { %>
+    <%- css(theme.stellar.cdn_css) %>
+  <% } else { %>
+    <%- css('/css/main.css') %>
+  <% } %>
+
+  <% if (config.inject && config.inject.head){ %>
+    <% (config.inject.head||[]).forEach(function(item){ %>
+      <%- item %>
+    <% }) %>
+  <% } else if (config.favicon) { %>
+    <link rel="shortcut icon" type='image/x-icon' href="<%- url_for(config.favicon) %>">
+  <% } %>
+</head>
