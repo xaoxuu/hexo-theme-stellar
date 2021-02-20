@@ -1,5 +1,5 @@
 <%
-function getTitle() {
+function generate_title() {
   if (page.seo_title || page.title || page.wiki || page.layout) {
     return (page.seo_title || page.title || page.wiki || page.layout) + ' - ' + config.title;
   } else if (page.category) {
@@ -11,8 +11,18 @@ function getTitle() {
   }
   return '';
 }
-if (page.description == undefined) {
-  page.description = stellar_meta('description', page);
+function generate_robots() {
+  if (is_home() == true) {
+    return '';
+  }
+  if (page.robots) {
+    return '<meta name="robots" content="' + page.robots + '">';
+  } else {
+    // default rule
+    if (['post', 'wiki', 'index'].includes(page.layout) == false) {
+      return '<meta name="robots" content="noindex,nofollow">';
+    }
+  }
 }
 function og_args() {
   var args = {};
@@ -28,7 +38,7 @@ function og_args() {
 <head hexo-theme='<%- stellar_info("tree")  %>'>
   <%- meta_generator() %>
   <meta charset="utf-8">
-  <meta name='robots' content='<%- stellar_meta("robots", page) %>'>
+  <%- generate_robots() %>
 
   <meta http-equiv='x-dns-prefetch-control' content='on' />
   <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
@@ -41,7 +51,7 @@ function og_args() {
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  <title><%- getTitle() %></title>
+  <title><%- generate_title() %></title>
 
   <% if (theme.open_graph && theme.open_graph.enable) { %>
     <%- open_graph(og_args()) %>

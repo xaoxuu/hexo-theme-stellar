@@ -64,7 +64,6 @@ article:
   # npm i hexo-related-popular-posts
   related_posts:
     enable: false
-    title: meta.related_posts
     max_count: 5
     placeholder_img: https://7.dusays.com/2021/02/20/76b86c0226ffd.svg
   # 分享文章
@@ -134,6 +133,8 @@ plugins:
     enable: true
     css: https://unpkg.com/swiper/swiper-bundle.min.css
     js: https://unpkg.com/swiper/swiper-bundle.min.js
+  # issues api
+  issuesjs: /js/issues.js
 
   ## optional plugins ##
   # preload

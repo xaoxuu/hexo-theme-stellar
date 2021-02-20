@@ -2,7 +2,7 @@
   function loadIssuesJS() {
     const issues = document.getElementById('issues-api');
     if (issues != undefined) {
-      loadScript('<%- url_for("/js/issues.js") %>');
+      loadScript('<%- url_for(theme.plugins.issuesjs || "/js/issues.js") %>');
     }
   };
   $(function () {
