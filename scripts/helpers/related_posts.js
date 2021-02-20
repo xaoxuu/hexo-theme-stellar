@@ -3,18 +3,23 @@
  */
 
 'use strict';
+
 var util = require('hexo-util');
 
-// Examples of helper
 hexo.extend.helper.register('popular_posts_wrapper', function(args){
-  if (!args || !args.json || args.json.length == 0) return "";
+  const title = args.title;
+  const json = args.json.json;
+  const cls = args.json.class;
+  if (json == undefined || json.length == 0) {
+    return '';
+  }
   const cfg = hexo.theme.config.article.related_posts;
   if (cfg.enable != true) return;
   var returnHTML = "";
   var div = `
     <div class="related_posts">
     <section class='header'>
-      <div class='title cap cyan'>${cfg.title}</div>
+      <div class='title cap cyan'>${title}</div>
     </section>
     <section class='body'>
     `;
@@ -36,18 +41,18 @@ hexo.extend.helper.register('popular_posts_wrapper', function(args){
     el += '<span class="title">' + list.title + '</span>';
 
     if (list.excerpt && list.excerpt.length > 0) {
-      el += '<span class="excerpt">' + util.truncate(util.stripHTML(list.excerpt), {length: 64}) + '</span>';
+      el += '<span class="excerpt">' + util.truncate(util.stripHTML(list.excerpt), {length: 120}) + '</span>';
     }
 
     el +=  '</a>';
     return el;
   }
 
-  for(var i = 0; i < args.json.length; i++) {
-    returnHTML += generateHTML(args.json[i]);
+  for(var i = 0; i < json.length; i++) {
+    returnHTML += generateHTML(json[i]);
   }
 
-  if (returnHTML != "") returnHTML = "<div class=\"" + args.class + "\">" + returnHTML + "</div>";
+  if (returnHTML != "") returnHTML = "<div class=\"" + cls + "\">" + returnHTML + "</div>";
   div += returnHTML;
   div += '</section></div>';
   return div;

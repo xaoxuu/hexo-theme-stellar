@@ -9,7 +9,6 @@ btn:
   tag: 标签
   tags: 标签
   archives: 归档
-  learn_more: 了解详情
   getting_started: 开始使用
 
 meta:
@@ -19,12 +18,13 @@ meta:
   read_next: 接下来阅读
   older: 更早一篇
   references: 参考资料
+  related_posts: 您可能感兴趣的文章
   comment_title: 快来参与讨论吧
   back_to_top: 回到顶部
   more: '更多%s'
 
 footer:
-  license: '除非特别说明，本站采用 CC BY SA 4.0 许可协议。'
+  license: '本博客所有文章除特别声明外，均采用 %s 许可协议。转载请注明出处！'
   info_not_open_source: '本站由 %s 创建，使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 作为主题。'
   info_open_source: '本站由 %s 创建，使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 作为主题，您可以在 [%s](%s) 找到本站源码。'
 

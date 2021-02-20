@@ -9,7 +9,7 @@
   </div>
   <div class='widget-body'>
     <%
-    var arr = page.class == 'wiki' ? site.pages.filter(function(p){
+    var arr = page.menu_id == 'wiki' ? site.pages.filter(function(p){
       return p.layout == 'wiki' && p.title && p.title.length > 0;
     }) : site.posts.filter(function(p){
       return p.title && p.title.length > 0;

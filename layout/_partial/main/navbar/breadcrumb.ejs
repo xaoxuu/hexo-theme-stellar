@@ -30,7 +30,7 @@
         <a class='cap breadcrumb' href='<%- url_for(p.path) %>'><%- p.title %></a>
       <% }); %>
       <% site.pages.filter(function (p) { %>
-        <% return p.layout == 'wiki' && p.wiki == page.wiki && !p.order %>
+        <% return p.layout == 'wiki' && p.wiki == page.wiki && p.description %>
       <% }).limit(1).each(function(p) { %>
         <span class="sep"></span>
         <a class='cap breadcrumb' href='<%- url_for(p.path) %>'><%- page.wiki %></a>

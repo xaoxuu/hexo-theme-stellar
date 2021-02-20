@@ -1,16 +1,4 @@
 <%
-function genrateRobots() {
-  var el = '';
-  if (page.robots) {
-    el += '<meta name="robots" content="' + page.robots + '">';
-  } else if (is_home() == false) {
-    if (['post', 'wiki', 'index'].includes(page.layout) == false) {
-      el += '<meta name="robots" content="noindex,nofollow">';
-    }
-  }
-  return el;
-}
-
 function getTitle() {
   if (page.seo_title || page.title || page.wiki || page.layout) {
     return (page.seo_title || page.title || page.wiki || page.layout) + ' - ' + config.title;
@@ -23,78 +11,25 @@ function getTitle() {
   }
   return '';
 }
-function getKeywords() {
-  if (page.keywords) {
-    return page.keywords;
-  } else if (page.tags && page.tags.length > 0) {
-    return page.tags.map(function(t){return t.name}).join(',');
-  }
-  return '';
+if (page.description == undefined) {
+  page.description = stellar_meta('description', page);
 }
-function getDescription() {
-  if (page.description) {
-    return page.description;
-  } else {
-    if (['post', 'wiki'].includes(page.layout)) {
-      if (page.excerpt && page.excerpt.length > 0) {
-        return strip_html(page.excerpt);
-      } else if (page.content && page.content.length > 0) {
-        return truncate(strip_html(page.content), {length: 160});
-      }
-    }
+function og_args() {
+  var args = {};
+  if (theme.open_graph.twitter_id) {
+    args.twitter_id = theme.open_graph.twitter_id;
   }
-  return '';
-}
-function genrateKeywords() {
-  const keywords = getKeywords();
-  if (keywords && keywords.length > 0) {
-    return '<meta name="keywords" content="' + keywords + '">';
-  } else {
-    return '';
+  if (page.layout == 'post' && page.cover) {
+    args.twitter_card = 'summary_large_image';
   }
-}
-function genrateDescription() {
-  const description = getDescription();
-  if (description && description.length > 0) {
-    return '<meta name="description" content="' + description + '">';
-  } else {
-    return '';
-  }
-}
-function genrateOpenGraph() {
-  if (theme.head.open_graph == false) {
-    return '';
-  }
-  var el = '';
-  el += '<meta property="og:title" content="' + getTitle() + '">';
-  el += '<meta property="og:description" content="' + getDescription() + '">';
-  el += '<meta property="og:locale" content="' + page.lang.replace('-', '_') + '">';
-  el += '<meta property="og:url" content="' + page.permalink + '">';
-  el += '<meta property="og:type" content="website">';
-  el += '<meta property="og:site_name" content="' + config.title + '">';
-  if (page.layout == 'post' && page.cover && page.cover.length > 0) {
-    el += '<meta property="og:image" content="' + page.cover + '">';
-  }
-  return el;
-}
-function genrateTwitter() {
-  if (theme.head.twitter == undefined || theme.head.twitter.length == 0 || theme.head.twitter == false) {
-    return '';
-  }
-  var el = '';
-  if (theme.head.twitter != 'true') {
-    el += '<meta property="twitter:site" content="@' + theme.head.twitter + '">';
-  }
-  if (page.layout == 'post' && page.cover && page.cover.length > 0) {
-    el += '<meta name="twitter:image" content="' + page.cover + '">';
-    el += '<meta name="twitter:card" content="summary_large_image">';
-  }
-  return el;
+  return args;
 }
 %>
-<head hexo-theme='https://github.com/xaoxuu/hexo-theme-stellar/tree/<%- theme.stellar.version %>'>
+<head hexo-theme='<%- stellar_info("tree")  %>'>
+  <%- meta_generator() %>
   <meta charset="utf-8">
-  <%- genrateRobots() %>
+  <meta name='robots' content='<%- stellar_meta("robots", page) %>'>
+
   <meta http-equiv='x-dns-prefetch-control' content='on' />
   <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -107,11 +42,10 @@ function genrateTwitter() {
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
   <title><%- getTitle() %></title>
-  <%- genrateKeywords() %>
-  <%- genrateDescription() %>
-  <%- genrateOpenGraph() %>
-  <%- genrateTwitter() %>
 
+  <% if (theme.open_graph && theme.open_graph.enable) { %>
+    <%- open_graph(og_args()) %>
+  <% } %>
 
   <!-- feed -->
   <% if (config.feed && config.feed.path) { %>

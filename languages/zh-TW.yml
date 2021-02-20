@@ -9,7 +9,6 @@ btn:
   tag: 標籤
   tags: 標籤
   archives: 歸檔
-  learn_more: 了解詳情
   getting_started: 開始使用
 
 meta:
@@ -19,12 +18,13 @@ meta:
   read_next: 接下來閱讀
   older: 更早一篇
   references: 參考資料
+  related_posts: 您可能感興趣的文章
   comment_title: 快來參與討論吧
   back_to_top: 回到頂部
   more: '更多%s'
 
 footer:
-  license: '除非特別說明，本站採用 CC BY SA 4.0 許可協議。'
+  license: '本網誌所有文章除特別聲明外，均採用 %s 許可協議。轉載請註明出處！'
   info_not_open_source: '本站由 %s 創建，使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 作為主題。'
   info_open_source: '本站由 %s 創建，使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 作為主題，您可以在 [%s](%s) 找到本站源碼。'
 

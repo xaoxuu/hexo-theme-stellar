@@ -1,0 +1,20 @@
+<%
+const author = '[' + config.author + '](' + config.url + config.root + ')';
+const using = '[' + stellar_info('name') + '](' + stellar_info('tree') + ')';
+const source = theme.footer.source;
+function layoutDiv() {
+  var wrapper = '';
+  wrapper += '<div><hr>';
+  if (theme.footer.license) {
+    wrapper += markdown(__('footer.license', theme.footer.license));
+  }
+  if (source) {
+    wrapper += markdown(__('footer.info_open_source', author, using, source));
+  } else {
+    wrapper += markdown(__('footer.info_not_open_source', author, using));
+  }
+  wrapper += '</div>';
+  return wrapper;
+}
+%>
+<%- layoutDiv() %>

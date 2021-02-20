@@ -9,31 +9,30 @@ stellar:
 
 
 ######## head tags ########
-head:
-  open_graph: true
-  twitter: false
+open_graph:
+  enable: true
+  twitter_id: # for open_graph meta
 
 
 ######## Sidebar ########
 sidebar:
   logo:
-    avatar: # default is config.avatar
-    title: # default is config.title
-  logo_action:
-    avatar: /about/
-    title: /
+    avatar:
+      src: # default is config.avatar
+      href: # set your user center page like: '/about/'
+    title: # default is config.title, you can set html tag like: '<img no-lazy height="32px" src="xxx"/>'
   menu:
-    - class: post # post, wiki, about
-      name: btn.blog
+    post:
+      title: btn.blog
       url: /
-    - class: wiki
-      name: btn.wiki
+    wiki:
+      title: btn.wiki
       url: /wiki/
-    - class: friends
-      name: 友链
+    friends:
+      title: 友链
       url: /friends/
-    - class: about
-      name: 关于
+    about:
+      title: 关于
       url: /about/
   # Sidebar widgets
   widgets:
@@ -65,7 +64,7 @@ article:
   # npm i hexo-related-popular-posts
   related_posts:
     enable: false
-    title: 您可能感兴趣的文章
+    title: meta.related_posts
     max_count: 5
     placeholder_img: https://7.dusays.com/2021/02/20/76b86c0226ffd.svg
   # 分享文章
@@ -104,10 +103,8 @@ footer:
       url: https://music.163.com/#/user/home?id=63035382
     - icon: '<img src="https://7.dusays.com/2021/02/14/942ebbf1a4b91.svg"/>'
       url: /comments/
-  license: 'CC BY SA 4.0'
-  source:
-    where: GitHub
-    url: https://github.com/xaoxuu/site-source
+  license: '[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
+  source: #'[GitHub](https://github.com/xaoxuu/hexo-theme-stellar)'
 
 
 ######## Tag Plugins ########
@@ -137,12 +134,12 @@ plugins:
     enable: true
     css: https://unpkg.com/swiper/swiper-bundle.min.css
     js: https://unpkg.com/swiper/swiper-bundle.min.js
-  
+
   ## optional plugins ##
   # preload
   preload:
-    enable: #true
-    service: instant_page # instant_page, flying_pages
+    enable: true
+    service: flying_pages # instant_page, flying_pages
     instant_page: https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js
     flying_pages: https://cdn.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js
 

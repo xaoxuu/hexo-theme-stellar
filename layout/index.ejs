@@ -1,13 +1,13 @@
 <%
-if (page.class == undefined) {
+if (page.menu_id == undefined) {
   if (page.layout == 'index' && page.title && page.wiki) {
-    page.class = 'wiki';
+    page.menu_id = 'wiki';
   } else {
-    page.class = 'post';
+    page.menu_id = 'post';
   }
 }
 %>
-<% if (page.class == 'post') { %>
+<% if (page.menu_id == 'post') { %>
   <%- partial('_partial/main/navbar/list_post') %>
   <% if (page.posts) { %>
     <div class='post-list post'>
@@ -21,7 +21,7 @@ if (page.class == undefined) {
       <%- partial('_partial/main/post_list/paginator') %>
     </div>
   <% } %>
-<% } else if (page.class == 'wiki') { %>
+<% } else if (page.menu_id == 'wiki') { %>
   <% function outputExcerpt(post) { %>
     <a class='post-card wiki reveal' href='<%- url_for(post.link || post.path) %>'>
       <article class='excerpt md'>

@@ -10,9 +10,9 @@ hexo.on('generateBefore', () => {
 hexo.on('ready', () => {
   const { version } = require('../../package.json');
   hexo.log.info(`
-===================================================
-Stellar ${version}
-Docs: https://xaoxuu.com/wiki/stellar/
-Repo: https://github.com/xaoxuu/hexo-theme-stellar/
-===================================================`);
+=======================================================
+  Stellar ${version}
+  Docs: https://xaoxuu.com/wiki/stellar/
+  Repo: https://github.com/xaoxuu/hexo-theme-stellar/
+=======================================================`);
 });
