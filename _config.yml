@@ -67,7 +67,7 @@ article:
     enable: false
     title: 您可能感兴趣的文章
     max_count: 5
-    placeholder_img: https://cdn.jsdelivr.net/gh/volantis-x/cdn-wallpaper-minimalist/2020/046.jpg
+    placeholder_img: https://7.dusays.com/2021/02/20/76b86c0226ffd.svg
   # 分享文章
   share:
     qq: https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png
@@ -120,7 +120,7 @@ tag_plugins:
     interactive: false # enable interactive for user
   # {% link title, url, img %}
   link:
-    default_img: https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/256/safari.png
+    default_img: https://7.dusays.com/2021/02/20/8f277b4ee0ecd.svg
 
 
 ######## JS Plugins ########
@@ -143,7 +143,7 @@ plugins:
   preload:
     enable: #true
     service: instant_page # instant_page, flying_pages
-    instant_page: https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@2/js/instant_page.js
+    instant_page: https://cdn.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js
     flying_pages: https://cdn.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js
 
   # image lazyload
