@@ -5,15 +5,16 @@
     margin: $gap * 2 $gap $gap
     padding: 0.25rem
     background: var(--block)
-    border-radius: 8px
+    border-radius: 6px
     .logo-wrap
-      margin: 0.5rem 1rem
+      margin: 0.5rem 0.75rem
       .img
         width: 32px
         height: 32px
-        display: none
       .title
         font-size: 1.5rem
+  nav.menu 
+    margin: -2px
 
 // pc上右边顶部留白
 @media screen and (min-width: $device-tablet)
@@ -22,5 +23,5 @@
 
 // 移动端显示主导航栏
 @media screen and (max-width: $device-tablet)
-  .l_main.list header
+  .l_main header
     display: block

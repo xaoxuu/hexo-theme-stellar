@@ -15,10 +15,9 @@ btn:
 meta:
   recent_update: 最近更新
   toc: 本文目錄
-  read_prev: 回顧上一篇
+  read_prev: 上一篇
   read_next: 接下來閱讀
-  older: 較早文章
-  newer: 較新文章
+  older: 更早一篇
   references: 參考資料
   comment_title: 快來參與討論吧
   back_to_top: 回到頂部

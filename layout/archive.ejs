@@ -7,7 +7,7 @@ if (page.class == undefined) {
   <%- partial('index') %>
 <% } else { %>
   <% page.title = __('btn.archives'); %>
-  <%- partial('_partial/navbar/list_post') %>
+  <%- partial('_partial/main/navbar/list_post') %>
   <div class='post-list'>
   	<% var years = []; %>
   	<% site.posts.sort('date', -1).each(function(post) { %>

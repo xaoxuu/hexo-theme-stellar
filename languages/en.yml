@@ -15,10 +15,9 @@ btn:
 meta:
   recent_update: Recent Update
   toc: TOC
-  read_prev: PREV
-  read_next: NEXT
+  read_prev: or prev
+  read_next: READ NEXT
   older: Older
-  newer: Newer
   references: References
   comment_title: Join the discussion
   back_to_top: Back to top

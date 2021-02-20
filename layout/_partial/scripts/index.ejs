@@ -1,11 +1,12 @@
 <!-- required -->
 <%- partial('global') %>
+<%- js({src: theme.plugins.jquery || 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js'}) %>
 <% if (theme.stellar.cdn_js) { %>
   <%- js({src: theme.stellar.cdn_js, async: true}) %>
 <% } else { %>
   <%- js({src: 'js/main.js', async: true}) %>
 <% } %>
-<%- js({src: theme.plugins.jquery || 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js'}) %>
+
 
 
 <!-- optional -->

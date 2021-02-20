@@ -8,28 +8,28 @@ if (page.class == undefined) {
 }
 %>
 <% if (page.class == 'post') { %>
-  <%- partial('_partial/navbar/list_post') %>
+  <%- partial('_partial/main/navbar/list_post') %>
   <% if (page.posts) { %>
     <div class='post-list post'>
       <% page.posts.each(function(post){ %>
         <a class='post-card post reveal' href='<%- url_for(post.link || post.path) %>'>
           <article class='excerpt md'>
-            <%- partial('_partial/post_list/post_card', {post: post}) %>
+            <%- partial('_partial/main/post_list/post_card', {post: post}) %>
           </article>
         </a>
       <% }) %>
-      <%- partial('_partial/post_list/paginator') %>
+      <%- partial('_partial/main/post_list/paginator') %>
     </div>
   <% } %>
 <% } else if (page.class == 'wiki') { %>
   <% function outputExcerpt(post) { %>
     <a class='post-card wiki reveal' href='<%- url_for(post.link || post.path) %>'>
       <article class='excerpt md'>
-        <%- partial('_partial/post_list/wiki_card', {post: post}) %>
+        <%- partial('_partial/main/post_list/wiki_card', {post: post}) %>
       </article>
     </a>
   <% } %>
-  <%- partial('_partial/navbar/list_wiki') %>
+  <%- partial('_partial/main/navbar/list_wiki') %>
   <% if (page.title && page.wiki) { %>
     <div class='post-list wiki filter'>
       <% page.wiki.forEach((wiki, i) => { %>

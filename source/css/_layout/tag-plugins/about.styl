@@ -24,7 +24,6 @@
     .avatar
       display: inline-flex
       margin: 0 1rem
-      // flex-shrink: 0
   .about-body
     >p
       font-size: $fs14
@@ -49,9 +48,9 @@
 
 @media screen and (max-width: $device-mobile)
   .tag-plugin.about
-    background: none
     padding: 1rem
     .about-header
+      flex-direction: column
       .avatar
         margin: 1rem auto
       p

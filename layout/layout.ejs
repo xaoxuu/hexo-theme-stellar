@@ -2,13 +2,13 @@
 <html lang='<%- page.lang %>'>
 <%- partial('_partial/head') %>
 <body theme='<%- page.dark ? "dark" : "light" %>'>
-  <%- partial('_partial/article/wiki_cover') %>
+  <%- partial('_partial/main/article/wiki_cover') %>
   <div class='l_body' id='start'>
     <aside class='l_left'>
     <%- partial('_partial/sidebar/index') %>
     </aside>
     <div class='l_main<%- page.content ? "" : " list" %>'>
-      <%- partial('_partial/sidebar/header') %>
+      <%- partial('_partial/main/header/index') %>
       <%- body %>
       <footer class='page-footer'>
         <%- partial('_partial/footer') %>

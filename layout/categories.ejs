@@ -6,7 +6,7 @@ if (page.class == undefined) {
 <% if (site.categories.length) { %>
   <% page.title = __('btn.categories'); %>
   <% page.layout = 'categories'; %>
-  <%- partial('_partial/navbar/list_post') %>
+  <%- partial('_partial/main/navbar/list_post') %>
   <div class='post-list'>
     <div class='list-title'><%- __('page.categories', site.categories.length) %></div>
     <article class='post-card reveal' id='cats'>

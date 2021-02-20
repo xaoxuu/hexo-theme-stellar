@@ -45,7 +45,7 @@ function setSedebar() {
   $("#toc a.toc-link").click(function(e) {
     l_body.classList.remove("sidebar");
   });
-  $(".social-wrap a.comment").click(function(e) {
+  $("#toc a#s-top").click(function(e) {
     l_body.classList.remove("sidebar");
   });
 }

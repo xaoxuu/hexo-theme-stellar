@@ -13,22 +13,25 @@
   display: flex
   align-items: center
   color: var(--text-p0)
-  &:hover
-    color: var(--text-p0)
+  a  
+    color: inherit
+    display: flex
+    align-items: center
   .img
     width: 40px
     height: 40px
     flex-shrink: 0
-    border-radius: 20px
+    border-radius: 40px
+    border: 2px solid transparent
     overflow: hidden
     margin-right: 1rem
     img
       object-fit: cover
   .title
-    padding-top: 2px
     font-size: 1.75rem
     font-weight: 900
     color: inherit
+    line-height: 1;
     font-family: $ff-logo
 
 nav.menu
@@ -52,13 +55,10 @@ nav.menu
     border-radius: 4px
     font-size: $fs14
     font-weight: 500
-    trans2: color background
     overflow: hidden
-    span
-      color: var(--text-p3)
-      display: block
-      padding: 6px 12px
-    &.active span, &:hover span
+    padding: 0.375rem 0.75rem
+    color: var(--text-p3)
+    &.active, &:hover
       color: var(--text-p1)
       background: var(--card)
 
@@ -67,6 +67,7 @@ nav.menu
   overflow: scroll
   flex-grow: 1
   scrollbar(0, 0)
+  z-index: 1
   .widget-wrap
     margin: 1rem 0 2rem 0
     .widget-header

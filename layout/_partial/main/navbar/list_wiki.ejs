@@ -1,0 +1,28 @@
+<div class='nav-wrap'>
+  <nav class='sub wiki cap green'>
+    <% if (page.layout == 'index' && page.title && page.wiki) { %>
+      <a href='/wiki/'><%- __('btn.all_wiki') %></a>
+    <% } else { %>
+      <a class='active' href='/wiki/'><%- __('btn.all_wiki') %></a>
+    <% } %>
+    <%
+    var groups = [];
+    var paths = [];
+    site.pages.filter(function (p) {
+      return p.layout == 'index' && p.title && p.wiki;
+    }).sort('order').each(function(p) {
+      if (groups.includes(p.wiki) == false) {
+        groups.push(p.title);
+        paths.push(p.path);
+      }
+    });
+    %>
+    <% groups.forEach((group, i) => { %>
+      <% if (page.title == group) { %>
+        <a class='active' href='<%- url_for(paths[i]) %>'><%- group %></a>
+      <% } else { %>
+        <a class='' href='<%- url_for(paths[i]) %>'><%- group %></a>
+      <% } %>
+    <% }); %>
+  </nav>  
+</div>

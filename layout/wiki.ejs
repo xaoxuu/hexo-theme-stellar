@@ -12,11 +12,16 @@ if (page.title == undefined) {
 <% if (page.layout == 'index') { %>
   <%- partial('index') %>
 <% } else { %>
-  <%- partial('_partial/navbar/breadcrumb') %>
+  <%
+  if (page.header == undefined) {
+    page.header = false;
+  }
+  %>
+  <%- partial('_partial/main/navbar/breadcrumb') %>
   <article class='content md <%- page.layout %>'>
   <h1 class='article-title'><span><%- page.h1 || page.title %></span></h1>
   <%- page.content %>
   </article>
-  <%- partial('_partial/article/read_next') %>
+  <%- partial('_partial/main/article/read_next') %>
   <%- partial('_partial/plugins/comments/layout') %>
 <% } %>

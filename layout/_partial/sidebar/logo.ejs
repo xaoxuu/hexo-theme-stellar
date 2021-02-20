@@ -1,6 +1,8 @@
-<a class='logo-wrap' href='/'>
-  <% if (theme.sidebar.logo.avatar != false) { %>
-    <div class='img'><img no-lazy src='<%- theme.sidebar.logo.avatar || config.avatar %>'/></div>
-  <% } %>
-  <div class='title'><%- theme.sidebar.logo.title || config.title %></div>
-</a>
+<div class='logo-wrap'>
+  <a href='/'>
+    <% if (theme.sidebar.logo.avatar != false) { %>
+      <div class='img'><img no-lazy src='<%- theme.sidebar.logo.avatar || config.avatar %>'/></div>
+    <% } %>
+    <span class='title'><%- theme.sidebar.logo.title || config.title %></span>
+  </a>
+</div>

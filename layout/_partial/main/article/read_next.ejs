@@ -1,0 +1,63 @@
+<%
+function layoutDiv() {
+  var prev,next;
+  var title = __('meta.read_next');
+  var title_prev = __('meta.read_prev');
+  if (page.layout == 'post') {
+    prev = page.next;
+    next = page.prev;
+    title_prev = __('meta.older');
+  } else if (page.layout == 'wiki' && page.wiki && page.wiki.length > 0) {
+    title_prev = __('meta.read_prev');
+    var wikis = [];
+    wikis = site.pages.filter(function (p) {
+      if (p.layout == 'wiki' && p.wiki && p.wiki == page.wiki) {
+        if (p.order == undefined) {
+          p.order = 0;
+        }
+        return true;
+      } else {
+        return false;
+      }
+    }).sort('order');
+    wikis.forEach((p, i) => {
+      if (p.order < page.order) {
+        if (prev == undefined || p.order > prev.order) {
+          prev = p;
+        }
+      } else if (p.order > page.order) {
+        if (next == undefined || p.order < next.order) {
+          next = p;
+        }
+      }
+    });
+  }
+  let wrapper = '';
+  if (prev || next) {
+    wrapper += '<div class="read-next-wrap">';
+    wrapper += '<section class="header cap cyan">';
+    wrapper += '<span>' + title + '</span>';
+    wrapper += '</section>';
+    wrapper += '<section class="body">';
+    if (next) {
+      wrapper += '<div class="post-title unread">';
+      wrapper += '<a href="' + url_for(next.path) + '">';
+      wrapper += next.title || next.seo_title;
+      wrapper += '</a>';
+      wrapper += '</div>';
+    }
+    if (prev) {
+      wrapper += '<div class="post-title read">';
+      wrapper += '<a href="' + url_for(prev.path) + '">';
+      wrapper += title_prev + __('symbol.colon');
+      wrapper += prev.title || prev.seo_title;
+      wrapper += '</a>';
+      wrapper += '</div>';
+    }
+    wrapper += '</section>';
+    wrapper += '</div>';
+  }
+  return wrapper;
+}
+%>
+<%- layoutDiv(); %>

@@ -15,10 +15,9 @@ btn:
 meta:
   recent_update: 最近更新
   toc: 本文目录
-  read_prev: 回顾上一篇
+  read_prev: 上一篇
   read_next: 接下来阅读
-  older: 较早文章
-  newer: 较新文章
+  older: 更早一篇
   references: 参考资料
   comment_title: 快来参与讨论吧
   back_to_top: 回到顶部
