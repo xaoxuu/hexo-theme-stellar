@@ -1,1 +1,23 @@
-<div id="utterances"></div>
+<%
+function layoutDiv() {
+  var el = '';
+  el += '<div id="utterances"';
+  let utterances = Object.assign({}, theme.comments.utterances, page.utterances);
+  if (page.comment_id) {
+    utterances['issue-term'] = page.comment_id;
+  }
+  if (page.dark && utterances.theme.dark) {
+    utterances.theme = utterances.theme.dark;
+  } else if (utterances.theme.light) {
+    utterances.theme = utterances.theme.light;
+  }
+  for (let key of Object.keys(utterances)) {
+    if (utterances[key]) {
+      el += ' ' + key + '="' + utterances[key] + '"';
+    }
+  }
+  el += '></div>';
+  return el;
+}
+%>
+<%- layoutDiv() %>

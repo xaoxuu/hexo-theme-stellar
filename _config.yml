@@ -80,8 +80,6 @@ comments:
     theme:
       light: github-light
       dark: github-dark
-    label: ✨💬✨
-    crossorigin: anonymous
 
 
 ######## Footer ########

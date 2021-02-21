@@ -1,48 +1,23 @@
-<%
-if (page.utterances == undefined) {
-  page.utterances = theme.comments.utterances;
-} else {
-  for (let key of Object.keys(theme.comments.utterances)) {
-    if (page.utterances[key] == undefined) {
-      page.utterances[key] = theme.comments.utterances[key];
-    }
-  }
-}
-if (page.comment_id) {
-  page.utterances['issue-term'] = page.comment_id;
-}
-if (theme.comments.utterances.theme) {
-  if (page.dark) {
-    page.utterances.theme = theme.comments.utterances.theme.dark;
-  } else {
-    page.utterances.theme = theme.comments.utterances.theme.light;
-  }
-}
-%>
 <script>
-  stellar.comments = {
-    service: 'utterances',
-    utterances: Object.assign(<%- JSON.stringify(page.utterances) %>),
-  }
   function utterances(){
     if(!document.getElementById("utterances"))return;
     setTimeout(function() {
       var checkUtterances = setInterval(function () {
-        var HEAD = document.getElementById("utterances");
-        if (!HEAD) return
+        var el = document.getElementById("utterances");
+        if (!el) return
         clearInterval(checkUtterances)
         try {
-          HEAD.innerHTML="";
+          el.innerHTML="";
         } catch (error) {}
         var script = document.createElement('script');
-        const keys = ['repo', 'issue-term', 'theme', 'label', 'crossorigin'];
         script.src = 'https://utteranc.es/client.js';
-        for (let key of Object.keys(stellar.comments.utterances)) {
-          if (keys.includes(key) && stellar.comments.utterances[key]) {
-            script.setAttribute(key, stellar.comments.utterances[key]);
+        const keys = ['repo', 'issue-term', 'theme', 'label', 'crossorigin'];
+        keys.forEach((key, i) => {
+          if (el.attributes[key] && el.attributes[key].value) {
+            script.setAttribute(key, el.attributes[key].value);
           }
-        }
-        HEAD.appendChild(script);
+        });
+        el.appendChild(script);
        }, 200)
     });
   }
