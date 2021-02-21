@@ -22,6 +22,14 @@ meta:
   comment_title: Join the discussion
   back_to_top: Back to top
   more: 'More %s'
+  created: 'Posted on'
+  updated: 'Updated on'
+  date_suffix:
+    just: Just
+    min: minutes ago
+    hour: hours ago
+    day: days ago
+    month: months ago
 
 footer:
   license: 'All articles in this blog are licensed under %s unless stating additionally.'

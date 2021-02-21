@@ -30,8 +30,8 @@ if (post.categories && post.categories.length > 0) {
   <% } %>
 </div>
 <div class='meta cap'>
-  <span class='cap'>
-    <time><%= date(post.date, config.date_format) %></time>
+  <span class='cap' id='post-meta'>
+    <%- __('meta.created') %>&nbsp;<time datetime='<%- date_xml(post.date) %>'><%= date(post.date, config.date_format) %></time>
   </span>
   <% if (showCat) { %>
     <% if (post.layout == 'post' && post.categories && post.categories.length > 0) { %>

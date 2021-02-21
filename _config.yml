@@ -147,7 +147,7 @@ plugins:
   # image lazyload
   # https://www.npmjs.com/package/vanilla-lazyload
   lazyload:
-    enable: true
+    enable: true # [hexo clean && hexo s] is required after changing this value.
     js: https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js
     onlypost: false
     loadingImg: # https://7.dusays.com/2021/02/14/e45d2469cdeaf.svg

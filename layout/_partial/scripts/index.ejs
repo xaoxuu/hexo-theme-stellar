@@ -1,21 +1,44 @@
+<script type="text/javascript">
+  stellar = {};
+  stellar.config = {
+    date_suffix: {
+      just: '<%- __('meta.date_suffix.just') %>',
+      min: '<%- __('meta.date_suffix.min') %>',
+      hour: '<%- __('meta.date_suffix.hour') %>',
+      day: '<%- __('meta.date_suffix.day') %>',
+      month: '<%- __('meta.date_suffix.month') %>',
+    },
+  };
+
+  // required plugins (only load if needs)
+  stellar.plugins = {
+    jQuery: '<%- url_for(theme.plugins.jquery || "https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js") %>',
+    issuesjs: '<%- url_for(theme.plugins.issuesjs || "/js/issues.js") %>',
+  };
+
+  // optional plugins
+  if ('<%- theme.plugins.lazyload.enable %>' == 'true') {
+    stellar.plugins.lazyload = Object.assign(<%- JSON.stringify(theme.plugins.lazyload) %>);
+  }
+  if ('<%- theme.plugins.swiper.enable %>' == 'true') {
+    stellar.plugins.swiper = Object.assign(<%- JSON.stringify(theme.plugins.swiper) %>);
+  }
+  if ('<%- theme.plugins.scrollreveal.enable %>' == 'true') {
+    stellar.plugins.scrollreveal = Object.assign(<%- JSON.stringify(theme.plugins.scrollreveal) %>);
+  }
+  if ('<%- theme.plugins.preload.enable %>' == 'true') {
+    stellar.plugins.preload = Object.assign(<%- JSON.stringify(theme.plugins.preload) %>);
+  }
+</script>
+
 <!-- required -->
-<%- js({src: theme.plugins.jquery || 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js'}) %>
 <% if (theme.stellar.cdn_js) { %>
   <%- js({src: theme.stellar.cdn_js, async: true}) %>
 <% } else { %>
-  <%- js({src: 'js/main.js', async: true}) %>
+  <%- js({src: '/js/main.js', async: true}) %>
 <% } %>
 
-
-
 <!-- optional -->
-<%- partial('lazyload') %>
-<%- partial('preload') %>
-<%- partial('swiper') %>
-
-<%- partial('scrollreveal') %>
-
-
 <%- partial('../plugins/comments/script') %>
 
 <!-- inject -->
@@ -24,7 +47,3 @@
     <%- js %>
   <% }) %>
 <% } %>
-
-
-<!-- lazyload scripts -->
-<%- partial('issues') %>

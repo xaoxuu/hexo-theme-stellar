@@ -22,6 +22,14 @@ meta:
   comment_title: 快來參與討論吧
   back_to_top: 回到頂部
   more: '更多%s'
+  created: 發表於
+  updated: 更新於
+  date_suffix:
+    just: 剛剛
+    min: 分鐘前
+    hour: 小時前
+    day: 天前
+    month: 個月前
 
 footer:
   license: '本網誌所有文章除特別聲明外，均採用 %s 許可協議。轉載請註明出處！'

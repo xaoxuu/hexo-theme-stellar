@@ -15,8 +15,8 @@
             }) %>
       <% } %>
     </div>
-    <div>
-      <time><%- date(page.date, config.date_format) %></time>
+    <div id='post-meta'>
+      <%- __('meta.created') %>&nbsp;<time datetime='<%- date_xml(page.date) %>'><%- date(page.date, config.date_format) %></time>
     </div>
   <% } else if (page.layout == 'wiki') { %>
     <div>
@@ -35,6 +35,9 @@
         <span class="sep"></span>
         <a class='cap breadcrumb' href='<%- url_for(p.path) %>'><%- page.wiki %></a>
       <% }); %>
+    </div>
+    <div id='post-meta'>
+      <%- __('meta.updated') %>&nbsp;<time datetime='<%- date_xml(page.updated) %>'><%- date(page.updated, config.date_format) %></time>
     </div>
   <% } else { %>
       <div>

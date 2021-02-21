@@ -22,6 +22,14 @@ meta:
   comment_title: 快来参与讨论吧
   back_to_top: 回到顶部
   more: '更多%s'
+  created: 发布于
+  updated: 更新于
+  date_suffix:
+    just: 刚刚
+    min: 分钟前
+    hour: 小时前
+    day: 天前
+    month: 个月前
 
 footer:
   license: '本博客所有文章除特别声明外，均采用 %s 许可协议。转载请注明出处！'
