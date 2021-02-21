@@ -17,11 +17,6 @@ function generate_robots() {
   }
   if (page.robots) {
     return '<meta name="robots" content="' + page.robots + '">';
-  } else {
-    // default rule
-    if (['post', 'wiki', 'index'].includes(page.layout) == false) {
-      return '<meta name="robots" content="noindex,nofollow">';
-    }
   }
 }
 function og_args() {

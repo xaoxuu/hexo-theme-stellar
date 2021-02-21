@@ -1,3 +1,14 @@
+<%
+if (page.utterances == undefined) {
+  page.utterances = theme.comments.utterances;
+} else {
+  for (let key of Object.keys(theme.comments.utterances)) {
+    if (page.utterances[key] == undefined) {
+      page.utterances[key] = theme.comments.utterances[key];
+    }
+  }
+}
+%>
 <script>
   function pjax_utterances(){
     if(!document.getElementById("utterances"))return;
@@ -11,16 +22,16 @@
         } catch (error) {}
         var script = document.createElement('script');
         script.setAttribute('src','https://utteranc.es/client.js');
-        script.setAttribute('repo','<%- theme.comments.utterances.repo %>');
-        let issuenumber = '<%- theme.comments.utterances['issue-number'] || page.comment_id %>';
+        script.setAttribute('repo','<%- page.utterances.repo %>');
+        let issuenumber = '<%- page.utterances['issue-number'] || page.comment_id %>';
         if (issuenumber) {
           script.setAttribute('issue-term', issuenumber);
         } else {
-          script.setAttribute('issue-term', '<%- theme.comments.utterances['issue-term'] %>');
+          script.setAttribute('issue-term', '<%- page.utterances['issue-term'] %>');
         }
-        script.setAttribute('theme', '<%- page.dark ? theme.comments.utterances.theme.dark : theme.comments.utterances.theme.light %>' );
-        script.setAttribute('label','<%- theme.comments.utterances.label %>');
-        script.setAttribute('crossorigin','<%- theme.comments.utterances.crossorigin %>');
+        script.setAttribute('theme', '<%- page.dark ? page.utterances.theme.dark : page.utterances.theme.light %>' );
+        script.setAttribute('label','<%- page.utterances.label %>');
+        script.setAttribute('crossorigin','<%- page.utterances.crossorigin %>');
         HEAD.appendChild(script);
        }, 200)
     });
