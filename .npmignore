@@ -1,3 +1,4 @@
 .github/
 publish.sh
 node_modules
+utterances.json

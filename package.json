@@ -8,17 +8,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xaoxuu/hexo-theme-stellar.git"
+    "url": "https://github.com/xaoxuu/hexo-theme-stellar.git"
   },
   "keywords": [
     "hexo",
     "theme",
     "stellar"
   ],
-  "author": "xaoxuu (https://github.com/xaoxuu/)",
+  "author": "[@xaoxuu](https://github.com/xaoxuu/)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/xaoxuu/hexo-theme-stellar/issues/"
+  },
+  "dependencies": {
+    "hexo-renderer-ejs": "^1.0.0",
+    "hexo-renderer-stylus": "^2.0.1"
   },
   "homepage": "https://xaoxuu.com/wiki/stellar/",
   "devDependencies": {
