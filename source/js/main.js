@@ -98,7 +98,7 @@ const util = {
 
   // 从 butterfly 和 volantis 获得灵感
   loadScript: (src, opt) => new Promise((resolve, reject) => {
-    const script = document.createElement('script')
+    var script = document.createElement('script')
     script.src = src
     if (opt) {
       for (let key of Object.keys(opt)) {
@@ -284,8 +284,8 @@ if (stellar.plugins.swiper) {
 if (stellar.plugins.preload) {
   if (stellar.plugins.preload.service == 'instant_page') {
     util.loadScript(stellar.plugins.preload.instant_page, {
-      defer:true,
-      type:'module',
+      defer: true,
+      type: 'module',
       integrity: 'sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1'
     })
   } else if (stellar.plugins.preload.service == 'flying_pages') {

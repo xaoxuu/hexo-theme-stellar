@@ -33,8 +33,8 @@ meta:
 
 footer:
   license: '本網誌所有文章除特別聲明外，均採用 %s 許可協議。轉載請註明出處！'
-  info_not_open_source: '本站由 %s 創建，使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 作為主題。'
-  info_open_source: '本站由 %s 創建，使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 作為主題，您可以在 [%s](%s) 找到本站源碼。'
+  info_not_open_source: '本站由 %s 創建，使用 %s 作為主題。'
+  info_open_source: '本站由 %s 創建，使用 %s 作為主題，您可以在 %s 找到本站源碼。'
 
 page:
   error:

@@ -8,9 +8,23 @@ if (page.utterances == undefined) {
     }
   }
 }
+if (page.comment_id) {
+  page.utterances['issue-term'] = page.comment_id;
+}
+if (theme.comments.utterances.theme) {
+  if (page.dark) {
+    page.utterances.theme = theme.comments.utterances.theme.dark;
+  } else {
+    page.utterances.theme = theme.comments.utterances.theme.light;
+  }
+}
 %>
 <script>
-  function pjax_utterances(){
+  stellar.comments = {
+    service: 'utterances',
+    utterances: Object.assign(<%- JSON.stringify(page.utterances) %>),
+  }
+  function utterances(){
     if(!document.getElementById("utterances"))return;
     setTimeout(function() {
       var checkUtterances = setInterval(function () {
@@ -21,20 +35,16 @@ if (page.utterances == undefined) {
           HEAD.innerHTML="";
         } catch (error) {}
         var script = document.createElement('script');
-        script.setAttribute('src','https://utteranc.es/client.js');
-        script.setAttribute('repo','<%- page.utterances.repo %>');
-        let issuenumber = '<%- page.utterances['issue-number'] || page.comment_id %>';
-        if (issuenumber) {
-          script.setAttribute('issue-term', issuenumber);
-        } else {
-          script.setAttribute('issue-term', '<%- page.utterances['issue-term'] %>');
+        const keys = ['repo', 'issue-term', 'theme', 'label', 'crossorigin'];
+        script.src = 'https://utteranc.es/client.js';
+        for (let key of Object.keys(stellar.comments.utterances)) {
+          if (keys.includes(key) && stellar.comments.utterances[key]) {
+            script.setAttribute(key, stellar.comments.utterances[key]);
+          }
         }
-        script.setAttribute('theme', '<%- page.dark ? page.utterances.theme.dark : page.utterances.theme.light %>' );
-        script.setAttribute('label','<%- page.utterances.label %>');
-        script.setAttribute('crossorigin','<%- page.utterances.crossorigin %>');
         HEAD.appendChild(script);
        }, 200)
     });
   }
-  pjax_utterances();
+  utterances();
 </script>
