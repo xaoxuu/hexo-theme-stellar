@@ -264,14 +264,9 @@ if (stellar.plugins.swiper) {
         slidesPerView: 'auto',
         spaceBetween: 8,
         centeredSlides: true,
-        zoom: true,
         pagination: {
           el: '.swiper-pagination',
           clickable: true,
-        },
-        autoplay: {
-          delay: 5000,
-          disableOnInteraction: false,
         },
         navigation: {
           nextEl: '.swiper-button-next',
