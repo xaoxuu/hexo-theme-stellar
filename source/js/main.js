@@ -248,7 +248,9 @@ if (stellar.plugins.lazyload) {
 if (stellar.plugins.issuesjs) {
   const issues_api = document.getElementById('issues-api');
   if (issues_api != undefined) {
-    util.loadScript(stellar.plugins.issuesjs, {defer:true})
+    util.jQuery( () => {
+      util.loadScript(stellar.plugins.issuesjs, {defer:true})
+    })
   }
 }
 
