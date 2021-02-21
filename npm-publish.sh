@@ -14,9 +14,14 @@ VERSION=$1
 
 # 替换版本号
 function prepare() {
-  text="'"${VERSION}"'"" # This is theme's version."
+  text="'"${VERSION}"'"
   sed -i "" "s/^  version:\([^\"]\{1,\}\)/  version: ${text}/g" '_config.yml'
   sed -i "" "s/^  \"version\":\([^,]\{1,\}\)/  \"version\": \"${VERSION}\"/g" 'package.json'
+  main=${VERSION%%.*}
+  sub=${VERSION#*.}
+  sub=${sub%%.*}
+  jsdelivr=$main'.'$sub
+  sed -i "" "s/\(cdn.jsdelivr.net\/npm\/hexo-theme-stellar@[^/]\{1,\}\)/cdn.jsdelivr.net\/npm\/hexo-theme-stellar@${jsdelivr}/g" '_config.yml'
 }
 
 # 提交
@@ -53,4 +58,4 @@ do
   esac
 done
 
-prepare && commit
+prepare #&& commit
