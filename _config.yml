@@ -1,11 +1,10 @@
 ######## Stellar info ########
 stellar:
-  version: '1.0.0-rc.1'
+  version: '1.0.0-rc.2'
   homepage: 'https://xaoxuu.com/wiki/stellar/'
   repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
-  # The cdn version needs to be consistent with the stellar version
-  cdn_css: # 'https://cdn.jsdelivr.net/npm/hexo-theme-stellar@1.0/source/css/main.min.css'
-  cdn_js: # 'https://cdn.jsdelivr.net/npm/hexo-theme-stellar@1.0/source/js/main.min.js'
+  cdn_css: # Use cdn links instead of /css/main.css
+  cdn_js: # Use cdn links instead of /js/main.js
 
 
 ######## head tags ########
@@ -66,13 +65,7 @@ article:
     enable: false
     max_count: 5
     placeholder_img: https://7.dusays.com/2021/02/20/76b86c0226ffd.svg
-  # 分享文章
-  share:
-    qq: https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qq.png
-    qzone: https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/qzone.png
-    weibo: https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/weibo.png
-    # 需要安装插件  npm i hexo-helper-qrcode
-    wechat: https://cdn.jsdelivr.net/gh/volantis-x/cdn-org/logo/128/wechat.png
+
 
 
 ######## Comments ########
@@ -110,11 +103,11 @@ footer:
 tag_plugins:
   # {% note text %}
   note:
-    default_color: ''
+    default_color: '' # white, dark, red, orange, yellow, green, cyan, blue, purple
   # {% checkbox %}
   checkbox:
     interactive: false # enable interactive for user
-  # {% link title, url, img %}
+  # {% link url title [img:src] [description] %}
   link:
     default_img: https://7.dusays.com/2021/02/20/8f277b4ee0ecd.svg
 

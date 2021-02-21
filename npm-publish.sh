@@ -37,10 +37,13 @@ function commit() {
   printf "\n"
   git commit -m "${msg}"
 
+  git checkout npm
+  git rebase main
+
   printf "\n\n> \033[32m%s\033[0m" 'git push origin'
   printf "\n"
-  git push origin
-
+  git push origin main
+  git push origin npm
   # done
   printf "\n\n> \033[32m%s\033[0m\n" 'Congratulations!'
 }
@@ -58,4 +61,4 @@ do
   esac
 done
 
-prepare #&& commit
+prepare && commit
