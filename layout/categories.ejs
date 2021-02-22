@@ -10,7 +10,7 @@ if (page.menu_id == undefined) {
   <%- partial('_partial/main/navbar/list_post') %>
   <div class='post-list'>
     <div class='list-title'><%- __('page.categories', site.categories.length) %></div>
-    <article class='post-card reveal' id='cats'>
+    <article class='post-card<%- scrollreveal() %>' id='cats'>
       <% site.categories.sort('path').each(function(category){ %>
         <div>
           <a class="<%= category.parent ? 'cat child' : 'cat'%>" href="<%= url_for(category.path) %>">

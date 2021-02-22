@@ -11,7 +11,7 @@ function layoutWikiCover() {
     cover = ['logo', 'title', 'description'];
   }
   var el = '';
-  el += '<div class="l_cover reveal">';
+  el += '<div class="l_cover' + scrollreveal() + '">';
   el += '<article class="cover-wrap md">';
   if (page.logo && cover.includes('logo')) {
     el += '<div class="logo">';

@@ -1,7 +1,7 @@
 /**
  * image.js v1 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
- * 
+ *
  * {% image src [alt] [width:400px] [bg:#eee] [download:true/false/url] %}
  */
 
@@ -17,9 +17,6 @@ hexo.extend.tag.register('image', function(args) {
   }
   if (args.height) {
     style += 'height:' + args.height + ';';
-  }
-  if (args.padding) {
-    style += 'padding:' + args.padding + ';';
   }
   function img(src, alt, style) {
     let img = '';
@@ -39,8 +36,15 @@ hexo.extend.tag.register('image', function(args) {
   el += '<div class="tag-plugin img-wrap">';
   // bg
   el += '<div class="img-bg"';
-  if (args.bg && args.bg.length > 0) {
-    el += ' style="background:' + args.bg + '"';
+  if (args.bg || args.padding) {
+    el += ' style="';
+    if (args.bg && args.bg.length > 0) {
+      el += 'background:' + args.bg + ';';
+    }
+    if (args.padding) {
+      el += 'padding:' + args.padding + ';';
+    }
+    el += '"';
   }
   el += '>';
   el += img(args.src, args.alt, style);

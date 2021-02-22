@@ -5,11 +5,19 @@ if (page.menu_id == undefined) {
 if (page.header == undefined) {
   page.header = false;
 }
+function layoutTitle() {
+  const title = page.h1 || page.title;
+  if (title && title.length > 0) {
+    return '<h1 class="article-title"><span>' + title + '</span></h1>';
+  } else {
+    return '';
+  }
+}
 %>
 <% let post = page; %>
 <%- partial('_partial/main/navbar/breadcrumb') %>
-<article class='content md <%- post.layout %> reveal'>
-<h1 class='article-title'><span><%- post.h1 || post.title %></span></h1>
+<article class='content md <%- post.layout %><%- scrollreveal() %>'>
+<%- layoutTitle() %>
 <%- post.content %>
 </article>
 <%- partial('_partial/main/article/references') %>

@@ -8,6 +8,14 @@ if (page.layout == undefined) {
 if (page.title == undefined) {
   page.title = 'Wiki';
 }
+function layoutTitle() {
+  const title = page.h1 || page.title;
+  if (title && title.length > 0) {
+    return '<h1 class="article-title"><span>' + title + '</span></h1>';
+  } else {
+    return '';
+  }
+}
 %>
 <% if (page.layout == 'index') { %>
   <%- partial('index') %>
@@ -18,10 +26,11 @@ if (page.title == undefined) {
   }
   %>
   <%- partial('_partial/main/navbar/breadcrumb') %>
-  <article class='content md <%- page.layout %>'>
-  <h1 class='article-title'><span><%- page.h1 || page.title %></span></h1>
+  <article class='content md <%- page.layout %><%- scrollreveal() %>'>
+  <%- layoutTitle() %>
   <%- page.content %>
   </article>
+  <%- partial('_partial/main/article/references') %>
   <%- partial('_partial/main/article/read_next') %>
   <%- partial('_partial/plugins/comments/layout') %>
 <% } %>

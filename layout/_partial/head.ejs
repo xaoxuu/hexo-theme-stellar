@@ -1,6 +1,8 @@
 <%
 function generate_title() {
-  if (page.seo_title || page.title || page.wiki || page.layout) {
+  if (page.layout == 'wiki' && page.wiki && (page.title || page.seo_title)) {
+    return page.wiki + __('symbol.colon') + (page.seo_title || page.title) + ' - ' + config.title;
+  } else if (page.seo_title || page.title || page.wiki || page.layout) {
     return (page.seo_title || page.title || page.wiki || page.layout) + ' - ' + config.title;
   } else if (page.category) {
     return __('btn.category') + __('symbol.colon') + page.category + ' - ' + config.title;

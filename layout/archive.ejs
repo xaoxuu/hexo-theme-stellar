@@ -19,7 +19,7 @@ if (page.menu_id == undefined) {
   	<% }); %>
     <div class='list-title'><%- __('page.archives', years.length, site.posts.length) %></div>
   	<% years.forEach((year, i) => { %>
-  		<article class='post-card reveal' id='archive'>
+  		<article class='post-card<%- scrollreveal() %>' id='archive'>
   			<div class='card-title'><%= year %></div>
   			<% site.posts.sort('date', -1).filter(function (post) { %>
   				<% post.year = date(post.date, 'YYYY'); %>

@@ -15,7 +15,7 @@ if (page.title && page.wiki) {
   <% if (page.posts) { %>
     <div class='post-list post'>
       <% page.posts.each(function(post){ %>
-        <a class='post-card post reveal' href='<%- url_for(post.link || post.path) %>'>
+        <a class='post-card post<%- scrollreveal() %>' href='<%- url_for(post.link || post.path) %>'>
           <article class='excerpt md'>
             <%- partial('_partial/main/post_list/post_card', {post: post}) %>
           </article>
@@ -26,7 +26,7 @@ if (page.title && page.wiki) {
   <% } %>
 <% } else if (page.menu_id == 'wiki') { %>
   <% function outputExcerpt(post) { %>
-    <a class='post-card wiki reveal' href='<%- url_for(post.link || post.path) %>'>
+    <a class='post-card wiki<%- scrollreveal() %>' href='<%- url_for(post.link || post.path) %>'>
       <article class='excerpt md'>
         <%- partial('_partial/main/post_list/wiki_card', {post: post}) %>
       </article>

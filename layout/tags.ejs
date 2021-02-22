@@ -10,7 +10,7 @@ if (page.menu_id == undefined) {
   <%- partial('_partial/main/navbar/list_post') %>
   <div class='post-list'>
     <div class='list-title'><%- __('page.tags', site.tags.length) %></div>
-    <article class='post-card reveal' id='tags'>
+    <article class='post-card<%- scrollreveal() %>' id='tags'>
       <% site.tags.sort('length', -1).each(function(tag){ %>
         <a class='tag' href="<%= url_for(tag.path) %>">
           <span class='name'><%= tag.name %></span>
