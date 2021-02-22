@@ -22,7 +22,11 @@
     <div>
       <a class='cap breadcrumb' href='/'><%- __('btn.home') %></a>
       <span class="sep"></span>
-      <a class='cap breadcrumb' href='/wiki/'><%- __('btn.wiki') %></a>
+      <% if (page.menu_id && theme.sidebar.menu[page.menu_id] && theme.sidebar.menu[page.menu_id].url) { %>
+        <a class='cap breadcrumb' href='<%- url_for(theme.sidebar.menu[page.menu_id].url) %>'><%- __(theme.sidebar.menu[page.menu_id].title) %></a>
+      <% } else { %>
+        <a class='cap breadcrumb' href='/wiki/'><%- __('btn.wiki') %></a>
+      <% } %>
       <% site.pages.filter(function (p) { %>
         <% return p.layout == 'index' && p.title && p.wiki && p.wiki.includes(page.wiki) %>
       <% }).limit(1).each(function(p) { %>
