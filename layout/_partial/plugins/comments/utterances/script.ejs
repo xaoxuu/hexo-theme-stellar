@@ -11,7 +11,7 @@
         } catch (error) {}
         var script = document.createElement('script');
         script.src = 'https://utteranc.es/client.js';
-        const keys = ['repo', 'issue-term', 'theme', 'label', 'crossorigin'];
+        const keys = ['repo', 'issue-term', 'issue-number', 'theme', 'label', 'crossorigin'];
         keys.forEach((key, i) => {
           if (el.attributes[key] && el.attributes[key].value) {
             script.setAttribute(key, el.attributes[key].value);

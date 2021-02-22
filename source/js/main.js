@@ -264,6 +264,7 @@ if (stellar.plugins.swiper) {
         slidesPerView: 'auto',
         spaceBetween: 8,
         centeredSlides: true,
+        loop: true,
         pagination: {
           el: '.swiper-pagination',
           clickable: true,

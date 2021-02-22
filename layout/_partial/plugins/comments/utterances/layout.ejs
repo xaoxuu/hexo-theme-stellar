@@ -11,6 +11,9 @@ function layoutDiv() {
   } else if (utterances.theme.light) {
     utterances.theme = utterances.theme.light;
   }
+  if (utterances['issue-number']) {
+    utterances['issue-term'] = null;
+  }
   for (let key of Object.keys(utterances)) {
     if (utterances[key]) {
       el += ' ' + key + '="' + utterances[key] + '"';

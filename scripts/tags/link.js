@@ -1,7 +1,7 @@
 /**
  * link.js v1 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
- * 
+ *
  * {% link url title [description] [img:src] %}
  */
 
@@ -10,7 +10,7 @@
 const { ArgsMap } = require('./utils');
 
 hexo.extend.tag.register('link', function(args) {
-  args = ArgsMap(args, ['src'], ['url', 'title', 'description']);
+  args = ArgsMap(args, ['img'], ['url', 'title', 'description']);
   var el = '';
   el += '<div class="tag-plugin tag link">';
   el += '<a class="link-card" title="' + args.title + '" href="' + args.url + '">';

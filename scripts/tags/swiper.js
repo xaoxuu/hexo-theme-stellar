@@ -19,6 +19,7 @@ hexo.extend.tag.register('swiper', function(args, content) {
     imgs = imgs.match(/<img(.*?)src="(.*?)"(.*?)>/gi);
     if (imgs && imgs.length > 0) {
       imgs.forEach((img, i) => {
+        img = img.replace('<img src', '<img no-lazy src');
         el += '<div class="swiper-slide">' + img + '</div>';
       });
     }
