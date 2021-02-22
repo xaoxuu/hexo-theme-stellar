@@ -24,8 +24,12 @@ hexo.extend.tag.register('friends', function(args) {
   el += '">';
   function groupHeader(group) {
     var header = '<div class="group-header">';
-    header += '<p class="title">' + group.title + '</p>';
-    header += '<p class="description">' + group.description + '</p>';
+    if (!!group.title) {
+      header += '<p class="title">' + group.title + '</p>';
+    }
+    if (!!group.description) {
+      header += '<p class="description">' + group.description + '</p>';
+    }
     header += '</div>';
     return header;
   }
