@@ -13,11 +13,11 @@
   display: flex
   align-items: center
   color: var(--text-p0)
-  a  
+  a
     color: inherit
     display: flex
     align-items: center
-  .img
+  .avatar
     width: 40px
     height: 40px
     flex-shrink: 0
@@ -25,6 +25,9 @@
     border: 2px solid transparent
     overflow: hidden
     margin-right: 1rem
+    trans1 background
+    &:hover
+      background: $color-hover
     img
       object-fit: cover
   .title
@@ -61,6 +64,10 @@ nav.menu
     &.active, &:hover
       color: var(--text-p1)
       background: var(--card)
+
+.l_left .menu a.nav-item
+  flex-grow: 1
+  text-align: center
 
 .l_left .widgets
   margin: $gap 0

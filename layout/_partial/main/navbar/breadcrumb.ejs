@@ -1,7 +1,7 @@
 <% if (page.breadcrumb != false) { %>
   <div class='breadcrumb-navigation'>
   <% if (page.layout == 'post') { %>
-    <div class='cap'>
+    <div id='breadcrumb'>
       <a class='cap breadcrumb' href='/'><%- __('btn.home') %></a>
       <span class="sep"></span>
       <a class='cap breadcrumb' href='/'><%- __('btn.blog') %></a>
@@ -19,7 +19,7 @@
       <%- __('meta.created') %>&nbsp;<time datetime='<%- date_xml(page.date) %>'><%- date(page.date, config.date_format) %></time>
     </div>
   <% } else if (page.layout == 'wiki') { %>
-    <div>
+    <div id='breadcrumb'>
       <a class='cap breadcrumb' href='/'><%- __('btn.home') %></a>
       <span class="sep"></span>
       <% if (page.menu_id && theme.sidebar.menu[page.menu_id] && theme.sidebar.menu[page.menu_id].url) { %>
@@ -44,7 +44,7 @@
       <%- __('meta.updated') %>&nbsp;<time datetime='<%- date_xml(page.updated) %>'><%- date(page.updated, config.date_format) %></time>
     </div>
   <% } else { %>
-      <div>
+      <div id='breadcrumb'>
         <a class='cap breadcrumb' href='/'><%- __('btn.home') %></a>
         <span class="sep"></span>
         <a class='cap breadcrumb' href='<%- url_for(page.path) %>'><%- page.title || page.seo_title %></a>

@@ -47,9 +47,13 @@ nav.cap
   font-size: $fs-footnote
   color: var(--text-p3)
   font-weight: 500
-  a.cap:hover
-    color: $color-cat-hover
-  div+div
+  div#breadcrumb
+    display: flex
+    align-items: center
+    flex-direction: row
+    a.cap:hover
+      color: $color-cat-hover
+  div#post-meta
     margin-top: 2px
 
 

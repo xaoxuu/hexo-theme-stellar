@@ -12,7 +12,7 @@ function layoutMainMenu() {
       el += ' active';
     }
     el += '" href="' + url_for(item.url) + '">';
-    el += '<span>' + __(item.title) + '</span>';
+    el += __(item.title);
     el += '</a>';
   }
   el += '</nav>';
