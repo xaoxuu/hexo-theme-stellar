@@ -20,6 +20,7 @@ function layoutDiv() {
         return false;
       }
     }).sort('order');
+    page.order = page.order || 0;
     wikis.forEach((p, i) => {
       if (p.order < page.order) {
         if (prev == undefined || p.order > prev.order) {
@@ -42,7 +43,7 @@ function layoutDiv() {
     if (next) {
       wrapper += '<div class="post-title unread">';
       wrapper += '<a href="' + url_for(next.path) + '">';
-      wrapper += next.title || next.seo_title;
+      wrapper += next.title || next.seo_title || next.wiki;
       wrapper += '</a>';
       wrapper += '</div>';
     }
@@ -50,7 +51,7 @@ function layoutDiv() {
       wrapper += '<div class="post-title read">';
       wrapper += '<a href="' + url_for(prev.path) + '">';
       wrapper += title_prev + __('symbol.colon');
-      wrapper += prev.title || prev.seo_title;
+      wrapper += prev.title || prev.seo_title || prev.wiki;
       wrapper += '</a>';
       wrapper += '</div>';
     }
