@@ -1,14 +1,20 @@
 <% if (page.breadcrumb != false) { %>
   <div class='breadcrumb-navigation'>
   <% if (page.layout == 'post') { %>
-    <div id='breadcrumb'>
+    <%
+    var firstCat = '';
+    if (page.categories && page.categories.length > 0) {
+      firstCat = page.categories.data[0].name;
+    }
+    %>
+    <div id='breadcrumb'<%- category_color(firstCat) %>>
       <a class='cap breadcrumb' href='/'><%- __('btn.home') %></a>
       <span class="sep"></span>
       <a class='cap breadcrumb' href='/'><%- __('btn.blog') %></a>
       <% if (page.layout == 'post' && page.categories && page.categories.length > 0) { %>
         <span class="sep"></span>
         <%- list_categories(page.categories, {
-            class: 'cap breadcrumb cat',
+            class: 'cap breadcrumb',
             show_count: false,
             separator: ' <span class="sep"></span> ',
             style: 'none'
@@ -19,7 +25,15 @@
       <%- __('meta.created') %>&nbsp;<time datetime='<%- date_xml(page.date) %>'><%- date(page.date, config.date_format) %></time>
     </div>
   <% } else if (page.layout == 'wiki') { %>
-    <div id='breadcrumb'>
+    <%
+    var catPage = '';
+    site.pages.filter(function (p) {
+      return p.layout == 'index' && p.title && p.wiki && p.wiki.includes(page.wiki)
+    }).limit(1).each(function(p) {
+      catPage = p;
+    });
+    %>
+    <div id='breadcrumb'<%- category_color(catPage.title) %>>
       <a class='cap breadcrumb' href='/'><%- __('btn.home') %></a>
       <span class="sep"></span>
       <% if (page.menu_id && theme.sidebar.menu[page.menu_id] && theme.sidebar.menu[page.menu_id].url) { %>
@@ -27,12 +41,10 @@
       <% } else { %>
         <a class='cap breadcrumb' href='<%- url_for(config.wiki_dir || "/wiki/") %>'><%- __('btn.wiki') %></a>
       <% } %>
-      <% site.pages.filter(function (p) { %>
-        <% return p.layout == 'index' && p.title && p.wiki && p.wiki.includes(page.wiki) %>
-      <% }).limit(1).each(function(p) { %>
+      <% if (catPage && catPage.title && catPage.path) { %>
         <span class="sep"></span>
-        <a class='cap breadcrumb' href='<%- url_for(p.path) %>'><%- p.title %></a>
-      <% }); %>
+        <a class='cap breadcrumb' href='<%- url_for(catPage.path) %>'><%- catPage.title %></a>
+      <% } %>
       <% site.pages.filter(function (p) { %>
         <% return p.layout == 'wiki' && p.wiki == page.wiki && p.description %>
       <% }).limit(1).each(function(p) { %>

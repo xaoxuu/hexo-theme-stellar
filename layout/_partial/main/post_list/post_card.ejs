@@ -44,10 +44,11 @@ if (post.categories && post.categories.length > 0) {
       }
       function layoutCats() {
         if (cats.length > 0) {
-          var ret = '<span class="cap breadcrumb">';
-          ret += cats.shift()
-          ret += '</span>';
-          return ret;
+          let cat = cats.shift();
+          var el = '<span class="cap breadcrumb"' + category_color(cat) + '>';
+          el += cat;
+          el += '</span>';
+          return el;
         } else {
           return '';
         }

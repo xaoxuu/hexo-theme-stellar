@@ -22,13 +22,19 @@
   </div>
 <% } %>
 <div class='excerpt'>
-  <div class='cap breadcrumb'>
-    <% site.pages.filter(function (p) { %>
-      <% return p.layout == 'index' && p.title && p.wiki && p.wiki.includes(post.wiki) %>
-    <% }).limit(1).each(function(p) { %>
-      <span><%- p.title %></span>
-    <% }); %>
-  </div>
+  <%
+  var cat = '';
+  site.pages.filter(function (p) {
+    return p.layout == 'index' && p.title && p.wiki && p.wiki.includes(post.wiki)
+  }).limit(1).each(function(p) {
+    cat = p.title;
+  });
+  %>
+  <% if (cat) { %>
+    <div class='cap breadcrumb'<%- category_color(cat) %>>
+      <span><%- cat %></span>
+    </div>
+  <% } %>
   <h2 class='post-title'><%- post.wiki || post.title %></h2>
   <% if (post.description) { %>
     <p><%- post.description %></p>

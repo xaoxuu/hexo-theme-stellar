@@ -59,6 +59,9 @@ sidebar:
 article:
   # 如果没有指定 excerpt 和 description，将自动取多长的内容作为文章摘要？
   auto_excerpt: 200
+  # 分类颜色
+  category_color:
+    '新闻稿': '#DA0F47'
   # 相关文章，需要安装插件 (for layout: post)
   # npm i hexo-related-popular-posts
   related_posts:

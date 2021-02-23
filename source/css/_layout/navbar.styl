@@ -19,12 +19,11 @@ nav.cap
     font-weight: 600
     white-space: nowrap
     trans1 background
-    &:hover
+    &.active,&:hover
       background: var(--hover-block)
       color: var(--text-p1)
-    &.active
-      font-weight: 700
-      color: inherit
+  a+a
+    margin-left: 4px
 
 .md .tag-plugin.navbar
   nav.cap
@@ -51,8 +50,15 @@ nav.cap
     display: flex
     align-items: center
     flex-direction: row
-    a.cap:hover
-      color: $color-cat-hover
+    &:not([style]) a
+      color: var(--text-p1)
+    &[style] a
+      color: inherit
+    span.sep
+      color: var(--text-p3)
+    // a.cap:hover
+    //   color: $color-cat-hover
+    //   text-decoration: underline
   div#post-meta
     margin-top: 2px
 

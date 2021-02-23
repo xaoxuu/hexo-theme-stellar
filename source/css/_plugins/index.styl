@@ -1,5 +1,12 @@
+// 通用插件
+@import "common/*"
+
 // 根据主题配置加载
 if hexo-config('plugins.swiper.enable')
   @import 'swiper'
 if hexo-config('plugins.scrollreveal.enable')
   @import 'scrollreveal'
+
+// 评论
+if hexo-config('comments.service') == 'utterances'
+  @import 'comments/utterances'
