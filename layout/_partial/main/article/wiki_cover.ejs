@@ -13,21 +13,12 @@ function layoutWikiCover() {
   var el = '';
   el += '<div class="l_cover' + scrollreveal() + '">';
   el += '<article class="cover-wrap md">';
-  if (page.logo && cover.includes('logo')) {
-    el += '<div class="logo">';
-    var height = '';
-    var src = '';
-    page.logo.split(' ').forEach(function(item) {
-      if (item.includes('px')) {
-        height = item;
-      } else {
-        src = item;
-      }
-    });
-    if (height.length > 0) {
-      el += '<img src="' + src + '" height="' + height + '">';
+  if (page.logo && page.logo.src && cover.includes('logo')) {
+    el += '<div class="preview">';
+    if (page.logo.large) {
+      el += '<img src="' + page.logo.src + '" height="' + page.logo.large + '">';
     } else {
-      el += '<img src="' + src + '">';
+      el += '<img src="' + page.logo.src + '">';
     }
     el += '</div>';
   }

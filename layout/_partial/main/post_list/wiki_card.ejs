@@ -1,44 +1,31 @@
-<% if (post.logo) { %>
-  <%
-  var arr = post.logo.split(' ');
-  var height = '';
-  var src = '';
-  arr.forEach(function(item) {
-    var px = item.match(/[0-9]*px/i);
-    if (px && px.length > 0) {
-      px = px[0];
-      height = px;
-    } else {
-      src = item;
+<%
+function layoutDiv() {
+  var el = '';
+  if (post.logo && post.logo.src) {
+    el += '<div class="preview">';
+    el += '<img src="' + post.logo.src + '" alt="logo"';
+    if (post.logo.small) {
+      el += ' height="' + post.logo.small + '"';
     }
-  });
-  %>
-  <div class='logo'>
-  <% if (height.length > 0) { %>
-    <img src='<%- src %>' alt='logo' height='<%- height %>'>
-  <% } else { %>
-    <img src='<%- src %>' alt='logo'>
-  <% } %>
-  </div>
-<% } %>
-<div class='excerpt'>
-  <%
+    el += '/>';
+    el += '</div>';
+  }
+  el += '<div class="excerpt">';
   var cat = '';
   site.pages.filter(function (p) {
     return p.layout == 'index' && p.title && p.wiki && p.wiki.includes(post.wiki)
   }).limit(1).each(function(p) {
     cat = p.title;
   });
-  %>
-  <% if (cat) { %>
-    <div class='cap breadcrumb'<%- category_color(cat) %>>
-      <span><%- cat %></span>
-    </div>
-  <% } %>
-  <h2 class='post-title'><%- post.wiki || post.title %></h2>
-  <% if (post.description) { %>
-    <p><%- post.description %></p>
-  <% } else if (post.excerpt) { %>
-    <%- strip_html(post.excerpt) %>
-  <% } %>
-</div>
+  if (cat) {
+    el += '<div class="cap breadcrumb"' + category_color(cat) + '>';
+    el += '<span>' + cat + '</span>';
+    el += '</div>';
+  }
+  el += '<h2 class="post-title">' + (post.wiki || post.title || post.seo_title) + '</h2>';
+  el += '<p>' + post.description + '</p>';
+  el += '</div>';
+  return el;
+}
+%>
+<%- layoutDiv() %>

@@ -35,6 +35,8 @@ sidebar:
       url: /about/
   # Sidebar widgets
   widgets:
+    # default layout in home/wiki/categories/tags/archives pages
+    layout: [welcome, recent]
     # Recent update
     recent:
       layout: recent

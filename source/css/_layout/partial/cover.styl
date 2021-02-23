@@ -9,12 +9,14 @@
 .l_cover .cover-wrap
   margin-bottom: 0
   max-width: 500px
-  .logo
+  .preview
     margin-bottom: 2rem
     img
       object-fit: contain
       max-height: 35vh
       max-width: 100%
+      @media screen and (max-width: 500px)
+        max-width: 60%
   .cover-title
     font-weight: 700
     font-size: 1.5rem

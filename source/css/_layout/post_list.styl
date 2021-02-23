@@ -29,7 +29,7 @@
       margin-left: 0.5rem
 .post-list .post-card:hover
   box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.04), 0 4px 16px 0px rgba(0, 0, 0, 0.04)
-  .logo img
+  .preview img
     transform: scale(1.1)
   .excerpt .readmore
     color: $color-link
@@ -85,9 +85,9 @@
   justify-content: center
 
 
-.post-list .post-card.wiki article .logo
+.post-list .post-card.wiki article .preview
   display: flex
-  width: 180px
+  width: 200px
   margin: 1rem
   align-items: center
   img
@@ -99,9 +99,10 @@
   flex: 1
   overflow: hidden
   word-wrap: break-word
-  .title
-    font-weight: 600
-    font-size: $fs-h3
+  .post-title
+    margin-top: 0.5rem
+    font-weight: 500
+    font-size: 1.75rem
   >p
     margin: 0.5rem 0
     font-size: $fs14
