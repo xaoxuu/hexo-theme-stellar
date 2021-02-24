@@ -36,6 +36,8 @@
     .name
       padding-top: 0.5em
 
+
+
 // style
 .friends-wrap.round .user-simple
   a
@@ -43,6 +45,12 @@
     trans1: background
     img
       border-radius: 64px
+      margin-top: 0.5rem
+      margin-bottom: 2rem
+    .name
+      position: absolute
+      height: 2rem
+      bottom: 0
     &:hover
       background: var(--hover-block)
 
@@ -56,6 +64,10 @@
       height: 96px
       border-radius: 0
     .name
-      padding: 0.5em
+      padding: 0 0.5em
+      height: 2rem
+      display: flex
+      justify-content: center
+      align-items: center
     &:hover
       box-shadow: $boxshadow-card-float

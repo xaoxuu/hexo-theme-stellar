@@ -21,10 +21,15 @@ div.related-posts-wrap
       display: flex
       flex-direction: column
       overflow: hidden
-      width: 360px
+      min-width: 280px
+      width: 40vw
+      max-width: 460px
       border: 1px solid var(--hover-block)
       .img
-        height: 180px
+        min-width: 100%
+        min-height: 140px
+        height: "calc(%s * 0.5)" % @width
+        max-height: 230px
         overflow: hidden
         img
           width: 100%
@@ -33,11 +38,9 @@ div.related-posts-wrap
           &:not(.lazyload)
             trans1: transform 1s
       @media screen and (max-width: $device-tablet)
-        width: 300px
+        width: 70vw
         .img
-          height: 150px
-      @media screen and (max-width: $device-mobile)
-        width: 300px
+          height: "calc(%s * 0.5)" % @width
       .title
         color: var(--text-p1)
         font-weight: 500
