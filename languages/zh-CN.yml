@@ -24,6 +24,8 @@ meta:
   more: '更多%s'
   created: 发布于
   updated: 更新于
+  license: 许可协议
+  share: 分享文章
   date_suffix:
     just: 刚刚
     min: 分钟前
@@ -32,7 +34,7 @@ meta:
     month: 个月前
 
 footer:
-  license: '本博客所有文章除特别声明外，均采用 %s 许可协议。转载请注明出处！'
+  license: '本博客所有文章除特别声明外，均采用 %s 许可协议，转载请注明出处。'
   info_not_open_source: '本站由 %s 创建，使用 %s 作为主题。'
   info_open_source: '本站由 %s 创建，使用 %s 作为主题，您可以在 %s 找到本站源码。'
 

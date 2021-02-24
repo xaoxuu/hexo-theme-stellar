@@ -24,6 +24,8 @@ meta:
   more: 'More %s'
   created: 'Posted on'
   updated: 'Updated on'
+  license: License
+  share: Share
   date_suffix:
     just: Just
     min: minutes ago

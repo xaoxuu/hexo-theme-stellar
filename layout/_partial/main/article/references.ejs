@@ -1,23 +1,73 @@
 <%
 function layoutDiv() {
+  let el = '';
+  el += '<div class="references-wrap">';
   if (page.references && page.references.length > 0) {
-    let wrapper = '';
-    wrapper += '<div class="references-wrap">';
-    wrapper += '<section class="header">';
-    wrapper += '<span>' + __('meta.references') + '</span>';
-    wrapper += '</section>';
-    wrapper += '<section class="body"><ul>';
+    el += '<section id="references">';
+    el += '<div class="header">';
+    el += '<span>' + __('meta.references') + '</span>';
+    el += '</div>';
+    el += '<div class="body"><ul>';
     page.references.forEach((item, i) => {
-      wrapper += '<li class="post-title">';
-      wrapper += '<a href="' + item.url + '">';
-      wrapper += item.title;
-      wrapper += '</a>';
-      wrapper += '</li>';
+      el += '<li class="post-title">';
+      el += '<a href="' + item.url + '">';
+      el += item.title;
+      el += '</a>';
+      el += '</li>';
     });
-    wrapper += '</ul></section>';
-    wrapper += '</div>';
-    return wrapper;
+    el += '</ul></div>';
+    el += '</section>';
   }
+
+  if (theme.article.license && page.license != false) {
+    el += '<section id="license">';
+    el += '<div class="header">';
+    el += '<span>' + __('meta.license') + '</span>';
+    el += '</div>';
+    el += '<div class="body">';
+    el += markdown(page.license || theme.article.license);
+    el += '</div>';
+    el += '</section>';
+  }
+
+  if (theme.article.share && page.share != false) {
+    el += '<section id="share">';
+    el += '<div class="header">';
+    el += '<span>' + __('meta.share') + '</span>';
+    el += '</div>';
+    el += '<div class="body social-wrap">';
+    theme.article.share.forEach((item, i) => {
+      if (['wechat', 'weibo', 'email', 'link'].includes(item)) {
+        el += '<a class="social share-item ' + item + '"';
+        if (item == 'wechat') {
+          el += ' href="#"';
+        } else if (item == 'weibo') {
+          el += ' href="#"';
+        } else if (item == 'email') {
+          el += ' href="#"';
+        } else if (item == 'link') {
+          el += ' href="#"';
+        }
+        el += '>';
+        if (item == 'wechat') {
+          el += '<img src="https://7.dusays.com/2021/02/24/b32ef3da1162a.svg"/>';
+        } else if (item == 'weibo') {
+          el += '<img src="https://7.dusays.com/2021/02/24/80c07e4dbb303.svg"/>';
+        } else if (item == 'email') {
+          el += '<img src="https://7.dusays.com/2021/02/24/a1b00e20f425d.svg"/>';
+        } else if (item == 'link') {
+          el += '<img src="https://7.dusays.com/2021/02/24/8411ed322ced6.svg"/>';
+        }
+        el += '</a>';
+      }
+    });
+    el += '</div>';
+    el += '</section>';
+  }
+
+
+  el += '</div>';
+  return el;
 }
 %>
 <%- layoutDiv(); %>

@@ -123,17 +123,20 @@ nav.menu
   margin-top: 0
   margin-bottom: 1rem
   line-height: 0
-  .social-wrap
-    display: grid
-    grid-gap: $gap * 0.25 $gap * 0.25
-    grid-template-columns: repeat(auto-fill, 32px)
-  a
+  
+
+.social-wrap
+  display: grid
+  grid-gap: $gap * 0.25 $gap * 0.25
+  grid-template-columns: repeat(auto-fill, 32px)
+  a.social
+    line-height: 0
     display: inline-block
-    background: var(--card)
     padding: 4px
     border-radius: 4px
     filter: grayscale(100%)
     overflow: hidden
+    background: var(--card)
     trans1: box-shadow
     &:hover
       color: $color-hover
