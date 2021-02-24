@@ -38,14 +38,13 @@ nav.cap
     align-items: center
     flex-direction: row
     &:not([style]) a
-      color: var(--text-p1)
+      color: $color-link
     &[style] a
       color: inherit
     span.sep
       color: var(--text-p3)
-    // a.cap:hover
-    //   color: $color-cat-hover
-    //   text-decoration: underline
+    a.cap:hover
+      color: $color-hover
   div#post-meta
     margin-top: 2px
 

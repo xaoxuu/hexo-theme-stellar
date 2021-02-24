@@ -70,7 +70,8 @@
       height: 240px
     @media screen and (max-width: $device-mobile-m)
       height: 200px
-    trans1: transform 1s
+    &:not(.lazyload)
+      trans1: transform 1s
 .post-list .post-card.post:hover
   .post-title
     color: $color-hover
@@ -92,7 +93,8 @@
   align-items: center
   img
     object-fit: contain
-    trans1 transform 0.75s
+  img:not(.lazyload)
+    trans1: transform 0.75s
 .post-list .post-card.wiki article .excerpt
   margin: 1rem
   min-width: 220px
