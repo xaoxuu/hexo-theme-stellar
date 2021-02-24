@@ -12,11 +12,9 @@
   cursor: pointer
   min-width 280px
   max-width: 100%
+  width: 320px
   box-shadow: $boxshadow-card
   transition: box-shadow
-  @media screen and (max-width: $device-mobile-l)
-    max-width: 100%
-    width: 100%
   border-radius: 8px
   &:hover
     box-shadow: $boxshadow-float, $boxshadow-card-float
@@ -26,23 +24,15 @@
   div.left,div.right
     pointer-events: none
   div.right
-    width: 54px
-    height: 54px
-    margin: 12px
+    width: 3rem
+    height: 3rem
+    margin: 0.75rem
     overflow: hidden
     flex-shrink: 0
-    position: relative
-    i
-      font-size: 32px
-      line-height: 48px
-      margin-left: 4px
     img
-      display: block
-      position: absolute
-      border-radius: $border-card / 4
-      top: 50%
-      left: 50%
-      transform: translate(-50%, -50%)
+      width: 100%
+      height: 100%
+      object-fit: cover
   div.left
     overflow: hidden
     margin-left: 16px
@@ -56,7 +46,7 @@
     font-size: $fs14
   span.url
     flex-shrink: 0
-    color: var(--text-p2)
+    color: var(--text-p3)
     font-size: $fs13
 
 .md .link-group

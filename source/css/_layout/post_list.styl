@@ -50,32 +50,33 @@
     trans1 color
   .excerpt
     font-size: $fs14
-  .post-cover-wrap
-    overflow: hidden
-    margin-left: 0 - 1.5 * $gap
-    margin-top: 0 - 1.5 * $gap
-    margin-bottom: 1.25 * $gap
-    width: "calc(100% + 3 * %s)" % $gap
   .post-cover
-    background-position: center
-    background-size: cover
-    height: 320px
-    @media screen and (max-width: 900px)
-      height: 280px
-    @media screen and (max-width: $device-tablet)
+    overflow: hidden
+    margin-left: -1rem
+    margin-top: -1rem
+    margin-right: -1rem
+    img
+      object-fit: cover
+      disable-select()
+      width: 100%
+      border-radius: 0
       height: 320px
-    @media screen and (max-width: $device-mobile)
-      height: 280px
-    @media screen and (max-width: $device-mobile-l)
-      height: 240px
-    @media screen and (max-width: $device-mobile-m)
-      height: 200px
-    &:not(.lazyload)
-      trans1: transform 1s
+      @media screen and (max-width: 900px)
+        height: 280px
+      @media screen and (max-width: $device-tablet)
+        height: 320px
+      @media screen and (max-width: $device-mobile)
+        height: 280px
+      @media screen and (max-width: $device-mobile-l)
+        height: 240px
+      @media screen and (max-width: $device-mobile-m)
+        height: 200px
+      &:not(.lazyload)
+        trans1: transform 1s
 .post-list .post-card.post:hover
   .post-title
     color: $color-hover
-  .post-cover
+  .post-cover img
     transform: scale(1.04)
 
 // wiki

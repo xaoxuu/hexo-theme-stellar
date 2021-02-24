@@ -5,16 +5,8 @@ if (post.categories && post.categories.length > 0) {
 }
 %>
 <% if (post.cover) { %>
-  <div class='post-cover-wrap'>
-    <% if (theme.plugins.lazyload && theme.plugins.lazyload.enable) { %>
-      <% if (theme.plugins.lazyload.loadingImg) { %>
-        <div class='post-cover lazyload placeholder' data-bg='<%- post.cover %>'></div>
-      <% } else { %>
-        <div class='post-cover lazyload' data-bg='<%- post.cover %>'></div>
-      <% } %>
-    <% } else { %>
-      <div class='post-cover' style='background-image:url(<%- post.cover %>)'></div>
-    <% } %>
+  <div class='post-cover'>
+    <img src='<%- post.cover %>'/>
   </div>
 <% } %>
 <h2 class="post-title">

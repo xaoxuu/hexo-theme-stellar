@@ -1,3 +1,9 @@
-a.ghcard
-  display: inline-block
+.tag-plugin.ghcard
   line-height: 0
+  a.ghcard
+    display: inline-block
+    img
+      border-radius: 5px
+      transition: box-shadow
+    &:hover img
+      box-shadow: $boxshadow-float, $boxshadow-card-float
