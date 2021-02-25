@@ -44,6 +44,9 @@ function commit() {
   printf "\n"
   git push origin main
   git push origin npm
+
+  npm publish
+
   git checkout main
   # done
   printf "\n\n> \033[32m%s\033[0m\n" 'Congratulations!'
