@@ -33,32 +33,32 @@ function layoutDiv() {
       }
     });
   }
-  let wrapper = '';
+  let el = '';
   if (prev || next) {
-    wrapper += '<div class="read-next-wrap">';
-    wrapper += '<section class="header cap cyan">';
-    wrapper += '<span>' + title + '</span>';
-    wrapper += '</section>';
-    wrapper += '<section class="body">';
+    el += '<div class="related-wrap" id="read-next">';
+    el += '<section class="header cap cyan">';
+    el += '<span>' + title + '</span>';
+    el += '</section>';
+    el += '<section class="body">';
     if (next) {
-      wrapper += '<div class="post-title unread">';
-      wrapper += '<a href="' + url_for(next.path) + '">';
-      wrapper += next.title || next.seo_title || next.wiki;
-      wrapper += '</a>';
-      wrapper += '</div>';
+      el += '<div class="post-title unread">';
+      el += '<a href="' + url_for(next.path) + '">';
+      el += next.title || next.seo_title || next.wiki;
+      el += '</a>';
+      el += '</div>';
     }
     if (prev) {
-      wrapper += '<div class="post-title read">';
-      wrapper += '<a href="' + url_for(prev.path) + '">';
-      wrapper += title_prev + __('symbol.colon');
-      wrapper += prev.title || prev.seo_title || prev.wiki;
-      wrapper += '</a>';
-      wrapper += '</div>';
+      el += '<div class="post-title read">';
+      el += '<a href="' + url_for(prev.path) + '">';
+      el += title_prev + __('symbol.colon');
+      el += prev.title || prev.seo_title || prev.wiki;
+      el += '</a>';
+      el += '</div>';
     }
-    wrapper += '</section>';
-    wrapper += '</div>';
+    el += '</section>';
+    el += '</div>';
   }
-  return wrapper;
+  return el;
 }
 %>
 <%- layoutDiv(); %>

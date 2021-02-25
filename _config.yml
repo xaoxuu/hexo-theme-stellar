@@ -26,7 +26,7 @@ sidebar:
   # Sidebar widgets
   widgets:
     # default layout in home/wiki/categories/tags/archives pages
-    layout: [welcome, recent]
+    default: [welcome, recent]
     # Recent update
     recent:
       layout: recent

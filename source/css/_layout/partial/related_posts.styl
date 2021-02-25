@@ -1,7 +1,4 @@
-div.related-posts-wrap
-  padding: $gap * 2 $gap
-  &:empty
-    display: none
+.related-wrap#related-posts
   .related-posts
     width: 100%
     display: flex
@@ -64,13 +61,3 @@ div.related-posts-wrap
           transform: scale(1.04)
     a+a
       margin-left: $gap
-
-
-// // iPad 竖屏
-// @media screen and (max-width: $device-tablet)
-//   section.related-posts-wrap
-//     .related-posts
-//       a
-//         min-width: 280px
-//         .img
-//           height: 120px

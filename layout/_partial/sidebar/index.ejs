@@ -6,7 +6,7 @@ if (page.sidebar == undefined) {
   } else if (page.layout == 'wiki' && page.content) {
     page.sidebar = ['toc', 'wiki_more'];
   } else {
-    page.sidebar = theme.sidebar.widgets.layout;
+    page.sidebar = theme.sidebar.widgets.default;
   }
 }
 function layoutFooterDiv() {

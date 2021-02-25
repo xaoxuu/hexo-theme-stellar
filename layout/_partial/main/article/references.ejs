@@ -4,7 +4,7 @@ function layoutDiv() {
     return '';
   }
   let el = '';
-  el += '<div class="references-wrap">';
+  el += '<div class="article-footer">';
   if (page.references && page.references.length > 0) {
     el += '<section id="references">';
     el += '<div class="header">';
@@ -14,7 +14,7 @@ function layoutDiv() {
     page.references.forEach((item, i) => {
       el += '<li class="post-title">';
       el += '<a href="' + item.url + '">';
-      el += item.title;
+      el += item.title || item.url;
       el += '</a>';
       el += '</li>';
     });

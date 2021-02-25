@@ -16,12 +16,12 @@ if (loadComment && page.layout == 'wiki' && page.wiki) {
 }
 %>
 <% if (loadComment) { %>
-  <article class='comments-wrap' id="comments">
+  <div class='related-wrap md' id="comments">
     <div class='cmt-title cap cyan'>
       <%- page.comment_title != undefined ? page.comment_title : __('meta.comment_title') %>
     </div>
     <div class='cmt-body <%- theme.comments.service %>'>
       <%- partial(theme.comments.service + '/layout') %>
     </div>
-  </article>
+  </div>
 <% } %>
