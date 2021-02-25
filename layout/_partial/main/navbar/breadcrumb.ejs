@@ -36,8 +36,8 @@
     <div id='breadcrumb'<%- category_color(catPage.title) %>>
       <a class='cap breadcrumb' href='/'><%- __('btn.home') %></a>
       <span class="sep"></span>
-      <% if (page.menu_id && theme.sidebar.menu[page.menu_id] && theme.sidebar.menu[page.menu_id].url) { %>
-        <a class='cap breadcrumb' href='<%- url_for(theme.sidebar.menu[page.menu_id].url) %>'><%- __(theme.sidebar.menu[page.menu_id].title) %></a>
+      <% if (page.menu_id && theme.sidebar.menu[page.menu_id] && md_link(theme.sidebar.menu[page.menu_id])) { %>
+        <a class='cap breadcrumb' href='<%- url_for(md_link(theme.sidebar.menu[page.menu_id])) %>'><%- __(md_text(theme.sidebar.menu[page.menu_id])) %></a>
       <% } else { %>
         <a class='cap breadcrumb' href='<%- url_for(config.wiki_dir || "/wiki/") %>'><%- __('btn.wiki') %></a>
       <% } %>

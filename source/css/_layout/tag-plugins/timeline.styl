@@ -29,15 +29,15 @@ div.timenode
   position: relative
   background: var(--card)
   border: 1px solid var(--block-border)
-  border-radius: 6px
+  border-radius: $border-block
   margin-top: 1rem
   margin-bottom: 1rem
   font-size: $fs14
   .header
     line-height: 1.2
     background: var(--block)
-    border-top-left-radius: 5px
-    border-top-right-radius: 5px
+    border-top-left-radius: "calc(%s - 1px)" % $border-block
+    border-top-right-radius: "calc(%s - 1px)" % $border-block
     border-bottom: 1px solid var(--block-border)
     display: flex
     justify-content: space-between

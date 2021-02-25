@@ -127,6 +127,20 @@ const util = {
     }
   },
 
+  copy_link: () => {
+    const el = document.getElementById("copy-link");
+    if (el) {
+      el.select();
+      document.execCommand("Copy");
+    }
+  },
+
+  toggle_qrcode: () => {
+    const el = document.getElementById("qrcode-wechat");
+    if (el) {
+      el.classList.toggle("display");
+    }
+  },
 }
 
 

@@ -4,8 +4,9 @@
   margin-top: 1.75rem
   top: -2px
   background: var(--site-bg)
-  padding: 0.5rem 1.25rem 0.38rem
+  padding: 0.5rem 1rem 0.38rem
   z-index: 1
+
 nav.cap
   display: flex
   overflow: scroll
@@ -14,17 +15,15 @@ nav.cap
     margin: 0
   a
     padding: 0.5rem 0.75rem
+    margin-left: 0.25rem
     color: var(--text-p3)
     border-radius: 4px
     font-weight: 600
     white-space: nowrap
     trans1 background
-    &.active,&:hover
+    &.active, &:hover
       background: var(--hover-block)
       color: var(--text-p1)
-  a+a
-    margin-left: 4px
-
 
 // 面包屑导航
 .breadcrumb-navigation

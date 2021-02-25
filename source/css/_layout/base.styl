@@ -109,6 +109,7 @@ ol ul, ol ol
 table:not([class])
   border-collapse: collapse
   overflow: auto
+  display: block
   margin: 1rem 0
   max-width: 100%
   vertical-align: text-top
@@ -125,3 +126,13 @@ table:not([class])
     trans()
     &:hover
       background: var(--block)
+
+input
+  display: block
+
+a[onclick]:hover
+  cursor: pointer
+
+input
+  background: none
+  border: none

@@ -3,12 +3,18 @@
   padding: 1rem
   background: var(--block)
   border-radius: $border-block
+  border: 1px solid var(--block-border)
   .header
     font-weight: 500
     color: var(--text-p3)
     margin-bottom: 0.75rem
     font-size: 1.25rem
   .body
+    input.copy-area
+      margin-bottom: 0.5rem
+      width: 100%
+      font-family: $ff-code
+      font-size: $fs12
     p
       font-size: $fs14
       color: var(--text-p2)
@@ -22,12 +28,23 @@
     .post-title
       margin: 0.5rem 0
       line-height: 1.2
-      font-size: $fs13
+      font-size: $fs14
   section+section
-    margin-top: 2rem
+    margin-top: 1rem
+    padding-top: 1rem
+    border-top: 1px solid var(--block-border)
 
 .references-wrap .social-wrap
   grid-gap: $gap * 0.25 $gap * 0.5
   grid-template-columns: repeat(auto-fill, 40px)
   a.social
     padding: 8px
+
+.references-wrap .qrcode
+  margin: 2rem auto 1rem
+  width: 128px
+  img
+    object-fit: contain
+
+.references-wrap .qrcode.display
+  display: block !important
