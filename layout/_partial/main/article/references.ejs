@@ -46,9 +46,9 @@ function layoutDiv() {
         if (['wechat', 'weibo', 'email', 'link'].includes(item)) {
           el += '<a class="social share-item ' + item + '"';
           if (item == 'wechat') {
-            el += ' onclick=\'util.toggle_qrcode()\'';
+            el += ' onclick="util.toggle_qrcode()"';
           } else if (item == 'weibo') {
-            el += ' href="http://service.weibo.com/share/share.php?url=' + page.permalink;
+            el += ' href="https://service.weibo.com/share/share.php?url=' + page.permalink;
             el += '&title=' + (page.seo_title || page.title) + ' - ' + config.title;
             if (page.latyout == 'post' && page.cover) {
               el += '&pics=' + page.cover;
@@ -61,7 +61,7 @@ function layoutDiv() {
             el += ' href="mailto:?subject=' + (page.title || page.seo_title) + ' - ' + config.title + '&amp;'
             el += 'body=' + page.permalink + '"';
           } else if (item == 'link') {
-            el += ' onclick=\'util.copy_link()\'';
+            el += ' onclick="util.copy_link()"';
           }
           el += '>';
           if (item == 'wechat') {
@@ -79,7 +79,7 @@ function layoutDiv() {
       el += '</div>';
       if (theme.article.share.includes('wechat')) {
         el += '<div class="qrcode" id="qrcode-wechat" style="display:none">';
-        const src = qrcode(url,{margin:1,size:8});
+        const src = qrcode(url,{margin:2,size:8});
         el += '<img src="' + src + '"/>';
         el += '</div>';
       }

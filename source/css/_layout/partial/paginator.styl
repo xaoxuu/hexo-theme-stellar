@@ -3,20 +3,33 @@
   justify-content: space-between
   align-items: center
   disable-select()
-  font-weight: 500
-  svg.icon
-    font-size: 1.8rem
+  font-size: 1rem
+  font-weight: 700
+  background: var(--block)
+  border-radius: $border-card
+  border: 1px solid var(--block-border)
+  overflow: hidden
   .paginator
     text-align: center
-    padding: $gap
-  div.paginator
-    font-size: $fs14
-    color: var(--text-p2)
+  .current
+    font-family: $ff-code
+    color: var(--text-p3)
   a.paginator
-    color: $color-link
-    trans1: color
+    color: var(--text-p3)
+    padding: 1rem
+    line-height: 0
+    img
+      height: 1rem
+      filter: grayscale(100%)
     &.disable
       pointer-events: none
       opacity: 0.25
+    &.prev
+      border-right: 1px solid transparent
+    &.next
+      border-left: 1px solid transparent
   a.paginator:hover
-    color: $color-hover
+    background: var(--card)
+    border-color: var(--block-border)
+    img
+      filter: grayscale(0%)

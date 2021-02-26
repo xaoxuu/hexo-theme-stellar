@@ -55,7 +55,7 @@ article:
   category_color:
     '新闻稿': '#DA0F47'
   # 文章许可协议
-  license: '本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh) 许可协议，转载请注明出处。'
+  license: '本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。'
   # 分享
   share: # [weibo, email, link] # wechat 需要安装二维码插件： npm i hexo-helper-qrcode
   # 相关文章，需要安装插件 (for layout: post)
@@ -145,7 +145,7 @@ plugins:
 
   # https://scrollrevealjs.org/api/reveal.html
   scrollreveal:
-    enable: #true
+    enable: true
     js: https://cdn.jsdelivr.net/npm/scrollreveal@4.0.7/dist/scrollreveal.min.js
     distance: 8px
     duration: 500 # ms

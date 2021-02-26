@@ -1,4 +1,4 @@
-div.timeline
+.tag-plugin.timeline
   position: relative
   display: block
   margin: 1rem 0
@@ -13,32 +13,32 @@ div.timeline
     left: 16px
     top: 1rem
     bottom: 1rem
-  svg.top, svg.bottom
+  >svg.icon:first-child, >svg.icon:last-child
     position: absolute
     z-index: 1
     fill: var(--block-border)
     height 16px
     width: 16px
     margin-left: 9px
-  svg.top
+  >svg.icon:first-child
     margin-top: -1rem
-  svg.bottom
+  >svg.icon:last-child
     margin-bottom: 1rem
 
-div.timenode
+.tag-plugin.timenode
   position: relative
   background: var(--card)
-  border: 1px solid var(--block-border)
+  border: 1px solid var(--theme)
   border-radius: $border-block
   margin-top: 1rem
   margin-bottom: 1rem
   font-size: $fs14
   .header
     line-height: 1.2
-    background: var(--block)
+    background: var(--theme-bg)
     border-top-left-radius: "calc(%s - 1px)" % $border-block
     border-top-right-radius: "calc(%s - 1px)" % $border-block
-    border-bottom: 1px solid var(--block-border)
+    border-bottom: 1px solid var(--theme)
     display: flex
     justify-content: space-between
     align-items: center
@@ -64,19 +64,17 @@ div.timenode
     li
       font-size: $fs14
 
-div.timenode:hover
+.tag-plugin.timenode:hover
   .header a
     visibility: visible
 
-// div.timeline:hover
-//   &:before
-//     background: var(--block-border)
-//   svg.top, svg.bottom
-//     fill: var(--block-border)
-// div.timenode:hover
-//   border-color: var(--block-border)
-//   .header
-//     background: var(--block-border)
-//     border-color: var(--block-border)
-//     a
-//       visibility: visible
+.tag-plugin.timeline .timenode
+  --theme-bg: alpha(#888, 0.05)
+
+.tag-plugin.timeline[order='-date'] .timenodes>.timenode:first-child
+  --theme: alpha($c-blue, 0.25)
+  --theme-bg: alpha($c-blue, 0.05)
+
+.tag-plugin.timeline[order='date'] .timenodes>:last-child
+  --theme: alpha($c-blue, 0.25)
+  --theme-bg: alpha($c-blue, 0.05)

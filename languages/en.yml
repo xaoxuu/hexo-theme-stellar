@@ -43,9 +43,11 @@ page:
     what: Page Not Found
     why: The address may be entered incorrectly or the address has been deleted.
     action: Back to Home
-  categories: '%s Categories'
-  tags: '%s Tags'
-  archives: '%s Years, %s Archives'
+  categories: "%s's %s has %s categories"
+  tags: "%s's %s has %s tags"
+  archives: "%s in %s years wrote %s articles" # 不知道如何把参数顺序调一下
+  filter: "%s's %s has %s articles"
+  wiki: "%s has %s %s in total"
 
 symbol:
   comma: ", "

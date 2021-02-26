@@ -2,7 +2,7 @@ btn:
   home: 主頁
   blog: 博客
   wiki: 項目
-  recent_publish: 最新發布
+  recent_publish: 近期發布
   all_wiki: 所有項目
   category: 分類
   categories: 分類
@@ -43,9 +43,11 @@ page:
     what: 很抱歉，您訪問的頁面不存在
     why: 可能是輸入地址有誤或該地址已被刪除
     action: 返回主頁
-  categories: '共%s個分類'
-  tags: '共%s個標籤'
-  archives: 'TA在%s年間寫了%s篇文章'
+  categories: '%s的%s共有%s個分類'
+  tags: '%s的%s共有%s個標籤'
+  archives: '%s在%s年間寫了%s篇文章'
+  filter: '%s的%s共有%s篇文章'
+  wiki: '%s共有%s个%s'
 
 symbol:
   comma: "，"

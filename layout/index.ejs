@@ -9,11 +9,21 @@ if (page.menu_id == undefined) {
 if (page.title && page.wiki) {
   page.robots = 'noindex,follow';
 }
+function layout_h1() {
+  if (is_home()) {
+    return '';
+  }
+  var el = '<h1 class="list-title">';
+  el += __('page.filter', config.title, page.category || page.tag, page.posts.length);
+  el += '</h1>';
+  return el;
+}
 %>
 <% if (page.menu_id == 'post') { %>
   <%- partial('_partial/main/navbar/list_post') %>
   <% if (page.posts) { %>
     <div class='post-list post'>
+      <%- layout_h1() %>
       <% page.posts.each(function(post){ %>
         <a class='post-card post<%- scrollreveal() %>' href='<%- url_for(post.link || post.path) %>'>
           <article class='excerpt md'>
@@ -35,12 +45,19 @@ if (page.title && page.wiki) {
   <%- partial('_partial/main/navbar/list_wiki') %>
   <% if (page.title && page.wiki) { %>
     <div class='post-list wiki filter'>
-      <% page.wiki.forEach((wiki, i) => { %>
-        <% site.pages.filter(function (p) { %>
-          <% return p.layout == 'wiki' && p.wiki == wiki && p.description; %>
-        <% }).limit(1).each(function(post) { %>
-          <%- outputExcerpt(post) %>
-        <% }); %>
+      <%
+      var wikis = [];
+      page.wiki.forEach((wiki, i) => {
+        site.pages.filter(function (p) {
+          return p.layout == 'wiki' && p.wiki == wiki && p.description;
+        }).limit(1).each(function(post) {
+          wikis.push(post);
+        });
+      });
+      %>
+      <h1 class='list-title'><%- __('page.wiki', config.title, wikis.length, page.title) %></h1>
+      <% wikis.forEach(function(post) { %>
+        <%- outputExcerpt(post) %>
       <% }); %>
     </div>
   <% } else { %>
@@ -58,6 +75,7 @@ if (page.title && page.wiki) {
         }
       }).sort('order');
       %>
+      <h1 class='list-title'><%- __('page.wiki', config.title, wikis.length,  __('btn.wiki')) %></h1>
       <% wikis.forEach(function(post) { %>
         <%- outputExcerpt(post) %>
       <% }); %>

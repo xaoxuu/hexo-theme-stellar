@@ -2,7 +2,7 @@ btn:
   home: 主页
   blog: 文章
   wiki: 项目
-  recent_publish: 最新发布
+  recent_publish: 近期发布
   all_wiki: 所有项目
   category: 分类
   categories: 分类
@@ -43,9 +43,11 @@ page:
     what: 很抱歉，您访问的页面不存在
     why: 可能是输入地址有误或该地址已被删除
     action: 返回主页
-  categories: '共%s个分类'
-  tags: '共%s个标签'
-  archives: 'TA在%s年间写了%s篇文章'
+  categories: '%s的%s共有%s个分类'
+  tags: '%s的%s共有%s个标签'
+  archives: '%s在%s年间写了%s篇文章'
+  filter: '%s的%s共有%s篇文章'
+  wiki: '%s共有%s个%s'
 
 symbol:
   comma: "，"

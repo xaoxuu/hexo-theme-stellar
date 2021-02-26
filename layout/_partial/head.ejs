@@ -13,6 +13,17 @@ function generate_title() {
   }
   return '';
 }
+function generate_description() {
+  // 索引页
+  if (theme.open_graph && theme.open_graph.enable) {
+    return '';
+  }
+  if (page.description || page.excerpt || page.content) {
+    return '<meta name="description" content="' + truncate(strip_html(page.description || page.excerpt || page.content), {length: 150}) + '">';
+  }
+  return '<meta name="description" content="' + config.description + '">';
+}
+
 function generate_robots() {
   if (is_home() == true) {
     return '';
@@ -53,6 +64,7 @@ function og_args() {
   <% if (theme.open_graph && theme.open_graph.enable) { %>
     <%- open_graph(og_args()) %>
   <% } %>
+  <%- generate_description() %>
 
   <!-- feed -->
   <% if (config.feed && config.feed.path) { %>

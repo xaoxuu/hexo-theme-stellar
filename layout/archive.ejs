@@ -17,7 +17,7 @@ if (page.menu_id == undefined) {
   			<% years.push(post.year); %>
   		<% } %>
   	<% }); %>
-    <div class='list-title'><%- __('page.archives', years.length, site.posts.length) %></div>
+    <h1 class='list-title'><%- __('page.archives', config.title, years.length, site.posts.length) %></h1>
   	<% years.forEach((year, i) => { %>
   		<article class='post-card<%- scrollreveal() %>' id='archive'>
   			<div class='card-title'><%= year %></div>
