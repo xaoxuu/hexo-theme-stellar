@@ -14,7 +14,7 @@ function layoutFooterDiv() {
     var el = '<footer class="footer"><div class="social-wrap">';
     theme.footer.social.forEach(item => {
       if (item.icon && item.url) {
-        el += '<a class="social" href="' + url_for(item.url) + '">' + item.icon + '</a>';
+        el += '<a class="social" href="' + url_for(item.url) + '" target="_blank" rel="external nofollow noopener noreferrer">' + item.icon + '</a>';
       }
     });
     el += '</div></footer>';

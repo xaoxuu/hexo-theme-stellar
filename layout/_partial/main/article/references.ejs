@@ -13,7 +13,7 @@ function layoutDiv() {
     el += '<div class="body"><ul>';
     page.references.forEach((item, i) => {
       el += '<li class="post-title">';
-      el += '<a href="' + item.url + '">';
+      el += '<a href="' + item.url + '" target="_blank" rel="external nofollow noopener noreferrer">';
       el += item.title || item.url;
       el += '</a>';
       el += '</li>';
@@ -44,7 +44,7 @@ function layoutDiv() {
       el += '<div class="social-wrap">';
       theme.article.share.forEach((item, i) => {
         if (['wechat', 'weibo', 'email', 'link'].includes(item)) {
-          el += '<a class="social share-item ' + item + '"';
+          el += '<a class="social share-item ' + item + '" target="_blank" rel="external nofollow noopener noreferrer"';
           if (item == 'wechat') {
             el += ' onclick="util.toggle_qrcode()"';
           } else if (item == 'weibo') {
