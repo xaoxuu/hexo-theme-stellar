@@ -1,4 +1,5 @@
-.post-list .paginator-wrap
+.paginator-wrap
+  margin: 1rem
   display: flex
   justify-content: space-between
   align-items: center
@@ -25,11 +26,10 @@
       pointer-events: none
       opacity: 0.25
     &.prev
-      border-right: 1px solid transparent
+      border-right: 1px solid var(--block-border)
     &.next
-      border-left: 1px solid transparent
+      border-left: 1px solid var(--block-border)
   a.paginator:hover
     background: var(--card)
-    border-color: var(--block-border)
     img
       filter: grayscale(0%)

@@ -132,7 +132,9 @@ const util = {
     if (el) {
       el.select();
       document.execCommand("Copy");
-      hud.toast(msg);
+      if (msg && msg.length > 0) {
+        hud.toast(msg);
+      }
     }
   },
 

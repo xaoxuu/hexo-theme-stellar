@@ -1,0 +1,30 @@
+.md .tag-plugin.copy
+  display: flex
+  .link-box
+    background: var(--block)
+    border-radius: $border-block
+    border: 1px solid var(--block-border)
+    overflow: hidden
+    max-width: 100%
+    display: flex
+    width: 360px
+    &[width='max']
+      width: 100%
+    @media screen and (max-width: $device-mobile-l)
+      min-width: 100%
+  input.copy-area
+    display: inline-block
+    padding: 1em
+    width: 100%
+    color: var(--text-p2)
+  button.copy-btn
+    border-left: 1px solid var(--block-border)
+    display: inline-block
+    background: var(--hover-block)
+    line-height: 0
+    height: 100%
+    font-size: 1rem
+    padding: 0.5rem 1rem
+    color: var(--text-p2)
+    &:hover
+      background: var(--card)
