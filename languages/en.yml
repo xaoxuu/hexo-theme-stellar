@@ -49,6 +49,9 @@ page:
   filter: "%s's %s has %s articles"
   wiki: "%s has %s %s in total"
 
+message:
+  copied: Copied!
+
 symbol:
   comma: ", "
   period: ". "

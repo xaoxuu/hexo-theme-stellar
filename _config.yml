@@ -87,11 +87,11 @@ footer:
     - icon: '<img src="https://7.dusays.com/2021/02/14/25678f144c438.svg"/>'
       url: /atom.xml
     - icon: '<img src="https://7.dusays.com/2021/02/14/08a41b181ce68.svg"/>'
-      url: https://github.com/xaoxuu
+      url: /
     - icon: '<img src="https://7.dusays.com/2021/02/14/cf1ae151f9e83.svg"/>'
-      url: https://music.163.com/#/user/home?id=63035382
+      url: /
     - icon: '<img src="https://7.dusays.com/2021/02/14/942ebbf1a4b91.svg"/>'
-      url: /comments/
+      url: /
   license: '[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
   source: #'[GitHub](https://github.com/xaoxuu/hexo-theme-stellar)'
 

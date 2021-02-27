@@ -127,22 +127,39 @@ const util = {
     }
   },
 
-  copy_link: () => {
-    const el = document.getElementById("copy-link");
+  copy: (id, msg) => {
+    const el = document.getElementById(id);
     if (el) {
       el.select();
       document.execCommand("Copy");
+      hud.toast(msg);
     }
   },
 
-  toggle_qrcode: () => {
-    const el = document.getElementById("qrcode-wechat");
+  toggle: (id) => {
+    const el = document.getElementById(id);
     if (el) {
       el.classList.toggle("display");
     }
   },
 }
 
+const hud = {
+  toast: (msg, duration) => {
+    duration=isNaN(duration)?2000:duration;
+    var el = document.createElement('div');
+    el.classList.add('toast');
+    el.innerHTML = msg;
+    document.body.appendChild(el);
+    setTimeout(function() {
+      var d = 0.5;
+      el.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';
+      el.style.opacity = '0';
+      setTimeout(function() { document.body.removeChild(el) }, d * 1000);
+    }, duration);
+  },
+
+}
 
 // defines
 

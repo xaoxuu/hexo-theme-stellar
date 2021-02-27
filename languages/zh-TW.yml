@@ -49,6 +49,9 @@ page:
   filter: '%s的%s共有%s篇文章'
   wiki: '%s共有%s个%s'
 
+message:
+  copied: 複製成功
+
 symbol:
   comma: "，"
   period: "。"
