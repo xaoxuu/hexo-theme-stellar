@@ -12,18 +12,21 @@
 const { ArgsMap } = require('./utils');
 
 hexo.extend.tag.register('copy', function(args) {
-  args = ArgsMap(args, ['width'], ['text', 'more']);
-  var text;
-  if (args.text == 'git' && args.more && args.more.length > 0) {
-    text = args.more;
+  args = ArgsMap(args, ['width', 'git'], ['text']);
+  if (args == undefined || args.text == undefined) {
+    return '';
+  }
+  var text = args.text;
+  if (args.git) {
     if (text.substr(0,1) == '/') {
       text = text.substring(1);
     }
-    text = 'https://github.com/' + text + '.git';
-  } else if (args.text && args.text.length > 0) {
-    text = args.text;
-    if (args.more && args.more.length > 0) {
-      text += ' ' + args.more;
+    if (args.git == 'ssh') {
+      text = 'git@github.com:' + text + '.git';
+    } else if (args.git == 'gh') {
+      text = 'gh repo clone ' + text;
+    } else {
+      text = 'https://github.com/' + text + '.git';
     }
   }
   function generate_id(text) {
