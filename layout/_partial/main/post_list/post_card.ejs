@@ -49,4 +49,7 @@ if (post.categories && post.categories.length > 0) {
       <%- layoutCats() %>
     <% } %>
   <% } %>
+  <% if (post.pin) { %>
+    <span class='pin'><img src='https://7.dusays.com/2021/02/27/3279dd441df8b.svg'/></span>
+  <% } %>
 </div>

@@ -25,9 +25,17 @@
   overflow: hidden
   background: var(--card)
   .meta.cap
+    display: flex
+    flex-wrap: wrap
+    align-items: center
     margin-bottom: 0.5rem
     span+span
       margin-left: 0.5rem
+    span.pin
+      line-height: 0
+      img
+        object-fit: contain
+        height: 1.5em
 .post-list .post-card:hover
   box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.04), 0 4px 16px 0px rgba(0, 0, 0, 0.04)
   .preview img
