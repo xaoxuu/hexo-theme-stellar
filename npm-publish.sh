@@ -47,6 +47,9 @@ function commit() {
 
   npm publish
 
+  git tag ${VERSION}
+  git push --tags
+
   git checkout main
   # done
   printf "\n\n> \033[32m%s\033[0m\n" 'Congratulations!'
