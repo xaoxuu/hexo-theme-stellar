@@ -54,12 +54,14 @@ article.md
       &:hover
         text-decoration: underline
 
+article.md p
+  font-size: $fsp
 // code
 article.md code
   color: $color-inlinecode
   font-family: $ff-code
   word-break: break-all
-
+  font-size: $fsp
 
 // div
 article.md>div
@@ -69,7 +71,7 @@ article.md blockquote
   margin: 1rem 0
   padding: 1rem
   background: var(--block)
-  border-left: $border-block solid $color-theme
+  border-left: 3px solid $color-theme
   border-radius: 0 $border-block $border-block 0
   color: var(--text-p2)
   p

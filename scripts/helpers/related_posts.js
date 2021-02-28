@@ -19,7 +19,7 @@ hexo.extend.helper.register('popular_posts_wrapper', function(args){
   var div = `
     <div class="related_posts">
     <section class='header'>
-      <div class='title cap cyan'>${title}</div>
+      <div class='title cap theme'>${title}</div>
     </section>
     <section class='body'>
     `;

@@ -17,7 +17,7 @@ if (loadComment && page.layout == 'wiki' && page.wiki) {
 %>
 <% if (loadComment) { %>
   <div class='related-wrap md' id="comments">
-    <div class='cmt-title cap cyan'>
+    <div class='cmt-title cap theme'>
       <%- page.comment_title != undefined ? page.comment_title : __('meta.comment_title') %>
     </div>
     <div class='cmt-body <%- theme.comments.service %>'>
