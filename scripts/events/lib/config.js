@@ -6,7 +6,7 @@
 'use strict';
 
 module.exports = hexo => {
-  
+
   const { cache, language_switcher } = hexo.theme.config;
   const warning = function(...args) {
     hexo.log.warn(`Since ${args[0]} is turned on, the ${args[1]} is disabled to avoid potential hazards.`);

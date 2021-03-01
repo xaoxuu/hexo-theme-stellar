@@ -1,16 +1,14 @@
 /**
  * friends.js v1 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
- * 
+ *
  * {% friends [style:rect] [group:name] %}
  */
 
 'use strict';
 
-const { ArgsMap } = require('./utils');
-
 hexo.extend.tag.register('friends', function(args) {
-  args = ArgsMap(args, ['style', 'group']);
+  args = hexo.args.map(args, ['style', 'group']);
   var friends = hexo.locals.get('data').friends;
   if (friends == undefined) {
     return;

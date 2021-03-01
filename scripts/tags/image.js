@@ -7,10 +7,8 @@
 
 'use strict';
 
-const { ArgsMap } = require('./utils');
-
 hexo.extend.tag.register('image', function(args) {
-  args = ArgsMap(args, ['width', 'height', 'bg', 'download', 'padding'], ['src', 'alt']);
+  args = hexo.args.map(args, ['width', 'height', 'bg', 'download', 'padding'], ['src', 'alt']);
   var style = '';
   if (args.width) {
     style += 'width:' + args.width + ';';

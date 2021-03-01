@@ -7,14 +7,16 @@
 
 'use strict';
 
-const { ArgsMap } = require('./utils');
-
 hexo.extend.tag.register('link', function(args) {
-  args = ArgsMap(args, ['img'], ['url', 'title', 'description']);
+  args = hexo.args.map(args, ['img'], ['url', 'title', 'description']);
+
   var el = '';
   el += '<div class="tag-plugin tag link">';
-  el += '<a class="link-card" title="' + args.title + '" href="' + args.url + '">';
-
+  el += '<a class="link-card" title="' + args.title + '" href="' + args.url + '"';
+  if (args.url.includes('://')) {
+    el += ' target="_blank" rel="external nofollow noopener noreferrer"';
+  }
+  el += '>';
   // left
   el += '<div class="left">';
   el += '<span class="title">' + args.title + '</span><span class="url">' + (args.description || args.url) + '</span>';

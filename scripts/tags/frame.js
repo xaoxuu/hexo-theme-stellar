@@ -7,10 +7,8 @@
 
 'use strict';
 
-const { ArgsMap } = require('./utils');
-
 hexo.extend.tag.register('frame', function(args) {
-  args = ArgsMap(args, ['focus', 'img', 'video'], ['device', 'alt']);
+  args = hexo.args.map(args, ['focus', 'img', 'video'], ['device', 'alt']);
   const img = args.img || '';
   const video = args.video || '';
   const device = args.device || '';

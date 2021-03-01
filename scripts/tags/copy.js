@@ -9,10 +9,8 @@
 
 'use strict';
 
-const { ArgsMap } = require('./utils');
-
 hexo.extend.tag.register('copy', function(args) {
-  args = ArgsMap(args, ['width', 'git'], ['text']);
+  args = hexo.args.map(args, ['width', 'git'], ['text']);
   if (args == undefined || args.text == undefined) {
     return '';
   }

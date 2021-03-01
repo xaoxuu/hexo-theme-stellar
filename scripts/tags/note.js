@@ -1,10 +1,10 @@
 /**
  * note.js v1 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
- * 
+ *
  * note:
  * {% note [color:color] [title] content %}
- * 
+ *
  * noteblock:
  * {% noteblock [color:color] title %}
  * markdown content
@@ -12,8 +12,6 @@
  */
 
 'use strict';
-
-const { ArgsMap } = require('./utils');
 
 function outputNoteBlock(color, title, content) {
   var el = '';
@@ -40,7 +38,7 @@ function outputNoteBlock(color, title, content) {
 }
 
 hexo.extend.tag.register('note', function(args) {
-  args = ArgsMap(args, ['color'], ['title', 'content']);
+  args = hexo.args.map(args, ['color'], ['title', 'content']);
   if (args.content) {
     return outputNoteBlock(args.color, args.title, args.content);
   } else {
@@ -49,6 +47,6 @@ hexo.extend.tag.register('note', function(args) {
 });
 
 hexo.extend.tag.register('noteblock', function(args, content) {
-  args = ArgsMap(args, ['color'], ['title']);
+  args = hexo.args.map(args, ['color'], ['title']);
   return outputNoteBlock(args.color, args.title, content);
 }, {ends: true});

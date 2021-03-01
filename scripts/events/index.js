@@ -5,6 +5,7 @@
 hexo.on('generateBefore', () => {
   // Merge config.
   require('./lib/config')(hexo);
+  require('./lib/utils')(hexo);
 });
 
 hexo.on('ready', () => {
