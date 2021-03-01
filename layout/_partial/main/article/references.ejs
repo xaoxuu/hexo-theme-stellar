@@ -87,8 +87,7 @@ function layoutDiv() {
       el += '</div>';
       if (theme.article.share.includes('wechat')) {
         el += '<div class="qrcode" id="qrcode-wechat" style="display:none">';
-        const src = qrcode(url,{margin:2,size:8});
-        el += '<img src="' + src + '"/>';
+        el += '<img no-lazy src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=' + url + '"/>';
         el += '</div>';
       }
       el += '</div>';

@@ -82,6 +82,19 @@
         height: 200px
       &:not(.lazyload)
         trans1: transform 1s
+.post-list .post-card.post.photo .post-cover img
+  height: 400px
+  @media screen and (max-width: 900px)
+    height: 320px
+  @media screen and (max-width: $device-tablet)
+    height: 400px
+  @media screen and (max-width: $device-mobile)
+    height: 320px
+  @media screen and (max-width: $device-mobile-l)
+    height: 280px
+  @media screen and (max-width: $device-mobile-m)
+    height: 240px
+
 .post-list .post-card.post:hover
   .post-title
     color: $color-hover
