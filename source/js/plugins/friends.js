@@ -1,5 +1,5 @@
-const IssuesAPI = {
-  requestIssuesAPI(url, callback, timeout) {
+const friendsjs = {
+  requestAPI: (url, callback, timeout) => {
     let retryTimes = 5;
     function request() {
       return new Promise((resolve, reject) => {
@@ -42,45 +42,43 @@ const IssuesAPI = {
     }
     request();
   },
-  getIssuesAPIForFriends(cfg) {
+  layout: (cfg) => {
     const el = $(cfg.el)[0];
-    $(el).append('<div class="loading"><p>正在加载</p></div>');
-    this.requestIssuesAPI(cfg.api, function(data) {
-      $(el).find('.loading').remove();
+    $(el).append('<div class="loading-wrap"><svg class="loading" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg><p></p></div>');
+    friendsjs.requestAPI(cfg.api, function(data) {
+      $(el).find('.loading-wrap').remove();
       const arr = data.content;
       arr.forEach((item, i) => {
         var user = '<div class="user-simple">';
         user += '<a class="user-link" target="_blank" rel="external nofollow noopener noreferrer"';
         user += ' href="' + item.url + '">';
-        user += '<img src="' + item.avatar + '" onerror="javascript:this.src=\'https://image.thum.io/get/width/1024/crop/768/' + item.url + '\';"/>';
+        user += '<img src="' + (item.avatar || 'https://7.dusays.com/2021/03/03/87519671e4837.svg') + '" onerror="javascript:this.src=\'https://7.dusays.com/2021/03/03/87519671e4837.svg\';">';
         user += '<div class="name"><span>' + item.title + '</span></div>';
         user += '</a>';
         user += '</div>';
         $(el).find('.group-body').append(user);
       });
     }, function() {
-      $(el).find('.loading i').remove();
-      $(el).find('.loading p').text('加载失败，请稍后重试。');
+      $(el).find('.loading-wrap svg').remove();
+      $(el).find('.loading-wrap p').text('加载失败，请稍后重试。');
     });
   },
-  request() {
-    const els = document.getElementsByClassName('issues-wrap');
-    for (var i = 0; i < els.length; i++) {
-      const el = els[i];
-      const api = el.getAttribute('api');
-      const group = el.getAttribute('group');
-      if (api == null) {
-        continue;
-      }
-      var cfg = new Object();
-      cfg.class = el.getAttribute('class');
-      cfg.el = el;
-      cfg.api = api;
-      cfg.group = group;
-      this.getIssuesAPIForFriends(cfg);
-    }
-  }
-};
+}
+
 $(function () {
-  IssuesAPI.request();
+  const els = document.getElementsByClassName('friendsjs-wrap');
+  for (var i = 0; i < els.length; i++) {
+    const el = els[i];
+    const api = el.getAttribute('api');
+    const group = el.getAttribute('group');
+    if (api == null) {
+      continue;
+    }
+    var cfg = new Object();
+    cfg.class = el.getAttribute('class');
+    cfg.el = el;
+    cfg.api = api;
+    cfg.group = group;
+    friendsjs.layout(cfg);
+  }
 });

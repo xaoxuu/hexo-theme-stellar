@@ -278,11 +278,20 @@ if (stellar.plugins.lazyload) {
 }
 
 // issuesjs
-if (stellar.plugins.issuesjs) {
-  const issues_api = document.getElementById('issues-api');
+if (stellar.plugins.sitesjs) {
+  const issues_api = document.getElementById('sites-api');
   if (issues_api != undefined) {
     util.jQuery( () => {
-      util.loadScript(stellar.plugins.issuesjs, {defer:true})
+      util.loadScript(stellar.plugins.sitesjs, {defer:true})
+    })
+  }
+}
+if (stellar.plugins.friendsjs) {
+  const issues_api = document.getElementById('friends-api');
+  if (issues_api != undefined) {
+    console.log(issues_api);
+    util.jQuery( () => {
+      util.loadScript(stellar.plugins.friendsjs, {defer:true})
     })
   }
 }

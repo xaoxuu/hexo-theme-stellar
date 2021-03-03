@@ -124,7 +124,8 @@ plugins:
     css: https://unpkg.com/swiper/swiper-bundle.min.css
     js: https://unpkg.com/swiper/swiper-bundle.min.js
   # issues api
-  issuesjs: /js/issues.js
+  sitesjs: /js/plugins/sites.js
+  friendsjs: /js/plugins/friends.js
 
   ## optional plugins ##
   # preload
