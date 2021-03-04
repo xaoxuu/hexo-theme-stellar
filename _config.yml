@@ -140,9 +140,7 @@ plugins:
   lazyload:
     enable: true # [hexo clean && hexo s] is required after changing this value.
     js: https://cdn.jsdelivr.net/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js
-    onlypost: false
-    loadingImg: # https://7.dusays.com/2021/02/14/e45d2469cdeaf.svg
-    blurIn: true # 模糊加载效果 （loadingImg为空时有效）
+    transition: blur # blur, fade
 
   # https://scrollrevealjs.org/api/reveal.html
   scrollreveal:

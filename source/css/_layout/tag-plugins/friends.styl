@@ -1,4 +1,4 @@
-.friends-wrap
+.users-wrap
   overflow: hidden
   .group-header
     margin: 0 0 1rem
@@ -21,7 +21,7 @@
       margin: 2rem 0
       text-align: center
 
-.friends-wrap .user-simple
+.users-wrap .user-card
   flex-shrink: 1
   display: flex
   align-items: stretch
@@ -36,7 +36,7 @@
     width: 16.66%
   @media screen and (max-width: $device-mobile)
     width: 25%
-  a
+  .card-link
     margin: 0
     width: 100%
     color: var(--text-p1)
@@ -60,9 +60,13 @@
       background: var(--card)
       border-radius: 64px
       margin: 0 0 0.5rem
-      trans2 transform box-shadow
-    &:hover
-      background: var(--hover-block)
-      img
-        transform: scale(1.2) rotate(8deg)
-        box-shadow: $boxshadow-card-float
+
+// transform
+.users-wrap .user-card .card-link
+  >img
+    trans2 transform box-shadow
+  &:hover
+    background: var(--hover-block)
+    img
+      transform: scale(1.2) rotate(8deg)
+      box-shadow: $boxshadow-card-float

@@ -1,14 +1,22 @@
-if hexo-config('plugins.lazyload.blurIn') == true
-  img.lazyload:not(.placeholder)
+if hexo-config('plugins.lazyload.transition') == 'blur'
+  img.lazyload
     trans2pro: transform 1s filter 0.25s
     &:not(.loaded)
       filter blur(8px)
     &.loaded
       filter none
+  .group-body .site-card .card-link>img
+    trans2: box-shadow filter
+  .group-body .user-card .card-link>img
+    trans3: box-shadow filter transform
 else
-  img.lazyload:not(.placeholder)
+  img.lazyload
     trans2pro: transform 1s opacity 0.5s
     &:not(.loaded)
       opacity: 0
     &.loaded
       opacity: 1
+  .group-body .site-card .card-link>img
+    trans2: box-shadow opacity
+  .group-body .user-card .card-link>img
+    trans3: box-shadow opacity transform

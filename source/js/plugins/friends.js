@@ -49,10 +49,10 @@ const friendsjs = {
       $(el).find('.loading-wrap').remove();
       const arr = data.content;
       arr.forEach((item, i) => {
-        var user = '<div class="user-simple">';
-        user += '<a class="user-link" target="_blank" rel="external nofollow noopener noreferrer"';
+        var user = '<div class="user-card">';
+        user += '<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer"';
         user += ' href="' + item.url + '">';
-        user += '<img src="' + (item.avatar || 'https://7.dusays.com/2021/03/03/87519671e4837.svg') + '" onerror="javascript:this.src=\'https://7.dusays.com/2021/03/03/87519671e4837.svg\';">';
+        user += '<img src="' + (item.avatar || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';">';
         user += '<div class="name"><span>' + item.title + '</span></div>';
         user += '</a>';
         user += '</div>';
@@ -70,15 +70,14 @@ $(function () {
   for (var i = 0; i < els.length; i++) {
     const el = els[i];
     const api = el.getAttribute('api');
-    const group = el.getAttribute('group');
     if (api == null) {
       continue;
     }
     var cfg = new Object();
-    cfg.class = el.getAttribute('class');
     cfg.el = el;
     cfg.api = api;
-    cfg.group = group;
+    cfg.class = el.getAttribute('class');
+    cfg.avatar = 'https://7.dusays.com/2021/03/03/87519671e4837.svg';
     friendsjs.layout(cfg);
   }
 });

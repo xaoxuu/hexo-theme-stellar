@@ -50,10 +50,10 @@ const sitesjs = {
       const arr = data.content;
       arr.forEach((item, i) => {
         var cell = '<div class="site-card">';
-        cell += '<a class="site-link" target="_blank" rel="external nofollow noopener noreferrer" href="' + item.url + '">';
-        cell += '<img src="' + (item.screenshot || ('https://image.thum.io/get/width/1024/crop/768/' + site.url)) + '" onerror="javascript:this.src=\'https://7.dusays.com/2021/02/20/76b86c0226ffd.svg\';"/>';
+        cell += '<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="' + item.url + '">';
+        cell += '<img src="' + (item.screenshot || ('https://image.thum.io/get/width/1024/crop/768/' + site.url)) + '" onerror="javascript:this.src=\'' + cfg.screenshot + '\';"/>';
         cell += '<div class="info">';
-        cell += '<img src="' + (item.avatar || 'https://7.dusays.com/2021/02/20/8f277b4ee0ecd.svg') + '" onerror="javascript:this.src=\'https://7.dusays.com/2021/02/20/8f277b4ee0ecd.svg\';"/>';
+        cell += '<img src="' + (item.avatar || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';"/>';
         cell += '<span class="title">' + item.title + '</span>';
         cell += '<span class="desc">' + (item.description || item.url) + '</span>';
         cell += '</div>';
@@ -73,7 +73,6 @@ $(function () {
   for (var i = 0; i < els.length; i++) {
     const el = els[i];
     const api = el.getAttribute('api');
-    const group = el.getAttribute('group');
     if (api == null) {
       continue;
     }
@@ -81,7 +80,8 @@ $(function () {
     cfg.class = el.getAttribute('class');
     cfg.el = el;
     cfg.api = api;
-    cfg.group = group;
+    cfg.avatar = 'https://7.dusays.com/2021/02/20/8f277b4ee0ecd.svg';
+    cfg.screenshot = 'https://7.dusays.com/2021/02/20/76b86c0226ffd.svg';
     sitesjs.layout(cfg);
   }
 });

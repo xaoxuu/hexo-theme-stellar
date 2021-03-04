@@ -289,7 +289,6 @@ if (stellar.plugins.sitesjs) {
 if (stellar.plugins.friendsjs) {
   const issues_api = document.getElementById('friends-api');
   if (issues_api != undefined) {
-    console.log(issues_api);
     util.jQuery( () => {
       util.loadScript(stellar.plugins.friendsjs, {defer:true})
     })

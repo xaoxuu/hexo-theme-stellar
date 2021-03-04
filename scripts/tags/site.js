@@ -34,7 +34,7 @@ hexo.extend.tag.register('sites', function(args) {
   function cell(site) {
     if (site.url && site.title) {
       var cell = '<div class="site-card">';
-      cell += '<a class="site-link" target="_blank" rel="external nofollow noopener noreferrer" href="' + site.url + '">';
+      cell += '<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="' + site.url + '">';
       cell += '<img src="' + (site.screenshot || ('https://image.thum.io/get/width/1024/crop/768/' + site.url)) + '" onerror="javascript:this.src=\'https://7.dusays.com/2021/02/20/76b86c0226ffd.svg\';"/>';
       cell += '<div class="info">';
       cell += '<img src="' + (site.avatar || 'https://7.dusays.com/2021/02/20/8f277b4ee0ecd.svg') + '" onerror="javascript:this.src=\'https://7.dusays.com/2021/02/20/8f277b4ee0ecd.svg\';"/>';
@@ -61,6 +61,9 @@ hexo.extend.tag.register('sites', function(args) {
           el += '<div class="sitesjs-wrap"';
           el += ' id="sites-api"';
           el += ' api="' + (group.api || 'https://issues-api.vercel.app') + '/' + group.repo + '"';
+          if (hexo.theme.config.plugins.lazyload && hexo.theme.config.plugins.lazyload.enable) {
+            el += ' lazyload="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII="';
+          }
           el += '>';
           el += '<div class="group-body"></div>';
           el += '</div>';
