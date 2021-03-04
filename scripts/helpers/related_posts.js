@@ -26,14 +26,14 @@ hexo.extend.helper.register('popular_posts_wrapper', function(args){
   function generateHTML(list){
 
     var el = '';
-    el += '<a class="item" href="' + list.path + '" title="' + list.title + '" rel="bookmark ">';
+    el += '<a class="item" href="' + list.path + '" title="' + list.title + '">';
 
-    if (cfg.placeholder_img && cfg.placeholder_img.length > 0) {
+    if (hexo.theme.config.default.cover) {
       el += '<div class="img">'
       if (list.img && list.img != "") {
         el += '<img src="' + list.img + '" />';
       } else {
-        el += '<img src="' + cfg.placeholder_img + '" />';
+        el += '<img src="' + hexo.theme.config.default.cover + '" />';
       }
       el += '</div>';
     }

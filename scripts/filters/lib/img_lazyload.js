@@ -27,13 +27,13 @@ function lazyProcess(htmlContent) {
     if (newImgTag.includes(' class="') == false) {
       newImgTag = newImgTag.slice(0,4) + ' class=""' + newImgTag.slice(4);
     }
-    // class 中增加 lazyload
+    // class 中增加 lazy
     newImgTag = newImgTag.replace(/(.*?) class="(.*?)" (.*?)>/gi, function(ori, before, value, after){
       var newClass = value;
       if (newClass.length > 0) {
         newClass += ' ';
       }
-      newClass += 'lazyload';
+      newClass += 'lazy';
       if (value) {
         return ori.replace(value, newClass);
       } else {
@@ -42,7 +42,7 @@ function lazyProcess(htmlContent) {
     });
     // 加载图
     const loadingImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=';
-    newImgTag = newImgTag.replace(src_value, src_value + '" data-srcset="' + src_value + '" srcset="' + loadingImg);
+    newImgTag = newImgTag.replace(src_value, loadingImg + '" data-src="' + src_value);
     return newImgTag;
   });
 }

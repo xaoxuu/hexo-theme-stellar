@@ -35,7 +35,7 @@ hexo.extend.tag.register('friends', function(args) {
     if (friend.url && friend.title) {
       var cell = '<div class="user-card">';
       cell += '<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="' + friend.url + '">';
-      cell += '<img src="' + (friend.avatar || 'https://7.dusays.com/2021/03/03/87519671e4837.svg') + '" onerror="javascript:this.src=\'https://7.dusays.com/2021/03/03/87519671e4837.svg\';"/>';
+      cell += '<img src="' + (friend.avatar || hexo.theme.config.default.avatar) + '" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;' + hexo.theme.config.default.avatar + '&quot;;"/>';
       cell += '<div class="name"><span>' + friend.title + '</span></div>';
       cell += '</a></div>'
       return cell;
@@ -57,9 +57,6 @@ hexo.extend.tag.register('friends', function(args) {
           el += '<div class="friendsjs-wrap"';
           el += ' id="friends-api"';
           el += ' api="' + (group.api || 'https://issues-api.vercel.app') + '/' + group.repo + '"';
-          if (hexo.theme.config.plugins.lazyload && hexo.theme.config.plugins.lazyload.enable) {
-            el += ' lazyload="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII="';
-          }
           el += '>';
           el += '<div class="group-body"></div>';
           el += '</div>';

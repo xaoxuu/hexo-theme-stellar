@@ -63,8 +63,6 @@ article:
   related_posts:
     enable: false
     max_count: 5
-    placeholder_img: https://7.dusays.com/2021/02/20/76b86c0226ffd.svg
-
 
 
 ######## Comments ########
@@ -148,5 +146,10 @@ plugins:
     js: https://cdn.jsdelivr.net/npm/scrollreveal@4.0.7/dist/scrollreveal.min.js
     distance: 8px
     duration: 500 # ms
-    interval: 50 # ms
+    interval: 100 # ms
     scale: 1 # 0.1~1
+
+default:
+  avatar: https://7.dusays.com/2021/03/03/87519671e4837.svg
+  link: https://7.dusays.com/2021/02/20/8f277b4ee0ecd.svg
+  cover: https://7.dusays.com/2021/02/20/76b86c0226ffd.svg

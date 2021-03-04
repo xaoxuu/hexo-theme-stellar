@@ -80,7 +80,7 @@
         height: 240px
       @media screen and (max-width: $device-mobile-m)
         height: 200px
-      &:not(.lazyload)
+      &:not(.lazy)
         trans1: transform 1s
 .post-list .post-card.post.photo .post-cover img
   height: 400px
@@ -116,8 +116,8 @@
   align-items: center
   img
     object-fit: contain
-  img:not(.lazyload)
-    trans1: transform 0.75s
+    &:not(.lazy)
+      trans1: transform 0.75s
 .post-list .post-card.wiki article .excerpt
   margin: 1rem
   min-width: 220px
