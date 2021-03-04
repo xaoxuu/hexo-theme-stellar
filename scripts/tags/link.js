@@ -24,7 +24,12 @@ hexo.extend.tag.register('link', function(args) {
 
   // right
   el += '<div class="right">';
-  el += '<img src="' + (args.img || hexo.theme.config.tag_plugins.link.default_img) + '"/>';
+  if (hexo.theme.config.plugins.lazyload && hexo.theme.config.plugins.lazyload.enable) {
+    el += '<div class="lazy img" data-bg="' + (args.img || hexo.theme.config.default.link) + '"></div>';
+  } else {
+    el += '<div class="lazy img" style="background-image:url(&quot;' + (args.img || hexo.theme.config.default.link) + '&quot;)"></div>';
+  }
+
   el += '</div>';
 
   // end

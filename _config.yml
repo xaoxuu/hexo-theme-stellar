@@ -102,9 +102,6 @@ tag_plugins:
   # {% checkbox %}
   checkbox:
     interactive: false # enable interactive for user
-  # {% link url title [img:src] [description] %}
-  link:
-    default_img: https://7.dusays.com/2021/02/20/8f277b4ee0ecd.svg
 
 
 ######## JS Plugins ########
