@@ -337,3 +337,5 @@ if (stellar.plugins.preload) {
     util.loadScript(stellar.plugins.preload.flying_pages, {defer:true})
   }
 }
+
+console.log('hexo-theme-stellar:\n' + stellar.github);

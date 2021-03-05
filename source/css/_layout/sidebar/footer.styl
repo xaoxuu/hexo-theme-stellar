@@ -1,0 +1,26 @@
+.l_left .footer
+  margin-top: 0
+  margin-bottom: 1rem
+  line-height: 0
+
+
+.social-wrap
+  display: grid
+  grid-gap: 0.25rem 0.25rem
+  grid-template-columns: repeat(auto-fill, 32px)
+  a.social
+    line-height: 0
+    display: inline-block
+    padding: 6px
+    border-radius: 4px
+    filter: grayscale(100%)
+    overflow: hidden
+    background: transparent
+    trans3: box-shadow background transform
+    &:hover
+      color: $color-hover
+      z-index: 1
+      filter: grayscale(0%)
+      transform: translateY(-1px)
+      background: linear-gradient(145deg, #ddd, #fff)
+      box-shadow: 2px 4px 8px #ddd, -2px -4px 8px #fff
