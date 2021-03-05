@@ -8,14 +8,14 @@
 
 .l_cover .cover-wrap
   margin-bottom: 0
-  max-width: 500px
+  max-width: $device-mobile
   .preview
     margin-bottom: 2rem
     img
       object-fit: contain
       max-height: 35vh
       max-width: 100%
-      @media screen and (max-width: 500px)
+      @media screen and (max-width: $device-mobile)
         max-width: 60%
   .cover-title
     font-weight: 700
@@ -26,7 +26,7 @@
   .description
     margin: 1rem 0
   .start-wrap
-    margin: $gap * 2 0
+    margin: 2rem 0
     flex-shrink: 0
     a.start
       display: inline-block

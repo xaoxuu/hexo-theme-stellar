@@ -1,5 +1,5 @@
 <div class='widget-wrap' id='recent'>
-  <div class='widget-header dis-select'>
+  <div class='widget-header h4 dis-select'>
     <span class='name'><%- __('meta.recent_update') %></span>
     <% if (item.rss) { %>
       <a class='cap-action' id='rss' title='Subscribe' href='<%- item.rss %>'>
@@ -7,7 +7,7 @@
       </a>
     <% } %>
   </div>
-  <div class='widget-body'>
+  <div class='widget-body fs14'>
     <%
     var arr = page.menu_id == 'wiki' ? site.pages.filter(function(p){
       return p.layout == 'wiki' && p.title && p.title.length > 0;

@@ -2,14 +2,46 @@
   a.post
     display: inline-flex
     align-items: baseline
-    font-size: $fs14
     margin: 0.25rem 0
-    font-weight: 600
-    color: var(--text-p2)
+    font-weight: 500
+    color: var(--text-p1)
     &:hover
       color: $color-hover
     time
       font-family: $ff-code
       margin-right: 1em
-      flex-shrink: 0;
+      font-weight: 700
+      flex-shrink: 0
       opacity 0.5
+
+.post-list .post-card#cats
+  a.cat
+    display: flex
+    &.child
+      padding-left: 2rem
+    font-weight: 500
+    padding: 0.5rem 1rem
+    border-radius: $border-block
+    color: var(--text-p1)
+    &:hover
+      background: var(--block)
+      color: $color-hover
+    .badge
+      opacity 0.5
+      margin-left: 4px
+
+.post-list .post-card#tags
+  a.tag
+    display: inline-flex
+    align-items: center
+    margin: 0.5rem
+    position: relative
+    font-weight: 500
+    color: var(--text-p1)
+    &:hover
+      color: $color-hover
+    span
+      margin: 0 0.25rem
+    .badge
+      opacity 0.5
+      font-weight: 700

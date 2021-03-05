@@ -6,20 +6,18 @@
   border: 1px solid var(--block-border)
   .header
     font-weight: 500
-    color: var(--text-p3)
-    margin-bottom: 0.75rem
-    font-size: 1.25rem
+    color: var(--text-p2)
+    font-size: $fs-h4
   .body
     input.copy-area
       margin: 0.75rem 0
       padding: 0
       width: 100%
     p
-      font-size: $fs14
       color: var(--text-p2)
-      margin: 1em 0
+      margin: 0.5em 0
       a
-        font-weight: 400
+        font-weight: unset
     ul
       margin: 0
       overflow: hidden
@@ -28,7 +26,6 @@
     .post-title
       margin: 0.5rem 0
       line-height: 1.2
-      font-size: $fs14
       word-break: break-all
   section+section
     margin-top: 1rem
@@ -36,9 +33,9 @@
     border-top: 1px solid var(--block-border)
 
 .md .article-footer .social-wrap
-  grid-gap: $gap * 0.5 $gap * 1.5
+  grid-gap: 0.5rem 1.5rem
   grid-template-columns: repeat(auto-fill, 24px)
-  margin: 0.5rem 0
+  margin: 1rem 0
   a.social
     padding: 0
     background: none

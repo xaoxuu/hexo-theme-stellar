@@ -4,7 +4,7 @@ const using = '[' + stellar_info('name') + '](' + stellar_info('tree') + ')';
 const source = theme.footer.source;
 function layoutDiv() {
   var wrapper = '';
-  wrapper += '<div><hr>';
+  wrapper += '<footer class="page-footer fs12"><hr><div>';
   if (theme.footer.license) {
     wrapper += markdown(__('footer.license', theme.footer.license));
   }
@@ -13,7 +13,7 @@ function layoutDiv() {
   } else {
     wrapper += markdown(__('footer.info_not_open_source', author, using));
   }
-  wrapper += '</div>';
+  wrapper += '</div></footer>';
   return wrapper;
 }
 %>

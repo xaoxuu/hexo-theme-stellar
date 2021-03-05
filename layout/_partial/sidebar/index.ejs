@@ -11,7 +11,7 @@ if (page.sidebar == undefined) {
 }
 function layoutFooterDiv() {
   if (theme.footer.social && theme.footer.social.length > 0) {
-    var el = '<footer class="footer"><div class="social-wrap">';
+    var el = '<footer class="footer"><div class="social-wrap dis-select">';
     theme.footer.social.forEach(item => {
       if (item.icon && item.url) {
         el += '<a class="social" href="' + url_for(item.url) + '"';
@@ -31,15 +31,13 @@ function layoutFooterDiv() {
   }
 }
 %>
-<div class='wrap'>
-  <%- partial('header') %>
-  <div class='widgets'>
-    <% page.sidebar.forEach(function(widget){ %>
-      <% if (widget in theme.sidebar.widgets) { %>
-        <% let w = theme.sidebar.widgets[widget]; %>
-        <%- partial('widgets/' + w.layout, {item: w}) %>
-      <% } %>
-    <% }) %>
-  </div>
-  <%- layoutFooterDiv() %>
+<%- partial('header', {where: 'sidebar'}) %>
+<div class='widgets'>
+  <% page.sidebar.forEach(function(widget){ %>
+    <% if (widget in theme.sidebar.widgets) { %>
+      <% let w = theme.sidebar.widgets[widget]; %>
+      <%- partial('widgets/' + w.layout, {item: w}) %>
+    <% } %>
+  <% }) %>
 </div>
+<%- layoutFooterDiv() %>

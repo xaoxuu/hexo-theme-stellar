@@ -2,6 +2,8 @@
   margin-top: 1em
   margin-bottom: 1em
   max-width: 360px
+  @media screen and (max-width: $device-mobile-375)
+    width: 100%
 
 .md .link-card
   margin-right: 1em
@@ -13,9 +15,11 @@
   min-width 280px
   max-width: 100%
   width: 320px
+  @media screen and (max-width: $device-mobile-375)
+    width: 100%
   box-shadow: $boxshadow-card
   transition: box-shadow
-  border-radius: 8px
+  border-radius: $border-widget
   &:hover
     box-shadow: $boxshadow-float, $boxshadow-card-float
 
@@ -24,14 +28,14 @@
   div.left,div.right
     pointer-events: none
   div.right
-    width: 3rem
-    height: 3rem
+    width: 2.5rem
+    height: 2.5rem
     margin: 0.75rem
     overflow: hidden
     flex-shrink: 0
   div.left
     overflow: hidden
-    margin-left: 16px
+    margin-left: 1rem
   span
     margin: 0
     display: block
@@ -39,19 +43,6 @@
   span.title
     font-weight: 500
     color: var(--text-p1)
-    font-size: $fs14
   span.url
     flex-shrink: 0
     color: var(--text-p3)
-    font-size: $fs13
-
-.md .link-group
-  display: grid
-  grid-template-columns: 1fr 1fr
-  @media screen and (max-width: $device-mobile-l * 2)
-    grid-template-columns: 1fr
-  grid-gap: $gap
-  .tag.link
-    margin: 0
-  .link-card
-    width: 100%

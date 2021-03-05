@@ -1,0 +1,22 @@
+button
+  border: none
+  font-weight: 500
+  outline: none
+  disable-select()
+  cursor: pointer
+
+a.button
+  font-weight: 500
+  line-height: 1
+  padding: 0.75rem 2rem
+  border-radius: 3px
+  trans1: background
+  font-size: $fs-15
+  &.theme
+    background: $color-theme
+    color: white
+    &:hover
+      background: $color-hover
+
+a[onclick]:hover
+  cursor: pointer

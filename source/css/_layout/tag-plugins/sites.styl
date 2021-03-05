@@ -3,7 +3,7 @@
     margin: 0 0 1rem
     p
       margin: 0
-      font-size: $fs14
+      font-size: $fs-14
       &:first-child
         font-size: 1.25rem
         font-weight: 500
@@ -19,16 +19,16 @@
 
 .sites-wrap .group-body
   display: grid
-  grid-gap: $gap $gap
-  grid-template-columns: repeat(auto-fill, "calc((100% - 3 * %s) / 4)" % $gap)
+  grid-gap: 1rem 1rem
+  grid-template-columns: repeat(auto-fill, "calc((100% - 3 * %s) / 4)" % 1rem)
   @media screen and (max-width: $device-laptop)
-    grid-template-columns: repeat(auto-fill, "calc((100% - 2 * %s) / 3)" % $gap)
+    grid-template-columns: repeat(auto-fill, "calc((100% - 2 * %s) / 3)" % 1rem)
   @media screen and (max-width: 900px)
-    grid-template-columns: repeat(auto-fill, "calc((100% - 1 * %s) / 2)" % $gap)
+    grid-template-columns: repeat(auto-fill, "calc((100% - 1 * %s) / 2)" % 1rem)
   @media screen and (max-width: $device-tablet)
-    grid-template-columns: repeat(auto-fill, "calc((100% - 2 * %s) / 3)" % $gap)
+    grid-template-columns: repeat(auto-fill, "calc((100% - 2 * %s) / 3)" % 1rem)
   @media screen and (max-width: $device-mobile)
-    grid-template-columns: repeat(auto-fill, "calc((100% - 1 * %s) / 2)" % $gap)
+    grid-template-columns: repeat(auto-fill, "calc((100% - 1 * %s) / 2)" % 1rem)
   margin-bottom: 2rem
 
 .sites-wrap .group-body .site-card .card-link
@@ -47,7 +47,7 @@
     object-fit: cover
     box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.2)
   .info
-    margin-top: $gap * 0.5
+    margin-top: 0.5rem
     line-height: 1.2
     >img
       width: 28px
@@ -61,7 +61,7 @@
     .title
       font-weight: 500
       color: var(--text-p1)
-      font-size: $fs14
+      font-size: $fs-14
       margin-top: 1px
       display: -webkit-box
       -webkit-box-orient: vertical

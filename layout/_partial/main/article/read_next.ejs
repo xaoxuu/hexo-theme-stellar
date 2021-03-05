@@ -41,14 +41,14 @@ function layoutDiv() {
     el += '</section>';
     el += '<section class="body">';
     if (next) {
-      el += '<div class="post-title unread">';
+      el += '<div class="post-title h2">';
       el += '<a href="' + url_for(next.path) + '">';
       el += next.title || next.seo_title || next.wiki;
       el += '</a>';
       el += '</div>';
     }
     if (prev) {
-      el += '<div class="post-title read">';
+      el += '<div class="post-title fs14">';
       el += '<a href="' + url_for(prev.path) + '">';
       el += title_prev + __('symbol.colon');
       el += prev.title || prev.seo_title || prev.wiki;

@@ -1,0 +1,58 @@
+pre
+  font-family: $ff-code
+  font-size: $fs-code
+  tab-size: 4
+  -moz-tab-size: 4
+  -o-tab-size: 4
+  -webkit-tab-size: 4
+
+a
+  text-decoration: none
+  color: $color-link
+  &:hover
+    color: $color-hover
+
+
+hr
+  color: var(--text-meta)
+  opacity: .1
+
+
+img
+  max-width: 100%
+
+
+li
+  font-size: $fs-15
+
+
+ul,ol
+  padding-left: 1.5rem
+
+ul ul, ul ol
+  padding-left: 0
+ol ul, ol ol
+  padding-left: 0
+
+
+// table
+table:not([class])
+  border-collapse: collapse
+  overflow: auto
+  display: block
+  margin: 1rem 0
+  max-width: 100%
+  vertical-align: text-top
+  font-size: $fs-14
+  th
+    background: var(--block)
+  td,th
+    padding: 0.5em 1em
+    border: 1px solid var(--hover-block)
+    line-height: 1.5
+  tr
+    word-break: keep-all
+    white-space:nowrap
+    trans()
+    &:hover
+      background: var(--block)

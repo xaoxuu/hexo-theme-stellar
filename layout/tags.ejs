@@ -9,12 +9,12 @@ if (page.menu_id == undefined) {
   <% page.layout = 'tags'; %>
   <%- partial('_partial/main/navbar/list_post') %>
   <div class='post-list'>
-    <h1 class='list-title'><%- __('page.tags', config.title, __('btn.blog'), site.tags.length) %></h1>
+    <h1 class='list-title h4'><%- __('page.tags', config.title, __('btn.blog'), site.tags.length) %></h1>
     <article class='post-card<%- scrollreveal() %>' id='tags'>
       <% site.tags.sort('length', -1).each(function(tag){ %>
         <a class='tag' href="<%= url_for(tag.path) %>">
-          <span class='name'><%= tag.name %></span>
-          <span class='badge'>x<%- tag.length %></span>
+          <span class='name fs14'><%= tag.name %></span>
+          <span class='badge fs12'>x<%- tag.length %></span>
         </a>
       <% }) %>
     </article>

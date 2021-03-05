@@ -4,10 +4,10 @@
   <% }).limit(1).each(function(current_group) { %>
     <% if (current_group.wiki.length > 1) { %>
       <div class='widget-wrap' id='related'>
-        <div class='widget-header dis-select'>
+        <div class='widget-header h4 dis-select'>
           <span class='name'>更多<%- current_group.title %></span>
         </div>
-        <div class='widget-body'>
+        <div class='widget-body fs14'>
           <% current_group.wiki.forEach((wiki, i) => { %>
             <% site.pages.filter(function (p) { %>
               <% return p.wiki == wiki && p.wiki != page.wiki && p.description %>

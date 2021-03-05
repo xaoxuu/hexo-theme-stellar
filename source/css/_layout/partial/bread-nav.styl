@@ -1,0 +1,20 @@
+// 面包屑导航
+.bread-nav
+  padding: 1rem 1rem 0
+  margin-top: 1rem
+  color: var(--text-p3)
+  font-weight: 500
+  div#breadcrumb
+    display: flex
+    align-items: center
+    flex-direction: row
+    &:not([style]) a
+      color: $color-link
+    &[style] a
+      color: inherit
+    span.sep
+      color: var(--text-p3)
+    a.cap:hover
+      color: $color-hover
+  div#post-meta
+    margin-top: 2px

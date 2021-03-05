@@ -1,4 +1,3 @@
-@require('_defines/base')
 @require('_defines/const')
 
 // 通用主题色
@@ -33,42 +32,47 @@ $c-card-dark = #333
 //   font-weight: normal
 //   font-style: normal
 
-$ff-body = -apple-system, system-ui, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", "Microsoft Yahei", sans-serif
+$ff-body = system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif
 $ff-code = Menlo, Monaco, Consolas, "Courier New", monospace, sans-serif
 
 $ff-logo = $ff-body
 
 // font size
 $fs-root = 16px
+$fs-15 = .9375rem
+$fs-14 = .875rem
+$fs-13 = .8125rem
+$fs-12 = .75rem
+
 $fs-h1   = 2rem   // 32px
-$fs-h2   = 1.625rem  // 26px
+$fs-h2   = 1.5rem // 24px
 $fs-h3   = 1.375rem  // 22px
 $fs-h4   = 1.125rem  // 18px
-$fs-h5   = 1rem      // 16px
-$fs-h6   = 1rem      // 16px
+$fs-h5   = $fs-15
+$fs-h6   = $fs-12
+$fs-p = $fs-15
+$fs-code = $fs-13
 
-$fsh2 = 1.5rem // 24px
-$fs15 = .9375rem  // 15px
-$fs14 = .875rem   // 14px
-$fs13 = .8125rem   // 13px
-$fs-code = .8125rem  // 13px
-$fs12 = .75rem   // 13px
-$fs-footnote = .75rem  // the smallest (12px)
-$fsp = $fs15
-
-// site layout
-$sidebar = 280px
-
-// max body width
-$layout-max-body-width = 680px
-$layout-max-body-width-2k = 720px
-
-// gap
-$gap = 16px // 必须是 px
-
-// border radius
 $border-card = 12px
+$border-widget = 8px
 $border-block = 4px
+
+// 可以动态变化的属性
+:root
+  --width-left: 280px
+  --width-main: 680px
+  --gap-l: 16px
+  // desktop or larger
+  @media screen and (min-width: $device-desktop)
+    --width-left: 320px
+    --gap-l: 32px
+  // desktop 2k or larger
+  @media screen and (min-width: $device-2k)
+    --width-main: 740px
+  // desktop 4k or larger
+  @media screen and (min-width: $device-4k)
+    --width-main: 860px
+    --gap-l: 64px
 
 
 // shadow

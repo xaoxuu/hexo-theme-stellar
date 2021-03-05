@@ -1,14 +1,13 @@
 .l_body
   display: flex
   margin: auto
-  padding: 0 $gap
+  padding: 0 var(--gap-l)
   justify-content: center
 
 .l_body .l_left
   z-index: 8
-  width: $sidebar
+  width: var(--width-left)
   flex-shrink: 0
-  height 100vh
   position: sticky
   position: -webkit-sticky
   top: 0
@@ -17,36 +16,7 @@
   flex-shrink: 1
   flex-grow: 1
   width: 320px
-  max-width: $layout-max-body-width
-  @media screen and (min-width: $device-2k)
-    max-width: $layout-max-body-width-2k
-  footer
-    margin-top: 4rem
-    margin-bottom: 2rem
-
-.float-panel
-  position: sticky
-  right: 0
-  bottom: 2rem
-  float: right
-  z-index: 9
-  display: flex
-  border-radius: 2rem 0 0 2rem
-  padding-right: 2rem
-  padding: 4px
-  overflow: hidden
-  background: var(--hover-block)
-.sidebar-toggle.mobile
-  cursor: pointer
-  color: var(--text-p2)
-  background: white
-  padding: 0.5rem
-  margin-right: 1rem
-  border-radius: 32px
-  line-height: 1
-  width: 2rem
-  height: 2rem
-  font-size: 13px
+  max-width: var(--width-main)
 
 .l_body.mobile.sidebar
   .sidebar-toggle.mobile
@@ -62,9 +32,7 @@
     padding: 0
     .l_left
       position: fixed
-      height: 100vh
-      width: 280px
-      transform: translateX(0 - $gap - 320px)
+      transform: translateX(-320px)
       margin: 0
       left: 0
       background: var(--site-bg)
@@ -73,7 +41,7 @@
       max-width: 100%
   .l_body.mobile
     .l_left
-      transition: transform .38s ease-out
+      transition: transform .5s ease-out
   .l_body.mobile.sidebar
     .l_left
       transform: translateX(0px)

@@ -1,8 +1,8 @@
 <div class='widget-wrap' id='markdown'>
-  <div class='widget-header dis-select'>
+  <div class='widget-header h4 dis-select'>
     <span class='name'><%- item.title %></span>
   </div>
-  <div class='widget-body'>
+  <div class='widget-body fs14'>
     <% (item.content||[]).forEach(function(row){ %>
       <%- markdown(row) %>
     <% }) %>

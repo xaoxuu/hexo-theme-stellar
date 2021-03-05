@@ -1,50 +1,55 @@
 article.md
   max-width: 100%
   padding: 1rem
-  overflow: hidden
   color: var(--text-p1)
   line-height: 1.7
 
+article.md.excerpt
+  p
+    font-size: $fs-14
+    margin: 1em 0
+
 article.md.content
   position: relative
-  margin-bottom: $gap * 2
-
-// titles
-article.md
+  margin-bottom: 2rem
   h1.article-title
-    margin-top: $gap * 0.5
+    margin-top: 0.5rem
     line-height: 1.2
-  h1,h2,h3,h4,h5,h6
-    line-height: 1.8
     color: var(--text-p0)
+  h2,h3,h4,h5,h6
+    color: var(--text-p0)
+    padding-top: 1em
+    margin-bottom: 1em
     &:hover
       a.headerlink:before
         opacity: 1
+
+// titles
+article.md
   a.headerlink:before
     opacity: 0
     content: '#'
     position: absolute
-    width: 0.75em
     margin-left: -0.75em
   h2
     margin-top: 3rem
     border-bottom: 1px solid var(--block-border)
     font-weight: 400
-    font-size: $fsh2
     &:first-child
       margin-top: 1rem
   h3
     margin-top: 3rem
-    margin-bottom: 0
+    font-weight: 400
+  h4,h5,h6
     font-weight: 500
   h2+h3
-    margin-top: 1rem
+    margin-top: 0
   h3+h4
-    margin-top: 1rem
-  h5
-    font-size: $fs14
-  h6
-    font-size: $fs12
+    margin-top: 0
+  h4+h5
+    margin-top: 0
+  h5+h6
+    margin-top: 0
 
 // a
 article.md
@@ -55,13 +60,14 @@ article.md
         text-decoration: underline
 
 article.md p
-  font-size: $fsp
+  font-size: $fs-p
+
 // code
 article.md code
   color: $color-inlinecode
   font-family: $ff-code
   word-break: break-all
-  font-size: $fsp
+  font-size: $fs-p
 
 // div
 article.md>div
@@ -76,10 +82,8 @@ article.md blockquote
   color: var(--text-p2)
   p
     margin: 0.5em 0
-    font-size: $fs14
+    font-size: $fs-14
 
-article.md ul, article.md ol
-  padding-left: 2rem
 
 article.md img
   border-radius: 4px

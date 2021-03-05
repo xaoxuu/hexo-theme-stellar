@@ -1,8 +1,10 @@
 .l_main
   position: relative
+  padding-bottom: "calc(1 * %s)" % var(--gap-l)
+  @media screen and (min-width: $device-tablet)
+    padding-top: "calc(2 * %s)" % var(--gap-l)
   header
-    display: none
-    margin: $gap * 2 $gap $gap
+    margin: 2rem 1rem 1rem
     padding: 0.25rem
     background: var(--block)
     border-radius: 6px
@@ -18,13 +20,3 @@
     margin: -3px
     a.nav-item
       margin: 2px
-
-// pc上右边顶部留白
-@media screen and (min-width: $device-tablet)
-  .l_main
-    margin-top: $gap
-
-// 移动端显示主导航栏
-@media screen and (max-width: $device-tablet)
-  .l_main header
-    display: block

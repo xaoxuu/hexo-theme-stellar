@@ -1,15 +1,15 @@
-.l_left .wrap
+.l_left
   display: flex
   flex-direction: column
-  height: "calc(100% - 3 * %s)" % $gap
-  margin-top: $gap
-  padding: $gap
+  padding: var(--gap-l)
+  padding-top: "calc(2 * %s)" % var(--gap-l)
+  height: "calc(100vh - 3 * %s)" % var(--gap-l)
   @media screen and (max-width: $device-tablet)
-    height: "calc(100% - 2 * %s)" % $gap
-    margin-top: 0
+    padding-top: "calc(1 * %s)" % var(--gap-l)
+    height: "calc(100% - 2 * %s)" % var(--gap-l)
 
 .logo-wrap
-  margin: $gap 0
+  margin: 1rem 0
   display: flex
   align-items: center
   color: var(--text-p0)
@@ -43,7 +43,6 @@ nav.menu
   margin-top: 0
   background: var(--block)
   border-radius: 6px
-  disable-select()
   display: flex
   padding: 1px
   flex-wrap: wrap
@@ -58,7 +57,7 @@ nav.menu
     word-break: keep-all
     margin: 1px
     border-radius: 4px
-    font-size: $fs14
+    font-size: $fs-14
     font-weight: 500
     overflow: hidden
     padding: 0.375rem 0.75rem
@@ -72,7 +71,7 @@ nav.menu
   text-align: center
 
 .l_left .widgets
-  margin: $gap 0
+  margin: 1rem 0
   overflow: scroll
   flex-grow: 1
   scrollbar(0, 0)
@@ -81,11 +80,10 @@ nav.menu
     margin: 1rem 0 2rem 0
     .widget-header
       display: flex
-      font-size: 1.25rem
       color: var(--text-meta)
       justify-content: space-between
       align-items: center
-      font-weight: 600
+      font-weight: 500
       position: sticky
       position: -webkit-sticky
       top: -2px
@@ -106,16 +104,12 @@ nav.menu
 
     .widget-body
       margin: 0.5rem 0
-      font-size: $fs14
       color: var(--text-p2)
       p
         margin-top: 0.5em
         margin-bottom: 0.5em
-        >a
-          &:not([class])
-            font-weight: 500
-            &:hover
-              text-decoration: underline
+        >a:hover
+          text-decoration: underline
 
 
 
@@ -126,9 +120,8 @@ nav.menu
 
 
 .social-wrap
-  disable-select()
   display: grid
-  grid-gap: $gap * 0.25 $gap * 0.25
+  grid-gap: 0.25rem 0.25rem
   grid-template-columns: repeat(auto-fill, 32px)
   a.social
     line-height: 0

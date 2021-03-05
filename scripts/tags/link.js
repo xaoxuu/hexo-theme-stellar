@@ -11,7 +11,7 @@ hexo.extend.tag.register('link', function(args) {
   args = hexo.args.map(args, ['img'], ['url', 'title', 'description']);
 
   var el = '';
-  el += '<div class="tag-plugin tag link">';
+  el += '<div class="tag-plugin tag link dis-select">';
   el += '<a class="link-card" title="' + args.title + '" href="' + args.url + '"';
   if (args.url.includes('://')) {
     el += ' target="_blank" rel="external nofollow noopener noreferrer"';
@@ -19,7 +19,7 @@ hexo.extend.tag.register('link', function(args) {
   el += '>';
   // left
   el += '<div class="left">';
-  el += '<span class="title">' + args.title + '</span><span class="url">' + (args.description || args.url) + '</span>';
+  el += '<span class="title fs14">' + args.title + '</span><span class="url fs12">' + (args.description || args.url) + '</span>';
   el += '</div>';
 
   // right

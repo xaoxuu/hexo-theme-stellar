@@ -1,18 +1,6 @@
 // list
 .post-list
   margin: 1rem
-  .card-title,.list-title
-    color: var(--text-p3)
-    font-family: $ff-code
-    line-height: 1.2
-  .list-title
-    font-weight: 500
-    margin: 2rem 1rem 0rem
-    font-size: 1.2rem
-  .card-title
-    font-weight: 600
-    padding-bottom: 0.5rem
-    font-size: 1.2rem
 
 // card
 .post-list .post-card
@@ -49,16 +37,6 @@
 
 // posts
 .post-list .post-card
-  .post-title
-    font-weight: 500
-    margin: .5em 0
-    line-height: 1.2
-    font-size: $fs-h3
-    border-bottom: none
-    color: var(--text-p1)
-    trans1 color
-  .excerpt
-    font-size: $fs14
   .post-cover
     overflow: hidden
     margin-left: -1rem
@@ -66,7 +44,6 @@
     margin-right: -1rem
     img
       object-fit: cover
-      disable-select()
       width: 100%
       border-radius: 0
       height: 320px
@@ -76,9 +53,9 @@
         height: 320px
       @media screen and (max-width: $device-mobile)
         height: 280px
-      @media screen and (max-width: $device-mobile-l)
+      @media screen and (max-width: $device-mobile-425)
         height: 240px
-      @media screen and (max-width: $device-mobile-m)
+      @media screen and (max-width: $device-mobile-375)
         height: 200px
       &:not(.lazy)
         trans1: transform 1s
@@ -90,9 +67,9 @@
     height: 400px
   @media screen and (max-width: $device-mobile)
     height: 320px
-  @media screen and (max-width: $device-mobile-l)
+  @media screen and (max-width: $device-mobile-425)
     height: 280px
-  @media screen and (max-width: $device-mobile-m)
+  @media screen and (max-width: $device-mobile-375)
     height: 240px
 
 .post-list .post-card.post:hover
@@ -124,10 +101,3 @@
   flex: 1
   overflow: hidden
   word-wrap: break-word
-  .post-title
-    margin-top: 0.5rem
-    font-weight: 500
-    font-size: 1.75rem
-  >p
-    margin: 0.5rem 0
-    font-size: $fs14

@@ -1,7 +1,7 @@
 <%
 function layoutMainMenu() {
   var el = '';
-  el += '<nav class="menu">'
+  el += '<nav class="menu dis-select">'
   for (let id of Object.keys(theme.sidebar.menu)) {
     let item = theme.sidebar.menu[id];
     if (item == undefined || item.length == 0) {
@@ -19,7 +19,7 @@ function layoutMainMenu() {
   return el;
 }
 %>
-<header class='header'>
+<header class='header<%- where == "main" ? " mobile-only" : "" %>'>
   <%- partial('logo') %>
   <%- layoutMainMenu() %>
 </header>

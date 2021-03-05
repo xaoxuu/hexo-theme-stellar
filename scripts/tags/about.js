@@ -35,7 +35,7 @@ hexo.extend.tag.register('about', function(args, content) {
   el += '</div>';
 
   // content
-  el += '<div class="about-body">';
+  el += '<div class="about-body fs14">';
   el += rows.join('');
   el += '</div>';
 

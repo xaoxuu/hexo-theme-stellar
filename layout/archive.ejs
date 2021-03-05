@@ -17,16 +17,16 @@ if (page.menu_id == undefined) {
   			<% years.push(post.year); %>
   		<% } %>
   	<% }); %>
-    <h1 class='list-title'><%- __('page.archives', config.title, years.length, site.posts.length) %></h1>
+    <h1 class='list-title h4'><%- __('page.archives', config.title, years.length, site.posts.length) %></h1>
   	<% years.forEach((year, i) => { %>
   		<article class='post-card<%- scrollreveal() %>' id='archive'>
-  			<div class='card-title'><%= year %></div>
+  			<div class='list-title h4'><%= year %></div>
   			<% site.posts.sort('date', -1).filter(function (post) { %>
   				<% post.year = date(post.date, 'YYYY'); %>
   		    <% return post.year == year; %>
   		  <% }).each(function(post) { %>
   				<div>
-            <a class='post' href="<%= url_for(post.link || post.path) %>">
+            <a class='post fs14' href="<%= url_for(post.link || post.path) %>">
     					<time><%= date(post.date, 'MM-DD') %></time>
     					<span>
                 <% if (post.title) { %>

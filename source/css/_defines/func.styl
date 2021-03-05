@@ -1,4 +1,58 @@
 
+// 可替代 transition 使用
+transition($op = all, $time = 0.28s, $ease = ease-out)
+  transition: $op $time $ease
+  -moz-transition: $op $time $ease
+  -webkit-transition: $op $time $ease
+  -o-transition: $op $time $ease
+
+// 为1个属性设置动画
+trans1($op, $time = 0.2s)
+  transition: $op $time ease-out
+  -moz-transition: $op $time ease-out
+  -webkit-transition: $op $time ease-out
+  -o-transition: $op $time ease-out
+
+// 为2个属性设置动画
+trans2($op1, $op2)
+  transition: $op1 0.2s ease-out, $op2 0.2s ease-out
+  -moz-transition: $op1 0.2s ease-out, $op2 0.2s ease-out
+  -webkit-transition: $op1 0.2s ease-out, $op2 0.2s ease-out
+  -o-transition: $op1 0.2s ease-out, $op2 0.2s ease-out
+
+trans2pro($op1, $t1, $op2, $t2)
+  transition: $op1 $t1 ease-out, $op2 $t2 ease-out
+  -moz-transition: $op1 $t1 ease-out, $op2 $t2 ease-out
+  -webkit-transition: $op1 $t1 ease-out, $op2 $t2 ease-out
+  -o-transition: $op1 $t1 ease-out, $op2 $t2 ease-out
+
+trans3($op1, $op2, $op3)
+  transition: $op1 0.2s ease-out, $op2 0.2s ease-out, $op3 0.2s ease-out
+  -moz-transition: $op1 0.2s ease-out, $op2 0.2s ease-out, $op3 0.2s ease-out
+  -webkit-transition: $op1 0.2s ease-out, $op2 0.2s ease-out, $op3 0.2s ease-out
+  -o-transition: $op1 0.2s ease-out, $op2 0.2s ease-out, $op3 0.2s ease-out
+
+txt-ellipsis()
+  white-space: nowrap
+  overflow: hidden
+  text-overflow: ellipsis
+
+placeholder(rules)
+  &::-webkit-input-placeholder
+    rules()
+  &:-moz-placeholder
+    rules()
+	&::-moz-placeholder
+    rules()
+	&:-ms-input-placeholder
+    rules()
+
+disable-select()
+  -moz-user-select: none
+  -ms-user-select: none
+  -webkit-user-select: none
+  user-select: none
+
 
 scrollbar($w = 4px, $b = 2px, $c = var(--text-meta), $h = var(--text-p3))
   &::-webkit-scrollbar
@@ -39,7 +93,7 @@ hover-block($v, $h, $br = 4px)
     background: var(--hover-block)
 
 
-inside-box($fs = $fs15)
+inside-box($fs = $fs-15)
   p,ol,ul
     margin-top: 0.5rem
     margin-bottom: 0.5rem

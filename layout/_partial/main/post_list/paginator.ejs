@@ -1,5 +1,5 @@
 <% if (is_home() && page.total > 1) { %>
-  <div class='paginator-wrap'>
+  <div class='paginator-wrap dis-select'>
     <a class='paginator prev<%- page.prev != 0 ? "" : " disable" %>' href='<%- url_for(page.prev_link) %>'>
       <img src='https://7.dusays.com/2021/02/26/f049bbd4e88ec.svg'/>
     </a>
