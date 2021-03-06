@@ -8,7 +8,7 @@
 'use strict';
 
 hexo.extend.tag.register('sites', function(args) {
-  args = hexo.args.map(args, ['only', 'not']);
+  args = hexo.args.map(args, ['only', 'not', 'repo', 'api']);
   if (args.only) {
     args.only = args.only.split(',');
   }
@@ -18,6 +18,14 @@ hexo.extend.tag.register('sites', function(args) {
   var sites = hexo.locals.get('data').sites;
   if (sites == undefined) {
     sites = {};
+  }
+  if (args.repo) {
+    sites = {
+      group: {
+        api: args.api,
+        repo: args.repo
+      }
+    }
   }
   var el = '<div class="tag-plugin sites-wrap">';
   function groupHeader(group) {
