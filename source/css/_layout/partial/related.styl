@@ -1,3 +1,8 @@
+.related-wrap
+  padding: 2rem 1rem
+  &:empty
+    display: none
+
 .related-wrap#related-posts
   .related-posts
     width: 100%
@@ -60,3 +65,27 @@
           transform: scale(1.04)
     a+a
       margin-left: 1rem
+
+
+.related-wrap#read-next
+  .body
+    .post-title
+      margin: 0.5rem 0
+      line-height: 1.2
+      a
+        color: inherit
+        &:hover
+          color: $color-hover
+      &.fs14
+        color: var(--text-p3)
+        font-weight: 500
+      &.h2
+        color: var(--text-p1)
+
+
+.related-wrap#comments
+  div.cmt-body
+    min-height: 150px
+    position: relative
+    svg.loading
+      top: 60px

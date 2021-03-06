@@ -17,7 +17,6 @@ hexo.extend.helper.register('popular_posts_wrapper', function(args){
   if (cfg.enable != true) return;
   var returnHTML = "";
   var div = `
-    <div class="related_posts">
     <section class='header'>
       <div class='title cap theme'>${title}</div>
     </section>
@@ -54,6 +53,6 @@ hexo.extend.helper.register('popular_posts_wrapper', function(args){
 
   if (returnHTML != "") returnHTML = "<div class=\"" + cls + "\">" + returnHTML + "</div>";
   div += returnHTML;
-  div += '</section></div>';
+  div += '</section>';
   return div;
 });
