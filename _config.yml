@@ -140,7 +140,7 @@ plugins:
   # https://scrollrevealjs.org/api/reveal.html
   scrollreveal:
     enable: true
-    js: https://cdn.jsdelivr.net/npm/scrollreveal@4.0.7/dist/scrollreveal.min.js
+    js: https://cdn.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js
     distance: 8px
     duration: 500 # ms
     interval: 100 # ms

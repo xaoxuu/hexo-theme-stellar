@@ -37,12 +37,9 @@ div.swiper-slide
   background: alpha(white, 0.25)
   trans1 background
   --swiper-theme-color: black !important
-  @supports (backdrop-filter: blur(20px))
-    background: alpha(white, 0.5)
-    backdrop-filter: saturate(200%) blur(20px)
   &:after
     font-size: 1.2rem !important
     font-weight: 700 !important
   &:hover
-    background: white
+    background: white !important
     --swiper-theme-color: $color-hover !important

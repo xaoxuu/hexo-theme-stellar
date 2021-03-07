@@ -18,7 +18,7 @@ article.md.content
     color: var(--text-p0)
   h2,h3,h4,h5,h6
     color: var(--text-p0)
-    padding-top: 1em
+    padding-top: 1rem
     margin-bottom: 1em
     &:hover
       a.headerlink:before
@@ -36,12 +36,14 @@ article.md
     border-bottom: 1px solid var(--block-border)
     font-weight: 400
     &:first-child
-      margin-top: 1rem
+      margin-top: 0
   h3
     margin-top: 3rem
     font-weight: 400
   h4,h5,h6
     font-weight: 500
+  h1+h2
+    margin-top: 0
   h2+h3
     margin-top: 0
   h3+h4

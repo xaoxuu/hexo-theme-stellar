@@ -35,7 +35,7 @@ function lazyProcess(htmlContent) {
       }
       newClass += 'lazy';
       if (value) {
-        return ori.replace(value, newClass);
+        return ori.replace('class="' + value, 'class="' + newClass);
       } else {
         return ori.replace('class="', 'class="' + newClass);
       }

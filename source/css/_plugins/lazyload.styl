@@ -10,8 +10,10 @@ if hexo-config('plugins.lazyload.transition') == 'blur'
     trans-cover filter
     &:not(.loaded)
       filter blur(8px)
+      -webkit-filter blur(8px)
     &.loaded,&.error
       filter none
+      -webkit-filter none
   .group-body .site-card .card-link>img
     trans-site filter
   .group-body .user-card .card-link>img
