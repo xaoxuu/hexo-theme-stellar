@@ -77,7 +77,7 @@ $(function () {
     cfg.el = el;
     cfg.api = api;
     cfg.class = el.getAttribute('class');
-    cfg.avatar = 'https://7.dusays.com/2021/03/03/87519671e4837.svg';
+    cfg.avatar = 'https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/avatar/round/3442075.svg';
     friendsjs.layout(cfg);
   }
 });
