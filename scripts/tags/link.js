@@ -11,7 +11,7 @@ hexo.extend.tag.register('link', function(args) {
   args = hexo.args.map(args, ['img'], ['url', 'title', 'description']);
 
   var el = '';
-  el += '<div class="tag-plugin tag link dis-select">';
+  el += '<div class="tag-plugin link dis-select">';
   el += '<a class="link-card" title="' + args.title + '" href="' + args.url + '"';
   if (args.url.includes('://')) {
     el += ' target="_blank" rel="external nofollow noopener noreferrer"';

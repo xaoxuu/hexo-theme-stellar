@@ -13,7 +13,7 @@ hexo.extend.tag.register('folding', function(args, content) {
   args = hexo.args.map(args, ['color', 'codeblock', 'open'], ['title']);
   var el = '';
   // header
-  el += '<details class="tag-plugin"'
+  el += '<details class="tag-plugin folding"'
   el += ' ' + hexo.args.joinTags(args, ['color', 'codeblock']).join(' ');
   if (args.open && args.open == 'true') {
     el += ' open';

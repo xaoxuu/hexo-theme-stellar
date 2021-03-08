@@ -1,4 +1,4 @@
-.md .tag.link
+.md .tag-plugin.link
   margin-top: 1em
   margin-bottom: 1em
   max-width: 360px
@@ -18,10 +18,9 @@
   @media screen and (max-width: $device-mobile-375)
     width: 100%
   box-shadow: $boxshadow-card
-  trans2 box-shadow transform
+  trans1 box-shadow
   border-radius: $border-widget
   &:hover
-    transform: translateY(-1px)
     box-shadow: $boxshadow-card-float
 
 
@@ -47,3 +46,7 @@
   span.url
     flex-shrink: 0
     color: var(--text-p3)
+
+.tag-plugin.folding,.tag-plugin.tabs
+  .tag-plugin.link .link-card
+    background: var(--block)

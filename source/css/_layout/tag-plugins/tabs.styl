@@ -59,12 +59,10 @@ $tbr = $border-block
         display: none
       &.active
         display: block
-      >
-        p,.tabs,ul,ol,.highlight,.note
-          &:first-child
-            margin-top: 0
-          &:last-child
-            margin-bottom: 0
+      >:first-child
+        margin-top: 0
+      >:last-child
+        margin-bottom: 0
 
 
 .tag-plugin.tabs .tab-pane[codeblock]
