@@ -46,7 +46,7 @@ function layoutDiv() {
       el += '</div>';
       el += '<div class="body">';
       el += '<div class="link"><input class="copy-area" readonly="true" id="copy-link" value="' + page.permalink + '" /></div>';
-      el += '<div class="social-wrap">';
+      el += '<div class="social-wrap dis-select">';
       theme.article.share.forEach((item, i) => {
         if (['wechat', 'weibo', 'email', 'link'].includes(item)) {
           el += '<a class="social share-item ' + item + '"';
@@ -86,8 +86,8 @@ function layoutDiv() {
       });
       el += '</div>';
       if (theme.article.share.includes('wechat')) {
-        el += '<div class="qrcode" id="qrcode-wechat" style="display:none">';
-        el += '<img no-lazy src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=' + url + '"/>';
+        el += '<div class="qrcode" id="qrcode-wechat" style="visibility:hidden;height:0">';
+        el += '<img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=' + url + '"/>';
         el += '</div>';
       }
       el += '</div>';

@@ -22,11 +22,22 @@ hexo.extend.helper.register('popular_posts_wrapper', function(args){
     </section>
     <section class='body'>
     `;
+
+  const posts = this.site.posts;
+  const root = this.config.root;
   function generateHTML(list){
 
     var el = '';
     el += '<a class="item" href="' + list.path + '" title="' + list.title + '">';
-
+    var p = posts.filter(function(p) {
+      return root + p.path == list.path;
+    });
+    if (p && p.length > 0) {
+      p = p.data[0];
+    }
+    if (p && p.cover) {
+      list.img = p.cover;
+    }
     if (hexo.theme.config.default.cover) {
       el += '<div class="img">'
       if (list.img && list.img != "") {
