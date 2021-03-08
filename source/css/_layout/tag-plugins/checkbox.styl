@@ -1,6 +1,5 @@
 .md .checkbox
   display: flex
-  align-items: center
   margin: 0.25em 0
   font-size: $fs-15
   line-height: 1.2
@@ -21,6 +20,8 @@
     margin-right: 8px
     if hexo-config('tag_plugins.checkbox.interactive') != true
       pointer-events: none
+  span
+    margin-top: 1px
   /* Checkbox */
   input[type=checkbox]
     &:before, &:after
@@ -155,7 +156,7 @@
 
 
 .tag-plugin.checkbox
-  --theme: $color-theme
+  --theme: $c-blue
 
 .tag-plugin.checkbox[color='red']
   --theme: mix($c-red, $c-card-light, 90)

@@ -1,0 +1,76 @@
+$tbr = $border-block
+
+.tag-plugin.tabs
+  display: block
+  position: relative
+  margin-top: 1rem
+  margin-bottom: 1rem
+  border-radius: $tbr
+  border: 1px solid var(--block-border)
+  font-size: $fs-14
+
+.tag-plugin.tabs
+  ul.nav-tabs
+    display: flex
+    overflow-x: auto
+    white-space: nowrap
+    justify-content: flex-start
+    margin: 0 !important
+    padding: 8px 8px 0 8px
+    background: var(--block)
+    border-radius: $tbr $tbr 0 0
+    line-height: 1.5
+    li.tab
+      list-style-type: none
+      margin-top: 0
+      margin-bottom: 0
+      &:last-child
+        padding-right: 1rem
+      a
+        display: block
+        cursor: pointer
+        border-radius: $tbr $tbr 0 0
+        padding: 0.5rem
+        text-align: center
+        font-size: $fs-14
+        line-height: inherit
+        font-weight: 700
+        color: var(--text-p3)
+        border: 1px solid transparent
+        &:hover
+          color: var(--text-p1)
+        i
+          pointer-events: none
+      &.active a
+        cursor: default
+        color: var(--text-p1)
+        background: var(--card)
+        border: 1px solid var(--block-border)
+        border-bottom: 1px solid var(--card)
+
+  .tab-content
+    border-top: 1px solid var(--block-border)
+    margin-top: -1px
+    background: var(--card)
+    border-radius:  0 0 $tbr $tbr
+    .tab-pane
+      padding: 1rem
+      &:not(.active)
+        display: none
+      &.active
+        display: block
+      >
+        p,.tabs,ul,ol,.highlight,.note
+          &:first-child
+            margin-top: 0
+          &:last-child
+            margin-bottom: 0
+
+
+.tag-plugin.tabs .tab-pane[codeblock]
+  padding: 0
+  .highlight
+    border: none
+    border-radius: 0
+    background: transparent
+    margin: 0
