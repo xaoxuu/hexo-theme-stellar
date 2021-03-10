@@ -1,4 +1,4 @@
 .github/
-publish.sh
+npm-publish.sh
 node_modules
 utterances.json
