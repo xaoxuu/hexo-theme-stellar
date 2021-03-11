@@ -290,7 +290,6 @@ if (stellar.plugins.lazyload) {
   // to make LazyLoad self-initialize
   window.lazyLoadOptions = {
     elements_selector: ".lazy",
-    threshold: 0
   };
   // Listen to the initialization event
   // and get the instance of LazyLoad
