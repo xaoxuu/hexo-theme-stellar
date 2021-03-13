@@ -80,24 +80,48 @@
         padding: 8px 2rem
     .vcards
       margin-top: 0.5rem
+      .vcard
+        display: flex
+        position: relative
+        .vimg
+          width: 36px
+          height: 36px
+        .vh
+          margin-left: -46px
+          padding-bottom: 0
+          width: 100%
+          .vhead
+            line-height: 1.2
+          .vnick
+            margin-left: 44px
+            line-height: inherit
+            font-size: $fs-14
+          .vtime
+            margin-left: 44px
+            font-size: $fs-12
+            font-weight: 500
+          .vat
+            font-size: $fs-12
       >.vcard
         border-radius: $border-block
         background: var(--card)
         border: 1px dashed var(--block-border)
         padding: 1rem
         margin-bottom: 1rem
-      .vh
-        border-bottom: none
-      .vquote
-        border-left: none
+        >.vh
+          border-bottom: none
+          >.vquote
+            border-left: none
+            padding-left: 0
+            >.vcard
+              border-top: 1px dashed var(--block-border)
       .vimg
-        border: 1px solid white
         padding: 0
         background: var(--block)
       .vhead
         span
           &.vnick
-            color: var(--text-p3)
+            color: var(--text-p2)
             cursor: default
         a
           &.vnick
@@ -106,9 +130,6 @@
             &:hover
               color: $color-hover
         .vsys
-          margin: 2px
-          padding: 1px 8px
-          background-color: var(--block)
           display: none
       .vmeta
         .vat
@@ -124,6 +145,7 @@
 
       .vcontent
         padding-top: 0
+        margin-top: .75em
         blockquote
           padding-top: 1rem
           padding-bottom: 1rem

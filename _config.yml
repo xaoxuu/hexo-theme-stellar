@@ -30,7 +30,7 @@ sidebar:
     # Recent update
     recent:
       layout: recent
-      rss: /atom.xml # npm i hexo-generator-feed
+      rss: # /atom.xml # npm i hexo-generator-feed
       limit: 5 # Count of posts
     # TOC (valid only in layout:post/wiki)
     toc:

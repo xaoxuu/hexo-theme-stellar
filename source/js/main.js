@@ -37,96 +37,6 @@ const util = {
     return result
   },
 
-  // 懒加载 css https://github.com/filamentgroup/loadCSS
-  loadCSS: (href, before, media, attributes) => {
-    var doc = window.document;
-    var ss = doc.createElement("link");
-    var ref;
-    if (before) {
-      ref = before;
-    } else {
-      var refs = (doc.body || doc.getElementsByTagName("head")[0]).childNodes;
-      ref = refs[refs.length - 1];
-    }
-    var sheets = doc.styleSheets;
-    if (attributes) {
-      for (var attributeName in attributes) {
-        if (attributes.hasOwnProperty(attributeName)) {
-          ss.setAttribute(attributeName, attributes[attributeName]);
-        }
-      }
-    }
-    ss.rel = "stylesheet";
-    ss.href = href;
-    ss.media = "only x";
-    function ready(cb) {
-      if (doc.body) {
-        return cb();
-      }
-      setTimeout(function () {
-        ready(cb);
-      });
-    }
-    ready(function () {
-      ref.parentNode.insertBefore(ss, before ? ref : ref.nextSibling);
-    });
-    var onloadcssdefined = function (cb) {
-      var resolvedHref = ss.href;
-      var i = sheets.length;
-      while (i--) {
-        if (sheets[i].href === resolvedHref) {
-          return cb();
-        }
-      }
-      setTimeout(function () {
-        onloadcssdefined(cb);
-      });
-    };
-    function loadCB() {
-      if (ss.addEventListener) {
-        ss.removeEventListener("load", loadCB);
-      }
-      ss.media = media || "all";
-    }
-    if (ss.addEventListener) {
-      ss.addEventListener("load", loadCB);
-    }
-    ss.onloadcssdefined = onloadcssdefined;
-    onloadcssdefined(loadCB);
-    return ss;
-  },
-
-  // 从 butterfly 和 volantis 获得灵感
-  loadScript: (src, opt) => new Promise((resolve, reject) => {
-    var script = document.createElement('script')
-    script.src = src
-    if (opt) {
-      for (let key of Object.keys(opt)) {
-        script[key] = opt[key]
-      }
-    } else {
-      // 默认异步，如果需要同步，第二个参数传入 {} 即可
-      script.async = true
-    }
-    script.onerror = reject
-    script.onload = script.onreadystatechange = function() {
-      const loadState = this.readyState
-      if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
-      script.onload = script.onreadystatechange = null
-      resolve()
-    }
-    document.head.appendChild(script)
-  }),
-
-  // https://github.com/jerryc127/hexo-theme-butterfly
-  jQuery: (fn) => {
-    if (typeof jQuery === 'undefined') {
-      util.loadScript(stellar.plugins.jQuery).then(fn)
-    } else {
-      fn()
-    }
-  },
-
   copy: (id, msg) => {
     const el = document.getElementById(id);
     if (el) {
@@ -178,7 +88,7 @@ const sidebar = {
 
 const init = {
   toc: () => {
-    util.jQuery(() => {
+    stellar.jQuery(() => {
       const scrollOffset = 32;
       var segs = [];
       $("article.md :header").each(function (idx, node) {
@@ -212,7 +122,7 @@ const init = {
     })
   },
   sidebar: () => {
-    util.jQuery(() => {
+    stellar.jQuery(() => {
       $("#toc a.toc-link").click(function(e) {
         l_body.classList.remove("sidebar");
       });
@@ -271,7 +181,7 @@ init.registerTabsTag()
 
 // scrollreveal
 if (stellar.plugins.scrollreveal) {
-  util.loadScript(stellar.plugins.scrollreveal.js).then(function () {
+  stellar.loadScript(stellar.plugins.scrollreveal.js).then(function () {
     ScrollReveal().reveal("body .reveal", {
       distance: stellar.plugins.scrollreveal.distance,
       duration: stellar.plugins.scrollreveal.duration,
@@ -284,7 +194,7 @@ if (stellar.plugins.scrollreveal) {
 
 // lazyload
 if (stellar.plugins.lazyload) {
-  util.loadScript(stellar.plugins.lazyload.js, {defer:true})
+  stellar.loadScript(stellar.plugins.lazyload.js, {defer:true})
   // https://www.npmjs.com/package/vanilla-lazyload
   // Set the options globally
   // to make LazyLoad self-initialize
@@ -309,16 +219,16 @@ if (stellar.plugins.lazyload) {
 if (stellar.plugins.sitesjs) {
   const issues_api = document.getElementById('sites-api');
   if (issues_api != undefined) {
-    util.jQuery( () => {
-      util.loadScript(stellar.plugins.sitesjs, {defer:true})
+    stellar.jQuery( () => {
+      stellar.loadScript(stellar.plugins.sitesjs, {defer:true})
     })
   }
 }
 if (stellar.plugins.friendsjs) {
   const issues_api = document.getElementById('friends-api');
   if (issues_api != undefined) {
-    util.jQuery( () => {
-      util.loadScript(stellar.plugins.friendsjs, {defer:true})
+    stellar.jQuery( () => {
+      stellar.loadScript(stellar.plugins.friendsjs, {defer:true})
     })
   }
 }
@@ -327,8 +237,8 @@ if (stellar.plugins.friendsjs) {
 if (stellar.plugins.swiper) {
   const swiper_api = document.getElementById('swiper-api');
   if (swiper_api != undefined) {
-    util.loadCSS(stellar.plugins.swiper.css);
-    util.loadScript(stellar.plugins.swiper.js, {defer:true}).then(function () {
+    stellar.loadCSS(stellar.plugins.swiper.css);
+    stellar.loadScript(stellar.plugins.swiper.js, {defer:true}).then(function () {
       var swiper = new Swiper('.swiper-container', {
         slidesPerView: 'auto',
         spaceBetween: 8,
@@ -350,7 +260,7 @@ if (stellar.plugins.swiper) {
 // preload
 if (stellar.plugins.preload) {
   if (stellar.plugins.preload.service == 'instant_page') {
-    util.loadScript(stellar.plugins.preload.instant_page, {
+    stellar.loadScript(stellar.plugins.preload.instant_page, {
       defer: true,
       type: 'module',
       integrity: 'sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1'
@@ -362,7 +272,7 @@ if (stellar.plugins.preload) {
       maxRPS: 5,
       hoverDelay: 25
     };
-    util.loadScript(stellar.plugins.preload.flying_pages, {defer:true})
+    stellar.loadScript(stellar.plugins.preload.flying_pages, {defer:true})
   }
 }
 
