@@ -67,7 +67,7 @@ article:
 
 ######## Comments ########
 comments:
-  service: utterances # utterances
+  service: # utterances, valine
   # utterances
   # https://utteranc.es/
   utterances:
@@ -77,19 +77,33 @@ comments:
     theme:
       light: github-light
       dark: github-dark
+  valine:
+    js: https://cdn.jsdelivr.net/npm/valine@1.4/dist/Valine.min.js
+    appId: # your appId
+    appKey: # your appKey
+    placeholder:
+    meta: [nick,mail,link] # valine comment header info
+    requiredFields: [nick,mail]
+    enableQQ: true # Unstable avatar link
+    recordIP: false # Record commenter IP
+    avatar: robohash # gravatar style https://valine.js.org/avatar
+    pageSize: 10 # comment list page size
+    lang: zh-cn
+    highlight: true
+    mathJax: false
 
 
 ######## Footer ########
 footer:
   social:
-    - icon: '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/social/25678f144c438.svg"/>'
-      url: /atom.xml
-    - icon: '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/social/08a41b181ce68.svg"/>'
-      url: /
-    - icon: '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/social/cf1ae151f9e83.svg"/>'
-      url: /
-    - icon: '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/social/942ebbf1a4b91.svg"/>'
-      url: /
+    # - icon: '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/social/25678f144c438.svg"/>'
+    #   url: /atom.xml
+    # - icon: '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/social/08a41b181ce68.svg"/>'
+    #   url: /
+    # - icon: '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/social/cf1ae151f9e83.svg"/>'
+    #   url: /
+    # - icon: '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/social/942ebbf1a4b91.svg"/>'
+    #   url: /
   license: '[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
   source: #'[GitHub](https://github.com/xaoxuu/hexo-theme-stellar)'
 

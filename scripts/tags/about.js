@@ -17,14 +17,16 @@ hexo.extend.tag.register('about', function(args, content) {
   el += '<div class="tag-plugin about">';
   el += '<div class="about-header">';
   // avatar
-  el += '<div class="avatar">'
-  el += '<img src="' + args.avatar + '"';
-  if (args.height && args.height.length > 0) {
-    el += ' height="' + args.height + '"/>';
-  } else {
-    el += '/>';
+  if (args.avatar) {
+    el += '<div class="avatar">'
+    el += '<img src="' + args.avatar + '"';
+    if (args.height && args.height.length > 0) {
+      el += ' height="' + args.height + '"/>';
+    } else {
+      el += '/>';
+    }
+    el += '</div>';
   }
-  el += '</div>';
   // title
   if (rows.length > 0) {
     // el += '<div class="title">';
