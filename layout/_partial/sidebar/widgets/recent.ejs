@@ -1,30 +1,39 @@
-<div class='widget-wrap' id='recent'>
-  <div class='widget-header h4 dis-select'>
-    <span class='name'><%- __('meta.recent_update') %></span>
-    <% if (item.rss) { %>
-      <a class='cap-action' id='rss' title='Subscribe' href='<%- item.rss %>'>
-        <svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8938"><path d="M800.966 947.251c0-404.522-320.872-732.448-716.69-732.448V62.785c477.972 0 865.44 395.987 865.44 884.466h-148.75z m-162.273 0h-148.74c0-228.98-181.628-414.598-405.678-414.598v-152.01c306.205 0 554.418 253.68 554.418 566.608z m-446.24-221.12c59.748 0 108.189 49.503 108.189 110.557 0 61.063-48.44 110.563-108.188 110.563-59.747 0-108.18-49.5-108.18-110.563 0-61.054 48.433-110.556 108.18-110.556z" p-id="8939"></path></svg>
-      </a>
-    <% } %>
-  </div>
-  <div class='widget-body fs14'>
-    <%
-    var arr = page.menu_id == 'wiki' ? site.pages.filter(function(p){
-      return p.layout == 'wiki' && p.title && p.title.length > 0;
-    }) : site.posts.filter(function(p){
-      return p.title && p.title.length > 0;
-    });
-    %>
-    <% arr.sort('updated', -1).limit(item.limit).each(function(post){ %>
-      <div class='post-title'>
-        <a href="<%= url_for(post.link || post.path) %>">
-          <% if (post.wiki && (post.title.toUpperCase().includes(post.wiki.toUpperCase()) == false)) { %>
-            <%- post.wiki ? post.wiki + ': ' : '' %><%- post.title %>
-          <% } else { %>
-            <%- post.title %>
-          <% } %>
-        </a>
-      </div>
-    <% }) %>
-  </div>
-</div>
+<%
+function layoutDiv() {
+  var el = '<div class="widget-wrap" id="recent">';
+  // header
+  el += '<div class="widget-header h4 dis-select">';
+  el += '<span class="name">' + __("meta.recent_update") + '</span>';
+  if (item.rss) {
+    el += '<a class="cap-action" id="rss" title="Subscribe" href="' + item.rss + '">';
+    el += '<svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8938"><path d="M800.966 947.251c0-404.522-320.872-732.448-716.69-732.448V62.785c477.972 0 865.44 395.987 865.44 884.466h-148.75z m-162.273 0h-148.74c0-228.98-181.628-414.598-405.678-414.598v-152.01c306.205 0 554.418 253.68 554.418 566.608z m-446.24-221.12c59.748 0 108.189 49.503 108.189 110.557 0 61.063-48.44 110.563-108.188 110.563-59.747 0-108.18-49.5-108.18-110.563 0-61.054 48.433-110.556 108.18-110.556z" p-id="8939"></path></svg>';
+    el += '</a>';
+  }
+  el += '</div>';
+  // body
+  var arr = page.menu_id == "wiki" ? site.pages.filter(function(p){
+    return p.layout == "wiki" && p.title && p.title.length > 0;
+  }) : site.posts.filter(function(p){
+    return p.title && p.title.length > 0;
+  });
+  el += '<div class="widget-body fs14">';
+  arr.sort("updated", -1).limit(item.limit).each(function(post) {
+    el += '<div class="post-title reveal">';
+    el += '<div class="cap">';
+    el += __("meta.updated") + '&nbsp;' + '<time>' + date(post.updated, config.date_format) + '</time>';
+    el += '</div>';
+    el += '<a href="' + url_for(post.link || post.path) + '">';
+    if (post.wiki && (post.title.toUpperCase().includes(post.wiki.toUpperCase()) == false)) {
+       el += post.wiki + ': ';
+    }
+    el += post.title;
+    el += '</a>';
+    el += '</div>';
+    el += '';
+  });
+  el += '</div>';
+  el += '</div>';
+  return el;
+}
+%>
+<%- layoutDiv() %>

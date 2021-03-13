@@ -4,11 +4,9 @@ function layoutDiv() {
   var title = __('meta.read_next');
   var title_prev = __('meta.read_prev');
   if (page.layout == 'post') {
-    prev = page.next;
-    next = page.prev;
-    title_prev = __('meta.older');
+    prev = page.prev;
+    next = page.next;
   } else if (page.layout == 'wiki' && page.wiki && page.wiki.length > 0) {
-    title_prev = __('meta.read_prev');
     var wikis = [];
     wikis = site.pages.filter(function (p) {
       if (p.layout == 'wiki' && p.wiki && p.wiki == page.wiki) {
