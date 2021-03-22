@@ -1,6 +1,10 @@
 // toc padding
 #toc .widget-body
   line-height: 1.2
+  ul ul, ul ol
+    padding-left: 0
+  ol ul, ol ol
+    padding-left: 0
   .toc
     padding: 0
     margin: 0
@@ -63,12 +67,12 @@
     font-weight: 500
     &.active
       color: var(--text-p2)
-      font-size: $fs-14
+      font-size: 1rem
     &:hover
       background: var(--block-hover)
 
-#toc .widget-body.wiki
-  .doc-tree.active
-    border-color: var(--text-meta)
-  .doc-tree.active:only-child
-    border-color: var(--block-hover)
+// #toc .widget-body.wiki
+//   .doc-tree.active
+//     border-color: var(--text-meta)
+//   .doc-tree.active:only-child
+//     border-color: var(--block-hover)
