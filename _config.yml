@@ -19,14 +19,14 @@ sidebar:
     avatar: '[config.avatar](/about/)' # you can set avatar link in _config.yml or '[https://xxx.png](/about/)'
     title: '[config.title](/)' # you can set html tag like: '[<img no-lazy height="32px" src="xxx"/>](/)'
   menu:
-    post: '[btn.blog](/)'
-    wiki: '[btn.wiki](/wiki/)'
+    post: # '[btn.blog](/)'
+    wiki: # '[btn.wiki](/wiki/)'
     friends: # '[友链](/friends/)'
     about: # '[关于](/about/)'
   # Sidebar widgets
   widgets:
     # default layout in home/wiki/categories/tags/archives pages
-    default: [welcome, recent]
+    default: # [welcome, recent]
     # Recent update
     recent:
       layout: recent
