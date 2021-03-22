@@ -1,0 +1,98 @@
+labels:
+  # 文档中有答案
+  - name: read docs
+    labeled:
+      issue:
+        body: |
+          :wave: Hello,
+          Your question is answered in the official documents of [Stellar](https://xaoxuu.com/wiki/stellar/) and [Hexo](https://hexo.io), if you can’t find it, you can try to search.
+
+          :wave: 您好，
+          您的疑问在 [Stellar](https://xaoxuu.com/wiki/stellar/) 和 [Hexo](https://hexo.io) 的官方文档有答案，如果找不到可以尝试进行搜索。
+
+  # 采纳的建议
+  - name: todo
+    labeled:
+      issue:
+        body: |
+          :wave: Hello,
+          Your suggestion is great, we will add this feature in subsequent versions, thank you very much!
+
+          :wave: 您好，
+          您的建议很棒，我们将会在后续版本中加入这个功能，非常感谢！
+
+  # 迟迟没有回复
+  - name: waiting response
+    labeled:
+      issue:
+        body: |
+          :wave: Hello,
+          We are waiting for your response. If you do not reply, we will close this issue.
+
+          :wave: 您好，
+          我们正等待您的回应，如果您迟迟没有回复，我们将会关闭这个 issue 。
+
+  ################ 关闭 ################
+  # 重复的问题
+  - name: duplicate
+    labeled:
+      issue:
+        action: close
+        body: |
+          :wave: Hello,
+          This is a duplicate issue, but we still appreciate your feedback.
+
+          :wave: 您好，
+          这是一个重复的问题，但我们仍然感谢您的反馈。
+
+
+  # 不予修复
+  - name: wontfix
+    labeled:
+      issue:
+        action: close
+        body: |
+          :wave: Hello,
+          Due to the design or external issues, we will not deal with this, but we still appreciate your feedback.
+
+          :wave: 您好，
+          由于设计如此，或者是外界问题导致，我们不会对此进行处理，但仍然感谢您的反馈！
+
+
+  # 由于没有回复而被关闭
+  - name: losing contact
+    labeled:
+      issue:
+        action: close
+        body: |
+          :wave: Hello,
+          Due to your delay in replying, we closed this issue.
+
+          :wave: 您好，
+          由于您迟迟没有回复，我们关闭了这个 issue 。
+
+
+  # 问题得以解决
+  - name: resolved
+    labeled:
+      issue:
+        action: close
+        body: |
+          :wave: Hello,
+          This issue has been marked as resolved. If there are other issues, please contact us with a new issue.
+
+          :wave: 您好，
+          此 issue 已经被标记为已解决，如果还有其它问题，请提出新的 issue 联系我们。
+
+
+  # BUG得以修复
+  - name: fixed
+    labeled:
+      issue:
+        action: close
+        body: |
+          :wave: Hello,
+          This bug has been fixed, please update your stellar.
+
+          :wave: 您好，
+          此 BUG 已经被修复，请更新您的 Stellar 版本。
