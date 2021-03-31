@@ -11,6 +11,9 @@
   --card: $c-card-light
   --theme-highlight: darken($color-theme, 5)
   --theme-bg: mix($color-theme, $c-card-light, 10)
+  // 评论查看更多按钮样式
+  --valine-more-button-before: linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(246, 246, 246, .9))
+  --valine-more-button-after: rgba(246, 246, 246, .9)
 
 body[theme='dark']
   --site-bg: $c-site-bg-dark
@@ -25,3 +28,6 @@ body[theme='dark']
   --card: $c-card-dark
   --theme-highlight: $color-theme
   --theme-bg: mix($color-theme, $c-card-dark, 10)
+  // 评论查看更多按钮样式
+  --valine-more-button-before: 0 0
+  --valine-more-button-after: #393c40

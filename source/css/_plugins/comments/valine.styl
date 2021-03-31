@@ -23,6 +23,8 @@
         border-bottom: 1px dashed var(--text-meta)
         .vinput
           border: none
+        .vnick
+          margin-left: 0;
       .vedit
         .vicon
           height: 22px
@@ -83,9 +85,18 @@
       .vcard
         display: flex
         position: relative
+        .vcontent.expand
+          &:before
+            background: var(--valine-more-button-before);
+          &:after
+            background: var(--valine-more-button-after);
         .vimg
-          width: 36px
-          height: 36px
+          width: 40px
+          height: 40px
+          z-index: 1
+          transition: all ease 1s
+          &:hover
+            transform: rotate(360deg)
         .vh
           margin-left: -46px
           padding-bottom: 0
@@ -108,6 +119,8 @@
         border: 1px dashed var(--block-border)
         padding: 1rem
         margin-bottom: 1rem
+        &:hover
+          border-color: $color-theme;
         >.vh
           border-bottom: none
           >.vquote
@@ -135,7 +148,7 @@
         .vat
           font-weight: bold
           color: var(--text-p1)
-          float: none
+          float: right
           trans()
           padding: 4px 8px
           border-radius: 2px
@@ -153,8 +166,10 @@
           border-left: 3px solid $color-theme
         code
           color: var(--text-p1)
+          background: var(--block);
+          margin: 0 2px;
         pre
-          background: var(--color-codeblock)
+          background: var(--block)
           code
             border: none
         a
