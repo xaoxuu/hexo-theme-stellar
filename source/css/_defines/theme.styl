@@ -15,6 +15,7 @@
   --valine-more-button-before: linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(246, 246, 246, .9))
   --valine-more-button-after: rgba(246, 246, 246, .9)
 
+// 页面的dark主题
 body[theme='dark']
   --site-bg: $c-site-bg-dark
   --block: $c-block-dark
@@ -31,3 +32,22 @@ body[theme='dark']
   // 评论查看更多按钮样式
   --valine-more-button-before: 0 0
   --valine-more-button-after: #393c40
+
+// 系统的dark模式
+@media (prefers-color-scheme: dark)
+  :root
+    --site-bg: $c-site-bg-dark
+    --block: $c-block-dark
+    --block-border: mix($c-block-dark, $c-text-dark, 90)
+    --block-hover: mix($c-block-dark, $c-text-dark, 95)
+    --text-p0: $c-title-dark
+    --text-p1: $c-text-dark
+    --text-p2: mix($c-text-dark, $c-site-bg-dark, 70)
+    --text-p3: mix($c-text-dark, $c-site-bg-dark, 45)
+    --text-meta: mix($c-text-dark, $c-site-bg-dark, 30)
+    --card: $c-card-dark
+    --theme-highlight: $color-theme
+    --theme-bg: mix($color-theme, $c-card-dark, 10)
+    // 评论查看更多按钮样式
+    --valine-more-button-before: 0 0
+    --valine-more-button-after: #393c40
