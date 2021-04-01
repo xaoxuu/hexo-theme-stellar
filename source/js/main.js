@@ -1,3 +1,4 @@
+console.log('hexo-theme-stellar:\n' + stellar.github);
 // utils
 const util = {
 
@@ -276,4 +277,7 @@ if (stellar.plugins.preload) {
   }
 }
 
-console.log('hexo-theme-stellar:\n' + stellar.github);
+// darkmode
+if (stellar.plugins.darkmode) {
+  stellar.loadScript(stellar.plugins.darkmode.js, {defer:true})
+}
