@@ -1,4 +1,6 @@
 .cmt-body.valine
+  --more-before: linear-gradient(180deg, rgba(255, 255, 255, .9), rgba(246, 246, 246, .9))
+  --more-after: rgba(246, 246, 246, .9)
   margin-top: 1rem
   #valine_container
     line-height: 1.5 !important
@@ -87,32 +89,32 @@
         position: relative
         .vcontent.expand
           &:before
-            background: var(--valine-more-button-before);
+            background: var(--more-before);
           &:after
-            background: var(--valine-more-button-after);
+            background: var(--more-after);
         .vimg
           width: 40px
           height: 40px
           z-index: 1
-          transition: all ease 1s
-          &:hover
-            transform: rotate(360deg)
         .vh
           margin-left: -46px
           padding-bottom: 0
           width: 100%
+          position: relative
           .vhead
             line-height: 1.2
-          .vnick
-            margin-left: 44px
-            line-height: inherit
-            font-size: $fs-14
+            .vnick
+              margin-left: 44px
+              line-height: inherit
+              font-size: $fs-14
           .vtime
             margin-left: 44px
             font-size: $fs-12
             font-weight: 500
           .vat
             font-size: $fs-12
+          .vvisitor
+            display: none
       >.vcard
         border-radius: $border-block
         background: var(--card)
@@ -132,26 +134,27 @@
         padding: 0
         background: var(--block)
       .vhead
-        span
-          &.vnick
-            color: var(--text-p2)
-            cursor: default
-        a
-          &.vnick
-            color: #ff9800
-            font-weight: 700
-            &:hover
-              color: $color-hover
+        span.vnick
+          color: var(--text-p2)
+          cursor: default
+        a.vnick
+          color: #ff9800
+          font-weight: 700
+          &:hover
+            color: $color-hover
         .vsys
           display: none
       .vmeta
+        position: static !important
         .vat
           font-weight: bold
           color: var(--text-p1)
-          float: right
-          trans()
+          background: var(--card)
           padding: 4px 8px
           border-radius: 2px
+          position: absolute
+          top: 0
+          right: 0
           &:hover
             color: $color-hover
             background-color: var(--block)
@@ -201,3 +204,14 @@
       color: var(--text-p1)
     p
       color: var(--text-p1)
+
+
+body[theme='dark']
+  .cmt-body.valine
+    --more-before: 0 0
+    --more-after: #393c40
+
+@media (prefers-color-scheme: dark)
+  .cmt-body.valine
+    --more-before: 0 0
+    --more-after: #393c40

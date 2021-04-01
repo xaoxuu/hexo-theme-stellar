@@ -81,8 +81,8 @@ comments:
     js: https://cdn.jsdelivr.net/gh/XuxuGood/simple-blog-cdn@main/js/Valine.min.js
     appId: # your appId
     appKey: # your appKey
-    placeholder: "温馨提示: 遵纪守法, 友善评论!"
-    requiredFields: [nick,mail]
+    placeholder:
+    requiredFields: [nick, mail]
     enableQQ: true # Unstable avatar link
     recordIP: false # Record commenter IP
     avatar: robohash # gravatar style https://valine.js.org/avatar
@@ -90,12 +90,15 @@ comments:
     lang: zh-cn
     highlight: true
     mathJax: false
-    tagMeta: [ 博主,小伙伴,访客 ] # 标签要显示的文字,默认'博主,小伙伴,访客'
-    metaPlaceholder: { nick: "昵称/QQ号(必填)", mail: "邮箱（必填，完全保密）", link: "网址(https://)" }
+    tagMeta: [博主, 小伙伴, 访客] # 标签要显示的文字,默认'博主,小伙伴,访客'
+    metaPlaceholder:
+      nick: "昵称/QQ号(必填)"
+      mail: "邮箱（必填，完全保密）"
+      link: "网址(https://)"
     master: #md5加密后的博主邮箱
-      - 6a565e6c47127afdd40d5d46089dxxxx
+      - 6783037F2DF30EAB99F9FC256157D875
     friends: #md5加密后的小伙伴邮箱
-      - d32d39c8e126512382ee4b831a8fxxxx # 某某
+      - 6783037F2DF30EAB99F9FC256157D875
 
 
 ######## Footer ########
