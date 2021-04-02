@@ -168,9 +168,8 @@ plugins:
     interval: 100 # ms
     scale: 1 # 0.1~1
 
-  darkmode:
-    enable: #true
-    js: /js/plugins/darkmode.js
+style:
+  darkmode: auto # set 'auto' to enable, set 'false' to disable
 
 default:
   avatar: https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/avatar/round/3442075.svg

@@ -24,3 +24,6 @@
       transform: translateY(-1px)
       background: linear-gradient(145deg, #ddd, #fff)
       box-shadow: 2px 4px 8px #ddd, -2px -4px 8px #fff
+      if hexo-config('style.darkmode') == 'auto'
+        @media (prefers-color-scheme: dark)
+          box-shadow: none

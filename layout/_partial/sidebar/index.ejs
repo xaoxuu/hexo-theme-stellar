@@ -2,7 +2,7 @@
 // 默认组件
 if (page.sidebar == undefined) {
   if (page.layout == 'post' && page.content) {
-    page.sidebar = ['toc', 'recent'];
+    page.sidebar = ['toc'];
   } else if (page.layout == 'wiki' && page.content) {
     page.sidebar = ['toc', 'wiki_more'];
   } else {

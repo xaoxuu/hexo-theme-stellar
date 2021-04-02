@@ -1,22 +1,28 @@
 .l_main
   position: relative
   padding-bottom: "calc(1 * %s)" % var(--gap-l)
+  @media screen and (min-width: 1200px)
+    margin-left: "calc(2 * %s)" % var(--gap-l)
+    margin-right: "calc(0.75 * %s)" % var(--width-left)
   @media screen and (min-width: $device-tablet)
     padding-top: "calc(2 * %s)" % var(--gap-l)
   header
-    margin: 2rem 1rem 1rem
-    padding: 0.25rem
-    background: var(--block)
-    border-radius: 6px
+    padding: 2rem 1rem 0
+    border-bottom: 2px solid var(--block)
+    margin-bottom: 1.5rem
     .logo-wrap
-      margin: 0.5rem 0.75rem
-      .avatar
-        width: 32px
-        height: 32px
-        border: none
-      .title
-        font-size: 1.5rem
-  nav.menu
-    margin: -3px
-    a.nav-item
-      margin: 2px
+      margin: 0.5rem 0
+    nav.menu
+      background: none
+      padding: 0
+      justify-content: space-between
+      a.nav-item
+        margin: 0
+        margin-bottom: -2px
+        padding: 0.5rem 1rem
+        border-radius: 0
+        border-bottom: 2px solid var(--block)
+      a.nav-item.active, a.nav-item:hover
+        background: none
+        color: $color-theme
+        border-bottom-color: $color-theme

@@ -127,9 +127,6 @@ const init = {
       $("#toc a.toc-link").click(function(e) {
         l_body.classList.remove("sidebar");
       });
-      $("#toc a#s-top").click(function(e) {
-        l_body.classList.remove("sidebar");
-      });
     })
   },
   relativeDate: (selector) => {
@@ -275,9 +272,4 @@ if (stellar.plugins.preload) {
     };
     stellar.loadScript(stellar.plugins.preload.flying_pages, {defer:true})
   }
-}
-
-// darkmode
-if (stellar.plugins.darkmode) {
-  stellar.loadScript(stellar.plugins.darkmode.js, {defer:true})
 }

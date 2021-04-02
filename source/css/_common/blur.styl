@@ -1,7 +1,9 @@
-body[theme='light']
+:root
   --blur-bg: alpha(white, .5)
-body[theme='dark']
-  --blur-bg: alpha(black, .5)
+if hexo-config('style.darkmode') == 'auto'
+  @media (prefers-color-scheme: dark)
+    :root
+      --blur-bg: alpha(black, .5)
 .blur
   background: var(--blur-bg)
   @supports ((-webkit-backdrop-filter:blur(12px)) or (backdrop-filter:blur(12px)))

@@ -1,44 +1,36 @@
 :root
-  --site-bg: $c-site-bg-light
-  --block: $c-block-light
-  --block-border: mix($c-block-light, $c-text-light, 95)
-  --block-hover: mix($c-block-light, $c-text-light, 98)
-  --text-p0: $c-title-light
-  --text-p1: $c-text-light
-  --text-p2: mix($c-text-light, $c-site-bg-light, 80)
-  --text-p3: mix($c-text-light, $c-site-bg-light, 60)
-  --text-meta: mix($c-text-light, $c-site-bg-light, 20)
-  --card: $c-card-light
+  --site-bg: $light-site-bg
+  --block: $light-block
+  --block-border: darken($light-block, 5)
+  --block-hover: darken($light-block, 2)
+  --text-p0: $light-title
+  --text-p1: $light-text
+  --text-p2: mix($light-text, $light-site-bg, 80)
+  --text-p3: mix($light-text, $light-site-bg, 60)
+  --text-meta: mix($light-text, $light-site-bg, 20)
+  --card: $light-card
   --theme-highlight: darken($color-theme, 5)
-  --theme-bg: mix($color-theme, $c-card-light, 10)
+  --theme-bg: mix($color-theme, $light-card, 10)
 
-// 页面的dark主题
-body[theme='dark']
-  --site-bg: $c-site-bg-dark
-  --block: $c-block-dark
-  --block-border: mix($c-block-dark, $c-text-dark, 90)
-  --block-hover: mix($c-block-dark, $c-text-dark, 95)
-  --text-p0: $c-title-dark
-  --text-p1: $c-text-dark
-  --text-p2: mix($c-text-dark, $c-site-bg-dark, 70)
-  --text-p3: mix($c-text-dark, $c-site-bg-dark, 45)
-  --text-meta: mix($c-text-dark, $c-site-bg-dark, 30)
-  --card: $c-card-dark
-  --theme-highlight: $color-theme
-  --theme-bg: mix($color-theme, $c-card-dark, 10)
+if hexo-config('style.darkmode') == 'auto'
+  // 系统的dark模式
+  @media (prefers-color-scheme: dark)
+    :root
+      --site-bg: $dark-site-bg
+      --block: $dark-block
+      --block-border: lighten($dark-block, 10)
+      --block-hover: darken($dark-block, 1)
+      --text-p0: $dark-title
+      --text-p1: $dark-text
+      --text-p2: mix($dark-text, $dark-site-bg, 70)
+      --text-p3: mix($dark-text, $dark-site-bg, 45)
+      --text-meta: mix($dark-text, $dark-site-bg, 30)
+      --card: $dark-card
+      --theme-highlight: $color-theme
+      --theme-bg: mix($color-theme, $dark-card, 10)
+      @media screen and (max-width: $device-tablet)
+        --site-bg: $dark-site-bg-mobile
 
-// 系统的dark模式
-@media (prefers-color-scheme: dark)
-  :root
-    --site-bg: $c-site-bg-dark
-    --block: $c-block-dark
-    --block-border: mix($c-block-dark, $c-text-dark, 90)
-    --block-hover: mix($c-block-dark, $c-text-dark, 95)
-    --text-p0: $c-title-dark
-    --text-p1: $c-text-dark
-    --text-p2: mix($c-text-dark, $c-site-bg-dark, 70)
-    --text-p3: mix($c-text-dark, $c-site-bg-dark, 45)
-    --text-meta: mix($c-text-dark, $c-site-bg-dark, 30)
-    --card: $c-card-dark
-    --theme-highlight: $color-theme
-    --theme-bg: mix($color-theme, $c-card-dark, 10)
+  @media (prefers-color-scheme: dark)
+    html
+      filter: brightness(80%) !important

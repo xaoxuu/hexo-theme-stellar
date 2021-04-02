@@ -10,20 +10,22 @@ $color-inlinecode = #ff7043
 $color-cat = #FF7844
 $color-cat-hover = darken($color-cat, 20)
 
-// 浅色页面
-$c-site-bg-light = #f8f8f8
-$c-block-light = #f2f2f2
-$c-title-light = #000
-$c-text-light = #222
-$c-card-light = white
+// 浅色
+$light-site-bg = #f8f8f8
+$light-block = #f2f2f2
+$light-title = #000
+$light-text = #222
+$light-card = white
 
-// 深色页面
-$c-site-bg-dark = black
-$c-block-dark = #111
-$c-title-dark = #fff
-$c-text-dark = #fff
-$c-card-dark = #333
+// 深色
+$dark-site-bg = #20252B
+$dark-block = #40454B
+$dark-title = #fff
+$dark-text = #eee
+$dark-card = #2E353D
 
+// 移动端深色背景（OLED调成纯黑可以省电）
+$dark-site-bg-mobile = black
 
 
 // @font-face
@@ -59,7 +61,7 @@ $border-block = 4px
 
 // 可以动态变化的属性
 :root
-  --width-left: 280px
+  --width-left: 256px
   --width-main: 680px
   --gap-l: 16px
   // desktop or larger
