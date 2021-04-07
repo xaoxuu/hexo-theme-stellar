@@ -1,8 +1,15 @@
 <div class='logo-wrap'>
   <% if (md_text(theme.sidebar.logo.avatar)) { %>
-    <a class='avatar' href='<%- url_for(md_link(theme.sidebar.logo.avatar) || "/") %>'><img no-lazy src='<%- md_text(theme.sidebar.logo.avatar) %>'/></a>
+    <a class='avatar' href='<%- url_for(md_link(theme.sidebar.logo.avatar) || "/") %>'>
+      <% if (theme.style.animated_avatar.animate) { %>
+        <img no-lazy class='bg' src='<%- theme.style.animated_avatar.background %>'/>
+      <% } %>
+      <img no-lazy class='avatar' src='<%- md_text(theme.sidebar.logo.avatar) %>'/>
+    </a>
   <% } %>
   <% if (md_text(theme.sidebar.logo.title)) { %>
-    <a class='title' href='<%- url_for(md_link(theme.sidebar.logo.title) || "/") %>'><%- md_text(theme.sidebar.logo.title) %></a>
+    <a class='title' href='<%- url_for(md_link(theme.sidebar.logo.title) || "/") %>'>
+      <%- md_text(theme.sidebar.logo.title) %>
+    </a>
   <% } %>
 </div>
