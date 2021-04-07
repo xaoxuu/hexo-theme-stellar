@@ -1,6 +1,6 @@
 ######## Stellar info ########
 stellar:
-  version: '1.0.1'
+  version: '1.1.0'
   homepage: 'https://xaoxuu.com/wiki/stellar/'
   repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
   cdn_css: # Use cdn links instead of /css/main.css
@@ -173,7 +173,7 @@ style:
   darkmode: auto # set 'auto' to enable, set 'false' to disable
   animated_avatar:
     animate: auto # auto, always
-    background: https://img.vim-cn.com/7f/b2c0a988ce5a12108069b41f08234a83af51fa.webp
+    background: https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp
 
 default:
   avatar: https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/avatar/round/3442075.svg
