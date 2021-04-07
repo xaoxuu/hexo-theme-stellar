@@ -1,14 +1,5 @@
 <%
-var enable = false;
-if (page.layout == 'post') {
-  if (page.content && toc(page.content).length > 0) {
-    enable = true;
-  }
-} else if (page.layout == 'wiki' || page.sidebar.includes('toc') == true) {
-  enable = true;
-}
-
-function layout_toc() {
+function layoutToc() {
   if (toc(page.content).length > 0) {
     return toc(page.content, {
       list_number: item.list_number,
@@ -17,58 +8,81 @@ function layout_toc() {
     });
   }
 }
- %>
-<% if (enable == true) { %>
-  <div class='widget-wrap' id='toc'>
-    <div class='widget-header h4 dis-select'>
-      <span class='name'>
-        <% if (page.toc_title) { %>
-          <%- page.toc_title %>
-        <% } else if (page.layout == 'wiki') { %>
-          <%- page.wiki || item.wiki %>
-        <% } else { %>
-          <%- __('meta.toc') %>
-        <% } %>
-      </span>
-    </div>
-    <div class='widget-body fs14 <%- page.layout == "wiki" ? "wiki" : "post" %>'>
-      <% if (page.layout == 'wiki' && page.wiki) { %>
-        <%
-        var wikis = [];
-        wikis = site.pages.filter(function (p) {
-          if (p.layout == 'wiki' && p.wiki && p.wiki == page.wiki && (p.title || p.seo_title)) {
-            if (p.order == undefined) {
-              p.order = 0;
-            }
-            return true;
-          } else {
-            return false;
+function layoutDiv(fallback) {
+  var t = '';
+  if (page.layout == 'post' && page.content) {
+    let toc_content = toc(page.content);
+    if (toc_content && toc_content.length > 0) {
+      t = page.layout;
+    }
+  } else if (page.layout == 'wiki') {
+    t = page.layout;
+  } else if (page.sidebar.includes('toc') == true) {
+    t = page.layout;
+  }
+  var el = '';
+  if (t.length > 0) {
+    el += '<div class="widget-wrap" id="toc">';
+    el += '<div class="widget-header h4 dis-select">';
+    el += '<span class="name">';
+      if (page.toc_title) {
+        el += page.toc_title;
+      } else if (toc == 'wiki') {
+        el += page.wiki || item.wiki;
+      } else {
+        el += __("meta.toc");
+      }
+    el += '</span>';
+    el += '</div>';
+    el += '<div class="widget-body fs14 ' + t + '">';
+    if (page.layout == "wiki" && page.wiki) {
+      var wikis = [];
+      wikis = site.pages.filter(function (p) {
+        if (p.layout == "wiki" && p.wiki && p.wiki == page.wiki && (p.title || p.seo_title)) {
+          if (p.order == undefined) {
+            p.order = 0;
           }
-        }).sort('order');
-        %>
-        <% if (wikis.length > 1) { %>
-          <% wikis.each(function(p) { %>
-            <% if (p.path == page.path) { %>
-              <div class='doc-tree active'>
-                <a class='doc-tree-link active' href="<%- url_for(p.path) %>"><span class="toc-text"><%- p.title || p.seo_title %></span></a>
-                <%- layout_toc() %>
-              </div>
-            <% } else { %>
-              <div class='doc-tree'>
-                <a class='doc-tree-link' href="<%- url_for(p.path) %>"><span class="toc-text"><%- p.title || p.seo_title %></span></a>
-              </div>
-            <% } %>
-          <% }); %>
-        <% } else { %>
-          <div class='doc-tree active'>
-            <%- layout_toc() %>
-          </div>
-        <% } %>
-      <% } else { %>
-        <div class='doc-tree active'>
-          <%- layout_toc() %>
-        </div>
-      <% } %>
-    </div>
-  </div>
-<% } %>
+          return true;
+        } else {
+          return false;
+        }
+      }).sort("order");
+      if (wikis.length > 1) {
+        wikis.each(function(p) {
+          let isActive = '';
+          if (p.path == page.path) {
+            isActive += ' active';
+          }
+          el += '<div class="doc-tree' + isActive + '">';
+          el += '<a class="doc-tree-link' + isActive + '" href="' + url_for(p.path) + '">';
+          el += '<span class="toc-text">' + (p.title || p.seo_title) + '</span>';
+          el += '</a>';
+          if (p.path == page.path) {
+            el += layoutToc();
+          }
+          el += '</div>';
+        });
+      } else {
+        el += '<div class="doc-tree active">';
+        el += layoutToc();
+        el += '</div>';
+      }
+    } else {
+      el += '<div class="doc-tree active">';
+      el += layoutToc();
+      el += '</div>';
+    }
+    el += '</div>';
+    el += '</div>';
+    return el;
+  } else if (item.fallback) {
+    return fallback(item.fallback);
+  }
+}
+
+%>
+<%-
+layoutDiv(function(widget){
+  return partial(widget, {item: theme.sidebar.widgets[widget]})
+})
+%>
