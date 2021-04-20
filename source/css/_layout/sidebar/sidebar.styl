@@ -34,9 +34,9 @@
       border-radius: @width
     if hexo-config('style.animated_avatar.animate')
       img.bg
-        trans1 opacity
+        trans1: opacity
         position: absolute
-        opacity: 0
+        opacity: 0 !important
         z-index: -1
       @keyframes spin
         from
@@ -45,13 +45,13 @@
           transform:rotate(360deg)
     if hexo-config('style.animated_avatar.animate') == 'always'
       img.bg
-        opacity: 1
+        opacity: 1 !important
         animation: spin infinite 1s
         animation-timing-function: linear
     if hexo-config('style.animated_avatar.animate') == 'auto'
       &:hover
         img.bg
-          opacity: 1
+          opacity: 1 !important
           animation: spin infinite 1s
           animation-timing-function: linear
 
