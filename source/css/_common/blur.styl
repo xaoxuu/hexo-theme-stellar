@@ -1,14 +1,16 @@
 :root
+  --blur-px: 12px
   --blur-bg: alpha(white, .5)
 if hexo-config('style.darkmode') == 'auto'
   @media (prefers-color-scheme: dark)
     :root
       --blur-bg: alpha(black, .5)
+
 .blur
   background: var(--blur-bg)
-  @supports ((-webkit-backdrop-filter:blur(12px)) or (backdrop-filter:blur(12px)))
+  @supports ((-webkit-backdrop-filter:blur(var(--blur-px))) or (backdrop-filter:blur(var(--blur-px))))
     background: var(--blur-bg) !important
-    backdrop-filter: saturate(200%) blur(12px)
-    -webkit-backdrop-filter: saturate(200%) blur(12px)
+    backdrop-filter: saturate(200%) blur(var(--blur-px))
+    -webkit-backdrop-filter: saturate(200%) blur(var(--blur-px))
   &:hover
     background: var(--card)

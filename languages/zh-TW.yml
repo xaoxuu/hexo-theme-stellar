@@ -43,11 +43,6 @@ page:
     what: 很抱歉，您訪問的頁面不存在
     why: 可能是輸入地址有誤或該地址已被刪除
     action: 返回主頁
-  categories: '%s的%s共有%s個分類'
-  tags: '%s的%s共有%s個標籤'
-  archives: '%s在%s年間寫了%s篇文章'
-  filter: '%s的%s共有%s篇文章'
-  wiki: '%s共有%s个%s'
 
 message:
   copied: 複製成功

@@ -42,9 +42,6 @@ function layout_posts(partial) {
       }
     })
   } else {
-    el += '<h1 class="list-title h4">';
-    el += __('page.filter', config.title, page.category || page.tag, page.posts.length);
-    el += '</h1>';
     page.posts.each(function(post){
       el += layout_post_card('post', post, partial(post));
     })
@@ -66,7 +63,6 @@ function layout_wikis(partial) {
       });
     });
     el += '<div class="post-list wiki filter">';
-    el += '<h1 class="list-title h4">' + __("page.wiki", config.title, wikis.length, page.title) + '</h1>';
     wikis.forEach(function(wiki) {
         el += layout_post_card('wiki', wiki, partial(wiki));
     });
@@ -84,7 +80,6 @@ function layout_wikis(partial) {
       }
     }).sort('order');
     el += '<div class="post-list wiki">';
-    el += '<h1 class="list-title h4">' + __("page.wiki", config.title, wikis.length, __('btn.wiki')) + '</h1>';
     wikis.forEach(function(wiki) {
         el += layout_post_card('wiki', wiki, partial(wiki));
     });

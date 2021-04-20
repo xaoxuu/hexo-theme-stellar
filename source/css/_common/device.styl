@@ -1,0 +1,42 @@
+.mobile-only
+  display: none
+  @media screen and (max-width: $device-tablet)
+    display: block !important
+
+.mobile-hidden
+  @media screen and (max-width: $device-tablet)
+    display: none
+
+.float-panel
+  position: sticky
+  right: 0
+  bottom: 2rem
+  float: right
+  z-index: 9
+  display: flex
+  border-radius: 4px 0 0 4px
+  padding-right: 1rem
+  border: 1px solid var(--block-border)
+  border-right: 0
+  overflow: hidden
+  --blur-px: 24px
+  --blur-bg: alpha(#eaeaea, .6)
+  if hexo-config('style.darkmode') == 'auto'
+    @media (prefers-color-scheme: dark)
+      --blur-bg: alpha(#555, .6)
+
+.sidebar-toggle.mobile
+  cursor: pointer
+  color: var(--text-p2)
+  border-right: 1px solid transparent
+  background: none
+  padding: 0.5rem
+  line-height: 0
+  font-size: 20px
+
+
+.l_body.mobile.sidebar
+  .sidebar-toggle.mobile
+    background: var(--card)
+    color: $color-hover
+    border-color: var(--block-border)
