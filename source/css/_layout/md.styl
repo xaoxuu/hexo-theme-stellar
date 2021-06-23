@@ -68,14 +68,16 @@ article.md p
 
 // code
 article.md code
-  color: $color-inlinecode
+  -webkit-font-smoothing: auto
+  -moz-osx-font-smoothing: auto
+  color: var(--text-code)
   font-family: $ff-code
   word-break: break-all
-  font-size: inherit
+  font-size: 85%
   background: var(--block)
-  padding: 2px
+  padding: .2em .4em
   border-radius: 2px
-  border: 1px solid var(--block-border)
+  // border: 1px solid var(--block-border)
 
 // div
 article.md>div

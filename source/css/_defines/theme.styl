@@ -7,7 +7,9 @@
   --text-p1: $light-text
   --text-p2: mix($light-text, $light-site-bg, 80)
   --text-p3: mix($light-text, $light-site-bg, 60)
+  --text-p4: mix($light-text, $light-site-bg, 35)
   --text-meta: mix($light-text, $light-site-bg, 20)
+  --text-code: $light-code
   --card: $light-card
   --theme-highlight: darken($color-theme, 5)
   --theme-bg: mix($color-theme, $light-card, 10)
@@ -24,7 +26,9 @@ if hexo-config('style.darkmode') == 'auto'
       --text-p1: $dark-text
       --text-p2: mix($dark-text, $dark-site-bg, 70)
       --text-p3: mix($dark-text, $dark-site-bg, 45)
+      --text-p4: mix($dark-text, $dark-site-bg, 35)
       --text-meta: mix($dark-text, $dark-site-bg, 30)
+      --text-code: $dark-code
       --card: $dark-card
       --theme-highlight: $color-theme
       --theme-bg: mix($color-theme, $dark-card, 10)

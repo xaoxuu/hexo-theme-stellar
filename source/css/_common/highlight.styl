@@ -49,12 +49,12 @@ article.md .highlight
     padding: 0 1em
     border-width: 0
     margin-left: 0
-    position: sticky
+    // position: sticky // 如果希望行标固定请打开此行；但是如果想在较窄屏幕上拥有较好的阅读体验，建议让行标跟随滚动。
     left: 0
     z-index: 1
     background: var(--block)
     pre .line
-      color: var(--text-p2)
+      color: var(--text-p4)
   .code
     pre
       display: block
@@ -136,7 +136,7 @@ article.md .highlight
 
 
 
-$hl-keyword = #9c27b0
+$hl-keyword = #8959a8
 $hl-blue = #1E80F0
 $hl-cyan = #17AFCA
 $hl-green = #3FA33F
@@ -168,13 +168,14 @@ pre
 
   // 注释
   .comment
-    color: var(--text-p3)
+    color: var(--text-p4)
+    font-style: italic
 
   .keyword, .meta-keyword, .javascript .function
     color: $hl-keyword
 
   .type, .built_in, .tag .name
-    color: $color-md-light-blue
+    color: $color-md-blue
 
   .variable, .regexp, .ruby .constant, .xml .tag .title, .xml .pi, .xml .doctype, .html .doctype, .css .id, .css .class, .css .pseudo
     color: $hl-amber
@@ -214,14 +215,8 @@ pre
   .line
     .meta
       color: $hl-keyword
-    .meta-string,.string
-      color: $hl-orange
     .class
       color: $hl-text
-      .title
-        color: $hl-blue
-    .comment
-      color: $hl-green
 
 .highlight.json
   .line

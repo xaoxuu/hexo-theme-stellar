@@ -6,22 +6,23 @@ $color-link = #2196f3
 $color-button = #1BCDFC
 $color-hover = #ff5722
 $color-inner = #fff
-$color-inlinecode = #ff7043
 $color-cat = #FF7844
 $color-cat-hover = darken($color-cat, 20)
 
 // 浅色
-$light-site-bg = #f8f8f8
+$light-site-bg = convert(hexo-config('style.theme.light'))
 $light-block = #f2f2f2
 $light-title = #000
-$light-text = #222
+$light-text = #444
+$light-code = #111
 $light-card = white
 
 // 深色
-$dark-site-bg = #20252B
+$dark-site-bg = convert(hexo-config('style.theme.dark'))
 $dark-block = #2E353D
 $dark-title = #fff
-$dark-text = #eee
+$dark-text = #ddd
+$dark-code = #ff7043
 $dark-card = #40454B
 
 // 移动端深色背景（OLED调成纯黑可以省电）

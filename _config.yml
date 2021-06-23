@@ -171,6 +171,9 @@ plugins:
 
 style:
   darkmode: auto # set 'auto' to enable, set 'false' to disable
+  theme:
+    light: '#f8f8f8'
+    dark: '#20252B'
   animated_avatar:
     animate: auto # auto, always
     background: https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp
