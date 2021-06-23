@@ -105,13 +105,17 @@ comments:
 ######## Footer ########
 footer:
   social:
-    # - icon: '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/social/25678f144c438.svg"/>'
+    # - title: RSS
+    #   icon: '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/social/25678f144c438.svg"/>'
     #   url: /atom.xml
-    # - icon: '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/social/08a41b181ce68.svg"/>'
+    # - title: GitHub
+    #   icon: '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/social/08a41b181ce68.svg"/>'
     #   url: /
-    # - icon: '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/social/cf1ae151f9e83.svg"/>'
+    # - title: Music
+    #   icon: '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/social/cf1ae151f9e83.svg"/>'
     #   url: /
-    # - icon: '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/social/942ebbf1a4b91.svg"/>'
+    # - title: Comments
+    #   icon: '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/social/942ebbf1a4b91.svg"/>'
     #   url: /
   license: '[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
   source: #'[GitHub](https://github.com/xaoxuu/hexo-theme-stellar)'
