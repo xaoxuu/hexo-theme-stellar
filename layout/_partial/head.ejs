@@ -77,11 +77,13 @@ function og_args() {
     <%- css('/css/main.css') %>
   <% } %>
 
+  <% if (config.favicon) { %>
+    <%- favicon_tag(config.favicon) %>
+  <% } %>
+  
   <% if (config.inject && config.inject.head){ %>
     <% (config.inject.head||[]).forEach(function(item){ %>
       <%- item %>
     <% }) %>
-  <% } else if (config.favicon) { %>
-    <link rel="shortcut icon" type='image/x-icon' href="<%- url_for(config.favicon) %>">
   <% } %>
 </head>
