@@ -26,6 +26,10 @@
     border-radius: 50px
     overflow: hidden
     margin-right: 1rem
+    div.bg 
+      width: 100%
+      height: 100%
+      background-size: cover
     img.avatar
       margin: 2px
       object-fit: cover
@@ -33,7 +37,7 @@
       height: "calc(100% - 2 * %s)" % @margin
       border-radius: @width
     if hexo-config('style.animated_avatar.animate')
-      img.bg
+      div.bg
         trans1: opacity
         position: absolute
         opacity: 0 !important
@@ -44,13 +48,13 @@
         to
           transform:rotate(360deg)
     if hexo-config('style.animated_avatar.animate') == 'always'
-      img.bg
+      div.bg
         opacity: 1 !important
         animation: spin infinite 1s
         animation-timing-function: linear
     if hexo-config('style.animated_avatar.animate') == 'auto'
       &:hover
-        img.bg
+        div.bg
           opacity: 1 !important
           animation: spin infinite 1s
           animation-timing-function: linear
