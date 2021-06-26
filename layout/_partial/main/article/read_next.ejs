@@ -2,10 +2,13 @@
 function layoutDiv() {
   var prev,next;
   var title = __('meta.read_next');
-  var title_prev = __('meta.read_prev');
+  var title_prev = __('meta.prev');
+  var title_next = __('meta.next');
   if (page.layout == 'post') {
     prev = page.prev;
     next = page.next;
+    title_prev = __('meta.newer');
+    title_next = __('meta.older');
   } else if (page.layout == 'wiki' && page.wiki && page.wiki.length > 0) {
     var wikis = [];
     wikis = site.pages.filter(function (p) {
@@ -37,21 +40,26 @@ function layoutDiv() {
     el += '<section class="header cap theme">';
     el += '<span>' + title + '</span>';
     el += '</section>';
-    el += '<section class="body">';
+    el += '<section class="body fs14">';
     if (next) {
-      el += '<div class="post-title h2">';
-      el += '<a href="' + url_for(next.path) + '">';
+      el += '<a id="next" href="' + url_for(next.path) + '">';
       el += next.title || next.seo_title || next.wiki;
+      el += '<span class="note">' + title_next + '</span>';
       el += '</a>';
-      el += '</div>';
     }
+    el += '<div class="line"></div>';
     if (prev) {
-      el += '<div class="post-title fs14">';
-      el += '<a href="' + url_for(prev.path) + '">';
-      el += title_prev + __('symbol.colon');
+      el += '<a id="prev" href="' + url_for(prev.path) + '">';
       el += prev.title || prev.seo_title || prev.wiki;
+      el += '<span class="note">' + title_prev + '</span>';
       el += '</a>';
-      el += '</div>';
+    }
+    if (page.layout == 'post') {
+      el += '<div class="line"></div>';
+      el += '<a id="more" href="' + url_for(config.archive_dir) + '">';
+      el += __('meta.all_articles');
+      el += '<span class="note">' + __('btn.archives') + '</span>';
+      el += '</a>';
     }
     el += '</section>';
     el += '</div>';

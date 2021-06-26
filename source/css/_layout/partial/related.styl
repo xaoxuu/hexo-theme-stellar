@@ -2,6 +2,21 @@
   padding: 2rem 1rem
   &:empty
     display: none
+  section.header
+    display: flex
+    justify-content: space-between
+    align-items: center
+    >span.title
+      padding: 0.25rem 0
+  section.footer
+    margin-top: 1rem
+
+  a.more
+    padding: 0.25rem 0.5rem
+    
+    border-radius: $border-block
+    color: var(--text-p1)
+
 
 .related-wrap#related-posts
   .related-posts
@@ -47,7 +62,7 @@
         color: var(--text-p1)
         font-weight: 500
         font-size: $fs-15
-        margin: 1rem 1rem 0 1rem
+        margin: .75rem .75rem 0 .75rem
         display: -webkit-box
         -webkit-box-orient: vertical
         overflow: hidden
@@ -55,7 +70,7 @@
       .excerpt
         color: var(--text-p2)
         font-size: $fs-13
-        margin: 0.4rem 1rem 0 1rem
+        margin: 0.4rem .75rem 0 .75rem
         display: -webkit-box
         -webkit-box-orient: vertical
         overflow: hidden
@@ -69,18 +84,40 @@
 
 .related-wrap#read-next
   .body
-    .post-title
-      margin: 0.5rem 0
+    background: var(--block)
+    border-radius: $border-block
+    border: 1px solid var(--block-border)
+    margin-top: 1rem
+    overflow: hidden
+    .line
+      margin: 0
+      height: 1px
+      background: var(--block-border)
+      &+.line,&:first-child,&:last-child
+        display: none
+    >a
+      display: flex
+      margin: 0
       line-height: 1.2
-      a
-        color: inherit
-        &:hover
-          color: $color-hover
-      &.fs14
-        color: var(--text-p3)
+      padding: 0.75rem 0.5rem
+      color: var(--text-p2)
+      justify-content: space-between
+      align-items: center
+      font-weight: 500
+      .note
+        flex-shrink: 0
+        margin-left: 4px
+        font-size: $fs-12
+        color: var(--text-meta)
         font-weight: 500
-      &.h2
-        color: var(--text-p1)
+      &#more
+        font-size: $fs-12
+        text-align: center
+        color: var(--text-p3)
+      &:hover
+        color: $color-hover !important
+        background: var(--card)
+      
 
 
 .related-wrap#comments
