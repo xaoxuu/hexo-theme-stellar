@@ -61,13 +61,8 @@
 
     // 从 butterfly 和 volantis 获得灵感
     loadScript: (src, opt) => new Promise((resolve, reject) => {
-      // 判断是否存在
-      let el = document.querySelector("script[src='" + src + "']")
-      if (el !== null) {
-        return
-      }
-      var script = document.createElement('script')
-      script.src = src
+      var script = document.createElement('script');
+      script.src = src;
       if (opt) {
         for (let key of Object.keys(opt)) {
           script[key] = opt[key]
