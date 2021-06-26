@@ -140,3 +140,27 @@ nav.menu
         margin-bottom: 0.5em
         >a:hover
           text-decoration: underline
+  .widget-wrap#recent .widget-body
+    border: 1px solid var(--block-border)
+    border-radius: $border-block
+    background: var(--block)
+    overflow: hidden
+    .line
+      margin: 0
+      height: 1px
+      background: var(--block-border)
+      &+.line,&:first-child,&:last-child
+        display: none
+    >a
+      padding 0.5rem
+      display: block
+      line-height: 1.2
+      color: var(--text-p2)
+      font-weight: 500
+      div.cap
+        margin-bottom: 0.25rem
+        color: var(--text-p4)
+      &:hover
+        color: $color-hover
+        background: var(--card)
+    

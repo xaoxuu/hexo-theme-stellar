@@ -18,17 +18,18 @@ function layoutDiv() {
   });
   el += '<div class="widget-body fs14">';
   arr.sort("updated", -1).limit(item.limit).each(function(post) {
-    el += '<div class="post-title reveal">';
+    el += '<div class="line"></div>'
+    el += '<a class="reveal" href="' + url_for(post.link || post.path) + '">';
     el += '<div class="cap">';
     el += '<time>' + date(post.updated, config.date_format) + '</time>';
     el += '</div>';
-    el += '<a href="' + url_for(post.link || post.path) + '">';
+    el += '<span class="title">';
     if (post.wiki && (post.title.toUpperCase().includes(post.wiki.toUpperCase()) == false)) {
        el += post.wiki + ': ';
     }
     el += post.title;
+    el += '</span>';
     el += '</a>';
-    el += '</div>';
     el += '';
   });
   el += '</div>';
