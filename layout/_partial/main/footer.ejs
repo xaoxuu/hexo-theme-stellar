@@ -3,18 +3,40 @@ const author = '[@' + config.author + '](' + config.url + config.root + ')';
 const using = '[' + stellar_info('name') + '](' + stellar_info('tree') + ')';
 const source = theme.footer.source;
 function layoutDiv() {
-  var wrapper = '';
-  wrapper += '<footer class="page-footer fs12"><hr><div>';
+  var el = '';
+  el += '<footer class="page-footer fs12">';
+  el += '<hr>';
+  // sitemap
+  if (theme.footer.sitemap && Object.keys(theme.footer.sitemap).length > 0) {
+    el += '<div class="sitemap">';
+    for (let group of Object.keys(theme.footer.sitemap)) {
+      let items = theme.footer.sitemap[group];
+      if (items == undefined || items.length == 0) {
+        continue;
+      }
+      el += '<div class="sitemap-group">';
+      el += '<span class="fs14">' + group + '</span>';
+      items.forEach((item, i) => {
+        el += '<a href="' + url_for(md_link(item)) + '">';
+        el += __(md_text(item));
+        el += '</a>';
+      });
+      el += '</div>';
+    }
+    el += '</div>';
+  }
+  // footer
+  el += '<div class="text">';
   if (theme.footer.license) {
-    wrapper += markdown(__('footer.license', theme.footer.license));
+    el += markdown(__('footer.license', theme.footer.license));
   }
   if (source) {
-    wrapper += markdown(__('footer.info_open_source', author, using, source));
+    el += markdown(__('footer.info_open_source', author, using, source));
   } else {
-    wrapper += markdown(__('footer.info_not_open_source', author, using));
+    el += markdown(__('footer.info_not_open_source', author, using));
   }
-  wrapper += '</div></footer>';
-  return wrapper;
+  el += '</div></footer>';
+  return el;
 }
 %>
 <%- layoutDiv() %>

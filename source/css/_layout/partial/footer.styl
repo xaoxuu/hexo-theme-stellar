@@ -1,11 +1,38 @@
 .page-footer
   margin: 4rem 1rem 2rem
   color: var(--text-p3)
+  a
+    color: var(--text-p3)
+    &:hover
+      color: $color-hover
+
+.page-footer .sitemap
+  margin: .5rem 0 1.5rem
+  display: grid
+  grid-gap: 1rem 1rem
+  grid-auto-flow: column dense
+  overflow: scroll
+  scrollbar(0, 0)
+
+
+.page-footer .sitemap .sitemap-group
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+  >span,>a
+    text-decoration: none
+    txt-ellipsis()
+  >span
+    margin: .5rem 0
+    font-weight: 500
+    color: var(--text-p1)
+  >a
+    margin: .2rem 0
+
+
+.page-footer .text
   p
     margin: 4px 0
     line-height: 1.2
   a
-    color: var(--text-p3)
     text-decoration: underline
-    &:hover
-      color: $color-hover

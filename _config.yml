@@ -117,6 +117,24 @@ footer:
     # - title: Comments
     #   icon: '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/social/942ebbf1a4b91.svg"/>'
     #   url: /
+  sitemap:
+    # '博客':
+    #   - '[近期](/)'
+    #   - '[分类](/)'
+    #   - '[标签](/)'
+    #   - '[归档](/)'
+    # '项目':
+    #   - '[开源库](/)'
+    #   - '[实用脚本](/)'
+    # '社交':
+    #   - '[友链](/)'
+    #   - '[留言板](/)'
+    #   - '[Spotify](/)'
+    #   - '[Unsplash](/)'
+    # '更多':
+    #   - '[关于本站](/)'
+    #   - '[GitHub](/)'
+    #   - '[GitLab](/)'
   license: '[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
   source: #'[GitHub](https://github.com/xaoxuu/hexo-theme-stellar)'
 
