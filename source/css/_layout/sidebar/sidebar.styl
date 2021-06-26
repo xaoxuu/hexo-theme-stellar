@@ -9,7 +9,7 @@
     height: "calc(100% - 2 * %s)" % var(--gap-l)
 
 .logo-wrap
-  margin: 1rem 0
+  margin: 1rem 0 .5rem
   display: flex
   align-items: center
   color: var(--text-p0)
@@ -59,17 +59,30 @@
           animation: spin infinite 1s
           animation-timing-function: linear
 
-
-
   .title
     font-size: 1.75rem
     font-weight: 900
     color: inherit
     line-height: 1;
     font-family: $ff-logo
+  
+
+.logo-wrap.wiki
+  flex-direction: column
+  align-items: flex-start
+  a.wiki-home
+    margin-bottom: .5rem
+    color: var(--text-p2)
+    img 
+      height: .9em
+      margin-right: .5rem
+    &:hover
+      color: $color-hover
+      filter: unset !important
+
 
 nav.menu
-  margin-top: 0
+  margin: 1rem 0 .5rem
   background: var(--block)
   border-radius: 6px
   display: flex
@@ -120,6 +133,8 @@ nav.menu
       background: var(--site-bg)
       padding: 2px 0
       z-index 1
+      &:empty
+        display: none
       .cap-action
         hover-block 4px 4px
         line-height: 0
@@ -140,7 +155,7 @@ nav.menu
         margin-bottom: 0.5em
         >a:hover
           text-decoration: underline
-  .widget-wrap#recent .widget-body
+  .widget-wrap#recent .widget-body, .widget-wrap#related .widget-body
     border: 1px solid var(--block-border)
     border-radius: $border-block
     background: var(--block)
@@ -163,4 +178,15 @@ nav.menu
       &:hover
         color: $color-hover
         background: var(--card)
-    
+      &.wiki 
+        font-weight: 700
+      div.excerpt
+        margin-top: .5rem
+        color: var(--text-p3)
+        font-size: $fs-12
+        font-weight: 400
+        display: -webkit-box
+        -webkit-box-orient: vertical
+        overflow: hidden
+        -webkit-line-clamp: 3
+

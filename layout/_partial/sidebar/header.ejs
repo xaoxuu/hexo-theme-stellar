@@ -1,6 +1,7 @@
 <%
 function layoutMainMenu() {
   var el = '';
+  el += partial('logo');
   el += '<nav class="menu dis-select">'
   for (let id of Object.keys(theme.sidebar.menu)) {
     let item = theme.sidebar.menu[id];
@@ -18,8 +19,26 @@ function layoutMainMenu() {
   el += '</nav>';
   return el;
 }
+function layoutWikiMenu() {
+  var el = '';
+  el += partial('logo');
+  return el;
+}
+function layoutDiv() {
+  var el = '';
+  el += '<header class="header';
+  if (where == 'main') {
+    el += ' mobile-only';
+  }
+  el += '">';
+  if (page.layout === 'wiki') {
+    el += layoutWikiMenu();
+  } else {
+    el += layoutMainMenu();
+  }
+  el += '</header>';
+  return el;
+}
 %>
-<header class='header<%- where == "main" ? " mobile-only" : "" %>'>
-  <%- partial('logo') %>
-  <%- layoutMainMenu() %>
-</header>
+
+<%- layoutDiv() %>

@@ -1,15 +1,51 @@
-<div class='logo-wrap'>
-  <% if (md_text(theme.sidebar.logo.avatar)) { %>
-    <a class='avatar' href='<%- url_for(md_link(theme.sidebar.logo.avatar) || "/") %>'>
-      <% if (theme.style.animated_avatar.animate) { %>
-        <div class='bg' style='opacity:0;background-image:url("<%- theme.style.animated_avatar.background %>");'></div>
-      <% } %>
-      <img no-lazy class='avatar' src='<%- md_text(theme.sidebar.logo.avatar) %>'/>
-    </a>
-  <% } %>
-  <% if (md_text(theme.sidebar.logo.title)) { %>
-    <a class='title' href='<%- url_for(md_link(theme.sidebar.logo.title) || "/") %>'>
-      <%- md_text(theme.sidebar.logo.title) %>
-    </a>
-  <% } %>
-</div>
+<%
+var wiki;
+if (page.layout === 'wiki') {
+  site.pages.filter(function (p) {
+    return p.layout == 'wiki' && p.wiki == page.wiki && p.description
+  }).limit(1).each(function(p) {
+    wiki = p;
+  });
+}
+
+function layoutDiv() {
+  var el = '';
+  if (page.layout === 'wiki') {
+    el += '<div class="logo-wrap wiki">';
+    // all products
+    el += '<a style="filter: grayscale(100%)" class="wiki-home cap" href="' + url_for(config.wiki_dir) + '">';
+    el += '<img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/arrow/f049bbd4e88ec.svg"/>';
+    el += __('btn.all_wiki');
+    el += '</a>';
+    // this product
+    if (wiki === undefined) {
+      if (page.menu_id && theme.sidebar.menu[page.menu_id] && md_link(theme.sidebar.menu[page.menu_id])) {
+        wiki = new Object();
+        wiki.path = md_link(theme.sidebar.menu[page.menu_id]);
+        wiki.wiki = __(md_text(theme.sidebar.menu[page.menu_id]));
+      }
+    }
+    if (wiki !== undefined) {
+      el += '<a class="title" href="' + url_for(wiki.path) + '">';
+      el += wiki.wiki;
+      el += '</a>';
+    }
+  } else {
+    el += '<div class="logo-wrap">';
+    if (md_text(theme.sidebar.logo.avatar)) {
+      el += '<a class="avatar" href="' + url_for(md_link(theme.sidebar.logo.avatar) || "/") + '">';
+      el += '<img no-lazy class="avatar" src="' + md_text(theme.sidebar.logo.avatar) + '">';
+      el += '</a>';
+    }
+    if (md_text(theme.sidebar.logo.title)) {
+      el += '<a class="title" href="' + url_for(md_link(theme.sidebar.logo.title) || "/") + '">';
+      el += md_text(theme.sidebar.logo.title);
+      el += '</a>';
+    }
+  }
+  el += '</div>';
+  return el;
+}
+%>
+
+<%- layoutDiv() %>

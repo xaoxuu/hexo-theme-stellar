@@ -18,9 +18,9 @@
     color: var(--text-p3)
     padding: 1rem
     line-height: 0
+    filter: grayscale(100%)
     img
       height: 1rem
-      filter: grayscale(100%)
     &.disable
       pointer-events: none
       opacity: 0.25
@@ -30,5 +30,4 @@
       border-left: 1px solid var(--block-border)
   a.paginator:hover
     background: var(--card)
-    img
-      filter: grayscale(0%)
+    filter: unset

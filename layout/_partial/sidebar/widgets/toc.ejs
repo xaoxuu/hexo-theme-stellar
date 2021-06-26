@@ -25,15 +25,13 @@ function layoutDiv(fallback) {
   if (t.length > 0) {
     el += '<div class="widget-wrap" id="toc">';
     el += '<div class="widget-header h4 dis-select">';
-    el += '<span class="name">';
-      if (page.toc_title) {
-        el += page.toc_title;
-      } else if (t == 'wiki') {
-        el += page.wiki || item.wiki;
-      } else {
-        el += __("meta.toc");
-      }
-    el += '</span>';
+    if (page.toc_title) {
+      el += '<span class="name">' + page.toc_title + '</span>';
+    } else if (t == 'wiki') {
+      el += '';
+    } else {
+      el += '<span class="name">' + __("meta.toc") + '</span>';
+    }
     el += '</div>';
     el += '<div class="widget-body fs14 ' + t + '">';
     if (page.layout == "wiki" && page.wiki) {
