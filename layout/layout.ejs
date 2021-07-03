@@ -4,7 +4,7 @@
 <body>
   <%- partial('_partial/main/article/wiki_cover') %>
   <div class='l_body' id='start'>
-    <aside class='l_left'>
+    <aside class='l_left' layout='<%- page.layout %>'>
     <%- partial('_partial/sidebar/index') %>
     </aside>
     <div class='l_main<%- page.content ? "" : " list" %>'>
