@@ -13,7 +13,7 @@
 
   a.more
     padding: 0.25rem 0.5rem
-    
+
     border-radius: $border-block
     color: var(--text-p1)
 
@@ -100,10 +100,15 @@
       margin: 0
       line-height: 1.2
       padding: 0.75rem 0.5rem
-      color: var(--text-p2)
+      color: var(--text-p3)
       justify-content: space-between
       align-items: center
       font-weight: 500
+      font-size: $fs-12
+      &:first-child
+        color: var(--text-p1)
+        font-size: $fs-h4
+        font-weight: 400
       .note
         flex-shrink: 0
         margin-left: 4px
@@ -111,13 +116,11 @@
         color: var(--text-meta)
         font-weight: 500
       &#more
-        font-size: $fs-12
-        text-align: center
-        color: var(--text-p3)
+        justify-content: center
       &:hover
         color: $color-hover !important
         background: var(--card)
-      
+
 
 
 .related-wrap#comments
