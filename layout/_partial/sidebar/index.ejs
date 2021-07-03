@@ -11,7 +11,7 @@ if (page.sidebar == undefined) {
 }
 function layoutFooterDiv() {
   if (theme.footer.social && theme.footer.social.length > 0) {
-    var el = '<footer class="footer"><div class="social-wrap dis-select">';
+    var el = '<footer class="footer dis-select"><div class="social-wrap">';
     theme.footer.social.forEach(item => {
       if (item.icon && (item.url || item.onclick)) {
         el += '<a class="social"';
