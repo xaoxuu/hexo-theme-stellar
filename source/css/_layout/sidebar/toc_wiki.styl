@@ -3,8 +3,8 @@
   .widget-body
     margin-top: 0
 
-// 未激活的分页链接
-.l_left[layout='wiki'] .widget-wrap#toc .doc-tree
+// 其它分页链接
+.widget-wrap#toc .doc-tree:not(:only-child)
   border-radius: 4px
   margin: 4px 0
   background: var(--block)
@@ -29,10 +29,12 @@
 
 
 // 当前分页链接
-.l_left[layout='wiki'] .widget-wrap#toc .doc-tree.active
+.widget-wrap#toc .doc-tree.active:not(:only-child)
   a.doc-tree-link
     background: var(--block)
-    border-bottom: 1px solid var(--block-border)
+    font-weight: 700
+    &:not(:only-child)
+      border-bottom: 1px solid var(--block-border)
     &:hover
       background: var(--block-hover)
       &:after
