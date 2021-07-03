@@ -143,7 +143,7 @@ footer:
 tag_plugins:
   # {% note text %}
   note:
-    default_color: '' # white, dark, red, orange, yellow, green, cyan, blue, purple
+    default_color: '' # light, dark, red, orange, yellow, green, cyan, blue, purple
   # {% checkbox %}
   checkbox:
     interactive: false # enable interactive for user
