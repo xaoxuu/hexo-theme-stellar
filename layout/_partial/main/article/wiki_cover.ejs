@@ -13,22 +13,23 @@ function layoutWikiCover() {
   var el = '';
   el += '<div class="l_cover' + scrollreveal() + '">';
   el += '<article class="cover-wrap md">';
-  if (page.logo && page.logo.src && cover.includes('logo')) {
+  let proj = theme.wiki.projects[page.wiki];
+  if (proj.logo && proj.logo.src && cover.includes('logo')) {
     el += '<div class="preview">';
-    if (page.logo.large) {
-      el += '<img src="' + page.logo.src + '" height="' + page.logo.large + '">';
+    if (proj.logo.large) {
+      el += '<img src="' + proj.logo.src + '" height="' + proj.logo.large + '">';
     } else {
-      el += '<img src="' + page.logo.src + '">';
+      el += '<img src="' + proj.logo.src + '">';
     }
     el += '</div>';
   }
-  if (page.title && cover.includes('title')) {
+  if ((proj.title || page.title) && cover.includes('title')) {
     el += '<div class="cover-title">';
-    el += '<span>' + (page.wiki || page.title) + '</span>';
+    el += '<span>' + (proj.title || page.title) + '</span>';
     el += '</div>';
   }
-  if (page.description && cover.includes('description')) {
-    el += '<div class="description">' + page.description + '</div>';
+  if ((proj.description || page.description) && cover.includes('description')) {
+    el += '<div class="description">' + (proj.description || page.description) + '</div>';
   }
   el += '<div class="start-wrap">';
   el += '<a class="button theme start" href="#start">' + __('btn.getting_started') + '</a>';

@@ -1,28 +1,34 @@
-<div class='nav-wrap mobile-hidden'>
-  <nav class='sub wiki cap'>
-    <% if (page.layout == 'index' && page.title && page.wiki) { %>
-      <a href='<%- url_for(config.wiki_dir || "/wiki/") %>'><%- __('btn.all_wiki') %></a>
-    <% } else { %>
-      <a class='active' href='<%- url_for(config.wiki_dir || "/wiki/") %>'><%- __('btn.all_wiki') %></a>
-    <% } %>
-    <%
-    var groups = [];
-    var paths = [];
-    site.pages.filter(function (p) {
-      return p.layout == 'index' && p.title && p.wiki;
-    }).sort('order').each(function(p) {
-      if (groups.includes(p.wiki) == false) {
-        groups.push(p.title);
-        paths.push(p.path);
+<%
+function layoutDiv() {
+  var el = '';
+  el += '<div class="nav-wrap mobile-hidden">';
+  el += '<nav class="sub wiki cap">';
+  // 所有项目
+  el += '<a';
+  if (page.filter === false) {
+    el += ' class="active"';
+  }
+  el += ' href="' + url_for(config.wiki_dir || "/wiki/") + '">' + __("btn.all_wiki") + '</a>';
+  el += '</a>';
+  // 项目分类
+  for (let group_name of Object.keys(theme.wiki.groups)) {
+    let group = theme.wiki.groups[group_name];
+    let projects = group.projects.filter(function(proj){
+      return proj.index !== false;
+    })
+    if (projects && projects.length > 0) {
+      el += '<a';
+      if (group.title && group.title.length > 0 && page.group === group.title) {
+        el += ' class="active"';
       }
-    });
-    %>
-    <% groups.forEach((group, i) => { %>
-      <% if (page.title == group) { %>
-        <a class='active' href='<%- url_for(paths[i]) %>'><%- group %></a>
-      <% } else { %>
-        <a class='' href='<%- url_for(paths[i]) %>'><%- group %></a>
-      <% } %>
-    <% }); %>
-  </nav>
-</div>
+      el += ' href="' + url_for(group.path) + '">' + group.title + '</a>';
+      el += '</a>';
+    } 
+  }
+  el += '</nav>';
+  el += '</div>';
+  return el;
+}
+%>
+
+<%- layoutDiv() %>

@@ -1,66 +1,87 @@
-<% if (page.breadcrumb != false) { %>
-  <div class='bread-nav fs12'>
-  <% if (page.layout == 'post') { %>
-    <%
-    var firstCat = '';
+<%
+function layoutDiv() {
+  var el = '';
+  if (page.breadcrumb === false) {
+    return el;
+  }
+  el += '<div class="bread-nav fs12">';
+  if (page.layout === "post") {
+    var firstCat = "";
     if (page.categories && page.categories.length > 0) {
       firstCat = page.categories.data[0].name;
     }
-    %>
-    <div id='breadcrumb'<%- category_color(firstCat) %>>
-      <a class='cap breadcrumb' href='/'><%- __('btn.home') %></a>
-      <span class="sep"></span>
-      <a class='cap breadcrumb' href='/'><%- __('btn.blog') %></a>
-      <% if (page.layout == 'post' && page.categories && page.categories.length > 0) { %>
-        <span class="sep"></span>
-        <%- list_categories(page.categories, {
-            class: 'cap breadcrumb',
-            show_count: false,
-            separator: ' <span class="sep"></span> ',
-            style: 'none'
-            }) %>
-      <% } %>
-    </div>
-    <div id='post-meta'>
-      <%- __('meta.created') %>&nbsp;<time datetime='<%- date_xml(page.date) %>'><%- date(page.date, config.date_format) %></time>
-    </div>
-  <% } else if (page.layout == 'wiki') { %>
-    <%
-    var catPage = '';
-    site.pages.filter(function (p) {
-      return p.layout == 'index' && p.title && p.wiki && p.wiki.includes(page.wiki)
-    }).limit(1).each(function(p) {
-      catPage = p;
-    });
-    %>
-    <div id='breadcrumb'<%- category_color(catPage.title) %>>
-      <a class='cap breadcrumb' href='/'><%- __('btn.home') %></a>
-      <span class="sep"></span>
-      <% if (page.menu_id && theme.sidebar.menu[page.menu_id] && md_link(theme.sidebar.menu[page.menu_id])) { %>
-        <a class='cap breadcrumb' href='<%- url_for(md_link(theme.sidebar.menu[page.menu_id])) %>'><%- __(md_text(theme.sidebar.menu[page.menu_id])) %></a>
-      <% } else { %>
-        <a class='cap breadcrumb' href='<%- url_for(config.wiki_dir || "/wiki/") %>'><%- __('btn.wiki') %></a>
-      <% } %>
-      <% if (catPage && catPage.title && catPage.path) { %>
-        <span class="sep"></span>
-        <a class='cap breadcrumb' href='<%- url_for(catPage.path) %>'><%- catPage.title %></a>
-      <% } %>
-      <% site.pages.filter(function (p) { %>
-        <% return p.layout == 'wiki' && p.wiki == page.wiki && p.description %>
-      <% }).limit(1).each(function(p) { %>
-        <span class="sep"></span>
-        <a class='cap breadcrumb' href='<%- url_for(p.path) %>'><%- page.wiki %></a>
-      <% }); %>
-    </div>
-    <div id='post-meta'>
-      <%- __('meta.updated') %>&nbsp;<time datetime='<%- date_xml(page.updated) %>'><%- date(page.updated, config.date_format) %></time>
-    </div>
-  <% } else { %>
-      <div id='breadcrumb'>
-        <a class='cap breadcrumb' href='/'><%- __('btn.home') %></a>
-        <span class="sep"></span>
-        <a class='cap breadcrumb' href='<%- url_for(page.path) %>'><%- page.title || page.seo_title %></a>
-      </div>
-  <% } %>
-  </div>
-<% } %>
+    el += '<div id="breadcrumb"' + category_color(firstCat) + '>';
+    el += '<a class="cap breadcrumb" href="/">' + __("btn.home") + '</a>';
+    el += '<span class="sep"></span>';
+    el += '<a class="cap breadcrumb" href="/">' + __("btn.blog") + '</a>';
+    if (page.layout == "post" && page.categories && page.categories.length > 0) {
+      el += '<span class="sep"></span>';
+      el += list_categories(page.categories, {
+          class: "cap breadcrumb",
+          show_count: false,
+          separator: ' <span class="sep"></span> ',
+          style: "none"
+        });
+    }
+    el += '</div>';
+    // 发布日期
+    el += '<div id="post-meta">';
+    el += __("meta.created") + '&nbsp;<time datetime="' + date_xml(page.date) + '">' + date(page.date, config.date_format) + '</time>';
+    el += '</div>';
+  } else if (page.layout === "wiki" && page.wiki && page.wiki.length > 0) {
+    var cat_name = '';
+    let proj = theme.wiki.projects[page.wiki];
+    if (proj.group && proj.group.length > 0) {
+      let group = theme.wiki.groups[proj.group];
+      if (group) {
+        cat_name = group.title;
+      }
+    }
+    el += '<div id="breadcrumb"' + category_color(cat_name) + '>';
+    var nodes = [];
+    // home
+    el += '<a class="cap breadcrumb" id="home" href="/">' + __("btn.home") + '</a>';
+    nodes.push('/');
+    // menu_id
+    el += '<span class="sep"></span>';
+    if (page.menu_id && theme.sidebar.menu[page.menu_id] && md_link(theme.sidebar.menu[page.menu_id])) {
+      let url = url_for(md_link(theme.sidebar.menu[page.menu_id]));
+      nodes.push(url);
+      el += '<a class="cap breadcrumb" id="menu" href="' + url + '">' + __(md_text(theme.sidebar.menu[page.menu_id])) + '</a>';
+    } else {
+      let url = url_for(config.wiki_dir || "/wiki/");
+      nodes.push(url);
+      el += '<a class="cap breadcrumb" id="menu" href="' + url + '">' + __("btn.wiki") + '</a>';
+    }
+    // group
+    if (proj.group && proj.group.length > 0) {
+      let group = theme.wiki.groups[proj.group];
+      let url = url_for(group.path);
+      if (group !== undefined && nodes.includes(url) === false) {
+        el += '<span class="sep"></span>';
+        el += '<a class="cap breadcrumb" id="group" href="' + url + '">' + group.title + '</a>';
+      }
+    }
+    // 项目名
+    let url_proj = url_for(proj.path);
+    if (nodes.includes(url_proj) === false) {
+      el += '<span class="sep"></span>';
+      el += '<a class="cap breadcrumb" id="proj" href="' + url_proj + '">' + proj.title + '</a>';
+    }
+    el += '</div>';
+    // 更新日期
+    el += '<div id="post-meta">';
+    el += __("meta.updated") + '&nbsp;<time datetime="' + date_xml(page.updated) + '">' + date(page.updated, config.date_format) + '</time>';
+    el += '</div>';
+  } else {
+    el += '<div id="breadcrumb">';
+    el += '<a class="cap breadcrumb" href="/">' + __("btn.home") + '</a>';
+    el += '<span class="sep"></span>';
+    el += '<a class="cap breadcrumb" href="' + url_for(page.path) + '">' + (page.title || page.seo_title) + '</a>';
+    el += '</div>';
+  }
+  el += '</div>';
+  return el;
+}
+%>
+<%- layoutDiv() %>

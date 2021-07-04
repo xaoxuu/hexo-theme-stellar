@@ -3,38 +3,36 @@ function layoutDiv() {
   if (page.layout !== "wiki") {
     return '';
   }
-  var current_group;
-  site.pages.filter(function (p) {
-    return p.layout == "index" && p.title && p.wiki && p.wiki.includes(page.wiki)
-  }).limit(1).each(function(p) {
-    current_group = p;
-  });
-  if (current_group === undefined || current_group.wiki.length < 1) {
-    return '';
-  }
   var el = '';
-  el += '<div class="widget-wrap" id="related">';
-  el += '<div class="widget-header cap dis-select">';
-  el += '<span class="name">更多' + current_group.title + '</span>';
-  el += '</div>';
-  el += '<div class="widget-body fs14">';
-  current_group.wiki.forEach((wiki, i) => {
-    site.pages.filter(function (p) {
-      return p.wiki == wiki && p.wiki != page.wiki && p.description
-    }).each(function(post) {
-      if (post.wiki || post.title) {
-        el += '<div class="line"></div>'
-        el += '<a class="reveal wiki" href="' + url_for(post.link || post.path) + '">';
-        el += post.wiki || post.title;
-        el += '<div class="excerpt">';
-        el += post.description;
-        el += '</div>';
-        el += '</a>';
-      }
-    });
-  });
-  el += '</div>';
-  el += '</div>';
+  let proj = theme.wiki.projects[page.wiki];
+  if (proj.group && proj.group.length > 0) {
+    let group = theme.wiki.groups[proj.group];
+    let projects = group.projects.filter(function(proj){
+      return proj.index !== false;
+    })
+    if (projects && projects.length > 1) {
+      var el = '';
+      el += '<div class="widget-wrap" id="related">';
+      el += '<div class="widget-header cap dis-select">';
+      el += '<span class="name">更多' + group.title + '</span>';
+      el += '</div>';
+      el += '<div class="widget-body fs14">';
+      projects.forEach((p, i) => {
+        if (p.title !== proj.title) {
+          // 同一个分组中的其它项目
+          el += '<div class="line"></div>'
+          el += '<a class="reveal wiki" href="' + url_for(p.path) + '">';
+          el += p.title;
+          el += '<div class="excerpt">';
+          el += p.description;
+          el += '</div>';
+          el += '</a>';
+        }
+      });
+      el += '</div>';
+      el += '</div>';
+    }
+  }
   return el;
 }
 %>
