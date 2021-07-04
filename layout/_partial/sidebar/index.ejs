@@ -11,30 +11,48 @@ if (page.sidebar == undefined) {
 }
 function layoutFooterDiv() {
   if (theme.footer.social && theme.footer.social.length > 0) {
-    var el = '<footer class="footer dis-select"><div class="social-wrap">';
-    theme.footer.social.forEach(item => {
-      if (item.icon && (item.url || item.onclick)) {
-        el += '<a class="social"';
-        if (item.title) {
-          el += ' title="' + item.title + '"';
-        }
-        if (item.url) {
-          el += ' href="' + url_for(item.url) + '"';
-          if (item.url.includes('://')) {
-            el += ' target="_blank" rel="external nofollow noopener noreferrer"';
-          } else {
-            el += ' rel="noopener noreferrer"';
-          }
-        } else if (item.onclick) {
-          item.onclick = item.onclick.replace(/"|\'/g, '&quot;');
-          el += ' onclick="' + item.onclick + '"';
-        }
-        el += '>';
-        el += item.icon;
-        el += '</a>';
+    var el = '<footer class="footer dis-select">';
+    if (page.layout === 'wiki' && page.wiki) {
+      const proj = theme.wiki.projects[page.wiki];
+      if (proj.repo) {
+        el += '<div class="proj-wrap">';
+          el += '<a class="item"';
+          el += ' title="GitHub"';
+          el += ' href="' + url_for("https://github.com/" + proj.repo) + '"';
+          el += ' target="_blank" rel="external nofollow noopener noreferrer"';
+          el += '>';
+          el += '<svg aria-hidden="true" role="img" class="color-icon-primary" viewBox="0 0 16 16" width="1rem" height="1rem" fill="currentColor" style="display:inline-block;user-select:none;vertical-align:text-bottom;overflow:visible"><path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>';
+          el += 'GitHub';
+          el += '</a>';
+        el += '</div>';
       }
-    });
-    el += '</div></footer>';
+    } else {
+      el += '<div class="social-wrap">';
+      theme.footer.social.forEach(item => {
+        if (item.icon && (item.url || item.onclick)) {
+          el += '<a class="social"';
+          if (item.title) {
+            el += ' title="' + item.title + '"';
+          }
+          if (item.url) {
+            el += ' href="' + url_for(item.url) + '"';
+            if (item.url.includes('://')) {
+              el += ' target="_blank" rel="external nofollow noopener noreferrer"';
+            } else {
+              el += ' rel="noopener noreferrer"';
+            }
+          } else if (item.onclick) {
+            item.onclick = item.onclick.replace(/"|\'/g, '&quot;');
+            el += ' onclick="' + item.onclick + '"';
+          }
+          el += '>';
+          el += item.icon;
+          el += '</a>';
+        }
+      });
+      el += '</div>';
+    }
+    el += '</footer>';
     return el;
   } else {
     return '';
