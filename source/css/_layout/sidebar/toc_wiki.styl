@@ -37,10 +37,8 @@
     font-weight: 700
     &:not(:only-child)
       border-bottom: 1px solid var(--block-border)
-    &:hover
-      background: var(--block-hover)
-      &:after
-        content: none
+    &:hover:after
+      content: none
   >.toc
     padding: 4px
     background: var(--card)

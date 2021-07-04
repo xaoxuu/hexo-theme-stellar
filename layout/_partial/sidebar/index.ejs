@@ -26,7 +26,7 @@ function layoutWidgets() {
 function layoutFooterDiv() {
   if (theme.footer.social && theme.footer.social.length > 0) {
     var el = '<footer class="footer dis-select">';
-    if (page.layout === 'wiki' && page.wiki) {
+    if (page.layout === 'wiki' && page.wiki && page.menu_id === 'wiki') {
       const proj = theme.wiki.projects[page.wiki];
       if (proj.repo) {
         el += '<div class="proj-wrap">';
