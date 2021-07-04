@@ -32,6 +32,9 @@ function layoutDiv() {
     el += '<div class="logo-wrap">';
     if (md_text(theme.sidebar.logo.avatar)) {
       el += '<a class="avatar" href="' + url_for(md_link(theme.sidebar.logo.avatar) || "/") + '">';
+      if (theme.style.animated_avatar.animate) {
+        el += '<div class="bg" style="opacity:0;background-image:url(' + theme.style.animated_avatar.background + ');"></div>';
+      }
       el += '<img no-lazy class="avatar" src="' + md_text(theme.sidebar.logo.avatar) + '">';
       el += '</a>';
     }
