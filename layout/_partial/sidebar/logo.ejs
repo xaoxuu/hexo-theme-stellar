@@ -40,7 +40,16 @@ function layoutDiv() {
     }
     if (md_text(theme.sidebar.logo.title)) {
       el += '<a class="title" href="' + url_for(md_link(theme.sidebar.logo.title) || "/") + '">';
-      el += md_text(theme.sidebar.logo.title);
+      el += '<div class="main">' + md_text(theme.sidebar.logo.title) + '</div>';
+      if (config.subtitle) {
+        let arr = config.subtitle.split('|');
+        if (arr.length > 0) {
+          el += '<div class="sub normal cap">' + arr[0] + '</div>';
+          if (arr.length > 1) {
+            el += '<div class="sub hover cap" style="opacity:0">' + arr[1] + '</div>';
+          }
+        }
+      }
       el += '</a>';
     }
   }

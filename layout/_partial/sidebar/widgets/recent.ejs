@@ -22,11 +22,22 @@ function layoutDiv() {
     el += '<a class="reveal" href="' + url_for(post.link || post.path) + '">';
     el += '<div class="cap">';
     el += '<time>' + date(post.updated, config.date_format) + '</time>';
+    if (post.layout === 'wiki') {
+      el += '<span>';
+      let proj = theme.wiki.projects[post.wiki];
+      if (proj && proj.title) {
+        el += proj.title;
+      } else if (post.wiki) {
+        el += post.wiki;
+      }
+      el += '</span>';
+    } else {
+      post.categories.limit(1).forEach((cat, i) => {
+        el += '<span>' + cat.name + '</span>';
+      });
+    }
     el += '</div>';
     el += '<span class="title">';
-    if (post.wiki && (post.title.toUpperCase().includes(post.wiki.toUpperCase()) == false)) {
-       el += post.wiki + ': ';
-    }
     el += post.title;
     el += '</span>';
     el += '</a>';

@@ -59,12 +59,30 @@
           animation: spin infinite 1s
           animation-timing-function: linear
 
-  .title
+  a.title
     font-size: 1.75rem
     font-weight: 900
     color: inherit
-    line-height: 1;
+    line-height: 1
     font-family: $ff-logo
+    display: block
+    position: relative
+    .sub
+      color: var(--text-p1)
+      trans2 opacity transform
+    .hover
+      position: absolute
+      bottom: 0
+      transform: translateY(8px)
+    &:hover
+      .normal
+        opacity: 0
+        transform: translateY(-8px)
+      .hover
+        transform: translateY(0)
+        opacity: 1 !important
+  a.avatar+a.title
+    txt-ellipsis()
 
 
 .logo-wrap.wiki
@@ -72,14 +90,15 @@
   flex-direction: column
   align-items: flex-start
   a.wiki-home
-    margin-bottom: .75rem
+    margin-bottom: .5rem
     color: var(--text-p2)
     svg
       margin-right: 2px
     &:hover
       color: $color-hover
       filter: unset !important
-
+  a.title
+    line-height: inherit
 
 nav.menu
   margin: 1rem 0 .5rem
@@ -174,6 +193,8 @@ nav.menu
       div.cap
         margin-bottom: 0.25rem
         color: var(--text-p4)
+        display: flex
+        justify-content: space-between
       &:hover
         color: $color-hover
         background: var(--card)
