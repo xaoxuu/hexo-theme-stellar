@@ -3,7 +3,23 @@ var proj;
 if (page.layout === 'wiki' && page.wiki) {
   proj = theme.wiki.projects[page.wiki];
 }
-
+function layoutTitle(main, url, sub) {
+  var el = '';
+  el += '<a class="title" href="' + url_for(url || "/") + '">';
+  el += '<div class="main">' + main + '</div>';
+  if (sub) {
+    let arr = sub.split('|');
+    console.log(arr);
+    if (arr.length > 1) {
+      el += '<div class="sub normal cap">' + arr[0].trim() + '</div>';
+      el += '<div class="sub hover cap" style="opacity:0">' + arr[1].trim() + '</div>';
+    } else if (arr.length > 0) {
+      el += '<div class="sub cap">' + arr[0] + '</div>';
+    }
+  }
+  el += '</a>';
+  return el;
+}
 function layoutDiv() {
   var el = '';
   if (page.layout === 'wiki' && proj.index !== false) {
@@ -24,9 +40,10 @@ function layoutDiv() {
       }
     }
     if (proj !== undefined) {
-      el += '<a class="title" href="' + url_for(proj.path) + '">';
-      el += proj.title || proj.wiki;
-      el += '</a>';
+      let main = proj.title || proj.wiki || page.wiki || page.title;
+      let url = proj.path;
+      let sub = proj.subtitle;
+      el += layoutTitle(main, url, sub);
     }
   } else {
     el += '<div class="logo-wrap">';
@@ -38,19 +55,11 @@ function layoutDiv() {
       el += '<img no-lazy class="avatar" src="' + md_text(theme.sidebar.logo.avatar) + '">';
       el += '</a>';
     }
-    if (md_text(theme.sidebar.logo.title)) {
-      el += '<a class="title" href="' + url_for(md_link(theme.sidebar.logo.title) || "/") + '">';
-      el += '<div class="main">' + md_text(theme.sidebar.logo.title) + '</div>';
-      if (config.subtitle) {
-        let arr = config.subtitle.split('|');
-        if (arr.length > 0) {
-          el += '<div class="sub normal cap">' + arr[0] + '</div>';
-          if (arr.length > 1) {
-            el += '<div class="sub hover cap" style="opacity:0">' + arr[1] + '</div>';
-          }
-        }
-      }
-      el += '</a>';
+    let main = md_text(theme.sidebar.logo.title);
+    if (main) {
+      let url = md_link(theme.sidebar.logo.title);
+      let sub = config.subtitle;
+      el += layoutTitle(main, url, sub);
     }
   }
   el += '</div>';

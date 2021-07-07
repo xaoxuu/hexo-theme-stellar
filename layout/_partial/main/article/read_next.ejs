@@ -4,16 +4,16 @@ function layoutDiv() {
   var title = __('meta.read_next');
   var title_prev = __('meta.prev');
   var title_next = __('meta.next');
-  if (page.layout == 'post') {
+  if (page.layout === 'post') {
     prev = page.prev;
     next = page.next;
     title_prev = __('meta.newer');
     title_next = __('meta.older');
-  } else if (page.layout == 'wiki' && page.wiki && page.wiki.length > 0) {
+  } else if (page.layout === 'wiki' && page.wiki && page.wiki.length > 0) {
     var wikis = [];
     wikis = site.pages.filter(function (p) {
-      if (p.layout == 'wiki' && p.wiki && p.wiki == page.wiki) {
-        if (p.order == undefined) {
+      if (p.layout === 'wiki' && p.wiki && p.wiki === page.wiki) {
+        if (p.order === undefined) {
           p.order = 0;
         }
         return true;
@@ -24,15 +24,18 @@ function layoutDiv() {
     page.order = page.order || 0;
     wikis.forEach((p, i) => {
       if (p.order < page.order) {
-        if (prev == undefined || p.order > prev.order) {
+        if (prev === undefined || p.order > prev.order) {
           prev = p;
         }
       } else if (p.order > page.order) {
-        if (next == undefined || p.order < next.order) {
+        if (next === undefined || p.order < next.order) {
           next = p;
         }
       }
     });
+    if (next === undefined) {
+      return '<br>';
+    }
   }
   let el = '';
   if (prev || next) {
