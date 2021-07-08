@@ -9,7 +9,6 @@ function layoutTitle(main, url, sub) {
   el += '<div class="main">' + main + '</div>';
   if (sub) {
     let arr = sub.split('|');
-    console.log(arr);
     if (arr.length > 1) {
       el += '<div class="sub normal cap">' + arr[0].trim() + '</div>';
       el += '<div class="sub hover cap" style="opacity:0">' + arr[1].trim() + '</div>';
