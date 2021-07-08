@@ -4,9 +4,12 @@
     padding: 1px
     background: var(--block)
     border-radius: 6px
+    display: inline-flex
     a
       margin: 1px
-      padding: 0.5em 0.75rem
-      &:hover
+      padding: 0.25em 0.75rem
+      &:after
+        display: none
+      &:hover,&.active
         background: var(--card)
         color: var(--text-p1)

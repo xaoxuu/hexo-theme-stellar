@@ -4,25 +4,49 @@
   margin-top: 1.75rem
   top: -2px
   background: var(--site-bg)
-  padding: 0.5rem 1rem 0.38rem
+  padding: 0 1rem
   z-index: 1
+  margin-bottom: 1px
+  &:after
+    content: ''
+    width: 'calc(100% - 2 * %s)' % 1rem
+    height: 2px
+    border-radius: 2px
+    position: absolute
+    bottom: 0
+    left: 1rem
+    background: var(--block-hover)
 
 nav.cap
   display: flex
-  overflow: scroll
+  overflow: scroll visible
   scrollbar(0, 0)
   >p
     margin: 0
   a
-    padding: 0.5rem 0.75rem
-    margin-left: 0.25rem
+    padding: .25rem 1rem
+    margin: 10px 0 8px 0
+    line-height: 2
     color: var(--text-p3)
     border-radius: 4px
     font-weight: 500
     white-space: nowrap
-    &.active, &:hover
+    position: relative
+    z-index: 1
+    &:after
+      content: ''
+      width: 'calc(100% - 2 * %s)' % .5rem
+      height: 2px
+      position: absolute
+      bottom: -8px
+      left: .5rem
+    &:hover
       background: var(--block-hover)
+    &.active, &:hover
       color: var(--text-p1)
+    &.active:after
+      background: $color-theme
+      border-radius: 2px
 
 
 @media screen and (max-width: $device-tablet)
