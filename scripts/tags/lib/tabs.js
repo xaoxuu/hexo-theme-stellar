@@ -30,7 +30,7 @@ module.exports = ctx => function(args, content) {
   }
 
   tabNav = `<ul class="nav-tabs">${tabNav}</ul>`;
-  tabContent = `<div class="tab-content fs14">${tabContent}</div>`;
+  tabContent = `<div class="tab-content">${tabContent}</div>`;
 
   return `<div class="tag-plugin tabs" id="${tabName.toLowerCase().split(' ').join('-')}">${tabNav + tabContent}</div>`;
 };

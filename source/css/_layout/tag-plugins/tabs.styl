@@ -1,76 +1,70 @@
 $tbr = $border-block
 
 .tag-plugin.tabs
-  display: block
   position: relative
   margin-top: 1rem
   margin-bottom: 1rem
-  border-radius: $tbr
-  border: 1px solid var(--block-border)
-  font-size: $fs-14
+  display: flex
+  flex-direction: column
 
 .tag-plugin.tabs
   ul.nav-tabs
     display: flex
-    overflow-x: auto
+    align-self: center
+    overflow: scroll visible
+    scrollbar(0, 0)
+    max-width: 100%
     white-space: nowrap
-    justify-content: flex-start
     margin: 0 !important
-    padding: 8px 8px 0 8px
-    background: var(--block)
-    border-radius: $tbr $tbr 0 0
     line-height: 1.5
+    position: relative
+    padding: 8px 0
+    &:after
+      content: ''
+      position: absolute
+      background: var(--block-hover)
+      width: 100%
+      height: 2px
+      bottom: 0
+      left: 0
+      border-radius: 2px
     li.tab
       list-style-type: none
-      margin-top: 0
-      margin-bottom: 0
-      &:last-child
-        padding-right: 1rem
       a
         display: block
         cursor: pointer
-        border-radius: $tbr $tbr 0 0
-        padding: 0.5rem
-        text-align: center
-        font-size: $fs-14
+        padding: .25rem .75rem
+        font-size: $fs-13
         line-height: inherit
         font-weight: 700
         color: var(--text-p3)
-        border: 1px solid transparent
+        border-radius: 4px
+        position: relative
+        margin: 0 2px
         &:hover
           color: var(--text-p1)
+          background: var(--block-hover)
         i
           pointer-events: none
       &.active a
         cursor: default
         color: var(--text-p1)
         background: var(--card)
-        border: 1px solid var(--block-border)
-        border-bottom: 1px solid var(--card)
+        box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.04), 0 0 8px 0px rgba(0, 0, 0, 0.04)
+        &:after
+          content: ''
+          z-index: 1
+          position: absolute
+          background: $color-theme
+          width: 'calc(100% - 2 * %s)' % .5rem
+          height: 2px
+          bottom: -8px
+          left: .5rem
+          border-radius: 2px
 
   .tab-content
-    border-top: 1px solid var(--block-border)
-    margin-top: -1px
-    background: var(--card)
-    border-radius:  0 0 $tbr $tbr
     .tab-pane
-      padding: 1rem
       &:not(.active)
         display: none
       &.active
         display: block
-      >:first-child, li:first-child>p
-        margin-top: 0
-      >:last-child
-        margin-bottom: 0
-
-
-.tag-plugin.tabs .tab-pane[codeblock]
-  padding: 0
-  .highlight
-    border: none
-    border-radius: 0
-    background: transparent
-    margin: 0
-    .code:before
-      content: none
