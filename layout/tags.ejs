@@ -12,7 +12,7 @@ if (page.menu_id == undefined) {
     <article class='post-card<%- scrollreveal() %>' id='tags'>
       <% site.tags.sort('length', -1).each(function(tag){ %>
         <a class='tag' href="<%= url_for(tag.path) %>">
-          <span class='name fs14'><%= tag.name %></span>
+          <span class='name'><%= tag.name %></span>
           <span class='badge fs12'>x<%- tag.length %></span>
         </a>
       <% }) %>

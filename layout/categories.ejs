@@ -12,7 +12,7 @@ if (page.menu_id == undefined) {
     <article class='post-card<%- scrollreveal() %>' id='cats'>
       <% site.categories.sort('path').each(function(category){ %>
         <div>
-          <a class="<%= category.parent ? 'cat child' : 'cat'%> fs14" href="<%= url_for(category.path) %>">
+          <a class="<%= category.parent ? 'cat child' : 'cat'%>" href="<%= url_for(category.path) %>">
             <span class='name'><%- category.name %></span>
             <span class='badge'>(<%- category.posts.length %>)</span>
           </a>
