@@ -1,76 +1,68 @@
 .tag-plugin.timeline
   position: relative
-  display: block
   margin: 1rem 0
-  padding-top: 1rem
-  padding-bottom: 1rem
+  padding-left: 16px
   &:before
     content: ''
+    position: absolute
     z-index: 0
-    position: absolute
-    background: var(--block-border)
-    width: 2px
-    left: 16px
-    top: 1rem
-    bottom: 1rem
-  >svg.icon:first-child, >svg.icon:last-child
-    position: absolute
-    z-index: 1
-    fill: var(--block-border)
-    height 16px
-    width: 16px
-    margin-left: 9px
-  >svg.icon:first-child
-    margin-top: -1rem
-  >svg.icon:last-child
-    margin-bottom: 1rem
-
-.tag-plugin.timenode
-  position: relative
-  background: var(--card)
-  border: 1px solid var(--theme)
-  border-radius: $border-block
-  margin-top: 1rem
-  margin-bottom: 1rem
-  .header
-    line-height: 1.2
-    background: var(--theme-bg)
-    border-top-left-radius: "calc(%s - 1px)" % $border-block
-    border-top-right-radius: "calc(%s - 1px)" % $border-block
-    border-bottom: 1px solid var(--theme)
-    display: flex
-    justify-content: space-between
-    align-items: center
-    span
-      font-weight: 500
-      color: var(--text-p1)
-      padding: 0.75rem 16px
-    a
-      visibility: hidden
-      margin-left: 4px
-      padding: 0.4rem 8px
-      margin-right: 8px
-      line-height: 0
-      border-radius: 4px
-      color: var(--text-p1)
-      &:hover
-        color: $color-link
-  .body
-    padding: 0.5rem 1rem
-    p,.highlight,ol,ul
-      margin: 0.5rem 0
-
-.tag-plugin.timenode:hover
-  .header a
-    visibility: visible
+    background: var(--block-hover)
+    width: 4px
+    left: 0px
+    border-radius: 8px
+    top: .5rem
+    bottom: 0
 
 .tag-plugin.timeline .timenode
-  --theme-bg: alpha(#888, 0.05)
+  position: relative
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+  &[highlight] .header:before
+    background: $color-theme
+  &+.timenode
+    margin-top: 1rem
+  &:hover .header
+    p
+      color: var(--text-p1)
+    &:before
+      background: $color-theme
+      height: 16px
+      top: 'calc(50% - 0.5 * %s)' % @height
 
-.tag-plugin.timeline[order='-date'] .timenodes>.timenode:first-child
-  --theme: alpha($c-blue, 0.25)
-  --theme-bg: alpha($c-blue, 0.05)
+.tag-plugin.timeline .header
+  display: flex
+  align-items: center
+  position: relative
+  p
+    margin: .25rem 0
+    font-size: $fs-12
+    font-weight: 700
+    color: var(--text-p3)
+    font-family: $ff-code
+    a
+      color: inherit
+      font-weight: inherit
+  &:before
+    content: ''
+    position: absolute
+    left: -16px
+    width: 4px
+    border-radius: 12px
+    height: 4px
+    top: 'calc(50% - 0.5 * %s)' % @height
+    background: var(--text-p4)
+    trans3 background height top
 
-.tag-plugin.timeline[order='date'] .timenodes>:last-child
-  --theme: alpha($c-blue, 0.25)
-  --theme-bg: alpha($c-blue, 0.05)
+
+.tag-plugin.timeline .body
+  background: var(--card)
+  border-radius: 12px
+  border-top-left-radius: 2px
+  padding: 0.5rem 1rem
+  margin-top: 4px
+  box-shadow: $boxshadow-block
+  &:empty
+    display: none
+  p,.highlight,ol,ul,.tag-plugin
+    margin: .5rem 0
