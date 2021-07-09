@@ -6,19 +6,20 @@
 
 module.exports = hexo => {
   const data = hexo.locals.get('data');
+  if (hexo.theme.config.wiki === undefined) {
+    hexo.theme.config.wiki = {};
+  }
+  if (hexo.theme.config.wiki.projects === undefined) {
+    hexo.theme.config.wiki.projects = {};
+  }
   if (data.projects) {
-    if (hexo.theme.config.wiki === undefined) {
-      hexo.theme.config.wiki = {};
-    }
-    if (hexo.theme.config.wiki.projects === undefined) {
-      hexo.theme.config.wiki.projects = {};
-    }
     for (let id of Object.keys(data.projects)) {
       hexo.theme.config.wiki.projects[id] = data.projects[id];
     }
   }
+
   // wiki 配置
-  const { wiki } = hexo.theme.config;
+  var wiki = hexo.theme.config.wiki;
   // wiki 所有页面
   const wiki_pages = hexo.locals.get('pages').filter(function (p) {
     return (p.layout === 'wiki') && (p.wiki !== undefined) && (p.wiki.length > 0);

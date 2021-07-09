@@ -17,7 +17,9 @@ function layoutDiv() {
     el += '</div>';
   }
   el += '<h2 class="post-title">' + (proj.wiki || proj.title || proj.seo_title) + '</h2>';
-  el += '<p>' + proj.description + '</p>';
+  if (proj.description) {
+    el += '<p>' + proj.description + '</p>';
+  }
   el += '</div>';
   return el;
 }

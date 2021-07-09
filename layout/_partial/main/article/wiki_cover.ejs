@@ -1,35 +1,45 @@
 <%
 function layoutWikiCover() {
-  if (page.layout != 'wiki') {
-    return '';
+  var el = '';
+  if (page.layout !== 'wiki') {
+    return el;
   }
-  if (page.cover == undefined || page.cover == false || page.cover == '[]') {
-    return '';
+  let proj = theme.wiki.projects[page.wiki];
+  if (proj === undefined) {
+    return el;
   }
-  var cover = page.cover;
-  if (page.cover == true) {
+  if (proj.path !== page.path) {
+    return;
+  }
+  if (proj.cover === undefined || proj.cover === false || proj.cover === '[]') {
+    return el;
+  }
+  var cover = proj.cover;
+  let logo = proj.logo;
+  let title = proj.title || page.title;
+  let desc = proj.description || page.description;
+  if (cover === true) {
     cover = ['logo', 'title', 'description'];
   }
-  var el = '';
   el += '<div class="l_cover' + scrollreveal() + '">';
   el += '<article class="cover-wrap md">';
-  let proj = theme.wiki.projects[page.wiki];
-  if (proj.logo && proj.logo.src && cover.includes('logo')) {
+
+  if (logo && logo.src && cover.includes('logo')) {
     el += '<div class="preview">';
-    if (proj.logo.large) {
-      el += '<img src="' + proj.logo.src + '" height="' + proj.logo.large + '">';
+    if (logo.large) {
+      el += '<img src="' + logo.src + '" height="' + logo.large + '">';
     } else {
-      el += '<img src="' + proj.logo.src + '">';
+      el += '<img src="' + logo.src + '">';
     }
     el += '</div>';
   }
-  if ((proj.title || page.title) && cover.includes('title')) {
+  if (title && cover.includes('title')) {
     el += '<div class="cover-title">';
-    el += '<span>' + (proj.title || page.title) + '</span>';
+    el += '<span>' + title + '</span>';
     el += '</div>';
   }
-  if ((proj.description || page.description) && cover.includes('description')) {
-    el += '<div class="description">' + (proj.description || page.description) + '</div>';
+  if (desc && cover.includes('description')) {
+    el += '<div class="description">' + desc + '</div>';
   }
   el += '<div class="start-wrap">';
   el += '<a class="button theme start" href="#start">' + __('btn.getting_started') + '</a>';
