@@ -1,36 +1,63 @@
 /**
- * tabs.js | https://theme-next.js.org/docs/tag-plugins/tabs
+ * tabs.js v2 | 基于NexT修改： https://theme-next.js.org/docs/tag-plugins/tabs
  */
 
 'use strict';
 
 module.exports = ctx => function(args, content) {
-  const tabBlock = /<!--\s*tab (.*?)\s*-->\n([\w\W\s\S]*?)<!--\s*endtab\s*-->/g;
-  args = ctx.args.map(args, ['active', 'codeblock', 'color'], ['tabName']);
+  var el = '';
+  var arr = content.split(/<!--\s*(.*?)\s*-->/g).filter((item, i) => {
+    return item.trim().length > 0;
+  });
+  if (arr.length < 1) {
+    return el;
+  }
+  var tabs = [];
+  arr.forEach((item, i) => {
+    if (item.startsWith('tab ')) {
+      tabs.push({
+        header: item
+      });
+    } else if (tabs.length > 0) {
+      var tab = tabs[tabs.length-1];
+      if (tab.body === undefined) {
+        tab.body = item;
+      } else {
+        tab.body += '\n' + item;
+      }
+    }
+  });
+
+  args = ctx.args.map(args, ['active', 'center'], ['tabName']);
   const tabName = args.tabName;
   const tabActive = Number(args.active) || 0;
 
-  let match;
   let tabId = 0;
   let tabNav = '';
   let tabContent = '';
 
   if (!tabName) ctx.log.warn('Tabs block must have unique name!');
 
-  while ((match = tabBlock.exec(content)) !== null) {
-    let {caption, codeblock} = ctx.args.map(match[1].split(' '), ['codeblock'], ['caption']);
-    let postContent = ctx.render.renderSync({ text: match[2], engine: 'markdown' }).trim();
-
+  tabs.forEach((tab, i) => {
+    let caption = tab.header.substring(4);
+    let content = ctx.render.renderSync({ text: tab.body, engine: 'markdown' }).trim();
     const abbr = tabName + ' ' + ++tabId;
     const href = abbr.toLowerCase().split(' ').join('-');
-
     const isActive = (tabActive > 0 && tabActive === tabId) || (tabActive === 0 && tabId === 1) ? ' active' : '';
     tabNav += `<li class="tab${isActive}"><a href="#${href}">${caption || abbr}</a></li>`;
-    tabContent += `<div class="tab-pane${isActive}" ${codeblock ? 'codeblock="true"' : ''} id="${href}">${postContent}</div>`;
-  }
+    tabContent += `<div class="tab-pane${isActive}" id="${href}">${content}</div>`;
+  });
 
   tabNav = `<ul class="nav-tabs">${tabNav}</ul>`;
   tabContent = `<div class="tab-content">${tabContent}</div>`;
 
-  return `<div class="tag-plugin tabs" id="${tabName.toLowerCase().split(' ').join('-')}">${tabNav + tabContent}</div>`;
+  el += '<div class="tag-plugin tabs"';
+  if (args.center === 'true') {
+    el += ' center="true"';
+  }
+  el += 'id="' + tabName.toLowerCase().split(' ').join('-') + '"';
+  el += '">';
+  el += tabNav + tabContent;
+  el += '</div>';
+  return el;
 };

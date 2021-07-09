@@ -37,9 +37,7 @@ function layoutNodeContent(content) {
 
 function postTimeline(args, content) {
   var el = '';
-  const nodeBlock = /<!--\s*(.*?)\s*-->/g;
-  let match;
-  var arr = content.split(nodeBlock).filter((item, i) => {
+  var arr = content.split(/<!--\s*(.*?)\s*-->/g).filter((item, i) => {
     return item.trim().length > 0;
   });
   if (arr.length < 1) {
