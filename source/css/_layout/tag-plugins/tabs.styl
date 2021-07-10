@@ -4,13 +4,16 @@
   margin-bottom: 1rem
   display: flex
   flex-direction: column
-  &[center]
+  align-items: flex-start
+  &[align=center]
     align-items: center
+  &[align=right]
+    align-items: flex-end
 
 .tag-plugin.tabs
   ul.nav-tabs
     display: flex
-    align-self: center
+    // align-self: center
     overflow: scroll visible
     scrollbar(0, 0)
     max-width: 100%
@@ -64,6 +67,7 @@
 
   .tab-content
     max-width: 100%
+    text-align: justify
     .tab-pane
       &:not(.active)
         display: none

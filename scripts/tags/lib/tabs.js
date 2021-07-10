@@ -28,7 +28,7 @@ module.exports = ctx => function(args, content) {
     }
   });
 
-  args = ctx.args.map(args, ['active', 'center'], ['tabName']);
+  args = ctx.args.map(args, ['active', 'align'], ['tabName']);
   const tabName = args.tabName;
   const tabActive = Number(args.active) || 0;
 
@@ -52,8 +52,8 @@ module.exports = ctx => function(args, content) {
   tabContent = `<div class="tab-content">${tabContent}</div>`;
 
   el += '<div class="tag-plugin tabs"';
-  if (args.center === 'true') {
-    el += ' center="true"';
+  if (args.align !== undefined) {
+    el += ' align="' + args.align + '"';
   }
   el += 'id="' + tabName.toLowerCase().split(' ').join('-') + '"';
   el += '">';
