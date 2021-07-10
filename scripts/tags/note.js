@@ -1,19 +1,21 @@
 /**
- * note.js v1 | https://github.com/xaoxuu/hexo-theme-stellar/
+ * note.js v1.1 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
  * note:
  * {% note [color:color] [title] content %}
  *
  * noteblock:
- * {% noteblock [color:color] title %}
+ * {% noteblock [color:color] [codeblock:bool] title %}
  * markdown content
  * {% endnoteblock %}
  */
 
 'use strict';
 
-function outputNoteBlock(color, title, content) {
+function outputNoteBlock(args, content) {
+  const color = args.color;
+  const title = args.title;
   var el = '';
   const defaultColor = hexo.theme.config.tag_plugins.note.default_color;
   if (!color && defaultColor) {
@@ -23,6 +25,9 @@ function outputNoteBlock(color, title, content) {
   el += '<div class="tag-plugin note"';
   if (color && color.length > 0) {
     el += ' color="' + color + '"';
+  }
+  if (args.codeblock !== undefined) {
+    el += ' codeblock="' + args.codeblock + '"';
   }
   el += '>';
   // title
@@ -39,14 +44,14 @@ function outputNoteBlock(color, title, content) {
 
 hexo.extend.tag.register('note', function(args) {
   args = hexo.args.map(args, ['color'], ['title', 'content']);
-  if (args.content) {
-    return outputNoteBlock(args.color, args.title, args.content);
-  } else {
-    return outputNoteBlock(args.color, '', args.title);
+  if (args.content === undefined || args.content.length <= 0) {
+    args.content = args.title;
+    args.title = '';
   }
+  return outputNoteBlock(args, args.content);
 });
 
 hexo.extend.tag.register('noteblock', function(args, content) {
-  args = hexo.args.map(args, ['color'], ['title']);
-  return outputNoteBlock(args.color, args.title, content);
+  args = hexo.args.map(args, ['color', 'codeblock'], ['title']);
+  return outputNoteBlock(args, content);
 }, {ends: true});

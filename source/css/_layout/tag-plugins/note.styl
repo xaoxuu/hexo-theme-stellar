@@ -1,20 +1,37 @@
-.md div.note
+.md .tag-plugin.note
   $border-block = 4px
   position: relative
   margin-top: 1rem
   margin-bottom: 1rem
-  padding: 1rem
+  padding: 0 1rem
   border-radius: $border-block
   font-size: $fs-15
   background: var(--theme-bg)
   border: 1px solid var(--theme)
   color: var(--text-p1)
-  div.title
+  >.title
     inside-box: $fs-15
-    margin-bottom: 0.5rem
-  div.body
+    line-height: 1.2
+    margin-top: 1rem
+  >.body
     inside-box: $fs-14
+    line-height: 1.5
+    margin-top: .5rem
+    margin-bottom: 1rem
+  >.body:only-child
+    margin: 1rem 0
 
-.md div.note:not([color])
+
+.md .tag-plugin.note:not([color])
   .highlight
     background: var(--block-hover)
+.md .tag-plugin.note[codeblock=true]
+  padding: 0
+  >.title, >.body:only-child
+    margin-top: 0
+  >.body
+    margin-bottom: 0
+  .highlight
+    margin: 0
+    border: none
+    background: none
