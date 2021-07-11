@@ -18,6 +18,9 @@
   display: flex
   flex-direction: column
   align-items: flex-start
+  max-width: 'calc(100% - %s)' % 16px
+  >.header, >.body
+    max-width: @max-width
   &[highlight] .header:before
     background: $color-theme
   &+.timenode
