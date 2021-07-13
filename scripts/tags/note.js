@@ -6,7 +6,7 @@
  * {% note [color:color] [title] content %}
  *
  * noteblock:
- * {% noteblock [color:color] [codeblock:bool] title %}
+ * {% noteblock [color:color] [child:codeblock/tabs] title %}
  * markdown content
  * {% endnoteblock %}
  */
@@ -23,12 +23,7 @@ function outputNoteBlock(args, content) {
   }
   // header
   el += '<div class="tag-plugin note"';
-  if (color && color.length > 0) {
-    el += ' color="' + color + '"';
-  }
-  if (args.codeblock !== undefined) {
-    el += ' codeblock="' + args.codeblock + '"';
-  }
+  el += ' ' + hexo.args.joinTags(args, ['color', 'child']).join(' ');
   el += '>';
   // title
   if (title && title.length > 0) {
@@ -52,6 +47,6 @@ hexo.extend.tag.register('note', function(args) {
 });
 
 hexo.extend.tag.register('noteblock', function(args, content) {
-  args = hexo.args.map(args, ['color', 'codeblock'], ['title']);
+  args = hexo.args.map(args, ['color', 'child'], ['title']);
   return outputNoteBlock(args, content);
 }, {ends: true});

@@ -25,7 +25,7 @@
 .md .tag-plugin.note:not([color])
   .highlight
     background: var(--block-hover)
-.md .tag-plugin.note[codeblock=true]
+.md .tag-plugin.note[child=codeblock]
   padding: 0
   >.title, >.body:only-child
     margin-top: 0
@@ -35,3 +35,9 @@
     margin: 0
     border: none
     background: none
+
+.md .tag-plugin.note[child=tabs]
+  >.body
+    margin: 0
+    >.tabs
+      margin-top: .5rem
