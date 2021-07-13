@@ -68,10 +68,10 @@ scrollbar($w = 4px, $b = 2px, $c = var(--text-meta), $h = var(--text-p3))
       background: $h
 
 
-scrollbar-codeblock()
+scrollbar-codeblock($height = 4px)
   &::-webkit-scrollbar
-    height: 4px
-    width: 4px
+    height: $height
+    width: $height
   &::-webkit-scrollbar-track-piece
     background: transparent
   &::-webkit-scrollbar-thumb

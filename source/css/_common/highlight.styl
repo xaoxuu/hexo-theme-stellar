@@ -36,7 +36,7 @@ article.md .highlight
     margin: 0
     background: transparent
     border: none
-    scrollbar-codeblock()
+    scrollbar-codeblock(convert(hexo-config('style.codeblock.scrollbar')))
     tr
       background: transparent
       &:hover
@@ -71,7 +71,6 @@ article.md .highlight
   .code
     vertical-align: top
     &:before
-      content: ""
       position: absolute
       top: 0
       right: 0
