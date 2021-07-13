@@ -19,7 +19,7 @@ function layoutDiv() {
   el += '<div class="widget-body fs14">';
   arr.sort("updated", -1).limit(item.limit).each(function(post) {
     el += '<div class="line"></div>'
-    el += '<a class="reveal" href="' + url_for(post.link || post.path) + '">';
+    el += '<a class="more-item" href="' + url_for(post.link || post.path) + '">';
     el += '<div class="cap">';
     el += '<time>' + date(post.updated, config.date_format) + '</time>';
     if (post.layout === 'wiki') {

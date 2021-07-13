@@ -185,7 +185,7 @@ if (stellar.plugins.scrollreveal) {
       duration: stellar.plugins.scrollreveal.duration,
       interval: stellar.plugins.scrollreveal.interval,
       scale: stellar.plugins.scrollreveal.scale,
-      easing: "ease-out",
+      easing: "ease-out"
     });
   })
 }
