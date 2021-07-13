@@ -6,7 +6,7 @@ page.header = false;
 page.robots = 'none';
 %>
 <article class='md error-page'>
-  <h1><img id='error' src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/404/1c830bfcd517d.svg" alt=""></h1>
+  <h1><img id='error' src='https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/404/1c830bfcd517d.svg' alt='404'></h1>
   <p class='what'>
     <strong>
       <%- __('page.error.what') %>
@@ -15,6 +15,7 @@ page.robots = 'none';
   <p class='why'>
     <%- __('page.error.why') %>
   </p>
+  <br><br>
   <a class='button theme' id='back' href="/"><%- __('page.error.action') %></a>
 </article>
 <%- partial('_partial/plugins/comments/layout') %>
