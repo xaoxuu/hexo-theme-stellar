@@ -1,9 +1,21 @@
 <%
 function layoutDiv() {
-  if (page.layout == 'wiki' && !page.references) {
-    return '';
+  var el = '';
+  var item = [];
+  if (page.references && page.references.length > 0) {
+    item.push('references');
   }
-  let el = '';
+  if (page.layout !== 'wiki') {
+    if (theme.article.license && theme.article.license.length > 0) {
+      item.push('license');
+    }
+    if (theme.article.share && theme.article.share.length > 0) {
+      item.push('share');
+    }
+  }
+  if (item.length === 0) {
+    return el;
+  }
   el += '<div class="article-footer reveal fs14">';
   if (page.references && page.references.length > 0) {
     el += '<section id="references">';
