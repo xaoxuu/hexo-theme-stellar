@@ -5,17 +5,17 @@
   margin-bottom: 1rem
   padding: 0 1rem
   border-radius: $border-block
-  font-size: $fs-15
   background: var(--theme-bg)
   border: 1px solid var(--theme)
   color: var(--text-p1)
   >.title
-    inside-box: $fs-15
+    font-size: $fs-15
     line-height: 1.2
     margin-top: 1rem
   >.body
-    inside-box: $fs-14
-    line-height: 1.5
+    &,p
+      font-size: $fs-14
+      line-height: 1.5
     margin-top: .5rem
     margin-bottom: 1rem
   >.body:only-child

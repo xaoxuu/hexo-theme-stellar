@@ -25,9 +25,19 @@ article.md.content
     color: var(--text-p0)
     padding-top: 1rem
     margin-bottom: 1em
+    line-height: 1.8
     &:hover
       a.headerlink:before
         opacity: 1
+  blockquote,ul,ol
+    p,ul,ol
+      font-size: $fs-14
+      line-height: 1.5
+  p,blockquote,.tag-plugin,ul,ol,.highlight,table
+    margin-top: var(--gap-p)
+    margin-bottom: var(--gap-p)
+    *
+      --gap-p: .5rem
 
 // titles
 article.md.content
@@ -88,19 +98,17 @@ article.md pre
 
 // div
 article.md>div
-  margin: 1rem 0
+  margin: var(--gap-p) 0
 // blockquote
 article.md blockquote
-  margin: 1rem 0
+  margin-left: 0
+  margin-right: 0
   padding: 1rem
   background: var(--card)
   border-left: 4px solid $color-theme
   border-radius: $border-block
   color: var(--text-p2)
   box-shadow: $boxshadow-card
-  p
-    margin: 0.5em 0
-    font-size: $fs-14
 
 
 article.md img
