@@ -1,19 +1,27 @@
 .widget-wrap#repo-info
   .widget-body
-    .item
-      margin: 4px 0
-    a
+    border: 1px solid var(--block-border)
+    border-radius: $border-block
+    background: var(--block)
+    overflow: hidden
+    .line
+      margin: 0
+      height: 1px
+      background: var(--block-border)
+      &+.line,&:first-child,&:last-child
+        display: none
+    a.item-link
       color: var(--text-p2)
       font-weight: 500
-      display: inline-flex
+      display: flex
       align-items: center
-      padding: 0.25rem .5rem
-      border-radius: 4px
+      padding: 0.5rem .5rem
       font-size: $fs-13
+      justify-content: space-between
+      flex-direction: row-reverse
       svg
-        margin-right: .5rem
         width: 1em
         height: 1em
     a:hover
-      color: var(--text-p1)
-      background: var(--block-hover)
+      color: $color-hover
+      background: var(--card)

@@ -10,6 +10,15 @@
     padding-top: "calc(1 * %s)" % var(--gap-l)
     height: "calc(100% - 2 * %s)" % var(--gap-l)
 
+.l_left[layout=wiki]
+  padding-bottom: 0
+  height: "calc(100vh - 2 * %s)" % var(--gap-l)
+  @media screen and (max-width: $device-tablet)
+    height: "calc(100% - 1 * %s)" % var(--gap-l)
+  .widgets >:last-child
+    margin-bottom: 6rem
+
+
 .logo-wrap
   margin: 1rem 0 .5rem
   display: flex
@@ -98,8 +107,11 @@
       color: $color-hover
       filter: unset !important
 
+.l_left nav.menu
+  margin-bottom: 1.5rem
+
 nav.menu
-  margin: 1rem 0 .5rem
+  margin: 1rem 0
   background: var(--block)
   border-radius: 6px
   display: flex
@@ -131,7 +143,6 @@ nav.menu
   flex-grow: 1
 
 .l_left .widgets
-  margin: 1rem 0
   overflow: scroll
   flex-grow: 1
   scrollbar(0, 0)
@@ -172,30 +183,23 @@ nav.menu
         >a:hover
           text-decoration: underline
   .widget-wrap#recent .widget-body, .widget-wrap#related .widget-body
-    border: 1px solid var(--block-border)
-    border-radius: $border-block
-    background: var(--block)
-    overflow: hidden
-    .line
-      margin: 0
-      height: 1px
-      background: var(--block-border)
-      &+.line,&:first-child,&:last-child
-        display: none
     >a
       padding 0.5rem
       display: block
       line-height: 1.2
       color: var(--text-p2)
       font-weight: 500
+      border: 1px solid var(--block-border)
+      border-radius: $border-block
+      margin: 4px 0
+      background: var(--block)
       div.cap
         margin-bottom: 0.25rem
         color: var(--text-p4)
         display: flex
         justify-content: space-between
       &:hover
-        color: $color-hover
-        background: var(--card)
+        background: var(--block-hover)
       &.wiki
         font-weight: 700
       div.excerpt
@@ -207,6 +211,3 @@ nav.menu
         -webkit-box-orient: vertical
         overflow: hidden
         -webkit-line-clamp: 3
-
-.l_left[layout='wiki'] .widgets
-  margin-top: 0

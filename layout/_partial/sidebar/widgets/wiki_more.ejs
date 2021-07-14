@@ -20,7 +20,6 @@ function layoutDiv() {
       projects.forEach((p, i) => {
         if (p.title !== proj.title) {
           // 同一个分组中的其它项目
-          el += '<div class="line"></div>'
           el += '<a class="more-item wiki" href="' + url_for(p.path) + '">';
           el += p.title;
           el += '<div class="excerpt">';
