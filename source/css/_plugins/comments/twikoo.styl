@@ -1,0 +1,115 @@
+.cmt-body.twikoo
+  --twikoo-lighttext: #ef794f;
+  --twikoo-secondtext: #909094;
+  --twikoo-emoji-background: #f8f8f8;
+  --twikoo-theme: #409eff;
+  margin-top: 1.5rem
+
+  .tk-content
+    .vemoji, .tk-owo-emotion
+      width: unset;
+      border-radius: 0;
+      max-height: 24px;
+      max-width: 100px;
+
+    img
+      max-width: 400px;
+      max-height: 400px;
+      border-radius: 8px;
+
+.OwO
+  .OwO-body
+    background: var(--twikoo-emoji-background) !important;
+    color: var(--text-p1) !important;
+
+    .OwO-items
+      .OwO-item
+        img
+          max-height: 26px;
+          width: unset;
+
+.twikoo
+  .el-input-group__append, .el-input-group__prepend,
+  .el-input__inner, .el-textarea__inner,
+  .el-button:not(.el-button--primary):not(.el-button--text),
+  .tk-comments-count,
+  .tk-content,
+  .tk-preview-container
+    color: var(--text-p1) !important;
+
+  .el-button:not(.el-button--primary):not(.el-button--text):active,
+  .el-button:not(.el-button--primary):not(.el-button--text):focus,
+  .el-button:not(.el-button--primary):not(.el-button--text):hover
+    color: var(--twikoo-theme) !important;
+
+  .tk-action-icon svg
+    color: var(--text-p1) !important;
+
+  b, strong
+    color: var(--twikoo-lighttext);
+
+  a
+    cursor: pointer
+
+  .tk-time, .tk-extras
+    color: var(--twikoo-secondtext);
+
+  .tk-expand
+    width: auto
+    border: none
+    padding: 6px 2rem
+    border-radius: 4px
+    background: var(--block)
+    color: var(--text-p1)
+    line-height: 2
+    font-size: 14px
+    font-weight: 500
+    trans()
+
+    &:hover
+      background: var(--block-hover)
+
+  .tk-comment
+    margin-top: 0 !important;
+    margin-bottom: 1rem
+    border: 1px dashed var(--block-border);
+    padding: 1rem;
+    border-radius: 4px;
+    background: var(--card);
+
+    &:hover
+      border-color: var(--twikoo-theme);
+
+  .tk-main .tk-comment
+    margin-top: 1rem !important;
+    margin-bottom: 0;
+
+  .tk-submit
+    padding: 1rem 1rem 0 1rem;
+    border-radius: 4px;
+    background: var(--card);
+
+  .tk-tag
+    vertical-align: 0.1em !important;
+
+  .tk-comments-title .tk-comments-count
+    margin-top: 15px;
+    color: var(--text-p1);
+
+    span:nth-child(1)
+      font-size: 1.5rem;
+      font-weight: 700;
+
+    span:nth-child(2)
+      font-size: 1rem;
+
+  .tk-comments-no
+    color: var(--text-p1);
+
+if hexo-config('style.darkmode') == 'auto'
+  @media (prefers-color-scheme: dark)
+    .cmt-body.twikoo
+      --twikoo-lighttext: #f2b94b;
+      --twikoo-secondtext: #a1a2b8;
+      --twikoo-emoji-background: darken($dark-block, 1);
+      --twikoo-theme: #409eff;

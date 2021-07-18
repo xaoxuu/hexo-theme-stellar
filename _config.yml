@@ -100,7 +100,11 @@ comments:
       - 6783037F2DF30EAB99F9FC256157D875
     friends: #md5加密后的小伙伴邮箱
       - 6783037F2DF30EAB99F9FC256157D875
-
+  # Twikoo
+  # https://twikoo.js.org/
+  twikoo:
+    js: https://cdn.jsdelivr.net/npm/twikoo@1.4.0/dist/twikoo.all.min.js # 建议锁定版本
+    envId: https://xxx # vercel函数
 
 ######## Footer ########
 footer:
