@@ -76,9 +76,12 @@ comments:
     issue-term: pathname
     issue-number:
     theme: preferred-color-scheme
+    label:
     input-position: top # top/bottom 评论框位置
     comment-order: desc # desc 排序
     keep-theme: # true/false
+    loading: false
+    branch: main
   # utterances
   # https://utteranc.es/
   utterances:
@@ -86,6 +89,7 @@ comments:
     issue-term: pathname
     issue-number:
     theme: preferred-color-scheme
+    label:
   valine:
     js: https://cdn.jsdelivr.net/gh/XuxuGood/simple-blog-cdn@main/js/Valine.min.js
     appId: # your appId

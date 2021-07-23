@@ -1,25 +1,26 @@
 <script>
-  function beaudar(){
-    if(!document.getElementById("beaudar"))return;
-    setTimeout(function() {
-      var checkbeaudar = setInterval(function () {
-        var el = document.getElementById("beaudar");
-        if (!el) return
-        clearInterval(checkbeaudar)
-        try {
-          el.innerHTML="";
-        } catch (error) {}
-        var script = document.createElement('script');
-        script.src = 'https://beaudar.lipk.org/client.js';
-        const keys = ['repo', 'issue-term', 'issue-number', 'theme', 'label', 'crossorigin', 'input-position', 'comment-order', 'keep-theme'];
-        keys.forEach((key, i) => {
-          if (el.attributes[key] && el.attributes[key].value) {
-            script.setAttribute(key, el.attributes[key].value);
-          }
-        });
-        el.appendChild(script);
-       }, 200)
+  function loadBeaudar() {
+    const els = document.querySelectorAll("#comments #beaudar");
+    if (els.length === 0) return;
+    els.forEach((el, i) => {
+      try {
+        el.innerHTML = '';
+      } catch (error) {
+        console.log(error);
+      }
+      var script = document.createElement('script');
+      script.src = 'https://beaudar.lipk.org/client.js';
+      script.async = true;
+      for (let key of Object.keys(el.attributes)) {
+        let attr = el.attributes[key];
+        if (['class', 'id'].includes(attr.name) === false) {
+          script.setAttribute(attr.name, attr.value);
+        }
+      }
+      el.appendChild(script);
     });
   }
-  beaudar();
+  window.addEventListener('DOMContentLoaded', (event) => {
+      loadBeaudar();
+  });
 </script>

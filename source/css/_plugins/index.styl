@@ -7,6 +7,10 @@ if hexo-config('plugins.scrollreveal.enable')
   @import 'scrollreveal'
 
 // 评论
+if hexo-config('comments.service') == 'beaudar'
+  @import 'comments/beaudar'
+if hexo-config('comments.service') == 'twikoo'
+  @import 'comments/twikoo'
 if hexo-config('comments.service') == 'utterances'
   @import 'comments/utterances'
 if hexo-config('comments.service') == 'valine'
