@@ -7,10 +7,10 @@ Elegant and powerful theme for Hexo.
 Check your environment:
 
 ```yaml
-Hexo: 5.3.0
-hexo-cli: 4.2.0
-node.js: 14.15.4 LTS
-npm: 6.14.10 LTS
+Hexo: 5.4.0
+hexo-cli: 4.3.0
+node.js: 14.17.3 LTS
+npm: 6.14.13 LTS
 ```
 
 Edit your `_config.yml`:
