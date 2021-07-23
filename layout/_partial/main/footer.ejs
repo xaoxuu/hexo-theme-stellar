@@ -1,6 +1,6 @@
 <%
 const author = '[@' + config.author + '](' + config.url + config.root + ')';
-const using = '[' + stellar_info('name') + '](' + stellar_info('tree') + ')';
+const using = '[' + stellar_info('name') + '](' + stellar_info('tree') + ' "v' + stellar_info('version') + '")';
 const source = theme.footer.source;
 function layoutDiv() {
   var el = '';
