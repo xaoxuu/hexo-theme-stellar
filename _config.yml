@@ -68,16 +68,24 @@ article:
 
 ######## Comments ########
 comments:
-  service: # utterances, valine
+  service: # beaudar, utterances, valine, twikoo
+  # beaudar
+  # https://beaudar.lipk.org/
+  beaudar:
+    repo: xxx/xxx
+    issue-term: pathname
+    issue-number:
+    theme: preferred-color-scheme
+    input-position: top # top/bottom 评论框位置
+    comment-order: desc # desc 排序
+    keep-theme: # true/false
   # utterances
   # https://utteranc.es/
   utterances:
     repo: xxx/xxx
     issue-term: pathname
     issue-number:
-    theme:
-      light: github-light
-      dark: github-dark
+    theme: preferred-color-scheme
   valine:
     js: https://cdn.jsdelivr.net/gh/XuxuGood/simple-blog-cdn@main/js/Valine.min.js
     appId: # your appId
