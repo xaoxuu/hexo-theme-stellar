@@ -3,8 +3,13 @@
 if (page.sidebar == undefined) {
   if (page.layout == 'post' && page.content) {
     page.sidebar = ['toc', 'repo_info'];
-  } else if (page.layout == 'wiki' && page.content) {
-    page.sidebar = ['toc', 'repo_info', 'wiki_more'];
+  } else if (page.layout == 'wiki' && page.content && page.wiki) {
+    let proj = theme.wiki.projects[page.wiki];
+    if (proj.sidebar) {
+      page.sidebar = proj.sidebar;
+    } else {
+      page.sidebar = ['toc', 'repo_info', 'wiki_more'];
+    }
   } else {
     page.sidebar = theme.sidebar.widgets.default_layout;
   }

@@ -1,10 +1,10 @@
-.l_left[layout='wiki'] .widget-wrap#toc
-  margin-top: 0
-  .widget-body
-    margin-top: 0
+.widget-wrap#toc
+  .widget-body+.widget-header
+    margin-top: 1rem
+
 
 // 其它分页链接
-.widget-wrap#toc .doc-tree:not(:only-child)
+.widget-wrap#toc .multi .doc-tree
   border-radius: 4px
   margin: 4px 0
   background: var(--block)
@@ -33,7 +33,7 @@
 
 
 // 当前分页链接
-.widget-wrap#toc .doc-tree.active:not(:only-child)
+.widget-wrap#toc .multi .doc-tree.active
   a.doc-tree-link
     background: var(--block)
     font-weight: 700

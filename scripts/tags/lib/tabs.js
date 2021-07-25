@@ -4,6 +4,8 @@
 
 'use strict';
 
+var tab_index = 0;
+
 module.exports = ctx => function(args, content) {
   var el = '';
   var arr = content.split(/<!--\s*(.*?)\s*-->/g).filter((item, i) => {
@@ -28,15 +30,13 @@ module.exports = ctx => function(args, content) {
     }
   });
 
-  args = ctx.args.map(args, ['active', 'align'], ['tabName']);
-  const tabName = args.tabName;
+  args = ctx.args.map(args, ['active', 'align']);
+  const tabName = 'tab_' + ++tab_index;
   const tabActive = Number(args.active) || 0;
 
   let tabId = 0;
   let tabNav = '';
   let tabContent = '';
-
-  if (!tabName) ctx.log.warn('Tabs block must have unique name!');
 
   tabs.forEach((tab, i) => {
     let caption = tab.header.substring(4);

@@ -67,6 +67,34 @@ module.exports = hexo => {
     proj.pages.limit(1).forEach((p, i) => {
       proj.path = p.path;
     });
+    // 内页按 section 分组
+    var secs = [];
+    if (proj.sections) {
+      for (let t of Object.keys(proj.sections)) {
+        let range = proj.sections[t];
+        if (range.length > 1) {
+          secs.push({
+            title: t,
+            from: range[0],
+            to: range[1]
+          });
+        }
+      }
+    }
+    var newSections = [];
+    secs.forEach((sec, i) => {
+      const pages = proj.pages.filter(function (p) {
+        return p.order >= sec.from && p.order <= sec.to;
+      });
+      if (pages && pages.length > 0) {
+        newSections.push({
+          title: sec.title,
+          pages: pages
+        });
+      }
+    });
+    proj.sections = newSections;
+
   }
 
   var groups = {};
