@@ -1,55 +1,84 @@
 <%
-let showCat = false;
-if (post.categories && post.categories.length > 0) {
-  showCat = true;
-}
-%>
-<% if (post.cover) { %>
-  <div class='post-cover'>
-    <img src='<%- post.cover %>'/>
-  </div>
-<% } %>
-<h2 class="post-title">
-  <%- (post.title || post.seo_title) ? (post.title || post.seo_title) : date(post.date, config.date_format) %>
-</h2>
-<div class='excerpt'>
-  <% if (post.excerpt) { %>
-    <p><%- strip_html(post.excerpt) %></p>
-  <% } else if (post.description) { %>
-    <p><%- post.description %></p>
-  <% } else if (post.content && theme.article.auto_excerpt > 0) { %>
-    <p><%- truncate(strip_html(post.content), {length: theme.article.auto_excerpt}) %></p>
-  <% } %>
-</div>
-<div class='meta cap'>
-  <span class='cap' id='post-meta'>
-    <%- __('meta.created') %>&nbsp;<time datetime='<%- date_xml(post.date) %>'><%= date(post.date, config.date_format) %></time>
-  </span>
-  <% if (showCat) { %>
-    <% if (post.layout == 'post' && post.categories && post.categories.length > 0) { %>
-      <%
+function layoutDiv() {
+  var el = '';
+  // 封面
+  if (post.cover || theme.article.auto_cover) {
+    var cover_url;
+    if (post.cover !== undefined) {
+      if (post.cover.includes('/')) {
+        cover_url = post.cover;
+      } else {
+        cover_url = 'https://source.unsplash.com/1280x640/?' + post.cover;
+      }
+    } else {
+      // 自动以 tags 作为关键词搜索封面
+      if (post.tags) {
+        var params = '';
+        post.tags.reverse().forEach((tag, i) => {
+          if (i > 0) {
+            params += ',';
+          }
+          params += tag.name;
+        });
+        cover_url = 'https://source.unsplash.com/1280x640/?' + params;
+      } else {
+        cover_url = 'https://source.unsplash.com/random/1280x640';
+      }
+    }
+    if (cover_url) {
+      el += '<div class="post-cover">';
+      el += '<img src="' + cover_url + '"/>';
+      el += '</div>';
+    }
+  }
+
+  // 标题
+  el += '<h2 class="post-title">';
+  el += (post.title || post.seo_title) ? (post.title || post.seo_title) : date(post.date, config.date_format);
+  el += '</h2>';
+
+  // 摘要
+  el += '<div class="excerpt">';
+  el += '<p>';
+  if (post.excerpt) {
+    el += strip_html(post.excerpt);
+  } else if (post.description) {
+    el += post.description;
+  } else if (post.content && theme.article.auto_excerpt > 0) {
+    el += truncate(strip_html(post.content), {length: theme.article.auto_excerpt});
+  }
+  el += '</p>';
+  el += '</div>';
+
+  // meta
+  el += '<div class="meta cap">';
+  // time
+  el += '<span class="cap" id="post-meta">';
+  el += __("meta.created") + '&nbsp;' + '<time datetime="' + date_xml(post.date) + '">' + date(post.date, config.date_format) + '</time>';
+  el += '</span>';
+  // cat
+  if (post.categories && post.categories.length > 0) {
+    if (post.layout === 'post' && post.categories && post.categories.length > 0) {
       var cats = [];
       if (post.categories) {
         post.categories.forEach((cat, i) => {
           cats.push(cat.name);
         });
       }
-      function layoutCats() {
-        if (cats.length > 0) {
-          let cat = cats.shift();
-          var el = '<span class="cap breadcrumb"' + category_color(cat) + '>';
-          el += cat;
-          el += '</span>';
-          return el;
-        } else {
-          return '';
-        }
+      if (cats.length > 0) {
+        let cat = cats.shift();
+        el += '<span class="cap breadcrumb"' + category_color(cat) + '>';
+        el += cat;
+        el += '</span>';
       }
-      %>
-      <%- layoutCats() %>
-    <% } %>
-  <% } %>
-  <% if (post.pin) { %>
-    <span class='pin'><img src='https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/badge/3279dd441df8b.svg'/></span>
-  <% } %>
-</div>
+    }
+  }
+  if (post.pin) {
+    el += '<span class="pin"><img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/badge/3279dd441df8b.svg"/></span>';
+  }
+  el += '<div>';
+
+  return el;
+}
+%>
+<%- layoutDiv() %>

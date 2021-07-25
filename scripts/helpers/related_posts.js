@@ -35,8 +35,23 @@ hexo.extend.helper.register('popular_posts_wrapper', function(args){
     if (p && p.length > 0) {
       p = p.data[0];
     }
-    if (p && p.cover) {
-      list.img = p.cover;
+    if (p) {
+      if (p.cover) {
+        if (p.cover.includes('/')) {
+          list.img = p.cover;
+        } else {
+          list.img = 'https://source.unsplash.com/1280x640/?' + p.cover;
+        }
+      } else if (cfg.auto_cover && p.tags.length > 0) {
+        var params = '';
+        p.tags.reverse().forEach((tag, i) => {
+          if (i > 0) {
+            params += ',';
+          }
+          params += tag.name;
+        });
+        list.img = 'https://source.unsplash.com/1280x640/?' + params;
+      }
     }
     if (hexo.theme.config.default.cover) {
       el += '<div class="img">'
