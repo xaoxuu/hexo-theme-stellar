@@ -1,4 +1,4 @@
-details
+details.folding
   display: block
   padding: 1rem
   margin: 1rem 0
@@ -31,7 +31,7 @@ details
         right: 1rem
 
 
-details[open]
+details.folding[open]
   >summary
     border-bottom: 1px solid var(--theme)
     border-bottom-left-radius: 0
@@ -54,7 +54,7 @@ details[open]
     >:last-child
       margin-bottom: 0
 
-details[child=codeblock]>div.body
+details.folding[child=codeblock]>div.body
   padding: 0
   background: transparent
   .highlight

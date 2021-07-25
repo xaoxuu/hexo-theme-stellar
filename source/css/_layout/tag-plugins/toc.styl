@@ -1,0 +1,38 @@
+details.toc
+  background: var(--block)
+  border: 1px solid var(--block-border)
+  border-radius: $border-block
+  overflow: hidden
+  color: var(--text-p2)
+  summary
+    cursor: pointer
+    padding: 0 .5rem
+    line-height: 2
+    color: var(--text-p2)
+    font-size: $fs-13
+    font-weight: 500
+    &:hover
+      background: var(--block-hover)
+
+  >div.body
+    margin: var(--gap-p) 1rem 1rem
+
+details.toc[open] >summary
+  border-bottom: 1px solid transparent
+  &:hover
+    border-bottom-color: var(--block-border)
+
+details.toc[open] >div.body
+  section+section
+    margin-top: 1rem
+  section
+    .header
+      line-height: 2
+      font-weight: 500
+    .header+.doc_tree
+      margin-top: 0
+
+
+@media screen and (max-width: $device-tablet)
+  .tag-plugin.toc[display=mobile]
+    display: block !important
