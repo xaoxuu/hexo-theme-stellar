@@ -7,7 +7,7 @@ function layoutDiv() {
     let proj = theme.wiki.projects[page.wiki];
     if (proj && proj.repo) {
       repo = proj.repo;
-      if (proj.branch !== undefined) {
+      if (proj.branch != undefined) {
         branch = proj.branch;
       }
     }
@@ -15,7 +15,7 @@ function layoutDiv() {
     // 其它的如果有设置 repo 也可以
     repo = page.repo;
   }
-  if (repo === undefined) {
+  if (repo == undefined) {
     return el;
   }
   // 布局
@@ -26,6 +26,7 @@ function layoutDiv() {
   el += '</div>';
   // body
   el += '<div class="widget-body fs14">';
+  el += '<div class="items">';
   var items = [];
   // GitHub
   items.push({
@@ -62,6 +63,7 @@ function layoutDiv() {
     el += '<span>' + item.text + '</span>';
     el += '</a>';
   });
+  el += '</div>';
   el += '</div>';
   el += '</div>';
   return el;

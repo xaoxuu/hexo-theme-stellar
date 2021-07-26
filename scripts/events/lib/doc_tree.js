@@ -4,12 +4,20 @@
 
 'use strict';
 
+function page(page) {
+  return {
+    title: page.title,
+    path: page.path,
+    wiki: page.wiki
+  };
+}
+
 module.exports = hexo => {
   const data = hexo.locals.get('data');
-  if (hexo.theme.config.wiki === undefined) {
+  if (hexo.theme.config.wiki == undefined) {
     hexo.theme.config.wiki = {};
   }
-  if (hexo.theme.config.wiki.projects === undefined) {
+  if (hexo.theme.config.wiki.projects == undefined) {
     hexo.theme.config.wiki.projects = {};
   }
   if (data.projects) {
@@ -22,58 +30,77 @@ module.exports = hexo => {
   var wiki = hexo.theme.config.wiki;
   // wiki 所有页面
   const wiki_pages = hexo.locals.get('pages').filter(function (p) {
-    return (p.layout === 'wiki') && (p.wiki !== undefined) && (p.wiki.length > 0);
+    return (p.layout === 'wiki') && (p.wiki != undefined) && (p.wiki.length > 0);
   });
 
-  // 数据整合：项目组
-  var cats = [];
-  for (let proj_name of Object.keys(wiki.projects)) {
-    let proj = wiki.projects[proj_name];
-    if (proj.group !== undefined) {
-      if (cats.includes(proj.group) === false) {
-        cats.push(proj.group);
+  // 数据整合：项目标签
+  var tagNames = [];
+  for (let id of Object.keys(wiki.projects)) {
+    let proj = wiki.projects[id];
+    let tags = proj.tags;
+    if (tags) {
+      if ((typeof tags == 'string') && tags.constructor == String) {
+        if (tagNames.includes(tags) === false) {
+          tagNames.push(tags);
+        }
+        // 类型转换
+        tags = [tags];
+      } else if ((typeof tags == 'object') && tags.constructor == Array) {
+        tags.forEach((tag, i) => {
+          if (tagNames.includes(tag) === false) {
+            tagNames.push(tag);
+          }
+        });
       }
+      wiki.projects[id].tags = tags;
     }
   }
   // 补充未分组的项目
   const projs = Object.keys(wiki.projects);
   wiki_pages.forEach((p, i) => {
-    if (projs.includes(p.wiki) === false) {
-      if (wiki.projects[p.wiki] === undefined) {
+    if (projs.includes(p.wiki) == false) {
+      if (wiki.projects[p.wiki] == undefined) {
         wiki.projects[p.wiki] = {};
         wiki.projects[p.wiki].pages = [];
       }
       var proj = wiki.projects[p.wiki];
-      if (proj.description === undefined) {
+      if (proj.description == undefined) {
         proj.description = p.description;
       }
       wiki.projects[p.wiki].pages.push(p);
     }
   });
-  // 补充项目名称
-  for (let proj_name of Object.keys(wiki.projects)) {
-    let proj = wiki.projects[proj_name];
-    if (proj.title === undefined || proj.title.length === 0) {
-      proj.title = proj_name;
+  // 补充项目名称和首页
+  for (let id of Object.keys(wiki.projects)) {
+    let proj = wiki.projects[id];
+    proj.id = id;
+    if (proj.title == undefined || proj.title.length === 0) {
+      proj.title = id;
     }
   }
+  // 补充 order
+  wiki_pages.forEach((p, i) => {
+    if (p.order == undefined) {
+      p.order = 0;
+    }
+  });
 
   // 数据整合：每个项目的子页面
-  for (let proj_name of Object.keys(wiki.projects)) {
-    let proj = wiki.projects[proj_name];
+  for (let id of Object.keys(wiki.projects)) {
+    let proj = wiki.projects[id];
     proj.pages = wiki_pages.filter(function (p) {
-      return p.wiki === proj_name;
+      return p.wiki === id;
     }).sort('order');
     proj.pages.limit(1).forEach((p, i) => {
-      proj.path = p.path;
+      proj.homepage = p;
     });
     // 内页按 section 分组
-    var secs = [];
+    var sectionConfigs = [];
     if (proj.sections) {
       for (let t of Object.keys(proj.sections)) {
         let range = proj.sections[t];
         if (range.length > 1) {
-          secs.push({
+          sectionConfigs.push({
             title: t,
             from: range[0],
             to: range[1]
@@ -81,37 +108,52 @@ module.exports = hexo => {
         }
       }
     }
-    var newSections = [];
-    secs.forEach((sec, i) => {
+    var sections = [];
+    sectionConfigs.forEach((sec, i) => {
       const pages = proj.pages.filter(function (p) {
         return p.order >= sec.from && p.order <= sec.to;
       });
       if (pages && pages.length > 0) {
-        newSections.push({
+        sections.push({
           title: sec.title,
           pages: pages
         });
       }
     });
-    proj.sections = newSections;
-
+    proj.sections = sections;
   }
 
-  var groups = {};
-  cats.forEach((group_name, i) => {
+  // 全站所有的项目标签
+  var all_tags = {};
+  tagNames.forEach((tagName, i) => {
     var projs = [];
-    for (let proj_name of Object.keys(wiki.projects)) {
-      let proj = wiki.projects[proj_name];
-      if (proj.group === group_name && projs.includes(group_name) === false) {
-        projs.push(proj);
+    for (let id of Object.keys(wiki.projects)) {
+      let proj = wiki.projects[id];
+      if (proj.tags && proj.tags.includes(tagName) === true && projs.includes(tagName) === false) {
+        projs.push(proj.id);
       }
     }
-    groups[group_name] = {
-      title: group_name,
-      path: (hexo.config.wiki_dir || 'wiki') + '/categories/' + group_name + '/index.html',
-      projects: projs
+    all_tags[tagName] = {
+      name: tagName,
+      path: (hexo.config.wiki_dir || 'wiki') + '/tags/' + tagName + '/index.html',
+      items: projs
     };
   });
-  wiki.groups = groups;
+
+  // 整合相似项目
+  for (let id of Object.keys(wiki.projects)) {
+    let proj = wiki.projects[id];
+    if (proj.tags) {
+      var related = [];
+      proj.tags.forEach((tagName, i) => {
+        let tagObj = all_tags[tagName];
+        related = related.concat(tagObj.items);
+        related = [...new Set(related)];
+      });
+      proj.related = related;
+    }
+  }
+
+  wiki.all_tags = all_tags;
   wiki.all_pages = wiki_pages;
 };

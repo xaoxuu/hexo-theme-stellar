@@ -43,7 +43,7 @@ hexo.extend.tag.register('toc', function(args) {
 
   if (args.wiki) {
     const proj = hexo.theme.config.wiki.projects[args.wiki];
-    if (proj === undefined) {
+    if (proj == undefined) {
       return '';
     }
     if (proj.sections && proj.sections.length > 1) {

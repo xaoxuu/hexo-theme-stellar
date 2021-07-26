@@ -4,7 +4,7 @@
   .image-bg
     line-height: 0
     text-align: center
-    border-radius: 4px
+    border-radius: $border-image
     position: relative
     overflow: hidden
     &:hover
@@ -12,7 +12,7 @@
         opacity: 1 !important
     img
       display: inline-block
-      object-fit: contain
+      object-fit: cover
     .image-download
       position: absolute
       bottom: 8px
@@ -37,7 +37,3 @@
       color: var(--text-p3)
       &:empty
         display: none
-      // &.left
-      //   text-align: left
-      // &.center
-      //   text-align: center

@@ -2,16 +2,17 @@
   .widget-body+.widget-header
     margin-top: 1rem
 
+.widget-wrap.multi#toc .widget-header
+  color: var(--text-p1)
+  font-size: $fs-14
+
 
 // 其它分页链接
-.widget-wrap#toc .multi .doc-tree
-  border-radius: 4px
-  margin: 4px 0
+.widget-wrap.multi#toc .doc-tree
+  border-radius: $border-block
   background: var(--block)
   overflow: hidden
   border: 1px solid var(--block-border)
-  &:first-child
-    margin-top: 0
   a.doc-tree-link
     color: var(--text-p2)
     padding: 0.5rem
@@ -33,7 +34,7 @@
 
 
 // 当前分页链接
-.widget-wrap#toc .multi .doc-tree.active
+.widget-wrap.multi#toc .doc-tree.active
   a.doc-tree-link
     background: var(--block)
     font-weight: 700

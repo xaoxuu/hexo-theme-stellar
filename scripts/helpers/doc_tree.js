@@ -11,10 +11,7 @@ hexo.extend.helper.register('doc_tree', function(page, args){
     return '';
   }
   const pages = hexo.locals.get('pages').filter(function (p) {
-    if (p.layout == 'wiki' && p.wiki && p.wiki == page.wiki && (p.title || p.seo_title)) {
-      if (p.order == undefined) {
-        p.order = 0;
-      }
+    if (p.layout == 'wiki' && p.wiki && p.wiki == page.wiki) {
       return true;
     } else {
       return false;

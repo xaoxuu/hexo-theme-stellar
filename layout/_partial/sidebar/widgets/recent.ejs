@@ -11,11 +11,20 @@ function layoutDiv() {
   }
   el += '</div>';
   // body
-  var arr = page.menu_id == "wiki" ? site.pages.filter(function(p){
-    return p.layout == "wiki" && p.title && p.title.length > 0;
-  }) : site.posts.filter(function(p){
-    return p.title && p.title.length > 0;
-  });
+  var arr = [];
+  if (page.menu_id == 'wiki') {
+    arr = theme.wiki.all_pages.filter(function(p){
+      if (p.wiki) {
+        let proj = theme.wiki.projects[p.wiki];
+        return proj.index != false;
+      }
+      return false;
+    });
+  } else {
+    arr = site.posts.filter(function(p){
+      return p.title && p.title.length > 0;
+    });
+  }
   el += '<div class="widget-body fs14">';
   arr.sort("updated", -1).limit(item.limit).each(function(post) {
     el += '<div class="line"></div>'

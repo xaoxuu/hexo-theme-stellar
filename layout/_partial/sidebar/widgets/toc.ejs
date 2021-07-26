@@ -63,11 +63,11 @@ function layoutDiv(fallback) {
 
   var el = '';
   if (type.length > 0) {
-    el += '<div class="widget-wrap" id="toc">';
+    el += '<div class="widget-wrap ' + type + '" id="toc">';
     if (page.layout !== 'wiki') {
       // post 布局
       el += layoutTocHeader(page.toc_title || __("meta.toc"));
-      el += '<div class="widget-body fs14 ' + type + '">';
+      el += '<div class="widget-body fs14">';
       el += '<div class="doc-tree active">';
       el += layoutToc();
       el += '</div>';
@@ -78,13 +78,13 @@ function layoutDiv(fallback) {
         proj.sections.forEach((sec, i) => {
           // 多 section
           el += layoutTocHeader(sec.title);
-          el += '<div class="widget-body fs14 ' + type + '">';
+          el += '<div class="widget-body fs14">';
           el += layoutDocTree(sec.pages);
           el += '</div>';
         });
       } else {
         // 单 section
-        el += '<div class="widget-body fs14 ' + type + '">';
+        el += '<div class="widget-body fs14">';
         el += layoutDocTree(proj.pages);
         el += '</div>';
       }

@@ -158,8 +158,9 @@ nav.menu
       position: -webkit-sticky
       top: -2px
       background: var(--site-bg)
-      padding: 2px 0
+      padding-top: 2px
       z-index 1
+      line-height: 2.4
       &:empty
         display: none
       .cap-action
@@ -182,6 +183,8 @@ nav.menu
         margin-bottom: 0.5em
         >a:hover
           text-decoration: underline
+    .widget-header+.widget-body
+      margin-top: 0
   .widget-wrap#recent .widget-body, .widget-wrap#related .widget-body
     >a
       padding 0.5rem
@@ -210,4 +213,4 @@ nav.menu
         display: -webkit-box
         -webkit-box-orient: vertical
         overflow: hidden
-        -webkit-line-clamp: 3
+        -webkit-line-clamp: 5

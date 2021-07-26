@@ -4,7 +4,7 @@ function layoutDiv() {
   // 封面
   if (post.cover || theme.article.auto_cover) {
     var cover_url;
-    if (post.cover !== undefined) {
+    if (post.cover != undefined) {
       if (post.cover.includes('/')) {
         cover_url = post.cover;
       } else {

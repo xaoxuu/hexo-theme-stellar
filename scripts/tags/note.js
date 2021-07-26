@@ -39,7 +39,7 @@ function outputNoteBlock(args, content) {
 
 hexo.extend.tag.register('note', function(args) {
   args = hexo.args.map(args, ['color'], ['title', 'content']);
-  if (args.content === undefined || args.content.length <= 0) {
+  if (args.content == undefined || args.content.length <= 0) {
     args.content = args.title;
     args.title = '';
   }

@@ -29,15 +29,23 @@ article.md.content
     &:hover
       a.headerlink:before
         opacity: 1
+
+.md
+  ul,ol
+    padding-bottom: .5rem
+    margin: 0
   blockquote,ul,ol
     p,ul,ol
       font-size: $fs-14
       line-height: 1.5
   p,blockquote,.tag-plugin,ul,ol,.highlight,table
-    margin-top: var(--gap-p)
-    margin-bottom: var(--gap-p)
     *
       --gap-p: .5rem
+  p,.tag-plugin
+    margin-top: var(--gap-p)
+    margin-bottom: var(--gap-p)
+    .highlight,table
+      --gap-p: 1rem
 
 // titles
 article.md.content
@@ -105,7 +113,7 @@ article.md blockquote
   margin-right: 0
   padding: 1rem
   background: var(--card)
-  border-left: 4px solid $color-theme
+  border-left: 6px solid $color-theme
   border-radius: $border-block
   color: var(--text-p2)
   box-shadow: $boxshadow-card

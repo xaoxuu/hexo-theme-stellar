@@ -5,7 +5,7 @@ function layoutDiv() {
   var config = Object.assign({}, theme.comments[cmt]);
   if (page.layout === 'wiki' && page.wiki) {
     let proj = theme.wiki.projects[page.wiki];
-    if (proj[cmt] !== undefined) {
+    if (proj[cmt] != undefined) {
       Object.assign(config, proj[cmt]);
     }
   }
@@ -14,11 +14,11 @@ function layoutDiv() {
   if (config['issue-number'] !== null) {
     config['issue-term'] = null;
   } else {
-    if (page.comment_id !== undefined) {
+    if (page.comment_id != undefined) {
       config['issue-term'] = page.comment_id;
     } else if (page.layout === 'wiki' && page.wiki) {
       let proj = theme.wiki.projects[page.wiki];
-      if (proj.comment_id !== undefined) {
+      if (proj.comment_id != undefined) {
         config['issue-term'] = proj.comment_id;
       }
     }

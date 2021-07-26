@@ -22,7 +22,7 @@ module.exports = ctx => function(args, content) {
       });
     } else if (tabs.length > 0) {
       var tab = tabs[tabs.length-1];
-      if (tab.body === undefined) {
+      if (tab.body == undefined) {
         tab.body = item;
       } else {
         tab.body += '\n' + item;
@@ -52,7 +52,7 @@ module.exports = ctx => function(args, content) {
   tabContent = `<div class="tab-content">${tabContent}</div>`;
 
   el += '<div class="tag-plugin tabs"';
-  if (args.align !== undefined) {
+  if (args.align != undefined) {
     el += ' align="' + args.align + '"';
   }
   el += 'id="' + tabName.toLowerCase().split(' ').join('-') + '"';

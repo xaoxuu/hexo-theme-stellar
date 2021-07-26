@@ -6,9 +6,9 @@ if (theme.comments.service && theme.comments.service.length > 0) {
   }
 }
 // 合并项目评论
-if (loadComment && page.layout === 'wiki' && page.wiki) {
+if (loadComment && page.layout == 'wiki' && page.wiki) {
   let proj = theme.wiki.projects[page.wiki];
-  if (proj.comment_title !== undefined && page.comment_title === undefined) {
+  if (proj.comment_title != undefined && page.comment_title == undefined) {
     if (['utterances', 'beaudar'].includes(theme.comments.service)) {
       page.comment_title = proj.comment_title;
     }
@@ -18,7 +18,7 @@ if (loadComment && page.layout === 'wiki' && page.wiki) {
 <% if (loadComment) { %>
   <div class='related-wrap md reveal' id="comments">
     <div class='cmt-title cap theme'>
-      <%- page.comment_title !== undefined ? markdown(page.comment_title) : __('meta.comment_title') %>
+      <%- page.comment_title != undefined ? markdown(page.comment_title) : __('meta.comment_title') %>
     </div>
     <div class='cmt-body <%- theme.comments.service %>'>
       <%- partial(theme.comments.service + '/layout') %>

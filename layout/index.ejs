@@ -1,5 +1,5 @@
 <%
-if (page.menu_id === undefined) {
+if (page.menu_id == undefined) {
   if (page.layout === 'index' && page.wiki) {
     page.menu_id = 'wiki';
   } else {
@@ -34,7 +34,7 @@ function layout_posts(partial) {
     }
     // unpinned posts
     page.posts.each(function(post){
-      if (post.pin === undefined) {
+      if (post.pin == undefined) {
         el += layout_post_card('post', post, partial(post));
       }
     })
@@ -53,23 +53,19 @@ function layout_wikis(partial) {
   const projects = theme.wiki.projects;
   for (let proj_name of Object.keys(projects)) {
     let proj = projects[proj_name];
-    if (proj.index === false || proj.pages === undefined || proj.pages.length === 0) {
+    if (proj.index === false || proj.pages == undefined || proj.pages.length === 0) {
       continue;
     }
     if (page.filter === false) {
       // all wikis
-      proj.pages.sort('order').limit(1).forEach((p0, i) => {
-        el += '<div class="post-list wiki">';
-        el += layout_post_card('wiki', p0, partial(proj));
-        el += '</div>';
-      });
-    } else if (page.group === proj.group) {
+      el += '<div class="post-list wiki">';
+      el += layout_post_card('wiki', proj.homepage, partial(proj));
+      el += '</div>';
+    } else if (proj.tags && proj.tags.includes(page.tagName) === true) {
       // filtered wikis
-      proj.pages.sort('order').limit(1).forEach((p0, i) => {
-        el += '<div class="post-list wiki filter">';
-        el += layout_post_card('wiki', p0, partial(proj));
-        el += '</div>';
-      });
+      el += '<div class="post-list wiki filter">';
+      el += layout_post_card('wiki', proj.homepage, partial(proj));
+      el += '</div>';
     }
   }
   return el;

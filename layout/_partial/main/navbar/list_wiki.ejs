@@ -11,17 +11,17 @@ function layoutDiv() {
   el += ' href="' + url_for(config.wiki_dir || "/wiki/") + '">' + __("btn.all_wiki") + '</a>';
   el += '</a>';
   // 项目分类
-  for (let group_name of Object.keys(theme.wiki.groups)) {
-    let group = theme.wiki.groups[group_name];
-    let projects = group.projects.filter(function(proj){
-      return proj.index !== false;
+  for (let id of Object.keys(theme.wiki.all_tags)) {
+    let tag = theme.wiki.all_tags[id];
+    let projects = tag.items.filter(function(item){
+      return item.index !== false;
     })
     if (projects && projects.length > 0) {
       el += '<a';
-      if (group.title && group.title.length > 0 && page.group === group.title) {
+      if (tag.name && tag.name.length > 0 && page.tagName === tag.name) {
         el += ' class="active"';
       }
-      el += ' href="' + url_for(group.path) + '">' + group.title + '</a>';
+      el += ' href="' + url_for(tag.path) + '">' + tag.name + '</a>';
       el += '</a>';
     }
   }

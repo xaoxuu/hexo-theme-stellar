@@ -51,7 +51,7 @@ function postTimeline(args, content) {
       });
     } else if (nodes.length > 0) {
       var node = nodes[nodes.length-1];
-      if (node.body === undefined) {
+      if (node.body == undefined) {
         node.body = item;
       } else {
         node.body += '\n' + item;

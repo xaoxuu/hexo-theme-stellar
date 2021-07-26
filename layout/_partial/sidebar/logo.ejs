@@ -29,7 +29,7 @@ function layoutDiv() {
     el += __('btn.all_wiki');
     el += '</a>';
     // this product
-    if (proj === undefined) {
+    if (proj == undefined) {
       // 如果没有项目名，则使用menu中显示的名字
       if (page.menu_id && theme.sidebar.menu[page.menu_id] && md_link(theme.sidebar.menu[page.menu_id])) {
         proj = {
@@ -38,9 +38,9 @@ function layoutDiv() {
         };
       }
     }
-    if (proj !== undefined) {
+    if (proj != undefined) {
       let main = proj.title || proj.wiki || page.wiki || page.title;
-      let url = proj.path;
+      let url = proj.homepage.path;
       let sub = proj.subtitle;
       el += layoutTitle(main, url, sub);
     }

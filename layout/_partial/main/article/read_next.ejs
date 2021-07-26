@@ -10,30 +10,22 @@ function layoutDiv() {
     title_prev = __('meta.newer');
     title_next = __('meta.older');
   } else if (page.layout === 'wiki' && page.wiki && page.wiki.length > 0) {
-    var wikis = [];
-    wikis = site.pages.filter(function (p) {
-      if (p.layout === 'wiki' && p.wiki && p.wiki === page.wiki) {
-        if (p.order === undefined) {
-          p.order = 0;
+    let proj = theme.wiki.projects[page.wiki];
+    if (proj) {
+      proj.pages.forEach((p, i) => {
+        if (p.order < page.order) {
+          if (prev == undefined || p.order > prev.order) {
+            prev = p;
+          }
+        } else if (p.order > page.order) {
+          if (next == undefined || p.order < next.order) {
+            next = p;
+          }
         }
-        return true;
-      } else {
-        return false;
-      }
-    }).sort('order');
-    page.order = page.order || 0;
-    wikis.forEach((p, i) => {
-      if (p.order < page.order) {
-        if (prev === undefined || p.order > prev.order) {
-          prev = p;
-        }
-      } else if (p.order > page.order) {
-        if (next === undefined || p.order < next.order) {
-          next = p;
-        }
-      }
-    });
-    if (next === undefined) {
+      });
+    }
+    if (next == undefined) {
+      // 项目的最后一篇文档
       return '<br>';
     }
   }

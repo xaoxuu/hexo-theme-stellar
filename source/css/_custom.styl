@@ -53,12 +53,13 @@ $fs-h3   = 1.375rem  // 22px
 $fs-h4   = 1.125rem  // 18px
 $fs-h5   = $fs-15
 $fs-h6   = $fs-12
-$fs-p = $fs-15
+$fs-p    = $fs-15
 $fs-code = $fs-13
 
 $border-card = 12px
 $border-widget = 4px
-$border-block = 4px
+$border-block = 6px
+$border-image = 6px
 
 // 可以动态变化的属性
 :root
@@ -66,11 +67,9 @@ $border-block = 4px
   --width-main: 680px
   --gap-l: 16px
   --gap-p: 1.25rem // gap for paragraph
-  // desktop or larger
-  @media screen and (min-width: $device-desktop)
-    --gap-l: 32px
   // desktop 2k or larger
   @media screen and (min-width: $device-2k)
+    --gap-l: 32px
     --width-left: 320px
     --width-main: 740px
   // desktop 4k or larger

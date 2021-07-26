@@ -5,13 +5,13 @@ function layoutWikiCover() {
     return el;
   }
   let proj = theme.wiki.projects[page.wiki];
-  if (proj === undefined) {
+  if (proj == undefined) {
     return el;
   }
-  if (proj.path !== page.path) {
+  if (proj.homepage.path !== page.path) {
     return;
   }
-  if (proj.cover === undefined || proj.cover === false || proj.cover === '[]') {
+  if (proj.cover == undefined || proj.cover === false || proj.cover === '[]') {
     return el;
   }
   var cover = proj.cover;
@@ -42,7 +42,7 @@ function layoutWikiCover() {
     el += '<div class="description">' + desc + '</div>';
   }
   el += '<div class="start-wrap">';
-  el += '<a class="button theme start" href="#start">' + __('btn.getting_started') + '</a>';
+  el += '<a class="button theme start" href="#start">' + (proj.start || __('btn.getting_started')) + '</a>';
   el += '</div>';
   el += '</article>';
   el += '</div>';

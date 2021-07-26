@@ -16,15 +16,14 @@ hexo.extend.generator.register('wiki', function (locals) {
       data: {'filter': false},
       layout: ['wiki']
     });
-    if (hexo.theme.config.wiki && hexo.theme.config.wiki.groups) {
-      for (let group_name of Object.keys(hexo.theme.config.wiki.groups)) {
-        let group = hexo.theme.config.wiki.groups[group_name];
+    if (hexo.theme.config.wiki && hexo.theme.config.wiki.all_tags) {
+      for (let id of Object.keys(hexo.theme.config.wiki.all_tags)) {
+        let tag = hexo.theme.config.wiki.all_tags[id];
         ret.push({
-          path: group.path,
+          path: tag.path,
           data: {
             'filter': true,
-            'title': group.title,
-            'group': group.title
+            'tagName': tag.name
           },
           layout: ['wiki']
         });
