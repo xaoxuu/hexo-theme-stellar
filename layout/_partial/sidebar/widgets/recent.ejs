@@ -31,7 +31,7 @@ function layoutDiv() {
     el += '<a class="more-item" href="' + url_for(post.link || post.path) + '">';
     el += '<div class="cap">';
     el += '<time>' + date(post.updated, config.date_format) + '</time>';
-    if (post.layout === 'wiki') {
+    if (post.layout == 'wiki') {
       el += '<span>';
       let proj = theme.wiki.projects[post.wiki];
       if (proj && proj.title) {
@@ -47,7 +47,7 @@ function layoutDiv() {
     }
     el += '</div>';
     el += '<span class="title">';
-    el += post.title;
+    el += post.title || post.seo_title || post.wiki;
     el += '</span>';
     el += '</a>';
     el += '';
