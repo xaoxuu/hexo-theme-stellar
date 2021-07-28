@@ -6,7 +6,6 @@
 .post-list .post-card
   display: block
   margin: 1rem 0
-  color: var(--text-p2)
   border-radius: $border-card
   box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.02)
   trans1 box-shadow
@@ -25,11 +24,8 @@
         object-fit: contain
         height: 1.5em
 .post-list .post-card:hover
-  box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.04), 0 4px 16px 0px rgba(0, 0, 0, 0.04)
-  .preview img
-    transform: scale(1.1)
-  .excerpt .readmore
-    color: $color-link
+  box-shadow: 0 1px 4px 0px rgba(0, 0, 0, 0.08), 0 2px 8px 0px rgba(0, 0, 0, 0.06), 0 4px 16px 0px rgba(0, 0, 0, 0.04)
+
 
 // common article
 .post-list article
@@ -72,11 +68,6 @@
   @media screen and (max-width: $device-mobile-375)
     height: 240px
 
-.post-list .post-card.post:hover
-  .post-title
-    color: $color-hover
-  .post-cover img
-    transform: scale(1.04)
 
 // wiki
 .post-list .post-card.wiki article

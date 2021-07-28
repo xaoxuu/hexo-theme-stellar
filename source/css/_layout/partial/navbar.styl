@@ -35,12 +35,14 @@ nav.cap
     position: relative
     z-index: 1
     &:after
-      content: ''
       width: 'calc(100% - 2 * %s)' % .5rem
       height: 2px
       position: absolute
       bottom: -8px
       left: .5rem
+      background: $color-theme
+      border-radius: 2px
+      pointer-events: none
     &:hover
       background: var(--block-hover)
     &.active, &:hover
@@ -49,8 +51,7 @@ nav.cap
       background: var(--card)
       box-shadow: $boxshadow-button
     &.active:after
-      background: $color-theme
-      border-radius: 2px
+      content: ''
   a+a
     margin-left: 4px
 

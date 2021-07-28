@@ -31,7 +31,8 @@ article.md.content
         opacity: 1
 
 .md
-  ul,ol
+  ul:not(:last-child),
+  ol:not(:last-child)
     padding-bottom: .5rem
     margin: 0
   blockquote,ul,ol
@@ -89,8 +90,6 @@ article.md p
 article.md code
   -webkit-font-smoothing: auto
   -moz-osx-font-smoothing: auto
-  -webkit-text-size-adjust: 100%
-  -ms-text-size-adjust: 100%
   color: var(--text-code)
   font-family: $ff-code
   word-break: break-all
@@ -101,8 +100,6 @@ article.md code
 article.md pre
   -webkit-font-smoothing: auto
   -moz-osx-font-smoothing: auto
-  -webkit-text-size-adjust: 100%
-  -ms-text-size-adjust: 100%
 
 // div
 article.md>div

@@ -13,9 +13,7 @@ function layoutDiv() {
   el += '<div class="excerpt">';
   if (proj.tags && proj.tags.length > 0) {
     let tag = proj.tags[0];
-    el += '<div>';
-    el += '<span class="cap breadcrumb"' + category_color(tag) + '>' + tag + '</span>';
-    el += '</div>';
+    el += '<div class="cap breadcrumb"' + category_color(tag) + '>' + tag + '</div>';
   }
   el += '<h2 class="post-title">' + (proj.wiki || proj.title || proj.seo_title) + '</h2>';
   if (proj.description) {
