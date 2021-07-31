@@ -157,6 +157,7 @@ footer:
     #   - '[GitLab](/)'
   license: '[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
   source: #'[GitHub](https://github.com/xaoxuu/hexo-theme-stellar)'
+  more: # string or array (support markdown)
 
 
 ######## Tag Plugins ########
