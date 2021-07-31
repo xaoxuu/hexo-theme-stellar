@@ -13,7 +13,6 @@ if (page.menu_id == undefined) {
       <% site.tags.sort('length', -1).each(function(tag){ %>
         <a class='tag' href="<%= url_for(tag.path) %>">
           <span class='name'><%= tag.name %></span>
-          <span class='badge fs12'>x<%- tag.length %></span>
         </a>
       <% }) %>
     </article>
