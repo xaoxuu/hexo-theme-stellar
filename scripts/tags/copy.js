@@ -30,7 +30,7 @@ hexo.extend.tag.register('copy', function(args) {
     }
   }
 
-  const copy_id = 'copy_' + ++copy_index + '-' + text.replace(/[^a-z|0-9|.:]/gi, '');
+  const copy_id = 'copy_' + ++copy_index;
 
   var el = '';
   el += '<div class="tag-plugin copy"';
