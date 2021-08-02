@@ -147,34 +147,13 @@
       transform: scale(1)
   /* Colors */
   input
-    border: 2px solid var(--theme-border)
+    border: 2px solid var(--theme)
     &[type=checkbox]:checked
-      background: var(--theme-border)
+      background: var(--theme)
     &[type=radio]:checked:before
-      background: var(--theme-border)
+      background: var(--theme)
 
 
 
-.tag-plugin.checkbox
-  --theme: $c-blue
-
-.tag-plugin.checkbox[color='red']
-  --theme: mix($c-red, $light-card, 90)
-
-.tag-plugin.checkbox[color='orange']
-  --theme: mix($c-orange, $light-card, 90)
-
-.tag-plugin.checkbox[color='yellow']
-  --theme: mix($c-yellow, $light-card, 90)
-
-.tag-plugin.checkbox[color='green']
-  --theme: mix($c-green, $light-card, 90)
-
-.tag-plugin.checkbox[color='cyan']
-  --theme: mix($c-cyan, $light-card, 90)
-
-.tag-plugin.checkbox[color='blue']
-  --theme: mix($c-blue, $light-card, 100)
-
-.tag-plugin.checkbox[color='purple']
-  --theme: mix($c-purple, $light-card, 90)
+.tag-plugin.checkbox:not([color])
+  --theme:$c-blue
