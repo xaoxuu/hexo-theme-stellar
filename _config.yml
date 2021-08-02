@@ -26,7 +26,7 @@ sidebar:
   # Sidebar widgets
   widgets:
     # default layout in home/wiki/categories/tags/archives pages
-    default_layout: [welcome, recent]
+    default_layout: [welcome]
     # Recent update
     recent:
       layout: recent
@@ -42,9 +42,17 @@ sidebar:
     # welcome
     welcome:
       layout: markdown
-      title: 欢迎
+      title: Stellar 入门指南
       content:
-        - '欢迎光临小站，[Stellar](https://github.com/xaoxuu/hexo-theme-stellar/) 是一个支持 wiki 的 hexo 主题，适合综合型站点使用。同时也拥有简约而精美的视觉设计和丰富的标签插件，帮助您简单从容地应对各种场合。'
+        - '欢迎使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar/) 主题，下面是您的入门指南，祝您使用愉快！'
+        - '<br>'
+        - '**第一步**'
+        - '创建 `blog/_config.stellar.yml` 文件，在此文件中填写需要自定义的主题配置。'
+        - '<br>'
+        - '**第二步**'
+        - '创建 `blog/source/_data/widgets.yml` 文件，此文件中填写需要自定义的侧边栏组件，例如 `welcome` 组件。'
+        - '<br>'
+        - '如果有任何疑问，请先查阅[文档](https://xaoxuu.com/wiki/stellar/)，如果文档中没有提供，请提 [issue](https://github.com/xaoxuu/hexo-theme-stellar/issues/) 向开发中询问。'
 
 
 

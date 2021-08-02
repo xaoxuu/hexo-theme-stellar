@@ -21,7 +21,9 @@ function layoutWidgets() {
     page.sidebar.forEach((w, i) => {
       if (w in theme.sidebar.widgets) {
         let widget = theme.sidebar.widgets[w];
-        el += partial('widgets/' + widget.layout, {item: widget});
+        if (widget && widget.layout) {
+          el += partial('widgets/' + widget.layout, {item: widget});
+        }
       }
     });
   }
