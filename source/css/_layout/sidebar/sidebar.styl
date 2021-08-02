@@ -23,7 +23,7 @@
   margin: 1rem 0 .5rem
   display: flex
   align-items: center
-  color: var(--text-p0)
+  overflow: hidden
   a
     color: inherit
     display: flex
@@ -78,13 +78,17 @@
     font-family: $ff-logo
     display: block
     position: relative
+    .main
+      color: var(--text-p0)
     .sub
       color: var(--text-p1)
       trans2 opacity transform
+      white-space: nowrap
     .hover
       position: absolute
       bottom: 0
       transform: translateY(8px)
+      overflow: visible
     &:hover
       .normal
         opacity: 0
