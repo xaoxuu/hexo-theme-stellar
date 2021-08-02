@@ -168,6 +168,12 @@ tag_plugins:
   # {% checkbox %}
   checkbox:
     interactive: false # enable interactive for user
+  emoji:
+    default: https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/qq/%s.gif
+    twemoji: https://cdn.jsdelivr.net/gh/twitter/twemoji/assets/svg/%s.svg
+    qq: https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/qq/%s.gif
+    aru: https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/aru-l/%s.gif
+    tieba: https://cdn.jsdelivr.net/gh/volantis-x/cdn-emoji/tieba/%s.png
 
 
 ######## JS Plugins ########
