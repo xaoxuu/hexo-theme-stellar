@@ -1,33 +1,41 @@
 .tag-plugin
-  --theme: var(--block-border)
+  --theme: var(--text-p1)
+  --theme-border: var(--block-border)
   --theme-bg: var(--block)
 
 .tag-plugin[color='red']
-  --theme: mix($c-red, $light-card, 40)
+  --theme: $c-red
+  --theme-border: mix($c-red, $light-card, 40)
   --theme-bg: mix($c-red, $light-card, 10)
 
 .tag-plugin[color='orange']
-  --theme: mix($c-orange, $light-card, 40)
+  --theme: $c-orange
+  --theme-border: mix($c-orange, $light-card, 40)
   --theme-bg: mix($c-orange, $light-card, 10)
 
 .tag-plugin[color='yellow']
-  --theme: mix($c-yellow, $light-card, 40)
+  --theme: $c-yellow
+  --theme-border: mix($c-yellow, $light-card, 40)
   --theme-bg: mix($c-yellow, $light-card, 10)
 
 .tag-plugin[color='green']
-  --theme: mix($c-green, $light-card, 40)
+  --theme: $c-green
+  --theme-border: mix($c-green, $light-card, 40)
   --theme-bg: mix($c-green, $light-card, 10)
 
 .tag-plugin[color='cyan']
-  --theme: mix($c-cyan, $light-card, 40)
+  --theme: $c-cyan
+  --theme-border: mix($c-cyan, $light-card, 40)
   --theme-bg: mix($c-cyan, $light-card, 10)
 
 .tag-plugin[color='blue']
-  --theme: mix($c-blue, $light-card, 40)
+  --theme: $c-blue
+  --theme-border: mix($c-blue, $light-card, 40)
   --theme-bg: mix($c-blue, $light-card, 10)
 
 .tag-plugin[color='purple']
-  --theme: mix($c-purple, $light-card, 40)
+  --theme: $c-purple
+  --theme-border: mix($c-purple, $light-card, 40)
   --theme-bg: mix($c-purple, $light-card, 10)
 
 
@@ -42,40 +50,40 @@
 if hexo-config('style.darkmode') == 'auto'
   @media (prefers-color-scheme: dark)
     .tag-plugin[color='red']
-      --theme: mix($c-red, $dark-card, 80)
+      --theme-border: mix($c-red, $dark-card, 80)
       --theme-bg: mix($c-red, $dark-card, 10)
 
     .tag-plugin[color='orange']
-      --theme: mix($c-orange, $dark-card, 80)
+      --theme-border: mix($c-orange, $dark-card, 80)
       --theme-bg: mix($c-orange, $dark-card, 10)
 
     .tag-plugin[color='yellow']
-      --theme: mix($c-yellow, $dark-card, 80)
+      --theme-border: mix($c-yellow, $dark-card, 80)
       --theme-bg: mix($c-yellow, $dark-card, 10)
 
     .tag-plugin[color='green']
-      --theme: mix($c-green, $dark-card, 80)
+      --theme-border: mix($c-green, $dark-card, 80)
       --theme-bg: mix($c-green, $dark-card, 10)
 
     .tag-plugin[color='cyan']
-      --theme: mix($c-cyan, $dark-card, 80)
+      --theme-border: mix($c-cyan, $dark-card, 80)
       --theme-bg: mix($c-cyan, $dark-card, 10)
 
     .tag-plugin[color='blue']
-      --theme: mix($c-blue, $dark-card, 80)
+      --theme-border: mix($c-blue, $dark-card, 80)
       --theme-bg: mix($c-blue, $dark-card, 10)
 
     .tag-plugin[color='purple']
-      --theme: mix($c-purple, $dark-card, 80)
+      --theme-border: mix($c-purple, $dark-card, 80)
       --theme-bg: mix($c-purple, $dark-card, 10)
 
 
     .tag-plugin[color='light']
-      --theme: white
+      --theme-border: white
       --theme-bg: #ddd
       color: var(--site-bg) !important
 
     .tag-plugin[color='dark']
-      --theme: black
+      --theme-border: black
       --theme-bg: #222
       color: var(--text-p1) !important

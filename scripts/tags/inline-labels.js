@@ -1,3 +1,10 @@
+/**
+ * 修饰文本标签 | https://github.com/xaoxuu/hexo-theme-stellar/
+ *
+ * example:
+ * {% psw 这是密码 %}
+ */
+
 'use strict';
 
 
@@ -18,4 +25,20 @@ hexo.extend.tag.register('kbd', function(args) {
 });
 hexo.extend.tag.register('psw', function(args) {
   return `<psw>${args.join(' ')}</psw>`;
+});
+hexo.extend.tag.register('sup', function(args) {
+  args = hexo.args.map(args, ['color'], ['text']);
+  var el = '';
+  el += '<sup class="tag-plugin sup"' + ' ' + hexo.args.joinTags(args, ['color']).join(' ') + '>';
+  el += args.text;
+  el += '</sup>';
+  return el;
+});
+hexo.extend.tag.register('sub', function(args) {
+  args = hexo.args.map(args, ['color'], ['text']);
+  var el = '';
+  el += '<sub class="tag-plugin sub"' + ' ' + hexo.args.joinTags(args, ['color']).join(' ') + '>';
+  el += args.text;
+  el += '</sub>';
+  return el;
 });
