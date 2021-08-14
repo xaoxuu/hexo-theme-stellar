@@ -20,7 +20,7 @@ hexo.extend.tag.register('folding', function(args, content) {
   }
   el += '>';
   // summary
-  el += '<summary><span>' + args.title + '</span></summary>';
+  el += '<summary><span>' + (args.title || '') + '</span></summary>';
   // content
   el += '<div class="body">';
   el += hexo.render.renderSync({text: content, engine: 'markdown'}).split('\n').join('');
