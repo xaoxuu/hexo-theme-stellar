@@ -22,7 +22,7 @@
 // iPad 竖屏
 @media screen and (max-width: $device-tablet)
   .mobile-only
-    display: block !important
+    display: flex !important
   .l_body
     padding: 0
     .l_left
@@ -32,6 +32,7 @@
       left: 0
       background: var(--site-bg)
       box-shadow: $boxshadow-card-float
+      z-index: 10
     .l_main
       max-width: 100%
   .l_body.mobile
