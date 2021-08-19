@@ -1,0 +1,34 @@
+$lbg = hexo-config('tag_plugins.mark.light_bg_offset') is a 'unit' ? unit(hexo-config('tag_plugins.mark.light_bg_offset'), '%') : 0;
+
+$note-types = 'gray' 'purple' 'blue' 'green' 'orange' 'yellow' 'red';
+
+$note-border = {
+  gray : #777,
+  purple : #6f42c1,
+  blue    : #428bca,
+  green : #5cb85c,
+  orange : #f0ad4e,
+  yellow: #FFFF00,
+  red  : #d9534f
+};
+
+$mark = {
+  gray : lighten(spin($note-border.gray, 0), 89% + $lbg),
+  purple : lighten(spin($note-border.purple, 10), 87% + $lbg),
+  blue    : lighten(spin($note-border.blue, -10), 86% + $lbg),
+  green : lighten(spin($note-border.green, 10), 85% + $lbg),
+  orange : lighten(spin($note-border.orange, 10), 83% + $lbg),
+  yellow : lighten(spin($note-border.yellow, 0), 70% + $lbg),
+  red  : lighten(spin($note-border.red, -10), 87% + $lbg)
+};
+
+mark {
+  padding: 0 2px;
+  border-radius: $border-block
+  color: var(--text-p1);
+  for $type in $note-types {
+    &.{$type} {
+      background-color: $mark[$type];
+    }
+  }
+}
