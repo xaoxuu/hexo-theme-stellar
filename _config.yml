@@ -59,7 +59,7 @@ sidebar:
 ######## Article ########
 article:
   # 如果没有指定封面，是否根据 tags 作为关键词搜索封面？
-  auto_cover: true # search from https://source.unsplash.com/
+  auto_cover: false # search from https://source.unsplash.com/
   # 如果没有指定 excerpt 和 description，将自动取多长的内容作为文章摘要？
   auto_excerpt: 200
   # 分类颜色

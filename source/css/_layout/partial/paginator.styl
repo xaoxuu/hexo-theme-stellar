@@ -5,10 +5,11 @@
   align-items: center
   font-size: 1rem
   font-weight: 700
-  background: var(--block)
+  background: var(--card)
   border-radius: $border-card
-  border: 1px solid var(--block-border)
   overflow: hidden
+  box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.03)
+  &:hover
   .paginator
     text-align: center
   .current
@@ -24,10 +25,6 @@
     &.disable
       pointer-events: none
       opacity: 0.25
-    &.prev
-      border-right: 1px solid var(--block-border)
-    &.next
-      border-left: 1px solid var(--block-border)
   a.paginator:hover
     background: var(--card)
     filter: unset

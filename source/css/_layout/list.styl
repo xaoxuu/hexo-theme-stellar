@@ -11,11 +11,15 @@
   trans1 box-shadow
   overflow: hidden
   background: var(--card)
+  .excerpt
+    margin: 1rem 0
+    >p
+      margin: 1rem 0
   .meta.cap
     display: flex
     flex-wrap: wrap
     align-items: center
-    margin-bottom: 0.5rem
+    margin: .5rem 0
     span+span
       margin-left: 0.5rem
     span.pin
@@ -42,17 +46,17 @@
       object-fit: cover
       width: 100%
       border-radius: 0
-      height: 320px
+      height: 280px
       @media screen and (max-width: 900px)
-        height: 280px
-      @media screen and (max-width: $device-tablet)
-        height: 320px
-      @media screen and (max-width: $device-mobile)
-        height: 280px
-      @media screen and (max-width: $device-mobile-425)
         height: 240px
+      @media screen and (max-width: $device-tablet)
+        height: 280px
+      @media screen and (max-width: $device-mobile)
+        height: 240px
+      @media screen and (max-width: $device-mobile-425)
+        height: 220px
       @media screen and (max-width: $device-mobile-375)
-        height: 200px
+        height: 180px
       &:not(.lazy)
         trans1: transform 1s
 .post-list .post-card.post.photo .post-cover img
@@ -75,20 +79,23 @@
   flex-wrap: wrap
   trans1 box-shadow
   justify-content: center
+  padding: 1rem .5rem
 
 
 .post-list .post-card.wiki article .preview
   display: flex
   width: 200px
-  margin: 1rem
+  margin: 1rem .5rem
   align-items: center
   img
     object-fit: contain
     &:not(.lazy)
       trans1: transform 0.75s
 .post-list .post-card.wiki article .excerpt
-  margin: 1rem
+  margin: 1rem .5rem
   min-width: 220px
   flex: 1
   overflow: hidden
   word-wrap: break-word
+  p:last-child
+    margin-bottom: 0
