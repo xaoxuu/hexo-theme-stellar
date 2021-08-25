@@ -42,7 +42,7 @@ hexo.extend.helper.register('popular_posts_wrapper', function(args){
         } else {
           list.img = 'https://source.unsplash.com/1280x640/?' + p.cover;
         }
-      } else if (cfg.auto_cover && p.tags.length > 0) {
+      } else if (cfg.auto_cover && p.tags && p.tags.length > 0) {
         var params = '';
         p.tags.reverse().forEach((tag, i) => {
           if (i > 0) {
