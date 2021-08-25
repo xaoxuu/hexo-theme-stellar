@@ -21,7 +21,7 @@ function layoutTitle(main, url, sub) {
 }
 function layoutDiv() {
   var el = '';
-  if (page.layout === 'wiki' && proj.index !== false) {
+  if (page.layout == 'wiki' && proj && proj.index != false) {
     el += '<div class="logo-wrap wiki">';
     // all products
     el += '<a style="filter: grayscale(100%)" class="wiki-home cap" href="' + url_for(config.wiki_dir) + '">';
