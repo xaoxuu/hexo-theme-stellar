@@ -4,6 +4,16 @@ function layoutDiv() {
   if (page.breadcrumb === false) {
     return el;
   }
+  var home_title = __("btn.home");
+  if (theme.breadcrumb && theme.breadcrumb.home) {
+    if (theme.breadcrumb.home === 'config.title') {
+      home_title = config.title;
+    } else if (theme.breadcrumb.home === 'config.author') {
+      home_title = config.author;
+    } else if (theme.breadcrumb.home !== 'home') {
+      home_title = theme.breadcrumb.home;
+    }
+  }
   if (page.layout === "post") {
     var firstCat = "";
     if (page.categories && page.categories.length > 0) {
@@ -11,9 +21,9 @@ function layoutDiv() {
     }
     el += '<div class="bread-nav fs12">';
     el += '<div id="breadcrumb">';
-    el += '<a class="cap breadcrumb" href="/">' + __("btn.home") + '</a>';
+    el += '<a class="cap breadcrumb" href="' + config.root + '">' + home_title + '</a>';
     el += '<span class="sep"></span>';
-    el += '<a class="cap breadcrumb" href="/">' + __("btn.blog") + '</a>';
+    el += '<a class="cap breadcrumb" href="' + config.root + '">' + __("btn.blog") + '</a>';
     if (page.layout == "post" && page.categories && page.categories.length > 0) {
       el += '<span class="sep"></span>';
       el += list_categories(page.categories, {
@@ -34,7 +44,7 @@ function layoutDiv() {
     el += '<div id="breadcrumb">';
     var nodes = [];
     // home
-    el += '<a class="cap breadcrumb" id="home" href="/">' + __("btn.home") + '</a>';
+    el += '<a class="cap breadcrumb" id="home" href="' + config.root + '">' + home_title + '</a>';
     nodes.push('/');
     // menu_id
     el += '<span class="sep"></span>';
@@ -63,7 +73,7 @@ function layoutDiv() {
   } else if (page.title || page.seo_title) {
     el += '<div class="bread-nav fs12">';
     el += '<div id="breadcrumb">';
-    el += '<a class="cap breadcrumb" href="/">' + __("btn.home") + '</a>';
+    el += '<a class="cap breadcrumb" href="' + config.root + '">' + home_title + '</a>';
     el += '<span class="sep"></span>';
     el += '<a class="cap breadcrumb" href="' + url_for(page.path) + '">' + (page.title || page.seo_title) + '</a>';
     el += '</div>';
