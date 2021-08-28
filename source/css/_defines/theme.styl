@@ -14,24 +14,34 @@
   --theme-highlight: darken($color-theme, 5)
   --theme-bg: mix($color-theme, $light-card, 10)
 
+set_darkmode()
+  :root
+    --site-bg: $dark-site-bg
+    --block: $dark-block
+    --block-border: lighten($dark-block, 6)
+    --block-hover: darken($dark-block, 4)
+    --text-p0: $dark-title
+    --text-p1: mix($dark-text, $dark-site-bg, 85)
+    --text-p2: mix($dark-text, $dark-site-bg, 70)
+    --text-p3: mix($dark-text, $dark-site-bg, 45)
+    --text-p4: mix($dark-text, $dark-site-bg, 35)
+    --text-meta: mix($dark-text, $dark-site-bg, 30)
+    --text-code: $dark-code
+    --card: $dark-card
+    --theme-highlight: $color-theme
+    --theme-bg: mix($color-theme, $dark-card, 10)
+    @media screen and (max-width: $device-tablet)
+      --site-bg: $dark-site-bg-mobile
+      --card: darken($dark-card, 6)
+      --block: darken($dark-block, 4)
+      --block-border: lighten($dark-block, 2)
+      --block-hover: darken($dark-block,8)
+
 if hexo-config('style.darkmode') == 'auto'
   // 系统的dark模式
   @media (prefers-color-scheme: dark)
-    :root
-      --site-bg: $dark-site-bg
-      --block: $dark-block
-      --block-border: lighten($dark-block, 10)
-      --block-hover: darken($dark-block, 1)
-      --text-p0: $dark-title
-      --text-p1: mix($dark-text, $dark-site-bg, 85)
-      --text-p2: mix($dark-text, $dark-site-bg, 70)
-      --text-p3: mix($dark-text, $dark-site-bg, 45)
-      --text-p4: mix($dark-text, $dark-site-bg, 35)
-      --text-meta: mix($dark-text, $dark-site-bg, 30)
-      --text-code: $dark-code
-      --card: $dark-card
-      --theme-highlight: $color-theme
-      --theme-bg: mix($color-theme, $dark-card, 10)
-      @media screen and (max-width: $device-tablet)
-        --site-bg: $dark-site-bg-mobile
-        --card: darken($dark-card, 8)
+    set_darkmode()
+
+
+if hexo-config('style.darkmode') == 'always'
+  set_darkmode()

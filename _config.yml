@@ -231,7 +231,7 @@ plugins:
     scale: 1 # 0.1~1
 
 style:
-  darkmode: auto # set 'auto' to enable, set 'false' to disable
+  darkmode: auto # auto / always / false
   theme:
     light: '#f8f8f8'
     dark: '#202429'
