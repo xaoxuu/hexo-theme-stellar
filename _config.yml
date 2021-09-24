@@ -200,8 +200,8 @@ plugins:
   # swiper
   swiper:
     enable: true
-    css: https://unpkg.com/swiper/swiper-bundle.min.css
-    js: https://unpkg.com/swiper/swiper-bundle.min.js
+    css: https://unpkg.com/swiper@6/swiper-bundle.min.css
+    js: https://unpkg.com/swiper@6/swiper-bundle.min.js
   # issues api
   sitesjs: /js/plugins/sites.js
   friendsjs: /js/plugins/friends.js
