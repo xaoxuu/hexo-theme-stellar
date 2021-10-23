@@ -1,6 +1,6 @@
 ######## Stellar info ########
 stellar:
-  version: '1.5.1'
+  version: '1.5.2'
   homepage: 'https://xaoxuu.com/wiki/stellar/'
   repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
   cdn_css: # Use cdn links instead of /css/main.css
