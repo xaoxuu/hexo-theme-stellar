@@ -29,19 +29,18 @@
       line-height: 1.5
     .tag-plugin.navbar:last-child
       nav.cap
-        padding: 0
-        background: none
+        margin-top: 1rem
         a
           margin: 0
-          padding: 0
           color: $color-link
+          background: var(--block-hover)
           &.active
             background: none
           &:hover
             color: $color-hover
-            background: none
+            background: var(--block-border)
         a+a
-          margin-left: 1.5rem
+          margin-left: .5rem
   .about-header+.about-body
     margin-top: 1.5rem
 

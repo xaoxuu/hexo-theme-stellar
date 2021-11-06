@@ -18,13 +18,13 @@ if (page.menu_id == undefined) {
   		<% } %>
   	<% }); %>
   	<% years.forEach((year, i) => { %>
-  		<article class='post-card<%- scrollreveal() %>' id='archive'>
-  			<div class='archive-year h4'><%= year %></div>
+  		<article class='<%- scrollreveal() %>' id='archive'>
+  			<div class='archive-header h4'><%= year %></div>
   			<% site.posts.sort('date', -1).filter(function (post) { %>
   				<% post.year = date(post.date, 'YYYY'); %>
   		    <% return post.year == year; %>
   		  <% }).each(function(post) { %>
-  				<div>
+  				<div class='archive-list'>
             <a class='post fs14' href="<%= url_for(post.link || post.path) %>">
     					<time><%= date(post.date, 'MM-DD') %></time>
     					<span>
