@@ -7,6 +7,9 @@
 
 'use strict';
 
+var util = require('hexo-util');
+const full_url_for = require('hexo-util').full_url_for.bind(hexo);
+
 hexo.extend.tag.register('link', function(args) {
   args = hexo.args.map(args, ['icon'], ['url', 'title', 'description']);
 
@@ -28,7 +31,7 @@ hexo.extend.tag.register('link', function(args) {
     return el;
   }
   function loadTitle() {
-    return '<span class="title fs14">' + args.title + '</span>';
+    return '<span class="title">' + args.title + '</span>';
   }
   function loadDesc() {
     return '<span class="url fs12">' + (args.description || args.url) + '</span>';
@@ -38,7 +41,7 @@ hexo.extend.tag.register('link', function(args) {
     // top
     el += '<div class="top">';
     el += loadIcon();
-    el += '<span class="url fs12">' + args.url + '</span>';
+    el += '<span class="url fs12">' + full_url_for(args.url) + '</span>';
     el += '</div>';
     // bottom
     el += '<div class="bottom">';
