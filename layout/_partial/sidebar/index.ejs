@@ -2,16 +2,21 @@
 // 默认组件
 if (page.sidebar == undefined) {
   if (page.layout == 'post' && page.content) {
-    page.sidebar = ['toc', 'repo_info'];
+    page.sidebar = theme.sidebar.widget_layout.post;
   } else if (page.layout == 'wiki' && page.content && page.wiki) {
     let proj = theme.wiki.projects[page.wiki];
     if (proj.sidebar) {
       page.sidebar = proj.sidebar;
     } else {
-      page.sidebar = ['toc', 'repo_info', 'wiki_more'];
+      page.sidebar = theme.sidebar.widget_layout.wiki;
     }
+  } else if (is_home() || ['categories', 'tags', 'archives', 'index', '404'].includes(page.layout)) {
+    page.sidebar = theme.sidebar.widget_layout.index;
+  } else if (page.layout == 'page') {
+    page.sidebar = theme.sidebar.widget_layout.page;
   } else {
-    page.sidebar = theme.sidebar.widgets.default_layout;
+    console.log('page.layout: ', page.layout);
+    page.sidebar = [];
   }
 }
 function layoutWidgets() {

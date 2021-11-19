@@ -24,9 +24,14 @@ sidebar:
     # friends: '[友链](/friends/)'
     # about: '[关于](/about/)'
   # Sidebar widgets
+  widget_layout:
+    index: [welcome, recent] # for home/wiki/categories/tags/archives/404 pages
+    page: [welcome, toc] # for pages using 'layout:page'
+    post: [toc, repo_info] # for pages using 'layout:post'
+    wiki: [toc, repo_info, wiki_more] # for pages using 'layout:wiki'
   widgets:
     # default layout in home/wiki/categories/tags/archives pages
-    default_layout: [welcome]
+    # default_layout: [welcome]
     # Recent update
     recent:
       layout: recent
@@ -58,7 +63,7 @@ sidebar:
 
 ######## Main ########
 breadcrumb:
-  home: config.title # config.title / config.author / home or custom content
+  home: home # config.title / config.author / home or custom content
 
 ######## Article ########
 article:

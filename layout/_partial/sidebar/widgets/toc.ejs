@@ -66,7 +66,7 @@ function layoutDiv(fallback) {
     el += '<div class="widget-wrap ' + type + '" id="toc">';
     if (page.layout !== 'wiki') {
       // post 布局
-      el += layoutTocHeader(page.toc_title || __("meta.toc"));
+      el += layoutTocHeader(page.toc_title);
       el += '<div class="widget-body fs14">';
       el += '<div class="doc-tree active">';
       el += layoutToc();
@@ -84,6 +84,7 @@ function layoutDiv(fallback) {
         });
       } else {
         // 单 section
+        el += layoutTocHeader(page.toc_title);
         el += '<div class="widget-body fs14">';
         el += layoutDocTree(proj.pages);
         el += '</div>';
