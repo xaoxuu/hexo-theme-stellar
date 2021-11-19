@@ -9,7 +9,8 @@
         font-weight: 500
   .group-body
     width: 100%
-    margin-bottom: 2rem
+    &+.group-header
+      margin-top: 2rem
   .sitesjs-wrap
     display: block
     .loading-wrap
@@ -29,7 +30,6 @@
     grid-template-columns: repeat(auto-fill, "calc((100% - 2 * %s) / 3)" % 1rem)
   @media screen and (max-width: $device-mobile)
     grid-template-columns: repeat(auto-fill, "calc((100% - 1 * %s) / 2)" % 1rem)
-  margin-bottom: 2rem
 
 .sites-wrap .group-body .site-card .card-link
   width: 100%

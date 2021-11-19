@@ -58,6 +58,9 @@ hexo.extend.tag.register('friends', function(args) {
       }
       if (groupId in friends) {
         let group = friends[groupId];
+        if ((typeof group == 'object') && group.constructor == Array) {
+          group = {items: group};
+        }
         if (group.title || group.description) {
           el += groupHeader(group);
         }
