@@ -34,14 +34,14 @@ hexo.extend.tag.register('link', function(args) {
     return '<span class="title">' + args.title + '</span>';
   }
   function loadDesc() {
-    return '<span class="url fs12">' + (args.description || args.url) + '</span>';
+    return '<span class="desc fs12">' + (args.description || full_url_for(args.url)) + '</span>';
   }
 
   if (args.description) {
     // top
     el += '<div class="top">';
     el += loadIcon();
-    el += '<span class="url fs12">' + full_url_for(args.url) + '</span>';
+    el += '<span class="desc fs12">' + full_url_for(args.url) + '</span>';
     el += '</div>';
     // bottom
     el += '<div class="bottom">';

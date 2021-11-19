@@ -21,11 +21,10 @@ nav.cap
   display: flex
   overflow: scroll visible
   scrollbar(0, 0)
-  padding-left: .25rem
   >p
     margin: 0
   a
-    padding: .25rem .75rem
+    padding: .25rem 1rem
     margin: 10px 0 8px 0
     line-height: 2
     color: var(--text-p3)
@@ -35,11 +34,11 @@ nav.cap
     position: relative
     z-index: 1
     &:after
-      width: 'calc(100% - 2 * %s)' % .5rem
       height: 2px
       position: absolute
       bottom: -8px
-      left: .5rem
+      left: 1rem
+      right: 1rem
       background: $color-theme
       border-radius: 2px
       pointer-events: none
