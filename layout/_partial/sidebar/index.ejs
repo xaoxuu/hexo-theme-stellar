@@ -31,10 +31,11 @@ function layoutWidgets() {
   return el;
 }
 function layoutFooterDiv() {
-  if (page.layout !== 'wiki' && theme.footer.social && theme.footer.social.length > 0) {
+  if (page.layout !== 'wiki' && theme.footer.social) {
     var el = '<footer class="footer dis-select">';
     el += '<div class="social-wrap">';
-    theme.footer.social.forEach(item => {
+    for (let id of Object.keys(theme.footer.social)) {
+      let item = theme.footer.social[id];
       if (item.icon && (item.url || item.onclick)) {
         el += '<a class="social"';
         if (item.title) {
@@ -55,7 +56,7 @@ function layoutFooterDiv() {
         el += item.icon;
         el += '</a>';
       }
-    });
+    }
     el += '</div>';
     el += '</footer>';
     return el;
