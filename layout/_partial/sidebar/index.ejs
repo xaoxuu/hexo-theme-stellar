@@ -10,7 +10,7 @@ if (page.sidebar == undefined) {
     } else {
       page.sidebar = theme.sidebar.widget_layout.wiki;
     }
-  } else if (is_home() || ['categories', 'tags', 'archives', 'index', '404'].includes(page.layout)) {
+  } else if (is_home() || ['categories', 'tags', 'archives', 'index', '404', undefined].includes(page.layout)) {
     page.sidebar = theme.sidebar.widget_layout.index;
   } else if (page.layout == 'page') {
     page.sidebar = theme.sidebar.widget_layout.page;
