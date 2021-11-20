@@ -86,6 +86,8 @@
   display: flex
   width: 200px
   margin: 1rem .5rem
+  @media screen and (min-width: 950px)
+    margin: 1rem
   align-items: center
   img
     object-fit: contain
@@ -93,7 +95,9 @@
       trans1: transform 0.75s
 .post-list .post-card.wiki article .excerpt
   margin: 1rem .5rem
-  min-width: 220px
+  @media screen and (min-width: 950px)
+    margin-right: 2rem
+  min-width: 280px
   flex: 1
   overflow: hidden
   word-wrap: break-word
