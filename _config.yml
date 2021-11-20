@@ -30,8 +30,6 @@ sidebar:
     post: [toc, repo_info] # for pages using 'layout:post'
     wiki: [toc, repo_info, wiki_more] # for pages using 'layout:wiki'
   widgets:
-    # default layout in home/wiki/categories/tags/archives pages
-    # default_layout: [welcome]
     # Recent update
     recent:
       layout: recent
