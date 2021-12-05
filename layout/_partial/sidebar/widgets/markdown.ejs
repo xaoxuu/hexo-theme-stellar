@@ -9,7 +9,7 @@ function layoutDiv() {
       el += '<span class="name">' + item.title + '</span>';
     el += '</div>';
     el += '<div class="widget-body fs14">';
-      el += markdown(item.content);
+      el += markdown(item.content[0]);
     el += '</div>';
   el += '</div>';
   return el;
