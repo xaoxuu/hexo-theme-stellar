@@ -1,36 +1,6 @@
 <%
 function layoutDiv() {
   var el = '';
-  // 封面
-  if (post.cover || theme.article.auto_cover) {
-    var cover_url;
-    if (post.cover != undefined) {
-      if (post.cover.includes('/')) {
-        cover_url = post.cover;
-      } else {
-        cover_url = 'https://source.unsplash.com/1280x640/?' + post.cover;
-      }
-    } else {
-      // 自动以 tags 作为关键词搜索封面
-      if (post.tags) {
-        var params = '';
-        post.tags.reverse().forEach((tag, i) => {
-          if (i > 0) {
-            params += ',';
-          }
-          params += tag.name;
-        });
-        cover_url = 'https://source.unsplash.com/1280x640/?' + params;
-      } else {
-        cover_url = 'https://source.unsplash.com/random/1280x640';
-      }
-    }
-    if (cover_url) {
-      el += '<div class="post-cover">';
-      el += '<img src="' + cover_url + '"/>';
-      el += '</div>';
-    }
-  }
 
   // 标题
   el += '<h2 class="post-title">';
