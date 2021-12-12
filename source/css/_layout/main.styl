@@ -1,9 +1,9 @@
 .l_main
   position: relative
   padding-bottom: "calc(1 * %s)" % var(--gap-l)
-  @media screen and (min-width: 1200px)
+  @media screen and (min-width: 1280px)
     margin-left: "calc(2 * %s)" % var(--gap-l)
-    margin-right: "calc(0.75 * %s)" % var(--width-left)
+    margin-right: "calc(2 * %s + %s)" % (var(--gap-l) var(--width-left))
   @media screen and (min-width: $device-tablet)
     padding-top: "calc(2 * %s)" % var(--gap-l)
   header
