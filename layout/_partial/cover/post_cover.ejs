@@ -1,0 +1,26 @@
+<%
+function div() {
+  var el = '';
+  if (page.banner == undefined || page.banner == false) {
+    return el;
+  }
+  el += '<div class="l_cover post' + scrollreveal() + '">';
+  el += '<div class="cover">';
+  if (theme.plugins.lazyload && theme.plugins.lazyload.enable) {
+    el += '<div class="lazy img bg" data-bg="' + page.banner + '"></div>';
+  } else {
+    el += '<div class="lazy img bg" style="background-image:url(&quot;' + page.banner + '&quot;)"></div>';
+  }
+  el += '</div>';
+  if (page.title) {
+    el += '<div class="cover-wrap md">';
+    el += '<h1 class="article-title">';
+    el += page.title;
+    el += '</h1>';
+    el += '</div>';
+  }
+  el += '</div>';
+  return el;
+}
+%>
+<%- div() %>

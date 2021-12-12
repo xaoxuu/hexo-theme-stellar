@@ -6,6 +6,9 @@ if (page.header == undefined) {
   page.header = false;
 }
 function layoutTitle() {
+  if (page.layout == 'post' && page.banner && page.title) {
+    return '';
+  }
   const title = page.h1 || page.title;
   if (title && title.length > 0) {
     return '<h1 class="article-title"><span>' + title + '</span></h1>';

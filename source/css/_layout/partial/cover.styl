@@ -5,9 +5,45 @@
   flex-direction: column
   justify-content: center
   align-items: center
+  position: relative
+  &.post
+    height: inherit
+
 
 .l_cover .cover-wrap
   margin-bottom: 0
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  .cover-title
+    font-weight: 700
+    font-size: 1.5rem
+    margin: 1rem 0
+    line-height: 1.2
+  .description
+    margin: 1rem 0
+  .start-wrap
+    margin: 2rem 0
+    flex-shrink: 0
+    a.start
+      display: inline-block
+
+.l_cover.post
+  .cover
+    width: 100%
+    height: 35vh
+    z-index: -1
+
+.l_cover.post .cover-wrap
+  z-index: 1
+  .article-title
+    text-align: center
+    padding: 1rem
+    margin: 1em 0
+
+
+.l_cover.wiki .cover-wrap
   max-width: $device-mobile
   .preview
     margin-bottom: 2rem
@@ -18,15 +54,5 @@
       @media screen and (max-width: $device-mobile)
         max-width: 60%
   .cover-title
-    font-weight: 700
-    font-size: 1.5rem
-    margin: 1rem 0
     &:first-child
       font-size: 3rem
-  .description
-    margin: 1rem 0
-  .start-wrap
-    margin: 2rem 0
-    flex-shrink: 0
-    a.start
-      display: inline-block

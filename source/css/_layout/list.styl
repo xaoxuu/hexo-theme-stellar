@@ -11,10 +11,12 @@
   trans1 box-shadow
   overflow: hidden
   background: var(--card)
+  position: relative
   .excerpt
     margin: 1rem 0
     >p
       margin: 1rem 0
+      line-height: 1.5
   .meta.cap
     display: flex
     flex-wrap: wrap
@@ -28,7 +30,7 @@
         object-fit: contain
         height: 1.5em
 .post-list .post-card:hover
-  box-shadow: 0 1px 4px 0px rgba(0, 0, 0, 0.08), 0 2px 8px 0px rgba(0, 0, 0, 0.06), 0 4px 16px 0px rgba(0, 0, 0, 0.04)
+  box-shadow: 0 1px 4px 0px rgba(0, 0, 0, 0.1), 0 4px 16px 0px rgba(0, 0, 0, 0.1)
 
 
 // common article
@@ -39,38 +41,31 @@
 .post-list .post-card
   .post-cover
     overflow: hidden
-    margin-left: -1rem
-    margin-top: -1rem
-    margin-right: -1rem
+    position: absolute
+    width: 100%
+    border-radius: 0
+    &:not(.lazy)
+      trans1: transform 1s
+
+.post-list .post-card.post.photo
+  .cover
+    position: relative
+    line-height: 0
     img
-      object-fit: cover
       width: 100%
-      border-radius: 0
-      height: 280px
-      @media screen and (max-width: 900px)
-        height: 240px
-      @media screen and (max-width: $device-tablet)
-        height: 280px
-      @media screen and (max-width: $device-mobile)
-        height: 240px
-      @media screen and (max-width: $device-mobile-425)
-        height: 220px
-      @media screen and (max-width: $device-mobile-375)
-        height: 180px
-      &:not(.lazy)
-        trans1: transform 1s
-.post-list .post-card.post.photo .post-cover img
-  height: 400px
-  @media screen and (max-width: 900px)
-    height: 320px
-  @media screen and (max-width: $device-tablet)
-    height: 400px
-  @media screen and (max-width: $device-mobile)
-    height: 320px
-  @media screen and (max-width: $device-mobile-425)
-    height: 280px
-  @media screen and (max-width: $device-mobile-375)
-    height: 240px
+    .meta
+      margin: 0 1rem
+      position: absolute
+      line-height: 1
+      bottom: 1rem
+      width: 'calc(100% - %s * 2)' % 1rem
+      justify-content: flex-end
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2)
+      .cap
+        color: white
+  h2
+    margin: .25rem 0
+    font-size: $fs-h4
 
 
 // wiki

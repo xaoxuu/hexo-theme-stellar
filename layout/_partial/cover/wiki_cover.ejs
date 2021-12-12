@@ -1,9 +1,6 @@
 <%
 function layoutWikiCover() {
   var el = '';
-  if (page.layout !== 'wiki') {
-    return el;
-  }
   let proj = theme.wiki.projects[page.wiki];
   if (proj == undefined) {
     return el;
@@ -21,7 +18,7 @@ function layoutWikiCover() {
   if (cover === true) {
     cover = ['logo', 'title', 'description'];
   }
-  el += '<div class="l_cover' + scrollreveal() + '">';
+  el += '<div class="l_cover wiki' + scrollreveal() + '">';
   el += '<article class="cover-wrap md">';
 
   if (logo && logo.src && cover.includes('logo')) {

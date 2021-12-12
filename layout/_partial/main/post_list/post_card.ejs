@@ -1,7 +1,7 @@
 <%
-function layoutDiv() {
+function div_default() {
   var el = '';
-
+  el += '<article class="md">';
   // 标题
   el += '<h2 class="post-title">';
   el += (post.title || post.seo_title) ? (post.title || post.seo_title) : date(post.date, config.date_format);
@@ -43,12 +43,36 @@ function layoutDiv() {
       }
     }
   }
+  el += '</div>';
   if (post.pin) {
     el += '<span class="pin"><img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/badge/3279dd441df8b.svg"/></span>';
   }
-  el += '<div>';
-
+  el += '</article>';
   return el;
 }
+function div_photo() {
+  var el = '';
+  el += '<div class="cover">';
+  el += '<img src="' + post.cover + '"/>';
+  el += '<div class="meta cap">';
+  el += '<span class="cap" id="post-meta">';
+  el += __("meta.created") + '&nbsp;' + '<time datetime="' + date_xml(post.date) + '">' + date(post.date, config.date_format) + '</time>';
+  el += '</span>';
+  el += '</div>';
+  el += '</div>';
+
+  el += '<article class="md">';
+  el += '<h2 class="post-title">';
+  el += post.title;
+  el += '</h2>';
+  el += '</article>';
+  return el;
+}
+function div() {
+  if (post.cover && post.cover.length > 0) {
+    return div_photo();
+  }
+  return div_default();
+}
 %>
-<%- layoutDiv() %>
+<%- div() %>

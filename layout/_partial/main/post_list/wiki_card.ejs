@@ -1,6 +1,7 @@
 <%
 function layoutDiv() {
   var el = '';
+  el += '<article class="md">';
   if (proj.logo && proj.logo.src) {
     el += '<div class="preview">';
     el += '<img src="' + proj.logo.src + '" alt="logo"';
@@ -20,6 +21,7 @@ function layoutDiv() {
     el += '<p>' + proj.description + '</p>';
   }
   el += '</div>';
+  el += '</article>';
   return el;
 }
 %>

@@ -1,0 +1,12 @@
+<%
+function layoutCover() {
+  if (page.layout == 'wiki') {
+    return partial('wiki_cover');
+  }
+  if (page.layout == 'post') {
+    return partial('post_cover');
+  }
+  return '';
+}
+%>
+<%- layoutCover() %>
