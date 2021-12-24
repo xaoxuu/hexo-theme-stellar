@@ -22,6 +22,7 @@
     flex-wrap: wrap
     align-items: center
     margin: .5rem 0
+    line-height: 1.5
     span+span
       margin-left: 0.5rem
     span.pin
@@ -34,18 +35,37 @@
 
 
 // common article
-.post-list article
+.post-list article.md
   padding: 1rem
+  p
+    font-size: $fs-14
+    color: var(--text-p2)
 
 // posts
-.post-list .post-card
-  .post-cover
-    overflow: hidden
-    position: absolute
+.post-list .post-card .post-cover
+  overflow: hidden
+  width: 'calc(100% + 2 * %s)' % 1rem
+  border-radius: 0
+  margin-left: -1rem
+  margin-top: -1rem
+  margin-right: -1rem
+  &:not(.lazy)
+    trans1: transform 1s
+  img
+    object-fit: cover
     width: 100%
     border-radius: 0
-    &:not(.lazy)
-      trans1: transform 1s
+    height: 280px
+    @media screen and (max-width: 900px)
+      height: 240px
+    @media screen and (max-width: $device-tablet)
+      height: 280px
+    @media screen and (max-width: $device-mobile)
+      height: 240px
+    @media screen and (max-width: $device-mobile-425)
+      height: 220px
+    @media screen and (max-width: $device-mobile-375)
+      height: 180px
 
 .post-list .post-card.post.photo
   .cover
@@ -53,16 +73,25 @@
     line-height: 0
     img
       width: 100%
-    .meta
-      margin: 0 1rem
+    .cover-info
+      padding: 1rem
       position: absolute
-      line-height: 1
-      bottom: 1rem
+      line-height: 1.2
       width: 'calc(100% - %s * 2)' % 1rem
-      justify-content: flex-end
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2)
+      color: white
+      &[position=top]
+        top: 0
+        background-image: linear-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.2),rgba(0,0,0,0))
+      &[position=bottom]
+        bottom: 0
+        background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0.2),rgba(0,0,0,0.25))
       .cap
         color: white
+      .title
+        font-weight: 500
+        font-size: $fs-h3
+        margin: 4px 0
   h2
     margin: .25rem 0
     font-size: $fs-h4

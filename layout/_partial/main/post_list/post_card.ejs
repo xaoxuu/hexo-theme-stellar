@@ -2,6 +2,38 @@
 function div_default() {
   var el = '';
   el += '<article class="md">';
+
+  // 封面
+  if (post.cover || theme.article.auto_cover) {
+    var cover_url;
+    if (post.cover != undefined) {
+      if (post.cover.includes('/')) {
+        cover_url = post.cover;
+      } else {
+        cover_url = 'https://source.unsplash.com/1280x640/?' + post.cover;
+      }
+    } else {
+      // 自动以 tags 作为关键词搜索封面
+      if (post.tags) {
+        var params = '';
+        post.tags.reverse().forEach((tag, i) => {
+          if (i > 0) {
+            params += ',';
+          }
+          params += tag.name;
+        });
+        cover_url = 'https://source.unsplash.com/1280x640/?' + params;
+      } else {
+        cover_url = 'https://source.unsplash.com/random/1280x640';
+      }
+    }
+    if (cover_url) {
+      el += '<div class="post-cover">';
+      el += '<img src="' + cover_url + '"/>';
+      el += '</div>';
+    }
+  }
+
   // 标题
   el += '<h2 class="post-title">';
   el += (post.title || post.seo_title) ? (post.title || post.seo_title) : date(post.date, config.date_format);
@@ -43,10 +75,10 @@ function div_default() {
       }
     }
   }
-  el += '</div>';
   if (post.pin) {
     el += '<span class="pin"><img src="https://cdn.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/badge/3279dd441df8b.svg"/></span>';
   }
+  el += '</div>';
   el += '</article>';
   return el;
 }
@@ -54,22 +86,30 @@ function div_photo() {
   var el = '';
   el += '<div class="cover">';
   el += '<img src="' + post.cover + '"/>';
-  el += '<div class="meta cap">';
-  el += '<span class="cap" id="post-meta">';
-  el += __("meta.created") + '&nbsp;' + '<time datetime="' + date_xml(post.date) + '">' + date(post.date, config.date_format) + '</time>';
-  el += '</span>';
-  el += '</div>';
-  el += '</div>';
+  if (post.cover_info) {
+    el += '<div class="cover-info"';
+    if (post.cover_info.meta) {
+      el += 'position="top">';
+    } else {
+      el += 'position="bottom">';
+    }
+    if (post.cover_info.meta) {
+      el += '<div class="cap">' + post.cover_info.meta + '</div>';
+    }
+    if (post.cover_info.title) {
+      el += '<div class="title">' + post.cover_info.title + '</div>';
+    }
+    if (post.cover_info.subtitle) {
+      el += '<div class="cap">' + post.cover_info.subtitle + '</div>';
+    }
+    el += '</div>';
 
-  el += '<article class="md">';
-  el += '<h2 class="post-title">';
-  el += post.title;
-  el += '</h2>';
-  el += '</article>';
+  }
+  el += '</div>';
   return el;
 }
 function div() {
-  if (post.cover && post.cover.length > 0) {
+  if (post.cover && post.cover.length > 0 && post.cover_info != undefined) {
     return div_photo();
   }
   return div_default();
