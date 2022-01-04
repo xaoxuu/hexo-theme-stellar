@@ -38,8 +38,10 @@
 .post-list article.md
   padding: 1rem
   p
-    font-size: $fs-14
     color: var(--text-p2)
+    @media screen and (min-width: $device-mobile)
+      font-size: $fs-14
+
 
 // posts
 .post-list .post-card .post-cover
@@ -82,16 +84,20 @@
       color: white
       &[position=top]
         top: 0
-        background-image: linear-gradient(rgba(0,0,0,0.25),rgba(0,0,0,0.2),rgba(0,0,0,0))
+        background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.3),rgba(0,0,0,0))
       &[position=bottom]
         bottom: 0
-        background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0.2),rgba(0,0,0,0.25))
+        background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0.3),rgba(0,0,0,0.4))
+      div+div
+        margin-top: 8px
+        @media screen and (max-width: $device-mobile)
+          margin-top: 4px
       .cap
         color: white
+        font-size: $fs-13
       .title
         font-weight: 500
         font-size: $fs-h3
-        margin: 4px 0
   h2
     margin: .25rem 0
     font-size: $fs-h4

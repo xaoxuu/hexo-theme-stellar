@@ -6,9 +6,6 @@ if (page.header == undefined) {
   page.header = false;
 }
 function layoutTitle() {
-  if (page.layout == 'post' && page.banner && page.title) {
-    return '';
-  }
   const title = page.h1 || page.title;
   if (title && title.length > 0) {
     return '<h1 class="article-title"><span>' + title + '</span></h1>';
@@ -19,7 +16,7 @@ function layoutTitle() {
 %>
 <% let post = page; %>
 <%- partial('_partial/main/navbar/breadcrumb') %>
-<article class='content md <%- post.layout %><%- scrollreveal() %>'>
+<article class='content md <%- post.layout %><%- post.indent ? ' indent' : '' %><%- scrollreveal() %>'>
 <%- layoutTitle() %>
 <%- post.content %>
 <%- partial('_partial/main/article/article_footer') %>

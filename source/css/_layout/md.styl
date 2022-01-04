@@ -19,8 +19,15 @@ h1.article-title
 article.md.content
   position: relative
   margin-bottom: 2rem
+  display: flex
+  flex-direction: column
+  &.indent
+    >p:not([class])
+      text-indent: 'calc(%s * 2)' % $fs-p
+    h1,h2,h3,h4,h5,h6
+      text-align: center
   >:first-child
-    margin-top: 0
+    margin-top: 1rem
   h1:not(:first-child)
     margin-top: 2em
   h2:first-child
@@ -28,11 +35,13 @@ article.md.content
   h2,h3,h4,h5,h6
     color: var(--text-p0)
     padding-top: 1rem
-    margin-bottom: 1em
+    margin-bottom: .5rem
     line-height: 1.8
     &:hover
       a.headerlink:before
         opacity: 1
+
+
 
 .md
   ul:not(:last-child),
@@ -46,9 +55,13 @@ article.md.content
   p,blockquote,.tag-plugin,ul,ol,.highlight,table
     *
       --gap-p: .5rem
-  p,.tag-plugin
+  p,>ul:not(:last-child),>ol:not(:last-child)
+    margin-top: 'calc(%s - 4px)' % var(--gap-p)
+    margin-bottom: 'calc(%s - 4px)' % var(--gap-p)
+  .tag-plugin
     margin-top: var(--gap-p)
     margin-bottom: var(--gap-p)
+  p,.tag-plugin
     .highlight,table
       --gap-p: 1rem
 
@@ -60,7 +73,7 @@ article.md.content
     position: absolute
     margin-left: -0.75em
   h2
-    margin-top: 3rem
+    margin-top: 2rem
     border-bottom: 1px solid var(--block-border)
     font-weight: 400
   h3

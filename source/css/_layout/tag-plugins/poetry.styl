@@ -1,0 +1,50 @@
+.md .tag-plugin.poetry
+  align-self: center
+  &[align=center]
+    align-items: center
+  >.title
+    font-weight: 500
+    font-size: 1rem
+    margin-top: var(--gap-p)
+  >.meta
+    color: var(--text-p2)
+    font-size: $fs-12
+    font-weight: 500
+    span+span
+      margin-left: 4px
+  >.body
+    margin: var(--gap-p) 0
+    border-top: 1px dashed var(--block-border)
+    border-bottom: 1px dashed var(--block-border)
+    p
+      font-size: $fs-14
+  >.footer
+    font-style: italic
+    color: var(--text-p4)
+    margin: var(--gap-p) 0
+    font-size: $fs-12
+
+// 描边修饰
+.md .tag-plugin.poetry
+  padding-left: 1rem
+  position: relative
+  &:before
+    content: ''
+    position: absolute
+    width: 4px
+    left: -4px
+    top: 4px
+    bottom: 4px
+    border-radius: 4px
+    background: var(--block)
+  >.title
+    position: relative
+    &:before
+      content: ''
+      position: absolute
+      width: 4px
+      left: calc(-1rem - 4px)
+      top: 6px
+      bottom: 6px
+      border-radius: 4px
+      background: $color-highlight

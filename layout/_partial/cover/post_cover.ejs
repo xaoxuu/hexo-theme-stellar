@@ -12,13 +12,6 @@ function div() {
     el += '<div class="lazy img bg" style="background-image:url(&quot;' + page.banner + '&quot;)"></div>';
   }
   el += '</div>';
-  if (page.title) {
-    el += '<div class="cover-wrap md">';
-    el += '<h1 class="article-title">';
-    el += page.title;
-    el += '</h1>';
-    el += '</div>';
-  }
   el += '</div>';
   return el;
 }
