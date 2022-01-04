@@ -24,8 +24,11 @@ article.md.content
   &.indent
     >p:not([class])
       text-indent: 'calc(%s * 2)' % $fs-p
+      text-align: justify
     h1,h2,h3,h4,h5,h6
       text-align: center
+    >h2:not([class])
+      border-bottom-style: dashed
   >:first-child
     margin-top: 1rem
   h1:not(:first-child)
