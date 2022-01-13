@@ -28,7 +28,9 @@ article.md.content
     h1,h2,h3,h4,h5,h6
       text-align: center
     >h2:not([class])
+      align-self: center
       border-bottom-style: dashed
+      border-bottom-color: $color-highlight
   >:first-child
     margin-top: 1rem
   h1:not(:first-child)
@@ -61,7 +63,7 @@ article.md.content
   p,>ul:not(:last-child),>ol:not(:last-child)
     margin-top: 'calc(%s - 4px)' % var(--gap-p)
     margin-bottom: 'calc(%s - 4px)' % var(--gap-p)
-  .tag-plugin
+  .tag-plugin,iframe
     margin-top: var(--gap-p)
     margin-bottom: var(--gap-p)
   p,.tag-plugin
@@ -109,6 +111,10 @@ article.md p
 article.md pre
   -webkit-font-smoothing: auto
   -moz-osx-font-smoothing: auto
+
+article.md
+  .center
+    align-self: center
 
 // div
 article.md>div

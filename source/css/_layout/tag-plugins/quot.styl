@@ -1,11 +1,12 @@
 .md .tag-plugin.quot
   text-align: center
-  font-weight: 700
   position: relative
+  align-items: center
+.md .tag-plugin.quot:not(span)
   display: flex
   align-self: center
-  align-items: center
   border-bottom: none
+  font-weight: 700
   &:first-child
     margin-top: 1.5rem
   a.headerlink:before
@@ -17,7 +18,7 @@
 
 // override
 article.md.content
-  .quot
+  .quot:not(span)
     color: var(--text-p0)
   h1.quot
     font-size: $fs-h1
@@ -31,7 +32,7 @@ article.md.content
     font-size: $fs-h4
 
 // type=text
-.md .tag-plugin.quot[type=text]
+.md .tag-plugin.quot[type=text]:not(span)
   &:before,&:after
     content: ""
     position: absolute
@@ -54,7 +55,7 @@ article.md.content h1.quot[type=text]
     border-width: 8px
 
 // type=icon
-.md .tag-plugin.quot[type=icon]
+.md .tag-plugin.quot[type=icon]:not(span)
   .icon
     height: 1.5em
     display: inline-block
@@ -64,3 +65,18 @@ article.md.content h1.quot[type=text]
       margin-right: .5rem
     &.suffix
       margin-left: .5rem
+
+// inline quot
+.md span.tag-plugin.quot
+  font-weight: 500
+  &:before,&:after
+    color: $color-highlight
+    font-weight: 900
+  &:before
+    content: "「"
+    margin-left: -0.125em
+    margin-right: 0.125em
+  &:after
+    content: "」"
+    margin-left: 0.125em
+    margin-right: -0.125em
