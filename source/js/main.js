@@ -59,16 +59,16 @@ const util = {
 
 const hud = {
   toast: (msg, duration) => {
-    duration=isNaN(duration)?2000:duration;
+    duration = isNaN(duration) ? 2000 : duration;
     var el = document.createElement('div');
     el.classList.add('toast');
     el.innerHTML = msg;
     document.body.appendChild(el);
-    setTimeout(function() {
+    setTimeout(function () {
       var d = 0.5;
       el.style.webkitTransition = '-webkit-transform ' + d + 's ease-in, opacity ' + d + 's ease-in';
       el.style.opacity = '0';
-      setTimeout(function() { document.body.removeChild(el) }, d * 1000);
+      setTimeout(function () { document.body.removeChild(el) }, d * 1000);
     }, duration);
   },
 
@@ -96,7 +96,7 @@ const init = {
         segs.push(node)
       });
       // 滚动
-      $(document, window).scroll(function(e) {
+      $(document, window).scroll(function (e) {
         var scrollTop = $(this).scrollTop();
         var topSeg = null
         for (var idx in segs) {
@@ -124,7 +124,7 @@ const init = {
   },
   sidebar: () => {
     stellar.jQuery(() => {
-      $("#toc a.toc-link").click(function(e) {
+      $("#toc a.toc-link").click(function (e) {
         l_body.classList.remove("sidebar");
       });
     })
@@ -142,7 +142,7 @@ const init = {
   /**
    * Tabs tag listener (without twitter bootstrap).
    */
-  registerTabsTag: function() {
+  registerTabsTag: function () {
     // Binding `nav-tabs` & `tab-content` by real time permalink changing.
     document.querySelectorAll('.tabs ul.nav-tabs .tab').forEach(element => {
       element.addEventListener('click', event => {
@@ -192,7 +192,7 @@ if (stellar.plugins.scrollreveal) {
 
 // lazyload
 if (stellar.plugins.lazyload) {
-  stellar.loadScript(stellar.plugins.lazyload.js, {defer:true})
+  stellar.loadScript(stellar.plugins.lazyload.js, { defer: true })
   // https://www.npmjs.com/package/vanilla-lazyload
   // Set the options globally
   // to make LazyLoad self-initialize
@@ -217,16 +217,16 @@ if (stellar.plugins.lazyload) {
 if (stellar.plugins.sitesjs) {
   const issues_api = document.getElementById('sites-api');
   if (issues_api != undefined) {
-    stellar.jQuery( () => {
-      stellar.loadScript(stellar.plugins.sitesjs, {defer:true})
+    stellar.jQuery(() => {
+      stellar.loadScript(stellar.plugins.sitesjs, { defer: true })
     })
   }
 }
 if (stellar.plugins.friendsjs) {
   const issues_api = document.getElementById('friends-api');
   if (issues_api != undefined) {
-    stellar.jQuery( () => {
-      stellar.loadScript(stellar.plugins.friendsjs, {defer:true})
+    stellar.jQuery(() => {
+      stellar.loadScript(stellar.plugins.friendsjs, { defer: true })
     })
   }
 }
@@ -236,7 +236,7 @@ if (stellar.plugins.swiper) {
   const swiper_api = document.getElementById('swiper-api');
   if (swiper_api != undefined) {
     stellar.loadCSS(stellar.plugins.swiper.css);
-    stellar.loadScript(stellar.plugins.swiper.js, {defer:true}).then(function () {
+    stellar.loadScript(stellar.plugins.swiper.js, { defer: true }).then(function () {
       var swiper = new Swiper('.swiper-container', {
         slidesPerView: 'auto',
         spaceBetween: 8,
@@ -270,6 +270,31 @@ if (stellar.plugins.preload) {
       maxRPS: 5,
       hoverDelay: 25
     };
-    stellar.loadScript(stellar.plugins.preload.flying_pages, {defer:true})
+    stellar.loadScript(stellar.plugins.preload.flying_pages, { defer: true })
+  }
+}
+
+// fancybox
+if (stellar.plugins.fancybox) {
+  let selector = 'article .tag-plugin.image img';
+
+  if (stellar.plugins.fancybox.comment.enable) {
+    selector += `, ${stellar.plugins.fancybox.comment.selector}`
+  }
+
+  if (document.querySelectorAll(selector).length !== 0) {
+    stellar.loadCSS(stellar.plugins.fancybox.css);
+    stellar.loadScript(stellar.plugins.fancybox.js, { defer: true }).then(function () {
+      Fancybox.bind(selector, {
+        groupAll: true,
+        hideScrollbar: false,
+        Thumbs: {
+          autoStart: false,
+        },
+        caption: function (fancybox, carousel, slide) {
+          return slide.$trigger.alt || null
+        }
+      });
+    })
   }
 }
