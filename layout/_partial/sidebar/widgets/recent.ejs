@@ -27,29 +27,21 @@ function layoutDiv() {
   }
   el += '<div class="widget-body fs14">';
   arr.sort("updated", -1).limit(item.limit).each(function(post) {
-    el += '<div class="line"></div>'
-    el += '<a class="more-item" href="' + url_for(post.link || post.path) + '">';
-    el += '<div class="cap">';
-    el += '<time>' + date(post.updated, config.date_format) + '</time>';
+    el += '<div class="more-item">';
+    el += '<a class="title" href="' + url_for(post.link || post.path) + '">';
     if (post.layout == 'wiki') {
       el += '<span>';
       let proj = theme.wiki.projects[post.wiki];
       if (proj && proj.title) {
-        el += proj.title;
+        el += proj.title + __('symbol.colon');
       } else if (post.wiki) {
-        el += post.wiki;
+        el += post.wiki + __('symbol.colon');
       }
       el += '</span>';
-    } else {
-      post.categories.limit(1).forEach((cat, i) => {
-        el += '<span>' + cat.name + '</span>';
-      });
     }
-    el += '</div>';
-    el += '<span class="title">';
     el += post.title || post.seo_title || post.wiki;
-    el += '</span>';
     el += '</a>';
+    el += '</div>';
     el += '';
   });
   el += '</div>';
