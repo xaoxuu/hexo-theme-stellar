@@ -276,12 +276,10 @@ if (stellar.plugins.preload) {
 
 // fancybox
 if (stellar.plugins.fancybox) {
-  let selector = 'article .tag-plugin.image img';
-
-  if (stellar.plugins.fancybox.comment.enable) {
-    selector += `, ${stellar.plugins.fancybox.comment.selector}`
+  let selector = 'img[fancybox]:not(.error)';
+  if (stellar.plugins.fancybox.selector) {
+    selector += `, ${stellar.plugins.fancybox.selector}`
   }
-
   if (document.querySelectorAll(selector).length !== 0) {
     stellar.loadCSS(stellar.plugins.fancybox.css);
     stellar.loadScript(stellar.plugins.fancybox.js, { defer: true }).then(function () {

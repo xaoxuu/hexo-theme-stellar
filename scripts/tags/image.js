@@ -8,7 +8,7 @@
 'use strict';
 
 hexo.extend.tag.register('image', function(args) {
-  args = hexo.args.map(args, ['width', 'height', 'bg', 'download', 'padding'], ['src', 'alt']);
+  args = hexo.args.map(args, ['width', 'height', 'bg', 'download', 'padding', 'fancybox'], ['src', 'alt']);
   var style = '';
   if (args.width) {
     style += 'width:' + args.width + ';';
@@ -16,11 +16,31 @@ hexo.extend.tag.register('image', function(args) {
   if (args.height) {
     style += 'height:' + args.height + ';';
   }
+  // fancybox
+  var fancybox = false;
+  if (hexo.theme.config.plugins.fancybox && hexo.theme.config.plugins.fancybox.enable) {
+    // 主题配置
+    if (hexo.theme.config.tag_plugins.image && hexo.theme.config.tag_plugins.image.fancybox) {
+      fancybox = hexo.theme.config.tag_plugins.image.fancybox;
+    }
+    // 覆盖配置
+    if (args.fancybox && args.fancybox.length > 0) {
+      if (args.fancybox == 'true') {
+        fancybox = true;
+      } else if (args.fancybox == 'false') {
+        fancybox = false;
+      }
+    }
+  }
+
   function img(src, alt, style) {
     let img = '';
     img += '<img src="' + src + '"';
     if (alt) {
       img += ' alt="' + alt + '"';
+    }
+    if (fancybox) {
+      img += ' fancybox="true"';
     }
     if (style.length > 0) {
       img += ' style="' + style + '"';
