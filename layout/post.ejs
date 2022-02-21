@@ -12,7 +12,8 @@ function layoutTitle() {
       '<span style="font-size: 13px; color: grey;">' + 
         '本站字数：' + totalcount(site) + '&nbsp;&nbsp;&nbsp;&nbsp;' + 
         '本文字数：' + wordcount(post.content) + '&nbsp;&nbsp;&nbsp;&nbsp;' + 
-        '预计阅读时长：' + min2read(post.content) + 'min' + 
+        '预计阅读时长：' + min2read(post.content) + 'min' + '&nbsp;&nbsp;&nbsp;&nbsp;' + 
+        '访问次数：' + '<span id="busuanzi_value_page_pv"></span>' + '次' +
       '</span>';
   } else {
     return '';
@@ -21,6 +22,7 @@ function layoutTitle() {
 %>
 <% let post = page; %>
 <%- partial('_partial/main/navbar/breadcrumb') %>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <article class='content md <%- post.layout %><%- post.indent ? ' indent' : '' %><%- scrollreveal() %>'>
 <%- layoutTitle() %>
 <%- post.content %>
