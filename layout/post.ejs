@@ -8,7 +8,12 @@ if (page.header == undefined) {
 function layoutTitle() {
   const title = page.h1 || page.title;
   if (title && title.length > 0) {
-    return '<h1 class="article-title"><span>' + title + '</span></h1>';
+    return '<h1 class="article-title"><span>' + title + '</span></h1>' + 
+      '<span style="font-size: 13px; color: grey;">' + 
+        '本站字数：' + totalcount(site) + '&nbsp;&nbsp;&nbsp;&nbsp;' + 
+        '本文字数：' + wordcount(post.content) + '&nbsp;&nbsp;&nbsp;&nbsp;' + 
+        '预计阅读时长：' + min2read(post.content) + 'min' + 
+      '</span>';
   } else {
     return '';
   }
