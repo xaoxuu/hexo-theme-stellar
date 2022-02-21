@@ -164,7 +164,9 @@ nav.menu
       background: var(--site-bg)
       padding-top: 2px
       z-index 1
-      line-height: 2.4
+      line-height: 2
+      color: var(--text-p4)
+      font-size: $fs-14
       &:empty
         display: none
       .cap-action
@@ -190,7 +192,21 @@ nav.menu
           text-decoration: underline
     .widget-header+.widget-body
       margin-top: 0
-  .widget-wrap#recent .widget-body, .widget-wrap#related .widget-body
+
+  .widget-wrap .widget-body
+    .more-item
+      margin: .5rem 0
+      .cap
+        margin-bottom: .25rem
+  .widget-wrap#recent .widget-body
+    a
+      line-height: 1.2
+      font-weight: 500
+      color: var(--text-p2)
+      font-size: $fs-13
+      &:hover
+        color: $color-hover
+  .widget-wrap#related .widget-body
     >a
       padding 0.5rem
       display: block
