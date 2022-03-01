@@ -6,6 +6,10 @@ stellar:
   cdn_css: # Use cdn links instead of /css/main.css
   cdn_js: # Use cdn links instead of /js/main.js
 
+######## 赫蹏 (Heti) - 专为中文网页内容设计的排版样式增强 ########
+heti: false  # 启用之后将会在内文和卡片摘要使用 Heti 排版增强
+             # 效果详情见 https://sivan.github.io/heti/
+
 
 ######## head tags ########
 open_graph:
