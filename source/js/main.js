@@ -296,3 +296,13 @@ if (stellar.plugins.fancybox) {
     })
   }
 }
+
+// heti
+if (stellar.plugins.heti) {
+  stellar.loadCSS(stellar.plugins.heti.css);
+  stellar.loadScript(stellar.plugins.heti.js, { defer: true }).then(function () {
+    const heti = new Heti('.heti p');
+    heti.autoSpacing();
+    stellar.plugins.heti.enable = false;
+  });
+}
