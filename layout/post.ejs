@@ -16,7 +16,7 @@ function layoutTitle() {
 %>
 <% let post = page; %>
 <%- partial('_partial/main/navbar/breadcrumb') %>
-<article class='content md <%- post.layout %><%- post.indent ? ' indent' : '' %><%- scrollreveal() %>'>
+<article class='content heti md <%- post.layout %><%- post.indent ? ' indent' : '' %><%- scrollreveal() %>'>
 <%- layoutTitle() %>
 <%- post.content %>
 <%- partial('_partial/main/article/article_footer') %>

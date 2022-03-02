@@ -51,6 +51,7 @@ function og_args() {
   <meta http-equiv='x-dns-prefetch-control' content='on' />
   <link rel='dns-prefetch' href='https://cdn.jsdelivr.net'>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='//unpkg.com'>
 
   <meta name="renderer" content="webkit">
   <meta name="force-rendering" content="webkit">
@@ -60,6 +61,15 @@ function og_args() {
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" content="#f8f8f8">
   <title><%- generate_title() %></title>
+
+  <% if (theme.heti) { %>
+    <link rel="stylesheet" href="//unpkg.com/heti/umd/heti.min.css">
+    <script src="//unpkg.com/heti/umd/heti-addon.min.js"></script>
+    <script defer>
+      const heti = new Heti('.heti');
+      heti.autoSpacing(); // 自动进行中西文混排美化和标点挤压
+    </script>
+  <% } %>
 
   <% if (theme.open_graph && theme.open_graph.enable) { %>
     <%- open_graph(og_args()) %>
