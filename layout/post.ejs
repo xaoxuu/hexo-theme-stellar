@@ -19,11 +19,15 @@ function layoutTitle() {
     return '';
   }
 }
+let post = page;
+let heti = '';
+if (theme.plugins.heti && theme.plugins.heti.enable) {
+  heti = ' heti';
+}
 %>
-<% let post = page; %>
 <%- partial('_partial/main/navbar/breadcrumb') %>
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<article class='content md <%- post.layout %><%- post.indent ? ' indent' : '' %><%- scrollreveal() %>'>
+<article class='content<%- heti %> md <%- post.layout %><%- post.indent ? ' indent' : '' %><%- scrollreveal() %>'>
 <%- layoutTitle() %>
 <%- post.content %>
 <%- partial('_partial/main/article/article_footer') %>

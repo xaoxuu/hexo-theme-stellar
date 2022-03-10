@@ -40,7 +40,11 @@ function div_default() {
   el += '</h2>';
 
   // 摘要
-  el += '<div class="excerpt">';
+  el += '<div class="excerpt';
+  if (theme.plugins.heti && theme.plugins.heti.enable) {
+    el += ' heti';
+  }
+  el += '">';
   el += '<p>';
   if (post.excerpt) {
     el += strip_html(post.excerpt);
