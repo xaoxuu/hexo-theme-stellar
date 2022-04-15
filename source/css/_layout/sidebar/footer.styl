@@ -13,6 +13,9 @@
     padding: 6px
     border-radius: 4px
     filter: grayscale(100%)
+    if hexo-config('style.darkmode') == 'auto'
+      @media (prefers-color-scheme: dark)
+        filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
     overflow: hidden
     background: transparent
     trans3: box-shadow background transform
