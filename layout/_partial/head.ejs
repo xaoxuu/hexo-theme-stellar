@@ -62,6 +62,10 @@ function og_args() {
   <meta name="theme-color" content="#f8f8f8">
   <title><%- generate_title() %></title>
 
+  <% if(theme.mathjax) {%>
+    <%- partial('mathjax')%>
+  <% } %>
+
   <% if (theme.heti) { %>
     <link rel="stylesheet" href="//unpkg.com/heti/umd/heti.min.css">
     <script src="//unpkg.com/heti/umd/heti-addon.min.js"></script>
