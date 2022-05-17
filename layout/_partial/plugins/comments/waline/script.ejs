@@ -1,0 +1,20 @@
+<script>
+
+  function load_comment(){
+    if(!document.getElementById("waline"))return;
+    stellar.loadCSS('<%- theme.comments.waline.css %>');
+    stellar.loadScript('<%- theme.comments.waline.js %>', {defer:true}).then(function () {
+      var path = decodeURI(window.location.pathname);
+      Waline.init({
+        el: '#waline',
+        serverURL: '<%- theme.comments.waline.serverURL %>',
+        path: path
+      });
+    });
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    console.log('DOM fully loaded and parsed');
+    load_comment();
+  });
+
+</script>
