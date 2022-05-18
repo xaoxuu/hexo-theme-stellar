@@ -87,7 +87,7 @@ article:
 
 ######## Comments ########
 comments:
-  service: # beaudar, utterances, valine, twikoo
+  service: # beaudar, utterances, valine, twikoo, waline
   # beaudar
   # https://beaudar.lipk.org/
   beaudar:
@@ -136,6 +136,52 @@ comments:
   twikoo:
     js: https://cdn.jsdelivr.net/npm/twikoo@1.4.0/dist/twikoo.all.min.js # 建议锁定版本
     envId: https://xxx # vercel函数
+  waline:
+    js: https://unpkg.com/@waline/client@v2/dist/waline.js
+    css: https://unpkg.com/@waline/client@v2/dist/waline.css
+    # Waline server address url, you should set this to your own link
+    serverURL: 
+
+    # If false, comment count will only be displayed in post page, not in home page
+    commentCount: true
+
+    # Pageviews count, Note: You should not enable both `waline.pageview` and `leancloud_visitors`.
+    pageview: false
+
+    # Custom locales
+    # locale:
+    #   placeholder: Welcome to comment # Comment box placeholder
+
+    # Custom emoji
+    # emoji:
+    #   - https://unpkg.com/@waline/emojis@1.0.1/weibo
+    #   - https://unpkg.com/@waline/emojis@1.0.1/alus
+    #   - https://unpkg.com/@waline/emojis@1.0.1/bilibili
+    #   - https://unpkg.com/@waline/emojis@1.0.1/qq
+    #   - https://unpkg.com/@waline/emojis@1.0.1/tieba
+    #   - https://unpkg.com/@waline/emojis@1.0.1/tw-emoji
+
+    # Comment infomation, valid meta are nick, mail and link
+    # meta:
+    #   - nick
+    #   - mail
+    #   - link
+
+    # Set required meta field, e.g.: [nick] | [nick, mail]
+    # requiredMeta:
+    #   - nick
+
+    # Language, available values: en-US, zh-CN, zh-TW, pt-BR, ru-RU, jp-JP
+    # lang: zh-CN
+
+    # Word limit, no limit when setting to 0
+    # wordLimit: 0
+
+    # Whether enable login, can choose from 'enable', 'disable' and 'force'
+    # login: enable
+
+    # comment per page
+    # pageSize: 10
 
 ######## Footer ########
 footer:
@@ -241,6 +287,7 @@ plugins:
     # 可以处理评论区的图片（不支持 iframe 类评论系统）例如：
     # 使用valine评论可以写: .vcontent img:not(.vemoji)
     # 使用twikoo评论可以写: .tk-content img:not([class*="emo"])
+    # 使用waline评论可以写: #waline_container .vcontent img
     selector: .swiper-slide img # 多个选择器用英文逗号隔开
 
   # swiper
