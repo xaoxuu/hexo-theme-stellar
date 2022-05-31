@@ -27,6 +27,7 @@ meta:
   created: 发布于
   updated: 更新于
   license: 许可协议
+  printpost: 打印本文
   share: 分享文章
   repo_info: 项目仓库
   date_suffix:

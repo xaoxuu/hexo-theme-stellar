@@ -27,6 +27,7 @@ meta:
   created: 'Posted on'
   updated: 'Updated on'
   license: License
+  printpost: 'Print post'
   share: Share
   repo_info: Repo Info
   date_suffix:
