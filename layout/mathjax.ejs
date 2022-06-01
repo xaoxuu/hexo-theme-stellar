@@ -1,4 +1,4 @@
-<% if (theme.mathjax.enable){ %>
+<% if (theme.plugins.mathjax.enable){ %>
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
           tex2jax: {
@@ -25,5 +25,5 @@
           });
       </script>
 
-    <script type="text/javascript" src="<%- theme.mathjax.cdn %>"></script>
+    <script type="text/javascript" src="<%- theme.plugins.mathjax.cdn %>"></script>
 <% } %>
