@@ -84,7 +84,6 @@ article:
     auto_cover: true # 如果没有封面就根据 tags 作为关键词搜索封面，开了此项将不会自动从文章中提取首张图片作为封面了。
 
 
-
 ######## Comments ########
 comments:
   service: # beaudar, utterances, valine, twikoo, waline
@@ -303,6 +302,13 @@ plugins:
     enable: false
     css: https://unpkg.com/heti/umd/heti.min.css
     js: https://unpkg.com/heti/umd/heti-addon.min.js
+    
+  # MathJax
+  # 需在Markdown文件开头加入mathjax: true
+  # 推荐使用Pandoc: npm uninstall hexo-renderer-marked --save & npm install hexo-renderer-pandoc --save
+  mathjax:
+    enable: false
+    cdn: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML
 
 
 style:

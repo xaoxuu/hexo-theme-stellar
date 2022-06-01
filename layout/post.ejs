@@ -19,6 +19,9 @@ if (theme.plugins.heti && theme.plugins.heti.enable) {
   heti = ' heti';
 }
 %>
+<% if (page.mathjax == true){ %>
+    <%- partial('mathjax') %>
+<% } %>
 <%- partial('_partial/main/navbar/breadcrumb') %>
 <article class='content<%- heti %> md <%- post.layout %><%- post.indent ? ' indent' : '' %><%- scrollreveal() %>'>
 <%- layoutTitle() %>
