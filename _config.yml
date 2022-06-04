@@ -139,7 +139,7 @@ comments:
     js: https://unpkg.com/@waline/client@v2/dist/waline.js
     css: https://unpkg.com/@waline/client@v2/dist/waline.css
     # Waline server address url, you should set this to your own link
-    serverURL: 
+    serverURL:
 
     # If false, comment count will only be displayed in post page, not in home page
     commentCount: true
@@ -215,6 +215,10 @@ footer:
   source: #'[GitHub](https://github.com/xaoxuu/hexo-theme-stellar)'
   more: # string or array (support markdown)
 
+######## Verification ########
+google_site_verification:
+bing_site_verification:
+baidu_site_verification:
 
 ######## Tag Plugins ########
 tag_plugins:

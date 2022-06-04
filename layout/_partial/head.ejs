@@ -60,6 +60,17 @@ function og_args() {
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" content="#f8f8f8">
+
+  <% if (theme.google_site_verification && theme.google_site_verification.length > 0) { %>
+    <meta name="google-site-verification" content="<%- theme.google_site_verification %>">
+  <% } %>
+  <% if (theme.bing_site_verification && theme.bing_site_verification.length > 0) { %>
+    <meta name="msvalidate.01" content="<%- theme.bing_site_verification %>">
+  <% } %>
+  <% if (theme.baidu_site_verification && theme.baidu_site_verification.length > 0) { %>
+    <meta name="baidu-site-verification" content="<%- theme.baidu_site_verification %>">
+  <% } %>
+
   <title><%- generate_title() %></title>
 
   <% if (theme.open_graph && theme.open_graph.enable) { %>
