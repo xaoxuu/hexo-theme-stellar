@@ -87,4 +87,11 @@ function og_args() {
       <%- item %>
     <% }) %>
   <% } %>
+
+  <% if (theme.baidu_analytics && theme.baidu_analytics.length> 0) { %>
+    <%- partial('plugins/analytics/baidu-analytics') %>
+  <% } %>
+  <% if (theme.google_analytics && theme.google_analytics.length> 0) { %>
+    <%- partial('plugins/analytics/google-analytics') %>
+  <% } %>
 </head>
