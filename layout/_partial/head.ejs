@@ -82,6 +82,11 @@ function og_args() {
     <%- favicon_tag(config.favicon) %>
   <% } %>
 
+  <% if (config.highlight && config.highlight.enable == true && config.highlight.hljs == true) { %>
+    <%- css(theme.style.codeblock.highlightjs_theme) %>
+  <% } %>
+
+
   <% if (config.inject && config.inject.head){ %>
     <% (config.inject.head||[]).forEach(function(item){ %>
       <%- item %>

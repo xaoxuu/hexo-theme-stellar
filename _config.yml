@@ -139,7 +139,7 @@ comments:
     js: https://unpkg.com/@waline/client@v2/dist/waline.js
     css: https://unpkg.com/@waline/client@v2/dist/waline.css
     # Waline server address url, you should set this to your own link
-    serverURL: 
+    serverURL:
 
     # If false, comment count will only be displayed in post page, not in home page
     commentCount: true
@@ -302,7 +302,7 @@ plugins:
     enable: false
     css: https://unpkg.com/heti/umd/heti.min.css
     js: https://unpkg.com/heti/umd/heti-addon.min.js
-    
+
   # MathJax
   # 需在Markdown文件开头加入mathjax: true
   # 推荐使用Pandoc: npm uninstall hexo-renderer-marked --save & npm install hexo-renderer-pandoc --save
@@ -321,6 +321,7 @@ style:
     background: https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp
   codeblock:
     scrollbar: 4px
+    highlightjs_theme: https://fastly.jsdelivr.net/gh/highlightjs/cdn-release@11.5.0/build/styles/atom-one-dark.min.css
 
 default:
   avatar: https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/avatar/round/3442075.svg
