@@ -12,6 +12,15 @@ a
   &:hover
     color: $color-hover
 
+// md > a
+p, li
+  >a:not([class])
+    margin: 0 1px
+    padding: 4px
+    border-radius: 4px
+    &:hover
+      color: darken($color-hover, 10)
+      background: alpha($color-hover, 0.08)
 
 hr
   color: var(--text-meta)
