@@ -86,6 +86,12 @@ function og_args() {
     <%- css(theme.style.codeblock.highlightjs_theme) %>
   <% } %>
 
+  <% if (theme.plugins.katex && theme.plugins.katex.enable) { %>
+    <%- theme.plugins.katex.min_css %>
+    <%- theme.plugins.katex.min_js %>
+    <%- theme.plugins.katex.auto_render_min_js %>
+  <% } %>
+
 
   <% if (config.inject && config.inject.head){ %>
     <% (config.inject.head||[]).forEach(function(item){ %>
