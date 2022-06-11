@@ -47,13 +47,14 @@ const friendsjs = {
     $(el).append('<div class="loading-wrap"><svg class="loading" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg><p></p></div>');
     friendsjs.requestAPI(cfg.api, function(data) {
       $(el).find('.loading-wrap').remove();
-      const arr = data.content;
+      const arr = data.content || data;
+      console.log(data);
       arr.forEach((item, i) => {
         var user = '<div class="user-card">';
         user += '<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer"';
-        user += ' href="' + item.url + '">';
-        user += '<img src="' + (item.avatar || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';">';
-        user += '<div class="name"><span>' + item.title + '</span></div>';
+        user += ' href="' + (item.html_url || item.url) + '">';
+        user += '<img src="' + (item.avatar_url || item.avatar || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';">';
+        user += '<div class="name"><span>' + (item.title || item.login) + '</span></div>';
         user += '</a>';
         user += '</div>';
         $(el).find('.group-body').append(user);
