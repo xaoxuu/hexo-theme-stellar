@@ -10,7 +10,7 @@ function layoutTitle() {
 %>
 <% if (page.h1 || page.title || (page.content && page.content.length > 0)) { %>
   <%- partial('_partial/main/navbar/breadcrumb') %>
-  <article class='content md <%- page.layout %><%- scrollreveal() %>'>
+  <article class='content md <%- page.layout %><%- page.indent ? ' indent' : '' %><%- scrollreveal() %>'>
   <%- layoutTitle() %>
   <% if (page.content && page.content.length > 0) { %>
     <%- page.content %>

@@ -1,15 +1,37 @@
 <%
 function div() {
   var el = '';
-  if (page.banner == undefined || page.banner == false) {
+  if ((page.banner == undefined || page.banner == false) && !theme.article.auto_banner) {
     return el;
+  }
+  var url;
+  if (page.banner != undefined) {
+    if (page.banner.includes('/')) {
+      url = page.banner;
+    } else {
+      url = 'https://source.unsplash.com/2000x400/?' + page.banner;
+    }
+  } else {
+    // 自动以 tags 作为关键词搜索封面
+    if (page.tags) {
+      var params = '';
+      page.tags.reverse().forEach((tag, i) => {
+        if (i > 0) {
+          params += ',';
+        }
+        params += tag.name;
+      });
+      url = 'https://source.unsplash.com/2000x400/?' + params;
+    } else {
+      url = 'https://source.unsplash.com/random/2000x400';
+    }
   }
   el += '<div class="l_cover post' + scrollreveal() + '">';
   el += '<div class="cover">';
   if (theme.plugins.lazyload && theme.plugins.lazyload.enable) {
-    el += '<div class="lazy img bg" data-bg="' + page.banner + '"></div>';
+    el += '<div class="lazy img bg" data-bg="' + url + '"></div>';
   } else {
-    el += '<div class="lazy img bg" style="background-image:url(&quot;' + page.banner + '&quot;)"></div>';
+    el += '<div class="lazy img bg" style="background-image:url(&quot;' + url + '&quot;)"></div>';
   }
   el += '</div>';
   el += '</div>';

@@ -62,6 +62,9 @@ hexo.extend.tag.register('sites', function(args) {
       }
       if (groupId in sites) {
         let group = sites[groupId];
+        if ((typeof group == 'object') && group.constructor == Array) {
+          group = {items: group};
+        }
         if (group.title || group.description) {
           el += groupHeader(group);
         }

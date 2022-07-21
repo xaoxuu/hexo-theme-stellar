@@ -61,13 +61,13 @@
     if hexo-config('style.animated_avatar.animate') == 'always'
       div.bg
         opacity: 1 !important
-        animation: spin infinite 1s
+        animation: spin infinite 4s
         animation-timing-function: linear
     if hexo-config('style.animated_avatar.animate') == 'auto'
       &:hover
         div.bg
           opacity: 1 !important
-          animation: spin infinite 1s
+          animation: spin infinite 4s
           animation-timing-function: linear
 
   a.title
@@ -188,8 +188,6 @@ nav.menu
         margin-top: .5em
         margin-bottom: .5em
         line-height: 1.5
-        >a:hover
-          text-decoration: underline
     .widget-header+.widget-body
       margin-top: 0
 
