@@ -61,6 +61,11 @@ function div_default() {
   // time
   el += '<span class="cap" id="post-meta">';
   el += __("meta.created") + '&nbsp;' + '<time datetime="' + date_xml(post.date) + '">' + date(post.date, config.date_format) + '</time>';
+  // 增加博客文章更新日期
+  if (post.updated && Date.parse(post.updated) > Date.parse(post.date)) {
+  el += '&nbsp;&nbsp;' + __("meta.updated") + '&nbsp;' + '<time datetime="' + date_xml(post.updated) + '">' +
+    date(post.updated, config.date_format) + '</time>';
+  }
   el += '</span>';
   // cat
   if (post.categories && post.categories.length > 0) {

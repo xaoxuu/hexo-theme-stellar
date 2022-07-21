@@ -37,6 +37,11 @@ function layoutDiv() {
     // 发布日期
     el += '<div id="post-meta">';
     el += __("meta.created") + '&nbsp;<time datetime="' + date_xml(page.date) + '">' + date(page.date, config.date_format) + '</time>';
+    // 增加博客文章更新日期
+    if (page.updated && Date.parse(page.updated) > Date.parse(page.date)) {
+    el += '&nbsp;&nbsp;' + __("meta.updated") + '&nbsp;<time datetime="' + date_xml(page.updated) + '">' +
+      date(page.updated, config.date_format) + '</time>';
+    }
     el += '</div>';
     el += '</div>';
   } else if (page.layout === "wiki" && page.wiki && page.wiki.length > 0) {

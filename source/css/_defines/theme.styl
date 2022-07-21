@@ -1,6 +1,7 @@
 :root
   --site-bg: $light-site-bg
   --block: $light-block
+  --code: darken($light-block, 5)
   --block-border: darken($light-block, 5)
   --block-hover: darken($light-block, 2)
   --text-p0: $light-title
@@ -13,11 +14,18 @@
   --card: $light-card
   --theme-highlight: darken($color-theme, 5)
   --theme-bg: mix($color-theme, $light-card, 10)
+  // 阴影
+  --shadow-1: darken($white, 10)
+  --shadow-2: darken($black, 0)
+  // 文本代码块
+  --code-gradient-light: #cff0ff
+  --code-gradient-dark: #afcafd
 
 set_darkmode()
   :root
     --site-bg: $dark-site-bg
     --block: $dark-block
+    --code: $dark-block
     --block-border: lighten($dark-block, 6)
     --block-hover: darken($dark-block, 4)
     --text-p0: $dark-title
@@ -30,6 +38,13 @@ set_darkmode()
     --card: $dark-card
     --theme-highlight: $color-theme
     --theme-bg: mix($color-theme, $dark-card, 10)
+    // 阴影
+    --shadow-1: lighten($black, 15)
+    --shadow-2: lighten($black, 22)
+    // 文本代码块
+    --code-gradient-light: lighten($black, 8)
+    --code-gradient-dark: lighten($black, 8)
+
     @media screen and (max-width: $device-tablet)
       --site-bg: $dark-site-bg-mobile
       --card: darken($dark-card, 6)
