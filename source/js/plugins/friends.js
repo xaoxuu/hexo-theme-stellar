@@ -48,7 +48,6 @@ const friendsjs = {
     friendsjs.requestAPI(cfg.api, function(data) {
       $(el).find('.loading-wrap').remove();
       const arr = data.content || data;
-      console.log(data);
       arr.forEach((item, i) => {
         var user = '<div class="user-card">';
         user += '<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer"';

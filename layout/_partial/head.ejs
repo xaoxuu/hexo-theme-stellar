@@ -98,4 +98,42 @@ function og_args() {
       <%- item %>
     <% }) %>
   <% } %>
+
+  <% if (theme.music){ %>
+    <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css" media="defer" onload="this.media='all'">
+    <% } %>
+
+  <% if (theme.pjax){ %>
+    <script>
+      function getScript(url, callback) {
+        if (Array.isArray(this.isGetScript)) {
+          if (this.isGetScript.includes(url)) return callback()
+          this.isGetScript.push(url)
+        } else {
+          this.isGetScript = []
+          this.isGetScript.push(url)
+        }
+        var script = document.createElement('script')
+        script.src = url
+
+
+        if (typeof callback != 'undefined') {
+          if (script.readyState) {
+            script.onreadystatechange = function () {
+              if (script.readyState == 'loaded' || script.readyState == 'complete') {
+                script.onreadystatechange = null
+                callback()
+              }
+            }
+          } else {
+            script.onload = function () {
+              script.onload = null
+              callback()
+            }
+          }
+        }
+        document.body.appendChild(script)
+      }
+    </script>
+    <% } %>
 </head>

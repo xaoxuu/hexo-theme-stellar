@@ -1,0 +1,49 @@
+<% if (theme.music.enable){ %>
+	<div id="aplayer">
+		<style>
+			div#aplayer {
+				position: sticky;
+				left: 0;
+				bottom: 0;
+				z-index: 9;
+			}
+			.aplayer .aplayer-lrc p {
+				font-size: 12px;
+				font-weight: 700;
+				line-height: 16px !important;
+			}
+			span.aplayer-list-title {
+				color: #666;
+			}
+			.aplayer .aplayer-lrc p.aplayer-lrc-current {
+				font-size: 15px;
+				color: <% theme.music.theme %>;
+			}
+			<% if (theme.music.autoHide){ %>
+			.aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+				right: -66px !important;
+			}
+			.aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+				right: 0 !important;
+			}
+			<% } %>
+		</style>
+		<meting-js
+			server="<%- theme.music.server %>"
+			type="<%- theme.music.type %>"
+			id="<%- theme.music.id %>"
+			fixed='<%- theme.music.fixed ? 'true' : 'false' %>'
+			autoplay='<%- theme.music.autoplay === true %>'
+			theme='<%- theme.music.theme %>'
+			loop='<%- theme.music.loop %>'
+			order='<%- theme.music.order %>'
+			preload='<%- theme.music.preload %>'
+			volume='<%- Number(theme.music.volume) %>'
+			list-folded='<%- theme.music.listFolded %>'
+			storageName='<%- theme.music.storageName %>'
+		>
+		</meting-js>
+		<script defer src="/libs/aplayer/APlayer.min.js"></script>
+		<script defer src="/libs/aplayer/Meting.min.js"></script>
+	</div>
+<% } %>

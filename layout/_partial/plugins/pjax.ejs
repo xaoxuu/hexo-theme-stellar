@@ -1,0 +1,32 @@
+<% if(theme.pjax){ %>
+<script defer type="text/javascript">
+  getScript("/libs/pjax/pjax.min.js", loadPjax);
+  function loadPjax() {
+    window.pjax = new Pjax({
+      selectors: [
+        "head title",
+        'head meta[name="keywords"]',
+        'head meta[name="description"]',
+        "div#start",
+      ],
+      cache: true,
+      cacheBust: false,
+    });
+  }
+  // 开始 PJAX 执行的函数
+  document.addEventListener("pjax:send", function () {});
+  // PJAX 完成之后执行的函数，可以和上面的重载放在一起
+  document.addEventListener("pjax:complete", function () {
+    <% if (theme.plugins.lazyload.enable) { %>
+      window.lazyLoadInstance.update();
+    <% } %>
+    loadBeaudar();
+  });
+  // Pjax请求错误时，跳转到404页面
+  document.addEventListener("pjax:error", (err) => {
+    if (err.request.status === 404) {
+      pjax.loadUrl("/404.html");
+    }
+  });
+</script>
+<% } %>
