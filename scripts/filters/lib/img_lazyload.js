@@ -41,7 +41,8 @@ function lazyProcess(htmlContent) {
       }
     });
     // 加载图
-    const loadingImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=';
+    const loadingImg =
+      "https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/cover/76b86c0226ffd.svg";
     newImgTag = newImgTag.replace(src_value, loadingImg + '" data-src="' + src_value);
     return newImgTag;
   });
