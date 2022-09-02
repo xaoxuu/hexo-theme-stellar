@@ -4,22 +4,27 @@
   function loadPjax() {
     window.pjax = new Pjax({
       selectors: [
-        "head title",
+        'head title',
         'head meta[name="keywords"]',
         'head meta[name="description"]',
-        "div#start",
+        'div#cover',
+        'div.widgets',
+        'main#main_body',
       ],
       cache: true,
       cacheBust: false,
     });
   }
   // 开始 PJAX 执行的函数
-  document.addEventListener("pjax:send", function () {});
+  document.addEventListener("pjax:send", function () {
+
+  });
   // PJAX 完成之后执行的函数，可以和上面的重载放在一起
   document.addEventListener("pjax:complete", function () {
     <% if (theme.plugins.lazyload.enable) { %>
       window.lazyLoadInstance.update();
     <% } %>
+    exeAllFn();
     loadBeaudar();
   });
   // Pjax请求错误时，跳转到404页面

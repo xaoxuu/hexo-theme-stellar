@@ -1,4 +1,10 @@
 console.log('hexo-theme-stellar:\n' + stellar.github);
+
+// pjax reload
+function exeAllFn() {
+  init.toc()
+}
+
 // utils
 const util = {
 

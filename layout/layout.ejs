@@ -2,14 +2,18 @@
 <html lang='<%- page.lang %>'>
 <%- partial('_partial/head') %>
 <body>
-  <%- partial('_partial/cover/index') %>
+  <div id='cover'>
+    <%- partial('_partial/cover/index') %>
+  </div>
   <div class='l_body' id='start'>
     <aside class='l_left' layout='<%- page.layout %>'>
     <%- partial('_partial/sidebar/index') %>
     </aside>
     <div class='l_main<%- page.content ? "" : " list" %>'>
       <%- partial('_partial/main/header/index') %>
-      <%- body %>
+        <main id="main_body">
+          <%- body %>
+        </main>
       <%- partial('_partial/main/footer') %>
       <%- partial('_partial/menubtn') %>
     </div>
