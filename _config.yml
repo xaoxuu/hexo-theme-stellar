@@ -341,6 +341,7 @@ plugins:
 
 style:
   darkmode: auto # auto / always / false
+  smooth_scroll: true # true / false
   theme:
     light: '#f8f8f8'
     dark: '#313438'
