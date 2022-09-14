@@ -230,9 +230,10 @@ footer:
     # '更多':
     #   - '[关于本站](/)'
     #   - '[GitHub](/)'
-  license: # '[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
-  source: #'[GitHub](https://github.com/xaoxuu/hexo-theme-stellar)'
-  more: # string or array (support markdown)
+  content: | # 支持 Markdown 格式
+    本站由 [@anonymity](/) 使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 主题创建。
+    本博客所有文章除特别声明外，均采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。
+  # 主题用户越多，开发者维护和更新的积极性就越高，如果您喜欢本主题，请在适当的位置显示主题信息和仓库链接以表支持。
 
 
 ######## Tag Plugins ########

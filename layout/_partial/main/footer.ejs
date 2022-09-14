@@ -1,8 +1,5 @@
 <%
-const author = '[@' + config.author + '](' + config.url + config.root + ')';
-const using = '[' + stellar_info('name') + '](' + stellar_info('tree') + ' "v' + stellar_info('version') + '")';
-const source = theme.footer.source;
-const more = theme.footer.more;
+const content = theme.footer.content;
 function layoutDiv() {
   var el = '';
   el += '<footer class="page-footer reveal fs12">';
@@ -28,19 +25,11 @@ function layoutDiv() {
   }
   // footer
   el += '<div class="text">';
-  if (theme.footer.license) {
-    el += markdown(__('footer.license', theme.footer.license));
-  }
-  if (source) {
-    el += markdown(__('footer.info_open_source', author, using, source));
-  } else {
-    el += markdown(__('footer.info_not_open_source', author, using));
-  }
-  if (more) {
-    if ((typeof more == 'string') && more.constructor == String) {
-      el += markdown(more);
-    } else if ((typeof more == 'object') && more.constructor == Array) {
-      more.forEach((item, i) => {
+  if (content) {
+    if ((typeof content == 'string') && content.constructor == String) {
+      el += markdown(content);
+    } else if ((typeof content == 'object') && content.constructor == Array) {
+      content.forEach((item, i) => {
         el += markdown(item);
       });
     }
