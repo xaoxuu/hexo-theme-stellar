@@ -67,7 +67,7 @@ hexo.extend.tag.register('friends', function(args) {
         if (group.repo) {
           el += '<div class="friendsjs-wrap"';
           el += ' id="friends-api"';
-          el += ' api="' + (group.api || 'https://issues-api.vercel.app') + '/v1/' + group.repo + '"';
+          el += ' api="' + (group.api || 'https://issues-api.xaoxuu.com') + '/v1/' + group.repo + '"';
           el += '>';
           el += '<div class="group-body"></div>';
           el += '</div>';
