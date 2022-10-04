@@ -253,11 +253,11 @@ tag_plugins:
       prefix: https://s2.loli.net/2022/01/04/UvHcsa73jQPnobq.png
   # {% emoji %}
   emoji:
-    default: https://fastly.jsdelivr.net/gh/volantis-x/cdn-emoji/qq/%s.gif
+    default: https://fastly.jsdelivr.net/gh/cdn-x/emoji/qq/%s.gif
     twemoji: https://fastly.jsdelivr.net/gh/twitter/twemoji/assets/svg/%s.svg
-    qq: https://fastly.jsdelivr.net/gh/volantis-x/cdn-emoji/qq/%s.gif
-    aru: https://fastly.jsdelivr.net/gh/volantis-x/cdn-emoji/aru-l/%s.gif
-    tieba: https://fastly.jsdelivr.net/gh/volantis-x/cdn-emoji/tieba/%s.png
+    qq: https://fastly.jsdelivr.net/gh/cdn-x/emoji/qq/%s.gif
+    aru: https://fastly.jsdelivr.net/gh/cdn-x/emoji/aru-l/%s.gif
+    tieba: https://fastly.jsdelivr.net/gh/cdn-x/emoji/tieba/%s.png
   # {% image %}
   image:
     fancybox: # true, false
