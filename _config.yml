@@ -42,6 +42,11 @@ sidebar:
       min_depth: 2
       max_depth: 5
       fallback: recent # Use a backup widget when toc does not exist.
+    # github user info
+    ghuser:
+      layout: ghuser
+      api: https://api.github.com
+      username: # your github login username
     # welcome
     welcome:
       layout: markdown

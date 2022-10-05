@@ -49,6 +49,7 @@ const GitHubInfo = {
       for (let key of Object.keys(data)) {
         $(el).find("[type=text]#" + key).text(data[key]);
         $(el).find("[type=link]#" + key).attr("href", data[key]);
+        $(el).find("[type=img]#" + key).attr("src", data[key]);
       }
     }, function() {
     });
