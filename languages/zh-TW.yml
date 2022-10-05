@@ -36,11 +36,6 @@ meta:
     day: 天前
     month: 個月前
 
-footer:
-  license: '本網誌所有文章除特別聲明外，均採用 %s 授權條款。轉載請註明出處。'
-  info_not_open_source: '本站由 %s 使用 %s 主題建立。'
-  info_open_source: '本站由 %s 使用 %s 主題建立。您可以在 %s 找到本站原始碼。'
-
 page:
   error:
     what: 抱歉，找不到您存取的頁面

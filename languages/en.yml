@@ -36,11 +36,6 @@ meta:
     day: days ago
     month: months ago
 
-footer:
-  license: 'All articles in this blog are licensed under %s unless stating additionally.'
-  info_not_open_source: 'This site was deployed by %s using %s.'
-  info_open_source: 'This site was deployed by %s using %s. You can find the source code in %s.'
-
 page:
   error:
     what: Page Not Found
