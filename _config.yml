@@ -272,6 +272,7 @@ plugins:
   # issues api
   sitesjs: /js/plugins/sites.js
   friendsjs: /js/plugins/friends.js
+  ghinfo: /js/plugins/ghinfo.js
 
   ## optional plugins ##
   # preload

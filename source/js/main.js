@@ -230,6 +230,14 @@ if (stellar.plugins.friendsjs) {
     })
   }
 }
+if (stellar.plugins.ghinfo) {
+  const issues_api = document.getElementById('ghinfo-api');
+  if (issues_api != undefined) {
+    stellar.jQuery(() => {
+      stellar.loadScript(stellar.plugins.ghinfo, { defer: true })
+    })
+  }
+}
 
 // swiper
 if (stellar.plugins.swiper) {
