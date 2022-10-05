@@ -21,7 +21,7 @@ function layoutDiv() {
   
   el += '<div class="widget-wrap" id="github-user">';
   el += '<div class="widget-body fs14 github-info-wrap" id="ghinfo-api" api="' + item.api + '/users/' + item.username + '">';
-    el += '<img no-lazy class="avatar" type="img" id="avatar_url" src="' + config.avatar + '">';
+    el += '<div><img no-lazy class="avatar" type="img" id="avatar_url" src="' + config.avatar + '"></div>';
     // username
     el += '<div class="username" type="text" id="name" href="https://github.com/' + item.username + '">';
     el += item.username;

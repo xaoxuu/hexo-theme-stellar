@@ -4,14 +4,16 @@
   align-items: center
   background: var(--card)
   border-radius: $border-card
-  padding: 1rem
+  padding: 2rem 1rem 1rem
   margin: 'calc(%s + 1.25rem)' % var(--gap-p) 0
 
 .widget-wrap#github-user .widget-body .avatar
   display: block
   border-radius: 100%
+  margin: auto
   max-width: 80%
-  margin-top: 1.5rem
+  @media screen and (max-width: $device-tablet)
+    max-width: 50%
 
 .widget-wrap#github-user .widget-body .username
   font-weight: 900
