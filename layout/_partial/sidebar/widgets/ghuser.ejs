@@ -2,15 +2,18 @@
 var btns = [];
 btns.push({
   key: 'followers',
-  desc: 'followers'
+  desc: 'followers',
+  href: 'https://github.com/xaoxuu?tab=followers'
 });
 btns.push({
   key: 'following',
-  desc: 'following'
+  desc: 'following',
+  href: 'https://github.com/xaoxuu?tab=following'
 });
 btns.push({
   key: 'public_repos',
-  desc: 'repos'
+  desc: 'repos',
+  href: 'https://github.com/xaoxuu?tab=repositories'
 });
 
 function layoutDiv() {
@@ -30,7 +33,7 @@ function layoutDiv() {
     
     el += '<div class="buttons">';
       btns.forEach((btn, i) => {
-        el += '<a class="btn" href="#">';
+        el += '<a class="btn" href="' + btn.href + '">';
         el += '<span class="title" type="text" id="' + btn.key + '"></span>';
         el += '<span class="desc">' + btn.desc + '</span>';
         el += '</a>';
