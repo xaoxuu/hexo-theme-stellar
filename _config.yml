@@ -266,6 +266,9 @@ tag_plugins:
   # {% image %}
   image:
     fancybox: # true, false
+  # {% timeline %}
+  timeline:
+    max-height: 80vh
 
 
 ######## JS Plugins ########
@@ -274,10 +277,15 @@ plugins:
   # jquery
   jquery: https://fastly.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js
 
-  # issues api
-  sitesjs: /js/plugins/sites.js
-  friendsjs: /js/plugins/friends.js
-  ghinfo: /js/plugins/ghinfo.js
+  # stellar api
+  stellar:
+    sites: /js/plugins/sites.js
+    friends: /js/plugins/friends.js
+    ghinfo: /js/plugins/ghinfo.js
+    timeline: /js/plugins/timeline.js
+  
+
+  marked: https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js
 
   ## optional plugins ##
   # preload

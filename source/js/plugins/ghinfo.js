@@ -57,7 +57,7 @@ const GitHubInfo = {
 }
 
 $(function () {
-  const els = document.getElementsByClassName('github-info-wrap');
+  const els = document.getElementsByClassName('stellar-ghinfo-api');
   for (var i = 0; i < els.length; i++) {
     const el = els[i];
     const api = el.getAttribute('api');

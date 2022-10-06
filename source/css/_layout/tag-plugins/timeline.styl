@@ -1,6 +1,6 @@
-.tag-plugin.timeline
+.md .tag-plugin.timeline
   position: relative
-  margin: 1rem 0
+  margin-top: 0
   padding-left: 16px
   &:before
     content: ''
@@ -74,3 +74,10 @@
     margin: .5rem 0
   .tag-plugin.copy
     width: 240px
+
+
+.tag-plugin.timeline.stellar-timeline-api .body
+  max-height: convert(hexo-config('tag_plugins.timeline.max-height'))
+  overflow: scroll
+  pre code 
+    font-size: $fs-12

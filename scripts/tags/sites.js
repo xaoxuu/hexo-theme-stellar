@@ -69,8 +69,7 @@ hexo.extend.tag.register('sites', function(args) {
           el += groupHeader(group);
         }
         if (group.repo) {
-          el += '<div class="sitesjs-wrap"';
-          el += ' id="sites-api"';
+          el += '<div class="stellar-sites-api"';
           el += ' api="' + (group.api || 'https://issues-api.xaoxuu.com') + '/v1/' + group.repo + '"';
           el += '>';
           el += '<div class="group-body"></div>';

@@ -103,12 +103,13 @@
 
   // required plugins (only load if needs)
   stellar.plugins = {
-    jQuery: '<%- url_for(theme.plugins.jquery || "https://fastly.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js") %>',
-    sitesjs: '<%- url_for(theme.plugins.sitesjs) %>',
-    friendsjs: '<%- url_for(theme.plugins.friendsjs) %>',
-    ghinfo: '<%- url_for(theme.plugins.ghinfo) %>',
+    jQuery: '<%- url_for(theme.plugins.jquery || "https://fastly.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js") %>'
   };
 
+  // stellar js
+  stellar.plugins.stellar = Object.assign(<%- JSON.stringify(theme.plugins.stellar) %>);
+
+  stellar.plugins.marked = Object.assign(<%- JSON.stringify(theme.plugins.marked) %>);
   // optional plugins
   if ('<%- theme.plugins.lazyload.enable %>' == 'true') {
     stellar.plugins.lazyload = Object.assign(<%- JSON.stringify(theme.plugins.lazyload) %>);

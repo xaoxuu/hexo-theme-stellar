@@ -69,7 +69,7 @@ const sitesjs = {
 }
 
 $(function () {
-  const els = document.getElementsByClassName('sitesjs-wrap');
+  const els = document.getElementsByClassName('stellar-sites-api');
   for (var i = 0; i < els.length; i++) {
     const el = els[i];
     const api = el.getAttribute('api');

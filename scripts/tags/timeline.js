@@ -36,36 +36,48 @@ function layoutNodeContent(content) {
 
 
 function postTimeline(args, content) {
+  args = hexo.args.map(args, ['api', 'sort', 'reversed']);
   var el = '';
+
+  if (args.api && args.api.length > 0) {
+    el += '<div class="tag-plugin timeline stellar-timeline-api" api="' + args.api + '"';
+    if (args.sort) {
+      el += ' sort="' + args.sort + '"';
+    }
+    if (args.reversed) {
+      el += ' reversed="' + args.reversed + '"';
+    }
+    el += '>';
+  } else {
+    el += '<div class="tag-plugin timeline">';
+  }
+
   var arr = content.split(/<!--\s*(.*?)\s*-->/g).filter((item, i) => {
     return item.trim().length > 0;
   });
-  if (arr.length < 1) {
-    return el;
-  }
-  var nodes = [];
-  arr.forEach((item, i) => {
-    if (item.startsWith('node ')) {
-      nodes.push({
-        header: item
-      });
-    } else if (nodes.length > 0) {
-      var node = nodes[nodes.length-1];
-      if (node.body == undefined) {
-        node.body = item;
-      } else {
-        node.body += '\n' + item;
+  if (arr.length > 0) {
+    var nodes = [];
+    arr.forEach((item, i) => {
+      if (item.startsWith('node ')) {
+        nodes.push({
+          header: item
+        });
+      } else if (nodes.length > 0) {
+        var node = nodes[nodes.length-1];
+        if (node.body == undefined) {
+          node.body = item;
+        } else {
+          node.body += '\n' + item;
+        }
       }
-    }
-  });
-
-  el += '<div class="tag-plugin timeline">';
-  nodes.forEach((node, i) => {
-    el += '<div class="timenode" item="' + (i + 1) + '">';
-    el += layoutNodeTitle(node.header.substring(5));
-    el += layoutNodeContent(node.body);
-    el += '</div>';
-  });
+    });
+    nodes.forEach((node, i) => {
+      el += '<div class="timenode" index="' + (i) + '">';
+      el += layoutNodeTitle(node.header.substring(5));
+      el += layoutNodeContent(node.body);
+      el += '</div>';
+    });  
+  }
 
   el += '</div>';
   return el;

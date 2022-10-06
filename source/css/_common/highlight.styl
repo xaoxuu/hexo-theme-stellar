@@ -4,12 +4,14 @@ code
   color: var(--text-code)
   font-family: $ff-code
   word-break: break-all
+
+p>code:not([class]),li>code:not([class])
   font-size: 85%
   background: var(--block)
   padding: .2em .4em
   border-radius: 4px
 
-article.md .highlight
+article.md .highlight, .tag-plugin pre:not([class])
   margin: var(--gap-p) 0
   border-radius: $border-block
   overflow: hidden
@@ -168,7 +170,7 @@ $hl-red = #EE2B29
 $hl-orange = #FB3F1B
 $hl-amber = #FD8607
 $hl-text = var(--text-p1)
-pre
+.code>pre
   .code:before
     display: none
   // 行

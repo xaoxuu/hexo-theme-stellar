@@ -213,29 +213,20 @@ if (stellar.plugins.lazyload) {
   });
 }
 
-// issuesjs
-if (stellar.plugins.sitesjs) {
-  const issues_api = document.getElementById('sites-api');
-  if (issues_api != undefined) {
-    stellar.jQuery(() => {
-      stellar.loadScript(stellar.plugins.sitesjs, { defer: true })
-    })
-  }
-}
-if (stellar.plugins.friendsjs) {
-  const issues_api = document.getElementById('friends-api');
-  if (issues_api != undefined) {
-    stellar.jQuery(() => {
-      stellar.loadScript(stellar.plugins.friendsjs, { defer: true })
-    })
-  }
-}
-if (stellar.plugins.ghinfo) {
-  const issues_api = document.getElementById('ghinfo-api');
-  if (issues_api != undefined) {
-    stellar.jQuery(() => {
-      stellar.loadScript(stellar.plugins.ghinfo, { defer: true })
-    })
+// stellar js
+if (stellar.plugins.stellar) {
+  for (let key of Object.keys(stellar.plugins.stellar)) {
+    let js = stellar.plugins.stellar[key];
+    console.log(key, js);
+    const els = document.getElementsByClassName('stellar-' + key + '-api');
+    if (els != undefined && els.length > 0) {
+      stellar.jQuery(() => {
+        stellar.loadScript(js, { defer: true });
+        if (key == 'timeline') {
+          stellar.loadScript(stellar.plugins.marked);
+        }
+      })
+    }
   }
 }
 

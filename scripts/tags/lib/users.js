@@ -11,8 +11,7 @@ module.exports = ctx => function(args) {
   args = ctx.args.map(args, ['api']);
   var el = '<div class="tag-plugin users-wrap">';
   
-  el += '<div class="friendsjs-wrap"';
-  el += ' id="friends-api"';
+  el += '<div class="stellar-friends-api"';
   el += ' api="' + args.api + '"';
   el += '>';
   el += '<div class="group-body"></div>';
