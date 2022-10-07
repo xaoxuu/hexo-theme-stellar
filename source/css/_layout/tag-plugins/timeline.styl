@@ -45,6 +45,7 @@
     color: var(--text-p3)
     font-family: $ff-code
     trans1 color
+    opacity: 0.75
     a
       color: inherit
       font-weight: inherit
@@ -79,5 +80,78 @@
 .tag-plugin.timeline.stellar-timeline-api .body
   max-height: convert(hexo-config('tag_plugins.timeline.max-height'))
   overflow: scroll
+  p
+    font-size: $fs-14
+  p.title 
+    font-size: 1rem
+    font-weight: 500
+    margin: 0
+    padding: 0.5rem 0 0.75rem
+    line-height: 1.25
+    border-bottom: 1px dashed var(--block-border)
   pre code 
     font-size: $fs-12
+
+.tag-plugin.timeline.stellar-timeline-api .body .footer
+  padding: 0.5rem 0 1rem
+  margin-bottom: -0.5rem
+  user-select: none
+  font-weight: 500
+  display: flex
+  flex-wrap: wrap
+  justify-content: space-between
+  align-items: center
+  position: sticky
+  position: -webkit-sticky
+  bottom: -0.5rem
+  background: var(--card)
+  &:empty
+    display: none
+  .label:first-child
+    margin-left: 0
+  a.comments 
+    margin-right: 0
+  
+
+
+
+.tag-plugin.timeline.stellar-timeline-api .body .footer .labels
+  display: flex
+  flex-wrap: wrap
+  font-size: $fs-12
+
+.tag-plugin.timeline.stellar-timeline-api .body .footer .reactions
+  display: flex
+  flex-wrap: wrap
+  font-size: $fs-13
+  .reaction 
+    border: 1px dashed var(--block-border)
+
+
+.tag-plugin.timeline.stellar-timeline-api .body .footer .label 
+  color: white
+  text-shadow: 0 0 2px rgba(0, 0, 0, 0.3)
+
+.tag-plugin.timeline.stellar-timeline-api .body .footer a.comments 
+  border-radius: 64px
+  border: 1px solid var(--block-border)
+  padding: 0 0.5rem
+  color: inherit
+  trans1: all
+  .key
+    margin-right: 4px
+  &:hover
+    background: $color-theme
+    border: 1px solid $color-theme
+    color: var(--card)
+    background: var(--text-p1)
+    border: 1px solid var(--text-p1)
+
+
+.tag-plugin.timeline.stellar-timeline-api .body .footer .label,
+.tag-plugin.timeline.stellar-timeline-api .body .footer .reaction
+  margin: 0 0.25rem
+  border-radius: 64px
+  padding: 0 0.5rem
+  .key
+    margin-right: 4px

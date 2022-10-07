@@ -1,4 +1,14 @@
 const StellarTimeline = {
+  reactions: {
+    '+1': '👍',
+    '-1': '👎', 
+    'laugh': '😀', 
+    'hooray': '🎉', 
+    'confused': '😕', 
+    'heart': '❤️', 
+    'rocket': '🚀', 
+    'eyes': '👀'
+  },
   requestAPI: (url, callback, timeout) => {
     let retryTimes = 5;
     function request() {
@@ -53,15 +63,45 @@ const StellarTimeline = {
         arr.reverse();
       }
       arr.forEach((item, i) => {
-        var cell = '<div class="timenode" index="' + i + '">';
-        cell += '<div class="header">';
-        cell += '<p>' + item.title + '</p>';
-        cell += '</div>';
-        cell += '<div class="body fs14">';
-        cell += marked.parse(item.body);
-        cell += '</div>';
-        cell += '</div>';
-        $(el).append(cell);
+        if (item.labels.length > 0) {
+          var cell = '<div class="timenode" index="' + i + '">';
+          cell += '<div class="header">';
+          let date = new Date(item.created_at);
+          cell += '<p>' + date + '</p>';
+          cell += '</div>';
+          cell += '<div class="body">';
+          cell += '<p class="title">' + item.title + '</p>';
+          cell += marked.parse(item.body);
+          cell += '<div class="footer">';
+          cell += '<div class="labels">';
+          item.labels.forEach((label, i) => {
+            cell += '<div class="label ' + label.name + '" style="background:#' + label.color + '">';
+            cell += label.name;
+            cell += '</div>';
+          });
+          cell += '</div>';
+          cell += '<div class="reactions">';
+          if (item.reactions.total_count > 0) {
+            for (let key of Object.keys(StellarTimeline.reactions)) {
+              let num = item.reactions[key];
+              if (num > 0) {
+                cell += '<div class="reaction ' + key + '">';
+                cell += '<span class="key ' + key + '">' + StellarTimeline.reactions[key] + '</span>';
+                cell += '<span class="value ' + key + '">' + item.reactions[key] + '</span>';
+                cell += '</div>';
+              }
+            }
+          }
+          cell += '<a class="comments" href="' + item.html_url + '">';
+          cell += '<span class="key comments">💬</span>';
+          cell += '<span class="value comments">' + item.comments + '</span>';
+          cell += '</a>';
+          cell += '</div>';
+          cell += '</div>';
+          cell += '</div>';
+          cell += '</div>';
+          $(el).append(cell);
+        }
       });
     }, function() {
       $(el).find('.loading-wrap svg').remove();
