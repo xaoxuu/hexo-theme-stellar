@@ -217,7 +217,6 @@ if (stellar.plugins.lazyload) {
 if (stellar.plugins.stellar) {
   for (let key of Object.keys(stellar.plugins.stellar)) {
     let js = stellar.plugins.stellar[key];
-    console.log(key, js);
     const els = document.getElementsByClassName('stellar-' + key + '-api');
     if (els != undefined && els.length > 0) {
       stellar.jQuery(() => {
