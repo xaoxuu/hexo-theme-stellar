@@ -23,18 +23,25 @@ function layoutDiv() {
   }
   
   el += '<div class="widget-wrap" id="github-user">';
-  el += '<div class="widget-body fs14 stellar-ghinfo-api" api="' + item.api + '/users/' + item.username + '">';
-    el += '<div><img no-lazy class="avatar" type="img" id="avatar_url" src="' + config.avatar + '"></div>';
-    // username
-    el += '<div class="username" type="text" id="name" href="https://github.com/' + item.username + '">';
-    el += item.username;
+  // header
+  if (item.header && item.header.length > 0) {
+    el += '<div class="widget-header cap dis-select">';
+    el += '<span class="name">' + item.header + '</span>';
     el += '</div>';
-    el += '<p type="text" id="bio"></p>';
+  }
+  // body
+  el += '<div class="widget-body stellar-ghinfo-api" api="' + item.api + '/users/' + item.username + '">';
+    if (item.avatar) {
+      el += '<div class="avatar" ><img no-lazy type="img" id="avatar_url" src="' + config.avatar + '"></div>';
+    }
+    // username
+    el += '<p class="username" type="text" id="name" href="https://github.com/' + item.username + '">&nbsp;</p>';
+    el += '<p class="bio" type="text" id="bio">&nbsp;</p>';
     
     el += '<div class="buttons">';
       btns.forEach((btn, i) => {
         el += '<a class="btn" href="' + btn.href + '">';
-        el += '<span class="title" type="text" id="' + btn.key + '"></span>';
+        el += '<span class="title" type="text" id="' + btn.key + '">0</span>';
         el += '<span class="desc">' + btn.desc + '</span>';
         el += '</a>';
       });

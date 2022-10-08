@@ -100,11 +100,13 @@
   display: flex
   flex-wrap: wrap
   justify-content: space-between
-  align-items: center
+  align-items: stretch
   position: sticky
   position: -webkit-sticky
   bottom: -0.5rem
   background: var(--card)
+  .key, .value  
+    line-height: 1
   &:empty
     display: none
   .label:first-child
@@ -113,45 +115,50 @@
     margin-right: 0
   
 
-
-
 .tag-plugin.timeline.stellar-timeline-api .body .footer .labels
   display: flex
   flex-wrap: wrap
   font-size: $fs-12
+  line-height: 1.8
+  align-items: stretch
 
 .tag-plugin.timeline.stellar-timeline-api .body .footer .reactions
   display: flex
+  align-items: stretch
   flex-wrap: wrap
   font-size: $fs-13
+  line-height: 1.8
   .reaction 
-    border: 1px dashed var(--block-border)
+    border: 1px dashed var(--block)
+    display: flex
+    align-items: center
 
 
 .tag-plugin.timeline.stellar-timeline-api .body .footer .label 
-  color: white
-  text-shadow: 0 0 2px rgba(0, 0, 0, 0.3)
+  border-width: 1px
+  border-style: solid
+  display: flex 
+  align-items: center
 
 .tag-plugin.timeline.stellar-timeline-api .body .footer a.comments 
-  border-radius: 64px
-  border: 1px solid var(--block-border)
+  display: flex
+  align-items: center
+  border-radius: 4px
   padding: 0 0.5rem
-  color: inherit
+  color: white
   trans1: all
+  margin-left: 2px
+  background: $color-theme
   .key
     margin-right: 4px
   &:hover
-    background: $color-theme
-    border: 1px solid $color-theme
-    color: var(--card)
-    background: var(--text-p1)
-    border: 1px solid var(--text-p1)
+    background: $color-hover
 
 
 .tag-plugin.timeline.stellar-timeline-api .body .footer .label,
 .tag-plugin.timeline.stellar-timeline-api .body .footer .reaction
-  margin: 0 0.25rem
-  border-radius: 64px
+  margin: 0 2px
+  border-radius: 4px
   padding: 0 0.5rem
   .key
     margin-right: 4px

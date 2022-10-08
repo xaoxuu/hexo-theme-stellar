@@ -1,25 +1,32 @@
+.widget-wrap#github-user
+  .widget-header+.widget-body
+    margin: 0.75rem 0
 .widget-wrap#github-user .widget-body
-  display: flex
-  flex-direction: column
-  align-items: center
+  text-align: center
   background: var(--card)
   border-radius: $border-card
-  padding: 2rem 1rem 1rem
-  margin: 'calc(%s + 1.25rem)' % var(--gap-p) 0
+  padding: 1rem
 
 .widget-wrap#github-user .widget-body .avatar
   display: block
   border-radius: 100%
-  margin: auto
-  max-width: 80%
+  margin: 1rem auto 1.25rem auto
+  max-width: 75%
+  overflow: hidden
+  img 
+    display: block
   @media screen and (max-width: $device-tablet)
     max-width: 50%
 
 .widget-wrap#github-user .widget-body .username
   font-weight: 900
   font-size: $fs-h2
-  margin-top: 1.5rem
   color: var(--text-p0)
+  margin: 0.5rem 0
+
+.widget-wrap#github-user .widget-body .bio
+  font-size: $fs-13
+  margin: 0.5rem 0
 
 .widget-wrap#github-user .widget-body .follow 
   font-weight: 500
@@ -36,14 +43,14 @@
   justify-content: center
   trans1: background
   svg
-    margin-right: 4px
+    margin-right: 6px
   &:hover
     background: $color-hover
 
   
 
 .widget-wrap#github-user .widget-body .buttons
-  margin: 0.75rem 0
+  margin: 1rem 0
   align-self: stretch
   display: grid
   grid-gap: 2px

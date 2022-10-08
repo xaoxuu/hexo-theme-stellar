@@ -15,32 +15,9 @@ a
 // md > a
 p:not([class]), li:not([class])
   a:not([class])
-    position: relative
     margin: 0 1px
     padding: 2px
-    &:after
-      content: ''
-      position: absolute
-      border-radius: 2px
-      bottom: 0
-      left: 2px
-      right: 2px
-      height: 1px
-      opacity: 0.5
-      background: $color-link
-      trans1: all
-    &:hover
-      border-bottom: none
-      color: $color-link
-      // color: darken($color-hover, 10)
-      // background: alpha($color-hover, 0.08)
-      &:after
-        height: 100%
-        opacity: 0.2
-        bottom: 0
-        left: 0
-        right: 0
-        // background-color: alpha($color-hover, 0.08)
+    text-decoration: underline
 
 hr
   color: var(--text-meta)

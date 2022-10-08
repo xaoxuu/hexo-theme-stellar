@@ -67,7 +67,7 @@ const StellarTimeline = {
           var cell = '<div class="timenode" index="' + i + '">';
           cell += '<div class="header">';
           let date = new Date(item.created_at);
-          cell += '<p>' + date + '</p>';
+          cell += '<p>' + date.toString().replace(/\sGMT([^.]*)/i, "") + '</p>';
           cell += '</div>';
           cell += '<div class="body">';
           cell += '<p class="title">' + item.title + '</p>';
@@ -75,8 +75,8 @@ const StellarTimeline = {
           cell += '<div class="footer">';
           cell += '<div class="labels">';
           item.labels.forEach((label, i) => {
-            cell += '<div class="label ' + label.name + '" style="background:#' + label.color + '">';
-            cell += label.name;
+            cell += '<div class="label ' + label.name + '" style="background:#' + label.color + '12;border-color:#' + label.color + '22">';
+            cell += '<span>' + label.name + '</span>';
             cell += '</div>';
           });
           cell += '</div>';
