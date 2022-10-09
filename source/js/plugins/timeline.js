@@ -73,26 +73,26 @@ const StellarTimeline = {
           cell += '<p class="title">' + item.title + '</p>';
           cell += marked.parse(item.body);
           cell += '<div class="footer">';
-          cell += '<div class="labels">';
+          cell += '<div class="flex labels">';
           item.labels.forEach((label, i) => {
-            cell += '<div class="label ' + label.name + '" style="background:#' + label.color + '12;border-color:#' + label.color + '22">';
+            cell += '<div class="item label ' + label.name + '" style="background:#' + label.color + '12;border-color:#' + label.color + '22">';
             cell += '<span>' + label.name + '</span>';
             cell += '</div>';
           });
           cell += '</div>';
-          cell += '<div class="reactions">';
+          cell += '<div class="flex reactions">';
           if (item.reactions.total_count > 0) {
             for (let key of Object.keys(StellarTimeline.reactions)) {
               let num = item.reactions[key];
               if (num > 0) {
-                cell += '<div class="reaction ' + key + '">';
+                cell += '<div class="item reaction ' + key + '">';
                 cell += '<span class="key ' + key + '">' + StellarTimeline.reactions[key] + '</span>';
                 cell += '<span class="value ' + key + '">' + item.reactions[key] + '</span>';
                 cell += '</div>';
               }
             }
           }
-          cell += '<a class="comments" href="' + item.html_url + '">';
+          cell += '<a class="item comments" href="' + item.html_url + '">';
           cell += '<span class="key comments">💬</span>';
           cell += '<span class="value comments">' + item.comments + '</span>';
           cell += '</a>';

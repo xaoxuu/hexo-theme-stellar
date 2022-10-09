@@ -105,44 +105,40 @@
   position: -webkit-sticky
   bottom: -0.5rem
   background: var(--card)
-  .key, .value  
-    line-height: 1
+  span
+    line-height: 1.8
   &:empty
     display: none
-  .label:first-child
-    margin-left: 0
   a.comments 
     margin-right: 0
   
 
-.tag-plugin.timeline.stellar-timeline-api .body .footer .labels
+.tag-plugin.timeline.stellar-timeline-api .body .footer .flex
   display: flex
   flex-wrap: wrap
   font-size: $fs-12
-  line-height: 1.8
   align-items: stretch
-
-.tag-plugin.timeline.stellar-timeline-api .body .footer .reactions
-  display: flex
-  align-items: stretch
-  flex-wrap: wrap
-  font-size: $fs-13
-  line-height: 1.8
   .reaction 
-    border: 1px dashed var(--block)
-    display: flex
+    border-color: var(--block)
+    border-style: dashed
+  .item
+    border-width: 1px
+    border-style: solid
+    margin: 2px
+    border-radius: 4px
+    padding: 0 0.5rem
+    display: flex 
     align-items: center
-
-
-.tag-plugin.timeline.stellar-timeline-api .body .footer .label 
-  border-width: 1px
-  border-style: solid
-  display: flex 
-  align-items: center
+    &.comments
+      border-width: 0
+    &:first-child 
+      margin-left: 0
+    &:last-child 
+      margin-right: 0
+    .key
+      margin-right: 4px
 
 .tag-plugin.timeline.stellar-timeline-api .body .footer a.comments 
-  display: flex
-  align-items: center
   border-radius: 4px
   padding: 0 0.5rem
   color: white
@@ -154,11 +150,3 @@
   &:hover
     background: $color-hover
 
-
-.tag-plugin.timeline.stellar-timeline-api .body .footer .label,
-.tag-plugin.timeline.stellar-timeline-api .body .footer .reaction
-  margin: 0 2px
-  border-radius: 4px
-  padding: 0 0.5rem
-  .key
-    margin-right: 4px
