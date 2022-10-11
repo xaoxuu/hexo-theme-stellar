@@ -1,6 +1,3 @@
-article.md.content>.tag-plugin.about:first-child
-  margin-top: 0
-
 .tag-plugin.about
   background: var(--block)
   border-radius: $border-card
@@ -32,17 +29,15 @@ article.md.content>.tag-plugin.about:first-child
     .tag-plugin.navbar:last-child
       nav.cap
         margin-top: 1rem
+        background: var(--card)
+        border: 1px solid var(--block-border)
         a
-          margin: 0
           color: $color-link
-          background: var(--block-hover)
-          &.active
-            background: none
           &:hover
-            color: $color-hover
-            background: var(--block-border)
-        a+a
-          margin-left: .5rem
+            background: var(--block)
+          &.active 
+            background: var(--block)
+            box-shadow: none
   .about-header+.about-body
     margin-top: 1.5rem
 

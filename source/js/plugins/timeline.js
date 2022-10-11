@@ -58,10 +58,6 @@ const StellarTimeline = {
     StellarTimeline.requestAPI(cfg.api, function(data) {
       $(el).find('.loading-wrap').remove();
       const arr = data.content || data;
-      const reversed = el.getAttribute('reversed');
-      if (reversed == '' || reversed == true) {
-        arr.reverse();
-      }
       arr.forEach((item, i) => {
         if (item.labels.length > 0) {
           var cell = '<div class="timenode" index="' + i + '">';

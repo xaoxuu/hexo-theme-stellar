@@ -36,18 +36,11 @@ function layoutNodeContent(content) {
 
 
 function postTimeline(args, content) {
-  args = hexo.args.map(args, ['api', 'sort', 'reversed']);
+  args = hexo.args.map(args, ['api']);
   var el = '';
 
   if (args.api && args.api.length > 0) {
-    el += '<div class="tag-plugin timeline stellar-timeline-api" api="' + args.api + '"';
-    if (args.sort) {
-      el += ' sort="' + args.sort + '"';
-    }
-    if (args.reversed) {
-      el += ' reversed="' + args.reversed + '"';
-    }
-    el += '>';
+    el += '<div class="tag-plugin timeline stellar-timeline-api" api="' + args.api + '">';
   } else {
     el += '<div class="tag-plugin timeline">';
   }
