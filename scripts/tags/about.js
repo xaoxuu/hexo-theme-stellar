@@ -17,9 +17,13 @@ hexo.extend.tag.register('about', function(args, content) {
   el += '<div class="tag-plugin about">';
   el += '<div class="about-header">';
   // avatar
-  if (args.avatar) {
+  var avatar_url = args.avatar;
+  if (args.avatar === undefined) {
+     avatar_url = hexo.config.avatar;
+  }
+  if (avatar_url) {
     el += '<div class="avatar">'
-    el += '<img src="' + args.avatar + '"';
+    el += '<img src="' + avatar_url + '"';
     if (args.height && args.height.length > 0) {
       el += ' height="' + args.height + '"/>';
     } else {
