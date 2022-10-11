@@ -3,17 +3,17 @@ var btns = [];
 btns.push({
   key: 'followers',
   desc: 'followers',
-  href: 'https://github.com/xaoxuu?tab=followers'
+  href: '?tab=followers'
 });
 btns.push({
   key: 'following',
   desc: 'following',
-  href: 'https://github.com/xaoxuu?tab=following'
+  href: '?tab=following'
 });
 btns.push({
   key: 'public_repos',
   desc: 'repos',
-  href: 'https://github.com/xaoxuu?tab=repositories'
+  href: '?tab=repositories'
 });
 
 function layoutDiv() {
@@ -21,7 +21,7 @@ function layoutDiv() {
   if (item.username == undefined || item.username.length == 0) {
     return el;
   }
-  
+
   el += '<div class="widget-wrap" id="github-user">';
   // header
   if (item.header && item.header.length > 0) {
@@ -37,10 +37,10 @@ function layoutDiv() {
     // username
     el += '<p class="username" type="text" id="name" href="https://github.com/' + item.username + '">&nbsp;</p>';
     el += '<p class="bio" type="text" id="bio">&nbsp;</p>';
-    
+
     el += '<div class="buttons">';
       btns.forEach((btn, i) => {
-        el += '<a class="btn" href="' + btn.href + '">';
+        el += '<a class="btn" href="https://github.com/' + item.username + '' + btn.href + '">';
         el += '<span class="title" type="text" id="' + btn.key + '">0</span>';
         el += '<span class="desc">' + btn.desc + '</span>';
         el += '</a>';
