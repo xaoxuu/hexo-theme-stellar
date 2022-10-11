@@ -11,7 +11,7 @@ p>code:not([class]),li>code:not([class])
   padding: .2em .4em
   border-radius: 4px
 
-article.md .highlight, .tag-plugin pre:not([class])
+article.md .highlight, pre:not([class]):has(>code)
   margin: var(--gap-p) 0
   border-radius: $border-block
   overflow: hidden
