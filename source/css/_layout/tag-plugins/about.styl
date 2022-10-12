@@ -1,11 +1,12 @@
 .tag-plugin.about
   background: var(--block)
   border-radius: $border-card
-  padding: 3rem 2rem 2rem
+  padding: 2rem
   .about-header
     display flex
-    justify-content: space-between
+    justify-content: center
     flex-wrap: wrap
+    margin: 1rem 0 2rem
     img
       object-fit: contain
     >img
@@ -30,7 +31,6 @@
       nav.cap
         margin-top: 1rem
         background: var(--card)
-        border: 1px solid var(--block-border)
         a
           color: $color-link
           &:hover
@@ -43,7 +43,8 @@
 
 @media screen and (max-width: $device-mobile)
   .tag-plugin.about
-    padding: 2rem 1rem 1rem
+    padding: 1rem
     .about-header
+      margin: 2rem 0
       p
         width 100%

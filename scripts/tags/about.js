@@ -10,7 +10,7 @@
 'use strict';
 
 hexo.extend.tag.register('about', function(args, content) {
-  args = hexo.args.map(args, ['avatar', 'height']);
+  args = hexo.args.map(args, ['avatar', 'height', 'border']);
   var rows = hexo.render.renderSync({text: content, engine: 'markdown'}).split('\n');
   var el = '';
   // wrapper
@@ -24,20 +24,15 @@ hexo.extend.tag.register('about', function(args, content) {
   if (avatar_url) {
     el += '<div class="avatar">'
     el += '<img src="' + avatar_url + '"';
-    if (args.height && args.height.length > 0) {
-      el += ' height="' + args.height + '"/>';
-    } else {
-      el += '/>';
+    if (args.border && args.border.length > 0) {
+      el += ' style="border-radius:' + args.border + '"';
     }
+    if (args.height && args.height.length > 0) {
+      el += ' height="' + args.height + '"';
+    }
+    el += '/>';
     el += '</div>';
   }
-  // title
-  if (rows.length > 0) {
-    // el += '<div class="title">';
-    el += rows.shift();
-    // el += '</div>';
-  }
-
   el += '</div>';
 
   // content
