@@ -6,7 +6,7 @@
     display flex
     justify-content: center
     flex-wrap: wrap
-    margin: 1rem 0 2rem
+    margin: 1.5rem 0 3rem
     img
       object-fit: contain
     >img
@@ -32,8 +32,9 @@
       nav.cap
         margin-top: 1rem
         background: var(--card)
+        box-shadow: $boxshadow-button
         a
-          color: $color-link
+          color: var(--text-p2)
           &:hover
             background: var(--block)
           &.active 
@@ -46,6 +47,6 @@
   .tag-plugin.about
     padding: 1.5rem 1rem
     .about-header
-      margin: 2rem 0
+      margin: 2.5rem 0 3rem
       p
         width 100%
