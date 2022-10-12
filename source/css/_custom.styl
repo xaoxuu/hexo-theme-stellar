@@ -38,8 +38,17 @@ $dark-site-bg-mobile = black
 
 $ff-body = system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif
 $ff-code = Menlo, Monaco, Consolas, system-ui, "Courier New", monospace, sans-serif
-
 $ff-logo = $ff-body
+
+if hexo-config('style.font-family.body')
+  $ff-body = convert(hexo-config('style.font-family.body'))
+
+if hexo-config('style.font-family.code')
+  $ff-code = convert(hexo-config('style.font-family.code'))
+
+if hexo-config('style.font-family.logo')
+  $ff-logo = convert(hexo-config('style.font-family.logo'))
+
 
 // font size
 $fs-root = 16px
