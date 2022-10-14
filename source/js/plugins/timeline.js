@@ -88,7 +88,7 @@ const StellarTimeline = {
               }
             }
           }
-          cell += '<a class="item comments" href="' + item.html_url + '">';
+          cell += '<a class="item comments" href="' + item.html_url + '" target="_blank" rel="external nofollow noopener noreferrer">';
           cell += '<span class="key comments">💬</span>';
           cell += '<span class="value comments">' + item.comments + '</span>';
           cell += '</a>';
