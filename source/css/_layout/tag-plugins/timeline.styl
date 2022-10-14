@@ -91,11 +91,15 @@
     font-size: $fs-14
   p.title 
     font-size: 1rem
-    font-weight: 500
+    font-weight: 700
     margin: 0
     padding: 0.5rem 0 0.75rem
     line-height: 1.25
     border-bottom: 1px dashed var(--block-border)
+    a 
+      color: inherit
+      &:hover
+        color: $color-hover
   pre code 
     font-size: $fs-12
 
@@ -116,18 +120,13 @@
     line-height: 1.8
   &:empty
     display: none
-  a.comments 
-    margin-right: 0
-  
+  .flex
+    display: flex
+    flex-wrap: wrap
+    font-size: $fs-12
+    align-items: stretch
 
-.tag-plugin.timeline.stellar-timeline-api .body .footer .flex
-  display: flex
-  flex-wrap: wrap
-  font-size: $fs-12
-  align-items: stretch
-  .reaction 
-    border-color: var(--block)
-    border-style: dashed
+.tag-plugin.timeline.stellar-timeline-api .body .footer
   .item
     border-width: 1px
     border-style: solid
@@ -136,24 +135,9 @@
     padding: 0 0.5rem
     display: flex 
     align-items: center
-    &.comments
-      border-width: 0
     &:first-child 
       margin-left: 0
     &:last-child 
       margin-right: 0
-    .key
-      margin-right: 4px
-
-.tag-plugin.timeline.stellar-timeline-api .body .footer a.comments 
-  border-radius: 4px
-  padding: 0 0.5rem
-  color: white
-  trans1: all
-  margin-left: 2px
-  background: $color-theme
-  .key
-    margin-right: 4px
-  &:hover
-    background: $color-hover
-
+  .reaction 
+    border-color: var(--block)

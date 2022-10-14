@@ -59,45 +59,55 @@ const StellarTimeline = {
       $(el).find('.loading-wrap').remove();
       const arr = data.content || data;
       arr.forEach((item, i) => {
-        if (item.labels.length > 0) {
-          var cell = '<div class="timenode" index="' + i + '">';
-          cell += '<div class="header">';
-          let date = new Date(item.created_at);
-          cell += '<p>' + date.toString().replace(/\sGMT([^.]*)/i, "") + '</p>';
-          cell += '</div>';
-          cell += '<div class="body">';
-          cell += '<p class="title">' + item.title + '</p>';
-          cell += marked.parse(item.body);
-          cell += '<div class="footer">';
-          cell += '<div class="flex labels">';
+        var cell = '<div class="timenode" index="' + i + '">';
+        cell += '<div class="header">';
+        let date = new Date(item.created_at);
+        cell += '<p>' + date.toString().replace(/\sGMT([^.]*)/i, "") + '</p>';
+        cell += '</div>';
+        cell += '<div class="body">';
+        cell += '<p class="title">';
+        cell += '<a href="' + item.html_url + '" target="_blank" rel="external nofollow noopener noreferrer">';
+        cell += item.title || item.name || item.tag_name;
+        cell += '</a>';
+        cell += '</p>';
+        
+        cell += marked.parse(item.body);
+        cell += '<div class="footer">';
+        cell += '<div class="flex left">';
+        if (item.labels) {
           item.labels.forEach((label, i) => {
-            cell += '<div class="item label ' + label.name + '" style="background:#' + label.color + '12;border-color:#' + label.color + '22">';
+            cell += '<div class="item label ' + label.name + '" style="background:#' + label.color + '18;border-color:#' + label.color + '36">';
             cell += '<span>' + label.name + '</span>';
             cell += '</div>';
           });
-          cell += '</div>';
-          cell += '<div class="flex reactions">';
-          if (item.reactions.total_count > 0) {
-            for (let key of Object.keys(StellarTimeline.reactions)) {
-              let num = item.reactions[key];
-              if (num > 0) {
-                cell += '<div class="item reaction ' + key + '">';
-                cell += '<span class="key ' + key + '">' + StellarTimeline.reactions[key] + '</span>';
-                cell += '<span class="value ' + key + '">' + item.reactions[key] + '</span>';
-                cell += '</div>';
-              }
+        } else if (item.zipball_url) {
+          cell += '<a class="item download" href="' + item.zipball_url + '" target="_blank" rel="external nofollow noopener noreferrer">';
+          cell += '<span>📦 ' + item.tag_name + '.zip</span>';
+          cell += '</a>';
+        }
+        cell += '</div>';
+        cell += '<div class="flex right">';
+        if (item.reactions && item.reactions.total_count > 0) {
+          for (let key of Object.keys(StellarTimeline.reactions)) {
+            let num = item.reactions[key];
+            if (num > 0) {
+              cell += '<div class="item reaction ' + key + '">';
+              cell += '<span>' + StellarTimeline.reactions[key] + ' ' + item.reactions[key] + '</span>';
+              cell += '</div>';
             }
           }
-          cell += '<a class="item comments" href="' + item.html_url + '" target="_blank" rel="external nofollow noopener noreferrer">';
-          cell += '<span class="key comments">💬</span>';
-          cell += '<span class="value comments">' + item.comments + '</span>';
-          cell += '</a>';
-          cell += '</div>';
-          cell += '</div>';
-          cell += '</div>';
-          cell += '</div>';
-          $(el).append(cell);
         }
+        if (item.comments) {
+          cell += '<a class="item comments last" href="' + item.html_url + '" target="_blank" rel="external nofollow noopener noreferrer">';
+          cell += '<span>💬 ' + item.comments + '</span>';
+          cell += '</a>';
+        }
+        
+        cell += '</div>';
+        cell += '</div>';
+        cell += '</div>';
+        cell += '</div>';
+        $(el).append(cell);
       });
     }, function() {
       $(el).find('.loading-wrap svg').remove();
