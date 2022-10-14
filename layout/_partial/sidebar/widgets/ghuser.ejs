@@ -3,17 +3,17 @@ var btns = [];
 btns.push({
   key: 'followers',
   desc: 'followers',
-  href: '?tab=followers'
+  tab: 'followers'
 });
 btns.push({
   key: 'following',
   desc: 'following',
-  href: '?tab=following'
+  tab: 'following'
 });
 btns.push({
   key: 'public_repos',
   desc: 'repos',
-  href: '?tab=repositories'
+  tab: 'repositories'
 });
 
 function layoutDiv() {
@@ -35,12 +35,12 @@ function layoutDiv() {
       el += '<div class="avatar" ><img no-lazy type="img" id="avatar_url" src="' + config.avatar + '"></div>';
     }
     // username
-    el += '<p class="username" type="text" id="name" href="https://github.com/' + item.username + '">&nbsp;</p>';
+    el += '<p class="username" ff="title" type="text" id="name">&nbsp;</p>';
     el += '<p class="bio" type="text" id="bio">&nbsp;</p>';
 
     el += '<div class="buttons">';
       btns.forEach((btn, i) => {
-        el += '<a class="btn" href="https://github.com/' + item.username + '' + btn.href + '">';
+        el += '<a class="btn" href="https://github.com/' + item.username + '?tab=' + btn.tab + '">';
         el += '<span class="title" type="text" id="' + btn.key + '">0</span>';
         el += '<span class="desc">' + btn.desc + '</span>';
         el += '</a>';
