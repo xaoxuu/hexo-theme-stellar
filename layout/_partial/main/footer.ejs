@@ -3,6 +3,7 @@ const author = '[@' + config.author + '](' + config.url + config.root + ')';
 const using = '[' + stellar_info('name') + '](' + stellar_info('tree') + ' "v' + stellar_info('version') + '")';
 const source = theme.footer.source;
 const more = theme.footer.more;
+const websiteApprove = theme.footer.websiteApprove
 function layoutDiv() {
   var el = '';
   el += '<footer class="page-footer reveal fs12">';
@@ -35,6 +36,9 @@ function layoutDiv() {
     el += markdown(__('footer.info_open_source', author, using, source));
   } else {
     el += markdown(__('footer.info_not_open_source', author, using));
+  }
+  if(websiteApprove) {
+    el += markdown(__('footer.website_approve', websiteApprove));
   }
   if (more) {
     if ((typeof more == 'string') && more.constructor == String) {
