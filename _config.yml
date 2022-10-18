@@ -365,10 +365,19 @@ plugins:
 style:
   darkmode: auto # auto / always / false
   smooth_scroll: true # true / false
+  font-size: 16px
   font-family:
     logo: system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif
     body: system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif
     code: Menlo, Monaco, Consolas, system-ui, "Courier New", monospace, sans-serif
+  color: 
+    theme: '#1BCDFC'
+    link: '#2196f3'
+    button: '#1BCDFC'
+    hover: '#ff5722'
+    highlight: '#ff5722'
+    inner: '#fff'
+    cat: '#FF7844'
   theme:
     light: '#f8f8f8'
     dark: '#313438'
