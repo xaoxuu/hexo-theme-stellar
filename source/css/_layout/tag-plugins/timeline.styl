@@ -76,6 +76,8 @@
   padding: 0.5rem 1rem
   margin-top: 4px
   box-shadow: $boxshadow-block
+  p
+    font-size: $fs-14
   &:empty
     display: none
   p,.highlight,ol,ul,.tag-plugin
@@ -87,8 +89,6 @@
 .tag-plugin.timeline.stellar-timeline-api .body
   max-height: convert(hexo-config('tag_plugins.timeline.max-height'))
   overflow: scroll
-  p
-    font-size: $fs-14
   p.title 
     font-size: 1rem
     font-weight: 700
@@ -141,3 +141,14 @@
       margin-right: 0
   .reaction 
     border-color: var(--block)
+
+.tag-plugin.timeline .body blockquote
+  padding: 0 0.5rem
+  box-shadow: none
+  border-left: 4px solid var(--block-border)
+  border-radius: 0
+  display: block
+  margin: 0.5rem 0
+  p
+    font-size: $fs-13
+    margin: 4px

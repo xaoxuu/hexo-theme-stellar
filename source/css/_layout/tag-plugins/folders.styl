@@ -3,13 +3,12 @@
   margin: 1rem 0
   border-radius: $border-block
   font-size: $fs-14
-  background: var(--theme-bg)
   border: 1px solid var(--theme-border)
   overflow: hidden
   .folder
     display: block
     font-size: $fs-14
-    background: var(--theme-bg)
+    background: var(--block)
     &:last-child summary
       border-bottom: none
   summary
@@ -20,7 +19,7 @@
     position: relative
     line-height: 1.2
     outline: none
-    padding: 1rem
+    padding: 0.75rem 1rem
     border-bottom: 1px solid var(--theme-border)
     &:last-child
       border-bottom: none
@@ -28,18 +27,20 @@
       p,h1,h2,h3,h4,h5,h6
         display: inline
         border-bottom: none !important
-    &:after
-      position: absolute
-      content: '+'
-      text-align: center
-      top: 50%
-      transform: translateY(-50%)
-      right: 1rem
     &:hover
       color: var(--text-p0)
+      background: var(--block-hover)
+      &:after
+        position: absolute
+        content: '+'
+        text-align: center
+        top: 50%
+        transform: translateY(-50%)
+        right: 1rem
 
 
 .tag-plugin.folders details[open]
+  background: none
   &:last-child 
     summary
       border-bottom: 1px solid var(--theme-border)
@@ -47,11 +48,11 @@
       border-bottom: none
   >summary
     color: var(--text-p1)
-    font-weight: 700
-    &:after
+    background: var(--block-hover)
+    &:hover:after
       content: '-'
+      
   >div.body
-    background: var(--card)
     padding: 1rem
     border-bottom: 1px solid var(--theme-border)
     font-size: $fs-15

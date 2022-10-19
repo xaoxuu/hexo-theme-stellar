@@ -57,8 +57,14 @@ const StellarTimeline = {
     $(el).append('<div class="loading-wrap"><svg class="loading" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg><p></p></div>');
     StellarTimeline.requestAPI(cfg.api, function(data) {
       $(el).find('.loading-wrap').remove();
+      const user = el.getAttribute('user');
       const arr = data.content || data;
       arr.forEach((item, i) => {
+        if (item.user && item.user.login && user && user.length > 0) {
+          if (!user.includes(item.user.login)) {
+            return;
+          }
+        }
         var cell = '<div class="timenode" index="' + i + '">';
         cell += '<div class="header">';
         let date = new Date(item.created_at);
@@ -98,7 +104,7 @@ const StellarTimeline = {
           }
         }
         if (item.comments != null) {
-          cell += '<a class="item comments last" href="' + item.html_url + '" target="_blank" rel="external nofollow noopener noreferrer">';
+          cell += '<a class="item comments last" href="' + item.html_url + '#issuecomment-new" target="_blank" rel="external nofollow noopener noreferrer">';
           cell += '<span>💬 ' + (item.comments || 0) + '</span>';
           cell += '</a>';
         }
