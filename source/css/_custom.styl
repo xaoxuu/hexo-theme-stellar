@@ -1,13 +1,13 @@
 @require('_defines/const')
 
 // 通用主题色
-$color-theme = #1BCDFC
-$color-link = #2196f3
-$color-button = #1BCDFC
-$color-hover = #ff5722
-$color-highlight = #ff5722
-$color-inner = #fff
-$color-cat = #FF7844
+$color-theme = convert(hexo-config('style.theme.main'))
+$color-link = convert(hexo-config('style.theme.link'))
+$color-button = convert(hexo-config('style.theme.button'))
+$color-hover = convert(hexo-config('style.theme.hover'))
+$color-highlight = convert(hexo-config('style.theme.highlight'))
+$color-inner = convert(hexo-config('style.theme.inner'))
+$color-cat = convert(hexo-config('style.theme.cat'))
 $color-cat-hover = darken($color-cat, 20)
 
 // 浅色
@@ -51,7 +51,7 @@ if hexo-config('style.font-family.logo')
 
 
 // font size
-$fs-root = 16px
+$fs-root = convert(hexo-config('style.font-size'))
 $fs-15 = .9375rem
 $fs-14 = .875rem
 $fs-13 = .8125rem
