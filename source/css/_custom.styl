@@ -1,33 +1,30 @@
 @require('_defines/const')
 
 // 通用主题色
-$color-theme = convert(hexo-config('style.theme.main'))
-$color-link = convert(hexo-config('style.theme.link'))
-$color-button = convert(hexo-config('style.theme.button'))
-$color-hover = convert(hexo-config('style.theme.hover'))
-$color-highlight = convert(hexo-config('style.theme.highlight'))
-$color-inner = convert(hexo-config('style.theme.inner'))
-$color-cat = convert(hexo-config('style.theme.cat'))
-$color-cat-hover = darken($color-cat, 20)
+$color-theme = convert(hexo-config('style.color.common.theme'))
+$color-accent = convert(hexo-config('style.color.common.accent'))
+$color-link = convert(hexo-config('style.color.common.link'))
+$color-button = convert(hexo-config('style.color.common.button'))
+$color-hover = convert(hexo-config('style.color.common.hover'))
 
 // 浅色
-$light-site-bg = convert(hexo-config('style.theme.light'))
-$light-block = #f2f2f2
-$light-title = #000
-$light-text = #333
-$light-code = #111
-$light-card = white
+$light-background = convert(hexo-config('style.color.light.background'))
+$light-block = convert(hexo-config('style.color.light.block'))
+$light-card = convert(hexo-config('style.color.light.card'))
+$light-title = convert(hexo-config('style.color.light.title'))
+$light-text = convert(hexo-config('style.color.light.text'))
+$light-code = convert(hexo-config('style.color.light.code'))
 
 // 深色
-$dark-site-bg = convert(hexo-config('style.theme.dark'))
-$dark-block = darken(saturate($dark-site-bg, 40%), 2)
-$dark-title = #fff
-$dark-text = #eee
-$dark-code = #ff7043
-$dark-card = lighten(saturate($dark-site-bg, 50%), 10)
+$dark-background = convert(hexo-config('style.color.dark.background'))
+$dark-block = convert(hexo-config('style.color.dark.block'))
+$dark-card = convert(hexo-config('style.color.dark.card'))
+$dark-title = convert(hexo-config('style.color.dark.title'))
+$dark-text = convert(hexo-config('style.color.dark.text'))
+$dark-code = convert(hexo-config('style.color.dark.code'))
 
 // 移动端深色背景（OLED调成纯黑可以省电）
-$dark-site-bg-mobile = black
+$dark-background-mobile = convert(hexo-config('style.color.dark.background-mobile'))
 
 
 // @font-face
