@@ -97,9 +97,9 @@ const StellarTimeline = {
             }
           }
         }
-        if (item.comments) {
+        if (item.comments != null) {
           cell += '<a class="item comments last" href="' + item.html_url + '" target="_blank" rel="external nofollow noopener noreferrer">';
-          cell += '<span>💬 ' + item.comments + '</span>';
+          cell += '<span>💬 ' + (item.comments || 0) + '</span>';
           cell += '</a>';
         }
         

@@ -40,7 +40,9 @@ function postTimeline(args, content) {
   var el = '';
 
   if (args.api && args.api.length > 0) {
-    el += '<div class="tag-plugin timeline stellar-timeline-api" api="' + args.api + '">';
+    el += '<div class="tag-plugin timeline stellar-timeline-api"';
+    el += ' ' + hexo.args.joinTags(args, ['api']).join(' ');
+    el += '>';
   } else {
     el += '<div class="tag-plugin timeline">';
   }
