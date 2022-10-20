@@ -92,7 +92,7 @@ function layoutDiv(fallback) {
     }
     el += '</div>';
   } else if (item.fallback) {
-    el += partial(item.fallback, {item: theme.sidebar.widgets[item.fallback]});
+    el += partial(item.fallback, {item: theme.data.widgets[item.fallback]});
   }
   return el;
 }

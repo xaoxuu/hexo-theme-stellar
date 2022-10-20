@@ -1,0 +1,46 @@
+# 您可以在这里创建属于自己的侧边栏组件库，在需要的位置放置自己的组件
+# layout即组件布局，支持自定义的有：
+# - markdown: 渲染 md 文本
+#
+
+# ---- 内置组件，请勿覆盖 ----
+repo_info:
+  layout: repo_info
+wiki_more:
+  layout: wiki_more
+
+# ---- 默认组件，可以覆盖自定义配置 ----
+# 将其覆盖设置为空，可删除一个默认组件，例如 welcome:
+# Recent update
+recent:
+  layout: recent
+  rss: # /atom.xml # npm i hexo-generator-feed
+  limit: 5 # Count of posts
+# TOC (valid only in layout:post/wiki)
+toc:
+  layout: toc
+  list_number: false
+  min_depth: 2
+  max_depth: 5
+  fallback: recent # Use a backup widget when toc does not exist.
+# github user info
+ghuser:
+  layout: ghuser
+  api: https://api.github.com
+  username: github # your github login username
+  avatar: true # true / false
+
+
+welcome:
+  layout: markdown
+  title: Stellar 入门指南
+  content: | # support markdown
+    欢迎使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar/) 主题，下面是您的入门指南，祝您使用愉快！
+    <br>
+    **第一步**
+    创建 `blog/_config.stellar.yml` 文件，在此文件中填写需要自定义的主题配置。
+    <br>
+    **第二步**
+    创建 `blog/source/_data/widgets.yml` 文件，此文件中填写需要自定义的侧边栏组件，例如 `welcome` 组件。
+    <br>
+    如果有任何疑问，请先查阅[文档](https://xaoxuu.com/wiki/stellar/)，如果文档中没有提供，请提 [issue](https://github.com/xaoxuu/hexo-theme-stellar/issues/) 向开发中询问。

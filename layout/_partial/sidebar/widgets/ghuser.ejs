@@ -23,12 +23,6 @@ function layoutDiv() {
   }
 
   el += '<div class="widget-wrap" id="github-user">';
-  // header
-  if (item.header && item.header.length > 0) {
-    el += '<div class="widget-header cap dis-select">';
-    el += '<span class="name">' + item.header + '</span>';
-    el += '</div>';
-  }
   // body
   el += '<div class="widget-body stellar-ghinfo-api" api="' + item.api + '/users/' + item.username + '">';
     if (item.avatar) {

@@ -2,18 +2,18 @@
 // 默认组件
 if (page.sidebar == undefined) {
   if (page.layout == 'post' && page.content) {
-    page.sidebar = theme.sidebar.widget_layout.post;
+    page.sidebar = theme.sidebar.widgets.post;
   } else if (page.layout == 'wiki' && page.content && page.wiki) {
     let proj = theme.wiki.projects[page.wiki];
     if (proj.sidebar) {
       page.sidebar = proj.sidebar;
     } else {
-      page.sidebar = theme.sidebar.widget_layout.wiki;
+      page.sidebar = theme.sidebar.widgets.wiki;
     }
   } else if (is_home() || ['categories', 'tags', 'archives', 'index', '404', undefined].includes(page.layout)) {
-    page.sidebar = theme.sidebar.widget_layout.index;
+    page.sidebar = theme.sidebar.widgets.index;
   } else if (page.layout == 'page') {
-    page.sidebar = theme.sidebar.widget_layout.page;
+    page.sidebar = theme.sidebar.widgets.page;
   } else {
     page.sidebar = [];
   }
@@ -23,8 +23,8 @@ function layoutWidgets() {
   el += '<div class="widgets">';
   if (page.sidebar) {
     page.sidebar.forEach((w, i) => {
-      if (w in theme.sidebar.widgets) {
-        let widget = theme.sidebar.widgets[w];
+      if (w in theme.data.widgets) {
+        let widget = theme.data.widgets[w];
         if (widget && widget.layout) {
           el += partial('widgets/' + widget.layout, {item: widget});
         }

@@ -24,51 +24,11 @@ sidebar:
     # friends: '[友链](/friends/)'
     # about: '[关于](/about/)'
   # Sidebar widgets
-  widget_layout:
-    index: [welcome, recent, ghuser_mini] # for home/wiki/categories/tags/archives/404 pages
+  widgets:
+    index: [welcome, recent] # for home/wiki/categories/tags/archives/404 pages
     page: [welcome, toc] # for pages using 'layout:page'
     post: [toc, repo_info] # for pages using 'layout:post'
     wiki: [toc, repo_info, wiki_more] # for pages using 'layout:wiki'
-  widgets:
-    # Recent update
-    recent:
-      layout: recent
-      rss: # /atom.xml # npm i hexo-generator-feed
-      limit: 5 # Count of posts
-    # TOC (valid only in layout:post/wiki)
-    toc:
-      layout: toc
-      list_number: false
-      min_depth: 2
-      max_depth: 5
-      fallback: recent # Use a backup widget when toc does not exist.
-    # github user info
-    ghuser:
-      layout: ghuser
-      api: https://api.github.com
-      username: github # your github login username
-      avatar: true
-    ghuser_mini:
-      layout: ghuser
-      header: # GitHub Info
-      api: https://api.github.com
-      username: github # your github login username
-      avatar: false
-    # welcome
-    welcome:
-      layout: markdown
-      title: Stellar 入门指南
-      content: | # support markdown
-        欢迎使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar/) 主题，下面是您的入门指南，祝您使用愉快！
-        <br>
-        **第一步**
-        创建 `blog/_config.stellar.yml` 文件，在此文件中填写需要自定义的主题配置。
-        <br>
-        **第二步**
-        创建 `blog/source/_data/widgets.yml` 文件，此文件中填写需要自定义的侧边栏组件，例如 `welcome` 组件。
-        <br>
-        如果有任何疑问，请先查阅[文档](https://xaoxuu.com/wiki/stellar/)，如果文档中没有提供，请提 [issue](https://github.com/xaoxuu/hexo-theme-stellar/issues/) 向开发中询问。
-
 
 
 ######## Main ########

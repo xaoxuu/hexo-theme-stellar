@@ -1,9 +1,13 @@
 /**
  * 部分代码借鉴自 NexT:
  * https://github.com/next-theme/hexo-theme-next/blob/master/scripts/events/lib/config.js
+ * Volantis:
+ * https://github.com/volantis-x/hexo-theme-volantis/blob/master/scripts/events/lib/cdn.js
  */
 
 'use strict';
+
+const path = require('path');
 
 module.exports = hexo => {
 
@@ -25,23 +29,35 @@ module.exports = hexo => {
 
   // merge data
   const data = hexo.locals.get('data');
+  // merge widgets
+  var widgets = hexo.render.renderSync({ path: path.join(hexo.theme_dir, '_data/widgets.yml'), engine: 'yaml' });
   if (data.widgets) {
-    for (let id of Object.keys(data.widgets)) {
-      hexo.theme.config.sidebar.widgets[id] = data.widgets[id];
+    for (let i of Object.keys(data.widgets)) {
+      let widget = data.widgets[i];
+      if (widget == null || widget.length == 0) {
+        // delete
+        delete widgets[i];
+      } else {
+        // create
+        if (widgets[i] == null) {
+          widgets[i] = widget;
+        } else {
+          // merge
+          for (let j of Object.keys(widget)) {
+            widgets[i][j] = widget[j];
+          }
+        }
+      }
     }
   }
+  if (hexo.theme.config.data == undefined) {
+    hexo.theme.config.data = {};
+  }
+  hexo.theme.config.data['widgets'] = widgets;
 
   // default menu
   if (hexo.theme.config.sidebar.menu == undefined) {
     hexo.theme.config.sidebar.menu = [];
   }
-  // default widgets
-  if (hexo.theme.config.sidebar.widgets.repo_info == undefined) {
-    hexo.theme.config.sidebar.widgets.repo_info = {layout: 'repo_info'};
-  }
-  if (hexo.theme.config.sidebar.widgets.wiki_more == undefined) {
-    hexo.theme.config.sidebar.widgets.wiki_more = {layout: 'wiki_more'};
-  }
-
 
 };
