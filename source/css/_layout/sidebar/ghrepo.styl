@@ -1,0 +1,30 @@
+.widget-wrap#repo-info
+  .widget-body
+    a.repo
+      display: block
+      border: 1px solid var(--block-border)
+      color: var(--text-p2)
+      background: var(--block)
+      border-radius: $border-block
+      >div  
+        margin: 0.75rem 0.5rem
+      span
+        color: var(--text-p2)
+      &:hover
+        background: var(--block-hover)
+    a.repo
+      svg
+        margin-right: 4px
+      .flex-row
+        display: flex 
+        align-items: center
+      .repo-name
+        font-size: $fs-14
+        font-weight: 700
+      .repo-desc
+        font-size: $fs-13
+      .grid
+        font-size: $fs-13
+        display: grid
+        grid-gap: 2px
+        grid-template-columns: repeat(auto-fill, "calc((100% - 2 * %s) / 3)" % 2px)

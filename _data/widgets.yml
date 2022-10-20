@@ -3,9 +3,9 @@
 # - markdown: 渲染 md 文本
 #
 
-# ---- 内置组件，请勿覆盖 ----
-repo_info:
-  layout: repo_info
+# ---- 内置组件，暂时不支持覆盖 ----
+ghrepo:
+  layout: ghrepo
 wiki_more:
   layout: wiki_more
 
