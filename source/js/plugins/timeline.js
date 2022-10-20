@@ -67,6 +67,12 @@ const StellarTimeline = {
         }
         var cell = '<div class="timenode" index="' + i + '">';
         cell += '<div class="header">';
+        if (!user && item.user) {
+          cell += '<a class="user-info" href="' + item.user.html_url + '" target="_blank" rel="external nofollow noopener noreferrer">';
+          cell += '<img src="' + item.user.avatar_url + '">';
+          cell += '<span>' + item.user.login + '</span>';
+          cell += '</a>';
+        }
         let date = new Date(item.created_at);
         cell += '<p>' + date.toString().replace(/\sGMT([^.]*)/i, "") + '</p>';
         cell += '</div>';
@@ -105,7 +111,7 @@ const StellarTimeline = {
         }
         if (item.comments != null) {
           cell += '<a class="item comments last" href="' + item.html_url + '#issuecomment-new" target="_blank" rel="external nofollow noopener noreferrer">';
-          cell += '<span>💬 ' + (item.comments || 0) + '</span>';
+          cell += '<span><svg t="1666270368054" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2528" width="200" height="200"><path d="M952 64H72C32.3 64 0 96.3 0 136v508c0 39.7 32.3 72 72 72h261l128 128c14 14 32.5 21.1 50.9 21.1s36.9-7 50.9-21.1l128-128h261c39.7 0 72-32.3 72-72V136c0.2-39.7-32.1-72-71.8-72zM222 462c-39.8 0-72-32.2-72-72s32.2-72 72-72 72 32.2 72 72-32.2 72-72 72z m290-7.7c-39.8 0-72-32.2-72-72s32.2-72 72-72 72 32.2 72 72c0 39.7-32.2 72-72 72z m290 8c-39.8 0-72-32.2-72-72s32.2-72 72-72 72 32.2 72 72c0 39.7-32.2 72-72 72z" p-id="2529"></path></svg> ' + (item.comments || 0) + '</span>';
           cell += '</a>';
         }
         

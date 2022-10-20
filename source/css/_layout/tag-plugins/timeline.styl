@@ -35,24 +35,48 @@
   &:hover .header
     p
       color: var(--text-p1)
+    .user-info
+      background: $color-theme
+      span
+        color: var(--card)
     &:before
       background: $color-theme
       height: 16px
       top: 'calc(50% - 0.5 * %s)' % @height
       transform: scale(1)
 
-.tag-plugin.timeline .header
+.tag-plugin.timeline .timenode .header
   display: flex
   align-items: center
   position: relative
-  p
-    margin: .25rem 0
+  margin: 0.25rem 0
+  .user-info 
+    display: flex
+    align-items: center
     font-size: $fs-12
-    font-weight: 700
+    font-weight: 500
+    color: var(--text-p1)
+    margin-right: 4px
+    line-height: 1
+    border-radius: 16px
+    padding-right: 6px
+    trans2 color background
+    img 
+      background: white
+      height: 16px
+      border-radius: 16px
+      display: inline
+      margin: 0 4px 0 0
+      object-fit: contain
+    &:hover
+      background: $color-hover
+  p
+    margin: 0
+    font-size: $fs-12
+    font-weight: 500
     color: var(--text-p3)
-    font-family: $ff-code
     trans1 color
-    opacity: 0.75
+    line-height: 1
     a
       color: inherit
       font-weight: inherit
@@ -148,7 +172,7 @@
   border-left: 4px solid var(--block-border)
   border-radius: 0
   display: block
-  margin: 0.5rem 0
+  margin: 0.75rem 0
   p
     font-size: $fs-13
-    margin: 4px
+    margin: 0.25rem
