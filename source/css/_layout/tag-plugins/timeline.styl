@@ -1,6 +1,8 @@
-.tag-plugin.timeline
+.md .tag-plugin.folding .body:has(.timeline)
+  background: var(--site-bg)
+.md .tag-plugin.timeline
   position: relative
-  margin: 1rem 0
+  margin-top: 0
   padding-left: 16px
   &:before
     content: ''
@@ -45,6 +47,7 @@
     color: var(--text-p3)
     font-family: $ff-code
     trans1 color
+    opacity: 0.75
     a
       color: inherit
       font-weight: inherit
@@ -74,3 +77,61 @@
     margin: .5rem 0
   .tag-plugin.copy
     width: 240px
+
+
+.tag-plugin.timeline.stellar-timeline-api .body
+  max-height: convert(hexo-config('tag_plugins.timeline.max-height'))
+  overflow: scroll
+  p
+    font-size: $fs-14
+  p.title
+    font-size: 1rem
+    font-weight: 700
+    margin: 0
+    padding: 0.5rem 0 0.75rem
+    line-height: 1.25
+    border-bottom: 1px dashed var(--block-border)
+    a
+      color: inherit
+      &:hover
+        color: $color-hover
+  pre code
+    font-size: $fs-12
+
+.tag-plugin.timeline.stellar-timeline-api .body .footer
+  padding: 0.5rem 0 1rem
+  margin-bottom: -0.5rem
+  user-select: none
+  font-weight: 500
+  display: flex
+  flex-wrap: wrap
+  justify-content: space-between
+  align-items: stretch
+  position: sticky
+  position: -webkit-sticky
+  bottom: -0.5rem
+  background: var(--card)
+  span
+    line-height: 1.8
+  &:empty
+    display: none
+  .flex
+    display: flex
+    flex-wrap: wrap
+    font-size: $fs-12
+    align-items: stretch
+.tag-plugin.timeline.stellar-timeline-api .body .footer
+  .item
+    border-width: 1px
+    border-style: solid
+    margin: 2px
+    border-radius: 4px
+    padding: 0 0.5rem
+    display: flex
+    align-items: center
+    &:first-child
+      margin-left: 0
+    &:last-child
+      margin-right: 0
+    .reaction
+      border-color: var(--block)

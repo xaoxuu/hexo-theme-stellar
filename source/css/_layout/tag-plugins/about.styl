@@ -1,12 +1,12 @@
 .tag-plugin.about
-  background: var(--block)
-  border-radius: $border-block
+  background: var(--card)
+  border-radius: $border-card
   padding: 2rem
   .about-header
     display flex
-    flex-direction: row-reverse
-    justify-content: space-between
+    justify-content: center
     flex-wrap: wrap
+    margin: 1.5rem 0 3rem
     img
       object-fit: contain
     >img
@@ -28,28 +28,25 @@
     >p
       line-height: 1.5
     .tag-plugin.navbar:last-child
+      text-align: center
       nav.cap
         margin-top: 1rem
+        background: var(--block)
         a
-          margin: 0
-          color: $color-link
-          background: var(--block-hover)
-          &.active
-            background: none
+          color: var(--text-p2)
           &:hover
-            color: $color-hover
-            background: var(--block-border)
-        a+a
-          margin-left: .5rem
+            background: var(--card)
+          &.active
+            background: var(--card)
+            box-shadow: none
+            color: var(--text-p1)
   .about-header+.about-body
     margin-top: 1.5rem
 
 @media screen and (max-width: $device-mobile)
   .tag-plugin.about
-    padding: 1rem
+    padding: 1.5rem 1rem
     .about-header
-      flex-direction: column
-      .avatar
-        margin: 1rem auto
+      margin: 2.5rem 0 3rem
       p
         width 100%

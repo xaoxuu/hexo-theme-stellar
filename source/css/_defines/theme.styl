@@ -18,8 +18,10 @@
   --shadow-1: darken($white, 10)
   --shadow-2: darken($white, 0)
   // 文本代码块
-  --code-gradient-light: #cff0ff
-  --code-gradient-dark: #afcafd
+  --code-gradient-light: #d1d1d1
+  --code-gradient-dark: #f1f1f1
+  //
+  --list-light: lighten($black, 90)
 
 set_darkmode()
   :root
@@ -42,10 +44,13 @@ set_darkmode()
     --shadow-1: lighten($black, 15)
     --shadow-2: lighten($black, 22)
     // 文本代码块
-    --code-gradient-light: lighten($black, 8)
-    --code-gradient-dark: lighten($black, 8)
+    --code-gradient-light: #2f2f2f
+    --code-gradient-dark: #2f2f2f
 
-    @media screen and (max-width: $device-tablet)
+    // aplayer css
+    --list-light: lighten($black, 20)
+
+    @media screen and (max-width: $device-mobile-max)
       --site-bg: $dark-site-bg-mobile
       --card: darken($dark-card, 6)
       --block: darken($dark-block, 4)
@@ -56,6 +61,9 @@ if hexo-config('style.darkmode') == 'auto'
   // 系统的dark模式
   @media (prefers-color-scheme: dark)
     set_darkmode()
+    html {
+      color-scheme: dark;
+    }
 
 
 if hexo-config('style.darkmode') == 'always'

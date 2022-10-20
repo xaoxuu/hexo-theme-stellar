@@ -1,4 +1,4 @@
-const friendsjs = {
+const GitHubInfo = {
   requestAPI: (url, callback, timeout) => {
     let retryTimes = 5;
     function request() {
@@ -44,29 +44,20 @@ const friendsjs = {
   },
   layout: (cfg) => {
     const el = $(cfg.el)[0];
-    $(el).append('<div class="loading-wrap"><svg class="loading" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg><p></p></div>');
-    friendsjs.requestAPI(cfg.api, function(data) {
-      $(el).find('.loading-wrap').remove();
+    GitHubInfo.requestAPI(cfg.api, function(data) {
       const arr = data.content || data;
-      arr.forEach((item, i) => {
-        var user = '<div class="user-card">';
-        user += '<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer"';
-        user += ' href="' + (item.html_url || item.url) + '">';
-        user += '<img src="' + (item.avatar_url || item.avatar || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';">';
-        user += '<div class="name"><span>' + (item.title || item.login) + '</span></div>';
-        user += '</a>';
-        user += '</div>';
-        $(el).find('.group-body').append(user);
-      });
+      for (let key of Object.keys(data)) {
+        $(el).find("[type=text]#" + key).text(data[key]);
+        $(el).find("[type=link]#" + key).attr("href", data[key]);
+        $(el).find("[type=img]#" + key).attr("src", data[key]);
+      }
     }, function() {
-      $(el).find('.loading-wrap svg').remove();
-      $(el).find('.loading-wrap p').text('加载失败，请稍后重试。');
     });
   },
 }
 
 $(function () {
-  const els = document.getElementsByClassName('stellar-friends-api');
+  const els = document.getElementsByClassName('stellar-ghinfo-api');
   for (var i = 0; i < els.length; i++) {
     const el = els[i];
     const api = el.getAttribute('api');
@@ -77,7 +68,6 @@ $(function () {
     cfg.el = el;
     cfg.api = api;
     cfg.class = el.getAttribute('class');
-    cfg.avatar = 'https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/avatar/round/3442075.svg';
-    friendsjs.layout(cfg);
+    GitHubInfo.layout(cfg);
   }
 });

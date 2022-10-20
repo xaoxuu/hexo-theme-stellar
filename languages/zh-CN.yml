@@ -36,12 +36,6 @@ meta:
     day: 天前
     month: 个月前
 
-footer:
-  license: '本博客所有文章除特别声明外，均采用 %s 许可协议，转载请注明出处。'
-  info_not_open_source: '本站由 %s 创建，使用 %s 作为主题。'
-  info_open_source: '本站由 %s 创建，使用 %s 作为主题，您可以在 %s 找到本站源码。'
-  website_approve: '本站备案信息 %s'
-
 page:
   error:
     what: 很抱歉，您访问的页面不存在

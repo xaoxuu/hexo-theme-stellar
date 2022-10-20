@@ -1,6 +1,6 @@
 ######## Stellar info ########
 stellar:
-  version: '1.8.0'
+  version: '1.10.0'
   homepage: 'https://xaoxuu.com/wiki/stellar/'
   repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
   cdn_css: # Use cdn links instead of /css/main.css
@@ -11,23 +11,6 @@ stellar:
 open_graph:
   enable: true
   twitter_id: # for open_graph meta
-
-######## Music info ########
-pjax: true
-music:
-  enable: true # 开关
-  autoHide: true   # hide auto maticaly
-  server: netease   # require	music platform: netease, tencent, kugou, xiami, baidu
-  type: playlist    # require song, playlist, album, search, artist
-  id: 7508183172     # require	song id / playlist id / album id / search keyword
-  fixed: true       # 开启吸底模式
-  autoplay: false   # 是否自动播放
-  theme: '#b7daff'
-  loop: 'all'       # 音频循环播放, 可选值: 'all', 'one', 'none'
-  order: 'list'   # 音频循环顺序, 可选值: 'list', 'random'
-  preload: 'auto'   # 预加载，可选值: 'none', 'metadata', 'auto'
-  volume: 0.8       # 默认音量，请注意播放器会记忆用户设置，用户手动设置音量后默认音量即失效
-  listFolded: false # 列表默认折叠
 
 ######## Sidebar ########
 sidebar:
@@ -58,6 +41,19 @@ sidebar:
       min_depth: 2
       max_depth: 5
       fallback: recent # Use a backup widget when toc does not exist.
+    # github user info
+    ghuser:
+      layout: ghuser
+      api: https://api.github.com
+      username: xiangshu233
+      avatar: true
+
+    ghuser_mini:
+        layout: ghuser
+        header: # GitHub Info
+        api: https://api.github.com
+        username: xiangshu233
+        avatar: false
     # welcome
     welcome:
       layout: markdown
@@ -118,6 +114,8 @@ comments:
     keep-theme: # true/false
     loading: false
     branch: main
+
+
   # utterances
   # https://utteranc.es/
   utterances:
@@ -126,6 +124,25 @@ comments:
     issue-number:
     theme: preferred-color-scheme
     label:
+
+  # giscus
+  # https://giscus.app/zh-CN
+  giscus:
+    data-repo: xxx/xxx # [在此输入仓库]
+    data-repo-id: # [在此输入仓库 ID]
+    data-category: # [在此输入分类名]
+    data-category-id:
+    data-mapping: pathname
+    data-strict: 0
+    data-reactions-enabled: 1
+    data-emit-metadata: 0
+    data-input-position: top # top, bottom
+    data-theme: preferred_color_scheme
+    data-lang: zh-CN
+    data-loading: lazy
+    crossorigin: anonymous
+
+
   valine:
     js: https://fastly.jsdelivr.net/gh/XuxuGood/simple-blog-cdn@main/js/Valine.min.js
     appId: # your appId
@@ -171,12 +188,13 @@ comments:
 
     # Custom emoji
     # emoji:
-    #   - https://unpkg.com/@waline/emojis@1.0.1/weibo
-    #   - https://unpkg.com/@waline/emojis@1.0.1/alus
-    #   - https://unpkg.com/@waline/emojis@1.0.1/bilibili
-    #   - https://unpkg.com/@waline/emojis@1.0.1/qq
-    #   - https://unpkg.com/@waline/emojis@1.0.1/tieba
-    #   - https://unpkg.com/@waline/emojis@1.0.1/tw-emoji
+    #   - https://unpkg.com/@waline/emojis@1.1.0/weibo
+    #   - https://unpkg.com/@waline/emojis@1.1.0/alus
+    #   - https://unpkg.com/@waline/emojis@1.1.0/bilibili
+    #   - https://unpkg.com/@waline/emojis@1.1.0/qq
+    #   - https://unpkg.com/@waline/emojis@1.1.0/tieba
+    #   - https://unpkg.com/@waline/emojis@1.1.0/tw-emoji
+    #   - https://unpkg.com/@waline/emojis@1.1.0/bmoji
 
     # Comment infomation, valid meta are nick, mail and link
     # meta:
@@ -229,10 +247,11 @@ footer:
     # '更多':
     #   - '[关于本站](/)'
     #   - '[GitHub](/)'
-  license: '[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)'
-  source: #'[GitHub](https://github.com/xaoxuu/hexo-theme-stellar)'
-  more: '<span id="runtime">'
-  websiteApprove: '[鲁ICP备19044863号](https://beian.miit.gov.cn)'
+  content: | # 支持 Markdown 格式
+    本站由 [@xiangshu](/) 使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 主题创建。本站备案信息：[鲁ICP备19044863号](https://beian.miit.gov.cn)
+    本博客所有文章除特别声明外，均采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。
+    <span id='runtime'>
+
 
 
 ######## Tag Plugins ########
@@ -252,14 +271,18 @@ tag_plugins:
       prefix: https://s2.loli.net/2022/01/04/UvHcsa73jQPnobq.png
   # {% emoji %}
   emoji:
-    default: https://fastly.jsdelivr.net/gh/volantis-x/cdn-emoji/qq/%s.gif
+    default: https://fastly.jsdelivr.net/gh/cdn-x/emoji/qq/%s.gif
     twemoji: https://fastly.jsdelivr.net/gh/twitter/twemoji/assets/svg/%s.svg
-    qq: https://fastly.jsdelivr.net/gh/volantis-x/cdn-emoji/qq/%s.gif
-    aru: https://fastly.jsdelivr.net/gh/volantis-x/cdn-emoji/aru-l/%s.gif
-    tieba: https://fastly.jsdelivr.net/gh/volantis-x/cdn-emoji/tieba/%s.png
+    qq: https://fastly.jsdelivr.net/gh/cdn-x/emoji/qq/%s.gif
+    aru: https://fastly.jsdelivr.net/gh/cdn-x/emoji/aru-l/%s.gif
+    tieba: https://fastly.jsdelivr.net/gh/cdn-x/emoji/tieba/%s.png
   # {% image %}
   image:
     fancybox: # true, false
+
+  # {% timeline %}
+  timeline:
+    max-height: 80vh
 
 
 ######## JS Plugins ########
@@ -268,9 +291,15 @@ plugins:
   # jquery
   jquery: https://fastly.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js
 
-  # issues api
-  sitesjs: /js/plugins/sites.js
-  friendsjs: /js/plugins/friends.js
+  # stellar api
+  stellar:
+    sites: /js/plugins/sites.js
+    friends: /js/plugins/friends.js
+    ghinfo: /js/plugins/ghinfo.js
+    timeline: /js/plugins/timeline.js
+
+
+  marked: https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js
 
   ## optional plugins ##
   # preload
@@ -341,11 +370,18 @@ plugins:
 
 style:
   darkmode: auto # auto / always / false
+  # 平滑滚动
+  smooth_scroll: false # true / false
+  font-family:
+    logo: system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif
+    body: HarmonyOS_Medium # HarmonyOS_Regular
+    code: Fira Code', Monaco, Menlo, "Microsoft Yahei", Consolas, monospace
   theme:
     light: '#f8f8f8'
-    dark: '#313438'
+    dark: '#1a1a1a'
   animated_avatar:
-    animate: auto # auto, always
+    # 头像动画
+    animate: always # auto, always
     background: https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp
   codeblock:
     scrollbar: 4px

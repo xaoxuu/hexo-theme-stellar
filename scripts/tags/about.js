@@ -10,28 +10,28 @@
 'use strict';
 
 hexo.extend.tag.register('about', function(args, content) {
-  args = hexo.args.map(args, ['avatar', 'height']);
+  args = hexo.args.map(args, ['avatar', 'height', 'border']);
   var rows = hexo.render.renderSync({text: content, engine: 'markdown'}).split('\n');
   var el = '';
   // wrapper
   el += '<div class="tag-plugin about">';
   el += '<div class="about-header">';
   // avatar
-  if (args.avatar) {
-    el += '<div class="avatar">'
-    el += '<img src="' + args.avatar + '"';
-    if (args.height && args.height.length > 0) {
-      el += ' height="' + args.height + '"/>';
-    } else {
-      el += '/>';
-    }
-    el += '</div>';
+  var avatar_url = args.avatar;
+  if (args.avatar === undefined) {
+    avatar_url = hexo.config.avatar;
   }
-  // title
-  if (rows.length > 0) {
-    // el += '<div class="title">';
-    el += rows.shift();
-    // el += '</div>';
+  if (avatar_url) {
+    el += '<div class="avatar">'
+    el += '<img src="' + avatar_url + '"';
+    if (args.border && args.border.length > 0) {
+      el += ' style="border-radius:' + args.border + '"';
+    }
+    if (args.height && args.height.length > 0) {
+      el += ' height="' + args.height + '"';
+    }
+    el += '/>';
+    el += '</div>';
   }
 
   el += '</div>';

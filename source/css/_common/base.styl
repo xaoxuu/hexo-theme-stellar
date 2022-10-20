@@ -1,44 +1,27 @@
 pre
-  font-family: $ff-fira-code
+  font-family: $ff-code
   font-size: $fs-code
   tab-size: 4
   -moz-tab-size: 4
   -o-tab-size: 4
   -webkit-tab-size: 4
-
 a
   text-decoration: none
   color: $color-link
   &:hover
     color: $color-hover
 
-// md > a
-p, li
-  >a:not([class])
-    margin: 0 1px
-    padding: 4px
-    border-radius: 4px
-    &:hover
-      color: darken($color-hover, 10)
-      background: alpha($color-hover, 0.08)
-
+p:not([class])
+  text-align: justify
 hr
   color: var(--text-meta)
   opacity: .1
-
-
 img
   max-width: 100%
-
-
 li
   font-size: $fs-15
-
-
 ul,ol
   padding-left: 1.5rem
-
-
 // table
 table:not([class])
   border-collapse: collapse
@@ -60,3 +43,6 @@ table:not([class])
     trans()
     &:hover
       background: var(--block)
+
+*[ff=title]
+  font-family: $ff-logo

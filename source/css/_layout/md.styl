@@ -25,6 +25,8 @@ article.md.content
     >p:not([class])
       text-indent: 'calc(%s * 2)' % $fs-p
       text-align: justify
+      a
+        text-indent: 0
     h1,h2,h3,h4,h5,h6
       text-align: center
     >h2:not([class])
@@ -32,7 +34,7 @@ article.md.content
       border-bottom-style: dashed
       border-bottom-color: $color-highlight
   >:first-child
-    margin-top: 1rem
+    margin-top: 0
   h1:not(:first-child)
     margin-top: 2em
   h2:first-child
@@ -129,3 +131,35 @@ article.md img
   border-radius: $border-image
   margin: auto
   display: block
+
+article.md
+  p:not([class]), li:not([class])
+    a:not([class])
+      position: relative
+      padding: 2px
+      text-decoration: none
+      display: inline-block
+      line-height: 1.2
+      &:after
+        content: ''
+        position: absolute
+        border-radius: 2px
+        bottom: 1px
+        left: 2px
+        right: 2px
+        height: 1px
+        opacity: 0.5
+        background: $color-link
+        trans1: all
+      &:hover
+        border-bottom: none
+        color: $color-link
+        // color: darken($color-hover, 10)
+        // background: alpha($color-hover, 0.08)
+        &:after
+          height: 100%
+          opacity: 0.2
+          bottom: 0
+          left: 0
+          right: 0
+          // background-color: alpha($color-hover, 0.08)

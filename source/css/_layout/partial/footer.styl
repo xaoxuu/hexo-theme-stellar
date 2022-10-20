@@ -9,6 +9,7 @@
 .page-footer .sitemap
   margin: .5rem 0 2rem
   display: grid
+  scrollbar-width: none
   grid-gap: 1rem 1rem
   grid-auto-flow: column dense
   overflow: scroll
@@ -33,6 +34,7 @@
 .page-footer .text
   p
     margin: 4px 0
-    line-height: 1.2
-  a
+    line-height: 1.5
+  a:not([class])
     text-decoration: underline
+    font-weight: 500

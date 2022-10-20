@@ -26,7 +26,7 @@ function layoutTitle() {
 <% } else { %>
   <%
   if (page.header == undefined) {
-    page.header = false;
+    page.header = 'auto';
   }
   %>
   <%- partial('_partial/main/navbar/breadcrumb') %>

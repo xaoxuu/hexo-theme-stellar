@@ -1,0 +1,73 @@
+.aplayer {
+	background: var(--card) !important
+  &-body {
+    background: var(--site-bg) !important
+  }
+  &-lrc:before {
+    background: linear-gradient(180deg, var(--block-border) 0, hsla(0,0%,100%,0)) !important;
+  }
+  &-lrc:after {
+    background: linear-gradient(180deg, hsla(0,0%,100%,0) 0, var(--block-border))!important;
+  }
+  &-info {
+    border-top: 1px solid var(--block-border) !important
+    border-bottom: 1px solid var(--block-border) !important;
+  }
+
+  &-title {
+    color: var(--text-p1) !important
+  }
+  &-list {
+    border: 1px solid var(--block-border) !important
+    &-index {
+      color: var(--text-p3) !important
+    }
+    &-title {
+      color: var(--text-p1) !important
+    }
+    &-author {
+      color: var(--text-p3) !important
+    }
+  }
+  &-list-light {
+    background: var(--list-light) !important
+  }
+  &-list ol li {
+    border-top: 1px solid var(--block-border) !important
+    &:hover {
+      background-color:var(--text-meta) !important
+    }
+  }
+  ol::-webkit-scrollbar-thumb {
+    background-color: var(--list-light) !important
+    &:hover {
+      background-color:var(--text-meta) !important
+    }
+  }
+
+  &-info .aplayer-controller .aplayer-time .aplayer-icon path {
+    fill: var(--text-p1) !important
+  }
+
+  &-miniswitcher {
+    background: var(--list-light) !important
+    &-icon {
+      svg {
+        background: var(--block) !important
+          path {
+            fill: var(--text-p1) !important
+          }
+      }
+    }
+  }
+
+  &-info .aplayer-controller .aplayer-time .aplayer-icon:hover path {
+      fill: var(--text-p3) !important
+  }
+
+}
+
+
+
+
+

@@ -69,6 +69,8 @@ function layoutFooterDiv() {
   }
 }
 %>
-<%- partial('header', {where: 'sidebar'}) %>
+<% if (page.header == undefined || page.header == 'left' || page.header == 'auto') { %>
+  <%- partial('header', {where: 'sidebar'}) %>
+<% } %>
 <%- layoutWidgets() %>
 <%- layoutFooterDiv() %>

@@ -2,20 +2,20 @@ code
   -webkit-font-smoothing: auto
   -moz-osx-font-smoothing: auto
   color: var(--text-code)
-  font-family: $ff-code2
-  word-break: break-all
-  font-size: 95%
+  font-family: $ff-code
+
+p>code:not([class]), li>code:not([class])
+  font-size: 85%
   background: linear-gradient(to right, var(--code-gradient-light), var(--code-gradient-dark))
   padding: .1em .4em
   margin: 0em .2em
   border-radius: 4px
 
-article.md .highlight
+article.md .highlight, pre:not([class]):has(>code)
   margin: var(--gap-p) 0
   border-radius: $border-block
   overflow: hidden
   background: var(--block)
-  border: 1px solid var(--block-border)
   line-height: 1.5
   font-family: $ff-code
   box-sizing: border-box
@@ -135,7 +135,7 @@ article.md .highlight
     content: "Python"
   &.php .code:before
     content: "PHP"
-  &.rust .code:before
+  &.rust .code:before,&.rs .code:before
     content: "Rust"
   &.sql .code:before
     content: "SQL"
@@ -145,21 +145,21 @@ article.md .highlight
     content: "Makefile"
   &.go .code:before
     content: "Go"
-  &.ts .code:before, &.typescript .code:before
-    content: "TypeScript"
+  &.typescript .code:before,&.ts .code:before
+    content: "TS"
 
 
 
-$hl-keyword = #8959a8
+$hl-keyword = #C792EA
 $hl-blue = #1E80F0
 $hl-cyan = #17AFCA
 $hl-green = #3FA33F
 $hl-light-blue = #6ECDF9
-$hl-red = #EE2B29
+$hl-red = #ff6260
 $hl-orange = #FB3F1B
 $hl-amber = #FD8607
 $hl-text = var(--text-p1)
-pre
+.code>pre
   .code:before
     display: none
   // 行
@@ -202,7 +202,7 @@ pre
     color: $color-md-orange
 
   .string, .meta-string
-    color: darken($color-md-green, 10%)
+    color: darken($color-md-green, 1%)
 
   .value, .inheritance, .header, .ruby .symbol, .xml .cdata
     color: $color-md-green

@@ -22,11 +22,11 @@ $light-card = white
 
 // 深色
 $dark-site-bg = convert(hexo-config('style.theme.dark'))
-$dark-block = darken(saturate($dark-site-bg, 40%), 2)
+$dark-block = #101010
 $dark-title = #fff
 $dark-text = #eee
-$dark-code = #ff7043
-$dark-card = lighten(saturate($dark-site-bg, 50%), 10)
+$dark-code = #aac8e4
+$dark-card = lighten(saturate($dark-site-bg, 90%), 2)
 
 // 移动端深色背景（OLED调成纯黑可以省电）
 $dark-site-bg-mobile = black
@@ -40,9 +40,17 @@ $dark-site-bg-mobile = black
 
 $ff-body = system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif
 $ff-code = Menlo, Monaco, Consolas, system-ui, "Courier New", monospace, sans-serif
-$ff-code2 = 'Fira Code', Monaco, Menlo, "Microsoft Yahei", Consolas, monospace
-$ff-fira-code = 'Fira Code', monospace; // 代码块字体 Fira Code
 $ff-logo = $ff-body
+
+if hexo-config('style.font-family.body')
+  $ff-body = convert(hexo-config('style.font-family.body'))
+
+if hexo-config('style.font-family.code')
+  $ff-code = convert(hexo-config('style.font-family.code'))
+
+if hexo-config('style.font-family.logo')
+  $ff-logo = convert(hexo-config('style.font-family.logo'))
+
 
 // font size
 $fs-root = 16px
@@ -80,6 +88,12 @@ $border-image = 6px
     --width-main: 860px
     --gap-l: 64px
 
+  // iPad 竖屏
+  @media screen and (max-width: $device-tablet)
+    --width-left: 220px
+  // iPad 竖屏
+  @media screen and (max-width: $device-mobile-max)
+    --width-left: 256px
 
 // shadow
 $boxshadow-card = 0 1px 2px 0px rgba(0, 0, 0, 0.1)
