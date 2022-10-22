@@ -47,7 +47,21 @@
   &:hover
     background: $color-hover
 
-  
+.widget-wrap#github-user .widget-body .menu 
+  margin-bottom: 0
+  background: none
+  a.active 
+    box-shadow: none
+    position: relative
+    &:after
+      content: ''
+      position: absolute
+      height: 3px
+      bottom: 0
+      width: 32px
+      left: 'calc(50% - 0.5 * %s)' % @width
+      border-radius: 4px
+      background: $color-theme
 
 .widget-wrap#github-user .widget-body .buttons
   margin: 1rem 0

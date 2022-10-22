@@ -28,7 +28,8 @@ ghuser:
   layout: ghuser
   api: https://api.github.com
   username: github # your github login username
-  avatar: true # true / false
+  avatar: true # show avatar or not
+  menu: true # show menu or not
 
 
 welcome:

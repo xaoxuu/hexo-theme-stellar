@@ -1,6 +1,10 @@
 // list
 .post-list
   margin: 1rem
+  .post-title
+    margin-top: 1.5rem
+  .post-title:first-child
+    margin-top: .5rem
 
 // card
 .post-list .post-card
@@ -51,6 +55,7 @@
   margin-left: -1rem
   margin-top: -1rem
   margin-right: -1rem
+  background: var(--block)
   &:not(.lazy)
     trans1: transform 1s
   img

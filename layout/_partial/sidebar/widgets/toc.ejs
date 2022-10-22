@@ -15,11 +15,7 @@ function layoutToc() {
 function layoutTocHeader(title) {
   var el = '';
   el += '<div class="widget-header cap dis-select">';
-  if (title) {
-    el += '<span class="name">' + title + '</span>';
-  } else {
-    el += '<span class="name">' + __("meta.toc") + '</span>';
-  }
+  el += '<span class="name">' + (title || page.title || __("meta.toc")) + '</span>';
   el += '</div>';
   return el;
 }

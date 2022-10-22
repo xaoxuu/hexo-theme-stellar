@@ -134,7 +134,7 @@ nav.menu
     font-size: $fs-14
     font-weight: 500
     overflow: hidden
-    padding: 0.375rem 0.75rem
+    padding: 0.375rem 0.5rem
     color: var(--text-p3)
     text-align: center
     &.active, &:hover
@@ -151,6 +151,7 @@ nav.menu
   scrollbar-width: none
   scrollbar(0, 0)
   z-index: 1
+  line-height: 1.2
   .widget-wrap
     margin: 1rem 0 3rem 0
     .widget-header
@@ -159,14 +160,15 @@ nav.menu
       align-items: center
       font-weight: 500
       position: sticky
-      position: -webkit-sticky
       top: -2px
       background: var(--site-bg)
       padding-top: 2px
       z-index 1
-      line-height: 2
-      color: var(--text-p4)
+      color: var(--text-p3)
       font-size: $fs-14
+      >span 
+        margin: 0.25rem 0
+        text-align: left
       &:empty
         display: none
       .cap-action
