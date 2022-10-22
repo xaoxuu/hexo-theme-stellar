@@ -26,6 +26,8 @@
       if hexo-config('style.darkmode') == 'auto'
         @media (prefers-color-scheme: dark)
           box-shadow: none
+      if hexo-config('style.darkmode') == 'always'
+        box-shadow: none
 
 .proj-wrap
   display: grid

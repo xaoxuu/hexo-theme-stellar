@@ -47,43 +47,48 @@
   --theme-bg: #444
   color: var(--card) !important
 
+set_darkmode_tags()
+  .tag-plugin[color='red']
+    --theme-border: mix($c-red, $dark-card, 80)
+    --theme-bg: mix($c-red, $dark-card, 10)
+
+  .tag-plugin[color='orange']
+    --theme-border: mix($c-orange, $dark-card, 80)
+    --theme-bg: mix($c-orange, $dark-card, 10)
+
+  .tag-plugin[color='yellow']
+    --theme-border: mix($c-yellow, $dark-card, 80)
+    --theme-bg: mix($c-yellow, $dark-card, 10)
+
+  .tag-plugin[color='green']
+    --theme-border: mix($c-green, $dark-card, 80)
+    --theme-bg: mix($c-green, $dark-card, 10)
+
+  .tag-plugin[color='cyan']
+    --theme-border: mix($c-cyan, $dark-card, 80)
+    --theme-bg: mix($c-cyan, $dark-card, 10)
+
+  .tag-plugin[color='blue']
+    --theme-border: mix($c-blue, $dark-card, 80)
+    --theme-bg: mix($c-blue, $dark-card, 10)
+
+  .tag-plugin[color='purple']
+    --theme-border: mix($c-purple, $dark-card, 80)
+    --theme-bg: mix($c-purple, $dark-card, 10)
+
+  .tag-plugin[color='light']
+    --theme-border: white
+    --theme-bg: #ddd
+    color: var(--card) !important
+
+  .tag-plugin[color='dark']
+    --theme-border: black
+    --theme-bg: #222
+    color: var(--text-p1) !important
+
 if hexo-config('style.darkmode') == 'auto'
   @media (prefers-color-scheme: dark)
-    .tag-plugin[color='red']
-      --theme-border: mix($c-red, $dark-card, 80)
-      --theme-bg: mix($c-red, $dark-card, 10)
+    set_darkmode_tags()
 
-    .tag-plugin[color='orange']
-      --theme-border: mix($c-orange, $dark-card, 80)
-      --theme-bg: mix($c-orange, $dark-card, 10)
-
-    .tag-plugin[color='yellow']
-      --theme-border: mix($c-yellow, $dark-card, 80)
-      --theme-bg: mix($c-yellow, $dark-card, 10)
-
-    .tag-plugin[color='green']
-      --theme-border: mix($c-green, $dark-card, 80)
-      --theme-bg: mix($c-green, $dark-card, 10)
-
-    .tag-plugin[color='cyan']
-      --theme-border: mix($c-cyan, $dark-card, 80)
-      --theme-bg: mix($c-cyan, $dark-card, 10)
-
-    .tag-plugin[color='blue']
-      --theme-border: mix($c-blue, $dark-card, 80)
-      --theme-bg: mix($c-blue, $dark-card, 10)
-
-    .tag-plugin[color='purple']
-      --theme-border: mix($c-purple, $dark-card, 80)
-      --theme-bg: mix($c-purple, $dark-card, 10)
-
-
-    .tag-plugin[color='light']
-      --theme-border: white
-      --theme-bg: #ddd
-      color: var(--card) !important
-
-    .tag-plugin[color='dark']
-      --theme-border: black
-      --theme-bg: #222
-      color: var(--text-p1) !important
+if hexo-config('style.darkmode') == 'always'
+  set_darkmode_tags()

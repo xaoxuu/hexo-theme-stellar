@@ -49,12 +49,16 @@
             if hexo-config('style.darkmode') == 'auto'
               @media (prefers-color-scheme: dark)
                 box-shadow: none
+            if hexo-config('style.darkmode') == 'always'
+              box-shadow: none
           &:active
             background: linear-gradient(145deg, #eee, #fff)
             box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.1), -0px -0px 0px rgba(255, 255, 255, 0.8), inset 2px 2px 4px rgba(0, 0, 0, 0.1), inset -2px -2px 4px rgba(255, 255, 255, 1), inset -8px -8px 16px rgba(255, 255, 255, 0.4)
             if hexo-config('style.darkmode') == 'auto'
               @media (prefers-color-scheme: dark)
                 box-shadow: none
+            if hexo-config('style.darkmode') == 'always'
+              box-shadow: none
       .vedit
         .vctrl span
           padding: 0

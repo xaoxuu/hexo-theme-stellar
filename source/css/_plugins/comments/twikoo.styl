@@ -106,10 +106,16 @@
   .tk-comments-no
     color: var(--text-p1);
 
+set_darkmode_comments()
+  .cmt-body.twikoo
+    --twikoo-lighttext: #f2b94b;
+    --twikoo-secondtext: #a1a2b8;
+    --twikoo-emoji-background: darken($dark-block, 1);
+    --twikoo-theme: #409eff;
+
 if hexo-config('style.darkmode') == 'auto'
   @media (prefers-color-scheme: dark)
-    .cmt-body.twikoo
-      --twikoo-lighttext: #f2b94b;
-      --twikoo-secondtext: #a1a2b8;
-      --twikoo-emoji-background: darken($dark-block, 1);
-      --twikoo-theme: #409eff;
+    set_darkmode_comments()
+
+if hexo-config('style.darkmode') == 'always'
+  set_darkmode_comments()
