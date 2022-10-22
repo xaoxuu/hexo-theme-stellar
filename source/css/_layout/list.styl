@@ -81,7 +81,7 @@
     img
       width: 100%
     .cover-info
-      padding: 1rem
+      padding: 1.5rem 1rem
       position: absolute
       line-height: 1.2
       width: 'calc(100% - %s * 2)' % 1rem
@@ -89,10 +89,10 @@
       color: white
       &[position=top]
         top: 0
-        background-image: linear-gradient(rgba(0,0,0,0.4),rgba(0,0,0,0.3),rgba(0,0,0,0))
+        background-image: linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.2),rgba(0,0,0,0))
       &[position=bottom]
         bottom: 0
-        background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0.3),rgba(0,0,0,0.4))
+        background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0.2),rgba(0,0,0,0.3))
       div+div
         margin-top: 8px
         @media screen and (max-width: $device-mobile)

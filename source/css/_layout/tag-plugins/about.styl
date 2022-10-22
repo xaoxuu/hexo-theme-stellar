@@ -6,7 +6,7 @@
     display flex
     justify-content: center
     flex-wrap: wrap
-    margin: 1.5rem 0 3rem
+    margin: 1.5rem 0
     img
       object-fit: contain
     >img
@@ -27,27 +27,16 @@
   .about-body
     >p
       line-height: 1.5
-    .tag-plugin.navbar:last-child
-      text-align: center
-      nav.cap
-        margin-top: 1rem
-        background: var(--card)
-        box-shadow: $boxshadow-button
-        a
-          color: var(--text-p2)
-          &:hover
-            background: var(--block)
-          &.active 
-            background: var(--block)
-            box-shadow: none
-            color: var(--text-p1)
+      &:first-child
+        margin-top: 2.5rem
+    p+.tag-plugin.navbar .cap
+      margin-top: 1rem
   .about-header+.about-body
-    margin-top: 1.5rem
+    margin-top: 2rem
 
 @media screen and (max-width: $device-mobile)
   .tag-plugin.about
-    padding: 1.5rem 1rem
+    padding: 2rem 1rem
     .about-header
-      margin: 2.5rem 0 3rem
       p
         width 100%

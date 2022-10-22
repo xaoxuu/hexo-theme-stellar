@@ -90,21 +90,22 @@ function div_photo() {
   var el = '';
   el += '<div class="cover">';
   el += '<img src="' + post.cover + '"/>';
-  if (post.cover_info) {
+  let info = post.cover_info;
+  if (info) {
     el += '<div class="cover-info"';
-    if (post.cover_info.meta) {
+    if (info.meta) {
       el += 'position="top">';
     } else {
       el += 'position="bottom">';
     }
-    if (post.cover_info.meta) {
-      el += '<div class="cap">' + post.cover_info.meta + '</div>';
+    if (info.meta) {
+      el += '<div class="cap">' + info.meta + '</div>';
     }
-    if (post.cover_info.title) {
-      el += '<div class="title">' + post.cover_info.title + '</div>';
+    if (info.title) {
+      el += '<div class="title">' + info.title + '</div>';
     }
-    if (post.cover_info.subtitle) {
-      el += '<div class="cap">' + post.cover_info.subtitle + '</div>';
+    if (info.subtitle) {
+      el += '<div class="cap">' + info.subtitle + '</div>';
     }
     el += '</div>';
 
