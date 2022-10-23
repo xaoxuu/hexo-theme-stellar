@@ -25,7 +25,7 @@ sidebar:
     # about: '[关于](/about/)'
   # Sidebar widgets
   widgets:
-    index: [welcome, recent] # for home/wiki/categories/tags/archives/404 pages
+    index: [welcome, recent, timeline] # for home/wiki/categories/tags/archives/404 pages
     page: [welcome, toc] # for pages using 'layout:page'
     post: [toc, ghrepo] # for pages using 'layout:post'
     wiki: [toc, ghrepo, wiki_more] # for pages using 'layout:wiki'

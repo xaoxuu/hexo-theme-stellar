@@ -3,12 +3,14 @@
   flex-direction: column
   word-break: break-all
   text-align: justify
-  padding: var(--gap-l)
+  padding: var(--gap-l) 0
   padding-top: "calc(2 * %s)" % var(--gap-l)
   height: "calc(100vh - 3 * %s)" % var(--gap-l)
   @media screen and (max-width: $device-mobile-max)
     padding-top: "calc(1 * %s)" % var(--gap-l)
     height: "calc(100% - 2 * %s)" % var(--gap-l)
+  .header
+    margin: 0 var(--gap-l)
 
 .l_left[layout=wiki]
   padding-bottom: 0
@@ -153,7 +155,7 @@ nav.menu
   z-index: 1
   line-height: 1.2
   .widget-wrap
-    margin: 1rem 0 3rem 0
+    margin: 1rem var(--gap-l) 3rem var(--gap-l)
     .widget-header
       display: flex
       justify-content: space-between

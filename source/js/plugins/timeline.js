@@ -57,17 +57,21 @@ const StellarTimeline = {
     $(el).append('<div class="loading-wrap"><svg class="loading" style="vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2709"><path d="M832 512c0-176-144-320-320-320V128c211.2 0 384 172.8 384 384h-64zM192 512c0 176 144 320 320 320v64C300.8 896 128 723.2 128 512h64z" p-id="2710"></path></svg><p></p></div>');
     StellarTimeline.requestAPI(cfg.api, function(data) {
       $(el).find('.loading-wrap').remove();
-      const user = el.getAttribute('user');
       const arr = data.content || data;
+      var users = [];
+      const filter = el.getAttribute('user');
+      if (filter && filter.length > 0) {
+        users = filter.split(",");
+      }
       arr.forEach((item, i) => {
-        if (item.user && item.user.login && user && user.length > 0) {
-          if (!user.includes(item.user.login)) {
+        if (item.user && item.user.login && users.length > 0) {
+          if (!users.includes(item.user.login)) {
             return;
           }
         }
         var cell = '<div class="timenode" index="' + i + '">';
         cell += '<div class="header">';
-        if (!user && item.user) {
+        if (!users.length && item.user) {
           cell += '<a class="user-info" href="' + item.user.html_url + '" target="_blank" rel="external nofollow noopener noreferrer">';
           cell += '<img src="' + item.user.avatar_url + '">';
           cell += '<span>' + item.user.login + '</span>';
