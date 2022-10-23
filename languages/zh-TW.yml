@@ -15,10 +15,10 @@ meta:
   recent_update: 最近更新
   toc: 本文目錄
   read_next: 接下來閱讀
-  prev: 上一篇
-  next: 下一篇
-  older: 較早
-  newer: 較新
+  prev: 回顧上一篇
+  next: 接下來閱讀
+  older: 較早文章
+  newer: 較新文章
   references: 參考資料
   related_posts: 您可能感興趣的文章
   comment_title: 參與討論

@@ -15,10 +15,10 @@ meta:
   recent_update: 最近更新
   toc: 本文目录
   read_next: 接下来阅读
-  prev: 上一篇
-  next: 下一篇
-  older: 较早
-  newer: 较新
+  prev: 回顾上一篇
+  next: 接下来阅读
+  older: 较早文章
+  newer: 较新文章
   references: 参考资料
   related_posts: 您可能感兴趣的文章
   comment_title: 快来参与讨论吧

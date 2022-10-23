@@ -21,105 +21,71 @@
 .related-wrap#related-posts
   .related-posts
     width: 100%
-    display: flex
     margin: 1rem 0
-    overflow-x: scroll
-    align-items: flex-start
-    scrollbar(8px, 4px)
-    padding-bottom: 8px
     border-radius: $border-block
-    a
-      flex-grow: 0
-      flex-shrink: 0
-      background: var(--card)
-      border-radius: $border-block
-      padding-bottom: 1rem
+    background: var(--block)
+    overflow: hidden
+    border: 1px solid var(--block-border)
+    .item
       line-height: 1.2
-      display: flex
-      flex-direction: column
-      overflow: hidden
-      min-width: 280px
-      width: 40vw
-      max-width: 460px
-      border: 1px solid var(--block-hover)
-      z-index: 1
-      .img
-        min-width: 100%
-        min-height: 140px
-        height: "calc(%s * 0.5)" % @width
-        max-height: 230px
-        overflow: hidden
-        img
-          width: 100%
-          height: 100%
-          object-fit: cover
-          &:not(.lazy)
-            trans1: transform 1s
-      @media screen and (max-width: $device-tablet)
-        width: 70vw
-        .img
-          height: "calc(%s * 0.5)" % @width
+      display: block
+      padding: 1rem
       .title
         color: var(--text-p1)
         font-weight: 500
-        font-size: $fs-15
-        margin: .75rem .75rem 0 .75rem
+        font-size: 1rem
         display: -webkit-box
         -webkit-box-orient: vertical
         overflow: hidden
         -webkit-line-clamp: 2
       .excerpt
-        color: var(--text-p2)
-        font-size: $fs-13
-        margin: 0.4rem .75rem 0 .75rem
+        color: var(--text-p3)
+        font-size: $fs-12
+        margin-top: 0.5rem
         display: -webkit-box
         -webkit-box-orient: vertical
         overflow: hidden
         -webkit-line-clamp: 3
       &:hover
-        img
-          transform: scale(1.04)
-    a+a
-      margin-left: 1rem
+        background: var(--block-hover)
+    .item+.item 
+      border-top: 1px dashed var(--block-border)
 
 
 .related-wrap#read-next
   .body
-    background: var(--block)
-    border-radius: $border-block
-    border: 1px solid var(--block-border)
     margin-top: 1rem
-    overflow: hidden
-    .line
-      margin: 0
-      height: 1px
-      background: var(--block-border)
-      &+.line,&:first-child,&:last-child
-        display: none
+    display: grid
+    grid-gap: 16px
+    grid-template-columns: repeat(auto-fill, "calc((100% - 1 * %s) / 2)" % 16px)
     >a
       display: flex
+      flex-direction: column
       margin: 0
       line-height: 1.2
       padding: 0.75rem 0.5rem
-      color: var(--text-p3)
-      justify-content: space-between
-      align-items: center
-      font-weight: 500
-      font-size: $fs-12
-      &:first-child
-        color: var(--text-p1)
-        font-size: $fs-h4
-        font-weight: 400
+      color: var(--text-p1)
+      font-size: 1rem
+      background: var(--card)
+      border-radius: $border-block
+      box-shadow: $boxshadow-card
+      trans2: box-shadow transform
+      &:last-child
+        text-align: right
       .note
         flex-shrink: 0
-        margin-left: 4px
+        margin-bottom: 4px
         font-size: $fs-12
         color: var(--text-p4)
         font-weight: 500
       &:hover
         color: $color-hover !important
-        background: var(--card)
-
+        box-shadow: $boxshadow-card-float
+        transform: translateY(-1px)
+.wiki+.related-wrap#read-next .body>a
+  font-size: $fs-h3
+  &:last-child
+    color: var(--text-p4)
 
 
 .related-wrap#comments
