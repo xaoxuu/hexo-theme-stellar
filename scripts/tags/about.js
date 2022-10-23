@@ -9,7 +9,6 @@
 
 'use strict';
 const url_for = require('hexo-util').url_for.bind(hexo);
-const i18n = require('hexo-i18n');
 
 hexo.extend.tag.register('about', function(args, content) {
   args = hexo.args.map(args, ['avatar', 'height', 'border', 'back']);

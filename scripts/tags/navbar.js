@@ -49,7 +49,7 @@ hexo.extend.tag.register('navbar', function(args) {
     el += '</a>';
     return el;
   }
-  args.links.forEach((item, i) => {
+  (args.links || []).forEach((item, i) => {
     el += layoutItem(item, i);
   });
   el += '</nav></div>';
