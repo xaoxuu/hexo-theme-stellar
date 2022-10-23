@@ -2,6 +2,32 @@
   background: var(--block)
   border-radius: $border-card
   padding: 2rem
+  position: relative
+  .nav-back
+    position: absolute
+    line-height: 1
+    overflow: hidden
+    left: 1rem
+    top: 1rem
+    display: flex
+    align-items: center
+    background: var(--site-bg)
+    border-radius: 40px
+    border: 1px solid var(--block-border)
+    padding: 2px 0
+    svg,span
+      trans1 transform
+      width: 36px
+    span
+      position: absolute
+      text-align: center
+      left: 100%
+    &:hover
+      background: var(--card)
+      svg  
+        transform: translateX(-36px)
+      span
+        transform: translateX(-100%)
   .about-header
     display flex
     justify-content: center

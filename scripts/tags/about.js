@@ -8,21 +8,26 @@
  */
 
 'use strict';
+const url_for = require('hexo-util').url_for.bind(hexo);
+const i18n = require('hexo-i18n');
 
 hexo.extend.tag.register('about', function(args, content) {
-  args = hexo.args.map(args, ['avatar', 'height', 'border']);
+  args = hexo.args.map(args, ['avatar', 'height', 'border', 'back']);
   var rows = hexo.render.renderSync({text: content, engine: 'markdown'}).split('\n');
   var el = '';
   // wrapper
   el += '<div class="tag-plugin about">';
-  el += '<div class="about-header">';
+  if (args.back) {
+    el += '<a class="nav-back cap" href="' + url_for(hexo.config.root) + '">';
+    el += '<svg aria-hidden="true" viewBox="0 0 16 16" width="1rem" height="1rem" fill="currentColor"><path fill-rule="evenodd" d="M7.78 12.53a.75.75 0 01-1.06 0L2.47 8.28a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 1.06L4.81 7h7.44a.75.75 0 010 1.5H4.81l2.97 2.97a.75.75 0 010 1.06z"></path></svg>';
+    el += '<span>Back</span>';
+    el += '</a>';
+  }
   // avatar
   var avatar_url = args.avatar;
-  if (args.avatar === undefined) {
-     avatar_url = hexo.config.avatar;
-  }
   if (avatar_url) {
-    el += '<div class="avatar">'
+    el += '<div class="about-header">';
+    el += '<div class="avatar">';
     el += '<img src="' + avatar_url + '"';
     if (args.border && args.border.length > 0) {
       el += ' style="border-radius:' + args.border + '"';
@@ -32,8 +37,8 @@ hexo.extend.tag.register('about', function(args, content) {
     }
     el += '/>';
     el += '</div>';
+    el += '</div>';
   }
-  el += '</div>';
 
   // content
   el += '<div class="about-body fs14">';
