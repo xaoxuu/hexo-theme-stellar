@@ -6,6 +6,22 @@
   .post-title:first-child
     margin-top: .5rem
 
+.post-list
+  .post-title
+    font-weight: 500
+    margin: .75rem 0
+    line-height: 1.2
+    font-size: $fs-h3
+    border-bottom: none
+    color: var(--text-p0)
+    trans1 color
+    @media screen and (max-width: $device-mobile)
+      font-size: $fs-h4
+      margin: 0.5rem 0
+  .wiki .post-title
+    margin-top: 0.5rem
+    font-weight: 700
+
 // card
 .post-list .post-card
   display: block
@@ -18,8 +34,12 @@
   position: relative
   .excerpt
     margin: 1rem 0
+    @media screen and (max-width: $device-mobile)
+      margin: 0.5rem 0
     >p
       margin: 1rem 0
+      @media screen and (max-width: $device-mobile)
+        margin: 0.5rem 0
       line-height: 1.5
   .meta.cap
     display: flex
@@ -41,10 +61,11 @@
 // common article
 .post-list article.md
   padding: 1rem
+  @media screen and (max-width: $device-mobile)
+    padding: 0.5rem 1rem
   p
     color: var(--text-p2)
-    @media screen and (min-width: $device-mobile)
-      font-size: $fs-14
+    font-size: $fs-14
 
 
 // posts
