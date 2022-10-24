@@ -1,5 +1,6 @@
 .related-wrap
-  padding: 2rem 1rem
+  padding: 1rem
+  margin: 2rem 0
   &:empty
     display: none
   section.header
@@ -22,22 +23,31 @@
   .related-posts
     width: 100%
     margin: 1rem 0
-    border-radius: $border-block
-    background: var(--block)
-    overflow: hidden
-    border: 1px solid var(--block-border)
     .item
       line-height: 1.2
       display: block
-      padding: 1rem
+      border-left: 0
+      &+.item
+        margin-top: 1rem
+      &:first-child
+        margin-top: 0
       .title
         color: var(--text-p1)
         font-weight: 500
         font-size: 1rem
-        display: -webkit-box
-        -webkit-box-orient: vertical
-        overflow: hidden
-        -webkit-line-clamp: 2
+        trans1 color
+        position: relative
+        padding-bottom: 4px
+        &:after
+          content: ''
+          position: absolute
+          left: 0
+          width: 0
+          height: 2px
+          bottom: 0
+          border-radius: 2px
+          background: $color-hover
+          trans1 width
       .excerpt
         color: var(--text-p3)
         font-size: $fs-12
@@ -45,47 +55,43 @@
         display: -webkit-box
         -webkit-box-orient: vertical
         overflow: hidden
-        -webkit-line-clamp: 3
+        -webkit-line-clamp: 2
       &:hover
-        background: var(--block-hover)
-    .item+.item 
-      border-top: 1px dashed var(--block-border)
+        .title
+          color: $color-hover
+          &:after
+            width: 100%
 
 
 .related-wrap#read-next
   .body
-    margin-top: 1rem
     display: grid
     grid-gap: 16px
     grid-template-columns: repeat(auto-fill, "calc((100% - 1 * %s) / 2)" % 16px)
-    >a
-      display: flex
-      flex-direction: column
+    .item  
+      border-top: 1px dashed var(--block-border)
+      border-bottom: 1px dashed var(--block-border)
+      padding: 1rem 0
+    .note
+      margin-bottom: 0.75rem
+      font-size: $fs-12
+      color: var(--text-p4)
+      font-weight: 500
+    a
       margin: 0
       line-height: 1.2
-      padding: 0.75rem 0.5rem
       color: var(--text-p1)
-      font-size: 1rem
-      background: var(--card)
-      border-radius: $border-block
-      box-shadow: $boxshadow-card
-      trans2: box-shadow transform
-      &:last-child
-        text-align: right
-      .note
-        flex-shrink: 0
-        margin-bottom: 4px
-        font-size: $fs-12
-        color: var(--text-p4)
-        font-weight: 500
+      font-size: $fs-h4
       &:hover
         color: $color-hover !important
-        box-shadow: $boxshadow-card-float
-        transform: translateY(-1px)
-.wiki+.related-wrap#read-next .body>a
-  font-size: $fs-h3
-  &:last-child
-    color: var(--text-p4)
+    #next
+      text-align: right
+.wiki+.related-wrap#read-next
+  .item
+    a
+      font-size: $fs-h3
+    &#prev a
+      color: var(--text-p3)
 
 
 .related-wrap#comments

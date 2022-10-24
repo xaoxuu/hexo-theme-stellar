@@ -219,10 +219,10 @@ tag_plugins:
   # {% quot %}
   quot:
     default: # 可以自行配置多种图标方案
-      prefix: https://s2.loli.net/2022/01/04/vsTB5pGrIHfPxSj.png
-      suffix: https://s2.loli.net/2022/01/04/NORdtjlAhifZSns.png
+      prefix: https://bu.dusays.com/2022/10/24/63567d3e092ff.png
+      suffix: https://bu.dusays.com/2022/10/24/63567d3e0ab55.png
     hashtag:
-      prefix: https://s2.loli.net/2022/01/04/UvHcsa73jQPnobq.png
+      prefix: https://bu.dusays.com/2022/10/24/63567d3e07da3.png
   # {% emoji %}
   emoji:
     default: https://fastly.jsdelivr.net/gh/cdn-x/emoji/qq/%s.gif
