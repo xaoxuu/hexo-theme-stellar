@@ -43,7 +43,7 @@ hexo.extend.tag.register('sites', function(args) {
     if (site.url && site.title) {
       var cell = '<div class="site-card">';
       cell += '<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="' + site.url + '">';
-      cell += '<img src="' + (site.screenshot || ('https://image.thum.io/get/width/1024/crop/768/' + site.url)) + '" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;' + hexo.theme.config.default.cover + '&quot;;"/>';
+      cell += '<img src="' + (site.screenshot || ('https://screenshot-api.xaoxuu.com/api?url=' + site.url + '&width=1280&height=720')) + '" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;' + hexo.theme.config.default.cover + '&quot;;"/>';
       cell += '<div class="info">';
       cell += '<img src="' + (site.avatar || hexo.theme.config.default.link) + '" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;' + hexo.theme.config.default.link + '&quot;;"/>';
       cell += '<span class="title">' + site.title + '</span>';
