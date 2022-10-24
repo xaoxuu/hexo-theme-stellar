@@ -120,14 +120,19 @@
   p.title 
     font-size: 1rem
     font-weight: 700
-    margin: 0
-    padding: 0.5rem 0 0.75rem
+    margin: 0.5rem 0 0.75rem
     line-height: 1.25
-    border-bottom: 1px dashed var(--block-border)
     a 
       color: inherit
       &:hover
         color: $color-hover
+  a
+    &:has(img):after
+      display: none
+    img  
+      margin: 0 auto
+  img
+    margin: 0.5rem auto
   pre code 
     font-size: $fs-12
 
