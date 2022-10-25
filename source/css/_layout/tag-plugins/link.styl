@@ -14,8 +14,8 @@
   cursor: pointer
   min-width 280px
   max-width: 100%
-  width: 320px
-  @media screen and (max-width: $device-mobile-375)
+  width: 350px
+  @media screen and (max-width: $device-mobile-425)
     width: 100%
   box-shadow: $boxshadow-card
   border-radius: $border-block
@@ -35,54 +35,68 @@
   text-align: justify
 
 .md .link-card
-  line-height: 1.2
-  > div
-    pointer-events: none
+  >.left
+    overflow: hidden
+    margin: 0.75rem 0 0.75rem 0.75rem
+    .title
+      font-size: $fs-14
+    span+span 
+      margin-top: 0.25rem
+  >.right
+    width: 2.75rem
+    height: 2.75rem
+    margin: 0.75rem
+    overflow: hidden
+    flex-shrink: 0
   >.top
     display: flex
-    margin: .75rem 1rem .25rem
+    margin: .75rem 0.75rem .25rem
     overflow: hidden
     max-width: 'calc(100% - %s * 2)' % 1rem
     align-items: center
     .img
       line-height: 0
       height: 16px
-      width: 20px
-      margin-right: 4px
+      width: 16px
+      border-radius: 16px
+      margin-right: 8px
       background-repeat: no-repeat
       background-size: contain
       background-position: left center
-    .desc
-      opacity: .75
-      line-height: 1.5
     span
       txt-ellipsis()
       max-width: 100%
   >.bottom
-    margin: 0 1rem .75rem 1rem
+    margin: 0 0.75rem 0.75rem 0.75rem
     .title
       font-size: $fs-15
       margin: 4px 0 8px 0
-  >.right
-    width: 2.5rem
-    height: 2.5rem
-    margin: .75rem
+
+.md .link-card
+  line-height: 1.2
+  .title
+    display: -webkit-box
+    -webkit-box-orient: vertical
     overflow: hidden
+    -webkit-line-clamp: 2
+  .cap
     flex-shrink: 0
-  >.left
+    color: var(--text-p3)
+  .link
+    line-height: 1.5
+    opacity: .75
+    txt-ellipsis()
+  .desc
+    display: -webkit-box
+    -webkit-box-orient: vertical
     overflow: hidden
-    margin: .5rem 0 .5rem 1rem
-    .title
-      font-size: $fs-14
-      margin: 1px 0 5px 0
-    .desc
-      flex-shrink: 0
-      txt-ellipsis()
+    -webkit-line-clamp: 3
+  .img
+    border-radius: 4px
+
   span
     margin: 0
     display: block
-  span.title
+  .title
     font-weight: 500
     color: var(--text-p1)
-  span.desc
-    color: var(--text-p3)

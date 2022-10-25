@@ -2,7 +2,7 @@
  * link.js v1.1 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
- * {% link url title [description] [icon:src] %}
+ * {% link url [title] [desc:true/false] [icon:src] %}
  */
 
 'use strict';
@@ -11,11 +11,11 @@ var util = require('hexo-util');
 const full_url_for = require('hexo-util').full_url_for.bind(hexo);
 
 hexo.extend.tag.register('link', function(args) {
-  args = hexo.args.map(args, ['icon'], ['url', 'title', 'description']);
+  args = hexo.args.map(args, ['icon', 'desc'], ['url', 'title']);
 
   var el = '';
   el += '<div class="tag-plugin link dis-select">';
-  el += '<a class="link-card' + (args.description ? ' rich' : ' plain') + '" title="' + args.title + '" href="' + args.url + '"';
+  el += '<a class="link-card' + (args.desc ? ' rich' : ' plain') + '" title="' + args.title + '" href="' + args.url + '"';
   if (args.url.includes('://')) {
     el += ' target="_blank" rel="external nofollow noopener noreferrer"';
   }
@@ -31,17 +31,19 @@ hexo.extend.tag.register('link', function(args) {
     return el;
   }
   function loadTitle() {
-    return '<span class="title">' + args.title + '</span>';
+    return '<span class="title">' + (args.title || args.url) + '</span>';
   }
   function loadDesc() {
-    return '<span class="desc fs12">' + (args.description || full_url_for(args.url)) + '</span>';
+    return '<span class="cap desc fs12"></span>';
+  }
+  function loadLink() {
+    return '<span class="cap link fs12">' + full_url_for(args.url) + '</span>';
   }
 
-  if (args.description) {
+  if (args.desc) {
     // top
     el += '<div class="top">';
-    el += loadIcon();
-    el += '<span class="desc fs12">' + full_url_for(args.url) + '</span>';
+    el += loadIcon() + loadLink();
     el += '</div>';
     // bottom
     el += '<div class="bottom">';
@@ -50,7 +52,7 @@ hexo.extend.tag.register('link', function(args) {
   } else {
     // left
     el += '<div class="left">';
-    el += loadTitle() + loadDesc();
+    el += loadTitle() + loadLink();
     el += '</div>';
     // right
     el += '<div class="right">';

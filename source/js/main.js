@@ -217,14 +217,20 @@ if (stellar.plugins.lazyload) {
 if (stellar.plugins.stellar) {
   for (let key of Object.keys(stellar.plugins.stellar)) {
     let js = stellar.plugins.stellar[key];
-    const els = document.getElementsByClassName('stellar-' + key + '-api');
-    if (els != undefined && els.length > 0) {
-      stellar.jQuery(() => {
-        stellar.loadScript(js, { defer: true });
-        if (key == 'timeline') {
-          stellar.loadScript(stellar.plugins.marked);
-        }
-      })
+    if (key == 'linkcard') {
+      stellar.loadScript(js, { defer: true }).then(function () {
+        setCardLink(document.querySelectorAll('a.link-card'));
+      });
+    } else {
+      const els = document.getElementsByClassName('stellar-' + key + '-api');
+      if (els != undefined && els.length > 0) {
+        stellar.jQuery(() => {
+          stellar.loadScript(js, { defer: true });
+          if (key == 'timeline') {
+            stellar.loadScript(stellar.plugins.marked);
+          }
+        })
+      }
     }
   }
 }

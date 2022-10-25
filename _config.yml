@@ -250,7 +250,7 @@ plugins:
     friends: /js/plugins/friends.js
     ghinfo: /js/plugins/ghinfo.js
     timeline: /js/plugins/timeline.js
-  
+    linkcard: /js/plugins/linkcard.js
 
   marked: https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js
 
