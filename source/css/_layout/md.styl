@@ -24,7 +24,7 @@ article.md.content
   &.indent
     >p:not([class])
       text-indent: 'calc(%s * 2)' % $fs-p
-      text-align: justify
+      text-align: convert(hexo-config('style.text-align'))
       a
         text-indent: 0
     h1,h2,h3,h4,h5,h6
