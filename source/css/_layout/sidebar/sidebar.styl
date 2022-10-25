@@ -166,8 +166,8 @@ nav.menu
       background: var(--site-bg)
       padding-top: 2px
       z-index 1
-      color: var(--text-p3)
-      font-size: $fs-14
+      .item 
+        display: block
       >span 
         margin: 0.25rem 0
         text-align: left
@@ -195,48 +195,29 @@ nav.menu
     .widget-header+.widget-body
       margin-top: 0
 
-  .widget-wrap .widget-body
-    .more-item
-      margin: .5rem 0
-      .cap
-        margin-bottom: .25rem
   .widget-wrap#recent .widget-body
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    margin-top: 0.25rem
     a
       line-height: 1.2
-      font-weight: 500
-      color: var(--text-p2)
       font-size: $fs-13
+      margin: 0.25rem 0
+      padding: 2px 0
+      .title  
+        font-size: $fs-13
+        color: var(--text-p2)
       &:hover
         color: $color-hover
-  .widget-wrap#related .widget-body
-    >a
-      padding 0.5rem
-      display: block
-      line-height: 1.2
-      color: var(--text-p2)
-      font-weight: 500
-      border: 1px solid var(--block-border)
-      border-radius: $border-block
-      margin: 4px 0
-      background: var(--block)
-      div.cap
-        margin-bottom: 0.25rem
-        color: var(--text-p4)
-        display: flex
-        justify-content: space-between
-      &:hover
-        background: var(--block-hover)
-      &.wiki
+  .widget-wrap#related 
+    .widget-body a
+      margin-top: 0.5rem
+      .title 
         font-weight: 700
-      div.excerpt
-        margin-top: .5rem
-        color: var(--text-p3)
-        font-size: $fs-12
-        font-weight: 400
-        display: -webkit-box
-        -webkit-box-orient: vertical
-        overflow: hidden
-        -webkit-line-clamp: 5
+        font-size: $fs-14
+      .excerpt
+        -webkit-line-clamp: 3
 
 .widgets .loading-wrap
   margin: 0.5rem 0

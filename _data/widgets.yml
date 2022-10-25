@@ -6,8 +6,8 @@
 # ---- 内置组件，暂时不支持覆盖 ----
 ghrepo:
   layout: ghrepo
-wiki_more:
-  layout: wiki_more
+related:
+  layout: related
 
 # ---- 默认组件，可以覆盖自定义配置 ----
 # 将其覆盖设置为空，可删除一个默认组件，例如 welcome:

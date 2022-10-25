@@ -19,48 +19,45 @@
     color: var(--text-p1)
 
 
-.related-wrap#related-posts
-  .related-posts
-    width: 100%
-    margin: 1rem 0
-    .item
-      line-height: 1.2
-      display: block
-      border-left: 0
-      &+.item
-        margin-top: 1rem
-      &:first-child
-        margin-top: 0
+
+.related-posts
+  width: 100%
+  margin: 1rem 0
+  .item
+    line-height: 1.2
+    display: block
+    border-left: 0
+    margin-top: 1rem
+    .title
+      color: var(--text-p1)
+      font-weight: 500
+      font-size: 1rem
+      trans1 color
+      position: relative
+      padding-bottom: 4px
+      &:after
+        content: ''
+        position: absolute
+        left: 0
+        width: 0
+        height: 2px
+        bottom: 0
+        border-radius: 2px
+        background: $color-hover
+        trans1 width
+    .excerpt
+      color: var(--text-p3)
+      font-size: $fs-12
+      margin-top: 0.5rem
+      display: -webkit-box
+      -webkit-box-orient: vertical
+      overflow: hidden
+      -webkit-line-clamp: 2
+    &:hover
       .title
-        color: var(--text-p1)
-        font-weight: 500
-        font-size: 1rem
-        trans1 color
-        position: relative
-        padding-bottom: 4px
+        color: $color-hover
         &:after
-          content: ''
-          position: absolute
-          left: 0
-          width: 0
-          height: 2px
-          bottom: 0
-          border-radius: 2px
-          background: $color-hover
-          trans1 width
-      .excerpt
-        color: var(--text-p3)
-        font-size: $fs-12
-        margin-top: 0.5rem
-        display: -webkit-box
-        -webkit-box-orient: vertical
-        overflow: hidden
-        -webkit-line-clamp: 2
-      &:hover
-        .title
-          color: $color-hover
-          &:after
-            width: 100%
+          width: 100%
 
 
 .related-wrap#read-next
