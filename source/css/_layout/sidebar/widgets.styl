@@ -83,3 +83,21 @@
       line-height: 1.5
       &:hover
         color: $color-hover
+  
+  .widget-wrap#timeline .widget-body
+    margin-top: 0.5rem
+    .tag-plugin.timeline .timenode
+      .header
+        margin-bottom: 0.5rem
+        txt-ellipsis()
+        .user-info
+          background: var(--block)
+          &:hover
+            background: $color-hover
+            color: var(--card)
+        &:before
+          display: none
+      &+.timenode
+        margin-top: 0.75rem
+      .body
+        max-height: 40vh
