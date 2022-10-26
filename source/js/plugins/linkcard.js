@@ -31,8 +31,9 @@ function renderer(el, obj) {
   if (obj.icon && obj.icon.length > 0) {
     el.querySelector('.img').style = 'background-image: url("' + obj.icon + '");';
   }
-  if (obj.desc && obj.desc.length > 0) {
-    el.querySelector('.desc').innerHTML = obj.desc;
+  let desc = el.querySelector('.desc');
+  if (desc && obj.desc && obj.desc.length > 0) {
+    desc.innerHTML = obj.desc;
   }
 }
 
@@ -53,9 +54,12 @@ function getInfo(el, html, link) {
       title = title.textContent
 
       // Get the src of the first img tag in the body tag
-      // icon = doc.querySelector('body img')
-      // icon = icon && icon.getAttribute('src')
-      
+      let tmp = doc.querySelector('head link[rel="apple-touch-icon"]')
+      if (!tmp) {
+        tmp = doc.querySelector('head link[rel="icon"]')
+      }
+      icon = tmp && tmp.getAttribute('href')
+
       if (/^data:image/.test(icon)) icon = ''
 
       // If there is no src then get the site icon
