@@ -77,6 +77,9 @@ module.exports = hexo => {
     if (proj.title == undefined || proj.title.length === 0) {
       proj.title = id;
     }
+    if (proj.name == undefined || proj.name.length == 0) {
+      proj.name = id;
+    }
   }
   // 补充 order
   wiki_pages.forEach((p, i) => {

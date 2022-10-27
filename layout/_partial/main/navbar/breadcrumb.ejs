@@ -62,7 +62,7 @@ function layoutDiv() {
     let url_proj = url_for(proj.homepage.path);
     if (nodes.includes(url_proj) === false) {
       el += '<span class="sep"></span>';
-      el += '<a class="cap breadcrumb" id="proj" href="' + url_proj + '">' + proj.title + '</a>';
+      el += '<a class="cap breadcrumb" id="proj" href="' + url_proj + '">' + (proj.name || proj.title) + '</a>';
     }
     el += '</div>';
     // 更新日期

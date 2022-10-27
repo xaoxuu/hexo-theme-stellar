@@ -31,8 +31,8 @@ function layoutDiv() {
     el += '<span class="title">'
     if (post.layout == 'wiki') {
       let proj = theme.wiki.projects[post.wiki];
-      if (proj && proj.title) {
-        el += proj.title + ' / ';
+      if (proj && proj.name) {
+        el += proj.name + ' / ';
       } else if (post.wiki) {
         el += post.wiki + ' / ';
       }

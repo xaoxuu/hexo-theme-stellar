@@ -39,7 +39,7 @@ function layoutDiv() {
       }
     }
     if (proj != undefined) {
-      let main = proj.title || proj.wiki || page.wiki || page.title;
+      let main = proj.name || proj.title || proj.wiki || page.wiki || page.title;
       let url = proj.homepage.path;
       let sub = proj.subtitle;
       el += layoutTitle(main, url, sub);

@@ -16,7 +16,7 @@ function layoutDiv() {
     let tag = proj.tags[0];
     el += '<div class="cap breadcrumb"' + category_color(tag) + '>' + tag + '</div>';
   }
-  el += '<h2 class="post-title">' + (proj.wiki || proj.title || proj.seo_title) + '</h2>';
+  el += '<h2 class="post-title">' + (proj.title || proj.name || proj.seo_title) + '</h2>';
   if (proj.description) {
     el += '<p>' + proj.description + '</p>';
   }
