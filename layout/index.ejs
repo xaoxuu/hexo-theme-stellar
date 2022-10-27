@@ -13,7 +13,7 @@ if (page.title && page.wiki) {
 function layout_post_card(layout, post, content) {
   var el = '';
   var layout = layout;
-  if (layout == 'post' && post.cover != undefined && post.cover_info != undefined) {
+  if (layout == 'post' && post['cover'] != undefined && post['cover-title'] != undefined) {
     layout += ' photo';
   }
   el += '<a class="post-card ' + layout + ' ' + scrollreveal() + '" href="' + url_for(post.link || post.path) + '">';

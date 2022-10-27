@@ -1,16 +1,22 @@
 <%
+const obj = {
+  image: post['cover'],
+  title: post['cover-title'],
+  cat: post['cover-cat'],
+  subtitle: post['cover-subtitle']
+};
 function div_default() {
   var el = '';
   el += '<article class="md">';
 
   // 封面
-  if (post.cover || theme.article.auto_cover) {
+  if (obj.image || theme.article.auto_cover) {
     var cover_url;
-    if (post.cover != undefined) {
-      if (post.cover.includes('/')) {
-        cover_url = post.cover;
+    if (obj.image != undefined) {
+      if (obj.image.includes('/')) {
+        cover_url = obj.image;
       } else {
-        cover_url = 'https://source.unsplash.com/1280x640/?' + post.cover;
+        cover_url = 'https://source.unsplash.com/1280x640/?' + obj.image;
       }
     } else {
       // 自动以 tags 作为关键词搜索封面
@@ -89,23 +95,22 @@ function div_default() {
 function div_photo() {
   var el = '';
   el += '<div class="cover">';
-  el += '<img src="' + post.cover + '"/>';
-  let info = post.cover_info;
-  if (info) {
+  el += '<img src="' + obj.image + '"/>';
+  if (obj.title || obj.cat || obj.subtitle) {
     el += '<div class="cover-info"';
-    if (info.meta) {
+    if (obj.cat) {
       el += 'position="top">';
     } else {
       el += 'position="bottom">';
     }
-    if (info.meta) {
-      el += '<div class="cap">' + info.meta + '</div>';
+    if (obj.cat) {
+      el += '<div class="cap">' + obj.cat + '</div>';
     }
-    if (info.title) {
-      el += '<div class="title">' + info.title + '</div>';
+    if (obj.title) {
+      el += '<div class="title">' + obj.title + '</div>';
     }
-    if (info.subtitle) {
-      el += '<div class="cap">' + info.subtitle + '</div>';
+    if (obj.subtitle) {
+      el += '<div class="cap">' + obj.subtitle + '</div>';
     }
     el += '</div>';
 
@@ -114,7 +119,7 @@ function div_photo() {
   return el;
 }
 function div() {
-  if (post.cover && post.cover.length > 0 && post.cover_info != undefined) {
+  if (obj.image && obj.image.length > 0 && obj.title != undefined) {
     return div_photo();
   }
   return div_default();
