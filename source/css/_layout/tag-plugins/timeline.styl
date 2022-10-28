@@ -113,15 +113,32 @@
   .tag-plugin.copy
     width: 240px
 
+.tag-plugin.timeline[api]
+  &.stellar-fcircle-api .timenode:hover .header
+    .user-info
+      background: inherit
+      span
+        color: inherit
+  a.body
+    color: var(--text-p1)
+    trans2: transform box-shadow
+    line-height: 1.25
+    padding: 0.75rem 1rem
+    &:hover
+      transform: translateY(-1px)
+      box-shadow: $boxshadow-card-float
 
-.tag-plugin.timeline.stellar-timeline-api .body
-  max-height: convert(hexo-config('tag_plugins.timeline.max-height'))
+
+.tag-plugin.timeline[api] .body
   overflow: scroll
-  p.title 
+  p.title
     font-size: 1rem
     font-weight: 700
     margin: 0.5rem 0 0.75rem
     line-height: 1.25
+    &:only-child 
+      margin-bottom: 0.5rem
+      font-weight: 500
     a 
       color: inherit
       &:hover
@@ -136,7 +153,7 @@
   pre code 
     font-size: $fs-12
 
-.tag-plugin.timeline.stellar-timeline-api .body .footer
+.tag-plugin.timeline[api] .body .footer
   margin: 0 0 -0.5rem
   padding: 0.5rem 0 1rem
   user-select: none
@@ -159,7 +176,7 @@
     font-size: $fs-12
     align-items: stretch
 
-.tag-plugin.timeline.stellar-timeline-api .body .footer
+.tag-plugin.timeline[api] .body .footer
   .item
     border-width: 1px
     border-style: solid
