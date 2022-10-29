@@ -66,5 +66,5 @@ welcome:
 timeline:
   layout: timeline
   title: 近期动态
-  api: https://api.github.com/repos/xaoxuu/hexo-theme-stellar/issues
+  api: # https://api.github.com/repos/xaoxuu/hexo-theme-stellar/issues
   user:

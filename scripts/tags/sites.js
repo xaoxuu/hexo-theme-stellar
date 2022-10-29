@@ -2,28 +2,28 @@
  * sites.js v2 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
- * {% sites [group] [repo:owner/repo] [data:http] %}
+ * {% sites [group] [repo:owner/repo] [api:http] %}
  */
 
 'use strict';
 
 hexo.extend.tag.register('sites', function(args) {
-  args = hexo.args.map(args, ['repo', 'data'], ['group']);
+  args = hexo.args.map(args, ['repo', 'api'], ['group']);
   var links = hexo.locals.get('data').links;
   if (links == undefined) {
     links = {};
   }
-  var data;
-  if (args.data) {
-    data = args.data;
+  var api;
+  if (args.api) {
+    api = args.api;
   } else if (args.repo) {
-    data = 'https://raw.github.xaoxuu.com/' + args.repo + '/output/v2/data.json';
+    api = 'https://raw.github.xaoxuu.com/' + args.repo + '/output/v2/data.json';
   }
   
   var el = '<div class="tag-plugin sites-wrap">';
-  if (data) {
+  if (api) {
     el += '<div class="stellar-sites-api"';
-    el += ' api="' + data + '"';
+    el += ' api="' + api + '"';
     el += '>';
     el += '<div class="group-body"></div>';
     el += '</div>';
