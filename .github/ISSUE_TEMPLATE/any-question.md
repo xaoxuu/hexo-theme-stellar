@@ -1,5 +1,5 @@
 ---
-name: Any Question
+name: Any Question【问题反馈】
 about: 主题使用方面任何问题或建议
 title: ''
 labels: ''

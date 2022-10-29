@@ -36,14 +36,14 @@ function layoutNodeContent(content) {
 
 
 function postTimeline(args, content) {
-  args = hexo.args.map(args, ['api', 'user', 'type', 'limit']);
+  args = hexo.args.map(args, ['api', 'user', 'type', 'limit', 'hide']);
   var el = '';
   if (!args.type) {
     args.type = 'timeline';
   }
   if (args.api && args.api.length > 0) {
     el += '<div class="tag-plugin timeline stellar-' + args.type + '-api"';
-    el += ' ' + hexo.args.joinTags(args, ['api', 'user', 'limit']).join(' ');
+    el += ' ' + hexo.args.joinTags(args, ['api', 'user', 'limit', 'hide']).join(' ');
     el += '>';
   } else {
     el += '<div class="tag-plugin timeline">';

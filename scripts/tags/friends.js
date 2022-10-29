@@ -42,9 +42,6 @@ hexo.extend.tag.register('friends', function(args) {
     }
     el += '<div class="group-body">';
     const items = links[args.group] || [];
-    console.log('links', links);
-    console.log('group', args.group);
-    console.log('items', items);
     items.forEach((item, i) => {
       el += cell(item);
     });

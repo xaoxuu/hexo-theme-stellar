@@ -25,7 +25,7 @@ module.exports = hexo => {
     warning('caching', '`relative_link` option in Hexo `_config.yml`');
     hexo.config.relative_link = false;
   }
-  hexo.config.meta_generator = false;
+  // hexo.config.meta_generator = false;
 
   // merge data
   const data = hexo.locals.get('data');
