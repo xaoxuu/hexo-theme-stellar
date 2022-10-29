@@ -3,7 +3,8 @@ const obj = {
   image: post['cover'],
   title: post['cover-title'],
   cat: post['cover-cat'],
-  subtitle: post['cover-subtitle']
+  subtitle: post['cover-subtitle'],
+  color: post['cover-text-color']
 };
 function div_default() {
   var el = '';
@@ -98,6 +99,9 @@ function div_photo() {
   el += '<img src="' + obj.image + '"/>';
   if (obj.title || obj.cat || obj.subtitle) {
     el += '<div class="cover-info"';
+    if (obj.color) {
+      el += 'style="color:' + obj.color + '"';
+    }
     if (obj.cat) {
       el += 'position="top">';
     } else {

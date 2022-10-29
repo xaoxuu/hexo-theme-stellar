@@ -105,19 +105,16 @@
       position: absolute
       line-height: 1.2
       width: 'calc(100% - %s * 2)' % 1rem
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2)
-      color: white
+      color: var(--text-p0)
       &[position=top]
         top: 0
-        background-image: linear-gradient(rgba(0,0,0,0.3),rgba(0,0,0,0.2),rgba(0,0,0,0))
       &[position=bottom]
         bottom: 0
-        background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0.2),rgba(0,0,0,0.3))
       div+div
         margin-top: 4px
       .cap
-        color: white
         font-size: $fs-13
+        color: unset
       .title
         font-weight: 500
         font-size: $fs-h3

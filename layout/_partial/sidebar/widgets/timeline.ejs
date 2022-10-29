@@ -12,7 +12,7 @@ function layoutDiv() {
     }
     el += '<div class="widget-body fs14">';
       el += '<div class="tag-plugin timeline stellar-timeline-api"';
-      ['api', 'user'].forEach(key => {
+      ['api', 'user', 'hide'].forEach(key => {
         if (item[key]) {
           el += ' ' + key + '="' + item[key] + '"';
         }
