@@ -6,17 +6,18 @@
   height: "calc(100vh - 1 * %s)" % var(--gap-l)
   .header
     margin: var(--gap-l) var(--gap-l) 0
-  >.widgets:first-child>.widget-wrap:first-child
-    margin-top: "calc(2 * %s)" % var(--gap-l)
+  @media screen and (min-width: $device-mobile-max)
+    >.widgets:first-child>.widget-wrap:first-child
+      margin-top: "calc(2 * %s)" % var(--gap-l)
   @media screen and (max-width: $device-mobile-max)
-    height: "calc(100% - 2 * %s)" % var(--gap-l)
+    height: 100vh
   
 
 .l_left[layout=wiki]
   padding-bottom: 0
   height: 100vh
   @media screen and (max-width: $device-mobile-max)
-    height: "calc(100% - 1 * %s)" % var(--gap-l)
+    height: 100vh
   .widgets >:last-child
     margin-bottom: 6rem
 
