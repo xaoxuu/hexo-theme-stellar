@@ -56,7 +56,7 @@ const FCircle = {
         var cell = '<div class="timenode" index="' + i + '">';
         cell += '<div class="header">';
         cell += '<div class="user-info">';
-        cell += '<img src="' + item.avatar + '">';
+        cell += '<img src="' + (item.avatar || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';">';
         cell += '<span>' + item.author + '</span>';
         cell += '</div>';
         cell += '<p>' + item.updated + '</p>';
@@ -83,9 +83,10 @@ $(function () {
     if (api == null) {
       continue;
     }
-    var obj = new Object();
-    obj.el = el;
-    obj.api = api;
-    FCircle.layoutDiv(obj);
+    var cfg = new Object();
+    cfg.el = el;
+    cfg.api = api;
+    cfg.avatar = 'https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/avatar/round/3442075.svg';
+    FCircle.layoutDiv(cfg);
   }
 });
