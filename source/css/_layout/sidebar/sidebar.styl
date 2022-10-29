@@ -3,18 +3,18 @@
   flex-direction: column
   word-break: break-all
   text-align: justify
-  padding: var(--gap-l) 0
-  padding-top: "calc(2 * %s)" % var(--gap-l)
-  height: "calc(100vh - 3 * %s)" % var(--gap-l)
-  @media screen and (max-width: $device-mobile-max)
-    padding-top: "calc(1 * %s)" % var(--gap-l)
-    height: "calc(100% - 2 * %s)" % var(--gap-l)
+  height: "calc(100vh - 1 * %s)" % var(--gap-l)
   .header
-    margin: 0 var(--gap-l)
+    margin: var(--gap-l) var(--gap-l) 0
+  >.widgets:first-child>.widget-wrap:first-child
+    margin-top: "calc(2 * %s)" % var(--gap-l)
+  @media screen and (max-width: $device-mobile-max)
+    height: "calc(100% - 2 * %s)" % var(--gap-l)
+  
 
 .l_left[layout=wiki]
   padding-bottom: 0
-  height: "calc(100vh - 2 * %s)" % var(--gap-l)
+  height: 100vh
   @media screen and (max-width: $device-mobile-max)
     height: "calc(100% - 1 * %s)" % var(--gap-l)
   .widgets >:last-child
