@@ -77,7 +77,7 @@ const StellarTimeline = {
         }
         var cell = '<div class="timenode" index="' + i + '">';
         cell += '<div class="header">';
-        if (!users.length && item.user) {
+        if (!users.length && item.user && !hide.includes('user')) {
           cell += '<a class="user-info" href="' + item.user.html_url + '" target="_blank" rel="external nofollow noopener noreferrer">';
           cell += '<img src="' + item.user.avatar_url + '">';
           cell += '<span>' + item.user.login + '</span>';
