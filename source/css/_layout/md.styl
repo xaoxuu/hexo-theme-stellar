@@ -133,30 +133,27 @@ article.md
   p:not([class]), li:not([class])
     a:not([class])
       position: relative
-      padding: 2px
+      padding: 2px 0
       text-decoration: none
-      display: inline-block
       line-height: 1.2
+      word-break: keep-all
       &:after
         content: ''
         position: absolute
         border-radius: 2px
-        bottom: 1px
-        left: 2px
-        right: 2px
+        bottom: 0
+        left: 0
+        right: 0
         height: 1px
-        opacity: 0.5
+        opacity: 0.8
         background: $color-link
         trans1: all
       &:hover
         border-bottom: none
         color: $color-link
-        // color: darken($color-hover, 10)
-        // background: alpha($color-hover, 0.08)
         &:after
           height: 100%
           opacity: 0.2
           bottom: 0
-          left: 0
-          right: 0
-          // background-color: alpha($color-hover, 0.08)
+          left: -2px
+          right: -2px
