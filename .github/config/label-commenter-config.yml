@@ -96,3 +96,16 @@ labels:
 
           :wave: 您好，
           此 BUG 已经被修复，请更新您的 Stellar 版本。
+          
+
+  # 文章分享
+  - name: 分享
+    labeled:
+      issue:
+        action: close
+        body: |
+          :wave: Hello,
+          The article you shared has been included, click [here](https://xaoxuu.com/wiki/stellar/articles/) to view it, we look forward to your next sharing!
+
+          :wave: 您好，
+          您分享文章已经被收录，点击 [此处](https://xaoxuu.com/wiki/stellar/articles/) 可以查看效果，期待您的下次分享！
