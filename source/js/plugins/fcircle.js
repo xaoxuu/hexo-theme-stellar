@@ -59,7 +59,7 @@ const FCircle = {
         cell += '<img src="' + (item.avatar || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';">';
         cell += '<span>' + item.author + '</span>';
         cell += '</div>';
-        cell += '<p>' + item.updated + '</p>';
+        cell += '<p>' + item.created + '</p>';
         cell += '</div>';
         cell += '<a class="body" href="' + item.link + '" target="_blank" rel="external nofollow noopener noreferrer">';
         cell += item.title;

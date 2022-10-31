@@ -212,6 +212,7 @@ tag_plugins:
     qq: https://fastly.jsdelivr.net/gh/cdn-x/emoji/qq/%s.gif
     aru: https://fastly.jsdelivr.net/gh/cdn-x/emoji/aru-l/%s.gif
     tieba: https://fastly.jsdelivr.net/gh/cdn-x/emoji/tieba/%s.png
+    blobcat: https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs/%s.png
   # {% image %}
   image:
     fancybox: # true, false
