@@ -17,7 +17,7 @@ hexo.extend.tag.register('friends', function(args) {
   if (args.api) {
     api = args.api;
   } else if (args.repo) {
-    api = 'https://raw.github.xaoxuu.com/' + args.repo + '/output/v2/data.json';
+    api = 'https://data.json.vlts.cc/v2/' + args.repo;
   }
   
   var el = '<div class="tag-plugin users-wrap">';
