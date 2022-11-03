@@ -219,7 +219,7 @@ if (stellar.plugins.stellar) {
     let js = stellar.plugins.stellar[key];
     if (key == 'linkcard') {
       stellar.loadScript(js, { defer: true }).then(function () {
-        setCardLink(document.querySelectorAll('a.link-card'));
+        setCardLink(document.querySelectorAll('a.link-card[cardlink]'));
       });
     } else {
       const els = document.getElementsByClassName('stellar-' + key + '-api');

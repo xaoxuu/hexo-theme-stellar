@@ -7,7 +7,6 @@
 
 'use strict';
 
-var util = require('hexo-util');
 const full_url_for = require('hexo-util').full_url_for.bind(hexo);
 
 hexo.extend.tag.register('link', function(args) {
@@ -15,10 +14,11 @@ hexo.extend.tag.register('link', function(args) {
 
   var el = '';
   el += '<div class="tag-plugin link dis-select">';
-  el += '<a class="link-card' + (args.desc ? ' rich' : ' plain') + '" title="' + args.title + '" href="' + args.url + '"';
+  el += '<a class="link-card' + (args.desc ? ' rich' : ' plain') + '" title="' + (args.title || '') + '" href="' + args.url + '"';
   if (args.url.includes('://')) {
     el += ' target="_blank" rel="external nofollow noopener noreferrer"';
   }
+  el += ' cardlink';
   el += '>';
 
   function loadIcon() {

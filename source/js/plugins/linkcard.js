@@ -27,6 +27,7 @@ function isHttp(url) {
 function renderer(el, obj) {
   if (obj.title && obj.title.length > 0) {
     el.querySelector('.title').innerHTML = obj.title;
+    el.title = obj.title;
   }
   if (obj.icon && obj.icon.length > 0) {
     el.querySelector('.img').style = 'background-image: url("' + obj.icon + '");';
