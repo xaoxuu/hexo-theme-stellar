@@ -1,11 +1,14 @@
 <%
-const obj = {
-  image: post['cover'],
-  title: post['cover-title'],
-  cat: post['cover-cat'],
-  subtitle: post['cover-subtitle'],
-  color: post['cover-text-color']
+const poster = post.poster;
+var obj = {
+  image: post.cover
 };
+if (poster) {
+  obj.headline = poster.headline;
+  obj.topic = poster.topic;
+  obj.caption = poster.caption;
+  obj.color = poster.color;
+}
 function div_default() {
   var el = '';
   el += '<article class="md">';
@@ -97,24 +100,24 @@ function div_photo() {
   var el = '';
   el += '<div class="cover">';
   el += '<img src="' + obj.image + '"/>';
-  if (obj.title || obj.cat || obj.subtitle) {
+  if (obj.headline || obj.topic || obj.caption) {
     el += '<div class="cover-info"';
     if (obj.color) {
       el += 'style="color:' + obj.color + '"';
     }
-    if (obj.cat) {
+    if (obj.topic) {
       el += 'position="top">';
     } else {
       el += 'position="bottom">';
     }
-    if (obj.cat) {
-      el += '<div class="cap">' + obj.cat + '</div>';
+    if (obj.topic) {
+      el += '<div class="cap">' + obj.topic + '</div>';
     }
-    if (obj.title) {
-      el += '<div class="title">' + obj.title + '</div>';
+    if (obj.headline) {
+      el += '<div class="title">' + obj.headline + '</div>';
     }
-    if (obj.subtitle) {
-      el += '<div class="cap">' + obj.subtitle + '</div>';
+    if (obj.caption) {
+      el += '<div class="cap">' + obj.caption + '</div>';
     }
     el += '</div>';
 
@@ -123,7 +126,7 @@ function div_photo() {
   return el;
 }
 function div() {
-  if (obj.image && obj.image.length > 0 && obj.title != undefined) {
+  if (obj.image && obj.image.length > 0 && obj.headline != undefined) {
     return div_photo();
   }
   return div_default();

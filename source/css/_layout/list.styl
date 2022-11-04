@@ -1,15 +1,13 @@
 // list
 .post-list
   margin: 1rem
-  .post-title
-    margin-top: 1.5rem
   .post-title:first-child
     margin-top: .5rem
 
 .post-list
   .post-title
     font-weight: 500
-    margin: .75rem 0
+    margin: 1.25rem 0 .75rem 0
     line-height: 1.2
     font-size: $fs-h3
     border-bottom: none
@@ -29,6 +27,7 @@
   box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.02)
   trans1 box-shadow
   overflow: hidden
+  z-index: 0
   background: var(--card)
   position: relative
   .excerpt
@@ -53,8 +52,12 @@
       img
         object-fit: contain
         height: 1.5em
+
 .post-list .post-card:hover
   box-shadow: 0 1px 4px 0px rgba(0, 0, 0, 0.1), 0 4px 16px 0px rgba(0, 0, 0, 0.1)
+  img 
+    transform: scale(1.02)
+    filter: brightness(80%)
 
 
 // common article
