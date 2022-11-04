@@ -11,7 +11,16 @@ const full_url_for = require('hexo-util').full_url_for.bind(hexo);
 
 hexo.extend.tag.register('link', function(args) {
   args = hexo.args.map(args, ['icon', 'desc'], ['url', 'title']);
-
+  var autofill = [];
+  if (!args.title) {
+    autofill.push('title');
+  }
+  if (!args.icon) {
+    autofill.push('icon');
+  }
+  if (args.desc) {
+    autofill.push('desc');
+  }
   var el = '';
   el += '<div class="tag-plugin link dis-select">';
   el += '<a class="link-card' + (args.desc ? ' rich' : ' plain') + '" title="' + (args.title || '') + '" href="' + args.url + '"';
@@ -19,6 +28,9 @@ hexo.extend.tag.register('link', function(args) {
     el += ' target="_blank" rel="external nofollow noopener noreferrer"';
   }
   el += ' cardlink';
+  el += ' autofill="';
+  el += autofill.join(',');
+  el += '"';
   el += '>';
 
   function loadIcon() {
