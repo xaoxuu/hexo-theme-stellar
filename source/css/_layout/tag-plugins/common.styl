@@ -1,3 +1,24 @@
+set_text_white()
+  --text-p0: white
+  --text-p1: white
+  --text-p2: #eee
+  --text-p3: #ddd
+  --text-code: white
+  --card: $dark-card
+  --block: $dark-block
+  --block-border: lighten($dark-block, 6)
+  --block-hover: darken($dark-block, 4)
+set_text_black()
+  --text-p0: black
+  --text-p1: #111
+  --text-p2: #333
+  --text-p3: #555
+  --text-code: white
+  --card: $light-card
+  --block: $light-block
+  --block-border: darken($light-block, 5)
+  --block-hover: darken($light-block, 2)
+
 .tag-plugin
   --theme: var(--text-p1)
   --theme-border: var(--block-border)
@@ -5,86 +26,99 @@
 
 .tag-plugin[color='red']
   --theme: $c-red
-  --theme-border: mix($c-red, $light-card, 40)
-  --theme-bg: mix($c-red, $light-card, 10)
+  --theme-border: mix($c-red, white, 60)
+  --theme-bg: mix($c-red, white, 15)
 
 .tag-plugin[color='orange']
   --theme: $c-orange
-  --theme-border: mix($c-orange, $light-card, 40)
-  --theme-bg: mix($c-orange, $light-card, 10)
+  --theme-border: mix($c-orange, white, 60)
+  --theme-bg: mix($c-orange, white, 15)
 
 .tag-plugin[color='yellow']
   --theme: $c-yellow
-  --theme-border: mix($c-yellow, $light-card, 40)
-  --theme-bg: mix($c-yellow, $light-card, 10)
+  --theme-border: mix($c-yellow, white, 60)
+  --theme-bg: mix($c-yellow, white, 20)
 
 .tag-plugin[color='green']
   --theme: $c-green
-  --theme-border: mix($c-green, $light-card, 40)
-  --theme-bg: mix($c-green, $light-card, 10)
+  --theme-border: mix($c-green, white, 60)
+  --theme-bg: mix($c-green, white, 15)
 
 .tag-plugin[color='cyan']
   --theme: $c-cyan
-  --theme-border: mix($c-cyan, $light-card, 40)
-  --theme-bg: mix($c-cyan, $light-card, 10)
+  --theme-border: mix($c-cyan, white, 60)
+  --theme-bg: mix($c-cyan, white, 15)
 
 .tag-plugin[color='blue']
   --theme: $c-blue
-  --theme-border: mix($c-blue, $light-card, 40)
-  --theme-bg: mix($c-blue, $light-card, 10)
+  --theme-border: mix($c-blue, white, 60)
+  --theme-bg: mix($c-blue, white, 15)
 
 .tag-plugin[color='purple']
   --theme: $c-purple
-  --theme-border: mix($c-purple, $light-card, 40)
-  --theme-bg: mix($c-purple, $light-card, 10)
-
+  --theme-border: mix($c-purple, white, 60)
+  --theme-bg: mix($c-purple, white, 15)
 
 .tag-plugin[color='light']
   --theme-bg: white
 
-
 .tag-plugin[color='dark']
-  --theme-bg: #444
-  color: var(--card) !important
+  --theme-bg: #333
+  set_text_white()
+
+.tag-plugin.note[color='warning']
+  --theme: $c-yellow
+  --theme-border: #ffe659
+  --theme-bg: #ffe659
+  --theme-link: #ff453a
+
+.tag-plugin.note[color='error']
+  --theme: $c-yellow
+  --theme-border: #ff453a
+  --theme-bg: #ff453a
+  --theme-link: #ffe659
+  set_text_white()
 
 set_darkmode_tags()
   .tag-plugin[color='red']
-    --theme-border: mix($c-red, $dark-card, 80)
-    --theme-bg: mix($c-red, $dark-card, 10)
+    --theme-border: mix($c-red, black, 70)
+    --theme-bg: mix($c-red, black, 20)
 
   .tag-plugin[color='orange']
-    --theme-border: mix($c-orange, $dark-card, 80)
-    --theme-bg: mix($c-orange, $dark-card, 10)
+    --theme-border: mix($c-orange, black, 70)
+    --theme-bg: mix($c-orange, black, 20)
 
   .tag-plugin[color='yellow']
-    --theme-border: mix($c-yellow, $dark-card, 80)
-    --theme-bg: mix($c-yellow, $dark-card, 10)
+    --theme-border: mix($c-yellow, black, 70)
+    --theme-bg: mix($c-yellow, black, 20)
 
   .tag-plugin[color='green']
-    --theme-border: mix($c-green, $dark-card, 80)
-    --theme-bg: mix($c-green, $dark-card, 10)
+    --theme-border: mix($c-green, black, 70)
+    --theme-bg: mix($c-green, black, 20)
 
   .tag-plugin[color='cyan']
-    --theme-border: mix($c-cyan, $dark-card, 80)
-    --theme-bg: mix($c-cyan, $dark-card, 10)
+    --theme-border: mix($c-cyan, black, 70)
+    --theme-bg: mix($c-cyan, black, 20)
 
   .tag-plugin[color='blue']
-    --theme-border: mix($c-blue, $dark-card, 80)
-    --theme-bg: mix($c-blue, $dark-card, 10)
+    --theme-border: mix($c-blue, black, 70)
+    --theme-bg: mix($c-blue, black, 20)
 
   .tag-plugin[color='purple']
-    --theme-border: mix($c-purple, $dark-card, 80)
-    --theme-bg: mix($c-purple, $dark-card, 10)
+    --theme-border: mix($c-purple, black, 70)
+    --theme-bg: mix($c-purple, black, 20)
 
   .tag-plugin[color='light']
     --theme-border: white
-    --theme-bg: #ddd
-    color: var(--card) !important
+    --theme-bg: #fff
 
   .tag-plugin[color='dark']
     --theme-border: black
-    --theme-bg: #222
-    color: var(--text-p1) !important
+    --theme-bg: #111
+    set_text_white()
+
+  .tag-plugin[color='warning'],.tag-plugin[color='light']
+    set_text_black()
 
 if hexo-config('style.darkmode') == 'auto'
   @media (prefers-color-scheme: dark)

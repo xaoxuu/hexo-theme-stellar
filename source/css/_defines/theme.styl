@@ -1,8 +1,12 @@
-:root
-  --site-bg: $light-background
-  --block: $light-block
-  --block-border: darken($light-block, 5)
-  --block-hover: darken($light-block, 2)
+set_text_light()
+  --text-p0: $dark-title
+  --text-p1: mix($dark-text, $dark-background, 85)
+  --text-p2: mix($dark-text, $dark-background, 70)
+  --text-p3: mix($dark-text, $dark-background, 45)
+  --text-p4: mix($dark-text, $dark-background, 35)
+  --text-meta: mix($dark-text, $dark-background, 30)
+  --text-code: $dark-code
+set_text_dark()
   --text-p0: $light-title
   --text-p1: $light-text
   --text-p2: mix($light-text, $light-background, 80)
@@ -10,24 +14,25 @@
   --text-p4: mix($light-text, $light-background, 35)
   --text-meta: mix($light-text, $light-background, 20)
   --text-code: $light-code
+:root
+  --site-bg: $light-background
   --card: $light-card
+  --block: $light-block
+  --block-border: darken($light-block, 5)
+  --block-hover: darken($light-block, 2)
+  set_text_dark()
   --theme-highlight: darken($color-theme, 5)
   --theme-bg: mix($color-theme, $light-card, 10)
+  --theme-link: $color-link
 
 set_darkmode()
   :root
     --site-bg: $dark-background
+    --card: $dark-card
     --block: $dark-block
     --block-border: lighten($dark-block, 6)
     --block-hover: darken($dark-block, 4)
-    --text-p0: $dark-title
-    --text-p1: mix($dark-text, $dark-background, 85)
-    --text-p2: mix($dark-text, $dark-background, 70)
-    --text-p3: mix($dark-text, $dark-background, 45)
-    --text-p4: mix($dark-text, $dark-background, 35)
-    --text-meta: mix($dark-text, $dark-background, 30)
-    --text-code: $dark-code
-    --card: $dark-card
+    set_text_light()
     --theme-highlight: $color-theme
     --theme-bg: mix($color-theme, $dark-card, 10)
     @media screen and (max-width: $device-mobile-max)

@@ -326,7 +326,7 @@ style:
       card: white # 卡片背景颜色
       title: '#000' # 标题文本颜色
       text: '#333' # 正文文本颜色
-      code: '#111' # 行内代码颜色
+      code: '#f33a00' # 行内代码颜色
     dark:
       background: '#313438' # 深色背景颜色
       background-mobile: black # 移动端深色背景（OLED调成纯黑可以省电）

@@ -48,8 +48,8 @@ details.folding[open]
     margin: 0 - 1rem
     margin-top: 0
     background: var(--card)
-    border-bottom-left-radius: $border-block
-    border-bottom-right-radius: $border-block
+    border-bottom-left-radius: 'calc(%s - 1px)' % $border-block
+    border-bottom-right-radius: 'calc(%s - 1px)' % $border-block
     font-size: $fs-15
     >:first-child
       margin-top: 0
