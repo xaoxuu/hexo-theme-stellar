@@ -18,7 +18,7 @@ function layoutDiv() {
   if (repo == undefined) {
     return el;
   }
-  item.api = 'https://api.github.com/repos/' + repo + '/issues?per_page=' + item.limit;
+  item.api = theme.api_host.ghapi + '/repos/' + repo + '/issues?per_page=' + item.limit;
   if (item.labels) {
     item.api += '&labels=' + item.labels;
   }
