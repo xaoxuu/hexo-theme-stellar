@@ -104,6 +104,10 @@
   padding: 0.5rem 1rem
   margin-top: 4px
   box-shadow: $boxshadow-block
+  trans2: transform box-shadow
+  &:hover
+    transform: translateY(-1px)
+    box-shadow: $boxshadow-card-float
   p
     font-size: $fs-14
     img  
@@ -124,12 +128,8 @@
   a.body
     display: block
     color: var(--text-p1)
-    trans2: transform box-shadow
     line-height: 1.25
     padding: 0.75rem 1rem
-    &:hover
-      transform: translateY(-1px)
-      box-shadow: $boxshadow-card-float
 
 
 .tag-plugin.timeline[api] .body
