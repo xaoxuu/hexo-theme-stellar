@@ -1,22 +1,33 @@
 <%
 function generate_title() {
-  if (page.layout == 'wiki' && page.wiki && (page.title || page.seo_title)) {
-    return page.wiki + __('symbol.colon') + (page.seo_title || page.title) + ' - ' + config.title;
-  } else if (page.seo_title || page.title || page.wiki) {
-    return (page.seo_title || page.title || page.wiki) + ' - ' + config.title;
-  } else if (page.category) {
-    return __('btn.category') + __('symbol.colon') + page.category + ' - ' + config.title;
-  } else if (page.tag) {
-    return __('btn.tag') + __('symbol.colon') + page.tag + ' - ' + config.title;
+  if (page.seo_title) {
+    return page.seo_title;
+  }
+  if (page.wiki) {
+    let proj = theme.wiki.projects[page.wiki];
+    let wiki = (proj && proj.name) || page.wiki;
+    if (page.title) {
+      return wiki + __('symbol.colon') + page.title + ' - ' + config.title;
+    } else {
+      return wiki + ' - ' + config.title;
+    }
   } else {
-    return config.title;
+    if (page.category) {
+      return __('btn.category') + __('symbol.colon') + page.category + ' - ' + config.title;
+    } else if (page.tag) {
+      return __('btn.tag') + __('symbol.colon') + page.tag + ' - ' + config.title;
+    } else {
+      return config.title;
+    }
   }
   return '';
 }
 function generate_description() {
-  // 索引页
-  if (theme.open_graph && theme.open_graph.enable) {
-    return '';
+  if (page.layout == 'wiki' && page.wiki) {
+    let proj = theme.wiki.projects[page.wiki];
+    if (proj && proj.description) {
+      return '<meta name="description" content="' + proj.description + '">';
+    }
   }
   if (page.description || page.excerpt || page.content) {
     return '<meta name="description" content="' + truncate(strip_html(page.description || page.excerpt || page.content), {length: 150}) + '">';
