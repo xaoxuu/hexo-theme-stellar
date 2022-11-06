@@ -17,7 +17,7 @@ hexo.extend.tag.register('sites', function(args) {
   if (args.api) {
     api = args.api;
   } else if (args.repo) {
-    api = 'https://data.json.vlts.cc/v2/' + args.repo;
+    api = 'https://api.vlts.cc/output_data/v2/' + args.repo;
   }
   
   var el = '<div class="tag-plugin sites-wrap">';

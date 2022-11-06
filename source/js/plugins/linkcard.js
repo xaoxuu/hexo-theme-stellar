@@ -33,7 +33,7 @@ function setCardLink(nodes) {
     if (el.nodeType !== 1) return
     el.removeAttribute('cardlink');
     const link = el.href;
-    const api = 'https://site-info.vlts.cc/api?url=';
+    const api = 'https://api.vlts.cc/site_info/v1?url=';
     fetch(api + link).then(function(response) {
       if (response.ok) {
         return response.json();
