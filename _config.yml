@@ -85,8 +85,18 @@ article:
   auto_excerpt: 200
   # 分类颜色
   category_color:
-    # '新闻稿': '#DA0F47'
+    # '实用脚本': '#DA0F47'
+    # '博客': '#03a9f4'
     # '前端工程化': '#FF9900'
+    # 'Vue': '#42b883'
+    # 'Vue3': '#006e54'
+    # 'TS': '#3c78c9'
+    # 'Git': '#e84d31'
+    # 'JS': '#efd81d'
+    # 'UI': '#e3adb9'
+    # '小程序': '#16d46b'
+    # '笔记': '#4a4b9d'
+    # '生活': '#cee4ae'
   # 文章许可协议
   license: '本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。'
   # 分享
@@ -316,6 +326,8 @@ plugins:
     enable: true # [hexo clean && hexo s] is required after changing this value.
     js: https://fastly.jsdelivr.net/npm/vanilla-lazyload@17.3.1/dist/lazyload.min.js
     transition: blur # blur, fade
+    lightLoadImage: https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/cover/76b86c0226ffd.svg
+    darkLoadImage: https://fastly.jsdelivr.net/gh/xiangshu233/blogAssets/2022/10/loadingImg.svg
 
   # https://scrollrevealjs.org/api/reveal.html
   scrollreveal:
