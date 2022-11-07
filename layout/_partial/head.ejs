@@ -23,6 +23,9 @@ function generate_title() {
   return '';
 }
 function generate_description() {
+  if (theme.open_graph && theme.open_graph.enable) {
+    return '';
+  }
   if (page.layout == 'wiki' && page.wiki) {
     let proj = theme.wiki.projects[page.wiki];
     if (proj && proj.description) {
