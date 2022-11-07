@@ -9,11 +9,11 @@
   --waline-light-grey: #999;
   --waline-dark-grey: #666;
   /* 主题色 */
-  --waline-theme-color: $color-theme;
-  --waline-active-color: $color-hover;
+  --waline-theme-color: #3498db;
+  --waline-active-color: #2ecc71;
   /* 布局颜色 */
   --waline-color: #444;
-  --waline-bgcolor: #fff;
+  --waline-bgcolor: #f2f2f2; /* BAK fff */
   --waline-bgcolor-light: #f8f8f8;
   --waline-bgcolor-hover: #f0f0f0;
   --waline-border-color: #ddd;
@@ -38,7 +38,7 @@
   --waline-box-shadow: none;
   
 
-  @media (prefers-color-scheme: dark)
+  @media (prefers-color-scheme: auto) /* BAK prefers-color-scheme: dark */
     --waline-white: #000;
     --waline-light-grey: #666;
     --waline-dark-grey: #999;
@@ -61,5 +61,5 @@
     padding: .375em;
     font-weight: bold;
     font-size: 1.25em;
-    color: #fff;
+    color: #666; /* BAK #fff
 
