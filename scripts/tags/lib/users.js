@@ -5,7 +5,7 @@
  * {% users api:https://api.github.com/repos/xaoxuu/hexo-theme-stellar/contributors %}
  */
 
-'use strict';
+ 'use strict';
 
 module.exports = ctx => function(args) {
   args = ctx.args.map(args, ['api']);
@@ -17,6 +17,6 @@ module.exports = ctx => function(args) {
   el += '<div class="group-body"></div>';
   el += '</div>';
 
-  el += '</div>';
-  return el;
-};
+   el += '</div>';
+   return el;
+ };

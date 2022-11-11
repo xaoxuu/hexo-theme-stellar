@@ -1,0 +1,45 @@
+<%
+function layoutDiv() {
+  var el = '';
+  var repo;
+  var branch = 'main';
+  if (page.layout === 'wiki' && page.wiki) {
+    let proj = theme.wiki.projects[page.wiki];
+    if (proj && proj.repo) {
+      repo = proj.repo;
+      if (proj.branch != undefined) {
+        branch = proj.branch;
+      }
+    }
+  } else {
+    // 其它的如果有设置 repo 也可以
+    repo = page.repo;
+  }
+  if (repo == undefined) {
+    return el;
+  }
+  item.api = theme.api_host.ghapi + '/repos/' + repo + '/issues?per_page=' + item.limit;
+  if (item.labels) {
+    item.api += '&labels=' + item.labels;
+  }
+  el += '<div class="widget-wrap" id="timeline">';
+    if (item.title) {
+      el += '<div class="widget-header cap theme dis-select">';
+      el += '<span class="name">' + item.title + '</span>';
+      el += '</div>';
+    }
+    el += '<div class="widget-body fs14">';
+      el += '<div class="tag-plugin timeline stellar-timeline-api"';
+      ['api', 'user'].forEach(key => {
+        if (item[key]) {
+          el += ' ' + key + '="' + item[key] + '"';
+        }
+      });
+      el += '>';
+      el += '</div>';
+    el += '</div>';
+  el += '</div>';
+  return el;
+}
+%>
+<%- layoutDiv() %>

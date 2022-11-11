@@ -28,7 +28,6 @@ meta:
   updated: 'Updated on'
   license: License
   share: Share
-  repo_info: Repo Info
   date_suffix:
     just: Just
     min: minutes ago

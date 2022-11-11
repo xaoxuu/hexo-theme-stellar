@@ -69,7 +69,7 @@ function layoutDiv() {
             el += ' onclick="util.toggle(&quot;qrcode-wechat&quot)"';
           } else if (item == 'weibo') {
             el += ' href="https://service.weibo.com/share/share.php?url=' + page.permalink;
-            el += '&title=' + (page.seo_title || page.title) + ' - ' + config.title;
+            el += '&title=' + (page.seo_title || (page.title + ' - ' + config.title));
             if (page.latyout == 'post' && page.cover) {
               el += '&pics=' + page.cover;
             } else if (page.latyout == 'wiki' && page.logo && page.logo.src) {
@@ -78,7 +78,7 @@ function layoutDiv() {
             el += '&summary=' + truncate(page.description || strip_html(page.excerpt || page.content), {length: 120});
             el += '"';
           } else if (item == 'email') {
-            el += ' href="mailto:?subject=' + (page.title || page.seo_title) + ' - ' + config.title + '&amp;'
+            el += ' href="mailto:?subject=' + ((page.title + ' - ' + config.title) || page.seo_title) + '&amp;'
             el += 'body=' + page.permalink + '"';
           } else if (item == 'link') {
             el += ' onclick="util.copy(&quot;copy-link&quot;, &quot;' + __('message.copied') + '&quot;)"';

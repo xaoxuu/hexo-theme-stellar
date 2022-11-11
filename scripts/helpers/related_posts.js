@@ -25,58 +25,30 @@ hexo.extend.helper.register('popular_posts_wrapper', function(args){
 
   const posts = this.site.posts;
   const root = this.config.root;
-  function generateHTML(list){
 
+  function listItem(obj){
     var el = '';
-    el += '<a class="item" href="' + list.path + '" title="' + list.title + '">';
+    el += '<a class="item" href="' + obj.path + '" title="' + obj.title + '">';
     var p = posts.filter(function(p) {
-      return root + p.path == list.path;
+      return root + p.path == obj.path;
     });
     if (p && p.length > 0) {
       p = p.data[0];
     }
-    if (p) {
-      if (p.cover) {
-        if (p.cover.includes('/')) {
-          list.img = p.cover;
-        } else {
-          list.img = 'https://source.unsplash.com/1280x640/?' + p.cover;
-        }
-      } else if (cfg.auto_cover && p.tags && p.tags.length > 0) {
-        var params = '';
-        p.tags.reverse().forEach((tag, i) => {
-          if (i > 0) {
-            params += ',';
-          }
-          params += tag.name;
-        });
-        list.img = 'https://source.unsplash.com/1280x640/?' + params;
-      }
+    el += '<span class="title">' + obj.title + '</span>';
+    if (obj.excerpt && obj.excerpt.length > 0) {
+      el += '<span class="excerpt">' + util.truncate(util.stripHTML(obj.excerpt), {length: 120}) + '</span>';
     }
-    if (hexo.theme.config.default.cover) {
-      el += '<div class="img">'
-      if (list.img && list.img != "") {
-        el += '<img src="' + list.img + '" />';
-      } else {
-        el += '<img src="' + hexo.theme.config.default.cover + '" />';
-      }
-      el += '</div>';
-    }
-
-    el += '<span class="title">' + list.title + '</span>';
-
-    if (list.excerpt && list.excerpt.length > 0) {
-      el += '<span class="excerpt">' + util.truncate(util.stripHTML(list.excerpt), {length: 120}) + '</span>';
-    }
-
     el +=  '</a>';
     return el;
   }
 
-  for(var i = 0; i < json.length; i++) {
-    returnHTML += generateHTML(json[i]);
+  if (json.length > 0) {
+      for(var i = 0; i < json.length; i++) {
+        returnHTML += listItem(json[i]);
+      }
   }
-
+  
   if (returnHTML != "") returnHTML = "<div class=\"" + cls + "\">" + returnHTML + "</div>";
   div += returnHTML;
   div += '</section>';

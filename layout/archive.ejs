@@ -7,7 +7,7 @@ if (page.menu_id == undefined) {
 <% if (page.posts && (is_category() || is_tag())) { %>
   <%- partial('index') %>
 <% } else { %>
-  <% page.title = __('btn.archives'); %>
+  <% page.title = __('btn.archives') + ' - ' + config.title; %>
   <%- partial('_partial/main/navbar/list_post') %>
   <div class='post-list'>
   	<% var years = []; %>

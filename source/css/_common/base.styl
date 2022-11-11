@@ -7,12 +7,13 @@ pre
   -webkit-tab-size: 4
 a
   text-decoration: none
-  color: $color-link
+  color: var(--theme-link)
   &:hover
     color: $color-hover
 
-p:not([class])
-  text-align: justify
+.md p:not([class])
+  text-align: convert(hexo-config('style.text-align'))
+
 hr
   color: var(--text-meta)
   opacity: .1

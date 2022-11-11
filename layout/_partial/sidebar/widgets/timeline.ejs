@@ -1,0 +1,27 @@
+<%
+function layoutDiv() {
+  var el = '';
+  if (item.api == undefined) {
+    return el;
+  }
+  el += '<div class="widget-wrap" id="timeline">';
+    if (item.title) {
+      el += '<div class="widget-header cap theme dis-select">';
+      el += '<span class="name">' + item.title + '</span>';
+      el += '</div>';
+    }
+    el += '<div class="widget-body fs14">';
+      el += '<div class="tag-plugin timeline stellar-' + (item.type || "timeline") + '-api"';
+      ['api', 'user', 'hide', 'limit'].forEach(key => {
+        if (item[key]) {
+          el += ' ' + key + '="' + item[key] + '"';
+        }
+      });
+      el += '>';
+      el += '</div>';
+    el += '</div>';
+  el += '</div>';
+  return el;
+}
+%>
+<%- layoutDiv() %>

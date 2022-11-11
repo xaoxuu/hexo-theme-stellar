@@ -1,5 +1,5 @@
-.l_left .footer
-  margin-top: .5rem
+.l_left>.footer
+  margin: 0.5rem var(--gap-l) 0
   @media screen and (max-width: $device-tablet)
     margin-bottom: 1rem
 
@@ -26,6 +26,8 @@
       if hexo-config('style.darkmode') == 'auto'
         @media (prefers-color-scheme: dark)
           box-shadow: none
+      if hexo-config('style.darkmode') == 'always'
+        box-shadow: none
 
 .proj-wrap
   display: grid

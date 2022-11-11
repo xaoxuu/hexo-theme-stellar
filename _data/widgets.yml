@@ -1,0 +1,72 @@
+# 您可以在这里创建属于自己的侧边栏组件库，在需要的位置放置自己的组件
+# layout即组件布局，支持自定义的有：
+# - markdown: 渲染 md 文本
+#
+
+ghrepo:
+  layout: ghrepo
+related:
+  layout: related
+
+ghissues:
+  layout: ghissues
+  title: # Recent Issues
+  limit: 3 # 显示的issues最大数量
+  labels: # 过滤只显示具有某些标签的issues
+
+# 将其覆盖设置为空，可删除一个默认组件，例如 welcome:
+# Recent update
+recent:
+  layout: recent
+  rss: # /atom.xml # npm i hexo-generator-feed
+  limit: 5 # Count of posts
+# TOC (valid only in layout:post/wiki)
+toc:
+  layout: toc
+  list_number: false
+  min_depth: 2
+  max_depth: 5
+  fallback: recent # Use a backup widget when toc does not exist.
+# github user info
+ghuser:
+  layout: ghuser
+  api: https://api.github.com
+  username: xiangshu233 # your github login username
+  avatar: true # show avatar or not
+  menu: false # show menu or not
+
+tagcloud:
+  layout: tagcloud
+  title: 标签云
+  # 标签云配置
+  min_font: 12
+  max_font: 24
+  amount: 100
+  orderby: name
+  order: 1 # 1, sac 升序；-1, desc 降序
+  color: false # 使用颜色
+  start_color: # 开始的颜色。您可使用十六进位值（#b700ff），rgba（rgba(183, 0, 255, 1)），hsla（hsla(283, 100%, 50%, 1)）或 颜色关键字。此变量仅在 color 参数开启时才有用。
+  end_color: # 结束的颜色。您可使用十六进位值（#b700ff），rgba（rgba(183, 0, 255, 1)），hsla（hsla(283, 100%, 50%, 1)）或 颜色关键字。此变量仅在 color 参数开启时才有用。
+  show_count: false # 显示每个标签的文章总数
+
+welcome:
+  layout: markdown
+  title: Stellar 入门指南
+  content: | # support markdown
+    欢迎使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar/) 主题，下面是您的入门指南，祝您使用愉快！
+    <br>
+    **第一步**
+    创建 `blog/_config.stellar.yml` 文件，在此文件中填写需要自定义的主题配置。
+    <br>
+    **第二步**
+    创建 `blog/source/_data/widgets.yml` 文件，此文件中填写需要自定义的侧边栏组件，例如 `welcome` 组件。
+    <br>
+    如果有任何疑问，请先查阅 [文档](https://xaoxuu.com/wiki/stellar/)，如果文档中没有提供，请提 [issue](https://github.com/xaoxuu/hexo-theme-stellar/issues/) 向开发中询问。
+
+timeline:
+  layout: timeline
+  title: 近期动态
+  api: https://api.github.com/repos/xaoxuu/hexo-theme-stellar/issues
+  user: # 默认显示所有人的数据，设置名称可过滤为仅显示某人的数据，多个名称用英文逗号隔开，不要加空格
+  type: # 默认不用写，如果是友链朋友圈数据请写 fcircle
+  limit: # 默认通过 api 上增加 per_page 来设置，如果是友链朋友圈，可通过这个设置数量

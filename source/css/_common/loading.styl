@@ -13,3 +13,21 @@ svg.loading
       transform:rotate(0deg)
     to
       transform:rotate(360deg)
+
+.loading-wrap
+  margin: 0
+  text-align: center
+  background: var(--block)
+  border-radius: $border-card
+  position relative
+  padding: 2rem
+  svg  
+    margin: 4px
+  &:after 
+    content: hexo-config('style.loading.loading')
+    color: var(--text-p1)
+    display: block
+    font-size: 14px
+  &.error
+    &:after
+      content: hexo-config('style.loading.error')

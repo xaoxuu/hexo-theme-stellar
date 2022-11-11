@@ -1,15 +1,14 @@
 code
   -webkit-font-smoothing: auto
   -moz-osx-font-smoothing: auto
-  color: var(--text-code)
   font-family: $ff-code
 
-p>code:not([class]), li>code:not([class])
+p>code:not([class]),li>code:not([class])
   font-size: 85%
-  background: linear-gradient(to right, var(--code-gradient-light), var(--code-gradient-dark))
-  padding: .1em .4em
-  margin: 0em .2em
+  background: var(--block)
+  padding: .2em
   border-radius: 4px
+  color: var(--text-code)
 
 article.md .highlight, pre:not([class]):has(>code)
   margin: var(--gap-p) 0
@@ -20,7 +19,7 @@ article.md .highlight, pre:not([class]):has(>code)
   font-family: $ff-code
   box-sizing: border-box
   @media screen and (min-width: $device-mobile)
-    min-width: 280px
+    min-width: 180px
 
 article.md .highlight
   position: relative
@@ -74,6 +73,22 @@ article.md .highlight
       padding: .5em 1rem
   .gutter+.code pre
     padding-left: 0.25em
+
+article.md .gist
+  .gist-file
+    border: 1px solid var(--block-border)
+    border-radius: $border-block
+  .gist-data
+    border-bottom: 1px solid var(--block-border)
+  .highlight
+    display: inherit
+    border: none
+    border-radius: 0
+    background: none
+    margin: 0
+    padding: 1em 0
+  .gist-meta
+    background: var(--block-border)
 
 
 table:not([class])

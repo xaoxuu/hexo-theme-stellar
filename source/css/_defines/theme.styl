@@ -1,59 +1,45 @@
-:root
-  color-scheme: light;
-  --site-bg: $light-site-bg
-  --block: $light-block
-  --code: darken($light-block, 5)
-  --block-border: darken($light-block, 5)
-  --block-hover: darken($light-block, 2)
+set_text_light()
+  --text-p0: $dark-title
+  --text-p1: mix($dark-text, $dark-background, 85)
+  --text-p2: mix($dark-text, $dark-background, 70)
+  --text-p3: mix($dark-text, $dark-background, 45)
+  --text-p4: mix($dark-text, $dark-background, 35)
+  --text-meta: mix($dark-text, $dark-background, 30)
+  --text-code: $dark-code
+set_text_dark()
   --text-p0: $light-title
   --text-p1: $light-text
-  --text-p2: mix($light-text, $light-site-bg, 80)
-  --text-p3: mix($light-text, $light-site-bg, 60)
-  --text-p4: mix($light-text, $light-site-bg, 35)
-  --text-meta: mix($light-text, $light-site-bg, 20)
+  --text-p2: mix($light-text, $light-background, 80)
+  --text-p3: mix($light-text, $light-background, 60)
+  --text-p4: mix($light-text, $light-background, 35)
+  --text-meta: mix($light-text, $light-background, 20)
   --text-code: $light-code
+:root
+  color-scheme: light;
+  --site-bg: $light-background
   --card: $light-card
+  --block: $light-block
+  --block-border: darken($light-block, 5)
+  --block-hover: darken($light-block, 2)
+  set_text_dark()
   --theme-highlight: darken($color-theme, 5)
   --theme-bg: mix($color-theme, $light-card, 10)
-  // 阴影
-  --shadow-1: darken($white, 10)
-  --shadow-2: darken($white, 0)
-  // 文本代码块
-  --code-gradient-light: #d1d1d1
-  --code-gradient-dark: #f1f1f1
-  //
-  --list-light: lighten($black, 90)
+  --theme-link: $color-link
 
 set_darkmode()
   :root
     color-scheme: dark;
-    --site-bg: $dark-site-bg
+    --site-bg: $dark-background
+    --card: $dark-card
     --block: $dark-block
     --code: $dark-block
     --block-border: lighten($dark-block, 6)
     --block-hover: darken($dark-block, 4)
-    --text-p0: $dark-title
-    --text-p1: mix($dark-text, $dark-site-bg, 85)
-    --text-p2: mix($dark-text, $dark-site-bg, 70)
-    --text-p3: mix($dark-text, $dark-site-bg, 45)
-    --text-p4: mix($dark-text, $dark-site-bg, 35)
-    --text-meta: mix($dark-text, $dark-site-bg, 30)
-    --text-code: $dark-code
-    --card: $dark-card
+    set_text_light()
     --theme-highlight: $color-theme
     --theme-bg: mix($color-theme, $dark-card, 10)
-    // 阴影
-    --shadow-1: lighten($black, 15)
-    --shadow-2: lighten($black, 22)
-    // 文本代码块
-    --code-gradient-light: #2f2f2f
-    --code-gradient-dark: #2f2f2f
-
-    // aplayer css
-    --list-light: lighten($black, 20)
-
     @media screen and (max-width: $device-mobile-max)
-      --site-bg: $dark-site-bg-mobile
+      --site-bg: $dark-background-mobile
       --card: darken($dark-card, 6)
       --block: darken($dark-block, 4)
       --block-border: lighten($dark-block, 2)

@@ -36,11 +36,15 @@ function layoutNodeContent(content) {
 
 
 function postTimeline(args, content) {
-  args = hexo.args.map(args, ['api']);
+  args = hexo.args.map(args, ['api', 'user', 'type', 'limit', 'hide']);
   var el = '';
-
+  if (!args.type) {
+    args.type = 'timeline';
+  }
   if (args.api && args.api.length > 0) {
-    el += '<div class="tag-plugin timeline stellar-timeline-api" api="' + args.api + '">';
+    el += '<div class="tag-plugin timeline stellar-' + args.type + '-api"';
+    el += ' ' + hexo.args.joinTags(args, ['api', 'user', 'limit', 'hide']).join(' ');
+    el += '>';
   } else {
     el += '<div class="tag-plugin timeline">';
   }
@@ -48,7 +52,6 @@ function postTimeline(args, content) {
   var arr = content.split(/<!--\s*(.*?)\s*-->/g).filter((item, i) => {
     return item.trim().length > 0;
   });
-
   if (arr.length > 0) {
     var nodes = [];
     arr.forEach((item, i) => {

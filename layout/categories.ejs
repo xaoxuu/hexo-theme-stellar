@@ -5,7 +5,7 @@ if (page.menu_id == undefined) {
 }
 %>
 <% if (site.categories.length) { %>
-  <% page.title = __('btn.categories'); %>
+  <% page.title = __('btn.categories') + ' - ' + config.title; %>
   <% page.layout = 'categories'; %>
   <%- partial('_partial/main/navbar/list_post') %>
   <div class='post-list'>

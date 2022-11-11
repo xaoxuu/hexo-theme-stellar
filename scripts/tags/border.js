@@ -1,15 +1,15 @@
 /**
- * grid.js v1.0 | https://github.com/xaoxuu/hexo-theme-stellar/
+ * border.js v1.0 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
- * {% grid [color:color] [child:codeblock/tabs] title %}
+ * {% border [color:color] [child:codeblock/tabs] title %}
  * body
- * {% endgrid %}
+ * {% endborder %}
  */
 
 'use strict';
 
-hexo.extend.tag.register('grid', function(args, content) {
+hexo.extend.tag.register('border', function(args, content) {
   args = hexo.args.map(args, ['color', 'child'], ['title']);
   const color = args.color;
   const title = args.title;

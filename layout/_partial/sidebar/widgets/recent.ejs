@@ -2,7 +2,7 @@
 function layoutDiv() {
   var el = '<div class="widget-wrap" id="recent">';
   // header
-  el += '<div class="widget-header cap dis-select">';
+  el += '<div class="widget-header cap theme dis-select">';
   el += '<span class="name">' + __("meta.recent_update") + '</span>';
   if (item.rss) {
     el += '<a class="cap-action" id="rss" title="Subscribe" href="' + item.rss + '">';
@@ -25,23 +25,20 @@ function layoutDiv() {
       return p.title && p.title.length > 0;
     });
   }
-  el += '<div class="widget-body fs14">';
+  el += '<div class="widget-body related-posts fs14">';
   arr.sort("updated", -1).limit(item.limit).each(function(post) {
-    el += '<div class="more-item">';
-    el += '<a class="title" href="' + url_for(post.link || post.path) + '">';
+    el += '<a class="item title" href="' + url_for(post.link || post.path) + '">';
+    el += '<span class="title">'
     if (post.layout == 'wiki') {
-      el += '<span>';
       let proj = theme.wiki.projects[post.wiki];
-      if (proj && proj.title) {
-        el += proj.title + __('symbol.colon');
+      if (proj && proj.name) {
+        el += proj.name + ' / ';
       } else if (post.wiki) {
-        el += post.wiki + __('symbol.colon');
+        el += post.wiki + ' / ';
       }
-      el += '</span>';
     }
-    el += post.title || post.seo_title || post.wiki;
+    el += (post.title || post.seo_title || post.wiki) + '</span>';
     el += '</a>';
-    el += '</div>';
     el += '';
   });
   el += '</div>';

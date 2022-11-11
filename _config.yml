@@ -1,6 +1,6 @@
 ######## Stellar info ########
 stellar:
-  version: '1.10.0'
+  version: '1.15.1'
   homepage: 'https://xaoxuu.com/wiki/stellar/'
   repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
   cdn_css: # Use cdn links instead of /css/main.css
@@ -23,52 +23,15 @@ sidebar:
     # friends: '[友链](/friends/)'
     # about: '[关于](/about/)'
   # Sidebar widgets
-  widget_layout:
-    index: [welcome, recent] # for home/wiki/categories/tags/archives/404 pages
-    page: [welcome, toc] # for pages using 'layout:page'
-    post: [toc, repo_info] # for pages using 'layout:post'
-    wiki: [toc, repo_info, wiki_more] # for pages using 'layout:wiki'
   widgets:
-    # Recent update
-    recent:
-      layout: recent
-      rss: # /atom.xml # npm i hexo-generator-feed
-      limit: 5 # Count of posts
-    # TOC (valid only in layout:post/wiki)
-    toc:
-      layout: toc
-      list_number: false
-      min_depth: 2
-      max_depth: 5
-      fallback: recent # Use a backup widget when toc does not exist.
-    # github user info
-    ghuser:
-      layout: ghuser
-      api: https://api.github.com
-      username: xiangshu233
-      avatar: true
+    # index: [welcome, recent, timeline] # for home/wiki/categories/tags/archives/404 pages
+    # page: [welcome, toc] # for pages using 'layout:page'
+    # post: [toc, ghrepo, ghissues] # for pages using 'layout:post'
+    # wiki: [toc, ghrepo, ghissues, related] # for pages using 'layout:wiki'
 
-    ghuser_mini:
-        layout: ghuser
-        header: # GitHub Info
-        api: https://api.github.com
-        username: xiangshu233
-        avatar: false
-    # welcome
-    welcome:
-      layout: markdown
-      title: Stellar 入门指南
-      content: | # support markdown
-        欢迎使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar/) 主题，下面是您的入门指南，祝您使用愉快！
-        <br>
-        **第一步**
-        创建 `blog/_config.stellar.yml` 文件，在此文件中填写需要自定义的主题配置。
-        <br>
-        **第二步**
-        创建 `blog/source/_data/widgets.yml` 文件，此文件中填写需要自定义的侧边栏组件，例如 `welcome` 组件。
-        <br>
-        如果有任何疑问，请先查阅[文档](https://xaoxuu.com/wiki/stellar/)，如果文档中没有提供，请提 [issue](https://github.com/xaoxuu/hexo-theme-stellar/issues/) 向开发中询问。
-
+######## Index ########
+post-index: # 近期发布 分类 标签 归档 and ...
+  # '朋友文章': /friends/rss/
 
 
 ######## Main ########
@@ -87,18 +50,8 @@ article:
   category_color:
     # '实用脚本': '#DA0F47'
     # '博客': '#03a9f4'
-    # '前端工程化': '#FF9900'
-    # 'Vue': '#42b883'
-    # 'Vue3': '#006e54'
-    # 'TS': '#3c78c9'
-    # 'Git': '#e84d31'
-    # 'JS': '#efd81d'
-    # 'UI': '#e3adb9'
-    # '小程序': '#16d46b'
-    # '笔记': '#4a4b9d'
-    # '生活': '#cee4ae'
   # 文章许可协议
-  license: '本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。'
+  license: '本文采用[署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/)许可协议，转载请注明出处。'
   # 分享
   share: # [wechat, weibo, email, link]
   # 相关文章，需要安装插件 (for layout: post)
@@ -106,12 +59,11 @@ article:
   related_posts:
     enable: false
     max_count: 5
-    auto_cover: true # 如果没有封面就根据 tags 作为关键词搜索封面，开了此项将不会自动从文章中提取首张图片作为封面了。
 
 
 ######## Comments ########
 comments:
-  service: # beaudar, utterances, valine, twikoo, waline
+  service: # beaudar, utterances, twikoo, waline
   # beaudar
   # https://beaudar.lipk.org/
   beaudar:
@@ -135,7 +87,6 @@ comments:
     issue-number:
     theme: preferred-color-scheme
     label:
-
   # giscus
   # https://giscus.app/zh-CN
   giscus:
@@ -153,29 +104,6 @@ comments:
     data-loading: lazy
     crossorigin: anonymous
 
-
-  valine:
-    js: https://fastly.jsdelivr.net/gh/XuxuGood/simple-blog-cdn@main/js/Valine.min.js
-    appId: # your appId
-    appKey: # your appKey
-    placeholder:
-    requiredFields: [nick, mail]
-    enableQQ: true # Unstable avatar link
-    recordIP: false # Record commenter IP
-    avatar: robohash # gravatar style https://valine.js.org/avatar
-    pageSize: 10 # comment list page size
-    lang: zh-cn
-    highlight: true
-    mathJax: false
-    tagMeta: [博主, 小伙伴, 访客] # 标签要显示的文字,默认'博主,小伙伴,访客'
-    metaPlaceholder:
-      nick: "昵称/QQ号(必填)"
-      mail: "邮箱（必填，完全保密）"
-      link: "网址(https://)"
-    master: #md5加密后的博主邮箱
-      - 6783037F2DF30EAB99F9FC256157D875
-    friends: #md5加密后的小伙伴邮箱
-      - 6783037F2DF30EAB99F9FC256157D875
   # Twikoo
   # https://twikoo.js.org/
   twikoo:
@@ -259,10 +187,9 @@ footer:
     #   - '[关于本站](/)'
     #   - '[GitHub](/)'
   content: | # 支持 Markdown 格式
-    本站由 [@xiangshu](/) 使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 主题创建。本站备案信息：[鲁ICP备19044863号](https://beian.miit.gov.cn)
+    本站由 [@anonymity](/) 使用 [Stellar](https://github.com/xaoxuu/hexo-theme-stellar) 主题创建。
     本博客所有文章除特别声明外，均采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。
-    <span id='runtime'>
-
+  # 主题用户越多，开发者维护和更新的积极性就越高，如果您喜欢本主题，请在适当的位置显示主题信息和仓库链接以表支持。
 
 
 ######## Tag Plugins ########
@@ -276,10 +203,10 @@ tag_plugins:
   # {% quot %}
   quot:
     default: # 可以自行配置多种图标方案
-      prefix: https://s2.loli.net/2022/01/04/vsTB5pGrIHfPxSj.png
-      suffix: https://s2.loli.net/2022/01/04/NORdtjlAhifZSns.png
+      prefix: https://bu.dusays.com/2022/10/24/63567d3e092ff.png
+      suffix: https://bu.dusays.com/2022/10/24/63567d3e0ab55.png
     hashtag:
-      prefix: https://s2.loli.net/2022/01/04/UvHcsa73jQPnobq.png
+      prefix: https://bu.dusays.com/2022/10/24/63567d3e07da3.png
   # {% emoji %}
   emoji:
     default: https://fastly.jsdelivr.net/gh/cdn-x/emoji/qq/%s.gif
@@ -287,14 +214,13 @@ tag_plugins:
     qq: https://fastly.jsdelivr.net/gh/cdn-x/emoji/qq/%s.gif
     aru: https://fastly.jsdelivr.net/gh/cdn-x/emoji/aru-l/%s.gif
     tieba: https://fastly.jsdelivr.net/gh/cdn-x/emoji/tieba/%s.png
+    blobcat: https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs/%s.png
   # {% image %}
   image:
     fancybox: # true, false
-
   # {% timeline %}
   timeline:
     max-height: 80vh
-
 
 ######## JS Plugins ########
 plugins:
@@ -308,7 +234,8 @@ plugins:
     friends: /js/plugins/friends.js
     ghinfo: /js/plugins/ghinfo.js
     timeline: /js/plugins/timeline.js
-
+    linkcard: /js/plugins/linkcard.js
+    fcircle: /js/plugins/fcircle.js
 
   marked: https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js
 
@@ -345,7 +272,6 @@ plugins:
     js: https://fastly.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.umd.js
     css: https://fastly.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css
     # 可以处理评论区的图片（不支持 iframe 类评论系统）例如：
-    # 使用valine评论可以写: .vcontent img:not(.vemoji)
     # 使用twikoo评论可以写: .tk-content img:not([class*="emo"])
     # 使用waline评论可以写: #waline_container .vcontent img
     selector: .swiper-slide img # 多个选择器用英文逗号隔开
@@ -383,15 +309,35 @@ plugins:
 
 style:
   darkmode: auto # auto / always / false
-  # 平滑滚动
-  smooth_scroll: false # true / false
+  smooth_scroll: true # true / false
+  font-size: 16px
   font-family:
-    logo: system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif
-    body: HarmonyOS_Medium # HarmonyOS_Regular
-    code: Fira Code', Monaco, Menlo, "Microsoft Yahei", Consolas, monospace
-  theme:
-    light: '#f8f8f8'
-    dark: '#1a1a1a'
+    logo: 'system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif'
+    body: 'system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif'
+    code: 'Menlo, Monaco, Consolas, system-ui, "Courier New", monospace, sans-serif'
+  text-align: left
+  color:
+    common:
+      theme: '#1BCDFC' # 主题色
+      accent: '#ff5722' # 强调色
+      link: '#2196f3' # 超链接颜色
+      button: '#1BCDFC' # 按钮颜色
+      hover: '#ff5722' # 按钮高亮颜色
+    light:
+      background: '#f8f8f8' # 浅色背景颜色
+      block: '#f2f2f2' # 块背景颜色
+      card: white # 卡片背景颜色
+      title: '#000' # 标题文本颜色
+      text: '#333' # 正文文本颜色
+      code: '#f33a00' # 行内代码颜色
+    dark:
+      background: '#313438' # 深色背景颜色
+      background-mobile: black # 移动端深色背景（OLED调成纯黑可以省电）
+      block: '#2B2F33' # 块背景颜色
+      card: '#464D57' # 卡片背景颜色
+      title: '#fff' # 标题文本颜色
+      text: '#eee' # 正文文本颜色
+      code: '#ff7043' # 行内代码颜色
   animated_avatar:
     # 头像动画
     animate: always # auto, always
@@ -399,9 +345,17 @@ style:
   codeblock:
     scrollbar: 4px
     highlightjs_theme: https://fastly.jsdelivr.net/gh/highlightjs/cdn-release@11.5.0/build/styles/atom-one-dark.min.css
+  loading:
+    loading: 正在加载
+    error: 加载失败，请稍后重试。
 
 default:
   avatar: https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/avatar/round/3442075.svg
   link: https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/link/8f277b4ee0ecd.svg
   cover: https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/cover/76b86c0226ffd.svg
   image: https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/image/2659360.svg
+
+api_host:
+  ghapi: https://api.github.com
+  ghraw: https://raw.githubusercontent.com
+  gist: https://gist.github.com

@@ -1,0 +1,103 @@
+.widgets .loading-wrap
+  margin: 0.5rem 0
+
+.l_left .widgets
+  overflow: scroll
+  flex-grow: 1
+  scrollbar-width: none
+  scrollbar(0, 0)
+  z-index: 1
+  line-height: 1.2
+  .widget-wrap
+    margin: 1rem var(--gap-l) 3rem var(--gap-l)
+    .widget-header
+      display: flex
+      justify-content: space-between
+      align-items: center
+      font-weight: 500
+      position: sticky
+      top: -2px
+      background: var(--site-bg)
+      padding-top: 2px
+      z-index 1
+      .item 
+        display: block
+      >span 
+        margin: 0.25rem 0
+        text-align: left
+      &:empty
+        display: none
+      .cap-action
+        hover-block 4px 4px
+        line-height: 0
+        color: var(--text-meta)
+        trans2: color background
+        .icon
+          fill: var(--text-meta)
+        &:hover
+          color: $color-hover
+          .icon
+            fill: $color-hover
+
+    .widget-body
+      margin: 0.5rem 0
+      color: var(--text-p1)
+      p
+        margin-top: .5em
+        margin-bottom: .5em
+        line-height: 1.5
+    .widget-header+.widget-body
+      margin-top: 0
+
+
+
+.l_left .widgets
+  .widget-wrap#recent .widget-body
+    display: flex
+    flex-direction: column
+    align-items: flex-start
+    margin-top: 0.25rem
+    a
+      line-height: 1.2
+      font-size: $fs-13
+      margin: 0.25rem 0
+      padding: 2px 0
+      .title  
+        font-size: $fs-13
+        color: var(--text-p2)
+      &:hover
+        color: $color-hover
+  .widget-wrap#related .widget-body a
+    margin-top: 0.5rem
+    margin-bottom: 1rem
+    .title 
+      font-weight: 700
+      font-size: $fs-14
+    .excerpt
+      -webkit-line-clamp: 3
+
+  .widget-wrap#tagcloud .widget-body
+    margin-top: 0.25rem
+    a  
+      word-break: break-word
+      color: var(--text-p2)
+      line-height: 1.5
+      &:hover
+        color: $color-hover
+  
+  .widget-wrap#timeline .widget-body
+    margin-top: 0.5rem
+    .tag-plugin.timeline .timenode
+      .header
+        margin-bottom: 0.5rem
+        txt-ellipsis()
+        .user-info
+          background: var(--block)
+          &:hover
+            background: $color-hover
+            color: var(--card)
+        &:before
+          display: none
+      &+.timenode
+        margin-top: 0.75rem
+        

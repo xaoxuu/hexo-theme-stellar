@@ -3,18 +3,21 @@
   flex-direction: column
   word-break: break-all
   text-align: justify
-  padding: var(--gap-l)
-  padding-top: "calc(2 * %s)" % var(--gap-l)
-  height: "calc(100vh - 3 * %s)" % var(--gap-l)
+  height: "calc(100vh - 1 * %s)" % var(--gap-l)
+  .header
+    margin: var(--gap-l) var(--gap-l) 0
+  @media screen and (min-width: $device-mobile-max)
+    >.widgets:first-child>.widget-wrap:first-child
+      margin-top: "calc(2 * %s)" % var(--gap-l)
   @media screen and (max-width: $device-mobile-max)
-    padding-top: "calc(1 * %s)" % var(--gap-l)
-    height: "calc(100% - 2 * %s)" % var(--gap-l)
+    height: 100vh
+
 
 .l_left[layout=wiki]
   padding-bottom: 0
-  height: "calc(100vh - 2 * %s)" % var(--gap-l)
+  height: 100vh
   @media screen and (max-width: $device-mobile-max)
-    height: "calc(100% - 1 * %s)" % var(--gap-l)
+    height: 100vh
   .widgets >:last-child
     margin-bottom: 6rem
 
@@ -134,7 +137,7 @@ nav.menu
     font-size: $fs-14
     font-weight: 500
     overflow: hidden
-    padding: 0.375rem 0.75rem
+    padding: 0.375rem 0.5rem
     color: var(--text-p3)
     text-align: center
     &.active, &:hover
@@ -145,91 +148,3 @@ nav.menu
 .l_left .menu a.nav-item
   flex-grow: 1
 
-.l_left .widgets
-  overflow: scroll
-  flex-grow: 1
-  scrollbar-width: none
-  scrollbar(0, 0)
-  z-index: 1
-  .widget-wrap
-    margin: 1rem 0 3rem 0
-    .widget-header
-      display: flex
-      justify-content: space-between
-      align-items: center
-      font-weight: 500
-      position: sticky
-      position: -webkit-sticky
-      top: -2px
-      background: var(--site-bg)
-      padding-top: 2px
-      z-index 1
-      line-height: 2
-      color: var(--text-p4)
-      font-size: $fs-14
-      &:empty
-        display: none
-      .cap-action
-        hover-block 4px 4px
-        line-height: 0
-        color: var(--text-meta)
-        trans2: color background
-        .icon
-          fill: var(--text-meta)
-        &:hover
-          color: $color-hover
-          .icon
-            fill: $color-hover
-
-    .widget-body
-      margin: 0.5rem 0
-      color: var(--text-p1)
-      p
-        margin-top: .5em
-        margin-bottom: .5em
-        line-height: 1.5
-    .widget-header+.widget-body
-      margin-top: 0
-
-  .widget-wrap .widget-body
-    .more-item
-      margin: .5rem 0
-      .cap
-        margin-bottom: .25rem
-  .widget-wrap#recent .widget-body
-    a
-      line-height: 1.2
-      font-weight: 500
-      color: var(--text-p2)
-      font-size: $fs-13
-      &:hover
-        color: $color-hover
-  .widget-wrap#related .widget-body
-    >a
-      padding 0.5rem
-      display: block
-      line-height: 1.2
-      color: var(--text-p2)
-      font-weight: 500
-      border: 1px solid var(--block-border)
-      border-radius: $border-block
-      margin: 4px 0
-      background: var(--block)
-      div.cap
-        margin-bottom: 0.25rem
-        color: var(--text-p4)
-        display: flex
-        justify-content: space-between
-      &:hover
-        background: var(--block-hover)
-      &.wiki
-        font-weight: 700
-      div.excerpt
-        margin-top: .5rem
-        color: var(--text-p3)
-        font-size: $fs-12
-        font-weight: 400
-        display: -webkit-box
-        -webkit-box-orient: vertical
-        overflow: hidden
-        -webkit-line-clamp: 5

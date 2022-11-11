@@ -24,7 +24,7 @@ article.md.content
   &.indent
     >p:not([class])
       text-indent: 'calc(%s * 2)' % $fs-p
-      text-align: justify
+      text-align: convert(hexo-config('style.text-align'))
       a
         text-indent: 0
     h1,h2,h3,h4,h5,h6
@@ -32,7 +32,7 @@ article.md.content
     >h2:not([class])
       align-self: center
       border-bottom-style: dashed
-      border-bottom-color: $color-highlight
+      border-bottom-color: $color-accent
   >:first-child
     margin-top: 0
   h1:not(:first-child)
@@ -68,9 +68,6 @@ article.md.content
   .tag-plugin,iframe
     margin-top: var(--gap-p)
     margin-bottom: var(--gap-p)
-  p,.tag-plugin
-    .highlight,table
-      --gap-p: 1rem
   iframe
     display: block
 
@@ -136,30 +133,27 @@ article.md
   p:not([class]), li:not([class])
     a:not([class])
       position: relative
-      padding: 2px
+      padding: 2px 0
       text-decoration: none
-      display: inline-block
       line-height: 1.2
+      word-break: keep-all
       &:after
         content: ''
         position: absolute
         border-radius: 2px
-        bottom: 1px
-        left: 2px
-        right: 2px
+        bottom: 0
+        left: 0
+        right: 0
         height: 1px
-        opacity: 0.5
-        background: $color-link
+        opacity: 0.8
+        background: var(--theme-link)
         trans1: all
       &:hover
         border-bottom: none
-        color: $color-link
-        // color: darken($color-hover, 10)
-        // background: alpha($color-hover, 0.08)
+        color: var(--theme-link)
         &:after
           height: 100%
           opacity: 0.2
           bottom: 0
-          left: 0
-          right: 0
-          // background-color: alpha($color-hover, 0.08)
+          left: -2px
+          right: -2px

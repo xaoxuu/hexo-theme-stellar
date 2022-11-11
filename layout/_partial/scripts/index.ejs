@@ -90,6 +90,7 @@
       }
     }
   };
+  stellar.version = '<%- theme.stellar.version %>';
   stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/<%- theme.stellar.version %>';
   stellar.config = {
     date_suffix: {
@@ -108,8 +109,8 @@
 
   // stellar js
   stellar.plugins.stellar = Object.assign(<%- JSON.stringify(theme.plugins.stellar) %>);
-  stellar.plugins.marked = Object.assign(<%- JSON.stringify(theme.plugins.marked) %>);
 
+  stellar.plugins.marked = Object.assign(<%- JSON.stringify(theme.plugins.marked) %>);
   // optional plugins
   if ('<%- theme.plugins.lazyload.enable %>' == 'true') {
     stellar.plugins.lazyload = Object.assign(<%- JSON.stringify(theme.plugins.lazyload) %>);

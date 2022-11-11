@@ -24,6 +24,8 @@
   if hexo-config('style.darkmode') == 'auto'
     @media (prefers-color-scheme: dark)
       --blur-bg: alpha(#555, .6)
+  if hexo-config('style.darkmode') == 'always'
+    --blur-bg: alpha(#555, .6)
 
 .sidebar-toggle.mobile
   cursor: pointer

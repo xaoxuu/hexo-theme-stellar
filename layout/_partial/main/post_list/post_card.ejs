@@ -1,16 +1,26 @@
 <%
+const poster = post.poster;
+var obj = {
+  image: post.cover
+};
+if (poster) {
+  obj.headline = poster.headline;
+  obj.topic = poster.topic;
+  obj.caption = poster.caption;
+  obj.color = poster.color;
+}
 function div_default() {
   var el = '';
   el += '<article class="md">';
 
   // 封面
-  if (post.cover || theme.article.auto_cover) {
+  if (obj.image || theme.article.auto_cover) {
     var cover_url;
-    if (post.cover != undefined) {
-      if (post.cover.includes('/')) {
-        cover_url = post.cover;
+    if (obj.image != undefined) {
+      if (obj.image.includes('/')) {
+        cover_url = obj.image;
       } else {
-        cover_url = 'https://source.unsplash.com/1280x640/?' + post.cover;
+        cover_url = 'https://source.unsplash.com/1280x640/?' + obj.image;
       }
     } else {
       // 自动以 tags 作为关键词搜索封面
@@ -94,22 +104,25 @@ function div_default() {
 function div_photo() {
   var el = '';
   el += '<div class="cover">';
-  el += '<img src="' + post.cover + '"/>';
-  if (post.cover_info) {
+  el += '<img src="' + obj.image + '"/>';
+  if (obj.headline || obj.topic || obj.caption) {
     el += '<div class="cover-info"';
-    if (post.cover_info.meta) {
+    if (obj.color) {
+      el += 'style="color:' + obj.color + '"';
+    }
+    if (obj.topic) {
       el += 'position="top">';
     } else {
       el += 'position="bottom">';
     }
-    if (post.cover_info.meta) {
-      el += '<div class="cap">' + post.cover_info.meta + '</div>';
+    if (obj.topic) {
+      el += '<div class="cap">' + obj.topic + '</div>';
     }
-    if (post.cover_info.title) {
-      el += '<div class="title">' + post.cover_info.title + '</div>';
+    if (obj.headline) {
+      el += '<div class="title">' + obj.headline + '</div>';
     }
-    if (post.cover_info.subtitle) {
-      el += '<div class="cap">' + post.cover_info.subtitle + '</div>';
+    if (obj.caption) {
+      el += '<div class="cap">' + obj.caption + '</div>';
     }
     el += '</div>';
 
@@ -118,7 +131,7 @@ function div_photo() {
   return el;
 }
 function div() {
-  if (post.cover && post.cover.length > 0 && post.cover_info != undefined) {
+  if (obj.image && obj.image.length > 0 && obj.headline != undefined) {
     return div_photo();
   }
   return div_default();

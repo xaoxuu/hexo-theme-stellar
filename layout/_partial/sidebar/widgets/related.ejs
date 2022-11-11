@@ -16,21 +16,21 @@ function layoutDiv() {
   var el = '';
   if (related.length > 0) {
     el += '<div class="widget-wrap" id="related">';
-    el += '<div class="widget-header cap dis-select">';
+    el += '<div class="widget-header cap theme dis-select">';
     var title = __('btn.wiki');
     if (proj.tags && proj.tags[0]) {
       title = proj.tags[0];
     }
     el += '<span class="name">' + __('meta.more', title) + '</span>';
     el += '</div>';
-    el += '<div class="widget-body fs14">';
+    el += '<div class="widget-body related-posts">';
     related.forEach((p, i) => {
       // 同一个分组中的其它项目
-      el += '<a class="more-item wiki" href="' + url_for(p.homepage.path) + '">';
-      el += p.title;
-      el += '<div class="excerpt">';
-      el += p.description;
-      el += '</div>';
+      el += '<a class="item wiki" href="' + url_for(p.homepage.path) + '">';
+      el += '<span class="title">' + p.title + '</span>';
+      if (p.description && p.description.length > 0) {
+        el += '<span class="excerpt">' + p.description + '</span>';
+      }
       el += '</a>';
     });
     el += '</div>';

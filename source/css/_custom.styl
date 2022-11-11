@@ -1,35 +1,30 @@
 @require('_defines/const')
 
 // 通用主题色
-$color-theme = #1BCDFC
-$color-link = #2196f3
-$color-button = #1BCDFC
-$color-hover = #ff5722
-$color-highlight = #ff5722
-$color-inner = #fff
-$color-cat = #FF7844
-$color-cat-hover = darken($color-cat, 20)
-$white = #fff
-$black = #000
+$color-theme = convert(hexo-config('style.color.common.theme'))
+$color-accent = convert(hexo-config('style.color.common.accent'))
+$color-link = convert(hexo-config('style.color.common.link'))
+$color-button = convert(hexo-config('style.color.common.button'))
+$color-hover = convert(hexo-config('style.color.common.hover'))
 
 // 浅色
-$light-site-bg = convert(hexo-config('style.theme.light'))
-$light-block = #f2f2f2
-$light-title = #000
-$light-text = #333
-$light-code = #111
-$light-card = white
+$light-background = convert(hexo-config('style.color.light.background'))
+$light-block = convert(hexo-config('style.color.light.block'))
+$light-card = convert(hexo-config('style.color.light.card'))
+$light-title = convert(hexo-config('style.color.light.title'))
+$light-text = convert(hexo-config('style.color.light.text'))
+$light-code = convert(hexo-config('style.color.light.code'))
 
 // 深色
-$dark-site-bg = convert(hexo-config('style.theme.dark'))
-$dark-block = #101010
-$dark-title = #fff
-$dark-text = #eee
-$dark-code = #aac8e4
-$dark-card = lighten(saturate($dark-site-bg, 90%), 2)
+$dark-background = convert(hexo-config('style.color.dark.background'))
+$dark-block = convert(hexo-config('style.color.dark.block'))
+$dark-card = convert(hexo-config('style.color.dark.card'))
+$dark-title = convert(hexo-config('style.color.dark.title'))
+$dark-text = convert(hexo-config('style.color.dark.text'))
+$dark-code = convert(hexo-config('style.color.dark.code'))
 
 // 移动端深色背景（OLED调成纯黑可以省电）
-$dark-site-bg-mobile = black
+$dark-background-mobile = convert(hexo-config('style.color.dark.background-mobile'))
 
 
 // @font-face
@@ -53,7 +48,7 @@ if hexo-config('style.font-family.logo')
 
 
 // font size
-$fs-root = 16px
+$fs-root = convert(hexo-config('style.font-size'))
 $fs-15 = .9375rem
 $fs-14 = .875rem
 $fs-13 = .8125rem
@@ -66,34 +61,35 @@ $fs-h4   = 1.125rem  // 18px
 $fs-h5   = $fs-15
 $fs-h6   = $fs-12
 $fs-p    = $fs-15
-$fs-code = $fs-14 // 代码块字体 size
+$fs-code = $fs-13
 
 $border-card = 12px
-$border-block = 6px
+$border-block = 8px
 $border-image = 6px
 
 // 可以动态变化的属性
 :root
-  --width-left: 270px
+  --width-left: 310px
   --width-main: 720px
   --gap-l: 16px
   --gap-p: .75rem // gap for paragraph
   // desktop 2k or larger
   @media screen and (min-width: $device-2k)
     --gap-l: 32px
-    --width-left: 320px
+    --width-left: 410px
     --width-main: 780px
   // desktop 4k or larger
   @media screen and (min-width: $device-4k)
     --width-main: 860px
     --gap-l: 64px
-
   // iPad 竖屏
   @media screen and (max-width: $device-tablet)
-    --width-left: 220px
+    --width-left: 282px
   // iPad 竖屏
   @media screen and (max-width: $device-mobile-max)
-    --width-left: 256px
+    --width-left: 310px
+
+
 
 // shadow
 $boxshadow-card = 0 1px 2px 0px rgba(0, 0, 0, 0.1)
