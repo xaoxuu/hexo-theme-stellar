@@ -1,5 +1,5 @@
 .md .tag-plugin.link
-  max-width: 400px
+  max-width: 100%
   margin: 1em auto
   display: flex
   justify-content: center
@@ -12,8 +12,8 @@
   justify-content: space-between
   align-items: center
   cursor: pointer
-  min-width 280px
-  max-width: 100%
+  // min-width 280px
+  // max-width: 100%
   width: 320px
   @media screen and (max-width: $device-mobile-375)
     width: 100%
@@ -31,7 +31,7 @@
 .md .link-card.rich
   flex-direction: column
   align-items: stretch
-  width: 400px
+  width: 460px
   text-align: justify
 
 .md .link-card
@@ -50,7 +50,7 @@
     flex-shrink: 0
   >.top
     display: flex
-    margin: .75rem 0.75rem .25rem
+    margin: 1rem 1rem 0.75rem
     overflow: hidden
     max-width: 'calc(100% - %s * 2)' % 1rem
     align-items: center
@@ -67,10 +67,10 @@
       txt-ellipsis()
       max-width: 100%
   >.bottom
-    margin: 0 0.75rem 0.75rem 0.75rem
+    margin: 0 1rem 1rem
     .title
       font-size: $fs-15
-      margin: 4px 0 8px 0
+      margin-bottom: 0.5rem
 
 .md .link-card
   line-height: 1.2
