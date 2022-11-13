@@ -321,8 +321,8 @@ style:
       button: '#1BCDFC' # 按钮颜色
       hover: '#ff5722' # 按钮高亮颜色
     light:
-      background: '#f8f8f8' # 浅色背景颜色
-      block: '#f2f2f2' # 块背景颜色
+      background: '#F6F8FA' # 浅色背景颜色
+      block: '#EEF0F2' # 块背景颜色
       card: white # 卡片背景颜色
       title: '#000' # 标题文本颜色
       text: '#333' # 正文文本颜色
