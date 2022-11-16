@@ -283,7 +283,7 @@ plugins:
   # 赫蹏 (Heti) - 专为中文网页内容设计的排版样式增强
   # https://github.com/sivan/heti
   heti:
-    enable: false
+    enable: false # 此插件会和代码块冲突，仅适用于纯中文博主。
     css: https://unpkg.com/heti/umd/heti.min.css
     js: https://unpkg.com/heti/umd/heti-addon.min.js
 
@@ -321,8 +321,8 @@ style:
       button: '#1BCDFC' # 按钮颜色
       hover: '#ff5722' # 按钮高亮颜色
     light:
-      background: '#F6F8FA' # 浅色背景颜色
-      block: '#EEF0F2' # 块背景颜色
+      background: '#F8F9FA' # 浅色背景颜色
+      block: '#F0F1F2' # 块背景颜色
       card: white # 卡片背景颜色
       title: '#000' # 标题文本颜色
       text: '#333' # 正文文本颜色
