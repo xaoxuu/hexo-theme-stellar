@@ -18,6 +18,12 @@ if (page.sidebar == undefined) {
     page.sidebar = [];
   }
 }
+
+// parse array string
+if (typeof page.sidebar == 'string') {
+  page.sidebar = page.sidebar.replace(/ /g, '').split(',');
+}
+
 function layoutWidgets() {
   var el = '';
   el += '<div class="widgets">';
