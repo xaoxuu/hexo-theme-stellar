@@ -95,6 +95,7 @@ module.exports = ctx => {
       continue
     }
     proj.homepage = proj_pages[0]
+    proj.homepage.is_homepage = true
     // 内页按 section 分组
     var section_configs = []
     if (proj.sections) {

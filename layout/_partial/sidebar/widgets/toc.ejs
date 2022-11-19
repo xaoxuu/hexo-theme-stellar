@@ -30,7 +30,7 @@ function layoutDocTree(pages) {
     el += '<div class="doc-tree' + isActive + '">';
     if (proj.pages.length > 1) {
       let href = url_for(p.path);
-      if (i == 0) {
+      if (p.is_homepage) {
         href += '#start'
       }
       el += '<a class="doc-tree-link' + isActive + '" href="' + href + '">';
