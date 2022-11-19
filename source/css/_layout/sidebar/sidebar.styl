@@ -6,6 +6,7 @@
   height: "calc(100vh - 1 * %s)" % var(--gap-l)
   .header
     margin: var(--gap-l) var(--gap-l) 0
+    margin-top: "calc(2 * %s)" % var(--gap-l)
   @media screen and (min-width: $device-mobile-max)
     >.widgets:first-child>.widget-wrap:first-child
       margin-top: "calc(2 * %s)" % var(--gap-l)
@@ -23,7 +24,6 @@
 
 
 .logo-wrap
-  margin: 1rem 0
   display: flex
   align-items: center
   overflow: hidden

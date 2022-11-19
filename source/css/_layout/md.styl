@@ -1,6 +1,9 @@
 article.md
   max-width: 100%
-  padding: 1rem
+  padding: 0 1rem
+  margin-top: 1rem
+  &:first-child
+    margin-top: 0
   color: var(--text-p1)
   line-height: 1.7
   word-break: break-word
@@ -33,7 +36,7 @@ article.md.content
       align-self: center
       border-bottom-style: dashed
       border-bottom-color: $color-accent
-  >:first-child
+  >:first-child:not(h1)
     margin-top: 0
   h1:not(:first-child)
     margin-top: 2em
