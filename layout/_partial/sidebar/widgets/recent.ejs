@@ -24,7 +24,7 @@ function layoutDiv() {
     arr = site.posts.filter( p => p.title && p.title.length > 0)
   }
   el += '<div class="widget-body related-posts fs14">';
-  arr = arr.sort((p1, p2) => { p1.order > p2.order })
+  arr = arr.sort((p1, p2) => p1.order > p2.order ? -1 : 1)
   arr.length = item.limit
   arr.forEach(post => {
     el += '<a class="item title" href="' + url_for(post.link || post.path) + '">';
