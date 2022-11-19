@@ -8,9 +8,7 @@ var tab_index = 0;
 
 module.exports = ctx => function(args, content) {
   var el = '';
-  var arr = content.split(/<!--\s*(.*?)\s*-->/g).filter((item, i) => {
-    return item.trim().length > 0;
-  });
+  var arr = content.split(/<!--\s*(.*?)\s*-->/g).filter(item => item.trim().length > 0)
   if (arr.length < 1) {
     return el;
   }

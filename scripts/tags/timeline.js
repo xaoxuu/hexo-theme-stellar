@@ -49,9 +49,7 @@ function postTimeline(args, content) {
     el += '<div class="tag-plugin timeline">';
   }
 
-  var arr = content.split(/<!--\s*(.*?)\s*-->/g).filter((item, i) => {
-    return item.trim().length > 0;
-  });
+  var arr = content.split(/<!--\s*(.*?)\s*-->/g).filter(item => item.trim().length > 0)
   if (arr.length > 0) {
     var nodes = [];
     arr.forEach((item, i) => {

@@ -13,20 +13,20 @@ function layoutDiv() {
   // body
   var arr = [];
   if (page.menu_id == 'wiki') {
-    arr = theme.wiki.all_pages.filter(function(p){
+    arr = theme.wiki.all_pages.filter( p => {
       if (p.wiki) {
         let proj = theme.wiki.projects[p.wiki];
         return proj.index != false;
       }
-      return false;
-    });
+      return false
+    })
   } else {
-    arr = site.posts.filter(function(p){
-      return p.title && p.title.length > 0;
-    });
+    arr = site.posts.filter( p => p.title && p.title.length > 0)
   }
   el += '<div class="widget-body related-posts fs14">';
-  arr.sort("updated", -1).limit(item.limit).each(function(post) {
+  arr = arr.sort((p1, p2) => { p1.order > p2.order })
+  arr.length = item.limit
+  arr.forEach(post => {
     el += '<a class="item title" href="' + url_for(post.link || post.path) + '">';
     el += '<span class="title">'
     if (post.layout == 'wiki') {
