@@ -29,7 +29,11 @@ function layoutDocTree(pages) {
     }
     el += '<div class="doc-tree' + isActive + '">';
     if (proj.pages.length > 1) {
-      el += '<a class="doc-tree-link' + isActive + '" href="' + url_for(p.path) + '">';
+      let href = url_for(p.path);
+      if (i == 0) {
+        href += '#start'
+      }
+      el += '<a class="doc-tree-link' + isActive + '" href="' + href + '">';
       el += '<span class="toc-text">' + (p.title || p.seo_title) + '</span>';
       el += '</a>';
     }
