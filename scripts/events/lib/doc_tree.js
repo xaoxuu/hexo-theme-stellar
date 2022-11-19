@@ -13,6 +13,7 @@ class WikiPage {
     this.seo_title = page.seo_title
     this.wiki = page.wiki
     this.order = page.order || 0
+    this.updated = page.updated
   }
 }
 
