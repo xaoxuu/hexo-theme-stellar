@@ -4,6 +4,8 @@
   grid-template-columns: repeat(auto-fill, "calc((100% - 1 * %s) / 2)" % 16px)
   >.cell
     margin: 1rem 0
+    p:first-child>strong:only-child
+      font-size: $fs-h4
   >.cell>
     p   
       line-height: 1.5
@@ -30,3 +32,7 @@
   &[bg='card']>.cell
     background: var(--card)
     box-shadow: $boxshadow-card
+    trans2 box-shadow transform
+    &:hover
+      transform: translateY(-1px)
+      box-shadow: $boxshadow-card-float

@@ -1,6 +1,6 @@
 ######## Stellar info ########
 stellar:
-  version: '1.15.1'
+  version: '1.16.0'
   homepage: 'https://xaoxuu.com/wiki/stellar/'
   repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
   cdn_css: # Use cdn links instead of /css/main.css
@@ -25,10 +25,10 @@ sidebar:
     # about: '[关于](/about/)'
   # Sidebar widgets
   widgets:
-    index: [welcome, recent, timeline] # for home/wiki/categories/tags/archives/404 pages
-    page: [welcome, toc] # for pages using 'layout:page'
-    post: [toc, ghrepo, ghissues] # for pages using 'layout:post'
-    wiki: [toc, ghrepo, ghissues, related] # for pages using 'layout:wiki'
+    index: welcome, recent, timeline # for home/wiki/categories/tags/archives/404 pages
+    page: welcome, toc # for pages using 'layout:page'
+    post: toc, ghrepo, ghissues # for pages using 'layout:post'
+    wiki: ghrepo, toc, ghissues, related # for pages using 'layout:wiki'
 
 ######## Index ########
 post-index: # 近期发布 分类 标签 归档 and ...

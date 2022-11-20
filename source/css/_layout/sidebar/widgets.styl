@@ -9,8 +9,10 @@
   z-index: 1
   line-height: 1.2
   .widget-wrap
-    margin: 1rem var(--gap-l) 3rem var(--gap-l)
+    margin: 1rem 0 2rem
     .widget-header
+      padding-left: var(--gap-l)
+      padding-right: var(--gap-l)
       display: flex
       justify-content: space-between
       align-items: center
@@ -40,7 +42,7 @@
             fill: $color-hover
 
     .widget-body
-      margin: 0.5rem 0
+      margin: 0.5rem var(--gap-l)
       color: var(--text-p1)
       p
         margin-top: .5em
@@ -48,7 +50,8 @@
         line-height: 1.5
     .widget-header+.widget-body
       margin-top: 0
-
+  .widget-wrap+.widget-wrap .widget-header
+    margin-top: 3rem
 
 
 .l_left .widgets

@@ -6,17 +6,15 @@
 
 var tab_index = 0;
 
-module.exports = ctx => function(args, content) {
+module.exports = ctx => function(args, content = '') {
   var el = '';
-  var arr = content.split(/<!--\s*(.*?)\s*-->/g).filter((item, i) => {
-    return item.trim().length > 0;
-  });
+  var arr = content.split(/<!--\s*tab (.*?)\s*-->/g).filter(item => item.trim().length > 0)
   if (arr.length < 1) {
     return el;
   }
   var tabs = [];
   arr.forEach((item, i) => {
-    if (item.startsWith('tab ')) {
+    if (i % 2 == 0) {
       tabs.push({
         header: item
       });
@@ -37,14 +35,12 @@ module.exports = ctx => function(args, content) {
   let tabId = 0;
   let tabNav = '';
   let tabContent = '';
-
   tabs.forEach((tab, i) => {
-    let caption = tab.header.substring(4);
-    let content = ctx.render.renderSync({ text: tab.body, engine: 'markdown' }).trim();
+    let content = ctx.render.renderSync({ text: (tab.body || ''), engine: 'markdown' }).trim();
     const abbr = tabName + ' ' + ++tabId;
     const href = abbr.toLowerCase().split(' ').join('-');
     const isActive = (tabActive > 0 && tabActive === tabId) || (tabActive === 0 && tabId === 1) ? ' active' : '';
-    tabNav += `<li class="tab${isActive}"><a href="#${href}">${caption || abbr}</a></li>`;
+    tabNav += `<li class="tab${isActive}"><a href="#${href}">${tab.header || abbr}</a></li>`;
     tabContent += `<div class="tab-pane${isActive}" id="${href}">${content}</div>`;
   });
 

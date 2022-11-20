@@ -3,9 +3,9 @@
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
  * {% split [style:block/card] %}
- * <!-- cell -->
+ * <!-- cell left -->
  * left body
- * <!-- cell -->
+ * <!-- cell right -->
  * right body
  * {% endsplit %}
  */
@@ -19,15 +19,13 @@ hexo.extend.tag.register('split', function(args, content) {
   el += ' ' + hexo.args.joinTags(args, ['bg']).join(' ');
   el += '>';
   
-  var arr = content.split(/<!--\s*(.*?)\s*-->/g).filter((item, i) => {
-    return item.trim().length > 0;
-  });
+  var arr = content.split(/<!--\s*cell (.*?)\s*-->/g).filter(item => item.trim().length > 0)
   if (arr.length > 0) {
     var nodes = [];
     arr.forEach((item, i) => {
-      if (item == 'cell') {
+      if (i % 2 == 0) {
         nodes.push({
-          header: ''
+          header: item
         });
       } else if (nodes.length > 0) {
         var node = nodes[nodes.length-1];
@@ -40,7 +38,7 @@ hexo.extend.tag.register('split', function(args, content) {
     });
     nodes.forEach((node, i) => {
       el += '<div class="cell" index="' + (i) + '">';
-      el += hexo.render.renderSync({text: node.body, engine: 'markdown'}).split('\n').join('');
+      el += hexo.render.renderSync({text: (node.body || ''), engine: 'markdown'}).split('\n').join('');
       el += '</div>';
     });  
   }

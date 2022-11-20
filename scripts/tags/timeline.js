@@ -49,13 +49,11 @@ function postTimeline(args, content) {
     el += '<div class="tag-plugin timeline">';
   }
 
-  var arr = content.split(/<!--\s*(.*?)\s*-->/g).filter((item, i) => {
-    return item.trim().length > 0;
-  });
+  var arr = content.split(/<!--\s*node (.*?)\s*-->/g).filter(item => item.trim().length > 0)
   if (arr.length > 0) {
     var nodes = [];
     arr.forEach((item, i) => {
-      if (item.startsWith('node ')) {
+      if (i % 2 == 0) {
         nodes.push({
           header: item
         });
@@ -70,7 +68,7 @@ function postTimeline(args, content) {
     });
     nodes.forEach((node, i) => {
       el += '<div class="timenode" index="' + (i) + '">';
-      el += layoutNodeTitle(node.header.substring(5));
+      el += layoutNodeTitle(node.header);
       el += layoutNodeContent(node.body);
       el += '</div>';
     });  

@@ -29,9 +29,7 @@ hexo.extend.helper.register('popular_posts_wrapper', function(args){
   function listItem(obj){
     var el = '';
     el += '<a class="item" href="' + obj.path + '" title="' + obj.title + '">';
-    var p = posts.filter(function(p) {
-      return root + p.path == obj.path;
-    });
+    var p = posts.filter(p => root + p.path == obj.path)
     if (p && p.length > 0) {
       p = p.data[0];
     }

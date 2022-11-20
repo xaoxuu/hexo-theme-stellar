@@ -19,15 +19,13 @@ hexo.extend.tag.register('folders', function(args, content) {
   el += ' ' + hexo.args.joinTags(args, ['color']).join(' ');
   el += '>';
   
-  var arr = content.split(/<!--\s*(.*?)\s*-->/g).filter((item, i) => {
-    return item.trim().length > 0;
-  });
+  var arr = content.split(/<!--\s*folder (.*?)\s*-->/g).filter(item => item.trim().length > 0)
   if (arr.length > 0) {
     var nodes = [];
     arr.forEach((item, i) => {
-      if (item.startsWith('folder ')) {
+      if (i % 2 == 0) {
         nodes.push({
-          header: item.substring(7)
+          header: item
         });
       } else if (nodes.length > 0) {
         var node = nodes[nodes.length-1];
@@ -44,7 +42,7 @@ hexo.extend.tag.register('folders', function(args, content) {
       el += '<summary><span>' + (node.header || '') + '</span></summary>';
       // content
       el += '<div class="body">';
-      el += hexo.render.renderSync({text: node.body, engine: 'markdown'}).split('\n').join('');
+      el += hexo.render.renderSync({text: (node.body || ''), engine: 'markdown'}).split('\n').join('');
       el += '</div></details>';
     });  
   }

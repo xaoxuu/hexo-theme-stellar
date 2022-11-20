@@ -6,6 +6,7 @@
   height: "calc(100vh - 1 * %s)" % var(--gap-l)
   .header
     margin: var(--gap-l) var(--gap-l) 0
+    margin-top: "calc(2 * %s)" % var(--gap-l)
   @media screen and (min-width: $device-mobile-max)
     >.widgets:first-child>.widget-wrap:first-child
       margin-top: "calc(2 * %s)" % var(--gap-l)
@@ -23,7 +24,6 @@
 
 
 .logo-wrap
-  margin: 1rem 0
   display: flex
   align-items: center
   overflow: hidden
@@ -100,12 +100,12 @@
         opacity: 1 !important
 
 
-.logo-wrap.wiki
-  margin: 1rem 0 1.5rem 0
+.l_left .widgets .widget-wrap.logo-wrap.wiki
+  margin-bottom: 1.5rem
   flex-direction: column
   align-items: flex-start
   a.wiki-home
-    margin-bottom: 1rem
+    margin-bottom: 0.5rem
     color: var(--text-p1)
     svg
       margin-right: 2px
