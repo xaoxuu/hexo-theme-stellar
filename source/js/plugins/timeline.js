@@ -95,7 +95,7 @@ const StellarTimeline = {
           cell += '</p>';
         }
         
-        cell += marked.parse(item.body);
+        cell += marked.parse(item.body || '');
         if (!hide.includes('footer')) {
           cell += '<div class="footer">';
           cell += '<div class="flex left">';
