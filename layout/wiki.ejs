@@ -7,9 +7,9 @@ if (page.layout == undefined) {
 }
 if (page.title == undefined) {
   if (page.tagName) {
-    page.title = page.tagName + ' - ' + config.title;
+    page.title = page.tagName;
   } else {
-    page.title = __('btn.wiki') + ' - ' + config.title;
+    page.title = __('btn.wiki');
   }
 }
 function layoutTitle() {
