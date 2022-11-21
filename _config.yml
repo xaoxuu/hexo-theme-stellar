@@ -194,7 +194,7 @@ footer:
 tag_plugins:
   # {% note text %}
   note:
-    default_color: '' # light, dark, red, orange, yellow, green, cyan, blue, purple
+    default_color: '' # light, dark, red, orange, yellow, green, cyan, blue, purple, warning, error
   # {% checkbox %}
   checkbox:
     interactive: false # enable interactive for user
@@ -219,6 +219,9 @@ tag_plugins:
   # {% timeline %}
   timeline:
     max-height: 80vh
+  # {% mark %}
+  mark:
+    default_color: dark # light, dark, red, orange, yellow, green, cyan, blue, purple, warning, error
 
 
 ######## JS Plugins ########
