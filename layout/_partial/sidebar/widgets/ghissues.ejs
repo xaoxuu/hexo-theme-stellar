@@ -3,7 +3,9 @@ function layoutDiv() {
   var el = '';
   var repo;
   var branch = 'main';
-  if (page.layout === 'wiki' && page.wiki) {
+  if (page.repo) {
+    repo = page.repo
+  } else if (page.layout === 'wiki' && page.wiki) {
     let proj = theme.wiki.projects[page.wiki];
     if (proj && proj.repo) {
       repo = proj.repo;
@@ -11,9 +13,6 @@ function layoutDiv() {
         branch = proj.branch;
       }
     }
-  } else {
-    // 其它的如果有设置 repo 也可以
-    repo = page.repo;
   }
   if (repo == undefined) {
     return el;
