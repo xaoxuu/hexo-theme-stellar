@@ -28,6 +28,7 @@ function layoutDiv() {
   el += '<div class="widget-body related-posts fs14">';
   arr.length = item.limit
   arr.forEach(post => {
+    if (!post) { return }
     el += '<a class="item title" href="' + url_for(post.link || post.path) + '">';
     el += '<span class="title">'
     if (post.layout == 'wiki') {
