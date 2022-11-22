@@ -73,11 +73,21 @@ function layoutWidgets() {
   }
   if (page.sidebar) {
     page.sidebar.forEach((w, i) => {
-      if (w in theme.data.widgets) {
-        let widget = theme.data.widgets[w];
-        if (widget && widget.layout) {
-          el += partial('widgets/' + widget.layout, {item: widget});
-        }
+      let name = ''
+      if (typeof w == 'string') {
+        name = w
+      } else if (typeof w == 'object' && w.layout && w.override) {
+        name = w.override
+      }
+      let widget = {}
+      if (name in theme.data.widgets) {
+        Object.assign(widget, theme.data.widgets[name])
+      }
+      if (typeof w == 'object' && w.layout) {
+        Object.assign(widget, w)
+      }
+      if (widget && widget.layout) {
+        el += partial('widgets/' + widget.layout, {item: widget})
       }
     });
   }

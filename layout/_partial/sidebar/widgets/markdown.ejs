@@ -1,16 +1,16 @@
 <%
 function layoutDiv() {
+  if (!item.content?.length) return ''
   var el = '';
-  if (item.content == undefined || item.content.length == 0) {
-    return el;
-  }
   el += '<div class="widget-wrap" id="markdown">';
+  if (item.title?.length > 0) {
     el += '<div class="widget-header cap theme dis-select">';
-      el += '<span class="name">' + item.title + '</span>';
+    el += '<span class="name">' + item.title + '</span>';
     el += '</div>';
-    el += '<div class="widget-body fs14">';
-      el += markdown(item.content);
-    el += '</div>';
+  }
+  el += '<div class="widget-body fs14">';
+  el += markdown(item.content);
+  el += '</div>';
   el += '</div>';
   return el;
 }
