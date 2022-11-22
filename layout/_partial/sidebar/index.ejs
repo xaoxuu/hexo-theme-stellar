@@ -74,16 +74,16 @@ function layoutWidgets() {
   if (page.sidebar) {
     page.sidebar.forEach((w, i) => {
       let name = ''
+      let widget = {}
       if (typeof w == 'string') {
         name = w
-      } else if (typeof w == 'object' && w.layout && w.override) {
+      } else if (typeof w == 'object' && w.override) {
         name = w.override
       }
-      let widget = {}
       if (name in theme.data.widgets) {
         Object.assign(widget, theme.data.widgets[name])
       }
-      if (typeof w == 'object' && w.layout) {
+      if (typeof w == 'object' && w.override) {
         Object.assign(widget, w)
       }
       if (widget && widget.layout) {

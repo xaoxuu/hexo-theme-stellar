@@ -24,7 +24,7 @@ function layoutDiv() {
 
   el += '<div class="widget-wrap" id="github-user">';
   // body
-  el += '<div class="widget-body stellar-ghinfo-api" api="' + item.api + '/users/' + item.username + '">';
+  el += '<div class="widget-body stellar-ghinfo-api" api="' + theme.api_host.ghapi + '/users/' + item.username + '">';
     if (item.avatar) {
       el += '<div class="avatar" ><img no-lazy type="img" id="avatar_url" src="' + config.avatar + '"></div>';
     }
