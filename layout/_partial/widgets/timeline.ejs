@@ -4,7 +4,7 @@ function layoutDiv() {
   if (item.api == undefined) {
     return el;
   }
-  el += '<div class="widget-wrap" id="timeline">';
+  el += '<widget class="widget-wrapper timeline">';
     if (item.title) {
       el += '<div class="widget-header cap theme dis-select">';
       el += '<span class="name">' + item.title + '</span>';
@@ -20,7 +20,7 @@ function layoutDiv() {
       el += '>';
       el += '</div>';
     el += '</div>';
-  el += '</div>';
+  el += '</widget>';
   return el;
 }
 %>

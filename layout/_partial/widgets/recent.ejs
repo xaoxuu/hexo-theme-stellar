@@ -1,6 +1,6 @@
 <%
 function layoutDiv() {
-  var el = '<div class="widget-wrap" id="recent">';
+  var el = '<widget class="widget-wrapper recent">';
   // header
   el += '<div class="widget-header cap theme dis-select">';
   el += '<span class="name">' + __("meta.recent_update") + '</span>';
@@ -44,7 +44,7 @@ function layoutDiv() {
     el += '';
   });
   el += '</div>';
-  el += '</div>';
+  el += '</widget>';
   return el;
 }
 %>

@@ -8,11 +8,12 @@
     margin: var(--gap-l) var(--gap-l) 0
     margin-top: "calc(2 * %s)" % var(--gap-l)
   @media screen and (min-width: $device-mobile-max)
-    >.widgets:first-child>.widget-wrap:first-child
+    >.widgets:first-child>.widget-wrapper:first-child
       margin-top: "calc(2 * %s)" % var(--gap-l)
   @media screen and (max-width: $device-mobile-max)
     height: 100vh
   
+
 
 .l_left[layout=wiki]
   padding-bottom: 0
@@ -100,7 +101,7 @@
         opacity: 1 !important
 
 
-.l_left .widgets .widget-wrap.logo-wrap.wiki
+.l_left .widgets .widget-wrapper.logo-wrap.wiki
   margin-bottom: 1.5rem
   flex-direction: column
   align-items: flex-start

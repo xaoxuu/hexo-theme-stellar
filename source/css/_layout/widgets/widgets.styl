@@ -8,7 +8,7 @@
   scrollbar(0, 0)
   z-index: 1
   line-height: 1.2
-  .widget-wrap
+  .widget-wrapper
     margin: 1rem 0 2rem
     .widget-header
       padding-left: var(--gap-l)
@@ -50,12 +50,12 @@
         line-height: 1.5
     .widget-header+.widget-body
       margin-top: 0
-  .widget-wrap+.widget-wrap .widget-header
+  .widget-wrapper+.widget-wrapper .widget-header
     margin-top: 3rem
 
 
 .l_left .widgets
-  .widget-wrap#recent .widget-body
+  .widget-wrapper.recent .widget-body
     display: flex
     flex-direction: column
     align-items: flex-start
@@ -70,7 +70,7 @@
         color: var(--text-p2)
       &:hover
         color: $color-hover
-  .widget-wrap#related .widget-body a
+  .widget-wrapper.related .widget-body a
     margin-top: 0.5rem
     margin-bottom: 1rem
     .title 
@@ -79,7 +79,7 @@
     .excerpt
       -webkit-line-clamp: 3
 
-  .widget-wrap#tagcloud .widget-body
+  .widget-wrapper.tagcloud .widget-body
     margin-top: 0.25rem
     a  
       word-break: break-word
@@ -88,7 +88,7 @@
       &:hover
         color: $color-hover
   
-  .widget-wrap#timeline .widget-body
+  .widget-wrapper.timeline .widget-body
     margin-top: 0.5rem
     .tag-plugin.timeline .timenode
       .header

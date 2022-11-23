@@ -2,7 +2,7 @@
 function layoutDiv() {
   if (!item.content?.length) return ''
   var el = '';
-  el += '<div class="widget-wrap" id="markdown">';
+  el += '<widget class="widget-wrapper markdown">';
   if (item.title?.length > 0) {
     el += '<div class="widget-header cap theme dis-select">';
     el += '<span class="name">' + item.title + '</span>';
@@ -11,7 +11,7 @@ function layoutDiv() {
   el += '<div class="widget-body fs14">';
   el += markdown(item.content);
   el += '</div>';
-  el += '</div>';
+  el += '</widget>';
   return el;
 }
 %>
