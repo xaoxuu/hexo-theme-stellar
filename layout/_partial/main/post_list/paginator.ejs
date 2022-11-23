@@ -1,13 +1,9 @@
 <% if (is_home() && page.total > 1) { %>
   <div class='paginator-wrap dis-select'>
-    <a class='paginator prev<%- page.prev != 0 ? "" : " disable" %>' href='<%- url_for(page.prev_link) %>'>
-      <img src='https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/arrow/f049bbd4e88ec.svg'/>
-    </a>
-    <div class='paginator current'>
-      <%- page.current %><span class='sep'></span><%- page.total %>
-    </div>
-    <a class='paginator next<%- page.next != 0 ? "" : " disable" %>' href='<%- url_for(page.next_link) %>'>
-      <img src='https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/arrow/064b95430caf4.svg'/>
-    </a>
+  <%- paginator({
+    prev_text: '',
+    next_text: '',
+    force_prev_next:true
+  }) %>
   </div>
 <% } %>
