@@ -1,4 +1,4 @@
-.md .frame-wrap
+.md-text .frame-wrap
   position: relative
   overflow: hidden
   margin: 0 auto
@@ -8,7 +8,7 @@
   align-items: center
   img,video
     border-radius: 0
-.md .frame-wrap .frame
+.md-text .frame-wrap .frame
   z-index: 1
   display: block
   position: absolute;
@@ -16,11 +16,11 @@
   background-repeat: no-repeat;
   overflow: hidden;
 
-.md .tag-plugin.img-wrap .frame-wrap
+.md-text .tag-plugin.img-wrap .frame-wrap
   &[focus]
     height: auto
 
-.md .frame-wrap
+.md-text .frame-wrap
   &#iphone11
     img,video
       width: 287px
@@ -44,7 +44,7 @@
       bottom: 0
 
 @media screen and (max-width: $device-mobile)
-  .md .frame-wrap
+  .md-text .frame-wrap
     &#iphone11
       img,video
         width: 208px

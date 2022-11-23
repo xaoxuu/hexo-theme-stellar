@@ -92,7 +92,7 @@ const init = {
     stellar.jQuery(() => {
       const scrollOffset = 32;
       var segs = [];
-      $("article.md :header").each(function (idx, node) {
+      $("article.md-text :header").each(function (idx, node) {
         segs.push(node)
       });
       // 滚动

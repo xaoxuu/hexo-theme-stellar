@@ -1,4 +1,4 @@
-article.md
+.md-text
   max-width: 100%
   padding: 0 1rem
   margin-top: 1rem
@@ -8,7 +8,7 @@ article.md
   line-height: 1.7
   word-break: break-word
 
-article.md.excerpt
+.md-text.excerpt
   p
     font-size: $fs-14
     margin: 1em 0
@@ -19,7 +19,7 @@ h1.article-title
   line-height: 1.2
   color: var(--text-p0)
 
-article.md.content
+.md-text.content
   position: relative
   margin-bottom: 2rem
   display: flex
@@ -53,7 +53,7 @@ article.md.content
 
 
 
-article.md
+.md-text
   ul:not(:last-child),
   ol:not(:last-child)
     padding-bottom: .5rem
@@ -75,7 +75,7 @@ article.md
     display: block
 
 // titles
-article.md.content
+.md-text.content
   a.headerlink:before
     opacity: 0
     content: '#'
@@ -101,28 +101,28 @@ article.md.content
   h5+h6
     margin-top: -0.5rem
 
-article.md p
+.md-text p
   font-size: $fs-p
 
-article.md pre
+.md-text pre
   -webkit-font-smoothing: auto
   -moz-osx-font-smoothing: auto
 
-article.md
+.md-text
   .center
     align-self: center
 
 // div
-article.md>div
+.md-text>div
   margin: var(--gap-p) 0
 
 
-article.md img
+.md-text img
   border-radius: $border-image
   margin: auto
   display: block
 
-article.md 
+.md-text 
   p:not([class]), li:not([class])
     a:not([class])
       position: relative

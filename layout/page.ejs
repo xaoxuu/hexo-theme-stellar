@@ -15,7 +15,7 @@ function layoutDiv() {
   if (page.h1 || page.title || (page.content && page.content.length > 0)) {
     el += partial('_partial/main/navbar/breadcrumb');
   }
-  el += '<article class="content md ' + page.layout + (page.indent ? ' indent' : '') + scrollreveal() + '">';
+  el += '<article class="md-text content ' + page.layout + (page.indent ? ' indent' : '') + scrollreveal() + '">';
   el += layoutTitle();
   if (page.content && page.content.length > 0) {
     el += page.content;

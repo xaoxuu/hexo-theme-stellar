@@ -10,7 +10,7 @@ p>code:not([class]),li>code:not([class])
   border-radius: 4px
   color: var(--text-code)
 
-article.md .highlight, pre:not([class]):has(>code)
+.md-text .highlight, pre:not([class]):has(>code)
   margin: var(--gap-p) 0
   border-radius: $border-block
   overflow: hidden
@@ -22,7 +22,7 @@ article.md .highlight, pre:not([class]):has(>code)
   @media screen and (min-width: $device-mobile)
     min-width: 180px
 
-article.md .highlight
+.md-text .highlight
   position: relative
   overflow: auto
   display: block
@@ -75,7 +75,7 @@ article.md .highlight
   .gutter+.code pre
     padding-left: 0.25em
 
-article.md .gist 
+.md-text .gist 
   .gist-file 
     border: 1px solid var(--block-border)
     border-radius: $border-block
@@ -96,7 +96,7 @@ table:not([class])
   border-collapse: collapse
 
 
-article.md pre
+.md-text pre
   >.caption
     color: var(--text-p3)
   >.hljs
@@ -106,7 +106,7 @@ article.md pre
     line-height: 1.5
     box-sizing: border-box
 
-article.md .highlight
+.md-text .highlight
   .code
     vertical-align: top
     &:before
