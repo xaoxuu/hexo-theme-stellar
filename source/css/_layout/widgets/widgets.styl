@@ -1,7 +1,8 @@
-.widgets .loading-wrap
-  margin: 0.5rem 0
+.widgets 
+  .loading-wrap
+    margin: 0.5rem 0
 
-.l_left .widgets
+.widgets
   overflow: scroll
   flex-grow: 1
   scrollbar-width: none
@@ -9,6 +10,7 @@
   z-index: 1
   line-height: 1.2
   .widget-wrapper
+    display: block
     margin: 1rem 0 2rem
     .widget-header
       padding-left: var(--gap-l)
@@ -52,55 +54,3 @@
       margin-top: 0
   .widget-wrapper+.widget-wrapper .widget-header
     margin-top: 3rem
-
-
-.l_left .widgets
-  .widget-wrapper.recent .widget-body
-    display: flex
-    flex-direction: column
-    align-items: flex-start
-    margin-top: 0.25rem
-    a
-      line-height: 1.2
-      font-size: $fs-13
-      margin: 0.25rem 0
-      padding: 2px 0
-      .title  
-        font-size: $fs-13
-        color: var(--text-p2)
-      &:hover
-        color: $color-hover
-  .widget-wrapper.related .widget-body a
-    margin-top: 0.5rem
-    margin-bottom: 1rem
-    .title 
-      font-weight: 700
-      font-size: $fs-14
-    .excerpt
-      -webkit-line-clamp: 3
-
-  .widget-wrapper.tagcloud .widget-body
-    margin-top: 0.25rem
-    a  
-      word-break: break-word
-      color: var(--text-p2)
-      line-height: 1.5
-      &:hover
-        color: $color-hover
-  
-  .widget-wrapper.timeline .widget-body
-    margin-top: 0.5rem
-    .tag-plugin.timeline .timenode
-      .header
-        margin-bottom: 0.5rem
-        txt-ellipsis()
-        .user-info
-          background: var(--block)
-          &:hover
-            background: $color-hover
-            color: var(--card)
-        &:before
-          display: none
-      &+.timenode
-        margin-top: 0.75rem
-        

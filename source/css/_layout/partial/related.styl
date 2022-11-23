@@ -31,19 +31,11 @@
       color: var(--text-p1)
       font-weight: 500
       font-size: 1rem
-      trans1 color
+      trans2 color border
       position: relative
-      padding-bottom: 4px
-      &:after
-        content: ''
-        position: absolute
-        left: 0
-        width: 0
-        height: 2px
-        bottom: 0
-        border-radius: 2px
-        background: $color-hover
-        trans1 width
+      padding-bottom: 2px
+      border-bottom: 1px dashed var(--text-meta)
+      line-height: 1.6
     .excerpt
       color: var(--text-p3)
       font-size: $fs-12
@@ -55,8 +47,7 @@
     &:hover
       .title
         color: $color-hover
-        &:after
-          width: 100%
+        border-bottom: 1px solid $color-hover
 
 
 .related-wrap#read-next
