@@ -305,7 +305,7 @@ plugins:
     auto_render_min_js: <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous"onload="renderMathInElement(document.body);"></script>
 
 style:
-  darkmode: auto # auto / always / false
+  darkmode: always # auto / always / false
   smooth_scroll: true # true / false
   font-size: 16px
   font-family:
@@ -328,7 +328,7 @@ style:
       text: '#333' # 正文文本颜色
       code: '#f33a00' # 行内代码颜色
     dark:
-      background: '#313438' # 深色背景颜色
+      background: '#000000' # 深色背景颜色
       background-mobile: black # 移动端深色背景（OLED调成纯黑可以省电）
       block: '#2B2F33' # 块背景颜色
       card: '#464D57' # 卡片背景颜色
