@@ -29,6 +29,48 @@
       if hexo-config('style.darkmode') == 'always'
         box-shadow: none
 
+.large-social-wrap
+  grid-gap: 0.25rem 0.25rem
+  grid-template-columns: repeat(auto-fill, 32px)
+  a.large-social
+    height: 1.2em
+    line-height: 0
+    display: block
+    padding: 6px
+    border-radius: 4px
+    overflow: hidden
+    background: transparent
+    trans3: box-shadow background transform
+    img
+      display: inline-block
+      height: 1.2em
+      width: 1.2em
+      if hexo-config('style.darkmode') == 'auto'
+        @media (prefers-color-scheme: dark)
+          filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
+    span.description
+      display: inline-block
+      height: 0.6em
+      vertical-align: middle
+      color: var(--text-p1)
+      margin-left: 0.5em
+    &:hover
+      color: $color-hover
+      z-index: 1
+      filter: unset
+      transform: translateY(-1px)
+      if hexo-config('style.darkmode') == 'auto'
+        @media (prefers-color-scheme: dark)
+          background: linear-gradient(145deg, #48484A, #2C2C2E)
+      box-shadow: 2px 4px 8px #ddd, -2px -4px 8px #2C2C2E
+      if hexo-config('style.darkmode') == 'auto'
+        @media (prefers-color-scheme: dark)
+          box-shadow: none
+          img
+            filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
+      if hexo-config('style.darkmode') == 'always'
+        box-shadow: none
+
 .proj-wrap
   display: grid
   grid-gap: 0.25rem 0.25rem

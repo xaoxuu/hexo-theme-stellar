@@ -112,6 +112,41 @@ function layoutFooterDiv() {
       }
     }
     el += '</div>';
+    if (theme.footer.largesocial) {
+      el += '<br/>';
+      el += '<div class="large-social-wrap">';
+      for (let id of Object.keys(theme.footer.largesocial)) {
+        let item = theme.footer.largesocial[id];
+        if (item.icon && (item.url || item.onclick)) {
+          el += '<a class="large-social"';
+          if (item.title) {
+            el += ' title="' + item.title + '"';
+          }
+          if (item.url) {
+            el += ' href="' + url_for(item.url) + '"';
+            if (item.url.includes('://')) {
+              el += ' target="_blank" rel="external nofollow noopener noreferrer"';
+            } else {
+              el += ' rel="noopener noreferrer"';
+            }
+          } else if (item.onclick) {
+            item.onclick = item.onclick.replace(/"|\'/g, '&quot;');
+            el += ' onclick="' + item.onclick + '"';
+          }
+          el += '>';
+          el += '<div>';
+          el += item.icon;
+          if (item.description) {
+            el += '<span class="description">';
+            el += item.description;
+            el += '</span>';
+          }
+          el += '</div>';
+          el += '</a>';
+        }
+      }
+      el += '</div>';
+    }
     el += '<br/>&nbsp;<a href="https://www.foreverblog.cn/" target="_blank" > <img src="https://my-img.cc/i/2022/11/24/637edbe7a403d.png" alt="" style="width:175px;height:auto;"> </a>'
     el += '<br/>&nbsp;<a href="https://wngamebox.cn/" target="_blank" > <img src="https://my-img.cc/2022/2BUZ19cg.png" alt="" style="width:175px;height:auto;"> </a>'
     el += '</footer>';
@@ -122,7 +157,7 @@ function layoutFooterDiv() {
 }
 %>
 <% if (page.header == undefined || page.header == 'left' || page.header == 'auto') { %>
-  <%- partial('header', {where: 'sidebar'}) %>
+<%- partial('header', {where: 'sidebar'}) %>
 <% } %>
 <%- layoutWidgets() %>
 <%- layoutFooterDiv() %>
