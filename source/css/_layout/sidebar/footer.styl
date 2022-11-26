@@ -12,7 +12,10 @@
     display: inline-block
     padding: 6px
     border-radius: 4px
-    filter: grayscale(100%)
+    img
+      if hexo-config('style.darkmode') == 'auto'
+        @media (prefers-color-scheme: dark)
+          filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
     overflow: hidden
     background: transparent
     trans3: box-shadow background transform
@@ -21,11 +24,15 @@
       z-index: 1
       filter: unset
       transform: translateY(-1px)
-      background: linear-gradient(145deg, #ddd, #fff)
-      box-shadow: 2px 4px 8px #ddd, -2px -4px 8px #fff
+      if hexo-config('style.darkmode') == 'auto'
+        @media (prefers-color-scheme: dark)
+          background: linear-gradient(145deg, #48484A, #2C2C2E)
+      box-shadow: 2px 4px 8px #ddd, -2px -4px 8px #2C2C2E
       if hexo-config('style.darkmode') == 'auto'
         @media (prefers-color-scheme: dark)
           box-shadow: none
+          img
+            filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
       if hexo-config('style.darkmode') == 'always'
         box-shadow: none
 
