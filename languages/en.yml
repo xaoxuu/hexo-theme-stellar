@@ -50,3 +50,10 @@ symbol:
   colon: ": "
   brackets_l: "("
   brackets_r: ")"
+
+widget:
+  github: "'s GitHub"
+  followers: "followers"
+  following: "following"
+  repos: "repo"
+  follow: "Follow"

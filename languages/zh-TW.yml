@@ -50,3 +50,10 @@ symbol:
   colon: "："
   brackets_l: "（"
   brackets_r: "）"
+
+widget:
+  github: " 的 GitHub"
+  followers: "關注者"
+  following: "正在關注"
+  repos: "倉庫"
+  follow: "關注"
