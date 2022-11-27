@@ -14,10 +14,15 @@
     box-shadow: $boxshadow-button
     trans1 box-shadow
     &:hover
-      box-shadow: 0 0 2px 0px alpha($color-theme, 0.2), 0 0 8px 0px alpha($color-theme, 0.2)
-    &:focus
-      box-shadow: 0 0 2px 0px alpha($color-theme, 0.4), 0 0 8px 0px alpha($color-theme, 0.4)
-    
+      box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.16), 0 0 8px 0px rgba(0, 0, 0, 0.08)
+  
+  &.noresult 
+    .search-input
+      &:hover
+        box-shadow: 0 0 2px 0px alpha($c-red, 0.2), 0 0 8px 0px alpha($c-red, 0.2)
+      &:focus
+        box-shadow: 0 0 2px 0px alpha($c-red, 0.5), 0 0 8px 0px alpha($c-red, 0.4)
+
   .search-no-result
     display: none
     margin: 1em auto
@@ -68,3 +73,17 @@
 .search-wrapper.noresult
   .search-no-result
     display: block
+
+.widget-wrapper
+  .search-form
+    top: 0
+    background: var(--site-bg)
+  .search-input
+    margin-top: 1rem
+    margin-bottom: -1rem
+  #search-result,.search-no-result
+    margin-top: 2rem
+
+.widget-wrapper:not(:first-child)
+  .search-wrapper
+    margin-top: -1rem
