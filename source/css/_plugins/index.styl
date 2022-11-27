@@ -8,6 +8,10 @@ if hexo-config('plugins.scrollreveal.enable')
 if hexo-config('plugins.fancybox.enable')
   @import 'fancybox'
 
+// 搜索
+if hexo-config('search.service') == 'local_search'
+  @import 'search/local-search'
+
 // 评论
 if hexo-config('comments.service') == 'beaudar'
   @import 'comments/beaudar'

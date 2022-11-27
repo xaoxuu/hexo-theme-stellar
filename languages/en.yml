@@ -41,6 +41,11 @@ page:
     why: The address may be entered incorrectly or the address has been deleted.
     action: Back to Home
 
+search:
+  search: Search
+  search_in: Search in %s
+  no_results: No Results!
+
 message:
   copied: Copied!
 

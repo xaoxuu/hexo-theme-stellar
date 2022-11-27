@@ -2,7 +2,10 @@
 # layout即组件布局，支持自定义的有：
 # - markdown: 渲染 md 文本
 #
-
+search:
+  layout: search
+  filter: auto # auto or 'path'
+  
 ghrepo:
   layout: ghrepo
 related:
