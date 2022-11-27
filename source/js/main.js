@@ -310,6 +310,9 @@ if (stellar.search.service) {
         var $resultArea = document.querySelector("div#search-result");
         $inputArea.focus(function() {
           var path = stellar.search[stellar.search.service]?.path || '/search.xml';
+          if (!path.startsWith('/')) {
+            path = '/' + path;
+          }
           const filter = $inputArea.attr('data-filter') || '';
           searchFunc(path, filter, 'search-input', 'search-result');
         });
