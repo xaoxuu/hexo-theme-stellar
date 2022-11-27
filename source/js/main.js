@@ -209,7 +209,7 @@ if (stellar.plugins.lazyload) {
     false
   );
   document.addEventListener('DOMContentLoaded', function () {
-    lazyLoadInstance.update();
+    window.lazyLoadInstance?.update();
   });
 }
 
