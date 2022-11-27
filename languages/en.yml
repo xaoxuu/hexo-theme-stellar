@@ -1,7 +1,10 @@
 btn:
   home: Home
   blog: Blog
+  posts: Posts
   wiki: Wiki
+  notes: Notes
+  friends: Friends
   recent_publish: Recent
   all_wiki: All Products
   category: Category

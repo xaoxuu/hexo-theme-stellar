@@ -1,7 +1,10 @@
 btn:
   home: 首頁
   blog: 網誌
-  wiki: Wiki
+  posts: 文章
+  wiki: 知識庫
+  notes: 便簽
+  friends: 友聯
   recent_publish: 近期發布
   all_wiki: 所有 Wiki
   category: 分類
