@@ -1,4 +1,4 @@
-.md .tag-plugin.link
+.md-text .tag-plugin.link
   max-width: 100%
   margin: 1em auto
   display: flex
@@ -6,7 +6,7 @@
   @media screen and (max-width: $device-mobile-375)
     width: 100%
 
-.md .link-card
+.md-text .link-card
   background: var(--card)
   display: inline-flex
   justify-content: space-between
@@ -24,17 +24,17 @@
     box-shadow: $boxshadow-card-float
     transform: translateY(-1px)
 
-.md .link-card.plain
+.md-text .link-card.plain
   flex-direction: row
   align-items: center
 
-.md .link-card.rich
+.md-text .link-card.rich
   flex-direction: column
   align-items: stretch
   width: 460px
   text-align: justify
 
-.md .link-card
+.md-text .link-card
   >.left
     overflow: hidden
     margin: 0.75rem 0 0.75rem 0.75rem
@@ -72,7 +72,7 @@
       font-size: $fs-15
       margin-bottom: 0.5rem
 
-.md .link-card
+.md-text .link-card
   line-height: 1.2
   .title
     display: -webkit-box

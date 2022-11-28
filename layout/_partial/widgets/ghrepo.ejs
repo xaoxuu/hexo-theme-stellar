@@ -3,7 +3,9 @@ function layoutDiv() {
   var el = '';
   var repo;
   var branch = 'main';
-  if (page.layout === 'wiki' && page.wiki) {
+  if (page.repo) {
+    repo = page.repo
+  } else if (page.layout === 'wiki' && page.wiki) {
     let proj = theme.wiki.projects[page.wiki];
     if (proj && proj.repo) {
       repo = proj.repo;
@@ -11,15 +13,12 @@ function layoutDiv() {
         branch = proj.branch;
       }
     }
-  } else {
-    // 其它的如果有设置 repo 也可以
-    repo = page.repo;
   }
   if (repo == undefined) {
     return el;
   }
   // 布局
-  el += '<div class="widget-wrap" id="repo-info">';
+  el += '<widget class="widget-wrapper ghrepo">';
   // body
   el += '<div class="widget-body">';
   el += '<div class="items stellar-ghinfo-api" api="' + theme.api_host.ghapi + '/repos/' + repo + '">';
@@ -46,7 +45,7 @@ function layoutDiv() {
   el += '</a>';
   el += '</div>';
   el += '</div>';
-  el += '</div>';
+  el += '</widget>';
   return el;
 }
 %>

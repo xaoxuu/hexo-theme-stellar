@@ -3,7 +3,9 @@ function layoutDiv() {
   var el = '';
   var repo;
   var branch = 'main';
-  if (page.layout === 'wiki' && page.wiki) {
+  if (page.repo) {
+    repo = page.repo
+  } else if (page.layout === 'wiki' && page.wiki) {
     let proj = theme.wiki.projects[page.wiki];
     if (proj && proj.repo) {
       repo = proj.repo;
@@ -11,9 +13,6 @@ function layoutDiv() {
         branch = proj.branch;
       }
     }
-  } else {
-    // 其它的如果有设置 repo 也可以
-    repo = page.repo;
   }
   if (repo == undefined) {
     return el;
@@ -22,7 +21,7 @@ function layoutDiv() {
   if (item.labels) {
     item.api += '&labels=' + item.labels;
   }
-  el += '<div class="widget-wrap" id="timeline">';
+  el += '<widget class="widget-wrapper timeline">';
     if (item.title) {
       el += '<div class="widget-header cap theme dis-select">';
       el += '<span class="name">' + item.title + '</span>';
@@ -38,7 +37,7 @@ function layoutDiv() {
       el += '>';
       el += '</div>';
     el += '</div>';
-  el += '</div>';
+  el += '</widget>';
   return el;
 }
 %>

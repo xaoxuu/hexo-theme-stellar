@@ -10,6 +10,9 @@
 
 hexo.extend.tag.register('mark', function(args) {
   args = hexo.args.map(args, ['color'], ['text']);
+  if (args.color == null) {
+    args.color = hexo.theme.config.tag_plugins.mark.default_color
+  }
   var el = '';
   el += '<mark class="tag-plugin mark"';
   el += ' ' + hexo.args.joinTags(args, ['color']).join(' ');

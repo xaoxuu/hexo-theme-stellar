@@ -63,7 +63,7 @@ function layoutDiv(fallback) {
 
   var el = '';
   if (type.length > 0) {
-    el += '<div class="widget-wrap ' + type + '" id="toc">';
+    el += '<widget class="widget-wrapper toc ' + type + '" id="toc">';
     if (page.layout !== 'wiki') {
       // post 布局
       el += layoutTocHeader(page.toc_title);
@@ -90,7 +90,7 @@ function layoutDiv(fallback) {
         el += '</div>';
       }
     }
-    el += '</div>';
+    el += '</widget>';
   } else if (item.fallback) {
     el += partial(item.fallback, {item: theme.data.widgets[item.fallback]});
   }

@@ -1,6 +1,6 @@
 <%
 function layoutDiv() {
-  var el = '<div class="widget-wrap" id="recent">';
+  var el = '<widget class="widget-wrapper recent">';
   // header
   el += '<div class="widget-header cap theme dis-select">';
   el += '<span class="name">' + __("meta.recent_update") + '</span>';
@@ -28,14 +28,14 @@ function layoutDiv() {
   el += '<div class="widget-body related-posts fs14">';
   arr.length = item.limit
   arr.forEach(post => {
+    if (!post) { return }
     el += '<a class="item title" href="' + url_for(post.link || post.path) + '">';
     el += '<span class="title">'
     if (post.layout == 'wiki') {
       let proj = theme.wiki.projects[post.wiki];
-      if (proj && proj.name) {
-        el += proj.name + ' / ';
-      } else if (post.wiki) {
-        el += post.wiki + ' / ';
+      let name = proj?.name || post?.wiki;
+      if (name) {
+        el += '<strong>' + name + '</strong>' + '<span class="dot"></span>';
       }
     }
     el += (post.title || post.seo_title || post.wiki) + '</span>';
@@ -43,7 +43,7 @@ function layoutDiv() {
     el += '';
   });
   el += '</div>';
-  el += '</div>';
+  el += '</widget>';
   return el;
 }
 %>

@@ -1,6 +1,6 @@
 ######## Stellar info ########
 stellar:
-  version: '1.16.0'
+  version: '1.17.0'
   homepage: 'https://xaoxuu.com/wiki/stellar/'
   repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
   cdn_css: # Use cdn links instead of /css/main.css
@@ -25,10 +25,10 @@ sidebar:
     # about: '[关于](/about/)'
   # Sidebar widgets
   widgets:
-    index: welcome, recent, timeline # for home/wiki/categories/tags/archives/404 pages
+    index: welcome, recent, search, timeline # for home/wiki/categories/tags/archives/404 pages
     page: welcome, toc # for pages using 'layout:page'
-    post: toc, ghrepo, ghissues # for pages using 'layout:post'
-    wiki: ghrepo, toc, ghissues, related # for pages using 'layout:wiki'
+    post: toc, ghrepo, search, ghissues # for pages using 'layout:post'
+    wiki: search, ghrepo, toc, ghissues, related # for pages using 'layout:wiki'
 
 ######## Index ########
 post-index: # 近期发布 分类 标签 归档 and ...
@@ -49,9 +49,9 @@ article:
   auto_excerpt: 200
   # 分类颜色
   category_color:
-    '新闻稿': '#DA0F47'
+    '探索号': '#f44336'
   # 文章许可协议
-  license: '本文采用[署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/)许可协议，转载请注明出处。'
+  license: '本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。'
   # 分享
   share: # [wechat, weibo, email, link]
   # 相关文章，需要安装插件 (for layout: post)
@@ -60,6 +60,11 @@ article:
     enable: false
     max_count: 5
 
+
+search:
+  service: local_search # hexo, todo...
+  local_search: # npm i hexo-generator-search
+  
 
 ######## Comments ########
 comments:
@@ -194,7 +199,7 @@ footer:
 tag_plugins:
   # {% note text %}
   note:
-    default_color: '' # light, dark, red, orange, yellow, green, cyan, blue, purple
+    default_color: '' # light, dark, red, orange, yellow, green, cyan, blue, purple, warning, error
   # {% checkbox %}
   checkbox:
     interactive: false # enable interactive for user
@@ -219,6 +224,9 @@ tag_plugins:
   # {% timeline %}
   timeline:
     max-height: 80vh
+  # {% mark %}
+  mark:
+    default_color: dark # light, dark, red, orange, yellow, green, cyan, blue, purple, warning, error
 
 
 ######## JS Plugins ########

@@ -15,7 +15,7 @@ function layoutDiv() {
   }
   var el = '';
   if (related.length > 0) {
-    el += '<div class="widget-wrap" id="related">';
+    el += '<widget class="widget-wrapper related">';
     el += '<div class="widget-header cap theme dis-select">';
     var title = __('btn.wiki');
     if (proj.tags && proj.tags[0]) {
@@ -34,7 +34,7 @@ function layoutDiv() {
       el += '</a>';
     });
     el += '</div>';
-    el += '</div>';
+    el += '</widget>';
   }
   return el;
 }

@@ -1,10 +1,13 @@
-.widget-wrap.single#toc .widget-header
+.widget-wrapper.toc .widget-header
+  margin-top: 1rem
+
+.widget-wrapper.toc.single .widget-header
   font-weight: 500
   font-size: $fs-12
   >span
     margin: 0.5rem 0
 
-#toc .widget-body
+.widget-wrapper.toc .widget-body
   margin-top: 0
   ul ul, ul ol
     padding-left: 0
@@ -34,7 +37,7 @@
       padding-left: 2.9rem
 
 
-#toc .toc-item
+.widget-wrapper.toc .toc-item
   color: var(--text-p2)
   font-size: $fs-12
   padding: 0
@@ -44,7 +47,7 @@
     border-left-color: @color
   .toc-child .toc-item
     padding: 0
-#toc a.toc-link
+.widget-wrapper.toc a.toc-link
   color: inherit
   display: block
   line-height: 1.2

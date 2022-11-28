@@ -1,4 +1,4 @@
-.md .tag-plugin.note
+.md-text .tag-plugin.note
   position: relative
   margin-top: 1rem
   margin-bottom: 1rem
@@ -21,13 +21,13 @@
     margin: 1rem 0
 
 
-.md .tag-plugin.note[color]
+.md-text .tag-plugin.note[color]
   code
     background: none
-.md .tag-plugin.note:not([color])
+.md-text .tag-plugin.note:not([color])
   .highlight
     background: var(--block-hover)
-.md .tag-plugin.note[child=codeblock]
+.md-text .tag-plugin.note[child=codeblock]
   padding: 0
   >.title, >.body:only-child
     margin-top: 0
@@ -38,13 +38,13 @@
     border: none
     background: none
 
-.md .tag-plugin.note[child=tabs]
+.md-text .tag-plugin.note[child=tabs]
   >.body
     margin: 0
     >.tabs
       margin-top: .5rem
 
-.md .tag-plugin.note[child=iframe]
+.md-text .tag-plugin.note[child=iframe]
   overflow: hidden
   padding: 0
   >.body
@@ -52,5 +52,5 @@
     iframe
       margin: 0
 
-.md .tag-plugin .tag-plugin.note
+.md-text .tag-plugin .tag-plugin.note
   --gap-p: 1rem

@@ -22,9 +22,9 @@ function layoutDiv() {
     return el;
   }
 
-  el += '<div class="widget-wrap" id="github-user">';
+  el += '<widget class="widget-wrapper ghuser">';
   // body
-  el += '<div class="widget-body stellar-ghinfo-api" api="' + item.api + '/users/' + item.username + '">';
+  el += '<div class="widget-body stellar-ghinfo-api" api="' + theme.api_host.ghapi + '/users/' + item.username + '">';
     if (item.avatar) {
       el += '<div class="avatar" ><img no-lazy type="img" id="avatar_url" src="' + config.avatar + '"></div>';
     }
@@ -47,10 +47,10 @@ function layoutDiv() {
     el += '</a>';
     // menu
     if (item.menu) {
-      el += partial('../menu', {where: 'sidebar'});
+      el += partial('../sidebar/menu', {where: 'sidebar'});
     }
   el += '</div>';
-  el += '</div>';
+  el += '</widget>';
   return el;
 }
 %>

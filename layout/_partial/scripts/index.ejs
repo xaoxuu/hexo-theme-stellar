@@ -107,6 +107,15 @@
     jQuery: '<%- url_for(theme.plugins.jquery || "https://fastly.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js") %>'
   };
 
+  if ('<%- theme.search.service %>') {
+    stellar.search = {};
+    stellar.search.service = '<%- theme.search.service %>';
+    if (stellar.search.service == 'local_search') {
+      let service_obj = Object.assign({}, <%- JSON.stringify(config.search) %>);
+      stellar.search[stellar.search.service] = service_obj;
+    }
+  }
+
   // stellar js
   stellar.plugins.stellar = Object.assign(<%- JSON.stringify(theme.plugins.stellar) %>);
 

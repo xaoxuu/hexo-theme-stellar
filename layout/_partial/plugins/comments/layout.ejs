@@ -31,7 +31,7 @@ if (cmt.service && page[cmt.service]) {
 page.cmt = cmt;
 %>
 <% if (loadComment) { %>
-  <div class='related-wrap md reveal' id="comments">
+  <div class='related-wrap md-text reveal' id="comments">
     <div class='cmt-title cap theme'>
       <%- page.comment_title != undefined ? markdown(page.comment_title) : __('meta.comment_title') %>
     </div>
