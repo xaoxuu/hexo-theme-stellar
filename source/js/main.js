@@ -309,7 +309,7 @@ if (stellar.search.service) {
         var $inputArea = $("input#search-input");
         var $resultArea = document.querySelector("div#search-result");
         $inputArea.focus(function() {
-          var path = stellar.search[stellar.search.service]?.path || '/search.xml';
+          var path = stellar.search[stellar.search.service]?.path || '/search.json';
           if (!path.startsWith('/')) {
             path = '/' + path;
           }

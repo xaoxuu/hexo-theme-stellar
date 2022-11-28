@@ -62,8 +62,11 @@ article:
 
 
 search:
-  service: local_search # hexo, todo...
-  local_search: # npm i hexo-generator-search
+  service: local_search # local_search, todo...
+  local_search:
+    field: all # post, page, all
+    path: /search.json
+    content: true
   
 
 ######## Comments ########

@@ -111,7 +111,7 @@
     stellar.search = {};
     stellar.search.service = '<%- theme.search.service %>';
     if (stellar.search.service == 'local_search') {
-      let service_obj = Object.assign({}, <%- JSON.stringify(config.search) %>);
+      let service_obj = Object.assign({}, <%- JSON.stringify(theme.search.local_search) %>);
       stellar.search[stellar.search.service] = service_obj;
     }
   }

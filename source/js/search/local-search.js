@@ -51,17 +51,9 @@ var searchFunc = function(path, filter, searchId, contentId) {
 
   $.ajax({
     url: path,
-    dataType: "xml",
-    success: function(xmlResponse) {
-      // get the contents from search data
-      var datas = $("entry", xmlResponse).map(function() {
-        return {
-          title: $("title", this).text(),
-          content: $("content", this).text(),
-          url: $("link", this).attr("href")
-        };
-      }).get();
-
+    dataType: "json",
+    success: function(jsonResponse) {
+      var datas = jsonResponse;
       var $input = document.getElementById(searchId);
       if (!$input) { return; }
       var $resultContent = document.getElementById(contentId);
