@@ -70,9 +70,9 @@ function layoutDiv() {
           } else if (item == 'weibo') {
             el += ' href="https://service.weibo.com/share/share.php?url=' + page.permalink;
             el += '&title=' + (page.seo_title || (page.title + ' - ' + config.title));
-            if (page.latyout == 'post' && page.cover) {
+            if (page.layout == 'post' && page.cover) {
               el += '&pics=' + page.cover;
-            } else if (page.latyout == 'wiki' && page.logo && page.logo.src) {
+            } else if (page.layout == 'wiki' && page.logo && page.logo.src) {
               el += '&pics=' + page.logo.src;
             }
             el += '&summary=' + truncate(page.description || strip_html(page.excerpt || page.content), {length: 120});
