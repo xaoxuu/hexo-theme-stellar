@@ -5,15 +5,23 @@ function layoutDiv() {
   el += '<div class="search-wrapper" id="search">'
   el += '<form class="search-form">'
   var filter = ''
-  if (item.filter == 'auto' && page.layout == 'wiki') {
-    let matches = page.path.match(/(.*?)\/(.*?)\//i)
-    if (matches?.length > 0) {
-      filter = matches[0]
+  if (item.filter == 'auto') {
+    if (page.layout == 'wiki') {
+      let matches = page.path.match(/(.*?)\/(.*?)\//i)
+      if (matches?.length > 0) {
+        filter = matches[0]
+      }
+    }
+  } else {
+    if (item.filter?.length > 0) {
+      filter = item.filter
     }
   }
   el += '<input type="text" class="search-input" id="search-input"'
   if (filter.length > 0) {
-    filter = '/' + filter
+    if (!filter.startsWith('/')) {
+      filter = '/' + filter
+    }
     el += ' data-filter="' + filter + '"'
     el += ' placeholder="' + (item.placeholder || __('search.search_in', filter)) + '">'
   } else {

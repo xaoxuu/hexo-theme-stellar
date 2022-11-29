@@ -83,7 +83,7 @@ function layoutWidgets() {
       if (name in theme.data.widgets) {
         Object.assign(widget, theme.data.widgets[name])
       }
-      if (typeof w == 'object' && w.override) {
+      if (typeof w == 'object' && (w.override || w.layout)) {
         Object.assign(widget, w)
       }
       if (widget && widget.layout) {
