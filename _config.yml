@@ -25,10 +25,22 @@ sidebar:
     # about: '[关于](/about/)'
   # Sidebar widgets
   widgets:
-    index: welcome, recent, search, timeline # for home/wiki/categories/tags/archives/404 pages
-    page: welcome, toc # for pages using 'layout:page'
+    #### 自动生成的页面 ####
+    # 主页
+    home: search, welcome, recent, timeline # for home
+    # 博客索引页
+    blog_index: search_blog, recent, timeline # for categories/tags/archives
+    # 文档索引页
+    wiki_index: search_docs, recent, timeline # for wiki
+    # 其它（404）
+    others: search, welcome, recent, timeline # for 404 and ...
+    #### 手动创建的页面 ####
+    # 文章内页
     post: toc, ghrepo, search, ghissues # for pages using 'layout:post'
+    # 文档内页
     wiki: search, ghrepo, toc, ghissues, related # for pages using 'layout:wiki'
+    # 其它 layout:page 的页面
+    page: welcome, toc, search # for custom pages using 'layout:page'
 
 ######## Index ########
 post-index: # 近期发布 分类 标签 归档 and ...

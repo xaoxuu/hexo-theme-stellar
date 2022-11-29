@@ -5,6 +5,17 @@
 search:
   layout: search
   filter: auto # auto or 'path'
+
+
+search_blog:
+  layout: search
+  filter: /blog/ # auto or 'path'
+  placeholder: 文章搜索
+
+search_docs:
+  layout: search
+  filter: /wiki/ # auto or 'path'
+  placeholder: 文档搜索
   
 ghrepo:
   layout: ghrepo

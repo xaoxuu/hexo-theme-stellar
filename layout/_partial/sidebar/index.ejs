@@ -14,8 +14,14 @@ if (page.sidebar == undefined) {
     } else {
       page.sidebar = theme.sidebar.widgets.wiki;
     }
-  } else if (is_home() || ['categories', 'tags', 'archives', 'index', '404', undefined].includes(page.layout)) {
-    page.sidebar = theme.sidebar.widgets.index;
+  } else if (is_home()) {
+    page.sidebar = theme.sidebar.widgets.home;
+  } else if (is_category() || is_tag() || is_archive() || ['categories', 'tags', 'archives'].includes(page.layout)) {
+    page.sidebar = theme.sidebar.widgets.blog_index;
+  } else if (['wiki_index'].includes(page.layout)) {
+    page.sidebar = theme.sidebar.widgets.wiki_index;
+  } else if (['404', undefined].includes(page.layout)) {
+    page.sidebar = theme.sidebar.widgets.others;
   } else if (page.layout == 'page') {
     page.sidebar = theme.sidebar.widgets.page;
   } else {

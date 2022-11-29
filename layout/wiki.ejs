@@ -3,7 +3,7 @@ if (page.menu_id == undefined) {
   page.menu_id = 'wiki';
 }
 if (page.layout == undefined) {
-  page.layout = 'index';
+  page.layout = 'wiki_index';
 }
 if (page.title == undefined) {
   if (page.tagName) {
@@ -21,7 +21,7 @@ function layoutTitle() {
   }
 }
 %>
-<% if (page.layout === 'index') { %>
+<% if (page.layout === 'wiki_index') { %>
   <%- partial('index') %>
 <% } else { %>
   <%
