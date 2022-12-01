@@ -57,14 +57,30 @@ const weibojs = {
         cell += '<div class="header">';
         cell += '<div class="user-info">';
         cell += '<img src="' + (item.avatar || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';">';
-        cell += '<span>' + item.author + '</span>';
+        cell += '<span>' + item.source + '</span>';
         cell += '</div>';
-        cell += '<p>' + item.created + '</p>';
+        cell += '<p>' + item.created_at + '</p>';
         cell += '</div>';
-        cell += '<a class="body" href="' + item.link + '" target="_blank" rel="external nofollow noopener noreferrer">';
+        cell += '<a class="body" href="' + item.url + '" target="_blank" rel="external nofollow noopener noreferrer">';
         cell += item.content;
         cell += '</a>';
+        // 每条微博的右下角 转发 评论 点赞
+        cell += '<div class="footer">';
+        cell += '<div class="flex right">';
+        cell += '<div class="item reaction laugh">';
+        cell += '<span>' + '转发' + ' ' + item.reposts_count + '</span>';
         cell += '</div>';
+        cell += '<div class="item reaction laugh">';
+        cell += '<span>' + '评论' + ' ' + item.comments_count + '</span>';
+        cell += '</div>';
+        cell += '<div class="item reaction laugh">';
+        cell += '<span>' + '点赞' + ' ' + item.attitudes_count + '</span>';
+        cell += '</div>';
+        cell += '</div>';
+        cell += '</div>';
+        // 右下角结束
+        cell += '</div>';
+        console.info(item.content)
         $(el).append(cell);
       });
     }, function() {
@@ -87,6 +103,6 @@ $(function () {
     cfg.el = el;
     cfg.api = api;
     cfg.avatar = 'https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/avatar/round/3442075.svg';
-    weibo.layoutDiv(cfg);
+    weibojs.layoutDiv(cfg);
   }
 });
