@@ -56,31 +56,34 @@ const weibojs = {
         var cell = '<div class="timenode" index="' + i + '">';
         cell += '<div class="header">';
         cell += '<div class="user-info">';
-        cell += '<img src="' + (item.avatar || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';">';
-        cell += '<span>' + item.source + '</span>';
+        cell += '<img src="' + (data.user.avatar_hd || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';">';
+        cell += '<span>' + data.user.nick_name + '</span>';
         cell += '</div>';
         cell += '<p>' + item.created_at + '</p>';
         cell += '</div>';
+        cell += '<div class="body">';
         cell += '<a class="body" href="' + item.url + '" target="_blank" rel="external nofollow noopener noreferrer">';
         cell += item.content;
         cell += '</a>';
+        // cell += '</div>';
         // 每条微博的右下角 转发 评论 点赞
         cell += '<div class="footer">';
+        cell += '<div class="flex left">';
+        cell += '</div>';
         cell += '<div class="flex right">';
-        cell += '<div class="item reaction laugh">';
+        cell += '<div class="item reaction repost">';
         cell += '<span>' + '转发' + ' ' + item.reposts_count + '</span>';
         cell += '</div>';
-        cell += '<div class="item reaction laugh">';
-        cell += '<span>' + '评论' + ' ' + item.comments_count + '</span>';
-        cell += '</div>';
-        cell += '<div class="item reaction laugh">';
+        cell += '<a class="item comments last" href="' + item.url + '#issuecomment-new" target="_blank" rel="external nofollow noopener noreferrer">';
+        cell += '<span><svg t="1666270368054" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2528" width="200" height="200"><path d="M952 64H72C32.3 64 0 96.3 0 136v508c0 39.7 32.3 72 72 72h261l128 128c14 14 32.5 21.1 50.9 21.1s36.9-7 50.9-21.1l128-128h261c39.7 0 72-32.3 72-72V136c0.2-39.7-32.1-72-71.8-72zM222 462c-39.8 0-72-32.2-72-72s32.2-72 72-72 72 32.2 72 72-32.2 72-72 72z m290-7.7c-39.8 0-72-32.2-72-72s32.2-72 72-72 72 32.2 72 72c0 39.7-32.2 72-72 72z m290 8c-39.8 0-72-32.2-72-72s32.2-72 72-72 72 32.2 72 72c0 39.7-32.2 72-72 72z" p-id="2529"></path></svg> ' + (item.comments_count || 0) + '</span>';
+        cell += '</a>';
+        cell += '<div class="item reaction attitudes">';
         cell += '<span>' + '点赞' + ' ' + item.attitudes_count + '</span>';
         cell += '</div>';
+
         cell += '</div>';
         cell += '</div>';
         // 右下角结束
-        cell += '</div>';
-        console.info(item.content)
         $(el).append(cell);
       });
     }, function() {
@@ -102,7 +105,7 @@ $(function () {
     var cfg = new Object();
     cfg.el = el;
     cfg.api = api;
-    cfg.avatar = 'https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/avatar/round/3442075.svg';
+    cfg.avatar = 'https://tvax1.sinaimg.cn/crop.0.0.1024.1024.180/0033ImPzly8h8ncto2wtrj60sg0sg3ze02.jpg';
     weibojs.layoutDiv(cfg);
   }
 });
