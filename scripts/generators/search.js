@@ -54,6 +54,8 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
         content = content.replace(/[#]{2,} /g, '')
         // 部分HTML标签
         content = content.replace(/<iframe[\s|\S]+iframe>/g, '')
+        content = content.replace(/<hr>/g, '')
+        content = content.replace(/<br>/g, '')
         // 图片
         content = content.replace(/\!\[(.*?)\]\((.*?)\)/g, '')
         // 链接
