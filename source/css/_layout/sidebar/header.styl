@@ -5,9 +5,9 @@
 nav.menu
   margin: 1rem 0
   background: var(--block)
+  border: 1px solid var(--block-border)
   border-radius: 6px
   display: flex
-  padding: 1px
   flex-wrap: wrap
   &::-webkit-scrollbar
     display: none
@@ -28,7 +28,7 @@ nav.menu
     text-align: center
     &.active, &:hover
       color: var(--text-p1)
-      background: var(--card)
+      background: var(--block-lighten)
       box-shadow: $boxshadow-button
 
 .l_left .menu a.nav-item

@@ -40,10 +40,10 @@ function layoutTitle(main, url, sub) {
   if (sub) {
     let arr = sub.split('|');
     if (arr.length > 1) {
-      el += '<div class="sub normal cap">' + arr[0].trim() + '</div>';
-      el += '<div class="sub hover cap" style="opacity:0">' + arr[1].trim() + '</div>';
-    } else if (arr.length > 0) {
-      el += '<div class="sub cap">' + arr[0] + '</div>';
+      el += '<div class="sub normal cap">' + arr.shift().trim() + '</div>';
+      el += '<div class="sub hover cap" style="opacity:0">' + arr.join('|') + '</div>';
+    } else {
+      el += '<div class="sub cap">' + sub + '</div>';
     }
   }
   el += '</a>';

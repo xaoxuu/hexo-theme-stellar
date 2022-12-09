@@ -52,21 +52,24 @@
   .menu 
     margin-bottom: 0
     background: none
-    a:hover 
-      box-shadow: none 
-      background: var(--block)
-    a.active 
-      box-shadow: none
-      position: relative
-      &:after
-        content: ''
-        position: absolute
-        height: 3px
-        bottom: 0
-        width: 32px
-        left: 'calc(50% - 0.5 * %s)' % @width
-        border-radius: 4px
-        background: $color-theme
+    border: 0
+    a
+      margin: 0
+      &:hover 
+        box-shadow: none 
+        background: var(--block)
+      &.active 
+        box-shadow: none
+        position: relative
+        &:after
+          content: ''
+          position: absolute
+          height: 3px
+          bottom: 0
+          width: 32px
+          left: 'calc(50% - 0.5 * %s)' % @width
+          border-radius: 4px
+          background: $color-theme
 
   .buttons
     margin: 1rem 0

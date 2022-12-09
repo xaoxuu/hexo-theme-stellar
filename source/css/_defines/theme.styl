@@ -1,3 +1,7 @@
+$dynamic-block-h = hue($dynamic-block)
+$dynamic-block-s = saturation($dynamic-block)
+$dynamic-block-l = lightness($dynamic-block)
+
 set_text_light()
   --text-p0: $dark-title
   --text-p1: mix($dark-text, $dark-background, 85)
@@ -17,9 +21,10 @@ set_text_dark()
 :root
   --site-bg: $light-background
   --card: $light-card
-  --block: $light-block
-  --block-border: darken($light-block, 5)
-  --block-hover: darken($light-block, 2)
+  --block: hsl($dynamic-block-h, $dynamic-block-s, 95)
+  --block-border: hsl($dynamic-block-h, $dynamic-block-s, 90)
+  --block-hover: hsl($dynamic-block-h, $dynamic-block-s, 92)
+  --block-lighten: hsl($dynamic-block-h, $dynamic-block-s, 100)
   set_text_dark()
   --theme-highlight: darken($color-theme, 5)
   --theme-bg: mix($color-theme, $light-card, 10)
@@ -29,18 +34,16 @@ set_darkmode()
   :root
     --site-bg: $dark-background
     --card: $dark-card
-    --block: $dark-block
-    --block-border: lighten($dark-block, 6)
-    --block-hover: darken($dark-block, 4)
+    --block: hsl($dynamic-block-h, $dynamic-block-s, 12)
+    --block-border: hsl($dynamic-block-h, $dynamic-block-s, 24)
+    --block-hover: hsl($dynamic-block-h, $dynamic-block-s, 9)
+    --block-lighten: hsl($dynamic-block-h, $dynamic-block-s, 30)
     set_text_light()
     --theme-highlight: $color-theme
     --theme-bg: mix($color-theme, $dark-card, 10)
     @media screen and (max-width: $device-mobile-max)
       --site-bg: $dark-background-mobile
       --card: darken($dark-card, 6)
-      --block: darken($dark-block, 4)
-      --block-border: lighten($dark-block, 2)
-      --block-hover: darken($dark-block,8)
 
 if hexo-config('style.darkmode') == 'auto'
   // 系统的dark模式
