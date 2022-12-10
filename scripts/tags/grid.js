@@ -1,21 +1,21 @@
 /**
- * split.js v1.0 | https://github.com/xaoxuu/hexo-theme-stellar/
+ * grid.js v1.0 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
- * {% split [style:block/card] %}
+ * {% grid [style:block/card] %}
  * <!-- cell left -->
  * left body
  * <!-- cell right -->
  * right body
- * {% endsplit %}
+ * {% endgrid %}
  */
 
 'use strict';
 
-hexo.extend.tag.register('split', function(args, content) {
+hexo.extend.tag.register('grid', function(args, content) {
   args = hexo.args.map(args, ['bg']);
   var el = '';
-  el += '<div class="tag-plugin split"';
+  el += '<div class="tag-plugin grid"';
   el += ' ' + hexo.args.joinTags(args, ['bg']).join(' ');
   el += '>';
   

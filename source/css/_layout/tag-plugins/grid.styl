@@ -1,4 +1,4 @@
-.tag-plugin.split
+.tag-plugin.grid
   display: grid
   grid-gap: 16px
   grid-template-columns: repeat(auto-fill, "calc((100% - 1 * %s) / 2)" % 16px)
@@ -19,11 +19,11 @@
       margin-bottom: -0.25em
     
 
-.tag-plugin.split
+.tag-plugin.grid
   @media screen and (max-width: $device-tablet)
     display: block
 
-.tag-plugin.split
+.tag-plugin.grid
   &[bg]>.cell
     padding: 1rem
     border-radius: $border-card
