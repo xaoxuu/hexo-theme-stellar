@@ -4,7 +4,7 @@
   display: flex
   flex-direction: column
   
-  .content:not(span)
+  .content
     display: flex
     align-items: center
     border-bottom: none
@@ -37,7 +37,7 @@
 
 // type=text
 .md-text .tag-plugin.quot 
-  .content[type=text]:not(span)
+  .content[type=text]
     &:before,&:after
       content: ""
       position: absolute
@@ -60,7 +60,7 @@
       border-width: 8px
 
 // type=icon
-.md-text .tag-plugin.quot .content[type=icon]:not(span)
+.md-text .tag-plugin.quot .content[type=icon]
   .icon
     height: 1.5em
     display: inline-block
@@ -71,18 +71,3 @@
       margin-right: .5rem
     &.suffix
       margin-left: .5rem
-
-// inline quot
-.md-text span.tag-plugin.quot .content
-  font-weight: 500
-  &:before,&:after
-    color: $color-accent
-    font-weight: 900
-  &:before
-    content: "「"
-    margin-left: -0.125em
-    margin-right: 0.125em
-  &:after
-    content: "」"
-    margin-left: 0.125em
-    margin-right: -0.125em

@@ -22,13 +22,13 @@ details.folding
         border-bottom: none !important
     &:hover
       color: var(--text-p0)
-      &:after
-        position: absolute
-        content: '+'
-        text-align: center
-        top: 50%
-        transform: translateY(-50%)
-        right: 1rem
+    &:after
+      position: absolute
+      content: '+'
+      text-align: center
+      top: 50%
+      transform: translateY(-50%)
+      right: 1rem
 
 
 details.folding[open]
@@ -38,9 +38,8 @@ details.folding[open]
     border-bottom-right-radius: 0
     color: var(--text-p1)
     margin-bottom: 0
-    &:hover
-      &:after
-        content: '-'
+    &:after
+      content: '-'
   >div.body
     display: flex;
     flex-direction: column;

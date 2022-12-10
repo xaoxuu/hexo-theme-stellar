@@ -1,13 +1,13 @@
 set_text_white()
   --text-p0: white
   --text-p1: white
-  --text-p2: #eee
+  --text-p2: hsl(0 0 88%)
   --text-p3: #ddd
   --text-code: white
 set_text_black()
   --text-p0: black
   --text-p1: #111
-  --text-p2: #333
+  --text-p2: hsl(0 0 12%)
   --text-p3: #555
   --text-code: white
 
@@ -16,8 +16,8 @@ set_dynamic_color($theme)
   --theme-bg1: hsl(hue($theme), 90, 90)
   --theme-bg2: hsl(hue($theme), 80, 95)
   --theme-border: hsl(hue($theme), 50, 80)
-  --text-p0: hsl(hue($theme), 50, 24)
-  --text-p1: hsl(hue($theme), 40, 24)
+  --text-p0: hsl(hue($theme), 60, 16)
+  --text-p1: hsl(hue($theme), 50, 24)
   --text-p2: hsl(hue($theme), 90, 24)
 
 .tag-plugin
@@ -44,9 +44,12 @@ set_dynamic_color($theme)
   set_dynamic_color($c-purple)
 
 .tag-plugin[color='light']
+  --theme-bg1: hsl(0 0 88%)
   --theme-bg2: white
+  set_text_black()
 
 .tag-plugin[color='dark']
+  --theme-bg1: hsl(0 0 12%)
   --theme-bg2: #333
   set_text_white()
 
@@ -90,10 +93,13 @@ set_darkmode_tags()
     set_dynamic_color($c-purple)
   .tag-plugin[color='light']
     --theme-border: white
+    --theme-bg1: hsl(0 0 88%)
     --theme-bg2: #fff
+    set_text_black()
 
   .tag-plugin[color='dark']
     --theme-border: black
+    --theme-bg1: hsl(0 0 12%)
     --theme-bg2: #111
     set_text_white()
 
