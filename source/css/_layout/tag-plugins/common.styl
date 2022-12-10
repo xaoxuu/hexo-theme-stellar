@@ -4,18 +4,17 @@ set_text_white()
   --text-p2: #eee
   --text-p3: #ddd
   --text-code: white
-  --card: $dark-card
-  --block-border: lighten($dark-block, 6)
-  --block-hover: darken($dark-block, 4)
 set_text_black()
   --text-p0: black
   --text-p1: #111
   --text-p2: #333
   --text-p3: #555
   --text-code: white
-  --card: $light-card
-  --block-border: darken($light-block, 5)
-  --block-hover: darken($light-block, 2)
+
+set_dynamic_color($theme)
+  --theme: $theme
+  --theme-bg: hsl(hue($theme), 100, 95)
+  --theme-border: hsl(hue($theme), 90, 50)
 
 .tag-plugin
   --theme: var(--text-p1)
@@ -23,39 +22,19 @@ set_text_black()
   --theme-bg: var(--block)
 
 .tag-plugin[color='red']
-  --theme: $c-red
-  --theme-border: mix($c-red, white, 60)
-  --theme-bg: mix($c-red, white, 15)
-
+  set_dynamic_color($c-red)
 .tag-plugin[color='orange']
-  --theme: $c-orange
-  --theme-border: mix($c-orange, white, 60)
-  --theme-bg: mix($c-orange, white, 15)
-
+  set_dynamic_color($c-orange)
 .tag-plugin[color='yellow']
-  --theme: $c-yellow
-  --theme-border: mix($c-yellow, white, 60)
-  --theme-bg: mix($c-yellow, white, 20)
-
+  set_dynamic_color($c-yellow)
 .tag-plugin[color='green']
-  --theme: $c-green
-  --theme-border: mix($c-green, white, 60)
-  --theme-bg: mix($c-green, white, 15)
-
+  set_dynamic_color($c-green)
 .tag-plugin[color='cyan']
-  --theme: $c-cyan
-  --theme-border: mix($c-cyan, white, 60)
-  --theme-bg: mix($c-cyan, white, 15)
-
+  set_dynamic_color($c-cyan)
 .tag-plugin[color='blue']
-  --theme: $c-blue
-  --theme-border: mix($c-blue, white, 60)
-  --theme-bg: mix($c-blue, white, 15)
-
+  set_dynamic_color($c-blue)
 .tag-plugin[color='purple']
-  --theme: $c-purple
-  --theme-border: mix($c-purple, white, 60)
-  --theme-bg: mix($c-purple, white, 15)
+  set_dynamic_color($c-purple)
 
 .tag-plugin[color='light']
   --theme-bg: white
@@ -78,34 +57,24 @@ set_text_black()
   set_text_white()
 
 set_darkmode_tags()
+  set_dynamic_color($theme)
+    --theme: $theme
+    --theme-bg: hsl(hue($theme), 30, 20)
+    --theme-border: hsl(hue($theme), 90, 40)
   .tag-plugin[color='red']
-    --theme-border: mix($c-red, black, 70)
-    --theme-bg: mix($c-red, black, 35)
-
+    set_dynamic_color($c-red)
   .tag-plugin[color='orange']
-    --theme-border: mix($c-orange, black, 70)
-    --theme-bg: mix($c-orange, black, 35)
-
+    set_dynamic_color($c-orange)
   .tag-plugin[color='yellow']
-    --theme-border: mix($c-yellow, black, 70)
-    --theme-bg: mix($c-yellow, black, 30)
-
+    set_dynamic_color($c-yellow)
   .tag-plugin[color='green']
-    --theme-border: mix($c-green, black, 70)
-    --theme-bg: mix($c-green, black, 30)
-
+    set_dynamic_color($c-green)
   .tag-plugin[color='cyan']
-    --theme-border: mix($c-cyan, black, 70)
-    --theme-bg: mix($c-cyan, black, 30)
-
+    set_dynamic_color($c-cyan)
   .tag-plugin[color='blue']
-    --theme-border: mix($c-blue, black, 70)
-    --theme-bg: mix($c-blue, black, 35)
-
+    set_dynamic_color($c-blue)
   .tag-plugin[color='purple']
-    --theme-border: mix($c-purple, black, 70)
-    --theme-bg: mix($c-purple, black, 40)
-
+    set_dynamic_color($c-purple)
   .tag-plugin[color='light']
     --theme-border: white
     --theme-bg: #fff

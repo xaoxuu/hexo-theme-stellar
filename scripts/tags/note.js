@@ -13,13 +13,11 @@ hexo.extend.tag.register('note', function(args) {
     args.content = args.title;
     args.title = '';
   }
-  const color = args.color;
-  const title = args.title;
-  var el = '';
-  const defaultColor = hexo.theme.config.tag_plugins.note.default_color;
-  if (!color && defaultColor) {
-    color = defaultColor;
+  const { title } = args;
+  if (args.color == null) {
+    args.color = hexo.theme.config.tag_plugins.note.default_color
   }
+  var el = '';
   // header
   el += '<div class="tag-plugin note"';
   el += ' ' + hexo.args.joinTags(args, ['color', 'child']).join(' ');

@@ -129,7 +129,7 @@ h1.article-title
       padding: 2px 0
       text-decoration: none
       line-height: 1.2
-      &:after
+      &:before
         content: ''
         position: absolute
         border-radius: 2px
@@ -143,9 +143,11 @@ h1.article-title
       &:hover
         border-bottom: none
         color: var(--theme-link)
-        &:after
+        z-index 0
+        &:before
           height: 100%
           opacity: 0.2
+          z-index -1
           bottom: 0
           left: -2px
           right: -2px

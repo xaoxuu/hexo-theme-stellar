@@ -346,23 +346,11 @@ style:
       button: 'hsl(192 98% 55%)' # 按钮颜色
       hover: 'hsl(14 100% 57%)' # 按钮高亮颜色
     # 动态颜色（会根据明暗主题重设明度值，只用关心色相和饱和度即可）
-    dynamic: 
+    dynamic:
+      background: 'hsl(212 16% 98%)' # 浅色背景颜色
       block: 'hsl(212 8% 95%)' # 块背景颜色
-    light:
-      background: hsl(212 16% 98%) # 浅色背景颜色
-      block: 'hsl(212 8% 95%)' # 块背景颜色
-      card: 'white' # 卡片背景颜色
-      title: 'black' # 标题文本颜色
-      text: 'hsl(0 0% 20%)' # 正文文本颜色
       code: 'hsl(14 100% 48%)' # 行内代码颜色
-    dark:
-      background: 'hsl(212 6% 16%)' # 深色背景颜色
-      background-mobile: black # 移动端深色背景（OLED调成纯黑可以省电）
-      block: 'hsl(212 8% 20%)' # 块背景颜色
-      card: 'hsl(212 10% 22%)' # 卡片背景颜色
-      title: 'white' # 标题文本颜色
-      text: 'hsl(0 0% 93%)' # 正文文本颜色
-      code: 'hsl(14 100% 63%)' # 行内代码颜色
+      text: 'hsl(0 0% 20%)' # 文本颜色
   animated_avatar:
     animate: auto # auto, always
     background: https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp
