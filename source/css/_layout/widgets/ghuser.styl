@@ -55,12 +55,10 @@
     border: 0
     a
       margin: 0
-      &:hover 
-        box-shadow: none 
-        background: var(--block)
       &.active 
         box-shadow: none
         position: relative
+        background: none
         &:after
           content: ''
           position: absolute
@@ -70,6 +68,9 @@
           left: 'calc(50% - 0.5 * %s)' % @width
           border-radius: 4px
           background: $color-theme
+      &:hover 
+        box-shadow: none 
+        background: var(--block)
 
   .buttons
     margin: 1rem 0

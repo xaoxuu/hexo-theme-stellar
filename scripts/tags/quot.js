@@ -38,14 +38,18 @@ hexo.extend.tag.register('quot', function(args) {
     return el;
   }
   if (args.el.includes('h')) {
-    el += '<' + args.el + ' class="tag-plugin quot"' + type + ' id="' + args.text + '">';
+    el += '<div' + ' class="tag-plugin quot">'
+    el += '<' + args.el + ' class="content" id="' + args.text + '"' + type + '>';
     el += '<a href="#' + args.text + '" class="headerlink" title="' + args.text + '"></a>';
     el += content();
     el += '</' + args.el + '>';
+    el += '</div>'
   } else {
-    el += '<' + args.el + ' class="tag-plugin quot"' + type + '>';
+    el += '<div' + ' class="tag-plugin quot">'
+    el += '<' + args.el + ' class="content"' + type + '>';
     el += content();
     el += '</' + args.el + '>';
+    el += '</div>'
   }
   return el;
 });

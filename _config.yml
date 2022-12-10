@@ -339,18 +339,17 @@ style:
     code: 'Menlo, Monaco, Consolas, system-ui, "Courier New", monospace, sans-serif'
   text-align: left
   color:
-    common:
-      theme: 'hsl(192 98% 55%)' # 主题色
-      accent: 'hsl(14 100% 57%)' # 强调色
-      link: 'hsl(207 90% 54%)' # 超链接颜色
-      button: 'hsl(192 98% 55%)' # 按钮颜色
-      hover: 'hsl(14 100% 57%)' # 按钮高亮颜色
     # 动态颜色（会根据明暗主题重设明度值，只用关心色相和饱和度即可）
-    dynamic:
-      background: 'hsl(212 16% 98%)' # 浅色背景颜色
-      block: 'hsl(212 8% 95%)' # 块背景颜色
-      code: 'hsl(14 100% 48%)' # 行内代码颜色
-      text: 'hsl(0 0% 20%)' # 文本颜色
+    background: 'hsl(212 16% 98%)' # 浅色背景颜色
+    block: 'hsl(212 8% 95%)' # 块背景颜色
+    code: 'hsl(14 100% 48%)' # 行内代码颜色
+    text: 'hsl(0 0% 20%)' # 文本颜色
+    # 主题色配置（不会根据明暗动态调整，请设置为通用的颜色）
+    theme: 'hsl(192 98% 55%)' # 主题色
+    accent: 'hsl(14 100% 57%)' # 强调色
+    link: 'hsl(207 90% 54%)' # 超链接颜色
+    button: 'hsl(192 98% 55%)' # 按钮颜色
+    hover: 'hsl(14 100% 57%)' # 按钮高亮颜色
   animated_avatar:
     animate: auto # auto, always
     background: https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.2/avatar/round/rainbow64@3x.webp

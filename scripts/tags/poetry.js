@@ -3,7 +3,7 @@
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
  * poetry:
- * {% poetry [align:center] [title] [author:作者] [date:日期] [footer:footer] %}
+ * {% poetry [title] [author:作者] [date:日期] [footer:footer] %}
  * body
  * {% endpoetry %}
  *
@@ -13,13 +13,11 @@
 
 hexo.extend.tag.register('poetry', function(args, content) {
   var el = '';
-  args = hexo.args.map(args, ['author', 'date', 'align', 'footer'], ['title']);
+  args = hexo.args.map(args, ['author', 'date', 'footer'], ['title']);
 
   el += '<div class="tag-plugin poetry"';
-  if (args.align) {
-    el += ' align="' + args.align + '"';
-  }
   el += '>';
+  el += '<div class="content">'
   if (args.title) {
     el += '<div class="title">';
     el += args.title;
@@ -43,6 +41,7 @@ hexo.extend.tag.register('poetry', function(args, content) {
     el += args.footer;
     el += '</div>';
   }
+  el += '</div>'
   el += '</div>';
   return el;
 }, {ends: true});

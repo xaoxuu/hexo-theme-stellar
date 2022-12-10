@@ -13,13 +13,20 @@ set_text_black()
 
 set_dynamic_color($theme)
   --theme: $theme
-  --theme-bg: hsl(hue($theme), 100, 95)
-  --theme-border: hsl(hue($theme), 90, 50)
+  --theme-bg1: hsl(hue($theme), 90, 90)
+  --theme-bg2: hsl(hue($theme), 80, 95)
+  --theme-border: hsl(hue($theme), 50, 80)
+  --text-p0: hsl(hue($theme), 50, 24)
+  --text-p1: hsl(hue($theme), 40, 24)
+  --text-p2: hsl(hue($theme), 90, 24)
 
 .tag-plugin
   --theme: var(--text-p1)
   --theme-border: var(--block-border)
-  --theme-bg: var(--block)
+  --theme-bg1: hsl(hue($color-theme), 90, 90)
+  --theme-bg2: var(--block)
+  &.tag
+    --text-p2: hsl(hue($color-theme), 90, 24)
 
 .tag-plugin[color='red']
   set_dynamic_color($c-red)
@@ -37,30 +44,36 @@ set_dynamic_color($theme)
   set_dynamic_color($c-purple)
 
 .tag-plugin[color='light']
-  --theme-bg: white
+  --theme-bg2: white
 
 .tag-plugin[color='dark']
-  --theme-bg: #333
+  --theme-bg2: #333
   set_text_white()
 
 .tag-plugin[color='warning']
   --theme: $c-yellow
   --theme-border: #ffe659
-  --theme-bg: #ffe659
+  --theme-bg2: #ffe659
   --theme-link: #ff453a
 
 .tag-plugin[color='error']
   --theme: $c-yellow
   --theme-border: #ff453a
-  --theme-bg: #ff453a
+  --theme-bg2: #ff453a
   --theme-link: #ffe659
   set_text_white()
 
 set_darkmode_tags()
   set_dynamic_color($theme)
     --theme: $theme
-    --theme-bg: hsl(hue($theme), 30, 20)
-    --theme-border: hsl(hue($theme), 90, 40)
+    --theme-bg1: hsl(hue($theme), 80, 20)
+    --theme-bg2: hsl(hue($theme), 16, 16)
+    --theme-border: hsl(hue($theme), 50, 24)
+    --text-p0: hsl(hue($theme), 80, 80)
+    --text-p1: hsl(hue($theme), 64, 90)
+    --text-p2: hsl(hue($theme), 80, 72)
+  .tag-plugin.tag
+    set_dynamic_color($color-theme)
   .tag-plugin[color='red']
     set_dynamic_color($c-red)
   .tag-plugin[color='orange']
@@ -77,11 +90,11 @@ set_darkmode_tags()
     set_dynamic_color($c-purple)
   .tag-plugin[color='light']
     --theme-border: white
-    --theme-bg: #fff
+    --theme-bg2: #fff
 
   .tag-plugin[color='dark']
     --theme-border: black
-    --theme-bg: #111
+    --theme-bg2: #111
     set_text_white()
 
   .tag-plugin[color='warning'],.tag-plugin[color='light']
