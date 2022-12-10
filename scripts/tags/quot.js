@@ -1,9 +1,9 @@
 /**
- * quot.js v1.1 | https://github.com/xaoxuu/hexo-theme-stellar/
+ * quot.js v1.2 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
  * quot:
- * {% quot [el:h1] [icon:default] text %}
+ * {% quot [el:h2] [icon:default] text %}
  *
  */
 

@@ -2,7 +2,7 @@
  * toc.js v1 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
- * {% toc wiki:xxx [open:true] [display:mobile] title %}
+ * {% toc wiki:xxx [title] [open:true] [display:mobile] %}
  */
 
 'use strict';
@@ -33,7 +33,7 @@ hexo.extend.tag.register('toc', function(args) {
   el += '>';
 
   el += '<details class="toc"';
-  if (args.open !== false) {
+  if (args.open != 'false') {
     el += ' open';
   }
   el += '>';
