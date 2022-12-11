@@ -1,0 +1,27 @@
+.aplayer .aplayer-lrc p { 
+    text-align: center; }
+  .aplayer {
+    background: #121415;
+  }
+  .aplayer .aplayer-lrc:before {
+      background: #121415 ;
+  }
+  .aplayer .aplayer-lrc:after {
+    background: linear-gradient(180deg,hsla(200,14%,6%,0) 0,hsla(200,14%,6%,.8))
+  }
+  .aplayer .aplayer-list ol li {
+    text-align: left;
+    border-top: 1px solid #292d2f;
+  }
+  .aplayer .aplayer-list ol li.aplayer-list-light {
+    background: #292d2f; }
+  .aplayer .aplayer-list ol li:hover {
+    background: #2f3436; }
+  .aplayer .aplayer-pic .aplayer-play {
+    width: 26px;
+    height: 26px;
+    border: 2px solid #292d2f;
+  }
+  .aplayer.aplayer-withlist .aplayer-info {
+    border-bottom: 1px solid #292d2f; 
+  }
