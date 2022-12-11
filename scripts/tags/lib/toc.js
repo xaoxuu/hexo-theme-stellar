@@ -7,12 +7,13 @@
 
 'use strict'
 
-function layoutDocTree(pages) {
+function layoutDocTree(ctx, pages) {
+  const url_for = require('hexo-util').url_for.bind(ctx)
   var el = ''
   el += '<ul class="toc">'
   pages.forEach((p, i) => {
     el += '<li>'
-    el += '<a class="list-link" href="' + p.permalink + '">'
+    el += '<a class="list-link" href="' + url_for(p.path) + '">'
     el += '<span>' + (p.title || p.seo_title) + '</span>'
     el += '</a>'
     el += '</li>'
@@ -53,14 +54,14 @@ module.exports = ctx => function(args) {
         el += '<div class="header">'
         el += sec.title
         el += '</div>'
-        el += layoutDocTree(sec.pages)
+        el += layoutDocTree(ctx, sec.pages)
         el += '</section>'
       })
       el += '</div>'
     } else {
       el += '<div class="body fs14">'
       el += '<div class="body">'
-      el += layoutDocTree(proj.pages)
+      el += layoutDocTree(ctx, proj.pages)
       el += '</div>'
       el += '</div>'
     }
