@@ -288,8 +288,8 @@ plugins:
   # swiper
   swiper:
     enable: true
-    css: https://unpkg.com/swiper@6/swiper-bundle.min.css
-    js: https://unpkg.com/swiper@6/swiper-bundle.min.js
+    css: https://unpkg.com/swiper@8/swiper-bundle.min.css
+    js: https://unpkg.com/swiper@8/swiper-bundle.min.js
 
 
   # 赫蹏 (Heti) - 专为中文网页内容设计的排版样式增强

@@ -2,7 +2,7 @@
  * swiper.js v1 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
- * {% swiper %}
+ * {% swiper [width:max] [effect:cards] %}
  * ![img](src)
  * {% endswiper %}
  */
@@ -10,7 +10,7 @@
 'use strict'
 
 module.exports = ctx => function(args, content) {
-  args = ctx.args.map(args, ['width'])
+  args = ctx.args.map(args, ['width', 'effect'])
   var el = ''
   function slide() {
     let imgs = ctx.render.renderSync({text: content, engine: 'markdown'})
@@ -22,10 +22,8 @@ module.exports = ctx => function(args, content) {
       })
     }
   }
-  el += '<div class="tag-plugin swiper-container" id="swiper-api"'
-  if (args.width && args.width.length > 0) {
-    el += ' ' + ctx.args.joinTags(args, 'width').join(' ')
-  }
+  el += '<div class="tag-plugin gallery swiper" id="swiper-api"'
+  el += ' ' + ctx.args.joinTags(args, ['width', 'effect']).join(' ')
   el += '>'
   el += '<div class="swiper-wrapper">'
   slide()
