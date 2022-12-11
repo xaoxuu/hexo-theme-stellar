@@ -257,6 +257,18 @@ plugins:
     service: flying_pages # instant_page, flying_pages
     instant_page: https://fastly.jsdelivr.net/gh/volantis-x/cdn-volantis@4.1.2/js/instant_page.js
     flying_pages: https://fastly.jsdelivr.net/gh/gijo-varghese/flying-pages@2.1.2/flying-pages.min.js
+  
+  # musicplayer
+  musicplayer:
+    enable: true
+    flyio: 
+      js: https://unpkg.com/flyio/dist/fly.min.js
+    aplayer:
+      css: https://unpkg.com/aplayer@1.10.1/dist/APlayer.min.css
+      js: https://unpkg.com/aplayer@1.10.1/dist/APlayer.min.js
+    darkmode: /js/plugins/musicplayer.css
+    assemble: /js/plugins/musicplayer.js
+    netease: https://netease.pengfeima.cn  # 如果要从远程获取音乐资源，那么需要自行搭建api服务 
 
   # image lazyload
   # https://www.npmjs.com/package/vanilla-lazyload

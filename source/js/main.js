@@ -213,6 +213,31 @@ if (stellar.plugins.lazyload) {
   });
 }
 
+<<<<<<< HEAD
+=======
+
+// musicplayer
+if (stellar.plugins.musicplayer.enable) {
+  const els = document.getElementsByClassName('stellar-musicplayer');
+  if (els != undefined && els.length > 0){
+    // 加载alpayer的css文件和js文件
+    stellar.loadCSS(stellar.plugins.musicplayer.aplayer.css);
+    stellar.loadCSS(stellar.plugins.musicplayer.darkmode);
+    stellar.loadScript(stellar.plugins.musicplayer.aplayer.js);
+    // 加载flyio，之后运行脚本
+    stellar.loadScript(stellar.plugins.musicplayer.flyio.js).then(function () {
+    }).then(function () {
+      // 运行js文件
+      // WARN : 这里为什么要用jQuery？
+      // 为什么有时候要用
+      stellar.jQuery(() => {
+        stellar.loadScript(stellar.plugins.musicplayer.assemble);
+      })
+    } )
+  }
+}
+
+>>>>>>> b8b3e9c (添加黑暗模式的样式)
 // stellar js
 if (stellar.plugins.stellar) {
   for (let key of Object.keys(stellar.plugins.stellar)) {
