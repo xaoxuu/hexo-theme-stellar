@@ -213,8 +213,6 @@ if (stellar.plugins.lazyload) {
   });
 }
 
-<<<<<<< HEAD
-=======
 
 // musicplayer
 if (stellar.plugins.musicplayer.enable) {
@@ -237,7 +235,6 @@ if (stellar.plugins.musicplayer.enable) {
   }
 }
 
->>>>>>> b8b3e9c (添加黑暗模式的样式)
 // stellar js
 if (stellar.plugins.stellar) {
   for (let key of Object.keys(stellar.plugins.stellar)) {
