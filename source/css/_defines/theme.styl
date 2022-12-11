@@ -33,7 +33,7 @@ set_text_light()
   --text-code: hsl($color-code-h, $color-code-s, $color-code-l * 1.25)
 
 :root
-  --site-bg: hsl($color-background-h, $color-background-s, 98)
+  --site-bg: hsl($color-background-h, $color-background-s, $color-background-l)
   --card: hsl($color-block-h, $color-block-s, 100)
   --block: hsl($color-block-h, $color-block-s, 95)
   --block-border: hsl($color-block-h, $color-block-s, 90)
@@ -45,12 +45,12 @@ set_text_light()
 
 set_darkmode()
   :root
-    --site-bg: hsl($color-background-h, $color-background-s / 2, 16)
-    --card: hsl($color-block-h, $color-block-s * 1.5, 25)
-    --block: hsl($color-block-h, $color-block-s, 12)
+    --site-bg: hsl($color-background-h, $color-background-s * 0.5, (100 - $color-background-l) * 2 + 8)
+    --card: hsl($color-block-h, $color-block-s * 1.5, 24)
+    --block: hsl($color-block-h, $color-block-s, 16)
     --block-border: hsl($color-block-h, $color-block-s, 24)
-    --block-hover: hsl($color-block-h, $color-block-s, 9)
-    --block-lighten: hsl($color-block-h, $color-block-s, 30)
+    --block-hover: hsl($color-block-h, $color-block-s, 20)
+    --block-lighten: hsl($color-block-h, $color-block-s, 32)
     set_text_light()
     @media screen and (max-width: $device-mobile-max)
       --site-bg: black
