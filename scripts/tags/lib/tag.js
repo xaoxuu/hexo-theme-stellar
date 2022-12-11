@@ -6,15 +6,15 @@
  *
  */
 
-'use strict';
+'use strict'
 
 const tag_colors = ['red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'purple']
-var tag_index = 0;
+var tag_index = 0
 
-hexo.extend.tag.register('tag', function(args) {
-  args = hexo.args.map(args, ['color'], ['text', 'href']);
+module.exports = ctx => function(args) {
+  args = ctx.args.map(args, ['color'], ['text', 'href'])
   if (args.color == null) {
-    const default_color = hexo.theme.config.tag_plugins.tag?.default_color
+    const default_color = ctx.theme.config.tag_plugins.tag?.default_color
     if (default_color) {
       args.color = default_color
     } else {
@@ -25,11 +25,11 @@ hexo.extend.tag.register('tag', function(args) {
       }
     }
   }
-  var el = '';
-  el += '<a class="tag-plugin tag"';
-  el += ' ' + hexo.args.joinTags(args, ['color', 'href']).join(' ');
-  el += '>';
-  el += args.text;
-  el += '</a>';
-  return el;
-});
+  var el = ''
+  el += '<a class="tag-plugin tag"'
+  el += ' ' + ctx.args.joinTags(args, ['color', 'href']).join(' ')
+  el += '>'
+  el += args.text
+  el += '</a>'
+  return el
+}

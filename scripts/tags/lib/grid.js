@@ -10,40 +10,40 @@
  * {% endgrid %}
  */
 
-'use strict';
+'use strict'
 
-hexo.extend.tag.register('grid', function(args, content) {
-  args = hexo.args.map(args, ['bg']);
-  var el = '';
-  el += '<div class="tag-plugin grid"';
-  el += ' ' + hexo.args.joinTags(args, ['bg']).join(' ');
-  el += '>';
+module.exports = ctx => function(args, content) {
+  args = ctx.args.map(args, ['bg'])
+  var el = ''
+  el += '<div class="tag-plugin grid"'
+  el += ' ' + ctx.args.joinTags(args, ['bg']).join(' ')
+  el += '>'
   
   var arr = content.split(/<!--\s*cell (.*?)\s*-->/g).filter(item => item.trim().length > 0)
   if (arr.length > 0) {
-    var nodes = [];
+    var nodes = []
     arr.forEach((item, i) => {
       if (i % 2 == 0) {
         nodes.push({
           header: item
-        });
+        })
       } else if (nodes.length > 0) {
-        var node = nodes[nodes.length-1];
+        var node = nodes[nodes.length-1]
         if (node.body == undefined) {
-          node.body = item;
+          node.body = item
         } else {
-          node.body += '\n' + item;
+          node.body += '\n' + item
         }
       }
-    });
+    })
     nodes.forEach((node, i) => {
-      el += '<div class="cell" index="' + (i) + '">';
-      el += hexo.render.renderSync({text: (node.body || ''), engine: 'markdown'}).split('\n').join('');
-      el += '</div>';
-    });  
+      el += '<div class="cell" index="' + (i) + '">'
+      el += ctx.render.renderSync({text: (node.body || ''), engine: 'markdown'}).split('\n').join('')
+      el += '</div>'
+    })  
   }
 
-  el += '</div>';
+  el += '</div>'
 
-  return el;
-}, {ends: true});
+  return el
+}

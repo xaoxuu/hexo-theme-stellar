@@ -2,7 +2,7 @@
  * tabs.js v2 | 基于NexT修改： https://theme-next.js.org/docs/tag-plugins/tabs
  */
 
-'use strict';
+'use strict'
 
 var tab_index = 0 
 
