@@ -32,11 +32,11 @@ page.cmt = cmt;
 %>
 <% if (loadComment) { %>
   <div class='related-wrap md-text reveal' id="comments">
-    <div class='cmt-title cap theme'>
+    <section class='header cmt-title cap theme'>
       <%- page.comment_title != undefined ? markdown(page.comment_title) : __('meta.comment_title') %>
-    </div>
-    <div class='cmt-body <%- cmt.service %>'>
+    </section>
+    <section class='body cmt-body <%- cmt.service %>'>
       <%- partial(cmt.service + '/layout') %>
-    </div>
+    </section>
   </div>
 <% } %>

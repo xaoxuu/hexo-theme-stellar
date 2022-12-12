@@ -63,7 +63,7 @@ function layoutDiv(fallback) {
 
   var el = '';
   if (type.length > 0) {
-    el += '<widget class="widget-wrapper toc ' + type + '" id="toc">';
+    el += '<widget class="widget-wrapper toc ' + type + '" id="data-toc">';
     if (page.layout !== 'wiki') {
       // post 布局
       el += layoutTocHeader(page.toc_title);

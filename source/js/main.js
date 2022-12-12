@@ -111,12 +111,12 @@ const init = {
           }
         }
         if (topSeg) {
-          $(".toc#toc a.toc-link").removeClass("active")
+          $("#data-toc a.toc-link").removeClass("active")
           var link = "#" + topSeg.attr("id")
           if (link != '#undefined') {
-            $('.toc#toc a.toc-link[href="' + encodeURI(link) + '"]').addClass("active")
+            $('#data-toc a.toc-link[href="' + encodeURI(link) + '"]').addClass("active")
           } else {
-            $('.toc#toc a.toc-link:first').addClass("active")
+            $('#data-toc a.toc-link:first').addClass("active")
           }
         }
       })
@@ -124,7 +124,7 @@ const init = {
   },
   sidebar: () => {
     stellar.jQuery(() => {
-      $(".toc#toc a.toc-link").click(function (e) {
+      $("#data-toc a.toc-link").click(function (e) {
         l_body.classList.remove("sidebar");
       });
     })
