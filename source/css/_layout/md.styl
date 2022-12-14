@@ -31,19 +31,20 @@ h1.article-title
     h1,h2,h3,h4,h5,h6
       text-align: center
     >h2:not([class])
-      align-self: center
-      border-bottom-style: dashed
-      border-bottom-color: $color-accent
+      border-bottom: none
   >:first-child:not(h1)
     margin-top: 0
   h1:not(:first-child)
     margin-top: 2em
   h2:first-child
     margin-top: 0
+  h2
+    margin-bottom: 1rem
+  h3,h4,h5,h6
+    margin-bottom: .5rem
   h2,h3,h4,h5,h6
     color: var(--text-p0)
     padding-top: 1rem
-    margin-bottom: .5rem
     line-height: 1.8
     &:hover
       a.headerlink:before
