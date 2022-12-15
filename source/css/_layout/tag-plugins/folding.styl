@@ -2,7 +2,7 @@ details.folding
   display: block
   padding: 1rem
   margin: 1rem 0
-  border-radius: $border-button
+  border-radius: $border-bar
   font-size: $fs-14
   background: var(--theme-bg2)
   border: 1px solid var(--theme-border)
@@ -10,7 +10,7 @@ details.folding
     cursor: pointer
     padding: .75rem 1rem
     margin: 0 - 1rem
-    border-radius: $border-button
+    border-radius: $border-bar
     color: var(--text-p2)
     font-weight: 500
     position: relative
@@ -29,6 +29,7 @@ details.folding
       top: 50%
       transform: translateY(-50%)
       right: 1rem
+      line-height: 1
 
 
 details.folding[open]
@@ -47,8 +48,8 @@ details.folding[open]
     margin: 0 - 1rem
     margin-top: 0
     background: var(--card)
-    border-bottom-left-radius: 'calc(%s - 1px)' % $border-button
-    border-bottom-right-radius: 'calc(%s - 1px)' % $border-button
+    border-bottom-left-radius: 'calc(%s - 1px)' % $border-bar
+    border-bottom-right-radius: 'calc(%s - 1px)' % $border-bar
     font-size: $fs-15
     >:first-child
       margin-top: 0

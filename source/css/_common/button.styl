@@ -9,7 +9,7 @@ a.button
   font-weight: 500
   line-height: 1
   padding: 0.75rem 2rem
-  border-radius: 3px
+  border-radius: $border-button
   trans1: background
   font-size: $fs-15
   &.theme
@@ -17,6 +17,10 @@ a.button
     color: var(--card)
     &:hover
       background: $color-hover
+  &.start
+    border-radius: 100px
+    background: var(--text-p1)
+    color: var(--card)
 
 a[onclick]:hover
   cursor: pointer
