@@ -144,7 +144,7 @@ const init = {
    */
   registerTabsTag: function () {
     // Binding `nav-tabs` & `tab-content` by real time permalink changing.
-    document.querySelectorAll('.tabs ul.nav-tabs .tab').forEach(element => {
+    document.querySelectorAll('.tabs .nav-tabs .tab').forEach(element => {
       element.addEventListener('click', event => {
         event.preventDefault();
         // Prevent selected tab to select again.

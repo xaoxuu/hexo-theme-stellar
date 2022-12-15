@@ -4,7 +4,7 @@ code
   font-family: $ff-code
 
 p>code:not([class]),li>code:not([class])
-  font-size: 85%
+  font-size: $fs-code
   background: var(--block)
   padding: .2em
   border-radius: 4px
@@ -16,7 +16,7 @@ p>code:not([class]),li>code:not([class])
   overflow: hidden
   background: var(--block)
   line-height: 1.5
-  font-family: $ff-code
+  font-family: $ff-codeblock
   box-sizing: border-box
   @media screen and (min-width: $device-mobile)
     min-width: 180px
@@ -27,15 +27,16 @@ p>code:not([class]),li>code:not([class])
   display: block
   figcaption
     color: var(--text-p2)
-    font-size: $fs-code
-    padding: 4px 0.5rem
-    position: sticky
-    left: 0
-    background: var(--block-hover)
-    border-top-left-radius: "calc(%s - 1px)" % $border-block
-    border-top-right-radius: "calc(%s - 1px)" % $border-block
+    font-size: $fs-codeblock
+    font-weight: 500
+    margin-left: 0.5rem
+    display: inline-block
     span
-      margin-right: 4px
+      padding: 4px 0.5rem
+      display: block
+      border-bottom-left-radius: $border-button
+      border-bottom-right-radius: $border-button
+      background: var(--block-hover)
   >table
     overflow: auto
     display: block

@@ -60,9 +60,12 @@ h1.article-title
     p,ul,ol
       font-size: $fs-14
       line-height: 1.5
+      code 
+        font-size: inherit
+        padding: 0
   p,blockquote,.tag-plugin,ul,ol,.highlight,table
     *
-      --gap-p: .5rem
+      --gap-p: var(--gap-p-compact)
   p,ul,ol
     margin-top: 'calc(%s - 4px)' % var(--gap-p)
     margin-bottom: 'calc(%s - 4px)' % var(--gap-p)
@@ -71,6 +74,9 @@ h1.article-title
     margin-bottom: var(--gap-p)
   iframe
     display: block
+  ul>li, ol>li
+    margin-top: 4px
+    margin-bottom: 4px
 
 // titles
 .md-text.content

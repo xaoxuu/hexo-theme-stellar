@@ -1,26 +1,25 @@
 .md-text .tag-plugin.note
   position: relative
-  margin-top: 1rem
-  margin-bottom: 1rem
-  padding: 0 1rem
+  padding: 0.25rem 1rem
   border-radius: $border-block
   background: var(--theme-bg2)
-  border: 1px solid var(--theme-border)
+  if hexo-config('tag_plugins.note.border') == true
+    border: 1px solid var(--theme-border)
   color: var(--text-p1)
   >.title
     font-size: $fs-15
-    line-height: 1.2
-    margin-top: 1rem
+    line-height: 1.5
+    margin-top: var(--gap-p-compact)
     font-weight: 500
     color: var(--text-p0)
   >.body
     &,p
       font-size: $fs-14
       line-height: 1.5
-    margin-top: .5rem
-    margin-bottom: 1rem
+    margin-top: var(--gap-p-compact)
+    margin-bottom: var(--gap-p-compact)
   >.body:only-child
-    margin: 1rem 0
+    margin: 'calc(%s - 0.25rem)' % var(--gap-p) 0
 
 
 .md-text .tag-plugin.note[color]

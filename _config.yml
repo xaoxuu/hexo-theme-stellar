@@ -197,9 +197,10 @@ footer:
 
 ######## Tag Plugins ########
 tag_plugins:
-  # {% note text %}
+  # {% ablock %} / {% note %}
   note:
     default_color: '' # light, dark, red, orange, yellow, green, cyan, blue, purple, warning, error
+    border: true # true / false
   # {% checkbox %}
   checkbox:
     interactive: false # enable interactive for user
@@ -319,12 +320,22 @@ plugins:
 style:
   darkmode: auto # auto / always / false
   smooth_scroll: true # true / false
-  font-size: 16px
+  font-size:
+    root: 16px
+    body: .9375rem # 15px
+    code: 85% # 14px
+    codeblock: 0.8125rem # 13px
   font-family:
     logo: 'system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif'
     body: 'system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif'
     code: 'Menlo, Monaco, Consolas, system-ui, "Courier New", monospace, sans-serif'
+    codeblock: 'Menlo, Monaco, Consolas, system-ui, "Courier New", monospace, sans-serif'
   text-align: left
+  border-radius:
+    card: 12px
+    block: 12px
+    button: 8px
+    image: 8px
   color:
     # 动态颜色（会根据明暗主题重设明度值，只用关心色相和饱和度即可）
     background: 'hsl(212 16% 98%)' # 浅色背景颜色

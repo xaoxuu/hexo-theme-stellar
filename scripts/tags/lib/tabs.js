@@ -39,11 +39,11 @@ module.exports = ctx => function(args, content = '') {
     const abbr = tabName + ' ' + ++tabId
     const href = abbr.toLowerCase().split(' ').join('-')
     const isActive = (tabActive > 0 && tabActive === tabId) || (tabActive === 0 && tabId === 1) ? ' active' : ''
-    tabNav += `<li class="tab${isActive}"><a href="#${href}">${tab.header || abbr}</a></li>`
+    tabNav += `<div class="tab${isActive}"><a href="#${href}">${tab.header || abbr}</a></div>`
     tabContent += `<div class="tab-pane${isActive}" id="${href}">${content}</div>`
   })
 
-  tabNav = `<ul class="nav-tabs">${tabNav}</ul>`
+  tabNav = `<div class="nav-tabs">${tabNav}</div>`
   tabContent = `<div class="tab-content">${tabContent}</div>`
 
   var el = ''
