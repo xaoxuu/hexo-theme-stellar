@@ -127,7 +127,7 @@ const init = {
               const e0 = document.querySelector('.widgets')
               const e1 = document.querySelector('#data-toc a.toc-link[href="' + encodeURI(link) + '"]')
               const offsetBottom = e1.getBoundingClientRect().bottom - e0.getBoundingClientRect().bottom + 100
-              const offsetTop = e1.getBoundingClientRect().top - e0.getBoundingClientRect().top - 80
+              const offsetTop = e1.getBoundingClientRect().top - e0.getBoundingClientRect().top - 64
               if (offsetTop < 0) {
                 e0.scrollBy(0, offsetTop)
               } else if (offsetBottom > 0) {
