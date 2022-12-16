@@ -30,7 +30,7 @@ function layoutTitle() {
   }
   %>
   <%- partial('_partial/main/navbar/breadcrumb') %>
-  <article class='md-text content <%- page.layout %><%- scrollreveal() %>'>
+  <article class='md-text content <%- page.layout %><%- page.indent ? ' indent' : '' %><%- scrollreveal() %>'>
   <%- layoutTitle() %>
   <%- page.content %>
   <%- partial('_partial/main/article/article_footer') %>
