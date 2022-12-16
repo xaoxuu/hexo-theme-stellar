@@ -10,23 +10,36 @@
     display: flex
     flex-direction: row
     align-items: center
+    transition: 0.38s ease-out
+    z-index: 0
+    &:after
+      content: ''
+      position absolute
+      left: 0
+      right: 0
+      bottom: 0
+      height: 2px
+      border-radius: 4px
+      background: convert(hexo-config('style.gradient.search'))
+      background-size: 200%
+      animation: glow 10s linear forwards
+      @keyframes glow {
+        from {
+          background-position: 0%
+        }
+        to {
+          background-position: 200%
+        }
+      }
   .search-input
     width: 100%
-    padding: 0.5rem
+    padding: 0.5rem 0
     line-height: 1
     box-sizing: border-box
     font-family: $ff-body
-    border-radius: $border-bar
-    background-color: var(--card)
     color: var(--text-p0)
-    border: 1px solid var(--block-border)
-    &:focus
-      trans1 border-color
   
-  &.noresult 
-    .search-input
-      &:focus
-        border: 1px solid $c-red
+  &.noresult
     .search-icon
       color: $c-red
 
@@ -84,20 +97,16 @@
     top: 0
     background: var(--site-bg)
   .search-input
-    margin-top: 1rem
-    margin-bottom: -1rem
-    padding-left: 1.75rem
+    padding-left: 1.5rem
   .search-icon 
-    margin-top: 1rem
-    margin-bottom: -1rem
     position: absolute
-    margin-left: 0.5rem
+    margin-left: 0.25rem
     left: 0
     pointer-events: none
     color: var(--text-p2)
     
   #search-result,.search-no-result
-    margin-top: 2rem
+    margin-top: 1rem
 
 .widget-wrapper:not(:first-child)
   .search-wrapper
