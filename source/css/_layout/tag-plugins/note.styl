@@ -3,6 +3,7 @@
   padding: 0.25rem 1rem
   border-radius: $border-block
   background: var(--theme-bg2)
+  overflow: hidden
   if hexo-config('tag_plugins.note.border') == true
     border: 1px solid var(--theme-border)
   color: var(--text-p1)
@@ -46,7 +47,6 @@
       margin-top: .5rem
 
 .md-text .tag-plugin.note[child=iframe]
-  overflow: hidden
   padding: 0
   >.body
     margin: 0

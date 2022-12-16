@@ -95,6 +95,13 @@ const init = {
       $("article.md-text :header").each(function (idx, node) {
         segs.push(node)
       });
+      // 定位到激活的目录树（不如pjax体验好）
+      // const widgets = document.querySelector('.widgets')
+      // const e1 = document.querySelector('.doc-tree-link.active')
+      // const offsetTop = e1.getBoundingClientRect().top - widgets.getBoundingClientRect().top - 100
+      // if (offsetTop > 0) {
+      //   widgets.scrollBy({top: offsetTop, behavior: 'smooth'})
+      // }
       // 滚动
       $(document, window).scroll(function (e) {
         var scrollTop = $(this).scrollTop();
@@ -114,7 +121,19 @@ const init = {
           $("#data-toc a.toc-link").removeClass("active")
           var link = "#" + topSeg.attr("id")
           if (link != '#undefined') {
-            $('#data-toc a.toc-link[href="' + encodeURI(link) + '"]').addClass("active")
+            const highlightItem = $('#data-toc a.toc-link[href="' + encodeURI(link) + '"]')
+            if (highlightItem.length > 0) {
+              highlightItem.addClass("active")
+              const e0 = document.querySelector('.widgets')
+              const e1 = document.querySelector('#data-toc a.toc-link[href="' + encodeURI(link) + '"]')
+              const offsetBottom = e1.getBoundingClientRect().bottom - e0.getBoundingClientRect().bottom + 100
+              const offsetTop = e1.getBoundingClientRect().top - e0.getBoundingClientRect().top - 80
+              if (offsetTop < 0) {
+                e0.scrollBy(0, offsetTop)
+              } else if (offsetBottom > 0) {
+                e0.scrollBy(0, offsetBottom)
+              }
+            }
           } else {
             $('#data-toc a.toc-link:first').addClass("active")
           }
