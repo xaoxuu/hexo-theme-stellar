@@ -1,35 +1,30 @@
 .tag-plugin.folders
-  display: block
-  margin: 1rem 0
-  border-radius: $border-bar
+  margin: var(--gap-p) 0
   font-size: $fs-14
-  border: 1px solid var(--theme-border)
+  border-top: 1px solid var(--block-border)
   overflow: hidden
   .folder
-    display: block
-    font-size: $fs-14
-    background: var(--block)
-    &:last-child summary
-      border-bottom: none
+    border-bottom: 1px solid var(--block-border)
+    padding: 1rem
   summary
-    display: block
     cursor: pointer
     color: var(--text-p2)
     font-weight: 500
     position: relative
     line-height: 1.2
     outline: none
-    padding: 0.75rem 1rem
-    border-bottom: 1px solid var(--theme-border)
+    padding: 1rem
+    margin: -1rem
     &:last-child
       border-bottom: none
     >
+      span 
+        margin-left: 0.25em
       p,h1,h2,h3,h4,h5,h6
         display: inline
         border-bottom: none !important
     &:hover
       color: var(--text-p0)
-      background: var(--block-hover)
     &:after
       position: absolute
       content: '+'
@@ -40,23 +35,15 @@
 
 
 .tag-plugin.folders details[open]
-  background: none
-  &:last-child 
-    summary
-      border-bottom: 1px solid var(--theme-border)
-    .body
-      border-bottom: none
   >summary
     color: var(--text-p1)
-    background: var(--block-hover)
+    font-weight: 700
     &:after
       content: '-'
       
   >div.body
-    padding: 1rem
-    border-bottom: 1px solid var(--theme-border)
     font-size: $fs-15
     >:first-child
-      margin-top: 0
+      margin-top: 1rem
     >:last-child
       margin-bottom: 0
