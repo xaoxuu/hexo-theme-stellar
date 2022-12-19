@@ -54,13 +54,10 @@ var searchFunc = function(path, filter, searchId, contentId) {
         }
         // perform local searching
         datas.forEach(function(data) {
-          if (!data.title?.trim().length) { return }
           if (!data.content?.trim().length) { return }
           var matches = 0;
-          if (filter && !data.path.includes(filter)) {
-            return;
-          }
-          var dataTitle = data.title.trim();
+          if (filter && !data.path.includes(filter)) { return }
+          var dataTitle = data.title?.trim() || 'Untitled';
           var dataTitleLowerCase = dataTitle.toLowerCase();
           var dataContent = data.content;
           var dataContentLowerCase = dataContent.toLowerCase();

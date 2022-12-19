@@ -79,7 +79,6 @@ search:
     field: all # post, page, all
     path: /search.json # 搜索文件存放位置
     content: true # 是否搜索内容
-    codeblock: true # 是否搜索代码块（需要content: true)
   
 
 ######## Comments ########
