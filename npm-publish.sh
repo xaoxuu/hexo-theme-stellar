@@ -45,7 +45,7 @@ function commit() {
   git push origin main
   git push origin npm
 
-  npm publish
+  # npm publish
 
   git tag ${VERSION}
   git push --tags
