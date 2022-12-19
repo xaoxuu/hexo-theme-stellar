@@ -41,14 +41,14 @@ function commit() {
   git rebase main
 
   printf "\n\n> \033[32m%s\033[0m" 'git push origin'
-  printf "\n"
+  # printf "\n"
   git push origin main
   git push origin npm
 
   # npm publish
 
-  git tag ${VERSION}
-  git push --tags
+  # git tag ${VERSION}
+  # git push --tags
 
   git checkout main
   # done
