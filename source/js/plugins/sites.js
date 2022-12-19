@@ -81,8 +81,8 @@ $(function () {
     cfg.class = el.getAttribute('class');
     cfg.el = el;
     cfg.api = api;
-    cfg.avatar = 'https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/link/8f277b4ee0ecd.svg';
-    cfg.screenshot = 'https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/cover/76b86c0226ffd.svg';
+    cfg.avatar = 'https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/link/8f277b4ee0ecd.svg';
+    cfg.screenshot = 'https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/cover/76b86c0226ffd.svg';
     sitesjs.layout(cfg);
   }
 });
