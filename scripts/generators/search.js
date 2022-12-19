@@ -48,27 +48,27 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
         content = content.replace(/<!--\s*node(.*?)\s*-->/g, '$1')
         // 不保留内容的标签
         content = content.replace(/{%\s*(.*?)\s*%}/g, '')
-        // 注释
-        content = content.replace(/<!--\s*(.*?)\s*-->/g, '')
-        // ## 标题
-        content = content.replace(/[#]{2,} /g, '')
-        // 部分HTML标签
-        content = content.replace(/<iframe[\s|\S]+iframe>/g, '')
-        content = content.replace(/<hr>/g, '')
-        content = content.replace(/<br>/g, '')
-        // 图片
-        content = content.replace(/\!\[(.*?)\]\((.*?)\)/g, '')
-        // 链接
-        content = content.replace(/\[(.*?)\]\((.*?)\)/g, '$1')
-        // 过滤代码块
-        if (cfg.codeblock == false) {
-          content = content.replace(/```([^`]+)```/g, '')
-        }
-        // 多个连续空格换成单个空格
-        content = content.replace(/[\s]{2,} /g, ' ')
-        // 特殊字符
-        content = content.replace(/[\r|\n]+/g, '')
       }
+      // 注释
+      content = content.replace(/<!--\s*(.*?)\s*-->/g, '')
+      // ## 标题
+      content = content.replace(/[#]{2,} /g, '')
+      // 部分HTML标签
+      content = content.replace(/<iframe[\s|\S]+iframe>/g, '')
+      content = content.replace(/<hr>/g, '')
+      content = content.replace(/<br>/g, '')
+      // 图片
+      content = content.replace(/\!\[(.*?)\]\((.*?)\)/g, '')
+      // 链接
+      content = content.replace(/\[(.*?)\]\((.*?)\)/g, '$1')
+      // 过滤代码块
+      if (cfg.codeblock == false) {
+        content = content.replace(/```([^`]+)```/g, '')
+      }
+      // 多个连续空格换成单个空格
+      content = content.replace(/[\s]{2,} /g, ' ')
+      // 特殊字符
+      content = content.replace(/[\r|\n]+/g, '')
       temp_post.content = content.trim()
     }
     if (post.tags && post.tags.length > 0) {
