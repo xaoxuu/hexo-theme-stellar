@@ -51,7 +51,7 @@ const sitesjs = {
       arr.forEach((item, i) => {
         var cell = '<div class="site-card">';
         cell += '<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="' + item.url + '">';
-        cell += '<img src="' + (item.screenshot || ('https://screenshot-api.xaoxuu.com/api?url=' + item.url + '&width=1280&height=720')) + '" onerror="javascript:this.src=\'' + cfg.screenshot + '\';"/>';
+        cell += '<img src="' + (item.screenshot || ('https://api.vlts.cc/screenshot?url=' + item.url + '&width=1280&height=720')) + '" onerror="javascript:this.src=\'' + cfg.screenshot + '\';"/>';
         cell += '<div class="info">';
         cell += '<img src="' + (item.avatar || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';"/>';
         cell += '<span class="title">' + item.title + '</span>';
