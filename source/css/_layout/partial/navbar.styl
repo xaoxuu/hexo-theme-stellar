@@ -1,7 +1,7 @@
 .nav-wrap
   position: sticky
   position: -webkit-sticky
-  margin-top: .75rem
+  margin-top: -0.5rem
   top: -2px
   background: var(--site-bg)
   padding: 0 1rem
@@ -57,3 +57,10 @@ nav.cap
 @media screen and (max-width: $device-mobile-max)
   .nav-wrap
     margin-top: 0
+    padding-left: 0
+    padding-right: 0
+    nav
+      a:first-child
+        margin-left: 1rem
+      a:last-child
+        margin-right: 1rem

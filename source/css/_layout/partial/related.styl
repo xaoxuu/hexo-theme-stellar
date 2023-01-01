@@ -1,6 +1,6 @@
 .related-wrap
-  padding: 1rem
-  margin: 2rem 0
+  padding: 0 1rem
+  margin: 4rem 0
   &:empty
     display: none
   section.header
@@ -14,14 +14,14 @@
 
   a.more
     padding: 0.25rem 0.5rem
-
-    border-radius: $border-block
+    border-radius: $border-bar
     color: var(--text-p1)
 
-
+article.md-text.content+.related-wrap
+  margin-top: 0
 
 .related-posts
-  width: 100%
+  max-width: 100%
   margin: 1rem 0
   .item
     line-height: 1.2
@@ -32,19 +32,11 @@
       color: var(--text-p1)
       font-weight: 500
       font-size: 1rem
-      trans1 color
+      trans2 color border
       position: relative
-      padding-bottom: 4px
-      &:after
-        content: ''
-        position: absolute
-        left: 0
-        width: 0
-        height: 2px
-        bottom: 0
-        border-radius: 2px
-        background: $color-hover
-        trans1 width
+      padding-bottom: 2px
+      border-bottom: 1px dashed var(--text-meta)
+      line-height: 1.6
     .excerpt
       color: var(--text-p3)
       font-size: $fs-12
@@ -56,8 +48,7 @@
     &:hover
       .title
         color: $color-hover
-        &:after
-          width: 100%
+        border-bottom: 1px solid $color-hover
 
 
 .related-wrap#read-next
@@ -92,17 +83,19 @@
 
 
 .related-wrap#comments
-  div.cmt-title
+  padding: 0 1rem
+  .cmt-title
     p
       margin: 0
+      font-size: inherit
       a
         color: inherit
         text-decoration: underline
         &:hover
           color: $color-hover
-        &:after
+        &:before
           display: none
-  div.cmt-body
+  .cmt-body
     min-height: 150px
     position: relative
     svg.loading

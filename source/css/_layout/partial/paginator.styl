@@ -9,17 +9,28 @@
   border-radius: $border-card
   overflow: hidden
   box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.03)
-  &:hover
-  .paginator
+  .page-number
+    padding: 4px 8px
+    border-radius: 8px
+    background: var(--block)
+    margin: 2px
+  .extend
     text-align: center
+    background-size: contain
+    width: 1rem
+    height: 1rem
+    background-origin: content-box
+    background-clip: content-box
     &.next
       border-left: 1px dashed var(--block-border)
+      background-image: url('https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/arrow/064b95430caf4.svg')
     &.prev
       border-right: 1px dashed var(--block-border)
+      background-image: url('https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/arrow/f049bbd4e88ec.svg')
   .current
     font-family: $ff-code
     color: var(--text-p3)
-  a.paginator
+  .extend
     color: var(--text-p3)
     padding: 1rem
     line-height: 0
@@ -28,6 +39,7 @@
       height: 1rem
     &.disable
       pointer-events: none
-      opacity: 0.25
-  a.paginator:hover
+  span.extend
+    opacity: 0.25
+  a.extend:hover
     filter: unset

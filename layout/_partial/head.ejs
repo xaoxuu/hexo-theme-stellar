@@ -13,16 +13,14 @@ function generate_title() {
     }
   } else {
     if (page.title) {
-      return page.title;
+      return page.title + ' - ' + config.title;
     } else if (page.category) {
       return __('btn.category') + __('symbol.colon') + page.category + ' - ' + config.title;
     } else if (page.tag) {
       return __('btn.tag') + __('symbol.colon') + page.tag + ' - ' + config.title;
-    } else {
-      return config.title;
     }
   }
-  return '';
+  return config.title;
 }
 function generate_description() {
   if (theme.open_graph && theme.open_graph.enable) {
@@ -66,8 +64,8 @@ function og_args() {
   <%- generate_robots() %>
 
   <meta http-equiv='x-dns-prefetch-control' content='on' />
-  <link rel='dns-prefetch' href='https://fastly.jsdelivr.net'>
-  <link rel="preconnect" href="https://fastly.jsdelivr.net" crossorigin>
+  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
+  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
   <link rel='dns-prefetch' href='//unpkg.com'>
 
   <meta name="renderer" content="webkit">

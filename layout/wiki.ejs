@@ -3,13 +3,13 @@ if (page.menu_id == undefined) {
   page.menu_id = 'wiki';
 }
 if (page.layout == undefined) {
-  page.layout = 'index';
+  page.layout = 'wiki_index';
 }
 if (page.title == undefined) {
   if (page.tagName) {
-    page.title = page.tagName + ' - ' + config.title;
+    page.title = page.tagName;
   } else {
-    page.title = __('btn.wiki') + ' - ' + config.title;
+    page.title = __('btn.wiki');
   }
 }
 function layoutTitle() {
@@ -21,7 +21,7 @@ function layoutTitle() {
   }
 }
 %>
-<% if (page.layout === 'index') { %>
+<% if (page.layout === 'wiki_index') { %>
   <%- partial('index') %>
 <% } else { %>
   <%
@@ -30,7 +30,7 @@ function layoutTitle() {
   }
   %>
   <%- partial('_partial/main/navbar/breadcrumb') %>
-  <article class='content md <%- page.layout %><%- scrollreveal() %>'>
+  <article class='md-text content <%- page.layout %><%- page.indent ? ' indent' : '' %><%- scrollreveal() %>'>
   <%- layoutTitle() %>
   <%- page.content %>
   <%- partial('_partial/main/article/article_footer') %>

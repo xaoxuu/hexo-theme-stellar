@@ -23,7 +23,7 @@ if (theme.plugins.heti && theme.plugins.heti.enable) {
     <%- partial('mathjax') %>
 <% } %>
 <%- partial('_partial/main/navbar/breadcrumb') %>
-<article class='content<%- heti %> md <%- post.layout %><%- post.indent ? ' indent' : '' %><%- scrollreveal() %>'>
+<article class='md-text content<%- heti %> <%- post.layout %><%- post.indent ? ' indent' : '' %><%- scrollreveal() %>'>
 <%- layoutTitle() %>
 <%- post.content %>
 <%- partial('_partial/main/article/article_footer') %>

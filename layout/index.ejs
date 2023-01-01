@@ -1,6 +1,6 @@
 <%
 if (page.menu_id == undefined) {
-  if (page.layout === 'index' && page.wiki) {
+  if (page.layout === 'wiki_index' && page.wiki) {
     page.menu_id = 'wiki';
   } else {
     page.menu_id = 'post';
@@ -28,9 +28,7 @@ function layout_posts(partial) {
   if (is_home()) {
     // pinned posts
     if (page.current == 1) {
-      var pinned = site.posts.filter(function(post){
-        return post.pin != undefined;
-      }).sort((config.index_generator && config.index_generator.order_by) || '-date');
+      var pinned = site.posts.filter(post => post.pin != undefined).sort((config.index_generator && config.index_generator.order_by) || '-date');
       pinned.forEach((post, i) => {
         el += layout_post_card('post', post, partial(post));
       });

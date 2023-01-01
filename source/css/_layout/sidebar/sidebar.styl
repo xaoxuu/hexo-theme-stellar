@@ -3,11 +3,12 @@
   flex-direction: column
   word-break: break-all
   text-align: justify
-  height: "calc(100vh - 1 * %s)" % var(--gap-l)
+  height: 100vh
   .header
     margin: var(--gap-l) var(--gap-l) 0
+    margin-top: "calc(2 * %s)" % var(--gap-l)
   @media screen and (min-width: $device-mobile-max)
-    >.widgets:first-child>.widget-wrap:first-child
+    >.widgets:first-child>.widget-wrapper:first-child
       margin-top: "calc(2 * %s)" % var(--gap-l)
   @media screen and (max-width: $device-mobile-max)
     height: 100vh
@@ -22,129 +23,17 @@
     margin-bottom: 6rem
 
 
-.logo-wrap
-  margin: 1rem 0
+.l_left .widgets .widget-wrapper.logo-wrap.wiki .widget-body
   display: flex
-  align-items: center
-  overflow: hidden
-  a
-    color: inherit
-    display: flex
-    align-items: center
-  a.avatar
-    display: block
-    position: relative
-    width: 50px
-    height: 50px
-    flex-shrink: 0
-    border-radius: 50px
-    overflow: hidden
-    margin-right: 1rem
-    div.bg
-      width: 100%
-      height: 100%
-      background-size: cover
-    img.avatar
-      margin: 2px
-      object-fit: cover
-      width: "calc(100% - 2 * %s)" % @margin
-      height: "calc(100% - 2 * %s)" % @margin
-      border-radius: @width
-    if hexo-config('style.animated_avatar.animate')
-      div.bg
-        trans1: opacity
-        position: absolute
-        opacity: 0 !important
-        z-index: -1
-      @keyframes spin
-        from
-          transform:rotate(0deg)
-        to
-          transform:rotate(360deg)
-    if hexo-config('style.animated_avatar.animate') == 'always'
-      div.bg
-        opacity: 1 !important
-        animation: spin infinite 4s
-        animation-timing-function: linear
-    if hexo-config('style.animated_avatar.animate') == 'auto'
-      &:hover
-        div.bg
-          opacity: 1 !important
-          animation: spin infinite 4s
-          animation-timing-function: linear
-
-  a.title
-    font-size: 1.75rem
-    font-weight: 900
-    color: inherit
-    line-height: 1.2
-    display: block
-    position: relative
-    .main
-      color: var(--text-p0)
-    .sub
-      color: var(--text-p1)
-      trans2 opacity transform
-      white-space: nowrap
-    .hover
-      position: absolute
-      bottom: 0
-      transform: translateY(8px)
-      overflow: visible
-    &:hover
-      .normal
-        opacity: 0
-        transform: translateY(-8px)
-      .hover
-        transform: translateY(0)
-        opacity: 1 !important
-
-
-.logo-wrap.wiki
-  margin: 1rem 0 1.5rem 0
+  margin-bottom: 1.5rem
   flex-direction: column
   align-items: flex-start
   a.wiki-home
-    margin-bottom: 1rem
+    margin-bottom: 0.5rem
     color: var(--text-p1)
     svg
       margin-right: 2px
     &:hover
       color: $color-hover
       filter: unset !important
-
-.l_left nav.menu
-  margin-bottom: 1.5rem
-
-nav.menu
-  margin: 1rem 0
-  background: var(--block)
-  border-radius: 6px
-  display: flex
-  padding: 1px
-  flex-wrap: wrap
-  &::-webkit-scrollbar
-    display: none
-  &::-webkit-scrollbar-track-piece
-    background: transparent
-  &::-webkit-scrollbar-thumb
-    display: none
-  a.nav-item
-    text-overflow: ellipsis
-    word-break: keep-all
-    margin: 1px
-    border-radius: 4px
-    font-size: $fs-14
-    font-weight: 500
-    overflow: hidden
-    padding: 0.375rem 0.5rem
-    color: var(--text-p3)
-    text-align: center
-    &.active, &:hover
-      color: var(--text-p1)
-      background: var(--card)
-      box-shadow: $boxshadow-button
-
-.l_left .menu a.nav-item
-  flex-grow: 1
 

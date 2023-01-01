@@ -14,23 +14,21 @@
   float: right
   z-index: 10
   display: flex
-  border-radius: $border-block 0 0 $border-block
-  padding-right: 1rem
-  border: 1px solid var(--block-border)
-  border-right: 0
+  border-radius: 2rem
+  margin-right: 1rem
   overflow: hidden
-  --blur-px: 24px
-  --blur-bg: alpha(#eaeaea, .6)
+  --blur-px: 16px
+  --blur-bg: alpha(#fff, .4)
+  trans1: all
   if hexo-config('style.darkmode') == 'auto'
     @media (prefers-color-scheme: dark)
-      --blur-bg: alpha(#555, .6)
+      --blur-bg: alpha(#000, .4)
   if hexo-config('style.darkmode') == 'always'
-    --blur-bg: alpha(#555, .6)
+    --blur-bg: alpha(#000, .4)
 
 .sidebar-toggle.mobile
   cursor: pointer
-  color: var(--text-p2)
-  border-right: 1px solid transparent
+  color: var(--text-p0)
   background: none
   padding: 0.5rem
   line-height: 0
@@ -39,6 +37,9 @@
 
 
 .l_body.mobile.sidebar
+  .float-panel
+    box-shadow: $boxshadow-float
+    transform: translateY(-2px)
   .sidebar-toggle.mobile
     background: var(--card)
     color: $color-hover

@@ -1,3 +1,5 @@
+@import 'aplayer'
+
 // 根据主题配置加载
 if hexo-config('plugins.lazyload.enable')
   @import 'lazyload'
@@ -8,6 +10,7 @@ if hexo-config('plugins.scrollreveal.enable')
 if hexo-config('plugins.fancybox.enable')
   @import 'fancybox'
 
+
 // 评论
 if hexo-config('comments.service') == 'beaudar'
   @import 'comments/beaudar'
@@ -17,3 +20,5 @@ if hexo-config('comments.service') == 'utterances'
   @import 'comments/utterances'
 if hexo-config('comments.service') == 'waline'
   @import 'comments/waline'
+if hexo-config('comments.service') == 'artalk'
+  @import 'comments/artalk'

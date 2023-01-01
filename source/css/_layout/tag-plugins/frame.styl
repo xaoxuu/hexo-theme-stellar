@@ -1,4 +1,4 @@
-.md .frame-wrap
+.md-text .frame-wrap
   position: relative
   overflow: hidden
   margin: 0 auto
@@ -8,7 +8,7 @@
   align-items: center
   img,video
     border-radius: 0
-.md .frame-wrap .frame
+.md-text .frame-wrap .frame
   z-index: 1
   display: block
   position: absolute;
@@ -16,18 +16,18 @@
   background-repeat: no-repeat;
   overflow: hidden;
 
-.md .tag-plugin.img-wrap .frame-wrap
+.md-text .tag-plugin.img-wrap .frame-wrap
   &[focus]
     height: auto
 
-.md .frame-wrap
+.md-text .frame-wrap
   &#iphone11
     img,video
       width: 287px
       margin-top: 19px
       margin-bottom: 20px
     .frame
-      background-image: url(https://fastly.jsdelivr.net/gh/cdn-x/placeholder@1.0.1/frame/iphone11.svg);
+      background-image: url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/frame/iphone11.svg);
       width: 329px
       height: 658px
   &[focus='top']
@@ -44,7 +44,7 @@
       bottom: 0
 
 @media screen and (max-width: $device-mobile)
-  .md .frame-wrap
+  .md-text .frame-wrap
     &#iphone11
       img,video
         width: 208px

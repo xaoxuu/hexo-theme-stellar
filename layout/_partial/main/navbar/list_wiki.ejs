@@ -13,9 +13,7 @@ function layoutDiv() {
   // 项目分类
   for (let id of Object.keys(theme.wiki.all_tags)) {
     let tag = theme.wiki.all_tags[id];
-    let projects = tag.items.filter(function(item){
-      return item.index !== false;
-    })
+    let projects = tag.items.filter(item => item.index !== false)
     if (projects && projects.length > 0) {
       el += '<a';
       if (tag.name && tag.name.length > 0 && page.tagName === tag.name) {

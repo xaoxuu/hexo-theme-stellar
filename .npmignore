@@ -1,5 +1,4 @@
 .github/
 npm-publish.sh
 node_modules
-utterances.json
-beaudar.json
+giscus.json

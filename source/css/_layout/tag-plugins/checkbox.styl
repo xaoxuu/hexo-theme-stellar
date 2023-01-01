@@ -1,8 +1,9 @@
-.md .checkbox
+.md-text .tag-plugin.checkbox
   display: flex
+  align-items: center
   font-size: $fs-15
   line-height: 1.2
-  --gap-p: .25rem
+  --gap-p: 'calc(%s / 2)' % var(--gap-p-compact)
   input
     -webkit-appearance: none
     -moz-appearance: none
@@ -20,8 +21,6 @@
     margin-right: 8px
     if hexo-config('tag_plugins.checkbox.interactive') != true
       pointer-events: none
-  span
-    margin-top: 1px
   /* Checkbox */
   input[type=checkbox]
     &:before, &:after

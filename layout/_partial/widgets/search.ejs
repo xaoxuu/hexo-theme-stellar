@@ -1,0 +1,40 @@
+<%
+function layoutDiv() {
+  var el = '<widget class="widget-wrapper search">'
+  el += '<div class="widget-body">'
+  el += '<div class="search-wrapper" id="search">'
+  el += '<form class="search-form">'
+  var filter = ''
+  if (item.filter == 'auto') {
+    if (page.layout == 'wiki') {
+      let matches = page.path.match(/(.*?)\/(.*?)\//i)
+      if (matches?.length > 0) {
+        filter = matches[0]
+      }
+    }
+  } else {
+    if (item.filter?.length > 0) {
+      filter = item.filter
+    }
+  }
+  el += '<input type="text" class="search-input" id="search-input"'
+  if (filter.length > 0) {
+    if (!filter.startsWith('/')) {
+      filter = '/' + filter
+    }
+    el += ' data-filter="' + filter + '"'
+    el += ' placeholder="' + (item.placeholder || __('search.search_in', filter)) + '">'
+  } else {
+    el += ' placeholder="' + (item.placeholder || __('search.search')) + '">'
+  }
+  el += '<svg t="1670596976048" class="icon search-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2676" width="200" height="200"><path d="M938.2 832.6L723.8 618.1c-2.5-2.5-5.3-4.4-7.9-6.4 36.2-55.6 57.3-121.8 57.3-193.1C773.3 222.8 614.6 64 418.7 64S64 222.8 64 418.6c0 195.9 158.8 354.6 354.6 354.6 71.3 0 137.5-21.2 193.2-57.4 2 2.7 3.9 5.4 6.3 7.8L832.5 938c14.6 14.6 33.7 21.9 52.8 21.9 19.1 0 38.2-7.3 52.8-21.8 29.2-29.1 29.2-76.4 0.1-105.5M418.7 661.3C284.9 661.3 176 552.4 176 418.6 176 284.9 284.9 176 418.7 176c133.8 0 242.6 108.9 242.6 242.7 0 133.7-108.9 242.6-242.6 242.6" p-id="2677"></path></svg>'
+  el += '</form>'
+  el += '<div id="search-result"></div>'
+  el += '<div class="search-no-result">' + __('search.no_results') + '</div>'
+  el += '</div>'
+  el += '</div>'
+  el += '</widget>'
+  return el
+}
+%>
+<%- layoutDiv() %>

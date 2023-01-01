@@ -1,4 +1,10 @@
 <%
+var cmt = {
+  service: theme.comments.service
+};
+if (cmt.service) {
+  cmt[cmt.service] = Object.assign({}, theme.comments[cmt.service]);
+}
 var loadComment = false;
 if (theme.comments.service && theme.comments.service.length > 0) {
   if (page.comments == undefined || page.comments != false) {
@@ -13,15 +19,24 @@ if (loadComment && page.layout == 'wiki' && page.wiki) {
       page.comment_title = proj.comment_title;
     }
   }
+  if (proj.comments && proj.comments.service) {
+    cmt = proj.comments;
+    let s = proj.comments.service;
+    cmt[s] = Object.assign({}, theme.comments[s], proj.comments[s]);
+  }
 }
+if (cmt.service && page[cmt.service]) {
+  Object.assign(cmt[cmt.service], page[cmt.service]);
+}
+page.cmt = cmt;
 %>
 <% if (loadComment) { %>
-  <div class='related-wrap md reveal' id="comments">
-    <div class='cmt-title cap theme'>
+  <div class='related-wrap md-text reveal' id="comments">
+    <section class='header cmt-title cap theme'>
       <%- page.comment_title != undefined ? markdown(page.comment_title) : __('meta.comment_title') %>
-    </div>
-    <div class='cmt-body <%- theme.comments.service %>'>
-      <%- partial(theme.comments.service + '/layout') %>
-    </div>
+    </section>
+    <section class='body cmt-body <%- cmt.service %>'>
+      <%- partial(cmt.service + '/layout') %>
+    </section>
   </div>
 <% } %>

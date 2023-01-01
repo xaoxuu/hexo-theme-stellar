@@ -1,0 +1,113 @@
+.widgets .widget-wrapper.search
+  margin-top: 1rem
+  margin-bottom: 0
+
+.search-wrapper
+  width: 100%
+  >.search-form
+    position: sticky
+    top: 1rem
+    display: flex
+    flex-direction: row
+    align-items: center
+    transition: 0.38s ease-out
+    z-index: 0
+    &:after
+      content: ''
+      position absolute
+      left: 0
+      right: 0
+      bottom: 0
+      height: 2px
+      border-radius: 4px
+      background: convert(hexo-config('style.gradient.search'))
+      background-size: 200%
+      animation: glow 10s linear infinite
+      @keyframes glow {
+        from {
+          background-position: 0%
+        }
+        to {
+          background-position: 200%
+        }
+      }
+  .search-input
+    width: 100%
+    padding: 0.5rem 0
+    line-height: 1
+    box-sizing: border-box
+    font-family: $ff-body
+    color: var(--text-p0)
+  
+  &.noresult
+    .search-icon
+      color: $c-red
+
+  .search-no-result
+    display: none
+    margin: 1em auto
+    color: var(--text-p1)
+    text-align: center
+    font-size: $fs-14
+    padding: 2rem
+    background: var(--block)
+    border-radius: $border-bar
+
+  #search-result
+    ul.search-result-list
+      padding: 0
+      margin: 0
+      list-style-type: none
+    li
+      margin: 1em auto
+      &:hover
+        .search-result-title
+          color: $color-hover
+    .search-result-title
+      color: var(--text-p1)
+      font-weight: 700
+      line-height: 1.2
+
+    .search-result-content
+      overflow: hidden
+      color: var(--text-p3)
+      margin: .4em auto
+      max-height: 13em
+      text-align: justify
+      font-size: $fs-12
+      line-height: 1.2
+      display: -webkit-box
+      -webkit-box-orient: vertical
+      overflow: hidden
+      -webkit-line-clamp: 3
+
+    .search-keyword
+      border-bottom: 1px dashed $color-hover
+      color: $color-hover
+      font-weight: bold
+
+
+
+.search-wrapper.noresult
+  .search-no-result
+    display: block
+
+.widget-wrapper
+  .search-form
+    top: 0
+    background: var(--site-bg)
+  .search-input
+    padding-left: 1.5rem
+  .search-icon 
+    position: absolute
+    margin-left: 0.25rem
+    left: 0
+    pointer-events: none
+    color: var(--text-p2)
+    
+  #search-result,.search-no-result
+    margin-top: 1rem
+
+.widget-wrapper:not(:first-child)
+  .search-wrapper
+    margin-top: -1rem

@@ -1,0 +1,60 @@
+.widgets 
+  .loading-wrap
+    margin: 0.5rem 0
+
+.widgets
+  overflow: scroll
+  flex-grow: 1
+  scrollbar-width: none
+  scrollbar(0, 0)
+  z-index: 1
+  line-height: 1.2
+  .widget-wrapper
+    .widget-header
+      padding-left: var(--gap-l)
+      padding-right: var(--gap-l)
+      display: flex
+      justify-content: space-between
+      align-items: center
+      font-weight: 500
+      position: sticky
+      top: -2px
+      background: var(--site-bg)
+      padding-top: 2px
+      z-index 1
+      .item 
+        display: block
+      >span 
+        margin: 0.25rem 0
+        text-align: left
+      &:empty
+        display: none
+      .cap-action
+        hover-block 4px 4px
+        line-height: 0
+        color: var(--text-meta)
+        trans2: color background
+        .icon
+          fill: var(--text-meta)
+        &:hover
+          color: $color-hover
+          .icon
+            fill: $color-hover
+
+    .widget-body
+      margin: 0.5rem var(--gap-l)
+      color: var(--text-p1)
+      p
+        margin-top: .5em
+        margin-bottom: .5em
+        line-height: 1.5
+    .widget-header+.widget-body
+      margin-top: 0
+  .widget-wrapper+.widget-wrapper .widget-header
+    margin-top: 3rem
+  .widget-wrapper+.widget-wrapper.toc .widget-header
+    margin-top: 1rem
+
+.widget-wrapper
+    display: block
+    margin: 2rem 0

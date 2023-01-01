@@ -9,14 +9,51 @@ a.button
   font-weight: 500
   line-height: 1
   padding: 0.75rem 2rem
-  border-radius: 3px
-  trans1: background
+  border-radius: $border-button
   font-size: $fs-15
+  user-select: none
   &.theme
     background: $color-theme
     color: var(--card)
     &:hover
       background: $color-hover
+  &.start
+    border-radius: 100px
+    background: var(--text-p1)
+    color: var(--card)
 
 a[onclick]:hover
   cursor: pointer
+
+a.button.start.gradient
+  transition: 0.38s ease-out
+  position relative
+  z-index: 0
+  background: convert(hexo-config('style.gradient.start'))
+  background-size: 1000%
+  color: white
+  text-shadow: 0 0 1px rgba(0,0,0,0.12)
+  animation: glow 60s linear infinite
+  @keyframes glow {
+    from {
+      background-position: 0%
+    }
+    to {
+      background-position: 1000%
+    }
+  }
+  &:after
+    content: ''
+    position absolute
+    left: 0
+    right: 0
+    top: 0
+    bottom: 0
+    border-radius: 100px
+    background: inherit
+    z-index -1
+    filter: blur(36px)
+    transition: 0.38s ease-out
+    opacity 0
+  &:hover:after
+    opacity 1

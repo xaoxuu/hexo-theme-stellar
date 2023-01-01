@@ -1,7 +1,4 @@
-.md .tag-plugin.folding .body:has(.timeline)
-  background: var(--site-bg)
-
-.md .tag-plugin.timeline
+.md-text .tag-plugin.timeline
   position: relative
   margin-top: 0
   padding-left: 16px
@@ -20,7 +17,7 @@
     &:before
       display: none
 
-.md .tag-plugin.timeline .timenode
+.md-text .tag-plugin.timeline .timenode
   position: relative
   display: flex
   flex-direction: column
@@ -99,15 +96,11 @@
 
 .tag-plugin.timeline .body
   background: var(--card)
-  border-radius: 12px
+  border-radius: $border-card
   border-top-left-radius: 2px
   padding: 0.5rem 1rem
   margin-top: 4px
   box-shadow: $boxshadow-block
-  trans2: transform box-shadow
-  &:hover
-    transform: translateY(-1px)
-    box-shadow: $boxshadow-card-float
   p
     font-size: $fs-14
     img
@@ -192,11 +185,9 @@
     border-color: var(--block)
 
 .tag-plugin.timeline .body blockquote
-  padding: 0 0.5rem
-  box-shadow: none
-  border-left: 4px solid var(--block-border)
+  background: none
   border-radius: 0
-  display: block
+  padding: 0 0.5rem
   margin: 0.75rem 0
   p
     font-size: $fs-13

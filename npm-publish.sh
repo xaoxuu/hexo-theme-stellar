@@ -21,7 +21,7 @@ function prepare() {
   sub=${VERSION#*.}
   sub=${sub%%.*}
   jsdelivr=$main'.'$sub
-  sed -i "" "s/\(fastly.jsdelivr.net\/npm\/hexo-theme-stellar@[^/]\{1,\}\)/fastly.jsdelivr.net\/npm\/hexo-theme-stellar@${jsdelivr}/g" '_config.yml'
+  sed -i "" "s/\(gcore.jsdelivr.net\/npm\/hexo-theme-stellar@[^/]\{1,\}\)/gcore.jsdelivr.net\/npm\/hexo-theme-stellar@${jsdelivr}/g" '_config.yml'
 }
 
 # 提交
@@ -41,14 +41,14 @@ function commit() {
   git rebase main
 
   printf "\n\n> \033[32m%s\033[0m" 'git push origin'
-  printf "\n"
+  # printf "\n"
   git push origin main
   git push origin npm
 
-  npm publish
+  # npm publish
 
-  git tag ${VERSION}
-  git push --tags
+  # git tag ${VERSION}
+  # git push --tags
 
   git checkout main
   # done

@@ -19,7 +19,7 @@ function layoutWikiCover() {
     cover = ['logo', 'title', 'description'];
   }
   el += '<div class="l_cover wiki' + scrollreveal() + '">';
-  el += '<article class="cover-wrap md">';
+  el += '<article class="cover-wrap md-text">';
 
   if (logo && logo.src && cover.includes('logo')) {
     el += '<div class="preview">';
@@ -39,7 +39,7 @@ function layoutWikiCover() {
     el += '<div class="description">' + desc + '</div>';
   }
   el += '<div class="start-wrap">';
-  el += '<a class="button theme start" href="#start">' + (proj.start || __('btn.getting_started')) + '</a>';
+  el += '<a class="button start gradient" href="#start">' + (proj.start || __('btn.getting_started')) + '</a>';
   el += '</div>';
   el += '</article>';
   el += '</div>';

@@ -1,0 +1,24 @@
+<%
+function layoutDiv() {
+  var el = '';
+  if (site.tags == undefined || site.tags.length == 0) {
+    return el;
+  }
+  var opts = Object.assign({}, item);
+  delete opts['title'];
+  delete opts['layout'];
+  opts.class = 'tag ';
+  el += '<widget class="widget-wrapper tagcloud">';
+    if (item.title) {
+      el += '<div class="widget-header cap theme dis-select">';
+      el += '<span class="name">' + item.title + '</span>';
+      el += '</div>';
+    }
+    el += '<div class="widget-body fs14">';
+      el += tagcloud(site.tags, opts);
+    el += '</div>';
+  el += '</widget>';
+  return el;
+}
+%>
+<%- layoutDiv() %>

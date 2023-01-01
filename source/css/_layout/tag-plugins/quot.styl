@@ -1,62 +1,66 @@
-.md .tag-plugin.quot
+.md-text .tag-plugin.quot
   text-align: center
-  position: relative
   align-items: center
-  max-width 400px
-.md .tag-plugin.quot:not(span)
-  display: inline-flex
-  align-self: center
-  border-bottom: none
-  font-weight: 700
-  &:first-child
-    margin-top: 1.5rem
-  a.headerlink:before
-    content: ''
-  padding: 16px 24px 8px 24px
-  @media screen and (max-width: $device-mobile)
-    padding: 16px 20px 8px
-  line-height: 1.2
+  display: flex
+  flex-direction: column
+  
+  .content
+    display: flex
+    align-items: center
+    border-bottom: none
+    font-weight: 700
+    padding: 16px 24px
+    a.headerlink:before
+      content: ''
+    @media screen and (max-width: $device-mobile)
+      padding: 12px 20px
+    line-height: 1.2
 
+.md-text .tag-plugin.quot .content
+  max-width 500px
+  position: relative
 // override
-article.md.content
-  .quot:not(span)
-    color: var(--text-p0)
-  h1.quot
+.md-text.content .tag-plugin.quot
+  h1
     font-size: $fs-h1
     font-weight: 900
     padding: 20px 32px 12px 32px
     @media screen and (max-width: $device-mobile)
       padding: 20px 24px 12px
-  h2.quot,h3.quot,h4.quot,h5.quot,h6.quot
+  h2,h3,h4,h5,h6
     font-size: $fs-h3
-  p.quot
+    margin-top: 1em
+    margin-bottom: 0
+  p
     font-size: $fs-h4
+    color: var(--text-p0)
 
 // type=text
-.md .tag-plugin.quot[type=text]:not(span)
-  &:before,&:after
-    content: ""
-    position: absolute
-    width: 8px
-    height: 14px
-  &:before
-    top: 8px
-    left: 0
-    border-top: 6px solid $color-accent
-    border-left: 6px solid $color-accent
-  &:after
-    right: 0
-    bottom: 0
-    border-right: 6px solid $color-accent
-    border-bottom: 6px solid $color-accent
-article.md.content h1.quot[type=text]
-  &:before,&:after
-    width: 12px
-    height: 20px
-    border-width: 8px
+.md-text .tag-plugin.quot
+  .content[type=text]
+    &:before,&:after
+      content: ""
+      position: absolute
+      width: 8px
+      height: 14px
+    &:before
+      top: 8px
+      left: 0
+      border-top: 6px solid $color-accent
+      border-left: 6px solid $color-accent
+    &:after
+      right: 0
+      bottom: 8px
+      border-right: 6px solid $color-accent
+      border-bottom: 6px solid $color-accent
+  h1.content[type=text]
+    &:before,&:after
+      width: 12px
+      height: 20px
+      border-width: 8px
 
 // type=icon
-.md .tag-plugin.quot[type=icon]:not(span)
+.md-text .tag-plugin.quot .content[type=icon]
   .icon
     height: 1.5em
     display: inline-block
@@ -67,18 +71,3 @@ article.md.content h1.quot[type=text]
       margin-right: .5rem
     &.suffix
       margin-left: .5rem
-
-// inline quot
-.md span.tag-plugin.quot
-  font-weight: 500
-  &:before,&:after
-    color: $color-accent
-    font-weight: 900
-  &:before
-    content: "「"
-    margin-left: -0.125em
-    margin-right: 0.125em
-  &:after
-    content: "」"
-    margin-left: 0.125em
-    margin-right: -0.125em

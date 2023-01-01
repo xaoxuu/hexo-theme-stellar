@@ -1,20 +1,55 @@
 <%
+var proj;
+if (page.layout === 'wiki' && page.wiki) {
+  proj = theme.wiki.projects[page.wiki];
+}
+function layoutTitle(main, url, sub) {
+  var el = '';
+  el += '<a class="title" href="' + url_for(url || "/") + '">';
+  el += '<div class="main" ff="title">' + main + '</div>';
+  if (sub) {
+    let arr = sub.split('|');
+    if (arr.length > 1) {
+      el += '<div class="sub normal cap">' + arr.shift().trim() + '</div>';
+      el += '<div class="sub hover cap" style="opacity:0">' + arr.join('|') + '</div>';
+    } else {
+      el += '<div class="sub cap">' + sub + '</div>';
+    }
+  }
+  el += '</a>';
+  return el;
+}
+
 function layoutDiv() {
   var el = '';
+  if (page.layout == 'wiki' && page.menu_id == 'wiki') {
+    return el;
+  }
   el += '<header class="header';
   if (where == 'main') {
     el += ' mobile-only';
   }
   el += '">';
-  el += partial('logo');
-  if (where != 'main') {
-    if (page.layout === 'wiki' && page.wiki) {
-      if (page.menu_id !== 'wiki') {
-        el += partial('menu', {where: where});
-      }
-    } else {
-      el += partial('menu', {where: where});
+
+  el += '<div class="logo-wrap">';
+  if (md_text(theme.sidebar.logo.avatar)) {
+    el += '<a class="avatar" href="' + url_for(md_link(theme.sidebar.logo.avatar) || "/") + '">';
+    if (theme.style.animated_avatar.animate) {
+      el += '<div class="bg" style="opacity:0;background-image:url(' + theme.style.animated_avatar.background + ');"></div>';
     }
+    el += '<img no-lazy class="avatar" src="' + md_text(theme.sidebar.logo.avatar) + '">';
+    el += '</a>';
+  }
+  let main = md_text(theme.sidebar.logo.title);
+  if (main) {
+    let url = md_link(theme.sidebar.logo.title);
+    let sub = config.subtitle;
+    el += layoutTitle(main, url, sub);
+  }
+  el += '</div>';
+
+  if (where != 'main') {
+    el += partial('menu', {where: where});
   }
   el += '</header>';
   return el;

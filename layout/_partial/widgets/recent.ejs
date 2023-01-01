@@ -1,0 +1,50 @@
+<%
+function layoutDiv() {
+  var el = '<widget class="widget-wrapper recent">';
+  // header
+  el += '<div class="widget-header cap theme dis-select">';
+  el += '<span class="name">' + __("meta.recent_update") + '</span>';
+  if (item.rss) {
+    el += '<a class="cap-action" id="rss" title="Subscribe" href="' + item.rss + '">';
+    el += '<svg class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8938"><path d="M800.966 947.251c0-404.522-320.872-732.448-716.69-732.448V62.785c477.972 0 865.44 395.987 865.44 884.466h-148.75z m-162.273 0h-148.74c0-228.98-181.628-414.598-405.678-414.598v-152.01c306.205 0 554.418 253.68 554.418 566.608z m-446.24-221.12c59.748 0 108.189 49.503 108.189 110.557 0 61.063-48.44 110.563-108.188 110.563-59.747 0-108.18-49.5-108.18-110.563 0-61.054 48.433-110.556 108.18-110.556z" p-id="8939"></path></svg>';
+    el += '</a>';
+  }
+  el += '</div>';
+  // body
+  var arr = [];
+  if (page.menu_id == 'wiki') {
+    arr = theme.wiki.all_pages.filter( p => {
+      if (p.wiki) {
+        let proj = theme.wiki.projects[p.wiki];
+        return proj.index != false;
+      }
+      return false
+    })
+    arr = arr.sort((p1, p2) => p1.updated > p2.updated ? -1 : 1)
+  } else {
+    arr = site.posts.filter( p => p.title && p.title.length > 0)
+    arr = arr.sort("updated", -1)
+  }
+  el += '<div class="widget-body related-posts fs14">';
+  arr.length = item.limit
+  arr.forEach(post => {
+    if (!post) { return }
+    el += '<a class="item title" href="' + url_for(post.link || post.path) + '">';
+    el += '<span class="title">'
+    if (post.layout == 'wiki') {
+      let proj = theme.wiki.projects[post.wiki];
+      let name = proj?.name || post?.wiki;
+      if (name) {
+        el += '<strong>' + name + '</strong>' + '<span class="dot"></span>';
+      }
+    }
+    el += (post.title || post.seo_title || post.wiki) + '</span>';
+    el += '</a>';
+    el += '';
+  });
+  el += '</div>';
+  el += '</widget>';
+  return el;
+}
+%>
+<%- layoutDiv() %>
