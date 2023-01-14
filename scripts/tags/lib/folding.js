@@ -4,7 +4,7 @@
  *
  * {% folding [color:yellow] [child:codeblock] [open:false] title %}
  * body
- * {% endtable %}
+ * {% endfolding %}
  */
 
 'use strict'
