@@ -241,6 +241,8 @@ tag_plugins:
   # {% image %}
   image:
     fancybox: # true, false
+    replace_original:  #把markdown格式的图片解析成图片标签
+      enable: false
   # {% timeline %}
   timeline:
     max-height: 80vh
