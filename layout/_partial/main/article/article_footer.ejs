@@ -99,7 +99,7 @@ function layoutDiv() {
       el += '</div>';
       if (theme.article.share.includes('wechat')) {
         el += '<div class="qrcode" id="qrcode-wechat" style="visibility:hidden;height:0">';
-        el += '<img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=' + url + '"/>';
+        el += '<img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=' + page.permalink + '"/>';
         el += '</div>';
       }
       el += '</div>';
