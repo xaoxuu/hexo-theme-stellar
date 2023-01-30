@@ -390,3 +390,8 @@ api_host:
   ghapi: https://api.github.com
   ghraw: https://raw.githubusercontent.com
   gist: https://gist.github.com
+
+
+updated_time:
+  post_card_type: none # none replace same_line two_lines
+  page_meta_type: same_line

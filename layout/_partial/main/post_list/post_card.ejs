@@ -70,11 +70,21 @@ function div_default() {
   el += '<div class="meta cap">';
   // time
   el += '<span class="cap" id="post-meta">';
-  el += __("meta.created") + '&nbsp;' + '<time datetime="' + date_xml(post.date) + '">' + date(post.date, config.date_format) + '</time>';
-  //保险起见时间戳有10的误差再判定需要加上比较好(话说2就行了吧)
-  if (Math.abs(post.date - post.updated) >= 10){
-    el += '<br/>';
-    el += __("meta.updated") + '&nbsp;' + '<time datetime="' + date_xml(post.updated) + '">' + date(post.updated, config.date_format) + '</time>';
+
+
+    
+  if (Math.abs(post.date - post.updated) == 0 || theme.updated_time.post_card_type != "replace"){
+    el += __("meta.created") + '&nbsp;<time datetime="' + date_xml(post.date) + '">' + date(post.date, config.date_format) + '</time>';
+  }
+
+
+  if (Math.abs(post.date - post.updated) > 0 && theme.updated_time.post_card_type != "none"){
+    if (theme.updated_time.post_card_type == "two_lines") el += '<br/>';
+    if (theme.updated_time.post_card_type == "same_line") el += '&nbsp;';
+    if (["replace", "same_line", "two_lines"].includes(theme.updated_time.post_card_type)){ //防止小天才乱填
+      el += __("meta.updated") + '&nbsp;<time datetime="' + date_xml(post.updated) + '">' + date(post.updated, config.date_format) + '</time>';
+    }
+    
   }
   el += '</span>';
   // cat

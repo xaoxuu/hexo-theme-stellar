@@ -36,7 +36,16 @@ function layoutDiv() {
     el += '</div>';
     // 发布日期
     el += '<div id="post-meta">';
-    el += __("meta.created") + '&nbsp;<time datetime="' + date_xml(page.date) + '">' + date(page.date, config.date_format) + '</time>';
+    if (Math.abs(page.date - page.updated) == 0 || theme.updated_time.page_meta_type != "replace"){
+      el += __("meta.created") + '&nbsp;<time datetime="' + date_xml(page.date) + '">' + date(page.date, config.date_format) + '</time>';
+    }
+    if (Math.abs(page.date - page.updated) > 0 && theme.updated_time.page_meta_type != "none"){
+      if (theme.updated_time.page_meta_type == "two_lines") el += '<br/>';
+      if (theme.updated_time.page_meta_type == "same_line") el += '&nbsp;';
+      if (["replace", "same_line", "two_lines"].includes(theme.updated_time.page_meta_type)){ //防止小天才乱填
+        el += __("meta.updated") + '&nbsp;<time datetime="' + date_xml(page.updated) + '">' + date(page.updated, config.date_format) + '</time>';
+      }
+    }
     el += '</div>';
     el += '</div>';
   } else if (page.layout === "wiki" && page.wiki && page.wiki.length > 0) {
