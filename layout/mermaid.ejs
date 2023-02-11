@@ -1,0 +1,28 @@
+<% if (theme.plugins.mermaid.enable) { %>
+  <script type="text/javascript" src="<%- theme.plugins.mermaid.js %>"></script>
+
+  <script>
+    var mermaid_config = {
+      startOnLoad: true,
+      theme: '<%- theme.plugins.mermaid.theme %>',
+      logLevel: 3,
+      themeVariables: {
+        darkMode: true
+      },
+      flowchart: {
+        useMaxWidth: false,
+        htmlLabels: true,
+        curve: 'linear'
+      },
+      gantt: {
+        axisFormat: '%m/%d/%Y'
+      },
+      sequence: {
+        actorMargin: 50
+      }
+    }
+    if (window.mermaid) {
+        mermaid.initialize(mermaid_config);
+    }
+  </script>
+<% } %>

@@ -79,7 +79,7 @@ search:
     field: all # post, page, all
     path: /search.json # 搜索文件存放位置
     content: true # 是否搜索内容
-  
+
 
 ######## Comments ########
 comments:
@@ -127,7 +127,7 @@ comments:
   twikoo:
     js: https://gcore.jsdelivr.net/npm/twikoo@1.6.8/dist/twikoo.all.min.js # 建议锁定版本
     envId: https://xxx # vercel函数
-  
+
   # Waline
   # https://waline.js.org/
   waline:
@@ -168,12 +168,12 @@ comments:
     #   api: # 图床 api 地址
     #   token: # 图床验证
     #   resp: # 图片地址返回值的字段
-  
+
   # Artalk
   # https://artalk.js.org/
   artalk:
     css: https://unpkg.com/artalk@2.4.3/dist/Artalk.css
-    js: https://unpkg.com/artalk@2.4.3/dist/Artalk.js 
+    js: https://unpkg.com/artalk@2.4.3/dist/Artalk.js
     server: # 后端服务地址
     placeholder: ''
     darkMode: auto
@@ -271,7 +271,7 @@ plugins:
     weibo: /js/plugins/weibo.js
 
   marked: https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js
-  
+
   ## optional plugins ##
   # preload
   preload:
@@ -337,6 +337,23 @@ plugins:
     min_css: <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
     min_js: <script defer src="https://gcore.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
     auto_render_min_js: <script defer src="https://gcore.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"onload="renderMathInElement(document.body);"></script>
+
+  # Mermaid - markdwon to flow chart, seq chart, class chart ...
+  # 需要安装 npm install --save hexo-filter-mermaid-diagrams
+  # 使用时 需要在Markdown文件开头加入 mermaid: true
+  # 使用示例：
+  # ```mermaid
+  # graph LR
+  #   A(Section A) -->|option 1| B(Section A)
+  #   B -->|option 2| C(Section C)
+  # ```
+  mermaid:
+    enable: false
+    # js: https://unpkg.com/mermaid@9.0.0/dist/mermaid.min.js
+    js: https://cdn.jsdelivr.net/npm/mermaid@v9/dist/mermaid.min.js
+    # Available themes: default | dark | forest | neutral
+    # 推荐使用 dark 主题 在夜间模式下显示效果更好
+    theme: dark
 
 style:
   darkmode: auto # auto / always / false
