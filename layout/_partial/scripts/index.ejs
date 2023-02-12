@@ -62,9 +62,8 @@
     // 从 butterfly 和 volantis 获得灵感
     loadScript: (src, opt) => new Promise((resolve, reject) => {
       var script = document.createElement('script');
-      const config_root = '<%- config.root %>'.slice(0,-1);
-      if (src.startsWith('/') && config_root!==''){
-        src = config_root + src;
+      if (src.startsWith('/') && stellar.site_root!==''){
+        src = stellar.site_root + src;
       }
       script.src = src;
       if (opt) {
@@ -94,6 +93,7 @@
       }
     }
   };
+  stellar.site_root = '<%- config.root %>'.slice(0,-1);
   stellar.version = '<%- theme.stellar.version %>';
   stellar.github = 'https://github.com/xaoxuu/hexo-theme-stellar/tree/<%- theme.stellar.version %>';
   stellar.config = {
