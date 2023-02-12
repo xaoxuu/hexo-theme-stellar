@@ -14,6 +14,7 @@ open_graph:
 
 
 ######## Sidebar ########
+root:
 sidebar:
   logo:
     avatar: '[config.avatar](/about/)' # you can set avatar link in _config.yml or '[https://xxx.png](/about/)'

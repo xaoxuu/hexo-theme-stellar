@@ -1,4 +1,5 @@
 <script type="text/javascript">
+
   const stellar = {
     // 懒加载 css https://github.com/filamentgroup/loadCSS
     loadCSS: (href, before, media, attributes) => {
@@ -62,8 +63,9 @@
     // 从 butterfly 和 volantis 获得灵感
     loadScript: (src, opt) => new Promise((resolve, reject) => {
       var script = document.createElement('script');
-      if (src.startsWith('/')){
-        src = '..' + src;
+      const config_root = '<%- config.root %>'.slice(0,-1);
+      if (src.startsWith('/') && config_root!==''){
+        src = config_root + src;
       }
       script.src = src;
       if (opt) {
