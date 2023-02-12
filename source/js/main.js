@@ -337,9 +337,9 @@ if (stellar.search.service) {
           if (!path.startsWith('/')) {
             path = '/' + path;
           }
-          const siteRoot = stellar.search.local_search.root;
-          if (siteRoot){
-            path = siteRoot + path;
+          const search_root = stellar.search.local_search.root;
+          if (search_root){
+            path = search_root + path;
           }
           const filter = $inputArea.attr('data-filter') || '';
           searchFunc(path, filter, 'search-input', 'search-result');
