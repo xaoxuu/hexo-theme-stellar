@@ -62,6 +62,9 @@
     // 从 butterfly 和 volantis 获得灵感
     loadScript: (src, opt) => new Promise((resolve, reject) => {
       var script = document.createElement('script');
+      if (src.startsWith('/')){
+        src = stellar.config.root + src.substring(1);
+      }
       script.src = src;
       if (opt) {
         for (let key of Object.keys(opt)) {
@@ -100,6 +103,7 @@
       day: '<%- __('meta.date_suffix.day') %>',
       month: '<%- __('meta.date_suffix.month') %>',
     },
+    root : '<%- config.root %>',
   };
 
   // required plugins (only load if needs)

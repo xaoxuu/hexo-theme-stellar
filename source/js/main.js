@@ -334,9 +334,10 @@ if (stellar.search.service) {
         var $resultArea = document.querySelector("div#search-result");
         $inputArea.focus(function() {
           var path = stellar.search[stellar.search.service]?.path || '/search.json';
-          if (!path.startsWith('/')) {
-            path = '/' + path;
+          if (path.startsWith('/')) {
+            path = path.substring(1);
           }
+          path = stellar.config.root + path;
           const filter = $inputArea.attr('data-filter') || '';
           searchFunc(path, filter, 'search-input', 'search-result');
         });
