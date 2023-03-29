@@ -37,6 +37,17 @@ function generate_description() {
   }
   return '<meta name="description" content="' + config.description + '">';
 }
+function generate_keywords() {
+  if (page.keywords && page.keywords.length > 0) {
+    return '<meta name="keywords" content="' + page.keywords + '">';
+  } else if (page.tags && page.tags.length > 0) {
+    return '<meta name="keywords" content="' + page.tags.map(tag => tag.name).join(',') + '">';
+  } else if (config.keywords && config.keywords.length > 0) {
+    return '<meta name="keywords" content="' + config.keywords + '">';
+  } else {
+    return '';
+  }
+}
 
 function generate_robots() {
   if (is_home() == true) {
@@ -82,6 +93,8 @@ function og_args() {
     <%- open_graph(og_args()) %>
   <% } %>
   <%- generate_description() %>
+  
+  <%- generate_keywords() %>
 
   <!-- feed -->
   <% if (config.feed && config.feed.path) { %>
