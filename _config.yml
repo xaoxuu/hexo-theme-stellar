@@ -72,6 +72,11 @@ article:
     enable: false
     max_count: 5
 
+# AI 摘要
+TianliGpt:
+  post: true
+  wiki: true
+  api: 5Q5mpqRK5DkwT1X9Gi5e
 
 search:
   service: local_search # local_search, todo...
