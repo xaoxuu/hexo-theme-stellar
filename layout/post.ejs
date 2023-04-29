@@ -29,6 +29,9 @@ if (theme.plugins.heti && theme.plugins.heti.enable) {
 <article class='md-text content<%- heti %> <%- post.layout %><%- post.indent ? ' indent' : '' %><%- scrollreveal() %>'>
 <%- layoutTitle() %>
 <%- post.content %>
+<% if (theme.TianliGpt.post) { %>
+  <%- partial('_partial/main/article/ai_abstract') %>
+<% } %>
 <%- partial('_partial/main/article/article_footer') %>
 </article>
 <%- partial('_partial/main/article/read_next') %>
