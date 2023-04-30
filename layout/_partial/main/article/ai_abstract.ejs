@@ -1,0 +1,7 @@
+<% if (page.layout === 'post' || (page.layout === 'wiki' && page.wiki && page.wiki.length > 0)) { %>
+  <script>
+    let tianliGPT_postSelector = '.md-text.content.<%= page.layout === 'post' ? 'post' : 'wiki' %>';
+    let tianliGPT_key = '<%= theme.TianliGpt.api %>';
+  </script>
+  <script src="https://cdn1.tianli0.top/gh/zhheo/Post-Abstract-AI@0.9/tianli_gpt.js"></script>
+<% } %>

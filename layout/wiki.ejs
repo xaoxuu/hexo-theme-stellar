@@ -33,6 +33,9 @@ function layoutTitle() {
   <article class='md-text content <%- page.layout %><%- page.indent ? ' indent' : '' %><%- scrollreveal() %>'>
   <%- layoutTitle() %>
   <%- page.content %>
+  <% if (theme.TianliGpt.wiki) { %>
+	<%- partial('_partial/main/article/ai_abstract') %>
+  <% } %>
   <%- partial('_partial/main/article/article_footer') %>
   </article>
   <%- partial('_partial/main/article/read_next') %>
