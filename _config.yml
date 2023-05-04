@@ -78,6 +78,12 @@ TianliGpt:
   wiki: true
   api: 5Q5mpqRK5DkwT1X9Gi5e
 
+# 代码块
+CodeBlock:
+  show_copy: true
+  default_text: 'copy'
+  success_text: 'copied'
+
 search:
   service: local_search # local_search, todo...
   local_search: # 在 front-matter 中设置 indexing:false 来避免被搜索索引
