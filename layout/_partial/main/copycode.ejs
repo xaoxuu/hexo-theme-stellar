@@ -1,0 +1,86 @@
+<% if (theme.CodeBlock.show_copy) { %>
+
+  <style>
+    .highlight {
+      position: relative;
+    }
+    .highlight .code .copy-btn{
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 4px 0.5rem;
+      opacity: 0.25;
+      font-weight: 700;
+      color: var(--theme);
+      cursor: pointer;
+      transition: opacity 0.3s;
+    }
+    .highlight .code .copy-btn:hover{
+      color: var(--text-code);
+      opacity: 0.75;
+    }
+    .highlight .code .copy-btn.success {
+      color: var(--swiper-theme-color);
+      opacity: 0.75;
+
+    }
+    .highlight .code .copy-btn.warning {
+      color: var(--text-code);
+      opacity: 0.75;
+    }
+    
+  </style>
+  <script>
+    const codeElementArr = document.querySelectorAll('.code')
+    codeElementArr.forEach(code => {
+      const codeBeforeWidth = window.getComputedStyle(code, '::before').width.split('px')[0]
+      const codeBeforePadding = window.getComputedStyle(code, '::before').padding.split(' ').pop().split('px')[0]
+  
+      // copy btn 
+      const codeCopyBtn = document.createElement('div')
+      codeCopyBtn.classList.add('copy-btn')
+      codeCopyBtn.style.right = Number(codeBeforeWidth) + Number(codeBeforePadding) * 2 + 'px'
+      codeCopyBtn.innerText = '<%= theme.CodeBlock.default_text%>'
+      code.appendChild(codeCopyBtn)
+  
+      codeCopyBtn.addEventListener('click', async () => {
+        const currentCodeElement = code.children[0]?.innerText
+        await copyCode(currentCodeElement)
+
+        codeCopyBtn.innerText = '<%= theme.CodeBlock.success_text%>'
+        codeCopyBtn.classList.add('success')
+
+        setTimeout(() => {
+          codeCopyBtn.innerText = '<%= theme.CodeBlock.default_text%>'
+          codeCopyBtn.classList.remove('success')
+        },1000)
+      })
+    })
+    
+    async function copyCode(currentCode) {
+      // console.log(currentCode)
+      // console.log('复制代码')
+      if (navigator.clipboard) {
+        try {
+          await navigator.clipboard.writeText(currentCode)
+          } catch (error) {
+          // 未获得用户许可
+          codeCopyBtn.innerText = '未获得用户许可'
+          codeCopyBtn.classList.add('warning')
+          setTimeout(() => {
+            codeCopyBtn.innerText = '<%= theme.CodeBlock.default_text%>'
+            codeCopyBtn.classList.remove('warning')
+          },1000)
+        }
+      } else {
+        codeCopyBtn.innerText = '当前浏览器不支持此api'
+        codeCopyBtn.classList.add('warning')
+        setTimeout(() => {
+          codeCopyBtn.innerText = '<%= theme.CodeBlock.default_text%>'
+          codeCopyBtn.classList.remove('warning')
+        },1000)
+      }
+    }
+  </script>
+<% } %>
+ 
