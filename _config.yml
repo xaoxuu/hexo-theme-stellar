@@ -72,12 +72,6 @@ article:
     enable: false
     max_count: 5
 
-# AI 摘要
-TianliGpt:
-  post: true
-  wiki: true
-  api: 5Q5mpqRK5DkwT1X9Gi5e
-
 search:
   service: local_search # local_search, todo...
   local_search: # 在 front-matter 中设置 indexing:false 来避免被搜索索引
@@ -366,6 +360,13 @@ plugins:
     js: /js/plugins/copycode.js
     default_text: 'Copy'
     success_text: 'Copied'
+  
+  # AI 摘要
+  # https://github.com/zhheo/Post-Abstract-AI
+  tianli_gpt:
+    enable: false
+    field: post # all, post, wiki
+    api: 5Q5mpqRK5DkwT1X9Gi5e
 
 style:
   darkmode: auto # auto / always / false

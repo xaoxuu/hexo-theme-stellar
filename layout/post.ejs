@@ -29,7 +29,7 @@ if (theme.plugins.heti && theme.plugins.heti.enable) {
 <article class='md-text content<%- heti %> <%- post.layout %><%- post.indent ? ' indent' : '' %><%- scrollreveal() %>'>
 <%- layoutTitle() %>
 <%- post.content %>
-<% if (theme.TianliGpt.post) { %>
+<% if (theme.plugins.tianli_gpt.enable && ['all', 'post'].includes(theme.plugins.tianli_gpt.field)) { %>
   <%- partial('_partial/main/article/ai_abstract') %>
 <% } %>
 <%- partial('_partial/main/article/article_footer') %>
