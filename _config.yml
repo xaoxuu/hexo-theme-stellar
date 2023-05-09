@@ -78,12 +78,6 @@ TianliGpt:
   wiki: true
   api: 5Q5mpqRK5DkwT1X9Gi5e
 
-# 代码块
-CodeBlock:
-  show_copy: true
-  default_text: 'copy'
-  success_text: 'copied'
-
 search:
   service: local_search # local_search, todo...
   local_search: # 在 front-matter 中设置 indexing:false 来避免被搜索索引
@@ -365,6 +359,13 @@ plugins:
     # Available themes: default | dark | forest | neutral
     # 推荐使用 dark 主题 在夜间模式下显示效果更好
     theme: dark
+
+  # 代码块复制按钮
+  copycode:
+    enable: true
+    js: /js/plugins/copycode.js
+    default_text: 'Copy'
+    success_text: 'Copied'
 
 style:
   darkmode: auto # auto / always / false

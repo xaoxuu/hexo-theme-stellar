@@ -1,0 +1,27 @@
+.highlight
+  position: relative
+
+.highlight .code .copy-btn
+  position: absolute
+  top: 0
+  right: 0
+  padding: 4px 0.5rem
+  opacity: 0
+  font-weight: 700
+  color: var(--theme)
+  cursor: pointer
+
+.highlight:hover .copy-btn 
+  opacity 0.25
+
+.highlight .code .copy-btn:hover
+  color: var(--theme)
+  opacity: 0.75
+
+.highlight .code .copy-btn.success
+  color: $c-green
+  opacity: 0.75
+
+.highlight .code .copy-btn.warning
+  color: $c-orange
+  opacity: 0.75

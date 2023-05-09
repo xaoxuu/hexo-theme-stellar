@@ -385,3 +385,7 @@ if (stellar.plugins.heti) {
     stellar.plugins.heti.enable = false;
   });
 }
+
+if (stellar.plugins.copycode) {
+  stellar.loadScript(stellar.plugins.copycode.js, { defer: true })
+}
