@@ -239,9 +239,9 @@ tag_plugins:
     blobcat: https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs/${name}.png
   # {% image %}
   image:
-    fancybox: # true, false
-    replace_original:  #把markdown格式的图片解析成图片标签
-      enable: false
+    fancybox: false # true, false
+    parse_markdown: true # 把 markdown 格式的图片解析成图片标签
+
   # {% timeline %}
   timeline:
     max-height: 80vh
