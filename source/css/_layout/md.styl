@@ -139,7 +139,10 @@ h1.article-title
         left: 0
         right: 0
         height: 1px
-        opacity: 0.8
+        if hexo-config('style.link.underline') == true
+          opacity: 0.8
+        else
+          opacity: 0
         background: var(--theme-link)
         trans1: all
       &:hover
@@ -153,8 +156,3 @@ h1.article-title
           bottom: 0
           left: -2px
           right: -2px
-.md-text li:not([class]) a:not([class]):before, .md-text p:not([class]) a:not([class]):before
-    background unset !important
-
-.md-text li:not([class]) a:not([class]):hover:before, .md-text p:not([class]) a:not([class]):hover:before
-    background var(--theme-link) !important
