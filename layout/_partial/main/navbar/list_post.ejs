@@ -40,7 +40,9 @@ function layoutDiv() {
   if (theme['post-index']) {
     const obj = theme['post-index'];
     for (let key of Object.keys(obj)) {
-      if (full_url_for(page.path) == full_url_for(obj[key])) {
+      // 当 page 的末尾为 index.html 或者处于该 page 的某个子页面时也应该匹配
+      // if (full_url_for(page.path) == full_url_for(obj[key])) {
+      if (full_url_for(page.path).startsWith(full_url_for(obj[key]))){
         el += '<a class="active" href="' + url_for(obj[key]) + '">' + key + '</a>';
       } else {
         el += '<a href="' + url_for(obj[key]) + '">' + key + '</a>';
