@@ -12,6 +12,9 @@ function layoutDiv() {
   if (page.post_list) {
     el += partial('_partial/main/navbar/list_post');
   }
+  if (page.mermaid == true) {
+    el += partial('mermaid');
+  }
   if (page.h1 || page.title || (page.content && page.content.length > 0)) {
     el += partial('_partial/main/navbar/breadcrumb');
   }

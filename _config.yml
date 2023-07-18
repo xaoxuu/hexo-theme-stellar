@@ -351,8 +351,7 @@ plugins:
     # js: https://unpkg.com/mermaid@9.0.0/dist/mermaid.min.js
     js: https://cdn.jsdelivr.net/npm/mermaid@v9/dist/mermaid.min.js
     # Available themes: default | dark | forest | neutral
-    # 推荐使用 dark 主题 在夜间模式下显示效果更好
-    theme: dark
+    theme: neutral
 
   # 代码块复制按钮
   copycode:

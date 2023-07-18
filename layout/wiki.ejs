@@ -29,6 +29,9 @@ function layoutTitle() {
     page.header = 'auto';
   }
   %>
+  <% if (page.mermaid == true){ %>
+    <%- partial('mermaid') %>
+  <% } %>
   <%- partial('_partial/main/navbar/breadcrumb') %>
   <article class='md-text content <%- page.layout %><%- page.indent ? ' indent' : '' %><%- scrollreveal() %>'>
   <%- layoutTitle() %>

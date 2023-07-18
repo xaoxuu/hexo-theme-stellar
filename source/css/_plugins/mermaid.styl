@@ -1,106 +1,121 @@
-pre.mermaid {
-  display: inline-block;
-  width: 100%;
-  text-align: center;
-}
+pre.mermaid
+  display: inline-block
+  width: 100%
+  text-align: center
+  font-family: $ff-body
 
-.mermaid svg {
-  width: 100%;
-  display: inline-block;
-}
+.mermaid svg 
+  width: 100%
+  display: inline-block
 
+
+.mermaid svg
+  width: 100%
+  display: inline-block
+
+.mermaid span,text
+  font-family: $ff-body
+
+.mermaid .edgeLabel
+  padding: 4px
+  background-color: var(--site-bg) !important
+
+.mermaid rect.basic.label-container
+  stroke: var(--block-border) !important
+  fill: var(--block) !important
+  
 set_mermaid_darkmode()
-  .mermaid {
-    fill: #ccc !important;
-  }
+  .mermaid 
+    fill: #ccc !important
+  
 
-  .mermaid .error-icon {
-    fill: #a44141 !important;
-  }
+  .mermaid .error-icon 
+    fill: #a44141 !important
+  
 
-  .mermaid .error-text {
-    fill: #ddd !important;
-    stroke: #ddd !important;
-  }
+  .mermaid .error-text 
+    fill: #ddd !important
+    stroke: #ddd !important
+  
 
-  .mermaid .marker {
-    fill: lightgrey !important;
-    stroke: lightgrey !important;
-  }
+  .mermaid .marker 
+    fill: lightgrey !important
+    stroke: lightgrey !important
+  
 
-  .mermaid .marker.cross {
-    stroke: lightgrey !important;
-  }
+  .mermaid .marker.cross 
+    stroke: lightgrey !important
+  
 
-  .mermaid .label {
-    color: #ccc !important;
-  }
+  .mermaid .label 
+    color: #ccc !important
+  
 
-  .mermaid .cluster-label text {
-    fill: #F9FFFE !important;
-  }
+  .mermaid .cluster-label text 
+    fill: #F9FFFE !important
+  
 
-  .mermaid .cluster-label span {
-    color: #F9FFFE !important;
-  }
+  .mermaid .cluster-label span 
+    color: #F9FFFE !important
+  
 
   .mermaid .label text,
-  .mermaid span {
-    fill: #ccc !important;
-    color: #ccc !important;
-  }
+  .mermaid span 
+    fill: #ccc !important
+    color: #ccc !important
+  
 
   .mermaid .node rect,
   .mermaid .node circle,
   .mermaid .node ellipse,
   .mermaid .node polygon,
-  .mermaid .node path {
-    fill: #1f2020 !important;
-    stroke: #81B1DB !important;
-  }
+  .mermaid .node path 
+    fill: #1f2020 !important
+    stroke: #81B1DB !important
+  
 
-  .mermaid .arrowheadPath {
-    fill: lightgrey !important;
-  }
+  .mermaid .arrowheadPath 
+    fill: lightgrey !important
+  
 
-  .mermaid .edgePath .path {
-    stroke: lightgrey !important;
-  }
+  .mermaid .edgePath .path 
+    stroke: lightgrey !important
+  
 
-  .mermaid .flowchart-link {
-    stroke: lightgrey !important;
-  }
+  .mermaid .flowchart-link 
+    stroke: lightgrey !important
+  
 
-  .mermaid .edgeLabel {
-    background-color: hsl(0, 0%, 34.4117647059%) !important;
-  }
+  .mermaid .edgeLabel 
+    background-color: hsl(0, 0%, 34.4117647059%) !important
+  
 
-  .mermaid .edgeLabel rect {
-    background-color: hsl(0, 0%, 34.4117647059%) !important;
-    fill: hsl(0, 0%, 34.4117647059%) !important;
-  }
+  .mermaid .edgeLabel rect 
+    background-color: hsl(0, 0%, 34.4117647059%) !important
+    fill: hsl(0, 0%, 34.4117647059%) !important
+  
 
-  .mermaid .cluster rect {
-    fill: hsl(180, 1.5873015873%, 28.3529411765%) !important;
-    stroke: rgba(255, 255, 255, 0.25) !important;
-  }
+  .mermaid .cluster rect 
+    fill: hsl(180, 1.5873015873%, 28.3529411765%) !important
+    stroke: rgba(255, 255, 255, 0.25) !important
+  
 
-  .mermaid .cluster text {
-    fill: #F9FFFE !important;
-  }
+  .mermaid .cluster text 
+    fill: #F9FFFE !important
+  
 
-  .mermaid .cluster span {
-    color: #F9FFFE !important;
-  }
+  .mermaid .cluster span 
+    color: #F9FFFE !important
+  
 
-  .mermaid div.mermaidTooltip {
-    background: hsl(20, 1.5873015873%, 12.3529411765%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  }
+  .mermaid div.mermaidTooltip 
+    background: hsl(20, 1.5873015873%, 12.3529411765%) !important
+    border: 1px solid rgba(255, 255, 255, 0.25) !important
+  
 
-  .mermaid .flowchartTitleText {
-    fill: #ccc;
-  }
+  .mermaid .flowchartTitleText 
+    fill: #ccc
+  
 
 if hexo-config('style.darkmode') == 'auto'
   @media (prefers-color-scheme: dark)
