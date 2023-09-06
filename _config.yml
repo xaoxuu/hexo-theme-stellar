@@ -365,7 +365,8 @@ plugins:
   tianli_gpt:
     enable: false
     field: post # all, post, wiki
-    api: 5Q5mpqRK5DkwT1X9Gi5e
+    api: 5Q5mpqRK5DkwT1X9Gi5e # tianli_gpt key
+    typingAnimate: true # 打字机动画 
 
 style:
   darkmode: auto # auto / always / false
