@@ -84,7 +84,9 @@ function layoutDiv(fallback) {
         });
       } else {
         // 单 section
-        el += layoutTocHeader(page.toc_title);
+        if (proj.pages.length == 1) {
+          el += layoutTocHeader(page.toc_title);
+        }
         el += '<div class="widget-body fs14">';
         el += layoutDocTree(proj.pages);
         el += '</div>';
