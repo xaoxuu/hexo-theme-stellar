@@ -4,11 +4,11 @@ function layoutDiv() {
     return '';
   }
   var related = [];
-  let proj = theme.wiki.projects[page.wiki];
-  if (proj.related && proj.related.length > 0) {
+  let proj = theme.wiki.tree[page.wiki];
+  if (proj?.related?.length > 0) {
     proj.related.forEach((pid, i) => {
-      let p = theme.wiki.projects[pid];
-      if (p && p.title !== proj.title && p.index !== false) {
+      let p = theme.wiki.tree[pid];
+      if (p && p.title !== proj?.title && p.index !== false) {
         related.push(p);
       }
     });

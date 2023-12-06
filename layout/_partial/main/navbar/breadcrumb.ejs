@@ -58,11 +58,13 @@ function layoutDiv() {
       el += '<a class="cap breadcrumb" id="menu" href="' + url + '">' + __("btn.wiki") + '</a>';
     }
     // 项目名
-    let proj = theme.wiki.projects[page.wiki];
-    let url_proj = url_for(proj.homepage.path);
-    if (nodes.includes(url_proj) === false) {
-      el += '<span class="sep"></span>';
-      el += '<a class="cap breadcrumb" id="proj" href="' + url_proj + '">' + (proj.name || proj.title) + '</a>';
+    let proj = theme.wiki.tree[page.wiki];
+    if (proj != null) {
+      let url_proj = url_for(proj.homepage.path);
+      if (nodes.includes(url_proj) === false) {
+        el += '<span class="sep"></span>';
+        el += '<a class="cap breadcrumb" id="proj" href="' + url_proj + '">' + (proj.name || proj.title) + '</a>';
+      }
     }
     el += '</div>';
     // 更新日期

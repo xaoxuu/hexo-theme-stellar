@@ -43,7 +43,7 @@ module.exports = ctx => function(args) {
   el += '</summary>'
 
   if (args.wiki) {
-    const proj = ctx.theme.config.wiki.projects[args.wiki]
+    const proj = ctx.theme.config.wiki.tree[args.wiki]
     if (proj == undefined) {
       return ''
     }

@@ -4,7 +4,7 @@ function generate_title() {
     return page.seo_title;
   }
   if (page.wiki) {
-    let proj = theme.wiki.projects[page.wiki];
+    let proj = theme.wiki.tree[page.wiki];
     let wiki = (proj && proj.name) || page.wiki;
     if (page.title) {
       return wiki + __('symbol.colon') + page.title + ' - ' + config.title;
@@ -27,7 +27,7 @@ function generate_description() {
     return '';
   }
   if (page.layout == 'wiki' && page.wiki) {
-    let proj = theme.wiki.projects[page.wiki];
+    let proj = theme.wiki.tree[page.wiki];
     if (proj && proj.description) {
       return '<meta name="description" content="' + proj.description + '">';
     }

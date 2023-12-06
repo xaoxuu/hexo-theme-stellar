@@ -1,5 +1,5 @@
 <%
-let proj = theme.wiki.projects[page.wiki];
+let proj = theme.wiki.tree[page.wiki];
 
 function layoutToc() {
   if (toc(page.content).length > 0) {
@@ -74,10 +74,12 @@ function layoutDiv(fallback) {
       el += '</div>';
     } else if (proj) {
       // wiki 布局
-      if (proj.sections && proj.sections.length > 0) {
+      if (proj.sections && proj.sections.length > 1) {
         proj.sections.forEach((sec, i) => {
           // 多 section
-          el += layoutTocHeader(sec.title);
+          if (sec.title?.length > 0) {
+            el += layoutTocHeader(sec.title);
+          }
           el += '<div class="widget-body fs14">';
           el += layoutDocTree(sec.pages);
           el += '</div>';

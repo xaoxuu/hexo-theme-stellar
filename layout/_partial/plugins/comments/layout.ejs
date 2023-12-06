@@ -12,8 +12,8 @@ if (theme.comments.service && theme.comments.service.length > 0) {
   }
 }
 // 合并项目评论
-if (loadComment && page.layout == 'wiki' && page.wiki) {
-  let proj = theme.wiki.projects[page.wiki];
+let proj = theme.wiki.tree[page.wiki];
+if (loadComment && page.layout == 'wiki' && page.wiki && (proj != null)) {
   if (proj.comment_title != undefined && page.comment_title == undefined) {
     if (['utterances', 'beaudar', 'giscus'].includes(theme.comments.service)) {
       page.comment_title = proj.comment_title;
