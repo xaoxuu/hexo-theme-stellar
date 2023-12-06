@@ -4,9 +4,9 @@ function layoutDiv() {
   el += '<div class="nav-wrap">';
   el += '<nav class="sub post cap">';
   if (is_home()) {
-    el += '<a class="active" href="' + url_for("/") + '">' + __("btn.recent_publish") + '</a>';
+    el += '<a class="active" href="' + url_for(config.index_generator.path) + '">' + __("btn.recent_publish") + '</a>';
   } else {
-    el += '<a href="' + url_for("/") + '">' + __("btn.recent_publish") + '</a>';
+    el += '<a href="' + url_for(config.index_generator.path) + '">' + __("btn.recent_publish") + '</a>';
   }
 
   if (site.categories && site.categories.length > 0) {

@@ -15,7 +15,7 @@
 module.exports = ctx => function(args, content) {
   args = ctx.args.map(args, ['color'])
   var el = ''
-  el += '<div class="tag-plugin folders"'
+  el += '<div class="tag-plugin colorful folders"'
   el += ' ' + ctx.args.joinTags(args, ['color']).join(' ')
   el += '>'
   

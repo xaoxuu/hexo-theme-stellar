@@ -13,7 +13,7 @@ module.exports = (ctx, type) => function(args) {
   args = ctx.args.map(args, ['color', 'checked', 'symbol'], ['text'])
   var el = ''
   // div
-  el += '<div class="tag-plugin checkbox"'
+  el += '<div class="tag-plugin colorful checkbox"'
   el += ' ' + ctx.args.joinTags(args, ['color', 'symbol']).join(' ')
   el += '>'
   // input

@@ -9,11 +9,16 @@
   border-radius: $border-card
   overflow: hidden
   box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.03)
+  color: var(--text-p3)
   .page-number
     padding: 4px 8px
     border-radius: 8px
-    background: var(--block)
     margin: 2px
+  a.page-number
+    color: var(--text-p3)
+    &:hover
+      color: var(--text-p1)
+      background: var(--block)
   .extend
     text-align: center
     background-size: contain
@@ -29,9 +34,8 @@
       background-image: url('https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.4/arrow/f049bbd4e88ec.svg')
   .current
     font-family: $ff-code
-    color: var(--text-p3)
+    background: var(--block)
   .extend
-    color: var(--text-p3)
     padding: 1rem
     line-height: 0
     filter: grayscale(100%)

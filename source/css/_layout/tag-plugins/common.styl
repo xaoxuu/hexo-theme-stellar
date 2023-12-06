@@ -13,8 +13,7 @@ set_text_black()
 
 set_dynamic_color($theme)
   --theme: $theme
-  --theme-bg1: hsl(hue($theme), 90, 90)
-  --theme-bg2: hsl(hue($theme), 90, 92)
+  --theme-block: hsl(hue($theme), 90, 92)
   --theme-border: hsl(hue($theme), 50, 80)
   --text-p0: hsl(hue($theme), 55, 16)
   --text-p1: hsl(hue($theme), 55, 20)
@@ -23,85 +22,79 @@ set_dynamic_color($theme)
 .tag-plugin
   --theme: var(--text-p1)
   --theme-border: var(--block-border)
-  --theme-bg1: hsl(hue($color-theme), 90, 90)
-  --theme-bg2: var(--block)
+  --theme-block: var(--block)
 
-.tag-plugin[color='red']
+.colorful[color='red']
   set_dynamic_color($c-red)
-.tag-plugin[color='orange']
+.colorful[color='orange']
   set_dynamic_color($c-orange)
-.tag-plugin[color='yellow']
+.colorful[color='yellow']
   set_dynamic_color($c-yellow)
-.tag-plugin[color='green']
+.colorful[color='green']
   set_dynamic_color($c-green)
-.tag-plugin[color='cyan']
+.colorful[color='cyan']
   set_dynamic_color($c-cyan)
-.tag-plugin[color='blue']
+.colorful[color='blue']
   set_dynamic_color($c-blue)
-.tag-plugin[color='purple']
+.colorful[color='purple']
   set_dynamic_color($c-purple)
 
-.tag-plugin[color='light']
-  --theme-bg1: hsl(0 0 88%)
-  --theme-bg2: white
+.colorful[color='light']
+  --theme-block: white
   set_text_black()
 
-.tag-plugin[color='dark']
-  --theme-bg1: hsl(0 0 12%)
-  --theme-bg2: #333
+.colorful[color='dark']
+  --theme-block: #333
   set_text_white()
 
-.tag-plugin[color='warning']
+.colorful[color='warning']
   --theme: $c-yellow
   --theme-border: #ffe659
-  --theme-bg2: #ffe659
+  --theme-block: #ffe659
   --theme-link: #ff453a
 
-.tag-plugin[color='error']
+.colorful[color='error']
   --theme: $c-yellow
   --theme-border: #ff453a
-  --theme-bg2: #ff453a
+  --theme-block: #ff453a
   --theme-link: #ffe659
   set_text_white()
 
 set_darkmode_tags()
   set_dynamic_color($theme)
     --theme: $theme
-    --theme-bg1: hsl(hue($theme), 50, 16)
-    --theme-bg2: hsl(hue($theme), 16, 16)
+    --theme-block: hsl(hue($theme), 16, 16)
     --theme-border: hsl(hue($theme), 50, 24)
     --text-p0: hsl(hue($theme), 100, 85)
     --text-p1: hsl(hue($theme), 50, 75)
     --text-p2: hsl(hue($theme), 80, 72)
   .tag-plugin.tag
     set_dynamic_color($color-theme)
-  .tag-plugin[color='red']
+  .colorful[color='red']
     set_dynamic_color($c-red)
-  .tag-plugin[color='orange']
+  .colorful[color='orange']
     set_dynamic_color($c-orange)
-  .tag-plugin[color='yellow']
+  .colorful[color='yellow']
     set_dynamic_color($c-yellow)
-  .tag-plugin[color='green']
+  .colorful[color='green']
     set_dynamic_color($c-green)
-  .tag-plugin[color='cyan']
+  .colorful[color='cyan']
     set_dynamic_color($c-cyan)
-  .tag-plugin[color='blue']
+  .colorful[color='blue']
     set_dynamic_color($c-blue)
-  .tag-plugin[color='purple']
+  .colorful[color='purple']
     set_dynamic_color($c-purple)
-  .tag-plugin[color='light']
+  .colorful[color='light']
     --theme-border: white
-    --theme-bg1: hsl(0 0 88%)
-    --theme-bg2: #fff
+    --theme-block: #fff
     set_text_black()
 
-  .tag-plugin[color='dark']
+  .colorful[color='dark']
     --theme-border: black
-    --theme-bg1: hsl(0 0 12%)
-    --theme-bg2: #111
+    --theme-block: #111
     set_text_white()
 
-  .tag-plugin[color='warning'],.tag-plugin[color='light']
+  .colorful[color='warning'],.colorful[color='light']
     set_text_black()
 
 if hexo-config('style.darkmode') == 'auto'

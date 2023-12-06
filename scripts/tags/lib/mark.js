@@ -14,7 +14,7 @@ module.exports = ctx => function(args) {
     args.color = ctx.theme.config.tag_plugins.mark.default_color
   }
   var el = ''
-  el += '<mark class="tag-plugin mark"'
+  el += '<mark class="tag-plugin colorful mark"'
   el += ' ' + ctx.args.joinTags(args, ['color']).join(' ')
   el += '>'
   el += args.text

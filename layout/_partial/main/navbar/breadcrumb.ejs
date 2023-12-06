@@ -24,7 +24,7 @@ function layoutDiv() {
     el += '<div id="breadcrumb">';
     el += '<a class="cap breadcrumb" href="' + config.root + '">' + home_title + '</a>';
     el += '<span class="sep"></span>';
-    el += '<a class="cap breadcrumb" href="' + config.root + '">' + __("btn.blog") + '</a>';
+    el += '<a class="cap breadcrumb" href="' + config.index_generator.path + '">' + __("btn.blog") + '</a>';
     if (page.layout == "post" && page.categories && page.categories.length > 0) {
       el += '<span class="sep"></span>';
       el += list_categories(page.categories, {
@@ -37,8 +37,14 @@ function layoutDiv() {
     el += '</div>';
     // 发布日期
     el += '<div id="post-meta">';
-    el += __("meta.created") + '&nbsp;<time datetime="' + date_xml(page.date) + '">' + date(page.date, config.date_format) + '</time>';
+    el += `
+    <span>${__("meta.created")}&nbsp;<time datetime="${date_xml(page.date)}">${date(page.date, config.date_format)}</time></span>
+    `;
+    el += `
+    <span>${__("meta.updated")}&nbsp;<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time></span>
+    `;
     el += '</div>';
+    
     el += '</div>';
     el += '</div>';
   } else if (page.layout === "wiki" && page.wiki && page.wiki.length > 0) {
@@ -72,7 +78,9 @@ function layoutDiv() {
     el += '</div>';
     // 更新日期
     el += '<div id="post-meta">';
-    el += __("meta.updated") + '&nbsp;<time datetime="' + date_xml(page.updated) + '">' + date(page.updated, config.date_format) + '</time>';
+    el += `
+    <span>${__("meta.updated")}&nbsp;<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time></span>
+    `;
     el += '</div>';
     el += '</div>';
 
