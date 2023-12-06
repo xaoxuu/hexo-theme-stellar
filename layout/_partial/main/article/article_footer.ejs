@@ -2,63 +2,82 @@
 function layoutDiv() {
   var el = '';
   var item = [];
-  if (page.references && page.references.length > 0) {
+  if (page.references?.length > 0) {
     item.push('references');
   }
-  if (page.layout !== 'wiki') {
-    if (theme.article.license && theme.article.license.length > 0) {
-      item.push('license');
-    }
-    if (theme.article.share && theme.article.share.length > 0) {
-      item.push('share');
-    }
+  if (theme.article.license?.length > 0) {
+    item.push('license');
+  }
+  if (theme.article.share?.length > 0) {
+    item.push('share');
   }
   if (item.length === 0) {
     return el;
   }
   el += '<div class="article-footer reveal fs14">';
-  if (page.references && page.references.length > 0) {
-    el += '<section id="references">';
-    el += '<div class="header">';
-    el += '<span>' + __('meta.references') + '</span>';
-    el += '</div>';
-    el += '<div class="body"><ul>';
-    page.references.forEach((item, i) => {
-      el += '<li class="post-title">';
-      el += '<a href="' + item.url + '"';
-      if (item.url.includes('://')) {
-        el += ' target="_blank" rel="external nofollow noopener noreferrer">';
-      } else {
-        el += ' rel="noopener noreferrer">';
-      }
-      el += item.title || item.url;
-      el += '</a>';
-      el += '</li>';
-    });
-    el += '</ul></div>';
-    el += '</section>';
+  if (page.references?.length > 0) {
+    function refList() {
+      var el = '';
+      page.references.forEach((item, i) => {
+        el += '<li class="post-title">';
+        el += '<a href="' + item.url + '"';
+        if (item.url.includes('://')) {
+          el += ' target="_blank" rel="external nofollow noopener noreferrer">';
+        } else {
+          el += ' rel="noopener noreferrer">';
+        }
+        el += item.title || item.url;
+        el += '</a>';
+        el += '</li>';
+      });
+      return el;
+    }
+    el += `
+    <section id="references">
+      <div class="header"><span>${__('meta.references')}</span></div>
+      <div class="body">
+        <ul>${refList()}</ul>
+      </div>
+    </section>
+    `
   }
 
+  var license = ''
   if (page.layout == 'post') {
-    if (theme.article.license && page.license != false) {
-      el += '<section id="license">';
-      el += '<div class="header">';
-      el += '<span>' + __('meta.license') + '</span>';
-      el += '</div>';
-      el += '<div class="body">';
-      el += markdown(page.license || theme.article.license);
-      el += '</div>';
-      el += '</section>';
+    if (theme.article.license && (page.license != false)) {
+      license = markdown(page.license || theme.article.license)
     }
+  } else if (page.layout == 'wiki' && page.wiki) {
+    let proj = theme.wiki.tree[page.wiki]
+    if (page.license != null) {
+      license = markdown(page.license || theme.article.license)
+    } else if (proj?.license != null) {
+      license = markdown(proj.license || theme.article.license)
+    }
+  }
+  if (license.length > 0) {
+    el += `
+    <section id="license">
+      <div class="header"><span>${__('meta.license')}</span></div>
+      <div class="body">${license}</div>
+    </section>
+    `
+  }
 
-    if (theme.article.share && page.share != false) {
-      el += '<section id="share">';
-      el += '<div class="header">';
-      el += '<span>' + __('meta.share') + '</span>';
-      el += '</div>';
-      el += '<div class="body">';
-      el += '<div class="link"><input class="copy-area" readonly="true" id="copy-link" value="' + page.permalink + '" /></div>';
-      el += '<div class="social-wrap dis-select">';
+  var showSharePlugin = false
+  if (page.layout == 'post') {
+    showSharePlugin = page.share != false
+  } else if (page.layout == 'wiki' && page.wiki) {
+    let proj = theme.wiki.tree[page.wiki]
+    if (page.share != null) {
+      showSharePlugin = page.share == true
+    } else if (proj != null) {
+      showSharePlugin = proj.share == true
+    }
+  }
+  if (theme.article.share && showSharePlugin) {
+    function socialButtons() {
+      var el = ''
       theme.article.share.forEach((item, i) => {
         if (['wechat', 'weibo', 'email', 'link'].includes(item)) {
           el += '<a class="social share-item ' + item + '"';
@@ -96,15 +115,29 @@ function layoutDiv() {
           el += '</a>';
         }
       });
-      el += '</div>';
-      if (theme.article.share.includes('wechat')) {
-        el += '<div class="qrcode" id="qrcode-wechat" style="visibility:hidden;height:0">';
-        el += '<img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=' + page.permalink + '"/>';
-        el += '</div>';
-      }
-      el += '</div>';
-      el += '</section>';
+      return el;
     }
+    function qrcode() {
+      if (theme.article.share.includes('wechat')) {
+        return `
+        <div class="qrcode" id="qrcode-wechat" style="visibility:hidden;height:0">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${page.permalink}"/>
+        </div>
+        `
+      } else {
+        return ''
+      }
+    }
+    el += `
+    <section id="share">
+      <div class="header"><span>${__('meta.share')}</span></div>
+      <div class="body">
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="${page.permalink}" /></div>
+        <div class="social-wrap dis-select">${socialButtons()}</div>
+        ${qrcode()}
+      </div>
+    </section>
+    `
   }
 
   el += '</div>';
