@@ -52,7 +52,11 @@ function layoutDiv() {
     if (page.license != null) {
       license = markdown(page.license || theme.article.license)
     } else if (proj?.license != null) {
-      license = markdown(proj.license || theme.article.license)
+      if (proj.license == true) {
+        license = markdown(theme.article.license)
+      } else {
+        license = markdown(proj.license)
+      }
     }
   }
   if (license.length > 0) {
