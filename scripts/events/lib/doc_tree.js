@@ -35,10 +35,16 @@ function getWikiObject(ctx) {
       if (obj.sort == null) {
         obj.sort = 0
       }
+      if (obj.path?.startsWith('/')) {
+        obj.path = obj.path.substring(1)
+      }
+      if (obj.path?.endsWith('/') == false) {
+        obj.path = obj.path + '/'
+      }
       list.push(obj)
     }
   }
-  list = list.sort((p1, p2) => p1.sort - p2.sort)
+  list = list.sort((p1, p2) => p2.sort - p1.sort)
   for (let item of list) {
     wiki.tree[item.id] = item
   }
@@ -81,10 +87,13 @@ module.exports = ctx => {
   }
   
   // 数据整合：每个项目的子页面
-  for (let id of wiki_list) {
+  for (let i = 0; i < wiki_list.length; i++) {
+    let id = wiki_list[i];
     let item = wiki.tree[id]
     let sub_pages = wiki_pages.filter(p => p.wiki === id)
     if (!sub_pages || sub_pages.length == 0) {
+      wiki_list.splice(i, 1)
+      delete wiki.tree[id]
       continue
     }
 
@@ -92,10 +101,15 @@ module.exports = ctx => {
     // 未特别指定首页时，获取TOC第一页作为首页
     if (item.homepage == null && item.toc != null) {
       for (let id of Object.keys(item.toc)) {
-        const path_key = item.toc[id]
-        let hs = sub_pages.filter(p => (p.path_key.endsWith(path_key)))
-        if (hs.length > 0) {
-          item.homepage = hs[0]
+        const sec = item.toc[id]
+        for (let key of sec) {
+          let hs = sub_pages.filter(p => p.path_key == item.path + key)
+          if (hs.length > 0) {
+            item.homepage = hs[0]
+            break
+          }
+        }
+        if (item.homepage != null) {
           break
         }
       }
@@ -108,28 +122,39 @@ module.exports = ctx => {
     var sections = []
     var others = sub_pages
     if (item.toc) {
+      // 根据配置设置顺序
       for (let title of Object.keys(item.toc)) {
-        let key_list = item.toc[title]
-        var arr = []
-        for (let key of key_list) {
-          arr = arr.concat(sub_pages.filter(p => p.path_key.endsWith(key)))
-          others = others.filter(p => p.path_key.endsWith(key) == false)
+        var sec = { title: title, pages: []}
+        for (let key of item.toc[title]) {
+          sec.pages = sec.pages.concat(sub_pages.filter(p => p.path_key == item.path + key))
+          others = others.filter(p => p.path_key != item.path + key)
         }
+        sections.push(sec)
+      }
+      if (others.length > 0 && others.filter(p => p.title?.length > 0).length > 0) {
         sections.push({
-          title: title,
-          pages: arr
+          title: '...',
+          pages: others.sort((p1, p2) => p1.path - p2.path)
         })
       }
-    }
-    if (others.length > 0) {
+    } else {
+      // 自动设置顺序
       sections.push({
-        pages: others
+        pages: sub_pages.sort((p1, p2) => p1.path - p2.path)
       })
+    }
+    
+    // page number
+    var page_number = 0
+    for (let sec of sections) {
+      for (let page of sec.pages) {
+        page.page_number = page_number++
+      }
     }
     item.sections = sections
     item.pages = sub_pages
   }
-
+  
   // 全站所有的项目标签
   var all_tags = {}
   all_tag_name.forEach((tag_name, i) => {
@@ -163,6 +188,7 @@ module.exports = ctx => {
 
   wiki.all_tags = all_tags
   wiki.all_pages = wiki_pages
+  wiki.shelf = ctx.locals.get('data').wiki
   ctx.theme.config.wiki = wiki
 
 }

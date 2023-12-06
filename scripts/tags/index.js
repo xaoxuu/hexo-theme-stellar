@@ -32,6 +32,6 @@ hexo.extend.tag.register('navbar', require('./lib/navbar')(hexo))
 hexo.extend.tag.register('note', require('./lib/note')(hexo))
 hexo.extend.tag.register('poetry', require('./lib/poetry')(hexo), true)
 hexo.extend.tag.register('quot', require('./lib/quot')(hexo))
-hexo.extend.tag.register('tag', require('./lib/tag')(hexo))
+hexo.extend.tag.register('hashtag', require('./lib/hashtag')(hexo))
 
 // others

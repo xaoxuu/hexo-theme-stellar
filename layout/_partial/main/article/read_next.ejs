@@ -12,18 +12,23 @@ function layoutDiv() {
   } else if (page.layout === 'wiki' && page.wiki && page.wiki.length > 0) {
     let proj = theme.wiki.tree[page.wiki];
     if (proj) {
-      const current = page.order || 0;
-      proj.pages.forEach((p, i) => {
-        if (p.order < current) {
-          if (prev == undefined || p.order > prev.order) {
-            prev = p;
+      let ps = proj.pages.filter(p => p.path == page.path)
+      if (ps.length > 0) {
+        const current_page_number = ps[0].page_number || 0;
+        proj.pages.forEach((p, i) => {
+          if (p.page_number < current_page_number) {
+            if (prev == undefined || p.page_number > prev.page_number) {
+              prev = p;
+            }
+          } else if (p.page_number > current_page_number) {
+            if (next == undefined || p.page_number < next.page_number) {
+              next = p;
+            }
           }
-        } else if (p.order > current) {
-          if (next == undefined || p.order < next.order) {
-            next = p;
-          }
-        }
-      });
+        });
+      } else {
+        console.error('未找到当前页');
+      }
     }
   }
   let el = '';

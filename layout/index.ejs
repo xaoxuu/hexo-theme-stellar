@@ -51,13 +51,13 @@ function layout_posts(partial) {
 function layout_wikis(partial) {
   var el = '';
   var wikis = [];
-  const wiki_tree = theme.wiki.tree;
-  for (let proj_name of Object.keys(wiki_tree)) {
-    let proj = wiki_tree[proj_name];
+  const { shelf, tree } = theme.wiki;
+  for (let pid of shelf) {
+    let proj = tree[pid];
     if (proj == null) {
       continue;
     }
-    if (proj.index === false || proj.pages == undefined || proj.pages.length === 0) {
+    if (proj.pages == undefined || proj.pages.length === 0) {
       continue;
     }
     if (page.filter === false) {

@@ -38,7 +38,7 @@ sidebar:
     # 文章内页
     post: search_blog, toc, ghrepo, ghissues # for pages using 'layout:post'
     # 文档内页
-    wiki: search, ghrepo, toc, ghissues, related # for pages using 'layout:wiki'
+    wiki: search, toc, ghissues, related # for pages using 'layout:wiki'
     # 其它 layout:page 的页面
     page: toc, search # for custom pages using 'layout:page'
 
@@ -248,9 +248,9 @@ tag_plugins:
   # {% mark %}
   mark:
     default_color: dark # light, dark, red, orange, yellow, green, cyan, blue, purple, warning, error
-  # {% tag %}
-  tag:
-    default_color: yellow # red, orange, yellow, green, cyan, blue, purple
+  # {% hashtag %}
+  hashtag:
+    default_color: # red, orange, yellow, green, cyan, blue, purple
 
 
 ######## JS Plugins ########

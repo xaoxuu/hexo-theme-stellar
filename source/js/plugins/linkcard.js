@@ -42,7 +42,7 @@ function setCardLink(nodes) {
     }).then(function(data) {
       renderer(el, data);
     }).catch(function(error) {
-      console.log(error);
+      console.error(error);
     });
   })
 }

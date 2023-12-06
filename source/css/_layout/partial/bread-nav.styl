@@ -3,6 +3,8 @@
   padding: 0.25rem 1rem 0
   color: var(--text-p3)
   font-weight: 500
+  display: flex
+  justify-content: space-between
   div#breadcrumb
     display: flex
     align-items: center
@@ -17,3 +19,26 @@
       color: $color-hover
   div#post-meta
     margin-top: 2px
+
+.bread-nav .ghrepo
+  font-size: $fs-13
+  display: flex
+  flex-direction: column
+  align-items: flex-start
+  border-left: 1px solid var(--text-meta)
+  padding-left: 8px
+  a  
+    display: flex
+    align-items: center
+    color: var(--text-p2)
+    svg
+      margin-right: 4px
+    &.bold 
+      font-weight: 600
+      color: var(--text-p1)
+    span 
+      margin-left: 4px
+    &:hover
+      color: var(--theme-link)
+  a+a   
+    margin-top: 8px

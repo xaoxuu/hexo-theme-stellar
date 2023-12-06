@@ -22,7 +22,10 @@ function layoutTocHeader(title) {
 
 function layoutDocTree(pages) {
   var el = '';
-  pages.forEach((p, i) => {
+  for (let p of pages) {
+    if (p.title == null || p.title.length == 0) {
+      continue;
+    }
     let isActive = '';
     if (p.path === page.path) {
       isActive += ' active';
@@ -34,14 +37,14 @@ function layoutDocTree(pages) {
         href += '#start'
       }
       el += '<a class="doc-tree-link' + isActive + '" href="' + href + '">';
-      el += '<span class="toc-text">' + (p.title || p.seo_title) + '</span>';
+      el += '<span class="toc-text">' + p.title + '</span>';
       el += '</a>';
     }
     if (p.path === page.path) {
       el += layoutToc();
     }
     el += '</div>';
-  });
+  }
   return el;
 }
 
@@ -74,9 +77,8 @@ function layoutDiv(fallback) {
       el += '</div>';
     } else if (proj) {
       // wiki 布局
-      if (proj.sections && proj.sections.length > 1) {
+      if (proj.sections && proj.sections.length > 0 && proj.pages.length > 1) { // 多 pages
         proj.sections.forEach((sec, i) => {
-          // 多 section
           if (sec.title?.length > 0) {
             el += layoutTocHeader(sec.title);
           }
@@ -84,8 +86,7 @@ function layoutDiv(fallback) {
           el += layoutDocTree(sec.pages);
           el += '</div>';
         });
-      } else {
-        // 单 section
+      } else { // 单 page
         if (proj.pages.length == 1) {
           el += layoutTocHeader(page.toc_title);
         }

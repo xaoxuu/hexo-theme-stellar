@@ -26,12 +26,10 @@ codeElementArr.forEach(code => {
 })
 
 async function copyCode(currentCode) {
-  // console.log(currentCode)
-  // console.log('复制代码')
   if (navigator.clipboard) {
     try {
       await navigator.clipboard.writeText(currentCode)
-      } catch (error) {
+    } catch (error) {
       // 未获得用户许可
       codeCopyBtn.innerText = '未获得用户许可'
       codeCopyBtn.classList.add('warning')
