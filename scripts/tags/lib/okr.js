@@ -54,6 +54,7 @@ function generateKRList(ctx, contentArray) {
 }
 
 function layoutItem(ctx, type, index, title, note, color, label, percent) {
+  const percentStr = (percent * 100).toString().replace(/\.\d*/, '')
   return `
   <div class="okr-item ${type}">
     <div class="okr-left">
@@ -66,10 +67,10 @@ function layoutItem(ctx, type, index, title, note, color, label, percent) {
     <div class="okr-right colorful" color="${color}">
       <div class="labels">
         <span class="status label">${label}</span>
-        <span class="status percent">${percent * 100}%</span>
+        <span class="status percent">${percentStr}%</span>
       </div>
       <div class="progress">
-        <div class="fill" style="width:${percent * 100}%;"></div>
+        <div class="fill" style="width:${percentStr}%;"></div>
       </div>
     </div>
   </div>
@@ -114,7 +115,8 @@ module.exports = ctx => function(args, content = '') {
     (accumulator, currentValue) => accumulator + currentValue,
     0,
   );
-  const oPercent = Number(oMeta.percent) || (krPercentSum / krPercentList.length)
+  
+  const oPercent = Number(oMeta.percent) || (krPercentSum / krPercentList.length).toFixed(2)
   var status = null
   if (args.status != null && args.status && statusList[args.status]) {
     status = statusList[args.status] 
