@@ -9,7 +9,7 @@ function layoutDiv() {
   if (proj?.related?.length > 0) {
     proj.related.filter(pid => shelf.includes(pid)).forEach((pid, i) => {
       let p = tree[pid];
-      if (p && p.title !== proj?.title) {
+      if (p && p.title !== proj?.title && p.homepage) {
         related.push(p);
       }
     });
@@ -25,10 +25,7 @@ function layoutDiv() {
     el += '<span class="name">' + __('meta.more', title) + '</span>';
     el += '</div>';
     el += '<div class="widget-body related-posts">';
-    related.forEach((p, i) => {
-      if (p.homepage == null) {
-        console.error("未找到首页：", p.title);
-      }
+    for (let p of related) {
       // 同一个分组中的其它项目
       el += '<a class="item wiki" href="' + url_for(p.homepage?.path) + '">';
       el += '<span class="title">' + p.title + '</span>';
@@ -36,7 +33,7 @@ function layoutDiv() {
         el += '<span class="excerpt">' + p.description + '</span>';
       }
       el += '</a>';
-    });
+    }
     el += '</div>';
     el += '</widget>';
   }
