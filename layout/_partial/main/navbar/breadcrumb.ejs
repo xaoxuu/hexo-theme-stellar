@@ -22,9 +22,9 @@ function layoutDiv() {
     el += '<div class="bread-nav fs12">';
     el += '<div class="left">';
     el += '<div id="breadcrumb">';
-    el += '<a class="cap breadcrumb" href="' + config.root + '">' + home_title + '</a>';
+    el += '<a class="cap breadcrumb" href="' + url_for(config.root) + '">' + home_title + '</a>';
     el += '<span class="sep"></span>';
-    el += '<a class="cap breadcrumb" href="' + config.index_generator.path + '">' + __("btn.blog") + '</a>';
+    el += '<a class="cap breadcrumb" href="' + url_for(config.index_generator.path) + '">' + __("btn.blog") + '</a>';
     if (page.layout == "post" && page.categories && page.categories.length > 0) {
       el += '<span class="sep"></span>';
       el += list_categories(page.categories, {
@@ -53,7 +53,7 @@ function layoutDiv() {
     el += '<div id="breadcrumb">';
     var nodes = [];
     // home
-    el += '<a class="cap breadcrumb" id="home" href="' + config.root + '">' + home_title + '</a>';
+    el += '<a class="cap breadcrumb" id="home" href="' + url_for(config.root) + '">' + home_title + '</a>';
     nodes.push('/');
     // menu_id
     el += '<span class="sep"></span>';
@@ -109,7 +109,7 @@ function layoutDiv() {
     <div class="bread-nav fs12">
       <div class="left">
         <div id="breadcrumb">
-          <a class="cap breadcrumb" href="${config.root}">${home_title}</a>
+          <a class="cap breadcrumb" href="${url_for(config.root)}">${home_title}</a>
           <span class="sep"></span>
           <a class="cap breadcrumb" href="${url_for(page.path)}">${page.title || page.seo_title}</a>
         </div>
