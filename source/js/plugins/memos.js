@@ -84,14 +84,18 @@ const MemosJS = {
         var imgs = [];
         for (let res of item.resourceList) {
           if (res.type?.includes('image/')) {
-            imgs.push(res.id);
-            console.log('type', res.type);
+            imgs.push(res);
           }
         }
         if (imgs.length > 0) {
           cell += '<div class="tag-plugin image">';
-          for (let id of imgs) {
-            cell += `<div class="image-bg"><img src="https://${cfg.host}/o/r/${id}" fancybox="true"></div>`;
+          for (let img of imgs) {
+            if (img.externalLink?.length > 0) {
+              cell += `<div class="image-bg"><img src="${img.externalLink}" fancybox="true"></div>`;
+            } else {
+              cell += `<div class="image-bg"><img src="https://${cfg.host}/o/r/${img.id}" fancybox="true"></div>`;
+            }
+            
           }
           cell += '</div>';
         }
