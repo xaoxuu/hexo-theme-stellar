@@ -10,10 +10,10 @@ Stellar 是一个内置文档系统的简约商务风 Hexo 主题，支持丰富
 Check your environment:
 
 ```yaml
-Hexo: 5.4.0 ~ 6.3.0
+Hexo: 6.3.0 ~ 7.0.0
 hexo-cli: 4.3.0 ~ latest
-node.js: 14.17.3 ~ 18.12.0
-npm: 6.14.13 ~ 8.19.2
+node: 14.17.3 ～ 20.10.0 # 建议选择 LTS 版本，过高的版本 hexo 还没有进行兼容。
+npm: 6.14.13 ~ 10.2.3
 ```
 
 Edit your `_config.yml`:
