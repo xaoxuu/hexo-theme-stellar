@@ -1,5 +1,5 @@
 /**
- * timeline.js v2 | https://github.com/xaoxuu/hexo-theme-stellar/
+ * timeline.js v2.1 | https://github.com/xaoxuu/hexo-theme-stellar/
  *
  * {% timeline %}
  *
@@ -35,14 +35,14 @@ function layoutNodeContent(ctx, content) {
 }
 
 module.exports = ctx => function(args, content = '') {
-  args = ctx.args.map(args, ['api', 'user', 'type', 'limit', 'hide'])
+  args = ctx.args.map(args, ['api', 'user', 'type', 'limit', 'hide', 'avatar'])
   var el = ''
   if (!args.type) {
     args.type = 'timeline'
   }
   if (args.api && args.api.length > 0) {
     el += '<div class="tag-plugin timeline stellar-' + args.type + '-api"'
-    el += ' ' + ctx.args.joinTags(args, ['api', 'user', 'limit', 'hide']).join(' ')
+    el += ' ' + ctx.args.joinTags(args, ['api', 'user', 'limit', 'hide', 'avatar']).join(' ')
     el += '>'
   } else {
     el += '<div class="tag-plugin timeline">'
