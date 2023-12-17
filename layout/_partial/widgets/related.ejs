@@ -3,34 +3,25 @@ function layoutDiv() {
   if (page.layout !== "wiki") {
     return '';
   }
-  var related = [];
-  const { shelf, tree } = theme.wiki;
-  let proj = tree[page.wiki];
-  if (proj?.related?.length > 0) {
-    proj.related.filter(pid => shelf.includes(pid)).forEach((pid, i) => {
-      let p = tree[pid];
-      if (p && p.title !== proj?.title && p.homepage) {
-        related.push(p);
-      }
-    });
+  let thisItemObject = theme.wiki.tree[page.wiki];
+  if (thisItemObject == null) {
+    return '';
   }
+  const relatedItems = thisItemObject.relatedItems;
   var el = '';
-  if (related.length > 0) {
+  for (let relatedItem of relatedItems) {
     el += '<widget class="widget-wrapper related">';
     el += '<div class="widget-header cap theme dis-select">';
-    var title = __('btn.wiki');
-    if (proj.tags && proj.tags[0]) {
-      title = proj.tags[0];
-    }
-    el += '<span class="name">' + __('meta.more', title) + '</span>';
+    el += '<span class="name">' + __('meta.more', relatedItem.name) + '</span>';
     el += '</div>';
     el += '<div class="widget-body related-posts">';
-    for (let p of related) {
+    for (let id of relatedItem.items) {
       // 同一个分组中的其它项目
-      el += '<a class="item wiki" href="' + url_for(p.homepage?.path) + '">';
-      el += '<span class="title">' + p.title + '</span>';
-      if (p.description && p.description.length > 0) {
-        el += '<span class="excerpt">' + p.description + '</span>';
+      let item = theme.wiki.tree[id];
+      el += '<a class="item wiki" href="' + url_for(item.homepage?.path) + '">';
+      el += '<span class="title">' + item.title + '</span>';
+      if (item.description && item.description.length > 0) {
+        el += '<span class="excerpt">' + item.description + '</span>';
       }
       el += '</a>';
     }

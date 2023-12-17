@@ -58,7 +58,9 @@ module.exports = ctx => {
   // wiki 所有页面
   const wiki_pages = pages.filter(p => (p.layout === 'wiki')).map(p => new WikiPage(p))
   const wiki_list = Object.keys(wiki.tree)
-
+  // 上架的项目列表
+  wiki.shelf = ctx.locals.get('data').wiki
+  
   // 数据整合：项目标签
   var all_tag_name = []
   for (let id of wiki_list) {
@@ -158,17 +160,25 @@ module.exports = ctx => {
   // 全站所有的项目标签
   var all_tags = {}
   all_tag_name.forEach((tag_name, i) => {
-    var subs = []
+    var items = []
     for (let id of wiki_list) {
       let item = wiki.tree[id]
-      if (item.tags && item.tags.includes(tag_name) === true && subs.includes(tag_name) === false) {
-        subs.push(item.id)
+      // 过滤掉找不到页面的项目
+      if (item.homepage == null) {
+        continue
+      }
+      // 过滤掉未上架的项目
+      if (!wiki.shelf.includes(item.id)) {
+        continue
+      }
+      if (item.tags && item.tags.includes(tag_name) === true && items.includes(tag_name) === false) {
+        items.push(item.id)
       }
     }
     all_tags[tag_name] = {
       name: tag_name,
       path: (ctx.config.wiki_dir || 'wiki') + '/tags/' + tag_name + '/index.html',
-      items: subs
+      items: items
     }
   })
 
@@ -176,13 +186,17 @@ module.exports = ctx => {
   for (let id of wiki_list) {
     let item = wiki.tree[id]
     if (item.tags) {
-      var related = []
+      var relatedItems = []
       item.tags.forEach((tag_name, i) => {
-        let tagObj = all_tags[tag_name]
-        related = related.concat(tagObj.items)
-        related = [...new Set(related)]
+        let relatedOtherItems = all_tags[tag_name].items.filter(name => name != item.id)
+        if (relatedOtherItems.length > 0) {
+          relatedItems.push({
+            name: tag_name,
+            items: relatedOtherItems
+          })
+        }
       })
-      item.related = related
+      item.relatedItems = relatedItems
     }
   }
 

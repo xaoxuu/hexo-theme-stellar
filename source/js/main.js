@@ -323,7 +323,6 @@ if (stellar.plugins.fancybox) {
   var needFancybox = document.querySelectorAll(selector).length !== 0;
   if (!needFancybox) {
     const els = document.getElementsByClassName('stellar-memos-api');
-    console.log('els', els);
     if (els != undefined && els.length > 0) {
       needFancybox = true;
     }
