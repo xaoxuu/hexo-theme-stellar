@@ -30,7 +30,7 @@ if (theme.plugins.heti && theme.plugins.heti.enable) {
 <%- layoutTitle() %>
 <%- post.content %>
 <% if (theme.plugins.tianli_gpt.enable && ['all', 'post'].includes(theme.plugins.tianli_gpt.field)) { %>
-  <%- partial('_partial/main/article/ai_abstract') %>
+  <%- partial('_partial/plugins/ai/tianli_gpt') %>
 <% } %>
 <%- partial('_partial/main/article/article_footer') %>
 </article>
