@@ -8,15 +8,22 @@
   padding: 4px 0.5rem
   opacity: 0
   font-weight: 700
-  color: var(--theme)
+  color: var(--text-p2)
+  border-bottom-left-radius: $border-bar
+  border-bottom-right-radius: $border-bar
+  background: var(--block-hover)
+  display: block
   cursor: pointer
+  margin-right: 0.5rem
 
-.highlight:hover .copy-btn 
-  opacity 0.25
+.highlight:hover
+  .code:before
+    opacity: 0
+  .copy-btn 
+    opacity: 0.75
 
 .highlight .code .copy-btn:hover
-  color: var(--theme)
-  opacity: 0.75
+  opacity: 1
 
 .highlight .code .copy-btn.success
   color: $c-green
@@ -25,3 +32,7 @@
 .highlight .code .copy-btn.warning
   color: $c-orange
   opacity: 0.75
+
+.md-text .tag-plugin[child=codeblock]
+  .highlight .code .copy-btn
+    border-radius: $border-bar
