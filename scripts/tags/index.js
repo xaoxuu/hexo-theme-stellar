@@ -10,6 +10,7 @@ hexo.extend.tag.register('folding', require('./lib/folding')(hexo), true)
 hexo.extend.tag.register('folders', require('./lib/folders')(hexo), true)
 hexo.extend.tag.register('grid', require('./lib/grid')(hexo), true)
 hexo.extend.tag.register('swiper', require('./lib/swiper')(hexo), true)
+hexo.extend.tag.register('gallery', require('./lib/gallery')(hexo), {ends: true})
 
 // data
 hexo.extend.tag.register('users', require('./lib/friends')(hexo))

@@ -327,7 +327,7 @@ plugins:
     # 可以处理评论区的图片（不支持 iframe 类评论系统）例如：
     # 使用twikoo评论可以写: .tk-content img:not([class*="emo"])
     # 使用waline评论可以写: #waline_container .vcontent img
-    selector: .swiper-slide img # 多个选择器用英文逗号隔开
+    selector: .swiper-slide img, .gallery img # 多个选择器用英文逗号隔开
 
   # swiper
   swiper:

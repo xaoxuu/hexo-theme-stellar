@@ -1,0 +1,44 @@
+.tag-plugin.gallery
+  border-radius: 8px
+  column-count: 4
+  column-gap: 0
+  margin-left: -4px
+  margin-right: -4px
+  .cell
+    display: block
+    padding: 4px
+    overflow hidden
+    z-index 0
+    position: relative
+    &:hover
+      .image-meta
+        opacity: 1
+  img 
+    object-fit: cover
+    height: 100%
+    overflow: hidden
+    display: block
+  .image-meta
+    position: absolute
+    opacity: 0
+    z-index: 1
+    margin: 4px
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    pointer-events: none
+    background: rgba(black, 0.5)
+    border-radius: 8px
+    trans1(opacity)
+    display: flex
+    flex-direction: column
+    justify-content: flex-end
+    .image-caption
+      display: block
+      font-size: $fs-13
+      color: white
+      line-height: 1.2
+      margin: 4px
+      &:empty
+        display: none
