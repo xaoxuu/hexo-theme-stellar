@@ -18,18 +18,13 @@ function layoutDiv() {
   if (page.references?.length > 0) {
     function refList() {
       var el = '';
-      page.references.forEach((item, i) => {
-        el += '<li class="post-title">';
-        el += '<a href="' + item.url + '"';
-        if (item.url.includes('://')) {
-          el += ' target="_blank" rel="external nofollow noopener noreferrer">';
-        } else {
-          el += ' rel="noopener noreferrer">';
-        }
-        el += item.title || item.url;
-        el += '</a>';
-        el += '</li>';
-      });
+      for (let ref of page.references) {
+        el += `
+        <li class="post-title">
+          ${markdown(ref)}
+        </li>
+        `
+      }
       return el;
     }
     el += `
