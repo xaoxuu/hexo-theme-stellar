@@ -145,12 +145,11 @@
 
 .post-list .post-card.wiki article .preview
   display: flex
-  width: 200px
-  margin: 1rem .5rem
-  @media screen and (min-width: 950px)
-    margin: 1rem
+  margin: 1rem 3rem
   align-items: center
   img
+    width: 96px
+    max-height: 96px
     object-fit: contain
     &:not(.lazy)
       trans1: transform 0.75s
@@ -162,6 +161,9 @@
   flex: 1
   overflow: hidden
   word-wrap: break-word
+  .caps
+    line-height: 1
+    margin-bottom: 0.75rem
   .cap
     background: var(--theme-block)
     padding: 2px 4px
