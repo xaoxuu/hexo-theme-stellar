@@ -4,7 +4,7 @@
 
 // container
 hexo.extend.tag.register('tabs', require('./lib/tabs')(hexo), true)
-hexo.extend.tag.register('ablock', require('./lib/ablock')(hexo), true)
+hexo.extend.tag.register('box', require('./lib/box')(hexo), true)
 hexo.extend.tag.register('about', require('./lib/about')(hexo), true)
 hexo.extend.tag.register('folding', require('./lib/folding')(hexo), true)
 hexo.extend.tag.register('folders', require('./lib/folders')(hexo), true)

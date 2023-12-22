@@ -215,7 +215,7 @@ footer:
 
 ######## Tag Plugins ########
 tag_plugins:
-  # {% ablock %} / {% note %}
+  # {% box %} / {% note %}
   note:
     default_color: '' # light, dark, red, orange, yellow, green, cyan, blue, purple, warning, error
     border: true # true / false
@@ -393,7 +393,7 @@ plugins:
 
 style:
   darkmode: auto # auto / always / false
-  smooth_scroll: true # true / false
+  smooth_scroll: false # true / false 开启时如果目录过长可能无法准确定位
   font-size:
     root: 16px
     body: .9375rem # 15px
