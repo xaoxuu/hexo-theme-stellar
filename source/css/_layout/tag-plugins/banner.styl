@@ -44,6 +44,8 @@
             color: white
             background: rgba(white, 0.25)
       .back
+        background: none
+        padding: 0
         line-height: 0
         visibility: hidden
         @media screen and (max-width: $device-mobile-max)
@@ -97,3 +99,8 @@
       font-size: 1.2rem
     .subtitle
       font-size: $fs-14
+
+.tag-plugin.banner:hover
+  img.bg
+    transform: scale(1.01)
+    trans1(transform, 2s)
