@@ -1,11 +1,11 @@
 /**
- * navbar.js v1 | https://github.com/xaoxuu/hexo-theme-stellar/
+ * navbar.js v2 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
- * {% navbar [markdown link] ... %}
+ * {% navbar [active:url] [markdown-link] ... %}
  *
  * example:
- * {% navbar active:1 [Home](/) [About](/about/) [Comments](#comments) %}
+ * {% navbar active:/about/ [Home](/) [About](/about/) [Comments](#comments) %}
  */
 
 'use strict'
@@ -18,40 +18,21 @@ module.exports = ctx => function(args) {
   if (args.links) {
     args.links = args.links.split(' ')
   }
-  var el = '<div class="tag-plugin navbar"><nav class="cap">'
-  function layoutItem(a, i) {
-    var text = ''
-    var href = ''
-    var el = '<a'
-    if ((i+1).toString() === args.active) {
-      el += ' class="active"'
-    }
-    if (a.includes('](')) {
-      // markdown
-      let tmp = a.split('](')
-      if (tmp.length > 1) {
-        text = tmp[0]
-        if (text.length > 1) {
-          text = text.substring(1, text.length)
-        }
-        href = tmp[1]
-        if (href.length > 1) {
-          href = href.substring(0, href.length-1)
-        }
-        el += ' href="' + href + '"'
+  var el = `<div class="tag-plugin navbar"><nav class="cap">`
+  for (let link of args.links) {
+    const matches = link.match(/\[(.*?)\]\((.*?)\)/i)
+    if (matches?.length > 2) {
+      let text = matches[1]
+      let href = matches[2]
+      if (href == args.active) {
+        el += `<a class="link blur active" href="${href}">${text}</a>`
+      } else {
+        el += `<a class="link" href="${href}">${text}</a>`
       }
     } else {
-      el += ' href="#' + a + '"'
-      text = a
+      el += `<a class="link" href="#${link}">${link}</a>`
     }
-    el += '>'
-    el += text
-    el += '</a>'
-    return el
   }
-  (args.links || []).forEach((item, i) => {
-    el += layoutItem(item, i)
-  })
-  el += '</nav></div>'
+  el += `</nav></div>`
   return el
 }
