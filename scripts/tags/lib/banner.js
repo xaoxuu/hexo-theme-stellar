@@ -10,7 +10,6 @@
 'use strict';
 
 module.exports = ctx => function(args, content) {
-  const url_for = require('hexo-util').url_for.bind(ctx)
   args = ctx.args.map(args, ['bg', 'avatar', 'link'], ['title', 'subtitle'])
   var el = ''
   el += `<div class="tag-plugin banner">`
