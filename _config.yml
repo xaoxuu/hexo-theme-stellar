@@ -276,7 +276,7 @@ tag_plugins:
   gallery:
     layout: grid # grid / flow
     size: mix # s / m / l / xl / mix
-    square: true # true / false
+    ratio: square # origin / square
 
       
 

@@ -1,15 +1,15 @@
 /**
- * gallery.js v2.0 | https://github.com/xaoxuu/hexo-theme-stellar/
+ * gallery.js v2.1 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
- * {% gallery [layout:grid/flow] [size:mix/s/m/l/xl] [square:true/false] %}
+ * {% gallery [layout:grid/flow] [size:mix/s/m/l/xl] [ratio:origin/square] %}
  * ![title](/xxx.png)
  * ![title](/xxx.png)
  * ![title](/xxx.png)
  * ![title](/xxx.png)
  * {% endgallery %}
  * 
- * layout:grid 网格布局，支持通过 size/square 设置尺寸和长宽比
+ * layout:grid 网格布局，支持通过 size/ratio 设置尺寸和长宽比
  * layout:flow 瀑布流布局，竖排，适合图片量大的时候使用（体验不佳请慎用）
  */
 
@@ -32,18 +32,18 @@ function img(src, alt) {
 }
 
 module.exports = ctx => function(args, content) {
-  args = ctx.args.map(args, ['layout', 'size', 'square'])
+  args = ctx.args.map(args, ['layout', 'size', 'ratio'])
   if (args.layout == null) {
     args.layout = ctx.theme.config.tag_plugins.gallery.layout
   }
   if (args.size == null) {
     args.size = ctx.theme.config.tag_plugins.gallery.size
   }
-  if (args.square == null) {
-    args.square = ctx.theme.config.tag_plugins.gallery.square
+  if (args.ratio == null) {
+    args.ratio = ctx.theme.config.tag_plugins.gallery.ratio
   }
   var el = ''
-  el += `<div class="tag-plugin gallery" ${ctx.args.joinTags(args, ['layout', 'size', 'square']).join(' ')}>`
+  el += `<div class="tag-plugin gallery" ${ctx.args.joinTags(args, ['layout', 'size', 'ratio']).join(' ')}>`
   const img_mds = content.split('\n').filter(item => item.trim().length > 0)
   for (let md of img_mds) {
     const matches = md.match(/\!\[(.*?)\]\((.*?)\)/i)
