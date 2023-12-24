@@ -24,7 +24,7 @@
       padding: 0.5rem
       font-weight: 500
       font-size: $fs-13
-      color: var(--text-p2)
+      color: var(--text-p1)
     .toc-child .toc-item .toc-link
       padding: 0.25rem 0.5rem 0.25rem 1.3rem
       font-weight: 400
@@ -69,3 +69,14 @@
     color: $color-theme !important
     &:before
       visibility: visible
+
+
+// 激活上级目录时显示子目录
+.toc-item a.toc-link+ol
+  display: none
+.toc a.toc-link.active+ol
+  display: block
+ol:has(> .toc-item a.active)
+  display: block
+.doc-tree:hover a.toc-link+ol
+  display: block
