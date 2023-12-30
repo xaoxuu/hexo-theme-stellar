@@ -8,7 +8,7 @@
       if (!path) {
         path = decodeURI(window.location.pathname);
       }
-      var artalk = new Artalk({
+      var artalk = Artalk.init({
         el: '#artalk_container',
         pageKey: path,
         pageTitle: '<%= page.title || page.seo_title %>',
