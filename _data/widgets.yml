@@ -34,6 +34,7 @@ recent:
   layout: recent
   rss: # /atom.xml # npm i hexo-generator-feed
   limit: 5 # Count of posts
+
 # TOC (valid only in layout:post/wiki)
 toc:
   layout: toc
@@ -41,6 +42,8 @@ toc:
   min_depth: 2
   max_depth: 5
   fallback: recent # Use a backup widget when toc does not exist.
+  collapse: false # true / false / auto
+
 # github user info
 ghuser:
   layout: ghuser
