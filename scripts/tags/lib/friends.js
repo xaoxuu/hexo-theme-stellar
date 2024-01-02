@@ -9,7 +9,7 @@
 
 module.exports = ctx => function(args) {
   args = ctx.args.map(args, ['repo', 'api'], ['group'])
-  var links = ctx.locals.get('data').links
+  var links = ctx.theme.config.links
   if (links == undefined) {
     links = {}
   }
@@ -32,7 +32,7 @@ module.exports = ctx => function(args) {
       if (item.url && item.title) {
         var cell = '<div class="user-card">'
         cell += '<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="' + item.url + '">'
-        cell += '<img src="' + (item.avatar || ctx.theme.config.default.avatar) + '" onerror="javascript:this.removeAttribute(&quotdata-src&quot)this.src=&quot' + ctx.theme.config.default.avatar + '&quot"/>'
+        cell += '<img src="' + (item.icon || item.avatar || ctx.theme.config.default.avatar) + '" onerror="javascript:this.removeAttribute(&quotdata-src&quot)this.src=&quot' + ctx.theme.config.default.avatar + '&quot"/>'
         cell += '<div class="name"><span>' + item.title + '</span></div>'
         cell += '</a></div>'
         return cell

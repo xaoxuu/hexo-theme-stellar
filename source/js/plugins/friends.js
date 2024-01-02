@@ -52,7 +52,7 @@ const friendsjs = {
         var user = '<div class="user-card">';
         user += '<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer"';
         user += ' href="' + (item.html_url || item.url) + '">';
-        user += '<img src="' + (item.avatar_url || item.avatar || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';">';
+        user += '<img src="' + (item.avatar_url || item.avatar || item.icon || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';">';
         user += '<div class="name"><span>' + (item.title || item.login) + '</span></div>';
         user += '</a>';
         user += '</div>';

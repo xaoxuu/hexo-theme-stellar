@@ -9,7 +9,7 @@
 
 module.exports = ctx => function(args) {
   args = ctx.args.map(args, ['repo', 'api'], ['group'])
-  var links = ctx.locals.get('data').links
+  var links = ctx.theme.config.links
   if (links == undefined) {
     links = {}
   }
@@ -32,9 +32,9 @@ module.exports = ctx => function(args) {
       if (item.url && item.title) {
         var cell = '<div class="site-card">'
         cell += '<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="' + item.url + '">'
-        cell += '<img src="' + (item.screenshot || ('https://api.vlts.cc/screenshot?url=' + item.url + '&width=1280&height=720')) + '" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;' + ctx.theme.config.default.cover + '&quot;;"/>'
+        cell += '<img src="' + (item.cover || item.screenshot || ('https://api.vlts.cc/screenshot?url=' + item.url + '&width=1280&height=720')) + '" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;' + ctx.theme.config.default.cover + '&quot;;"/>'
         cell += '<div class="info">'
-        cell += '<img src="' + (item.avatar || ctx.theme.config.default.link) + '" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;' + ctx.theme.config.default.link + '&quot;;"/>'
+        cell += '<img src="' + (item.icon || item.avatar || ctx.theme.config.default.link) + '" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;' + ctx.theme.config.default.link + '&quot;;"/>'
         cell += '<span class="title">' + item.title + '</span>'
         cell += '<span class="desc">' + (item.description || item.url) + '</span>'
         cell += '</div>'
