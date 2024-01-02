@@ -14,9 +14,9 @@ if hexo-config('plugins.lazyload.transition') == 'blur'
     &.loaded,&.error
       filter none
       -webkit-filter none
-  .group-body .site-card .card-link>img
+  .site-card .card-link>img
     trans-site filter
-  .group-body .user-card .card-link>img
+  .user-card .card-link>img
     trans-user filter
 else
   img.lazy
@@ -25,7 +25,7 @@ else
       opacity: 0
     &.loaded,&.error
       opacity: 1
-  .group-body .site-card .card-link>img
+  .site-card .card-link>img
     trans-site opacity
-  .group-body .user-card .card-link>img
+  .user-card .card-link>img
     trans-user opacity

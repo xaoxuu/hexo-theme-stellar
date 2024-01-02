@@ -22,7 +22,7 @@ module.exports = ctx => function(args, content) {
       })
     }
   }
-  el += '<div class="tag-plugin swiper" id="swiper-api"'
+  el += '<div class="tag-plugin swiper fancybox" id="swiper-api"'
   el += ' ' + ctx.args.joinTags(args, ['width', 'effect']).join(' ')
   el += '>'
   el += '<div class="swiper-wrapper">'

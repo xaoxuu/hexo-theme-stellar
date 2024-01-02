@@ -9,10 +9,6 @@
 
 module.exports = ctx => function(args) {
   args = ctx.args.map(args, ['repo', 'api'], ['group'])
-  var links = ctx.theme.config.links
-  if (links == undefined) {
-    links = {}
-  }
   var api
   if (args.api) {
     api = args.api
@@ -22,29 +18,22 @@ module.exports = ctx => function(args) {
   
   var el = '<div class="tag-plugin users-wrap">'
   if (api) {
-    el += '<div class="stellar-friends-api"'
-    el += ' api="' + api + '"'
-    el += '>'
-    el += '<div class="group-body"></div>'
-    el += '</div>'
+    el += `<div class="stellar-friends-api" ${ctx.args.joinTags(args, ['size']).join(' ')} api="${api}"><div class="grid-box"></div></div>`
   } else if (args.group) {
-    function cell(item) {
-      if (item.url && item.title) {
-        var cell = '<div class="user-card">'
-        cell += '<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="' + item.url + '">'
-        cell += '<img src="' + (item.icon || item.avatar || ctx.theme.config.default.avatar) + '" onerror="javascript:this.removeAttribute(&quotdata-src&quot)this.src=&quot' + ctx.theme.config.default.avatar + '&quot"/>'
-        cell += '<div class="name"><span>' + item.title + '</span></div>'
-        cell += '</a></div>'
-        return cell
-      } else {
-        return ''
+    const links = ctx.theme.config.links || {}
+    el += '<div class="grid-box">'
+    for (let item of (links[args.group] || [])) {
+      if (item?.url && item?.title) {
+        el += `<div class="grid-cell user-card">`
+        el += `<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="${item.url}">`
+        el += `<img src="${item.icon || item.avatar || ctx.theme.config.default.avatar}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${ctx.theme.config.default.avatar}&quot;;"/>`
+        el += `<div class="name">`
+        el += `<span>${item.title}</span>`
+        el += `</div>`
+        el += `</a>`
+        el += `</div>`
       }
     }
-    el += '<div class="group-body">'
-    const items = links[args.group] || []
-    items.forEach((item, i) => {
-      el += cell(item)
-    })
     el += '</div>'
   }
   

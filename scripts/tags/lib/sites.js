@@ -9,10 +9,6 @@
 
 module.exports = ctx => function(args) {
   args = ctx.args.map(args, ['repo', 'api'], ['group'])
-  var links = ctx.theme.config.links
-  if (links == undefined) {
-    links = {}
-  }
   var api
   if (args.api) {
     api = args.api
@@ -25,30 +21,25 @@ module.exports = ctx => function(args) {
     el += '<div class="stellar-sites-api"'
     el += ' api="' + api + '"'
     el += '>'
-    el += '<div class="group-body"></div>'
+    el += '<div class="grid-box"></div>'
     el += '</div>'
   } else if (args.group) {
-    function cell(item) {
-      if (item.url && item.title) {
-        var cell = '<div class="site-card">'
-        cell += '<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="' + item.url + '">'
-        cell += '<img src="' + (item.cover || item.screenshot || ('https://api.vlts.cc/screenshot?url=' + item.url + '&width=1280&height=720')) + '" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;' + ctx.theme.config.default.cover + '&quot;;"/>'
-        cell += '<div class="info">'
-        cell += '<img src="' + (item.icon || item.avatar || ctx.theme.config.default.link) + '" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;' + ctx.theme.config.default.link + '&quot;;"/>'
-        cell += '<span class="title">' + item.title + '</span>'
-        cell += '<span class="desc">' + (item.description || item.url) + '</span>'
-        cell += '</div>'
-        cell += '</a></div>'
-        return cell
-      } else {
-        return ''
+    const links = ctx.theme.config.links || {}
+    el += '<div class="grid-box">'
+    for (let item of (links[args.group] || [])) {
+      if (item?.url && item?.title) {
+        el += `<div class="grid-cell site-card">`
+        el += `<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="${item.url}">`
+        el += `<img src="${item.cover || item.screenshot || ('https://api.vlts.cc/screenshot?url=' + item.url + '&width=1280&height=720')}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${ctx.theme.config.default.cover}&quot;;"/>`
+        el += `<div class="info">`
+        el += `<img src="${item.icon || item.avatar || ctx.theme.config.default.link}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${item.icon || item.avatar || ctx.theme.config.default.link}&quot;;"/>`
+        el += `<span class="title">${item.title}</span>`
+        el += `<span class="desc">${item.description || item.url}</span>`
+        el += `</div>`
+        el += `</a>`
+        el += `</div>`
       }
     }
-    el += '<div class="group-body">'
-    const items = links[args.group] || []
-    items.forEach((item, i) => {
-      el += cell(item)
-    })
     el += '</div>'
   }
 

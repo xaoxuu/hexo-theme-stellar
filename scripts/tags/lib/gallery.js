@@ -33,9 +33,6 @@ function img(src, alt) {
 
 module.exports = ctx => function(args, content) {
   args = ctx.args.map(args, ['layout', 'size', 'ratio'])
-  if (args.layout == null) {
-    args.layout = ctx.theme.config.tag_plugins.gallery.layout
-  }
   if (args.size == null) {
     args.size = ctx.theme.config.tag_plugins.gallery.size
   }
@@ -43,14 +40,18 @@ module.exports = ctx => function(args, content) {
     args.ratio = ctx.theme.config.tag_plugins.gallery.ratio
   }
   var el = ''
-  el += `<div class="tag-plugin gallery" ${ctx.args.joinTags(args, ['layout', 'size', 'ratio']).join(' ')}>`
+  var layoutType = 'grid'
+  if (args.layout == 'flow') {
+    layoutType = 'flow'
+  }
+  el += `<div class="tag-plugin gallery fancybox ${layoutType}-box" ${ctx.args.joinTags(args, ['size', 'ratio']).join(' ')}>`
   const img_mds = content.split('\n').filter(item => item.trim().length > 0)
   for (let md of img_mds) {
     const matches = md.match(/\!\[(.*?)\]\((.*?)\)/i)
     if (matches?.length > 2) {
       let alt = matches[1]
       let src = matches[2]
-      el += `<div class="cell">${img(src, alt)}</div>`
+      el += `<div class="${layoutType}-cell">${img(src, alt)}</div>`
     }
   }
   el += `</div>`
