@@ -107,6 +107,7 @@ comments:
   # giscus
   # https://giscus.app/zh-CN
   giscus:
+    src: https://giscus.app/client.js
     data-repo: xxx/xxx # [在此输入仓库]
     data-repo-id: # [在此输入仓库 ID]
     data-category: # [在此输入分类名]
