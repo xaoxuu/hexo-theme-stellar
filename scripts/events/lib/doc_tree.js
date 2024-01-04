@@ -59,7 +59,7 @@ module.exports = ctx => {
   const wiki_pages = pages.filter(p => (p.layout === 'wiki')).map(p => new WikiPage(p))
   const wiki_list = Object.keys(wiki.tree)
   // 上架的项目列表
-  wiki.shelf = ctx.locals.get('data').wiki
+  wiki.shelf = ctx.locals.get('data').wiki || []
   
   // 数据整合：项目标签
   var all_tag_name = []
@@ -202,7 +202,6 @@ module.exports = ctx => {
 
   wiki.all_tags = all_tags
   wiki.all_pages = wiki_pages
-  wiki.shelf = ctx.locals.get('data').wiki
   ctx.theme.config.wiki = wiki
 
 }

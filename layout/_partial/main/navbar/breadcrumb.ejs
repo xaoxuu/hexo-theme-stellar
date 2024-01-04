@@ -84,7 +84,7 @@ function layoutDiv() {
     el += '</div>';
     el += '</div>';
 
-    let repo = page.repo || proj.repo
+    const repo = page.repo || proj?.repo
     if (repo) {
       el += `
       <div class="right ghrepo stellar-ghinfo-api" api="${theme.api_host.ghapi}/repos/${repo}">
