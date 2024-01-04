@@ -79,6 +79,8 @@
         display: none
       &.active
         display: block
+  .tab-content:has(.grid-box)
+    width: 100%
 
 .md-text.indent .tag-plugin.tabs .tab-content p:not([class])
   text-indent: 'calc(%s * 2)' % $fs-p

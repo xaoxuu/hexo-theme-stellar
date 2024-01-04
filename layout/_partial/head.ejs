@@ -67,18 +67,38 @@ function og_args() {
   }
   return Object.assign(args, page.open_graph);
 }
+
+function preconnect() {
+  var el = '';
+  for (let href of (theme.preconnect || [])) {
+    el += `<link rel="preconnect" href="${href}" crossorigin>`;
+  }
+  return el;
+}
+
+function custom_inject() {
+  var el = '';
+  for (let item of (config.inject?.head || [])) {
+    el += item;
+  }
+  for (let item of (theme.inject?.head || [])) {
+    el += item;
+  }
+  for (let item of (page.inject?.head || [])) {
+    el += item;
+  }
+  return el;
+}
+
 %>
+
 <head>
-  <%- meta_generator() %>
-  <meta name="hexo-theme" content="<%- stellar_info('tree') %>" version="<%- stellar_info('version') %>">
   <meta charset="utf-8">
+  <meta name="hexo-theme" content="<%- stellar_info('tree') %>" version="<%- stellar_info('version') %>">
   <%- generate_robots() %>
-
+  <%- meta_generator() %>
   <meta http-equiv='x-dns-prefetch-control' content='on' />
-  <link rel='dns-prefetch' href='https://gcore.jsdelivr.net'>
-  <link rel="preconnect" href="https://gcore.jsdelivr.net" crossorigin>
-  <link rel='dns-prefetch' href='//unpkg.com'>
-
+  <%- preconnect() %>
   <meta name="renderer" content="webkit">
   <meta name="force-rendering" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
@@ -115,16 +135,6 @@ function og_args() {
     <%- css(theme.style.codeblock.highlightjs_theme) %>
   <% } %>
 
-  <% if (theme.plugins.katex && theme.plugins.katex.enable) { %>
-    <%- theme.plugins.katex.min_css %>
-    <%- theme.plugins.katex.min_js %>
-    <%- theme.plugins.katex.auto_render_min_js %>
-  <% } %>
-
-
-  <% if (config.inject && config.inject.head){ %>
-    <% (config.inject.head||[]).forEach(function(item){ %>
-      <%- item %>
-    <% }) %>
-  <% } %>
+  <%- partial('plugins/parser/head') %>
+  <%- custom_inject() %>
 </head>

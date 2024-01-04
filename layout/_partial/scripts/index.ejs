@@ -1,3 +1,20 @@
+<%
+
+function custom_inject() {
+  var el = '';
+  for (let item of (config.inject?.script || [])) {
+    el += item;
+  }
+  for (let item of (theme.inject?.script || [])) {
+    el += item;
+  }
+  for (let item of (page.inject?.script || [])) {
+    el += item;
+  }
+  return el;
+}
+
+%>
 <script type="text/javascript">
   const stellar = {
     // 懒加载 css https://github.com/filamentgroup/loadCSS
@@ -160,8 +177,4 @@
 <%- partial('../plugins/parser/script') %>
 
 <!-- inject -->
-<% if (config.inject && config.inject.script && config.inject.script.length > 0) { %>
-  <% config.inject.script.forEach(function(js) { %>
-    <%- js %>
-  <% }) %>
-<% } %>
+<%- custom_inject() %>

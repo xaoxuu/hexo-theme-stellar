@@ -8,6 +8,10 @@ stellar:
 
 
 ######## head tags ########
+preconnect:
+  # - https://gcore.jsdelivr.net
+  # - https://unpkg.com
+
 open_graph:
   enable: true
   twitter_id: # for open_graph meta
@@ -353,7 +357,7 @@ plugins:
   # 需在Markdown文件开头加入mathjax: true
   # 推荐使用Pandoc: npm uninstall hexo-renderer-marked --save & npm install hexo-renderer-pandoc --save
   mathjax:
-    enable: true
+    # set <mathjax: true> to enable in page's front-matter
     js: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML
 
   # Katex - The fastest math typesetting library for the web
@@ -361,7 +365,7 @@ plugins:
   # https://github.com/KaTeX/KaTeX
   # 使用 hexo-renderer-markdown-it-plus 作为公式渲染器：npm uninstall hexo-renderer-marked --save npm install hexo-renderer-markdown-it-plus --save
   katex:
-    enable: false
+    # set <katex: true> to enable in page's front-matter
     min_css: <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
     min_js: <script defer src="https://gcore.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
     auto_render_min_js: <script defer src="https://gcore.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"onload="renderMathInElement(document.body);"></script>
@@ -376,7 +380,8 @@ plugins:
   #   B -->|option 2| C(Section C)
   # ```
   mermaid:
-    enable: true
+    # set <mermaid: true> to enable in page's front-matter
+    style_optimization: false # use custom style in stellar
     # js: https://unpkg.com/mermaid@9.0.0/dist/mermaid.min.js
     js: https://cdn.jsdelivr.net/npm/mermaid@v9/dist/mermaid.min.js
     # Available themes: default | dark | forest | neutral

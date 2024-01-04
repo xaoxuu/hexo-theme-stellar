@@ -1,3 +1,6 @@
+<% if (page.katex == true) { %>
+  <%- partial('katex/script') %>
+<% } %>
 <% if (page.mathjax == true) { %>
   <%- partial('mathjax/script') %>
 <% } %>
