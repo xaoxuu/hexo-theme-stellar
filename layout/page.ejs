@@ -1,6 +1,6 @@
 <%
 function layoutTitle() {
-  const title = page.h1 || page.title;
+  const title = page.h1 != null ? page.h1 : page.title;
   if (title && title.length > 0) {
     return '<h1 class="article-title"><span>' + title + '</span></h1>';
   } else {
