@@ -19,12 +19,6 @@ if (theme.plugins.heti && theme.plugins.heti.enable) {
   heti = ' heti';
 }
 %>
-<% if (page.mathjax == true){ %>
-    <%- partial('mathjax') %>
-<% } %>
-<% if (page.mermaid == true){ %>
-  <%- partial('mermaid') %>
-<% } %>
 <%- partial('_partial/main/navbar/breadcrumb') %>
 <article class='md-text content<%- heti %> <%- post.layout %><%- post.indent ? ' indent' : '' %><%- scrollreveal() %>'>
 <%- layoutTitle() %>

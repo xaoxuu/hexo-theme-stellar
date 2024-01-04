@@ -353,8 +353,8 @@ plugins:
   # 需在Markdown文件开头加入mathjax: true
   # 推荐使用Pandoc: npm uninstall hexo-renderer-marked --save & npm install hexo-renderer-pandoc --save
   mathjax:
-    enable: false
-    cdn: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML
+    enable: true
+    js: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML
 
   # Katex - The fastest math typesetting library for the web
   # https://katex.org/docs/autorender.html
@@ -376,7 +376,7 @@ plugins:
   #   B -->|option 2| C(Section C)
   # ```
   mermaid:
-    enable: false
+    enable: true
     # js: https://unpkg.com/mermaid@9.0.0/dist/mermaid.min.js
     js: https://cdn.jsdelivr.net/npm/mermaid@v9/dist/mermaid.min.js
     # Available themes: default | dark | forest | neutral
