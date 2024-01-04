@@ -24,14 +24,18 @@
     align-items: baseline
     margin: 0.25rem 0
     color: var(--text-p1)
-    &:hover
-      color: $color-hover
+    trans2 color border
+    border-bottom: 1px dashed var(--text-meta)
     time
       font-family: $ff-code
       margin-right: 1em
       font-weight: 700
       flex-shrink: 0
-      opacity .5
+      color: var(--text-p4)
+    &:hover
+      border-bottom: 1px solid $color-theme
+      time
+        color: $color-theme
   &:hover
     .archive-header
       color: var(--text-p1)

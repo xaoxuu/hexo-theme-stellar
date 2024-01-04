@@ -19,13 +19,11 @@
       color: $color-hover
   div#post-meta
     margin-top: 2px
-    span+span
-      margin-left: 8px
+    span.updated
       visibility: hidden
   &:hover
-    div#post-meta
-      span+span
-        visibility: visible
+    div#post-meta span.updated
+      visibility: visible
 
 .bread-nav .ghrepo
   font-size: $fs-13

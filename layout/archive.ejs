@@ -3,41 +3,58 @@ page.robots = 'noindex,follow';
 if (page.menu_id == undefined) {
   page.menu_id = 'post';
 }
+if (page.author) {
+  page.header = 'auto';
+}
+function layoutArchiveList() {
+  var el = ''
+  if (page.author) {
+    page.title = page.author.name
+    el += partial('_partial/main/navbar/author_banner')
+  } else {
+    page.title = __('btn.archives')
+    el += partial('_partial/main/navbar/list_post')
+  }
+  el += `<div class="post-list archives">`
+  var years = []
+  site.posts.sort('date', -1).each(function(post) {
+  	post.year = date(post.date, 'YYYY')
+  	  if (post.year && (years.includes(post.year) == false) && (post.title || post.date)) {
+  		  years.push(post.year)
+    }
+  })
+  for (let year of years) {
+    el += `<article class="${scrollreveal()}" id="archive">`
+  	el += `<div class='archive-header h4'>${year}</div>`
+    site.posts.sort('date', -1).filter(function (post) {
+      post.year = date(post.date, 'YYYY')
+      return post.year == year
+    }).each(function(post) {
+      el += `<div class="archive-list">`
+      el +=`<a class='post fs14' href="${url_for(post.link || post.path)}">`
+      el += `<time>${date(post.date, 'MM-DD')}</time>`
+      el += `<span>`
+      if (post.title) {
+        el += post.title
+      } else if (post.date) {
+        el += date(post.date, config.date_format)
+      }
+      el += `</span>`
+      el += `</a>`
+      el += `</div>`
+    })
+  	el += `</article>`
+  }
+  el += `</div>`
+  return el
+}
+function layoutDiv() {
+  if (page.posts && (is_category() || is_tag())) {
+    return partial('index')
+  } else {
+    return layoutArchiveList()
+  }
+}
 %>
-<% if (page.posts && (is_category() || is_tag())) { %>
-  <%- partial('index') %>
-<% } else { %>
-  <% page.title = __('btn.archives'); %>
-  <%- partial('_partial/main/navbar/list_post') %>
-  <div class='post-list'>
-  	<% var years = []; %>
-  	<% site.posts.sort('date', -1).each(function(post) { %>
-  		<% post.year = date(post.date, 'YYYY'); %>
-  		<% if (post.year && (years.includes(post.year) == false) && (post.title || post.date)) { %>
-  			<% years.push(post.year); %>
-  		<% } %>
-  	<% }); %>
-  	<% years.forEach((year, i) => { %>
-  		<article class='<%- scrollreveal() %>' id='archive'>
-  			<div class='archive-header h4'><%= year %></div>
-  			<% site.posts.sort('date', -1).filter(function (post) { %>
-  				<% post.year = date(post.date, 'YYYY'); %>
-  		    <% return post.year == year; %>
-  		  <% }).each(function(post) { %>
-  				<div class='archive-list'>
-            <a class='post fs14' href="<%= url_for(post.link || post.path) %>">
-    					<time><%= date(post.date, 'MM-DD') %></time>
-    					<span>
-                <% if (post.title) { %>
-      						<%- post.title %>
-      					<% } else if (post.date) { %>
-      						<%= date(post.date, config.date_format) %>
-      					<% } %>
-              </span>
-    				</a>
-          </div>
-  			<% }); %>
-  		</article>
-  	<% }); %>
-  </div>
-<% } %>
+ 
+<%- layoutDiv() %>

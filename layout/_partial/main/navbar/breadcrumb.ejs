@@ -35,13 +35,29 @@ function layoutDiv() {
         });
     }
     el += '</div>';
-    // 发布日期
+    // 作者
+    var author = null
+    if (theme.authors) {
+      if (page.author?.length > 0 && theme.authors[page.author] != null) {
+        author = theme.authors[page.author]
+      } else {
+        author = theme.default_author
+      }
+    }
     el += '<div id="post-meta">';
+    if (author) {
+      let link = `<a href="${url_for(author.path)}">${author.name}</a>`
+      el += `<span class="author">${__("meta.created_author", link)}</span>`
+    } else {
+      el += `<span class="author">${__("meta.created")}</span>`
+    }
+    // 发布日期
     el += `
-    <span>${__("meta.created")}&nbsp;<time datetime="${date_xml(page.date)}">${date(page.date, config.date_format)}</time></span>
+    <span class="created"><time datetime="${date_xml(page.date)}">${date(page.date, config.date_format)}</time></span>
     `;
+    // 更新日期
     el += `
-    <span>${__("meta.updated")}&nbsp;<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time></span>
+    <span class="updated">${__("symbol.comma") + __("meta.updated")}&nbsp;<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time></span>
     `;
     el += '</div>';
     

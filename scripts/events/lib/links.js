@@ -1,5 +1,5 @@
 /**
- * doc_tree.js v2 | https://github.com/xaoxuu/hexo-theme-stellar/
+ * links.js v1 | https://github.com/xaoxuu/hexo-theme-stellar/
  */
 
 'use strict';

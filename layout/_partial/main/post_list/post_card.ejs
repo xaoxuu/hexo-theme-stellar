@@ -68,8 +68,20 @@ function div_default() {
 
   // meta
   el += '<div class="meta cap">';
-  // time
   el += '<span class="cap" id="post-meta">';
+  // author
+  var author = null
+  if (theme.authors) {
+    if (page.author?.length > 0 && theme.authors[page.author] != null) {
+      author = theme.authors[page.author]
+    } else {
+      author = theme.default_author
+    }
+  }
+  if (author) {
+    el += author.name + '&nbsp;'
+  }
+  // time
   el += __("meta.created") + '&nbsp;' + '<time datetime="' + date_xml(post.date) + '">' + date(post.date, config.date_format) + '</time>';
   el += '</span>';
   // cat

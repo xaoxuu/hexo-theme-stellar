@@ -1,0 +1,31 @@
+<%
+function layoutDiv() {
+  const author = page.author
+  var el = ``
+  el += `<div class="tag-plugin banner author">`
+  if (author.banner) {
+    el += `<img class="bg" src="${author.banner}">`
+  }
+  el += `
+  <div class="content">
+    <div class="top">
+      <button class="back cap" onclick="window.history.back()">
+        <svg aria-hidden="true" viewBox="0 0 16 16" fill="currentColor">
+          <path fill-rule="evenodd" d="M7.78 12.53a.75.75 0 01-1.06 0L2.47 8.28a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 1.06L4.81 7h7.44a.75.75 0 010 1.5H4.81l2.97 2.97a.75.75 0 010 1.06z"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="bottom">
+      <img class="avatar" src="${author.avatar}">
+      <div class="text-area">
+        <p class="text title">${author.name}</p>
+        <div class="text subtitle">${author.description || ""}</div>
+      </div>
+    </div>
+  </div>
+  `
+  el += `</div>`
+  return el
+}
+%>
+<%- layoutDiv() %>

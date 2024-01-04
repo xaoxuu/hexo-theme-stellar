@@ -6,7 +6,6 @@
   flex-direction: column
   justify-content: flex-end
   align-items: flex-start
-  color: white
   height: 240px
   @media screen and (max-width: $device-mobile-max)
     height: 200px
@@ -78,14 +77,11 @@
     border-radius: 50%
     width: 48px
     height: 48px
-    border: 2px solid white
   .bottom
     display: flex
     padding: 1rem
     width: 100%
     box-sizing: border-box
-    background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0.2))
-    text-shadow: 0 0 1px rgba(0,0,0,0.12)
     .title
       font-size: 1.5rem
       font-weight: 600
@@ -99,9 +95,27 @@
       font-size: 1.2rem
     .subtitle
       font-size: $fs-14
+  .content:only-child
+    color: var(--text-p1)
+  .bg+.content 
+    color: white
+    .avatar
+      border: 2px solid white
+    .bottom
+      background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0.2))
+      text-shadow: 0 0 1px rgba(0,0,0,0.12)
 
 .tag-plugin.banner
   trans1(transform, 2s)
   &:hover
     img.bg
      transform: scale(1.01)
+
+.l_main.list .tag-plugin.banner
+  background: var(--block-hover)
+  .content .top
+    margin-top: 1.5rem
+  margin: 0 1rem
+  @media screen and (max-width: $device-mobile)
+    margin: 0
+    border-radius: 0
