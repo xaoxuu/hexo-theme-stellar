@@ -7,7 +7,7 @@ if (page.layout === 'wiki' && page.wiki) {
 if (page.sidebar == undefined) {
   if (page.layout == 'post' && page.content) {
     page.sidebar = theme.sidebar.widgets.post;
-  } else if (page.layout == 'wiki' && page.content && page.wiki) {
+  } else if (page.layout == 'wiki' && page.wiki) {
     let proj = theme.wiki.tree[page.wiki];
     if (proj?.sidebar) {
       page.sidebar = proj.sidebar;

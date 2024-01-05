@@ -2,16 +2,11 @@
   display: flex
   justify-content: space-between
   box-sizing: border-box
-  background: var(--block)
+  background: var(--card)
   border-radius: $border-bar
   border: 1px solid var(--block-border)
   overflow: hidden
-  width: 320px
-  max-width: 100%
-  &[width='max']
-    width: 100%
-  @media screen and (max-width: $device-mobile-425)
-    min-width: 100%
+  width: 100%
 
   input.copy-area
     display: inline-block
@@ -22,13 +17,12 @@
     text-indent: 1rem
   button.copy-btn
     margin: 0
-    line-height: 3
     border-left: 1px solid var(--block-border)
     display: inline-block
-    background: var(--block-hover)
+    background: var(--block)
     line-height: 0
     font-size: 1rem
     padding: 0 .75rem
     color: var(--text-p2)
     &:hover
-      background: var(--card)
+      background: var(--block-hover)
