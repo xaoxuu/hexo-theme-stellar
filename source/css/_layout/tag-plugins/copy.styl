@@ -7,7 +7,16 @@
   border: 1px solid var(--block-border)
   overflow: hidden
   width: 100%
-
+  span
+    line-height: 3
+    padding: 0 1rem
+    background: var(--block)
+    border-right: 1px solid var(--block-border)
+    color: var(--text-p3)
+    font-family: $ff-code
+    font-size: $fs-12
+    font-weight: 700
+    flex-shrink: 0
   input.copy-area
     display: inline-block
     padding: 0
@@ -16,10 +25,10 @@
     line-height: 3
     text-indent: 1rem
   button.copy-btn
-    margin: 0
-    border-left: 1px solid var(--block-border)
+    margin: 2px
+    border-radius: 'calc(%s - 2px)' % $border-bar
     display: inline-block
-    background: var(--block)
+    background: none
     line-height: 0
     font-size: 1rem
     padding: 0 .75rem

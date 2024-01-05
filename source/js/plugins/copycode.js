@@ -13,7 +13,7 @@ codeElementArr.forEach(code => {
 
     codeCopyBtn.innerText = stellar.plugins.copycode.success_text
     codeCopyBtn.classList.add('success')
-
+    hud.toast(stellar.plugins.copycode.toast)
     setTimeout(() => {
       codeCopyBtn.innerText = stellar.plugins.copycode.default_text
       codeCopyBtn.classList.remove('success')

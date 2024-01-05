@@ -395,6 +395,7 @@ plugins:
     js: /js/plugins/copycode.js
     default_text: 'Copy'
     success_text: 'Copied'
+    toast: 复制成功
   
   # AI 摘要
   # https://github.com/zhheo/Post-Abstract-AI
