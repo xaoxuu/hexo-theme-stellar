@@ -39,10 +39,10 @@
         display: none
 
 .tag-plugin.gallery .grid-cell
-  img
+  >img
     trans1(transform, 0.5s)
   &:hover
-    img
+    >img
       transform: scale(1.1)
     
 
@@ -90,7 +90,7 @@
       aspect-ratio: 1
   &[ratio='portrait']
     .grid-cell
-      aspect-ratio: 4 / 5
+      aspect-ratio: 2 / 3
   .grid-cell
     background: var(--block)
     img  
