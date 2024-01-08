@@ -1,5 +1,5 @@
 <%
-const content = theme.footer.content;
+const content = theme.footer.content?.replace('${author}', config.author)?.replace('${theme.name}', stellar_info('name'))?.replace('${theme.version}', stellar_info('version'))?.replace('${theme.tree}', stellar_info('tree'))
 function layoutDiv() {
   var el = '';
   el += '<footer class="page-footer reveal fs12">';
