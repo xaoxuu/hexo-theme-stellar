@@ -40,25 +40,36 @@ function layoutDiv() {
   var license = ''
   if (page.layout == 'post') {
     if (theme.article.license && (page.license != false)) {
-      license = markdown(page.license || theme.article.license)
+      license = page.license || theme.article.license
     }
   } else if (page.layout == 'wiki' && page.wiki) {
     let proj = theme.wiki.tree[page.wiki]
     if (page.license != null) {
-      license = markdown(page.license || theme.article.license)
+      license = page.license || theme.article.license
     } else if (proj?.license != null) {
       if (proj.license == true) {
-        license = markdown(theme.article.license)
+        license = theme.article.license
       } else {
-        license = markdown(proj.license)
+        license = proj.license
       }
     }
   }
   if (license.length > 0) {
+    var author = null
+    if (theme.authors) {
+      if (page.author?.length > 0 && theme.authors[page.author] != null) {
+        author = theme.authors[page.author]
+      } else {
+        author = theme.default_author
+      }
+    }
+    if (author) {
+      license = license.replace('${author.name}', author.name).replace('${author.url}', author.url)
+    }
     el += `
     <section id="license">
       <div class="header"><span>${__('meta.license')}</span></div>
-      <div class="body">${license}</div>
+      <div class="body">${markdown(license)}</div>
     </section>
     `
   }
