@@ -19,7 +19,10 @@
     padding: 1rem 0.5rem
     .name
       max-width: 100%
-      txt-ellipsis()
+      display: -webkit-box
+      -webkit-box-orient: vertical
+      overflow: hidden
+      -webkit-line-clamp: 2
     img
       object-fit: cover
       display: block
