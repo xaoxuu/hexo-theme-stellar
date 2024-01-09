@@ -1,41 +1,35 @@
 <%
-const content = theme.footer.content?.replace('${author}', config.author)?.replace('${theme.name}', stellar_info('name'))?.replace('${theme.version}', stellar_info('version'))?.replace('${theme.tree}', stellar_info('tree'))
+const content = theme.footer.content?.replace('${author.name}', (config.author || 'Anonymity'))?.replace('${theme.name}', stellar_info('name'))?.replace('${theme.version}', stellar_info('version'))?.replace('${theme.tree}', stellar_info('tree'))
 function layoutDiv() {
-  var el = '';
-  el += '<footer class="page-footer reveal fs12">';
-  el += '<hr>';
+  var el = ''
+  el += '<footer class="page-footer reveal fs12">'
+  el += '<hr>'
   // sitemap
   if (theme.footer.sitemap && Object.keys(theme.footer.sitemap).length > 0) {
-    el += '<div class="sitemap">';
+    el += '<div class="sitemap">'
     for (let group of Object.keys(theme.footer.sitemap)) {
-      let items = theme.footer.sitemap[group];
+      let items = theme.footer.sitemap[group]
       if (items == undefined || items.length == 0) {
-        continue;
+        continue
       }
-      el += '<div class="sitemap-group">';
-      el += '<span class="fs14">' + group + '</span>';
+      el += '<div class="sitemap-group">'
+      el += '<span class="fs14">' + group + '</span>'
       items.forEach((item, i) => {
-        el += '<a href="' + url_for(md_link(item)) + '">';
-        el += __(md_text(item));
-        el += '</a>';
+        el += '<a href="' + url_for(md_link(item)) + '">'
+        el += __(md_text(item))
+        el += '</a>'
       });
-      el += '</div>';
+      el += '</div>'
     }
-    el += '</div>';
+    el += '</div>'
   }
   // footer
-  el += '<div class="text">';
+  el += '<div class="text">'
   if (content) {
-    if ((typeof content == 'string') && content.constructor == String) {
-      el += markdown(content);
-    } else if ((typeof content == 'object') && content.constructor == Array) {
-      content.forEach((item, i) => {
-        el += markdown(item);
-      });
-    }
+    el += markdown(content)
   }
-  el += '</div></footer>';
-  return el;
+  el += '</div></footer>'
+  return el
 }
 %>
 <%- layoutDiv() %>
