@@ -8,7 +8,7 @@
     margin-bottom: .5em
     position: relative
     padding: 4px 0
-    color: var(--text-p3)
+    color: var(--text-p1)
     &:after
       content: ""
       position: absolute
@@ -18,7 +18,7 @@
       right: 0
       z-index: -1
       border-radius: 4px
-      background: var(--block-border)
+      background: $color-theme
   a.post
     display: inline-flex
     align-items: baseline
@@ -34,13 +34,9 @@
       color: var(--text-p4)
     &:hover
       border-bottom: 1px solid $color-theme
+      color: var(--text-p0)
       time
         color: $color-theme
-  &:hover
-    .archive-header
-      color: var(--text-p1)
-      &:after
-        background: $color-theme
 
 
 

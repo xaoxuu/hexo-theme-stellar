@@ -84,22 +84,16 @@
     object-fit: cover
     width: 100%
     border-radius: 0
-    height: 280px
-    @media screen and (max-width: 900px)
-      height: 240px
-    @media screen and (max-width: $device-tablet)
-      height: 220px
-    @media screen and (max-width: $device-mobile-425)
-      height: 200px
-    @media screen and (max-width: $device-mobile-375)
-      height: 180px
-
+    aspect-ratio: hexo-config('article.cover_ratio')
+    
 .post-list .post-card.post.photo
   .cover
     position: relative
     line-height: 0
     img
       width: 100%
+      object-fit: cover
+      aspect-ratio: hexo-config('article.cover_ratio')
     .cover-info
       padding: 1.5rem 1rem
       position: absolute
