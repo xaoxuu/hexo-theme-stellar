@@ -1,6 +1,6 @@
 <%
 function layoutDiv() {
-  if (!item.content?.length) return ''
+  if (!item.content?.length && !item.src?.length) return ''
   var el = '';
   el += '<widget class="widget-wrapper markdown">';
   if (item.title?.length > 0) {
@@ -9,7 +9,12 @@ function layoutDiv() {
     el += '</div>';
   }
   el += '<div class="widget-body fs14">';
-  el += markdown(item.content);
+  if (item.content) {
+    el += markdown(item.content);
+  }
+  if (item.src) {
+    el += `<div class="stellar-marked-api md-marked" src="${item.src}"></div>`
+  }
   el += '</div>';
   el += '</widget>';
   return el;
