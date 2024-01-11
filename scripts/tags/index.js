@@ -22,6 +22,7 @@ hexo.extend.tag.register('sites', require('./lib/sites')(hexo))
 hexo.extend.tag.register('ghcard', require('./lib/ghcard')(hexo))
 hexo.extend.tag.register('toc', require('./lib/toc')(hexo))
 hexo.extend.tag.register('timeline', require('./lib/timeline')(hexo), {ends: true})
+hexo.extend.tag.register('md', require('./lib/md')(hexo))
 
 // express
 hexo.extend.tag.register('checkbox', require('./lib/checkbox')(hexo, 'checkbox'))

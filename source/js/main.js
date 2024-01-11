@@ -242,7 +242,7 @@ if (stellar.plugins.stellar) {
       const els = document.getElementsByClassName('stellar-' + key + '-api');
       if (els != undefined && els.length > 0) {
         stellar.jQuery(() => {
-          if (key == 'timeline' || 'memos') {
+          if (key == 'timeline' || 'memos' || 'marked') {
             stellar.loadScript(stellar.plugins.marked).then(function () {
               stellar.loadScript(js, { defer: true });
             });
