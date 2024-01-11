@@ -12,7 +12,7 @@
 var md_index = 0
 
 module.exports = ctx => function(args) {
-  args = ctx.args.map(args, ['src'])
+  args = ctx.args.map(args, [''], ['src'])
   const md_id = "md_" + ++md_index
   return `
   <div class="stellar-marked-api md-marked" src="${args.src}" id="${md_id}"></div>
