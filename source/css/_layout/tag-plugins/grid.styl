@@ -1,11 +1,7 @@
 .tag-plugin.grid
   display: grid
   grid-gap: 16px
-  grid-template-columns: repeat(auto-fill, "calc((100% - 1 * %s) / 2)" % 16px)
-  >.cell
-    p:first-child>strong:only-child
-      font-size: 1rem
-  >.cell>
+  &[bg]>.cell>
     p   
       line-height: 1.5
     :first-child
@@ -21,7 +17,7 @@
   &[bg]>.cell
     padding: 1rem
     border-radius: $border-card
-  &[bg='block']>.cell
+  &[bg='box']>.cell
     background: var(--block)
   &[bg='card']>.cell
     background: var(--card)
