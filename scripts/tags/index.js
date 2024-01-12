@@ -39,4 +39,6 @@ hexo.extend.tag.register('poetry', require('./lib/poetry')(hexo), true)
 hexo.extend.tag.register('quot', require('./lib/quot')(hexo))
 hexo.extend.tag.register('hashtag', require('./lib/hashtag')(hexo))
 hexo.extend.tag.register('okr', require('./lib/okr')(hexo), {ends: true})
+hexo.extend.tag.register('audio', require('./lib/audio')(hexo))
+hexo.extend.tag.register('video', require('./lib/video')(hexo))
 // others
