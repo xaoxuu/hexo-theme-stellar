@@ -5,35 +5,36 @@
   position: absolute
   top: 0
   right: 0
-  padding: 4px 0.5rem
-  opacity: 0
+  padding: 0px 0.5rem
   font-weight: 700
-  color: var(--text-p2)
+  visibility: hidden
   border-bottom-left-radius: $border-bar
   border-bottom-right-radius: $border-bar
-  background: var(--block-hover)
+  background: var(--card)
   display: block
   cursor: pointer
-  margin-right: 0.5rem
+  margin-right: 4px
+  margin-top: 4px
+  border-radius: 'calc(%s - 4px)' % $border-block
 
 .highlight:hover
   .code:before
-    opacity: 0
+    visibility: hidden
   .copy-btn 
-    opacity: 0.75
-
-.highlight .code .copy-btn:hover
-  opacity: 1
+    visibility: visible
 
 .highlight .code .copy-btn.success
-  color: $c-green
-  opacity: 0.75
+  background: $c-green
+  color: white
+  visibility: visible
 
 .highlight .code .copy-btn.warning
-  color: $c-orange
-  opacity: 0.75
+  background: $c-orange
+  color: white
+  visibility: visible
 
 .md-text .folding[child=codeblock]
-  .highlight .code .copy-btn
-    margin-top: 1rem
+  .code .copy-btn
+    z-index 1
+    margin-right: 1rem
     border-radius: $border-bar
