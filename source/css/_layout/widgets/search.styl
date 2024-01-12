@@ -1,5 +1,4 @@
 .widgets .widget-wrapper.search
-  margin-top: 1rem
   margin-bottom: 0
 
 .search-wrapper
@@ -12,36 +11,21 @@
     align-items: center
     transition: 0.38s ease-out
     z-index: 0
-    &:after
-      content: ''
-      position absolute
-      left: 0
-      right: 0
-      bottom: 0
-      height: 2px
-      border-radius: 4px
-      background: convert(hexo-config('style.gradient.search'))
-      background-size: 200%
-      animation: glow 10s linear infinite
-      @keyframes glow {
-        from {
-          background-position: 0%
-        }
-        to {
-          background-position: 200%
-        }
-      }
   .search-input
     width: 100%
     padding: 0.5rem 0
-    line-height: 1
+    line-height: 1.5
     box-sizing: border-box
     font-family: $ff-body
+    font-size: $fs-13
     color: var(--text-p0)
+    
   
-  &.noresult
+  &.noresult[searching='true']
     .search-icon
       color: $c-red
+    .search-form
+      border: 1px solid $c-red
 
   .search-no-result
     display: none
@@ -88,22 +72,27 @@
 
 
 
-.search-wrapper.noresult
+.search-wrapper.noresult[searching='true']
   .search-no-result
     display: block
 
 .widget-wrapper
   .search-form
     top: 0
-    background: var(--site-bg)
+    background: var(--card)
+    border: 1px solid var(--block-border)
+    border-radius: $border-bar
   .search-input
-    padding-left: 1.5rem
+    text-indent: 0.75rem
+    padding-right: 2rem
   .search-icon 
-    position: absolute
-    margin-left: 0.25rem
-    left: 0
+    margin: 2px
+    position absolute
+    right: 0
     pointer-events: none
     color: var(--text-p2)
+    padding: 0.5rem
+    border-radius: 'calc(%s - 2px)' % $border-bar
     
   #search-result,.search-no-result
     margin-top: 1rem

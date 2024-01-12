@@ -22,7 +22,7 @@
 // Pieter Robberechts <http://github.com/probberechts>
 
 /*exported searchFunc*/
-var searchFunc = function(path, filter, searchId, contentId) {
+var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
 
   function getAllCombinations(keywords) {
     var i, j, result = [];
@@ -43,6 +43,7 @@ var searchFunc = function(path, filter, searchId, contentId) {
       var $input = document.getElementById(searchId);
       if (!$input) { return; }
       var $resultContent = document.getElementById(contentId);
+      var $wrapper = document.getElementById(wrapperId);
 
       $input.addEventListener("input", function(){
         var resultList = [];
@@ -50,8 +51,10 @@ var searchFunc = function(path, filter, searchId, contentId) {
           .sort(function(a,b) { return b.split(" ").length - a.split(" ").length; });
         $resultContent.innerHTML = "";
         if (this.value.trim().length <= 0) {
+          $wrapper.setAttribute('searching', 'false');
           return;
         }
+        $wrapper.setAttribute('searching', 'true');
         // perform local searching
         datas.forEach(function(data) {
           if (!data.content?.trim().length) { return }

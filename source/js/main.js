@@ -362,7 +362,7 @@ if (stellar.search.service) {
           }
           path = stellar.config.root + path;
           const filter = $inputArea.attr('data-filter') || '';
-          searchFunc(path, filter, 'search-input', 'search-result');
+          searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
         });
         $inputArea.keydown(function(e) {
           if (e.which == 13) {
