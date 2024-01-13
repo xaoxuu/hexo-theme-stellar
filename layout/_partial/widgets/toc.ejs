@@ -1,7 +1,7 @@
 <%
 let proj = theme.wiki.tree[page.wiki];
-var hasTOC = false
-function layoutToc() {
+var hasTOC = true
+function layoutTocBody() {
   if (toc(page.content).length > 0) {
     hasTOC = true
     return toc(page.content, {
@@ -15,96 +15,102 @@ function layoutToc() {
 }
 
 function layoutTocHeader(title) {
-  var el = '';
-  el += '<div class="widget-header cap dis-select">';
-  el += '<span class="name">' + (title || __("meta.toc")) + '</span>';
-  el += '</div>';
-  return el;
+  var el = ''
+  el += `<div class="widget-header cap dis-select">`
+  el += `<span class="name">${title || __("meta.toc")}</span>`
+  el += `</div>`
+  return el
 }
 
 function layoutDocTree(pages) {
-  var el = '';
+  var el = ''
   for (let p of pages) {
     if (p.title == null || p.title.length == 0) {
-      continue;
+      continue
     }
-    let isActive = '';
+    let isActive = ''
     if (p.path === page.path) {
-      isActive += ' active';
+      isActive += ' active'
     }
-    el += '<div class="doc-tree' + isActive + '">';
+    el += `<div class="doc-tree${isActive}">`
     if (proj.pages.length > 1) {
       let href = url_for(p.path);
       if (p.is_homepage) {
         href += '#start'
       }
-      el += '<a class="doc-tree-link' + isActive + '" href="' + href + '">';
-      el += '<span class="toc-text">' + p.title + '</span>';
-      el += '</a>';
+      el += `<a class="doc-tree-link${isActive}" href="${href}">`
+      el += `<span class="toc-text">${p.title}</span>`
+      el += `</a>`
     }
     if (p.path === page.path) {
-      el += layoutToc();
+      el += layoutTocBody()
     }
-    el += '</div>';
+    el += `</div>`
   }
-  return hasTOC ? el : ''
+  return el
 }
 
 
 function layoutDiv(fallback) {
-  var type = '';
+  var type = ''
   if (proj && proj.pages) {
     if (proj.pages.length > 1) {
-      type = 'multi';
+      type = 'multi'
     } else {
-      type = 'single';
+      type = 'single'
     }
   } else {
-    let toc_content = toc(page.content);
+    let toc_content = toc(page.content)
     if (toc_content && toc_content.length > 0) {
-      type = 'single';
+      type = 'single'
     }
   }
 
-  var el = '';
+  var el = ''
   if (type.length > 0) {
-    el += `<widget class="widget-wrapper toc ${type}" id="data-toc" collapse="${item.collapse}">`;
+    el += `<widget class="widget-wrapper toc ${type}" id="data-toc" collapse="${item.collapse}">`
     if (page.layout !== 'wiki') {
       // post 布局
-      el += layoutTocHeader(page.toc_title);
-      el += '<div class="widget-body fs14">';
-      el += '<div class="doc-tree active">';
-      el += layoutToc();
-      el += '</div>';
-      el += '</div>';
+      el += layoutTocHeader(page.toc_title)
+      el += `<div class="widget-body fs14">`
+      el += `<div class="doc-tree active">`
+      el += layoutTocBody()
+      el += `</div>`
+      el += `</div>`
+      if (hasTOC == false) {
+        return ''
+      }
     } else if (proj) {
       // wiki 布局
       if (proj.sections && proj.sections.length > 0 && proj.pages.length > 1) { // 多 pages
         for (let sec of proj.sections) {
           if (sec.pages.length == 0) {
-            continue;
+            continue
           }
           if (sec.title?.length > 0) {
-            el += layoutTocHeader(sec.title);
+            el += layoutTocHeader(sec.title)
           }
-          el += '<div class="widget-body fs14">';
-          el += layoutDocTree(sec.pages);
-          el += '</div>';
+          el += `<div class="widget-body fs14">`
+          el += layoutDocTree(sec.pages)
+          el += `</div>`
         }
       } else { // 单 page
         if (proj.pages.length == 1) {
-          el += layoutTocHeader(page.toc_title);
+          el += layoutTocHeader(page.toc_title)
         }
-        el += '<div class="widget-body fs14">';
-        el += layoutDocTree(proj.pages);
-        el += '</div>';
+        el += `<div class="widget-body fs14">`
+        el += layoutDocTree(proj.pages)
+        el += `</div>`
+        if (hasTOC == false) {
+          return ''
+        }
       }
     }
-    el += '</widget>';
+    el += `</widget>`
   } else if (item.fallback) {
-    el += partial(item.fallback, {item: theme.data.widgets[item.fallback]});
+    el += partial(item.fallback, {item: theme.data.widgets[item.fallback]})
   }
-  return hasTOC ? el : ''
+  return el
 }
 
 %>
