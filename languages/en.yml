@@ -24,6 +24,7 @@ meta:
   comment_title: Join the discussion
   back_to_top: Back to top
   more: 'More %s'
+  posts_in_category: 'Category: %s'
   created_author: '%s posted on'
   created: 'Posted on'
   updated: 'Updated on'

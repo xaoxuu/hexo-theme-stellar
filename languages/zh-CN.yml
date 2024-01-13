@@ -24,6 +24,7 @@ meta:
   comment_title: 快来参与讨论吧
   back_to_top: 回到顶部
   more: '更多「%s」'
+  posts_in_category: '专栏：%s'
   created_author: 本文由 %s 发布于
   created: 发布于
   updated: 更新于

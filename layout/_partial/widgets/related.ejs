@@ -1,34 +1,59 @@
 <%
-function layoutDiv() {
-  if (page.layout !== "wiki") {
-    return '';
+function relatedPosts() {
+  const { categories } = page;
+  if (categories.length == 0) {
+    return ''
   }
-  let thisItemObject = theme.wiki.tree[page.wiki];
+  const relatedItem = categories.data[0]
+  var el = ''
+  el += `<widget class="widget-wrapper recent">`
+  el += `<div class="widget-header cap theme dis-select">`
+  el += `<span class="name">${__('meta.posts_in_category', relatedItem.name)}</span>`
+  el += `</div>`
+  el += `<div class="widget-body related-posts">`
+  relatedItem.posts.sort('date', -1).each(function(post) {
+    el += `<a class="item${post.path == page.path ? ' active' : ''}" href="${url_for(post.path)}">`
+    el += `<span class="title">${post.title}</span>`
+    el += `</a>`
+  })
+  el += `</div>`
+  el += `</widget>`
+  return el
+}
+function relatedWiki() {
+  let thisItemObject = theme.wiki.tree[page.wiki]
   if (thisItemObject == null) {
-    return '';
+    return ''
   }
-  const relatedItems = thisItemObject.relatedItems;
-  var el = '';
+  const relatedItems = thisItemObject.relatedItems
+  var el = ''
   for (let relatedItem of relatedItems) {
-    el += '<widget class="widget-wrapper related">';
-    el += '<div class="widget-header cap theme dis-select">';
-    el += '<span class="name">' + __('meta.more', relatedItem.name) + '</span>';
-    el += '</div>';
-    el += '<div class="widget-body related-posts">';
+    el += `<widget class="widget-wrapper related">`
+    el += `<div class="widget-header cap theme dis-select">`
+    el += `<span class="name">${__('meta.more', relatedItem.name)}</span>`
+    el += `</div>`
+    el += `<div class="widget-body related-posts">`
     for (let id of relatedItem.items) {
       // 同一个分组中的其它项目
-      let item = theme.wiki.tree[id];
-      el += '<a class="item wiki" href="' + url_for(item.homepage?.path) + '">';
-      el += '<span class="title">' + item.title + '</span>';
+      let item = theme.wiki.tree[id]
+      el += `<a class="item wiki" href="${url_for(item.homepage?.path)}">`
+      el += `<span class="title">${item.title}</span>`
       if (item.description && item.description.length > 0) {
-        el += '<span class="excerpt">' + item.description + '</span>';
+        el += `<span class="excerpt">${item.description}</span>`
       }
-      el += '</a>';
+      el += `</a>`
     }
-    el += '</div>';
-    el += '</widget>';
+    el += `</div>`
+    el += `</widget>`
   }
-  return el;
+  return el
+}
+function layoutDiv() {
+  if (page.layout == 'wiki') {
+    return relatedWiki()
+  } else if (page.layout == 'post') {
+    return relatedPosts()
+  }
 }
 %>
 <%- layoutDiv() %>

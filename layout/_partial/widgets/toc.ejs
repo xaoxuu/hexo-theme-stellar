@@ -1,21 +1,23 @@
 <%
 let proj = theme.wiki.tree[page.wiki];
-
+var hasTOC = false
 function layoutToc() {
   if (toc(page.content).length > 0) {
+    hasTOC = true
     return toc(page.content, {
       list_number: item.list_number,
       min_depth: item.min_depth,
       max_depth: item.max_depth
     });
   }
-  return '';
+  hasTOC = false
+  return ''
 }
 
 function layoutTocHeader(title) {
   var el = '';
   el += '<div class="widget-header cap dis-select">';
-  el += '<span class="name">' + (title || page.title || __("meta.toc")) + '</span>';
+  el += '<span class="name">' + (title || __("meta.toc")) + '</span>';
   el += '</div>';
   return el;
 }
@@ -45,7 +47,7 @@ function layoutDocTree(pages) {
     }
     el += '</div>';
   }
-  return el;
+  return hasTOC ? el : ''
 }
 
 
@@ -102,7 +104,7 @@ function layoutDiv(fallback) {
   } else if (item.fallback) {
     el += partial(item.fallback, {item: theme.data.widgets[item.fallback]});
   }
-  return el;
+  return hasTOC ? el : ''
 }
 
 %>

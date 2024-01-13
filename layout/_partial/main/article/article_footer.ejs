@@ -38,11 +38,7 @@ function layoutDiv() {
   }
 
   var license = ''
-  if (page.layout == 'post') {
-    if (theme.article.license && (page.license != false)) {
-      license = page.license || theme.article.license
-    }
-  } else if (page.layout == 'wiki' && page.wiki) {
+  if (page.wiki) {
     let proj = theme.wiki.tree[page.wiki]
     if (page.license != null) {
       license = page.license || theme.article.license
@@ -52,6 +48,10 @@ function layoutDiv() {
       } else {
         license = proj.license
       }
+    }
+  } else if (page.layout == 'post') {
+    if (theme.article.license && (page.license != false)) {
+      license = page.license || theme.article.license
     }
   }
   if (license.length > 0) {
@@ -75,15 +75,15 @@ function layoutDiv() {
   }
 
   var showSharePlugin = false
-  if (page.layout == 'post') {
-    showSharePlugin = page.share != false
-  } else if (page.layout == 'wiki' && page.wiki) {
+  if (page.wiki) {
     let proj = theme.wiki.tree[page.wiki]
     if (page.share != null) {
       showSharePlugin = page.share == true
     } else if (proj != null) {
       showSharePlugin = proj.share == true
     }
+  } else if (page.layout == 'post') {
+    showSharePlugin = page.share != false
   }
   if (theme.article.share && showSharePlugin) {
     function socialButtons() {
@@ -101,8 +101,8 @@ function layoutDiv() {
             el += '&title=' + (page.seo_title || (page.title + ' - ' + config.title));
             if (page.layout == 'post' && page.cover) {
               el += '&pics=' + page.cover;
-            } else if (page.layout == 'wiki' && page.logo && page.logo.src) {
-              el += '&pics=' + page.logo.src;
+            } else if (page.layout == 'wiki' && page.icon) {
+              el += '&pics=' + page.icon;
             }
             el += '&summary=' + truncate(page.description || strip_html(page.excerpt || page.content), {length: 120});
             el += '"';
