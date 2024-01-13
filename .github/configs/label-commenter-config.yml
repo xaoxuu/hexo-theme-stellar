@@ -1,4 +1,16 @@
 labels:
+
+  # 请描述详细一点
+  - name: describe in detail
+    labeled:
+      issue:
+        body: |
+          :wave: Hello,
+          Please describe your problem in as much detail as possible. If you don’t know how to describe the problem in detail, this article can help you: [How To Ask Questions The Smart Way](http://www.catb.org/~esr/faqs/smart-questions.html).
+
+          :wave: 您好，
+          请尽可能详细地描述您的问题。如果不知道如何详细地描述问题，这份教程可以帮助到您：[提问的智慧](https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/master/README-zh_CN.md) 。
+
   # 文档中有答案
   - name: read docs
     labeled:
