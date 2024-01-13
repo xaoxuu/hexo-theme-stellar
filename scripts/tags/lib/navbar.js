@@ -25,7 +25,7 @@ module.exports = ctx => function(args) {
       let text = matches[1]
       let href = matches[2]
       if (href == args.active) {
-        el += `<a class="link blur active" href="${href}">${text}</a>`
+        el += `<a class="link active" href="${href}">${text}</a>`
       } else {
         el += `<a class="link" href="${href}">${text}</a>`
       }

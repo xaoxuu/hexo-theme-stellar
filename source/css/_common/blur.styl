@@ -9,7 +9,7 @@ if hexo-config('style.darkmode') == 'always'
   :root
     --blur-bg: alpha(black, .5)
 
-.blur
+blur-effect()
   background: var(--blur-bg)
   @supports ((-webkit-backdrop-filter:blur(var(--blur-px))) or (backdrop-filter:blur(var(--blur-px))))
     background: var(--blur-bg) !important
@@ -17,3 +17,6 @@ if hexo-config('style.darkmode') == 'always'
     -webkit-backdrop-filter: saturate(200%) blur(var(--blur-px))
   &:hover
     background: var(--card)
+
+.blur
+  blur-effect()
