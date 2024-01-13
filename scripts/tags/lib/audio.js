@@ -14,7 +14,7 @@ module.exports = ctx => function(args) {
     args.type = 'audio/mp3'
   }
   return `
-  <div class="tag-plugin video">
+  <div class="tag-plugin audio">
   <audio controls preload>
   <source src="${args.src}" type="${args.type}">Your browser does not support the audio tag.
   </audio>

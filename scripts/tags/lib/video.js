@@ -9,7 +9,15 @@
 'use strict';
 
 module.exports = ctx => function(args) {
-  args = ctx.args.map(args, ['type'], ['src'])
+  args = ctx.args.map(args, ['type', 'bilibili', 'ratio'], ['src'])
+  if (args.bilibili) {
+    return `
+    <div class="tag-plugin video" style="aspect-ratio:${args.ratio || 16/9}">
+    <iframe src="https://player.bilibili.com/player.html?bvid=${args.bilibili}" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
+    </iframe>
+    </div>
+    `
+  }
   if (args.type == null) {
     args.type = 'video/mp4'
   }
