@@ -16,7 +16,21 @@ open_graph:
   enable: true
   twitter_id: # for open_graph meta
 
-######## head tags ########
+
+######## Sidebar ########
+logo:
+    avatar: '[config.avatar](/about/)' # you can set avatar link in _config.yml or '[https://xxx.png](/about/)'
+    title: '[config.title](/)' # you can set html tag like: '[<img no-lazy height="32px" src="xxx"/>](/)'
+    subtitle: # 文字1 | 文字2(鼠标放上去会切换到文字2)
+
+menu:
+  # post: '[btn.blog](/)'
+  # wiki: '[btn.wiki](/wiki/)'
+  # friends: '[友链](/friends/)'
+  # about: '[关于](/about/)'
+
+
+######## Main ########
 # 站点主结构树
 root:
   # 主页配置
@@ -57,22 +71,7 @@ root:
   page:
     sidebar: toc, search
 
-######## Sidebar ########
-logo:
-    avatar: '[config.avatar](/about/)' # you can set avatar link in _config.yml or '[https://xxx.png](/about/)'
-    title: '[config.title](/)' # you can set html tag like: '[<img no-lazy height="32px" src="xxx"/>](/)'
-    subtitle: # 文字1 | 文字2(鼠标放上去会切换到文字2)
 
-menu:
-  # post: '[btn.blog](/)'
-  # wiki: '[btn.wiki](/wiki/)'
-  # friends: '[友链](/friends/)'
-  # about: '[关于](/about/)'
-
-
-######## Main ########
-breadcrumb:
-  home: home # config.title / config.author / home or custom content
 
 ######## Article ########
 article:

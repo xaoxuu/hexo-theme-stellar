@@ -12,10 +12,12 @@ if (page.sidebar == null) {
     sidebar = root.wiki.sidebar
   } else if (page.layout === '404') {
     sidebar = root.error_page.sidebar
-  } else if (page.layout === null || page.layout === 'page') {
+  } else if (page.layout === 'page') {
     sidebar = root.page.sidebar
-  } else if (page.layout == 'post') {
+  } else if (page.layout === 'post') {
     sidebar = root.post.sidebar
+  } else if (page.layout == null) {
+    sidebar = root.page.sidebar
   } else {
     sidebar = []
   }

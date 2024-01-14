@@ -5,15 +5,6 @@ function layoutDiv() {
     return el;
   }
   var home_title = __("btn.home");
-  if (theme.breadcrumb && theme.breadcrumb.home) {
-    if (theme.breadcrumb.home === 'config.title') {
-      home_title = config.title;
-    } else if (theme.breadcrumb.home === 'config.author') {
-      home_title = config.author;
-    } else if (theme.breadcrumb.home !== 'home') {
-      home_title = theme.breadcrumb.home;
-    }
-  }
   if (page.layout === "post") {
     var firstCat = "";
     if (page.categories && page.categories.length > 0) {
