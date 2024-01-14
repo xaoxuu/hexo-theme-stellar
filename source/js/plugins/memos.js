@@ -126,7 +126,7 @@ $(function () {
     cfg.host = api.replace(/https:\/\/(.*?)\/(.*)/i, '$1');
     cfg.avatar = el.getAttribute('avatar');
     if (!cfg.avatar) {
-      cfg.avatar = 'https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg';
+      cfg.avatar = 'https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg';
     }
     MemosJS.layoutDiv(cfg);
   }

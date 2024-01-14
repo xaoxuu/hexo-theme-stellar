@@ -16,6 +16,11 @@ open_graph:
   enable: true
   twitter_id: # for open_graph meta
 
+# 只影响生成的页面路径，不影响配置文件命名规则
+base_dir:
+  wiki: wiki
+  topic: topic
+  author: author
 
 ######## Sidebar ########
 sidebar:
@@ -36,13 +41,17 @@ sidebar:
     blog_index: search_blog, recent, timeline # for categories/tags/archives
     # 文档索引页
     wiki_index: search_docs, recent, timeline # for wiki
+    # 专栏索引页
+    index_topic: search_blog, recent, timeline # for topic
     # 其它（404）
     others: search, recent, timeline # for 404 and ...
     #### 手动创建的页面 ####
     # 文章内页
     post: search_blog, toc, related, ghrepo, ghissues # for pages using 'layout:post'
+    # 专栏内页
+    topic: search_blog, toc, related # for pages using 'layout:wiki'
     # 文档内页
-    wiki: search, toc, ghissues, related # for pages using 'layout:wiki'
+    wiki: search_blog, toc, ghissues, related # for pages using 'layout:wiki'
     # 其它 layout:page 的页面
     page: toc, search # for custom pages using 'layout:page'
 
@@ -189,16 +198,16 @@ comments:
 footer:
   social:
     # github:
-    #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/08a41b181ce68.svg"/>'
+    #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/>'
     #   url: /
     # music:
-    #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/3845874.svg"/>'
+    #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/3845874.svg"/>'
     #   url: /
     # unsplash:
-    #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/3616429.svg"/>'
+    #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/3616429.svg"/>'
     #   url: /
     # comments:
-    #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/social/942ebbf1a4b91.svg"/>'
+    #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/942ebbf1a4b91.svg"/>'
     #   url: /about/#comments
   sitemap:
     # '博客':
@@ -443,7 +452,7 @@ style:
     underline: true # true / false
   animated_avatar:
     animate: auto # auto, always
-    background: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/rainbow64@3x.webp
+    background: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp
   codeblock:
     scrollbar: 4px
     highlightjs_theme: https://gcore.jsdelivr.net/gh/highlightjs/cdn-release@11.7.0/build/styles/atom-one-dark.min.css
@@ -455,12 +464,13 @@ style:
     search: 'linear-gradient(to right, #04F3FF, #08FFC6, #DDF730, #FFBD19, #FF1FE0, #C418FF, #04F3FF)'
 
 default:
-  avatar: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/avatar/round/3442075.svg
-  link: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/link/8f277b4ee0ecd.svg
-  cover: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/cover/76b86c0226ffd.svg
-  image: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2659360.svg
-  project: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/image/2779789.png
-  banner: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.9/banner/books.jpg
+  avatar: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg
+  link: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/link/8f277b4ee0ecd.svg
+  cover: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg
+  image: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg
+  project: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2779789.png
+  banner: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/banner/books.jpg
+  topic: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/10433048.png
 
 api_host:
   ghapi: https://api.github.com

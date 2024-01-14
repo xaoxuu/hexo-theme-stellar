@@ -8,7 +8,7 @@ function relatedPosts() {
   var el = ''
   el += `<widget class="widget-wrapper recent">`
   el += `<div class="widget-header cap theme dis-select">`
-  el += `<span class="name">${__('meta.posts_in_category', relatedItem.name)}</span>`
+  el += `<span class="name">${__('btn.topic') + __('symbol.colon') + relatedItem.name}</span>`
   el += `</div>`
   el += `<div class="widget-body related-posts">`
   relatedItem.posts.sort('date', -1).each(function(post) {
@@ -16,6 +16,29 @@ function relatedPosts() {
     el += `<span class="title">${post.title}</span>`
     el += `</a>`
   })
+  el += `</div>`
+  el += `</widget>`
+  return el
+}
+function relatedPostsInTopic() {
+  if (page.topic?.length == 0) {
+    return ''
+  }
+  const topic = theme.topic.tree[page.topic]
+  if (topic == null) {
+    return ''
+  }
+  var el = ''
+  el += `<widget class="widget-wrapper recent">`
+  el += `<div class="widget-header cap theme dis-select">`
+  el += `<span class="name">${__('btn.topic') + __('symbol.colon') + topic.name}</span>`
+  el += `</div>`
+  el += `<div class="widget-body related-posts">`
+  for (let post of topic.pages) {
+    el += `<a class="item${post.path == page.path ? ' active' : ''}" href="${url_for(post.path)}">`
+    el += `<span class="title">${post.title}</span>`
+    el += `</a>`
+  }
   el += `</div>`
   el += `</widget>`
   return el
@@ -53,6 +76,8 @@ function layoutDiv() {
     return relatedWiki()
   } else if (page.layout == 'post') {
     return relatedPosts()
+  } else if (page.layout == 'topic') {
+    return relatedPostsInTopic()
   }
 }
 %>

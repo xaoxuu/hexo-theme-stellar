@@ -1,8 +1,4 @@
 <%
-var proj;
-if (page.layout === 'wiki' && page.wiki) {
-  proj = theme.wiki.tree[page.wiki];
-}
 // 默认组件
 if (page.sidebar == undefined) {
   if (page.layout == 'post' && page.content) {
@@ -14,6 +10,14 @@ if (page.sidebar == undefined) {
     } else {
       page.sidebar = theme.sidebar.widgets.wiki;
     }
+  } else if (page.layout === 'topic') {
+    if (page.topic && theme.topic?.tree[page.topic]?.sidebar) {
+      page.sidebar = theme.topic.tree[page.topic].sidebar;
+    } else {
+      page.sidebar = theme.sidebar.widgets.topic;
+    }
+  } else if (page.layout === 'index_topic') {
+    page.sidebar = theme.sidebar.widgets.index_topic
   } else if (is_home()) {
     page.sidebar = theme.sidebar.widgets.home;
   } else if (is_category() || is_tag() || is_archive() || ['categories', 'tags', 'archives'].includes(page.layout)) {
@@ -60,6 +64,10 @@ function layoutWidgets() {
     el += __('btn.all_wiki');
     el += '</a>';
     // this product
+    var proj;
+    if (page.layout === 'wiki' && page.wiki) {
+      proj = theme.wiki.tree[page.wiki];
+    }
     if (proj == undefined) {
       // 如果没有项目名，则使用menu中显示的名字
       if (page.menu_id && theme.sidebar.menu[page.menu_id] && md_link(theme.sidebar.menu[page.menu_id])) {

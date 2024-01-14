@@ -63,7 +63,38 @@ function layoutDiv() {
     
     el += '</div>';
     el += '</div>';
-  } else if (page.layout === "wiki" && page.wiki && page.wiki.length > 0) {
+  } else if (page.layout === 'topic' && page.topic?.length > 0) {
+    el += '<div class="bread-nav fs12">';
+    el += '<div class="left">';
+    el += '<div id="breadcrumb">';
+    var nodes = [];
+    // home
+    el += '<a class="cap breadcrumb" id="home" href="' + url_for(config.root) + '">' + home_title + '</a>';
+    nodes.push('/');
+    // menu_id
+    el += '<span class="sep"></span>';
+    let url = url_for(theme.base_dir.topic);
+    nodes.push(url);
+    el += '<a class="cap breadcrumb" id="menu" href="' + url + '">' + __("btn.topic") + '</a>';
+    // 专栏名
+    let topicObject = theme.topic.tree[page.topic];
+    if (topicObject != null) {
+      let url_proj = url_for(topicObject.homepage?.path);
+      if (nodes.includes(url_proj) === false) {
+        el += '<span class="sep"></span>';
+        el += '<a class="cap breadcrumb" id="proj" href="' + url_proj + '">' + (topicObject.name || topicObject.title) + '</a>';
+      }
+    }
+    el += '</div>';
+    // 更新日期
+    el += '<div id="post-meta">';
+    el += `
+    <span>${__("meta.updated")}&nbsp;<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time></span>
+    `;
+    el += '</div>';
+    el += '</div>';
+    el += '</div>';
+  } else if (page.layout === "wiki" && page.wiki?.length > 0) {
     el += '<div class="bread-nav fs12">';
     el += '<div class="left">';
     el += '<div id="breadcrumb">';

@@ -36,6 +36,13 @@ function layoutDiv() {
       el += '<a href="' + url_for(config.archive_dir) + '">' + __("btn.archives") + '</a>';
     }
   }
+  if (theme.topic?.publish_list?.length > 0) {
+    if (page.layout == 'index_topic') {
+      el += '<a class="active" href="' + url_for(theme.base_dir.topic) + '">' + __("btn.topic") + '</a>';
+    } else {
+      el += '<a href="' + url_for(theme.base_dir.topic) + '">' + __("btn.topic") + '</a>';
+    }
+  }
   
   if (theme['post-index']) {
     const obj = theme['post-index'];

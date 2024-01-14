@@ -8,7 +8,12 @@ hexo.on('generateBefore', () => {
   require('./lib/links')(hexo);
   require('./lib/authors')(hexo);
   require('./lib/doc_tree')(hexo);
+  require('./lib/topic_tree')(hexo);
   require('./lib/utils')(hexo);
+});
+
+hexo.on('generateAfter', () => {
+  require('./lib/merge_posts')(hexo);
 });
 
 hexo.on('ready', () => {
