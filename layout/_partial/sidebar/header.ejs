@@ -32,19 +32,18 @@ function layoutDiv() {
   el += '">';
 
   el += '<div class="logo-wrap">';
-  if (md_text(theme.sidebar.logo.avatar)) {
-    el += '<a class="avatar" href="' + url_for(md_link(theme.sidebar.logo.avatar) || "/") + '">';
+  if (md_text(theme.logo.avatar)) {
+    el += '<a class="avatar" href="' + url_for(md_link(theme.logo.avatar) || "/") + '">';
     if (theme.style.animated_avatar.animate) {
       el += '<div class="bg" style="opacity:0;background-image:url(' + theme.style.animated_avatar.background + ');"></div>';
     }
-    el += '<img no-lazy class="avatar" src="' + md_text(theme.sidebar.logo.avatar) + '">';
+    el += '<img no-lazy class="avatar" src="' + md_text(theme.logo.avatar) + '">';
     el += '</a>';
   }
-  let main = md_text(theme.sidebar.logo.title);
+  let main = md_text(theme.logo.title);
   if (main) {
-    let url = md_link(theme.sidebar.logo.title);
-    let sub = config.subtitle;
-    el += layoutTitle(main, url, sub);
+    let url = md_link(theme.logo.title);
+    el += layoutTitle(main, url, theme.logo.subtitle);
   }
   el += '</div>';
 

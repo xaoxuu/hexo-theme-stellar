@@ -1,36 +1,33 @@
 <%
-// 默认组件
-if (page.sidebar == undefined) {
-  if (page.layout == 'post' && page.content) {
-    page.sidebar = theme.sidebar.widgets.post;
-  } else if (page.layout == 'wiki' && page.wiki) {
-    let proj = theme.wiki.tree[page.wiki];
-    if (proj?.sidebar) {
-      page.sidebar = proj.sidebar;
-    } else {
-      page.sidebar = theme.sidebar.widgets.wiki;
-    }
-  } else if (page.layout === 'topic') {
-    if (page.topic && theme.topic?.tree[page.topic]?.sidebar) {
-      page.sidebar = theme.topic.tree[page.topic].sidebar;
-    } else {
-      page.sidebar = theme.sidebar.widgets.topic;
-    }
-  } else if (page.layout === 'index_topic') {
-    page.sidebar = theme.sidebar.widgets.index_topic
-  } else if (is_home()) {
-    page.sidebar = theme.sidebar.widgets.home;
+if (page.sidebar == null) {
+  const root = theme.root
+  var sidebar
+  if (is_home()) {
+    sidebar = root.home.sidebar
   } else if (is_category() || is_tag() || is_archive() || ['categories', 'tags', 'archives'].includes(page.layout)) {
-    page.sidebar = theme.sidebar.widgets.blog_index;
-  } else if (['wiki_index'].includes(page.layout)) {
-    page.sidebar = theme.sidebar.widgets.wiki_index;
-  } else if (['404', undefined].includes(page.layout)) {
-    page.sidebar = theme.sidebar.widgets.others;
-  } else if (page.layout == 'page') {
-    page.sidebar = theme.sidebar.widgets.page;
+    sidebar = root.blog.sidebar
+  } else if (page.layout === 'index_topic' || page.layout === 'topic') {
+    sidebar = root.topic.sidebar
+  } else if (page.layout === 'index_wiki' || page.layout === 'wiki') {
+    sidebar = root.wiki.sidebar
+  } else if (page.layout === '404') {
+    sidebar = root.error_page.sidebar
+  } else if (page.layout === null || page.layout === 'page') {
+    sidebar = root.page.sidebar
+  } else if (page.layout == 'post') {
+    sidebar = root.post.sidebar
   } else {
-    page.sidebar = [];
+    sidebar = []
   }
+
+  if (page.layout === 'topic' && page.topic && theme.topic?.tree[page.topic]?.sidebar) {
+    sidebar = theme.topic.tree[page.topic].sidebar
+  }
+  if (page.layout == 'wiki' && page.wiki && theme.wiki?.tree[page.wiki]?.sidebar) {
+    sidebar = theme.wiki.tree[page.wiki].sidebar
+  }
+  
+  page.sidebar = sidebar
 }
 
 // parse array string
@@ -55,25 +52,25 @@ function layoutTitle(main, url, sub) {
 }
 function layoutWidgets() {
   var el = '';
+  var proj;
+  if (page.layout === 'wiki' && page.wiki) {
+    proj = theme.wiki.tree[page.wiki];
+  }
   el += '<div class="widgets">';
   if (page.layout == 'wiki' && proj && page.menu_id == 'wiki') {
     el += '<widget class="widget-wrapper logo-wrap wiki"><div class="widget-body">';
     // all products
-    el += '<a style="filter: grayscale(100%)" class="wiki-home cap" href="' + url_for(config.wiki_dir) + '">';
+    el += '<a style="filter: grayscale(100%)" class="wiki-home cap" href="' + url_for(theme.root.wiki.base_dir) + '">';
     el += '<svg aria-hidden="true" viewBox="0 0 16 16" width="1.2em" height="1.2em" fill="currentColor"><path fill-rule="evenodd" d="M7.78 12.53a.75.75 0 01-1.06 0L2.47 8.28a.75.75 0 010-1.06l4.25-4.25a.75.75 0 011.06 1.06L4.81 7h7.44a.75.75 0 010 1.5H4.81l2.97 2.97a.75.75 0 010 1.06z"></path></svg>';
     el += __('btn.all_wiki');
     el += '</a>';
     // this product
-    var proj;
-    if (page.layout === 'wiki' && page.wiki) {
-      proj = theme.wiki.tree[page.wiki];
-    }
     if (proj == undefined) {
       // 如果没有项目名，则使用menu中显示的名字
-      if (page.menu_id && theme.sidebar.menu[page.menu_id] && md_link(theme.sidebar.menu[page.menu_id])) {
+      if (page.menu_id && theme.menu[page.menu_id] && md_link(theme.menu[page.menu_id])) {
         proj = {
-          path: md_link(theme.sidebar.menu[page.menu_id]),
-          wiki: __(md_text(theme.sidebar.menu[page.menu_id]))
+          path: md_link(theme.menu[page.menu_id]),
+          wiki: __(md_text(theme.menu[page.menu_id]))
         };
       }
     }
@@ -142,6 +139,7 @@ function layoutFooterDiv() {
     return '';
   }
 }
+
 %>
 <% if (page.header == undefined || page.header == 'left' || page.header == 'auto') { %>
   <%- partial('header', {where: 'sidebar'}) %>

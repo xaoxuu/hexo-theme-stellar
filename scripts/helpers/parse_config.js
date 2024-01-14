@@ -1,6 +1,6 @@
 /**
- * md_link(theme.sidebar.menu['home']) is '/'
- * md_text(theme.sidebar.menu['home']) is 'Home'
+ * md_link(theme.menu['home']) is '/'
+ * md_text(theme.menu['home']) is 'Home'
  */
 
 'use strict';

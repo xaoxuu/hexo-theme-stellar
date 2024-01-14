@@ -4,25 +4,9 @@ function layoutDiv() {
   var title = __('meta.read_next')
   title_prev = __('meta.newer')
   title_next = __('meta.older')
-  if (page.layout === 'post') {
+  if (page.layout === 'post' || page.layout === 'topic') {
     prev = page.prev
     next = page.next
-  } else if (page.layout === 'topic' && page.topic?.length > 0) {
-    const topicObject = theme.topic.tree[page.topic]
-    if (topicObject) {
-      const current_page_date = topicObject.pages.filter(p => p.path == page.path)[0].date
-      for (let p of topicObject.pages) {
-        if (p.date > current_page_date) {
-          if (prev == undefined || p.date < prev.date) {
-            prev = p
-          }
-        } else if (p.date < current_page_date) {
-          if (next == undefined || p.date > next.date) {
-            next = p
-          }
-        }
-      }
-    }
   } else if (page.layout === 'wiki' && page.wiki?.length > 0) {
     var title_prev = __('meta.prev');
     var title_next = __('meta.next');

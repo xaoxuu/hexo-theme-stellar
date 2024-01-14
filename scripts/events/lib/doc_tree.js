@@ -177,7 +177,7 @@ module.exports = ctx => {
     }
     all_tags[tag_name] = {
       name: tag_name,
-      path: (ctx.config.wiki_dir || 'wiki') + '/tags/' + tag_name + '/index.html',
+      path: (ctx.theme.config.root.wiki.base_dir) + '/tags/' + tag_name + '/index.html',
       items: items
     }
   })

@@ -2,11 +2,8 @@
 if (page.menu_id == undefined) {
   page.menu_id = 'post'
 }
-if (page.layout == undefined) {
-  page.layout = 'index_topic'
-}
 if (page.title == undefined) {
-  page.title = __('btn.wiki')
+  page.title = __('btn.topic')
 }
 function layoutTitle() {
   const title = page.h1 != null ? page.h1 : page.title;
@@ -17,23 +14,15 @@ function layoutTitle() {
   }
 }
 %>
-<% if (page.layout === 'index_topic') { %>
-  <%- partial('index') %>
-<% } else { %>
-  <%
-  if (page.header == undefined) {
-    page.header = 'auto';
-  }
-  %>
-  <%- partial('_partial/main/navbar/breadcrumb') %>
-  <article class='md-text content <%- page.layout %><%- page.indent ? ' indent' : '' %><%- scrollreveal() %>'>
-  <%- layoutTitle() %>
-  <%- markdown(page.content) %>
-  <% if (theme.plugins.tianli_gpt.enable && ['all', 'topic'].includes(theme.plugins.tianli_gpt.field)) { %>
-	<%- partial('_partial/plugins/ai/tianli_gpt') %>
-  <% } %>
-  <%- partial('_partial/main/article/article_footer') %>
-  </article>
-  <%- partial('_partial/main/article/read_next') %>
-  <%- partial('_partial/plugins/comments/layout') %>
+
+<%- partial('_partial/main/navbar/breadcrumb') %>
+<article class='md-text content <%- page.layout %><%- page.indent ? ' indent' : '' %><%- scrollreveal() %>'>
+<%- layoutTitle() %>
+<%- markdown(page.content) %>
+<% if (theme.plugins.tianli_gpt.enable && ['all', 'topic'].includes(theme.plugins.tianli_gpt.field)) { %>
+<%- partial('_partial/plugins/ai/tianli_gpt') %>
 <% } %>
+<%- partial('_partial/main/article/article_footer') %>
+</article>
+<%- partial('_partial/main/article/read_next') %>
+<%- partial('_partial/plugins/comments/layout') %>

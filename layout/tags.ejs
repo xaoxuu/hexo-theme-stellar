@@ -7,7 +7,7 @@ if (page.menu_id == undefined) {
 <% if (site.tags.length) { %>
   <% page.title = __('btn.tags'); %>
   <% page.layout = 'tags'; %>
-  <%- partial('_partial/main/navbar/list_post') %>
+  <%- partial('_partial/main/navbar/nav_tabs_blog') %>
   <div class='post-list'>
     <article class='<%- scrollreveal() %>' id='tags'>
       <% site.tags.sort('length', -1).each(function(tag){ %>

@@ -1,0 +1,42 @@
+<%
+function layout_wiki_list(partial) {
+  var el = ''
+  const { shelf, tree } = theme.wiki
+  for (let pid of shelf) {
+    let proj = tree[pid]
+    if (proj == null) {
+      continue
+    }
+    if (proj.pages == undefined || proj.pages.length === 0) {
+      continue
+    }
+    if (page.filter === false) {
+      // wikiList
+      el += `<div class="post-list wiki">`
+      el += `<a class="post-card wiki ${scrollreveal()}" href="${url_for(proj.homepage?.path || '/')}">`
+      el += partial(proj)
+      el += `</a>`
+      el += `</div>`
+    } else if (proj.tags && proj.tags.includes(page.tagName) === true) {
+      // filtered wikiList
+      el += `<div class="post-list wiki filter">`
+      el += `<a class="post-card wiki ${scrollreveal()}" href="${url_for(proj.homepage?.path || '/')}">`
+      el += partial(proj)
+      el += `</a>`
+      el += `</div>`
+    }
+  }
+  return el
+}
+
+function layoutDiv() {
+  var el = ''
+  el += partial('_partial/main/navbar/nav_tabs_wiki')
+  el += layout_wiki_list(function(proj) {
+    return partial('_partial/main/post_list/wiki_card', {proj: proj})
+  })
+  return el
+}
+%>
+
+<%- layoutDiv() %>

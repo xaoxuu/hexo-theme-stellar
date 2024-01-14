@@ -1,12 +1,4 @@
 <%
-if (page.menu_id == undefined) {
-  if (page.layout === 'wiki_topic' && page.topic) {
-    page.menu_id = 'blog'
-  } else {
-    page.menu_id = 'post'
-  }
-}
-
 function layout_topic_list(partial) {
   var el = ''
   const { publish_list, tree } = theme.topic
@@ -25,7 +17,7 @@ function layout_topic_list(partial) {
 }
 function layoutDiv() {
   var el = ''
-  el += partial('_partial/main/navbar/list_post')
+  el += partial('_partial/main/navbar/nav_tabs_blog')
   el += layout_topic_list(function(topic) {
     return partial('_partial/main/post_list/topic_card', {topic: topic})
   })

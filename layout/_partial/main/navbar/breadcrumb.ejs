@@ -73,7 +73,7 @@ function layoutDiv() {
     nodes.push('/');
     // menu_id
     el += '<span class="sep"></span>';
-    let url = url_for(theme.base_dir.topic);
+    let url = url_for(theme.root.topic.base_dir);
     nodes.push(url);
     el += '<a class="cap breadcrumb" id="menu" href="' + url + '">' + __("btn.topic") + '</a>';
     // 专栏名
@@ -104,12 +104,12 @@ function layoutDiv() {
     nodes.push('/');
     // menu_id
     el += '<span class="sep"></span>';
-    if (page.menu_id && theme.sidebar.menu[page.menu_id] && md_link(theme.sidebar.menu[page.menu_id])) {
-      let url = url_for(md_link(theme.sidebar.menu[page.menu_id]));
+    if (page.menu_id && theme.menu[page.menu_id] && md_link(theme.menu[page.menu_id])) {
+      let url = url_for(md_link(theme.menu[page.menu_id]));
       nodes.push(url);
-      el += '<a class="cap breadcrumb" id="menu" href="' + url + '">' + __(md_text(theme.sidebar.menu[page.menu_id])) + '</a>';
+      el += '<a class="cap breadcrumb" id="menu" href="' + url + '">' + __(md_text(theme.menu[page.menu_id])) + '</a>';
     } else {
-      let url = url_for(config.wiki_dir || "/wiki/");
+      let url = url_for(theme.root.wiki.base_dir);
       nodes.push(url);
       el += '<a class="cap breadcrumb" id="menu" href="' + url + '">' + __("btn.wiki") + '</a>';
     }

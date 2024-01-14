@@ -16,48 +16,58 @@ open_graph:
   enable: true
   twitter_id: # for open_graph meta
 
-# 只影响生成的页面路径，不影响配置文件命名规则
-base_dir:
-  wiki: wiki
-  topic: topic
-  author: author
+######## head tags ########
+# 站点主结构树
+root:
+  # 主页配置
+  home:
+    sidebar: search, recent, timeline
+  # 博客配置
+  blog:
+    base_dir: blog # 只影响自动生成的页面路径
+    menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 post 的页面默认使用这里配置的 menu_id
+    sidebar: search_blog, recent, timeline # for categories/tags/archives
+    nav_tabs:  # 近期发布 分类 标签 专栏 归档 and ...
+      # '朋友文章': /friends/rss/
+  # 博客文章配置
+  post:
+    menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 post 的页面默认使用这里配置的 menu_id
+    sidebar: search_blog, toc, related, ghrepo, ghissues # for pages using 'layout:post'
+  # 博客专栏配置
+  topic:
+    base_dir: topic # 只影响自动生成的页面路径
+    menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 topic 的页面默认使用这里配置的 menu_id
+    sidebar: search_blog, toc, related # for topic
+  # wiki配置
+  wiki:
+    base_dir: wiki # 只影响自动生成的页面路径
+    menu_id: wiki # 未在 front-matter 中指定 menu_id 时，layout 为 wiki 的页面默认使用这里配置的 menu_id
+    sidebar: search_docs, ghissues, related, recent, timeline # for wiki
+  # 作者信息配置
+  author: 
+    base_dir: author # 只影响自动生成的页面路径
+    menu_id: post
+    sidebar: search_blog, recent, timeline
+  # 错误页配置
+  error_page:
+    menu_id: post
+    '404': '/404.html'
+    sidebar: search, recent, timeline
+  # 其它自定义页面配置 layout: page
+  page:
+    sidebar: toc, search
 
 ######## Sidebar ########
-sidebar:
-  logo:
+logo:
     avatar: '[config.avatar](/about/)' # you can set avatar link in _config.yml or '[https://xxx.png](/about/)'
     title: '[config.title](/)' # you can set html tag like: '[<img no-lazy height="32px" src="xxx"/>](/)'
-  menu:
-    # post: '[btn.blog](/)'
-    # wiki: '[btn.wiki](/wiki/)'
-    # friends: '[友链](/friends/)'
-    # about: '[关于](/about/)'
-  # Sidebar widgets
-  widgets:
-    #### 自动生成的页面 ####
-    # 主页
-    home: search, recent, timeline # for home
-    # 博客索引页
-    blog_index: search_blog, recent, timeline # for categories/tags/archives
-    # 文档索引页
-    wiki_index: search_docs, recent, timeline # for wiki
-    # 专栏索引页
-    index_topic: search_blog, recent, timeline # for topic
-    # 其它（404）
-    others: search, recent, timeline # for 404 and ...
-    #### 手动创建的页面 ####
-    # 文章内页
-    post: search_blog, toc, related, ghrepo, ghissues # for pages using 'layout:post'
-    # 专栏内页
-    topic: search_blog, toc, related # for pages using 'layout:wiki'
-    # 文档内页
-    wiki: search_blog, toc, ghissues, related # for pages using 'layout:wiki'
-    # 其它 layout:page 的页面
-    page: toc, search # for custom pages using 'layout:page'
+    subtitle: # 文字1 | 文字2(鼠标放上去会切换到文字2)
 
-######## Index ########
-post-index: # 近期发布 分类 标签 归档 and ...
-  # '朋友文章': /friends/rss/
+menu:
+  # post: '[btn.blog](/)'
+  # wiki: '[btn.wiki](/wiki/)'
+  # friends: '[友链](/friends/)'
+  # about: '[关于](/about/)'
 
 
 ######## Main ########

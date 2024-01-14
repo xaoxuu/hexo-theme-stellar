@@ -7,7 +7,7 @@ if (page.menu_id == undefined) {
 <% if (site.categories.length) { %>
   <% page.title = __('btn.categories'); %>
   <% page.layout = 'categories'; %>
-  <%- partial('_partial/main/navbar/list_post') %>
+  <%- partial('_partial/main/navbar/nav_tabs_blog') %>
   <div class='post-list'>
     <article class='<%- scrollreveal() %>' id='cats'>
       <% site.categories.sort('path').each(function(category){ %>

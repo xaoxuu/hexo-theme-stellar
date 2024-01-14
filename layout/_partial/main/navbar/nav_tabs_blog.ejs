@@ -29,6 +29,14 @@ function layoutDiv() {
     }
   }
   
+  if (theme.topic?.publish_list?.length > 0) {
+    if (page.layout == 'index_topic') {
+      el += '<a class="active" href="' + url_for(theme.root.topic.base_dir) + '">' + __("btn.topic") + '</a>';
+    } else {
+      el += '<a href="' + url_for(theme.root.topic.base_dir) + '">' + __("btn.topic") + '</a>';
+    }
+  }
+  
   if (site.posts && site.posts.length > 0) {
     if (is_archive()) {
       el += '<a class="active" href="' + url_for(config.archive_dir) + '">' + __("btn.archives") + '</a>';
@@ -36,23 +44,16 @@ function layoutDiv() {
       el += '<a href="' + url_for(config.archive_dir) + '">' + __("btn.archives") + '</a>';
     }
   }
-  if (theme.topic?.publish_list?.length > 0) {
-    if (page.layout == 'index_topic') {
-      el += '<a class="active" href="' + url_for(theme.base_dir.topic) + '">' + __("btn.topic") + '</a>';
-    } else {
-      el += '<a href="' + url_for(theme.base_dir.topic) + '">' + __("btn.topic") + '</a>';
-    }
-  }
   
-  if (theme['post-index']) {
-    const obj = theme['post-index'];
-    for (let key of Object.keys(obj)) {
+  const { nav_tabs } = theme.root.blog
+  if (nav_tabs) {
+    for (let key of Object.keys(nav_tabs)) {
       // 当 page 的末尾为 index.html 或者处于该 page 的某个子页面时也应该匹配
-      // if (full_url_for(page.path) == full_url_for(obj[key])) {
-      if (full_url_for(page.path).startsWith(full_url_for(obj[key]))){
-        el += '<a class="active" href="' + url_for(obj[key]) + '">' + key + '</a>';
+      // if (full_url_for(page.path) == full_url_for(nav_tabs[key])) {
+      if (full_url_for(page.path).startsWith(full_url_for(nav_tabs[key]))){
+        el += '<a class="active" href="' + url_for(nav_tabs[key]) + '">' + key + '</a>';
       } else {
-        el += '<a href="' + url_for(obj[key]) + '">' + key + '</a>';
+        el += '<a href="' + url_for(nav_tabs[key]) + '">' + key + '</a>';
       }
     }
   }

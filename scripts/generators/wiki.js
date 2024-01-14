@@ -3,34 +3,35 @@
  */
 
 hexo.extend.generator.register('wiki', function (locals) {
-  var hasWiki = false;
-  locals.pages.forEach((page, i) => {
-    if (page.layout == 'wiki') {
-      hasWiki = true;
-    }
-  });
-  if (hasWiki) {
-    var ret = [];
-    ret.push({
-      path: (hexo.config.wiki_dir || 'wiki') + '/index.html',
-      data: {'filter': false},
-      layout: ['wiki']
-    });
-    if (hexo.theme.config.wiki && hexo.theme.config.wiki.all_tags) {
-      for (let id of Object.keys(hexo.theme.config.wiki.all_tags)) {
-        let tag = hexo.theme.config.wiki.all_tags[id];
-        ret.push({
-          path: tag.path,
-          data: {
-            'filter': true,
-            'tagName': tag.name
-          },
-          layout: ['wiki']
-        });
-      }
-    }
-    return ret;
-  } else {
-    return {};
+  const { root, wiki } = hexo.theme.config
+  const wikiIdList = Object.keys(wiki.tree)
+  if (wikiIdList.length == 0) {
+    return {}
   }
-});
+  var ret = []
+  ret.push({
+    path: root.wiki.base_dir + '/index.html',
+    layout: ['index_wiki'],
+    data: {
+      layout: 'index_wiki',
+      menu_id: root.wiki.menu_id,
+      filter: false
+    }
+  })
+  if (wiki.all_tags) {
+    for (let id of Object.keys(wiki.all_tags)) {
+      let tag = wiki.all_tags[id]
+      ret.push({
+        path: tag.path,
+        layout: ['index_wiki'],
+        data: {
+          layout: 'index_wiki',
+          menu_id: root.wiki.menu_id,
+          filter: true,
+          tagName: tag.name
+        }
+      })
+    }
+  }
+  return ret
+})

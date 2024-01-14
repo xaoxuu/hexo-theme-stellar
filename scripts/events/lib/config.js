@@ -56,8 +56,8 @@ module.exports = hexo => {
   hexo.theme.config.data['widgets'] = widgets;
 
   // default menu
-  if (hexo.theme.config.sidebar.menu == undefined) {
-    hexo.theme.config.sidebar.menu = [];
+  if (hexo.theme.config.menu == undefined) {
+    hexo.theme.config.menu = [];
   }
 
 };

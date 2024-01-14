@@ -6,7 +6,7 @@
 
 module.exports = ctx => {
   var authors = ctx.locals.get('data').authors || {}
-  let basePath = ctx.config.author_dir || 'author'
+  let basePath = ctx.theme.config.root.author.base_dir
   // url
   for (let key of Object.keys(authors)) {
     let author = authors[key]

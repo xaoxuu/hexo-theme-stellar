@@ -1,25 +1,4 @@
 <%
-function relatedPosts() {
-  const { categories } = page;
-  if (categories.length == 0) {
-    return ''
-  }
-  const relatedItem = categories.data[0]
-  var el = ''
-  el += `<widget class="widget-wrapper recent">`
-  el += `<div class="widget-header cap theme dis-select">`
-  el += `<span class="name">${__('btn.topic') + __('symbol.colon') + relatedItem.name}</span>`
-  el += `</div>`
-  el += `<div class="widget-body related-posts">`
-  relatedItem.posts.sort('date', -1).each(function(post) {
-    el += `<a class="item${post.path == page.path ? ' active' : ''}" href="${url_for(post.path)}">`
-    el += `<span class="title">${post.title}</span>`
-    el += `</a>`
-  })
-  el += `</div>`
-  el += `</widget>`
-  return el
-}
 function relatedPostsInTopic() {
   if (page.topic?.length == 0) {
     return ''
@@ -74,8 +53,6 @@ function relatedWiki() {
 function layoutDiv() {
   if (page.layout == 'wiki') {
     return relatedWiki()
-  } else if (page.layout == 'post') {
-    return relatedPosts()
   } else if (page.layout == 'topic') {
     return relatedPostsInTopic()
   }
