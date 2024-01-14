@@ -32,7 +32,7 @@ menu:
 
 ######## Main ########
 # 站点主结构树
-root:
+site_tree:
   # 主页配置
   home:
     sidebar: search, recent, timeline

@@ -64,7 +64,7 @@ function layoutDiv() {
     nodes.push('/');
     // menu_id
     el += '<span class="sep"></span>';
-    let url = url_for(theme.root.topic.base_dir);
+    let url = url_for(theme.site_tree.topic.base_dir);
     nodes.push(url);
     el += '<a class="cap breadcrumb" id="menu" href="' + url + '">' + __("btn.topic") + '</a>';
     // 专栏名
@@ -100,7 +100,7 @@ function layoutDiv() {
       nodes.push(url);
       el += '<a class="cap breadcrumb" id="menu" href="' + url + '">' + __(md_text(theme.menu[page.menu_id])) + '</a>';
     } else {
-      let url = url_for(theme.root.wiki.base_dir);
+      let url = url_for(theme.site_tree.wiki.base_dir);
       nodes.push(url);
       el += '<a class="cap breadcrumb" id="menu" href="' + url + '">' + __("btn.wiki") + '</a>';
     }

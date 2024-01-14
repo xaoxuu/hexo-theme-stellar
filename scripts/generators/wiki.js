@@ -3,18 +3,18 @@
  */
 
 hexo.extend.generator.register('wiki', function (locals) {
-  const { root, wiki } = hexo.theme.config
+  const { site_tree, wiki } = hexo.theme.config
   const wikiIdList = Object.keys(wiki.tree)
   if (wikiIdList.length == 0) {
     return {}
   }
   var ret = []
   ret.push({
-    path: root.wiki.base_dir + '/index.html',
+    path: site_tree.wiki.base_dir + '/index.html',
     layout: ['index_wiki'],
     data: {
       layout: 'index_wiki',
-      menu_id: root.wiki.menu_id,
+      menu_id: site_tree.wiki.menu_id,
       filter: false
     }
   })
@@ -26,7 +26,7 @@ hexo.extend.generator.register('wiki', function (locals) {
         layout: ['index_wiki'],
         data: {
           layout: 'index_wiki',
-          menu_id: root.wiki.menu_id,
+          menu_id: site_tree.wiki.menu_id,
           filter: true,
           tagName: tag.name
         }

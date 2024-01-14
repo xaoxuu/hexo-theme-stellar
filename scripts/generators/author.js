@@ -3,7 +3,7 @@
  */
 
 hexo.extend.generator.register('author', function (locals) {
-  const { root, authors } = hexo.theme.config
+  const { site_tree, authors } = hexo.theme.config
   var pages = []
   for (let key of Object.keys(authors)) {
     const author = authors[key]
@@ -15,8 +15,8 @@ hexo.extend.generator.register('author', function (locals) {
       layout: ['archive'],
       data: {
         author: author,
-        sidebar: root.author.sidebar,
-        menu_id: root.author.menu_id
+        sidebar: site_tree.author.sidebar,
+        menu_id: site_tree.author.menu_id
       }
     })
   }

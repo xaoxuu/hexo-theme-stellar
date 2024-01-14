@@ -31,9 +31,9 @@ function layoutDiv() {
   
   if (theme.topic?.publish_list?.length > 0) {
     if (page.layout == 'index_topic') {
-      el += '<a class="active" href="' + url_for(theme.root.topic.base_dir) + '">' + __("btn.topic") + '</a>';
+      el += '<a class="active" href="' + url_for(theme.site_tree.topic.base_dir) + '">' + __("btn.topic") + '</a>';
     } else {
-      el += '<a href="' + url_for(theme.root.topic.base_dir) + '">' + __("btn.topic") + '</a>';
+      el += '<a href="' + url_for(theme.site_tree.topic.base_dir) + '">' + __("btn.topic") + '</a>';
     }
   }
   
@@ -45,7 +45,7 @@ function layoutDiv() {
     }
   }
   
-  const { nav_tabs } = theme.root.blog
+  const { nav_tabs } = theme.site_tree.blog
   if (nav_tabs) {
     for (let key of Object.keys(nav_tabs)) {
       // 当 page 的末尾为 index.html 或者处于该 page 的某个子页面时也应该匹配

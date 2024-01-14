@@ -8,7 +8,7 @@ function layoutDiv() {
   if (page.filter === false) {
     el += ' class="active"';
   }
-  el += ' href="' + url_for(theme.root.wiki.base_dir) + '">' + __("btn.all_wiki") + '</a>';
+  el += ' href="' + url_for(theme.site_tree.wiki.base_dir) + '">' + __("btn.all_wiki") + '</a>';
   el += '</a>';
   // 项目分类
   const { shelf, all_tags } = theme.wiki;
@@ -25,7 +25,7 @@ function layoutDiv() {
     }
   }
 
-  const { nav_tabs } = theme.root.wiki
+  const { nav_tabs } = theme.site_tree.wiki
   if (nav_tabs) {
     for (let key of Object.keys(nav_tabs)) {
       // 当 page 的末尾为 index.html 或者处于该 page 的某个子页面时也应该匹配
