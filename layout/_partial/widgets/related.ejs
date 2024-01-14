@@ -32,7 +32,7 @@ function relatedWiki() {
   for (let relatedItem of relatedItems) {
     el += `<widget class="widget-wrapper related">`
     el += `<div class="widget-header cap theme dis-select">`
-    el += `<span class="name">${__('meta.more', relatedItem.name)}</span>`
+    el += `<span class="name">${__('meta.more') + __('symbol.colon') + relatedItem.name}</span>`
     el += `</div>`
     el += `<div class="widget-body related-posts">`
     for (let id of relatedItem.items) {

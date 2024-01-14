@@ -57,7 +57,7 @@ module.exports = hexo => {
 
   // default menu
   if (hexo.theme.config.menu == undefined) {
-    hexo.theme.config.menu = [];
+    hexo.theme.config.menu = {};
   }
 
 };
