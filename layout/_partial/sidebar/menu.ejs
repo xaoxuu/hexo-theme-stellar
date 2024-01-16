@@ -1,26 +1,18 @@
 <%
 function layoutDiv() {
-  var el = '';
-  el += '<nav class="menu dis-select';
-  if (where == 'main') {
-    el += ' mobile-hidden';
-  }
-  el += '">';
+  var el = ''
+  el += `<nav class="menu dis-select${where == 'main' ? ' mobile-hidden' : ''}">`
   for (let id of Object.keys(theme.menu)) {
-    let item = theme.menu[id];
+    let item = theme.menu[id]
     if (item == undefined || item.length == 0) {
-      continue;
+      continue
     }
-    el += '<a class="nav-item';
-    if (id == page.menu_id) {
-      el += ' active';
-    }
-    el += '" href="' + url_for(md_link(item)) + '">';
-    el += __(md_text(item));
-    el += '</a>';
+    el += `<a class="nav-item${id == page.menu_id ? ' active' : ''}" href="${url_for(md_link(item))}">`
+    el += __(md_text(item))
+    el += `</a>`
   }
-  el += '</nav>';
-  return el;
+  el += `</nav>`
+  return el
 }
 %>
 

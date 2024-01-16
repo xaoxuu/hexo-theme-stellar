@@ -48,29 +48,6 @@
     &:hover
       background: $color-hover
 
-  .menu 
-    margin-bottom: 0
-    background: none
-    border: 0
-    a
-      margin: 0
-      &.active 
-        box-shadow: none
-        position: relative
-        background: none
-        &:after
-          content: ''
-          position: absolute
-          height: 3px
-          bottom: 0
-          width: 32px
-          left: 'calc(50% - 0.5 * %s)' % @width
-          border-radius: 4px
-          background: $color-theme
-      &:hover 
-        box-shadow: none 
-        background: var(--block)
-
   .buttons
     margin: 1rem 0
     align-self: stretch

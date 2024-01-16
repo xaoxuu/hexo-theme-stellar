@@ -1,0 +1,24 @@
+.widget-wrapper.post-list .widget-body
+  margin-top: 0.25rem
+  a
+    line-height: 1
+    font-size: $fs-14
+    padding: 8px 16px
+    display: block
+    border-radius: $border-bar
+    color: var(--text-p1)
+    trans1 background
+    &.active
+      background: var(--alpha50)
+    &:hover
+      background: var(--alpha100)
+  a+a
+    margin-top: 2px
+  a  
+    display: flex
+    justify-content: space-between
+    align-items: center
+    .title
+      txt-ellipsis()
+    .icon
+      flex-shrink: 0

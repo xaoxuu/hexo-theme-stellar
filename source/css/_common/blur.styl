@@ -1,13 +1,6 @@
 :root
   --blur-px: 12px
-  --blur-bg: alpha(white, .5)
-if hexo-config('style.darkmode') == 'auto'
-  @media (prefers-color-scheme: dark)
-    :root
-      --blur-bg: alpha(black, .5)
-if hexo-config('style.darkmode') == 'always'
-  :root
-    --blur-bg: alpha(black, .5)
+  --blur-bg: var(--alpha50)
 
 blur-effect()
   background: var(--blur-bg)

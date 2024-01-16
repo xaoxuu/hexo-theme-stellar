@@ -1,0 +1,42 @@
+<%
+if (item.filter == null) {
+  item.filter = 'auto'
+}
+function layoutDiv() {
+  var el = ''
+  el += `<div class="search-wrapper" id="search-wrapper">`
+  el += `<form class="search-form">`
+  var filter = ''
+  if (item.filter == 'auto') {
+    if (page.layout == 'wiki') {
+      let matches = page.path.match(/(.*?)\/(.*?)\//i)
+      if (matches?.length > 0) {
+        filter = matches[0]
+      }
+    }
+  } else {
+    if (item.filter?.length > 0) {
+      filter = item.filter
+    }
+  }
+  el += `<a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();">`
+  el += `<svg t="1705074644177" class="icon search-icon" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1560" width="200" height="200"><path d="M1008.839137 935.96571L792.364903 719.491476a56.783488 56.783488 0 0 0-80.152866 0 358.53545 358.53545 0 1 1 100.857314-335.166073 362.840335 362.840335 0 0 1-3.689902 170.145468 51.248635 51.248635 0 1 0 99.217358 26.444296 462.057693 462.057693 0 1 0-158.255785 242.303546l185.930047 185.725053a51.248635 51.248635 0 0 0 72.568068 0 51.248635 51.248635 0 0 0 0-72.978056z" p-id="1561"></path><path d="M616.479587 615.969233a50.428657 50.428657 0 0 0-61.498362-5.534852 174.655348 174.655348 0 0 1-177.525271 3.484907 49.403684 49.403684 0 0 0-58.833433 6.76482l-3.074918 2.869923a49.403684 49.403684 0 0 0 8.609771 78.10292 277.767601 277.767601 0 0 0 286.992355-5.739847 49.403684 49.403684 0 0 0 8.404776-76.667958z" p-id="1562"></path></svg>`
+  el += `</a>`
+  el += `<input type="text" class="search-input" id="search-input"`
+  if (filter.length > 0) {
+    if (!filter.startsWith('/')) {
+      filter = '/' + filter
+    }
+    el += ` data-filter="${filter}"`
+    el += ` placeholder="${item.placeholder || __('search.search_in', filter)}">`
+  } else {
+    el += ` placeholder="${item.placeholder || __('search.search')}">`
+  }
+  el += `</form>`
+  el += `<div id="search-result"></div>`
+  el += `<div class="search-no-result">${__('search.no_results')}</div>`
+  el += `</div>`
+  return el
+}
+%>
+<%- layoutDiv() %>

@@ -1,57 +1,80 @@
-.widgets .widget-wrapper.search
-  margin-bottom: 0
 
 .search-wrapper
   width: 100%
   >.search-form
     position: sticky
+    margin-bottom: 8px
     top: 1rem
+    height: 40px
     display: flex
     flex-direction: row
     align-items: center
     transition: 0.38s ease-out
     z-index: 0
+    border-radius: $border-bar
+    color: var(--text-p0)
+    background: var(--alpha50)
+    &:has(input:focus)
+      background: var(--alpha100)
   .search-input
     width: 100%
-    padding: 0.5rem 0
-    line-height: 1.5
+    line-height: 16px
     box-sizing: border-box
     font-family: $ff-body
     font-size: $fs-13
+    padding: 12px 0
     color: var(--text-p0)
+  .search-button 
+    border-radius: $border-bar
+    line-height: 40px
+  .search-icon
+    width: 44px
+    margin-left: 4px
+    color: var(--text-p2)
+    margin-bottom: 2px
+    path[p-id="1562"]
+      color: $color-theme
     
   
   &.noresult[searching='true']
     .search-icon
       path[p-id="1562"]
         color: $c-red
-    .search-form
-      border: 1px solid $c-red
 
   .search-no-result
     display: none
-    margin: 1em auto
     color: var(--text-p1)
     text-align: center
     font-size: $fs-14
     padding: 2rem
-    background: var(--block)
-    border-radius: $border-bar
+    background: var(--alpha20)
+    border-radius: $border-card
+
 
   #search-result
-    ul.search-result-list
+    max-height: 60vh
+    overflow: scroll
+    border-radius: $border-card
+    &:empty
+      display: none
+    .search-result-list
       padding: 0
       margin: 0
       list-style-type: none
-    li
-      margin: 1em auto
-      &:hover
-        .search-result-title
-          color: $color-hover
+    li a
+        display: block
+        background: var(--alpha20)
+        line-height: 1.2
+        padding: 0.75rem 1rem
+        border-radius: $border-card
+        trans1 background
+        &:hover
+          background: var(--alpha100)
+    li+li
+        margin-top: 8px
     .search-result-title
       color: var(--text-p1)
       font-weight: 700
-      line-height: 1.2
 
     .search-result-content
       overflow: hidden
@@ -60,46 +83,18 @@
       max-height: 13em
       text-align: justify
       font-size: $fs-12
-      line-height: 1.2
       display: -webkit-box
       -webkit-box-orient: vertical
       overflow: hidden
-      -webkit-line-clamp: 3
+      -webkit-line-clamp: 2
 
     .search-keyword
-      border-bottom: 1px dashed $color-hover
-      color: $color-hover
+      color: var(--text-p1)
+      border-bottom: 1px dashed var(--text-p1)
       font-weight: bold
-
 
 
 .search-wrapper.noresult[searching='true']
   .search-no-result
     display: block
-
-.widget-wrapper
-  .search-form
-    top: 0
-    background: var(--card)
-    border: 1px solid var(--block-border)
-    border-radius: $border-bar
-  .search-input
-    text-indent: 0.75rem
-    padding-right: 2rem
-  .search-icon 
-    margin: 2px
-    position absolute
-    right: 0
-    pointer-events: none
-    color: var(--text-p2)
-    padding: 0.5rem
-    border-radius: 'calc(%s - 2px)' % $border-bar
-    path[p-id="1562"]
-      color: $color-theme
-    
-  #search-result,.search-no-result
-    margin-top: 1rem
-
-.widget-wrapper:not(:first-child)
-  .search-wrapper
-    margin-top: -1rem
+    margin-bottom: 8px

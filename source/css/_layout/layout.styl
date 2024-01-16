@@ -10,7 +10,7 @@
   flex-shrink: 0
   position: sticky
   position: -webkit-sticky
-  top: 0
+  top: 8px
 
 .l_body .l_main
   flex-shrink: 1
@@ -20,6 +20,17 @@
 
 
 // 手机布局
+.main-mask
+  position: fixed
+  pointer-events: none
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  background: rgba(black, 0.5)
+  z-index: 9
+  opacity 0
+  trans1 opacity
 @media screen and (max-width: $device-mobile-max)
   .mobile-only
     display: block !important
@@ -29,10 +40,10 @@
       position: fixed
       transform: translateX(-320px)
       margin: 0
-      left: 0
+      left: 8px
       background: var(--site-bg)
       box-shadow: $boxshadow-card-float
-      z-index: 9
+      z-index: 10
     .l_main
       max-width: 100%
   .l_body.mobile
@@ -41,3 +52,6 @@
   .l_body.mobile.sidebar
     .l_left
       transform: translateX(0px)
+    .main-mask
+      opacity 1
+      pointer-events: inherit

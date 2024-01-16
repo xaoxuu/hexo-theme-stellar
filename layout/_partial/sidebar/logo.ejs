@@ -1,0 +1,45 @@
+<%
+// logo.icon, logo.title, logo.subtitle, logo.url
+function layoutTitle(main, url, sub) {
+  var el = ''
+  el += `<a class="title" href="${url_for(url || "/")}">`
+  el += `<div class="main" ff="title">${main}</div>`
+  if (sub) {
+    const arr = sub.split('|')
+    if (arr.length > 1) {
+      el += `<div class="sub normal cap">${arr.shift().trim()}</div>`
+      el += `<div class="sub hover cap" style="opacity:0">${arr.join('|')}</div>`
+    } else {
+      el += `<div class="sub cap">${sub}</div>`
+    }
+  }
+  el += `</a>`
+  return el
+}
+
+function layoutDiv() {
+  var el = ''
+  el += `<header class="header${where == 'main' ? ' mobile-only' : ''}">`
+  el += `<div class="logo-wrap">`
+  if (logo.icon) {
+    el += `<div class="icon"><img no-lazy class="icon" src="${md_text(logo.icon)}"></div>`
+  } else if (md_text(logo.avatar)) {
+    el += `<a class="avatar" href="${url_for(md_link(logo.avatar) || '/')}">`
+    if (theme.style.animated_avatar.animate) {
+      el += `<div class="bg" style="opacity:0;background-image:url(${theme.style.animated_avatar.background});"></div>`
+    }
+    el += `<img no-lazy class="avatar" src="${md_text(logo.avatar)}">`
+    el += `</a>`
+  }
+  const main = md_text(logo.title)
+  if (main) {
+    let url = md_link(logo.title)
+    el += layoutTitle(main, url, logo.subtitle)
+  }
+  el += `</div>`
+  el += '</header>'
+  return el
+}
+%>
+
+<%- layoutDiv() %>

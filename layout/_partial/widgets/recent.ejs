@@ -1,8 +1,8 @@
 <%
 function layoutDiv() {
-  var el = '<widget class="widget-wrapper recent">';
+  var el = '<widget class="widget-wrapper post-list">';
   // header
-  el += '<div class="widget-header cap theme dis-select">';
+  el += '<div class="widget-header cap dis-select">';
   el += '<span class="name">' + __("meta.recent_update") + '</span>';
   if (item.rss) {
     el += '<a class="cap-action" id="rss" title="Subscribe" href="' + item.rss + '">';
@@ -25,11 +25,12 @@ function layoutDiv() {
     arr = site.posts.filter( p => p.title && p.title.length > 0)
     arr = arr.sort("updated", -1)
   }
-  el += '<div class="widget-body related-posts fs14">';
+  el += '<div class="widget-body fs14">';
   arr.length = item.limit
   arr.forEach(post => {
     if (!post) { return }
-    el += '<a class="item title" href="' + url_for(post.link || post.path) + '">';
+    const isActive = post.path == page.path
+    el += `<a class="item title${post.path == page.path ? ' active' : ''}" href="${url_for(post.link || post.path)}">`
     el += '<span class="title">'
     if (post.layout == 'wiki') {
       let proj = theme.wiki.tree[post.wiki];
@@ -39,6 +40,9 @@ function layoutDiv() {
       }
     }
     el += (post.title || post.seo_title || post.wiki) + '</span>';
+    if (isActive) {
+      el += `<svg t="1705415018387" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="14793" width="200" height="200"><path d="M256 896a42.666667 42.666667 0 0 1-20.906667-5.546667A42.666667 42.666667 0 0 1 213.333333 853.333333V227.413333A97.28 97.28 0 0 1 307.2 128h409.6A97.28 97.28 0 0 1 810.666667 227.413333V853.333333a42.666667 42.666667 0 0 1-21.333334 36.693334 42.666667 42.666667 0 0 1-42.666666 0l-241.92-136.96-227.413334 136.533333A42.666667 42.666667 0 0 1 256 896z" p-id="14794"></path></svg>`
+    }
     el += '</a>';
     el += '';
   });

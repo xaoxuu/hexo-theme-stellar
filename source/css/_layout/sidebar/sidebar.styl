@@ -1,9 +1,8 @@
 .l_left
-  display: flex
-  flex-direction: column
-  word-break: break-all
-  text-align: justify
-  height: 100vh
+  margin: 8px
+  height: 'calc(%s - 16px)' % 100vh
+  border-radius: $border-card
+  overflow: hidden
   .header
     margin: var(--gap-l) var(--gap-l) 0
     margin-top: "calc(2 * %s)" % var(--gap-l)
@@ -13,15 +12,20 @@
   @media screen and (max-width: $device-mobile-max)
     height: 100vh
   
-
-.l_left[layout=wiki]
-  padding-bottom: 0
-  height: 100vh
-  @media screen and (max-width: $device-mobile-max)
-    height: 100vh
-  .widgets >:last-child
-    margin-bottom: 6rem
-
+.l_left 
+  .sidebar-bg
+    position absolute
+    width: 100%
+    height: 100%
+    object-fit: cover
+    background: var(--text-meta)
+  .sidebar-container
+    height: 100%
+    --blur-px: 50px
+    display: flex
+    flex-direction: column
+    word-break: break-all
+    text-align: justify
 
 .l_left .widgets .widget-wrapper.logo-wrap.wiki .widget-body
   display: flex

@@ -20,8 +20,8 @@ open_graph:
 ######## Sidebar ########
 # 左上角显示的 logo 区域，包含图标、大标题、副标题
 logo:
-  avatar: '[config.avatar](/about/)' # you can set avatar link in _config.yml or '[https://xxx.png](/about/)'
-  title: '[config.title](/)' # you can set html tag like: '[<img no-lazy height="32px" src="xxx"/>](/)'
+  avatar: '[${config.avatar}](/about/)' # you can set avatar link in _config.yml or '[https://xxx.png](/about/)'
+  title: '[${config.title}](/)' # you can set html tag like: '[<img no-lazy height="32px" src="xxx"/>](/)'
   subtitle: '' # '文字1 | 文字2' (鼠标放上去会切换到文字2)
 
 # 侧边栏主功能导航菜单
@@ -40,41 +40,41 @@ menu:
 site_tree:
   # 主页配置
   home:
-    sidebar: search, recent, timeline
-  # 博客配置
+    sidebar: recent, timeline
+  # 博客列表配置
   blog:
     base_dir: blog # 只影响自动生成的页面路径
     menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 post 的页面默认使用这里配置的 menu_id
-    sidebar: search_blog, recent, timeline # for categories/tags/archives
+    sidebar: recent, timeline # for categories/tags/archives
     nav_tabs:  # 近期发布 分类 标签 专栏 归档 and ...
       # '朋友文章': /friends/rss/
   # 博客文章配置
   post:
     menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 post 的页面默认使用这里配置的 menu_id
-    sidebar: search_blog, toc, related, ghrepo, ghissues # for pages using 'layout:post'
+    sidebar: toc, related, ghrepo, ghissues, recent # for pages using 'layout:post'
   # 博客专栏配置
   topic:
     base_dir: topic # 只影响自动生成的页面路径
     menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 topic 的页面默认使用这里配置的 menu_id
-    sidebar: search_blog, toc, related # for topic
+    sidebar: toc, related # for topic
   # wiki配置
   wiki:
     base_dir: wiki # 只影响自动生成的页面路径
     menu_id: wiki # 未在 front-matter 中指定 menu_id 时，layout 为 wiki 的页面默认使用这里配置的 menu_id
-    sidebar: search_docs, toc, ghissues, related # for wiki
+    sidebar: toc, ghissues, related, recent # for wiki
   # 作者信息配置
   author: 
     base_dir: author # 只影响自动生成的页面路径
     menu_id: post
-    sidebar: search_blog, recent, timeline
+    sidebar: recent, timeline
   # 错误页配置
   error_page:
     menu_id: post
     '404': '/404.html'
-    sidebar: search, recent, timeline
+    sidebar: recent, timeline
   # 其它自定义页面配置 layout: page
   page:
-    sidebar: toc, search
+    sidebar: toc, timeline
 
 
 
@@ -448,7 +448,7 @@ style:
   border-radius:
     card: 12px
     block: 12px
-    bar: 6px
+    bar: 8px
     image: 6px
   color:
     # 动态颜色（会根据明暗主题重设明度值，只用关心色相和饱和度即可）
@@ -485,6 +485,7 @@ default:
   project: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2779789.png
   banner: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/banner/books.jpg
   topic: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/10433048.png
+  sidebar: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg
 
 api_host:
   ghapi: https://api.github.com

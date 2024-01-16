@@ -2,21 +2,7 @@
 # layout即组件布局，支持自定义的有：
 # - markdown: 渲染 md 文本
 #
-search:
-  layout: search
-  filter: auto # auto or 'path'
 
-
-search_blog:
-  layout: search
-  filter: /blog/ # auto or 'path'
-  placeholder: 文章搜索
-
-search_docs:
-  layout: search
-  filter: /wiki/ # auto or 'path'
-  placeholder: 文档搜索
-  
 ghrepo:
   layout: ghrepo
 related:
@@ -33,7 +19,7 @@ ghissues:
 recent:
   layout: recent
   rss: # /atom.xml # npm i hexo-generator-feed
-  limit: 5 # Count of posts
+  limit: 10 # Count of posts
 
 # TOC (valid only in layout:post/wiki)
 toc:
@@ -41,7 +27,7 @@ toc:
   list_number: false
   min_depth: 2
   max_depth: 5
-  fallback: recent # Use a backup widget when toc does not exist.
+  fallback: # recent # Use a backup widget when toc does not exist.
   collapse: false # true / false / auto
 
 # github user info

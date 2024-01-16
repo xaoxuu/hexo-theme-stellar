@@ -9,6 +9,7 @@
   scrollbar(0, 0)
   z-index: 1
   line-height: 1.2
+  margin: 0 var(--gap-l)
   .widget-wrapper
     .widget-header
       padding-left: var(--gap-l)
@@ -17,32 +18,30 @@
       justify-content: space-between
       align-items: center
       font-weight: 500
-      position: sticky
-      top: -2px
-      background: var(--site-bg)
-      padding-top: 2px
-      z-index 1
+      line-height: 28px
       .item 
         display: block
-      >span 
-        margin: 0.25rem 0
+      >span
         text-align: left
       &:empty
         display: none
       .cap-action
-        hover-block 4px 4px
         line-height: 0
-        color: var(--text-meta)
+        color: var(--text-p2)
         trans2: color background
+        border-radius: 4px
+        padding: 6px
+        margin-right: -4px
         .icon
-          fill: var(--text-meta)
+          fill: var(--text-p2)
         &:hover
           color: $color-hover
+          background: var(--alpha100)
           .icon
             fill: $color-hover
 
     .widget-body
-      margin: 0.5rem var(--gap-l)
+      margin: 0.5rem 0
       color: var(--text-p1)
       p
         margin-top: .5em
@@ -50,11 +49,8 @@
         line-height: 1.5
     .widget-header+.widget-body
       margin-top: 0
-  .widget-wrapper+.widget-wrapper .widget-header
-    margin-top: 3rem
-  .widget-wrapper+.widget-wrapper.toc .widget-header
-    margin-top: 1rem
+
 
 .widget-wrapper
-    display: block
-    margin: 2rem 0
+  display: block
+  margin: 32px 0

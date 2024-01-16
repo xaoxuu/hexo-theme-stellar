@@ -1,8 +1,39 @@
-.widget-wrapper.related .widget-body a
-  margin-top: 0.5rem
-  margin-bottom: 1rem
-  .title 
+
+.widget-wrapper.post-card .widget-body
+  max-width: 100%
+  margin: 1rem 0
+  .item+.item
+    margin-top: 8px
+  .item
+    line-height: 1.2
+    background: var(--alpha50)
+    padding: 10px 16px
+    border-radius: $border-card
+    display: block
+    border-left: 0
+    box-sizing: border-box
+  .title
+    color: var(--text-p1)
+    font-weight: 500
+    font-size: 1rem
+    display: -webkit-box
+    -webkit-box-orient: vertical
+    overflow: hidden
+    -webkit-line-clamp: 1
     font-weight: 700
     font-size: $fs-14
   .excerpt
-    -webkit-line-clamp: 3
+    color: var(--text-p3)
+    font-size: $fs-12
+    margin-top: 0.5rem
+    display: -webkit-box
+    -webkit-box-orient: vertical
+    overflow: hidden
+    -webkit-line-clamp: 2
+  
+  .item
+    trans1 background
+  .item.active
+    background: var(--card)
+  .item:hover
+    background: var(--card)

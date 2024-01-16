@@ -1,44 +1,15 @@
-.l_left 
-  nav.menu
-    margin-bottom: 0
-
-nav.menu
-  margin: 1rem 0
-  background: var(--block)
-  border: 1px solid var(--block-border)
-  border-radius: 6px
-  display: flex
-  flex-wrap: wrap
-  &::-webkit-scrollbar
-    display: none
-  &::-webkit-scrollbar-track-piece
-    background: transparent
-  &::-webkit-scrollbar-thumb
-    display: none
-  a.nav-item
-    text-overflow: ellipsis
-    word-break: keep-all
-    margin: 1px
-    border-radius: 4px
-    font-size: $fs-14
-    font-weight: 500
-    overflow: hidden
-    padding: 0.375rem 0.5rem
-    color: var(--text-p3)
-    text-align: center
-    &.active, &:hover
-      color: var(--text-p1)
-      background: var(--card)
-      box-shadow: $boxshadow-button
-
-.l_left .menu a.nav-item
-  flex-grow: 1
-
-
 .logo-wrap
   display: flex
   align-items: center
   overflow: hidden
+  height: 48px
+  img
+    object-fit: cover
+  .icon
+    width: 48px
+    height: 48px
+    margin-right: 1rem
+    border-radius: 4px
   a
     color: inherit
     display: flex
@@ -46,10 +17,10 @@ nav.menu
   a.avatar
     display: block
     position: relative
-    width: 50px
-    height: 50px
+    width: 48px
+    height: 48px
     flex-shrink: 0
-    border-radius: 50px
+    border-radius: 48px
     overflow: hidden
     margin-right: 1rem
     div.bg
@@ -58,7 +29,6 @@ nav.menu
       background-size: cover
     img.avatar
       margin: 2px
-      object-fit: cover
       width: "calc(100% - 2 * %s)" % @margin
       height: "calc(100% - 2 * %s)" % @margin
       border-radius: @width

@@ -3,10 +3,10 @@
     margin-top: 0.5rem
   .tag-plugin.timeline .timenode
     .header
-      margin-bottom: 0.5rem
+      margin: 0.5rem 16px
       txt-ellipsis()
       .user-info
-        background: var(--block)
+        background: var(--alpha50)
         &:hover
           background: $color-hover
           color: var(--card)
@@ -14,4 +14,19 @@
         display: none
     &+.timenode
       margin-top: 0.75rem
+    .header p
+      color: var(--text-p2)
+    .body
+      border-radius: $border-card
+      background: var(--alpha50)
+      box-shadow: none
+
+      a
+        trans1 all
+        border-bottom: 1px solid var(--text-p0)
+        color: var(--text-p0)
+        &:hover
+          color: $color-hover
+          border-bottom: 1px solid $color-hover
+      
       

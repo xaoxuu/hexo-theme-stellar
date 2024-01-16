@@ -5,13 +5,17 @@
   <%- partial('_partial/cover/index') %>
   <div class='l_body' id='start'>
     <aside class='l_left' layout='<%- page.layout %>'>
-    <%- partial('_partial/sidebar/index') %>
+      <img no-lazy class="sidebar-bg" src="<%- theme.default.sidebar %>">
+      <div class="sidebar-container blur">
+        <%- partial('_partial/sidebar/index') %>
+      </div>
     </aside>
-    <div class='l_main<%- page.content ? "" : " list" %>'>
+    <div class='l_main<%- page.content ? "" : " list" %>' id="main">
       <%- partial('_partial/main/header/index') %>
       <%- body %>
       <%- partial('_partial/main/footer') %>
       <%- partial('_partial/menubtn') %>
+      <div class="main-mask" onclick="sidebar.toggle()"></div>
     </div>
   </div>
   <div class='scripts'>

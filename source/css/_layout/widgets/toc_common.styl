@@ -1,12 +1,12 @@
-.widget-wrapper.toc .widget-header
-  margin-top: 1rem
 
 .widget-wrapper.toc.single .widget-header
   font-weight: 500
   font-size: $fs-12
-  >span
-    margin: 0.5rem 0
 
+.toc-item
+  margin-top: 2px
+.toc-child
+  margin-top: 2px
 .widget-wrapper.toc .widget-body
   margin-top: 0
   ul ul, ul ol
@@ -14,8 +14,6 @@
   ol ul, ol ol
     padding-left: 0
 
-  .doc-tree
-    margin: 4px 0
   .toc
     padding: 0
     margin: 0
@@ -43,7 +41,7 @@
   padding: 0
   list-style: none
   &.active
-    color: $color-theme
+    background: var(--alpha50)
     border-left-color: @color
   .toc-child .toc-item
     padding: 0
@@ -51,8 +49,9 @@
   color: inherit
   display: block
   line-height: 1.2
-  border-radius: 4px
+  border-radius: $border-bar
   position: relative
+  trans1 background
   &:before
     content: ''
     position: absolute
@@ -61,14 +60,15 @@
     bottom: 'calc(50% - %s)' % 6px
     width: 2px
     border-radius: 2px
-    background: $color-theme
+    background: var(--text-p0)
     visibility: hidden
-  &:hover
-    background: var(--block-hover)
   &.active
-    color: $color-theme !important
+    background: var(--alpha50)
     &:before
       visibility: visible
+  &:hover
+    background: var(--alpha100)
+  
   
 // 始终折叠
 .widget-wrapper.toc[collapse='true']

@@ -8,14 +8,18 @@ function relatedPostsInTopic() {
     return ''
   }
   var el = ''
-  el += `<widget class="widget-wrapper recent">`
-  el += `<div class="widget-header cap theme dis-select">`
+  el += `<widget class="widget-wrapper post-list">`
+  el += `<div class="widget-header cap dis-select">`
   el += `<span class="name">${__('btn.topic') + __('symbol.colon') + topic.name}</span>`
   el += `</div>`
-  el += `<div class="widget-body related-posts">`
+  el += `<div class="widget-body">`
   for (let post of topic.pages) {
-    el += `<a class="item${post.path == page.path ? ' active' : ''}" href="${url_for(post.path)}">`
+    const isActive = post.path == page.path
+    el += `<a class="item${isActive ? ' active' : ''}" href="${url_for(post.path)}">`
     el += `<span class="title">${post.title}</span>`
+    if (isActive) {
+      el += `<svg t="1705415018387" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="14793" width="200" height="200"><path d="M256 896a42.666667 42.666667 0 0 1-20.906667-5.546667A42.666667 42.666667 0 0 1 213.333333 853.333333V227.413333A97.28 97.28 0 0 1 307.2 128h409.6A97.28 97.28 0 0 1 810.666667 227.413333V853.333333a42.666667 42.666667 0 0 1-21.333334 36.693334 42.666667 42.666667 0 0 1-42.666666 0l-241.92-136.96-227.413334 136.533333A42.666667 42.666667 0 0 1 256 896z" p-id="14794"></path></svg>`
+    }
     el += `</a>`
   }
   el += `</div>`
@@ -30,11 +34,11 @@ function relatedWiki() {
   const relatedItems = thisItemObject.relatedItems
   var el = ''
   for (let relatedItem of relatedItems) {
-    el += `<widget class="widget-wrapper related">`
-    el += `<div class="widget-header cap theme dis-select">`
+    el += `<widget class="widget-wrapper post-card">`
+    el += `<div class="widget-header cap dis-select">`
     el += `<span class="name">${__('meta.more') + __('symbol.colon') + relatedItem.name}</span>`
     el += `</div>`
-    el += `<div class="widget-body related-posts">`
+    el += `<div class="widget-body">`
     for (let id of relatedItem.items) {
       // 同一个分组中的其它项目
       let item = theme.wiki.tree[id]

@@ -1,0 +1,44 @@
+.nav-area .menu
+  width: 100%
+  display: grid
+  margin: 8px 0
+  grid-template-columns: repeat(4, 1fr)
+  grid-gap: 8px
+  &::-webkit-scrollbar
+    display: none
+  &::-webkit-scrollbar-track-piece
+    background: transparent
+  &::-webkit-scrollbar-thumb
+    display: none
+  
+  .nav-item
+    box-sizing: border-box
+    text-overflow: ellipsis
+    word-break: keep-all
+    width: 100%
+    line-height: 40px
+    border-radius: $border-bar
+    font-size: $fs-15
+    font-weight: 500
+    color: var(--text-p3)
+    text-align: center
+    background: var(--alpha50)
+    @supports ((-webkit-backdrop-filter:blur(var(--blur-px))) or (backdrop-filter:blur(var(--blur-px))))
+      backdrop-filter: saturate(200%) blur(var(--blur-px))
+      -webkit-backdrop-filter: saturate(200%) blur(var(--blur-px))
+    trans1 background
+    position: relative
+    &.active, &:hover
+      color: var(--text-p1)
+      background: var(--alpha100)
+    &.active:after
+      content: ''
+      position absolute
+      width: 16px
+      height: 2px
+      left: 50%
+      transform: translateX(-50%)
+      border-radius: 2px
+      bottom: 2px
+      background: var(--text-p1)
+
