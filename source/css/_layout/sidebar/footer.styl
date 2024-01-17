@@ -5,7 +5,7 @@
   display: grid
   grid-gap: 0.25rem 0.25rem
   grid-template-columns: repeat(auto-fill, 32px)
-  a.social
+  .social
     line-height: 0
     display: inline-block
     padding: 6px
@@ -18,22 +18,3 @@
       z-index: 1
       filter: unset
       background: var(--alpha100)
-
-.proj-wrap
-  display: grid
-  grid-gap: 0.25rem 0.25rem
-  a.item
-    border-radius: 4px
-    font-size: $fs-13
-    font-weight: 500
-    color: var(--text-p2)
-    background: var(--block)
-    border: 1px solid var(--block-border)
-    overflow: hidden
-    padding: .75em
-    text-align: center
-    svg
-      margin-right: .5em
-    &:hover
-      color: $color-hover
-      background: var(--card)

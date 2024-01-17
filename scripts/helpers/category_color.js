@@ -16,7 +16,7 @@ hexo.extend.helper.register('category_color', function(cat){
     } else if (textColor.length == (1+6)) { // #ffffff
       bgColor += '20'
     }
-    return ` style="--text-p3:${textColor};--theme-block:${bgColor}"`;
+    return ` style="--text-p2:${textColor};--theme-block:${bgColor}"`;
   }
   return ''
 })

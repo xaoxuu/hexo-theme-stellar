@@ -1,6 +1,7 @@
 .widgets 
   .loading-wrap
     margin: 0.5rem 0
+    background: var(--alpha50)
 
 .widgets
   overflow: scroll
@@ -17,12 +18,15 @@
       display: flex
       justify-content: space-between
       align-items: center
-      font-weight: 500
       line-height: 28px
+      font-weight: 500
+      font-size: $fs-12
+      color: var(--text-p1)
       .item 
         display: block
       >span
         text-align: left
+        opacity 0.6
       &:empty
         display: none
       .cap-action
@@ -31,7 +35,7 @@
         trans2: color background
         border-radius: 4px
         padding: 6px
-        margin-right: -4px
+        margin-right: -5px
         .icon
           fill: var(--text-p2)
         &:hover

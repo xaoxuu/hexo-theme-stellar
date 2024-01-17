@@ -9,7 +9,7 @@ function relatedPostsInTopic() {
   }
   var el = ''
   el += `<widget class="widget-wrapper post-list">`
-  el += `<div class="widget-header cap dis-select">`
+  el += `<div class="widget-header dis-select">`
   el += `<span class="name">${__('btn.topic') + __('symbol.colon') + topic.name}</span>`
   el += `</div>`
   el += `<div class="widget-body">`
@@ -35,7 +35,7 @@ function relatedWiki() {
   var el = ''
   for (let relatedItem of relatedItems) {
     el += `<widget class="widget-wrapper post-card">`
-    el += `<div class="widget-header cap dis-select">`
+    el += `<div class="widget-header dis-select">`
     el += `<span class="name">${__('meta.more') + __('symbol.colon') + relatedItem.name}</span>`
     el += `</div>`
     el += `<div class="widget-body">`

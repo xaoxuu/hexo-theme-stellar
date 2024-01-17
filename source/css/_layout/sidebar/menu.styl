@@ -21,20 +21,16 @@
     color: var(--text-p3)
     text-align: center
     background: var(--alpha50)
-    @supports ((-webkit-backdrop-filter:blur(var(--blur-px))) or (backdrop-filter:blur(var(--blur-px))))
-      backdrop-filter: saturate(200%) blur(var(--blur-px))
-      -webkit-backdrop-filter: saturate(200%) blur(var(--blur-px))
     trans1 background
     position: relative
     display: flex
     flex-direction: column
     align-items: center
     justify-content: center
-    img
-      height: 32px
+    img,svg
+      height: 28px
       object-fit: contain
-      opacity 0.5
-      filter: grayscale(100%) brightness(0.4)
+      filter: grayscale(100%) brightness(0.8) opacity(0.8)
       trans1 all
     span
       text-overflow: ellipsis
@@ -42,8 +38,7 @@
     &.active, &:hover
       color: var(--text-p1)
       background: var(--alpha100)
-      img
-        opacity: 1
+      img,svg
         filter: unset
     &.active:after
       content: ''

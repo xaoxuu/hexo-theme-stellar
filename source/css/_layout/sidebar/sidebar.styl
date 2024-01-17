@@ -19,23 +19,13 @@
     background: var(--text-meta)
   .sidebar-container
     height: 100%
-    --blur-px: 50px
+    --blur-px: 100px
+    --blur-bg: var(--sidebar-bg)
+    @supports ((-webkit-backdrop-filter:blur(var(--blur-px))) or (backdrop-filter:blur(var(--blur-px))))
+      background: var(--blur-bg)
+      backdrop-filter: saturate(240%) blur(var(--blur-px))
+      -webkit-backdrop-filter: saturate(240%) blur(var(--blur-px))
     display: flex
     flex-direction: column
     word-break: break-all
     text-align: justify
-
-.l_left .widgets .widget-wrapper.logo-wrap.wiki .widget-body
-  display: flex
-  margin-bottom: 1.5rem
-  flex-direction: column
-  align-items: flex-start
-  a.wiki-home
-    margin-bottom: 0.5rem
-    color: var(--text-p1)
-    svg
-      margin-right: 2px
-    &:hover
-      color: $color-hover
-      filter: unset !important
-
