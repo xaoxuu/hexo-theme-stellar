@@ -95,15 +95,9 @@ function layoutDiv() {
     nodes.push('/');
     // menu_id
     el += '<span class="sep"></span>';
-    if (page.menu_id && theme.menu[page.menu_id]?.url) {
-      let url = url_for(theme.menu[page.menu_id]?.url);
-      nodes.push(url);
-      el += '<a class="cap breadcrumb" id="menu" href="' + url + '">' + __(theme.menu[page.menu_id]?.title) + '</a>';
-    } else {
-      let url = url_for(theme.site_tree.wiki.base_dir);
-      nodes.push(url);
-      el += '<a class="cap breadcrumb" id="menu" href="' + url + '">' + __("btn.wiki") + '</a>';
-    }
+    let url = url_for(theme.site_tree.wiki.base_dir);
+    nodes.push(url);
+    el += '<a class="cap breadcrumb" id="menu" href="' + url + '">' + __("btn.wiki") + '</a>';
     // 项目名
     let proj = theme.wiki.tree[page.wiki];
     if (proj != null) {
