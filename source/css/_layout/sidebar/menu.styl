@@ -13,10 +13,8 @@
   
   .nav-item
     box-sizing: border-box
-    text-overflow: ellipsis
-    word-break: keep-all
     width: 100%
-    line-height: 40px
+    min-height: 40px
     border-radius: $border-bar
     font-size: $fs-15
     font-weight: 500
@@ -28,9 +26,25 @@
       -webkit-backdrop-filter: saturate(200%) blur(var(--blur-px))
     trans1 background
     position: relative
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    img
+      height: 32px
+      object-fit: contain
+      opacity 0.5
+      filter: grayscale(100%) brightness(0.4)
+      trans1 all
+    span
+      text-overflow: ellipsis
+      word-break: keep-all
     &.active, &:hover
       color: var(--text-p1)
       background: var(--alpha100)
+      img
+        opacity: 1
+        filter: unset
     &.active:after
       content: ''
       position absolute

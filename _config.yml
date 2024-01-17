@@ -448,7 +448,7 @@ style:
   border-radius:
     card: 12px
     block: 12px
-    bar: 8px
+    bar: 12px
     image: 6px
   color:
     # 动态颜色（会根据明暗主题重设明度值，只用关心色相和饱和度即可）

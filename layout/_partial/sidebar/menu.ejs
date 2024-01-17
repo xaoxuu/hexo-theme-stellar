@@ -7,8 +7,16 @@ function layoutDiv() {
     if (item == undefined || item.length == 0) {
       continue
     }
-    el += `<a class="nav-item${id == page.menu_id ? ' active' : ''}" href="${url_for(md_link(item))}">`
-    el += __(md_text(item))
+    el += `<a class="nav-item${id == page.menu_id ? ' active' : ''}" title="${item.title}" href="${url_for(item.url)}">`
+    if (item.icon?.length > 0) {
+      if (item.icon.startsWith('<img')) {
+        el += item.icon
+      } else {
+        el += `<img no-lazy src="${item.icon}">`
+      }
+    } else {
+      el += `<span>${__(item.title)}</span>`
+    }
     el += `</a>`
   }
   el += `</nav>`

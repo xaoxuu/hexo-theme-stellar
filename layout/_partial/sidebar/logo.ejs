@@ -1,4 +1,33 @@
 <%
+var logo = theme.logo
+if (page.logo) {
+  logo = Object.assign({}, logo, page.logo)
+} else if (page.wiki && page.layout == 'wiki' && theme.wiki.tree[page.wiki]) {
+  const proj = theme.wiki.tree[page.wiki]
+  var l = proj.logo
+  if (l) {
+    logo = l
+  } else if (proj.name || proj.icon) {
+    logo = {
+      icon: proj.icon || theme.default.project,
+      title: `[${proj.name || proj.title}](${url_for(proj.homepage?.path || '')})`,
+      subtitle: proj.subtitle
+    }
+  }
+} else if (page.topic && page.layout == 'topic' && theme.topic.tree[page.topic]) {
+  const topic = theme.topic.tree[page.topic]
+  var l = topic.logo
+  if (l) {
+    logo = l
+  } else if (topic.name || topic.icon) {
+    logo = {
+      icon: topic.icon || theme.default.topic,
+      title: `[${topic.name || topic.title}](${url_for(topic.homepage?.path || '')})`,
+      subtitle: topic.subtitle
+    }
+  }
+}
+
 // logo.icon, logo.title, logo.subtitle, logo.url
 function layoutTitle(main, url, sub) {
   var el = ''
@@ -18,6 +47,14 @@ function layoutTitle(main, url, sub) {
 }
 
 function layoutDiv() {
+  if (where == 'main') {
+    if (page.layout == 'wiki' && page.menu_id == 'wiki') {
+      return ''
+    }
+    if (page.header == false) {
+      return
+    }
+  }
   var el = ''
   el += `<header class="header${where == 'main' ? ' mobile-only' : ''}">`
   el += `<div class="logo-wrap">`

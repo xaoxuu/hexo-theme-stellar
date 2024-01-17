@@ -6,7 +6,10 @@ if (page.sidebar == null) {
     sidebar = site_tree.home.sidebar
   } else if (is_category() || is_tag() || is_archive() || ['categories', 'tags', 'archives'].includes(page.layout)) {
     sidebar = site_tree.blog.sidebar
-  } else if (page.layout === 'index_topic' || page.layout === 'topic') {
+  } else if (page.layout === 'index_topic') {
+    // 专栏列表页等同于博客列表页
+    sidebar = site_tree.blog.sidebar
+  } else if (page.layout === 'topic') {
     sidebar = site_tree.topic.sidebar
   } else if (page.layout === 'index_wiki' || page.layout === 'wiki') {
     sidebar = site_tree.wiki.sidebar
@@ -32,7 +35,6 @@ if (page.sidebar == null) {
   page.sidebar = sidebar
 }
 
-  console.log('s', sidebar);
 // parse array string
 if (typeof page.sidebar == 'string') {
   page.sidebar = page.sidebar.replace(/ /g, '').split(',');
@@ -119,35 +121,7 @@ function layoutFooterDiv() {
 }
 
 function layoutLogo() {
-  var logo = theme.logo
-  if (page.logo) {
-    logo = page.logo
-  } else if (page.wiki && page.layout == 'wiki' && theme.wiki.tree[page.wiki]) {
-    const proj = theme.wiki.tree[page.wiki]
-    var l = proj.logo
-    if (l) {
-      logo = l
-    } else if (proj.name || proj.icon) {
-      logo = {
-        icon: proj.icon || theme.default.project,
-        title: `[${proj.name || proj.title}](${url_for(proj.homepage?.path || '')})`,
-        subtitle: proj.subtitle
-      }
-    }
-  } else if (page.topic && page.layout == 'topic' && theme.topic.tree[page.topic]) {
-    const topic = theme.topic.tree[page.topic]
-    var l = topic.logo
-    if (l) {
-      logo = l
-    } else if (topic.name || topic.icon) {
-      logo = {
-        icon: topic.icon || theme.default.topic,
-        title: `[${topic.name || topic.title}](${url_for(topic.homepage?.path || '')})`,
-        subtitle: topic.subtitle
-      }
-    }
-  }
-  return partial('logo', {logo: logo, where: 'sidebar'})
+  return partial('logo', {where: 'sidebar'})
 }
 
 function layoutNavArea() {

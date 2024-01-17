@@ -1,25 +1,35 @@
-<!DOCTYPE html>
-<html lang='<%- page.lang %>'>
-<%- partial('_partial/head') %>
-<body>
-  <%- partial('_partial/cover/index') %>
-  <div class='l_body' id='start'>
-    <aside class='l_left' layout='<%- page.layout %>'>
-      <img no-lazy class="sidebar-bg" src="<%- theme.default.sidebar %>">
-      <div class="sidebar-container blur">
-        <%- partial('_partial/sidebar/index') %>
-      </div>
-    </aside>
-    <div class='l_main<%- page.content ? "" : " list" %>' id="main">
-      <%- partial('_partial/main/header/index') %>
-      <%- body %>
-      <%- partial('_partial/main/footer') %>
-      <%- partial('_partial/menubtn') %>
-      <div class="main-mask" onclick="sidebar.toggle()"></div>
-    </div>
-  </div>
-  <div class='scripts'>
-    <%- partial('_partial/scripts/index') %>
-  </div>
-</body>
-</html>
+<%
+var page_type = 'index'
+if (['post', 'page', 'wiki', 'topic', null].includes(page.layout)) {
+  if (!page.nav_tabs) {
+    page_type = 'content'
+  }
+}
+
+var html = `<!DOCTYPE html>`
+html += `<html lang="${page.lang}">`
+  html += partial('_partial/head')
+  html += `<body>`
+    html += partial('_partial/cover/index')
+    html += `<div class="l_body ${page_type}" id="start" layout="page.layout">`
+      html += `<aside class="l_left">`
+        html += `<img no-lazy class="sidebar-bg" src="${theme.default.sidebar}">`
+        html += `<div class="sidebar-container blur">`
+          html += partial('_partial/sidebar/index')
+        html += `</div>`
+      html += `</aside>`
+      html += `<div class="l_main" id="main">`
+        html += partial('_partial/sidebar/logo', {where: 'main'})
+        html += body
+        html += partial('_partial/main/footer')
+        html += partial('_partial/menubtn')
+        html += `<div class="main-mask" onclick="sidebar.toggle()"></div>`
+      html += `</div>`
+    html += `</div>`
+    html += `<div class="scripts">`
+      html += partial('_partial/scripts/index')
+    html += `</div>`
+  html += `</body>`
+html += `</html>`
+%>
+<%- html %>
