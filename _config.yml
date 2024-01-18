@@ -95,6 +95,10 @@ site_tree:
 
 ######## Article ########
 article:
+  # 文章类型，决定布局风格，可以在 front-matter/topic/wiki 中覆盖此参数
+  type: tech # tech: 默认技术类文章, story: 图文类文章，文字和段落间增距大
+  # 缩进两个文字宽度，适合文字类博客，可以在 front-matter/topic/wiki 中覆盖此参数
+  indent: # true / false
   # 如果没有指定封面，是否根据 tags 作为关键词搜索封面图片？
   auto_cover: false # search from https://source.unsplash.com/
   # 封面图宽高比
@@ -451,7 +455,7 @@ style:
   smooth_scroll: false # true / false 开启时如果目录过长可能无法准确定位
   font-size:
     root: 16px
-    body: .9375rem # 15px
+    body: 1rem # 16px 
     code: 85% # 14px
     codeblock: 0.8125rem # 13px
   font-family:
@@ -491,6 +495,13 @@ style:
   gradient: # https://webgradients.com/
     start: 'linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))'
     search: 'linear-gradient(to right, #04F3FF, #08FFC6, #DDF730, #FFBD19, #FF1FE0, #C418FF, #04F3FF)'
+  sidebar:
+    # 可以设置：纯色/渐变色/图片作为背景
+    # background: 'linear-gradient(to bottom, #abc3, #abc3)'
+    # background: 'linear-gradient(to bottom, #20E2D744, #F9FEA544)'
+    # 在图片上层增加高斯模糊效果（同时附带饱和度增强效果）
+    background: 'url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg)'
+    blur: true
 
 default:
   avatar: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg
@@ -500,7 +511,7 @@ default:
   project: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2779789.png
   banner: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/banner/books.jpg
   topic: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/10433048.png
-  sidebar: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg
+
 
 api_host:
   ghapi: https://api.github.com

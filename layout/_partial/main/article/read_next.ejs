@@ -4,7 +4,7 @@ function layoutDiv() {
   var title = __('meta.read_next')
   title_prev = __('meta.newer')
   title_next = __('meta.older')
-  if (page.layout === 'post' || page.layout === 'topic') {
+  if (page.layout === 'post') {
     prev = page.prev
     next = page.next
   } else if (page.layout === 'wiki' && page.wiki?.length > 0) {

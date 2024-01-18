@@ -55,9 +55,9 @@ function relatedWiki() {
   return el
 }
 function layoutDiv() {
-  if (page.layout == 'wiki') {
+  if (page.wiki?.length > 0) {
     return relatedWiki()
-  } else if (page.layout == 'topic') {
+  } else if (page.topic?.length > 0) {
     return relatedPostsInTopic()
   }
 }

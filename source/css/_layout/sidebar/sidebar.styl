@@ -10,7 +10,10 @@
     >.widgets:first-child>.widget-wrapper:first-child
       margin-top: "calc(2 * %s)" % var(--gap-l)
   
-.l_left 
+.l_left
+  background-size: cover
+  if hexo-config('style.sidebar.background')
+    background-image: convert(hexo-config('style.sidebar.background'))
   .sidebar-bg
     position absolute
     width: 100%
@@ -19,13 +22,14 @@
     background: var(--text-meta)
   .sidebar-container
     height: 100%
+    display: flex
+    flex-direction: column
+    word-break: break-all
+    text-align: justify
+  .sidebar-blur
     --blur-px: 100px
     --blur-bg: var(--sidebar-bg)
     @supports ((-webkit-backdrop-filter:blur(var(--blur-px))) or (backdrop-filter:blur(var(--blur-px))))
       background: var(--blur-bg)
       backdrop-filter: saturate(240%) blur(var(--blur-px))
       -webkit-backdrop-filter: saturate(240%) blur(var(--blur-px))
-    display: flex
-    flex-direction: column
-    word-break: break-all
-    text-align: justify

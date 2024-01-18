@@ -9,7 +9,7 @@ if (page.sidebar == null) {
   } else if (page.layout === 'index_topic') {
     // 专栏列表页等同于博客列表页
     sidebar = site_tree.blog.sidebar
-  } else if (page.layout === 'topic') {
+  } else if (page.topic?.length > 0) {
     sidebar = site_tree.topic.sidebar
   } else if (page.layout === 'index_wiki' || page.layout === 'wiki') {
     sidebar = site_tree.wiki.sidebar
@@ -25,7 +25,7 @@ if (page.sidebar == null) {
     sidebar = []
   }
 
-  if (page.layout === 'topic' && page.topic && theme.topic?.tree[page.topic]?.sidebar) {
+  if (page.topic && theme.topic?.tree[page.topic]?.sidebar) {
     sidebar = theme.topic.tree[page.topic].sidebar
   }
   if (page.layout == 'wiki' && page.wiki && theme.wiki?.tree[page.wiki]?.sidebar) {
@@ -133,7 +133,7 @@ function layoutNavArea() {
     if (proj.search) {
       search = proj.search
     }
-  } else if (page.topic && page.layout == 'topic' && theme.topic.tree[page.topic]) {
+  } else if (page.topic && theme.topic.tree[page.topic]) {
     const topic = theme.topic.tree[page.topic]
     if (topic.search) {
       search = topic.search

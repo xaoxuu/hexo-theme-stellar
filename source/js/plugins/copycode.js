@@ -3,7 +3,7 @@ codeElementArr.forEach(code => {
   // copy btn 
   const codeCopyBtn = document.createElement('div')
   codeCopyBtn.classList.add('copy-btn')
-  codeCopyBtn.innerText = stellar.plugins.copycode.default_text
+  codeCopyBtn.innerHTML = stellar.plugins.copycode.default_text
 
   code.appendChild(codeCopyBtn)
 
@@ -11,11 +11,11 @@ codeElementArr.forEach(code => {
     const currentCodeElement = code.children[0]?.innerText
     await copyCode(currentCodeElement)
 
-    codeCopyBtn.innerText = stellar.plugins.copycode.success_text
+    codeCopyBtn.innerHTML = stellar.plugins.copycode.success_text
     codeCopyBtn.classList.add('success')
     hud.toast(stellar.plugins.copycode.toast, 2500)
     setTimeout(() => {
-      codeCopyBtn.innerText = stellar.plugins.copycode.default_text
+      codeCopyBtn.innerHTML = stellar.plugins.copycode.default_text
       codeCopyBtn.classList.remove('success')
     },3000)
   })

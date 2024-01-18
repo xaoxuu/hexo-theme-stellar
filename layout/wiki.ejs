@@ -20,7 +20,7 @@ function layoutTitle() {
 %>
 
 <%- partial('_partial/main/navbar/breadcrumb') %>
-<article class='md-text content <%- page.layout %><%- page.indent ? ' indent' : '' %><%- scrollreveal() %>'>
+<article class='md-text content <%- page.layout %><%- scrollreveal() %>'>
 <%- layoutTitle() %>
 <%- page.content %>
 <% if (theme.plugins.tianli_gpt.enable && ['all', 'wiki'].includes(theme.plugins.tianli_gpt.field)) { %>

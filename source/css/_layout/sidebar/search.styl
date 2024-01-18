@@ -84,7 +84,7 @@
     .search-result-content
       overflow: hidden
       color: var(--text-p3)
-      margin: .4em auto
+      margin: 4px 0 0
       max-height: 13em
       text-align: justify
       font-size: $fs-12
@@ -94,9 +94,10 @@
       -webkit-line-clamp: 2
 
     .search-keyword
-      color: var(--text-p1)
-      border-bottom: 1px dashed var(--text-p1)
+      color: $c-red
+      border-bottom: 1px dashed $c-red
       font-weight: bold
+      filter grayscale(25%)
 
 
 .search-wrapper.noresult[searching='true']
