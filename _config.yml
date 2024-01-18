@@ -449,6 +449,7 @@ plugins:
     enable: false
     field: post # all, post, wiki
     api: 5Q5mpqRK5DkwT1X9Gi5e # tianli_gpt key
+    limit: 1000 # 设置提交的字数限制，默认为1000字，上限为5000，超过5000字符将被截断，不能为空
     typingAnimate: true # 打字机动画 
 
 style:

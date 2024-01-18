@@ -1,7 +1,7 @@
 .post-TianliGPT
   --heo-none: #00000000
-  --heo-theme = var(--theme-link)
-  --heo-main: var(--theme-link)
+  --heo-theme = $color-theme
+  --heo-main: $color-theme
   --heo-snackbar-time: 5s
   --heo-theme-none: #4259ef01
   --heo-background: var(--site-bg)
@@ -18,11 +18,10 @@
 
 .post-TianliGPT
   background: var(--block)
-  border-radius: 12px
+  border-radius: $border-block
   padding: 12px
   line-height: 1.3
   border: var(--style-border-always)
-  margin: 16px 0
 
   @media screen and (max-width: 768px)
     .post-TianliGPT
@@ -30,7 +29,6 @@
 
 .tianliGPT-title
   display: flex
-  color: var(--theme-link)
   border-radius: 8px
   align-items: center
   padding: 0 12px
@@ -46,7 +44,7 @@
   margin-top: 12px
   padding: 8px 12px
   background: var(--card)
-  border-radius: 8px
+  border-radius: $border-block
   border: var(--style-border-always)
   font-size: 15px
   line-height: 1.4
@@ -71,15 +69,15 @@
   transition: 0.3s
   
 .tianliGPT-suggestions .tianliGPT-suggestions-item:hover
-  background: var(--heo-main)
+  background: $color-theme
   color: var(--text-p0)
 
 .blinking-cursor
-  background-color: var(--heo-main)
+  background-color: var(--text-p2)
   width: 10px
-  height: 16px
+  height: 10px
   display: inline-block
-  vertical-align: middle
+  border-radius: 50%;
   animation: blinking-cursor 0.5s infinite
   -webkit-animation: blinking-cursor 0.5s infinite
   margin-left: 4px
@@ -102,7 +100,7 @@
     
 .tianliGPT-tag
   font-size: 12px
-  background-color: var(--theme-link)
+  background-color: var(--text-p2)
   color: var(--card)
   font-weight: bold
   border-radius: 4px
@@ -116,7 +114,7 @@
   transition: 0.3s
 
 .tianliGPT-tag:hover
-  background: var(--text-p2)
+  background: $color-theme
   color: var(--card)
 
 ins.adsbygoogle
@@ -149,7 +147,7 @@ ins.adsbygoogle
 .tianliGPT-title-icon svg
   width: 20px
   height: 20px
-  fill: var(--heo-main)
+  fill: var(--text-p2)
 
 .tianliGPT-title-icon svg path
-  fill: var(--heo-main)
+  fill: var(--text-p2)
