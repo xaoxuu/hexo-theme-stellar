@@ -40,7 +40,7 @@ function layoutDiv() {
     if (prev) {
       el += '<div class="note">' + title_prev + '</div>';
       el += '<a href="' + url_for(prev.path) + '">';
-      el += prev.title || prev.seo_title || prev.wiki || date(prev.date, config.date_format);
+      el += prev.title || prev.wiki || date(prev.date, config.date_format);
       el += '</a>';
     }
     el += '</div>';
@@ -49,7 +49,7 @@ function layoutDiv() {
     if (next) {
       el += '<div class="note">' + title_next + '</div>';
       el += '<a href="' + url_for(next.path) + '">';
-      el += next.title || next.seo_title || next.wiki || date(next.date, config.date_format);
+      el += next.title || next.wiki || date(next.date, config.date_format);
       el += '</a>';
     }
     el += '</div>';

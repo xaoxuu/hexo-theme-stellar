@@ -14,7 +14,7 @@ function layoutDocTree(ctx, pages) {
   pages.forEach((p, i) => {
     el += '<li>'
     el += '<a class="list-link" href="' + url_for(p.path) + '">'
-    el += '<span>' + (p.title || p.seo_title) + '</span>'
+    el += '<span>' + p.title + '</span>'
     el += '</a>'
     el += '</li>'
   })

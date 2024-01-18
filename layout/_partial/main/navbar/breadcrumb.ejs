@@ -136,14 +136,14 @@ function layoutDiv() {
       `;
     }
     el += '</div>';
-  } else if (page.title || page.seo_title) {
+  } else if (page.title) {
     el += `
     <div class="bread-nav fs12">
       <div class="left">
         <div id="breadcrumb">
           <a class="cap breadcrumb" href="${url_for(config.root)}">${home_title}</a>
           <span class="sep"></span>
-          <a class="cap breadcrumb" href="${url_for(page.path)}">${page.title || page.seo_title}</a>
+          <a class="cap breadcrumb" href="${url_for(page.path)}">${page.title}</a>
         </div>
       </div>
     </div>
