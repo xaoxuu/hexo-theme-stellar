@@ -12,8 +12,8 @@ if (theme.comments.service && theme.comments.service.length > 0) {
   }
 }
 // 合并项目评论
-let proj = theme.wiki.tree[page.wiki];
-if (loadComment && page.layout == 'wiki' && page.wiki && (proj != null)) {
+const proj = theme.wiki.tree[page.wiki]
+if (loadComment && (proj != null)) {
   if (proj.comment_title != undefined && page.comment_title == undefined) {
     if (['utterances', 'beaudar', 'giscus'].includes(theme.comments.service)) {
       page.comment_title = proj.comment_title;
@@ -31,7 +31,7 @@ if (cmt.service && page[cmt.service]) {
 page.cmt = cmt;
 %>
 <% if (loadComment) { %>
-  <div class='related-wrap md-text reveal' id="comments">
+  <div class="related-wrap md-text<%- scrollreveal(' ') %>" id="comments">
     <section class='header cmt-title cap theme'>
       <%- page.comment_title != undefined ? markdown(page.comment_title) : __('meta.comment_title') %>
     </section>

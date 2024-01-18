@@ -1,5 +1,5 @@
 <% if ((is_home() || is_category() || is_tag()) && page.total > 1) { %>
-  <div class='paginator-wrap dis-select'>
+  <div class='paginator-wrap dis-select<%- scrollreveal(' ') %>'>
   <%- paginator({
     prev_text: '',
     next_text: '',

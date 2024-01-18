@@ -1,28 +1,70 @@
 <%
-function layoutTitle() {
-  const title = page.h1 != null ? page.h1 : page.title;
-  if (title && title.length > 0) {
-    return '<h1 class="article-title"><span>' + title + '</span></h1>';
+const { layout } = page
+// 是否使用 Heti 布局插件
+const isUsingHeti = theme.plugins.heti && theme.plugins.heti.enable
+// 是否使用 TianliGPT 插件
+const isUsingTianliGPT = theme.plugins.tianli_gpt.enable && ['all', page.layout].includes(theme.plugins.tianli_gpt.field)
+
+// 默认的 menu_id
+if (page.menu_id == null) {
+  if (page.wiki) {
+    page.menu_id = 'wiki'
   } else {
-    return '';
+    page.menu_id = 'post'
   }
 }
+// 默认的 title
+if (page.title == null) {
+  if (page.wiki) {
+    page.title = __('btn.wiki')
+  }
+}
+
+function layoutTitle() {
+  const title = page.h1 != null ? page.h1 : page.title
+  if (title && title.length > 0) {
+    return `<h1 class="article-title"><span>${title}</span></h1>`
+  } else {
+    return ''
+  }
+}
+
+function articleClass() {
+  var str = `md-text content${scrollreveal(' ')}`
+  if (isUsingHeti) {
+    str += ' heti'
+  }
+  if (isUsingTianliGPT) {
+    str += ' '
+  }
+  return str
+}
+
 function layoutDiv() {
-  var el = '';
+  var el = ''
   if (page.nav_tabs) {
-    el += partial('_partial/main/navbar/nav_tabs_blog');
+    el += partial('_partial/main/navbar/nav_tabs_blog')
   }
   if (page.h1 || page.title || (page.content && page.content.length > 0)) {
-    el += partial('_partial/main/navbar/breadcrumb');
+    el += partial('_partial/main/navbar/breadcrumb')
   }
-  el += '<article class="md-text content ' + page.layout + scrollreveal() + '">';
-  el += layoutTitle();
+  el += `<article class="${articleClass()}">`
+  el += layoutTitle()
   if (page.content && page.content.length > 0) {
-    el += page.content;
+    el += page.content
   }
-  el += '</article>';
-  el += partial('_partial/plugins/comments/layout');
-  return el;
+  if (layout === 'post') {
+    el += partial('_partial/main/article/article_footer')
+  }
+  el += `</article>`
+  if (layout === 'post' || page.wiki) {
+    el += partial('_partial/main/article/read_next')
+  }
+  if (layout === 'post') {
+    el += partial('_partial/main/article/related_posts')
+  }
+  el += partial('_partial/plugins/comments/layout')
+  return el
 }
 %>
 

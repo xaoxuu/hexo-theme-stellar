@@ -55,7 +55,7 @@ module.exports = ctx => {
   var wiki = getWikiObject(ctx)
   const pages = ctx.locals.get('pages')
   // wiki 所有页面
-  const wiki_pages = pages.filter(p => (p.layout === 'wiki')).map(p => new WikiPage(p))
+  const wiki_pages = pages.filter(p => (p.wiki != null)).map(p => new WikiPage(p))
   const wiki_list = Object.keys(wiki.tree)
   // 上架的项目列表
   wiki.shelf = ctx.locals.get('data').wiki || []

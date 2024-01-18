@@ -15,11 +15,11 @@ if (page.type?.length > 0) {
 var indent = false
 if (page.indent != null) {
   indent = page.indent
-} else if (page.topic && theme.topic.tree[page.topic] && (theme.topic.tree[page.topic].indent != null)) {
-  indent = theme.topic.tree[page.topic].indent
-} else if (page.wiki && theme.wiki.tree[page.wiki] && (theme.wiki.tree[page.wiki].indent != null)) {
-  indent = theme.wiki.tree[page.wiki].indent
-} else if (theme.article.indent) {
+} else if (theme.topic.tree[page.topic]?.indent != null) {
+  indent = theme.topic.tree[page.topic]?.indent
+} else if (theme.wiki.tree[page.wiki]?.indent != null) {
+  indent = theme.wiki.tree[page.wiki]?.indent
+} else if (theme.article.indent != null) {
   indent = theme.article.indent
 } else {
   indent = article_type === 'story'
@@ -32,7 +32,6 @@ html += `<html lang="${page.lang}">`
     html += partial('_partial/cover/index')
     html += `<div class="l_body ${page_type} ${article_type}" id="start" layout="${page.layout}" ${indent ? 'text-indent' : ''}>`
       html += `<aside class="l_left">`
-        // html += `<img no-lazy class="sidebar-bg" src="${theme.style.sidebar.background}">`
         html += `<div class="sidebar-container${theme.style.sidebar?.blur ? ' sidebar-blur' : ''}">`
           html += partial('_partial/sidebar/index')
         html += `</div>`

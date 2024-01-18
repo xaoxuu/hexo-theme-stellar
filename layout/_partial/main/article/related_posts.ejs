@@ -2,7 +2,7 @@
 function layoutDiv() {
   if (theme.article.related_posts.enable) {
     var el = '';
-    el += '<div class="related-wrap reveal" id="related-posts">';
+    el += `<div class="related-wrap${scrollreveal(' ')}" id="related-posts">`
     el += popular_posts_wrapper({
       title: __('meta.related_posts'),
       json: popular_posts_json({ maxCount: theme.article.related_posts.max_count , ulClass: 'related-posts' , PPMixingRate: 0.2 , isImage: true , isExcerpt: true} , page )

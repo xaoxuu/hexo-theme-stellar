@@ -1,4 +1,8 @@
 <%
+
+const wiki = theme.wiki.tree[page.wiki]
+const topic = theme.topic.tree[page.topic]
+
 if (page.sidebar == null) {
   const { site_tree } = theme
   var sidebar
@@ -11,7 +15,7 @@ if (page.sidebar == null) {
     sidebar = site_tree.blog.sidebar
   } else if (page.topic?.length > 0) {
     sidebar = site_tree.topic.sidebar
-  } else if (page.layout === 'index_wiki' || page.layout === 'wiki') {
+  } else if (page.layout === 'index_wiki' || page.wiki) {
     sidebar = site_tree.wiki.sidebar
   } else if (page.layout === '404') {
     sidebar = site_tree.error_page.sidebar
@@ -25,15 +29,16 @@ if (page.sidebar == null) {
     sidebar = []
   }
 
-  if (page.topic && theme.topic?.tree[page.topic]?.sidebar) {
-    sidebar = theme.topic.tree[page.topic].sidebar
+  if (topic?.sidebar) {
+    sidebar = topic.sidebar
   }
-  if (page.layout == 'wiki' && page.wiki && theme.wiki?.tree[page.wiki]?.sidebar) {
-    sidebar = theme.wiki.tree[page.wiki].sidebar
+  if (wiki?.sidebar) {
+    sidebar = wiki.sidebar
   }
 
   page.sidebar = sidebar
 }
+
 
 // parse array string
 if (typeof page.sidebar == 'string') {
@@ -57,10 +62,6 @@ function layoutTitle(main, url, sub) {
 }
 function layoutWidgets() {
   var el = '';
-  var proj;
-  if (page.layout === 'wiki' && page.wiki) {
-    proj = theme.wiki.tree[page.wiki];
-  }
   el += '<div class="widgets">';
   if (page.sidebar) {
     page.sidebar.forEach((w, i) => {
@@ -71,8 +72,8 @@ function layoutWidgets() {
       } else if (typeof w == 'object' && w.override) {
         name = w.override
       }
-      if (name in theme.data.widgets) {
-        Object.assign(widget, theme.data.widgets[name])
+      if (name in theme.widgets) {
+        Object.assign(widget, theme.widgets[name])
       }
       if (typeof w == 'object' && (w.override || w.layout)) {
         Object.assign(widget, w)
@@ -128,16 +129,10 @@ function layoutNavArea() {
   var search = {}
   if (page.search) {
     search = page.search
-  } else if (page.wiki && page.layout == 'wiki' && theme.wiki.tree[page.wiki]) {
-    const proj = theme.wiki.tree[page.wiki]
-    if (proj.search) {
-      search = proj.search
-    }
-  } else if (page.topic && theme.topic.tree[page.topic]) {
-    const topic = theme.topic.tree[page.topic]
-    if (topic.search) {
-      search = topic.search
-    }
+  } else if (wiki?.search) {
+    search = wiki.search
+  } else if (topic?.search) {
+    search = topic.search
   }
   var el = ''
   el += `<div class="nav-area">`

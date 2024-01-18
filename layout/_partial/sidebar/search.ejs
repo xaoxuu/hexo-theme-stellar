@@ -8,7 +8,7 @@ function layoutDiv() {
   el += `<form class="search-form">`
   var filter = ''
   if (item.filter == 'auto') {
-    if (page.layout == 'wiki') {
+    if (page.wiki) {
       let matches = page.path.match(/(.*?)\/(.*?)\//i)
       if (matches?.length > 0) {
         filter = matches[0]

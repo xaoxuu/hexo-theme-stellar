@@ -1,8 +1,8 @@
 <%
 function generate_title() {
   if (page.wiki) {
-    let proj = theme.wiki.tree[page.wiki];
-    let wiki = (proj && proj.name) || page.wiki;
+    const proj = theme.wiki.tree[page.wiki]
+    const wiki = proj?.name || page.wiki
     if (page.title) {
       return wiki + __('symbol.colon') + page.title + ' - ' + config.title;
     } else {
@@ -24,9 +24,9 @@ function generate_description() {
     return '';
   }
   if (page.wiki) {
-    let proj = theme.wiki.tree[page.wiki];
-    if (proj && proj.description) {
-      return '<meta name="description" content="' + proj.description + '">';
+    const proj = theme.wiki.tree[page.wiki]
+    if (proj?.description) {
+      return '<meta name="description" content="' + proj.description + '">'
     }
   }
   if (page.description || page.excerpt || page.content) {

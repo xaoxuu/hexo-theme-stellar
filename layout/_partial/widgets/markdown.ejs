@@ -2,7 +2,7 @@
 function layoutDiv() {
   if (!item.content?.length && !item.src?.length) return ''
   var el = '';
-  el += '<widget class="widget-wrapper markdown">';
+  el += `<widget class="widget-wrapper${scrollreveal(' ')} markdown">`
   if (item.title?.length > 0) {
     el += '<div class="widget-header dis-select">';
     el += '<span class="name">' + item.title + '</span>';

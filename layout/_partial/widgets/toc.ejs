@@ -1,5 +1,5 @@
 <%
-let proj = theme.wiki.tree[page.wiki];
+const proj = theme.wiki.tree[page.wiki]
 var hasTOC = true
 function layoutTocBody() {
   if (toc(page.content).length > 0) {
@@ -56,12 +56,8 @@ function layoutDocTree(pages) {
 
 function layoutDiv(fallback) {
   var type = ''
-  if (proj && proj.pages) {
-    if (proj.pages.length > 1) {
-      type = 'multi'
-    } else {
-      type = 'single'
-    }
+  if (proj?.pages) {
+    type = proj.pages.length > 1 ? 'multi' : 'single'
   } else {
     let toc_content = toc(page.content)
     if (toc_content && toc_content.length > 0) {
@@ -71,19 +67,8 @@ function layoutDiv(fallback) {
 
   var el = ''
   if (type.length > 0) {
-    el += `<widget class="widget-wrapper toc ${type}" id="data-toc" collapse="${item.collapse}">`
-    if (page.layout !== 'wiki') {
-      // post 布局
-      el += layoutTocHeader()
-      el += `<div class="widget-body fs14">`
-      el += `<div class="doc-tree active">`
-      el += layoutTocBody()
-      el += `</div>`
-      el += `</div>`
-      if (hasTOC == false) {
-        return ''
-      }
-    } else if (proj) {
+    el += `<widget class="widget-wrapper${scrollreveal(' ')} toc ${type}" id="data-toc" collapse="${item.collapse}">`
+    if (proj) {
       // wiki 布局
       if (proj.sections && proj.sections.length > 0 && proj.pages.length > 1) { // 多 pages
         for (let sec of proj.sections) {
@@ -108,10 +93,21 @@ function layoutDiv(fallback) {
           return ''
         }
       }
-    }
+    } else {
+      // post 布局
+      el += layoutTocHeader()
+      el += `<div class="widget-body fs14">`
+      el += `<div class="doc-tree active">`
+      el += layoutTocBody()
+      el += `</div>`
+      el += `</div>`
+      if (hasTOC == false) {
+        return ''
+      }
+    } 
     el += `</widget>`
   } else if (item.fallback) {
-    const fallback = theme.data.widgets[item.fallback]
+    const fallback = theme.widgets[item.fallback]
     el += partial(fallback.layout, {item: fallback})
   }
   return el

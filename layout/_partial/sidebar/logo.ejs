@@ -2,7 +2,7 @@
 var logo = theme.logo
 if (page.logo) {
   logo = Object.assign({}, logo, page.logo)
-} else if (page.wiki && page.layout == 'wiki' && theme.wiki.tree[page.wiki]) {
+} else if (theme.wiki.tree[page.wiki]) {
   const proj = theme.wiki.tree[page.wiki]
   var l = proj.logo
   if (l) {
@@ -14,7 +14,7 @@ if (page.logo) {
       subtitle: proj.subtitle
     }
   }
-} else if (page.topic && theme.topic.tree[page.topic]) {
+} else if (theme.topic.tree[page.topic]) {
   const topic = theme.topic.tree[page.topic]
   var l = topic.logo
   if (l) {
@@ -48,11 +48,16 @@ function layoutTitle(main, url, sub) {
 
 function layoutDiv() {
   if (where == 'main') {
-    if (page.layout == 'wiki' && page.menu_id == 'wiki') {
+    if (page.header == false) {
       return ''
     }
-    if (page.header == false) {
-      return
+    // 内容页如果未设置 header 则不显示
+    if (page.header == null) {
+      if (!page.nav_tabs) { // 如果有 nav_tabs 就代表是列表页
+        if (page.layout === 'post' || page.layout === 'page' || page.wiki) {
+          return ''
+        }
+      }
     }
   }
   var el = ''

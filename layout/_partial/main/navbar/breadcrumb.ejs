@@ -99,7 +99,7 @@ function layoutDiv() {
     nodes.push(url);
     el += '<a class="cap breadcrumb" id="menu" href="' + url + '">' + __("btn.wiki") + '</a>';
     // 项目名
-    let proj = theme.wiki.tree[page.wiki];
+    const proj = theme.wiki.tree[page.wiki]
     if (proj != null) {
       let url_proj = url_for(proj.homepage?.path);
       if (nodes.includes(url_proj) === false) {
