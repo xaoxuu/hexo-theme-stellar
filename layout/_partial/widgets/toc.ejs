@@ -74,7 +74,7 @@ function layoutDiv(fallback) {
     el += `<widget class="widget-wrapper toc ${type}" id="data-toc" collapse="${item.collapse}">`
     if (page.layout !== 'wiki') {
       // post 布局
-      el += layoutTocHeader(page.toc_title)
+      el += layoutTocHeader()
       el += `<div class="widget-body fs14">`
       el += `<div class="doc-tree active">`
       el += layoutTocBody()
@@ -99,7 +99,7 @@ function layoutDiv(fallback) {
         }
       } else { // 单 page
         if (proj.pages.length == 1) {
-          el += layoutTocHeader(page.toc_title)
+          el += layoutTocHeader()
         }
         el += `<div class="widget-body fs14">`
         el += layoutDocTree(proj.pages)
