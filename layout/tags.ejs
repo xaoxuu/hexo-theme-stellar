@@ -9,7 +9,7 @@ if (page.menu_id == undefined) {
   <% page.layout = 'tags'; %>
   <%- partial('_partial/main/navbar/nav_tabs_blog') %>
   <div class='post-list'>
-    <article class='<%- scrollreveal() %>' id='tags'>
+    <article class='<%- scrollreveal("") %>' id='tags'>
       <% site.tags.sort('length', -1).each(function(tag){ %>
         <a class='tag' href="<%= url_for(tag.path) %>">
           <span class='name'><%= tag.name %></span>

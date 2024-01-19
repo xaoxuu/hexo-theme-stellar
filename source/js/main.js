@@ -197,13 +197,16 @@ init.registerTabsTag()
 // scrollreveal
 if (stellar.plugins.scrollreveal) {
   stellar.loadScript(stellar.plugins.scrollreveal.js).then(function () {
-    ScrollReveal().reveal("body .reveal", {
+    const slideUp = {
       distance: stellar.plugins.scrollreveal.distance,
       duration: stellar.plugins.scrollreveal.duration,
       interval: stellar.plugins.scrollreveal.interval,
       scale: stellar.plugins.scrollreveal.scale,
+      opacity: 0,
       easing: "ease-out"
-    });
+    }
+    ScrollReveal().reveal('.l_left .slide-up', slideUp)
+    ScrollReveal().reveal('.l_main .slide-up', slideUp)
   })
 }
 

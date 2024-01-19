@@ -1,7 +1,7 @@
 <%
 function layoutWikiCover() {
   var el = '';
-  let proj = theme.wiki.tree[page.wiki];
+  const proj = theme.wiki.tree[page.wiki]
   if (proj == undefined) {
     return el;
   }
@@ -18,7 +18,7 @@ function layoutWikiCover() {
   if (coverpage === true) {
     coverpage = ['cover', 'title', 'description'];
   }
-  el += '<div class="l_cover wiki' + scrollreveal() + '">';
+  el += '<div class="l_cover wiki' + scrollreveal(' ') + '">';
   el += '<article class="cover-wrap md-text">';
 
   if (cover?.length > 0 && coverpage.includes('cover')) {

@@ -8,7 +8,7 @@ function layoutDiv() {
   delete opts['title'];
   delete opts['layout'];
   opts.class = 'tag ';
-  el += '<widget class="widget-wrapper tagcloud">';
+  el += `<widget class="widget-wrapper${scrollreveal(' ')} tagcloud">`
     if (item.title) {
       el += '<div class="widget-header dis-select">';
       el += '<span class="name">' + item.title + '</span>';

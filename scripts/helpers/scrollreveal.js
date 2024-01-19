@@ -1,9 +1,9 @@
 'use strict';
 
-hexo.extend.helper.register('scrollreveal', function(args){
-  const cfg = hexo.theme.config;
-  if (cfg.plugins.scrollreveal && cfg.plugins.scrollreveal.enable) {
-    return ' reveal';
+hexo.extend.helper.register('scrollreveal', function(args) {
+  if (hexo.theme.config.plugins.scrollreveal?.enable) {
+    return `${args ? args : ''}slide-up`
+  } else {
+    return ''
   }
-  return '';
-});
+})

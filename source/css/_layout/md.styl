@@ -22,16 +22,6 @@ h1.article-title
   position: relative
   padding-bottom: 2rem
   overflow: hidden
-  &.indent
-    >p:not([class])
-      text-indent: 'calc(%s * 2)' % $fs-p
-      text-align: convert(hexo-config('style.text-align'))
-      a
-        text-indent: 0
-    h1,h2,h3,h4,h5,h6
-      text-align: center
-    >h2:not([class])
-      border-bottom: none
   >:first-child:not(h1)
     margin-top: 0
   h1:not(:first-child)
@@ -52,6 +42,17 @@ h1.article-title
       margin-top: 0.25em
       margin-bottom: 0.25em
       padding-top: 0
+
+.l_body[text-indent] .md-text.content
+  >p:not([class])
+    text-indent: 'calc(%s * 2)' % var(--fs-p)
+    text-align: convert(hexo-config('style.text-align'))
+    a
+      text-indent: 0
+  h1,h2,h3,h4,h5,h6
+    text-align: center
+  >h2:not([class])
+    border-bottom: none
 
 .md-text.content:first-child
   padding-top: 0
@@ -109,7 +110,7 @@ h1.article-title
     margin-top: -0.5rem
 
 .md-text p
-  font-size: $fs-p
+  font-size: var(--fs-p)
 
 .md-text pre
   -webkit-font-smoothing: auto

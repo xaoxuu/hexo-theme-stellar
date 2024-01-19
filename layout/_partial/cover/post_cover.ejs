@@ -26,7 +26,7 @@ function div() {
       url = 'https://source.unsplash.com/random/2000x400';
     }
   }
-  el += '<div class="l_cover post' + scrollreveal() + '">';
+  el += '<div class="l_cover post' + scrollreveal(' ') + '">';
   el += '<div class="cover">';
   if (theme.plugins.lazyload && theme.plugins.lazyload.enable) {
     el += '<div class="lazy img bg" data-bg="' + url + '"></div>';

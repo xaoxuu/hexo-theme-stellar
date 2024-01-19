@@ -24,7 +24,7 @@ function layoutArchiveList() {
     }
   })
   for (let year of years) {
-    el += `<article class="${scrollreveal()}" id="archive">`
+    el += `<article class="${scrollreveal('')}" id="archive">`
   	el += `<div class='archive-header h4'>${year}</div>`
     site.posts.sort('date', -1).filter(function (post) {
       post.year = date(post.date, 'YYYY')

@@ -5,13 +5,11 @@ function layoutDiv() {
   var branch = 'main';
   if (page.repo) {
     repo = page.repo
-  } else if (page.layout === 'wiki' && page.wiki) {
-    let proj = theme.wiki.tree[page.wiki];
-    if (proj && proj.repo) {
-      repo = proj.repo;
-      if (proj.branch != undefined) {
-        branch = proj.branch;
-      }
+  } else if (theme.wiki.tree[page.wiki]?.repo) {
+    const proj = theme.wiki.tree[page.wiki]
+    repo = proj.repo
+    if (proj.branch != undefined) {
+      branch = proj.branch
     }
   }
   if (repo == undefined) {
@@ -21,7 +19,7 @@ function layoutDiv() {
   if (item.labels) {
     item.api += '&labels=' + item.labels;
   }
-  el += '<widget class="widget-wrapper timeline">';
+  el += `<widget class="widget-wrapper${scrollreveal(' ')} timeline">`
     if (item.title) {
       el += '<div class="widget-header dis-select">';
       el += '<span class="name">' + item.title + '</span>';

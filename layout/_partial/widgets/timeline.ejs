@@ -4,7 +4,7 @@ function layoutDiv() {
   if (item.api == undefined) {
     return el;
   }
-  el += '<widget class="widget-wrapper timeline">';
+  el += `<widget class="widget-wrapper${scrollreveal(' ')} timeline">`
     if (item.title) {
       el += '<div class="widget-header dis-select">';
       el += '<span class="name">' + item.title + '</span>';

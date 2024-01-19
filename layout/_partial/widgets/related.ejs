@@ -8,7 +8,7 @@ function relatedPostsInTopic() {
     return ''
   }
   var el = ''
-  el += `<widget class="widget-wrapper post-list">`
+  el += `<widget class="widget-wrapper${scrollreveal(' ')} post-list">`
   el += `<div class="widget-header dis-select">`
   el += `<span class="name">${__('btn.topic') + __('symbol.colon') + topic.name}</span>`
   el += `</div>`
@@ -34,7 +34,7 @@ function relatedWiki() {
   const relatedItems = thisItemObject.relatedItems
   var el = ''
   for (let relatedItem of relatedItems) {
-    el += `<widget class="widget-wrapper post-card">`
+    el += `<widget class="widget-wrapper${scrollreveal(' ')} post-card">`
     el += `<div class="widget-header dis-select">`
     el += `<span class="name">${__('meta.more') + __('symbol.colon') + relatedItem.name}</span>`
     el += `</div>`
@@ -55,9 +55,9 @@ function relatedWiki() {
   return el
 }
 function layoutDiv() {
-  if (page.layout == 'wiki') {
+  if (page.wiki?.length > 0) {
     return relatedWiki()
-  } else if (page.layout == 'topic') {
+  } else if (page.topic?.length > 0) {
     return relatedPostsInTopic()
   }
 }

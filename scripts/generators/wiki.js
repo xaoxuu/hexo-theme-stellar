@@ -28,7 +28,8 @@ hexo.extend.generator.register('wiki', function (locals) {
           layout: 'index_wiki',
           menu_id: site_tree.wiki.menu_id,
           filter: true,
-          tagName: tag.name
+          tagName: tag.name,
+          title: tag.name
         }
       })
     }

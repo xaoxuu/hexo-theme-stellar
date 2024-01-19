@@ -2,7 +2,7 @@
  * topic v1 | https://github.com/xaoxuu/hexo-theme-stellar/
  */
 
-hexo.extend.generator.register('topic', function (locals) {
+hexo.extend.generator.register('index_topic', function (locals) {
   const { site_tree, topic } = hexo.theme.config
   const topicIdList = Object.keys(topic.tree)
   if (topicIdList.length == 0) {

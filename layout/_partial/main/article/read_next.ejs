@@ -4,13 +4,13 @@ function layoutDiv() {
   var title = __('meta.read_next')
   title_prev = __('meta.newer')
   title_next = __('meta.older')
-  if (page.layout === 'post' || page.layout === 'topic') {
+  if (page.layout === 'post') {
     prev = page.prev
     next = page.next
-  } else if (page.layout === 'wiki' && page.wiki?.length > 0) {
+  } else if (page.wiki?.length > 0) {
     var title_prev = __('meta.prev');
     var title_next = __('meta.next');
-    let proj = theme.wiki.tree[page.wiki];
+    const proj = theme.wiki.tree[page.wiki];
     if (proj) {
       let ps = proj.pages?.filter(p => p.path == page.path)
       if (ps?.length > 0) {
@@ -33,14 +33,14 @@ function layoutDiv() {
   }
   let el = '';
   if (prev || next) {
-    el += '<div class="related-wrap reveal" id="read-next">';
+    el += `<div class="related-wrap${scrollreveal(' ')}" id="read-next">`
     el += '<section class="body">';
     // prev
     el += '<div class="item" id="prev">';
     if (prev) {
       el += '<div class="note">' + title_prev + '</div>';
       el += '<a href="' + url_for(prev.path) + '">';
-      el += prev.title || prev.seo_title || prev.wiki || date(prev.date, config.date_format);
+      el += prev.title || prev.wiki || date(prev.date, config.date_format);
       el += '</a>';
     }
     el += '</div>';
@@ -49,7 +49,7 @@ function layoutDiv() {
     if (next) {
       el += '<div class="note">' + title_next + '</div>';
       el += '<a href="' + url_for(next.path) + '">';
-      el += next.title || next.seo_title || next.wiki || date(next.date, config.date_format);
+      el += next.title || next.wiki || date(next.date, config.date_format);
       el += '</a>';
     }
     el += '</div>';

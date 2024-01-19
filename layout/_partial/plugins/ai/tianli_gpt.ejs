@@ -1,4 +1,4 @@
-<% if (page.layout === 'post' || (page.layout === 'wiki' && page.wiki && page.wiki.length > 0)) { %>
+<% if (page.layout === 'post' || (page.wiki?.length > 0)) { %>
   <script>
     let tianliGPT_postSelector = '.md-text.content.<%= page.layout === "post" ? "post" : "wiki" %>';
     let tianliGPT_key = '<%= theme.plugins.tianli_gpt.api %>';

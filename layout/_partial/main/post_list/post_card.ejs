@@ -46,7 +46,7 @@ function div_default() {
 
   // 标题
   el += '<h2 class="post-title">';
-  el += (post.title || post.seo_title) ? (post.title || post.seo_title) : date(post.date, config.date_format);
+  el += post.title ? post.title : date(post.date, config.date_format);
   el += '</h2>';
 
   // 摘要
