@@ -28,10 +28,10 @@
     background-clip: content-box
     &.next
       border-left: 1px dashed var(--block-border)
-      background-image: url('https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/arrow/064b95430caf4.svg')
+      background-image: url(hexo-config('style.paginator.next'))
     &.prev
       border-right: 1px dashed var(--block-border)
-      background-image: url('https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/arrow/f049bbd4e88ec.svg')
+      background-image: url(hexo-config('style.paginator.prev'))
   .current
     font-family: $ff-code
     background: var(--block)

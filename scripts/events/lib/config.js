@@ -29,7 +29,7 @@ module.exports = ctx => {
 
   // merge data
   const data = ctx.locals.get('data')
-  // merge widgets
+  // merge widgets: 可覆盖删除的合并
   var widgets = ctx.render.renderSync({ path: path.join(ctx.theme_dir, '_data/widgets.yml'), engine: 'yaml' })
   if (data.widgets) {
     for (let i of Object.keys(data.widgets)) {
@@ -50,8 +50,14 @@ module.exports = ctx => {
       }
     }
   }
-  
   ctx.theme.config.widgets = widgets
+
+  // merge icons: 简单覆盖合并
+  var icons = ctx.render.renderSync({ path: path.join(ctx.theme_dir, '_data/icons.yml'), engine: 'yaml' })
+  if (data.icons) {
+    icons = Object.assign({}, icons, data.icons)
+  }
+  ctx.theme.config.icons = icons
 
   // default menu
   if (ctx.theme.config.menubar == undefined) {
