@@ -113,3 +113,11 @@
 
 .tag-plugin.banner .navbar a.active
   blur-effect()
+
+
+.tag-plugin.banner.author
+  @media screen and (min-width: $device-mobile-max)
+    margin-left: var(--gap-l)
+    margin-right: var(--gap-l)
+  @media screen and (max-width: $device-mobile-max)
+    border-radius: 0
