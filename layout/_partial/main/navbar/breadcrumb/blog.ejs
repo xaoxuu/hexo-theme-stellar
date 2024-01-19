@@ -1,0 +1,34 @@
+<%
+function layoutDiv() {
+  const topicObject = theme.topic.tree[page.topic]
+  var el = ''
+  if (topicObject) { // 专栏文章
+    // 专栏列表页
+    const topicIndexPageURL = url_for(theme.site_tree.index_topic.base_dir)
+    el += `<span class="sep"></span>`
+    el += `<a class="cap breadcrumb" id="menu" href="${topicIndexPageURL}">${__("btn.topic")}</a>`
+    // 专栏项目名
+    const topicHomePageURL = url_for(topicObject.homepage?.path);
+    if (topicHomePageURL != topicIndexPageURL) {
+      el += `<span class="sep"></span>`
+      el += `<a class="cap breadcrumb" id="proj" href="${topicHomePageURL}">${topicObject.name || topicObject.title}</a>`
+    }
+  } else { // 普通文章
+    // 文章列表页
+    el += `<span class="sep"></span>`
+    el += `<a class="cap breadcrumb" href="${url_for(config.index_generator.path)}">${__("btn.blog")}</a>`
+    // 分类列表页
+    if (page.categories?.length > 0) {
+      el += `<span class="sep"></span>`
+      el += list_categories(page.categories, {
+          class: "cap breadcrumb",
+          show_count: false,
+          separator: ' <span class="sep"></span> ',
+          style: "none"
+        })
+    }
+  }
+  return el
+}
+%>
+<%- layoutDiv() %>

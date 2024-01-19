@@ -1,0 +1,35 @@
+<%
+function layoutDiv() {
+  if (page.breadcrumb === false) {
+    return ''
+  }
+  var el = ''
+  // 1.main
+  el += `<div class="bread-nav fs12">`
+  // 2.left
+  el += `<div class="left">`
+  // 3.left.top: 面包屑导航
+  el += `<div id="breadcrumb">`
+    // 首页
+    el += `<a class="cap breadcrumb" href="${url_for(config.root)}">${__("btn.home")}</a>`
+    if (theme.wiki.tree[page.wiki]) {
+      el += partial('breadcrumb/wiki')
+    } else if (page.layout == 'post') {
+      el += partial('breadcrumb/blog')
+    } else {
+      el += partial('breadcrumb/page')
+    }
+  // end 3.left.top
+  el += `</div>`
+  // 3.left.bottom
+  el += partial('dateinfo')
+  // end 2.left
+  el += `</div>`
+  // 2.right
+  el += partial('ghinfo')
+  // end 1.main
+  el += `</div>`
+  return el
+}
+%>
+<%- layoutDiv() %>

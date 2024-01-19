@@ -1,0 +1,10 @@
+<%
+function layoutDiv() {
+  // 普通页面就显示当前页面
+  return `
+  <span class="sep"></span>
+  <a class="cap breadcrumb" href="${url_for(page.path)}">${page.title}</a>
+  `
+}
+%>
+<%- layoutDiv() %>

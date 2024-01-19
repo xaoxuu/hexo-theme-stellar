@@ -10,11 +10,11 @@ hexo.extend.generator.register('wiki', function (locals) {
   }
   var ret = []
   ret.push({
-    path: site_tree.wiki.base_dir + '/index.html',
+    path: site_tree.index_wiki.base_dir + '/index.html',
     layout: ['index_wiki'],
     data: {
       layout: 'index_wiki',
-      menu_id: site_tree.wiki.menu_id,
+      menu_id: site_tree.index_wiki.menu_id,
       filter: false
     }
   })
@@ -26,7 +26,7 @@ hexo.extend.generator.register('wiki', function (locals) {
         layout: ['index_wiki'],
         data: {
           layout: 'index_wiki',
-          menu_id: site_tree.wiki.menu_id,
+          menu_id: site_tree.index_wiki.menu_id,
           filter: true,
           tagName: tag.name,
           title: tag.name

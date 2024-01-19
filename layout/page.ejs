@@ -7,10 +7,12 @@ const isUsingTianliGPT = theme.plugins.tianli_gpt.enable && ['all', page.layout]
 
 // 默认的 menu_id
 if (page.menu_id == null) {
-  if (page.wiki) {
-    page.menu_id = 'wiki'
+  if (page.wiki?.length > 0) {
+    page.menu_id = theme.site_tree.wiki.menu_id
+  } else if (page.topic?.length > 0) {
+    page.menu_id = theme.site_tree.topic.menu_id
   } else {
-    page.menu_id = 'post'
+    page.menu_id = theme.site_tree.post.menu_id
   }
 }
 // 默认的 title
@@ -46,7 +48,7 @@ function layoutDiv() {
     el += partial('_partial/main/navbar/nav_tabs_blog')
   }
   if (page.h1 || page.title || (page.content && page.content.length > 0)) {
-    el += partial('_partial/main/navbar/breadcrumb')
+    el += partial('_partial/main/navbar/article_top_area')
   }
   el += `<article class="${articleClass()}">`
   el += layoutTitle()

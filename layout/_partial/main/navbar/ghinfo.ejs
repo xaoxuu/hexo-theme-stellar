@@ -1,0 +1,25 @@
+<%
+function layoutDiv() {
+  const repo = page.repo || theme.wiki.tree[page.wiki]?.repo
+  if (repo == null) {
+    return ''
+  }
+  return `
+  <div class="right ghrepo stellar-ghinfo-api" api="${theme.api_host.ghapi}/repos/${repo}">
+    <a class="repo-link bold" href="https://github.com/${repo}">
+      ${icon('github:repo')}
+      <span type="text">${repo}</span>
+    </a>
+    <a class="repo-link" href="https://github.com/${repo}/stargazers">
+      ${icon('github:star')}
+      <span type="text" id="stargazers_count">0</span><span>stars</span>
+    </a>
+    <a class="repo-link" href="https://github.com/${repo}/forks">
+      ${icon('github:fork')}
+      <span type="text" id="forks_count">0</span><span>forks</span>
+    </a>
+  </div>
+  `
+}
+%>
+<%- layoutDiv() %>

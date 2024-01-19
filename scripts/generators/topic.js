@@ -10,11 +10,11 @@ hexo.extend.generator.register('index_topic', function (locals) {
   }
   var ret = []
   ret.push({
-    path: site_tree.topic.base_dir + '/index.html',
+    path: site_tree.index_topic.base_dir + '/index.html',
     layout: ['index_topic'],
     data: {
       layout: 'index_topic',
-      menu_id: site_tree.topic.menu_id
+      menu_id: site_tree.index_topic.menu_id
     }
   })
   return ret

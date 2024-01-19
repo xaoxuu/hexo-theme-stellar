@@ -9,13 +9,16 @@ if (page.sidebar == null) {
   if (is_home()) {
     sidebar = site_tree.home.sidebar
   } else if (is_category() || is_tag() || is_archive() || ['categories', 'tags', 'archives'].includes(page.layout)) {
-    sidebar = site_tree.blog.sidebar
+    sidebar = site_tree.index_blog.sidebar
   } else if (page.layout === 'index_topic') {
     // 专栏列表页等同于博客列表页
-    sidebar = site_tree.blog.sidebar
+    sidebar = site_tree.index_blog.sidebar
   } else if (page.topic?.length > 0) {
-    sidebar = site_tree.topic.sidebar
-  } else if (page.layout === 'index_wiki' || page.wiki) {
+    // 专栏文章内页等同于普通文章内页
+    sidebar = site_tree.post.sidebar
+  } else if (page.layout === 'index_wiki') {
+    sidebar = site_tree.index_wiki.sidebar
+  } else if (page.wiki?.length > 0) {
     sidebar = site_tree.wiki.sidebar
   } else if (page.layout === '404') {
     sidebar = site_tree.error_page.sidebar
