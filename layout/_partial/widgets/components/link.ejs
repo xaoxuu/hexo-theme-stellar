@@ -1,0 +1,15 @@
+<%
+function layoutDiv() {
+  var el = ''
+  el += `<a class="link" title="${item.title}" href="${item.url}">`
+  if (item.icon) {
+    el += icon(item.icon)
+  }
+  if (showText) {
+    el += `<span>${item.title}</span>`
+  }
+  el += `</a>`
+  return el
+}
+%>
+<%- layoutDiv() %>

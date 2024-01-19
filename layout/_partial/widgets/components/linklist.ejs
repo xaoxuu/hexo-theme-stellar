@@ -1,0 +1,27 @@
+<%
+function layoutDiv(linklist) {
+  var links = linklist.items || []
+  if (links.length == 0) {
+    return ''
+  }
+  var el = ''
+  var style = ''
+  var columns = linklist.columns || links.length
+  if (links.length == 1) {
+    style += `style="grid-template-columns:repeat(1,1fr);"`
+  } else {
+    style += `style="grid-template-columns:repeat(${columns},1fr);"`
+  }
+  var align = 'center'
+  if (columns == 1 && links.length > 1) {
+    align = 'left'
+  }
+  el += `<div class="linklist ${align}" ${style}>`
+  for (let link of links) {
+    el += partial('link', {item: link, showText: columns > 2 ? false : true})
+  }
+  el += `</div>`
+  return el
+}
+%>
+<%- layoutDiv(item) %>
