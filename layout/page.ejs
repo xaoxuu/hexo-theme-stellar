@@ -62,6 +62,9 @@ function layoutDiv() {
   if (layout === 'post' || page.wiki) {
     el += partial('_partial/main/article/read_next')
   }
+  if (isUsingTianliGPT) {
+    el += partial('_partial/plugins/ai/tianli_gpt')
+  }
   if (layout === 'post') {
     el += partial('_partial/main/article/related_posts')
   }

@@ -1,6 +1,6 @@
 <% if (page.layout === 'post' || (page.wiki?.length > 0)) { %>
   <script>
-    let tianliGPT_postSelector = '.md-text.content.<%= page.layout === "post" ? "post" : "wiki" %>';
+    let tianliGPT_postSelector = 'article.content';
     let tianliGPT_key = '<%= theme.plugins.tianli_gpt.api %>';
     let tianliGPT_typingAnimate = '<%= theme.plugins.tianli_gpt.typingAnimate %>';
     let tianliGPT_wordLimit = <%= theme.plugins.tianli_gpt.limit %>;
