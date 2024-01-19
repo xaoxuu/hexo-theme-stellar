@@ -21,25 +21,9 @@ function layout_post_card(layout, post, content) {
 function layout_post_list(partial) {
   var el = '';
   el += '<div class="post-list post">';
-  if (is_home()) {
-    // pinned posts
-    if (page.current == 1) {
-      var pinned = site.posts.filter(post => post.pin != undefined).sort((config.index_generator && config.index_generator.order_by) || '-date');
-      pinned.forEach((post, i) => {
-        el += layout_post_card('post', post, partial(post));
-      });
-    }
-    // unpinned posts
-    page.posts.each(function(post){
-      if (post.pin == undefined) {
-        el += layout_post_card('post', post, partial(post));
-      }
-    })
-  } else {
-    page.posts.each(function(post){
-      el += layout_post_card('post', post, partial(post));
-    })
-  }
+  page.posts.each(function(post){
+    el += layout_post_card('post', post, partial(post));
+  })
   el += '</div>';
   return el;
 }
