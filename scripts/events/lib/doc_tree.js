@@ -104,25 +104,30 @@ module.exports = ctx => {
 
     // 首页
     // 未特别指定首页时，获取TOC第一页作为首页
-    if (item.homepage == null && item.toc != null) {
+    var homepage = item.homepage
+    if (homepage == null && item.toc != null) {
       for (let id of Object.keys(item.toc)) {
         const sec = item.toc[id]
         for (let key of sec) {
           let hs = sub_pages.filter(p => p.path_key == item.base_dir + key)
           if (hs.length > 0) {
-            item.homepage = hs[0]
+            homepage = hs[0]
             break
           }
         }
-        if (item.homepage != null) {
+        if (homepage != null) {
           break
         }
       }
     }
-    if (item.homepage == null) {
-      item.homepage = sub_pages[0]
+    if (homepage == null) {
+      homepage = sub_pages[0]
     }
-    item.homepage.is_homepage = true
+    if (typeof homepage == 'string') {
+      homepage = {path: homepage}
+    }
+    homepage.is_homepage = true
+    item.homepage = homepage
     // 内页分组
     var sections = []
     var others = sub_pages
