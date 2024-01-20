@@ -18,7 +18,7 @@ function relatedPostsInTopic() {
     el += `<a class="item${isActive ? ' active' : ''}" href="${url_for(post.path)}">`
     el += `<span class="title">${post.title}</span>`
     if (isActive) {
-      el += icon('default:bookmark')
+      el += icon('default:bookmark.active')
     }
     el += `</a>`
   }

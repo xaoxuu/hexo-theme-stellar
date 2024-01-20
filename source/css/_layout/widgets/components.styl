@@ -1,21 +1,21 @@
-.widgets .linklist
+.widget-body .linklist
   display: grid
   grid-gap: 8px
-  margin: 1em 0
 
 .linklist .link
   border-radius: $border-bar
-  background: var(--alpha50)
   color: var(--text-p2)
-  border: none
-  border-bottom: none
   min-height: 32px
-  padding: 2px 4px
+  padding: 0 4px
   trans1 background
   display: flex
   justify-content: center
   align-items: center
   txt-ellipsis()
+  &.active
+    background: var(--alpha50)
+    svg,img
+      filter: unset
 
 .linklist .link span
   padding: 0 4px
@@ -23,23 +23,23 @@
 .linklist .link svg, .linklist .link img
   $size = 16px
   padding: 0 2px
-  color: $color-theme
+  &:not([class='active-icon'])
+    color: $color-theme
   max-height: 18px
   width: auto
   filter: grayscale(100%) brightness(0.8) opacity(0.8)
   trans1 filter
   flex-shrink: 0
 
-.markdown .linklist.center .link
-  border-radius: $border-button
-
-.linklist.left
-  grid-gap: 4px
+.widget-body .linklist.left
+  grid-gap: 2px
 .linklist.left .link
-  justify-content: flex-start
-  padding: 2px 16px
+  justify-content: space-between
+  padding: 0 16px
   img,svg 
-    width: 16px
+    width: 1em
+    height: 1em
+    transform: scale(1.2)
   span 
     padding: 0 8px
 

@@ -41,7 +41,7 @@ function layoutDocTree(pages) {
       el += `<a class="doc-tree-link${isActive}" href="${href}">`
       el += `<span class="toc-text">${p.title}</span>`
       if (isActive.length > 0) {
-        el += icon('default:bookmark')
+        el += icon('default:bookmark.active')
       }
       el += `</a>`
     }

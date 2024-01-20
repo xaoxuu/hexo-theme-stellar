@@ -18,7 +18,7 @@ function layoutDiv(linklist) {
   }
   el += `<div class="linklist ${align}" ${style}>`
   for (let link of links) {
-    el += partial('link', {item: link, showText: columns > 2 ? false : true})
+    el += partial('link', {item: link, columns: columns})
   }
   el += `</div>`
   return el

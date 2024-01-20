@@ -1,12 +1,18 @@
 <%
 function layoutDiv() {
   var el = ''
-  el += `<a class="link" title="${item.title}" href="${item.url}">`
+  const isActive = url_for(item.url) == url_for(page.path)
+  el += `<a class="link${isActive ? ' active' : ''}" title="${item.title}" href="${item.url}">`
+  el += `<div class="flex">`
   if (item.icon) {
     el += icon(item.icon)
   }
-  if (showText) {
+  if (columns <= 2) {
     el += `<span>${item.title}</span>`
+  }
+  el += `</div>`
+  if (columns == 1 && isActive) {
+    el += icon('default:bookmark.active')
   }
   el += `</a>`
   return el

@@ -31,17 +31,22 @@
         display: none
       .cap-action
         line-height: 0
-        color: var(--text-p2)
-        trans2: color background
+        color: inherit
+        opacity 0.6
+        trans2: opacity background
         border-radius: 4px
         padding: 6px
         margin-right: -5px
-        .icon
+        svg
+          height: 1em
+          width: auto
+          transform: scale(1.2)
           fill: var(--text-p2)
         &:hover
           color: $color-hover
           background: var(--alpha100)
-          .icon
+          opacity 1
+          svg
             fill: $color-hover
 
     .widget-body

@@ -14,8 +14,9 @@
   overflow: hidden
   a.doc-tree-link
     color: var(--text-p1)
-    padding: 0.5rem 16px
+    padding: 0 16px
     display: flex
+    min-height: 32px
     justify-content: space-between
     align-items: center
     font-size: $fs-14
@@ -23,16 +24,21 @@
     trans1 background
     .toc-text
       txt-ellipsis()
-    .icon
+    svg,img
       flex-shrink: 0
+      width: 1em
+      height: 1em
+      transform: scale(1.2)
     &:after
       position: absolute
       right: .5rem
-    &.active
-      &:only-child
+    &:only-child
+      &.active
+        background: var(--alpha50)
+      &:hover
         background: var(--alpha100)
     &:hover
-      background: var(--alpha50)
+      background: var(--alpha100)
 
 
 // 当前分页链接
