@@ -25,7 +25,8 @@ function layoutDiv() {
     arr = site.posts.filter( p => p.title && p.title.length > 0)
     arr = arr.sort("updated", -1)
   }
-  el += '<div class="widget-body fs14">';
+  el += '<div class="widget-body fs14">'
+  arr = arr.filter(p => p.title?.length > 0)
   arr.length = item.limit
   arr.forEach(post => {
     if (!post) { return }
@@ -39,7 +40,7 @@ function layoutDiv() {
         el += '<strong>' + name + '</strong>' + '<span class="dot"></span>';
       }
     }
-    el += (post.title || post.wiki) + '</span>';
+    el += post.title + '</span>';
     if (isActive) {
       el += icon('default:bookmark.active')
     }
