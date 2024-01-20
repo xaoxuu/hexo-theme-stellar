@@ -2,7 +2,7 @@
 function layoutDiv() {
   var el = ''
   el += `<nav class="menu dis-select${where == 'main' ? ' mobile-hidden' : ''}">`
-  for (let item of theme.menubar.items) {
+  for (let item of (theme.menubar.items || [])) {
     if (item == undefined || item.id == null || item.url == null) {
       continue
     }

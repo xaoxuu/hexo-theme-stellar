@@ -21,6 +21,9 @@ function getWikiObject(ctx) {
   const data = ctx.locals.get('data')
   var list = []
   for (let key of Object.keys(data)) {
+    if (key.endsWith('.DS_Store')) {
+      continue
+    }
     if (key.includes('wiki/') && key.length > 5) {
       let newKey = key.replace('wiki/', '')
       let obj = data[key]
