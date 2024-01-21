@@ -25,10 +25,10 @@ module.exports = ctx => function(args) {
     }
     // 覆盖配置
     if (args.fancybox && args.fancybox.length > 0) {
-      if (args.fancybox == 'true') {
-        fancybox = true
-      } else if (args.fancybox == 'false') {
+      if (args.fancybox == 'false') {
         fancybox = false
+      } else {
+        fancybox = args.fancybox
       }
     }
   }
@@ -40,7 +40,7 @@ module.exports = ctx => function(args) {
       img += ' alt="' + alt + '"'
     }
     if (fancybox) {
-      img += ' fancybox="true"'
+      img += ` data-fancybox="${fancybox}"`
     }
     if (style.length > 0) {
       img += ' style="' + style + '"'

@@ -91,11 +91,10 @@ const MemosJS = {
           cell += '<div class="tag-plugin image">';
           for (let img of imgs) {
             if (img.externalLink?.length > 0) {
-              cell += `<div class="image-bg"><img src="${img.externalLink}" fancybox="true"></div>`;
+              cell += `<div class="image-bg"><img src="${img.externalLink}" data-fancybox="memos"></div>`;
             } else {
-              cell += `<div class="image-bg"><img src="https://${cfg.host}/o/r/${img.id}" fancybox="true"></div>`;
+              cell += `<div class="image-bg"><img src="https://${cfg.host}/o/r/${img.id}" data-fancybox="memos"></div>`;
             }
-            
           }
           cell += '</div>';
         }

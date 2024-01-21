@@ -303,24 +303,9 @@ if (stellar.plugins.preload) {
   }
 }
 
-function loadFancybox() {
-  stellar.loadCSS(stellar.plugins.fancybox.css);
-  stellar.loadScript(stellar.plugins.fancybox.js, { defer: true }).then(function () {
-    Fancybox.bind(selector, {
-      groupAll: true,
-      hideScrollbar: false,
-      Thumbs: {
-        autoStart: false,
-      },
-      caption: function (fancybox, carousel, slide) {
-        return slide.$trigger.alt || null
-      }
-    });
-  })
-}
 // fancybox
 if (stellar.plugins.fancybox) {
-  let selector = 'img[fancybox]:not(.error)';
+  let selector = '[data-fancybox]:not(.error)';
   if (stellar.plugins.fancybox.selector) {
     selector += `, ${stellar.plugins.fancybox.selector}`
   }
@@ -332,16 +317,16 @@ if (stellar.plugins.fancybox) {
     }
   }
   if (needFancybox) {
+    console.log('need fancy', selector, document.querySelectorAll(selector) );
     stellar.loadCSS(stellar.plugins.fancybox.css);
     stellar.loadScript(stellar.plugins.fancybox.js, { defer: true }).then(function () {
       Fancybox.bind(selector, {
-        groupAll: true,
         hideScrollbar: false,
         Thumbs: {
           autoStart: false,
         },
-        caption: function (fancybox, carousel, slide) {
-          return slide.$trigger.alt || null
+        caption: (fancybox, slide) => {
+          return slide.triggerEl.alt || null
         }
       });
     })

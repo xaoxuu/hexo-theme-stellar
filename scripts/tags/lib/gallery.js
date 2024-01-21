@@ -15,9 +15,11 @@
 
 'use strict'
 
+var index = 0
+
 function img(src, alt) {
   let img = ''
-  img += `<img src="${src}"`
+  img += `<img data-fancybox="gallery-${index}" src="${src}"`
   if (alt?.length > 0) {
     img += ` alt="${alt}"`
   }
@@ -44,7 +46,8 @@ module.exports = ctx => function(args, content) {
   if (args.layout == 'flow') {
     layoutType = 'flow'
   }
-  el += `<div class="tag-plugin gallery fancybox ${layoutType}-box" ${ctx.args.joinTags(args, ['size', 'ratio']).join(' ')}>`
+  index += 1
+  el += `<div class="tag-plugin gallery ${layoutType}-box" ${ctx.args.joinTags(args, ['size', 'ratio']).join(' ')}>`
   const img_mds = content.split('\n').filter(item => item.trim().length > 0)
   for (let md of img_mds) {
     const matches = md.match(/\!\[(.*?)\]\((.*?)\)/i)
