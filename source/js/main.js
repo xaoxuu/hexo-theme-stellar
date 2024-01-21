@@ -286,13 +286,7 @@ if (stellar.plugins.swiper) {
 
 // preload
 if (stellar.plugins.preload) {
-  if (stellar.plugins.preload.service == 'instant_page') {
-    stellar.loadScript(stellar.plugins.preload.instant_page, {
-      defer: true,
-      type: 'module',
-      integrity: 'sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1'
-    })
-  } else if (stellar.plugins.preload.service == 'flying_pages') {
+  if (stellar.plugins.preload.service == 'flying_pages') {
     window.FPConfig = {
       delay: 0,
       ignoreKeywords: [],
