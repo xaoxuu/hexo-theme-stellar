@@ -2,6 +2,11 @@
 if (item.filter == null) {
   item.filter = 'auto'
 }
+if (item.placeholder == null && item.filter == 'auto') {
+  if (theme.wiki.tree[page.wiki]?.name) {
+    item.placeholder = __('search.search_in', theme.wiki.tree[page.wiki]?.name) 
+  }
+}
 function layoutDiv() {
   var el = ''
   el += `<div class="search-wrapper" id="search-wrapper">`
