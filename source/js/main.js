@@ -311,7 +311,6 @@ if (stellar.plugins.fancybox) {
     }
   }
   if (needFancybox) {
-    console.log('need fancy', selector, document.querySelectorAll(selector) );
     stellar.loadCSS(stellar.plugins.fancybox.css);
     stellar.loadScript(stellar.plugins.fancybox.js, { defer: true }).then(function () {
       Fancybox.bind(selector, {
