@@ -14,18 +14,6 @@ if (page.logo) {
       subtitle: proj.subtitle
     }
   }
-} else if (theme.topic.tree[page.topic]) {
-  const topic = theme.topic.tree[page.topic]
-  var l = topic.logo
-  if (l) {
-    logo = l
-  } else if (topic.name || topic.icon) {
-    logo = {
-      icon: topic.icon || theme.default.topic,
-      title: `[${topic.name || topic.title}](${url_for(topic.homepage?.path || '')})`,
-      subtitle: topic.subtitle
-    }
-  }
 }
 
 // logo.icon, logo.title, logo.subtitle, logo.url
