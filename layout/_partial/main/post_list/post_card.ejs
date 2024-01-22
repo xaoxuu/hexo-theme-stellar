@@ -71,7 +71,7 @@ function div_default() {
   el += '<span class="cap" id="post-meta">';
   
   // time
-  el += __("meta.created") + '&nbsp;' + '<time datetime="' + date_xml(post.date) + '">' + date(post.date, config.date_format) + '</time>';
+  el += `<time datetime="${date_xml(post.date)}">${date(post.date, config.date_format)}</time>`
   el += '</span>';
   // cat
   if (post.categories && post.categories.length > 0) {
