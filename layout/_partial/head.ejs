@@ -118,11 +118,7 @@ function custom_inject() {
     <%- feed_tag(config.feed.path, {title: config.title}) %>
   <% } %>
 
-  <% if (theme.stellar.cdn_css) { %>
-    <%- css(theme.stellar.cdn_css) %>
-  <% } else { %>
-    <%- css('/css/main.css') %>
-  <% } %>
+  <link rel="stylesheet" href="<%- `${theme.stellar.main_css}?v=${stellar_info('version')}` %>">
 
   <% if (config.favicon) { %>
     <%- favicon_tag(config.favicon) %>

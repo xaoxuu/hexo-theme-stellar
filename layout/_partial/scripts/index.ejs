@@ -166,11 +166,7 @@ function custom_inject() {
 </script>
 
 <!-- required -->
-<% if (theme.stellar.cdn_js) { %>
-  <%- js({src: theme.stellar.cdn_js, async: true}) %>
-<% } else { %>
-  <%- js({src: '/js/main.js', async: true}) %>
-<% } %>
+<script src="<%- `${theme.stellar.main_js}?v=${stellar_info('version')}` %>" async></script>
 
 <!-- optional -->
 <%- partial('../plugins/comments/script') %>
