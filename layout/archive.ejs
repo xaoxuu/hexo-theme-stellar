@@ -17,7 +17,7 @@ function layoutArchiveList() {
   }
   el += `<div class="post-list archives">`
   var years = []
-  const posts = page.author != null ? site.posts.filter(p => (p.author || theme.default_author.name) == page.author.name) : site.posts
+  const posts = page.author != null ? site.posts.filter(p => (p.author || theme.default_author.id) == page.author.id) : site.posts
   posts.sort('date', -1).each(function(post) {
   	post.year = date(post.date, 'YYYY')
   	  if (post.year && (years.includes(post.year) == false) && (post.title || post.date)) {
