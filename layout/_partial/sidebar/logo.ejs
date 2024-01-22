@@ -6,6 +6,9 @@ if (page.logo) {
   const proj = theme.wiki.tree[page.wiki]
   var l = proj.logo
   if (l) {
+    if (l.title.includes('](') == false) {
+      l.title = `[${l.title}](${url_for(proj.homepage?.path || '')})`
+    }
     logo = l
   } else if (proj.name || proj.icon) {
     logo = {
