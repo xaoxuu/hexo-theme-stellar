@@ -1,12 +1,16 @@
 .nav-wrap
-  position: sticky
-  position: -webkit-sticky
-  margin-top: -0.5rem
-  top: -2px
-  background: var(--site-bg)
   padding: 0 1rem
   z-index: 8
-  margin-bottom: 1px
+  top: 0
+  background: var(--site-bg)
+  if hexo-config('style.site') && hexo-config('style.site.background-image')
+    position inherit
+    background: none
+  else 
+    position: sticky
+    position: -webkit-sticky
+    margin-bottom: 1px
+    margin-top: -8px
   &:after
     content: ''
     width: 'calc(100% - 2 * %s)' % 1rem
@@ -25,7 +29,10 @@ nav.cap
     margin: 0
   a
     padding: .25rem 0.75rem
-    margin: 10px 0.25rem 8px 0.25rem
+    if hexo-config('style.site') && hexo-config('style.site.background-image')
+      margin: 10px 0.25rem 8px 0
+    else
+      margin: 10px 0.25rem 8px 0.25rem
     line-height: 2
     color: var(--text-p3)
     border-radius: $border-button

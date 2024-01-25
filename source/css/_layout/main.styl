@@ -17,3 +17,21 @@
   .l_main
     @media screen and (max-width: $device-mobile-max)
       padding-top: 0
+
+body>.sitebg
+  position fixed
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  background-size: cover
+  if hexo-config('style.site') && hexo-config('style.site.background-image')
+    background-image: convert(hexo-config('style.site.background-image'))
+  .siteblur
+    width: 100%
+    height: 100%
+    blur-effect()
+    if hexo-config('style.site') && hexo-config('style.site.blur-px')
+      --blur-px: convert(hexo-config('style.site.blur-px'))
+    if hexo-config('style.site') && hexo-config('style.site.blur-bg')
+      --blur-bg: convert(hexo-config('style.site.blur-bg'))

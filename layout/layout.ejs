@@ -25,10 +25,18 @@ if (page.indent != null) {
   indent = article_type === 'story'
 }
 
+var site_background = ''
+if (theme.style.site && theme.style.site['background-image']) {
+  site_background += `<div class="sitebg">`
+  site_background += `<div class="siteblur"></div>`
+  site_background += `</div>`
+}
+
 var html = `<!DOCTYPE html>`
 html += `<html lang="${page.lang}">`
   html += partial('_partial/head')
   html += `<body>`
+    html += site_background
     html += partial('_partial/cover/index')
     html += `<div class="l_body ${page_type} ${article_type}" id="start" layout="${page.layout}" ${indent ? 'text-indent' : ''}>`
       html += `<aside class="l_left">`

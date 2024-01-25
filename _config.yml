@@ -513,15 +513,20 @@ style:
     search: 'linear-gradient(to right, #04F3FF, #08FFC6, #DDF730, #FFBD19, #FF1FE0, #C418FF, #04F3FF)'
   sidebar:
     # 可以设置：纯色/渐变色/图片作为背景
-    # background: 'linear-gradient(to bottom, #abc3, #abc3)'
-    # background: 'linear-gradient(to bottom, #20E2D744, #F9FEA544)'
-    background: 'url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg)'
-    # 在图片上层增加高斯模糊效果（同时附带饱和度增强效果）
-    blur: true
+    # background: var(--sidebar-bg)
+    # background-image: 'linear-gradient(to bottom, var(--sidebar-bg), var(--sidebar-bg))'
+    background-image: url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg)
+    blur-px: 100px
+    blur-bg: var(--alpha60)
   paginator:
     prev: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/arrow/f049bbd4e88ec.svg
     next: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/arrow/064b95430caf4.svg
   error_page: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg
+  site:
+    background-image: #'url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.14/image/site-bg1@small.webp)' # 未完全适配，慎用
+    blur-px: 100px
+    blur-bg: var(--alpha75)
+
 
 default:
   avatar: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg

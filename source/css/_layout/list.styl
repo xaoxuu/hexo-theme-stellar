@@ -24,11 +24,17 @@
   display: block
   margin: 1rem 0
   border-radius: $border-card
-  box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.02)
+  background: var(--card)
+  @media (prefers-color-scheme: dark)
+    &:hover
+      box-shadow: 0 0 4px -2px $color-theme, 0 0 24px -8px $color-theme
+  @media (prefers-color-scheme: light)
+    box-shadow: $boxshadow-card
+    hover-float()
   trans1 all
   overflow: hidden
   z-index: 0
-  background: var(--card)
+  
   position: relative
   .excerpt
     margin: 1rem 0
@@ -56,11 +62,9 @@
         height: 1.5rem
         color: $c-red
 
-.post-list .post-card:hover
-  img 
-    transform: scale(1.02)
-    filter: brightness(80%)
-
+.post-list.post .post-card:hover
+  img
+    filter: brightness(50%)
 
 // common article
 .post-list .md-text
