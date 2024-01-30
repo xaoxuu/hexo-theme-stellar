@@ -1,6 +1,6 @@
 'use strict';
 
-hexo.extend.helper.register('icon', function(key) {
+hexo.extend.helper.register('icon', function(key, args) {
   const { icons } = hexo.theme.config
   var result = ''
   if (icons[key]) {
@@ -9,7 +9,7 @@ hexo.extend.helper.register('icon', function(key) {
     result = key
   }
   if (result.startsWith('/') || result.startsWith('https://') || result.startsWith('http://')) {
-    return `<img src="${result}" />`
+    return `<img ${args?.length > 0 ? args : ''} src="${result}" />`
   } else {
     return result
   }

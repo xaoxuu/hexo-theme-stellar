@@ -12,13 +12,7 @@ function layoutDiv() {
     }
     el += `>`
     if (item.icon?.length > 0) {
-      if (item.icon.startsWith('<')) {
-        el += item.icon
-      } else if (theme.icons[item.icon]) {
-        el += theme.icons[item.icon]
-      } else {
-        el += `<img no-lazy src="${item.icon}">`
-      }
+      el += icon(item.icon, 'no-lazy')
     } else {
       el += `<span>${__(item.title)}</span>`
     }

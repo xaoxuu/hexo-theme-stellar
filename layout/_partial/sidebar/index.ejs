@@ -115,7 +115,7 @@ function layoutFooterDiv() {
         el += ' onclick="' + item.onclick + '"';
       }
       el += '>';
-      el += item.icon;
+      el += icon(item.icon, 'no-lazy')
       el += '</a>';
     }
   }
