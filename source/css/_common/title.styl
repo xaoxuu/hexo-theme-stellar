@@ -16,14 +16,12 @@ h6
 
 // 次级段落字号
 .fs14
-  font-size: $fs-14
-  p
-    font-size: $fs-14 !important
-  li
-    font-size: $fs-14 !important
-// 脚标字号
-.fs12
-  font-size: $fs-12
+  --fs-p: $fs-14
+  font-size: var(--fs-p)
+
+.footnote
+  --fs-p: $fs-13
+  font-size: var(--fs-p)
 
 .widgets
   .post-title

@@ -28,6 +28,12 @@ function layoutDiv() {
         })
     }
   }
+  const author = theme.authors ? (theme.authors[page.author] || theme.default_author) : null
+  if (author) {
+    el += `<span class="dot"></span>`
+    const link = `<a href="${url_for(author.path)}">${author.name}</a>`
+    el += `<span class="author">${link}</span>`
+  }
   return el
 }
 %>

@@ -470,9 +470,9 @@ style:
   darkmode: auto # auto / always / false
   smooth_scroll: false # true / false 开启时如果目录过长可能无法准确定位
   font-size:
-    root: 16px
-    body: 1rem # 16px 
-    code: 85% # 14px
+    root: 16px # 改这个会影响全局所有文字的字号
+    body: 17px # 影响正文区域的字号，如果改成 px 则不受 root 影响
+    code: 85% # 相较于其所在行的文本大小，建议用百分比
     codeblock: 0.8125rem # 13px
   font-family:
     logo: 'system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif'
@@ -480,6 +480,8 @@ style:
     code: 'Menlo, Monaco, Consolas, system-ui, "Courier New", monospace, sans-serif'
     codeblock: 'Menlo, Monaco, Consolas, system-ui, "Courier New", monospace, sans-serif'
   text-align: left
+  prefix:
+    h2: https://api.iconify.design/ci:heading-h2.svg
   border-radius:
     card: 12px
     block: 12px

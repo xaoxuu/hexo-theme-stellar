@@ -1,24 +1,30 @@
 // 面包屑导航
 .bread-nav
-  padding: 0.25rem 1rem 0
-  color: var(--text-p3)
   font-weight: 500
   display: flex
   justify-content: space-between
   div#breadcrumb
     display: flex
-    align-items: center
+    align-items: baseline
     flex-direction: row
-    &:not([style]) a
-      color: var(--theme-link)
-    &[style] a
-      color: inherit
-    span.sep
-      color: var(--text-p3)
-    a.cap:hover
-      color: $color-hover
+  a
+    color: var(--text-banner)
+    padding: 4px
+    border-radius: 2px
+  span 
+    color: var(--text-banner)
+  span.sep
+    opacity 0.5
+    margin: 0
+  span.dot:before
+    opacity 0.5
+    margin: 0 8px
+
+  a:hover
+    background: var(--hover-bg)
   div#post-meta
-    margin-top: 2px
+    padding: 4px
+    color: var(--text-banner)
     span.updated
       visibility: hidden
   &:hover
@@ -35,15 +41,13 @@
   a  
     display: flex
     align-items: center
-    color: var(--text-p2)
+    color: var(--text-banner)
     svg
       margin-right: 4px
     &.bold 
       font-weight: 600
-      color: var(--text-p1)
+      color: var(--text-banner)
     span 
       margin-left: 4px
     &:hover
-      color: var(--theme-link)
-  a+a   
-    margin-top: 8px
+      opacity 1

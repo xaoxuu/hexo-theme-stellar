@@ -1,0 +1,54 @@
+<%
+
+var banner_url = page.banner || ''
+
+function layoutTitle() {
+  const title = page.h1 != null ? page.h1 : page.title
+  if (title && title.length > 0) {
+    return `<h1 class="text title"><span>${title}</span></h1>`
+  } else {
+    return ''
+  }
+}
+
+function layoutBottom() {
+  const article_title = layoutTitle()
+  if (article_title.length > 0) {
+    return `
+    <div class="bottom">
+      <div class="text-area">
+        ${article_title}
+      </div>
+    </div>
+    `
+  } else {
+    return ``
+  }
+}
+
+function layoutDiv() {
+  const top = partial('article_top_area')
+  const bottom = layoutBottom()
+  if (top.trim().length == 0 && bottom.length == 0) {
+    return ``
+  }
+  var el = ``
+  el += `<div class="article banner top">`
+  if (banner_url.length > 0) {
+    el += `<img class="bg" src="${banner_url}">`
+  }
+  var style = ``
+  if (page.poster?.color) {
+    style += ' style="--text-banner:' + page.poster?.color + '"'
+  }
+  el += `
+  <div class="content"${style}>
+    ${top}
+    ${bottom}
+  </div>
+  `
+  el += `</div>`
+  return el
+}
+%>
+<%- layoutDiv() %>

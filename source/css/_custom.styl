@@ -65,10 +65,12 @@ $border-button = 4px
 :root
   --width-left: 288px
   --width-main: 720px
-  --fs-p: $fs-body
+  --fs-body: $fs-body
+  --fs-p: var(--fs-body)
+  --fs-p2: 'calc(%s * 0.9)' % $fs-body
   --gap-l: 16px
-  --gap-p: 1rem // gap for paragraph
-  --gap-p-compact: 0.75rem
+  --gap-p: 'calc(%s + 4px)' % $fs-body // gap for paragraph
+  --gap-p-compact: 'calc(%s * 0.75)' % $fs-body
   // desktop 2k or larger
   @media screen and (min-width: $device-2k)
     --gap-l: 32px

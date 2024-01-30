@@ -1,0 +1,23 @@
+.article.banner
+  --text-banner: var(--text-p0)
+  --hover-bg: rgba(black, 0.08)
+  background: var(--block)
+  margin: 0
+  height: unset
+
+.article.banner
+  .bg+.content
+    --text-banner: white
+    --hover-bg: rgba(white, 0.2)
+    background: rgba(black, 0.1)
+
+.article.banner .content
+  .top
+    align-items: flex-start
+    margin: 1rem 'calc(1rem - 4px)'
+  .title
+    font-size: $fs-h1
+    color: var(--text-banner)
+  h1
+    line-height: 1.2
+    margin: 0

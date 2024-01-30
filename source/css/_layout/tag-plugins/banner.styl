@@ -1,4 +1,4 @@
-.tag-plugin.banner
+.banner
   border-radius: $border-card
   position: relative
   overflow: hidden
@@ -82,25 +82,26 @@
     padding: 1rem
     width: 100%
     box-sizing: border-box
-    .title
-      font-size: 1.5rem
-      font-weight: 600
-    .avatar+.text-area
-      margin-left: 0.75rem
-    .text-area .text
-      line-height: 1.2
-      margin-top: 0.25rem
-      margin-bottom: 0.25rem
-    .avatar+.text-area .title
-      font-size: 1.2rem
-    .subtitle
-      font-size: $fs-14
+  .title
+    font-size: 1.5rem
+    font-weight: 600
+  .avatar+.text-area
+    margin-left: 0.75rem
+  .text-area .text
+    line-height: 1.2
+    margin-top: 0.25rem
+    margin-bottom: 0.25rem
+  .avatar+.text-area .title
+    font-size: 1.2rem
+  .subtitle
+    font-size: $fs-14
   .content:only-child
     color: var(--text-p1)
   .bg+.content 
     color: white
     .avatar
       border: 2px solid white
+      margin: 0
     .bottom
       background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0.2))
       text-shadow: 0 0 1px rgba(0,0,0,0.12)
@@ -114,10 +115,13 @@
 .tag-plugin.banner .navbar a.active
   blur-effect()
 
-
-.tag-plugin.banner.author
-  @media screen and (min-width: $device-mobile-max)
+@media screen and (min-width: $device-mobile-max)
+  .banner.author.top
     margin-left: var(--gap-l)
     margin-right: var(--gap-l)
-  @media screen and (max-width: $device-mobile-max)
+  
+@media screen and (max-width: $device-mobile-max)
+  .banner.top
     border-radius: 0
+  .md-text.content .tag-plugin.banner:first-child
+    margin-top: 1rem

@@ -22,15 +22,6 @@ if (page.title == null) {
   }
 }
 
-function layoutTitle() {
-  const title = page.h1 != null ? page.h1 : page.title
-  if (title && title.length > 0) {
-    return `<h1 class="article-title"><span>${title}</span></h1>`
-  } else {
-    return ''
-  }
-}
-
 function articleClass() {
   var str = `md-text content${scrollreveal(' ')}`
   if (isUsingHeti) {
@@ -48,10 +39,9 @@ function layoutDiv() {
     el += partial('_partial/main/navbar/nav_tabs_blog')
   }
   if (page.h1 || page.title || (page.content && page.content.length > 0)) {
-    el += partial('_partial/main/navbar/article_top_area')
+    el += partial('_partial/main/navbar/article_banner')
   }
   el += `<article class="${articleClass()}">`
-  el += layoutTitle()
   if (page.content && page.content.length > 0) {
     el += page.content
   }

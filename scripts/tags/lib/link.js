@@ -45,10 +45,10 @@ module.exports = ctx => function(args) {
     return '<span class="title">' + (args.title || args.url) + '</span>'
   }
   function loadDesc() {
-    return '<span class="cap desc fs12"></span>'
+    return '<span class="cap desc footnote"></span>'
   }
   function loadLink() {
-    return '<span class="cap link fs12">' + full_url_for(args.url) + '</span>'
+    return '<span class="cap link footnote">' + full_url_for(args.url) + '</span>'
   }
 
   if (args.desc) {
