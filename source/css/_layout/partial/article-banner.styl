@@ -1,6 +1,6 @@
 .article.banner
   --text-banner: var(--text-p0)
-  --hover-bg: rgba(black, 0.08)
+  --button-hover-bg: rgba(black, 0.08)
   background: var(--block)
   margin: 0
   height: unset
@@ -8,7 +8,7 @@
 .article.banner
   .bg+.content
     --text-banner: white
-    --hover-bg: rgba(white, 0.2)
+    --button-hover-bg: rgba(white, 0.2)
     background: rgba(black, 0.1)
 
 .article.banner .content
@@ -18,6 +18,29 @@
   .title
     font-size: $fs-h1
     color: var(--text-banner)
+  .bottom
+    padding: 1.5rem 1rem
   h1
     line-height: 1.2
     margin: 0
+  
+  
+  
+
+// 动画配置
+.article.banner
+  .bg+.content
+    trans1 all
+    --blur-bg: rgba(black, 0.1)
+    --blur-px: 0px
+    --blur-sat: 100%
+    background: var(--blur-bg)
+    @supports ((-webkit-backdrop-filter:blur(var(--blur-px))) or (backdrop-filter:blur(var(--blur-px))))
+      background: var(--blur-bg)
+      backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
+      -webkit-backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
+  &:hover
+    .bg+.content
+      --blur-bg: rgba(black, 0.2)
+      --blur-px: 20px
+      --blur-sat: 150%

@@ -2,19 +2,24 @@
 function layoutDiv() {
   // 作者
   var el = ''
-  el += `<div id="post-meta">`
+  el += `<div class="flex-row" id="post-meta">`
   if (page.wiki) {
-    el += `<span class="created">${__("meta.updated") + __("symbol.colon")}</span>`
+    el += `<span class="text created">${__("meta.updated") + __("symbol.colon")}`
     el += `<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time>`
     el += `</span>`
   } else {
+    const author = theme.authors ? (theme.authors[page.author] || theme.default_author) : null
+    if (author) {
+      el += `<a class="author" href="${url_for(author.path)}">${author.name}</a>`
+      el += `<span class="sep"></span>`
+    }
     // 发布日期
-    el += `<span class="created">${__("meta.created") + __("symbol.colon")}</span>`
+    el += `<span class="text created">${__("meta.created") + __("symbol.colon")}`
     el += `<time datetime="${date_xml(page.date)}">${date(page.date, config.date_format)}</time>`
     el += `</span>`
     // 更新日期
-    el += `<span class="updated">`
-    el += `<span class="dot"></span>`
+    el += `<span class="sep updated"></span>`
+    el += `<span class="text updated">`
     el += `${__("meta.updated") + __("symbol.colon")}`
     el += `<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time>`
     el += `</span>`

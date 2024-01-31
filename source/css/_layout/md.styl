@@ -116,35 +116,13 @@
 .md-text 
   p:not([class]), li:not([class])
     a:not([class])
-      position: relative
-      padding: 2px 0
-      text-decoration: none
-      line-height: 1.2
-      &:before
-        content: ''
-        position: absolute
-        border-radius: 2px
-        bottom: 0
-        left: 0
-        right: 0
-        height: 1px
-        if hexo-config('style.link.underline') == true
-          opacity: 0.8
-        else
-          opacity: 0
-        background: var(--theme-link)
-        trans1: all
+      padding: 0 2px
+      margin: 0 -2px
+      border-radius: 2px
+      trans1 all
+      text-decoration: underline
       &:hover
-        border-bottom: none
-        color: var(--theme-link)
-        z-index 0
-        &:before
-          height: 100%
-          opacity: 0.2
-          z-index -1
-          bottom: 0
-          left: -2px
-          right: -2px
+        color: $color-hover
       &:has(img)
-        &:before
-          content: none
+        text-decoration: none
+        padding: 0

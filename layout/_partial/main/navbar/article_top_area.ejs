@@ -9,7 +9,7 @@ function layoutDiv() {
   // 2.left
   el += `<div class="left">`
   // 3.left.top: 面包屑导航
-  el += `<div id="breadcrumb">`
+  el += `<div class="flex-row" id="breadcrumb">`
     // 首页
     el += `<a class="cap breadcrumb" href="${url_for(config.root)}">${__("btn.home")}</a>`
     if (theme.wiki.tree[page.wiki]) {

@@ -32,14 +32,14 @@ function layoutDiv() {
   if (top.trim().length == 0 && bottom.length == 0) {
     return ``
   }
+  var style = ``
   var el = ``
   el += `<div class="article banner top">`
   if (banner_url.length > 0) {
     el += `<img class="bg" src="${banner_url}">`
-  }
-  var style = ``
-  if (page.poster?.color) {
-    style += ' style="--text-banner:' + page.poster?.color + '"'
+    if (page.poster?.color) {
+      style += ' style="--text-banner:' + page.poster?.color + '"'
+    }
   }
   el += `
   <div class="content"${style}>

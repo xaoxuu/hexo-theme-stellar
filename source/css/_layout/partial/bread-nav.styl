@@ -3,7 +3,8 @@
   font-weight: 500
   display: flex
   justify-content: space-between
-  div#breadcrumb
+  color: var(--text-banner)
+  .flex-row
     display: flex
     align-items: baseline
     flex-direction: row
@@ -11,20 +12,19 @@
     color: var(--text-banner)
     padding: 4px
     border-radius: 2px
+    &:hover
+      background: var(--button-hover-bg)
   span 
     color: var(--text-banner)
   span.sep
     opacity 0.5
     margin: 0
-  span.dot:before
-    opacity 0.5
-    margin: 0 8px
-
-  a:hover
-    background: var(--hover-bg)
-  div#post-meta
+  span.text
     padding: 4px
-    color: var(--text-banner)
+
+  div#post-meta
+    span.sep:before
+      content: '|'
     span.updated
       visibility: hidden
   &:hover
