@@ -122,7 +122,7 @@ function layoutDiv() {
     function qrcode() {
       if (theme.article.share.includes('wechat')) {
         return `
-        <div class="qrcode" id="qrcode-wechat" style="visibility:hidden;height:0">
+        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${page.permalink}"/>
         </div>
         `

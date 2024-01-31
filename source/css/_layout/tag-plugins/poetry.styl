@@ -5,11 +5,11 @@
   .content
     >.title
       font-weight: 500
-      font-size: 1rem
       margin-top: var(--gap-p)
     >.meta
       color: var(--text-p2)
-      font-size: $fs-12
+      --fsp: var(--fsp3)
+      font-size: var(--fsp)
       font-weight: 500
       span+span
         margin-left: 4px
@@ -17,13 +17,13 @@
       margin: var(--gap-p) 0
       border-top: 1px dashed var(--block-border)
       border-bottom: 1px dashed var(--block-border)
-      p
-        font-size: $fs-14
+      line-height: 2
     >.footer
       font-style: italic
       color: var(--text-p4)
       margin: var(--gap-p) 0
-      font-size: $fs-12
+      --fsp: var(--fsp3)
+      font-size: var(--fsp)
 
 // 描边修饰
 .md-text .tag-plugin.poetry .content

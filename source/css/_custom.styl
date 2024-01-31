@@ -66,8 +66,10 @@ $border-button = 4px
   --width-left: 288px
   --width-main: 720px
   --fs-body: $fs-body
-  --fs-p: var(--fs-body)
-  --fs-p2: 'calc(%s * 0.9)' % $fs-body
+  --fsp: var(--fs-body)
+  --fsp1: 'calc(%s - 1px)' % var(--fsp)
+  --fsp2: 'calc(%s - 2px)' % var(--fsp)
+  --fsp3: 'calc(%s - 3px)' % var(--fsp)
   --gap-l: 16px
   --gap-p: 'calc(%s + 4px)' % $fs-body // gap for paragraph
   --gap-p-compact: 'calc(%s * 0.75)' % $fs-body
@@ -89,7 +91,7 @@ $border-button = 4px
 
 // 文章布局风格
 .l_body.story
-  --fs-p: 'calc(%s + 2px)' % $fs-body
+  --fsp: 'calc(%s + 2px)' % $fs-body
   --gap-p: 1.5rem
   .tag-plugin,p>img
     margin-top: 2.4rem

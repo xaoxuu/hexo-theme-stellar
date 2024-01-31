@@ -11,7 +11,7 @@
     line-height: 1.2
     font-size: $fs-h3
     border-bottom: none
-    color: var(--text-p0)
+    color: var(--text)
     trans1 color
     @media screen and (max-width: $device-mobile)
       font-size: $fs-h4
@@ -106,7 +106,8 @@
       position: absolute
       line-height: 1.2
       width: 'calc(100% - %s * 2)' % 1rem
-      color: var(--text-p0)
+      --text-banner: white
+      color: var(--text-banner)
       &[position=top]
         top: 0
         background-image: linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0))

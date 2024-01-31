@@ -11,7 +11,8 @@ details.folding
     margin: -1rem
     color: var(--text-p2)
     font-weight: 500
-    font-size: $fs-14
+    --fsp: var(--fsp2)
+    font-size: var(--fsp)
     position: relative
     line-height: 1.2
     outline: none
@@ -22,7 +23,7 @@ details.folding
         display: inline
         border-bottom: none !important
     &:hover
-      color: var(--text-p0)
+      color: var(--text)
     &:after
       position: absolute
       content: '+'
@@ -44,6 +45,7 @@ details.folding[open]
     padding: 0 1rem 1rem
     margin: 0 -1rem -1rem
     color: var(--text-p1)
+    --fsp: var(--fsp1)
     >:first-child
       margin-top: 1rem
     >:last-child

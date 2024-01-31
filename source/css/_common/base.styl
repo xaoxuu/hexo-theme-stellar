@@ -25,7 +25,8 @@ img
 
 
 li
-  font-size: var(--fs-p)
+  --fsp: var(--fsp1)
+  font-size: var(--fsp)
 
 
 ul,ol
@@ -40,7 +41,8 @@ table:not([class])
   margin: 1rem 0
   max-width: 100%
   vertical-align: text-top
-  font-size: $fs-14
+  --fsp: var(--fsp2)
+  font-size: var(--fsp)
   th
     background: var(--block)
   td,th

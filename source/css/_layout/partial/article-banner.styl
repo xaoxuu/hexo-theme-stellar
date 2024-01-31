@@ -1,15 +1,14 @@
 .article.banner
-  --text-banner: var(--text-p0)
-  --button-hover-bg: rgba(black, 0.08)
+  --text-banner: var(--text)
   background: var(--block)
   margin: 0
   height: unset
 
 .article.banner
   .bg+.content
+    min-height: 240px
     --text-banner: white
-    --button-hover-bg: rgba(white, 0.2)
-    background: rgba(black, 0.1)
+    --button-hover-bg: rgba(white, 0.25)
 
 .article.banner .content
   .top
@@ -41,6 +40,18 @@
       -webkit-backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
   &:hover
     .bg+.content
-      --blur-bg: rgba(black, 0.2)
+      --blur-bg: rgba(black, 0.1)
       --blur-px: 20px
       --blur-sat: 150%
+
+.article.banner
+  --button-hover-bg: rgba(black, 0.05)
+set_darkmode()
+  .article.banner
+    --button-hover-bg: rgba(white, 0.15)
+
+if hexo-config('style.darkmode') == 'auto'
+  @media (prefers-color-scheme: dark)
+    set_darkmode()
+if hexo-config('style.darkmode') == 'always'
+  set_darkmode()

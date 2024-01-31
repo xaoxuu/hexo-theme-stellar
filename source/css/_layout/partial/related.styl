@@ -31,7 +31,8 @@ article.md-text.content+.related-wrap
     .title
       color: var(--text-p1)
       font-weight: 500
-      font-size: 1rem
+      --fsp: var(--fsp1)
+      font-size: var(--fsp)
       trans2 color border
       position: relative
       padding-bottom: 2px
@@ -39,7 +40,8 @@ article.md-text.content+.related-wrap
       line-height: 1.6
     .excerpt
       color: var(--text-p3)
-      font-size: $fs-12
+      --fsp: var(--fsp3)
+      font-size: var(--fsp)
       margin-top: 0.5rem
       display: -webkit-box
       -webkit-box-orient: vertical
@@ -65,7 +67,7 @@ article.md-text.content+.related-wrap
       padding: 1rem 0
     .note
       margin-bottom: 0.75rem
-      font-size: $fs-12
+      font-size: $fs-13
       color: var(--text-p4)
       font-weight: 500
     a

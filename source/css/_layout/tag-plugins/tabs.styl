@@ -42,7 +42,8 @@
         display: block
         cursor: pointer
         padding: .25rem .75rem
-        font-size: $fs-13
+        --fsp: var(--fsp3)
+        font-size: var(--fsp)
         line-height: inherit
         font-weight: 500
         color: var(--text-p3)
@@ -83,6 +84,6 @@
     width: 100%
 
 .l_body[text-indent] .md-text .tag-plugin.tabs .tab-content .tab-pane>p:not([class])
-  text-indent: 'calc(%s * 2)' % var(--fs-p)
+  text-indent: 'calc(%s * 2)' % var(--fsp)
   a
     text-indent: 0

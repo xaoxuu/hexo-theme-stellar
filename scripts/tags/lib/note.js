@@ -24,7 +24,7 @@ module.exports = ctx => function(args) {
   el += '>'
   // title
   if (title && title.length > 0) {
-    el += '<div class="title">' + title + '</div>'
+    el += `<div class="title">${title}</div>`
   }
   // content
   el += '<div class="body">'

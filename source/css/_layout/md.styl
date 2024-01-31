@@ -21,7 +21,7 @@
 
 .l_body[text-indent] .md-text.content
   >p
-    text-indent: 'calc(%s * 2)' % var(--fs-p)
+    text-indent: 'calc(%s * 2)' % var(--fsp)
     text-align: convert(hexo-config('style.text-align'))
   h1,h2,h3,h4,h5,h6
     text-align: center
@@ -37,7 +37,8 @@
     margin: 0
   blockquote,ul,ol
     p,ul,ol
-      font-size: var(--fs-p2)
+      --fsp: var(--fsp1)
+      font-size: var(--fsp)
       line-height: 1.5
       code 
         font-size: inherit
@@ -59,7 +60,7 @@
 .md-text.content
   h1,h2,h3,h4,h5,h6
     margin-bottom: var(--gap-p)
-    color: var(--text-p0)
+    color: var(--text)
     line-height: 1.8
   blockquote, .tag-plugin
     h2,h3,h4,h5,h6
@@ -78,10 +79,12 @@
     color: white
     font-weight: 700
     padding: 0 2px
+    font-size: $fs-12
   h2
     margin-top: 'calc(%s + 1rem)' % var(--gap-p)
-    border-bottom: 1px solid var(--block-border)
     font-weight: 400
+    a.headerlink:before
+      content: ':'
   h3
     margin-top: 'calc(%s + 0.75rem)' % var(--gap-p)
     font-weight: 400
@@ -93,7 +96,7 @@
   margin-top: 0
 
 .md-text p
-  font-size: var(--fs-p)
+  font-size: var(--fsp)
 
 .md-text pre
   -webkit-font-smoothing: auto

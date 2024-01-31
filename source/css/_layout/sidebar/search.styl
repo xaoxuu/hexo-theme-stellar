@@ -12,7 +12,7 @@
     transition: 0.38s ease-out
     z-index: 0
     border-radius: $border-bar
-    color: var(--text-p0)
+    color: var(--text)
     background: var(--alpha50)
     &:has(input:focus)
       background: var(--alpha100)
@@ -23,7 +23,7 @@
     font-family: $ff-body
     font-size: $fs-13
     padding: 12px 0
-    color: var(--text-p0)
+    color: var(--text)
   .search-button 
     border-radius: $border-bar
     line-height: 40px
@@ -80,6 +80,7 @@
     .search-result-title
       color: var(--text-p1)
       font-weight: 700
+      font-size: $fs-15
 
     .search-result-content
       overflow: hidden
@@ -87,7 +88,7 @@
       margin: 4px 0 0
       max-height: 13em
       text-align: justify
-      font-size: $fs-12
+      font-size: $fs-13
       display: -webkit-box
       -webkit-box-orient: vertical
       overflow: hidden
