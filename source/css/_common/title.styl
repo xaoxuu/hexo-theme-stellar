@@ -1,18 +1,19 @@
 h1,.h1
-  font-size: $fs-h1
+  font-size: var(--fsh2)
   font-weight: 700
   @media screen and (max-width: $device-mobile)
-    font-size: $fs-h1
+    font-size: var(--fsh2)
 h2,.h2
-  font-size: $fs-h2
+  font-size: var(--fsh2)
+  margin-top: 1.5em
 h3,.h3
-  font-size: $fs-h3
+  font-size: var(--fsh3)
 h4,.h4
-  font-size: $fs-h4
+  font-size: var(--fsh4)
 h5
-  font-size: $fs-h5
+  font-size: 'calc(%s + 1px)' % var(--fsp)
 h6
-  font-size: $fs-h6
+  font-size: 'calc(%s + 0px)' % var(--fsp)
 
 // 次级段落字号
 .fs15

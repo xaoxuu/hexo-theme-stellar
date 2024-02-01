@@ -18,29 +18,31 @@
       background: var(--alpha100)
   .search-input
     width: 100%
-    line-height: 16px
     box-sizing: border-box
     font-family: $ff-body
-    font-size: $fs-13
+    font-size: $fs-14
     padding: 12px 0
     color: var(--text)
   .search-button 
     border-radius: $border-bar
-    line-height: 40px
-  .search-icon
-    width: 44px
-    margin-left: 4px
-    color: var(--text-p2)
-    margin-bottom: 2px
-    path[p-id="1562"]
-      color: $color-theme
+    display: flex
+    align-items: center
+    height: 40px
+    svg
+      width: 44px
+      margin-left: 4px
+      color: var(--text-p2)
+      font-size: 16px
+      margin-top: 1px
+      path[p-id="1562"]
+        color: $color-theme
     
   &[searching='true']
-    .search-icon
+    .search-button
       path[p-id="1562"]
         color: $c-green
   &.noresult[searching='true']
-    .search-icon
+    .search-button
       path[p-id="1562"]
         color: $c-red
 

@@ -44,16 +44,19 @@ $fs-14 = .875rem
 $fs-13 = .8125rem
 $fs-12 = .75rem
 
-$fs-h1   = 2rem   // 32px
-$fs-h2   = 1.75rem    // 28px
-$fs-h3   = 1.375rem  // 22px
-$fs-h4   = 1.125rem  // 18px
-$fs-h5   = $fs-15
-$fs-h6   = $fs-12
 $fs-body = convert(hexo-config('style.font-size.body'))
 $fs-code = convert(hexo-config('style.font-size.code'))
 $fs-codeblock = convert(hexo-config('style.font-size.codeblock'))
 
+$fsh1 = 'calc(%s + 11px)' % $fs-body
+$fsh2 = 'calc(%s + 11px)' % $fs-body
+$fsh3 = 'calc(%s + 7px)' % $fs-body
+$fsh4 = 'calc(%s + 4px)' % $fs-body
+
+$fsp0 = 'calc(%s - 0px)' % $fs-body
+$fsp1 = 'calc(%s - 1px)' % $fs-body
+$fsp2 = 'calc(%s - 2px)' % $fs-body
+$fsp3 = 'calc(%s - 3px)' % $fs-body
 
 $border-card = convert(hexo-config('style.border-radius.card'))
 $border-block = convert(hexo-config('style.border-radius.block'))
@@ -65,11 +68,11 @@ $border-button = 4px
 :root
   --width-left: 288px
   --width-main: 720px
-  --fs-body: $fs-body
-  --fsp: var(--fs-body)
-  --fsp1: 'calc(%s - 1px)' % var(--fsp)
-  --fsp2: 'calc(%s - 2px)' % var(--fsp)
-  --fsp3: 'calc(%s - 3px)' % var(--fsp)
+  --fsp: $fs-body
+  --fsh2: 'calc(%s + 11px)' % var(--fsp)
+  --fsh3: 'calc(%s + 7px)' % var(--fsp)
+  --fsh4: 'calc(%s + 4px)' % var(--fsp)
+  
   --gap-l: 16px
   --gap-p: 'calc(%s + 4px)' % $fs-body // gap for paragraph
   --gap-p-compact: 'calc(%s * 0.75)' % $fs-body

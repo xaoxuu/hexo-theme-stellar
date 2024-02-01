@@ -3,17 +3,17 @@
   align-items: center
   display: flex
   flex-direction: column
-  
+  --gap-p: 2rem
   .content
     display: flex
     align-items: center
     border-bottom: none
     font-weight: 700
-    padding: 16px 24px
+    padding: 0 24px
     a.headerlink
       display: none
     @media screen and (max-width: $device-mobile)
-      padding: 12px 20px
+      padding: 0 20px
     line-height: 1.2
 
 .md-text .tag-plugin.quot .content
@@ -21,18 +21,16 @@
   position: relative
 // override
 .md-text.content .tag-plugin.quot
-  h1
-    font-size: $fs-h1
+  h1,h2
+    font-size: $fsh2
     font-weight: 900
-    padding: 20px 32px 12px 32px
+    padding: 4px 32px 0
     @media screen and (max-width: $device-mobile)
-      padding: 20px 24px 12px
-  h2,h3,h4,h5,h6
-    font-size: $fs-h3
-    margin-top: 1em
-    margin-bottom: 0
+      padding: 4px 24px 0
+  h3,h4,h5,h6
+    font-size: $fsh3
   p
-    font-size: $fs-h4
+    --fsp: $fsh4
     color: var(--text)
 
 // type=text
@@ -44,13 +42,13 @@
       width: 8px
       height: 14px
     &:before
-      top: 8px
+      top: -8px
       left: 0
       border-top: 6px solid $color-accent
       border-left: 6px solid $color-accent
     &:after
       right: 0
-      bottom: 8px
+      bottom: -8px
       border-right: 6px solid $color-accent
       border-bottom: 6px solid $color-accent
   h1.content[type=text]

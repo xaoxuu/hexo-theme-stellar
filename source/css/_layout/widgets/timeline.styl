@@ -1,6 +1,15 @@
 .widget-wrapper.timeline 
   .widget-body
     margin-top: 0.5rem
+  .body
+    a
+      trans1 all
+      border-bottom: 1px solid var(--text)
+      color: var(--text-p1)
+      --fsp: $fsp2
+      &:hover
+        color: $color-hover
+        border-bottom: 1px solid $color-hover
   .tag-plugin.timeline .timenode
     .header
       margin: 0.5rem 16px
@@ -20,14 +29,8 @@
       border-radius: $border-card
       background: var(--alpha50)
       box-shadow: none
-
-      a
-        trans1 all
-        border-bottom: 1px solid var(--text)
-        color: var(--text-p1)
-        &:hover
-          color: $color-hover
-          border-bottom: 1px solid $color-hover
+      p,li
+        --fsp: $fsp3
       code 
         background: none
         padding: 0

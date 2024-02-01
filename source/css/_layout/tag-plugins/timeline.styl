@@ -1,6 +1,5 @@
 .md-text .tag-plugin.timeline
   position: relative
-  margin-top: 0
   padding-left: 16px
   &:before
     content: ''
@@ -102,7 +101,7 @@
   margin-top: 4px
   box-shadow: $boxshadow-block
   p
-    --fsp: var(--fsp1)
+    --fsp: $fsp1
     img  
       display: block
   &:empty
@@ -123,7 +122,7 @@
     color: var(--text-p1)
     line-height: 1.25
     padding: 0.75rem 1rem
-    --fsp: var(--fsp1)
+    --fsp: $fsp1
     font-size: var(--fsp)
 
 
@@ -142,7 +141,7 @@
       trans1 all
       &:hover
         border-bottom: 2px solid $color-hover
-  p:first-child:not([class]) a:not([class])
+  >p:first-child:not([class]) a:not([class])
     padding: 0
     margin: 0
     color: inherit
@@ -205,7 +204,7 @@
   padding: 0 0.5rem
   margin: 0.75rem 0
   p
-    --fsp: var(--fsp2)
+    --fsp: $fsp2
     margin: 0.25rem
 
 .tag-plugin.timeline .body
