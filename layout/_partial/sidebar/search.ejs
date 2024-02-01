@@ -24,9 +24,9 @@ function layoutDiv() {
       filter = item.filter
     }
   }
-  el += `<a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();">`
+  el += `<div class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();">`
   el += icon('default:search')
-  el += `</a>`
+  el += `</div>`
   el += `<input type="text" class="search-input" id="search-input"`
   if (filter.length > 0) {
     if (!filter.startsWith('/')) {
