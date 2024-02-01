@@ -46,20 +46,26 @@
         margin: 0.5rem 0
       line-height: 1.5
   .meta.cap
-    display: flex
+    &,span
+      display: flex
+      align-items: center
     flex-wrap: wrap
-    align-items: center
-    margin: 0.25rem 0
-    line-height: 1.5
-    span+span
-      margin-left: 0.5rem
-    span.pin
+    margin: 0
+    line-height: 2
+    --fsp: var(--fsp1)
+    font-size: var(--fsp)
+    svg
+      height: 1em
+      width: auto
       line-height: 0
+      transform: scale(1.2)
+      margin-right: 8px
+    >span+span
+      margin-left: 1.5rem
+    span.pin
       img
         object-fit: contain
-        height: 1.5em
       svg
-        height: 1.5rem
         color: $c-red
 
 .post-list.post .post-card:hover

@@ -15,6 +15,9 @@ function layoutDiv() {
     }
     // 发布日期
     el += `<span class="text created">`
+    if (!author) {
+      el += `${__("meta.created") + __("symbol.colon")}`
+    }
     el += `<time datetime="${date_xml(page.date)}">${date(page.date, config.date_format)}</time>`
     el += `</span>`
     // 更新日期

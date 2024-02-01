@@ -10,7 +10,7 @@ function relatedPostsInTopic() {
   var el = ''
   el += `<widget class="widget-wrapper${scrollreveal(' ')} post-list">`
   el += `<div class="widget-header dis-select">`
-  el += `<span class="name">${__('btn.topic') + __('symbol.colon') + topic.name}</span>`
+  el += `<span class="name">${__('btn.topic') + __('symbol.colon') + (topic.name || topic.title)}</span>`
   el += `</div>`
   el += `<div class="widget-body">`
   for (let post of topic.pages) {
