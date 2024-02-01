@@ -17,7 +17,7 @@ function generate_title() {
       return __('btn.tag') + __('symbol.colon') + page.tag + ' - ' + config.title;
     }
   }
-  return config.title;
+  return config.title + ' | ' + config.subtitle;
 }
 function generate_description() {
   if (theme.open_graph && theme.open_graph.enable) {
