@@ -50,9 +50,9 @@ const sitesjs = {
       for (let item of data.content) {
         var cell = `<div class="grid-cell site-card">`;
         cell += `<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="${item.url}">`;
-        cell += `<img src="${item.cover || item.screenshot}" onerror="javascript:this.removeAttribute(\'data-src\');this.src=\'${cfg.screenshot}\';"/>`;
+        cell += `<img src="${item.cover || item.screenshot}" onerror="javascript:this.removeAttribute(\'data-src\');this.src=\'${cfg.screenshot}\';" alt=""/>`;
         cell += `<div class="info">`;
-        cell += `<img src="${item.icon || item.avatar || cfg.avatar}" onerror="javascript:this.removeAttribute(\'data-src\');this.src=\'${cfg.avatar}\';"/>`;
+        cell += `<img src="${item.icon || item.avatar || cfg.avatar}" onerror="javascript:this.removeAttribute(\'data-src\');this.src=\'${cfg.avatar}\';" alt=""/>`;
         cell += `<span class="title">${item.title}</span>`;
         cell += `<span class="desc">${item.description || item.url}</span>`;
         cell += `</div>`;

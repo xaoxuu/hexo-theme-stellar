@@ -50,7 +50,7 @@ const friendsjs = {
       for (let item of (data.content || data)) {
         var cell = `<div class="grid-cell user-card">`;
         cell += `<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="${item.html_url || item.url}">`;;
-        cell += `<img src="${item.avatar_url || item.avatar || item.icon || cfg.avatar}" onerror="javascript:this.removeAttribute(\'data-src\');this.src=\'${cfg.avatar}\';"/>`;
+        cell += `<img alt="" src="${item.avatar_url || item.avatar || item.icon || cfg.avatar}" onerror="javascript:this.removeAttribute(\'data-src\');this.src=\'${cfg.avatar}\';"/>`;
         cell += `<div class="name image-meta">`;
         cell += `<span class="image-caption">${item.title || item.login}</span>`;
         cell += `</div>`;

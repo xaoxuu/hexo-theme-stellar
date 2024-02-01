@@ -22,7 +22,7 @@ function layoutWikiCover() {
   el += '<article class="cover-wrap md-text">';
 
   if (cover?.length > 0 && coverpage.includes('cover')) {
-    el += `<div class="preview cover"><img src="${cover}"/></div>`
+    el += `<div class="preview cover"><img src="${cover}" alt=""/></div>`
   }
   if (title && coverpage.includes('title')) {
     el += '<div class="cover-title">';

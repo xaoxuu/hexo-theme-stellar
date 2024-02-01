@@ -14,7 +14,7 @@ module.exports = ctx => function(args, content) {
   var el = ''
   el += `<div class="tag-plugin banner">`
   // bg
-  el += `<img class="bg" src="${args.bg ? args.bg : ctx.theme.config.default.banner}">`
+  el += `<img class="bg" src="${args.bg ? args.bg : ctx.theme.config.default.banner}" alt="">`
   // content
   el += `<div class="content">`
   // content.top
@@ -43,7 +43,7 @@ module.exports = ctx => function(args, content) {
   el += `<div class="bottom">`
   // content.bottom.avatar
   if (args.avatar?.length > 0) {
-    el += `<img class="avatar" src="${args.avatar}">`
+    el += `<img class="avatar" src="${args.avatar}" alt="">`
   }
   // content.bottom.text-area
   if (args.title?.length > 0 || args.subtitle?.length > 0) {

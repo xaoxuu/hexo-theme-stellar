@@ -29,11 +29,11 @@ module.exports = ctx => function(args) {
     var el = ''
     const cfg = ctx.theme.config.tag_plugins.quot[args.icon]
     if (cfg && cfg.prefix) {
-      el += '<img class="icon prefix" src="' + cfg.prefix + '" />'
+      el += '<img class="icon prefix" src="' + cfg.prefix + '" alt="" />'
     }
     el += args.text
     if (cfg && cfg.suffix) {
-      el += '<img class="icon suffix" src="' + cfg.suffix + '" />'
+      el += '<img class="icon suffix" src="' + cfg.suffix + '" alt="" />'
     }
     return el
   }

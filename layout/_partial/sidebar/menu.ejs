@@ -17,7 +17,7 @@ function layoutDiv() {
       } else if (theme.icons[item.icon]) {
         el += theme.icons[item.icon]
       } else {
-        el += `<img no-lazy src="${item.icon}">`
+        el += `<img alt="" no-lazy src="${item.icon}">`
       }
     } else {
       el += `<span>${__(item.title)}</span>`

@@ -72,7 +72,7 @@ const MemosJS = {
         if (!users.length && !hide.includes('user')) {
           cell += '<div class="user-info">';
           if (cfg.avatar?.length > 0) {
-            cell += `<img src="${cfg.avatar}">`;
+            cell += `<img alt="" src="${cfg.avatar}">`;
           }
           cell += '<span>' + item.creatorName + '</span>';
           cell += '</div>';
@@ -91,9 +91,9 @@ const MemosJS = {
           cell += '<div class="tag-plugin image">';
           for (let img of imgs) {
             if (img.externalLink?.length > 0) {
-              cell += `<div class="image-bg"><img src="${img.externalLink}" data-fancybox="memos"></div>`;
+              cell += `<div class="image-bg"><img alt="" src="${img.externalLink}" data-fancybox="memos"></div>`;
             } else {
-              cell += `<div class="image-bg"><img src="https://${cfg.host}/o/r/${img.id}" data-fancybox="memos"></div>`;
+              cell += `<div class="image-bg"><img alt="" src="https://${cfg.host}/o/r/${img.id}" data-fancybox="memos"></div>`;
             }
           }
           cell += '</div>';

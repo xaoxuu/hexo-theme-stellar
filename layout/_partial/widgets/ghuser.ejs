@@ -26,7 +26,7 @@ function layoutDiv() {
   // body
   el += '<div class="widget-body stellar-ghinfo-api" api="' + theme.api_host.ghapi + '/users/' + item.username + '">';
     if (item.avatar) {
-      el += '<div class="avatar" ><img no-lazy type="img" id="avatar_url" src="' + config.avatar + '"></div>';
+      el += '<div class="avatar" ><img alt="" no-lazy type="img" id="avatar_url" src="' + config.avatar + '"></div>';
     }
     // username
     el += '<p class="username" ff="title" type="text" id="name">&nbsp;</p>';

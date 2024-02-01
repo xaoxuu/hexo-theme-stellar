@@ -56,7 +56,7 @@ const weibojs = {
         var cell = '<div class="timenode" index="' + i + '">';
         cell += '<div class="header">';
         cell += '<div class="user-info">';
-        cell += '<img src="' + (data.user.avatar_hd || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';">';
+        cell += '<img src="' + (data.user.avatar_hd || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';" alt="">';
         cell += '<span>' + data.user.nick_name + '</span>';
         cell += '</div>';
         cell += '<p>' + item.created_at + '</p>';

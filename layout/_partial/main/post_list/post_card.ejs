@@ -39,7 +39,7 @@ function div_default() {
     }
     if (cover_url) {
       el += '<div class="post-cover">';
-      el += '<img src="' + cover_url + '"/>';
+      el += '<img src="' + cover_url + '" alt=""/>';
       el += '</div>';
     }
   }
@@ -100,7 +100,7 @@ function div_default() {
 function div_photo() {
   var el = '';
   el += '<div class="cover">';
-  el += '<img src="' + obj.image + '"/>';
+  el += '<img src="' + obj.image + '" alt=""/>';
   if (obj.headline || obj.topic || obj.caption) {
     el += '<div class="cover-info"';
     if (obj.color) {

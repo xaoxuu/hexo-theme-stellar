@@ -56,7 +56,7 @@ const FCircle = {
         var cell = '<div class="timenode" index="' + i + '">';
         cell += '<div class="header">';
         cell += '<div class="user-info">';
-        cell += '<img src="' + (item.avatar || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';">';
+        cell += '<img alt="" src="' + (item.avatar || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';">';
         cell += '<span>' + item.author + '</span>';
         cell += '</div>';
         cell += '<p>' + item.created + '</p>';

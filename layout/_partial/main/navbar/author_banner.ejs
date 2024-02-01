@@ -4,7 +4,7 @@ function layoutDiv() {
   var el = ``
   el += `<div class="tag-plugin banner author">`
   if (author.banner) {
-    el += `<img class="bg" src="${author.banner}">`
+    el += `<img alt="" class="bg" src="${author.banner}">`
   }
   el += `
   <div class="content">
@@ -14,7 +14,7 @@ function layoutDiv() {
       </button>
     </div>
     <div class="bottom">
-      <img class="avatar" src="${author.avatar}">
+      <img alt="" class="avatar" src="${author.avatar}">
       <div class="text-area">
         <p class="text title">${author.name}</p>
         <div class="text subtitle">${author.description || ""}</div>

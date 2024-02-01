@@ -2,7 +2,7 @@
 function layoutDiv() {
   var el = '';
   el += '<article class="md-text">';
-  el += `<div class="preview"><img src="${proj.icon ? proj.icon : theme.default.project}"/></div>`
+  el += `<div class="preview"><img alt="" src="${proj.icon ? proj.icon : theme.default.project}"/></div>`
   el += '<div class="excerpt">';
   if (proj.tags && proj.tags.length > 0) {
     el += '<div class="caps">';

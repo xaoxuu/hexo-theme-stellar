@@ -33,7 +33,7 @@ module.exports = ctx => function(args) {
   if (!url.includes('&show_owner=')) {
     url += '&show_owner=true'
   }
-  el += '<img src="' + url + '"/>'
+  el += '<img src="' + url + '" alt=""/>'
   el += '</a></div>'
   return el
 }

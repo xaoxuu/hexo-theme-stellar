@@ -9,7 +9,7 @@ hexo.extend.helper.register('icon', function(key) {
     result = key
   }
   if (result.startsWith('/') || result.startsWith('https://') || result.startsWith('http://')) {
-    return `<img src="${result}" />`
+    return `<img src="${result}" alt="" />`
   } else {
     return result
   }
