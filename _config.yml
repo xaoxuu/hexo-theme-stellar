@@ -294,6 +294,8 @@ tag_plugins:
       suffix: https://bu.dusays.com/2022/10/24/63567d3e0ab55.png
     hashtag:
       prefix: https://bu.dusays.com/2022/10/24/63567d3e07da3.png
+    question:
+      prefix: ph:seal-question-fill
   # {% emoji %}
   emoji:
     default: https://gcore.jsdelivr.net/gh/cdn-x/emoji/qq/${name}.gif
