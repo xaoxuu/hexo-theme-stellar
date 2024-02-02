@@ -304,6 +304,9 @@ tag_plugins:
     aru: https://gcore.jsdelivr.net/gh/cdn-x/emoji/aru-l/${name}.gif
     tieba: https://gcore.jsdelivr.net/gh/cdn-x/emoji/tieba/${name}.png
     blobcat: https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs/${name}.png
+  icon:
+    # 留空时，图标和文字颜色相同
+    default_color: accent # theme, accent, red, orange, yellow, green, cyan, blue, purple
   # {% image %}
   image:
     fancybox: false # true, false
