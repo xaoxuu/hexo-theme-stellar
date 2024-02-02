@@ -26,20 +26,31 @@
   if hexo-config('style.darkmode') == 'always'
     --blur-bg: alpha(#000, .4)
 
+// 侧边栏弹出按钮
 .sidebar-toggle.mobile
   cursor: pointer
   color: var(--text)
   background: none
   padding: 8px
   line-height: 0
-  font-size: 24px
+  font-size: 28px
   margin: 0
+  display: flex
+  >*
+    path#sep
+      trans1 transform
+    width: auto
+    height: 28px
+// 侧边栏弹出后
+.l_body.mobile.sidebar .sidebar-toggle.mobile
+  svg g
+    fill: currentColor
+    fill-opacity: 0.3
+    path#sep
+      transform: translateX(2px)
 
 
 .l_body.mobile.sidebar
-  .float-panel
-    box-shadow: $boxshadow-float
-    transform: translateY(-2px)
   .sidebar-toggle.mobile
     background: var(--card)
     color: $color-hover

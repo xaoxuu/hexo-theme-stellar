@@ -1,8 +1,8 @@
 <%
 function layoutDiv() {
   var el = '';
-  el += '<div class="nav-wrap">';
-  el += '<nav class="sub post">';
+  el += '<div class="navbar top">';
+  el += '<nav class="post">';
   if (is_home()) {
     el += '<a class="active" href="' + url_for(config.index_generator.path) + '">' + __("btn.recent_publish") + '</a>';
   } else {

@@ -24,24 +24,34 @@
       align-items: center
       line-height: 1
       margin: 1rem
-      .navbar
+      .tag-plugin.navbar
         margin: 0
-        nav.cap
-          border-radius: 6px
-          background: rgba(black, 0.2)
+        border-radius: 6px
+        padding: 2px
+        background: rgba(black, 0.2)
+        overflow: hidden
+        &:after
+          content: none
         .link
+          margin: 0
+          border-radius: 4px
           color: rgba(white, 0.8)
           padding: 2px 6px
-          border-radius: 4px
           background: none
           line-height: 1.5
           font-size: $fs-15
+          text-shadow: 0 0 1px rgba(0,0,0,0.12)
+          &+.link
+            margin-left: 2px
+          &:after
+            content: none
+          &:hover
+            color: white
+            background: rgba(white, 0.25)
           &.active
             color: white
             background: rgba(white, 0.25)
-          &:hover
-            color: white
-            background: rgba(black, 0.5) !important
+        
       .back
         background: none
         padding: 0

@@ -122,7 +122,7 @@ article:
   # 如果没有指定横幅，是否根据 tags 作为关键词搜索横幅图片？
   auto_banner: false # search from https://source.unsplash.com/
   # 如果没有指定 excerpt 和 description，将自动取多长的内容作为文章摘要？
-  auto_excerpt: 200
+  auto_excerpt: 128
   # 分类颜色
   category_color:
     '探索号': '#f44336'

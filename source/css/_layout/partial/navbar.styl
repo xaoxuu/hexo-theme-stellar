@@ -1,4 +1,4 @@
-.nav-wrap
+.navbar
   padding: 0 1rem
   z-index: 8
   top: 0
@@ -13,15 +13,15 @@
     margin-top: -8px
   &:after
     content: ''
-    width: 'calc(100% - 2 * %s)' % 1rem
     height: 2px
     border-radius: 2px
     position: absolute
     bottom: 0
     left: 1rem
+    right: 1rem
     background: var(--block-hover)
 
-nav.sub
+.navbar nav
   display: flex
   overflow: scroll visible
   scrollbar(0, 0)
@@ -57,13 +57,15 @@ nav.sub
     &.active
       background: var(--card)
       box-shadow: $boxshadow-button
+      cursor default
+      pointer-events: none
     &.active:after
       content: ''
   a+a
     margin-left: 4px
 
 @media screen and (max-width: $device-mobile-max)
-  .nav-wrap
+  .navbar.top
     margin-top: 0
     padding-left: 0
     padding-right: 0

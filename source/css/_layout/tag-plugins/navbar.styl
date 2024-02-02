@@ -1,22 +1,9 @@
-.md-text .tag-plugin.navbar
-  text-align: center
-  nav.cap
-    margin: 0
-    padding: 1px
-    background: var(--card)
-    box-shadow: $boxshadow-button
-    border-radius: 6px
-    display: inline-flex
-    max-width: 100%
-    a
-      margin: 1px
-      padding: 0.25em 0.75rem
-      color: var(--text-p2)
-      &:after
-        display: none
-      &:hover
-        background: var(--block)
-      &.active
-        background: var(--block)
-        box-shadow: none
-        color: var(--text-p1)
+.tag-plugin.navbar
+  padding: 0
+  &:after
+    left: 0
+    right: 0
+
+@media screen and (min-width: $device-mobile-max)
+  .tag-plugin.navbar nav a
+    margin-top: 2px

@@ -3,7 +3,7 @@
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
  * quot:
- * {% quot [el:h2] [icon:default] text %}
+ * {% quot [el:h2] [icon:default] [prefix:icon] text [suffix:icon] %}
  *
  */
 
@@ -11,29 +11,32 @@
 
 module.exports = ctx => function(args) {
   var el = ''
-  args = ctx.args.map(args, ['el', 'icon'], ['text'])
+  args = ctx.args.map(args, ['el', 'icon', 'prefix', 'suffix'], ['text'])
   if (!args.el) {
     args.el = 'p'
   }
 
   var type = ''
-  if (args.icon && args.icon != 'square' && args.icon != 'quotes') {
+  if (args.icon || args.prefix || args.suffix) {
     type = ' type="icon"'
   } else {
     type = ' type="text"'
   }
   function content() {
-    if (!args.icon) {
-      return args.text
-    }
-    var el = ''
     const cfg = ctx.theme.config.tag_plugins.quot[args.icon]
-    if (cfg && cfg.prefix) {
-      el += '<img class="icon prefix" src="' + cfg.prefix + '" />'
+    var el = ''
+    var prefix = args.prefix || cfg?.prefix
+    var suffix = args.suffix || cfg?.suffix
+    if (prefix) {
+      el += ctx.utils.icon(prefix, 'class="icon prefix"')
+    } else {
+      el += `<span class="empty"></span>`
     }
-    el += args.text
-    if (cfg && cfg.suffix) {
-      el += '<img class="icon suffix" src="' + cfg.suffix + '" />'
+    el += `<span class="text">${args.text}</span>`
+    if (suffix) {
+      el += ctx.utils.icon(suffix, 'class="icon prefix"')
+    } else {
+      el += `<span class="empty"></span>`
     }
     return el
   }

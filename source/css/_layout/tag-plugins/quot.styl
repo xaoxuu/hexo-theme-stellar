@@ -59,13 +59,14 @@
 
 // type=icon
 .md-text .tag-plugin.quot .content[type=icon]
-  .icon
+  img,svg
     height: 1.5em
     display: inline-block
     color: $color-accent
     border-radius: 0
-    &.prefix
-      margin-left: -0.5rem
-      margin-right: .5rem
-    &.suffix
-      margin-left: .5rem
+  span.text
+    margin: 0 .5rem
+    padding-top: 1px
+  span.empty
+    padding: 0 8px
+  
