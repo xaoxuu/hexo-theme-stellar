@@ -10,6 +10,10 @@ if (['post', 'page', 'wiki', null].includes(page.layout)) {
 var article_type = theme.article.type
 if (page.type?.length > 0) {
   article_type = page.type
+} else if (theme.topic.tree[page.topic]?.type != null) {
+  article_type = theme.topic.tree[page.topic]?.type
+} else if (theme.wiki.tree[page.wiki]?.type != null) {
+  article_type = theme.wiki.tree[page.wiki]?.type
 }
 // 是否缩进
 var indent = false

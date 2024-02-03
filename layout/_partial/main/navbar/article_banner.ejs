@@ -1,6 +1,13 @@
 <%
 
-var banner_url = page.banner || ''
+var banner_url
+if (page.banner) {
+  banner_url = page.banner
+} else if (theme.topic.tree[page.topic]?.banner != null) {
+  banner_url = theme.topic.tree[page.topic]?.banner
+} else if (theme.wiki.tree[page.wiki]?.banner != null) {
+  banner_url = theme.wiki.tree[page.wiki]?.banner
+}
 
 function layoutTitle() {
   const title = page.h1 != null ? page.h1 : page.title
@@ -35,7 +42,7 @@ function layoutDiv() {
   var style = ``
   var el = ``
   el += `<div class="article banner top">`
-  if (banner_url.length > 0) {
+  if (banner_url?.length > 0) {
     el += `<img class="bg" src="${banner_url}">`
     if (page.poster?.color) {
       style += ' style="--text-banner:' + page.poster?.color + '"'
