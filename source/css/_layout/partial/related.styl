@@ -94,12 +94,8 @@ article.md-text.content+.related-wrap
       margin: 0
       font-size: inherit
       a
-        color: inherit
-        text-decoration: underline
-        &:hover
-          color: $color-hover
-        &:before
-          display: none
+        --theme-link: $color-theme
+        --theme-link-opa: rgba($color-theme, 0.2)
   .cmt-body
     min-height: 150px
     position: relative

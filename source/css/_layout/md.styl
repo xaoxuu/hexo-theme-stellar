@@ -108,16 +108,19 @@
   margin: auto
   display: block
 
-.md-text 
-  p:not([class]), li:not([class])
-    a:not([class])
-      padding: 0 2px
-      margin: 0 -2px
-      border-radius: 2px
-      trans1 all
-      text-decoration: underline
-      &:hover
-        color: $color-hover
-      &:has(img)
-        text-decoration: none
-        padding: 0
+.md-text li:not([class]) a:not([class]), .md-text p:not([class]) a:not([class])
+  position: relative
+  text-decoration: none
+  trans1 all
+  padding: 0 2px
+  border-radius: 0
+  background: linear-gradient(0deg,var(--theme-link),var(--theme-link)) no-repeat left 100%/100% 1px
+  &:hover
+    color: var(--theme-link)
+    border-radius: 4px
+    background: linear-gradient(0deg,var(--theme-link-opa),var(--theme-link-opa)) no-repeat left 100%/100% 100%
+  &:has(img)
+    background: none
+    padding: 0
+    &:hover
+      background: none
