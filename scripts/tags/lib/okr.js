@@ -56,7 +56,7 @@ function generateKRList(ctx, contentArray) {
 function layoutItem(ctx, type, index, title, note, color, label, percent) {
   const percentStr = (percent * 100).toString().replace(/\.\d*/, '')
   return `
-  <div class="okr-item ${type}">
+  <div class="okr-item ${type}" id="okr-${index.toLowerCase()}">
     <div class="okr-left">
       <span class="title">${index.toUpperCase()}</span>
     </div>
