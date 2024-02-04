@@ -76,11 +76,11 @@ const hud = {
 
 const l_body = document.querySelector('.l_body');
 
-const sidebar = {
+const leftbar = {
   toggle: () => {
     if (l_body) {
       l_body.classList.add('mobile');
-      l_body.classList.toggle("sidebar");
+      l_body.classList.toggle("leftbar");
     }
   }
 }
@@ -139,10 +139,10 @@ const init = {
       })
     })
   },
-  sidebar: () => {
+  leftbar: () => {
     stellar.jQuery(() => {
       $("#data-toc a.toc-link").click(function (e) {
-        l_body.classList.remove("sidebar");
+        l_body.classList.remove("leftbar");
       });
     })
   },
@@ -190,7 +190,7 @@ const init = {
 
 // init
 init.toc()
-init.sidebar()
+init.leftbar()
 init.relativeDate(document.querySelectorAll('#post-meta time'))
 init.registerTabsTag()
 

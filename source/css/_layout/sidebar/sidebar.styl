@@ -1,36 +1,35 @@
 .l_left
-  margin: 8px 8px 8px 0
+  margin: 8px 0 8px 8px
   height: 'calc(%s - 16px)' % 100vh
   border-radius: $border-card-l
   overflow: hidden
   .header
     margin: var(--gap-l) var(--gap-l) 0
     margin-top: "calc(2 * %s)" % var(--gap-l)
-  if hexo-config('style.sidebar') && hexo-config('style.sidebar.sticky')
-    @media screen and (min-width: 1400px)
-      margin-left: auto
-      margin-right: "calc(2 * %s)" % var(--gap-l)
+  @media screen and (min-width: 1400px)
+    margin-left: auto
+    margin-right: "calc(2 * %s)" % var(--gap-l)
   @media screen and (min-width: $device-mobile-max)
     >.widgets:first-child>.widget-wrapper:first-child
       margin-top: "calc(2 * %s)" % var(--gap-l)
   
 .l_left
   background-size: cover
-  if hexo-config('style.sidebar') && hexo-config('style.sidebar.background-image')
-    background-image: convert(hexo-config('style.sidebar.background-image'))
-  else if hexo-config('style.sidebar') && hexo-config('style.sidebar.background')
-    background: convert(hexo-config('style.sidebar.background'))
-  .sidebar-container
+  if hexo-config('style.leftbar') && hexo-config('style.leftbar.background-image')
+    background-image: convert(hexo-config('style.leftbar.background-image'))
+  else if hexo-config('style.leftbar') && hexo-config('style.leftbar.background')
+    background: convert(hexo-config('style.leftbar.background'))
+  .leftbar-container
     height: 100%
     display: flex
     flex-direction: column
     word-break: break-all
     text-align: justify
-    if hexo-config('style.sidebar') && hexo-config('style.sidebar.blur-px')
-      --blur-px: convert(hexo-config('style.sidebar.blur-px'))
+    if hexo-config('style.leftbar') && hexo-config('style.leftbar.blur-px')
+      --blur-px: convert(hexo-config('style.leftbar.blur-px'))
       @supports ((-webkit-backdrop-filter:blur(var(--blur-px))) or (backdrop-filter:blur(var(--blur-px))))
         background: var(--blur-bg)
         backdrop-filter: saturate(240%) blur(var(--blur-px))
         -webkit-backdrop-filter: saturate(240%) blur(var(--blur-px))
-    if hexo-config('style.sidebar') && hexo-config('style.sidebar.blur-bg')
-      --blur-bg: convert(hexo-config('style.sidebar.blur-bg'))
+    if hexo-config('style.leftbar') && hexo-config('style.leftbar.blur-bg')
+      --blur-bg: convert(hexo-config('style.leftbar.blur-bg'))

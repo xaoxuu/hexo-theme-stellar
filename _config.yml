@@ -62,12 +62,12 @@ site_tree:
   # -- 列表类页面 -- #
   # 主页配置
   home:
-    sidebar: welcome, recent, timeline
+    leftbar: welcome, recent, timeline
   # 博客列表页配置
   index_blog:
     base_dir: blog # 只影响自动生成的页面路径
     menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 post 的页面默认使用这里配置的 menu_id
-    sidebar: welcome, recent, timeline # for categories/tags/archives
+    leftbar: welcome, recent, timeline # for categories/tags/archives
     nav_tabs:  # 近期发布 分类 标签 专栏 归档 and ...
       # '朋友文章': /friends/rss/
   # 博客专栏列表页配置
@@ -78,34 +78,34 @@ site_tree:
   index_wiki:
     base_dir: wiki # 只影响自动生成的页面路径
     menu_id: wiki # 未在 front-matter 中指定 menu_id 时，layout 为 wiki 的页面默认使用这里配置的 menu_id
-    sidebar: toc, ghissues, related, recent # for wiki
+    leftbar: toc, ghissues, related, recent # for wiki
     nav_tabs:
       # 'more': https://github.com/xaoxuu
   # -- 内容类页面 -- #
   # 博客文章内页配置
   post:
     menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 post 的页面默认使用这里配置的 menu_id
-    sidebar: toc, related, ghrepo, ghissues, recent # for pages using 'layout:post'
+    leftbar: toc, related, ghrepo, ghissues, recent # for pages using 'layout:post'
   # 博客专栏文章内页配置
   topic:
     menu_id: post
   # 文档内页配置
   wiki:
     menu_id: wiki # 未在 front-matter 中指定 menu_id 时，layout 为 wiki 的页面默认使用这里配置的 menu_id
-    sidebar: toc, ghissues, related, recent # for wiki
+    leftbar: toc, ghissues, related, recent # for wiki
   # 作者信息配置
   author: 
     base_dir: author # 只影响自动生成的页面路径
     menu_id: post
-    sidebar: recent, timeline
+    leftbar: recent, timeline
   # 错误页配置
   error_page:
     menu_id: post
     '404': '/404.html'
-    sidebar: recent, timeline
+    leftbar: recent, timeline
   # 其它自定义页面配置 layout: page
   page:
-    sidebar: toc, recent, timeline
+    leftbar: toc, recent, timeline
 
 
 
@@ -521,11 +521,9 @@ style:
   gradient: # https://webgradients.com/
     start: 'linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))'
     search: 'linear-gradient(to right, #04F3FF, #08FFC6, #DDF730, #FFBD19, #FF1FE0, #C418FF, #04F3FF)'
-  sidebar:
-    sticky: false # true/false 屏幕足够宽时，侧边栏是否吸附在正文区域旁边
+  leftbar:
     # 可以设置：纯色/渐变色/图片作为背景
-    # background: var(--sidebar-bg)
-    # background-image: 'linear-gradient(to bottom, var(--sidebar-bg), var(--sidebar-bg))'
+    # background: var(--leftbar-bg)
     background-image: url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg)
     blur-px: 100px
     blur-bg: var(--alpha60)

@@ -1,8 +1,8 @@
 .l_body
   display: grid
   grid-template-columns: 1fr minmax(200px,var(--width-main)) 1fr
+  grid-gap: var(--gap-l)
   margin: auto
-  padding: 0 var(--gap-l)
   font-size: var(--fsp)
 
 .l_body .l_left
@@ -19,7 +19,7 @@
     display: block !important
   .l_body
     padding: 0
-    grid-template-columns: 1fr
+    display: block
     .l_left
       position: fixed
       transform: translateX(-320px)
@@ -32,7 +32,7 @@
   .l_body.mobile
     .l_left
       transition: transform .38s ease-out
-  .l_body.mobile.sidebar
+  .l_body.mobile.leftbar
     .l_left
       transform: translateX(0px)
     .main-mask
