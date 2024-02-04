@@ -104,7 +104,12 @@ floatable-float()
   box-shadow: 0 12px 20px -4px rgba(0, 0, 0, 0.15)
   transform: translate3d(0, -2px, 0)
 
-hover-float()
-  floatable-trans()
-  &:hover
-    floatable-float()
+hoverable-card()
+  trans1 all
+  @media (prefers-color-scheme: dark)
+    &:hover
+      box-shadow: 0 0 4px -2px $color-theme, 0 0 24px -8px $color-theme
+  @media (prefers-color-scheme: light)
+    box-shadow: $boxshadow-card
+    &:hover
+      floatable-float()

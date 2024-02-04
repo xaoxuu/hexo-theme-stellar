@@ -25,13 +25,7 @@
   margin: 1rem 0
   border-radius: $border-card
   background: var(--card)
-  @media (prefers-color-scheme: dark)
-    &:hover
-      box-shadow: 0 0 4px -2px $color-theme, 0 0 24px -8px $color-theme
-  @media (prefers-color-scheme: light)
-    box-shadow: $boxshadow-card
-    hover-float()
-  trans1 all
+  hoverable-card()
   overflow: hidden
   z-index: 0
   
