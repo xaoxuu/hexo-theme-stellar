@@ -1,8 +1,8 @@
 .l_body
-  display: flex
+  display: grid
+  grid-template-columns: 1fr minmax(200px,var(--width-main)) 1fr
   margin: auto
   padding: 0 var(--gap-l)
-  justify-content: center
   font-size: var(--fsp)
 
 .l_body .l_left
@@ -13,30 +13,13 @@
   position: -webkit-sticky
   top: 8px
 
-.l_body .l_main
-  flex-shrink: 1
-  flex-grow: 1
-  width: 320px
-  max-width: var(--width-main)
-
-
 // 手机布局
-.main-mask
-  position: fixed
-  pointer-events: none
-  top: 0
-  left: 0
-  width: 100%
-  height: 100%
-  background: rgba(black, 0.2)
-  z-index: 9
-  opacity 0
-  trans1 opacity
 @media screen and (max-width: $device-mobile-max)
   .mobile-only
     display: block !important
   .l_body
     padding: 0
+    grid-template-columns: 1fr
     .l_left
       position: fixed
       transform: translateX(-320px)
@@ -55,3 +38,16 @@
     .main-mask
       opacity 1
       pointer-events: inherit
+
+
+.main-mask
+  position: fixed
+  pointer-events: none
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  background: rgba(black, 0.2)
+  z-index: 9
+  opacity 0
+  trans1 opacity

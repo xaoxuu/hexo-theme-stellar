@@ -6,6 +6,10 @@
   .header
     margin: var(--gap-l) var(--gap-l) 0
     margin-top: "calc(2 * %s)" % var(--gap-l)
+  if hexo-config('style.sidebar') && hexo-config('style.sidebar.sticky')
+    @media screen and (min-width: 1400px)
+      margin-left: auto
+      margin-right: "calc(2 * %s)" % var(--gap-l)
   @media screen and (min-width: $device-mobile-max)
     >.widgets:first-child>.widget-wrapper:first-child
       margin-top: "calc(2 * %s)" % var(--gap-l)

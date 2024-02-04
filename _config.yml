@@ -522,6 +522,7 @@ style:
     start: 'linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))'
     search: 'linear-gradient(to right, #04F3FF, #08FFC6, #DDF730, #FFBD19, #FF1FE0, #C418FF, #04F3FF)'
   sidebar:
+    sticky: false # true/false 屏幕足够宽时，侧边栏是否吸附在正文区域旁边
     # 可以设置：纯色/渐变色/图片作为背景
     # background: var(--sidebar-bg)
     # background-image: 'linear-gradient(to bottom, var(--sidebar-bg), var(--sidebar-bg))'
