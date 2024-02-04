@@ -30,11 +30,11 @@ function setCardLink(nodes) {
   nodes = 'forEach' in (nodes || {}) ? nodes : document.querySelectorAll('a[cardlink]')
   nodes.forEach((el) => {
     // If it is not a tag element then it is not processed
-    if (el.nodeType !== 1) return
+    if (el.nodeType !== 1) return;
     el.removeAttribute('cardlink');
-    const link = el.href;
-    const api = 'https://api.vlts.cc/site_info/v1?url=';
-    fetch(api + link).then(function(response) {
+    const api = el.getAttribute('api');
+    if (api == null) return;
+    fetch(api).then(function(response) {
       if (response.ok) {
         return response.json();
       }

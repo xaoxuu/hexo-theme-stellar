@@ -10,6 +10,13 @@
 module.exports = ctx => function(args) {
   const full_url_for = require('hexo-util').full_url_for.bind(ctx)
   args = ctx.args.map(args, ['icon', 'desc'], ['url', 'title'])
+  if (args.url == null) {
+    return '';
+  }
+  args.api = ctx.theme.config.tag_plugins.linkcard.api
+  if (args.api) {
+    args.api = args.api.replace('${href}', args.url)
+  }
   var autofill = []
   if (!args.title) {
     autofill.push('title')
@@ -27,6 +34,9 @@ module.exports = ctx => function(args) {
     el += ' target="_blank" rel="external nofollow noopener noreferrer"'
   }
   el += ' cardlink'
+  if (args.api) {
+    el += ` api="${args.api}"`
+  }
   el += ' autofill="'
   el += autofill.join(',')
   el += '"'
