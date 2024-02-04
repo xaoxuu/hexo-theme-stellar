@@ -13,9 +13,10 @@ module.exports = ctx => function(args) {
   if (args.url == null) {
     return '';
   }
+  const url = full_url_for(args.url)
   args.api = ctx.theme.config.tag_plugins.linkcard.api
   if (args.api) {
-    args.api = args.api.replace('${href}', args.url)
+    args.api = args.api.replace('${href}', url)
   }
   var autofill = []
   if (!args.title) {
