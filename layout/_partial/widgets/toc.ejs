@@ -38,7 +38,7 @@ function layoutToc(fallback) {
 function layoutDiv(fallback) {
   const editBtn = partial('components/edit', {map: item.edit_this_page})
   const tocBody = layoutTocBody()
-  if (tocBody.length == 0 && editBtn.length == 0) {
+  if (tocBody.trim().length == 0 && editBtn.trim().length == 0) {
     return ''
   }
   var el = ''
@@ -49,11 +49,13 @@ function layoutDiv(fallback) {
     el += tocBody
     el += `</div>`
   }
-  if (editBtn.trim().length > 0) {
-    el += `<div class="widget-footer">`
-    el += editBtn
-    el += `</div>`
-  }
+  el += `<div class="widget-footer">`
+  el += editBtn
+  el += `<a class="top" onclick="util.scrollTop()">`
+  el += icon('default:upup')
+  el += `<span>${__('btn.top')}</span>`
+  el += `</a>`
+  el += `</div>`
   el += `</widget>`
   return el
 }

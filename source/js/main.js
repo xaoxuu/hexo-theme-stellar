@@ -54,6 +54,10 @@ const util = {
       el.classList.toggle("display");
     }
   },
+
+  scrollTop: () => {
+    window.scrollTo({top: 0, behavior: "smooth"});
+  },
 }
 
 const hud = {

@@ -11,10 +11,10 @@
   flex-shrink: 0
   position: sticky
   position: -webkit-sticky
-  top: 8px
 
+.l_body .l_left
+  top: 8px
 .l_body .l_right
-  height: 100%
   .widgets
     height: 100%
     overflow visible
@@ -25,6 +25,7 @@
     display: block !important
   .l_body
     .l_right
+      top: 8px
       position: fixed
       height: calc(100% - 8px * 2)
       transform: translateX(320px)
@@ -35,6 +36,7 @@
       z-index: 10
       background: var(--site-bg)
       overflow: auto
+      scrollbar(0, 0)
   .l_body[rightbar]
     .l_right
       transform: translateX(0px)

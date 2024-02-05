@@ -58,19 +58,21 @@
 
 .widget-wrapper
   display: block
+  padding-bottom: 32px
 
 .l_left .widgets
   margin: 0 var(--gap-margin)
   .widget-wrapper
-    margin: 32px 0
-  
+    &:first-child
+      margin-top: 32px
+
+.l_right
+  --gap-margin: 0
 .l_right .widgets
   .widget-wrapper
-    margin-top: 8px
-    margin-bottom: 32px
     .widget-header
-      padding-left: var(--gap-max)
-      padding-right: var(--gap-max)
+      padding-left: var(--gap-padding)
+      padding-right: var(--gap-padding)
     &:not(.toc)
       margin-left: var(--gap-margin)
       margin-right: var(--gap-margin)

@@ -1,6 +1,11 @@
 .widget-wrapper.toc
   background: var(--site-bg)
   z-index 1
+
+.l_right .widgets .widget-wrapper.toc .widget-header
+  padding-left: var(--gap-max)
+  padding-right: var(--gap-max)
+
 // 目录基本样式
 .widget-wrapper.toc .toc
   --fsp: $fsp2
@@ -15,7 +20,7 @@
     list-style: none
   a  
     padding: 4px var(--gap-max)
-    color: var(--text-p2)
+    color: var(--text-p3)
     display: block
     overflow: hidden
     text-overflow: ellipsis
@@ -49,10 +54,11 @@
   margin-top: 0
   padding: 16px 0
   .widget-body .toc
-    max-height: 75vh
+    max-height: 70vh
     @media screen and (max-width: $device-laptop)
       max-height: unset
     overflow: auto
+    scrollbar(0, 0)
 
 
 
@@ -66,13 +72,13 @@
     --fsp: $fsp2
 
 // 高亮样式
-.widget-wrapper.toc .toc a.toc-link.active
-  color: var(--text-p0)
-  &:before,&:after
-    content: ''
-
 .widget-wrapper.toc .toc a.toc-link:hover
   color: $color-theme
+
+.widget-wrapper.toc .toc a.toc-link.active
+  color: var(--text)
+  &:before,&:after
+    content: ''
 
 // 始终折叠
 .widget-wrapper.toc[collapse='true']
@@ -115,19 +121,19 @@
     grid-template-rows: 0fr
 
 // 编辑本文按钮
+.widget-wrapper.toc .widget-body+.widget-footer:before 
+  content: ''
+  position absolute
+  background: var(--block-border)
+  top: 0
+  height: 1px
+  left: var(--gap-max)
+  right: var(--gap-max)
 .widget-wrapper.toc .widget-footer
   margin-top: 8px
   color: var(--text-p2)
   position relative
   padding-top: 8px
-  &:before 
-    content: ''
-    position absolute
-    background: var(--block-border)
-    top: 0
-    height: 1px
-    left: var(--gap-max)
-    right: var(--gap-max)
   a
     display: flex
     align-items: center
@@ -142,3 +148,23 @@
       margin-right: 8px
   a:hover
     background: var(--block-hover)
+    color: var(--text)
+
+.widget-wrapper.toc+.widget-wrapper
+  padding-top: 32px
+
+@media screen and (max-width: $device-laptop)
+  .l_right
+    blur-effect()
+    .widgets
+      padding: 8px
+      .widget-wrapper.toc
+        background: var(--alpha100)
+  .widget-wrapper.toc .toc
+    a
+      color: var(--text-p2)
+  .widget-wrapper.toc .widget-footer
+    a
+      background: var(--block)
+    a+a
+      margin-top: 4px
