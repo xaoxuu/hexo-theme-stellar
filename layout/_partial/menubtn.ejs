@@ -1,5 +1,8 @@
-<div class='float-panel mobile-only blur' style='display:none'>
-  <button type='button' class='leftbar-toggle mobile' onclick='leftbar.toggle()'>
+<div class='float-panel blur'>
+  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+    <%- icon('default:rightbar') %>
+  </button>
+  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
     <%- icon('default:leftbar') %>
   </button>
 </div>

@@ -52,12 +52,12 @@ html += `<html lang="${page.lang}">`
         html += partial('_partial/sidebar/logo', {where: 'main'})
         html += body
         html += partial('_partial/main/footer')
-        html += partial('_partial/menubtn')
-        html += `<div class="main-mask" onclick="sidebar.toggle()"></div>`
+        html += `<div class="main-mask" onclick="sidebar.dismiss()"></div>`
       html += `</div>`
       html += `<aside class="l_right">`
         html += partial('_partial/sidebar/index_rightbar')
       html += `</aside>`
+      html += partial('_partial/menubtn')
     html += `</div>`
     html += `<div class="scripts">`
       html += partial('_partial/scripts/index')

@@ -1,3 +1,6 @@
+.widget-wrapper.toc
+  background: var(--site-bg)
+  z-index 1
 // 目录基本样式
 .widget-wrapper.toc .toc
   --fsp: $fsp2
@@ -11,7 +14,7 @@
     margin: 2px 0
     list-style: none
   a  
-    padding: 4px var(--gap-l)
+    padding: 4px var(--gap-max)
     color: var(--text-p2)
     display: block
     overflow: hidden
@@ -20,7 +23,7 @@
     position relative
     &:before,&:after
       position: absolute
-      left: 4px
+      left: 'calc(%s * 0.5)' % var(--gap-max)
       width: 8px
       height: 8px
       top: 'calc(%s - 4px)' % 50%
@@ -39,12 +42,19 @@
           opacity 0
     
 // 固定位置
-.l_right .widget-wrapper.toc
+.l_right .widgets .widget-wrapper.toc
   position: sticky
   position: -webkit-sticky
-  top: 32px
-  max-height: 'calc(90vh - 2 * %s)' % @top
-  overflow: scroll
+  top: 0
+  margin-top: 0
+  padding: 16px 0
+  .widget-body .toc
+    max-height: 75vh
+    @media screen and (max-width: $device-laptop)
+      max-height: unset
+    overflow: scroll
+
+
 
 // 各级缩进样式
 .widget-wrapper.toc .toc
@@ -88,3 +98,47 @@
   display: block
 .widget-wrapper.toc[collapse='auto'] ol:has(> .toc-item a.active)
   display: block
+
+// 手动折叠
+.widget-wrapper.toc 
+  .widget-body
+    display: grid
+    grid-template-rows: 1fr
+    trans1 all
+    overflow hidden
+.l_right .widgets .widget-wrapper.toc .widget-header .cap-action:hover
+  background: var(--block-border)
+.l_right .widgets .widget-wrapper.toc.collapse
+  .widget-header .cap-action
+    background: var(--block-border)
+  .widget-body
+    grid-template-rows: 0fr
+
+// 编辑本文按钮
+.widget-wrapper.toc .widget-footer
+  margin-top: 8px
+  color: var(--text-p2)
+  position relative
+  padding-top: 8px
+  &:before 
+    content: ''
+    position absolute
+    background: var(--block-border)
+    top: 0
+    height: 1px
+    left: var(--gap-max)
+    right: var(--gap-max)
+  a
+    display: flex
+    align-items: center
+    color: inherit
+    font-size: $fs-14
+    padding: 8px 16px
+    margin: 0 calc(var(--gap-max) - 16px)
+    border-radius: 4px
+    svg,img
+      height: 16px
+      width: auto
+      margin-right: 8px
+  a:hover
+    background: var(--block-hover)

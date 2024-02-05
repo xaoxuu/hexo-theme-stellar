@@ -10,11 +10,13 @@ btn:
   tag: Tag
   tags: Tags
   archives: Archives
+  all_posts: All Posts
   getting_started: Getting Started
+  edit: Edit This Page
 
 meta:
   recent_update: Recent Update
-  toc: TOC
+  toc: On This Page
   read_next: READ NEXT
   prev: Prev
   next: Next

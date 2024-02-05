@@ -10,11 +10,10 @@
   scrollbar(0, 0)
   z-index: 1
   line-height: 1.2
-  margin: 0 var(--gap-l)
   .widget-wrapper
     .widget-header
-      padding-left: var(--gap-l)
-      padding-right: var(--gap-l)
+      padding-left: var(--gap-padding)
+      padding-right: var(--gap-padding)
       display: flex
       justify-content: space-between
       align-items: baseline
@@ -50,16 +49,33 @@
             fill: $color-hover
 
     .widget-body
-      margin: 0.5rem 0
       color: var(--text-p1)
       p
         margin-top: .5em
         margin-bottom: .5em
         line-height: 1.5
-    .widget-header+.widget-body
-      margin-top: 0
 
 
 .widget-wrapper
   display: block
-  margin: 32px 0
+
+.l_left .widgets
+  margin: 0 var(--gap-margin)
+  .widget-wrapper
+    margin: 32px 0
+  
+.l_right .widgets
+  .widget-wrapper
+    margin-top: 8px
+    .widget-header
+      padding-left: var(--gap-max)
+      padding-right: var(--gap-max)
+    &:not(.toc)
+      margin-left: var(--gap-margin)
+      margin-right: var(--gap-margin)
+  .widget-wrapper+.widget-wrapper
+    margin-top: 32px
+  @media screen and (max-width: $device-laptop)
+    .widget-wrapper
+      margin-top: var(--gap-margin)
+      border-radius: $border-card

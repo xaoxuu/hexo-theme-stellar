@@ -9,12 +9,15 @@
 
 .float-panel
   position: sticky
+  grid-column-end: span 3
   right: 0
   bottom: 2rem
   float: right
   z-index: 10
   display: flex
-  border-radius: 2rem
+  flex-direction: column
+  border-radius: 0.5rem
+  margin-left: auto
   margin-right: 1rem
   overflow: hidden
   --blur-px: 16px
@@ -27,7 +30,7 @@
     --blur-bg: alpha(#000, .4)
 
 // 侧边栏弹出按钮
-.leftbar-toggle.mobile
+.float-panel button
   cursor: pointer
   color: var(--text)
   background: none
@@ -41,8 +44,16 @@
       trans1 transform
     width: auto
     height: 28px
+
 // 侧边栏弹出后
-.l_body.mobile.leftbar .leftbar-toggle.mobile
+.l_body[leftbar] .float-panel, .l_body[rightbar] .float-panel
+  box-shadow: 0 0 4px -2px $color-theme, 0 0 24px -12px $color-theme
+.l_body[leftbar] .float-panel button
+  background: var(--card)
+
+.l_body[leftbar] .float-panel button.leftbar-toggle
+  color: $color-theme
+  border-color: var(--block-border)
   svg g
     fill: currentColor
     fill-opacity: 0.3
@@ -50,8 +61,15 @@
       transform: translateX(2px)
 
 
-.l_body.mobile.leftbar
-  .leftbar-toggle.mobile
-    background: var(--card)
-    color: $color-hover
-    border-color: var(--block-border)
+.l_body[rightbar] .float-panel button
+  background: var(--card)
+
+.l_body[rightbar] .float-panel button.rightbar-toggle
+  color: $color-theme
+  border-color: var(--block-border)
+  svg g
+    fill: currentColor
+    fill-opacity: 0.3
+    path#sep
+      transform: translateX(2px)
+

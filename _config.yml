@@ -89,7 +89,7 @@ site_tree:
   post:
     menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 post 的页面默认使用这里配置的 menu_id
     leftbar: related, ghrepo, ghissues, recent # for pages using 'layout:post'
-    rightbar: toc
+    rightbar: ghrepo, toc
   # 博客专栏文章内页配置
   topic:
     menu_id: post
@@ -97,19 +97,19 @@ site_tree:
   wiki:
     menu_id: wiki # 未在 front-matter 中指定 menu_id 时，layout 为 wiki 的页面默认使用这里配置的 menu_id
     leftbar: tree, ghissues, related, recent # for wiki
-    rightbar: toc
+    rightbar: ghrepo, toc
   # 作者信息配置
   author: 
     base_dir: author # 只影响自动生成的页面路径
     menu_id: post
     leftbar: recent, timeline
-    rightbar:
+    rightbar: timeline
   # 错误页配置
   error_page:
     menu_id: post
     '404': '/404.html'
     leftbar: recent, timeline
-    rightbar:
+    rightbar: timeline
   # 其它自定义页面配置 layout: page
   page:
     leftbar: recent

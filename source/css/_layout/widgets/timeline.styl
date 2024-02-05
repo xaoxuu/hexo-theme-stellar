@@ -1,4 +1,4 @@
-.widget-wrapper.timeline 
+.widget-wrapper.timeline
   .widget-body
     margin-top: 0.5rem
   .body
@@ -12,7 +12,7 @@
         border-bottom: 1px solid $color-hover
   .tag-plugin.timeline .timenode
     .header
-      margin: 0.5rem 16px
+      margin: 0.5rem var(--gap-padding)
       txt-ellipsis()
       .user-info
         background: var(--alpha50)
@@ -27,8 +27,6 @@
       color: var(--text-p2)
     .body
       border-radius: $border-card
-      background: var(--alpha50)
-      box-shadow: none
       p,li
         --fsp: $fsp3
       code 
@@ -41,3 +39,8 @@
       
   .tag-plugin.timeline[api] .body .footer
     background: none
+
+
+.l_left .widget-wrapper.timeline .body
+  box-shadow: none
+  background: var(--alpha50)

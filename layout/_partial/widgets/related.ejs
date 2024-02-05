@@ -31,7 +31,7 @@ function relatedWiki() {
   if (thisItemObject == null) {
     return ''
   }
-  const relatedItems = thisItemObject.relatedItems
+  const relatedItems = thisItemObject.relatedItems || []
   var el = ''
   for (let relatedItem of relatedItems) {
     el += `<widget class="widget-wrapper${scrollreveal(' ')} post-card">`

@@ -21,24 +21,34 @@ recent:
   rss: # /atom.xml # npm i hexo-generator-feed
   limit: 10 # Count of posts
 
+# 页面树（与当前页面强关联的上下篇文章列表）
 tree:
   layout: tree
 
-# TOC (valid only in rightbar)
+# 本文目录（当前页面内各级标题列表）
 toc:
   layout: toc
-  list_number: true
+  list_number: false
   min_depth: 1
   max_depth: 6
   collapse: false # true / false / auto
+  # 编辑本文按钮
+  edit_this_page: # 从开头开始匹配替换
+    '_posts/': https://github.com/xaoxuu/xaoxuu.com/blob/main/source/_posts/
+    'wiki/stellar/': https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/
 
-# github user info
+# GitHub 用户信息
 ghuser:
   layout: ghuser
-  username: github # your github login username
+  username: # your github login username
   avatar: true # show avatar or not
-  menu: true # show menu or not
 
+# 本文作者组件，需要先配置作者信息: authors.yml
+author:
+  layout: author
+  avatar: true
+
+# 标签云组件
 tagcloud:
   layout: tagcloud
   title: 标签云

@@ -4,13 +4,15 @@ btn:
   wiki: 文檔
   topic: 專欄
   recent_publish: 近期發布
-  all_wiki: 所有 Wiki
+  all_wiki: 所有文檔
   category: 分類
   categories: 分類
   tag: 標籤
   tags: 標籤
   archives: 封存
+  all_posts: 所有網誌
   getting_started: 開始使用
+  edit: 編輯本文
 
 meta:
   recent_update: 最近更新

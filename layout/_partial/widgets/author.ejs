@@ -1,0 +1,37 @@
+<%
+
+var author = null
+if (theme.authors) {
+  if (page.author?.length > 0 && theme.authors[page.author] != null) {
+    author = theme.authors[page.author]
+  } else {
+    author = theme.default_author
+  }
+}
+
+function layoutDiv() {
+  if (author == null) {
+    return ''
+  }
+  var el = ''
+  el += `<widget class="widget-wrapper${scrollreveal(' ')} user-card author">`
+  // body
+  el += `<div class="widget-body">`
+    if (item.avatar) {
+      el += `<div class="avatar"><img type="img" id="avatar_url" src="${author.avatar}"></div>`
+    }
+    // username
+    el += `<p class="username" ff="title" type="text" id="name">${author.name}</p>`
+    el += `<p class="bio" type="text" id="bio">${author.desc || author.description}</p>`
+
+    // homepage
+    el += `<a class="follow" href="${url_for(author.path)}">`
+    el += icon('solar:documents-bold-duotone')
+    el += __('btn.all_posts')
+    el += `</a>`
+  el += `</div>`
+  el += `</widget>`
+  return el
+}
+%>
+<%- layoutDiv() %>

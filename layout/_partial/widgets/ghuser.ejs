@@ -22,7 +22,7 @@ function layoutDiv() {
     return el;
   }
 
-  el += `<widget class="widget-wrapper${scrollreveal(' ')} ghuser">`
+  el += `<widget class="widget-wrapper${scrollreveal(' ')} user-card ghuser">`
   // body
   el += '<div class="widget-body stellar-ghinfo-api" api="' + theme.api_host.ghapi + '/users/' + item.username + '">';
     if (item.avatar) {

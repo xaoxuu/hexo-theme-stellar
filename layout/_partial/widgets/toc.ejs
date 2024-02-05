@@ -15,11 +15,12 @@ function layoutTocHeader(title) {
   var el = ''
   el += `<div class="widget-header dis-select">`
   el += `<span class="name">${title || __("meta.toc")}</span>`
+  el += `<a class="cap-action" onclick="sidebar.toggleTOC()" >${icon('default:rightbar')}</a>`
   el += `</div>`
   return el
 }
 
-function layoutDiv(fallback) {
+function layoutToc(fallback) {
   const tocBody = layoutTocBody()
   if (tocBody.length == 0) {
     return ''
@@ -30,6 +31,29 @@ function layoutDiv(fallback) {
   el += `<div class="widget-body">`
   el += tocBody
   el += `</div>`
+  el += `</widget>`
+  return el
+}
+
+function layoutDiv(fallback) {
+  const editBtn = partial('components/edit', {map: item.edit_this_page})
+  const tocBody = layoutTocBody()
+  if (tocBody.length == 0 && editBtn.length == 0) {
+    return ''
+  }
+  var el = ''
+  el += `<widget class="widget-wrapper${scrollreveal(' ')} toc" id="data-toc" collapse="${item.collapse}">`
+  if (tocBody.length > 0) {
+    el += layoutTocHeader()
+    el += `<div class="widget-body">`
+    el += tocBody
+    el += `</div>`
+  }
+  if (editBtn.trim().length > 0) {
+    el += `<div class="widget-footer">`
+    el += editBtn
+    el += `</div>`
+  }
   el += `</widget>`
   return el
 }
