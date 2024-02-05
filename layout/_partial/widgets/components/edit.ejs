@@ -3,7 +3,7 @@ function parseURL() {
   const source = page.source || ''
   var url
   for (let id of Object.keys(map)) {
-    if (source.startsWith(id)) {
+    if (source.startsWith(id) && map[id]) {
       return source.replace(id, map[id])
     }
   }
