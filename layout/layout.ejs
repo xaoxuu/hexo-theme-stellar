@@ -45,7 +45,7 @@ html += `<html lang="${page.lang}">`
     html += `<div class="l_body ${page_type} ${article_type}" id="start" layout="${page.layout}" ${indent ? 'text-indent' : ''}>`
       html += `<aside class="l_left">`
         html += `<div class="leftbar-container${theme.style.leftbar?.blur ? ' leftbar-blur' : ''}">`
-          html += partial('_partial/sidebar/index')
+          html += partial('_partial/sidebar/index_leftbar')
         html += `</div>`
       html += `</aside>`
       html += `<div class="l_main" id="main">`
@@ -55,6 +55,9 @@ html += `<html lang="${page.lang}">`
         html += partial('_partial/menubtn')
         html += `<div class="main-mask" onclick="sidebar.toggle()"></div>`
       html += `</div>`
+      html += `<aside class="l_right">`
+        html += partial('_partial/sidebar/index_rightbar')
+      html += `</aside>`
     html += `</div>`
     html += `<div class="scripts">`
       html += partial('_partial/scripts/index')

@@ -1,0 +1,90 @@
+// 目录基本样式
+.widget-wrapper.toc .toc
+  --fsp: $fsp2
+  padding: 0
+  margin: 0
+  position relative
+  list-style: none
+  .toc-child
+    padding-left: 1em
+  li
+    margin: 2px 0
+    list-style: none
+  a  
+    padding: 4px var(--gap-l)
+    color: var(--text-p2)
+    display: block
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+    position relative
+    &:before,&:after
+      position: absolute
+      left: 4px
+      width: 8px
+      height: 8px
+      top: 'calc(%s - 4px)' % 50%
+      border-radius: 8px
+      background: var(--block)
+      background: $color-theme
+    &:after
+      opacity 0
+      animation: wave 1s linear infinite
+      @keyframes wave
+        from
+          transform: scale(1)
+          opacity 1
+        to
+          transform: scale(2)
+          opacity 0
+    
+// 固定位置
+.l_right .widget-wrapper.toc
+  position: sticky
+  position: -webkit-sticky
+  top: 32px
+  max-height: 'calc(90vh - 2 * %s)' % @top
+  overflow: scroll
+
+// 各级缩进样式
+.widget-wrapper.toc .toc
+  .toc-item
+    font-weight: 500
+    --fsp: $fsp1
+  .toc-item  .toc-item
+    font-weight: 400
+    --fsp: $fsp2
+
+// 高亮样式
+.widget-wrapper.toc .toc a.toc-link.active
+  color: var(--text-p0)
+  &:before,&:after
+    content: ''
+
+.widget-wrapper.toc .toc a.toc-link:hover
+  color: $color-theme
+
+// 始终折叠
+.widget-wrapper.toc[collapse='true']
+  .toc-item a.toc-link+ol
+    display: none
+  // 激活上级目录时显示子目录
+  .toc a.toc-link.active+ol
+    display: block
+
+// 自动折叠
+.widget-wrapper.toc[collapse='auto']
+  .toc-item a.toc-link+ol
+    display: none
+  // 激活上级目录时显示子目录
+  .toc a.toc-link.active+ol
+    display: block
+  // 鼠标放上去时显示子目录
+  &:hover a.toc-link+ol
+    display: block
+
+// 子目录激活时显示
+.widget-wrapper.toc[collapse='true'] ol:has(> .toc-item a.active)
+  display: block
+.widget-wrapper.toc[collapse='auto'] ol:has(> .toc-item a.active)
+  display: block

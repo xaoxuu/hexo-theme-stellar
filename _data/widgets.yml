@@ -21,13 +21,15 @@ recent:
   rss: # /atom.xml # npm i hexo-generator-feed
   limit: 10 # Count of posts
 
-# TOC (valid only in layout:post/wiki)
+tree:
+  layout: tree
+
+# TOC (valid only in rightbar)
 toc:
   layout: toc
-  list_number: false
-  min_depth: 2
-  max_depth: 5
-  fallback: # recent # Use a backup widget when toc does not exist.
+  list_number: true
+  min_depth: 1
+  max_depth: 6
   collapse: false # true / false / auto
 
 # github user info

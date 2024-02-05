@@ -62,12 +62,14 @@ site_tree:
   # -- 列表类页面 -- #
   # 主页配置
   home:
-    leftbar: welcome, recent, timeline
+    leftbar: welcome, recent
+    rightbar: timeline
   # 博客列表页配置
   index_blog:
     base_dir: blog # 只影响自动生成的页面路径
     menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 post 的页面默认使用这里配置的 menu_id
-    leftbar: welcome, recent, timeline # for categories/tags/archives
+    leftbar: welcome, recent # for categories/tags/archives
+    rightbar: timeline
     nav_tabs:  # 近期发布 分类 标签 专栏 归档 and ...
       # '朋友文章': /friends/rss/
   # 博客专栏列表页配置
@@ -78,34 +80,40 @@ site_tree:
   index_wiki:
     base_dir: wiki # 只影响自动生成的页面路径
     menu_id: wiki # 未在 front-matter 中指定 menu_id 时，layout 为 wiki 的页面默认使用这里配置的 menu_id
-    leftbar: toc, ghissues, related, recent # for wiki
+    leftbar: ghissues, related, recent # for wiki
+    rightbar: timeline
     nav_tabs:
       # 'more': https://github.com/xaoxuu
   # -- 内容类页面 -- #
   # 博客文章内页配置
   post:
     menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 post 的页面默认使用这里配置的 menu_id
-    leftbar: toc, related, ghrepo, ghissues, recent # for pages using 'layout:post'
+    leftbar: related, ghrepo, ghissues, recent # for pages using 'layout:post'
+    rightbar: toc
   # 博客专栏文章内页配置
   topic:
     menu_id: post
   # 文档内页配置
   wiki:
     menu_id: wiki # 未在 front-matter 中指定 menu_id 时，layout 为 wiki 的页面默认使用这里配置的 menu_id
-    leftbar: toc, ghissues, related, recent # for wiki
+    leftbar: tree, ghissues, related, recent # for wiki
+    rightbar: toc
   # 作者信息配置
   author: 
     base_dir: author # 只影响自动生成的页面路径
     menu_id: post
     leftbar: recent, timeline
+    rightbar:
   # 错误页配置
   error_page:
     menu_id: post
     '404': '/404.html'
     leftbar: recent, timeline
+    rightbar:
   # 其它自定义页面配置 layout: page
   page:
-    leftbar: toc, recent, timeline
+    leftbar: recent
+    rightbar: toc, timeline
 
 
 

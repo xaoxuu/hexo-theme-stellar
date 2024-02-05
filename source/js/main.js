@@ -122,7 +122,8 @@ const init = {
             const highlightItem = $('#data-toc a.toc-link[href="' + encodeURI(link) + '"]')
             if (highlightItem.length > 0) {
               highlightItem.addClass("active")
-              const e0 = document.querySelector('.widgets')
+              const e0 = document.querySelector('#data-toc')
+              console.log('e0', e0);
               const e1 = document.querySelector('#data-toc a.toc-link[href="' + encodeURI(link) + '"]')
               const offsetBottom = e1.getBoundingClientRect().bottom - e0.getBoundingClientRect().bottom + 200
               const offsetTop = e1.getBoundingClientRect().top - e0.getBoundingClientRect().top - 64

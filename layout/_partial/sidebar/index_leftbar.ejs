@@ -47,6 +47,8 @@ if (page.leftbar == null) {
 if (typeof page.leftbar == 'string') {
   page.leftbar = page.leftbar.replace(/ /g, '').split(',');
 }
+
+
 function layoutTitle(main, url, sub) {
   var el = '';
   el += '<a class="title" href="' + url_for(url || "/") + '">';

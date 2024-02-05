@@ -5,13 +5,19 @@
   margin: auto
   font-size: var(--fsp)
 
-.l_body .l_left
+.l_body aside
   z-index: 8
   width: var(--width-left)
   flex-shrink: 0
   position: sticky
   position: -webkit-sticky
   top: 8px
+
+.l_body .l_right
+  height: 100%
+  .widgets
+    height: 100%
+    overflow visible
 
 // 手机布局
 @media screen and (max-width: $device-mobile-max)
