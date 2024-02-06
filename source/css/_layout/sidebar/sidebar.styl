@@ -1,18 +1,15 @@
 .l_left
-  margin: 8px 0 8px 8px
+  margin: 8px
   height: 'calc(%s - 16px)' % 100vh
   border-radius: $border-card-l
   overflow: hidden
   .header
     margin: var(--gap-max) var(--gap-margin) 0
-  // @media screen and (min-width: $device-mobile-max)
-  //   >.widgets:first-child>.widget-wrapper:first-child
-  //     margin-top: calc(2 * var(--gap-max))
 
 .l_right
-  margin: 8px 8px 8px 0
+  margin: 8px
   border-radius: $border-card-l
-@media screen and (min-width: 1400px)
+@media screen and (min-width: $device-2k)
   .l_left
     margin-left: auto
     margin-right: calc(2 * var(--gap-max))

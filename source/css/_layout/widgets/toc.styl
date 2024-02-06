@@ -1,10 +1,17 @@
 .widget-wrapper.toc
   background: var(--site-bg)
   z-index 1
-
-.l_right .widgets .widget-wrapper.toc .widget-header
-  padding-left: var(--gap-max)
-  padding-right: var(--gap-max)
+  .widget-body
+    position relative
+    &:before
+      content: ''
+      position absolute
+      top: 4px
+      bottom: 4px
+      left: 0
+      width: 4px
+      background: var(--block)
+      border-radius: 4px
 
 // 目录基本样式
 .widget-wrapper.toc .toc
@@ -13,46 +20,42 @@
   margin: 0
   position relative
   list-style: none
-  .toc-child
-    padding-left: 1em
   li
-    margin: 2px 0
+    margin: 0
     list-style: none
-  a  
-    padding: 4px var(--gap-max)
+  a
+    --padding: calc(var(--gap-padding) / 2)
+    --padding-offset: calc(0 - var(--padding))
+    padding: 6px var(--padding)
+    margin: 0 var(--padding)
     color: var(--text-p3)
     display: block
-    overflow: hidden
-    text-overflow: ellipsis
-    white-space: nowrap
     position relative
-    &:before,&:after
-      position: absolute
-      left: 'calc(%s * 0.5)' % var(--gap-max)
-      width: 8px
-      height: 8px
-      top: 'calc(%s - 4px)' % 50%
-      border-radius: 8px
-      background: var(--block)
+    border-radius: $border-bar
+    trans1 all
+    &.active:before
+      content: ''
+      position absolute
+      top: 4px
+      bottom: 4px
+      left: -8px
+      width: 4px
       background: $color-theme
-    &:after
-      opacity 0
-      animation: wave 1s linear infinite
-      @keyframes wave
-        from
-          transform: scale(1)
-          opacity 1
-        to
-          transform: scale(2)
-          opacity 0
+      border-radius: 4px
+    &:hover
+      background: var(--block-hover)
+      color: var(--text)
     
 // 固定位置
 .l_right .widgets .widget-wrapper.toc
+  margin-top: 0
   position: sticky
   position: -webkit-sticky
   top: 0
-  margin-top: 0
   padding: 16px 0
+  &:first-child
+    top: 8px
+    padding-top: 8px
   .widget-body .toc
     max-height: 70vh
     @media screen and (max-width: $device-laptop)
@@ -67,14 +70,23 @@
   .toc-item
     font-weight: 500
     --fsp: $fsp1
-  .toc-item  .toc-item
+  .toc-item .toc-item
     font-weight: 400
     --fsp: $fsp2
+  ol
+    padding-left: 0
+  .toc-child .toc-link
+    padding-left: 1.5rem
+  .toc-child .toc-child .toc-link
+    padding-left: 2.5rem
+  .toc-child .toc-child .toc-child .toc-link
+    padding-left: 3.5rem
+  .toc-child .toc-child .toc-child .toc-child .toc-link
+    padding-left: 4.5rem
+  .toc-child .toc-child .toc-child .toc-child .toc-child .toc-link
+    padding-left: 5rem
 
 // 高亮样式
-.widget-wrapper.toc .toc a.toc-link:hover
-  color: $color-theme
-
 .widget-wrapper.toc .toc a.toc-link.active
   color: var(--text)
   &:before,&:after
@@ -127,8 +139,8 @@
   background: var(--block-border)
   top: 0
   height: 1px
-  left: var(--gap-max)
-  right: var(--gap-max)
+  left: var(--gap-padding)
+  right: var(--gap-padding)
 .widget-wrapper.toc .widget-footer
   margin-top: 8px
   color: var(--text-p2)
@@ -139,9 +151,9 @@
     align-items: center
     color: inherit
     font-size: $fs-14
-    padding: 8px 16px
-    margin: 0 calc(var(--gap-max) - 16px)
-    border-radius: 4px
+    padding: 8px var(--gap-padding)
+    border-radius: $border-bar
+    trans1 all
     svg,img
       height: 16px
       width: auto
@@ -157,14 +169,14 @@
   .l_right
     blur-effect()
     .widgets
-      padding: 8px
       .widget-wrapper.toc
-        background: var(--alpha100)
+        position: static
+        background: none
   .widget-wrapper.toc .toc
     a
       color: var(--text-p2)
   .widget-wrapper.toc .widget-footer
     a
-      background: var(--block)
+      background: var(--alpha100)
     a+a
       margin-top: 4px

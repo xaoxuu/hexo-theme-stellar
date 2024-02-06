@@ -10,6 +10,7 @@
   scrollbar(0, 0)
   z-index: 1
   line-height: 1.2
+  margin: 0 var(--gap-margin)
   .widget-wrapper
     .widget-header
       padding-left: var(--gap-padding)
@@ -61,21 +62,17 @@
   padding-bottom: 32px
 
 .l_left .widgets
-  margin: 0 var(--gap-margin)
   .widget-wrapper
     &:first-child
       margin-top: 32px
 
-.l_right
-  --gap-margin: 0
 .l_right .widgets
+  &:empty 
+    display: none
   .widget-wrapper
     .widget-header
       padding-left: var(--gap-padding)
       padding-right: var(--gap-padding)
-    &:not(.toc)
-      margin-left: var(--gap-margin)
-      margin-right: var(--gap-margin)
   @media screen and (max-width: $device-laptop)
     .widget-wrapper
       margin-top: var(--gap-margin)

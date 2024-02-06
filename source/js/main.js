@@ -159,7 +159,7 @@ const init = {
         if(timeout !== null) clearTimeout(timeout);
         timeout = setTimeout(function() {
           scrollTOC();
-        }.bind(this), 300);
+        }.bind(this), 50);
       });      
     })
   },

@@ -7,21 +7,27 @@
 
 .l_body aside
   z-index: 8
-  width: var(--width-sidebar)
   flex-shrink: 0
   position: sticky
   position: -webkit-sticky
+  // 侧边栏容器宽度
+  --width-sidebar: calc(var(--gap-margin) * 2 + var(--gap-padding) * 2 + var(--side-content-width))
+  width: var(--width-sidebar)
 
 .l_body .l_left
+  justify-self: right
   top: 8px
 .l_body .l_right
-  width: calc(var(--width-sidebar) - var(--gap-max) + var(--gap-padding))
+  justify-self: left
+  --gap-margin: 0px
   .widgets
     height: 100%
     overflow visible
 
 // 平板布局
 @media screen and (max-width: $device-laptop)
+  .l_body .l_right
+    --gap-margin: 16px
   .laptop-only
     display: block !important
   .l_body
@@ -43,7 +49,7 @@
     .l_right
       transform: translateX(0px)
     .main-mask
-      opacity 1
+      // opacity 1
       pointer-events: inherit
 
 // 手机布局

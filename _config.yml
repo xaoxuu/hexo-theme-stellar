@@ -63,7 +63,7 @@ site_tree:
   # 主页配置
   home:
     leftbar: welcome, recent
-    rightbar: welcome
+    rightbar: 
   # 博客列表页配置
   index_blog:
     base_dir: blog # 只影响自动生成的页面路径
@@ -80,7 +80,7 @@ site_tree:
   index_wiki:
     base_dir: wiki # 只影响自动生成的页面路径
     menu_id: wiki # 未在 front-matter 中指定 menu_id 时，layout 为 wiki 的页面默认使用这里配置的 menu_id
-    leftbar: ghissues, related, recent # for wiki
+    leftbar: related, recent # for wiki
     rightbar: 
     nav_tabs:
       # 'more': https://github.com/xaoxuu
@@ -88,7 +88,7 @@ site_tree:
   # 博客文章内页配置
   post:
     menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 post 的页面默认使用这里配置的 menu_id
-    leftbar: related, ghrepo, ghissues, recent # for pages using 'layout:post'
+    leftbar: related, recent # for pages using 'layout:post'
     rightbar: ghrepo, toc
   # 博客专栏文章内页配置
   topic:
@@ -96,7 +96,7 @@ site_tree:
   # 文档内页配置
   wiki:
     menu_id: wiki # 未在 front-matter 中指定 menu_id 时，layout 为 wiki 的页面默认使用这里配置的 menu_id
-    leftbar: tree, ghissues, related, recent # for wiki
+    leftbar: tree, related, recent # for wiki
     rightbar: ghrepo, toc
   # 作者信息配置
   author: 

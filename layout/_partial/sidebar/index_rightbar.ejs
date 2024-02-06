@@ -49,8 +49,10 @@ if (typeof page.rightbar == 'string') {
 }
 
 function layoutWidgets() {
-  var el = '';
-  el += '<div class="widgets">';
+  if (page.rightbar == null || page.rightbar.length == 0) {
+    return ''
+  }
+  var el = ''
   if (page.rightbar) {
     page.rightbar.forEach((w, i) => {
       let name = ''
@@ -71,8 +73,11 @@ function layoutWidgets() {
       }
     });
   }
-  el += '</div>';
-  return el;
+  if (el.trim().length > 0) {
+    return `<div class="widgets">${el}</div>`
+  } else {
+    return ''
+  }
 }
 
 %>

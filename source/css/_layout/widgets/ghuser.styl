@@ -6,7 +6,7 @@
   background: var(--card)
   border-radius: $border-card
   padding: 1rem
-  hoverable-card()
+  box-shadow: $boxshadow-card
 
 .widgets .widget-wrapper.user-card 
   .avatar
@@ -17,6 +17,7 @@
     overflow: hidden
     img
       display: block
+      aspect-ratio: 1
     @media screen and (max-width: $device-tablet)
       max-width: 50%
 

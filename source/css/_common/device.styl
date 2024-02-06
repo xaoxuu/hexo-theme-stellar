@@ -16,9 +16,11 @@
   z-index: 10
   display: flex
   flex-direction: column
-  border-radius: 0.5rem
+  border-radius: $border-bar
   margin-left: auto
   margin-right: 1rem
+  @media screen and (min-width: $device-mobile-max)
+    margin-right: 2rem
   overflow: hidden
   --blur-px: 16px
   --blur-bg: alpha(#fff, .4)
@@ -47,9 +49,10 @@
 
 // 侧边栏弹出后
 .l_body[leftbar] .float-panel, .l_body[rightbar] .float-panel
-  box-shadow: 0 0 4px -2px $color-theme, 0 0 16px -8px $color-theme, 0 0 32px -16px $color-theme
-.l_body[leftbar] .float-panel button
-  background: var(--card)
+  box-shadow: 0 0 4px -1px $color-theme, 0 0 16px -4px $color-theme, 0 0 32px -12px $color-theme, 0 0 128px -32px $color-theme
+  
+.l_body[leftbar] .float-panel button.leftbar-toggle
+  background: var(--alpha100)
 
 .l_body[leftbar] .float-panel button.leftbar-toggle
   color: $color-theme
@@ -61,8 +64,12 @@
       transform: translateX(2px)
 
 
-.l_body[rightbar] .float-panel button
-  background: var(--card)
+// 侧边栏有内容时才显示弹出按钮
+.l_body .l_right:empty+.float-panel button.rightbar-toggle
+  display: none !important
+
+.l_body[rightbar] .float-panel button.rightbar-toggle
+  background: var(--alpha100)
 
 .l_body[rightbar] .float-panel button.rightbar-toggle
   color: $color-theme
