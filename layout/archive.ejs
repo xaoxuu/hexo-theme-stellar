@@ -8,14 +8,21 @@ if (page.author) {
 }
 function layoutArchiveList() {
   var el = ''
+  var cls = ''
   if (page.author) {
     page.title = page.author.name
-    el += partial('_partial/main/navbar/author_banner')
+    page.banner = page.author.banner
+    page.banner_info = {
+      avatar: page.author.avatar,
+      subtitle: page.author.description
+    }
+    el += partial('_partial/main/navbar/article_banner')
+    cls += ' author'
   } else {
     page.title = __('btn.archives')
     el += partial('_partial/main/navbar/nav_tabs_blog')
   }
-  el += `<div class="post-list archives">`
+  el += `<div class="post-list${cls} archives">`
   var years = []
   const posts = page.author != null ? site.posts.filter(p => (p.author || theme.default_author.id) == page.author.id) : site.posts
   posts.sort('date', -1).each(function(post) {

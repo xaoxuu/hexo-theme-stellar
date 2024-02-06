@@ -23,7 +23,7 @@ open_graph:
 logo:
   avatar: '[${config.avatar}](/about/)' # you can set avatar link in _config.yml or '[https://xxx.png](/about/)'
   title: '[${config.title}](/)' # you can set html tag like: '[<img no-lazy height="32px" src="xxx"/>](/)'
-  subtitle: '' # '文字1 | 文字2' (鼠标放上去会切换到文字2)
+  subtitle: '${config.subtitle}' # '文字1 | 文字2' (鼠标放上去会切换到文字2)
 
 # 侧边栏主功能导航菜单
 menubar:
@@ -63,7 +63,7 @@ site_tree:
   # 主页配置
   home:
     leftbar: welcome, recent
-    rightbar: # timeline
+    rightbar: welcome
   # 博客列表页配置
   index_blog:
     base_dir: blog # 只影响自动生成的页面路径
@@ -191,7 +191,7 @@ comments:
     data-input-position: top # top, bottom
     data-theme: preferred_color_scheme
     data-lang: zh-CN
-    data-loading: lazy
+    data-loading: # lazy
     crossorigin: anonymous
 
   # Twikoo

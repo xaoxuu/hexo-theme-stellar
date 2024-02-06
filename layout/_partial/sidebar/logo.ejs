@@ -67,7 +67,7 @@ function layoutDiv() {
   const main = md_text(logo.title)
   if (main) {
     let url = md_link(logo.title)
-    el += layoutTitle(main, url, logo.subtitle)
+    el += layoutTitle(main, url, md_text(logo.subtitle))
   }
   el += `</div>`
   el += '</header>'

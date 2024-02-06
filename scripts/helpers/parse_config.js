@@ -9,17 +9,18 @@ hexo.extend.helper.register('md_text', function(args) {
   if (args == undefined) {
     return ''
   }
+  const { config } = hexo
+  args = args.replace('${config.title}', config.title)
+  args = args.replace('${config.subtitle}', config.subtitle)
+  args = args.replace('${config.avatar}', config.avatar)
   let tmp = args.split('](')
   if (tmp.length > 1) {
     tmp = tmp[0]
     if (tmp.length > 1) {
       tmp = tmp.substring(1, tmp.length)
     }
-  }
-  if (tmp == 'config.title' || tmp == '${config.title}') {
-    tmp = hexo.config.title
-  } else if (tmp == 'config.avatar' || tmp == '${config.avatar}') {
-    tmp = hexo.config.avatar
+  } else {
+    tmp = args
   }
   return tmp
 })
