@@ -155,6 +155,7 @@ search:
 ######## Comments ########
 comments:
   service: # beaudar, utterances, giscus, twikoo, waline, artalk
+  comment_title: 快来参与讨论吧~
   # beaudar
   # https://beaudar.lipk.org/
   beaudar:
