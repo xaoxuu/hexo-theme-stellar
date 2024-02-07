@@ -35,23 +35,26 @@ _light_text()
   --text-meta: hsl($color-text-h, $color-text-s, 100 - $color-text-l / 0.5 * 1.75)
   --text-code: hsl($color-code-h, $color-code-s, (100 - $color-code-l) * 1.2)
 
+_common_root()
+  :root
+    --theme-link: $color-link
+
 _light_root()
   :root
     --site-bg: hsl($color-background-h, $color-background-s, $color-background-l)
     --card: hsl($color-block-h, $color-block-s, 100)
+    --block: hsl($color-block-h, $color-block-s, 95)
+    --block-border: hsl($color-block-h, $color-block-s, 90)
+    --block-hover: hsl($color-block-h, $color-block-s, 92)
+    --theme-link-opa: rgba($color-link, 0.2)
+    --leftbar-bg: hsl($color-block-h, $color-block-s, 90)
     --alpha20: rgba(white, 0.2)
     --alpha50: rgba(white, 0.5)
     --alpha60: rgba(white, 0.6)
     --alpha75: rgba(white, 0.75)
     --alpha100: white
-    --leftbar-bg: hsl($color-block-h, $color-block-s, 90)
-    --block: hsl($color-block-h, $color-block-s, 95)
-    --block-border: hsl($color-block-h, $color-block-s, 90)
-    --block-hover: hsl($color-block-h, $color-block-s, 92)
     _dark_text()
-    --theme-link: $color-link
-    --theme-link-opa: rgba($color-link, 0.2)
-
+    
 _dark_root()
   :root
     --site-bg: hsl($color-background-h, $color-background-s * 0.5, (100 - $color-background-l) * 2 + 8)
@@ -59,16 +62,18 @@ _dark_root()
     --block: hsl($color-block-h, $color-block-s, 16)
     --block-border: hsl($color-block-h, $color-block-s, 24)
     --block-hover: hsl($color-block-h, $color-block-s, 20)
+    --theme-link-opa: rgba($color-link, 0.4)
+    --leftbar-bg: hsl($color-block-h, $color-block-s, 24)
     --alpha20: rgba(black, 0.2)
     --alpha50: rgba(black, 0.5)
     --alpha60: rgba(black, 0.6)
     --alpha75: rgba(black, 0.75)
     --alpha100: black
-    --leftbar-bg: hsl($color-block-h, $color-block-s, 24)
     _light_text()
     @media screen and (max-width: $device-mobile-max)
       --site-bg: black
 
+_common_root()
 // 默认自动模式
 if theme(light)
   _light_root()
