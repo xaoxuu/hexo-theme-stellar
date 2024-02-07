@@ -9,19 +9,15 @@ const util = {
     const minute = 1000 * 60
     const hour = minute * 60
     const day = hour * 24
-    const month = day * 30
 
     let result
     if (more) {
-      const monthCount = dateDiff / month
       const dayCount = dateDiff / day
       const hourCount = dateDiff / hour
       const minuteCount = dateDiff / minute
 
-      if (monthCount > 12) {
+      if (dayCount > 7) {
         result = null
-      } else if (monthCount >= 1) {
-        result = parseInt(monthCount) + ' ' + stellar.config.date_suffix.month
       } else if (dayCount >= 1) {
         result = parseInt(dayCount) + ' ' + stellar.config.date_suffix.day
       } else if (hourCount >= 1) {
