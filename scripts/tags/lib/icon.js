@@ -9,19 +9,24 @@
 'use strict'
 
 module.exports = ctx => function(args) {
-  args = ctx.args.map(args, ['color', 'style'], ['key'])
+  args = ctx.args.map(args, ['color', 'style'], ['key', 'text'])
   if (args.color == null) {
     args.color = ctx.theme.config.tag_plugins.icon.default_color
   }
   var el = ''
-  el += '<span class="tag-plugin colorful icon"'
-  el += ' ' + ctx.args.joinTags(args, ['color']).join(' ')
-  el += '>'
+  if (args.text) {
+    el += `<div class="tag-plugin icon-wrap">`
+  }
+  el += `<span class="tag-plugin icon colorful" ${ctx.args.joinTags(args, ['color']).join(' ')}>`
   var more = ''
   if (args.style) {
     more += `style="${args.style}"`
   }
   el += ctx.utils.icon(args.key, more)
-  el += '</span>'
+  el += `</span>`
+  if (args.text) {
+    el += `<span class="text">${args.text}</span>`
+    el += '</div>'
+  }
   return el
 }
