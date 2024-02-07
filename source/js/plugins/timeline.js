@@ -84,7 +84,7 @@ const StellarTimeline = {
           cell += '</a>';
         }
         let date = new Date(item.created_at);
-        cell += '<p>' + date.toLocaleString() + '</p>';
+        cell += '<span>' + date.toLocaleString() + '</span>';
         cell += '</div>';
         cell += '<div class="body">';
         if (!hide.includes('title')) {

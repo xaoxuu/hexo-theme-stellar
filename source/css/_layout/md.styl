@@ -20,9 +20,12 @@
   overflow: hidden
 
 .l_body[text-indent] .md-text.content
-  >p
+  // 应用缩进效果
+  p:not([class])
     text-indent: 'calc(%s * 2)' % var(--fsp)
     text-align: justify
+    a
+      text-indent: 0
   ol,ul
     margin-left: 0.5em
   h1,h2,h3,h4,h5,h6
@@ -31,6 +34,11 @@
       display: none
   h2
     margin: 2em 0 1.5em
+  // 取消缩进效果
+  blockquote, .poetry, .okr, .timeline, li
+    p:not([class])
+      text-indent: 0
+      text-align: convert(hexo-config('style.text-align'))
 
 .md-text
   ul:not(:last-child),

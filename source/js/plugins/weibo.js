@@ -59,7 +59,7 @@ const weibojs = {
         cell += '<img src="' + (data.user.avatar_hd || cfg.avatar) + '" onerror="javascript:this.src=\'' + cfg.avatar + '\';">';
         cell += '<span>' + data.user.nick_name + '</span>';
         cell += '</div>';
-        cell += '<p>' + item.created_at + '</p>';
+        cell += '<span>' + item.created_at + '</span>';
         cell += '</div>';
         cell += '<div class="body">';
         cell += '<a class="body" href="' + item.url + '" target="_blank" rel="external nofollow noopener noreferrer">';
