@@ -6,7 +6,7 @@
 
 .article.banner
   .bg+.content
-    min-height: 240px
+    min-height: 224px
     --text-banner: white
     --button-hover-bg: rgba(white, 0.25)
 
@@ -32,7 +32,7 @@
 .article.banner
   .bg+.content
     trans1 all
-    --blur-bg: rgba(black, 0.1)
+    --blur-bg: rgba(black, 0)
     --blur-px: 0px
     --blur-sat: 100%
     background: var(--blur-bg)
@@ -48,12 +48,10 @@
 
 .article.banner
   --button-hover-bg: rgba(black, 0.05)
-set_darkmode()
-  .article.banner
+  ondark()
     --button-hover-bg: rgba(white, 0.15)
-
-if hexo-config('style.darkmode') == 'auto'
-  @media (prefers-color-scheme: dark)
-    set_darkmode()
-if hexo-config('style.darkmode') == 'always'
-  set_darkmode()
+  if theme(dark)
+    ondark()
+  else if theme(auto)
+    @media (prefers-color-scheme: dark)
+      ondark()

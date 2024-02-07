@@ -1,3 +1,6 @@
+theme($t)
+  convert(hexo-config('style.prefers_theme')) == $t
+
 $color-background-h = hue($color-background)
 $color-background-s = saturation($color-background)
 $color-background-l = lightness($color-background)
@@ -14,7 +17,7 @@ $color-text-h = hue($color-text)
 $color-text-s = saturation($color-text)
 $color-text-l = lightness($color-text)
 
-set_text_dark()
+_dark_text()
   --text: hsl($color-text-h, $color-text-s, 0)
   --text-p1: hsl($color-text-h, $color-text-s, $color-text-l)
   --text-p2: hsl($color-text-h, $color-text-s, $color-text-l / 0.5 * 0.75)
@@ -23,7 +26,7 @@ set_text_dark()
   --text-meta: hsl($color-text-h, $color-text-s, $color-text-l / 0.5 * 2)
   --text-code: hsl($color-code-h, $color-code-s, $color-code-l)
 
-set_text_light()
+_light_text()
   --text: hsl($color-text-h, $color-text-s, 100)
   --text-p1: hsl($color-text-h, $color-text-s, 100 - $color-text-l / 0.5 * 0.5)
   --text-p2: hsl($color-text-h, $color-text-s, 100 - $color-text-l / 0.5 * 0.75)
@@ -32,23 +35,24 @@ set_text_light()
   --text-meta: hsl($color-text-h, $color-text-s, 100 - $color-text-l / 0.5 * 1.75)
   --text-code: hsl($color-code-h, $color-code-s, (100 - $color-code-l) * 1.2)
 
-:root
-  --site-bg: hsl($color-background-h, $color-background-s, $color-background-l)
-  --card: hsl($color-block-h, $color-block-s, 100)
-  --alpha20: rgba(white, 0.2)
-  --alpha50: rgba(white, 0.5)
-  --alpha60: rgba(white, 0.6)
-  --alpha75: rgba(white, 0.75)
-  --alpha100: white
-  --leftbar-bg: hsl($color-block-h, $color-block-s, 90)
-  --block: hsl($color-block-h, $color-block-s, 95)
-  --block-border: hsl($color-block-h, $color-block-s, 90)
-  --block-hover: hsl($color-block-h, $color-block-s, 92)
-  set_text_dark()
-  --theme-link: $color-link
-  --theme-link-opa: rgba($color-link, 0.2)
+_light_root()
+  :root
+    --site-bg: hsl($color-background-h, $color-background-s, $color-background-l)
+    --card: hsl($color-block-h, $color-block-s, 100)
+    --alpha20: rgba(white, 0.2)
+    --alpha50: rgba(white, 0.5)
+    --alpha60: rgba(white, 0.6)
+    --alpha75: rgba(white, 0.75)
+    --alpha100: white
+    --leftbar-bg: hsl($color-block-h, $color-block-s, 90)
+    --block: hsl($color-block-h, $color-block-s, 95)
+    --block-border: hsl($color-block-h, $color-block-s, 90)
+    --block-hover: hsl($color-block-h, $color-block-s, 92)
+    _dark_text()
+    --theme-link: $color-link
+    --theme-link-opa: rgba($color-link, 0.2)
 
-set_darkmode()
+_dark_root()
   :root
     --site-bg: hsl($color-background-h, $color-background-s * 0.5, (100 - $color-background-l) * 2 + 8)
     --card: hsl($color-block-h, $color-block-s * 1.2, 24)
@@ -61,15 +65,17 @@ set_darkmode()
     --alpha75: rgba(black, 0.75)
     --alpha100: black
     --leftbar-bg: hsl($color-block-h, $color-block-s, 24)
-    set_text_light()
+    _light_text()
     @media screen and (max-width: $device-mobile-max)
       --site-bg: black
 
-if hexo-config('style.darkmode') == 'auto'
-  // 系统的dark模式
+// 默认自动模式
+if theme(light)
+  _light_root()
+else if theme(dark)
+  _dark_root()
+else
+  @media (prefers-color-scheme: light)
+    _light_root()
   @media (prefers-color-scheme: dark)
-    set_darkmode()
-
-
-if hexo-config('style.darkmode') == 'always'
-  set_darkmode()
+    _dark_root()

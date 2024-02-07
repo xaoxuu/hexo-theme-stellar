@@ -24,7 +24,7 @@ pre.mermaid
   stroke: var(--block-border) !important
   fill: var(--block) !important
   
-set_mermaid_darkmode()
+_dark_mermaid()
   .mermaid 
     fill: #ccc !important
   
@@ -117,9 +117,8 @@ set_mermaid_darkmode()
     fill: #ccc
   
 
-if hexo-config('style.darkmode') == 'auto'
+if theme(dark)
+  _dark_mermaid()
+else if theme(auto)
   @media (prefers-color-scheme: dark)
-    set_mermaid_darkmode()
-
-if hexo-config('style.darkmode') == 'always'
-  set_mermaid_darkmode()
+    _dark_mermaid()

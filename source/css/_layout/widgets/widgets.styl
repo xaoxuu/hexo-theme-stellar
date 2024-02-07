@@ -73,7 +73,12 @@
     .widget-header
       padding-left: var(--gap-padding)
       padding-right: var(--gap-padding)
+  // 小屏幕
   @media screen and (max-width: $device-laptop)
     .widget-wrapper
       margin-top: var(--gap-margin)
       border-radius: $border-card
+  // 大屏幕
+  @media screen and (min-width: $device-laptop)
+    .widget-wrapper.markdown .widget-body
+      background: var(--block)

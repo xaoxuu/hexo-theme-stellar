@@ -106,15 +106,15 @@
   .tk-comments-no
     color: var(--text-p1);
 
-set_darkmode_comments()
+_dark_comments()
   .cmt-body.twikoo
     --twikoo-lighttext: $color-link;
     --twikoo-secondtext: var(--text-p2);
     --twikoo-theme: $color-theme;
 
-if hexo-config('style.darkmode') == 'auto'
-  @media (prefers-color-scheme: dark)
-    set_darkmode_comments()
 
-if hexo-config('style.darkmode') == 'always'
-  set_darkmode_comments()
+if theme(dark)
+  _dark_comments()
+else if theme(auto)
+  @media (prefers-color-scheme: dark)
+    _dark_comments()

@@ -66,7 +66,7 @@ set_dynamic_color($theme)
   --theme-link: #ffe659
   set_text_white()
 
-set_darkmode_tags()
+_dark_tags()
   set_dynamic_color($theme)
     --theme: $theme
     --theme-border: hsl(hue($theme), 50, 24)
@@ -104,9 +104,10 @@ set_darkmode_tags()
   .colorful[color='warning'],.colorful[color='light']
     set_text_black()
 
-if hexo-config('style.darkmode') == 'auto'
-  @media (prefers-color-scheme: dark)
-    set_darkmode_tags()
 
-if hexo-config('style.darkmode') == 'always'
-  set_darkmode_tags()
+if theme(dark)
+  _dark_tags()
+else if theme(auto)
+  @media (prefers-color-scheme: dark)
+    _dark_tags()
+

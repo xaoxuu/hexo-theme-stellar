@@ -25,11 +25,13 @@
   --blur-px: 16px
   --blur-bg: alpha(#fff, .4)
   trans1: all
-  if hexo-config('style.darkmode') == 'auto'
-    @media (prefers-color-scheme: dark)
-      --blur-bg: alpha(#000, .4)
-  if hexo-config('style.darkmode') == 'always'
+  ondark()
     --blur-bg: alpha(#000, .4)
+  if theme(dark)
+    ondark()
+  else if theme(auto)
+    @media (prefers-color-scheme: dark)
+      ondark()
 
 // 侧边栏弹出按钮
 .float-panel button

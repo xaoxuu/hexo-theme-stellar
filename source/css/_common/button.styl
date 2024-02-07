@@ -27,7 +27,7 @@ a[onclick]:hover
 
 a.button.start.gradient
   position relative
-  @media (prefers-color-scheme: dark)
+  ondark()
     transition: 0.38s ease-out
     z-index: 0
     background: convert(hexo-config('style.gradient.start'))
@@ -59,3 +59,9 @@ a.button.start.gradient
     &:hover:after
       filter: blur(36px)
       opacity 1
+  
+  if theme(dark)
+    ondark()
+  else if theme(auto)
+    @media (prefers-color-scheme: dark)
+      ondark()

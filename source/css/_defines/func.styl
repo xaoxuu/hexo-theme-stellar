@@ -106,10 +106,20 @@ floatable-float()
 
 hoverable-card()
   trans1 all
-  @media (prefers-color-scheme: dark)
-    &:hover
-      box-shadow: 0 0 4px -2px $color-theme, 0 0 24px -8px $color-theme
-  @media (prefers-color-scheme: light)
+  onlight()
     box-shadow: $boxshadow-card
     &:hover
       floatable-float()
+  ondark()
+    &:hover
+      box-shadow: 0 0 4px -2px $color-theme, 0 0 24px -8px $color-theme
+  if theme(light)
+    onlight()
+  else if theme(dark)
+    ondark()
+  else
+    @media (prefers-color-scheme: light)
+      onlight()
+    @media (prefers-color-scheme: dark)
+      ondark()
+  

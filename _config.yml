@@ -321,6 +321,9 @@ tag_plugins:
   icon:
     # 留空时，图标和文字颜色相同
     default_color: accent # theme, accent, red, orange, yellow, green, cyan, blue, purple
+  # {% button 标题 链接 %}
+  button:
+    default_color: theme # theme, accent, red, orange, yellow, green, cyan, blue, purple
   # {% image %}
   image:
     fancybox: false # true, false
@@ -486,7 +489,7 @@ plugins:
     typingAnimate: true # 打字机动画 
 
 style:
-  darkmode: auto # auto / always / false
+  prefers_theme: auto # auto / light / dark
   smooth_scroll: false # true / false 开启时如果目录过长可能无法准确定位
   font-size:
     root: 16px # 改这个会影响全局所有文字的字号
@@ -516,7 +519,6 @@ style:
     theme: 'hsl(192 98% 55%)' # 主题色
     accent: 'hsl(14 100% 57%)' # 强调色
     link: 'hsl(207 90% 54%)' # 超链接颜色
-    button: 'hsl(192 98% 55%)' # 按钮颜色
     hover: 'hsl(14 100% 57%)' # 按钮高亮颜色
   animated_avatar:
     animate: auto # auto, always
@@ -529,7 +531,6 @@ style:
     error: 加载失败，请稍后重试。
   gradient: # https://webgradients.com/
     start: 'linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))'
-    search: 'linear-gradient(to right, #04F3FF, #08FFC6, #DDF730, #FFBD19, #FF1FE0, #C418FF, #04F3FF)'
   leftbar:
     # 可以设置：纯色/渐变色/图片作为背景
     # background: var(--leftbar-bg)

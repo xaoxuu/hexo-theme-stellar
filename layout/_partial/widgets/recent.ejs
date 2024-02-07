@@ -30,8 +30,7 @@ function layoutDiv() {
   arr.length = item.limit
   arr.forEach(post => {
     if (!post) { return }
-    const isActive = post.path == page.path
-    el += `<a class="item title${post.path == page.path ? ' active' : ''}" href="${url_for(post.link || post.path)}">`
+    el += `<a class="item title" href="${url_for(post.link || post.path)}">`
     el += '<span class="title">'
     if (post.wiki) {
       const proj = theme.wiki.tree[post.wiki];
@@ -41,9 +40,6 @@ function layoutDiv() {
       }
     }
     el += post.title + '</span>';
-    if (isActive) {
-      el += icon('default:bookmark.active')
-    }
     el += '</a>';
     el += '';
   });

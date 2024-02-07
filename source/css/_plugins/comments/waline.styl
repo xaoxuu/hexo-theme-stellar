@@ -37,8 +37,8 @@
   --waline-avatar-radius: 50%;
   --waline-box-shadow: none;
   
-
-  @media (prefers-color-scheme: dark)
+.cmt-body.waline
+  ondark()
     --waline-white: #000;
     --waline-light-grey: #666;
     --waline-dark-grey: #999;
@@ -55,11 +55,14 @@
     /* 其他颜色 */
     --waline-info-bgcolor: #272727;
     --waline-info-color: #666;
+    .wl-count
+      padding: .375em;
+      font-weight: bold;
+      font-size: 1.25em;
+      color: #fff;
 
-.wl-count
-  @media (prefers-color-scheme: dark)
-    padding: .375em;
-    font-weight: bold;
-    font-size: 1.25em;
-    color: #fff;
-
+  if theme(dark)
+    ondark()
+  else if theme(auto)
+    @media (prefers-color-scheme: dark)
+      ondark()

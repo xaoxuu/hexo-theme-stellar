@@ -22,7 +22,7 @@ module.exports = ctx => function(args) {
     args.text = `${args.text} ${arr.join(' ')}`
   }
   if (args.color == null) {
-    args.color = 'theme'
+    args.color = ctx.theme.config.tag_plugins.button.default_color
   }
   var el = ''
   el += '<a class="tag-plugin colorful button"'

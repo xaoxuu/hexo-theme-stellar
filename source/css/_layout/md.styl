@@ -23,6 +23,8 @@
   >p
     text-indent: 'calc(%s * 2)' % var(--fsp)
     text-align: justify
+  ol,ul
+    margin-left: 0.5em
   h1,h2,h3,h4,h5,h6
     text-align: center
     a.headerlink
@@ -108,14 +110,18 @@
   margin: auto
   display: block
 
-.md-text li:not([class]) a:not([class]), .md-text p:not([class]) a:not([class])
+.md-text li:not([class]) a:not([class])
+.md-text p:not([class]) a:not([class])
+.md-text table a:not([class])
   position: relative
   text-decoration: none
   trans1 all
   padding: 0 2px
   border-radius: 0
+  color: inherit
   background: linear-gradient(0deg,var(--theme-link),var(--theme-link)) no-repeat left 100%/100% 1px
   &:hover
+    text-decoration: none
     color: var(--theme-link)
     border-radius: 4px
     background: linear-gradient(0deg,var(--theme-link-opa),var(--theme-link-opa)) no-repeat left 100%/100% 100%

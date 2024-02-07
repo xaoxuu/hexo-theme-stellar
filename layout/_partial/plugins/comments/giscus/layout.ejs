@@ -2,9 +2,12 @@
 function layoutDiv() {
   var el = '';
   const cmt = page.cmt;
-  if (cmt && cmt.service && (cmt.service.length > 0)) {
+  if (cmt?.service?.length > 0) {
     const name = cmt.service;
-    const body = cmt[name];
+    var body = cmt[name];
+    if (theme.style.prefers_theme != 'auto' && body['data-theme'] == 'preferred_color_scheme') {
+      body['data-theme'] = theme.style.prefers_theme
+    }
     el += '<div id="' + name + '"';
     for (let key of Object.keys(body)) {
       if (body[key] !== null) {
