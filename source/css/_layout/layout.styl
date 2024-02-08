@@ -20,6 +20,7 @@
 .l_body .l_right
   justify-self: left
   --gap-margin: 0px
+  max-height: calc(100% - 8px * 2)
   .widgets
     height: 100%
     overflow visible
@@ -34,7 +35,7 @@
     .l_right
       top: 8px
       position: fixed
-      height: calc(100% - 8px * 2)
+      max-height: calc(100% - 8px * 2)
       transform: translateX(320px)
       transition: transform .38s ease-out
       margin: 0
@@ -44,7 +45,8 @@
       background: var(--site-bg)
       overflow: auto
       scrollbar(0, 0)
-      --blur-bg: var(--alpha75)
+      --blur-bg: var(--alpha60)
+      --blur-px: 50px
   .l_body[rightbar]
     .l_right
       transform: translateX(0px)

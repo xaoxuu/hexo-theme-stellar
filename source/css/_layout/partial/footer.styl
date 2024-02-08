@@ -3,15 +3,19 @@
   color: var(--text-p2)
   a
     color: var(--text-p2)
+    border-radius: 2px
     &:hover
-      color: $color-hover
+      color: var(--text)
+      background: var(--block-hover)
 
 .page-footer .sitemap
-  margin: .5rem 0 2rem
+  margin: .5rem -4px 2rem
   display: grid
   scrollbar-width: none
   grid-gap: 1rem 1rem
   grid-auto-flow: column dense
+  // grid-template-columns: repeat(auto-fill, minmax(80px, 1fr))
+  grid-template-columns: repeat(4, 1fr)
   overflow: scroll
   scrollbar(0, 0)
 
@@ -23,12 +27,11 @@
   >span,>a
     text-decoration: none
     txt-ellipsis()
+    padding: 4px
   >span
-    margin: .5rem 0
     font-weight: 500
     color: var(--text-p1)
-  >a
-    margin: .2rem 0
+    margin: 4px 0
 
 
 .page-footer .text
@@ -36,5 +39,4 @@
     margin: 4px 0
     line-height: 1.5
   a:not([class])
-    text-decoration: underline
     font-weight: 500
