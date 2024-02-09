@@ -16,7 +16,7 @@ const util = {
       const hourCount = dateDiff / hour
       const minuteCount = dateDiff / minute
 
-      if (dayCount > 7) {
+      if (dayCount > 14) {
         result = null
       } else if (dayCount >= 1) {
         result = parseInt(dayCount) + ' ' + stellar.config.date_suffix.day
@@ -159,10 +159,10 @@ const init = {
       });      
     })
   },
-  leftbar: () => {
+  sidebar: () => {
     stellar.jQuery(() => {
       $("#data-toc a.toc-link").click(function (e) {
-        l_body.classList.remove("leftbar");
+        sidebar.dismiss();
       });
     })
   },
@@ -210,7 +210,7 @@ const init = {
 
 // init
 init.toc()
-init.leftbar()
+init.sidebar()
 init.relativeDate(document.querySelectorAll('#post-meta time'))
 init.registerTabsTag()
 
