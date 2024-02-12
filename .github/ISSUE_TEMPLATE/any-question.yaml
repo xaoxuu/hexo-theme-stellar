@@ -1,0 +1,23 @@
+name: Any Question【问题反馈】
+description: 主题使用方面任何问题或建议。
+labels: []
+body:
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 检查清单
+      description: 请认真检查以下清单中的每一项，并在相符的项前打勾。
+      options:
+        - required: true
+          label: 已经阅读过 [官方文档](https://xaoxuu.com/wiki/stellar/) 相关内容，并尝试进行搜索。
+        - required: false
+          label: 尝试过在本地测试运行官方 [demo](https://github.com/xaoxuu/hexo-theme-stellar-examples/) 源码。
+        - required: false
+          label: 尝试过在 Codespace 中测试运行官方 [demo](https://github.com/xaoxuu/hexo-theme-stellar-examples/) 源码。
+  - type: textarea
+    id: config-file
+    validations:
+      required: true
+    attributes:
+      label: 问题描述
+      description: 为了使您遇到的问题能够快速得到解决，建议先阅读并理解 [提问的智慧](https://github.com/ryanhanwu/How-To-Ask-Questions-The-Smart-Way/blob/main/README-zh_CN.md) 。
