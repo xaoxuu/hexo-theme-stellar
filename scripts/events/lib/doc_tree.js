@@ -30,8 +30,8 @@ function getWikiObject(ctx) {
       if ((typeof obj.tags == 'string') && obj.tags.constructor == String) {
         obj.tags = [obj.tags]
       }
-      if ((typeof obj.toc == 'object') && obj.toc.constructor == Array) {
-        obj.toc = { '': obj.toc }
+      if ((typeof obj.tree == 'object') && obj.tree.constructor == Array) {
+        obj.tree = { '': obj.tree }
       }
       obj.id = newKey
       if (obj.sort == null) {
@@ -108,9 +108,9 @@ module.exports = ctx => {
     // 首页
     // 未特别指定首页时，获取TOC第一页作为首页
     var homepage = item.homepage
-    if (homepage == null && item.toc != null) {
-      for (let id of Object.keys(item.toc)) {
-        const sec = item.toc[id]
+    if (homepage == null && item.tree != null) {
+      for (let id of Object.keys(item.tree)) {
+        const sec = item.tree[id]
         for (let key of sec) {
           let hs = sub_pages.filter(p => p.path_key == item.base_dir + key)
           if (hs.length > 0) {
@@ -134,11 +134,11 @@ module.exports = ctx => {
     // 内页分组
     var sections = []
     var others = sub_pages
-    if (item.toc) {
+    if (item.tree) {
       // 根据配置设置顺序
-      for (let title of Object.keys(item.toc)) {
+      for (let title of Object.keys(item.tree)) {
         var sec = { title: title, pages: []}
-        for (let key of item.toc[title]) {
+        for (let key of item.tree[title]) {
           sec.pages = sec.pages.concat(sub_pages.filter(p => p.path_key == item.base_dir + key))
           others = others.filter(p => p.path_key != item.base_dir + key)
         }
