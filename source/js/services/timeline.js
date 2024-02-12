@@ -31,7 +31,6 @@ utils.jq(() => {
         if (hideStr && hideStr.length > 0) {
           hide = hideStr.split(",");
         }
-        console.log('arr', arr);
         arr.forEach((item, i) => {
           if (item.user && item.user.login && users.length > 0) {
             if (!users.includes(item.user.login)) {
@@ -99,7 +98,6 @@ utils.jq(() => {
           
           cell += '</div>';
           cell += '</div>';
-          console.log('cell', cell, el);
           $(el).append(cell);
         });
       });

@@ -14,10 +14,10 @@
     for (let id of Object.keys(ctx.services)) {
       const js = ctx.services[id];
       if (id == 'siteinfo') {
-        const els = document.querySelectorAll('a.link-card[cardlink]');
-        if (els?.length > 0) {
+        ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
+        if (ctx.cardlinks?.length > 0) {
           utils.js(js, { defer: true }).then(function () {
-            setCardLink(els);
+            setCardLink(ctx.cardlinks);
           });
         }
       } else {
