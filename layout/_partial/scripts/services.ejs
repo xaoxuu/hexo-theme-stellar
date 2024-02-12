@@ -1,0 +1,39 @@
+<script>
+  ctx.services = {
+    fcircle: `<%- theme.services.fcircle?.js %>`,
+    friends: `<%- theme.services.friends?.js %>`,
+    ghinfo: `<%- theme.services.ghinfo?.js %>`,
+    siteinfo: `<%- theme.services.siteinfo?.js %>`,
+    mdrender: `<%- theme.services.mdrender?.js %>`,
+    memos: `<%- theme.services.memos?.js %>`,
+    sites: `<%- theme.services.sites?.js %>`,
+    timeline: `<%- theme.services.timeline?.js %>`,
+    weibo: `<%- theme.services.weibo?.js %>`,
+  }
+  window.addEventListener('DOMContentLoaded', (event) => {
+    for (let id of Object.keys(ctx.services)) {
+      const js = ctx.services[id];
+      if (id == 'siteinfo') {
+        const els = document.querySelectorAll('a.link-card[cardlink]');
+        if (els?.length > 0) {
+          utils.js(js, { defer: true }).then(function () {
+            setCardLink(els);
+          });
+        }
+      } else {
+        const els = document.getElementsByClassName(`stellar-${id}-api`);
+        if (els?.length > 0) {
+          utils.jq(() => {
+            if (id == 'timeline' || 'memos' || 'marked') {
+              utils.js(deps.marked).then(function () {
+                utils.js(js, { defer: true });
+              });
+            } else {
+              utils.js(js, { defer: true });
+            }
+          });
+        }
+      }
+    }
+  });
+</script>

@@ -1,0 +1,9 @@
+<% if (['all', page.layout].includes(theme.plugins.tianli_gpt.field)) { %>
+  <script>
+    let tianliGPT_postSelector = 'article.content';
+    let tianliGPT_key = `<%= theme.plugins.tianli_gpt?.api %>`;
+    let tianliGPT_typingAnimate = `<%= theme.plugins.tianli_gpt?.typingAnimate %>`;
+    let tianliGPT_wordLimit = `<%= theme.plugins.tianli_gpt?.limit %>`;
+  </script>
+  <script defer src="<%- theme.plugins.tianli_gpt?.js %>"></script>
+<% } %>

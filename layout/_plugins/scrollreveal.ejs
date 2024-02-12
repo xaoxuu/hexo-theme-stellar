@@ -1,0 +1,15 @@
+<script defer src="<%- conf.js %>"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const slideUp = {
+      distance: `<%- conf.distance %>`,
+      duration: `<%- conf.duration %>`,
+      interval: `<%- conf.interval %>`,
+      scale: `<%- conf.scale %>`,
+      opacity: 0,
+      easing: "ease-out"
+    };
+    ScrollReveal().reveal('.l_left .slide-up', slideUp);
+    ScrollReveal().reveal('.l_main .slide-up', slideUp);
+  });
+</script>

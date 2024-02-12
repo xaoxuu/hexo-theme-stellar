@@ -1,4 +1,4 @@
-.md-text .tag-plugin.timeline
+.tag-plugin.timeline
   position: relative
   padding-left: 16px
   &:before
@@ -16,7 +16,7 @@
     &:before
       display: none
 
-.md-text .tag-plugin.timeline .timenode
+.tag-plugin.timeline .timenode
   position: relative
   display: flex
   flex-direction: column
@@ -31,12 +31,8 @@
   &+.timenode
     margin-top: 1rem
   &:hover .header
-    p
+    span
       color: var(--text-p1)
-    .user-info
-      background: $color-theme
-      span
-        color: var(--card)
     &:before
       background: $color-theme
       height: 16px
@@ -49,17 +45,17 @@
   position: relative
   margin: 0.25rem 0
   font-size: $fs-13
+  a.user-info span
+    font-weight: 600
   .user-info 
     display: flex
     align-items: center
     font-size: $fs-13
     font-weight: 500
     color: var(--text-p1)
-    margin-right: 4px
+    margin-right: 8px
     line-height: 1
     border-radius: 16px
-    padding-right: 6px
-    trans2 color background
     img 
       background: white
       height: 16px
@@ -67,19 +63,10 @@
       display: inline
       margin: 0 4px 0 0
       object-fit: contain
-    &:hover
-      background: $color-hover
-  &,p  
+  &,span
     font-weight: 500
     color: var(--text-p3)
-    trans1 color
     line-height: 1
-  p
-    margin: 0 !important
-    font-size: $fs-13 !important
-    a
-      color: inherit
-      font-weight: inherit
   &:before
     content: ''
     position: absolute
@@ -112,11 +99,6 @@
     width: 240px
 
 .tag-plugin.timeline[api]
-  &.stellar-fcircle-api .timenode:hover .header
-    .user-info
-      background: inherit
-      span
-        color: inherit
   a.body
     display: block
     color: var(--text-p1)
@@ -187,6 +169,8 @@
     flex-wrap: wrap
     font-size: $fs-13
     align-items: stretch
+  .left+.right
+    margin-left: 4px
 
 .tag-plugin.timeline[api] .body .footer
   .item
@@ -202,8 +186,13 @@
       margin-left: 0
     &:last-child 
       margin-right: 0
-  a:hover
-      border-color: $color-hover
+  a.item
+    background: var(--block)
+    border-color: var(--block-border)
+    color: inherit
+    &:hover
+      background: var(--block-hover)
+      
   .reaction 
     border-color: var(--block)
 
@@ -237,8 +226,9 @@
   p:last-child
     margin-bottom: 2px
   img  
-    margin: 0
+    margin: .5rem 0
     max-height: 128px
+    cursor: zoom-in
   .tag-plugin.image
     display: flex
     .image-bg+.image-bg

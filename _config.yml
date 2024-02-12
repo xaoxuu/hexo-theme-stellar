@@ -289,11 +289,6 @@ footer:
 
 ######## Tag Plugins ########
 tag_plugins:
-  # {% link %}
-  linkcard:
-    # 设置 api 可以自动提取网页标题、图标，服务部署方法：https://github.com/xaoxuu/site-info-api/
-    # 接口测试通过后，把按钮的 href 部分替换成 ${href} 之后填写到下方，例如：https://api.vlts.cc/site_info/v1?url=${href}
-    api: 
   # {% box %} / {% note %}
   note:
     default_color: '' # light, dark, red, orange, yellow, green, cyan, blue, purple, warning, error
@@ -366,42 +361,82 @@ tag_plugins:
     size: mix # s / m / l / xl / mix
     ratio: square # origin / square
 
-      
 
-
-######## JS Plugins ########
-plugins:
-  ## required plugins ##
-  # jquery
+# 基础依赖
+dependencies:
   jquery: https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js
-
-  # stellar api
-  stellar:
-    sites: /js/plugins/sites.js
-    friends: /js/plugins/friends.js
-    ghinfo: /js/plugins/ghinfo.js
-    timeline: /js/plugins/timeline.js
-    linkcard: /js/plugins/linkcard.js
-    fcircle: /js/plugins/fcircle.js
-    weibo: /js/plugins/weibo.js
-    memos: /js/plugins/memos.js
-    marked: /js/plugins/marked.js
-
   marked: https://cdn.bootcdn.net/ajax/libs/marked/4.0.18/marked.min.js
 
-  ## optional plugins ##
+
+# 内置服务，按需加载（页面内用到了就会加载，没有用到就不会加载）
+services:
+  # 外部 md 渲染
+  mdrender:
+    js: /js/services/mdrender.js
+  # 数据填充类
+  siteinfo:
+    js: /js/services/siteinfo.js
+    # 设置 api 可以自动提取网页标题、图标，服务部署方法：https://github.com/xaoxuu/site-info-api/
+    # 接口测试通过后，把按钮的 href 部分替换成 ${href} 之后填写到下方，例如：https://api.vlts.cc/site_info/v1?url=${href}
+    api: 
+  ghinfo:
+    js: /js/services/ghinfo.js
+  # 网格布局类
+  sites:
+    js: /js/services/sites.js
+  friends:
+    js: /js/services/friends.js
+  # 列表布局类
+  timeline:
+    js: /js/services/timeline.js
+  fcircle:
+    js: /js/services/fcircle.js
+  weibo:
+    js: /js/services/weibo.js
+  memos:
+    js: /js/services/memos.js
+
+
+# 扩展插件接入方法：(插件名下面用 #plugin# 代替)
+# 1. 在这里增加 #plugin# 配置，至少赢含有 enable 字段，默认为空（不启用）
+# 2. 新建文件 layout/_plugins/#plugin#.ejs 文件中设置编写加载代码。
+# 2.1. 在该文件中可以直接使用 conf 来读取用户在【步骤 1】填写的配置字段内容
+# 2.2. 如果需要引入 css 或 js，可以使用 utils.css(xxx)、utils.js(xxx)，具体可参考 layout/_plugins/fancybox.ejs
+# 2.3. 如果需要本地 js 文件，请放入 /source/js/plugins 文件夹中，引入方式为：utils.js('/js/plugins/xxx.js');
+# 3. 如果这个插件只需要引入外部文件，可以在【步骤 1】处增加 inject 字段，而无需进入【步骤 2】创建 ejs，参考 katex
+plugins:
+
   # preload
   preload:
     enable: true
     service: flying_pages # flying_pages
     flying_pages: https://cdn.bootcdn.net/ajax/libs/flying-pages/2.1.2/flying-pages.min.js
 
-  # image lazyload
+  # lazyload
   # https://www.npmjs.com/package/vanilla-lazyload
   lazyload:
     enable: true # [hexo clean && hexo s] is required after changing this value.
     js: https://cdn.bootcdn.net/ajax/libs/vanilla-lazyload/17.8.4/lazyload.min.js
     transition: fade # blur, fade
+
+  # https://fancyapps.com/docs/ui/fancybox/
+  # available for {% image xxx %}
+  fancybox:
+    enable: true
+    loader: /js/plugins/fancybox-loader.js
+    js: https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js
+    css: https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css
+    # 让 md 语法图片支持放大可以这样写: .md-text img:not([class]), .md-text .image img
+    # 可以处理评论区的图片（不支持 iframe 类评论系统）例如：
+    # 使用 twikoo 评论可以写: .tk-content img:not([class*="emo"])
+    # 使用 waline 评论可以写: #waline_container .vcontent img
+    selector: .timenode p>img # 多个选择器用英文逗号隔开
+
+  # swiper
+  swiper:
+    enable: true
+    css: https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css
+    js: https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js
 
   # https://scrollrevealjs.org/api/reveal.html
   scrollreveal:
@@ -411,49 +446,34 @@ plugins:
     duration: 800 # ms
     interval: 100 # ms
     scale: 1 # 0.1~1
-
-  # https://fancyapps.com/docs/ui/fancybox/
-  # available for {% image xxx %}
-  fancybox:
-    enable: true
-    js: https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.umd.min.js
-    css: https://cdn.bootcdn.net/ajax/libs/fancyapps-ui/5.0.22/fancybox/fancybox.min.css
-    # 让 md 语法图片支持放大可以这样写: .md-text img:not([class]), .md-text .image img
-    # 可以处理评论区的图片（不支持 iframe 类评论系统）例如：
-    # 使用 twikoo 评论可以写: .tk-content img:not([class*="emo"])
-    # 使用 waline 评论可以写: #waline_container .vcontent img
-    selector: # 多个选择器用英文逗号隔开
-
-  # swiper
-  swiper:
-    enable: true
-    css: https://unpkg.com/swiper@10.3/swiper-bundle.min.css
-    js: https://unpkg.com/swiper@10.3/swiper-bundle.min.js
-
-
-  # 赫蹏 (Heti) - 专为中文网页内容设计的排版样式增强
-  # https://github.com/sivan/heti
-  heti:
-    enable: false # 此插件会和代码块冲突，仅适用于纯中文博主。
-    css: https://unpkg.com/heti@0.9.2/umd/heti.min.css
-    js: https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js
-
+  
+  # AI 摘要
+  # https://github.com/zhheo/Post-Abstract-AI
+  tianli_gpt: 
+    enable: #true
+    js: https://cdn1.tianli0.top/gh/zhheo/Post-Abstract-AI@0.15.2/tianli_gpt.min.js
+    field: post # all, post, wiki
+    api: 5Q5mpqRK5DkwT1X9Gi5e # tianli_gpt key
+    limit: 1000 # 设置提交的字数限制，默认为1000字，上限为5000，超过5000字符将被截断，不能为空
+    typingAnimate: true # 打字机动画 
+  
+  # Katex - The fastest math typesetting library for the web
+  # https://katex.org/docs/autorender.html
+  # https://github.com/KaTeX/KaTeX
+  # 使用 hexo-renderer-markdown-it-plus 作为公式渲染器：npm uninstall hexo-renderer-marked --save npm install hexo-renderer-markdown-it-plus --save
+  katex:
+    enable: #true # 可以在特定文章的 front-matter 中设置 katex: true 来开启，也可以在这里设置全局开启
+    inject: |
+      <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+      <script defer src="https://gcore.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
+      <script defer src="https://gcore.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"onload="renderMathInElement(document.body);"></script>
+  
   # MathJax
   # 需在Markdown文件开头加入mathjax: true
   # 推荐使用Pandoc: npm uninstall hexo-renderer-marked --save & npm install hexo-renderer-pandoc --save
   mathjax:
     enable: # true # 可以在特定文章的 front-matter 中设置 mathjax: true 来开启，也可以在这里设置全局开启
     js: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML
-
-  # Katex - The fastest math typesetting library for the web
-  # https://katex.org/docs/autorender.html
-  # https://github.com/KaTeX/KaTeX
-  # 使用 hexo-renderer-markdown-it-plus 作为公式渲染器：npm uninstall hexo-renderer-marked --save npm install hexo-renderer-markdown-it-plus --save
-  katex:
-    enable: # true # 可以在特定文章的 front-matter 中设置 katex: true 来开启，也可以在这里设置全局开启
-    min_css: <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
-    min_js: <script defer src="https://gcore.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.js" integrity="sha384-PwRUT/YqbnEjkZO0zZxNqcxACrXe+j766U2amXcgMg5457rve2Y7I6ZJSm2A0mS4" crossorigin="anonymous"></script>
-    auto_render_min_js: <script defer src="https://gcore.jsdelivr.net/npm/katex@0.16.4/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"onload="renderMathInElement(document.body);"></script>
 
   # Mermaid - markdwon to flow chart, seq chart, class chart ...
   # 需要安装 npm install --save hexo-filter-mermaid-diagrams
@@ -471,23 +491,22 @@ plugins:
     js: https://cdn.jsdelivr.net/npm/mermaid@v9/dist/mermaid.min.js
     # Available themes: default | dark | forest | neutral
     theme: neutral
-
+  
   # 代码块复制按钮
   copycode:
     enable: true
-    js: /js/plugins/copycode.js
     default_text: 'Copy'
     success_text: 'Copied'
     toast: 复制成功
   
-  # AI 摘要
-  # https://github.com/zhheo/Post-Abstract-AI
-  tianli_gpt:
-    enable: false
-    field: post # all, post, wiki
-    api: 5Q5mpqRK5DkwT1X9Gi5e # tianli_gpt key
-    limit: 1000 # 设置提交的字数限制，默认为1000字，上限为5000，超过5000字符将被截断，不能为空
-    typingAnimate: true # 打字机动画 
+  # 赫蹏 (Heti) - 专为中文网页内容设计的排版样式增强
+  # https://github.com/sivan/heti
+  heti:
+    enable: false # 此插件会和代码块冲突，仅适用于纯中文博主。
+    css: https://unpkg.com/heti@0.9.2/umd/heti.min.css
+    js: https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js
+
+
 
 style:
   prefers_theme: auto # auto / light / dark

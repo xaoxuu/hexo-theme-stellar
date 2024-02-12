@@ -1,0 +1,8 @@
+<script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.search = {
+      path: `<%- conf.path || '/search.json' %>`,
+    }
+    utils.js('/js/search/local-search.js', { defer: true });
+  });
+</script>

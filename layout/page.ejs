@@ -1,9 +1,7 @@
 <%
 const { layout } = page
 // 是否使用 Heti 布局插件
-const isUsingHeti = theme.plugins.heti && theme.plugins.heti.enable
-// 是否使用 TianliGPT 插件
-const isUsingTianliGPT = theme.plugins.tianli_gpt.enable && ['all', page.layout].includes(theme.plugins.tianli_gpt.field)
+const isUsingHeti = theme.plugins.heti?.enable
 
 // 默认的 menu_id
 if (page.menu_id == null) {
@@ -27,9 +25,6 @@ function articleClass() {
   if (isUsingHeti) {
     str += ' heti'
   }
-  if (isUsingTianliGPT) {
-    str += ' '
-  }
   return str
 }
 
@@ -52,13 +47,10 @@ function layoutDiv() {
   if (layout === 'post' || page.wiki) {
     el += partial('_partial/main/article/read_next')
   }
-  if (isUsingTianliGPT) {
-    el += partial('_partial/plugins/ai/tianli_gpt')
-  }
   if (layout === 'post') {
     el += partial('_partial/main/article/related_posts')
   }
-  el += partial('_partial/plugins/comments/layout')
+  el += partial('_partial/comments/layout')
   return el
 }
 %>

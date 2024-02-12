@@ -19,13 +19,13 @@ const util = {
       if (dayCount > 14) {
         result = null
       } else if (dayCount >= 1) {
-        result = parseInt(dayCount) + ' ' + stellar.config.date_suffix.day
+        result = parseInt(dayCount) + ' ' + ctx.date_suffix.day
       } else if (hourCount >= 1) {
-        result = parseInt(hourCount) + ' ' + stellar.config.date_suffix.hour
+        result = parseInt(hourCount) + ' ' + ctx.date_suffix.hour
       } else if (minuteCount >= 1) {
-        result = parseInt(minuteCount) + ' ' + stellar.config.date_suffix.min
+        result = parseInt(minuteCount) + ' ' + ctx.date_suffix.min
       } else {
-        result = stellar.config.date_suffix.just
+        result = ctx.date_suffix.just
       }
     } else {
       result = parseInt(dateDiff / day)
@@ -75,33 +75,10 @@ const hud = {
 
 const l_body = document.querySelector('.l_body');
 
-const sidebar = {
-  leftbar: () => {
-    if (l_body) {
-      l_body.toggleAttribute('leftbar');
-      l_body.removeAttribute('rightbar');
-    }
-  },
-  rightbar: () => {
-    if (l_body) {
-      l_body.toggleAttribute('rightbar');
-      l_body.removeAttribute('leftbar');
-    }
-  },
-  dismiss: () => {
-    if (l_body) {
-      l_body.removeAttribute('leftbar');
-      l_body.removeAttribute('rightbar');
-    }
-  },
-  toggleTOC: () => {
-    document.querySelector('#data-toc').classList.toggle('collapse');
-  }
-}
 
 const init = {
   toc: () => {
-    stellar.jQuery(() => {
+    utils.jq(() => {
       const scrollOffset = 32;
       var segs = [];
       $("article.md-text :header").each(function (idx, node) {
@@ -160,7 +137,7 @@ const init = {
     })
   },
   sidebar: () => {
-    stellar.jQuery(() => {
+    utils.jq(() => {
       $("#data-toc a.toc-link").click(function (e) {
         sidebar.dismiss();
       });
@@ -213,203 +190,3 @@ init.toc()
 init.sidebar()
 init.relativeDate(document.querySelectorAll('#post-meta time'))
 init.registerTabsTag()
-
-// scrollreveal
-if (stellar.plugins.scrollreveal) {
-  stellar.loadScript(stellar.plugins.scrollreveal.js).then(function () {
-    const slideUp = {
-      distance: stellar.plugins.scrollreveal.distance,
-      duration: stellar.plugins.scrollreveal.duration,
-      interval: stellar.plugins.scrollreveal.interval,
-      scale: stellar.plugins.scrollreveal.scale,
-      opacity: 0,
-      easing: "ease-out"
-    }
-    ScrollReveal().reveal('.l_left .slide-up', slideUp)
-    ScrollReveal().reveal('.l_main .slide-up', slideUp)
-  })
-}
-
-// lazyload
-if (stellar.plugins.lazyload) {
-  stellar.loadScript(stellar.plugins.lazyload.js, { defer: true })
-  // https://www.npmjs.com/package/vanilla-lazyload
-  // Set the options globally
-  // to make LazyLoad self-initialize
-  window.lazyLoadOptions = {
-    elements_selector: ".lazy",
-  };
-  // Listen to the initialization event
-  // and get the instance of LazyLoad
-  window.addEventListener(
-    "LazyLoad::Initialized",
-    function (event) {
-      window.lazyLoadInstance = event.detail.instance;
-    },
-    false
-  );
-  document.addEventListener('DOMContentLoaded', function () {
-    window.lazyLoadInstance?.update();
-  });
-}
-
-// stellar js
-if (stellar.plugins.stellar) {
-  for (let key of Object.keys(stellar.plugins.stellar)) {
-    let js = stellar.plugins.stellar[key];
-    if (key == 'linkcard') {
-      stellar.loadScript(js, { defer: true }).then(function () {
-        setCardLink(document.querySelectorAll('a.link-card[cardlink]'));
-      });
-    } else {
-      const els = document.getElementsByClassName('stellar-' + key + '-api');
-      if (els != undefined && els.length > 0) {
-        stellar.jQuery(() => {
-          if (key == 'timeline' || 'memos' || 'marked') {
-            stellar.loadScript(stellar.plugins.marked).then(function () {
-              stellar.loadScript(js, { defer: true });
-            });
-          } else {
-            stellar.loadScript(js, { defer: true });
-          }
-        })
-      }
-    }
-  }
-}
-
-// swiper
-if (stellar.plugins.swiper) {
-  const swiper_api = document.getElementById('swiper-api');
-  if (swiper_api != undefined) {
-    stellar.loadCSS(stellar.plugins.swiper.css);
-    stellar.loadScript(stellar.plugins.swiper.js, { defer: true }).then(function () {
-      const effect = swiper_api.getAttribute('effect') || '';
-      var swiper = new Swiper('.swiper#swiper-api', {
-        slidesPerView: 'auto',
-        spaceBetween: 8,
-        centeredSlides: true,
-        effect: effect,
-        loop: true,
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true,
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-      });
-    })
-  }
-}
-
-// preload
-if (stellar.plugins.preload) {
-  if (stellar.plugins.preload.service == 'flying_pages') {
-    window.FPConfig = {
-      delay: 0,
-      ignoreKeywords: [],
-      maxRPS: 5,
-      hoverDelay: 25
-    };
-    stellar.loadScript(stellar.plugins.preload.flying_pages, { defer: true })
-  }
-}
-
-// fancybox
-if (stellar.plugins.fancybox) {
-  let selector = '[data-fancybox]:not(.error)';
-  if (stellar.plugins.fancybox.selector) {
-    selector += `, ${stellar.plugins.fancybox.selector}`
-  }
-  var needFancybox = document.querySelectorAll(selector).length !== 0;
-  if (!needFancybox) {
-    const els = document.getElementsByClassName('stellar-memos-api');
-    if (els != undefined && els.length > 0) {
-      needFancybox = true;
-    }
-  }
-  if (needFancybox) {
-    stellar.loadCSS(stellar.plugins.fancybox.css);
-    stellar.loadScript(stellar.plugins.fancybox.js, { defer: true }).then(function () {
-      Fancybox.bind(selector, {
-        hideScrollbar: false,
-        Thumbs: {
-          autoStart: false,
-        },
-        caption: (fancybox, slide) => {
-          return slide.triggerEl.alt || null
-        }
-      });
-    })
-  }
-}
-
-
-if (stellar.search.service) {
-  if (stellar.search.service == 'local_search') {
-    stellar.jQuery(() => {
-      stellar.loadScript('/js/search/local-search.js', { defer: true }).then(function () {
-        var $inputArea = $("input#search-input");
-        if ($inputArea.length == 0) {
-          return;
-        }
-        var $resultArea = document.querySelector("div#search-result");
-        $inputArea.focus(function() {
-          var path = stellar.search[stellar.search.service]?.path || '/search.json';
-          if (path.startsWith('/')) {
-            path = path.substring(1);
-          }
-          path = stellar.config.root + path;
-          const filter = $inputArea.attr('data-filter') || '';
-          searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
-        });
-        $inputArea.keydown(function(e) {
-          if (e.which == 13) {
-            e.preventDefault();
-          }
-        });
-        var observer = new MutationObserver(function(mutationsList, observer) {
-          if (mutationsList.length == 1) {
-            if (mutationsList[0].addedNodes.length) {
-              $('.search-wrapper').removeClass('noresult');
-            } else if (mutationsList[0].removedNodes.length) {
-              $('.search-wrapper').addClass('noresult');
-            }
-          }
-        });
-        observer.observe($resultArea, { childList: true });
-      });
-    })
-  }
-}
-
-
-// heti
-if (stellar.plugins.heti) {
-  stellar.loadCSS(stellar.plugins.heti.css);
-  stellar.loadScript(stellar.plugins.heti.js, { defer: true }).then(function () {
-    const heti = new Heti('.heti');
-    
-    // Copied from heti.autoSpacing() without DOMContentLoaded.
-    // https://github.com/sivan/heti/blob/eadee6a3b748b3b7924a9e7d5b395d4bce479c9a/js/heti-addon.js
-    //
-    // We managed to minimize the code modification to ensure .autoSpacing()
-    // is synced with upstream; therefore, we use `.bind()` to emulate the 
-    // behavior of .autoSpacing() so we can even modify almost no code.
-    void (function () {
-      const $$rootList = document.querySelectorAll(this.rootSelector)
-
-      for (let $$root of $$rootList) {
-        this.spacingElement($$root)
-      }
-    }).bind(heti)();
-
-    stellar.plugins.heti.enable = false;
-  });
-}
-
-if (stellar.plugins.copycode) {
-  stellar.loadScript(stellar.plugins.copycode.js, { defer: true })
-}

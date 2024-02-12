@@ -1,0 +1,31 @@
+<script type="text/javascript">
+  const ctx = {
+    date_suffix: {
+      just: `<%- __('meta.date_suffix.just') %>`,
+      min: `<%- __('meta.date_suffix.min') %>`,
+      hour: `<%- __('meta.date_suffix.hour') %>`,
+      day: `<%- __('meta.date_suffix.day') %>`,
+    },
+    root : `<%- config.root %>`,
+  };
+
+  // required plugins (only load if needs)
+  if (`<%- theme.search.service %>`) {
+    ctx.search = {};
+    ctx.search.service = `<%- theme.search.service %>`;
+    if (ctx.search.service == 'local_search') {
+      let service_obj = Object.assign({}, `<%- JSON.stringify(theme.search.local_search) %>`);
+      ctx.search[ctx.search.service] = service_obj;
+    }
+  }
+  const def = {
+    avatar: `<%- theme.default.avatar %>`,
+    cover: `<%- theme.default.cover %>`,
+  };
+  const deps = {
+    jquery: `<%- url_for(theme.dependencies.jquery) %>`,
+    marked: `<%- url_for(theme.dependencies.marked) %>`
+  }
+  
+
+</script>

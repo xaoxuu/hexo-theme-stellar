@@ -1,9 +1,0 @@
-<% if (page.layout === 'post' || (page.wiki?.length > 0)) { %>
-  <script>
-    let tianliGPT_postSelector = 'article.content';
-    let tianliGPT_key = '<%= theme.plugins.tianli_gpt.api %>';
-    let tianliGPT_typingAnimate = '<%= theme.plugins.tianli_gpt.typingAnimate %>';
-    let tianliGPT_wordLimit = <%= theme.plugins.tianli_gpt.limit %>;
-  </script>
-<script defer src="https://cdn1.tianli0.top/gh/zhheo/Post-Abstract-AI@0.15.2/tianli_gpt.min.js"></script>
-<% } %>

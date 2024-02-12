@@ -1,0 +1,24 @@
+<%
+function loadPlugins() {
+  var el = ''
+
+  // search
+  if (theme.search[theme.search.service]) {
+    el += partial(`search/${theme.search.service}`, {conf: theme.search[theme.search.service]});
+  }
+  
+  // others
+  for (let id of Object.keys(theme.plugins)) {
+    const conf = Object.assign({}, theme.plugins[id], page[id])
+    if (page[id] == true || conf.enable) {
+      if (conf.inject?.length > 0) {
+        el += conf.inject
+      } else {
+        el += partial(`${id}`, {conf: conf})
+      }
+    }
+  }
+  return el
+}
+%>
+<%- loadPlugins() %>

@@ -136,3 +136,35 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
     }
   });
 };
+
+utils.jq(() => {
+  var $inputArea = $("input#search-input");
+    if ($inputArea.length == 0) {
+      return;
+    }
+    var $resultArea = document.querySelector("div#search-result");
+    $inputArea.focus(function() {
+      var path = ctx.search.path;
+      if (path.startsWith('/')) {
+        path = path.substring(1);
+      }
+      path = ctx.root + path;
+      const filter = $inputArea.attr('data-filter') || '';
+      searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
+    });
+    $inputArea.keydown(function(e) {
+      if (e.which == 13) {
+        e.preventDefault();
+      }
+    });
+    var observer = new MutationObserver(function(mutationsList, observer) {
+      if (mutationsList.length == 1) {
+        if (mutationsList[0].addedNodes.length) {
+          $('.search-wrapper').removeClass('noresult');
+        } else if (mutationsList[0].removedNodes.length) {
+          $('.search-wrapper').addClass('noresult');
+        }
+      }
+    });
+    observer.observe($resultArea, { childList: true });
+  });
