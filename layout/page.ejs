@@ -2,6 +2,7 @@
 const { layout } = page
 // 是否使用 Heti 布局插件
 const isUsingHeti = theme.plugins.heti?.enable
+const isUsingTianliGPT = theme.plugins.tianli_gpt?.enable
 
 // 默认的 menu_id
 if (page.menu_id == null) {
@@ -39,6 +40,9 @@ function layoutDiv() {
   el += `<article class="${articleClass()}">`
   if (page.content && page.content.length > 0) {
     el += page.content
+  }
+  if (isUsingTianliGPT) {
+    el += partial('_plugins/tianli_gpt')
   }
   if (layout === 'post') {
     el += partial('_partial/main/article/article_footer')
