@@ -448,15 +448,18 @@ plugins:
     scale: 1 # 0.1~1
   
   # AI 摘要
-  # https://github.com/zhheo/Post-Abstract-AI
+  # https://github.com/qxchuckle/Post-Summary-AI
   tianli_gpt: 
     enable: #true
-    js: https://cdn1.tianli0.top/gh/zhheo/Post-Abstract-AI@0.15.2/tianli_gpt.min.js
+    js: https://jsd.onmicrosoft.cn/gh/qxchuckle/Post-Summary-AI@6.0/chuckle-post-ai.min.js
     field: post # all, post, wiki
     api: 5Q5mpqRK5DkwT1X9Gi5e # tianli_gpt key
-    limit: 1000 # 设置提交的字数限制，默认为1000字，上限为5000，超过5000字符将被截断，不能为空
+    limit: 1000 # 设置提交的字数限制，默认为1000字，上限为5000，超过5000字符将被截断
     typingAnimate: true # 打字机动画 
-  
+    direct: true # 是否直接显示摘要，否则显示 AI 简介
+    recommend: all # all, web # 文章推荐方式，all：匹配数据库内所有文章进行推荐，web：仅当前站内的文章，默认all
+    shuttle: true # 是否隐藏矩阵穿梭
+
   # Katex - The fastest math typesetting library for the web
   # https://katex.org/docs/autorender.html
   # https://github.com/KaTeX/KaTeX
