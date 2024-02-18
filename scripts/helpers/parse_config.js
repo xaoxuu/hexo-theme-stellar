@@ -10,9 +10,9 @@ hexo.extend.helper.register('md_text', function(args) {
     return ''
   }
   const { config } = hexo
-  args = args.replace('${config.title}', config.title)
-  args = args.replace('${config.subtitle}', config.subtitle)
-  args = args.replace('${config.avatar}', config.avatar)
+  args = args.replace('{config.title}', config.title)
+  args = args.replace('{config.subtitle}', config.subtitle)
+  args = args.replace('{config.avatar}', config.avatar)
   let tmp = args.split('](')
   if (tmp.length > 1) {
     tmp = tmp[0]

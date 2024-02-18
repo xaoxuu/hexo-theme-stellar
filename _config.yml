@@ -21,9 +21,9 @@ open_graph:
 ######## Sidebar ########
 # 左上角显示的 logo 区域，包含图标、大标题、副标题
 logo:
-  avatar: '[${config.avatar}](/about/)' # you can set avatar link in _config.yml or '[https://xxx.png](/about/)'
-  title: '[${config.title}](/)' # you can set html tag like: '[<img no-lazy height="32px" src="xxx"/>](/)'
-  subtitle: '${config.subtitle}' # '文字1 | 文字2' (鼠标放上去会切换到文字2)
+  avatar: '[{config.avatar}](/about/)' # you can set avatar link in _config.yml or '[https://xxx.png](/about/)'
+  title: '[{config.title}](/)' # you can set html tag like: '[<img no-lazy height="32px" src="xxx"/>](/)'
+  subtitle: '{config.subtitle}' # '文字1 | 文字2' (鼠标放上去会切换到文字2)
 
 # 侧边栏主功能导航菜单
 menubar:
@@ -282,7 +282,7 @@ footer:
     #   - '[关于本站](/)'
     #   - '[GitHub](/)'
   content: | # 支持 Markdown 格式
-    本站由 [${author.name}](/) 使用 [${theme.name} ${theme.version}](${theme.tree}) 主题创建。
+    本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。
     本博客所有文章除特别声明外，均采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。
   # 主题用户越多，开发者维护和更新的积极性就越高，如果您喜欢本主题，请在适当的位置显示主题信息和仓库链接以表支持。
 
@@ -307,12 +307,12 @@ tag_plugins:
       prefix: ph:seal-question-fill
   # {% emoji %}
   emoji:
-    default: https://gcore.jsdelivr.net/gh/cdn-x/emoji/qq/${name}.gif
-    twemoji: https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/${name}.svg
-    qq: https://gcore.jsdelivr.net/gh/cdn-x/emoji/qq/${name}.gif
-    aru: https://gcore.jsdelivr.net/gh/cdn-x/emoji/aru-l/${name}.gif
-    tieba: https://gcore.jsdelivr.net/gh/cdn-x/emoji/tieba/${name}.png
-    blobcat: https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs/${name}.png
+    default: https://gcore.jsdelivr.net/gh/cdn-x/emoji/qq/{name}.gif
+    twemoji: https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg
+    qq: https://gcore.jsdelivr.net/gh/cdn-x/emoji/qq/{name}.gif
+    aru: https://gcore.jsdelivr.net/gh/cdn-x/emoji/aru-l/{name}.gif
+    tieba: https://gcore.jsdelivr.net/gh/cdn-x/emoji/tieba/{name}.png
+    blobcat: https://gcore.jsdelivr.net/gh/norevi/waline-blobcatemojis@1.0/blobs/{name}.png
   icon:
     # 留空时，图标和文字颜色相同
     default_color: accent # theme, accent, red, orange, yellow, green, cyan, blue, purple
@@ -377,7 +377,7 @@ data_services:
   siteinfo:
     js: /js/services/siteinfo.js
     # 设置 api 可以自动提取网页标题、图标，服务部署方法：https://github.com/xaoxuu/site-info-api/
-    # 接口测试通过后，把按钮的 href 部分替换成 ${href} 之后填写到下方，例如：https://api.vlts.cc/site_info/v1?url=${href}
+    # 接口测试通过后，把按钮的 href 部分替换成 {href} 之后填写到下方，例如：https://api.vlts.cc/site_info/v1?url={href}
     api: 
   ghinfo:
     js: /js/services/ghinfo.js

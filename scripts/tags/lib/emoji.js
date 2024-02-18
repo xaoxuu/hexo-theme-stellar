@@ -27,7 +27,7 @@ module.exports = ctx => function(args) {
     }
   }
   if (config[args.source] && args.name) {
-    let url = config[args.source].replace('${name}', args.name)
+    let url = config[args.source].replace('{name}', args.name)
     el += '<img no-lazy="" class="inline"'
     el += ' src="' + url + '"'
     if (args.height) {

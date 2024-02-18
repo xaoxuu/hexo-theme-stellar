@@ -64,7 +64,7 @@ function layoutDiv() {
       }
     }
     if (author) {
-      license = license.replace('${author.name}', author.name).replace('${author.url}', author.url)
+      license = license.replace('{author.name}', author.name).replace('{author.url}', author.url)
     }
     el += `
     <section id="license">
