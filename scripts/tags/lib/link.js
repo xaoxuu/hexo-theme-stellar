@@ -14,7 +14,7 @@ module.exports = ctx => function(args) {
     return '';
   }
   const url = full_url_for(args.url)
-  args.api = ctx.theme.config.services.siteinfo?.api
+  args.api = ctx.theme.config.data_services.siteinfo?.api
   if (args.api) {
     args.api = args.api.replace('${href}', url)
   }

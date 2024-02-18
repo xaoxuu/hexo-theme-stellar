@@ -1,6 +1,6 @@
 utils.jq(() => {
   $(function () {
-    const els = document.getElementsByClassName('stellar-memos-api');
+    const els = document.getElementsByClassName('ds-memos');
     for (var i = 0; i < els.length; i++) {
       const el = els[i];
       const api = el.getAttribute('api');

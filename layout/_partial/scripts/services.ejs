@@ -1,18 +1,8 @@
-<script>
-  ctx.services = {
-    fcircle: `<%- theme.services.fcircle?.js %>`,
-    friends: `<%- theme.services.friends?.js %>`,
-    ghinfo: `<%- theme.services.ghinfo?.js %>`,
-    siteinfo: `<%- theme.services.siteinfo?.js %>`,
-    mdrender: `<%- theme.services.mdrender?.js %>`,
-    memos: `<%- theme.services.memos?.js %>`,
-    sites: `<%- theme.services.sites?.js %>`,
-    timeline: `<%- theme.services.timeline?.js %>`,
-    weibo: `<%- theme.services.weibo?.js %>`,
-  }
+<script defer>
   window.addEventListener('DOMContentLoaded', (event) => {
+    ctx.services = Object.assign({}, JSON.parse(`<%- JSON.stringify(theme.data_services) %>`));
     for (let id of Object.keys(ctx.services)) {
-      const js = ctx.services[id];
+      const js = ctx.services[id].js;
       if (id == 'siteinfo') {
         ctx.cardlinks = document.querySelectorAll('a.link-card[cardlink]');
         if (ctx.cardlinks?.length > 0) {
@@ -21,7 +11,7 @@
           });
         }
       } else {
-        const els = document.getElementsByClassName(`stellar-${id}-api`);
+        const els = document.getElementsByClassName(`ds-${id}`);
         if (els?.length > 0) {
           utils.jq(() => {
             if (id == 'timeline' || 'memos' || 'marked') {

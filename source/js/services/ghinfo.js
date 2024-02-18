@@ -1,6 +1,6 @@
 utils.jq(() => {
   $(function () {
-    const els = document.getElementsByClassName('stellar-ghinfo-api');
+    const els = document.getElementsByClassName('ds-ghinfo');
     for (var i = 0; i < els.length; i++) {
       const el = els[i];
       const api = el.getAttribute('api');

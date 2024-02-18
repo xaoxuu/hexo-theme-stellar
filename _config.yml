@@ -369,7 +369,7 @@ dependencies:
 
 
 # 内置服务，按需加载（页面内用到了就会加载，没有用到就不会加载）
-services:
+data_services:
   # 外部 md 渲染
   mdrender:
     js: /js/services/mdrender.js
