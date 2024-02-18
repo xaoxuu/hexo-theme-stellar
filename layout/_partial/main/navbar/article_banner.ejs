@@ -14,6 +14,10 @@ banner = Object.assign(banner, page.banner_info)
 if (banner.title == null) {
   banner.title = page.h1 != null ? page.h1 : page.title
 }
+// 副标题
+if (banner.subtitle == null) {
+  banner.subtitle = page.subtitle
+}
 
 function layoutBreadcrumb() {
   if (page.breadcrumb === false) {
