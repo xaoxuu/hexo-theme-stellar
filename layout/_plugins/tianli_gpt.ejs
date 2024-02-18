@@ -1,23 +1,11 @@
 <% if (['all', page.layout].includes(theme.plugins.tianli_gpt.field)) { %>
-  <script src="<%- theme.plugins.tianli_gpt?.js %>"></script>
-  <script data-pjax defer>
-      new ChucklePostAI({
+  <script defer src="<%- theme.plugins.tianli_gpt?.js %>"></script>
+  <script defer>
+    window.addEventListener('DOMContentLoaded', (event) => {
+      new ChucklePostAI(Object.assign({
         el: 'article.content',
-        key: '<%= theme.plugins.tianli_gpt?.api %>',
-        rec_method: '<%= theme.plugins.tianli_gpt?.recommend || all %>',
-        summary_directly: `<%= theme.plugins.tianli_gpt?.direct %>`,
-        typewriter: `<%= theme.plugins.tianli_gpt?.typingAnimate %>`,
-        css: `/css/_plugins/tianli_gpt`,
-        summary_toggle: false,
-        total_length: `<%= theme.plugins.tianli_gpt?.limit %>`,
-        hide_shuttle: `<%= theme.plugins.tianli_gpt?.shuttle %>`,
-        interface: {
-          name: "AI摘要",
-          introduce: "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。", // 自我介绍
-          version: "TianliGPT",
-          button: ["介绍自己", "推荐文章", "生成摘要", "矩阵穿梭"],
-        },
-      })
-    </script>
-  <% } %>
-  
+        css: `/css/_plugins/tianli_gpt`
+      }, JSON.parse(`<%- JSON.stringify(theme.plugins.tianli_gpt) %>`)))
+    });
+  </script>
+<% } %>
