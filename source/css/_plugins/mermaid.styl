@@ -1,17 +1,8 @@
 pre.mermaid
-  display: inline-block
-  width: 100%
-  text-align: center
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-family: $ff-body
-
-.mermaid svg 
-  width: 100%
-  display: inline-block
-
-
-.mermaid svg
-  width: 100%
-  display: inline-block
 
 .mermaid span,text
   font-family: $ff-body
@@ -23,99 +14,99 @@ pre.mermaid
 .mermaid rect.basic.label-container
   stroke: var(--block-border) !important
   fill: var(--block) !important
-  
+
 _dark_mermaid()
-  .mermaid 
+  .mermaid
     fill: #ccc !important
-  
 
-  .mermaid .error-icon 
+
+  .mermaid .error-icon
     fill: #a44141 !important
-  
 
-  .mermaid .error-text 
+
+  .mermaid .error-text
     fill: #ddd !important
     stroke: #ddd !important
-  
 
-  .mermaid .marker 
+
+  .mermaid .marker
     fill: lightgrey !important
     stroke: lightgrey !important
-  
 
-  .mermaid .marker.cross 
+
+  .mermaid .marker.cross
     stroke: lightgrey !important
-  
 
-  .mermaid .label 
+
+  .mermaid .label
     color: #ccc !important
-  
 
-  .mermaid .cluster-label text 
+
+  .mermaid .cluster-label text
     fill: #F9FFFE !important
-  
 
-  .mermaid .cluster-label span 
+
+  .mermaid .cluster-label span
     color: #F9FFFE !important
-  
+
 
   .mermaid .label text,
-  .mermaid span 
+  .mermaid span
     fill: #ccc !important
     color: #ccc !important
-  
+
 
   .mermaid .node rect,
   .mermaid .node circle,
   .mermaid .node ellipse,
   .mermaid .node polygon,
-  .mermaid .node path 
+  .mermaid .node path
     fill: #1f2020 !important
     stroke: #81B1DB !important
-  
 
-  .mermaid .arrowheadPath 
+
+  .mermaid .arrowheadPath
     fill: lightgrey !important
-  
 
-  .mermaid .edgePath .path 
+
+  .mermaid .edgePath .path
     stroke: lightgrey !important
-  
 
-  .mermaid .flowchart-link 
+
+  .mermaid .flowchart-link
     stroke: lightgrey !important
-  
 
-  .mermaid .edgeLabel 
+
+  .mermaid .edgeLabel
     background-color: hsl(0, 0%, 34.4117647059%) !important
-  
 
-  .mermaid .edgeLabel rect 
+
+  .mermaid .edgeLabel rect
     background-color: hsl(0, 0%, 34.4117647059%) !important
     fill: hsl(0, 0%, 34.4117647059%) !important
-  
 
-  .mermaid .cluster rect 
+
+  .mermaid .cluster rect
     fill: hsl(180, 1.5873015873%, 28.3529411765%) !important
     stroke: rgba(255, 255, 255, 0.25) !important
-  
 
-  .mermaid .cluster text 
+
+  .mermaid .cluster text
     fill: #F9FFFE !important
-  
 
-  .mermaid .cluster span 
+
+  .mermaid .cluster span
     color: #F9FFFE !important
-  
 
-  .mermaid div.mermaidTooltip 
+
+  .mermaid div.mermaidTooltip
     background: hsl(20, 1.5873015873%, 12.3529411765%) !important
     border: 1px solid rgba(255, 255, 255, 0.25) !important
-  
 
-  .mermaid .flowchartTitleText 
+
+  .mermaid .flowchartTitleText
     fill: #ccc
-  
+
 
 if theme(dark)
   _dark_mermaid()
