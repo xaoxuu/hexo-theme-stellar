@@ -242,6 +242,10 @@ comments:
     #   token: # 图床验证
     #   resp: # 图片地址返回值的字段
 
+  waline_v3:
+    # Waline server address url, you should set this to your own link
+    serverURL: https://waline.vercel.app
+
   # Artalk
   # https://artalk.js.org/
   artalk:

@@ -1,0 +1,17 @@
+<script defer type="module">
+  import { init } from 'https://unpkg.com/@waline/client@v3/dist/waline.js';
+  window.addEventListener('DOMContentLoaded', (event) => {
+    utils.css('https://unpkg.com/@waline/client@v3/dist/waline.css');
+    const id = 'waline_container';
+    const el = document.getElementById(id);
+    var path = el.getAttribute('comment_id');
+    if (!path) {
+      path = decodeURI(window.location.pathname);
+    }
+    const waline = init({
+      el: `#${id}`,
+      path: path,
+      serverURL: el.getAttribute('serverURL'),
+    });
+  });
+</script>
