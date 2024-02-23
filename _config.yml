@@ -208,7 +208,7 @@ comments:
     css: https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.css
     meta_css: https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css
     # Waline server address url, you should set this to your own link
-    serverURL:
+    serverURL: https://waline.vercel.app
     # If false, comment count will only be displayed in post page, not in home page
     commentCount: true
     # Pageviews count, Note: You should not enable both `waline.pageview` and `leancloud_visitors`.
@@ -242,10 +242,6 @@ comments:
     #   api: # 图床 api 地址
     #   token: # 图床验证
     #   resp: # 图片地址返回值的字段
-
-  waline_v3:
-    # Waline server address url, you should set this to your own link
-    serverURL: https://waline.vercel.app
 
   # Artalk
   # https://artalk.js.org/
