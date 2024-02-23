@@ -204,8 +204,9 @@ comments:
   # Waline
   # https://waline.js.org/
   waline:
-    js: https://unpkg.com/@waline/client@2.14.1/dist/waline.js
-    css: https://unpkg.com/@waline/client@2.14.1/dist/waline.css
+    js: https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.js
+    css: https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline.css
+    meta_css: https://gcore.jsdelivr.net/npm/@waline/client@3.1.2/dist/waline-meta.css
     # Waline server address url, you should set this to your own link
     serverURL:
     # If false, comment count will only be displayed in post page, not in home page
