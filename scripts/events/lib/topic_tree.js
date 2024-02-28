@@ -13,6 +13,9 @@ function getTopicTree(ctx) {
   const data = ctx.locals.get('data')
   var list = []
   for (let key of Object.keys(data)) {
+    if (key.endsWith('.DS_Store')) {
+      continue
+    }
     if (key.startsWith('topic/') && key.length > 5) {
       let newKey = key.replace('topic/', '')
       let obj = data[key]
