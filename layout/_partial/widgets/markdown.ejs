@@ -23,4 +23,146 @@ function layoutDiv() {
   return el;
 }
 %>
+<% if (theme.sidebar.widgets.hitokoto.enable) { %>
+  <script>
+  fetch('https://international.v1.hitokoto.cn/?encode=json')
+    .then(response => response.json())
+    .then(data => {
+      let hitokoto = data.hitokoto; // 数据：肠已断，泪难收。相思重上小红楼。
+      let from = data.from;
+      let fromWho = data.from_who;
+      from = `《${from}》`; // 在 from 变量前后添加“《”和“》”字符
+      // console.log(from); // 输出：鹧鸪天·晚日寒鸦一片愁
+      // console.log(fromWho); // 输出：辛弃疾
+      // console.log(hitokoto);
+      // 更新 #hitokoto 元素的内容
+      let hitokotoDom = document.querySelector('#hitokoto');
+      if (hitokotoDom) {
+        hitokotoDom.innerText = hitokoto;
+      }
+      // 更新 #hitokoto_from 元素的内容
+      let fromDom = document.querySelector('#hitokoto_from');
+      if (fromDom) {
+        fromDom.innerText = from;
+      }
+      // 更新 #hitokoto_who 元素的内容
+      let fromWhoDom = document.querySelector('#hitokoto_who');
+      if (fromWhoDom) {
+        fromWhoDom.innerText = fromWho;
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  </script>
+<% } %>
+<% if (theme.sidebar.widgets.weather.enable) { %>
+  <script>
+  // 使用 ifinfo.io 或其他类似服务来获取用户IP
+  fetch('https://api.vvhan.com/api/getIpInfo')
+    .then(response => response.json())
+    .then(data => {
+      // 提取IP地址
+      const ipAddress = data.ip;
+      const city = data.info.city;
+      // console.log(ipAddress);
+      // console.log(city);
+      // 使用正则表达式判断IP地址类型
+      const isIPv4 = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+      const isIPv6 = /^(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/;
+
+      // 根据IP地址类型决定使用ip还是city来请求天气信息，并添加正确的参数前缀
+      const weatherApiUrlParam = isIPv4.test(ipAddress) ? `ip=${ipAddress}` : `city=${city}`;
+      // console.log(weatherApiUrlParam);
+      // 构建请求天气的URL
+      const weatherApiUrl = `https://api.vvhan.com/api/weather?${weatherApiUrlParam}`;
+      // console.log(weatherApiUrl);
+      // 发送请求到天气API
+      fetch(weatherApiUrl)
+        .then(weatherResponse => weatherResponse.json())
+        .then(weatherData => {
+          // 在这里处理天气数据
+          // console.log(weatherData);
+          let city = weatherData.city;
+          let date = weatherData.info.date;
+          let week = weatherData.info.week;
+          let type = weatherData.info.type;
+          let low = weatherData.info.low;
+          let high = weatherData.info.high;
+          let fengxiang = weatherData.info.fengxiang;
+          let fengli = weatherData.info.fengli;
+          let aqi_name = weatherData.info.air.aqi_name;
+          let tip = weatherData.info.tip;
+          // 获取要显示city内容的元素
+          const cityContentElement = document.getElementById('city-content');
+          cityContentElement.textContent = city;
+          // 获取要显示date内容的元素
+          const dateContentElement = document.getElementById('date-content');
+          dateContentElement.textContent = date;
+          // 获取要显示week内容的元素
+          const weekContentElement = document.getElementById('week-content');
+          weekContentElement.textContent = week;
+          // 获取要显示天气内容的元素
+          const weatherContentElement = document.getElementById('weather-content');
+          weatherContentElement.textContent = type;
+          // 获取要显示low内容的元素
+          const lowContentElement = document.getElementById('low-content');
+          lowContentElement.textContent = low;
+          // 获取要显示high内容的元素
+          const highContentElement = document.getElementById('high-content');
+          highContentElement.textContent = high;
+          // 获取要显示fengxiang内容的元素
+          const fengxiangContentElement = document.getElementById('fengxiang-content');
+          fengxiangContentElement.textContent = fengxiang;
+          // 获取要显示fengli内容的元素
+          const fengliContentElement = document.getElementById('fengli-content');
+          fengliContentElement.textContent = fengli;
+          // 获取要显示aqi_name内容的元素
+          const aqi_nameContentElement = document.getElementById('aqi-name-content');
+          aqi_nameContentElement.textContent = aqi_name;
+          // 获取要显示tip内容的元素
+          const tipContentElement = document.getElementById('tip-content');
+          tipContentElement.textContent = tip;
+        })
+    })
+  </script>
+<% } %>
+
+<% if (theme.comments.waline.recentcomments) { %>
+  <script type="module">
+    import {
+      RecentComments
+    } from 'https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.mjs';
+    RecentComments({
+      el: '#waline-recent',
+      serverURL: 'https://waline.luoxue03.cn',
+      count: 10,
+    });
+  </script>
+  <% } %>
+<% if (theme.comments.waline.list) { %>
+  <script type="module">
+    import {
+      UserList
+    } from 'https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.mjs';
+    UserList({
+      el: '#waline-users',
+      serverURL: 'https://waline.luoxue03.cn',
+      count: 10,
+      mode: 'list'
+    });
+  </script>
+<% } %>
+
+<% if (theme.comments.waline.wall) { %>
+  <script type="module">
+    import {
+      UserList
+    } from 'https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.mjs';
+    UserList({
+      el: '#waline-wall',
+      serverURL: 'https://waline.luoxue03.cn',
+      count: 50,
+      mode: 'wall',
+    });
+  </script>
+<% } %>
 <%- layoutDiv() %>

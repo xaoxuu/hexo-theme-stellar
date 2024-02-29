@@ -1,0 +1,37 @@
+.gradient-text {
+    font-size: 11px;
+    background: linear-gradient(to right, red, #008B45, #FF7256);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.gradient-color-text {
+    background-size: 400% 400%;
+    background-image: linear-gradient(to right, #ff0000, #ff8000, #fff200, #51ff00, #00d0ff, #9000ff, #ff008c);
+    -webkit-background-clip: text;
+    animation: text-color-gradient 10s ease infinite;
+    color: transparent !important;
+    font-size: 11px;
+
+    @keyframes text-color-gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+}
+
+img {
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    -ms-interpolation-mode: nearest-neighbor;
+}

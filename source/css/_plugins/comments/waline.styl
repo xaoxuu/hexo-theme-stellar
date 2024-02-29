@@ -1,4 +1,4 @@
-.cmt-body
+.cmt-body.waline
   .wl-panel
     margin: 0.5em 0 !important
   .wl-meta-head
@@ -36,33 +36,32 @@
   --waline-border: 1px solid var(--waline-border-color);
   --waline-avatar-radius: 50%;
   --waline-box-shadow: none;
-  
-.cmt-body.waline
-  ondark()
-    --waline-white: #000;
-    --waline-light-grey: #666;
-    --waline-dark-grey: #999;
+// .cmt-body.waline
+//   ondark()
+//     --waline-white: #000;
+//     --waline-light-grey: #666;
+//     --waline-dark-grey: #999;
     /* 布局颜色 */
 
-    --waline-color: #fff;
-    --waline-bgcolor: var(--block);
-    --waline-bgcolor-light: #272727;
-    --waline-border-color: #333;
-    --waline-disable-bgcolor: #444;
-    --waline-disable-color: #272727;
-    /* 特殊颜色 */
-    --waline-bq-color: #272727;
-    /* 其他颜色 */
-    --waline-info-bgcolor: #272727;
-    --waline-info-color: #666;
-    .wl-count
-      padding: .375em;
-      font-weight: bold;
-      font-size: 1.25em;
-      color: #fff;
+  //   --waline-color: #fff;
+  //   --waline-bgcolor: var(--block);
+  //   --waline-bgcolor-light: #272727;
+  //   --waline-border-color: #333;
+  //   --waline-disable-bgcolor: #444;
+  //   --waline-disable-color: #272727;
+  //   /* 特殊颜色 */
+  //   --waline-bq-color: #272727;
+  //   /* 其他颜色 */
+  //   --waline-info-bgcolor: #272727;
+  //   --waline-info-color: #666;
+  //   .wl-count
+  //     padding: .375em;
+  //     font-weight: bold;
+  //     font-size: 1.25em;
+  //     color: #fff;
 
-  if theme(dark)
-    ondark()
-  else if theme(auto)
-    @media (prefers-color-scheme: dark)
-      ondark()
+  // if theme(dark)
+  //   ondark()
+  // else if theme(auto)
+  //   @media (prefers-color-scheme: dark)
+  //     ondark()
