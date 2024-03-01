@@ -67,7 +67,7 @@ site_tree:
   # -- 列表类页面 -- #
   # 主页配置
   home:
-    leftbar: welcome, weather, recent, waline-recent
+    leftbar: welcome, weather, recent, lishi, waline-recent
     rightbar:
   # 博客列表页配置
   index_blog:

@@ -165,4 +165,70 @@ function layoutDiv() {
     });
   </script>
 <% } %>
+
+<script>
+// 定义一个异步函数fetchHistoryData，用于获取历史数据
+async function fetchHistoryData() {
+  try {
+    // 使用fetch API发起一个异步请求到提供的API URL
+    const response = await fetch('https://api.leafone.cn/api/lishi');
+
+    // 检查响应状态码是否为200（ok），如果不是，则抛出一个错误
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    // 解析响应体中的JSON数据
+    const data = await response.json();
+
+    // 返回解析后的数据
+    return data;
+  } catch (error) {
+    // 如果在fetch操作过程中出现错误，则在控制台输出错误信息，并返回null
+    console.error('There was a problem with the fetch operation:', error);
+    return null;
+  }
+}
+// 定义一个函数updateDisplay，用于更新页面上的显示内容
+function updateDisplay(title, year) {
+  // 获取id为'historyDisplay'的DOM元素
+  const displayElement = document.getElementById('historyDisplay');
+
+  // 设置该元素的textContent为传入的title和year，格式为"title: year"
+  displayElement.textContent = `${title}: ${year}`;
+}
+// 定义主程序逻辑函数main
+async function main() {
+  // 调用fetchHistoryData函数获取历史数据
+  const historyData = await fetchHistoryData();
+
+  // 检查是否成功获取到数据，并且数据中包含info数组
+  if (historyData && historyData.data && historyData.data.info) {
+    // 获取info数组
+    const infoArray = historyData.data.info;
+
+    // 初始化当前索引为0
+    let currentIndex = 0;
+
+    // 设置一个定时器，每3秒钟执行一次
+    setInterval(() => {
+      // 更新当前索引，如果到达数组末尾则循环回到开头
+      currentIndex = (currentIndex + 1) % infoArray.length;
+
+      // 获取当前索引对应的数组元素
+      const currentItem = infoArray[currentIndex];
+
+      // 提取元素的title和year，year为time字段的前4个字符（即年份）
+      const title = currentItem.title;
+      const year = currentItem.time.substring(0, 4);
+
+      // 调用updateDisplay函数更新页面显示
+      updateDisplay(title, year);
+    }, 3000); // 定时器的时间间隔设置为3000毫秒（即3秒）
+  }
+}
+// 调用主程序main函数
+main();
+</script>
+
 <%- layoutDiv() %>
