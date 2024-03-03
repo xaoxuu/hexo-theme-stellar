@@ -4,13 +4,7 @@
     font-size: $fs-14
     padding: 8px 16px
     display: block
-    border-radius: $border-bar
     color: var(--text-p1)
-    trans1 background
-    &.active
-      background: var(--alpha50)
-    &:hover
-      background: var(--alpha100)
   a+a
     margin-top: 2px
   a  
@@ -19,6 +13,11 @@
     align-items: center
     .title
       txt-ellipsis()
+      border-bottom: 1px dashed var(--text-meta)
+      padding-bottom: 2px
+      trans1 border-bottom
+      &:hover
+        border-bottom: 1px solid $color-theme
     svg
       flex-shrink: 0
       height: 1em
