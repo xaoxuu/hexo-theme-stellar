@@ -23,9 +23,6 @@ utils.jq(() => {
                     includeReply: false
                 }).then(function (res) {
                     for (var j = 0; j < res.length; j++) {
-                        if (j === 0) {
-                            console.log(res[0]);
-                        }
                         var cell = '<div class="timenode" index="' + i + '">';
                         cell += '<div class="header">';
                         cell += '<div class="user-info">';
