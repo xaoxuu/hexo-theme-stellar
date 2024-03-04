@@ -21,7 +21,6 @@ utils.jq(() => {
                     pageSize: 15,
                     includeReply: false
                 }).then(function (res) {
-                    console.log(res);
                     for (var j = 0; j < res.length; j++) {
                         if (j === 0) {
                             console.log(res[0]);
