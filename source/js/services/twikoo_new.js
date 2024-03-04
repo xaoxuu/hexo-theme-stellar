@@ -16,7 +16,6 @@ utils.jq(() => {
                 if (api == null) {
                     continue;
                 }
-                const default_avatar = def.avatar;
                 twikoo.getRecentComments({
                     envId: api,
                     pageSize: limit,
@@ -26,7 +25,6 @@ utils.jq(() => {
                         var cell = '<div class="timenode" index="' + i + '">';
                         cell += '<div class="header">';
                         cell += '<div class="user-info">';
-                        cell += '<img src="' + (res[j].avatar || default_avatar) + '" onerror="javascript:this.src=\'' + default_avatar + '\';">';
                         cell += '<span>' + res[j].nick + '</span>';
                         cell += '</div>';
                         cell += '<span>' + res[j].relativeTime + '</span>';
