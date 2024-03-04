@@ -8,7 +8,7 @@ utils.jq(() => {
     twikooScript.onload = function() {
         // 当 Twikoo 脚本加载完成后执行加载评论的函数
         $(function () {
-            const els = document.getElementsByClassName('ds-comment');
+            const els = document.getElementsByClassName('ds-commentnew');
             for (var i = 0; i < els.length; i++) {
                 const el = els[i];
                 const api = el.getAttribute('api');
