@@ -8,9 +8,9 @@ utils.jq(() => {
     twikooScript.onload = function() {
         // 当 Twikoo 脚本加载完成后执行加载评论的函数
         $(function () {
-            const els = document.getElementsByClassName('ds-twikoo');
-            for (var i = 0; i < els.length; i++) {
-                const el = els[i];
+            const twikoo = document.getElementsByClassName('ds-twikoo');
+            for (var i = 0; i < twikoo.length; i++) {
+                const el = twikoo[i];
                 const api = el.getAttribute('api');
                 const limit = parseInt(el.getAttribute('limit')) || 10;
                 const reply = el.getAttribute('hide') === 'reply' ? false : true;
