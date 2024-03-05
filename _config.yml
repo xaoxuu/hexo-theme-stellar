@@ -68,7 +68,7 @@ site_tree:
   # 主页配置
   home:
     leftbar: welcome, weather, recent, lishi, waline-recent
-    rightbar:
+    rightbar: new_comment
   # 博客列表页配置
   index_blog:
     base_dir: blog # 只影响自动生成的页面路径
@@ -443,6 +443,8 @@ dependencies:
 
 # 内置服务，按需加载（页面内用到了就会加载，没有用到就不会加载）
 data_services:
+  commentnew:
+    js: /js/services/waline_new.js
   # 外部 md 渲染
   mdrender:
     js: /js/services/mdrender.js

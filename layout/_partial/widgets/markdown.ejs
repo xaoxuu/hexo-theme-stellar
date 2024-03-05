@@ -127,7 +127,7 @@ function layoutDiv() {
 <% } %>
 
 <% if (theme.comments.waline.recentcomments) { %>
-  <script type="module">
+  <!-- <script type="module">
     import {
       RecentComments
     } from 'https://fastly.jsdelivr.net/npm/@waline/client/dist/waline.mjs';
@@ -135,9 +135,11 @@ function layoutDiv() {
       el: '#waline-recent',
       serverURL: 'https://waline.luoxue03.cn',
       count: 10,
+    }).then((comments) => {
+      console.log(comments);
     });
-  </script>
-  <% } %>
+  </script> -->
+<% } %>
 <% if (theme.comments.waline.list) { %>
   <script type="module">
     import {
