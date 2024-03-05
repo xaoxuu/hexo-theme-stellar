@@ -8,9 +8,9 @@ utils.jq(() => {
     twikooScript.onload = function() {
         // 当 Twikoo 脚本加载完成后执行加载评论的函数
         $(function () {
-            const twikoo = document.getElementsByClassName('ds-twikoo');
-            for (var i = 0; i < twikoo.length; i++) {
-                const el = twikoo[i];
+            const twikoos = document.getElementsByClassName('ds-twikoo');
+            for (var i = 0; i < twikoos.length; i++) {
+                const el = twikoos[i];
                 const api = el.getAttribute('api');
                 const limit = parseInt(el.getAttribute('limit')) || 10;
                 const reply = el.getAttribute('hide') === 'reply' ? false : true;
@@ -30,9 +30,9 @@ utils.jq(() => {
                         cell += '</div>';
                         cell += '<span>' + res[j].relativeTime + '</span>';
                         cell += '</div>';
-                        cell += '<a class="body" href="' + res[j].url + '" target="_blank" rel="external nofollow noopener noreferrer">';
+                        cell += '<a class="body" href="' + res[j].url + '">';
                         cell += res[j].commentText;
-                        cell += '</div>';
+                        cell += '</a>';
                         cell += '</div>';
                         $(el).append(cell);
                     }
