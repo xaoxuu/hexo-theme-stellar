@@ -23,7 +23,7 @@ utils.jq(() => {
                     includeReply: reply
                 }).then(function (res) {
                     for (var j = 0; j < res.length; j++) {
-                        var cell = '<div class="timenode" index="' + i + '">';
+                        var cell = '<div class="timenode" index="' + j + '">';
                         cell += '<div class="header">';
                         cell += '<div class="user-info">';
                         cell += '<span>' + res[j].nick + '</span>';
