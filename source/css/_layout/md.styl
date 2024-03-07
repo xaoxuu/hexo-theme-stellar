@@ -116,7 +116,7 @@
 .md-text img
   border-radius: $border-image
   margin: auto
-  display: inline-block
+  display: block
 
 li:not([class]) a:not([class])
 p:not([class]) a:not([class])
@@ -127,7 +127,7 @@ table a:not([class])
   padding: 0 2px
   border-radius: 0
   color: inherit
-  background: linear-gradient(0deg,var(--theme-link),var(--theme-link)) no-repeat left 100%/100% 1px
+  border-bottom: 2px solid var(--theme-link)
   &:hover
     text-decoration: none
     color: var(--theme-link)
