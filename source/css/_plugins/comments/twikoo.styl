@@ -35,15 +35,69 @@
   .tk-comments-count,
   .tk-content,
   .tk-preview-container
-    color: var(--text-p1) !important;
-
+    color: var(--text-p1) !important
+  .el-input__inner:focus,
+  .el-textarea__inner:focus
+    border-color: var(--twikoo-theme) !important
   .el-button:not(.el-button--primary):not(.el-button--text):active,
   .el-button:not(.el-button--primary):not(.el-button--text):focus,
   .el-button:not(.el-button--primary):not(.el-button--text):hover
-    color: var(--twikoo-theme) !important;
+    color: var(--twikoo-theme) !important
+    border-color: var(--theme-link-opa) !important
+  .el-button--primary.is-disabled:active,
+  .el-button--primary.is-disabled:focus,
+  .el-button--primary.is-disabled:hover
+    background-color: var(--theme-link-opa) !important
+
+  .el-button:focus,.el-button:hover
+    border-color: var(--theme-link-opa) !important
+  .el-button:active
+    color: var(--twikoo-theme) !important
+    border-color: var(--twikoo-theme) !important
+  .el-button.is-active,.el-button.is-plain:active
+    color: var(--twikoo-theme) !important
+    border-color: var(--twikoo-theme) !important
+
+  .el-button--primary
+    background-color: var(--twikoo-theme) !important
+    border-color: var(--twikoo-theme) !important
+  .el-button--primary:focus,.el-button--primary:hover
+    background: $color-hover !important;
+    border-color: $color-hover !important;
+  .el-button--primary:active
+    background: var(--twikoo-theme) !important
+    border-color: var(--twikoo-theme) !important
+  .el-button--primary.is-active
+    background: var(--twikoo-theme) !important
+    border-color: var(--twikoo-theme) !important
+  .el-button--primary.is-disabled,
+  .el-button--primary.is-disabled:active,
+  .el-button--primary.is-disabled:focus,
+  .el-button--primary.is-disabled:hover
+    background-color: var(--theme-link-opa) !important
+    border-color: var(--theme-link-opa) !important
+  .el-button--primary.is-plain
+    color: var(--twikoo-theme) !important
+    border-color: var(--theme-link-opa) !important
+  .el-button--primary.is-plain:focus,
+  .el-button--primary.is-plain:hover
+    background: var(--twikoo-theme) !important
+    border-color: var(--twikoo-theme) !important
+  .el-button--primary.is-plain:active
+    background: var(--twikoo-theme) !important
+    border-color: var(--twikoo-theme) !important
 
   .tk-action-icon svg
-    color: var(--text-p1) !important;
+    color: var(--text-p1) !important
+
+  .tk-action-link
+    color: var(--twikoo-theme) !important
+  
+  .el-loading-spinner .path
+    stroke: var(--twikoo-theme) !important
+
+  .tk-icon.__comments
+    color: var(--twikoo-theme) !important
 
   b, strong
     color: var(--twikoo-lighttext);
@@ -52,7 +106,7 @@
     cursor: pointer
 
   .tk-time, .tk-extras
-    color: var(--twikoo-secondtext);
+    color: var(--twikoo-secondtext)
 
   .tk-expand
     width: auto
