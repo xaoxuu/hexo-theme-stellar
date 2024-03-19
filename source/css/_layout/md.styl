@@ -71,28 +71,14 @@
   h1,h2,h3,h4,h5,h6
     color: var(--text)
     line-height: 1.8
+    &:before
+      content: '#'
+      margin-right: 8px
+      color: $color-theme
   blockquote, .tag-plugin
     h2,h3,h4,h5,h6
       margin-top: 0.25em
       margin-bottom: 0.25em
-      
-  a.headerlink 
-    background: $color-theme
-    border-radius: 2px
-    margin-right: 8px
-    trans1 background
-  a.headerlink:hover
-    background: $color-hover
-  a.headerlink:before
-    content: ''
-    color: white
-    font-weight: 700
-    padding: 0 2px
-    font-size: $fs-12
-  h2
-    font-weight: 500
-    a.headerlink:before
-      content: ':'
   
 .md-text.content:first-child .tag-plugin:first-child
   margin-top: 0
