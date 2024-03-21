@@ -1,0 +1,53 @@
+// 渐变文字
+
+.gradient-text {
+    font-size: 11px;
+    background: linear-gradient(to right, red, #008B45, #FF7256);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+.gradient-color-text {
+    background-size: 400% 400%;
+    background-image: linear-gradient(to right, #ff0000, #ff8000, #fff200, #51ff00, #00d0ff, #9000ff, #ff008c) !important;
+    -webkit-background-clip: text;
+    animation: text-color-gradient 10s ease infinite;
+    color: transparent !important;
+    font-size: 11px;
+
+    @keyframes text-color-gradient {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+}
+
+// 渐进下划线
+
+#historyDisplay a {
+    background: linear-gradient(to right, #c3c8cb, #acdaff) no-repeat right bottom;
+    animation: fadeIn 4s;
+    background-size: 0 2px;
+    color: #333 !important;
+    transition: background-size 1s;
+    font-size: 14px;
+}
+
+#historyDisplay a:hover {
+    background-position: left bottom;
+    background-size: 100% 2px;
+}
+
+#wl-edit {
+  font-family: "寒蝉全圆体"!important; /* 替换"你的字体"为你想要的字体 */
+  font-size: 14px !important; /* 或者你想要的字体大小 */
+
+}
