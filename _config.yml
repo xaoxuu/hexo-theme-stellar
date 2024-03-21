@@ -54,6 +54,8 @@ menubar:
       title: 社交
       url: /friends/
 
+
+# 侧边栏自定义配置开关
 sidebar:
   widgets:
     hitokoto:
@@ -67,7 +69,7 @@ site_tree:
   # -- 列表类页面 -- #
   # 主页配置
   home:
-    leftbar: welcome, weather, recent, lishi, waline-recent
+    leftbar: welcome, weather, recent, history
     rightbar: new_comment
   # 博客列表页配置
   index_blog:
@@ -287,7 +289,8 @@ footer:
       icon: '<img id="ThemeL" src="https://upyun.thatcdn.cn/public/img/icon/Sun.png"/>'
       url: javaScript:void('永昼');
     AI:
-      icon: '<img id="ThemeAI" src="https://upyun.thatcdn.cn/public/img/icon/AI.png"/>'
+      # icon: '<img id="ThemeAI" src="https://upyun.thatcdn.cn/public/img/icon/AI.png"/>'
+      icon: '<i class="fa-solid fa-circle-half-stroke fa-flip"></i>'
       url: javaScript:void('跟随系统');
   sitemap:
     '博客':
@@ -443,8 +446,12 @@ dependencies:
 
 # 内置服务，按需加载（页面内用到了就会加载，没有用到就不会加载）
 data_services:
+  # 评论时间线插件
   commentnew:
     js: /js/services/waline_new.js
+  # 历史时间线插件
+  history:
+    js: /js/services/history.js
   # 外部 md 渲染
   mdrender:
     js: /js/services/mdrender.js
@@ -616,12 +623,12 @@ style:
     image: 12px # 图片圆角
   color:
     # 动态颜色（会根据明暗主题重设明度值，只用关心色相和饱和度即可）
-    background: 'hsl(212 16% 98%)' # 浅色背景颜色
+    background: '#f8fafd' # 浅色背景颜色
     block: 'hsl(212 8% 95%)' # 块背景颜色
     code: 'hsl(220 20% 10%)' # 'hsl(14 100% 48%)' # 行内代码颜色
     text: 'hsl(0 0% 20%)' # 文本颜色
     # 主题色配置（不会根据明暗动态调整，请设置为通用的颜色）
-    theme: 'hsl(192 98% 55%)' # 主题色
+    theme: '#c5dbff' # 主题色
     accent: 'hsl(14 100% 57%)' # 强调色
     link: 'hsl(207 90% 54%)' # 超链接颜色
     hover: 'hsl(14 100% 57%)' # 按钮高亮颜色
@@ -632,14 +639,20 @@ style:
     scrollbar: 4px
     highlightjs_theme: https://gcore.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css
   loading:
-    loading: 正在加载
-    error: 加载失败，请稍后重试。
+    loading: 精彩马上到来~
+    error: 加载失败了:(
   gradient: # https://webgradients.com/
     start: 'linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))'
   leftbar:
     # 可以设置：纯色/渐变色/图片作为背景
-    # background: var(--leftbar-bg)
-    background-image: url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg)
+    # 备选
+    # background-image: 'linear-gradient(to top, #dfe9f3 0%, white 100%);'
+    # background-image: 'linear-gradient(to top, #c9d6ff, #e2e2e2);'
+    # background-image: url(https://fastly.jsdelivr.net/gh/luoxue03/ImagesHost/PIC/tutu.jpg)
+    # 原始
+    # background-image: url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg)
+
+    background-image: ' linear-gradient(45deg, #DFDFE5 15%,#E2E2E2 60%,#C9D6FF 85%)'
     blur-px: 100px
     blur-bg: var(--alpha60)
   paginator:
