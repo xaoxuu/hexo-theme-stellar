@@ -1,6 +1,3 @@
-// import axios from 'axios'; // 假设您已经在项目中引入了 Axios 库，用于发起 AJAX 请求
-// var marked = require('marked');
-
 utils.jq(() => {
     $(function () {
         const els = document.getElementsByClassName('ds-commentnew');
@@ -31,7 +28,7 @@ utils.jq(() => {
                         cell += '<span>' + new Date(res[j].insertedAt).toLocaleString() + '</span>';
                         cell += '</div>';
                         cell += '<a class="body" href="' + (res[j].link || '#') + '" target="_blank" rel="external nofollow noopener noreferrer">';
-                        cell += '<span>';
+                        cell += '<span style="font-size: 13px;">';
                         // cell += res[j].orig;
                         cell += res[j].comment.replace(/<a\b[^>]*>(.*?)<\/a>/g, '$1');
                         // cell += markdownCell;
