@@ -58,7 +58,7 @@ utils.jq(() => {
               if (img.externalLink?.length > 0) {
                 cell += `<div class="image-bg"><img src="${img.externalLink}" data-fancybox="memos"></div>`;
               } else {
-                cell += `<div class="image-bg"><img src="https://${host}/o/r/${img.name}" data-fancybox="memos"></div>`;
+                cell += `<div class="image-bg"><img src="https://${host}/o/r/${img.id}" data-fancybox="memos"></div>`;
               }
             }
             cell += '</div>';
