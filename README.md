@@ -4,6 +4,8 @@ Stellar 是一个内置文档系统的简约商务风 Hexo 主题，支持丰富
 
 [![Stargazers over time](https://starchart.cc/xaoxuu/hexo-theme-stellar.svg)](https://starchart.cc/xaoxuu/hexo-theme-stellar)
 
+## About
+Stellar的个人修改版本
 
 ## Getting Started
 
