@@ -1,14 +1,12 @@
 utils.jq(() => {
-    // 加载 Twikoo 的 JavaScript 脚本
-    const twikooScript = document.createElement('script');
-    twikooScript.src = 'https://npm.onmicrosoft.cn/twikoo@1.6.32';
-    twikooScript.async = true;
-    document.head.appendChild(twikooScript);
-
-    twikooScript.onload = function() {
+    // 在加载 Twikoo 脚本前显示加载动画
+    const twikoos = document.getElementsByClassName('ds-twikoo');
+    for (var i = 0; i < twikoos.length; i++) {
+        utils.onLoading(twikoos[i]);
+    }
+    utils.js('https://npm.onmicrosoft.cn/twikoo@1.6.32', {async: true}).then(function () {
         // 当 Twikoo 脚本加载完成后执行加载评论的函数
         $(function () {
-            const twikoos = document.getElementsByClassName('ds-twikoo');
             for (var i = 0; i < twikoos.length; i++) {
                 const el = twikoos[i];
                 const api = el.getAttribute('api');
@@ -22,10 +20,14 @@ utils.jq(() => {
                     pageSize: limit,
                     includeReply: reply
                 }).then(function (res) {
+                    // 加载成功，移除加载动画
+                    utils.onLoadSuccess(el);
                     for (var j = 0; j < res.length; j++) {
                         var commentText = res[j].commentText;
-                        // 检查 commentText 的长度并截断超过 50 个字符的文本
-                        if (commentText.length > 50) {
+                        // 跳过空评论或截断超过50个字符的评论
+                        if (!commentText || commentText.trim() === '') {
+                            continue;
+                        } else if (commentText.length > 50) {
                             commentText = commentText.substring(0, 50) + '...';
                         }
                         var cell = '<div class="timenode" index="' + j + '">';
@@ -41,11 +43,14 @@ utils.jq(() => {
                         cell += '</div>';
                         $(el).append(cell);
                     }
-                }).catch(function (err) {
-                    // 发生错误
-                    console.error(err);
+                }).catch(function () {
+                    utils.onLoadFailure(el);
                 });
             }
         });
-    };
+    }).catch(function () {
+        for (var i = 0; i < twikoos.length; i++) {
+            utils.onLoadFailure(twikoos[i]);
+        }
+    });
 });
