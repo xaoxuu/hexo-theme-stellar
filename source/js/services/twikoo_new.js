@@ -1,7 +1,7 @@
 utils.jq(() => {
     // 加载 Twikoo 的 JavaScript 脚本
     const twikooScript = document.createElement('script');
-    twikooScript.src = 'https://npm.onmicrosoft.cn/twikoo@1.6.31';
+    twikooScript.src = 'https://npm.onmicrosoft.cn/twikoo@1.6.32';
     twikooScript.async = true;
     document.head.appendChild(twikooScript);
 
@@ -23,6 +23,11 @@ utils.jq(() => {
                     includeReply: reply
                 }).then(function (res) {
                     for (var j = 0; j < res.length; j++) {
+                        var commentText = res[j].commentText;
+                        // 检查 commentText 的长度并截断超过 50 个字符的文本
+                        if (commentText.length > 50) {
+                            commentText = commentText.substring(0, 50) + '...';
+                        }
                         var cell = '<div class="timenode" index="' + j + '">';
                         cell += '<div class="header">';
                         cell += '<div class="user-info">';
@@ -31,7 +36,7 @@ utils.jq(() => {
                         cell += '<span>' + res[j].relativeTime + '</span>';
                         cell += '</div>';
                         cell += '<a class="body" href="' + res[j].url + '">';
-                        cell += res[j].commentText;
+                        cell += commentText;
                         cell += '</a>';
                         cell += '</div>';
                         $(el).append(cell);
