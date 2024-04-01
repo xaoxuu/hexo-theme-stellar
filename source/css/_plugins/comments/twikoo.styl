@@ -9,7 +9,7 @@
   cursor: pointer
   padding: 0.75em
   text-align: center
-  transition: all 0.5s
+  trans1 background
   border-radius: $border-card
   letter-spacing: 5px
   background: var(--block)
@@ -45,11 +45,12 @@
       display: none
     .el-button--primary.is-disabled, .el-button--primary.is-disabled:active, .el-button--primary.is-disabled:focus, .el-button--primary.is-disabled:hover
       background-color: var(--block)
+      color: var(--text-meta)
     .el-button--primary
       border-color: var(--text-p1)
-      color: var(--card)
+      color: var(--text)
       border-radius: $border-card
-      transition: .3s
+      trans1 all
       width: 6.25rem
       position: absolute
       top: -40px
@@ -83,7 +84,6 @@
     .el-input-group__append, .el-input-group__prepend
       background-color: var(--card)
       color: var(--text-p1)
-      border-color: var(--card-border)
       border: none
     .el-input-group--prepend .el-input__inner, .el-input-group__append
       border-radius: $border-card
@@ -116,12 +116,9 @@
         margin-left: 0
         margin-top: 0
         justify-content: space-around
-    .tk-admin
-      backdrop-filter: blur(5px)
     .el-button
       background-color: var(--card)
       border: none
-      color: var(--text)
     .tk-tag-green
       background-color: var(--theme-link-opa)
       border: none
@@ -148,9 +145,6 @@
     .tk-content 
       p
         margin: 0
-    .tk-admin-config-input 
-      .el-input__inner
-        background: transparent !important
   .tk-comment .tk-submit .tk-avatar, .tk-replies .tk-avatar
     height: 2.5rem !important
     width: 2.5rem !important
@@ -179,19 +173,22 @@
     border-radius: $border-card
     padding: 1rem 0px 0px
     margin-top: 0
-    transition: all 0.3s ease 0s
+    trans1 all
   .tk-content span:first-child:not(.token)
     font-size: .75rem
-    color: var(--anzhiyu-secondtext)
+    color: var(--text-p2)
 
-.twikoo .tk-extra 
-  background: var(--card)
+.twikoo .tk-extra
+  background: var(--block)
   padding: 4px 8px
   border-radius: $border-card
   margin-right: 4px
-  color: var(--anzhiyu-secondtext)
+  color: var(--text-p3)
   margin-top: 6px
   font-size: 0.8rem
+
+.twikoo .tk-time
+  color: var(--text-p3)
 
 .twikoo .tk-extra-text 
   font-size: .75rem
@@ -222,18 +219,16 @@
 .tk-comments-container > .tk-comment 
   margin-top: 0 !important
   margin-bottom: 1rem !important
-  transition: 0.3s
+  trans1 all
   border-radius: $border-card
   padding: 0
   padding-top: 1rem
   border: none
-  border-top: var(--style-border-dashed)
 
 .page .tk-comments-container > .tk-comment
   background: var(--card)
   padding: 1rem
   padding-bottom: 1rem
-  border-top: var(--style-border)
 
 .tk-content
   margin-top: 0.5rem
