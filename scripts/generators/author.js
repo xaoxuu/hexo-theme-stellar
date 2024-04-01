@@ -17,7 +17,8 @@ hexo.extend.generator.register('author', function (locals) {
       data: {
         author: author,
         leftbar: site_tree.author.leftbar,
-        menu_id: site_tree.author.menu_id
+        menu_id: site_tree.author.menu_id,
+        breadcrumb: false
       }
     })
   }
