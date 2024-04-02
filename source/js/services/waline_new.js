@@ -18,10 +18,10 @@ utils.jq(() => {
           cell += '<img src="' + (item.avatar || default_avatar) + '" onerror="javascript:this.src=\'' + default_avatar + '\';">';
           cell += '<span>' + item.nick + '</span>';
           cell += '</div>';
-          cell += '<span>' + item.insertedAt + '</span>';
+          cell += '<span>' + new Date(item.time).toLocaleString() + '</span>';
           cell += '</div>';
-          cell += '<a class="body" href="' + item.link + '" target="_blank" rel="external nofollow noopener noreferrer">';
-          cell += item.comment;
+          cell += '<a class="body" href="' + item.url + '" target="_blank" rel="external nofollow noopener noreferrer">';
+          cell += item.comment.replace(/<a\b[^>]*>(.*?)<\/a>/g, '$1');
           cell += '</a>';
           cell += '</div>';
           $(el).append(cell);
