@@ -18,8 +18,9 @@ utils.jq(() => {
           res.forEach((comment, j) => {
             let commentText = comment.commentText;
             if (!commentText) return;
+            // 转义
+            commentText = commentText.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
             commentText = commentText.length > 50 ? commentText.substring(0, 50) + '...' : commentText;
-
             var cell = '<div class="timenode" index="' + j + '">';
             cell += '<div class="header">';
             cell += '<div class="user-info">';
