@@ -447,7 +447,7 @@ dependencies:
 # 内置服务，按需加载（页面内用到了就会加载，没有用到就不会加载）
 data_services:
   # 评论时间线插件
-  commentnew:
+  waline:
     js: /js/services/waline_new.js
   # 历史时间线插件
   history:
@@ -617,8 +617,8 @@ style:
   prefix:
     h2: https://api.iconify.design/ci:heading-h2.svg
   border-radius:
-    card-l: 16px # 侧边栏、文章横幅位置的圆角
-    card: 12px # 文章内大部分卡片的圆角
+    card-l: 12px # 侧边栏、文章横幅位置的圆角
+    card: 6px # 文章内大部分卡片的圆角
     bar: 8px # 横条类元素的圆角
     image: 12px # 图片圆角
   color:
