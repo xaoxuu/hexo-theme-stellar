@@ -46,8 +46,62 @@
     background-size: 100% 2px;
 }
 
+// waline 评论 输入框文字
+
 #wl-edit {
   font-family: "寒蝉全圆体"!important; /* 替换"你的字体"为你想要的字体 */
   font-size: 14px !important; /* 或者你想要的字体大小 */
 
 }
+// waline 最新评论插件 emoji 表情 大小
+.tag-plugin.timeline.ds-waline .timenode
+
+    .wl-emoji
+        display: inline-block;
+        vertical-align: baseline;
+        height: 1.6em;
+        margin: -0.25em .15em;
+
+// 滚动显示
+// 个性化部分 ⬇️
+.scroll-box
+    width 15em
+    border 1px solid transparent // 设置边框为1像素宽并透明
+    border-radius 10px // 设置圆角半径为10像素
+
+// 通用代码部分 ⬇️
+.scroll-wrap {
+    max-width: 100%;
+    display: inline-block;
+    vertical-align: top;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.scroll-item {
+    animation: scroll linear 6s alternate infinite;
+    float: left;
+}
+
+@keyframes scroll {
+    0% {
+        margin-left: 0;
+        transform: translateX(0);
+    }
+
+    10% {
+        margin-left: 0;
+        transform: translateX(0);
+    }
+
+    90% {
+        margin-left: 100%;
+        transform: translateX(-100%);
+    }
+
+    100% {
+        margin-left: 100%;
+        transform: translateX(-100%);
+    }
+}
+
