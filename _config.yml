@@ -145,11 +145,15 @@ article:
     max_count: 5
 
 search:
-  service: local_search # local_search, todo...
+  service: local_search # local_search, algolia_search, todo...
   local_search: # 在 front-matter 中设置 indexing:false 来避免被搜索索引
     field: all # post, page, all
     path: /search.json # 搜索文件存放位置
     content: true # 是否搜索内容
+  algolia_search: # Docsearch https://docsearch.algolia.com/apply/ 申请
+    appId: 
+    apiKey: 
+    indexName: 
 
 
 ######## Comments ########
