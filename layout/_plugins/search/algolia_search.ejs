@@ -1,0 +1,13 @@
+<script>
+    window.addEventListener('DOMContentLoaded', (event) => {
+      window.searchConfig = {
+        appId: '<%- conf.appId %>', 
+        apiKey: '<%- conf.apiKey %>', 
+        indexName: '<%- conf.indexName %>', 
+        hitsPerPage: 100, 
+      };
+      utils.js('https://gcore.jsdelivr.net/algoliasearch/3/algoliasearch.min.js', { defer: true });
+      utils.js('/js/search/algolia-search.js', { defer: true });
+    });
+  </script>
+  
