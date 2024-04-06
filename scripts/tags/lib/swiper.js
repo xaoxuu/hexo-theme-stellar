@@ -13,15 +13,19 @@ module.exports = ctx => function(args, content) {
   args = ctx.args.map(args, ['width', 'effect'])
   var el = ''
   function slide() {
-    let imgs = ctx.render.renderSync({text: content, engine: 'markdown'})
-    imgs = imgs.match(/<img(.*?)src="(.*?)"(.*?)>/gi)
-    if (imgs && imgs.length > 0) {
-      imgs.forEach((img, i) => {
-        img = img.replace('<img src', '<img no-lazy src')
-        el += '<div class="swiper-slide">' + img + '</div>'
-      })
+    let matches = content.match(/!\[.*?\]\((.*?)\)/g) || [];
+    let imgUrls = matches.map(img => {
+      let match = img.match(/!\[.*?\]\((.*?)\)/);
+      return match && match[1];
+    });
+
+    if (imgUrls.length > 0) {
+      imgUrls.forEach((url, i) => {
+        el += `<div class="swiper-slide"><img no-lazy src="${url}" alt="image-${i}"></div>`;
+      });
     }
   }
+
   el += '<div class="tag-plugin swiper fancybox" id="swiper-api"'
   el += ' ' + ctx.args.joinTags(args, ['width', 'effect']).join(' ')
   el += '>'
