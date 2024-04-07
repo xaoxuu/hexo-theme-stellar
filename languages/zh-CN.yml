@@ -41,14 +41,14 @@ meta:
 
 page:
   error:
-    what: 很抱歉，您访问的页面不存在
+    what: 很抱歉，页面挂了捏
     why: 可能是输入地址有误或该地址已被删除
     action: 返回主页
 
 search:
-  search: 站内搜索
+  search: 搜点啥？
   search_in: 在 %s 中搜索
-  no_results: 没有找到内容！
+  no_results: 啥都没有
 
 message:
   copied: 复制成功
