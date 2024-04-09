@@ -1,0 +1,18 @@
+<% 
+const { field } = theme.plugins.expire;
+const matchesField = field === 'all' || field === layout || (field === 'wiki' && page.wiki) || (field === 'topic' && page.topic);
+if (matchesField) { %>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      var expiredDays = `<%= conf.expiredDays %>`;
+      var postDate = new Date('<%= page.updated %>').getTime();
+      var currentDate = new Date().getTime();
+      var daysDiff = Math.floor((currentDate - postDate) / (1000 * 3600 * 24));
+  
+      if (daysDiff > expiredDays) {
+        var cell = '<div class="tag-plugin colorful note" color="orange"><div class="title">文章时效提醒</div><div class="body"><p>这篇文章上次更新于' + daysDiff + '天前，部分信息可能已发生改变，请注意甄别。</p></div></div>';
+        document.querySelector('article.content').insertAdjacentHTML('afterbegin', cell);
+      }
+    });
+  </script>
+<% } %>
