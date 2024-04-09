@@ -457,7 +457,7 @@ plugins:
   tianli_gpt: 
     enable: #true
     js: https://jsd.onmicrosoft.cn/gh/qxchuckle/Post-Summary-AI@6.0/chuckle-post-ai.min.js
-    field: post # all, post, wiki
+    field: post # all, post, wiki, topic
     key: 5Q5mpqRK5DkwT1X9Gi5e # tianli_gpt key
     total_length: 1000 # 设置提交的字数限制，默认为1000字，上限为5000，超过5000字符将被截断
     typewriter: true # 打字机动画 
@@ -513,6 +513,11 @@ plugins:
     default_text: 'Copy'
     success_text: 'Copied'
     toast: 复制成功
+
+  expire: # 文章时效提醒
+    enable: # true
+    field: post # all, post, wiki, topic
+    expiredDays: 45 # 文章过期时间
   
   # 赫蹏 (Heti) - 专为中文网页内容设计的排版样式增强
   # https://github.com/sivan/heti
