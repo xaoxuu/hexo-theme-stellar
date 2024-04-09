@@ -54,6 +54,10 @@ const util = {
   scrollTop: () => {
     window.scrollTo({top: 0, behavior: "smooth"});
   },
+
+  scrollComment: () => {
+    document.getElementById('comments').scrollIntoView({behavior: "smooth"});
+  },
 }
 
 const hud = {
