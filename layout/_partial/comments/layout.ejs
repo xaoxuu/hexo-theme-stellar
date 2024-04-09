@@ -16,6 +16,7 @@ const proj = theme.wiki.tree[page.wiki]
 if (loadComment && (proj != null)) {
   if (proj.comments === false) {
     loadComment = false;
+    page.comments = false;
   } else {
     if (proj.comment_title != undefined && page.comment_title == undefined) {
       if (['utterances', 'beaudar', 'giscus'].includes(theme.comments.service)) {
