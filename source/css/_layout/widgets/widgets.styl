@@ -1,7 +1,7 @@
 .widgets 
   .loading-wrap
     margin: 0.5rem 0
-    background: var(--alpha50)
+    background: var(--block)
 
 .widgets
   overflow: scroll
@@ -73,6 +73,10 @@
     .widget-header
       padding-left: var(--gap-padding)
       padding-right: var(--gap-padding)
+      background: var(--site-bg)
+      position: sticky
+      z-index: 2
+      top: 0
   // 小屏幕
   @media screen and (max-width: $device-laptop)
     .widget-wrapper

@@ -167,7 +167,6 @@
 
 @media screen and (max-width: $device-laptop)
   .l_right
-    blur-effect()
     .widgets
       .widget-wrapper.toc
         position: static
@@ -176,7 +175,4 @@
     a
       color: var(--text-p2)
   .widget-wrapper.toc .widget-footer
-    a
-      background: var(--alpha100)
-    a+a
-      margin-top: 4px
+    display: none

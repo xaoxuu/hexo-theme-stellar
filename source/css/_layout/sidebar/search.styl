@@ -13,9 +13,10 @@
     z-index: 0
     border-radius: $border-bar
     color: var(--text)
-    background: var(--alpha50)
+    background: var(--block)
+    border: 1px solid var(--block-border)
     &:has(input:focus)
-      background: var(--alpha100)
+      background: var(--card)
   .search-input
     width: 100%
     box-sizing: border-box
@@ -52,9 +53,8 @@
     text-align: center
     font-size: $fs-14
     padding: 2rem
-    background: var(--alpha20)
+    background: var(--block)
     border-radius: $border-card
-
 
   #search-result
     max-height: 60vh
@@ -70,13 +70,14 @@
       list-style-type: none
     li a
         display: block
-        background: var(--alpha20)
+        background: var(--block)
         line-height: 1.2
         padding: 0.75rem 1rem
         border-radius: $border-card
+        border: 1px solid var(--block-border)
         trans1 background
         &:hover
-          background: var(--alpha100)
+          background: var(--card)
     li+li
         margin-top: 8px
     .search-result-title
@@ -98,7 +99,6 @@
 
     .search-keyword
       color: $c-red
-      border-bottom: 1px dashed $c-red
       font-weight: bold
       filter grayscale(25%)
 
@@ -107,3 +107,4 @@
   .search-no-result
     display: block
     margin-bottom: 8px
+    border: 1px solid var(--block-border)

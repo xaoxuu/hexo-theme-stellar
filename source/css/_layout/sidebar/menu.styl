@@ -2,8 +2,11 @@
   width: 100%
   display: grid
   margin: 8px 0
+  border: 1px solid var(--block-border)
+  border-radius: $border-bar
+  background: var(--block)
   grid-template-columns: repeat(hexo-config('menubar.columns'), 1fr)
-  grid-gap: 8px
+  grid-gap: 2px
   &::-webkit-scrollbar
     display: none
   &::-webkit-scrollbar-track-piece
@@ -15,13 +18,10 @@
     box-sizing: border-box
     width: 100%
     min-height: 40px
-    border-radius: $border-bar
     font-size: $fs-15
     font-weight: 500
     color: var(--text-p3)
     text-align: center
-    background: var(--alpha50)
-    trans1 background
     position: relative
     display: flex
     flex-direction: column
@@ -37,7 +37,10 @@
       word-break: keep-all
     &.active, &:hover
       color: var(--text-p1)
-      background: var(--alpha100)
+      background: var(--card)
+      trans1 background
+      border-radius: $border-bar
+      box-shadow: $boxshadow-button
       img,svg
         filter: unset
     &.active:after

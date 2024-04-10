@@ -457,7 +457,7 @@ plugins:
   tianli_gpt: 
     enable: #true
     js: https://jsd.onmicrosoft.cn/gh/qxchuckle/Post-Summary-AI@6.0/chuckle-post-ai.min.js
-    field: post # all, post, wiki
+    field: post # all, post, wiki, topic
     key: 5Q5mpqRK5DkwT1X9Gi5e # tianli_gpt key
     total_length: 1000 # 设置提交的字数限制，默认为1000字，上限为5000，超过5000字符将被截断
     typewriter: true # 打字机动画 

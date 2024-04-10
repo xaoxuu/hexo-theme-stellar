@@ -45,8 +45,6 @@
       background: var(--site-bg)
       overflow: auto
       scrollbar(0, 0)
-      --blur-bg: var(--alpha60)
-      --blur-px: 50px
   .l_body[rightbar]
     .l_right
       transform: translateX(0px)
@@ -66,6 +64,7 @@
       transform: translateX(-320px)
       transition: transform .38s ease-out
       margin: 0
+      background: var(--site-bg)
       left: 8px
       box-shadow: $boxshadow-card-float
       z-index: 10
@@ -74,6 +73,7 @@
   .l_body[leftbar]
     .l_left
       transform: translateX(0px)
+      
     .main-mask
       opacity 1
       pointer-events: inherit
