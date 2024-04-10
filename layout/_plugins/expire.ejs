@@ -1,0 +1,26 @@
+<%
+const { field } = theme.plugins.expire;
+const matchesField = field === 'all' || field === layout || (field === 'wiki' && page.wiki) || (field === 'topic' && page.topic);
+if (matchesField) {
+  const expireTitle = __('meta.expire.title');
+  const expireMessageTemplate = __('meta.expire.message', '%s');
+%>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var expiredDays = '<%= conf.expiredDays %>' || 60;
+  var postDate = new Date('<%= page.updated %>').getTime();
+  var currentDate = new Date().getTime();
+  var daysDiff = Math.floor((currentDate - postDate) / (1000 * 3600 * 24));
+  if (daysDiff > expiredDays) {
+    var message = '<%= expireMessageTemplate %>'.replace('%s', daysDiff);
+    var cell = '<div class="tag-plugin colorful note" color="' + '<%= conf.color %>' + '">';
+    cell += '<div class="title">' + '<%= expireTitle %>' + '</div>';
+    cell += '<div class="body">';
+    cell += '<span>' + message + '</span>';
+    cell += '</div>';
+    cell += '</div>';
+    document.querySelector('article.content').insertAdjacentHTML('afterbegin', cell);
+  }
+});
+</script>
+<% } %>

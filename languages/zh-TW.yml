@@ -39,6 +39,9 @@ meta:
     hour: 小時前
     day: 天前
     month: 個月前
+  expire:
+    title: 文章時效提醒
+    message: 這篇文章上次更新於 %s 天前，部分信息可能已發生改變，請注意甄別
 
 page:
   error:

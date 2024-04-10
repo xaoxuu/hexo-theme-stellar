@@ -39,6 +39,9 @@ meta:
     hour: hours ago
     day: days ago
     month: months ago
+  expire:
+    title: Article Prescription Reminder
+    message: This article was last updated %s days ago, and some information may have changed. Please pay attention to discernment
 
 page:
   error:
