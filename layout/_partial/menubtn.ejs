@@ -5,4 +5,12 @@
   <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
     <%- icon('default:leftbar') %>
   </button>
+  <button type='button' style='display:none' class='laptop-only button-toggle mobile' onclick='util.scrollTop()'>
+    <%- icon('default:upup') %>
+  </button>
+  <% if (page.comments) { %>
+    <button type='button' style='display:none' class='laptop-only button-toggle mobile' onclick='util.scrollComment()'>
+      <%- icon('default:tocomment') %>
+    </button>
+  <% } %>
 </div>
