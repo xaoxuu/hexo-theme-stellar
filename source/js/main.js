@@ -58,6 +58,10 @@ const util = {
   scrollComment: () => {
     document.getElementById('comments').scrollIntoView();
   },
+
+  scrollComment: () => {
+    document.getElementById('comments').scrollIntoView({behavior: "smooth"});
+  },
 }
 
 const hud = {
