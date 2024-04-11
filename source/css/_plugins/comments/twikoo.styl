@@ -1,118 +1,167 @@
 .cmt-body.twikoo
-  --twikoo-lighttext: $color-theme;
-  --twikoo-secondtext: #909094;
-  --twikoo-emoji-background: #f8f8f8;
-  --twikoo-theme: $color-theme;
+  --twikoo-theme: $color-theme
   margin-top: 1.5rem
 
   .tk-content
     .vemoji, .tk-owo-emotion
-      width: unset;
-      border-radius: $border-image;
-      max-height: 24px;
-      max-width: 100px;
-      display: inline;
-      margin: 0 0.25em;
+      width: unset
+      border-radius: $border-image
+      max-height: 24px
+      max-width: 100px
+      display: inline
+      margin: 0 0.25em
     img
-      max-width: 400px;
-      max-height: 400px;
-      border-radius: $border-image;
+      max-width: 400px
+      max-height: 400px
+      border-radius: $border-image
 
 .OwO
   .OwO-body
-    background: var(--twikoo-emoji-background) !important;
-    color: var(--text-p1) !important;
+    background-color: var(--block) !important
+    color: var(--text-p1) !important
 
     .OwO-items
       .OwO-item
         img
-          max-height: 26px;
-          width: unset;
+          max-height: 26px
+          width: unset
 
 .twikoo
   .el-input-group__append, .el-input-group__prepend,
   .el-input__inner, .el-textarea__inner,
-  .el-button:not(.el-button--primary):not(.el-button--text),
-  .tk-comments-count,
-  .tk-content,
   .tk-preview-container
-    color: var(--text-p1) !important;
-
+    border-color: var(--block-border)
+  .el-input__inner:focus,
+  .el-textarea__inner:focus
+    border-color: var(--twikoo-theme) !important  
   .el-button:not(.el-button--primary):not(.el-button--text):active,
   .el-button:not(.el-button--primary):not(.el-button--text):focus,
   .el-button:not(.el-button--primary):not(.el-button--text):hover
-    color: var(--twikoo-theme) !important;
+    color: var(--twikoo-theme) !important
+    border-color: var(--theme-link-opa) !important
+    background-color: var(--block) !important
+  .el-button--primary.is-disabled:active,
+  .el-button--primary.is-disabled:focus,
+  .el-button--primary.is-disabled:hover
+    background-color: var(--theme-link-opa) !important
+
+  .el-button:focus,.el-button:hover
+    border-color: var(--theme-link-opa)
+  .el-button:active
+    color: var(--twikoo-theme)
+    border-color: var(--twikoo-theme)
+  .el-button.is-active,.el-button.is-plain:active
+    color: var(--twikoo-theme)
+    border-color: var(--twikoo-theme)
+
+  .el-button--primary
+    background-color: var(--twikoo-theme)
+    border-color: var(--twikoo-theme) !important
+  .el-button--primary:focus,.el-button--primary:hover
+    background: $color-hover
+    border-color: $color-hover !important
+  .el-button--primary:active
+    background: var(--twikoo-theme)
+    border-color: var(--twikoo-theme)
+  .el-button--primary.is-active
+    background: var(--twikoo-theme)
+    border-color: var(--twikoo-theme)
+  .el-button--primary.is-disabled,
+  .el-button--primary.is-disabled:active,
+  .el-button--primary.is-disabled:focus,
+  .el-button--primary.is-disabled:hover
+    background-color: var(--theme-link-opa) !important
+    border-color: var(--theme-link-opa) !important
+  .el-button--primary.is-plain
+    color: var(--twikoo-theme) !important
+    border-color: var(--theme-link-opa)
+  .el-button--primary.is-plain:focus,
+  .el-button--primary.is-plain:hover
+    background: var(--twikoo-theme) !important
+    border-color: var(--twikoo-theme)
+  .el-button--primary.is-plain:active
+    background: var(--twikoo-theme) !important
+    border-color: var(--twikoo-theme)
 
   .tk-action-icon svg
-    color: var(--text-p1) !important;
+    color: var(--text-p2)
+
+  .tk-action-link
+    color: var(--text-p1)
+    &:hover
+      color: var(--twikoo-theme)
+
+  .el-loading-spinner .path
+    stroke: var(--twikoo-theme)
+
+  .tk-icon.__comments
+    color: var(--twikoo-theme)
 
   b, strong
-    color: var(--twikoo-lighttext);
+    color: var(--text-p1)
 
   a
     cursor: pointer
 
   .tk-time, .tk-extras
-    color: var(--twikoo-secondtext);
+    color: var(--text-p3)
 
   .tk-expand
     width: auto
     border: none
     padding: 6px 2rem
     border-radius: $border-card
-    background: var(--block)
+    background: var(--block-hover)
     color: var(--text-p1)
     line-height: 2
     font-size: 14px
     font-weight: 500
-    trans()
+    trans1 background
 
     &:hover
-      background: var(--block-hover)
+      background: var(--card)
 
   .tk-comment
-    margin-top: 0 !important;
+    margin-top: 0
     margin-bottom: 1rem
-    border: 1px dashed var(--block-border);
-    padding: 1rem;
-    border-radius: $border-card;
-    background: var(--card);
+    border: 1px dashed var(--block-border)
+    padding: 1rem
+    border-radius: $border-card
+    background: var(--block)
 
     &:hover
-      border-color: var(--twikoo-theme);
+      border-color: var(--twikoo-theme)
 
   .tk-main .tk-comment
-    margin-top: 1rem !important;
-    margin-bottom: 0;
+    margin-top: 1rem
+    margin-bottom: 0
 
   .tk-submit
-    padding: 1rem 1rem 0 1rem;
-    border-radius: $border-card;
-    background: var(--card);
+    padding: 1rem 1rem 0 1rem
+    border-radius: $border-card
+    background: var(--block)
 
   .tk-tag
-    vertical-align: 0.1em !important;
+    vertical-align: 0.1em
 
+  .tk-tag-green
+    border: none
+    background-color: var(--theme-link-opa)
+    color: var(--twikoo-theme)
+    
   .tk-comments-title .tk-comments-count
-    margin-top: 15px;
-    color: var(--text-p1);
+    margin-top: 15px
+    color: var(--text-p1)
 
     span:nth-child(1)
-      font-size: 1.5rem;
-      font-weight: 700;
+      font-size: 1.5rem
+      font-weight: 700
 
     span:nth-child(2)
-      font-size: 1rem;
+      font-size: 1rem
 
   .tk-comments-no
-    color: var(--text-p1);
-
-_dark_comments()
-  .cmt-body.twikoo
-    --twikoo-lighttext: $color-link;
-    --twikoo-secondtext: var(--text-p2);
-    --twikoo-theme: $color-theme;
-
+    color: var(--text-p1)
 
 if theme(dark)
   _dark_comments()
