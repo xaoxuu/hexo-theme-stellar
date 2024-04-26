@@ -26,7 +26,7 @@
 
 .l_body[text-indent] .article.banner .content .bottom.only-title
   justify-content: center
-  
+
 
 // 动画配置
 .article.banner
@@ -50,8 +50,8 @@
   --button-hover-bg: rgba(black, 0.05)
   ondark()
     --button-hover-bg: rgba(white, 0.15)
-  if theme(dark)
+  :root[data-theme="dark"] &
     ondark()
-  else if theme(auto)
+  :root:not([data-theme]) &
     @media (prefers-color-scheme: dark)
       ondark()
