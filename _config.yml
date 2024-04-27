@@ -166,7 +166,7 @@ comments:
     repo: xxx/xxx
     issue-term: pathname
     issue-number:
-    theme: preferred-color-scheme
+    theme: stellar
     label:
     input-position: top # top/bottom 评论框位置
     comment-order: desc # desc 排序
@@ -179,7 +179,7 @@ comments:
     repo: xxx/xxx
     issue-term: pathname
     issue-number:
-    theme: preferred-color-scheme
+    theme: stellar
     label:
   # giscus
   # https://giscus.app/zh-CN
@@ -508,7 +508,7 @@ plugins:
     # js: https://unpkg.com/mermaid@9.0.0/dist/mermaid.min.js
     js: https://cdn.jsdelivr.net/npm/mermaid@v9/dist/mermaid.min.js
     # Available themes: default | dark | forest | neutral
-    theme: neutral
+    theme: stellar
   
   # 代码块复制按钮
   copycode:
