@@ -37,7 +37,11 @@ if (theme.style.site && theme.style.site['background-image']) {
 }
 
 var html = `<!DOCTYPE html>`
-html += `<html lang="${page.lang}">`
+if (theme.style.prefers_theme === 'auto') {
+    html += `<html lang="${page.lang}">`
+} else {
+  html += `<html lang="${page.lang}" data-theme="${theme.style.prefers_theme}">`
+}
   html += partial('_partial/head')
   html += `<body>`
     html += site_background
