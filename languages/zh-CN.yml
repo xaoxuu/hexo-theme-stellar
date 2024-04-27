@@ -53,6 +53,10 @@ search:
 
 message:
   copied: 复制成功
+  theme_switched:
+    light: 切换到浅色模式
+    dark: 切换到深色模式
+    auto: 切换到跟随系统配色
 
 symbol:
   comma: "，"

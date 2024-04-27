@@ -22,6 +22,8 @@ function custom_inject() {
 <!-- required -->
 <script src="<%- `${theme.stellar.main_js}?v=${stellar_info('version')}` %>" async></script>
 
+<%- partial('scripts/theme') %>
+
 <!-- optional -->
 <%- partial('comments/script') %>
 
