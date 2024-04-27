@@ -53,6 +53,10 @@ search:
 
 message:
   copied: Copied!
+  theme_switched:
+    light: Switched to Light Mode
+    dark: Switched to Dark Mode
+    auto: Switched to Auto Mode
 
 symbol:
   comma: ", "
