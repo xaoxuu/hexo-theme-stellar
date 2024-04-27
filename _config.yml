@@ -274,7 +274,7 @@ footer:
     #   url: /about/#comments
     # theme:
     #   icon: default:theme
-    #   url: 'javascript:switchTheme()'
+    #   onclick: 'switchTheme()'
   sitemap:
     # '博客':
     #   - '[近期](/)'
