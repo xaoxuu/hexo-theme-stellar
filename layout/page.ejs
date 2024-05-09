@@ -40,7 +40,7 @@ function layoutDiv() {
   if (page.content && page.content.length > 0) {
     el += page.content
   }
-  if (layout === 'post') {
+  if (layout === 'post' || page.wiki) {
     el += partial('_partial/main/article/article_footer')
   }
   el += `</article>`
