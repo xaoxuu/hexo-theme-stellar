@@ -3,7 +3,7 @@
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
  * paper:
- * {% paper [under_line] [title:标题] [author:作者] [date:日期] [footer:footer] %}
+ * {% paper [underline] [title:标题] [author:作者] [date:日期] [footer:footer] %}
  * 
  * <!-- section section-title -->
  * section-content
@@ -22,12 +22,11 @@
 
 module.exports = ctx => function(args, content) {
   var el = ''
-  args = ctx.args.map(args, ['title', 'author', 'date', 'footer'], ['under_line'])
+  args = ctx.args.map(args, ['style','title', 'author', 'date', 'footer'])
 
-  el += '<div class="tag-plugin paper fullscreen-access">'
+  el += '<div class="tag-plugin paper">'
 
-  el += '<div class="content'
-  el += args.under_line === 'under_line' ? ' under_line">' : '">'
+  el += '<div class="content' + (typeof args.style === 'undefined' ? '' : ' ' + args.style)  + '">'
   el += '<div class="title">'  // 布局需要
   if (args.title) el += args.title
   el += '</div>'

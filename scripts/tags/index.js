@@ -47,6 +47,5 @@ hexo.extend.tag.register('video', require('./lib/video')(hexo))
 // read 阅读类
 hexo.extend.tag.register('reel', require('./lib/read/reel')(hexo), true)
 hexo.extend.tag.register('paper', require('./lib/read/paper')(hexo), true)
-hexo.extend.tag.register('English', require('./lib/read/English')(hexo), true)
 
 // others

@@ -15,7 +15,7 @@ module.exports = ctx => function(args, content) {
   var el = ''
   args = ctx.args.map(args, ['author', 'date', 'footer'], ['title'])
 
-  el += '<div class="tag-plugin reel fullscreen-access"'
+  el += '<div class="tag-plugin reel"'
   el += '>'
   el += '<div class="content">'
   el += '<div class="title">'
