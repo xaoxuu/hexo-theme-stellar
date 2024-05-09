@@ -250,8 +250,8 @@ comments:
   # Artalk
   # https://artalk.js.org/
   artalk:
-    css: https://unpkg.com/artalk@2.7/dist/Artalk.css
-    js: https://unpkg.com/artalk@2.7/dist/Artalk.js
+    css: https://unpkg.com/artalk@2.8.5/dist/Artalk.css
+    js: https://unpkg.com/artalk@2.8.5/dist/Artalk.js
     server: # 后端服务地址
     placeholder: ''
     darkMode: auto
