@@ -3,7 +3,7 @@
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
  * paper:
- * {% paper [underline] [title:标题] [author:作者] [date:日期] [footer:footer] %}
+ * {% paper [style:underline|无] [title:标题] [author:作者] [date:日期] [footer:footer] %}
  * 
  * <!-- section section-title -->
  * section-content
