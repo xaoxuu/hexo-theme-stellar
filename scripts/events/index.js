@@ -10,6 +10,7 @@ hexo.on('generateBefore', () => {
   require('./lib/doc_tree')(hexo);
   require('./lib/topic_tree')(hexo);
   require('./lib/utils')(hexo);
+  require('./lib/notebooks')(hexo);
 });
 
 hexo.on('generateAfter', () => {

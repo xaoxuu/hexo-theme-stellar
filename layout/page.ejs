@@ -3,6 +3,13 @@ const { layout } = page
 // 是否使用 Heti 布局插件
 const isUsingHeti = theme.plugins.heti?.enable
 
+const notebook = theme.notebooks.tree[page.notebook]
+if (notebook) {
+    page.menu_id ??= notebook.menu_id
+    page.license ??= notebook.license
+    page.share ??= notebook.share
+}
+
 // 默认的 menu_id
 if (page.menu_id == null) {
   if (page.wiki?.length > 0) {
@@ -40,7 +47,10 @@ function layoutDiv() {
   if (page.content && page.content.length > 0) {
     el += page.content
   }
-  if (layout === 'post' || page.wiki) {
+  if (notebook) {
+    el += partial('_partial/main/notebook/note_tags', { notebook: notebook })
+  }
+  if (layout === 'post' || page.wiki || notebook) {
     el += partial('_partial/main/article/article_footer')
   }
   el += `</article>`
