@@ -7,6 +7,17 @@ function layoutDiv() {
     el += `<span class="text created">${__("meta.updated") + __("symbol.colon")}`
     el += `<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time>`
     el += `</span>`
+  } else if (page.notebook) {
+    // 更新日期
+    el += `<span class="text created">${__("meta.updated") + __("symbol.colon")}`
+    el += `<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time>`
+    el += `</span>`
+    // 发布日期
+    el += `<span class="sep updated"></span>`
+    el += `<span class="text updated">`
+    el += `${__("meta.created") + __("symbol.colon")}`
+    el += `<time datetime="${date_xml(page.date)}">${date(page.date, config.date_format)}</time>`
+    el += `</span>`
   } else {
     const author = theme.authors ? (theme.authors[page.author] || theme.default_author) : null
     if (author) {

@@ -3,6 +3,7 @@ btn:
   blog: 文章
   wiki: 文档
   topic: 专栏
+  notebook: 笔记本
   recent_publish: 近期发布
   all_wiki: 所有项目
   category: 分类
@@ -18,6 +19,8 @@ btn:
 
 meta:
   recent_update: 最近更新
+  tag_tree: 标签
+  all_notes: 所有笔记
   toc: 本文目录
   read_next: 接下来阅读
   prev: 回顾上一篇

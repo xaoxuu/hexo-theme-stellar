@@ -3,6 +3,7 @@ btn:
   blog: 網誌
   wiki: 文檔
   topic: 專欄
+  notebook: 筆記本
   recent_publish: 近期發布
   all_wiki: 所有文檔
   category: 分類
@@ -18,6 +19,8 @@ btn:
 
 meta:
   recent_update: 最近更新
+  tag_tree: 標籤
+  all_notes: 所有筆記
   toc: 本文目錄
   read_next: 接下來閱讀
   prev: 回顧上一篇

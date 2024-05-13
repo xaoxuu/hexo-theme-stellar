@@ -1,0 +1,8 @@
+<%# 笔记页面的面包屑 %>
+<span class="sep"></span>
+<a class="cap breadcrumb" href="<%= url_for(theme.site_tree.notebooks.base_dir) %>"><%= __('btn.notebook') %></a>
+<% const notebook = theme.notebooks.tree[page.notebook] %>
+<% if (notebook) { %>
+  <span class="sep"></span>
+  <a class="cap breadcrumb" href="<%= url_for(notebook.base_dir) %>"><%= notebook.name || notebook.title %></a>
+<% } %>
