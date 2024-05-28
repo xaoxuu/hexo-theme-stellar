@@ -55,11 +55,13 @@ function layoutDiv(fallback) {
   el += icon('default:upup')
   el += `<span>${__('btn.top')}</span>`
   el += `</a>`
-  if (page.comments) {
-    el += `<a class="buttom" onclick="util.scrollComment()">`
-    el += icon('default:tocomment')
-    el += `<span>${__('btn.comments')}</span>`
-    el += `</a>`
+  if (theme.comments.service && theme.comments.service.length > 0) {
+    if (page.comments == undefined || page.comments != false) {
+      el += `<a class="buttom" onclick="util.scrollComment()">`
+      el += icon('default:tocomment')
+      el += `<span>${__('btn.comments')}</span>`
+      el += `</a>`
+    }
   }
   el += `</div>`
   el += `</widget>`
