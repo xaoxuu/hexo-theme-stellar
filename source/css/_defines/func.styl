@@ -118,7 +118,6 @@ hoverable-card()
   :root[data-theme="dark"] &
     ondark()
   :root:not([data-theme]) &
-    @media (prefers-color-scheme: light)
-      onlight()
+    onlight()
     @media (prefers-color-scheme: dark)
       ondark()
