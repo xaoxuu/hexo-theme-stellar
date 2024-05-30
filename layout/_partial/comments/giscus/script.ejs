@@ -1,5 +1,5 @@
 <script>
-  window.addEventListener('DOMContentLoaded', (event) => {
+  function load_comment() {
     const els = document.querySelectorAll("#comments #giscus");
     if (els.length === 0) return;
     els.forEach((el, i) => {
@@ -18,5 +18,5 @@
       }
       el.appendChild(script);
     });
-  });
+  }
 </script>

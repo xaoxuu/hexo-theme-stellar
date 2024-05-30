@@ -1,0 +1,28 @@
+#comment-load-button
+  background-color: rgba($color-theme, 0.2)
+  color: $color-theme
+  padding: 10px 20px 10px 20px
+  text-align: center
+  text-decoration: none
+  display: block
+  margin: 4px 2px
+  cursor: pointer
+  border-radius: 8px
+  border: solid 2px rgba($color-theme, 0.2)
+  transition-duration: 0.4s
+  align-items: center
+  justify-content: center
+  display: flex
+
+#comment-load-button:hover 
+  border: solid 2px $color-hover
+
+#comment-load-button svg
+  display flex
+  stroke darken($color-theme, 40%)
+
+#comment-load-button p
+  display flex
+  --fsp: $fsp2
+  font-size: var(--fsp)
+  margin: 0

@@ -1,3 +1,18 @@
 <% if (page.cmt && page.cmt.service && page.cmt.service.length > 0) { %>
   <%- partial(page.cmt.service + '/script') %>
+  <script>
+    <% if (page.cmt.load_button) { %>
+      function appear_comment() {
+        let div = document.getElementById("comments");
+        div.style="";
+        load_comment();
+        let self = document.getElementById("comment-load-button");
+        self.remove();
+      }
+    <% } else { %>
+      window.addEventListener('DOMContentLoaded', (event) => {
+        load_comment();
+      });
+    <% } %>
+  </script>
 <% } %>

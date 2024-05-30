@@ -1,5 +1,5 @@
 <script>
-  function load_artalk() {
+  function load_comment() {
     if (!document.querySelectorAll("#artalk_container")[0]) return;
     utils.css('<%- theme.comments.artalk.css %>');
     utils.js('<%- theme.comments.artalk.js %>', {defer: true}).then(function () {
@@ -19,7 +19,4 @@
         })
       });
   }
-  window.addEventListener('DOMContentLoaded', (event) => {
-    load_artalk();
-  });
 </script>

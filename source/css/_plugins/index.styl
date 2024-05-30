@@ -30,3 +30,5 @@ if hexo-config('comments.service') == 'waline'
   @import 'comments/waline'
 if hexo-config('comments.service') == 'artalk'
   @import 'comments/artalk'
+if hexo-config('comments.service') != undefined && hexo-config('comments.load_button') == true
+  @import 'comments/load-button'

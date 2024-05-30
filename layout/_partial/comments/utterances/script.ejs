@@ -1,5 +1,5 @@
 <script>
-  function loadUtterances() {
+  function load_comment(){
     const els = document.querySelectorAll("#comments #utterances");
     if (els.length === 0) return;
     els.forEach((el, i) => {
@@ -20,7 +20,4 @@
       el.appendChild(script);
     });
   }
-  window.addEventListener('DOMContentLoaded', (event) => {
-      loadUtterances();
-  });
 </script>
