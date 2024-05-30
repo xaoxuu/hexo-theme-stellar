@@ -79,7 +79,6 @@ _common_root()
 :root[data-theme="dark"]
   _dark_root()
 :root:not([data-theme])
-  @media (prefers-color-scheme: light)
-    _light_root()
+  _light_root()
   @media (prefers-color-scheme: dark)
     _dark_root()
