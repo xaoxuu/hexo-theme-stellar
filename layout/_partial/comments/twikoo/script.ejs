@@ -1,14 +1,11 @@
 <script type="module">
-  const el = document.getElementById('artalk_container');
+  const el = document.getElementById('twikoo_container');
   util.viewportLazyload(el, load_twikoo, <%= theme.comments.lazyload ?? false %>);
 
   function load_twikoo() {
     if (!el) return;
     utils.js('<%- theme.comments.twikoo.js %>', {defer: true}).then(function () {
-      const path = el.getAttribute('comment_id');
-      if (!path) {
-        path = decodeURI(window.location.pathname);
-      }
+      const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
       twikoo.init(Object.assign(<%- JSON.stringify(theme.comments.twikoo) %>, {
         el: '#twikoo_container',
         path: path,
