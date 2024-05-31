@@ -1,6 +1,6 @@
 <script type="module">
   const el = document.querySelector("#comments #utterances");
-  util.viewportLazyload(el, load_utterances, <%= theme.comments.lazyload %>);
+  util.viewportLazyload(el, load_utterances, <%= theme.comments.lazyload ?? false %>);
 
   function load_utterances() {
     try {

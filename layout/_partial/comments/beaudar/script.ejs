@@ -1,6 +1,6 @@
 <script type="module">
   const el = document.querySelector('#comments #beaudar');
-  util.viewportLazyload(el, load_beaudar, <%= theme.comments.lazyload %>);
+  util.viewportLazyload(el, load_beaudar, <%= theme.comments.lazyload ?? false %>);
 
   function load_beaudar() {
     if (!el) return;
