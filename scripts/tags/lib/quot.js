@@ -9,7 +9,7 @@
 
 'use strict'
 
-module.exports = ctx => function(args) {
+module.exports = ctx => function (args) {
   var el = ''
   args = ctx.args.map(args, ['el', 'icon', 'prefix', 'suffix'], ['text'])
   if (!args.el) {
@@ -43,7 +43,6 @@ module.exports = ctx => function(args) {
   if (args.el.includes('h')) {
     el += '<div' + ' class="tag-plugin quot">'
     el += '<' + args.el + ' class="content" id="' + args.text + '"' + type + '>'
-    el += '<a href="#' + args.text + '" class="headerlink" title="' + args.text + '"></a>'
     el += content()
     el += '</' + args.el + '>'
     el += '</div>'
