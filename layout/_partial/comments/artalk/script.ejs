@@ -1,6 +1,6 @@
 <script type="module">
   const el = document.getElementById('artalk_container');
-  util.viewportLazyload(el, load_artalk, <%= theme.comments.viewportLazyload %>);
+  util.viewportLazyload(el, load_artalk, <%= theme.comments.lazyload %>);
 
   function load_artalk() {
     if (!el) return;

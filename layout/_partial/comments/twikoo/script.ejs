@@ -1,6 +1,6 @@
 <script type="module">
   const el = document.getElementById('artalk_container');
-  util.viewportLazyload(el, load_twikoo, <%= theme.comments.viewportLazyload %>);
+  util.viewportLazyload(el, load_twikoo, <%= theme.comments.lazyload %>);
 
   function load_twikoo() {
     if (!el) return;

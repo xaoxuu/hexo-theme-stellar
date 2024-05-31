@@ -1,6 +1,6 @@
 <script type="module">
   const el = document.querySelector('#comments #giscus');
-  util.viewportLazyload(el, load_discus, <%= theme.comments.viewportLazyload %>);
+  util.viewportLazyload(el, load_discus, <%= theme.comments.lazyload %>);
 
   function load_discus() {
     if (!el) return;

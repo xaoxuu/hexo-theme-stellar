@@ -2,7 +2,7 @@
   import { init } from '<%- theme.comments.waline.js %>';
 
   const el = document.getElementById('waline_container');
-  util.viewportLazyload(el, load_waline, <%= theme.comments.viewportLazyload %>);
+  util.viewportLazyload(el, load_waline, <%= theme.comments.lazyload %>);
 
   function load_waline(){
     if (!el) return;
