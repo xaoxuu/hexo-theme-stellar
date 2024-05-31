@@ -3,6 +3,7 @@
   util.viewportLazyload(el, load_utterances, <%= theme.comments.lazyload ?? false %>);
 
   function load_utterances() {
+    if (!el) return;
     try {
       el.innerHTML = '';
     } catch (error) {
