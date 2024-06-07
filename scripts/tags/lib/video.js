@@ -8,14 +8,13 @@
 
 'use strict';
 
-module.exports = ctx => function(args) {
+module.exports = ctx => function (args) {
   args = ctx.args.map(args, ['type', 'bilibili', 'ratio', 'width', 'autoplay'], ['src'])
   if (args.width == null) {
     args.width = '100%'
   }
   if (args.bilibili) {
-    return `
-    <div class="tag-plugin video" style="aspect-ratio:${args.ratio || 16/9};max-width:${args.width};">
+    return `<div class="tag-plugin video" style="aspect-ratio:${args.ratio || 16 / 9};max-width:${args.width};">
     <iframe src="https://player.bilibili.com/player.html?bvid=${args.bilibili}&autoplay=${args.autoplay || 'false'}" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true">
     </iframe>
     </div>
