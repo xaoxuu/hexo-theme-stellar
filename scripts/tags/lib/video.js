@@ -9,7 +9,7 @@
 'use strict';
 
 module.exports = ctx => function (args) {
-  args = ctx.args.map(args, ['type', 'bilibili', 'ratio', 'width', 'autoplay'], ['src'])
+  args = ctx.args.map(args, ['type', 'bilibili', 'youtube', 'ratio', 'width', 'autoplay'], ['src'])
   if (args.width == null) {
     args.width = '100%'
   }
@@ -20,8 +20,14 @@ module.exports = ctx => function (args) {
     </div>
     `
   }
-  return `
-  <div class="tag-plugin video" style="max-width:${args.width};">
+  if (args.youtube) {
+    return `<div class="tag-plugin video" style="aspect-ratio:${args.ratio || 16/9};max-width:${args.width};">
+    <iframe src="https://www.youtube.com/embed/${args.youtube}?rel=0&color=white&disablekb=1&playsinline=1&&rel=0&autoplay=${args.autoplay || '0'}; picture-in-picture="true" allowfullscreen="true" >
+    </iframe>
+    </div>
+    `
+  }
+  return `<div class="tag-plugin video" style="max-width:${args.width};">
   <video controls preload>
   <source src="${args.src}" type="${args.type || 'video/mp4'}">Your browser does not support the video tag.
   </video>
