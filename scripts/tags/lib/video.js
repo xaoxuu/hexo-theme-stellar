@@ -22,7 +22,7 @@ module.exports = ctx => function (args) {
   }
   if (args.youtube) {
     return `<div class="tag-plugin video" style="aspect-ratio:${args.ratio || 16/9};max-width:${args.width};">
-    <iframe src="https://www.youtube.com/embed/${args.youtube}?rel=0&color=white&disablekb=1&playsinline=1&&rel=0&autoplay=${args.autoplay || '0'}; picture-in-picture="true" allowfullscreen="true" >
+    <iframe src="https://www.youtube.com/embed/${args.youtube}?rel=0&color=white&disablekb=1&playsinline=1&&rel=0&autoplay=${args.autoplay || '0'}" picture-in-picture="true" allowfullscreen="true" >
     </iframe>
     </div>
     `
