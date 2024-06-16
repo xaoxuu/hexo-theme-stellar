@@ -6,10 +6,7 @@
     if (!el) return;
     utils.css('<%- theme.comments.artalk.css %>');
     utils.js('<%- theme.comments.artalk.js %>', {defer: true}).then(function () {
-      const path = el.getAttribute('comment_id');
-      if (!path) {
-        path = decodeURI(window.location.pathname);
-      }
+      const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
       const artalk = Artalk.init({
         el: '#artalk_container',
         pageKey: path,

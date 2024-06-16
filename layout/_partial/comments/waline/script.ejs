@@ -10,11 +10,7 @@
     utils.css('<%- theme.comments.waline.css %>');
     utils.css('<%- theme.comments.waline.meta_css %>');
 
-    const path = el.getAttribute('comment_id');
-    if (!path) {
-      path = decodeURI(window.location.pathname);
-    }
-
+    const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
     const waline = init(Object.assign(<%- JSON.stringify(theme.comments.waline) %>, {
       el: '#waline_container',
       path: path,
