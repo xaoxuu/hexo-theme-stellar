@@ -53,8 +53,10 @@ function layoutDiv() {
     if (theme.article.license && (page.license != false)) {
       license = page.license || theme.article.license
     }
+  } else if (page.license) {
+    license = page.license === true ? theme.article.license : page.license
   }
-  if (license.length > 0) {
+  if (license?.length > 0) {
     var author = null
     if (theme.authors) {
       if (page.author?.length > 0 && theme.authors[page.author] != null) {
@@ -84,6 +86,8 @@ function layoutDiv() {
     }
   } else if (page.layout == 'post') {
     showSharePlugin = page.share != false
+  } else if (page.share) {
+    showSharePlugin = true
   }
   if (theme.article.share && showSharePlugin) {
     function socialButtons() {
@@ -95,7 +99,7 @@ function layoutDiv() {
             el += ' target="_blank" rel="external nofollow noopener noreferrer"';
           }
           if (item == 'wechat') {
-            el += ' onclick="util.toggle(&quot;qrcode-wechat&quot)"';
+            el += ' onclick="util.toggle(&quot;qrcode-wechat&quot;)"';
           } else if (item == 'weibo') {
             el += ' href="https://service.weibo.com/share/share.php?url=' + page.permalink;
             el += '&title=' + page.title + ' - ' + config.title;

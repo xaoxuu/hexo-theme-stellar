@@ -59,9 +59,9 @@ a.button.start.gradient
     &:hover:after
       filter: blur(36px)
       opacity 1
-  
-  if theme(dark)
+
+  :root[data-theme="dark"] &
     ondark()
-  else if theme(auto)
+  :root:not([data-theme]) &
     @media (prefers-color-scheme: dark)
       ondark()

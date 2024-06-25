@@ -3,6 +3,7 @@ btn:
   blog: 文章
   wiki: 文档
   topic: 专栏
+  notebook: 笔记本
   recent_publish: 近期发布
   all_wiki: 所有项目
   category: 分类
@@ -14,9 +15,12 @@ btn:
   getting_started: 开始使用
   edit: 编辑本文
   top: 回到顶部
+  comments: 参与讨论
 
 meta:
   recent_update: 最近更新
+  tag_tree: 标签
+  all_notes: 所有笔记
   toc: 本文目录
   read_next: 接下来阅读
   prev: 回顾上一篇
@@ -52,6 +56,10 @@ search:
 
 message:
   copied: 复制成功
+  theme_switched:
+    light: 切换到浅色模式
+    dark: 切换到深色模式
+    auto: 切换到跟随系统配色
 
 symbol:
   comma: "，"

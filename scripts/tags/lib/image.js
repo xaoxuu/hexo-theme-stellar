@@ -2,7 +2,7 @@
  * image.js v1 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
- * {% image src [alt] [width:400px] [bg:#eee] [download:true/false/url] %}
+ * {% image src [alt] [width:400px] [bg:#eee] [download:true/false/url] [fancybox:true/false/url] %}
  */
 
 'use strict'
@@ -18,6 +18,7 @@ module.exports = ctx => function(args) {
   }
   // fancybox
   var fancybox = false
+  var fancyboxHref = null
   if (ctx.theme.config.plugins.fancybox && ctx.theme.config.plugins.fancybox.enable) {
     // 主题配置
     if (ctx.theme.config.tag_plugins.image && ctx.theme.config.tag_plugins.image.fancybox) {
@@ -27,8 +28,11 @@ module.exports = ctx => function(args) {
     if (args.fancybox && args.fancybox.length > 0) {
       if (args.fancybox == 'false') {
         fancybox = false
-      } else {
+      } else if (args.fancybox === 'true') {
         fancybox = args.fancybox
+      } else {
+        fancybox = true
+        fancyboxHref = args.fancybox
       }
     }
   }
@@ -36,16 +40,24 @@ module.exports = ctx => function(args) {
   function img(src, alt, style) {
     let img = ''
     img += '<img src="' + src + '"'
+    let a = '<a data-fancybox'
     if (alt) {
       img += ' alt="' + alt + '"'
+      a += ` data-caption="${alt}"`
     }
-    if (fancybox) {
+    if (fancybox && !fancyboxHref) {
       img += ` data-fancybox="${fancybox}"`
     }
     if (style.length > 0) {
       img += ' style="' + style + '"'
     }
     img += '/>'
+
+    if (fancyboxHref) {
+      a += ` href="${fancyboxHref}">${img}</a>`
+      return a
+    }
+
     return img
   }
 

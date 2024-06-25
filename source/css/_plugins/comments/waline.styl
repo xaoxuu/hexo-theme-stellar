@@ -36,7 +36,7 @@
   --waline-border: 1px solid var(--waline-border-color);
   --waline-avatar-radius: 50%;
   --waline-box-shadow: none;
-  
+
 .cmt-body.waline
   ondark()
     --waline-white: #000;
@@ -61,8 +61,8 @@
       font-size: 1.25em;
       color: #fff;
 
-  if theme(dark)
+  :root[data-theme="dark"] &
     ondark()
-  else if theme(auto)
+  :root:not([data-theme]) &
     @media (prefers-color-scheme: dark)
       ondark()

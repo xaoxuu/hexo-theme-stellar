@@ -34,6 +34,8 @@ function layoutBreadcrumb() {
     el += `<a class="cap breadcrumb" href="${url_for(config.root)}">${__("btn.home")}</a>`
     if (theme.wiki.tree[page.wiki]) {
       el += partial('breadcrumb/wiki')
+    } else if (page.notebook) {
+      el += partial('breadcrumb/note')
     } else if (page.layout == 'post') {
       el += partial('breadcrumb/blog')
     } else {

@@ -54,6 +54,24 @@ const util = {
   scrollTop: () => {
     window.scrollTo({top: 0, behavior: "smooth"});
   },
+
+  scrollComment: () => {
+    document.getElementById('comments').scrollIntoView({behavior: "smooth"});
+  },
+
+  viewportLazyload: (target, func, enabled = true) => {
+    if (!enabled || !("IntersectionObserver" in window)) {
+      func();
+      return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].intersectionRatio > 0) {
+        func();
+        observer.disconnect();
+      }
+    });
+    observer.observe(target);
+  }
 }
 
 const hud = {

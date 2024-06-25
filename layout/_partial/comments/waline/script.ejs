@@ -1,29 +1,27 @@
 <script type="module">
-  import { init } from '<%- theme.comments.waline.js %>'
+  import { init } from '<%- theme.comments.waline.js %>';
 
-  function load_comment(){
-    if(!document.getElementById("waline_container"))return;
+  const el = document.getElementById('waline_container');
+  util.viewportLazyload(el, load_waline, <%= theme.comments.lazyload ?? false %>);
+
+  function load_waline(){
+    if (!el) return;
 
     utils.css('<%- theme.comments.waline.css %>');
     utils.css('<%- theme.comments.waline.meta_css %>');
 
-    const el = document.getElementById("waline_container");
-    var path = el.getAttribute('comment_id');
-    if (!path) {
-      path = decodeURI(window.location.pathname);
-    }
-
+    const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
     const waline = init(Object.assign(<%- JSON.stringify(theme.comments.waline) %>, {
       el: '#waline_container',
       path: path,
       <% if(!!theme.comments.waline.imageUploader?.api){ %>
         imageUploader: function(file) {
-          let headers = new Headers();
+          const headers = new Headers();
           headers.set('Accept', 'application/json');
           <% if(!!theme.comments.waline.imageUploader?.token) { %>
             headers.set('<%= theme.comments.waline.imageUploader?.tokenName %>', '<%= theme.comments.waline.imageUploader?.token %>')
           <% } %>
-          let formData = new FormData();
+          const formData = new FormData();
           formData.append('<%= theme.comments.waline.imageUploader?.fileName %>', file);
           return fetch('<%= theme.comments.waline.imageUploader?.api %>',{
             method: 'POST',
@@ -34,10 +32,5 @@
         },
       <% } %>
     }));
-
   }
-  window.addEventListener('DOMContentLoaded', (event) => {
-    load_comment();
-  });
-
 </script>

@@ -14,15 +14,20 @@ if (theme.comments.service && theme.comments.service.length > 0) {
 // 合并项目评论
 const proj = theme.wiki.tree[page.wiki]
 if (loadComment && (proj != null)) {
-  if (proj.comment_title != undefined && page.comment_title == undefined) {
-    if (['utterances', 'beaudar', 'giscus'].includes(theme.comments.service)) {
-      page.comment_title = proj.comment_title;
+  if (proj.comments === false) {
+    loadComment = false;
+    page.comments = false;
+  } else {
+    if (proj.comment_title != undefined && page.comment_title == undefined) {
+      if (['utterances', 'beaudar', 'giscus'].includes(theme.comments.service)) {
+        page.comment_title = proj.comment_title;
+      }
     }
-  }
-  if (proj.comments && proj.comments.service) {
-    cmt = proj.comments;
-    let s = proj.comments.service;
-    cmt[s] = Object.assign({}, theme.comments[s], proj.comments[s]);
+    if (proj.comments && proj.comments.service) {
+      cmt = proj.comments;
+      let s = proj.comments.service;
+      cmt[s] = Object.assign({}, theme.comments[s], proj.comments[s]);
+    }
   }
 }
 if (cmt.service && page[cmt.service]) {
