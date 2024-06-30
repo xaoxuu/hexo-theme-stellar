@@ -50,8 +50,8 @@ page:
     action: 返回首頁
 
 search:
-  search: 站內搜索
-  search_in: 在 %s 中搜索
+  search: 站內搜尋
+  search_in: 在 %s 中搜尋
   no_results: 沒有找到內容！
 
 message:
