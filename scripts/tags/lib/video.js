@@ -21,8 +21,13 @@ module.exports = ctx => function (args) {
     `
   }
   if (args.youtube) {
-    return `<div class="tag-plugin video" style="aspect-ratio:${args.ratio || 16/9};max-width:${args.width};">
-    <iframe src="https://www.youtube.com/embed/${args.youtube}?rel=0&color=white&disablekb=1&playsinline=1&&rel=0&autoplay=${args.autoplay || '0'}" picture-in-picture="true" allowfullscreen="true" >
+    if(args.autoplay == 'true' || args.autoplay == '1') { 
+      args.autoplay = '1&mute=1'
+    } else {
+      args.autoplay = '0'
+    }
+    return `<div class="tag-plugin video" style="aspect-ratio:${args.ratio || 16 / 9};max-width:${args.width};">
+    <iframe style="border:none" src="https://www.youtube.com/embed/${args.youtube}?rel=0&disablekb=1&playsinline=1&autoplay=${args.autoplay}" picture-in-picture="true" allowfullscreen="true" >
     </iframe>
     </div>
     `
