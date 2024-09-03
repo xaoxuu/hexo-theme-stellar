@@ -43,14 +43,14 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
       content = content.replace(/[\s]{2,}/g, ' ')
       temp_post.content = content.trim()
     }
-    if (post.tags && post.tags.length > 0) {
+    if (post.tags && Array.isArray(post.tags) && post.tags.length > 0) {
       var tags = []
       post.tags.forEach(function (tag) {
         tags.push(tag.name)
       })
       temp_post.tags = tags
     }
-    if (post.categories && post.categories.length > 0) {
+    if (post.categories && Array.isArray(post.categories) && post.categories.length > 0) {
       var categories = []
       post.categories.forEach(function (cate) {
         categories.push(cate.name)
