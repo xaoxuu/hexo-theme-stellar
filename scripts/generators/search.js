@@ -60,8 +60,22 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
     return temp_post
   }
 
+  function matchAndExit(path, patterns) {
+    for (let pattern of patterns) {
+        const regexPattern = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
+        if (path.match(regexPattern)) {
+            // console.log("Matched pattern:", pattern);
+            return true;
+        }
+    }
+    return false;
+  }
+
   if (posts) {
     posts.each(function(post) {
+      var layout_list = ["post"]
+      if (!layout_list.includes(post.layout)) return
+      if (matchAndExit(post.path, cfg.skip_search)) return
       if (post.indexing == false) return
       let temp_post = generateJson(post)
       res.push(temp_post)
@@ -69,6 +83,9 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
   } 
   if (pages) {
     pages.each(function(page) {
+      var layout_list = ["page", "wiki"]
+      if (!layout_list.includes(page.layout)) return
+      if (matchAndExit(page.path, cfg.skip_search)) return
       if (page.indexing == false) return
       let temp_post = generateJson(page)
       res.push(temp_post)
