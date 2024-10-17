@@ -39,7 +39,7 @@ module.exports = ctx => function(args, content) {
     nodes.forEach((node, i) => {
       el += '<details class="folder" index="' + (i) + '">'
       // summary
-      el += '<summary><span>' + (node.header || '') + '</span></summary>'
+      el += '<summary>' + ctx.render.renderSync({text: (node.header || ''), engine: 'markdown'}) + '</summary>'
       // content
       el += '<div class="body">'
       el += ctx.render.renderSync({text: (node.body || ''), engine: 'markdown'}).split('\n').join('')

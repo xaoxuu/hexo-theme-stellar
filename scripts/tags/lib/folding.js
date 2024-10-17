@@ -20,7 +20,7 @@ module.exports = ctx => function(args, content) {
   }
   el += '>'
   // summary
-  el += '<summary><span>' + (args.title || '') + '</span></summary>'
+  el += '<summary>' + ctx.render.renderSync({text: (args.title || ''), engine: 'markdown'}) + '</summary>'
   // content
   el += '<div class="body">'
   el += ctx.render.renderSync({text: content, engine: 'markdown'}).split('\n').join('')
