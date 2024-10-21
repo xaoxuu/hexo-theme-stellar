@@ -22,7 +22,7 @@ module.exports = ctx => function(args, content) {
   el += '>'
   // title
   if (title && title.length > 0) {
-    el += '<div class="title"><strong>' + title + '</strong></div>'
+    el += '<div class="title"><strong>' + ctx.render.renderSync({text: title, engine: 'markdown'}) + '</strong></div>'
   }
   // content
   el += '<div class="body">'
