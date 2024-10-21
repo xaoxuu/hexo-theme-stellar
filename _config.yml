@@ -452,6 +452,15 @@ data_services:
     js: /js/services/weibo.js
   memos:
     js: /js/services/memos.js
+  # 最新评论获取类
+  twikoo:
+    js: /js/services/twikoo_latest_comment.js
+  waline:
+    js: /js/services/waline_latest_comment.js
+  artalk:
+    js: /js/services/artalk_latest_comment.js
+  giscus:
+    js: /js/services/giscus_latest_comment.js
 
 
 # 扩展插件接入方法：(插件名下面用 #plugin# 代替)
