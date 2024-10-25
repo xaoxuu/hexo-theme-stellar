@@ -21,7 +21,7 @@ function custom_inject() {
 <%- partial('scripts/tagtree') %>
 
 <!-- required -->
-<script src="<%- `${theme.stellar.main_js}?v=${stellar_info('version')}` %>" defer></script>
+<script src="<%- url_for(`${theme.stellar.main_js}?v=${stellar_info('version')}`) %>" defer></script>
 
 <%- partial('scripts/theme') %>
 
