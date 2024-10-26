@@ -76,10 +76,13 @@
     text-align: justify
     margin-top: .5rem
     .tab-pane
+      display: block
       &:not(.active)
-        display: none
+        visibility: hidden
+        height: 0
       &.active
-        display: block
+        visibility: visible
+        height: auto
   .tab-content:has(.grid-box)
     width: 100%
 
