@@ -95,7 +95,7 @@ module.exports = ctx => {
   }
   
   // 数据整合：每个项目的子页面
-  for (let i = 0; i < wiki_list.length; i++) {
+  for (let i = wiki_list.length - 1; i >= 0; i--) {
     let id = wiki_list[i];
     let item = wiki.tree[id]
     let sub_pages = wiki_pages.filter(p => p.wiki === id)
