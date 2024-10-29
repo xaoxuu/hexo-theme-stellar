@@ -63,7 +63,7 @@ module.exports = ctx => {
   const pages = ctx.locals.get('pages')
   // wiki 所有页面
   const wiki_pages = pages.filter(p => (p.wiki != null)).map(p => new WikiPage(p))
-  const wiki_list = Object.keys(wiki.tree)
+  const wiki_list = Object.keys(wiki.tree).filter(id => wiki_pages.some(p => p.wiki === id))
   // 上架的项目列表
   wiki.shelf = ctx.locals.get('data').wiki || []
   
@@ -99,11 +99,6 @@ module.exports = ctx => {
     let id = wiki_list[i];
     let item = wiki.tree[id]
     let sub_pages = wiki_pages.filter(p => p.wiki === id)
-    if (!sub_pages || sub_pages.length == 0) {
-      wiki_list.splice(i, 1)
-      delete wiki.tree[id]
-      continue
-    }
 
     // 首页
     // 未特别指定首页时，获取TOC第一页作为首页
