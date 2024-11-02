@@ -31,11 +31,13 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
       temp_post.path = root + post.path
     }
     if (cfg.content != false && post.content) {
-      var content = stripHTML(post.content).trim()
+      var content = stripHTML(post.content.replace(/<span class="line">\d+<\/span>/g, '')).trim()
       // 部分HTML标签
       content = content.replace(/<iframe[\s|\S]+iframe>/g, '')
       content = content.replace(/<hr>/g, '')
       content = content.replace(/<br>/g, '')
+      // 去除HTML实体
+      content = content.replace(/&[^\s;]+;/g, "")
       // 换行符换成空格
       content = content.replace(/\\n/g, ' ')
       content = content.replace(/\n/g, ' ')
