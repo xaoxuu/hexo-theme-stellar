@@ -37,7 +37,7 @@ function generate_description() {
 function generate_keywords() {
   if (page.keywords && page.keywords.length > 0) {
     return '<meta name="keywords" content="' + page.keywords + '">';
-  } else if (page.tags && Array.isArray(page.tags) && page.tags.length > 0) {
+  } else if (page.tags && page.tags.length > 0) {
     return '<meta name="keywords" content="' + page.tags.map(tag => tag.name).join(',') + '">';
   } else if (config.keywords && config.keywords.length > 0) {
     return '<meta name="keywords" content="' + config.keywords + '">';
