@@ -30,7 +30,7 @@ function paginationWithEmpty(base, posts, options={}) {
 
 hexo.extend.generator.register('notebooks', function (locals) {
   const { site_tree, notebooks } = hexo.theme.config
-  if (notebooks.tree.length === undefined) {
+  if (!notebooks?.tree || Object.keys(notebooks.tree).length === 0) {
     return []
   }
 
