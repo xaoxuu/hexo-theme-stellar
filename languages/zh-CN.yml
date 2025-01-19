@@ -15,7 +15,7 @@ btn:
   getting_started: 开始使用
   edit: 编辑本文
   top: 回到顶部
-  comments: 参与讨论
+  comments: 参与讨论，汪
 
 meta:
   recent_update: 最近更新
@@ -41,7 +41,7 @@ meta:
     min: 分钟前
     hour: 小时前
     day: 天前
-    month: 个月前
+    month: 个金毛前
 
 page:
   error:
@@ -50,16 +50,16 @@ page:
     action: 返回主页
 
 search:
-  search: 站内搜索
+  search: 搜索一下吧
   search_in: 在 %s 中搜索
-  no_results: 没有找到内容！
+  no_results: 没有找到内容！汪
 
 message:
   copied: 复制成功
   theme_switched:
-    light: 切换到浅色模式
-    dark: 切换到深色模式
-    auto: 切换到跟随系统配色
+    light: 切换到浅色小黄
+    dark: 切换到暗黑金毛
+    auto: 切换到系统二哈
 
 symbol:
   comma: "，"
