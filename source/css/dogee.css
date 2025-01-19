@@ -1,0 +1,73 @@
+.pace {
+	-webkit-pointer-events: none;
+	pointer-events: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	    user-select: none;
+	z-index: 2000;
+	position: fixed;
+	margin: auto;
+	top: 10px;
+	left: 0;
+	right: 0;
+	height: 8px;
+	border-radius: 8px;
+	width: 4rem;
+	background: #eaecf2;
+	border: 1px #e3e8f7;
+	overflow: hidden;
+  }
+  
+  .pace-inactive .pace-progress {
+	opacity: 0;
+	transition: 0.3s ease-in;
+  }
+  
+  .pace .pace-progress {
+	-ms-box-sizing: border-box;
+	-o-box-sizing: border-box;
+	box-sizing: border-box;
+	transform: translate3d(0, 0, 0);
+	max-width: 200px;
+	position: absolute;
+	z-index: 2000;
+	display: block;
+	top: 0;
+	right: 100%;
+	height: 100%;
+	width: 100%;
+	background: #78c2ff;
+	/*background: linear-gradient(-45deg, #F4511E, #7E57C2, #23d5ab);*/
+	-webkit-animation: gradient 1.5s ease infinite;
+	        animation: gradient 1.5s ease infinite;
+	background-size: 200%;
+  }
+  
+  .pace.pace-inactive {
+	opacity: 0;
+	transition: 0.3s;
+	top: -8px;
+  }
+  @-webkit-keyframes gradient {
+	0% {
+	  background-position: 0% 50%;
+	}
+	50% {
+	  background-position: 100% 50%;
+	}
+	100% {
+	  background-position: 0% 50%;
+	}
+  }
+  @keyframes gradient {
+	0% {
+	  background-position: 0% 50%;
+	}
+	50% {
+	  background-position: 100% 50%;
+	}
+	100% {
+	  background-position: 0% 50%;
+	}
+  }
