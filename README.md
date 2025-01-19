@@ -1,5 +1,5 @@
-人是傻的，代码是一坨的，主题魔改是报错的，我是阿黄
+这是
 
-支持了stellar顶部加载条
-[X]支持侧边栏无色
-[X]有bug写issues
+- [x] 支持了stellar顶部加载条
+- [x] 侧边栏无色
+- [x] 魔改的是XAOXUU的STELLAR主题，给原作者XAOXUU点上星星⭐️
