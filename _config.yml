@@ -650,8 +650,8 @@ style:
     scrollbar: 4px
     highlightjs_theme: https://gcore.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css
   loading:
-    loading: 正在加载
-    error: 加载失败，请稍后重试。
+    loading: \--(-_-)--/
+    error: \--(O-O)--/erreo
   gradient: # https://webgradients.com/
     start: 'linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))'
   leftbar:
