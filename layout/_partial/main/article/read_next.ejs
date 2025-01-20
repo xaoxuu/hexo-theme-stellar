@@ -36,24 +36,29 @@ function layoutDiv() {
     el += `<div class="related-wrap${scrollreveal(' ')}" id="read-next">`
     el += '<section class="body">';
     // prev
-    el += '<div class="item" id="prev">';
+    el += `<a class="item" id="prev"`;
     if (prev) {
+      el += ' href="' + url_for(prev.path) + '">';
       el += '<div class="note">' + title_prev + '</div>';
-      el += '<a href="' + url_for(prev.path) + '">';
       el += prev.title || prev.wiki || date(prev.date, config.date_format);
-      el += '</a>';
+      el += `</a`;
+    } else {
+      el += '>';
+      el += `<div class="note">${__('meta.newer_prev')}</div><span>${__('meta.newer_null')}</span`;
     }
-    el += '</div>';
+    el += `>`;
     // next
-    el += '<div class="item" id="next">';
+    el += `<a class="item" id="next"`;
     if (next) {
+      el += ' href="' + url_for(next.path) + '">';
       el += '<div class="note">' + title_next + '</div>';
-      el += '<a href="' + url_for(next.path) + '">';
       el += next.title || next.wiki || date(next.date, config.date_format);
-      el += '</a>';
+      el += `</a`;
+    } else {
+      el += '>';
+      el += `<div class="note">${__('meta.older_next')}</div><span>${__('meta.older_null')}</span`;
     }
-    el += '</div>';
-
+    el += `>`;
     el += '</section>';
     el += '</div>';
   }
