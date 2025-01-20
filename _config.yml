@@ -612,7 +612,7 @@ plugins:
 
 
 style:
-  prefers_theme: auto # auto / light / dark
+  prefers_theme: dark # auto / light / dark
   smooth_scroll: false # true / false 开启时如果目录过长可能无法准确定位
   font-size:
     root: 16px # 改这个会影响全局所有文字的字号
