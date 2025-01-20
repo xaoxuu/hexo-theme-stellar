@@ -15,7 +15,7 @@ btn:
   getting_started: 开始使用
   edit: 编辑本文
   top: 回到顶部
-  comments: 参与讨论，汪
+  comments: 参与讨论，汪～
 
 meta:
   recent_update: 最近更新🐶
@@ -23,34 +23,34 @@ meta:
   all_notes: 所有笔记
   toc: 本文目录
   read_next: 接下来阅读
-  prev: 回顾上一篇
-  next: 接下来阅读
-  older: 较早文章
-  newer: 较新文章
+  prev: 回上一个
+  next: 接下来探险
+  older: 最新文章，new
+  newer: 较新文章，old
   references: 参考资料
   related_posts: 您可能感兴趣的文章
-  back_to_top: 回到顶部
-  more: 更多
+  back_to_top: 回到头顶
+  more: 多，更多
   created_author: 本文由 %s 发布于
   created: 发布于
   updated: 更新于
   license: 许可协议
   share: 分享文章
   date_suffix:
-    just: 刚刚
-    min: 分钟前
+    just: 刚吃完食
+    min: 分钟前吃完
     hour: 小时前
-    day: 天前
+    day: 日子前
     month: 个金毛前
 
 page:
   error:
     what: 很抱歉，您访问的页面不存在
     why: 可能是输入地址有误或该地址已被删除
-    action: 返回主页
+    action: 返回家里
 
 search:
-  search: 搜索一下吧
+  search: Powers by xiaowang
   search_in: 在 %s 中搜索
   no_results: 没有找到内容！汪
 
