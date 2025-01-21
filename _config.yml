@@ -688,6 +688,6 @@ api_host:
 # 自定义引入css,js
 inject:
   head:
-    - <link rel="stylesheet" href="/customize/css/pace.css"> # 网站进度条加载
+    - <link rel="stylesheet" href="/css/dogee.css"> # 网站进度条加载
   script:
-    - <script type="text/javascript" src="/customize/js/pace.min.js"></script> # 网站进度条加载
+    - <script type="text/javascript" src="/js/dogee.js"></script> # 网站进度条加载
