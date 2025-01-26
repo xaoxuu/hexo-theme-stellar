@@ -1,0 +1,192 @@
+/**
+ * Color about
+ */
+:root {
+    --line-height-tight: 1.3;
+    --callout-border-width: 0px;
+    --callout-border-opacity: 0.25;
+    --callout-padding: 18px 12px 1px 15px;
+    --callout-radius: 4px;
+    --callout-title-color: inherit;
+    --callout-title-padding: 0;
+    --callout-title-size: inherit;
+    --callout-title-weight: 600;
+    --callout-content-padding: 0;
+    --callout-content-background: transparent;
+    --callout-blend-mode: var(darken);
+    --callout-default: 8, 109, 221;
+    --callout-info: 0, 176, 255;
+    /*--callout-todo: 8, 109, 221;*/
+    --callout-bug: 233, 49, 71;
+    --callout-error: 233, 49, 71;
+    --callout-fail: 233, 49, 71;
+    --callout-success: 8, 185, 78;
+    --callout-example: 120, 82, 238;
+    --callout-important: 0, 191, 188;
+    --callout-summary: 0, 191, 188;
+    --callout-tip: 0, 191, 188;
+    --callout-question: 232, 148, 0;
+    --callout-warning: 236, 117, 0;
+    --callout-quote: 158, 158, 158;
+    --callout-collapse-icon: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxZW0iIGhlaWdodD0iMWVtIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIHN0cm9rZS13aWR0aD0iMiIgZD0ibTkgMThsNi02bC02LTYiLz48L3N2Zz4=");
+}
+
+.theme-light {
+    --callout-blend-mode: var(darken);
+}
+
+.theme-dark {
+    --callout-blend-mode: var(lighten);
+}
+
+html[data-theme="light"] #app {
+    --callout-blend-mode: var(darken);
+}
+
+html[data-theme="dark"] #app {
+    --callout-blend-mode: var(lighten);
+}
+
+/**
+ * Obsidian callout about
+ *
+ * The following style is exactly the same as in obsidian
+ */
+.callout {
+    /*overflow: hidden;*/
+    border-style: solid;
+    border-color: rgba(var(--callout-color), var(--callout-border-opacity));
+    border-width: var(--callout-border-width);
+    border-radius: var(--callout-radius);
+    margin: 1em 0;
+    mix-blend-mode: var(--callout-blend-mode);
+    background-color: rgba(var(--callout-color), 0.1);
+    padding: var(--callout-padding);
+    --callout-color: var(--callout-default);
+    --callout-icon: lucide-pencil;
+}
+
+.callout .callout-title {
+    padding: var(--callout-title-padding);
+    display: flex;
+    gap: 7px;
+    font-size: var(--callout-title-size);
+    color: rgb(var(--callout-color));
+    line-height: var(--line-height-tight);
+    align-items: flex-start;
+}
+
+details.callout .callout-title {
+    /*margin: 0;*/
+    margin-bottom: 12px;
+    cursor: pointer;
+}
+
+.callout .callout-title .callout-icon {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+.callout-title-icon svg {
+    width: 19px;
+    /* 宽度 */
+    height: 19px;
+    /* 高度 */
+}
+
+.callout .callout-title .callout-title-inner {
+    --font-weight: var(--callout-title-weight);
+    font-weight: var(--font-weight);
+    color: var(--callout-title-color);
+}
+
+.callout .callout-title .callout-fold {
+    background-color: rgb(var(--callout-color));
+    mask-image: var(--callout-collapse-icon);
+    mask-size: 100%;
+    -webkit-mask-image: var(--callout-collapse-icon);
+    -webkit-mask-size: 100%;
+    height: 15px;
+    /* 可调整 */
+    width: 19px;
+    /* 可调整 */
+    transition: 100ms ease-in-out;
+}
+
+details[close].callout>.callout-title>.callout-fold {
+    transform: rotate(-90deg);
+}
+
+details[open].callout>.callout-title>.callout-fold {
+    transform: rotate(90deg);
+}
+
+.callout .callout-content {
+    /*overflow-x: auto;*/
+    padding: var(--callout-content-padding);
+    background-color: var(--callout-content-background);
+}
+
+.callout[data-callout="info"],
+.callout[data-callout="todo"] {
+    --callout-color: var(--callout-info);
+    --callout-icon: lucide-check-circle-2;
+}
+
+.callout[data-callout="success"],
+.callout[data-callout="check"],
+.callout[data-callout="done"] {
+    --callout-color: var(--callout-success);
+    --callout-icon: lucide-check;
+}
+
+.callout[data-callout="warning"],
+.callout[data-callout="caution"],
+.callout[data-callout="attention"] {
+    --callout-color: var(--callout-warning);
+    --callout-icon: lucide-alert-triangle;
+}
+
+
+.callout[data-callout="question"],
+.callout[data-callout="help"],
+.callout[data-callout="faq"] {
+    --callout-color: var(--callout-question);
+    --callout-icon: lucide-alert-triangle;
+}
+
+.callout[data-callout="danger"],
+.callout[data-callout="error"],
+.callout[data-callout="bug"],
+.callout[data-callout="failure"],
+.callout[data-callout="fail"],
+.callout[data-callout="missing"] {
+    --callout-color: var(--callout-error);
+    --callout-icon: lucide-zap;
+}
+
+.callout[data-callout="tip"],
+.callout[data-callout="hint"],
+.callout[data-callout="important"] {
+    --callout-color: var(--callout-tip);
+    --callout-icon: lucide-flame;
+}
+
+.callout[data-callout="example"] {
+    --callout-color: var(--callout-example);
+    --callout-icon: lucide-list;
+}
+
+.callout[data-callout="abstract"],
+.callout[data-callout="summary"],
+.callout[data-callout="tldr"] {
+    --callout-color: var(--callout-summary);
+    --callout-icon: lucide-clipboard-list;
+}
+
+.callout[data-callout="quote"],
+.callout[data-callout="cite"] {
+    --callout-color: var(--callout-quote);
+    --callout-icon: quote-glyph;
+}
