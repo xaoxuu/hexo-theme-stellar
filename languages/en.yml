@@ -51,9 +51,9 @@ page:
     action: Back to Home
 
 search:
-  search: Search
+  search: 🐱 What do you search for?
   search_in: Search in %s
-  no_results: No Results!
+  no_results: No Results! 〒▽〒
 
 message:
   copied: Copied!

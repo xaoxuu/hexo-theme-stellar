@@ -51,9 +51,9 @@ page:
     action: 返回首頁
 
 search:
-  search: 站內搜尋
+  search: 你想搜什麼喵🐱？
   search_in: 在 %s 中搜尋
-  no_results: 沒有找到內容！
+  no_results: 沒有找到〒▽〒
 
 message:
   copied: 複製成功
