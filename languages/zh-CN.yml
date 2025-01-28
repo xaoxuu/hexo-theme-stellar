@@ -16,6 +16,7 @@ btn:
   edit: 编辑本文
   top: 回到顶部
   comments: 参与讨论
+  font: 更换字体
 
 meta:
   recent_update: 最近更新
@@ -30,7 +31,6 @@ meta:
   references: 参考资料
   related_posts: 您可能感兴趣的文章
   back_to_top: 回到顶部
-  font: 切换字体
   more: 更多
   created_author: 本文由 %s 发布于
   created: 发布于
