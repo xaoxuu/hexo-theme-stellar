@@ -64,4 +64,7 @@ module.exports = ctx => {
     ctx.theme.config.menubar = {}
   }
 
+  // chat users
+  ctx.theme.config.chat_users = data.chat_users;
+
 }
