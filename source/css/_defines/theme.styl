@@ -23,6 +23,7 @@ _dark_text()
   --text-p1: hsl($color-text-h, $color-text-s, $color-text-l)
   --text-p2: hsl($color-text-h, $color-text-s, $color-text-l / 0.5 * 0.75)
   --text-p3: hsl($color-text-h, $color-text-s, $color-text-l / 0.5 * 1.25)
+  --text-p3-opa: hsla($color-text-h, $color-text-s, $color-text-l / 0.5 * 1.25, 0.3)
   --text-p4: hsl($color-text-h, $color-text-s, $color-text-l / 0.5 * 1.5)
   --text-meta: hsl($color-text-h, $color-text-s, $color-text-l / 0.5 * 2)
   --text-code: hsl($color-code-h, $color-code-s, $color-code-l)
@@ -32,6 +33,7 @@ _light_text()
   --text-p1: hsl($color-text-h, $color-text-s, 100 - $color-text-l / 0.5 * 0.5)
   --text-p2: hsl($color-text-h, $color-text-s, 100 - $color-text-l / 0.5 * 0.75)
   --text-p3: hsl($color-text-h, $color-text-s, 100 - $color-text-l / 0.5 * 1.2)
+  --text-p3-opa: hsla($color-text-h, $color-text-s, 100 - $color-text-l / 0.5 * 1.2, 0.3)
   --text-p4: hsl($color-text-h, $color-text-s, 100 - $color-text-l / 0.5 * 1.4)
   --text-meta: hsl($color-text-h, $color-text-s, 100 - $color-text-l / 0.5 * 1.75)
   --text-code: hsl($color-code-h, $color-code-s, (100 - $color-code-l) * 1.2)
@@ -39,6 +41,8 @@ _light_text()
 _common_root()
   :root
     --theme-link: $color-link
+    --theme-color: $color-theme
+    --theme-color-opa: $color-theme-opa
 
 _light_root()
   --site-bg: hsl($color-background-h, $color-background-s, $color-background-l)
@@ -53,6 +57,18 @@ _light_root()
   --alpha60: rgba(white, 0.6)
   --alpha75: rgba(white, 0.75)
   --alpha100: white
+  // chat 标签
+  --chat-bg:     #f1f2f5
+  --chat-block:  #ffffff
+  --chat-border: #f2f2f2
+  --chat-qq-right-bg: #0099FF
+  --chat-qq-right-text: #ffffff
+  --chat-wechat-news-num: #d8dadf
+  --chat-video-button: #ffffffE6
+  --chat-wechat-right-bg: #91ED61
+  --chat-quote-blink-color: #185c6d1a
+  --chat-wechat-quote-color: #808080
+  --chat-wechat-quote-bg: #8080801a
   _dark_text()
 
 _dark_root()
@@ -68,6 +84,18 @@ _dark_root()
   --alpha60: rgba(black, 0.6)
   --alpha75: rgba(black, 0.75)
   --alpha100: black
+  // chat 标签
+  --chat-bg:     #1f2224  // #111111
+  --chat-block:  #25282a  // #191919
+  --chat-border: #303437  // #222222
+  --chat-qq-right-bg: #0099ff80
+  --chat-qq-right-text: #ffffff99
+  --chat-wechat-news-num: #25282a
+  --chat-video-button: #25282ad9  // #191919E6
+  --chat-wechat-right-bg: hsl(hue($c-green), 25, 25)
+  --chat-quote-blink-color: #185c6d26
+  --chat-wechat-quote-color: #858585
+  --chat-wechat-quote-bg: #8585851a
   _light_text()
   @media screen and (max-width: $device-mobile-max)
     --site-bg: black
@@ -82,3 +110,13 @@ _common_root()
   _light_root()
   @media (prefers-color-scheme: dark)
     _dark_root()
+
+@media (prefers-color-scheme: dark)
+  :root:not([color-scheme])
+    img,
+    .md-text .tag-plugin.chat>.content .chatcell .user-main .talk.file>.content>.top>.right>svg.icon>path
+      filter: brightness(75%)!important
+[color-scheme='dark']
+    img,
+    .md-text .tag-plugin.chat>.content .chatcell .user-main .talk.file>.content>.top>.right>svg.icon>path
+      filter: brightness(75%)!important

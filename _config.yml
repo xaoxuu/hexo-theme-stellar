@@ -418,6 +418,8 @@ tag_plugins:
     layout: grid # grid / flow
     size: mix # s / m / l / xl / mix
     ratio: square # origin / square
+  chat:
+    api: https://siteinfo.listentothewind.cn/api/v1
 
 
 # 基础依赖
@@ -453,6 +455,13 @@ data_services:
     js: /js/services/weibo.js
   memos:
     js: /js/services/memos.js
+  # chat
+  voice: 
+    js: /js/plugins/voice.js
+  video: 
+    js: /js/plugins/video.js
+  download-file: 
+    js: /js/plugins/download-file.js
   # 最新评论获取类
   twikoo:
     js: /js/services/twikoo_latest_comment.js

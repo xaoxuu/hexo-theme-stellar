@@ -43,6 +43,8 @@
     }
     applyTheme(newTheme)
     window.localStorage.setItem('Stellar.theme', newTheme)
+    utils.dark.mode = newTheme === 'auto' ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") : newTheme;
+    utils.dark.method.toggle.start();
 
     const messages = {
       light: `<%- __('message.theme_switched.light') %>`,
@@ -57,6 +59,9 @@
     const theme = window.localStorage.getItem('Stellar.theme')
     if (theme !== null) {
       applyTheme(theme)
+    } else {
+      utils.dark.mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     }
+    utils.dark.method.toggle.start();
   })()
 </script>
