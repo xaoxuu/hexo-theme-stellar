@@ -7,6 +7,9 @@
       day: `<%- __('meta.date_suffix.day') %>`,
     },
     root : `<%- config.root %>`,
+    tag_plugins: {
+      chat: Object.assign(<%- JSON.stringify(theme.tag_plugins.chat) %>),
+    }
   };
 
   // required plugins (only load if needs)
