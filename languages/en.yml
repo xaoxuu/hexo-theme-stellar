@@ -51,8 +51,7 @@ page:
     action: Back to Home
 
 search:
-  search: 🐱 What do you search for?
-  tip: Powered by Algolia
+  search: Power by Algolia - 🐱 What do you search for?
   search_in: Search in %s
   no_results: No Results! 〒▽〒
 

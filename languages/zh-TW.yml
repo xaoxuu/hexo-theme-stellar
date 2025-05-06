@@ -51,8 +51,7 @@ page:
     action: 返回首頁
 
 search:
-  search: 你想搜什麼喵🐱？
-  tip: Powered by Algolia
+  search: Power by Algolia - 你想搜什麼喵🐱？
   search_in: 在 %s 中搜尋
   no_results: 沒有找到〒▽〒
 
