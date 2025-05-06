@@ -52,6 +52,7 @@ page:
 
 search:
   search: 🐱 What do you search for?
+  tip: Powered by Algolia
   search_in: Search in %s
   no_results: No Results! 〒▽〒
 
