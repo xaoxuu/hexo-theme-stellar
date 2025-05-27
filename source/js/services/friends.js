@@ -16,11 +16,11 @@ utils.jq(() => {
           cell += `<img src="${item.avatar_url || item.avatar || item.icon || default_avatar}" onerror="javascript:this.removeAttribute(\'data-src\');this.src=\'${default_avatar}\';"/>`;
           cell += `<div class="name image-meta">`;
           cell += `<span class="image-caption">${item.title || item.login}</span>`;
+          cell += `</div>`;
           if (item.labels && item.labels.length > 0) {
             let label = item.labels[0];
             cell += `<div class="label" style="background:#${label.color};">${label.name}</div>`;
           }
-          cell += `</div>`;
           cell += `</a>`;
           cell += `</div>`;
           $(el).find('.grid-box').append(cell);
