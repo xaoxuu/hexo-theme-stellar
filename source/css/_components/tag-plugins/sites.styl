@@ -9,6 +9,7 @@
   width: 100%
   display: flex
   flex-direction: column
+  position: relative
   >img
     object-fit: cover
     aspect-ratio: 1.5
@@ -18,6 +19,7 @@
   .info
     margin-top: 0.5rem
     line-height: 1.2
+    position: relative
     >img
       width: 28px
       height: @width
@@ -45,6 +47,16 @@
       -webkit-box-orient: vertical
       overflow: hidden
       -webkit-line-clamp: 1
+
+  .label
+    position: absolute
+    color: initial
+    font-weight: 600
+    top: 1px
+    right: 0
+    font-size: 10px
+    padding: 2px 4px
+    border-radius: 16px
 
 // transform
 .sites-wrap .site-card .card-link

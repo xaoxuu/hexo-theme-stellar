@@ -19,6 +19,10 @@ utils.jq(() => {
           cell += `<img src="${item.icon || item.avatar || default_avatar}" onerror="javascript:this.removeAttribute(\'data-src\');this.src=\'${default_avatar}\';"/>`;
           cell += `<span class="title">${item.title}</span>`;
           cell += `<span class="desc">${item.description || item.url}</span>`;
+          if (item.labels && item.labels.length > 0) {
+            let label = item.labels[0];
+            cell += `<span class="label" style="background:#${label.color};">${label.name}</span>`;
+          }
           cell += `</div>`;
           cell += `</a>`;
           cell += `</div>`;

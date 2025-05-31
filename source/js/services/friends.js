@@ -17,6 +17,10 @@ utils.jq(() => {
           cell += `<div class="name image-meta">`;
           cell += `<span class="image-caption">${item.title || item.login}</span>`;
           cell += `</div>`;
+          if (item.labels && item.labels.length > 0) {
+            let label = item.labels[0];
+            cell += `<div class="label" style="background:#${label.color};">${label.name}</div>`;
+          }
           cell += `</a>`;
           cell += `</div>`;
           $(el).find('.grid-box').append(cell);
