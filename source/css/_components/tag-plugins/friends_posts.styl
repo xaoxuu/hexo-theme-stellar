@@ -1,0 +1,140 @@
+.users-posts-wrap .grid-box
+  display: grid
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr))
+  grid-gap: 16px
+
+.users-posts-wrap .user-post-card
+  display: flex
+  align-items: center
+  border-radius: $border-card
+  background: var(--card)
+  box-shadow: $boxshadow-card
+  font-weight: 500
+  hoverable-card()
+  .card-link
+    color: var(--text-p1)
+    display: flex
+    justify-content: flex-start
+    flex-direction: column
+    align-items: center
+    text-align: center
+    line-height: 1.2
+    border-radius: 4px
+    position: relative
+    flex-shrink: 0
+    width: 80px
+    margin: 1rem
+    trans1 width 
+    span
+      display: -webkit-box
+      -webkit-box-orient: vertical
+      overflow: hidden
+      -webkit-line-clamp: 1
+      position: relative
+    .title
+      font-size: $fs-14
+      font-weight: 500
+      margin-top: 0.5rem
+      max-width: 100%
+    img
+      object-fit: cover
+      display: block
+      width: 48px
+      height: 48px
+      background: var(--card)
+      border-radius: 64px
+      margin: 0 0 0.5rem
+      floatable-trans()
+
+  .label
+    margin-top: 4px
+    color: white
+    font-size: $fs-12
+    padding: 2px 6px
+    border-radius: 16px
+    font-weight: 600
+    border: 1px solid white
+
+  .posts
+    display: flex
+    justify-content: center
+    flex-direction: column
+    border-top: 1px solid var(--border)
+    margin: 1rem 1rem 1rem 0
+    .post-link
+      display: flex
+      flex-direction: column
+      color: var(--text-p1)
+      position: relative
+      trans1 color
+      &+.post-link
+        margin-top: 0.5rem
+      &:before
+        content: ''
+        position: absolute
+        left: -12px
+        top: 2px
+        bottom: 2px
+        width: 4px
+        border-radius: 4px
+        background: var(--block)
+        trans1 background
+      &:hover:before
+        background: $color-hover
+      span 
+        // 只显示1行
+        display: -webkit-box
+        -webkit-box-orient: vertical
+        overflow: hidden
+        -webkit-line-clamp: 1
+        position: relative
+        line-height: 1.2
+     .title
+        font-size: $fs-13
+        font-weight: 500
+        max-width: 100%
+        display: -webkit-box
+        -webkit-box-orient: vertical
+        overflow: hidden
+        -webkit-line-clamp: 2
+        position: relative
+      .date
+        font-size: $fs-12
+        color: var(--text-p4)
+        margin-top: 0.25rem
+      .no-post
+        font-size: $fs-13
+        color: var(--text-meta)
+      .desc
+        font-size: $fs-13
+        color: var(--text-p2)
+        font-weight: 600
+        margin-bottom: 1rem
+        line-height: 1.2
+        margin-right: auto
+        position: relative
+        &:before,&:after
+          position: absolute
+          font-weight: 900
+          color: var(--text-meta)
+        &:before
+          content: '“'
+          left: -12px
+        &:hover:before
+          color: $color-hover
+
+
+
+
+// transform
+.users-posts-wrap .user-post-card
+  &:hover
+    .card-link
+      img
+        transform: scale(1.2) rotate(8deg)
+        box-shadow: $boxshadow-card-float
+  .card-link:hover
+    // 宽度放大
+    width: 128px
+  .post-link:hover
+    color: $color-hover
