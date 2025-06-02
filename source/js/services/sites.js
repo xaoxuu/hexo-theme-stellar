@@ -19,9 +19,16 @@ utils.jq(() => {
           cell += `<img src="${item.icon || item.avatar || default_avatar}" onerror="javascript:this.removeAttribute(\'data-src\');this.src=\'${default_avatar}\';"/>`;
           cell += `<span class="title">${item.title}</span>`;
           cell += `<span class="desc">${item.description || item.url}</span>`;
-          if (item.labels && item.labels.length > 0) {
-            let label = item.labels[0];
-            cell += `<span class="label" style="background:#${label.color};">${label.name}</span>`;
+          cell += `</div>`;
+          cell += `<div class="labels">`;
+          for (let label of item.labels) {
+            if (label.lightness > 75) {
+              cell += `<div class="label" style="background:#${label.color};color:hsla(${label.hue}, ${label.saturation}%, 20%, 1);">${label.name}</div>`;
+            } else if (label.saturation > 90 && label.lightness > 40) {
+              cell += `<div class="label" style="background:#${label.color};color:hsla(${label.hue}, 50%, 20%, 1);">${label.name}</div>`;
+            } else {
+              cell += `<div class="label" style="background:#${label.color};color:white">${label.name}</div>`;
+            }
           }
           cell += `</div>`;
           cell += `</a>`;

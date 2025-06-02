@@ -19,8 +19,10 @@ utils.jq(() => {
           cell += `</a>`;
           cell += `<div class="labels">`;
           for (let label of item.labels) {
-            if (label.lightness > 80) {
-              cell += `<div class="label" style="background:#${label.color};color:hsla(${label.hue}, ${label.saturation}%, 25%, 1);">${label.name}</div>`;
+            if (label.lightness > 75) {
+              cell += `<div class="label" style="background:#${label.color};color:hsla(${label.hue}, ${label.saturation}%, 20%, 1);">${label.name}</div>`;
+            } else if (label.saturation > 90 && label.lightness > 40) {
+              cell += `<div class="label" style="background:#${label.color};color:hsla(${label.hue}, 50%, 20%, 1);">${label.name}</div>`;
             } else {
               cell += `<div class="label" style="background:#${label.color};color:white">${label.name}</div>`;
             }

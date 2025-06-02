@@ -21,6 +21,8 @@
     flex-wrap: wrap
     align-items: center
     justify-content: center
+    pointer-events: none
+    user-select: none
     .label
       color: white
       font-size: 12px
@@ -93,9 +95,9 @@
       height: 100%
     .posts
       margin: 0.5rem 0 1rem 0
-      display: grid
-      grid-template-columns: 1fr
-      grid-gap: 0.5rem
+      display: flex
+      flex-direction: column
+      align-items: flex-start
     .post-link
       display: flex
       flex-direction: column
@@ -103,7 +105,7 @@
       position: relative
       trans1 color
       &+.post-link
-        margin-top: 0.5rem
+        margin-top: 1rem
       &:before
         content: ''
         position: absolute
