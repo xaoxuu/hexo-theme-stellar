@@ -1,16 +1,39 @@
 .users-posts-wrap .grid-box
   display: grid
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr))
-  grid-gap: 16px
+  grid-template-columns: 1fr
+  grid-gap: 2px
+  overflow: hidden
+  border-radius: $border-card
 
 .users-posts-wrap .user-post-card
-  display: flex
-  align-items: center
-  border-radius: $border-card
-  background: var(--card)
-  box-shadow: $boxshadow-card
+  display: grid
+  grid-template-columns: 1fr 2fr
+  grid-gap: 16px
   font-weight: 500
-  hoverable-card()
+  border-radius: 4px
+  background: var(--block)
+  padding: 1rem
+  div,span
+    line-height: 1.2
+  .labels
+    margin-top: 4px
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    justify-content: center
+    .label
+      color: white
+      font-size: 12px
+      padding: 3px 6px 2px 6px
+      margin: 4px 2px 0 2px
+      line-height: 1
+      border-radius: 16px
+  .avatar-box
+    display: flex
+    justify-content: center
+    flex-direction: column
+    align-items: center
+    padding: 1rem
   .card-link
     color: var(--text-p1)
     display: flex
@@ -18,12 +41,9 @@
     flex-direction: column
     align-items: center
     text-align: center
-    line-height: 1.2
     border-radius: 4px
     position: relative
     flex-shrink: 0
-    width: 80px
-    margin: 1rem
     trans1 width 
     span
       display: -webkit-box
@@ -34,31 +54,48 @@
     .title
       font-size: $fs-14
       font-weight: 500
-      margin-top: 0.5rem
+      margin-top: 1rem
       max-width: 100%
     img
       object-fit: cover
       display: block
-      width: 48px
-      height: 48px
+      width: 64px
+      height: 64px
       background: var(--card)
       border-radius: 64px
-      margin: 0 0 0.5rem
       floatable-trans()
-
-  .label
-    margin-top: 4px
-    color: white
-    font-size: 10px
-    padding: 2px 6px
-    border-radius: 16px
-    font-weight: 500
-
-  .posts
+    
+  .previews
     display: flex
-    justify-content: center
+    justify-content: space-between
     flex-direction: column
-    margin: 1rem 1rem 1rem 0
+    height: 100%
+    position: relative
+    .empty
+      min-height: 1rem
+    .desc
+      font-size: 1.2rem
+      color: var(--text-p3)
+      font-weight: 400
+      margin: 1rem 0
+      margin-right: auto
+      position: relative
+      &:before
+        position: absolute
+        font-weight: 900
+        font-size: 32px
+        color: var(--block-border)
+        top: 0
+        content: '“'
+        left: -20px
+        trans1 all
+    .spacer
+      height: 100%
+    .posts
+      margin: 0.5rem 0 1rem 0
+      display: grid
+      grid-template-columns: 1fr
+      grid-gap: 0.5rem
     .post-link
       display: flex
       flex-direction: column
@@ -72,23 +109,22 @@
         position: absolute
         left: -12px
         top: 2px
-        bottom: 2px
+        height: $fs-14
         width: 4px
         border-radius: 4px
-        background: var(--block)
-        trans1 background
+        background: var(--block-border)
+        trans2 background height
       &:hover:before
         background: $color-hover
+        height: calc(100% - 4px)
       span 
-        // 只显示1行
         display: -webkit-box
         -webkit-box-orient: vertical
         overflow: hidden
         -webkit-line-clamp: 1
         position: relative
-        line-height: 1.2
      .title
-        font-size: $fs-13
+        font-size: $fs-14
         font-weight: 500
         max-width: 100%
         display: -webkit-box
@@ -103,39 +139,18 @@
       .no-post
         font-size: $fs-13
         color: var(--text-p4)
-      .desc
-        font-size: $fs-13
-        color: var(--text-p3)
-        font-weight: 600
-        margin-bottom: 1rem
-        line-height: 1.2
-        margin-right: auto
-        position: relative
-        &:before,&:after
-          position: absolute
-          font-weight: 900
-          font-size: 24px
-          color: var(--block)
-          top: 0
-        &:before
-          content: '“'
-          left: -16px
-
-
 
 
 // transform
 .users-posts-wrap .user-post-card
   &:hover
-    .card-link
-      img
-        transform: scale(1.2) rotate(8deg)
-        box-shadow: $boxshadow-card-float
     .desc
-      &:before,&:after
+      &:before
         color: $color-hover
+        transform: scale(1.2) translateX(-4px)
   .card-link:hover
-    // 宽度放大
-    width: 128px
+    img
+      transform: scale(1.2) rotate(8deg)
+      box-shadow: $boxshadow-card-float
   .post-link:hover
     color: $color-hover
