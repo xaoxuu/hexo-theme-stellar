@@ -23,7 +23,7 @@
 .post-list .post-card
   display: block
   margin: 1rem 0
-  border-radius: $border-card
+  border-radius: $border-card-l
   background: var(--card)
   hoverable-card()
   overflow: hidden
@@ -63,8 +63,13 @@
         color: $c-red
 
 .post-list.post .post-card:hover
-  img
-    filter: brightness(50%)
+  // img
+  //   filter: brightness(50%) // 模糊蒙版会失效
+  .cover-info
+    .title
+      transform: translateY(-4px)
+    .cap
+      transform: translateY(-2px)
 
 // common article
 .post-list .md-text
@@ -101,6 +106,20 @@
       width: 100%
       object-fit: cover
       aspect-ratio: hexo-config('article.cover_ratio')
+    &:before
+      content: ''
+      position: absolute
+      left: 0
+      right: 0
+      height: 128px
+    &[position=top]:before
+      top: 0
+      backdrop-filter: blur(32px)
+      mask: linear-gradient(black, rgba(black, 0.75), transparent)
+    &[position=bottom]:before
+      bottom: 0
+      backdrop-filter: blur(32px)
+      mask: linear-gradient(transparent, rgba(black, 0.75), black)
     .cover-info
       padding: 1.5rem 1rem
       position: absolute
@@ -119,9 +138,11 @@
       .cap
         font-size: $fs-13
         color: unset
+        trans1 all
       .title
         font-weight: 500
         font-size: $fsh3
+        trans1 all
       @media screen and (max-width: $device-mobile)
         padding: 1rem
         div+div
