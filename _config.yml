@@ -145,7 +145,7 @@ notebook:
   auto_excerpt: 128
   # 可以为某个 tag 设定图标（显示在标签树中）。
   tagcons:
-    '': solar:hashtag-linear
+    '': solar:hashtag-square-bold
   # 每页显示多少篇笔记。0 表示不分页，null 则 fallback 到 hexo 的配置。
   # 可以在笔记本 yaml 的 per_page 字段中覆盖此参数。
   per_page: null
@@ -356,11 +356,11 @@ tag_plugins:
     interactive: false # enable interactive for user
   # {% quot %}
   quot:
-    default: # 可以自行配置多种图标方案
-      prefix: https://bu.dusays.com/2022/10/24/63567d3e092ff.png
-      suffix: https://bu.dusays.com/2022/10/24/63567d3e0ab55.png
+    default: # 可以自行配置多种图标方案，支持icons.yml中配置的图片key，也支持直接设置svg/png等文件链接
+      prefix: bxs:quote-left
+      suffix: bxs:quote-right
     hashtag:
-      prefix: https://bu.dusays.com/2022/10/24/63567d3e07da3.png
+      prefix: solar:hashtag-square-bold
     question:
       prefix: ph:seal-question-fill
   # {% emoji %}
