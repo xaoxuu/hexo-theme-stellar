@@ -2,13 +2,13 @@
  * friends.js v2 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
- * {% friends [group] [repo:owner/repo] [api:http] %}
+ * {% friends [group] [repo:owner/repo] [posts:true/false] [api:http] %}
  */
 
 'use strict'
 
 module.exports = ctx => function(args) {
-  args = ctx.args.map(args, ['repo', 'api'], ['group'])
+  args = ctx.args.map(args, ['repo', 'api', 'posts'], ['group'])
   var api
   if (args.api) {
     api = args.api
@@ -16,9 +16,9 @@ module.exports = ctx => function(args) {
     api = 'https://api.vlts.cc/output_data/v2/' + args.repo
   }
   
-  var el = '<div class="tag-plugin users-wrap">'
+  var el = `<div class="tag-plugin ${args.posts ? 'users-posts-wrap' : 'users-wrap'}">`
   if (api) {
-    el += `<div class="ds-friends" ${ctx.args.joinTags(args, ['size']).join(' ')} api="${api}"><div class="grid-box"></div></div>`
+    el += `<div class="ds-friends${args.posts ? '_and_posts' : ''}" ${ctx.args.joinTags(args, ['size']).join(' ')} api="${api}"><div class="grid-box"></div></div>`
   } else if (args.group) {
     const links = ctx.theme.config.links || {}
     el += '<div class="grid-box">'

@@ -30,7 +30,7 @@ module.exports = ctx => function(args) {
       if (item?.url && item?.title) {
         el += `<div class="grid-cell site-card">`
         el += `<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="${item.url}">`
-        el += `<img src="${item.cover || item.screenshot || ('https://image.thum.io/get/width/1280/crop/720/' + item.url)}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${ctx.theme.config.default.cover}&quot;;"/>`
+        el += `<img src="${item.cover || item.snapshot || item.screenshot || ('https://image.thum.io/get/width/1280/crop/720/' + item.url)}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${ctx.theme.config.default.cover}&quot;;"/>`
         el += `<div class="info">`
         el += `<img src="${item.icon || item.avatar || ctx.theme.config.default.link}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${item.icon || item.avatar || ctx.theme.config.default.link}&quot;;"/>`
         el += `<span class="title">${item.title}</span>`

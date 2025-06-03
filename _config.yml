@@ -446,6 +446,8 @@ data_services:
     js: /js/services/sites.js
   friends:
     js: /js/services/friends.js
+  friends_and_posts:
+    js: /js/services/friends_and_posts.js
   # 列表布局类
   timeline:
     js: /js/services/timeline.js
