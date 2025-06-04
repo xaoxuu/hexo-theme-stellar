@@ -111,14 +111,16 @@
         position: absolute
         left: -12px
         top: 2px
-        height: $fs-14
+        height: 'calc(%s - 2px)' % $fs-14
         width: 4px
         border-radius: 4px
         background: var(--block-border)
-        trans2 background height
+        trans1 all
       &:hover:before
         background: $color-hover
-        height: calc(100% - 4px)
+        // height: calc(100% - 4px)
+        height: 100%
+        top: 0
       span 
         display: -webkit-box
         -webkit-box-orient: vertical
