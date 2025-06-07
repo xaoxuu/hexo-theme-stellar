@@ -31,20 +31,34 @@
 // 动画配置
 .article.banner
   .bg+.content
-    trans1 all
     --blur-bg: rgba(black, 0)
     --blur-px: 0px
     --blur-sat: 100%
-    background: var(--blur-bg)
-    @supports ((-webkit-backdrop-filter:blur(var(--blur-px))) or (backdrop-filter:blur(var(--blur-px))))
-      background: var(--blur-bg)
-      backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
-      -webkit-backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
-  &:hover
-    .bg+.content
+    &:hover
       --blur-bg: rgba(black, 0.1)
-      --blur-px: 20px
+      --blur-px: 1em
       --blur-sat: 150%
+    background: var(--blur-bg)
+    trans1 all
+    &:before,&:after
+      content: ''
+      position: absolute
+      z-index 0
+      left: 0
+      width: 100%
+      backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
+      trans1 all
+    &:before
+      top: 0
+      height: 4rem
+      mask: linear-gradient(black, rgba(black, 0.75), transparent)
+    &:after
+      bottom: 0
+      height: 5rem
+      mask: linear-gradient(transparent, rgba(black, 0.75), black)
+    .top,.bottom
+      z-index 1
+  
 
 .article.banner
   --button-hover-bg: rgba(black, 0.05)

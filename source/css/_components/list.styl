@@ -28,8 +28,18 @@
   hoverable-card()
   overflow: hidden
   z-index: 0
-  
   position: relative
+  --img-br: 100%
+  --img-sat: 100%
+  --blur-px: 1em
+  --blur-sat: 120%
+  &:hover
+    --img-br: 75%
+    --img-sat: 120%
+    --blur-sat: 200%
+  img
+    filter: brightness(var(--img-br)) saturate(var(--img-sat))
+    trans1 all
   .excerpt
     margin: 1rem 0
     @media screen and (max-width: $device-mobile)
@@ -62,14 +72,6 @@
       svg
         color: $c-red
 
-.post-list.post .post-card:hover
-  // img
-  //   filter: brightness(50%) // 模糊蒙版会失效
-  .cover-info
-    .title
-      transform: translateY(-4px)
-    .cap
-      transform: translateY(-2px)
 
 // common article
 .post-list .md-text
@@ -105,20 +107,22 @@
     img
       width: 100%
       object-fit: cover
-      aspect-ratio: hexo-config('article.cover_ratio')
+      aspect-ratio: hexo-config('article.cover_ratio') 
+      z-index 0
     &:before
       content: ''
+      z-index 1
       position: absolute
       left: 0
       right: 0
       height: 128px
+      backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
+      trans1 all
     &[position=top]:before
       top: 0
-      backdrop-filter: blur(32px)
       mask: linear-gradient(black, rgba(black, 0.75), transparent)
     &[position=bottom]:before
       bottom: 0
-      backdrop-filter: blur(32px)
       mask: linear-gradient(transparent, rgba(black, 0.75), black)
     .cover-info
       padding: 1.5rem 1rem
@@ -127,6 +131,7 @@
       width: 'calc(100% - %s * 2)' % 1rem
       --text-banner: white
       color: var(--text-banner)
+      z-index: 2
       &[position=top]
         top: 0
         background-image: linear-gradient(rgba(0,0,0,0.2),rgba(0,0,0,0))
@@ -135,22 +140,25 @@
         background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0.2))
       div+div
         margin-top: 4px
-      .cap
-        font-size: $fs-13
+      .text
         color: unset
         trans1 all
-      .title
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2)
+      .topic
+        font-size: $fs-13
+      .headline
         font-weight: 500
         font-size: $fsh3
-        trans1 all
+      .caption
+        font-size: $fs-14
       @media screen and (max-width: $device-mobile)
         padding: 1rem
         div+div
           margin-top: 2px
-        .title
+        .headline
           font-size: $fsh4
-        .cap
-          font-size: $fs-12
+        .caption
+          font-size: $fs-13
   h2
     margin: .25rem 0
     font-size: $fsh4

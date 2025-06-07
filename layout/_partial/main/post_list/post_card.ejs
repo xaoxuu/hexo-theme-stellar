@@ -111,18 +111,19 @@ function div_photo() {
   el += '<div class="cover" position="' + position + '">';
   el += '<img src="' + obj.image + '"/>';
   if (position.length > 0) {
-    el += '<div class="cover-info" position="' + position + '">';
+    el += '<div class="cover-info" position="' + position + '"';
     if (obj.color) {
       el += 'style="color:' + obj.color + '"';
     }
+    el += '>';
     if (obj.topic) {
-      el += '<div class="cap">' + obj.topic + '</div>';
+      el += '<div class="text topic">' + obj.topic + '</div>';
     }
     if (obj.headline) {
-      el += '<div class="title">' + obj.headline + '</div>';
+      el += '<div class="text headline">' + obj.headline + '</div>';
     }
     if (obj.caption) {
-      el += '<div class="cap">' + obj.caption + '</div>';
+      el += '<div class="text caption">' + obj.caption + '</div>';
     }
     el += '</div>';
 
