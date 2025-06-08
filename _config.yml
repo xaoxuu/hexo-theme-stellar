@@ -10,7 +10,7 @@ stellar:
 ######## head tags ########
 preconnect:
   # - https://gcore.jsdelivr.net
-  # - https://cdn.jsdelivr.net
+  # - https://gcore.jsdelivr.net
   # - https://unpkg.com
 
 open_graph:
@@ -424,8 +424,8 @@ tag_plugins:
 
 # 基础依赖
 dependencies:
-  jquery: https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
-  marked: https://cdn.jsdelivr.net/npm/marked@13.0.1/lib/marked.umd.min.js
+  jquery: https://gcore.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
+  marked: https://gcore.jsdelivr.net/npm/marked@13.0.1/lib/marked.umd.min.js
 
 
 # 内置服务，按需加载（页面内用到了就会加载，没有用到就不会加载）
@@ -488,13 +488,13 @@ plugins:
   preload:
     enable: true
     service: flying_pages # flying_pages
-    flying_pages: https://cdn.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js
+    flying_pages: https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js
 
   # lazyload
   # https://www.npmjs.com/package/vanilla-lazyload
   lazyload:
     enable: true # [hexo clean && hexo s] is required after changing this value.
-    js: https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.min.js
+    js: https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.min.js
     transition: fade # blur, fade
 
   # https://fancyapps.com/docs/ui/fancybox/
@@ -502,8 +502,8 @@ plugins:
   fancybox:
     enable: true
     loader: /js/plugins/fancybox-loader.js
-    js: https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js
-    css: https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css
+    js: https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js
+    css: https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css
     # 让 md 语法图片支持放大可以这样写: .md-text img:not([class]), .md-text .image img
     # 可以处理评论区的图片（不支持 iframe 类评论系统）例如：
     # 使用 twikoo 评论可以写: .tk-content img:not([class*="emo"])
@@ -519,7 +519,7 @@ plugins:
   # https://scrollrevealjs.org/api/reveal.html
   scrollreveal:
     enable: #true
-    js: https://cdn.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js
+    js: https://gcore.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js
     distance: 16px
     duration: 800 # ms
     interval: 100 # ms
@@ -574,7 +574,7 @@ plugins:
     enable: # true # 可以在特定文章的 front-matter 中设置 mermaid: true 来开启，也可以在这里设置全局开启
     style_optimization: false # use custom style in stellar
     # js: https://unpkg.com/mermaid@9.0.0/dist/mermaid.min.js
-    js: https://cdn.jsdelivr.net/npm/mermaid@v9/dist/mermaid.min.js
+    js: https://gcore.jsdelivr.net/npm/mermaid@v9/dist/mermaid.min.js
     # Available themes: default | dark | forest | neutral
     theme: neutral
   
