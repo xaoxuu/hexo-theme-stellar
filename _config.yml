@@ -1,6 +1,6 @@
 ######## Stellar info ########
 stellar:
-  version: '1.30.0'
+  version: '1.30.1'
   homepage: 'https://xaoxuu.com/wiki/stellar/'
   repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
   main_css: /css/main.css
@@ -10,7 +10,7 @@ stellar:
 ######## head tags ########
 preconnect:
   # - https://gcore.jsdelivr.net
-  # - https://cdn.jsdelivr.net
+  # - https://gcore.jsdelivr.net
   # - https://unpkg.com
 
 open_graph:
@@ -145,7 +145,7 @@ notebook:
   auto_excerpt: 128
   # 可以为某个 tag 设定图标（显示在标签树中）。
   tagcons:
-    '': solar:hashtag-linear
+    '': solar:hashtag-square-bold
   # 每页显示多少篇笔记。0 表示不分页，null 则 fallback 到 hexo 的配置。
   # 可以在笔记本 yaml 的 per_page 字段中覆盖此参数。
   per_page: null
@@ -173,7 +173,7 @@ article:
   # 如果没有指定封面，是否根据 tags 作为关键词搜索封面图片？
   auto_cover: false # search from https://source.unsplash.com/
   # 封面图宽高比
-  cover_ratio: 2.4
+  cover_ratio: 2
   # 如果没有指定横幅，是否根据 tags 作为关键词搜索横幅图片？
   auto_banner: false # search from https://source.unsplash.com/
   # 如果没有指定 excerpt 和 description，将自动取多长的内容作为文章摘要？
@@ -252,15 +252,15 @@ comments:
   # Twikoo
   # https://twikoo.js.org/
   twikoo:
-    js: https://gcore.jsdelivr.net/npm/twikoo@1.6.8/dist/twikoo.all.min.js # 建议锁定版本
+    js: https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js # 建议锁定版本
     envId: https://xxx # vercel函数
 
   # Waline
   # https://waline.js.org/
   waline:
-    js: https://gcore.jsdelivr.net/npm/@waline/client@3.1.3/dist/waline.js
-    css: https://gcore.jsdelivr.net/npm/@waline/client@3.1.3/dist/waline.css
-    meta_css: https://gcore.jsdelivr.net/npm/@waline/client@3.1.3/dist/waline-meta.css
+    js: https://gcore.jsdelivr.net/npm/@waline/client@3.1/dist/waline.js
+    css: https://gcore.jsdelivr.net/npm/@waline/client@3.1/dist/waline.css
+    meta_css: https://gcore.jsdelivr.net/npm/@waline/client@3.1/dist/waline-meta.css
     # Waline server address url, you should set this to your own link
     serverURL: https://waline.vercel.app
     # If false, comment count will only be displayed in post page, not in home page
@@ -300,8 +300,8 @@ comments:
   # Artalk
   # https://artalk.js.org/
   artalk:
-    css: https://unpkg.com/artalk@2.8.5/dist/Artalk.css
-    js: https://unpkg.com/artalk@2.8.5/dist/Artalk.js
+    css: https://unpkg.com/artalk@2.8/dist/Artalk.css
+    js: https://unpkg.com/artalk@2.8/dist/Artalk.js
     server: # 后端服务地址
     placeholder: ''
     darkMode: auto
@@ -356,11 +356,11 @@ tag_plugins:
     interactive: false # enable interactive for user
   # {% quot %}
   quot:
-    default: # 可以自行配置多种图标方案
-      prefix: https://bu.dusays.com/2022/10/24/63567d3e092ff.png
-      suffix: https://bu.dusays.com/2022/10/24/63567d3e0ab55.png
+    default: # 可以自行配置多种图标方案，支持icons.yml中配置的图片key，也支持直接设置svg/png等文件链接
+      prefix: bxs:quote-left
+      suffix: bxs:quote-right
     hashtag:
-      prefix: https://bu.dusays.com/2022/10/24/63567d3e07da3.png
+      prefix: solar:hashtag-square-bold
     question:
       prefix: ph:seal-question-fill
   # {% emoji %}
@@ -424,8 +424,8 @@ tag_plugins:
 
 # 基础依赖
 dependencies:
-  jquery: https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js
-  marked: https://cdn.jsdelivr.net/npm/marked@13.0.1/lib/marked.umd.min.js
+  jquery: https://gcore.jsdelivr.net/npm/jquery@3.7/dist/jquery.min.js
+  marked: https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js
 
 
 # 内置服务，按需加载（页面内用到了就会加载，没有用到就不会加载）
@@ -488,13 +488,13 @@ plugins:
   preload:
     enable: true
     service: flying_pages # flying_pages
-    flying_pages: https://cdn.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js
+    flying_pages: https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js
 
   # lazyload
   # https://www.npmjs.com/package/vanilla-lazyload
   lazyload:
     enable: true # [hexo clean && hexo s] is required after changing this value.
-    js: https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.min.js
+    js: https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js
     transition: fade # blur, fade
 
   # https://fancyapps.com/docs/ui/fancybox/
@@ -502,8 +502,8 @@ plugins:
   fancybox:
     enable: true
     loader: /js/plugins/fancybox-loader.js
-    js: https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js
-    css: https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css
+    js: https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js
+    css: https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css
     # 让 md 语法图片支持放大可以这样写: .md-text img:not([class]), .md-text .image img
     # 可以处理评论区的图片（不支持 iframe 类评论系统）例如：
     # 使用 twikoo 评论可以写: .tk-content img:not([class*="emo"])
@@ -513,13 +513,13 @@ plugins:
   # swiper
   swiper:
     enable: true
-    css: https://unpkg.com/swiper@10.3.1/swiper-bundle.min.css
-    js: https://unpkg.com/swiper@10.3.1/swiper-bundle.min.js
+    css: https://unpkg.com/swiper@10.3/swiper-bundle.min.css
+    js: https://unpkg.com/swiper@10.3/swiper-bundle.min.js
 
   # https://scrollrevealjs.org/api/reveal.html
   scrollreveal:
     enable: #true
-    js: https://cdn.jsdelivr.net/npm/scrollreveal@4.0.9/dist/scrollreveal.min.js
+    js: https://gcore.jsdelivr.net/npm/scrollreveal@4.0/dist/scrollreveal.min.js
     distance: 16px
     duration: 800 # ms
     interval: 100 # ms
@@ -552,7 +552,7 @@ plugins:
   katex:
     enable: #true # hexo-renderer-markdown-it-plus 默认开启 katex，此选项仅用于引入样式
     inject: |
-      <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/katex@0.16.4/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://gcore.jsdelivr.net/npm/katex@0.16/dist/katex.min.css" integrity="sha384-vKruj+a13U8yHIkAyGgK1J3ArTLzrFGBbBc0tDp4ad/EyewESeXE/Iv67Aj8gKZ0" crossorigin="anonymous">
   
   # MathJax
   # 需在Markdown文件开头加入mathjax: true
@@ -574,7 +574,7 @@ plugins:
     enable: # true # 可以在特定文章的 front-matter 中设置 mermaid: true 来开启，也可以在这里设置全局开启
     style_optimization: false # use custom style in stellar
     # js: https://unpkg.com/mermaid@9.0.0/dist/mermaid.min.js
-    js: https://cdn.jsdelivr.net/npm/mermaid@v9/dist/mermaid.min.js
+    js: https://gcore.jsdelivr.net/npm/mermaid@v9/dist/mermaid.min.js
     # Available themes: default | dark | forest | neutral
     theme: neutral
   
@@ -589,8 +589,8 @@ plugins:
   # https://github.com/sivan/heti
   heti:
     enable: false # 此插件会和代码块冲突，仅适用于纯中文博主。
-    css: https://unpkg.com/heti@0.9.2/umd/heti.min.css
-    js: https://unpkg.com/heti@0.9.2/umd/heti-addon.min.js
+    css: https://unpkg.com/heti@0.9/umd/heti.min.css
+    js: https://unpkg.com/heti@0.9/umd/heti-addon.min.js
 
 
 
@@ -631,7 +631,7 @@ style:
     background: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/rainbow64@3x.webp
   codeblock:
     scrollbar: 4px
-    highlightjs_theme: https://gcore.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css
+    highlightjs_theme: https://gcore.jsdelivr.net/gh/highlightjs/cdn-release@11.9/build/styles/atom-one-dark.min.css
   loading:
     loading: 正在加载
     error: 加载失败，请稍后重试。
