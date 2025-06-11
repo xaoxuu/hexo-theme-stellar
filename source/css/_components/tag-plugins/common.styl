@@ -15,6 +15,7 @@ set_dynamic_color($theme)
   --theme: $theme
   --theme-border: hsl(hue($theme), 50, 80)
   --theme-block: hsl(hue($theme), 90, 92)
+  --theme-mark: hsl(hue($theme), 95, 80)
   --theme-codeblock: hsl(hue($theme), 50, 95)
   --text: hsl(hue($theme), 55, 16)
   --text-p1: hsl(hue($theme), 55, 20)
@@ -24,6 +25,7 @@ set_dynamic_color($theme)
   --theme: var(--text-p1)
   --theme-border: var(--block-border)
   --theme-block: var(--block)
+  --theme-mark: var(--theme-block)
   --theme-codeblock: var(--block)
 
 .colorful[color='red']
@@ -72,11 +74,12 @@ _dark_tags()
   set_dynamic_color($theme)
     --theme: $theme
     --theme-border: hsl(hue($theme), 50, 24)
-    --theme-block: hsl(hue($theme), 16, 16)
+    --theme-block: hsl(hue($theme), 24, 24)
+    --theme-mark: hsl(hue($theme), 24, 24)
     --theme-codeblock: hsl(hue($theme), 12, 18)
-    --text: hsl(hue($theme), 100, 85)
-    --text-p1: hsl(hue($theme), 50, 75)
-    --text-p2: hsl(hue($theme), 80, 72)
+    --text: hsl(hue($theme), 100, 80)
+    --text-p1: hsl(hue($theme), 50, 72)
+    --text-p2: hsl(hue($theme), 80, 64)
   .tag-plugin.tag
     set_dynamic_color($color-theme)
   .colorful[color='red']
