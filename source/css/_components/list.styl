@@ -32,10 +32,13 @@
   --img-br: 100%
   --img-sat: 100%
   --blur-px: 1em
+  --blur-height: 128px
   --blur-sat: 120%
   &:hover
     --img-br: 75%
     --img-sat: 120%
+    // --blur-px: 0
+    // --blur-height: 0
     --blur-sat: 200%
   img
     filter: brightness(var(--img-br)) saturate(var(--img-sat))
@@ -115,7 +118,7 @@
       position: absolute
       left: 0
       right: 0
-      height: 128px
+      height: var(--blur-height)
       backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
       trans1 all
     &[position=top]:before

@@ -174,6 +174,8 @@ article:
   auto_cover: false # search from https://source.unsplash.com/
   # 封面图宽高比
   cover_ratio: 2
+  # 文章内横幅宽高比
+  banner_ratio: 2.5
   # 如果没有指定横幅，是否根据 tags 作为关键词搜索横幅图片？
   auto_banner: false # search from https://source.unsplash.com/
   # 如果没有指定 excerpt 和 description，将自动取多长的内容作为文章摘要？
