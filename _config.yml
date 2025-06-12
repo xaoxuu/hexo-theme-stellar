@@ -394,7 +394,7 @@ tag_plugins:
   # {% hashtag %}
   hashtag:
     default_color: # red, orange, yellow, green, cyan, blue, purple
-  # {% okr o1 percent:0.5 status:normal %}
+  # {% okr o1 percent:50 status:in_track/at_risk/off_track/finished/unfinished %}
   okr:
     border: true # 是否显示边框
     status: # 可以自行增加
