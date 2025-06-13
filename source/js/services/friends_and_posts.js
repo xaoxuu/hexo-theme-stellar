@@ -9,7 +9,8 @@ utils.jq(() => {
       }
       const default_avatar = def.avatar;
       // layout
-      utils.request(el, api, function(data) {
+      utils.request(el, api, async resp => {
+        const data = await resp.json();
         for (let item of (data.content || data)) {
           var cell = `<div class="grid-cell user-post-card">`;
           cell += `<div class="avatar-box">`;

@@ -18,7 +18,8 @@ utils.jq(() => {
         continue;
       }
       // layout
-      utils.request(el, api, function(data) {
+      utils.request(el, api, async resp => {
+        const data = await resp.json();
         const query = new URL(api).search;
         const arr = data.content || data;
         var users = [];
