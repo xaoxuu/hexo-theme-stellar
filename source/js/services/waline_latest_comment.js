@@ -10,7 +10,8 @@ utils.jq(() => {
         }
         const api = apiBase + '/comment?type=recent&count=' + limit;
         const default_avatar = def.avatar;
-        utils.request(el, api, function(data) {
+        utils.request(el, api, async resp => {
+          const data = await resp.json();
           data.forEach((item, i) => {
             var cell = '<div class="timenode" index="' + i + '">';
             cell += '<div class="header">';

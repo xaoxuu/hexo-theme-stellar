@@ -126,10 +126,8 @@ table a:not([class])
   position: relative
   text-decoration: none
   trans1 all
-  padding: 0 2px
   border-radius: 0
-  color: inherit
-  background: linear-gradient(0deg,var(--theme-link),var(--theme-link)) no-repeat left 100%/100% 1px
+  background: linear-gradient(0deg,var(--block-border),var(--block-border)) no-repeat left 100%/100% 2px
   &:hover
     text-decoration: none
     color: var(--theme-link)
@@ -137,6 +135,5 @@ table a:not([class])
     background: linear-gradient(0deg,var(--theme-link-opa),var(--theme-link-opa)) no-repeat left 100%/100% 100%
   &:has(img)
     background: none
-    padding: 0
     &:hover
       background: none

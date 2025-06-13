@@ -9,7 +9,8 @@ utils.jq(() => {
         }
         const default_avatar = def.avatar;
         // layout
-        utils.request(el, api, function(data) {
+        utils.request(el, api, async resp => {
+          const data = await resp.json();
           const limit = el.getAttribute('limit');
           data.forEach((item, i) => {
             if (limit && i >= limit) {

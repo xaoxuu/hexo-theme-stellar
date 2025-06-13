@@ -1,10 +1,10 @@
 /**
- * okr.js v1 | https://github.com/xaoxuu/hexo-theme-stellar/
+ * okr.js v2 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 
- * {% okr o1 percent:0.5 status:delay %}
+ * {% okr o1 percent:50 status:in_track/at_risk/off_track/finished/unfinished %}
  * title (only one line)
  * note
- * <!-- okr kr1 percent:1 -->
+ * <!-- okr kr1 percent:100 status:in_track/at_risk/off_track/finished/unfinished -->
  * title (only one line)
  * note
  * {% endokr %}
@@ -54,7 +54,7 @@ function generateKRList(ctx, contentArray) {
 }
 
 function layoutItem(ctx, type, index, title, note, color, label, percent) {
-  const percentStr = (percent * 100).toString().replace(/\.\d*/, '')
+  const percentStr = percent.toString().replace(/\.\d*/, '')
   return `
   <div class="okr-item ${type}" id="okr-${index.toLowerCase()}">
     <div class="okr-left">
@@ -102,7 +102,7 @@ module.exports = ctx => function(args, content = '') {
       status = statusList[krMeta.status] 
     }
     if (status == null) {
-      if (krPercent >= 1) {
+      if (krPercent >= 100) {
         status = statusList['finished']
       } else {
         status = statusList['in_track']
@@ -122,7 +122,7 @@ module.exports = ctx => function(args, content = '') {
     status = statusList[args.status] 
   }
   if (status == null) {
-    if (oPercent >= 1) {
+    if (oPercent >= 100) {
       status = statusList['finished']
     } else {
       status = statusList['in_track']
