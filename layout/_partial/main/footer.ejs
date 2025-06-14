@@ -28,6 +28,7 @@ function layoutDiv() {
   if (content) {
     el += markdown(content)
   }
+  el += '<span class="totalcount">发表了 ' + site.posts.length + ' 篇文章 · </span><span class="post-count">总计 ' + totalcount(site) + ' 字</span>'
   el += '</div></footer>'
   return el
 }
