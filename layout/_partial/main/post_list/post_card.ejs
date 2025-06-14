@@ -83,11 +83,10 @@ function div_default() {
         });
       }
       if (cats.length > 0) {
-        let str = cats.join(' / ');
-        let lastCat = cats.pop();
-        el += '<span class="cap breadcrumb"' + category_color(lastCat) + '>';
+        let cat = cats.shift();
+        el += '<span class="cap breadcrumb"' + category_color(cat) + '>';
         el += icon('default:category')
-        el += `<span>${str}</span>`
+        el += `<span>${cat}</span>`
         el += '</span>';
       }
     }
