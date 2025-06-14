@@ -1,9 +1,11 @@
-.md-text .article-footer
+.article-footer
   margin-top: 4rem
   padding: 1rem
   background: var(--block)
   border-radius: $border-card
   border: 1px solid var(--block-border)
+  font-size: $fs-15
+  line-height: 1.6
   &:empty
     display: none
   .header
@@ -12,21 +14,23 @@
     font-size: $fsh5
   .body
     --fsp: $fsp2
-    input.copy-area
-      margin: 0.75rem 0
-      padding: 0
-      width: 100%
-      font-family: $ff-body
+    >.link
+      margin: 0
+      height: 0
+      opacity 0
     p
       color: var(--text-p2)
-      margin: 0.5em 0
+      margin: 0.5rem 0
       a
         font-weight: unset
     ul
       margin: 0
       overflow: hidden
+      padding-left: 1rem
+      li
+        font-size: var(--fsp)
     .post-title
-      margin: 2px 0
+      margin: 0
       line-height: 1.2
       word-break: break-all
       p
@@ -36,11 +40,16 @@
     padding-top: 1rem
     border-top: 1px solid var(--block-border)
 
-.md-text .article-footer .social-wrap
-  grid-gap: 0.5rem 1rem
-  margin: 0
+.article-footer .social-wrap
+  grid-gap: 0.5rem 2rem
+  margin: 0.75rem 0
+  grid-template-columns: repeat(auto-fill, 20px);
+  a.social
+    background: none
+    border-radius: 4px
+    padding: 0
 
-.md-text .article-footer .qrcode
+.article-footer .qrcode
   width: 128px
   padding: 4px
   background: white
@@ -54,7 +63,7 @@
   img
     object-fit: contain
 
-.md-text .article-footer .qrcode.display
+.article-footer .qrcode.display
   margin: 2rem auto 1rem
   height: 128px !important
   opacity: 1 !important
