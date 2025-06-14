@@ -87,17 +87,30 @@
       background: $color-theme
       border-radius: 2px
       margin-right: 8px
-      trans1 background
+      padding: 0 2px
+      trans1 all
       &:hover
         background: $color-hover
-      &:before
-        content: ''
+      &:before,&:after
         color: white
         font-weight: 700
-        padding: 0 2px
-        font-size: $fs-12
+      &:before
+        content: ''
+        font-size: 0.5em
+      &:after
+        font-size: 0.25em
   h2
     font-weight: 500
+    >a:first-child
+      &:before
+        content: '⌘'
+  h3
+    >a:first-child:before
+      content: '='
+  h4
+    >a:first-child:before
+      content: '|'
+  h5
     >a:first-child:before
       content: ':'
     
