@@ -40,7 +40,7 @@ toc:
 # GitHub 用户信息
 ghuser:
   layout: ghuser
-  username: # your github login username
+  username: james1BadCreeper # your github login username
   avatar: true # show avatar or not
 
 # 本文作者组件，需要先配置作者信息: authors.yml
