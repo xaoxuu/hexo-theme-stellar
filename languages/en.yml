@@ -16,6 +16,7 @@ btn:
   edit: Edit This Page
   top: Scroll to Top
   comments: Join Discussion
+  font: Change Fonts
 
 meta:
   recent_update: Recent Update
@@ -50,9 +51,9 @@ page:
     action: Back to Home
 
 search:
-  search: Search
+  search: 🐱 search for what? Power by Algolia
   search_in: Search in %s
-  no_results: No Results!
+  no_results: No Results! 〒▽〒
 
 message:
   copied: Copied!

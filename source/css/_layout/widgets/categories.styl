@@ -1,0 +1,37 @@
+// categories widget 样式
+.widget-wrapper.categories-widget .widget-body {
+    border-radius: $border-card;
+    padding: 12px 20px;
+    background: var(--alpha50); // 这里设置背景
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); // 添加阴影效果
+  }
+
+// 每个分类的样式
+.category
+  line-height: 1.5
+  margin: 8px 0
+  display: flex // 使用flex布局来确保图标和文本在同一行
+  align-items: center // 垂直居中对齐
+
+.category-icon
+  width: 16px
+  height: 16px
+  vertical-align: middle
+  margin-right: 8px
+
+.category a
+  display: inline-block // 链接以行内块方式显示
+  word-break: break-word
+  color: var(--text-p2)
+  font-family: MiSans
+  font-weight: 300
+  font-size: 16px
+  text-decoration: none
+  &:hover
+    color: $color-hover
+    text-decoration: underline
+
+// Variables
+$color-hover = #0366d6
+
+

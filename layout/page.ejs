@@ -44,6 +44,8 @@ function layoutDiv() {
     el += partial('_partial/main/navbar/article_banner')
   }
   el += `<article class="${articleClass()}">`
+  //过期提醒容器
+  el +=`<div id="gtime"></div>`
   if (page.content && page.content.length > 0) {
     el += page.content
   }

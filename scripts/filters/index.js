@@ -28,3 +28,6 @@ function change_image(data) {
 
 hexo.extend.filter.register('before_post_render', change_image, 9);
 
+hexo.extend.filter.register("after_generate", () =>
+  require("./lib/generate-stats").generateStats(hexo)
+);

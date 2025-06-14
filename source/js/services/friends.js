@@ -9,8 +9,7 @@ utils.jq(() => {
       }
       const default_avatar = def.avatar;
       // layout
-      utils.request(el, api, async resp => {
-        const data = await resp.json();
+      utils.request(el, api, function(data) {
         for (let item of (data.content || data)) {
           var cell = `<div class="grid-cell user-card">`;
           cell += `<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="${item.html_url || item.url}">`;;

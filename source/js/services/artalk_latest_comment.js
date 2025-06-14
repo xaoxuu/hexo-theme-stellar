@@ -9,8 +9,7 @@ utils.jq(() => {
         if (api == null) {
           continue;
         }
-        utils.request(el, api, async resp => {
-          const data = await resp.json();
+        utils.request(el, api, function (data) {
           data = data.data || [];
           data.forEach((item, i) => {
             var cell = '<div class="timenode" index="' + i + '">';

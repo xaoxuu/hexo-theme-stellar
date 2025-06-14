@@ -6,15 +6,13 @@
   flex-direction: column
   &[align=left]
     align-items: flex-start
-    .nav-tabs,.tab-content
+    .nav-tabs
       align-self: flex-start
   &[align=center]
     align-items: center
-    .nav-tabs,.tab-content
-      align-items: center
   &[align=right]
     align-items: flex-end
-    .nav-tabs,.tab-content
+    .nav-tabs
       align-self: flex-end
 
 .tag-plugin.tabs
@@ -77,14 +75,13 @@
     max-width: 100%
     text-align: justify
     margin-top: .5rem
-    display: flex
-    flex-direction: column
     .tab-pane
       display: block
-      overflow: hidden
       &:not(.active)
+        visibility: hidden
         height: 0
       &.active
+        visibility: visible
         height: auto
   .tab-content:has(.grid-box)
     width: 100%
