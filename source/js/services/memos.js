@@ -9,7 +9,8 @@ utils.jq(() => {
     const limit = el.getAttribute('limit');
     const host = api.match(/https:\/\/(.*?)\/(.*)/i)[1];
 
-    utils.request(el, api, async data => {
+    utils.request(el, api, async resp => {
+      const data = await resp.json();
       let memos = versionHandlers.identify(data);
       if (memos.version === "feature" )return;
 

@@ -34,8 +34,20 @@
       display: none
   h2
     margin: 2em 0 1.5em
+  // 修正缩进效果
+  blockquote
+    &:before
+      content: none
+    p:not([class])
+      z-index: 1
+      text-indent: var(--fsp)
+      font-size: calc(var(--fsp) + 2px)
+      color: var(--text)
+      font-weight: 600
+      text-decoration: underline $color-hover
+      text-underline-offset: 0.25em
   // 取消缩进效果
-  blockquote, .poetry, .okr, .timeline, li, .article-footer
+  .poetry, .okr, .timeline, li, .article-footer
     p:not([class])
       text-indent: 0
       text-align: convert(hexo-config('style.text-align'))
@@ -126,10 +138,8 @@ table a:not([class])
   position: relative
   text-decoration: none
   trans1 all
-  padding: 0 2px
   border-radius: 0
-  color: inherit
-  background: linear-gradient(0deg,var(--theme-link),var(--theme-link)) no-repeat left 100%/100% 1px
+  background: linear-gradient(0deg,var(--block-border),var(--block-border)) no-repeat left 100%/100% 2px
   &:hover
     text-decoration: none
     color: var(--theme-link)
@@ -137,6 +147,5 @@ table a:not([class])
     background: linear-gradient(0deg,var(--theme-link-opa),var(--theme-link-opa)) no-repeat left 100%/100% 100%
   &:has(img)
     background: none
-    padding: 0
     &:hover
       background: none
