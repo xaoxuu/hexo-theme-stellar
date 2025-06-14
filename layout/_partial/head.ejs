@@ -89,6 +89,10 @@ function custom_inject() {
 
 %>
 
+<% if (theme.plugins.katex) { %>
+  <%- theme.plugins.katex.min_css %>
+<% } %>
+
 <head>
   <meta charset="utf-8">
   <meta name="hexo-theme" content="<%- stellar_info('tree') %>" theme-name="<%- stellar_info('name') %>" theme-version="<%- stellar_info('version') %>">

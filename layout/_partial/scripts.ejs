@@ -33,3 +33,8 @@ function custom_inject() {
 
 <!-- inject -->
 <%- custom_inject() %>
+
+<% if (theme.plugins.katex) { %>
+  <%- theme.plugins.katex.min_js %>
+  <%- theme.plugins.katex.auto_render_min_js %>
+<% } %>
