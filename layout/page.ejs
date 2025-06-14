@@ -50,10 +50,10 @@ function layoutDiv() {
   if (notebook) {
     el += partial('_partial/main/notebook/note_tags', { notebook: notebook })
   }
+  el += `</article>`
   if (layout === 'post' || page.wiki || notebook) {
     el += partial('_partial/main/article/article_footer')
   }
-  el += `</article>`
   if (layout === 'post' || page.wiki) {
     el += partial('_partial/main/article/read_next')
   }
