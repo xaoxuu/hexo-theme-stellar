@@ -34,8 +34,20 @@
       display: none
   h2
     margin: 2em 0 1.5em
+  // 修正缩进效果
+  blockquote
+    &:before
+      content: none
+    p:not([class])
+      z-index: 1
+      text-indent: var(--fsp)
+      font-size: calc(var(--fsp) + 2px)
+      color: var(--text)
+      font-weight: 600
+      text-decoration: underline $color-hover
+      text-underline-offset: 0.25em
   // 取消缩进效果
-  blockquote, .poetry, .okr, .timeline, li, .article-footer
+  .poetry, .okr, .timeline, li, .article-footer
     p:not([class])
       text-indent: 0
       text-align: convert(hexo-config('style.text-align'))
