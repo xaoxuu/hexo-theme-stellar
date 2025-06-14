@@ -1,3 +1,7 @@
+// 通用 hsla 函数
+hsla-var(h = var(--hue), s = var(--sat), l = var(--light), a = 1)
+  return unquote('hsla(%s, %s, %s, %s)' % (h s l a))
+
 // Deprecated function. Keep for compatibility.
 theme($t)
   convert(hexo-config('style.prefers_theme')) == $t
@@ -43,6 +47,11 @@ _common_root()
     --theme-link: $color-link
     --theme-color: $color-theme
     --theme-color-opa: $color-theme-opa
+    // new
+    --hue: 50
+    --sat: 90%
+    --light: 80%
+    --dynamic-color: hsla-var()
 
 _light_root()
   --site-bg: hsl($color-background-h, $color-background-s, $color-background-l)
