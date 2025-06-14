@@ -83,21 +83,32 @@ function div_default() {
         });
       }
       if (cats.length > 0) {
-        let str = cats.join(' / ');
-        let lastCat = cats.pop();
-        el += '<span class="cap breadcrumb"' + category_color(lastCat) + '>';
+        let cat = cats.shift();
+        el += '<span class="cap breadcrumb"' + category_color(cat) + '>';
         el += icon('default:category')
-        el += `<span>${str}</span>`
+        el += `<span>${cat}</span>`
         el += '</span>';
       }
     }
   }
-  if (post.sticky) {
+    if (post.sticky) {
     el += `<span class="pin">${icon('default:pin')}</span>`
   }
   el += '</div>';
-  el += '</article>';
-  return el;
+  // cat tags
+  el += '<div style="margin: 4px 0px;">';
+  if (post.tags && post.tags.length > 0) {
+    el += '<span class="cap tags">';
+
+    el += post.tags.map(tag => `<span style="background-color: var(--tag-bg-color); padding: 0px 6px; margin: 0px 5px 0px 0px;border-radius: 5px; color: var(--tag-text-color); line-height: 1.5;">#<span>${tag.name}</span></span>`).join('');
+
+    el += '</span>';
+}
+
+el += '</div>';
+el += '</article>';
+return el;
+
 }
 function div_photo() {
   var el = '';
