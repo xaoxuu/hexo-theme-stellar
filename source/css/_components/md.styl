@@ -19,38 +19,6 @@
   padding-bottom: 2rem
   overflow: hidden
 
-.l_body[text-indent] .md-text.content
-  // 应用缩进效果
-  p:not([class])
-    text-indent: 'calc(%s * 2)' % var(--fsp)
-    text-align: justify
-    a
-      text-indent: 0
-  ol,ul
-    margin-left: 'calc(%s * 2)' % var(--fsp)
-  h1,h2,h3,h4,h5,h6
-    text-align: center
-    >a:first-child
-      display: none
-  h2
-    margin: 2em 0 1.5em
-  // 修正缩进效果
-  >blockquote
-    &:before
-      content: none
-    p:not([class])
-      z-index: 1
-      text-indent: var(--fsp)
-      font-size: calc(var(--fsp) + 2px)
-      color: var(--text)
-      font-weight: 600
-      text-decoration: underline $color-hover
-      text-underline-offset: 0.25em
-  // 取消缩进效果
-  .poetry, .okr, .timeline, li, .article-footer
-    p:not([class])
-      text-indent: 0
-      text-align: convert(hexo-config('style.text-align'))
 
 .md-text
   ul:not(:last-child),
@@ -80,40 +48,6 @@
 
 // titles
 .md-text.content
-  h1,h2,h3,h4,h5,h6
-    color: var(--text)
-    line-height: 1.8
-    >a:first-child
-      background: $color-theme
-      border-radius: 2px
-      margin-right: 8px
-      padding: 0 2px
-      trans1 all
-      &:hover
-        background: $color-hover
-      &:before,&:after
-        color: white
-        font-weight: 700
-      &:before
-        content: ''
-        font-size: 0.5em
-      &:after
-        font-size: 0.25em
-  h2
-    font-weight: 500
-    >a:first-child
-      &:before
-        content: '⌘'
-  h3
-    >a:first-child:before
-      content: '='
-  h4
-    >a:first-child:before
-      content: '|'
-  h5
-    >a:first-child:before
-      content: ':'
-    
   blockquote, .tag-plugin
     h2,h3,h4,h5,h6
       margin-top: 0.25em
@@ -139,12 +73,13 @@
 .md-text>div
   margin: var(--gap-p) 0
 
-
+// 图片样式
 .md-text img
   border-radius: $border-image
   margin: auto
   display: block
 
+// 链接样式
 li:not([class]) a:not([class])
 p:not([class]) a:not([class])
 table a:not([class])
