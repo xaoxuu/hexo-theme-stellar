@@ -6,8 +6,7 @@
 
 .article.banner
   .bg+.content
-    min-height: 200px
-    aspect-ratio: hexo-config('article.banner_ratio')
+    min-height: 224px
     --text-banner: white
     --button-hover-bg: rgba(white, 0.25)
 
@@ -31,17 +30,12 @@
 .article.banner
   .bg+.content
     --blur-bg: rgba(black, 0)
-    --blur-px: 1em
+    --blur-px: 0px
     --blur-sat: 100%
-    --blur-height-top: 6rem
-    --blur-height-bottom: 7rem
-    --blur-opacity: 0
     &:hover
       --blur-bg: rgba(black, 0.1)
+      --blur-px: 1em
       --blur-sat: 150%
-      --blur-height-top: 6rem
-      --blur-height-bottom: 7rem
-      --blur-opacity: 1
     background: var(--blur-bg)
     trans1 all
     &:before,&:after
@@ -52,14 +46,13 @@
       width: 100%
       backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
       trans1 all
-      opacity var(--blur-opacity)
     &:before
       top: 0
-      height: var(--blur-height-top)
+      height: 4rem
       mask: linear-gradient(black, rgba(black, 0.75), transparent)
     &:after
       bottom: 0
-      height: var(--blur-height-bottom)
+      height: 5rem
       mask: linear-gradient(transparent, rgba(black, 0.75), black)
     .top,.bottom
       z-index 1
