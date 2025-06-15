@@ -1,0 +1,35 @@
+.l_body[type='tech'] .md-text
+  h1,h2,h3,h4,h5,h6
+    color: var(--text)
+    line-height: 1.8
+    >a:first-child
+      background: $color-theme
+      border-radius: 2px
+      margin-right: 8px
+      padding: 0 2px
+      trans1 all
+      &:hover
+        background: $color-hover
+      &:before,&:after
+        color: white
+        font-weight: 700
+      &:before
+        content: ''
+        font-size: 0.5em
+      &:after
+        font-size: 0.25em
+  h2
+    font-weight: 500
+    >a:first-child
+      &:before
+        content: '⌘'
+  h3
+    >a:first-child:before
+      content: '='
+  h4
+    >a:first-child:before
+      content: '|'
+  h5
+    >a:first-child:before
+      content: ':'
+    

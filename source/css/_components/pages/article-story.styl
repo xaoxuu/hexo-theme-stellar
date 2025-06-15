@@ -1,0 +1,126 @@
+.l_body[type='story'] .md-text.content
+  --fsp: 'calc(%s + 1px)' % $fs-body
+  // 段落标题
+  h1,h2,h3,h4,h5,h6
+    color: var(--text)
+    line-height: 1.2
+    >a:first-child
+      background: $color-theme
+      border-radius: 2px
+      margin-right: 8px
+      padding: 0 2px
+      trans1 all
+      &:hover
+        background: $color-hover
+      &:before,&:after
+        color: white
+        font-weight: 700
+      &:before
+        content: ''
+        font-size: 0.5em
+      &:after
+        font-size: 0.25em
+  h2:not([class])
+    &:before,&:after
+      content: ''
+      display: inline-block
+      width: 12px
+      height: 1.2em
+      background: $cDeepOrange
+      transform: skewX(-20deg)
+      margin: 0 0.5em
+      vertical-align: top
+      position: relative
+
+  h3:not([class])
+    &:before,&:after
+      color: hsla($color-theme, 0.5)
+      margin: 0 8px
+      trans1 all
+    &:before 
+      content: '⏵'
+    &:after
+      content: '⏴'
+    &:hover
+      &:before,&:after
+        color: hsla($color-theme, 1)
+
+  h4:not([class])
+    position: relative
+    &:before
+      content: ''
+      position: absolute
+      width: 32px
+      height: 32px
+      margin-left: -16px
+      margin-top: -12px
+      background: hsla($color-theme, 0.3)
+      border-radius: 50%
+      filter: blur(12px)
+      pointer-events: none
+      z-index: -1
+      trans1 all
+    &:hover:before
+      background: hsla($color-theme, 0.6)
+  // 应用缩进效果
+  p:not([class])
+    text-indent: 'calc(%s * 2)' % var(--fsp)
+    text-align: justify
+    a
+      text-indent: 0
+  ol,ul
+    margin-left: 'calc(%s * 2)' % var(--fsp)
+  h1,h2,h3,h4,h5,h6
+    text-align: center
+    >a:first-child
+      display: none
+  h2
+    margin: 2em 0 1.5em
+  // 修正缩进效果
+  >blockquote
+    text-align: center
+    --inset: calc(var(--fsp) * 2)
+    margin-left: var(--inset)
+    margin-right: var(--inset)
+    background: var(--block)
+    padding: 1rem 2rem
+    border-radius: $border-card
+    &:before,&:after
+      position: absolute
+      font-size: 2rem
+      background-color: hsla($color-theme, 0.25)
+      top: -0.3em
+      width: 1em
+      height: 1em
+      content: ''
+      opacity 1
+      trans1 all
+    &:before
+      left: -0.3em
+      svg-mask-icon($iQuoteLeft)
+    &:after
+      right: -0.3em
+      svg-mask-icon($iQuoteRight)
+    p:not([class])
+      color: var(--text-p2)
+      font-size: $fs-body
+      text-indent: 2em
+    &:hover
+      &:before,&:after
+        background-color: hsla($color-theme, 0.5)
+  // 取消缩进效果
+  .poetry, .okr, .timeline, li, .article-footer
+    p:not([class])
+      text-indent: 0
+      text-align: convert(hexo-config('style.text-align'))
+
+
+
+.l_body[type='story'] .article.banner .content .bottom.only-title
+  justify-content: center
+
+
+.l_body[type='story'] .tag-plugin.tabs .tab-content .tab-pane>p:not([class])
+  text-indent: 'calc(%s * 2)' % var(--fsp)
+  a
+    text-indent: 0
