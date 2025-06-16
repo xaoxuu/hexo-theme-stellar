@@ -1,0 +1,6 @@
+.l_body[text-indent] article.content
+  p:not([class])
+    text-indent: 'calc(%s * 2)' % var(--fsp)
+    text-align: justify
+    a
+      text-indent: 0
