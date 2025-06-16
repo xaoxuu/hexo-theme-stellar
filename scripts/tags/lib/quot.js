@@ -16,17 +16,20 @@ module.exports = ctx => function (args) {
     args.el = 'p'
   }
 
-  var type = ''
-  if (args.icon || args.prefix || args.suffix) {
-    type = ' type="icon"'
-  } else {
-    type = ' type="text"'
-  }
   function content() {
-    const cfg = ctx.theme.config.tag_plugins.quot[args.icon]
+    const cfg = ctx.theme.config.tag_plugins.quot[args.icon || 'default']
     var el = ''
-    var prefix = args.prefix || cfg?.prefix
-    var suffix = args.suffix || cfg?.suffix
+    var prefix = null
+    var suffix = null
+    if (args.prefix || args.suffix) {
+      // 临时设定的样式
+      prefix = args.prefix
+      suffix = args.suffix
+    } else {
+      // yml中配置的样式
+      prefix = cfg?.prefix
+      suffix = cfg?.suffix
+    }
     if (prefix) {
       el += ctx.utils.icon(prefix, 'class="icon prefix"')
     } else {
@@ -40,18 +43,16 @@ module.exports = ctx => function (args) {
     }
     return el
   }
+  el += `<div class="tag-plugin quot ${args.el}">`
   if (args.el.includes('h')) {
-    el += '<div' + ' class="tag-plugin quot">'
-    el += '<' + args.el + ' class="content" id="' + args.text + '"' + type + '>'
+    el += `<${args.el} class="content" id="${args.text}">`
     el += content()
     el += '</' + args.el + '>'
-    el += '</div>'
   } else {
-    el += '<div' + ' class="tag-plugin quot">'
-    el += '<' + args.el + ' class="content"' + type + '>'
+    el += `<${args.el} class="content">`
     el += content()
     el += '</' + args.el + '>'
-    el += '</div>'
   }
+  el += '</div>'
   return el
 }

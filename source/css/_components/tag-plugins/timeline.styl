@@ -15,6 +15,10 @@
     padding-left: 0
     &:before
       display: none
+.l_body[type=story] .md-text.content 
+  .tag-plugin.timeline
+    ol,ul
+      margin-left: 0
 
 .tag-plugin.timeline .timenode
   position: relative
@@ -82,7 +86,7 @@
 
 .tag-plugin.timeline .body
   background: var(--card)
-  border-radius: $border-card
+  border-radius: 16px
   border-top-left-radius: 2px
   padding: 0.5rem 1rem
   margin-top: 4px
@@ -113,32 +117,21 @@
     font-weight: 700
     margin: 0.5rem 0 0.75rem
     line-height: 1.25
+    border-bottom: 1px solid var(--block-border)
     &:only-child 
       margin-bottom: 0.5rem
       font-weight: 500
     a 
       color: inherit
       text-decoration: none
-      border-bottom: 2px solid $color-theme
+      padding-bottom: 0.75rem
+      display: inline-block
       trans1 all
-      background: none
       &:hover
-        background: none
-        border-radius: 0
-        border-bottom: 2px solid $color-hover
-  >p:first-child:not([class]) a:not([class])
-    padding: 0
-    margin: 0
-    color: inherit
-    text-decoration: none
-    border-bottom: 2px solid $color-theme
-    trans1 all
-    background: none
-    &:hover
-      background: none
-      border-radius: 0
-      border-bottom: 2px solid $color-hover
-    
+        color: $color-hover
+  >p:first-child:not([class])
+    font-size: 1rem
+    margin: .25rem 0 .5rem
   
   a
     &:has(img):after
@@ -159,7 +152,6 @@
   flex-wrap: wrap
   justify-content: space-between
   align-items: stretch
-  background: var(--card)
   span
     line-height: 1.8
   &:empty

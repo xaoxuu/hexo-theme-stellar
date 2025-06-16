@@ -1,3 +1,13 @@
+svg-mask-icon($svg)
+  -webkit-mask-image: url($svg)
+  -webkit-mask-repeat: no-repeat
+  -webkit-mask-position: center
+  -webkit-mask-size: contain
+  mask-image: url($svg)
+  mask-repeat: no-repeat
+  mask-position: center
+  mask-size: contain
+
 
 // // 可替代 transition 使用
 // transition($op = all, $time = 0.28s, $ease = ease-out)
@@ -14,11 +24,11 @@ trans1($op, $time = 0.2s)
   -o-transition: $op $time ease-out
 
 // 为2个属性设置动画
-trans2($op1, $op2)
-  transition: $op1 0.2s ease-out, $op2 0.2s ease-out
-  -moz-transition: $op1 0.2s ease-out, $op2 0.2s ease-out
-  -webkit-transition: $op1 0.2s ease-out, $op2 0.2s ease-out
-  -o-transition: $op1 0.2s ease-out, $op2 0.2s ease-out
+trans2($op1, $op2, $time = 0.2s)
+  transition: $op1 $time ease-out, $op2 $time ease-out
+  -moz-transition: $op1 $time ease-out, $op2 $time ease-out
+  -webkit-transition: $op1 $time ease-out, $op2 $time ease-out
+  -o-transition: $op1 $time ease-out, $op2 $time ease-out
 
 trans2pro($op1, $t1, $op2, $t2)
   transition: $op1 $t1 ease-out, $op2 $t2 ease-out
@@ -78,7 +88,8 @@ scrollbar-codeblock($height = 4px)
   &::-webkit-scrollbar
     height: $height
     width: $height
-  &::-webkit-scrollbar-track-piece
+  &::-webkit-scrollbar-track-piece,
+  &::-webkit-scrollbar-corner
     background: transparent
   &::-webkit-scrollbar-thumb
     background: transparent

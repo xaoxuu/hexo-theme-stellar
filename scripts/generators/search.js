@@ -31,11 +31,13 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
       temp_post.path = root + post.path
     }
     if (cfg.content != false && post.content) {
-      var content = stripHTML(post.content).trim()
+      var content = stripHTML(post.content.replace(/<span class="line">\d+<\/span>/g, '')).trim()
       // 部分HTML标签
       content = content.replace(/<iframe[\s|\S]+iframe>/g, '')
       content = content.replace(/<hr>/g, '')
       content = content.replace(/<br>/g, '')
+      // 去除HTML实体
+      content = content.replace(/&[^\s;]+;/g, "")
       // 换行符换成空格
       content = content.replace(/\\n/g, ' ')
       content = content.replace(/\n/g, ' ')
@@ -60,8 +62,22 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
     return temp_post
   }
 
+  function matchAndExit(path, patterns) {
+    for (let pattern of patterns) {
+        const regexPattern = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
+        if (path.match(regexPattern)) {
+            // console.log("Matched pattern:", pattern);
+            return true;
+        }
+    }
+    return false;
+  }
+
   if (posts) {
     posts.each(function(post) {
+      var layout_list = ["post"]
+      if (!layout_list.includes(post.layout)) return
+      if (cfg.skip_search && matchAndExit(post.path, cfg.skip_search)) return
       if (post.indexing == false) return
       let temp_post = generateJson(post)
       res.push(temp_post)
@@ -69,6 +85,9 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
   } 
   if (pages) {
     pages.each(function(page) {
+      var layout_list = ["page", "wiki"]
+      if (!layout_list.includes(page.layout)) return
+      if (cfg.skip_search && matchAndExit(page.path, cfg.skip_search)) return
       if (page.indexing == false) return
       let temp_post = generateJson(page)
       res.push(temp_post)

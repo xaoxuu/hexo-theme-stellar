@@ -6,13 +6,15 @@
   flex-direction: column
   &[align=left]
     align-items: flex-start
-    .nav-tabs
+    .nav-tabs,.tab-content
       align-self: flex-start
   &[align=center]
     align-items: center
+    .nav-tabs,.tab-content
+      align-items: center
   &[align=right]
     align-items: flex-end
-    .nav-tabs
+    .nav-tabs,.tab-content
       align-self: flex-end
 
 .tag-plugin.tabs
@@ -75,15 +77,14 @@
     max-width: 100%
     text-align: justify
     margin-top: .5rem
+    display: flex
+    flex-direction: column
     .tab-pane
+      display: block
+      overflow: hidden
       &:not(.active)
-        display: none
+        height: 0
       &.active
-        display: block
-  .tab-content:has(.grid-box)
+        height: auto
+  .tab-content:has(.grid-box),.tab-pane:has(.grid-box)
     width: 100%
-
-.l_body[text-indent] .md-text .tag-plugin.tabs .tab-content .tab-pane>p:not([class])
-  text-indent: 'calc(%s * 2)' % var(--fsp)
-  a
-    text-indent: 0

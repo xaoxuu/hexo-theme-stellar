@@ -71,6 +71,13 @@ timeline:
   type: # 默认不用写，如果是友链朋友圈数据请写 fcircle
   limit: # 默认通过 api 上增加 per_page 来设置，如果是友链朋友圈，可通过这个设置数量
 
+latest_comment:
+  layout: timeline
+  title: 最新评论
+  api: # 参照文档获取服务对应的api
+  type: # 选择评论服务
+  limit: 16 # 限制获取数量
+
 tagtree:
   layout: tagtree
   expand_all: false # 是否展开所有节点

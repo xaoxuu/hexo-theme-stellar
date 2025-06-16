@@ -9,7 +9,8 @@ utils.jq(() => {
       }
       const default_avatar = def.avatar;
       // layout
-      utils.request(el, api, function(data) {
+      utils.request(el, api, async resp => {
+        const data = await resp.json();
         for (let item of (data.content || data)) {
           var cell = `<div class="grid-cell user-card">`;
           cell += `<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="${item.html_url || item.url}">`;;
@@ -17,6 +18,10 @@ utils.jq(() => {
           cell += `<div class="name image-meta">`;
           cell += `<span class="image-caption">${item.title || item.login}</span>`;
           cell += `</div>`;
+          if (item.labels && item.labels.length > 0) {
+            let label = item.labels[0];
+            cell += `<div class="label" style="background:#${label.color};">${label.name}</div>`;
+          }
           cell += `</a>`;
           cell += `</div>`;
           $(el).find('.grid-box').append(cell);

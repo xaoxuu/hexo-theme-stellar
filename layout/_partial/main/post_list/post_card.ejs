@@ -83,10 +83,11 @@ function div_default() {
         });
       }
       if (cats.length > 0) {
-        let cat = cats.shift();
-        el += '<span class="cap breadcrumb"' + category_color(cat) + '>';
+        let str = cats.join(' / ');
+        let lastCat = cats.pop();
+        el += '<span class="cap breadcrumb"' + category_color(lastCat) + '>';
         el += icon('default:category')
-        el += `<span>${cat}</span>`
+        el += `<span>${str}</span>`
         el += '</span>';
       }
     }
@@ -100,26 +101,30 @@ function div_default() {
 }
 function div_photo() {
   var el = '';
-  el += '<div class="cover">';
-  el += '<img src="' + obj.image + '"/>';
+  var position = '';
   if (obj.headline || obj.topic || obj.caption) {
-    el += '<div class="cover-info"';
+    if (obj.topic) {
+      position = 'top';
+    } else {
+      position = 'bottom';
+    }
+  }
+  el += '<div class="cover" position="' + position + '">';
+  el += '<img src="' + obj.image + '"/>';
+  if (position.length > 0) {
+    el += '<div class="cover-info" position="' + position + '"';
     if (obj.color) {
       el += 'style="color:' + obj.color + '"';
     }
+    el += '>';
     if (obj.topic) {
-      el += 'position="top">';
-    } else {
-      el += 'position="bottom">';
-    }
-    if (obj.topic) {
-      el += '<div class="cap">' + obj.topic + '</div>';
+      el += '<div class="text topic">' + obj.topic + '</div>';
     }
     if (obj.headline) {
-      el += '<div class="title">' + obj.headline + '</div>';
+      el += '<div class="text headline">' + obj.headline + '</div>';
     }
     if (obj.caption) {
-      el += '<div class="cap">' + obj.caption + '</div>';
+      el += '<div class="text caption">' + obj.caption + '</div>';
     }
     el += '</div>';
 

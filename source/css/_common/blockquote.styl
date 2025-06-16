@@ -2,9 +2,20 @@ blockquote
   display: block
   margin-left: 0
   margin-right: 0
-  padding: 0.25rem 0.75rem
-  background: var(--block)
+  padding: 0 var(--fsp)
   $bd-left = 4px
-  border-left: $bd-left solid var(--text-meta)
-  border-radius: $bd-left $border-card $border-card $bd-left
-  color: var(--text-p2)
+  color: var(--text-p3)
+  position: relative
+  &:before
+    trans1 all
+    content: ''
+    position: absolute
+    top: 0
+    bottom: 0
+    width 4px
+    border-radius: 1px
+    left: 0
+    opacity: 0.5
+    background: var(--text-meta)
+  &:hover:before
+    background: $color-theme

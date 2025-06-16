@@ -29,7 +29,7 @@
   code
     background: none
 .md-text .tag-plugin.note:not([color])
-  .highlight
+  .highlight, pre
     background: var(--block-hover)
 .md-text .tag-plugin.note[child=codeblock]
   padding: 0
@@ -66,3 +66,6 @@
 
 .md-text .tag-plugin .tag-plugin.note
   --gap-p: 1rem
+
+.l_body[type=story] .tag-plugin.note .title p:not([class])
+  text-indent: 0
