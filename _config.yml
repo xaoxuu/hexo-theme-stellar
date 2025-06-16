@@ -654,6 +654,12 @@ style:
     background-image: #'url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.14/image/site-bg1@small.webp)' # 未完全适配，慎用
     blur-px: 100px
     blur-bg: var(--alpha75)
+  # 技术文章内页各级标题前面的符号
+  header_prefix:
+    h2: '⌘'
+    h3: '='
+    h4: '|'
+    h5: ':'
 
 
 default:
