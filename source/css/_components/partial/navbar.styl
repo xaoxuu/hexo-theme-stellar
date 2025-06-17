@@ -1,64 +1,76 @@
 .navbar
-  padding: 0 1rem
   z-index: 8
-  top: 0
-  background: var(--site-bg)
+  top: 8px
+  overflow: scroll visible
+  scrollbar(0, 0)
   if hexo-config('style.site') && hexo-config('style.site.background-image')
     position inherit
     background: none
   else 
     position: sticky
     position: -webkit-sticky
-    margin-bottom: 1px
-    margin-top: -8px
-  &:after
-    content: ''
-    height: 2px
-    border-radius: 2px
-    position: absolute
-    bottom: 0
-    left: 1rem
-    right: 1rem
-    background: var(--block-hover)
 
 .navbar nav
-  display: flex
-  overflow: scroll visible
-  scrollbar(0, 0)
+  display: inline-flex
   font-size: $fs-14
+  position: relative
+  z-index: 1
+  border-radius: 64px
+  box-shadow: 0 0 2px rgba(black, .05), 0 0 8px rgba(black, .05)
+  margin: 8px 1rem
+  &:before,&:after
+    z-index -1
+    position: absolute
+    pointer-events: none
+    content: ''
+    --insetX: 0
+    --insetY: 0
+    left: var(--insetX)
+    right: var(--insetX)
+    top: var(--insetY)
+    bottom: var(--insetY)
+    border-radius: 64px
+  &:before
+    backdrop-filter: blur(8px)
+  &:after
+    --blur-px: 16px
+    --blur-sat: 500%
+    background: var(--alpha50)
+    backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
+    mask: linear-gradient(var(--alpha100), var(--alpha50), var(--alpha50), var(--alpha50), var(--alpha100))
+    box-shadow: inset 0 0 8px 1px white
+    trans1 all
+    @media (prefers-color-scheme: dark)
+      opacity 0.4
+      background: var(--alpha20)
   >p
     margin: 0
   a
     padding: 2px 0.75rem
     if hexo-config('style.site') && hexo-config('style.site.background-image')
-      margin: 10px 0.25rem 8px 0
+      margin: 8px 0.25rem 8px 0
     else
-      margin: 10px 0.25rem 8px 0.25rem
+      margin: 0.25rem
     line-height: 2
-    color: var(--text-p3)
-    border-radius: $border-button
+    color: var(--text-p1)
+    border-radius: 32px
     font-weight: 500
     white-space: nowrap
     position: relative
     z-index: 1
-    &:after
-      height: 2px
-      position: absolute
-      bottom: -8px
-      left: 0.75rem
-      right: 0.75rem
-      background: $color-theme
-      border-radius: 2px
-      pointer-events: none
+    trans1 all
     &:hover
-      background: var(--block-hover)
+      background: var(--alpha100)
     &.active, &:hover
-      color: var(--text-p1)
+      color: var(--text)
     &.active
-      background: var(--card)
+      background: var(--alpha60)
+      @media (prefers-color-scheme: dark)
+        background: rgba(white, 0.25)
       box-shadow: $boxshadow-button
       cursor default
       pointer-events: none
+      backdrop-filter: saturate(300%)
     &.active:after
       content: ''
   a+a
@@ -66,11 +78,5 @@
 
 @media screen and (max-width: $device-mobile-max)
   .navbar.top
-    margin-top: 0
-    padding-left: 0
-    padding-right: 0
-    nav
-      a:first-child
-        margin-left: 1rem
-      a:last-child
-        margin-right: 1rem
+    top: 32px
+    
