@@ -1,58 +1,49 @@
 .navbar
   padding: 0 1rem
   z-index: 8
-  top: 0
-  position: relative
-  --bg: unquote('linear-gradient(%s, transparent)' % var(--site-bg))
-  &:after
-    position: absolute
-    content: ''
-    pointer-events: none
-    top: 0
-    bottom: 0
-    left: 0
-    right: 0
-    --blur-px: 8px
-    --blur-sat: 300%
-    background: var(--bg)
-    backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
-    mask: linear-gradient(var(--site-bg), transparent)
-    trans1 all
+  top: 8px
+  overflow: scroll visible
+  scrollbar(0, 0)
   if hexo-config('style.site') && hexo-config('style.site.background-image')
     position inherit
     background: none
   else 
     position: sticky
     position: -webkit-sticky
-    margin-bottom: 1px
-    margin-top: -8px
 
 .navbar nav
   display: inline-flex
-  overflow: scroll visible
-  scrollbar(0, 0)
   font-size: $fs-14
   position: relative
-  &:before
+  &:before,&:after
     position: absolute
+    pointer-events: none
     content: ''
-    --insetX: .5rem
-    --insetY: .7rem
+    --insetX: 0
+    --insetY: 0
     left: var(--insetX)
     right: var(--insetX)
     top: var(--insetY)
     bottom: var(--insetY)
+    border-radius: 64px
+  &:before
     background: var(--alpha50)
     filter: blur(4px)
-    border-radius: 64px
+    --blur-px: 16px
+    --blur-sat: 300%
+    backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
+    mask: linear-gradient(white, var(--alpha50), var(--alpha50), var(--alpha50), white)
+    trans1 all
+  &:after
+    background: var(--alpha20)
   >p
     margin: 0
   a
     padding: 2px 0.75rem
     if hexo-config('style.site') && hexo-config('style.site.background-image')
-      margin: 10px 0.25rem 8px 0
+      margin: 8px 0.25rem 8px 0
     else
-      margin: 10px 0.25rem 8px 0.25rem
+      margin: 0.25rem
     line-height: 2
     color: var(--text-p1)
     border-radius: 32px

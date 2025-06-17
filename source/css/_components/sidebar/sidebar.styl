@@ -27,7 +27,8 @@
   else if hexo-config('style.leftbar') && hexo-config('style.leftbar.background')
     background: convert(hexo-config('style.leftbar.background'))
   .leftbar-container
-    height: 100%
+    --inset: 16px
+    max-height: 'calc(%s - %s * 6)' % (100vh var(--inset))
     display: flex
     flex-direction: column
     word-break: break-all
