@@ -1,64 +1,51 @@
 .navbar
-  padding: 0 1rem
   z-index: 8
-  top: 0
-  background: var(--site-bg)
-  if hexo-config('style.site') && hexo-config('style.site.background-image')
-    position inherit
-    background: none
-  else 
-    position: sticky
-    position: -webkit-sticky
-    margin-bottom: 1px
-    margin-top: -8px
-  &:after
-    content: ''
-    height: 2px
-    border-radius: 2px
-    position: absolute
-    bottom: 0
-    left: 1rem
-    right: 1rem
-    background: var(--block-hover)
+  top: 8px
+  position: sticky
+  position: -webkit-sticky
 
-.navbar nav
-  display: flex
+.navbar-blur 
+  margin: 0 1rem
+  border-radius: 64px
+  position: relative
+  newblur()
+
+.navbar-container 
+  max-width: 100%
+  margin: 1px
+  border-radius: 64px
   overflow: scroll visible
   scrollbar(0, 0)
+  
+.navbar nav
+  display: inline-flex
   font-size: $fs-14
+  z-index: 1
   >p
     margin: 0
   a
-    padding: 2px 0.75rem
-    if hexo-config('style.site') && hexo-config('style.site.background-image')
-      margin: 10px 0.25rem 8px 0
-    else
-      margin: 10px 0.25rem 8px 0.25rem
+    padding: .25rem 0.75rem
+    margin: 0.25rem
     line-height: 2
-    color: var(--text-p3)
-    border-radius: $border-button
+    color: var(--text-p1)
+    border-radius: 32px
     font-weight: 500
     white-space: nowrap
     position: relative
     z-index: 1
-    &:after
-      height: 2px
-      position: absolute
-      bottom: -8px
-      left: 0.75rem
-      right: 0.75rem
-      background: $color-theme
-      border-radius: 2px
-      pointer-events: none
+    trans1 all
     &:hover
-      background: var(--block-hover)
+      background: var(--alpha100)
     &.active, &:hover
-      color: var(--text-p1)
+      color: var(--text)
     &.active
-      background: var(--card)
+      background: var(--alpha60)
+      @media (prefers-color-scheme: dark)
+        background: rgba(white, 0.25)
       box-shadow: $boxshadow-button
       cursor default
       pointer-events: none
+      backdrop-filter: saturate(300%)
     &.active:after
       content: ''
   a+a
@@ -66,11 +53,5 @@
 
 @media screen and (max-width: $device-mobile-max)
   .navbar.top
-    margin-top: 0
-    padding-left: 0
-    padding-right: 0
-    nav
-      a:first-child
-        margin-left: 1rem
-      a:last-child
-        margin-right: 1rem
+    top: 36px
+    

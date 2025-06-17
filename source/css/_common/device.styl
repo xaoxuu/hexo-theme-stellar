@@ -10,35 +10,28 @@
 .float-panel
   position: sticky
   grid-column-end: span 3
+  --inset: 2rem
   right: 0
-  bottom: 2rem
+  bottom: calc(var(--inset) * 2)
+  margin-left: auto
+  margin-right: var(--inset)
   float: right
   z-index: 10
   display: flex
   flex-direction: column
-  border-radius: $border-bar
-  margin-left: auto
-  margin-right: 1rem
+  border-radius: 64px
   @media screen and (min-width: $device-mobile-max)
-    margin-right: 2rem
+    margin-right: 3rem
   overflow: hidden
-  --blur-px: 16px
-  --blur-bg: alpha(#fff, .4)
   trans1: all
-  ondark()
-    --blur-bg: alpha(#000, .4)
-  :root[data-theme="dark"] &
-    ondark()
-  :root:not([data-theme]) &
-    @media (prefers-color-scheme: dark)
-      ondark()
+  newblur()
 
 // 侧边栏弹出按钮
 .float-panel button
   cursor: pointer
   color: var(--text)
   background: none
-  padding: 8px
+  padding: 10px
   line-height: 0
   font-size: 28px
   margin: 0

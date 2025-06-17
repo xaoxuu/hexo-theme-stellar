@@ -35,11 +35,13 @@
     .l_right
       top: 8px
       position: fixed
-      max-height: calc(100% - 8px * 2)
       transform: translateX(320px)
       transition: transform .38s ease-out
       margin: 0
-      right: 8px
+      --inset: 8px
+      right: var(--inset)
+      top: var(--inset)
+      max-height: 'calc(%s - 96px)' % (100vh)
       box-shadow: $boxshadow-card-float
       z-index: 10
       background: var(--site-bg)
@@ -66,7 +68,13 @@
       transform: translateX(-320px)
       transition: transform .38s ease-out
       margin: 0
-      left: 8px
+      --inset: 8px
+      left: var(--inset)
+      top: var(--inset)
+      max-height: 'calc(%s - 96px)' % (100vh)
+      .leftbar-container
+        --inset: 8px
+        height: 'calc(%s - 96px)' % (100vh)
       box-shadow: $boxshadow-card-float
       z-index: 10
     .l_main
@@ -75,7 +83,7 @@
     .l_left
       transform: translateX(0px)
     .main-mask
-      opacity 1
+      // opacity 1
       pointer-events: inherit
 
 

@@ -2,6 +2,8 @@
 function layoutDiv() {
   var el = '';
   el += '<div class="navbar top">';
+  el += '<div class="navbar-blur">';
+    el += '<div class="navbar-container">';
   el += '<nav class="wiki">';
   // 所有项目
   el += '<a';
@@ -39,6 +41,8 @@ function layoutDiv() {
   }
 
   el += '</nav>';
+  el += '</div>';
+  el += '</div>';
   el += '</div>';
   return el;
 }
