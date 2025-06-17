@@ -43,6 +43,17 @@ function layoutBreadcrumb() {
     }
   // end 3.left.top
   el += `</div>`
+    if (page.layout == "post" && page.tags && page.tags.length > 0) {
+    el += '<div id="tag">'; // 将标签容器的创建移动到条件内部
+    el += ' <span>&nbsp标签: </span>';
+    el += list_categories(page.tags, {
+      class: "cap breadcrumb",
+      show_count: false,
+      separator: '&nbsp; ',
+      style: "none"
+    });
+    el += '&nbsp</div>';
+  }
   // 3.left.bottom
   el += partial('dateinfo')
   // end 2.left
