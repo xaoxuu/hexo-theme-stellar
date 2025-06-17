@@ -2,9 +2,6 @@
   margin: 8px
   max-height: 'calc(%s - 16px)' % 100vh
   border-radius: $border-card-l
-  overflow: hidden
-  overflow: clip
-  overflow-clip-margin: .5px
   .header
     margin: var(--gap-max) var(--gap-margin) 0
 
@@ -20,23 +17,61 @@
     margin-right: auto
 
 .l_left
-  background-position: center
-  background-size: cover
-  if hexo-config('style.leftbar') && hexo-config('style.leftbar.background-image')
-    background-image: convert(hexo-config('style.leftbar.background-image'))
-  else if hexo-config('style.leftbar') && hexo-config('style.leftbar.background')
-    background: convert(hexo-config('style.leftbar.background'))
+  .sidebg
+    pointer-events: none
+    position: absolute
+    top: 0
+    bottom: 0
+    left: 0
+    right: 0
+    background-position: center
+    background-size: cover
+    if hexo-config('style.leftbar') && hexo-config('style.leftbar.background-image')
+      if hexo-config('style.leftbar.blur-px')
+        left: 20%
+        right: 20%
+      else
+        border-radius: $border-card-l
+      background-image: convert(hexo-config('style.leftbar.background-image'))
+      --blur-px: convert(hexo-config('style.leftbar.blur-px'))
+      filter: saturate(300%) blur(var(--blur-px))
+    else if hexo-config('style.leftbar') && hexo-config('style.leftbar.background')
+      background: convert(hexo-config('style.leftbar.background'))
+    
   .leftbar-container
     height: 'calc(%s - 16px)' % 100vh
     display: flex
     flex-direction: column
     word-break: break-all
     text-align: justify
-    if hexo-config('style.leftbar') && hexo-config('style.leftbar.blur-px')
-      --blur-px: convert(hexo-config('style.leftbar.blur-px'))
-      @supports ((-webkit-backdrop-filter:blur(var(--blur-px))) or (backdrop-filter:blur(var(--blur-px))))
-        background: var(--blur-bg)
-        backdrop-filter: saturate(240%) blur(var(--blur-px))
-        -webkit-backdrop-filter: saturate(240%) blur(var(--blur-px))
-    if hexo-config('style.leftbar') && hexo-config('style.leftbar.blur-bg')
-      --blur-bg: convert(hexo-config('style.leftbar.blur-bg'))
+    border-radius: $border-card-l
+    overflow: hidden
+    &:before
+      position: absolute
+      content: ''
+      top: 0
+      bottom: 0
+      left: 0
+      right: 0
+      border-radius: $border-card-l
+      @media screen and (min-width: $device-mobile-max)
+        background: rgba(white, 0.5)
+        box-shadow: inset 0 0 32px 1px rgba(white, 0.5)
+        backdrop-filter: saturate(200%)
+        mask: linear-gradient(black, rgba(black, 0.5), 80%, transparent, 90%, transparent)
+
+      @media screen and (prefers-color-scheme: dark)
+        background: rgba(white, 0.05)
+        box-shadow: inset 0 0 32px 1px rgba(white, 0.2)
+
+@media screen and (max-width: $device-mobile-max)
+  .l_left
+    overflow: hidden
+    background: var(--alpha100)
+    .sidebg
+      left: 0
+      right: 0
+      
+@media screen and (max-width: $device-mobile-max) and (prefers-color-scheme: dark)
+  .l_left .leftbar-container:before
+    background: var(--alpha20)

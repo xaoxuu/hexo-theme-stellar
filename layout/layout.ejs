@@ -48,6 +48,7 @@ if (theme.style.prefers_theme === 'auto') {
     html += partial('_partial/cover/index')
     html += `<div class="l_body ${page_type}" id="start" layout="${page.layout}" type="${article_type}" ${indent ? 'text-indent' : ''}>`
       html += `<aside class="l_left">`
+        html += `<div class="sidebg"></div>`
         html += `<div class="leftbar-container${theme.style.leftbar?.blur ? ' leftbar-blur' : ''}">`
           html += partial('_partial/sidebar/index_leftbar')
         html += `</div>`

@@ -132,3 +132,30 @@ hoverable-card()
     onlight()
     @media (prefers-color-scheme: dark)
       ondark()
+
+newblur()
+  box-shadow: 0 0 2px rgba(black, .05), 0 0 8px rgba(black, .05)
+  trans1: all
+  &:before,&:after
+    z-index -1
+    position: absolute
+    pointer-events: none
+    content: ''
+    left: 0
+    right: 0
+    top: 0
+    bottom: 0
+    border-radius: 64px
+  &:before
+    backdrop-filter: blur(8px)
+  &:after
+    --blur-px: 16px
+    --blur-sat: 500%
+    background: var(--alpha50)
+    backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
+    mask: linear-gradient(rgba(white, 1), 10%, rgba(white, 0.2), 90%, rgba(white, 1)), linear-gradient(90deg, rgba(white, 1), 10%, rgba(white, 0.2), 90%, rgba(white, 1))
+    box-shadow: inset 0 0 8px 1px white
+    trans1 all
+    @media (prefers-color-scheme: dark)
+      opacity 0.4
+      background: var(--alpha20)
