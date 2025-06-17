@@ -35,11 +35,13 @@
     .l_right
       top: 8px
       position: fixed
-      max-height: calc(100% - 8px * 2)
       transform: translateX(320px)
       transition: transform .38s ease-out
       margin: 0
-      right: 8px
+      --inset: 16px
+      right: var(--inset)
+      top: var(--inset)
+      max-height: 'calc(%s - %s * 2)' % (100vh var(--inset))
       box-shadow: $boxshadow-card-float
       z-index: 10
       background: var(--site-bg)
@@ -66,7 +68,10 @@
       transform: translateX(-320px)
       transition: transform .38s ease-out
       margin: 0
-      left: 8px
+      --inset: 16px
+      left: var(--inset)
+      top: var(--inset)
+      max-height: 'calc(%s - %s * 2)' % (100vh var(--inset))
       box-shadow: $boxshadow-card-float
       z-index: 10
     .l_main
