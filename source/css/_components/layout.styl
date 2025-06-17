@@ -72,6 +72,9 @@
       left: var(--inset)
       top: var(--inset)
       max-height: 'calc(%s - %s * 6)' % (100vh var(--inset))
+      .leftbar-container
+        --inset: 16px
+        height: 'calc(%s - %s * 6)' % (100vh var(--inset))
       box-shadow: $boxshadow-card-float
       z-index: 10
     .l_main
