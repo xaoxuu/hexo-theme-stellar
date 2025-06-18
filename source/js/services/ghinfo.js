@@ -8,8 +8,7 @@ utils.jq(() => {
         continue;
       }
       // layout
-      utils.request(null, api, async resp => {
-        const data = await resp.json();
+      utils.request(null, api, function(data) {
         function fill(data) {
           for (let key of Object.keys(data)) {
             $(el).find("[type=text]#" + key).text(data[key]);
