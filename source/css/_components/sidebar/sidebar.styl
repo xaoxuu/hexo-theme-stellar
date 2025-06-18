@@ -26,6 +26,9 @@
     right: 0
     background-position: center
     background-size: cover
+    --saturate: 300%
+    --blur-px: convert(hexo-config('style.leftbar.blur-px'))
+    --brightness: 100%
     if hexo-config('style.leftbar') && hexo-config('style.leftbar.background-image')
       if hexo-config('style.leftbar.blur-px')
         left: 20%
@@ -33,8 +36,11 @@
       else
         border-radius: $border-card-l
       background-image: convert(hexo-config('style.leftbar.background-image'))
-      --blur-px: convert(hexo-config('style.leftbar.blur-px'))
-      filter: saturate(300%) blur(var(--blur-px))
+      filter: saturate(var(--saturate)) brightness(var(--brightness)) blur(var(--blur-px))
+      @media screen and (prefers-color-scheme: dark)
+        --blur-px: 'calc(%s * 0.75)' % convert(hexo-config('style.leftbar.blur-px'))
+        --saturate: 200%
+        --brightness: 75%
     else if hexo-config('style.leftbar') && hexo-config('style.leftbar.background')
       background: convert(hexo-config('style.leftbar.background'))
     
@@ -46,14 +52,16 @@
     text-align: justify
     border-radius: $border-card-l
     overflow: hidden
-    &:before
+    &:before,&:after
       position: absolute
+      pointer-events: none
       content: ''
       top: 0
       bottom: 0
       left: 0
       right: 0
       border-radius: $border-card-l
+    &:before
       @media screen and (min-width: $device-mobile-max)
         background: rgba(white, 0.5)
         box-shadow: inset 0 0 32px 1px rgba(white, 0.5)
@@ -71,8 +79,9 @@
     .sidebg
       left: 0
       right: 0
+      --saturate: 300%
       
       
 @media screen and (max-width: $device-mobile-max) and (prefers-color-scheme: dark)
-  .l_left .leftbar-container:before
+  .l_left .leftbar-container:after
     background: var(--alpha20)
