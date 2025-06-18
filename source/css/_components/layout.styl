@@ -41,7 +41,7 @@
       --inset: 8px
       right: var(--inset)
       top: var(--inset)
-      max-height: 'calc(%s - 96px)' % (100vh)
+      max-height: 'calc(%s - %s)' % (100vh $rightbar-bottom-margin)
       box-shadow: $boxshadow-card-float
       z-index: 10
       background: var(--site-bg)
@@ -71,10 +71,10 @@
       --inset: 8px
       left: var(--inset)
       top: var(--inset)
-      max-height: 'calc(%s - 96px)' % (100vh)
+      max-height: 'calc(%s - %s)' % (100vh $leftbar-bottom-margin)
       .leftbar-container
         --inset: 8px
-        height: 'calc(%s - 96px)' % (100vh)
+        height: 'calc(%s - %s)' % (100vh $leftbar-bottom-margin)
       box-shadow: $boxshadow-card-float
       z-index: 10
     .l_main
