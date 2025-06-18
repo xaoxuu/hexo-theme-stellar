@@ -26,6 +26,7 @@
     right: 0
     background-position: center
     background-size: cover
+    border-radius: $border-card-l
     --saturate: 300%
     --blur-px: convert(hexo-config('style.leftbar.blur-px'))
     --brightness: 100%
@@ -33,8 +34,6 @@
       if hexo-config('style.leftbar.blur-px')
         left: 20%
         right: 20%
-      else
-        border-radius: $border-card-l
       background-image: convert(hexo-config('style.leftbar.background-image'))
       filter: saturate(var(--saturate)) brightness(var(--brightness)) blur(var(--blur-px))
       @media screen and (prefers-color-scheme: dark)
