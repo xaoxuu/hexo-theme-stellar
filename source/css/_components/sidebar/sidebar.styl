@@ -20,10 +20,11 @@
   .sidebg
     pointer-events: none
     position: absolute
-    top: 0
-    bottom: 0
-    left: 0
-    right: 0
+    --inset: 0
+    top: var(--inset)
+    bottom: var(--inset)
+    left: var(--inset)
+    right: var(--inset)
     background-position: center
     background-size: cover
     border-radius: $border-card-l
@@ -32,8 +33,7 @@
     --brightness: 100%
     if hexo-config('style.leftbar') && hexo-config('style.leftbar.background-image')
       if hexo-config('style.leftbar.blur-px')
-        left: 20%
-        right: 20%
+        --inset: 32px
       background-image: convert(hexo-config('style.leftbar.background-image'))
       filter: saturate(var(--saturate)) brightness(var(--brightness)) blur(var(--blur-px))
       @media screen and (prefers-color-scheme: dark)
@@ -51,6 +51,8 @@
     text-align: justify
     border-radius: $border-card-l
     overflow: hidden
+    >*
+      z-index 1
     &:before,&:after
       position: absolute
       pointer-events: none
@@ -65,7 +67,7 @@
         background: rgba(white, 0.5)
         box-shadow: inset 0 0 32px 1px rgba(white, 0.5)
         backdrop-filter: saturate(300%)
-        mask: linear-gradient(black, rgba(black, 0.5), 80%, transparent, 90%, transparent)
+        mask: linear-gradient(black, rgba(black, 0.5), 70%, transparent, 90%, transparent)
 
       @media screen and (prefers-color-scheme: dark)
         background: rgba(white, 0.05)
@@ -76,11 +78,7 @@
     overflow: hidden
     background: var(--alpha100)
     .sidebg
-      left: 0
-      right: 0
+      --inset: 0
       --saturate: 300%
-      
-      
-@media screen and (max-width: $device-mobile-max) and (prefers-color-scheme: dark)
-  .l_left .leftbar-container:after
-    background: var(--alpha20)
+    .leftbar-container:after
+      background: var(--alpha20)
