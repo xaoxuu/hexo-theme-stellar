@@ -65,6 +65,7 @@ if (theme.style.prefers_theme === 'auto') {
       html += partial('_partial/menubtn')
     html += `</div>`
     html += `<div class="scripts">`
+      html += json_ld()
       html += partial('_partial/scripts')
     html += `</div>`
   html += `</body>`
