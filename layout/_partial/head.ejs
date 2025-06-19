@@ -62,6 +62,7 @@ function og_args() {
   if (page.layout == 'post' && page.cover) {
     args.twitter_card = 'summary_large_image';
   }
+  args.image = config.avatar || (config.email ? gravatar(config.email) : null);
   return Object.assign(args, page.open_graph);
 }
 
