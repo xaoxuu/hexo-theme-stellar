@@ -33,17 +33,23 @@
       position: relative
 
   h3:not([class])
+    position: relative
     &:before,&:after
-      color: hsla($color-theme, 0.5)
-      margin: 0 8px
+      position absolute
+      font-size: 1.2em
+      background-color: hsla($color-theme, 0.5)
+      width: 1em
+      height: 1em
+      content: ''
+      opacity 1
+      display: inline-block
       trans1 all
-    &:before 
-      content: '⏵'
+      vertical-align: middle
+    &:before
+      margin-left: -1em
+      svg-mask-icon($h3Left)
     &:after
-      content: '⏴'
-    &:hover
-      &:before,&:after
-        color: hsla($color-theme, 1)
+      svg-mask-icon($h3Right)
 
   h4:not([class])
     position: relative
@@ -56,12 +62,14 @@
       margin-top: -12px
       background: hsla($color-theme, 0.3)
       border-radius: 50%
-      filter: blur(12px)
+      --blur-px: 8px
+      filter: blur(var(--blur-px))
       pointer-events: none
       z-index: -1
-      trans1 all
+      trans1 all 0.5s
     &:hover:before
-      background: hsla($color-theme, 0.6)
+      --blur-px: 24px
+      background: hsla($color-theme, 1)
 
   ol,ul
     margin-left: 'calc(%s * 2)' % var(--fsp)
@@ -71,7 +79,7 @@
     >a:first-child
       display: none
   // 修正缩进效果
-  >blockquote
+  >blockquote,.tag-plugin.quote
     text-align: center
     --inset: calc(var(--fsp) * 2)
     margin-left: var(--inset)
