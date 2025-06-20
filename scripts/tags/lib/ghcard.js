@@ -17,6 +17,7 @@ module.exports = ctx => function(args) {
   var params = ['show_owner', 'theme', 'title_color', 'text_color', 'icon_color', 'bg_color', 'hide_border', 'cache_seconds', 'locale']
   args = ctx.args.map(args, params, ['repo'])
   const path = args.repo
+  const host = ctx.theme.config.api_host.ghcard
   var el = ''
   el += '<div class="tag-plugin ghcard">'
   el += '<a class="ghcard" rel="external nofollow noopener noreferrer" href="https://github.com/' + path + '">'
@@ -24,10 +25,10 @@ module.exports = ctx => function(args) {
   if (path.includes('/')) {
     // is repo
     const ps = path.split('/')
-    url += 'https://github-readme-stats.xaoxuu.com/api/pin/?username=' + ps[0] + '&repo=' + ps[1]
+    url = `${host}/api/pin/?username=${ps[0]}&repo=${ps[1]}`
   } else {
     // is user
-    url += 'https://github-readme-stats.xaoxuu.com/api/?username=' + path
+    url = `${host}/api/?username=${path}`
   }
   url += '&' + ctx.args.joinURLParams(args, params)
   if (!url.includes('&show_owner=')) {
