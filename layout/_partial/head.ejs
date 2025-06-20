@@ -62,6 +62,7 @@ function og_args() {
   if (page.layout == 'post' && page.cover) {
     args.twitter_card = 'summary_large_image';
   }
+  args.image = config.avatar || (config.email ? gravatar(config.email) : null);
   return Object.assign(args, page.open_graph);
 }
 
@@ -100,7 +101,7 @@ function custom_inject() {
   <meta name="force-rendering" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
   <meta name="HandheldFriendly" content="True" >
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">

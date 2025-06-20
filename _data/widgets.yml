@@ -68,7 +68,6 @@ timeline:
   title: 近期动态
   api: # https://api.github.com/repos/xaoxuu/hexo-theme-stellar/issues
   user: # 默认显示所有人的数据，设置名称可过滤为仅显示某人的数据，多个名称用英文逗号隔开，不要加空格
-  type: # 默认不用写，如果是友链朋友圈数据请写 fcircle
   limit: # 默认通过 api 上增加 per_page 来设置，如果是友链朋友圈，可通过这个设置数量
 
 latest_comment:
