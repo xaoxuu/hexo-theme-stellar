@@ -44,13 +44,15 @@
       background: convert(hexo-config('style.leftbar.background'))
     
   .leftbar-container
-    height: 'calc(%s - 16px)' % 100vh
+    height: 'calc(%s - 80px)' % 100vh
     display: flex
     flex-direction: column
     word-break: break-all
     text-align: justify
     border-radius: $border-card-l
     overflow: hidden
+    >.widgets
+      mask: linear-gradient(transparent, white, 10%, white, 90%, transparent)
     >*
       z-index 1
     &:before,&:after
