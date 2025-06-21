@@ -79,6 +79,15 @@ function layoutWidgets() {
   var el = '';
   el += '<div class="widgets">';
   if (page.leftbar) {
+    var search = {}
+    if (page.search) {
+      search = page.search
+    } else if (wiki?.search) {
+      search = wiki.search
+    } else if (topic?.search) {
+      search = topic.search
+    }
+    el += partial('search', {item: search})
     page.leftbar.forEach((w, i) => {
       let name = ''
       let widget = {}
@@ -141,17 +150,8 @@ function layoutLogo() {
 }
 
 function layoutNavArea() {
-  var search = {}
-  if (page.search) {
-    search = page.search
-  } else if (wiki?.search) {
-    search = wiki.search
-  } else if (topic?.search) {
-    search = topic.search
-  }
   var el = ''
   el += `<div class="nav-area">`
-  el += partial('search', {item: search})
   el += partial('menu', {where: 'sidebar'})
   el += `</div>`
   return el

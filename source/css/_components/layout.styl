@@ -35,15 +35,14 @@
   .l_body
     grid-gap: calc(var(--gap-margin) * 1)
     .l_right
-      top: 8px
       position: fixed
       transform: translateX(320px)
       transition: transform .38s ease-out
       margin: 0
       --inset: 8px
       right: var(--inset)
-      top: var(--inset)
-      max-height: 'calc(%s - %s)' % (100vh $rightbar-bottom-margin)
+      top: calc(var(--gap-margin) * 2)
+      max-height: 'calc(%s - %s * 2 - %s)' % (100vh var(--gap-margin) $rightbar-bottom-margin)
       box-shadow: $boxshadow-card-float
       z-index: 10
       background: var(--site-bg)
@@ -72,11 +71,11 @@
       margin: 0
       --inset: 8px
       left: var(--inset)
-      top: var(--inset)
-      max-height: 'calc(%s - %s)' % (100vh $leftbar-bottom-margin)
+      top: calc(var(--gap-margin) * 2)
+      max-height: 'calc(%s - %s * 2 - %s)' % (100vh var(--gap-margin) $leftbar-bottom-margin)
       .leftbar-container
         --inset: 8px
-        height: 'calc(%s - %s)' % (100vh $leftbar-bottom-margin)
+        height: 'calc(%s - %s * 2 - %s)' % (100vh var(--gap-margin) $leftbar-bottom-margin)
       box-shadow: $boxshadow-card-float
       z-index: 10
     .l_main

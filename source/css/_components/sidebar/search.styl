@@ -1,21 +1,40 @@
 
 .search-wrapper
+  padding-bottom: 32px
   width: 100%
+  border-radius: $border-card-s
   >.search-form
     position: sticky
-    margin-bottom: 8px
-    top: 1rem
+    top: 0
     height: 40px
     display: flex
     flex-direction: row
     align-items: center
     transition: 0.38s ease-out
-    z-index: 0
-    border-radius: $border-bar
+    z-index: 1
+    border-radius: $border-card-s
     color: var(--text)
-    background: var(--alpha50)
-    &:has(input:focus)
+    >*
+      z-index: 1
+    &:before
+      position: absolute
+      content: ''
+      height: 2px
+      bottom: 0
+      left: 1rem
+      right: 1rem
+      border-radius: $border-bar
       background: var(--alpha100)
+      @media screen and (prefers-color-scheme: dark)
+        background: var(--alpha20)
+      z-index 0
+      trans1 all
+    &:hover,&:has(input:focus),&:has(input:not(:placeholder-shown))
+      &:before
+        background: var(--alpha100)
+        height: 100%
+        left: 0
+        right: 0
   .search-input
     width: 100%
     box-sizing: border-box
@@ -23,6 +42,10 @@
     font-size: $fs-14
     padding: 12px 0
     color: var(--text)
+    &::placeholder
+      color: var(--text-p3)
+      @media screen and (prefers-color-scheme: dark)
+        color: var(--text-p2)
   .search-button 
     border-radius: $border-bar
     display: flex
@@ -31,7 +54,7 @@
     svg
       height: 1rem
       width: 40px
-      margin-left: 4px
+      margin-left: .5rem
       color: var(--text-p2)
       fill: currentColor
       path[p-id="1562"]
@@ -52,33 +75,34 @@
     text-align: center
     font-size: $fs-14
     padding: 2rem
+    margin: 8px 0
     background: var(--alpha20)
-    border-radius: $border-card
+    border-radius: $border-card-s
 
 
   #search-result
     max-height: 60vh
-    overflow: scroll
+    overflow: auto
     scrollbar-width: none
     scrollbar(0, 0)
-    border-radius: $border-card
+    border-radius: $border-bar
     &:empty
       display: none
     .search-result-list
       padding: 0
-      margin: 0
+      margin: 8px 0
       list-style-type: none
     li a
-        display: block
-        background: var(--alpha20)
-        line-height: 1.2
-        padding: 0.75rem 1rem
-        border-radius: $border-card
-        trans1 background
-        &:hover
-          background: var(--alpha100)
+      display: block
+      background: var(--alpha20)
+      line-height: 1.2
+      padding: 0.75rem 1rem
+      border-radius: $border-card-s
+      trans1 background
+      &:hover
+        background: var(--alpha100)
     li+li
-        margin-top: 8px
+      margin-top: 8px
     .search-result-title
       color: var(--text-p1)
       font-weight: 700

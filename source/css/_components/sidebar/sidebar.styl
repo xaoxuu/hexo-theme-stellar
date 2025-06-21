@@ -1,6 +1,6 @@
 .l_left
   margin: calc(var(--gap-margin) * 2) var(--gap-margin)
-  max-height: 'calc(%s - 80px)' % 100vh
+  max-height: 'calc(%s - %s * 2 - %s)' % (100vh var(--gap-margin) $leftbar-bottom-margin)
   border-radius: $border-card-l
   .header
     margin: var(--gap-max) var(--gap-margin) 0
@@ -44,7 +44,7 @@
       background: convert(hexo-config('style.leftbar.background'))
     
   .leftbar-container
-    height: 'calc(%s - 80px)' % 100vh
+    height: 'calc(%s - %s * 2 - %s)' % (100vh var(--gap-margin) $leftbar-bottom-margin)
     display: flex
     flex-direction: column
     word-break: break-all
@@ -52,7 +52,8 @@
     border-radius: $border-card-l
     overflow: hidden
     >.widgets
-      mask: linear-gradient(transparent, white, 10%, white, 90%, transparent)
+      border-radius: $border-bar
+      mask: linear-gradient(white, 90%, transparent)
     >*
       z-index 1
     &:before,&:after
