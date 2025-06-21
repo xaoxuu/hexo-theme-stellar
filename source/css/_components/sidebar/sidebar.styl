@@ -1,12 +1,12 @@
 .l_left
-  margin: 8px
-  max-height: 'calc(%s - 16px)' % 100vh
+  margin: calc(var(--gap-margin) * 2) var(--gap-margin)
+  max-height: 'calc(%s - 80px)' % 100vh
   border-radius: $border-card-l
   .header
     margin: var(--gap-max) var(--gap-margin) 0
 
 .l_right
-  margin: 8px
+  margin: calc(var(--gap-margin) * 2) 0
   border-radius: $border-card-l
 @media screen and (min-width: $device-2k)
   .l_left
