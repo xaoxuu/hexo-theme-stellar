@@ -14,7 +14,7 @@ module.exports = ctx => function(args) {
   if (args.api) {
     api = args.api
   } else if (args.repo) {
-    api = `${host}/${args.repo}/output/v2/data.json`
+    api = `https://${host}/${args.repo}/output/v2/data.json`
   }
   
   var el = `<div class="tag-plugin ${args.posts ? 'users-posts-wrap' : 'users-wrap'}">`

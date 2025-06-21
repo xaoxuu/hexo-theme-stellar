@@ -19,7 +19,7 @@ function layoutDiv() {
   el += `<widget class="widget-wrapper${scrollreveal(' ')} ghrepo">`
   // body
   el += '<div class="widget-body">';
-  el += '<div class="items ds-ghinfo" api="' + theme.api_host.ghapi + '/repos/' + repo + '">';
+  el += '<div class="items ds-ghinfo" api="https://' + theme.api_host.ghapi + '/repos/' + repo + '">';
   el += '<a class="repo" href="https://github.com/' + repo + '" target="_blank" rel="external nofollow noopener noreferrer">';
     el += '<div class="repo-name flex-row">';
       el += icon('github:repo')
@@ -35,7 +35,7 @@ function layoutDiv() {
         el += icon('github:fork')
         el += '<span type="text" id="forks_count"></span>';
       el += '</div>';
-      el += '<div class="flex-row ds-ghinfo" index="0" api="' + theme.api_host.ghapi + '/repos/' + repo + '/tags">';
+      el += '<div class="flex-row ds-ghinfo" index="0" api="https://' + theme.api_host.ghapi + '/repos/' + repo + '/tags">';
         el += icon('github:tag')
         el += '<span type="text" id="latest-tag-name">0</span>';
       el += '</div>';

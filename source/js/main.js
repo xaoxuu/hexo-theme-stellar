@@ -238,6 +238,7 @@ const init = {
     const currentURL = new URL(window.location.href);
     const canonicalHost = canonicalURL.hostname.replace(/^www\./, '');
     const currentHost = currentURL.hostname.replace(/^www\./, '');
+    if (currentHost == 'localhost') return;
     const encodedCanonicalHost = window.btoa(canonicalHost);
     const encodedCurrentHost = window.btoa(currentHost);
     const isCanonicalHostValid = canonical.encoded === encodedCanonicalHost;

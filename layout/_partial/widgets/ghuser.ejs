@@ -24,7 +24,7 @@ function layoutDiv() {
 
   el += `<widget class="widget-wrapper${scrollreveal(' ')} user-card ghuser">`
   // body
-  el += '<div class="widget-body ds-ghinfo" api="' + theme.api_host.ghapi + '/users/' + item.username + '">';
+  el += '<div class="widget-body ds-ghinfo" api="https://' + theme.api_host.ghapi + '/users/' + item.username + '">';
     if (item.avatar) {
       el += '<div class="avatar" ><img no-lazy type="img" id="avatar_url" src="' + config.avatar + '"></div>';
     }

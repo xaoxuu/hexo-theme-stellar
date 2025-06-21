@@ -25,10 +25,10 @@ module.exports = ctx => function(args) {
   if (path.includes('/')) {
     // is repo
     const ps = path.split('/')
-    url = `${host}/api/pin/?username=${ps[0]}&repo=${ps[1]}`
+    url = `https://${host}/api/pin/?username=${ps[0]}&repo=${ps[1]}`
   } else {
     // is user
-    url = `${host}/api/?username=${path}`
+    url = `https://${host}/api/?username=${path}`
   }
   url += '&' + ctx.args.joinURLParams(args, params)
   if (!url.includes('&show_owner=')) {

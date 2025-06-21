@@ -15,7 +15,7 @@ function layoutDiv() {
   if (repo == undefined) {
     return el;
   }
-  item.api = theme.api_host.ghapi + '/repos/' + repo + '/issues?per_page=' + item.limit;
+  item.api = `https://${theme.api_host.ghapi}/repos/${repo}/issues?per_page=${item.limit}`;
   if (item.labels) {
     item.api += '&labels=' + item.labels;
   }

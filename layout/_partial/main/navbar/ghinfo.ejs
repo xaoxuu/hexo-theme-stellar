@@ -5,7 +5,7 @@ function layoutDiv() {
     return ''
   }
   return `
-  <div class="right ghrepo ds-ghinfo" api="${theme.api_host.ghapi}/repos/${repo}">
+  <div class="right ghrepo ds-ghinfo" api="https://${theme.api_host.ghapi}/repos/${repo}">
     <a class="repo-link bold" href="https://github.com/${repo}">
       ${icon('github:repo')}
       <span type="text">${repo}</span>

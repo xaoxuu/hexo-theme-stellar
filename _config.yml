@@ -683,8 +683,8 @@ default:
 
 
 api_host:
-  ghapi: https://api.github.com
-  ghraw: https://raw.githubusercontent.com
-  gist: https://gist.github.com
+  ghapi: api.github.com
+  ghraw: raw.githubusercontent.com
+  gist: gist.github.com
   # https://github.com/anuraghazra/github-readme-stats
-  ghcard: https://github-readme-stats.vercel.app
+  ghcard: github-readme-stats.vercel.app
