@@ -1,16 +1,53 @@
-img.lazy
-  &:not(.loaded)
-    opacity: 0
-  &.loaded,&.error
-    opacity: 1
-  if hexo-config('plugins.lazyload.transition') == 'blur'
-    trans1 all 0.75s
-    &:not(.loaded)
-      filter blur(50px)
-      -webkit-filter blur(50px)
-    &.loaded,&.error
-      filter none
-      -webkit-filter none
-  else
-    trans1 all 0.38s
-    
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes blurIn {
+  from {
+    opacity: 0;
+    filter: blur(50px);
+    -webkit-filter: blur(50px);
+  }
+  to {
+    opacity: 1;
+    filter: none;
+    -webkit-filter: none;
+  }
+}
+
+img.lazy {
+  $LoadingImage = hexo-config('plugins.lazyload.loading_image')
+  $transitionType = hexo-config('plugins.lazyload.transition')
+
+  if $LoadingImage {
+    &.loading {
+      background: url($LoadingImage) no-repeat center center;
+      background-size: contain;
+    }
+  } else {
+    &.loading {
+      opacity: 0;
+    }
+  }
+
+  &.loaded {
+    opacity: 1;
+    animation: fadeIn 0.38s ease;
+
+    if $LoadingImage {
+      background: none;
+    }
+  }
+
+  if $transitionType == 'blur' {
+    &.loaded {
+      animation: blurIn 0.75s ease;
+    }
+  }
+
+  &.error {
+    opacity: 1;
+    background: none;
+  }
+}
