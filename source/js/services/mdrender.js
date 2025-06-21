@@ -3,7 +3,6 @@ utils.jq(() => {
   for (var i = 0; i < els.length; i++) {
     const el = els[i];
     const src = `${el.getAttribute('src')}?t=${new Date().getTime()}`;
-    console.log('src', src);
     
     utils.request(el, src, async resp => {
       const data = await resp.text();
