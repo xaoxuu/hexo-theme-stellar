@@ -92,11 +92,25 @@ function custom_inject() {
   return el;
 }
 
+function generate_canonical() {
+  const originalHost = theme.canonical.originalHost || '';
+  if (originalHost.length > 0) {
+    if (is_home()) {
+      return `<link rel="canonical" href="https://${originalHost}/">`;
+    } else if (page.path?.length > 0) {
+      const path = page.path.replace(/index\.html$/, '') || '/';
+      return `<link rel="canonical" href="https://${originalHost}/${path}">`;
+    }
+  }
+  return '';
+}
+
 %>
 
 <head>
   <meta charset="utf-8">
   <meta name="hexo-theme" content="<%- stellar_info('tree') %>" theme-name="<%- stellar_info('name') %>" theme-version="<%- stellar_info('version') %>">
+  <%- generate_canonical() %>
   <%- generate_robots() %>
   <%- meta_generator() %>
   <meta http-equiv='x-dns-prefetch-control' content='on' />
@@ -109,9 +123,6 @@ function custom_inject() {
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
-  <% if (theme.canonical.originalHost) { %>
-    <link rel="canonical" href="https://<%= theme.canonical.originalHost + "/" + page.path %>">
-  <% } %>
   <title><%- generate_title() %></title>
 
   <% if (theme.open_graph && theme.open_graph.enable) { %>
