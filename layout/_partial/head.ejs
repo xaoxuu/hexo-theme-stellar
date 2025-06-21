@@ -47,6 +47,10 @@ function generate_keywords() {
 }
 
 function generate_robots() {
+  const IS_BACKUP = process.env.IS_BACKUP === 'true';
+  if (IS_BACKUP) {
+    return '<meta name="robots" content="noindex, nofollow">';
+  }
   if (is_home() == true) {
     return '';
   }
@@ -105,7 +109,9 @@ function custom_inject() {
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
-  
+  <% if (theme.canonical.originalHost) { %>
+    <link rel="canonical" href="https://<%= theme.canonical.originalHost + "/" + page.path %>">
+  <% } %>
   <title><%- generate_title() %></title>
 
   <% if (theme.open_graph && theme.open_graph.enable) { %>

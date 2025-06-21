@@ -1,4 +1,13 @@
+<%
+  const canonical = theme.canonical || {}
+  const encoded = Buffer.from(canonical.originalHost || '').toString('base64');
+  const canonicalWithEncoded = Object.assign({}, canonical, {
+    encoded: encoded
+  });
+%>
+
 <script type="text/javascript">
+  window.canonical = <%- JSON.stringify(canonicalWithEncoded) %>;
   const ctx = {
     date_suffix: {
       just: `<%- __('meta.date_suffix.just') %>`,

@@ -200,6 +200,54 @@ const init = {
     window.dispatchEvent(new Event('tabs:register'));
   },
 
+  canonicalCheck: () => {
+    const canonical = window.canonical;
+    function showTip(isOfficial = false) {
+      const meta = document.createElement('meta');
+      meta.name = 'robots';
+      meta.content = 'noindex, nofollow';
+      document.head.appendChild(meta);
+      const notice = document.createElement('div');
+      const originalURL = `https://${canonical.originalHost}`;
+      if (isOfficial) {
+        notice.className = 'canonical-tip official';
+        notice.innerHTML = `
+        <a href="${originalURL}" target="_self" rel="noopener noreferrer">
+        本站为官方备用站，仅供应急。主站：${originalURL}
+        </a>
+        `;
+      } else {
+        notice.className = 'canonical-tip unofficial';
+        notice.innerHTML = `
+        <a href="${originalURL}" target="_self" rel="noopener noreferrer">
+        <div class="headline icon">☠️</div>
+        本站为非法克隆站，请前往官方源站访问。<br>
+        源站：${originalURL}
+        </a>
+        `;
+      }
+      document.body.appendChild(notice);
+    }
+    if (!canonical.originalHost) return;
+    const canonicalTag = document.querySelector('link[rel="canonical"]');
+    if (!canonicalTag) {
+      showTip(false);
+      return;
+    }
+    const canonicalURL = new URL(canonicalTag.href);
+    const currentURL = new URL(window.location.href);
+    const canonicalHost = canonicalURL.hostname.replace(/^www\./, '');
+    const currentHost = currentURL.hostname.replace(/^www\./, '');
+    const encodedCanonicalHost = window.btoa(canonicalHost);
+    const encodedCurrentHost = window.btoa(currentHost);
+    const isCanonicalHostValid = canonical.encoded === encodedCanonicalHost;
+    const isCurrentHostValid = canonical.encoded === encodedCurrentHost;
+    if (isCanonicalHostValid && isCurrentHostValid) {
+      return;
+    }
+    showTip(canonical.officialHosts?.includes(currentHost));
+  }
+
 }
 
 
@@ -208,3 +256,4 @@ init.toc()
 init.sidebar()
 init.relativeDate(document.querySelectorAll('#post-meta time'))
 init.registerTabsTag()
+init.canonicalCheck()

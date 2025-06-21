@@ -1,0 +1,32 @@
+.canonical-tip
+  position: fixed
+  text-align: center
+  bottom: 4rem
+  left: 50%
+  transform: translateX(-50%)
+  max-width: 90%
+  background-color: var(--block-hover)
+  color: var(--text-p1)
+  font-size: 1rem
+  font-family: #fff8e1
+  z-index: 9999999
+  box-shadow: 0 2px 8px rgba(black, .1), 0 4px 16px rgba(black, .1), 0 8px 32px rgba(black, .1)
+  border-radius: 6px
+  .headline
+    font-size: $fsh2
+  a
+    display: block
+    color: inherit
+    padding: 1rem 2rem
+
+.canonical-tip.unofficial
+  background-color: hsl(5, 100%, 60%)
+  color: white
+  animation: breathe 3s ease-in-out infinite
+  @keyframes breathe
+    0%
+      background-color: hsl(5, 100%, 60%)
+    50%
+      background-color: hsl(5, 100%, 30%)
+    100%
+      background-color: hsl(5, 100%, 60%)
