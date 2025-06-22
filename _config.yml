@@ -312,10 +312,10 @@ comments:
   # Artalk
   # https://artalk.js.org/
   artalk:
-    css: https://unpkg.com/artalk@2.8/dist/Artalk.css
-    js: https://unpkg.com/artalk@2.8/dist/Artalk.js
+    css: https://unpkg.com/artalk@2.9/dist/Artalk.css
+    js: https://unpkg.com/artalk@2.9/dist/Artalk.js
     server: # 后端服务地址
-    placeholder: ''
+    site: '' # 站点名称
     darkMode: auto
 
 

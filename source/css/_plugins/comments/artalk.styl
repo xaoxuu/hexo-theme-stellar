@@ -1,4 +1,80 @@
 .cmt-body.artalk .artalk
   --at-color-main: $color-theme
+  --at-color-meta: var(--text-p3)
+  margin-top: 1rem
   .atk-main-editor
     border-radius: $border-card
+    >.atk-header
+      border-bottom: 1px dashed var(--block-border)
+      padding: 0.5rem 1rem
+    >.atk-bottom 
+      .atk-plug-btn
+        border-radius: 32px
+        height: 2rem
+        width 2rem
+      .atk-send-btn
+        height: 2rem
+        border-radius: $border-button
+        min-width: 5em
+        trans1 all
+        &:hover
+          --at-color-main: $color-hover
+  .atk-list-comments-wrap>.atk-comment-wrap
+    border-radius: $border-card
+    background: var(--card)
+    >.atk-comment
+      padding: 1rem
+    &+.atk-comment-wrap
+      margin-top: .5rem
+  .atk-comment-children
+    border-top: 1px dashed var(--block-border)
+    margin-top: .5rem
+  .atk-avatar
+    padding: 0
+  .atk-avatar img
+    border-radius: 50%
+    width: 36px
+    height: 36px
+  .atk-comment-wrap>.atk-comment>.atk-main
+    margin-left: calc(36px + 1rem)
+  .atk-comment>.atk-main>.atk-header .atk-item.atk-nick
+    color: var(--text-p3)
+    font-weight: 500
+      
+
+
+  .atk-height-limit-btn
+    padding: 0.5rem 2rem
+  .atk-list-read-more 
+    margin-top: 2.5rem
+    padding-bottom: 1.5rem
+    .atk-list-read-more-inner
+      padding: 1rem 2rem
+      border-radius: $border-button
+      height: 3rem
+      width: 12rem
+      margin: -1.5rem auto 0
+
+.atk-comment>.atk-avatar
+
+// override
+.md-text .cmt-body.artalk .artalk
+  --gap-p: 1rem
+  p
+    line-height: 1.5
+    font-size: $fs-15
+    img
+      margin: var(--gap-p) auto
+  p>img[atk-emoticon]
+    max-height: 2em
+    margin: 0 auto
+    vertical-align: bottom
+  ul li, ol li
+    font-size: $fs-14
+  blockquote
+    position: relative
+    border-left: none
+    background: none
+    padding: 0.25rem 1rem
+    p
+      color: var(--text-p3)
