@@ -508,6 +508,7 @@ plugins:
     enable: true # [hexo clean && hexo s] is required after changing this value.
     js: https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js
     transition: fade # blur, fade
+    loading_image: null
 
   # https://fancyapps.com/docs/ui/fancybox/
   # available for {% image xxx %}
