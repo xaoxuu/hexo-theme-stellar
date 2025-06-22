@@ -21,8 +21,10 @@
     "url": "https://github.com/xaoxuu/hexo-theme-stellar/issues/"
   },
   "dependencies": {
+    "cheerio": "^1.1.0",
     "hexo-renderer-ejs": "^2.0.0",
-    "hexo-renderer-stylus": "^3.0.1"
+    "hexo-renderer-stylus": "^3.0.1",
+    "probe-image-size": "^7.2.3"
   },
   "homepage": "https://xaoxuu.com/wiki/stellar/",
   "devDependencies": {

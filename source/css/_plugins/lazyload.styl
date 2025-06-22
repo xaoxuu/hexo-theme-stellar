@@ -1,53 +1,64 @@
-@keyframes fadeIn {
+$lazyTransitionType = hexo-config('plugins.lazyload.transition')
+$loadingImage = hexo-config('plugins.lazyload.loading_image.src')
+$loadingImageWidth = convert(hexo-config('plugins.lazyload.loading_image.width'))
+$loadingImageHeight = convert(hexo-config('plugins.lazyload.loading_image.height'))
+
+img.lazy
+  &:not(.loaded)
+    opacity: 0
+  &.loaded,&.error
+    opacity: 1
+  if $lazyTransitionType == 'blur'
+    trans1 all 0.75s
+    &:not(.loaded)
+      filter blur(50px)
+      -webkit-filter blur(50px)
+    &.loaded,&.error
+      filter none
+      -webkit-filter none
+  else
+    trans1 all 0.38s
+
+
+@keyframes fadeIn
   from { opacity: 0; }
   to { opacity: 1; }
-}
 
-@keyframes blurIn {
-  from {
-    opacity: 0;
-    filter: blur(50px);
-    -webkit-filter: blur(50px);
-  }
-  to {
-    opacity: 1;
-    filter: none;
-    -webkit-filter: none;
-  }
-}
+@keyframes blurIn
+  from
+    opacity: 0
+    filter: blur(50px)
+    -webkit-filter: blur(50px)
+  to
+    opacity: 1
+    filter: blur(0px)
+    -webkit-filter: blur(0px)
 
-img.lazy {
-  $LoadingImage = hexo-config('plugins.lazyload.loading_image')
-  $transitionType = hexo-config('plugins.lazyload.transition')
+article img.lazy
+  &:not(.loaded)
+    opacity: 1
+  &.loading
+    border-radius: 4px
+    width: $loadingImageWidth !important
+    height: $loadingImageHeight
+    background-size: contain
+    filter none
+    transition: none
+  if $loadingImage
+    &.loading
+      background: url($loadingImage) no-repeat center center
+  else
+    &.loading
+      background: url($loadingIcon) no-repeat center center
 
-  if $LoadingImage {
-    &.loading {
-      background: url($LoadingImage) no-repeat center center;
-      background-size: contain;
-    }
-  } else {
-    &.loading {
-      opacity: 0;
-    }
-  }
+  &.loaded
+    animation: fadeIn 0.38s ease-out
+    if $loadingImage
+      background: none
+  if $lazyTransitionType == 'blur'
+    &.loaded
+      animation: blurIn .75s ease-out
 
-  &.loaded {
-    opacity: 1;
-    animation: fadeIn 0.38s ease;
+  &.error
+    background: none
 
-    if $LoadingImage {
-      background: none;
-    }
-  }
-
-  if $transitionType == 'blur' {
-    &.loaded {
-      animation: blurIn 0.75s ease;
-    }
-  }
-
-  &.error {
-    opacity: 1;
-    background: none;
-  }
-}

@@ -6,6 +6,9 @@
     border-radius: $border-image
     position: relative
     overflow: hidden
+    display: flex
+    &:has(img.lazy.loading)
+      background: var(--block)
     &:hover
       .image-download
         opacity: 1 !important

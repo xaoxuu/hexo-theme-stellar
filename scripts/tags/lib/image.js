@@ -7,6 +7,9 @@
 
 'use strict'
 
+
+var image_id = 1
+
 module.exports = ctx => function(args) {
   args = ctx.args.map(args, ['width', 'height', 'bg', 'download', 'padding', 'fancybox'], ['src', 'alt'])
   var style = ''
@@ -39,7 +42,7 @@ module.exports = ctx => function(args) {
 
   function img(src, alt, style) {
     let img = ''
-    img += '<img src="' + src + '"'
+    img += `<img src="${src}" data-src="${src}"`
     let a = '<a data-fancybox'
     if (alt) {
       img += ' alt="' + alt + '"'
@@ -65,7 +68,7 @@ module.exports = ctx => function(args) {
   // wrap
   el += '<div class="tag-plugin image">'
   // bg
-  el += '<div class="image-bg"'
+  el += `<div class="image-bg" lazy-id="${image_id++}"`
   if (args.bg || args.padding) {
     el += ' style="'
     if (args.bg && args.bg.length > 0) {

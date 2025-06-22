@@ -488,7 +488,7 @@ data_services:
 
 
 # 扩展插件接入方法：(插件名下面用 #plugin# 代替)
-# 1. 在这里增加 #plugin# 配置，至少赢含有 enable 字段，默认为空（不启用）
+# 1. 在这里增加 #plugin# 配置，至少应含有 enable 字段，默认为空（不启用）
 # 2. 新建文件 layout/_plugins/#plugin#.ejs 文件中设置编写加载代码。
 # 2.1. 在该文件中可以直接使用 conf 来读取用户在【步骤 1】填写的配置字段内容
 # 2.2. 如果需要引入 css 或 js，可以使用 utils.css(xxx)、utils.js(xxx)，具体可参考 layout/_plugins/fancybox.ejs
@@ -508,7 +508,12 @@ plugins:
     enable: true # [hexo clean && hexo s] is required after changing this value.
     js: https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js
     transition: fade # blur, fade
-    loading_image: null
+    # TODO: 宽高比获取到后修改md源文件，这样后续就不用每次重复获取了
+    fix_ratio: true # true / false # 是否固定宽高比，true 时会在图片上添加 style="aspect-ratio: 16/9;"，false 时则不添加，开启此功能会导致增加 generate 耗时
+    loading_image:
+      src: # https://github.githubassets.com/images/mona-loading-dark.gif
+      width: 3rem # 图片宽度
+      height: 3rem # 图片高度
 
   # https://fancyapps.com/docs/ui/fancybox/
   # available for {% image xxx %}

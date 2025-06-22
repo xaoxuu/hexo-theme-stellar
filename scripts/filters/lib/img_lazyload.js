@@ -41,8 +41,8 @@ function lazyProcess(htmlContent) {
       }
     });
     // 加载图
-    const loadingImage = cfg.loading_image || 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
-    newImgTag = newImgTag.replace(src_value, loadingImage + '" data-src="' + src_value);
+    const loadingImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=';
+    newImgTag = newImgTag.replace(src_value, loadingImg + '" data-src="' + src_value);
     return newImgTag;
   });
 }
