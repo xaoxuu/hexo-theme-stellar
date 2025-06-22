@@ -6,12 +6,12 @@
       document.documentElement.setAttribute('data-theme', theme)
     }
 
-    applyThemeToGiscus(theme)
+    // applyThemeToGiscus(theme)
   }
 
+  // FIXME: 这会导致无法使用 preferred_color_scheme 以外的主题
   const applyThemeToGiscus = (theme) => {
-    theme = theme === 'auto' ? 'preferred_color_scheme' : theme
-
+    // theme = theme === 'auto' ? 'preferred_color_scheme' : theme
     const cmt = document.getElementById('giscus')
     if (cmt) {
       // This works before giscus load.
