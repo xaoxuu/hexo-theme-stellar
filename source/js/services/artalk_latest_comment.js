@@ -10,7 +10,7 @@ utils.jq(() => {
           continue;
         }
         utils.request(el, api, async resp => {
-          const data = await resp.json();
+          var data = await resp.json();
           data = data.data || [];
           data.forEach((item, i) => {
             var cell = '<div class="timenode" index="' + i + '">';
