@@ -83,7 +83,11 @@ hexo.extend.helper.register('json_ld', function(args) {
     };
 
     if (config.keywords && config.keywords.length) {
-      schema.keywords = config.keywords.join(', ');
+      if (Array.isArray(args)) {
+        schema.keywords = config.keywords.join(', ');
+      } else {
+        schema.keywords = config.keywords;
+      }
     }
     if (!this.is_home()) {
 
