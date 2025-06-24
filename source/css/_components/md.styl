@@ -75,9 +75,11 @@
 
 // 图片样式
 .md-text img
-  border-radius: $border-image
   margin: auto
   display: block
+.md-text.content 
+  p>img, .tag-plugin.image .image-bg
+    border-radius: $border-image
 
 // 链接样式
 li:not([class]) a:not([class])

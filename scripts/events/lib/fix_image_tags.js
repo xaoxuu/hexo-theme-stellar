@@ -3,7 +3,7 @@ const path = require('path');
 const glob = require('glob');
 
 module.exports = (ctx, options) => {
-  const mdFiles = glob.sync('source/_posts/**/*.md');
+  const mdFiles = glob.sync('source/**/*.md');
 
   const ratioMapPath = path.join(__dirname, '../../.cache/image-ratios.json');
   if (!fs.existsSync(ratioMapPath)) {

@@ -48,7 +48,7 @@ module.exports = async (ctx, options) => {
     ctx.log.info('正在获取图片长宽比。首次可能耗时较久，请耐心等待...');
   }
 
-  const mdFiles = glob.sync('source/_posts/**/*.md');
+  const mdFiles = glob.sync('source/**/*.md');
 
   for (const file of mdFiles) {
     const relative = path.relative(process.cwd(), file);

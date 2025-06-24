@@ -48,9 +48,10 @@ module.exports = ctx => function(args) {
     if (fancybox && !fancyboxHref) {
       img += ` data-fancybox="${fancybox}"`
     }
-    if (style.length > 0) {
+    if (style.length > 0 && !args.ratio) {
       img += ' style="' + style + '"'
     }
+    img += `onerror="this.src=&quot;${ctx.theme.config.default.image_onerror}&quot;"`
     img += '/>'
 
     if (fancyboxHref) {
@@ -66,7 +67,7 @@ module.exports = ctx => function(args) {
   el += '<div class="tag-plugin image">'
   // bg
   el += `<div class="image-bg"`
-  if (args.bg || args.padding || args.ratio) {
+  if (args.bg || args.padding || args.ratio || style) {
     el += ' style="'
     if (args.bg && args.bg.length > 0) {
       el += 'background:' + args.bg + ';'
@@ -76,6 +77,12 @@ module.exports = ctx => function(args) {
     }
     if (args.ratio) {
       el += 'aspect-ratio:' + args.ratio + ';'
+      if (style) {
+        el += style
+      }
+    } else if (style) {
+      // 如果设置了图片宽度，但没有长宽比，那背景区就要铺满宽度
+      el += 'width:100%;'
     }
     el += '"'
   }

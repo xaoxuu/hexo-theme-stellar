@@ -96,6 +96,8 @@
     img  
       width: 100%
       height: 100%
+      &.loading
+        background-size: convert(hexo-config('plugins.lazyload.loading_image.size'))
 
 // 瀑布流布局
 .tag-plugin.gallery.flow-box
@@ -107,6 +109,10 @@
     img  
       width: 100%
       height: 100%
+      border-radius: 8px
+    &:has(img.loading),&:has(img.error)
+      img
+        background-color: var(--block)
   .image-meta
     border-radius: 8px
     margin-bottom: 8px

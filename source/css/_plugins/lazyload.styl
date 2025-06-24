@@ -1,7 +1,6 @@
 $lazyTransitionType = hexo-config('plugins.lazyload.transition')
 $loadingImage = hexo-config('plugins.lazyload.loading_image.src')
-$loadingImageWidth = convert(hexo-config('plugins.lazyload.loading_image.width'))
-$loadingImageHeight = convert(hexo-config('plugins.lazyload.loading_image.height'))
+$loadingImageSize = convert(hexo-config('plugins.lazyload.loading_image.size'))
 
 img.lazy
   &:not(.loaded)
@@ -37,19 +36,17 @@ img.lazy
 article img.lazy
   &:not(.loaded)
     opacity: 1
-  &.loading
     border-radius: 4px
-    width: $loadingImageWidth !important
-    height: $loadingImageHeight
-    background-size: contain
     filter none
     transition: none
   if $loadingImage
     &.loading
-      background: url($loadingImage) no-repeat center center
+      background: url($loadingImage) center center / $loadingImageSize no-repeat
   else
     &.loading
-      background: url($loadingIcon) no-repeat center center
+      background: url($loadingIcon) center center / $loadingImageSize no-repeat
+      min-width: $loadingImageSize
+      min-height: $loadingImageSize
 
   &.loaded
     animation: fadeIn 0.38s ease-out
@@ -61,4 +58,6 @@ article img.lazy
 
   &.error
     background: none
+    min-width: $loadingImageSize
+    min-height: $loadingImageSize
 
