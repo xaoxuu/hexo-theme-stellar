@@ -134,7 +134,7 @@ hoverable-card()
       ondark()
 
 newblur()
-  box-shadow: 0 0 2px rgba(black, .02), 0 2px 8px rgba(black, .03), 0 4px 16px rgba(black, .05)
+  box-shadow: 0 0 2px rgba(black, .04), 0 2px 8px rgba(black, .04), 0 4px 16px rgba(black, .04)
   trans1: all
   &:before,&:after
     z-index -1
@@ -148,12 +148,13 @@ newblur()
     border-radius: 64px
   &:before
     backdrop-filter: blur(8px)
-  &:after
-    --blur-px: 32px
-    --blur-sat: 500%
     background: var(--alpha20)
+  &:after
+    --blur-px: 24px
+    --blur-sat: 500%
+    background: var(--alpha50)
     backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
-    mask: linear-gradient(rgba(white, 1), 10%, rgba(white, 0.1), 90%, rgba(white, 1)), linear-gradient(90deg, rgba(white, 1), 10%, rgba(white, 0.1), 90%, rgba(white, 1))
+    mask: linear-gradient(rgba(white, 1), 10%, rgba(white, 0.05), 90%, rgba(white, 1)), linear-gradient(90deg, rgba(white, 1), 10%, rgba(white, 0.05), 90%, rgba(white, 1))
     box-shadow: inset 0 0 4px 1px rgba(white, 0.5)
     trans1 all
     @media (prefers-color-scheme: dark)
