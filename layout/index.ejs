@@ -22,8 +22,6 @@ function layout_post_list(partial) {
   var el = '';
   el += '<div class="post-list post">';
   page.posts.each(function(post){
-    console.log('indexing', post.indexing);
-    
     if (post.indexing != false) {
       el += layout_post_card('post', post, partial(post));
     }
