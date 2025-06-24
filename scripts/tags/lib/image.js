@@ -2,16 +2,13 @@
  * image.js v1 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
- * {% image src [alt] [width:400px] [bg:#eee] [download:true/false/url] [fancybox:true/false/url] %}
+ * {% image src [alt] [width:400px] [bg:#eee] [download:true/false/url] [fancybox:true/false/url] [ratio] %}
  */
 
 'use strict'
 
-
-var image_id = 1
-
 module.exports = ctx => function(args) {
-  args = ctx.args.map(args, ['width', 'height', 'bg', 'download', 'padding', 'fancybox'], ['src', 'alt'])
+  args = ctx.args.map(args, ['width', 'height', 'bg', 'download', 'padding', 'fancybox', 'ratio'], ['src', 'alt'])
   var style = ''
   if (args.width) {
     style += 'width:' + args.width + ';'
@@ -68,14 +65,17 @@ module.exports = ctx => function(args) {
   // wrap
   el += '<div class="tag-plugin image">'
   // bg
-  el += `<div class="image-bg" lazy-id="${image_id++}"`
-  if (args.bg || args.padding) {
+  el += `<div class="image-bg"`
+  if (args.bg || args.padding || args.ratio) {
     el += ' style="'
     if (args.bg && args.bg.length > 0) {
       el += 'background:' + args.bg + ';'
     }
     if (args.padding) {
       el += 'padding:' + args.padding + ';'
+    }
+    if (args.ratio) {
+      el += 'aspect-ratio:' + args.ratio + ';'
     }
     el += '"'
   }

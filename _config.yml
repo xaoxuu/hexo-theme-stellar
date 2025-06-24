@@ -508,8 +508,7 @@ plugins:
     enable: true # [hexo clean && hexo s] is required after changing this value.
     js: https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js
     transition: fade # blur, fade
-    # TODO: 宽高比获取到后修改md源文件，这样后续就不用每次重复获取了
-    fix_ratio: true # true / false # 是否固定宽高比，true 时会在图片上添加 style="aspect-ratio: 16/9;"，false 时则不添加，开启此功能会导致增加 generate 耗时
+    fix_ratio: true # true / false # 是否固定宽高比，true 时会在图片上添加 style="aspect-ratio: 16/9;"，false 时则不添加，开启此功能会导致增加首次 hexo s 的耗时
     loading_image:
       src: # https://github.githubassets.com/images/mona-loading-dark.gif
       width: 3rem # 图片宽度
