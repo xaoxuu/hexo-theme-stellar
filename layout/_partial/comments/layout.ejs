@@ -1,6 +1,6 @@
 <%
 var cmt = {
-  service: theme.comments.service
+  service: page.comments_service || theme.comments.service
 };
 if (cmt.service) {
   cmt[cmt.service] = Object.assign({}, theme.comments[cmt.service]);

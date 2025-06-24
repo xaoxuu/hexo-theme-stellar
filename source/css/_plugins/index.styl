@@ -20,13 +20,13 @@ if hexo-config('plugins.katex.enable')
   @import 'katex'
 
 // 评论
-if hexo-config('comments.service') == 'beaudar'
+if hexo-config('comments.service') == 'beaudar' or index(hexo-config('comments.custom_css'), 'beaudar') >= 0
   @import 'comments/beaudar'
-if hexo-config('comments.service') == 'twikoo'
+if hexo-config('comments.service') == 'twikoo' or index(hexo-config('comments.custom_css'), 'twikoo') >= 0
   @import 'comments/twikoo'
-if hexo-config('comments.service') == 'utterances'
+if hexo-config('comments.service') == 'utterances' or index(hexo-config('comments.custom_css'), 'utterances') >= 0
   @import 'comments/utterances'
-if hexo-config('comments.service') == 'waline'
+if hexo-config('comments.service') == 'waline' or index(hexo-config('comments.custom_css'), 'waline') >= 0
   @import 'comments/waline'
-if hexo-config('comments.service') == 'artalk'
+if hexo-config('comments.service') == 'artalk' or index(hexo-config('comments.custom_css'), 'artalk') >= 0
   @import 'comments/artalk'
