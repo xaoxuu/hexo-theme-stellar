@@ -120,13 +120,16 @@
       right: 0
       height: var(--blur-height)
       backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
+      -webkit-backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
       trans1 all
     &[position=top]:before
       top: 0
       mask: linear-gradient(black, rgba(black, 0.75), transparent)
+      -webkit-mask: linear-gradient(black, rgba(black, 0.75), transparent)
     &[position=bottom]:before
       bottom: 0
       mask: linear-gradient(transparent, rgba(black, 0.75), black)
+      -webkit-mask: linear-gradient(transparent, rgba(black, 0.75), black)
     .cover-info
       padding: 1.5rem 1rem
       position: absolute

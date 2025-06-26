@@ -8,7 +8,9 @@ if (['post', 'page', 'wiki', null].includes(page.layout)) {
 }
 // 文章类型：技术类文章/文学类文章
 var article_type = theme.article.type
-if (page.type?.length > 0) {
+if (page_type == 'index') {
+  article_type = undefined
+} else if (page.type?.length > 0) {
   article_type = page.type
 } else if (theme.topic.tree[page.topic]?.type != null) {
   article_type = theme.topic.tree[page.topic]?.type

@@ -54,6 +54,7 @@
     >.widgets
       border-radius: $border-bar
       mask: linear-gradient(white, 90%, transparent)
+      -webkit-mask: linear-gradient(white, 90%, transparent)
     >*
       z-index 1
     &:before,&:after
@@ -70,7 +71,9 @@
         background: rgba(white, 0.5)
         box-shadow: inset 0 0 32px 1px rgba(white, 0.5)
         backdrop-filter: saturate(300%)
+        -webkit-backdrop-filter: saturate(300%)
         mask: linear-gradient(black, rgba(black, 0.5), 70%, transparent, 90%, transparent)
+        -webkit-mask: linear-gradient(black, rgba(black, 0.5), 70%, transparent, 90%, transparent)
 
       @media screen and (prefers-color-scheme: dark)
         background: rgba(white, 0.05)

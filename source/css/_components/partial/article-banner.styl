@@ -49,18 +49,21 @@
       position: absolute
       z-index 0
       left: 0
-      width: 100%
+      right: 0
       backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
+      -webkit-backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
       trans1 all
       opacity var(--blur-opacity)
     &:before
       top: 0
       height: var(--blur-height-top)
       mask: linear-gradient(black, rgba(black, 0.75), transparent)
+      -webkit-mask: linear-gradient(black, rgba(black, 0.75), transparent)
     &:after
       bottom: 0
       height: var(--blur-height-bottom)
       mask: linear-gradient(transparent, rgba(black, 0.75), black)
+      -webkit-mask: linear-gradient(transparent, rgba(black, 0.75), black)
     .top,.bottom
       z-index 1
   
