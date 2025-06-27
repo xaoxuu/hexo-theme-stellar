@@ -18,7 +18,7 @@ function layoutNodeTitle(ctx, content) {
   var el = ''
   el += '<div class="header">'
   if (content && content.length > 0) {
-    el += content
+    el += `<span>${content}</span>`
   }
   el += '</div>'
   return el
