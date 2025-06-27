@@ -4,9 +4,12 @@
     scrollbar(0, 0)
   .atk-main-editor
     border-radius: $border-card
-    >.atk-header,>.atk-editor-user-wrap
+    .atk-header,.atk-editor-user-wrap
       border-bottom: 1px dashed var(--block-border)
       padding: 0.5rem 1rem
+    .atk-editor-user-wrap:empty
+      visibility: hidden
+      padding: 0
     >.atk-bottom 
       padding: 8px
       .atk-plug-btn
@@ -15,7 +18,7 @@
         width 2rem
       .atk-send-btn
         height: 2rem
-        border-radius: $border-button
+        border-radius: 100px
         min-width: 5em
         trans1 all
         &:hover
@@ -45,8 +48,8 @@
     color: var(--text-p3)
     font-weight: 500
 
-  .atk-badge-wrap .atk-badge
-    border-radius: 64px
+  .atk-badge-wrap span
+    border-radius: 100px
   .atk-height-limit-btn
     padding: 0.5rem 2rem
   .atk-list-read-more 
@@ -78,7 +81,7 @@
     --at-color-main: $color-theme
     --at-color-red: $c-red
     --at-color-green: $c-green
-    --at-color-gradient: linear-gradient(180deg, transparent, var(--card), 90%, var(--card))
+    --at-color-gradient: linear-gradient(180deg, transparent, var(--card), 50%, var(--card))
 
 .md-text .atk-comment>.atk-main>.atk-body
   overflow: visible
@@ -90,13 +93,15 @@
   p
     line-height: 1.5
     font-size: $fs-15
-    img
+    >img
       margin: var(--gap-p) auto
       border-radius: $border-image-s
+  a>img
+    display: inline
   p>img[atk-emoticon]
     max-height: 1.5em
-    transform: scale(1.5)
-    margin: 0 2px
+    transform: scale(1.2)
+    margin: 0 4px
     vertical-align: bottom
   ul li, ol li
     font-size: $fs-14
