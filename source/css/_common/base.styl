@@ -41,15 +41,18 @@ table:not([class])
   vertical-align: text-top
   --fsp: $fsp2
   font-size: var(--fsp)
+  scrollbar(0,0)
   th
     background: var(--block)
+    border-top: 1px solid var(--block-border)
+    border-bottom: 1px solid var(--block-border)
   td,th
     padding: 0.5em 1em
-    border: 1px solid var(--block-border)
     line-height: 1.5
   tr
     word-break: keep-all
     white-space:nowrap
+    border-bottom: 1px dashed var(--block-border)
     trans()
     &:hover
       background: var(--block)
