@@ -89,3 +89,10 @@ welcome:
   title: 欢迎，旅行者：
   content: |
     天各一方，终相见。喜欢的话请到评论区交流吧~
+
+explore:
+  layout: markdown
+  title: 探索者笔记
+  content: |
+    [探索者笔记](/explore/index/)
+    [Top 10 音乐](/explore/music/)
