@@ -9,11 +9,12 @@
   width: 100%
   min-width: 200px
   span
-    line-height: 3
-    padding: 0 1rem
-    background: var(--block)
-    border-right: 1px solid var(--block-border)
-    color: var(--text-p3)
+    padding: .25rem .5rem
+    margin: auto .5rem
+    line-height: 1
+    border-radius: 4px
+    background: hsla($color-theme, 0.2)
+    color: $color-theme
     font-family: $ff-code
     font-size: $fs-13
     font-weight: 700
@@ -25,11 +26,14 @@
     color: var(--text-p2)
     line-height: 3
     text-indent: 1rem
+  span+input.copy-area
+    text-indent: 0
   button.copy-btn
-    margin: 2px
+    margin: 2px 2px 2px 0
     border-radius: 'calc(%s - 2px)' % $border-bar
     display: inline-block
-    background: none
+    background: var(--block)
+    trans1 all
     line-height: 0
     font-size: 1rem
     padding: 0 .75rem

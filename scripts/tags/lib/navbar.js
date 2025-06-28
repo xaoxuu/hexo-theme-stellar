@@ -18,7 +18,7 @@ module.exports = ctx => function(args) {
   if (args.links) {
     args.links = args.links.split(' ')
   }
-  var el = `<div class="tag-plugin navbar"><nav>`
+  var el = `<div class="tag-plugin navbar">`
   for (let link of args.links) {
     const matches = link.match(/\[(.*?)\]\((.*?)\)/i)
     if (matches?.length > 2) {
@@ -33,6 +33,6 @@ module.exports = ctx => function(args) {
       el += `<a class="link" href="#${link}">${link}</a>`
     }
   }
-  el += `</nav></div>`
+  el += `</div>`
   return el
 }

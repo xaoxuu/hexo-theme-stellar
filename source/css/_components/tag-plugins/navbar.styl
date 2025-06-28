@@ -1,9 +1,19 @@
 .tag-plugin.navbar
-  padding: 0
-  &:after
-    left: 0
-    right: 0
-
-@media screen and (min-width: $device-mobile-max)
-  .tag-plugin.navbar nav a
-    margin-top: 2px
+  display: inline-flex
+  background: var(--card)
+  border-radius: $border-button
+  z-index inherit
+  box-shadow: 0 0 8px hsla(black, 0.04)
+  a
+    box-sizing: border-box
+    padding: .25rem 1rem
+    margin: 2px
+    color: inherit
+    border-radius: 'calc(%s - 1px)' % $border-button
+    trans1 all
+    &+a
+      margin-left: 0
+    &.active
+      background: var(--block)
+    &:hover
+      background: var(--block)
