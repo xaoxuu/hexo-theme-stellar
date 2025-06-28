@@ -82,38 +82,7 @@
     margin: 2em 0 1.5em
     >a:first-child
       display: none
-  // 修正缩进效果
-  >blockquote,.tag-plugin.quote
-    text-align: center
-    --inset: calc(var(--fsp) * 2)
-    margin-left: var(--inset)
-    margin-right: var(--inset)
-    background: var(--block)
-    padding: 1rem 2rem
-    border-radius: $border-card
-    &:before,&:after
-      position: absolute
-      font-size: 2rem
-      background-color: hsla($color-theme, 0.25)
-      top: -0.3em
-      width: 1em
-      height: 1em
-      content: ''
-      opacity 1
-      trans1 all
-    &:before
-      left: -0.3em
-      svg-mask-icon($iQuoteLeft)
-    &:after
-      right: -0.3em
-      svg-mask-icon($iQuoteRight)
-    p:not([class])
-      color: var(--text-p2)
-      font-size: $fs-body
-      text-indent: 2em
-    &:hover
-      &:before,&:after
-        background-color: hsla($color-theme, 0.5)
+
   // 取消缩进效果
   .poetry, .okr, .timeline, li, .article-footer
     p:not([class])
@@ -122,6 +91,39 @@
 
   p>img, .tag-plugin.image .image-bg
     border-radius: $border-image-l
+
+
+.l_body[type=story] .md-text.content>blockquote, .md-text.content .tag-plugin.blockquote
+  text-align: center
+  --inset: calc(var(--fsp) * 2)
+  margin-left: var(--inset)
+  margin-right: var(--inset)
+  background: var(--block)
+  padding: 1rem 2rem
+  border-radius: $border-card
+  &:before,&:after
+    position: absolute
+    font-size: 2rem
+    background-color: hsla($color-theme, 0.25)
+    top: -0.3em
+    width: 1em
+    height: 1em
+    content: ''
+    opacity 1
+    trans1 all
+  &:before
+    left: -0.3em
+    svg-mask-icon($iQuoteLeft)
+  &:after
+    right: -0.3em
+    svg-mask-icon($iQuoteRight)
+  p:not([class])
+    color: var(--text-p2)
+    font-size: $fs-body
+    text-indent: 2em
+  &:hover
+    &:before,&:after
+      background-color: hsla($color-theme, 0.5)
 
 
 .l_body[type=story] .article.banner .content .bottom.only-title
