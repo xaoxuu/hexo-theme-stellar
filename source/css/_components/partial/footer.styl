@@ -10,24 +10,19 @@
       background: var(--block-border)
 
 .page-footer .sitemap
-  margin: .5rem -4px 2rem
-  display: grid
-  scrollbar-width: none
+  margin: .5rem -4px
   grid-gap: 1rem 1rem
-  grid-auto-flow: column dense
-  // grid-template-columns: repeat(auto-fill, minmax(80px, 1fr))
-  grid-template-columns: repeat(4, 1fr)
-  overflow: scroll
   scrollbar(0, 0)
-
+  column-count: 4
 
 .page-footer .sitemap .sitemap-group
+  break-inside: avoid
   display: flex
   flex-direction: column
   align-items: flex-start
+  padding-bottom: 1rem
   >span,>a
     text-decoration: none
-    txt-ellipsis()
     padding: 4px
   >span
     font-weight: 500
@@ -36,6 +31,7 @@
 
 
 .page-footer .text
+  margin-top: .5rem
   p
     margin: 4px 0
     line-height: 1.5

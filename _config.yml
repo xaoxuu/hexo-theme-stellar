@@ -334,19 +334,30 @@ footer:
     #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/942ebbf1a4b91.svg"/>'
     #   url: /about/#comments
   sitemap:
-    # '博客':
-    #   - '[近期](/)'
-    #   - '[分类](/)'
-    #   - '[标签](/)'
-    #   - '[归档](/)'
-    # '项目':
-    #   - '[开源库](/)'
-    # '社交':
-    #   - '[友链](/)'
-    #   - '[留言板](/)'
-    # '更多':
-    #   - '[关于本站](/)'
-    #   - '[GitHub](/)'
+    # - title: 博客
+    #   items:
+    #     - '[近期发布](/)'
+    #     - '[分类](/blog/categories/)'
+    #     - '[标签](/blog/tags/)'
+    #     - '[归档](/blog/archives/)'
+    # - title: 项目
+    #   items:
+    #     - '[xxx](/)'
+    #     - '[xxx](/)'
+    #     - '[xxx](/)'
+    #     - '[xxx](/)'
+    # - title: 社交
+    #   items:
+    #     - '[xxx](/)'
+    #     - '[xxx](/)'
+    #     - '[xxx](/)'
+    #     - '[xxx](/)'
+    # - title: 关于
+    #   items:
+    #     - '[xxx](/)'
+    #     - '[xxx](/)'
+    #     - '[xxx](/)'
+    #     - '[xxx](/)'
   content: | # 支持 Markdown 格式
     本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。
     本博客所有文章除特别声明外，均采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。
