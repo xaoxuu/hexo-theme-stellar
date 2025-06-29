@@ -40,9 +40,9 @@ module.exports = ctx => function(args) {
   function img(src, alt, style) {
     let a = '<a data-fancybox'
     let img = ''
-    img += `<img src="${src}" data-src="${src}"`
+    img += `<img class="lazy" src="${src}" data-src="${src}"`
     if (alt) {
-      img += ' alt="' + alt + '"'
+      img += ` alt="${alt}"`
       a += ` data-caption="${alt}"`
     }
     if (fancybox && !fancyboxHref) {

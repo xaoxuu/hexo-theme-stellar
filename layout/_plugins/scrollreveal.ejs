@@ -9,8 +9,8 @@
       opacity: 0,
       easing: "ease-out"
     };
-    ScrollReveal().reveal('.l_left .slide-up', slideUp);
-    ScrollReveal().reveal('.l_main .slide-up', slideUp);
-    ScrollReveal().reveal('.l_right .slide-up', slideUp);
+    ScrollReveal({ container: '.widgets' }).reveal('.slide-up', { ...slideUp });
+    ScrollReveal({ container: '.l_main' }).reveal('.slide-up', { ...slideUp });
+    ScrollReveal({ container: '.l_right' }).reveal('.slide-up', { ...slideUp });
   });
 </script>
