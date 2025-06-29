@@ -19,7 +19,7 @@ module.exports = ctx => function(args) {
   
   var el = '<div class="tag-plugin sites-wrap">'
   if (api) {
-    el += '<div class="ds-sites"'
+    el += '<div class="data-service ds-sites"'
     el += ' api="' + api + '"'
     el += '>'
     el += '<div class="grid-box"></div>'
@@ -31,9 +31,15 @@ module.exports = ctx => function(args) {
       if (item?.url && item?.title) {
         el += `<div class="grid-cell site-card">`
         el += `<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="${item.url}">`
+        el += `<div class="lazy-box snapshot">`
         el += `<img src="${item.cover || item.snapshot || item.screenshot || ('https://image.thum.io/get/width/1280/crop/720/' + item.url)}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${ctx.theme.config.default.cover}&quot;;"/>`
+        el += `<div class="lazy-icon" style="background-image:url(&quot;${ctx.theme.config.default.loading}&quot;);"></div>`
+        el += `</div>`
         el += `<div class="info">`
+        el += `<div class="lazy-box icon">`
         el += `<img src="${item.icon || item.avatar || ctx.theme.config.default.link}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${item.icon || item.avatar || ctx.theme.config.default.link}&quot;;"/>`
+        el += `<div class="lazy-icon" style="background-image:url(&quot;${ctx.theme.config.default.loading}&quot;);"></div>`
+        el += `</div>`
         el += `<span class="title">${item.title}</span>`
         el += `<span class="desc">${item.description || item.url}</span>`
         el += `</div>`

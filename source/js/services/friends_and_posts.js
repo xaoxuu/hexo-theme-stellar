@@ -52,6 +52,7 @@ utils.jq(() => {
           cell += `</div>`;
           $(el).find('.grid-box').append(cell);
         }
+        window.wrapLazyloadImages(el);
       });
     }
   });

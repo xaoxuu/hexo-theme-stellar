@@ -13,7 +13,7 @@ function layoutDiv() {
     el += markdown(item.content);
   }
   if (item.src) {
-    el += `<div class="ds-mdrender" src="${item.src}"></div>`
+    el += `<div class="data-service ds-mdrender" src="${item.src}"></div>`
   }
   if (item.linklist) {
     el += partial('components/linklist', {item: item.linklist})

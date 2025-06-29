@@ -26,7 +26,7 @@ function layoutDiv() {
       el += '</div>';
     }
     el += '<div class="widget-body fs14">';
-      el += '<div class="tag-plugin timeline ds-timeline"';
+      el += '<div class="tag-plugin timeline data-service ds-timeline"';
       ['api', 'user'].forEach(key => {
         if (item[key]) {
           el += ' ' + key + '="' + item[key] + '"';

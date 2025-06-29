@@ -19,7 +19,7 @@ module.exports = ctx => function(args) {
   
   var el = `<div class="tag-plugin ${args.posts ? 'users-posts-wrap' : 'users-wrap'}">`
   if (api) {
-    el += `<div class="ds-friends${args.posts ? '_and_posts' : ''}" ${ctx.args.joinTags(args, ['size']).join(' ')} api="${api}"><div class="grid-box"></div></div>`
+    el += `<div class="data-service ds-friends${args.posts ? '_and_posts' : ''}" ${ctx.args.joinTags(args, ['size']).join(' ')} api="${api}"><div class="grid-box"></div></div>`
   } else if (args.group) {
     const links = ctx.theme.config.links || {}
     el += '<div class="grid-box">'

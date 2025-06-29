@@ -15,6 +15,6 @@ module.exports = ctx => function(args) {
   args = ctx.args.map(args, [''], ['src'])
   const md_id = "md_" + ++md_index
   return `
-  <div class="ds-mdrender" src="${args.src}" id="${md_id}"></div>
+  <div class="data-service ds-mdrender" src="${args.src}" id="${md_id}"></div>
   `
 }

@@ -10,24 +10,27 @@
   display: flex
   flex-direction: column
   position: relative
-  >img
-    object-fit: cover
-    aspect-ratio: 1.5
-    width: 100%
-    height: 100%
+  .lazy-box
     border-radius: $border-card-s
     box-shadow: 0 1px 2px 0px rgba(0, 0, 0, 0.2)
+    overflow hidden
+    >img
+      object-fit: cover
+      aspect-ratio: 1.5
+      width: 100%
+      height: 100%
   .info
     margin-top: 0.5rem
     line-height: 1.2
     position: relative
-    >img
-      width: 28px
-      height: @width
-      border-radius: @width
+    .lazy-box
       float: left
       margin-right: 8px
       margin-top: 2px
+      border-radius: @width
+      >img
+        width: 28px
+        height: @width
     span
       display: block
     .title
@@ -71,11 +74,11 @@
 
 // transform
 .sites-wrap .site-card .card-link
-  >img
+  >.lazy-box
     floatable-trans()
   &:hover
     .labels
       opacity 0
       transform: translateY(-4px)
-    >img
+    >.lazy-box
       floatable-float()

@@ -19,6 +19,7 @@ function custom_inject() {
 <%- partial('scripts/utils') %>
 <%- partial('scripts/sidebar') %>
 <%- partial('scripts/tagtree') %>
+<%- partial('scripts/lazyload') %>
 
 <!-- required -->
 <script src="<%- url_for(`${theme.stellar.main_js}?v=${stellar_info('version')}`) %>" defer></script>

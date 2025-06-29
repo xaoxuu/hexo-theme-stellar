@@ -23,7 +23,7 @@ module.exports = ctx => function(args) {
   var el = ''
   el += `<div class="tag-plugin albums-wrap">`
   if (api) {
-    el += `<div class="ds-friends" api="${api}"><div class="tag-plugin gallery grid-box" layout="grid" ratio="square" ${ctx.args.joinTags(args, ['size']).join(' ')}></div></div>`
+    el += `<div class="data-service ds-friends" api="${api}"><div class="tag-plugin gallery grid-box" layout="grid" ratio="square" ${ctx.args.joinTags(args, ['size']).join(' ')}></div></div>`
   } else if (args.group) {
     const links = ctx.theme.config.links || {}
     el += `<div class="tag-plugin gallery grid-box" layout="grid" ratio="square" ${ctx.args.joinTags(args, ['size']).join(' ')}>`

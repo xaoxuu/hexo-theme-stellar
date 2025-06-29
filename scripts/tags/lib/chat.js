@@ -110,11 +110,7 @@ module.exports = ctx => function(args, content) {
 
   function loadIcon(url) {
     var el = ''
-    if (ctx.theme.config.plugins.lazyload && ctx.theme.config.plugins.lazyload.enable) {
-      el += '<div class="lazy img" data-bg="' + ctx.theme.config.default.link + '"></div>'
-    } else {
-      el += '<div class="img" style="background-image:url(&quot;' + ctx.theme.config.default.link + '&quot;)"></div>'
-    }
+    el += '<div class="lazy img" data-bg="' + ctx.theme.config.default.link + '"></div>'
     return el
   }
 

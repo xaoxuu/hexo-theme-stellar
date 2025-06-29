@@ -58,14 +58,15 @@
       font-weight: 500
       margin-top: 1rem
       max-width: 100%
+    .lazy-box
+      border-radius: 64px
+      floatable-trans()
     img
       object-fit: cover
       display: block
       width: 64px
       height: 64px
-      background: var(--card)
-      border-radius: 64px
-      floatable-trans()
+      
     
   .previews
     display: flex
@@ -153,7 +154,7 @@
         color: var(--accent)
         transform: scale(1.2) translateX(-4px)
   .card-link:hover
-    img
+    .lazy-box
       transform: scale(1.2) rotate(8deg)
       box-shadow: $boxshadow-card-float
   .post-link:hover

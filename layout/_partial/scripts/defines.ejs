@@ -33,10 +33,12 @@
   const def = {
     avatar: `<%- theme.default.avatar %>`,
     cover: `<%- theme.default.cover %>`,
+    loading: `<%- theme.default.loading %>`,
   };
   const deps = {
     jquery: `<%- url_for(theme.dependencies.jquery) %>`,
-    marked: `<%- url_for(theme.dependencies.marked) %>`
+    marked: `<%- url_for(theme.dependencies.marked) %>`,
+    lazyload: `<%- url_for(theme.dependencies.lazyload) %>`
   }
   
 

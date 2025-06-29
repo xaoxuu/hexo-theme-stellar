@@ -1,8 +1,16 @@
 $lazyTransitionType = hexo-config('plugins.lazyload.transition')
-$loadingImage = hexo-config('plugins.lazyload.loading_image.src')
-$loadingImageSize = convert(hexo-config('plugins.lazyload.loading_image.size'))
+$loadingImageSize = 2rem
 
-img.lazy
+.lazy-box
+  position: relative
+  overflow: hidden
+  &.async // 通过 data-service 异步创建的懒加载元素，没办法知道宽高
+    background: var(--block)
+    min-height: 4rem
+
+// 懒加载
+img[data-ll-status]
+  z-index: 1
   &:not(.loaded)
     opacity: 0
   &.loaded,&.error
@@ -18,61 +26,28 @@ img.lazy
   else
     trans1 all 0.38s
 
+// 加载占位动画
+img[data-ll-status]+.lazy-icon
+  position: absolute
+  width: $loadingImageSize
+  height: $loadingImageSize
+  max-width: 100%
+  max-height: 100%
+  top: 50%
+  left: 50%
+  transform: translateX(-50%) translateY(-50%)
+  background-size: contain
+  background-repeat: no-repeat
+  background-position: center
 
-@keyframes fadeIn
-  from { opacity: 0; }
-  to { opacity: 1; }
+// 加载完成
+img[data-ll-status].loaded
+  &+.lazy-icon
+    display: none
 
-@keyframes blurIn
-  from
-    opacity: 0
-    filter: blur(20px)
-    -webkit-filter: blur(20px)
-  to
-    opacity: 1
-    filter: blur(0px)
-    -webkit-filter: blur(0px)
-
-article img.lazy
-  &:not(.loaded)
-    opacity: 1
-    border-radius: 4px
-    filter none
-    transition: none
-  if $loadingImage
-    &.loading
-      background: url($loadingImage) center center / $loadingImageSize no-repeat
-  else
-    &.loading
-      background: url($iLoadingIcon) center center / $loadingImageSize no-repeat
-      min-width: $loadingImageSize
-      min-height: $loadingImageSize
-
-  // &.loaded
-  //   animation: fadeIn 0.38s ease-out
-  //   if $loadingImage
-  //     background: none
-  // if $lazyTransitionType == 'blur'
-  //   &.loaded
-  //     animation: blurIn .5s ease-out
-
-  &:not(.loaded)
-    opacity: 0
-  &.loaded,&.error
-    opacity: 1
-  if $lazyTransitionType == 'blur'
-    trans1 all 0.5s
-    &:not(.loaded)
-      filter blur(20px)
-      -webkit-filter blur(20px)
-    &.loaded,&.error
-      filter none
-      -webkit-filter none
-  else
-    trans1 all 0.38s
-
-  &.error
-    background: none
-    min-width: $loadingImageSize
-    min-height: $loadingImageSize
-
+// 加载失败
+img[data-ll-status].error
+  min-width: $loadingImageSize
+  min-height: $loadingImageSize
+  &+.lazy-icon
+    display: none

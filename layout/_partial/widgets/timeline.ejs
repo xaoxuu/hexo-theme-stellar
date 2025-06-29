@@ -11,7 +11,7 @@ function layoutDiv() {
       el += '</div>';
     }
     el += '<div class="widget-body fs14">';
-      el += `<div class="tag-plugin timeline ds-${(item.type || 'timeline')}"`;
+      el += `<div class="tag-plugin timeline data-service ds-${(item.type || 'timeline')}"`;
       ['api', 'user', 'hide', 'limit'].forEach(key => {
         if (item[key]) {
           el += ' ' + key + '="' + item[key] + '"';

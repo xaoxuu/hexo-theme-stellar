@@ -24,15 +24,14 @@
       overflow: hidden
       -webkit-line-clamp: 2
       position: relative
+    .lazy-box
+      border-radius: 64px
+      margin: 0 0 0.5rem
     img
       object-fit: cover
       display: block
       width: 48px
       height: 48px
-      background: var(--card)
-      border-radius: 64px
-      margin: 0 0 0.5rem
-
   .label
     margin-top: 4px
     color: white
@@ -43,10 +42,10 @@
 
 // transform
 .users-wrap .user-card .card-link
-  >img
+  .lazy-box
     floatable-trans()
   &:hover
     background: var(--block-border)
-    img
+    .lazy-box
       transform: scale(1.2) rotate(8deg)
       box-shadow: $boxshadow-card-float
