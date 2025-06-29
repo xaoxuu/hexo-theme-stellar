@@ -23,7 +23,7 @@ if (page.logo) {
 function layoutTitle(main, url, sub) {
   var el = ''
   el += `<a class="title" href="${url_for(url || "/")}">`
-  el += `<div class="main" ff="title">${main}</div>`
+  el += `<div class="main">${main}</div>`
   if (sub) {
     const arr = sub.split('|')
     if (arr.length > 1) {

@@ -11,6 +11,7 @@ p>code:not([class]),li>code:not([class])
   color: var(--text-code)
 
 .md-text .highlight, pre:not([class]):has(>code)
+  --theme: var(--text-p3)
   margin: var(--gap-p) 0
   border-radius: $border-card
   overflow: hidden
@@ -81,6 +82,7 @@ p>code:not([class]),li>code:not([class])
     border-radius: $border-card
     overflow: hidden
   .gist-data
+    --bgColor-default: var(--block)
     border-bottom: 1px solid var(--block-border)
   .highlight
     display: inherit

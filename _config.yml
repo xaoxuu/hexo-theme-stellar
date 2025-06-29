@@ -626,10 +626,9 @@ style:
     code: 85% # 相较于其所在行的文本大小，建议用百分比
     codeblock: 0.8125rem # 13px
   font-family:
-    logo: 'system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif'
-    body: 'system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif'
-    code: 'Menlo, Monaco, Consolas, system-ui, "Courier New", monospace, sans-serif'
-    codeblock: 'Menlo, Monaco, Consolas, system-ui, "Courier New", monospace, sans-serif'
+    body: 'system-ui, "Microsoft Yahei", "Segoe UI", Arial, sans-serif'
+    code: 'Menlo, Monaco, Consolas, system-ui, monospace, sans-serif'
+    codeblock: 'Menlo, Monaco, Consolas, system-ui, monospace, sans-serif'
   text-align: left
   prefix:
     h2: https://api.iconify.design/ci:heading-h2.svg
@@ -665,18 +664,20 @@ style:
     start: 'linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))'
   leftbar:
     # 可以设置：纯色/渐变色/图片作为背景
-    # background: var(--leftbar-bg)
+    background-color: var(--card) # var(--block)
     background-image: url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg)
     blur-px: 100px
-    blur-bg: var(--alpha60)
+    blur-bg: var(--bg-a60)
+    background-opacity: 0.8
   paginator:
     prev: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/arrow/f049bbd4e88ec.svg
     next: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/arrow/064b95430caf4.svg
   error_page: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg
-  site:
-    background-image: #'url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.14/image/site-bg1@small.webp)' # 未完全适配，慎用
+  site: # 使用 background-image 后，blur 设置才有效
+    # background-image: 'url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.14/image/site-bg1@small.webp)'
     blur-px: 100px
-    blur-bg: var(--alpha75)
+    blur-bg: var(--bg-a75)
+    blur-sat: 300%
   # 技术文章内页各级标题前面的符号
   header_prefix:
     h2: '⌘'

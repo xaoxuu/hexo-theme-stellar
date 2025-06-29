@@ -20,7 +20,7 @@
     font-weight: 500
     color: var(--text-p3)
     text-align: center
-    background: var(--alpha50)
+    background: var(--bg-a50)
     trans1 background
     position: relative
     display: flex
@@ -30,14 +30,14 @@
     img,svg
       height: 28px
       object-fit: contain
-      filter: grayscale(100%) brightness(0.8) opacity(0.8)
+      filter: grayscale(50%) brightness(0.8) opacity(0.5)
       trans1 all
     span
       text-overflow: ellipsis
       word-break: keep-all
     &.active, &:hover
       color: var(--text-p1)
-      background: var(--alpha100)
+      background: var(--bg-a100)
       img,svg
         filter: unset
     &.active:after

@@ -1,7 +1,7 @@
 :root
   --ai-font-color var(--text-p2)
   --ai-post-bg var(--block)
-  --ai-content-bg var(--site-bg)
+  --ai-content-bg var(--background)
   --ai-content-border 1px solid var(--block-border)
   --ai-border 1px solid var(--block-border)
   --ai-tag-bg var(--card)
@@ -100,7 +100,7 @@
   cursor pointer
 
 #post-ai .ai-btn-item:hover
-  background var(--theme-link)
+  background var(--link)
 
 #post-ai .ai-recommend
   display flex
@@ -112,9 +112,9 @@
   margin-top 2px
 
 #post-ai .ai-recommend-item a
-  border-bottom 2px solid var(--theme-link)
+  border-bottom 2px solid var(--link)
   padding 0 .2em
-  color var(--theme-link)
+  color var(--link)
   font-weight 700
   text-decoration none
   transition all 0.3s
@@ -124,8 +124,8 @@
   -o-transition all 0.3s
 
 #post-ai .ai-recommend-item a:hover
-  background-color var(--theme-link)
-  border-bottom 2px solid var(--theme-link)
+  background-color var(--link)
+  border-bottom 2px solid var(--link)
   color #fff
   border-radius 5px
 
@@ -159,7 +159,7 @@
   opacity 0
 
 #post-ai .ai-Toggle:hover
-  background $color-theme
+  background var(--theme)
 
 #post-ai .ai-speech-box
   width 21px
@@ -193,7 +193,7 @@
   transition .3s
 
 #post-ai .ai-speech-box:hover .ai-speech-content
-  background $color-theme
+  background var(--theme)
 
 @keyframes ai_breathe
   0%

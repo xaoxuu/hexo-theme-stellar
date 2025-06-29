@@ -117,7 +117,7 @@
         background: var(--block-border)
         trans1 all
       &:hover:before
-        background: $color-hover
+        background: var(--accent)
         // height: calc(100% - 4px)
         height: 100%
         top: 0
@@ -150,11 +150,11 @@
   &:hover
     .desc
       &:before
-        color: $color-hover
+        color: var(--accent)
         transform: scale(1.2) translateX(-4px)
   .card-link:hover
     img
       transform: scale(1.2) rotate(8deg)
       box-shadow: $boxshadow-card-float
   .post-link:hover
-    color: $color-hover
+    color: var(--accent)

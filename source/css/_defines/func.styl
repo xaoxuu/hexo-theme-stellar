@@ -123,7 +123,7 @@ hoverable-card()
       floatable-float()
   ondark()
     &:hover
-      box-shadow: 0 0 4px -2px $color-theme, 0 0 24px -8px $color-theme
+      box-shadow: 0 0 4px -2px var(--theme), 0 0 24px -8px var(--theme)
   :root[data-theme="light"] &
     onlight()
   :root[data-theme="dark"] &
@@ -149,11 +149,11 @@ newblur()
   &:before
     backdrop-filter: blur(8px)
     -webkit-backdrop-filter: blur(8px)
-    background: var(--alpha20)
+    background: var(--bg-a20)
   &:after
     --blur-px: 24px
     --blur-sat: 500%
-    background: var(--alpha50)
+    background: var(--bg-a50)
     backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
     -webkit-backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
     mask: linear-gradient(rgba(white, 1), 10%, rgba(white, 0.05), 90%, rgba(white, 1)), linear-gradient(90deg, rgba(white, 1), 10%, rgba(white, 0.05), 90%, rgba(white, 1))
@@ -162,4 +162,4 @@ newblur()
     trans1 all
     @media (prefers-color-scheme: dark)
       opacity 0.4
-      background: var(--alpha20)
+      background: var(--bg-a20)

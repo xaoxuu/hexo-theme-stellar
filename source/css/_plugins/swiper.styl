@@ -1,5 +1,5 @@
 :root
-  --swiper-theme-color: $color-theme !important
+  --swiper-theme-color: var(--theme) !important
 .swiper
   width: 100%
   border-radius: 4px
@@ -47,7 +47,7 @@ div.swiper-slide
     color: var(--swiper-theme-color)
   &:hover
     background: white !important
-    --swiper-theme-color: $color-hover !important
+    --swiper-theme-color: var(--accent) !important
 
 .swiper-button-prev:after
   transform: translateX(-1px)

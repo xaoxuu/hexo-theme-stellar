@@ -25,23 +25,23 @@
     bottom: var(--inset)
     left: var(--inset)
     right: var(--inset)
-    background-position: center
-    background-size: cover
     border-radius: $border-card-l
-    --saturate: 300%
+    --saturate: 400%
     --blur-px: convert(hexo-config('style.leftbar.blur-px'))
-    --brightness: 100%
-    if hexo-config('style.leftbar') && hexo-config('style.leftbar.background-image')
+    --background-opacity: 1
+    if $leftbar-background-image
+      background-position: center
+      background-size: cover
       if hexo-config('style.leftbar.blur-px')
         --inset: 32px
+      if hexo-config('style.leftbar.background-opacity')
+        --background-opacity: hexo-config('style.leftbar.background-opacity')
       background-image: convert(hexo-config('style.leftbar.background-image'))
-      filter: saturate(var(--saturate)) brightness(var(--brightness)) blur(var(--blur-px))
+      filter: saturate(var(--saturate)) blur(var(--blur-px)) opacity(var(--background-opacity))
       @media screen and (prefers-color-scheme: dark)
-        --blur-px: 'calc(%s * 0.75)' % convert(hexo-config('style.leftbar.blur-px'))
-        --saturate: 200%
-        --brightness: 75%
-    else if hexo-config('style.leftbar') && hexo-config('style.leftbar.background')
-      background: convert(hexo-config('style.leftbar.background'))
+        --background-opacity: hexo-config('style.leftbar.background-opacity') * 0.75
+    else if $leftbar-background-color
+      background-color: convert($leftbar-background-color)
     
   .leftbar-container
     height: 'calc(%s - %s * 2 - %s)' % (100vh var(--gap-margin) $leftbar-bottom-margin)
@@ -67,24 +67,24 @@
       right: 0
       border-radius: $border-card-l
     &:before
-      @media screen and (min-width: $device-mobile-max)
-        background: rgba(white, 0.5)
-        box-shadow: inset 0 0 32px 1px rgba(white, 0.5)
-        backdrop-filter: saturate(300%)
-        -webkit-backdrop-filter: saturate(300%)
-        mask: linear-gradient(black, rgba(black, 0.5), 70%, transparent, 90%, transparent)
-        -webkit-mask: linear-gradient(black, rgba(black, 0.5), 70%, transparent, 90%, transparent)
-
-      @media screen and (prefers-color-scheme: dark)
-        background: rgba(white, 0.05)
-        box-shadow: inset 0 0 32px 1px rgba(white, 0.2)
+      if $leftbar-background-image
+        @media screen and (min-width: $device-mobile-max)
+          background: rgba(white, 0.5)
+          box-shadow: inset 0 0 32px 1px rgba(white, 0.5)
+          backdrop-filter: saturate(300%)
+          -webkit-backdrop-filter: saturate(300%)
+          mask: linear-gradient(black, rgba(black, 0.5), 70%, transparent, 90%, transparent)
+          -webkit-mask: linear-gradient(black, rgba(black, 0.5), 70%, transparent, 90%, transparent)
+        @media screen and (prefers-color-scheme: dark)
+          background: rgba(white, 0.05)
+          box-shadow: inset 0 0 32px 1px rgba(white, 0.1)
 
 @media screen and (max-width: $device-mobile-max)
   .l_left
     overflow: hidden
-    background: var(--alpha100)
+    background: var(--bg-a100)
     .sidebg
       --inset: 0
       --saturate: 300%
     .leftbar-container:after
-      background: var(--alpha20)
+      background: var(--bg-a20)

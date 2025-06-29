@@ -8,10 +8,10 @@ img.lazy
   &.loaded,&.error
     opacity: 1
   if $lazyTransitionType == 'blur'
-    trans1 all 0.75s
+    trans1 all 0.5s
     &:not(.loaded)
-      filter blur(50px)
-      -webkit-filter blur(50px)
+      filter blur(20px)
+      -webkit-filter blur(20px)
     &.loaded,&.error
       filter none
       -webkit-filter none
@@ -26,8 +26,8 @@ img.lazy
 @keyframes blurIn
   from
     opacity: 0
-    filter: blur(50px)
-    -webkit-filter: blur(50px)
+    filter: blur(20px)
+    -webkit-filter: blur(20px)
   to
     opacity: 1
     filter: blur(0px)
@@ -44,17 +44,32 @@ article img.lazy
       background: url($loadingImage) center center / $loadingImageSize no-repeat
   else
     &.loading
-      background: url($loadingIcon) center center / $loadingImageSize no-repeat
+      background: url($iLoadingIcon) center center / $loadingImageSize no-repeat
       min-width: $loadingImageSize
       min-height: $loadingImageSize
 
-  &.loaded
-    animation: fadeIn 0.38s ease-out
-    if $loadingImage
-      background: none
+  // &.loaded
+  //   animation: fadeIn 0.38s ease-out
+  //   if $loadingImage
+  //     background: none
+  // if $lazyTransitionType == 'blur'
+  //   &.loaded
+  //     animation: blurIn .5s ease-out
+
+  &:not(.loaded)
+    opacity: 0
+  &.loaded,&.error
+    opacity: 1
   if $lazyTransitionType == 'blur'
-    &.loaded
-      animation: blurIn .75s ease-out
+    trans1 all 0.5s
+    &:not(.loaded)
+      filter blur(20px)
+      -webkit-filter blur(20px)
+    &.loaded,&.error
+      filter none
+      -webkit-filter none
+  else
+    trans1 all 0.38s
 
   &.error
     background: none

@@ -13,7 +13,7 @@
   align-items: center
   txt-ellipsis()
   &.active
-    background: var(--alpha50)
+    background: var(--bg-a50)
     svg,img
       filter: unset
 
@@ -24,7 +24,7 @@
   $size = 16px
   padding: 0 2px
   &:not([class='active-icon'])
-    color: $color-theme
+    color: var(--theme)
   max-height: 18px
   width: auto
   filter: grayscale(100%) brightness(0.8) opacity(0.8)
@@ -44,6 +44,6 @@
     padding: 0 8px
 
 .linklist .link:hover
-  background: var(--alpha100)
+  background: var(--bg-a100)
   svg  
     filter: unset

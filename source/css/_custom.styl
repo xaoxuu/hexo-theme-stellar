@@ -1,44 +1,10 @@
 @require('_defines/const')
 
-// 通用主题色
-$color-theme = convert(hexo-config('style.color.theme'))
-$color-theme-opa = hsla(hue($color-theme), saturation($color-theme), lightness($color-theme), 0.3)
-$color-accent = convert(hexo-config('style.color.accent'))
-$color-link = convert(hexo-config('style.color.link'))
-$color-hover = convert(hexo-config('style.color.hover'))
 
-// 动态颜色
-$color-background = convert(hexo-config('style.color.background'))
-$color-block = convert(hexo-config('style.color.block'))
-$color-code = convert(hexo-config('style.color.code'))
-$color-text = convert(hexo-config('style.color.text'))
-
-$ff-body = system-ui, "Microsoft Yahei", "Segoe UI", -apple-system, Roboto, Ubuntu, "Helvetica Neue", Arial, "WenQuanYi Micro Hei", sans-serif
-$ff-codeblock = Menlo, Monaco, Consolas, system-ui, "Courier New", monospace, sans-serif
-$ff-code = $ff-codeblock
-$ff-logo = $ff-body
-
-$iQuoteLeft = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3C!-- Icon from BoxIcons Solid by Atisa - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='currentColor' d='M3.691 6.292C5.094 4.771 7.217 4 10 4h1v2.819l-.804.161c-1.37.274-2.323.813-2.833 1.604A2.9 2.9 0 0 0 6.925 10H10a1 1 0 0 1 1 1v7c0 1.103-.897 2-2 2H3a1 1 0 0 1-1-1v-5l.003-2.919c-.009-.111-.199-2.741 1.688-4.789M20 20h-6a1 1 0 0 1-1-1v-5l.003-2.919c-.009-.111-.199-2.741 1.688-4.789C16.094 4.771 18.217 4 21 4h1v2.819l-.804.161c-1.37.274-2.323.813-2.833 1.604A2.9 2.9 0 0 0 17.925 10H21a1 1 0 0 1 1 1v7c0 1.103-.897 2-2 2'/%3E%3C/svg%3E"
-$iQuoteRight = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3C!-- Icon from BoxIcons Solid by Atisa - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='currentColor' d='M20.309 17.708C22.196 15.66 22.006 13.03 22 13V5a1 1 0 0 0-1-1h-6c-1.103 0-2 .897-2 2v7a1 1 0 0 0 1 1h3.078a2.9 2.9 0 0 1-.429 1.396c-.508.801-1.465 1.348-2.846 1.624l-.803.16V20h1c2.783 0 4.906-.771 6.309-2.292m-11.007 0C11.19 15.66 10.999 13.03 10.993 13V5a1 1 0 0 0-1-1h-6c-1.103 0-2 .897-2 2v7a1 1 0 0 0 1 1h3.078a2.9 2.9 0 0 1-.429 1.396c-.508.801-1.465 1.348-2.846 1.624l-.803.16V20h1c2.783 0 4.906-.771 6.309-2.292'/%3E%3C/svg%3E"
-
-$h3Left = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='currentColor' fill-rule='evenodd' d='M13.488 4.43a.75.75 0 0 1 .081 1.058L7.988 12l5.581 6.512a.75.75 0 1 1-1.138.976l-6-7a.75.75 0 0 1 0-.976l6-7a.75.75 0 0 1 1.057-.081' clip-rule='evenodd'/%3E%3Cpath fill='currentColor' d='M17.75 5a.75.75 0 0 0-1.32-.488l-6 7a.75.75 0 0 0 0 .976l6 7A.75.75 0 0 0 17.75 19z'/%3E%3C/svg%3E"
-$h3Right = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='currentColor' fill-rule='evenodd' d='M10.512 4.43a.75.75 0 0 0-.081 1.058L16.012 12l-5.581 6.512a.75.75 0 1 0 1.138.976l6-7a.75.75 0 0 0 0-.976l-6-7a.75.75 0 0 0-1.057-.081' clip-rule='evenodd'/%3E%3Cpath fill='currentColor' d='M6.25 5a.75.75 0 0 1 1.32-.488l6 7a.75.75 0 0 1 0 .976l-6 7A.75.75 0 0 1 6.25 19z'/%3E%3C/svg%3E"
-
-$loadingIcon = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%231cd0fd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath stroke-dasharray='16' stroke-dashoffset='16' d='M12 3c4.97 0 9 4.03 9 9'%3E%3Canimate fill='freeze' attributeName='stroke-dashoffset' dur='0.6s' values='16;0'/%3E%3CanimateTransform attributeName='transform' dur='3s' repeatCount='indefinite' type='rotate' values='0 12 12;360 12 12'/%3E%3C/path%3E%3Cpath stroke-dasharray='64' stroke-dashoffset='64' stroke-opacity='0.3' d='M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z'%3E%3Canimate fill='freeze' attributeName='stroke-dashoffset' dur='2.4s' values='64;0'/%3E%3C/path%3E%3C/g%3E%3C/svg%3E"
-
-
-if hexo-config('style.font-family.body')
-  $ff-body = convert(hexo-config('style.font-family.body'))
-
-if hexo-config('style.font-family.code')
-  $ff-code = convert(hexo-config('style.font-family.code'))
-
-if hexo-config('style.font-family.codeblock')
-  $ff-codeblock = convert(hexo-config('style.font-family.codeblock'))
-
-if hexo-config('style.font-family.logo')
-  $ff-logo = convert(hexo-config('style.font-family.logo'))
-
+// font family
+$ff-body = convert(hexo-config('style.font-family.body'))
+$ff-code = convert(hexo-config('style.font-family.code'))
+$ff-codeblock = convert(hexo-config('style.font-family.codeblock'))
 
 // font size
 $fs-root = convert(hexo-config('style.font-size.root'))
@@ -61,6 +27,28 @@ $fsp0 = 'calc(%s - 0px)' % $fs-body
 $fsp1 = 'calc(%s - 1px)' % $fs-body
 $fsp2 = 'calc(%s - 2px)' % $fs-body
 $fsp3 = 'calc(%s - 3px)' % $fs-body
+
+// site main
+$site-background = hexo-config('style.site.background-image')
+$leftbar-background-image = hexo-config('style.leftbar.background-image')
+$leftbar-background-color = hexo-config('style.leftbar.background-color')
+
+
+// colors
+$c-theme = hsl(192deg, 98%, 55%)
+$c-accent = hsl(14deg, 100%, 57%)
+$c-base-hue = 210deg // 背景/文本颜色的主基调（一般看不出来不需要修改）
+
+// icons
+
+$iQuoteLeft = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3C!-- Icon from BoxIcons Solid by Atisa - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='currentColor' d='M3.691 6.292C5.094 4.771 7.217 4 10 4h1v2.819l-.804.161c-1.37.274-2.323.813-2.833 1.604A2.9 2.9 0 0 0 6.925 10H10a1 1 0 0 1 1 1v7c0 1.103-.897 2-2 2H3a1 1 0 0 1-1-1v-5l.003-2.919c-.009-.111-.199-2.741 1.688-4.789M20 20h-6a1 1 0 0 1-1-1v-5l.003-2.919c-.009-.111-.199-2.741 1.688-4.789C16.094 4.771 18.217 4 21 4h1v2.819l-.804.161c-1.37.274-2.323.813-2.833 1.604A2.9 2.9 0 0 0 17.925 10H21a1 1 0 0 1 1 1v7c0 1.103-.897 2-2 2'/%3E%3C/svg%3E"
+$iQuoteRight = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3C!-- Icon from BoxIcons Solid by Atisa - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='currentColor' d='M20.309 17.708C22.196 15.66 22.006 13.03 22 13V5a1 1 0 0 0-1-1h-6c-1.103 0-2 .897-2 2v7a1 1 0 0 0 1 1h3.078a2.9 2.9 0 0 1-.429 1.396c-.508.801-1.465 1.348-2.846 1.624l-.803.16V20h1c2.783 0 4.906-.771 6.309-2.292m-11.007 0C11.19 15.66 10.999 13.03 10.993 13V5a1 1 0 0 0-1-1h-6c-1.103 0-2 .897-2 2v7a1 1 0 0 0 1 1h3.078a2.9 2.9 0 0 1-.429 1.396c-.508.801-1.465 1.348-2.846 1.624l-.803.16V20h1c2.783 0 4.906-.771 6.309-2.292'/%3E%3C/svg%3E"
+
+$iH3Left = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='currentColor' fill-rule='evenodd' d='M13.488 4.43a.75.75 0 0 1 .081 1.058L7.988 12l5.581 6.512a.75.75 0 1 1-1.138.976l-6-7a.75.75 0 0 1 0-.976l6-7a.75.75 0 0 1 1.057-.081' clip-rule='evenodd'/%3E%3Cpath fill='currentColor' d='M17.75 5a.75.75 0 0 0-1.32-.488l-6 7a.75.75 0 0 0 0 .976l6 7A.75.75 0 0 0 17.75 19z'/%3E%3C/svg%3E"
+$iH3Right = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='currentColor' fill-rule='evenodd' d='M10.512 4.43a.75.75 0 0 0-.081 1.058L16.012 12l-5.581 6.512a.75.75 0 1 0 1.138.976l6-7a.75.75 0 0 0 0-.976l-6-7a.75.75 0 0 0-1.057-.081' clip-rule='evenodd'/%3E%3Cpath fill='currentColor' d='M6.25 5a.75.75 0 0 1 1.32-.488l6 7a.75.75 0 0 1 0 .976l-6 7A.75.75 0 0 1 6.25 19z'/%3E%3C/svg%3E"
+
+$iLoadingIcon = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='%231cd0fd' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath stroke-dasharray='16' stroke-dashoffset='16' d='M12 3c4.97 0 9 4.03 9 9'%3E%3Canimate fill='freeze' attributeName='stroke-dashoffset' dur='0.6s' values='16;0'/%3E%3CanimateTransform attributeName='transform' dur='3s' repeatCount='indefinite' type='rotate' values='0 12 12;360 12 12'/%3E%3C/path%3E%3Cpath stroke-dasharray='64' stroke-dashoffset='64' stroke-opacity='0.3' d='M12 3c4.97 0 9 4.03 9 9c0 4.97 -4.03 9 -9 9c-4.97 0 -9 -4.03 -9 -9c0 -4.97 4.03 -9 9 -9Z'%3E%3Canimate fill='freeze' attributeName='stroke-dashoffset' dur='2.4s' values='64;0'/%3E%3C/path%3E%3C/g%3E%3C/svg%3E"
+
 
 $border-card-l = convert(hexo-config('style.border-radius.card-l'))
 $border-card = convert(hexo-config('style.border-radius.card'))

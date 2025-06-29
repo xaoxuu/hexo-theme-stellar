@@ -24,14 +24,14 @@
       left: 1rem
       right: 1rem
       border-radius: $border-bar
-      background: var(--alpha100)
+      background: var(--bg-a100)
       @media screen and (prefers-color-scheme: dark)
-        background: var(--alpha20)
+        background: var(--bg-a20)
       z-index 0
       trans1 all
     &:hover,&:has(input:focus),&:has(input:not(:placeholder-shown))
       &:before
-        background: var(--alpha100)
+        background: var(--bg-a100)
         height: 100%
         left: 0
         right: 0
@@ -57,7 +57,7 @@
       color: var(--text-p2)
       fill: currentColor
       path[p-id="1562"]
-        color: $color-theme
+        color: var(--theme)
     
   &[searching='true']
     .search-button
@@ -75,7 +75,7 @@
     font-size: $fs-14
     padding: 2rem
     margin: 8px 0
-    background: var(--alpha20)
+    background: var(--bg-a20)
     border-radius: $border-card-s
 
 
@@ -93,13 +93,13 @@
       list-style-type: none
     li a
       display: block
-      background: var(--alpha20)
+      background: var(--bg-a20)
       line-height: 1.2
       padding: 0.75rem 1rem
       border-radius: $border-card-s
       trans1 background
       &:hover
-        background: var(--alpha100)
+        background: var(--bg-a100)
     li+li
       margin-top: 8px
     .search-result-title

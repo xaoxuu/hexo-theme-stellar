@@ -49,11 +49,11 @@ article.md-text.content+.related-wrap
       -webkit-line-clamp: 2
     &.active
       .title
-        border-bottom: 1px dashed $color-theme
+        border-bottom: 1px dashed var(--theme)
     &:hover
       .title
-        color: $color-hover
-        border-bottom: 1px solid $color-hover
+        color: var(--accent)
+        border-bottom: 1px solid var(--accent)
 
 
 .related-wrap#read-next
@@ -76,7 +76,7 @@ article.md-text.content+.related-wrap
       color: var(--text-p1)
       font-size: $fsh5
       &:hover
-        color: $color-hover !important
+        color: var(--accent) !important
     #next
       text-align: right
 .wiki+.related-wrap#read-next
@@ -94,8 +94,8 @@ article.md-text.content+.related-wrap
       margin: 0
       font-size: inherit
       a
-        --theme-link: $color-theme
-        --theme-link-opa: rgba($color-theme, 0.2)
+        --link: var(--theme)
+        --link-a20: x-theme-alpha(0.2)
   .cmt-body
     min-height: 150px
     position: relative

@@ -20,13 +20,17 @@ body>.sitebg
   right: 0
   bottom: 0
   background-size: cover
-  if hexo-config('style.site') && hexo-config('style.site.background-image')
-    background-image: convert(hexo-config('style.site.background-image'))
+  if $site-background
+    background-image: convert($site-background)
   .siteblur
     width: 100%
     height: 100%
+    --blur-px: 0
+    --blur-sat: 200%
     blur-effect()
-    if hexo-config('style.site') && hexo-config('style.site.blur-px')
+    if hexo-config('style.site.blur-sat') 
+      --blur-sat: convert(hexo-config('style.site.blur-sat'))
+    if hexo-config('style.site.blur-px')
       --blur-px: convert(hexo-config('style.site.blur-px'))
-    if hexo-config('style.site') && hexo-config('style.site.blur-bg')
+    if hexo-config('style.site.blur-bg')
       --blur-bg: convert(hexo-config('style.site.blur-bg'))

@@ -1,15 +1,15 @@
 :root
   --blur-px: 12px
-  --blur-bg: var(--alpha50)
-
+  --blur-bg: var(--bg-a50)
+  --blur-sat: 300%
 blur-effect()
-  background: var(--blur-bg)
+  background-color: var(--blur-bg)
   @supports ((-webkit-backdrop-filter:blur(var(--blur-px))) or (backdrop-filter:blur(var(--blur-px))))
-    background: var(--blur-bg) !important
-    backdrop-filter: saturate(300%) blur(var(--blur-px))
-    -webkit-backdrop-filter: saturate(300%) blur(var(--blur-px))
+    background-color: var(--blur-bg) !important
+    backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
+    -webkit-backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
   &:hover
-    background: var(--card)
+    background-color: var(--card)
 
 .blur
   blur-effect()

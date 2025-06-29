@@ -31,14 +31,14 @@
     box-sizing: border-box
     max-width: @max-width
   &[highlight] .header:before
-    background: $color-theme
+    background: var(--theme)
   &+.timenode
     margin-top: 1rem
   &:hover .header
     span
       color: var(--text-p1)
     &:before
-      background: $color-theme
+      background: var(--theme)
       height: 16px
       top: 'calc(50% - 0.5 * %s)' % @height
       transform: scale(1)
@@ -128,7 +128,7 @@
       display: inline-block
       trans1 all
       &:hover
-        color: $color-hover
+        color: var(--accent)
   >p:first-child:not([class])
     font-size: 1rem
     margin: .25rem 0 .5rem
@@ -173,7 +173,7 @@
     padding: 0 0.5rem
     display: flex 
     align-items: center
-    border-color: $color-link
+    border-color: var(--link)
     &:first-child 
       margin-left: 0
     &:last-child 

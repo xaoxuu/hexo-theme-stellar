@@ -50,12 +50,12 @@
 
 // 侧边栏弹出后
 .l_body[leftbar] .float-panel, .l_body[rightbar] .float-panel
-  box-shadow: 0 0 4px -1px $color-theme, 0 0 16px -4px $color-theme, 0 0 32px -12px $color-theme, 0 0 128px -32px $color-theme
+  box-shadow: 0 0 4px -1px var(--theme), 0 0 16px -4px var(--theme), 0 0 32px -12px var(--theme), 0 0 128px -32px var(--theme)
   &:before
-    background: var(--alpha50)
+    background: var(--bg-a50)
 
 .l_body[leftbar] .float-panel button.leftbar-toggle
-  color: $color-theme
+  color: var(--theme)
   svg g
     fill: currentColor
     fill-opacity: 0.3
@@ -68,7 +68,7 @@
   display: none !important
 
 .l_body[rightbar] .float-panel button.rightbar-toggle
-  color: $color-theme
+  color: var(--theme)
   svg g
     fill: currentColor
     fill-opacity: 0.3

@@ -9,13 +9,13 @@
     color: var(--text)
     line-height: 1.2
     >a:first-child
-      background: $color-theme
+      background: var(--theme)
       border-radius: 2px
       margin-right: 8px
       padding: 0 2px
       trans1 all
       &:hover
-        background: $color-hover
+        background: var(--accent)
       &:before,&:after
         color: white
         font-weight: 700
@@ -30,7 +30,7 @@
       display: inline-block
       width: 12px
       height: 1.2em
-      background: $cDeepOrange
+      background: $c-accent
       transform: skewX(-20deg)
       margin: 0 0.5em
       vertical-align: top
@@ -41,7 +41,7 @@
     &:before,&:after
       position absolute
       font-size: 1.2em
-      background-color: hsla($color-theme, 0.5)
+      background-color: x-theme-alpha(0.5)
       width: 1em
       height: 1em
       content: ''
@@ -51,9 +51,9 @@
       vertical-align: middle
     &:before
       margin-left: -1em
-      svg-mask-icon($h3Left)
+      svg-mask-icon($iH3Left)
     &:after
-      svg-mask-icon($h3Right)
+      svg-mask-icon($iH3Right)
 
   h4:not([class])
     position: relative
@@ -64,7 +64,7 @@
       height: 32px
       margin-left: -16px
       margin-top: -12px
-      background: hsla($color-theme, 0.3)
+      background: x-theme-alpha(0.3)
       border-radius: 50%
       --blur-px: 8px
       filter: blur(var(--blur-px))
@@ -73,7 +73,7 @@
       trans1 all 0.5s
     &:hover:before
       --blur-px: 24px
-      background: hsla($color-theme, 1)
+      background: x-theme-alpha(1)
 
   ol,ul
     margin-left: 'calc(%s * 2)' % var(--fsp)
@@ -104,7 +104,7 @@
   &:before,&:after
     position: absolute
     font-size: 2rem
-    background-color: hsla($color-theme, 0.25)
+    background-color: x-theme-alpha(0.25)
     top: -0.3em
     width: 1em
     height: 1em
@@ -123,7 +123,7 @@
     text-indent: 2em
   &:hover
     &:before,&:after
-      background-color: hsla($color-theme, 0.5)
+      background-color: x-theme-alpha(0.5)
 
 
 .l_body[type=story] .article.banner .content .bottom.only-title

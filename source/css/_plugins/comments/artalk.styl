@@ -22,7 +22,7 @@
         min-width: 5em
         trans1 all
         &:hover
-          --at-color-main: $color-hover
+          --at-color-main: var(--accent)
         &:empty
           display: none
   .atk-list-comments-wrap>.atk-comment-wrap
@@ -71,20 +71,31 @@
     --at-color-sub: var(--text-p3)
     --at-color-grey: var(--text-p4)
     --at-color-meta: var(--text-p4)
-    --at-color-border: var(--block-border)
-    --at-color-light: var(--theme-link)
+    if $site-background
+      --at-color-border: transparent
+    else
+      --at-color-border: var(--block-border)
+    --at-color-light: var(--link)
     --at-color-bg: var(--card)
     --at-color-bg-transl: var(--block-border)
     --at-color-bg-grey: var(--block)
     --at-color-bg-grey-transl: orange
     --at-color-bg-light: rgba(29, 161, 242, 1)
-    --at-color-main: $color-theme
+    --at-color-main: var(--theme)
     --at-color-red: $c-red
     --at-color-green: $c-green
     --at-color-gradient: linear-gradient(180deg, transparent, var(--card), 50%, var(--card))
 
 .md-text .atk-comment>.atk-main>.atk-body
   overflow: visible
+.md-text .artalk pre code, .atk-layer-wrap pre code
+  background: none
+.md-text .atk-main-editor>.atk-textarea-wrap>.atk-textarea
+  background: none
+
+.md-text .atk-notify-wrap .atk-notify
+  border-radius: $border-bar
+  margin: 8px
 
 
 // override
@@ -113,4 +124,4 @@
     p
       color: var(--text-p3)
   .atk-content a
-    --at-color-main: var(--theme-link)
+    --at-color-main: var(--link)
