@@ -1,6 +1,6 @@
 ######## Stellar info ########
 stellar:
-  version: '1.32.1'
+  version: '1.32.2'
   homepage: 'https://xaoxuu.com/wiki/stellar/'
   repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
   main_css: /css/main.css
@@ -533,7 +533,7 @@ plugins:
 
   # https://scrollrevealjs.org/api/reveal.html
   scrollreveal:
-    enable: true
+    enable: #true # 慎用，有些时候打开页面空白
     js: https://gcore.jsdelivr.net/npm/scrollreveal@4.0/dist/scrollreveal.min.js
     distance: 8px
     duration: 500 # ms

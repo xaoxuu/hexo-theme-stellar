@@ -14,7 +14,7 @@ module.exports = ctx => function(args, content) {
   var el = ''
   el += `<div class="tag-plugin banner">`
   // bg
-  el += `<img class="bg" src="${args.bg ? args.bg : ctx.theme.config.default.banner}">`
+  el += `<img class="lazy bg" data-src="${args.bg ? args.bg : ctx.theme.config.default.banner}">`
   // content
   el += `<div class="content">`
   // content.top
