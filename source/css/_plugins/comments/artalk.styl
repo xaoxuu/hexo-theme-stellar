@@ -7,11 +7,17 @@
     .atk-header,.atk-editor-user-wrap
       border-bottom: 1px dashed var(--block-border)
       padding: 0.5rem 1rem
+      margin: 0
     .atk-editor-user-wrap:empty
       visibility: hidden
       padding: 0
     >.atk-bottom 
       padding: 8px
+      .atk-state-btn
+        height: 2rem
+        border-radius: 100px
+        .atk-cancel
+          background: none
       .atk-plug-btn
         border-radius: 32px
         height: 2rem
@@ -77,10 +83,10 @@
       --at-color-border: var(--block-border)
     --at-color-light: var(--link)
     --at-color-bg: var(--card)
-    --at-color-bg-transl: var(--block-border)
+    --at-color-bg-transl: var(--card)
     --at-color-bg-grey: var(--block)
-    --at-color-bg-grey-transl: orange
-    --at-color-bg-light: rgba(29, 161, 242, 1)
+    --at-color-bg-grey-transl: var(--block-border)
+    --at-color-bg-light: var(--theme)
     --at-color-main: var(--theme)
     --at-color-red: $c-red
     --at-color-green: $c-green

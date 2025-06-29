@@ -17,13 +17,14 @@
 
 var index = 0
 
-function img(src, alt) {
+function img(src, alt, loading) {
   let img = ''
-  img += `<img data-fancybox="gallery-${index}" src="${src}"`
+  img += `<img class="lazy" data-fancybox="gallery-${index}" data-src="${src}"`
   if (alt?.length > 0) {
     img += ` alt="${alt}"`
   }
   img += `/>`
+  img += `<div class="lazy-icon" style="background-image:url(${loading});"></div>`
   // cap
   img += `<div class="image-meta">`
   if (alt?.length > 0) {
@@ -54,7 +55,7 @@ module.exports = ctx => function(args, content) {
     if (matches?.length > 2) {
       let alt = matches[1]
       let src = matches[2]
-      el += `<div class="${layoutType}-cell">${img(src, alt)}</div>`
+      el += `<div class="${layoutType}-cell lazy-box">${img(src, alt, ctx.theme.config.default.loading)}</div>`
     }
   }
   el += `</div>`
