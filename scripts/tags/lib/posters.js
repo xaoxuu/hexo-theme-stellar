@@ -11,7 +11,7 @@ module.exports = ctx => function(args) {
   var args = ctx.args.map(args, ['repo', 'api', 'size'], ['group'])
   const host = ctx.theme.config.api_host.ghraw
   if (args.size == null) {
-    args.size = 'm'
+    args.size = 's'
   }
   var api
   if (args.api) {
