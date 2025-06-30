@@ -4,7 +4,7 @@
   // Set the options globally
   // to make LazyLoad self-initialize
   window.lazyLoadOptions = {
-    elements_selector: ".lazy",
+    elements_selector: ".lazy, .lazyload",
     callback_loaded: (el) => {
       el.classList.add('loaded');
       const wrapper = el.closest('.lazy-box');

@@ -1,7 +1,7 @@
 <%
 function layoutDiv() {
   var el = '';
-  el += '<div id="artalk_container"';
+  el += `<div class="artalk ${theme.comments.artalk?.fancybox ? 'with-fancybox' : ''}" id="artalk_container"`;
   let cfg = {};
   if (page.comment_id) {
     cfg['comment_id'] = page.comment_id;

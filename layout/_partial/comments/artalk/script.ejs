@@ -6,6 +6,10 @@
     if (!el) return;
     utils.css('<%- theme.comments.artalk.css %>');
     utils.js('<%- theme.comments.artalk.js %>', {defer: true}).then(function () {
+      // 监听 Artalk 事件
+      Artalk.use((ctx) => {
+        ctx.on('list-loaded', () => window.lazyLoadInstance?.update())
+      })
       const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
       const artalk = Artalk.init({
         el: '#artalk_container',
@@ -13,7 +17,24 @@
         pageTitle: '<%= page.title %>',
         server: '<%= theme.comments.artalk.server %>',
         site: '<%= theme.comments.artalk.site %>',
-        darkMode: '<%= theme.comments.artalk.darkMode %>'
+        darkMode: '<%= theme.comments.artalk.darkMode %>',
+        <% if (theme.comments.artalk.imageUploader?.api) { %>
+        imgUploader: function(file) {
+          let headers = new Headers();
+          headers.set('Accept', 'application/json');
+          <% if (theme.comments.artalk.imageUploader?.token) { %>
+            headers.set('Authorization', '<%= theme.comments.artalk.imageUploader?.token %>')
+          <% } %>
+          let formData = new FormData();
+          formData.append('file', file);
+          return fetch('<%= theme.comments.artalk.imageUploader?.api %>',{
+            method: 'POST',
+            body: formData,
+            headers: headers
+            }).then((resp) => resp.json())
+              .then((resp) => resp.<%= theme.comments.artalk.imageUploader?.resp %>)
+        },
+        <% } %>
       });
     });
   }

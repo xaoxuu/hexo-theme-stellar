@@ -315,7 +315,15 @@ comments:
     js: https://unpkg.com/artalk@2.9/dist/Artalk.js
     server: # 后端服务地址
     site: '' # 站点名称
-    darkMode: auto
+    darkMode: auto # 其它模式都有问题，慎用，否则后果自负
+    fancybox: true # 是否为评论区启用 fancybox
+    # artalk 有三类图片：1.上传至服务端 2.上传至服务端后利用upgit上传至图床 3.前端上传至图床（本配置为此类）
+    # 配置此项时将覆盖服务端上传能力
+    imageUploader:
+      # 以兰空图床为例，下列填写内容为：
+      # api: 'https://xxxxxx/api/v1/upload' # 图床上传地址
+      # token: 'Bearer xxxxxxxxxxxxxx' # 图床验证
+      # resp: 'data.links.url' # 图片地址返回值的字段
 
 
 ######## Footer ########
