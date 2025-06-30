@@ -11,6 +11,11 @@
       width: 4px
       background: var(--block)
       border-radius: 4px
+  
+  if !$site-background-image
+    @media screen and (min-width: $device-laptop)
+      background: var(--background)
+
 
 // 目录基本样式
 .widget-wrapper.toc .toc

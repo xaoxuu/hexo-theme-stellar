@@ -674,7 +674,7 @@ style:
     next: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/arrow/064b95430caf4.svg
   error_page: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg
   site: # 使用 background-image 后，blur 设置才有效
-    # background-image: 'url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.14/image/site-bg1@small.webp)'
+    # background-image: url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.14/image/site-bg1@small.webp)
     blur-px: 100px
     blur-bg: var(--bg-a75)
     blur-sat: 300%
