@@ -69,6 +69,8 @@
       height: 3rem
       width: 12rem
       margin: -1.5rem auto 0
+      &:hover
+        background: var(--card)
   .atk-error-layer
     background: none
 
@@ -104,6 +106,14 @@
 .md-text .atk-main-editor>.atk-textarea-wrap>.atk-textarea
   background: none
   padding: 0.5rem 1rem
+
+.md-text .atk-loading
+  border-radius: $border-card
+.md-text .atk-main-editor .atk-editor-user-wrap .atk-editor-user .atk-user-profile-btn
+  padding: 0
+  &:hover
+    background: none
+
 
 .md-text .atk-notify-wrap .atk-notify
   border-radius: $border-bar
