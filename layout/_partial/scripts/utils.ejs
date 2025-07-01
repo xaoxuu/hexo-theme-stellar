@@ -160,7 +160,7 @@
               status = 2;
               timer = null;
               reject('请求超时');
-              if (retryTimes == 0) {
+              if (retryTimes == 0 && onFailure) {
                 onFailure();
               }
             }
@@ -188,7 +188,9 @@
               }, 5000);
             } else {
               utils.onLoadFailure(el);
-              onFailure();
+              if (onFailure) {
+                onFailure();
+              }
             }
           });
         });

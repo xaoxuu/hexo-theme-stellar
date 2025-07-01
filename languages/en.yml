@@ -36,6 +36,7 @@ meta:
   updated: 'Updated on'
   license: License
   share: Share
+  contributors: Contributors
   date_suffix:
     just: Just
     min: minutes ago

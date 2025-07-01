@@ -1,37 +1,38 @@
 /**
  * notebooks v1
  */
-const pagination = require('hexo-pagination')
-
-function paginationWithEmpty(base, posts, options={}) {
-  const { layout, data = {} } = options
-  if (posts.length === 0) {
-    base = `${base}/`
-    return [{
-      path: base,
-      layout: layout,
-      data: {
-        ...data,
-        base: base,
-        total: 1,
-        current: 1,
-        current_url: base,
-        posts: posts,
-        prev: 0,
-        prev_link: '',
-        next: 0,
-        next_link: '',
-      }
-    }]
-  } else {
-    return pagination(base, posts, options)
-  }
-}
 
 hexo.extend.generator.register('notebooks', function (locals) {
   const { site_tree, notebooks } = hexo.theme.config
   if (!notebooks?.tree || Object.keys(notebooks.tree).length === 0) {
     return []
+  }
+  // 不用 blog 和 notebooks 时不必依赖 hexo-pagination
+  const pagination = require('hexo-pagination')
+
+  function paginationWithEmpty(base, posts, options={}) {
+    const { layout, data = {} } = options
+    if (posts.length === 0) {
+      base = `${base}/`
+      return [{
+        path: base,
+        layout: layout,
+        data: {
+          ...data,
+          base: base,
+          total: 1,
+          current: 1,
+          current_url: base,
+          posts: posts,
+          prev: 0,
+          prev_link: '',
+          next: 0,
+          next_link: '',
+        }
+      }]
+    } else {
+      return pagination(base, posts, options)
+    }
   }
 
   const routes = []

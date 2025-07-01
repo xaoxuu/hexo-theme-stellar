@@ -40,6 +40,49 @@
     padding-top: 1rem
     border-top: 1px solid var(--block-border)
 
+.article-footer #contributors
+  .header
+    display: flex
+    justify-content: space-between
+    a.edit
+      font-size: $fs-14
+      display: flex
+      align-items: center
+      color: inherit
+      background: var(--block)
+      padding: 0 .5rem
+      border-radius: $border-button
+      svg
+        width 1.2em
+        height: 1.2em
+        margin-right: 4px
+        color: var(--text-p4)
+        trans1 color
+      span
+        line-height: 1.5
+        trans1 color
+      trans1 background
+      &:hover
+        color: var(--theme)
+        background: var(--theme-a20)
+        svg
+          color: var(--theme)
+  .body
+    margin-top: 4px
+    .loading-wrap
+      padding: 0
+      height: 84px
+    .users-wrap .grid-box
+      grid-template-columns: repeat(auto-fill, minmax(72px, 1fr))
+      grid-gap: 4px
+    .users-wrap .user-card .card-link
+      background: var(--block)
+      &:hover
+        background: var(--theme-a20)
+      img
+        width 32px
+        height: 32px
+
 .article-footer .social-wrap
   grid-gap: 0.5rem 2rem
   margin: 1rem 0 0.5rem

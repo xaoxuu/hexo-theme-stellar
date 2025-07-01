@@ -503,6 +503,11 @@ data_services:
     js: /js/services/artalk_latest_comment.js
   giscus:
     js: /js/services/giscus_latest_comment.js
+  contributors:
+    edit_this_page: # 从开头开始匹配替换
+      '_posts/': # https://github.com/xaoxuu/xaoxuu.com/blob/main/source/_posts/
+      '': https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/
+    js: /js/services/contributors.js
 
 
 # 扩展插件接入方法：(插件名下面用 #plugin# 代替)

@@ -1,0 +1,34 @@
+<%
+function parseURL() {
+  const source = page.source || ''
+  for (let id of Object.keys(map)) {
+    if (source.startsWith(id) && map[id]) {
+      return source.replace(id, map[id])
+    }
+  }
+}
+function layoutDiv() {
+  const url = parseURL()
+  if (url == null) {
+    return ''
+  }
+  const commits = url.replace('/github.com/', `/${theme.api_host.ghapi}/repos/`).replace('/blob/main/', '/commits?path=');
+  var el = `
+  <section id="contributors">
+    <div class="header">
+      <span>${__('meta.contributors')}</span>
+      <span class="spacer"></span>
+      <a class="edit" href="${url_for(url)}">
+        ${icon('default:edit')}
+        <span>${__('btn.edit')}</span>
+      </a>
+    </div>
+    <div class="body">
+      <div class="ds-contributors users-wrap" api-type="commits" api="${commits}"><div class="grid-box"></div></div>
+    </div>
+  </section>
+  `
+  return el
+}
+%>
+<%- layoutDiv() %>
