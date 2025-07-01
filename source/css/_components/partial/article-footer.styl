@@ -68,17 +68,22 @@
         svg
           color: var(--theme)
   .body
-    margin-top: 4px
     .loading-wrap
+      margin-top: 4px
       padding: 0
       height: 84px
     .users-wrap .grid-box
+      margin-top: 4px
       grid-template-columns: repeat(auto-fill, minmax(72px, 1fr))
       grid-gap: 4px
+      &:empty
+        display: none
     .users-wrap .user-card .card-link
       background: var(--block)
+      trans1 all
       &:hover
         background: var(--theme-a20)
+        color: var(--theme)
       img
         width 32px
         height: 32px

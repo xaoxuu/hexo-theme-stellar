@@ -506,7 +506,7 @@ data_services:
   contributors:
     edit_this_page: # 从开头开始匹配替换
       '_posts/': # https://github.com/xaoxuu/xaoxuu.com/blob/main/source/_posts/
-      '': https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/
+      'wiki/stellar/': https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/
     js: /js/services/contributors.js
 
 
