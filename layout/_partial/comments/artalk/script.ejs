@@ -7,9 +7,10 @@
     utils.css('<%- theme.comments.artalk.css %>');
     utils.js('<%- theme.comments.artalk.js %>', {defer: true}).then(function () {
       // 监听 Artalk 事件
-      Artalk.use((ctx) => {
-        ctx.on('list-loaded', () => window.lazyLoadInstance?.update())
-      })
+      // FIXME: Artalk开启了懒加载会导致评论输入预览框里的图也变成data-src，导致看不到图
+      // Artalk.use((ctx) => {
+      //   ctx.on('list-loaded', () => window.lazyLoadInstance?.update())
+      // })
       const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
       const artalk = Artalk.init({
         el: '#artalk_container',

@@ -99,25 +99,50 @@
     --at-color-green: $c-green
     --at-color-gradient: linear-gradient(180deg, transparent, var(--card), 50%, var(--card))
 
-.md-text .atk-comment>.atk-main>.atk-body
-  overflow: visible
-.md-text .artalk pre code, .atk-layer-wrap pre code
-  background: none
-.md-text .atk-main-editor>.atk-textarea-wrap>.atk-textarea
-  background: none
-  padding: 0.5rem 1rem
 
-.md-text .atk-loading
-  border-radius: $border-card
-.md-text .atk-main-editor .atk-editor-user-wrap .atk-editor-user .atk-user-profile-btn
-  padding: 0
+// fix style
+.cmt-body.artalk
+  .atk-comment>.atk-main>.atk-body
+    overflow: visible
+  .artalk pre code, .atk-layer-wrap pre code
+    background: none
+  .atk-main-editor>.atk-textarea-wrap>.atk-textarea
+    background: none
+    padding: 1rem
+    margin: 0
+    border: none
+
+  .atk-loading
+    border-radius: $border-card
+  .atk-main-editor .atk-editor-user-wrap .atk-editor-user .atk-user-profile-btn
+    padding: 0
   &:hover
     background: none
+  
+  .artalk>.atk-list>.atk-list-header 
+    padding: .5rem 1rem
+    .atk-comment-count
+      display: flex
+      align-items: baseline
+  .artalk>.atk-list>.atk-list-header .atk-dropdown-wrap .atk-arrow-down-icon
+    height: 8px
+  .artalk>.atk-list>.atk-list-header .atk-text
+    display: block
 
+  .atk-notify-wrap .atk-notify
+    border-radius: $border-bar
+    margin: 8px
+  
+  // emoticons
+  .atk-editor-plug-emoticons>.atk-grp-wrap>.atk-grp
 
-.md-text .atk-notify-wrap .atk-notify
-  border-radius: $border-bar
-  margin: 8px
+    padding: .5rem
+  .atk-editor-plug-emoticons>.atk-grp-wrap>.atk-grp[data-type=image]>.atk-item
+    width 3rem
+    height: 3rem
+    margin: 0
+    border-radius: 4px
+    padding: .5rem
 
 
 // override
