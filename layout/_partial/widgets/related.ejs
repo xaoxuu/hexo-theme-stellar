@@ -15,7 +15,7 @@ function relatedPostsInTopic() {
   el += `<div class="widget-body">`
   for (let post of topic.pages) {
     const isActive = post.path == page.path
-    el += `<a class="item${isActive ? ' active' : ''}" href="${url_for(post.path)}">`
+    el += `<a class="item${isActive ? ' active' : ''}" href="${pretty_url(post.path)}">`
     el += `<span class="title">${post.title}</span>`
     if (isActive) {
       el += icon('default:bookmark.active')
@@ -42,7 +42,7 @@ function relatedWiki() {
     for (let id of relatedItem.items) {
       // 同一个分组中的其它项目
       let item = theme.wiki.tree[id]
-      el += `<a class="item wiki" href="${url_for(item.homepage?.path)}">`
+      el += `<a class="item wiki" href="${pretty_url(item.homepage?.path)}">`
       el += `<span class="title">${item.title}</span>`
       if (item.description && item.description.length > 0) {
         el += `<span class="excerpt">${item.description}</span>`

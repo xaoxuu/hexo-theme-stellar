@@ -39,7 +39,7 @@ function layoutArchiveList() {
       return post.year == year
     }).each(function(post) {
       el += `<div class="archive-list">`
-      el +=`<a class='post fs14' href="${url_for(post.link || post.path)}">`
+      el +=`<a class='post fs14' href="${pretty_url(post.link || post.path)}">`
       el += `<time>${date(post.date, 'MM-DD')}</time>`
       el += `<span>`
       if (post.title) {

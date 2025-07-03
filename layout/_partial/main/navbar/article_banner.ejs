@@ -31,7 +31,7 @@ function layoutBreadcrumb() {
   // 3.left.top: 面包屑导航
   el += `<div class="flex-row" id="breadcrumb">`
     // 首页
-    el += `<a class="cap breadcrumb" href="${url_for(config.root)}">${__("btn.home")}</a>`
+    el += `<a class="cap breadcrumb" href="${pretty_url(config.root)}">${__("btn.home")}</a>`
     if (theme.wiki.tree[page.wiki]) {
       el += partial('breadcrumb/wiki')
     } else if (page.notebook) {

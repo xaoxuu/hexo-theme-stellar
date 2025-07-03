@@ -12,7 +12,7 @@ function layout_post_card(layout, post, content) {
   if (layout == 'post' && post.cover != undefined && post.poster != undefined) {
     layout += ' photo';
   }
-  el += `<a class="post-card${scrollreveal(' ')} ${layout}" href="${url_for(post.link || post.path)}">`
+  el += `<a class="post-card${scrollreveal(' ')} ${layout}" href="${pretty_url(post.link || post.path)}">`
   el += content;
   el += '</a>';
   return el;

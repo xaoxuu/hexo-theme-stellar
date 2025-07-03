@@ -9,7 +9,7 @@
 
 <% function layoutTag(tag, level) { %>
   <% const active = page.activeTag === tag.id %>
-  <a class="link<%= active ? ' active' : '' %>" href="<%= url_for(tag.path) %>">
+  <a class="link<%= active ? ' active' : '' %>" href="<%= pretty_url(tag.path) %>">
     <span class="toc-text"<% if (level > 0) { %> style="padding-left: <%= level * 0.875 %>rem;"<% } %>>
       <% if (tag.id === '') { %>
         <%= __('meta.all_notes') %>

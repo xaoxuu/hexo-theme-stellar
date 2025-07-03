@@ -6,7 +6,7 @@ function layoutDiv() {
     if (item == undefined || item.id == null || item.url == null) {
       continue
     }
-    el += `<a class="nav-item${item.id == page.menu_id ? ' active' : ''}" title="${item.title}" href="${url_for(item.url)}"`
+    el += `<a class="nav-item${item.id == page.menu_id ? ' active' : ''}" title="${item.title}" href="${pretty_url(item.url)}"`
     if (item.theme?.length > 0) {
       el += ` style="color:${item.theme}"`
     }

@@ -3,7 +3,7 @@
   <div class="tag-list">
     <% for (const t of page.tags) { %>
       <% const tag = notebook.tagTree.get(t.toLowerCase()) %>
-      <a class="tag" href="<%= url_for(tag.path) %>"><%= tag.name %></a>
+      <a class="tag" href="<%= pretty_url(tag.path) %>"><%= tag.name %></a>
     <% } %>
   </div>
 <% } %>

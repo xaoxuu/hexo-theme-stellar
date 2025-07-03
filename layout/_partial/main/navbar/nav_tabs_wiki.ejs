@@ -10,7 +10,7 @@ function layoutDiv() {
   if (page.filter === false) {
     el += ' class="active"';
   }
-  el += ' href="' + url_for(theme.site_tree.index_wiki.base_dir) + '">' + __("btn.all_wiki") + '</a>';
+  el += ' href="' + pretty_url(theme.site_tree.index_wiki.base_dir) + '">' + __("btn.all_wiki") + '</a>';
   el += '</a>';
   // 项目分类
   const { shelf, all_tags } = theme.wiki;
@@ -22,7 +22,7 @@ function layoutDiv() {
       if (tag.name && tag.name.length > 0 && page.tagName === tag.name) {
         el += ' class="active"';
       }
-      el += ' href="' + url_for(tag.path) + '">' + tag.name + '</a>';
+      el += ' href="' + pretty_url(tag.path) + '">' + tag.name + '</a>';
       el += '</a>';
     }
   }

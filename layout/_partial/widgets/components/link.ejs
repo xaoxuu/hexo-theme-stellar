@@ -1,7 +1,7 @@
 <%
 function layoutDiv() {
   var el = ''
-  const isActive = url_for(item.url) == url_for(page.path)
+  const isActive = pretty_url(item.url) == pretty_url(page.path)
   el += `<a class="link${isActive ? ' active' : ''}" title="${item.title}" href="${item.url}">`
   el += `<div class="flex">`
   if (item.icon) {

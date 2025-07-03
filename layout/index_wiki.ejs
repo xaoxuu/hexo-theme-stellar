@@ -13,14 +13,14 @@ function layout_wiki_list(partial) {
     if (page.filter === false) {
       // wikiList
       el += `<div class="post-list wiki">`
-      el += `<a class="post-card wiki${scrollreveal(' ')}" href="${url_for(proj.homepage?.path || '/')}">`
+      el += `<a class="post-card wiki${scrollreveal(' ')}" href="${pretty_url(proj.homepage?.path || '/')}">`
       el += partial(proj)
       el += `</a>`
       el += `</div>`
     } else if (proj.tags && proj.tags.includes(page.tagName) === true) {
       // filtered wikiList
       el += `<div class="post-list wiki filter">`
-      el += `<a class="post-card wiki${scrollreveal(' ')}" href="${url_for(proj.homepage?.path || '/')}">`
+      el += `<a class="post-card wiki${scrollreveal(' ')}" href="${pretty_url(proj.homepage?.path || '/')}">`
       el += partial(proj)
       el += `</a>`
       el += `</div>`

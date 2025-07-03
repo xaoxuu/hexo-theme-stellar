@@ -4,11 +4,11 @@ function layoutDiv() {
   var el = ''
   // 文档列表页
   el += `<span class="sep"></span>`
-  const wikiIndexPageURL = url_for(theme.site_tree.index_wiki.base_dir)
+  const wikiIndexPageURL = pretty_url(theme.site_tree.index_wiki.base_dir)
   el += `<a class="cap breadcrumb" id="menu" href="${wikiIndexPageURL}">${__("btn.wiki")}</a>`
   if (wikiObject) {
     // 文档项目名
-    const wikiHomePageURL = url_for(wikiObject.homepage?.path);
+    const wikiHomePageURL = pretty_url(wikiObject.homepage?.path);
     if (wikiHomePageURL != wikiIndexPageURL) {
       el += `<span class="sep"></span>`
       el += `<a class="cap breadcrumb" id="proj" href="${wikiHomePageURL}">${wikiObject.name || wikiObject.title}</a>`

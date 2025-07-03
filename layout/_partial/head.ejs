@@ -95,7 +95,13 @@ function custom_inject() {
 function generate_canonical() {
   const originalHost = theme.canonical.originalHost || '';
   if (originalHost.length > 0) {
-    const path = url_for(page.path).replace(/index\.html$/, '') || '/';
+    var path = pretty_url(page.path) || '/';
+    if (path.startsWith('/404') || path.startsWith('404')) {
+      return '';
+    }
+    if (path.endsWith('.html') && path.length > 5) {
+      path = path.split('.html')[0];
+    }
     return `<link rel="canonical" href="https://${originalHost}${path}">`;
   }
   return '';

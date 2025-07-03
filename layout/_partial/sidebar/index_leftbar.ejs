@@ -61,7 +61,7 @@ if (typeof page.leftbar == 'string') {
 
 function layoutTitle(main, url, sub) {
   var el = '';
-  el += '<a class="title" href="' + url_for(url || "/") + '">';
+  el += '<a class="title" href="' + pretty_url(url || "/") + '">';
   el += '<div class="main">' + main + '</div>';
   if (sub) {
     let arr = sub.split('|');

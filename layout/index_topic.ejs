@@ -8,7 +8,7 @@ function layout_topic_list(partial) {
       continue
     }
     el += `<div class="post-list wiki topic">`
-    el += `<a class="post-card wiki topic${scrollreveal(' ')}" href="${url_for(topic.homepage?.path || '/')}">`
+    el += `<a class="post-card wiki topic${scrollreveal(' ')}" href="${pretty_url(topic.homepage?.path || '/')}">`
     el += partial(topic)
     el += `</a>`
     el += `</div>`

@@ -3,7 +3,7 @@
   <% page.posts.each(post => { %>
     <a
       class="post-card<%= scrollreveal(' ') %> post"
-      href="<%= url_for(post.link || post.path) %><%= page.activeTag ? `?tag=${page.activeTag}` : '' %>"
+      href="<%= pretty_url(post.link || post.path) %><%= page.activeTag ? `?tag=${page.activeTag}` : '' %>"
     >
       <%- include('_partial/main/notebook/note_card', { note: post }) %>
     </a>

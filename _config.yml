@@ -709,3 +709,10 @@ api_host:
   gist: gist.github.com
   # https://github.com/anuraghazra/github-readme-stats
   ghcard: github-readme-stats.vercel.app
+
+
+
+# 非资深hexo开发者尽量不要动这块
+system:
+  # hexo 支持输出的链接格式众多，维护成本高，为了减少出错，统一成推荐的格式。
+  override_pretty_urls: true

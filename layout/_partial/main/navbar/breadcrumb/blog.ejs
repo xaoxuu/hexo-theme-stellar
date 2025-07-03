@@ -4,11 +4,11 @@ function layoutDiv() {
   var el = ''
   if (topicObject) { // 专栏文章
     // 专栏列表页
-    const topicIndexPageURL = url_for(theme.site_tree.index_topic.base_dir)
+    const topicIndexPageURL = pretty_url(theme.site_tree.index_topic.base_dir)
     el += `<span class="sep"></span>`
     el += `<a class="cap breadcrumb" id="menu" href="${topicIndexPageURL}">${__("btn.topic")}</a>`
     // 专栏项目名
-    const topicHomePageURL = url_for(topicObject.homepage?.path);
+    const topicHomePageURL = pretty_url(topicObject.homepage?.path);
     if (topicHomePageURL != topicIndexPageURL) {
       el += `<span class="sep"></span>`
       el += `<a class="cap breadcrumb" id="proj" href="${topicHomePageURL}">${topicObject.name || topicObject.title}</a>`
@@ -16,7 +16,7 @@ function layoutDiv() {
   } else { // 普通文章
     // 文章列表页
     el += `<span class="sep"></span>`
-    el += `<a class="cap breadcrumb" href="${url_for(config.index_generator.path)}">${__("btn.blog")}</a>`
+    el += `<a class="cap breadcrumb" href="${pretty_url(config.index_generator.path)}">${__("btn.blog")}</a>`
     // 分类列表页
     if (page.categories?.length > 0) {
       el += `<span class="sep"></span>`

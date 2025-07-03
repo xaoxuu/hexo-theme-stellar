@@ -13,6 +13,7 @@ hexo.extend.helper.register('json_ld', function(args) {
   const structured_data = this.theme.structured_data;
   const authorEmail = config.email;
   const authorImage = config.avatar || (authorEmail ? this.gravatar(authorEmail) : null);
+  const isPage = page.layout == 'page';
 
   const author = {
     '@type': 'Person',
@@ -45,10 +46,10 @@ hexo.extend.helper.register('json_ld', function(args) {
       headline: page.title,
       mainEntityOfPage: {
         '@type': 'WebPage',
-        '@id': this.url_for(page.permalink)
+        '@id': this.pretty_url(page.permalink)
       },
       publisher,
-      url: this.url_for(page.permalink)
+      url: this.pretty_url(page.permalink)
     };
 
     if (page.tags && page.tags.length > 0) {
@@ -69,9 +70,9 @@ hexo.extend.helper.register('json_ld', function(args) {
     schema.thumbnailUrl = page.cover || page.banner;
     schema.image = images;
   
-  } else if (this.is_page() || this.is_home()) {
+  } else if (isPage || this.is_home()) {
     
-    const url = this.is_home() ? config.url : this.url_for(page.permalink);
+    const url = this.is_home() ? config.url : this.pretty_url(page.permalink);
     schema = {
       '@context': 'https://schema.org',
       '@type': 'Website',

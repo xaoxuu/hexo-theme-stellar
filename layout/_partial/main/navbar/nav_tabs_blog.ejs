@@ -6,44 +6,44 @@ function layoutDiv() {
   el += '<div class="navbar-container">';
   el += '<nav class="post">';
   if (is_home()) {
-    el += '<a class="active" href="' + url_for(config.index_generator.path) + '">' + __("btn.recent_publish") + '</a>';
+    el += '<a class="active" href="' + pretty_url(config.index_generator.path) + '">' + __("btn.recent_publish") + '</a>';
   } else {
-    el += '<a href="' + url_for(config.index_generator.path) + '">' + __("btn.recent_publish") + '</a>';
+    el += '<a href="' + pretty_url(config.index_generator.path) + '">' + __("btn.recent_publish") + '</a>';
   }
 
   if (site.categories && site.categories.length > 0) {
     if (page.category) {
-      el += '<a class="active" href="' + url_for(config.category_dir) + '/">' + __("btn.category") + __("symbol.colon") + page.category + '</a>';
+      el += '<a class="active" href="' + pretty_url(config.category_dir) + '">' + __("btn.category") + __("symbol.colon") + page.category + '</a>';
     } else if (page.layout == "categories") {
-      el += '<a class="active" href="' + url_for(config.category_dir) + '/">' + __("btn.categories") + '</a>';
+      el += '<a class="active" href="' + pretty_url(config.category_dir) + '">' + __("btn.categories") + '</a>';
     } else {
-      el += '<a href="' + url_for(config.category_dir) + '/">' + __("btn.categories") + '</a>';
+      el += '<a href="' + pretty_url(config.category_dir) + '">' + __("btn.categories") + '</a>';
     }
   }
 
   if (site.tags && site.tags.length > 0) {
     if (page.tag) {
-      el += '<a class="active" href="' + url_for(config.tag_dir) + '/">' + __("btn.tag") + __("symbol.colon") + page.tag + '</a>';
+      el += '<a class="active" href="' + pretty_url(config.tag_dir) + '">' + __("btn.tag") + __("symbol.colon") + page.tag + '</a>';
     } else if (page.layout == "tags") {
-      el += '<a class="active" href="' + url_for(config.tag_dir) + '/">' + __("btn.tags") + '</a>';
+      el += '<a class="active" href="' + pretty_url(config.tag_dir) + '">' + __("btn.tags") + '</a>';
     } else {
-      el += '<a href="' + url_for(config.tag_dir) + '/">' + __("btn.tags") + '</a>';
+      el += '<a href="' + pretty_url(config.tag_dir) + '">' + __("btn.tags") + '</a>';
     }
   }
   
   if (theme.topic?.publish_list?.length > 0) {
     if (page.layout == 'index_topic') {
-      el += '<a class="active" href="' + url_for(theme.site_tree.index_topic.base_dir) + '/">' + __("btn.topic") + '</a>';
+      el += '<a class="active" href="' + pretty_url(theme.site_tree.index_topic.base_dir) + '">' + __("btn.topic") + '</a>';
     } else {
-      el += '<a href="' + url_for(theme.site_tree.index_topic.base_dir) + '/">' + __("btn.topic") + '</a>';
+      el += '<a href="' + pretty_url(theme.site_tree.index_topic.base_dir) + '">' + __("btn.topic") + '</a>';
     }
   }
   
   if (site.posts && site.posts.length > 0) {
     if (is_archive()) {
-      el += '<a class="active" href="' + url_for(config.archive_dir) + '/">' + __("btn.archives") + '</a>';
+      el += '<a class="active" href="' + pretty_url(config.archive_dir) + '">' + __("btn.archives") + '</a>';
     } else {
-      el += '<a href="' + url_for(config.archive_dir) + '/">' + __("btn.archives") + '</a>';
+      el += '<a href="' + pretty_url(config.archive_dir) + '">' + __("btn.archives") + '</a>';
     }
   }
   

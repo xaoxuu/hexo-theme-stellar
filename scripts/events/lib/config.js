@@ -11,9 +11,15 @@ const path = require('path')
 
 module.exports = ctx => {
 
-  const { cache, language_switcher } = ctx.theme.config
+  const { cache, language_switcher, system } = ctx.theme.config
   const warning = function(...args) {
     ctx.log.warn(`Since ${args[0]} is turned on, the ${args[1]} is disabled to avoid potential hazards.`)
+  }
+
+  if (system.override_pretty_urls !== false) {
+    // 强制修改 pretty_urls 配置项
+    ctx.config.pretty_urls.trailing_index = false
+    ctx.config.pretty_urls.trailing_html = false
   }
 
   if (cache && cache.enable && language_switcher) {

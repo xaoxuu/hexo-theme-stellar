@@ -21,7 +21,7 @@ function layoutDiv() {
   } else {
     const author = theme.authors ? (theme.authors[page.author] || theme.default_author) : null
     if (author) {
-      el += `<a class="author" href="${url_for(author.path)}">${author.name}</a>`
+      el += `<a class="author" href="${pretty_url(author.path)}">${author.name}</a>`
       el += `<span class="sep"></span>`
     }
     // 发布日期
