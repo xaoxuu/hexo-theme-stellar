@@ -474,11 +474,11 @@ data_services:
   # 打分
   rating:
     js: /js/services/rating.js
-    api: https://star-vote.vercel.app/api/rating
+    api: https://star-vote.xaox.cc/api/rating
   # 投票
   vote:
     js: /js/services/vote.js
-    api: https://star-vote.vercel.app/api/vote
+    api: https://star-vote.xaox.cc/api/vote
   # 网格布局类
   sites:
     js: /js/services/sites.js

@@ -1,0 +1,46 @@
+.tag-plugin.ds-vote .header
+  text-align: center
+  margin: .5rem
+  font-weight: 500
+  color: var(--text)
+.tag-plugin.ds-vote .body
+  width 50%
+  min-width: 240px
+  max-width: 320px
+  margin: 1rem auto
+  display: grid
+  grid-template-columns: 1fr 1fr
+  grid-gap: 2rem
+  button
+    color: var(--text-p1)
+    font-size: 1rem
+    display: inline-flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    padding: .5rem
+    background: var(--block)
+    border-radius: $border-button
+    font-weight: 500
+    svg
+      font-size: 1.5em
+      margin: 8px
+    span
+      line-height: 1
+      font-size: 1em
+      margin-bottom: 4px
+    trans1 all
+    color: var(--theme)
+    background: var(--theme-a10)
+    &.vote-up
+      x-set-theme-with-color($c-green)
+    &.vote-down
+      x-set-theme-with-color($c-red)
+    &:hover,&.active
+      color: white
+      background: var(--theme)
+
+
+// 已经投过票了
+.tag-plugin.ds-vote.voted
+  pointer-events: none

@@ -1,18 +1,72 @@
+function getRatingKey(id) {
+  return `rating-${id}`;
+}
+
+function hasRated(id) {
+  return !!localStorage.getItem(getRatingKey(id));
+}
+
+function getRatedValue(id) {
+  return parseInt(localStorage.getItem(getRatingKey(id)) || '0');
+}
+
+function storeRating(id, value) {
+  localStorage.setItem(getRatingKey(id), value);
+}
+
+function clearHover(el) {
+  el.querySelectorAll('.star').forEach(s => s.classList.remove('hover'));
+}
+
+function updatePreview(el, avg) {
+  const rounded = Math.floor(avg);
+  el.querySelectorAll('.star').forEach(s => {
+    const v = parseInt(s.dataset.value);
+    s.classList.toggle('preview', v <= rounded);
+  });
+}
+
+function setupHoverEffect(el) {
+  const stars = el.querySelectorAll('.star');
+  if (!stars.length) return;
+
+  stars.forEach(star => {
+    const value = parseInt(star.dataset.value);
+
+    star.addEventListener('mouseenter', () => {
+      stars.forEach(s => {
+        s.classList.remove('preview');
+        const v = parseInt(s.dataset.value);
+        s.classList.toggle('hover', v <= value);
+      });
+    });
+
+    star.addEventListener('mouseleave', () => {
+      clearHover(el);
+      // 恢复平均分预览
+      const avg = parseFloat(el.querySelector('.avg')?.textContent.replace(/[()]/g, '') || '0');
+      updatePreview(el, avg);
+    });
+  });
+}
+
+function calculateAverage(rating = {}) {
+  const validScores = Object.entries(rating).filter(([k]) => !isNaN(Number(k)));
+  const total = validScores.reduce((sum, [k, c]) => sum + Number(k) * c, 0);
+  const votes = validScores.reduce((sum, [, c]) => sum + c, 0);
+  return votes > 0 ? (total / votes).toFixed(1) : '0.0';
+}
+
 async function loadRating(el) {
   const id = el.dataset.id;
   const api = el.dataset.api;
   if (!id || !api) return;
 
   try {
-    const res = await fetch(`${api}/info?id=${encodeURIComponent(id)}`).then(r => r.json());
-    const rating = res.rating || {};
-
-    // ✅ 只统计 key 是数字的评分项
-    const validScores = Object.entries(rating).filter(([k]) => !isNaN(Number(k)));
-
-    const total = validScores.reduce((sum, [k, c]) => sum + Number(k) * c, 0);
-    const votes = validScores.reduce((sum, [, c]) => sum + c, 0);
-    const avg = votes > 0 ? (total / votes).toFixed(2) : '0.00';
+    const res = await fetch(`${api}/info?id=${encodeURIComponent(id)}`);
+    const data = await res.json();
+    const rating = data.rating || {};
+    const avg = calculateAverage(rating);
 
     let avgEl = el.querySelector('.avg');
     if (!avgEl) {
@@ -21,6 +75,8 @@ async function loadRating(el) {
       el.appendChild(avgEl);
     }
     avgEl.textContent = `(${avg})`;
+
+    updatePreview(el, avg);
   } catch (e) {
     console.warn(`[rating] 加载失败: id=${id}`, e);
   }
@@ -29,13 +85,16 @@ async function loadRating(el) {
 async function submitRating(el, value) {
   const id = el.dataset.id;
   const api = el.dataset.api;
-  if (!id || !api) return;
+  if (!id || !api || hasRated(id)) return;
+
+  storeRating(id, value);
+  el.classList.add('rated');
 
   try {
     await fetch(`${api}/update?id=${encodeURIComponent(id)}&value=${value}`, {
       method: 'POST'
     });
-    await loadRating(el);
+    loadRating(el);
   } catch (e) {
     console.warn(`[rating] 提交失败: id=${id}`, e);
   }
@@ -47,10 +106,17 @@ function initRatings() {
     if (!id || !api) return;
 
     loadRating(el);
+    setupHoverEffect(el);
 
-    el.querySelectorAll('.star')?.forEach(star => {
+    if (hasRated(id)) {
+      el.classList.add('rated');
+    }
+
+    el.querySelectorAll('.star').forEach(star => {
       const value = star.dataset.value;
-      star.addEventListener('click', () => submitRating(el, value));
+      star.addEventListener('click', () => {
+        if (!hasRated(id)) submitRating(el, value);
+      });
     });
   });
 }

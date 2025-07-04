@@ -10,17 +10,21 @@
 'use strict'
 
 module.exports = ctx => function (args) {
-  args = ctx.args.map(args, ['id'], [''])
+  args = ctx.args.map(args, ['id'], ['title'])
   const api = ctx.theme.config.data_services.rating.api
   const id = args.id || 'default'
 
+  const star = ctx.utils.icon('rating:star')
   let el = `<div class="tag-plugin ds-rating" data-api="${api}" data-api="${api}" data-id="${id}">`
-
-  for (let i = 1; i <= 5; i++) {
-    el += `<button class="star" data-value="${i}">⭐</button>`
+  if (args.title) {
+    el += `<div class="header"><span>${args.title}</span></div>`
   }
-
+  el += `<div class="body">`
+  for (let i = 1; i <= 5; i++) {
+    el += `<button class="star" data-value="${i}">${star}</button>`
+  }
   el += `<span class="avg">(0.0)</span>`
+  el += '</div>'
   el += '</div>'
   return el
 }

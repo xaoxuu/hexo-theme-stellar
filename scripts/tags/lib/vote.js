@@ -10,15 +10,19 @@
 'use strict'
 
 module.exports = ctx => function (args) {
-  args = ctx.args.map(args, ['id'], [''])
+  args = ctx.args.map(args, ['id'], ['title'])
+
   const api = ctx.theme.config.data_services.vote.api
   const id = args.id || 'default'
 
-  // ✅ 不再绑定 onclick，而使用 class 让 JS 绑定事件
-  return `
-<div class="tag-plugin ds-vote" data-api="${api}" data-api="${api}" data-id="${id}">
-  <button class="vote-up">👍 <span class="up">0</span></button>
-  <button class="vote-down">👎 <span class="down">0</span></button>
-</div>
-`.trim()
+  var el = `<div class="tag-plugin ds-vote" data-api="${api}" data-api="${api}" data-id="${id}">`
+  if (args.title) {
+    el += `<div class="header"><span>${args.title}</span></div>`
+  }
+  el += `<div class="body">`
+  el += `<button class="vote-up">${ctx.utils.icon('vote:thumbsup')} <span class="up">0</span></button>`
+  el += `<button class="vote-down">${ctx.utils.icon('vote:thumbsdown')} <span class="down">0</span></button>`
+  el += `</div>`
+  el += `</div>`
+  return el.trim()
 }
