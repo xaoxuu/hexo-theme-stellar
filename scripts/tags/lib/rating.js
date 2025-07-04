@@ -1,0 +1,26 @@
+/**
+ * rating.js v1.0 | https://github.com/xaoxuu/hexo-theme-stellar/
+ * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
+ *
+ * rating:
+ * {% rating id %}
+ *
+ */
+
+'use strict'
+
+module.exports = ctx => function (args) {
+  args = ctx.args.map(args, ['id'], [''])
+  const api = ctx.theme.config.data_services.rating.api
+  const id = args.id || 'default'
+
+  let el = `<div class="tag-plugin ds-rating" api="${api}" data-api="${api}" data-id="${id}">`
+
+  for (let i = 1; i <= 5; i++) {
+    el += `<button class="star" data-value="${i}">⭐</button>`
+  }
+
+  el += `<span class="avg">(0.0)</span>`
+  el += '</div>'
+  return el
+}

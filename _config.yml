@@ -471,6 +471,14 @@ data_services:
     api: 
   ghinfo:
     js: /js/services/ghinfo.js
+  # 打分
+  rating:
+    js: /js/services/rating.js
+    api: https://star-vote.vercel.app/api/rating
+  # 投票
+  vote:
+    js: /js/services/vote.js
+    api: https://star-vote.vercel.app/api/vote
   # 网格布局类
   sites:
     js: /js/services/sites.js
