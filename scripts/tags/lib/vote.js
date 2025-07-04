@@ -16,7 +16,7 @@ module.exports = ctx => function (args) {
 
   // ✅ 不再绑定 onclick，而使用 class 让 JS 绑定事件
   return `
-<div class="tag-plugin ds-vote" api="${api}" data-api="${api}" data-id="${id}">
+<div class="tag-plugin ds-vote" data-api="${api}" data-api="${api}" data-id="${id}">
   <button class="vote-up">👍 <span class="up">0</span></button>
   <button class="vote-down">👎 <span class="down">0</span></button>
 </div>

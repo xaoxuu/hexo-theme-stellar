@@ -36,7 +36,7 @@ module.exports = ctx => function(args) {
   }
   el += ' cardlink'
   if (args.api) {
-    el += ` api="${args.api}"`
+    el += ` data-api="${args.api}"`
   }
   el += ' autofill="'
   el += autofill.join(',')

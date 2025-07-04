@@ -2,7 +2,7 @@ utils.jq(() => {
   const els = Array.from(document.getElementsByClassName('ds-memos'));
 
   els.forEach(el => {
-    const api = el.getAttribute('api');
+    const api = el.dataset.api;
     if (!api) return;
 
     const default_avatar = el.getAttribute('avatar') || def.avatar;

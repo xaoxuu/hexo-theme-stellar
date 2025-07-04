@@ -13,7 +13,7 @@ utils.jq(() => {
     const timelines = document.getElementsByClassName('ds-timeline');
     for (var i = 0; i < timelines.length; i++) {
       const el = timelines[i];
-      const api = el.getAttribute('api');
+      const api = el.dataset.api;
       if (api == null) {
         continue;
       }

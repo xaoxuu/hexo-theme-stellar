@@ -12,7 +12,7 @@ async function loadRating(el) {
 
     const total = validScores.reduce((sum, [k, c]) => sum + Number(k) * c, 0);
     const votes = validScores.reduce((sum, [, c]) => sum + c, 0);
-    const avg = votes > 0 ? (total / votes).toFixed(1) : '0.0';
+    const avg = votes > 0 ? (total / votes).toFixed(2) : '0.00';
 
     let avgEl = el.querySelector('.avg');
     if (!avgEl) {

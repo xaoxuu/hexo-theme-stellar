@@ -410,7 +410,7 @@ module.exports = ctx => function(args, content) {
           let urlTarget = cell['link'].includes('://') ? ' target="_blank" rel="external nofollow noopener noreferrer"' : ''
           let linkFrom = cell['from'] || 'QQ小程序'
           el += `
-            <a class="link-card rich" href="${cell['link']}"${urlTarget} api="${ctx.theme.config.tag_plugins.chat?.api + '?url=' + cell['link']}" cardlink autofill="title,icon,desc">
+            <a class="link-card rich" href="${cell['link']}"${urlTarget} data-api="${ctx.theme.config.tag_plugins.chat?.api + '?url=' + cell['link']}" cardlink autofill="title,icon,desc">
             <div class="top">
               <span class="title">${cell['link']}</span>
             </div>

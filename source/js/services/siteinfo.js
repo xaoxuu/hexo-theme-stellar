@@ -6,7 +6,7 @@ function setCardLink(nodes) {
     // If it is not a tag element then it is not processed
     if (el.nodeType !== 1) return;
     el.removeAttribute('cardlink');
-    const api = el.getAttribute('api');
+    const api = el.dataset.api;
     if (api == null) return;
     fetch(api).then(function(response) {
       if (response.ok) {

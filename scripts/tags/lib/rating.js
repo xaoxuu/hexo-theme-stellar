@@ -14,7 +14,7 @@ module.exports = ctx => function (args) {
   const api = ctx.theme.config.data_services.rating.api
   const id = args.id || 'default'
 
-  let el = `<div class="tag-plugin ds-rating" api="${api}" data-api="${api}" data-id="${id}">`
+  let el = `<div class="tag-plugin ds-rating" data-api="${api}" data-api="${api}" data-id="${id}">`
 
   for (let i = 1; i <= 5; i++) {
     el += `<button class="star" data-value="${i}">⭐</button>`

@@ -3,7 +3,7 @@ utils.jq(() => {
     const els = document.getElementsByClassName('ds-fcircle');
     for (var i = 0; i < els.length; i++) {
       const el = els[i];
-      const api = el.getAttribute('api');
+      const api = el.dataset.api;
       if (api == null) {
         continue;
       }

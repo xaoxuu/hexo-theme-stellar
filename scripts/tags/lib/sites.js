@@ -20,7 +20,7 @@ module.exports = ctx => function(args) {
   var el = '<div class="tag-plugin sites-wrap">'
   if (api) {
     el += '<div class="data-service ds-sites"'
-    el += ' api="' + api + '"'
+    el += ' data-api="' + api + '"'
     el += '>'
     el += '<div class="grid-box"></div>'
     el += '</div>'

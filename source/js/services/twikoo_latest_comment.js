@@ -3,7 +3,7 @@ utils.jq(() => {
       const el = document.querySelector('.ds-twikoo');
       utils.onLoading(el); // 加载动画
   
-      const api = el.getAttribute('api');
+      const api = el.dataset.api;
       const limit = parseInt(el.getAttribute('limit')) || 10;
       const reply = el.getAttribute('hide') !== 'reply';
       if (!api) return;

@@ -5,7 +5,7 @@ utils.jq(() => {
         const el = els[i];
         const limit = parseInt(el.getAttribute('limit')) || 10;
   
-        const api = el.getAttribute('api') + '&limit=' + limit;
+        const api = el.dataset.api + '&limit=' + limit;
         if (api == null) {
           continue;
         }
