@@ -10,18 +10,18 @@
 'use strict'
 
 module.exports = ctx => function (args) {
-  args = ctx.args.map(args, ['id'], ['title'])
+  args = ctx.args.map(args, ['id', 'yes', 'no'], ['title'])
 
   const api = ctx.theme.config.data_services.vote.api
   const id = args.id || 'default'
 
-  var el = `<div class="tag-plugin ds-vote" data-api="${api}" data-api="${api}" data-id="${id}">`
+  var el = `<div class="tag-plugin ds-vote" data-api="${api}" data-id="${id}">`
   if (args.title) {
     el += `<div class="header"><span>${args.title}</span></div>`
   }
   el += `<div class="body">`
-  el += `<button class="vote-up">${ctx.utils.icon('vote:thumbsup')} <span class="up">0</span></button>`
-  el += `<button class="vote-down">${ctx.utils.icon('vote:thumbsdown')} <span class="down">0</span></button>`
+  el += `<button class="vote-up">${ctx.utils.icon(args.yes || 'vote:thumbsup')} <span class="up">0</span></button>`
+  el += `<button class="vote-down">${ctx.utils.icon(args.no || 'vote:thumbsdown')} <span class="down">0</span></button>`
   el += `</div>`
   el += `</div>`
   return el.trim()

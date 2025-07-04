@@ -68,6 +68,11 @@ async function loadRating(el) {
     const rating = data.rating || {};
     const avg = calculateAverage(rating);
 
+    // 计算评分人数
+    const validScores = Object.entries(rating).filter(([k]) => !isNaN(Number(k)));
+    const totalVotes = validScores.reduce((sum, [, c]) => sum + c, 0);
+
+    // 设置平均分
     let avgEl = el.querySelector('.avg');
     if (!avgEl) {
       avgEl = document.createElement('span');
@@ -75,6 +80,15 @@ async function loadRating(el) {
       el.appendChild(avgEl);
     }
     avgEl.textContent = `(${avg})`;
+
+    // 设置评分人数
+    let countEl = el.querySelector('.count');
+    if (!countEl) {
+      countEl = document.createElement('span');
+      countEl.className = 'count';
+      el.appendChild(countEl);
+    }
+    countEl.textContent = `${totalVotes}`;
 
     updatePreview(el, avg);
   } catch (e) {
