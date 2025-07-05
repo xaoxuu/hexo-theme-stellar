@@ -14,7 +14,7 @@ hexo.extend.generator.register('page', function (locals) {
       typeof page.layout === 'undefined'
     ) ? false : page.layout;
 
-    const isRawOutput = /\.(txt|json|xml)$/.test(path);
+    const isRawOutput = /\.(txt|json|xml|js|css)$/.test(path);
 
     return {
       path,
