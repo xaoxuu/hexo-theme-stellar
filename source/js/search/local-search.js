@@ -48,7 +48,9 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
         var dataContent = data.content;
         var dataContentLowerCase = dataContent.toLowerCase();
         var dataUrl = data.path.startsWith('//') ? data.path.slice(1) : data.path;
-
+        dataUrl = dataUrl.replace(/\/?index\.html$/, '/'); // index.html → /
+        dataUrl = dataUrl.replace(/\.html$/, '/'); // xxx.html → xxx/
+        
         var indexTitle = -1;
         var indexContent = -1;
         var firstOccur = -1;
