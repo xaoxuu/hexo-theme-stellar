@@ -1,3 +1,4 @@
+<% if (conf.v3) { %>
 <script>
   window.MathJax = {
     tex: {
@@ -23,4 +24,26 @@
     },
   };
 </script>
+<% } %>
 <script id="MathJax-script" src="<%- conf.js %>" async></script>
+<% if (!conf.v3) { %>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+  MathJax.Hub.Config({
+    tex2jax: {
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  });
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+<% } %>
