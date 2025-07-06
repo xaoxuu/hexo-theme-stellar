@@ -1,6 +1,9 @@
 $lazyTransitionType = hexo-config('plugins.lazyload.transition')
 $loadingImageSize = 2rem
 
+img:not([src])
+  visibility: hidden
+
 .lazy-box
   position: relative
   overflow: hidden
