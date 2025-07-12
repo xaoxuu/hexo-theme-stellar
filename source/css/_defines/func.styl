@@ -136,6 +136,13 @@ hoverable-card()
 newblur()
   box-shadow: 0 0 2px rgba(black, .04), 0 2px 8px rgba(black, .04), 0 4px 16px rgba(black, .04)
   trans1: all
+  text-shadow: 0 0 4px rgba(white, 1), 0 0 8px rgba(white, 0.8), 0 0 16px rgba(white, 0.6)
+  @media (prefers-color-scheme: dark)
+    text-shadow: 0 0 2px rgba(black, 0.2), 0 0 4px rgba(black, 0.4)
+  nav a:not(.active,:hover)
+    filter: drop-shadow(0 0 0 white) drop-shadow(0 0 4px white) drop-shadow(0 0 8px rgba(white, 0.5))
+    @media (prefers-color-scheme: dark)
+      filter: none
   &:before,&:after
     z-index -1
     position: absolute
@@ -149,17 +156,17 @@ newblur()
   &:before
     backdrop-filter: blur(8px)
     -webkit-backdrop-filter: blur(8px)
-    background: var(--bg-a20)
+    background: rgba(white, 0.1)
   &:after
-    --blur-px: 24px
-    --blur-sat: 500%
-    background: var(--bg-a50)
+    --blur-px: 8px
+    --blur-sat: 400%
+    background: rgba(white, 0.2)
     backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
     -webkit-backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
-    mask: linear-gradient(rgba(white, 1), 10%, rgba(white, 0.05), 90%, rgba(white, 1)), linear-gradient(90deg, rgba(white, 1), 10%, rgba(white, 0.05), 90%, rgba(white, 1))
-    -webkit-mask: linear-gradient(rgba(white, 1), 10%, rgba(white, 0.05), 90%, rgba(white, 1)), linear-gradient(90deg, rgba(white, 1), 10%, rgba(white, 0.05), 90%, rgba(white, 1))
+    mask: linear-gradient(white, 20%, transparent, 80%, white), linear-gradient(90deg, white, 20%, transparent, 80%, white)
+    -webkit-mask-image: linear-gradient(white, 20%, transparent, 80%, white), linear-gradient(90deg, white, 20%, transparent, 80%, white)
     box-shadow: inset 0 0 4px 1px rgba(white, 0.5)
     trans1 all
     @media (prefers-color-scheme: dark)
-      opacity 0.4
-      background: var(--bg-a20)
+      background: rgba(white, 0.1)
+      box-shadow: inset 0 0 2px 1px rgba(white, 0.2)
