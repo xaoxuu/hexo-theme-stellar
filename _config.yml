@@ -392,12 +392,12 @@ tag_plugins:
       prefix: ph:seal-question-fill
   # {% emoji %}
   emoji:
-    default: https://gcore.jsdelivr.net/gh/cdn-x/emoji@2.1.2/qq/{name}.gif
+    default: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif
     twemoji: https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg
-    qq: https://gcore.jsdelivr.net/gh/cdn-x/emoji@2.1.2/qq/{name}.gif
-    aru: https://gcore.jsdelivr.net/gh/cdn-x/emoji@2.1.2/aru/{name}.gif
-    tieba: https://gcore.jsdelivr.net/gh/cdn-x/emoji@2.1.2/tieba/{name}.png
-    blobcat: https://gcore.jsdelivr.net/gh/cdn-x/emoji@2.1.2/blobcat/{name}.gif
+    qq: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif
+    aru: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif
+    tieba: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png
+    blobcat: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif
   icon:
     # 留空时，图标和文字颜色相同
     default_color: accent # theme, accent, red, orange, yellow, green, cyan, blue, purple
