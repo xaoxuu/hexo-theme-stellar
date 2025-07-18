@@ -13,6 +13,9 @@ if (item.placeholder == null && item.filter == 'auto') {
 }
 function layoutDiv() {
   var el = ''
+  if (page.search == false) {
+    return el
+  }
   el += `<div class="search-wrapper" id="search-wrapper">`
   el += `<form class="search-form">`
   var filter = ''
