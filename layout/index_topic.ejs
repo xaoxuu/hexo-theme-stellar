@@ -7,8 +7,8 @@ function layout_topic_list(partial) {
     if (topic == null) {
       continue
     }
-    el += `<div class="post-list wiki topic">`
-    el += `<a class="post-card wiki topic${scrollreveal(' ')}" href="${pretty_url(topic.homepage?.path || '/')}">`
+    el += `<div class="post-card-wrap${scrollreveal(' ')}">`
+    el += `<a class="post-card wiki topic" href="${pretty_url(topic.homepage?.path || '/')}">`
     el += partial(topic)
     el += `</a>`
     el += `</div>`
@@ -18,9 +18,11 @@ function layout_topic_list(partial) {
 function layoutDiv() {
   var el = ''
   el += partial('_partial/main/navbar/nav_tabs_blog')
+  el += `<div class="post-list wiki topic">`;
   el += layout_topic_list(function(topic) {
     return partial('_partial/main/post_list/topic_card', {topic: topic})
   })
+    el += `</div>`
   return el
 }
 %>

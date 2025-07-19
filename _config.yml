@@ -556,8 +556,8 @@ plugins:
     enable: #true # 慎用，有些时候打开页面空白
     js: https://gcore.jsdelivr.net/npm/scrollreveal@4.0/dist/scrollreveal.min.js
     distance: 8px
-    duration: 500 # ms
-    interval: 50 # ms
+    duration: 1000 # ms
+    interval: 100 # ms
     scale: 1 # 0.1~1
   
   # AI 摘要

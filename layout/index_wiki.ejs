@@ -12,15 +12,15 @@ function layout_wiki_list(partial) {
     }
     if (page.filter === false) {
       // wikiList
-      el += `<div class="post-list wiki">`
-      el += `<a class="post-card wiki${scrollreveal(' ')}" href="${pretty_url(proj.homepage?.path || '/')}">`
+      el += `<div class="post-card-wrap${scrollreveal(' ')}">`
+      el += `<a class="post-card wiki" href="${pretty_url(proj.homepage?.path || '/')}">`
       el += partial(proj)
       el += `</a>`
       el += `</div>`
     } else if (proj.tags && proj.tags.includes(page.tagName) === true) {
       // filtered wikiList
-      el += `<div class="post-list wiki filter">`
-      el += `<a class="post-card wiki${scrollreveal(' ')}" href="${pretty_url(proj.homepage?.path || '/')}">`
+      el += `<div class="post-card-wrap${scrollreveal(' ')} filter">`
+      el += `<a class="post-card wiki" href="${pretty_url(proj.homepage?.path || '/')}">`
       el += partial(proj)
       el += `</a>`
       el += `</div>`
@@ -32,9 +32,11 @@ function layout_wiki_list(partial) {
 function layoutDiv() {
   var el = ''
   el += partial('_partial/main/navbar/nav_tabs_wiki')
+  el += `<div class="post-list wiki">`;
   el += layout_wiki_list(function(proj) {
     return partial('_partial/main/post_list/wiki_card', {proj: proj})
   })
+  el += `</div>`
   return el
 }
 %>
