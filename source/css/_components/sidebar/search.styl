@@ -1,132 +1,227 @@
-
-.search-wrapper
-  padding-bottom: 32px
-  width: 100%
-  border-radius: $border-card-s
-  >.search-form
-    position: sticky
-    top: 0
-    height: 40px
-    display: flex
-    flex-direction: row
-    align-items: center
-    transition: 0.38s ease-out
-    z-index: 1
-    border-radius: $border-card-s
-    color: var(--text)
-    >*
-      z-index: 1
-    &:before
-      position: absolute
-      content: ''
-      height: 2px
-      bottom: 0
-      left: 1rem
-      right: 1rem
-      border-radius: $border-bar
-      background: var(--bg-a100)
-      @media screen and (prefers-color-scheme: dark)
-        background: var(--bg-a20)
-      z-index 0
-      trans1 all
-    &:hover,&:has(input:focus),&:has(input:not(:placeholder-shown))
-      &:before
-        background: var(--bg-a100)
-        height: 100%
-        left: 0
-        right: 0
-  .search-input
-    width: 100%
-    box-sizing: border-box
-    font-family: $ff-body
-    font-size: $fs-14
-    padding: 12px 0
-    color: var(--text)
-    &::placeholder
-      color: var(--text-p3)
-      @media screen and (prefers-color-scheme: dark)
-        color: var(--text-p2)
-  .search-button 
-    border-radius: $border-bar
-    display: flex
-    align-items: center
-    height: 40px
-    svg
-      height: 1rem
-      width: calc((var(--side-content-width) + var(--gap-padding) * 2 - 3 * 8px) * 0.25)
-      color: var(--text-p2)
-      fill: currentColor
-      path[p-id="1562"]
-        color: var(--theme)
+.search-wrapper {
+  padding-bottom: 32px;
+  width: 100%;
+  border-radius: $border-card-s;
+  
+  > .search-form {
+    position: sticky;
+    top: 0;
+    height: 48px;  // Slightly taller for better interaction
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    transition: all 0.38s ease-out;
+    z-index: 1;
+    border-radius: $border-card-s;
+    color: var(--text);
+    background: var(--bg-a5);  // Subtle background
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     
-  &[searching='true']
-    .search-button
-      path[p-id="1562"]
-        color: $c-green
-  &.noresult[searching='true']
-    .search-button
-      path[p-id="1562"]
-        color: $c-red
+    > * {
+      z-index: 1;
+    }
+    
+    &:before {
+      position: absolute;
+      content: '';
+      height: 2px;
+      bottom: 0;
+      left: 1rem;
+      right: 1rem;
+      border-radius: $border-bar;
+      background: var(--theme-a30);  // Use theme color for accent
+      z-index: 0;
+      transition: all 0.3s ease;
+    }
+    
+    &:hover,
+    &:has(input:focus),
+    &:has(input:not(:placeholder-shown)) {
+      background: var(--bg-a10);  // Slightly more visible on interaction
+      
+      &:before {
+        background: var(--theme-a50);  // More prominent theme color
+        height: 100%;
+        left: 0;
+        right: 0;
+      }
+      
+      .search-button svg {
+        color: var(--theme);  // Match icon with theme
+      }
+    }
+  }
+  
+  .search-input {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: $ff-body;
+    font-size: $fs-15;  // Slightly larger font
+    padding: 12px 16px;  // More horizontal padding
+    color: var(--text);
+    background: transparent;
+    border: none;
+    outline: none;
+    
+    &::placeholder {
+      color: var(--text-p3);
+      transition: color 0.2s ease;
+      
+      @media screen and (prefers-color-scheme: dark) {
+        color: var(--text-p2);
+      }
+    }
+    
+    &:focus::placeholder {
+      color: var(--text-p4);  // Make placeholder fade more when focused
+    }
+  }
+  
+  .search-button {
+    border-radius: $border-bar;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    width: 40px;
+    margin-right: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: var(--bg-a20);
+    }
+    
+    svg {
+      height: 1.1rem;  // Slightly larger icon
+      width: 1.1rem;
+      color: var(--text-p2);
+      fill: currentColor;
+      transition: color 0.2s ease;
+      
+      path[p-id="1562"] {
+        color: var(--theme);
+      }
+    }
+  }
+  
+  &[searching='true'] {
+    .search-button {
+      animation: pulse 1.5s infinite;
+      
+      path[p-id="1562"] {
+        color: $c-green;
+      }
+    }
+  }
+  
+  &.noresult[searching='true'] {
+    .search-button {
+      path[p-id="1562"] {
+        color: $c-red;
+      }
+    }
+  }
+  
+  .search-no-result {
+    display: none;
+    color: var(--text-p1);
+    text-align: center;
+    font-size: $fs-14;
+    padding: 2rem;
+    margin: 8px 0;
+    background: var(--bg-a20);
+    border-radius: $border-card-s;
+    border: 1px dashed var(--bg-a50);
+  }
+  
+  #search-result {
+    max-height: 60vh;
+    overflow: auto;
+    scrollbar-width: none;
+    scrollbar(0, 0);
+    border-radius: $border-bar;
+    margin-top: 12px;
+    
+    &:empty {
+      display: none;
+    }
+    
+    .search-result-list {
+      padding: 0;
+      margin: 8px 0;
+      list-style-type: none;
+    }
+    
+    li a {
+      display: block;
+      background: var(--bg-a20);
+      line-height: 1.2;
+      padding: 1rem;  // More padding
+      border-radius: $border-card-s;
+      transition: all 0.2s ease;
+      border-left: 3px solid transparent;
+      
+      &:hover {
+        background: var(--bg-a100);
+        border-left-color: var(--theme);  // Accent border
+        transform: translateX(2px);
+      }
+    }
+    
+    li + li {
+      margin-top: 8px;
+    }
+    
+    .search-result-title {
+      color: var(--text-p1);
+      font-weight: 700;
+      font-size: $fs-15;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      
+      &:before {
+        content: '→';
+        margin-right: 6px;
+        color: var(--theme);
+        font-size: 0.9em;
+      }
+    }
+    
+    .search-result-content {
+      overflow: hidden;
+      color: var(--text-p3);
+      margin: 4px 0 0;
+      max-height: 13em;
+      text-align: justify;
+      font-size: $fs-13;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
+      line-height: 1.5;
+    }
+    
+    .search-keyword {
+      color: var(--theme);  // Use theme color instead of red
+      font-weight: bold;
+      background: var(--theme-a10);
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+  }
+}
 
-  .search-no-result
-    display: none
-    color: var(--text-p1)
-    text-align: center
-    font-size: $fs-14
-    padding: 2rem
-    margin: 8px 0
-    background: var(--bg-a20)
-    border-radius: $border-card-s
+.search-wrapper.noresult[searching='true'] {
+  .search-no-result {
+    display: block;
+    margin-bottom: 8px;
+  }
+}
 
-
-  #search-result
-    max-height: 60vh
-    overflow: auto
-    scrollbar-width: none
-    scrollbar(0, 0)
-    border-radius: $border-bar
-    &:empty
-      display: none
-    .search-result-list
-      padding: 0
-      margin: 8px 0
-      list-style-type: none
-    li a
-      display: block
-      background: var(--bg-a20)
-      line-height: 1.2
-      padding: 0.75rem 1rem
-      border-radius: $border-card-s
-      trans1 background
-      &:hover
-        background: var(--bg-a100)
-    li+li
-      margin-top: 8px
-    .search-result-title
-      color: var(--text-p1)
-      font-weight: 700
-      font-size: $fs-15
-
-    .search-result-content
-      overflow: hidden
-      color: var(--text-p3)
-      margin: 4px 0 0
-      max-height: 13em
-      text-align: justify
-      font-size: $fs-13
-      display: -webkit-box
-      -webkit-box-orient: vertical
-      overflow: hidden
-      -webkit-line-clamp: 2
-
-    .search-keyword
-      color: $c-red
-      border-bottom: 1px dashed $c-red
-      font-weight: bold
-      filter grayscale(25%)
-
-
-.search-wrapper.noresult[searching='true']
-  .search-no-result
-    display: block
-    margin-bottom: 8px
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
