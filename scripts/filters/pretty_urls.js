@@ -18,7 +18,7 @@ hexo.extend.generator.register('page', function (locals) {
 
     return {
       path,
-      layout,
+      layout: layout === 'page' ? ['page'] : [layout, 'page'],
       data: isRawOutput ? page.content : page
     };
   });
