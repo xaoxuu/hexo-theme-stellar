@@ -1,6 +1,11 @@
 'use strict';
 
 hexo.extend.helper.register('pretty_url', function (path = '') {
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    // 如果是绝对 URL，直接返回
+    return path;
+  }
+  
   let url = this.url_for(path);
 
   // 替换 /index.html → /
