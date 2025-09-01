@@ -38,6 +38,8 @@
         --background-opacity: hexo-config('style.leftbar.background-opacity')
       background-image: convert(hexo-config('style.leftbar.background-image'))
       filter: saturate(var(--saturate)) blur(var(--blur-px)) opacity(var(--background-opacity))
+      :root[data-theme="dark"] &
+        --background-opacity: hexo-config('style.leftbar.background-opacity') * 0.75
       @media screen and (prefers-color-scheme: dark)
         --background-opacity: hexo-config('style.leftbar.background-opacity') * 0.75
     else if $leftbar-background-color
@@ -69,12 +71,15 @@
     &:before
       if $leftbar-background-image
         @media screen and (min-width: $device-mobile-max)
-          background: rgba(white, 0.5)
+          background: rgba(white, 0.05)
           box-shadow: inset 0 0 32px 1px rgba(white, 0.5)
           backdrop-filter: saturate(300%)
           -webkit-backdrop-filter: saturate(300%)
           mask: linear-gradient(black, rgba(black, 0.5), 70%, transparent, 90%, transparent)
           -webkit-mask: linear-gradient(black, rgba(black, 0.5), 70%, transparent, 90%, transparent)
+        :root[data-theme="dark"] &
+          background: rgba(white, 0.05)
+          box-shadow: inset 0 0 32px 1px rgba(white, 0.1)
         @media screen and (prefers-color-scheme: dark)
           background: rgba(white, 0.05)
           box-shadow: inset 0 0 32px 1px rgba(white, 0.1)

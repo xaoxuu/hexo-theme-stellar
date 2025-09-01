@@ -25,6 +25,8 @@
       right: 1rem
       border-radius: $border-bar
       background: var(--bg-a100)
+      :root[data-theme="dark"] &
+        background: var(--bg-a20)
       @media screen and (prefers-color-scheme: dark)
         background: var(--bg-a20)
       z-index 0
@@ -44,6 +46,8 @@
     color: var(--text)
     &::placeholder
       color: var(--text-p3)
+      :root[data-theme="dark"] &
+        color: var(--text-p2)
       @media screen and (prefers-color-scheme: dark)
         color: var(--text-p2)
   .search-button 

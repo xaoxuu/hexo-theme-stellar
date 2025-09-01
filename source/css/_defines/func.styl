@@ -137,10 +137,14 @@ newblur()
   box-shadow: 0 0 2px rgba(black, .04), 0 2px 8px rgba(black, .04), 0 4px 16px rgba(black, .04)
   trans1: all
   text-shadow: 0 0 4px rgba(white, 1), 0 0 8px rgba(white, 0.8), 0 0 16px rgba(white, 0.6)
+  :root[data-theme="dark"] &
+    text-shadow: 0 0 2px rgba(black, 0.2), 0 0 4px rgba(black, 0.4)
   @media (prefers-color-scheme: dark)
     text-shadow: 0 0 2px rgba(black, 0.2), 0 0 4px rgba(black, 0.4)
   nav a:not(.active,:hover)
     filter: drop-shadow(0 0 0 white) drop-shadow(0 0 4px white)
+    :root[data-theme="dark"] &
+      filter: none
     @media (prefers-color-scheme: dark)
       filter: none
   &:before,&:after
@@ -158,6 +162,8 @@ newblur()
     -webkit-backdrop-filter: blur(8px)
     background: rgba(white, 0.3)
     margin: 1px
+    :root[data-theme="dark"] &
+      background: rgba(white, 0.2)
     @media (prefers-color-scheme: dark)
       background: rgba(white, 0.2)
   &:after
@@ -169,5 +175,7 @@ newblur()
     -webkit-mask-image: linear-gradient(white, 20%, transparent, 80%, white), linear-gradient(90deg, white, 20%, transparent, 80%, white)
     box-shadow: inset 0 0 4px 1px rgba(white, 0.5)
     trans1 all
+    :root[data-theme="dark"] &
+      box-shadow: inset 0 0 2px 1px rgba(white, 0.2)
     @media (prefers-color-scheme: dark)
       box-shadow: inset 0 0 2px 1px rgba(white, 0.2)
