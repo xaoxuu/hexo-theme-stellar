@@ -25,7 +25,7 @@
           });
         }
       } else if (id == 'download-file') {
-        ctx.files = document.querySelectorAll('.file');
+        ctx.files = document.querySelectorAll('.chat-file');
         if (ctx.files?.length > 0) {
           utils.js(js, { defer: true }).then(function () {
             downloadFileEvent(ctx.files);

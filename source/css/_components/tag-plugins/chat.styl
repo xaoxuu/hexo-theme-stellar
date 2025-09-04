@@ -272,7 +272,7 @@ chat_dark()
                     &.emoji,
                     &.link,
                     &.video,
-                    &.file
+                    &.chat-file
                         background: unset !important
                         padding: 0 !important
                     &.link
@@ -392,7 +392,7 @@ chat_dark()
                         video
                             width: 100%
                             border-radius: 6px
-                    &.file
+                    &.chat-file
                         background: transparent !important
                         display: flex
                         padding: unset !important
@@ -456,7 +456,7 @@ chat_dark()
                         flex-basis: 100%
                         justify-content: flex-end
                     .talk
-                        &.file
+                        &.chat-file
                             flex-direction: row-reverse
                         &.voice
                             .voice-btns
@@ -522,11 +522,11 @@ chat_dark()
                             display: none
                         &.link>.link-card,
                         &.video>video,
-                        &.file>.content,
+                        &.chat-file>.content,
                         &.image>img,
                         &.emoji>img
                             border-radius: 4px
-                        &.file .download-btn
+                        &.chat-file .download-btn
                             display: none
                         &.voice
                             padding: 8px .5em
