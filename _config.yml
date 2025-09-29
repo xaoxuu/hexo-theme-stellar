@@ -671,7 +671,9 @@ style:
     start: 'linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))'
   leftbar:
     # 可以设置：纯色/渐变色/图片作为背景
-    background-color: var(--card) # var(--block)
+    # 设置为纯色时，可以分别设置浅色和深色模式背景色
+    background-color-light: var(--card) # var(--block) #'rgb(#C3C3C3)'
+    background-color-dark: var(--card) # var(--block) #'rgb(#3C3C3C)'
     background-image: url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg)
     blur-px: 100px
     blur-bg: var(--bg-a60)
