@@ -40,9 +40,11 @@
       filter: saturate(var(--saturate)) blur(var(--blur-px)) opacity(var(--background-opacity))
       @media screen and (prefers-color-scheme: dark)
         --background-opacity: hexo-config('style.leftbar.background-opacity') * 0.75
-    else if $leftbar-background-color
-      background-color: convert($leftbar-background-color)
-    
+    else if $leftbar-background-color-light || $leftbar-background-color-dark
+      background-color: convert($leftbar-background-color-light)
+      @media screen and (prefers-color-scheme: dark)
+        background-color: convert($leftbar-background-color-dark)
+
   .leftbar-container
     height: 'calc(%s - %s * 2 - %s)' % (100vh var(--gap-margin) $leftbar-bottom-margin)
     display: flex
