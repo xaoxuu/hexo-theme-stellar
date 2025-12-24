@@ -40,6 +40,8 @@
       color: var(--text)
     &.active
       background: var(--bg-a60)
+      :root[data-theme="dark"] &
+        background: rgba(white, 0.25)
       @media (prefers-color-scheme: dark)
         background: rgba(white, 0.25)
       box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 0 2px rgba(0, 0, 0, 0.04), 0 0 4px rgba(0, 0, 0, 0.08)

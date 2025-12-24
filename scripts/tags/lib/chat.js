@@ -436,7 +436,7 @@ module.exports = ctx => function(args, content) {
             </a>
           `
       } else if (cell['file']) {
-        el += ` file" url="${cell["file"]}">`
+        el += ` chat-file" url="${cell["file"]}">`
         el += `
           <div class="content">
             <div class="top">

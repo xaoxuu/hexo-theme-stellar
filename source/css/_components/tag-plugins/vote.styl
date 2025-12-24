@@ -33,6 +33,8 @@
     trans1 all
     color: var(--theme)
     background: var(--theme-a10)
+    :root[data-theme="dark"] &
+      background: var(--theme-a20)
     @media (prefers-color-scheme: dark)
       background: var(--theme-a20)
     &.vote-up

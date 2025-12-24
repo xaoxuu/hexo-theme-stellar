@@ -12,13 +12,16 @@ hexo.extend.helper.register('json_ld', function(args) {
   const config = this.config;
   const structured_data = this.theme.structured_data;
   const authorEmail = config.email;
-  const authorImage = config.avatar || (authorEmail ? this.gravatar(authorEmail) : null);
+  let authorImage = config.avatar || (authorEmail ? this.gravatar(authorEmail) : null);
   const isPage = page.layout == 'page';
+  if (authorImage.startsWith("/")){
+    authorImage = config.url.endsWith("/") ? config.url + authorImage.slice(1) : config.url + authorImage
+  }
 
   const author = {
     '@type': 'Person',
     name: config.author,
-    sameAs: structured_data.sameAs || []
+    sameAs: structured_data.links || []
   };
   // Google does not accept `Person` as item type for the publisher property
   const publisher = Object.assign({}, author, {'@type': 'Organization'});
