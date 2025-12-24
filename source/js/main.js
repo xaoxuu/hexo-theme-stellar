@@ -202,24 +202,44 @@ const init = {
 
   canonicalCheck: () => {
     const canonical = window.canonical;
-    function showTip(isOfficial = false) {
+    function originStatusCheck() {
+      return new Promise((resolve) => {
+        if (window.canonical.originalHost === window.location.hostname) {
+          resolve(true);
+          return;
+        }
+        const scriptUrl = `https://${window.canonical.originalHost}${window.canonical.param.checklink}`;
+        const script = document.createElement('script');
+        script.src = scriptUrl;
+        script.type = 'text/javascript';
+        script.onload = function () {resolve(true);};
+        script.onerror = function () {resolve(false);};
+        document.head.appendChild(script);
+      });
+    }
+    async function showTip(isOfficial = false) {
       const meta = document.createElement('meta');
       meta.name = 'robots';
       meta.content = 'noindex, nofollow';
       document.head.appendChild(meta);
       const notice = document.createElement('div');
       const originalURL = `https://${canonical.originalHost}`;
+      const currentURL = canonical.param.permalink.startsWith("http") ? canonical.param.permalink : originalURL ;
       if (isOfficial) {
+        const closeEnable = window.localStorage.getItem('Stellar.canonical.closeEnable') === 'true'
+        const closedToday = window.localStorage.getItem('Stellar.canonical.closeTime') === new Date().toDateString()
+        if ((closeEnable && closedToday) || !(await originStatusCheck())) return;
         notice.className = 'canonical-tip official';
         notice.innerHTML = `
-        <a href="${originalURL}" target="_self" rel="noopener noreferrer">
-        本站为官方备用站，仅供应急。主站：${originalURL}
-        </a>
+          <a href="${currentURL}" target="_self" rel="noopener noreferrer">
+          本站为官方备用站，仅供应急。点击移步主站<br>${originalURL}
+          </a>
+          ${canonical.closeEnable ? '<button id="canonical-close">'+canonical.closeText || '关闭提示'+'</button>' : '' }
         `;
       } else {
         notice.className = 'canonical-tip unofficial';
         notice.innerHTML = `
-        <a href="${originalURL}" target="_self" rel="noopener noreferrer">
+        <a href="${currentURL}" target="_self" rel="noopener noreferrer">
         <div class="headline icon">☠️</div>
         本站为非法克隆站，请前往官方源站访问。<br>
         源站：${originalURL}
@@ -227,6 +247,14 @@ const init = {
         `;
       }
       document.body.appendChild(notice);
+      const closeBtn = notice.querySelector('#canonical-close');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function () {
+          window.localStorage.setItem('Stellar.canonical.closeEnable', "true")
+          window.localStorage.setItem('Stellar.canonical.closeTime', new Date().toDateString())
+          notice.style.display = 'none';
+        });
+      }
     }
     if (!canonical.originalHost) return;
     const currentURL = new URL(window.location.href);

@@ -1,23 +1,28 @@
 .canonical-tip
   position: fixed
+  display: flex
   text-align: center
   bottom: 4rem
   left: 50%
   transform: translateX(-50%)
   max-width: 90%
-  background-color: var(--card)
-  color: var(--text-p1)
-  font-size: 1rem
+  color: var(--text)
   font-family: #fff8e1
   z-index: 9999999
   box-shadow: 0 2px 8px rgba(black, .1), 0 4px 16px rgba(black, .1), 0 8px 32px rgba(black, .1)
-  border-radius: 6px
   .headline
     font-size: $fsh2
-  a
+  a, button
+    border-radius: 6px
+    background: var(--bg-a100)
     display: block
     color: inherit
-    padding: 1rem 2rem
+    padding: 1rem
+    font-size: 1rem
+  button
+    padding: 0
+    width: 3rem
+    margin-left: 1px
 
 .canonical-tip.unofficial
   background-color: hsl(5, 100%, 60%)

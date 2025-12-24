@@ -4,10 +4,13 @@
   const canonicalWithEncoded = Object.assign({}, canonical, {
     encoded: encoded
   });
+  const permalink = page.permalink || canonical.originalHost;
+  const checklink = theme.data_services.video.js
 %>
 
 <script type="text/javascript">
   window.canonical = <%- JSON.stringify(canonicalWithEncoded) %>;
+  window.canonical["param"] = <%- JSON.stringify({permalink, checklink}) %>;
   const ctx = {
     date_suffix: {
       just: `<%- __('meta.date_suffix.just') %>`,
