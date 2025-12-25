@@ -50,6 +50,8 @@ npm i hexo-theme-stellar
 
 See docs: https://xaoxuu.com/wiki/stellar/
 
+> AI docs： https://deepwiki.com/xaoxuu/hexo-theme-stellar/
+
 ## Examples
 
 https://xaoxuu.com/wiki/stellar/examples/
