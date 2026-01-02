@@ -136,7 +136,13 @@ function generate_canonical() {
 
   <!-- feed -->
   <% if (config.feed && config.feed.path) { %>
-    <%- feed_tag(config.feed.path, {title: config.title}) %>
+    <% 
+      // 判断是否为数组，如果是则取下标为 0 的元素，否则使用原值
+      var path = Array.isArray(config.feed.path) ? config.feed.path[0] : config.feed.path; 
+    %>
+    <% if (path) { %>
+      <%- feed_tag(path, {title: config.title}) %>
+    <% } %>
   <% } %>
 
   <link rel="stylesheet" href="<%- url_for(`${theme.stellar.main_css}?v=${stellar_info('version')}`) %>">

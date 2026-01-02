@@ -12,14 +12,17 @@ function layoutDiv() {
     }
     el += '<div class="widget-body fs14">';
       el += `<div class="tag-plugin timeline data-service ds-${(item.type || 'timeline')}"`;
-      // dataset
-      ['api'].forEach(key => {
-        if (item[key]) {
-          el += ' data-' + key + '="' + item[key] + '"';
+      // 动态遍历所有属性
+      const excludeKeys = ['title', 'type']; // 已用于其他用途的属性
+      const dataKeys = ['api']; // 需要添加 data- 前缀的属性
+      
+      Object.keys(item).forEach(key => {
+        if (excludeKeys.includes(key) || !item[key]) {
+          return;
         }
-      });
-      ['user', 'hide', 'limit'].forEach(key => {
-        if (item[key]) {
+        if (dataKeys.includes(key)) {
+          el += ' data-' + key + '="' + item[key] + '"';
+        } else {
           el += ' ' + key + '="' + item[key] + '"';
         }
       });
