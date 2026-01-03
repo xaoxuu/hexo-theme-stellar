@@ -136,7 +136,17 @@ function generate_canonical() {
 
   <!-- feed -->
   <% if (config.feed && config.feed.path) { %>
-    <%- feed_tag(config.feed.path, {title: config.title}) %>
+    <%
+      var paths = Array.isArray(config.feed.path)
+        ? config.feed.path
+        : [config.feed.path];
+    %>
+
+    <% paths.forEach(function (path) { %>
+      <% if (path) { %>
+        <%- feed_tag(path, { title: config.title }) %>
+      <% } %>
+    <% }) %>
   <% } %>
 
   <link rel="stylesheet" href="<%- url_for(`${theme.stellar.main_css}?v=${stellar_info('version')}`) %>">
