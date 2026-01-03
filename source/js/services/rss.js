@@ -11,12 +11,13 @@ utils.jq(() => {
         const text = await resp.text();
 
         const head = text.slice(0, 1024).trim();
-        const content_type = el.getAttribute('content_type');
-        const show_title = el.getAttribute('show_title') === 'true';
+        const content_type = el.getAttribute('content_type') || 'content';
+        const show_title = el.getAttribute('show_title') !== 'false';
+        const show_content = el.getAttribute('show_content') !== 'false';
         const limit = parseInt(el.getAttribute('limit')) || 10;
         // JSON Feed
         if (head.startsWith('{') && head.includes('jsonfeed.org/version')) {
-          handleJsonFeed(el, JSON.parse(text), content_type, show_title, limit);
+          handleJsonFeed(el, JSON.parse(text), content_type, show_title, show_content, limit);
           return;
         }
 
@@ -30,17 +31,17 @@ utils.jq(() => {
         // Atom Feed
         if (doc.documentElement.nodeName === 'feed' &&
             doc.documentElement.namespaceURI === 'http://www.w3.org/2005/Atom') {
-          handleAtom(el, doc, content_type, show_title, limit);
+          handleAtom(el, doc, content_type, show_title, show_content, limit);
           return;
         }
         // RSS 2.0 Feed
         if (doc.documentElement.nodeName === 'rss') {
-          handleRSS2(el, doc, content_type, show_title, limit);
+          handleRSS2(el, doc, content_type, show_title, show_content, limit);
           return;
         }
         // RSS 1.0 Feed
         if (doc.documentElement.nodeName === 'rdf:RDF') {
-          handleRSS1(el, doc, content_type, show_title, limit);
+          handleRSS1(el, doc, content_type, show_title, show_content, limit);
           return;
         }
       });
@@ -49,7 +50,7 @@ utils.jq(() => {
 });
 
 
-function handleAtom(el, doc, content_type, show_title, limit) {
+function handleAtom(el, doc, content_type, show_title, show_content, limit) {
   const entries = doc.querySelectorAll('entry');
   const feedAuthorName = doc.querySelector('feed > author > name')?.textContent || '匿名';
 
@@ -75,10 +76,13 @@ function handleAtom(el, doc, content_type, show_title, limit) {
 
     cell += `<div class="body">`;
     if (show_title) {
-      cell += `<p class="title"><a href="${link}" target="_blank" rel="external nofollow noopener noreferrer">${title}</a></p>`;
+      const titleAttr = show_content ? '' : ' style="border-bottom:none;"' ;
+      const linkAttr = show_content ? '' : ' style="padding-bottom:0"' ;
+      cell += `<p class="title"${titleAttr}><a href="${link}"${linkAttr} target="_blank" rel="external nofollow noopener noreferrer">${title}</a></p>`;
     }
-    
-    cell += `<div class="content">${content_type === 'summary' ? summary : content}</div>`;
+    if (show_content){
+      cell += `<div class="content">${content_type === 'summary' ? summary : content}</div>`;
+    }
     cell += `</div></div>`;
     
     return cell;
@@ -87,7 +91,7 @@ function handleAtom(el, doc, content_type, show_title, limit) {
   $(el).append(htmlBuffer);
 }
 
-function handleRSS2(el, doc, content_type, show_title, limit) {
+function handleRSS2(el, doc, content_type, show_title, show_content, limit) {
   const items = Array.from(doc.querySelectorAll('item')).slice(0, limit);
   const feedAuthorName = doc.querySelector('channel > managingEditor, channel > webMaster, channel > title')?.textContent || '匿名';
 
@@ -109,16 +113,20 @@ function handleRSS2(el, doc, content_type, show_title, limit) {
     cell += `</div>`;
     cell += `<div class="body">`;
     if (show_title) {
-      cell += `<p class="title"><a href="${link}" target="_blank" rel="external nofollow noopener noreferrer">${title}</a></p>`;
+      const titleAttr = show_content ? '' : ' style="border-bottom:none;"' ;
+      const linkAttr = show_content ? '' : ' style="padding-bottom:0"' ;
+      cell += `<p class="title"${titleAttr}><a href="${link}"${linkAttr} target="_blank" rel="external nofollow noopener noreferrer">${title}</a></p>`;
     }
-    cell += `<div class="content">${content_type === 'summary' ? description : content}</div>`;
+    if (show_content){
+      cell += `<div class="content">${content_type === 'summary' ? description : content}</div>`;
+    }
     cell += `</div></div>`;
     return cell;
   }).join('');
 
   $(el).append(htmlBuffer);
 }
-function handleRSS1(el, doc, content_type, show_title, limit) {
+function handleRSS1(el, doc, content_type, show_title, show_content, limit) {
   const items = Array.from(doc.querySelectorAll('item')).slice(0, limit);
   const feedTitle = doc.querySelector('channel > title')?.textContent || '匿名';
 
@@ -140,16 +148,20 @@ function handleRSS1(el, doc, content_type, show_title, limit) {
     cell += `</div>`;
     cell += `<div class="body">`;
     if (show_title) {
-      cell += `<p class="title"><a href="${link}" target="_blank" rel="external nofollow noopener noreferrer">${title}</a></p>`;
+      const titleAttr = show_content ? '' : ' style="border-bottom:none;"' ;
+      const linkAttr = show_content ? '' : ' style="padding-bottom:0"' ;
+      cell += `<p class="title"${titleAttr}><a href="${link}"${linkAttr} target="_blank" rel="external nofollow noopener noreferrer">${title}</a></p>`;
     }
-    cell += `<div class="content">${content_type === 'summary' ? description : content}</div>`;
+    if (show_content){
+      cell += `<div class="content">${content_type === 'summary' ? description : content}</div>`;
+    }
     cell += `</div></div>`;
     return cell;
   }).join('');
 
   $(el).append(htmlBuffer);
 }
-function handleJsonFeed(el, data, content_type, show_title, limit) {
+function handleJsonFeed(el, data, content_type, show_title, show_content, limit) {
   const items = (data.items || []).slice(0, limit);
   const feedAuthorName = data.authors?.[0]?.name || data.title || '匿名';
 
@@ -173,9 +185,13 @@ function handleJsonFeed(el, data, content_type, show_title, limit) {
     cell += `</div>`;
     cell += `<div class="body">`;
     if (show_title) {
-      cell += `<p class="title"><a href="${link}" target="_blank" rel="external nofollow noopener noreferrer">${title}</a></p>`;
+      const titleAttr = show_content ? '' : ' style="border-bottom:none;"' ;
+      const linkAttr = show_content ? '' : ' style="padding-bottom:0"' ;
+      cell += `<p class="title"${titleAttr}><a href="${link}"${linkAttr} target="_blank" rel="external nofollow noopener noreferrer">${title}</a></p>`;
     }
-    cell += `<div class="content">${content_type === 'summary' ? summary : content}</div>`;
+    if (show_content){
+      cell += `<div class="content">${content_type === 'summary' ? summary : content}</div>`;
+    }
     cell += `</div></div>`;
     return cell;
   }).join('');
