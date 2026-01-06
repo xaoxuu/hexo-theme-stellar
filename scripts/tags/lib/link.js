@@ -25,7 +25,7 @@ module.exports = ctx => function(args) {
   if (!args.icon) {
     autofill.push('icon')
   }
-  if (args.desc) {
+  if (args.desc !== 'true' && args.desc !== true && !args.desc) {
     autofill.push('desc')
   }
   var el = ''
@@ -52,7 +52,7 @@ module.exports = ctx => function(args) {
     return '<span class="title">' + (args.title || args.url) + '</span>'
   }
   function loadDesc() {
-    return '<span class="cap desc footnote"></span>'
+    return `<span class="cap desc footnote">${args.desc}</span>`
   }
   function loadLink() {
     return '<span class="cap link footnote">' + full_url_for(args.url) + '</span>'

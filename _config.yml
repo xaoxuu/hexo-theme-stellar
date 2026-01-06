@@ -518,7 +518,8 @@ data_services:
       '_posts/': # https://github.com/xaoxuu/xaoxuu.com/blob/main/source/_posts/
       'wiki/stellar/': https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/
     js: /js/services/contributors.js
-
+  rss:
+    js: /js/services/rss.js
 
 # 扩展插件接入方法：(插件名下面用 #plugin# 代替)
 # 1. 在这里增加 #plugin# 配置，至少应含有 enable 字段，默认为空（不启用）
