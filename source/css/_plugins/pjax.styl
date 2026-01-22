@@ -1,0 +1,39 @@
+// PJAX - Seamless page transitions
+// NProgress customization and loading states
+
+// NProgress bar color customization
+#nprogress
+  .bar
+    background: var(--theme-link, hsl(207 90% 54%))
+    height: 2px
+  .peg
+    box-shadow: 0 0 10px var(--theme-link, hsl(207 90% 54%)), 0 0 5px var(--theme-link, hsl(207 90% 54%))
+  .spinner-icon
+    border-top-color: var(--theme-link, hsl(207 90% 54%))
+    border-left-color: var(--theme-link, hsl(207 90% 54%))
+
+// PJAX page transition animations
+.l_body
+  transition: opacity 0.25s ease-out, transform 0.25s ease-out
+
+// Fade-out state during loading
+.pjax-loading
+  cursor: progress
+  
+  .l_body
+    opacity: 0.3
+    transform: translateY(8px)
+    pointer-events: none
+
+// Fade-in animation after content loads
+.pjax-loaded
+  .l_body
+    animation: pjax-fade-in 0.3s ease-out forwards
+
+@keyframes pjax-fade-in
+  from
+    opacity: 0.3
+    transform: translateY(-8px)
+  to
+    opacity: 1
+    transform: translateY(0)

@@ -24,13 +24,17 @@
   document.addEventListener('DOMContentLoaded', function () {
     window.lazyLoadInstance?.update();
   });
+  // Support for PJAX navigation
+  document.addEventListener('pjax:complete', function () {
+    window.lazyLoadInstance?.update();
+  });
 
   window.wrapLazyloadImages = (container) => {
     if (typeof container === 'string') {
       container = document.querySelector(container);
     }
     if (!container) return;
-    
+
     const images = container.querySelectorAll('img');
     images.forEach((img) => {
       if (img.classList.contains('lazy')) return;
@@ -63,5 +67,5 @@
       window.lazyLoadInstance.update();
     }
   }
-  
+
 </script>
