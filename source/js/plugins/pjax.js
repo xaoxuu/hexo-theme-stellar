@@ -10,7 +10,8 @@
   const defaultConfig = {
     selectors: ['title', '.l_body'],
     timeout: 10000,
-    cacheBust: false
+    cacheBust: false,
+    minLoadTime: 200  // Minimum time (ms) to show loading animation for smooth transitions
   };
 
   const config = Object.assign({}, defaultConfig, window.StellarPjaxConfig || {});
@@ -138,10 +139,10 @@
     // Trigger fade-in animation
     document.body.classList.add('pjax-loaded');
 
-    // Remove animation class after it completes
+    // Remove animation class after it completes (matches CSS animation duration)
     setTimeout(() => {
       document.body.classList.remove('pjax-loaded');
-    }, 350);
+    }, 400);
   }
 
   /**
@@ -195,6 +196,7 @@
     if (isLoading) return false;
 
     const isPop = options.isPop || false;
+    const startTime = Date.now();
 
     // Trigger before event
     triggerEvent('pjax:before', { url });
@@ -205,6 +207,13 @@
     try {
       const html = await fetchPage(url);
       const contents = extractContent(html, config.selectors);
+
+      // Ensure minimum load time for smooth animation
+      const elapsed = Date.now() - startTime;
+      const remainingTime = Math.max(0, config.minLoadTime - elapsed);
+      if (remainingTime > 0) {
+        await new Promise(resolve => setTimeout(resolve, remainingTime));
+      }
 
       // Scroll to top before replacing content (unless it's a popstate)
       if (!isPop) {
