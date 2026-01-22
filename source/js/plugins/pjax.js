@@ -159,21 +159,33 @@
       ? url + (url.includes('?') ? '&' : '?') + '_pjax=' + Date.now()
       : url;
 
-    const response = await fetch(fetchUrl, {
-      method: 'GET',
-      headers: {
-        'X-PJAX': 'true',
-        'X-Requested-With': 'XMLHttpRequest'
-      },
-      signal: abortController.signal,
-      timeout: config.timeout
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+    let timeoutId = null;
+    if (typeof config.timeout === 'number' && config.timeout > 0) {
+      timeoutId = setTimeout(function () {
+        // Abort the current request when the timeout is reached
+        if (abortController) {
+          abortController.abort();
+        }
+      }, config.timeout);
     }
-
-    return await response.text();
+    try {
+      const response = await fetch(fetchUrl, {
+        method: 'GET',
+        headers: {
+          'X-PJAX': 'true',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        signal: abortController.signal
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      return await response.text();
+    } finally {
+      if (timeoutId !== null) {
+        clearTimeout(timeoutId);
+      }
+    }
   }
 
   /**
@@ -196,7 +208,7 @@
 
       // Scroll to top before replacing content (unless it's a popstate)
       if (!isPop) {
-        window.scrollTo({ top: 0, behavior: 'instant' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
       // Replace content
