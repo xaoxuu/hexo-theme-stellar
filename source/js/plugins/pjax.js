@@ -8,13 +8,16 @@
 
   // PJAX configuration (can be overridden via window.StellarPjaxConfig)
   const defaultConfig = {
-    selectors: ['title', '.l_body'],
+    selectors: ['title', '#l_cover', '.l_body'],
     timeout: 10000,
     cacheBust: false,
     minLoadTime: 200  // Minimum time (ms) to show loading animation for smooth transitions
   };
 
   const config = Object.assign({}, defaultConfig, window.StellarPjaxConfig || {});
+  if (!config.selectors.includes('#l_cover')) {
+    config.selectors.push('#l_cover');
+  }
 
   // State management
   let isLoading = false;
@@ -75,13 +78,13 @@
       contents._htmlAttrs[attr.name] = attr.value;
     });
 
-    return contents;
+    return { contents, doc };
   }
 
   /**
    * Replace content in the current page
    */
-  function replaceContent(contents, selectors) {
+  function replaceContent(contents, selectors, doc) {
     // Update document title
     if (contents['title']) {
       document.title = contents['title'];
@@ -94,13 +97,29 @@
       });
     }
 
+    // Update body classes
+    if (contents._bodyClasses) {
+      document.body.className = contents._bodyClasses;
+    }
+
     // Replace content for each selector
     selectors.forEach(selector => {
       if (selector === 'title') return; // Already handled
 
-      const element = document.querySelector(selector);
-      if (element && contents[selector]) {
-        element.innerHTML = contents[selector];
+      const oldElement = document.querySelector(selector);
+      const newElement = doc.querySelector(selector);
+
+      if (oldElement && newElement) {
+        // Use replaceWith to swap the entire element (preserves all attributes)
+        oldElement.replaceWith(newElement.cloneNode(true));
+      } else if (oldElement) {
+        // If not found in new page, clear it
+        oldElement.innerHTML = '';
+        Array.from(oldElement.attributes).forEach(attr => {
+          if (attr.name !== 'id' && attr.name !== 'class') {
+            oldElement.removeAttribute(attr.name);
+          }
+        });
       }
     });
   }
@@ -205,26 +224,71 @@
     startLoading();
 
     try {
-      const html = await fetchPage(url);
-      const contents = extractContent(html, config.selectors);
+      // Check if we need to animate out (scroll to content start) if current page has cover
+      const currentWikiCover = document.querySelector('#l_cover .l_cover.wiki');
+      const startEl = document.getElementById('start');
+      let scrollPromise = Promise.resolve();
+      
+      if (currentWikiCover && startEl && !isPop) {
+        // Scroll to #start so content slides up to top (pushing cover out of view)
+        const rect = startEl.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const targetTop = rect.top + scrollTop;
+        
+        // Only animate if we are not already there
+        if (Math.abs(scrollTop - targetTop) > 5) {
+           window.scrollTo({ top: targetTop, behavior: 'smooth' });
+           // Wait for approx 400ms for scroll animation
+           scrollPromise = new Promise(resolve => setTimeout(resolve, 400));
+        }
+      }
 
-      // Ensure minimum load time for smooth animation
+      const [html] = await Promise.all([
+        fetchPage(url),
+        scrollPromise
+      ]);
+
+      const { contents, doc } = extractContent(html, config.selectors);
+
+      // Ensure minimum load time for smooth animation (if scroll was faster than fetch)
       const elapsed = Date.now() - startTime;
       const remainingTime = Math.max(0, config.minLoadTime - elapsed);
       if (remainingTime > 0) {
         await new Promise(resolve => setTimeout(resolve, remainingTime));
       }
 
-      // Scroll to top before replacing content (unless it's a popstate)
-      if (!isPop) {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-
       // Replace content
-      replaceContent(contents, config.selectors);
+      replaceContent(contents, config.selectors, doc);
 
-      // Update browser history (only for new navigations, not popstate)
+      // Scroll to correct position
       if (!isPop) {
+        // If there is a full-screen wiki cover, scroll to content (#start)
+        // Otherwise scroll to top
+        const wikiCover = document.querySelector('#l_cover .l_cover.wiki');
+        const startEl = document.getElementById('start');
+        
+        if (wikiCover && startEl) {
+          // Scroll slightly above #start to account for sidebar margin
+          // CSS: .l_body .l_left { top: calc(var(--gap-margin) * 2) }
+          // We want the sidebar (which is sticky) to be at its sticky position
+          const rect = startEl.getBoundingClientRect();
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          
+          // Get gap margin from CSS variable (approximate or hardcoded if needed)
+          // Default gap-margin is usually around 16px to 24px per theme
+          // Let's assume 2 * gap-margin is roughly 32px-48px. 
+          // However, we can also just scroll to rect.top + scrollTop.
+          // If sidebar is sticky at top: var(--gap-margin) * 2, we need the #start to be at top: 0 relative to viewport? 
+          // No, if the user scrolls, the sidebar sticks. We want the initial state where the sidebar is just at its top position.
+          // This creates a consistent 'initial view'.
+          
+          window.scrollTo({
+            top: rect.top + scrollTop,
+            behavior: 'auto'
+          });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'auto' });
+        }
         history.pushState({ pjax: true, url: url }, '', url);
       }
 
@@ -267,7 +331,33 @@
       link = link.parentElement;
     }
 
-    if (!shouldHandleLink(link)) return;
+    if (!shouldHandleLink(link)) {
+      // Handle in-page hash links with smooth scrolling
+      if (link && link.href && link.target !== '_blank') {
+         const url = new URL(link.href);
+         const currentUrl = new URL(window.location.href);
+         if (url.pathname === currentUrl.pathname && url.hash) {
+           const targetId = url.hash.slice(1);
+           const target = document.getElementById(targetId);
+           if (target) {
+             event.preventDefault();
+             
+             // Use same calculation as PJAX navigation for consistency
+             const rect = target.getBoundingClientRect();
+             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+             
+             window.scrollTo({
+               top: rect.top + scrollTop,
+               behavior: 'smooth'
+             });
+             
+             // Update URL hash without scrolling again
+             history.pushState(null, '', url.hash);
+           }
+         }
+      }
+      return;
+    }
 
     // Check for modifier keys (new tab/window)
     if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
@@ -316,5 +406,4 @@
   } else {
     init();
   }
-
 })();

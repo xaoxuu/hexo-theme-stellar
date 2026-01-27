@@ -20,19 +20,19 @@ $pjax-translate-distance = 16px
     border-left-color: var(--theme-link, hsl(207 90% 54%))
 
 // Main content transition base
-.l_body .l_main
+.l_body .l_main, #l_cover
   transition: opacity $pjax-duration $pjax-easing, transform $pjax-duration $pjax-easing
 
 // Loading state - content fades out and moves down slightly
 body.pjax-loading
-  .l_body .l_main
+  .l_body .l_main, #l_cover
     opacity: 0.4
     transform: translateY($pjax-translate-distance)
     pointer-events: none
 
 // Loaded state - content fades in with upward motion
 body.pjax-loaded
-  .l_body .l_main
+  .l_body .l_main, #l_cover
     animation: pjax-fade-in $pjax-duration $pjax-easing-out forwards
 
 // Fade-in animation keyframes
@@ -46,11 +46,11 @@ body.pjax-loaded
 
 // Respect reduced motion preferences
 @media (prefers-reduced-motion: reduce)
-  .l_body .l_main
+  .l_body .l_main, #l_cover
     transition: opacity $pjax-duration ease
-  body.pjax-loading .l_body .l_main
+  body.pjax-loading .l_body .l_main, body.pjax-loading #l_cover
     transform: none
-  body.pjax-loaded .l_body .l_main
+  body.pjax-loaded .l_body .l_main, body.pjax-loaded #l_cover
     animation: pjax-fade-simple $pjax-duration ease forwards
   @keyframes pjax-fade-simple
     0%
