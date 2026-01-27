@@ -110,10 +110,88 @@
       const newElement = doc.querySelector(selector);
 
       if (oldElement && newElement) {
-        // Use replaceWith to swap the entire element (preserves all attributes)
-        oldElement.replaceWith(newElement.cloneNode(true));
+        // Special handling for the main body layout to preserve sidebar state
+        if (selector === '.l_body') {
+          const oldSidebar = oldElement.querySelector('.l_left');
+          const newSidebar = newElement.querySelector('.l_left');
+          let widgetsPreserved = false;
+
+          if (oldSidebar && newSidebar) {
+            const oldTree = oldSidebar.querySelector('.doc-tree');
+            const newTree = newSidebar.querySelector('.doc-tree');
+            
+            // Case 1: Wiki Documentation Mode (Manual Active State Update)
+            // If both pages share the wiki documentation tree structure, we reuse the entire sidebar
+            // to prevent flickering and state loss, manually updating the active link.
+            if (oldTree && newTree) {
+              const targetUrl = contents._targetUrl || window.location.href;
+              // Safe-guard against invalid URLs
+              let relativeUrl;
+              try {
+                relativeUrl = new URL(targetUrl).pathname;
+              } catch (e) {
+                relativeUrl = targetUrl; // Fallback for relative paths
+              }
+              
+              const oldLinks = oldTree.querySelectorAll('a.active');
+              oldLinks.forEach(link => link.classList.remove('active'));
+              
+              const allLinks = oldTree.querySelectorAll('a');
+              for (let link of allLinks) {
+                // Determine if this link matches the current target URL
+                let linkPath;
+                try {
+                  linkPath = new URL(link.href).pathname;
+                } catch (e) {
+                  linkPath = link.getAttribute('href');
+                }
+
+                if (linkPath === relativeUrl) {
+                  link.classList.add('active');
+                  // Optional: Expand parent details if needed (theme dependent)
+                  break; 
+                }
+              }
+              
+              // Preserve entire sidebar by replacing the new one with the old one
+              newSidebar.replaceWith(oldSidebar);
+              widgetsPreserved = true;
+            } 
+            else {
+              // Case 2: Granular Preservation
+              // For non-wiki pages, we check individual components (Header, Nav, Widgets, Footer).
+              // If a component is identical in HTML, we reuse the old DOM node to preserve its state (animations, scroll).
+              const parts = ['.header', '.nav-area', '.widgets', '.footer'];
+              parts.forEach(partSelector => {
+                const oldPart = oldSidebar.querySelector(partSelector);
+                const newPart = newSidebar.querySelector(partSelector);
+                if (oldPart && newPart && oldPart.innerHTML === newPart.innerHTML) {
+                  newPart.replaceWith(oldPart);
+                  if (partSelector === '.widgets') {
+                    widgetsPreserved = true;
+                  }
+                }
+              });
+            }
+          }
+
+          // If the widgets area was NOT preserved (i.e., it was replaced),
+          // we attempt to restore the scroll position to minimize visual disruption.
+          if (!widgetsPreserved) {
+            const oldWidgets = oldElement.querySelector('.l_left .widgets');
+            const newWidgets = newElement.querySelector('.l_left .widgets');
+            if (oldWidgets && newWidgets) {
+              newWidgets.style.scrollBehavior = 'auto'; // Disable smooth scroll for instant restore
+              newWidgets.scrollTop = oldWidgets.scrollTop;
+              newWidgets.style.scrollBehavior = '';
+            }
+          }
+        }
+
+        // Swap the entire element with the prepared new element
+        oldElement.replaceWith(newElement);
       } else if (oldElement) {
-        // If not found in new page, clear it
+        // If the selector exists in old page but not in new page, clear it
         oldElement.innerHTML = '';
         Array.from(oldElement.attributes).forEach(attr => {
           if (attr.name !== 'id' && attr.name !== 'class') {
@@ -249,6 +327,7 @@
       ]);
 
       const { contents, doc } = extractContent(html, config.selectors);
+      contents._targetUrl = url;
 
       // Ensure minimum load time for smooth animation (if scroll was faster than fetch)
       const elapsed = Date.now() - startTime;
