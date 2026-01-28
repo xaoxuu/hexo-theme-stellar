@@ -110,46 +110,65 @@
 
       const oldEl = document.querySelector(selector);
       const newEl = doc.querySelector(selector);
-      if (!oldEl || !newEl) return;
+      if (oldEl && newEl) {
+        syncAttributes(newEl, oldEl);
 
-      if (selector === '.l_body') {
-        // Always replace main content
-        const oMain = oldEl.querySelector('.l_main');
-        const nMain = newEl.querySelector('.l_main');
-        if (oMain && nMain) {
-          oMain.replaceWith(nMain);
-        }
+        if (selector === '.l_body') {
+          // 1. Update main content
+          const oMain = oldEl.querySelector('.l_main');
+          const nMain = newEl.querySelector('.l_main');
+          if (oMain && nMain) {
+            oMain.replaceWith(nMain);
+          } else if (oMain) {
+            // Clear no longer existing main content
+            oMain.innerHTML = '';
+          }
 
-        // Special handling for the main layout to preserve sidebar state
-        const oSidebar = oldEl.querySelector('.l_left');
-        const nSidebar = newEl.querySelector('.l_left');
-        if (oSidebar && nSidebar) {
-          syncAttributes(newEl, oldEl);
-          const savedScrollTop = oSidebar.querySelector('.widgets')?.scrollTop || 0;
-
-          // Update Sidebar components in-place
-          ['.header', '.nav-area', '.widgets', '.footer'].forEach(part => {
-            const op = oSidebar.querySelector(part);
-            const np = nSidebar.querySelector(part);
-            if (op && np) {
-              const isIdentical = op.isEqualNode(np) || (op.innerHTML.trim() === np.innerHTML.trim());
-              if (!isIdentical) {
-                op.replaceWith(np);
-                if (part === '.widgets') {
-                  np.style.scrollBehavior = 'auto';
-                  np.scrollTop = savedScrollTop;
-                  np.style.scrollBehavior = '';
+          // 2. Special handling for sidebar
+          const oSidebar = oldEl.querySelector('.l_left');
+          const nSidebar = newEl.querySelector('.l_left');
+          if (oSidebar && nSidebar) {
+            // Update Sidebar components in-place
+            ['.header', '.nav-area', '.widgets', '.footer'].forEach(part => {
+              const op = oSidebar.querySelector(part);
+              const np = nSidebar.querySelector(part);
+              if (op && np) {
+                const isIdentical = op.isEqualNode(np) || (op.innerHTML.trim() === np.innerHTML.trim());
+                if (!isIdentical) {
+                  if (part === '.widgets') {
+                    const savedScrollTop = oSidebar.querySelector('.widgets')?.scrollTop || 0;
+                    op.replaceWith(np);
+                    np.style.scrollBehavior = 'auto';
+                    np.scrollTop = savedScrollTop;
+                    np.style.scrollBehavior = '';
+                  } else {
+                    op.replaceWith(np);
+                  }
                 }
+              } else if (op) {
+                op.innerHTML = '';
               }
-            }
-          });
-        }
-        return;
-      }
+            });
+          } else if (oSidebar) {
+            oSidebar.innerHTML = '';
+          }
 
-      // Default replacement for other selectors (like #l_cover)
-      if (!(oldEl.isEqualNode(newEl) || oldEl.innerHTML.trim() === newEl.innerHTML.trim())) {
-        oldEl.replaceWith(newEl);
+          // body already updated, skip general update
+          return;
+        }
+
+        // Default replacement for other selectors (like #l_cover)
+        if (!(oldEl.isEqualNode(newEl) || oldEl.innerHTML.trim() === newEl.innerHTML.trim())) {
+          oldEl.replaceWith(newEl);
+        }
+      } else if (oldEl) {
+        // If the selector exists in old page but not in new page, clear it
+        oldEl.innerHTML = '';
+        Array.from(oldEl.attributes).forEach(attr => {
+          if (attr.name !== 'id' && attr.name !== 'class') {
+            oldEl.removeAttribute(attr.name);
+          }
+        });
       }
     });
   }
