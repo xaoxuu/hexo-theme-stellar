@@ -57,147 +57,99 @@
   }
 
   /**
-   * Extract content from HTML string based on selectors
+   * Sync all attributes from source element to target element
    */
-  function extractContent(html, selectors) {
+  function syncAttributes(source, target) {
+    if (!source || !target) return;
+    const oldAttrs = Array.from(target.attributes);
+    const newAttrs = Array.from(source.attributes);
+
+    // Remove attributes not in source
+    for (let attr of oldAttrs) {
+      if (!source.hasAttribute(attr.name)) target.removeAttribute(attr.name);
+    }
+    // Add or update attributes
+    for (let attr of newAttrs) {
+      if (target.getAttribute(attr.name) !== attr.value) {
+        target.setAttribute(attr.name, attr.value);
+      }
+    }
+  }
+
+  /**
+   * Extract content from HTML string
+   */
+  function extractContent(html) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, 'text/html');
-    const contents = {};
-
-    selectors.forEach(selector => {
-      const element = doc.querySelector(selector);
-      if (element) {
-        contents[selector] = element.innerHTML;
-      }
-    });
-
-    // Also extract body classes and other meta info
-    contents._bodyClasses = doc.body.className;
-    contents._htmlAttrs = {};
-    Array.from(doc.documentElement.attributes).forEach(attr => {
-      contents._htmlAttrs[attr.name] = attr.value;
-    });
-
-    return { contents, doc };
+    return {
+      contents: {
+        title: doc.title,
+        _bodyClasses: doc.body.className,
+        _htmlAttrs: Array.from(doc.documentElement.attributes).reduce((acc, attr) => {
+          acc[attr.name] = attr.value;
+          return acc;
+        }, {})
+      },
+      doc
+    };
   }
 
   /**
    * Replace content in the current page
    */
   function replaceContent(contents, selectors, doc) {
-    // Update document title
-    if (contents['title']) {
-      document.title = contents['title'];
-    }
+    // 1. Update HTML attributes (theme, lang, etc.)
+    syncAttributes(doc.documentElement, document.documentElement);
+    if (contents.title) document.title = contents.title;
+    if (contents._bodyClasses) document.body.className = contents._bodyClasses;
 
-    // Update HTML attributes (like data-theme, lang)
-    if (contents._htmlAttrs) {
-      Object.keys(contents._htmlAttrs).forEach(key => {
-        document.documentElement.setAttribute(key, contents._htmlAttrs[key]);
-      });
-    }
-
-    // Update body classes
-    if (contents._bodyClasses) {
-      document.body.className = contents._bodyClasses;
-    }
-
-    // Replace content for each selector
+    // 2. Replace content for each selector
     selectors.forEach(selector => {
-      if (selector === 'title') return; // Already handled
+      if (selector === 'title' || selector === 'html') return;
 
-      const oldElement = document.querySelector(selector);
-      const newElement = doc.querySelector(selector);
+      const oldEl = document.querySelector(selector);
+      const newEl = doc.querySelector(selector);
+      if (!oldEl || !newEl) return;
 
-      if (oldElement && newElement) {
-        // Special handling for the main body layout to preserve sidebar state
-        if (selector === '.l_body') {
-          const oldSidebar = oldElement.querySelector('.l_left');
-          const newSidebar = newElement.querySelector('.l_left');
-          let widgetsPreserved = false;
-
-          if (oldSidebar && newSidebar) {
-            const oldTree = oldSidebar.querySelector('.doc-tree');
-            const newTree = newSidebar.querySelector('.doc-tree');
-            
-            // Case 1: Wiki Documentation Mode (Manual Active State Update)
-            // If both pages share the wiki documentation tree structure, we reuse the entire sidebar
-            // to prevent flickering and state loss, manually updating the active link.
-            if (oldTree && newTree) {
-              const targetUrl = contents._targetUrl || window.location.href;
-              // Safe-guard against invalid URLs
-              let relativeUrl;
-              try {
-                relativeUrl = new URL(targetUrl).pathname;
-              } catch (e) {
-                relativeUrl = targetUrl; // Fallback for relative paths
-              }
-              
-              const oldLinks = oldTree.querySelectorAll('a.active');
-              oldLinks.forEach(link => link.classList.remove('active'));
-              
-              const allLinks = oldTree.querySelectorAll('a');
-              for (let link of allLinks) {
-                // Determine if this link matches the current target URL
-                let linkPath;
-                try {
-                  linkPath = new URL(link.href).pathname;
-                } catch (e) {
-                  linkPath = link.getAttribute('href');
-                }
-
-                if (linkPath === relativeUrl) {
-                  link.classList.add('active');
-                  // Optional: Expand parent details if needed (theme dependent)
-                  break; 
-                }
-              }
-              
-              // Preserve entire sidebar by replacing the new one with the old one
-              newSidebar.replaceWith(oldSidebar);
-              widgetsPreserved = true;
-            } 
-            else {
-              // Case 2: Granular Preservation
-              // For non-wiki pages, we check individual components (Header, Nav, Widgets, Footer).
-              // If a component is identical in HTML, we reuse the old DOM node to preserve its state (animations, scroll).
-              const parts = ['.header', '.nav-area', '.widgets', '.footer'];
-              parts.forEach(partSelector => {
-                const oldPart = oldSidebar.querySelector(partSelector);
-                const newPart = newSidebar.querySelector(partSelector);
-                if (oldPart && newPart && oldPart.innerHTML === newPart.innerHTML) {
-                  newPart.replaceWith(oldPart);
-                  if (partSelector === '.widgets') {
-                    widgetsPreserved = true;
-                  }
-                }
-              });
-            }
-          }
-
-          // If the widgets area was NOT preserved (i.e., it was replaced),
-          // we attempt to restore the scroll position to minimize visual disruption.
-          if (!widgetsPreserved) {
-            const oldWidgets = oldElement.querySelector('.l_left .widgets');
-            const newWidgets = newElement.querySelector('.l_left .widgets');
-            if (oldWidgets && newWidgets) {
-              newWidgets.style.scrollBehavior = 'auto'; // Disable smooth scroll for instant restore
-              newWidgets.scrollTop = oldWidgets.scrollTop;
-              newWidgets.style.scrollBehavior = '';
-            }
-          }
+      if (selector === '.l_body') {
+        // Always replace main content
+        const oMain = oldEl.querySelector('.l_main');
+        const nMain = newEl.querySelector('.l_main');
+        if (oMain && nMain) {
+          oMain.replaceWith(nMain);
         }
 
-        // Swap the entire element with the prepared new element
-        oldElement.replaceWith(newElement);
-      } else if (oldElement) {
-        // If the selector exists in old page but not in new page, clear it
-        oldElement.innerHTML = '';
-        Array.from(oldElement.attributes).forEach(attr => {
-          if (attr.name !== 'id' && attr.name !== 'class') {
-            oldElement.removeAttribute(attr.name);
-          }
-        });
+        // Special handling for the main layout to preserve sidebar state
+        const oSidebar = oldEl.querySelector('.l_left');
+        const nSidebar = newEl.querySelector('.l_left');
+        if (oSidebar && nSidebar) {
+          syncAttributes(newEl, oldEl);
+          const savedScrollTop = oSidebar.querySelector('.widgets')?.scrollTop || 0;
+
+          // Update Sidebar components in-place
+          ['.header', '.nav-area', '.widgets', '.footer'].forEach(part => {
+            const op = oSidebar.querySelector(part);
+            const np = nSidebar.querySelector(part);
+            if (op && np) {
+              const isIdentical = op.isEqualNode(np) || (op.innerHTML.trim() === np.innerHTML.trim());
+              if (!isIdentical) {
+                op.replaceWith(np);
+                if (part === '.widgets') {
+                  np.style.scrollBehavior = 'auto';
+                  np.scrollTop = savedScrollTop;
+                  np.style.scrollBehavior = '';
+                }
+              }
+            }
+          });
+        }
+        return;
+      }
+
+      // Default replacement for other selectors (like #l_cover)
+      if (!(oldEl.isEqualNode(newEl) || oldEl.innerHTML.trim() === newEl.innerHTML.trim())) {
+        oldEl.replaceWith(newEl);
       }
     });
   }
