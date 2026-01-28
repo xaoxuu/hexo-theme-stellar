@@ -30,7 +30,7 @@
       container = document.querySelector(container);
     }
     if (!container) return;
-    
+
     const images = container.querySelectorAll('img');
     images.forEach((img) => {
       if (img.classList.contains('lazy')) return;
@@ -63,5 +63,5 @@
       window.lazyLoadInstance.update();
     }
   }
-  
+
 </script>

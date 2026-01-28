@@ -1,0 +1,25 @@
+<% // PJAX Plugin - Seamless page transitions
+    const nprogress_css='https://gcore.jsdelivr.net/npm/nprogress@0.2/nprogress.min.css';
+    const nprogress_js='https://gcore.jsdelivr.net/npm/nprogress@0.2/nprogress.min.js';
+%>
+
+<% if (conf.nprogress !==false) { %>
+    <link rel="stylesheet" href="<%= nprogress_css %>">
+    <script src="<%= nprogress_js %>"></script>
+    <script>
+        NProgress.configure({
+            showSpinner: false,
+            minimum: 0.1,
+            trickleSpeed: 200
+        });
+    </script>
+<% } %>
+
+<script>
+    window.StellarPjaxConfig = {
+        selectors: <%- JSON.stringify((conf.selectors || ['title', '#l_cover', '.l_body']).includes('#l_cover') ? (conf.selectors || ['title', '#l_cover', '.l_body']) : (conf.selectors || ['title', '#l_cover', '.l_body']).concat('#l_cover')) %>,
+        timeout: <%= conf.timeout || 10000 %>,
+        cacheBust: <%= conf.cacheBust || false %>
+    };
+</script>
+<script src="<%- url_for('/js/plugins/pjax.js') %>" defer></script>
