@@ -1,0 +1,59 @@
+// PJAX - Seamless page transitions
+// NProgress customization and loading states
+
+// Custom easing for smooth, natural animations
+$pjax-easing = cubic-bezier(0.4, 0, 0.2, 1)
+$pjax-easing-out = cubic-bezier(0.16, 1, 0.3, 1)  // Expo out - more elegant deceleration
+$pjax-duration = 0.4s
+$pjax-translate-distance = 16px
+
+// NProgress bar color customization
+#nprogress
+  .bar
+    background: var(--theme-link, hsl(207 90% 54%))
+    height: 2px
+    box-shadow: 0 0 8px var(--theme-link, hsl(207 90% 54%))
+  .peg
+    box-shadow: 0 0 10px var(--theme-link, hsl(207 90% 54%)), 0 0 5px var(--theme-link, hsl(207 90% 54%))
+  .spinner-icon
+    border-top-color: var(--theme-link, hsl(207 90% 54%))
+    border-left-color: var(--theme-link, hsl(207 90% 54%))
+
+// Main content transition base
+.l_body .l_main, #l_cover
+  transition: opacity $pjax-duration $pjax-easing, transform $pjax-duration $pjax-easing
+
+// Loading state - content fades out and moves down slightly
+body.pjax-loading
+  .l_body .l_main, #l_cover
+    opacity: 0.4
+    transform: translateY($pjax-translate-distance)
+    pointer-events: none
+
+// Loaded state - content fades in with upward motion
+body.pjax-loaded
+  .l_body .l_main, #l_cover
+    animation: pjax-fade-in $pjax-duration $pjax-easing-out forwards
+
+// Fade-in animation keyframes
+@keyframes pjax-fade-in
+  0%
+    opacity: 0
+    transform: translateY($pjax-translate-distance)
+  100%
+    opacity: 1
+    transform: translateY(0)
+
+// Respect reduced motion preferences
+@media (prefers-reduced-motion: reduce)
+  .l_body .l_main, #l_cover
+    transition: opacity $pjax-duration ease
+  body.pjax-loading .l_body .l_main, body.pjax-loading #l_cover
+    transform: none
+  body.pjax-loaded .l_body .l_main, body.pjax-loaded #l_cover
+    animation: pjax-fade-simple $pjax-duration ease forwards
+  @keyframes pjax-fade-simple
+    0%
+      opacity: 0
+    100%
+      opacity: 1
