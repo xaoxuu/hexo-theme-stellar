@@ -11,6 +11,23 @@
 <script type="text/javascript">
   window.canonical = <%- JSON.stringify(canonicalWithEncoded) %>;
   window.canonical["param"] = <%- JSON.stringify({permalink, checklink}) %>;
+  // Fix: Ensure page is at the correct top position on data load
+  if (history.scrollRestoration) {
+    history.scrollRestoration = 'auto';
+  }
+  (function() {
+    const scrollHandler = () => {
+      const wikiCover = document.querySelector('#l_cover .l_cover.wiki');
+      const startEl = document.getElementById('start');
+      if (wikiCover && startEl) {
+        window.scrollTo(0, startEl.offsetTop);
+      } else {
+        window.scrollTo(0, 0);
+      }
+    };
+    if (document.readyState !== 'loading') scrollHandler();
+    else document.addEventListener('DOMContentLoaded', scrollHandler);
+  })();
   const ctx = {
     date_suffix: {
       just: `<%- __('meta.date_suffix.just') %>`,
@@ -43,6 +60,4 @@
     marked: `<%- url_for(theme.dependencies.marked) %>`,
     lazyload: `<%- url_for(theme.dependencies.lazyload) %>`
   }
-  
-
 </script>
