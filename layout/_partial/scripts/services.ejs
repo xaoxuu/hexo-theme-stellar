@@ -55,7 +55,7 @@
     // search
     if (ctx.search && typeof searchFunc === 'function') {
       const $inputArea = $("input#search-input");
-      if ($inputArea.length > 0) {
+      if ($inputArea.length > 0 && !$inputArea[0]._searchInitialized) {
         const path = ctx.search.path.startsWith('/') ? ctx.root + ctx.search.path.substring(1) : ctx.root + ctx.search.path;
         const filter = $inputArea.attr('data-filter') || '';
         searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
