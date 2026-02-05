@@ -96,6 +96,22 @@
   }
 
   /**
+   * Check if two widgets are identical (preserving dynamic content if API matches)
+   */
+  function isWidgetIdentical(oldW, newW) {
+    if (oldW.isEqualNode(newW) || (oldW.innerHTML.trim() === newW.innerHTML.trim())) return true;
+    // Check for data-service identity
+    const oldDS = oldW.classList.contains('data-service') ? oldW : oldW.querySelector('.data-service');
+    const newDS = newW.classList.contains('data-service') ? newW : newW.querySelector('.data-service');
+    if (oldDS && newDS) {
+      const oldApi = oldDS.getAttribute('data-api');
+      const newApi = newDS.getAttribute('data-api');
+      if (oldApi && newApi && oldApi === newApi) return true;
+    }
+    return false;
+  }
+
+  /**
    * Replace content in the current page
    */
   function replaceContent(contents, selectors, doc) {
@@ -124,34 +140,61 @@
             oMain.innerHTML = '';
           }
 
-          // 2. Special handling for sidebar
-          const oSidebar = oldEl.querySelector('.l_left');
-          const nSidebar = newEl.querySelector('.l_left');
-          if (oSidebar && nSidebar) {
-            // Update Sidebar components in-place
-            ['.header', '.nav-area', '.widgets', '.footer'].forEach(part => {
-              const op = oSidebar.querySelector(part);
-              const np = nSidebar.querySelector(part);
-              if (op && np) {
-                const isIdentical = op.isEqualNode(np) || (op.innerHTML.trim() === np.innerHTML.trim());
-                if (!isIdentical) {
+          // 2. Special handling for sidebars (left and right)
+          ['.l_left', '.l_right'].forEach(side => {
+            const oSide = oldEl.querySelector(side);
+            const nSide = newEl.querySelector(side);
+            if (oSide && nSide) {
+              // Update Sidebar components in-place
+              ['.header', '.nav-area', '.widgets', '.footer'].forEach(part => {
+                const op = oSide.querySelector(part);
+                const np = nSide.querySelector(part);
+                if (op && np) {
                   if (part === '.widgets') {
-                    const savedScrollTop = oSidebar.querySelector('.widgets')?.scrollTop || 0;
-                    op.replaceWith(np);
-                    np.style.scrollBehavior = 'auto';
-                    np.scrollTop = savedScrollTop;
-                    np.style.scrollBehavior = '';
+                    const savedScrollTop = op.scrollTop || 0;
+                    const oldChildren = Array.from(op.children);
+                    const newChildren = Array.from(np.children);
+                    
+                    // Simple positional merger for performance and order preservation
+                    const maxLength = Math.max(oldChildren.length, newChildren.length);
+                    for (let i = 0; i < maxLength; i++) {
+                      const oc = oldChildren[i];
+                      const nc = newChildren[i];
+                      if (oc && nc) {
+                        if (!isWidgetIdentical(oc, nc)) {
+                          oc.replaceWith(nc);
+                        }
+                      } else if (oc) {
+                        oc.remove();
+                      } else if (nc) {
+                        op.appendChild(nc);
+                      }
+                    }
+                    op.style.scrollBehavior = 'auto';
+                    op.scrollTop = savedScrollTop;
+                    op.style.scrollBehavior = '';
                   } else {
-                    op.replaceWith(np);
+                    const isIdentical = op.isEqualNode(np) || (op.innerHTML.trim() === np.innerHTML.trim());
+                    if (!isIdentical) {
+                      op.replaceWith(np);
+                    }
                   }
+                } else if (op) {
+                  op.remove();
+                } else if (np) {
+                  oSide.appendChild(np);
                 }
-              } else if (op) {
-                op.innerHTML = '';
+              });
+            } else if (oSide && !nSide) {
+              oSide.remove();
+            } else if (!oSide && nSide) {
+              if (side === '.l_left') {
+                oldEl.prepend(nSide);
+              } else {
+                oldEl.append(nSide);
               }
-            });
-          } else if (oSidebar) {
-            oSidebar.innerHTML = '';
-          }
+            }
+          });
 
           // body already updated, skip general update
           return;
@@ -342,13 +385,14 @@
         history.pushState({ pjax: true, url: url }, '', url);
       }
 
-      // Trigger complete event for other scripts to re-initialize
-      triggerEvent('pjax:complete', { url });
-
       // Re-initialize lazy loading
       if (window.lazyLoadInstance) {
         window.lazyLoadInstance.update();
       }
+
+      // Trigger complete event for other scripts to re-initialize
+      // This is fired after DOM is updated and main content is ready
+      triggerEvent('pjax:complete', { url });
 
       stopLoading();
       isLoading = false;

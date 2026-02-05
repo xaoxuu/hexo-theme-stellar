@@ -124,11 +124,15 @@
       document.head.appendChild(script)
     }),
 
-    jq: (fn) => {
+    jq: (fn, pjax = true) => {
       if (typeof jQuery === 'undefined') {
         utils.js(deps.jquery).then(fn)
       } else {
         fn()
+      }
+      if (pjax && !fn._pjax_registered) {
+        document.addEventListener('pjax:complete', fn);
+        fn._pjax_registered = true;
       }
     },
 
@@ -152,6 +156,9 @@
       }
     },
     request: (el, url, callback, onFailure) => {
+      if (el && el.getAttribute('data-lazy-loaded')) {
+        return;
+      }
       const maxRetry = 3;
       let retryCount = 0;
 
@@ -181,6 +188,7 @@
             return resp;
           }).then(data => {
             if (timedOut) return;
+            if (el) el.setAttribute('data-lazy-loaded', true);
             utils.onLoadSuccess?.(el);
             callback(data);
             resolve(data);
