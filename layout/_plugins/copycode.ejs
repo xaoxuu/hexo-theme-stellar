@@ -1,13 +1,19 @@
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    window.codeElements = document.querySelectorAll('.code');
-    if (window.codeElements.length > 0) {
+  const initCopyCode = () => {
+    const codeElements = document.querySelectorAll('.code');
+    if (codeElements.length > 0) {
       ctx.copycode = {
         default_text: `<%- conf.default_text %>`,
         success_text: `<%- conf.success_text %>`,
         toast: `<%- conf.toast %>`,
       };
-      utils.js('/js/plugins/copycode.js');
+      utils.js('/js/plugins/copycode.js', { defer: true }).then(() => {
+        if (typeof createCopyButtons === 'function') {
+          createCopyButtons(codeElements);
+        }
+      });
     }
-  });
+  };
+  window.addEventListener('DOMContentLoaded', initCopyCode);
+  document.addEventListener('pjax:complete', initCopyCode);
 </script>
