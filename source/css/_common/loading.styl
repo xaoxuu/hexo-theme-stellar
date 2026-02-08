@@ -29,22 +29,6 @@ svg.loading
     color: var(--text-p1)
     display: block
     font-size: 14px
-  &.mini
-    padding: 2px
-    background: none
-    display: inline-flex
-    align-items: center
-    justify-content: center
-    svg
-      width: 1.2rem
-      height: 1.2rem
-      margin: 0 4px
-    &:after
-      content: '...'
-      font-size: 12px
-      display: inline-block
   &.error
     &:after
       content: hexo-config('style.loading.error')
-    &.mini:after
-      content: '!'

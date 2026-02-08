@@ -1,6 +1,6 @@
 <script defer src="<%- conf.js %>"></script>
 <script>
-  const initScrollReveal = () => {
+  utils.initPlugin(() => {
     const els = document.querySelectorAll('.slide-up');
     if (els.length > 0) {
       const slideUp = {
@@ -13,7 +13,5 @@
       };
       ScrollReveal().reveal('.slide-up', { ...slideUp });
     }
-  };
-  window.addEventListener('DOMContentLoaded', initScrollReveal);
-  document.addEventListener('pjax:complete', initScrollReveal);
+  }, 'scrollreveal');
 </script>

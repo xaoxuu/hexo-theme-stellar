@@ -1,5 +1,5 @@
 <script>
-  const initCopyCode = () => {
+  utils.initPlugin(() => {
     const codeElements = document.querySelectorAll('.code');
     if (codeElements.length > 0) {
       ctx.copycode = {
@@ -13,7 +13,5 @@
         }
       });
     }
-  };
-  window.addEventListener('DOMContentLoaded', initCopyCode);
-  document.addEventListener('pjax:complete', initCopyCode);
+  }, 'copycode');
 </script>
