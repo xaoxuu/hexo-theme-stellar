@@ -97,18 +97,29 @@
 
   /**
    * Check if two widgets are identical (preserving dynamic content if API matches)
+   * 使用轻量级比较策略以提高性能
    */
   function isWidgetIdentical(oldW, newW) {
-    if (oldW.isEqualNode(newW) || (oldW.innerHTML.trim() === newW.innerHTML.trim())) return true;
-    // Check for data-service identity
+    // 1. 快速检查：如果是同一个节点，直接返回
+    if (oldW === newW) return true;
+    
+    // 2. 检查 widget ID 或类型
+    const oldId = oldW.id || oldW.getAttribute('data-widget-id');
+    const newId = newW.id || newW.getAttribute('data-widget-id');
+    if (oldId && newId && oldId !== newId) return false;
+    
+    // 3. 检查 data-service 标识（动态内容）
     const oldDS = oldW.classList.contains('data-service') ? oldW : oldW.querySelector('.data-service');
     const newDS = newW.classList.contains('data-service') ? newW : newW.querySelector('.data-service');
     if (oldDS && newDS) {
       const oldApi = oldDS.getAttribute('data-api');
       const newApi = newDS.getAttribute('data-api');
+      // 如果 API 相同，保留旧内容（可能已加载数据）
       if (oldApi && newApi && oldApi === newApi) return true;
     }
-    return false;
+    
+    // 4. 最后才使用 isEqualNode（比 innerHTML 更快）
+    return oldW.isEqualNode(newW);
   }
 
   /**
@@ -170,11 +181,19 @@
                         op.appendChild(nc);
                       }
                     }
-                    op.style.scrollBehavior = 'auto';
-                    op.scrollTop = savedScrollTop;
-                    op.style.scrollBehavior = '';
+                    // 恢复滚动位置（在 DOM 更新后重新获取引用）
+                    const widgetsContainer = oSide.querySelector('.widgets');
+                    if (widgetsContainer) {
+                      widgetsContainer.style.scrollBehavior = 'auto';
+                      widgetsContainer.scrollTop = savedScrollTop;
+                      // 延迟恢复 scroll-behavior 以确保滚动完成
+                      requestAnimationFrame(() => {
+                        widgetsContainer.style.scrollBehavior = '';
+                      });
+                    }
                   } else {
-                    const isIdentical = op.isEqualNode(np) || (op.innerHTML.trim() === np.innerHTML.trim());
+                    // 使用 isEqualNode 而不是 innerHTML 比较
+                    const isIdentical = op.isEqualNode(np);
                     if (!isIdentical) {
                       op.replaceWith(np);
                     }
@@ -201,7 +220,7 @@
         }
 
         // Default replacement for other selectors (like #l_cover)
-        if (!(oldEl.isEqualNode(newEl) || oldEl.innerHTML.trim() === newEl.innerHTML.trim())) {
+        if (!oldEl.isEqualNode(newEl)) {
           oldEl.replaceWith(newEl);
         }
       } else if (oldEl) {
@@ -343,7 +362,7 @@
       const { contents, doc } = extractContent(html, config.selectors);
       contents._targetUrl = url;
 
-      // Ensure minimum load time for smooth animation (if scroll was faster than fetch)
+      // 确保最小加载时间以保证平滑动画
       const elapsed = Date.now() - startTime;
       const remainingTime = Math.max(0, config.minLoadTime - elapsed);
       if (remainingTime > 0) {
@@ -355,26 +374,15 @@
 
       // Scroll to correct position
       if (!isPop) {
-        // If there is a full-screen wiki cover, scroll to content (#start)
-        // Otherwise scroll to top
+        // 如果有全屏 wiki cover，滚动到内容区域 (#start)
+        // 否则滚动到顶部
         const wikiCover = document.querySelector('#l_cover .l_cover.wiki');
-        const startEl = document.getElementById('start');
+        const newStartEl = document.getElementById('start');
         
-        if (wikiCover && startEl) {
-          // Scroll slightly above #start to account for sidebar margin
-          // CSS: .l_body .l_left { top: calc(var(--gap-margin) * 2) }
-          // We want the sidebar (which is sticky) to be at its sticky position
-          const rect = startEl.getBoundingClientRect();
+        if (wikiCover && newStartEl) {
+          // 立即跳转到目标位置，不使用动画（避免与导航前的滚动冲突）
+          const rect = newStartEl.getBoundingClientRect();
           const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          
-          // Get gap margin from CSS variable (approximate or hardcoded if needed)
-          // Default gap-margin is usually around 16px to 24px per theme
-          // Let's assume 2 * gap-margin is roughly 32px-48px. 
-          // However, we can also just scroll to rect.top + scrollTop.
-          // If sidebar is sticky at top: var(--gap-margin) * 2, we need the #start to be at top: 0 relative to viewport? 
-          // No, if the user scrolls, the sidebar sticks. We want the initial state where the sidebar is just at its top position.
-          // This creates a consistent 'initial view'.
-          
           window.scrollTo({
             top: rect.top + scrollTop,
             behavior: 'auto'
@@ -416,45 +424,109 @@
   }
 
   /**
+   * Find the closest anchor element from event target
+   */
+  function findAnchorElement(target) {
+    let element = target;
+    while (element && element.tagName !== 'A') {
+      element = element.parentElement;
+    }
+    return element;
+  }
+
+  /**
+   * Check if link is a same-page hash link
+   */
+  function isSamePageHashLink(link, currentUrl) {
+    if (!link || !link.href || link.tagName !== 'A') return false;
+    if (link.target === '_blank') return false;
+
+    try {
+      const url = new URL(link.href);
+      return url.origin === currentUrl.origin && 
+             url.pathname === currentUrl.pathname && 
+             !!url.hash;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /**
+   * Decode hash ID to handle Chinese and other non-ASCII characters
+   * url.hash is URL-encoded (e.g., #%E4%B8%AD%E6%96%87), but getElementById needs decoded string
+   */
+  function decodeHashId(hash) {
+    const rawId = hash.slice(1);
+    try {
+      return decodeURIComponent(rawId);
+    } catch (e) {
+      // If decoding fails, use the original value
+      return rawId;
+    }
+  }
+
+  /**
+   * Scroll to element smoothly and update URL hash
+   */
+  function scrollToElement(element, hash) {
+    const rect = element.getBoundingClientRect();
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    window.scrollTo({
+      top: rect.top + scrollTop,
+      behavior: 'smooth'
+    });
+    
+    // Update URL hash without scrolling again
+    history.pushState(null, '', hash);
+  }
+
+  /**
+   * Handle same-page hash link navigation
+   * Returns true if handled, false otherwise
+   */
+  function handleHashLink(link, currentUrl) {
+    if (!isSamePageHashLink(link, currentUrl)) return false;
+
+    try {
+      const url = new URL(link.href);
+      const targetId = decodeHashId(url.hash);
+      const target = document.getElementById(targetId);
+      
+      if (target) {
+        scrollToElement(target, url.hash);
+        return true;
+      }
+    } catch (e) {
+      // Invalid URL, let it fall through
+    }
+    
+    return false;
+  }
+
+  /**
    * Handle link clicks
    */
   function handleClick(event) {
-    // Find the closest anchor element
-    let link = event.target;
-    while (link && link.tagName !== 'A') {
-      link = link.parentElement;
+    const link = findAnchorElement(event.target);
+    
+    // Handle in-page hash links FIRST (before shouldHandleLink check)
+    // This prevents page reloads when clicking table of contents in wiki mode
+    const currentUrl = new URL(window.location.href);
+    if (handleHashLink(link, currentUrl)) {
+      event.preventDefault();
+      return;
     }
 
+    // Check if PJAX should handle this link
     if (!shouldHandleLink(link)) {
-      // Handle in-page hash links with smooth scrolling
-      if (link && link.href && link.target !== '_blank') {
-         const url = new URL(link.href);
-         const currentUrl = new URL(window.location.href);
-         if (url.pathname === currentUrl.pathname && url.hash) {
-           const targetId = url.hash.slice(1);
-           const target = document.getElementById(targetId);
-           if (target) {
-             event.preventDefault();
-             
-             // Use same calculation as PJAX navigation for consistency
-             const rect = target.getBoundingClientRect();
-             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-             
-             window.scrollTo({
-               top: rect.top + scrollTop,
-               behavior: 'smooth'
-             });
-             
-             // Update URL hash without scrolling again
-             history.pushState(null, '', url.hash);
-           }
-         }
-      }
       return;
     }
 
     // Check for modifier keys (new tab/window)
-    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+    if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) {
+      return;
+    }
 
     // Prevent default and use PJAX
     event.preventDefault();
