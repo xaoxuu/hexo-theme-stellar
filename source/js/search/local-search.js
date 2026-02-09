@@ -2,6 +2,9 @@ var searchCache = null;
 var searchCacheKey = 'search_cache_v1';
 
 var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
+  var $input = document.getElementById(searchId);
+  if (!$input || $input._searchInitialized === true) return;
+  if ($input._searchInitialized === 'pending' && !searchCache) return;
 
   function getAllCombinations(keywords) {
     const result = [];
@@ -19,9 +22,8 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
   }
 
   function initSearch(datas) {
-    var $input = document.getElementById(searchId);
     if (!$input) { return; }
-    if ($input._searchInitialized) return; // 防止重复绑定
+    if ($input._searchInitialized === true) return; // 防止重复绑定
     $input._searchInitialized = true;
 
     var $resultContent = document.getElementById(contentId);
@@ -115,6 +117,7 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
   }
 
   if (!searchCache) {
+    $input._searchInitialized = 'pending';
     // 数据还没准备好，延迟初始化
     const timer = setInterval(() => {
       if (searchCache) {
