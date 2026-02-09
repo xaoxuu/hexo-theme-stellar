@@ -8,7 +8,7 @@ utils.jq(() => {
         continue;
       }
       // layout
-      utils.request(el, api, async resp => {
+      utils.request(null, api, async resp => {
         const data = await resp.json();
         function fill(data) {
           for (let key of Object.keys(data)) {
