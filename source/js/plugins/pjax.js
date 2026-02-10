@@ -320,6 +320,48 @@
   }
 
   /**
+   * Execute comment system scripts from the new page
+   * This ensures comment init functions are registered after PJAX navigation
+   */
+  function executeCommentScripts(doc) {
+    // Clear previous comment system init functions to avoid conflicts
+    if (window.stellar && window.stellar.initComments) {
+      window.stellar.initComments = {};
+    }
+
+    // Find and execute comment scripts from the new page
+    const scriptsDiv = doc.querySelector('.scripts');
+    if (!scriptsDiv) return;
+
+    // Look for comment-related script tags
+    const scripts = scriptsDiv.querySelectorAll('script');
+    scripts.forEach(oldScript => {
+      // Check if this is a comment system script by looking for initComments
+      const scriptContent = oldScript.textContent || oldScript.innerHTML;
+      if (scriptContent.includes('window.stellar.initComments')) {
+        // Create and execute a new script element
+        const newScript = document.createElement('script');
+        
+        // Copy attributes
+        Array.from(oldScript.attributes).forEach(attr => {
+          newScript.setAttribute(attr.name, attr.value);
+        });
+        
+        // Copy content
+        newScript.textContent = scriptContent;
+        
+        // Execute by appending to document
+        document.head.appendChild(newScript);
+        
+        // Clean up immediately to avoid duplicate scripts
+        setTimeout(() => {
+          newScript.remove();
+        }, 0);
+      }
+    });
+  }
+
+  /**
    * Navigate to a new page using PJAX
    */
   async function navigate(url, options = {}) {
@@ -371,6 +413,9 @@
 
       // Replace content
       replaceContent(contents, config.selectors, doc);
+
+      // Execute comment scripts from the new page
+      executeCommentScripts(doc);
 
       // Scroll to correct position
       if (!isPop) {
