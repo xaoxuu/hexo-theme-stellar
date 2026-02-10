@@ -342,21 +342,34 @@
         // Create and execute a new script element
         const newScript = document.createElement('script');
         
-        // Copy attributes
+        // Copy all attributes including type="module" if present
         Array.from(oldScript.attributes).forEach(attr => {
           newScript.setAttribute(attr.name, attr.value);
         });
         
-        // Copy content
-        newScript.textContent = scriptContent;
+        // For module scripts, we need to use a blob URL to preserve import statements
+        if (oldScript.type === 'module') {
+          const blob = new Blob([scriptContent], { type: 'text/javascript' });
+          const url = URL.createObjectURL(blob);
+          newScript.src = url;
+          
+          // Clean up blob URL after script loads
+          newScript.onload = () => {
+            URL.revokeObjectURL(url);
+            newScript.remove();
+          };
+        } else {
+          // For regular scripts, just copy the content
+          newScript.textContent = scriptContent;
+          
+          // Clean up after execution
+          setTimeout(() => {
+            newScript.remove();
+          }, 0);
+        }
         
         // Execute by appending to document
         document.head.appendChild(newScript);
-        
-        // Clean up immediately to avoid duplicate scripts
-        setTimeout(() => {
-          newScript.remove();
-        }, 0);
       }
     });
   }
