@@ -320,6 +320,59 @@
   }
 
   /**
+   * Execute comment system scripts from the new page
+   * This ensures comment init functions are registered after PJAX navigation
+   */
+  function executeCommentScripts(doc) {
+    // Clear previous comment system init functions to avoid conflicts
+    if (window.stellar && window.stellar.initComments) {
+      window.stellar.initComments = {};
+    }
+
+    // Find and execute comment scripts from the new page
+    const scriptsDiv = doc.querySelector('.scripts');
+    if (!scriptsDiv) return;
+
+    // Look for comment-related script tags
+    const scripts = scriptsDiv.querySelectorAll('script');
+    scripts.forEach(oldScript => {
+      // Check if this is a comment system script by looking for initComments
+      const scriptContent = oldScript.textContent || oldScript.innerHTML;
+      if (scriptContent.includes('window.stellar.initComments')) {
+        // Create and execute a new script element
+        const newScript = document.createElement('script');
+        
+        // Copy all attributes including type="module" if present
+        Array.from(oldScript.attributes).forEach(attr => {
+          newScript.setAttribute(attr.name, attr.value);
+        });
+        
+        // For module scripts, we need to use a blob URL to preserve import statements
+        if (oldScript.type === 'module') {
+          const blob = new Blob([scriptContent], { type: 'text/javascript' });
+          const url = URL.createObjectURL(blob);
+          newScript.src = url;
+          
+          // Clean up blob URL and script element after loading (or on error)
+          const cleanup = () => {
+            URL.revokeObjectURL(url);
+            newScript.remove();
+          };
+          newScript.onload = cleanup;
+          newScript.onerror = cleanup;
+        } else {
+          // For regular scripts, just copy the content
+          newScript.textContent = scriptContent;
+          // Script executes synchronously when appended, so we can remove it immediately
+        }
+        
+        // Execute by appending to document
+        document.head.appendChild(newScript);
+      }
+    });
+  }
+
+  /**
    * Navigate to a new page using PJAX
    */
   async function navigate(url, options = {}) {
@@ -371,6 +424,9 @@
 
       // Replace content
       replaceContent(contents, config.selectors, doc);
+
+      // Execute comment scripts from the new page
+      executeCommentScripts(doc);
 
       // Scroll to correct position
       if (!isPop) {
