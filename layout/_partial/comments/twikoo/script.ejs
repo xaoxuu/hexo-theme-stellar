@@ -1,15 +1,30 @@
-<script type="module">
-  const el = document.getElementById('twikoo_container');
-  util.viewportLazyload(el, load_twikoo, <%= theme.comments.lazyload ?? false %>);
-
-  function load_twikoo() {
-    if (!el) return;
-    utils.js('<%- theme.comments.twikoo.js %>', {defer: true}).then(function () {
-      const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
-      twikoo.init(Object.assign(<%- JSON.stringify(theme.comments.twikoo) %>, {
-        el: '#twikoo_container',
-        path: path,
-      }));
-    });
-  }
+<script>
+  (function() {
+    const lazyload = <%= theme.comments.lazyload ?? false %>;
+    
+    function initTwikoo() {
+      const el = document.getElementById('twikoo_container');
+      if (!el) return;
+      
+      function load_twikoo() {
+        utils.js('<%- theme.comments.twikoo.js %>', {defer: true}).then(function () {
+          const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
+          twikoo.init(Object.assign(<%- JSON.stringify(theme.comments.twikoo) %>, {
+            el: '#twikoo_container',
+            path: path,
+          }));
+        });
+      }
+      
+      util.viewportLazyload(el, load_twikoo, lazyload);
+    }
+    
+    // Store in global stellar namespace for PJAX reinitialization
+    window.stellar = window.stellar || {};
+    window.stellar.initComments = window.stellar.initComments || {};
+    window.stellar.initComments.twikoo = initTwikoo;
+    
+    // Initialize on page load
+    initTwikoo();
+  })();
 </script>

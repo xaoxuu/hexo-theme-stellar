@@ -299,6 +299,15 @@ stellar.initPage = function () {
   init.sidebar();
   init.relativeDate(document.querySelectorAll('#post-meta time'));
   init.registerTabsTag();
+  
+  // Reinitialize comments after PJAX navigation
+  if (stellar.initComments) {
+    for (const commentSystem in stellar.initComments) {
+      if (typeof stellar.initComments[commentSystem] === 'function') {
+        stellar.initComments[commentSystem]();
+      }
+    }
+  }
 };
 
 // Initial page load
