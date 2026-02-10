@@ -353,19 +353,17 @@
           const url = URL.createObjectURL(blob);
           newScript.src = url;
           
-          // Clean up blob URL after script loads
-          newScript.onload = () => {
+          // Clean up blob URL and script element after loading (or on error)
+          const cleanup = () => {
             URL.revokeObjectURL(url);
             newScript.remove();
           };
+          newScript.onload = cleanup;
+          newScript.onerror = cleanup;
         } else {
           // For regular scripts, just copy the content
           newScript.textContent = scriptContent;
-          
-          // Clean up after execution
-          setTimeout(() => {
-            newScript.remove();
-          }, 0);
+          // Script executes synchronously when appended, so we can remove it immediately
         }
         
         // Execute by appending to document
