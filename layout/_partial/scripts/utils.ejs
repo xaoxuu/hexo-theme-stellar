@@ -47,9 +47,9 @@
 
     // 懒加载 css https://github.com/filamentgroup/loadCSS
     css: (href, before, media, attributes) => {
-      // 如果样式已加载，直接返回
+      // 如果样式已加载，直接返回 null
       if (utils._loadedStyles.has(href)) {
-        return;
+        return null;
       }
       var doc = window.document;
       var ss = doc.createElement("link");
@@ -71,6 +71,8 @@
       ss.rel = "stylesheet";
       ss.href = href;
       ss.media = "only x";
+      // 标记样式为已加载 (在创建元素后立即标记，防止重复创建)
+      utils._loadedStyles.add(href);
       function ready(cb) {
         if (doc.body) {
           return cb();
@@ -99,8 +101,6 @@
           ss.removeEventListener("load", loadCB);
         }
         ss.media = media || "all";
-        // 标记样式为已加载
-        utils._loadedStyles.add(href);
       }
       if (ss.addEventListener) {
         ss.addEventListener("load", loadCB);
