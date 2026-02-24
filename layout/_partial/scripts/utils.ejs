@@ -42,8 +42,15 @@
   }
 
   const utils = {
+    // 已加载样式缓存
+    _loadedStyles: new Set(),
+
     // 懒加载 css https://github.com/filamentgroup/loadCSS
     css: (href, before, media, attributes) => {
+      // 如果样式已加载，直接返回
+      if (utils._loadedStyles.has(href)) {
+        return;
+      }
       var doc = window.document;
       var ss = doc.createElement("link");
       var ref;
@@ -92,6 +99,8 @@
           ss.removeEventListener("load", loadCB);
         }
         ss.media = media || "all";
+        // 标记样式为已加载
+        utils._loadedStyles.add(href);
       }
       if (ss.addEventListener) {
         ss.addEventListener("load", loadCB);
