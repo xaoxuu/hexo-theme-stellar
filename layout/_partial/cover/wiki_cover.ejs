@@ -11,6 +11,21 @@ function layoutWikiCover() {
   if (proj.coverpage == undefined || proj.coverpage === false || proj.coverpage === '[]') {
     return el;
   }
+  
+  // Helper function to escape HTML special characters
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str).replace(/[&<>"']/g, function(match) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[match];
+    });
+  }
+  
   var coverpage = proj.coverpage;
   let cover = proj.cover;
   let title = proj.title || page.title;
@@ -22,18 +37,18 @@ function layoutWikiCover() {
   el += '<article class="cover-wrap md-text">';
 
   if (cover?.length > 0 && coverpage.includes('cover')) {
-    el += `<div class="preview cover"><img src="${cover}"></div>`
+    el += `<div class="preview cover"><img src="${escapeHtml(cover)}" alt="cover"></div>`
   }
   if (title && coverpage.includes('title')) {
     el += '<div class="cover-title">';
-    el += '<span>' + title + '</span>';
+    el += '<span>' + escapeHtml(title) + '</span>';
     el += '</div>';
   }
   if (desc && coverpage.includes('description')) {
-    el += '<div class="description">' + desc + '</div>';
+    el += '<div class="description">' + escapeHtml(desc) + '</div>';
   }
   el += '<div class="start-wrap">';
-  el += '<a class="button start gradient" href="#start">' + (proj.start || __('btn.getting_started')) + '</a>';
+  el += '<a class="button start gradient" href="#start">' + escapeHtml(proj.start || __('btn.getting_started')) + '</a>';
   el += '</div>';
   el += '</article>';
   el += '</div>';
