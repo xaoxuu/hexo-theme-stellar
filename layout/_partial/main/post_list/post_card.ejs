@@ -39,7 +39,7 @@ function div_default() {
     }
     if (cover_url) {
       el += '<div class="post-cover">';
-      el += '<img src="' + cover_url + '"/>';
+      el += '<img src="' + cover_url + '">';
       el += '</div>';
     }
   }
@@ -110,7 +110,7 @@ function div_photo() {
     }
   }
   el += '<div class="cover" position="' + position + '">';
-  el += '<img src="' + obj.image + '"/>';
+  el += '<img src="' + obj.image + '">';
   if (position.length > 0) {
     el += '<div class="cover-info" position="' + position + '"';
     if (obj.color) {

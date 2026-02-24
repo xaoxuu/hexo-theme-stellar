@@ -135,7 +135,7 @@ function layoutDiv() {
       if (theme.article.share.includes('wechat')) {
         return `
         <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${page.permalink}"/>
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${page.permalink}">
         </div>
         `
       } else {
@@ -146,7 +146,7 @@ function layoutDiv() {
     <section id="share">
       <div class="header"><span>${__('meta.share')}</span></div>
       <div class="body">
-        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="${page.permalink}" /></div>
+        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="${page.permalink}"></div>
         <div class="social-wrap dis-select">${socialButtons()}</div>
         ${qrcode()}
       </div>
