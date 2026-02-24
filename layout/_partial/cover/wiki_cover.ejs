@@ -12,7 +12,7 @@ function layoutWikiCover() {
     return el;
   }
   
-  // Helper function to escape HTML special characters
+  // Helper function to escape HTML special characters for text content
   function escapeHtml(str) {
     if (!str) return '';
     return String(str).replace(/[&<>"']/g, function(match) {
@@ -22,6 +22,18 @@ function layoutWikiCover() {
         '>': '&gt;',
         '"': '&quot;',
         "'": '&#39;'
+      }[match];
+    });
+  }
+  
+  // Helper function to escape attribute values (only escape quotes and < >)
+  function escapeAttr(str) {
+    if (!str) return '';
+    return String(str).replace(/[<>"]/g, function(match) {
+      return {
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;'
       }[match];
     });
   }
@@ -37,7 +49,7 @@ function layoutWikiCover() {
   el += '<article class="cover-wrap md-text">';
 
   if (cover?.length > 0 && coverpage.includes('cover')) {
-    el += `<div class="preview cover"><img src="${escapeHtml(cover)}" alt="cover"></div>`
+    el += `<div class="preview cover"><img src="${escapeAttr(cover)}" alt="cover"></div>`
   }
   if (title && coverpage.includes('title')) {
     el += '<div class="cover-title">';

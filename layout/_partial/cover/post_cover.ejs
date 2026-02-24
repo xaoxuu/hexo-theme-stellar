@@ -5,7 +5,7 @@ function div() {
     return el;
   }
   
-  // Helper function to escape HTML special characters
+  // Helper function to escape HTML special characters for text content
   function escapeHtml(str) {
     if (!str) return '';
     return String(str).replace(/[&<>"']/g, function(match) {
@@ -19,12 +19,24 @@ function div() {
     });
   }
   
+  // Helper function to escape attribute values (only escape quotes and < >)
+  function escapeAttr(str) {
+    if (!str) return '';
+    return String(str).replace(/[<>"]/g, function(match) {
+      return {
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;'
+      }[match];
+    });
+  }
+  
   var url;
   if (page.banner != undefined) {
     if (page.banner.includes('/')) {
       url = page.banner;
     } else {
-      url = 'https://source.unsplash.com/2000x400/?' + encodeURIComponent(page.banner);
+      url = 'https://source.unsplash.com/2000x400/?' + page.banner;
     }
   } else {
     // 自动以 tags 作为关键词搜索封面
@@ -36,14 +48,14 @@ function div() {
         }
         params += tag.name;
       });
-      url = 'https://source.unsplash.com/2000x400/?' + encodeURIComponent(params);
+      url = 'https://source.unsplash.com/2000x400/?' + params;
     } else {
       url = 'https://source.unsplash.com/random/2000x400';
     }
   }
   el += '<div class="l_cover post' + scrollreveal(' ') + '">';
   el += '<div class="cover">';
-  el += '<div class="lazy img bg" data-bg="' + escapeHtml(url) + '"></div>';
+  el += '<div class="lazy img bg" data-bg="' + escapeAttr(url) + '"></div>';
   el += '</div>';
   el += '</div>';
   return el;
