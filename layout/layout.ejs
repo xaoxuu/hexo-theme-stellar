@@ -47,7 +47,8 @@ if (theme.style.prefers_theme === 'auto') {
   html += partial('_partial/head')
   html += `<body>`
     html += site_background
-    html += `<div id="l_cover">${partial('_partial/cover/index')}</div>`
+    var cover_content = partial('_partial/cover/index')
+    html += `<div id="l_cover">${cover_content}</div>`
     html += `<div class="l_body ${page_type}" id="start" layout="${page.layout}" type="${article_type}" ${indent ? 'text-indent' : ''}>`
       html += `<aside class="l_left">`
         html += `<div class="sidebg"></div>`
