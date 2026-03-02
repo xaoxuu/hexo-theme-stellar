@@ -38,6 +38,9 @@
       position: fixed
       transform: translateX(320px)
       transition: transform .38s ease-out
+      // Performance: Enable GPU acceleration for smooth animations
+      will-change: transform
+      backface-visibility: hidden
       margin: 0
       --inset: 8px
       right: var(--inset)
@@ -68,6 +71,9 @@
       position: fixed
       transform: translateX(-320px)
       transition: transform .38s ease-out
+      // Performance: Enable GPU acceleration for smooth animations
+      will-change: transform
+      backface-visibility: hidden
       margin: 0
       --inset: 8px
       left: var(--inset)

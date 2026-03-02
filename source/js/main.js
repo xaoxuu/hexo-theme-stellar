@@ -99,26 +99,45 @@ const init = {
     utils.jq(() => {
       const scrollOffset = 32;
       var segs = [];
+      var segOffsets = []; // Cache header positions
       $("article.md-text :header").each(function (idx, node) {
         segs.push(node);
       });
+      
+      // Cache header positions initially and on resize
+      function cacheHeaderPositions() {
+        segOffsets = segs.map(seg => $(seg).offset().top);
+      }
+      
+      if (segs.length > 0) {
+        cacheHeaderPositions();
+        // Update cache on window resize with debounce
+        let resizeTimeout = null;
+        window.addEventListener('resize', function() {
+          if (resizeTimeout !== null) clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(cacheHeaderPositions, 150);
+        }, { passive: true });
+      }
+      
       function activeTOC() {
-        var scrollTop = $(this).scrollTop();
+        var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         var topSeg = null;
-        for (var idx in segs) {
-          var seg = $(segs[idx]);
-          if (seg.offset().top > scrollTop + scrollOffset) {
+        var topSegIndex = -1;
+        
+        // Use cached positions instead of querying DOM
+        for (var idx = 0; idx < segs.length; idx++) {
+          if (segOffsets[idx] > scrollTop + scrollOffset) {
             continue;
           }
-          if (!topSeg) {
-            topSeg = seg;
-          } else if (seg.offset().top >= topSeg.offset().top) {
-            topSeg = seg;
+          if (topSegIndex === -1 || segOffsets[idx] >= segOffsets[topSegIndex]) {
+            topSegIndex = idx;
+            topSeg = segs[idx];
           }
         }
+        
         if (topSeg) {
           $("#data-toc a.toc-link").removeClass("active");
-          var link = "#" + topSeg.attr("id");
+          var link = "#" + $(topSeg).attr("id");
           if (link != '#undefined') {
             const highlightItem = $('#data-toc a.toc-link[href="' + encodeURI(link) + '"]');
             if (highlightItem.length > 0) {
@@ -129,6 +148,7 @@ const init = {
           }
         }
       }
+      
       function scrollTOC() {
         const e0 = document.querySelector('#data-toc .toc');
         const e1 = document.querySelector('#data-toc .toc a.toc-link.active');
@@ -144,14 +164,37 @@ const init = {
         }
       }
 
-      var timeout = null;
-      window.addEventListener('scroll', function () {
+      // Use requestAnimationFrame for better performance
+      var ticking = false;
+      var pendingScrollTOC = false;
+      
+      function requestTick() {
+        if (!ticking) {
+          window.requestAnimationFrame(updateTOC);
+          ticking = true;
+        }
+      }
+      
+      function updateTOC() {
         activeTOC();
-        if (timeout !== null) clearTimeout(timeout);
-        timeout = setTimeout(function () {
+        if (pendingScrollTOC) {
           scrollTOC();
-        }.bind(this), 50);
-      });
+          pendingScrollTOC = false;
+        }
+        ticking = false;
+      }
+      
+      var scrollTOCTimeout = null;
+      window.addEventListener('scroll', function () {
+        requestTick();
+        
+        // Debounce scrollTOC to avoid excessive smooth scrolling
+        if (scrollTOCTimeout !== null) clearTimeout(scrollTOCTimeout);
+        scrollTOCTimeout = setTimeout(function () {
+          pendingScrollTOC = true;
+          requestTick();
+        }, 100);
+      }, { passive: true });
     })
   },
   sidebar: () => {

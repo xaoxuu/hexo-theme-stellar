@@ -13,10 +13,16 @@
   window.canonical["param"] = <%- JSON.stringify({permalink, checklink}) %>;
   // Fix: Ensure page is at the correct top position on data load
   if (history.scrollRestoration) {
-    history.scrollRestoration = 'auto';
+    history.scrollRestoration = 'manual';
   }
   (function() {
     const scrollHandler = () => {
+      // Only scroll if user hasn't already scrolled
+      const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+      if (currentScroll > 0) {
+        return; // User has scrolled, don't interfere
+      }
+      
       const wikiCover = document.querySelector('#l_cover .l_cover.wiki');
       const startEl = document.getElementById('start');
       if (wikiCover && startEl) {
@@ -25,8 +31,13 @@
         window.scrollTo(0, 0);
       }
     };
-    if (document.readyState !== 'loading') scrollHandler();
-    else document.addEventListener('DOMContentLoaded', scrollHandler);
+    
+    // Use requestAnimationFrame to avoid layout thrashing during page load
+    if (document.readyState !== 'loading') {
+      requestAnimationFrame(scrollHandler);
+    } else {
+      document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(scrollHandler));
+    }
   })();
   const ctx = {
     date_suffix: {

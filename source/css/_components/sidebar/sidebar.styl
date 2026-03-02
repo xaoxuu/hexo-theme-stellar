@@ -47,6 +47,7 @@
       @media screen and (prefers-color-scheme: dark)
         background-color: convert($leftbar-background-color-dark)
 
+.l_left
   .leftbar-container
     height: 'calc(%s - %s * 2 - %s)' % (100vh var(--gap-margin) $leftbar-bottom-margin)
     display: flex
@@ -55,6 +56,9 @@
     text-align: justify
     border-radius: $border-card-l
     overflow: hidden
+    // Performance: Enable GPU acceleration to prevent jittering
+    will-change: transform
+    transform: translateZ(0)
     >.widgets
       border-radius: $border-bar
       mask: linear-gradient(white, 90%, transparent)
