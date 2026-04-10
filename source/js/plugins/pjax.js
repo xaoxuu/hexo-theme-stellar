@@ -126,8 +126,30 @@
    * Replace content in the current page
    */
   function replaceContent(contents, selectors, doc) {
-    // 1. Update HTML attributes (theme, lang, etc.)
-    syncAttributes(doc.documentElement, document.documentElement);
+    // 1. Update HTML attributes (theme except data-theme, lang, etc.)
+    const newHtmlAttrs = contents._htmlAttrs;
+    if (newHtmlAttrs) {
+      // Remove data-theme from new attributes to prevent overwriting user's saved theme
+      const attrsToSync = { ...newHtmlAttrs };
+      delete attrsToSync['data-theme'];
+      
+      // Sync all attributes
+      Object.keys(attrsToSync).forEach(attrName => {
+        const newValue = attrsToSync[attrName];
+        const oldValue = document.documentElement.getAttribute(attrName);
+        if (newValue !== oldValue) {
+          document.documentElement.setAttribute(attrName, newValue);
+        }
+      });
+      
+      // Remove attributes that exist in current html but not in new html (except data-theme)
+      Array.from(document.documentElement.attributes).forEach(attr => {
+        if (attr.name !== 'data-theme' && !(attr.name in attrsToSync)) {
+          document.documentElement.removeAttribute(attr.name);
+        }
+      });
+    }
+    
     if (contents.title) document.title = contents.title;
     if (contents._bodyClasses) document.body.className = contents._bodyClasses;
 
