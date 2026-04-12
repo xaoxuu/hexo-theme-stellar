@@ -50,7 +50,7 @@
 
     // Skip links to non-HTML resources
     const ext = url.pathname.split('.').pop().toLowerCase();
-    const nonHtmlExts = ['pdf', 'zip', 'rar', 'exe', 'dmg', 'doc', 'xls', 'ppt', 'mp3', 'mp4', 'avi', 'mov'];
+    const nonHtmlExts = ['xml', 'rss', 'pdf', 'zip', 'rar', 'exe', 'dmg', 'doc', 'xls', 'ppt', 'mp3', 'mp4', 'avi', 'mov'];
     if (nonHtmlExts.includes(ext)) return false;
 
     return true;
