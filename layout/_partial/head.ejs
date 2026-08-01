@@ -70,6 +70,46 @@ function og_args() {
   return Object.assign(args, page.open_graph);
 }
 
+function escape_meta_content(content) {
+  return String(content || '')
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function generate_og_title() {
+  return escape_meta_content(strip_html(page.title || config.title));
+}
+
+function generate_og_site_name() {
+  if (page.layout === 'post' && page.title) {
+    return generate_og_title();
+  }
+  return escape_meta_content(strip_html(config.title));
+}
+
+function render_open_graph() {
+  if (!(theme.open_graph && theme.open_graph.enable)) {
+    return '';
+  }
+  let meta = open_graph(og_args());
+  meta = meta.replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${generate_og_title()}">`);
+  if (meta.match(/<meta property="og:site_name" content="[^"]*">/)) {
+    meta = meta.replace(/<meta property="og:site_name" content="[^"]*">/, `<meta property="og:site_name" content="${generate_og_site_name()}">`);
+  } else {
+    meta += `<meta property="og:site_name" content="${generate_og_site_name()}">`;
+  }
+  if (page.title) {
+    if (meta.match(/<meta name="twitter:title" content="[^"]*">/)) {
+      meta = meta.replace(/<meta name="twitter:title" content="[^"]*">/, `<meta name="twitter:title" content="${generate_og_title()}">`);
+    } else {
+      meta += `<meta name="twitter:title" content="${generate_og_title()}">`;
+    }
+  }
+  return meta;
+}
+
 function preconnect() {
   var el = '';
   for (let href of (theme.preconnect || [])) {
@@ -127,9 +167,7 @@ function generate_canonical() {
   <meta name="theme-color" content="#f9fafb">
   <title><%- generate_title() %></title>
 
-  <% if (theme.open_graph && theme.open_graph.enable) { %>
-    <%- open_graph(og_args()) %>
-  <% } %>
+  <%- render_open_graph() %>
   <%- generate_description() %>
   
   <%- generate_keywords() %>
