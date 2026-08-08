@@ -1,4 +1,47 @@
+# npm 打包/发布时，存在 .npmignore 会优先使用它而不是 .gitignore，
+# 因此这里需要覆盖 .gitignore 的忽略项，并额外排除仅开发/部署需要的文件。
+
+# ---- 系统 / 编辑器 ----
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+.editorconfig
+
+# ---- 依赖与构建产物 ----
+node_modules/
+package-lock.json
+*.tgz
+npm-debug.log*
+yarn-error.log
+*.log
+
+# ---- 运行时缓存（构建时生成，不应随包发布）----
+.cache/
+scripts/.cache/
+
+# ---- Git 元数据 ----
+.git/
+.gitignore
+.gitmodules
+
+# ---- CI / 部署 / 发版 ----
 .github/
 release.js
-node_modules
 giscus.json
+
+# ---- 开发文档 / AI 辅助 ----
+docs/
+CLAUDE.md
+AGENTS.md
+.trae/
+
+# ---- 发布时需要保留的内容（不要忽略）----
+# layout/      EJS 模板
+# scripts/     Hexo 运行时插件
+# source/      CSS / JS 资源
+# languages/   多语言文案
+# _data/       主题默认数据
+# _config.yml  主题默认配置
+# README.md / LICENSE / package.json
