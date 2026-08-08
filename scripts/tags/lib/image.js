@@ -37,8 +37,8 @@ module.exports = ctx => function(args) {
     }
   }
 
+  var safeAlt = require('hexo-util').escapeHTML(args.alt || '')
   function img(src, alt, style) {
-    const safeAlt = require('hexo-util').escapeHTML(alt || '')
     let a = '<a data-fancybox'
     let img = ''
     img += `<img class="lazy" src="${src}" data-src="${src}"`

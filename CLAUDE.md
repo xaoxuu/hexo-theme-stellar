@@ -126,6 +126,7 @@ module.exports = function(hexo) {
 ### 3. 测试
 
 变更完成后，在自己的 Hexo 项目中集成验证：
+- **`npm run g` 构建验证**（`scripts/` 变更必须执行，全量渲染能发现模板作用域错误等）
 - `npm run s` 启动本地服务
 - 检查涉及的所有页面类型（首页、文章页、Wiki 页等）
 - 验证浏览器兼容性
@@ -180,6 +181,7 @@ module.exports = function(hexo) {
 
 ## 约束
 
+- **修改 `scripts/` 目录下任何文件后，必须运行 `npm run g` 验证构建成功。** `npm run s` 是按需渲染，不会触发所有 tag 插件，可能遗漏模板渲染错误。
 - 不引入新构建系统，保持 Hexo 原生 + Gulp 后处理
 - 不混用 EJS 和前端框架语法
 - CSS 兼容 IE8，JS 兼容 ES2015+
