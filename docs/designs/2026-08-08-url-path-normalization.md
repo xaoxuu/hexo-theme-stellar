@@ -73,3 +73,31 @@ normalize_path(path) → path_key（用于匹配/比较，如 wiki/project/getti
   - 文章页：`https://xaoxuu.com/blog/20260801/`
   - Wiki 页：`https://xaoxuu.com/wiki/stellar/`
   - 笔记页：`https://xaoxuu.com/notes/ios/`
+
+## 后续修复（2026-08-09）
+
+### 问题
+
+上一版仅统一了输出层（`pretty_url`、`path_key`），但 `page.path` 本身仍保留 `.html` 后缀（如 `wiki/git/git-server.html`），导致：
+
+- `page.permalink`（`full_url_for` + `pretty_urls.trailing_html=false`）去掉 `.html` 后不补尾斜杠，JSON-LD `url`/`@id` 与 sitemap `loc` 缺少尾斜杠，与 canonical 不一致（影响 34 个叶子页）；
+- `search.json` 输出原始 `.html`/`index.html` 路径，未统一为干净路径。
+
+### 方案
+
+在 `generateBefore` 最早阶段直接改写 Page model 存储中的 `page.path`：对以 `.html` 结尾（非 `/index.html`）且 layout 非 false 的页面，将路径归一为目录形式（`xxx.html` → `xxx/`），使 permalink、JSON-LD、sitemap 自动与 canonical（尾斜杠格式）一致。该步骤先于 `doc_tree`/`notebooks` 存储 `path`，模板中的路径比较（侧栏高亮、wiki 封面、上下篇）保持一致。
+
+`search.js` 生成器对输出路径统一使用 `normalize_path()`（`/xxx/index.html` → `/xxx/`），保证 search.json 无 `.html` 残留。
+
+`json_ld` 首页分支将站点 URL 归一为带尾斜杠形式（`https://xaoxuu.com/`）。
+
+客户端 `local-search.js` 的 `.html` 归一化逻辑保留，兼容旧版搜索缓存（`search_cache_v1`）。
+
+### 验证
+
+- `npm run g && npx gulp minify` 构建无报错，404.html 仍生成
+- canonical：169/169 自引用且以 `/` 结尾
+- JSON-LD 页面级 `url`/`@id` 与 canonical 一致；首页为 `https://xaoxuu.com/`
+- page-sitemap.xml 全部 `loc` 以 `/` 结尾
+- search.json 无 `.html` 路径（含目录首页的 `index.html`）
+- 站内链接无 `.html` 残留

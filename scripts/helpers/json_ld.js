@@ -75,7 +75,8 @@ hexo.extend.helper.register('json_ld', function(args) {
 
   } else if (isPage || this.is_home()) {
 
-    const url = this.is_home() ? config.url : this.pretty_url(page.permalink);
+    // 首页 URL 归一为带尾斜杠形式，与 canonical 保持一致
+    const url = this.is_home() ? config.url.replace(/\/?$/, '/') : this.pretty_url(page.permalink);
     schema = {
       '@context': 'https://schema.org',
       '@type': 'Website',

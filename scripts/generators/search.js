@@ -2,6 +2,7 @@
  * https://github.com/wzpan/hexo-generator-search
  */
 const { stripHTML } = require('hexo-util')
+const { normalize_path } = require('../lib/path_utils')
 
 hexo.extend.generator.register('search_json_generator', function (locals) {
   if (this.theme.config.search.service != 'local_search') { return {} }
@@ -28,7 +29,8 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
       temp_post.title = post.title.trim()
     }
     if (post.path) {
-      temp_post.path = root + post.path
+      const path = normalize_path(root + post.path)
+      temp_post.path = path === '/' ? '/' : path + '/'
     }
     if (cfg.content != false && post.content) {
       var content = stripHTML(post.content.replace(/<span class="line">\d+<\/span>/g, '')).trim()
