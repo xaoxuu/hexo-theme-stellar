@@ -454,7 +454,7 @@ tag_plugins:
 
 # 基础依赖
 dependencies:
-  jquery: https://gcore.jsdelivr.net/npm/jquery@3.7/dist/jquery.min.js
+  jquery: https://gcore.jsdelivr.net/npm/jquery@3.7/dist/jquery.slim.min.js
   marked: https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js
   lazyload:
     js: https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js
