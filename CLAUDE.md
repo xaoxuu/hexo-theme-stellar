@@ -1,5 +1,7 @@
 # Stellar Theme Development
 
+> 仓库职责与协作边界见 [AGENTS.md](AGENTS.md)；本文件为详细开发规范。
+
 这是 Hexo 主题 **Stellar** 的仓库。主题是一个独立的 npm 包，用于 [hexo-theme-stellar](https://github.com/xaoxuu/hexo-theme-stellar)。
 
 ## 技术栈
