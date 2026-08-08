@@ -31,8 +31,9 @@ normalize_path(path) → path_key（用于匹配/比较，如 wiki/project/getti
 
 1. 绝对 URL 直接返回
 2. `/index.html` → `/`
-3. `.html` → 移除
-4. 移除尾 `/`（保留根路径 `/`）
+3. `/index`（无后缀的目录首页）→ `/`
+4. `.html` → 移除
+5. 移除尾 `/`（保留根路径 `/`）
 
 ### pretty_url 逻辑
 

@@ -109,7 +109,7 @@ module.exports = ctx => {
       for (let id of Object.keys(item.tree)) {
         const sec = item.tree[id]
         for (let key of sec) {
-          let hs = sub_pages.filter(p => p.path_key == item.base_dir + key)
+          let hs = sub_pages.filter(p => p.path_key == normalize_path(item.base_dir + key))
           if (hs.length > 0) {
             homepage = hs[0]
             break
@@ -136,8 +136,9 @@ module.exports = ctx => {
       for (let title of Object.keys(item.tree)) {
         var sec = { title: title, pages: []}
         for (let key of item.tree[title]) {
-          sec.pages = sec.pages.concat(sub_pages.filter(p => p.path_key == item.base_dir + key))
-          others = others.filter(p => p.path_key != item.base_dir + key)
+          const pagePathKey = normalize_path(item.base_dir + key)
+          sec.pages = sec.pages.concat(sub_pages.filter(p => p.path_key == pagePathKey))
+          others = others.filter(p => p.path_key != pagePathKey)
         }
         sections.push(sec)
       }

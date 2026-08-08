@@ -10,6 +10,8 @@ function normalize_path(path = '') {
   }
   // /index.html → /
   path = path.replace(/\/index\.html$/, '/');
+  // 目录首页（无 .html 后缀形式，如 wiki/stellar/index）→ /
+  path = path.replace(/\/index$/, '/');
   // /xxx.html → /xxx
   path = path.replace(/\.html$/, '');
   // 去除尾 /
