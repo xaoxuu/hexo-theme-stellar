@@ -38,12 +38,13 @@ module.exports = ctx => function(args) {
   }
 
   function img(src, alt, style) {
+    const safeAlt = require('hexo-util').escapeHTML(alt || '')
     let a = '<a data-fancybox'
     let img = ''
     img += `<img class="lazy" src="${src}" data-src="${src}"`
-    if (alt) {
-      img += ` alt="${alt}"`
-      a += ` data-caption="${alt}"`
+    if (safeAlt) {
+      img += ` alt="${safeAlt}"`
+      a += ` data-caption="${safeAlt}"`
     }
     if (fancybox && !fancyboxHref) {
       img += ` data-fancybox="${fancybox}"`
@@ -101,9 +102,9 @@ module.exports = ctx => function(args) {
   }
   el += '</div>'
 
-  if (args.alt && args.alt.length > 0) {
+  if (safeAlt) {
     el += '<div class="image-meta">'
-    el += '<span class="image-caption center">' + args.alt + '</span>'
+    el += '<span class="image-caption center">' + safeAlt + '</span>'
     el += '</div>'
   }
 

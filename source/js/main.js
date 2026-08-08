@@ -37,10 +37,11 @@ const util = {
     const el = document.getElementById(id);
     if (el) {
       el.select();
-      document.execCommand("Copy");
-      if (msg && msg.length > 0) {
-        hud.toast(msg, 2500);
-      }
+      navigator.clipboard.writeText(el.value).then(() => {
+        if (msg && msg.length > 0) {
+          hud.toast(msg, 2500);
+        }
+      }).catch(() => {});
     }
   },
 

@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "cheerio": "^1.1.0",
+    "glob": "^10.4.0",
     "hexo-renderer-ejs": "^2.0.0",
     "hexo-renderer-stylus": "^3.0.1",
     "probe-image-size": "^7.2.3"

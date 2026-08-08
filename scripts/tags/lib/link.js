@@ -9,11 +9,13 @@
 
 module.exports = ctx => function(args) {
   const full_url_for = require('hexo-util').full_url_for.bind(ctx)
+  const escapeHTML = require('hexo-util').escapeHTML
   args = ctx.args.map(args, ['icon', 'desc'], ['url', 'title'])
   if (args.url == null) {
     return '';
   }
   const url = full_url_for(args.url)
+  const safeTitle = escapeHTML(args.title || '')
   args.api = ctx.theme.config.data_services.siteinfo?.api
   if (args.api) {
     args.api = args.api.replace('{href}', url)
@@ -30,7 +32,7 @@ module.exports = ctx => function(args) {
   }
   var el = ''
   el += '<div class="tag-plugin link dis-select">'
-  el += '<a class="link-card' + (args.desc ? ' rich' : ' plain') + '" title="' + (args.title || '') + '" href="' + args.url + '"'
+  el += '<a class="link-card' + (args.desc ? ' rich' : ' plain') + '" title="' + safeTitle + '" href="' + args.url + '"'
   if (args.url.includes('://')) {
     el += ' target="_blank" rel="external nofollow noopener noreferrer"'
   }
@@ -49,10 +51,10 @@ module.exports = ctx => function(args) {
     return el
   }
   function loadTitle() {
-    return '<span class="title">' + (args.title || args.url) + '</span>'
+    return '<span class="title">' + (safeTitle || args.url) + '</span>'
   }
   function loadDesc() {
-    return `<span class="cap desc footnote">${args.desc}</span>`
+    return `<span class="cap desc footnote">${escapeHTML(args.desc)}</span>`
   }
   function loadLink() {
     return '<span class="cap link footnote">' + full_url_for(args.url) + '</span>'

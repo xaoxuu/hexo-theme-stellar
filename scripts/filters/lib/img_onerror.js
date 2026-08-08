@@ -5,8 +5,6 @@
 
 'use strict';
 
-const fs = require('hexo-fs');
-
 module.exports.processSite = function(htmlContent) {
   const default_image = this.theme.config.default.image;
   return htmlContent.replace(/<img(.*?)src="(.*?)"(.*?)>/gi, function(imgTag) {

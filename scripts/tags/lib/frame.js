@@ -9,11 +9,12 @@
 
 module.exports = ctx => function(args) {
   args = ctx.args.map(args, ['focus', 'img', 'video'], ['device', 'alt'])
+  const escapeHTML = require('hexo-util').escapeHTML
   const img = args.img || ''
   const video = args.video || ''
   const device = args.device || ''
   const focus = args.focus || ''
-  const alt = args.alt || ''
+  const alt = escapeHTML(args.alt || '')
   if ((img.length == 0 && video.length == 0) || device.length == 0) {
     return
   }
