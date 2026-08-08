@@ -16,7 +16,4 @@ jobs:
     steps:
       - uses: googleapis/release-please-action@v4
         with:
-          release-type: node
-          package-name: hexo-theme-stellar
-          include-v-in-tag: false
           target-branch: main

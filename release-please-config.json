@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
+  "include-v-in-tag": false,
+  "packages": {
+    ".": {
+      "release-type": "node",
+      "extra-files": [
+        {
+          "type": "yaml",
+          "path": "_config.yml",
+          "jsonpath": "$.version"
+        }
+      ]
+    }
+  }
+}
