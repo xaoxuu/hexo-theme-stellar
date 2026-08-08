@@ -181,33 +181,28 @@ module.exports = function(hexo) {
 
 ## 发版规范
 
-发版分两步：脚本完成版本号更新和推送 → CI 自动完成 npm 发布和 tag 创建。
+使用 [release-please](https://github.com/googleapis/release-please) 自动化发版，详见 [docs/release-process.md](docs/release-process.md)。
 
 ```
-npm-publish.sh → push main + npm → CI → npm publish + git tag
+日常 push main → release-please 创建 Release PR → 合并 PR → GitHub Release + tag → 手动触发 npm publish
 ```
 
-### 使用方式
+### 版本号由 commit 类型决定
 
-```bash
-# 正常发版（CI 自动处理 npm publish 和 tag）
-bash npm-publish.sh 1.33.2
+| Commit 类型 | 版本变化 | 示例 |
+|------------|---------|------|
+| `fix:` / `perf:` | patch (`z+1`) | 1.33.1 → 1.33.2 |
+| `feat:` | minor (`y+1`) | 1.33.1 → 1.34.0 |
+| `feat!:` / `BREAKING CHANGE:` | major (`x+1`) | 1.33.1 → 2.0.0 |
 
-# 预览模式（仅显示改动，不提交/推送，执行后自动回滚）
-bash npm-publish.sh 1.33.2 --dry-run
-```
+`refactor:` / `style:` / `docs:` / `chore:` 不触发版本号变化。
 
 ### AI 调用指南
 
-1. **分析变更确定版本号**: 查看上一版本以来的 commit，按以下规则确定版本号：
-   - `x.y.z` → `x.y.(z+1)`: 仅含 fix / perf / style（修复和优化，安全升级）
-   - `x.y.z` → `x.(y+1).0`: 含 feat / refactor / breaking change（功能增减、一般重构）
-   - `x.y.z` → `(x+1).0.0`: 大型重构，用户可感知的设计调整
-   - `x.y.z` → `x.y.z-rc.N`: 测试版本
-2. **向用户确认**: 列出版本号和变更摘要，等待用户确认后再继续
-3. **dry-run 预览**: `bash npm-publish.sh <version> --dry-run` 检查变更是否正确
-4. **正式执行**: `bash npm-publish.sh <version>`
-5. **CI 自动**: 检测 `release:` commit → npm publish + tag
+1. 按 conventional commits 规范提交代码（`feat:` / `fix:` 等）
+2. push 到 main 后，release-please 自动分析并创建 Release PR
+3. 提醒用户在 GitHub 上 review 并合并 Release PR
+4. 合并后提醒用户手动触发 [npm-publish](https://github.com/xaoxuu/hexo-theme-stellar/actions/workflows/npm-publish.yml) workflow
 
 ## 约束
 

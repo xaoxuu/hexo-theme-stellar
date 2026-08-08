@@ -107,13 +107,4 @@ push 到 main 后，release-please 会自动运行。如果检测到需要发版
 - 包页面 → Settings → Trusted Publisher → GitHub Actions
 - Owner: `xaoxuu` | Repository: `hexo-theme-stellar` | Workflow: `npm-publish.yml`
 
-## 兼容旧流程
 
-如需手动发版（绕过 release-please），仍可使用 `npm-publish.sh`：
-
-```bash
-bash npm-publish.sh 1.33.2           # 手动发版
-bash npm-publish.sh 1.33.2 --dry-run # 预览
-```
-
-但推荐使用新流程以获得自动 CHANGELOG 和更安全的发布体验。
