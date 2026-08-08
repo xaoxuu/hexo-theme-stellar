@@ -134,8 +134,22 @@ module.exports = function(hexo) {
 
 ### 4. 文档归档
 
-- 方案、执行计划、测试记录保存在 `docs/` 目录
-- 文件命名: `docs/{YYYY-MM-DD}-{功能简称}.md`
+文档统一存放在 `docs/` 目录，按内容类型分三个子文件夹：
+
+```
+docs/
+├── audits/              # 代码审计、分析报告
+├── designs/             # 设计方案、技术方案
+└── guides/              # 流程指南、操作手册
+```
+
+| 文件夹 | 用途 | 示例 |
+|--------|------|------|
+| `audits/` | 代码质量审计、安全性分析、架构评估 | `2026-08-08-stellar-analysis.md` |
+| `designs/` | 功能设计方案、重构方案、技术选型 | `2026-08-08-pjax-removal-and-pretty-urls-fix.md` |
+| `guides/` | 发版流程、操作手册、新手指南 | `release-process.md` |
+
+- 文件命名: `{YYYY-MM-DD}-{功能简称}.md`，流程性文档可不带日期
 - 涉及逻辑变更（API、配置项、行为变化）必须同步更新仓库 Wiki
 
 ### 新增功能 Checklist
