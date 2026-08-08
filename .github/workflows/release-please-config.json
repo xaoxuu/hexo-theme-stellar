@@ -1,10 +1,9 @@
 {
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
-  "release-type": "node",
   "include-v-in-tag": false,
   "packages": {
     ".": {
-      "package-name": "hexo-theme-stellar",
+      "release-type": "node",
       "extra-files": [
         {
           "type": "yaml",
