@@ -9,9 +9,10 @@ stellar:
 
 ######## head tags ########
 preconnect:
-  # - https://gcore.jsdelivr.net
-  # - https://gcore.jsdelivr.net
-  # - https://unpkg.com
+  - https://gcore.jsdelivr.net
+  - https://unpkg.com
+  - https://cdn.jsdelivr.net
+  - https://cdnjs.cloudflare.com
 
 # 一旦设置源站地址，非源站地址将不会被SEO收录，并且访问时弹出提示
 # 如果访问地址不在备用站主机列表，则警告信息为非法克隆

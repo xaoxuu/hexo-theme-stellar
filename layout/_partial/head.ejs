@@ -187,6 +187,7 @@ function generate_canonical() {
     <% }) %>
   <% } %>
 
+  <link rel="preload" href="<%- url_for(`${theme.stellar.main_css}?v=${stellar_info('version')}`) %>" as="style">
   <link rel="stylesheet" href="<%- url_for(`${theme.stellar.main_css}?v=${stellar_info('version')}`) %>">
 
 
