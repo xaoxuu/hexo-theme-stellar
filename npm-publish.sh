@@ -7,8 +7,8 @@
 #   bash npm-publish.sh 1.33.2           # 正常发版
 #   bash npm-publish.sh 1.33.2 --dry-run # 预览，不执行实际操作
 #
-# CI 自动化:
-#   push npm 分支 → CI 自动 npm publish + 创建 Git tag
+# 发布到 npm:
+#   push main 后，手动触发 Actions → npm-publish workflow
 #   详见 .github/workflows/npm-publish.yml
 
 set -euo pipefail
@@ -114,18 +114,9 @@ function commit_and_push() {
   echo ">>> git push origin main"
   git push origin main
 
-  # npm 分支
-  echo ">>> git checkout npm && git rebase main"
-  git checkout npm
-  git rebase main
-  echo ">>> git push origin npm"
-  git push origin npm
-
-  # 回到 main
-  git checkout main
   echo ""
-  echo ">>> 发版完成: $VERSION"
-  echo ">>> CI 将在检测到 npm 分支 push 后自动发布到 npm 并创建 tag"
+  echo ">>> 版本号已更新并推送到 main 分支"
+  echo ">>> 请手动触发 Actions: https://github.com/xaoxuu/hexo-theme-stellar/actions/workflows/npm-publish.yml"
 }
 
 # ── 执行 ──────────────────────────────────────────────────
