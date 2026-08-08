@@ -1,6 +1,6 @@
 {
   "name": "hexo-theme-stellar",
-  "version": "1.33.2",
+  "version": "1.34.0",
   "description": "Elegant and powerful theme for Hexo.",
   "main": "package.json",
   "scripts": {
@@ -28,6 +28,5 @@
     "probe-image-size": "^7.2.3"
   },
   "homepage": "https://xaoxuu.com/wiki/stellar/",
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
