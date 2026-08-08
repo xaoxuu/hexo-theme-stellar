@@ -199,11 +199,15 @@ bash npm-publish.sh 1.33.2 --dry-run
 
 ### AI 调用指南
 
-1. **发版前先 dry-run**: `bash npm-publish.sh <version> --dry-run` 检查变更是否正确
-2. **确认后正式执行**: `bash npm-publish.sh <version>`
-3. 脚本自动完成: 三处版本号更新 → commit → push main + npm 分支
-4. **CI 自动**: 检测 `release:` commit → npm publish + tag
-5. 无需手动处理 npm publish 或 tag
+1. **分析变更确定版本号**: 查看上一版本以来的 commit，按以下规则确定版本号：
+   - `x.y.z` → `x.y.(z+1)`: 仅含 fix / perf / style（修复和优化，安全升级）
+   - `x.y.z` → `x.(y+1).0`: 含 feat / refactor / breaking change（功能增减、一般重构）
+   - `x.y.z` → `(x+1).0.0`: 大型重构，用户可感知的设计调整
+   - `x.y.z` → `x.y.z-rc.N`: 测试版本
+2. **向用户确认**: 列出版本号和变更摘要，等待用户确认后再继续
+3. **dry-run 预览**: `bash npm-publish.sh <version> --dry-run` 检查变更是否正确
+4. **正式执行**: `bash npm-publish.sh <version>`
+5. **CI 自动**: 检测 `release:` commit → npm publish + tag
 
 ## 约束
 
