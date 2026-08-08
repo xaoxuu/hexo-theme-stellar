@@ -179,10 +179,35 @@ module.exports = function(hexo) {
 | `style` | CSS/样式修改 |
 | `docs` | 文档更新 |
 
+## 发版规范
+
+发版分两步：脚本完成版本号更新和推送 → CI 自动完成 npm 发布和 tag 创建。
+
+```
+npm-publish.sh → push main + npm → CI → npm publish + git tag
+```
+
+### 使用方式
+
+```bash
+# 正常发版（CI 自动处理 npm publish 和 tag）
+bash npm-publish.sh 1.33.2
+
+# 预览模式（仅显示改动，不提交/推送，执行后自动回滚）
+bash npm-publish.sh 1.33.2 --dry-run
+```
+
+### AI 调用指南
+
+1. **发版前先 dry-run**: `bash npm-publish.sh <version> --dry-run` 检查变更是否正确
+2. **确认后正式执行**: `bash npm-publish.sh <version>`
+3. 脚本自动完成: 三处版本号更新 → commit → push main + npm 分支
+4. **CI 自动**: 检测 `release:` commit → npm publish + tag
+5. 无需手动处理 npm publish 或 tag
+
 ## 约束
 
 - **修改 `scripts/` 目录下任何文件后，必须运行 `npm run g && npx gulp minify` 验证构建成功。** `npm run g` 做全量渲染发现模板错误，`npx gulp minify` 做 HTML 压缩发现结构错误（如多余引号）。`npm run s` 是按需渲染，不能替代全量验证。
 - 不引入新构建系统，保持 Hexo 原生 + Gulp 后处理
 - 不混用 EJS 和前端框架语法
 - CSS 兼容 IE8，JS 兼容 ES2015+
-- npm 发布前确保版本号和 CHANGELOG 同步更新
