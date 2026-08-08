@@ -1,15 +1,18 @@
 #!/bin/bash
 #
-# Stellar 发版脚本
+# Stellar 发版脚本（已废弃）
 # https://xaoxuu.com/wiki/stellar
 #
-# 用法:
-#   bash npm-publish.sh 1.33.2           # 正常发版
-#   bash npm-publish.sh 1.33.2 --dry-run # 预览，不执行实际操作
+# 新发版流程（基于 release-please）:
+#   1. 按 conventional commits 规范提交代码到 main 分支
+#   2. release-please 自动分析 commit、创建 Release PR
+#   3. 合并 PR → 自动创建 GitHub Release + tag
+#   4. 手动触发 Actions → npm-publish workflow
+#   详见 .github/workflows/release-please.yml
 #
-# CI 自动化:
-#   push npm 分支 → CI 自动 npm publish + 创建 Git tag
-#   详见 .github/workflows/npm-publish.yml
+# 此脚本保留用于需要手动发版的场景:
+#   bash npm-publish.sh 1.33.2           # 手动发版
+#   bash npm-publish.sh 1.33.2 --dry-run # 预览，不执行实际操作
 
 set -euo pipefail
 
