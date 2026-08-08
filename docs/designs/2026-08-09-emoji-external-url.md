@@ -57,3 +57,15 @@ emoji 标签目前只能从配置的表情包（`tag_plugins.emoji` 中配置的
   - `{% emoji url:https://.../003.png name:表情 height:2em %}` → 含 alt 与 height 样式
   - 原有 `{% emoji tieba huaji %}` 输出不变
   - 非法/无 source 时输出为空，与现状一致
+
+### 测试记录
+
+- [x] `npm run g && npx gulp minify` 通过（主工程全量构建）
+- [x] 单元级用例：issue 示例 URL、`name`/`height`、带 `?color=` 的 URL、原有 source/name 语法均输出正确
+- [x] 端到端渲染：临时文章内 `{% emoji url:... %}` 经 Hexo 生成后输出 `<span class="tag-plugin emoji"><img no-lazy class="inline" src="..."/></span>`，`name`/`height` 正确生效，原有语法输出不变
+
+### 提交记录
+
+- `hexo-theme-stellar`: `e64c773` feat: support external image url in emoji tag
+- `hexo-theme-stellar-docs`: `3c8dbbc` docs: add url parameter usage for emoji tag
+- `xaoxuu.com`: `e6d17d8` chore: update stellar theme and docs submodules
