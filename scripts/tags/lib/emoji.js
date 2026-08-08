@@ -3,6 +3,7 @@
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
  * {% emoji [source] name [height:1.75em] %}
+ * {% emoji url:https://example.com/emoji.png [name:alt] [height:1.75em] %}
  *
  */
 
@@ -10,12 +11,26 @@
 
 module.exports = ctx => function(args) {
   const config = ctx.theme.config.tag_plugins.emoji
-  args = ctx.args.map(args, ['height'], ['source', 'name'])
+  args = ctx.args.map(args, ['url', 'height', 'name'], ['source', 'name'])
   var el = ''
+  el += '<span class="tag-plugin emoji">'
+  if (args.url) {
+    // 直接引用外部图片，不再走 source 配置查找
+    el += '<img no-lazy="" class="inline"'
+    el += ' src="' + args.url + '"'
+    if (args.name) {
+      el += ' alt="' + args.name + '"'
+    }
+    if (args.height) {
+      el += ' style="height:' + args.height + '"'
+    }
+    el += '/>'
+    el += '</span>'
+    return el
+  }
   if (args.source == undefined) {
     return el
   }
-  el += '<span class="tag-plugin emoji">'
   if (args.name == undefined) {
     // 省略了 source
     for (let id in config) {
