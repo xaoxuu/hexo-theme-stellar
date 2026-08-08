@@ -8,7 +8,7 @@
 #   bash npm-publish.sh 1.33.2 --dry-run # 预览，不执行实际操作
 #
 # 发布到 npm:
-#   push main 后，手动触发 Actions → npm-publish workflow
+#   push main + npm 后，手动触发 Actions → npm-publish workflow
 #   详见 .github/workflows/npm-publish.yml
 
 set -euo pipefail
@@ -114,8 +114,12 @@ function commit_and_push() {
   echo ">>> git push origin main"
   git push origin main
 
+  # npm 分支
+  echo ">>> git push origin main:npm"
+  git push origin main:npm
+
   echo ""
-  echo ">>> 版本号已更新并推送到 main 分支"
+  echo ">>> 版本号已更新并推送到 main 和 npm 分支"
   echo ">>> 请手动触发 Actions: https://github.com/xaoxuu/hexo-theme-stellar/actions/workflows/npm-publish.yml"
 }
 
