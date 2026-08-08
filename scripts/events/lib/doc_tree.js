@@ -4,13 +4,15 @@
 
 'use strict';
 
+const { normalize_path } = require('../../lib/path_utils');
+
 class WikiPage {
   constructor(page) { 
     this.id = page._id
     this.wiki = page.wiki
     this.title = page.title
     this.path = page.path
-    this.path_key = page.path.replace('.html', '')
+    this.path_key = normalize_path(page.path)
     this.layout = page.layout
     this.updated = page.updated
   }

@@ -1,22 +1,21 @@
 'use strict';
 
+const { normalize_path } = require('../lib/path_utils');
+
+hexo.extend.helper.register('normalize_path', function (path = '') {
+  return normalize_path(path);
+});
+
 hexo.extend.helper.register('pretty_url', function (path = '') {
   if (path.startsWith('http://') || path.startsWith('https://')) {
-    // 如果是绝对 URL，直接返回
     return path;
   }
-  
   let url = this.url_for(path);
 
-  // 替换 /index.html → /
-  url = url.replace(/\/index\.html$/, '/');
+  url = normalize_path(url);
 
-  // 替换 /about.html → /about/
-  url = url.replace(/\.html$/, '/');
-
-  // 如果没有扩展名，并且不以 / 结尾，补一个 /
-  const hasExtension = /\.[a-zA-Z0-9]+$/.test(url);
-  if (!hasExtension && !url.endsWith('/')) {
+  // 添加尾 /（根路径 / 除外）
+  if (url !== '/') {
     url += '/';
   }
 

@@ -4,6 +4,8 @@
 
 'use strict'
 
+const { normalize_path } = require('../../lib/path_utils');
+
 class NotePage {
   constructor(page) {
     this.id = page._id
@@ -11,7 +13,7 @@ class NotePage {
     this.title = page.title
     this.tags = page.tags
     this.path = page.path
-    this.path_key = page.path.replace('.html', '')
+    this.path_key = normalize_path(page.path)
     this.layout = page.layout
     this.date = page.date
     this.updated = page.updated || page.date
@@ -39,8 +41,8 @@ function prepareNotebook(id, info, ctx) {
     if (notebook.base_dir.startsWith('/')) {
       notebook.base_dir = notebook.base_dir.substring(1)
     }
-    if (notebook.base_dir.endsWith('/')) {
-      notebook.base_dir = notebook.base_dir.substring(0, notebook.base_dir.length - 1)
+    if (notebook.base_dir.length > 1 && !notebook.base_dir.endsWith('/')) {
+      notebook.base_dir = notebook.base_dir + '/'
     }
   } else {
     const notebooksBaseDir = ctx.theme.config.site_tree.notebooks.base_dir

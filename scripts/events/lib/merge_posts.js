@@ -5,6 +5,8 @@
 
 'use strict';
 
+const { normalize_path } = require('../../lib/path_utils');
+
 class RelatedPage {
   constructor(page) { 
     this.id = page._id
@@ -12,7 +14,7 @@ class RelatedPage {
     this.topic = page.topic
     this.title = page.title
     this.path = page.path
-    this.path_key = page.path.replace('.html', '')
+    this.path_key = normalize_path(page.path)
     this.layout = page.layout
     this.date = page.date
     this.updated = page.updated
