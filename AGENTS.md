@@ -52,3 +52,10 @@
 - 使用 Conventional Commits：`feat` / `fix` / `refactor` / `perf` / `style` / `docs` 等
 - 只有用户明确要求时才 push；发版前须与用户确认版本号
 - 详细发版规范见 [CLAUDE.md](CLAUDE.md) 的「发版规范」与「AI 调用指南」
+
+## 6. Issue 处理
+
+- 调查 issue 问题后，先询问用户是否进行回复，得到确认后再发出回复或处理
+- 回复已修复的 issue 时，**不要手动关闭 issue**，只需添加 `resolved` 标签
+- label-commenter CI（`.github/workflows/label-commenter.yml`）检测到 `resolved` 标签后会自动关闭 issue 并附上回复
+- 其他会触发关闭的标签（`fixed`、`duplicate`、`wontfix` 等）同样由 CI 处理，agent 不直接调用 close
