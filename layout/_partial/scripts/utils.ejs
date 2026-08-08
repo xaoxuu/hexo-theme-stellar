@@ -146,29 +146,12 @@
       document.head.appendChild(script)
     }),
 
-    // PJAX 事件监听器管理
-    _pjaxListeners: new Set(),
-    
-    jq: (fn, pjax = true) => {
+    jq: (fn) => {
       if (typeof jQuery === 'undefined') {
         utils.js(deps.jquery).then(fn)
       } else {
         fn()
       }
-      if (pjax && !fn._pjax_registered) {
-        document.addEventListener('pjax:complete', fn);
-        fn._pjax_registered = true;
-        utils._pjaxListeners.add(fn); // 追踪监听器以便清理
-      }
-    },
-    
-    // 清理所有 PJAX 事件监听器
-    cleanupPjaxListeners: () => {
-      utils._pjaxListeners.forEach(fn => {
-        document.removeEventListener('pjax:complete', fn);
-        fn._pjax_registered = false;
-      });
-      utils._pjaxListeners.clear();
     },
 
     onLoading: (el) => {
@@ -334,20 +317,6 @@
       }
     },
 
-    // 重新初始化所有插件（用于 PJAX 等场景）
-    reinitPlugins: () => {
-      utils._pluginInitializers.forEach(plugin => {
-        // 跳过标记为不需要重新初始化的插件
-        if (plugin.options.skipReinit) return;
-        
-        try {
-          plugin.fn();
-        } catch (error) {
-          console.error(`[Plugin ${plugin.name}] 重新初始化失败:`, error);
-        }
-      });
-    },
-    
     // 清理所有插件资源
     cleanupPlugins: () => {
       utils._pluginCleanups.forEach((cleanup, name) => {
@@ -363,20 +332,8 @@
     // 清理所有资源（用于页面卸载或重置）
     cleanupAll: () => {
       utils.cleanupPlugins();
-      utils.cleanupPjaxListeners();
     },
   };
-
-  // 自动处理 PJAX 事件
-  document.addEventListener('pjax:before', () => {
-    // 在导航前清理旧的 PJAX 监听器（如果需要重新注册）
-    // 注意：这里不清理，因为监听器应该是持久的
-    // utils.cleanupPjaxListeners();
-  });
-  
-  document.addEventListener('pjax:complete', () => {
-    utils.reinitPlugins();
-  });
 
   // utils.dark.mode 当前模式 dark or light
   // utils.dark.toggle() 暗黑模式触发器

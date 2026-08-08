@@ -537,15 +537,6 @@ plugins:
     service: flying_pages # flying_pages
     flying_pages: https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js
 
-  # pjax - 无刷新加载
-  # 启用后点击链接将使用 AJAX 加载内容，无需整页刷新
-  pjax:
-    enable: false # 还在测试中，可能存在兼容问题
-    selectors: ['title', '#l_cover', '.l_body'] # 需要替换的元素选择器
-    timeout: 10000 # 请求超时时间（毫秒）
-    cacheBust: false # 是否添加时间戳防止缓存
-    translate-distance: 8px # 动画
-
   # https://fancyapps.com/docs/ui/fancybox/
   # available for {% image xxx %}
   fancybox:

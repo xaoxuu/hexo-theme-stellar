@@ -1,8 +1,0 @@
-<script>
-    window.StellarPjaxConfig = {
-        selectors: <%- JSON.stringify((conf.selectors || ['title', '#l_cover', '.l_body']).includes('#l_cover') ? (conf.selectors || ['title', '#l_cover', '.l_body']) : (conf.selectors || ['title', '#l_cover', '.l_body']).concat('#l_cover')) %>,
-        timeout: <%= conf.timeout || 10000 %>,
-        cacheBust: <%= conf.cacheBust || false %>
-    };
-</script>
-<script src="<%- url_for('/js/plugins/pjax.js') %>" defer></script>
