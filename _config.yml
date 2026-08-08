@@ -522,6 +522,22 @@ data_services:
   rss:
     js: /js/services/rss.js
 
+# 动态数据缓存
+# 将动态数据缓存到浏览器本地：TTL 未过期直接显示缓存，过期后先显示缓存再后台刷新
+data_cache:
+  enable: true # 总开关
+  default_ttl: 3600 # 默认缓存时长（秒）
+  ttl: # 按服务覆盖缓存时长（秒），未列出的服务使用 default_ttl；设为 0 表示该服务不缓存
+    giscus: 600
+    waline: 600
+    artalk: 600
+    memos: 600
+    sites: 86400
+    friends: 86400
+    friends_and_posts: 86400
+    siteinfo: 86400
+  max_entries: 200 # 本地缓存条目上限，超出后按写入时间淘汰最旧的
+
 # 扩展插件接入方法：(插件名下面用 #plugin# 代替)
 # 1. 在这里增加 #plugin# 配置，至少应含有 enable 字段，默认为空（不启用）
 # 2. 新建文件 layout/_plugins/#plugin#.ejs 文件中设置编写加载代码。

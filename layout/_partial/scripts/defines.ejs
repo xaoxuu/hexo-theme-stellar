@@ -54,6 +54,7 @@
     avatar: `<%- theme.default.avatar %>`,
     cover: `<%- theme.default.cover %>`,
     loading: `<%- theme.default.loading %>`,
+    data_cache: <%- JSON.stringify(theme.data_cache || {}) %>,
   };
   const deps = {
     jquery: `<%- url_for(theme.dependencies.jquery) %>`,
