@@ -1,4 +1,4 @@
 .github/
-npm-publish.sh
+release.js
 node_modules
 giscus.json

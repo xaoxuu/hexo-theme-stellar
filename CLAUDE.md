@@ -195,20 +195,26 @@ docs/
 
 ## 发版规范
 
-发版分两步：脚本完成版本号更新和推送 → CI 自动完成 npm 发布和 tag 创建。
+发版分两步：Node 脚本完成版本号更新和推送 → 手动触发 CI 完成 npm 发布和 tag 创建。
 
 ```
-npm-publish.sh → push main + npm → CI → npm publish + git tag
+npm run release → push main + npm → 手动触发 CI → npm publish + git tag
 ```
 
 ### 使用方式
 
 ```bash
-# 正常发版（CI 自动处理 npm publish 和 tag）
-bash npm-publish.sh 1.33.2
+# 交互式发版（提示输入版本号，提交前二次确认）
+npm run release
 
-# 预览模式（仅显示改动，不提交/推送，执行后自动回滚）
-bash npm-publish.sh 1.33.2 --dry-run
+# 显式指定版本号
+npm run release -- 1.34.1
+
+# 非交互环境发版（必须显式传版本号，并用 --yes 确认）
+npm run release -- 1.34.1 --yes
+
+# 预演模式（仅显示改动，不提交/推送，执行后自动恢复）
+npm run release:dry -- 1.34.1
 ```
 
 ### AI 调用指南
@@ -219,9 +225,9 @@ bash npm-publish.sh 1.33.2 --dry-run
    - `x.y.z` → `(x+1).0.0`: 大型重构，用户可感知的设计调整
    - `x.y.z` → `x.y.z-rc.N`: 测试版本
 2. **向用户确认**: 列出版本号和变更摘要，等待用户确认后再继续
-3. **dry-run 预览**: `bash npm-publish.sh <version> --dry-run` 检查变更是否正确
-4. **正式执行**: `bash npm-publish.sh <version>`
-5. **CI 自动**: 检测 `release:` commit → npm publish + tag
+3. **dry-run 预览**: `npm run release:dry -- <version>` 检查变更是否正确
+4. **正式执行**: `npm run release -- <version>`，提交前脚本会二次确认
+5. **手动触发 CI**: 推送完成后手动触发 npm-publish workflow（默认 ref 为 npm），CI 负责 npm publish 与 tag 创建
 
 ## 约束
 

@@ -4,7 +4,9 @@
   "description": "Elegant and powerful theme for Hexo.",
   "main": "package.json",
   "scripts": {
-    "test": "echo test"
+    "test": "echo test",
+    "release": "node release.js",
+    "release:dry": "node release.js --dry-run"
   },
   "repository": {
     "type": "git",
