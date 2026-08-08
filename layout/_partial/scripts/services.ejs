@@ -43,7 +43,7 @@
         const els = document.getElementsByClassName(`ds-${id}`);
         if (els?.length > 0) {
           utils.jq(() => {
-            if (id == 'timeline' || id == 'memos' || id == 'marked') {
+            if (id == 'timeline' || id == 'memos' || id == 'marked' || id == 'mdrender') {
               utils.js(deps.marked).then(function () {
                 utils.js(js, { defer: true });
               });
