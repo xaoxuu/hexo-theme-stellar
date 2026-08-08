@@ -23,11 +23,24 @@ jobs:
           node-version: 24  # npm CLI 的版本需要在 11.5.1 版本或以上才支持 OIDC
           registry-url: https://registry.npmjs.org
 
+      - name: Check if this is a release commit
+        id: is_release
+        run: |
+          MSG=$(git log -1 --pretty=%B)
+          if echo "$MSG" | grep -qE '^release:\ '; then
+            echo "is_release=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_release=false" >> $GITHUB_OUTPUT
+            echo "Skipping: latest commit is not a release commit"
+          fi
+
       - name: Extract version from package.json
+        if: steps.is_release.outputs.is_release == 'true'
         id: version
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
       - name: Check if version already published
+        if: steps.is_release.outputs.is_release == 'true'
         id: check
         run: |
           PKG="hexo-theme-stellar"
