@@ -16,6 +16,4 @@ jobs:
     steps:
       - uses: googleapis/release-please-action@v4
         with:
-          config-file: .github/workflows/release-please-config.json
-          manifest-file: .github/workflows/.release-please-manifest.json
           target-branch: main
