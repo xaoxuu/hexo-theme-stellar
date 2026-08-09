@@ -16,32 +16,27 @@ module.exports = ctx => function(args) {
   if (args.height) {
     style += 'height:' + args.height + ';'
   }
-  // fancybox
-  var fancybox = false
+  // fancybox 默认开启（不再支持全局关闭），单图可用 fancybox:false 关闭
+  var fancybox = true
   var fancyboxHref = null
-  if (ctx.theme.config.plugins.fancybox && ctx.theme.config.plugins.fancybox.enable) {
-    // 主题配置
-    if (ctx.theme.config.tag_plugins.image && ctx.theme.config.tag_plugins.image.fancybox) {
-      fancybox = ctx.theme.config.tag_plugins.image.fancybox
-    }
-    // 覆盖配置
-    if (args.fancybox && args.fancybox.length > 0) {
-      if (args.fancybox == 'false') {
-        fancybox = false
-      } else if (args.fancybox === 'true') {
-        fancybox = args.fancybox
-      } else {
-        fancybox = true
-        fancyboxHref = args.fancybox
-      }
+  if (args.fancybox && args.fancybox.length > 0) {
+    if (args.fancybox == 'false') {
+      fancybox = false
+    } else if (args.fancybox === 'true') {
+      fancybox = true
+    } else {
+      fancybox = true
+      fancyboxHref = args.fancybox
     }
   }
 
   var safeAlt = require('hexo-util').escapeHTML(args.alt || '')
+  // 懒加载占位图（1x1 透明 PNG），真实地址放在 data-src
+  const loadingImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII='
   function img(src, alt, style) {
     let a = '<a data-fancybox'
     let img = ''
-    img += `<img class="lazy" src="${src}" data-src="${src}"`
+    img += `<img class="lazy" src="${loadingImg}" data-src="${src}"`
     if (safeAlt) {
       img += ` alt="${safeAlt}"`
       a += ` data-caption="${safeAlt}"`

@@ -1,6 +1,5 @@
 <script>
   (function() {
-    const lazyload = <%= theme.comments.lazyload ?? false %>;
     
     function initBeaudar() {
       const el = document.querySelector('#comments #beaudar');
@@ -24,7 +23,7 @@
         el.appendChild(script);
       }
       
-      util.viewportLazyload(el, load_beaudar, lazyload);
+      util.viewportLazyload(el, load_beaudar);
     }
     
     // Store in global stellar namespace for PJAX reinitialization

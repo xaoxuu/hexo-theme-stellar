@@ -1,7 +1,6 @@
 <script type="module">
   import { init } from '<%- theme.comments.waline.js %>';
 
-  const lazyload = <%= theme.comments.lazyload ?? false %>;
   
   function initWaline() {
     const el = document.getElementById('waline_container');
@@ -35,7 +34,7 @@
       }));
     }
     
-    util.viewportLazyload(el, load_waline, lazyload);
+    util.viewportLazyload(el, load_waline);
   }
   
   // Store in global stellar namespace for PJAX reinitialization

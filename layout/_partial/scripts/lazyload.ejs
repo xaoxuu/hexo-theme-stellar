@@ -1,5 +1,6 @@
-<script async src="<%- url_for(theme.dependencies.lazyload.js) %>"></script>
 <script>
+  // 先声明配置与初始化监听，再异步加载库：
+  // 保证库执行时 lazyLoadOptions 已就绪，避免 async 脚本抢先执行导致自初始化失败
   // https://www.npmjs.com/package/vanilla-lazyload
   // Set the options globally
   // to make LazyLoad self-initialize
@@ -7,13 +8,13 @@
     elements_selector: ".lazy",
     callback_loaded: (el) => {
       el.classList.add('loaded');
-      const wrapper = el.closest('.lazy-box');
+      // {% image %} 没有 .lazy-box 包裹，回退到父元素查找加载图标
+      const wrapper = el.closest('.lazy-box') || el.parentElement;
       const icon = wrapper?.querySelector('.lazy-icon');
       if (icon) icon.remove();
     }
   };
-  // Listen to the initialization event
-  // and get the instance of LazyLoad
+  // 监听初始化事件，获取 LazyLoad 实例
   window.addEventListener(
     "LazyLoad::Initialized",
     function (event) {
@@ -63,5 +64,5 @@
       window.lazyLoadInstance.update();
     }
   }
-
 </script>
+<script async src="<%- url_for(theme.dependencies.lazyload.js) %>"></script>

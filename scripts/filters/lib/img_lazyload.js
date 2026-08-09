@@ -5,22 +5,22 @@
 
 'use strict';
 
-const fs = require('hexo-fs');
-
+// 懒加载强制开启：不再读取 enable 配置，no-lazy 是唯一例外
 function lazyProcess(htmlContent) {
-  const cfg = this.theme.config.plugins.lazyload;
-  if (cfg == undefined || cfg.enable != true) {
-    return htmlContent;
-  }
   return htmlContent.replace(/<img(.*?)src="(.*?)"(.*?)>/gi, function(imgTag, src_before, src_value, src_after) {
-    // might be duplicate
-    if (/data-srcset/gi.test(imgTag)) {
+    // 已由 tag 插件输出懒加载标记（data-src / data-srcset）的图片不重复处理
+    if (/data-src/gi.test(imgTag)) {
+      return imgTag;
+    }
+    // 使用 srcset 的图片交给浏览器原生处理，避免占位图与 srcset 冲突
+    if (/srcset=/gi.test(imgTag)) {
       return imgTag;
     }
     if (/src="data:image(.*?)/gi.test(imgTag)) {
       return imgTag;
     }
-    if (imgTag.includes(' no-lazy ')) {
+    // no-lazy 兼容 `no-lazy` / `no-lazy=""` 两种写法
+    if (/\bno-lazy\b/gi.test(imgTag)) {
       return imgTag;
     }
     var newImgTag = imgTag;

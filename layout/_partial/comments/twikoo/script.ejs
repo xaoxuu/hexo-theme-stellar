@@ -1,6 +1,5 @@
 <script>
   (function() {
-    const lazyload = <%= theme.comments.lazyload ?? false %>;
     
     function initTwikoo() {
       const el = document.getElementById('twikoo_container');
@@ -16,7 +15,7 @@
         });
       }
       
-      util.viewportLazyload(el, load_twikoo, lazyload);
+      util.viewportLazyload(el, load_twikoo);
     }
     
     // Store in global stellar namespace for PJAX reinitialization

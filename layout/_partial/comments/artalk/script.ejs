@@ -1,6 +1,5 @@
 <script>
   (function() {
-    const lazyload = <%= theme.comments.lazyload ?? false %>;
     
     function initArtalk() {
       const el = document.getElementById('artalk_container');
@@ -43,7 +42,7 @@
         });
       }
       
-      util.viewportLazyload(el, load_artalk, lazyload);
+      util.viewportLazyload(el, load_artalk);
     }
     
     // Store in global stellar namespace for PJAX reinitialization

@@ -222,7 +222,6 @@ search:
 comments:
   service: # beaudar, utterances, giscus, twikoo, waline, artalk
   comment_title: 快来参与讨论吧~
-  lazyload: false # true / false
   custom_css: # artalk,twikoo,... 可以为没有全局启用的评论加载自定义样式
   # beaudar
   # https://beaudar.lipk.org/
@@ -319,7 +318,6 @@ comments:
     server: # 后端服务地址
     site: '' # 站点名称
     darkMode: auto # 其它模式都有问题，慎用，否则后果自负
-    fancybox: true # 是否为评论区启用 fancybox
     # artalk 有三类图片：1.上传至服务端 2.上传至服务端后利用upgit上传至图床 3.前端上传至图床（本配置为此类）
     # 配置此项时将覆盖服务端上传能力
     imageUploader:
@@ -409,7 +407,7 @@ tag_plugins:
     default_color: theme # theme, accent, red, orange, yellow, green, cyan, blue, purple
   # {% image %}
   image:
-    fancybox: false # true, false
+    parse_markdown: false # true / false（自动将 markdown 图片转为 {% image %} 标签）
   # {% copy xxx %}
   copy:
     toast: 复制成功
@@ -455,6 +453,7 @@ tag_plugins:
 # 基础依赖
 dependencies:
   marked: https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js
+  # 懒加载强制开启（无 enable 开关），图片默认懒加载，no-lazy 是唯一例外
   lazyload:
     js: https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js
     transition: fade # blur, fade
@@ -554,8 +553,10 @@ plugins:
 
   # https://fancyapps.com/docs/ui/fancybox/
   # available for {% image xxx %}
+  # mode: auto=按需（页面有可弹窗图片才加载）/ global=全局（所有页面加载）
   fancybox:
-    enable: true
+    enable: true # 插件注册必需字段，恒为 true（不再支持关闭）
+    mode: auto # auto / global
     js: https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js
     css: https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css
     # 让 md 语法图片支持放大可以这样写: .md-text img:not([class]), .md-text .image img

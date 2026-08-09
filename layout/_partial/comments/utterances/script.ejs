@@ -1,6 +1,5 @@
 <script>
   (function() {
-    const lazyload = <%= theme.comments.lazyload ?? false %>;
     
     function initUtterances() {
       const el = document.querySelector("#comments #utterances");
@@ -24,7 +23,7 @@
         el.appendChild(script);
       }
       
-      util.viewportLazyload(el, load_utterances, lazyload);
+      util.viewportLazyload(el, load_utterances);
     }
     
     // Store in global stellar namespace for PJAX reinitialization

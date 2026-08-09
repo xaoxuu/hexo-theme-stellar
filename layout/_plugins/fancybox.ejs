@@ -1,27 +1,42 @@
 <script>
   ctx.fancybox = {
+    mode: `<%- conf.mode || 'auto' %>`,
     selector: `<%- conf.selector %>`,
     css: `<%- conf.css %>`,
     js: `<%- conf.js %>`
   };
-  var selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon])';
+  // auto=按需：页面存在可弹窗图片才加载；global=全局：所有页面加载
+  const isGlobal = ctx.fancybox.mode === 'global';
+  // 评论区图片（artalk/twikoo/waline）显示较小，自动支持放大
+  var selector = '[data-fancybox]:not(.error), .with-fancybox img:not([atk-emoticon]):not([class*="emo"])';
   if (ctx.fancybox.selector) {
     selector += `, ${ctx.fancybox.selector}`
   }
-  var needFancybox = document.querySelectorAll(selector).length !== 0;
+  var needFancybox = isGlobal;
   if (!needFancybox) {
-    const memos = document.getElementsByClassName('ds-memos');
-    if (memos != undefined && memos.length > 0) {
-      needFancybox = true;
+    needFancybox = document.querySelectorAll(selector).length !== 0;
+    if (!needFancybox) {
+      // 图片型评论系统容器：评论区图片小图需要 fancybox
+      const withFancybox = document.getElementsByClassName('with-fancybox');
+      if (withFancybox != undefined && withFancybox.length > 0) {
+        needFancybox = true;
+      }
     }
-    const fancybox = document.getElementsByClassName('with-fancybox');
-    if (fancybox != undefined && fancybox.length > 0) {
-      needFancybox = true;
+    if (!needFancybox) {
+      // 动态数据服务：memos 渲染的图片需要 fancybox
+      const memos = document.getElementsByClassName('ds-memos');
+      if (memos != undefined && memos.length > 0) {
+        needFancybox = true;
+      }
     }
   }
   if (needFancybox) {
     utils.css(ctx.fancybox.css);
     utils.js(ctx.fancybox.js, { defer: true }).then(function () {
+      if (isGlobal) {
+        // 全局模式：正文所有非内联图片均可弹窗
+        selector += ', .md-text img:not(.inline):not([atk-emoticon])';
+      }
       Fancybox.bind(selector, {
         hideScrollbar: false,
         Thumbs: {
