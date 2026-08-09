@@ -1,0 +1,1166 @@
+# Changelog
+
+## 1.36.0
+
+> 发布日期：2026-08-09
+
+### 新功能
+- 动态数据本地缓存：友链、时间线、最新评论、Memos、RSS、GitHub 信息、卡片链接等动态数据统一接入 stale-while-revalidate 缓存（新增 data_cache 配置），TTL 内不再重复请求外部 API，过期后先显示缓存再后台刷新
+- emoji 标签支持 url: 参数直接引用外部图片，无需引入整套表情包
+- 恢复左栏滚动位置：在同一 Wiki / 笔记本分区内切换页面后，左栏停留在上次位置，激活项不可见时自动小幅滚动修正
+- ScrollReveal 默认开启（plugins.scrollreveal.enable: true）
+
+### 修复
+- 修复 TOC 高亮始终落在最后一个标题的问题
+- TOC 目录链接改为自定义平滑滚动，与「回到顶部」「参与讨论」体验统一，落点偏移与高亮判定一致
+- 修复带锚点打开页面或浏览器恢复滚动位置时，侧栏吸顶组件一直隐藏的问题（按吸顶容器单独 reveal）
+- 无标题层级的内容页不再丢失「回到顶部 / 参与讨论」操作按钮
+- 修复正文图片假懒加载：{% image %} 改为 1×1 占位 + data-src，图片真正进入视口后才加载
+- 修复 Mermaid 图表不渲染：默认 CDN 从 v9 升级到 v11
+- 修复评论系统加载回归：删除 PJAX 时代残留的评论重初始化死代码，评论脚本恢复为 module 模式
+
+### 重构
+- 移除 jQuery 依赖，以原生 DOM 封装替代，全站不再加载 jQuery
+- 懒加载重构：强制开启、不再有 enable 开关，no-lazy 是唯一例外；fancybox 改为 mode: auto / global 按需加载；评论区图片统一走视口懒加载
+- 移除 style.smooth_scroll 全局配置，滚动体验统一由 JS 控制
+
+### 配置变更（升级注意）
+- 新增 data_cache 配置块（enable / default_ttl / ttl / max_entries）
+- plugins.fancybox 新增 mode，移除 tag_plugins.image.fancybox
+- 移除 dependencies.jquery、comments.lazyload、style.smooth_scroll
+- 站点若通过 inject.script 注入依赖全局 $ 的脚本，升级后需改为原生实现
+
+Full Changelog: [1.35.0...1.36.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.35.0...1.36.0)
+
+## 1.35.0
+
+> 发布日期：2026-08-08
+
+### 其他
+
+- 移除 PJAX 支持：页面导航改为整页刷新，解决动态组件不刷新、评论系统切换等边界问题
+- 统一 URL 路径规范化逻辑，修复 canonical 标签路径不一致的问题
+- 修复 wiki 文档树中索引页（index）的路径匹配错误
+- 发版脚本迁移为 Node CLI（release.js），支持版本校验、dry-run 预览与二次确认
+- 完善仓库 AI 协作规范（AGENTS.md、issue 处理规则），重组 docs 目录（designs/、guides/、audits/）
+- 优化 npm 发布忽略规则（.npmignore）
+
+Full Changelog: [1.34.0...1.35.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.34.0...1.35.0)
+
+## 1.34.0
+
+> 发布日期：2026-08-08
+
+### 其他
+* add new-note command by @Zane-Jiang in https://github.com/xaoxuu/hexo-theme-stellar/pull/595
+* fix: chat.js by @thun888 in https://github.com/xaoxuu/hexo-theme-stellar/pull/610
+* fix: chat.styl by @thun888 in https://github.com/xaoxuu/hexo-theme-stellar/pull/611
+* fix: katex by @thun888 in https://github.com/xaoxuu/hexo-theme-stellar/pull/608
+* fix: resolve katex.min.css being blocked by @gsh1209 in https://github.com/xaoxuu/hexo-theme-stellar/pull/624
+* opt: canonical logic by @tovarsh in https://github.com/xaoxuu/hexo-theme-stellar/pull/627
+* feat: support separate light/dark leftbar background colors when using solid color by @gsh1209 in https://github.com/xaoxuu/hexo-theme-stellar/pull/622
+* fix: chat-file, dark mode, etc. by @thun888 in https://github.com/xaoxuu/hexo-theme-stellar/pull/617
+* fix: support Memos 0.25.0+ by @MikeWu597 in https://github.com/xaoxuu/hexo-theme-stellar/pull/631
+* feat: add rss by @thun888 in https://github.com/xaoxuu/hexo-theme-stellar/pull/633
+* feat: support pjax to implement non-refresh loading by @XZB-1248 in https://github.com/xaoxuu/hexo-theme-stellar/pull/640
+* fix: pjax not refresh dynamic components on page changed by @XZB-1248 in https://github.com/xaoxuu/hexo-theme-stellar/pull/645
+* Fix: Reinitialize comments after PJAX navigation by @xaoxuu with @Copilot in https://github.com/xaoxuu/hexo-theme-stellar/pull/646
+* Fix PJAX navigation between pages with different comment systems by @xaoxuu with @Copilot in https://github.com/xaoxuu/hexo-theme-stellar/pull/647
+* Fix duplicate CSS loading during pjax comment reinitialization by @xaoxuu with @Copilot in https://github.com/xaoxuu/hexo-theme-stellar/pull/650
+* fix: preserve user theme preference during PJAX navigation by @cuiruileo in https://github.com/xaoxuu/hexo-theme-stellar/pull/658
+* fix: 将 XML/RSS 文件加入 PJAX 黑名单  by @cuiruileo in https://github.com/xaoxuu/hexo-theme-stellar/pull/661
+### 新贡献者
+* @Zane-Jiang made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/595
+* @MikeWu597 made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/631
+* @XZB-1248 made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/640
+* @xaoxuu with @Copilot made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/646
+* @cuiruileo made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/658
+
+Full Changelog: [1.33.1...1.34.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.33.1...1.34.0)
+
+## 1.33.1
+
+> 发布日期：2025-07-17
+
+### 其他
+- feat: 增加 mathjax v3 的支援 by @flyinglimao in https://github.com/xaoxuu/hexo-theme-stellar/pull/587
+- fix: custom color #589
+- fix: emoticons@3.1
+### 新贡献者
+* @flyinglimao made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/587
+
+Full Changelog: [1.33.0...1.33.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.33.0...1.33.1)
+
+## 1.33.0
+
+> 发布日期：2025-07-06
+
+### 其他
+
+- feat: 新增投票和评分标签
+- opt: artalk ui
+- fix: canonical in 404 page
+- fix: pretty_urls.js by @thun888 in https://github.com/xaoxuu/hexo-theme-stellar/pull/585
+- fix: search path
+
+Full Changelog: [1.32.4...1.33.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.32.4...1.33.0)
+
+## 1.32.4
+
+> 发布日期：2025-07-04
+
+### 其他
+
+- fix: canonical
+- opt: doc’s contributors
+- opt: ui
+
+Full Changelog: [1.32.3...1.32.4](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.32.3...1.32.4)
+
+## 1.32.3
+
+> 发布日期：2025-06-30
+
+### 其他
+
+- Artalk 支持 imageUploader
+- 样式优化
+
+Full Changelog: [1.32.2...1.32.3](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.32.2...1.32.3)
+
+## 1.32.2
+
+> 发布日期：2025-06-29
+
+### 其他
+
+- 页脚结构优化
+- 配色方案重构，网站背景图现在有更完善的适配。
+- 图片懒加载优化，现在支持对动态数据中的图片进行懒加载，例如动态友链、时间线等。
+
+Full Changelog: [1.32.1...1.32.2](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.32.1...1.32.2)
+
+## 1.32.1
+
+> 发布日期：2025-06-28
+
+### 其他
+
+- 修复UI问题
+- 修复未知问题（quote 标签改名为： blockquote）
+- 优化懒加载图片缓存策略
+
+Full Changelog: [1.32.0...1.32.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.32.0...1.32.1)
+
+## 1.32.0
+
+> 发布日期：2025-06-27
+
+### 其他
+
+- 大量样式优化（特别是Artalk）
+- 为 lazyload 功能添加配置项 loading_image by @lambdark in https://github.com/xaoxuu/hexo-theme-stellar/pull/574
+- 图片懒加载时，不再发生高度调变
+- artalk_latest_comment by @thun888 in https://github.com/xaoxuu/hexo-theme-stellar/pull/579
+- 支持从主页隐藏文章 `indexing: false`
+- 移除已不支持的 unsplash 封面接口
+- 本地搜索体验优化
+
+Full Changelog: [1.31.0...1.32.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.31.0...1.32.0)
+
+## 1.31.0
+
+> 发布日期：2025-06-21
+
+### 其他
+- 增加 canonical 标签，并增加备用站提示和非法克隆站警告信息。（canonical加密校验，增加盗站成本）
+- structured data #50 and #470
+- 移除掉即将过期的 `vlts.cc` 服务，支持自部署
+- Theme color-scheme selector error by @ThatCoders in https://github.com/xaoxuu/hexo-theme-stellar/pull/573
+
+Full Changelog: [1.30.4...1.31.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.30.4...1.31.0)
+
+## 1.30.4
+
+> 发布日期：2025-06-20
+
+### 其他
+
+- 适配 iOS 26
+- 增加 quote 标签
+
+Full Changelog: [1.30.3...1.30.4](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.30.3...1.30.4)
+
+## 1.30.3
+
+> 发布日期：2025-06-17
+
+### 其他
+
+- 适配 iOS 26
+- 支持自定义技术文章内页各级标题前面的符号
+
+Full Changelog: [1.30.2...1.30.3](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.30.2...1.30.3)
+
+## 1.30.2
+
+> 发布日期：2025-06-15
+
+### 其他
+- 内置的 `cdn.jsdelivr.net` 地址统一修改为：`gcore.jsdelivr.net`
+- 内置依赖库版本号修改
+- 大量样式优化（包含期待已久的标题风格差异化）
+- 修复 tabs 标签显示问题
+
+Full Changelog: [1.30.1...1.30.2](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.30.1...1.30.2)
+
+## 1.30.1
+
+> 发布日期：2025-06-15
+
+### 其他
+- 新增了带最新文章的友链布局，使用方法为原友链标签中增加 `posts:true` 参数，例如：`{% friends posts:true api:xxx %}`，需搭配最新版动态友链。
+- 样式优化
+
+Full Changelog: [1.30.0...1.30.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.30.0...1.30.1)
+
+## 1.30.0
+
+> 发布日期：2025-06-03
+
+### 其他
+* fix: link path in nav_tabs_blog.ejs by @L33Z22L11 in https://github.com/xaoxuu/hexo-theme-stellar/pull/508
+* [feat] support memos Version management by @ThatCoders in https://github.com/xaoxuu/hexo-theme-stellar/pull/505
+* fix: youtube iframe by @abc1763613206 in https://github.com/xaoxuu/hexo-theme-stellar/pull/517
+* fix: ensure tags and categories are arrays before iterating by @Cactusinhand in https://github.com/xaoxuu/hexo-theme-stellar/pull/512
+* 优化 local search 逻辑 by @Cactusinhand in https://github.com/xaoxuu/hexo-theme-stellar/pull/521
+* [fix] skip_search is not iterable by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/526
+* [fix] notebooks undefined by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/527
+* [fix] scrollreveal l_right by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/528
+* [fix] mathjax render by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/532
+* [feat] comment new widgets by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/530
+* [fix]: 修复hexo路由改变造成无法正常加载theme资源文件的bug by @ttaydes in https://github.com/xaoxuu/hexo-theme-stellar/pull/535
+* [fix] js unexpected token by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/534
+* [fix] tabs mermaid syntax error by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/536
+* [fix] empty wiki  delete in loop by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/537
+* fix(notebooks): fix bug in notebooks generator by @calfzhou in https://github.com/xaoxuu/hexo-theme-stellar/pull/543
+* [fix] algoliasearch is not defined by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/542
+* fix: 页面没有使用tags生成keywords，文章搜索没有生成tags和categories by @LinWhite2333 in https://github.com/xaoxuu/hexo-theme-stellar/pull/540
+* feat: 优化stellar搜索引擎 by @codepzj in https://github.com/xaoxuu/hexo-theme-stellar/pull/538
+* fix: refine katex overflow style by @calfzhou in https://github.com/xaoxuu/hexo-theme-stellar/pull/544
+* add chat tag plugin by @HcGys in https://github.com/xaoxuu/hexo-theme-stellar/pull/560
+* [fix]更换 sites 截图提供商 by @Catwb in https://github.com/xaoxuu/hexo-theme-stellar/pull/565
+* [fix] 修复folding标签渲染异常问题 by @lambdark in https://github.com/xaoxuu/hexo-theme-stellar/pull/562
+* [fix] 修复mermaid暗色配置项的一个小问题 by @HisMax in https://github.com/xaoxuu/hexo-theme-stellar/pull/567
+### 新贡献者
+* @abc1763613206 made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/517
+* @Cactusinhand made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/512
+* @ttaydes made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/535
+* @LinWhite2333 made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/540
+* @codepzj made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/538
+* @Catwb made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/565
+* @lambdark made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/562
+* @HisMax made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/567
+
+Full Changelog: [1.29.1...1.30.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.29.1...1.30.0)
+
+## 1.29.1
+
+> 发布日期：2024-08-13
+
+### 其他
+* l10n: Update zh-TW translation by @pan93412 in https://github.com/xaoxuu/hexo-theme-stellar/pull/497
+
+Full Changelog: [1.29.0...1.29.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.29.0...1.29.1)
+
+## 1.29.0
+
+> 发布日期：2024-06-16
+
+### 其他
+* [feat] support run-time theme switch, and visitor preferred theme by @calfzhou in https://github.com/xaoxuu/hexo-theme-stellar/pull/449
+* ✨ local search打开文章url改进：避免文章设置永久链接导致点击打开失败 by @Achuan-2 in https://github.com/xaoxuu/hexo-theme-stellar/pull/450
+* [fix] render article footer in wiki pages by @calfzhou in https://github.com/xaoxuu/hexo-theme-stellar/pull/460
+* fix(stellar-artalk): bump version, fix site name escape by @songtianlun in https://github.com/xaoxuu/hexo-theme-stellar/pull/452
+* 添加阅读标签 by @HcGys in https://github.com/xaoxuu/hexo-theme-stellar/pull/462
+* [feat] add notebook support by @calfzhou in https://github.com/xaoxuu/hexo-theme-stellar/pull/464
+* [fix] fix typo - missing `;` for `&quot;` by @calfzhou in https://github.com/xaoxuu/hexo-theme-stellar/pull/469
+* fix(bug): 文章banner非法属性, 目录讨论按钮逻辑 by @L33Z22L11 in https://github.com/xaoxuu/hexo-theme-stellar/pull/475
+* [fix] #477 bad appearence with no prefers-color-scheme by @L33Z22L11 in https://github.com/xaoxuu/hexo-theme-stellar/pull/478
+* feat: 评论区视口懒加载 by @KazariEX in https://github.com/xaoxuu/hexo-theme-stellar/pull/480
+* [fix] multi renderer support, resolve #476 by @L33Z22L11 in https://github.com/xaoxuu/hexo-theme-stellar/pull/481
+* [fix] related_posts title by @L33Z22L11 in https://github.com/xaoxuu/hexo-theme-stellar/pull/485
+* [fix] tianli_gpt layout by @thun888 in https://github.com/xaoxuu/hexo-theme-stellar/pull/486
+* [fix] video tag by @L33Z22L11 in https://github.com/xaoxuu/hexo-theme-stellar/pull/487
+* feat: add youtube video by @Laitr0n in https://github.com/xaoxuu/hexo-theme-stellar/pull/491
+* fix: load script synchronously by @KazariEX in https://github.com/xaoxuu/hexo-theme-stellar/pull/482
+### 新贡献者
+* @songtianlun made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/452
+* @HcGys made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/462
+* @KazariEX made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/480
+* @thun888 made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/486
+* @Laitr0n made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/491
+
+Full Changelog: [1.28.1...1.29.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.28.1...1.29.0)
+
+## 1.28.1
+
+> 发布日期：2024-04-27
+
+### 其他
+* [feat] fixes xaoxuu#442: img fancybox supports providing a different image for popup by @calfzhou in https://github.com/xaoxuu/hexo-theme-stellar/pull/444
+* [opt] gist darkmode textcolor by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/445
+* [fix] copy failure by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/446
+
+Full Changelog: [1.28.0...1.28.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.28.0...1.28.1)
+
+## 1.28.0
+
+> 发布日期：2024-04-23
+
+### 其他
+**新特性**
+- 支持 algolia 搜索
+- 有评论的页面支持滚动到评论区（需要 toc 组件）
+- 优化 twikoo 表情显示
+- 移动端 Safari 状态栏区域颜色跟随主题
+- 其它样式优化
+**修复**
+- 修复 copy 按钮复制失败问题
+- 修复 swiper 组件相关问题
+* [fix] #405 emoji incomplete display due to border-radius by @L33Z22L11 in https://github.com/xaoxuu/hexo-theme-stellar/pull/406
+* 优化twikoo表情显示 by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/410
+* update waline_3.1.3 to fix reaction error by @gsh1209 in https://github.com/xaoxuu/hexo-theme-stellar/pull/412
+* [opt] navbar, sidebar-list, footer by @L33Z22L11 in https://github.com/xaoxuu/hexo-theme-stellar/pull/399
+* [fix] error handler for codeCopyBtn by @L33Z22L11 in https://github.com/xaoxuu/hexo-theme-stellar/pull/419
+* [fix] #413 extra breadcrumb on author's page by @L33Z22L11 in https://github.com/xaoxuu/hexo-theme-stellar/pull/418
+* [feat] algolia_search by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/423
+* [fix] #402 dark statusbar theme-color on phone by @L33Z22L11 in https://github.com/xaoxuu/hexo-theme-stellar/pull/424
+* [fix] swiper cycle invalid by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/425
+* [fix] tianli_gpt layout by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/429
+* [fix] proj.comments false by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/430
+* [feat] scroll to comment by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/431
+* [opt] twikoo fllow $color-theme by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/421
+* [opt] algolia_search filter by @weekdaycare in https://github.com/xaoxuu/hexo-theme-stellar/pull/434
+* fixd #436 white space caused by using border-radius and hidden overflow by @gsh1209 in https://github.com/xaoxuu/hexo-theme-stellar/pull/440
+### 新贡献者
+* @gsh1209 made their first contribution in https://github.com/xaoxuu/hexo-theme-stellar/pull/412
+
+Full Changelog: [1.27.0...1.28.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.27.0...1.28.0)
+
+## 1.27.0
+
+> 发布日期：2024-03-03
+
+### 其他
+**新特性**
+
+- 新增右侧栏，原 `sidebar` 更名为 `leftbar`
+
+**重要变更**
+
+- toc 样式修改为适应右边栏，不建议放在左边栏了
+- plugins 插件重构
+- 内置服务配置转移到 `data_services ` 中
+- 配置中的替换符号 `${xxx}` 由于存在冲突，格式更改为 `{xxx}`
+- Waline 评论插件升级到 3.x
+
+**修复**
+
+- 修复了 macOS 系统上的 `.DS_Store` 文件导致报错的问题
+
+Full Changelog: [1.26.8...1.27.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.26.8...1.27.0)
+
+## 1.26.8
+
+> 发布日期：2024-02-04
+
+### 其他
+**新特性**
+
+- linkcard 数据服务支持自部署：[site-info-api](https://github.com/xaoxuu/site-info-api/)
+
+**优化**
+
+- 统一暗色模式下卡片高亮效果
+
+Full Changelog: [1.26.7...1.26.8](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.26.7...1.26.8)
+
+## 1.26.7
+
+> 发布日期：2024-02-04
+
+### 其他
+**请不要安装这个版本**
+
+Full Changelog: [1.26.6...1.26.7](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.26.6...1.26.7)
+
+## 1.26.6
+
+> 发布日期：2024-02-03
+
+### 其他
+**新特性**
+
+- 新增 button 标签组件 [#button](https://xaoxuu.com/wiki/stellar/tag-plugins/express/#button-%E6%8C%89%E9%92%AE)
+- 支持在 topic 和 wiki 中设置 banner，应用到全部页面
+- 支持在 topic 和 wiki 中设置 type，应用到全部页面
+
+**优化**
+
+- 优化 okr 在移动端显示
+- 合并文章内 block 和 card 类圆角配置 -> card [_config.yml#L492](https://github.com/xaoxuu/hexo-theme-stellar/blob/aae8176876e4cfbe3650b1497cd63d35d0d5cb22/_config.yml#L492)
+- 新增 card-l 配置单独侧边栏和文章横幅的圆角 [_config.yml#L491](https://github.com/xaoxuu/hexo-theme-stellar/blob/aae8176876e4cfbe3650b1497cd63d35d0d5cb22/_config.yml#L491)
+
+Full Changelog: [1.26.5...1.26.6](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.26.5...1.26.6)
+
+## 1.26.5
+
+> 发布日期：2024-02-02
+
+### 其他
+**新特性**
+
+- 新增 [icon 标签组件](https://xaoxuu.com/wiki/stellar/tag-plugins/express/#icon-%E5%9B%BE%E6%A0%87%E6%A0%87%E7%AD%BE)
+
+**优化**
+
+- 优化多处样式
+
+**修复**
+
+- 修复部分页面侧边栏顶部间距消失问题
+
+Full Changelog: [1.26.4...1.26.5](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.26.4...1.26.5)
+
+## 1.26.4
+
+> 发布日期：2024-01-31
+
+### 其他
+**新特性**
+
+- 支持设置全站背景 [_config.yml#L525-L528](https://github.com/xaoxuu/hexo-theme-stellar/blob/9c906cc02bf209b8b8823f696fffeac5501a3372/_config.yml#L525-L528)
+
+**优化**
+
+- 大量字体默认调大一号
+- 优化文章顶部区域
+- 优化暗黑模式下的卡片阴影效果（改为彩色阴影）
+- 优化了时间线标签标题部分的链接的样式
+- 优化了微信分享展开动画
+- 优化了各级标题样式
+- 简化了行内链接样式
+
+**修复**
+
+- 修复了在 menu 和 social 位置使用 `icons.yml` 配置链接失效的问题
+
+Full Changelog: [1.26.3...1.26.4](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.26.3...1.26.4)
+
+## 1.26.3
+
+> 发布日期：2024-01-22
+
+### 其他
+**优化**
+
+- logo 区防止 title 过长时 icon 被压缩
+- logo 区的 title 字号调小至 1.5rem
+- 增加 css 和 js 的版本号，后续更新版本后应该不需要强制刷新了
+- tagcloud 样式适配新的侧边栏风格
+
+**修复**
+
+- 修复了作者归档页漏掉的筛选逻辑（仅显示作者的文章）
+
+Full Changelog: [1.26.2...1.26.3](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.26.2...1.26.3)
+
+## 1.26.2
+
+> 发布日期：2024-01-22
+
+### 其他
+**优化**
+
+- 优化 wiki 页面的搜索框默认占位文字
+- 专栏页面侧边栏的 logo 不再定制为专栏名，而是显示和博客页相同的内容
+- 适配 fancybox 插件 5.0 版本，image 标签支持 `fancybox:groupName` 设置为不同的组，并且每个 gallery 组件都是单独的一个组
+- katex、mathjax、mermaid 支持在配置文件中设置全局开启
+- 图片默认载入效果从 blur 改为 fade，如果喜欢 blur 可以在主题配置文件中自行修改
+
+**重要变更**
+
+- 移除了 instant_page 支持（效果不如 flying_pages）
+
+**修复**
+
+- 修复了作者归档页漏掉的筛选逻辑（仅显示作者的文章）
+
+Full Changelog: [1.26.1...1.26.2](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.26.1...1.26.2)
+
+## 1.26.1
+
+> 发布日期：2024-01-21
+
+### 其他
+**优化**
+
+- wiki 的最近更新过滤掉没有标题的页面
+- 当前激活页的书签图标改为主题色
+
+**修复**
+
+- 修复了新用户未配置 `menubar.items` 时报错的问题
+- 修复了 Mac 用户未设置忽略 `.DS_Store` 时产生的报错
+
+Full Changelog: [1.26.0...1.26.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.26.0...1.26.1)
+
+## 1.26.0
+
+> 发布日期：2024-01-21
+
+### 其他
+**新特性**
+
+- 侧边栏支持设置背景图、高速模糊、渐变效果
+- 侧边栏主导航菜单支持设置图标、支持设置列数
+- 支持在 `_data/icons.yml` 中配置图标
+- 侧边栏新增 `linklist` 组件，支持图标、网格和列表布局
+- 侧边栏 `markdown` 组件新增 `linklist` 参数，写法同 `linklist` 组件
+- 大多数内置图标都可以通过在 `_data/icons.yml` 中覆盖同名配置来修改了
+- 支持设置 `article.type` 来增大字体和图文间距，以优化图文类博客阅读体验
+
+**重要变更**
+- 移除 `seo_title` 字段，如果要隐藏页内标题，请设置 `h1: ''`
+- 侧边栏主导航菜单由 `menu` 改为 `menubar`
+- 不再支持 `pin: true` 来置顶，因为官方已经支持该功能，方法为： `sticky: 数字`
+- 搜索框不再是组件，而是独立功能，支持在 front-matter 和项目配置文件中覆盖参数
+- wiki 配置文件中的 `path` 更名为 `base_dir`
+
+Full Changelog: [1.25.0...1.26.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.25.0...1.26.0)
+
+## 1.25.0
+
+> 发布日期：2024-01-14
+
+### 其他
+**新特性**
+
+- 新增「专栏」功能 [> 了解详情](https://xaoxuu.com/wiki/stellar/topic.html)
+- 标签组件 video/audio 支持设置是否自动播放
+- 标签组件 video支持设置最大宽度（可用于竖屏视频）
+- 支持各个部分的默认 `menu_id` 设置
+
+**重要变更**
+
+- 原配置 `sidebar` 部分重构，其中的 `logo` 和 `menu` 提升一个层级，`wisgets` 转移到 `site_tree` 中的 `sidebar` 配置
+- 原配置 `post-index` 和 `post_list` 移除，现在转移到 `site_tree` 中的 `nav_tabs` 配置
+- 原配置 `wiki_dir` 和 `author_dir` 移除，现在转移到 `site_tree` 中的 `base_dir` 部分配置
+- 原配置 `subtitle` 从站点配置文件转移到主题配置文件的 `logo` 中
+
+上述变更详见主题配置文件 [#_config.yml](https://github.com/xaoxuu/hexo-theme-stellar/blob/e77bfecf1f59785192bff1cc3ab8b68b1b064899/_config.yml#L20-L77)
+
+Full Changelog: [1.24.1...1.25.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.24.1...1.25.0)
+
+## 1.24.1
+
+> 发布日期：2024-01-13
+
+### 其他
+**新特性**
+
+- video 标签组件现在支持 bilibili [#video](https://xaoxuu.com/wiki/stellar/tag-plugins/express/#video-%E8%A7%86%E9%A2%91%E6%A0%87%E7%AD%BE)
+
+**修复**
+
+- 修复了搜索输入后再清空时一直显示【没有找到内容！】的问题
+
+Full Changelog: [1.24.0...1.24.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.24.0...1.24.1)
+
+## 1.24.0
+
+> 发布日期：2024-01-12
+
+### 其他
+**新特性**
+
+- 在 license 中可以使用 `${author.name}` 来自动替换为当前文章作者名字
+- 新增 md 标签组件，使用方法为 `{% md https://host/path/file.md %}`
+- 侧边栏组件 markdown 新增 `src` 字段，支持渲染外部 markdown 文件
+- 新增 audio 和 video 组件
+- 网格组件 grid 重要更新：支持设置列数、列宽、间距、圆角了
+
+**重要变更**
+
+- 网格组件 grid 中的分隔符写法变更，现在仅支持 `<!-- cell -->` 固定写法
+- 代码复制按钮和归档页面样式优化
+
+Full Changelog: [1.23.0...1.24.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.23.0...1.24.0)
+
+## 1.23.0
+
+> 发布日期：2024-01-08
+
+### 其他
+**新特性**
+- 支持使用自建的 giscus 服务，只需要修改 `src` 参数即可
+- TOC 组件支持配置是否自动折叠 `collapse: false # true / false / auto` [#toc](https://xaoxuu.com/wiki/stellar/widgets/#toc)
+- 新增 [albums](https://xaoxuu.com/wiki/stellar/tag-plugins/container/#albums-%E4%B8%93%E8%BE%91%E5%AE%B9%E5%99%A8) 和 [posters](https://xaoxuu.com/wiki/stellar/tag-plugins/container/#posters-%E6%B5%B7%E6%8A%A5%E5%AE%B9%E5%99%A8) 组件，适合用于显示专辑列表、电影或游戏海报列表，数据源： `_data/links/xxx.yml`
+- front-matter 通过设置 `h1: ''` 可以隐藏文章页面内的文章标题
+- front-matter 支持设置 `inject` 参数来植入外部代码
+- 支持一站多作者，在 `_data/links/authors.yml` 中设置作者之后，第一个作者为默认作者；在 front-matter 中设置 `author: xxx` 来指定本文作者
+- copy 组件支持 `prefix` 参数，可以在复制内容前面显示一些文本（但不会被复制）
+
+**重要变更**
+- firends 和 sites 组件使用的 `_data/links.yml` 文件需要按组拆分成 `_data/links/xxx.yml`
+- 优化默认 footer 的主题信息，可显示版本号
+
+Full Changelog: [1.22.1...1.23.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.22.1...1.23.0)
+
+## 1.22.1
+
+> 发布日期：2023-12-30
+
+### 其他
+**重要变更**
+- 不再支持 `parse_markdown: true` 来将 `![]()` 替换成 `{% image xxx %}`
+
+**修复**
+- 修复了默认配置下 Gallery 不显示的问题
+
+Full Changelog: [1.22.0...1.22.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.22.0...1.22.1)
+
+## 1.22.0
+
+> 发布日期：2023-12-30
+
+### 其他
+**新特性**
+- Gallery 标签组件重磅升级，支持多种布局，可自定义默认配置，详见 [#Gallery](https://xaoxuu.com/blog/20231223/)
+- TOC 现在会自动展开和折叠
+
+**修复**
+- 修复 timeline(memos) 组件不显示数据的问题
+- 修复 Artalk 2.7.x 兼容性问题
+
+Full Changelog: [1.21.0...1.22.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.21.0...1.22.0)
+
+## 1.21.0
+
+> 发布日期：2023-12-22
+
+### 其他
+**新特性**
+- 时间线适配 memos 数据源 [#memos](https://xaoxuu.com/wiki/stellar/third-party/memos/)
+- 支持在 front-matter 中覆盖设置 `open_graph` 字段 [#覆盖 open-graph](https://xaoxuu.com/wiki/stellar/pages/#覆盖-OpenGraph)
+- 新增 gallery 标签组件 [#gallery](https://xaoxuu.com/wiki/stellar/tag-plugins/container/#gallery-%E5%9B%BE%E5%BA%93%E5%AE%B9%E5%99%A8)
+- 新增 banner 标签组件 [#banner](https://xaoxuu.com/wiki/stellar/tag-plugins/container/#banner-%E6%A8%AA%E5%B9%85%E5%AE%B9%E5%99%A8)
+
+**重要变更**
+- ablock 标签组件重命名为 box (批量替换即可）
+-  navbar 组件的 active 字段含义从索引改为了连接 [#navbar](https://xaoxuu.com/wiki/stellar/tag-plugins/express/index.html#navbar-%E5%AF%BC%E8%88%AA%E6%A0%8F)
+- references 写法变更，由 `{title, url}` 对象改为了 md 格式的链接列表。 [#参考资料](https://xaoxuu.com/wiki/stellar/pages/index.html#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99)
+
+Full Changelog: [1.20.0...1.21.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.20.0...1.21.0)
+
+## 1.20.0
+
+> 发布日期：2023-12-11
+
+### 其他
+**新特性**
+- 新增内置标签 `okr`，[> 了解详情](https://xaoxuu.com/wiki/stellar/tag-plugins/express/#okr-%E7%9B%AE%E6%A0%87%E7%AE%A1%E7%90%86)
+- wiki 页面的 GitHub 信息显示在右上角
+- 文章：鼠标移动到发布时间时，会额外显示更新时间
+- wiki 页面页脚支持显示 `license` 和 `share`
+
+**重要变更**
+- 内置标签：`tag` 更名为 `hashtag`
+- wiki 配置方法重做，[> 了解详情](https://xaoxuu.com/wiki/stellar/wiki-settings/)
+- 笔记模块配置方法重做，[> 了解详情](https://xaoxuu.com/wiki/stellar/wiki-settings/notes/)
+
+Full Changelog: [1.19.0...1.20.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.19.0...1.20.0)
+
+## 1.19.0
+
+> 发布日期：2023-05-09
+
+### 其他
+**新特性**
+- Waline 图床新增上传可选项 (#237)
+- 支持把 markdown 格式的图片解析成图片标签 (#252)
+- 增加对 mermaid 流程图的支持 (#263)
+- 增加 AI 摘要 (#287)
+- 代码块复制按钮 (#288)
+
+**重要变更**
+- 统一微信二维码分享链接 (#236)
+
+**修复**
+- 修复子目录部署 loadScript, search (#264)
+- 修复分类和标签页不显示分页器 (#291)
+
+Full Changelog: [1.18.5...1.19.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.18.5...1.19.0)
+
+## 1.18.5
+
+> 发布日期：2022-12-21
+
+### 其他
+- `F` 修复复制标签失效问题
+
+Full Changelog: [1.18.4...1.18.5](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.18.4...1.18.5)
+
+## 1.18.4
+
+> 发布日期：2022-12-19
+
+### 其他
+- `M` 为了防止冲突，`emoji` 标签配置中的名称部分由 `%s` 改为 `${name}`
+- `M` `npm` 包此后将由 GitHub Actions 发布
+
+Full Changelog: [1.18.3...1.18.4](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.18.3...1.18.4)
+
+## 1.18.3
+
+> 发布日期：2022-12-19
+
+### 其他
+- `F` 修复搜索不准确的问题 #211
+- `M` 优化 `folding` 和 `folders` 样式
+
+Full Changelog: [1.18.2...1.18.3](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.18.2...1.18.3)
+
+## 1.18.2
+
+> 发布日期：2022-12-16
+
+### 其他
+- `F` 修复没有搜索框时的报错
+- `M` 优化搜索框样式，项目封面按钮改为动态渐变
+- `A` 新增若干样式自定义选项
+- `M` 页面滚动时自动滚动目录到可见区域
+
+Full Changelog: [1.18.1...1.18.2](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.18.1...1.18.2)
+
+## 1.18.1
+
+> 发布日期：2022-12-15
+
+### 其他
+- `A` 新增 Artalk 评论
+- `M` swiper 插件升级到 `8.x` 版本，支持 `effect` 参数
+- `F` 修复若干问题
+
+Full Changelog: [1.18.0...1.18.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.18.0...1.18.1)
+
+## 1.18.0
+
+> 发布日期：2022-12-10
+
+### 其他
+- `A` 增加 `tag` 标签
+- `A` 时间线增加微博数据支持
+- `M` `border` 标签重命名为 `ablock`
+- `M` `split` 标签重命名为 `grid`
+- `M` `theme.style.color` 配置简化
+
+Full Changelog: [1.17.2...1.18.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.17.2...1.18.0)
+
+## 1.17.2
+
+> 发布日期：2022-11-29
+
+### 其他
+- `M` home/blog/wiki 等页面的侧边栏默认布局可以分开设置
+- `A` 搜索支持禁用代码块以减少体积
+- `M` 优化搜索文件体积
+- `F` 修复在 front-matter 中使用 `layout:xx` 创建侧边小组件的不显示的问题
+
+Full Changelog: [1.17.1...1.17.2](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.17.1...1.17.2)
+
+## 1.17.1
+
+> 发布日期：2022-11-28
+
+### 其他
+- `M` 内置搜索功能，使用 `json` 文件格式，默认全部索引。
+- `F` fix bug #190
+
+> 更新到 1.17.1 之后，搜索直接就可以用啦～
+
+Full Changelog: [1.17.0...1.17.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.17.0...1.17.1)
+
+## 1.17.0
+
+> 发布日期：2022-11-28
+
+### 其他
+- `A` 新增搜索组件（需搭配插件 [hexo-generator-search](https://github.com/wzpan/hexo-generator-search)） `npm i hexo-generator-search`
+- `M` 文章分页优化（建议更新到 hexo 6.3.0+ 版本）
+
+Full Changelog: [1.16.2...1.17.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.16.2...1.17.0)
+
+## 1.16.2
+
+> 发布日期：2022-11-23
+
+### 其他
+- `F` 修复只有一篇文章时 recent 组件导致报错的问题
+- `A` 支持设置 `mark` 标签默认颜色，[#详情](https://github.com/xaoxuu/hexo-theme-stellar/blob/904be4160c48515304c95d81211f83ae6a205594/_config.yml#L223-L224)
+- `A` 支持在 `front-matter` 中创建侧边栏组件，[#详情](https://xaoxuu.com/wiki/stellar/widgets/#%E4%B8%93%E7%94%A8%E7%BB%84%E4%BB%B6)
+- `A` 支持在 `front-matter` 中覆盖 `repo` 属性（用于一个 wiki 中有多个分页且每个分页展示不同的 repo 信息）
+
+Full Changelog: [1.16.1...1.16.2](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.16.1...1.16.2)
+
+## 1.16.1
+
+> 发布日期：2022-11-23
+
+### 其他
+- `F` 修复空内容的 issue 导致整个 timeline 不显示的问题
+- `F` 修复标题重复问题
+
+Full Changelog: [1.16.0...1.16.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.16.0...1.16.1)
+
+## 1.16.0
+
+> 发布日期：2022-11-20
+
+### 其他
+- `M` 优化移动端右下角侧边栏按钮样式
+- `M` 优化 `blockquote` 样式，降低醒目度
+- `M` 支持为项目单独设置不同的评论系统
+- `M` 默认的 `widgets` 布局配置改为字符串，避免了数组无法覆盖的问题
+- `M` 优化了 wiki 部分代码，提高 generate 性能
+- `M` 优化了 wiki 侧边栏布局，顶部标题不再固定置顶，提高目录区域可滚动面积
+- `F` 修复了 `tabs`、`folders`、`timeline`、`split` 标签内无法使用 `md` 格式代码块的问题
+
+Full Changelog: [1.15.1...1.16.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.15.1...1.16.0)
+
+## 1.15.1
+
+> 发布日期：2022-11-07
+
+### 其他
+- `F` 修复开启 `open_graph` 之后 `description` 标签重复的问题
+
+Full Changelog: [1.15.0...1.15.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.15.0...1.15.1)
+
+## 1.15.0
+
+> 发布日期：2022-11-06
+
+### 其他
+- `A` 增加 `api_host` 配置，可自定义
+- `M` 优化页面标题 `<head>` 标签
+- `M` 更新依赖库版本
+- `A` 增加 `gist` 代码片段样式兼容
+- `M` 时间线增加 `hover` 特效
+
+Full Changelog: [1.14.0...1.15.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.14.0...1.15.0)
+
+## 1.14.0
+
+> 发布日期：2022-11-05
+
+### 其他
+- `A` 时间线标签支持隐藏 `user`
+- `A` 侧边栏时间线组件支持显示朋友圈数据
+- `F` 修复时间线在 Windows 系统部分浏览器显示滚动条的 BUG
+- `M` 优化 `link` 标签数据填充逻辑，已有数据不再覆盖。
+- `M` 优化部分默认样式，例如封面、时间线
+- `A` `note` 和 `border` 标签的 `color` 字段新增两种颜色 `warning` 和 `error`
+- `M` 为避免歧义，文章封面全图卡片字段调整：
+```yaml
+poster: # 海报（可选，全图封面卡片，需搭配 cover 使用）
+topic: 标题上方的小字 # 可选
+headline: 大标题 # 必选，否则不生效
+caption: 标题下方的小字 # 可选
+color: 标题颜色 # white, red...，默认为跟随主题的动态颜色
+```
+
+Full Changelog: [1.13.0...1.14.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.13.0...1.14.0)
+
+## 1.13.0
+
+> 发布日期：2022-10-29
+
+### 其他
+- `A` 内置 [友链朋友圈](https://github.com/Rock-Candy-Tea/hexo-circle-of-friends) 极简版
+- `A` 首页文章检索栏支持自定义 `post-index`
+- `A` 时间线标签支持显示友链朋友圈数据
+- `M` 移除 `Valine` 评论插件
+- `A` 时间线标签支持隐藏标题和底部栏 `hide:title,footer`
+- `M` 原 `friends` 和 `site` 标签数据合并至 `links.yml` 文件，动态数据 API 升级至 `v2` 版本，需要将友链仓库同步更新。
+
+**备注：友链仓库更新方法**
+- 如果是直接 fork 我的友链仓库，可以如图所示直接点击同步：
+<img width="410" alt="image" src="https://user-images.githubusercontent.com/16400144/198840265-07e05ac0-b552-4c35-8c21-0e296422ed5a.png">
+
+- 否则需要：[issues-json-generator](https://github.com/xaoxuu/issues-json-generator) 仓库源码下载下来，文件全部替换到自己的仓库，注意隐藏文件 `.github` 中的也要同步，否则 CI 无法工作。
+
+Full Changelog: [1.12.0...1.13.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.12.0...1.13.0)
+
+## 1.12.0
+
+> 发布日期：2022-10-27
+
+### 其他
+- `F` fix darkmode
+- `A` 新增侧边栏 `timeline ` 组件
+- `M` 简化相关文章样式、上一篇下一篇样式
+- `M` 优化动态数据组件和标签的加载动画
+- `M` `wiki_more` 标签更名为 `related`
+- `M` `link` 标签现在可以自动获取图标、标题和摘要，原 `description:string` 参数改为 `desc:bool`
+- `M` `grid` 标签更名为 `border`
+- `A` 新增 `split` 标签
+- `A` 新增 `tagcloud` 标签云侧边栏组件
+- `M` 文章封面信息设置方式更改：
+- `cover_info.title` -> `cover-title`
+- `cover_info.meta` -> `cover.cat`
+- `cover_info.subtitle` -> `cover-subtitle`
+- `M` 项目参数中新增 `name` 属性，用于表示项目名，原 `title` 表示项目标题，例如：
+```yaml
+stellar:
+name: Stellar
+title: Stellar - 每个人的独立博客
+...
+```
+
+Full Changelog: [1.11.0...1.12.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.11.0...1.12.0)
+
+## 1.11.0
+
+> 发布日期：2022-10-20
+
+### 其他
+- `M` `timeline` 标签支持直接显示 GitHub 更新日志 [API](https://api.github.com/repos/xaoxuu/hexo-theme-stellar/releases)
+- `M` 支持在配置文件中自定义主题颜色
+- `M` 侧边栏组件配置从 `_config.yml` 中转移到数据文件 `_data/widgets.yml` 中，且仅支持在数据文件中配置。
+- `M` 侧边栏组件布局由 `sidebar.widgets_layout` 改名为 `sidebar.widgets`
+- `M` `ghrepo` 组件重构
+- `A` 新增 `folders` 标签，相当于一组折叠标签。
+
+Full Changelog: [1.10.0...1.11.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.10.0...1.11.0)
+
+## 1.10.0
+
+> 发布日期：2022-10-14
+
+### 其他
+- `M` 优化 `footer` 支持完全自定义
+- `A` 支持 `smooth_scroll` 平滑滚动效果
+- `A` 侧边栏 `ghinfo` 支持显示 `Stars` 和 `Forks` 数量
+- `A` 侧边栏新增 `ghuser` 标签，显示 GitHub 用户基础信息
+- `A` 时间线标签 `timeline` 新增支持动态时间线功能 `api:xxx`
+- `A` 更新 `Waline` 评论到 `1.1.0` 版本，新增哔哩哔哩小黄脸表情
+- `M` 优化 `about` 标签
+- `A` 新增支持自定义 `font-family`
+
+Full Changelog: [1.9.0...1.10.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.9.0...1.10.0)
+
+## 1.9.0
+
+> 发布日期：2022-09-05
+
+### 其他
+- `A` 支持 `Mathjax` 和 `Katex` 公式渲染
+- `A` 支持 [highlightjs](https://fastly.jsdelivr.net/gh/highlightjs/cdn-release@11.5.0/build/styles/) 代码高亮主题
+- `A` 新增 `users` 标签，用于显示用户列表，支持从GitHub拉取数据
+- `A` 支持 [giscus](https://giscus.app/zh-CN) 评论
+- `A` 适配 `waline` 暗黑模式
+- `F` 修复 Firfox 浏览器中显示侧边栏滚动条的问题
+
+Full Changelog: [1.8.0...1.9.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.8.0...1.9.0)
+
+## 1.8.0
+
+> 发布日期：2022-05-27
+
+### 其他
+- `A` 新增适配 `waline` 评论插件
+- `M` 为兼容 Hexo 6.2.0 版本，`noteblock` 标签改名为 `grid` 标签
+- `M` 修改 `cdn.jsdelivr.net` 的节点为 `fastly.jsdelivr.net`
+
+Full Changelog: [1.7.0...1.8.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.7.0...1.8.0)
+
+## 1.7.0
+
+> 发布日期：2022-03-29
+
+### 其他
+- `A` 新增 `quot` 标签和 `poetry` 标签
+- `A` 新增支持 [heti](https://github.com/sivan/heti) 插件优化中文排版样式
+- `M` 优化 `fancybox` 加载逻辑
+- `M` 优化文章封面
+
+Full Changelog: [1.6.1...1.7.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.6.1...1.7.0)
+
+## 1.6.1
+
+> 发布日期：2021-11-20
+
+### 其他
+- `F` 修复 `1.6.0` 的层级问题
+- `M` 优化样式
+
+Full Changelog: [1.6.0...1.6.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.6.0...1.6.1)
+
+## 1.6.0
+
+> 发布日期：2021-11-19
+
+### 其他
+- `M` 优化 `link` 标签，`img` 参数名改为 `icon`
+- `M` 去掉默认的 `menu`
+- `M` 优化侧边栏 `markdown` 组件，`content` 改为字符串类型
+- `M` 优化侧边栏 `social` 配置
+- `M` 优化侧边栏默认组件配置 [_config.yml#L27-L31](https://github.com/xaoxuu/hexo-theme-stellar/blob/4d33c50a8b9360796b01faa75db90156f2d0fe4b/_config.yml#L27-L31)
+- `M` 优化友链标签
+
+Full Changelog: [1.5.2...1.6.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.5.2...1.6.0)
+
+## 1.5.2
+
+> 发布日期：2021-10-23
+
+### 其他
+- `M` 支持始终暗黑模式
+- `F` 修复若干BUG
+- `M` 优化样式
+
+Full Changelog: [1.5.1...1.5.2](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.5.1...1.5.2)
+
+## 1.5.1
+
+> 发布日期：2021-10-23
+
+### 其他
+- `F` 修复若干BUG
+- `M` 支持自定义面包屑导航的「首页」文案
+
+Full Changelog: [1.5.0...1.5.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.5.0...1.5.1)
+
+## 1.5.0
+
+> 发布日期：2021-10-23
+
+### 其他
+- `A` 新增 `mark` 标签
+- `M` 优化样式
+
+Full Changelog: [1.4.2...1.5.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.4.2...1.5.0)
+
+## 1.4.2
+
+> 发布日期：2021-10-23
+
+### 其他
+- `M` 优化样式
+- `M` 优化翻译
+
+Full Changelog: [1.4.1...1.4.2](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.4.1...1.4.2)
+
+## 1.4.1
+
+> 发布日期：2021-10-23
+
+### 其他
+- `F` 修复若干BUG
+- `M` 优化样式
+- `A` 新增 `emoji` 标签
+
+Full Changelog: [1.4.0...1.4.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.4.0...1.4.1)
+
+## 1.4.0
+
+> 发布日期：2021-07-26
+
+### 其他
+- `A` 鼠标放在页脚的 Stellar 上可以看到版本号
+- `A` 支持自动根据 `tags` 作为关键词通过 [Unsplash API](https://source.unsplash.com) 自动设置文章封面
+- `A` 支持 `cover: 关键词` 方式通过 [Unsplash API](https://source.unsplash.com) 设置文章封面
+- `A` 支持目录树分组 `sections`
+- `A` 增加 `toc` 标签，可以设置仅在移动端显示
+- `M` 项目的分类属性 `group` 改为标签属性 `tags`，和文章的 `tags` 用法相同，支持单个或多个标签。[#分类和标签](https://hexo.io/zh-cn/docs/front-matter#%E5%88%86%E7%B1%BB%E5%92%8C%E6%A0%87%E7%AD%BE)
+
+Full Changelog: [1.3.0...1.4.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.3.0...1.4.0)
+
+## 1.3.0
+
+> 发布日期：2021-07-25
+
+### 其他
+- `M` 优化 wiki 解析逻辑，支持数据文件 `projects.yml`
+- `M` 优化代码字体在 Windows 平台的兼容性
+- `M` 优化 wiki 侧边栏
+- `M` 优化若干组件样式
+- `M` 优化 `tabs`、`timeline` 标签，不再需要 `<!-- endtabs -->` 结束符，详见文档。
+- `M` 优化 `folding`、`noteblock` 标签，支持多彩代码块，设置代码块参数由 `codeblock:true` 调整为 `child:codeblock`，使其具有更好的扩展性。
+- `A` 自定义 scrollbar 尺寸，设置为 0 可隐藏。
+- `A` 文章页脚如果没有参考资料、版权声明、分享组件，现在可以完全隐藏
+- `A` 新增 `Twikoo` 和 `Beaudar` 评论插件支持
+- `M` 为了防止歧义，侧边栏默认布局的属性由 `sidebar.widgets.default` 改为 `sidebar.widgets.default_layout`
+- `F` 修复若干 BUG
+
+Full Changelog: [1.2.1...1.3.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.2.1...1.3.0)
+
+## 1.2.1
+
+> 发布日期：2021-07-25
+
+### 其他
+- `F` 修复懒加载问题
+
+Full Changelog: [1.2.0...1.2.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.2.0...1.2.1)
+
+## 1.2.0
+
+> 发布日期：2021-07-25
+
+### 其他
+- `F` 修复若干 BUG
+- `A` 支持站点配置文件中的 `favicon` 字段
+- `M` Wiki 侧边栏优化
+- `A` 新增页脚自定义 sitemap
+
+Full Changelog: [1.1.1...1.2.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.1.1...1.2.0)
+
+## 1.1.1
+
+> 发布日期：2021-07-25
+
+### 其他
+- `M` 布局优化
+- `M` 翻译优化
+- `F` 修复 iOS 上代码字体大小错乱的问题
+- `F` 修复若干 BUG
+
+Full Changelog: [1.1.0...1.1.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.1.0...1.1.1)
+
+## 1.1.0
+
+> 发布日期：2021-07-25
+
+### 其他
+- `A` 适配系统 `dark` 模式
+- `A` 头像彩虹描边动效
+- `M` Valine 优化
+
+Full Changelog: [1.0.1...1.1.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.0.1...1.1.0)
+
+## 1.0.1
+
+> 发布日期：2021-07-25
+
+### 其他
+- `A` 新增 `Valine` 评论支持
+- `A` 侧边栏组件默认值为 `welcome`、`recent`
+
+Full Changelog: [1.0.0...1.0.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.0.0...1.0.1)
+
+## 1.0.0
+
+> 发布日期：2021-07-25
