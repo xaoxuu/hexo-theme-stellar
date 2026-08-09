@@ -130,58 +130,59 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
   }
 };
 
-utils.jq(() => {
-  (function preloadSearchData() {
-    var path = ctx.search.path;
-    if (path.startsWith('/')) {
-      path = path.substring(1);
-    }
-    path = ctx.root + path;
+(function preloadSearchData() {
+  var path = ctx.search.path;
+  if (path.startsWith('/')) {
+    path = path.substring(1);
+  }
+  path = ctx.root + path;
 
-    try {
-      var cached = localStorage.getItem(searchCacheKey);
-      if (cached) {
-        searchCache = JSON.parse(cached);
+  try {
+    var cached = localStorage.getItem(searchCacheKey);
+    if (cached) {
+      searchCache = JSON.parse(cached);
+    }
+  } catch (e) {
+    console.warn('搜索缓存解析失败', e);
+  }
+
+  fetch(path)
+    .then(res => res.json())
+    .then(json => {
+      searchCache = json;
+      try {
+        localStorage.setItem(searchCacheKey, JSON.stringify(json));
+      } catch (e) {
+        console.warn('搜索缓存写入失败', e);
       }
-    } catch (e) {
-      console.warn('搜索缓存解析失败', e);
-    }
+    });
+})();
 
-    fetch(path)
-      .then(res => res.json())
-      .then(json => {
-        searchCache = json;
-        try {
-          localStorage.setItem(searchCacheKey, JSON.stringify(json));
-        } catch (e) {
-          console.warn('搜索缓存写入失败', e);
-        }
-      });
-  })();
+(function () {
+  var inputArea = document.querySelector("input#search-input");
+  if (!inputArea) return;
+  var resultArea = document.querySelector("div#search-result");
 
-  var $inputArea = $("input#search-input");
-  if ($inputArea.length == 0) return;
-  var $resultArea = document.querySelector("div#search-result");
-
-  $inputArea.focus(function() {
+  inputArea.addEventListener("focus", function() {
     var path = ctx.search.path;
     if (path.startsWith('/')) {
       path = path.substring(1);
     }
     path = ctx.root + path;
-    const filter = $inputArea.attr('data-filter') || '';
+    const filter = inputArea.getAttribute('data-filter') || '';
     searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
   });
 
-  $inputArea.keydown(function(e) {
-    if (e.which == 13) {
+  inputArea.addEventListener("keydown", function(e) {
+    if (e.key == 'Enter') {
       e.preventDefault();
     }
   });
 
   const observer = new MutationObserver(function(mutationsList) {
-    const hasResults = $resultArea.querySelector(".search-result-list li");
-    $('.search-wrapper').toggleClass('noresult', !hasResults);
+    const hasResults = resultArea.querySelector(".search-result-list li");
+    const wrapper = document.querySelector('.search-wrapper');
+    if (wrapper) wrapper.classList.toggle('noresult', !hasResults);
   });
-  observer.observe($resultArea, { childList: true, subtree: true });
-});
+  observer.observe(resultArea, { childList: true, subtree: true });
+})();

@@ -1,6 +1,5 @@
-utils.jq(() => {
-    $(function () {
-      const els = document.getElementsByClassName('ds-artalk');
+(function () {
+  const els = document.getElementsByClassName('ds-artalk');
       for (var i = 0; i < els.length; i++) {
         const el = els[i];
         const limit = parseInt(el.getAttribute('limit')) || 10;
@@ -25,10 +24,9 @@ utils.jq(() => {
             cell += item.content_marked;
             cell += '</a>';
             cell += '</div>';
-            $(el).append(cell);
+            utils.dom(el).append(cell);
           });
         });
       }
-    });
-  });
+})();
   

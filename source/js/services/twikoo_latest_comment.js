@@ -1,6 +1,5 @@
-utils.jq(() => {
-    $(function () {
-      const el = document.querySelector('.ds-twikoo');
+(function () {
+  const el = document.querySelector('.ds-twikoo');
       utils.onLoading(el); // 加载动画
   
       const api = el.dataset.api;
@@ -38,10 +37,9 @@ utils.jq(() => {
           cell += commentText;
           cell += '</a>';
           cell += '</div>';
-          $(el).append(cell);
+          utils.dom(el).append(cell);
         });
       })
       .catch(() => utils.onLoadFailure(el));
-    });
-  });
+})();
   

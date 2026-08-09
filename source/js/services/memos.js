@@ -1,4 +1,4 @@
-utils.jq(() => {
+(function () {
   const els = Array.from(document.getElementsByClassName('ds-memos'));
 
   els.forEach(el => {
@@ -18,7 +18,7 @@ utils.jq(() => {
       const hide = el.getAttribute('hide')?.split(",") || [];
 
       await Promise.all(memos.data.slice(0, limit || memos.data.length).map(item =>
-          createMemoCell(item, memos, users, hide, default_avatar, host).then(cell => $(el).append(cell))
+          createMemoCell(item, memos, users, hide, default_avatar, host).then(cell => utils.dom(el).append(cell))
       ));
     });
 
@@ -130,5 +130,4 @@ utils.jq(() => {
       }
     };
   });
-});
-
+})();

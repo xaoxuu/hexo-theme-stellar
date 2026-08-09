@@ -42,28 +42,26 @@
       } else {
         const els = document.getElementsByClassName(`ds-${id}`);
         if (els?.length > 0) {
-          utils.jq(() => {
-            if (id == 'timeline' || id == 'memos' || id == 'marked' || id == 'mdrender') {
-              utils.js(deps.marked).then(function () {
-                utils.js(js, { defer: true });
-              });
-            } else {
+          if (id == 'timeline' || id == 'memos' || id == 'marked' || id == 'mdrender') {
+            utils.js(deps.marked).then(function () {
               utils.js(js, { defer: true });
-            }
-          }, false);
+            });
+          } else {
+            utils.js(js, { defer: true });
+          }
         }
       }
     }
 
     // search
     if (ctx.search && typeof searchFunc === 'function') {
-      const $inputArea = $("input#search-input");
-      if ($inputArea.length > 0 && !$inputArea[0]._searchInitialized) {
+      const inputArea = document.querySelector("input#search-input");
+      if (inputArea && !inputArea._searchInitialized) {
         const path = ctx.search.path.startsWith('/') ? ctx.root + ctx.search.path.substring(1) : ctx.root + ctx.search.path;
-        const filter = $inputArea.attr('data-filter') || '';
+        const filter = inputArea.getAttribute('data-filter') || '';
         searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
         // 标记为已初始化，防止重复绑定
-        $inputArea[0]._searchInitialized = true;
+        inputArea._searchInitialized = true;
       }
     }
 

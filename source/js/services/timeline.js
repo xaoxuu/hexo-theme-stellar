@@ -1,6 +1,5 @@
-utils.jq(() => {
-  $(function () {
-    const reactions = {
+(function () {
+  const reactions = {
       '+1': '👍',
       '-1': '👎', 
       'laugh': '😀', 
@@ -99,10 +98,9 @@ utils.jq(() => {
           
           cell += '</div>';
           cell += '</div>';
-          $(el).append(cell);
+          utils.dom(el).append(cell);
         });
         window.wrapLazyloadImages(el);
       });
     }
-  });
-});
+})();

@@ -1,6 +1,5 @@
-utils.jq(() => {
-  $(function () {
-    const els = document.getElementsByClassName('ds-rss');
+(function () {
+  const els = document.getElementsByClassName('ds-rss');
 
     for (let i = 0; i < els.length; i++) {
       const el = els[i];
@@ -46,8 +45,7 @@ utils.jq(() => {
         }
       });
     }
-  });
-});
+})();
 
 
 function handleAtom(el, doc, content_type, show_title, show_content, limit) {
@@ -88,7 +86,7 @@ function handleAtom(el, doc, content_type, show_title, show_content, limit) {
     return cell;
   }).join('');
 
-  $(el).append(htmlBuffer);
+  utils.dom(el).append(htmlBuffer);
 }
 
 function handleRSS2(el, doc, content_type, show_title, show_content, limit) {
@@ -124,7 +122,7 @@ function handleRSS2(el, doc, content_type, show_title, show_content, limit) {
     return cell;
   }).join('');
 
-  $(el).append(htmlBuffer);
+  utils.dom(el).append(htmlBuffer);
 }
 function handleRSS1(el, doc, content_type, show_title, show_content, limit) {
   const items = Array.from(doc.querySelectorAll('item')).slice(0, limit);
@@ -159,7 +157,7 @@ function handleRSS1(el, doc, content_type, show_title, show_content, limit) {
     return cell;
   }).join('');
 
-  $(el).append(htmlBuffer);
+  utils.dom(el).append(htmlBuffer);
 }
 function handleJsonFeed(el, data, content_type, show_title, show_content, limit) {
   const items = (data.items || []).slice(0, limit);
@@ -196,5 +194,5 @@ function handleJsonFeed(el, data, content_type, show_title, show_content, limit)
     return cell;
   }).join('');
 
-  $(el).append(htmlBuffer);
+  utils.dom(el).append(htmlBuffer);
 }

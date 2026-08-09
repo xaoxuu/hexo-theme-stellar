@@ -97,70 +97,63 @@ const l_body = document.querySelector('.l_body');
 
 const init = {
   toc: () => {
-    utils.jq(() => {
-      const scrollOffset = 32;
-      var segs = [];
-      $("article.md-text :header").each(function (idx, node) {
-        segs.push(node);
-      });
-      function activeTOC() {
-        var scrollTop = $(window).scrollTop();
-        var topSeg = null;
-        for (var idx in segs) {
-          var seg = $(segs[idx]);
-          if (seg.offset().top > scrollTop + scrollOffset) {
-            continue;
-          }
-          if (!topSeg) {
-            topSeg = seg;
-          } else if (seg.offset().top >= topSeg.offset().top) {
-            topSeg = seg;
-          }
+    const scrollOffset = 32;
+    var segs = utils.qsa("article.md-text h1, article.md-text h2, article.md-text h3, article.md-text h4, article.md-text h5, article.md-text h6");
+    function activeTOC() {
+      var scrollTop = window.scrollY;
+      var topSeg = null;
+      for (var i = 0; i < segs.length; i++) {
+        var segTop = segs[i].getBoundingClientRect().top + window.scrollY;
+        if (segTop > scrollTop + scrollOffset) {
+          continue;
         }
-        if (topSeg) {
-          $("#data-toc a.toc-link").removeClass("active");
-          var link = "#" + topSeg.attr("id");
-          if (link != '#undefined') {
-            const highlightItem = $('#data-toc a.toc-link[href="' + encodeURI(link) + '"]');
-            if (highlightItem.length > 0) {
-              highlightItem.addClass("active");
-            }
-          } else {
-            $('#data-toc a.toc-link:first').addClass("active");
-          }
+        if (!topSeg || segTop >= topSeg.getBoundingClientRect().top + window.scrollY) {
+          topSeg = segs[i];
         }
       }
-      function scrollTOC() {
-        const e0 = document.querySelector('#data-toc .toc');
-        const e1 = document.querySelector('#data-toc .toc a.toc-link.active');
-        if (e0 == null || e1 == null) {
-          return;
-        }
-        const offsetBottom = e1.getBoundingClientRect().bottom - e0.getBoundingClientRect().bottom + 100;
-        const offsetTop = e1.getBoundingClientRect().top - e0.getBoundingClientRect().top - 64;
-        if (offsetTop < 0) {
-          e0.scrollBy({ top: offsetTop, behavior: "smooth" });
-        } else if (offsetBottom > 0) {
-          e0.scrollBy({ top: offsetBottom, behavior: "smooth" });
+      if (topSeg) {
+        utils.dom("#data-toc a.toc-link").removeClass("active");
+        var id = topSeg.getAttribute("id");
+        var link = id ? "#" + id : "#undefined";
+        if (link != '#undefined') {
+          const highlightItem = utils.dom('#data-toc a.toc-link[href="' + encodeURI(link) + '"]');
+          if (highlightItem.length > 0) {
+            highlightItem.addClass("active");
+          }
+        } else {
+          const first = utils.qs('#data-toc a.toc-link');
+          if (first) first.classList.add("active");
         }
       }
+    }
+    function scrollTOC() {
+      const e0 = document.querySelector('#data-toc .toc');
+      const e1 = document.querySelector('#data-toc .toc a.toc-link.active');
+      if (e0 == null || e1 == null) {
+        return;
+      }
+      const offsetBottom = e1.getBoundingClientRect().bottom - e0.getBoundingClientRect().bottom + 100;
+      const offsetTop = e1.getBoundingClientRect().top - e0.getBoundingClientRect().top - 64;
+      if (offsetTop < 0) {
+        e0.scrollBy({ top: offsetTop, behavior: "smooth" });
+      } else if (offsetBottom > 0) {
+        e0.scrollBy({ top: offsetBottom, behavior: "smooth" });
+      }
+    }
 
-      var timeout = null;
-      window.addEventListener('scroll', function () {
-        activeTOC();
-        if (timeout !== null) clearTimeout(timeout);
-        timeout = setTimeout(function () {
-          scrollTOC();
-        }.bind(this), 50);
-      });
-    })
+    var timeout = null;
+    window.addEventListener('scroll', function () {
+      activeTOC();
+      if (timeout !== null) clearTimeout(timeout);
+      timeout = setTimeout(function () {
+        scrollTOC();
+      }, 50);
+    });
   },
   sidebar: () => {
-    utils.jq(() => {
-      $("#data-toc a.toc-link").click(function (e) {
-        sidebar.dismiss();
-      });
-    })
+    utils.dom("#data-toc a.toc-link").click(function (e) {
+      sidebar.dismiss();
+    });
   },
   leftbarScroll: () => {
     const container = document.querySelector('.l_left .widgets');

@@ -1,6 +1,5 @@
-utils.jq(() => {
-  $(function () {
-    const els = document.getElementsByClassName('ds-sites');
+(function () {
+  const els = document.getElementsByClassName('ds-sites');
     for (var i = 0; i < els.length; i++) {
       const el = els[i];
       const api = el.dataset.api;
@@ -34,10 +33,9 @@ utils.jq(() => {
           cell += `</div>`;
           cell += `</a>`;
           cell += `</div>`;
-          $(el).find('.grid-box').append(cell);
+          utils.dom(el).find('.grid-box').append(cell);
         }
         window.wrapLazyloadImages(el);
       });
     }
-  });
-});
+})();
