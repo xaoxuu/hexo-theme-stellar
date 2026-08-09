@@ -53,11 +53,14 @@ const util = {
   },
 
   scrollTop: () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    smoothScrollTo(0);
   },
 
   scrollComment: () => {
-    document.getElementById('comments').scrollIntoView({ behavior: "smooth" });
+    const el = document.getElementById('comments');
+    if (el) {
+      smoothScrollTo(el.getBoundingClientRect().top + window.scrollY - 32);
+    }
   },
 
   viewportLazyload: (target, func, enabled = true) => {
@@ -94,38 +97,40 @@ const hud = {
 
 const l_body = document.querySelector('.l_body');
 
-// TOC 平滑滚动（自定义动画，速度比浏览器原生 behavior:"smooth" 更快）
-let tocScrollAnim = null;
-function tocCancelScroll() {
-  if (tocScrollAnim !== null) {
-    cancelAnimationFrame(tocScrollAnim);
-    tocScrollAnim = null;
+// 通用平滑滚动（自定义动画，TOC / 回到顶部 / 参与讨论共用）
+let scrollAnim = null;
+function cancelSmoothScroll() {
+  if (scrollAnim !== null) {
+    cancelAnimationFrame(scrollAnim);
+    scrollAnim = null;
   }
 }
-function tocSmoothScrollTo(targetY) {
-  tocCancelScroll();
+function smoothScrollTo(targetY) {
+  cancelSmoothScroll();
+  targetY = Math.max(0, targetY);
   const startY = window.scrollY;
   const diff = targetY - startY;
   if (Math.abs(diff) < 2) {
     return;
   }
-  // 短距离 180ms，长距离最多 350ms
-  const duration = Math.min(350, Math.max(180, Math.abs(diff) * 0.1));
+  // 短距离 300ms，长距离最多 600ms
+  const duration = Math.min(600, Math.max(300, Math.abs(diff) * 0.15));
   const startTime = performance.now();
   function step(now) {
     const t = Math.min(1, (now - startTime) / duration);
     const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
-    window.scrollTo(0, startY + diff * eased);
+    // 显式指定 instant，避免全局 scroll-behavior: smooth 与自定义动画叠加导致滚动变慢
+    window.scrollTo({ top: startY + diff * eased, behavior: 'instant' });
     if (t < 1) {
-      tocScrollAnim = requestAnimationFrame(step);
+      scrollAnim = requestAnimationFrame(step);
     } else {
-      tocScrollAnim = null;
+      scrollAnim = null;
     }
   }
-  tocScrollAnim = requestAnimationFrame(step);
+  scrollAnim = requestAnimationFrame(step);
 }
-window.addEventListener('wheel', tocCancelScroll, { passive: true });
-window.addEventListener('touchstart', tocCancelScroll, { passive: true });
+window.addEventListener('wheel', cancelSmoothScroll, { passive: true });
+window.addEventListener('touchstart', cancelSmoothScroll, { passive: true });
 
 
 const init = {
@@ -194,7 +199,7 @@ const init = {
         e.preventDefault();
         const offset = 32; // 与 activeTOC 的 scrollOffset 保持一致
         const targetY = target.getBoundingClientRect().top + window.scrollY - offset;
-        tocSmoothScrollTo(Math.max(0, targetY));
+        smoothScrollTo(targetY);
         if (window.history && window.history.pushState) {
           window.history.pushState(null, "", href);
         }
