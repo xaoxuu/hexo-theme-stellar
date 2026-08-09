@@ -1,7 +1,36 @@
 <script>
   utils.initPlugin(() => {
-    const els = document.querySelectorAll('.slide-up');
+    const els = Array.prototype.slice.call(document.querySelectorAll('.slide-up'));
     if (els.length === 0) return;
+
+    // 吸顶/固定定位容器内的元素始终在视口内（或由容器控制显隐），
+    // 但 ScrollReveal 按文档坐标判断可见性，会误判这类元素为不可见，
+    // 导致带锚点/恢复滚动位置打开页面时组件一直不显示。
+    // 解决方式：以最近的吸顶/固定祖先作为该组元素的容器，
+    // 使可见性判断恒成立，入场动画保留且不再依赖主文档滚动。
+    const findPinnedContainer = (el) => {
+      let node = el;
+      while (node && node.nodeType === 1) {
+        const pos = window.getComputedStyle(node).position;
+        if (pos === 'sticky' || pos === 'fixed') return node;
+        node = node.parentElement;
+      }
+      return null;
+    };
+
+    const pinnedGroups = new Map(); // 容器 -> 元素列表
+    const targets = [];
+    els.forEach((el) => {
+      const container = findPinnedContainer(el);
+      if (container) {
+        const group = pinnedGroups.get(container) || [];
+        group.push(el);
+        pinnedGroups.set(container, group);
+      } else {
+        targets.push(el);
+      }
+    });
+    if (pinnedGroups.size === 0 && targets.length === 0) return;
 
     // 加载/初始化失败时兜底显示内容，避免整页空白
     let fallbackApplied = false;
@@ -31,7 +60,13 @@
           return;
         }
         try {
-          ScrollReveal().reveal('.slide-up', { ...slideUp });
+          const sr = ScrollReveal();
+          if (targets.length > 0) {
+            sr.reveal(targets, { ...slideUp });
+          }
+          pinnedGroups.forEach((group, container) => {
+            sr.reveal(group, { ...slideUp, container: container });
+          });
           clearTimeout(watchdog);
         } catch (err) {
           console.error('[Plugin scrollreveal] 初始化失败:', err);
