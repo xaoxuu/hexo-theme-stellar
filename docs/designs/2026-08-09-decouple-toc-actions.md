@@ -16,6 +16,20 @@ toc 组件的定位是「与本文相关」：目录、回到顶部、参与讨�
 - 样式无需结构性改动：分割线 `.widget-body+.widget-footer:before` 仅在目录体存在时出现，footer-only 形态下组件显示为紧凑操作栏。
 - `#data-toc` 相关浏览器 JS 对无 `.toc` 节点的场景已有空值保护（`scrollTOC` 判空返回、`activeTOC` 无匹配项时无操作），无需改动。
 
+## 各部分显示条件
+
+toc 组件整体及各部分的渲染条件如下（实现见 `layout/_partial/widgets/toc.ejs`）：
+
+| 部分 | 显示条件 |
+|------|---------|
+| 组件整体（`#data-toc`） | 页面在 `rightbar` 中配置了 `toc` 组件（post / wiki / note / page 默认均配置） |
+| header（本文目录 + 折叠按钮） | 页面内容存在标题层级（`toc(page.content)` 非空，且标题深度在 `min_depth` ~ `max_depth` 范围内） |
+| body（目录列表） | 同 header，有标题层级时才渲染 |
+| footer · 回到顶部 | 组件渲染时始终显示 |
+| footer · 参与讨论 | 同时满足：`theme.comments.service` 已配置；本页未禁用评论（`page.comments != false`，含 wiki 项目级 `comments: false` 覆盖） |
+
+无目录时组件只显示 footer 操作按钮（回到顶部，以及满足评论条件时的参与讨论），不再显示「本文目录」标题与折叠按钮。
+
 ## 影响范围
 
 | 文件 | 改动内容 |
