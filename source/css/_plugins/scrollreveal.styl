@@ -1,2 +1,6 @@
 .slide-up
   visibility: hidden
+
+// ScrollReveal 加载/初始化失败时强制显示内容，避免空白页
+html.sr-fallback .slide-up
+  visibility: visible !important

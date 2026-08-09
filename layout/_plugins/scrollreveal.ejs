@@ -1,17 +1,46 @@
-<script defer src="<%- conf.js %>"></script>
 <script>
   utils.initPlugin(() => {
     const els = document.querySelectorAll('.slide-up');
-    if (els.length > 0) {
-      const slideUp = {
-        distance: `<%- conf.distance %>`,
-        duration: `<%- conf.duration %>`,
-        interval: `<%- conf.interval %>`,
-        scale: `<%- conf.scale %>`,
-        opacity: 0,
-        easing: "ease-out"
-      };
-      ScrollReveal().reveal('.slide-up', { ...slideUp });
-    }
+    if (els.length === 0) return;
+
+    // 加载/初始化失败时兜底显示内容，避免整页空白
+    let fallbackApplied = false;
+    const revealFallback = () => {
+      if (fallbackApplied) return;
+      fallbackApplied = true;
+      document.documentElement.classList.add('sr-fallback');
+    };
+
+    const slideUp = {
+      distance: `<%- conf.distance %>`,
+      duration: `<%- conf.duration %>`,
+      interval: `<%- conf.interval %>`,
+      scale: `<%- conf.scale %>`,
+      opacity: 0,
+      easing: "ease-out"
+    };
+
+    // 看门狗：CDN 长时间无响应时强制显示内容
+    const watchdog = setTimeout(() => revealFallback(), 3000);
+
+    utils.js(`<%- conf.js %>`, { defer: true })
+      .then(() => {
+        if (fallbackApplied) return;
+        if (typeof ScrollReveal !== 'function') {
+          revealFallback();
+          return;
+        }
+        try {
+          ScrollReveal().reveal('.slide-up', { ...slideUp });
+          clearTimeout(watchdog);
+        } catch (err) {
+          console.error('[Plugin scrollreveal] 初始化失败:', err);
+          revealFallback();
+        }
+      })
+      .catch((err) => {
+        console.error('[Plugin scrollreveal] 加载失败:', err);
+        revealFallback();
+      });
   }, 'scrollreveal');
 </script>
