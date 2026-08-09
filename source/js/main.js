@@ -162,6 +162,59 @@ const init = {
       });
     })
   },
+  leftbarScroll: () => {
+    const container = document.querySelector('.l_left .widgets');
+    if (container == null) {
+      return;
+    }
+    const PREFIX = 'Stellar.leftbarScroll.';
+    const encode = (s) => encodeURIComponent(String(s || ''));
+    function scope() {
+      const wikiEl = document.querySelector('.doc-tree[data-wiki]');
+      if (wikiEl != null) {
+        return 'wiki:' + encode(wikiEl.getAttribute('data-wiki'));
+      }
+      const notebookEl = document.querySelector('widget[data-notebook]');
+      if (notebookEl != null) {
+        return 'notebook:' + encode(notebookEl.getAttribute('data-notebook'));
+      }
+      const body = document.querySelector('.l_body');
+      return 'layout:' + encode((body && body.getAttribute('layout')) || 'default');
+    }
+    window.addEventListener('pagehide', function () {
+      try {
+        const s = scope();
+        sessionStorage.setItem(PREFIX + s, String(container.scrollTop));
+        sessionStorage.setItem(PREFIX + 'last', s);
+      } catch (e) {}
+    });
+    try {
+      const s = scope();
+      // 仅当上一页与当前页属于同一分区时才恢复，离开分区后再回来不跳回旧位置
+      if (sessionStorage.getItem(PREFIX + 'last') !== s) {
+        return;
+      }
+      const value = sessionStorage.getItem(PREFIX + s);
+      if (value == null) {
+        return;
+      }
+      container.scrollTop = parseInt(value, 10) || 0;
+      const link = container.querySelector('a.link.active');
+      if (link == null) {
+        return;
+      }
+      const padding = 16;
+      const containerRect = container.getBoundingClientRect();
+      const linkRect = link.getBoundingClientRect();
+      const top = linkRect.top - containerRect.top;
+      const bottom = linkRect.bottom - containerRect.top;
+      if (top < 0) {
+        container.scrollTop += top - padding;
+      } else if (bottom > container.clientHeight) {
+        container.scrollTop += bottom - container.clientHeight + padding;
+      }
+    } catch (e) {}
+  },
   relativeDate: (selector) => {
     selector.forEach(item => {
       const $this = item
@@ -298,6 +351,7 @@ window.stellar = window.stellar || {};
 stellar.initPage = function () {
   init.toc();
   init.sidebar();
+  init.leftbarScroll();
   init.relativeDate(document.querySelectorAll('#post-meta time'));
   init.registerTabsTag();
   
@@ -314,4 +368,3 @@ stellar.initPage = function () {
 // Initial page load
 stellar.initPage();
 init.canonicalCheck();
-

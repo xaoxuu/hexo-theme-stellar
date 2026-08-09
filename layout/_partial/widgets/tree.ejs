@@ -60,7 +60,7 @@ function layoutDiv(fallback) {
     }
   }
   if (el.trim().length > 0) {
-    return `<widget class="widget-wrapper doc-tree post-list">${el}</widget>`
+    return `<widget class="widget-wrapper doc-tree post-list" data-wiki="${page.wiki}">${el}</widget>`
   } else {
     return ''
   }
