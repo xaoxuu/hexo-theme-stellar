@@ -530,6 +530,7 @@ data_cache:
     waline: 600
     artalk: 600
     memos: 600
+    memos-user: 86400
     sites: 86400
     friends: 86400
     friends_and_posts: 86400

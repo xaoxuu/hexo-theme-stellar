@@ -321,6 +321,31 @@
     // 动态数据本地缓存：TTL 未过期直接命中；过期后先显示缓存再后台刷新（stale-while-revalidate）
     _cacheEnabled: true,
     _cacheMaxEntryBytes: 200 * 1024,
+    // 同 URL 并发请求去重：页面内多个组件请求同一接口时共享一次 fetch
+    _pendingRequests: {},
+    _fetchShared: (url, options) => {
+      const key = (options && options.method || 'GET') + ' ' + url;
+      if (utils._pendingRequests[key]) {
+        return utils._pendingRequests[key].then(resp => resp.clone());
+      }
+      const promise = fetch(url, options).then(resp => {
+        if (!resp.ok) throw new Error('响应失败');
+        return resp;
+      }).finally(() => {
+        delete utils._pendingRequests[key];
+      });
+      utils._pendingRequests[key] = promise;
+      // 每个调用方各自 clone，避免 Response body 被消费后其他调用方取不到数据
+      return promise.then(resp => resp.clone());
+    },
+    // 延迟执行：缓存写入等非关键操作让出主线程
+    _defer: (fn) => {
+      if (window.requestIdleCallback) {
+        window.requestIdleCallback(fn, { timeout: 3000 });
+      } else {
+        setTimeout(fn, 0);
+      }
+    },
     cache: {
       prefix: 'Stellar.data_cache.v1.',
       enabled: () => !!def.data_cache?.enable && utils._cacheEnabled,
@@ -500,21 +525,21 @@
             }
           }, 5000);
 
-          fetch(url).then(resp => {
+          utils._fetchShared(url).then(resp => {
             if (timedOut) return;
             clearTimeout(timeout);
-
-            if (!resp.ok) throw new Error('响应失败');
             return resp;
           }).then(data => {
             if (timedOut) return;
             // 标记元素实例为已加载
             if (el) utils._loadedElements.add(el);
-            // 写入缓存（克隆响应，避免影响回调读取）
+            // 写入缓存（克隆响应，避免影响回调读取；延迟执行，避免阻塞渲染）
             if (cacheable && data.ok) {
-              data.clone().text().then(text => {
-                utils.cache.set(url, text, data.headers.get('Content-Type') || 'application/json', ttl);
-              }).catch(() => {});
+              utils._defer(() => {
+                data.clone().text().then(text => {
+                  utils.cache.set(url, text, data.headers.get('Content-Type') || 'application/json', ttl);
+                }).catch(() => {});
+              });
             }
             // 后台刷新渲染前恢复初始结构，避免缓存渲染的内容重复
             if (el && initialHTML !== null) {
@@ -562,30 +587,48 @@
 
       return new Promise((resolve, reject) => {
         let retryCount = 0;
+        // 与 request 保持一致：最终失败时回退 stale 缓存，避免闪失败态
+        const fallback = () => {
+          if (cached) {
+            resolve(utils.cache.toResponse(cached));
+          } else {
+            reject('timeout');
+          }
+        };
 
         const tryRequest = () => {
           let timedOut = false;
           const timer = setTimeout(() => {
             timedOut = true;
-            if (++retryCount > maxRetry) reject('timeout');
+            if (++retryCount > maxRetry) fallback();
             else tryRequest();
           }, timeout);
 
-          fetch(url, options)
+          utils._fetchShared(url, options)
             .then(resp => {
               clearTimeout(timer);
-              if (!resp.ok) throw new Error('bad response');
+              if (timedOut) return;
               if (cacheable) {
-                resp.clone().text().then(text => {
-                  utils.cache.set(url, text, resp.headers.get('Content-Type') || 'application/json', ttl);
-                }).catch(() => {});
+                utils._defer(() => {
+                  resp.clone().text().then(text => {
+                    utils.cache.set(url, text, resp.headers.get('Content-Type') || 'application/json', ttl);
+                  }).catch(() => {});
+                });
               }
               resolve(resp);
             })
             .catch(err => {
               clearTimeout(timer);
-              if (++retryCount > maxRetry) reject(err);
-              else setTimeout(tryRequest, 500);
+              if (timedOut) return;
+              if (++retryCount > maxRetry) {
+                if (cached) {
+                  resolve(utils.cache.toResponse(cached));
+                } else {
+                  reject(err);
+                }
+              } else {
+                setTimeout(tryRequest, 500);
+              }
             });
         };
 
