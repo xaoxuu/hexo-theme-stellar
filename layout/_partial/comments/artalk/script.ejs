@@ -1,4 +1,4 @@
-<script>
+<script type="module">
   (function() {
     
     function initArtalk() {
@@ -44,11 +44,6 @@
       
       util.viewportLazyload(el, load_artalk);
     }
-    
-    // Store in global stellar namespace for PJAX reinitialization
-    window.stellar = window.stellar || {};
-    window.stellar.initComments = window.stellar.initComments || {};
-    window.stellar.initComments.artalk = initArtalk;
     
     // Initialize on page load
     initArtalk();

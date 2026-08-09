@@ -1,4 +1,4 @@
-<script>
+<script type="module">
   (function() {
     
     function initUtterances() {
@@ -25,11 +25,6 @@
       
       util.viewportLazyload(el, load_utterances);
     }
-    
-    // Store in global stellar namespace for PJAX reinitialization
-    window.stellar = window.stellar || {};
-    window.stellar.initComments = window.stellar.initComments || {};
-    window.stellar.initComments.utterances = initUtterances;
     
     // Initialize on page load
     initUtterances();

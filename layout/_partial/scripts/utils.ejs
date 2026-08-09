@@ -113,7 +113,7 @@
     // 已加载脚本缓存
     _loadedScripts: new Set(),
 
-    // 已加载元素缓存 (使用 WeakSet 追踪元素实例,避免 PJAX 导航时的状态混淆)
+    // 已加载元素缓存 (使用 WeakSet 追踪元素实例,避免重复加载)
     _loadedElements: new WeakSet(),
 
     js: (src, opt) => new Promise((resolve, reject) => {
@@ -603,7 +603,7 @@
     },
     dark: {},
 
-    // 插件初始化管理器 - 统一处理 DOMContentLoaded 和 pjax:complete 事件
+    // 插件初始化管理器 - 统一处理 DOMContentLoaded 事件
     _pluginInitializers: [],
     _pluginCleanups: new Map(), // 存储每个插件的清理函数
     

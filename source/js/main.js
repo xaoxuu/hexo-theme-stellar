@@ -391,7 +391,6 @@ window.stellar = window.stellar || {};
 
 /**
  * Initialize page components
- * Called on initial load and after PJAX navigation
  */
 stellar.initPage = function () {
   init.toc();
@@ -399,15 +398,6 @@ stellar.initPage = function () {
   init.leftbarScroll();
   init.relativeDate(document.querySelectorAll('#post-meta time'));
   init.registerTabsTag();
-  
-  // Reinitialize comments after PJAX navigation
-  if (stellar.initComments) {
-    for (const commentSystem in stellar.initComments) {
-      if (typeof stellar.initComments[commentSystem] === 'function') {
-        stellar.initComments[commentSystem]();
-      }
-    }
-  }
 };
 
 // Initial page load

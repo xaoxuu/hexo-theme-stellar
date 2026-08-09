@@ -1,4 +1,4 @@
-<script>
+<script type="module">
   (function() {
     
     function initBeaudar() {
@@ -25,11 +25,6 @@
       
       util.viewportLazyload(el, load_beaudar);
     }
-    
-    // Store in global stellar namespace for PJAX reinitialization
-    window.stellar = window.stellar || {};
-    window.stellar.initComments = window.stellar.initComments || {};
-    window.stellar.initComments.beaudar = initBeaudar;
     
     // Initialize on page load
     initBeaudar();

@@ -37,11 +37,6 @@
     util.viewportLazyload(el, load_waline);
   }
   
-  // Store in global stellar namespace for PJAX reinitialization
-  window.stellar = window.stellar || {};
-  window.stellar.initComments = window.stellar.initComments || {};
-  window.stellar.initComments.waline = initWaline;
-  
   // Initialize on page load
   initWaline();
 </script>
