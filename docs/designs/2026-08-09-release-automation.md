@@ -64,3 +64,8 @@
 - 修复：在 `npm-publish` job 增加 `env.GH_TOKEN: ${{ github.token }}`（配合已有
   `permissions.contents: write`），`gh release view` 与 `gh release create` 均可正常鉴权。
 - 幂等重跑：已发布的版本与已存在的 tag 会自动跳过，仅补建缺失的 GitHub Release。
+
+### 2026-08-09：Release 正文不再包含发布日期行
+
+- 调整「Extract release notes from CHANGELOG.md」的 awk 提取逻辑，跳过
+  `> 发布日期：` 行，Release 正文只保留分类与变更条目。

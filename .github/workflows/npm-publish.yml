@@ -87,6 +87,7 @@ jobs:
           awk -v ver="## $VERSION" '
             $0 == ver { capture = 1; next }
             capture && /^## / { exit }
+            capture && /^> 发布日期：/ { next }
             capture { print }
           ' CHANGELOG.md > /tmp/release-notes.md
           if [ -s /tmp/release-notes.md ]; then
