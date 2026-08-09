@@ -7,9 +7,10 @@
  * 职责：
  *   1. 解析版本号与参数（--dry-run / --yes / --help）
  *   2. 校验版本号格式、当前分支、工作区状态
- *   3. 更新 _config.yml（stellar.version）与 package.json（version）
- *   4. 输出变更摘要与 diff，正式模式执行前二次确认
- *   5. dry-run 或取消时从内存恢复文件，不依赖 git checkout --
+ *   3. 校验 CHANGELOG.md 已包含该版本非空章节（内容由 AI/人工提前准备），否则终止
+ *   4. 更新 _config.yml（stellar.version）与 package.json（version）
+ *   5. 输出变更摘要与 diff，正式模式执行前二次确认
+ *   6. dry-run 或取消时从内存恢复文件，不依赖 git checkout --
  *
  * 说明：不放在 scripts/ 目录，因为主题的 scripts/ 是 Hexo 运行时插件目录，
  * 会被所有使用该主题的站点在构建时加载执行。
@@ -22,7 +23,7 @@ const { execFileSync } = require('child_process');
 
 const ROOT = __dirname;
 const VERSION_RE = /^\d+\.\d+\.\d+(-rc\.\d+)?$/;
-const ALLOWED_FILES = new Set(['_config.yml', 'package.json']);
+const ALLOWED_FILES = new Set(['_config.yml', 'package.json', 'CHANGELOG.md']);
 const WORKFLOW_URL = 'https://github.com/xaoxuu/hexo-theme-stellar/actions/workflows/npm-publish.yml';
 
 function usage() {
@@ -33,6 +34,9 @@ function usage() {
     '  npm run release                   # 交互式：提示输入版本号，提交前二次确认',
     '  npm run release -- <version>      # 显式指定版本号',
     '  npm run release:dry -- <version>  # 预演：写入后自动恢复，不提交/推送',
+    '',
+    '说明:',
+    '  CHANGELOG.md 需提前包含 `## <version>` 非空章节（由 AI/人工准备），脚本只做非空校验',
     '',
     '选项:',
     '  -n, --dry-run  预演模式，不执行提交与推送',
@@ -140,17 +144,52 @@ function updatePackageJson(version) {
   fs.writeFileSync(file, lines.join('\n'));
 }
 
+function extractVersionSection(text, version) {
+  const lines = text.split('\n');
+  const start = lines.findIndex((line) => line.trim() === `## ${version}`);
+  if (start === -1) {
+    return null;
+  }
+  const body = [];
+  for (let i = start + 1; i < lines.length; i++) {
+    if (/^## /.test(lines[i].trim())) {
+      break;
+    }
+    body.push(lines[i]);
+  }
+  return body.join('\n').trim();
+}
+
+function hasNonEmptyChangelogSection(text, version) {
+  const section = extractVersionSection(text, version);
+  if (section === null || section === '') {
+    return false;
+  }
+  return section
+    .split('\n')
+    .map((line) => line.trim())
+    .some((line) => line !== '' && !line.startsWith('> 发布日期：'));
+}
+
 function backupFiles() {
   const backups = new Map();
   for (const file of ALLOWED_FILES) {
-    backups.set(file, fs.readFileSync(path.join(ROOT, file)));
+    const full = path.join(ROOT, file);
+    backups.set(file, fs.existsSync(full) ? fs.readFileSync(full) : null);
   }
   return backups;
 }
 
 function restoreFiles(backups) {
   for (const [file, content] of backups) {
-    fs.writeFileSync(path.join(ROOT, file), content);
+    const full = path.join(ROOT, file);
+    if (content === null) {
+      if (fs.existsSync(full)) {
+        fs.unlinkSync(full);
+      }
+    } else {
+      fs.writeFileSync(full, content);
+    }
   }
 }
 
@@ -240,12 +279,18 @@ async function main() {
   const backups = backupFiles();
 
   try {
+    const changelogPath = path.join(ROOT, 'CHANGELOG.md');
+    const changelogText = fs.existsSync(changelogPath) ? fs.readFileSync(changelogPath, 'utf8') : '';
+    if (!hasNonEmptyChangelogSection(changelogText, version)) {
+      restoreFiles(backups);
+      fail(`CHANGELOG.md 中缺少版本 ${version} 的非空章节，已终止发版（请先由 AI/人工补充该章节）`);
+    }
     updateConfigYml(version);
     updatePackageJson(version);
 
     console.log('>>> 文件变更:');
     runGit(['diff', '--stat'], { stdio: 'inherit' });
-    const diff = runGit(['diff', '--', '_config.yml', 'package.json']);
+    const diff = runGit(['diff', '--', '_config.yml', 'package.json', 'CHANGELOG.md']);
     if (diff) {
       console.log(diff);
     }
@@ -269,8 +314,8 @@ async function main() {
       return;
     }
 
-    console.log('>>> git add _config.yml package.json');
-    runGit(['add', '--', '_config.yml', 'package.json'], { stdio: 'inherit' });
+    console.log('>>> git add _config.yml package.json CHANGELOG.md');
+    runGit(['add', '--', '_config.yml', 'package.json', 'CHANGELOG.md'], { stdio: 'inherit' });
     console.log(`>>> git commit -m "release: ${version}"`);
     runGit(['commit', '-m', `release: ${version}`], { stdio: 'inherit' });
     console.log('>>> git push origin main');
@@ -278,8 +323,9 @@ async function main() {
     console.log('>>> git push origin main:npm');
     runGit(['push', 'origin', 'main:npm'], { stdio: 'inherit' });
 
-    console.log('\n>>> 版本号已更新并推送到 main 和 npm 分支');
-    console.log(`>>> 请手动触发 Actions: ${WORKFLOW_URL}`);
+    console.log('\n>>> 版本号与 CHANGELOG 已更新，已推送到 main 和 npm 分支');
+    console.log('>>> npm-publish workflow 已自动触发，将完成 npm publish、tag 与 GitHub Release');
+    console.log(`>>> 查看进度: ${WORKFLOW_URL}`);
   } catch (err) {
     try {
       restoreFiles(backups);
@@ -291,7 +337,14 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.error(`\n执行中断: ${err.message}`);
-  process.exit(1);
-});
+if (require.main === module) {
+  main().catch((err) => {
+    console.error(`\n执行中断: ${err.message}`);
+    process.exit(1);
+  });
+}
+
+module.exports = {
+  extractVersionSection,
+  hasNonEmptyChangelogSection,
+};

@@ -45,13 +45,26 @@
 - CSS 兼容 IE8，JS 兼容 ES2015+，不混用 EJS 与前端框架
 - 新增功能覆盖维度：`layout/` + `scripts/` + `source/css/` + `source/js/`（如需）+ `docs/` + `languages/`（如需）
 - 方案/审计/指南文档统一归档在 `docs/`（`designs/`、`audits/`、`guides/`）
-- 发版遵循 release 流程（版本号规则、dry-run 预览、提交前与用户确认），详见 [CLAUDE.md](CLAUDE.md)
+- 发版遵循 release 流程（发版前先输出 CHANGELOG 章节、版本号规则、dry-run 预览、提交前与用户确认），详见 [CLAUDE.md](CLAUDE.md)
 
 ## 5. Git 与发布
 
 - 使用 Conventional Commits：`feat` / `fix` / `refactor` / `perf` / `style` / `docs` 等
 - 只有用户明确要求时才 push；发版前须与用户确认版本号
 - 详细发版规范见 [CLAUDE.md](CLAUDE.md) 的「发版规范」与「AI 调用指南」
+
+### 发版前 CHANGELOG 规范
+
+发版前由 AI 或人工在 `CHANGELOG.md` 中输出待发布版本的更新日志章节；脚本（`npm run release`）只做非空校验，不自动生成内容，章节缺失或为空时会拦截发版。
+
+格式要求：
+
+- 二级标题为版本号：`## 1.37.0`（不带 `v` 前缀），可另起一行写 `> 发布日期：YYYY-MM-DD`
+- 三级标题为分类：`### 新功能`、`### 修复`、`### 重构`、`### 优化`、`### 文档`、`### 样式`、`### 其他`、`### 升级注意（配置变更与破坏性改动）` 等
+- 分类下用 `- ` 无序列表记录变更
+- 新版本章节置于文件顶部（`# Changelog` 之后），历史章节按新→旧排列
+- 每个版本章节末尾追加一行 `Full Changelog: [上一版本...当前版本](https://github.com/xaoxuu/hexo-theme-stellar/compare/上一版本...当前版本)`（最早版本无前一版本时可省略）
+- AI 整理内容时可参考 `git log`（自上一个 tag 起）的 Conventional Commits，按 type 归类
 
 ## 6. Issue 处理
 

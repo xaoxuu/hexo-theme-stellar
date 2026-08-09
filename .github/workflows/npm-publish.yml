@@ -1,6 +1,9 @@
 name: npm-publish
 
 on:
+  push:
+    branches:
+      - npm
   workflow_dispatch:
     inputs:
       ref:
@@ -18,10 +21,19 @@ jobs:
     name: npm-publish
     runs-on: ubuntu-latest
     steps:
+      - name: Gate on release commit
+        id: gate
+        run: |
+          SKIP='false'
+          if [ "${{ github.event_name }}" = 'push' ] && [ "${{ startsWith(github.event.head_commit.message, 'release: ') }}" = 'false' ]; then
+            SKIP='true'
+          fi
+          echo "skip=$SKIP" >> "$GITHUB_OUTPUT"
+
       - name: Checkout repository
         uses: actions/checkout@v5
         with:
-          ref: ${{ inputs.ref }}
+          ref: ${{ inputs.ref || github.sha }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -31,23 +43,67 @@ jobs:
 
       - name: Extract version from package.json
         id: version
+        if: steps.gate.outputs.skip == 'false'
         run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
       - name: Check if version already published
         id: check
+        if: steps.gate.outputs.skip == 'false'
         run: |
           PKG="hexo-theme-stellar"
           VER="${{ steps.version.outputs.version }}"
           PUBLISHED=$(npm view "$PKG" versions --json 2>/dev/null | node -e "process.stdout.write(JSON.parse(require('fs').readFileSync('/dev/stdin','utf8')).includes('$VER') ? 'true' : 'false')")
-          echo "skip=$PUBLISHED" >> $GITHUB_OUTPUT
+          echo "skip=$PUBLISHED" >> "$GITHUB_OUTPUT"
 
       - name: Publish to npm
-        if: steps.check.outputs.skip == 'false'
+        if: steps.gate.outputs.skip == 'false' && steps.check.outputs.skip == 'false'
         run: npm publish --provenance --access public
 
       - name: Create Git tag
-        if: steps.check.outputs.skip == 'false'
+        if: steps.gate.outputs.skip == 'false' && steps.check.outputs.skip == 'false'
         run: |
           VERSION="${{ steps.version.outputs.version }}"
           git tag "$VERSION"
           git push origin "$VERSION"
+
+      - name: Check if GitHub release already exists
+        id: release_exists
+        if: steps.gate.outputs.skip == 'false'
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          if gh release view "$VERSION" >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Extract release notes from CHANGELOG.md
+        id: notes
+        if: steps.gate.outputs.skip == 'false' && steps.release_exists.outputs.exists == 'false'
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          awk -v ver="## $VERSION" '
+            $0 == ver { capture = 1; next }
+            capture && /^## / { exit }
+            capture { print }
+          ' CHANGELOG.md > /tmp/release-notes.md
+          if [ -s /tmp/release-notes.md ]; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create GitHub release
+        if: steps.gate.outputs.skip == 'false' && steps.release_exists.outputs.exists == 'false'
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          ARGS=(--title "$VERSION")
+          if [ "${{ steps.notes.outputs.found }}" = "true" ]; then
+            ARGS+=(--notes-file /tmp/release-notes.md)
+          else
+            ARGS+=(--generate-notes)
+          fi
+          if [[ "$VERSION" == *-rc.* ]]; then
+            ARGS+=(--prerelease)
+          fi
+          gh release create "$VERSION" "${ARGS[@]}"

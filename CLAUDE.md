@@ -197,10 +197,10 @@ docs/
 
 ## 发版规范
 
-发版分两步：Node 脚本完成版本号更新和推送 → 手动触发 CI 完成 npm 发布和 tag 创建。
+发版一键全自动：AI/人工提前准备 CHANGELOG 章节，Node 脚本校验非空并更新版本号后推送 → CI 自动完成 npm 发布、tag 创建与 GitHub Release。
 
 ```
-npm run release → push main + npm → 手动触发 CI → npm publish + git tag
+npm run release → push main + npm → CI 自动触发 → npm publish + git tag + GitHub Release
 ```
 
 ### 使用方式
@@ -219,6 +219,10 @@ npm run release -- 1.34.1 --yes
 npm run release:dry -- 1.34.1
 ```
 
+CHANGELOG.md 的历史数据已于 2026-08-09 一次性从 GitHub Releases API 同步入库（统一 H2 版本号 / H3 分类格式）；此后每次发版的更新日志由 AI/人工提前写入，脚本只做非空校验。
+
+提交前脚本校验 CHANGELOG.md 已包含该版本的非空章节（`## <version>`），缺失或为空则拦截；内容由 AI/人工提前准备。
+
 ### AI 调用指南
 
 1. **分析变更确定版本号**: 查看上一版本以来的 commit，按以下规则确定版本号：
@@ -226,10 +230,11 @@ npm run release:dry -- 1.34.1
    - `x.y.z` → `x.(y+1).0`: 含 feat / refactor / breaking change（功能增减、一般重构）
    - `x.y.z` → `(x+1).0.0`: 大型重构，用户可感知的设计调整
    - `x.y.z` → `x.y.z-rc.N`: 测试版本
-2. **向用户确认**: 列出版本号和变更摘要，等待用户确认后再继续
-3. **dry-run 预览**: `npm run release:dry -- <version>` 检查变更是否正确
-4. **正式执行**: `npm run release -- <version>`，提交前脚本会二次确认
-5. **手动触发 CI**: 推送完成后手动触发 npm-publish workflow（默认 ref 为 npm），CI 负责 npm publish 与 tag 创建
+2. **准备 CHANGELOG**: 由 AI/人工在 CHANGELOG.md 中写入 `## <version>` 章节（H2 版本号 + H3 分类，含升级注意），脚本只做非空校验
+3. **向用户确认**: 列出版本号和变更摘要，等待用户确认后再继续
+4. **dry-run 预览**: `npm run release:dry -- <version>` 检查变更是否正确（同时校验 CHANGELOG.md 已包含该版本非空章节）
+5. **正式执行**: `npm run release -- <version>`，提交前脚本会二次确认
+6. **推送后自动发布**: 推送完成后 npm-publish workflow 自动触发（npm 分支 `release:` 提交），CI 负责 npm publish、tag 与 GitHub Release；如未自动触发或需重跑，可手动触发 workflow（默认 ref 为 npm）
 
 ## 约束
 
