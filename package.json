@@ -1,6 +1,6 @@
 {
   "name": "hexo-theme-stellar",
-  "version": "1.36.0",
+  "version": "1.37.0",
   "description": "Elegant and powerful theme for Hexo.",
   "main": "package.json",
   "scripts": {

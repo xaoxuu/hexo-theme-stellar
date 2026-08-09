@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.37.0
+
+> 发布日期：2026-08-09
+
+### 新功能
+- 发版全自动化：`npm run release` 一键完成版本号更新（`_config.yml` + `package.json`）与 CHANGELOG 非空校验，并推送 main 与 npm 分支
+- npm 分支推送自动发布：`release: ` 开头提交触发 CI 自动完成 npm publish、版本 tag 与 GitHub Release，Release 正文取自 CHANGELOG.md 对应章节；已发布版本与已存在 Release 幂等跳过
+
+### 其他
+- CHANGELOG.md 历史数据一次性从 GitHub Releases API 同步入库（76 个版本，统一格式）
+- 新增发版流程文档（docs/guides/release-process.md）与设计记录（docs/designs/2026-08-09-release-automation.md）
+
+Full Changelog: [1.36.0...1.37.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.36.0...1.37.0)
+
 ## 1.36.0
 
 > 发布日期：2026-08-09
