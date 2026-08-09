@@ -104,7 +104,7 @@ const init = {
         segs.push(node);
       });
       function activeTOC() {
-        var scrollTop = $(this).scrollTop();
+        var scrollTop = $(window).scrollTop();
         var topSeg = null;
         for (var idx in segs) {
           var seg = $(segs[idx]);
