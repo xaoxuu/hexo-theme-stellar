@@ -94,6 +94,39 @@ const hud = {
 
 const l_body = document.querySelector('.l_body');
 
+// TOC 平滑滚动（自定义动画，速度比浏览器原生 behavior:"smooth" 更快）
+let tocScrollAnim = null;
+function tocCancelScroll() {
+  if (tocScrollAnim !== null) {
+    cancelAnimationFrame(tocScrollAnim);
+    tocScrollAnim = null;
+  }
+}
+function tocSmoothScrollTo(targetY) {
+  tocCancelScroll();
+  const startY = window.scrollY;
+  const diff = targetY - startY;
+  if (Math.abs(diff) < 2) {
+    return;
+  }
+  // 短距离 180ms，长距离最多 350ms
+  const duration = Math.min(350, Math.max(180, Math.abs(diff) * 0.1));
+  const startTime = performance.now();
+  function step(now) {
+    const t = Math.min(1, (now - startTime) / duration);
+    const eased = 1 - Math.pow(1 - t, 3); // easeOutCubic
+    window.scrollTo(0, startY + diff * eased);
+    if (t < 1) {
+      tocScrollAnim = requestAnimationFrame(step);
+    } else {
+      tocScrollAnim = null;
+    }
+  }
+  tocScrollAnim = requestAnimationFrame(step);
+}
+window.addEventListener('wheel', tocCancelScroll, { passive: true });
+window.addEventListener('touchstart', tocCancelScroll, { passive: true });
+
 
 const init = {
   toc: () => {
@@ -152,6 +185,18 @@ const init = {
   },
   sidebar: () => {
     utils.dom("#data-toc a.toc-link").click(function (e) {
+      const href = this.getAttribute("href");
+      const id = href && href.indexOf("#") === 0 ? decodeURIComponent(href.slice(1)) : null;
+      const target = id && document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        const offset = 32; // 与 activeTOC 的 scrollOffset 保持一致
+        const targetY = target.getBoundingClientRect().top + window.scrollY - offset;
+        tocSmoothScrollTo(Math.max(0, targetY));
+        if (window.history && window.history.pushState) {
+          window.history.pushState(null, "", href);
+        }
+      }
       sidebar.dismiss();
     });
   },
