@@ -25,6 +25,10 @@
 - 不改变 TOC 高亮（`activeTOC` / `scrollTOC`）、折叠（`collapse`）与侧栏关闭行为。
 - 落点偏移 32px，与 `activeTOC` 判定一致；不再依赖 `<html>` 的 `scroll-padding-top`。
 
+## 高亮边界修正
+
+平滑滚动后目标标题顶落在 32px 偏移线上，滚动位置取整可能使标题顶落在 32.1~32.4px，`activeTOC` 的 `segTop > scrollTop + scrollOffset` 判定将其排除，高亮回跳到上一条（首个标题时可能无高亮）。在判定中增加 4px 容差（`scrollTolerance`），取整误差不再影响高亮。
+
 ## 执行计划
 
 1. 修改 `source/js/main.js`
@@ -40,3 +44,5 @@
 - 无头 Chrome 实测 `blog/20170628`：点击第 3 个 TOC 链接，约 190ms 完成动画，落点 `headingTop=32px`，URL hash 同步为 `#%E6%8E%88%E6%9D%83`。
 - 长页面实测 `notes/server`：3267px 长距离跳转约 330ms（350ms 上限内），落点 `headingTop=32px`。
 - 动画中途派发 `wheel` 事件：滚动立即停止在打断位置，无回弹。
+- 高亮边界修正后重测（桌面视口 1440x900）：`blog/20170628`（4 条）、`notes/server`（11 条）、`blog/20200823`（3 条，用户报告「如何在主题中使用？」必现）点击后高亮均与点击项一致；修正前落点 32.1~32.4px 会回跳到上一条。
+- 带 hash 直接打开页面（如 `blog/20200823/#如何在主题中使用？`）：高亮正常。

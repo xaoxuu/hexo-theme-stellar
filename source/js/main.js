@@ -131,13 +131,15 @@ window.addEventListener('touchstart', tocCancelScroll, { passive: true });
 const init = {
   toc: () => {
     const scrollOffset = 32;
+    // 滚动位置取整后标题顶可能落在偏移线下方 1~2px，加容差避免高亮回跳到上一条
+    const scrollTolerance = 4;
     var segs = utils.qsa("article.md-text h1, article.md-text h2, article.md-text h3, article.md-text h4, article.md-text h5, article.md-text h6");
     function activeTOC() {
       var scrollTop = window.scrollY;
       var topSeg = null;
       for (var i = 0; i < segs.length; i++) {
         var segTop = segs[i].getBoundingClientRect().top + window.scrollY;
-        if (segTop > scrollTop + scrollOffset) {
+        if (segTop > scrollTop + scrollOffset + scrollTolerance) {
           continue;
         }
         if (!topSeg || segTop >= topSeg.getBoundingClientRect().top + window.scrollY) {
