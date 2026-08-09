@@ -6,7 +6,11 @@ utils.jq(() => {
     
     utils.request(el, src, async resp => {
       const data = await resp.text();
-      el.innerHTML = marked.parse(data);
+      if (typeof DOMPurify !== 'undefined') {
+        el.innerHTML = DOMPurify.sanitize(marked.parse(data));
+      } else {
+        el.innerHTML = marked.parse(data);
+      }
     });
   }
 });
