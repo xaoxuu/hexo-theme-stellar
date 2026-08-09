@@ -52,3 +52,15 @@
 4. 已发布版本 / 已存在 Release 重跑时幂等跳过。
 5. 提交前校验：CHANGELOG.md 缺少或为空该版本章节时脚本拦截；内容由 AI/人工提前准备。
 6. 文档与实现一致，无残留「手动触发 / 手动创建 Release」主流程描述。
+
+## 6. 变更记录
+
+### 2026-08-09：修复 GitHub Release 创建失败
+
+1.37.0 首次自动发版时，npm publish 与 git tag 均成功，但 `gh release create` 报
+`To use GitHub CLI in a GitHub Actions workflow, set the GH_TOKEN environment variable`，
+导致 GitHub Release 未创建。原因是 workflow 的 gh 调用步骤未注入 token。
+
+- 修复：在 `npm-publish` job 增加 `env.GH_TOKEN: ${{ github.token }}`（配合已有
+  `permissions.contents: write`），`gh release view` 与 `gh release create` 均可正常鉴权。
+- 幂等重跑：已发布的版本与已存在的 tag 会自动跳过，仅补建缺失的 GitHub Release。
