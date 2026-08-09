@@ -325,15 +325,12 @@ const init = {
       const originalURL = `https://${canonical.originalHost}`;
       const currentURL = canonical.param.permalink.startsWith("http") ? canonical.param.permalink : originalURL;
       if (isOfficial) {
-        const closeEnable = window.localStorage.getItem('Stellar.canonical.closeEnable') === 'true'
-        const closedToday = window.localStorage.getItem('Stellar.canonical.closeTime') === new Date().toDateString()
-        if ((closeEnable && closedToday) || !(await originStatusCheck())) return;
+        if (!(await originStatusCheck())) return;
         notice.className = 'canonical-tip official';
         notice.innerHTML = `
           <a href="${currentURL}" target="_self" rel="noopener noreferrer">
           本站为官方备用站，仅供应急。点击移步主站<br>${originalURL}
           </a>
-          ${canonical.closeEnable ? '<button id="canonical-close">' + canonical.closeText || '关闭提示' + '</button>' : ''}
         `;
       } else {
         notice.className = 'canonical-tip unofficial';
@@ -346,14 +343,6 @@ const init = {
         `;
       }
       document.body.appendChild(notice);
-      const closeBtn = notice.querySelector('#canonical-close');
-      if (closeBtn) {
-        closeBtn.addEventListener('click', function () {
-          window.localStorage.setItem('Stellar.canonical.closeEnable', "true")
-          window.localStorage.setItem('Stellar.canonical.closeTime', new Date().toDateString())
-          notice.style.display = 'none';
-        });
-      }
     }
     if (!canonical.originalHost) return;
     const currentURL = new URL(window.location.href);
