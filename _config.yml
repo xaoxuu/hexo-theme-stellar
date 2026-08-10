@@ -139,14 +139,14 @@ site_tree:
   author: 
     base_dir: author # 只影响自动生成的页面路径
     menu_id: post
-    leftbar: recent, timeline
-    rightbar: timeline
+    leftbar: recent
+    rightbar: 
   # 错误页配置
   error_page:
     menu_id: post
     '404': '/404.html'
-    leftbar: recent, timeline
-    rightbar: timeline
+    leftbar: recent
+    rightbar: 
   # 其它自定义页面配置 layout: page
   page:
     leftbar: recent
