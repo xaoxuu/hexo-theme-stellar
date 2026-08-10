@@ -37,9 +37,15 @@ function layoutToc(fallback) {
 
 function layoutDiv(fallback) {
   const tocBody = layoutTocBody()
+  const hasToc = tocBody.trim().length > 0
+  // 页面是否实际渲染评论区，由 _partial/comments/layout.ejs 标记
+  const hasComments = page.cmt_rendered === true
+  if (!hasToc && !hasComments) {
+    return ''
+  }
   var el = ''
   el += `<widget class="widget-wrapper${scrollreveal(' ')} toc" id="data-toc" collapse="${item.collapse}">`
-  if (tocBody.trim().length > 0) {
+  if (hasToc) {
     el += layoutTocHeader()
     el += `<div class="widget-body">`
     el += tocBody
@@ -50,13 +56,11 @@ function layoutDiv(fallback) {
   el += icon('default:upup')
   el += `<span>${__('btn.top')}</span>`
   el += `</a>`
-  if (theme.comments.service && theme.comments.service.length > 0) {
-    if (page.comments == undefined || page.comments != false) {
-      el += `<a class="buttom" onclick="util.scrollComment()">`
-      el += icon('default:tocomment')
-      el += `<span>${__('btn.comments')}</span>`
-      el += `</a>`
-    }
+  if (hasComments) {
+    el += `<a class="buttom" onclick="util.scrollComment()">`
+    el += icon('default:tocomment')
+    el += `<span>${__('btn.comments')}</span>`
+    el += `</a>`
   }
   el += `</div>`
   el += `</widget>`

@@ -34,6 +34,7 @@ if (cmt.service && page[cmt.service]) {
   Object.assign(cmt[cmt.service], page[cmt.service]);
 }
 page.cmt = cmt;
+page.cmt_rendered = loadComment;
 %>
 <% if (loadComment) { %>
   <div class="related-wrap md-text<%- scrollreveal(' ') %>" id="comments">
