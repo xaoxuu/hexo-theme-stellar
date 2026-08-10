@@ -31,7 +31,8 @@
         }
         const anchor = document.getElementById(anchorId);
         if (anchor) {
-          const offset = 32; // 与 TOC 点击滚动保持一致
+          // #start 锚点贴顶，不预留 offset；其余锚点与 TOC 点击滚动保持一致
+          const offset = anchorId === 'start' ? 0 : 32;
           const targetY = () => anchor.getBoundingClientRect().top + window.scrollY - offset;
           let timer = null;
           let lastY = null;

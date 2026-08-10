@@ -207,6 +207,22 @@ const init = {
       sidebar.dismiss();
     });
   },
+  wikiStart: () => {
+    utils.dom('#l_cover .l_cover.wiki .start-wrap a.button.start').click(function (e) {
+      const href = this.getAttribute("href");
+      const id = href && href.indexOf("#") === 0 ? decodeURIComponent(href.slice(1)) : null;
+      const target = id && document.getElementById(id);
+      if (target) {
+        e.preventDefault();
+        // #start 锚点贴顶滚动，不预留 offset
+        const offset = 0;
+        smoothScrollTo(target.getBoundingClientRect().top + window.scrollY - offset);
+        if (window.history && window.history.pushState) {
+          window.history.pushState(null, "", href);
+        }
+      }
+    });
+  },
   leftbarScroll: () => {
     const container = document.querySelector('.l_left .widgets');
     if (container == null) {
@@ -400,6 +416,7 @@ window.stellar = window.stellar || {};
 stellar.initPage = function () {
   init.toc();
   init.sidebar();
+  init.wikiStart();
   init.leftbarScroll();
   init.relativeDate(document.querySelectorAll('#post-meta time'));
   init.registerTabsTag();
