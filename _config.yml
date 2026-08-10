@@ -674,6 +674,7 @@ style:
     image-l: 24px # 非技术类文章插图圆角
     image: 16px # 技术类文章插图圆角
     image-s: 8px # 评论区图片圆角（部分评论支持）
+  corner-shape: superellipse(1.5) # 连续曲率圆角（仅 Chromium 139+ 支持，其余浏览器自动回退普通圆角）：superellipse(1.x) 开启，round 关闭
   color:
     # 主题色配置（不会根据明暗动态调整，请设置为通用的颜色）
     theme: 'hsl(192 98% 55%)' # 主题色

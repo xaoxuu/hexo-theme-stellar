@@ -1,3 +1,6 @@
+.article-banner-wrap
+  display: block
+
 .article.banner
   --text-banner: var(--text)
   background: var(--block)
@@ -48,22 +51,25 @@
       content: ''
       position: absolute
       z-index 0
+      top: 0
       left: 0
-      right: 0
-      backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
-      -webkit-backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
+      width: 100%
+      height: 100%
+      // Chromium: corner-shape + overflow:hidden 的合成层裁剪与 backdrop-filter 不兼容，
+      // 渐变模糊改用同图模糊层（filter + mask）实现，观感与 backdrop-filter 等价
+      background-image: var(--bg-url)
+      background-size: cover
+      background-position: center
+      filter: blur(var(--blur-px)) saturate(var(--blur-sat))
       trans1 all
       opacity var(--blur-opacity)
+      pointer-events: none
     &:before
-      top: 0
-      height: var(--blur-height-top)
-      mask: linear-gradient(black, rgba(black, 0.75), transparent)
-      -webkit-mask: linear-gradient(black, rgba(black, 0.75), transparent)
+      mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height-top) * 0.5), transparent var(--blur-height-top))
+      -webkit-mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height-top) * 0.5), transparent var(--blur-height-top))
     &:after
-      bottom: 0
-      height: var(--blur-height-bottom)
-      mask: linear-gradient(transparent, rgba(black, 0.75), black)
-      -webkit-mask: linear-gradient(transparent, rgba(black, 0.75), black)
+      mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height-bottom) * 0.5), transparent var(--blur-height-bottom))
+      -webkit-mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height-bottom) * 0.5), transparent var(--blur-height-bottom))
     .top,.bottom
       z-index 1
   

@@ -109,7 +109,7 @@ function div_photo() {
       position = 'bottom';
     }
   }
-  el += '<div class="cover" position="' + position + '">';
+  el += '<div class="cover" position="' + position + '" style="--cover-url:url(\'' + obj.image.replace(/'/g, '%27') + '\')">';
   el += '<img src="' + obj.image + '"/>';
   if (position.length > 0) {
     el += '<div class="cover-info" position="' + position + '"';

@@ -24,6 +24,7 @@
     height: 48px
     flex-shrink: 0
     border-radius: 48px
+    corner-shape: round // 保持正圆（连续曲率会使正圆变成类方形曲线）
     overflow: hidden
     margin-right: 1rem
     div.bg
@@ -35,6 +36,7 @@
       width: "calc(100% - 2 * %s)" % @margin
       height: "calc(100% - 2 * %s)" % @margin
       border-radius: @width
+      corner-shape: round
     if hexo-config('style.animated_avatar.animate')
       div.bg
         trans1: opacity

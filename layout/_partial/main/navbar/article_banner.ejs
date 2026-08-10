@@ -105,21 +105,27 @@ function layoutDiv() {
     return ``
   }
   const top = layoutBreadcrumb()
-  var style = ``
+  var bannerStyle = ``
+  var contentStyle = ``
   var el = ``
-  el += `<div class="article banner${scrollreveal(' ')} top">`
+  if (banner.url?.length > 0) {
+    bannerStyle += ` style="--bg-url:url('${banner.url.replace(/'/g, '%27')}')"`
+  }
+  el += `<div class="article-banner-wrap${scrollreveal(' ')}">`
+  el += `<div class="article banner top"${bannerStyle}>`
   if (banner.url?.length > 0) {
     el += `<img class="lazy bg" data-src="${banner.url}">`
     if (banner.color) {
-      style += ' style="--text-banner:' + banner.color + '"'
+      contentStyle += ' style="--text-banner:' + banner.color + '"'
     }
   }
   el += `
-  <div class="content"${style}>
+  <div class="content"${contentStyle}>
     ${top}
     ${bottom}
   </div>
   `
+  el += `</div>`
   el += `</div>`
   return el
 }

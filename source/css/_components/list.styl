@@ -20,12 +20,19 @@
     margin-top: 0.5rem
 
 // card
-.post-list .post-card
+.post-list .post-card-wrap
   display: block
   margin: 1rem 0
   border-radius: $border-card-l
-  background: var(--card)
   hoverable-card()
+  &:hover
+    // 保留 hover 阴影变化，去掉位移：ScrollReveal 内联 transform 与合成层交互导致位移卡顿
+    transform: none !important
+
+.post-list .post-card
+  display: block
+  border-radius: $border-card-l
+  background: var(--card)
   overflow: hidden
   z-index: 0
   position: relative
@@ -40,9 +47,16 @@
     // --blur-px: 0
     // --blur-height: 0
     --blur-sat: 200%
+    // 图片卡片 hover 封面放大：卡片本身不动，放大后的图片由圆角静态裁剪裁出圆角
+    .post-cover img, .cover img, .cover:before
+      transform: scale(1.05)
   img
     filter: brightness(var(--img-br)) saturate(var(--img-sat))
-    trans1 all
+    // 封面放大用 0.5s 缓动，其余属性（亮度/饱和度）保持主题默认 0.2s
+    transition: all .2s ease-out, transform .5s ease-out
+    -moz-transition: all .2s ease-out, transform .5s ease-out
+    -webkit-transition: all .2s ease-out, transform .5s ease-out
+    -o-transition: all .2s ease-out, transform .5s ease-out
   .excerpt
     margin: 1rem 0
     @media screen and (max-width: $device-mobile)
@@ -116,20 +130,26 @@
       content: ''
       z-index 1
       position: absolute
-      left: 0
-      right: 0
-      height: var(--blur-height)
-      backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
-      -webkit-backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
-      trans1 all
-    &[position=top]:before
       top: 0
-      mask: linear-gradient(black, rgba(black, 0.75), transparent)
-      -webkit-mask: linear-gradient(black, rgba(black, 0.75), transparent)
+      left: 0
+      width: 100%
+      height: 100%
+      // Chromium: corner-shape + overflow:hidden 的合成层裁剪与 backdrop-filter 不兼容，
+      // 渐变模糊改用同图模糊层（filter + mask）实现，观感与 backdrop-filter 等价
+      background-image: var(--cover-url)
+      background-size: cover
+      background-position: center
+      filter: brightness(var(--img-br)) saturate(var(--img-sat)) blur(var(--blur-px)) saturate(var(--blur-sat))
+      // 与封面 img 同步：缩放 0.5s 缓动，亮度/饱和度仍按 0.2s
+      transition: all .2s ease-out, transform .5s ease-out
+      -moz-transition: all .2s ease-out, transform .5s ease-out
+      -webkit-transition: all .2s ease-out, transform .5s ease-out
+      -o-transition: all .2s ease-out, transform .5s ease-out
+      mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
+      -webkit-mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
     &[position=bottom]:before
-      bottom: 0
-      mask: linear-gradient(transparent, rgba(black, 0.75), black)
-      -webkit-mask: linear-gradient(transparent, rgba(black, 0.75), black)
+      mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
+      -webkit-mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
     .cover-info
       padding: 1.5rem 1rem
       position: absolute
