@@ -6,7 +6,6 @@
     border-radius: $border-bar
     corner-shape: superellipse(1.2)
     color: var(--text-p1)
-    trans1 background
     &:hover
       background: var(--bg-a50)
     &.active
@@ -27,6 +26,10 @@
       &.active-icon
         width: 1rem
         height: 1rem
+
+.l_left .widget-wrapper.post-list .widget-body a
+  &:hover, &.active
+    sidebar-light()
 
 .widget-wrapper.post-list
   .widget-body+.widget-header

@@ -133,6 +133,18 @@ hoverable-card()
     @media (prefers-color-scheme: dark)
       ondark()
 
+// 侧栏高亮项的顶部光照效果（无过渡动画）：
+// 在 hover/active 背景上叠加顶部白色光照渐变与高光边，深浅色模式分别调优透明度
+sidebar-light($bg = unquote('var(--bg-a50)'), $light = 0.38, $edge = 0.45, $dark-light = 0.05, $dark-edge = 0.1)
+  background: linear-gradient(180deg, rgba(white, $light), rgba(white, 0) 50%), $bg
+  box-shadow: inset 0 1px 0 rgba(white, $edge)
+  :root[data-theme="dark"] &
+    background: linear-gradient(180deg, rgba(white, $dark-light), rgba(white, 0) 20%), $bg
+    box-shadow: inset 0 1px 0 rgba(white, $dark-edge)
+  @media (prefers-color-scheme: dark)
+    background: linear-gradient(180deg, rgba(white, $dark-light), rgba(white, 0) 20%), $bg
+    box-shadow: inset 0 1px 0 rgba(white, $dark-edge)
+
 newblur()
   box-shadow: 0 0 2px rgba(black, .04), 0 2px 8px rgba(black, .04), 0 4px 16px rgba(black, .04)
   trans1: all

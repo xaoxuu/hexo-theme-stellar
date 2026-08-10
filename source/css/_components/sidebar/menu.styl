@@ -20,7 +20,6 @@
     font-size: $fs-15
     color: var(--text-p2)
     text-align: left
-    trans1 background
     position: relative
     display: flex
     flex-direction: row
@@ -43,7 +42,7 @@
       word-break: keep-all
     &:hover
       color: var(--text-p1)
-      background: var(--bg-a50)
+      sidebar-light()
       img,svg
         opacity: 1
       > svg [fill="currentColor"]
@@ -52,7 +51,7 @@
         stroke: var(--item-grad)
     &.active
       color: var(--text-p1)
-      background: var(--bg-a50)
+      sidebar-light()
       img,svg
         opacity: 1
       .active-dot
