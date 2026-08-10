@@ -1,5 +1,46 @@
 # Changelog
 
+## 1.38.0
+
+> 发布日期：2026-08-11
+
+### 新功能
+- 新增连续曲率圆角配置 `style.corner-shape`（默认 `superellipse(1.2)`）：所有带圆角的位置统一使用曲率连续的 squircle 曲线，自动适配容器宽高；文章卡片与横幅的渐变模糊改为「同图模糊层」实现以兼容连续曲率（仅 Chromium 139+ 原生支持，其余浏览器自动回退普通圆角，可设 `round` 关闭）
+- 左栏导航列表化，wiki 内页增加返回按钮与搜索条交互优化
+- 菜单栏激活/悬停图标与圆点支持可配置角度的主题色渐变（`style.gradient.angle`）
+- 首页支持可配置评论区（默认关闭，`site_tree.home.comments`）
+- 新增 mbti 标签
+
+### 修复
+- 补全 npm-publish workflow 的 GH_TOKEN，修复 GitHub Release 创建失败
+- GitHub Release 正文不再包含 CHANGELOG 发布日期行
+- 克隆站提示源站从 encoded 反解，防止批量替换域名误导
+- 侧栏内部滚动容器组件 scrollreveal 不显示
+- 仅当页面包含 toc 或评论时显示 toc 操作按钮
+- wiki 封面「开始使用」按钮平滑滚动，#start 锚点贴顶定位
+
+### 重构
+- 移除官方备用站提示的关闭按钮与配置项
+
+### 优化
+- 动态数据组件缓存优化：同 URL 请求去重、memos 用户详情缓存、stale 兜底
+
+### 样式
+- 侧栏光照效果覆盖相关卡片、返回胶囊与 widget 操作按钮
+- 侧栏导航区边距调整
+- 左栏激活书签等彩色图标使用主题色渐变
+- 侧栏高亮项顶部叠加白色光照渐变与高光边
+- 左侧栏底部留白调整为 32px
+- 作者页与错误页侧栏不再显示时间线
+- 移动端顶部导航吸顶距离调整为 8px
+
+### 升级注意（配置变更与破坏性改动）
+- 新增 `style.corner-shape`（默认 `superellipse(1.2)`）：连续曲率圆角仅 Chromium 139+ 生效，其余浏览器自动回退普通圆角；设置 `round` 可关闭
+- 新增 `style.gradient.angle` 与 `site_tree.home.comments` 配置
+- 移除 `canonical.closeEnable`、`canonical.closeText` 配置项：官方备用站提示不再支持手动关闭
+
+Full Changelog: [1.37.0...1.38.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.37.0...1.38.0)
+
 ## 1.37.0
 
 > 发布日期：2026-08-09
