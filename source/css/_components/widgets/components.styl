@@ -25,6 +25,11 @@
 .l_left .linklist .link
   &:hover, &.active
     sidebar-light()
+    --item-grad: url(#leftbar-active-icon-grad)
+    > svg [fill="currentColor"]
+      fill: var(--item-grad)
+    > svg [stroke="currentColor"]
+      stroke: var(--item-grad)
 
 .linklist .link span
   padding: 0 4px

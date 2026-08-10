@@ -30,6 +30,11 @@
 .l_left .widget-wrapper.post-list .widget-body a
   &:hover, &.active
     sidebar-light()
+    --item-grad: url(#leftbar-active-icon-grad)
+    > svg [fill="currentColor"]
+      fill: var(--item-grad)
+    > svg [stroke="currentColor"]
+      stroke: var(--item-grad)
 
 .widget-wrapper.post-list
   .widget-body+.widget-header

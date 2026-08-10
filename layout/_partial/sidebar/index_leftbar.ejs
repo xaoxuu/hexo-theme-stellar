@@ -78,6 +78,8 @@ function layoutTitle(main, url, sub) {
 function layoutWidgets() {
   var el = '';
   el += '<div class="widgets">';
+  // 左栏共用的 SVG 渐变定义（供激活书签等彩色图标使用，见 grad-def.ejs）
+  el += partial('grad-def', {id: 'leftbar-active-icon-grad'})
   // 导航区放进组件滚动区，一起滚动
   el += layoutNavArea()
   if (page.leftbar) {

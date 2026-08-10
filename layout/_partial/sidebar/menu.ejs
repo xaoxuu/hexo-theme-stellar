@@ -1,26 +1,6 @@
 <%
 function layoutDiv() {
   var el = ''
-  // 渐变角度（CSS 角度，0=向上、顺时针），SVG 渐变坐标由它换算，保证与 CSS 渐变一致
-  var gradAngle = 225
-  if (theme.style && theme.style.gradient && theme.style.gradient.angle) {
-    gradAngle = parseFloat(theme.style.gradient.angle)
-    if (isNaN(gradAngle)) {
-      gradAngle = 225
-    }
-  }
-  var gradRad = gradAngle * Math.PI / 180
-  var gradVX = Math.sin(gradRad)
-  var gradVY = -Math.cos(gradRad)
-  var gradProj = [[0,0],[1,0],[0,1],[1,1]].map(function(c) {
-    return c[0] * gradVX + c[1] * gradVY
-  })
-  var gradMin = Math.min.apply(null, gradProj)
-  var gradMax = Math.max.apply(null, gradProj)
-  var gradX1 = Math.round((0.5 + gradVX * gradMin) * 1000) / 10
-  var gradY1 = Math.round((0.5 + gradVY * gradMin) * 1000) / 10
-  var gradX2 = Math.round((0.5 + gradVX * gradMax) * 1000) / 10
-  var gradY2 = Math.round((0.5 + gradVY * gradMax) * 1000) / 10
   el += `<nav class="menu dis-select${where == 'main' ? ' mobile-hidden' : ''}">`
   for (let item of (theme.menubar.items || [])) {
     if (item == undefined || item.id == null || item.url == null) {
@@ -41,7 +21,7 @@ function layoutDiv() {
     if (active) {
       el += `<span class="active-dot"></span>`
     }
-    el += `<svg class="grad-def" width="0" height="0" aria-hidden="true" focusable="false"><defs><linearGradient id="menu-grad-${item.id}" x1="${gradX1}%" y1="${gradY1}%" x2="${gradX2}%" y2="${gradY2}%"><stop offset="20%" style="stop-color:var(--item-theme-light)"/><stop offset="60%" style="stop-color:var(--item-theme)"/></linearGradient></defs></svg>`
+    el += partial('grad-def', {id: 'menu-grad-' + item.id})
     el += `</a>`
   }
   el += `</nav>`
