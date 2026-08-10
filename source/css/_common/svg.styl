@@ -7,3 +7,11 @@ svg.icon
 
 svg.active-icon
   color: var(--theme)
+
+// 隐藏的 SVG 渐变定义容器（配合 --item-grad 与 fill:var(--item-grad) 使用）
+svg.grad-def
+  position: absolute
+  width: 0 !important
+  height: 0 !important
+  overflow: hidden
+  pointer-events: none

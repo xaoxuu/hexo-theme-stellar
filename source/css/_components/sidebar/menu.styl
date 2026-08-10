@@ -30,12 +30,13 @@
     gap: 16px
     padding: 0 16px
     color: var(--text-p2)
+    // 菜单项主题色由配置内联提供（--item-theme），淡色变体在此基于它计算
+    --item-theme-light: x-theme-light()
     img,svg
       width: 1.5rem
       height: 1.5rem
       object-fit: contain
       opacity: 0.5
-      trans1 all
       color: var(--text-p2)
     span
       text-overflow: ellipsis
@@ -45,9 +46,13 @@
       background: var(--bg-a50)
       img,svg
         opacity: 1
+      > svg [fill="currentColor"]
+        fill: var(--item-grad)
+      > svg [stroke="currentColor"]
+        stroke: var(--item-grad)
     &.active
       color: var(--text-p1)
-      background: var(--bg-a100)
+      background: var(--bg-a50)
       img,svg
         opacity: 1
       .active-dot
@@ -56,7 +61,11 @@
         width: 8px
         height: 8px
         border-radius: 50%
-        background: var(--theme)
+        background: x-theme-gradient()
+      > svg [fill="currentColor"]
+        fill: var(--item-grad)
+      > svg [stroke="currentColor"]
+        stroke: var(--item-grad)
     // 未设置主题色的菜单项，激活/悬停时图标显示通用主题色
     &:not(.themed)
       &:hover, &.active
@@ -67,5 +76,3 @@
       &:hover, &.active
         > svg
           color: var(--item-theme)
-      .active-dot
-        background: var(--item-theme)

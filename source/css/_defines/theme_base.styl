@@ -62,6 +62,25 @@ x-set-text-colors($scheme, $p0 = 1, $p1 = 0.8, $p2 = 0.7, $p3 = 0.5, $p4 = 0.4)
   --block-border: x-hsla($hue, $sat, $light, $alpha * 1.5)
 
 
+// ========== 通用主题色渐变 ==========
+// 约定：渐变颜色通过 --item-theme 提供，未设置时回退到站点主题色 var(--theme)；
+// 淡色变体为 --item-theme-light（默认与白色混合 50%）；角度默认取 style.gradient.angle。
+// 注意：局部覆盖 --item-theme 的元素需同时设置 --item-theme-light（如 x-theme-light()），
+// 否则淡色变体仍沿用 :root 上的主题色。
+// 用法示例：
+//   .foo
+//     --item-theme: #1BCDFC                            // 可选，默认使用站点主题色
+//     background: x-theme-gradient()                   // 右上角淡色 → 左下角主色，停止点 20% / 60%
+//     background: x-theme-gradient(30%, 70%, 25%)      // 自定义停止点与淡色比例
+// 图标渐变（SVG）：元素内放置 <svg class="grad-def">…<linearGradient …/></svg>，
+// 并设置 --item-grad:url(#渐变id)，然后对子元素使用 fill:var(--item-grad)。
+x-theme-light($color = unquote('var(--item-theme)'), $ratio = 50%)
+  return unquote('color-mix(in srgb, %s %s, #fff)' % ($color $ratio))
+
+x-theme-gradient($color = unquote('var(--item-theme)'), $start = 20%, $end = 60%, $light-ratio = 50%, $angle = convert(hexo-config('style.gradient.angle')) or 225deg)
+  $light = x-theme-light($color, $light-ratio)
+  return unquote('linear-gradient(%s, %s %s, %s %s)' % ($angle $light $start $color $end))
+
 // ---------------- apply theme ----------------
 // 设置浅色模式
 dynamic-theme-light()
@@ -92,6 +111,9 @@ dynamic-theme-dark()
   --accent: $c-accent
   // 链接
   x-set-link-with-color($c-link)
+  // 通用渐变颜色（局部可用 --item-theme 覆盖）
+  --item-theme: var(--theme)
+  --item-theme-light: x-theme-light()
 
   // dynamic colors
   dynamic-theme-light()
@@ -103,4 +125,3 @@ dynamic-theme-dark()
   dynamic-theme-light()
 :root[data-theme="dark"]
   dynamic-theme-dark()
-
