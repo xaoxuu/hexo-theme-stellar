@@ -6,7 +6,7 @@ if (cmt.service) {
   cmt[cmt.service] = Object.assign({}, theme.comments[cmt.service]);
 }
 var loadComment = false;
-if (theme.comments.service && theme.comments.service.length > 0) {
+if (cmt.service && cmt.service.length > 0) {
   if (page.comments == undefined || page.comments != false) {
     loadComment = true;
   }

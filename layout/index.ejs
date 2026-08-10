@@ -5,6 +5,29 @@ if (page.menu_id == undefined) {
 if (page.title && page.wiki) {
   page.robots = 'noindex,follow';
 }
+// 首页评论区：仅首页第一页，默认不显示，可通过 site_tree.home.comments 开启/覆盖
+var homeCmt = theme.site_tree?.home?.comments
+if (homeCmt && homeCmt !== false && is_home_first_page()) {
+  page.comments = true;
+  if (typeof homeCmt === 'object') {
+    if (homeCmt.service) {
+      page.comments_service = homeCmt.service;
+    }
+    if (homeCmt.comment_title != null) {
+      page.comment_title = homeCmt.comment_title;
+    }
+    if (homeCmt.comment_id != null) {
+      page.comment_id = homeCmt.comment_id;
+    }
+    var homeCommentServices = ['beaudar', 'utterances', 'giscus', 'twikoo', 'waline', 'artalk'];
+    for (var i = 0; i < homeCommentServices.length; i++) {
+      var key = homeCommentServices[i];
+      if (homeCmt[key]) {
+        page[key] = homeCmt[key];
+      }
+    }
+  }
+}
 
 function layout_post_card(layout, post, content) {
   var el = '';
@@ -39,3 +62,6 @@ function layout_post_list(partial) {
   return partial('_partial/main/post_list/post_card', {post: post})
 }) %>
 <%- partial('_partial/main/post_list/paginator') %>
+<% if (homeCmt && homeCmt !== false && is_home_first_page()) { %>
+  <%- partial('_partial/comments/layout') %>
+<% } %>

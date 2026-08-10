@@ -74,6 +74,10 @@ site_tree:
   home:
     leftbar: welcome, recent
     rightbar: 
+    # 首页评论区，默认不显示。可设为 true 使用全局评论服务，
+    # 或参考页面 front-matter 覆盖评论参数：
+    # service、comment_title、comment_id 及 beaudar/utterances/giscus/twikoo/waline/artalk 各服务参数。
+    comments:
   # 博客列表页配置
   index_blog:
     base_dir: blog # 只影响自动生成的页面路径
