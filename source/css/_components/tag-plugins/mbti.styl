@@ -1,0 +1,80 @@
+.md-text .tag-plugin.mbti
+  display: block
+  border: 1px solid var(--theme-border)
+  background: var(--card)
+  color: inherit
+  text-decoration: none
+  .mbti-image
+    display: block
+    width: 100%
+    margin: 0 0 1.5rem 0
+  .mbti-title-link
+    color: inherit
+    font-weight: 600
+  .mbti-title
+    display: flex
+    align-items: center
+    justify-content: center
+    color: var(--text-p1)
+    font-weight: 600
+    margin-bottom: 1rem
+  .mbti-body
+    border-top: 1px dashed var(--block-border)
+    padding-top: 0.75rem
+    margin-top: 0.75rem
+
+  .mbti-trait + .mbti-trait
+    margin-top: 0.75rem
+
+  .mbti-labels
+    display: flex
+    justify-content: space-between
+    align-items: baseline
+    font-size: $fs-13
+    margin-bottom: 4px
+    .mbti-label.active
+      color: var(--text-p1)
+      font-weight: 600
+    .mbti-label:not(.active)
+      color: var(--text-p3)
+    .mbti-label .pct
+      color: var(--text-p3)
+      font-size: $fs-12
+
+  .mbti-progress
+    height: 4px
+    border-radius: 2px
+    position: relative
+    background: var(--theme-a30)
+    .fill
+      position: absolute
+      background: var(--theme)
+      border-radius: 2px
+      top: 0
+      left: 0
+      bottom: 0
+    .mbti-dot
+      position: absolute
+      top: -4px
+      width: 8px
+      height: 12px
+      margin-left: -4px
+      border-radius: 8px
+      background: #fff
+      box-shadow: $boxshadow-button
+      &:after
+        content: ''
+        position: absolute
+        top: 2px
+        bottom: 2px
+        left: 2px
+        width: 4px
+        border-radius: 4px
+        background: var(--theme)
+
+  .mbti-trait.reversed .fill
+    left: auto
+    right: 0
+
+.md-text .tag-plugin.note.mbti
+  padding: 2rem

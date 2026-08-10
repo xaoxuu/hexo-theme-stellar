@@ -68,3 +68,40 @@ symbol:
   colon: "："
   brackets_l: "（"
   brackets_r: "）"
+
+tag_plugins:
+  mbti:
+    title: 我的 MBTI 人格：%s（%s）
+    types:
+      INTJ: 架构师
+      INTP: 逻辑学家
+      ENTJ: 指挥官
+      ENTP: 辩论家
+      INFJ: 提倡者
+      INFP: 调停者
+      ENFJ: 主人公
+      ENFP: 活动家
+      ISTJ: 物流师
+      ISFJ: 守卫者
+      ESTJ: 管理者
+      ESFJ: 执政官
+      ISTP: 鉴赏家
+      ISFP: 冒险家
+      ESTP: 企业家
+      ESFP: 表演者
+    traits:
+      energy:
+        left: 外向
+        right: 内向
+      mind:
+        left: 天马行空
+        right: 求真务实
+      nature:
+        left: 理性思考
+        right: 情感细腻
+      tactics:
+        left: 运筹帷幄
+        right: 随机应变
+      identity:
+        left: 自信果断
+        right: 情绪易波动

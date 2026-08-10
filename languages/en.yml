@@ -68,3 +68,40 @@ symbol:
   colon: ": "
   brackets_l: "("
   brackets_r: ")"
+
+tag_plugins:
+  mbti:
+    title: 'My MBTI Type: %s (%s)'
+    types:
+      INTJ: Architect
+      INTP: Logician
+      ENTJ: Commander
+      ENTP: Debater
+      INFJ: Advocate
+      INFP: Mediator
+      ENFJ: Protagonist
+      ENFP: Campaigner
+      ISTJ: Logistician
+      ISFJ: Defender
+      ESTJ: Executive
+      ESFJ: Consul
+      ISTP: Virtuoso
+      ISFP: Adventurer
+      ESTP: Entrepreneur
+      ESFP: Entertainer
+    traits:
+      energy:
+        left: Extraverted
+        right: Introverted
+      mind:
+        left: Intuitive
+        right: Observant
+      nature:
+        left: Thinking
+        right: Feeling
+      tactics:
+        left: Judging
+        right: Prospecting
+      identity:
+        left: Assertive
+        right: Turbulent
