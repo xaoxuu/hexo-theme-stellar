@@ -7,21 +7,26 @@
     corner-shape: superellipse(1.2)
     color: var(--text-p1)
     trans1 background
-    &.active,&:hover
-      background: var(--bg-a100)
+    &:hover
+      background: var(--bg-a50)
+    &.active
+      background: var(--bg-a50)
   a+a
     margin-top: 2px
   a  
     display: flex
     justify-content: space-between
     align-items: center
+    gap: 16px
     .title
       txt-ellipsis()
     svg
       flex-shrink: 0
-      height: 1em
-      width: auto
-      transform: scale(1.2)
+      width: 1.5rem
+      height: 1.5rem
+      &.active-icon
+        width: 1rem
+        height: 1rem
 
 .widget-wrapper.post-list
   .widget-body+.widget-header

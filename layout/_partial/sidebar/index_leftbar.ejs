@@ -78,16 +78,9 @@ function layoutTitle(main, url, sub) {
 function layoutWidgets() {
   var el = '';
   el += '<div class="widgets">';
+  // 导航区放进组件滚动区，一起滚动
+  el += layoutNavArea()
   if (page.leftbar) {
-    var search = {}
-    if (page.search) {
-      search = page.search
-    } else if (wiki?.search) {
-      search = wiki.search
-    } else if (topic?.search) {
-      search = topic.search
-    }
-    el += partial('search', {item: search})
     page.leftbar.forEach((w, i) => {
       let name = ''
       let widget = {}
@@ -109,6 +102,20 @@ function layoutWidgets() {
   }
   el += '</div>';
   return el;
+}
+function layoutSearch() {
+  if (!page.leftbar) {
+    return ''
+  }
+  var search = {}
+  if (page.search) {
+    search = page.search
+  } else if (wiki?.search) {
+    search = wiki.search
+  } else if (topic?.search) {
+    search = topic.search
+  }
+  return partial('search', {item: search})
 }
 function layoutFooterDiv() {
   const { social } = theme.footer
@@ -154,6 +161,12 @@ function layoutNavArea() {
   if (page.menu == false) {
     return el
   }
+  // wiki 内容页默认隐藏导航区，page.menu 或 wiki.menu 为 true 时显示
+  if (page.wiki?.length > 0) {
+    if (page.menu !== true && wiki?.menu !== true) {
+      return el
+    }
+  }
   el += `<div class="nav-area">`
   el += partial('menu', {where: 'sidebar'})
   el += `</div>`
@@ -161,6 +174,6 @@ function layoutNavArea() {
 }
 %>
 <%- layoutLogo() %>
-<%- layoutNavArea() %>
+<%- layoutSearch() %>
 <%- layoutWidgets() %>
 <%- layoutFooterDiv() %>

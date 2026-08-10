@@ -11,6 +11,7 @@
   z-index: 1
   line-height: 1.2
   margin: 0 var(--gap-margin)
+  padding-bottom: 32px
   .widget-wrapper
     .widget-header
       padding-left: var(--gap-padding)
@@ -26,13 +27,13 @@
         display: block
       >span
         text-align: left
-        opacity 0.6
+        opacity 0.3
       &:empty
         display: none
       .cap-action
         line-height: 0
         color: inherit
-        opacity 0.6
+        opacity 0.3
         trans2: opacity background
         border-radius: 4px
         padding: 6px
@@ -59,7 +60,7 @@
 
 .widget-wrapper
   display: block
-  padding-bottom: 32px
+  margin-top: 32px
 
 .l_right .widgets
   &:empty 
@@ -77,7 +78,3 @@
   @media screen and (min-width: $device-laptop)
     .widget-wrapper.markdown .widget-body
       background: var(--block)
-
-.leftbar-container
-  .header+.widgets
-    margin-top: 1rem

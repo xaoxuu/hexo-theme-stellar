@@ -10,6 +10,8 @@
     display: flex
     flex-direction: row
     align-items: center
+    padding: 0 16px
+    gap: 16px
     transition: 0.38s ease-out
     z-index: 1
     border-radius: $border-card-s
@@ -31,12 +33,24 @@
         background: var(--bg-a20)
       z-index 0
       trans1 all
+    &:after
+      position: absolute
+      content: ''
+      height: 2px
+      bottom: 0
+      left: 1rem
+      right: 1rem
+      border-radius: $border-bar
+      background: convert(hexo-config('style.gradient.searchbar'))
+      background-size: 200%
+      animation: search-glow 20s linear infinite
+      opacity: 0
+      pointer-events: none
+      z-index 1
+      trans1 opacity, 0.3s
     &:hover,&:has(input:focus),&:has(input:not(:placeholder-shown))
-      &:before
-        background: var(--bg-a100)
-        height: 100%
-        left: 0
-        right: 0
+      &:after
+        opacity: 1
   .search-input
     width: 100%
     box-sizing: border-box
@@ -54,10 +68,13 @@
     border-radius: $border-bar
     display: flex
     align-items: center
-    height: 40px
+    justify-content: center
+    flex-shrink: 0
+    width: 1.5rem
+    height: 1.5rem
     svg
       height: 1rem
-      width: calc((var(--side-content-width) + var(--gap-padding) * 2 - 3 * 8px) * 0.25)
+      width: 1rem
       color: var(--text-p2)
       fill: currentColor
       path[p-id="1562"]
@@ -89,6 +106,8 @@
     scrollbar-width: none
     scrollbar(0, 0)
     border-radius: $border-bar
+    mask: linear-gradient(white, 90%, transparent)
+    -webkit-mask: linear-gradient(white, 90%, transparent)
     &:empty
       display: none
     .search-result-list
@@ -134,3 +153,23 @@
   .search-no-result
     display: block
     margin-bottom: 8px
+
+.leftbar-container > .search-wrapper
+  width: auto
+  margin: 1rem var(--gap-margin) 0
+  padding-bottom: 0
+
+.leftbar-container > .search-wrapper[searching='true']
+  flex-grow: 1
+  min-height: 0
+  display: flex
+  flex-direction: column
+  #search-result
+    flex-grow: 1
+    max-height: none
+
+@keyframes search-glow
+  from
+    background-position: 0%
+  to
+    background-position: 1000%

@@ -6,15 +6,17 @@ function layoutDiv() {
     if (item == undefined || item.id == null || item.url == null) {
       continue
     }
-    el += `<a class="nav-item${item.id == page.menu_id ? ' active' : ''}" title="${item.title}" href="${pretty_url(item.url)}"`
+    el += `<a class="nav-item${item.id == page.menu_id ? ' active' : ''}${item.theme?.length > 0 ? ' themed' : ''}"`
     if (item.theme?.length > 0) {
-      el += ` style="color:${item.theme}"`
+      el += ` style="--item-theme:${item.theme}"`
     }
-    el += `>`
+    el += ` title="${item.title}" href="${pretty_url(item.url)}">`
     if (item.icon?.length > 0) {
       el += icon(item.icon, 'no-lazy')
-    } else {
-      el += `<span>${__(item.title)}</span>`
+    }
+    el += `<span>${__(item.title)}</span>`
+    if (item.id == page.menu_id) {
+      el += `<span class="active-dot"></span>`
     }
     el += `</a>`
   }

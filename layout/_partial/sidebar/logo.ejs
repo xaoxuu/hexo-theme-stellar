@@ -37,6 +37,26 @@ function layoutTitle(main, url, sub) {
   return el
 }
 
+function layoutBack() {
+  if (where != 'sidebar' || !page.wiki) {
+    return ''
+  }
+  // 开关：page 的 wiki_home 优先，其次 wiki 定义的 wiki_home，默认显示
+  const wiki = theme.wiki.tree[page.wiki]
+  const enabled = page.wiki_home ?? wiki?.wiki_home ?? true
+  if (enabled === false) {
+    return ''
+  }
+  var el = ''
+  el += `<div class="wiki-home-wrap">`
+  el += `<a class="wiki-home cap" href="${pretty_url(theme.site_tree.index_wiki.base_dir)}">`
+  el += icon('default:goback')
+  el += `<span>${__('btn.all_wiki')}</span>`
+  el += `</a>`
+  el += `</div>`
+  return el
+}
+
 function layoutDiv() {
   if (where == 'main') {
     if (page.header == false) {
@@ -75,4 +95,5 @@ function layoutDiv() {
 }
 %>
 
+<%- layoutBack() %>
 <%- layoutDiv() %>

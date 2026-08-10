@@ -55,6 +55,10 @@
     text-align: justify
     border-radius: $border-card-l
     overflow: hidden
+    // 搜索条激活（有输入内容）时隐藏导航区与组件区，给搜索结果腾出空间
+    > .search-wrapper[searching='true']
+      & ~ .widgets
+        display: none
     >.widgets
       border-radius: $border-bar
       mask: linear-gradient(white, 90%, transparent)

@@ -38,7 +38,6 @@ logo:
 
 # 侧边栏主功能导航菜单
 menubar:
-  columns: 4 # 一行多少个
   items: # 可按照自己需求增加，符合以下格式即可
     # id: 页面中高亮的 menu_id 
     # theme: 高亮时的颜色，仅 svg 中 fill="currentColor" 时有效
@@ -687,6 +686,7 @@ style:
     error: 加载失败，请稍后重试。
   gradient: # https://webgradients.com/
     start: 'linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))'
+    searchbar: 'linear-gradient(to right, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)' # 搜索条激活时底部横条的渐变色（彩虹，收尾经蓝色平滑过渡）
   leftbar:
     # 可以设置：纯色/渐变色/图片作为背景
     # 设置为纯色时，可以分别设置浅色和深色模式背景色

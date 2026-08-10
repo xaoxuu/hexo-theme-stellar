@@ -2,6 +2,11 @@
   display: grid
   grid-gap: 8px
 
+.linklist .link:hover
+  background: var(--bg-a50)
+  svg  
+    filter: unset
+
 .linklist .link
   border-radius: $border-bar
   corner-shape: superellipse(1.2)
@@ -43,8 +48,3 @@
     transform: scale(1.2)
   span 
     padding: 0 8px
-
-.linklist .link:hover
-  background: var(--bg-a100)
-  svg  
-    filter: unset
