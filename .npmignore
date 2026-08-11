@@ -31,6 +31,11 @@ scripts/.cache/
 release.js
 giscus.json
 
+# ---- 开发工具（仅仓库内使用，不随包发布）----
+test/
+eslint.config.js
+ci/
+
 # ---- 开发文档 / AI 辅助 ----
 docs/
 CLAUDE.md

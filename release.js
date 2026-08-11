@@ -211,6 +211,15 @@ function askConfirm(question) {
   return ask(question).then((answer) => /^\s*(y|yes)\s*$/i.test(answer));
 }
 
+function runPreflightCheck() {
+  console.log('\n>>> 执行发版前质量检查: npm run check（lint + 单测 + 知识库核查）');
+  try {
+    execFileSync('npm', ['run', 'check'], { cwd: ROOT, stdio: 'inherit' });
+  } catch (_) {
+    fail('质量检查未通过（lint / 单测 / 知识库核查），已终止发版，请修复后再试');
+  }
+}
+
 async function main() {
   process.chdir(ROOT);
 
@@ -275,6 +284,8 @@ async function main() {
   if (summary) {
     console.log(`\n>>> 变更摘要:\n${summary}\n`);
   }
+
+  runPreflightCheck();
 
   const backups = backupFiles();
 

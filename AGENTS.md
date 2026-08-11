@@ -41,11 +41,12 @@
 ## 4. 关键规则
 
 - 修改 `scripts/` 后必须全量验证：`npm run g && npx gulp minify`（`npm run s` 是按需渲染，不能替代）
+- 质量门禁由 CI 强制执行（`.github/workflows/ci.yml`）：ESLint（`npm run lint`）、单元测试（`npm test`，Node 内置 test runner）、PR 提交信息 Conventional Commits 校验、demo 工程全量渲染 + minify、知识库硬事实核查；本地一键检查用 `npm run check`
 - 不引入新构建系统，保持 Hexo 原生 + Gulp 后处理
 - CSS 兼容 IE8，JS 兼容 ES2015+，不混用 EJS 与前端框架
 - 新增功能覆盖维度：`layout/` + `scripts/` + `source/css/` + `source/js/`（如需）+ `docs/` + `languages/`（如需）
 - 新增或重构标签插件时，先遵循 `docs/guides/tag-plugins-style-guide.md`；`AGENTS.md` 仅保留总纲与硬约束
-- 方案/审计/指南文档统一归档在 `docs/`（`designs/`、`audits/`、`guides/`）
+- 方案/审计/指南文档统一归档在 `docs/`（`designs/`、`audits/`、`guides/`）；新任务方案按 `docs/designs/_template/` 模板建 `{YYYY-MM-DD}-{功能简称}/`（`spec.md` / `plan.md` / `checklist.md`）
 - 主题知识库统一维护在 `docs/knowledge/`：涉及主题代码、配置或行为问题时，先查阅 `docs/knowledge/`（入口见 `docs/knowledge/README.md` 与各领域 `index.md`）；知识库内容与代码不一致时以代码为准，并同步修正知识库（修正记录见 `docs/knowledge/VERIFICATION.md`）
 - 发版遵循 release 流程（发版前先输出 CHANGELOG 章节、版本号规则、dry-run 预览、提交前与用户确认），详见 [CLAUDE.md](CLAUDE.md)
 

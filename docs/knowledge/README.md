@@ -34,7 +34,7 @@
 ## 维护约定
 
 - 知识库与代码不一致时**以代码为准**，修正后登记到 `VERIFICATION.md`
-- 主题升级或行为变更后，运行 `python3 tools/verify.py zh` 复查硬事实
+- 主题升级或行为变更后，运行 `python3 tools/verify.py` 复查硬事实
 - 页面内文件路径均已对照 `themes/stellar/` 核实；旧文档行号引用已移除（行号易过期）
 - 已移除功能（如 PJAX、jQuery、`welcome` 组件、`npm-publish.sh`）在对应页面已改写为当前实现
 - 每个页面 front matter 含 `title`、`domain`、`tags` 元数据，便于检索与引用

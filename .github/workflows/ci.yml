@@ -1,0 +1,104 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint (ESLint)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+
+  unit:
+    name: Unit tests (node:test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+
+  commit-gate:
+    name: Conventional Commits
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - run: node ci/check-commit-msg.js "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}"
+
+  integration:
+    name: Integration build (demo + minify)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      # 官方 demo 固定 commit，demo 有实质更新时手动提升该 pin
+      - name: Checkout demo project
+        uses: actions/checkout@v5
+        with:
+          repository: xaoxuu/hexo-theme-stellar-examples
+          ref: cc25ca381cf230ee0164723b2e95a9219265fb73
+          path: ${{ runner.temp }}/demo
+
+      - name: Use PR theme checkout in demo
+        run: |
+          mkdir -p "${{ runner.temp }}/demo/blog/themes"
+          cp -R "$GITHUB_WORKSPACE" "${{ runner.temp }}/demo/blog/themes/stellar"
+          rm -rf "${{ runner.temp }}/demo/blog/themes/stellar/.git" \
+                 "${{ runner.temp }}/demo/blog/themes/stellar/node_modules"
+
+      - name: Install demo dependencies
+        working-directory: ${{ runner.temp }}/demo/blog
+        run: npm install --no-audit --no-fund
+
+      # 主题目录优先于 node_modules（Hexo 解析顺序），此处再显式移除 npm 版以防歧义
+      - name: Remove npm-published theme
+        working-directory: ${{ runner.temp }}/demo/blog
+        run: rm -rf node_modules/hexo-theme-stellar
+
+      - name: Full render (hexo generate)
+        working-directory: ${{ runner.temp }}/demo/blog
+        run: npx hexo generate
+
+      - name: Install minify toolchain
+        working-directory: ${{ runner.temp }}/demo/blog
+        run: >-
+          npm install --no-save --no-audit --no-fund
+          gulp gulp-clean-css gulp-html-minifier-terser gulp-terser
+          gulp-sourcemaps gulp-babel @babel/core @babel/preset-env
+
+      - name: Minify (HTML/CSS/JS)
+        working-directory: ${{ runner.temp }}/demo/blog
+        run: |
+          cp "$GITHUB_WORKSPACE/ci/gulpfile.js" gulpfile.js
+          npx gulp minify
+
+  knowledge:
+    name: Knowledge base verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Ensure ripgrep
+        run: command -v rg || (sudo apt-get update && sudo apt-get install -y ripgrep)
+      - run: python3 docs/knowledge/tools/verify.py

@@ -10,8 +10,8 @@
 |------|------|------|
 | 模板引擎 | EJS | `layout/` |
 | CSS 预处理 | Stylus | `source/css/` |
-| 服务端 JS | CommonJS (ES5) | `scripts/` |
-| 浏览器 JS | ES5 (Babel 转译) | `source/js/` |
+| 服务端 JS | CommonJS（Node 22+，现代语法） | `scripts/` |
+| 浏览器 JS | ES2015+（源码），Babel 转译输出 | `source/js/` |
 | 国际化 | YAML | `languages/` |
 | 文档 | Markdown | `docs/` |
 
@@ -89,7 +89,7 @@ items.forEach(function(post) {
 
 - CommonJS: `require()` / `module.exports`
 - 文件头: `/* global hexo */` + `'use strict';`
-- 2 空格缩进，双引号，分号结尾
+- 2 空格缩进，双引号，分号结尾（新增代码遵循；存量代码风格不一，暂未由 lint 强制）
 - 标签注册: `hexo.extend.tag.register(name, handler, options)`
 - 辅助函数注册: `hexo.extend.helper.register(name, handler)`
 
@@ -116,7 +116,7 @@ module.exports = function(hexo) {
 
 ## 浏览器 JS 规范
 
-- ES5 语法（Gulp Babel 转译为 ES2015+）
+- 源码使用 ES2015+ 语法（Gulp Babel 转译输出）
 - 避免直接操作 DOM，使用主题工具函数
 - 注释: `//` 单行，`/* */` 多行
 
@@ -126,10 +126,11 @@ module.exports = function(hexo) {
 
 ### 1. 方案
 
-在 `docs/` 目录下创建或更新方案文档，描述：
+在 `docs/designs/{YYYY-MM-DD}-{功能简称}/` 目录下创建方案文档（模板见 `docs/designs/_template/`，包含 `spec.md` / `plan.md` / `checklist.md`），描述：
 - 要解决的问题或新增的能力
 - 技术方案和实现思路
 - 影响范围（涉及哪些文件/模块）
+- 需要同步的知识库页面与文档
 
 ### 2. 执行计划
 
@@ -142,10 +143,14 @@ module.exports = function(hexo) {
 
 变更完成后，在自己的 Hexo 项目中集成验证：
 - **`npm run g && npx gulp minify` 全量验证**（`scripts/` 变更必须执行：`npm run g` 发现模板渲染错误，`npx gulp minify` 发现 HTML 结构错误如多余引号等）
+- `npm run lint` 与 `npm test`（新增/修改纯函数时补充单测）
+- `python3 docs/knowledge/tools/verify.py` 知识库硬事实核查
 - `npm run s` 启动本地服务
 - 检查涉及的所有页面类型（首页、文章页、Wiki 页等）
 - 验证浏览器兼容性
 - 测试结果记录在 `docs/` 中
+
+> CI（`.github/workflows/ci.yml`）会在 PR 上强制 lint、单测、Conventional Commits、demo 全量构建 + minify 与知识库核查；本地可用 `npm run check` 一键执行 lint + 单测 + 知识库核查。
 
 ### 4. 文档归档
 
@@ -165,7 +170,8 @@ docs/
 | `guides/` | 发版流程、操作手册、新手指南 | `release-process.md` |
 
 - 文件命名: `{YYYY-MM-DD}-{功能简称}.md`，流程性文档可不带日期
-- 涉及逻辑变更（API、配置项、行为变化）必须同步更新仓库 Wiki
+- 多步骤任务使用 `docs/designs/{YYYY-MM-DD}-{功能简称}/` 目录（模板见 `docs/designs/_template/`），单文件方案可保留 `{YYYY-MM-DD}-{功能简称}.md` 形式
+- 涉及主题代码、配置或行为变化时，必须同步更新 `docs/knowledge/` 并在 `VERIFICATION.md` 登记；涉及逻辑变更（API、配置项、行为变化）同时更新仓库 Wiki
 
 ### 新增功能 Checklist
 
@@ -177,6 +183,7 @@ docs/
 4. `source/js/` — 浏览器脚本（如需）
 5. `docs/` — 方案 + 执行计划 + 测试记录
 6. `languages/` — 国际化文案（如需新增文本）
+7. `docs/knowledge/` — 涉及主题代码、配置或行为变化时同步更新
 
 ## 组件架构
 
@@ -211,6 +218,7 @@ docs/
 ## 发版规范
 
 发版一键全自动：AI/人工提前准备 CHANGELOG 章节，Node 脚本校验非空并更新版本号后推送 → CI 自动完成 npm 发布、tag 创建与 GitHub Release。
+发版前脚本自动执行 `npm run check`（lint + 单测 + 知识库核查），任一失败即中止。
 
 ```
 npm run release → push main + npm → CI 自动触发 → npm publish + git tag + GitHub Release

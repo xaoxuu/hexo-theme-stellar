@@ -4,7 +4,9 @@
   "description": "Elegant and powerful theme for Hexo.",
   "main": "package.json",
   "scripts": {
-    "test": "echo test",
+    "lint": "eslint .",
+    "test": "node --test",
+    "check": "npm run lint && npm test && python3 docs/knowledge/tools/verify.py",
     "release": "node release.js",
     "release:dry": "node release.js --dry-run"
   },
@@ -31,5 +33,6 @@
   },
   "homepage": "https://xaoxuu.com/wiki/stellar/",
   "devDependencies": {
+    "eslint": "^9.39.5"
   }
 }
