@@ -18,7 +18,7 @@ status: 已通过
 - 模板：`layout/layout.ejs` 中 `<aside class="l_left">` 按 `theme.style.leftbar?.ui-style === 'card'` 追加 `leftbar-card` 类；`glass` 不加类。
 - 样式：`source/css/_components/sidebar/sidebar.styl` 新增 `.l_left.leftbar-card` 规则：
   - `background: var(--card)`；
-  - `box-shadow: $boxshadow-float`（`0 4px 8px 0 rgba(0,0,0,0.1)`，介于 `$boxshadow-card` 与 `$boxshadow-card-float` 之间）；
+  - `box-shadow: $boxshadow-float`（`0 4px 8px 0 rgba(0,0,0,0.05)`，介于 `$boxshadow-card` 与 `$boxshadow-card-float` 之间）；
   - 隐藏 `.sidebg` 与 `.leftbar-container:before/:after`，避免背景图与磨砂叠加层干扰。
 - 交互样式按风格隔离（未来新增风格沿用同一机制）：`sidebar-light()` 混入与搜索条底部条改为读取容器级 CSS 变量 `--leftbar-item-bg` / `--leftbar-item-shadow` / `--leftbar-search-line`；
   - `card` 时列表项（菜单、最近更新、页面树、链接列表、相关文章等）hover/active 背景为 `var(--block)`、无顶部光照阴影；

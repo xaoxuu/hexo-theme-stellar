@@ -231,7 +231,7 @@ $border-bar = convert(hexo-config('style.border-radius.bar'))            // 横�
 | 令牌 | 阴影值 | 用途 |
 |------|--------|------|
 | `$boxshadow-card` | `0 1px 2px 0px rgba(0, 0, 0, 0.1)` | 默认卡片阴影 |
-| `$boxshadow-float` | `0 4px 8px 0px rgba(0, 0, 0, 0.1)` | 浮动元素 |
+| `$boxshadow-float` | `0 4px 8px 0px rgba(0, 0, 0, 0.05)` | 浮动元素 |
 | `$boxshadow-card-float` | `0 12px 16px -4px rgba(0, 0, 0, 0.2)` | 悬停抬升卡片 |
 | `$boxshadow-button` | `0 0 2px 0px rgba(0, 0, 0, 0.04), 0 0 8px 0px rgba(0, 0, 0, 0.04)` | 按钮立体感 |
 | `$boxshadow-block` | `0 1px 4px 0px rgba(0, 0, 0, 0.02), 0 2px 8px 0px rgba(0, 0, 0, 0.02)` | 内容块 |

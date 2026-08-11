@@ -277,7 +277,7 @@ graph LR
 | 变量 | 用途 | 阴影值 |
 |------|------|--------|
 | `$boxshadow-card` | 标准卡片 | `0 1px 2px 0px rgba(0,0,0,0.1)` |
-| `$boxshadow-float` | 浮动元素 | `0 4px 8px 0px rgba(0,0,0,0.1)` |
+| `$boxshadow-float` | 浮动元素 | `0 4px 8px 0px rgba(0,0,0,0.05)` |
 | `$boxshadow-card-float` | 悬停抬升卡片 | `0 12px 16px -4px rgba(0,0,0,0.2)` |
 | `$boxshadow-button` | 按钮立体感 | `0 0 2px 0px rgba(0,0,0,0.04), 0 0 8px 0px rgba(0,0,0,0.04)` |
 | `$boxshadow-block` | 块级元素 | `0 1px 4px 0px rgba(0,0,0,0.02), 0 2px 8px 0px rgba(0,0,0,0.02)` |

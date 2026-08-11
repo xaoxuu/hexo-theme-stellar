@@ -334,7 +334,7 @@ graph BT
 
 ### 纯色卡片风格（ui-style: card）
 
-`style.leftbar.ui-style` 控制左栏外观：`glass` 为历史默认行为，保留上面的三层背景系统；`card` 时 `layout.ejs` 为 `.l_left` 追加 `leftbar-card` 类，容器改为 `background: var(--card)`（浅色纯白 / 深色主题深灰黑）与 `box-shadow: $boxshadow-float`（`0 4px 8px 0 rgba(0,0,0,0.1)`），并隐藏 `.sidebg` 与 `.leftbar-container:before/:after`。因类选择器特异性更高，桌面与移动端均生效。该配置项默认值为 `card`。
+`style.leftbar.ui-style` 控制左栏外观：`glass` 为历史默认行为，保留上面的三层背景系统；`card` 时 `layout.ejs` 为 `.l_left` 追加 `leftbar-card` 类，容器改为 `background: var(--card)`（浅色纯白 / 深色主题深灰黑）与 `box-shadow: $boxshadow-float`（`0 4px 8px 0 rgba(0,0,0,0.05)`），并隐藏 `.sidebg` 与 `.leftbar-container:before/:after`。因类选择器特异性更高，桌面与移动端均生效。该配置项默认值为 `card`。
 
 交互样式按风格隔离：`sidebar-light()` 混入与搜索条底部条读取容器级 CSS 变量 `--leftbar-item-bg` / `--leftbar-item-shadow` / `--leftbar-search-line`（默认回退玻璃质感背景与 `--bg-a100`/`--bg-a20` 底部条）。`card` 时 `.l_left.leftbar-card` 将其覆盖为 `var(--block)` / `none` / `var(--text-meta)`：列表项（菜单、最近更新、页面树、链接列表、相关文章等）hover/active 背景为 `var(--block)`、无顶部光照；搜索条底部条默认为 `var(--text-meta)`，输入/悬停高亮仍为彩虹渐变。`glass` 与右栏未设置变量，保持原效果。
 
