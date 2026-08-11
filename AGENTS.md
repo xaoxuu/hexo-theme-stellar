@@ -46,6 +46,7 @@
 - 新增功能覆盖维度：`layout/` + `scripts/` + `source/css/` + `source/js/`（如需）+ `docs/` + `languages/`（如需）
 - 新增或重构标签插件时，先遵循 `docs/guides/tag-plugins-style-guide.md`；`AGENTS.md` 仅保留总纲与硬约束
 - 方案/审计/指南文档统一归档在 `docs/`（`designs/`、`audits/`、`guides/`）
+- 主题知识库统一维护在 `docs/knowledge/`：涉及主题代码、配置或行为问题时，先查阅 `docs/knowledge/`（入口见 `docs/knowledge/README.md` 与各领域 `index.md`）；知识库内容与代码不一致时以代码为准，并同步修正知识库（修正记录见 `docs/knowledge/VERIFICATION.md`）
 - 发版遵循 release 流程（发版前先输出 CHANGELOG 章节、版本号规则、dry-run 预览、提交前与用户确认），详见 [CLAUDE.md](CLAUDE.md)
 
 ## 5. Git 与发布

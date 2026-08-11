@@ -51,6 +51,19 @@ source/                     # 浏览器端资源
     └── search/             #     搜索
 ```
 
+## 主题知识库
+
+主题仓库内置一份面向 AI 贡献者的中文知识库，位于 `docs/knowledge/`：
+
+- `00-总览与安装配置/` ~ `09-高级主题/`：按主题域组织的中文知识库，每个页面带 front matter 元数据与相对链接，入口为 `docs/knowledge/README.md` 及各领域 `index.md`
+- `VERIFICATION.md`：核查与修正记录；`tools/verify.py`：硬事实核查脚本
+
+使用约定：
+
+- 涉及主题代码、配置或行为问题时，先查阅 `docs/knowledge/` 对应领域，再读源码确认
+- 知识库以本仓库代码为唯一事实来源；发现不一致时修正知识库，并登记到 `VERIFICATION.md`
+- 主题升级或行为变更后，可运行 `python3 docs/knowledge/tools/verify.py` 复查硬事实
+
 ## EJS 模板规范
 
 - `<% %>` 逻辑控制，`<%- %>` 输出非转义 HTML
