@@ -79,7 +79,7 @@ function layoutDiv() {
   } else if (md_text(logo.avatar)) {
     el += `<a class="avatar" href="${url_for(md_link(logo.avatar) || '/')}">`
     if (theme.style.animated_avatar.animate) {
-      el += `<div class="bg" style="opacity:0;background-image:url(${theme.style.animated_avatar.background});"></div>`
+      el += `<div class="bg"></div>`
     }
     el += `<img no-lazy class="avatar" src="${md_text(logo.avatar)}">`
     el += `</a>`
