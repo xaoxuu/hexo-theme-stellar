@@ -1,12 +1,12 @@
 .l_left
-  margin: calc(var(--gap-margin) * 2) var(--gap-margin)
-  max-height: 'calc(%s - %s * 2 - %s)' % (100vh var(--gap-margin) $leftbar-bottom-margin)
+  margin: var(--gap-margin)
+  max-height: 'calc(%s - %s - %s)' % (100vh var(--gap-margin) $leftbar-bottom-margin)
   border-radius: $border-card-l
   .header
     margin: var(--gap-max) var(--gap-margin) 0
 
 .l_right
-  margin: calc(var(--gap-margin) * 2) 0
+  margin: var(--gap-margin) 0
   border-radius: $border-card-l
 @media screen and (min-width: $device-2k)
   .l_left
@@ -71,7 +71,7 @@
         background-color: convert($leftbar-background-color-dark)
 
   .leftbar-container
-    height: 'calc(%s - %s * 2 - %s)' % (100vh var(--gap-margin) $leftbar-bottom-margin)
+    height: 'calc(%s - %s - %s)' % (100vh var(--gap-margin) $leftbar-bottom-margin)
     display: flex
     flex-direction: column
     word-break: break-all

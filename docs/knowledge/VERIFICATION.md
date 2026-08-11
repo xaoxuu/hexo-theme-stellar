@@ -58,6 +58,15 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 - 已移除功能的历史引用：`plugins.pjax`、`layout/_plugins/pjax.ejs`、`source/js/plugins/pjax.js` 等（8.4 页面与各页面「PJAX 已移除」说明）
 - 语言键/运行时字段：`search.search` 等为 `languages/*.yml` 键；`canonical.encoded` 为 `window.canonical` 运行时字段
 - 生成产物/解析伪影：`search.json`、`main.css`、`args.json.json`、`data_services.xxx.js`、`.ejs`/`.styl` 裸扩展名
+
+## 六、样式变更登记
+
+| 日期 | 位置 | 变更 |
+|------|------|------|
+| 2026-08-12 | `docs/knowledge/02-布局系统/sidebar-system.md` | 侧边栏顶部间距由 `calc(var(--gap-margin) * 2)`（32px）减半为 `var(--gap-margin)`（16px）；`$rightbar-bottom-margin` 96px→48px；`$leftbar-bottom-margin` 保持 32px 不变；移动端浮动面板顶部改为 `8pt` |
+| 2026-08-12 | `_components/partial/navbar.styl` / `_components/widgets/toc.styl` | navbar 与 TOC（右栏首个小部件）吸顶 `top` 同步减半为 `var(--gap-margin)`，移动端 navbar 对齐 `8pt` |
+| 2026-08-12 | `docs/knowledge/02-布局系统/logo-navigation-headers.md` | navbar top 胶囊按钮（`.navbar nav a`）显式 `corner-shape: round`，取消全局 `superellipse(1.2)` 连续曲率，保持两端正圆端帽 |
+| 2026-08-12 | `docs/knowledge/01-样式系统/responsive-design.md` | `.float-panel` 胶囊面板及其 `:before`/`:after` 显式 `corner-shape: round`，取消全局 `superellipse(1.2)` 连续曲率 |
 - 简写路径已自动补全：`_partial/*.ejs`（→ `layout/`）、`_defines|_common|_components|_plugins/*.styl`（→ `source/css/`）
 
 以上标记不构成内容错误；如需消除报告噪音，可后续调整 `tools/verify.py` 的忽略列表。

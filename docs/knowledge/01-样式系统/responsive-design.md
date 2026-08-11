@@ -397,6 +397,7 @@ graph LR
 - 响应式边距
 - 经 `newblur()` 混入的玻璃拟态模糊
 - `.l_body` 带 `[leftbar]` / `[rightbar]` 属性时的激活状态样式
+- 胶囊外形（`border-radius: 64px`）显式使用 `corner-shape: round`，不受全局 `superellipse(1.2)` 连续曲率影响
 
 `.float-panel` 内的按钮继承响应式尺寸与悬停状态。
 

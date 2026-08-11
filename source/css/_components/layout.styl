@@ -18,10 +18,10 @@
 
 .l_body .l_left
   justify-self: right
-  top: calc(var(--gap-margin) * 2)
+  top: var(--gap-margin)
 .l_body .l_right
   justify-self: left
-  max-height: calc(100% - calc(var(--gap-margin) * 2) * 2)
+  max-height: calc(100% - var(--gap-margin) * 2)
   .widgets
     height: 100%
     overflow visible
@@ -41,8 +41,8 @@
       margin: 0
       --inset: 8px
       right: var(--inset)
-      top: calc(var(--gap-margin) * 2)
-      max-height: 'calc(%s - %s * 2 - %s)' % (100vh var(--gap-margin) $rightbar-bottom-margin)
+      top: var(--gap-margin)
+      max-height: 'calc(%s - %s - %s)' % (100vh var(--gap-margin) $rightbar-bottom-margin)
       box-shadow: $boxshadow-card-float
       z-index: 10
       background: var(--background)
@@ -71,13 +71,15 @@
       margin: 0
       --inset: 8px
       left: var(--inset)
-      top: calc(var(--gap-margin) * 2)
-      max-height: 'calc(%s - %s * 2 - %s)' % (100vh var(--gap-margin) $leftbar-bottom-margin)
+      top: 8pt
+      max-height: 'calc(%s - 8pt - %s)' % (100vh $leftbar-bottom-margin)
       .leftbar-container
         --inset: 8px
-        height: 'calc(%s - %s * 2 - %s)' % (100vh var(--gap-margin) $leftbar-bottom-margin)
+        height: 'calc(%s - 8pt - %s)' % (100vh $leftbar-bottom-margin)
       box-shadow: $boxshadow-card-float
       z-index: 10
+    .l_right
+      top: 8pt
     .l_main
       max-width: 100%
   .l_body[leftbar]

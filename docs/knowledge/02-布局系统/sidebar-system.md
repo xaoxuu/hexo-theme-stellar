@@ -270,7 +270,7 @@ graph TB
 
 ## 右栏：小部件系统
 
-右栏（`.l_right`）放置上下文小部件，使用 `margin: calc(var(--gap-margin) * 2) 0` 与 `border-radius: $border-card-l` 保持视觉一致。
+右栏（`.l_right`）放置上下文小部件，使用 `margin: var(--gap-margin) 0` 与 `border-radius: $border-card-l` 保持视觉一致。
 
 ### 常用右栏小部件
 
@@ -390,10 +390,10 @@ graph TB
 | 断点 | 左栏（`.l_left`） | 右栏（`.l_right`） | 说明 |
 |------|--------------------|--------------------|------|
 | 桌面（≥`$device-2k`） | `margin-left: auto; margin-right: calc(2 * var(--gap-max))` | `margin-left: var(--gap-max); margin-right: auto` | 2K 居中 |
-| 桌面标准 | `margin: calc(var(--gap-margin) * 2) var(--gap-margin)` | `margin: calc(var(--gap-margin) * 2) 0` | 标准布局 |
-| 移动（≤`$device-mobile-max`） | `overflow: hidden; background: var(--bg-a100)` | 隐藏 | 折叠为移动端页头 |
+| 桌面标准 | `margin: var(--gap-margin)` | `margin: var(--gap-margin) 0` | 标准布局 |
+| 移动（≤`$device-mobile-max`） | `overflow: hidden; background: var(--bg-a100)` | 隐藏 | 折叠为移动端页头，浮动面板 `top: 8pt` |
 
-**高度约束**：`.l_left` 与 `.leftbar-container` 都限制在 `calc(100vh - var(--gap-margin) * 2 - $leftbar-bottom-margin)`，保持侧边栏在视口高度内。
+**高度约束**：`.l_left` 与 `.leftbar-container` 都限制在 `calc(100vh - var(--gap-margin) - $leftbar-bottom-margin)`，保持侧边栏在视口高度内；桌面顶部间距为 `var(--gap-margin)`（16px，相对原 32px 减半），底部预留 `$leftbar-bottom-margin` 保持 32px，移动端浮动面板顶部为 `8pt`。
 
 **参考源码**：[source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)
 

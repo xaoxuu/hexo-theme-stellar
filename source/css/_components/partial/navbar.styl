@@ -1,6 +1,6 @@
 .navbar
   z-index: 8
-  top: calc(var(--gap-margin) * 2)
+  top: var(--gap-margin)
   position: sticky
   position: -webkit-sticky
 
@@ -29,6 +29,7 @@
     line-height: 2
     color: var(--text-p1)
     border-radius: 32px
+    corner-shape: round // 胶囊按钮保持正圆端帽，不受全局 superellipse 连续曲率影响
     font-weight: 500
     white-space: nowrap
     position: relative
@@ -56,5 +57,5 @@
 
 @media screen and (max-width: $device-mobile-max)
   .navbar.top
-    top: 8px
+    top: 8pt
     

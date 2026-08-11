@@ -21,12 +21,14 @@
   justify-content: center
   flex-direction: column
   border-radius: 64px
+  corner-shape: round // 胶囊面板保持正圆端帽，不受全局 superellipse 连续曲率影响
   @media screen and (min-width: $device-mobile-max)
     margin-right: 3rem
   overflow: hidden
   trans1: all
   &:before,&:after
     border-radius: 64px
+    corner-shape: round
 
   newblur()
 
@@ -74,4 +76,3 @@
     fill-opacity: 0.3
     path#sep
       transform: translateX(2px)
-

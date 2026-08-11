@@ -442,6 +442,8 @@ site_tree:
 - 列表页保持页头可见（主内容区为 mobile-only 模式）
 - 保证导航标签始终可访问
 
+**导航标签外观：** navbar top 的标签渲染为胶囊按钮（`border-radius: 32px`），并在 `source/css/_components/partial/navbar.styl` 中显式设置 `corner-shape: round`，保持两端正圆端帽，不受全局 `corner-shape: superellipse(1.2)` 连续曲率影响。
+
 **参考源码**：[_config.yml](../../../_config.yml)、[layout/_partial/sidebar/logo.ejs](../../../layout/_partial/sidebar/logo.ejs)
 
 ## 4. 不同上下文中的页头显示
