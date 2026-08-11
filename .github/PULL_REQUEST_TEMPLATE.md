@@ -13,7 +13,7 @@
 
 ## 验证清单
 
-- [ ] 涉及 `scripts/` 时已执行全量验证：`npm run g && npx gulp minify`（或依赖 CI integration job 通过）
+- [ ] 涉及 `scripts/` 时已在主工程执行 `npm run g` 全量验证（或依赖 CI integration job 通过）
 - [ ] 新增 / 修改纯函数已补充单元测试（`npm test` 通过）
 - [ ] `npm run lint` 通过
 - [ ] 涉及主题代码、配置或行为变化时已同步 `docs/knowledge/` 并在 `VERIFICATION.md` 登记
