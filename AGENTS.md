@@ -44,6 +44,7 @@
 - 不引入新构建系统，保持 Hexo 原生 + Gulp 后处理
 - CSS 兼容 IE8，JS 兼容 ES2015+，不混用 EJS 与前端框架
 - 新增功能覆盖维度：`layout/` + `scripts/` + `source/css/` + `source/js/`（如需）+ `docs/` + `languages/`（如需）
+- 新增或重构标签插件时，先遵循 `docs/guides/tag-plugins-style-guide.md`；`AGENTS.md` 仅保留总纲与硬约束
 - 方案/审计/指南文档统一归档在 `docs/`（`designs/`、`audits/`、`guides/`）
 - 发版遵循 release 流程（发版前先输出 CHANGELOG 章节、版本号规则、dry-run 预览、提交前与用户确认），详见 [CLAUDE.md](CLAUDE.md)
 
