@@ -26,11 +26,11 @@
       left: 1rem
       right: 1rem
       border-radius: $border-bar
-      background: var(--bg-a100)
+      background: var(--leftbar-search-line, var(--bg-a100))
       :root[data-theme="dark"] &
-        background: var(--bg-a20)
+        background: var(--leftbar-search-line, var(--bg-a20))
       @media screen and (prefers-color-scheme: dark)
-        background: var(--bg-a20)
+        background: var(--leftbar-search-line, var(--bg-a20))
       z-index 0
       trans1 all
     &:after
