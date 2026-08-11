@@ -44,6 +44,16 @@ jobs:
           fetch-depth: 0
       - run: node ci/check-commit-msg.js "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}"
 
+  skill-sync:
+    name: Skill mirror sync
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - run: node ci/check-skill-sync.js --check
+
   integration:
     name: Integration build (demo + minify)
     runs-on: ubuntu-latest

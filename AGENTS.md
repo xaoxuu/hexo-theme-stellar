@@ -2,6 +2,8 @@
 
 > 本文件是 hexo-theme-stellar 主题仓库的 **AI 协作唯一权威规范**，供所有 AI 编码工具（Codex、Claude Code、Cursor、Copilot、Trae 等）与开发者共同遵守。
 > `CLAUDE.md` 与 `.github/copilot-instructions.md` 是本文件的兼容入口，内容如有出入，以本文件为准。
+> `$stellar-theme-dev` skill（Codex 的 `.agents/skills/` 与 Claude Code 的 `.claude/skills/`）是本流程的执行清单，本文件始终是唯一权威，冲突以本文件为准。
+> Codex 与 Claude Code 涉及主题开发、验证或发版时，先调用 `$stellar-theme-dev` skill；其他环境直接按本文件 §7/§9/§10 流程执行。
 
 ## 1. 仓库职责
 
