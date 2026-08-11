@@ -274,6 +274,10 @@ def main():
                 print('  -', i)
     print(f'\n报告已写入: {out}')
 
+    if total['bad_line_refs'] > 0 or total['version_mismatches'] > 0:
+        print('错误: 行号引用越界或版本不一致（硬事实异常），知识库核查未通过', file=sys.stderr)
+        sys.exit(1)
+
 
 if __name__ == '__main__':
     main()
