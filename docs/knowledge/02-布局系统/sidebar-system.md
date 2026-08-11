@@ -167,7 +167,7 @@ Logo 组件最多包含三个元素：图标/头像、主标题、副标题。�
 | 标题 | `logo.title` | 带链接的主标题文本 | Hexo 的 `config.title` |
 | 副标题 | `logo.subtitle` | 副标题文本（支持 `|` 分隔的悬停切换效果） | Hexo 的 `config.subtitle` |
 
-**动态头像**：`style.animated_avatar.animate` 启用时，头像包含一个悬停淡入的背景层，产生装饰动画。
+**动态头像**：`style.animated_avatar.animate` 启用时，头像包含一个悬停淡入的 CSS 锥形渐变光环（`style.gradient.avatar`，默认彩虹色），以 4s 匀速旋转产生装饰动画。
 
 **参考源码**：[_config.yml](../../../_config.yml)、[layout/_partial/sidebar/logo.ejs](../../../layout/_partial/sidebar/logo.ejs)
 
