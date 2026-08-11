@@ -23,6 +23,7 @@ status: 已通过
 - 交互样式按风格隔离（未来新增风格沿用同一机制）：`sidebar-light()` 混入与搜索条底部条改为读取容器级 CSS 变量 `--leftbar-item-bg` / `--leftbar-item-shadow` / `--leftbar-search-line`；
   - `card` 时列表项（菜单、最近更新、页面树、链接列表、相关文章等）hover/active 背景为 `var(--block-border)`、无顶部光照阴影；
   - 搜索条底部条默认为 `var(--text-meta)`，输入/悬停高亮仍为彩虹渐变；
+  - 组件白色半透明背景（`--bg-a20/a50/a60/a75`）统一覆盖为 `var(--block)`，`--bg-a100`（不透明白）覆盖为 `var(--block-border)` 保留 hover 反馈，与右栏观感一致；
   - `glass` 与右栏（TOC 等）未设置变量，回退保持原效果。
 - 涉及文件：`layout/layout.ejs`、`source/css/_components/sidebar/sidebar.styl`、`source/css/_defines/func.styl`、`source/css/_components/sidebar/search.styl`、`_config.yml`、`docs/knowledge/02-布局系统/sidebar-system.md`、`docs/knowledge/02-布局系统/layout-overview.md`。
 
