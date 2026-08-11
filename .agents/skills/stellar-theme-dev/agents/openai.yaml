@@ -1,0 +1,4 @@
+interface:
+  display_name: "Stellar 主题开发"
+  short_description: "按仓库规范完成主题开发、全量验证、提交与发版的完整流程"
+  default_prompt: "使用 $stellar-theme-dev 完成这次主题改动，遵循完整开发流程。"
