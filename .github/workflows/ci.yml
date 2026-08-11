@@ -69,7 +69,11 @@ jobs:
         with:
           repository: xaoxuu/hexo-theme-stellar-examples
           ref: cc25ca381cf230ee0164723b2e95a9219265fb73
-          path: ${{ runner.temp }}/demo
+          path: demo
+
+      # checkout 不允许把仓库检出到 $GITHUB_WORKSPACE 之外，先检出到 workspace 再移入临时目录
+      - name: Move demo to temp directory
+        run: mv "$GITHUB_WORKSPACE/demo" "${{ runner.temp }}/demo"
 
       - name: Use PR theme checkout in demo
         run: |
