@@ -20,7 +20,7 @@ Stellar 是一个极为强大的综合型 Hexo 主题，包含博客系统、知
 
 上述亮点都可以在 [文档](https://xaoxuu.com/wiki/stellar/) 中找到详细使用方法。
 
-[![Stargazers over time](https://starchart.cc/xaoxuu/hexo-theme-stellar.svg)](https://starchart.cc/xaoxuu/hexo-theme-stellar)
+[![Star History Chart](https://star-history.dera.page/svg?repos=xaoxuu/hexo-theme-stellar&type=date&legend=top-left)](https://star-history.dera.page/#xaoxuu/hexo-theme-stellar&type=date&legend=top-left)
 
 
 ## Getting Started
@@ -30,8 +30,8 @@ Check your environment:
 ```yaml
 Hexo: 6.3.0 ~ latest
 hexo-cli: 4.3.0 ~ latest
-node: 14.17.3 ～ latest LTS # 建议选择 LTS 版本，过高的版本 hexo 还没有进行兼容。
-npm: 6.14.13 ~ latest
+node: >= 22 # 建议选择 LTS 版本
+npm: >= 10
 ```
 
 Edit your `_config.yml`:
