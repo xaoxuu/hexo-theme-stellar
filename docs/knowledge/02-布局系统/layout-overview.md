@@ -202,7 +202,7 @@ graph TD
 | CSS 选择器 | HTML 元素 | 角色 |
 |---|---|---|
 | `.l_body` | `<div class="l_body {page_type}" id="start">` | 三栏网格容器；接收计算出的类与属性 |
-| `.l_left` | `<aside class="l_left">` | 左栏 |
+| `.l_left` | `<aside class="l_left[.leftbar-card?]">` | 左栏；`style.leftbar.ui-style: card` 时追加 `leftbar-card` 类 |
 | `.l_main` | `<div class="l_main" id="main">` | 中央内容列 |
 | `.l_right` | `<aside class="l_right">` | 右栏 |
 | `#l_cover` | `<div id="l_cover">` | 网格上方的全宽封面区 |
@@ -231,6 +231,12 @@ graph TD
 `theme.style.leftbar.blur` 为 `true` 时，`.leftbar-container` 追加 `leftbar-blur` 类，为左栏背景启用磨砂玻璃 CSS 效果。
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
+
+### 左栏风格（ui-style）
+
+`style.leftbar.ui-style` 控制左栏外观：`glass`（默认历史行为，背景图 + 磨砂玻璃效果）不追加额外类；`card` 时 `.l_left` 追加 `leftbar-card` 类，配合 `sidebar.styl` 呈现纯色卡片 + 中间阴影。配置默认值为 `card`。
+
+**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)、[source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)
 
 ## layout.ejs 引入的 Partials
 

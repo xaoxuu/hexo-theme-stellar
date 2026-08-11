@@ -16,6 +16,18 @@
     margin-left: var(--gap-max)
     margin-right: auto
 
+// 纯色卡片风格（style.leftbar.ui-style: card）：
+// 实色 var(--card) 背景 + 中间档阴影，隐藏图片背景与磨砂叠加层
+.l_left.leftbar-card
+  background: var(--card)
+  box-shadow: $boxshadow-float
+  .sidebg
+    display: none
+  .leftbar-container
+    &:before
+    &:after
+      display: none
+
 .l_left
   .sidebg
     pointer-events: none

@@ -694,6 +694,7 @@ style:
     avatar: 'conic-gradient(from 0deg, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)' # 头像 hover 时旋转光环的渐变色（彩虹，首尾同色保证旋转无缝）
     angle: 210deg # 主题色渐变的角度（0=向上，顺时针；225deg = 右上角 → 左下角）
   leftbar:
+    ui-style: card # glass（背景图+磨砂玻璃效果）/ card（纯色卡片：var(--card) 实色背景 + 中间阴影）
     # 可以设置：纯色/渐变色/图片作为背景
     # 设置为纯色时，可以分别设置浅色和深色模式背景色
     background-color-light: var(--card) # var(--block) #'rgb(#C3C3C3)'
