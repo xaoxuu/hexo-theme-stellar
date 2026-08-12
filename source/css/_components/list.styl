@@ -4,6 +4,26 @@
   .post-title:first-child
     margin-top: .5rem
 
+// 白底文章卡片（含置顶轮播卡片）hover 时：标题底部主题色下划线高度从 0 生长到 12px 并淡入，层级在文字下层
+.post-list .post-card .post-title
+  position: relative
+  width: fit-content
+  &::after
+    content: ''
+    position: absolute
+    left: 0
+    bottom: -2px
+    z-index: -1
+    width: 100%
+    height: 0
+    opacity: 0
+    background: var(--theme)
+    transition: height .25s ease, opacity .25s ease
+
+.post-list .post-card:hover .post-title::after
+  height: 12px
+  opacity: 0.5
+
 .l_main .post-list
   .post-title
     font-weight: 500
@@ -24,10 +44,7 @@
   display: block
   margin: 1rem 0
   border-radius: $border-card-l
-  hoverable-card()
-  &:hover
-    // 保留 hover 阴影变化，去掉位移：ScrollReveal 内联 transform 与合成层交互导致位移卡顿
-    transform: none !important
+  box-shadow: $boxshadow-card
 
 .post-list .post-card
   display: block

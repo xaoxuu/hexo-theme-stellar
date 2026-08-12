@@ -73,3 +73,17 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 - 简写路径已自动补全：`_partial/*.ejs`（→ `layout/`）、`_defines|_common|_components|_plugins/*.styl`（→ `source/css/`）
 
 以上标记不构成内容错误；如需消除报告噪音，可后续调整 `tools/verify.py` 的忽略列表。
+
+## 七、功能与文档同步登记
+
+| 日期 | 位置 | 变更 |
+|------|------|------|
+| 2026-08-12 | `docs/designs/2026-08-12-pin-slider/`、`layout/_partial/main/pin_slider.ejs`、`source/css/_components/pin-slider.styl` | 新增列表页置顶内容轮播：所有 navbar top 列表页上方置顶位，`pin_slider` 配置（默认关闭），`pin` 字段（兼容 `sticky` 别名，设置即置顶、按数值降序，0/负数同样参与），轮播进度按内容类型分组缓存到 localStorage |
+| 2026-08-12 | `docs/knowledge/00-总览与安装配置/configuration.md` | 新增 `pin_slider` 配置小节；配置表新增 `pin_slider` 行 |
+| 2026-08-12 | `docs/knowledge/03-内容系统/wiki-docs.md`、`content-overview.md` | wiki 项目与专栏数据文件新增 `pin` 字段说明 |
+| 2026-08-12 | `docs/knowledge/02-布局系统/logo-navigation-headers.md`、`page-templates-routing.md` | navbar top 上方置顶轮播位说明 |
+| 2026-08-12 | `docs/knowledge/05-前端交互/client-side-overview.md` | pin-slider 组件与 localStorage 缓存机制说明 |
+| 2026-08-12 | `docs/knowledge/03-内容系统/post-lists-cards.md` | 置顶文章改由列表页置顶轮播展示：轮播开启时文章卡片不再显示 `post.sticky` 图钉图标（未开启时保留） |
+| 2026-08-12 | `layout/_partial/main/pin_slider.ejs`、`source/css/_components/pin-slider.styl` | 文章幻灯片改为完全复用列表文章卡片样式（`post_card`，photo/默认卡片），唯一区别是固定宽高比（2:1） |
+| 2026-08-12 | `layout/_partial/main/navbar/nav_tabs_blog.ejs`、`layout/_partial/main/pin_slider.ejs` | 专栏列表页与其他博客列表页一致展示置顶文章轮播（移除专栏数据 `pin` 的轮播收集） |
+| 2026-08-12 | `layout/_partial/main/pin_slider.ejs`、`source/css/_components/pin-slider.styl` | 轮播滚轮/触控板切换：wheel 事件，横向 deltaX 与鼠标滚轮 deltaY 均映射切页，阈值 + 400ms 冷却；移除 Pointer Events 跟手拖拽 |

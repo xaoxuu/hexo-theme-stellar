@@ -114,6 +114,14 @@ graph TB
 
 ---
 
+### 置顶内容轮播（pin-slider）
+
+列表页 navbar top 上方可渲染置顶内容轮播（`layout/_partial/main/pin_slider.ejs`，配置见 `pin_slider`）：纯原生实现（无第三方依赖），经 `utils.initPlugin` 注册并返回清理函数，支持自动播放（hover/focus/页面隐藏时暂停）、圆点点击切换、滚轮/触控板切换（wheel 事件，横向与鼠标滚轮均映射，阈值 + 400ms 冷却）、触摸松手滑动与 `prefers-reduced-motion` 降级。轮播进度按内容类型分组（`post`/`wiki`）缓存到 localStorage（键 `stellar.pin-slider.<group>`），内容或张数变化后自动失效。
+
+**参考源码**：[layout/_partial/main/pin_slider.ejs](../../../layout/_partial/main/pin_slider.ejs)、[source/css/_components/pin-slider.styl](../../../source/css/_components/pin-slider.styl)
+
+---
+
 ## stellar 命名空间
 
 `stellar` 是全局对象，是主题 JavaScript 与外部插件集成的主要入口。

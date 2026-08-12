@@ -153,6 +153,16 @@ site_tree:
     rightbar: toc
 
 
+######## 置顶轮播 ########
+# 所有带 navbar top 的列表页（首页/归档/标签/分类/专栏/wiki 列表等）上方显示置顶内容轮播。
+# 博客列表放置顶文章（front-matter 中 pin:true|number，兼容 sticky 别名），
+# wiki 列表放置顶 wiki 项目、专栏列表放置顶专栏（数据文件中 pin:true|number）。
+# enable: 是否开启；interval: 自动轮播间隔（毫秒）。
+pin_slider:
+  enable: false
+  interval: 4000
+
+
 ######## Notebook ########
 notebook:
   # 如果没有指定 excerpt 和 description，将自动取多长的内容作为文章摘要。

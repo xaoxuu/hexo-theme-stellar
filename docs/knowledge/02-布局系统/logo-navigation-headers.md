@@ -444,6 +444,8 @@ site_tree:
 
 **导航标签外观：** navbar top 的标签渲染为胶囊按钮（`border-radius: 32px`），并在 `source/css/_components/partial/navbar.styl` 中显式设置 `corner-shape: round`，保持两端正圆端帽，不受全局 `corner-shape: superellipse(1.2)` 连续曲率影响。
 
+**置顶内容轮播位：** 所有渲染 navbar top 的列表页在导航栏上方自动预留置顶轮播位（`layout/_partial/main/pin_slider.ejs`，配置 `pin_slider`）；无置顶内容时不渲染。博客列表放置顶文章（`pin`/`sticky`），wiki 列表放置顶 wiki 项目，专栏列表放置顶专栏（数据文件 `pin`）。
+
 **参考源码**：[_config.yml](../../../_config.yml)、[layout/_partial/sidebar/logo.ejs](../../../layout/_partial/sidebar/logo.ejs)
 
 ## 4. 不同上下文中的页头显示

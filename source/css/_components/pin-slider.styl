@@ -1,0 +1,174 @@
+// 置顶内容轮播（navbar top 上方通用置顶位）
+.pin-slider
+  position: relative
+  margin: 0 1rem var(--gap-margin)
+  border-radius: $border-card-l
+  overflow: hidden
+  box-shadow: $boxshadow-card
+  // 初始化前隐藏，避免先闪出第一张；定位到缓存序号后再显示
+  visibility: hidden
+
+.pin-slider-track
+  display: flex
+  transition: transform .45s ease-out
+  will-change: transform
+
+.pin-slide
+  position: relative
+  flex: 0 0 100%
+  height: 15rem
+  overflow: hidden
+  border-radius: $border-card-l
+  background: var(--card)
+  @media screen and (max-width: $device-mobile-max)
+    height: 11rem
+  &:hover
+    .pin-slide-bg
+      transform: scale(1.04)
+      filter: brightness(.92) saturate(1.1)
+
+// 文章幻灯片：固定宽高比，内部完全复用列表文章卡片（.post-list .post-card）的标记与样式
+.pin-slide.post-slide
+  height: auto
+  aspect-ratio: 2 / 1
+  .post-list
+    margin: 0
+    height: 100%
+  .post-card
+    height: 100%
+    border-radius: 0
+    display: flex
+    flex-direction: column
+    .md-text
+      flex: 1
+      overflow: hidden
+      // flex 布局不折叠外边距，手动对齐列表卡片的间距
+      .post-title
+        margin-bottom: 1rem
+        @media screen and (max-width: $device-mobile)
+          margin-bottom: .5rem
+      .excerpt
+        margin: 0
+      .excerpt > p
+        margin-top: 0
+  // 有封面但无 poster 的默认卡片：压缩封面比例并截断文字，适配固定宽高比
+  .post-card:not(.photo) .post-cover img
+    aspect-ratio: 3 / 1
+  .post-card:not(.photo) .post-title
+    -webkit-line-clamp: 1
+  .post-card:not(.photo) .excerpt p
+    -webkit-line-clamp: 1
+    overflow: hidden
+  // 移动端白底卡片空间有限，不显示正文
+  .post-card:not(.photo) .excerpt
+    @media screen and (max-width: $device-mobile-max)
+      display: none
+  // 无封面卡片被拉伸到固定宽高比时，内容靠下方对齐
+  &.no-cover .md-text
+    display: flex
+    flex-direction: column
+    justify-content: flex-end
+
+// wiki / 专栏项目幻灯片背景
+.pin-slide-bg
+  position: absolute
+  inset: 0
+  width: 100%
+  height: 100%
+  object-fit: cover
+  transition: transform .5s ease-out, filter .2s ease-out
+
+.pin-slide-mask
+  position: absolute
+  inset: 0
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.35) 55%, rgba(0, 0, 0, 0.68) 100%)
+
+.pin-slide-info
+  position: absolute
+  left: 0
+  right: 0
+  bottom: 0
+  z-index: 1
+  padding: 1.5rem 6rem 1.75rem 2rem
+  text-align: left
+  @media screen and (max-width: $device-mobile-max)
+    padding: 1rem 3.5rem 1.25rem 1.25rem
+
+.pin-slide-caps
+  display: flex
+  flex-wrap: wrap
+  gap: .375rem
+  margin-bottom: .5rem
+
+.pin-slide-chip
+  padding: .125rem .5rem
+  border-radius: 999px
+  background: rgba(white, 0.22)
+  backdrop-filter: blur(4px)
+  -webkit-backdrop-filter: blur(4px)
+  font-size: $fs-13
+  color: white
+
+.pin-slide-title
+  font-size: $fsh3
+  font-weight: 600
+  line-height: 1.3
+  color: white
+  trans1 color
+  @media screen and (max-width: $device-mobile-max)
+    font-size: $fsh5
+
+.pin-slider-dots
+  position: absolute
+  right: 0
+  bottom: 0
+  z-index: 2
+  display: flex
+  align-items: center
+  gap: 4px
+  padding: 1rem
+  border-radius: 999px
+
+.pin-slider-dot
+  position: relative
+  overflow: hidden
+  width: .5rem
+  height: .5rem
+  padding: 0
+  background-color: rgba(white, 0.5)
+  border: 1px solid rgba(0, 0, 0, 0.1)
+  border-radius: 50%
+  cursor: pointer
+  trans1 all
+  &::before
+    content: ''
+    position: absolute
+    left: 0
+    right: 0
+    top: 0
+    bottom: 0
+    border-radius: inherit
+    background: var(--theme)
+    transform: scaleX(0)
+    transform-origin: left
+  &:hover
+    background-color: white
+  &.active
+    width: 1.5rem
+    border-radius: 999px
+    background-color: white
+    &::before
+      transform: scaleX(1)
+      animation: pin-slider-progress var(--pin-duration, 4s) linear forwards
+
+@keyframes pin-slider-progress
+  from
+    transform: scaleX(0)
+  to
+    transform: scaleX(1)
+
+.pin-slider.paused .pin-slider-dot.active::before
+  animation-play-state: paused
+
+.pin-slider.reduced .pin-slider-dot.active::before
+  animation: none

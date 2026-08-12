@@ -92,7 +92,9 @@ function div_default() {
       }
     }
   }
-  if (post.sticky) {
+  // 置顶文章已由列表页 navbar 上方的置顶轮播展示，轮播开启时不再显示卡片内 pin 图标；
+  // 未开启轮播时保留原图标标记。
+  if (post.sticky && theme.pin_slider?.enable !== true) {
     el += `<span class="pin">${icon('default:pin')}</span>`
   }
   el += '</div>';

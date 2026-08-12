@@ -238,7 +238,7 @@ graph TD
 
 - 始终包含带日历图标的日期
 - `post.categories` 存在时包含带分类图标的面包屑
-- `post.sticky` 为 true 时显示置顶图标
+- 置顶文章在列表页 navbar 上方的置顶轮播中展示（配置 `pin_slider`）；轮播开启时卡片不再显示置顶图标，未开启时保留 `post.sticky` 图钉图标
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
 
@@ -395,7 +395,7 @@ graph LR
     CatIcon["icon('default:category')"]
     CatSpan["<span class='breadcrumb'<br/>style='{category_color}'>{cats}</span>"]
     
-    CheckSticky{"post.sticky?"}
+    CheckSticky{"post.sticky?<br/>且 pin_slider 未开启"}
     PinIcon["<span class='pin'>icon('default:pin')</span>"]
     
     MetaContainer --> SpanWrap
@@ -431,8 +431,8 @@ graph LR
 
 **置顶标记**
 
-- `post.sticky` 为真时显示
-- 用图钉图标表示置顶/精选状态
+- 置顶文章在列表页 navbar 上方的置顶轮播中展示（配置 `pin_slider`，见[置顶内容轮播配置](../00-总览与安装配置/configuration.md#置顶内容轮播配置)）
+- 轮播开启时，文章卡片不再显示置顶图标；未开启时保留 `post.sticky` 图钉图标
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
 

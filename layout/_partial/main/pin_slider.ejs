@@ -1,0 +1,317 @@
+<%
+// 置顶内容轮播：所有带 navbar top 的列表页上方共用。
+// type: post / wiki / topic
+var pinType = type || 'post'
+var pinItems = []
+
+function pinValue(item) {
+  return item.pin != null ? item.pin : item.sticky
+}
+
+// 只要设置了 pin（含 0、负数）即视为置顶，未设置 / false 不置顶
+function isPinned(item) {
+  var v = pinValue(item)
+  return v !== false && v != null
+}
+
+// 排序仅比较数值大小，true 视作 1
+function pinWeight(item) {
+  var v = pinValue(item)
+  if (v === true) {
+    return 1
+  }
+  var n = Number(v)
+  return isNaN(n) ? 0 : n
+}
+
+if (pinType == 'wiki') {
+  var shelf = theme.wiki?.shelf || []
+  for (var wi = 0; wi < shelf.length; wi++) {
+    var wproj = theme.wiki.tree[shelf[wi]]
+    if (wproj != null && isPinned(wproj)) {
+      pinItems.push(wproj)
+    }
+  }
+} else {
+  var allPosts = site.posts.toArray() || []
+  for (var pi = 0; pi < allPosts.length; pi++) {
+    var post = allPosts[pi]
+    if (post.indexing === false) {
+      continue
+    }
+    if (isPinned(post)) {
+      pinItems.push(post)
+    }
+  }
+}
+
+pinItems.sort(function(a, b) {
+  return pinWeight(b) - pinWeight(a)
+})
+
+// 文章幻灯片：完全复用列表文章卡片（post_card）的标记与样式，仅固定宽高比
+function postSlide(post) {
+  var cardLayout = 'post'
+  if (post.cover != undefined && post.poster != undefined) {
+    cardLayout += ' photo'
+  }
+  var noCover = !(post.cover != null && post.cover.length > 0)
+  var el = ''
+  el += '<div class="pin-slide post-slide' + (noCover ? ' no-cover' : '') + '">'
+  el += '<div class="post-list post">'
+  el += '<a class="post-card ' + cardLayout + '" href="' + pretty_url(post.link || post.path) + '">'
+  el += partial('_partial/main/post_list/post_card', {post: post})
+  el += '</a>'
+  el += '</div>'
+  el += '</div>'
+  return el
+}
+
+function projectChips(tags) {
+  var caps = ''
+  if (tags && tags.length > 0) {
+    caps += '<span class="pin-slide-chip">' + tags.join('</span><span class="pin-slide-chip">') + '</span>'
+  }
+  return caps
+}
+
+function wikiSlide(proj) {
+  var img = proj.cover || proj.icon || theme.default.project
+  var title = proj.title || proj.name || proj.id
+  var excerpt = proj.description || ''
+  var el = ''
+  el += '<a class="pin-slide" href="' + pretty_url(proj.homepage?.path || '/') + '">'
+  el += '<img class="pin-slide-bg" src="' + img + '" alt=""/>'
+  el += '<div class="pin-slide-mask"></div>'
+  el += '<div class="pin-slide-info">'
+  el += '<div class="pin-slide-caps">' + projectChips(proj.tags) + '</div>'
+  el += '<div class="pin-slide-title">' + title + '</div>'
+  if (excerpt.length > 0) {
+    el += '<div class="pin-slide-excerpt">' + excerpt + '</div>'
+  }
+  el += '</div>'
+  el += '</a>'
+  return el
+}
+
+if (theme.pin_slider?.enable && pinItems.length > 0) {
+  var slidesHtml = ''
+  var dotsHtml = ''
+  for (var si = 0; si < pinItems.length; si++) {
+    var item = pinItems[si]
+    if (pinType == 'wiki') {
+      slidesHtml += wikiSlide(item)
+    } else {
+      slidesHtml += postSlide(item)
+    }
+    if (pinItems.length > 1) {
+      var label = item.title || item.name || item.id || (si + 1)
+      dotsHtml += '<button type="button" class="pin-slider-dot' + (si == 0 ? ' active' : '') + '" data-index="' + si + '" aria-label="' + label + '"></button>'
+    }
+  }
+  var groupKey = pinType == 'wiki' ? 'wiki' : 'post'
+  var sliderInterval = theme.pin_slider.interval || 4000
+  var el = ''
+  el += '<div class="pin-slider" id="pin-slider" data-interval="' + sliderInterval + '" data-key="' + pinType + '" data-group="' + groupKey + '">'
+  el += '<div class="pin-slider-track">'
+  el += slidesHtml
+  el += '</div>'
+  if (dotsHtml.length > 0) {
+    el += '<div class="pin-slider-dots">' + dotsHtml + '</div>'
+  }
+  el += '</div>'
+%>
+<%- el %>
+<script>
+function initWhenReady() {
+  if (typeof utils !== 'undefined' && utils.initPlugin) {
+    utils.initPlugin(initPinSlider, 'pin-slider');
+  } else {
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof utils !== 'undefined' && utils.initPlugin) {
+        utils.initPlugin(initPinSlider, 'pin-slider');
+      }
+    });
+  }
+}
+initWhenReady();
+function initPinSlider() {
+  var slider = document.getElementById('pin-slider');
+  if (!slider) return;
+  var track = slider.querySelector('.pin-slider-track');
+  var slides = slider.querySelectorAll('.pin-slide');
+  var count = slides.length;
+  if (!track || count <= 1) {
+    slider.style.visibility = 'visible';
+    return;
+  }
+  var interval = parseInt(slider.getAttribute('data-interval'), 10) || 4000;
+  var type = slider.getAttribute('data-key') || 'post';
+  var group = slider.getAttribute('data-group') || 'post';
+  var contentKey = type + '::' + Array.prototype.map.call(slides, function(a) {
+    var link = a.querySelector('a.post-card, a.pin-slide');
+    return link ? link.getAttribute('href') : a.getAttribute('href');
+  }).join('|');
+  var index = restorePinIndex(group, contentKey, count);
+  var reduced = false;
+  try {
+    reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  } catch (e) {}
+  slider.style.setProperty('--pin-duration', interval + 'ms');
+  if (reduced) {
+    slider.classList.add('reduced');
+  }
+  function goTo(n) {
+    index = (n + count) % count;
+    track.style.transform = 'translateX(-' + (index * 100) + '%)';
+    var dots = slider.querySelector('.pin-slider-dots');
+    var items = dots ? dots.children : [];
+    for (var i = 0; i < count; i++) {
+      if (!items[i]) continue;
+      if (i === index) {
+        items[i].classList.add('active');
+        items[i].setAttribute('aria-current', 'true');
+      } else {
+        items[i].classList.remove('active');
+        items[i].removeAttribute('aria-current');
+      }
+    }
+    savePinIndex(group, contentKey, index, count);
+  }
+  function next() { goTo(index + 1); }
+  function prev() { goTo(index - 1); }
+  function start() {
+    if (reduced) return;
+    slider.classList.remove('paused');
+  }
+  function stop() {
+    slider.classList.add('paused');
+  }
+  function onVis() {
+    if (document.hidden) {
+      stop();
+    } else {
+      start();
+    }
+  }
+  var startX = null;
+  var startY = null;
+  function onTouchStart(e) {
+    stop();
+    var t = e.changedTouches[0];
+    startX = t.clientX;
+    startY = t.clientY;
+  }
+  function onTouchEnd(e) {
+    if (startX == null) return;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - startX;
+    var dy = t.clientY - startY;
+    startX = null;
+    startY = null;
+    if (Math.abs(dx) > 30 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) {
+        next();
+      } else {
+        prev();
+      }
+    }
+    start();
+  }
+  // 滚轮/触控板切换：横向（deltaX）与鼠标滚轮（deltaY）都映射为切页，
+  // 轮播区域始终拦截滚动，400ms 冷却防连跳
+  var wheelCooldown = 0;
+  function onWheel(e) {
+    var unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 200 : 1;
+    var dx = e.deltaX * unit;
+    var dy = e.deltaY * unit;
+    if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return;
+    e.preventDefault();
+    var now = Date.now();
+    if (now < wheelCooldown) return;
+    wheelCooldown = now + 400;
+    if (Math.abs(dx) >= Math.abs(dy)) {
+      if (dx < 0) {
+        next();
+      } else {
+        prev();
+      }
+    } else {
+      if (dy > 0) {
+        next();
+      } else {
+        prev();
+      }
+    }
+  }
+  var dotsEl = slider.querySelector('.pin-slider-dots');
+  function onProgressEnd(e) {
+    if (e.animationName === 'pin-slider-progress') {
+      next();
+    }
+  }
+  if (dotsEl) {
+    dotsEl.addEventListener('click', function(e) {
+      var btn = e.target.closest ? e.target.closest('.pin-slider-dot') : null;
+      if (btn) {
+        goTo(parseInt(btn.getAttribute('data-index'), 10) || 0);
+      }
+    });
+    dotsEl.addEventListener('animationend', onProgressEnd);
+  }
+  slider.addEventListener('mouseenter', stop);
+  slider.addEventListener('mouseleave', start);
+  slider.addEventListener('focusin', stop);
+  slider.addEventListener('focusout', start);
+  slider.addEventListener('touchstart', onTouchStart, { passive: true });
+  slider.addEventListener('touchend', onTouchEnd, { passive: true });
+  slider.addEventListener('wheel', onWheel, { passive: false });
+  document.addEventListener('visibilitychange', onVis);
+  // 初始化直接定位到缓存序号：先禁用过渡再恢复，避免每次进页面播放“从第一张滑过来”的动画
+  track.style.transition = 'none';
+  goTo(index);
+  void track.offsetWidth;
+  track.style.transition = '';
+  slider.style.visibility = 'visible';
+  start();
+  return function() {
+    stop();
+    slider.removeEventListener('mouseenter', stop);
+    slider.removeEventListener('mouseleave', start);
+    slider.removeEventListener('focusin', stop);
+    slider.removeEventListener('focusout', start);
+    slider.removeEventListener('touchstart', onTouchStart);
+    slider.removeEventListener('touchend', onTouchEnd);
+    slider.removeEventListener('wheel', onWheel);
+    if (dotsEl) {
+      dotsEl.removeEventListener('animationend', onProgressEnd);
+    }
+    document.removeEventListener('visibilitychange', onVis);
+  };
+}
+function restorePinIndex(group, contentKey, count) {
+  try {
+    var raw = localStorage.getItem('stellar.pin-slider.' + group);
+    if (!raw) return 0;
+    var data = JSON.parse(raw);
+    var sets = data && data.sets ? data.sets : {};
+    var rec = sets[contentKey];
+    if (rec && rec.t === count && rec.i >= 0 && rec.i < count) {
+      return rec.i;
+    }
+  } catch (e) {}
+  return 0;
+}
+function savePinIndex(group, contentKey, index, count) {
+  try {
+    var raw = localStorage.getItem('stellar.pin-slider.' + group);
+    var data = raw ? JSON.parse(raw) : {};
+    if (!data.sets) data.sets = {};
+    data.sets[contentKey] = { i: index, t: count };
+    localStorage.setItem('stellar.pin-slider.' + group, JSON.stringify(data));
+  } catch (e) {}
+}
+</script>
+<%
+}
+%>

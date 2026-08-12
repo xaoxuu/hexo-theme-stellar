@@ -86,6 +86,7 @@ graph TB
 | `preconnect`、`canonical`、`open_graph`、`structured_data` | SEO 与 meta 标签 |
 | `logo`、`menubar` | 侧边栏品牌与导航 |
 | `site_tree` | 各页面类型布局定义与侧边栏小部件分配 |
+| `pin_slider` | 列表页置顶内容轮播（navbar top 上方） |
 | `notebook` | 笔记本系统配置 |
 | `article` | 文章显示与元数据设置 |
 | `search` | 搜索服务配置 |
@@ -310,6 +311,22 @@ wiki:
 `index_wiki` 定义 wiki 列表页，`wiki` 定义单个 wiki 页面。注意 wiki 页面左栏的 `tree` 小部件用于展示项目结构。
 
 **参考源码**：[_config.yml](../../../_config.yml)
+
+### 置顶内容轮播配置
+
+`pin_slider` 小节控制所有带 navbar top 的列表页（首页/归档/标签/分类/专栏/wiki 列表等）上方的置顶内容轮播：
+
+```yaml
+pin_slider:
+  enable: false   # 是否开启
+  interval: 4000  # 自动轮播间隔（毫秒）
+```
+
+- 博客类列表（首页/归档/标签/分类/专栏等）放置顶文章（文章 front-matter `pin: true|number`，兼容 `sticky` 别名；只要设置即置顶，按数值降序排序，`true` 视作 1，0/负数同样参与）；
+- wiki 列表放置顶 wiki 项目（数据文件 `pin: true|number`，规则同上）；专栏列表页与其他博客列表页一致展示置顶文章；
+- 无置顶内容时不渲染；轮播进度按内容类型分组缓存到 localStorage（切换 tab 不重置）。
+
+**参考源码**：[_config.yml](../../../_config.yml)（`pin_slider` 小节）、[layout/_partial/main/pin_slider.ejs](../../../layout/_partial/main/pin_slider.ejs)
 
 ### 笔记本配置
 
