@@ -357,6 +357,8 @@ data_services:
 
 这些服务连接到 `comments` 小节配置的评论系统 API（见[评论系统](../07-外部集成/comment-systems.md)），获取并显示近期评论活动。
 
+Artalk 最新评论渲染时保留表情图（`atk-emoticon`，CSS 限高 1.5em），其余标签转纯文本并截断 50 字符，空评论跳过，避免大表情图与段落撑爆侧栏卡片布局。
+
 **参考源码**：[_config.yml](../../../_config.yml)
 
 ---
