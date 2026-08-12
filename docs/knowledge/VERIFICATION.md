@@ -70,6 +70,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 | 2026-08-12 | `_components/partial/navbar.styl` / `_components/widgets/toc.styl` | navbar 与 TOC（右栏首个小部件）吸顶 `top` 同步减半为 `var(--gap-margin)`，移动端 navbar 对齐 `8pt` |
 | 2026-08-12 | `docs/knowledge/02-布局系统/logo-navigation-headers.md` | navbar top 胶囊按钮（`.navbar nav a`）显式 `corner-shape: round`，取消全局 `superellipse(1.2)` 连续曲率，保持两端正圆端帽 |
 | 2026-08-12 | `docs/knowledge/01-样式系统/responsive-design.md` | `.float-panel` 胶囊面板及其 `:before`/`:after` 显式 `corner-shape: round`，取消全局 `superellipse(1.2)` 连续曲率 |
+| 2026-08-12 | `docs/knowledge/02-布局系统/logo-navigation-headers.md` | 回退 navbar top 链接（`.navbar nav a`）的 `corner-shape: round` 覆盖（`fc1ccb2` 引入），改随全局 `superellipse(1.2)` 连续曲率渲染，与父容器 `.navbar-blur` / `.navbar-container` 一致；`.float-panel` 的 `corner-shape: round` 保留 |
 - 简写路径已自动补全：`_partial/*.ejs`（→ `layout/`）、`_defines|_common|_components|_plugins/*.styl`（→ `source/css/`）
 
 以上标记不构成内容错误；如需消除报告噪音，可后续调整 `tools/verify.py` 的忽略列表。

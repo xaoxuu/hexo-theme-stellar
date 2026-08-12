@@ -442,7 +442,7 @@ site_tree:
 - 列表页保持页头可见（主内容区为 mobile-only 模式）
 - 保证导航标签始终可访问
 
-**导航标签外观：** navbar top 的标签渲染为胶囊按钮（`border-radius: 32px`），并在 `source/css/_components/partial/navbar.styl` 中显式设置 `corner-shape: round`，保持两端正圆端帽，不受全局 `corner-shape: superellipse(1.2)` 连续曲率影响。
+**导航标签外观：** navbar top 的标签渲染为胶囊按钮（`border-radius: 32px`），不显式设置 `corner-shape`，跟随全局 `corner-shape: superellipse(1.2)` 连续曲率渲染，与父容器 `.navbar-blur` / `.navbar-container` 保持一致。
 
 **置顶内容轮播位：** 所有渲染 navbar top 的列表页在导航栏上方自动预留置顶轮播位（`layout/_partial/main/pin_slider.ejs`，配置 `pin_slider`）；无置顶内容时不渲染。博客列表放置顶文章（`pin`/`sticky`），wiki 列表放置顶 wiki 项目，专栏列表放置顶专栏（数据文件 `pin`）。
 
