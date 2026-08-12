@@ -68,6 +68,7 @@ graph TB
     
     subgraph "Utility Functions"
         WRAP["wrapLazyloadImages(container)"]
+        MUTATION["MutationObserver<br/>Auto Register .lazy"]
         UPDATE["lazyLoadInstance.update()"]
     end
     
@@ -85,6 +86,7 @@ graph TB
     WRAP --> LAZYBOX
     LAZYBOX --> LAZYIMG
     LAZYBOX --> LAZYICON
+    MUTATION --> UPDATE
     
     OPTIONS --> INSTANCE
     INSTANCE --> UPDATE
@@ -285,7 +287,10 @@ flowchart TD
 
 ## 页面加载后的懒加载更新
 
-主题为普通整页导航，每次页面加载执行一次初始化扫描（DOMContentLoaded 时 `lazyLoadInstance.update()`）。数据服务动态插入的新图片经 `wrapLazyloadImages()` 包装后同样调用 update 注册。
+主题为普通整页导航，每次页面加载执行一次初始化扫描（DOMContentLoaded 时 `lazyLoadInstance.update()`）。
+
+- **动态插入的 `.lazy` 元素**：`lazyload.ejs` 内置 MutationObserver（rAF 节流），检测到新增 `.lazy` 元素后自动调用 `lazyLoadInstance.update()` 重新注册，第三方自定义脚本无需手动触发。
+- **普通 `<img src>` 转换**：数据服务动态插入的普通图片仍经 `wrapLazyloadImages()` 包装为懒加载标记，该函数末尾同样调用 update 注册。
 
 **参考源码**：[layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
 
@@ -382,7 +387,7 @@ callback_loaded: (el) => {
 | 配置 | `window.lazyLoadOptions` | 库加载前 |
 | 实例访问 | `window.lazyLoadInstance` | LazyLoad::Initialized 事件 |
 | 图片包装 | `wrapLazyloadImages()` | 手动调用 / 标签插件 |
-| 加载更新 | `lazyLoadInstance.update()` | 页面加载 / 新内容插入 |
+| 加载更新 | `lazyLoadInstance.update()` | 页面加载 / MutationObserver 自动触发 / 新内容插入 |
 | 加载回调 | `callback_loaded` | 每张图片加载完成 |
 | 加载指示 | `.lazy-icon` | 随包装创建 |
 | 已加载状态 | `.loaded` 类 | 回调时添加 |

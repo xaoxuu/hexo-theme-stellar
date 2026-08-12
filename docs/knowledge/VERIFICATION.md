@@ -35,6 +35,7 @@
 | 8.2 搜索 | `search.no_results` 等被误报为配置键 | 实为语言文件键（`languages/zh-CN.yml`），非 `_config.yml` 键 |
 | 3.1 模板路由 | `layout/post.ejs`、`layout/wiki.ejs` | 不存在；内容页经 `layout.ejs` + `page.ejs` 按 `page.layout` 处理 |
 | 2.5 动态头像 / sidebar-system 动态头像 | `animated_avatar.background` 图片背景（rainbow64@3x.webp） | 改为 CSS 锥形渐变：新增 `style.gradient.avatar`（默认搜索条同款彩虹色），移除 `animated_avatar.background`；光环旋转动画（4s）不变 |
+| 7.1 懒加载更新 | 动态懒加载图片需手动调用 `wrapLazyloadImages()` 或 `update()` | `lazyload.ejs` 新增 MutationObserver 兜底：检测到新增 `.lazy` 元素自动 `lazyLoadInstance.update()`；`wrapLazyloadImages()` 仍负责普通 `<img src>` 转换 |
 
 ## 三、处理约定
 
