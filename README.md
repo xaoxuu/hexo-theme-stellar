@@ -81,4 +81,4 @@ theme: stellar
 
 - 提交 Issues：https://github.com/xaoxuu/hexo-theme-stellar/issues/
 - 参与讨论：https://github.com/xaoxuu/hexo-theme-stellar/discussions/
-- 贡献指南：https://xaoxuu.com/wiki/stellar/contributors/
+- 贡献指南：[CONTRIBUTING.md](CONTRIBUTING.md) · [Wiki 贡献页](https://xaoxuu.com/wiki/stellar/contributors/)
