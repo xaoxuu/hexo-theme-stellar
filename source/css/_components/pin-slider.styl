@@ -18,7 +18,6 @@
   flex: 0 0 100%
   height: 15rem
   overflow: hidden
-  border-radius: $border-card-l
   background: var(--card)
   @media screen and (max-width: $device-mobile-max)
     height: 11rem
@@ -27,47 +26,78 @@
       transform: scale(1.04)
       filter: brightness(.92) saturate(1.1)
 
-// 文章幻灯片：固定宽高比，内部完全复用列表文章卡片（.post-list .post-card）的标记与样式
+// 文章幻灯片：固定「标题 + 一行小字」结构，宽高比与非置顶文章一致（article.cover_ratio）；
+// 文字区与 poster 卡片 cover-info 一致（同款渐变模糊层 + 四周间距）；无封面时为纯白卡片
 .pin-slide.post-slide
+  display: block
   height: auto
-  aspect-ratio: 2 / 1
-  .post-list
-    margin: 0
+  aspect-ratio: hexo-config('article.cover_ratio')
+  --img-br: 100%
+  --img-sat: 100%
+  --blur-px: 1em
+  --blur-height: 128px
+  --blur-sat: 120%
+  .pin-slide-bg
+    z-index: 0
+  // 渐变模糊层：与 poster 卡片 .cover:before 一致（同图模糊 + 底部渐变 mask）
+  &:not(.no-cover)::before
+    content: ''
+    z-index: 1
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
     height: 100%
-  .post-card
-    height: 100%
-    border-radius: 0
-    display: flex
-    flex-direction: column
-    .md-text
-      flex: 1
+    background-image: var(--pin-cover-url)
+    background-size: cover
+    background-position: center
+    filter: brightness(var(--img-br)) saturate(var(--img-sat)) blur(var(--blur-px)) saturate(var(--blur-sat))
+    mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
+    -webkit-mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
+    transition: transform .5s ease-out
+  .pin-slide-text
+    position: absolute
+    bottom: 0
+    z-index: 2
+    padding: 1rem
+    line-height: 1.2
+    width: 100%
+    box-sizing: border-box
+    text-align: left
+    .pin-slide-headline
+      font-weight: 500
+      font-size: $fsh3
+      color: white
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2)
+      white-space: nowrap
       overflow: hidden
-      // flex 布局不折叠外边距，手动对齐列表卡片的间距
-      .post-title
-        margin-bottom: 1rem
-        @media screen and (max-width: $device-mobile)
-          margin-bottom: .5rem
-      .excerpt
-        margin: 0
-      .excerpt > p
-        margin-top: 0
-  // 有封面但无 poster 的默认卡片：压缩封面比例并截断文字，适配固定宽高比
-  .post-card:not(.photo) .post-cover img
-    aspect-ratio: 3 / 1
-  .post-card:not(.photo) .post-title
-    -webkit-line-clamp: 1
-  .post-card:not(.photo) .excerpt p
-    -webkit-line-clamp: 1
-    overflow: hidden
-  // 移动端白底卡片空间有限，不显示正文
-  .post-card:not(.photo) .excerpt
-    @media screen and (max-width: $device-mobile-max)
-      display: none
-  // 无封面卡片被拉伸到固定宽高比时，内容靠下方对齐
-  &.no-cover .md-text
-    display: flex
-    flex-direction: column
-    justify-content: flex-end
+      text-overflow: ellipsis
+      trans1 color
+      @media screen and (max-width: $device-mobile)
+        font-size: $fsh4
+    .pin-slide-caption
+      margin-top: 4px
+      font-size: $fs-14
+      color: white
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2)
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+      @media screen and (max-width: $device-mobile)
+        font-size: $fs-13
+  &:not(.no-cover) .pin-slide-text
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2))
+  &:not(.no-cover):hover::before
+    transform: scale(1.04)
+  // 无封面卡片：纯白底 + 普通文章文字颜色
+  &.no-cover
+    background: var(--card)
+    .pin-slide-headline
+      color: var(--text)
+      text-shadow: none
+    .pin-slide-caption
+      color: var(--text-p2)
+      text-shadow: none
 
 // wiki / 专栏项目幻灯片背景
 .pin-slide-bg
@@ -120,26 +150,29 @@
 
 .pin-slider-dots
   position: absolute
+  left: 0
   right: 0
   bottom: 0
   z-index: 2
   display: flex
   align-items: center
   gap: 4px
-  padding: 1rem
-  border-radius: 999px
+  padding: 4px
+  border-radius: 4px
+  justify-content: center
 
 .pin-slider-dot
   position: relative
   overflow: hidden
-  width: .5rem
-  height: .5rem
+  width: 16px
+  height: 2px
   padding: 0
-  background-color: rgba(white, 0.5)
-  border: 1px solid rgba(0, 0, 0, 0.1)
-  border-radius: 50%
+  background-color: rgba(white, 0.25)
+  border-radius: 4px
+  border-shape: round
   cursor: pointer
   trans1 all
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2)
   &::before
     content: ''
     position: absolute
@@ -147,15 +180,12 @@
     right: 0
     top: 0
     bottom: 0
-    border-radius: inherit
     background: var(--theme)
     transform: scaleX(0)
     transform-origin: left
   &:hover
     background-color: white
   &.active
-    width: 1.5rem
-    border-radius: 999px
     background-color: white
     &::before
       transform: scaleX(1)
@@ -172,3 +202,39 @@
 
 .pin-slider.reduced .pin-slider-dot.active::before
   animation: none
+
+// 翻页按钮：容器复用 navbar 的玻璃效果（bar-glass），图标为 solar 双箭头 SVG（无文字），
+// 鼠标悬停 / 键盘聚焦到轮播区时显示，左右两侧垂直居中
+.pin-slider-nav
+  position: absolute
+  top: 50%
+  z-index: 3
+  display: flex
+  align-items: center
+  justify-content: center
+  width: 27px
+  height: 44px
+  padding: 1rem .25rem
+  margin-top: -2rem
+  border: none
+  bar-glass(40px)
+  color: var(--text)
+  cursor: pointer
+  opacity: 0
+  &.prev
+    left: 10px
+  &.next
+    right: 10px
+  svg
+    display: block
+    width: 1.25rem
+    height: 1.25rem
+  &:hover
+    color: var(--theme)
+  &:focus
+    outline: none
+    opacity: 1
+
+.pin-slider:hover .pin-slider-nav,
+.pin-slider:focus-within .pin-slider-nav
+  opacity: 1

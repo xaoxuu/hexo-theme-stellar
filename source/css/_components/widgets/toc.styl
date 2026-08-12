@@ -55,11 +55,11 @@
     
 // 固定位置
 .l_right .widgets .widget-wrapper.toc
-  margin-top: 0
+  margin-top: 1rem
   position: sticky
   position: -webkit-sticky
-  top: calc(var(--gap-margin) * 1)
-  padding: 16px 0
+  top: 0
+  padding: 1rem 0
   &:first-child
     top: var(--gap-margin)
     padding-top: 1rem
@@ -181,6 +181,9 @@
       .widget-wrapper.toc
         position: static
         background: none
+        padding: 0
+        &:first-child
+          padding-top: 0
   .widget-wrapper.toc .toc
     a
       color: var(--text-p2)

@@ -57,6 +57,8 @@ $border-card-l = convert(hexo-config('style.border-radius.card-l'))
 $border-card = convert(hexo-config('style.border-radius.card'))
 $border-card-s = convert(hexo-config('style.border-radius.card-s'))
 $border-bar = convert(hexo-config('style.border-radius.bar'))
+$bar-item-gap = 2px // bar 容器内按钮/标签之间的间距与距边距离（gap + padding 共用）
+$border-bar-container = 'calc(%s + %s)' % ($border-bar $bar-item-gap) // bar 容器圆角 = 按钮圆角（$border-bar）+ 间距，保持同心
 $border-image-l = convert(hexo-config('style.border-radius.image-l'))
 $border-image = convert(hexo-config('style.border-radius.image'))
 $border-image-s = convert(hexo-config('style.border-radius.image-s'))

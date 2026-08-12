@@ -11,7 +11,6 @@
   z-index: 1
   line-height: 1.2
   margin: 0 var(--gap-margin)
-  padding-bottom: 32px
   .widget-wrapper
     .widget-header
       padding-left: var(--gap-padding)
@@ -35,7 +34,7 @@
         color: inherit
         opacity 0.3
         trans1 opacity
-        border-radius: 4px
+        border-radius: 8px
         padding: 6px
         margin-right: -6px
         svg
@@ -62,9 +61,14 @@
   display: block
   margin-top: 32px
 
+.l_left .widgets
+  padding-bottom: 64px
 .l_right .widgets
+  padding: 16px 0
   &:empty 
     display: none
+  .widget-wrapper:first-child
+    margin-top: 0
   .widget-wrapper
     .widget-header
       padding-left: var(--gap-padding)

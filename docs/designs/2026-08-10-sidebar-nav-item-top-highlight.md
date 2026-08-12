@@ -8,8 +8,8 @@
 
 在 `source/css/_defines/func.styl` 新增公共 mixin `sidebar-light($bg = var(--bg-a50), ...)`：
 
-- 浅色模式：`background: linear-gradient(180deg, rgba(white, 0.38), rgba(white, 0) 55%), $bg`，`box-shadow: inset 0 1px 0 rgba(white, 0.45)`
-- 深色模式（`data-theme="dark"` 与 `prefers-color-scheme: dark` 双写）：渐变改为 `rgba(white, 0.09) → 0`，白边改为 `rgba(white, 0.1)`（约为浅色的一半）
+- 浅色模式：`background: linear-gradient(180deg, rgba(white, 0.38), rgba(white, 0) 50%), $bg`，`box-shadow: inset 0 1px 0 rgba(white, 0.45)`
+- 深色模式（`data-theme="dark"` 与 `prefers-color-scheme: dark` 双写）：渐变改为 `rgba(white, 0.08) → rgba(white, 0) 50%`（与浅色同样的截止位置），白边改为 `rgba(white, 0.08)`（约为浅色的一半）
 - 不设置任何过渡/动画，hover 与 active 即时切换；不引入伪元素，`img/svg/span` 等保持原有样式
 
 应用范围（均无动画）：

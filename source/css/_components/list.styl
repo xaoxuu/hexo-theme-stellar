@@ -168,7 +168,7 @@
       mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
       -webkit-mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
     .cover-info
-      padding: 1.5rem 1rem
+      padding: 1rem
       position: absolute
       line-height: 1.2
       width: 'calc(100% - %s * 2)' % 1rem
@@ -195,9 +195,6 @@
       .caption
         font-size: $fs-14
       @media screen and (max-width: $device-mobile)
-        padding: 1rem
-        div+div
-          margin-top: 2px
         .headline
           font-size: $fsh4
         .caption
@@ -240,7 +237,7 @@
     --theme-block: var(--block)
     background: var(--theme-block)
     padding: 2px 4px
-    border-radius: 2px
+    border-radius: 4px
   p:last-child
     margin-bottom: 0
   .cap+.cap

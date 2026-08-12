@@ -49,21 +49,41 @@ pinItems.sort(function(a, b) {
   return pinWeight(b) - pinWeight(a)
 })
 
-// 文章幻灯片：完全复用列表文章卡片（post_card）的标记与样式，仅固定宽高比
-function postSlide(post) {
-  var cardLayout = 'post'
-  if (post.cover != undefined && post.poster != undefined) {
-    cardLayout += ' photo'
+// 文章幻灯片：固定「标题 + 一行小字」结构，宽高比统一取自 pin_slider.ratio。
+// 标题：poster.headline > title；小字：poster.caption > description > excerpt（截断 50 字）。
+// 样式与 poster 卡片 cover-info 一致；无封面时为纯白卡片（文字按普通文章颜色）。
+function postSubtitle(post) {
+  if (post.poster != null && post.poster.caption != null && post.poster.caption.length > 0) {
+    return post.poster.caption
   }
+  if (post.description != null && post.description.length > 0) {
+    return post.description
+  }
+  var text = post.excerpt || post.content || ''
+  text = strip_html(text).replace(/\s+/g, ' ').trim()
+  return text.length > 0 ? truncate(text, {length: 50}) : ''
+}
+
+function postSlide(post) {
   var noCover = !(post.cover != null && post.cover.length > 0)
+  var headline = (post.poster != null && post.poster.headline != null && post.poster.headline.length > 0) ? post.poster.headline : post.title
+  var subtitle = postSubtitle(post)
   var el = ''
-  el += '<div class="pin-slide post-slide' + (noCover ? ' no-cover' : '') + '">'
-  el += '<div class="post-list post">'
-  el += '<a class="post-card ' + cardLayout + '" href="' + pretty_url(post.link || post.path) + '">'
-  el += partial('_partial/main/post_list/post_card', {post: post})
+  el += '<a class="pin-slide post-slide' + (noCover ? ' no-cover' : '') + '" href="' + pretty_url(post.link || post.path) + '"'
+  if (!noCover) {
+    el += ' style="--pin-cover-url:url(\'' + post.cover.replace(/'/g, '%27') + '\')"'
+  }
+  el += '>'
+  if (!noCover) {
+    el += '<img class="pin-slide-bg" src="' + post.cover + '" alt=""/>'
+  }
+  el += '<div class="pin-slide-text">'
+  el += '<div class="pin-slide-headline">' + headline + '</div>'
+  if (subtitle.length > 0) {
+    el += '<div class="pin-slide-caption">' + subtitle + '</div>'
+  }
+  el += '</div>'
   el += '</a>'
-  el += '</div>'
-  el += '</div>'
   return el
 }
 
@@ -94,7 +114,7 @@ function wikiSlide(proj) {
   return el
 }
 
-if (theme.pin_slider?.enable && pinItems.length > 0) {
+if (pinItems.length > 0) {
   var slidesHtml = ''
   var dotsHtml = ''
   for (var si = 0; si < pinItems.length; si++) {
@@ -110,7 +130,7 @@ if (theme.pin_slider?.enable && pinItems.length > 0) {
     }
   }
   var groupKey = pinType == 'wiki' ? 'wiki' : 'post'
-  var sliderInterval = theme.pin_slider.interval || 4000
+  var sliderInterval = 5000 // 自动轮播间隔固定 5000ms
   var el = ''
   el += '<div class="pin-slider" id="pin-slider" data-interval="' + sliderInterval + '" data-key="' + pinType + '" data-group="' + groupKey + '">'
   el += '<div class="pin-slider-track">'
@@ -118,6 +138,8 @@ if (theme.pin_slider?.enable && pinItems.length > 0) {
   el += '</div>'
   if (dotsHtml.length > 0) {
     el += '<div class="pin-slider-dots">' + dotsHtml + '</div>'
+    el += '<button type="button" class="pin-slider-nav prev">' + icon('solar:double-alt-arrow-left-bold-duotone') + '</button>'
+    el += '<button type="button" class="pin-slider-nav next">' + icon('solar:double-alt-arrow-right-bold-duotone') + '</button>'
   }
   el += '</div>'
 %>
@@ -218,32 +240,6 @@ function initPinSlider() {
     }
     start();
   }
-  // 滚轮/触控板切换：横向（deltaX）与鼠标滚轮（deltaY）都映射为切页，
-  // 轮播区域始终拦截滚动，400ms 冷却防连跳
-  var wheelCooldown = 0;
-  function onWheel(e) {
-    var unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? 200 : 1;
-    var dx = e.deltaX * unit;
-    var dy = e.deltaY * unit;
-    if (Math.abs(dx) < 20 && Math.abs(dy) < 20) return;
-    e.preventDefault();
-    var now = Date.now();
-    if (now < wheelCooldown) return;
-    wheelCooldown = now + 400;
-    if (Math.abs(dx) >= Math.abs(dy)) {
-      if (dx < 0) {
-        next();
-      } else {
-        prev();
-      }
-    } else {
-      if (dy > 0) {
-        next();
-      } else {
-        prev();
-      }
-    }
-  }
   var dotsEl = slider.querySelector('.pin-slider-dots');
   function onProgressEnd(e) {
     if (e.animationName === 'pin-slider-progress') {
@@ -259,13 +255,20 @@ function initPinSlider() {
     });
     dotsEl.addEventListener('animationend', onProgressEnd);
   }
+  var navPrev = slider.querySelector('.pin-slider-nav.prev');
+  var navNext = slider.querySelector('.pin-slider-nav.next');
+  if (navPrev) {
+    navPrev.addEventListener('click', prev);
+  }
+  if (navNext) {
+    navNext.addEventListener('click', next);
+  }
   slider.addEventListener('mouseenter', stop);
   slider.addEventListener('mouseleave', start);
   slider.addEventListener('focusin', stop);
   slider.addEventListener('focusout', start);
   slider.addEventListener('touchstart', onTouchStart, { passive: true });
   slider.addEventListener('touchend', onTouchEnd, { passive: true });
-  slider.addEventListener('wheel', onWheel, { passive: false });
   document.addEventListener('visibilitychange', onVis);
   // 初始化直接定位到缓存序号：先禁用过渡再恢复，避免每次进页面播放“从第一张滑过来”的动画
   track.style.transition = 'none';
@@ -282,9 +285,14 @@ function initPinSlider() {
     slider.removeEventListener('focusout', start);
     slider.removeEventListener('touchstart', onTouchStart);
     slider.removeEventListener('touchend', onTouchEnd);
-    slider.removeEventListener('wheel', onWheel);
     if (dotsEl) {
       dotsEl.removeEventListener('animationend', onProgressEnd);
+    }
+    if (navPrev) {
+      navPrev.removeEventListener('click', prev);
+    }
+    if (navNext) {
+      navNext.removeEventListener('click', next);
     }
     document.removeEventListener('visibilitychange', onVis);
   };

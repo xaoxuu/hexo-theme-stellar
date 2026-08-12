@@ -1,9 +1,10 @@
 <% if ((is_home() || is_category() || is_tag()) && page.total > 1) { %>
   <div class='paginator-wrap dis-select<%- scrollreveal(' ') %>'>
   <%- paginator({
-    prev_text: '',
-    next_text: '',
-    force_prev_next:true
+    prev_text: icon('solar:double-alt-arrow-left-bold-duotone'),
+    next_text: icon('solar:double-alt-arrow-right-bold-duotone'),
+    force_prev_next: true,
+    escape: false
   }) %>
   </div>
 <% } %>

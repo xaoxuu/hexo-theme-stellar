@@ -533,7 +533,7 @@ graph TB
 
 ```stylus
 .navbar-blur
-  newblur()
+  bar-glass() // 容器圆角默认 $border-bar-container，由 style.border-radius.bar 派生
 ```
 
 效果使用多种技术：
@@ -613,7 +613,7 @@ graph TB
 ```mermaid
 graph TB
     NAV[".navbar<br/>Position: sticky<br/>z-index: 8"]
-    BLUR[".navbar-blur<br/>Border radius: 64px<br/>newblur() effect"]
+    BLUR[".navbar-blur<br/>Border radius: $border-bar-container<br/>bar-glass() effect"]
     CONTAINER[".navbar-container<br/>Overflow: scroll visible<br/>scrollbar(0,0)"]
     CONTENT[".navbar nav<br/>inline-flex layout"]
     

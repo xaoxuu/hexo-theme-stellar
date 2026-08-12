@@ -177,11 +177,11 @@ graph TB
     Responsive --> MarginDesktop["Desktop ≥768px:<br/>margin-right: 3rem"]
     
     Visual --> Blur["newblur() mixin<br/>Glassmorphism backdrop"]
-    Visual --> Radius["border-radius: 64px<br/>Rounded pill shape"]
+    Visual --> Radius["border-radius: $border-bar-container<br/>bar container radius"]
     Visual --> ZIndex["z-index: 999999<br/>Always on top"]
     
-    StateActive["Active state:<br/>.l_body[leftbar] or [rightbar]"] --> Shadow["Multi-layer theme-colored shadow"]
-    StateActive --> Background["--bg-a50 semi-transparent"]
+    StateActive["Active state:<br/>corresponding toggle button"] --> Shadow["Multi-layer shadow<br/>(bar-item-active)"]
+    StateActive --> Background["bg-a60 fill<br/>(navbar item active style)"]
 ```
 
 关键响应式行为：
@@ -204,15 +204,10 @@ graph TB
 
 3. **激活状态视觉反馈**：
    ```stylus
-   .l_body[leftbar] .float-panel, .l_body[rightbar] .float-panel
-     box-shadow: 0 0 4px -1px var(--theme), 
-                 0 0 16px -4px var(--theme), 
-                 0 0 32px -12px var(--theme), 
-                 0 0 128px -32px var(--theme)
-     &:before
-       background: var(--bg-a50)
+   .l_body[leftbar] .float-panel button.leftbar-toggle, .l_body[rightbar] .float-panel button.rightbar-toggle
+     bar-item-active()
    ```
-   侧边栏打开时，多层阴影用主题色营造发光效果。
+   侧边栏打开时，对应的切换按钮完整复用 navbar item 激活样式（`var(--bg-a60)` 背景 + 多层阴影 + `saturate(300%)`），观感与 navbar item 一致；面板本身保持 `bar-glass()` 玻璃效果，按钮图标仍用主题色提示当前打开的侧栏。
 
 ### 按钮图标变换
 
@@ -220,9 +215,14 @@ graph TB
 
 ```stylus
 .float-panel button
-  width: 48px
-  height: 48px
-  font-size: 28px
+  bar-item() // 与 navbar item 共用基础 UI（圆角 $border-bar、连续曲率）
+  box-sizing: border-box
+  width: 36px
+  height: 36px
+  padding: 4px
+  display: flex
+  justify-content: center
+  align-items: center
   >*
     path#sep
       trans1 transform
@@ -334,7 +334,7 @@ graph LR
 ### 移动优先原则
 
 1. **渐进增强**：基础样式面向移动端，媒体查询为桌面增强
-2. **触控友好**：`.float-panel button` 最小 48px 触控目标
+2. **触控友好**：`.float-panel button` 为 36×36（与 navbar item 同高、1:1），按钮圆角直接用 `$border-bar`（12px），容器圆角 `$border-bar-container`（14px）与其同心；条内按钮与按钮之间、按钮距条边均为 `$bar-item-gap`（2px，容器 `gap`/`padding` 统一引用），navbar 导航项与 float-panel 按钮共用 `bar-item()`（连续曲率），一处修改两处生效
 3. **内容优先**：主内容始终可访问，移动端侧边栏为可选遮罩
 4. **性能**：移动端工具（`.mobile-only`）用 `display: none` 避免渲染开销
 
@@ -396,8 +396,8 @@ graph LR
 - 带可配置 inset 的粘性定位
 - 响应式边距
 - 经 `newblur()` 混入的玻璃拟态模糊
-- `.l_body` 带 `[leftbar]` / `[rightbar]` 属性时的激活状态样式
-- 胶囊外形（`border-radius: 64px`）显式使用 `corner-shape: round`，不受全局 `superellipse(1.2)` 连续曲率影响
+- `.l_body` 带 `[leftbar]` / `[rightbar]` 属性时，对应的切换按钮复用 navbar item 激活样式（`bar-item-active()`），面板保持玻璃效果
+- 圆角（容器 `$border-bar-container`、按钮 `$border-bar`，均由 `style.border-radius.bar` 派生）随全局 `superellipse(1.2)` 连续曲率渲染（`bar-glass()` / `bar-item()` 显式应用 `corner-shape: $corner-shape`），不再使用 `corner-shape: round` 覆盖
 
 `.float-panel` 内的按钮继承响应式尺寸与悬停状态。
 

@@ -30,7 +30,7 @@ if (homeCmt && homeCmt !== false && is_home_first_page()) {
 }
 
 // 首页第一页渲染置顶轮播时，列表不再重复展示置顶文章
-var pinSliderActive = theme.pin_slider?.enable === true && is_home_first_page()
+var pinSliderActive = is_home_first_page()
 
 function layout_post_card(layout, post, content) {
   var el = '';

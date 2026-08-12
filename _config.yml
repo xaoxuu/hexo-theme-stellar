@@ -153,16 +153,6 @@ site_tree:
     rightbar: toc
 
 
-######## 置顶轮播 ########
-# 所有带 navbar top 的列表页（首页/归档/标签/分类/专栏/wiki 列表等）上方显示置顶内容轮播。
-# 博客列表放置顶文章（front-matter 中 pin:true|number，兼容 sticky 别名），
-# wiki 列表放置顶 wiki 项目、专栏列表放置顶专栏（数据文件中 pin:true|number）。
-# enable: 是否开启；interval: 自动轮播间隔（毫秒）。
-pin_slider:
-  enable: false
-  interval: 4000
-
-
 ######## Notebook ########
 notebook:
   # 如果没有指定 excerpt 和 description，将自动取多长的内容作为文章摘要。
@@ -680,7 +670,7 @@ style:
     card-l: 24px # 侧边栏、文章横幅位置的圆角
     card: 16px # 文章内大部分卡片的圆角
     card-s: 12px # 文章内小型卡片的圆角
-    bar: 8px # 横条类元素的圆角
+    bar: 12px # 横条类元素的圆角
     image-l: 24px # 非技术类文章插图圆角
     image: 16px # 技术类文章插图圆角
     image-s: 8px # 评论区图片圆角（部分评论支持）
@@ -713,9 +703,6 @@ style:
     blur-px: 100px
     blur-bg: var(--bg-a60)
     background-opacity: 0.8
-  paginator:
-    prev: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/arrow/f049bbd4e88ec.svg
-    next: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/arrow/064b95430caf4.svg
   error_page: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg
   site: # 使用 background-image 后，blur 设置才有效
     # background-image: url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.14/image/site-bg1@small.webp)

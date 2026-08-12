@@ -6,53 +6,36 @@
 
 .navbar-blur 
   margin: 0 1rem
-  border-radius: 64px
   position: relative
-  newblur()
+  bar-glass()
 
 .navbar-container 
   max-width: 100%
   margin: 1px
-  border-radius: 64px
+  border-radius: $border-bar-container
   overflow: scroll visible
   scrollbar(0, 0)
   
 .navbar nav
   display: inline-flex
   font-size: $fs-14
+  gap: $bar-item-gap
+  padding: $bar-item-gap
   z-index: 1
   >p
     margin: 0
   a
-    padding: .25rem 0.75rem
-    margin: 0.25rem
-    line-height: 2
-    color: var(--text-p1)
-    border-radius: 32px
-    font-weight: 500
-    white-space: nowrap
-    position: relative
-    z-index: 1
-    trans1 all
+    bar-item()
     &:hover
       background: var(--bg-a50)
     &.active, &:hover
       color: var(--text)
     &.active
-      background: var(--bg-a60)
-      :root[data-theme="dark"] &
-        background: rgba(white, 0.25)
-      @media (prefers-color-scheme: dark)
-        background: rgba(white, 0.25)
-      box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 0 2px rgba(0, 0, 0, 0.04), 0 0 4px rgba(0, 0, 0, 0.08)
+      bar-item-active()
       cursor default
       pointer-events: none
-      backdrop-filter: saturate(300%)
-      -webkit-backdrop-filter: saturate(300%)
     &.active:after
       content: ''
-  a+a
-    margin-left: 4px
 
 @media screen and (max-width: $device-mobile-max)
   .navbar.top

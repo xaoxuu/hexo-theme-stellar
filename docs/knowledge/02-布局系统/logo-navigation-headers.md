@@ -442,9 +442,9 @@ site_tree:
 - 列表页保持页头可见（主内容区为 mobile-only 模式）
 - 保证导航标签始终可访问
 
-**导航标签外观：** navbar top 的标签渲染为胶囊按钮（`border-radius: 32px`），不显式设置 `corner-shape`，跟随全局 `corner-shape: superellipse(1.2)` 连续曲率渲染，与父容器 `.navbar-blur` / `.navbar-container` 保持一致。
+**导航标签外观：** navbar top 的标签通过 `bar-item()` 定义基础 UI（`padding: .25rem .75rem`、`line-height: 2`、`font-size: $fs-14`、圆角 `$border-bar`、`corner-shape: $corner-shape`），圆角直接使用 `$border-bar`（当前 12px），父容器 `.navbar-blur` / `.navbar-container` 圆角为 `$border-bar-container = calc($border-bar + $bar-item-gap)`（当前 14px），内外保持同心，不再固定为 32px 胶囊；标签间与距边间距由 `.navbar nav` 的 `gap` / `padding` 统一为 `$bar-item-gap`（当前 2px）；bar 容器（`bar-glass()`）与内部元素均显式应用连续曲率圆角。标签激活样式由 `bar-item-active()` 提供（`var(--bg-a60)` 背景 + 多层阴影 + `saturate(300%)`），侧边栏打开时 `.float-panel` 中对应的按钮（`leftbar-toggle` / `rightbar-toggle`）复用同一套 `bar-item()` + `bar-item-active()`。
 
-**置顶内容轮播位：** 所有渲染 navbar top 的列表页在导航栏上方自动预留置顶轮播位（`layout/_partial/main/pin_slider.ejs`，配置 `pin_slider`）；无置顶内容时不渲染。博客列表放置顶文章（`pin`/`sticky`），wiki 列表放置顶 wiki 项目，专栏列表放置顶专栏（数据文件 `pin`）。
+**置顶内容轮播位：** 所有渲染 navbar top 的列表页在导航栏上方自动预留置顶轮播位（`layout/_partial/main/pin_slider.ejs`，无需开关配置，有置顶内容即渲染，自动轮播间隔固定 5000ms）；无置顶内容时不渲染。博客列表放置顶文章（`pin`/`sticky`），wiki 列表放置顶 wiki 项目，专栏列表放置顶专栏（数据文件 `pin`）。
 
 **参考源码**：[_config.yml](../../../_config.yml)、[layout/_partial/sidebar/logo.ejs](../../../layout/_partial/sidebar/logo.ejs)
 

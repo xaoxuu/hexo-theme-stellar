@@ -335,7 +335,7 @@ graph TB
 
 专栏是文章的集合，使用 `topic` 布局，继承 `post` 类型的大部分配置，可在 `{site_tree.index_topic.base_dir}/`（默认 `/topic/`）建立独立索引。
 
-专栏列表页与其他博客列表页一致，在 navbar 上方展示置顶文章轮播（配置 `pin_slider`）。
+专栏列表页与其他博客列表页一致，在 navbar 上方展示置顶文章轮播（无需开关配置，有置顶文章即渲染）。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 

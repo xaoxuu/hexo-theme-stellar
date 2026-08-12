@@ -203,7 +203,7 @@ tree:
 | `base_dir` | 去掉开头 `/`，补结尾 `/` | doc_tree.js |
 | `tags` | 字符串转为单元素数组 | doc_tree.js |
 | `sort` | 为 null 时默认 `0` | doc_tree.js |
-| `pin` | 仅用于置顶轮播收集（`pin_slider.enable` 时生效），不改变列表顺序；设置即置顶，按数值降序 | pin_slider.ejs |
+| `pin` | 仅用于置顶轮播收集（有置顶内容即渲染），不改变列表顺序；设置即置顶，按数值降序 | pin_slider.ejs |
 
 **wiki.shelf**——根文件 `_data/wiki.yml`（非子目录）定义哪些项目 ID 视为「已发布」。只有 shelf 中的项目出现在标签索引与相关项目列表中。
 

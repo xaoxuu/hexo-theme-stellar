@@ -20,30 +20,31 @@
   display: flex
   justify-content: center
   flex-direction: column
-  border-radius: 64px
-  corner-shape: round // 胶囊面板保持正圆端帽，不受全局 superellipse 连续曲率影响
+  gap: $bar-item-gap
+  padding: $bar-item-gap
   @media screen and (min-width: $device-mobile-max)
     margin-right: 3rem
   overflow: hidden
   trans1: all
-  &:before,&:after
-    border-radius: 64px
-    corner-shape: round
 
-  newblur()
+  bar-glass()
 
 
 // 侧边栏弹出按钮
 .float-panel button
+  bar-item()
   cursor: pointer
   color: var(--text)
   background: none
-  width: 48px
-  height: 48px
+  box-sizing: border-box
+  width: 36px
+  height: 36px
+  padding: 4px
   line-height: 0
   font-size: 28px
-  margin: 0
   display: flex
+  justify-content: center
+  align-items: center
   >*
     path#sep
       trans1 transform
@@ -51,10 +52,8 @@
     height: 28px
 
 // 侧边栏弹出后
-.l_body[leftbar] .float-panel, .l_body[rightbar] .float-panel
-  box-shadow: 0 0 4px -1px var(--theme), 0 0 16px -4px var(--theme), 0 0 32px -12px var(--theme), 0 0 128px -32px var(--theme)
-  &:before
-    background: var(--bg-a50)
+.l_body[leftbar] .float-panel button.leftbar-toggle, .l_body[rightbar] .float-panel button.rightbar-toggle
+  bar-item-active()
 
 .l_body[leftbar] .float-panel button.leftbar-toggle
   color: var(--theme)

@@ -253,7 +253,7 @@ flowchart TD
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)、[scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
 
-渲染 navbar top 的列表页（首页/归档/标签/分类/专栏/wiki 列表及带 `nav_tabs` 的页面）在导航栏上方自动获得置顶内容轮播位（配置 `pin_slider`，无置顶内容时不渲染），见[置顶内容轮播配置](../00-总览与安装配置/configuration.md#置顶内容轮播配置)。
+渲染 navbar top 的列表页（首页/归档/标签/分类/专栏/wiki 列表及带 `nav_tabs` 的页面）在导航栏上方自动获得置顶内容轮播位（无需开关配置，有置顶内容即渲染，自动轮播间隔固定 5000ms；无置顶内容时不渲染），见[置顶内容轮播](../00-总览与安装配置/configuration.md#置顶内容轮播)。
 
 ---
 
