@@ -16,7 +16,7 @@ function layoutDiv(linklist) {
   if (columns == 1 && links.length > 1) {
     align = 'left'
   }
-  el += `<div class="linklist ${align}" ${style}>`
+  el += `<div class="linklist ${align}${columns > 1 ? ' multi' : ''}" ${style}>`
   for (let link of links) {
     el += partial('link', {item: link, columns: columns})
   }
