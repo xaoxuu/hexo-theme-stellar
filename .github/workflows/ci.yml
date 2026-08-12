@@ -86,6 +86,11 @@ jobs:
         working-directory: ${{ runner.temp }}/demo/blog
         run: npm install --no-audit --no-fund
 
+      # demo 工程仍固定 Hexo 7，这里显式安装 Hexo 8 及配套插件版本，保证 CI 与适配目标一致
+      - name: Install Hexo 8 for integration build
+        working-directory: ${{ runner.temp }}/demo/blog
+        run: npm install --no-save --no-audit --no-fund hexo@^8.1.2 hexo-renderer-marked@^7.0.1 hexo-generator-index@^4.0.0
+
       # 主题目录优先于 node_modules（Hexo 解析顺序），此处再显式移除 npm 版以防歧义
       - name: Remove npm-published theme
         working-directory: ${{ runner.temp }}/demo/blog
