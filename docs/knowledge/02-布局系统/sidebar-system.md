@@ -348,7 +348,7 @@ graph BT
 
 - `--bg-a100`、`--bg-a20`：不同透明度下的主题背景
 - `$border-card-l`：侧边栏面板共享圆角
-- `$leftbar-bottom-margin`：`max-height` 计算中的底部边距
+- `$leftbar-bottom-margin-mobile` / `$rightbar-bottom-margin-mobile`：仅移动端浮动面板 `max-height` 计算中的底部边距（64px）
 - `--gap-margin`、`--gap-max`：间距令牌
 
 变量定义见[设计令牌与 CSS 变量](../01-样式系统/design-tokens.md)与[颜色与深色模式](../01-样式系统/colors-dark-mode.md)。
@@ -395,7 +395,7 @@ graph TB
 | 桌面标准 | `margin: var(--gap-margin)` | `margin: var(--gap-margin) 0` | 标准布局 |
 | 移动（≤`$device-mobile-max`） | `overflow: hidden; background: var(--bg-a100)` | 隐藏 | 折叠为移动端页头，浮动面板 `top: 8pt` |
 
-**高度约束**：`.l_left` 与 `.leftbar-container` 都限制在 `calc(100vh - var(--gap-margin) - $leftbar-bottom-margin)`，保持侧边栏在视口高度内；桌面顶部间距为 `var(--gap-margin)`（16px，相对原 32px 减半），底部预留 `$leftbar-bottom-margin` 保持 32px，移动端浮动面板顶部为 `8pt`。
+**高度约束**：PC（>667px）`.l_left` 与 `.leftbar-container` 限制在 `calc(100vh - var(--gap-margin) * 2)`，顶部与底部间距均为 `var(--gap-margin)`（16px）；移动端（≤667px）左右浮动面板顶部为 `8pt`，底部为 `$leftbar-bottom-margin-mobile` / `$rightbar-bottom-margin-mobile`（均为 64px）。
 
 **参考源码**：[source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)
 

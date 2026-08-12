@@ -1,6 +1,6 @@
 .l_left
   margin: var(--gap-margin)
-  max-height: 'calc(%s - %s - %s)' % (100vh var(--gap-margin) $leftbar-bottom-margin)
+  max-height: calc(100vh - var(--gap-margin) * 2)
   border-radius: $border-card-l
   .header
     margin: var(--gap-max) var(--gap-margin) 0
@@ -71,7 +71,7 @@
         background-color: convert($leftbar-background-color-dark)
 
   .leftbar-container
-    height: 'calc(%s - %s - %s)' % (100vh var(--gap-margin) $leftbar-bottom-margin)
+    height: calc(100vh - var(--gap-margin) * 2)
     display: flex
     flex-direction: column
     word-break: break-all

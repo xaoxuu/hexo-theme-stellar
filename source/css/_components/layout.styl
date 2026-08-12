@@ -42,7 +42,7 @@
       --inset: 8px
       right: var(--inset)
       top: var(--gap-margin)
-      max-height: 'calc(%s - %s - %s)' % (100vh var(--gap-margin) $rightbar-bottom-margin)
+      max-height: calc(100vh - var(--gap-margin) * 2)
       box-shadow: $boxshadow-card-float
       z-index: 10
       background: var(--background)
@@ -72,14 +72,15 @@
       --inset: 8px
       left: var(--inset)
       top: 8pt
-      max-height: 'calc(%s - 8pt - %s)' % (100vh $leftbar-bottom-margin)
+      max-height: 'calc(%s - 8pt - %s)' % (100vh $leftbar-bottom-margin-mobile)
       .leftbar-container
         --inset: 8px
-        height: 'calc(%s - 8pt - %s)' % (100vh $leftbar-bottom-margin)
+        height: 'calc(%s - 8pt - %s)' % (100vh $leftbar-bottom-margin-mobile)
       box-shadow: $boxshadow-card-float
       z-index: 10
     .l_right
       top: 8pt
+      max-height: 'calc(%s - 8pt - %s)' % (100vh $rightbar-bottom-margin-mobile)
     .l_main
       max-width: 100%
   .l_body[leftbar]

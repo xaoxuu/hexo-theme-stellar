@@ -67,6 +67,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 | 日期 | 位置 | 变更 |
 |------|------|------|
 | 2026-08-12 | `docs/knowledge/02-布局系统/sidebar-system.md` | 侧边栏顶部间距由 `calc(var(--gap-margin) * 2)`（32px）减半为 `var(--gap-margin)`（16px）；`$rightbar-bottom-margin` 96px→48px；`$leftbar-bottom-margin` 保持 32px 不变；移动端浮动面板顶部改为 `8pt` |
+| 2026-08-12 | `docs/knowledge/02-布局系统/sidebar-system.md` | `$leftbar-bottom-margin` / `$rightbar-bottom-margin` 重命名为 `*-mobile` 且值统一为 64px，仅移动端媒体查询引用；PC（含平板）侧边栏底部间距统一为 `var(--gap-margin)`，上下各 16px；移动端右栏新增显式 max-height（8pt 顶 + 64px 底） |
 | 2026-08-12 | `_components/partial/navbar.styl` / `_components/widgets/toc.styl` | navbar 与 TOC（右栏首个小部件）吸顶 `top` 同步减半为 `var(--gap-margin)`，移动端 navbar 对齐 `8pt` |
 | 2026-08-12 | `docs/knowledge/02-布局系统/logo-navigation-headers.md` | navbar top 胶囊按钮（`.navbar nav a`）显式 `corner-shape: round`，取消全局 `superellipse(1.2)` 连续曲率，保持两端正圆端帽 |
 | 2026-08-12 | `docs/knowledge/01-样式系统/responsive-design.md` | `.float-panel` 胶囊面板及其 `:before`/`:after` 显式 `corner-shape: round`，取消全局 `superellipse(1.2)` 连续曲率 |
