@@ -311,7 +311,7 @@ node -e "console.log(require('js-yaml').load(require('fs').readFileSync('_config
 | `probe-image-size` | ^7.2.3 | 懒加载图片尺寸检测 |
 | `glob` | ^10.4.0 | 文件通配匹配 |
 
-主题兼容 Hexo 6.3.0 及以上版本。
+主题兼容 Hexo 6.3.0 及以上版本（已验证至 8.1.2）。
 
 **参考源码**：[package.json](../../../package.json)、[README.md](../../../README.md)
 

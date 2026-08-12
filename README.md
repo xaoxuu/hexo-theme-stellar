@@ -40,7 +40,7 @@ Stellar 是一个功能强大的综合型 Hexo 主题，内置博客、知识库
 ### 环境要求
 
 ```yaml
-Hexo: 6.3.0 ~ latest
+Hexo: 6.3.0 ~ latest（已验证至 8.1.2）
 hexo-cli: 4.3.0 ~ latest
 node: >= 22 # 建议选择 LTS 版本
 npm: >= 10
