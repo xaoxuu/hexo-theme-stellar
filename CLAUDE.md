@@ -14,7 +14,8 @@
 - 技术栈：EJS 模板、Stylus 样式、服务端 CommonJS（Node 22+，现代语法）、浏览器 ES2015+（源码，Babel 转译输出）、YAML 文案
 - 涉及主题代码、配置或行为问题时，先查 `docs/knowledge/` 对应领域，再读源码确认；知识库与代码不一致时以代码为准
 - 修改 `scripts/` 后必须在主工程（xaoxuu.com，以 `themes/stellar` 子模块依赖本仓库）中执行 `npm run g` 全量验证（已含 `hexo generate` + gulp minify）；`npm run s` 是按需渲染，不能替代
+- UI 方面改动量不大时无需自检流程，除非用户明确要求
 - 本地一键检查：`npm run check`（lint + 单测 + 知识库硬事实核查）
-- 提交使用 Conventional Commits；只有用户明确要求时才 push
+- 任务完成后不自动提交，改动保留在工作区供用户审查；提交仅在用户明确要求时执行（发版流程除外），使用 Conventional Commits，一次提交对应一个需求点、逻辑相似的需求可合并提交；只有用户明确要求时才 push
 - 发版前须与用户确认版本号与变更摘要，先 `npm run release:dry -- <version>` 预演，再 `npm run release`
 - Issue 处理：回复已修复的 issue 时只添加 `resolved` 标签，不手动关闭；关闭由 label-commenter CI 处理
