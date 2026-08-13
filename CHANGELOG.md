@@ -1,5 +1,39 @@
 # Changelog
 
+## 1.39.0
+
+> 发布日期：2026-08-13
+
+### 新功能
+- 左侧栏新增纯色卡片风格（`style.leftbar.ui-style: card`）：实色 `var(--card)` 背景 + 中间档阴影，列表项、搜索条交互与右栏观感一致
+- 列表页新增置顶内容轮播：首页/归档/标签/分类/专栏/wiki 列表自动渲染置顶文章或项目（无需额外配置），bar UI 统一、分页器图标更新
+- 头像彩虹光环改为 CSS 锥形渐变（`style.gradient.avatar`），不再依赖外部图片
+
+### 修复
+- 最新评论组件：正文转纯文本并截断、保留表情图并限高，修复侧栏布局
+- 懒加载图片自动注册动态插入的图片
+- 置顶轮播翻页按钮垂直居中
+- integration 构建因 workspace 路径限制导致的 demo 检出失败
+
+### 样式
+- 压缩页面顶部与侧边栏间距，胶囊元素改为正圆端帽（`style.radius.bar` 默认 8px → 12px）
+- 左栏卡片阴影透明度调整为 0.05，card 风格组件背景统一为 `var(--block)` / `var(--block-border)`
+- 侧栏底部间距改为仅手机端生效，PC 上下统一为 gap-margin
+- linklist 多列项按 leftbar 风格显示背景色
+- 导航链接移除 corner-shape 覆盖，与父容器保持一致
+
+### 其他
+- 新增主题中文知识库（`docs/knowledge/`）、AI 协作规范与贡献指南
+- integration 构建切换至 Hexo 8，并补充兼容适配方案
+- 新增标签插件风格设计规范
+
+### 升级注意（配置变更与破坏性改动）
+- 新增 `style.leftbar.ui-style`（`glass` / `card`，默认 `card`）：未显式设置的站点升级后默认显示卡片风格，可用 `glass` 恢复原磨砂玻璃效果
+- 新增 `style.gradient.avatar`（头像光环渐变色）；移除 `style.animated_avatar.background`
+- 移除 `style.paginator.prev` / `style.paginator.next`（分页器图标改为内置 SVG）
+
+Full Changelog: [1.38.0...1.39.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.38.0...1.39.0)
+
 ## 1.38.0
 
 > 发布日期：2026-08-11
