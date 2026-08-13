@@ -38,9 +38,12 @@ function layoutToc(fallback) {
 function layoutDiv(fallback) {
   const tocBody = layoutTocBody()
   const hasToc = tocBody.trim().length > 0
+  // 远程 md 内容由客户端渲染，构建期正文无标题：
+  // 预留空 TOC 容器，渲染完成后由 mdrender.js 填充
+  const hasRemoteMd = has_remote_md(page)
   // 页面是否实际渲染评论区，由 _partial/comments/layout.ejs 标记
   const hasComments = page.cmt_rendered === true
-  if (!hasToc && !hasComments) {
+  if (!hasToc && !hasRemoteMd && !hasComments) {
     return ''
   }
   var el = ''
@@ -49,6 +52,10 @@ function layoutDiv(fallback) {
     el += layoutTocHeader()
     el += `<div class="widget-body">`
     el += tocBody
+    el += `</div>`
+  } else if (hasRemoteMd) {
+    el += layoutTocHeader()
+    el += `<div class="widget-body">`
     el += `</div>`
   }
   el += `<div class="widget-footer">`

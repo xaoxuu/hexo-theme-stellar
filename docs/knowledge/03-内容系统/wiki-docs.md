@@ -279,6 +279,19 @@ flowchart TD
 
 ---
 
+## README 主页（首页空正文 + repo 触发）
+
+wiki 项目数据文件配置 `repo`（必填）与可选 `branch` 后，若项目首页（如 `source/wiki/{id}/index.md`）正文为空——剪裁多余空行、空格后为空——该页正文自动渲染为该 GitHub 仓库的 README.md：
+
+- 渲染复用底层远程 md 组件（`scripts/lib/mdrender_html.js` 通用占位生成器 + `scripts/lib/wiki_readme.js` wiki 应用判定 + `source/js/services/mdrender.js` 客户端服务），占位元素被原地替换，最终 DOM 无外部容器；
+- README 地址由 `scripts/lib/wiki_readme.js` 的 `readmeUrl` 按主题配置 `api_host.ghraw` 构造（配置即唯一默认值来源，代码不兜底），相对图片/链接解析到同一镜像基址；
+- 标题默认适配本地文章格式：补齐标题 id、追加 `headerlink` 锚点（与 hexo-renderer-marked 输出一致），h1 视为页面标题直接隐藏（页面标题已由 banner 展示，不降级）；
+- 首页正文非空时以本地内容为准（本地内容优先）；`branch` 缺省用 GitHub `HEAD`（自动指向默认分支）。
+
+页面本身是真实 Hexo 页，走 `page.ejs` → `layout.ejs` 完整渲染链路，封面、banner、侧栏、评论与导航行为与本地 wiki 页一致。由于正文在页面加载后才渲染，右侧 TOC 由 `layout/_partial/widgets/toc.ejs` 预留空容器，mdrender 服务渲染完成后派发 `stellar:mdrender` 事件，`source/js/main.js` 监听并按服务端 `toc()` 同款结构重建（滚动高亮动态查询标题）。
+
+---
+
 ## 小节与导航树构建
 
 小节代表 wiki 项目的侧边栏导航分组。是否配置显式 `tree` 会影响构建过程。

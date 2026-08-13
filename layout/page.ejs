@@ -44,8 +44,12 @@ function layoutDiv() {
     el += partial('_partial/main/navbar/article_banner')
   }
   el += `<article class="${articleClass()}">`
-  if (page.content && page.content.length > 0) {
+  if (page.content && String(page.content).trim().length > 0) {
     el += page.content
+  } else {
+    // wiki 项目首页正文为空（剪裁空白后）且配置了 repo 时，
+    // 以该仓库 README.md 作为主页正文（应用层 helper，复用底层远程 md 渲染组件）
+    el += wiki_readme_html(theme.wiki.tree[page.wiki], page)
   }
   if (notebook) {
     el += partial('_partial/main/notebook/note_tags', { notebook: notebook })

@@ -132,14 +132,105 @@ function smoothScrollTo(targetY) {
 window.addEventListener('wheel', cancelSmoothScroll, { passive: true });
 window.addEventListener('touchstart', cancelSmoothScroll, { passive: true });
 
+// 远程 md（mdrender 服务）渲染完成后重建右栏 TOC：结构与服务端 toc() 输出一致
+let tocClickBound = false;
+function rebuildToc(scope) {
+  const widget = document.querySelector('#data-toc');
+  if (!widget) {
+    return;
+  }
+  const body = widget.querySelector('.widget-body');
+  if (!body) {
+    return;
+  }
+  const article = scope && scope.closest ? scope.closest('article.md-text') : null;
+  const root = article || document.querySelector('article.md-text');
+  if (!root) {
+    return;
+  }
+  const headings = root.querySelectorAll('h1,h2,h3,h4,h5,h6');
+  if (headings.length === 0) {
+    return;
+  }
+  const ol = document.createElement('ol');
+  ol.className = 'toc';
+  const stack = [];
+  headings.forEach(function (h) {
+    const id = h.id;
+    if (!id) {
+      return;
+    }
+    const level = parseInt(h.tagName.substring(1), 10);
+    const li = document.createElement('li');
+    li.className = 'toc-item toc-level-' + level;
+    const a = document.createElement('a');
+    a.className = 'toc-link';
+    a.href = '#' + encodeURIComponent(id);
+    const span = document.createElement('span');
+    span.className = 'toc-text';
+    span.textContent = h.textContent.trim();
+    a.appendChild(span);
+    li.appendChild(a);
+    while (stack.length > 0 && stack[stack.length - 1].level >= level) {
+      stack.pop();
+    }
+    if (stack.length === 0) {
+      ol.appendChild(li);
+    } else {
+      const parent = stack[stack.length - 1];
+      if (!parent.childOl) {
+        parent.childOl = document.createElement('ol');
+        parent.childOl.className = 'toc-child';
+        parent.li.appendChild(parent.childOl);
+      }
+      parent.childOl.appendChild(li);
+    }
+    stack.push({ level: level, li: li });
+  });
+  body.innerHTML = '';
+  body.appendChild(ol);
+  bindTocClick(widget);
+}
+
+function bindTocClick(widget) {
+  if (tocClickBound) {
+    return;
+  }
+  tocClickBound = true;
+  widget.addEventListener('click', function (e) {
+    const link = e.target.closest('a.toc-link');
+    if (!link) {
+      return;
+    }
+    const href = link.getAttribute('href');
+    const id = href && href.indexOf('#') === 0 ? decodeURIComponent(href.slice(1)) : null;
+    const target = id && document.getElementById(id);
+    if (target) {
+      e.preventDefault();
+      const offset = 32;
+      const targetY = target.getBoundingClientRect().top + window.scrollY - offset;
+      smoothScrollTo(targetY);
+      if (window.history && window.history.pushState) {
+        window.history.pushState(null, '', href);
+      }
+    }
+  });
+}
+
+// 远程 md 渲染完成后由页面层重建右栏 TOC
+document.addEventListener('stellar:mdrender', function (e) {
+  rebuildToc(e.detail && e.detail.target);
+});
+
 
 const init = {
   toc: () => {
     const scrollOffset = 32;
     // 滚动位置取整后标题顶可能落在偏移线下方 1~2px，加容差避免高亮回跳到上一条
     const scrollTolerance = 4;
-    var segs = utils.qsa("article.md-text h1, article.md-text h2, article.md-text h3, article.md-text h4, article.md-text h5, article.md-text h6");
     function activeTOC() {
+      // 每次滚动动态查询：远程 md 内容渲染后标题才存在
+      var segs = utils.qsa("article.md-text h1, article.md-text h2, article.md-text h3, article.md-text h4, article.md-text h5, article.md-text h6");
       var scrollTop = window.scrollY;
       var topSeg = null;
       for (var i = 0; i < segs.length; i++) {
