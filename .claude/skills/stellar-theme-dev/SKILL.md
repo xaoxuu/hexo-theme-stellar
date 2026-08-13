@@ -29,11 +29,11 @@ description: 主题仓库（hexo-theme-stellar）开发全流程：方案 → �
 命令按需执行：
 
 - `scripts/` 有改动 → 必须在主工程（xaoxuu.com）执行 `npm run g` 全量验证（已含 `hexo clean && hexo generate && npx gulp minify`）；`npm run s` 是按需渲染，不能替代。
-- 新增/修改纯函数 → 补充单测并跑 `npm run check`（lint + 单测 + 知识库硬事实核查）。
+- 新增/修改纯函数 → 补充单测并跑 `npm run check`（lint + 单测 + 依赖声明检查 + 知识库硬事实核查）。
 - 知识库有改动 → `python3 docs/knowledge/tools/verify.py` 硬事实核查。
 - UI 方面（样式、模板、前端交互等）改动量不大时无需自检流程，除非用户明确要求。
 - 检查所有受影响页面类型（首页、文章页、Wiki 页等），验证结果记录在方案目录 `checklist.md`。
-- 完成条件：应执行的命令全部通过；首页、文章页、Wiki 页等受影响页面类型均检查通过。
+- 完成条件：应执行的命令全部通过；新增 `require` 均已声明或为 Node 内置模块（test/ 禁止幽灵依赖）；首页、文章页、Wiki 页等受影响页面类型均检查通过。
 
 ### 4. 提交
 

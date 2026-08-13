@@ -86,6 +86,7 @@ items.forEach(function(post) {
 - 文件头: `/* global hexo */` + `'use strict';`
 - 2 空格缩进，双引号，分号结尾（新增代码遵循；存量代码风格不一，暂未由 lint 强制）
 - 标签注册: `hexo.extend.tag.register(name, handler, options)`；辅助函数注册: `hexo.extend.helper.register(name, handler)`
+- 新增 `require()` 先确认归属：`test/` 只引用 `package.json` 已声明依赖或 Node 内置模块（防幽灵依赖，`npm test` 自动检查）；`scripts/` 可依赖 hexo 宿主提供的模块（如 `hexo-util`），因为主题只在 hexo 项目内运行
 
 ```js
 /* global hexo */
@@ -122,11 +123,12 @@ module.exports = function(hexo) {
 **验证门禁**：
 
 - `scripts/` 有改动 → 必须在主工程（xaoxuu.com）执行 `npm run g` 全量验证（已含 `hexo clean && hexo generate && npx gulp minify`，可发现模板渲染错误与 HTML 结构错误）；`npm run s` 是按需渲染，不能替代
-- 新增/修改纯函数 → 补充单测并跑 `npm run check`（lint + 单测 + 知识库硬事实核查）
+- 新增/修改纯函数 → 补充单测并跑 `npm run check`（lint + 单测 + 依赖声明检查 + 知识库硬事实核查）
 - 知识库有改动 → `python3 docs/knowledge/tools/verify.py` 硬事实核查
 - UI 方面（样式、模板、前端交互等）改动量不大时无需自检流程，除非用户明确要求
 - 检查所有受影响页面类型（首页、文章页、Wiki 页等），验证结果记录在方案目录 `checklist.md`
 - CI（`.github/workflows/ci.yml`）会在 PR 上强制 lint、单测、Conventional Commits、demo 全量构建 + minify 与知识库核查；等价流程为 demo 工程 `npx hexo generate` + `npx gulp minify`
+- 完成条件：应执行的命令全部通过；新增 `require` 均已声明或为 Node 内置模块（`test/` 禁止幽灵依赖）
 
 **提交门禁**：
 
