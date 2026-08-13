@@ -33,6 +33,7 @@
   },
   "homepage": "https://xaoxuu.com/wiki/stellar/",
   "devDependencies": {
-    "eslint": "^9.39.5"
+    "eslint": "^9.39.5",
+    "hexo-util": "^4.0.0"
   }
 }
