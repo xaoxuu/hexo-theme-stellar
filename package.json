@@ -5,7 +5,7 @@
   "main": "package.json",
   "scripts": {
     "lint": "eslint .",
-    "test": "node --test",
+    "test": "node ci/check-require-decls.js && node --test",
     "check": "npm run lint && npm test && python3 docs/knowledge/tools/verify.py",
     "release": "node release.js",
     "release:dry": "node release.js --dry-run"
