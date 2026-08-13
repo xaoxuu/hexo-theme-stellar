@@ -39,14 +39,14 @@ function div_default() {
     }
     if (cover_url) {
       el += '<div class="post-cover">';
-      el += '<img src="' + cover_url + '"/>';
+      el += '<img src="' + escape_html(cover_url) + '"/>';
       el += '</div>';
     }
   }
 
   // 标题
   el += '<h2 class="post-title">';
-  el += post.title ? post.title : date(post.date, config.date_format);
+  el += post.title ? escape_html(post.title) : date(post.date, config.date_format);
   el += '</h2>';
 
   // 摘要
@@ -57,11 +57,11 @@ function div_default() {
   el += '">';
   el += '<p>';
   if (post.excerpt) {
-    el += strip_html(post.excerpt);
+    el += escape_html(strip_html(post.excerpt));
   } else if (post.description) {
-    el += post.description;
+    el += escape_html(post.description);
   } else if (post.content && theme.article.auto_excerpt > 0) {
-    el += truncate(strip_html(post.content), {length: theme.article.auto_excerpt});
+    el += escape_html(truncate(strip_html(post.content), {length: theme.article.auto_excerpt}));
   }
   el += '</p>';
   el += '</div>';
@@ -87,7 +87,7 @@ function div_default() {
         let lastCat = cats.pop();
         el += '<span class="cap breadcrumb"' + category_color(lastCat) + '>';
         el += icon('default:category')
-        el += `<span>${str}</span>`
+        el += `<span>${escape_html(str)}</span>`
         el += '</span>';
       }
     }
@@ -107,22 +107,22 @@ function div_photo() {
       position = 'bottom';
     }
   }
-  el += '<div class="cover" position="' + position + '" style="--cover-url:url(\'' + obj.image.replace(/'/g, '%27') + '\')">';
-  el += '<img src="' + obj.image + '"/>';
+  el += '<div class="cover" position="' + position + '" style="--cover-url:url(\'' + escape_html(obj.image.replace(/'/g, '%27')) + '\')">';
+  el += '<img src="' + escape_html(obj.image) + '"/>';
   if (position.length > 0) {
     el += '<div class="cover-info" position="' + position + '"';
     if (obj.color) {
-      el += 'style="color:' + obj.color + '"';
+      el += 'style="color:' + escape_html(obj.color) + '"';
     }
     el += '>';
     if (obj.topic) {
-      el += '<div class="text topic">' + obj.topic + '</div>';
+      el += '<div class="text topic">' + escape_html(obj.topic) + '</div>';
     }
     if (obj.headline) {
-      el += '<div class="text headline">' + obj.headline + '</div>';
+      el += '<div class="text headline">' + escape_html(obj.headline) + '</div>';
     }
     if (obj.caption) {
-      el += '<div class="text caption">' + obj.caption + '</div>';
+      el += '<div class="text caption">' + escape_html(obj.caption) + '</div>';
     }
     el += '</div>';
 

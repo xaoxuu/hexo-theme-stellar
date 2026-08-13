@@ -14,7 +14,7 @@ function layoutDiv() {
 
   if (site.categories && site.categories.length > 0) {
     if (page.category) {
-      el += '<a class="active" href="' + pretty_url(config.category_dir) + '">' + __("btn.category") + __("symbol.colon") + page.category + '</a>';
+      el += '<a class="active" href="' + pretty_url(config.category_dir) + '">' + __("btn.category") + __("symbol.colon") + escape_html(page.category) + '</a>';
     } else if (page.layout == "categories") {
       el += '<a class="active" href="' + pretty_url(config.category_dir) + '">' + __("btn.categories") + '</a>';
     } else {
@@ -24,7 +24,7 @@ function layoutDiv() {
 
   if (site.tags && site.tags.length > 0) {
     if (page.tag) {
-      el += '<a class="active" href="' + pretty_url(config.tag_dir) + '">' + __("btn.tag") + __("symbol.colon") + page.tag + '</a>';
+      el += '<a class="active" href="' + pretty_url(config.tag_dir) + '">' + __("btn.tag") + __("symbol.colon") + escape_html(page.tag) + '</a>';
     } else if (page.layout == "tags") {
       el += '<a class="active" href="' + pretty_url(config.tag_dir) + '">' + __("btn.tags") + '</a>';
     } else {

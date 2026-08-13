@@ -131,10 +131,10 @@ function layoutFooterDiv() {
     if (item.icon && (item.url || item.onclick)) {
       el += '<a class="social"';
       if (item.title) {
-        el += ' title="' + item.title + '"';
+        el += ' title="' + escape_html(item.title) + '"';
       }
       if (item.url) {
-        el += ' href="' + url_for(item.url) + '"';
+        el += ' href="' + escape_html(url_for(item.url)) + '"';
         if (item.url.includes('://')) {
           el += ' target="_blank" rel="external nofollow noopener noreferrer"';
         } else {

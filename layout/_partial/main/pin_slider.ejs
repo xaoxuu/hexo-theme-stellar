@@ -69,18 +69,18 @@ function postSlide(post) {
   var headline = (post.poster != null && post.poster.headline != null && post.poster.headline.length > 0) ? post.poster.headline : post.title
   var subtitle = postSubtitle(post)
   var el = ''
-  el += '<a class="pin-slide post-slide' + (noCover ? ' no-cover' : '') + '" href="' + pretty_url(post.link || post.path) + '"'
+  el += '<a class="pin-slide post-slide' + (noCover ? ' no-cover' : '') + '" href="' + escape_html(pretty_url(post.link || post.path)) + '"'
   if (!noCover) {
-    el += ' style="--pin-cover-url:url(\'' + post.cover.replace(/'/g, '%27') + '\')"'
+    el += ' style="--pin-cover-url:url(\'' + escape_html(post.cover.replace(/'/g, '%27')) + '\')"'
   }
   el += '>'
   if (!noCover) {
-    el += '<img class="pin-slide-bg" src="' + post.cover + '" alt=""/>'
+    el += '<img class="pin-slide-bg" src="' + escape_html(post.cover) + '" alt=""/>'
   }
   el += '<div class="pin-slide-text">'
-  el += '<div class="pin-slide-headline">' + headline + '</div>'
+  el += '<div class="pin-slide-headline">' + escape_html(headline) + '</div>'
   if (subtitle.length > 0) {
-    el += '<div class="pin-slide-caption">' + subtitle + '</div>'
+    el += '<div class="pin-slide-caption">' + escape_html(subtitle) + '</div>'
   }
   el += '</div>'
   el += '</a>'
@@ -90,7 +90,7 @@ function postSlide(post) {
 function projectChips(tags) {
   var caps = ''
   if (tags && tags.length > 0) {
-    caps += '<span class="pin-slide-chip">' + tags.join('</span><span class="pin-slide-chip">') + '</span>'
+    caps += '<span class="pin-slide-chip">' + tags.map(function(t) { return escape_html(t) }).join('</span><span class="pin-slide-chip">') + '</span>'
   }
   return caps
 }
@@ -100,14 +100,14 @@ function wikiSlide(proj) {
   var title = proj.title || proj.name || proj.id
   var excerpt = proj.description || ''
   var el = ''
-  el += '<a class="pin-slide" href="' + pretty_url(proj.homepage?.path || '/') + '">'
-  el += '<img class="pin-slide-bg" src="' + img + '" alt=""/>'
+  el += '<a class="pin-slide" href="' + escape_html(pretty_url(proj.homepage?.path || '/')) + '">'
+  el += '<img class="pin-slide-bg" src="' + escape_html(img) + '" alt=""/>'
   el += '<div class="pin-slide-mask"></div>'
   el += '<div class="pin-slide-info">'
   el += '<div class="pin-slide-caps">' + projectChips(proj.tags) + '</div>'
-  el += '<div class="pin-slide-title">' + title + '</div>'
+  el += '<div class="pin-slide-title">' + escape_html(title) + '</div>'
   if (excerpt.length > 0) {
-    el += '<div class="pin-slide-excerpt">' + excerpt + '</div>'
+    el += '<div class="pin-slide-excerpt">' + escape_html(excerpt) + '</div>'
   }
   el += '</div>'
   el += '</a>'
@@ -125,8 +125,7 @@ if (pinItems.length > 0) {
       slidesHtml += postSlide(item)
     }
     if (pinItems.length > 1) {
-      var label = item.title || item.name || item.id || (si + 1)
-      dotsHtml += '<button type="button" class="pin-slider-dot' + (si == 0 ? ' active' : '') + '" data-index="' + si + '" aria-label="' + label + '"></button>'
+      dotsHtml += '<button type="button" class="pin-slider-dot' + (si == 0 ? ' active' : '') + '" data-index="' + si + '"></button>'
     }
   }
   var groupKey = pinType == 'wiki' ? 'wiki' : 'post'

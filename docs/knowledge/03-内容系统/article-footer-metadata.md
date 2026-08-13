@@ -224,12 +224,14 @@ article:
 | `pics` | `page.cover`（文章）或 `page.icon`（wiki 页面） |
 | `summary` | `page.description` 或截断的 `page.excerpt` / `page.content` |
 
+所有分享参数（URL、标题、图片、摘要）均经 `encodeURIComponent` 编码后拼入 `href`；`copy-link` 输入框的 `value` 与复制提示文案经 HTML 转义输出，标题/摘要含引号、`&`、`<` 等字符时不会破坏 HTML 结构。
+
 ### 微信二维码
 
 分享列表含 `wechat` 时，额外渲染 `<div class="qrcode" id="qrcode-wechat">`：
 
 ```html
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data={page.permalink}"/>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data={encodeURIComponent(page.permalink)}"/>
 ```
 
 二维码面板经 CSS 过渡动画。初始 `opacity: 0; height: 0; transform: scale(0.01)`；`util.toggle("qrcode-wechat")` 添加 `display` 类后面板动画到 `height: 128px; transform: scale(1)`。
