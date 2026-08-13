@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.39.1
+
+> 发布日期：2026-08-13
+
+### 新功能
+- 置顶文章新增平铺样式配置 `article.pin_style: flat`：首页第一页不再渲染置顶轮播，置顶文章按与轮播一致的排序权重在文章列表靠前平铺展示
+
+### 修复
+- 用户内容统一 HTML 转义并移除圆点 aria-label，修复标题含引号导致构建失败
+
+### 升级注意（配置变更与破坏性改动）
+- 新增 `article.pin_style`（`carousel` / `flat`，默认 `carousel`）：默认行为不变；设置 `flat` 后首页置顶文章改为平铺样式展示
+
+Full Changelog: [1.39.0...1.39.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.39.0...1.39.1)
+
 ## 1.39.0
 
 > 发布日期：2026-08-13
