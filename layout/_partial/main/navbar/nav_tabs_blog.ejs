@@ -1,7 +1,10 @@
 <%
 function layoutDiv() {
   var el = '';
-  el += partial('_partial/main/pin_slider', {type: 'post'});
+  // 置顶文章样式为平铺时不渲染轮播，置顶文章改由首页文章列表靠前展示
+  if (theme.article?.pin_style !== 'flat') {
+    el += partial('_partial/main/pin_slider', {type: 'post'});
+  }
   el += '<div class="navbar top">';
   el += '<div class="navbar-blur">';
   el += '<div class="navbar-container">';

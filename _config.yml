@@ -180,6 +180,8 @@ notebook:
 
 ######## Article ########
 article:
+  # 置顶文章样式：carousel = 轮播（默认）， flat = 平铺（不渲染轮播，置顶文章在首页文章列表靠前展示，排序规则与轮播一致）
+  pin_style: carousel
   # 文章类型，决定布局风格，可以在 front-matter/topic/wiki 中覆盖此参数
   type: tech # tech: 默认技术类文章, story: 图文类文章，文字和段落间增距大
   # 缩进两个文字宽度，适合文字类博客，可以在 front-matter/topic/wiki 中覆盖此参数

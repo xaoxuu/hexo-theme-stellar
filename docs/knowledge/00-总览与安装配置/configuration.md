@@ -86,7 +86,6 @@ graph TB
 | `preconnect`、`canonical`、`open_graph`、`structured_data` | SEO 与 meta 标签 |
 | `logo`、`menubar` | 侧边栏品牌与导航 |
 | `site_tree` | 各页面类型布局定义与侧边栏小部件分配 |
-| `pin_slider` | 列表页置顶内容轮播（navbar top 上方） |
 | `notebook` | 笔记本系统配置 |
 | `article` | 文章显示与元数据设置 |
 | `search` | 搜索服务配置 |
@@ -314,10 +313,14 @@ wiki:
 
 ### 置顶内容轮播
 
-所有带 navbar top 的列表页（首页/归档/标签/分类/专栏/wiki 列表等）上方自动展示置顶内容轮播，无需开关配置：只要有置顶内容即渲染，自动轮播间隔固定 5000ms。
+置顶内容的展示样式由 `article.pin_style` 控制：`carousel`（默认）为轮播；`flat`（平铺）时文章不进入轮播区，改为在首页第一页文章列表靠前展示（排序规则与轮播一致）。
 
-- 博客类列表（首页/归档/标签/分类/专栏等）放置顶文章（文章 front-matter `pin: true|number`，兼容 `sticky` 别名；只要设置即置顶，按数值降序排序，`true` 视作 1，0/负数同样参与）；
-- wiki 列表放置顶 wiki 项目（数据文件 `pin: true|number`，规则同上）；专栏列表页与其他博客列表页一致展示置顶文章；
+`carousel`（默认）：所有带 navbar top 的博客类列表页（首页/归档/标签/分类/专栏等）上方自动展示置顶文章轮播，无需开关配置：只要有置顶内容即渲染，自动轮播间隔固定 5000ms；首页第一页列表不再重复展示置顶文章。
+
+`flat`（平铺）：博客类列表页不渲染文章轮播；首页第一页文章列表顶部按轮播同款规则展示全部置顶文章（含超出单页切片的老文章），同页不重复；归档/分类/标签/首页第二页起的列表中置顶文章按日期正常出现。
+
+- 置顶文章判定与排序（两种样式通用）：文章 front-matter `pin: true|number`，兼容 `sticky` 别名；只要设置即置顶，按数值降序排序，`true` 视作 1，0/负数同样参与，非数字视作 0，权重相同保持 `site.posts` 原顺序；
+- wiki 列表放置顶 wiki 项目（数据文件 `pin: true|number`，规则同上），始终以轮播展示，不受 `article.pin_style` 影响；
 - 轮播区宽高比与非置顶文章统一，由 `article.cover_ratio` 控制（修改该值即可整体调整）；
 - 无置顶内容时不渲染；轮播进度按内容类型分组缓存到 localStorage（切换 tab 不重置）。
 
@@ -348,6 +351,7 @@ notebook:
 |------|------|------|------|
 | `type` | `tech` / `story` | `tech` | 布局风格（tech 紧凑、story 宽松） |
 | `indent` | Boolean | `false` | 段落首行两字缩进 |
+| `pin_style` | `carousel` / `flat` | `carousel` | 置顶文章展示样式：carousel 轮播；flat 平铺（不渲染轮播，置顶文章在首页列表靠前展示，排序规则与轮播一致） |
 | `cover_ratio` | Number | `2` | 文章卡片封面宽高比 |
 | `banner_ratio` | Number | `2.5` | 文章横幅宽高比 |
 | `auto_banner` | Boolean | `false` | 根据标签自动从 Unsplash 获取横幅 |

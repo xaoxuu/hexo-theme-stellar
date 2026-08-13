@@ -29,8 +29,49 @@ if (homeCmt && homeCmt !== false && is_home_first_page()) {
   }
 }
 
-// 首页第一页渲染置顶轮播时，列表不再重复展示置顶文章
-var pinSliderActive = is_home_first_page()
+// 置顶文章样式：carousel = 轮播（默认），flat = 平铺（首页列表靠前展示）
+var pinStyle = theme.article?.pin_style || 'carousel'
+var pinFlat = pinStyle === 'flat'
+
+// 与 pin_slider.ejs 保持一致的置顶判定与排序权重
+function pinValue(post) {
+  return post.pin != null ? post.pin : post.sticky
+}
+function isPinned(post) {
+  var v = pinValue(post)
+  return v !== false && v != null
+}
+function pinWeight(post) {
+  var v = pinValue(post)
+  if (v === true) {
+    return 1
+  }
+  var n = Number(v)
+  return isNaN(n) ? 0 : n
+}
+
+// 首页第一页渲染置顶轮播时，列表不再重复展示置顶文章（carousel 模式）
+var pinSliderActive = is_home_first_page() && !pinFlat
+
+// flat 模式：首页第一页收集全部置顶文章，按轮播顺序置顶展示
+var flatPins = []
+if (pinFlat && is_home_first_page()) {
+  var allPosts = site.posts.toArray() || []
+  for (var fi = 0; fi < allPosts.length; fi++) {
+    var fpost = allPosts[fi]
+    if (fpost.indexing === false) {
+      continue
+    }
+    if (isPinned(fpost)) {
+      flatPins.push({post: fpost, index: fi})
+    }
+  }
+  flatPins.sort(function(a, b) {
+    var d = pinWeight(b.post) - pinWeight(a.post)
+    // 权重相同保持原顺序（与轮播一致）
+    return d !== 0 ? d : a.index - b.index
+  })
+}
 
 function layout_post_card(layout, post, content) {
   var el = '';
@@ -49,17 +90,32 @@ function layout_post_card(layout, post, content) {
 function layout_post_list(partial) {
   var el = '';
   el += `<div class="post-list post">`;
-  page.posts.each(function(post){
-    if (post.indexing != false) {
-      if (pinSliderActive) {
-        var pinVal = post.pin != null ? post.pin : post.sticky
-        if (pinVal !== false && pinVal != null) {
-          return
-        }
+  if (flatPins.length > 0) {
+    var pinnedPaths = {}
+    flatPins.forEach(function(item) {
+      pinnedPaths[item.post.path] = true
+    })
+    flatPins.forEach(function(item) {
+      el += layout_post_card('post', item.post, partial(item.post));
+    })
+    page.posts.each(function(post){
+      if (post.indexing != false && !pinnedPaths[post.path]) {
+        el += layout_post_card('post', post, partial(post));
       }
-      el += layout_post_card('post', post, partial(post));
-    }
-  })
+    })
+  } else {
+    page.posts.each(function(post){
+      if (post.indexing != false) {
+        if (pinSliderActive) {
+          var pinVal = pinValue(post)
+          if (pinVal !== false && pinVal != null) {
+            return
+          }
+        }
+        el += layout_post_card('post', post, partial(post));
+      }
+    })
+  }
   el += '</div>';
   return el;
 }
