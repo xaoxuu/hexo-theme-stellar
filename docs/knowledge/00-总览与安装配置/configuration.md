@@ -163,7 +163,7 @@ graph LR
 
 ```yaml
 stellar:
-  version: '1.38.0'
+  version: '1.39.0'
   homepage: 'https://xaoxuu.com/wiki/stellar/'
   repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
   main_css: /css/main.css
