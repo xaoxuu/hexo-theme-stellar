@@ -23,6 +23,7 @@
 
 | 位置 | 问题 | 修正 |
 |------|------|------|
+| head-seo.md 描述生成 / Open Graph / JSON-LD | 文档与代码一致，但 `open_graph.enable` 时 wiki 项目 description 兜底未生效：`generate_description()` 提前返回，`og_args()` 未传描述，JSON-LD 无项目描述兜底 | 修复 `og_args()` 传入项目描述、`generate_description()` 调整优先级、`json_ld.js` 增加项目描述兜底；同步更新文档（见 `docs/designs/2026-08-14-wiki-meta-description-fallback/`） |
 | 1.1/1 Overview 等 | 版本号 1.39.0 | 统一为 1.39.1 |
 | 1.1/1 Overview 等 | 版本号 1.38.0 | 统一为 1.39.0 |
 | 1.1/1 Overview 等 | 版本号 1.33.1 | 统一为 1.38.0 |

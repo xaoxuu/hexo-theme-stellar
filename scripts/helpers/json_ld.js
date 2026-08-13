@@ -98,6 +98,11 @@ hexo.extend.helper.register('json_ld', function(args) {
 
       if (page.excerpt || page.description) {
         schema.description = this.strip_html(page.description || page.excerpt);
+      } else if (page.wiki) {
+        const proj = this.theme.wiki.tree[page.wiki];
+        if (proj && proj.description) {
+          schema.description = proj.description;
+        }
       } else {
         schema.description = util.truncate(this.strip_html(page.content), {length: 200});
       }

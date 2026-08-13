@@ -23,14 +23,17 @@ function generate_description() {
   if (theme.open_graph && theme.open_graph.enable) {
     return '';
   }
+  if (page.description) {
+    return '<meta name="description" content="' + truncate(strip_html(page.description), {length: 150}) + '">';
+  }
   if (page.wiki) {
     const proj = theme.wiki.tree[page.wiki]
     if (proj?.description) {
       return '<meta name="description" content="' + proj.description + '">'
     }
   }
-  if (page.description || page.excerpt || page.content) {
-    return '<meta name="description" content="' + truncate(strip_html(page.description || page.excerpt || page.content), {length: 150}) + '">';
+  if (page.excerpt || page.content) {
+    return '<meta name="description" content="' + truncate(strip_html(page.excerpt || page.content), {length: 150}) + '">';
   }
   return '<meta name="description" content="' + config.description + '">';
 }
@@ -65,6 +68,12 @@ function og_args() {
   }
   if (page.layout == 'post' && page.cover) {
     args.twitter_card = 'summary_large_image';
+  }
+  if (page.wiki && !page.description) {
+    const proj = theme.wiki.tree[page.wiki];
+    if (proj && proj.description) {
+      args.description = proj.description;
+    }
   }
   args.image = config.avatar || (config.email ? gravatar(config.email) : null);
   return Object.assign(args, page.open_graph);

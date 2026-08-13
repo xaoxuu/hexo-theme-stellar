@@ -148,13 +148,16 @@ flowchart TD
 `generate_description()` 按优先级级联：
 
 1. **Open Graph 启用时跳过**：`theme.open_graph.enable` 为 true 时返回空（由 OG 标签处理描述）
-2. **Wiki 描述**：有 `theme.wiki.tree[page.wiki].description` 时使用
-3. **页面级描述**：依次检查 `page.description`、`page.excerpt`、截断的 `page.content`（150 字符）
-4. **兜底**：`config.description`
+2. **页面级描述**：`page.description`（截断至 150 字符）
+3. **Wiki 项目描述**：有 `theme.wiki.tree[page.wiki].description` 时使用（项目级兜底，正文为空的远程 README 主页也适用）
+4. **页面摘要**：`page.excerpt`、截断的 `page.content`（150 字符）
+5. **兜底**：`config.description`
 
 内容经 `strip_html()` 与 `truncate()` 处理，去除 HTML 标签并限制长度。
 
 **参考源码**：[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
+
+> 说明：站点启用 Open Graph（`open_graph.enable: true`，默认配置）时，实际生效的 `<meta name="description">` 由 `og_args()` 传入 Hexo 内置 `open_graph()` helper 生成，级联语义与上述一致：页面级 `page.description` / `page.open_graph.description` 优先，其次 wiki 项目描述，最后页面摘要与站点默认描述。
 
 ### 关键词生成
 
@@ -205,6 +208,8 @@ graph LR
 ```
 
 `theme.open_graph.enable` 为 true 时生成 OG 标签，并对 `og:title`、`og:site_name`、`twitter:title` 做主题定制替换（经 `generate_og_title()` / `generate_og_site_name()` 转义处理）。
+
+`og_args()` 还会在 `page.wiki` 存在且页面未显式设置 `page.description` 时，把 wiki 项目 YAML 的 `description` 传入 `description`，使 `<meta name="description">` 与 `og:description` 使用项目描述；`page.open_graph.description` 仍可经 front-matter 覆盖。
 
 **参考源码**：[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 
@@ -328,7 +333,7 @@ canonical:
 
 **条件**：`page.layout == 'page'` 或 `this.is_home()`
 
-**描述优先级**：page.description → page.excerpt → 截断内容（200 字符）
+**描述优先级**：page.description → page.excerpt → wiki 项目 description → 截断内容（200 字符）
 
 **参考源码**：[scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
 
