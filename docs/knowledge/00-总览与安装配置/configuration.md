@@ -358,6 +358,7 @@ notebook:
 | `auto_excerpt` | Number | `128` | 自动摘要提取字符数 |
 | `reading_time` | Boolean | `false` | 文章页显示字数与预计阅读时长 |
 | `card_tags` | Boolean | `false` | 文章卡片显示标签（最多 5 个） |
+| `ai_label` | Object | 四档默认 | 文章 AI 成分标签：`manual` / `polished` / `generated` / `reviewed` 的文字颜色（无底色）与可选 `icon`，front-matter 用 `ai_label` 字段选择；文案由多语言系统提供（`languages/*.yml` 的 `meta.ai_label.*`，缺失时不渲染）；`default` 为空时未标记文章不渲染，非空时未标记文章按默认档渲染；banner 含图片时文字用默认颜色 |
 | `license` | String/Boolean | 许可文本 | 文章默认许可声明 |
 | `share` | Array | `[]` | 分享按钮：`wechat`、`weibo`、`email`、`link` |
 

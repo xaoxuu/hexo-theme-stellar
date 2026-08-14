@@ -328,6 +328,7 @@ graph TB
   - 摘要生成（未指定时取前 128 字符）
   - 许可页脚（默认 CC BY-NC-SA 4.0）
   - 相关文章计算（需 `hexo-related-popular-posts` 插件）
+  - AI 成分标签：front-matter `ai_label` 字段（`manual` / `polished` / `generated` / `reviewed`）标记文章 AI 成分，文案由多语言系统提供（`languages/*.yml` 的 `meta.ai_label.*`，缺失时不渲染），颜色与可选图标由 `article.ai_label` 配置（彩色文字、无底色）；未设置时取 `default`（为空则不显示）；文章页显示在顶部面包屑行最右（阅读时长右侧），banner 含图片时文字用默认颜色，文章列表卡片不显示
 
 **参考源码**：[_config.yml](../../../_config.yml)
 

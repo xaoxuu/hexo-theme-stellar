@@ -16,6 +16,8 @@
       margin-left: auto
       white-space: nowrap
       opacity: .8
+    .ai-label.right
+      margin-left: auto
   a
     color: var(--text-banner)
     padding: 4px
@@ -38,6 +40,18 @@
   &:hover
     div#post-meta span.updated
       visibility: visible
+
+// 文章 AI 成分标签：彩色文字、无背景，颜色由内联 style 提供（banner 含图片时继承默认色）
+.ai-label
+  display: inline-flex
+  align-items: center
+  gap: 4px
+  padding: 4px
+  white-space: nowrap
+  svg
+    height: 1em
+    width: auto
+    transform: scale(1.25)
 
 .bread-nav .ghrepo
   font-size: $fs-13

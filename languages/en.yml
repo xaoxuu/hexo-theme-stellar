@@ -39,6 +39,11 @@ meta:
   contributors: Page Contributors
   word_count: '%s words'
   reading_time: '%s min read'
+  ai_label:
+    manual: Written entirely by a human
+    reviewed: AI-reviewed
+    polished: AI-polished
+    generated: AI-generated
   date_suffix:
     just: Just
     min: minutes ago

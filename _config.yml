@@ -197,6 +197,23 @@ article:
   # 分类颜色
   category_color:
     '探索号': '#f44336'
+  # 文章 AI 成分标签：front-matter 用 ai_label: manual / reviewed / polished / generated 标记，
+  # 未设置时取 default（为空则不显示）；文案由多语言系统提供（languages/*.yml 的 meta.ai_label.*），
+  # 此处配置各档文字颜色与可选 icon；文章页显示在顶部面包屑行最右（阅读时长右侧）
+  ai_label:
+    default:
+    manual:
+      color: '#03a9f4'
+      icon: solar:shield-user-bold-duotone
+    reviewed:
+      color: '#4caf50'
+      icon: solar:shield-check-bold-duotone
+    polished:
+      color: '#4caf50'
+      icon: solar:shield-up-bold-duotone
+    generated:
+      color: '#ff9800'
+      icon: solar:shield-warning-bold-duotone
   # 文章许可协议
   license: '本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。'
   # 分享

@@ -39,6 +39,11 @@ meta:
   contributors: 本文貢獻者
   word_count: '%s 字'
   reading_time: '預計閱讀 %s 分鐘'
+  ai_label:
+    manual: 本文完全由人類完成
+    reviewed: 已 AI 審核
+    polished: 已 AI 潤飾
+    generated: 由 AI 生成
   date_suffix:
     just: 剛剛
     min: 分鐘前
