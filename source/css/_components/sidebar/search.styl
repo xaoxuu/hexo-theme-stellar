@@ -29,8 +29,9 @@
       background: var(--leftbar-search-line, var(--bg-a100))
       :root[data-theme="dark"] &
         background: var(--leftbar-search-line, var(--bg-a20))
-      @media screen and (prefers-color-scheme: dark)
-        background: var(--leftbar-search-line, var(--bg-a20))
+      :root:not([data-theme]) &
+        @media screen and (prefers-color-scheme: dark)
+          background: var(--leftbar-search-line, var(--bg-a20))
       z-index 0
       trans1 all
     &:after
@@ -62,8 +63,9 @@
       color: var(--text-p3)
       :root[data-theme="dark"] &
         color: var(--text-p2)
-      @media screen and (prefers-color-scheme: dark)
-        color: var(--text-p2)
+      :root:not([data-theme]) &
+        @media screen and (prefers-color-scheme: dark)
+          color: var(--text-p2)
   .search-button 
     border-radius: $border-bar
     display: flex

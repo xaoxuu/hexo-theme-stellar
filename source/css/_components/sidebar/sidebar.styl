@@ -63,12 +63,14 @@
       filter: saturate(var(--saturate)) blur(var(--blur-px)) opacity(var(--background-opacity))
       :root[data-theme="dark"] &
         --background-opacity: hexo-config('style.leftbar.background-opacity') * 0.75
-      @media screen and (prefers-color-scheme: dark)
-        --background-opacity: hexo-config('style.leftbar.background-opacity') * 0.75
+      :root:not([data-theme]) &
+        @media screen and (prefers-color-scheme: dark)
+          --background-opacity: hexo-config('style.leftbar.background-opacity') * 0.75
     else if $leftbar-background-color-light || $leftbar-background-color-dark
       background-color: convert($leftbar-background-color-light)
-      @media screen and (prefers-color-scheme: dark)
-        background-color: convert($leftbar-background-color-dark)
+      :root:not([data-theme]) &
+        @media screen and (prefers-color-scheme: dark)
+          background-color: convert($leftbar-background-color-dark)
 
   .leftbar-container
     height: calc(100vh - var(--gap-margin) * 2)
@@ -109,9 +111,10 @@
         :root[data-theme="dark"] &
           background: rgba(white, 0.05)
           box-shadow: inset 0 0 32px 1px rgba(white, 0.1)
-        @media screen and (prefers-color-scheme: dark)
-          background: rgba(white, 0.05)
-          box-shadow: inset 0 0 32px 1px rgba(white, 0.1)
+        :root:not([data-theme]) &
+          @media screen and (prefers-color-scheme: dark)
+            background: rgba(white, 0.05)
+            box-shadow: inset 0 0 32px 1px rgba(white, 0.1)
 
 @media screen and (max-width: $device-mobile-max)
   .l_left

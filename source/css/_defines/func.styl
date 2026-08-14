@@ -143,9 +143,10 @@ sidebar-light($bg = unquote('var(--bg-a50)'), $light = 0.38, $edge = 0.45, $dark
   :root[data-theme="dark"] &
     background: var(--leftbar-item-bg, linear-gradient(180deg, rgba(white, $dark-light), rgba(white, 0) 50%), $bg)
     box-shadow: var(--leftbar-item-shadow, inset 0 1px 0 rgba(white, $dark-edge))
-  @media (prefers-color-scheme: dark)
-    background: var(--leftbar-item-bg, linear-gradient(180deg, rgba(white, $dark-light), rgba(white, 0) 50%), $bg)
-    box-shadow: var(--leftbar-item-shadow, inset 0 1px 0 rgba(white, $dark-edge))
+  :root:not([data-theme]) &
+    @media (prefers-color-scheme: dark)
+      background: var(--leftbar-item-bg, linear-gradient(180deg, rgba(white, $dark-light), rgba(white, 0) 50%), $bg)
+      box-shadow: var(--leftbar-item-shadow, inset 0 1px 0 rgba(white, $dark-edge))
 
 newblur($radius = 64px)
   box-shadow: 0 0 2px rgba(black, .04), 0 2px 8px rgba(black, .04), 0 4px 16px rgba(black, .04)
@@ -153,14 +154,16 @@ newblur($radius = 64px)
   text-shadow: 0 0 4px rgba(white, 1), 0 0 8px rgba(white, 0.8), 0 0 16px rgba(white, 0.6)
   :root[data-theme="dark"] &
     text-shadow: 0 0 2px rgba(black, 0.2), 0 0 4px rgba(black, 0.4)
-  @media (prefers-color-scheme: dark)
-    text-shadow: 0 0 2px rgba(black, 0.2), 0 0 4px rgba(black, 0.4)
+  :root:not([data-theme]) &
+    @media (prefers-color-scheme: dark)
+      text-shadow: 0 0 2px rgba(black, 0.2), 0 0 4px rgba(black, 0.4)
   nav a:not(.active,:hover)
     filter: drop-shadow(0 0 0 white) drop-shadow(0 0 4px white)
     :root[data-theme="dark"] &
       filter: none
-    @media (prefers-color-scheme: dark)
-      filter: none
+    :root:not([data-theme]) &
+      @media (prefers-color-scheme: dark)
+        filter: none
   &:before,&:after
     z-index -1
     position: absolute
@@ -179,8 +182,9 @@ newblur($radius = 64px)
     margin: 1px
     :root[data-theme="dark"] &
       background: rgba(white, 0.2)
-    @media (prefers-color-scheme: dark)
-      background: rgba(white, 0.2)
+    :root:not([data-theme]) &
+      @media (prefers-color-scheme: dark)
+        background: rgba(white, 0.2)
   &:after
     --blur-px: 16px
     --blur-sat: 300%
@@ -192,8 +196,9 @@ newblur($radius = 64px)
     trans1 all
     :root[data-theme="dark"] &
       box-shadow: inset 0 0 2px 1px rgba(white, 0.2)
-    @media (prefers-color-scheme: dark)
-      box-shadow: inset 0 0 2px 1px rgba(white, 0.2)
+    :root:not([data-theme]) &
+      @media (prefers-color-scheme: dark)
+        box-shadow: inset 0 0 2px 1px rgba(white, 0.2)
 
 // 长条圆角玻璃 UI（navbar top 与 float-panel 共用）
 bar-glass($radius = $border-bar-container)
@@ -220,8 +225,9 @@ bar-item-active()
   background: var(--bg-a60)
   :root[data-theme="dark"] &
     background: rgba(white, 0.25)
-  @media (prefers-color-scheme: dark)
-    background: rgba(white, 0.25)
+  :root:not([data-theme]) &
+    @media (prefers-color-scheme: dark)
+      background: rgba(white, 0.25)
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.04), 0 0 2px rgba(0, 0, 0, 0.04), 0 0 4px rgba(0, 0, 0, 0.08)
   backdrop-filter: saturate(300%)
   -webkit-backdrop-filter: saturate(300%)
