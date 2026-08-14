@@ -1,0 +1,27 @@
+// 气泡注解标签（#602）：{% tip text:注解 %}词句{% endtip %}
+.tag-plugin.tip
+  position: relative
+  display: inline-block
+  border-bottom: 1px dashed var(--text-p3)
+  cursor: help
+  .tip-bubble
+    position: absolute
+    bottom: 135%
+    left: 50%
+    transform: translateX(-50%)
+    display: block
+    width: max-content
+    max-width: 18rem
+    padding: .35rem .7rem
+    bar-glass($border-bar)
+    text-shadow: none
+    color: var(--text-p1)
+    font-size: $fs-14
+    line-height: 1.5
+    white-space: normal
+    opacity: 0
+    pointer-events: none
+    transition: opacity .2s ease
+    z-index: 10
+  &:hover .tip-bubble, &:focus .tip-bubble
+    opacity: 1

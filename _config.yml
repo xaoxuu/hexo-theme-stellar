@@ -206,6 +206,10 @@ article:
   related_posts:
     enable: false
     max_count: 5
+  # 文章页是否显示字数和预计阅读时长（#302）
+  reading_time: false
+  # 文章卡片是否显示标签（最多 5 个，#580）
+  card_tags: false
 
 search:
   service: local_search # local_search, algolia_search, todo...
@@ -676,7 +680,7 @@ style:
     image-l: 24px # 非技术类文章插图圆角
     image: 16px # 技术类文章插图圆角
     image-s: 8px # 评论区图片圆角（部分评论支持）
-  corner-shape: superellipse(1.5) # 连续曲率圆角（仅 Chromium 139+ 支持，其余浏览器自动回退普通圆角）：superellipse(1.x) 开启，round 关闭
+  corner-shape: superellipse(1.25) # 连续曲率圆角（仅 Chromium 139+ 支持，其余浏览器自动回退普通圆角）：superellipse(1.x) 开启，round 关闭
   color:
     # 主题色配置（不会根据明暗动态调整，请设置为通用的颜色）
     theme: 'hsl(192 98% 55%)' # 主题色

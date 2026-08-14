@@ -37,6 +37,8 @@ meta:
   license: License
   share: Share
   contributors: Page Contributors
+  word_count: '%s words'
+  reading_time: '%s min read'
   date_suffix:
     just: Just
     min: minutes ago

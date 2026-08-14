@@ -1,0 +1,37 @@
+// 表格标签（#466）：{% table style:scroll|wrap|compact %}
+.tag-plugin.table
+  table
+    border-collapse: collapse
+    width: 100%
+  &.table-scroll
+    overflow-x: auto
+    -webkit-overflow-scrolling: touch
+    scrollbar()
+    table
+      min-width: max-content
+      th, td
+        padding: 8px 1em
+  &.table-wrap
+    table
+      table-layout: fixed
+      border-collapse: separate
+      border-spacing: 0
+      border: 1px solid var(--block-border)
+      border-radius: $border-card
+      overflow: hidden
+      tr
+        white-space: normal
+      th
+        border-top: none
+      th, td
+        word-break: break-word
+        overflow-wrap: anywhere
+        padding: 8px 1em
+        border-left: 1px solid var(--block-border)
+        &:first-child
+          border-left: none
+  &.table-compact
+    table
+      th, td
+        padding: 4px 1em
+        line-height: 1.4

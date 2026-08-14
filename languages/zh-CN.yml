@@ -37,6 +37,8 @@ meta:
   license: 许可协议
   share: 分享文章
   contributors: 本文贡献者
+  word_count: '%s 字'
+  reading_time: '预计阅读 %s 分钟'
   date_suffix:
     just: 刚刚
     min: 分钟前

@@ -13,6 +13,7 @@
     position: absolute
     left: 0
     bottom: -2px
+    border-radius: 2px
     z-index: -1
     width: 100%
     height: 0
@@ -69,11 +70,11 @@
       transform: scale(1.05)
   img
     filter: brightness(var(--img-br)) saturate(var(--img-sat))
-    // 封面放大用 0.5s 缓动，其余属性（亮度/饱和度）保持主题默认 0.2s
-    transition: all .2s ease-out, transform .5s ease-out
-    -moz-transition: all .2s ease-out, transform .5s ease-out
-    -webkit-transition: all .2s ease-out, transform .5s ease-out
-    -o-transition: all .2s ease-out, transform .5s ease-out
+    // 封面放大用 1.5s 缓动，其余属性（亮度/饱和度）保持主题默认 0.2s
+    transition: all .2s ease-out, transform 1.5s ease-out
+    -moz-transition: all .2s ease-out, transform 1.5s ease-out
+    -webkit-transition: all .2s ease-out, transform 1.5s ease-out
+    -o-transition: all .2s ease-out, transform 1.5s ease-out
   .excerpt
     margin: 1rem 0
     @media screen and (max-width: $device-mobile)
@@ -105,6 +106,11 @@
         object-fit: contain
       svg
         color: $c-red
+  .card-tags
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: 0 .5rem
 
 
 // common article

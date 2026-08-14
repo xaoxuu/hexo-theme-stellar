@@ -41,6 +41,13 @@ function layoutBreadcrumb() {
     } else {
       el += partial('breadcrumb/page')
     }
+  // 字数和预计阅读时长，置于面包屑行右侧（#302）
+  if (page.layout == 'post' && theme.article.reading_time) {
+    var _wc = word_count(page)
+    if (_wc > 0) {
+      el += `<span class="cap reading right">${__("meta.word_count", _wc)} · ${__("meta.reading_time", reading_time(page))}</span>`
+    }
+  }
   // end 3.left.top
   el += `</div>`
   // 3.left.bottom

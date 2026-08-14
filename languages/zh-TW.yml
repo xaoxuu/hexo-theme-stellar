@@ -37,6 +37,8 @@ meta:
   license: 授權條款
   share: 分享文章
   contributors: 本文貢獻者
+  word_count: '%s 字'
+  reading_time: '預計閱讀 %s 分鐘'
   date_suffix:
     just: 剛剛
     min: 分鐘前

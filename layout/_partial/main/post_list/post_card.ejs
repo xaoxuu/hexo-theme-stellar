@@ -93,6 +93,17 @@ function div_default() {
     }
   }
   // 置顶文章由轮播（默认）或首页列表靠前展示（flat 平铺）承担，卡片内不显示 pin 图标。
+  // 文章标签（最多 5 个，#580）
+  if (theme.article.card_tags && post.tags && post.tags.length > 0) {
+    el += '<span class="card-tags">';
+    post.tags.forEach((tag, i) => {
+      if (i >= 5) {
+        return;
+      }
+      el += `<span class="cap tag-chip">#${escape_html(tag.name)}</span>`;
+    });
+    el += '</span>';
+  }
   el += '</div>';
   el += '</article>';
   return el;
