@@ -10,14 +10,24 @@ if (page.menu_id == undefined) {
   <%- partial('_partial/main/navbar/nav_tabs_blog') %>
   <div class='post-list'>
     <article class='<%- scrollreveal("") %>' id='cats'>
-      <% site.categories.sort('path').each(function(category){ %>
-        <div>
-          <a class="<%= category.parent ? 'cat child' : 'cat'%>" href="<%= pretty_url(category.path) %>">
-            <span class='name'><%- icon('default:category') %><%- category.name %></span>
-            <span class='badge'>(<%- category.posts.length %>)</span>
-          </a>
-        </div>
-      <% }) %>
+      <%
+      function renderCategoryTree(nodes) {
+        var el = ''
+        nodes.forEach(function(node) {
+          el += `<div class="cat-item">`
+          el += `<a class="cat${node.parentId ? ' child' : ''}" href="${pretty_url(node.path)}">`
+          el += `<span class="name">${icon('default:category')}${escape_html(node.name)}</span>`
+          el += `<span class="badge">(${node.count})</span>`
+          el += `</a>`
+          if (node.children && node.children.length > 0) {
+            el += `<div class="cat-children">${renderCategoryTree(node.children)}</div>`
+          }
+          el += `</div>`
+        })
+        return el
+      }
+      %>
+      <%- renderCategoryTree(category_tree(site.categories)) %>
     </article>
   </div>
 <% } %>

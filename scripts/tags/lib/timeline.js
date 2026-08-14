@@ -18,7 +18,7 @@ function layoutNodeTitle(ctx, content) {
   var el = ''
   el += '<div class="header">'
   if (content && content.length > 0) {
-    el += `<span>${content}</span>`
+    el += `<span>${ctx.render.renderSync({text: content, engine: 'markdown'}).split('\n').join('').replace(/<\/?p>/g, '')}</span>`
   }
   el += '</div>'
   return el

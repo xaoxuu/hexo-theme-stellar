@@ -31,3 +31,11 @@ test('normalize_path 组合与边界场景', () => {
   assert.equal(normalize_path('/a/b/index.html'), '/a/b');
   assert.equal(normalize_path('/a//b/'), '/a//b');
 });
+
+test('normalize_path 兼容 pretty_urls.trailing_index（#523）', () => {
+  // trailing_index: true 时 page.path 为 xxx/index.html，item.url 省略 index.html
+  assert.equal(normalize_path('/about/index.html'), normalize_path('/about'));
+  assert.equal(normalize_path('/about/index.html'), normalize_path('/about/'));
+  assert.equal(normalize_path('/blog/2026/01/01/index.html'), normalize_path('/blog/2026/01/01'));
+  assert.equal(normalize_path('/wiki/stellar/index'), normalize_path('/wiki/stellar'));
+});

@@ -42,10 +42,10 @@
 
 .post-list #cats
   padding: 0
+  .cat-item
+    display: block
   a.cat
     display: flex
-    &.child
-      padding-left: 2rem
     padding: .5em 1rem
     border-radius: $border-bar
     color: var(--text-p2)
@@ -72,6 +72,10 @@
       .badge
         opacity: 1
         color: var(--theme)
+  .cat-children
+    margin-left: 1.25rem
+    padding-left: .75rem
+    border-left: 1px dashed var(--text-meta)
 
 .post-list #tags
   display: flex
