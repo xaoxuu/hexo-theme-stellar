@@ -39,6 +39,14 @@
               },
             <% } %>
           });
+          // artalk 邮件通知链接携带 ?atk_comment=... 等查询参数，
+          // 其 hash 监听会与主题目录定位冲突（#598）：
+          // 初始化并完成评论定位后清理查询参数，避免后续目录/锚点跳转被干扰。
+          if (window.location.search.indexOf('atk_') !== -1) {
+            window.setTimeout(function () {
+              window.history.replaceState(null, '', window.location.pathname + window.location.hash);
+            }, 300);
+          }
         });
       }
       

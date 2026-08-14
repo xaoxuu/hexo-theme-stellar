@@ -10,7 +10,9 @@
         const api = apiBase + '/comment?type=recent&count=' + limit;
         const default_avatar = def.avatar;
         utils.request(el, api, async resp => {
-          const data = await resp.json();
+          const payload = await resp.json();
+          // 兼容旧版数组与新版 { data: [...] } 返回结构（#630）
+          const data = Array.isArray(payload) ? payload : (payload && Array.isArray(payload.data) ? payload.data : []);
           data.forEach((item, i) => {
             var cell = '<div class="timenode" index="' + i + '">';
             cell += '<div class="header">';
