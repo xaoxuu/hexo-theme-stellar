@@ -65,7 +65,7 @@ graph TB
 
 `.highlight` 容器实现：
 
-- **基础样式**：圆角用 `$border-card`，背景用 `--block` CSS 变量，`corner-shape: superellipse(1.2)` 实现平滑圆角
+- **基础样式**：圆角用 `$border-card`，背景用 `--block` CSS 变量，`corner-shape: superellipse(1.25)` 实现平滑圆角
 - **溢出处理**：容器与嵌套表格自动溢出，支持横向滚动
 - **字体族**：`$ff-codeblock` 等宽字体
 - **最小宽度**：移动端及以上 180px
@@ -377,7 +377,7 @@ graph TB
     GISTFILE --> GISTMETA
     GISTDATA --> HIGHLIGHT
     
-    BORDER["border: 1px solid var(--block-border)<br/>border-radius: $border-card<br/>corner-shape: superellipse(1.2)"]
+    BORDER["border: 1px solid var(--block-border)<br/>border-radius: $border-card<br/>corner-shape: superellipse(1.25)"]
     BGOVERRIDE["--bgColor-default: var(--block)"]
     NOBORDER[".highlight:<br/>border: none<br/>border-radius: 0"]
     
@@ -525,7 +525,7 @@ pre
 `.highlight` 容器使用：
 
 - **圆角**：`$border-card` 设计令牌
-- **圆角形状**：`corner-shape: superellipse(1.2)`，iOS 风格平滑圆角
+- **圆角形状**：`corner-shape: superellipse(1.25)`，iOS 风格平滑圆角
 - **背景**：`var(--block)` 主题感知 CSS 变量
 
 这些效果是主题整体视觉语言的一部分，详见[Stylus 工具与混入](stylus-utilities.md)。

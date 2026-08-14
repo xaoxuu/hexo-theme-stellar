@@ -155,7 +155,7 @@ graph TB
     
     VISUAL --> BG["background: var(--theme-block)"]
     VISUAL --> RADIUS["border-radius: $border-card"]
-    VISUAL --> CORNER["corner-shape: superellipse(1.2)"]
+    VISUAL --> CORNER["corner-shape: superellipse(1.25)"]
     
     CHILDREN --> TITLE[".title<br/>Font size: $fsp1<br/>Weight: 500"]
     CHILDREN --> BODY[".body<br/>Font size: $fsp2<br/>Line height: 1.5"]

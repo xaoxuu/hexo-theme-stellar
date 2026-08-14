@@ -240,6 +240,7 @@ args = ctx.args.map(args, ['color', 'style'], ['key', 'text'])
 | `note` / `box` | 带可选边框的彩色标注框 | `tag_plugins.note` |
 | `folding` | 可折叠内容区 | N/A |
 | `tabs` | 标签页内容区 | N/A |
+| `table` | 表格样式容器（`scroll` / `wrap` / `compact`） | N/A |
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
@@ -274,6 +275,7 @@ args = ctx.args.map(args, ['color', 'style'], ['key', 'text'])
 | `mark` | 带背景色的高亮文本 | `tag_plugins.mark` |
 | `hashtag` | 样式化话题标签 | `tag_plugins.hashtag` |
 | `quot` | 装饰性引用标记 | `tag_plugins.quot` |
+| `tip` | 气泡注解（桌面 hover / 移动端点击） | N/A |
 
 **参考源码**：[_config.yml](../../../_config.yml)
 

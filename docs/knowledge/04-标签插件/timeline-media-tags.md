@@ -225,7 +225,7 @@ graph TB
 
 **卡片特性：**
 
-- `corner-shape: superellipse(1.2)` 平滑圆角
+- `corner-shape: superellipse(1.25)` 平滑圆角
 - `border-top-left-radius: 2px` 与时间线视觉连接
 - 支持嵌套标签插件（copy、image、代码块）
 - 图片用 `border-radius: $border-image-s`
@@ -331,7 +331,7 @@ data_services:
 .tag-plugin.timeline
   p > img
     border-radius: $border-image-s
-    corner-shape: superellipse(1.2)
+    corner-shape: superellipse(1.25)
 ```
 
 **数据服务时间线中的图片尺寸（memos 风格紧凑显示）：**

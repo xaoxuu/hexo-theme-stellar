@@ -1,5 +1,31 @@
 # Changelog
 
+## 1.40.0
+
+> 发布日期：2026-08-14
+
+### 新功能
+- 文章页新增字数与预计阅读时长显示（`article.reading_time`，默认关闭）
+- 文章卡片新增标签展示（最多 5 个，`article.card_tags`，默认关闭）
+- 新增表格标签 `{% table style:scroll|wrap|compact %}`，支持滚动/换行/紧凑三种表格样式
+- 新增气泡注解标签 `{% tip text:... %}词句{% endtip %}`，桌面 hover、移动端点击显示
+
+### 修复
+- 时间线节点标题（header）不再渲染 markdown 的问题（#401）
+- 分类页三级及以上分类无法正确展示的问题，改为基于 parent 递归构建嵌套树（#564）
+- 亮暗切换后 topbar 与左栏颜色不同步的问题：navbar/sidebar 暗色样式统一跟随 `data-theme` 开关（#593、#663）
+- iOS Safari 下右下角悬浮控件在玻璃椭圆框中不对齐的问题（#599）
+- artalk 邮件通知链接携带 `?atk_*` 参数导致目录定位失效的问题（#598）
+- waline 最近评论接口返回结构兼容（数组 / `{ data: [...] }`）（#630）
+- memos 新版 v1 接口识别与渲染适配，识别失败仍回退 feature 兜底（#668）
+- new-note 命令生成 front-matter 的 date 对齐为 `YYYY-MM-DD HH:mm`（#594）
+
+### 升级注意（配置变更与破坏性改动）
+- 新增 `article.reading_time`（默认 `false`）与 `article.card_tags`（默认 `false`），需要时设为 `true`
+- 新增 `table`、`tip` 两个标签插件；`table` 默认使用 `scroll` 样式
+
+Full Changelog: [1.39.1...1.40.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.39.1...1.40.0)
+
 ## 1.39.1
 
 > 发布日期：2026-08-13

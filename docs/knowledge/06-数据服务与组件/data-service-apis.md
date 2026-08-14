@@ -333,6 +333,12 @@ data_services:
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
+memos 服务内置多版本识别（`source/js/services/memos.js` 的 `versionHandlers`）：`22-`（数组格式）、`22+`、`25+` 与 `v1`（新版接口 `{ memos: [...] }`，creator 为 `users/xxx` 字符串形式）；识别失败时回退 `feature` 兜底，不阻断渲染。
+
+---
+
+## 评论集成服务
+
 ---
 
 ## 评论集成服务
@@ -358,6 +364,8 @@ data_services:
 这些服务连接到 `comments` 小节配置的评论系统 API（见[评论系统](../07-外部集成/comment-systems.md)），获取并显示近期评论活动。
 
 Artalk 最新评论渲染时保留表情图（`atk-emoticon`，CSS 限高 1.5em），其余标签转纯文本并截断 50 字符，空评论跳过，避免大表情图与段落撑爆侧栏卡片布局。
+
+waline 最新评论兼容数组与 `{ data: [...] }` 两种返回结构；Artalk 评论页加载后清理 `?atk_*` 查询参数，避免其 hash 监听干扰目录定位（#598）。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 

@@ -397,7 +397,7 @@ graph LR
 - 响应式边距
 - 经 `newblur()` 混入的玻璃拟态模糊
 - `.l_body` 带 `[leftbar]` / `[rightbar]` 属性时，对应的切换按钮复用 navbar item 激活样式（`bar-item-active()`），面板保持玻璃效果
-- 圆角（容器 `$border-bar-container`、按钮 `$border-bar`，均由 `style.border-radius.bar` 派生）随全局 `superellipse(1.2)` 连续曲率渲染（`bar-glass()` / `bar-item()` 显式应用 `corner-shape: $corner-shape`），不再使用 `corner-shape: round` 覆盖
+- 圆角（容器 `$border-bar-container`、按钮 `$border-bar`，均由 `style.border-radius.bar` 派生）随全局 `superellipse(1.25)` 连续曲率渲染（`bar-glass()` / `bar-item()` 显式应用 `corner-shape: $corner-shape`），不再使用 `corner-shape: round` 覆盖
 
 `.float-panel` 内的按钮继承响应式尺寸与悬停状态。
 

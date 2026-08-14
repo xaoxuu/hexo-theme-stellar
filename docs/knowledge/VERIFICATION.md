@@ -1,6 +1,6 @@
 # 核查与修正记录
 
-> 记录中文知识库对照 `themes/stellar/` 源码（版本 1.39.1，HEAD dea3290）核查与修正的偏差记录。
+> 记录中文知识库对照 `themes/stellar/` 源码（版本 1.39.1，HEAD 03f58eb）核查与修正的偏差记录。
 > 规则：行号引用一律改为文件路径；无法在代码中找到对应实现的主张保留原文并标注「未核实」。
 
 ## 一、已移除功能（整页改写为当前实现）
@@ -41,6 +41,18 @@
 | 2.5 动态头像 / sidebar-system 动态头像 | `animated_avatar.background` 图片背景（rainbow64@3x.webp） | 改为 CSS 锥形渐变：新增 `style.gradient.avatar`（默认搜索条同款彩虹色），移除 `animated_avatar.background`；光环旋转动画（4s）不变 |
 | 7.1 懒加载更新 | 动态懒加载图片需手动调用 `wrapLazyloadImages()` 或 `update()` | `lazyload.ejs` 新增 MutationObserver 兜底：检测到新增 `.lazy` 元素自动 `lazyLoadInstance.update()`；`wrapLazyloadImages()` 仍负责普通 `<img src>` 转换 |
 | 7.1 评论服务 / artalk_latest_comment | 最新评论直接渲染 `content_marked` 完整 HTML | 改为保留表情图（`atk-emoticon`，CSS 限高 1.5em）、其余标签转纯文本并截断 50 字符，空评论跳过；避免大表情图与段落撑爆侧栏卡片布局 |
+| 5.3 标签插件 | 无 `table`、`tip` 标签 | 新增 `table`（scroll/wrap/compact 三档样式）与 `tip`（气泡注解）标签，见 `docs/designs/2026-08-14-issue-fix-1400/` |
+| 1.2/3.3 文章配置 | 无 `article.reading_time`、`article.card_tags` | 新增两个配置键（均默认 `false`）：文章页字数/预计阅读、文章卡片标签 |
+| 6.4 动态数据 / memos | 仅识别 22-/22+/25+ | 新增 `v1` 分支（`{ memos: [...] }` + `createTime`，creator 为 `users/xxx` 字符串）；识别失败回退 `feature` |
+| 6.4 评论服务 / waline | 直接 `data.forEach` 处理返回 | 兼容数组与 `{ data: [...] }` 两种返回结构 |
+| 8.2 评论 / artalk | `?atk_*` 查询参数残留，干扰目录定位 | 初始化后 `history.replaceState` 清理查询参数（#598） |
+| 5.3 样式 / prefers-color-scheme | navbar/sidebar 暗色兜底无条件跟随系统 | 统一收敛到 `:root:not([data-theme])` 下，显式主题只跟随 `data-theme` 开关（#593/#663） |
+| 5.5 时间线 / timeline | 节点标题直接输出原文 | 改为经 markdown 渲染（#401） |
+| 3.3 分类页 | 分类列表平铺，三级及以上失效 | 改为基于 parent 递归构建嵌套树（#564），逻辑抽到 `scripts/lib/category_tree.js` |
+| 3.3 文章卡片 / 文章页 | 卡片无标签展示、文章页无阅读时长 | 卡片新增纯文字标签（`cap` 小字样式，最多 5 个，默认关闭）；文章页面包屑行右侧新增字数与预计阅读（`scripts/lib/reading_time.js`，默认关闭） |
+| 5.3 标签插件 / table、tip | 初版样式无区分、气泡纯色块 | 最终实现：table 三种样式（scroll 复用主题 `scrollbar()` 滚动条、wrap 外边框+圆角+内部左右边框+自动换行、compact 行高 1.4 紧凑显示）；tip 气泡复用 `bar-glass()` 玻璃效果；两标签语法不变 |
+| 2026-08-14 | `_config.yml`、`source/css/_custom.styl`、样式文档 | `style.corner-shape` 默认值统一为 `superellipse(1.25)` 并移除 `_custom.styl` 中的代码兜底（默认值由 `_config.yml` 提供）；同步更新知识库与 wiki 文档中的 1.2 引用 |
+| 2 命令 / new-note | 生成 front-matter 带秒 | date 对齐 `YYYY-MM-DD HH:mm`（#594） |
 
 ## 三、处理约定
 

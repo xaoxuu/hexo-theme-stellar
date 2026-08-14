@@ -356,6 +356,8 @@ notebook:
 | `banner_ratio` | Number | `2.5` | 文章横幅宽高比 |
 | `auto_banner` | Boolean | `false` | 根据标签自动从 Unsplash 获取横幅 |
 | `auto_excerpt` | Number | `128` | 自动摘要提取字符数 |
+| `reading_time` | Boolean | `false` | 文章页显示字数与预计阅读时长 |
+| `card_tags` | Boolean | `false` | 文章卡片显示标签（最多 5 个） |
 | `license` | String/Boolean | 许可文本 | 文章默认许可声明 |
 | `share` | Array | `[]` | 分享按钮：`wechat`、`weibo`、`email`、`link` |
 
