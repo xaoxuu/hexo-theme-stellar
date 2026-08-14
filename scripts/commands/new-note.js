@@ -36,7 +36,7 @@ hexo.extend.console.register('new-note', 'Create a new note', {
   const frontMatter = [
     '---',
     `title: ${name}`,
-    `date: ${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')} ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}:${String(date.getSeconds()).padStart(2,'0')}`,
+    `date: ${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')} ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}`,
     `tags: [${tags.map(t => '"'+t+'"').join(', ')}]`,
     `notebook: ${book}`,
     '---',
