@@ -9,8 +9,11 @@
 - 文章卡片新增标签展示（最多 5 个，`article.card_tags`，默认关闭）
 - 新增表格标签 `{% table style:scroll|wrap|compact %}`，支持滚动/换行/紧凑三种表格样式
 - 新增气泡注解标签 `{% tip text:... %}词句{% endtip %}`，桌面 hover、移动端点击显示
+- 远程 Markdown 渲染抽象：`{% md %}` 标签新增可选 `wrap` 参数；wiki 项目配置 `repo` 后可直接以仓库 README 作为首页正文
 
 ### 修复
+- wiki 项目描述作为页面描述（OG / JSON-LD）的兜底，修复 SEO 描述缺失的问题
+- 声明 hexo-pagination / hexo-util 依赖并新增依赖声明检查门禁，修复幽灵依赖导致的构建问题
 - 时间线节点标题（header）不再渲染 markdown 的问题（#401）
 - 分类页三级及以上分类无法正确展示的问题，改为基于 parent 递归构建嵌套树（#564）
 - 亮暗切换后 topbar 与左栏颜色不同步的问题：navbar/sidebar 暗色样式统一跟随 `data-theme` 开关（#593、#663）
