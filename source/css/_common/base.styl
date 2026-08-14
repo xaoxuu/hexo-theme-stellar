@@ -34,14 +34,15 @@ ul,ol
 // table
 table:not([class])
   border-collapse: collapse
-  overflow: auto
+  display: block
+  overflow-x: auto
+  -webkit-overflow-scrolling: touch
   margin: 1rem 0
   max-width: 100%
   vertical-align: text-top
   --fsp: $fsp2
   font-size: var(--fsp)
   scrollbar(0,0)
-  display: table
   th
     background: var(--block)
     border-top: 1px solid var(--block-border)
@@ -50,6 +51,8 @@ table:not([class])
     padding: 4px 1em
     line-height: 1.5
   tr
+    word-break: keep-all
+    white-space: nowrap
     border-bottom: 1px dashed var(--block-border)
     trans()
     &:hover
@@ -57,10 +60,3 @@ table:not([class])
 
   @media screen and (min-width: $device-mobile-max)
     width 100%
-
-  @media screen and (max-width: $device-mobile-max)
-    display: block
-    tr
-      word-break: keep-all
-      white-space:nowrap
-

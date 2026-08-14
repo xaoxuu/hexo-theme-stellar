@@ -557,21 +557,55 @@ pre
 表格局部覆盖 `--fsp` 把字号缩小 2px：
 
 ```stylus
+// source/css/_components/md-table.styl
+.md-table-scroll
+  overflow-x: auto
+  -webkit-overflow-scrolling: touch
+  max-width: 100%
+  margin: 1rem 0
+  scrollbar(0,0)
+  > table:not([class])
+    display: table
+    width: 100%
+    max-width: none
+    margin: 0
+    border-collapse: separate
+    border-spacing: 0
+    border: 1px solid var(--block-border)
+    border-radius: $border-card
+    overflow: hidden
+    th
+      border-top: none
+    th, td
+      border-left: 1px solid var(--block-border)
+      &:first-child
+        border-left: none
+```
+
+普通 Markdown 表格经 `after_post_render` 过滤器（`scripts/filters/lib/md_table.js`）包一层 `.md-table-scroll` 滚动容器：**宽度足够时铺满容器**（`width: 100%` 让列宽拉伸），内容宽度超过容器时**横向滚动**，单元格默认不换行（`tr { white-space: nowrap }`）。`{% table style:scroll %}` 与 `style:compact` 同样为「铺满 + 滚动」；需要单元格内自动换行或固定列宽时，用 `{% table style:wrap %}` 标签包裹。
+
+所有内容表格（md 默认 / `scroll` / `compact` / `wrap`）统一为 **wrap 同款的圆角卡片边框**：`1px solid var(--block-border)` 外框 + `$border-card` 圆角（`overflow: hidden` 裁剪），单元格之间以竖线分隔，表头保留块底色与横线。
+
+`table:not([class])` 基础样式（`source/css/_common/base.styl`）保留块级 + 横向滚动作为未包裹表格的兜底：
+
+```stylus
 // source/css/_common/base.styl
 table:not([class])
   border-collapse: collapse
-  overflow: auto
+  display: block
+  overflow-x: auto  // 兜底：默认横向滚动
+  -webkit-overflow-scrolling: touch
   margin: 1rem 0
   max-width: 100%
   vertical-align: text-top
   --fsp: $fsp2  // 局部覆盖：正文字号 - 2px
   font-size: var(--fsp)
-  
+
   th
     background: var(--block)
     border-top: 1px solid var(--block-border)
     border-bottom: 1px solid var(--block-border)
-  
+
   td, th
     padding: 4px 1em
     line-height: 1.5

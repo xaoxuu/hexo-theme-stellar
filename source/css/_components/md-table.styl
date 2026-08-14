@@ -1,0 +1,23 @@
+// 普通 Markdown 表格滚动容器：宽度足够时铺满容器，内容超出时横向滚动
+.md-table-scroll
+  overflow-x: auto
+  -webkit-overflow-scrolling: touch
+  max-width: 100%
+  margin: 1rem 0
+  scrollbar(0,0)
+  > table:not([class])
+    display: table
+    width: 100%
+    max-width: none
+    margin: 0
+    border-collapse: separate
+    border-spacing: 0
+    border: 1px solid var(--block-border)
+    border-radius: $border-card
+    overflow: hidden
+    th
+      border-top: none
+    th, td
+      border-left: 1px solid var(--block-border)
+      &:first-child
+        border-left: none
