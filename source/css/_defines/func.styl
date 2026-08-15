@@ -122,15 +122,15 @@ tag-chip()
   font-size: $fs-13
   font-weight: 500
   trans1 all
-  &:before
-    content: "#"
-    margin-left: -2px
-    margin-right: 2px
+  svg
+    width: 1em
+    height: 1em
+    margin-right: .25em
     opacity: .4
   &:hover
     color: var(--text)
     background: var(--block-border)
-    &:before
+    svg
       color: var(--theme)
       opacity: 1
 

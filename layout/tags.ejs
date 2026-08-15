@@ -12,6 +12,7 @@ if (page.menu_id == undefined) {
     <article class='<%- scrollreveal("") %>' id='tags'>
       <% site.tags.sort('length', -1).each(function(tag){ %>
         <a class='tag' href="<%= pretty_url(tag.path) %>">
+          <%- icon('default:hashtag') %>
           <span class='name'><%= tag.name %></span>
         </a>
       <% }) %>

@@ -47,7 +47,7 @@ module.exports = ctx => function(args) {
     if (style.length > 0 && !args.ratio) {
       img += ' style="' + style + '"'
     }
-    img += `onerror="this.src=&quot;${ctx.theme.config.default.image_onerror || ctx.utils.iconData('default:image-onerror')}&quot;"`
+    img += `onerror="this.src=&quot;${ctx.theme.config.default.image_onerror || ctx.utils.iconData('image:onerror')}&quot;"`
     img += '/>'
     // loading
     img += `<div class="lazy-icon" style="background-image:url(${ctx.theme.config.default.loading || ctx.utils.iconData('default:loading-placeholder')});"></div>`
@@ -93,7 +93,7 @@ module.exports = ctx => function(args) {
     if (args.alt) {
       download = ' download="' + args.alt + '"'
     }
-    el += '<a class="image-download blur" style="opacity:0" target="_blank"' + download + ' href="' + href + '">' + ctx.utils.icon('default:download') + '</a>'
+    el += '<a class="image-download blur" style="opacity:0" target="_blank"' + download + ' href="' + href + '">' + ctx.utils.icon('image:download') + '</a>'
   }
   el += '</div>'
 

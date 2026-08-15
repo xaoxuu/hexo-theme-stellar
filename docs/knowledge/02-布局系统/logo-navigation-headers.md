@@ -359,12 +359,12 @@ menubar:
   items:
     - id: post
       theme: '#1BCDFC'
-      icon: solar:documents-bold-duotone
+      icon: default:documents
       title: 博客
       url: /
     - id: wiki
       theme: '#3DC550'
-      icon: solar:notebook-bookmark-bold-duotone
+      icon: example:notebook
       title: 文档
       url: /wiki/
 ```
@@ -617,13 +617,13 @@ menubar:
   items:
     - id: post          # 菜单项标识
       theme: '#1BCDFC'  # 高亮主题色
-      icon: solar:documents-bold-duotone  # icons.yml 中的图标
+      icon: default:documents  # icons.yml 中的图标
       title: 博客       # 显示文本
       url: /            # 目标 URL
     
     - id: wiki
       theme: '#3DC550'
-      icon: solar:notebook-bookmark-bold-duotone
+      icon: example:notebook
       title: 文档
       url: /wiki/
 ```

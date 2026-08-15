@@ -76,8 +76,8 @@ flowchart TD
 
 `layout: post` 且 `theme.article.tags` 开启（默认 `true`）时，正文结束后、`article-footer` 之前渲染一行本文标签：
 
-- 模板 [layout/_partial/main/article/article_tags.ejs](../../../layout/_partial/main/article/article_tags.ejs)：`page.tags` 为空时输出空字符串；每个标签渲染为 `<a class="tag" href="${pretty_url(tag.path)}">` 链接，点击进入对应 Hexo 标签页。
-- 样式 [source/css/_components/partial/article-tags.styl](../../../source/css/_components/partial/article-tags.styl)：复用 [source/css/_defines/func.styl](../../../source/css/_defines/func.styl) 的 `tag-chip()` mixin——胶囊圆角（`border-radius: 999px`）、`var(--block)` 底色、`$fs-13`，`#` 前缀由 `:before` 提供（`opacity: .4`）；hover 时文字变 `var(--text)`、背景变 `var(--block-border)`、`#` 变主题色；容器 `justify-content: center` 居中，`margin: 2rem -0.5rem 0` 抵消标签外边距并保留与正文的 2rem 间距。与标签页（`/blog/tags/`）标签胶囊为同一套样式。
+- 模板 [layout/_partial/main/article/article_tags.ejs](../../../layout/_partial/main/article/article_tags.ejs)：`page.tags` 为空时输出空字符串；每个标签渲染为 `<a class="tag" href="${pretty_url(tag.path)}">` 链接，链接内先内联 `default:hashtag` 图标再输出标签名，点击进入对应 Hexo 标签页。
+- 样式 [source/css/_components/partial/article-tags.styl](../../../source/css/_components/partial/article-tags.styl)：复用 [source/css/_defines/func.styl](../../../source/css/_defines/func.styl) 的 `tag-chip()` mixin——胶囊圆角（`border-radius: 999px`）、`var(--block)` 底色、`$fs-13`，前缀为内联 hashtag 图标（`.tag svg`：`1em`、`opacity: .4`）；hover 时文字变 `var(--text)`、背景变 `var(--block-border)`、图标变主题色且不透明；容器 `justify-content: center` 居中，`margin: 2rem -0.5rem 0` 抵消标签外边距并保留与正文的 2rem 间距。与标签页（`/blog/tags/`）标签胶囊为同一套样式。
 - 仅博客文章生效；wiki / 笔记页维持各自的标签展示（笔记页见 `note_tags` partial）。
 
 **参考源码**：[layout/_partial/main/article/article_tags.ejs](../../../layout/_partial/main/article/article_tags.ejs)、[layout/page.ejs](../../../layout/page.ejs)、[source/css/_components/partial/article-tags.styl](../../../source/css/_components/partial/article-tags.styl)、[source/css/_defines/func.styl](../../../source/css/_defines/func.styl)

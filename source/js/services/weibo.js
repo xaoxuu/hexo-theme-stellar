@@ -36,16 +36,16 @@
           cell += '<div class="flex right">';
           cell += '<div class="item reaction repost">';
           cell += '<a class="item comments last" href="' + item.url + '#issuecomment-new" target="_blank" rel="external nofollow noopener noreferrer">';
-          cell += '<span>' + ctx.icons['solar:repeat-bold'] + ' ' + item.reposts_count + '</span>';
+          cell += '<span>' + ctx.icons['weibo:repeat'] + ' ' + item.reposts_count + '</span>';
           cell += '</a>';
           cell += '</div>';
           cell += '<a class="item comments last" href="' + item.url + '#issuecomment-new" target="_blank" rel="external nofollow noopener noreferrer">';
-          cell += '<span>' + ctx.icons['default:comment'] + ' '
+          cell += '<span>' + ctx.icons['weibo:comment'] + ' '
           + (item.comments_count || 0) + '</span>';
           cell += '</a>';
           cell += '<div class="item reaction attitudes">';
           cell += '<a class="item comments last" href="' + item.url + '#issuecomment-new" target="_blank" rel="external nofollow noopener noreferrer">';
-          cell += '<span>' + ctx.icons['solar:like-bold'] + ' ' + item.attitudes_count + '</span>';
+          cell += '<span>' + ctx.icons['weibo:like'] + ' ' + item.attitudes_count + '</span>';
           cell += '</a>';
           cell += '</div>';
 

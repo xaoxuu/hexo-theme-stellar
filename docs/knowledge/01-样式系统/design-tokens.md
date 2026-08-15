@@ -260,10 +260,10 @@ story 文章页的 h3 双箭头与引用引号装饰图标由 `_data/icons.yml` 
 
 | 变量 | 数据源（icons.yml 键） | 用途 |
 |------|----------------------|------|
-| `--icon-h3-left` | `solar:double-alt-arrow-left-bold-duotone` | H3 前缀图标（左 V 形） |
-| `--icon-h3-right` | `solar:double-alt-arrow-right-bold-duotone` | H3 前缀图标（右 V 形） |
-| `--icon-quote-left` | `bxs:quote-left` | 左引号图标 |
-| `--icon-quote-right` | `bxs:quote-right` | 右引号图标 |
+| `--icon-h3-left` | `default:arrow-left` | H3 前缀图标（左 V 形） |
+| `--icon-h3-right` | `default:arrow-right` | H3 前缀图标（右 V 形） |
+| `--icon-quote-left` | `quot:quote-left` | 左引号图标 |
+| `--icon-quote-right` | `quot:quote-right` | 右引号图标 |
 
 **参考源码**：[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)、[_data/icons.yml](../../../_data/icons.yml)
 

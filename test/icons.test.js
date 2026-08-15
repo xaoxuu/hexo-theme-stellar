@@ -50,10 +50,10 @@ test('icons.yml 键完整：所有静态 icon()/iconData()/ctx.icons 引用均�
   }
 
   // CSS 变量桥接使用的键（head.ejs 中为对象字面量，不走 icon() 调用）
-  found.add('solar:double-alt-arrow-left-bold-duotone');
-  found.add('solar:double-alt-arrow-right-bold-duotone');
-  found.add('bxs:quote-left');
-  found.add('bxs:quote-right');
+  found.add('default:arrow-left');
+  found.add('default:arrow-right');
+  found.add('quot:quote-left');
+  found.add('quot:quote-right');
 
   const missing = [...found].filter((k) => !iconKeys.has(k));
   assert.deepEqual(missing, []);

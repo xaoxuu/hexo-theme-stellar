@@ -40,7 +40,7 @@ module.exports = ctx => function(args) {
   }
   el += `<input class="copy-area" id="${copy_id}" value="${text}">`
   el += `<button class="copy-btn" onclick="util.copy(&quot;${copy_id}&quot;,&quot;${toast}&quot;)">`
-  el += ctx.utils.icon('default:copy')
+  el += ctx.utils.icon('copy:copy')
   el += `</button>`
   el += `</div>`
   return el

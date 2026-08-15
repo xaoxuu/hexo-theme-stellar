@@ -163,7 +163,7 @@ graph TD
 | 参数 | 类型 | 全局默认 | 覆盖范围 | 说明 |
 |------|------|----------|----------|------|
 | `auto_excerpt` | `number` | `128` | 无 | 未指定 `excerpt` 与 `description` 时自动摘要的长度 |
-| `tagcons` | `object` | `{ '': 'solar:hashtag-square-bold' }` | 无 | 标签图标映射（显示在标签树中） |
+| `tagcons` | `object` | `{ '': 'quot:hashtag' }` | 无 | 标签图标映射（显示在标签树中） |
 | `per_page` | `number\|null` | `null` | 笔记本 YAML | 每页笔记数（0 = 不分页，null = 用 Hexo 配置） |
 | `order_by` | `string` | `-updated` | 笔记本 YAML | 笔记排序（默认按更新时间降序） |
 | `license` | `boolean\|string` | `false` | 笔记本 YAML、front-matter | 许可显示（false = 隐藏，true = 用主题许可，string = 自定义文本） |
@@ -185,7 +185,7 @@ graph LR
     
     subgraph "Tag Tree Widget"
         WIDGET["tagtree widget<br/>Renders tag hierarchy"]
-        ICONS["Tag icons<br/>Default: solar:hashtag-square-bold"]
+        ICONS["Tag icons<br/>Default: quot:hashtag"]
     end
     
     subgraph "Note Metadata"
@@ -209,7 +209,7 @@ notebook:
   tagcons:
     'javascript': 'mdi:language-javascript'
     'python': 'mdi:language-python'
-    '': 'solar:hashtag-square-bold'  # 未匹配标签的默认图标
+    '': 'quot:hashtag'  # 未匹配标签的默认图标
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)

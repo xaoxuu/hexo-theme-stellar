@@ -227,10 +227,10 @@ function generate_canonical() {
   <%
     const iconCssVars = (() => {
       const map = {
-        '--icon-h3-left': 'solar:double-alt-arrow-left-bold-duotone',
-        '--icon-h3-right': 'solar:double-alt-arrow-right-bold-duotone',
-        '--icon-quote-left': 'bxs:quote-left',
-        '--icon-quote-right': 'bxs:quote-right'
+        '--icon-h3-left': 'default:arrow-left',
+        '--icon-h3-right': 'default:arrow-right',
+        '--icon-quote-left': 'quot:quote-left',
+        '--icon-quote-right': 'quot:quote-right'
       };
       let vars = [];
       for (const [name, key] of Object.entries(map)) {

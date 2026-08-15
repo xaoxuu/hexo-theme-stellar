@@ -16,7 +16,7 @@ if (page.menu_id == undefined) {
         nodes.forEach(function(node) {
           el += `<div class="cat-item">`
           el += `<a class="cat${node.parentId ? ' child' : ''}" href="${pretty_url(node.path)}">`
-          el += `<span class="name">${icon('default:category')}${escape_html(node.name)}</span>`
+          el += `<span class="name">${icon(node.children && node.children.length > 0 ? 'default:category-open' : 'default:category')}${escape_html(node.name)}</span>`
           el += `<span class="badge">(${node.count})</span>`
           el += `</a>`
           if (node.children && node.children.length > 0) {

@@ -29,7 +29,7 @@ module.exports = ctx => function(args) {
   el += '<a class="tag-plugin colorful hashtag"'
   el += ' ' + ctx.args.joinTags(args, ['color', 'href']).join(' ')
   el += '>'
-  el += ctx.utils.icon('default:hashtag')
+  el += ctx.utils.icon('hashtag:hashtag')
   el += '<span>' + args.text + '</span>'
   el += '</a>'
   return el
