@@ -241,6 +241,40 @@ function bindTocClick(widget) {
   });
 }
 
+// 通用页内锚点平滑滚动（标题左侧 headerlink、{% navbar %} 页内导航、脚注回链等）
+// 已被其他处理器拦截的点击（TOC、tabs、wiki #start 等）通过 defaultPrevented 跳过，避免重复滚动
+function bindAnchorClick() {
+  document.addEventListener('click', function (e) {
+    const link = e.target.closest('a[href^="#"]');
+    if (!link || e.defaultPrevented) {
+      return;
+    }
+    const href = link.getAttribute('href');
+    if (!href || href.indexOf('#') !== 0) {
+      return;
+    }
+    let id = href.slice(1);
+    try {
+      id = decodeURIComponent(id);
+    } catch (err) {
+      // 片段含非法编码时按原样查找
+    }
+    const target = id && document.getElementById(id);
+    if (!target) {
+      return;
+    }
+    e.preventDefault();
+    // #start 锚点贴顶滚动，不预留 offset；其余锚点与 TOC 点击滚动保持一致（32px）
+    const offset = id === 'start' ? 0 : 32;
+    const targetY = target.getBoundingClientRect().top + window.scrollY - offset;
+    smoothScrollTo(targetY);
+    if (window.history && window.history.pushState) {
+      window.history.pushState(null, '', href);
+    }
+  });
+}
+bindAnchorClick();
+
 // 远程 md 渲染完成后由页面层重建右栏 TOC
 document.addEventListener('stellar:mdrender', function (e) {
   rebuildToc(e.detail && e.detail.target);

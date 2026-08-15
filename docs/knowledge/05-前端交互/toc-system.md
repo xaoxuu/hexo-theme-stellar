@@ -332,6 +332,19 @@ sequenceDiagram
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)、[layout/_partial/widgets/toc.ejs](../../../layout/_partial/widgets/toc.ejs)
 
+### 页内锚点平滑滚动
+
+文档级委托监听（`bindAnchorClick`，`source/js/main.js`）拦截所有同页 `#` 链接（标题左侧 `.headerlink` 锚点、`{% navbar %}` 页内导航、脚注回链等），统一走 `smoothScrollTo` 平滑滚动：
+
+- 偏移量：`#start` 贴顶（0），其余锚点与 TOC 点击滚动保持一致（32px）
+- 命中后 `preventDefault()` 并用 `history.pushState` 更新 URL hash
+- 已由其他处理器拦截的点击（TOC、tabs、wiki 封面按钮、tagtree 等）通过 `e.defaultPrevented` 跳过，不重复滚动
+- 片段先 `decodeURIComponent` 解码（异常时按原样查找），目标元素不存在时放行浏览器默认行为
+
+初始带 `#锚点` 的 URL 打开仍由 `layout/_partial/scripts/defines.ejs` 直接定位（无动画），两者互不干扰。
+
+**参考源码**：[source/js/main.js](../../../source/js/main.js)
+
 ### TOC 折叠
 
 `div.widget-header` 中的 `a.cap-action` 调用 `sidebar.toggleTOC()`，展开或折叠 TOC 组件，与侧边栏折叠系统集成。
