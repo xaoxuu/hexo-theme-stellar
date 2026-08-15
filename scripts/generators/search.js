@@ -56,10 +56,12 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
     return temp_post
   }
 
+  // 循环外编译一次 skip_search 正则，避免每个 post/page 重复 new RegExp
+  const skipSearchPatterns = (cfg.skip_search || []).map(pattern => new RegExp('^' + pattern.replace(/\*/g, '.*') + '$'));
+
   function matchAndExit(path, patterns) {
     for (let pattern of patterns) {
-        const regexPattern = new RegExp('^' + pattern.replace(/\*/g, '.*') + '$');
-        if (path.match(regexPattern)) {
+        if (path.match(pattern)) {
             // console.log("Matched pattern:", pattern);
             return true;
         }
@@ -71,7 +73,7 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
     posts.each(function(post) {
       var layout_list = ["post"]
       if (!layout_list.includes(post.layout)) return
-      if (cfg.skip_search && matchAndExit(post.path, cfg.skip_search)) return
+      if (cfg.skip_search && matchAndExit(post.path, skipSearchPatterns)) return
       if (post.indexing == false) return
       let temp_post = generateJson(post)
       res.push(temp_post)
@@ -81,7 +83,7 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
     pages.each(function(page) {
       var layout_list = ["page", "wiki"]
       if (!layout_list.includes(page.layout)) return
-      if (cfg.skip_search && matchAndExit(page.path, cfg.skip_search)) return
+      if (cfg.skip_search && matchAndExit(page.path, skipSearchPatterns)) return
       if (page.indexing == false) return
       let temp_post = generateJson(page)
       res.push(temp_post)

@@ -6,6 +6,10 @@
 'use strict';
 
 module.exports.processSite = function(htmlContent) {
+  // 短路：无 <img 的页面（如 404）无需正则扫描
+  if (typeof htmlContent !== 'string' || !/<img/i.test(htmlContent)) {
+    return htmlContent;
+  }
   const default_image = this.theme.config.default.image;
   return htmlContent.replace(/<img(.*?)src="(.*?)"(.*?)>/gi, function(imgTag) {
     if (/="data:image(.*?)/gi.test(imgTag)) {

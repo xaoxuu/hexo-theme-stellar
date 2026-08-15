@@ -13,6 +13,10 @@ const cheerio = require('cheerio');
  * 排除代码高亮表格（.highlight）与 {% table %} 标签容器（.tag-plugin.table）。
  */
 function wrapMdTables(htmlContent) {
+  // 短路：不含 <table 时无需解析，避免 cheerio 全量 parse + serialize
+  if (typeof htmlContent === 'string' && !htmlContent.includes('<table')) {
+    return htmlContent;
+  }
   const $ = cheerio.load(htmlContent, null, false);
   $('table').each(function () {
     const $table = $(this);

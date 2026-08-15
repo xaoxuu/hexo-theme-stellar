@@ -7,6 +7,10 @@
 
 // 懒加载强制开启：不再读取 enable 配置，no-lazy 是唯一例外
 function lazyProcess(htmlContent) {
+  // 短路：无 <img 的页面（如 404）无需正则扫描
+  if (typeof htmlContent !== 'string' || !/<img/i.test(htmlContent)) {
+    return htmlContent;
+  }
   return htmlContent.replace(/<img(.*?)src="(.*?)"(.*?)>/gi, function(imgTag, src_before, src_value, src_after) {
     // 已由 tag 插件输出懒加载标记（data-src / data-srcset）的图片不重复处理
     if (/data-src/gi.test(imgTag)) {

@@ -49,3 +49,13 @@ test('processPost 修改 data.content', () => {
   const out = processPost(data);
   assert.ok(out.content.includes('md-table-scroll'));
 });
+
+test('不含 table 的 HTML 原样返回（跳过 cheerio 解析）', () => {
+  const html = '<p>hello <b>world</b></p>';
+  const out = wrapMdTables(html);
+  assert.equal(out, html);
+});
+
+test('空字符串原样返回', () => {
+  assert.equal(wrapMdTables(''), '');
+});

@@ -270,6 +270,30 @@ preconnect:
 
 ---
 
+## 构建期性能（generate 阶段）
+
+以主工程 xaoxuu.com（120 篇 md / 8121 行，2026-08-15）实测：`hexo generate` 约 3.0s，按包归因如下。
+
+| 包 / 模块 | 占比 | 说明 |
+|-----------|------|------|
+| core/node | ~24% | 模块加载、YAML 等一次性开销 |
+| hexo-autonofollow | ~19% | 每页 cheerio 整页解析 + 序列化（站点依赖，非主题） |
+| stylus | ~18% | 主题 CSS 编译（一次性） |
+| themes/stellar | ~9% | 模板渲染 + 构建期脚本 |
+| hexo 内核 | ~8% | EJS partial / 渲染框架 |
+| highlight.js / marked | ~6.5% | 内容代码高亮与 Markdown 分词 |
+
+主题构建期脚本已做以下优化（见 `docs/designs/2026-08-15-build-performance/`），全部保持输出逐字节一致：
+
+- **wiki 文档树**（`scripts/lib/doc_tree.js`）：页面按 `wiki` / `path_key` 单遍 `Map` 分组，替代旧实现的 O(W·P) `filter`/`some` 与 O(S·K·P) sections 组装；`all_tags`/`relatedItems` 用 `Set`/`Map` 去重，输出语义不变。
+- **笔记本系统**（`scripts/lib/notebooks.js`）：单遍 `groupPagesByNotebook` 分组，替代每个笔记本全量 `filter` 全部页面。
+- **内容过滤器短路**：`md_table` 在内容不含 `<table` 时跳过 cheerio 解析；`img_lazyload` / `img_onerror` 在无 `<img` 页面直接返回。
+- **搜索生成**：`skip_search` 通配正则循环外编译一次；`related_posts` helper 移除未使用的全量 `posts.filter` 死代码。
+
+本站当前规模下 generate 耗时收益约 0.05–0.2s（主题脚本占比约 9%），主要价值是内容规模增大时复杂度由 O(N·M) 降为 O(N+M) 并减少 GC；更大单项收益（hexo-autonofollow ~0.5s、stylus ~0.55s、`gulp minify` ~5.5s）属站点构建配置或依赖层面，未纳入本次主题改动，作为后续可选方向。
+
+---
+
 ## 汇总表
 
 | 特性 | 配置键 | 默认 | 主要文件 |

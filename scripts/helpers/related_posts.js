@@ -27,16 +27,9 @@ hexo.extend.helper.register('popular_posts_wrapper', function(args){
     <section class='body'>
     `;
 
-  const posts = this.site.posts;
-  const root = this.config.root;
-
   function listItem(obj){
     var el = '';
     el += '<a class="item" href="' + esc(obj.path) + '" title="' + esc(obj.title) + '">';
-    var p = posts.filter(p => root + p.path == obj.path)
-    if (p && p.length > 0) {
-      p = p.data[0];
-    }
     el += '<span class="title">' + esc(obj.title) + '</span>';
     if (obj.excerpt && obj.excerpt.length > 0) {
       el += '<span class="excerpt">' + esc(util.truncate(util.stripHTML(obj.excerpt), {length: 120})) + '</span>';
