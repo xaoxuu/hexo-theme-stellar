@@ -56,6 +56,9 @@ function layoutDiv() {
   }
   el += `</article>`
   if (layout === 'post' || page.wiki || notebook) {
+    if (layout === 'post' && theme.article.tags) {
+      el += partial('_partial/main/article/article_tags')
+    }
     el += partial('_partial/main/article/article_footer')
   }
   if (layout === 'post' || page.wiki) {

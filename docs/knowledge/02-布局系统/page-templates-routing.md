@@ -171,7 +171,8 @@ flowchart TD
     BANNER --> ARTICLE["article.md-text.content[.heti]"]
     ARTICLE --> CONTENT["page.content"]
     CONTENT --> NOTETAGS["notebook set?\n→ partial: notebook/note_tags"]
-    NOTETAGS --> FOOTER["layout==='post' OR page.wiki OR notebook?\n→ partial: article/article_footer"]
+    NOTETAGS --> TAGS["layout==='post' AND theme.article.tags?\n→ partial: article/article_tags"]
+    TAGS --> FOOTER["layout==='post' OR page.wiki OR notebook?\n→ partial: article/article_footer"]
     FOOTER --> READNEXT["layout==='post' OR page.wiki?\n→ partial: article/read_next"]
     READNEXT --> RELATED["layout==='post'?\n→ partial: article/related_posts"]
     RELATED --> COMMENTS["partial: comments/layout"]
@@ -185,6 +186,7 @@ flowchart TD
 |---|---|---|---|---|
 | `nav_tabs_blog` | 有 `page.nav_tabs` 时 | 有 `page.nav_tabs` 时 | 有 `page.nav_tabs` 时 | 有 `page.nav_tabs` 时 |
 | `article_banner` | 有标题/内容时 | 有标题/内容时 | 有标题/内容时 | 有标题/内容时 |
+| `article_tags` | 有 `theme.article.tags` 时 | ✗ | ✗ | ✗ |
 | `article_footer` | ✓ | ✓ | ✓ | ✗ |
 | `read_next` | ✓ | ✓ | ✗ | ✗ |
 | `related_posts` | ✓ | ✗ | ✗ | ✗ |

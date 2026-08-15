@@ -109,6 +109,31 @@ hover-block($v, $h, $br = 4px)
   &:hover
     background: var(--block-border)
 
+// 标签胶囊（标签页 /blog/tags/ 与文章底部标签复用；间距由容器负边距抵消）
+tag-chip()
+  display: inline-flex
+  align-items: center
+  position: relative
+  color: var(--text-p2)
+  margin: .5rem
+  padding: .5em .75rem
+  border-radius: 999px
+  background: var(--block)
+  font-size: $fs-13
+  font-weight: 500
+  trans1 all
+  &:before
+    content: "#"
+    margin-left: -2px
+    margin-right: 2px
+    opacity: .4
+  &:hover
+    color: var(--text)
+    background: var(--block-border)
+    &:before
+      color: var(--theme)
+      opacity: 1
+
 floatable-trans()
   trans2 transform box-shadow
 floatable-float()

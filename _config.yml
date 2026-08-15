@@ -227,6 +227,8 @@ article:
   reading_time: false
   # 文章卡片是否显示标签（最多 5 个，#580）
   card_tags: false
+  # 文章末尾是否显示本文标签（位于 article-footer 之前）
+  tags: true
 
 search:
   service: local_search # local_search, algolia_search, todo...

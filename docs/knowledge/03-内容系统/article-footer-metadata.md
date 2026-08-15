@@ -22,7 +22,7 @@ tags:
 
 </details>
 
-本页介绍 `article_footer.ejs` 组件——文章、wiki 页面与自定义页面内容下方渲染的块。涵盖引用渲染、许可解析、贡献者显示与社交分享。文章之间的导航元素（上一篇/下一篇、相关文章）见[相关内容与导航](related-content.md)；侧边栏与页面级元数据见[侧边栏系统](../02-布局系统/sidebar-system.md)。
+本页介绍文章正文下方的标签行与 `article_footer.ejs` 页脚组件——文章、wiki 页面与自定义页面内容下方渲染的块。涵盖标签行、引用渲染、许可解析、贡献者显示与社交分享。文章之间的导航元素（上一篇/下一篇、相关文章）见[相关内容与导航](related-content.md)；侧边栏与页面级元数据见[侧边栏系统](../02-布局系统/sidebar-system.md)。
 
 ---
 
@@ -69,6 +69,18 @@ flowchart TD
 ```
 
 **参考源码**：[layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)
+
+---
+
+## 文章标签行
+
+`layout: post` 且 `theme.article.tags` 开启（默认 `true`）时，正文结束后、`article-footer` 之前渲染一行本文标签：
+
+- 模板 [layout/_partial/main/article/article_tags.ejs](../../../layout/_partial/main/article/article_tags.ejs)：`page.tags` 为空时输出空字符串；每个标签渲染为 `<a class="tag" href="${pretty_url(tag.path)}">` 链接，点击进入对应 Hexo 标签页。
+- 样式 [source/css/_components/partial/article-tags.styl](../../../source/css/_components/partial/article-tags.styl)：复用 [source/css/_defines/func.styl](../../../source/css/_defines/func.styl) 的 `tag-chip()` mixin——胶囊圆角（`border-radius: 999px`）、`var(--block)` 底色、`$fs-13`，`#` 前缀由 `:before` 提供（`opacity: .4`）；hover 时文字变 `var(--text)`、背景变 `var(--block-border)`、`#` 变主题色；容器 `justify-content: center` 居中，`margin: 2rem -0.5rem 0` 抵消标签外边距并保留与正文的 2rem 间距。与标签页（`/blog/tags/`）标签胶囊为同一套样式。
+- 仅博客文章生效；wiki / 笔记页维持各自的标签展示（笔记页见 `note_tags` partial）。
+
+**参考源码**：[layout/_partial/main/article/article_tags.ejs](../../../layout/_partial/main/article/article_tags.ejs)、[layout/page.ejs](../../../layout/page.ejs)、[source/css/_components/partial/article-tags.styl](../../../source/css/_components/partial/article-tags.styl)、[source/css/_defines/func.styl](../../../source/css/_defines/func.styl)
 
 ---
 
