@@ -97,6 +97,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 | 2026-08-12 | `source/css/_components/partial/paginator.styl` | 列表页底部分页条 `.paginator-wrap` 圆角由 `$border-card-l`（24px）改为 `$border-bar-container`（14px），与 navbar top / float-panel 容器圆角统一 |
 | 2026-08-12 | `source/css/_components/widgets/widgets.styl` | 右栏 `.l_right .widgets` 首个 `.widget-wrapper` 去掉 `margin-top`（不再叠加 32px / `var(--gap-margin)` 顶部间距） |
 | 2026-08-15 | `source/css/_defines/func.styl`（新增 `tag-chip()` mixin）、`_components/pages/archives.styl`、`_components/partial/article-tags.styl` | 标签胶囊样式统一并复用：新增 `tag-chip()` mixin（胶囊 `border-radius: 999px`、`var(--block)` 底色、`#` 前缀、hover 高亮、`padding: .5em .75rem`、`margin: .5rem` 即 1rem 间距）；标签页（`/blog/tags/`）与应用保持一致、靠左展示（`.post-list #tags` 无 `justify-content`，容器 `margin: 0 -.5rem` 抵消外边距）；文章底部标签（`.article-tags`）复用同一 mixin，容器 `justify-content: center` 居中展示、水平外边距同标签页（`margin: 2rem -.5rem 0`，保留与正文的 2rem 顶部间距） |
+| 2026-08-15 | `source/css/_components/widgets/toc.styl` | toc 底部操作按钮（回到顶部 / 参与讨论）分隔线选择器由 `.widget-wrapper.toc .widget-body+.widget-footer:before` 放宽为 `.widget-wrapper.toc .widget-footer:before`，footer 前不再要求紧跟 `.widget-body`，结构变化时分隔线仍正常渲染 |
 - 简写路径已自动补全：`_partial/*.ejs`（→ `layout/`）、`_defines|_common|_components|_plugins/*.styl`（→ `source/css/`）
 
 以上标记不构成内容错误；如需消除报告噪音，可后续调整 `tools/verify.py` 的忽略列表。
