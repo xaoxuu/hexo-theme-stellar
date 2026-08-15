@@ -22,6 +22,50 @@ test('iconData 返回 icons.yml 原始值（不包 <img>，缺失返回空串）
   assert.equal(hexo.utils.iconData('missing:key'), '');
 });
 
+test('icon() 对 SVG 默认输出异步占位符，inline=true 原样输出，URL 输出 <img>', () => {
+  const hexo = {
+    theme: { config: { icons: {
+      'test:svg': '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M0 0"/></svg>',
+      'test:url': 'https://example.com/a.svg',
+      'test:plain': 'plain-value'
+    } } }
+  };
+  registerUtils(hexo);
+  assert.equal(hexo.utils.icon('test:svg'), '<svg class="icon" data-icon="test:svg" aria-hidden="true"></svg>');
+  assert.equal(hexo.utils.icon('test:svg', '', true), '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M0 0"/></svg>');
+  assert.equal(hexo.utils.icon('test:url'), '<img  src="https://example.com/a.svg" />');
+  assert.equal(hexo.utils.icon('test:plain'), 'plain-value');
+  assert.equal(hexo.utils.icon('missing:key'), 'missing:key');
+});
+
+test('stellar_icon_sets 生成器：按命名空间输出 JSON、去注释、跳过 URL', () => {
+  const registrations = {};
+  const prevHexo = global.hexo;
+  global.hexo = {
+    extend: { generator: { register: (name, fn) => { registrations[name] = fn; } } }
+  };
+  try {
+    const genPath = require.resolve('../scripts/generators/stellar-icons');
+    delete require.cache[genPath];
+    require('../scripts/generators/stellar-icons');
+  } finally {
+    global.hexo = prevHexo;
+  }
+  assert.equal(typeof registrations.stellar_icons, 'function');
+  const files = registrations.stellar_icon_sets.call({
+    theme: { config: { icons: {
+      'a:one': '<svg><!-- c --><path/></svg>',
+      'a:two': '<svg><path/></svg>',
+      'b:url': 'https://example.com/a.svg',
+      'b:svg': '<svg></svg>'
+    } } }
+  });
+  assert.deepEqual(files, [
+    { path: 'js/icons/a.json', data: '{"a":{"a:one":"<svg><path/></svg>","a:two":"<svg><path/></svg>"}}' },
+    { path: 'js/icons/b.json', data: '{"b":{"b:svg":"<svg></svg>"}}' }
+  ]);
+});
+
 test('icons.yml 键完整：所有静态 icon()/iconData()/ctx.icons 引用均存在', () => {
   const ymlSrc = fs.readFileSync(path.join(ROOT, '_data/icons.yml'), 'utf8');
   const iconKeys = new Set();
@@ -41,7 +85,7 @@ test('icons.yml 键完整：所有静态 icon()/iconData()/ctx.icons 引用均�
   for (const d of dirs) walk(path.join(ROOT, d));
 
   const found = new Set();
-  const reCall = /(?:icon|iconData)\(\s*['"]([^'"]+)['"]\s*\)/g;
+  const reCall = /(?:icon|iconData)\(\s*['"]([^'"]+)['"]/g;
   const reBracket = /icons\[\s*['"]([^'"]+)['"]\s*\]/g;
   for (const f of refs) {
     const src = fs.readFileSync(f, 'utf8');

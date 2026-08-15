@@ -14,6 +14,10 @@
 #
 # 读取方式：
 #   模板 / 标签脚本：icon('key') 或 ctx.utils.icon('key')
+#     首屏关键图标（搜索、菜单、leftbar/rightbar、goback）由模板调用处传第三参
+#     inline=true 保持内联；其余图标输出 <svg class="icon" data-icon="key"> 占位符，
+#     由 /js/icons.js 异步拉取构建期生成的 js/icons/{ns}.json 后原位替换为完整 SVG
+#     （最终 DOM 与内联一致，CSS 钩子不受影响）。
 #   原始值：hexo.utils.iconData('key')
 #   客户端：window.ctx.icons['key']（白名单，见 defines.ejs）
 #

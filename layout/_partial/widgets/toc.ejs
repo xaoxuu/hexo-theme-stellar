@@ -15,7 +15,7 @@ function layoutTocHeader(title) {
   var el = ''
   el += `<div class="widget-header dis-select">`
   el += `<span class="name">${title || __("meta.toc")}</span>`
-  el += `<a class="cap-action" onclick="sidebar.toggleTOC()" >${icon('default:rightbar')}</a>`
+  el += `<a class="cap-action" onclick="sidebar.toggleTOC()" >${icon('default:rightbar', '', true)}</a>`
   el += `</div>`
   return el
 }

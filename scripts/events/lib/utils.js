@@ -71,7 +71,7 @@ module.exports = hexo => {
     }
   };
   hexo.utils = {
-    icon: (key, args) => {
+    icon: (key, args, inline) => {
       const { icons } = hexo.theme.config
       var result = ''
       if (icons[key]) {
@@ -81,6 +81,11 @@ module.exports = hexo => {
       }
       if (result.startsWith('/') || result.startsWith('https://') || result.startsWith('http://')) {
         return `<img ${args?.length > 0 ? args : ''} src="${result}" />`
+      } else if (inline === true) {
+        return result
+      } else if (result.startsWith('<svg')) {
+        // 非首屏图标：输出占位符，由 /js/icons.js 异步拉取 js/icons/{ns}.json 后原位替换
+        return `<svg class="icon" data-icon="${key}" aria-hidden="true"></svg>`
       } else {
         return result
       }

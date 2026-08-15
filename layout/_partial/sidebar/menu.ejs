@@ -15,7 +15,7 @@ function layoutDiv() {
     el += ` style="${style}"`
     el += ` title="${item.title}" href="${pretty_url(item.url)}">`
     if (item.icon?.length > 0) {
-      el += icon(item.icon, 'no-lazy')
+      el += icon(item.icon, 'no-lazy', true)
     }
     el += `<span>${__(item.title)}</span>`
     if (active) {

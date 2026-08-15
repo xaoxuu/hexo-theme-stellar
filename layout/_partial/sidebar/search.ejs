@@ -32,7 +32,7 @@ function layoutDiv() {
     }
   }
   el += `<a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();">`
-  el += icon('default:search')
+  el += icon('default:search', '', true)
   el += `</a>`
   el += `<input type="text" class="search-input" id="search-input"`
   if (filter.length > 0) {
