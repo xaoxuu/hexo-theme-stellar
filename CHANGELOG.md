@@ -1,5 +1,46 @@
 # Changelog
 
+## 1.41.0
+
+> 发布日期：2026-08-15
+
+### 新功能
+- 本地搜索：搜索结果按章节拆分展示，点击直达章节锚点，目标页自动高亮关键词（`?kw=` 定位）
+- 本地搜索：懒加载与缓存 TTL（`search.local_search.lazy_load` 默认开启、`cache_ttl` 默认 1 天）
+- navbar 未吸顶时采用卡片样式，吸顶后恢复玻璃效果
+- 文章末尾新增标签行（`article.tags`，默认开启）
+- 内容表格统一铺满滚动与圆角边框
+- 文章新增 AI 成分标签（front-matter `ai_label: manual | polished | generated | reviewed`，`article.ai_label` 配置文案与颜色，默认不渲染）
+
+### 修复
+- 移动端顶栏伸缩时 navbar 玻璃效果误消失
+- 导航激活指示改为纯 CSS 小圆点，修复异步图标替换引起的抖动/闪烁
+- 恢复标题锚点等页内链接平滑滚动
+- 评论表情面板图片不再误触发 fancybox 弹窗
+- 修正 toc 底部操作按钮分隔线选择器
+- 修复 artalk 邮件链接无法定位评论区
+- SEO 元数据修复：wiki 标题去重、`og:site_name`、JSON-LD 图片/描述回退、分页标题
+
+### 样式
+- 调整 navbar 与 float-panel 按钮尺寸与间距（40px、gap 4px、底部 inset ×1）
+
+### 性能
+- 按需加载与外置缓存优化，减小 html/css/js 体积
+- 图标按命名空间异步加载，首屏关键图标保持内联
+- 构建期脚本去重遍历与过滤器短路（generate 阶段优化）
+
+### 重构
+- 主题内置图标统一迁移到 `_data/icons.yml`
+- 图标键统一为语义化命名空间（`default:` / 标签名命名空间），消除 `solar:`、`ph:`、`bxs:` 前缀
+
+### 升级注意（配置变更与破坏性改动）
+- 新增 `article.tags`（默认 `true`）：文章末尾显示标签行，不需要时设为 `false`
+- 新增 `article.ai_label` 与 front-matter `ai_label` 字段：不设置时不渲染，历史文章零变化
+- 新增 `search.local_search.lazy_load`（默认 `true`）与 `cache_ttl`（默认 `86400`）
+- 破坏性变更：图标键为公开接口，`solar:*` 等旧前缀键已全部改名；站点若在 `source/_data/icons.yml` 覆盖或 `_config.stellar.yml` 引用旧键需同步改名（主工程已确认无此类覆盖）
+
+Full Changelog: [1.40.0...1.41.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.40.0...1.41.0)
+
 ## 1.40.0
 
 > 发布日期：2026-08-14
