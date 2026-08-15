@@ -428,24 +428,20 @@ const init = {
   navbarPin: () => {
     // 列表页 navbar top 背景条状态切换：未吸顶为卡片样式（var(--card) + 文章卡片同款阴影），
     // 吸顶后恢复玻璃效果。在吸顶边界切换 .pinned 类，视觉由 CSS 控制。
+    // 吸顶判定直接测 navbar 的实际视口位置，而非用 scrollY 推算：
+    // 移动端浏览器顶栏伸缩会改变 scrollY（展开顶栏时 scrollY 减小），
+    // 即使 navbar 仍吸顶也可能跌破阈值，导致玻璃效果误消失。
     const navbars = document.querySelectorAll('.navbar.top');
     if (navbars.length === 0) {
       return;
     }
-    // 求元素在文档中的自然顶部位置（sticky 不影响 offsetTop 布局位置）
-    function documentTop(el) {
-      let top = 0;
-      while (el) {
-        top += el.offsetTop;
-        el = el.offsetParent;
-      }
-      return top;
-    }
+    // 视口顶部允许的偏差（px），吸收亚像素/取整误差
+    const TOLERANCE = 2;
     let states = [];
     function update() {
-      const scrollY = window.scrollY;
       states.forEach((state) => {
-        state.bar.classList.toggle('pinned', scrollY >= state.pinStart);
+        const top = state.navbar.getBoundingClientRect().top;
+        state.bar.classList.toggle('pinned', top <= state.stickyTop + TOLERANCE);
       });
     }
     function measure() {
@@ -455,11 +451,12 @@ const init = {
         if (bar == null) {
           return;
         }
-        // getComputedStyle().top 自动兼容桌面 var(--n) 与移动端 8pt
+        // getComputedStyle().top 自动兼容桌面 var(--gap-margin) 与移动端 8pt
         const stickyTop = parseFloat(getComputedStyle(navbar).top) || 16;
         states.push({
+          navbar: navbar,
           bar: bar,
-          pinStart: documentTop(navbar) - stickyTop
+          stickyTop: stickyTop
         });
       });
       update();
@@ -475,6 +472,10 @@ const init = {
         ticking = false;
       });
     }, { passive: true });
+    // 顶栏伸缩不一定触发 scroll，兜底监听 visualViewport 尺寸变化
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', update);
+    }
     window.addEventListener('resize', measure);
     window.addEventListener('pageshow', measure);
     measure();

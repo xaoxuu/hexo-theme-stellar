@@ -72,6 +72,7 @@
 | 2026-08-15 | `_data/icons.yml`、`_config.yml`、`layout/_partial/head.ejs`、`test/icons.test.js` | {% quot %} 分区图标统一 `quot:` 前缀：`ph:seal-question-fill` → `quot:question`、`bxs:quote-left/right` → `quot:quote-left/right`（同步 quot 前缀配置与 `--icon-quote-*` CSS 桥接）；`ph:`/`bxs:` 前缀在 icons.yml 中消除 |
 | 2026-08-15 | `_data/icons.yml`、`_config.yml` | 仅出现在 `_config.yml` 注释示例中的图标改用 `example:` 命名空间：`default:chat/planet/notebook` → `example:chat/planet/notebook`（侧边栏菜单示例），同步配置注释与文档示例 |
 | 2 命令 / new-note | 生成 front-matter 带秒 | date 对齐 `YYYY-MM-DD HH:mm`（#594） |
+| 2026-08-15 | `source/js/main.js`（`init.navbarPin`）、`docs/knowledge/05-前端交互/client-side-overview.md` | navbarPin 用 `scrollY >= pinStart` 推算吸顶状态，移动端浏览器顶栏伸缩改变 `scrollY`，导致仍吸顶时 `.pinned` 误移除、玻璃效果消失 | 改为直接测 `navbar.getBoundingClientRect().top <= stickyTop + 2px` 判定吸顶，删除 `documentTop()`/`pinStart`，新增 `visualViewport.resize` 兜底（见 `docs/designs/2026-08-15-navbar-pin-urlbar/`） |
 
 ## 三、处理约定
 
