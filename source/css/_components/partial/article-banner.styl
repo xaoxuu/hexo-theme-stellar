@@ -16,8 +16,26 @@
 
 .article.banner .content
   .top
+    display: flex
+    flex-direction: column
+    justify-content: flex-start
     align-items: flex-start
     margin: 1rem calc(1rem - 4px)
+  .top-row
+    display: flex
+    justify-content: space-between
+    align-items: flex-start
+    width: 100%
+    .right
+      display: flex
+      align-items: center
+      flex-shrink: 0
+      white-space: nowrap
+      .reading
+        opacity: .8
+        padding: 4px
+  .meta-row
+    width: 100%
   .title
     font-size: $fsh1
     color: var(--text-banner)

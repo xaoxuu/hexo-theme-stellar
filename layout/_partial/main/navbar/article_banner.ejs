@@ -19,17 +19,18 @@ if (banner.subtitle == null) {
   banner.subtitle = page.subtitle
 }
 
-function layoutBreadcrumb() {
+// 上块：第一行（左侧面包屑 + 右侧阅读时长 / AI 标签）+ 第二行（日期信息，靠左）
+function layoutTop() {
   if (page.breadcrumb === false) {
-    return `<div class="top"></div>`
+    return ''
   }
   var el = ''
-  // 1.main
+  // 1.上块容器
   el += `<div class="top bread-nav footnote">`
-  // 2.left
-  el += `<div class="left">`
-  // 3.left.top: 面包屑导航
-  el += `<div class="flex-row" id="breadcrumb">`
+  // 2.第一行
+  el += `<div class="top-row">`
+  // 2.1 左：面包屑导航
+  el += `<div class="left" id="breadcrumb">`
     // 首页
     el += `<a class="cap breadcrumb" href="${pretty_url(config.root)}">${__("btn.home")}</a>`
     if (theme.wiki.tree[page.wiki]) {
@@ -41,30 +42,30 @@ function layoutBreadcrumb() {
     } else {
       el += partial('breadcrumb/page')
     }
-  // 字数和预计阅读时长，置于面包屑行右侧（#302）
-  var readingHtml = ''
+  el += `</div>`
+  // 2.2 右：字数和预计阅读时长 + AI 成分标签（仅在有内容时渲染）
+  var rightHtml = ''
+  // 字数和预计阅读时长，置于第一行右侧（#302）
   if (page.layout == 'post' && theme.article.reading_time) {
     var _wc = word_count(page)
     if (_wc > 0) {
-      readingHtml = `<span class="cap reading right">${__("meta.word_count", _wc)} · ${__("meta.reading_time", reading_time(page))}</span>`
+      rightHtml += `<span class="cap reading">${__("meta.word_count", _wc)} · ${__("meta.reading_time", reading_time(page))}</span>`
     }
   }
-  el += readingHtml
-  // AI 成分标签：置于面包屑行最右（阅读时长右侧）；
+  // AI 成分标签：置于第一行最右（阅读时长右侧）；
   // banner 含图片时不用配置色，继承默认文字色（--text-banner）
   const bannerHasImage = banner.url && banner.url.length > 0
-  if (readingHtml.length > 0) {
-    el += ai_label(page.ai_label, 'cap', bannerHasImage)
-  } else {
-    el += ai_label(page.ai_label, 'cap right', bannerHasImage)
+  rightHtml += ai_label(page.ai_label, 'cap', bannerHasImage)
+  if (rightHtml.length > 0) {
+    el += `<div class="right">${rightHtml}</div>`
   }
-  // end 3.left.top
+  // end 2.第一行
   el += `</div>`
-  // 3.left.bottom
+  // 3.第二行：日期信息，靠左
+  el += `<div class="meta-row">`
   el += partial('dateinfo')
-  // end 2.left
   el += `</div>`
-  // end 1.main
+  // end 1.上块
   el += `</div>`
   return el
 }
@@ -118,10 +119,10 @@ function layoutBottom() {
 
 function layoutDiv() {
   const bottom = layoutBottom()
-  if (page.breadcrumb === false && bottom.length == 0) {
+  const top = layoutTop()
+  if (top.length == 0 && bottom.length == 0) {
     return ``
   }
-  const top = layoutBreadcrumb()
   var bannerStyle = ``
   var contentStyle = ``
   var el = ``
