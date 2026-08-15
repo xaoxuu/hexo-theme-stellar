@@ -12,7 +12,7 @@ function layoutDiv() {
   }
   el += `</div>`
   if (columns == 1 && isActive) {
-    el += icon('default:bookmark.active')
+    el += '<span class="active-dot"></span>'
   }
   el += `</a>`
   return el
