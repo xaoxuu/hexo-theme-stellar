@@ -1,6 +1,6 @@
 # 核查与修正记录
 
-> 记录中文知识库对照 `themes/stellar/` 源码（版本 1.40.0，HEAD f063186）核查与修正的偏差记录。
+> 记录中文知识库对照 `themes/stellar/` 源码（版本 1.41.0，HEAD 4f71c61）核查与修正的偏差记录。
 > 规则：行号引用一律改为文件路径；无法在代码中找到对应实现的主张保留原文并标注「未核实」。
 
 ## 一、已移除功能（整页改写为当前实现）
@@ -28,6 +28,7 @@
 | 1.1/1 Overview 等 | 版本号 1.38.0 | 统一为 1.39.0 |
 | 1.1/1 Overview 等 | 版本号 1.33.1 | 统一为 1.38.0 |
 | 1.1 环境要求 | Node 14.17.3 ~ latest LTS | 实际要求 Node >= 22（README） |
+| 1.1 安装与启动 / 版本位置 | 版本号 1.40.0（release 1.41.0 后未同步） | 统一为 1.41.0（installation.md 六处 + 知识库全量.md 同步） |
 | 1.1 安装与启动 / 版本位置 | 版本号 1.39.1（release 1.40.0 后未同步） | 统一为 1.40.0（installation.md 六处 + 知识库全量.md 同步） |
 | 1 样式系统 / 表格排版 | 文档仅描述 `overflow: auto`，未体现 1.32.1（`830ccbd`）起桌面端 `display: table` 压缩换行、不再横向滚动 | 恢复 `display: block` + `overflow-x: auto` + `tr` 不换行，普通 Markdown 表格默认横向滚动；同步更新文档（见 `docs/designs/2026-08-14-restore-table-scroll/`） |
 | 1 样式系统 / 表格排版 | `display: block` 表格只滚动不铺满、compact 无滚动容器 | 新增 `after_post_render` 过滤器把普通表格包 `.md-table-scroll`（宽度足够铺满 + 超出滚动），compact 补滚动容器与 `min-width: max-content`，wrap 保持换行（见 `docs/designs/2026-08-14-table-fill-scroll/`） |
