@@ -1,6 +1,6 @@
 var searchCache = null;          // 当前可用的搜索数据（数组）
 var searchCacheEntry = null;     // 最近读取/写入的缓存条目 { ts, ttl, data }
-var searchCacheKey = 'search_cache_v2';
+var searchCacheKey = 'search_cache_v4';
 var searchFetchPromise = null;   // 单飞：同一时刻只允许一个请求
 
 var searchLazyLoad = true;
@@ -116,6 +116,60 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
+  // 关键词组合（含原始大小写）：按组合长度降序，用于匹配与跳转高亮
+  function buildKeywordPairs(value) {
+    const tokens = value.trim().split(" ");
+    const combos = getAllCombinations(tokens.map(function(t) { return t.toLowerCase(); }));
+    const originalCombos = getAllCombinations(tokens);
+    const pairs = combos.map(function(kw, i) {
+      return { kw: kw, original: originalCombos[i] };
+    });
+    return pairs.sort(function(a, b) {
+      return b.kw.split(" ").length - a.kw.split(" ").length;
+    });
+  }
+
+  // 构建单条搜索结果 DOM
+  function buildResultElement(dataTitle, sectionName, secText, secFirst, pairs, href) {
+    const li = document.createElement('li');
+
+    // 文章标题位于链接上方，不参与跳转
+    const titleSpan = document.createElement('span');
+    titleSpan.className = 'search-result-title';
+    titleSpan.textContent = dataTitle;
+    li.appendChild(titleSpan);
+
+    const a = document.createElement('a');
+    a.href = href;
+
+    if (sectionName) {
+      const sectionSpan = document.createElement('span');
+      sectionSpan.className = 'search-result-section';
+      sectionSpan.textContent = sectionName;
+      a.appendChild(sectionSpan);
+    }
+
+    if (secText && secFirst >= 0) {
+      var start = Math.max(0, secFirst - 20);
+      var end = Math.min(secText.length, secFirst + 80);
+      if (start === 0) end = 100;
+      var matchContent = secText.substring(start, end);
+
+      var regS = new RegExp(pairs.map(function(p) { return escapeRegExp(p.kw); }).join("|"), "gi");
+      matchContent = matchContent.replace(regS, function(keyword) {
+        return "<span class=\"search-keyword\">" + keyword + "</span>";
+      });
+
+      const para = document.createElement('p');
+      para.className = 'search-result-content';
+      para.innerHTML = matchContent + '...';
+      a.appendChild(para);
+    }
+
+    li.appendChild(a);
+    return li;
+  }
+
   function initSearch() {
     if (!$input) return;
     if ($input._searchInitialized === true) return; // 防止重复绑定
@@ -125,22 +179,22 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
     var $wrapper = document.getElementById(wrapperId);
 
     $input.addEventListener("input", function() {
-      var resultList = [];
-      var keywords = getAllCombinations(this.value.trim().toLowerCase().split(" "))
-        .sort(function(a,b) { return b.split(" ").length - a.split(" ").length; });
+      var rawValue = this.value.trim();
       $resultContent.innerHTML = "";
-      if (this.value.trim().length <= 0) {
+      if (rawValue.length <= 0) {
         $wrapper.setAttribute('searching', 'false');
         return;
       }
       $wrapper.setAttribute('searching', 'true');
+
+      var pairs = buildKeywordPairs(this.value);
+      var resultList = [];
 
       // 读取模块级 searchCache：后台刷新后即时生效
       (searchCache || []).forEach(function(data) {
         if (!data.content?.trim().length) return;
         if (filter && !data.path.includes(filter)) return;
 
-        var matches = 0;
         var dataTitle = data.title?.trim() || 'Untitled';
         var dataTitleLowerCase = dataTitle.toLowerCase();
         var dataContent = data.content;
@@ -149,55 +203,76 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
         dataUrl = dataUrl.replace(/\/?index\.html$/, '/'); // index.html → /
         dataUrl = dataUrl.replace(/\.html$/, '/'); // xxx.html → xxx/
 
-        var indexTitle = -1;
-        var indexContent = -1;
-        var firstOccur = -1;
+        // 章节划分：anchors 缺失/为空 → 整页一段（回退页面级行为）
+        var anchors = Array.isArray(data.anchors) ? data.anchors : [];
+        var sections = [];
+        if (anchors.length === 0) {
+          sections.push({ anchor: null, offset: 0, end: dataContent.length });
+        } else {
+          for (var s = 0; s <= anchors.length; s++) {
+            sections.push({
+              anchor: s === 0 ? null : anchors[s - 1],
+              offset: s === 0 ? 0 : anchors[s - 1].offset,
+              end: s === anchors.length ? dataContent.length : anchors[s].offset
+            });
+          }
+        }
 
-        keywords.forEach(function(keyword) {
-          indexTitle = dataTitleLowerCase.indexOf(keyword);
-          indexContent = dataContentLowerCase.indexOf(keyword);
-          if (indexTitle >= 0 || indexContent >= 0) {
-            matches += 1;
-            if (indexContent < 0) indexContent = 0;
-            if (firstOccur < 0) firstOccur = indexContent;
+        // 标题命中（仅当无任何章节命中时兜底为页面级结果）
+        var titleMatches = 0;
+        var titleBestKw = null;
+        pairs.forEach(function(p) {
+          if (dataTitleLowerCase.indexOf(p.kw) >= 0) {
+            titleMatches += 1;
+            if (titleBestKw == null) titleBestKw = p.original;
           }
         });
 
-        if (matches > 0) {
-          const li = document.createElement('li');
-          const a = document.createElement('a');
-          a.href = dataUrl;
+        var hasSectionResult = false;
 
-          const titleSpan = document.createElement('span');
-          titleSpan.className = 'search-result-title';
-          titleSpan.textContent = dataTitle;
-          a.appendChild(titleSpan);
+        // 逐章节匹配
+        sections.forEach(function(section) {
+          var secText = dataContent.slice(section.offset, section.end);
+          if (!secText.trim().length) return;
+          var secLower = dataContentLowerCase.slice(section.offset, section.end);
+          var secMatches = 0;
+          var secFirst = -1;
+          var secBestKw = null;
+          pairs.forEach(function(p) {
+            var pos = secLower.indexOf(p.kw);
+            if (pos < 0) return;
+            secMatches += 1;
+            if (secFirst < 0 || pos < secFirst) secFirst = pos;
+            if (secBestKw == null) secBestKw = p.original;
+          });
+          if (secMatches === 0) return;
 
-          if (firstOccur >= 0) {
-            var start = Math.max(0, firstOccur - 20);
-            var end = Math.min(dataContent.length, firstOccur + 80);
-            if (start === 0) end = 100;
-            var matchContent = dataContent.substring(start, end);
-
-            var regS = new RegExp(keywords.map(escapeRegExp).join("|"), "gi");
-            matchContent = matchContent.replace(regS, function(keyword) {
-              return "<span class=\"search-keyword\">" + keyword + "</span>";
-            });
-
-            const para = document.createElement('p');
-            para.className = 'search-result-content';
-            para.innerHTML = matchContent + '...';
-            a.appendChild(para);
+          var href = dataUrl;
+          if (section.anchor) {
+            href += '?kw=' + encodeURIComponent(secBestKw) + '#' + encodeURIComponent(section.anchor.id);
+          } else {
+            href += '?kw=' + encodeURIComponent(secBestKw);
           }
+          resultList.push({
+            rank: secMatches,
+            offset: section.offset,
+            element: buildResultElement(dataTitle, section.anchor ? section.anchor.text : null, secText, secFirst, pairs, href)
+          });
+          hasSectionResult = true;
+        });
 
-          li.appendChild(a);
-          resultList.push({ rank: matches, element: li });
+        if (titleMatches > 0 && !hasSectionResult) {
+          resultList.push({
+            rank: titleMatches,
+            offset: Number.MAX_SAFE_INTEGER,
+            element: buildResultElement(dataTitle, null, null, -1, pairs, dataUrl + '?kw=' + encodeURIComponent(titleBestKw))
+          });
         }
       });
 
       if (resultList.length) {
         resultList.sort(function(a, b) {
-          return b.rank - a.rank;
+          return b.rank - a.rank || a.offset - b.offset;
         });
 
         const ul = document.createElement('ul');

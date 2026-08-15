@@ -532,11 +532,13 @@
             if (timedOut) return;
             // 标记元素实例为已加载
             if (el) utils._loadedElements.add(el);
-            // 写入缓存（克隆响应，避免影响回调读取；延迟执行，避免阻塞渲染）
+            // 写入缓存：回调会立即消费 data 的 body，必须先同步 clone 再延迟读取
             if (cacheable && data.ok) {
+              const cacheClone = data.clone();
+              const contentType = data.headers.get('Content-Type') || 'application/json';
               utils._defer(() => {
-                data.clone().text().then(text => {
-                  utils.cache.set(url, text, data.headers.get('Content-Type') || 'application/json', ttl);
+                cacheClone.text().then(text => {
+                  utils.cache.set(url, text, contentType, ttl);
                 }).catch(() => {});
               });
             }
@@ -608,9 +610,12 @@
               clearTimeout(timer);
               if (timedOut) return;
               if (cacheable) {
+                // 调用方会消费 resp 的 body，必须先同步 clone 再延迟读取
+                const cacheClone = resp.clone();
+                const contentType = resp.headers.get('Content-Type') || 'application/json';
                 utils._defer(() => {
-                  resp.clone().text().then(text => {
-                    utils.cache.set(url, text, resp.headers.get('Content-Type') || 'application/json', ttl);
+                  cacheClone.text().then(text => {
+                    utils.cache.set(url, text, contentType, ttl);
                   }).catch(() => {});
                 });
               }

@@ -188,4 +188,18 @@
     dark: `<%- __('message.theme_switched.dark') %>`,
     auto: `<%- __('message.theme_switched.auto') %>`,
   };
+
+  // 搜索跳转高亮：URL 带 ?kw= 时按需加载，定位正文中的匹配词
+  (function () {
+    try {
+      if (!window.location.search) return;
+      if (!new URLSearchParams(window.location.search).has('kw')) return;
+      document.addEventListener('DOMContentLoaded', function () {
+        // utils 为全局词法绑定（顶层 const），不能通过 window.utils 访问
+        if (typeof utils === 'object' && typeof utils.js === 'function') {
+          utils.js('<%- url_for('/js/search/highlight.js') %>', { defer: true }).catch(function () {});
+        }
+      });
+    } catch (e) {}
+  })();
 </script>

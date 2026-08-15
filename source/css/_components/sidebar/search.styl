@@ -124,18 +124,38 @@
       border-radius: $border-card-s
       trans1 background
       &:hover
-        background: var(--bg-a100)
+        background: var(--bg-a50)
     li+li
       margin-top: 8px
     .search-result-title
+      display: block
+      overflow: hidden
+      color: var(--text-p1)
+      font-size: $fs-14
+      padding: 0.5rem 1rem
+      white-space: nowrap
+      text-overflow: ellipsis
+
+    .search-result-section
+      display: block
+      overflow: hidden
       color: var(--text-p1)
       font-weight: 700
       font-size: $fs-15
+      text-overflow: ellipsis
+      white-space: nowrap
+      border-bottom: 1px solid var(--block-border)
+      padding-bottom: .5rem
+      margin-bottom: .5rem
+      &:before
+        content: '>'
+        margin-right: .5em
+        color: var(--theme)
 
     .search-result-content
       overflow: hidden
       color: var(--text-p3)
-      margin: 4px 0 0
+      margin: 0
       max-height: 13em
       text-align: justify
       font-size: $fs-13
@@ -145,8 +165,8 @@
       -webkit-line-clamp: 2
 
     .search-keyword
-      color: $c-red
-      border-bottom: 1px dashed $c-red
+      color: $c-yellow
+      border-bottom: 1px dashed $c-yellow
       font-weight: bold
       filter grayscale(25%)
 

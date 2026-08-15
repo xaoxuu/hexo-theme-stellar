@@ -1,8 +1,8 @@
 /**
  * https://github.com/wzpan/hexo-generator-search
  */
-const { stripHTML } = require('hexo-util')
 const { normalize_path } = require('../lib/path_utils')
+const { buildSearchIndex } = require('../lib/search_index')
 
 hexo.extend.generator.register('search_json_generator', function (locals) {
   if (this.theme.config.search.service != 'local_search') { return {} }
@@ -33,19 +33,11 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
       temp_post.path = path === '/' ? '/' : path + '/'
     }
     if (cfg.content != false && post.content) {
-      var content = stripHTML(post.content.replace(/<span class="line">\d+<\/span>/g, '')).trim()
-      // 部分HTML标签
-      content = content.replace(/<iframe[\s|\S]+iframe>/g, '')
-      content = content.replace(/<hr>/g, '')
-      content = content.replace(/<br>/g, '')
-      // 去除HTML实体
-      content = content.replace(/&[^\s;]+;/g, "")
-      // 换行符换成空格
-      content = content.replace(/\\n/g, ' ')
-      content = content.replace(/\n/g, ' ')
-      // 多个连续空格换成单个空格
-      content = content.replace(/[\s]{2,}/g, ' ')
-      temp_post.content = content.trim()
+      const { content, anchors } = buildSearchIndex(post.content)
+      temp_post.content = content
+      if (anchors.length > 0) {
+        temp_post.anchors = anchors
+      }
     }
     if (post.tags && post.tags.length > 0) {
       var tags = []

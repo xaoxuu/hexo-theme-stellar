@@ -123,7 +123,7 @@ search:
 
 ### 客户端加载与缓存
 
-客户端搜索数据带有效期缓存（`localStorage` 键 `search_cache_v2`，结构 `{ ts, ttl, data }`）：
+客户端搜索数据带有效期缓存（`localStorage` 键 `search_cache_v4`，结构 `{ ts, ttl, data }`）：
 
 - `lazy_load: true`（默认）：页面加载时不请求 `/search.json`、不初始化搜索。首次聚焦搜索框时：缓存未过期 → 立即出结果且不发请求；缓存过期 → 先用旧数据出结果并后台静默刷新；无缓存 → 显示加载态（搜索图标绿色）并拉取，完成后初始化。
 - `cache_ttl` 控制缓存有效期（秒）：未过期不发起网络请求；过期后后台刷新；`0` 表示不缓存、每次聚焦都请求。
@@ -203,11 +203,16 @@ flowchart LR
   {
     "title": "Page Title",
     "content": "Full page content text...",
-    "url": "/path/to/page/"
+    "url": "/path/to/page/",
+    "anchors": [
+      { "id": "section-id", "text": "Section Title", "offset": 18 }
+    ]
   },
   ...
 ]
 ```
+
+`anchors` 为可选字段：有标题的页面会输出章节锚点（`id` 为标题锚点、`offset` 为标题文本在 `content` 中的起始位置），无标题页面省略。客户端按锚点把结果拆分为章节：每个命中章节生成一条结果（显示页面标题 + 章节名），点击链接携带 `?kw=<关键词>` 与 `#<锚点>` 直接跳转到对应章节；目标页加载后会用黄色 mark 高亮关键词。
 
 `content: false` 时只索引标题与 URL，显著减小文件但搜索仅限标题匹配。
 
