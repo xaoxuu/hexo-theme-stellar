@@ -21,3 +21,9 @@
 - 上块显式两行结构落地，右对齐不再依赖 hack；`breadcrumb: false` 场景不再输出空 `.top`。
 - 下块（标题对齐规则、banner_info 样式）零改动，行为与视觉保持一致。
 - 保留 `.banner` 共享基类，页面级类名未变。
+
+## 修复记录（2026-08-16 复审）
+
+- 发现回归：移除空 `.top` 后，作者归档页 `.bottom` 因 `space-between` 对唯一子元素不生效而顶到横幅顶部。
+- 修复：`.article.banner .content .bottom` 增加 `margin-top: auto`，`.bottom` 恒贴底；有 `.top` 页面位置与修复前一致。
+- 复测：author `.bottom` 底边与 `.content` 底边对齐（y=115/216）；story/tech/about/wiki `.bottom` 坐标与修复前一致。
