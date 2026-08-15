@@ -353,7 +353,7 @@ const init = {
           window.history.pushState(null, "", href);
         }
       }
-      sidebar.dismiss();
+      window.sidebar.dismiss();
     });
   },
   wikiStart: () => {
