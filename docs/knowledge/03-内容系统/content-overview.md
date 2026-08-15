@@ -324,7 +324,7 @@ graph TB
 - **索引页**：生成于 `{site_tree.index_blog.base_dir}/`（默认 `/blog/`）
 - **侧边栏配置**：左 `related, recent` / 右 `ghrepo, toc`
 - **自动特性**：
-  - 封面图解析（`auto_banner: true` 时含 Unsplash 自动生成）
+  - 封面图解析（显式 `cover` 完整 URL 时渲染）
   - 摘要生成（未指定时取前 128 字符）
   - 许可页脚（默认 CC BY-NC-SA 4.0）
   - 相关文章计算（需 `hexo-related-popular-posts` 插件）

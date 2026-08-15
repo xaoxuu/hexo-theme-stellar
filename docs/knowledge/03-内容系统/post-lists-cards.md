@@ -171,9 +171,8 @@ graph TD
     OpenArticle["<article class='md-text'>"]
     
     CoverSection["Cover Image Section"]
-    CheckCover{"obj.image or<br/>theme.article.auto_cover?"}
-    GenerateCover["Generate cover URL"]
-    RenderCover["<div class='post-cover'><img src='{url}'/></div>"]
+    CheckCover{"obj.image<br/>includes '/'?"}
+    RenderCover["<div class='post-cover'><img src='{obj.image}'/></div>"]
     
     TitleSection["Title Section"]
     RenderTitle["<h2 class='post-title'>{title or date}</h2>"]
@@ -194,9 +193,8 @@ graph TD
     Start --> OpenArticle
     OpenArticle --> CoverSection
     CoverSection --> CheckCover
-    CheckCover -->|"yes"| GenerateCover
+    CheckCover -->|"yes"| RenderCover
     CheckCover -->|"no"| TitleSection
-    GenerateCover --> RenderCover
     RenderCover --> TitleSection
     
     TitleSection --> RenderTitle
@@ -219,7 +217,7 @@ graph TD
 
 **封面图**
 
-- 仅 `obj.image` 存在或 `theme.article.auto_cover` 启用时渲染
+- 仅 `obj.image` 为完整 URL（包含 `/`）时渲染
 - 包装在 `<div class="post-cover">` 中
 
 **标题**
@@ -321,58 +319,23 @@ graph TB
 
 ---
 
-## 封面图生成策略
+## 封面图渲染策略
 
-封面图 URL 生成采用带多级兜底的水瀑策略。
+封面仅在显式指定完整 URL（`post.cover` 包含 `/`）时渲染；`source.unsplash.com` 自动封面接口已失效，不再提供关键词、标签或随机图兜底。
 
 ```mermaid
 flowchart TD
     Start["Cover URL Generation"]
-    CheckImage{"obj.image<br/>defined?"}
     CheckSlash{"obj.image<br/>includes '/'?"}
     DirectURL["Use obj.image as-is<br/>(full URL)"]
-    UnsplashTerm["Construct Unsplash URL:<br/>source.unsplash.com/1280x640/?{obj.image}"]
-    
-    CheckAuto{"theme.article<br/>.auto_cover<br/>enabled?"}
-    CheckTags{"post.tags<br/>exists?"}
-    BuildParams["Build comma-separated<br/>tag names"]
-    TagsURL["source.unsplash.com/1280x640/?{tags}"]
-    RandomURL["source.unsplash.com/random/1280x640"]
-    
-    NoCover["cover_url = undefined"]
-    RenderCover["<div class='post-cover'><img src='{cover_url}'/></div>"]
+    RenderCover["<div class='post-cover'><img src='{obj.image}'/></div>"]
     SkipCover["Skip cover rendering"]
-    
-    Start --> CheckImage
-    CheckImage -->|"yes"| CheckSlash
-    CheckImage -->|"no"| CheckAuto
-    
+
+    Start --> CheckSlash
     CheckSlash -->|"yes"| DirectURL
-    CheckSlash -->|"no"| UnsplashTerm
+    CheckSlash -->|"no"| SkipCover
     DirectURL --> RenderCover
-    UnsplashTerm --> RenderCover
-    
-    CheckAuto -->|"yes"| CheckTags
-    CheckAuto -->|"no"| NoCover
-    CheckTags -->|"yes"| BuildParams
-    CheckTags -->|"no"| RandomURL
-    BuildParams --> TagsURL
-    TagsURL --> RenderCover
-    RandomURL --> RenderCover
-    
-    NoCover --> SkipCover
 ```
-
-### Unsplash 集成细节
-
-| 场景 | Front Matter | 生成 URL |
-|------|--------------|----------|
-| **显式 URL** | `cover: https://example.com/image.jpg` | `https://example.com/image.jpg` |
-| **Unsplash 搜索词** | `cover: landscape,mountain` | `https://source.unsplash.com/1280x640/?landscape,mountain` |
-| **从标签自动生成** | `tags: [nature, photography]` | `https://source.unsplash.com/1280x640/?photography,nature` |
-| **随机图片** | 无封面、无标签 | `https://source.unsplash.com/random/1280x640` |
-
-**重要**：拼接前标签会反转，保证最后一个标签作为主要搜索词。
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
 

@@ -13,35 +13,11 @@ function div_default() {
   var el = '';
   el += '<article class="md-text">';
 
-  // 封面
-  if (obj.image || theme.article.auto_cover) {
-    var cover_url;
-    if (obj.image != undefined) {
-      if (obj.image.includes('/')) {
-        cover_url = obj.image;
-      } else {
-        cover_url = 'https://source.unsplash.com/1280x640/?' + obj.image;
-      }
-    } else {
-      // 自动以 tags 作为关键词搜索封面
-      if (post.tags) {
-        var params = '';
-        post.tags.reverse().forEach((tag, i) => {
-          if (i > 0) {
-            params += ',';
-          }
-          params += tag.name;
-        });
-        cover_url = 'https://source.unsplash.com/1280x640/?' + params;
-      } else {
-        cover_url = 'https://source.unsplash.com/random/1280x640';
-      }
-    }
-    if (cover_url) {
-      el += '<div class="post-cover">';
-      el += '<img src="' + escape_html(cover_url) + '"/>';
-      el += '</div>';
-    }
+  // 封面：仅当显式 cover 为完整 URL 时渲染（Unsplash 自动封面接口已失效，不再生成）
+  if (obj.image && obj.image.includes('/')) {
+    el += '<div class="post-cover">';
+    el += '<img src="' + escape_html(obj.image) + '"/>';
+    el += '</div>';
   }
 
   // 标题
