@@ -179,7 +179,7 @@ graph TB
     end
     
     subgraph "Asset Tokens"
-        SVG["Inline SVG Icons<br/>$iQuoteLeft, $iQuoteRight<br/>$iH3Left, $iH3Right, $iLoadingIcon"]
+        SVG["CSS Icon Vars<br/>--icon-h3-left/right<br/>--icon-quote-left/right"]
     end
 ```
 

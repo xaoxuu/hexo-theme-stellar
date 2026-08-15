@@ -84,6 +84,10 @@ module.exports = hexo => {
       } else {
         return result
       }
+    },
+    iconData: (key) => {
+      const { icons } = hexo.theme.config
+      return icons && icons[key] ? icons[key] : ''
     }
   };
 };

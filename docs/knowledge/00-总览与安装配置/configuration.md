@@ -570,8 +570,8 @@ flowchart TD
 | `avatar` | 用户头像 | 默认头像 |
 | `cover` | 文章封面 | 缺失封面的占位 |
 | `banner` | 文章横幅 | 默认头图 |
-| `loading` | 加载指示 | 加载动画 SVG |
-| `image_onerror` | 图片加载失败兜底 | 图片加载失败时显示的图标 |
+| `loading` | 加载指示 | 加载动画 SVG（兼容回退，新值位于 `_data/icons.yml` 的 `default:loading-placeholder`） |
+| `image_onerror` | 图片加载失败兜底 | 图片加载失败时显示的图标（兼容回退，新值位于 `_data/icons.yml` 的 `default:image-onerror`） |
 
 这些默认值避免出现破图，保证资源缺失时的一致性体验。
 

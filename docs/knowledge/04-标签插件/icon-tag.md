@@ -353,6 +353,32 @@ if (args.color == null) {
 
 **参考源码**：[scripts/tags/lib/icon.js](../../../scripts/tags/lib/icon.js)
 
+## iconData() 辅助函数
+
+`hexo.utils.iconData(key)` 返回 icons.yml 的原始值（内联 SVG 或 URL，不包 `<img>`），供需要原始字符串的场景使用：
+
+| 场景 | 用法 |
+|------|------|
+| 懒加载占位背景图 / onerror | `ctx.theme.config.default.loading \|\| ctx.utils.iconData('default:loading-placeholder')` |
+| CSS 变量生成（head.ejs） | 从 `theme.icons[key]` 经 `encodeURIComponent` 生成 data URI |
+
+**参考源码**：[scripts/events/lib/utils.js](../../../scripts/events/lib/utils.js)
+
+## 客户端图标注册表
+
+`layout/_partial/scripts/defines.ejs` 把客户端用到的图标白名单注入 `ctx.icons`（`default:comment`、`default:loading-spinner`、`default:warning`、`solar:repeat-bold`、`solar:like-bold`），浏览器端 JS（weibo/timeline 服务、utils 加载/警告图标）按 `ctx.icons['key']` 读取渲染。注入时去除 SVG 注释并转义 `<`，防止 `<!--` / `</script>` 解析问题。
+
+**参考源码**：[layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs)
+
+## 内置图标键
+
+`_data/icons.yml` 除历史命名空间（solar/default/github/share/ph/bxs/vote/rating）外，新增：
+
+- `default:` copy、download、hashtag、comment、loading-spinner、warning、loading-placeholder（URL）、image-onerror（data-URI）
+- `github:logo-alt`：ghuser 头部 GitHub logo
+- `chat:` 浏览器来源（google/safari/ie/uc/qq/baidu/firefox/360/qq-mini）、文件类型（file-word/file-ppt/file-txt/file-pdf/file-archive/file-excel/file-code/file-photo/file-video/file-voice/file-config/file-database/file-link/file-exe/file-3d/file-unknown）、聊天控件（earphone/bluetooth/signal/wifi/battery/back/nav-more-wechat/nav-more-qq/arrow-up/pause/play/download/voice-qq/voice-wechat/photos/camera/red-envelope/smile-qq/smile-wechat/more-qq/more-wechat）
+- `solar:repeat-bold`、`solar:like-bold`：微博转发/点赞（替代 emoji）
+
 ## 添加自定义图标
 
 向主题添加自定义图标的步骤：

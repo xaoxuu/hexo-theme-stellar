@@ -156,7 +156,14 @@
     root : `<%- config.root %>`,
     tag_plugins: {
       chat: Object.assign(<%- JSON.stringify(theme.tag_plugins.chat) %>),
-    }
+    },
+    icons: <%- (() => {
+      const keys = ['default:comment', 'default:loading-spinner', 'default:warning', 'solar:repeat-bold', 'solar:like-bold'];
+      const out = {};
+      // 去除 SVG 注释（避免 <!-- / </script> 解析风险），再转义 <
+      for (const k of keys) out[k] = ((theme.icons && theme.icons[k]) || '').replace(/<!--[\s\S]*?-->/g, '');
+      return JSON.stringify(out).replace(/</g, '\\u003c');
+    })() %>
   };
 
   // required plugins (only load if needs)
@@ -171,7 +178,7 @@
   const def = {
     avatar: `<%- theme.default.avatar %>`,
     cover: `<%- theme.default.cover %>`,
-    loading: `<%- theme.default.loading %>`,
+    loading: `<%- theme.default.loading || (theme.icons && theme.icons['default:loading-placeholder']) %>`,
     data_cache: <%- JSON.stringify(theme.data_cache || {}) %>,
   };
   const deps = {

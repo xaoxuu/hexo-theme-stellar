@@ -47,10 +47,10 @@ module.exports = ctx => function(args) {
     if (style.length > 0 && !args.ratio) {
       img += ' style="' + style + '"'
     }
-    img += `onerror="this.src=&quot;${ctx.theme.config.default.image_onerror}&quot;"`
+    img += `onerror="this.src=&quot;${ctx.theme.config.default.image_onerror || ctx.utils.iconData('default:image-onerror')}&quot;"`
     img += '/>'
     // loading
-    img += `<div class="lazy-icon" style="background-image:url(${ctx.theme.config.default.loading});"></div>`
+    img += `<div class="lazy-icon" style="background-image:url(${ctx.theme.config.default.loading || ctx.utils.iconData('default:loading-placeholder')});"></div>`
     if (fancyboxHref) {
       a += ` href="${fancyboxHref}">${img}</a>`
       return a
@@ -93,7 +93,7 @@ module.exports = ctx => function(args) {
     if (args.alt) {
       download = ' download="' + args.alt + '"'
     }
-    el += '<a class="image-download blur" style="opacity:0" target="_blank"' + download + ' href="' + href + '"><svg class="icon" style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3734"><path d="M561.00682908 685.55838913a111.03077546 111.03077546 0 0 1-106.8895062 0L256.23182837 487.72885783a55.96309219 55.96309219 0 0 1 79.13181253-79.18777574L450.70357448 523.88101491V181.55477937a55.96309219 55.96309219 0 0 1 111.92618438 0v344.06109173l117.07478902-117.07478901a55.96309219 55.96309219 0 0 1 79.13181252 79.18777574zM282.81429711 797.1487951h447.70473912a55.96309219 55.96309219 0 0 1 0 111.92618438H282.81429711a55.96309219 55.96309219 0 0 1 0-111.92618438z" p-id="3735"></path></svg></a>'
+    el += '<a class="image-download blur" style="opacity:0" target="_blank"' + download + ' href="' + href + '">' + ctx.utils.icon('default:download') + '</a>'
   }
   el += '</div>'
 

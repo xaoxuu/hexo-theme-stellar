@@ -254,19 +254,18 @@ graph LR
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
 
-### 图标 Data URI
+### 图标装饰变量
 
-主题把 SVG 图标以内嵌 data URI 形式打包，提升性能：
+story 文章页的 h3 双箭头与引用引号装饰图标由 `_data/icons.yml` 驱动，构建时经 `layout/_partial/head.ejs` 编码为 CSS 变量：
 
-| 变量 | 用途 |
-|------|------|
-| `$iQuoteLeft` | 左引号图标 |
-| `$iQuoteRight` | 右引号图标 |
-| `$iH3Left` | H3 前缀图标（左 V 形） |
-| `$iH3Right` | H3 前缀图标（右 V 形） |
-| `$iLoadingIcon` | 加载动画图标 |
+| 变量 | 数据源（icons.yml 键） | 用途 |
+|------|----------------------|------|
+| `--icon-h3-left` | `solar:double-alt-arrow-left-bold-duotone` | H3 前缀图标（左 V 形） |
+| `--icon-h3-right` | `solar:double-alt-arrow-right-bold-duotone` | H3 前缀图标（右 V 形） |
+| `--icon-quote-left` | `bxs:quote-left` | 左引号图标 |
+| `--icon-quote-right` | `bxs:quote-right` | 右引号图标 |
 
-这些 data URI 是完整且 URL 编码的 SVG 字符串，可直接用于 CSS `url()`，无需外部文件依赖。
+**参考源码**：[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)、[_data/icons.yml](../../../_data/icons.yml)
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
 

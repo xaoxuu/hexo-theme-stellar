@@ -55,7 +55,7 @@ module.exports = ctx => function(args, content) {
     if (matches?.length > 2) {
       let alt = matches[1]
       let src = matches[2]
-      el += `<div class="${layoutType}-cell lazy-box">${img(src, alt, ctx.theme.config.default.loading)}</div>`
+      el += `<div class="${layoutType}-cell lazy-box">${img(src, alt, ctx.theme.config.default.loading || ctx.utils.iconData('default:loading-placeholder'))}</div>`
     }
   }
   el += `</div>`

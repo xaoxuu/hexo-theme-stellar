@@ -51,9 +51,9 @@
       vertical-align: middle
     &:before
       margin-left: -1em
-      svg-mask-icon($iH3Left)
+      svg-mask-icon(var(--icon-h3-left))
     &:after
-      svg-mask-icon($iH3Right)
+      svg-mask-icon(var(--icon-h3-right))
 
   h4:not([class])
     position: relative
@@ -115,10 +115,10 @@
     trans1 all
   &:before
     left: -0.3em
-    svg-mask-icon($iQuoteLeft)
+    svg-mask-icon(var(--icon-quote-left))
   &:after
     right: -0.3em
-    svg-mask-icon($iQuoteRight)
+    svg-mask-icon(var(--icon-quote-right))
   p:not([class])
     color: var(--text-p2)
     font-size: $fs-body

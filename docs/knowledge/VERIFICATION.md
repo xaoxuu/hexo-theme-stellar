@@ -38,6 +38,7 @@
 | 1.2/8.1 评论 | `comments.lazyload` 配置键 | 不存在；评论懒加载始终经 `util.viewportLazyload` 启用 |
 | 3.4/6.3 canonical | `canonical.encoded`、`canonical.closeEnable`、`canonical.closeText` 配置键 | `encoded` 由 `layout/_partial/scripts/defines.ejs` 计算；无 closeEnable/closeText 逻辑（旧版功能） |
 | 4.5 错误页 | `site_tree.error_page.leftbar: recent, timeline` | 实际为 `recent`（rightbar 空） |
+| 4-图标系统 | 内置图标分散在模板/脚本/CSS/客户端 JS/配置中硬编码 | 统一迁移到 `_data/icons.yml`：新增 `hexo.utils.iconData()`、`ctx.icons` 客户端注册表、`--icon-*` CSS 变量桥接；`default.loading`/`image_onerror` 保留兼容回退（见 `docs/designs/2026-08-15-unify-icons-to-icons-yml/`） |
 | 5.3/5.5/6.4 copy | `document.execCommand("Copy")` | 实际为 `navigator.clipboard.writeText()` |
 | 6.1 initPage | 序列含「评论系统重初始化」 | 当前序列：toc、sidebar、wikiStart、leftbarScroll、relativeDate、registerTabsTag |
 | 8.2 搜索 | `search.no_results` 等被误报为配置键 | 实为语言文件键（`languages/zh-CN.yml`），非 `_config.yml` 键 |
