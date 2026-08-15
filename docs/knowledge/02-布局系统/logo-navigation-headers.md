@@ -442,7 +442,7 @@ site_tree:
 - 列表页保持页头可见（主内容区为 mobile-only 模式）
 - 保证导航标签始终可访问
 
-**导航标签外观：** navbar top 的标签通过 `bar-item()` 定义基础 UI（`padding: .25rem .75rem`、`line-height: 2`、`font-size: $fs-14`、圆角 `$border-bar`、`corner-shape: $corner-shape`），圆角直接使用 `$border-bar`（当前 12px），父容器 `.navbar-blur` / `.navbar-container` 圆角为 `$border-bar-container = calc($border-bar + $bar-item-gap)`（当前 14px），内外保持同心，不再固定为 32px 胶囊；标签间与距边间距由 `.navbar nav` 的 `gap` / `padding` 统一为 `$bar-item-gap`（当前 2px）；bar 容器（`bar-glass()`）与内部元素均显式应用连续曲率圆角。标签激活样式由 `bar-item-active()` 提供（`var(--bg-a60)` 背景 + 多层阴影 + `saturate(300%)`），侧边栏打开时 `.float-panel` 中对应的按钮（`leftbar-toggle` / `rightbar-toggle`）复用同一套 `bar-item()` + `bar-item-active()`。
+**导航标签外观：** navbar top 的标签通过 `bar-item()` 定义基础 UI（`padding: .25rem .75rem`、`line-height: 2`、`font-size: $fs-14`、圆角 `$border-bar`、`corner-shape: $corner-shape`），圆角直接使用 `$border-bar`（当前 12px），父容器 `.navbar-blur` / `.navbar-container` 圆角为 `$border-bar-container = calc($border-bar + $bar-item-gap)`（当前 16px），内外保持同心，不再固定为 32px 胶囊；标签间与距边间距由 `.navbar nav` 的 `gap` / `padding` 统一为 `$bar-item-gap`（当前 4px）；bar 容器（`bar-glass()`）与内部元素均显式应用连续曲率圆角。标签激活样式由 `bar-item-active()` 提供（`var(--bg-a60)` 背景 + 多层阴影 + `saturate(300%)`），侧边栏打开时 `.float-panel` 中对应的按钮（`leftbar-toggle` / `rightbar-toggle`）复用同一套 `bar-item()` + `bar-item-active()`。
 
 **背景条状态切换：** 列表页 navbar top 的背景条（`.navbar-blur`）未吸顶时为卡片样式（`var(--card)` 底色 + `$boxshadow-card` 阴影，与文章卡片一致），吸顶后恢复玻璃效果（`bar-glass()` 模糊/高光）。由 `init.navbarPin()` 在吸顶边界切换 `.pinned` 类驱动；无 JS 时保持未吸顶的卡片样式。
 

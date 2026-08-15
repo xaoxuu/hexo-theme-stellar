@@ -169,7 +169,7 @@ graph TB
 graph TB
     FloatPanel[".float-panel<br/>Sticky floating panel"]
     
-    FloatPanel --> Position["position: sticky<br/>bottom: calc(var(--inset) * 2)"]
+    FloatPanel --> Position["position: sticky<br/>bottom: calc(var(--inset) * 1)"]
     FloatPanel --> Responsive["Responsive margin"]
     FloatPanel --> Visual["Visual effects"]
     
@@ -198,7 +198,7 @@ graph TB
      grid-column-end: span 3
      --inset: 2rem
      right: 0
-     bottom: calc(var(--inset) * 2)
+     bottom: calc(var(--inset) * 1)
    ```
    面板在滚动时保持视口角落位置，同时适配网格布局变化。
 
@@ -217,8 +217,8 @@ graph TB
 .float-panel button
   bar-item() // 与 navbar item 共用基础 UI（圆角 $border-bar、连续曲率）
   box-sizing: border-box
-  width: 36px
-  height: 36px
+  width: 40px
+  height: 40px
   padding: 4px
   display: flex
   justify-content: center
@@ -334,7 +334,7 @@ graph LR
 ### 移动优先原则
 
 1. **渐进增强**：基础样式面向移动端，媒体查询为桌面增强
-2. **触控友好**：`.float-panel button` 为 36×36（与 navbar item 同高、1:1），按钮圆角直接用 `$border-bar`（12px），容器圆角 `$border-bar-container`（14px）与其同心；条内按钮与按钮之间、按钮距条边均为 `$bar-item-gap`（2px，容器 `gap`/`padding` 统一引用），navbar 导航项与 float-panel 按钮共用 `bar-item()`（连续曲率），一处修改两处生效
+2. **触控友好**：`.float-panel button` 为 40×40（1:1，触控面积更大），按钮圆角直接用 `$border-bar`（12px），容器圆角 `$border-bar-container`（16px）与其同心；条内按钮与按钮之间、按钮距条边均为 `$bar-item-gap`（4px，容器 `gap`/`padding` 统一引用），navbar 导航项与 float-panel 按钮共用 `bar-item()`（连续曲率），一处修改两处生效
 3. **内容优先**：主内容始终可访问，移动端侧边栏为可选遮罩
 4. **性能**：移动端工具（`.mobile-only`）用 `display: none` 避免渲染开销
 
