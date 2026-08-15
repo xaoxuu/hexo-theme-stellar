@@ -134,45 +134,22 @@ graph TB
 
 ## CSS 插件加载
 
-### 条件导入模式
+### 核心样式 + 按需样式两级架构
 
-CSS 加载系统用 Stylus 的 `if` 指令配合 `hexo-config()` 函数条件导入插件样式表。这在构建期完成，禁用插件对 CSS 包贡献 0 字节。
+插件/评论样式不再全部编入 `main.css`，改为两级：
 
-**index.styl 中的导入逻辑：**
+1. **核心 `main.css`**：常驻的防闪烁与基础插件样式（lazyload 的 `.lazy` 显隐、scrollreveal 的 `.slide-up` 显隐、aplayer、copycode），经 `_plugins/index.styl` 用 Stylus `if` + `hexo-config()` 条件导入。
+2. **按需样式文件**：swiper/fancybox/mermaid 与各评论系统样式移入 `source/css/plugins/`、`source/css/comments/`，Hexo 独立编译为 `css/plugins/*.css`、`css/comments/*.css`；前端在对应插件/评论初始化（DOM 检测命中）时用 `utils.css()` 注入，URL 带版本参数。
 
-```stylus
-// 始终加载的核心插件
-@import 'lazyload'
-@import 'aplayer'
-
-if hexo-config('plugins.swiper.enable')
-  @import 'swiper'
-if hexo-config('plugins.scrollreveal.enable')
-  @import 'scrollreveal'
-if hexo-config('plugins.fancybox.enable')
-  @import 'fancybox'
-if hexo-config('plugins.mermaid.style_optimization')
-  @import 'mermaid'
-if hexo-config('plugins.copycode.enable')
-  @import 'copycode'
-if hexo-config('plugins.tianli_gpt.enable')
-  @import 'tianli_gpt'
-if hexo-config('plugins.katex.enable')
-  @import 'katex'
+```ejs
+// layout/_plugins/swiper.ejs 内，检测到 #swiper-api 后
+utils.css(`<%- url_for('/css/plugins/swiper.css') %>?v=<%- stellar_info('version') %>`);
+utils.css(`<%- conf.css %>`);
 ```
 
-### 评论系统条件导入
+评论样式同理：各评论 `script` partial 在与评论库相同的加载函数内先加载本地样式，再加载 CDN 样式/脚本。`custom_css` 配置保留（兼容性），但样式加载统一走对应评论服务的按需路径，不再全部打入 `main.css`。
 
-评论系统样式遵循同样模式，检查主 `service` 或 `custom_css` 数组中的存在性：
-
-```stylus
-if hexo-config('comments.service') == 'beaudar' or index(hexo-config('comments.custom_css'), 'beaudar') >= 0
-  @import 'comments/beaudar'
-```
-
-**注意**：`custom_css` 数组允许即使不是主服务也加载评论样式，支持不同页面多评论系统。
-
-**参考源码**：[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)
+**参考源码**：[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)、[source/css/plugins/](../../../source/css/plugins/)、[source/css/comments/](../../../source/css/comments/)
 
 ---
 
@@ -569,13 +546,14 @@ plugins:
 
 | 策略 | 插件 | 影响 |
 |------|------|------|
-| 始终加载 | copycode、lazyload | 最小（< 5KB） |
-| 条件 CSS | 全部带样式的插件 | 禁用时为零 |
+| 始终加载 | copycode、lazyload、scrollreveal、aplayer | 最小（防闪烁关键规则） |
+| 条件 CSS（构建期） | 核心样式表中的插件 | 禁用时为零 |
+| 按需 CSS（运行时） | swiper、fancybox、mermaid、评论系统 | 页面存在对应元素才注入 |
 | 条件 JS | fancybox、swiper | 禁用时为零 |
 | 按需 | mermaid、tianli_gpt | 仅设置标志时 |
 | 注入模式 | katex、mathjax | 简单样式表注入 |
 
-**参考源码**：[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)
+**参考源码**：[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)、[layout/_plugins/swiper.ejs](../../../layout/_plugins/swiper.ejs)
 
 ---
 

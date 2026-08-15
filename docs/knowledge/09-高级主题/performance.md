@@ -28,6 +28,10 @@ tags:
 - [scripts/events/lib/get_image_ratios.js](../../../scripts/events/lib/get_image_ratios.js)
 - [scripts/events/lib/fix_image_tags.js](../../../scripts/events/lib/fix_image_tags.js)
 - [source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)
+- [source/css/plugins/](../../../source/css/plugins/)
+- [source/css/comments/](../../../source/css/comments/)
+- [source/js/utils.js](../../../source/js/utils.js)
+- [scripts/generators/stellar-icons.js](../../../scripts/generators/stellar-icons.js)
 - [source/js/search/local-search.js](../../../source/js/search/local-search.js)
 
 </details>
@@ -249,6 +253,18 @@ preconnect:
 
 ---
 
+## 按需资源加载（CSS/JS 外置）
+
+主题把「每页都可能用到」与「少数页面才用到」的资源分开：
+
+- **核心样式 `main.css`** 只保留基础与防闪烁规则（`.lazy` 显隐、`.slide-up` 显隐、aplayer、copycode 等）；swiper/fancybox/mermaid 与五种评论系统样式移入 `source/css/plugins/`、`source/css/comments/` 独立编译，前端在 DOM 检测命中时经 `utils.css()` 按需注入。
+- **重复脚本外置**：`utils`（同步加载，保证解析期插件注册可用）、`theme`/`services`/`tagtree`（defer）不再内联进每个 HTML；图标白名单由构建期生成器 `scripts/generators/stellar-icons.js` 输出为 `/js/stellar-icons.js`，约 6KB 的 SVG 数据不再随每个页面重复传输。
+- **按页裁剪**：`tagtree.js` 仅在与 tagtree 小部件渲染相同的条件下输出；评论脚本本就按页输出。
+
+收益：每页内联脚本由约 31~34KB 降至约 10~13KB；无插件/评论页面不再下载对应 CSS；外置文件跨页与回访命中缓存。
+
+---
+
 ## 汇总表
 
 | 特性 | 配置键 | 默认 | 主要文件 |
@@ -260,5 +276,7 @@ preconnect:
 | 搜索缓存 | `search.local_search` | `localStorage` | `local-search.js`（客户端） |
 | API 主机覆盖 | `api_host` | GitHub 默认 | 数据服务脚本 |
 | DNS preconnect | `preconnect` | 空 | `head.ejs` |
+| 按需样式 | 插件/评论 CSS 独立文件 | 运行时注入 | `plugins/*.css`、`comments/*.css` |
+| 脚本外置 | 构建期生成 icons + 外部 JS | 每页内联减少约 20KB | `utils.js`、`stellar-icons.js` |
 
 **参考源码**：[_config.yml](../../../_config.yml)

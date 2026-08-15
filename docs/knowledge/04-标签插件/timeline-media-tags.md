@@ -25,7 +25,7 @@ tags:
 - [source/css/_components/tag-plugins/timeline.styl](../../../source/css/_components/tag-plugins/timeline.styl)
 - [source/css/_components/tag-plugins/gallery.styl](../../../source/css/_components/tag-plugins/gallery.styl)
 - [source/css/_components/tag-plugins/chat.styl](../../../source/css/_components/tag-plugins/chat.styl)
-- [source/css/_plugins/comments/artalk.styl](../../../source/css/_plugins/comments/artalk.styl)
+- [source/css/comments/artalk.styl](../../../source/css/comments/artalk.styl)
 
 </details>
 
@@ -620,7 +620,7 @@ https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif
 - `margin: 0 4px` 间距
 - `vertical-align: bottom` 文本对齐
 
-**参考源码**：[_config.yml](../../../_config.yml)、[source/css/_plugins/comments/artalk.styl](../../../source/css/_plugins/comments/artalk.styl)
+**参考源码**：[_config.yml](../../../_config.yml)、[source/css/comments/artalk.styl](../../../source/css/comments/artalk.styl)
 
 ---
 

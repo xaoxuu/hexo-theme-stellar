@@ -23,7 +23,7 @@ tags:
 - [_config.yml](../../../_config.yml)
 - [package.json](../../../package.json)
 - [layout/_partial/comments/](../../../layout/_partial/comments/)
-- [source/css/_plugins/comments/artalk.styl](../../../source/css/_plugins/comments/artalk.styl)
+- [source/css/comments/artalk.styl](../../../source/css/comments/artalk.styl)
 
 </details>
 
@@ -124,7 +124,7 @@ Artalk 邮件通知链接（`?atk_comment=<id>`，常带 `atk_notify_key`）与�
 
 Artalk 有专属 CSS 覆盖与 Stellar 设计系统集成。主题 CSS 变量在 `.cmt-body` 作用域内映射到 Artalk 内部 CSS 变量（`--at-color-*` 前缀）。
 
-**参考源码**：[source/css/_plugins/comments/artalk.styl](../../../source/css/_plugins/comments/artalk.styl)
+**参考源码**：[source/css/comments/artalk.styl](../../../source/css/comments/artalk.styl)
 
 ### Waline
 
@@ -188,7 +188,7 @@ flowchart LR
 
 ## Artalk CSS 集成
 
-Artalk 是唯一在 `source/css/_plugins/comments/artalk.styl` 中有专属 Stylus 覆盖的系统。覆盖策略把 Artalk 内部 CSS 变量系统桥接到 Stellar 设计令牌。
+Artalk 是唯一在 `source/css/comments/artalk.styl` 中有专属 Stylus 覆盖的系统。覆盖策略把 Artalk 内部 CSS 变量系统桥接到 Stellar 设计令牌。
 
 **CSS 变量映射**
 
@@ -217,11 +217,11 @@ flowchart LR
 
 映射限定在 `.cmt-body .artalk` 作用域，也应用于 `.atk-layer-wrap`（Artalk 模态层）及其深色模式变体，保证覆盖层中的自定义样式一致。
 
-**参考源码**：[source/css/_plugins/comments/artalk.styl](../../../source/css/_plugins/comments/artalk.styl)
+**参考源码**：[source/css/comments/artalk.styl](../../../source/css/comments/artalk.styl)
 
 Artalk 编辑器、评论卡片与列表页脚的布局覆盖（圆角、间距、按钮形状）限定在 `.cmt-body.artalk` 作用域，避免干扰其他组件。
 
-**参考源码**：[source/css/_plugins/comments/artalk.styl](../../../source/css/_plugins/comments/artalk.styl)
+**参考源码**：[source/css/comments/artalk.styl](../../../source/css/comments/artalk.styl)
 
 ---
 

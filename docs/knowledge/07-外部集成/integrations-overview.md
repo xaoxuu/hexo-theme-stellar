@@ -123,10 +123,10 @@ graph TB
     end
     
     subgraph "Comment Systems (Mutually Exclusive)"
-        BEAUDAR["comments.beaudar<br/>layout/_partial/comments/beaudar<br/>source/css/_plugins/comments/beaudar.styl"]
+        BEAUDAR["comments.beaudar<br/>layout/_partial/comments/beaudar<br/>source/css/comments/beaudar.styl"]
         GISCUS["comments.giscus<br/>layout/_partial/comments/giscus"]
-        WALINE["comments.waline<br/>layout/_partial/comments/waline<br/>source/css/_plugins/comments/waline.styl"]
-        ARTALK["comments.artalk<br/>layout/_partial/comments/artalk<br/>source/css/_plugins/comments/artalk.styl"]
+        WALINE["comments.waline<br/>layout/_partial/comments/waline<br/>source/css/comments/waline.styl"]
+        ARTALK["comments.artalk<br/>layout/_partial/comments/artalk<br/>source/css/comments/artalk.styl"]
     end
     
     LAZYLOAD -.->|"视口检测"| FANCYBOX
@@ -583,7 +583,7 @@ graph TB
 Artalk 评论覆盖示例：
 
 ```stylus
-// source/css/_plugins/comments/artalk.styl
+// source/css/comments/artalk.styl
 .atk-comment
   background var(--card)
   color var(--text-p1)
@@ -609,7 +609,7 @@ Artalk 评论覆盖示例：
 
 使用 `var(--card)` 的插件无需额外 CSS 即可自动从白色切换为深色背景。
 
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)、[source/css/_plugins/comments/](../../../source/css/_plugins/comments/)
+**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)、[source/css/comments/](../../../source/css/comments/)
 
 ## 集成配置
 

@@ -20,7 +20,7 @@ tags:
 - [source/css/_components/partial/article-footer.styl](../../../source/css/_components/partial/article-footer.styl)
 - [source/css/_components/tag-plugins/note.styl](../../../source/css/_components/tag-plugins/note.styl)
 - [source/css/_components/tag-plugins/timeline.styl](../../../source/css/_components/tag-plugins/timeline.styl)
-- [source/css/_plugins/comments/twikoo.styl](../../../source/css/_plugins/comments/twikoo.styl)
+- [source/css/comments/twikoo.styl](../../../source/css/comments/twikoo.styl)
 
 </details>
 

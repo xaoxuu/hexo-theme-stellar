@@ -16,7 +16,7 @@ tags:
 
 - [source/css/_common/base.styl](../../../source/css/_common/base.styl)
 - [source/css/_common/highlight.styl](../../../source/css/_common/highlight.styl)
-- [source/css/_plugins/comments/artalk.styl](../../../source/css/_plugins/comments/artalk.styl)
+- [source/css/comments/artalk.styl](../../../source/css/comments/artalk.styl)
 
 </details>
 
@@ -484,7 +484,7 @@ Artalk 集成：
 
 避免主题行内代码样式与 Artalk 评论渲染冲突。
 
-**参考源码**：[source/css/_plugins/comments/artalk.styl](../../../source/css/_plugins/comments/artalk.styl)
+**参考源码**：[source/css/comments/artalk.styl](../../../source/css/comments/artalk.styl)
 
 ---
 

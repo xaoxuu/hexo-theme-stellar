@@ -15,6 +15,10 @@ tags:
 生成此页面时参考的主题源码文件：
 
 - [source/js/main.js](../../../source/js/main.js)
+- [source/js/utils.js](../../../source/js/utils.js)
+- [source/js/theme.js](../../../source/js/theme.js)
+- [source/js/services.js](../../../source/js/services.js)
+- [source/js/tagtree.js](../../../source/js/tagtree.js)
 - [layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 - [layout/_partial/scripts/](../../../layout/_partial/scripts/)
 
@@ -354,6 +358,7 @@ window.canonical = {
 | **防抖滚动** | TOC 滚动更新 50ms 超时 | 减少重排计算 |
 | **IntersectionObserver** | `util.viewportLazyload()` 视口懒加载 | 元素可见时才执行工作 |
 | **事件委托** | 标签点击用冒泡 | 减少事件监听器数量 |
+| **外置脚本 + 按需样式** | 重复脚本外置为可缓存文件；插件/评论 CSS 按 DOM 检测注入 | 减小 HTML 体积、跨页命中缓存、无插件页面不下载对应样式 |
 
 TOC 滚动同步系统用防抖模式限制重排计算。用户滚动时 `activeTOC()` 立即执行，`scrollTOC()` 以 50ms 超时防抖，降低 TOC 小部件滚动计算的频率。
 
