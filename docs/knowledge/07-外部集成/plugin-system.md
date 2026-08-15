@@ -253,6 +253,8 @@ fancybox:
 - `.tk-content img:not([class*="emo"])`——Twikoo 评论图片（排除表情）
 - `#waline_container .vcontent img`——Waline 评论图片
 
+**评论区图片**：内置规则仅对评论内容区图片启用灯箱——Artalk `.atk-content`、Twikoo `.tk-content`、Waline `.wl-content`；编辑器与表情面板（如 Artalk `.atk-editor-plug-emoticons`）等非内容区图片不弹窗。
+
 **参考源码**：[_config.yml](../../../_config.yml)
 
 ---
