@@ -6,6 +6,7 @@
 'use strict';
 
 const util = require('hexo-util');
+const { postImages, postDescription } = require('../lib/seo');
 
 hexo.extend.helper.register('json_ld', function(args) {
   const page = this.page;
@@ -37,6 +38,13 @@ hexo.extend.helper.register('json_ld', function(args) {
   }
 
   if (this.is_post()) {
+    const images = postImages({
+      cover: page.cover,
+      banner: page.banner,
+      photos: page.photos,
+      content: page.content,
+      defaultCover: this.theme.default && this.theme.default.cover
+    });
     schema = {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
@@ -45,7 +53,7 @@ hexo.extend.helper.register('json_ld', function(args) {
       dateCreated: page.date.format(),
       dateModified: page.updated.format(),
       datePublished: page.date.format(),
-      description: this.strip_html(page.excerpt),
+      description: postDescription({ excerpt: page.excerpt, content: page.content }),
       headline: page.title,
       mainEntityOfPage: {
         '@type': 'WebPage',
@@ -59,18 +67,7 @@ hexo.extend.helper.register('json_ld', function(args) {
       schema.keywords = page.tags.map((tag) => tag.name).join(', ');
     }
 
-    let images = [];
-    if (page.photos && page.photos.length > 0) {
-      images = images.concat(page.photos);
-    }
-
-    if (page.cover?.length > 0) {
-      images = images.unshift(page.cover);
-    } else if (page.banner?.length > 0) {
-      images = images.unshift(page.banner);
-    }
-
-    schema.thumbnailUrl = page.cover || page.banner;
+    schema.thumbnailUrl = images[0] || undefined;
     schema.image = images;
 
   } else if (isPage || this.is_home()) {

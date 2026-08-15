@@ -75,6 +75,7 @@ symbol:
   colon: ": "
   brackets_l: "("
   brackets_r: ")"
+  page: "Page %s"
 
 tag_plugins:
   mbti:

@@ -1,13 +1,28 @@
 <%
+function strip_wiki_title(title, wiki) {
+  if (!wiki) { return title; }
+  var t = String(title || '');
+  if (t.toLowerCase() === String(wiki).toLowerCase()) { return ''; }
+  // wiki 名中的空格/连字符在标题中可能写为另一种形态（如 cloud shell / cloud-shell）
+  var flex = String(wiki).replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/[\s-]+/g, '[\\s-]*');
+  var m = t.match(new RegExp('^' + flex + '[\\s-]*[：:\\-](.*)$', 'i'));
+  if (m && m[1]) {
+    return m[1].trim();
+  }
+  return t;
+}
+
 function generate_title() {
   if (page.wiki) {
     const proj = theme.wiki.tree[page.wiki]
     const wiki = proj?.name || page.wiki
     if (page.title) {
-      return wiki + __('symbol.colon') + page.title + ' - ' + config.title;
-    } else {
-      return wiki + ' - ' + config.title;
+      var stripped = strip_wiki_title(page.title, wiki)
+      if (stripped) {
+        return wiki + __('symbol.colon') + stripped + ' - ' + config.title;
+      }
     }
+    return wiki + ' - ' + config.title;
   } else {
     if (page.title) {
       return page.title + ' - ' + config.title;
@@ -16,6 +31,9 @@ function generate_title() {
     } else if (page.tag) {
       return __('btn.tag') + __('symbol.colon') + page.tag + ' - ' + config.title;
     }
+  }
+  if (is_home() && page.current && page.current > 1) {
+    return config.title + ' - ' + __('symbol.page', page.current);
   }
   return config.title;
 }
@@ -75,7 +93,7 @@ function og_args() {
       args.description = proj.description;
     }
   }
-  args.image = config.avatar || (config.email ? gravatar(config.email) : null);
+  args.image = page.cover || page.banner || first_content_image(page.content) || config.avatar || (config.email ? gravatar(config.email) : null);
   return Object.assign(args, page.open_graph);
 }
 
@@ -92,9 +110,6 @@ function generate_og_title() {
 }
 
 function generate_og_site_name() {
-  if (page.layout === 'post' && page.title) {
-    return generate_og_title();
-  }
   return escape_meta_content(strip_html(config.title));
 }
 

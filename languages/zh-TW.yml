@@ -75,6 +75,7 @@ symbol:
   colon: "："
   brackets_l: "（"
   brackets_r: "）"
+  page: "第 %s 頁"
 
 tag_plugins:
   mbti:

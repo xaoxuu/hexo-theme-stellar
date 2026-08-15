@@ -107,9 +107,12 @@ graph TB
 | 标准页面 | `{title} - {site}` | `About - My Site` |
 | 分类归档 | `Category : {category} - {site}` | `Category : Tech - My Site` |
 | 标签归档 | `Tag : {tag} - {site}` | `Tag : Hexo - My Site` |
-| 首页 | `{site}` | `My Site` |
+| 首页（第 1 页） | `{site}` | `My Site` |
+| 首页分页（第 2 页起） | `{site} - Page {n}` | `My Site - Page 2` |
 
-函数使用 i18n 本地化符号（`__('symbol.colon')`），并从 `theme.wiki.tree[page.wiki]` 读取 wiki 项目名。
+函数使用 i18n 本地化符号（`__('symbol.colon')`、`__('symbol.page')`），并从 `theme.wiki.tree[page.wiki]` 读取 wiki 项目名。
+
+wiki 标题去重规则：当 `page.title` 与 wiki 项目名相同，或以 `：`/`:`/` - ` 为前缀重复 wiki 名时，只保留一次（如 `GHAPI JSON Generator：GHAPI JSON Generator` 会归一为 `GHAPI JSON Generator`）；wiki 名中的空格/连字符按同义处理（`cloud shell` 可匹配 `cloud-shell`）。
 
 **实现流程：**
 
@@ -119,8 +122,11 @@ flowchart TD
     
     ISWIKI -->|Yes| GETPROJ["Access theme.wiki.tree[page.wiki]"]
     GETPROJ --> GETNAME["wiki = proj?.name || page.wiki"]
-    GETNAME --> HASTITLE{"page.title exists?"}
-    HASTITLE -->|Yes| WIKITITL["Return wiki + : + title + - + site"]
+    GETNAME --> STRIP["strip_wiki_title() 去除标题中的 wiki 名前缀"]
+    STRIP --> HASTITLE{"page.title exists?"}
+    HASTITLE -->|Yes| WIKITITL{"去重后仍有剩余标题?"}
+    WIKITITL -->|Yes| WIKIFULL["Return wiki + : + title + - + site"]
+    WIKITITL -->|No| WIKIHOME["Return wiki + - + site"]
     HASTITLE -->|No| WIKIHOME["Return wiki + - + site"]
     
     ISWIKI -->|No| PAGECHECK{"page.title exists?"}
@@ -129,11 +135,14 @@ flowchart TD
     CATCHECK -->|Yes| CATTITLE["Return Category: + category + - + site"]
     CATCHECK -->|No| TAGCHECK{"page.tag exists?"}
     TAGCHECK -->|Yes| TAGTITLE["Return Tag: + tag + - + site"]
-    TAGCHECK -->|No| DEFAULTTITLE["Return config.title"]
+    TAGCHECK -->|No| PAGECHECK2{"is_home() && current > 1?"}
+    PAGECHECK2 -->|Yes| PAGETITLE2["Return site + Page + n"]
+    PAGECHECK2 -->|No| DEFAULTTITLE["Return config.title"]
     
-    WIKITITL --> END["Output to <title> tag"]
+    WIKIFULL --> END
     WIKIHOME --> END
     PAGETITLE --> END
+    PAGETITLE2 --> END
     CATTITLE --> END
     TAGTITLE --> END
     DEFAULTTITLE --> END
@@ -202,12 +211,12 @@ graph LR
 {
   twitter_id: theme.open_graph.twitter_id,
   twitter_card: 'summary_large_image',  // 仅 post 且有 cover 时
-  image: config.avatar || (config.email ? gravatar(config.email) : null),
+  image: page.cover || page.banner || first_content_image(page.content) || config.avatar || (config.email ? gravatar(config.email) : null),
   ...page.open_graph  // 页面级覆盖
 }
 ```
 
-`theme.open_graph.enable` 为 true 时生成 OG 标签，并对 `og:title`、`og:site_name`、`twitter:title` 做主题定制替换（经 `generate_og_title()` / `generate_og_site_name()` 转义处理）。
+`theme.open_graph.enable` 为 true 时生成 OG 标签，并对 `og:title`、`og:site_name`、`twitter:title` 做主题定制替换（经 `generate_og_title()` / `generate_og_site_name()` 转义处理）。`og:site_name` 始终输出站点名 `config.title`，`og:image` 按 封面 → 横幅 → 正文首图 → 头像 回退。
 
 `og_args()` 还会在 `page.wiki` 存在且页面未显式设置 `page.description` 时，把 wiki 项目 YAML 的 `description` 传入 `description`，使 `<meta name="description">` 与 `og:description` 使用项目描述；`page.open_graph.description` 仍可经 front-matter 覆盖。
 
@@ -312,7 +321,9 @@ canonical:
 
 **条件**：`this.is_post()` 为 true
 
-**图片来源优先级**：封面（cover）→ 横幅（banner）→ 相册（photos）
+**图片来源优先级**：封面（cover）→ 横幅（banner）→ 相册（photos）→ 正文首图（`data-src`/`src`）→ 默认封面（`theme.default.cover`）
+
+**描述来源**：摘要（`page.excerpt`）优先，缺失时回退正文前 200 字符（去除 HTML）。
 
 **参考源码**：[scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
 
