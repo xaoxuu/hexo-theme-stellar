@@ -365,7 +365,7 @@ data_services:
 
 Artalk 最新评论渲染时保留表情图（`atk-emoticon`，CSS 限高 1.5em），其余标签转纯文本并截断 50 字符，空评论跳过，避免大表情图与段落撑爆侧栏卡片布局。
 
-waline 最新评论兼容数组与 `{ data: [...] }` 两种返回结构；Artalk 评论页加载后清理 `?atk_*` 查询参数，避免其 hash 监听干扰目录定位（#598）。
+waline 最新评论兼容数组与 `{ data: [...] }` 两种返回结构；Artalk 带定位目标（`?atk_comment=` / `#atk-comment-`）时跳过视口懒加载立即初始化，`list-loaded` 事件完成后清理 `?atk_*` 查询参数，避免其 hash 监听干扰目录定位（#598）。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 

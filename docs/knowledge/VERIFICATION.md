@@ -50,6 +50,7 @@
 | 6.4 动态数据 / memos | 仅识别 22-/22+/25+ | 新增 `v1` 分支（`{ memos: [...] }` + `createTime`，creator 为 `users/xxx` 字符串）；识别失败回退 `feature` |
 | 6.4 评论服务 / waline | 直接 `data.forEach` 处理返回 | 兼容数组与 `{ data: [...] }` 两种返回结构 |
 | 8.2 评论 / artalk | `?atk_*` 查询参数残留，干扰目录定位 | 初始化后 `history.replaceState` 清理查询参数（#598） |
+| 8.2 评论 / artalk 定位 | 邮件链接 `?atk_comment=` 打开不定位评论区（视口懒加载下 Artalk 不初始化；300ms 固定延时清理与 `list-loaded` 竞态） | atk 定位目标跳过视口懒加载立即初始化；评论 id 改写到 hash、`list-loaded` 后事件驱动清理 `?atk_*`（见 `docs/designs/2026-08-15-artalk-comment-goto/`） |
 | 5.3 样式 / prefers-color-scheme | navbar/sidebar 暗色兜底无条件跟随系统 | 统一收敛到 `:root:not([data-theme])` 下，显式主题只跟随 `data-theme` 开关（#593/#663） |
 | 5.5 时间线 / timeline | 节点标题直接输出原文 | 改为经 markdown 渲染（#401） |
 | 3.3 分类页 | 分类列表平铺，三级及以上失效 | 改为基于 parent 递归构建嵌套树（#564），逻辑抽到 `scripts/lib/category_tree.js` |
