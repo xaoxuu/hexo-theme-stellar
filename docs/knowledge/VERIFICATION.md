@@ -75,6 +75,7 @@
 | 2 命令 / new-note | 生成 front-matter 带秒 | date 对齐 `YYYY-MM-DD HH:mm`（#594） |
 | 2026-08-15 | `source/js/main.js`（`init.navbarPin`）、`docs/knowledge/05-前端交互/client-side-overview.md` | navbarPin 用 `scrollY >= pinStart` 推算吸顶状态，移动端浏览器顶栏伸缩改变 `scrollY`，导致仍吸顶时 `.pinned` 误移除、玻璃效果消失 | 改为直接测 `navbar.getBoundingClientRect().top <= stickyTop + 2px` 判定吸顶，删除 `documentTop()`/`pinStart`，新增 `visualViewport.resize` 兜底（见 `docs/designs/2026-08-15-navbar-pin-urlbar/`） |
 | 2026-08-16 | `_config.yml`、`layout/_partial/cover/post_cover.ejs`（删除）、`layout/_partial/cover/index.ejs`、`layout/_partial/main/post_list/post_card.ejs`、`docs/knowledge/00-总览与安装配置/configuration.md`、`03-内容系统/content-overview.md`、`post-lists-cards.md`、`知识库全量.md` | 移除已失效的 auto_banner / auto_cover（Unsplash 封面接口）：删除 `article.auto_banner` 配置与 `post_cover.ejs` 死代码；文章卡片封面仅显式 `cover` 完整 URL 时渲染；同步清理知识库中的 Unsplash 描述（见 `docs/designs/2026-08-16-remove-unsplash-auto-banner/`） |
+| 2026-08-16 | `layout/_partial/main/post_list/post_card.ejs`、`source/css/_components/list.styl`、`docs/knowledge/03-内容系统/post-lists-cards.md` | 文章卡片标签前缀由字符 `#` 改为内联 `default:hashtag` 图标（`.card-tags svg`：1em、`margin-right: .25em`、`opacity: .4`，与 `tag-chip()` 一致）；标签页/文章页/笔记页标签不受影响（见 `docs/designs/2026-08-16-card-tags-hashtag-icon/`） |
 
 ## 三、处理约定
 

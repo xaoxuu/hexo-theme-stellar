@@ -76,7 +76,7 @@ function div_default() {
       if (i >= 5) {
         return;
       }
-      el += `<span class="cap tag-chip">#${escape_html(tag.name)}</span>`;
+      el += `<span class="cap tag-chip">${icon('default:hashtag')}${escape_html(tag.name)}</span>`;
     });
     el += '</span>';
   }

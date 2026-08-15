@@ -390,6 +390,11 @@ graph LR
 - 置顶文章在列表页 navbar 上方的置顶轮播中展示（无需开关配置，有置顶内容即渲染，见[置顶内容轮播](../00-总览与安装配置/configuration.md#置顶内容轮播)）
 - 文章卡片不再显示置顶图标（`post.sticky` 图钉由轮播替代）
 
+**卡片标签**
+
+- 由 `article.card_tags` 配置控制（默认关闭），最多显示 5 个
+- 标签为纯文字（`cap` 小字样式，无胶囊底色），前缀为内联 `default:hashtag` 图标（`.card-tags svg`：1em、`margin-right: .25em`、`opacity: .4`），与标签页图标一致
+
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
 
 ---
