@@ -1,10 +1,105 @@
-var searchCache = null;
-var searchCacheKey = 'search_cache_v1';
+var searchCache = null;          // 当前可用的搜索数据（数组）
+var searchCacheEntry = null;     // 最近读取/写入的缓存条目 { ts, ttl, data }
+var searchCacheKey = 'search_cache_v2';
+var searchFetchPromise = null;   // 单飞：同一时刻只允许一个请求
+
+var searchLazyLoad = true;
+var searchCacheTtl = 86400;
+
+try {
+  var searchCfg = ctx.search && ctx.search.local_search;
+  if (searchCfg) {
+    searchLazyLoad = searchCfg.lazy_load !== false;
+    searchCacheTtl = typeof searchCfg.cache_ttl === 'number' ? Math.max(0, searchCfg.cache_ttl) : 86400;
+  }
+} catch (e) {}
+
+function getSearchPath() {
+  var path = ctx.search.path;
+  if (path.startsWith('/')) {
+    path = path.substring(1);
+  }
+  return ctx.root + path;
+}
+
+function readSearchCache() {
+  try {
+    var raw = localStorage.getItem(searchCacheKey);
+    if (!raw) return null;
+    var entry = JSON.parse(raw);
+    if (!entry || typeof entry.ts !== 'number' || !Array.isArray(entry.data)) return null;
+    return entry;
+  } catch (e) {
+    console.warn('搜索缓存读取失败', e);
+    return null;
+  }
+}
+
+function writeSearchCache(data) {
+  if (searchCacheTtl <= 0) return;
+  try {
+    var entry = { ts: Date.now(), ttl: searchCacheTtl, data: data };
+    localStorage.setItem(searchCacheKey, JSON.stringify(entry));
+    searchCacheEntry = entry;
+  } catch (e) {
+    console.warn('搜索缓存写入失败', e);
+  }
+}
+
+function isCacheFresh(entry) {
+  return !!(entry && typeof entry.ts === 'number' && entry.ttl > 0 && Date.now() - entry.ts < entry.ttl * 1000);
+}
+
+// 从 localStorage 恢复缓存到内存（ttl=0 时不使用历史缓存）
+function loadCacheIntoMemory() {
+  if (searchCacheTtl <= 0) {
+    searchCacheEntry = null;
+    return null;
+  }
+  if (!searchCacheEntry) {
+    searchCacheEntry = readSearchCache();
+  }
+  if (searchCacheEntry && Array.isArray(searchCacheEntry.data)) {
+    searchCache = searchCacheEntry.data;
+  }
+  return searchCacheEntry;
+}
+
+// 是否需要发起请求：不缓存 / 无缓存 / 缓存过期
+function needsFetch() {
+  if (searchCacheTtl <= 0) return true;
+  var entry = searchCacheEntry || loadCacheIntoMemory();
+  return !isCacheFresh(entry);
+}
+
+// 拉取搜索数据（单飞），成功后更新内存与 localStorage
+function fetchSearchData(path) {
+  if (searchFetchPromise) return searchFetchPromise;
+  searchFetchPromise = fetch(path)
+    .then(function(res) {
+      if (!res.ok) throw new Error('search fetch failed: ' + res.status);
+      return res.json();
+    })
+    .then(function(json) {
+      if (!Array.isArray(json)) throw new Error('search data is not an array');
+      searchCache = json;
+      writeSearchCache(json);
+      return json;
+    })
+    .catch(function(err) {
+      console.warn('搜索数据加载失败', err);
+      throw err;
+    })
+    .finally(function() {
+      searchFetchPromise = null;
+    });
+  return searchFetchPromise;
+}
 
 var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
   var $input = document.getElementById(searchId);
   if (!$input || $input._searchInitialized === true) return;
-  if ($input._searchInitialized === 'pending' && !searchCache) return;
+  if ($input._searchInitialized === 'pending') return; // 数据加载中，等待完成后初始化
 
   function getAllCombinations(keywords) {
     const result = [];
@@ -21,8 +116,8 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   }
 
-  function initSearch(datas) {
-    if (!$input) { return; }
+  function initSearch() {
+    if (!$input) return;
     if ($input._searchInitialized === true) return; // 防止重复绑定
     $input._searchInitialized = true;
 
@@ -40,7 +135,8 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
       }
       $wrapper.setAttribute('searching', 'true');
 
-      datas.forEach(function(data) {
+      // 读取模块级 searchCache：后台刷新后即时生效
+      (searchCache || []).forEach(function(data) {
         if (!data.content?.trim().length) return;
         if (filter && !data.path.includes(filter)) return;
 
@@ -52,7 +148,7 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
         var dataUrl = data.path.startsWith('//') ? data.path.slice(1) : data.path;
         dataUrl = dataUrl.replace(/\/?index\.html$/, '/'); // index.html → /
         dataUrl = dataUrl.replace(/\.html$/, '/'); // xxx.html → xxx/
-        
+
         var indexTitle = -1;
         var indexContent = -1;
         var firstOccur = -1;
@@ -114,74 +210,94 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
         $resultContent.appendChild(ul);
       }
     });
-  }
 
-  if (!searchCache) {
-    $input._searchInitialized = 'pending';
-    // 数据还没准备好，延迟初始化
-    const timer = setInterval(() => {
-      if (searchCache) {
-        clearInterval(timer);
-        initSearch(searchCache);
-      }
-    }, 100);
-  } else {
-    initSearch(searchCache);
-  }
-};
-
-(function preloadSearchData() {
-  var path = ctx.search.path;
-  if (path.startsWith('/')) {
-    path = path.substring(1);
-  }
-  path = ctx.root + path;
-
-  try {
-    var cached = localStorage.getItem(searchCacheKey);
-    if (cached) {
-      searchCache = JSON.parse(cached);
-    }
-  } catch (e) {
-    console.warn('搜索缓存解析失败', e);
-  }
-
-  fetch(path)
-    .then(res => res.json())
-    .then(json => {
-      searchCache = json;
-      try {
-        localStorage.setItem(searchCacheKey, JSON.stringify(json));
-      } catch (e) {
-        console.warn('搜索缓存写入失败', e);
+    $input.addEventListener("keydown", function(e) {
+      if (e.key == 'Enter') {
+        e.preventDefault();
       }
     });
+
+    // 同步当前状态：已有文字立即执行一次搜索，否则清除加载态
+    if ($input.value && $input.value.trim().length > 0) {
+      $input.dispatchEvent(new Event('input'));
+    } else {
+      $wrapper.setAttribute('searching', 'false');
+    }
+  }
+
+  // 已有可用数据（新鲜或过期）→ 立即初始化
+  if (searchCache) {
+    initSearch();
+    return;
+  }
+  // 尝试从 localStorage 恢复
+  loadCacheIntoMemory();
+  if (searchCache) {
+    initSearch();
+    return;
+  }
+  // 无数据：标记等待，拉取完成后初始化
+  $input._searchInitialized = 'pending';
+  fetchSearchData(path)
+    .then(function() {
+      if ($input._searchInitialized === 'pending' && searchCache) {
+        initSearch();
+      }
+    })
+    .catch(function() {
+      if ($input._searchInitialized === 'pending') {
+        $input._searchInitialized = undefined; // 允许下次聚焦重试
+      }
+      var $wrapper = document.getElementById(wrapperId);
+      if ($wrapper) $wrapper.setAttribute('searching', 'false');
+    });
+};
+
+// 页面加载预取：仅非懒加载模式（缓存新鲜时不重复请求）
+(function preloadSearchData() {
+  if (searchLazyLoad) return;
+  if (needsFetch()) {
+    fetchSearchData(getSearchPath()).catch(function() {});
+  }
 })();
 
-(function () {
-  var inputArea = document.querySelector("input#search-input");
-  if (!inputArea) return;
+// 聚焦触发：懒加载模式下首次聚焦搜索框才加载数据
+document.addEventListener("focusin", function(e) {
+  var input = e.target;
+  if (!input || input.id !== 'search-input') return;
+  var path = getSearchPath();
+  var filter = input.getAttribute('data-filter') || '';
+
+  // 已初始化：仅按需后台刷新（刷新失败下次聚焦自动重试）
+  if (input._searchInitialized === true) {
+    if (needsFetch()) {
+      fetchSearchData(path).catch(function() {});
+    }
+    return;
+  }
+
+  // 懒加载：无可用数据时显示加载态（复用 searching 绿色图标状态）
+  if (searchLazyLoad && !searchCache && !loadCacheIntoMemory()) {
+    var $wrapper = document.getElementById('search-wrapper');
+    if ($wrapper) $wrapper.setAttribute('searching', 'true');
+  }
+
+  searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
+
+  // 有数据但已过期（或 ttl=0）→ 后台刷新
+  if (searchCache && needsFetch()) {
+    fetchSearchData(path).catch(function() {});
+  }
+});
+
+// 无结果/有结果状态兜底
+(function() {
   var resultArea = document.querySelector("div#search-result");
+  if (!resultArea) return;
 
-  inputArea.addEventListener("focus", function() {
-    var path = ctx.search.path;
-    if (path.startsWith('/')) {
-      path = path.substring(1);
-    }
-    path = ctx.root + path;
-    const filter = inputArea.getAttribute('data-filter') || '';
-    searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
-  });
-
-  inputArea.addEventListener("keydown", function(e) {
-    if (e.key == 'Enter') {
-      e.preventDefault();
-    }
-  });
-
-  const observer = new MutationObserver(function(mutationsList) {
-    const hasResults = resultArea.querySelector(".search-result-list li");
-    const wrapper = document.querySelector('.search-wrapper');
+  var observer = new MutationObserver(function(mutationsList) {
+    var hasResults = resultArea.querySelector(".search-result-list li");
+    var wrapper = document.querySelector('.search-wrapper');
     if (wrapper) wrapper.classList.toggle('noresult', !hasResults);
   });
   observer.observe(resultArea, { childList: true, subtree: true });

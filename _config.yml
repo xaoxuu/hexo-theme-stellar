@@ -236,6 +236,8 @@ search:
     field: all # post, page, all
     path: /search.json # 搜索文件存放位置
     content: true # 是否搜索内容
+    lazy_load: true # 懒加载：首次聚焦搜索框时才加载搜索数据（默认开启）；站点内容较多时建议关闭，防止首次搜索卡顿
+    cache_ttl: 86400 # 搜索数据缓存时长（秒），默认 1 天；设为 0 表示不缓存，建议按内容更新频率调整
     skip_search:  # 指定 path 中的内容不被搜索。
   algolia_search: # Docsearch https://docsearch.algolia.com/apply/ 申请
     appId: 

@@ -105,6 +105,8 @@ search:
     field: all           # post, page, all
     path: /search.json   # 搜索索引输出路径
     content: true        # 索引中包含全文内容
+    lazy_load: true      # 懒加载：首次聚焦搜索框时才请求搜索数据（默认开启）；站点内容较多时建议关闭，防止首次搜索卡顿
+    cache_ttl: 86400     # 搜索数据缓存时长（秒），默认 1 天；设为 0 表示不缓存，建议按内容更新频率调整
     skip_search: []      # 排除的路径模式
 ```
 
@@ -115,7 +117,20 @@ search:
 | `field` | string | `post`、`page`、`all` | 搜索索引包含哪些内容类型 |
 | `path` | string | 任意路径 | `search.json` 生成位置（相对站点根） |
 | `content` | boolean | `true`、`false` | 索引是否包含完整文章/页面内容（增大文件但启用内容搜索） |
+| `lazy_load` | boolean | `true`、`false` | 懒加载：页面加载不请求搜索数据，首次聚焦搜索框才加载（默认 `true`）；站点内容较多时建议关闭，防止首次搜索卡顿 |
+| `cache_ttl` | number | 秒 | 搜索数据缓存时长，默认 `86400`（1 天）；`0` 表示不缓存、每次聚焦都请求，建议按内容更新频率调整 |
 | `skip_search` | array | 路径模式 | 排除在搜索索引之外的路径模式列表 |
+
+### 客户端加载与缓存
+
+客户端搜索数据带有效期缓存（`localStorage` 键 `search_cache_v2`，结构 `{ ts, ttl, data }`）：
+
+- `lazy_load: true`（默认）：页面加载时不请求 `/search.json`、不初始化搜索。首次聚焦搜索框时：缓存未过期 → 立即出结果且不发请求；缓存过期 → 先用旧数据出结果并后台静默刷新；无缓存 → 显示加载态（搜索图标绿色）并拉取，完成后初始化。
+- `cache_ttl` 控制缓存有效期（秒）：未过期不发起网络请求；过期后后台刷新；`0` 表示不缓存、每次聚焦都请求。
+- 请求失败时回退已有缓存；无缓存则清除加载态并告警，再次聚焦可重试。
+- `lazy_load: false` 时保持页面加载预取，但缓存新鲜时同样不重复请求。
+
+内容较多的站点建议关闭懒加载（`lazy_load: false`），避免首次搜索时等待索引加载；`cache_ttl` 建议按内容更新频率调整（更新频繁可调小，更新稀少可调大，`0` 表示不缓存）。
 
 ### 搜索索引生成
 
@@ -144,7 +159,9 @@ flowchart LR
     end
     
     subgraph "Client Runtime"
-        LOAD["Page loads<br/>fetch search.json"]
+        FOCUS["First focus<br/>search input"]
+        CACHE{"cache valid?<br/>within cache_ttl"}
+        LOAD["fetch search.json"]
         SEARCH["User searches<br/>JS string matching"]
         RESULTS["Display results"]
     end
@@ -159,7 +176,10 @@ flowchart LR
     SKIPCHECK --> EXTRACT
     EXTRACT --> SEARCHJSON
     
-    SEARCHJSON --> LOAD
+    SEARCHJSON --> FOCUS
+    FOCUS --> CACHE
+    CACHE -- "fresh" --> SEARCH
+    CACHE -- "stale / none" --> LOAD
     LOAD --> SEARCH
     SEARCH --> RESULTS
 ```

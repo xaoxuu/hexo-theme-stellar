@@ -53,13 +53,17 @@ const initServices = () => {
 
   // search
   if (ctx.search && typeof searchFunc === 'function') {
-    const inputArea = document.querySelector("input#search-input");
-    if (inputArea && !inputArea._searchInitialized) {
-      const path = ctx.search.path.startsWith('/') ? ctx.root + ctx.search.path.substring(1) : ctx.root + ctx.search.path;
-      const filter = inputArea.getAttribute('data-filter') || '';
-      searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
-      // 标记为已初始化，防止重复绑定
-      inputArea._searchInitialized = true;
+    const searchCfg = ctx.search.local_search;
+    const lazyLoad = searchCfg ? searchCfg.lazy_load !== false : true;
+    // 懒加载模式下由 local-search.js 的聚焦事件负责初始化，此处跳过
+    if (!lazyLoad) {
+      const inputArea = document.querySelector("input#search-input");
+      if (inputArea && !inputArea._searchInitialized) {
+        const path = ctx.search.path.startsWith('/') ? ctx.root + ctx.search.path.substring(1) : ctx.root + ctx.search.path;
+        const filter = inputArea.getAttribute('data-filter') || '';
+        searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
+        // searchFunc 内部管理 _searchInitialized（pending → true），此处不再覆盖
+      }
     }
   }
 

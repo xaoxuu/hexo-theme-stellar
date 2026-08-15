@@ -1,8 +1,9 @@
 <script>
   window.addEventListener('DOMContentLoaded', (event) => {
-    ctx.search = {
+    ctx.search = Object.assign({}, ctx.search, {
       path: `<%- conf.path || '/search.json' %>`,
-    }
+      local_search: <%- JSON.stringify(conf) %>,
+    });
     utils.js('/js/search/local-search.js', { defer: true });
   });
 </script>

@@ -66,7 +66,7 @@ flowchart TD
 
   F --> F1["GitHub API / CDN substitution"]
 
-  G --> G1["localStorage search_cache_v1"]
+  G --> G1["search_cache_v2 + cache_ttl"]
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)
@@ -211,7 +211,11 @@ flowchart LR
 
 ## 搜索数据缓存
 
-本地搜索系统在构建期把全部站点内容序列化为 `/search.json`。首次加载时客户端获取该文件并缓存在 `localStorage`（键 `search_cache_v1`）。后续访问使用缓存副本，避免重复网络请求。
+本地搜索系统在构建期把全部站点内容序列化为 `/search.json`。客户端缓存带 TTL（`search.local_search.cache_ttl`，默认 `86400` 秒 = 1 天），以 `search_cache_v2` 键写入 `localStorage`（结构 `{ ts, ttl, data }`）：TTL 未过期直接使用缓存、不发请求；过期后先用旧缓存出结果并后台刷新；`cache_ttl: 0` 表示不缓存。
+
+`search.local_search.lazy_load`（默认 `true`）控制加载时机：开启时页面加载不请求搜索数据，首次聚焦搜索框才加载（缓存优先 + 后台刷新）；关闭时页面加载预取，但缓存新鲜时同样不重复请求。
+
+内容较多的站点建议关闭懒加载（`lazy_load: false`），避免首次搜索卡顿；`cache_ttl` 建议按内容更新频率自行调整（默认 1 天，`0` 表示不缓存）。
 
 搜索数据生成与客户端 `searchFunc` 逻辑详见[搜索功能](../07-外部集成/search.md)。
 
@@ -274,7 +278,7 @@ preconnect:
 | 懒加载过渡 | `dependencies.lazyload.transition` | `fade` | `lazyload.styl` |
 | 链接预加载 | `plugins.preload.enable` | `true`（flying_pages） | CDN 脚本 |
 | 图片比例缓存 | Hexo 事件 | 自动 | `get_image_ratios.js`、`fix_image_tags.js` |
-| 搜索缓存 | `search.local_search` | `localStorage` | `local-search.js`（客户端） |
+| 搜索缓存 | `search.local_search.lazy_load` / `cache_ttl` | `localStorage`（TTL 默认 1 天） | `local-search.js`（客户端） |
 | API 主机覆盖 | `api_host` | GitHub 默认 | 数据服务脚本 |
 | DNS preconnect | `preconnect` | 空 | `head.ejs` |
 | 按需样式 | 插件/评论 CSS 独立文件 | 运行时注入 | `plugins/*.css`、`comments/*.css` |
