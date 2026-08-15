@@ -14,22 +14,43 @@ function custom_inject() {
   return el;
 }
 
+// tagtree 脚本仅在与 tagtree 小部件渲染相同的条件下加载（见 _partial/sidebar/index_leftbar.ejs）
+function tagtreeWidgetOnPage() {
+  const leftbar = page && page.leftbar;
+  if (!Array.isArray(leftbar)) {
+    return false;
+  }
+  return leftbar.some(function (w) {
+    if (typeof w === 'string') {
+      return w === 'tagtree';
+    }
+    if (w && typeof w === 'object') {
+      return w.override === 'tagtree' || w.layout === 'tagtree';
+    }
+    return false;
+  });
+}
+
 %>
 <%- partial('scripts/defines') %>
-<%- partial('scripts/utils') %>
-<%- partial('scripts/sidebar') %>
-<%- partial('scripts/tagtree') %>
-<%- partial('scripts/lazyload') %>
 
-<!-- required -->
+<!-- core: utils 必须同步加载（页尾内联插件片段在解析期即调用 utils.initPlugin） -->
+<script src="<%- url_for('/js/utils.js') %>?v=<%- stellar_info('version') %>"></script>
+<script defer src="<%- url_for('/js/stellar-icons.js') %>?v=<%- stellar_info('version') %>"></script>
 <script src="<%- url_for(`${theme.stellar.main_js}?v=${stellar_info('version')}`) %>" defer></script>
+<script defer src="<%- url_for('/js/theme.js') %>?v=<%- stellar_info('version') %>"></script>
 
-<%- partial('scripts/theme') %>
+<% if (tagtreeWidgetOnPage()) { %>
+  <script>window.__STELLAR_TAGTREE__ = { expand_active: <%- JSON.stringify(!!(theme.widgets.tagtree && theme.widgets.tagtree.expand_active)) %> };</script>
+  <script defer src="<%- url_for('/js/tagtree.js') %>?v=<%- stellar_info('version') %>"></script>
+<% } %>
+
+<%- partial('scripts/lazyload') %>
 
 <!-- optional -->
 <%- partial('comments/script') %>
 
-<%- partial('scripts/services') %>
+<script defer src="<%- url_for('/js/services.js') %>?v=<%- stellar_info('version') %>"></script>
 <%- partial('../_plugins/index') %>
 
 <!-- inject -->

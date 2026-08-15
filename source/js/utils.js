@@ -1,4 +1,3 @@
-<script type="text/javascript">
   
   function RunItem() {
     this.list = []; // 存放回调函数
@@ -63,7 +62,7 @@
       var sheets = doc.styleSheets;
       if (attributes) {
         for (var attributeName in attributes) {
-          if (attributes.hasOwnProperty(attributeName)) {
+          if (Object.prototype.hasOwnProperty.call(attributes, attributeName)) {
             ss.setAttribute(attributeName, attributes[attributeName]);
           }
         }
@@ -722,4 +721,3 @@
   utils.dark = Object.assign(utils.dark, {
     push: utils.dark.method.toggle.push,
   });
-</script>

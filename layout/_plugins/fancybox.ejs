@@ -32,6 +32,7 @@
     }
   }
   if (needFancybox) {
+    utils.css(`<%- url_for('/css/plugins/fancybox.css') %>?v=<%- stellar_info('version') %>`);
     utils.css(ctx.fancybox.css);
     utils.js(ctx.fancybox.js, { defer: true }).then(function () {
       if (isGlobal) {

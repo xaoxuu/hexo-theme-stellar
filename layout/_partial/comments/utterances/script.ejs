@@ -6,6 +6,7 @@
       if (!el) return;
       
       function load_utterances() {
+        utils.css('<%- url_for('/css/comments/utterances.css') %>?v=<%- stellar_info('version') %>');
         try {
           el.innerHTML = '';
         } catch (error) {

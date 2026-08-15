@@ -10,6 +10,7 @@
       const hasAtkTarget = /[?&]atk_comment=\d+/.test(window.location.search) || /#atk-comment-\d+/.test(window.location.hash);
       
       function load_artalk() {
+        utils.css('<%- url_for('/css/comments/artalk.css') %>?v=<%- stellar_info('version') %>');
         utils.css('<%- theme.comments.artalk.css %>');
         utils.js('<%- theme.comments.artalk.js %>', {defer: true}).then(function () {
           // 监听 Artalk 事件

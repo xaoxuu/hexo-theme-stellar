@@ -6,6 +6,7 @@
       if (!el) return;
       
       function load_beaudar() {
+        utils.css('<%- url_for('/css/comments/beaudar.css') %>?v=<%- stellar_info('version') %>');
         try {
           el.innerHTML = '';
         } catch (error) {

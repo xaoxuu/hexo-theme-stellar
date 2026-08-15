@@ -157,13 +157,9 @@
     tag_plugins: {
       chat: Object.assign(<%- JSON.stringify(theme.tag_plugins.chat) %>),
     },
-    icons: <%- (() => {
-      const keys = ['weibo:comment', 'default:loading-spinner', 'default:warning', 'weibo:repeat', 'weibo:like'];
-      const out = {};
-      // 去除 SVG 注释（避免 <!-- / </script> 解析风险），再转义 <
-      for (const k of keys) out[k] = ((theme.icons && theme.icons[k]) || '').replace(/<!--[\s\S]*?-->/g, '');
-      return JSON.stringify(out).replace(/</g, '\\u003c');
-    })() %>
+    // 图标由构建期生成的 /js/stellar-icons.js 填充（defer，早于 DOMContentLoaded 就绪）
+    icons: {},
+    services: <%- JSON.stringify(theme.data_services || {}) %>,
   };
 
   // required plugins (only load if needs)
@@ -185,4 +181,11 @@
     marked: `<%- url_for(theme.dependencies.marked) %>`,
     lazyload: `<%- url_for(theme.dependencies.lazyload.js) %>`
   }
+
+  // 主题切换提示文案（供 /js/theme.js 使用）
+  window.__STELLAR_I18N__ = {
+    light: `<%- __('message.theme_switched.light') %>`,
+    dark: `<%- __('message.theme_switched.dark') %>`,
+    auto: `<%- __('message.theme_switched.auto') %>`,
+  };
 </script>

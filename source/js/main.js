@@ -97,6 +97,30 @@ const hud = {
 
 const l_body = document.querySelector('.l_body');
 
+const sidebar = {
+  leftbar: () => {
+    if (l_body) {
+      l_body.toggleAttribute('leftbar');
+      l_body.removeAttribute('rightbar');
+    }
+  },
+  rightbar: () => {
+    if (l_body) {
+      l_body.toggleAttribute('rightbar');
+      l_body.removeAttribute('leftbar');
+    }
+  },
+  dismiss: () => {
+    if (l_body) {
+      l_body.removeAttribute('leftbar');
+      l_body.removeAttribute('rightbar');
+    }
+  },
+  toggleTOC: () => {
+    document.querySelector('#data-toc').classList.toggle('collapse');
+  }
+}
+
 // 通用平滑滚动（自定义动画，TOC / 回到顶部 / 参与讨论共用）
 let scrollAnim = null;
 function cancelSmoothScroll() {

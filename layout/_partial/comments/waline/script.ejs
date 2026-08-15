@@ -7,6 +7,7 @@
     if (!el) return;
 
     function load_waline() {
+      utils.css('<%- url_for('/css/comments/waline.css') %>?v=<%- stellar_info('version') %>');
       utils.css('<%- theme.comments.waline.css %>');
       utils.css('<%- theme.comments.waline.meta_css %>');
 

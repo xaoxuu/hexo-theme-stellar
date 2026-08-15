@@ -89,10 +89,17 @@ module.exports = [
         utils: 'readonly',
         def: 'readonly',
         ctx: 'readonly',
+        deps: 'readonly',
         sidebar: 'readonly',
         hud: 'readonly',
         stellar: 'writable',
         comment: 'writable',
+        // 数据服务 / 搜索脚本运行时挂载的全局函数（services.js 动态调用）
+        setCardLink: 'readonly',
+        createVoiceDom: 'readonly',
+        videoEvents: 'readonly',
+        downloadFileEvent: 'readonly',
+        searchFunc: 'readonly',
         // 外部库全局（CDN 引入）
         marked: 'readonly',
         algoliasearch: 'readonly',
