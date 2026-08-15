@@ -120,10 +120,21 @@
       text-shadow: 0 0 1px rgba(0,0,0,0.12)
 
 .tag-plugin.banner
-  trans1(transform, 2s)
+  // 与文章列表 cover 一致的 hover 变量：默认亮度/饱和度
+  --img-br: 100%
+  --img-sat: 100%
   &:hover
+    --img-br: 75%
+    --img-sat: 120%
     img.bg
-     transform: scale(1.01)
+      transform: scale(1.05)
+  img.bg
+    filter: brightness(var(--img-br)) saturate(var(--img-sat))
+    // 封面放大用 1.5s 缓动，其余属性（亮度/饱和度）保持主题默认 0.2s
+    transition: all .2s ease-out, transform 1.5s ease-out
+    -moz-transition: all .2s ease-out, transform 1.5s ease-out
+    -webkit-transition: all .2s ease-out, transform 1.5s ease-out
+    -o-transition: all .2s ease-out, transform 1.5s ease-out
 
 .tag-plugin.banner .navbar a.active
   blur-effect()

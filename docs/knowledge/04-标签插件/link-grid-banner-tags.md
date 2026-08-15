@@ -344,6 +344,12 @@ el += `<img class="lazy bg" data-src="${args.bg ? args.bg : ctx.theme.config.def
 
 **参考源码**：[scripts/tags/lib/banner.js](../../../scripts/tags/lib/banner.js)
 
+### hover 动画
+
+`{% banner %}` hover 时背景图平滑放大至 `scale(1.05)`（1.5s 缓动），亮度降至 75%、饱和度升至 120%（0.2s 过渡），与文章列表封面卡片（`.post-card`）的 hover 效果一致。
+
+**参考源码**：[source/css/_components/tag-plugins/banner.styl](../../../source/css/_components/tag-plugins/banner.styl)
+
 ---
 
 ## 参数解析模式

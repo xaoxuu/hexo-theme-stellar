@@ -125,6 +125,7 @@ function layoutDiv() {
   }
   var bannerStyle = ``
   var contentStyle = ``
+  var maskHtml = ``
   var el = ``
   if (banner.url?.length > 0) {
     bannerStyle += ` style="--bg-url:url('${banner.url.replace(/'/g, '%27')}')"`
@@ -133,12 +134,14 @@ function layoutDiv() {
   el += `<div class="article banner top"${bannerStyle}>`
   if (banner.url?.length > 0) {
     el += `<img class="lazy bg" data-src="${banner.url}">`
+    maskHtml = `<div class="banner-mask top" aria-hidden="true"></div><div class="banner-mask bottom" aria-hidden="true"></div>`
     if (banner.color) {
       contentStyle += ' style="--text-banner:' + banner.color + '"'
     }
   }
   el += `
   <div class="content"${contentStyle}>
+    ${maskHtml}
     ${top}
     ${bottom}
   </div>

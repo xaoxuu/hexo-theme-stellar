@@ -55,6 +55,17 @@
     mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
     -webkit-mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
     transition: transform .5s ease-out
+  // 黑色渐变蒙版：底部边缘不透明度约 0.5，垂直中线为 0，与 poster 卡片一致
+  &:not(.no-cover)::after
+    content: ''
+    z-index: 1
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    pointer-events: none
+    background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5))
   .pin-slide-text
     position: absolute
     bottom: 0
@@ -85,8 +96,6 @@
       text-overflow: ellipsis
       @media screen and (max-width: $device-mobile)
         font-size: $fs-13
-  &:not(.no-cover) .pin-slide-text
-    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2))
   &:not(.no-cover):hover::before
     transform: scale(1.04)
   // 无封面卡片：纯白底 + 普通文章文字颜色

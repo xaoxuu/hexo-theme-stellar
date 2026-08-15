@@ -120,6 +120,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 | 2026-08-15 | `source/css/_components/sidebar/search.styl`、`source/js/search/local-search.js` | 搜索结果结构调整：文章标题移出链接、置于卡片顶部（`fs-14`、`padding: 0.5rem 1rem`、与链接同底色，hover 整体高亮）；章节名移入链接并采用原标题样式（`fs-15` 加粗、单行省略、底部 `var(--block-border)` 分割线），移除 `#` 前缀；链接圆角改为仅底部以配合标题卡片 |
 | 2026-08-15 | `source/css/_components/sidebar/search.styl` | 搜索结果卡片样式回归链接：`li a` 恢复完整 `$border-card-s` 圆角与 `var(--bg-a20)` 背景（hover `--bg-a100`）；`.search-result-title` 移除背景与圆角，仅保留 `fs-14`、`padding: 0.5rem 1rem`、单行省略的纯文字标题 |
 | 2026-08-15 | `source/css/_components/sidebar/search.styl` | 搜索结果样式最终调整：`li a` hover 背景由 `--bg-a100` 改为 `--bg-a50`；`.search-result-section` 前缀由 `#` 改为 `>`（`margin-right: .5em`、主题色），分隔间距 `padding-bottom`/`margin-bottom` 改为 `.5rem`；`.search-result-content` 外边距由 `4px 0 0` 改为 `0`；`.search-keyword` 命中高亮由红色改为黄色（`$c-yellow`，含虚线边框） |
+| 2026-08-16 | `source/css/_components/tag-plugins/banner.styl`、`list.styl`、`pin-slider.styl`、`partial/article-banner.styl`、`layout/_partial/main/navbar/article_banner.ejs` | banner 标签 hover 动画对齐文章列表 cover：背景图缩放 1.05（1.5s 缓动）、亮度 75% / 饱和度 120%（0.2s 过渡），transition 由容器移到 `img.bg`；poster 卡片、置顶轮播、文章页 banner 的同图模糊层新增黑色渐变蒙版（文字所在边缘不透明度约 0.5 → 垂直中线 0），移除 `cover-info` / `pin-slide-text` 原有 0.2 边缘渐变（见 `docs/designs/2026-08-16-banner-hover-cover-mask/`） |
 - 简写路径已自动补全：`_partial/*.ejs`（→ `layout/`）、`_defines|_common|_components|_plugins/*.styl`（→ `source/css/`）
 
 以上标记不构成内容错误；如需消除报告噪音，可后续调整 `tools/verify.py` 的忽略列表。
