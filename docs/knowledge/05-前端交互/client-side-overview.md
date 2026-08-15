@@ -126,6 +126,14 @@ graph TB
 
 ---
 
+### navbar top 背景条状态切换（navbar-blur）
+
+列表页 navbar top 的背景条（`.navbar-blur`）未吸顶时为卡片样式（`var(--card)` 底色 + `$boxshadow-card` 阴影，与文章卡片一致），吸顶后恢复玻璃效果（`bar-glass()` 模糊/高光）。实现为 `init.navbarPin()`：用 `offsetTop` 链求自然文档顶部，减去 `getComputedStyle(el).top`（自动兼容桌面 `var(--n)` 与移动端 `8pt`）得到吸顶起点 `pinStart`，在吸顶边界（`scrollY >= pinStart`）切换 `.navbar-blur.pinned` 类；rAF 节流监听 scroll，resize/pageshow 重算，初始化立即执行一次（兼容恢复滚动位置）；无 JS 时保持未吸顶的卡片样式。
+
+**参考源码**：[source/js/main.js](../../../source/js/main.js)、[source/css/_components/partial/navbar.styl](../../../source/css/_components/partial/navbar.styl)
+
+---
+
 ## stellar 命名空间
 
 `stellar` 是全局对象，是主题 JavaScript 与外部插件集成的主要入口。
@@ -142,6 +150,7 @@ flowchart TD
     initPage --> sidebarInit["init.sidebar()<br/>Configure sidebar clicks"]
     initPage --> wikiStart["init.wikiStart()<br/>Wiki cover anchor handling"]
     initPage --> leftbarScroll["init.leftbarScroll()<br/>Leftbar scroll state"]
+    initPage --> navbarPin["init.navbarPin()<br/>Navbar card/glass switch on pin"]
     initPage --> dateInit["init.relativeDate()<br/>Format relative times"]
     initPage --> tabsInit["init.registerTabsTag()<br/>Set up tab components"]
     
@@ -149,6 +158,7 @@ flowchart TD
     sidebarInit --> complete
     wikiStart --> complete
     leftbarScroll --> complete
+    navbarPin --> complete
     dateInit --> complete
     tabsInit --> complete
     
@@ -161,8 +171,9 @@ flowchart TD
 2. **侧边栏初始化**——配置 TOC 链接点击处理
 3. **Wiki 起始处理**——wiki 封面锚点滚动
 4. **左栏滚动**——左栏滚动状态恢复
-5. **相对时间格式化**——把时间戳转换为人类可读的相对时间
-6. **标签页注册**——设置标签页组件事件处理
+5. **导航栏背景条**——列表页 navbar 未吸顶卡片样式、吸顶恢复玻璃（吸顶边界切换 `.pinned`）
+6. **相对时间格式化**——把时间戳转换为人类可读的相对时间
+7. **标签页注册**——设置标签页组件事件处理
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)
 
@@ -232,6 +243,7 @@ graph LR
         sidebar["init.sidebar()"]
         wikiStart["init.wikiStart()"]
         leftbarScroll["init.leftbarScroll()"]
+        navbarPin["init.navbarPin()"]
         relativeDate["init.relativeDate(selector)"]
         registerTabs["init.registerTabsTag()"]
         canonical["init.canonicalCheck()"]
@@ -241,6 +253,7 @@ graph LR
         tocHeaders["article.md-text :header"]
         tocWidget["#data-toc"]
         sidebarLinks["#data-toc a.toc-link"]
+        navbarElements[".navbar.top .navbar-blur"]
         timeElements["#post-meta time"]
         tabElements[".tabs .nav-tabs .tab"]
         canonicalTag["link[rel=canonical]"]
@@ -250,6 +263,7 @@ graph LR
         scrollSync["Scroll synchronization"]
         activeState["Active state tracking"]
         dismiss["Sidebar dismiss on click"]
+        cardGlass["Navbar card/glass switch on pin"]
         timeFormat["Relative time display"]
         tabSwitch["Tab content switching"]
         cloneDetect["Clone site detection"]
@@ -262,6 +276,9 @@ graph LR
     
     sidebar --> sidebarLinks
     sidebar --> dismiss
+    
+    navbarPin --> navbarElements
+    navbarPin --> cardGlass
     
     relativeDate --> timeElements
     relativeDate --> timeFormat

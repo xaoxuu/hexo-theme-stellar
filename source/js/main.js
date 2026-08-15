@@ -425,6 +425,60 @@ const init = {
       }
     } catch (e) {}
   },
+  navbarPin: () => {
+    // 列表页 navbar top 背景条状态切换：未吸顶为卡片样式（var(--card) + 文章卡片同款阴影），
+    // 吸顶后恢复玻璃效果。在吸顶边界切换 .pinned 类，视觉由 CSS 控制。
+    const navbars = document.querySelectorAll('.navbar.top');
+    if (navbars.length === 0) {
+      return;
+    }
+    // 求元素在文档中的自然顶部位置（sticky 不影响 offsetTop 布局位置）
+    function documentTop(el) {
+      let top = 0;
+      while (el) {
+        top += el.offsetTop;
+        el = el.offsetParent;
+      }
+      return top;
+    }
+    let states = [];
+    function update() {
+      const scrollY = window.scrollY;
+      states.forEach((state) => {
+        state.bar.classList.toggle('pinned', scrollY >= state.pinStart);
+      });
+    }
+    function measure() {
+      states = [];
+      navbars.forEach((navbar) => {
+        const bar = navbar.querySelector('.navbar-blur');
+        if (bar == null) {
+          return;
+        }
+        // getComputedStyle().top 自动兼容桌面 var(--n) 与移动端 8pt
+        const stickyTop = parseFloat(getComputedStyle(navbar).top) || 16;
+        states.push({
+          bar: bar,
+          pinStart: documentTop(navbar) - stickyTop
+        });
+      });
+      update();
+    }
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) {
+        return;
+      }
+      ticking = true;
+      utils.requestAnimationFrame(() => {
+        update();
+        ticking = false;
+      });
+    }, { passive: true });
+    window.addEventListener('resize', measure);
+    window.addEventListener('pageshow', measure);
+    measure();
+  },
   relativeDate: (selector) => {
     selector.forEach(item => {
       const $this = item
@@ -567,6 +621,7 @@ stellar.initPage = function () {
   init.sidebar();
   init.wikiStart();
   init.leftbarScroll();
+  init.navbarPin();
   init.relativeDate(document.querySelectorAll('#post-meta time'));
   init.registerTabsTag();
 };
