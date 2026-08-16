@@ -53,7 +53,6 @@ Stellar 是一个「博客 + 知识库一体」的 Hexo 主题：简约商务美
 
 - 示例源码：[hexo-theme-stellar-examples](https://github.com/xaoxuu/hexo-theme-stellar-examples/)（`blog` 博客场景、`docs` 文档场景），可直接 fork 起步
 - 展示墙：[使用 Stellar 主题的博客](https://xaoxuu.com/wiki/stellar/examples/)
-- 部分使用站点：[杜老师说](https://dusays.com)、[Watermelonabc](https://watermelonabc.top/)、[妄司逸](https://blog.flechazo.icu/)
 
 [![Star History Chart](https://star-history.dera.page/svg?repos=xaoxuu/hexo-theme-stellar&type=date&legend=top-left)](https://star-history.dera.page/#xaoxuu/hexo-theme-stellar&type=date&legend=top-left)
 

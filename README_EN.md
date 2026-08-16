@@ -53,7 +53,6 @@ Detailed usage for all of the above can be found in the [documentation](https://
 
 - Example source: [hexo-theme-stellar-examples](https://github.com/xaoxuu/hexo-theme-stellar-examples/) (`blog` blog scenario, `docs` documentation scenario) — ready to fork and start
 - Showcase: [Blogs using Stellar](https://xaoxuu.com/wiki/stellar/examples/)
-- Some sites using Stellar: [杜老师说](https://dusays.com), [Watermelonabc](https://watermelonabc.top/), [妄司逸](https://blog.flechazo.icu/)
 
 [![Star History Chart](https://star-history.dera.page/svg?repos=xaoxuu/hexo-theme-stellar&type=date&legend=top-left)](https://star-history.dera.page/#xaoxuu/hexo-theme-stellar&type=date&legend=top-left)
 
