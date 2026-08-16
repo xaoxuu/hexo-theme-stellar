@@ -24,8 +24,6 @@ description: 主题仓库（hexo-theme-stellar）开发全流程：方案 → �
 
 ### 3. 验证
 
-- UI 方面（样式、模板、前端交互等）改动量不大时无需验证，除非用户明确要求。
-
 命令按需执行：
 
 - `scripts/` 有改动 → 必须在主工程（xaoxuu.com）执行 `npm run g` 全量验证（已含 `hexo clean && hexo generate && npx gulp minify`）；`npm run s` 是按需渲染，不能替代。

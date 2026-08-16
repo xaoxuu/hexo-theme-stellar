@@ -68,7 +68,7 @@ git submodule add https://github.com/<your-name>/hexo-theme-stellar.git themes/s
 
 ## 编码规范摘要
 
-完整规范见 `AGENTS.md` §6，核心要求：
+完整规范见 `AGENTS.md` §4，核心要求：
 
 - **EJS 模板**：`<%- %>` 输出非转义 HTML；变量声明用 `var`（IE8 兼容）；2 空格缩进；HTML 属性双引号；复杂逻辑提取到 `helpers/`
 - **Node 脚本**：CommonJS（`require()` / `module.exports`）；文件头 `/* global hexo */` + `'use strict';`；2 空格缩进、双引号、分号结尾
@@ -128,6 +128,7 @@ CI 会在 PR 上强制执行以下检查，全部通过后才可合并：
 | Unit tests | node:test 单测 |
 | Conventional Commits | 提交信息符合规范 |
 | Skill mirror sync | `.agents/` 与 `.claude/` 技能镜像一致 |
+| Spec refs | AGENTS.md 章节引用与关键措辞一致性 |
 | Integration build | 官方 demo 全量构建（hexo generate）+ Gulp minify |
 | Knowledge base verify | `docs/knowledge/tools/verify.py` 硬事实核查 |
 
