@@ -353,6 +353,7 @@ notebook:
 | `indent` | Boolean | `false` | 段落首行两字缩进 |
 | `pin_style` | `carousel` / `flat` | `carousel` | 置顶文章展示样式：carousel 轮播；flat 平铺（不渲染轮播，置顶文章在首页列表靠前展示，排序规则与轮播一致） |
 | `cover_ratio` | Number | `2` | 文章卡片封面宽高比 |
+| `card_style` | `hero` / `classic` | `hero` | 文章卡片样式：hero 全图文字封面卡片（有 cover 时标题 + 单行小字，文字区固定底部）；classic 普通卡片（封面/标题/摘要/meta） |
 | `banner_ratio` | Number | `2.5` | 文章横幅宽高比 |
 | `auto_excerpt` | Number | `128` | 自动摘要提取字符数 |
 | `reading_time` | Boolean | `false` | 文章页显示字数与预计阅读时长 |

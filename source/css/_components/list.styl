@@ -158,11 +158,8 @@
     width: 100%
     object-fit: cover
     z-index 0
-  // 与通用覆盖层能力统一：按 position 接入顶部/底部渐变模糊层 + 黑色蒙版（视觉参数不变）
-  &[position=top]
-    cover-overlay(var(--cover-url), top)
-  &[position=bottom]
-    cover-overlay(var(--cover-url), bottom)
+  // 与通用覆盖层能力统一：文字区固定底部（hero 卡片），渐变模糊层 + 黑色蒙版（视觉参数不变）
+  cover-overlay(var(--cover-url), bottom)
   .cover-info
     padding: 1rem
     position: absolute
@@ -171,10 +168,7 @@
     --text-banner: white
     color: var(--text-banner)
     z-index: 2
-    &[position=top]
-      top: 0
-    &[position=bottom]
-      bottom: 0
+    bottom: 0
     div+div
       margin-top: 4px
     .text
@@ -192,6 +186,10 @@
       font-size: $fs-14
       // 小字用主题色变体（split 模式下由插件写入 --text-banner-theme）
       color: var(--text-banner-theme, inherit)
+      // 只显示一行，超出省略
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
     @media screen and (max-width: $device-mobile)
       .headline
         font-size: $fsh4

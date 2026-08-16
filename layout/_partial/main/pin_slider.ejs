@@ -49,25 +49,13 @@ pinItems.sort(function(a, b) {
   return pinWeight(b) - pinWeight(a)
 })
 
-// 文章幻灯片：固定「标题 + 一行小字」结构，宽高比统一取自 pin_slider.ratio。
-// 标题：poster.headline > title；小字：poster.caption > description > excerpt（截断 50 字）。
-// 样式与 poster 卡片 cover-info 一致；无封面时为纯白卡片（文字按普通文章颜色）。
-function postSubtitle(post) {
-  if (post.poster != null && post.poster.caption != null && post.poster.caption.length > 0) {
-    return post.poster.caption
-  }
-  if (post.description != null && post.description.length > 0) {
-    return post.description
-  }
-  var text = post.excerpt || post.content || ''
-  text = strip_html(text).replace(/\s+/g, ' ').trim()
-  return text.length > 0 ? truncate(text, {length: 50}) : ''
-}
-
+// 文章幻灯片：固定「标题 + 一行小字」结构。
+// 标题：post.title；小字由 subtitle() helper 统一取值（subtitle > description > excerpt 前 50 字）。
+// 样式与 hero 卡片 cover-info 一致；无封面时为纯白卡片（文字按普通文章颜色）。
 function postSlide(post) {
   var noCover = !(post.cover != null && post.cover.length > 0)
-  var headline = (post.poster != null && post.poster.headline != null && post.poster.headline.length > 0) ? post.poster.headline : post.title
-  var subtitle = postSubtitle(post)
+  var headline = post.title
+  var sub = subtitle(post)
   var el = ''
   el += '<a class="pin-slide post-slide' + (noCover ? ' no-cover' : '') + '" href="' + escape_html(pretty_url(post.link || post.path)) + '"'
   if (!noCover) {
@@ -80,8 +68,8 @@ function postSlide(post) {
   // 有封面时文字颜色自适应（大字 contrast、小字 theme）；无封面保持普通文章文字颜色
   el += '<div class="pin-slide-text"' + (noCover ? '' : ' data-text-adaptive="split"') + '>'
   el += '<div class="pin-slide-headline">' + escape_html(headline) + '</div>'
-  if (subtitle.length > 0) {
-    el += '<div class="pin-slide-caption">' + escape_html(subtitle) + '</div>'
+  if (sub.length > 0) {
+    el += '<div class="pin-slide-caption">' + escape_html(sub) + '</div>'
   }
   el += '</div>'
   el += '</a>'

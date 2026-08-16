@@ -23,7 +23,7 @@ tags:
 
 ## 目的与范围
 
-本文详述 Stellar 的文章列表渲染系统与文章卡片组件架构：`post_card.ejs` 的渲染逻辑、封面图生成策略（含 Unsplash 集成）、默认布局与 photo 布局的区别、元数据显示模式。该系统负责在索引页、归档页与分类/标签页展示博客文章集合。
+本文详述 Stellar 的文章列表渲染系统与文章卡片组件架构：`post_card.ejs` 的渲染逻辑、封面图生成策略（含 Unsplash 集成）、classic 卡片与 hero 卡片的区别、元数据显示模式。该系统负责在索引页、归档页与分类/标签页展示博客文章集合。
 
 单篇文章页渲染见[页面模板与路由](../02-布局系统/page-templates-routing.md)；wiki 专属列表渲染见[文档系统](wiki-docs.md)。
 
@@ -62,7 +62,7 @@ graph TB
     LayoutPostList -->|"iterates page.posts"| LayoutPostCard
     LayoutPostCard -->|"partial(post_card)"| PostCardPartial
     PostCardPartial -->|"executes"| DivFunction
-    DivFunction -->|"obj.image && obj.headline"| DivPhoto
+    DivFunction -->|"card_style == 'hero' && 有封面"| DivPhoto
     DivFunction -->|"otherwise"| DivDefault
 
     DivDefault -->|"generates"| DefaultHTML["article.md-text: cover + title + excerpt + meta"]
@@ -124,16 +124,16 @@ flowchart TD
 graph LR
     PostObject["post object"]
     CheckCover{"post.cover<br/>defined?"}
-    CheckPoster{"post.poster<br/>defined?"}
+    CheckCardStyle{"article.card_style<br/>== 'hero'?"}
     PhotoLayout["layout = 'post photo'"]
     DefaultLayout["layout = 'post'"]
     WrapHTML["Wrap in <a class='post-card {layout}'>"]
     
     PostObject --> CheckCover
-    CheckCover -->|"yes"| CheckPoster
+    CheckCover -->|"yes"| CheckCardStyle
     CheckCover -->|"no"| DefaultLayout
-    CheckPoster -->|"yes"| PhotoLayout
-    CheckPoster -->|"no"| DefaultLayout
+    CheckCardStyle -->|"yes"| PhotoLayout
+    CheckCardStyle -->|"no"| DefaultLayout
     PhotoLayout --> WrapHTML
     DefaultLayout --> WrapHTML
 ```
@@ -152,10 +152,9 @@ graph LR
 
 | 属性 | 来源 | 用途 |
 |------|------|------|
-| `obj.image` | `post.cover` | 封面图 URL 或 Unsplash 搜索词 |
-| `obj.headline` | `poster.headline` | photo 布局的大号展示文本 |
-| `obj.topic` | `poster.topic` | 大标题上方的小主题文本 |
-| `obj.caption` | `poster.caption` | 大标题下方的描述文本 |
+| `obj.image` | `post.cover` | 封面图 URL |
+| headline | `post.title` | hero 卡片的大号展示文本（无标题回退日期） |
+| caption | `post.subtitle` → `post.description` → excerpt 前 50 字 | hero 卡片与置顶轮播共用的单行小字（`subtitle()` helper，空则不渲染） |
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
 
@@ -242,65 +241,31 @@ graph TD
 
 ---
 
-## Photo 布局渲染
+## Hero 卡片渲染（全图文字封面）
 
-`div_photo()` 生成杂志风格卡片，文字叠加在封面图上；`.cover-info` 带 `data-text-adaptive="split"`，大字（headline）用黑白对比、小字（topic/caption）用背景图平均色自适应（见下文「渐变模糊层与黑色蒙版」）。
+`div_photo()` 生成全图文字封面卡片（hero），文字叠加在封面图底部；`.cover-info` 带 `data-text-adaptive="split"`，大字（headline）用黑白对比、小字（caption）用背景图平均色自适应（见下文「渐变模糊层与黑色蒙版」）。
 
 ```mermaid
 graph TB
     Start["div_photo()"]
-    DeterminePosition{"Has topic,<br/>headline, or<br/>caption?"}
-    CheckTopic{"Has topic?"}
-    SetTop["position = 'top'"]
-    SetBottom["position = 'bottom'"]
-    NoPosition["position = ''"]
-    
-    OpenCover["<div class='cover' position='{position}'>"]
+    OpenCover["<div class='cover' position='bottom'>"]
     RenderImg["<img src='{obj.image}'/>"]
-    
-    CheckOverlay{"position.length<br/>> 0?"}
-    OpenInfo["<div class='cover-info' position='{position}'<br/>data-text-adaptive='split'>"]
-    
-    CheckTopicRender{"obj.topic?"}
-    RenderTopic["<div class='text topic'>{obj.topic}</div>"]
-    
-    CheckHeadlineRender{"obj.headline?"}
-    RenderHeadline["<div class='text headline'>{obj.headline}</div>"]
-    
-    CheckCaptionRender{"obj.caption?"}
-    RenderCaption["<div class='text caption'>{obj.caption}</div>"]
+    OpenInfo["<div class='cover-info' position='bottom'<br/>data-text-adaptive='split'>"]
+    RenderHeadline["<div class='text headline'>{post.title}</div>"]
+    CheckCaption{"有 subtitle /<br/>description / excerpt?"}
+    RenderCaption["<div class='text caption'>{一行小字}</div>"]
     
     CloseInfo["</div>"]
     CloseCover["</div>"]
     Return["return el"]
     
-    Start --> DeterminePosition
-    DeterminePosition -->|"yes"| CheckTopic
-    DeterminePosition -->|"no"| NoPosition
-    CheckTopic -->|"yes"| SetTop
-    CheckTopic -->|"no"| SetBottom
-    
-    SetTop --> OpenCover
-    SetBottom --> OpenCover
-    NoPosition --> OpenCover
-    
+    Start --> OpenCover
     OpenCover --> RenderImg
-    RenderImg --> CheckOverlay
-    
-    CheckOverlay -->|"yes"| OpenInfo
-    CheckOverlay -->|"no"| CloseCover
-    
-    OpenInfo --> CheckTopicRender
-    CheckTopicRender -->|"yes"| RenderTopic
-    CheckTopicRender -->|"no"| CheckHeadlineRender
-    RenderTopic --> CheckHeadlineRender
-    
-    CheckHeadlineRender -->|"yes"| RenderHeadline
-    CheckHeadlineRender -->|"no"| CheckCaptionRender
-    RenderHeadline --> CheckCaptionRender
-    
-    CheckCaptionRender -->|"yes"| RenderCaption
-    CheckCaptionRender -->|"no"| CloseInfo
+    RenderImg --> OpenInfo
+    OpenInfo --> RenderHeadline
+    RenderHeadline --> CheckCaption
+    CheckCaption -->|"有"| RenderCaption
+    CheckCaption -->|"无"| CloseInfo
     RenderCaption --> CloseInfo
     
     CloseInfo --> CloseCover
@@ -309,17 +274,13 @@ graph TB
 
 ### 定位逻辑
 
-| 条件 | 位置值 | 视觉效果 |
-|------|--------|----------|
-| 存在 `obj.topic` | `top` | 叠加文本位于图片顶部 |
-| 存在 `obj.headline` 或 `obj.caption`（无 topic） | `bottom` | 叠加文本位于图片底部 |
-| 无叠加文本 | `""`（空） | 不渲染叠加 div |
+hero 卡片文字区固定 `bottom`：标题（headline）与单行小字（caption）始终叠加在封面底部；不再支持 top 布局，也不再渲染主题小字（原 `poster.topic` 已移除）。小字取值统一由 `subtitle()` helper（`scripts/lib/subtitle.js`）提供：`post.subtitle` → `post.description` → `excerpt || content` 去 HTML、压缩空白后截断 50 字（省略号由 CSS 单行处理），都没有则不渲染；置顶轮播复用同一取值。
 
 ### 渐变模糊层与黑色蒙版
 
-该叠加观感由通用 mixin `cover-overlay($url-var, $sides, $layer)`（`source/css/_common/cover-overlay.styl`）统一提供：置顶轮播的 post/wiki 幻灯片与页顶 banner 复用同一套实现（`{% banner %}` 标签不使用该覆盖层，为纯背景图，见[链接、网格与横幅标签](../04-标签插件/link-grid-banner-tags.md)），方向按文字位置取 `top` / `bottom` / `both`。photo 布局的 `.cover` 上叠加两层效果（均在 `.cover-info` 之下）：同图模糊层（`:before`，同图 `blur(1em)` + 沿文字边缘的渐变 mask）与黑色渐变蒙版（`:after`，文字所在边缘不透明度约 0.25 → 封面垂直中线 0，`pointer-events: none`，不随 hover 缩放）。hover 时封面图与模糊层同步放大至 `scale(1.05)`（1.5s 缓动），亮度降至 75%、饱和度升至 120%（0.2s 过渡）。Safari 26.4/26.5 对带 `filter: blur()` 的合成层不执行父级 `overflow:hidden` + `border-radius` 圆角裁剪（WebKit 312584/319993），模糊层静止时（无 transform）会在文字所在边缘漏方角，故模糊层常驻 `transform: translateZ(0)`（恒等变换，hover 放大时 Safari 正常裁剪）、卡片 `.post-card` 另加与圆角同源的 `clip-path: inset(0 round $border-card-l)` 直接裁剪，规避静止时底部两角漏方角。
+该叠加观感由通用 mixin `cover-overlay($url-var, $sides, $layer)`（`source/css/_common/cover-overlay.styl`）统一提供：置顶轮播的 post/wiki 幻灯片与页顶 banner 复用同一套实现（`{% banner %}` 标签不使用该覆盖层，为纯背景图，见[链接、网格与横幅标签](../04-标签插件/link-grid-banner-tags.md)），方向按文字位置取 `top` / `bottom` / `both`。hero 卡片（`.post-card.photo`）的 `.cover` 固定使用 `bottom`，上叠加两层效果（均在 `.cover-info` 之下）：同图模糊层（`:before`，同图 `blur(1em)` + 沿文字边缘的渐变 mask）与黑色渐变蒙版（`:after`，文字所在边缘不透明度约 0.25 → 封面垂直中线 0，`pointer-events: none`，不随 hover 缩放）。hover 时封面图与模糊层同步放大至 `scale(1.05)`（1.5s 缓动），亮度降至 75%、饱和度升至 120%（0.2s 过渡）。Safari 26.4/26.5 对带 `filter: blur()` 的合成层不执行父级 `overflow:hidden` + `border-radius` 圆角裁剪（WebKit 312584/319993），模糊层静止时（无 transform）会在文字所在边缘漏方角，故模糊层常驻 `transform: translateZ(0)`（恒等变换，hover 放大时 Safari 正常裁剪）、卡片 `.post-card` 另加与圆角同源的 `clip-path: inset(0 round $border-card-l)` 直接裁剪，规避静止时底部两角漏方角。
 
-文字颜色自适应（`data-text-adaptive` 插件）：`.cover-info` 与置顶轮播的文字容器（`.pin-slide-text` / `.pin-slide-info`）渲染时带 `data-text-adaptive="split"`，页面按需懒加载 `source/js/color.js`（`window.stellar.color`）与 `source/js/plugins/adaptive-text.js`；插件读取 `--cover-url` / `--pin-cover-url` 背景图，canvas 等比缩至最长边 ≤64px 后取平均色，同时写入两个内联变量：`--text-banner` 为 contrast 结果（黑白对比，标题大字用，默认阈值 0.6 偏向浅色文字），`--text-banner-theme` 为 theme 结果（背景偏暗时平均色 lighten 到明度 0.85、偏亮时 darken 到明度 0.3，topic/caption/chip/excerpt 小字用）。`.headline` / `.title` 继承容器 contrast 色，`.topic` / `.caption` / `.chip` / `.excerpt` 显式取 `var(--text-banner-theme, inherit)`（插件未运行时回退继承）。平均色计算失败（CORS/解码异常）时保持 CSS 默认白字。见[前端交互概览](../05-前端交互/client-side-overview.md#文字自适应颜色插件)。
+文字颜色自适应（`data-text-adaptive` 插件）：`.cover-info` 与置顶轮播的文字容器（`.pin-slide-text` / `.pin-slide-info`）渲染时带 `data-text-adaptive="split"`，页面按需懒加载 `source/js/color.js`（`window.stellar.color`）与 `source/js/plugins/adaptive-text.js`；插件读取 `--cover-url` / `--pin-cover-url` 背景图，canvas 等比缩至最长边 ≤64px 后取平均色，同时写入两个内联变量：`--text-banner` 为 contrast 结果（黑白对比，标题大字用，默认阈值 0.6 偏向浅色文字），`--text-banner-theme` 为 theme 结果（背景偏暗时平均色 lighten 到明度 0.85、偏亮时 darken 到明度 0.3，caption/chip/excerpt 小字用）。`.headline` / `.title` 继承容器 contrast 色，`.caption` / `.chip` / `.excerpt` 显式取 `var(--text-banner-theme, inherit)`（插件未运行时回退继承）。平均色计算失败（CORS/解码异常）时保持 CSS 默认白字。见[前端交互概览](../05-前端交互/client-side-overview.md#文字自适应颜色插件)。
 
 **参考源码**：[source/css/_common/cover-overlay.styl](../../../source/css/_common/cover-overlay.styl)
 
@@ -416,26 +377,26 @@ graph LR
 ```mermaid
 flowchart TD
     DivFunction["div()"]
-    CheckPhoto{"obj.image.length > 0<br/>&&<br/>obj.headline !== undefined?"}
+    CheckHero{"card_style == 'hero'<br/>&& 有封面?"}
     CallPhoto["return div_photo()"]
     CallDefault["return div_default()"]
     
-    DivFunction --> CheckPhoto
-    CheckPhoto -->|"true"| CallPhoto
-    CheckPhoto -->|"false"| CallDefault
+    DivFunction --> CheckHero
+    CheckHero -->|"true"| CallPhoto
+    CheckHero -->|"false"| CallDefault
     
-    CallPhoto --> PhotoOutput["Photo layout:<br/>Cover with overlay"]
-    CallDefault --> DefaultOutput["Default layout:<br/>Cover + Title + Excerpt + Meta"]
+    CallPhoto --> HeroOutput["Hero layout:<br/>Cover with bottom text"]
+    CallDefault --> ClassicOutput["Classic layout:<br/>Cover + Title + Excerpt + Meta"]
 ```
 
 ### 判定条件
 
-仅当同时满足以下条件时使用 **photo 布局**：
+仅当同时满足以下条件时使用 **hero 卡片**：
 
-1. `obj.image` 已定义且长度非零
-2. `obj.headline` 已定义（非 undefined）
+1. `article.card_style` 为 `hero`（默认）
+2. `obj.image` 已定义且长度非零（文章有封面）
 
-否则回退到 **默认布局**。也就是说文章可以有封面图但仍用默认布局（front-matter 未指定 `poster.headline` 时）。
+否则回退到 **classic 卡片**。也就是说文章可以有封面图但仍用普通卡片（`article.card_style` 为 `classic` 或文章没有封面时）。
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
 
@@ -532,7 +493,7 @@ graph TD
 
 ### Topic 卡片 CSS 布局
 
-专栏容器为纯平铺布局（无卡片背景，条目间以分隔线衔接），`.cover` 规则泛化自 photo 卡片（见上文「photo 布局」），复用 `cover-overlay` 渐变模糊层：
+专栏容器为纯平铺布局（无卡片背景，条目间以分隔线衔接），`.cover` 规则泛化自 hero 卡片（见上文「Hero 卡片渲染」），复用 `cover-overlay` 渐变模糊层：
 
 | 选择器 | 属性 | 效果 |
 |--------|------|------|
@@ -604,17 +565,19 @@ description: SEO description  # 可选兜底
 ---
 ```
 
-### Photo 布局配置
+### Hero 卡片配置
+
+```yaml blog/_config.stellar.yml
+article:
+  card_style: hero # hero = 全图文字封面卡片 / classic = 普通卡片
+```
 
 ```yaml
 ---
 title: My Photo Post
 date: 2024-01-01
 cover: /images/hero.jpg
-poster:
-  headline: Big Headline Text
-  topic: Small Topic  # 可选：叠加文本定位到顶部
-  caption: Caption text  # 可选
+subtitle: Caption text  # 可选：一行小字（subtitle > description > excerpt 前 50 字）
 ---
 ```
 
@@ -629,7 +592,7 @@ poster:
 | `post-card-wrap` | 包装 div | 动画与间距容器 |
 | `post-card` | 链接元素 | 主卡片样式 |
 | `post-card.post` | 链接元素 | 标准文章卡片变体 |
-| `post-card.photo` | 链接元素 | photo 布局变体 |
+| `post-card.photo` | 链接元素 | hero 卡片变体 |
 | `post-list.post` | 容器 div | 文章列表网格/flex 容器 |
 | `post-cover` | div | 封面图包装 |
 | `post-title` | H2 | 文章标题样式 |
@@ -638,10 +601,10 @@ poster:
 | `meta.cap` | div | 元数据容器 |
 | `breadcrumb` | span | 分类面包屑样式 |
 | `pin` | span | 置顶文章指示 |
-| `cover` | div（photo 布局） | 封面图容器 |
-| `cover-info` | div（photo 布局） | 叠加文本容器 |
-| `text.topic` | div（photo 布局） | 主题文本样式 |
-| `text.headline` | div（photo 布局） | 大标题文本样式 |
-| `text.caption` | div（photo 布局） | 描述文本样式 |
+| `cover` | div（hero 卡片） | 封面图容器 |
+| `cover-info` | div（hero 卡片） | 底部叠加文本容器 |
+| `text.topic` | div（专栏最新文章卡片） | 专栏名小字样式 |
+| `text.headline` | div（hero 卡片） | 标题文本样式 |
+| `text.caption` | div（hero 卡片） | 单行小字样式 |
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)、[layout/index.ejs](../../../layout/index.ejs)

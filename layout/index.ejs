@@ -76,7 +76,7 @@ if (pinFlat && is_home_first_page()) {
 function layout_post_card(layout, post, content) {
   var el = '';
   var layout = layout;
-  if (layout == 'post' && post.cover != undefined && post.poster != undefined) {
+  if (layout == 'post' && post.cover != undefined && theme.article.card_style == 'hero') {
     layout += ' photo';
   }
   el += `<div class="post-card-wrap${scrollreveal(' ')}">`;

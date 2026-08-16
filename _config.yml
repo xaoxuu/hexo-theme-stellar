@@ -188,6 +188,8 @@ article:
   indent: # true / false
   # 封面图宽高比
   cover_ratio: 2
+  # 文章卡片样式：hero = 全图文字封面卡片（有 cover 时标题 + 一行小字，文字区固定底部），classic = 普通卡片（封面/标题/摘要/meta）
+  card_style: hero
   # 文章内横幅宽高比
   banner_ratio: 2.5
   # 如果没有指定 excerpt 和 description，将自动取多长的内容作为文章摘要？
