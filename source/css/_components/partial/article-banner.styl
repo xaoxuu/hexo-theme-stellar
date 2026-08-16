@@ -93,17 +93,16 @@
       -webkit-mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height-bottom) * 0.5), transparent var(--blur-height-bottom))
     .top,.bottom
       z-index 1
-    // 黑色渐变蒙版：文字所在边缘不透明度约 0.5，垂直中线为 0；与模糊层同步随 hover 淡入
+    // 黑色渐变蒙版：文字所在边缘不透明度约 0.5，垂直中线为 0；始终显示，提升文字与背景对比
     .banner-mask
       position: absolute
       inset: 0
       z-index: 1
       pointer-events: none
-      opacity: var(--blur-opacity)
-      trans1 all
-      &.top
+      opacity: 1
+      &.banner-mask-top
         background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0) 50%)
-      &.bottom
+      &.banner-mask-bottom
         background-image: linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,0.5))
   
 

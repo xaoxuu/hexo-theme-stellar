@@ -134,7 +134,7 @@ function layoutDiv() {
   el += `<div class="article banner top"${bannerStyle}>`
   if (banner.url?.length > 0) {
     el += `<img class="lazy bg" data-src="${banner.url}">`
-    maskHtml = `<div class="banner-mask top" aria-hidden="true"></div><div class="banner-mask bottom" aria-hidden="true"></div>`
+    maskHtml = `<div class="banner-mask banner-mask-top" aria-hidden="true"></div><div class="banner-mask banner-mask-bottom" aria-hidden="true"></div>`
     if (banner.color) {
       contentStyle += ' style="--text-banner:' + banner.color + '"'
     }

@@ -329,6 +329,7 @@ graph TB
   - 许可页脚（默认 CC BY-NC-SA 4.0）
   - 相关文章计算（需 `hexo-related-popular-posts` 插件）
   - AI 成分标签：front-matter `ai_label` 字段（`manual` / `polished` / `generated` / `reviewed`）标记文章 AI 成分，文案由多语言系统提供（`languages/*.yml` 的 `meta.ai_label.*`，缺失时不渲染），颜色与可选图标由 `article.ai_label` 配置（彩色文字、无底色）；未设置时取 `default`（为空则不显示）；文章页显示在顶部横幅第一行右侧（阅读时长右侧），banner 含图片时文字用默认颜色，文章列表卡片不显示
+- **顶部横幅黑色蒙版**：`page.banner`（或 `banner_info` 关联配置）提供图片时，页面顶部横幅渲染同图模糊层与黑色渐变蒙版（`.banner-mask-top` / `.banner-mask-bottom`）；黑色蒙版**始终显示**（文字所在边缘不透明度约 0.5 → 垂直中线 0，贴满横幅），hover 时同图模糊层淡入（`--blur-opacity`），蒙版不随 hover 变化
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
