@@ -44,5 +44,6 @@ description: 主题仓库（hexo-theme-stellar）开发全流程：方案 → �
 ### 5. 发版
 
 - 由用户触发时执行：分析自上一 tag 起的 commit 确定版本号 → 在 `CHANGELOG.md` 写入对应非空章节（H2 版本号 + H3 分类）→ 向用户确认版本号与变更摘要 → `npm run release:dry -- <version>` 预演 → 正式发版。
+- 发版前核对：`npm run check` 内含提交登记完整性检查，自上一 tag 起涉及主题代码/配置/行为变化的非合并提交须在 `docs/knowledge/VERIFICATION.md`「提交登记（发版前核对）」表登记短 SHA（纯文档 / CI 改动无需登记）；缺失先补登记再发版。
 - 详见 `docs/guides/release-process.md` 与 `AGENTS.md`「发版规范」（§8）。
 - 完成条件：版本号与变更摘要已获用户确认；dry-run 通过后完成正式发版。

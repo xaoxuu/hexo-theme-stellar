@@ -212,7 +212,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 ## 八、提交登记（发版前核对）
 
-> 发版前核对台账：`ci/check-release-docs.js` 会校验自上一 tag 以来的每个非合并提交（7 位短 SHA）都出现在下表；缺失时 `npm run check` 失败并列出缺失提交。登记时按实际 `git log --no-merges <tag>..HEAD` 输出为准。
+> 发版前核对台账：`ci/check-release-docs.js` 会校验自上一 tag 以来**涉及主题代码、配置或行为变化**的每个非合并提交（改动 `layout/`、`scripts/`、`source/`、`languages/`、`_data/`、`_config.yml`，7 位短 SHA）都出现在下表；纯文档 / CI / 工具改动无需登记。缺失时 `npm run check` 失败并列出缺失提交。登记时按实际 `git log --no-merges <tag>..HEAD` 输出为准。
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|

@@ -13,6 +13,8 @@ npm run release → push main + npm → CI 自动触发 → npm publish + git ta
 
 CHANGELOG.md 的历史数据已于 2026-08-09 一次性从 GitHub Releases API 同步入库（统一格式：二级标题为版本号，三级标题为分类）；此后每次发版的更新日志由 AI/人工提前写入 CHANGELOG.md，脚本只做非空校验。
 
+发版前还需完成**提交登记**：自上一 tag 起涉及主题代码/配置/行为变化的非合并提交（7 位短 SHA）登记到 `docs/knowledge/VERIFICATION.md`「提交登记（发版前核对）」表（`ci/check-release-docs.js` 校验，`npm run check` 内含该项，缺失会中止发版；纯文档 / CI / 工具改动无需登记）。
+
 ## 更新日志准备
 
 每次发版前，由 AI 或人工在 `CHANGELOG.md` 中为待发布版本写入 `## <version>` 章节（H2 版本号 + H3 分类，如 `### 新功能` / `### 修复` / `### 升级注意（配置变更与破坏性改动）`）；章节末尾追加一行 `Full Changelog: [上一版本...当前版本](https://github.com/xaoxuu/hexo-theme-stellar/compare/上一版本...当前版本)`。脚本不生成内容，只在发版前校验该章节存在且非空，缺失或为空则终止。
@@ -66,6 +68,7 @@ npm run release:dry -- 1.34.1
 
 - dry-run 或二次确认取消：文件从内存恢复，工作区与执行前一致
 - CHANGELOG 章节缺失或为空：脚本校验拦截并终止，提示先由 AI/人工补充该版本章节
+- 提交登记缺失：`npm run check` 的提交登记完整性检查列出缺失短 SHA，补登记到 `docs/knowledge/VERIFICATION.md`「提交登记（发版前核对）」后重跑
 - 版本已发布：CI 自动跳过 publish 与 tag，可安全重跑
 - Release 已存在：CI 跳过创建，可安全重跑
 - 推送失败（如 `npm` 分支漂移）：git 会报错并终止，已提交但未推送的改动可手动处理
@@ -73,6 +76,7 @@ npm run release:dry -- 1.34.1
 ## 发版 Checklist
 
 - [ ] 所有功能变更已合并到 main，且通过构建验证
+- [ ] 提交登记完整性：自上一 tag 起涉及主题代码/配置/行为变化的非合并提交已在 `docs/knowledge/VERIFICATION.md` 提交登记表登记短 SHA（`npm run check` 校验）
 - [ ] 由 AI/人工在 CHANGELOG.md 中写入 `## <version>` 非空章节
 - [ ] 执行 `npm run release:dry -- <version>` 检查变更与恢复
 - [ ] 执行 `npm run release -- <version>`（或交互式 `npm run release`）推送

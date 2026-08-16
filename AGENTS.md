@@ -136,6 +136,7 @@ module.exports = function(hexo) {
 **文档同步门禁**：
 
 - 涉及主题代码、配置或行为变化时，必须同步更新 `docs/knowledge/` 并在 `VERIFICATION.md` 登记；涉及逻辑变更（API、配置项、行为变化）时同步更新仓库 Wiki
+- 发版前 `npm run check` 内含提交登记完整性检查：自上一 tag 起涉及主题代码、配置或行为变化的非合并提交须在 `docs/knowledge/VERIFICATION.md`「提交登记（发版前核对）」表登记短 SHA（纯文档 / CI / 工具改动无需登记），缺失即失败（`ci/check-release-docs.js`）
 
 **新增功能 Checklist**（必须覆盖全部相关维度）：
 
@@ -190,6 +191,7 @@ npm run release → push main + npm → CI 自动触发 → npm publish + git ta
 
 - **版本号推导**（自上一个 tag 起分析 commit）：仅含 fix / perf / style → `x.y.(z+1)`；含 feat / refactor / breaking change → `x.(y+1).0`；大型重构、用户可感知的设计调整 → `(x+1).0.0`；测试版本 → `x.y.z-rc.N`
 - **CHANGELOG**：AI/人工先写入 `## <version>` 非空章节（H2 版本号 + H3 分类，格式见 `docs/guides/release-process.md`）
+- **提交登记**：自上一 tag 起涉及主题代码、配置或行为变化的非合并提交须在 `docs/knowledge/VERIFICATION.md`「提交登记（发版前核对）」表登记短 SHA（纯文档 / CI / 工具改动除外）；`npm run check` 内含完整性检查，缺失即中止发版
 - **确认**：向用户列出版本号和变更摘要，等待确认
 - **执行**：`npm run release:dry -- <version>` 预演通过后，`npm run release -- <version>`（非交互环境加 `--yes`）
 
