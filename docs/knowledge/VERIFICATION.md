@@ -23,6 +23,7 @@
 
 | 位置 | 问题 | 修正 |
 |------|------|------|
+| 2026-08-17 | 使用 hexo-minify（`removeAttributeQuotes`）的站点在 HTML 压缩后，`img_lazyload` 过滤器原正则 `/<img(.*?)src="(.*?)"(.*?)>/gi` 跨标签越界，把 bootstrap 内联脚本中的 `s.src = "/js/utils.js?v=..."` 改写成「1×1 PNG 占位 + `data-src`」，bootstrap 语法错误 → 4× `stellar is not defined` + `stellar.initPlugin is not a function` → scrollreveal 不初始化，`.slide-up` 列表靠 3 秒兜底显示（dusays.com 实测首卡约 3.1s） | 重写 `scripts/filters/lib/img_lazyload.js`：属性感知标签扫描（兼容无引号 src）+ 跳过 `<script>`/`<style>`/注释，杜绝越界；bootstrap 补载改用 `setAttribute('src')`；`layout/_plugins/index.ejs` 增加 `stellar.initPlugin` 兜底 shim；scrollreveal 因 GPL-3.0 许可冲突不内置（见 `docs/designs/2026-08-17-img-lazyload-regex-fix/`） |
 | 2026-08-16 | 第三方优化器把 `<script src="/js/utils.js">` 改写为占位符 + `data-src` 且页面无 loader 时，`utils` 从未定义，页尾所有 `utils.initPlugin(...)` 插件片段与 `main.js`/`theme.js`/`services.js` 抛 `utils is not defined`，scrollreveal 兜底未注册，`.slide-up` 列表永久隐藏 | 新增 `layout/_partial/scripts/bootstrap.ejs`（`window.stellar.initPlugin` 队列 + DOMContentLoaded 补载）、`scripts.ejs` 解析期 `document.write` 同步补载看门狗、`utils.js` IIFE 防重入并暴露 `window.utils`、scrollreveal `sr-fallback` 看门狗独立于 utils；`utils.initPlugin` 调用点统一改为 `stellar.initPlugin`（见 `docs/designs/2026-08-16-utils-lazy-load-guard/`） |
 | 2026-08-16 | `docs/knowledge/知识库全量.md`（合并版） | 删除合并版：仓库无生成脚本、手工双写易漂移且 `verify.py` 跳过核查；知识库以领域页面为唯一事实源（AGENTS.md / README 引用同步清理，RAG 可直接索引领域页面） |
 | 2026-08-16 | 置顶轮播左右箭头颜色固定为主题文字色，不随当前幻灯片封面明暗变化 | `initPinSlider` 在 `goTo` 切换时按当前幻灯片封面平均色计算 contrast 颜色写入箭头 `--text-banner`（`color: var(--text-banner, var(--text))`），随自动播放/切换实时更新，主题切换时经 `refreshPinNavColor` 重算（见 `docs/designs/2026-08-16-adaptive-text-color/`） |
@@ -224,6 +225,11 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `433ba90` | fix(bootstrap): utils 补载改用 setAttribute 并增加 stellar.initPlugin 兜底注册点 | 设计文档 `2026-08-17-img-lazyload-regex-fix/`；知识库 `05-前端交互/client-side-overview.md`、`07-外部集成/plugin-system.md`；CHANGELOG「修复」 |
+| `d72269f` | fix(lazyload): 修复图片懒加载正则跨标签越界改写 bootstrap 导致列表延迟与控制台报错 | 设计文档 `2026-08-17-img-lazyload-regex-fix/`；知识库 `09-高级主题/performance.md`；CHANGELOG「修复」 |
+| `27573ac` | style(waline): 更新 waline 评论区样式 | 仅登记（上游提交）；`source/css/comments/waline.styl` |
+| `3c8efce` | fix(ghrepo): 修正卡片统计文本超长时溢出的问题 (#691) | 仅登记（上游提交）；`source/css/_components/widgets/ghrepo.styl` |
+| `33e0090` | Update waline to 3.15.2 (#690) | 仅登记（上游提交）；`_config.yml`、`source/css/comments/waline.styl` |
 | `74f9ca5` | refactor(icons): 评论数图标统一使用 default:tocomment，移除 weibo:comment | 设计文档 `2026-08-16-default-comment-icon/`；知识库 `04-标签插件/icon-tag.md`（客户端白名单与用途描述）；主工程 wiki `tag-plugins/express.md`（weibo: 命名空间描述去掉「评论」） |
 | `b30b53b` | fix(style): timeline 页脚评论图标尺寸与文字对齐 | 设计文档 `2026-08-16-fix-timeline-footer-icon-size/`；`source/css/_components/tag-plugins/timeline.styl`（页脚 `.item svg`：1em + `vertical-align: -0.125em`） |
 | `a754ba3` | fix(utils): 插件注册队列化与 utils.js 补载，防御脚本延迟加载导致页面空白 | 设计文档 `2026-08-16-utils-lazy-load-guard/`；知识库 `05-前端交互/client-side-overview.md`、`07-外部集成/plugin-system.md`；本节二登记 |

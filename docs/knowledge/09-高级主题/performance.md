@@ -96,7 +96,7 @@ sequenceDiagram
   participant "vanilla-lazyload" as lib
 
   build->>filter: "HTML post-render"
-  filter->>filter: "regex: src→data-src, add class=lazy"
+  filter->>filter: "标签感知扫描：src→data-src，add class=lazy"
   filter-->>build: "patched HTML"
   browser->>script: "DOMContentLoaded"
   script->>lib: "window.lazyLoadOptions { elements_selector: .lazy }"
@@ -125,10 +125,11 @@ dependencies:
 
 ### 单图选择退出
 
-`img_lazyload.js` 过滤器跳过以下 `<img>` 标签：
+`img_lazyload.js` 过滤器（`after_render:html`）以属性感知方式扫描真实 `<img>` 标签：兼容双引号/单引号/无引号（HTML 压缩器产物）的 `src`，并完整跳过 `<script>`/`<style>`/注释区域，避免与压缩器（如 hexo-minify 的 `removeAttributeQuotes`）组合时正则跨标签越界、误改写页内内联脚本。跳过以下 `<img>` 标签：
 
-- 已含 `data-srcset`（重复防护）
-- 内联 `src="data:image…"`（base64 data URI）
+- 已含 `data-src` / `data-srcset`（重复防护）
+- 含 `srcset`（交给浏览器原生处理）
+- 内联 `data:image…`（base64 data URI）
 - 含 ` no-lazy ` 属性
 
 **参考源码**：[scripts/filters/lib/img_lazyload.js](../../../scripts/filters/lib/img_lazyload.js)

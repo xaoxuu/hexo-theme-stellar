@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.42.1
+
+> 发布日期：2026-08-17
+
+### 修复
+- 图片懒加载过滤器在 HTML 压缩器（如 hexo-minify `removeAttributeQuotes`）去除属性引号后，原正则跨标签越界，把页尾 bootstrap 内联脚本里的 `s.src = "/js/utils.js?v=..."` 误改写为「1×1 PNG 占位 + `data-src`」，导致 bootstrap 语法错误、`stellar is not defined` 连锁报错、scrollreveal 不初始化、`.slide-up` 文章列表延迟约 3 秒才显示；改为属性感知标签扫描并跳过 `<script>`/`<style>`/注释区域，同时兼容无引号 `src` 的图片懒加载
+- bootstrap 的 utils 补载改用 `setAttribute('src')` 赋值，避免被基于 `s.src = "..."` 的朴素正则（图片懒加载 / 脚本延迟优化器）改写
+- `layout/_plugins/index.ejs` 增加 `stellar.initPlugin` 兜底注册点：bootstrap 被第三方优化器改写/移除时不再产生 `stellar is not defined` 连锁报错，插件仍可注册运行
+
+Full Changelog: [1.42.0...1.42.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.42.0...1.42.1)
+
 ## 1.42.0
 
 > 发布日期：2026-08-16

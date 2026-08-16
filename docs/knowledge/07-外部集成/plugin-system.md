@@ -185,7 +185,7 @@ JavaScript 插件经 `layout/_plugins/` 中的独立 EJS 模板加载。每个�
 3. **自动初始化**：插件在页面加载时初始化
 4. **API 暴露**：插件经 `window.stellar` 命名空间暴露 API
 
-插件注册统一走 `stellar.initPlugin(fn, name, options)`（`window.stellar`，由 `layout/_partial/scripts/bootstrap.ejs` 在 `utils.js` 之前定义）：utils 就绪时等价于 `utils.initPlugin`；若第三方优化器把 `utils.js` 延迟/改写（如占位符 + `data-src`），注册请求先入队，utils 补载后自动补跑，避免解析期抛 `utils is not defined` 导致插件与页面内容丢失。scrollreveal 另有独立于 utils 的 3 秒 `sr-fallback` 兜底看门狗，保证 `.slide-up` 内容不会因插件加载失败而永久隐藏。
+插件注册统一走 `stellar.initPlugin(fn, name, options)`（`window.stellar`，由 `layout/_partial/scripts/bootstrap.ejs` 在 `utils.js` 之前定义）：utils 就绪时等价于 `utils.initPlugin`；若第三方优化器把 `utils.js` 延迟/改写（如占位符 + `data-src`），注册请求先入队，utils 补载后自动补跑，避免解析期抛 `utils is not defined` 导致插件与页面内容丢失。`layout/_plugins/index.ejs` 另有兜底 shim：当 bootstrap 本身被优化器改写/移除导致 `stellar.initPlugin` 缺失时，补一个等价注册点（utils 就绪时直接委托、未就绪时入队），避免 `stellar is not defined` 连锁报错。scrollreveal 另有独立于 utils 的 3 秒 `sr-fallback` 兜底看门狗，保证 `.slide-up` 内容不会因插件加载失败而永久隐藏。
 
 ---
 
@@ -265,15 +265,17 @@ swiper:
 
 ```yaml
 scrollreveal:
-  enable: #true  # 默认注释掉——可能引起空白页问题
-  js: https://gcore.jsdelivr.net/npm/scrollreveal@4.0/dist/scrollreveal.min.js
+  enable: true
+  js: https://gcore.jsdelivr.net/npm/scrollreveal@4.0/dist/scrollreveal.min.js # 默认 CDN；scrollreveal 为 GPL-3.0（开源/非商用），与主题 MIT 协议冲突，不内置
   distance: 8px
   duration: 1000  # ms
   interval: 100   # ms
   scale: 1        # 0.1~1
 ```
 
-**⚠️ 重要**：ScrollReveal 默认禁用并标记慎用，配置注释为「慎用，有些时候打开页面空白」。
+**⚠️ 重要**：ScrollReveal 默认启用。`.slide-up` 内容在 ScrollReveal 加载完成前保持 `visibility: hidden`，加载/初始化失败时由独立的 3 秒 `sr-fallback` 看门狗强制显示；该看门狗与 utils/bootstrap 解耦，即使插件注册失败内容也不会永久隐藏。
+
+**许可说明**：`scrollreveal@4.0` 官方包为 **GPL-3.0**（开源/非商用，商业站点需购买商用授权），与主题 MIT 协议不兼容，因此不内置进主题包，默认继续走 CDN；如需彻底去除 CDN 依赖，应自研 IntersectionObserver 入场动画（主题自有代码）。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
@@ -521,7 +523,7 @@ plugins:
 | `preload` | `true` | 链接预加载 | flying_pages |
 | `fancybox` | `true` | 图片灯箱 | @fancyapps/ui |
 | `swiper` | `true` | 轮播 | swiper |
-| `scrollreveal` | `false` | 滚动动画 | scrollreveal |
+| `scrollreveal` | `true` | 滚动动画 | scrollreveal（CDN，GPL-3.0 不内置） |
 | `tianli_gpt` | `false` | AI 摘要 | 需要 API key |
 | `katex` | `false` | 数学渲染 | hexo-renderer-markdown-it-plus |
 | `mathjax` | `false` | 数学渲染（备选） | 无 |
