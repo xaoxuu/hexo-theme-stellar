@@ -224,6 +224,8 @@ $border-bar = convert(hexo-config('style.border-radius.bar'))            // 横�
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
 
+全局 `* { corner-shape: $corner-shape }`（默认 `superellipse(1.25)`）只作用于元素自身背景/边框绘制；Chromium 不把 corner-shape 传递给子内容的 `overflow` 裁剪，`clip-path` 也会把角落硬裁为普通圆角。因此封面/轮播/横幅的背景图同时由容器自身背景承载（`--cover-url` / `--bg-url` / `--pin-cover-url`），并在 `.post-card` / `.article.banner` 上用 `@supports not (corner-shape: superellipse(1))` 守卫 clip-path（Chromium 移除、Safari/Firefox 保留圆角兜底），使图片角落与其它元素一致地跟随配置曲率（详见 `docs/designs/2026-08-16-corner-shape-image-containers/`）。
+
 ### 阴影系统
 
 盒阴影定义为可复用令牌，提供一致的层级感：

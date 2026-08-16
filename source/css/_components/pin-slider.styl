@@ -5,6 +5,11 @@
   border-radius: $border-card-l
   overflow: hidden
   box-shadow: $boxshadow-card
+  // 背景图由 .pin-slider 自身背景承载（跟随 corner-shape），由插件按当前 slide 同步 --pin-cover-url；
+  // 子图保留用于滑动动画与 hover 滤镜，角落楔形区由容器背景（同图）无缝补位
+  background-image: var(--pin-cover-url)
+  background-size: cover
+  background-position: center
   // 初始化前隐藏，避免先闪出第一张；定位到缓存序号后再显示
   visibility: hidden
 
@@ -19,6 +24,10 @@
   height: 15rem
   overflow: hidden
   background: var(--card)
+  // 带封面幻灯片背景改透明，让 .pin-slider 自身背景（corner-shape 圆角）透出；
+  // 无封面幻灯片保持白卡
+  &:not(.no-cover)
+    background: transparent
   @media screen and (max-width: $device-mobile-max)
     height: 11rem
   // 带封面幻灯片（post 封面幻灯片 + wiki/项目幻灯片）接入通用底部覆盖层：

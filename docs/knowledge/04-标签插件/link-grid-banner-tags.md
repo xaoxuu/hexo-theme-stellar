@@ -362,6 +362,8 @@ el += `<div class="content" data-text-adaptive="split">`
 
 > banner 是 `overflow: hidden` + 圆角/连续曲率的裁剪容器，内嵌 `{% navbar %}` 的激活链接不使用 `blur-effect()`（backdrop-filter）——backdrop-filter 在部分浏览器（Safari / 旧版 Chromium）会破坏父级圆角裁剪，hover 放大背景图时四角变直角；激活项改用与 hover 一致的半透明白底（`rgba(white, 0.25)`）。
 
+> 背景图同时由 `.banner` 自身背景承载（`--bg-url`）：Chromium 的 `corner-shape` 只作用于元素自身背景绘制，不会传递给子图片的 overflow 裁剪，容器自身背景使图片角落与其它元素一致地跟随配置曲率；子图保留用于 hover 滤镜，角落楔形区由容器背景（同图）无缝补位。
+
 ---
 
 ## 参数解析模式

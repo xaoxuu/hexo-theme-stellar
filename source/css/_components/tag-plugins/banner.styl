@@ -2,6 +2,10 @@
   border-radius: $border-image
   &.top
     border-radius: $border-card-l
+  // 背景图同时作为横幅自身背景承载（跟随 corner-shape），子图保留用于 hover 滤镜
+  background-image: var(--bg-url)
+  background-size: cover
+  background-position: center
   position: relative
   overflow: hidden
   display: flex 

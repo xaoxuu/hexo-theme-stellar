@@ -4,6 +4,10 @@
 .article.banner
   --text-banner: var(--text)
   background: var(--block)
+  // 背景图同时作为横幅自身背景承载（跟随 corner-shape），子图保留用于 hover 滤镜
+  background-image: var(--bg-url)
+  background-size: cover
+  background-position: center
   margin: 0
   height: unset
   // Safari 26.4/26.5 合成层裁剪 bug（WebKit 312584/319993，STP 242/249 才修）：
@@ -14,7 +18,10 @@
   // clip-path 保留作为正常浏览器裁剪与额外防御；移动端圆角归零时随 `.banner.top` 一并关闭（见 tag-plugins/banner.styl）
   isolation: isolate
   transform: translateZ(0)
-  clip-path: 'inset(0 round %s)' % $border-card-l
+  // clip-path 会把角落硬裁为普通圆角，覆盖 corner-shape；支持 corner-shape 的浏览器移除，
+  // 仅在不支持的浏览器（Safari/Firefox）保留圆角兜底
+  @supports not (corner-shape: superellipse(1))
+    clip-path: 'inset(0 round %s)' % $border-card-l
 
 .article.banner
   .bg+.content
@@ -85,7 +92,8 @@
     --blur-height-bottom: 7rem
     &:before, &:after
       // 模糊层自身也加 clip-path：该合成层是 Safari 跳过父级圆角裁剪的直接漏出源
-      clip-path: 'inset(0 round %s)' % $border-card-l
+      @supports not (corner-shape: superellipse(1))
+        clip-path: 'inset(0 round %s)' % $border-card-l
     .top,.bottom
       z-index: 1
   

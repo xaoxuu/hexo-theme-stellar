@@ -51,13 +51,21 @@
   display: block
   border-radius: $border-card-l
   background: var(--card)
+  // hero 封面卡片：封面图同时作为卡片自身背景承载，角落跟随全局 corner-shape 圆角裁剪；
+  // 子图保留用于 hover 变暗/放大滤镜，角落楔形区由容器背景（同图）无缝补位
+  background-image: var(--cover-url)
+  background-size: cover
+  background-position: center
   overflow: hidden
   z-index: 0
   position: relative
   // Safari 26.4/26.5 合成层裁剪 bug（WebKit 312584/319993）：带 filter:blur() 的合成层
   // （.cover:before 同图模糊层）不执行父级 overflow:hidden + border-radius 圆角裁剪，静止时底部两角漏方角；
-  // 用与圆角同源的 clip-path 直接裁剪（hover 时模糊层带 transform 反而正常，见 .cover:before 的 translateZ(0)）
-  clip-path: 'inset(0 round %s)' % $border-card-l
+  // 用与圆角同源的 clip-path 直接裁剪（hover 时模糊层带 transform 反而正常，见 .cover:before 的 translateZ(0)）。
+  // clip-path 会把角落硬裁为普通圆角，覆盖 corner-shape；因此在支持 corner-shape 的浏览器中移除，
+  // 仅在不支持的浏览器（Safari/Firefox）保留圆角兜底
+  @supports not (corner-shape: superellipse(1))
+    clip-path: 'inset(0 round %s)' % $border-card-l
   --img-br: 100%
   --img-sat: 100%
   --blur-px: 1em
@@ -288,8 +296,14 @@
       aspect-ratio: 2 / 1
       border-radius: $border-card-l
       overflow: hidden
-      // 与 .post-card 相同的 Safari 圆角裁剪兜底（模糊层合成层不跟随 overflow:hidden）
-      clip-path: 'inset(0 round %s)' % $border-card-l
+      // 背景图由 .cover 自身背景承载（跟随 corner-shape），子图保留用于 hover 滤镜
+      background-image: var(--cover-url)
+      background-size: cover
+      background-position: center
+      // 与 .post-card 相同的 Safari 圆角裁剪兜底（模糊层合成层不跟随 overflow:hidden）；
+      // 支持 corner-shape 的浏览器移除 clip-path，由自身背景跟随曲率
+      @supports not (corner-shape: superellipse(1))
+        clip-path: 'inset(0 round %s)' % $border-card-l
       display: block
       img
         width: 100%

@@ -151,6 +151,10 @@ function initPinSlider() {
   var slides = slider.querySelectorAll('.pin-slide');
   var count = slides.length;
   if (!track || count <= 1) {
+    // 单张幻灯片：直接把封面同步到 .pin-slider 自身背景（跟随 corner-shape）
+    if (slides[0]) {
+      slider.style.setProperty('--pin-cover-url', slides[0].style.getPropertyValue('--pin-cover-url') || '');
+    }
     slider.style.visibility = 'visible';
     return;
   }
@@ -173,6 +177,11 @@ function initPinSlider() {
   function goTo(n) {
     index = (n + count) % count;
     track.style.transform = 'translateX(-' + (index * 100) + '%)';
+    // 背景图由 .pin-slider 自身背景承载（跟随 corner-shape），随当前 slide 同步
+    var active = slides[index];
+    if (active) {
+      slider.style.setProperty('--pin-cover-url', active.style.getPropertyValue('--pin-cover-url') || '');
+    }
     var dots = slider.querySelector('.pin-slider-dots');
     var items = dots ? dots.children : [];
     for (var i = 0; i < count; i++) {
