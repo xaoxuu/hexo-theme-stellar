@@ -65,8 +65,8 @@ graph TB
     
     Root --> WidthMain["--width-main<br/>Main content column width"]
     Root --> SideWidth["--side-content-width<br/>Sidebar text width"]
-    Root --> GapMargin["--gap-margin<br/>Container margins: 16px"]
-    Root --> GapPadding["--gap-padding<br/>Element padding: 16px"]
+    Root --> GapBase["--gap-base<br/>Internal spacing: 16px"]
+    Root --> GapPage["--gap-page<br/>Page-level spacing: 16px → 32px"]
     Root --> GapP["--gap-p<br/>Paragraph spacing"]
     
     WidthMain --> W720["Base: 720px"]
@@ -77,8 +77,10 @@ graph TB
     SideWidth --> S188["Tablet: 188px<br/>@media max-width: $device-tablet"]
     SideWidth --> S224Mobile["Mobile: 224px<br/>@media max-width: $device-mobile-max"]
     
+    GapPage --> GP16["Base: 16px"]
+    GapPage --> GP32["Laptop+: 32px<br/>@media min-width: $device-laptop"]
+    
     GapP --> GapPCalc["calc(var(--fsp) + 4px)"]
-    GapMargin --> GapMax["--gap-max = margin + padding"]
 ```
 
 #### 主内容宽度缩放
@@ -119,13 +121,13 @@ graph TB
 
 | 变量 | 值 | 用途 |
 |------|-----|------|
-| `--gap-margin` | 16px | 元素轮廓到容器边缘 |
-| `--gap-padding` | 16px | 文本内容到元素轮廓 |
-| `--gap-max` | calc(margin + padding) | 文本到容器边缘（计算值） |
+| `--gap-base` | 16px | 组件内部基础间距（margin/padding 统一，固定） |
+| `--gap-page` | 16px / 32px（≥laptop） | 页面级留白（侧边栏/内容区/列间距） |
+| `--rightbar-width-extra` | calc(var(--gap-base) * 2) = 32px | 右栏宽度增量（在 `--width-sidebar` 基础上加宽） |
 | `--gap-p` | calc(var(--fsp) + 4px) | 段落垂直间距 |
 | `--gap-p-compact` | calc(var(--fsp) * 0.75) | 紧凑段落间距 |
 
-这些变量保证所有组件间距一致，同时随 `--fsp` 字号变化适配。
+间距令牌分两级：`--gap-base` 固定 16px（组件内部间距，不随屏幕变化）；`--gap-page` 按断点分档（≤`$device-laptop`/1180px 为 16px，≥1180px 为 32px），控制侧边栏到屏幕边缘、内容区上下与列间距。组件内部引用 `--gap-base`，页面级规则引用 `--gap-page`。这些变量同时随 `--fsp` 字号变化适配。
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
 

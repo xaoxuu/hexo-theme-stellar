@@ -64,10 +64,14 @@ $corner-shape = convert(hexo-config('style.corner-shape'))
   
   // 侧边栏文字内容宽度
   --side-content-width: 224px
-  // 元素轮廓到容器边缘的间距
-  --gap-margin: 16px
-  // 元素文本内容到元素自身的轮廓的间距
-  --gap-padding: 16px
+  // 组件内部基础间距（margin/padding 统一）
+  --gap-base: 16px
+  // 页面级留白（侧边栏/内容区/列间距），笔记本及以上放宽
+  --gap-page: 16px
+  @media screen and (min-width: $device-laptop)
+    --gap-page: 32px
+  // 右栏宽度增量（在 --width-sidebar 基础上加宽）
+  --rightbar-width-extra: calc(var(--gap-base) * 2)
   
   --gap-p: 'calc(%s + 4px)' % $fs-body // gap for paragraph
   --gap-p-compact: 'calc(%s * 0.75)' % $fs-body
@@ -82,11 +86,6 @@ $corner-shape = convert(hexo-config('style.corner-shape'))
     --side-content-width: 188px
   @media screen and (max-width: $device-mobile-max)
     --side-content-width: 224px
-
-// 动态计算值
-:root
-  // 元素文本内容到容器边缘的间距
-  --gap-max: calc(var(--gap-margin) + var(--gap-padding))
 
 // shadow
 $boxshadow-card = 0 1px 2px 0px rgba(0, 0, 0, 0.1)

@@ -259,9 +259,8 @@ graph TB
     end
     
     subgraph "Spacing Properties"
-        MARGIN["--gap-margin<br/>Container margins: 16px"]
-        PADDING["--gap-padding<br/>Content padding: 16px"]
-        MAX["--gap-max<br/>Combined: calc(--gap-margin + --gap-padding)"]
+        BASE["--gap-base<br/>Internal spacing: 16px (fixed)"]
+        PAGE["--gap-page<br/>Page-level spacing: 16px → 32px (laptop+)"]
         PGAP["--gap-p<br/>Paragraph spacing<br/>calc($fs-body + 4px)"]
     end
     
@@ -274,9 +273,8 @@ graph TB
     
     ROOT --> MAIN
     ROOT --> SIDE
-    ROOT --> MARGIN
-    ROOT --> PADDING
-    ROOT --> MAX
+    ROOT --> BASE
+    ROOT --> PAGE
     ROOT --> PGAP
     ROOT --> FSP
     ROOT --> FSH2
@@ -302,6 +300,19 @@ graph TB
 ```
 
 这样所有使用 `var(--width-main)` 的组件都会自动适配，无需各自的媒体查询。
+
+间距令牌同样按断点分档：
+
+```stylus
+:root
+  --gap-base: 16px
+  --gap-page: 16px
+  // 笔记本及以上放宽页面级留白
+  @media screen and (min-width: $device-laptop)
+    --gap-page: 32px
+```
+
+页面级规则引用 `--gap-page`，组件内部间距引用 `--gap-base`。
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
 
@@ -696,9 +707,9 @@ CSS 自定义属性随视口变化：
 @media screen and (min-width: $device-2k)
   .l_left
     margin-left: auto
-    margin-right: calc(2 * var(--gap-max))
+    margin-right: calc(2 * var(--gap-page))
   .l_right
-    margin-left: var(--gap-max)
+    margin-left: var(--gap-page)
     margin-right: auto
 ```
 

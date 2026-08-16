@@ -10,11 +10,11 @@
   scrollbar(0, 0)
   z-index: 1
   line-height: 1.2
-  margin: 0 var(--gap-margin)
+  margin: 0 var(--gap-base)
   .widget-wrapper
     .widget-header
-      padding-left: var(--gap-padding)
-      padding-right: var(--gap-padding)
+      padding-left: var(--gap-base)
+      padding-right: var(--gap-base)
       display: flex
       justify-content: space-between
       align-items: baseline
@@ -64,19 +64,20 @@
 .l_left .widgets
   padding-bottom: 64px
 .l_right .widgets
-  padding: 16px 0
+  padding: 0
   &:empty 
     display: none
   .widget-wrapper:first-child
     margin-top: 0
   .widget-wrapper
     .widget-header
-      padding-left: var(--gap-padding)
-      padding-right: var(--gap-padding)
+      padding-left: var(--gap-base)
+      padding-right: var(--gap-base)
   // 小屏幕
   @media screen and (max-width: $device-laptop)
+    padding: var(--gap-base) 0
     .widget-wrapper
-      margin-top: var(--gap-margin)
+      margin-top: var(--gap-base)
       border-radius: $border-card-s
   // 大屏幕
   @media screen and (min-width: $device-laptop)

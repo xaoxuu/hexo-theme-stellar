@@ -270,7 +270,7 @@ graph TB
 
 ## 右栏：小部件系统
 
-右栏（`.l_right`）放置上下文小部件，使用 `margin: var(--gap-margin) 0` 与 `border-radius: $border-card-l` 保持视觉一致。
+右栏（`.l_right`）放置上下文小部件，使用 `margin: var(--gap-page) 0` 与 `border-radius: $border-card-l` 保持视觉一致。
 
 ### 常用右栏小部件
 
@@ -283,7 +283,7 @@ graph TB
 
 **上下文加载**：右栏小部件常查询页面属性（TOC 用 `page.headings`、GitHub 卡片用 `page.repo`），按可用数据条件渲染。TOC 细节见[目录系统](../05-前端交互/toc-system.md)。
 
-2K+ 屏幕（`min-width: $device-2k`）上 `.l_right` 用 `margin-left: var(--gap-max); margin-right: auto` 居中整体布局。
+2K+ 屏幕（`min-width: $device-2k`）上 `.l_right` 用 `margin-left: var(--gap-page); margin-right: auto` 居中整体布局。
 
 **参考源码**：[source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)
 
@@ -391,11 +391,14 @@ graph TB
 
 | 断点 | 左栏（`.l_left`） | 右栏（`.l_right`） | 说明 |
 |------|--------------------|--------------------|------|
-| 桌面（≥`$device-2k`） | `margin-left: auto; margin-right: calc(2 * var(--gap-max))` | `margin-left: var(--gap-max); margin-right: auto` | 2K 居中 |
-| 桌面标准 | `margin: var(--gap-margin)` | `margin: var(--gap-margin) 0` | 标准布局 |
+| 桌面（≥`$device-2k`） | `margin-left: auto; margin-right: calc(2 * var(--gap-page))` | `margin-left: var(--gap-page); margin-right: auto` | 2K 居中 |
+| 桌面（≥`$device-laptop`） | `margin: var(--gap-page)` | `margin: var(--gap-page) 0` | 宽松档：`--gap-page` 32px，四周 32px |
+| 平板/紧凑（≤`$device-laptop`） | `margin: var(--gap-page)` | 平板为固定抽屉（`margin: 0`） | 紧凑档：`--gap-page` 16px，四周 16px |
 | 移动（≤`$device-mobile-max`） | `overflow: hidden; background: var(--bg-a100)` | 隐藏 | 折叠为移动端页头，浮动面板 `top: 8pt` |
 
-**高度约束**：PC（>667px）`.l_left` 与 `.leftbar-container` 限制在 `calc(100vh - var(--gap-margin) * 2)`，顶部与底部间距均为 `var(--gap-margin)`（16px）；移动端（≤667px）左右浮动面板顶部为 `8pt`，底部为 `$leftbar-bottom-margin-mobile` / `$rightbar-bottom-margin-mobile`（均为 64px）。
+右栏在共用基础宽度上额外加宽：`.l_right` 宽度 = `--width-sidebar` + `--rightbar-width-extra`（默认 `calc(var(--gap-base) * 2)` = 32px，桌面 320px / 内容 288px），左栏保持 `--width-sidebar`（288px）。
+
+**高度约束**：PC（>667px）`.l_left` 与 `.leftbar-container` 限制在 `calc(100vh - var(--gap-page) * 2)`，顶部与底部间距均为 `var(--gap-page)`（紧凑档 16px / 宽松档 32px）；移动端（≤667px）左右浮动面板顶部为 `8pt`，底部为 `$leftbar-bottom-margin-mobile` / `$rightbar-bottom-margin-mobile`（均为 64px）。
 
 **参考源码**：[source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)
 

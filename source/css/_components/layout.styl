@@ -1,9 +1,7 @@
 .l_body
   display: grid
   grid-template-columns: 1fr minmax(200px,var(--width-main)) 1fr
-  grid-gap: calc(var(--gap-margin) * 4)
-  @media screen and (max-width: $device-desktop)
-    grid-gap: calc(var(--gap-margin) * 2)
+  grid-gap: calc(var(--gap-page) * 1)
   margin: auto
   font-size: var(--fsp)
 
@@ -13,36 +11,34 @@
   position: sticky
   position: -webkit-sticky
   // 侧边栏容器宽度
-  --width-sidebar: calc(var(--gap-margin) * 2 + var(--gap-padding) * 2 + var(--side-content-width))
+  --width-sidebar: calc(var(--gap-base) * 4 + var(--side-content-width))
   width: var(--width-sidebar)
 
 .l_body .l_left
   justify-self: right
-  top: var(--gap-margin)
+  top: var(--gap-page)
 .l_body .l_right
   justify-self: left
-  max-height: calc(100% - var(--gap-margin) * 2)
+  width: calc(var(--width-sidebar) + var(--rightbar-width-extra))
+  max-height: calc(100% - var(--gap-page) * 2)
   .widgets
     height: 100%
     overflow visible
 
 // 平板布局
 @media screen and (max-width: $device-laptop)
-  .l_body .l_right
-    --gap-margin: 16px
   .laptop-only
     display: block !important
   .l_body
-    grid-gap: calc(var(--gap-margin) * 1)
     .l_right
       position: fixed
-      transform: translateX(320px)
+      transform: translateX(calc(100% + var(--inset) * 2))
       transition: transform .38s ease-out
       margin: 0
       --inset: 8px
       right: var(--inset)
-      top: var(--gap-margin)
-      max-height: calc(100vh - var(--gap-margin) * 2)
+      top: var(--gap-page)
+      max-height: calc(100vh - var(--gap-page) * 2)
       box-shadow: $boxshadow-card-float
       z-index: 10
       background: var(--background)
@@ -66,7 +62,7 @@
     display: block
     .l_left
       position: fixed
-      transform: translateX(-320px)
+      transform: translateX(calc(-100% - var(--inset) * 2))
       transition: transform .38s ease-out
       margin: 0
       --inset: 8px

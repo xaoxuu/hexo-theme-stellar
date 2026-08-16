@@ -2,8 +2,8 @@
   display: flex
   flex-direction: column
   align-items: center
-  padding-top: var(--gap-padding)
-  padding-bottom: var(--gap-padding)
+  padding-top: var(--gap-base)
+  padding-bottom: var(--gap-base)
   >.content
     display: flex
     flex-direction: column
@@ -22,7 +22,7 @@
     >.body
       overflow: auto
       scrollbar()
-      margin: 'calc(%s - 4px) %s' % var(--gap-padding)
+      margin: 'calc(%s - 4px) %s' % var(--gap-base)
       .main
         p
           margin: 0;

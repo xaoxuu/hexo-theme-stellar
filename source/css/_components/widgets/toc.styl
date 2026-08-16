@@ -31,7 +31,7 @@
     margin: 0
     list-style: none
   a
-    --padding: calc(var(--gap-padding) / 2)
+    --padding: calc(var(--gap-base) / 2)
     --padding-offset: calc(0 - var(--padding))
     padding: 4px var(--padding)
     margin: 0 var(--padding)
@@ -61,7 +61,7 @@
   top: 0
   padding: 1rem 0
   &:first-child
-    top: var(--gap-margin)
+    top: var(--gap-page)
     padding-top: 1rem
   .widget-body .toc
     max-height: 70vh
@@ -148,8 +148,8 @@
   background: var(--block-border)
   top: 0
   height: 1px
-  left: var(--gap-padding)
-  right: var(--gap-padding)
+  left: var(--gap-base)
+  right: var(--gap-base)
 .widget-wrapper.toc .widget-footer
   margin-top: 8px
   color: var(--text-p2)
@@ -160,7 +160,7 @@
     align-items: center
     color: inherit
     font-size: $fs-14
-    padding: 8px var(--gap-padding)
+    padding: 8px var(--gap-base)
     border-radius: $border-bar
     trans1 all
     svg

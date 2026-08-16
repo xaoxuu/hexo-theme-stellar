@@ -195,9 +195,8 @@ graph LR
   --side-content-width: 224px
   
   // 间距
-  --gap-margin: 16px
-  --gap-padding: 16px
-  --gap-max: calc(var(--gap-margin) + var(--gap-padding))
+  --gap-base: 16px  // 组件内部基础间距（固定）
+  --gap-page: 16px  // 页面级留白；≥laptop 自动放宽为 32px
   
   // 排版
   --fsp: $fs-body
@@ -210,7 +209,7 @@ graph LR
   --gap-p-compact: 'calc(%s * 0.75)' % $fs-body
 ```
 
-这些变量随媒体查询自动响应。例如 `--side-content-width` 随视口大小调整。
+这些变量随媒体查询自动响应。例如 `--side-content-width` 随视口大小调整；间距令牌分两级：`--gap-base` 固定 16px（组件内部间距），`--gap-page` 按断点分档（≤`$device-laptop`/1180px 为 16px，≥1180px 为 32px）控制页面级留白。
 
 ### 覆盖 CSS 变量
 
@@ -225,8 +224,8 @@ graph LR
 
 /* 更紧凑的间距 */
 :root {
-  --gap-margin: 12px;
-  --gap-padding: 12px;
+  --gap-base: 12px;
+  --gap-page: 24px;
 }
 
 /* 更大的标题 */
@@ -235,6 +234,8 @@ graph LR
   --fsh3: calc(var(--fsp) + 12px);
 }
 ```
+
+主题间距令牌默认已分档；若自定义 CSS 加载在主题之后，上述覆盖会全局生效（覆盖所有分档）。
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
 
@@ -387,7 +388,7 @@ graph TB
 ```stylus
 .my-custom-layout
   background: linear-gradient(45deg, $c-theme, $c-accent)
-  padding: var(--gap-max)
+  padding: var(--gap-base)
   border-radius: $border-card
   
   .custom-header

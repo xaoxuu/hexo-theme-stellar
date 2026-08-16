@@ -1,19 +1,19 @@
 .l_left
-  margin: var(--gap-margin)
-  max-height: calc(100vh - var(--gap-margin) * 2)
+  margin: var(--gap-page)
+  max-height: calc(100vh - var(--gap-page) * 2)
   border-radius: $border-card-l
   .header
-    margin: var(--gap-max) var(--gap-margin) 0
+    margin: var(--gap-base) var(--gap-base) 0
 
 .l_right
-  margin: 0
+  margin: var(--gap-page) 0
   border-radius: $border-card-l
 @media screen and (min-width: $device-2k)
   .l_left
     margin-left: auto
-    margin-right: calc(2 * var(--gap-max))
+    margin-right: calc(2 * var(--gap-page))
   .l_right
-    margin-left: var(--gap-max)
+    margin-left: var(--gap-page)
     margin-right: auto
 
 // 纯色卡片风格（style.leftbar.ui-style: card）：
@@ -73,7 +73,7 @@
           background-color: convert($leftbar-background-color-dark)
 
   .leftbar-container
-    height: calc(100vh - var(--gap-margin) * 2)
+    height: calc(100vh - var(--gap-page) * 2)
     display: flex
     flex-direction: column
     word-break: break-all

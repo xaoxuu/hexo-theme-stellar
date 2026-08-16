@@ -24,6 +24,10 @@
 - banner hover 动画对齐封面（背景图缩放 1.05 + 变暗），封面渐变模糊层增加黑色蒙版
 - 统一封面、轮播、页顶横幅与 banner 标签背景图覆盖层观感（`cover-overlay()`）
 - 左栏「所有项目」返回胶囊默认背景复用目录树激活光照效果
+- 间距令牌重构为 `--gap-base` / `--gap-page`：组件内部间距固定 16px，页面级留白随断点分档（16/32px），侧边栏贴边时四周间距一致
+- 右栏在侧边栏基础宽度上单独加宽（新增 `--rightbar-width-extra`，默认 32px）
+- 右栏 `.l_right .widgets` 桌面端 padding 归零，折叠抽屉保留 16px 0
+- 折叠抽屉位移改为跟随自身宽度（`calc(100% + inset*2)`），修复右栏加宽后收拢仍露边
 
 ### 重构
 - 移除已失效的 auto_banner（Unsplash 自动横幅）与 `poster` 配置
@@ -37,6 +41,7 @@
 - 移除 `article.auto_banner`（Unsplash 自动横幅已失效）与文章 front-matter `poster`（`headline` / `topic` / `caption`）；`poster.color` / `banner_info.color` 显式文字颜色不再生效，由自适应文字颜色接管
 - 新增 `article.card_style`（`hero` 默认 / `classic`）：未显式设置的站点保持 hero 卡片样式
 - 新增 `plugins.adaptive_text`（默认 `enable: true`）：页面存在 `[data-text-adaptive]` 元素时才按需加载，文字颜色默认随背景自适应
+- 删除间距令牌 `--gap-margin` / `--gap-padding` / `--gap-max`，替换为 `--gap-base`（组件内部间距）与 `--gap-page`（页面级留白）；引用旧令牌的自定义 CSS 需迁移
 - 知识库合并版 `知识库全量.md` 移除（RAG 可直接索引领域页面）
 
 Full Changelog: [1.41.0...main](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.41.0...main)

@@ -300,9 +300,8 @@ graph TB
     end
     
     subgraph "Spacing System"
-        MARGIN["--gap-margin<br/>16px"]
-        PADDING["--gap-padding<br/>16px"]
-        GAPMAX["--gap-max<br/>calc(margin + padding)"]
+        BASE["--gap-base<br/>16px (fixed)"]
+        PAGE["--gap-page<br/>16px → 32px (laptop+)"]
         GAPP["--gap-p<br/>calc($fs-body + 4px)"]
         GAPCOMPACT["--gap-p-compact<br/>calc($fs-body * 0.75)"]
     end
@@ -319,10 +318,9 @@ graph TB
         MEDIA4K["@media (min-width: 4k)<br/>--width-main: 860px"]
         MEDIATABLET["@media (max-width: tablet)<br/>--side-content-width: 188px"]
         MEDIAMOBILE["@media (max-width: mobile)<br/>--side-content-width: 224px"]
+        MEDIALAPTOP["@media (min-width: laptop)<br/>--gap-page: 32px"]
     end
     
-    MARGIN --> GAPMAX
-    PADDING --> GAPMAX
     FSP --> FSH2
     FSP --> FSH3
     FSP --> FSH4
@@ -331,6 +329,7 @@ graph TB
     WIDTHMAIN -.overridden by.-> MEDIA4K
     SIDEWIDTH -.overridden by.-> MEDIATABLET
     SIDEWIDTH -.overridden by.-> MEDIAMOBILE
+    PAGE -.overridden by.-> MEDIALAPTOP
 ```
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
@@ -352,9 +351,9 @@ graph TB
 间距系统采用两级层级：
 
 ```
---gap-margin: 16px    // 元素轮廓到容器边缘
---gap-padding: 16px   // 文本内容到元素轮廓
---gap-max: calc(var(--gap-margin) + var(--gap-padding))  // 总间距
+--gap-base: 16px    // 组件内部基础间距（固定，margin/padding 统一）
+--gap-page: 16px    // 页面级留白；≥laptop 为 32px
+--rightbar-width-extra: calc(var(--gap-base) * 2)  // 右栏宽度增量（默认 32px）
 ```
 
 段落间距按字号计算：
