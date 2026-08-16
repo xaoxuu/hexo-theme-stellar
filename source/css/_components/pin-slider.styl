@@ -46,10 +46,13 @@
     width: 100%
     box-sizing: border-box
     text-align: left
+    // 大字 contrast（--text-banner）、小字 theme（--text-banner-theme），由自适应插件写入
+    --text-banner: white
+    color: var(--text-banner)
     .pin-slide-headline
       font-weight: 500
       font-size: $fsh3
-      color: white
+      color: var(--text-banner)
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2)
       white-space: nowrap
       overflow: hidden
@@ -60,7 +63,7 @@
     .pin-slide-caption
       margin-top: 4px
       font-size: $fs-14
-      color: white
+      color: var(--text-banner-theme, inherit)
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2)
       white-space: nowrap
       overflow: hidden
@@ -99,6 +102,9 @@
   z-index: 2
   padding: 1.5rem 6rem 1.75rem 2rem
   text-align: left
+  // 大字 contrast（--text-banner）、小字 theme（--text-banner-theme），由自适应插件写入
+  --text-banner: white
+  color: var(--text-banner)
   @media screen and (max-width: $device-mobile-max)
     padding: 1rem 3.5rem 1.25rem 1.25rem
 
@@ -115,16 +121,19 @@
   backdrop-filter: blur(4px)
   -webkit-backdrop-filter: blur(4px)
   font-size: $fs-13
-  color: white
+  color: var(--text-banner-theme, white)
 
 .pin-slide-title
   font-size: $fsh3
   font-weight: 600
   line-height: 1.3
-  color: white
+  color: var(--text-banner)
   trans1 color
   @media screen and (max-width: $device-mobile-max)
     font-size: $fsh5
+
+.pin-slide-excerpt
+  color: var(--text-banner-theme, var(--text-banner))
 
 .pin-slider-dots
   position: absolute

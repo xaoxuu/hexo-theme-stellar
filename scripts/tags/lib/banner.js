@@ -17,9 +17,7 @@ module.exports = ctx => function(args, content) {
   // bg
   el += `<img class="lazy bg" data-src="${bg}">`
   // content
-  el += `<div class="content">`
-  // 黑色渐变蒙版：顶部/底部文字区域（与页顶 banner 一致）
-  el += `<div class="banner-mask banner-mask-top" aria-hidden="true"></div><div class="banner-mask banner-mask-bottom" aria-hidden="true"></div>`
+  el += `<div class="content" data-text-adaptive="split">`
   // content.top
   el += `<div class="top">`
   // content.top.back

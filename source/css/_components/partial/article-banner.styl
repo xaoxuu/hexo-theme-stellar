@@ -51,6 +51,13 @@
   .title
     font-size: $fsh1
     color: var(--text-banner)
+  .subtitle
+    // 小字用主题色变体（split 模式下由插件写入 --text-banner-theme）
+    color: var(--text-banner-theme, var(--text-banner))
+  .reading
+    color: var(--text-banner-theme, var(--text-banner))
+  .meta-row
+    color: var(--text-banner-theme, var(--text-banner))
   h1
     line-height: 1.2
     margin: 0.25rem 0

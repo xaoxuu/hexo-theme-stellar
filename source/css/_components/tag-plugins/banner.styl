@@ -22,6 +22,8 @@
     flex-direction: column
     justify-content: space-between
     .top
+      // 文字区保持在背景图（img.bg z-index 0）之上
+      z-index: 1
       display: flex
       justify-content: space-between
       align-items: center
@@ -38,7 +40,8 @@
         .link
           margin: 0
           border-radius: 4px
-          color: rgba(white, 0.8)
+          color: var(--text-banner-theme, var(--text-banner))
+          opacity: .8
           padding: 2px 6px
           background: none
           line-height: 1.5
@@ -49,10 +52,12 @@
           &:after
             content: none
           &:hover
-            color: white
+            color: var(--text-banner-theme, var(--text-banner))
+            opacity: 1
             background: rgba(white, 0.25)
           &.active
-            color: white
+            color: var(--text-banner-theme, var(--text-banner))
+            opacity: 1
             background: rgba(white, 0.25)
         
       .back
@@ -65,7 +70,7 @@
         svg
           width: 20px
           height: 20px
-          fill: white
+          fill: var(--text-banner-theme, var(--text-banner))
   .banner-link
     position: absolute
     top: 0
@@ -92,13 +97,17 @@
     width: 48px
     height: 48px
   .bottom
+    // 同 .top：文字区保持在背景图之上
+    z-index: 1
     display: flex
     padding: 1rem
     width: 100%
     box-sizing: border-box
   .title
     font-size: 1.5rem
-    font-weight: 600
+    font-weight: 700
+    // 与封面 headline 同款描边，避免标题在复杂背景上发虚
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2)
   .avatar+.text-area
     margin-left: 0.75rem
   .text-area .text
@@ -109,20 +118,35 @@
     font-size: 1.2rem
   .subtitle
     font-size: $fs-14
+    color: var(--text-banner-theme, var(--text-banner))
   .content:only-child
     color: var(--text-p1)
   .bg+.content 
-    color: white
+    --text-banner: white
+    color: var(--text-banner)
     .avatar
-      border: 2px solid white
+      border: 2px solid var(--text-banner)
       margin: 0
     .bottom
       text-shadow: 0 0 1px rgba(0,0,0,0.12)
 
 .tag-plugin.banner
-  // 与文章列表封面统一的覆盖层：常驻同图渐变模糊层 + 黑色蒙版，hover 放大/变暗
-  cover-overlay(var(--bg-url), both, '.content')
+  // 内容区用绝对定位铺满整卡：避免 flex 百分比高度（height: 100%）在不同浏览器解析不一致，
+  // 导致 .top/.bottom 无法贴顶/贴底（navbar 掉到中间）
+  .content
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+  // banner 标签不使用渐变模糊覆盖层（cover-overlay 仅用于封面/页顶 banner）：
+  // 纯背景图 + 自适应文字颜色，hover 保留背景图放大与变暗
+  --img-br: 100%
+  --img-sat: 100%
+  --cover-zoom: 1.05
   &:hover
+    --img-br: 75%
+    --img-sat: 120%
     img.bg
       transform: scale(var(--cover-zoom))
   img.bg

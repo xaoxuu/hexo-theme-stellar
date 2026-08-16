@@ -183,11 +183,15 @@
       text-shadow: 0 2px 4px rgba(0,0,0,0.2)
     .topic
       font-size: $fs-13
+      // 小字用主题色变体（split 模式下由插件写入 --text-banner-theme）
+      color: var(--text-banner-theme, inherit)
     .headline
       font-weight: 500
       font-size: $fsh3
     .caption
       font-size: $fs-14
+      // 小字用主题色变体（split 模式下由插件写入 --text-banner-theme）
+      color: var(--text-banner-theme, inherit)
     @media screen and (max-width: $device-mobile)
       .headline
         font-size: $fsh4

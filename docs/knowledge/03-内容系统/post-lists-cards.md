@@ -156,7 +156,6 @@ graph LR
 | `obj.headline` | `poster.headline` | photo 布局的大号展示文本 |
 | `obj.topic` | `poster.topic` | 大标题上方的小主题文本 |
 | `obj.caption` | `poster.caption` | 大标题下方的描述文本 |
-| `obj.color` | `poster.color` | 覆盖文本的颜色覆盖 |
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
 
@@ -245,7 +244,7 @@ graph TD
 
 ## Photo 布局渲染
 
-`div_photo()` 生成杂志风格卡片，文字叠加在封面图上。
+`div_photo()` 生成杂志风格卡片，文字叠加在封面图上；`.cover-info` 带 `data-text-adaptive="split"`，大字（headline）用黑白对比、小字（topic/caption）用背景图平均色自适应（见下文「渐变模糊层与黑色蒙版」）。
 
 ```mermaid
 graph TB
@@ -260,7 +259,7 @@ graph TB
     RenderImg["<img src='{obj.image}'/>"]
     
     CheckOverlay{"position.length<br/>> 0?"}
-    OpenInfo["<div class='cover-info' position='{position}'<br/>style='color:{obj.color}'>"]
+    OpenInfo["<div class='cover-info' position='{position}'<br/>data-text-adaptive='split'>"]
     
     CheckTopicRender{"obj.topic?"}
     RenderTopic["<div class='text topic'>{obj.topic}</div>"]
@@ -318,7 +317,9 @@ graph TB
 
 ### 渐变模糊层与黑色蒙版
 
-该叠加观感由通用 mixin `cover-overlay($url-var, $sides, $layer)`（`source/css/_common/cover-overlay.styl`）统一提供：置顶轮播的 post/wiki 幻灯片、页顶 banner 与 `{% banner %}` 标签复用同一套实现，方向按文字位置取 `top` / `bottom` / `both`。photo 布局的 `.cover` 上叠加两层效果（均在 `.cover-info` 之下）：同图模糊层（`:before`，同图 `blur(1em)` + 沿文字边缘的渐变 mask）与黑色渐变蒙版（`:after`，文字所在边缘不透明度约 0.25 → 封面垂直中线 0，`pointer-events: none`，不随 hover 缩放）。hover 时封面图与模糊层同步放大至 `scale(1.05)`（1.5s 缓动），亮度降至 75%、饱和度升至 120%（0.2s 过渡）。Safari 26.4/26.5 对带 `filter: blur()` 的合成层不执行父级 `overflow:hidden` + `border-radius` 圆角裁剪（WebKit 312584/319993），模糊层静止时（无 transform）会在文字所在边缘漏方角，故模糊层常驻 `transform: translateZ(0)`（恒等变换，hover 放大时 Safari 正常裁剪）、卡片 `.post-card` 另加与圆角同源的 `clip-path: inset(0 round $border-card-l)` 直接裁剪，规避静止时底部两角漏方角。
+该叠加观感由通用 mixin `cover-overlay($url-var, $sides, $layer)`（`source/css/_common/cover-overlay.styl`）统一提供：置顶轮播的 post/wiki 幻灯片与页顶 banner 复用同一套实现（`{% banner %}` 标签不使用该覆盖层，为纯背景图，见[链接、网格与横幅标签](../04-标签插件/link-grid-banner-tags.md)），方向按文字位置取 `top` / `bottom` / `both`。photo 布局的 `.cover` 上叠加两层效果（均在 `.cover-info` 之下）：同图模糊层（`:before`，同图 `blur(1em)` + 沿文字边缘的渐变 mask）与黑色渐变蒙版（`:after`，文字所在边缘不透明度约 0.25 → 封面垂直中线 0，`pointer-events: none`，不随 hover 缩放）。hover 时封面图与模糊层同步放大至 `scale(1.05)`（1.5s 缓动），亮度降至 75%、饱和度升至 120%（0.2s 过渡）。Safari 26.4/26.5 对带 `filter: blur()` 的合成层不执行父级 `overflow:hidden` + `border-radius` 圆角裁剪（WebKit 312584/319993），模糊层静止时（无 transform）会在文字所在边缘漏方角，故模糊层常驻 `transform: translateZ(0)`（恒等变换，hover 放大时 Safari 正常裁剪）、卡片 `.post-card` 另加与圆角同源的 `clip-path: inset(0 round $border-card-l)` 直接裁剪，规避静止时底部两角漏方角。
+
+文字颜色自适应（`data-text-adaptive` 插件）：`.cover-info` 与置顶轮播的文字容器（`.pin-slide-text` / `.pin-slide-info`）渲染时带 `data-text-adaptive="split"`，页面按需懒加载 `source/js/color.js`（`window.stellar.color`）与 `source/js/plugins/adaptive-text.js`；插件读取 `--cover-url` / `--pin-cover-url` 背景图，canvas 等比缩至最长边 ≤64px 后取平均色，同时写入两个内联变量：`--text-banner` 为 contrast 结果（黑白对比，标题大字用，默认阈值 0.6 偏向浅色文字），`--text-banner-theme` 为 theme 结果（背景偏暗时平均色 lighten 到明度 0.85、偏亮时 darken 到明度 0.3，topic/caption/chip/excerpt 小字用）。`.headline` / `.title` 继承容器 contrast 色，`.topic` / `.caption` / `.chip` / `.excerpt` 显式取 `var(--text-banner-theme, inherit)`（插件未运行时回退继承）。平均色计算失败（CORS/解码异常）时保持 CSS 默认白字。见[前端交互概览](../05-前端交互/client-side-overview.md#文字自适应颜色插件)。
 
 **参考源码**：[source/css/_common/cover-overlay.styl](../../../source/css/_common/cover-overlay.styl)
 
@@ -516,7 +517,7 @@ Wiki 卡片用 `list.styl` 中的 flex 布局，图标与文本并排：
 graph TD
     Cover["a.cover[position=bottom]"]
     CoverImg["img: background"]
-    CoverInfo["div.cover-info[position=bottom]"]
+    CoverInfo["div.cover-info[position=bottom, data-text-adaptive='split']"]
     TextTopic["div.text.topic: 专栏名"]
     TextHeadline["div.text.headline: 最新文章标题"]
     TextCaption["div.text.caption: 发布时间"]
@@ -614,7 +615,6 @@ poster:
   headline: Big Headline Text
   topic: Small Topic  # 可选：叠加文本定位到顶部
   caption: Caption text  # 可选
-  color: "#ffffff"  # 可选：文本颜色覆盖
 ---
 ```
 

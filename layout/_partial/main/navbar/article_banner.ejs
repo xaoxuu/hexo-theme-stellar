@@ -124,23 +124,22 @@ function layoutDiv() {
     return ``
   }
   var bannerStyle = ``
-  var contentStyle = ``
+  var adaptiveAttr = ``
   var maskHtml = ``
   var el = ``
   if (banner.url?.length > 0) {
     bannerStyle += ` style="--bg-url:url('${banner.url.replace(/'/g, '%27')}')"`
+    // 背景图上方文字颜色自适应
+    adaptiveAttr = ` data-text-adaptive="split"`
   }
   el += `<div class="article-banner-wrap${scrollreveal(' ')}">`
   el += `<div class="article banner top"${bannerStyle}>`
   if (banner.url?.length > 0) {
     el += `<img class="lazy bg" data-src="${banner.url}">`
     maskHtml = `<div class="banner-mask banner-mask-top" aria-hidden="true"></div><div class="banner-mask banner-mask-bottom" aria-hidden="true"></div>`
-    if (banner.color) {
-      contentStyle += ' style="--text-banner:' + banner.color + '"'
-    }
   }
   el += `
-  <div class="content"${contentStyle}>
+  <div class="content"${adaptiveAttr}>
     ${maskHtml}
     ${top}
     ${bottom}

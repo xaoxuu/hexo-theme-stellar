@@ -23,6 +23,9 @@
 
 | 位置 | 问题 | 修正 |
 |------|------|------|
+| 2026-08-16 | `poster.color`（photo 封面卡片内联 `color`）与 `banner_info.color`（页顶 banner 内联 `--text-banner`）的显式文字颜色设置与自适应文字颜色能力重复 | 移除 `layout/_partial/main/post_list/post_card.ejs` 的 `obj.color` 与 `layout/_partial/main/navbar/article_banner.ejs` 的 `banner.color` 设置逻辑，文字颜色一律由 `data-text-adaptive` 自适应计算；插件保留「元素已有内联 `--text-banner` / `color` 时跳过」的通用防御，文档同步（见 `docs/designs/2026-08-16-adaptive-text-color/`） |
+| 2026-08-16 | `04-标签插件/link-grid-banner-tags.md`、`03-内容系统/post-lists-cards.md`、`content-overview.md` 描述 `{% banner %}` 与封面/页顶 banner 统一使用 `cover-overlay()` 渐变模糊层，但该标签的文字被模糊层/黑色蒙版压在下方呈半透明 | `{% banner %}` 移除渐变模糊覆盖层与 `.banner-mask` 蒙版元素，改为纯背景图 + `data-text-adaptive="split"` 自适应文字颜色（文字区 `z-index: 1` 保持在背景图之上）；hover 保留背景图放大/变暗，无模糊层（见 `docs/designs/2026-08-16-adaptive-text-color/`） |
+| 2026-08-16 | 背景图/背景色上方的文字颜色硬编码为白色（`--text-banner: white`），亮色背景下可读性不足、明暗切换不稳定；知识库未描述自适应文字颜色能力 | 新增通用能力 `stellar.color`（`source/js/color.js`）+ DOM 插件（`source/js/plugins/adaptive-text.js`）：`[data-text-adaptive]`（`split` 用于封面/banner/轮播容器：大字 contrast、小字 theme；`theme` 默认 / `contrast` 单样式）按背景图平均色/背景色计算并写入 `--text-banner` / `--text-banner-theme`，明暗判定默认阈值 0.6 偏向浅色文字，页面存在目标元素时才懒加载；接入 photo 封面卡片、专栏最新文章卡片、置顶轮播（post/wiki 幻灯片）、页顶 banner、`{% banner %}`（banner.styl 硬编码 white 改为 `var(--text-banner)` / `var(--text-banner-theme, var(--text-banner))`，显式颜色覆盖优先）；新增 `plugins.adaptive_text.enable` 配置与 `test/color.test.js` 单测（见 `docs/designs/2026-08-16-adaptive-text-color/`） |
 | head-seo.md 描述生成 / Open Graph / JSON-LD | 文档与代码一致，但 `open_graph.enable` 时 wiki 项目 description 兜底未生效：`generate_description()` 提前返回，`og_args()` 未传描述，JSON-LD 无项目描述兜底 | 修复 `og_args()` 传入项目描述、`generate_description()` 调整优先级、`json_ld.js` 增加项目描述兜底；同步更新文档（见 `docs/designs/2026-08-14-wiki-meta-description-fallback/`） |
 | 1.1/1 Overview 等 | 版本号 1.39.0 | 统一为 1.39.1 |
 | 1.1/1 Overview 等 | 版本号 1.38.0 | 统一为 1.39.0 |

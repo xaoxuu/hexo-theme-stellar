@@ -288,7 +288,7 @@ graph TD
 graph TD
   root["div.tag-plugin.banner"]
   root --> bg["img.lazy.bg (data-src=bg or default.banner)"]
-  root --> content["div.content"]
+  root --> content["div.content (data-text-adaptive='split')"]
   root --> banner_link["a.banner-link (optional, when link arg set)"]
 
   content --> top["div.top"]
@@ -304,6 +304,12 @@ graph TD
 ```
 
 **参考源码**：[scripts/tags/lib/banner.js](../../../scripts/tags/lib/banner.js)
+
+### 文字颜色自适应
+
+`{% banner %}` 的 `div.content` 带 `data-text-adaptive="split"`：页面按需懒加载 `source/js/color.js`（`window.stellar.color`）与 `source/js/plugins/adaptive-text.js`，插件读取 `--bg-url` 背景图平均色，同时写入 `--text-banner`（contrast 黑白对比，标题大字用，默认阈值 0.6 偏向浅色文字）与 `--text-banner-theme`（theme，背景偏暗时平均色 lighten 到明度 0.85、偏亮时 darken 到明度 0.3，subtitle/导航等小字用）。`.bg+.content` 的标题继承 `var(--text-banner)`，`.subtitle` / `.navbar .link` / `.back` 图标取 `var(--text-banner-theme, var(--text-banner))`，头像描边使用 `var(--text-banner)`（默认 `white`，JS 未运行或平均色计算失败时保持白字）。用户显式指定颜色（内联 `--text-banner` 或内联 `color`）时插件跳过。
+
+**参考源码**：[source/js/color.js](../../../source/js/color.js)、[source/js/plugins/adaptive-text.js](../../../source/js/plugins/adaptive-text.js)、[source/css/_components/tag-plugins/banner.styl](../../../source/css/_components/tag-plugins/banner.styl)
 
 ### 导航条嵌入
 
@@ -336,13 +342,12 @@ for (let row of rows) {
 
 ### 背景图
 
-容器通过内联 `--bg-url` 暴露背景图 URL（供覆盖层模糊层取同图背景），`.content` 内固定渲染两个蒙版元素（`.banner-mask-top` / `.banner-mask-bottom`，`aria-hidden="true"`），配合通用覆盖层 `cover-overlay()` 实现常驻同图渐变模糊层与黑色蒙版（见[文章列表卡片](../03-内容系统/post-lists-cards.md#渐变模糊层与黑色蒙版)）：
+`{% banner %}` 不使用渐变模糊覆盖层（`cover-overlay` 仅用于文章列表封面、置顶轮播与页顶 banner）：容器通过内联 `--bg-url` 暴露背景图 URL（供自适应文字插件取背景图平均色），`img.bg` 铺满整卡，文字颜色由 `data-text-adaptive="split"` 按背景图平均色计算：
 
 ```js
 el += `<div class="tag-plugin banner" style="--bg-url:url('...')">`
 el += `<img class="lazy bg" data-src="...">`
-el += `<div class="content">`
-el += `<div class="banner-mask banner-mask-top" aria-hidden="true"></div><div class="banner-mask banner-mask-bottom" aria-hidden="true"></div>`
+el += `<div class="content" data-text-adaptive="split">`
 ```
 
 图片用 `data-src` 属性与 `lazy` 类懒加载。懒加载图片解析见[懒加载与图片处理](../07-外部集成/lazy-loading-images.md)。
@@ -351,7 +356,7 @@ el += `<div class="banner-mask banner-mask-top" aria-hidden="true"></div><div cl
 
 ### hover 动画
 
-`{% banner %}` 与文章列表封面统一：hover 时背景图与两侧同图模糊层同步放大至 `scale(1.05)`（图片 1.5s 缓动、模糊层 0.5s），亮度降至 75%、饱和度升至 120%（0.2s 过渡）。
+`{% banner %}` hover 时背景图放大至 `scale(1.05)`（1.5s 缓动），亮度降至 75%、饱和度升至 120%（0.2s 过渡）；无模糊层参与。
 
 **参考源码**：[source/css/_components/tag-plugins/banner.styl](../../../source/css/_components/tag-plugins/banner.styl)
 

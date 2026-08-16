@@ -77,7 +77,8 @@ function postSlide(post) {
   if (!noCover) {
     el += '<img class="pin-slide-bg" src="' + escape_html(post.cover) + '" alt=""/>'
   }
-  el += '<div class="pin-slide-text">'
+  // 有封面时文字颜色自适应（大字 contrast、小字 theme）；无封面保持普通文章文字颜色
+  el += '<div class="pin-slide-text"' + (noCover ? '' : ' data-text-adaptive="split"') + '>'
   el += '<div class="pin-slide-headline">' + escape_html(headline) + '</div>'
   if (subtitle.length > 0) {
     el += '<div class="pin-slide-caption">' + escape_html(subtitle) + '</div>'
@@ -102,7 +103,7 @@ function wikiSlide(proj) {
   var el = ''
   el += '<a class="pin-slide" href="' + escape_html(pretty_url(proj.homepage?.path || '/')) + '" style="--pin-cover-url:url(\'' + escape_html(img.replace(/'/g, '%27')) + '\')">'
   el += '<img class="pin-slide-bg" src="' + escape_html(img) + '" alt=""/>'
-  el += '<div class="pin-slide-info">'
+  el += '<div class="pin-slide-info" data-text-adaptive="split">'
   el += '<div class="pin-slide-caps">' + projectChips(proj.tags) + '</div>'
   el += '<div class="pin-slide-title">' + escape_html(title) + '</div>'
   if (excerpt.length > 0) {

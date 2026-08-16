@@ -7,7 +7,6 @@ if (poster) {
   obj.headline = poster.headline;
   obj.topic = poster.topic;
   obj.caption = poster.caption;
-  obj.color = poster.color;
 }
 function div_default() {
   var el = '';
@@ -97,11 +96,7 @@ function div_photo() {
   el += '<div class="cover" position="' + position + '" style="--cover-url:url(\'' + escape_html(obj.image.replace(/'/g, '%27')) + '\')">';
   el += '<img src="' + escape_html(obj.image) + '"/>';
   if (position.length > 0) {
-    el += '<div class="cover-info" position="' + position + '"';
-    if (obj.color) {
-      el += 'style="color:' + escape_html(obj.color) + '"';
-    }
-    el += '>';
+    el += '<div class="cover-info" position="' + position + '" data-text-adaptive="split">';
     if (obj.topic) {
       el += '<div class="text topic">' + escape_html(obj.topic) + '</div>';
     }

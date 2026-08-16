@@ -667,6 +667,11 @@ plugins:
     default_text: 'Copy'
     success_text: 'Copied'
     toast: 复制成功
+
+  # 文字自适应颜色：背景图/背景色上方的文字随背景亮度自适应
+  # 页面存在 [data-text-adaptive] 元素时才按需加载（theme：背景图平均色 lighten/darken；contrast：黑白对比）
+  adaptive_text:
+    enable: true
   
   # 赫蹏 (Heti) - 专为中文网页内容设计的排版样式增强
   # https://github.com/sivan/heti
