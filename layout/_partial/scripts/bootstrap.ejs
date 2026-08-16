@@ -1,0 +1,35 @@
+<script>
+  // 插件注册队列：utils.js 尚未就绪时先缓存注册请求，就绪后统一补跑，
+  // 保证解析期注册的插件不因加载时序丢失。
+  window.stellar = window.stellar || {};
+  window.stellar._pluginQueue = window.stellar._pluginQueue || [];
+  window.stellar.initPlugin = function (fn, name, options) {
+    if (typeof utils === 'object' && typeof utils.initPlugin === 'function') {
+      return utils.initPlugin(fn, name, options);
+    }
+    window.stellar._pluginQueue.push({ fn: fn, name: name, options: options || {} });
+  };
+  window.stellar._flushPlugins = function () {
+    var pending = window.stellar._pluginQueue.splice(0);
+    if (typeof utils !== 'object' || typeof utils.initPlugin !== 'function') return;
+    for (var i = 0; i < pending.length; i++) {
+      try {
+        utils.initPlugin(pending[i].fn, pending[i].name, pending[i].options);
+      } catch (e) {
+        console.error('[Stellar] 插件补注册失败:', e);
+      }
+    }
+  };
+  document.addEventListener('DOMContentLoaded', function () {
+    if (typeof utils === 'object') return;
+    // utils 未就绪时补载；加载成功后由 utils.js 内部补跑插件队列
+    var s = document.createElement('script');
+    s.src = '<%- url_for('/js/utils.js') %>?v=<%- stellar_info('version') %>';
+    s.async = false;
+    s.onerror = function () {
+      console.error('[Stellar] 无法加载 /js/utils.js，已启用内容兜底显示（sr-fallback）');
+      document.documentElement.classList.add('sr-fallback');
+    };
+    document.head.appendChild(s);
+  });
+</script>

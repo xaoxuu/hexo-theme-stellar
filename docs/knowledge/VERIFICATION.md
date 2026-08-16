@@ -23,6 +23,7 @@
 
 | 位置 | 问题 | 修正 |
 |------|------|------|
+| 2026-08-16 | 第三方优化器把 `<script src="/js/utils.js">` 改写为占位符 + `data-src` 且页面无 loader 时，`utils` 从未定义，页尾所有 `utils.initPlugin(...)` 插件片段与 `main.js`/`theme.js`/`services.js` 抛 `utils is not defined`，scrollreveal 兜底未注册，`.slide-up` 列表永久隐藏 | 新增 `layout/_partial/scripts/bootstrap.ejs`（`window.stellar.initPlugin` 队列 + DOMContentLoaded 补载）、`scripts.ejs` 解析期 `document.write` 同步补载看门狗、`utils.js` IIFE 防重入并暴露 `window.utils`、scrollreveal `sr-fallback` 看门狗独立于 utils；`utils.initPlugin` 调用点统一改为 `stellar.initPlugin`（见 `docs/designs/2026-08-16-utils-lazy-load-guard/`） |
 | 2026-08-16 | `docs/knowledge/知识库全量.md`（合并版） | 删除合并版：仓库无生成脚本、手工双写易漂移且 `verify.py` 跳过核查；知识库以领域页面为唯一事实源（AGENTS.md / README 引用同步清理，RAG 可直接索引领域页面） |
 | 2026-08-16 | 置顶轮播左右箭头颜色固定为主题文字色，不随当前幻灯片封面明暗变化 | `initPinSlider` 在 `goTo` 切换时按当前幻灯片封面平均色计算 contrast 颜色写入箭头 `--text-banner`（`color: var(--text-banner, var(--text))`），随自动播放/切换实时更新，主题切换时经 `refreshPinNavColor` 重算（见 `docs/designs/2026-08-16-adaptive-text-color/`） |
 | 2026-08-16 | 封面/banner 大标题用纯黑白 contrast，与 theme 小字割裂；用户希望大标题也用主题色但接近黑白 | `adaptiveTextColor` 新增 `saturationScale`（默认 1，调小更接近黑白）；`split` 模式大字改为 `saturationScale: 0.05` 的低饱和 theme（保留一点主色倾向），小字保持完整 theme（见 `docs/designs/2026-08-16-adaptive-text-color/`） |

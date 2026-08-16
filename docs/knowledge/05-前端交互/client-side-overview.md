@@ -116,6 +116,17 @@ graph TB
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)
 
+#### 解析期脚本与插件注册队列（utils bootstrap）
+
+`utils.js` 是解析期依赖：页尾内联插件片段在解析时就调用 `utils.initPlugin(...)` 注册，因此主题要求其同步加载。为防御第三方优化器把 `utils.js` 改写为占位符/加 `defer`（曾导致首页文章列表空白、控制台大量 `utils is not defined`），`scripts.ejs` 在 `utils.js` 标签前输出 `layout/_partial/scripts/bootstrap.ejs`：
+
+- `window.stellar.initPlugin(fn, name, options)`：utils 就绪时直接委托 `utils.initPlugin`，未就绪时入队 `window.stellar._pluginQueue`；utils.js 加载完成后经 `_flushPlugins()` 统一补跑。
+- 紧随 `utils.js` 的解析期看门狗：`typeof utils === 'undefined'` 时用 `document.write` 同步补载，恢复「utils 先于插件片段定义」的不变量。
+- `utils.js` 整体包 IIFE（`window.__stellarUtilsLoaded` 防重复执行），末尾暴露 `window.utils`；DOMContentLoaded 时若仍缺失则动态补载，失败时给 `<html>` 加 `sr-fallback` 兜底显示内容。
+- scrollreveal 的 3 秒 `sr-fallback` 看门狗独立于 `utils`/ScrollReveal，即使插件初始化完全失败，`.slide-up` 内容也会在 3 秒后强制显示。
+
+**参考源码**：[layout/_partial/scripts/bootstrap.ejs](../../../layout/_partial/scripts/bootstrap.ejs)、[layout/_partial/scripts.ejs](../../../layout/_partial/scripts.ejs)、[source/js/utils.js](../../../source/js/utils.js)
+
 ---
 
 ### 置顶内容轮播（pin-slider）

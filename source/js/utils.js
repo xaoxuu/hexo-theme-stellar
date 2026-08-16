@@ -1,4 +1,8 @@
-  
+(function () {
+  // 防重复执行：utils.js 可能被重复加载，二次执行直接跳过，避免重复声明报错。
+  if (window.__stellarUtilsLoaded) return;
+  window.__stellarUtilsLoaded = true;
+
   function RunItem() {
     this.list = []; // 存放回调函数
     this.start = () => {
@@ -726,3 +730,12 @@
   utils.dark = Object.assign(utils.dark, {
     push: utils.dark.method.toggle.push,
   });
+
+  // 暴露到 window：页尾插件片段经裸标识符 utils 即可使用
+  window.utils = utils;
+
+  // 补跑解析期注册的插件队列
+  if (window.stellar && typeof window.stellar._flushPlugins === 'function') {
+    window.stellar._flushPlugins();
+  }
+})();

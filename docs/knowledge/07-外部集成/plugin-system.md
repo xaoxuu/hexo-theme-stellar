@@ -185,6 +185,8 @@ JavaScript 插件经 `layout/_plugins/` 中的独立 EJS 模板加载。每个�
 3. **自动初始化**：插件在页面加载时初始化
 4. **API 暴露**：插件经 `window.stellar` 命名空间暴露 API
 
+插件注册统一走 `stellar.initPlugin(fn, name, options)`（`window.stellar`，由 `layout/_partial/scripts/bootstrap.ejs` 在 `utils.js` 之前定义）：utils 就绪时等价于 `utils.initPlugin`；若第三方优化器把 `utils.js` 延迟/改写（如占位符 + `data-src`），注册请求先入队，utils 补载后自动补跑，避免解析期抛 `utils is not defined` 导致插件与页面内容丢失。scrollreveal 另有独立于 utils 的 3 秒 `sr-fallback` 兜底看门狗，保证 `.slide-up` 内容不会因插件加载失败而永久隐藏。
+
 ---
 
 ## 内建插件

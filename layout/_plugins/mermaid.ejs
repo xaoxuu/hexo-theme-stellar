@@ -1,6 +1,6 @@
 <script defer type="text/javascript" src="<%- conf.js %>"></script>
 <script>
-  utils.initPlugin(() => {
+  stellar.initPlugin(() => {
     const els = document.querySelectorAll('.mermaid');
     if (els.length > 0) {
       utils.css(`<%- url_for('/css/plugins/mermaid.css') %>?v=<%- stellar_info('version') %>`);

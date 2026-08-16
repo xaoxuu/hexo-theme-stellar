@@ -195,7 +195,8 @@
       if (!window.location.search) return;
       if (!new URLSearchParams(window.location.search).has('kw')) return;
       document.addEventListener('DOMContentLoaded', function () {
-        // utils 为全局词法绑定（顶层 const），不能通过 window.utils 访问
+        // utils 由 /js/utils.js 定义（同时暴露 window.utils）；
+        // 未就绪时由 bootstrap 队列兜底，此处按就绪状态判断
         if (typeof utils === 'object' && typeof utils.js === 'function') {
           utils.js('<%- url_for('/js/search/highlight.js') %>', { defer: true }).catch(function () {});
         }

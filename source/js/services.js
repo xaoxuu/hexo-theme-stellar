@@ -176,4 +176,4 @@ const initServices = () => {
   };
 };
 
-utils.initPlugin(initServices, 'services');
+stellar.initPlugin(initServices, 'services');

@@ -1,7 +1,20 @@
 <script>
-  utils.initPlugin(() => {
-    const els = Array.prototype.slice.call(document.querySelectorAll('.slide-up'));
-    if (els.length === 0) return;
+  (function () {
+    // 兜底看门狗独立于插件初始化：3 秒内未完成 reveal 时强制显示 .slide-up 内容
+    let fallbackApplied = false;
+    const revealFallback = () => {
+      if (fallbackApplied) return;
+      fallbackApplied = true;
+      document.documentElement.classList.add('sr-fallback');
+    };
+    const watchdog = setTimeout(() => revealFallback(), 3000);
+
+    stellar.initPlugin(() => {
+      const els = Array.prototype.slice.call(document.querySelectorAll('.slide-up'));
+      if (els.length === 0) {
+        clearTimeout(watchdog);
+        return;
+      }
 
     // 吸顶/固定定位容器内的元素始终在视口内（或由容器控制显隐），
     // 但 ScrollReveal 按文档坐标判断可见性，会误判这类元素为不可见，
@@ -45,15 +58,10 @@
         targets.push(el);
       }
     });
-    if (pinnedGroups.size === 0 && targets.length === 0) return;
-
-    // 加载/初始化失败时兜底显示内容，避免整页空白
-    let fallbackApplied = false;
-    const revealFallback = () => {
-      if (fallbackApplied) return;
-      fallbackApplied = true;
-      document.documentElement.classList.add('sr-fallback');
-    };
+    if (pinnedGroups.size === 0 && targets.length === 0) {
+      clearTimeout(watchdog);
+      return;
+    }
 
     const slideUp = {
       distance: `<%- conf.distance %>`,
@@ -63,9 +71,6 @@
       opacity: 0,
       easing: "ease-out"
     };
-
-    // 看门狗：CDN 长时间无响应时强制显示内容
-    const watchdog = setTimeout(() => revealFallback(), 3000);
 
     utils.js(`<%- conf.js %>`, { defer: true })
       .then(() => {
@@ -92,5 +97,6 @@
         console.error('[Plugin scrollreveal] 加载失败:', err);
         revealFallback();
       });
-  }, 'scrollreveal');
+    }, 'scrollreveal');
+  })();
 </script>

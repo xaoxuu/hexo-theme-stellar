@@ -133,12 +133,13 @@ if (pinItems.length > 0) {
 <%- el %>
 <script>
 function initWhenReady() {
-  if (typeof utils !== 'undefined' && utils.initPlugin) {
-    utils.initPlugin(initPinSlider, 'pin-slider');
+  if (typeof stellar === 'object' && typeof stellar.initPlugin === 'function') {
+    stellar.initPlugin(initPinSlider, 'pin-slider');
   } else {
-    document.addEventListener('DOMContentLoaded', function() {
-      if (typeof utils !== 'undefined' && utils.initPlugin) {
-        utils.initPlugin(initPinSlider, 'pin-slider');
+    // pin_slider 内联脚本渲染在 scripts/bootstrap 之前，等待 DOMContentLoaded 后注册
+    document.addEventListener('DOMContentLoaded', function () {
+      if (typeof stellar === 'object' && typeof stellar.initPlugin === 'function') {
+        stellar.initPlugin(initPinSlider, 'pin-slider');
       }
     });
   }
