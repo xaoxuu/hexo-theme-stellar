@@ -186,9 +186,39 @@ function initPinSlider() {
       }
     }
     savePinIndex(group, contentKey, index, count);
+    updateNavColor();
   }
   function next() { goTo(index + 1); }
   function prev() { goTo(index - 1); }
+
+  // 左右箭头颜色随当前幻灯片封面自适应（contrast：深色背景白箭头、浅色背景深箭头）
+  var navColorRetries = 0;
+  function updateNavColor() {
+    var navs = slider.querySelectorAll('.pin-slider-nav');
+    if (navs.length === 0) return;
+    if (!window.stellar || !window.stellar.color || !window.resolveAdaptiveBackdrop) {
+      // 懒加载的 color.js / 插件尚未就绪时重试
+      if (navColorRetries < 25) {
+        navColorRetries++;
+        setTimeout(updateNavColor, 200);
+      }
+      return;
+    }
+    var slide = slides[index];
+    if (!slide) return;
+    var cover = slide.style.getPropertyValue('--pin-cover-url');
+    if (!cover) return;
+    var m = cover.match(/url\((['"]?)(.*?)\1\)/i);
+    if (!m) return;
+    stellar.color.getAverageColor(m[2], { background: window.resolveAdaptiveBackdrop(slide) }).then(function (rgb) {
+      if (!rgb) return;
+      var color = stellar.color.adaptiveTextColor(rgb, { style: 'contrast' });
+      for (var i = 0; i < navs.length; i++) {
+        navs[i].style.setProperty('--text-banner', color);
+      }
+    });
+  }
+  window.refreshPinNavColor = updateNavColor;
   function start() {
     if (reduced) return;
     slider.classList.remove('paused');
@@ -282,6 +312,9 @@ function initPinSlider() {
       navNext.removeEventListener('click', next);
     }
     document.removeEventListener('visibilitychange', onVis);
+    if (window.refreshPinNavColor === updateNavColor) {
+      window.refreshPinNavColor = null;
+    }
   };
 }
 function restorePinIndex(group, contentKey, count) {

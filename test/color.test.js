@@ -35,6 +35,29 @@ test('parse 支持 hex 与 rgb/rgba', () => {
   assert.equal(color.parse(null), null);
 });
 
+test('parse 支持 hsl/hsla 与 alpha（逗号与空格/斜杠语法）', () => {
+  assert.deepEqual(toHost(color.parse('hsl(0, 100%, 50%)')), { r: 255, g: 0, b: 0 });
+  assert.deepEqual(toHost(color.parse('hsl(120 100% 25%)')), { r: 0, g: 128, b: 0 });
+  assert.deepEqual(toHost(color.parse('hsla(210deg 20% 98% / 1)')), { r: 249, g: 250, b: 251 });
+  assert.equal(color.parse('hsla(120, 100%, 25%, 0.5)').a, 0.5);
+  assert.equal(color.parse('hsla(120 100% 25% / 50%)').a, 0.5);
+  assert.equal(color.parse('#ff000080').a, 128 / 255);
+  assert.equal(color.parse('rgba(1,2,3,0.25)').a, 0.25);
+});
+
+test('blendToBackground 按平均透明度向背景色混合', () => {
+  // 完全透明 → 背景色
+  assert.deepEqual(toHost(color.blendToBackground({ r: 0, g: 0, b: 0, a: 0 }, { r: 250, g: 250, b: 250 })), { r: 250, g: 250, b: 250 });
+  // 完全不透明 → 原色（背景不参与）
+  assert.deepEqual(toHost(color.blendToBackground({ r: 28, g: 28, b: 28, a: 255 }, { r: 250, g: 250, b: 250 })), { r: 28, g: 28, b: 28 });
+  // 半透明混合：128/255 透明 → 0.502 原色 + 0.498 背景
+  assert.deepEqual(toHost(color.blendToBackground({ r: 0, g: 0, b: 0, a: 128 }, { r: 255, g: 255, b: 255 })), { r: 127, g: 127, b: 127 });
+  // 无背景 → 原色（去掉 alpha）
+  assert.deepEqual(toHost(color.blendToBackground({ r: 28, g: 28, b: 28, a: 16 })), { r: 28, g: 28, b: 28 });
+  // 背景支持颜色字符串
+  assert.deepEqual(toHost(color.blendToBackground({ r: 0, g: 0, b: 0, a: 0 }, '#ffffff')), { r: 255, g: 255, b: 255 });
+});
+
 test('luminance 使用 WCAG 相对亮度', () => {
   assert.equal(color.luminance({ r: 0, g: 0, b: 0 }), 0);
   assert.equal(color.luminance({ r: 255, g: 255, b: 255 }), 1);
@@ -74,6 +97,15 @@ test('adaptiveTextColor 默认阈值 0.6 偏向浅色文字，可显式覆盖阈
   assert.equal(color.adaptiveTextColor('#bcbcbc', { style: 'contrast', threshold: 0.5 }), '#111111');
 });
 
+test('effectiveThreshold：彩色背景阈值上浮（浅粉判深 → 白字），中性灰保持 0.6', () => {
+  // 浅粉 rgb(244,191,192)：亮度 ≈ 0.603，饱和度 ≈ 0.71 → 彩色阈值 0.65 → 白字
+  assert.equal(color.adaptiveTextColor('#f4bfc0', { style: 'contrast' }), '#ffffff');
+  // 浅灰 #d0d0d0：亮度 ≈ 0.631，饱和度 0 → 中性阈值 0.6 → 深字
+  assert.equal(color.adaptiveTextColor('#d0d0d0', { style: 'contrast' }), '#111111');
+  // 显式 threshold 优先于 effectiveThreshold
+  assert.equal(color.adaptiveTextColor('#f4bfc0', { style: 'contrast', threshold: 0.5 }), '#111111');
+});
+
 test('adaptiveTextColor 样式2（theme）：以背景色为基色 lighten/darken', () => {
   // 深色背景 → lighten 到 0.85（灰阶下即 217）
   assert.equal(color.adaptiveTextColor('#111111', { style: 'theme' }), 'rgb(217,217,217)');
@@ -84,4 +116,35 @@ test('adaptiveTextColor 样式2（theme）：以背景色为基色 lighten/darke
   assert.ok(result.b >= result.g && result.g >= result.r);
   // 默认 style 为 theme
   assert.equal(color.adaptiveTextColor('#111111'), 'rgb(217,217,217)');
+});
+
+test('enhanceSaturation：低饱和彩色平均色抬升饱和度，中性/高饱和不变', () => {
+  // 浅灰蓝 rgb(238,240,242)：s≈0.133 → 抬升到 0.3，色相 210° 保留（b 通道更高）
+  const boosted = toHost(color.enhanceSaturation({ r: 238, g: 240, b: 242 }));
+  assert.ok(boosted.b >= boosted.g && boosted.g >= boosted.r);
+  assert.ok(boosted.b - boosted.r >= 8);
+  // 完全中性不变
+  assert.deepEqual(toHost(color.enhanceSaturation({ r: 200, g: 200, b: 200 })), { r: 200, g: 200, b: 200 });
+  // 已饱和（浅粉 s≈0.7）不变
+  assert.deepEqual(toHost(color.enhanceSaturation({ r: 244, g: 191, b: 192 })), { r: 244, g: 191, b: 192 });
+});
+
+test('adaptiveTextColor theme：低饱和蓝灰平均色带出蓝色倾向', () => {
+  // 大面积极浅灰 + 蓝色 logo 的平均色：增强后主题小字应明显偏蓝（b-g 通道高于 r）
+  const result = toHost(color.parse(color.adaptiveTextColor({ r: 238, g: 240, b: 242 }, { style: 'theme' })));
+  assert.ok(result.b - result.r > 30);
+  assert.ok(result.b >= result.g && result.g >= result.r);
+});
+
+test('adaptiveTextColor saturationScale：调小更接近黑白，保留一点色相', () => {
+  const full = toHost(color.parse(color.adaptiveTextColor({ r: 238, g: 240, b: 242 }, { style: 'theme' })));
+  const scaled = toHost(color.parse(color.adaptiveTextColor({ r: 238, g: 240, b: 242 }, { style: 'theme', saturationScale: 0.15 })));
+  const zero = toHost(color.parse(color.adaptiveTextColor({ r: 238, g: 240, b: 242 }, { style: 'theme', saturationScale: 0 })));
+  // 完整 theme 明显偏蓝
+  assert.ok(full.b - full.r > 30);
+  // 0.15：接近黑白（通道差距小），但仍保留一点蓝色倾向
+  assert.ok(scaled.b - scaled.r < 10);
+  assert.ok(scaled.b > scaled.r);
+  // 0：纯灰
+  assert.deepEqual(zero, { r: 77, g: 77, b: 77 });
 });

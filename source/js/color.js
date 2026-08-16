@@ -8,13 +8,15 @@
 
   var color = {};
 
-  // 颜色字符串 → {r,g,b}；支持 #rgb/#rrggbb/#rrggbbaa、rgb()/rgba()（含空格分隔）。
+  // 颜色字符串 → {r,g,b,a}（a 为 0~1 透明度，默认 1）；
+  // 支持 #rgb/#rrggbb/#rrggbbaa、rgb()/rgba()、hsl()/hsla()（逗号与空格/斜杠语法）。
   // 解析失败返回 null。
   color.parse = function (input) {
     if (input == null) {
       return null;
     }
     var str = String(input).trim();
+    var a = 1;
     if (str.charAt(0) === '#') {
       var hex = str.slice(1);
       if (hex.length === 3 || hex.length === 4) {
@@ -26,19 +28,39 @@
         var r = parseInt(hex.slice(0, 2), 16);
         var g = parseInt(hex.slice(2, 4), 16);
         var b = parseInt(hex.slice(4, 6), 16);
+        if (hex.length === 8) {
+          a = parseInt(hex.slice(6, 8), 16) / 255;
+        }
         if (!isNaN(r) && !isNaN(g) && !isNaN(b)) {
-          return { r: r, g: g, b: b };
+          return { r: r, g: g, b: b, a: a };
         }
       }
       return null;
     }
-    var m = str.match(/rgba?\(\s*([\d.]+)\s*[,\s]\s*([\d.]+)\s*[,\s]\s*([\d.]+)(?:\s*[,\s/]\s*[\d.]+%?)?\s*\)/i);
+    var m = str.match(/rgba?\(\s*([\d.]+)\s*[,\s]\s*([\d.]+)\s*[,\s]\s*([\d.]+)(?:\s*[,\s/]\s*([\d.]+%?))?\s*\)/i);
     if (m) {
       var r2 = Number(m[1]);
       var g2 = Number(m[2]);
       var b2 = Number(m[3]);
       if (!isNaN(r2) && !isNaN(g2) && !isNaN(b2)) {
-        return { r: r2, g: g2, b: b2 };
+        if (m[4] != null) {
+          a = m[4].charAt(m[4].length - 1) === '%' ? Number(m[4].slice(0, -1)) / 100 : Number(m[4]);
+        }
+        return { r: r2, g: g2, b: b2, a: a };
+      }
+    }
+    var hm = str.match(/hsla?\(\s*([\d.]+)(?:deg)?\s*[,\s]\s*([\d.]+%?)\s*[,\s]\s*([\d.]+%?)(?:\s*[,\s/]\s*([\d.]+%?))?\s*\)/i);
+    if (hm) {
+      var hue = Number(hm[1]);
+      var sat = hm[2].charAt(hm[2].length - 1) === '%' ? Number(hm[2].slice(0, -1)) / 100 : Number(hm[2]);
+      var lig = hm[3].charAt(hm[3].length - 1) === '%' ? Number(hm[3].slice(0, -1)) / 100 : Number(hm[3]);
+      if (!isNaN(hue) && !isNaN(sat) && !isNaN(lig)) {
+        if (hm[4] != null) {
+          a = hm[4].charAt(hm[4].length - 1) === '%' ? Number(hm[4].slice(0, -1)) / 100 : Number(hm[4]);
+        }
+        var h = ((hue % 360) + 360) % 360 / 360;
+        var rgb = hslToRgb(h, Math.max(0, Math.min(1, sat)), Math.max(0, Math.min(1, lig)));
+        return { r: rgb.r, g: rgb.g, b: rgb.b, a: a };
       }
     }
     return null;
@@ -148,15 +170,36 @@
     return color.withLightness(rgb, lightness == null ? 0.3 : lightness);
   };
 
+  // 主题色饱和度增强：平均色被大面积中性色盖过时饱和度极低（色相仍有效），
+  // 把低饱和度抬升到最低可见值（保留色相），让主题文字带出图片的主色倾向；
+  // 完全中性（无可靠色相）与已足够饱和的颜色不做处理。
+  color.enhanceSaturation = function (rgb, options) {
+    if (rgb == null) {
+      return null;
+    }
+    var opts = options || {};
+    var minS = opts.minSaturation == null ? 0.3 : opts.minSaturation;
+    var boostBelow = opts.boostBelow == null ? 0.2 : opts.boostBelow;
+    var epsilon = opts.neutralEpsilon == null ? 0.02 : opts.neutralEpsilon;
+    var hsl = rgbToHsl(rgb);
+    if (hsl.s >= boostBelow || hsl.s < epsilon) {
+      return { r: rgb.r, g: rgb.g, b: rgb.b, a: rgb.a == null ? 1 : rgb.a };
+    }
+    var out = hslToRgb(hsl.h, Math.max(hsl.s, minS), hsl.l);
+    return { r: out.r, g: out.g, b: out.b, a: rgb.a == null ? 1 : rgb.a };
+  };
+
   // 自适应文字颜色
   // bg：{r,g,b} 或颜色字符串
   // options：
   //   style           'theme'（默认）/ 'contrast'
-  //   threshold       明暗判定阈值，默认 0.6（偏向采纳浅色文字，避免中灰背景频繁翻转）
+  //   threshold       明暗判定阈值，默认按 effectiveThreshold（彩色背景 0.65 / 中性背景 0.6，
+  //                   偏向采纳浅色文字，避免中灰背景频繁翻转）
   //   lightColor      样式1 深色背景时的文字色，默认 #ffffff
   //   darkColor       样式1 浅色背景时的文字色，默认 #111111
   //   lightLightness  样式2 深色背景时的目标明度，默认 0.85
   //   darkLightness   样式2 浅色背景时的目标明度，默认 0.3
+  //   saturationScale 样式2 饱和度缩放（0~1，默认 1）：调小更接近黑白，仅保留一点主色倾向
   color.adaptiveTextColor = function (bg, options) {
     var opts = options || {};
     var rgb = (bg != null && typeof bg === 'object') ? bg : color.parse(bg);
@@ -164,25 +207,65 @@
       return null;
     }
     var style = opts.style || 'theme';
-    var dark = color.isDark(rgb, opts.threshold == null ? 0.6 : opts.threshold);
+    var threshold = opts.threshold == null ? color.effectiveThreshold(rgb) : opts.threshold;
+    var dark = color.isDark(rgb, threshold);
     if (style === 'contrast') {
       return dark ? (opts.lightColor || '#ffffff') : (opts.darkColor || '#111111');
+    }
+    var base = color.enhanceSaturation(rgb);
+    var hsl = rgbToHsl(base);
+    if (opts.saturationScale != null) {
+      hsl.s = hsl.s * Math.max(0, Math.min(1, opts.saturationScale));
     }
     var target = dark
       ? (opts.lightLightness == null ? 0.85 : opts.lightLightness)
       : (opts.darkLightness == null ? 0.3 : opts.darkLightness);
-    return color.withLightness(rgb, target);
+    return rgbString(hslToRgb(hsl.h, hsl.s, target));
   };
 
-  // 背景图平均色：等比缩至最长边 ≤ size（默认 64px）后 canvas 取 RGB 均值。
-  // 按 URL 缓存结果；CORS、解码失败等异常返回 null（由调用方回退 CSS 默认色）。
+  // 有效明暗阈值：彩色背景（饱和度 > 0.2）更偏向浅色文字，阈值上浮 0.05；
+  // 中性灰背景保持基础阈值，避免浅灰图配浅字。
+  color.effectiveThreshold = function (rgb, base) {
+    var threshold = base == null ? 0.6 : base;
+    var hsl = rgbToHsl(rgb);
+    return hsl.s > 0.2 ? threshold + 0.05 : threshold;
+  };
+
+  // 按平均透明度向背景色混合：透明像素不再把平均色拉向黑色，
+  // 而是按实际渲染背景合成（options.background 为 {r,g,b} 或颜色字符串）。
+  // 不传背景或完全不透明时返回原 RGB。
+  color.blendToBackground = function (rgb, background) {
+    if (rgb == null) {
+      return null;
+    }
+    var alpha = rgb.a == null ? 255 : rgb.a;
+    if (!background || alpha >= 255) {
+      return { r: rgb.r, g: rgb.g, b: rgb.b };
+    }
+    var bgRgb = (background != null && typeof background === 'object') ? background : color.parse(background);
+    if (bgRgb == null) {
+      return { r: rgb.r, g: rgb.g, b: rgb.b };
+    }
+    var k = alpha / 255;
+    var inv = 1 - k;
+    return {
+      r: Math.round(rgb.r * k + bgRgb.r * inv),
+      g: Math.round(rgb.g * k + bgRgb.g * inv),
+      b: Math.round(rgb.b * k + bgRgb.b * inv)
+    };
+  };
+
+  // 背景图平均色：等比缩至最长边 ≤ size（默认 64px）后 canvas 取 RGB 均值与平均透明度。
+  // 按 URL 缓存原始均值（含透明度）；CORS、解码失败等异常返回 null（由调用方回退 CSS 默认色）。
   var averageCache = {};
 
   color.getAverageColor = function (src, options) {
     var opts = options || {};
     var size = opts.size || 64;
     if (averageCache[src]) {
-      return averageCache[src];
+      return averageCache[src].then(function (raw) {
+        return color.blendToBackground(raw, opts.background);
+      });
     }
     var promise = new Promise(function (resolve) {
       var img = new Image();
@@ -208,15 +291,18 @@
           var r = 0;
           var g = 0;
           var b = 0;
+          var a = 0;
           for (var i = 0; i < data.length; i += 4) {
             r += data[i];
             g += data[i + 1];
             b += data[i + 2];
+            a += data[i + 3];
           }
           resolve({
             r: Math.round(r / total),
             g: Math.round(g / total),
-            b: Math.round(b / total)
+            b: Math.round(b / total),
+            a: Math.round(a / total)
           });
         } catch (e) {
           resolve(null);
@@ -228,7 +314,9 @@
       img.src = src;
     });
     averageCache[src] = promise;
-    return promise;
+    return promise.then(function (raw) {
+      return color.blendToBackground(raw, opts.background);
+    });
   };
 
   var root = typeof window !== 'undefined' ? window : {};

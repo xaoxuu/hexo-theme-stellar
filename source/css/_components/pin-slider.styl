@@ -197,6 +197,8 @@
   top: 50%
   transform: translateY(-50%)
   z-index: 3
+  // 箭头颜色随当前幻灯片封面自适应（插件写入 --text-banner；未计算时回退主题文字色）
+  color: var(--text-banner, var(--text))
   display: flex
   align-items: center
   justify-content: center
@@ -205,7 +207,6 @@
   padding: 1rem .25rem
   border: none
   bar-glass(40px)
-  color: var(--text)
   cursor: pointer
   opacity: 0
   &.prev
