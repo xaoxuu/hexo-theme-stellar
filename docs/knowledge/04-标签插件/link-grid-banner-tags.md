@@ -350,6 +350,8 @@ el += `<img class="lazy bg" data-src="${args.bg ? args.bg : ctx.theme.config.def
 
 **参考源码**：[source/css/_components/tag-plugins/banner.styl](../../../source/css/_components/tag-plugins/banner.styl)
 
+> banner 是 `overflow: hidden` + 圆角/连续曲率的裁剪容器，内嵌 `{% navbar %}` 的激活链接不使用 `blur-effect()`（backdrop-filter）——backdrop-filter 在部分浏览器（Safari / 旧版 Chromium）会破坏父级圆角裁剪，hover 放大背景图时四角变直角；激活项改用与 hover 一致的半透明白底（`rgba(white, 0.25)`）。
+
 ---
 
 ## 参数解析模式

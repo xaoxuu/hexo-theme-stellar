@@ -137,7 +137,12 @@
     -o-transition: all .2s ease-out, transform 1.5s ease-out
 
 .tag-plugin.banner .navbar a.active
-  blur-effect()
+  // 不使用 blur-effect()（backdrop-filter）：banner 是 overflow:hidden + 圆角/连续曲率的裁剪容器，
+  // backdrop-filter 在部分浏览器（Safari / 旧版 Chromium）会破坏父级圆角裁剪，
+  // hover 放大背景图时四角变直角；改用与 hover 一致的半透明白底
+  background: rgba(white, 0.25)
+  &:hover
+    background-color: var(--card)
 
 @media screen and (max-width: $device-mobile-max)
   .banner.top
