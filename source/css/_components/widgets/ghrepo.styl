@@ -28,3 +28,7 @@
       display: grid
       grid-gap: 2px
       grid-template-columns: repeat(auto-fill, "calc((100% - 2 * %s) / 3)" % 2px)
+      .flex-row
+        min-width: 0
+        span
+          txt-ellipsis()
