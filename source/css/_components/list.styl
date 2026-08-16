@@ -63,6 +63,7 @@
   --blur-px: 1em
   --blur-height: 128px
   --blur-sat: 120%
+  --cover-zoom: 1.05
   &:hover
     --img-br: 75%
     --img-sat: 120%
@@ -71,7 +72,7 @@
     --blur-sat: 200%
     // 图片卡片 hover 封面放大：卡片本身不动，放大后的图片由圆角静态裁剪裁出圆角
     .post-cover img, .cover img, .cover:before
-      transform: scale(1.05)
+      transform: scale(var(--cover-zoom))
   img
     filter: brightness(var(--img-br)) saturate(var(--img-sat))
     // 封面放大用 1.5s 缓动，其余属性（亮度/饱和度）保持主题默认 0.2s
@@ -158,47 +159,11 @@
       object-fit: cover
       aspect-ratio: hexo-config('article.cover_ratio') 
       z-index 0
-    &:before
-      content: ''
-      z-index 1
-      position: absolute
-      top: 0
-      left: 0
-      width: 100%
-      height: 100%
-      // Chromium: corner-shape + overflow:hidden 的合成层裁剪与 backdrop-filter 不兼容，
-      // 渐变模糊改用同图模糊层（filter + mask）实现，观感与 backdrop-filter 等价
-      background-image: var(--cover-url)
-      background-size: cover
-      background-position: center
-      filter: brightness(var(--img-br)) saturate(var(--img-sat)) blur(var(--blur-px)) saturate(var(--blur-sat))
-      // 常驻恒等 transform：hover 放大（scale 1.05）时 Safari 能正确应用父级圆角裁剪、静止时却会漏角，
-      // 让该层始终带 transform 复现正常状态；视觉零变化（translateZ(0) 为恒等变换）
-      transform: translateZ(0)
-      // 与封面 img 同步：缩放 0.5s 缓动，亮度/饱和度仍按 0.2s
-      transition: all .2s ease-out, transform .5s ease-out
-      -moz-transition: all .2s ease-out, transform .5s ease-out
-      -webkit-transition: all .2s ease-out, transform .5s ease-out
-      -o-transition: all .2s ease-out, transform .5s ease-out
-      mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
-      -webkit-mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
-    // 黑色渐变蒙版：文字所在边缘不透明度约 0.5，垂直中线为 0，提升文字与背景对比
-    &:after
-      content: ''
-      z-index 1
-      position: absolute
-      top: 0
-      left: 0
-      width: 100%
-      height: 100%
-      pointer-events: none
-    &[position=top]:after
-      background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0) 50%)
-    &[position=bottom]:before
-      mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
-      -webkit-mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
-    &[position=bottom]:after
-      background-image: linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,0.5))
+    // 与通用覆盖层能力统一：按 position 接入顶部/底部渐变模糊层 + 黑色蒙版（视觉参数不变）
+    &[position=top]
+      cover-overlay(var(--cover-url), top)
+    &[position=bottom]
+      cover-overlay(var(--cover-url), bottom)
     .cover-info
       padding: 1rem
       position: absolute
@@ -233,7 +198,7 @@
   // 需用更高特异性选择器在基规则之后覆盖，保持 hover 缩放动画（叠加恒等变换）
   &:hover
     .cover:before
-      transform: translateZ(0) scale(1.05)
+      transform: translateZ(0) scale(var(--cover-zoom))
   h2
     margin: .25rem 0
     font-size: $fsh4

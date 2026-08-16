@@ -336,8 +336,13 @@ for (let row of rows) {
 
 ### 背景图
 
+容器通过内联 `--bg-url` 暴露背景图 URL（供覆盖层模糊层取同图背景），`.content` 内固定渲染两个蒙版元素（`.banner-mask-top` / `.banner-mask-bottom`，`aria-hidden="true"`），配合通用覆盖层 `cover-overlay()` 实现常驻同图渐变模糊层与黑色蒙版（见[文章列表卡片](../03-内容系统/post-lists-cards.md#渐变模糊层与黑色蒙版)）：
+
 ```js
-el += `<img class="lazy bg" data-src="${args.bg ? args.bg : ctx.theme.config.default.banner}">`
+el += `<div class="tag-plugin banner" style="--bg-url:url('...')">`
+el += `<img class="lazy bg" data-src="...">`
+el += `<div class="content">`
+el += `<div class="banner-mask banner-mask-top" aria-hidden="true"></div><div class="banner-mask banner-mask-bottom" aria-hidden="true"></div>`
 ```
 
 图片用 `data-src` 属性与 `lazy` 类懒加载。懒加载图片解析见[懒加载与图片处理](../07-外部集成/lazy-loading-images.md)。
@@ -346,7 +351,7 @@ el += `<img class="lazy bg" data-src="${args.bg ? args.bg : ctx.theme.config.def
 
 ### hover 动画
 
-`{% banner %}` hover 时背景图平滑放大至 `scale(1.05)`（1.5s 缓动），亮度降至 75%、饱和度升至 120%（0.2s 过渡），与文章列表封面卡片（`.post-card`）的 hover 效果一致。
+`{% banner %}` 与文章列表封面统一：hover 时背景图与两侧同图模糊层同步放大至 `scale(1.05)`（图片 1.5s 缓动、模糊层 0.5s），亮度降至 75%、饱和度升至 120%（0.2s 过渡）。
 
 **参考源码**：[source/css/_components/tag-plugins/banner.styl](../../../source/css/_components/tag-plugins/banner.styl)
 

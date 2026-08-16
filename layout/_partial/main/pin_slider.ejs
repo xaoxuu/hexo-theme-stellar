@@ -100,9 +100,8 @@ function wikiSlide(proj) {
   var title = proj.title || proj.name || proj.id
   var excerpt = proj.description || ''
   var el = ''
-  el += '<a class="pin-slide" href="' + escape_html(pretty_url(proj.homepage?.path || '/')) + '">'
+  el += '<a class="pin-slide" href="' + escape_html(pretty_url(proj.homepage?.path || '/')) + '" style="--pin-cover-url:url(\'' + escape_html(img.replace(/'/g, '%27')) + '\')">'
   el += '<img class="pin-slide-bg" src="' + escape_html(img) + '" alt=""/>'
-  el += '<div class="pin-slide-mask"></div>'
   el += '<div class="pin-slide-info">'
   el += '<div class="pin-slide-caps">' + projectChips(proj.tags) + '</div>'
   el += '<div class="pin-slide-title">' + escape_html(title) + '</div>'

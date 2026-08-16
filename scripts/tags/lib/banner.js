@@ -11,12 +11,15 @@
 
 module.exports = ctx => function(args, content) {
   args = ctx.args.map(args, ['bg', 'avatar', 'link'], ['title', 'subtitle'])
+  var bg = args.bg ? args.bg : ctx.theme.config.default.banner
   var el = ''
-  el += `<div class="tag-plugin banner">`
+  el += `<div class="tag-plugin banner" style="--bg-url:url('${bg.replace(/'/g, '%27')}')">`
   // bg
-  el += `<img class="lazy bg" data-src="${args.bg ? args.bg : ctx.theme.config.default.banner}">`
+  el += `<img class="lazy bg" data-src="${bg}">`
   // content
   el += `<div class="content">`
+  // 黑色渐变蒙版：顶部/底部文字区域（与页顶 banner 一致）
+  el += `<div class="banner-mask banner-mask-top" aria-hidden="true"></div><div class="banner-mask banner-mask-bottom" aria-hidden="true"></div>`
   // content.top
   el += `<div class="top">`
   // content.top.back

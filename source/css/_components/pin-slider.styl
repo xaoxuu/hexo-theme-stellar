@@ -21,10 +21,13 @@
   background: var(--card)
   @media screen and (max-width: $device-mobile-max)
     height: 11rem
+  // 带封面幻灯片（post 封面幻灯片 + wiki/项目幻灯片）接入通用底部覆盖层：
+  // 同图渐变模糊层 + 黑色渐变蒙版，hover 放大/变暗参数与文章列表封面统一
+  &.post-slide:not(.no-cover), &:not(.post-slide)
+    cover-overlay(var(--pin-cover-url), bottom)
   &:hover
     .pin-slide-bg
-      transform: scale(1.04)
-      filter: brightness(.92) saturate(1.1)
+      transform: scale(var(--cover-zoom))
 
 // 文章幻灯片：固定「标题 + 一行小字」结构，宽高比与非置顶文章一致（article.cover_ratio）；
 // 文字区与 poster 卡片 cover-info 一致（同款渐变模糊层 + 四周间距）；无封面时为纯白卡片
@@ -32,40 +35,8 @@
   display: block
   height: auto
   aspect-ratio: hexo-config('article.cover_ratio')
-  --img-br: 100%
-  --img-sat: 100%
-  --blur-px: 1em
-  --blur-height: 128px
-  --blur-sat: 120%
   .pin-slide-bg
     z-index: 0
-  // 渐变模糊层：与 poster 卡片 .cover:before 一致（同图模糊 + 底部渐变 mask）
-  &:not(.no-cover)::before
-    content: ''
-    z-index: 1
-    position: absolute
-    top: 0
-    left: 0
-    width: 100%
-    height: 100%
-    background-image: var(--pin-cover-url)
-    background-size: cover
-    background-position: center
-    filter: brightness(var(--img-br)) saturate(var(--img-sat)) blur(var(--blur-px)) saturate(var(--blur-sat))
-    mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
-    -webkit-mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height) * 0.5), transparent var(--blur-height))
-    transition: transform .5s ease-out
-  // 黑色渐变蒙版：底部边缘不透明度约 0.5，垂直中线为 0，与 poster 卡片一致
-  &:not(.no-cover)::after
-    content: ''
-    z-index: 1
-    position: absolute
-    top: 0
-    left: 0
-    width: 100%
-    height: 100%
-    pointer-events: none
-    background-image: linear-gradient(rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.5))
   .pin-slide-text
     position: absolute
     bottom: 0
@@ -96,8 +67,6 @@
       text-overflow: ellipsis
       @media screen and (max-width: $device-mobile)
         font-size: $fs-13
-  &:not(.no-cover):hover::before
-    transform: scale(1.04)
   // 无封面卡片：纯白底 + 普通文章文字颜色
   &.no-cover
     background: var(--card)
@@ -115,19 +84,19 @@
   width: 100%
   height: 100%
   object-fit: cover
-  transition: transform .5s ease-out, filter .2s ease-out
-
-.pin-slide-mask
-  position: absolute
-  inset: 0
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.35) 55%, rgba(0, 0, 0, 0.68) 100%)
+  // hover 放大用 1.5s 缓动，亮度/饱和度仍按 0.2s（与文章列表封面一致）
+  filter: brightness(var(--img-br)) saturate(var(--img-sat))
+  transition: all .2s ease-out, transform 1.5s ease-out
+  -moz-transition: all .2s ease-out, transform 1.5s ease-out
+  -webkit-transition: all .2s ease-out, transform 1.5s ease-out
+  -o-transition: all .2s ease-out, transform 1.5s ease-out
 
 .pin-slide-info
   position: absolute
   left: 0
   right: 0
   bottom: 0
-  z-index: 1
+  z-index: 2
   padding: 1.5rem 6rem 1.75rem 2rem
   text-align: left
   @media screen and (max-width: $device-mobile-max)

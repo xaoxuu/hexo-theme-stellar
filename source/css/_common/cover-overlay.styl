@@ -1,0 +1,111 @@
+// 背景图覆盖层通用能力：同图渐变模糊层 + 黑色渐变蒙版 + hover 变暗
+// $url-var: 背景图 CSS 变量（--cover-url / --pin-cover-url / --bg-url），模糊层取同图背景
+// $sides: top | bottom | both —— 文字所在边缘；both 依赖宿主内的 .banner-mask-top/bottom 蒙版元素
+// $layer: 覆盖层宿主选择器（相对当前元素），缺省为当前元素自身；图片等 hover 目标由调用方按 DOM 自行接入
+cover-overlay($url-var, $sides = bottom, $layer = null)
+  $host = $layer ? $layer : '&'
+  // 统一默认观感变量（与文章列表 poster 封面一致）
+  --img-br: 100%
+  --img-sat: 100%
+  --blur-px: 1em
+  --blur-height: 128px
+  --blur-sat: 120%
+  --cover-zoom: 1.05
+  // hover 整体变暗：亮度 75%、饱和度 120%，模糊层饱和度提升至 200%
+  &:hover
+    --img-br: 75%
+    --img-sat: 120%
+    --blur-sat: 200%
+  if $sides == both
+    // 双侧：:before 顶部模糊层 + :after 底部模糊层，黑色蒙版由 .banner-mask-top/bottom 承担
+    {$host}:before, {$host}:after
+      content: ''
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      z-index: 0
+      background-image: $url-var
+      background-size: cover
+      background-position: center
+      filter: brightness(var(--img-br)) saturate(var(--img-sat)) blur(var(--blur-px)) saturate(var(--blur-sat))
+      // 常驻恒等 transform：hover 放大时 Safari 正确应用父级圆角裁剪（同 list.styl 注释）
+      transform: translateZ(0)
+      pointer-events: none
+      transition: all .2s ease-out, transform .5s ease-out
+      -moz-transition: all .2s ease-out, transform .5s ease-out
+      -webkit-transition: all .2s ease-out, transform .5s ease-out
+      -o-transition: all .2s ease-out, transform .5s ease-out
+    {$host}:before
+      mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height-top, var(--blur-height)) * 0.5), transparent var(--blur-height-top, var(--blur-height)))
+      -webkit-mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height-top, var(--blur-height)) * 0.5), transparent var(--blur-height-top, var(--blur-height)))
+    {$host}:after
+      mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height-bottom, var(--blur-height)) * 0.5), transparent var(--blur-height-bottom, var(--blur-height)))
+      -webkit-mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height-bottom, var(--blur-height)) * 0.5), transparent var(--blur-height-bottom, var(--blur-height)))
+    if $layer
+      &:hover
+        {$host}:before, {$host}:after
+          transform: translateZ(0) scale(var(--cover-zoom))
+    else
+      {$host}:hover:before, {$host}:hover:after
+        transform: translateZ(0) scale(var(--cover-zoom))
+    // 黑色渐变蒙版：文字所在边缘不透明度约 0.25，垂直中线为 0
+    {$host} .banner-mask
+      position: absolute
+      inset: 0
+      z-index: 1
+      pointer-events: none
+      &.banner-mask-top
+        background-image: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0) 50%)
+      &.banner-mask-bottom
+        background-image: linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,0.25))
+  else
+    // 单侧：:before 同图模糊层 + :after 黑色渐变蒙版
+    {$host}:before
+      content: ''
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      z-index: 1
+      background-image: $url-var
+      background-size: cover
+      background-position: center
+      filter: brightness(var(--img-br)) saturate(var(--img-sat)) blur(var(--blur-px)) saturate(var(--blur-sat))
+      // 常驻恒等 transform：hover 放大时 Safari 正确应用父级圆角裁剪（同 list.styl 注释）
+      transform: translateZ(0)
+      pointer-events: none
+      transition: all .2s ease-out, transform .5s ease-out
+      -moz-transition: all .2s ease-out, transform .5s ease-out
+      -webkit-transition: all .2s ease-out, transform .5s ease-out
+      -o-transition: all .2s ease-out, transform .5s ease-out
+    if $sides == top
+      {$host}:before
+        mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height-top, var(--blur-height)) * 0.5), transparent var(--blur-height-top, var(--blur-height)))
+        -webkit-mask: linear-gradient(black, rgba(black, 0.75) calc(var(--blur-height-top, var(--blur-height)) * 0.5), transparent var(--blur-height-top, var(--blur-height)))
+    else
+      {$host}:before
+        mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height-bottom, var(--blur-height)) * 0.5), transparent var(--blur-height-bottom, var(--blur-height)))
+        -webkit-mask: linear-gradient(to top, black, rgba(black, 0.75) calc(var(--blur-height-bottom, var(--blur-height)) * 0.5), transparent var(--blur-height-bottom, var(--blur-height)))
+    if $layer
+      &:hover
+        {$host}:before
+          transform: translateZ(0) scale(var(--cover-zoom))
+    else
+      {$host}:hover:before
+        transform: translateZ(0) scale(var(--cover-zoom))
+    {$host}:after
+      content: ''
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      z-index: 1
+      pointer-events: none
+      if $sides == top
+        background-image: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0) 50%)
+      else
+        background-image: linear-gradient(rgba(0,0,0,0) 50%, rgba(0,0,0,0.25))
