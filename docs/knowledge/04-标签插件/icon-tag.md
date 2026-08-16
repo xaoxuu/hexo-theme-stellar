@@ -182,7 +182,7 @@ ctx.utils.icon(iconKey, additionalAttributes, inline)
 
 **异步渲染**
 
-非首屏图标默认不内联进 HTML：服务端输出 `<svg class="icon" data-icon="key">` 占位符，客户端 `/js/icons.js`（defer）按命名空间拉取构建期生成的 `js/icons/{ns}.json` 后原位替换为完整 SVG，最终 DOM 与全量内联一致，CSS 钩子不受影响。首屏关键图标（搜索、菜单、leftbar/rightbar、goback）由对应模板调用处传 `inline=true` 保持内联；站点通过 `source/_data/icons.yml` 覆盖或补充的图标同样生效。无 JS 时非关键图标不显示（主题本身强依赖 JS）。
+非首屏图标默认不内联进 HTML：服务端输出 `<svg class="icon" data-icon="key">` 占位符，客户端 `/js/icons.js`（defer）按命名空间拉取构建期生成的 `js/icons/{ns}.json` 后原位替换为完整 SVG，最终 DOM 与全量内联一致，CSS 钩子不受影响。首屏关键图标（搜索、菜单、leftbar/rightbar、goback）与 TOC 底部操作按钮（回到顶部/参与讨论）由对应模板调用处传 `inline=true` 保持内联；站点通过 `source/_data/icons.yml` 覆盖或补充的图标同样生效。无 JS 时非关键图标不显示（主题本身强依赖 JS）。
 
 **图标解析：ctx.utils.icon() 调用方**
 

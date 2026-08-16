@@ -60,12 +60,12 @@ function layoutDiv(fallback) {
   }
   el += `<div class="widget-footer">`
   el += `<a class="top" onclick="util.scrollTop()">`
-  el += icon('default:upup')
+  el += icon('default:upup', '', true)
   el += `<span>${__('btn.top')}</span>`
   el += `</a>`
   if (hasComments) {
     el += `<a class="buttom" onclick="util.scrollComment()">`
-    el += icon('default:tocomment')
+    el += icon('default:tocomment', '', true)
     el += `<span>${__('btn.comments')}</span>`
     el += `</a>`
   }
