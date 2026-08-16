@@ -224,6 +224,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `a754ba3` | fix(utils): 插件注册队列化与 utils.js 补载，防御脚本延迟加载导致页面空白 | 设计文档 `2026-08-16-utils-lazy-load-guard/`；知识库 `05-前端交互/client-side-overview.md`、`07-外部集成/plugin-system.md`；本节二登记 |
 | `3cd116a` | style(ui): 间距令牌重构与侧边栏布局调整 | 设计文档 `2026-08-16-desktop-gap-max-spacing/`、`2026-08-16-responsive-gap-tokens/`、`2026-08-16-rightbar-width/`；知识库 `01-样式系统/*`、`02-布局系统/sidebar-system.md`、`09-高级主题/custom-styling-overrides.md`；CHANGELOG「样式/升级注意」 |
 | `b1501d9` | docs: 修正 AI 规范引用漂移并新增 check-spec-refs 一致性检查 | 设计文档 `docs/designs/2026-08-16-ai-spec-refs-check/`；CHANGELOG「其他」 |
 | `6c99783` | docs(knowledge): 移除合并版知识库全量并清理引用 | 本节二登记（知识库全量移除）；CHANGELOG「其他」 |
