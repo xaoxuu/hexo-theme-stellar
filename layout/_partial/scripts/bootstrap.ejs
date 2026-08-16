@@ -24,7 +24,9 @@
     if (typeof utils === 'object') return;
     // utils 未就绪时补载；加载成功后由 utils.js 内部补跑插件队列
     var s = document.createElement('script');
-    s.src = '<%- url_for('/js/utils.js') %>?v=<%- stellar_info('version') %>';
+    // 用 setAttribute 赋值 src，避免被基于 `s.src = "..."` 的正则
+    // （图片懒加载 / 脚本延迟优化器）误改写
+    s.setAttribute('src', '<%- url_for('/js/utils.js') %>?v=<%- stellar_info('version') %>');
     s.async = false;
     s.onerror = function () {
       console.error('[Stellar] 无法加载 /js/utils.js，已启用内容兜底显示（sr-fallback）');
