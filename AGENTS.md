@@ -48,7 +48,6 @@
 
 - `00-总览与安装配置/` ~ `09-高级主题/`：按主题域组织，入口为 `docs/knowledge/README.md` 及各领域 `index.md`
 - `VERIFICATION.md`：核查与修正记录；`tools/verify.py`：硬事实核查脚本
-- `知识库全量.md`：合并版（RAG / 一次性上下文导入）
 
 使用约定：
 
