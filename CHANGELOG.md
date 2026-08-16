@@ -1,5 +1,46 @@
 # Changelog
 
+## 1.42.0
+
+> 发布日期：2026-08-16
+
+### 新功能
+- 文章卡片新增 `article.card_style`（`hero` / `classic`）：hero 全图文字封面卡片（有 cover 时标题 + 单行小字，文字区固定底部），classic 普通卡片；hero 与置顶轮播统一小字取值 `subtitle()`（`subtitle` > `description` > excerpt 前 50 字）
+- 背景图/背景色上方文字颜色自适应（`plugins.adaptive_text`，默认开启）：`theme` / `contrast` / `split` 三种模式，按背景平均色计算并写入 `--text-banner` / `--text-banner-theme`，接入文章封面、专栏最新文章卡片、置顶轮播、页顶横幅与 `{% banner %}` 标签
+- 专栏列表页重构为上下布局：标题 + 描述 + 全宽最新文章卡片 + 其他文章列表，抽出 `.post-panel` 公共组件（友链文章订阅同步复用）
+
+### 修复
+- 标签行负边距导致移动端页面横向溢出（#688）
+- albums/posters 在 Firefox/Safari 标题竖排与遮罩消失问题（#689）
+- Babel 转译将 `sidebar` 全局改名导致侧边栏失效
+- 作者归档页横幅下块贴顶；页面顶部横幅黑色蒙版始终显示并贴边
+- Safari 下顶部横幅与列表封面方角漏出（`isolation: isolate` + `translateZ(0)` + clip-path 兜底）
+- banner 导航激活项 blur 导致 hover 圆角丢失
+- TOC 回到顶部/参与讨论图标改为内联并修复占位符布局
+- 轮播区/文章封面/页顶横幅/`{% banner %}` 图片角落跟随连续曲率圆角配置
+
+### 样式
+- 文章卡片标签 `#` 前缀替换为 hashtag 图标
+- banner hover 动画对齐封面（背景图缩放 1.05 + 变暗），封面渐变模糊层增加黑色蒙版
+- 统一封面、轮播、页顶横幅与 banner 标签背景图覆盖层观感（`cover-overlay()`）
+- 左栏「所有项目」返回胶囊默认背景复用目录树激活光照效果
+
+### 重构
+- 移除已失效的 auto_banner（Unsplash 自动横幅）与 `poster` 配置
+- 页面横幅上块重构为显式两行结构（面包屑 + 阅读时长/AI 标签 + 日期行）
+
+### 其他
+- 移除知识库合并版 `知识库全量.md`，知识库以领域页面为唯一事实源
+- 新增 AI 规范引用一致性检查（check-spec-refs）与发版前提交登记完整性检查（随 `npm run check` 执行）
+
+### 升级注意（配置变更与破坏性改动）
+- 移除 `article.auto_banner`（Unsplash 自动横幅已失效）与文章 front-matter `poster`（`headline` / `topic` / `caption`）；`poster.color` / `banner_info.color` 显式文字颜色不再生效，由自适应文字颜色接管
+- 新增 `article.card_style`（`hero` 默认 / `classic`）：未显式设置的站点保持 hero 卡片样式
+- 新增 `plugins.adaptive_text`（默认 `enable: true`）：页面存在 `[data-text-adaptive]` 元素时才按需加载，文字颜色默认随背景自适应
+- 知识库合并版 `知识库全量.md` 移除（RAG 可直接索引领域页面）
+
+Full Changelog: [1.41.0...main](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.41.0...main)
+
 ## 1.41.0
 
 > 发布日期：2026-08-15

@@ -4,7 +4,6 @@ domain: 内容系统
 tags:
   - 文章列表
   - 卡片
-  - Unsplash
 ---
 
 # 文章列表与卡片组件
@@ -23,7 +22,7 @@ tags:
 
 ## 目的与范围
 
-本文详述 Stellar 的文章列表渲染系统与文章卡片组件架构：`post_card.ejs` 的渲染逻辑、封面图生成策略（含 Unsplash 集成）、classic 卡片与 hero 卡片的区别、元数据显示模式。该系统负责在索引页、归档页与分类/标签页展示博客文章集合。
+本文详述 Stellar 的文章列表渲染系统与文章卡片组件架构：`post_card.ejs` 的渲染逻辑、封面图生成策略（显式 `cover` 完整 URL 时渲染）、classic 卡片与 hero 卡片的区别、元数据显示模式。该系统负责在索引页、归档页与分类/标签页展示博客文章集合。
 
 单篇文章页渲染见[页面模板与路由](../02-布局系统/page-templates-routing.md)；wiki 专属列表渲染见[文档系统](wiki-docs.md)。
 
@@ -551,7 +550,7 @@ graph TD
 ---
 title: My Post Title
 date: 2024-01-01
-cover: /images/cover.jpg  # 或 "nature,landscape"（Unsplash 搜索）
+cover: /images/cover.jpg  # 仅显式完整 URL 时渲染封面
 categories:
   - Category A
   - Category B

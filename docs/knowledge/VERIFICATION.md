@@ -1,6 +1,6 @@
 # 核查与修正记录
 
-> 记录中文知识库对照 `themes/stellar/` 源码（版本 1.41.0，HEAD 4f71c61）核查与修正的偏差记录。
+> 记录中文知识库对照 `themes/stellar/` 源码（版本 1.41.0，HEAD b1501d9）核查与修正的偏差记录。
 > 规则：行号引用一律改为文件路径；无法在代码中找到对应实现的主张保留原文并标注「未核实」。
 
 ## 一、已移除功能（整页改写为当前实现）
@@ -206,3 +206,35 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 | 2026-08-16 | `_config.yml`、`layout/_partial/main/post_list/post_card.ejs`、`layout/index.ejs`、`layout/_partial/main/pin_slider.ejs`、`source/css/_components/list.styl`、`docs/knowledge/00-总览与安装配置/configuration.md`、`03-内容系统/post-lists-cards.md`、`05-前端交互/client-side-overview.md`、`知识库全量.md`、`docs/designs/2026-08-16-remove-poster-card-style/`、主工程 `_config.stellar.yml`、`source/wiki/stellar/pages.md`、`front-matter.md`、`advanced-settings.md`、`notebooks.md`、`docs/specs/remove-poster-card-style/` | 移除文章 front-matter `poster`（headline/topic/caption）配置，新增 `article.card_style`（`hero` 默认 / `classic`）：hero 卡片在有 cover 时渲染「标题 + 单行小字（`subtitle` > `description`）」且文字区固定 bottom、不再有 top 布局与 topic 小字；置顶轮播同步改为 title + `subtitle` > `description` > excerpt（截断 50 字）；`list.styl` 移除 `.cover` / `.cover-info` 的 `[position=top]` 规则并给 caption 加单行省略；`.text.topic` 保留供专栏最新文章卡片使用；主仓库清理旧 poster front-matter 并同步 wiki 文档（见 `docs/designs/2026-08-16-remove-poster-card-style/`） |
 | 2026-08-16 | `scripts/lib/subtitle.js`（新增）、`scripts/helpers/subtitle.js`（新增）、`test/subtitle.test.js`（新增）、`layout/_partial/main/post_list/post_card.ejs`、`layout/_partial/main/pin_slider.ejs`、`docs/knowledge/03-内容系统/post-lists-cards.md`、`05-前端交互/client-side-overview.md`、`知识库全量.md`、主工程 `source/wiki/stellar/pages.md`、`front-matter.md`、`docs/specs/remove-poster-card-style/` | 统一小字取值逻辑：新增 `subtitle()` helper（纯函数 `scripts/lib/subtitle.js`），hero 卡片与置顶轮播共用 `subtitle > description > excerpt/content 前 50 字`（strip HTML、压缩空白、截断，省略号由 CSS 单行处理）；hero 卡片新增 excerpt 兜底；`post_card.ejs` / `pin_slider.ejs` 删除本地重复实现（见 `docs/designs/2026-08-16-remove-poster-card-style/`） |
 | 2026-08-16 | `layout/index.ejs`、`source/css/_components/list.styl`、`pin-slider.styl`、`partial/article-banner.styl`、`tag-plugins/banner.styl`、`layout/_partial/main/pin_slider.ejs`、`docs/knowledge/01-样式系统/styling-overview.md`、`04-标签插件/link-grid-banner-tags.md`、`docs/designs/2026-08-16-corner-shape-image-containers/`、主工程 `docs/specs/continuous-corner/`、`source/wiki/stellar/advanced-settings.md` | 修复轮播区/文章封面（hero）/页顶横幅/`{% banner %}` 图片角落不跟随 corner-shape：Chrome 151 实测 corner-shape 只作用于元素自身背景、不传递给子内容 overflow 裁剪，clip-path 亦强制普通圆角；图片 URL 由容器自身背景承载（`--cover-url` / `--bg-url` / `--pin-cover-url`），`.post-card` / `.article.banner` 的 clip-path 加 `@supports not (corner-shape: superellipse(1))` 守卫（Chromium 移除、Safari/Firefox 保留），轮播插件按当前 slide 同步 `--pin-cover-url` 到 `.pin-slider` 且封面 slide 背景透明（见 `docs/designs/2026-08-16-corner-shape-image-containers/`） |
+| 2026-08-16 | `0f4486d`（#688）· `source/css/_components/pages/archives.styl`、`partial/article-tags.styl` | 标签行负边距导致移动端页面横向溢出：修复 `.tag` 行负边距（仅此两文件），移动端不再横向溢出；行为回归修复，知识库无行为描述变更，仅登记（CHANGELOG 1.42.0「修复」） |
+| 2026-08-16 | `1f2f933`（#689）· `source/css/_components/tag-plugins/gallery.styl`、`source/css/_plugins/lazyload.styl` | albums/posters 在 Firefox/Safari 标题竖排与遮罩消失：修复 gallery 卡片标题竖排与遮罩丢失问题；行为回归修复，知识库无行为描述变更，仅登记（CHANGELOG 1.42.0「修复」） |
+| 2026-08-16 | `a198243` · `source/js/main.js` | Babel 转译将 `sidebar` 全局改名导致侧边栏失效：修复转译改名问题，侧边栏恢复（见 `docs/designs/2026-08-16-fix-babel-sidebar-rename/`），补登记 |
+
+## 八、提交登记（发版前核对）
+
+> 发版前核对台账：`ci/check-release-docs.js` 会校验自上一 tag 以来的每个非合并提交（7 位短 SHA）都出现在下表；缺失时 `npm run check` 失败并列出缺失提交。登记时按实际 `git log --no-merges <tag>..HEAD` 输出为准。
+
+| 短 SHA | 提交标题 | 覆盖说明 |
+|--------|----------|----------|
+| `b1501d9` | docs: 修正 AI 规范引用漂移并新增 check-spec-refs 一致性检查 | 设计文档 `docs/designs/2026-08-16-ai-spec-refs-check/`；CHANGELOG「其他」 |
+| `6c99783` | docs(knowledge): 移除合并版知识库全量并清理引用 | 本节二登记（知识库全量移除）；CHANGELOG「其他」 |
+| `c4df2ae` | fix(corner-shape): 轮播/封面/横幅图片角落跟随连续曲率圆角配置 | 设计文档 `2026-08-16-corner-shape-image-containers/`；知识库 `01-样式系统/styling-overview.md`、`04-标签插件/link-grid-banner-tags.md`；CHANGELOG「修复」 |
+| `3c8b08a` | feat: 完善背景图文字自适应颜色（alpha 合成、彩色阈值、饱和度增强、轮播箭头） | 设计文档 `2026-08-16-adaptive-text-color/`；知识库 `00-总览与安装配置/configuration.md`；CHANGELOG「新功能」 |
+| `1f2f933` | fix(gallery): 修正 albums/posters 在 Firefox/Safari 标题竖排与遮罩消失问题 (#689) | 仅登记（本节七，本次补）；CHANGELOG「修复」 |
+| `1ec3358` | feat(article): 新增 card_style（hero/classic）并移除 poster 配置，统一小字取值 | 设计文档 `2026-08-16-remove-poster-card-style/`；知识库 configuration.md、`03-内容系统/post-lists-cards.md`、`05-前端交互/client-side-overview.md`；CHANGELOG「新功能/升级注意」 |
+| `5df71ec` | feat: 背景图文字颜色自适应（split 大字 contrast + 小字 theme） | 设计文档 `2026-08-16-adaptive-text-color/`；知识库 configuration.md；CHANGELOG「新功能」 |
+| `8653f92` | feat(topic): 重构专栏列表页为上下布局并抽取公共组件 | 设计文档 `2026-08-15-topic-latest-post-card/`；知识库 post-lists-cards.md、`04-标签插件/social-content-card-tags.md`；CHANGELOG「新功能」 |
+| `0f4486d` | fix: 标签行负边距导致移动端页面横向溢出 (#688) | 仅登记（本节七，本次补）；CHANGELOG「修复」 |
+| `26d6a85` | style(banner): 统一封面、轮播、页顶横幅与 banner 标签背景图覆盖层观感 | 设计文档 `2026-08-16-unify-cover-overlay/`；知识库 post-lists-cards.md、`03-内容系统/content-overview.md`、link-grid-banner-tags.md、client-side-overview.md；CHANGELOG「样式」 |
+| `b4da348` | fix(banner): Safari 下修复顶部横幅与列表封面方角漏出 | 设计文档 `2026-08-16-fix-article-banner-safari-corners/`、`2026-08-16-fix-cover-corner-leak/`；知识库 content-overview.md；CHANGELOG「修复」 |
+| `a231613` | fix(banner): 导航激活项改用半透明白底避免 hover 圆角丢失 | 设计文档 `2026-08-16-fix-banner-navbar-active-blur/`；CHANGELOG「修复」 |
+| `db0f82b` | fix(banner): 页面顶部横幅黑色蒙版始终显示并贴边 | 设计文档 `2026-08-16-fix-article-banner-mask/`；知识库 content-overview.md；CHANGELOG「修复」 |
+| `f2d6f95` | fix(toc): 回到顶部/参与讨论图标内联并修复占位符布局 | 设计文档 `2026-08-16-toc-footer-icon-inline/`；知识库 `09-高级主题/performance.md`、`04-标签插件/icon-tag.md`；CHANGELOG「修复」 |
+| `366f8e9` | style: 左栏返回胶囊默认背景复用目录树激活光照效果 | 设计文档 `2026-08-16-wiki-home-active-style/`；知识库 `02-布局系统/sidebar-system.md`；CHANGELOG「样式」 |
+| `4abda8f` | docs: 记录修复方案的构建与部署验证结果 | 设计文档 `2026-08-16-fix-babel-sidebar-rename/checklist.md`；纯文档提交 |
+| `a198243` | fix: 修复 Babel 转译将 sidebar 全局改名导致侧边栏失效 | 设计文档 `2026-08-16-fix-babel-sidebar-rename/`；本节七登记（本次补）；CHANGELOG「修复」 |
+| `b83ef7a` | style: banner hover 动画对齐封面，封面渐变模糊层增加黑色蒙版 | 设计文档 `2026-08-16-banner-hover-cover-mask/`；知识库 content-overview.md；CHANGELOG「样式」 |
+| `9a8380d` | fix: 修复作者归档页横幅下块贴顶问题 | 设计文档 `2026-08-16-refactor-page-banner/`；CHANGELOG「修复」 |
+| `0172f57` | refactor: 重构页面横幅上块为显式两行结构 | 设计文档 `2026-08-16-refactor-page-banner/`；知识库 content-overview.md；CHANGELOG「重构」 |
+| `3bb1a87` | style: 文章卡片标签 # 前缀替换为 hashtag 图标 | 设计文档 `2026-08-16-card-tags-hashtag-icon/`；知识库 post-lists-cards.md；CHANGELOG「样式」 |
+| `3e31c73` | refactor: 移除已失效的 auto_banner（Unsplash 自动横幅）功能 | 设计文档 `2026-08-16-remove-unsplash-auto-banner/`；知识库 configuration.md、post-lists-cards.md、content-overview.md（本次修正残留引用）；CHANGELOG「重构/升级注意」 |
