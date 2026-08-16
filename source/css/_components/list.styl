@@ -150,50 +150,53 @@
     border-radius: 0
     aspect-ratio: hexo-config('article.cover_ratio')
     
-.post-list .post-card.post.photo
-  .cover
-    position: relative
-    line-height: 0
-    img
-      width: 100%
-      object-fit: cover
-      aspect-ratio: hexo-config('article.cover_ratio') 
-      z-index 0
-    // 与通用覆盖层能力统一：按 position 接入顶部/底部渐变模糊层 + 黑色蒙版（视觉参数不变）
+// 封面渐变模糊卡片：文章 photo 卡片与专栏最新文章卡片共用（接入 cover-overlay 统一覆盖层）
+.post-list .post-card .cover
+  position: relative
+  line-height: 0
+  img
+    width: 100%
+    object-fit: cover
+    z-index 0
+  // 与通用覆盖层能力统一：按 position 接入顶部/底部渐变模糊层 + 黑色蒙版（视觉参数不变）
+  &[position=top]
+    cover-overlay(var(--cover-url), top)
+  &[position=bottom]
+    cover-overlay(var(--cover-url), bottom)
+  .cover-info
+    padding: 1rem
+    position: absolute
+    line-height: 1.2
+    width: 'calc(100% - %s * 2)' % 1rem
+    --text-banner: white
+    color: var(--text-banner)
+    z-index: 2
     &[position=top]
-      cover-overlay(var(--cover-url), top)
+      top: 0
     &[position=bottom]
-      cover-overlay(var(--cover-url), bottom)
-    .cover-info
-      padding: 1rem
-      position: absolute
-      line-height: 1.2
-      width: 'calc(100% - %s * 2)' % 1rem
-      --text-banner: white
-      color: var(--text-banner)
-      z-index: 2
-      &[position=top]
-        top: 0
-      &[position=bottom]
-        bottom: 0
-      div+div
-        margin-top: 4px
-      .text
-        color: unset
-        trans1 all
-        text-shadow: 0 2px 4px rgba(0,0,0,0.2)
-      .topic
-        font-size: $fs-13
+      bottom: 0
+    div+div
+      margin-top: 4px
+    .text
+      color: unset
+      trans1 all
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2)
+    .topic
+      font-size: $fs-13
+    .headline
+      font-weight: 500
+      font-size: $fsh3
+    .caption
+      font-size: $fs-14
+    @media screen and (max-width: $device-mobile)
       .headline
-        font-weight: 500
-        font-size: $fsh3
+        font-size: $fsh4
       .caption
-        font-size: $fs-14
-      @media screen and (max-width: $device-mobile)
-        .headline
-          font-size: $fsh4
-        .caption
-          font-size: $fs-13
+        font-size: $fs-13
+
+.post-list .post-card.post.photo
+  .cover img
+    aspect-ratio: hexo-config('article.cover_ratio')
   // hover 放大覆盖：基规则的 `transform: translateZ(0)` 特异性高于上方 `.post-card:hover` 的 scale，
   // 需用更高特异性选择器在基规则之后覆盖，保持 hover 缩放动画（叠加恒等变换）
   &:hover
@@ -242,6 +245,64 @@
     margin-bottom: 0
   .cap+.cap
     margin-left: 4px
+
+
+// topic 专栏列表：平铺容器 + 上下布局（h2 专栏标题 → 最新文章卡片 → 文章链接列表）
+.post-list.topic
+  .post-card-wrap
+    margin: 0
+    box-shadow: none
+    border-radius: 0
+    & + .post-card-wrap
+      border-top: 1px solid var(--block-border)
+  .post-card
+    background: none
+    box-shadow: none
+    border-radius: 0
+    overflow: visible
+    clip-path: none
+    .md-text
+      padding: 2.25rem 0
+      @media screen and (max-width: $device-mobile)
+        padding: 1.5rem 0
+  .post-card.topic article
+    display: flex
+    flex-direction: column
+    gap: 1rem
+    .topic-title
+      story-title()
+      margin: 0 0 0.5rem
+    .topic-desc
+      text-align: center
+      color: var(--text-p2)
+      font-size: $fs-14
+      line-height: 1.5
+      // 左右内边距与文章列表（.post-panel padding: 0 1rem）一致
+      padding: 0 1rem
+      margin: 0 0 1rem
+    .cover
+      flex: none
+      width: 100%
+      aspect-ratio: 2 / 1
+      border-radius: $border-card-l
+      overflow: hidden
+      // 与 .post-card 相同的 Safari 圆角裁剪兜底（模糊层合成层不跟随 overflow:hidden）
+      clip-path: 'inset(0 round %s)' % $border-card-l
+      display: block
+      img
+        width: 100%
+        height: 100%
+    .post-panel
+      flex: none
+      width: 100%
+      // 左右内边距与文章封面文字区（.cover-info padding: 1rem）一致
+      padding: 0 1rem
+      .posts
+        margin: 0
+  // hover 放大覆盖（与 photo 卡片一致，见 .post-card.post.photo:hover 注释）
+  .post-card.topic:hover
+    .cover:before
+      transform: translateZ(0) scale(var(--cover-zoom))
 
 .post-list.archives
   @media screen and (max-width: $device-mobile)

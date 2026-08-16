@@ -1,14 +1,35 @@
 <%
 function layoutDiv() {
   var el = '';
+  var bg = topic.cover || topic.icon || theme.default.topic;
+  var label = topic.title || topic.name;
+  var latest = topic.homepage;
   el += '<article class="md-text">';
-  el += `<div class="preview"><img src="${topic.icon ? topic.icon : theme.default.topic}"/></div>`
-  el += '<div class="excerpt">';
-  el += '<h2 class="post-title">' + (topic.title || topic.name) + '</h2>';
+  // 专栏标题（story 文章 h2 样式，置于卡片外）
+  el += '<h2 class="topic-title">' + escape_html(label) + '</h2>';
+  // 专栏描述（标题下方）
   if (topic.description) {
-    el += '<p>' + topic.description + '</p>';
+    el += '<p class="topic-desc">' + escape_html(topic.description) + '</p>';
   }
-  el += '</div>';
+  // 最新文章卡片（整卡跳转最新文章）
+  el += partial('_partial/main/post_list/latest_post_card', {
+    href: pretty_url(latest ? (latest.path || '/') : '/'),
+    background: bg,
+    post: latest
+  });
+  // 其他文章（排除最新，最多 3 条，按发布时间倒序）
+  if (topic.pages && topic.pages.length > 1) {
+    el += '<div class="post-panel">';
+    el += '<div class="posts">';
+    topic.pages.slice(1, 4).forEach(function(post) {
+      el += '<a class="post-link" href="' + pretty_url(post.path) + '">';
+      el += '<span class="title">' + escape_html(post.title) + '</span>';
+      el += '<span class="date">' + escape_html(date(post.date, config.date_format)) + '</span>';
+      el += '</a>';
+    });
+    el += '</div>';
+    el += '</div>';
+  }
   el += '</article>';
   return el;
 }

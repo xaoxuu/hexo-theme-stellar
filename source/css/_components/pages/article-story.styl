@@ -25,16 +25,7 @@
       &:after
         font-size: 0.25em
   h2:not([class])
-    &:before,&:after
-      content: ''
-      display: inline-block
-      width: 12px
-      height: 1.2em
-      background: $c-accent
-      transform: skewX(-20deg)
-      margin: 0 0.5em
-      vertical-align: top
-      position: relative
+    story-title()
 
   h3:not([class])
     position: relative

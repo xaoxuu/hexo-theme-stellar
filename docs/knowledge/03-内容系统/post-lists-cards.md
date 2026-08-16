@@ -40,6 +40,7 @@ tags:
 | `layout/index.ejs` | `layout_post_list()`、`layout_post_card()` | 遍历 `page.posts`，包装卡片 |
 | `layout/_partial/main/post_list/post_card.ejs` | `div()`、`div_default()`、`div_photo()` | 渲染单篇文章卡片 |
 | `layout/_partial/main/post_list/wiki_card.ejs` | `layoutDiv()` | 渲染 wiki 项目卡片 |
+| `layout/_partial/main/post_list/topic_card.ejs`、`latest_post_card.ejs` | `layoutDiv()` | 渲染专栏容器（最新文章卡片 + 其他文章列表） |
 | `layout/_partial/main/navbar/nav_tabs_blog` | — | 文章列表上方的导航标签 |
 | `layout/_partial/main/post_list/paginator` | — | 文章列表下方的分页 |
 
@@ -490,6 +491,59 @@ Wiki 卡片用 `list.styl` 中的 flex 布局，图标与文本并排：
 | `.post-card.wiki article .cap` | `background: var(--theme-block)` | 标签块背景 |
 
 **参考源码**：[source/css/_components/list.styl](../../../source/css/_components/list.styl)
+
+---
+
+## Topic 卡片变体
+
+`index_topic.ejs` 遍历 `theme.topic.publish_list`，经 `topic_card.ejs` 渲染每个专栏容器，上下排布：顶部为 `h2.topic-title` 专栏标题（复用 story 文章 h2 样式，`story-title()` mixin）与其下 `p.topic-desc` 专栏描述，中间为**最新文章卡片**（`latest_post_card.ejs` 公共组件，整卡跳转最新文章），底部为该专栏其他文章链接列表（`.post-panel` 公共组件，与友链文章订阅 `friends_and_posts` 共用样式）；专栏容器之间以加大内边距拉开间隔。
+
+### 数据对象 `topic`
+
+| 属性 | 兜底 | 用途 |
+|------|------|------|
+| `topic.cover` | `topic.icon` → `theme.default.topic` | 最新文章卡片背景图（2:1 裁剪） |
+| `topic.title` | `topic.name` | 容器顶部 `h2.topic-title` 专栏标题（置于卡片外） |
+| `topic.description` | — | 标题下方的 `p.topic-desc` 一句话描述 |
+| `topic.homepage` | — | 最新文章（`pages[0]`），整卡跳转目标 |
+| `topic.pages` | `[]` | 专栏文章列表；卡片下方取 `slice(1, 4)` 排除最新 |
+
+### 最新文章卡片结构
+
+`latest_post_card` 接收 `{href, background, label, post}`，输出 `a.cover[position=bottom]`（`--cover-url` 背景 + 同图渐变模糊层，经 `cover-overlay` 统一能力）与底部 `.cover-info` 文字区；专栏列表页不传 `label`（专栏名已外置为 h2），仅渲染标题与时间两行，`label` 保留给未来首页等场景：
+
+```mermaid
+graph TD
+    Cover["a.cover[position=bottom]"]
+    CoverImg["img: background"]
+    CoverInfo["div.cover-info[position=bottom]"]
+    TextTopic["div.text.topic: 专栏名"]
+    TextHeadline["div.text.headline: 最新文章标题"]
+    TextCaption["div.text.caption: 发布时间"]
+    Cover --> CoverImg
+    Cover --> CoverInfo
+    CoverInfo --> TextTopic
+    CoverInfo --> TextHeadline
+    CoverInfo --> TextCaption
+```
+
+**参考源码**：[layout/_partial/main/post_list/latest_post_card.ejs](../../../layout/_partial/main/post_list/latest_post_card.ejs)
+
+### Topic 卡片 CSS 布局
+
+专栏容器为纯平铺布局（无卡片背景，条目间以分隔线衔接），`.cover` 规则泛化自 photo 卡片（见上文「photo 布局」），复用 `cover-overlay` 渐变模糊层：
+
+| 选择器 | 属性 | 效果 |
+|--------|------|------|
+| `.post-list.topic .post-card-wrap + .post-card-wrap` | `border-top: 1px solid var(--block-border)` | 平铺条目间分隔线 |
+| `.post-card.topic article` | `display: flex; flex-direction: column; gap: 1rem` | 上下布局：标题 → 卡片 → 列表 |
+| `.post-card.topic article .topic-title` | `story-title()`（居中 + accent 斜杠） | 专栏标题，置于卡片外，复用 story 文章 h2 样式 |
+| `.post-card.topic article .topic-desc` | `text-align: center; color: var(--text-p2); padding: 0 1rem` | 标题下方的一句话描述（左右内边距与文章列表一致） |
+| `.post-card.topic .cover` | `flex: none; width: 100%; aspect-ratio: 2/1` | 全宽最新文章卡片，接入 `cover-overlay` |
+| `.post-card.topic .post-panel` | `flex: none; width: 100%; padding: 0 1rem` | 卡片下方文章链接列表（左右内边距与封面文字区一致） |
+| `.post-list.topic .post-card .md-text` | `padding: 2.25rem 0`（移动端 1.5rem） | 加大专栏容器上下间隔 |
+
+**参考源码**：[layout/index_topic.ejs](../../../layout/index_topic.ejs)、[source/css/_components/list.styl](../../../source/css/_components/list.styl)
 
 ---
 

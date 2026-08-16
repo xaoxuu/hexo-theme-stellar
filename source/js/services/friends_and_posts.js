@@ -29,7 +29,7 @@
           }
           cell += `</div>`;
           cell += `</div>`;
-          cell += `<div class="previews">`;
+          cell += `<div class="post-panel">`;
           if (item.description) {
             cell += `<div class="desc">${item.description || item.issue_number || ''}</div>`;
           } else {

@@ -15,6 +15,23 @@ h5
 h6
   font-size: 'calc(%s + 0px)' % var(--fsp)
 
+// story 文章段落标题（h2）：居中 + 两侧 accent 斜杠装饰
+// 专栏列表页专栏标题（.topic-title）与 story 文章 h2 共用
+story-title()
+  color: var(--text)
+  line-height: 1.2
+  text-align: center
+  &:before,&:after
+    content: ''
+    display: inline-block
+    width: 12px
+    height: 1.2em
+    background: $c-accent
+    transform: skewX(-20deg)
+    margin: 0 0.5em
+    vertical-align: top
+    position: relative
+
 // 次级段落字号
 .fs15
   --fsp: $fs-15

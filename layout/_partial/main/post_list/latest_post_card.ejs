@@ -1,0 +1,25 @@
+<%
+// 最新文章封面卡片（公共组件）：整卡跳转到最新文章，背景为封面图，底部渐变模糊文字区。
+// 入参：href（跳转链接）、background（背景图 URL）、label（专栏名/分类名）、post（{title, date}）
+// 专栏列表页与未来首页等场景复用；无 post 时仅渲染 label。
+function layoutDiv() {
+  var el = '';
+  var bg = background || theme.default.topic;
+  // 注意：不能用 `var href` 承接，var 提升会遮蔽 partial 传入的 href 参数
+  var link = pretty_url(href || '/');
+  el += '<a class="cover" position="bottom" style="--cover-url:url(\'' + escape_html(bg.replace(/'/g, '%27')) + '\')" href="' + link + '">';
+  el += '<img src="' + escape_html(bg) + '" alt=""/>';
+  el += '<div class="cover-info" position="bottom">';
+  if (typeof label !== 'undefined' && label) {
+    el += '<div class="text topic">' + escape_html(label) + '</div>';
+  }
+  if (post) {
+    el += '<div class="text headline">' + escape_html(post.title) + '</div>';
+    el += '<div class="text caption">' + escape_html(date(post.date, config.date_format)) + '</div>';
+  }
+  el += '</div>';
+  el += '</a>';
+  return el;
+}
+%>
+<%- layoutDiv() %>

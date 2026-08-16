@@ -102,6 +102,8 @@ flowchart TD
 - `posts` 为假 → `div.users-wrap`
 - `posts` 为真 → `div.users-posts-wrap`
 
+**友链文章订阅（`posts:true`）运行时结构：** 数据服务加载后生成 `div.grid-cell.user-post-card`，内含 `div.avatar-box`（头像 + 标题）与 `div.post-panel`（`.desc` 一句话描述 + `.posts` 内多个 `a.post-link`：`span.title` + `span.date`）。`.post-panel` 为公共组件，与专栏卡片右侧文章列表共用（见[文章列表与卡片组件](../03-内容系统/post-lists-cards.md)）。
+
 **参考源码**：[scripts/tags/lib/friends.js](../../../scripts/tags/lib/friends.js)
 
 ---
