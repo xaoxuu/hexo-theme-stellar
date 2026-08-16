@@ -6,6 +6,15 @@
   background: var(--block)
   margin: 0
   height: unset
+  // Safari 26.4/26.5 合成层裁剪 bug（WebKit 312584/319993，STP 242/249 才修）：
+  // 带 filter:blur() 的合成子层（同图模糊层 :before/:after）不执行父级 overflow:hidden + border-radius 圆角裁剪；
+  // 子层自身 border-radius/overflow 无效（319993 复现注释），父层 clip-path 实测仍被绕过。
+  // 官方建议（WebKit 67950）：让圆角父层自身成为层叠上下文并强制合成，使圆角裁剪在合成层层面作用于全部子层。
+  // 对照：正常工作的 cover 卡片 .post-card 自带 z-index:0 + position:relative（层叠上下文）。
+  // clip-path 保留作为正常浏览器裁剪与额外防御；移动端圆角归零时随 `.banner.top` 一并关闭（见 tag-plugins/banner.styl）
+  isolation: isolate
+  transform: translateZ(0)
+  clip-path: 'inset(0 round %s)' % $border-card-l
 
 .article.banner
   .bg+.content
@@ -82,6 +91,8 @@
       background-size: cover
       background-position: center
       filter: blur(var(--blur-px)) saturate(var(--blur-sat))
+      // 模糊层自身也加 clip-path：该合成层是 Safari 跳过父级圆角裁剪的直接漏出源
+      clip-path: 'inset(0 round %s)' % $border-card-l
       trans1 all
       opacity var(--blur-opacity)
       pointer-events: none

@@ -317,7 +317,7 @@ graph TB
 
 ### 渐变模糊层与黑色蒙版
 
-photo 布局的 `.cover` 上叠加两层效果（均在 `.cover-info` 之下）：同图模糊层（`:before`，同图 `blur(1em)` + 沿文字边缘的渐变 mask）与黑色渐变蒙版（`:after`，文字所在边缘不透明度约 0.5 → 封面垂直中线 0，`pointer-events: none`，不随 hover 缩放）。hover 时封面图与模糊层同步放大至 `scale(1.05)`（1.5s 缓动），亮度降至 75%、饱和度升至 120%（0.2s 过渡）。
+photo 布局的 `.cover` 上叠加两层效果（均在 `.cover-info` 之下）：同图模糊层（`:before`，同图 `blur(1em)` + 沿文字边缘的渐变 mask）与黑色渐变蒙版（`:after`，文字所在边缘不透明度约 0.5 → 封面垂直中线 0，`pointer-events: none`，不随 hover 缩放）。hover 时封面图与模糊层同步放大至 `scale(1.05)`（1.5s 缓动），亮度降至 75%、饱和度升至 120%（0.2s 过渡）。Safari 26.4/26.5 对带 `filter: blur()` 的合成层不执行父级 `overflow:hidden` + `border-radius` 圆角裁剪（WebKit 312584/319993），模糊层静止时（无 transform）会在文字所在边缘漏方角，故模糊层常驻 `transform: translateZ(0)`（恒等变换，hover 放大时 Safari 正常裁剪）、卡片 `.post-card` 另加与圆角同源的 `clip-path: inset(0 round $border-card-l)` 直接裁剪，规避静止时底部两角漏方角。
 
 **参考源码**：[source/css/_components/list.styl](../../../source/css/_components/list.styl)
 
