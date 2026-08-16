@@ -40,7 +40,7 @@
           cell += '</a>';
           cell += '</div>';
           cell += '<a class="item comments last" href="' + item.url + '#issuecomment-new" target="_blank" rel="external nofollow noopener noreferrer">';
-          cell += '<span>' + ctx.icons['weibo:comment'] + ' '
+          cell += '<span>' + ctx.icons['default:tocomment'] + ' '
           + (item.comments_count || 0) + '</span>';
           cell += '</a>';
           cell += '<div class="item reaction attitudes">';

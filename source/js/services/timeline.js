@@ -88,7 +88,7 @@
             }
             if (item.comments != null) {
               cell += '<a class="item comments last" href="' + item.html_url + '#issuecomment-new" target="_blank" rel="external nofollow noopener noreferrer">';
-              cell += '<span>' + ctx.icons['weibo:comment'] + ' ' + (item.comments || 0) + '</span>';
+              cell += '<span>' + ctx.icons['default:tocomment'] + ' ' + (item.comments || 0) + '</span>';
               cell += '</a>';
             }
             
