@@ -18,6 +18,7 @@
 - banner 导航激活项 blur 导致 hover 圆角丢失
 - TOC 回到顶部/参与讨论图标改为内联并修复占位符布局
 - 轮播区/文章封面/页顶横幅/`{% banner %}` 图片角落跟随连续曲率圆角配置
+- timeline 页脚评论图标尺寸与文字对齐
 
 ### 样式
 - 文章卡片标签 `#` 前缀替换为 hashtag 图标
@@ -32,6 +33,7 @@
 ### 重构
 - 移除已失效的 auto_banner（Unsplash 自动横幅）与 `poster` 配置
 - 页面横幅上块重构为显式两行结构（面包屑 + 阅读时长/AI 标签 + 日期行）
+- 评论数图标统一使用 `default:tocomment`，移除 `weibo:comment`
 
 ### 其他
 - 移除知识库合并版 `知识库全量.md`，知识库以领域页面为唯一事实源
@@ -42,6 +44,7 @@
 - 新增 `article.card_style`（`hero` 默认 / `classic`）：未显式设置的站点保持 hero 卡片样式
 - 新增 `plugins.adaptive_text`（默认 `enable: true`）：页面存在 `[data-text-adaptive]` 元素时才按需加载，文字颜色默认随背景自适应
 - 删除间距令牌 `--gap-margin` / `--gap-padding` / `--gap-max`，替换为 `--gap-base`（组件内部间距）与 `--gap-page`（页面级留白）；引用旧令牌的自定义 CSS 需迁移
+- `weibo:comment` 图标已移除，评论数图标统一使用 `default:tocomment`；自定义中引用了 `weibo:comment` 的站点请改用 `default:tocomment`
 - 知识库合并版 `知识库全量.md` 移除（RAG 可直接索引领域页面）
 
 Full Changelog: [1.41.0...main](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.41.0...main)
