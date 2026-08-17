@@ -6,8 +6,9 @@
       if (api == null) {
         continue;
       }
+      const isWikiStars = el.classList.contains('wiki-stars');
       // layout
-      utils.request(null, api, async resp => {
+      utils.request(isWikiStars ? el : null, api, async resp => {
         const data = await resp.json();
         function fill(data) {
           for (let key of Object.keys(data)) {
@@ -27,6 +28,13 @@
         } else {
           fill(data);
         }
-      });
+        if (isWikiStars && data.stargazers_count != null) {
+          el.classList.add('loaded');
+        }
+      }, () => {
+        if (isWikiStars) {
+          el.remove();
+        }
+      }).catch(() => {});
     }
 })();

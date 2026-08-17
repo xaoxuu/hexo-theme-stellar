@@ -202,6 +202,8 @@ tree:
 | `tree` | 数组包装为 `{ '': array }` | doc_tree.js |
 | `base_dir` | 去掉开头 `/`，补结尾 `/` | doc_tree.js |
 | `tags` | 字符串转为单元素数组 | doc_tree.js |
+| `headline` | 不转换；为空时卡片回退 `title` | wiki_card.ejs |
+| `available` | 不转换；可选字符串 | wiki_card.ejs |
 | `sort` | 为 null 时默认 `0` | doc_tree.js |
 | `pin` | 仅用于置顶轮播收集（有置顶内容即渲染），不改变列表顺序；设置即置顶，按数值降序 | pin_slider.ejs |
 
@@ -387,12 +389,12 @@ flowchart TD
 
 ### Wiki 索引页
 
-wiki 索引页（`index_wiki` 布局）显示 `wiki.shelf` 中所有已发布项目。每个项目卡片显示：
+wiki 索引页（`index_wiki` 布局）显示 `wiki.shelf` 中所有已发布项目。仅配置 `cover` 的卡片使用全幅背景图、同图渐变模糊层与不透明度约 0.25 至 0 的黑色蒙版；未配置 `cover` 时保留纯色空背景。卡片显示：
 
-- 项目标题与描述
-- `wiki.tree[id].tags` 的标签
+- `wiki.tree[id].tags` 标签、`headline` 营销标题（为空回退 `title`）与可选 `available` 适用范围文字；“适用于”由 `meta.available` 语言键输出
+- 有 `repo` 时从 GitHub 动态加载 star 数；无仓库或加载失败时隐藏该项
+- 底栏中的 `icon`（无值回退默认项目图）、`name` 项目标题和 `subtitle()` 项目副标题
 - 指向 `wiki.tree[id].homepage.path` 的链接
-- 配置了封面图时显示项目封面
 
 索引页使用 `site_tree.index_wiki` 配置其侧边栏与导航。
 

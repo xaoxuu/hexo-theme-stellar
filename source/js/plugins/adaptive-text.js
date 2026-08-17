@@ -1,7 +1,7 @@
 // 文字自适应颜色 DOM 插件
 // 扫描 [data-text-adaptive] 元素，解析背景来源（--cover-url → --bg-url →
 // background-image → background-color），调用 stellar.color 计算文字颜色，
-// 写入内联 --text-banner 与 --text-banner-theme。
+// 写入内联 --text-banner 与 --text-banner-theme；Wiki 封面另写入主题色蒙版变量。
 // 属性值：
 //   theme（默认）  背景图平均色 lighten/darken（两种变量同色）
 //   contrast       黑白对比（两种变量同色）
@@ -85,6 +85,39 @@ function setSplitTextColors(el, rgb) {
   }
 }
 
+// Wiki 卡片的 Today 风格内容层使用封面平均色：保留色相，增强弱饱和度后压低明度，
+// 让满不透明蒙版下的白色文字始终可读。变量写到 .wiki-card：蒙版用深色版本，
+// hover 边框使用同源但提高 20 个明度点的版本。
+function setWikiOverlayColor(el, rgb) {
+  var node = el.parentElement;
+  while (node && node.nodeType === 1) {
+    if ((' ' + node.className + ' ').indexOf(' wiki-card ') !== -1) {
+      var themed = stellar.color.enhanceSaturation(rgb, { minSaturation: 0.45, boostBelow: 0.35 });
+      var overlay = stellar.color.darken(themed, 0.26);
+      var border = stellar.color.lighten(themed, 0.46);
+      if (overlay) {
+        node.style.setProperty('--wiki-overlay-color', overlay);
+      }
+      if (border) {
+        node.style.setProperty('--wiki-border-color', border);
+      }
+      return;
+    }
+    node = node.parentElement;
+  }
+}
+
+// Wiki 卡片主题色确定后（包括提取失败时的 CSS 回退）通知索引页。
+// 覆盖层会同时等待原图 load，避免先用默认主题色绘制、再切换为平均色。
+function notifyWikiOverlayReady(el) {
+  if (!el || !el.dispatchEvent || !document.createEvent) {
+    return;
+  }
+  var event = document.createEvent('Event');
+  event.initEvent('wiki-overlay-ready', true, false);
+  el.dispatchEvent(event);
+}
+
 function applyToElement(el) {
   // 用户显式覆盖优先：首次处理时元素已有内联 --text-banner 或内联 color 则跳过
   // （插件自身写入的变量不视为用户覆盖，主题切换重算时需重新应用）
@@ -103,6 +136,10 @@ function applyToElement(el) {
     } else {
       setTextColor(el, styleName, rgb);
     }
+    if (styleName === 'split' && el.parentElement && (' ' + el.parentElement.className + ' ').indexOf(' wiki-card-cover ') !== -1) {
+      setWikiOverlayColor(el, rgb);
+      notifyWikiOverlayReady(el);
+    }
     appliedElements.add(el);
   };
   if (bg.type === 'color') {
@@ -112,6 +149,9 @@ function applyToElement(el) {
     stellar.color.getAverageColor(bg.url, { background: backdrop }).then(function (rgb) {
       if (rgb) {
         apply(rgb);
+      } else if (styleName === 'split' && el.parentElement && (' ' + el.parentElement.className + ' ').indexOf(' wiki-card-cover ') !== -1) {
+        // 平均色提取失败时不写变量，保留 CSS 回退色；但仍须解除 Wiki 覆盖层等待。
+        notifyWikiOverlayReady(el);
       }
     });
   }

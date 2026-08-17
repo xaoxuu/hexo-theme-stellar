@@ -1,21 +1,60 @@
 <%
 function layoutDiv() {
   var el = '';
-  el += '<article class="md-text">';
-  el += `<div class="preview"><img src="${proj.icon ? proj.icon : theme.default.project}"/></div>`
-  el += '<div class="excerpt">';
+  var cover = proj.cover;
+  var projectIcon = proj.icon;
+  var caption = subtitle(proj);
+  var headline = proj.headline || proj.title || proj.name || '';
+  el += '<article class="wiki-card-content">';
+  el += '<div class="wiki-card-cover' + (cover ? '' : ' no-cover') + '" position="bottom"';
+  if (cover) {
+    el += ' style="--cover-url:url(\'' + escape_html(cover.replace(/'/g, '%27')) + '\')">';
+    el += '<img src="' + escape_html(cover) + '" alt=""/>';
+  } else {
+    el += '>';
+  }
+  el += '<div class="wiki-card-info" position="bottom"';
+  if (cover) {
+    el += ' data-text-adaptive="split"';
+  }
+  el += '>';
+  el += '<div class="wiki-card-summary">';
   if (proj.tags && proj.tags.length > 0) {
-    el += '<div class="caps">';
-      for (let tag of proj.tags) {
-        el += '<span class="cap breadcrumb"' + category_color(tag) + '>' + tag + '</span>';
-      }
+    el += '<div class="wiki-tags wiki-meta">';
+    for (var i = 0; i < proj.tags.length; i++) {
+      var tag = proj.tags[i];
+      el += '<span>' + escape_html(tag) + '</span>';
+    }
     el += '</div>';
   }
-  el += '<h2 class="post-title">' + (proj.title || proj.name) + '</h2>';
-  if (proj.description) {
-    el += '<p>' + proj.description + '</p>';
+  el += '<h2 class="headline">' + escape_html(headline) + '</h2>';
+  if (proj.available || proj.repo) {
+    el += '<div class="wiki-meta">';
+    if (proj.available) {
+      el += '<span class="wiki-available">' + icon('default:platforms') + '<span class="label">' + escape_html(__('meta.available')) + '</span><span class="value">' + escape_html(proj.available) + '</span></span>';
+    }
+    if (proj.repo) {
+      el += '<span class="wiki-stars data-service ds-ghinfo" data-api="https://' + theme.api_host.ghapi + '/repos/' + escape_html(proj.repo) + '">';
+      el += icon('default:fire') + '<span type="text" id="stargazers_count"></span>';
+      el += '</span>';
+    }
+    el += '</div>';
   }
   el += '</div>';
+  el += '<div class="wiki-project">';
+  el += '<div class="project-icon">';
+  if (projectIcon) {
+    el += '<img src="' + escape_html(projectIcon) + '" alt=""/>';
+  } else {
+    el += icon('default:documents');
+  }
+  el += '</div>';
+  el += '<div class="project-text"><div class="project-name">' + escape_html(proj.name || proj.title || '') + '</div>';
+  if (caption.length > 0) {
+    el += '<div class="project-subtitle">' + escape_html(caption) + '</div>';
+  }
+  el += '</div></div>';
+  el += '</div></div>';
   el += '</article>';
   return el;
 }

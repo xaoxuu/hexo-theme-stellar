@@ -1,0 +1,210 @@
+// Wiki 列表卡片独立组件：不复用文章 Hero 的 .cover 或 cover-overlay()。
+.post-list.wiki
+  display: grid
+  // Nested min() in minmax() is dropped by older WebKit, which leaves only
+  // the grid's implicit single column.
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr))
+  gap: 1rem
+  .post-card-wrap
+    width: 100%
+    margin: 0
+    border-radius: $border-card-l
+    box-shadow: $boxshadow-card
+  @media screen and (max-width: $device-mobile)
+    grid-template-columns: minmax(0, 1fr)
+
+.post-list.wiki .wiki-card
+  display: block
+  position: relative
+  z-index: 0
+  overflow: hidden
+  border-radius: $border-card-l
+  background: var(--card)
+  --wiki-img-br: 100%
+  --wiki-img-sat: 100%
+  --wiki-blur-sat: 150%
+  --wiki-overlay-color: var(--theme, #4f7cff)
+  // 边框与底部蒙版同源，但额外提高 20 个明度点，悬浮反馈更清晰。
+  --wiki-border-color: var(--theme, #4f7cff)
+  &.no-cover
+    --wiki-border-color: var(--block-border)
+  @supports not (corner-shape: superellipse(1))
+    clip-path: 'inset(0 round %s)' % $border-card-l
+  &:after
+    content: ''
+    position: absolute
+    inset: 0
+    z-index: 3
+    border: 2px solid transparent
+    border-radius: inherit
+    corner-shape: $corner-shape
+    pointer-events: none
+    transition: border-color .2s ease-out
+  &:hover
+    --wiki-img-br: 75%
+    --wiki-img-sat: 120%
+    --wiki-blur-sat: 200%
+    &:after
+      border-color: var(--wiki-border-color)
+    .wiki-card-cover > img
+      transform: scale(1.05)
+    .wiki-card-cover:before
+      transform: translateZ(0) scale(1.05)
+
+.wiki-card-content
+  padding: 0
+
+.wiki-card-cover
+  position: relative
+  min-height: 240px
+  overflow: hidden
+  aspect-ratio: 3 / 4
+  background-image: var(--cover-url)
+  background-size: cover
+  background-position: center
+  // Today 内容层：同图模糊覆盖下半部，主题色从中部开始渐显，到最底部才完全不透明。
+  > img
+    position: absolute
+    inset: 0
+    z-index: 0
+    width: 100%
+    height: 100%
+    object-fit: cover
+    filter: brightness(var(--wiki-img-br)) saturate(var(--wiki-img-sat))
+    transform: translateZ(0)
+    transition: all .2s ease-out, transform 1.5s ease-out
+  &:before
+    content: ''
+    position: absolute
+    inset: 0
+    z-index: 1
+    background-image: var(--cover-url)
+    background-size: cover
+    background-position: center
+    filter: brightness(var(--wiki-img-br)) saturate(var(--wiki-img-sat)) blur(1.5rem) saturate(var(--wiki-blur-sat))
+    mask: linear-gradient(to top, black, rgba(black, .75) 26%, transparent 52%)
+    -webkit-mask: linear-gradient(to top, black, rgba(black, .75) 26%, transparent 52%)
+    transform: translateZ(0)
+    pointer-events: none
+    opacity: 0
+    transition: opacity .2s ease-out, filter .2s ease-out, transform .5s ease-out
+  &:after
+    content: ''
+    position: absolute
+    inset: 0
+    z-index: 1
+    pointer-events: none
+    background-image: linear-gradient(to bottom, transparent 50%, var(--wiki-overlay-color) 100%)
+    opacity: 0
+    transition: opacity .2s ease-out
+  &.no-cover
+    background: var(--card)
+    &:before, &:after
+      display: none
+    &.cover-error > img
+      display: none
+
+.post-list.wiki .wiki-card.cover-loaded .wiki-card-cover:not(.no-cover)
+  &:before, &:after
+    opacity: 1
+
+.wiki-card-info
+  display: flex
+  position: absolute
+  z-index: 2
+  right: 0
+  bottom: 0
+  left: 0
+  flex-direction: column
+  justify-content: flex-end
+  box-sizing: border-box
+  color: var(--text-banner, white)
+  @media screen and (max-width: $device-mobile)
+    .wiki-card-summary
+      padding: .75rem
+
+.wiki-card-cover.no-cover .wiki-card-info
+  color: var(--text)
+  .wiki-meta, .project-subtitle
+    color: var(--text-p2)
+
+.wiki-card-info
+  .wiki-card-summary
+    padding: 1rem
+  .headline
+    margin: .5rem 0
+    font-size: 1.25rem
+    font-weight: 700
+    line-height: 1.2
+    color: inherit
+  @media screen and (max-width: $device-mobile)
+    .headline
+      margin: .375rem 0
+  .wiki-meta
+    display: flex
+    flex-wrap: wrap
+    align-items: center
+    gap: .5rem 1rem
+    min-height: 1.25rem
+    color: var(--text-banner-theme, inherit)
+    font-size: $fs-13
+    line-height: 1.2
+  .wiki-available
+    display: inline-flex
+    flex-wrap: wrap
+    align-items: center
+    gap: 4px
+  .wiki-available, .wiki-stars
+    svg
+      flex: none
+      width: 1em
+      height: 1em
+      vertical-align: middle
+  .wiki-stars
+    display: none
+    align-items: center
+    gap: 4px
+    &.loaded
+      display: inline-flex
+  .wiki-project
+    display: flex
+    align-items: center
+    gap: 10px
+    margin-top: auto
+    padding: .75rem 1rem 1rem
+    background: rgba(black, .1)
+    line-height: 1.2
+    @media screen and (max-width: $device-mobile)
+      padding: .625rem .75rem .75rem
+  .project-icon
+    display: flex
+    flex: none
+    align-items: center
+    justify-content: center
+    width: 2.5rem
+    height: 2.5rem
+    overflow: hidden
+    border-radius: 30%
+    background: var(--block)
+    color: var(--text-p2)
+    img
+      width: 100%
+      height: 100%
+      object-fit: cover
+    svg
+      width: 1.5rem
+      height: 1.5rem
+  .project-text
+    min-width: 0
+    flex: 1
+  .project-name, .project-subtitle
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+  .project-name
+    font-size: $fs-14
+    font-weight: 500
+  .project-subtitle
+    margin-top: 3px
+    color: var(--text-banner-theme, inherit)
+    font-size: $fs-13

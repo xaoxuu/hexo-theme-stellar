@@ -37,6 +37,7 @@ meta:
   license: License
   share: Share
   contributors: Page Contributors
+  available: Available for
   word_count: '%s words'
   reading_time: '%s min read'
   ai_label:

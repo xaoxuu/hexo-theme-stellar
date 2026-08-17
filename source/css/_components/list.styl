@@ -217,46 +217,6 @@
     font-size: $fsh4
 
 
-// wiki
-.post-list .post-card.wiki article
-  display: flex
-  flex-wrap: wrap
-  trans1 box-shadow
-  justify-content: center
-  padding: 1rem .5rem
-
-
-.post-list .post-card.wiki article .preview
-  display: flex
-  margin: 1rem 3rem
-  align-items: center
-  img
-    width: 96px
-    max-height: 96px
-    object-fit: contain
-    trans1: all 0.75s
-.post-list .post-card.wiki article .excerpt
-  margin: 1rem .5rem
-  @media screen and (min-width: 950px)
-    margin-right: 2rem
-  min-width: 280px
-  flex: 1
-  overflow: hidden
-  word-wrap: break-word
-  .caps
-    line-height: 1
-    margin-bottom: 0.75rem
-  .cap
-    --theme-block: var(--block)
-    background: var(--theme-block)
-    padding: 2px 4px
-    border-radius: 4px
-  p:last-child
-    margin-bottom: 0
-  .cap+.cap
-    margin-left: 4px
-
-
 // topic 专栏列表：平铺容器 + 上下布局（h2 专栏标题 → 最新文章卡片 → 文章链接列表）
 .post-list.topic
   .post-card-wrap

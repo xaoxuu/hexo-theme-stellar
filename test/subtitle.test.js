@@ -9,6 +9,15 @@ test('subtitle 优先取 post.subtitle', () => {
   assert.equal(subtitle({ subtitle: '小字', description: '描述', excerpt: '摘要' }), '小字');
 });
 
+test('显式 subtitle 的非空前缀会截取 | 前内容', () => {
+  assert.equal(subtitle({ subtitle: 'Stellar | Designed by xaoxuu' }), 'Stellar');
+  assert.equal(subtitle({ subtitle: 'Stellar | Designed | Open source' }), 'Stellar');
+});
+
+test('subtitle 以 | 开头时保留完整内容', () => {
+  assert.equal(subtitle({ subtitle: ' | Designed by xaoxuu' }), ' | Designed by xaoxuu');
+});
+
 test('subtitle 无 subtitle 时取 description', () => {
   assert.equal(subtitle({ description: '描述', excerpt: '摘要' }), '描述');
 });

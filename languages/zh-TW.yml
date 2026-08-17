@@ -37,6 +37,7 @@ meta:
   license: 授權條款
   share: 分享文章
   contributors: 本文貢獻者
+  available: 適用於
   word_count: '%s 字'
   reading_time: '預計閱讀 %s 分鐘'
   ai_label:

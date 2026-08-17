@@ -153,7 +153,7 @@ graph LR
 |------|------|------|
 | `obj.image` | `post.cover` | 封面图 URL |
 | headline | `post.title` | hero 卡片的大号展示文本（无标题回退日期） |
-| caption | `post.subtitle` → `post.description` → excerpt 前 50 字 | hero 卡片与置顶轮播共用的单行小字（`subtitle()` helper，空则不渲染） |
+| caption | `post.subtitle`（` | ` 前缀优先）→ `post.description` → excerpt 前 50 字 | hero 卡片与置顶轮播共用的单行小字（`subtitle()` helper，空则不渲染） |
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
 
@@ -273,7 +273,7 @@ graph TB
 
 ### 定位逻辑
 
-hero 卡片文字区固定 `bottom`：标题（headline）与单行小字（caption）始终叠加在封面底部；不再支持 top 布局，也不再渲染主题小字（原 `poster.topic` 已移除）。小字取值统一由 `subtitle()` helper（`scripts/lib/subtitle.js`）提供：`post.subtitle` → `post.description` → `excerpt || content` 去 HTML、压缩空白后截断 50 字（省略号由 CSS 单行处理），都没有则不渲染；置顶轮播复用同一取值。
+hero 卡片文字区固定 `bottom`：标题（headline）与单行小字（caption）始终叠加在封面底部；不再支持 top 布局，也不再渲染主题小字（原 `poster.topic` 已移除）。小字取值统一由 `subtitle()` helper（`scripts/lib/subtitle.js`）提供：显式 `post.subtitle` 含 ` | ` 且左侧非空时只取左侧；其他 `subtitle` 原样保留，之后依次回退 `post.description`、`excerpt || content` 去 HTML、压缩空白后截断 50 字（省略号由 CSS 单行处理），都没有则不渲染；置顶轮播复用同一取值。
 
 ### 渐变模糊层与黑色蒙版
 
@@ -403,16 +403,21 @@ flowchart TD
 
 ## Wiki 卡片变体
 
-`wiki_card.ejs` partial 渲染 wiki 项目条目卡片，使用 `proj` 数据对象而非 `post` 对象，产生图标与文本并排的横向布局。
+`wiki_card.ejs` partial 渲染 wiki 项目条目卡片，使用 `proj` 数据对象而非 `post` 对象。模板使用独立的 `wiki-card` / `wiki-card-cover` / `wiki-card-info` 类，不复用文章 hero 的 `.cover` 或 `cover-overlay()`；底部内容区采用 Wiki 专属 Today 风格的同图渐变模糊层与封面主题色蒙版。
 
 ### 数据对象 `proj`
 
 | 属性 | 兜底 | 用途 |
 |------|------|------|
-| `proj.icon` | `theme.default.project` | 预览图标 URL |
-| `proj.tags` | — | 面包屑显示的标签字符串数组 |
-| `proj.title` | `proj.name` | 卡片标题文本 |
-| `proj.description` | — | 可选正文文本 |
+| `proj.cover` | — | 卡片背景图；未配置时保留纯色空背景 |
+| `proj.icon` | `theme.default.project` | 底栏项目图标 |
+| `proj.tags` | — | 顶部标签字符串数组 |
+| `proj.headline` | `proj.title` → `proj.name` | 可选营销标题 |
+| `proj.title` | `proj.name` | 既有项目标题与营销标题回退 |
+| `proj.available` | — | 可选适用范围字符串（标签由 `meta.available` 本地化输出） |
+| `proj.repo` | — | GitHub star 动态数据源 |
+| `proj.name` | `proj.title` | 底栏项目标题 |
+| `subtitle(proj)` | `subtitle`（` | ` 前缀优先）→ `description` → excerpt/content | 底栏项目副标题 |
 
 ### 渲染结构
 
@@ -420,38 +425,54 @@ flowchart TD
 
 ```mermaid
 graph TD
-    Article["article.md-text"]
-    Preview["div.preview"]
-    PreviewImg["img: proj.icon or theme.default.project"]
-    Excerpt["div.excerpt"]
-    Caps["div.caps (if proj.tags)"]
-    TagSpan["span.cap.breadcrumb x N (category_color applied)"]
-    Title["h2.post-title"]
-    Description["p (if proj.description)"]
+    Article["article.wiki-card-content"]
+    Cover["div.wiki-card-cover: cover background or blank"]
+    Info["div.wiki-card-info: bottom overlay"]
+    Summary["div.wiki-card-summary"]
+    Caps["div.wiki-tags.wiki-meta (if proj.tags)"]
+    TagSpan["span x N"]
+    Title["h2.headline: proj.headline or proj.title"]
+    Meta["div.wiki-meta: available + heat"]
+    Platform["default:platforms + 适用于 + available"]
+    Star["default:fire + stargazers_count（热度）"]
+    Project["div.wiki-project: proj.icon or default:documents + name + subtitle(proj)"]
 
-    Article --> Preview
-    Preview --> PreviewImg
-    Article --> Excerpt
-    Excerpt --> Caps
+    Article --> Cover
+    Cover --> Info
+    Info --> Summary
+    Summary --> Caps
     Caps --> TagSpan
-    Excerpt --> Title
-    Excerpt --> Description
+    Summary --> Title
+    Summary --> Meta
+    Meta --> Platform
+    Meta --> Star
+    Info --> Project
 ```
 
 **参考源码**：[layout/_partial/main/post_list/wiki_card.ejs](../../../layout/_partial/main/post_list/wiki_card.ejs)
 
 ### Wiki 卡片 CSS 布局
 
-Wiki 卡片用 `list.styl` 中的 flex 布局，图标与文本并排：
+Wiki 卡片用 `list.styl` 中的封面布局，内容固定在卡片底部：
 
 | 选择器 | 属性 | 效果 |
 |--------|------|------|
-| `.post-card.wiki article` | `display: flex; flex-wrap: wrap` | 图标 + 文本横向布局 |
-| `.post-card.wiki article .preview` | `width: 96px; max-height: 96px` | 固定尺寸图标区 |
-| `.post-card.wiki article .excerpt` | `min-width: 280px; flex: 1` | 弹性文本区 |
-| `.post-card.wiki article .cap` | `background: var(--theme-block)` | 标签块背景 |
+| `.wiki-card-cover` | 独立伪层 + `aspect-ratio: 3 / 4` | 竖版封面、下半部同图模糊层、封面主题色渐变蒙版与 hover 封面缩放；不复用文章 Hero 覆盖层 |
+| `.wiki-card.cover-loaded .wiki-card-cover:before/:after` | 原图加载且平均主题色已确定后 `opacity: 1` | 初始隐藏模糊层与主题色蒙版；`adaptive-text` 计算成功或失败回退后通知 Wiki 页，避免先出现默认主题色再跳变 |
+| `.wiki-card.no-cover` | `--wiki-border-color: var(--block-border)` | 无封面或封面加载失败时 hover 使用通用边框颜色 |
+| `.wiki-card-cover.cover-error` | 隐藏图片并切换 `.no-cover` | 加载失败降级为纯色空封面与深色文字 |
+| `.wiki-card-info` | `left/right/bottom: 0` + `justify-content: flex-end` | 信息层按内容高度贴住封面底部；自身不设内边距 |
+| `.wiki-card:hover:after` | 2px `--wiki-border-color` + `corner-shape` 边框 | hover 显示比底部蒙版提高 20 个明度点、跟随全局连续曲率的圆角边框，不改变盒模型 |
+| `.post-list.wiki` | `grid` + `repeat(auto-fit, minmax(240px, 1fr))` | 响应式多列排列；列通过 `1fr` 均分并铺满容器，窄屏用单列避免最小列宽溢出 |
+| `.post-list.wiki .post-card-wrap` | `width: 100%` | Wiki 卡片随 Grid 列宽伸缩并填满容器 |
+| `.wiki-card-info` | `position: absolute; left/right/bottom: 0` | 底部内容区 |
+| `.wiki-card-info .wiki-meta` | `gap: .5rem 1rem` + 统一主题文字色 | 标签、适用范围与热度的文字不再区分样式；标签不复用 `cap` / `breadcrumb` 旧类或分类色，适用范围无背景或边框并前置内置 `default:platforms` 多设备图标 |
+| `.wiki-card-info .headline` | `1.25rem` / `700` | 突出营销标题，移动端保持同一字号 |
+| `.wiki-card-summary` / `.wiki-card-info .wiki-project` | 分别设内边距 | 上方文案与全宽项目底栏独立控制；项目区为 `rgba(black, .1)` 的轻微遮罩，无顶部边框 |
+| `.wiki-card .wiki-stars` | 成功后 `.loaded` 显示 | GitHub `stargazers_count` 加载前和失败时隐藏；展示语义为热度的内置 Solar `default:fire` 图标 |
+| `.wiki-card-info .project-icon` | `border-radius: 30%` + `var(--block)` | 项目图标使用统一的柔和圆角矩形底色；未配置 `icon` 时使用内置 Solar `default:documents`，颜色为 `var(--text-p2)` |
 
-**参考源码**：[source/css/_components/list.styl](../../../source/css/_components/list.styl)
+**参考源码**：[source/css/_components/wiki-card.styl](../../../source/css/_components/wiki-card.styl)
 
 ---
 

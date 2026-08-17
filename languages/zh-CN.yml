@@ -37,6 +37,7 @@ meta:
   license: 许可协议
   share: 分享文章
   contributors: 本文贡献者
+  available: 适用于
   word_count: '%s 字'
   reading_time: '预计阅读 %s 分钟'
   ai_label:
