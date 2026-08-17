@@ -141,7 +141,7 @@ graph TB
 
 ### navbar top 背景条状态切换（navbar-blur）
 
-列表页 navbar top 的背景条（`.navbar-blur`）未吸顶时为卡片样式（`var(--card)` 底色 + `$boxshadow-card` 阴影，与文章卡片一致），吸顶后恢复玻璃效果（`bar-glass()` 模糊/高光）。实现为 `init.navbarPin()`：直接测量 navbar 的实际视口位置，`getBoundingClientRect().top` 不高于 sticky 顶部（`getComputedStyle(el).top`，自动兼容桌面 `var(--gap-margin)` 与移动端 `8pt`）加 2px 容差时切换 `.navbar-blur.pinned` 类——移动端浏览器顶栏伸缩会改变 `scrollY`（展开顶栏时 `scrollY` 减小），用 `scrollY` 推算吸顶状态会导致仍吸顶时玻璃误消失，因此以实际位置为准；rAF 节流监听 scroll，resize/pageshow 重算，`visualViewport` 存在时其 resize 也触发一次判定，初始化立即执行一次（兼容恢复滚动位置）；无 JS 时保持未吸顶的卡片样式。
+列表页 navbar top 的背景条（`.navbar-blur`）未滚动/未吸顶时为卡片样式（`var(--card)` 底色 + `$boxshadow-card` 阴影，与文章卡片一致），吸顶且页面滚动达到阈值后恢复玻璃效果（`bar-glass()` 模糊/高光）。实现为 `init.navbarPin()`：直接测量 navbar 的实际视口位置，`getBoundingClientRect().top` 不高于 sticky 顶部（`getComputedStyle(el).top`，自动兼容桌面 `var(--gap-page)` 与移动端 `8pt`）加 2px 容差、且 `window.scrollY >= 2` 时切换 `.navbar-blur.pinned` 类——无轮播区页面（如 wiki）的 navbar 在页面顶部即已吸顶，需额外要求实际滚动，否则默认保持卡片样式，回到顶部（滚动小于 2px）恢复卡片；移动端浏览器顶栏伸缩会改变 `scrollY`（展开顶栏时 `scrollY` 减小），用 `scrollY` 推算吸顶状态会导致仍吸顶时玻璃误消失，因此吸顶判定仍以实际位置为准，`scrollY` 仅作为滚动阈值；rAF 节流监听 scroll，resize/pageshow 重算，`visualViewport` 存在时其 resize 也触发一次判定，初始化立即执行一次（兼容恢复滚动位置）；无 JS 时保持未吸顶的卡片样式。
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)、[source/css/_components/partial/navbar.styl](../../../source/css/_components/partial/navbar.styl)
 

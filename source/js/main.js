@@ -426,22 +426,27 @@ const init = {
     } catch (e) {}
   },
   navbarPin: () => {
-    // 列表页 navbar top 背景条状态切换：未吸顶为卡片样式（var(--card) + 文章卡片同款阴影），
-    // 吸顶后恢复玻璃效果。在吸顶边界切换 .pinned 类，视觉由 CSS 控制。
+    // 列表页 navbar top 背景条状态切换：未滚动/未吸顶为卡片样式（var(--card) + 文章卡片同款阴影），
+    // 页面滚动达到阈值且吸顶后恢复玻璃效果。在吸顶边界切换 .pinned 类，视觉由 CSS 控制。
     // 吸顶判定直接测 navbar 的实际视口位置，而非用 scrollY 推算：
     // 移动端浏览器顶栏伸缩会改变 scrollY（展开顶栏时 scrollY 减小），
     // 即使 navbar 仍吸顶也可能跌破阈值，导致玻璃效果误消失。
+    // 无轮播区页面（如 wiki）的 navbar 在页面顶部即已吸顶，需额外要求页面实际滚动达到阈值，
+    // 否则默认保持卡片样式；回到顶部（滚动小于阈值）恢复卡片。
     const navbars = document.querySelectorAll('.navbar.top');
     if (navbars.length === 0) {
       return;
     }
     // 视口顶部允许的偏差（px），吸收亚像素/取整误差
     const TOLERANCE = 2;
+    // 页面滚动阈值（px）：未滚动时保持卡片样式，滚动达到该值后才切换玻璃效果
+    const SCROLL_THRESHOLD = 2;
     let states = [];
     function update() {
+      const scrolled = window.scrollY >= SCROLL_THRESHOLD;
       states.forEach((state) => {
         const top = state.navbar.getBoundingClientRect().top;
-        state.bar.classList.toggle('pinned', top <= state.stickyTop + TOLERANCE);
+        state.bar.classList.toggle('pinned', scrolled && top <= state.stickyTop + TOLERANCE);
       });
     }
     function measure() {
