@@ -83,6 +83,9 @@ graph TD
 | `btn.archives` | `Archives` | |
 | `btn.all_posts` | `All Posts` | |
 | `btn.getting_started` | `Getting Started` | |
+| `btn.docs` | `Documentation` | Wiki Hero 内置文档按钮 |
+| `btn.source` | `Source` | Wiki Hero 仓库按钮 |
+| `btn.copy` | `Copy` | Wiki Hero 终端复制按钮及其辅助标签 |
 | `btn.edit` | `Edit This Page` | |
 | `btn.top` | `Scroll to Top` | 用于 TOC 组件页脚 |
 | `btn.comments` | `Join Discussion` | 用于 TOC 组件页脚 |
@@ -116,6 +119,11 @@ graph TD
 | `meta.license` | `License` | |
 | `meta.share` | `Share` | |
 | `meta.contributors` | `Page Contributors` | |
+| `meta.available` | `Available for` | Wiki 卡片适用范围标签 |
+| `meta.wiki_project` | `Wiki project` | Wiki Hero 导航辅助标签 |
+| `meta.project_preview` | `Project preview` | Wiki Hero 预览区辅助标签 |
+| `meta.install_method` | `Installation method` | Wiki Hero 终端标签组辅助标签 |
+| `meta.command` | `Command %s` | Wiki Hero 未命名命令标签；`%s` = 序号 |
 | `meta.date_suffix.just` | `Just` | 相对时间 |
 | `meta.date_suffix.min` | `minutes ago` | 相对时间 |
 | `meta.date_suffix.hour` | `hours ago` | 相对时间 |
@@ -157,6 +165,7 @@ graph TD
 | 键 | `en.yml` 值 | 说明 |
 |----|-------------|------|
 | `message.copied` | `Copied!` | 复制到剪贴板后 |
+| `message.fetching_latest_release` | `'%s is fetching the latest release…'` | Wiki Hero 获取最新版本时；`%s` = 项目名 |
 | `message.theme_switched.light` | `Switched to Light Mode` | |
 | `message.theme_switched.dark` | `Switched to Dark Mode` | |
 | `message.theme_switched.auto` | `Switched to Auto Mode` | |

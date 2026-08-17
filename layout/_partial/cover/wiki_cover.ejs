@@ -1,44 +1,105 @@
 <%
 function layoutWikiCover() {
   var el = '';
-  const proj = theme.wiki.tree[page.wiki]
-  if (proj == undefined) {
-    return el;
-  }
-  if (proj.homepage.path !== page.path) {
+  const proj = theme.wiki.tree[page.wiki];
+  if (proj == undefined || proj.homepage.path !== page.path) {
     return el;
   }
   if (proj.coverpage == undefined || proj.coverpage === false || proj.coverpage === '[]') {
     return el;
   }
-  var coverpage = proj.coverpage;
-  let cover = proj.cover;
-  let title = proj.title || page.title;
-  let desc = proj.description || page.description;
-  if (coverpage === true) {
-    coverpage = ['cover', 'title', 'description'];
-  }
-  el += '<div class="l_cover wiki">';
-  el += '<article class="cover-wrap md-text">';
 
-  if (cover?.length > 0 && coverpage.includes('cover')) {
-    el += `<div class="preview cover"><img src="${cover}"/></div>`
+  var background = proj.background;
+  var preview = proj.preview || {};
+  var commands = Array.isArray(preview.commands) ? preview.commands.filter(function (item) {
+    return item && item.codes;
+  }) : [];
+  var hasPreview = (preview.type === 'image' && preview.src) || commands.length > 0;
+  var title = proj.headline || proj.title || page.title;
+  var desc = proj.description || page.description;
+  var repo = proj.repo;
+  var actions = Array.isArray(proj.actions) ? proj.actions.filter(function (item) {
+    return item && item.title && item.url;
+  }) : [];
+  var isGalaxy = background === 'galaxy';
+  var isImageBackground = background && !isGalaxy;
+  var projectName = proj.name || proj.title || page.wiki;
+  var adaptiveTextAttr = '';
+  if (isImageBackground) {
+    adaptiveTextAttr = ' data-text-adaptive="split" style="--cover-url:url(\'' + escape_html(background.replace(/'/g, '%27')) + '\')"';
+  } else if (isGalaxy) {
+    adaptiveTextAttr = ' data-text-adaptive="split" style="--adaptive-background:#10152f"';
   }
-  if (title && coverpage.includes('title')) {
-    el += '<div class="cover-title">';
-    el += '<span>' + title + '</span>';
-    el += '</div>';
+
+  el += '<div class="l_cover wiki wiki-hero' + (hasPreview ? '' : ' without-preview') + '">';
+  el += '<div class="wiki-cover-background' + (isGalaxy ? ' galaxy' : '') + (isImageBackground ? ' image' : '') + '" aria-hidden="true">';
+  if (isGalaxy) {
+    el += '<canvas></canvas>';
+  } else if (isImageBackground) {
+    el += '<img class="wiki-cover-background-image" src="' + escape_html(background) + '" alt="" />';
+    el += '<img class="wiki-cover-background-blur" src="' + escape_html(background) + '" alt="" />';
   }
-  if (desc && coverpage.includes('description')) {
+  el += '<div class="wiki-cover-background-overlay"></div></div>';
+  el += '<div class="wiki-cover-layout"' + adaptiveTextAttr + '>';
+  el += '<nav class="wiki-navbar" aria-label="' + escape_html(__('meta.wiki_project')) + '"><span class="wiki-cover-project-brand"><span class="wiki-cover-project-logo">';
+  if (proj.icon) {
+    el += '<img src="' + escape_html(proj.icon) + '" alt="" />';
+  } else {
+    el += icon('default:documents');
+  }
+  el += '</span><span class="wiki-cover-project-name">' + escape_html(projectName) + '</span></span></nav>';
+  el += '<article class="cover-wrap wiki-cover-content">';
+  el += '<section class="wiki-cover-intro">';
+  if (repo) {
+    el += '<p class="wiki-cover-release ds-ghinfo is-loading" data-project-name="' + escape_html(projectName) + '" data-api="https://' + theme.api_host.ghapi + '/repos/' + escape_html(repo) + '/tags" index="0">';
+    el += '<span class="wiki-cover-release-placeholder">' + escape_html(__('message.fetching_latest_release', projectName)) + '</span>';
+    el += '<span class="wiki-cover-release-value"><span type="text" id="latest-tag-name"></span></span></p>';
+  }
+  if (title) {
+    el += '<h1 class="cover-title">' + escape_html(title) + '</h1>';
+  }
+  if (desc) {
     el += '<div class="description">' + desc + '</div>';
   }
-  el += '<div class="start-wrap">';
-  el += '<a class="button start gradient" href="#start">' + (proj.start || __('btn.getting_started')) + '</a>';
-  el += '</div>';
-  el += '</article>';
-  el += '</div>';
-  el += '<hr>';
+  el += '<div class="wiki-cover-actions">';
+  if (repo) {
+    el += '<a class="button wiki-cover-source" href="https://github.com/' + escape_html(repo) + '" target="_blank" rel="external nofollow noopener noreferrer">' + icon('default:github') + '<span>' + escape_html(__('btn.source')) + '</span></a>';
+  }
+  el += '<a class="button" href="#start">' + icon('default:documents') + '<span>' + escape_html(__('btn.docs')) + '</span></a>';
+  actions.forEach(function (item) {
+    el += '<a class="button" href="' + escape_html(item.url) + '" target="_blank" rel="external nofollow noopener noreferrer">';
+    if (item.icon) {
+      el += icon(item.icon);
+    }
+    el += '<span>' + escape_html(item.title) + '</span></a>';
+  });
+  el += '</div></section>';
+  if (hasPreview) {
+    el += '<section class="wiki-cover-preview" aria-label="' + escape_html(__('meta.project_preview')) + '">';
+    if (preview.type === 'image' && preview.src) {
+      el += '<img src="' + escape_html(preview.src) + '" alt="' + escape_html(preview.alt || '') + '" />';
+    } else if (commands.length > 0) {
+      el += '<div class="wiki-cover-terminal">';
+      el += '<div class="wiki-cover-terminal-toolbar"><div class="wiki-cover-terminal-tabs" role="tablist" aria-label="' + escape_html(__('meta.install_method')) + '">';
+      commands.forEach(function (item, index) {
+        el += '<button type="button" role="tab" aria-selected="' + (index === 0 ? 'true' : 'false') + '" class="' + (index === 0 ? 'active' : '') + '" data-codes="' + escape_html(item.codes) + '">' + escape_html(item.label || __('meta.command', index + 1)) + '</button>';
+      });
+      el += '</div><button type="button" class="wiki-cover-copy" data-copy-message="' + escape_html(__('message.copied')) + '" aria-label="' + escape_html(__('btn.copy')) + '">' + icon('copy:copy') + '<span>' + escape_html(__('btn.copy')) + '</span></button></div>';
+      el += '<pre><code>' + terminalCodes(commands[0].codes) + '</code></pre>';
+      el += '</div>';
+    }
+    el += '</section>';
+  }
+  el += '</article></div></div><hr>';
   return el;
+}
+
+function terminalCodes(codes) {
+  return String(codes || '').split(/\r?\n/).filter(function (line) {
+    return line.trim().length > 0;
+  }).map(function (line) {
+    return '<span>' + escape_html(line) + '</span>';
+  }).join('');
 }
 %>
 <%- layoutWikiCover() %>

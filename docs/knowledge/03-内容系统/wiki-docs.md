@@ -202,12 +202,17 @@ tree:
 | `tree` | 数组包装为 `{ '': array }` | doc_tree.js |
 | `base_dir` | 去掉开头 `/`，补结尾 `/` | doc_tree.js |
 | `tags` | 字符串转为单元素数组 | doc_tree.js |
-| `headline` | 不转换；为空时卡片回退 `title` | wiki_card.ejs |
+| `headline` | 不转换；卡片和 Hero 标题为空时回退 `title` | wiki_card.ejs、wiki_cover.ejs |
 | `available` | 不转换；可选字符串 | wiki_card.ejs |
+| `background` | URL 作为静态 Hero 背景，并让 Hero 文字沿用封面平均色自适应；`galaxy` 为内置动态星空，并以其基准底色驱动同一自适应取色 | wiki_cover.ejs、adaptive-text.js |
+| `preview` | `terminal` 使用 `commands[].codes` 多行命令；`image` 使用 `src`/`alt` | wiki_cover.ejs |
+| `actions` | 可选自定义 Hero 按钮数组（`title`、`url`、可选 `icon`） | wiki_cover.ejs |
 | `sort` | 为 null 时默认 `0` | doc_tree.js |
 | `pin` | 仅用于置顶轮播收集（有置顶内容即渲染），不改变列表顺序；设置即置顶，按数值降序 | pin_slider.ejs |
 
 **wiki.shelf**——根文件 `_data/wiki.yml`（非子目录）定义哪些项目 ID 视为「已发布」。只有 shelf 中的项目出现在标签索引与相关项目列表中。
+
+Wiki Hero 的内置按钮、终端标签、加载提示与辅助标签均通过 `__()` 读取 `languages/`；它们随站点语言切换。`actions[].title` 是项目自定义内容，保持原值，不由主题翻译。
 
 ### 页面级 Front-Matter
 

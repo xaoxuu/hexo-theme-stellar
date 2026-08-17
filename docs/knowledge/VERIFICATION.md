@@ -22,6 +22,8 @@
 ## 二、版本与事实修正
 
 | 位置 | 问题 | 修正 |
+| 2026-08-18 | 1.42.1 后新增 Wiki Hero 的源码/文档/复制按钮、终端标签、版本加载提示及辅助标签硬编码为简体中文 | 新增 `btn.docs` / `btn.source` / `btn.copy`、`meta.wiki_project` / `meta.project_preview` / `meta.install_method` / `meta.command` 和 `message.fetching_latest_release` 三语键；`wiki_cover.ejs` 统一经 `__()` 输出，项目自定义 `actions[].title` 保持原值 |
+| 2026-08-18 | Wiki 项目首页只有单列 logo、标题与开始阅读，无法承载项目安装与演示入口 | 采用双栏 Hero：`background` 支持 URL 与 `galaxy`，`preview` 支持终端多行 `codes` 或图片，`actions` 为自定义按钮；静态背景图复用封面平均色、`galaxy` 使用其基准底色，分别生成 Hero 标题高对比色与说明/按钮主题色；静态图底部 80%–100% 以模糊和站点背景色渐隐，GitHub tags 读取最新版本（见 `docs/designs/2026-08-18-wiki-hero-cover/`） |
 |------|------|------|
 | 2026-08-17 | 无封面 Wiki 卡片 hover 仍使用主题色边框；封面图片未加载时主题色蒙版先显示，刷新会出现明亮空白；原图先加载时又会短暂显示默认主题色 | 外层 `.wiki-card.no-cover` 使用 `--block-border`；Wiki 索引脚本等待原图 `load` 与 `adaptive-text` 主题色结果后才加 `.cover-loaded` 显示覆盖层，平均色失败确认 CSS 回退，`error` 时卡片降级为无封面 |
 | 2026-08-17 | Wiki 元信息中的“适用于”标签与平台值样式不同，项目图标背景与圆角不统一 | 移除平台标签的单独透明度与内边距，`.wiki-meta` 间距改为 `.5rem 1rem`；项目图标改为 30% 圆角与 `var(--block)` 背景 |
@@ -237,6 +239,9 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `b2c0a3e` | feat(wiki): 改造封面卡片布局 | 设计文档 `2026-08-17-wiki-cover-cards/`；知识库 `03-内容系统/post-lists-cards.md`、`wiki-docs.md`；三语 `meta.available`；Wiki 卡片模板、样式与 GitHub 数据服务 |
+| `3274cc1` | fix: navbar 无轮播区页面默认卡片样式，滚动 2px 后恢复玻璃 | 设计文档 `2026-08-17-navbar-pin-scroll-threshold/`；知识库 `05-前端交互/client-side-overview.md`；`source/js/main.js` |
+| `2a8f5d2` | refactor(loading): 统一 loading 动画并自包含化 | 设计文档 `2026-08-17-unify-loading-animation/`、`2026-08-17-inline-loading-svg/`；知识库 configuration.md、icon-tag.md；内联 loading SVG 与各占位消费方 |
 | `433ba90` | fix(bootstrap): utils 补载改用 setAttribute 并增加 stellar.initPlugin 兜底注册点 | 设计文档 `2026-08-17-img-lazyload-regex-fix/`；知识库 `05-前端交互/client-side-overview.md`、`07-外部集成/plugin-system.md`；CHANGELOG「修复」 |
 | `d72269f` | fix(lazyload): 修复图片懒加载正则跨标签越界改写 bootstrap 导致列表延迟与控制台报错 | 设计文档 `2026-08-17-img-lazyload-regex-fix/`；知识库 `09-高级主题/performance.md`；CHANGELOG「修复」 |
 | `27573ac` | style(waline): 更新 waline 评论区样式 | 仅登记（上游提交）；`source/css/comments/waline.styl` |

@@ -372,6 +372,99 @@ const init = {
       }
     });
   },
+  wikiCover: () => {
+    document.querySelectorAll('.wiki-cover-terminal').forEach(function (terminal) {
+      const code = terminal.querySelector('pre code');
+      const tabs = terminal.querySelectorAll('[role="tab"]');
+      function renderCodes(value) {
+        const lines = value.split(/\r?\n/).filter(function (line) {
+          return line.trim().length > 0;
+        });
+        terminal.dataset.codes = lines.join('\n');
+        code.innerHTML = '';
+        lines.forEach(function (line) {
+          const row = document.createElement('span');
+          row.textContent = line;
+          code.appendChild(row);
+        });
+      }
+      if (tabs.length > 0) {
+        renderCodes(tabs[0].getAttribute('data-codes') || '');
+      }
+      tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          tabs.forEach(function (item) {
+            const active = item === tab;
+            item.classList.toggle('active', active);
+            item.setAttribute('aria-selected', active ? 'true' : 'false');
+          });
+          renderCodes(tab.getAttribute('data-codes') || '');
+        });
+      });
+      const copy = terminal.querySelector('.wiki-cover-copy');
+      if (copy) {
+        copy.addEventListener('click', function () {
+          const value = terminal.dataset.codes || '';
+          if (!value || !navigator.clipboard) return;
+          navigator.clipboard.writeText(value).then(function () {
+            hud.toast(copy.getAttribute('data-copy-message') || 'Copied', 2500);
+          }).catch(function () {});
+        });
+      }
+    });
+
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return;
+    document.querySelectorAll('.wiki-cover-background.galaxy canvas').forEach(function (canvas) {
+      const ctx2d = canvas.getContext('2d');
+      if (!ctx2d) return;
+      let width = 0;
+      let height = 0;
+      let pointer = { x: 0, y: 0 };
+      let stars = [];
+      const count = 110;
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        width = rect.width;
+        height = rect.height;
+        canvas.width = Math.round(width * ratio);
+        canvas.height = Math.round(height * ratio);
+        ctx2d.setTransform(ratio, 0, 0, ratio, 0, 0);
+        stars = Array.from({ length: count }, function () {
+          return {
+            x: Math.random() * width,
+            y: Math.random() * height,
+            z: .2 + Math.random() * .8,
+            size: .3 + Math.random() * 1.7
+          };
+        });
+      }
+      function draw() {
+        ctx2d.clearRect(0, 0, width, height);
+        stars.forEach(function (star) {
+          const x = star.x + pointer.x * star.z * 18;
+          const y = star.y + pointer.y * star.z * 12;
+          ctx2d.beginPath();
+          ctx2d.fillStyle = 'rgba(225, 234, 255, ' + (.18 + star.z * .62) + ')';
+          ctx2d.arc(x, y, star.size * star.z, 0, Math.PI * 2);
+          ctx2d.fill();
+        });
+        window.requestAnimationFrame(draw);
+      }
+      canvas.parentElement.addEventListener('pointermove', function (event) {
+        const rect = canvas.getBoundingClientRect();
+        pointer.x = (event.clientX - rect.left) / rect.width - .5;
+        pointer.y = (event.clientY - rect.top) / rect.height - .5;
+      });
+      canvas.parentElement.addEventListener('pointerleave', function () {
+        pointer = { x: 0, y: 0 };
+      });
+      window.addEventListener('resize', resize);
+      resize();
+      draw();
+    });
+  },
   leftbarScroll: () => {
     const container = document.querySelector('.l_left .widgets');
     if (container == null) {
@@ -626,6 +719,7 @@ stellar.initPage = function () {
   init.toc();
   init.sidebar();
   init.wikiStart();
+  init.wikiCover();
   init.leftbarScroll();
   init.navbarPin();
   init.relativeDate(document.querySelectorAll('#post-meta time'));

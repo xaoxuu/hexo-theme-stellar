@@ -64,3 +64,257 @@
   .cover-title
     &:first-child
       font-size: 3rem
+
+
+.l_cover.wiki-hero
+  min-height: 640px
+  overflow: hidden
+  isolation: isolate
+  color: var(--text)
+  text-align: left
+  .wiki-cover-background
+    position: absolute
+    z-index: -1
+    inset: 0
+    overflow: hidden
+    background: var(--background)
+    &.image
+      .wiki-cover-background-image,
+      .wiki-cover-background-blur
+        position: absolute
+        inset: 0
+        width: 100%
+        height: 100%
+        object-fit: cover
+      .wiki-cover-background-blur
+        filter: blur(18px)
+        clip-path: inset(80% 0 0)
+        transform: scale(1.03)
+      .wiki-cover-background-overlay
+        position: absolute
+        inset: 0
+        background: linear-gradient(to bottom, transparent 0%, transparent 80%, var(--background) 100%)
+    &.galaxy
+      background: radial-gradient(circle at 30% 20%, #27347a 0, #10152f 35%, #070811 75%)
+      canvas
+        width: 100%
+        height: 100%
+  .wiki-navbar
+    position: absolute
+    top: 2rem
+    left: 0
+    right: 0
+  .wiki-cover-layout
+    width: calc(100% - 4rem)
+    max-width: 1120px
+    height: 100%
+    margin: 0 auto
+    position: relative
+    color: var(--text-banner, var(--text))
+  .wiki-cover-project-name
+    display: inline-block
+    font-size: 1rem
+    font-weight: 700
+  .wiki-cover-project-brand
+    display: inline-flex
+    align-items: center
+    gap: 1rem
+  .wiki-cover-project-logo
+    display: inline-flex
+    align-items: center
+    justify-content: center
+    height: 1.5rem
+    img
+      width: 100%
+      height: 100%
+      object-fit: cover
+    svg
+      width: 1.25rem
+      height: 1.25rem
+  .wiki-cover-content
+    width: 100%
+    max-width: none
+    height: 100%
+    margin: 0
+    display: grid
+    grid-template-columns: minmax(0, 1fr) minmax(320px, .9fr)
+    gap: clamp(3rem, 8vw, 8rem)
+    align-items: center
+  .wiki-cover-intro
+    max-width: 560px
+    display: flex
+    flex-direction: column
+    align-items: stretch
+    gap: 1.5rem
+  .wiki-cover-release
+    display: inline-flex
+    align-items: center
+    min-height: 1.75rem
+    align-self: flex-start
+    box-sizing: border-box
+    padding: .25rem .75rem
+    margin: 0
+    border: 1px solid white
+    border-color: var(--text-banner, white)
+    border-radius: 100px
+    corner-shape: round
+    color: inherit
+    font-size: $fs-14
+    font-weight: 700
+    line-height: 1.2
+    .wiki-cover-release-value
+      display: none
+    &.loaded
+      .wiki-cover-release-placeholder
+        display: none
+      .wiki-cover-release-value
+        display: inline
+  .cover-title
+    margin: 0
+    color: inherit
+    font-size: clamp(2.5rem, 3vw, 4.75rem)
+    line-height: 1.08
+    letter-spacing: -.04em
+  .description
+    margin: 0
+    color: var(--text-banner-theme, var(--text-p2))
+    font-size: 1.05rem
+    line-height: 1.75
+  .wiki-cover-actions
+    display: flex
+    flex-wrap: wrap
+    gap: 1rem
+    a.button
+      display: inline-flex
+      align-items: center
+      gap: .5rem
+      padding: .5rem 1rem
+      border-radius: 100px
+      corner-shape: round
+      border: 1px solid rgba(white, .35)
+      border-color: var(--text-banner, white)
+      color: inherit
+      background: rgba(white, .14)
+      box-shadow: 0 8px 30px rgba(0,0,0,.12)
+      backdrop-filter: blur(12px)
+      svg
+        width: 1.5rem
+        height: 1.5rem
+      &:hover
+        color: inherit
+        background: rgba(white, .24)
+      &.wiki-cover-source
+        border-color: white
+        color: black
+        background: white
+        &:hover
+          color: black
+          background: rgba(white, .86)
+  .wiki-cover-preview
+    width: 100%
+    border-radius: 1.25rem
+    overflow: hidden
+    box-shadow: 0 24px 60px rgba(0,0,0,.18)
+    > img
+      display: block
+      width: 100%
+      max-height: 62vh
+      object-fit: contain
+      background: var(--card)
+  .wiki-cover-terminal
+    position: relative
+    min-height: 150px
+    padding: 1rem
+    color: #dbe4ff
+    background: #111522
+    font-family: $ff-code
+    .wiki-cover-terminal-toolbar
+      display: flex
+      align-items: center
+      justify-content: space-between
+      margin-bottom: 1.4rem
+    .wiki-cover-terminal-tabs
+      display: flex
+      gap: .5rem
+      button
+        padding: .5rem .75rem
+        border-radius: 8px
+        color: rgba(white, .65)
+        font-family: inherit
+        font-size: $fs-13
+        line-height: 1
+        &.active
+          color: white
+          background: rgba(white, .14)
+    pre
+      margin: 0
+      padding: 0
+      overflow-x: auto
+      color: inherit
+      background: transparent
+      font: 1rem
+      line-height: 1.8
+      code span
+        display: block
+      code span:before
+        content: '$ '
+        color: #8ca5ff
+    .wiki-cover-copy
+      display: inline-flex
+      align-items: center
+      gap: .5rem
+      padding: .5rem .75rem .5rem .5rem
+      border-radius: 8px
+      color: rgba(white, .8)
+      font-family: inherit
+      font-size: $fs-13
+      line-height: 1
+      background: rgba(white, .1)
+      &:hover
+        color: white
+        background: rgba(white, .18)
+  &.without-preview .wiki-cover-content
+    grid-template-columns: minmax(0, 560px)
+    justify-content: center
+
+@media screen and (max-width: $device-tablet)
+  .l_cover.wiki-hero
+    height: auto
+    min-height: 100vh
+    padding: 7rem 0 4rem
+    .wiki-cover-layout
+      width: calc(100% - 3rem)
+      max-width: 620px
+      height: auto
+      display: grid
+      grid-template-rows: auto 1fr
+      position: static
+    .wiki-navbar
+      position: absolute
+      top: 1.5rem
+      left: 1.5rem
+      right: 1.5rem
+      padding-top: 0
+    .wiki-cover-content
+      height: auto
+      margin-top: 3rem
+      grid-template-columns: 1fr
+      gap: 3rem
+    .wiki-cover-intro
+      max-width: none
+    .wiki-cover-preview
+      max-width: 620px
+
+@media screen and (max-width: $device-mobile)
+  .l_cover.wiki-hero
+    .wiki-cover-layout
+      width: calc(100% - 2rem)
+    .wiki-navbar
+      left: 1rem
+      right: 1rem
+    .cover-title
+      font-size: 2.6rem
+
+@media (prefers-reduced-motion: reduce)
+  .l_cover.wiki-hero .wiki-cover-background.galaxy canvas
+    display: none

@@ -13,6 +13,9 @@ btn:
   archives: 封存
   all_posts: 所有網誌
   getting_started: 開始使用
+  docs: 文件
+  source: 原始碼
+  copy: 複製
   edit: 編輯本文
   top: 回到頂部
   comments: 參與討論
@@ -38,6 +41,10 @@ meta:
   share: 分享文章
   contributors: 本文貢獻者
   available: 適用於
+  wiki_project: Wiki 專案
+  project_preview: 專案預覽
+  install_method: 安裝方式
+  command: 指令 %s
   word_count: '%s 字'
   reading_time: '預計閱讀 %s 分鐘'
   ai_label:
@@ -65,6 +72,7 @@ search:
 
 message:
   copied: 複製成功
+  fetching_latest_release: '%s 正在取得最新版本…'
   theme_switched:
     light: 切換到淺色模式
     dark: 切換到深色模式

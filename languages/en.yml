@@ -13,6 +13,9 @@ btn:
   archives: Archives
   all_posts: All Posts
   getting_started: Getting Started
+  docs: Documentation
+  source: Source
+  copy: Copy
   edit: Edit This Page
   top: Scroll to Top
   comments: Join Discussion
@@ -38,6 +41,10 @@ meta:
   share: Share
   contributors: Page Contributors
   available: Available for
+  wiki_project: Wiki project
+  project_preview: Project preview
+  install_method: Installation method
+  command: Command %s
   word_count: '%s words'
   reading_time: '%s min read'
   ai_label:
@@ -65,6 +72,7 @@ search:
 
 message:
   copied: Copied!
+  fetching_latest_release: '%s is fetching the latest release…'
   theme_switched:
     light: Switched to Light Mode
     dark: Switched to Dark Mode

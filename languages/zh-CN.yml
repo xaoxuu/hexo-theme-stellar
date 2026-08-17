@@ -13,6 +13,9 @@ btn:
   archives: 归档
   all_posts: 所有文章
   getting_started: 开始使用
+  docs: 文档
+  source: 源码
+  copy: 复制
   edit: 编辑本文
   top: 回到顶部
   comments: 参与讨论
@@ -38,6 +41,10 @@ meta:
   share: 分享文章
   contributors: 本文贡献者
   available: 适用于
+  wiki_project: Wiki 项目
+  project_preview: 项目预览
+  install_method: 安装方式
+  command: 命令 %s
   word_count: '%s 字'
   reading_time: '预计阅读 %s 分钟'
   ai_label:
@@ -65,6 +72,7 @@ search:
 
 message:
   copied: 复制成功
+  fetching_latest_release: '%s 正在获取最新版本…'
   theme_switched:
     light: 切换到浅色模式
     dark: 切换到深色模式

@@ -1,5 +1,5 @@
 // 文字自适应颜色 DOM 插件
-// 扫描 [data-text-adaptive] 元素，解析背景来源（--cover-url → --bg-url →
+// 扫描 [data-text-adaptive] 元素，解析背景来源（--adaptive-background → --cover-url → --bg-url →
 // background-image → background-color），调用 stellar.color 计算文字颜色，
 // 写入内联 --text-banner 与 --text-banner-theme；Wiki 封面另写入主题色蒙版变量。
 // 属性值：
@@ -19,6 +19,10 @@ function parseCssUrl(value) {
 
 function resolveBackground(el) {
   var style = window.getComputedStyle(el);
+  var adaptiveBackground = stellar.color.parse(style.getPropertyValue('--adaptive-background'));
+  if (adaptiveBackground) {
+    return { type: 'color', rgb: adaptiveBackground };
+  }
   var cover = parseCssUrl(style.getPropertyValue('--cover-url'));
   if (cover) {
     return { type: 'image', url: cover };
