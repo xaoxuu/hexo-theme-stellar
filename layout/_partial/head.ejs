@@ -237,6 +237,15 @@ function generate_canonical() {
         const raw = theme.icons && theme.icons[key];
         if (raw) vars.push(`  ${name}: url("data:image/svg+xml,${encodeURIComponent(raw)}");`);
       }
+      // 加载占位：由 icons.yml 的 default:loading 提供（内联 SVG 编码为 data URI，URL 直用）
+      const loadingRaw = theme.icons && theme.icons['default:loading'];
+      if (loadingRaw) {
+        if (loadingRaw.trim().startsWith('<svg')) {
+          vars.push(`  --icon-loading: url("data:image/svg+xml,${encodeURIComponent(loadingRaw)}");`);
+        } else {
+          vars.push(`  --icon-loading: url("${loadingRaw}");`);
+        }
+      }
       return vars.length > 0 ? `:root {\n${vars.join('\n')}\n}` : '';
     })();
   %>

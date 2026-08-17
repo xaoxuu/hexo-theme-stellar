@@ -5,7 +5,7 @@
 // 与 layout/_partial/scripts/defines.ejs 中旧的白名单保持一致（客户端通过 ctx.icons 读取）。
 hexo.extend.generator.register('stellar_icons', function () {
   const icons = (this.theme.config && this.theme.config.icons) || {};
-  const keys = ['default:tocomment', 'default:loading-spinner', 'default:warning', 'weibo:repeat', 'weibo:like'];
+  const keys = ['default:tocomment', 'default:warning', 'weibo:repeat', 'weibo:like'];
   const out = {};
   // 去除 SVG 注释（避免 <!-- / </script> 解析风险），再转义 <
   for (const k of keys) {

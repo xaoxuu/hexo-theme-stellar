@@ -312,7 +312,7 @@ graph TB
 
 | 类 | 图标 | 用途 | 效果 |
 |----|------|------|------|
-| `.loading` | `default:loading` | 加载中 | 旋转动画 |
+| `.loading` | 自定义图标（如 `custom:spinner`） | 加载中 | 旋转动画（仅内联 SVG 适用） |
 | `.active-icon` | `default:bookmark.active` | 选中状态 | 激活状态指示 |
 
 **颜色属性应用**
@@ -364,14 +364,15 @@ if (args.color == null) {
 
 | 场景 | 用法 |
 |------|------|
-| 懒加载占位背景图 / onerror | `ctx.theme.config.default.loading \|\| ctx.utils.iconData('default:loading-placeholder')` |
+| 加载失败兜底 onerror | `ctx.theme.config.default.image_onerror \|\| ctx.utils.iconData('image:onerror')` |
+| 加载占位（`--icon-loading`） | `head.ejs` 由 `icons['default:loading']` 内联 SVG 经 `encodeURIComponent` 生成 data URI；`.lazy-icon` 经 `svg-mask-icon` 蒙版 + `background-color: var(--theme)` 上色 |
 | CSS 变量生成（head.ejs） | 从 `theme.icons[key]` 经 `encodeURIComponent` 生成 data URI |
 
 **参考源码**：[scripts/events/lib/utils.js](../../../scripts/events/lib/utils.js)
 
 ## 客户端图标注册表
 
-`layout/_partial/scripts/defines.ejs` 把客户端用到的图标白名单注入 `ctx.icons`（`default:tocomment`、`default:loading-spinner`、`default:warning`、`weibo:repeat`、`weibo:like`），浏览器端 JS（weibo/timeline 服务、utils 加载/警告图标）按 `ctx.icons['key']` 读取渲染。注入时去除 SVG 注释并转义 `<`，防止 `<!--` / `</script>` 解析问题。
+`layout/_partial/scripts/defines.ejs` 把客户端用到的图标白名单注入 `ctx.icons`（`default:tocomment`、`default:warning`、`weibo:repeat`、`weibo:like`），浏览器端 JS（weibo/timeline 服务、utils 警告图标）按 `ctx.icons['key']` 读取渲染。注入时去除 SVG 注释并转义 `<`，防止 `<!--` / `</script>` 解析问题。
 
 **参考源码**：[layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs)
 
@@ -379,7 +380,7 @@ if (args.color == null) {
 
 `_data/icons.yml` 除历史命名空间（solar/default/github/share/ph/bxs/vote/rating）外，新增：
 
-- 主题基础功能（非标签插件）图标键统一为 `default:语义名`（如 `default:calendar`、`default:goback`），键不绑定用途、可任意复用；仅出现在 `_config.yml` 注释示例中的图标用 `example:` 命名空间（如 `example:planet`）；非 Solar 值图标放在顶部「非 Solar 值保留图标」组并逐个备注来源与原因（`default:search` 三态着色依赖 `p-id="1562"`、`default:rss` 经典 RSS 视觉、`default:leftbar/rightbar` `#sep` 位移动画、`default:loading-spinner` 自带动画、`default:loading-placeholder` 外部 URL）
+- 主题基础功能（非标签插件）图标键统一为 `default:语义名`（如 `default:calendar`、`default:goback`），键不绑定用途、可任意复用；仅出现在 `_config.yml` 注释示例中的图标用 `example:` 命名空间（如 `example:planet`）；非 Solar 值图标放在顶部「非 Solar 值保留图标」组并逐个备注来源与原因（`default:search` 三态着色依赖 `p-id="1562"`、`default:rss` 经典 RSS 视觉、`default:leftbar/rightbar` `#sep` 位移动画、`default:loading` 内联 SVG（`fill="currentColor"`，SMIL 三圆点动画），经 `head.ejs` 生成 `--icon-loading`，图片懒加载/评论区/异步数据服务占位共用）
 - `github:logo-alt`：ghuser 头部 GitHub logo
 - `chat:` 浏览器来源（google/safari/ie/uc/qq/baidu/firefox/360/qq-mini）、文件类型（file-word/file-ppt/file-txt/file-pdf/file-archive/file-excel/file-code/file-photo/file-video/file-voice/file-config/file-database/file-link/file-exe/file-3d/file-unknown）、聊天控件（earphone/bluetooth/signal/wifi/battery/back/nav-more-wechat/nav-more-qq/arrow-up/pause/play/download/voice-qq/voice-wechat/photos/camera/red-envelope/smile-qq/smile-wechat/more-qq/more-wechat）
 - `weibo:repeat`、`weibo:like`：微博/时间线数据服务（{% timeline %}）的转发/点赞图标（替代 emoji，客户端注册表）；评论数图标复用 `default:tocomment`（与右栏「参与讨论」一致）

@@ -99,8 +99,12 @@ article.md-text.content+.related-wrap
   .cmt-body
     min-height: 150px
     position: relative
-    svg.loading
+    .lazy-icon
+      position: absolute
       top: 60px
+      left: 50%
+      transform: translateX(-50%)
+      z-index: -1
     iframe
       border-radius: 4px
       border: none

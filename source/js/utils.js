@@ -299,7 +299,7 @@
     onLoading: (el) => {
       if (el) {
         if (el.querySelector('.loading-wrap') === null) {
-          el.insertAdjacentHTML('beforeend', `<div class="loading-wrap">${ctx.icons['default:loading-spinner']}</div>`);
+          el.insertAdjacentHTML('beforeend', `<div class="loading-wrap"><div class="lazy-icon"></div></div>`);
         }
       }
     },

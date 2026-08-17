@@ -50,7 +50,7 @@ module.exports = ctx => function(args) {
     img += `onerror="this.src=&quot;${ctx.theme.config.default.image_onerror || ctx.utils.iconData('image:onerror')}&quot;"`
     img += '/>'
     // loading
-    img += `<div class="lazy-icon" style="background-image:url(${ctx.theme.config.default.loading || ctx.utils.iconData('default:loading-placeholder')});"></div>`
+    img += `<div class="lazy-icon"></div>`
     if (fancyboxHref) {
       a += ` href="${fancyboxHref}">${img}</a>`
       return a

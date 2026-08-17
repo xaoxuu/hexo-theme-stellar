@@ -22,8 +22,11 @@ svg.loading
   border-radius: $border-card
   position relative
   padding: 2rem
-  svg  
+  svg,
+  .lazy-icon
     margin: 4px
+  .lazy-icon
+    display: inline-block
   &:after 
     content: hexo-config('style.loading.loading')
     color: var(--text-p1)
