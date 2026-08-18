@@ -370,6 +370,18 @@ footer:
     # comments:
     #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/942ebbf1a4b91.svg"/>'
     #   url: /about/#comments
+    # spacer: # 弹性占位项：将其后的 social 按钮推至右侧
+    # links:
+    #   type: dropdown
+    #   icon: default:documents
+    #   title: 更多链接
+    #   items:
+    #     - icon: default:documents
+    #       title: 文档
+    #       url: /wiki/
+    #     - icon: default:github
+    #       title: GitHub
+    #       url: https://github.com/
   sitemap:
     # - title: 博客
     #   items:

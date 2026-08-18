@@ -48,6 +48,7 @@ function tagtreeWidgetOnPage() {
 <script defer src="<%- url_for('/js/stellar-icons.js') %>?v=<%- stellar_info('version') %>"></script>
 <!-- 非首屏图标异步加载：占位符替换依赖构建期生成的 js/icons/{ns}.json -->
 <script defer src="<%- url_for('/js/icons.js') %>?v=<%- stellar_info('version') %>" data-version="<%- stellar_info('version') %>"></script>
+<script defer src="<%- url_for('/js/plugins/dropdown.js') %>?v=<%- stellar_info('version') %>"></script>
 <script src="<%- url_for(`${theme.stellar.main_js}?v=${stellar_info('version')}`) %>" defer></script>
 <script defer src="<%- url_for('/js/theme.js') %>?v=<%- stellar_info('version') %>"></script>
 

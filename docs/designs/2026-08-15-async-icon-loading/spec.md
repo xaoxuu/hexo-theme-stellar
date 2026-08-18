@@ -9,7 +9,7 @@ status: 已通过
 ## 1. 问题与目标
 
 - 当前 `hexo.utils.icon()` 在构建期把 `_data/icons.yml`（含站点 `source/_data/icons.yml` 覆盖）中的 SVG 原样内联进 HTML：全站 182 个页面共内联约 3.02MB SVG（占 HTML 总量 29.5%），首页约 47KB；同一批首屏/侧栏图标随每个页面重复传输，浏览器无法缓存。
-- 成功标准：除首屏关键图标（搜索、菜单、leftbar/rightbar、goback）外，其余图标改为异步加载；页面 HTML 内联 SVG 显著下降；异步图标最终以与现状一致的内联 SVG 形态注入，现有 CSS 钩子（搜索三态、菜单渐变、leftbar 动画、chat 着色）零改动可用。
+- 成功标准：除首屏关键图标（搜索、菜单、leftbar/rightbar、arrow-left）外，其余图标改为异步加载；页面 HTML 内联 SVG 显著下降；异步图标最终以与现状一致的内联 SVG 形态注入，现有 CSS 钩子（搜索三态、菜单渐变、leftbar 动画、chat 着色）零改动可用。
 
 ## 2. 技术方案
 
@@ -21,7 +21,7 @@ status: 已通过
   - URL 值（`/`、`http(s)://`）仍输出 `<img ${args} src=...>`（保持内联，极小）。
   - SVG 值：`inline === true` 时原样输出（现状行为）；否则输出占位符 `<svg class="icon" data-icon="key" aria-hidden="true"></svg>`。
   - 缺失键仍返回 key 原文（现状行为）。
-- 首屏模板显式内联（`inline=true`）：`layout/_partial/sidebar/search.ejs`（`default:search`）、`layout/_partial/sidebar/menu.ejs`（菜单任意键，含站点 `solar:*`）、`layout/_partial/menubtn.ejs`（leftbar/rightbar）、`layout/_partial/sidebar/logo.ejs`（goback）。其余调用点（widgets、标签插件、翻页、评论）默认异步。
+- 首屏模板显式内联（`inline=true`）：`layout/_partial/sidebar/search.ejs`（`default:search`）、`layout/_partial/sidebar/menu.ejs`（菜单任意键，含站点 `solar:*`）、`layout/_partial/menubtn.ejs`（leftbar/rightbar）、`layout/_partial/sidebar/logo.ejs`（`default:arrow-left`）。其余调用点（widgets、标签插件、翻页、评论）默认异步。
 - 理由：菜单渐变 `> svg [fill="currentColor"]`、搜索三态 `path[p-id="1562"]`、leftbar `path#sep` 动画都依赖内联 DOM 结构，保留内联可避免 CSS 重构；异步图标最终仍以内联 SVG 形态注入，chat 等所有 `>path` 着色规则不受影响。
 
 ### 构建期生成器

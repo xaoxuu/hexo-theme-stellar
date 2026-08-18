@@ -1,0 +1,154 @@
+.dropdown
+  position: relative
+  display: inline-block
+  z-index: 0
+  overflow: visible
+  line-height: 1
+  font-size: $fs-14
+  >.dropdown-trigger
+    display: inline-flex
+    align-items: center
+    gap: 0.5rem
+    box-sizing: border-box
+    min-height: 2rem
+    padding: 0.5rem 1.25rem 0.5rem 0.75rem
+    cursor: pointer
+    list-style: none
+    outline: none
+    border-radius: $border-bar
+    color: var(--text-p2)
+    background: var(--block)
+    text-decoration: none
+    white-space: nowrap
+    &::-webkit-details-marker
+      display: none
+    &::marker
+      display: none
+    &:hover, &:focus-visible
+      color: var(--text-p1)
+      background: var(--block-border)
+    >svg, >img, >.icon
+      flex: 0 0 1.25rem
+      width: 1.25rem
+      height: 1.25rem
+    >.dropdown-arrow
+      transition: transform 0.2s ease
+    >span
+      overflow: hidden
+      text-overflow: ellipsis
+  &[open]
+    z-index: 10
+    >.dropdown-trigger
+      color: var(--text-p1)
+      background: var(--block-border)
+      >.dropdown-arrow
+        transform: rotate(180deg)
+.dropdown-menu
+  display: flex
+  flex-direction: column
+  gap: 0.125rem
+  box-sizing: border-box
+  min-width: 10rem
+  max-width: calc(100vw - 2rem)
+  max-height: calc(100vh - 2rem)
+  padding: 0.25rem
+  overflow-x: hidden
+  overflow-y: auto
+  font-size: $fs-14
+  border: 1px solid var(--block-border)
+  border-radius: $border-card
+  corner-shape: $corner-shape
+  background: rgba(white, 0.3)
+  box-shadow: 0 0 2px rgba(black, .04), 0 2px 8px rgba(black, .04), 0 4px 16px rgba(black, .04)
+  text-shadow: 0 0 4px rgba(white, 1), 0 0 8px rgba(white, 0.8), 0 0 16px rgba(white, 0.6)
+  backdrop-filter: saturate(300%) blur(16px)
+  -webkit-backdrop-filter: saturate(300%) blur(16px)
+  :root[data-theme="dark"] &
+    background: rgba(white, 0.2)
+    text-shadow: 0 0 2px rgba(black, 0.2), 0 0 4px rgba(black, 0.4)
+  :root:not([data-theme]) &
+    @media (prefers-color-scheme: dark)
+      background: rgba(white, 0.2)
+      text-shadow: 0 0 2px rgba(black, 0.2), 0 0 4px rgba(black, 0.4)
+  text-align: left
+  line-height: 1
+  .dropdown-item
+    display: flex
+    align-items: center
+    gap: 0.5rem
+    min-height: 2rem
+    padding: 0 0.5rem
+    overflow: hidden
+    border-radius: $border-bar
+    color: var(--text-p2)
+    text-decoration: none
+    line-height: 1.2
+    white-space: nowrap
+    &:hover, &:focus-visible
+      color: var(--text-p1)
+      background: var(--bg-a20)
+    >svg, >img, >.icon
+      flex: 0 0 1.25rem
+      width: 1.25rem
+      height: 1.25rem
+    >span
+      overflow: hidden
+      text-overflow: ellipsis
+
+.dropdown > .dropdown-menu
+  position: absolute
+  z-index: 10
+  top: calc(100% + 0.5rem)
+  left: 50%
+  transform: translateX(-50%)
+  visibility: hidden
+
+.dropdown[direction=up] > .dropdown-menu
+  top: auto
+  bottom: calc(100% + 0.5rem)
+
+.dropdown[align=left] > .dropdown-menu
+  left: 0
+  transform: none
+
+.dropdown[align=right] > .dropdown-menu
+  right: 0
+  left: auto
+  transform: none
+
+.dropdown-layer
+  position: fixed
+  z-index: 1000
+  top: 0
+  right: 0
+  bottom: 0
+  left: 0
+  pointer-events: none
+  > .dropdown-bridge
+    position: fixed
+    z-index: 0
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    pointer-events: auto
+    background: transparent
+  > .dropdown-menu
+    position: fixed
+    z-index: 1000
+    top: 0
+    left: 0
+    transform: none
+    pointer-events: auto
+    visibility: hidden
+    opacity: 0
+    contain: paint
+    will-change: opacity
+    transition: opacity 0.16s ease-out
+    &.dropdown-menu-visible
+      visibility: visible
+      opacity: 1
+
+@media (prefers-reduced-motion: reduce)
+  .dropdown-layer > .dropdown-menu, .dropdown > .dropdown-trigger > .dropdown-arrow
+    transition: none

@@ -41,7 +41,6 @@ hexo.on('ready', () => {
   checkVersion(hexo, { useCache: true });
 });
 
-
 // 防止重复注册
 let hasRun = false;
 
@@ -66,4 +65,3 @@ hexo.extend.filter.register('before_generate', async () => {
     fixMarkdownImages(hexo); // 不用 await，因为是同步的
   }
 });
-

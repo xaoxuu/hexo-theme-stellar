@@ -26,7 +26,7 @@ module.exports = ctx => function(args, content) {
   } else {
     el += `
     <button class="back cap" onclick="window.history.back()">
-      ${ctx.utils.icon('default:goback')}
+      ${ctx.utils.icon('default:arrow-left')}
     </button>
     `
   }

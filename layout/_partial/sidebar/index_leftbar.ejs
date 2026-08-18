@@ -125,10 +125,20 @@ function layoutFooterDiv() {
     return ''
   }
   var el = '<footer class="footer dis-select">';
-  el += '<div class="social-wrap">';
+  el += '<div class="social-wrap" style="--item-grad:url(#footer-social-icon-grad)">';
+  el += partial('grad-def', {id: 'footer-social-icon-grad'})
   for (let id of Object.keys(social)) {
     let item = social[id];
-    if (item.icon && (item.url || item.onclick)) {
+    if (id === 'spacer') {
+      el += '<span class="social-spacer" aria-hidden="true"></span>';
+    } else if (item?.type === 'dropdown') {
+      el += partial('../dropdown', {
+        item: item,
+        rootClass: 'social-dropdown',
+        triggerClass: 'social',
+        showTitle: false
+      })
+    } else if (item?.icon && (item.url || item.onclick)) {
       el += '<a class="social"';
       if (item.title) {
         el += ' title="' + escape_html(item.title) + '"';

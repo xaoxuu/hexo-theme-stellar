@@ -24,7 +24,6 @@ status: 已实施
 
 | 旧键 | 新键（Solar 原名） |
 |---|---|
-| default:goback | solar:alt-arrow-left-bold-duotone |
 | default:edit | solar:pen-new-round-bold-duotone |
 | default:theme | solar:moon-stars-bold-duotone |
 | default:upup | solar:double-alt-arrow-up-bold-duotone |

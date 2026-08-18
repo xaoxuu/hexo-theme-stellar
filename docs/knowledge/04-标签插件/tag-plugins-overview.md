@@ -21,6 +21,7 @@ tags:
 - [package.json](../../../package.json)
 - [scripts/tags/index.js](../../../scripts/tags/index.js)
 - [scripts/tags/lib/](../../../scripts/tags/lib/)
+- [source/css/_common/dropdown.styl](../../../source/css/_common/dropdown.styl)
 
 </details>
 
@@ -32,6 +33,7 @@ tags:
 - [提示框与容器标签插件](note-container-tags.md)——标注框与容器
 - [时间线与媒体标签](timeline-media-tags.md)——时序展示与图库
 - [交互式标签插件](link-grid-banner-tags.md)——按钮、复选框、聊天界面
+- `{% dropdown %}`——带图标链接项的通用下拉菜单
 - [内容展示标签](social-content-card-tags.md)——状态指示、引用、表情集
 
 ## 系统架构
@@ -101,7 +103,7 @@ graph TB
     end
     
     subgraph "Styling System"
-        TAG_STYLES["Tag Plugin Styles<br/>source/css/_components/tag-plugins/*.styl"]
+        TAG_STYLES["Component Styles<br/>source/css/_common/ + _components/tag-plugins/"]
         COLORS["Color System<br/>theme, accent, status colors"]
         RESPONSIVE["Responsive Layouts<br/>media queries"]
     end
@@ -231,6 +233,32 @@ args = ctx.args.map(args, ['color', 'style'], ['key', 'text'])
 | 多位置参数 | `{% icon heart Love %}` | 图标键 + 文本标签 |
 | 混合参数 | `{% icon heart color:red style:"font-size:2em" %}` | 组合命名与位置参数 |
 
+### dropdown 通用下拉菜单
+
+`dropdown` 是一个块级标签，用圆角端点绘制的箭头和标题作为触发按钮，用带 `icon:key` 的 Markdown 链接声明子项。它与 Footer Social 共用 `.dropdown` 样式、原生 `<details>/<summary>` 结构和全局浮层定位逻辑，不包含具体业务语义。展开时箭头旋转 180°。
+
+```md
+{% dropdown direction:down 更多链接 %}
+- icon:default:documents [文档](/wiki/)
+- icon:default:github [GitHub](https://github.com/)
+{% enddropdown %}
+```
+
+参数说明：
+
+| 参数 | 类型 | 默认 | 说明 |
+|------|------|------|------|
+| `title` | 位置参数 | — | 主按钮标题，必填 |
+| `direction` | `up` / `down` | `auto` | 菜单展开方向；未指定时根据触发按钮上下空间自动判断 |
+| `align` | `left` / `right` | `auto` | 菜单贴合触发按钮的左边或右边；未指定时根据视口空间自动选择 |
+| `open` | `true` | — | 是否默认展开 |
+
+主按钮固定使用内联 SVG 箭头，不需要 `icon` 参数；为兼容既有内容，传入的 `icon:` 参数会被忽略。
+
+子项格式为 `icon:key [标题](URL)`，也支持把 `icon:key` 放在链接之后。缺少图标或格式不匹配的行会被忽略；不支持嵌套 dropdown。菜单打开后挂载到 `body` 下的全局浮层，使用通用 `bar-glass()` 玻璃背景，自动调整上下和左右位置，不受正文或 sidebar 祖先容器裁剪；鼠标移入触发按钮时自动展开，透明桥接区连接触发按钮与菜单之间的间隙，离开三者后立即关闭，不使用延迟计时器；菜单定位完成后淡入显示；菜单高度受视口限制，超出后垂直滚动。
+
+**参考源码**：[scripts/tags/lib/dropdown.js](../../../scripts/tags/lib/dropdown.js)、[scripts/tags/index.js](../../../scripts/tags/index.js)、[source/js/plugins/dropdown.js](../../../source/js/plugins/dropdown.js)、[source/css/_common/dropdown.styl](../../../source/css/_common/dropdown.styl)
+
 ## 可用标签插件
 
 ### 容器与布局标签
@@ -239,6 +267,7 @@ args = ctx.args.map(args, ['color', 'style'], ['key', 'text'])
 |------|------|----------|
 | `note` / `box` | 带可选边框的彩色标注框 | `tag_plugins.note` |
 | `folding` | 可折叠内容区 | N/A |
+| `dropdown` | 带图标链接项的通用下拉菜单 | N/A |
 | `tabs` | 标签页内容区 | N/A |
 | `table` | 表格样式容器（`scroll` / `wrap` / `compact`） | N/A |
 
@@ -375,6 +404,7 @@ el += '</span>'
 | 样式类别 | 文件模式 | 用途 |
 |----------|----------|------|
 | 标签插件基础 | `source/css/_components/tag-plugins/*.styl` | 核心标签插件样式 |
+| 通用组件 | `source/css/_common/*.styl` | 被标签、布局或其它主题组件复用的通用结构样式 |
 | 颜色变体 | `_custom.styl` 中的工具混入 | 颜色系统集成 |
 | 响应式布局 | 插件样式中的媒体查询 | 自适应显示 |
 

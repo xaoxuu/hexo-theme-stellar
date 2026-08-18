@@ -24,7 +24,7 @@ xaoxuu.com 左栏顶部固定区域当前顺序为 logo → 导航区（多列�
 
 ### 返回按钮（layout/_partial/sidebar/logo.ejs）
 
-- wiki 内容页（`page.wiki`）在侧边栏 logo 上方渲染 `<a class="wiki-home cap">`：左箭头图标（`default:goback`）+ `btn.all_wiki`（所有项目），链接到 `theme.site_tree.index_wiki.base_dir`（wiki 列表页）。
+- wiki 内容页（`page.wiki`）在侧边栏 logo 上方渲染 `<a class="wiki-home cap">`：左箭头图标（`default:arrow-left`）+ `btn.all_wiki`（所有项目），链接到 `theme.site_tree.index_wiki.base_dir`（wiki 列表页）。
 - 开关 `wiki_home`（page front-matter 优先，其次 wiki 定义 `_data/wiki/{id}.yml`）：`false` 时隐藏，默认 `true` 显示。
 - wiki 列表页（`index_wiki`）、非 wiki 页面不渲染。
 

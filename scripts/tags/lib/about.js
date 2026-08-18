@@ -18,7 +18,7 @@ module.exports = ctx => function(args, content) {
   el += '<div class="tag-plugin about">'
   if (args.back) {
     el += '<a class="nav-back cap" href="' + url_for(ctx.config.root) + '">'
-    el += ctx.utils.icon('default:goback')
+    el += ctx.utils.icon('default:arrow-left')
     el += '</a>'
   }
   // avatar

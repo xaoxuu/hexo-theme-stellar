@@ -14,7 +14,7 @@ status: 已实施
 
 ## 2. 技术方案
 
-- `_data/icons.yml`：27 个 `solar:*` 基础键按映射表改名为 `default:语义名`（arrow-left/right、documents、chat、planet、notebook、pin、shield-user/check/up/warning、repeat、like、goback、edit、theme、upup、tocomment、calendar、category、category-open、bookmark.active、loading、comment、warning、image-onerror、hashtag）；移除零引用 `solar:pin-bold-duotone`；分区注释改为「主题基础功能 · default 内置图标 · 主视觉/界面控件/数据服务」；顶部「非 Solar 值保留图标」组保持（键本已是 default:*）。
+- `_data/icons.yml`：基础键按映射表改名为 `default:语义名`（arrow-left/right、documents、chat、planet、notebook、pin、shield-user/check/up/warning、repeat、like、edit、theme、upup、tocomment、calendar、category、category-open、bookmark.active、loading、comment、warning、image-onerror、hashtag）；移除零引用 `solar:pin-bold-duotone`；分区注释改为「主题基础功能 · default 内置图标 · 主视觉/界面控件/数据服务」；顶部「非 Solar 值保留图标」组保持（键本已是 default:*）。
 - 引用同步（仅字符串）：layout（分页器、pin_slider、toc、sidebar、post_card、note_card、categories、contributors、comments×6、widgets、tags、article_tags）、`head.ejs` CSS 桥接（`--icon-h3-left/right` → `default:arrow-left/right`）、`defines.ejs` 客户端白名单（`default:comment/loading-spinner/warning/repeat/like`）、`scripts/tags/lib/`、`source/js/services/`、`_config.yml`（侧边栏图标默认值、ai_label 档位、image_onerror 注释）、`test/icons.test.js` 硬编码桥接键。
 - 不改动：`github:`、`share:`、全部标签插件键（copy/download/hashtag-bold-duotone、hashtag-square-bold、ph、bxs、vote、rating、chat:*）；`solar:hashtag-bold-duotone`（{% hashtag %} 插件）保持不变。
 - 修正（最终）：标签组件专用图标不归 `default:`，改用标签名命名空间——`default:comment/repeat/like` → `weibo:comment/repeat/like`（{% timeline %} 数据服务）、`default:image-onerror` → `image:onerror`（{% image %}）；`default:loading-spinner/warning/loading-placeholder` 等共享工具保留 `default:`。

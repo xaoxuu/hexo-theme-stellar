@@ -1,0 +1,60 @@
+<%
+const dropdownItem = typeof item !== 'undefined' && item ? item : {}
+const items = Array.isArray(dropdownItem.items) ? dropdownItem.items.filter(child => child && child.icon && child.title && child.url) : []
+const classes = ['dropdown']
+const dropdownRootClass = typeof rootClass === 'string' ? rootClass : ''
+if (dropdownRootClass) {
+  classes.push(dropdownRootClass)
+}
+const triggerClasses = ['dropdown-trigger']
+const dropdownTriggerClass = typeof triggerClass === 'string' ? triggerClass : ''
+if (dropdownTriggerClass) {
+  triggerClasses.push(dropdownTriggerClass)
+}
+const dropdownDirection = typeof direction === 'string' ? direction : ''
+const dropdownShowTitle = typeof showTitle === 'undefined' || showTitle !== false
+
+function linkAttrs(child) {
+  const url = String(child.url)
+  var attrs = ' href="' + escape_html(url_for(url)) + '"'
+  if (url.includes('://')) {
+    attrs += ' target="_blank" rel="external nofollow noopener noreferrer"'
+  } else {
+    attrs += ' rel="noopener noreferrer"'
+  }
+  return attrs
+}
+
+function layoutDiv() {
+  if (!dropdownItem.icon || items.length === 0) {
+    return ''
+  }
+  const title = dropdownItem.title ? escape_html(dropdownItem.title) : ''
+  var el = '<details class="' + classes.join(' ') + '"'
+  if (dropdownDirection) {
+    el += ' direction="' + escape_html(dropdownDirection) + '"'
+  }
+  el += '>'
+  el += '<summary class="' + triggerClasses.join(' ') + '"'
+  if (title) {
+    el += ' title="' + title + '" aria-label="' + title + '"'
+  }
+  el += '>'
+  // dropdown 首次展开时需要立即显示图标，使用内联 SVG 避免 /js/icons.js 异步替换造成闪烁。
+  el += icon(dropdownItem.icon, 'no-lazy', true)
+  if (dropdownShowTitle && dropdownItem.title) {
+    el += '<span>' + title + '</span>'
+  }
+  el += '</summary>'
+  el += '<div class="dropdown-menu">'
+  for (let child of items) {
+    el += '<a class="dropdown-item"' + linkAttrs(child) + '>'
+    el += icon(child.icon, 'no-lazy', true)
+    el += '<span>' + escape_html(child.title) + '</span>'
+    el += '</a>'
+  }
+  el += '</div></details>'
+  return el
+}
+%>
+<%- layoutDiv() %>

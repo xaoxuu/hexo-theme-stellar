@@ -169,6 +169,8 @@ Logo 组件最多包含三个元素：图标/头像、主标题、副标题。�
 
 **动态头像**：`style.animated_avatar.animate` 启用时，头像包含一个悬停淡入的 CSS 锥形渐变光环（`style.gradient.avatar`，默认彩虹色），以 4s 匀速旋转产生装饰动画。
 
+**Wiki 返回入口**：Wiki 内容页在左栏 Logo 上方显示“所有项目”入口，链接到 `theme.site_tree.index_wiki.base_dir`。`page.wiki_home` 优先于项目配置的 `wiki_home` 控制其显示，默认显示；图标复用列表分页上一页的 `default:arrow-left`，并以内联 SVG 保持首屏可见。
+
 **参考源码**：[_config.yml](../../../_config.yml)、[layout/_partial/sidebar/logo.ejs](../../../layout/_partial/sidebar/logo.ejs)
 
 ### 标题与副标题渲染
@@ -265,6 +267,63 @@ graph TB
 客户端搜索逻辑见[搜索功能](../07-外部集成/search.md)。
 
 **参考源码**：[source/css/_components/sidebar/search.styl](../../../source/css/_components/sidebar/search.styl)
+
+---
+
+## 左栏：Footer Social
+
+左栏底部的 `.footer` 由 `theme.footer.social` 驱动。social 配置使用 YAML 映射的字段顺序决定按钮顺序，普通条目继续支持 `icon`、`title`、`url` 和 `onclick`：
+
+``@@BT@yaml
+footer:
+  social:
+    github:
+      icon: default:github
+      title: GitHub
+      url: https://github.com/
+``@@BT@
+
+将条目的 `type` 设置为 `dropdown`，即可渲染通用下拉菜单。主按钮使用 `icon` 和 `title`，子项使用 `icon`、`title` 和 `url`：
+
+``@@BT@yaml
+footer:
+  social:
+    links:
+      type: dropdown
+      icon: default:documents
+      title: 更多链接
+      items:
+        - icon: default:documents
+          title: 文档
+          url: /wiki/
+        - icon: default:github
+          title: GitHub
+          url: https://github.com/
+``@@BT@
+
+未设置 `type` 的条目按普通 social 链接处理。dropdown 由 `layout/_partial/dropdown.ejs` 使用原生 `<details>/<summary>` 渲染，并复用通用 `.dropdown` 样式和 `bar-glass()` 玻璃背景；打开后菜单会由 `source/js/plugins/dropdown.js` 移入 `body` 下的全局浮层，使用 `position: fixed`，不受 sidebar 容器裁剪。鼠标移入触发按钮时自动展开，透明桥接区连接触发按钮与菜单之间的间隙；离开触发按钮、菜单和桥接区后立即关闭，不使用延迟计时器，菜单定位完成后淡入显示。未指定方向时，脚本根据触发按钮上下空间自动选择展开方向，并让菜单贴合触发按钮的左边或右边；菜单有视口高度上限，子项过多时可以垂直滚动。不支持嵌套 dropdown，也不包含具体业务语义。子项的 URL 沿用普通 social 的内链/外链处理规则。
+
+Social 按钮与 dropdown 触发器仅固定 32px 高度，并使用 4px 内边距；宽度由图标内容自然决定，主题不会覆写 SVG 尺寸，按钮圆角为 8px。因此不同纵横比的图标会得到不同按钮宽度，不会被拉伸。
+
+普通 Social 按钮悬停时会取消灰阶，并将 SVG 中使用 `currentColor` 的填充或描边接入通用主题渐变（`--item-theme-light` 至 `--item-theme`）；渐变角度仍遵循 `style.gradient.angle`。未悬停时保留图标自身颜色的灰阶效果。
+
+`spacer` 是保留的占位标识。将 `spacer:` 放在两个 social 条目之间时，主题会输出弹性空白，把它之后的按钮推至同一行右侧；它不渲染图标、链接或提示，配置值也会被忽略：
+
+``@@BT@yaml
+footer:
+  social:
+    github:
+      icon: default:github
+      url: https://github.com/
+    spacer:
+    links:
+      type: dropdown
+      icon: default:documents
+      title: 更多链接
+      items: []
+``@@BT@
+
+**参考源码**：[layout/_partial/sidebar/index_leftbar.ejs](../../../layout/_partial/sidebar/index_leftbar.ejs)、[layout/_partial/dropdown.ejs](../../../layout/_partial/dropdown.ejs)、[source/js/plugins/dropdown.js](../../../source/js/plugins/dropdown.js)、[source/css/_common/dropdown.styl](../../../source/css/_common/dropdown.styl)、[source/css/_components/sidebar/footer.styl](../../../source/css/_components/sidebar/footer.styl)、[_config.yml](../../../_config.yml)
 
 ---
 

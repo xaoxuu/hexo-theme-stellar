@@ -33,7 +33,7 @@ status: 已通过
 - `github:logo-alt`：ghuser 头部 TDesign GitHub logo
 - `chat:`：浏览器 logo（google/safari/ie/uc/qq/baidu/firefox/360/qq-mini）、文件类型（word/ppt/txt/pdf/compressPkg/excel/code/photo/video/voice/config/database/link/exe/3d/unknow）、控制图标（voice-qq/voice-wechat/photos/camera/red-envelope/smile-qq/smile-wechat/more-qq/more-wechat/pause/play/download）
 - `solar:repeat-bold`、`solar:like-bold`：微博转发/点赞 emoji 替换（从 iconify 拉取 bold 内联 SVG）
-- 复用已有：`default:goback`、`bxs:quote-left/right`、`solar:double-alt-arrow-left/right-bold-duotone`
+- 复用已有：`default:arrow-left`、`bxs:quote-left/right`、`solar:double-alt-arrow-left/right-bold-duotone`
 
 内联 SVG 所需的 class（`class="icon"`、`class="loading"` 等）保留在 yml 值内，因为 `icon()` 对非 URL 结果会丢弃附加参数。
 

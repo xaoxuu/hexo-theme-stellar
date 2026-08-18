@@ -367,6 +367,58 @@ notebook:
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
+### 页脚配置
+
+`footer` 包含左栏底部的 social 按钮、主内容区页脚站点地图和 Markdown 文本：
+
+| 字段 | 类型 | 用途 |
+|------|------|------|
+| `social` | Object | 左栏底部的 social 按钮；按 YAML 字段顺序显示 |
+| `social.*.icon` | String | 普通按钮或 dropdown 主按钮图标 |
+| `social.*.title` | String | 普通按钮 tooltip 或 dropdown 无障碍标签 |
+| `social.*.url` | String | 普通按钮链接 |
+| `social.*.onclick` | String | 普通按钮点击脚本，与 `url` 二选一 |
+| `social.spacer` | Object / null | 弹性占位项；将其后的 social 按钮推至同一行右侧 |
+| `social.*.type` | `dropdown` | 将条目渲染为通用下拉菜单 |
+| `social.*.items` | Array | dropdown 子项列表，每项包含 `icon`、`title`、`url` |
+| `sitemap` | Array | 主内容区页脚的分组链接 |
+| `content` | String | 主内容区页脚的 Markdown 文本 |
+
+dropdown 示例：
+
+``@@BT@yaml
+footer:
+  social:
+    links:
+      type: dropdown
+      icon: default:documents
+      title: 更多链接
+      items:
+        - icon: default:documents
+          title: 文档
+          url: /wiki/
+``@@BT@
+
+未设置 `type` 的 `social` 条目保持普通链接行为。若要在一组按钮中撑开中间空间，可在需要的位置加入 `spacer:`；其值会被忽略，只按配置位置输出弹性空白：
+
+``@@BT@yaml
+footer:
+  social:
+    github:
+      icon: default:github
+      url: https://github.com/
+    spacer:
+    links:
+      type: dropdown
+      icon: default:documents
+      title: 更多链接
+      items: []
+``@@BT@
+
+dropdown 不关联语言或其它业务场景，也不支持嵌套菜单。打开后的菜单挂载到 `body` 下的全局浮层，并根据触发按钮周围的可用空间自动调整上下和左右位置。
+
+**参考源码**：[_config.yml](../../../_config.yml)、[layout/_partial/sidebar/index_leftbar.ejs](../../../layout/_partial/sidebar/index_leftbar.ejs)、[layout/_partial/dropdown.ejs](../../../layout/_partial/dropdown.ejs)、[layout/_partial/main/footer.ejs](../../../layout/_partial/main/footer.ejs)
+
 ### 样式配置
 
 `style` 小节定义设计令牌，由 `source/css/_custom.styl` 消费：

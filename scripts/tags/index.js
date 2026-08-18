@@ -12,6 +12,7 @@ hexo.extend.tag.register('grid', require('./lib/grid')(hexo), true)
 hexo.extend.tag.register('swiper', require('./lib/swiper')(hexo), true)
 hexo.extend.tag.register('gallery', require('./lib/gallery')(hexo), {ends: true})
 hexo.extend.tag.register('banner', require('./lib/banner')(hexo), true)
+hexo.extend.tag.register('dropdown', require('./lib/dropdown')(hexo), true)
 
 // data
 hexo.extend.tag.register('users', require('./lib/friends')(hexo))

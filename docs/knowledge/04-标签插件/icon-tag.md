@@ -182,7 +182,7 @@ ctx.utils.icon(iconKey, additionalAttributes, inline)
 
 **异步渲染**
 
-非首屏图标默认不内联进 HTML：服务端输出 `<svg class="icon" data-icon="key">` 占位符，客户端 `/js/icons.js`（defer）按命名空间拉取构建期生成的 `js/icons/{ns}.json` 后原位替换为完整 SVG，最终 DOM 与全量内联一致，CSS 钩子不受影响。首屏关键图标（搜索、菜单、leftbar/rightbar、goback）与 TOC 底部操作按钮（回到顶部/参与讨论）由对应模板调用处传 `inline=true` 保持内联；站点通过 `source/_data/icons.yml` 覆盖或补充的图标同样生效。无 JS 时非关键图标不显示（主题本身强依赖 JS）。
+非首屏图标默认不内联进 HTML：服务端输出 `<svg class="icon" data-icon="key">` 占位符，客户端 `/js/icons.js`（defer）按命名空间拉取构建期生成的 `js/icons/{ns}.json` 后原位替换为完整 SVG，最终 DOM 与全量内联一致，CSS 钩子不受影响。首屏关键图标（搜索、菜单、leftbar/rightbar、arrow-left）与 TOC 底部操作按钮（回到顶部/参与讨论）由对应模板调用处传 `inline=true` 保持内联；站点通过 `source/_data/icons.yml` 覆盖或补充同名键。无 JS 时非关键图标不显示（主题本身强依赖 JS）。
 
 **图标解析：ctx.utils.icon() 调用方**
 
@@ -380,7 +380,7 @@ if (args.color == null) {
 
 `_data/icons.yml` 除历史命名空间（solar/default/github/share/ph/bxs/vote/rating）外，新增：
 
-- 主题基础功能（非标签插件）图标键统一为 `default:语义名`（如 `default:calendar`、`default:goback`），键不绑定用途、可任意复用；仅出现在 `_config.yml` 注释示例中的图标用 `example:` 命名空间（如 `example:planet`）；非 Solar 值图标放在顶部「非 Solar 值保留图标」组并逐个备注来源与原因（`default:search` 三态着色依赖 `p-id="1562"`、`default:rss` 经典 RSS 视觉、`default:leftbar/rightbar` `#sep` 位移动画、`default:loading` 内联 SVG（`fill="currentColor"`，SMIL 三圆点动画），经 `head.ejs` 生成 `--icon-loading`，图片懒加载/评论区/异步数据服务占位共用）
+- 主题基础功能（非标签插件）图标键统一为 `default:语义名`（如 `default:calendar`、`default:arrow-left`），键不绑定用途、可任意复用；仅出现在 `_config.yml` 注释示例中的图标用 `example:` 命名空间（如 `example:planet`）；非 Solar 值图标放在顶部「非 Solar 值保留图标」组并逐个备注来源与原因（`default:search` 三态着色依赖 `p-id="1562"`、`default:rss` 经典 RSS 视觉、`default:leftbar/rightbar` `#sep` 位移动画、`default:loading` 内联 SVG（`fill="currentColor"`，SMIL 三圆点动画），经 `head.ejs` 生成 `--icon-loading`，图片懒加载/评论区/异步数据服务占位共用）
 - `github:logo-alt`：ghuser 头部 GitHub logo
 - `chat:` 浏览器来源（google/safari/ie/uc/qq/baidu/firefox/360/qq-mini）、文件类型（file-word/file-ppt/file-txt/file-pdf/file-archive/file-excel/file-code/file-photo/file-video/file-voice/file-config/file-database/file-link/file-exe/file-3d/file-unknown）、聊天控件（earphone/bluetooth/signal/wifi/battery/back/nav-more-wechat/nav-more-qq/arrow-up/pause/play/download/voice-qq/voice-wechat/photos/camera/red-envelope/smile-qq/smile-wechat/more-qq/more-wechat）
 - `weibo:repeat`、`weibo:like`：微博/时间线数据服务（{% timeline %}）的转发/点赞图标（替代 emoji，客户端注册表）；评论数图标复用 `default:tocomment`（与右栏「参与讨论」一致）

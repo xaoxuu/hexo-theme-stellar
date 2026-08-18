@@ -2,15 +2,20 @@
   margin: 0.5rem var(--gap-base) 1rem
 
 .social-wrap
-  display: grid
-  grid-gap: 0.25rem 0.25rem
-  grid-template-columns: repeat(auto-fill, 32px)
+  display: flex
+  flex-wrap: wrap
+  gap: 0.25rem
+  align-items: center
   text-align: center
   .social
     line-height: 0
-    display: inline-block
-    padding: 6px
-    border-radius: 32px
+    display: inline-flex
+    align-items: center
+    box-sizing: border-box
+    flex: 0 0 auto
+    height: 32px
+    padding: 4px
+    border-radius: 8px
     filter: grayscale(100%)
     overflow: hidden
     background: transparent
@@ -18,6 +23,45 @@
     &:hover
       z-index: 1
       filter: unset
-      background: var(--bg-a100)
+      background: var(--bg-a20)
+      svg [fill="currentColor"]
+        fill: var(--item-grad)
+      svg [stroke="currentColor"]
+        stroke: var(--item-grad)
     img
       border-radius: 2px
+    svg
+      height: 24px
+      width: 24px
+
+  .social-spacer
+    flex: 1 1 0
+    min-width: 0
+    height: 32px
+    pointer-events: none
+
+  .social-dropdown
+    position: relative
+    box-sizing: border-box
+    flex: 0 0 auto
+    height: 32px
+    line-height: 0
+    >.dropdown-trigger.social
+      display: flex
+      box-sizing: border-box
+    &[open]
+      >.dropdown-trigger.social
+        z-index: 1
+        filter: unset
+        background: var(--bg-a100)
+    // JS 未加载时保留向上展开的原生 details 兜底；正常情况下菜单会移入全局浮层。
+    >.dropdown-menu
+      top: auto
+      bottom: calc(100% + 0.5rem)
+    &:first-child:not(:last-child) >.dropdown-menu, &:only-child >.dropdown-menu
+      left: 0
+      transform: none
+    &:last-child:not(:first-child) >.dropdown-menu
+      right: 0
+      left: auto
+      transform: none
