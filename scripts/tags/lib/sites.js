@@ -10,6 +10,7 @@
 module.exports = ctx => function(args) {
   args = ctx.args.map(args, ['repo', 'api'], ['group'])
   const host = ctx.theme.config.api_host.ghraw
+  const siteinfoApi = ctx.theme.config.data_services.siteinfo?.api
   var api
   if (args.api) {
     api = args.api
@@ -29,15 +30,18 @@ module.exports = ctx => function(args) {
     el += '<div class="grid-box">'
     for (let item of (links[args.group] || [])) {
       if (item?.url && item?.title) {
+        const itemSiteinfoApi = !item.icon && !item.avatar && siteinfoApi
+          ? siteinfoApi.replace('{href}', item.url)
+          : ''
         el += `<div class="grid-cell site-card">`
-        el += `<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="${item.url}">`
+        el += `<a class="card-link"${itemSiteinfoApi ? ` data-siteinfo-api="${itemSiteinfoApi}"` : ''} target="_blank" rel="external nofollow noopener noreferrer" href="${item.url}">`
         el += `<div class="lazy-box snapshot">`
         el += `<img class="lazy" data-src="${item.cover || item.snapshot || item.screenshot || ('https://image.thum.io/get/width/1280/crop/720/' + item.url)}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${ctx.theme.config.default.cover}&quot;;"/>`
         el += `<div class="lazy-icon"></div>`
         el += `</div>`
         el += `<div class="info">`
         el += `<div class="lazy-box icon">`
-        el += `<img class="lazy" data-src="${item.icon || item.avatar || ctx.theme.config.default.link}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${item.icon || item.avatar || ctx.theme.config.default.link}&quot;;"/>`
+        el += `<img class="lazy siteinfo-icon" data-src="${item.icon || item.avatar || ctx.theme.config.default.link}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${item.icon || item.avatar || ctx.theme.config.default.link}&quot;;"/>`
         el += `<div class="lazy-icon"></div>`
         el += `</div>`
         el += `<span class="title">${item.title}</span>`

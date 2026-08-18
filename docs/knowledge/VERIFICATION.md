@@ -21,6 +21,8 @@
 
 ## 二、版本与事实修正
 
+| 2026-08-18 | `{% sites %}` 卡片缺少图标时没有复用已有 siteinfo 能力 | sites 静态与动态卡片为缺少 `icon` / `avatar` 的条目增加 siteinfo 请求标识，`siteinfo.js` 异步填充圆形图标；不改变截图逻辑（见 `docs/designs/2026-08-18-sites-siteinfo-icon/`） |
+
 | 位置 | 问题 | 修正 |
 | 2026-08-18 | 1.42.1 后新增 Wiki Hero 的源码/文档/复制按钮、终端标签、版本加载提示及辅助标签硬编码为简体中文 | 新增 `btn.docs` / `btn.source` / `btn.copy`、`meta.wiki_project` / `meta.project_preview` / `meta.install_method` / `meta.command` 和 `message.fetching_latest_release` 三语键；`wiki_cover.ejs` 统一经 `__()` 输出，项目自定义 `actions[].title` 保持原值 |
 | 2026-08-18 | Wiki 项目首页只有单列 logo、标题与开始阅读，无法承载项目安装与演示入口 | 采用双栏 Hero：`background` 支持 URL 与 `galaxy`，`preview` 支持终端多行 `codes` 或图片，`actions` 为自定义按钮；静态背景图复用封面平均色、`galaxy` 使用其基准底色，分别生成 Hero 标题高对比色与说明/按钮主题色；静态图底部 80%–100% 以模糊和站点背景色渐隐，GitHub tags 读取最新版本（见 `docs/designs/2026-08-18-wiki-hero-cover/`） |

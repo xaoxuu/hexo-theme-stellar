@@ -140,7 +140,7 @@ item.cover
   || 'https://image.thum.io/get/width/1280/crop/720/' + item.url
 ```
 
-图标 `data-src` 解析为 `item.icon || item.avatar || default.link`。
+图标 `data-src` 解析为 `item.icon || item.avatar || default.link`。条目缺少 `icon` 与 `avatar` 且已配置 `siteinfo.api` 时，卡片会复用 siteinfo 服务异步补充圆形图标；该服务不负责获取截图。
 
 条目必须同时有 `url` 与 `title` 才渲染；缺任一项静默跳过。
 

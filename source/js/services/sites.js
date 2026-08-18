@@ -12,11 +12,14 @@
       utils.request(el, api, async resp => {
         const data = await resp.json();
         for (let item of data.content) {
+          const siteinfoApi = !item.icon && !item.avatar && ctx.services.siteinfo?.api
+            ? ctx.services.siteinfo.api.replace('{href}', item.url)
+            : '';
           var cell = `<div class="grid-cell site-card">`;
-          cell += `<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="${item.url}">`;
+          cell += `<a class="card-link"${siteinfoApi ? ` data-siteinfo-api="${siteinfoApi}"` : ''} target="_blank" rel="external nofollow noopener noreferrer" href="${item.url}">`;
           cell += `<img src="${item.cover || item.snapshot || item.screenshot}" onerror="javascript:this.removeAttribute(\'data-src\');this.src=\'${default_cover}\';"/>`;
           cell += `<div class="info">`;
-          cell += `<img src="${item.icon || item.avatar || default_avatar}" onerror="javascript:this.removeAttribute(\'data-src\');this.src=\'${default_avatar}\';"/>`;
+          cell += `<img class="siteinfo-icon" src="${item.icon || item.avatar || default_avatar}" onerror="javascript:this.removeAttribute(\'data-src\');this.src=\'${default_avatar}\';"/>`;
           cell += `<span class="title">${item.title}</span>`;
           cell += `<span class="desc">${item.description || item.url}</span>`;
           cell += `</div>`;
@@ -36,6 +39,7 @@
           utils.dom(el).find('.grid-box').append(cell);
         }
         window.wrapLazyloadImages(el);
+        window.dispatchEvent(new Event('stellar:sites-ready'));
       });
     }
 })();

@@ -6,9 +6,12 @@ const initServices = () => {
     const js = ctx.services[id].js;
     if (id == 'siteinfo') {
       const cardlinks = document.querySelectorAll('a.link-card[cardlink]');
-      if (cardlinks?.length > 0) {
+      const siteCards = document.querySelectorAll('.ds-sites, .site-card .card-link[data-siteinfo-api]');
+      if (cardlinks?.length > 0 || siteCards?.length > 0) {
         utils.js(js, { defer: true }).then(function () {
-          setCardLink(cardlinks);
+          if (cardlinks?.length > 0) {
+            setCardLink(cardlinks);
+          }
         });
       }
     } else if (id == 'ghinfo') {

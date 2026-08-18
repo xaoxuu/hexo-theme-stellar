@@ -34,3 +34,29 @@ function setCardLink(nodes) {
     }, undefined, { service: 'siteinfo' });
   })
 }
+
+function setSiteCardIcon(nodes) {
+  nodes = 'forEach' in (nodes || {}) ? nodes : document.querySelectorAll('.site-card .card-link[data-siteinfo-api]')
+  nodes.forEach((el) => {
+    if (el.nodeType !== 1) return;
+    const api = el.dataset.siteinfoApi;
+    if (api == null) return;
+    utils.request(null, api, function(response) {
+      return response.json().then(function(data) {
+        if (data.icon && data.icon.length > 0) {
+          const icon = el.querySelector('.siteinfo-icon');
+          if (icon) {
+            icon.src = data.icon;
+            icon.setAttribute('data-src', data.icon);
+          }
+        }
+      }).catch(function(error) {
+        console.error(error);
+      });
+    }, undefined, { service: 'siteinfo' });
+  })
+}
+
+window.addEventListener('stellar:sites-ready', function() {
+  setSiteCardIcon();
+});
