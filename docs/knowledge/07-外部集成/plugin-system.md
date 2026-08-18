@@ -290,8 +290,8 @@ scrollreveal:
 ```yaml
 mermaid:
   enable: # true  # 可全局或经 front-matter 按页启用
-  style_optimization: false  # 使用 Stellar 自定义样式
-  js: https://gcore.jsdelivr.net/npm/mermaid@v9/dist/mermaid.min.js
+  style_optimization: false  # true 使用 Stellar 自定义样式；false 使用 Mermaid 官方主题
+  js: https://gcore.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js
   theme: neutral  # default | dark | forest | neutral
 ```
 
@@ -300,6 +300,8 @@ mermaid:
 1. **全局**：配置 `enable: true`
 2. **按页**：front-matter 添加 `mermaid: true`
 3. **依赖**：需安装 `hexo-filter-mermaid-diagrams` 包
+
+`style_optimization` 为 `true` 时，主题会按需加载 Stellar Mermaid 样式；为 `false` 或未配置时不加载该样式，`theme` 由 Mermaid 官方主题处理。
 
 **Markdown 用法：**
 

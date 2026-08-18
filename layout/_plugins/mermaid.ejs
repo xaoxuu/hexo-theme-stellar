@@ -3,7 +3,9 @@
   stellar.initPlugin(() => {
     const els = document.querySelectorAll('.mermaid');
     if (els.length > 0) {
-      utils.css(`<%- url_for('/css/plugins/mermaid.css') %>?v=<%- stellar_info('version') %>`);
+      if (<%- conf.style_optimization === true %>) {
+        utils.css(`<%- url_for('/css/plugins/mermaid.css') %>?v=<%- stellar_info('version') %>`);
+      }
       const mermaid_config = {
         startOnLoad: false,
         theme:
@@ -12,9 +14,6 @@
             ? "dark"
             : "<%- conf.theme %>",
         logLevel: 3,
-        themeVariables: {
-          darkMode: true
-        },
         flowchart: {
           useMaxWidth: false,
           htmlLabels: true,

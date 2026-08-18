@@ -77,6 +77,7 @@
 | 7.1/5 前端脚本 | 内联脚本 partial（`scripts/utils.ejs`、`theme.ejs`、`services.ejs`、`tagtree.ejs`、`sidebar.ejs`） | 全部外置：`utils.js` 同步加载、`theme.js`/`services.js`/`tagtree.js` defer、`sidebar` 并入 `main.js`；图标白名单改由构建期生成的 `/js/stellar-icons.js` 填充 `ctx.icons`（见 `docs/designs/2026-08-15-on-demand-bundling/`） |
 | 5 前端交互 / 平滑滚动 | 删除全局 `scroll-behavior: smooth` 后标题左侧 `.headerlink`、`{% navbar %}` 页内导航、脚注回链等原生 `#` 链接退化为即时跳转 | `main.js` 新增文档级 `bindAnchorClick` 委托：同页 `#` 链接统一走 `smoothScrollTo`（32px 偏移、`#start` 贴顶、`pushState` 更新 hash），已 `preventDefault` 的点击自动跳过（见 `docs/designs/2026-08-15-restore-anchor-smooth-scroll/`） |
 | 1 样式系统 / 插件加载 | 插件与评论样式全部编入 `main.css`；`index.styl` 评论条件 `index(custom_css, name) >= 0` 在 Stylus 下恒为真导致五种评论样式全量打入 | swiper/fancybox/mermaid 移入 `source/css/plugins/`，五种评论样式移入 `source/css/comments/` 独立编译，运行时 `utils.css()` 按需注入；`index.styl` 删除评论条件段（见 `docs/designs/2026-08-15-on-demand-bundling/`） |
+| 7 Mermaid / 样式配置 | `style_optimization` 未参与运行时 CSS 加载，导致官方 `theme` 被 Stellar CSS 覆盖；部分标签文字不可见 | `style_optimization: true` 才加载 Stellar CSS，默认使用 Mermaid 官方主题；收窄 SVG 选择器并改用 Stellar CSS 变量保证文字对比度（见 `docs/designs/2026-08-18-mermaid-style-config/`） |
 | 6.4 动态数据 / memos | 仅识别 22-/22+/25+ | 新增 `v1` 分支（`{ memos: [...] }` + `createTime`，creator 为 `users/xxx` 字符串）；识别失败回退 `feature` |
 | 6.4 评论服务 / waline | 直接 `data.forEach` 处理返回 | 兼容数组与 `{ data: [...] }` 两种返回结构 |
 | 8.2 评论 / artalk | `?atk_*` 查询参数残留，干扰目录定位 | 初始化后 `history.replaceState` 清理查询参数（#598） |

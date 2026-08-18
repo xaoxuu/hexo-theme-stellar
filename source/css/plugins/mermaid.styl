@@ -7,14 +7,33 @@ pre.mermaid
   justify-content: center;
   font-family: $ff-body
 
-.mermaid span,text
+.mermaid span,
+.mermaid text
   font-family: $ff-body
 
 .mermaid .edgeLabel
   padding: 4px
   background-color: var(--background) !important
+  color: var(--text-p1) !important
+
+.mermaid .edgeLabel text,
+.mermaid .label text,
+.mermaid .nodeLabel,
+.mermaid .cluster-label text,
+.mermaid .cluster-label span
+  fill: var(--text-p1) !important
+  color: var(--text-p1) !important
 
 .mermaid rect.basic.label-container
+  stroke: var(--block-border) !important
+  fill: var(--block) !important
+
+.mermaid .node rect,
+.mermaid .node circle,
+.mermaid .node ellipse,
+.mermaid .node polygon,
+.mermaid .node path,
+.mermaid .cluster rect
   stroke: var(--block-border) !important
   fill: var(--block) !important
 
@@ -42,21 +61,21 @@ _dark_mermaid()
 
 
   .mermaid .label
-    color: #ccc !important
+    color: var(--text-p1) !important
 
 
   .mermaid .cluster-label text
-    fill: #F9FFFE !important
+    fill: var(--text-p1) !important
 
 
   .mermaid .cluster-label span
-    color: #F9FFFE !important
+    color: var(--text-p1) !important
 
 
   .mermaid .label text,
   .mermaid span
-    fill: #ccc !important
-    color: #ccc !important
+    fill: var(--text-p1) !important
+    color: var(--text-p1) !important
 
 
   .mermaid .node rect,
@@ -64,8 +83,8 @@ _dark_mermaid()
   .mermaid .node ellipse,
   .mermaid .node polygon,
   .mermaid .node path
-    fill: #1f2020 !important
-    stroke: #81B1DB !important
+    fill: var(--block) !important
+    stroke: var(--block-border) !important
 
 
   .mermaid .arrowheadPath
@@ -90,16 +109,16 @@ _dark_mermaid()
 
 
   .mermaid .cluster rect
-    fill: hsl(180, 1.5873015873%, 28.3529411765%) !important
-    stroke: rgba(255, 255, 255, 0.25) !important
+    fill: var(--block) !important
+    stroke: var(--block-border) !important
 
 
   .mermaid .cluster text
-    fill: #F9FFFE !important
+    fill: var(--text-p1) !important
 
 
   .mermaid .cluster span
-    color: #F9FFFE !important
+    color: var(--text-p1) !important
 
 
   .mermaid div.mermaidTooltip

@@ -657,7 +657,7 @@ plugins:
   # ```
   mermaid:
     enable: # true # 可以在特定文章的 front-matter 中设置 mermaid: true 来开启，也可以在这里设置全局开启
-    style_optimization: false # use custom style in stellar
+    style_optimization: false # true: use custom style in Stellar; false: use Mermaid official theme
     # js: https://unpkg.com/mermaid@11/dist/mermaid.min.js
     js: https://gcore.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js
     # Available themes: default | dark | forest | neutral

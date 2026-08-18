@@ -117,7 +117,7 @@ graph TB
         SWIPER["plugins.swiper<br/>layout/_plugins/swiper.ejs<br/>source/css/_plugins/swiper.styl"]
         SCROLLREVEAL["plugins.scrollreveal<br/>layout/_plugins/scrollreveal.ejs<br/>source/css/_plugins/scrollreveal.styl"]
         KATEX["plugins.katex<br/>inject: link tag<br/>source/css/_plugins/katex.styl"]
-        MERMAID["plugins.mermaid<br/>layout/_plugins/mermaid.ejs<br/>source/css/_plugins/mermaid.styl"]
+        MERMAID["plugins.mermaid<br/>layout/_plugins/mermaid.ejs<br/>source/css/plugins/mermaid.styl"]
         COPYCODE["plugins.copycode<br/>layout/_plugins/copycode.ejs<br/>source/css/_plugins/copycode.styl"]
         TIANLI["plugins.tianli_gpt<br/>layout/_plugins/tianli_gpt.ejs<br/>source/css/_plugins/tianli_gpt.styl"]
     end
@@ -150,7 +150,7 @@ graph TB
 | **Swiper** | `plugins.swiper.enable` | `layout/_plugins/swiper.ejs` | `source/css/_plugins/swiper.styl` | swiper@10.3 |
 | **ScrollReveal** | `plugins.scrollreveal.enable` | `layout/_plugins/scrollreveal.ejs` | `source/css/_plugins/scrollreveal.styl` | scrollreveal@4.0 |
 | **KaTeX** | `plugins.katex.enable` | 内联 inject | `source/css/_plugins/katex.styl` | katex CDN |
-| **Mermaid** | `plugins.mermaid.enable` | `layout/_plugins/mermaid.ejs` | `source/css/_plugins/mermaid.styl` | mermaid CDN |
+| **Mermaid** | `plugins.mermaid.enable` | `layout/_plugins/mermaid.ejs` | `source/css/plugins/mermaid.styl` | mermaid CDN |
 | **CopyCode** | `plugins.copycode.enable` | `layout/_plugins/copycode.ejs` | `source/css/_plugins/copycode.styl` | N/A |
 | **Heti** | `plugins.heti.enable` | `layout/_plugins/heti.ejs` | N/A | heti@0.9 |
 | **Tianli GPT** | `plugins.tianli_gpt.enable` | `layout/_plugins/tianli_gpt.ejs` | `source/css/_plugins/tianli_gpt.styl` | CDN |
@@ -182,7 +182,7 @@ graph TB
 |------|----------|------|------|------|
 | **KaTeX** | `plugins.katex.enable` | 内联 inject | `katex.styl` | LaTeX 数学渲染 |
 | **MathJax** | `plugins.mathjax.enable` | `layout/_plugins/mathjax.ejs` | N/A | 备选数学渲染器 |
-| **Mermaid** | `plugins.mermaid.enable` | `layout/_plugins/mermaid.ejs` | `mermaid.styl` | 图表生成 |
+| **Mermaid** | `plugins.mermaid.enable` | `layout/_plugins/mermaid.ejs` | `source/css/plugins/mermaid.styl` | 图表生成 |
 | **CopyCode** | `plugins.copycode.enable` | `layout/_plugins/copycode.ejs` | `copycode.styl` | 代码块复制按钮 |
 | **Heti** | `plugins.heti.enable` | `layout/_plugins/heti.ejs` | N/A | 中文排版 |
 | **Tianli GPT** | `plugins.tianli_gpt.enable` | `layout/_plugins/tianli_gpt.ejs` | `tianli_gpt.styl` | AI 内容摘要 |
@@ -422,8 +422,8 @@ if hexo-config('plugins.scrollreveal.enable')
   @import 'scrollreveal'
 if hexo-config('plugins.fancybox.enable')
   @import 'fancybox'
-if hexo-config('plugins.mermaid.style_optimization')
-  @import 'mermaid'
+// Mermaid CSS 已独立编译，在运行时由 layout/_plugins/mermaid.ejs
+// 按 style_optimization 配置按需加载
 if hexo-config('plugins.copycode.enable')
   @import 'copycode'
 if hexo-config('plugins.tianli_gpt.enable')
