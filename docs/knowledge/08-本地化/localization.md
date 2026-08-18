@@ -165,7 +165,7 @@ graph TD
 | 键 | `en.yml` 值 | 说明 |
 |----|-------------|------|
 | `message.copied` | `Copied!` | 复制到剪贴板后 |
-| `message.fetching_latest_release` | `'%s is fetching the latest release…'` | Wiki Hero 获取最新版本时；`%s` = 项目名 |
+| `message.fetching_latest_release` | `'%s is fetching the latest release…'` | 历史兼容键；Wiki Hero 已改为无文字加载态，当前不再使用 |
 | `message.theme_switched.light` | `Switched to Light Mode` | |
 | `message.theme_switched.dark` | `Switched to Dark Mode` | |
 | `message.theme_switched.auto` | `Switched to Auto Mode` | |

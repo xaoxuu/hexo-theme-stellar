@@ -241,6 +241,8 @@ graph TB
 
 完整列表以 `_data/widgets.yml` 为准。
 
+**Wiki 文档树链接**：`tree` 小部件中的每个条目（包括项目首页）都直接链接到其规范化页面路径，不附加 `#start` 锚点。Wiki 项目列表卡片同样使用项目首页的纯路径。
+
 **小部件加载**：遍历 `leftbar` 数组并引入对应 partial。模板不存在或返回空内容时静默跳过，不报错。
 
 `.leftbar-container` 内的 `.widgets` 容器通过 `mask: linear-gradient(white, 90%, transparent)` 底部淡出，并用 `border-radius: $border-bar` 裁剪溢出。

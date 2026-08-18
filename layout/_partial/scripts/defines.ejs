@@ -17,8 +17,6 @@
   }
   (function() {
     const scrollHandler = () => {
-      const wikiCover = document.querySelector('#l_cover .l_cover.wiki');
-      const startEl = document.getElementById('start');
       // 存在有效锚点时，等待布局稳定后滚动到目标
       // （浏览器原生锚点滚动发生在布局完成前，长文章的懒加载图片/异步组件会把目标顶偏）
       const hash = window.location.hash;
@@ -137,11 +135,8 @@
           return;
         }
       }
-      if (wikiCover && startEl) {
-        window.scrollTo(0, startEl.offsetTop);
-      } else {
-        window.scrollTo(0, 0);
-      }
+      // 没有锚点时始终保持页面顶部；Wiki Hero 只在用户显式访问 #start 时定位正文。
+      window.scrollTo(0, 0);
     };
     if (document.readyState !== 'loading') scrollHandler();
     else document.addEventListener('DOMContentLoaded', scrollHandler);

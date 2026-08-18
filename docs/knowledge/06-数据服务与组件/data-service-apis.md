@@ -195,6 +195,8 @@ data_services:
 
 用 GitHub API 获取仓库信息。
 
+Wiki 项目首页配置 `repo` 时，Hero 会用此服务请求 tags 的第一项。请求开始到数据可用期间，最新版本按钮只保留自身高度，不显示加载文案或边框；获取到 tag 后再淡入显示“项目名 + tag”。若 tag 响应提供 `html_url` 则按钮链接至该地址（例如 Release 页面），否则按 `repo` 与 tag 拼接 GitHub tag 引用页；仓库不存在、没有 tag 或请求失败时，该按钮会被移除。
+
 **配置：**
 
 ```yaml

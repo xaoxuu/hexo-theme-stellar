@@ -86,13 +86,20 @@
         width: 100%
         height: 100%
         object-fit: cover
+      .wiki-cover-background-image
+        z-index: 0
       .wiki-cover-background-blur
+        z-index: 1
         filter: blur(18px)
-        clip-path: inset(80% 0 0)
+        // 以透明度遮罩渐入模糊层；clip-path 会在 80% 处硬切，丢失过渡。
+        mask: linear-gradient(to top, black 0%, rgba(black, .75) 10%, transparent 20%)
+        -webkit-mask: linear-gradient(to top, black 0%, rgba(black, .75) 10%, transparent 20%)
         transform: scale(1.03)
       .wiki-cover-background-overlay
         position: absolute
+        z-index: 2
         inset: 0
+        pointer-events: none
         background: linear-gradient(to bottom, transparent 0%, transparent 80%, var(--background) 100%)
     &.galaxy
       background: radial-gradient(circle at 30% 20%, #27347a 0, #10152f 35%, #070811 75%)
@@ -100,6 +107,9 @@
         width: 100%
         height: 100%
   .wiki-navbar
+    display: flex
+    align-items: center
+    gap: 1rem
     position: absolute
     top: 2rem
     left: 0
@@ -111,26 +121,29 @@
     margin: 0 auto
     position: relative
     color: var(--text-banner, var(--text))
-  .wiki-cover-project-name
-    display: inline-block
+  // 未配置背景时没有 data-text-adaptive，不会运行自适应取色。
+  .wiki-cover-layout:not([data-text-adaptive])
+    --text-banner-theme: var(--text-p2)
+    .wiki-cover-release,
+    .wiki-cover-actions a.button
+      border-color: var(--block-border)
+  .wiki-navbar-home
+    display: inline-flex
+    align-items: center
+    min-height: 1.5rem
+    padding: 0
+    border: 0
+    color: var(--text-banner, var(--text))
     font-size: 1rem
     font-weight: 700
-  .wiki-cover-project-brand
-    display: inline-flex
-    align-items: center
-    gap: 1rem
-  .wiki-cover-project-logo
-    display: inline-flex
-    align-items: center
-    justify-content: center
-    height: 1.5rem
-    img
-      width: 100%
-      height: 100%
-      object-fit: cover
-    svg
-      width: 1.25rem
-      height: 1.25rem
+    line-height: 1.5rem
+    text-decoration: none
+    background: transparent
+    box-shadow: none
+    &:hover
+      color: var(--text-banner, var(--text))
+      background: transparent
+      opacity: .8
   .wiki-cover-content
     width: 100%
     max-width: none
@@ -154,32 +167,39 @@
     box-sizing: border-box
     padding: .25rem .75rem
     margin: 0
-    border: 1px solid white
-    border-color: var(--text-banner, white)
+    border: 1px solid unquote('color-mix(in srgb, var(--text-banner-theme, white) 50%, transparent)')
     border-radius: 100px
-    corner-shape: round
     color: inherit
-    font-size: $fs-14
+    font-size: $fs-12
     font-weight: 700
     line-height: 1.2
+    text-decoration: none
+    transition: opacity .25s ease
     .wiki-cover-release-value
       display: none
+    &.is-loading
+      // 请求期间仅保留标签高度，避免标题在数据返回时跳动。
+      opacity: 0
+      pointer-events: none
     &.loaded
-      .wiki-cover-release-placeholder
-        display: none
+      opacity: 1
       .wiki-cover-release-value
         display: inline
+      &:hover
+        color: inherit
+        background: unquote('color-mix(in srgb, var(--text-banner-theme, var(--background)) 20%, transparent)')
   .cover-title
     margin: 0
-    color: inherit
+    // 标题自身以 contrast 模式计算，始终在黑白之间切换，不继承容器主题色。
+    color: var(--text-banner, var(--text))
+    // 主题色仅作为外发光轮廓，保留黑白标题的对比度。
+    text-shadow: 0 0 16px unquote('color-mix(in srgb, var(--text-banner-theme, currentColor) 50%, transparent)'), 0 0 32px unquote('color-mix(in srgb, var(--text-banner-theme, currentColor) 20%, transparent)')
     font-size: clamp(2.5rem, 3vw, 4.75rem)
-    line-height: 1.08
-    letter-spacing: -.04em
   .description
     margin: 0
     color: var(--text-banner-theme, var(--text-p2))
-    font-size: 1.05rem
     line-height: 1.75
+    text-shadow: 0 0 8px unquote('color-mix(in srgb, var(--text-banner-theme, currentColor) 50%, transparent)'), 0 0 16px unquote('color-mix(in srgb, var(--text-banner-theme, currentColor) 10%, transparent)')
   .wiki-cover-actions
     display: flex
     flex-wrap: wrap
@@ -188,28 +208,28 @@
       display: inline-flex
       align-items: center
       gap: .5rem
-      padding: .5rem 1rem
+      padding: .5rem 1.25rem .5rem 1rem
       border-radius: 100px
-      corner-shape: round
-      border: 1px solid rgba(white, .35)
-      border-color: var(--text-banner, white)
+      border: 1px solid unquote('color-mix(in srgb, var(--text-banner-theme, white) 50%, transparent)')
       color: inherit
-      background: rgba(white, .14)
-      box-shadow: 0 8px 30px rgba(0,0,0,.12)
+      background: unquote('color-mix(in srgb, var(--text-banner-theme, var(--background)) 20%, transparent)')
       backdrop-filter: blur(12px)
+      trans1 background
       svg
         width: 1.5rem
         height: 1.5rem
       &:hover
         color: inherit
-        background: rgba(white, .24)
+        background: unquote('color-mix(in srgb, var(--text-banner-theme, var(--background)) 50%, transparent)')
       &.wiki-cover-source
-        border-color: white
-        color: black
-        background: white
+        border-color: var(--text-banner, var(--text))
+        color: var(--text-banner, var(--text))
+        background: var(--text-banner, var(--text))
+        svg, span
+          filter: invert(1)
         &:hover
-          color: black
-          background: rgba(white, .86)
+          color: var(--text-banner, var(--text))
+          background: var(--text-banner, var(--text))
   .wiki-cover-preview
     width: 100%
     border-radius: 1.25rem
@@ -225,8 +245,9 @@
     position: relative
     min-height: 150px
     padding: 1rem
-    color: #dbe4ff
-    background: #111522
+    color: var(--text-banner-theme)
+    background: unquote('color-mix(in srgb, var(--text-banner-theme, var(--background)) 20%, transparent)')
+    backdrop-filter: blur(12px) brightness(0.8)
     font-family: $ff-code
     .wiki-cover-terminal-toolbar
       display: flex
@@ -239,13 +260,15 @@
       button
         padding: .5rem .75rem
         border-radius: 8px
-        color: rgba(white, .65)
+        color: inherit
+        opacity 0.5
         font-family: inherit
         font-size: $fs-13
         line-height: 1
+        font-weight: 500
         &.active
-          color: white
-          background: rgba(white, .14)
+          opacity 1
+          background: unquote('color-mix(in srgb, var(--text-banner-theme, var(--background)) 20%, transparent)')
     pre
       margin: 0
       padding: 0
@@ -265,14 +288,14 @@
       gap: .5rem
       padding: .5rem .75rem .5rem .5rem
       border-radius: 8px
-      color: rgba(white, .8)
+      color: var(--text-banner, var(--text))
       font-family: inherit
       font-size: $fs-13
       line-height: 1
-      background: rgba(white, .1)
+      background: unquote('color-mix(in srgb, var(--text-banner-theme, var(--background)) 20%, transparent)')
+      trans1 background
       &:hover
-        color: white
-        background: rgba(white, .18)
+        background: unquote('color-mix(in srgb, var(--text-banner-theme, var(--background)) 50%, transparent)')
   &.without-preview .wiki-cover-content
     grid-template-columns: minmax(0, 560px)
     justify-content: center

@@ -341,7 +341,7 @@ sequenceDiagram
 - 已由其他处理器拦截的点击（TOC、tabs、wiki 封面按钮、tagtree 等）通过 `e.defaultPrevented` 跳过，不重复滚动
 - 片段先 `decodeURIComponent` 解码（异常时按原样查找），目标元素不存在时放行浏览器默认行为
 
-初始带 `#锚点` 的 URL 打开仍由 `layout/_partial/scripts/defines.ejs` 直接定位（无动画），两者互不干扰。
+初始带 `#锚点` 的 URL 打开仍由 `layout/_partial/scripts/defines.ejs` 直接定位（无动画）；没有 hash 时一律保持在页面顶部，Wiki Hero 不会自动定位到 `#start`。两者互不干扰。
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)
 

@@ -19,8 +19,8 @@
           }
         }
         const idx = el.getAttribute('index');
+        const arr = data.content || data;
         if (idx != undefined) {
-          const arr = data.content || data;
           if (arr && arr.length > idx) {
             let obj = arr[idx];
             obj['latest-tag-name'] = obj['name'];
@@ -36,7 +36,15 @@
           const tag = el.querySelector('#latest-tag-name');
           if (tag && tag.textContent) {
             const value = el.querySelector('.wiki-cover-release-value');
+            const item = arr && arr.length > idx ? arr[idx] : data;
+            const repo = el.dataset.repo;
+            const url = item && item.html_url || repo && 'https://github.com/' + repo.split('/').map(encodeURIComponent).join('/') + '/tree/' + encodeURIComponent(tag.textContent);
+            if (!url) {
+              el.remove();
+              return;
+            }
             value.textContent = el.dataset.projectName + ' ' + tag.textContent;
+            el.href = url;
             el.classList.remove('is-loading');
             el.classList.add('loaded');
           } else {

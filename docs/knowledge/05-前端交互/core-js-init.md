@@ -284,7 +284,7 @@ graph TB
 
 ### Wiki 起始处理
 
-`init.wikiStart()` 处理 wiki 封面的锚点滚动（如 `#start` 贴顶滚动），保证长文章懒加载/异步组件布局稳定后滚动到目标。
+`init.wikiStart()` 处理用户点击 Wiki 封面“文档”按钮后的锚点滚动（如 `#start` 贴顶滚动）。不带 hash 初始打开 Wiki 首页时不会触发该定位，页面保持在顶部。
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)
 

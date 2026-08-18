@@ -21,6 +21,30 @@
 
 ## 二、版本与事实修正
 
+| 2026-08-19 | Wiki Hero 结束后模板额外输出 `<hr>`，在 `l_cover` 与正文间产生非预期分隔线 | 移除 `wiki_cover.ejs` 中 Hero 收尾处的 `<hr>`；正文与页脚的分隔线不受影响 | `layout/_partial/cover/wiki_cover.ejs`、`docs/knowledge/03-内容系统/wiki-docs.md`、`docs/designs/2026-08-19-wiki-hero-remove-divider/` |
+
+| 2026-08-19 | Wiki Hero 最新版本标签仅展示版本，不能进入对应 GitHub 页面 | 将标签改为新窗口打开的链接按钮；优先采用 tag 数据的 `html_url`，否则用 `repo` 与 tag 生成 GitHub tag 引用页 | `layout/_partial/cover/wiki_cover.ejs`、`source/js/services/ghinfo.js`、`source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md`、`06-数据服务与组件/data-service-apis.md` |
+
+| 2026-08-19 | Wiki Hero 最新版本标签位于正文介绍区，和站点导航分离 | `repo` 存在时将 `wiki-cover-release ds-ghinfo` 移至 `wiki-navbar-home` 右侧；导航采用 flex 布局，间距 `1rem`，既有加载隐藏与完成后淡入行为不变 | `layout/_partial/cover/wiki_cover.ejs`、`source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md` |
+
+| 2026-08-19 | Wiki Hero 未配置图片或 `galaxy` 背景时，不会运行自适应取色，辅助文字与按钮边框没有稳定的默认值 | 无背景 `.wiki-cover-layout` 的 `--text-banner-theme` 回退为 `--text-p2`；版本标签和普通操作按钮的边框单独回退为 `--block-border`。图片和 `galaxy` 背景仍由内联自适应变量覆盖 | `source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md` |
+
+| 2026-08-19 | Wiki Hero 最新版本标签在 GitHub tag 数据返回前显示“正在获取”文案，且数据回填时会突然出现 | 初始状态仅保留标签高度且完全透明，不输出加载文案；成功取得 tag 后，以 250ms `opacity` 过渡淡入。无 tag 或请求失败时移除该标签 | `layout/_partial/cover/wiki_cover.ejs`、`source/css/_components/partial/cover.styl`、`source/js/services/ghinfo.js`、`docs/designs/2026-08-19-wiki-hero-release-loading/` |
+
+| 2026-08-18 | Wiki Hero 顶部左侧显示项目图标和项目名，无法作为站点导航入口；最新版本标签边框过实 | 左侧改为无背景的站点标题按钮，文字使用 `config.title`、颜色使用 `--text-banner`，点击返回站点首页；项目图标和名称不再在该位置显示。最新版本标签的主题色边框改为 50% 透明度 | `layout/_partial/cover/wiki_cover.ejs`、`source/css/_components/partial/cover.styl`、`docs/designs/2026-08-18-wiki-hero-cover/` |
+
+| 2026-08-19 | Wiki Hero 主标题沿用 split 模式的低饱和主题色，仍带有封面主题色倾向 | 主标题自身使用 `data-text-adaptive="contrast"`，按封面明暗仅在黑白间切换；说明、版本标签和按钮仍使用主题色变体 | `layout/_partial/cover/wiki_cover.ejs`、`source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md` |
+
+| 2026-08-19 | Wiki Hero 主标题切换为黑白后缺少封面主题色的视觉呼应 | 使用 `--text-banner-theme` 的半透明色为标题添加柔和发光轮廓，标题填充仍保持动态黑白 | `source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md` |
+
+| 2026-08-19 | Wiki Hero 的安装命令终端背景完全透明，无法形成可辨识的毛玻璃层次；站点背景色不能呼应封面 | 终端背景改为封面平均色派生的 `--text-banner-theme` 与透明色各 50% 的混色，并保留 `backdrop-filter: blur(12px)`；变量不可用时回退 `--background` | `source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md`、`docs/designs/2026-08-18-wiki-hero-cover/` |
+
+| 2026-08-19 | Wiki Hero 安装命令终端沿用固定蓝白文字，无法适配封面主题色 | 工具栏文字改用 `--text-banner`；命令与 `$` 提示符改用 `--text-banner-theme` | `source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md`、`docs/designs/2026-08-18-wiki-hero-cover/` |
+
+| 2026-08-19 | Wiki Hero 的“源码”按钮固定为黑字白底，无法随封面明暗保持反差 | 背景与边框使用 `--text-banner`；文字和图标分别对相同变量执行 `invert(1)`，保持与背景相反 | `source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md`、`docs/designs/2026-08-18-wiki-hero-cover/` |
+
+| 2026-08-18 | Wiki 项目首页在左栏文档树中额外附加 `#start`，且无 hash 初始打开时初始化脚本仍会自动滚到 `#start` | 移除首页条目的锚点拼接，并让无 hash 页面一律保持页面顶部；Wiki 项目卡片与文档树均直接跳转到项目首页路径，显式 `#start` 和 Wiki Hero 的“文档”按钮仍保留正文定位 | `layout/_partial/widgets/tree.ejs`、`layout/_partial/scripts/defines.ejs`、`docs/designs/2026-08-18-wiki-links-without-start-anchor/` |
+
 | 2026-08-18 | Footer Social 悬停时只取消灰阶，SVG 没有使用主题通用渐变 | 在 social 容器复用 `grad-def`，仅对 SVG 中的 `fill` / `stroke="currentColor"` 应用 `--item-grad`；渐变颜色与角度继承现有通用主题令牌，显式多色图标和未悬停灰阶行为不变 | `docs/designs/2026-08-18-footer-social-svg-gradient/` |
 
 | 2026-08-18 | Wiki 侧栏、banner 与 about 返回入口各自复用专用返回图标 | 三处统一复用分页上一页的 `default:arrow-left`，删除不再使用的专用图标定义；跳转与显示行为不变 | `docs/designs/2026-08-18-unify-back-arrow-icon/` |

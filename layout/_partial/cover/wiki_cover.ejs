@@ -41,22 +41,17 @@ function layoutWikiCover() {
   }
   el += '<div class="wiki-cover-background-overlay"></div></div>';
   el += '<div class="wiki-cover-layout"' + adaptiveTextAttr + '>';
-  el += '<nav class="wiki-navbar" aria-label="' + escape_html(__('meta.wiki_project')) + '"><span class="wiki-cover-project-brand"><span class="wiki-cover-project-logo">';
-  if (proj.icon) {
-    el += '<img src="' + escape_html(proj.icon) + '" alt="" />';
-  } else {
-    el += icon('default:documents');
+  el += '<nav class="wiki-navbar" aria-label="' + escape_html(config.title) + '">';
+  el += '<a class="wiki-navbar-home" href="' + escape_html(pretty_url('/')) + '">' + escape_html(config.title) + '</a>';
+  if (repo) {
+    el += '<a class="wiki-cover-release ds-ghinfo is-loading" data-project-name="' + escape_html(projectName) + '" data-repo="' + escape_html(repo) + '" data-api="https://' + theme.api_host.ghapi + '/repos/' + escape_html(repo) + '/tags" index="0" target="_blank" rel="external nofollow noopener noreferrer">';
+    el += '<span class="wiki-cover-release-value"><span type="text" id="latest-tag-name"></span></span></a>';
   }
-  el += '</span><span class="wiki-cover-project-name">' + escape_html(projectName) + '</span></span></nav>';
+  el += '</nav>';
   el += '<article class="cover-wrap wiki-cover-content">';
   el += '<section class="wiki-cover-intro">';
-  if (repo) {
-    el += '<p class="wiki-cover-release ds-ghinfo is-loading" data-project-name="' + escape_html(projectName) + '" data-api="https://' + theme.api_host.ghapi + '/repos/' + escape_html(repo) + '/tags" index="0">';
-    el += '<span class="wiki-cover-release-placeholder">' + escape_html(__('message.fetching_latest_release', projectName)) + '</span>';
-    el += '<span class="wiki-cover-release-value"><span type="text" id="latest-tag-name"></span></span></p>';
-  }
   if (title) {
-    el += '<h1 class="cover-title">' + escape_html(title) + '</h1>';
+    el += '<h1 class="cover-title" data-text-adaptive="contrast">' + escape_html(title) + '</h1>';
   }
   if (desc) {
     el += '<div class="description">' + desc + '</div>';
@@ -90,7 +85,7 @@ function layoutWikiCover() {
     }
     el += '</section>';
   }
-  el += '</article></div></div><hr>';
+  el += '</article></div></div>';
   return el;
 }
 
