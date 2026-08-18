@@ -24,11 +24,11 @@ img
   max-width: 100%
 
 li
-  font-size: 'calc(%s - 1px)' % var(--fsp)
+  font-size: 'calc(%s - 1px)' % var(--fs-content)
 
 
 ul,ol
-  padding-left: var(--fsp)
+  padding-left: var(--fs-content)
 
 
 // table
@@ -40,8 +40,8 @@ table:not([class])
   margin: 1rem 0
   max-width: 100%
   vertical-align: text-top
-  --fsp: $fsp2
-  font-size: var(--fsp)
+  --fs-content: $fs-content-2
+  font-size: var(--fs-content)
   scrollbar(0,0)
   th
     background: var(--block)

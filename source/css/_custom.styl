@@ -8,25 +8,24 @@ $ff-codeblock = convert(hexo-config('style.font-family.codeblock'))
 
 // font size
 $fs-root = convert(hexo-config('style.font-size.root'))
-$fs-15 = .9375rem
-$fs-14 = .875rem
-$fs-13 = .8125rem
-$fs-12 = .75rem
+$fs-15 = 'calc(%s - 1px)' % var(--fs-content-base)
+$fs-14 = 'calc(%s - 2px)' % var(--fs-content-base)
+$fs-13 = 'calc(%s - 3px)' % var(--fs-content-base)
+$fs-12 = 'calc(%s - 4px)' % var(--fs-content-base)
 
-$fs-body = convert(hexo-config('style.font-size.body'))
 $fs-code = convert(hexo-config('style.font-size.code'))
 $fs-codeblock = convert(hexo-config('style.font-size.codeblock'))
 
-$fsh1 = 'calc(%s + 9px)' % $fs-body
-$fsh2 = 'calc(%s + 11px)' % $fs-body
-$fsh3 = 'calc(%s + 7px)' % $fs-body
-$fsh4 = 'calc(%s + 4px)' % $fs-body
-$fsh5 = 'calc(%s + 2px)' % $fs-body
+$fsh1 = 'calc(%s + 9px)' % var(--fs-content-base)
+$fsh2 = 'calc(%s + 11px)' % var(--fs-content-base)
+$fsh3 = 'calc(%s + 7px)' % var(--fs-content-base)
+$fsh4 = 'calc(%s + 4px)' % var(--fs-content-base)
+$fsh5 = 'calc(%s + 2px)' % var(--fs-content-base)
 
-$fsp0 = 'calc(%s - 0px)' % $fs-body
-$fsp1 = 'calc(%s - 1px)' % $fs-body
-$fsp2 = 'calc(%s - 2px)' % $fs-body
-$fsp3 = 'calc(%s - 3px)' % $fs-body
+$fs-content-0 = 'calc(%s - 0px)' % var(--fs-content-base)
+$fs-content-1 = 'calc(%s - 1px)' % var(--fs-content-base)
+$fs-content-2 = 'calc(%s - 2px)' % var(--fs-content-base)
+$fs-content-3 = 'calc(%s - 3px)' % var(--fs-content-base)
 
 // site main
 $site-background-image = hexo-config('style.site.background-image')
@@ -56,11 +55,13 @@ $corner-shape = convert(hexo-config('style.corner-shape'))
 
 // 可以动态变化的属性
 :root
+  --fs-root: $fs-root
+  --fs-content-base: var(--fs-root)
+  --fs-content: var(--fs-content-base)
   --width-main: 720px
-  --fsp: $fs-body
-  --fsh2: 'calc(%s + 11px)' % var(--fsp)
-  --fsh3: 'calc(%s + 7px)' % var(--fsp)
-  --fsh4: 'calc(%s + 4px)' % var(--fsp)
+  --fsh2: 'calc(%s + 11px)' % var(--fs-content)
+  --fsh3: 'calc(%s + 7px)' % var(--fs-content)
+  --fsh4: 'calc(%s + 4px)' % var(--fs-content)
   
   // 侧边栏文字内容宽度
   --side-content-width: 224px
@@ -73,8 +74,8 @@ $corner-shape = convert(hexo-config('style.corner-shape'))
   // 右栏宽度增量（在 --width-sidebar 基础上加宽）
   --rightbar-width-extra: calc(var(--gap-base) * 2)
   
-  --gap-p: 'calc(%s + 4px)' % $fs-body // gap for paragraph
-  --gap-p-compact: 'calc(%s * 0.75)' % $fs-body
+  --gap-p: 'calc(%s + 4px)' % var(--fs-content-base) // gap for paragraph
+  --gap-p-compact: 'calc(%s * 0.75)' % var(--fs-content-base)
   // desktop 2k or larger
   @media screen and (min-width: $device-2k)
     --width-main: 780px
@@ -85,6 +86,7 @@ $corner-shape = convert(hexo-config('style.corner-shape'))
   @media screen and (max-width: $device-tablet)
     --side-content-width: 188px
   @media screen and (max-width: $device-mobile-max)
+    --fs-root: 'calc(%s + 2px)' % $fs-root
     --side-content-width: 224px
 
 // shadow

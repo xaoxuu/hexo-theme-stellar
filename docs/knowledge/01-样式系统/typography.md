@@ -50,17 +50,17 @@ graph TB
         FF_CODEBLOCK["$ff-codeblock"]
         
         FS_ROOT["$fs-root"]
-        FS_BODY["$fs-body"]
+        FS_BASE["$fs-root<br/>(style.font-size.root)"]
         FS_CODE["$fs-code"]
         FS_CODEBLOCK["$fs-codeblock"]
         
         FSH_CALC["$fsh1-5<br/>calc() strings"]
-        FSP_CALC["$fsp0-3<br/>calc() strings"]
+        FSP_CALC["$fs-content-0..3<br/>calc() strings"]
     end
     
     subgraph "CSS Custom Properties"
         ROOT[":root selector"]
-        VAR_FSP["--fsp"]
+        VAR_FSP["--fs-content-base / --fs-content"]
         VAR_FSH["--fsh2, --fsh3, --fsh4"]
         VAR_GAP["--gap-p, --gap-p-compact"]
     end
@@ -68,7 +68,7 @@ graph TB
     subgraph "Static CSS"
         CODE_FF["code { font-family: $ff-code }"]
         PRE_FF["pre { font-family: $ff-codeblock }"]
-        LI_FS["li { font-size: calc(var(--fsp) - 1px) }"]
+        LI_FS["li { font-size: calc(var(--fs-content) - 1px) }"]
     end
     
     YML --> HEXO_CFG
@@ -103,7 +103,7 @@ graph TB
 - **`hexo-config(path)`**：构建期从 `_config.yml` 取值，例如 `hexo-config('style.font-family.body')` 取正文字体族。
 - **`convert(value)`**：确保 YAML 字符串正确转换为 Stylus 值，处理单位与引号。
 
-Stylus 字符串插值生成动态 `calc()` 表达式：`'calc(%s + 9px)' % $fs-body` 在 `$fs-body` 为 `1rem` 时输出 `"calc(1rem + 9px)"`。
+字号令牌直接引用 `var(--fs-root)` 生成动态 `calc()` 表达式，移动端修改基准时无需重新生成各组件规则。
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
 
@@ -165,7 +165,7 @@ pre
 
 ## 字号系统
 
-字号变量分四类：来自配置的基础字号、固定 rem 常量、计算出的标题字号、计算出的段落变体。所有标题与段落字号都从 `$fs-body` 派生，保持比例缩放。
+字号变量分四类：来自配置的基础字号、动态次级字号令牌、计算出的标题字号、计算出的段落变体。所有标题与段落字号都从 `--fs-root` 派生，保持比例缩放。
 
 **字号变量依赖**
 
@@ -173,45 +173,45 @@ pre
 graph TD
     subgraph "Configuration Sources"
         CFG_ROOT["style.font-size.root"]
-        CFG_BODY["style.font-size.body"]
+        CFG_BODY["style.font-size.body<br/>(已移除)"]
         CFG_CODE["style.font-size.code"]
         CFG_CB["style.font-size.codeblock"]
     end
     
     subgraph "Base Variables"
         FS_ROOT["$fs-root"]
-        FS_BODY["$fs-body"]
+        FS_BODY["$fs-root<br/>(root 配置变量)"]
         FS_CODE["$fs-code"]
         FS_CB["$fs-codeblock"]
     end
     
     subgraph "Fixed Constants"
-        FS_15["$fs-15 = .9375rem"]
-        FS_14["$fs-14 = .875rem"]
-        FS_13["$fs-13 = .8125rem"]
-        FS_12["$fs-12 = .75rem"]
+        FS_15["$fs-15 = calc(--fs-root - 1px)"]
+        FS_14["$fs-14 = calc(--fs-root - 2px)"]
+        FS_13["$fs-13 = calc(--fs-root - 3px)"]
+        FS_12["$fs-12 = calc(--fs-root - 4px)"]
     end
     
     subgraph "Heading Calculations"
-        FSH1["$fsh1<br/>calc($fs-body + 9px)"]
-        FSH2["$fsh2<br/>calc($fs-body + 11px)"]
-        FSH3["$fsh3<br/>calc($fs-body + 7px)"]
-        FSH4["$fsh4<br/>calc($fs-body + 4px)"]
-        FSH5["$fsh5<br/>calc($fs-body + 2px)"]
+        FSH1["$fsh1<br/>calc(var(--fs-root) + 9px)"]
+        FSH2["$fsh2<br/>calc(var(--fs-root) + 11px)"]
+        FSH3["$fsh3<br/>calc(var(--fs-root) + 7px)"]
+        FSH4["$fsh4<br/>calc(var(--fs-root) + 4px)"]
+        FSH5["$fsh5<br/>calc(var(--fs-root) + 2px)"]
     end
     
     subgraph "Paragraph Variants"
-        FSP0["$fsp0 = calc($fs-body - 0px)"]
-        FSP1["$fsp1 = calc($fs-body - 1px)"]
-        FSP2["$fsp2 = calc($fs-body - 2px)"]
-        FSP3["$fsp3 = calc($fs-body - 3px)"]
+        FSP0["$fs-content-0 = calc(var(--fs-content-base) - 0px)"]
+        FSP1["$fs-content-1 = calc(var(--fs-content-base) - 1px)"]
+        FSP2["$fs-content-2 = calc(var(--fs-content-base) - 2px)"]
+        FSP3["$fs-content-3 = calc(var(--fs-content-base) - 3px)"]
     end
     
     subgraph "Runtime Variables"
-        VAR_FSP["--fsp: $fs-body"]
-        VAR_FSH2["--fsh2: calc(var(--fsp) + 11px)"]
-        VAR_FSH3["--fsh3: calc(var(--fsp) + 7px)"]
-        VAR_FSH4["--fsh4: calc(var(--fsp) + 4px)"]
+        VAR_FSP["--fs-content-base: var(--fs-root)<br/>--fs-content: var(--fs-content-base)"]
+        VAR_FSH2["--fsh2: calc(var(--fs-content) + 11px)"]
+        VAR_FSH3["--fsh3: calc(var(--fs-content) + 7px)"]
+        VAR_FSH4["--fsh4: calc(var(--fs-content) + 4px)"]
     end
     
     CFG_ROOT --> FS_ROOT
@@ -243,15 +243,15 @@ graph TD
 ```stylus
 // source/css/_custom.styl
 $fs-root = convert(hexo-config('style.font-size.root'))
-$fs-body = convert(hexo-config('style.font-size.body'))
+$fs-root = convert(hexo-config('style.font-size.root'))
 $fs-code = convert(hexo-config('style.font-size.code'))
 $fs-codeblock = convert(hexo-config('style.font-size.codeblock'))
 ```
 
 | 变量 | 用途 | 应用 |
 |------|------|------|
-| `$fs-root` | 根元素（html）尺寸，设定 rem 基准 | 决定 1rem 的值 |
-| `$fs-body` | 默认段落/正文字号 | 所有计算尺寸的基础 |
+| `$fs-root` | 构建期根字号配置 | 作为 `--fs-root` 的桌面端基准 |
+| `$fs-root` | `style.font-size.root` | HTML/rem 根字号；移动端自动增加 2px |
 | `$fs-code` | 行内代码字号 | 应用于 `p>code`、`li>code` |
 | `$fs-codeblock` | 代码块字号 | 应用于 `pre`、`.highlight` |
 
@@ -261,13 +261,13 @@ $fs-codeblock = convert(hexo-config('style.font-size.codeblock'))
 
 ```stylus
 // source/css/_custom.styl
-$fs-15 = .9375rem  // 根字号 16px 时约 15px
-$fs-14 = .875rem   // 约 14px
-$fs-13 = .8125rem  // 约 13px
-$fs-12 = .75rem    // 约 12px
+$fs-15 = calc(var(--fs-root) - 1px)
+$fs-14 = calc(var(--fs-root) - 2px)
+$fs-13 = calc(var(--fs-root) - 3px)
+$fs-12 = calc(var(--fs-root) - 4px)
 ```
 
-组件中需要绝对尺寸时使用，不受 `$fs-body` 配置影响。
+这些令牌在桌面端分别等价于 root - 1/2/3/4px，在移动端会随 `--fs-root` 一起增加 2px。
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
 
@@ -275,15 +275,15 @@ $fs-12 = .75rem    // 约 12px
 
 ## 标题字号层级
 
-标题字号用 Stylus 字符串插值创建 CSS `calc()` 表达式，在 `$fs-body` 基础上加固定像素偏移，保证基础字号变化时所有标题按比例缩放。
+标题字号使用 CSS `calc()` 表达式，在 `--fs-root` 基础上加固定像素偏移，保证桌面与移动端基准变化时标题同步缩放。
 
 | 变量 | 计算 | 偏移 | 大小排序 |
 |------|------|------|----------|
-| `$fsh1` | `calc($fs-body + 9px)` | +9px | 第 2 大 |
-| `$fsh2` | `calc($fs-body + 11px)` | +11px | **最大** |
-| `$fsh3` | `calc($fs-body + 7px)` | +7px | 第 3 大 |
-| `$fsh4` | `calc($fs-body + 4px)` | +4px | 第 4 大 |
-| `$fsh5` | `calc($fs-body + 2px)` | +2px | 第 5 大 |
+| `$fsh1` | `calc(var(--fs-root) + 9px)` | +9px | 第 2 大 |
+| `$fsh2` | `calc(var(--fs-root) + 11px)` | +11px | **最大** |
+| `$fsh3` | `calc(var(--fs-root) + 7px)` | +7px | 第 3 大 |
+| `$fsh4` | `calc(var(--fs-root) + 4px)` | +4px | 第 4 大 |
+| `$fsh5` | `calc(var(--fs-root) + 2px)` | +2px | 第 5 大 |
 
 ### 字符串插值机制
 
@@ -291,14 +291,14 @@ Stylus 用 `%` 运算符把变量嵌入字符串：
 
 ```stylus
 // source/css/_custom.styl
-$fsh1 = 'calc(%s + 9px)' % $fs-body
-$fsh2 = 'calc(%s + 11px)' % $fs-body
-$fsh3 = 'calc(%s + 7px)' % $fs-body
-$fsh4 = 'calc(%s + 4px)' % $fs-body
-$fsh5 = 'calc(%s + 2px)' % $fs-body
+$fsh1 = 'calc(var(--fs-root) + 9px)'
+$fsh2 = 'calc(var(--fs-root) + 11px)'
+$fsh3 = 'calc(var(--fs-root) + 7px)'
+$fsh4 = 'calc(var(--fs-root) + 4px)'
+$fsh5 = 'calc(var(--fs-root) + 2px)'
 ```
 
-若 `$fs-body` 为 `1rem`，输出为 `"calc(1rem + 9px)"`、`"calc(1rem + 11px)"` 等。
+这些表达式在运行时读取 `--fs-root`，因此移动端无需逐个覆盖标题规则。
 
 ### 视觉层级设计
 
@@ -310,34 +310,34 @@ $fsh5 = 'calc(%s + 2px)' % $fs-body
 
 ## 段落字号变体
 
-四个递减字号变量为次级内容提供更小文本，各从 `$fs-body` 减去固定像素：
+四个递减字号变量为次级内容提供更小文本，各从 `--fs-root` 减去固定像素：
 
 ```stylus
 // source/css/_custom.styl
-$fsp0 = 'calc(%s - 0px)' % $fs-body  // 基准（不缩减）
-$fsp1 = 'calc(%s - 1px)' % $fs-body  // -1px
-$fsp2 = 'calc(%s - 2px)' % $fs-body  // -2px
-$fsp3 = 'calc(%s - 3px)' % $fs-body  // -3px
+$fs-content-0 = 'calc(var(--fs-content-base) - 0px)'  // 基准（不缩减）
+$fs-content-1 = 'calc(var(--fs-content-base) - 1px)'  // -1px
+$fs-content-2 = 'calc(var(--fs-content-base) - 2px)'  // -2px
+$fs-content-3 = 'calc(var(--fs-content-base) - 3px)'  // -3px
 ```
 
 | 变量 | 用法示例 | 应用场景 |
 |------|----------|----------|
-| `$fsp0` | 基准参考 | 等价于 `$fs-body` |
-| `$fsp1` | 列表项（`li`） | [base.styl](../../../source/css/_common/base.styl) |
-| `$fsp2` | 表格单元格 | [base.styl](../../../source/css/_common/base.styl) |
-| `$fsp3` | 元信息、脚注 | 主题组件 |
+| `$fs-content-0` | 基准参考 | 等价于 `--fs-content-base` |
+| `$fs-content-1` | 列表项（`li`） | [base.styl](../../../source/css/_common/base.styl) |
+| `$fs-content-2` | 表格单元格 | [base.styl](../../../source/css/_common/base.styl) |
+| `$fs-content-3` | 元信息、脚注 | 主题组件 |
 
 ### 列表项字号缩减
 
-列表项使用运行时 `--fsp` 变量并减 1px：
+列表项使用运行时 `--fs-content` 变量并减 1px：
 
 ```stylus
 // source/css/_common/base.styl
 li
-  font-size: 'calc(%s - 1px)' % var(--fsp)
+  font-size: 'calc(%s - 1px)' % var(--fs-content)
 ```
 
-这为段落块与列表内容建立视觉层级，无需显式指定 `$fsp1`。
+这为段落块与列表内容建立视觉层级，无需显式指定 `$fs-content-1`。
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)、[source/css/_common/base.styl](../../../source/css/_common/base.styl)
 
@@ -345,7 +345,7 @@ li
 
 ## 用于运行时缩放的 CSS 自定义属性
 
-排版系统在 `:root` 中暴露 CSS 自定义属性以支持运行时调整。多数 Stylus 变量编译为静态值，而这些属性允许媒体查询动态修改字号与间距。
+排版系统在 `:root` 中暴露 CSS 自定义属性以支持运行时调整。`--fs-root` 是 HTML/rem 根字号，`--fs-content-base` 是页面字号基准，`--fs-content` 是组件当前字号；媒体查询在移动端将 root 提高 2px，story 再将页面基准提高 2px。
 
 **运行时排版变量系统**
 
@@ -353,12 +353,13 @@ li
 graph TB
     subgraph ":root Declaration"
         ROOT[":root selector"]
-        VAR_FSP["--fsp: $fs-body"]
-        VAR_FSH2["--fsh2: calc(var(--fsp) + 11px)"]
-        VAR_FSH3["--fsh3: calc(var(--fsp) + 7px)"]
-        VAR_FSH4["--fsh4: calc(var(--fsp) + 4px)"]
-        VAR_GAP_P["--gap-p: calc($fs-body + 4px)"]
-        VAR_GAP_PC["--gap-p-compact: calc($fs-body * 0.75)"]
+        VAR_ROOT["--fs-root: $fs-root"]
+        VAR_FSP["--fs-content-base: var(--fs-root)<br/>--fs-content: var(--fs-content-base)"]
+        VAR_FSH2["--fsh2: calc(var(--fs-content) + 11px)"]
+        VAR_FSH3["--fsh3: calc(var(--fs-content) + 7px)"]
+        VAR_FSH4["--fsh4: calc(var(--fs-content) + 4px)"]
+        VAR_GAP_P["--gap-p: calc(var(--fs-root) + 4px)"]
+        VAR_GAP_PC["--gap-p-compact: calc(var(--fs-root) * 0.75)"]
     end
     
     subgraph "Media Query Infrastructure"
@@ -368,8 +369,8 @@ graph TB
     end
     
     subgraph "Consumer Elements"
-        LI_FS["li { font-size: calc(var(--fsp) - 1px) }"]
-        TABLE_FS["table { --fsp: $fsp2 }"]
+        LI_FS["li { font-size: calc(var(--fs-content) - 1px) }"]
+        TABLE_FS["table { --fs-content: $fs-content-2 }"]
         H2_FS["h2 { font-size: var(--fsh2) }"]
         H3_FS["h3 { font-size: var(--fsh3) }"]
         P_MARGIN["p { margin: var(--gap-p) 0 }"]
@@ -384,7 +385,7 @@ graph TB
     
     MQ_2K -.->|"can override"| VAR_FSP
     MQ_4K -.->|"can override"| VAR_FSP
-    MQ_MOBILE -.->|"can override"| VAR_FSP
+    MQ_MOBILE -.->|"--fs-root + 2px"| VAR_ROOT
     
     VAR_FSP --> LI_FS
     VAR_FSP --> TABLE_FS
@@ -399,21 +400,23 @@ graph TB
 ```stylus
 // source/css/_custom.styl
 :root
+  --fs-root: $fs-root
   --width-main: 720px
-  --fsp: $fs-body
-  --fsh2: 'calc(%s + 11px)' % var(--fsp)
-  --fsh3: 'calc(%s + 7px)' % var(--fsp)
-  --fsh4: 'calc(%s + 4px)' % var(--fsp)
+  --fs-content-base: var(--fs-root)
+  --fs-content: var(--fs-content-base)
+  --fsh2: 'calc(%s + 11px)' % var(--fs-content)
+  --fsh3: 'calc(%s + 7px)' % var(--fs-content)
+  --fsh4: 'calc(%s + 4px)' % var(--fs-content)
   
-  --gap-p: 'calc(%s + 4px)' % $fs-body
-  --gap-p-compact: 'calc(%s * 0.75)' % $fs-body
+  --gap-p: 'calc(var(--fs-root) + 4px)'
+  --gap-p-compact: 'calc(var(--fs-root) * 0.75)'
 ```
 
 ### 级联计算链
 
-`--fsp` 是运行时字号锚点。由于 `--fsh2`、`--fsh3`、`--fsh4` 的 `calc()` 使用 `var(--fsp)`，在媒体查询中修改 `--fsp` 会自动级联到所有标题尺寸。
+`--fs-root` 是运行时字号锚点，桌面端等于配置的 root，移动端为 root + 2px。`--fs-content-base` 默认引用它，story 内容区再额外增加 2px；`--fs-content` 默认引用页面基准，组件可局部覆盖。由于标题和段落令牌都引用这些变量，媒体查询无需逐个覆盖组件。
 
-例如媒体查询设置 `--fsp: 1.125rem` 后：
+例如组件局部设置 `--fs-content: 1.125rem` 后：
 
 - `--fsh2` → `calc(1.125rem + 11px)`
 - `--fsh3` → `calc(1.125rem + 7px)`
@@ -499,15 +502,17 @@ pre
 
 ## 响应式排版行为
 
-`:root` 声明包含嵌套媒体查询，跨断点调整布局尺寸。CSS 自定义属性基础设施支持通过修改 `--fsp` 做响应式字号缩放，但当前实现并不随视口宽度调整排版。
+`:root` 声明包含嵌套媒体查询，跨断点调整布局尺寸和字号。移动断点将统一基准 `--fs-root` 提高 2px，story 内容区在当前基准上再提高 2px。
 
 ### 媒体查询结构
 
 ```stylus
 // source/css/_custom.styl
 :root
-  --fsp: $fs-body
-  --fsh2: 'calc(%s + 11px)' % var(--fsp)
+  --fs-root: $fs-root
+  --fs-content-base: var(--fs-root)
+  --fs-content: var(--fs-content-base)
+  --fsh2: 'calc(%s + 11px)' % var(--fs-content)
   // ... 其他变量
   
   // 2k 及以上桌面
@@ -523,26 +528,24 @@ pre
     --side-content-width: 188px
   
   @media screen and (max-width: $device-mobile-max)
+    --fs-root: calc($fs-root + 2px)
     --side-content-width: 224px
 ```
 
 ### 响应式设计理念
 
-主题在所有视口保持恒定字号。响应式调整针对：
+主题在桌面端保持配置字号；移动端将所有字号基准提高 2px。响应式调整还包括：
 
 - 内容宽度（`--width-main`：720px → 780px → 860px）
 - 侧边栏宽度（`--side-content-width`：224px → 188px → 224px）
 - 间距变量（`--gap-margin`、`--gap-padding`）
 
-### 排版缩放基础设施
+### 排版缩放规则
 
-变量架构支持未来的响应式排版：
-
-1. 媒体查询修改 `--fsp` 值
-2. 所有 `--fsh*` 变量自动重算（它们使用 `calc(var(--fsp) + Npx)`）
-3. 使用 `var(--fsh2)` 等的元素无需额外规则即可更新
-
-该基础设施目前未被启用，优先保证一致阅读体验而非随视口缩放文字。
+1. 桌面端 `--fs-root` 等于 `style.font-size.root`。
+2. 移动端 `--fs-root` 为 root + 2px。
+3. `--fs-content-base` 默认取 `--fs-root`，story 内容区使用 `calc(var(--fs-root) + 2px)`；`--fs-content` 默认取页面基准。
+4. 标题、段落变体、rem 令牌和相关间距自动级联更新。
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
 
@@ -554,7 +557,7 @@ pre
 
 ### 表格排版
 
-表格局部覆盖 `--fsp` 把字号缩小 2px：
+表格局部覆盖 `--fs-content` 把字号缩小 2px：
 
 ```stylus
 // source/css/_components/md-table.styl
@@ -598,8 +601,8 @@ table:not([class])
   margin: 1rem 0
   max-width: 100%
   vertical-align: text-top
-  --fsp: $fsp2  // 局部覆盖：正文字号 - 2px
-  font-size: var(--fsp)
+  --fs-content: $fs-content-2  // 局部覆盖：正文字号 - 2px
+  font-size: var(--fs-content)
 
   th
     background: var(--block)
@@ -611,7 +614,7 @@ table:not([class])
     line-height: 1.5
 ```
 
-`--fsp` 创建局部作用域。由于 `$fsp2 = calc($fs-body - 2px)`，表格文字比正文小 2px，且不影响周围内容。
+`--fs-content` 创建局部作用域。由于 `$fs-content-2 = calc(var(--fs-content-base) - 2px)`，表格文字比正文小 2px，且不影响周围内容。
 
 `:not([class])` 排除带显式类名的表格（如标签插件中的表格），不自动缩小。
 
@@ -622,13 +625,13 @@ table:not([class])
 ```stylus
 // source/css/_common/base.styl
 li
-  font-size: 'calc(%s - 1px)' % var(--fsp)
+  font-size: 'calc(%s - 1px)' % var(--fs-content)
 
 ul, ol
-  padding-left: var(--fsp)
+  padding-left: var(--fs-content)
 ```
 
-`padding-left: var(--fsp)` 让缩进随字号缩放，响应式调整排版时保持比例层级。
+`padding-left: var(--fs-content)` 让缩进随字号缩放，响应式调整排版时保持比例层级。
 
 **参考源码**：[source/css/_common/base.styl](../../../source/css/_common/base.styl)
 
@@ -664,11 +667,13 @@ ul, ol
 | 代码字体 | `style.font-family.code` | `$ff-code` | `font-family` | 否 |
 | 代码块字体 | `style.font-family.codeblock` | `$ff-codeblock` | `font-family` | 否 |
 | 根字号 | `style.font-size.root` | `$fs-root` | `font-size` | 否 |
-| 正文字号 | `style.font-size.body` | `$fs-body` | `--fsp` | 是（媒体查询） |
-| H2 字号 | 计算 | `$fsh2` | `--fsh2` | 是（经 `--fsp`） |
-| H3 字号 | 计算 | `$fsh3` | `--fsh3` | 是（经 `--fsp`） |
-| H4 字号 | 计算 | `$fsh4` | `--fsh4` | 是（经 `--fsp`） |
+| 全局字号基准 | `style.font-size.root` | `$fs-root` | `--fs-root` | 是（移动端 +2px） |
+| 当前页面字号基准 | 由 root 计算 | `--fs-root` | `--fs-content-base` | 是（媒体查询/story） |
+| 当前组件字号 | 由页面基准计算 | `$fs-content-0..3` | `--fs-content` | 是（组件局部覆盖） |
+| H2 字号 | 计算 | `$fsh2` | `--fsh2` | 是（经 `--fs-content`） |
+| H3 字号 | 计算 | `$fsh3` | `--fsh3` | 是（经 `--fs-content`） |
+| H4 字号 | 计算 | `$fsh4` | `--fsh4` | 是（经 `--fs-content`） |
 | 代码字号 | `style.font-size.code` | `$fs-code` | `font-size` | 否 |
 | 代码块字号 | `style.font-size.codeblock` | `$fs-codeblock` | `font-size` | 否 |
 
-排版系统优先保证一致性与比例关系。标题与变体字号都从基础 `$fs-body` 派生，基础配置变化时整套字号体系协调缩放。CSS 自定义属性层为未来响应式增强保留灵活性，同时保持当前实现简单高效。
+排版系统优先保证一致性与比例关系。标题与变体字号都从 `--fs-root` 派生，基础配置变化或移动端增加 2px 时整套字号体系协调缩放。story 内容区在当前基准上额外增加 2px。

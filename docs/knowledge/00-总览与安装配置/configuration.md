@@ -439,7 +439,7 @@ graph TB
     
     subgraph "CSS Variable Generation"
         CUSTOMSTYL["_custom.styl<br/>Design token layer"]
-        CSSROOT[":root CSS variables<br/>--fsp, --gap-*, --width-*"]
+        CSSROOT[":root CSS variables<br/>--fs-root, --fs-content-base, --fs-content, --gap-*, --width-*"]
     end
     
     subgraph "Component Consumption"
@@ -462,7 +462,7 @@ graph TB
 
 关键样式配置：
 
-1. **字号**：`font-size.root` 设置基准字号（影响所有 `rem` 单位）；`font-size.body` 可用 `px` 或 `rem`
+1. **字号**：`font-size.root` 设置桌面端根字号（影响所有 `rem` 单位）；移动端自动增加 2px。页面基准使用 `--fs-content-base`，组件字号使用 `--fs-content`。旧字段 `style.font-size.body` 已移除，不再生效。
 2. **圆角**：`border-radius` 从 `card-l`（24px，大卡片）到 `card-s`（12px，小卡片）渐进
 3. **颜色**：`color.theme` / `color.accent` / `color.link` 使用 HSL 值，便于精确调色
 4. **左栏外观**：支持纯色、渐变或带模糊效果的背景图

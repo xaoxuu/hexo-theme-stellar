@@ -157,8 +157,8 @@ graph TB
     VISUAL --> RADIUS["border-radius: $border-card"]
     VISUAL --> CORNER["corner-shape: superellipse(1.25)"]
     
-    CHILDREN --> TITLE[".title<br/>Font size: $fsp1<br/>Weight: 500"]
-    CHILDREN --> BODY[".body<br/>Font size: $fsp2<br/>Line height: 1.5"]
+    CHILDREN --> TITLE[".title<br/>Font size: $fs-content-1<br/>Weight: 500"]
+    CHILDREN --> BODY[".body<br/>Font size: $fs-content-2<br/>Line height: 1.5"]
 ```
 
 **基础样式属性**
@@ -176,14 +176,14 @@ graph TB
 
 `.title` 元素：
 
-- 字号 `$fsp1`（较大）
+- 字号 `$fs-content-1`（较大）
 - 字重 500
 - 颜色 `--text`（高对比）
 - 顶部边距 `var(--gap-p-compact)`
 
 `.body` 元素：
 
-- 字号 `$fsp2`（小于标题）
+- 字号 `$fs-content-2`（小于标题）
 - 应用于容器与其内 `<p>` 元素
 - 垂直边距 `var(--gap-p-compact)`
 - 特例：body 是唯一子元素时，边距调整为 `calc(var(--gap-p) - 0.25rem)`

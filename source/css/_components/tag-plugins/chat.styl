@@ -314,7 +314,7 @@ chat_dark()
                                 align-items: center
                                 >svg,
                                 >span
-                                    height: $fs-12 + .05rem
+                                    height: 'calc(%s * 0.8)' % var(--fs-content-base)
                         
                     &.voice
                         display: flex

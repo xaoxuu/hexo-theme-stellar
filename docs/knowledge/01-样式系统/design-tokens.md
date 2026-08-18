@@ -39,14 +39,14 @@ graph TB
     subgraph "Build-Time Layer"
         HEXOCONFIG["hexo-config() function"]
         STYLUSVARS["Stylus Variables<br/>$ff-body, $c-theme, $border-card"]
-        CALCULATIONS["Calculated Values<br/>$fsh1-$fsh5, $fsp0-$fsp3"]
+        CALCULATIONS["Calculated Values<br/>$fsh1-$fsh5, $fs-content-0-$fs-content-3"]
     end
     
     subgraph "Runtime Layer"
         CSSROOT[":root CSS Custom Properties"]
         CSSWIDTH["--width-main"]
         CSSGAP["--gap-margin, --gap-padding"]
-        CSSFONT["--fsp, --fsh2, --fsh3"]
+        CSSFONT["--fs-root, --fs-content-base, --fs-content, --fsh2, --fsh3"]
     end
     
     subgraph "Component Consumption"
@@ -99,7 +99,7 @@ graph LR
         FFBODY["$ff-body = convert(hexo-config('style.font-family.body'))"]
         FFCODE["$ff-code = convert(hexo-config('style.font-family.code'))"]
         FSROOT["$fs-root = convert(hexo-config('style.font-size.root'))"]
-        FSBODY["$fs-body = convert(hexo-config('style.font-size.body'))"]
+        FSBASE["$fs-root = convert(hexo-config('style.font-size.root'))"]
         CTHEME["$c-theme = convert(hexo-config('style.color.theme'))"]
         CACCENT["$c-accent = convert(hexo-config('style.color.accent'))"]
         BORDERCARD["$border-card = convert(hexo-config('style.border-radius.card'))"]
@@ -131,61 +131,61 @@ graph LR
 | `$ff-body` | `style.font-family.body` | 正文字体 |
 | `$ff-code` | `style.font-family.code` | 行内代码字体 |
 | `$ff-codeblock` | `style.font-family.codeblock` | 代码块字体 |
-| `$fs-root` | `style.font-size.root` | 根 HTML 字号 |
-| `$fs-body` | `style.font-size.body` | 默认正文字号 |
+| `$fs-root` | `style.font-size.root` | 桌面端字号基准 |
+| `$fs-root` | `style.font-size.root` | HTML/rem 根字号；移动端自动增加 2px |
 | `$fs-code` | `style.font-size.code` | 行内代码字号 |
 | `$fs-codeblock` | `style.font-size.codeblock` | 代码块字号 |
 
 额外的固定字号令牌：
 
 ```
-$fs-15 = .9375rem  // 约 15px
-$fs-14 = .875rem   // 约 14px
-$fs-13 = .8125rem  // 约 13px
-$fs-12 = .75rem    // 约 12px
+$fs-15 = calc(var(--fs-content-base) - 1px)
+$fs-14 = calc(var(--fs-content-base) - 2px)
+$fs-13 = calc(var(--fs-content-base) - 3px)
+$fs-12 = calc(var(--fs-content-base) - 4px)
 ```
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
 
 ### 计算字号令牌
 
-主题基于 `$fs-body` 生成标题与段落的计算字号：
+主题基于 `var(--fs-root)` 生成标题与段落的计算字号：
 
 ```mermaid
 graph TB
-    FSBODY["$fs-body<br/>(from config)"]
+    FSROOT["var(--fs-root)<br/>(from style.font-size.root)"]
     
     subgraph "Header Sizes"
-        FSH1["$fsh1 = calc($fs-body + 9px)"]
-        FSH2["$fsh2 = calc($fs-body + 11px)"]
-        FSH3["$fsh3 = calc($fs-body + 7px)"]
-        FSH4["$fsh4 = calc($fs-body + 4px)"]
-        FSH5["$fsh5 = calc($fs-body + 2px)"]
+        FSH1["$fsh1 = calc(var(--fs-root) + 9px)"]
+        FSH2["$fsh2 = calc(var(--fs-root) + 11px)"]
+        FSH3["$fsh3 = calc(var(--fs-root) + 7px)"]
+        FSH4["$fsh4 = calc(var(--fs-root) + 4px)"]
+        FSH5["$fsh5 = calc(var(--fs-root) + 2px)"]
     end
     
     subgraph "Paragraph Variations"
-        FSP0["$fsp0 = calc($fs-body - 0px)"]
-        FSP1["$fsp1 = calc($fs-body - 1px)"]
-        FSP2["$fsp2 = calc($fs-body - 2px)"]
-        FSP3["$fsp3 = calc($fs-body - 3px)"]
+        FSP0["$fs-content-0 = calc(var(--fs-content-base) - 0px)"]
+        FSP1["$fs-content-1 = calc(var(--fs-content-base) - 1px)"]
+        FSP2["$fs-content-2 = calc(var(--fs-content-base) - 2px)"]
+        FSP3["$fs-content-3 = calc(var(--fs-content-base) - 3px)"]
     end
     
-    FSBODY --> FSH1
-    FSBODY --> FSH2
-    FSBODY --> FSH3
-    FSBODY --> FSH4
-    FSBODY --> FSH5
-    FSBODY --> FSP0
-    FSBODY --> FSP1
-    FSBODY --> FSP2
-    FSBODY --> FSP3
+    FSROOT --> FSH1
+    FSROOT --> FSH2
+    FSROOT --> FSH3
+    FSROOT --> FSH4
+    FSROOT --> FSH5
+    FSROOT --> FSP0
+    FSROOT --> FSP1
+    FSROOT --> FSP2
+    FSROOT --> FSP3
 ```
 
 这些计算用字符串插值配合 CSS `calc()` 保持动态尺寸，实际 Stylus 代码格式：
 
 ```stylus
-$fsh1 = 'calc(%s + 9px)' % $fs-body
-$fsp1 = 'calc(%s - 1px)' % $fs-body
+$fsh1 = 'calc(var(--fs-root) + 9px)'
+$fs-content-1 = 'calc(var(--fs-content-base) - 1px)'
 ```
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
@@ -302,22 +302,23 @@ graph TB
     subgraph "Spacing System"
         BASE["--gap-base<br/>16px (fixed)"]
         PAGE["--gap-page<br/>16px → 32px (laptop+)"]
-        GAPP["--gap-p<br/>calc($fs-body + 4px)"]
-        GAPCOMPACT["--gap-p-compact<br/>calc($fs-body * 0.75)"]
+        GAPP["--gap-p<br/>calc(var(--fs-root) + 4px)"]
+        GAPCOMPACT["--gap-p-compact<br/>calc(var(--fs-root) * 0.75)"]
     end
     
     subgraph "Font Size Properties"
-        FSP["--fsp<br/>$fs-body"]
-        FSH2["--fsh2<br/>calc(--fsp + 11px)"]
-        FSH3["--fsh3<br/>calc(--fsp + 7px)"]
-        FSH4["--fsh4<br/>calc(--fsp + 4px)"]
+        FSROOT["--fs-root<br/>$fs-root / mobile +2px"]
+        FSP["--fs-content<br/>var(--fs-content-base)"]
+        FSH2["--fsh2<br/>calc(--fs-content + 11px)"]
+        FSH3["--fsh3<br/>calc(--fs-content + 7px)"]
+        FSH4["--fsh4<br/>calc(--fs-content + 4px)"]
     end
     
     subgraph "Responsive Overrides"
         MEDIA2K["@media (min-width: 2k)<br/>--width-main: 780px"]
         MEDIA4K["@media (min-width: 4k)<br/>--width-main: 860px"]
         MEDIATABLET["@media (max-width: tablet)<br/>--side-content-width: 188px"]
-        MEDIAMOBILE["@media (max-width: mobile)<br/>--side-content-width: 224px"]
+        MEDIAMOBILE["@media (max-width: mobile)<br/>--fs-root: root + 2px"]
         MEDIALAPTOP["@media (min-width: laptop)<br/>--gap-page: 32px"]
     end
     
@@ -359,8 +360,8 @@ graph TB
 段落间距按字号计算：
 
 ```
---gap-p: calc($fs-body + 4px)           // 标准段落间距
---gap-p-compact: calc($fs-body * 0.75)  // 紧凑段落间距
+--gap-p: calc(var(--fs-root) + 4px)           // 标准段落间距
+--gap-p-compact: calc(var(--fs-root) * 0.75)  // 紧凑段落间距
 ```
 
 这样间距随字号变化按比例缩放。
@@ -386,13 +387,16 @@ graph TB
 字号 CSS 自定义属性引用 Stylus 变量，同时暴露给运行时修改：
 
 ```
---fsp: $fs-body                           // 基准字号
---fsh2: calc(var(--fsp) + 11px)          // H2 标题字号
---fsh3: calc(var(--fsp) + 7px)           // H3 标题字号
---fsh4: calc(var(--fsp) + 4px)           // H4 标题字号
+--fs-root: $fs-root                       // 桌面基准；移动端 +2px
+--fs-root: 16px                          // HTML/rem 根字号
+--fs-content-base: var(--fs-root)        // 页面字号基准
+--fs-content: var(--fs-content-base)     // 当前组件字号
+--fsh2: calc(var(--fs-content) + 11px)   // H2 标题字号
+--fsh3: calc(var(--fs-content) + 7px)    // H3 标题字号
+--fsh4: calc(var(--fs-content) + 4px)    // H4 标题字号
 ```
 
-标题计算引用 `var(--fsp)`，运行时修改 `--fsp` 会级联到所有依赖尺寸，无需重新计算即可实现动态字号调整。
+标题计算引用 `var(--fs-content)`，而 `--fs-content` 默认引用 `--fs-content-base`；移动端修改 `--fs-root` 会级联到页面和组件字号，无需逐个覆盖组件。
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
 
@@ -412,7 +416,7 @@ graph TB
     
     subgraph "Dynamic CSS Custom Properties"
         DYNAMIC["Available at runtime<br/>Can be modified via JavaScript"]
-        EXDYNAMIC["Examples:<br/>--width-main, --gap-margin<br/>--fsp, --side-content-width"]
+        EXDYNAMIC["Examples:<br/>--width-main, --gap-page<br/>--fs-root, --fs-content, --side-content-width"]
         USEDYNAMIC["Used in: Responsive layouts<br/>User preference adaptations"]
     end
     

@@ -42,8 +42,8 @@ graph TB
     
     subgraph "Design Token Layer"
         CUSTOM["_custom.styl<br/>hexo-config() reads config"]
-        STYLUS["Stylus Variables<br/>$fs-body, $c-theme, etc"]
-        CSSROOT[":root CSS Variables<br/>--width-main, --gap-*, --fsp"]
+        STYLUS["Stylus Variables<br/>$fs-root, $c-theme, etc"]
+        CSSROOT[":root CSS Variables<br/>--width-main, --gap-*, --fs-root, --fs-content-base, --fs-content"]
     end
     
     subgraph "User Override Points"
@@ -90,8 +90,8 @@ graph TB
 | 配置键 | 用途 | 示例值 |
 |--------|------|--------|
 | `style.prefers_theme` | 初始主题模式 | `auto`、`light`、`dark` |
-| `style.font-size.root` | 基准字号（影响全部 rem 单位） | `16px`、`18px` |
-| `style.font-size.body` | 正文字号 | `17px`、`1.0625rem` |
+| `style.font-size.root` | 桌面端字号基准，并作为移动端字号计算起点 | `16px`、`18px` |
+| `style.font-size.body` | 已移除；旧配置不再产生效果 | 不再支持 |
 | `style.font-family.body` | 正文字体栈 | 系统字体或自定义 |
 | `style.color.theme` | 主题主色 | `hsl(192 98% 55%)` |
 | `style.color.accent` | 强调色 | `hsl(14 100% 57%)` |
@@ -105,8 +105,7 @@ graph TB
 ```yaml
 style:
   font-size:
-    root: 18px      # 影响所有 rem 尺寸
-    body: 18px      # 正文字号
+    root: 18px      # 桌面端基准；移动端自动为 20px
 ```
 
 **更改主题颜色：**
@@ -174,9 +173,10 @@ graph LR
 
 **关键转换点：**
 
-1. **YAML 到 Stylus**：`hexo-config('style.font-size.body')` → `$fs-body` 变量
-2. **Stylus 到 CSS 属性**：`:root { --fsp: $fs-body }` → 运行时 CSS 变量
-3. **组件消费**：组件用 `$fs-body`（静态）或 `var(--fsp)`（动态）
+1. **YAML 到 Stylus**：`hexo-config('style.font-size.root')` → `$fs-root` 变量
+2. **Stylus 到 CSS 属性**：`:root { --fs-root: $fs-root; --fs-content-base: var(--fs-root); --fs-content: var(--fs-content-base) }`
+3. **响应式覆盖**：移动断点将 `--fs-root` 提高 2px，story 内容区再提高 2px
+4. **组件消费**：组件用 `$fs-*` 令牌或 `var(--fs-content)`，均从页面基准派生
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
 
@@ -199,14 +199,16 @@ graph LR
   --gap-page: 16px  // 页面级留白；≥laptop 自动放宽为 32px
   
   // 排版
-  --fsp: $fs-body
-  --fsh2: 'calc(%s + 11px)' % var(--fsp)
-  --fsh3: 'calc(%s + 7px)' % var(--fsp)
-  --fsh4: 'calc(%s + 4px)' % var(--fsp)
+  --fs-root: $fs-root
+  --fs-content-base: var(--fs-root)
+  --fs-content: var(--fs-content-base)
+  --fsh2: 'calc(%s + 11px)' % var(--fs-content)
+  --fsh3: 'calc(%s + 7px)' % var(--fs-content)
+  --fsh4: 'calc(%s + 4px)' % var(--fs-content)
   
   // 段落间距
-  --gap-p: 'calc(%s + 4px)' % $fs-body
-  --gap-p-compact: 'calc(%s * 0.75)' % $fs-body
+  --gap-p: 'calc(var(--fs-root) + 4px)'
+  --gap-p-compact: 'calc(var(--fs-root) * 0.75)'
 ```
 
 这些变量随媒体查询自动响应。例如 `--side-content-width` 随视口大小调整；间距令牌分两级：`--gap-base` 固定 16px（组件内部间距），`--gap-page` 按断点分档（≤`$device-laptop`/1180px 为 16px，≥1180px 为 32px）控制页面级留白。
@@ -230,8 +232,8 @@ graph LR
 
 /* 更大的标题 */
 :root {
-  --fsh2: calc(var(--fsp) + 16px);
-  --fsh3: calc(var(--fsp) + 12px);
+  --fsh2: calc(var(--fs-content) + 16px);
+  --fsh3: calc(var(--fs-content) + 12px);
 }
 ```
 
@@ -658,7 +660,7 @@ style:
 /* 好：使用 CSS 变量 */
 .custom-element {
   padding: var(--gap-padding);
-  font-size: var(--fsp);
+  font-size: var(--fs-content);
 }
 
 /* 避免：硬编码值 */

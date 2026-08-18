@@ -272,7 +272,7 @@ flowchart LR
 |--------|------|
 | `.article-footer` | 外层容器：`var(--block)` 背景、边框、`border-radius: $border-card-l` |
 | `.article-footer .header` | 区块标签：`font-weight: 500`、`font-size: $fsh5` |
-| `.article-footer .body` | 内容区：`--fsp: $fsp2`、隐藏的复制链接输入框 |
+| `.article-footer .body` | 内容区：`--fs-content: $fs-content-2`、隐藏的复制链接输入框 |
 | `.article-footer section+section` | 相邻区块间的顶部边框分隔 |
 | `.article-footer #contributors` | 贡献者网格布局与编辑按钮样式 |
 | `.article-footer .social-wrap` | 20px 社交图标按钮的 CSS grid |

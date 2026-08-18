@@ -46,7 +46,7 @@ graph TB
     subgraph "Layer 1: Design Token Layer"
         CUSTOM["_custom.styl<br/>source/css/_custom.styl"]
         TOKENS["Stylus Variables<br/>$ff-body, $c-theme, $border-card"]
-        CSSROOT["CSS Custom Properties<br/>--width-main, --gap-*, --fsp"]
+        CSSROOT["CSS Custom Properties<br/>--width-main, --gap-*, --fs-root, --fs-content-base, --fs-content"]
     end
     
     subgraph "Layer 2: Utility Layer"
@@ -114,7 +114,7 @@ graph LR
     
     subgraph "Design Tokens"
         FONT["Font Definitions<br/>$ff-body, $ff-code, $ff-codeblock"]
-        SIZE["Size Definitions<br/>$fs-root, $fs-body, $fs-code"]
+        SIZE["Size Definitions<br/>$fs-root, $fs-code, $fs-codeblock"]
         COLOR["Color Definitions<br/>$c-theme, $c-accent, $c-link"]
         RADIUS["Border Radius<br/>$border-card-l, $border-card, $border-card-s"]
         LAYOUT["Layout Values<br/>$site-background-image, $leftbar-background-image"]
@@ -153,9 +153,9 @@ graph LR
 graph TB
     subgraph "Typography Tokens"
         FF["Font Families<br/>$ff-body, $ff-code, $ff-codeblock"]
-        FS["Font Sizes<br/>$fs-root, $fs-body, $fs-code"]
+        FS["Font Sizes<br/>$fs-root, $fs-code, $fs-codeblock"]
         FSH["Header Sizes<br/>$fsh1 through $fsh5"]
-        FSP["Paragraph Sizes<br/>$fsp0 through $fsp3"]
+        FSP["Content Sizes<br/>$fs-content-0 through $fs-content-3"]
     end
     
     subgraph "Color Tokens"
@@ -195,19 +195,19 @@ $ff-code = convert(hexo-config('style.font-family.code'))
 $ff-codeblock = convert(hexo-config('style.font-family.codeblock'))
 ```
 
-字号基于正文字号计算缩放：
+字号基于动态根字号计算缩放：
 
 | 令牌 | 计算 | 用途 |
 |------|------|------|
-| `$fsh1` | `calc($fs-body + 9px)` | 最大标题 |
-| `$fsh2` | `calc($fs-body + 11px)` | 二级标题 |
-| `$fsh3` | `calc($fs-body + 7px)` | 三级标题 |
-| `$fsh4` | `calc($fs-body + 4px)` | 四级标题 |
-| `$fsh5` | `calc($fs-body + 2px)` | 五级标题 |
-| `$fsp0` | `calc($fs-body - 0px)` | 普通段落 |
-| `$fsp1` | `calc($fs-body - 1px)` | 略小文本 |
-| `$fsp2` | `calc($fs-body - 2px)` | 元信息文本 |
-| `$fsp3` | `calc($fs-body - 3px)` | 最小文本 |
+| `$fsh1` | `calc(var(--fs-root) + 9px)` | 最大标题 |
+| `$fsh2` | `calc(var(--fs-root) + 11px)` | 二级标题 |
+| `$fsh3` | `calc(var(--fs-root) + 7px)` | 三级标题 |
+| `$fsh4` | `calc(var(--fs-root) + 4px)` | 四级标题 |
+| `$fsh5` | `calc(var(--fs-root) + 2px)` | 五级标题 |
+| `$fs-content-0` | `calc(var(--fs-content-base) - 0px)` | 普通段落 |
+| `$fs-content-1` | `calc(var(--fs-content-base) - 1px)` | 略小文本 |
+| `$fs-content-2` | `calc(var(--fs-content-base) - 2px)` | 元信息文本 |
+| `$fs-content-3` | `calc(var(--fs-content-base) - 3px)` | 最小文本 |
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
 
@@ -261,14 +261,14 @@ graph TB
     subgraph "Spacing Properties"
         BASE["--gap-base<br/>Internal spacing: 16px (fixed)"]
         PAGE["--gap-page<br/>Page-level spacing: 16px → 32px (laptop+)"]
-        PGAP["--gap-p<br/>Paragraph spacing<br/>calc($fs-body + 4px)"]
+        PGAP["--gap-p<br/>Paragraph spacing<br/>calc(var(--fs-root) + 4px)"]
     end
     
     subgraph "Typography Properties"
-        FSP["--fsp<br/>Dynamic font size<br/>Defaults to $fs-body"]
-        FSH2["--fsh2<br/>H2 size: calc(--fsp + 11px)"]
-        FSH3["--fsh3<br/>H3 size: calc(--fsp + 7px)"]
-        FSH4["--fsh4<br/>H4 size: calc(--fsp + 4px)"]
+        FSP["--fs-content<br/>Current component size<br/>Defaults to var(--fs-content-base)"]
+        FSH2["--fsh2<br/>H2 size: calc(--fs-content + 11px)"]
+        FSH3["--fsh3<br/>H3 size: calc(--fs-content + 7px)"]
+        FSH4["--fsh4<br/>H4 size: calc(--fs-content + 4px)"]
     end
     
     ROOT --> MAIN
@@ -322,12 +322,15 @@ graph TB
 
 | 变量 | 表达式 | 用途 |
 |------|--------|------|
-| `--fsp` | `$fs-body` | 基准段落字号，可被组件覆盖 |
-| `--fsh2` | `calc(var(--fsp) + 11px)` | H2 相对当前 `--fsp` 的字号 |
-| `--fsh3` | `calc(var(--fsp) + 7px)` | H3 相对当前 `--fsp` 的字号 |
-| `--fsh4` | `calc(var(--fsp) + 4px)` | H4 相对当前 `--fsp` 的字号 |
+| `--fs-root` | `$fs-root`；移动端 +2px | 全局字号基准 |
+| `--fs-root` | 配置值；移动端 root + 2px | HTML/rem 根字号 |
+| `--fs-content-base` | `var(--fs-root)`；story 额外 + 2px | 当前页面字号基准 |
+| `--fs-content` | `var(--fs-content-base)` | 当前组件字号，可局部覆盖 |
+| `--fsh2` | `calc(var(--fs-content) + 11px)` | H2 相对当前组件字号 |
+| `--fsh3` | `calc(var(--fs-content) + 7px)` | H3 相对当前组件字号 |
+| `--fsh4` | `calc(var(--fs-content) + 4px)` | H4 相对当前组件字号 |
 
-组件只需改变 `--fsp` 即可调整整个排版比例尺。
+组件只需改变 `--fs-content` 即可调整局部排版比例尺；页面布局通过 `--fs-content-base` 调整基准。
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
 

@@ -80,7 +80,7 @@ graph TB
     GapPage --> GP16["Base: 16px"]
     GapPage --> GP32["Laptop+: 32px<br/>@media min-width: $device-laptop"]
     
-    GapP --> GapPCalc["calc(var(--fsp) + 4px)"]
+    GapP --> GapPCalc["calc(var(--fs-content-base) + 4px)"]
 ```
 
 #### 主内容宽度缩放
@@ -124,10 +124,10 @@ graph TB
 | `--gap-base` | 16px | 组件内部基础间距（margin/padding 统一，固定） |
 | `--gap-page` | 16px / 32px（≥laptop） | 页面级留白（侧边栏/内容区/列间距） |
 | `--rightbar-width-extra` | calc(var(--gap-base) * 2) = 32px | 右栏宽度增量（在 `--width-sidebar` 基础上加宽） |
-| `--gap-p` | calc(var(--fsp) + 4px) | 段落垂直间距 |
-| `--gap-p-compact` | calc(var(--fsp) * 0.75) | 紧凑段落间距 |
+| `--gap-p` | calc(var(--fs-content-base) + 4px) | 段落垂直间距 |
+| `--gap-p-compact` | calc(var(--fs-content-base) * 0.75) | 紧凑段落间距 |
 
-间距令牌分两级：`--gap-base` 固定 16px（组件内部间距，不随屏幕变化）；`--gap-page` 按断点分档（≤`$device-laptop`/1180px 为 16px，≥1180px 为 32px），控制侧边栏到屏幕边缘、内容区上下与列间距。组件内部引用 `--gap-base`，页面级规则引用 `--gap-page`。这些变量同时随 `--fsp` 字号变化适配。
+间距令牌分两级：`--gap-base` 固定 16px（组件内部间距，不随屏幕变化）；`--gap-page` 按断点分档（≤`$device-laptop`/1180px 为 16px，≥1180px 为 32px），控制侧边栏到屏幕边缘、内容区上下与列间距。组件内部引用 `--gap-base`，页面级规则引用 `--gap-page`。段落间距随 `--fs-content-base` 字号变化适配。
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
 
@@ -278,12 +278,12 @@ graph TB
 
 ### 排版缩放
 
-字号变量随视口适配。基础字号静态定义，但 CSS 变量 `--fsp` 可动态调整，级联到：
+字号变量随视口适配。`--fs-root` 在移动端增加 2px，CSS 变量 `--fs-content-base` 与 `--fs-content` 随之级联到：
 
-- `--fsh2`：calc(var(--fsp) + 11px)——H2 标题
-- `--fsh3`：calc(var(--fsp) + 7px)——H3 标题
-- `--fsh4`：calc(var(--fsp) + 4px)——H4 标题
-- `--gap-p`：calc(var(--fsp) + 4px)——段落间距
+- `--fsh2`：calc(var(--fs-content) + 11px)——H2 标题
+- `--fsh3`：calc(var(--fs-content) + 7px)——H3 标题
+- `--fsh4`：calc(var(--fs-content) + 4px)——H4 标题
+- `--gap-p`：calc(var(--fs-content-base) + 4px)——段落间距
 
 这保证字号偏好变化时按比例缩放。
 
