@@ -413,57 +413,14 @@ const init = {
       }
     });
 
+    const galaxyCanvases = document.querySelectorAll('.wiki-cover-background.galaxy canvas');
     const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduceMotion) return;
-    document.querySelectorAll('.wiki-cover-background.galaxy canvas').forEach(function (canvas) {
-      const ctx2d = canvas.getContext('2d');
-      if (!ctx2d) return;
-      let width = 0;
-      let height = 0;
-      let pointer = { x: 0, y: 0 };
-      let stars = [];
-      const count = 110;
-      function resize() {
-        const rect = canvas.getBoundingClientRect();
-        const ratio = Math.min(window.devicePixelRatio || 1, 2);
-        width = rect.width;
-        height = rect.height;
-        canvas.width = Math.round(width * ratio);
-        canvas.height = Math.round(height * ratio);
-        ctx2d.setTransform(ratio, 0, 0, ratio, 0, 0);
-        stars = Array.from({ length: count }, function () {
-          return {
-            x: Math.random() * width,
-            y: Math.random() * height,
-            z: .2 + Math.random() * .8,
-            size: .3 + Math.random() * 1.7
-          };
-        });
+    if (reduceMotion || galaxyCanvases.length === 0) return;
+    utils.js('/js/plugins/galaxy.js').then(function () {
+      if (stellar.galaxy && typeof stellar.galaxy.mountAll === 'function') {
+        stellar.galaxy.mountAll(galaxyCanvases);
       }
-      function draw() {
-        ctx2d.clearRect(0, 0, width, height);
-        stars.forEach(function (star) {
-          const x = star.x + pointer.x * star.z * 18;
-          const y = star.y + pointer.y * star.z * 12;
-          ctx2d.beginPath();
-          ctx2d.fillStyle = 'rgba(225, 234, 255, ' + (.18 + star.z * .62) + ')';
-          ctx2d.arc(x, y, star.size * star.z, 0, Math.PI * 2);
-          ctx2d.fill();
-        });
-        window.requestAnimationFrame(draw);
-      }
-      canvas.parentElement.addEventListener('pointermove', function (event) {
-        const rect = canvas.getBoundingClientRect();
-        pointer.x = (event.clientX - rect.left) / rect.width - .5;
-        pointer.y = (event.clientY - rect.top) / rect.height - .5;
-      });
-      canvas.parentElement.addEventListener('pointerleave', function () {
-        pointer = { x: 0, y: 0 };
-      });
-      window.addEventListener('resize', resize);
-      resize();
-      draw();
-    });
+    }).catch(function () {});
   },
   leftbarScroll: () => {
     const container = document.querySelector('.l_left .widgets');

@@ -28,7 +28,7 @@ function layoutWikiCover() {
   if (isImageBackground) {
     adaptiveTextAttr = ' data-text-adaptive="split" style="--cover-url:url(\'' + escape_html(background.replace(/'/g, '%27')) + '\')"';
   } else if (isGalaxy) {
-    adaptiveTextAttr = ' data-text-adaptive="split" style="--adaptive-background:#10152f"';
+    adaptiveTextAttr = ' data-text-adaptive="split" style="--adaptive-background:#000000"';
   }
 
   el += '<div class="l_cover wiki wiki-hero' + (hasPreview ? '' : ' without-preview') + '">';
@@ -43,13 +43,13 @@ function layoutWikiCover() {
   el += '<div class="wiki-cover-layout"' + adaptiveTextAttr + '>';
   el += '<nav class="wiki-navbar" aria-label="' + escape_html(config.title) + '">';
   el += '<a class="wiki-navbar-home" href="' + escape_html(pretty_url('/')) + '">' + escape_html(config.title) + '</a>';
+  el += '</nav>';
+  el += '<article class="cover-wrap wiki-cover-content">';
+  el += '<section class="wiki-cover-intro">';
   if (repo) {
     el += '<a class="wiki-cover-release ds-ghinfo is-loading" data-project-name="' + escape_html(projectName) + '" data-repo="' + escape_html(repo) + '" data-api="https://' + theme.api_host.ghapi + '/repos/' + escape_html(repo) + '/tags" index="0" target="_blank" rel="external nofollow noopener noreferrer">';
     el += '<span class="wiki-cover-release-value"><span type="text" id="latest-tag-name"></span></span></a>';
   }
-  el += '</nav>';
-  el += '<article class="cover-wrap wiki-cover-content">';
-  el += '<section class="wiki-cover-intro">';
   if (title) {
     el += '<h1 class="cover-title" data-text-adaptive="contrast">' + escape_html(title) + '</h1>';
   }

@@ -21,6 +21,10 @@
 
 ## 二、版本与事实修正
 
+| 2026-08-19 | Wiki Hero 最新版本标签位于站点导航内，与项目信息层级分离 | 将 `wiki-cover-release ds-ghinfo` 移入项目介绍区，位于 `cover-title` 上方；既有数据请求、加载隐藏、淡入和外链行为不变 | `layout/_partial/cover/wiki_cover.ejs`、`source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md`、`docs/designs/2026-08-19-wiki-release-above-title/` |
+
+| 2026-08-19 | Wiki Hero 的 `galaxy` 背景仅用 2D Canvas 绘制固定随机星点，缺少纵深、辉光、闪烁和生命周期控制；旧径向渐变中心色 `#27347a` 会把透明 WebGL 星场染成偏亮蓝色 | 改为按需加载的原生 WebGL 四层星场：使用固定 Galaxy 参数，鼠标仅产生平滑视差而不排斥星点；Canvas 与自适应文字取色基准统一使用纯黑 `#000000`；离开视口或页面后台时暂停，减少动态效果、WebGL/着色器/脚本失败时保留该静态底色；不新增 React、OGL 或配置项（见 `docs/designs/2026-08-19-wiki-galaxy-webgl/`） | `layout/_partial/cover/wiki_cover.ejs`、`source/js/plugins/galaxy.js`、`source/js/main.js`、`source/css/_components/partial/cover.styl`、`THIRD-PARTY-NOTICES.md`、`docs/knowledge/03-内容系统/wiki-docs.md` |
+
 | 2026-08-19 | Wiki Hero 结束后模板额外输出 `<hr>`，在 `l_cover` 与正文间产生非预期分隔线 | 移除 `wiki_cover.ejs` 中 Hero 收尾处的 `<hr>`；正文与页脚的分隔线不受影响 | `layout/_partial/cover/wiki_cover.ejs`、`docs/knowledge/03-内容系统/wiki-docs.md`、`docs/designs/2026-08-19-wiki-hero-remove-divider/` |
 
 | 2026-08-19 | Wiki Hero 最新版本标签仅展示版本，不能进入对应 GitHub 页面 | 将标签改为新窗口打开的链接按钮；优先采用 tag 数据的 `html_url`，否则用 `repo` 与 tag 生成 GitHub tag 引用页 | `layout/_partial/cover/wiki_cover.ejs`、`source/js/services/ghinfo.js`、`source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md`、`06-数据服务与组件/data-service-apis.md` |
