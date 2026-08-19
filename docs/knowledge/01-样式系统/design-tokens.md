@@ -13,6 +13,8 @@ tags:
 <summary>相关源码文件</summary>
 
 - [source/css/_custom.styl](../../../source/css/_custom.styl)
+- [source/css/_components/collection.styl](../../../source/css/_components/collection.styl)
+- [layout/layout.ejs](../../../layout/layout.ejs)
 - [_config.yml](../../../_config.yml)
 
 </details>
@@ -97,9 +99,26 @@ tags:
 | `--gap-p` | `calc(var(--fs-root) + 4px)` | 标准段落间距 |
 | `--gap-p-compact` | `calc(var(--fs-root) * 0.75)` | 紧凑段落间距 |
 
-`--gap-base` 和 `--gap-page` 不能混用：前者控制组件内部节奏，后者控制页面边缘留白。新增组件应优先复用这两个令牌，而不是直接写入固定间距。
+`--gap-base` 和 `--gap-page` 不能混用：前者控制组件内部节奏，后者控制页面边缘留白。新增或修改的普通间距优先从 `2 / 4 / 8 / 12 / 16 / 24 / 32px` 中选择；`16px` 组件内间距优先复用 `--gap-base`，页面级留白优先复用 `--gap-page`。该规则不追溯旧组件，1px 描边、尺寸、圆角、最小高度、动画位移与光学对齐值也不做机械替换。
 
 移动端的侧栏宽度和字号存在专门的响应式覆盖；具体断点见[响应式设计](responsive-design.md)。
+
+## 集合组件 Surface 令牌
+
+`layout.ejs` 为页面区域声明 `data-ui-surface`：左栏按 `style.leftbar.ui-style` 取 `glass` 或 `card`，右栏取 `sidebar`，主内容区取 `content`。通用集合组件不读取页面位置，而由以下组件级语义变量适配表面：
+
+| 令牌组 | 语义 |
+| --- | --- |
+| `--ui-item-bg` / `--ui-item-bg-hover` / `--ui-item-bg-active` | 普通、悬停与激活条目背景 |
+| `--ui-item-shadow-hover` / `--ui-item-shadow-active` | 条目交互状态阴影 |
+| `--ui-grid-item-bg` / `--ui-summary-item-bg` | 网格与摘要变体的静态填充 |
+| `--ui-item-title` / `--ui-item-muted` | 标题与描述/meta 文字层级 |
+| `--ui-item-padding-x` / `--ui-item-padding-y` / `--ui-item-min-height` | 条目自身几何尺寸 |
+| `--ui-collection-gap` / `--ui-columns` / `--ui-grid-min` | 集合间距、最大列数和自适应最小列宽 |
+
+surface 只改变背景、阴影与文字层级；list/grid、variant、density 负责几何。`columns` 是 grid 的最大列数，实际列数由 `auto-fit/minmax` 按容器宽度自动降低，不能用于控制标题可见性。
+
+这些变量定义在 `collection.styl` 的组件作用域中，不属于站点配置 API；其它通用紧凑集合可以消费，但专用展示组件不应借用它们改变自身布局。
 
 ## 变量使用规则
 

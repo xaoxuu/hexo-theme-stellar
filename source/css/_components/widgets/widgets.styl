@@ -55,11 +55,16 @@
         margin-top: .5em
         margin-bottom: .5em
         line-height: 1.5
+      >.ui-collection,
+      >.widget-section>.ui-collection
+        min-width: 0
 
 
 .widget-wrapper
   display: block
   margin-top: 32px
+  .widget-section+.widget-section
+    margin-top: 24px
 
 .l_left .widgets
   padding-bottom: 64px

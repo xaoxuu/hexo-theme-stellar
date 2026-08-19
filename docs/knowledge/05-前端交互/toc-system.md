@@ -15,8 +15,10 @@ tags:
 生成此页面时参考的主题源码文件：
 
 - [layout/_partial/widgets/toc.ejs](../../../layout/_partial/widgets/toc.ejs)
+- [layout/_partial/components/widget-frame.ejs](../../../layout/_partial/components/widget-frame.ejs)
 - [layout/_partial/menubtn.ejs](../../../layout/_partial/menubtn.ejs)
 - [source/js/main.js](../../../source/js/main.js)
+- [source/css/_components/widgets/toc.styl](../../../source/css/_components/widgets/toc.styl)
 - [languages/zh-CN.yml](../../../languages/zh-CN.yml)
 
 </details>
@@ -42,7 +44,7 @@ graph TB
 
     subgraph "Generated HTML"
         WIDGET["widget#data-toc"]
-        TOC_NAV["nav.toc"]
+        TOC_NAV["nav.toc.ui-collection-adapter"]
         TOC_LINKS["a.toc-link"]
         WIDGET_FOOTER["div.widget-footer"]
     end
@@ -84,20 +86,20 @@ TOC 在构建期由 [layout/_partial/widgets/toc.ejs](../../../layout/_partial/w
 graph LR
     layoutDiv["layoutDiv()"]
     layoutTocBody["layoutTocBody()"]
-    layoutTocHeader["layoutTocHeader()"]
+    widgetFrame["widget-frame.ejs"]
     tocHelper["toc(page.content, options)"]
 
     layoutDiv --> layoutTocBody
-    layoutDiv --> layoutTocHeader
+    layoutDiv --> widgetFrame
     layoutTocBody --> tocHelper
 ```
 
 | 函数 | 角色 |
 |------|------|
-| `layoutTocBody()` | 调用 Hexo `toc()` 辅助函数；无标题时返回 `''` |
-| `layoutTocHeader(title)` | 构建带标题 span 与切换按钮的 `div.widget-header` |
-| `layoutToc(fallback)` | 无页脚的组件（备选变体） |
-| `layoutDiv(fallback)` | 带页脚的完整组件 |
+| `layoutTocBody()` | 调用 Hexo `toc()` 辅助函数，为结果追加 `.ui-collection-adapter`；无标题时返回 `''` |
+| `layoutTocAction()` | 构建保持原 `sidebar.toggleTOC()` 协议的切换按钮 |
+| `layoutFooter(hasComments)` | 构建回到顶部与评论区操作 |
+| `layoutDiv()` | 组合内容、远程 Markdown 占位与页脚，再交给 `widget-frame.ejs` 输出 |
 
 **参考源码**：[layout/_partial/widgets/toc.ejs](../../../layout/_partial/widgets/toc.ejs)
 
@@ -122,7 +124,7 @@ widget.widget-wrapper.toc#data-toc[collapse="..."]
   │   ├── span.name           （经 __("meta.toc") 本地化）
   │   └── a.cap-action        （onclick="sidebar.toggleTOC()"）
   ├── div.widget-body
-  │   └── nav.toc
+  │   └── nav.toc.ui-collection-adapter
   │       └── ol.toc-child
   │           └── li.toc-item
   │               └── a.toc-link[href="#heading-id"]
@@ -132,6 +134,8 @@ widget.widget-wrapper.toc#data-toc[collapse="..."]
 ```
 
 `a.buttom` 元素仅在 `theme.comments.service` 非空且 `page.comments !== false` 时渲染。
+
+adapter 类只接入 collection 的 surface/state 令牌；TOC 非激活条目悬停时消费 hover 背景与阴影。激活条目静止时保持透明且无阴影，仅显示激活文字色和左侧主题色指示条；指示条宽 `4px`，距条目上下各 `4px`。鼠标悬停到激活条目时仍显示普通 hover 效果。TOC 的层级缩进、折叠属性、链接类名和滚动同步协议保持不变。远程 Markdown 在运行时生成的 `ol.toc` 同样由 `main.js` 追加 adapter 类。
 
 **参考源码**：[layout/_partial/widgets/toc.ejs](../../../layout/_partial/widgets/toc.ejs)
 

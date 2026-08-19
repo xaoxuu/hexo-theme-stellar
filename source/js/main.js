@@ -177,7 +177,7 @@ function rebuildToc(scope) {
     return;
   }
   const ol = document.createElement('ol');
-  ol.className = 'toc';
+  ol.className = 'toc ui-collection-adapter';
   const stack = [];
   headings.forEach(function (h) {
     const id = h.id;
@@ -430,7 +430,7 @@ const init = {
     const PREFIX = 'Stellar.leftbarScroll.';
     const encode = (s) => encodeURIComponent(String(s || ''));
     function scope() {
-      const wikiEl = document.querySelector('.doc-tree[data-wiki]');
+      const wikiEl = document.querySelector('.doc-tree-widget[data-wiki]');
       if (wikiEl != null) {
         return 'wiki:' + encode(wikiEl.getAttribute('data-wiki'));
       }
@@ -459,7 +459,7 @@ const init = {
         return;
       }
       container.scrollTop = parseInt(value, 10) || 0;
-      const link = container.querySelector('a.link.active');
+      const link = container.querySelector('.ui-collection__item.is-active');
       if (link == null) {
         return;
       }

@@ -338,6 +338,8 @@ flowchart TD
 
 `where == 'main'`（主内容区）时 `<nav>` 带 `mobile-hidden` 类，移动端隐藏；侧边栏上下文渲染时不带此类，桌面始终可见。
 
+menubar 复用 collection 的结构与状态样式，但保留导航自身的排版密度：标题字号使用公共 `$fs-15` 令牌，菜单项之间的纵向间距为 `2px`。该覆盖仅作用于 `.nav-area .menu`，不会改变 recent、tree 等其它 collection。
+
 **参考源码**：[layout/_partial/sidebar/menu.ejs](../../../layout/_partial/sidebar/menu.ejs)、[scripts/helpers/icon.js](../../../scripts/helpers/icon.js)
 
 ### 3.2 菜单栏配置
@@ -348,14 +350,12 @@ flowchart TD
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
-| `columns` | Number | 每行菜单项数量（如 `4`） |
 | `items` | Array | 菜单项对象数组（字段如上） |
 
 **示例配置：**
 
 ```yaml
 menubar:
-  columns: 4
   items:
     - id: post
       theme: '#1BCDFC'
@@ -615,7 +615,6 @@ header: true
 
 ```yaml
 menubar:
-  columns: 4  # 每行项目数
   items:
     - id: post          # 菜单项标识
       theme: '#1BCDFC'  # 高亮主题色

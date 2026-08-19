@@ -17,8 +17,12 @@ tags:
 - [layout/layout.ejs](../../../layout/layout.ejs)
 - [layout/_partial/sidebar/index_leftbar.ejs](../../../layout/_partial/sidebar/index_leftbar.ejs)
 - [layout/_partial/sidebar/index_rightbar.ejs](../../../layout/_partial/sidebar/index_rightbar.ejs)
+- [layout/_partial/components/widget-frame.ejs](../../../layout/_partial/components/widget-frame.ejs)
+- [layout/_partial/components/collection.ejs](../../../layout/_partial/components/collection.ejs)
+- [layout/_partial/components/collection-item.ejs](../../../layout/_partial/components/collection-item.ejs)
 - [_data/widgets.yml](../../../_data/widgets.yml)
 - [layout/_partial/widgets/](../../../layout/_partial/widgets/)
+- [source/css/_components/collection.styl](../../../source/css/_components/collection.styl)
 
 </details>
 
@@ -240,6 +244,32 @@ flowchart TD
 | `_partial/widgets/*.ejs` | 各小部件渲染模板 | 由小部件 `layout` 字段指定 |
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)、[layout/_partial/sidebar/index_leftbar.ejs](../../../layout/_partial/sidebar/index_leftbar.ejs)、[layout/_partial/sidebar/index_rightbar.ejs](../../../layout/_partial/sidebar/index_rightbar.ejs)
+
+---
+
+## 通用集合组件
+
+侧边栏中的紧凑导航、摘要列表与链接网格共享一套渲染原语，避免各 widget 重复维护图标、间距、圆角、激活圆点和 hover 状态：
+
+| Partial | 职责 |
+| --- | --- |
+| `_partial/components/widget-frame.ejs` | 渲染 widget 标题、操作区、内容区、页脚，并在内容为空时跳过输出 |
+| `_partial/components/collection.ejs` | 渲染 list/grid 容器，声明 variant、density 和 grid 最大列数 |
+| `_partial/components/collection-item.ejs` | 渲染图标、前缀、标题、描述、meta、尾部内容和 active 指示 |
+
+`collection.ejs` 的固定接口为：
+
+- 容器：`layout: list | grid`、`variant: nav | summary | icon`、`density: auto | compact | regular`、`columns`；
+- 条目：`href`、`title`，以及可选的 `icon`、`prefix`、`description`、`meta`、`theme`、`active`、`className`；
+- `title` 等普通文本由模板转义；`before` / `after` 仅供主题内部传入受信任 HTML。
+
+调用 partial 时将上述字段放在 `options` 对象内，例如 `{options: {layout: 'grid', ...}}`。这是为了避开 Hexo/EJS 模板上下文中的同名 `layout` helper；对组件使用方而言，公开字段仍是 `options.layout`。
+
+生成的 DOM 以 `.ui-collection`、`.ui-collection__item/content/title/description/meta/indicator` 为独立命名空间，激活状态统一为 `.is-active`。menu、recent、related、tree、tagtree 和 linklist 直接使用该结构；TOC 与搜索结果保留各自生成结构和交互，只追加 `.ui-collection-adapter` 并消费相同 surface 令牌。
+
+collection 只读取 `--ui-item-*`、`--ui-grid-*` 等语义变量，不判断 `.l_left` 或 `.l_right`。页面区域由 `layout.ejs` 的 `data-ui-surface="glass|card|sidebar|content"` 显式声明，因此同一组件可以放入左侧纯色/玻璃栏、右栏或正文区域。
+
+**参考源码**：[layout/_partial/components/](../../../layout/_partial/components/)、[source/css/_components/collection.styl](../../../source/css/_components/collection.styl)
 
 ---
 

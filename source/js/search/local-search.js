@@ -276,7 +276,7 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
         });
 
         const ul = document.createElement('ul');
-        ul.className = 'search-result-list';
+        ul.className = 'search-result-list ui-collection-adapter';
         resultList.forEach(function(item) {
           ul.appendChild(item.element);
         });

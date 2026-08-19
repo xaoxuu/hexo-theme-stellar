@@ -1,0 +1,60 @@
+<%
+function renderCollection(options) {
+  return partial('_partial/components/collection', {options: options})
+}
+
+function renderWidget(title, options) {
+  return partial('_partial/components/widget-frame', {
+    title: title,
+    body: renderCollection(options),
+    reveal: false
+  })
+}
+
+function renderSurface(name, surface, width) {
+  var navItems = [
+    {href: '#active', title: '当前页面', icon: 'default:documents', active: true},
+    {href: '#long', title: '这是一个用于检查单行省略和容器适应性的很长标题', icon: 'default:rightbar'},
+    {href: '#plain', title: '无图标条目'}
+  ]
+  var gridItems = [
+    {href: '#one', title: '项目一', icon: 'default:documents'},
+    {href: '#two', title: '项目二', icon: 'default:rightbar'},
+    {href: '#three', title: '项目三', icon: 'default:github'},
+    {href: '#four', title: '项目四', icon: 'default:rss'}
+  ]
+  var summaryItems = [
+    {href: '#summary-one', title: '摘要条目', description: '两行说明用于检查文字层级、截断和不同 surface 下的卡片填充。'},
+    {href: '#summary-two', title: '第二个摘要条目', description: '正文宽度下仍复用同一 DOM 与状态变量。'}
+  ]
+  var treeItems = [
+    {href: '#root', title: '一级节点', active: true},
+    {href: '#child', title: '二级节点', depth: 1, indicator: false},
+    {href: '#leaf', title: '三级节点', depth: 2, indicator: false}
+  ]
+  var html = '<section class="collection-preview__surface" data-ui-surface="' + surface + '" data-preview-width="' + width + '">'
+  html += '<header><strong>' + escape_html(name) + '</strong><code>' + escape_html(surface) + ' · ' + width + 'px</code></header>'
+  html += renderWidget('紧凑列表', {layout: 'list', variant: 'nav', density: 'compact', items: navItems})
+  html += renderWidget('响应式网格', {layout: 'grid', variant: 'nav', density: 'compact', columns: 2, items: gridItems})
+  html += renderWidget('摘要列表', {layout: 'list', variant: 'summary', density: 'regular', items: summaryItems})
+  html += renderWidget('层级列表', {layout: 'list', variant: 'nav', density: 'compact', items: treeItems})
+  html += '</section>'
+  return html
+}
+%>
+<article class="md-text collection-preview">
+  <h1>侧边栏集合组件预览</h1>
+  <p>此开发页面用于同时检查列表、网格和摘要条目在四种 surface、不同容器宽度及明暗主题下的表现。</p>
+  <div class="collection-preview__theme" aria-label="预览主题">
+    <span>预览主题</span>
+    <button type="button" onclick="document.documentElement.setAttribute('data-theme','light')">Light</button>
+    <button type="button" onclick="document.documentElement.setAttribute('data-theme','dark')">Dark</button>
+    <button type="button" onclick="document.documentElement.removeAttribute('data-theme')">Auto</button>
+  </div>
+  <div class="collection-preview__grid">
+    <%- renderSurface('左栏 Glass', 'glass', 240) %>
+    <%- renderSurface('左栏 Card', 'card', 240) %>
+    <%- renderSurface('右侧栏', 'sidebar', 320) %>
+    <%- renderSurface('正文区域', 'content', 720) %>
+  </div>
+</article>

@@ -17,7 +17,7 @@ utils.js(window.searchConfig.js).then(() => {
 
   function displayResults(hits) {
     var resultList = document.createElement("ul");
-    resultList.classList.add("search-result-list");
+    resultList.classList.add("search-result-list", "ui-collection-adapter");
     if (hits.length === 0) {
       searchWrapper.classList.add('noresult');
     } else {

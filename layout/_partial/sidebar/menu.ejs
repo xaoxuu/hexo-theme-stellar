@@ -1,31 +1,30 @@
 <%
 function layoutDiv() {
-  var el = ''
-  el += `<nav class="menu dis-select${where == 'main' ? ' mobile-hidden' : ''}">`
-  for (let item of (theme.menubar.items || [])) {
-    if (item == undefined || item.id == null || item.url == null) {
+  var entries = []
+  for (var menuItem of (theme.menubar.items || [])) {
+    if (menuItem == null || menuItem.id == null || menuItem.url == null || menuItem.title == null) {
       continue
     }
-    var active = item.id == page.menu_id
-    el += `<a class="nav-item${active ? ' active' : ''}${item.theme?.length > 0 ? ' themed' : ''}"`
-    var style = `--item-grad:url(#menu-grad-${item.id})`
-    if (item.theme?.length > 0) {
-      style += `;--item-theme:${item.theme}`
-    }
-    el += ` style="${style}"`
-    el += ` title="${item.title}" href="${pretty_url(item.url)}">`
-    if (item.icon?.length > 0) {
-      el += icon(item.icon, 'no-lazy', true)
-    }
-    el += `<span>${__(item.title)}</span>`
-    if (active) {
-      el += `<span class="active-dot"></span>`
-    }
-    el += partial('grad-def', {id: 'menu-grad-' + item.id})
-    el += `</a>`
+    entries.push({
+      href: pretty_url(menuItem.url),
+      title: __(menuItem.title),
+      icon: menuItem.icon,
+      theme: menuItem.theme,
+      active: menuItem.id == page.menu_id,
+      className: menuItem.theme?.length > 0 ? 'is-themed' : '',
+      gradientId: 'menu-grad-' + menuItem.id
+    })
   }
-  el += `</nav>`
-  return el
+  var body = partial('_partial/components/collection', {options: {
+    layout: 'list',
+    variant: 'nav',
+    density: 'regular',
+    items: entries
+  }})
+  if ((body || '').trim().length === 0) {
+    return ''
+  }
+  return `<nav class="menu dis-select${where == 'main' ? ' mobile-hidden' : ''}">${body}</nav>`
 }
 %>
 

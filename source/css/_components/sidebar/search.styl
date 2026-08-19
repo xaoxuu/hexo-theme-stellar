@@ -118,13 +118,17 @@
       list-style-type: none
     li a
       display: block
-      background: var(--bg-a20)
+      background: var(--ui-summary-item-bg)
       line-height: 1.2
       padding: 0.75rem 1rem
       border-radius: $border-card-s
       trans1 background
       &:hover
-        background: var(--bg-a50)
+        background: var(--ui-adapter-bg-hover)
+        box-shadow: var(--ui-adapter-shadow-hover)
+      &:focus-visible
+        outline: 2px solid var(--theme)
+        outline-offset: 2px
     li+li
       margin-top: 8px
     .search-result-title

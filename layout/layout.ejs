@@ -49,19 +49,20 @@ if (theme.style.prefers_theme === 'auto') {
     html += site_background
     html += `<div id="l_cover">${partial('_partial/cover/index').trim()}</div>`
     html += `<div class="l_body ${page_type}" id="start" layout="${page.layout}" type="${article_type}" ${indent ? 'text-indent' : ''}>`
-      html += `<aside class="l_left${theme.style.leftbar?.['ui-style'] === 'card' ? ' leftbar-card' : ''}">`
+      var leftbarSurface = theme.style.leftbar?.['ui-style'] === 'card' ? 'card' : 'glass'
+      html += `<aside class="l_left${leftbarSurface === 'card' ? ' leftbar-card' : ''}" data-ui-surface="${leftbarSurface}">`
         html += `<div class="sidebg"></div>`
         html += `<div class="leftbar-container${theme.style.leftbar?.blur ? ' leftbar-blur' : ''}">`
           html += partial('_partial/sidebar/index_leftbar')
         html += `</div>`
       html += `</aside>`
-      html += `<div class="l_main" id="main">`
+      html += `<div class="l_main" id="main" data-ui-surface="content">`
         html += partial('_partial/sidebar/logo', {where: 'main'})
         html += body
         html += partial('_partial/main/footer')
         html += `<div class="main-mask" onclick="sidebar.dismiss()"></div>`
       html += `</div>`
-      html += `<aside class="l_right">`
+      html += `<aside class="l_right" data-ui-surface="sidebar">`
         html += partial('_partial/sidebar/index_rightbar').trim()
       html += `</aside>`
       html += partial('_partial/menubtn')

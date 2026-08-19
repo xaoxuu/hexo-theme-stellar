@@ -33,16 +33,18 @@
     margin-right: 2px
     opacity: .4
 
-.widget-body.tag-tree .tag-subtree > a > .tag-switcher-wrapper
+.tag-tree .tag-subtree > .tag-tree__link > .tag-switcher-wrapper
   width: 1.75rem
   height: 0.875rem
+  flex-shrink: 0
+  margin-left: auto
   display: flex
   justify-content: end
   align-items: center
   &:hover
     color: var(--theme)
 
-.widget-body.tag-tree .tag-subtree.parent-tag > a .tag-switcher
+.tag-tree .tag-subtree.is-parent > .tag-tree__link .tag-switcher
   display: inline-block
   height: 0.5rem
   width: 0.5rem
@@ -50,16 +52,16 @@
   border-style: none solid solid none
   transform: translateX(-25%) rotate(-45deg)
 
-.widget-body.tag-tree .tag-subtree.parent-tag.expanded > a .tag-switcher
+.tag-tree .tag-subtree.is-parent.is-expanded > .tag-tree__link .tag-switcher
   transform: translateY(-25%) rotate(45deg)
 
-.widget-body.tag-tree .tag-subtree.parent-tag > .tag-subtree
+.tag-tree .tag-subtree.is-parent > .tag-subtree
   display: none
 
-.widget-body.tag-tree .tag-subtree.parent-tag.expanded > .tag-subtree
+.tag-tree .tag-subtree.is-parent.is-expanded > .tag-subtree
   display: block
 
-.widget-body.tag-tree .tag-subtree .tagcon
-  font-size: smaller
-  opacity: 0.4
-  margin-right: 0.25rem
+.tag-tree .tag-subtree
+  min-width: 0
+  >.ui-collection__item
+    width: 100%

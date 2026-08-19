@@ -1,0 +1,26 @@
+<%
+var collectionOptions = typeof options === 'object' && options ? options : {}
+var collectionItems = Array.isArray(collectionOptions.items) ? collectionOptions.items.filter(function(entry) {
+  return entry && entry.href != null
+}) : []
+if (collectionItems.length > 0) {
+var collectionLayout = collectionOptions.layout === 'grid' ? 'grid' : 'list'
+var collectionVariant = ['nav', 'summary', 'icon'].includes(collectionOptions.variant) ? collectionOptions.variant : 'nav'
+var collectionDensity = ['compact', 'regular'].includes(collectionOptions.density) ? collectionOptions.density : 'auto'
+var collectionColumns = parseInt(collectionOptions.columns, 10)
+if (!Number.isFinite(collectionColumns) || collectionColumns < 1) {
+  collectionColumns = 1
+}
+var collectionClassName = typeof collectionOptions.className === 'string' ? collectionOptions.className.trim() : ''
+var collectionClasses = 'ui-collection'
+if (collectionClassName.length > 0) {
+  collectionClasses += ' ' + collectionClassName
+}
+var collectionStyle = collectionLayout === 'grid' ? ' style="--ui-columns:' + collectionColumns + '"' : ''
+%>
+<div class="<%= collectionClasses %>" data-layout="<%= collectionLayout %>" data-variant="<%= collectionVariant %>" data-density="<%= collectionDensity %>"<%- collectionStyle %>>
+  <% collectionItems.forEach(function(entry) { %>
+    <%- partial('_partial/components/collection-item', {item: entry}) %>
+  <% }) %>
+</div>
+<% } %>

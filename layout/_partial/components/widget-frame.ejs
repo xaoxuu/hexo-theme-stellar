@@ -1,0 +1,35 @@
+<%
+var frameBody = typeof body === 'string' ? body.trim() : ''
+var frameFooter = typeof footer === 'string' ? footer.trim() : ''
+if (frameBody.length > 0 || frameFooter.length > 0) {
+var frameClassName = typeof className === 'string' ? className.trim() : ''
+var frameTitle = typeof title === 'undefined' || title == null ? '' : String(title)
+var frameAction = typeof action === 'string' ? action : ''
+var frameAttrs = typeof attrs === 'object' && attrs ? attrs : {}
+var frameReveal = typeof reveal === 'undefined' || reveal !== false
+var frameClasses = 'widget-wrapper'
+if (frameReveal) {
+  frameClasses += scrollreveal(' ')
+}
+if (frameClassName.length > 0) {
+  frameClasses += ' ' + frameClassName
+}
+var attrHtml = ''
+Object.keys(frameAttrs).forEach(function(key) {
+  if (frameAttrs[key] == null || frameAttrs[key] === false) {
+    return
+  }
+  attrHtml += ' ' + escape_html(key) + '="' + escape_html(frameAttrs[key]) + '"'
+})
+%>
+<widget class="<%= frameClasses %>"<%- attrHtml %>>
+  <% if (frameTitle.length > 0 || frameAction.length > 0) { %>
+    <div class="widget-header dis-select">
+      <% if (frameTitle.length > 0) { %><span class="name"><%= frameTitle %></span><% } %>
+      <%- frameAction %>
+    </div>
+  <% } %>
+  <% if (frameBody.length > 0) { %><div class="widget-body"><%- frameBody %></div><% } %>
+  <%- frameFooter %>
+</widget>
+<% } %>

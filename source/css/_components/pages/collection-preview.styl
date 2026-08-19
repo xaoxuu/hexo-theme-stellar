@@ -1,0 +1,68 @@
+.collection-preview
+  padding: 2rem 1rem
+  >h1, >p
+    max-width: 720px
+    margin-left: auto
+    margin-right: auto
+
+.collection-preview__grid
+  display: grid
+  grid-template-columns: repeat(2, minmax(0, 1fr))
+  gap: var(--gap-page)
+  align-items: start
+  margin-top: 2rem
+  @media screen and (max-width: $device-tablet)
+    grid-template-columns: minmax(0, 1fr)
+
+.collection-preview__theme
+  max-width: 720px
+  margin: 1rem auto 0
+  display: flex
+  align-items: center
+  justify-content: flex-end
+  gap: 8px
+  color: var(--text-p3)
+  font-size: $fs-12
+  button
+    border: 0
+    border-radius: $border-button
+    padding: 4px 8px
+    color: var(--text-p2)
+    background: var(--block)
+    cursor: pointer
+    &:focus-visible
+      outline: 2px solid var(--theme)
+      outline-offset: 2px
+
+.collection-preview__surface
+  box-sizing: border-box
+  width: 100%
+  margin: 0 auto
+  padding: var(--gap-base)
+  border-radius: $border-card-l
+  background: var(--card)
+  box-shadow: $boxshadow-card
+  &[data-preview-width='240']
+    max-width: 240px
+  &[data-preview-width='320']
+    max-width: 320px
+  &[data-preview-width='720']
+    width: unquote('min(720px, calc(100vw - 2 * var(--gap-page)))')
+    max-width: none
+    grid-column: 1 / -1
+  &[data-ui-surface='glass']
+    background: linear-gradient(135deg, rgba(white, .42), rgba(white, .12)), url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg) center / cover
+  >header
+    display: flex
+    justify-content: space-between
+    gap: 8px
+    color: var(--text-p1)
+    padding: 0 var(--gap-base) var(--gap-base)
+    code
+      color: var(--text-p3)
+      background: none
+      padding: 0
+  .widget-wrapper
+    margin-top: 0
+  .widget-wrapper+.widget-wrapper
+    margin-top: 24px

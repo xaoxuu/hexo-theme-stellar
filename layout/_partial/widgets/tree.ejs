@@ -1,68 +1,58 @@
 <%
-const proj = theme.wiki.tree[page.wiki]
+var proj = theme.wiki.tree[page.wiki]
 
-function layoutTocHeader(title) {
-  var el = ''
-  el += `<div class="widget-header dis-select">`
-  el += `<span class="name">${title || __("meta.toc")}</span>`
-  el += `</div>`
-  return el
+function layoutSectionHeader(title) {
+  if (!title || title.length === 0) {
+    return ''
+  }
+  return '<div class="widget-header dis-select"><span class="name">' + escape_html(title) + '</span></div>'
 }
 
 function layoutDocTree(pages) {
-  var el = ''
-  for (let p of pages) {
-    if (p.title == null || p.title.length == 0) {
+  var entries = []
+  for (var docPage of pages) {
+    if (docPage.title == null || docPage.title.length === 0 || proj.pages.length <= 1) {
       continue
     }
-    let isActive = ''
-    if (p.path === page.path) {
-      isActive += ' active'
-    }
-    if (proj.pages.length > 1) {
-      let href = pretty_url(p.path);
-      el += `<a class="link${isActive}" href="${href}">`
-      el += `<span class="toc-text">${p.title}</span>`
-      if (isActive.length > 0) {
-        el += '<span class="active-dot"></span>'
-      }
-      el += `</a>`
-    }
+    entries.push({
+      href: pretty_url(docPage.path),
+      title: docPage.title,
+      active: docPage.path === page.path,
+      gradientRef: 'leftbar-active-icon-grad'
+    })
   }
-  return el
+  return partial('_partial/components/collection', {options: {
+    layout: 'list',
+    variant: 'nav',
+    density: 'compact',
+    items: entries
+  }})
 }
 
-
-function layoutDiv(fallback) {
-  if (proj == null) {
+function layoutDiv() {
+  if (proj == null || proj.pages == null || proj.pages.length === 0 || proj.sections == null || proj.sections.length === 0) {
     return ''
   }
-  if (proj.pages == null || proj.pages.length == 0) {
-    return ''
-  }
-  if (proj.sections == null || proj.sections.length == 0) {
-    return ''
-  }
-  var el = ''
-  for (let sec of proj.sections) {
-    if (sec.pages.length == 0) {
+  var body = ''
+  for (var section of proj.sections) {
+    if (section.pages.length === 0) {
       continue
     }
-    if (sec.title?.length > 0) {
-      el += layoutTocHeader(sec.title)
-    }
-    const docTree = layoutDocTree(sec.pages)
-    if (docTree.trim().length > 0) {
-      el += `<div class="widget-body fs14">${docTree}</div>`
+    var collection = (layoutDocTree(section.pages) || '').trim()
+    if (collection.length > 0) {
+      body += '<section class="widget-section">'
+      body += layoutSectionHeader(section.title)
+      body += collection
+      body += '</section>'
     }
   }
-  if (el.trim().length > 0) {
-    return `<widget class="widget-wrapper doc-tree post-list" data-wiki="${page.wiki}">${el}</widget>`
-  } else {
-    return ''
-  }
+  return partial('_partial/components/widget-frame', {
+    className: 'doc-tree-widget',
+    body: body,
+    attrs: {'data-wiki': page.wiki},
+    reveal: false
+  })
 }
-
 %>
 
 <%- layoutDiv() %>

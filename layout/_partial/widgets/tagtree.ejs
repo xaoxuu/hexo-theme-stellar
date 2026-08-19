@@ -1,59 +1,75 @@
-<%# 笔记本的标签树 %>
-<% const notebook = theme.notebooks.tree[page.notebook] %>
-<% const tagTree = notebook?.tagTree %>
-<% const isLeaf = tag => tag.id === '' || tag.children.length === 0 %>
-<% const getTagcon = tag => {
-  const tagcons = theme.notebook.tagcons || {}
+<%
+var notebook = theme.notebooks.tree[page.notebook]
+var tagTree = notebook?.tagTree
+
+function isLeaf(tag) {
+  return tag.id === '' || tag.children.length === 0
+}
+
+function getTagcon(tag) {
+  var tagcons = theme.notebook.tagcons || {}
   return tagcons[tag.name] || tagcons[tag.id] || tagcons[tag.part] || tagcons[tag.part.toLowerCase()] || tagcons['']
-} %>
+}
 
-<% function layoutTag(tag, level) { %>
-  <% const active = page.activeTag === tag.id %>
-  <a class="link<%= active ? ' active' : '' %>" href="<%= pretty_url(tag.path) %>">
-    <span class="toc-text"<% if (level > 0) { %> style="padding-left: <%= level * 0.875 %>rem;"<% } %>>
-      <% if (tag.id === '') { %>
-        <%= __('meta.all_notes') %>
-      <% } else { %>
-        <% const tagcon = item.show_tagcon && getTagcon(tag) %>
-        <% if (tagcon) { %><span class="tagcon"><%- icon(tagcon) %></span><% } %>
-        <%= tag.part %>
-      <% } %>
-    </span>
-    <span class="toc-text tag-switcher-wrapper">
-      <span class="tag-switcher" />
-    </span>
-  </a>
-<% } %>
+function layoutTag(tag, level) {
+  var active = page.activeTag === tag.id
+  var tagcon = tag.id !== '' && item.show_tagcon ? getTagcon(tag) : ''
+  var trailing = ''
+  if (!isLeaf(tag)) {
+    trailing = '<span class="tag-switcher-wrapper"><span class="tag-switcher"></span></span>'
+  }
+  return partial('_partial/components/collection-item', {
+    item: {
+      href: pretty_url(tag.path),
+      title: tag.id === '' ? __('meta.all_notes') : tag.part,
+      icon: tagcon,
+      active: active,
+      indicator: false,
+      depth: level,
+      className: 'tag-tree__link',
+      after: trailing
+    }
+  })
+}
 
-<% function layoutChildTags(tag, level) { %>
-  <% for (const child of tag.children) { %>
-    <%= tagAndSub(tagTree.get(child), level + 1) %>
-  <% } %>
-<% } %>
+function tagAndSub(tag, level) {
+  if (!tag) {
+    return ''
+  }
+  var active = page.activeTag === tag.id
+  var expanded = item.expand_all || (item.expand_active && active) || page.activeTag?.startsWith(tag.id + '/')
+  var classes = isLeaf(tag) ? ' is-leaf' : ' is-parent'
+  if (expanded) {
+    classes += ' is-expanded'
+  }
+  var el = '<div class="tag-subtree' + classes + '" data-tag="' + escape_html(tag.id) + '">'
+  el += layoutTag(tag, level)
+  if (!isLeaf(tag)) {
+    for (var child of tag.children) {
+      el += tagAndSub(tagTree.get(child), level + 1)
+    }
+  }
+  el += '</div>'
+  return el
+}
 
-<% function tagAndSub(tag, level) { %>
-  <% if (!tag) return '' %>
-  <% const active = page.activeTag === tag.id %>
-  <% const expanded = item.expand_all || (item.expand_active && active) || page.activeTag?.startsWith(`${tag.id}/`) %>
-  <% const classes = [isLeaf(tag) ? ' leaf-tag' : ' parent-tag', expanded ? ' expanded' : ''] %>
-  <div class="tag-subtree<%= classes.join('') %>" data-tag="<%= tag.id %>">
-    <%= layoutTag(tag, level) %>
-    <% if (!isLeaf(tag)) { %>
-      <%= layoutChildTags(tag, level) %>
-    <% } %>
-  </div>
-<% } %>
+function layoutDiv() {
+  if (!tagTree) {
+    return ''
+  }
+  var body = '<div class="ui-collection tag-tree" data-layout="list" data-variant="nav" data-density="compact">'
+  body += tagAndSub(tagTree.get(''), 0)
+  for (var child of tagTree.get('').children) {
+    body += tagAndSub(tagTree.get(child), 0)
+  }
+  body += '</div>'
+  return partial('_partial/components/widget-frame', {
+    className: 'tag-tree-widget',
+    title: __('meta.tag_tree'),
+    body: body,
+    attrs: {'data-notebook': page.notebook}
+  })
+}
+%>
 
-<% if (tagTree) { %>
-  <widget class="widget-wrapper<%= scrollreveal(' ') %> post-list" data-notebook="<%= page.notebook %>">
-    <div class="widget-header dis-select">
-      <span class="name"><%= __('meta.tag_tree') %></span>
-    </div>
-    <div class="widget-body fs14 tag-tree">
-      <%= tagAndSub(tagTree.get(''), 0) %>
-      <% for (const child of tagTree.get('').children) { %>
-        <%= tagAndSub(tagTree.get(child), 0) %>
-      <% } %>
-    </div>
-  </widget>
-<% } %>
+<%- layoutDiv() %>

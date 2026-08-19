@@ -387,7 +387,7 @@ graph BT
 | `style.leftbar.blur-px` | `--blur-px` CSS 变量 → `.sidebg` 的 `filter: blur(...)` | sidebar.styl |
 | `$leftbar-background-color-light` | `.sidebg` 的 `background-color`（浅色模式） | sidebar.styl |
 | `$leftbar-background-color-dark` | `.sidebg` 的 `background-color`（深色模式经 `prefers-color-scheme`） | sidebar.styl |
-| `style.leftbar.ui-style` | `glass` / `card` 风格开关；`card` 时 `.l_left` 追加 `leftbar-card` 类 | layout.ejs / sidebar.styl |
+| `style.leftbar.ui-style` | `glass` / `card` 风格开关；同时为 `.l_left` 声明对应 `data-ui-surface` | layout.ejs / sidebar.styl / collection.styl |
 
 设置 `$leftbar-background-image` 时，`.sidebg` 还扩展内缩进（`--inset: 32px`），让模糊略微溢出容器边缘，再由父元素 `border-radius` 裁剪。
 
@@ -397,11 +397,11 @@ graph BT
 
 `style.leftbar.ui-style` 控制左栏外观：`glass` 为历史默认行为，保留上面的三层背景系统；`card` 时 `layout.ejs` 为 `.l_left` 追加 `leftbar-card` 类，容器改为 `background: var(--card)`（浅色纯白 / 深色主题深灰黑）与 `box-shadow: $boxshadow-float`（`0 4px 8px 0 rgba(0,0,0,0.05)`），并隐藏 `.sidebg` 与 `.leftbar-container:before/:after`。因类选择器特异性更高，桌面与移动端均生效。该配置项默认值为 `card`。
 
-交互样式按风格隔离：`sidebar-light()` 混入与搜索条底部条读取容器级 CSS 变量 `--leftbar-item-bg` / `--leftbar-item-shadow` / `--leftbar-search-line`（默认回退玻璃质感背景与 `--bg-a100`/`--bg-a20` 底部条）。`card` 时 `.l_left.leftbar-card` 将其覆盖为 `var(--block-border)` / `none` / `var(--text-meta)`：列表项（菜单、最近更新、页面树、链接列表、相关文章等）hover/active 背景为 `var(--block-border)`、无顶部光照；搜索条底部条默认为 `var(--text-meta)`，输入/悬停高亮仍为彩虹渐变。`glass` 与右栏未设置变量，保持原效果。wiki 内容页左上角「所有项目」返回胶囊（`.wiki-home`，`source/css/_components/sidebar/logo.styl`）默认态同样复用 `sidebar-light()`，与目录树激活项背景一致；hover 仅文字颜色变化。
+紧凑列表、摘要条目和链接网格不再通过 `.l_left` / `.l_right` 高特异性选择器适配。`layout.ejs` 为左栏声明 `data-ui-surface="glass|card"`，为右栏声明 `sidebar`，为主内容声明 `content`；`.ui-collection` 只消费 `--ui-item-*`、`--ui-grid-*` 等 surface 语义变量。glass 使用半透明高光，card/sidebar 使用块级填充，surface 不改变条目尺寸和网格几何。
 
-组件填充同样按风格隔离：`card` 时 `.l_left.leftbar-card` 覆盖 `--bg-a20/a50/a60/a75` 为 `var(--block)`、`--bg-a100` 为 `var(--block-border)`，使原本白色半透明的组件背景（markdown 正文、标签云、相关文章、时间线、搜索结果等）与右栏观感一致。
+搜索结果与 TOC 保留原有生成结构和交互，通过 `.ui-collection-adapter` 读取相同的 hover/active 令牌。`sidebar-light()` 仍服务于未迁移的专用侧栏元素，例如 wiki 内容页左上角「所有项目」返回胶囊；搜索条底部条继续读取 `--leftbar-search-line`。
 
-左栏独立 linklist 小部件的多列布局（`columns > 1`，模板为其追加 `multi` 类）下，每个链接显示背景色：`glass` 为 `--bg-a20`，`card` 经上述覆盖自动得到 `var(--block)`；单列列表与单链接不显示背景，hover/active 仍走 `sidebar-light()` 高亮（`components.styl`）。
+左栏 `card` 对 `--bg-a*` 的历史重映射仍用于 markdown、标签云、时间线等专用展示组件，但 collection 不依赖这组全局变量。linklist 改为显式 `view: list | grid`；`columns` 仅在 grid 下表示最大列数，窄容器自动降列，`show_title` 独立控制标题且默认为 `true`。
 
 ### CSS 变量集成
 

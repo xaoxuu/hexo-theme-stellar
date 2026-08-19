@@ -1,0 +1,44 @@
+<%
+var entry = item || {}
+var entryTitle = entry.title == null ? '' : String(entry.title)
+var entryPrefix = entry.prefix == null ? '' : String(entry.prefix)
+var entryDescription = entry.description == null ? '' : String(entry.description)
+var entryMeta = entry.meta == null ? '' : String(entry.meta)
+var entryClassName = typeof entry.className === 'string' ? entry.className.trim() : ''
+var entryClasses = 'ui-collection__item'
+if (entry.active) {
+  entryClasses += ' is-active'
+}
+if (entryClassName.length > 0) {
+  entryClasses += ' ' + entryClassName
+}
+var entryStyle = ''
+if (entry.theme) {
+  entryStyle += '--item-theme:' + String(entry.theme) + ';'
+}
+if (entry.depth > 0) {
+  entryStyle += '--ui-item-depth:' + parseInt(entry.depth, 10) + ';'
+}
+var entryGradientId = entry.gradientId ? String(entry.gradientId).replace(/[^a-zA-Z0-9_-]/g, '-') : ''
+var entryGradientRef = entry.gradientRef ? String(entry.gradientRef).replace(/[^a-zA-Z0-9_-]/g, '-') : ''
+if (entryGradientId.length > 0 || entryGradientRef.length > 0) {
+  entryStyle += '--item-grad:url(#' + (entryGradientId || entryGradientRef) + ');'
+}
+var showTitle = entry.showTitle !== false
+var hasContent = showTitle || entryPrefix.length > 0 || entryDescription.length > 0 || entryMeta.length > 0
+%>
+<a class="<%= entryClasses %>" href="<%= entry.href %>" title="<%= entryTitle %>"<% if (entry.active) { %> aria-current="page"<% } %><% if (entryStyle.length > 0) { %> style="<%= entryStyle %>"<% } %>>
+  <%- typeof entry.before === 'string' ? entry.before : '' %>
+  <% if (entry.icon) { %><span class="ui-collection__leading"><%- icon(entry.icon, 'no-lazy', true) %></span><% } %>
+  <% if (hasContent) { %>
+    <span class="ui-collection__content">
+      <% if (entryPrefix.length > 0) { %><span class="ui-collection__prefix"><%= entryPrefix %></span><% } %>
+      <% if (showTitle) { %><span class="ui-collection__title"><%= entryTitle %></span><% } %>
+      <% if (entryDescription.length > 0) { %><span class="ui-collection__description"><%= entryDescription %></span><% } %>
+      <% if (entryMeta.length > 0) { %><span class="ui-collection__meta"><%= entryMeta %></span><% } %>
+    </span>
+  <% } %>
+  <%- typeof entry.after === 'string' ? entry.after : '' %>
+  <% if (entry.active && entry.indicator !== false) { %><span class="ui-collection__indicator"></span><% } %>
+  <% if (entryGradientId.length > 0) { %><%- partial('_partial/sidebar/grad-def', {id: entryGradientId}) %><% } %>
+</a>

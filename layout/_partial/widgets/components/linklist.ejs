@@ -1,27 +1,30 @@
 <%
 function layoutDiv(linklist) {
-  var links = linklist.items || []
-  if (links.length == 0) {
-    return ''
+  var links = Array.isArray(linklist.items) ? linklist.items : []
+  var view = linklist.view === 'grid' ? 'grid' : 'list'
+  var columns = view === 'grid' ? (linklist.columns || 2) : 1
+  var showTitle = linklist.show_title !== false
+  var entries = []
+  for (var link of links) {
+    if (!link || !link.url || !link.title) {
+      continue
+    }
+    entries.push({
+      href: link.url,
+      title: link.title,
+      icon: link.icon,
+      active: pretty_url(link.url) == pretty_url(page.path),
+      showTitle: showTitle,
+      gradientRef: 'leftbar-active-icon-grad'
+    })
   }
-  var el = ''
-  var style = ''
-  var columns = linklist.columns || links.length
-  if (links.length == 1) {
-    style += `style="grid-template-columns:repeat(1,1fr);"`
-  } else {
-    style += `style="grid-template-columns:repeat(${columns},1fr);"`
-  }
-  var align = 'center'
-  if (columns == 1 && links.length > 1) {
-    align = 'left'
-  }
-  el += `<div class="linklist ${align}${columns > 1 ? ' multi' : ''}" ${style}>`
-  for (let link of links) {
-    el += partial('link', {item: link, columns: columns})
-  }
-  el += `</div>`
-  return el
+  return partial('_partial/components/collection', {options: {
+    layout: view,
+    variant: showTitle ? 'nav' : 'icon',
+    density: 'compact',
+    columns: columns,
+    items: entries
+  }})
 }
 %>
 <%- layoutDiv(item) %>

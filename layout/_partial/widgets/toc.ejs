@@ -1,79 +1,54 @@
 <%
-
 function layoutTocBody() {
-  if (toc(page.content).length > 0) {
-    return toc(page.content, {
-      list_number: item.list_number,
-      min_depth: item.min_depth,
-      max_depth: item.max_depth
-    })
-  }
-  return ''
-}
-
-function layoutTocHeader(title) {
-  var el = ''
-  el += `<div class="widget-header dis-select">`
-  el += `<span class="name">${title || __("meta.toc")}</span>`
-  el += `<a class="cap-action" onclick="sidebar.toggleTOC()" >${icon('default:rightbar', '', true)}</a>`
-  el += `</div>`
-  return el
-}
-
-function layoutToc(fallback) {
-  const tocBody = layoutTocBody()
-  if (tocBody.length == 0) {
+  var tocBody = toc(page.content, {
+    list_number: item.list_number,
+    min_depth: item.min_depth,
+    max_depth: item.max_depth
+  })
+  if (tocBody.length === 0) {
     return ''
   }
-  var el = ''
-  el += `<widget class="widget-wrapper${scrollreveal(' ')} toc" id="data-toc" collapse="${item.collapse}">`
-  el += layoutTocHeader()
-  el += `<div class="widget-body">`
-  el += tocBody
-  el += `</div>`
-  el += `</widget>`
-  return el
+  return tocBody.replace('class="toc"', 'class="toc ui-collection-adapter"')
 }
 
-function layoutDiv(fallback) {
-  const tocBody = layoutTocBody()
-  const hasToc = tocBody.trim().length > 0
-  // 远程 md 内容由客户端渲染，构建期正文无标题：
-  // 预留空 TOC 容器，渲染完成后由 mdrender.js 填充
-  const hasRemoteMd = has_remote_md(page)
-  // 页面是否实际渲染评论区，由 _partial/comments/layout.ejs 标记
-  const hasComments = page.cmt_rendered === true
+function layoutTocAction() {
+  return '<a class="cap-action" onclick="sidebar.toggleTOC()">' + icon('default:rightbar', '', true) + '</a>'
+}
+
+function layoutFooter(hasComments) {
+  var footer = '<div class="widget-footer">'
+  footer += '<a class="top" onclick="util.scrollTop()">'
+  footer += icon('default:upup', '', true)
+  footer += '<span>' + __('btn.top') + '</span></a>'
+  if (hasComments) {
+    footer += '<a class="buttom" onclick="util.scrollComment()">'
+    footer += icon('default:tocomment', '', true)
+    footer += '<span>' + __('btn.comments') + '</span></a>'
+  }
+  footer += '</div>'
+  return footer
+}
+
+function layoutDiv() {
+  var tocBody = layoutTocBody()
+  var hasToc = tocBody.trim().length > 0
+  var hasRemoteMd = has_remote_md(page)
+  var hasComments = page.cmt_rendered === true
   if (!hasToc && !hasRemoteMd && !hasComments) {
     return ''
   }
-  var el = ''
-  el += `<widget class="widget-wrapper${scrollreveal(' ')} toc" id="data-toc" collapse="${item.collapse}">`
-  if (hasToc) {
-    el += layoutTocHeader()
-    el += `<div class="widget-body">`
-    el += tocBody
-    el += `</div>`
-  } else if (hasRemoteMd) {
-    el += layoutTocHeader()
-    el += `<div class="widget-body">`
-    el += `</div>`
-  }
-  el += `<div class="widget-footer">`
-  el += `<a class="top" onclick="util.scrollTop()">`
-  el += icon('default:upup', '', true)
-  el += `<span>${__('btn.top')}</span>`
-  el += `</a>`
-  if (hasComments) {
-    el += `<a class="buttom" onclick="util.scrollComment()">`
-    el += icon('default:tocomment', '', true)
-    el += `<span>${__('btn.comments')}</span>`
-    el += `</a>`
-  }
-  el += `</div>`
-  el += `</widget>`
-  return el
+  return partial('_partial/components/widget-frame', {
+    className: 'toc',
+    title: hasToc || hasRemoteMd ? __('meta.toc') : '',
+    action: hasToc || hasRemoteMd ? layoutTocAction() : '',
+    body: hasToc ? tocBody : (hasRemoteMd ? '<nav class="toc ui-collection-adapter"></nav>' : ''),
+    footer: layoutFooter(hasComments),
+    attrs: {
+      id: 'data-toc',
+      collapse: item.collapse === 'auto' ? 'auto' : String(item.collapse === true)
+    }
+  })
 }
-
 %>
 
 <%- layoutDiv() %>

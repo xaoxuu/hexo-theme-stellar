@@ -1,61 +1,72 @@
 <%
 function layoutDiv() {
-  var el = `<widget class="widget-wrapper${scrollreveal(' ')} recent post-list">`
-  // header
-  el += '<div class="widget-header dis-select">';
-  el += '<span class="name">' + __("meta.recent_update") + '</span>';
+  var action = ''
   if (item.rss) {
-    el += '<a class="cap-action" id="rss" title="Subscribe" href="' + item.rss + '">';
-    el += icon('default:rss')
-    el += '</a>';
+    action += '<a class="cap-action" id="rss" title="Subscribe" href="' + escape_html(item.rss) + '">'
+    action += icon('default:rss')
+    action += '</a>'
   }
-  el += '</div>';
-  // body
-  var arr = [];
+  var arr = []
   if (page.menu_id == 'wiki') {
-    arr = theme.wiki.all_pages.filter( p => {
+    arr = theme.wiki.all_pages.filter(function(p) {
       if (p.wiki) {
-        let proj = theme.wiki.tree[p.wiki];
-        return proj?.index != false;
+        var proj = theme.wiki.tree[p.wiki]
+        return proj?.index != false
       }
       return false
     })
-    arr = arr.sort((p1, p2) => p1.updated > p2.updated ? -1 : 1)
+    arr = arr.sort(function(p1, p2) {
+      return p1.updated > p2.updated ? -1 : 1
+    })
   } else if (page.layout === 'notebooks') {
-    arr = site.pages.filter(p => p.notebook).sort('-updated')
+    arr = site.pages.filter(function(p) {
+      return p.notebook
+    }).sort('-updated')
   } else if (page.notebook) {
-    arr = site.pages.filter(p => p.notebook === page.notebook).sort('-updated')
+    arr = site.pages.filter(function(p) {
+      return p.notebook === page.notebook
+    }).sort('-updated')
   } else {
-    arr = site.posts.filter( p => p.title && p.title.length > 0)
-    arr = arr.sort("updated", -1)
+    arr = site.posts.filter(function(p) {
+      return p.title && p.title.length > 0
+    }).sort('updated', -1)
   }
-  el += '<div class="widget-body fs14">'
-  arr = arr.filter(p => p.title?.length > 0)
+  arr = arr.filter(function(p) {
+    return p.title?.length > 0
+  })
   arr.length = item.limit
-  arr.forEach(post => {
-    if (!post) { return }
-    el += `<a class="item title" href="${pretty_url(post.link || post.path)}">`
-    el += '<span class="title">'
-    if (post.wiki) {
-      const proj = theme.wiki.tree[post.wiki];
-      let name = proj?.name || post?.wiki;
-      if (name) {
-        el += '<strong>' + name + '</strong>' + '<span class="dot"></span>';
-      }
-    } else if (page.layout === 'notebooks') {
-      const notebook = theme.notebooks.tree[post.notebook]
-      const name = notebook?.name || post.notebook
-      if (name) {
-        el += '<strong>' + name + '</strong>' + '<span class="dot"></span>';
-      }
+  var entries = []
+  arr.forEach(function(post) {
+    if (!post) {
+      return
     }
-    el += post.title + '</span>';
-    el += '</a>';
-    el += '';
-  });
-  el += '</div>';
-  el += '</widget>';
-  return el;
+    var prefix = ''
+    if (post.wiki) {
+      var proj = theme.wiki.tree[post.wiki]
+      prefix = proj?.name || post.wiki || ''
+    } else if (page.layout === 'notebooks') {
+      var notebook = theme.notebooks.tree[post.notebook]
+      prefix = notebook?.name || post.notebook || ''
+    }
+    entries.push({
+      href: pretty_url(post.link || post.path),
+      title: post.title,
+      prefix: prefix,
+      indicator: false
+    })
+  })
+  var body = partial('_partial/components/collection', {options: {
+    layout: 'list',
+    variant: 'nav',
+    density: 'compact',
+    items: entries
+  }})
+  return partial('_partial/components/widget-frame', {
+    className: 'recent-widget',
+    title: __('meta.recent_update'),
+    action: action,
+    body: body
+  })
 }
 %>
 <%- layoutDiv() %>

@@ -5,8 +5,8 @@
     &:before
       content: ''
       position absolute
-      top: 6px
-      bottom: 6px
+      top: 8px
+      bottom: 8px
       left: 0
       width: 4px
       background: var(--block)
@@ -16,7 +16,8 @@
     @media screen and (min-width: $device-laptop)
       background: var(--background)
 
-.l_left .widget-wrapper.toc
+[data-ui-surface='glass'] .widget-wrapper.toc,
+[data-ui-surface='card'] .widget-wrapper.toc
   @media screen and (min-width: $device-laptop)
     background: none
 
@@ -35,7 +36,7 @@
     --padding-offset: calc(0 - var(--padding))
     padding: 4px var(--padding)
     margin: 0 var(--padding)
-    color: var(--text-p3)
+    color: var(--ui-item-muted)
     display: block
     position relative
     border-radius: $border-bar
@@ -43,18 +44,19 @@
     &.active:before
       content: ''
       position absolute
-      top: 6px
-      bottom: 6px
+      top: 4px
+      bottom: 4px
       left: -8px
       width: 4px
       background: var(--theme)
       border-radius: 4px
     &:hover
-      background: var(--block-border)
-      color: var(--text)
+      background: var(--ui-adapter-bg-hover)
+      box-shadow: var(--ui-adapter-shadow-hover)
+      color: var(--ui-item-title)
     
 // 固定位置
-.l_right .widgets .widget-wrapper.toc
+[data-ui-surface='sidebar'] .widgets .widget-wrapper.toc
   margin-top: 1rem
   position: sticky
   position: -webkit-sticky
@@ -85,15 +87,15 @@
   ol
     padding-left: 0
   .toc-child .toc-link
-    padding-left: 1.5rem
+    padding-left: calc(var(--gap-base) * 1)
   .toc-child .toc-child .toc-link
-    padding-left: 2.5rem
+    padding-left: calc(var(--gap-base) * 2)
   .toc-child .toc-child .toc-child .toc-link
-    padding-left: 3.5rem
+    padding-left: calc(var(--gap-base) * 3)
   .toc-child .toc-child .toc-child .toc-child .toc-link
-    padding-left: 4.5rem
+    padding-left: calc(var(--gap-base) * 4)
   .toc-child .toc-child .toc-child .toc-child .toc-child .toc-link
-    padding-left: 5rem
+    padding-left: calc(var(--gap-base) * 5)
 
 // 高亮样式
 .widget-wrapper.toc .toc a.toc-link.active
@@ -133,9 +135,9 @@
     grid-template-rows: 1fr
     trans1 all
     overflow hidden
-.l_right .widgets .widget-wrapper.toc .widget-header .cap-action:hover
+[data-ui-surface='sidebar'] .widgets .widget-wrapper.toc .widget-header .cap-action:hover
   sidebar-light(var(--bg-a50))
-.l_right .widgets .widget-wrapper.toc.collapse
+[data-ui-surface='sidebar'] .widgets .widget-wrapper.toc.collapse
   .widget-header .cap-action
     sidebar-light(var(--bg-a50))
   .widget-body
@@ -181,7 +183,7 @@
   padding-top: 32px
 
 @media screen and (max-width: $device-laptop)
-  .l_right
+  [data-ui-surface='sidebar']
     blur-effect()
     .widgets
       .widget-wrapper.toc
