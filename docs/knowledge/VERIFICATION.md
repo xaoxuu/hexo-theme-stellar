@@ -21,6 +21,8 @@
 
 ## 二、版本与事实修正
 
+| 2026-08-19 | `layout/_partial/widgets/components/link.ejs`、`source/css/_components/widgets/components.styl` | linklist 标题增加 `.link-title` 角色类，通用文字样式不再匹配 `.active-dot`，避免标题 padding 与省略规则拉扁激活圆点；圆点结构与 8×8px 样式保持不变 |
+
 | 2026-08-19 | Wiki Hero 最新版本标签位于站点导航内，与项目信息层级分离 | 将 `wiki-cover-release ds-ghinfo` 移入项目介绍区，位于 `cover-title` 上方；既有数据请求、加载隐藏、淡入和外链行为不变 | `layout/_partial/cover/wiki_cover.ejs`、`source/css/_components/partial/cover.styl`、`docs/knowledge/03-内容系统/wiki-docs.md`、`docs/designs/2026-08-19-wiki-release-above-title/` |
 
 | 2026-08-19 | Wiki Hero 的 `galaxy` 背景仅用 2D Canvas 绘制固定随机星点，缺少纵深、辉光、闪烁和生命周期控制；旧径向渐变中心色 `#27347a` 会把透明 WebGL 星场染成偏亮蓝色 | 改为按需加载的原生 WebGL 四层星场：使用固定 Galaxy 参数，鼠标仅产生平滑视差而不排斥星点；Canvas 与自适应文字取色基准统一使用纯黑 `#000000`；离开视口或页面后台时暂停，减少动态效果、WebGL/着色器/脚本失败时保留该静态底色；不新增 React、OGL 或配置项（见 `docs/designs/2026-08-19-wiki-galaxy-webgl/`） | `layout/_partial/cover/wiki_cover.ejs`、`source/js/plugins/galaxy.js`、`source/js/main.js`、`source/css/_components/partial/cover.styl`、`THIRD-PARTY-NOTICES.md`、`docs/knowledge/03-内容系统/wiki-docs.md` |

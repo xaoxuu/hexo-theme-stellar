@@ -8,7 +8,7 @@ function layoutDiv() {
     el += icon(item.icon)
   }
   if (columns <= 2) {
-    el += `<span>${item.title}</span>`
+    el += `<span class="link-title">${item.title}</span>`
   }
   el += `</div>`
   if (columns == 1 && isActive) {
