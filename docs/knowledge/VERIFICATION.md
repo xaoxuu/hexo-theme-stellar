@@ -298,6 +298,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `9618899` | feat(navigation): 增加原生跨文档页面过渡 | 设计文档 `2026-08-20-cross-document-page-transition/`；知识库 `07-外部集成/pjax-navigation.md`；默认配置与 `page-transition.styl` |
 | `b2c0a3e` | feat(wiki): 改造封面卡片布局 | 设计文档 `2026-08-17-wiki-cover-cards/`；知识库 `03-内容系统/post-lists-cards.md`、`wiki-docs.md`；三语 `meta.available`；Wiki 卡片模板、样式与 GitHub 数据服务 |
 | `3274cc1` | fix: navbar 无轮播区页面默认卡片样式，滚动 2px 后恢复玻璃 | 设计文档 `2026-08-17-navbar-pin-scroll-threshold/`；知识库 `05-前端交互/client-side-overview.md`；`source/js/main.js` |
 | `2a8f5d2` | refactor(loading): 统一 loading 动画并自包含化 | 设计文档 `2026-08-17-unify-loading-animation/`、`2026-08-17-inline-loading-svg/`；知识库 configuration.md、icon-tag.md；内联 loading SVG 与各占位消费方 |
