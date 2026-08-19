@@ -12,496 +12,103 @@ tags:
 <details>
 <summary>相关源码文件</summary>
 
-生成此页面时参考的主题源码文件：
-
 - [source/css/_custom.styl](../../../source/css/_custom.styl)
+- [_config.yml](../../../_config.yml)
 
 </details>
 
 ## 目的与范围
 
-本文介绍 `_custom.styl` 中实现的设计令牌系统，它是 Stellar 主题的基础样式层。设计令牌是保存视觉设计属性（字体、颜色、间距、边框等）的命名变量。主题采用双层方案：Stylus 变量用于构建期配置，CSS 自定义属性用于运行时主题与响应式适配。
+本文是 Stellar 公共设计令牌的权威页面。它记录令牌的语义、来源、响应式规则和消费方式；单个组件的普通 CSS 属性以组件源码为准，不在本文重复展开。
 
-排版细节（字号策略与响应式缩放）见[排版系统](typography.md)；颜色系统与深色模式见[颜色与深色模式](colors-dark-mode.md)；响应式模式与断点见[响应式设计](responsive-design.md)。
+相关页面：
 
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
+- [样式与主题定制](styling-overview.md)：样式层级和修改路径；
+- [排版系统](typography.md)：字体、字号比例和内容排版；
+- [颜色与深色模式](colors-dark-mode.md)：语义颜色和主题模式；
+- [响应式设计](responsive-design.md)：断点和响应式策略。
 
-## 架构概览
+## 令牌架构
 
-设计令牌系统以三层级联把配置值转化为可用的设计原语：
+主题通过两层令牌把配置转化为组件可消费的样式：
 
-```mermaid
-graph TB
-    subgraph "Configuration Source"
-        CONFIG["_config.yml<br/>style section"]
-    end
-    
-    subgraph "Build-Time Layer"
-        HEXOCONFIG["hexo-config() function"]
-        STYLUSVARS["Stylus Variables<br/>$ff-body, $c-theme, $border-card"]
-        CALCULATIONS["Calculated Values<br/>$fsh1-$fsh5, $fs-content-0-$fs-content-3"]
-    end
-    
-    subgraph "Runtime Layer"
-        CSSROOT[":root CSS Custom Properties"]
-        CSSWIDTH["--width-main"]
-        CSSGAP["--gap-margin, --gap-padding"]
-        CSSFONT["--fs-root, --fs-content-base, --fs-content, --fsh2, --fsh3"]
-    end
-    
-    subgraph "Component Consumption"
-        LAYOUTS["Layout Styles<br/>sidebar, navbar, main"]
-        COMPONENTS["Component Styles<br/>md-text, post-card"]
-        UTILITIES["Utility Functions<br/>func.styl mixins"]
-    end
-    
-    CONFIG --> HEXOCONFIG
-    HEXOCONFIG --> STYLUSVARS
-    STYLUSVARS --> CALCULATIONS
-    STYLUSVARS --> CSSROOT
-    CALCULATIONS --> CSSROOT
-    
-    CSSROOT --> CSSWIDTH
-    CSSROOT --> CSSGAP
-    CSSROOT --> CSSFONT
-    
-    STYLUSVARS --> LAYOUTS
-    STYLUSVARS --> COMPONENTS
-    STYLUSVARS --> UTILITIES
-    
-    CSSWIDTH --> LAYOUTS
-    CSSGAP --> COMPONENTS
-    CSSFONT --> COMPONENTS
-```
+1. **Stylus 令牌**：构建期由 `hexo-config()` 读取配置，供 Stylus 和 mixin 使用；
+2. **CSS 自定义属性**：输出到 `:root`，供响应式规则、局部覆盖和运行时逻辑使用。
 
-`hexo-config()` 函数在构建期读取配置并转换为 Stylus 变量；部分值以 CSS 自定义属性暴露在 `:root` 选择器中，支持响应式设计与用户偏好的运行时修改。
+配置 → `_custom.styl` → Stylus/CSS 令牌 → 组件样式。修改配置后需要重新构建；CSS 自定义属性的媒体查询覆盖由浏览器运行时处理。
 
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
+## 公共令牌
 
-## 配置驱动的变量生成
+### 字体与字号
 
-### hexo-config 函数模式
-
-所有设计令牌都通过 `hexo-config()` 函数来自主题的 `_config.yml`，按键路径取值：
-
-```mermaid
-graph LR
-    subgraph "Configuration Keys"
-        STYLEFONT["style.font-family.*"]
-        STYLESIZE["style.font-size.*"]
-        STYLECOLOR["style.color.*"]
-        STYLEBORDER["style.border-radius.*"]
-        STYLELEFT["style.leftbar.*"]
-        STYLESITE["style.site.*"]
-    end
-    
-    subgraph "Stylus Variable Assignments"
-        FFBODY["$ff-body = convert(hexo-config('style.font-family.body'))"]
-        FFCODE["$ff-code = convert(hexo-config('style.font-family.code'))"]
-        FSROOT["$fs-root = convert(hexo-config('style.font-size.root'))"]
-        FSBASE["$fs-root = convert(hexo-config('style.font-size.root'))"]
-        CTHEME["$c-theme = convert(hexo-config('style.color.theme'))"]
-        CACCENT["$c-accent = convert(hexo-config('style.color.accent'))"]
-        BORDERCARD["$border-card = convert(hexo-config('style.border-radius.card'))"]
-        LEFTBG["$leftbar-background-image = hexo-config('style.leftbar.background-image')"]
-    end
-    
-    STYLEFONT --> FFBODY
-    STYLEFONT --> FFCODE
-    STYLESIZE --> FSROOT
-    STYLESIZE --> FSBODY
-    STYLECOLOR --> CTHEME
-    STYLECOLOR --> CACCENT
-    STYLEBORDER --> BORDERCARD
-    STYLELEFT --> LEFTBG
-```
-
-`convert()` 是 Stylus 辅助函数，确保取回的值类型正确。
-
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
-
-## Stylus 变量分类
-
-### 字体变量
-
-主题定义三类字体变量，均取自配置：
-
-| 变量 | 配置键 | 用途 |
-|------|--------|------|
-| `$ff-body` | `style.font-family.body` | 正文字体 |
-| `$ff-code` | `style.font-family.code` | 行内代码字体 |
-| `$ff-codeblock` | `style.font-family.codeblock` | 代码块字体 |
-| `$fs-root` | `style.font-size.root` | 桌面端字号基准 |
-| `$fs-root` | `style.font-size.root` | HTML/rem 根字号；移动端自动增加 2px |
+| 令牌 | 配置来源 | 语义 |
+| --- | --- | --- |
+| `$ff-body` | `style.font-family.body` | 正文字体栈 |
+| `$ff-code` | `style.font-family.code` | 行内代码字体栈 |
+| `$ff-codeblock` | `style.font-family.codeblock` | 代码块字体栈 |
+| `$fs-root` / `--fs-root` | `style.font-size.root` | 页面字号基准；移动端按响应式规则调整 |
 | `$fs-code` | `style.font-size.code` | 行内代码字号 |
 | `$fs-codeblock` | `style.font-size.codeblock` | 代码块字号 |
 
-额外的固定字号令牌：
+标题令牌从当前内容字号派生：`--fsh2`、`--fsh3`、`--fsh4` 分别用于 H2、H3、H4。组件需要局部调整排版时优先覆盖 `--fs-content`，让标题和段落继续沿用同一比例尺。
 
-```
-$fs-15 = calc(var(--fs-content-base) - 1px)
-$fs-14 = calc(var(--fs-content-base) - 2px)
-$fs-13 = calc(var(--fs-content-base) - 3px)
-$fs-12 = calc(var(--fs-content-base) - 4px)
-```
+### 颜色与背景
 
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
-
-### 计算字号令牌
-
-主题基于 `var(--fs-root)` 生成标题与段落的计算字号：
-
-```mermaid
-graph TB
-    FSROOT["var(--fs-root)<br/>(from style.font-size.root)"]
-    
-    subgraph "Header Sizes"
-        FSH1["$fsh1 = calc(var(--fs-root) + 9px)"]
-        FSH2["$fsh2 = calc(var(--fs-root) + 11px)"]
-        FSH3["$fsh3 = calc(var(--fs-root) + 7px)"]
-        FSH4["$fsh4 = calc(var(--fs-root) + 4px)"]
-        FSH5["$fsh5 = calc(var(--fs-root) + 2px)"]
-    end
-    
-    subgraph "Paragraph Variations"
-        FSP0["$fs-content-0 = calc(var(--fs-content-base) - 0px)"]
-        FSP1["$fs-content-1 = calc(var(--fs-content-base) - 1px)"]
-        FSP2["$fs-content-2 = calc(var(--fs-content-base) - 2px)"]
-        FSP3["$fs-content-3 = calc(var(--fs-content-base) - 3px)"]
-    end
-    
-    FSROOT --> FSH1
-    FSROOT --> FSH2
-    FSROOT --> FSH3
-    FSROOT --> FSH4
-    FSROOT --> FSH5
-    FSROOT --> FSP0
-    FSROOT --> FSP1
-    FSROOT --> FSP2
-    FSROOT --> FSP3
-```
-
-这些计算用字符串插值配合 CSS `calc()` 保持动态尺寸，实际 Stylus 代码格式：
-
-```stylus
-$fsh1 = 'calc(var(--fs-root) + 9px)'
-$fs-content-1 = 'calc(var(--fs-content-base) - 1px)'
-```
-
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
-
-### 颜色变量
-
-颜色令牌定义主题的视觉身份：
-
-| 变量 | 配置键 | 用途 |
-|------|--------|------|
-| `$c-theme` | `style.color.theme` | 主题色 |
+| 令牌 | 配置来源 | 语义 |
+| --- | --- | --- |
+| `$c-theme` | `style.color.theme` | 主题主色 |
 | `$c-accent` | `style.color.accent` | 强调色 |
 | `$c-link` | `style.color.link` | 链接色 |
-| `$c-base-hue` | 固定 `210deg` | 背景/文字色的基础色相 |
-
-`$c-base-hue` 控制 HSL 颜色系统中生成背景色与文字色的基础色相，通常不需要修改。
-
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
-
-### 背景变量
-
-背景配置支持图片与颜色定制：
-
-| 变量 | 配置键 | 用途 |
-|------|--------|------|
+| `$c-base-hue` | 主题固定值 | 背景和文字色生成的基础色相 |
 | `$site-background-image` | `style.site.background-image` | 全站背景图 |
 | `$leftbar-background-image` | `style.leftbar.background-image` | 左栏背景图 |
-| `$leftbar-background-color-light` | `style.leftbar.background-color-light` | 左栏浅色模式颜色 |
-| `$leftbar-background-color-dark` | `style.leftbar.background-color-dark` | 左栏深色模式颜色 |
-
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
-
-### 圆角变量
-
-主题采用三档圆角体系保持视觉一致：
-
-```mermaid
-graph LR
-    subgraph "Card Borders"
-        CARDL["$border-card-l<br/>Large cards"]
-        CARD["$border-card<br/>Standard cards"]
-        CARDS["$border-card-s<br/>Small cards"]
-    end
-    
-    subgraph "Image Borders"
-        IMAGEL["$border-image-l<br/>Large images"]
-        IMAGE["$border-image<br/>Standard images"]
-        IMAGES["$border-image-s<br/>Small images"]
-    end
-    
-    subgraph "UI Elements"
-        BAR["$border-bar<br/>Navigation bars"]
-        BUTTON["$border-button = 8px<br/>Buttons (fixed)"]
-    end
-    
-    CONFIG["_config.yml<br/>style.border-radius.*"] --> CARDL
-    CONFIG --> CARD
-    CONFIG --> CARDS
-    CONFIG --> IMAGEL
-    CONFIG --> IMAGE
-    CONFIG --> IMAGES
-    CONFIG --> BAR
-```
-
-`$border-button` 硬编码为 `8px`，不从配置派生。
-
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
-
-### 图标装饰变量
-
-story 文章页的 h3 双箭头与引用引号装饰图标由 `_data/icons.yml` 驱动，构建时经 `layout/_partial/head.ejs` 编码为 CSS 变量：
-
-| 变量 | 数据源（icons.yml 键） | 用途 |
-|------|----------------------|------|
-| `--icon-h3-left` | `default:arrow-left` | H3 前缀图标（左 V 形） |
-| `--icon-h3-right` | `default:arrow-right` | H3 前缀图标（右 V 形） |
-| `--icon-quote-left` | `quot:quote-left` | 左引号图标 |
-| `--icon-quote-right` | `quot:quote-right` | 右引号图标 |
-
-**参考源码**：[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)、[_data/icons.yml](../../../_data/icons.yml)
-
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
-
-### 阴影定义
-
-盒阴影令牌提供一致的层级效果：
-
-| 变量 | 用途 | 阴影值 |
-|------|------|--------|
-| `$boxshadow-card` | 标准卡片 | `0 1px 2px 0px rgba(0,0,0,0.1)` |
-| `$boxshadow-float` | 浮动元素 | `0 4px 8px 0px rgba(0,0,0,0.05)` |
-| `$boxshadow-card-float` | 悬停抬升卡片 | `0 12px 16px -4px rgba(0,0,0,0.2)` |
-| `$boxshadow-button` | 按钮立体感 | `0 0 2px 0px rgba(0,0,0,0.04), 0 0 8px 0px rgba(0,0,0,0.04)` |
-| `$boxshadow-block` | 块级元素 | `0 1px 4px 0px rgba(0,0,0,0.02), 0 2px 8px 0px rgba(0,0,0,0.02)` |
-| `$boxshadow-toast` | Toast 通知 | `0 4px 8px 0px rgba(0,0,0,0.1), 0 12px 16px -4px rgba(0,0,0,0.2)` |
-
-阴影系统使用低透明度值营造深度，避免过重视觉。
-
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
-
-## CSS 自定义属性系统
-
-### 动态布局变量
-
-`:root` 选择器定义可运行时修改的 CSS 自定义属性：
-
-```mermaid
-graph TB
-    subgraph "Core Layout Properties"
-        WIDTHMAIN["--width-main<br/>Default: 720px"]
-        SIDEWIDTH["--side-content-width<br/>Default: 224px"]
-    end
-    
-    subgraph "Spacing System"
-        BASE["--gap-base<br/>16px (fixed)"]
-        PAGE["--gap-page<br/>16px → 32px (laptop+)"]
-        GAPP["--gap-p<br/>calc(var(--fs-root) + 4px)"]
-        GAPCOMPACT["--gap-p-compact<br/>calc(var(--fs-root) * 0.75)"]
-    end
-    
-    subgraph "Font Size Properties"
-        FSROOT["--fs-root<br/>$fs-root / mobile +2px"]
-        FSP["--fs-content<br/>var(--fs-content-base)"]
-        FSH2["--fsh2<br/>calc(--fs-content + 11px)"]
-        FSH3["--fsh3<br/>calc(--fs-content + 7px)"]
-        FSH4["--fsh4<br/>calc(--fs-content + 4px)"]
-    end
-    
-    subgraph "Responsive Overrides"
-        MEDIA2K["@media (min-width: 2k)<br/>--width-main: 780px"]
-        MEDIA4K["@media (min-width: 4k)<br/>--width-main: 860px"]
-        MEDIATABLET["@media (max-width: tablet)<br/>--side-content-width: 188px"]
-        MEDIAMOBILE["@media (max-width: mobile)<br/>--fs-root: root + 2px"]
-        MEDIALAPTOP["@media (min-width: laptop)<br/>--gap-page: 32px"]
-    end
-    
-    FSP --> FSH2
-    FSP --> FSH3
-    FSP --> FSH4
-    
-    WIDTHMAIN -.overridden by.-> MEDIA2K
-    WIDTHMAIN -.overridden by.-> MEDIA4K
-    SIDEWIDTH -.overridden by.-> MEDIATABLET
-    SIDEWIDTH -.overridden by.-> MEDIAMOBILE
-    PAGE -.overridden by.-> MEDIALAPTOP
-```
 
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
+组件优先使用语义颜色变量，例如 `var(--text-p1)`、`var(--card)`、`var(--block-border)` 和 `var(--theme)`；组件文档不应复制整套颜色值。
 
-### 宽度与布局属性
+### 圆角
 
-主内容宽度随屏幕尺寸通过媒体查询适配：
+配置中的圆角令牌按组件层级分为大、中、小三档，并分别覆盖卡片、图片和横条元素：
 
-| 属性 | 默认 | 2K+ 屏幕 | 4K+ 屏幕 |
-|------|------|----------|----------|
-| `--width-main` | 720px | 780px | 860px |
-
-渐进加宽充分利用大屏，同时保持可读的行长。
+| 令牌 | 语义 |
+| --- | --- |
+| `$border-card-l` / `$border-card` / `$border-card-s` | 大型、标准、小型卡片 |
+| `$border-image-l` / `$border-image` / `$border-image-s` | 大型、标准、小型图片 |
+| `$border-bar` | 导航栏、浮层、分页器等横条组件 |
+| `$border-button` | 按钮默认圆角，当前为 `8px`，不是配置项 |
 
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
+组件有特殊圆角时，知识库只记录该值对布局或视觉契约的影响，并链接对应组件页面；普通装饰性圆角以源码为准。
 
-### 间距系统变量
+### 阴影
 
-间距系统采用两级层级：
+阴影令牌按层级复用：`$boxshadow-card` 用于普通卡片，`$boxshadow-float` 用于浮动元素，`$boxshadow-card-float` 用于悬停抬升，`$boxshadow-button`、`$boxshadow-block` 和 `$boxshadow-toast` 分别服务于对应组件层级。
 
-```
---gap-base: 16px    // 组件内部基础间距（固定，margin/padding 统一）
---gap-page: 16px    // 页面级留白；≥laptop 为 32px
---rightbar-width-extra: calc(var(--gap-base) * 2)  // 右栏宽度增量（默认 32px）
-```
+阴影的具体函数值属于实现细节；除非变更影响组件层级或兼容性，否则不在领域页面重复列出。
 
-段落间距按字号计算：
+## 布局与间距令牌
 
-```
---gap-p: calc(var(--fs-root) + 4px)           // 标准段落间距
---gap-p-compact: calc(var(--fs-root) * 0.75)  // 紧凑段落间距
-```
+以下 CSS 自定义属性是跨组件布局契约：
 
-这样间距随字号变化按比例缩放。
+| 令牌 | 当前默认值/规则 | 语义 |
+| --- | --- | --- |
+| `--width-main` | `720px`；2K 为 `780px`，4K 为 `860px` | 主内容最大宽度 |
+| `--side-content-width` | 桌面 `224px`；平板 `188px` | 侧栏内容宽度 |
+| `--gap-base` | `16px` | 组件内部基础间距 |
+| `--gap-page` | 默认 `16px`；laptop 及以上 `32px` | 页面级留白 |
+| `--gap-p` | `calc(var(--fs-root) + 4px)` | 标准段落间距 |
+| `--gap-p-compact` | `calc(var(--fs-root) * 0.75)` | 紧凑段落间距 |
 
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
-
-### 侧边栏宽度适配
-
-侧边栏宽度随设备类别调整：
-
-| 屏幕宽度 | `--side-content-width` |
-|----------|------------------------|
-| 桌面（默认） | 224px |
-| 平板（max-width: tablet） | 188px |
-| 手机（max-width: mobile） | 224px |
-
-注意手机端回到 224px，以保证触控目标尺寸。
-
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
-
-### 动态字号属性
-
-字号 CSS 自定义属性引用 Stylus 变量，同时暴露给运行时修改：
-
-```
---fs-root: $fs-root                       // 桌面基准；移动端 +2px
---fs-root: 16px                          // HTML/rem 根字号
---fs-content-base: var(--fs-root)        // 页面字号基准
---fs-content: var(--fs-content-base)     // 当前组件字号
---fsh2: calc(var(--fs-content) + 11px)   // H2 标题字号
---fsh3: calc(var(--fs-content) + 7px)    // H3 标题字号
---fsh4: calc(var(--fs-content) + 4px)    // H4 标题字号
-```
-
-标题计算引用 `var(--fs-content)`，而 `--fs-content` 默认引用 `--fs-content-base`；移动端修改 `--fs-root` 会级联到页面和组件字号，无需逐个覆盖组件。
-
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
-
-## 变量使用模式
-
-### 静态与动态变量
-
-设计令牌系统使用两类变量：
-
-```mermaid
-graph TB
-    subgraph "Static Stylus Variables"
-        STATIC["Compiled at build time<br/>Cannot change after deployment"]
-        EXSTATIC["Examples:<br/>$c-theme, $border-card<br/>$boxshadow-float"]
-        USESTATIC["Used in: Component styles<br/>that don't need runtime changes"]
-    end
-    
-    subgraph "Dynamic CSS Custom Properties"
-        DYNAMIC["Available at runtime<br/>Can be modified via JavaScript"]
-        EXDYNAMIC["Examples:<br/>--width-main, --gap-page<br/>--fs-root, --fs-content, --side-content-width"]
-        USEDYNAMIC["Used in: Responsive layouts<br/>User preference adaptations"]
-    end
-    
-    STATIC --> EXSTATIC
-    EXSTATIC --> USESTATIC
-    DYNAMIC --> EXDYNAMIC
-    EXDYNAMIC --> USEDYNAMIC
-```
-
-不会变化的值优先用静态变量（性能更好）；需要随视口、用户偏好或运行时条件变化的值用 CSS 自定义属性。
-
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
-
-### 组件样式消费
-
-各组件以标准化模式消费这些令牌：
-
-| 令牌类型 | 消费模式 | 示例 |
-|----------|----------|------|
-| 字体族 | 直接赋给 `font-family` | `font-family: $ff-body` |
-| 字号 | 直接赋值或用于 `calc()` | `font-size: $fs-14` |
-| 颜色 | 用于 color/background/border | `color: $c-link` |
-| 边框 | border-radius 属性 | `border-radius: $border-card` |
-| 阴影 | box-shadow 属性 | `box-shadow: $boxshadow-card` |
-| CSS 变量 | 用 `var()` 引用 | `width: var(--width-main)` |
-
-Stylus 编译器在构建期解析静态变量，CSS 自定义属性在浏览器运行时解析。
-
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
-
-## 与配置系统的集成
-
-### 配置结构映射
-
-设计令牌直接映射 `_config.yml` 的 `style` 小节：
-
-```mermaid
-graph LR
-    subgraph "_config.yml Structure"
-        STYLE["style:"]
-        FONTFAM["  font-family:<br/>    body, code, codeblock"]
-        FONTSIZE["  font-size:<br/>    root, body, code, codeblock"]
-        COLOR["  color:<br/>    theme, accent, link"]
-        BORDER["  border-radius:<br/>    card, card-l, card-s<br/>    image, image-l, image-s<br/>    bar"]
-        LEFTBAR["  leftbar:<br/>    background-image<br/>    background-color-light<br/>    background-color-dark"]
-        SITE["  site:<br/>    background-image"]
-    end
-    
-    subgraph "_custom.styl Variables"
-        VARS["Design Token Variables"]
-    end
-    
-    STYLE --> FONTFAM
-    STYLE --> FONTSIZE
-    STYLE --> COLOR
-    STYLE --> BORDER
-    STYLE --> LEFTBAR
-    STYLE --> SITE
-    
-    FONTFAM --> VARS
-    FONTSIZE --> VARS
-    COLOR --> VARS
-    BORDER --> VARS
-    LEFTBAR --> VARS
-    SITE --> VARS
-```
-
-这种一对一映射保证配置修改直接影响编译出的 CSS，无需手动更新变量。
-
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
-
-### 构建期与运行时配置
-
-理解值的解析时机对定制至关重要：
-
-**构建期解析：**
-- 所有 `hexo-config()` 调用在 `hexo generate` 时解析
-- Stylus 变量编译为静态 CSS 值
-- 修改后需要重新生成站点
-
-**运行时解析：**
-- CSS 自定义属性可被 JavaScript 修改
-- 媒体查询覆盖自动生效
-- 响应式适配无需重新生成
-
-这种混合方案在性能（编译期解析）与灵活性（响应式运行时适配）之间取得平衡。
-
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
+`--gap-base` 和 `--gap-page` 不能混用：前者控制组件内部节奏，后者控制页面边缘留白。新增组件应优先复用这两个令牌，而不是直接写入固定间距。
+
+移动端的侧栏宽度和字号存在专门的响应式覆盖；具体断点见[响应式设计](responsive-design.md)。
+
+## 变量使用规则
+
+- 构建期确定、无需运行时变化的值使用 Stylus 令牌；
+- 随视口、主题模式或组件状态变化的值使用 CSS 自定义属性；
+- 组件优先消费语义令牌，不跨层读取另一个组件的私有变量；
+- 新增公共令牌必须有稳定语义、明确消费方和唯一源码定义；
+- 用户定制优先覆盖公开 CSS 变量或配置，不修改主题组件源码。
+
+## 事实来源与维护
+
+当前默认值以 `source/css/_custom.styl` 和 `_config.yml` 为准。本文只解释公共令牌的语义和使用边界。修改令牌后同步更新本文及受影响的布局契约，并运行 `python3 docs/knowledge/tools/verify.py`。

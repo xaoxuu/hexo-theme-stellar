@@ -14,6 +14,7 @@ description: 主题仓库（hexo-theme-stellar）开发全流程：方案 → �
 - 先读 `AGENTS.md`「架构总览」（§6）与 `docs/knowledge/00-总览与安装配置/overview.md` 建立整体认知、定位改动范围。
 - 在 `docs/designs/{YYYY-MM-DD}-{功能简称}/` 下建方案文档（模板 `docs/designs/_template/`，含 `spec.md` / `plan.md` / `checklist.md`）。
 - 方案需写明：要解决的问题、技术方案与实现思路、影响范围、需同步的知识库页面与文档。
+- 知识库文档遵循“设计语义、行为契约、修改依据”分层；新增具体数值时说明语义和作用范围，普通 CSS 实现值以源码为准，不在多个页面重复维护。
 - 完成条件：方案文档已就位；改动范围与受影响维度已确认。
 
 ### 2. 开发
