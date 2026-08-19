@@ -225,6 +225,8 @@ article:
 | `email` | 打开 `mailto:?subject=...&body=...` 链接 |
 | `link` | 调用 `util.copy("copy-link", ...)` 复制永久链接到剪贴板 |
 
+分享按钮中的图标由主题图标配置以外部 SVG `<img>` 输出；样式将图片限制为 20×20px，并设为块级元素，使其与分享栏 20px 网格列对齐。
+
 `util.toggle` 与 `util.copy` 是客户端辅助函数，见[标签页组件与工具函数](../05-前端交互/tabs-utils.md)。
 
 ### 微博分享参数

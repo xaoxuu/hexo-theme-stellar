@@ -62,6 +62,7 @@
 | 2026-08-18 | `footer.social` 仅支持单个链接按钮，缺少可复用的多链接入口 | 新增通用 `type: dropdown` 条目：主按钮配置 `icon/title`，子项配置 `icon/title/url`；普通 social 配置保持兼容，组件不关联具体业务 |
 
 | 2026-08-18 | `{% sites %}` 卡片缺少图标时没有复用已有 siteinfo 能力 | sites 静态与动态卡片为缺少 `icon` / `avatar` 的条目增加 siteinfo 请求标识，`siteinfo.js` 异步填充圆形图标；不改变截图逻辑（见 `docs/designs/2026-08-18-sites-siteinfo-icon/`） |
+| 2026-08-19 | 文章底部分享图标按外部 SVG 固有尺寸显示，可能溢出 20px 分享网格并错位 | 在文章页脚分享按钮内将图标图片固定为 20×20px 并设为块级元素，保持分享链接与图标来源不变（见 `docs/designs/2026-08-19-article-share-icon-size/`） |
 
 | 2026-08-18 | Footer dropdown 向上展开时被 `.leftbar-container` 或移动端 `.l_left` 的 `overflow: hidden` 裁剪 | 新增全局 `.dropdown-layer` 浮层；打开时将菜单移入 `body` 并使用 `position: fixed`，根据触发按钮周围的上下、左右空间自动定位，不修改 sidebar 容器的 `overflow`；菜单复用 `bar-glass()` 玻璃背景；新增连接触发按钮与菜单的透明桥接区，离开按钮、菜单和桥接区后立即关闭；菜单淡入显示 |
 
