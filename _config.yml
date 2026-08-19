@@ -698,6 +698,8 @@ plugins:
 
 style:
   prefers_theme: auto # auto / light / dark
+  page_transition:
+    enable: true # 同源整页导航使用原生 View Transition；旧浏览器自动回退普通导航
   font-size:
     root: 16px # 桌面端全局字号基准；移动端自动增加 2px
     code: 85% # 相较于其所在行的文本大小，建议用百分比

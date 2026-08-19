@@ -1,0 +1,22 @@
+// 同源整页导航使用浏览器原生 View Transition 平滑衔接。
+// 不支持该能力的浏览器会忽略这些规则，继续使用普通整页导航。
+if hexo-config('style.page_transition.enable')
+  @view-transition
+    navigation: auto
+
+  // 左栏独立于根快照过渡，内容未变化时避免随整页一起闪烁。
+  .l_left
+    view-transition-name: leftbar
+
+  ::view-transition-group(root),
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  ::view-transition-group(leftbar),
+  ::view-transition-old(leftbar),
+  ::view-transition-new(leftbar)
+    animation-duration: 0.2s
+    animation-timing-function: ease-out
+
+  @media (prefers-reduced-motion: reduce)
+    @view-transition
+      navigation: none

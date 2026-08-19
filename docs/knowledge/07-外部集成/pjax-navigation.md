@@ -3,6 +3,7 @@ title: 页面导航与预加载
 domain: 外部集成
 tags:
   - 导航
+  - View Transition
   - 预加载
   - flying_pages
   - PJAX
@@ -15,16 +16,18 @@ tags:
 
 生成此页面时参考的主题源码文件：
 
-- [_config.yml](../../../_config.yml)（`plugins.preload` 小节）
+- [_config.yml](../../../_config.yml)（`style.page_transition`、`plugins.preload` 小节）
+- [source/css/_components/page-transition.styl](../../../source/css/_components/page-transition.styl)
 - [layout/_plugins/preload.ejs](../../../layout/_plugins/preload.ejs)
 - [layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs)
 - [docs/designs/2026-08-08-pjax-removal.md](../../../docs/designs/2026-08-08-pjax-removal.md)
+- [docs/designs/2026-08-20-cross-document-page-transition/spec.md](../../../docs/designs/2026-08-20-cross-document-page-transition/spec.md)
 
 </details>
 
 ## 概览
 
-Stellar 使用**普通整页导航**。早期版本曾内置自定义 PJAX 实现（约 640 行，涉及 DOM diff、小部件合并、评论脚本重执行、滚动恢复等复杂逻辑），因维护成本极高且边缘情况层出不穷，已于 **v1.35.0（2026-08-08）移除**。作为替代，主题通过 `plugins.preload`（flying_pages）在鼠标悬停时预加载站内链接，提升导航体验。
+Stellar 使用**普通整页导航**。早期版本曾内置自定义 PJAX 实现（约 640 行，涉及 DOM diff、小部件合并、评论脚本重执行、滚动恢复等复杂逻辑），因维护成本极高且边缘情况层出不穷，已于 **v1.35.0（2026-08-08）移除**。当前主题在整页导航之上使用原生跨文档 View Transition 平滑衔接同源页面，并通过 `plugins.preload`（flying_pages）在鼠标悬停时预加载站内链接；两者均不改变页面脚本的单次初始化模型。
 
 ## PJAX 移除背景
 
@@ -63,6 +66,22 @@ Stellar 使用**普通整页导航**。早期版本曾内置自定义 PJAX 实�
 无需 PJAX 式的 DOM 部分更新、小部件合并或脚本重执行逻辑。
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)
+
+### 跨文档页面过渡
+
+默认配置如下：
+
+```yaml
+style:
+  page_transition:
+    enable: true
+```
+
+启用后，主题输出 `@view-transition { navigation: auto; }`，由浏览器为同源、用户触发的整页导航保留旧页面快照，直到新文档首帧可以呈现。`.l_left` 使用独立的 `view-transition-name: leftbar`：内容未变化时左栏保持视觉连续，内容变化时与新页面自然交叉过渡；页面 DOM 仍会完整重建，不保留左栏运行状态。
+
+根页面和左栏统一使用 `0.2s ease-out`。`prefers-reduced-motion: reduce` 下关闭跨文档动效。将 `style.page_transition.enable` 设为 `false` 时不输出相关规则；不支持该能力的浏览器也会忽略规则并回退普通整页导航。跨域链接、刷新、地址栏导航和页内锚点不由该能力接管。
+
+**参考源码**：[source/css/_components/page-transition.styl](../../../source/css/_components/page-transition.styl)、[_config.yml](../../../_config.yml)
 
 ### 锚点滚动处理
 
@@ -106,13 +125,15 @@ flying-pages 在**鼠标悬停**到站内链接时预取目标页面（延迟 65
 | 懒加载图片 | 每次页面加载经 `lazyLoadInstance.update()` 扫描 |
 | 评论系统 | 每次页面加载经视口懒加载初始化，无 PJAX 重初始化需求 |
 | 滚动恢复 | 浏览器原生 `history.scrollRestoration = 'auto'` |
+| 页面过渡 | 只保存前后页面的视觉快照，不复用 DOM 或脚本状态 |
 
 **参考源码**：[layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs)
 
 ## 性能考虑
 
 - 整页导航消除 PJAX 的复杂状态管理，减少边缘错误
+- 原生跨文档 View Transition 遮蔽新文档首帧前的白屏，并让左栏独立平滑衔接
 - preload 在保留导航体感速度的同时避免 PJAX 的 DOM 合并开销
 - 脚本与样式按页面实际需要加载，无 PJAX 相关的额外缓存与更新逻辑
 
-**参考源码**：[_config.yml](../../../_config.yml)
+**参考源码**：[_config.yml](../../../_config.yml)、[source/css/_components/page-transition.styl](../../../source/css/_components/page-transition.styl)

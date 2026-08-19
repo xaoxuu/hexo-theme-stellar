@@ -21,6 +21,8 @@
 
 ## 二、版本与事实修正
 
+| 2026-08-20 | PJAX 移除后的普通整页导航会销毁并重建完整文档，即使左栏内容相同也会出现可感知闪烁 | 默认启用原生同源跨文档 View Transition，左栏作为独立命名区域以 `0.2s ease-out` 平滑衔接；减少动态效果、配置关闭或浏览器不支持时回退普通整页导航，不恢复 PJAX 或脚本重入 | `_config.yml`、`source/css/_components/page-transition.styl`、`docs/knowledge/07-外部集成/pjax-navigation.md`、`docs/designs/2026-08-20-cross-document-page-transition/` |
+
 | 2026-08-20 | collection 的 grid/summary 静态背景会覆盖通用 hover/active，背景与图标 transition 在 glass 渐变切换时可出现闪烁；未激活图标的灰阶/亮度/透明度滤镜还会与 SVG 自身分层透明度叠加，造成深浅不一 | 移除布局/变体静态填充、collection 交互过渡和 leading 图标灰阶滤镜；条目默认透明，glass 的 hover/active 与 menubar 玻璃高亮一致，非 glass 统一为 `var(--block)`；未激活 SVG 使用 `var(--text-p2)`，外部图片保留原色，图标透明度统一为 `0.5`，hover/active 恢复为 `1` | `source/css/_components/collection.styl`、`docs/designs/2026-08-20-collection-surface-interactions/` |
 
 | 2026-08-20 | collection 同时维护 auto/compact/regular 三档 density，regular 单独把集合间距放大到 8px；用户 linklist 也被固定为 compact，无法使用默认几何 | 删除 regular 接口与样式，非 compact 值统一回退 auto；recent、topic/wiki related、文档树和标签树使用 compact，menubar、用户 linklist 与普通集合使用 auto；menubar 专属 2px 间距覆盖保留 | `layout/_partial/components/collection.ejs`、`layout/_partial/widgets/`、`layout/_partial/sidebar/menu.ejs`、`source/css/_components/collection.styl`、`docs/designs/2026-08-20-collection-density-simplification/` |
