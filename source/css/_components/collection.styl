@@ -2,11 +2,9 @@
 [data-ui-surface]
   --ui-item-bg: transparent
   --ui-item-bg-hover: var(--block)
-  --ui-item-bg-active: var(--block-border)
+  --ui-item-bg-active: var(--block)
   --ui-item-shadow-hover: none
   --ui-item-shadow-active: none
-  --ui-grid-item-bg: var(--block)
-  --ui-summary-item-bg: var(--block)
   --ui-item-title: var(--text-p1)
   --ui-item-muted: var(--text-p3)
   --ui-item-padding-x: var(--gap-base)
@@ -19,8 +17,6 @@
   --ui-item-bg-active: linear-gradient(180deg, rgba(white, .38), rgba(white, 0) 50%), var(--bg-a50)
   --ui-item-shadow-hover: inset 0 1px 0 rgba(white, .45)
   --ui-item-shadow-active: inset 0 1px 0 rgba(white, .45)
-  --ui-grid-item-bg: var(--bg-a20)
-  --ui-summary-item-bg: var(--bg-a20)
   :root[data-theme='dark'] &
     --ui-item-bg-hover: linear-gradient(180deg, rgba(white, .08), rgba(white, 0) 50%), var(--bg-a50)
     --ui-item-bg-active: linear-gradient(180deg, rgba(white, .08), rgba(white, 0) 50%), var(--bg-a50)
@@ -32,16 +28,6 @@
       --ui-item-bg-active: linear-gradient(180deg, rgba(white, .08), rgba(white, 0) 50%), var(--bg-a50)
       --ui-item-shadow-hover: inset 0 1px 0 rgba(white, .08)
       --ui-item-shadow-active: inset 0 1px 0 rgba(white, .08)
-
-[data-ui-surface='card']
-  --ui-item-bg-hover: var(--block-border)
-  --ui-item-bg-active: var(--block-border)
-  --ui-grid-item-bg: var(--block)
-  --ui-summary-item-bg: var(--block)
-
-[data-ui-surface='sidebar']
-  --ui-item-bg-hover: var(--block)
-  --ui-item-bg-active: var(--block-border)
 
 .ui-collection
   --ui-columns: 1
@@ -62,11 +48,6 @@
   --ui-item-min-height: 30px
   --ui-collection-gap: 2px
 
-.ui-collection[data-density='regular']
-  --ui-item-padding-y: 8px
-  --ui-item-min-height: 40px
-  --ui-collection-gap: 8px
-
 .ui-collection__item
   --item-theme-light: x-theme-light()
   box-sizing: border-box
@@ -83,7 +64,6 @@
   gap: 12px
   line-height: 1.2
   position: relative
-  trans2 color background
   &:hover
     color: var(--ui-item-title)
     background: var(--ui-item-bg-hover)
@@ -108,8 +88,7 @@
     max-width: 100%
     max-height: 100%
     object-fit: contain
-    filter: grayscale(100%) brightness(.8) opacity(.8)
-    trans1 filter
+    opacity: .5
 
 .ui-collection__content
   min-width: 0
@@ -173,14 +152,15 @@
   .ui-collection__leading
     color: var(--item-theme, var(--theme))
     img,svg
-      filter: unset
+      opacity: 1
     svg [fill='currentColor']
       fill: var(--item-grad, currentColor)
     svg [stroke='currentColor']
       stroke: var(--item-grad, currentColor)
 
-.ui-collection[data-layout='grid'] .ui-collection__item
-  background: var(--ui-grid-item-bg)
+.ui-collection[data-layout='grid']
+  .ui-collection__indicator
+    display: none
 
 .ui-collection[data-variant='icon']
   --ui-grid-min: 3rem
@@ -193,7 +173,6 @@
 
 .ui-collection[data-variant='summary'] .ui-collection__item
   align-items: flex-start
-  background: var(--ui-summary-item-bg)
   border-radius: $border-card-s
   padding-top: 8px
   padding-bottom: 8px

@@ -259,15 +259,17 @@ flowchart TD
 
 `collection.ejs` 的固定接口为：
 
-- 容器：`layout: list | grid`、`variant: nav | summary | icon`、`density: auto | compact | regular`、`columns`；
+- 容器：`layout: list | grid`、`variant: nav | summary | icon`、`density: auto | compact`、`columns`；
 - 条目：`href`、`title`，以及可选的 `icon`、`prefix`、`description`、`meta`、`theme`、`active`、`className`；
 - `title` 等普通文本由模板转义；`before` / `after` 仅供主题内部传入受信任 HTML。
 
 调用 partial 时将上述字段放在 `options` 对象内，例如 `{options: {layout: 'grid', ...}}`。这是为了避开 Hexo/EJS 模板上下文中的同名 `layout` helper；对组件使用方而言，公开字段仍是 `options.layout`。
 
-生成的 DOM 以 `.ui-collection`、`.ui-collection__item/content/title/description/meta/indicator` 为独立命名空间，激活状态统一为 `.is-active`。menu、recent、related、tree、tagtree 和 linklist 直接使用该结构；TOC 与搜索结果保留各自生成结构和交互，只追加 `.ui-collection-adapter` 并消费相同 surface 令牌。
+`compact` 仅用于 recent、related、文档树和标签树等系统自动生成的次要列表；menubar、用户 linklist 和普通集合使用默认 `auto`。其它 density 值（包括旧 `regular`）统一回退为 `auto`。menubar 仍可在自身组件作用域覆盖条目间距，不改变 collection 的 density 契约。
 
-collection 只读取 `--ui-item-*`、`--ui-grid-*` 等语义变量，不判断 `.l_left` 或 `.l_right`。页面区域由 `layout.ejs` 的 `data-ui-surface="glass|card|sidebar|content"` 显式声明，因此同一组件可以放入左侧纯色/玻璃栏、右栏或正文区域。
+生成的 DOM 以 `.ui-collection`、`.ui-collection__item/content/title/description/meta/indicator` 为独立命名空间，激活状态统一为 `.is-active`。list 布局显示 active 指示圆点；grid 布局保留相同 DOM 与 `aria-current`，但隐藏圆点，仅使用背景、文字和图标表达激活状态。menu、recent、related、tree、tagtree 和 linklist 直接使用该结构；TOC 与搜索结果保留各自生成结构和交互，只追加 `.ui-collection-adapter` 并消费相同 surface 令牌。
+
+collection 只读取 `--ui-item-*` 等语义变量，不判断 `.l_left` 或 `.l_right`。页面区域由 `layout.ejs` 的 `data-ui-surface="glass|card|sidebar|content"` 显式声明，因此同一组件可以放入左侧纯色/玻璃栏、右栏或正文区域。list/grid/summary 默认背景透明：glass 的 hover/active 复用 menubar 玻璃高亮，其它表面使用 `var(--block)`；条目和 leading 图标在交互状态间立即切换，不做过渡。未激活的内联 SVG 通过 `currentColor` 统一使用 `var(--text-p2)`，不叠加灰阶、亮度或透明度滤镜；外部图片图标保留原图颜色。未激活 `img` / `svg` 整体透明度为 `0.5`，hover/active 时恢复为 `1`，SVG 仍按条目主题色或渐变高亮。
 
 **参考源码**：[layout/_partial/components/](../../../layout/_partial/components/)、[source/css/_components/collection.styl](../../../source/css/_components/collection.styl)
 

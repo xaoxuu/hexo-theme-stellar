@@ -6,7 +6,7 @@ var collectionItems = Array.isArray(collectionOptions.items) ? collectionOptions
 if (collectionItems.length > 0) {
 var collectionLayout = collectionOptions.layout === 'grid' ? 'grid' : 'list'
 var collectionVariant = ['nav', 'summary', 'icon'].includes(collectionOptions.variant) ? collectionOptions.variant : 'nav'
-var collectionDensity = ['compact', 'regular'].includes(collectionOptions.density) ? collectionOptions.density : 'auto'
+var collectionDensity = collectionOptions.density === 'compact' ? 'compact' : 'auto'
 var collectionColumns = parseInt(collectionOptions.columns, 10)
 if (!Number.isFinite(collectionColumns) || collectionColumns < 1) {
   collectionColumns = 1

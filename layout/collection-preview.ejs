@@ -18,7 +18,7 @@ function renderSurface(name, surface, width) {
     {href: '#plain', title: '无图标条目'}
   ]
   var gridItems = [
-    {href: '#one', title: '项目一', icon: 'default:documents'},
+    {href: '#one', title: '项目一', icon: 'default:documents', active: true},
     {href: '#two', title: '项目二', icon: 'default:rightbar'},
     {href: '#three', title: '项目三', icon: 'default:github'},
     {href: '#four', title: '项目四', icon: 'default:rss'}
@@ -35,8 +35,8 @@ function renderSurface(name, surface, width) {
   var html = '<section class="collection-preview__surface" data-ui-surface="' + surface + '" data-preview-width="' + width + '">'
   html += '<header><strong>' + escape_html(name) + '</strong><code>' + escape_html(surface) + ' · ' + width + 'px</code></header>'
   html += renderWidget('紧凑列表', {layout: 'list', variant: 'nav', density: 'compact', items: navItems})
-  html += renderWidget('响应式网格', {layout: 'grid', variant: 'nav', density: 'compact', columns: 2, items: gridItems})
-  html += renderWidget('摘要列表', {layout: 'list', variant: 'summary', density: 'regular', items: summaryItems})
+  html += renderWidget('响应式网格', {layout: 'grid', variant: 'nav', columns: 2, items: gridItems})
+  html += renderWidget('摘要列表', {layout: 'list', variant: 'summary', items: summaryItems})
   html += renderWidget('层级列表', {layout: 'list', variant: 'nav', density: 'compact', items: treeItems})
   html += '</section>'
   return html

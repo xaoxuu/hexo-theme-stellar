@@ -111,12 +111,11 @@ tags:
 | --- | --- |
 | `--ui-item-bg` / `--ui-item-bg-hover` / `--ui-item-bg-active` | 普通、悬停与激活条目背景 |
 | `--ui-item-shadow-hover` / `--ui-item-shadow-active` | 条目交互状态阴影 |
-| `--ui-grid-item-bg` / `--ui-summary-item-bg` | 网格与摘要变体的静态填充 |
 | `--ui-item-title` / `--ui-item-muted` | 标题与描述/meta 文字层级 |
 | `--ui-item-padding-x` / `--ui-item-padding-y` / `--ui-item-min-height` | 条目自身几何尺寸 |
 | `--ui-collection-gap` / `--ui-columns` / `--ui-grid-min` | 集合间距、最大列数和自适应最小列宽 |
 
-surface 只改变背景、阴影与文字层级；list/grid、variant、density 负责几何。`columns` 是 grid 的最大列数，实际列数由 `auto-fit/minmax` 按容器宽度自动降低，不能用于控制标题可见性。
+surface 只改变背景、阴影与文字层级；list/grid、variant、density 负责几何。条目默认背景透明：glass 表面的 hover/active 使用顶部光照与高光边，其它表面使用 `var(--block)`；这些状态不使用过渡动画。`columns` 是 grid 的最大列数，实际列数由 `auto-fit/minmax` 按容器宽度自动降低，不能用于控制标题可见性。
 
 这些变量定义在 `collection.styl` 的组件作用域中，不属于站点配置 API；其它通用紧凑集合可以消费，但专用展示组件不应借用它们改变自身布局。
 
