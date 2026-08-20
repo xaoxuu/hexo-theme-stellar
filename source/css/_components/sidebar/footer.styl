@@ -18,8 +18,8 @@
     border-radius: 8px
     filter: grayscale(100%)
     overflow: hidden
-    background: transparent
-    trans3: box-shadow background transform
+    background: var(--ui-item-bg)
+    box-shadow: none
     img
       flex: initial
       width: auto
@@ -57,10 +57,17 @@
       left: auto
       transform: none
 
+  .social:hover
+    background: var(--ui-item-bg-hover)
+    box-shadow: var(--ui-item-shadow-hover)
+
+  .social-dropdown[open] > .dropdown-trigger.social
+    background: var(--ui-item-bg-active)
+    box-shadow: var(--ui-item-shadow-active)
+
   .social:hover, .social-dropdown[open] > .dropdown-trigger.social
     z-index: 1
     filter: unset
-    background: var(--bg-a20)
     >img, >svg
       opacity: 1
     svg [fill="currentColor"]

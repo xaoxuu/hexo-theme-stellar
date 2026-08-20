@@ -21,6 +21,8 @@
 
 ## 二、版本与事实修正
 
+| 2026-08-20 | 左栏 Footer Social 的 hover/open 背景固定使用 `var(--bg-a20)`，未复用 collection surface，无法随 glass/card 区分顶部光照、高光边与纯色反馈 | 普通 hover 消费 `--ui-item-bg-hover` / `--ui-item-shadow-hover`，dropdown 打开态消费 active 令牌；glass 与 collection 使用相同半透明高光，card 使用 `var(--block)` 且无阴影，同时移除背景与阴影过渡并保留原有按钮几何和图标反馈 | `source/css/_components/sidebar/footer.styl`、`docs/knowledge/02-布局系统/sidebar-system.md`、`docs/designs/2026-08-20-footer-social-surface-interactions/` |
+
 | 2026-08-20 | Footer dropdown 主按钮的图片尺寸和打开态与普通 social 按钮不一致，未激活主图标也缺少层级弱化；菜单项重复维护列表样式且强制要求图标；正文标签箭头位于标题左侧；混合图标菜单的条目高度不一致；菜单文字的多重明暗阴影会形成自带背景色的错觉 | Footer trigger 完全复用 `.social` 尺寸与 hover/open 高亮，主图标默认透明度 `0.5`、激活恢复 `1`；菜单声明 glass surface 并组合通用 collection list 的 compact 密度，最小宽度固定为 150px；Footer 配置与标签子项图标改为可选；正文箭头移至标题右侧；dropdown 局部最小行高统一为 leading 高度加纵向 padding，无图标项不保留占位；移除菜单文字阴影并保留玻璃表面与条目交互背景 | `layout/_partial/dropdown.ejs`、`scripts/tags/lib/dropdown.js`、`source/css/_common/dropdown.styl`、`source/css/_components/sidebar/footer.styl`、`docs/designs/2026-08-20-dropdown-style-alignment/` |
 
 | 2026-08-20 | PJAX 移除后的普通整页导航会销毁并重建完整文档，即使左栏内容相同也会出现可感知闪烁 | 默认启用原生同源跨文档 View Transition，左栏作为独立命名区域以 `0.2s ease-out` 平滑衔接；减少动态效果、配置关闭或浏览器不支持时回退普通整页导航，不恢复 PJAX 或脚本重入 | `_config.yml`、`source/css/_components/page-transition.styl`、`docs/knowledge/07-外部集成/pjax-navigation.md`、`docs/designs/2026-08-20-cross-document-page-transition/` |
