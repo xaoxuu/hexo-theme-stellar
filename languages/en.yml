@@ -19,6 +19,8 @@ btn:
   edit: Edit This Page
   top: Scroll to Top
   comments: Join Discussion
+  expand_posts: Show %s more posts
+  collapse_posts: Collapse
 
 meta:
   recent_update: Recent Update

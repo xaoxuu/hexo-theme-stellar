@@ -176,6 +176,7 @@
 | 2026-08-16 | `source/css/_common/title.styl`、`_components/pages/article-story.styl`、`_components/list.styl`、`layout/_partial/main/post_list/topic_card.ejs` | 专栏容器左右分栏（非移动端等宽）与卡片内专栏名，与最终视觉不一致 | 改为上下布局：`h2.topic-title` 专栏标题（卡片外）→ 全宽最新文章卡片（仅标题 + 时间两行）→ 其他文章列表；抽取共享 mixin `story-title()` 复用 story 文章 h2 样式（story 渲染输出不变）（见 `docs/designs/2026-08-15-topic-latest-post-card/`） |
 | 2026-08-16 | `layout/_partial/main/post_list/topic_card.ejs`、`source/css/_components/list.styl`、`docs/knowledge/03-内容系统/post-lists-cards.md`、`知识库全量.md` | 专栏标题下无描述、专栏间间隔偏小 | 标题下方新增 `p.topic-desc` 专栏描述（居中次要色）；`.md-text` 上下内边距 `1.5rem` → `2.25rem`（移动端 `1.25rem` → `1.5rem`）加大专栏间隔（见 `docs/designs/2026-08-15-topic-latest-post-card/`） |
 | 2026-08-18 | `source/css/_custom.styl`、`source/css/_common/html.styl`、`source/css/_components/pages/article-story.styl`、`source/css/_components/tag-plugins/{mdrender,poetry}.styl`、字号知识库 | 移动端正文偏小，旧字号配置和局部变量命名不统一 | 统一使用 `--fs-root`、`--fs-content-base`、`--fs-content`：桌面端 root 取 `style.font-size.root`，移动端增加 2px，story 在页面基准上再增加 2px；移除旧正文配置字段和兼容别名（见 `docs/designs/2026-08-18-mobile-font-size/`） |
+| 2026-08-20 | `layout/{archive,index_topic}.ejs`、`layout/_partial/main/post_list/{archive_item,topic_card}.ejs`、`source/css/_components/{list,pages/archives}.styl`、`languages/*.yml`、`docs/knowledge/03-内容系统/post-lists-cards.md` | 专栏其他文章复用友链订阅 `.post-panel` 且最多只渲染 3 篇，无法访问列表中的更早文章；专栏模块顺序受 `publish_list` 配置顺序影响 | 抽取归档文章行供归档页与专栏复用；专栏默认显示最新封面之外的 3 篇文章，剩余文章通过原生 `<details>` 展开全部并可收起；专栏模块按各自最新文章发布时间倒序排列（见 `docs/designs/2026-08-20-topic-archive-more-list/`） |
 
 ## 三、处理约定
 

@@ -1,0 +1,12 @@
+<%
+var item = post || {};
+var href = pretty_url(item.link || item.path || '/');
+var itemDate = item.date ? date(item.date, 'MM-DD') : '';
+var itemTitle = item.title || (item.date ? date(item.date, config.date_format) : '');
+%>
+<div class="archive-list">
+  <a class="post fs14" href="<%- escape_html(href) %>">
+    <% if (itemDate) { %><time><%- escape_html(itemDate) %></time><% } %>
+    <span><%- escape_html(itemTitle) %></span>
+  </a>
+</div>

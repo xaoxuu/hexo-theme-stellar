@@ -24,34 +24,25 @@ function layoutArchiveList() {
   }
   el += `<div class="post-list${cls} archives">`
   var years = []
-  const posts = page.author != null ? site.posts.filter(p => (p.author || theme.default_author.id) == page.author.id) : site.posts
+  var posts = page.author != null ? site.posts.filter(function(post) {
+    return (post.author || theme.default_author.id) == page.author.id
+  }) : site.posts
   posts.sort('date', -1).each(function(post) {
-  	post.year = date(post.date, 'YYYY')
-  	  if (post.year && (years.includes(post.year) == false) && (post.title || post.date)) {
-  		  years.push(post.year)
+    post.year = date(post.date, 'YYYY')
+    if (post.year && (years.includes(post.year) == false) && (post.title || post.date)) {
+      years.push(post.year)
     }
   })
-  for (let year of years) {
+  for (var year of years) {
     el += `<article class="${scrollreveal('')}" id="archive">`
-  	el += `<div class='archive-header h4'>${year}</div>`
+    el += `<div class='archive-header h4'>${year}</div>`
     posts.sort('date', -1).filter(function (post) {
       post.year = date(post.date, 'YYYY')
       return post.year == year
     }).each(function(post) {
-      el += `<div class="archive-list">`
-      el +=`<a class='post fs14' href="${pretty_url(post.link || post.path)}">`
-      el += `<time>${date(post.date, 'MM-DD')}</time>`
-      el += `<span>`
-      if (post.title) {
-        el += post.title
-      } else if (post.date) {
-        el += date(post.date, config.date_format)
-      }
-      el += `</span>`
-      el += `</a>`
-      el += `</div>`
+      el += partial('_partial/main/post_list/archive_item', {post: post})
     })
-  	el += `</article>`
+    el += `</article>`
   }
   el += `</div>`
   return el

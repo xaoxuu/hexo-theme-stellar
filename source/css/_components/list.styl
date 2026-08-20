@@ -247,7 +247,7 @@
       color: var(--text-p2)
       font-size: $fs-14
       line-height: 1.5
-      // 左右内边距与文章列表（.post-panel padding: 0 1rem）一致
+      // 左右内边距与下方归档式文章列表一致
       padding: 0 1rem
       margin: 0 0 1rem
     .cover
@@ -268,13 +268,51 @@
       img
         width: 100%
         height: 100%
-    .post-panel
+    .topic-posts
       flex: none
       width: 100%
+      margin: 0
       // 左右内边距与文章封面文字区（.cover-info padding: 1rem）一致
       padding: 0 1rem
-      .posts
-        margin: 0
+    .topic-posts-more[open]
+      display: flex
+      flex-direction: column
+      .topic-posts-extra
+        order: 1
+      .topic-posts-toggle
+        order: 2
+    .topic-posts-toggle
+      display: flex
+      align-items: center
+      justify-content: center
+      gap: .35em
+      width: 100%
+      margin-top: .5rem
+      padding: .75rem 0
+      list-style: none
+      cursor: pointer
+      color: var(--text-p3)
+      font-size: $fs-13
+      font-weight: 500
+      trans1 color
+      &::-webkit-details-marker
+        display: none
+      .when-open
+        display: none
+      svg
+        width: 1em
+        height: 1em
+        transform: rotate(90deg)
+        trans1 transform
+      &:hover
+        color: var(--accent)
+    .topic-posts-more[open] .topic-posts-toggle
+      .when-closed
+        display: none
+      .when-open
+        display: inline
+      svg
+        transform: rotate(-90deg)
   // hover 放大覆盖（与 photo 卡片一致，见 .post-card.post.photo:hover 注释）
   .post-card.topic:hover
     .cover:before

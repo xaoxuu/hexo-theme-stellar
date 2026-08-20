@@ -17,17 +17,29 @@ function layoutDiv() {
     background: bg,
     post: latest
   });
-  // 其他文章（排除最新，最多 3 条，按发布时间倒序）
+  // 其他文章（排除最新，默认展示 3 条，剩余文章可展开）
   if (topic.pages && topic.pages.length > 1) {
-    el += '<div class="post-panel">';
-    el += '<div class="posts">';
-    topic.pages.slice(1, 4).forEach(function(post) {
-      el += '<a class="post-link" href="' + pretty_url(post.path) + '">';
-      el += '<span class="title">' + escape_html(post.title) + '</span>';
-      el += '<span class="date">' + escape_html(date(post.date, config.date_format)) + '</span>';
-      el += '</a>';
+    var otherPosts = topic.pages.slice(1);
+    var visiblePosts = otherPosts.slice(0, 3);
+    var hiddenPosts = otherPosts.slice(3);
+    el += '<div class="topic-posts">';
+    visiblePosts.forEach(function(post) {
+      el += partial('_partial/main/post_list/archive_item', {post: post});
     });
-    el += '</div>';
+    if (hiddenPosts.length > 0) {
+      el += '<details class="topic-posts-more">';
+      el += '<summary class="topic-posts-toggle">';
+      el += '<span class="when-closed">' + escape_html(__('btn.expand_posts', hiddenPosts.length)) + '</span>';
+      el += '<span class="when-open">' + escape_html(__('btn.collapse_posts')) + '</span>';
+      el += icon('default:arrow-right', '', true);
+      el += '</summary>';
+      el += '<div class="topic-posts-extra">';
+      hiddenPosts.forEach(function(post) {
+        el += partial('_partial/main/post_list/archive_item', {post: post});
+      });
+      el += '</div>';
+      el += '</details>';
+    }
     el += '</div>';
   }
   el += '</article>';

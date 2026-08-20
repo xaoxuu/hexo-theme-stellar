@@ -1,12 +1,18 @@
 <%
 function layout_topic_list(partial) {
   var el = ''
-  const { publish_list, tree } = theme.topic
-  for (let id of publish_list) {
-    const topic = tree[id]
-    if (topic == null) {
-      continue
-    }
+  var publish_list = theme.topic.publish_list
+  var tree = theme.topic.tree
+  var topics = publish_list.map(function(id) {
+    return tree[id]
+  }).filter(function(topic) {
+    return topic != null
+  }).sort(function(a, b) {
+    var aDate = a.homepage && a.homepage.date ? new Date(a.homepage.date).getTime() : 0
+    var bDate = b.homepage && b.homepage.date ? new Date(b.homepage.date).getTime() : 0
+    return bDate - aDate
+  })
+  for (var topic of topics) {
     el += `<div class="post-card-wrap${scrollreveal(' ')}">`
     el += `<div class="post-card topic">`
     el += partial(topic)

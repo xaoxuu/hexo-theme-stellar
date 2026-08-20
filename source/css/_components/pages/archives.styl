@@ -19,24 +19,25 @@
       z-index: -1
       border-radius: 4px
       background: var(--theme)
-  a.post
-    display: inline-flex
-    align-items: baseline
-    margin: 0.25rem 0
-    color: var(--text-p1)
-    trans2 color border
-    border-bottom: 1px dashed var(--text-meta)
+
+.post-list .archive-list a.post
+  display: inline-flex
+  align-items: baseline
+  margin: 0.25rem 0
+  color: var(--text-p1)
+  trans2 color border
+  border-bottom: 1px dashed var(--text-meta)
+  time
+    font-family: $ff-code
+    margin-right: 1em
+    font-weight: 700
+    flex-shrink: 0
+    color: var(--text-p4)
+  &:hover
+    border-bottom: 1px solid var(--theme)
+    color: var(--text)
     time
-      font-family: $ff-code
-      margin-right: 1em
-      font-weight: 700
-      flex-shrink: 0
-      color: var(--text-p4)
-    &:hover
-      border-bottom: 1px solid var(--theme)
-      color: var(--text)
-      time
-        color: var(--theme)
+      color: var(--theme)
 
 
 

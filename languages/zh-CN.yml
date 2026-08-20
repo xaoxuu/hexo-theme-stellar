@@ -19,6 +19,8 @@ btn:
   edit: 编辑本文
   top: 回到顶部
   comments: 参与讨论
+  expand_posts: 展开其余 %s 篇
+  collapse_posts: 收起
 
 meta:
   recent_update: 最近更新

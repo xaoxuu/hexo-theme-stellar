@@ -478,7 +478,7 @@ Wiki 卡片用 `list.styl` 中的封面布局，内容固定在卡片底部：
 
 ## Topic 卡片变体
 
-`index_topic.ejs` 遍历 `theme.topic.publish_list`，经 `topic_card.ejs` 渲染每个专栏容器，上下排布：顶部为 `h2.topic-title` 专栏标题（复用 story 文章 h2 样式，`story-title()` mixin）与其下 `p.topic-desc` 专栏描述，中间为**最新文章卡片**（`latest_post_card.ejs` 公共组件，整卡跳转最新文章），底部为该专栏其他文章链接列表（`.post-panel` 公共组件，与友链文章订阅 `friends_and_posts` 共用样式）；专栏容器之间以加大内边距拉开间隔。
+`index_topic.ejs` 读取 `theme.topic.publish_list` 作为上架专栏集合，并按各专栏最新文章 `homepage.date` 降序排列后，经 `topic_card.ejs` 渲染每个专栏容器；无文章的专栏排在末尾，同日期保持配置中的相对顺序。每个容器上下排布：顶部为 `h2.topic-title` 专栏标题（复用 story 文章 h2 样式，`story-title()` mixin）与其下 `p.topic-desc` 专栏描述，中间为**最新文章卡片**（`latest_post_card.ejs` 公共组件，整卡跳转最新文章），底部为该专栏其他文章的归档式列表。其他文章与归档页共同复用 `archive_item.ejs`，显示 `MM-DD + 标题`；默认显示 3 篇，超过后通过原生 `<details>` 展开全部剩余文章并可再次收起。专栏容器之间以加大内边距拉开间隔。
 
 ### 数据对象 `topic`
 
@@ -488,7 +488,7 @@ Wiki 卡片用 `list.styl` 中的封面布局，内容固定在卡片底部：
 | `topic.title` | `topic.name` | 容器顶部 `h2.topic-title` 专栏标题（置于卡片外） |
 | `topic.description` | — | 标题下方的 `p.topic-desc` 一句话描述 |
 | `topic.homepage` | — | 最新文章（`pages[0]`），整卡跳转目标 |
-| `topic.pages` | `[]` | 专栏文章列表；卡片下方取 `slice(1, 4)` 排除最新 |
+| `topic.pages` | `[]` | 专栏文章列表；`slice(1)` 排除最新，前 3 篇默认显示，其余折叠 |
 
 ### 最新文章卡片结构
 
@@ -522,10 +522,11 @@ graph TD
 | `.post-card.topic article .topic-title` | `story-title()`（居中 + accent 斜杠） | 专栏标题，置于卡片外，复用 story 文章 h2 样式 |
 | `.post-card.topic article .topic-desc` | `text-align: center; color: var(--text-p2); padding: 0 1rem` | 标题下方的一句话描述（左右内边距与文章列表一致） |
 | `.post-card.topic .cover` | `flex: none; width: 100%; aspect-ratio: 2/1` | 全宽最新文章卡片，接入 `cover-overlay` |
-| `.post-card.topic .post-panel` | `flex: none; width: 100%; padding: 0 1rem` | 卡片下方文章链接列表（左右内边距与封面文字区一致） |
+| `.post-card.topic .topic-posts` | `flex: none; width: 100%; padding: 0 1rem` | 卡片下方归档式文章列表（左右内边距与封面文字区一致） |
+| `.post-card.topic .topic-posts-more` | 原生 `<details>` + 打开态排序 | 默认隐藏第 4 篇起的其他文章；展开后让按钮保持在完整列表底部 |
 | `.post-list.topic .post-card .md-text` | `padding: 2.25rem 0`（移动端 1.5rem） | 加大专栏容器上下间隔 |
 
-**参考源码**：[layout/index_topic.ejs](../../../layout/index_topic.ejs)、[source/css/_components/list.styl](../../../source/css/_components/list.styl)
+**参考源码**：[layout/index_topic.ejs](../../../layout/index_topic.ejs)、[layout/_partial/main/post_list/archive_item.ejs](../../../layout/_partial/main/post_list/archive_item.ejs)、[source/css/_components/list.styl](../../../source/css/_components/list.styl)、[source/css/_components/pages/archives.styl](../../../source/css/_components/pages/archives.styl)
 
 ---
 
