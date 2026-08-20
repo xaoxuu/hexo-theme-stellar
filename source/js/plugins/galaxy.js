@@ -175,12 +175,12 @@ void main() {
     density: 2.0,
     hueShift: 140.0,
     speed: 0.5,
-    glowIntensity: 0.5,
+    glowIntensity: 0.2,
     saturation: 0.1,
-    mouseRepulsion: false,
+    mouseRepulsion: true,
     twinkleIntensity: 0.1,
     rotationSpeed: 0.1,
-    repulsionStrength: 0.0,
+    repulsionStrength: 0.1,
     autoCenterRepulsion: 0.0,
     transparent: true
   };
