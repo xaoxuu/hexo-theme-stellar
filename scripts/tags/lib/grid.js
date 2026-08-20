@@ -18,6 +18,9 @@ module.exports = ctx => function(args, content) {
     args.w = '240px'
   }
   var el = ''
+  var cellClass = args.bg === 'card'
+    ? 'cell card-hover card-hover--spotlight card-hover--tilt'
+    : 'cell'
   el += '<div class="tag-plugin grid"'
   el += ' ' + ctx.args.joinTags(args, ['bg', 'columns']).join(' ')
   el += ' style="'
@@ -34,7 +37,7 @@ module.exports = ctx => function(args, content) {
   // 分组
   var cells = content.split(/<!--\s*cell(.*?)-->/g).filter(item => item.trim().length > 0)
   for (let cell of cells) {
-    el += `<div class="cell" style="`
+    el += `<div class="${cellClass}" style="`
     if (args.br) {
       el += `border-radius:${args.br};`
     }

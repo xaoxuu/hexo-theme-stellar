@@ -1,0 +1,63 @@
+// 组合类驱动的通用卡片 hover 能力。
+// 仅在客户端完成挂载后生效，脚本失败时保留组件原有表现。
+.card-hover.is-card-hover-ready
+  position: relative
+  --card-hover-mouse-x: 50%
+  --card-hover-mouse-y: 50%
+  --card-hover-rotate-x: 0deg
+  --card-hover-rotate-y: 0deg
+
+.card-hover.is-card-hover-ready.card-hover--tilt
+  transform: perspective(900px) translate3d(0, 0, 0) rotateX(var(--card-hover-rotate-x)) rotateY(var(--card-hover-rotate-y))
+  transform-origin: center
+  transition: transform .25s ease-out, box-shadow .2s ease-out
+
+.card-hover.is-card-hover-ready.card-hover--tilt.is-card-hover-active
+  transform: perspective(900px) translate3d(0, -2px, 0) rotateX(var(--card-hover-rotate-x)) rotateY(var(--card-hover-rotate-y))
+  transition-duration: .08s, .2s
+  will-change: transform
+
+.card-hover__spotlight
+  position: absolute
+  inset: 0
+  z-index: 2
+  border-radius: inherit
+  corner-shape: inherit
+  background: radial-gradient(circle at var(--card-hover-mouse-x) var(--card-hover-mouse-y), var(--card-hover-spotlight-color, rgba(255, 255, 255, .25)), transparent 80%)
+  opacity: 0
+  pointer-events: none
+  transition: opacity .25s ease-out
+
+.card-hover.is-card-hover-ready.card-hover--spotlight
+  &.is-card-hover-active, &:focus-within
+    > .card-hover__spotlight
+      opacity: .6
+
+// ScrollReveal 使用外层 .post-card-wrap 的 transform；倾斜只作用于内层卡片。
+// 启用插件时把同尺寸包装器的阴影移到卡片本体，使阴影随 3D transform 移动。
+.post-list:not(.topic) .post-card-wrap
+  box-shadow: none
+
+.post-list:not(.topic) .post-card.card-hover,
+.post-list.wiki .wiki-card.card-hover
+  box-shadow: $boxshadow-card
+
+.post-list.wiki .post-card-wrap
+  box-shadow: none
+
+// link/grid 原本通过 hoverable-card() 写入 transform；显式组合类接管后统一合成倾斜与上浮。
+.md-text .link-card.card-hover.card-hover--tilt.is-card-hover-ready,
+.tag-plugin.grid[bg='card'] > .cell.card-hover.card-hover--tilt.is-card-hover-ready
+  transform: perspective(900px) translate3d(0, 0, 0) rotateX(var(--card-hover-rotate-x)) rotateY(var(--card-hover-rotate-y))
+  &.is-card-hover-active
+    transform: perspective(900px) translate3d(0, -2px, 0) rotateX(var(--card-hover-rotate-x)) rotateY(var(--card-hover-rotate-y))
+
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce)
+  .card-hover.is-card-hover-ready.card-hover--tilt,
+  .card-hover.is-card-hover-ready.card-hover--tilt.is-card-hover-active,
+  .md-text .link-card.card-hover.card-hover--tilt.is-card-hover-ready,
+  .tag-plugin.grid[bg='card'] > .cell.card-hover.card-hover--tilt.is-card-hover-ready
+    transform: none
+    transition: none
+  .card-hover.is-card-hover-ready.card-hover--spotlight > .card-hover__spotlight
+    opacity: 0

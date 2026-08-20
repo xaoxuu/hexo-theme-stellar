@@ -5,7 +5,7 @@ var entryPrefix = entry.prefix == null ? '' : String(entry.prefix)
 var entryDescription = entry.description == null ? '' : String(entry.description)
 var entryMeta = entry.meta == null ? '' : String(entry.meta)
 var entryClassName = typeof entry.className === 'string' ? entry.className.trim() : ''
-var entryClasses = 'ui-collection__item'
+var entryClasses = 'ui-collection__item card-hover card-hover--spotlight'
 if (entry.active) {
   entryClasses += ' is-active'
 }

@@ -91,8 +91,8 @@ graph LR
 ```mermaid
 graph TD
   root["div.tag-plugin.link.dis-select"]
-  root --> a_plain["a.link-card.plain (no desc)"]
-  root --> a_rich["a.link-card.rich (with desc)"]
+  root --> a_plain["a.link-card.plain.card-hover (no desc)"]
+  root --> a_rich["a.link-card.rich.card-hover (with desc)"]
 
   a_plain --> left["div.left"]
   a_plain --> right["div.right"]
@@ -115,7 +115,7 @@ graph TD
 `title`、`icon` 或 `desc` 缺失时，对应字段名追加到锚元素的 `autofill` 属性。`cardlink` 属性同时标记元素。配置了 `ctx.theme.config.data_services.siteinfo.api` 时，URL 以 `args.api.replace('{href}', url)` 插值并作为 `data-api` 存储到锚上，启用客户端自动填充。
 
 ```
-<a class="link-card plain" cardlink autofill="title,icon,desc" data-api="...">
+<a class="link-card plain card-hover card-hover--spotlight card-hover--tilt" cardlink autofill="title,icon,desc" data-api="...">
 ```
 
 **参考源码**：[scripts/tags/lib/link.js](../../../scripts/tags/lib/link.js)
@@ -194,7 +194,7 @@ flowchart TD
 ctx.render.renderSync({text: cell, engine: 'markdown'})
 ```
 
-每个单元格成为 `<div class="cell" style="border-radius:...">`。
+每个单元格成为 `<div class="cell" style="border-radius:...">`；仅 `bg:card` 时，`cell` 还会输出 `card-hover card-hover--spotlight card-hover--tilt`。
 
 **参考源码**：[scripts/tags/lib/grid.js](../../../scripts/tags/lib/grid.js)
 
@@ -213,6 +213,12 @@ graph TD
 `bg` 与 `columns` 属性经 `ctx.args.joinTags(args, ['bg', 'columns'])` 序列化到容器 div 上。
 
 **参考源码**：[scripts/tags/lib/grid.js](../../../scripts/tags/lib/grid.js)
+
+### Card Hover 行为
+
+`{% link %}` 始终为链接卡片输出 Hover 组合类；`{% grid %}` 只有 `bg:card` 为每个单元格输出，`bg:box` 与无背景网格不输出。启用 `plugins.card_hover` 时，它们获得鼠标光斑和 3D 倾斜，插件最后加载的样式会统一组合 `hoverable-card()` 原有的上浮 transform；链接可点击区域、自动填充属性和单元格 Markdown 结构不变。插件关闭或运行环境不支持动态效果时仍使用既有 link/grid 样式。
+
+**参考源码**：[scripts/tags/lib/link.js](../../../scripts/tags/lib/link.js)、[scripts/tags/lib/grid.js](../../../scripts/tags/lib/grid.js)、[source/css/_plugins/card-hover.styl](../../../source/css/_plugins/card-hover.styl)
 
 ---
 

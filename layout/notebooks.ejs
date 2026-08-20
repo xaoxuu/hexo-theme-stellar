@@ -2,7 +2,7 @@
 <% for (const notebook of Object.values(theme.notebooks.tree)) { %>
   <div class="post-list wiki">
     <div class="post-card-wrap<%= scrollreveal(' ') %>">
-    <a class="post-card wiki" href="<%= pretty_url(notebook.base_dir) %>">
+    <a class="post-card wiki card-hover card-hover--spotlight card-hover--tilt" href="<%= pretty_url(notebook.base_dir) %>">
       <%- include('_partial/main/notebook/notebook_card', { notebook: notebook }) %>
     </a>
     </div>

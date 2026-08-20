@@ -17,7 +17,7 @@ function layout_wiki_list(partial) {
       if (proj.cover) {
         coverStyle = ` style="--cover-url:url('${escape_html(proj.cover.replace(/'/g, '%27'))}')"`
       }
-      el += `<a class="wiki-card${proj.cover ? '' : ' no-cover'}"${coverStyle} href="${pretty_url(proj.homepage?.path || '/')}">`
+      el += `<a class="wiki-card card-hover card-hover--spotlight card-hover--tilt${proj.cover ? '' : ' no-cover'}"${coverStyle} href="${pretty_url(proj.homepage?.path || '/')}">`
       el += partial(proj)
       el += `</a>`
       el += `</div>`
@@ -28,7 +28,7 @@ function layout_wiki_list(partial) {
       if (proj.cover) {
         coverStyle = ` style="--cover-url:url('${escape_html(proj.cover.replace(/'/g, '%27'))}')"`
       }
-      el += `<a class="wiki-card${proj.cover ? '' : ' no-cover'}"${coverStyle} href="${pretty_url(proj.homepage?.path || '/')}">`
+      el += `<a class="wiki-card card-hover card-hover--spotlight card-hover--tilt${proj.cover ? '' : ' no-cover'}"${coverStyle} href="${pretty_url(proj.homepage?.path || '/')}">`
       el += partial(proj)
       el += `</a>`
       el += `</div>`

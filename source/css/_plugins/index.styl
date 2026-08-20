@@ -10,3 +10,6 @@ if hexo-config('plugins.tianli_gpt.enable')
   @import 'tianli_gpt'
 if hexo-config('plugins.katex.enable')
   @import 'katex'
+if hexo-config('plugins.card_hover.enable')
+  // 最后加载，组合并覆盖 link/grid 既有 hover transform
+  @import 'card-hover'

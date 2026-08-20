@@ -48,7 +48,7 @@ module.exports = ctx => function(args, content = '') {
   el += '<div class="dropdown-menu ui-collection" data-ui-surface="glass" data-layout="list" data-variant="nav" data-density="compact">'
   for (const item of items) {
     const url = String(item.url)
-    el += `<a class="dropdown-item ui-collection__item" href="${escapeHTML(toUrl(url))}`
+    el += `<a class="dropdown-item ui-collection__item card-hover card-hover--spotlight" href="${escapeHTML(toUrl(url))}`
     if (url.includes('://')) {
       el += '" target="_blank" rel="external nofollow noopener noreferrer">'
     } else {

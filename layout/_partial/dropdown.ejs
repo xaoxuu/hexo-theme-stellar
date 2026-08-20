@@ -48,7 +48,7 @@ function layoutDiv() {
   el += '</summary>'
   el += '<div class="dropdown-menu ui-collection" data-ui-surface="glass" data-layout="list" data-variant="nav" data-density="compact">'
   for (let child of items) {
-    el += '<a class="dropdown-item ui-collection__item"' + linkAttrs(child) + '>'
+    el += '<a class="dropdown-item ui-collection__item card-hover card-hover--spotlight"' + linkAttrs(child) + '>'
     if (child.icon) {
       el += '<span class="ui-collection__leading">' + icon(child.icon, 'no-lazy', true) + '</span>'
     }

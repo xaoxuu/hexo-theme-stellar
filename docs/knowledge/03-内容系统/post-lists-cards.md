@@ -476,6 +476,22 @@ Wiki 卡片用 `list.styl` 中的封面布局，内容固定在卡片底部：
 
 ---
 
+## 通用卡片 Hover 接入
+
+文章、笔记、笔记本、Wiki 项目列表、置顶轮播外层与专栏最新文章封面卡片都输出以下组合类，纯色与封面版本使用同一契约：
+
+```html
+<a class="... card-hover card-hover--spotlight card-hover--tilt">...</a>
+```
+
+启用 `plugins.card_hover` 后，光斑跟随指针，倾斜最多采用配置的 `max_tilt` 并上浮 2px；离开时 Tilt 立即回正，Spotlight 在最后指针位置淡出后再回中。文章/Wiki 的 Tilt 只变换内层 `.post-card` / `.wiki-card`，避免覆盖外层 `.post-card-wrap` 的 ScrollReveal transform；置顶轮播只变换 `.pin-slider` 外层，不占用 `.pin-slider-track` 的横向切换 transform。插件样式把列表阴影从等尺寸包装器移到卡片本体，使阴影随倾斜移动，同时保留文章、轮播和专栏封面缩放/变暗及 Wiki hover 边框等子元素动效。
+
+专栏最新文章卡片与置顶轮播外层输出完整组合类；专栏标题、描述和下方归档式文章条目仍保持静态，不随卡片倾斜。插件关闭、触屏、粗指针或减少动态效果时，组合类不产生动态行为。
+
+**参考源码**：[layout/index.ejs](../../../layout/index.ejs)、[layout/index_wiki.ejs](../../../layout/index_wiki.ejs)、[layout/notes.ejs](../../../layout/notes.ejs)、[layout/notebooks.ejs](../../../layout/notebooks.ejs)、[layout/_partial/main/pin_slider.ejs](../../../layout/_partial/main/pin_slider.ejs)、[layout/_partial/main/post_list/latest_post_card.ejs](../../../layout/_partial/main/post_list/latest_post_card.ejs)、[source/css/_plugins/card-hover.styl](../../../source/css/_plugins/card-hover.styl)
+
+---
+
 ## Topic 卡片变体
 
 `index_topic.ejs` 读取 `theme.topic.publish_list` 作为上架专栏集合，并按各专栏最新文章 `homepage.date` 降序排列后，经 `topic_card.ejs` 渲染每个专栏容器；无文章的专栏排在末尾，同日期保持配置中的相对顺序。每个容器上下排布：顶部为 `h2.topic-title` 专栏标题（复用 story 文章 h2 样式，`story-title()` mixin）与其下 `p.topic-desc` 专栏描述，中间为**最新文章卡片**（`latest_post_card.ejs` 公共组件，整卡跳转最新文章），底部为该专栏其他文章的归档式列表。其他文章与归档页共同复用 `archive_item.ejs`，显示 `MM-DD + 标题`；默认显示 3 篇，超过后通过原生 `<details>` 展开全部剩余文章并可再次收起。专栏容器之间以加大内边距拉开间隔。
@@ -492,7 +508,7 @@ Wiki 卡片用 `list.styl` 中的封面布局，内容固定在卡片底部：
 
 ### 最新文章卡片结构
 
-`latest_post_card` 接收 `{href, background, label, post}`，输出 `a.cover[position=bottom]`（`--cover-url` 背景 + 同图渐变模糊层，经 `cover-overlay` 统一能力）与底部 `.cover-info` 文字区；专栏列表页不传 `label`（专栏名已外置为 h2），仅渲染标题与时间两行，`label` 保留给未来首页等场景：
+`latest_post_card` 接收 `{href, background, label, post}`，输出 `a.cover.card-hover.card-hover--spotlight.card-hover--tilt[position=bottom]`（`--cover-url` 背景 + 同图渐变模糊层，经 `cover-overlay` 统一能力）与底部 `.cover-info` 文字区；专栏列表页不传 `label`（专栏名已外置为 h2），仅渲染标题与时间两行，`label` 保留给未来首页等场景：
 
 ```mermaid
 graph TD
@@ -521,7 +537,7 @@ graph TD
 | `.post-card.topic article` | `display: flex; flex-direction: column; gap: 1rem` | 上下布局：标题 → 卡片 → 列表 |
 | `.post-card.topic article .topic-title` | `story-title()`（居中 + accent 斜杠） | 专栏标题，置于卡片外，复用 story 文章 h2 样式 |
 | `.post-card.topic article .topic-desc` | `text-align: center; color: var(--text-p2); padding: 0 1rem` | 标题下方的一句话描述（左右内边距与文章列表一致） |
-| `.post-card.topic .cover` | `flex: none; width: 100%; aspect-ratio: 2/1` | 全宽最新文章卡片，接入 `cover-overlay` |
+| `.post-card.topic .cover` | `flex: none; width: 100%; aspect-ratio: 2/1` | 全宽最新文章卡片，接入 `cover-overlay` 与 Spotlight + Tilt |
 | `.post-card.topic .topic-posts` | `flex: none; width: 100%; padding: 0 1rem` | 卡片下方归档式文章列表（左右内边距与封面文字区一致） |
 | `.post-card.topic .topic-posts-more` | 原生 `<details>` + 打开态排序 | 默认隐藏第 4 篇起的其他文章；展开后让按钮保持在完整列表底部 |
 | `.post-list.topic .post-card .md-text` | `padding: 2.25rem 0`（移动端 1.5rem） | 加大专栏容器上下间隔 |

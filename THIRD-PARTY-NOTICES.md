@@ -2,7 +2,8 @@
 
 ## React Bits
 
-The Wiki Galaxy WebGL background is adapted from the Galaxy component in
+The Wiki Galaxy WebGL background and Card Hover spotlight layer are adapted
+from the Galaxy and Spotlight Card components in
 [React Bits](https://github.com/DavidHDev/react-bits).
 
 MIT License

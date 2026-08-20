@@ -58,11 +58,11 @@ function layoutWikiCover() {
   }
   el += '<div class="wiki-cover-actions">';
   if (repo) {
-    el += '<a class="button wiki-cover-source" href="https://github.com/' + escape_html(repo) + '" target="_blank" rel="external nofollow noopener noreferrer">' + icon('default:github') + '<span>' + escape_html(__('btn.source')) + '</span></a>';
+    el += '<a class="button wiki-cover-source card-hover card-hover--spotlight" href="https://github.com/' + escape_html(repo) + '" target="_blank" rel="external nofollow noopener noreferrer">' + icon('default:github') + '<span>' + escape_html(__('btn.source')) + '</span></a>';
   }
-  el += '<a class="button" href="#start">' + icon('default:documents') + '<span>' + escape_html(__('btn.docs')) + '</span></a>';
+  el += '<a class="button card-hover card-hover--spotlight" href="#start">' + icon('default:documents') + '<span>' + escape_html(__('btn.docs')) + '</span></a>';
   actions.forEach(function (item) {
-    el += '<a class="button" href="' + escape_html(item.url) + '" target="_blank" rel="external nofollow noopener noreferrer">';
+    el += '<a class="button card-hover card-hover--spotlight" href="' + escape_html(item.url) + '" target="_blank" rel="external nofollow noopener noreferrer">';
     if (item.icon) {
       el += icon(item.icon);
     }

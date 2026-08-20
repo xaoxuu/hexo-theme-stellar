@@ -32,7 +32,7 @@ module.exports = ctx => function(args) {
   }
   var el = ''
   el += '<div class="tag-plugin link dis-select">'
-  el += '<a class="link-card' + (args.desc ? ' rich' : ' plain') + '" title="' + safeTitle + '" href="' + args.url + '"'
+  el += '<a class="link-card' + (args.desc ? ' rich' : ' plain') + ' card-hover card-hover--spotlight card-hover--tilt" title="' + safeTitle + '" href="' + args.url + '"'
   if (args.url.includes('://')) {
     el += ' target="_blank" rel="external nofollow noopener noreferrer"'
   }
