@@ -315,6 +315,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `976e1a7` | fix(sidebar): 修复 Footer 图片图标尺寸 | 设计文档 `2026-08-20-footer-social-img-size/`；知识库 `02-布局系统/sidebar-system.md`；Footer Social 图片图标与 SVG 统一为 24×24px |
 | `e0b6dc3` | feat(topic): 增加归档式可折叠文章列表 | 设计文档 `2026-08-20-topic-archive-more-list/`；知识库 `03-内容系统/post-lists-cards.md`；专栏排序、归档列表折叠交互与三语文案 |
 | `aa0eb19` | style(galaxy): 调整辉光与鼠标排斥 | 设计文档 `2026-08-20-galaxy-interaction-tuning/`；知识库 `03-内容系统/wiki-docs.md`；Wiki Hero 星河交互参数 |
 | `f8558d4` | style(collection): 收敛暗色高亮与菜单间距 | 设计文档 `2026-08-20-collection-dark-highlight-menu-spacing/`；知识库 `06-数据服务与组件/widget-architecture.md`；集合组件暗色状态与侧栏菜单间距 |
