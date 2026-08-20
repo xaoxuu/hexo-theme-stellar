@@ -21,6 +21,8 @@
 
 ## 二、版本与事实修正
 
+| 2026-08-20 | glass collection 在深色模式下的 hover/active 基底偏亮，menubar 又单独将 `auto` 集合间距压缩为 2px，与通用 collection 几何不一致 | 深色 glass 交互基底由 `var(--bg-a50)` 改为 `var(--bg-a20)`，保留顶部光照与高光边；移除 menubar 的 2px 间距覆盖，与其它 `auto` collection 共用默认 4px 间距 | `source/css/_components/collection.styl`、`source/css/_components/sidebar/nav-area.styl`、`docs/designs/2026-08-20-collection-dark-highlight-menu-spacing/` |
+
 | 2026-08-20 | Widget Header 的 cap action hover 直接调用 `sidebar-light()`，未与 collection 的 surface 交互保持同步 | cap action hover 改为消费 `--ui-item-bg-hover` 与 `--ui-item-shadow-hover`；glass 左栏复用 collection 的半透明顶部光照与高光边，按钮几何、透明度和 accent 图标反馈不变 | `source/css/_components/widgets/widgets.styl`、`docs/knowledge/02-布局系统/sidebar-system.md`、`docs/designs/2026-08-20-widget-cap-action-surface-interaction/` |
 
 | 2026-08-20 | markdown widget 内嵌 collection 与普通 widget 一样默认透明，说明文字与链接条目缺少组合层次 | markdown widget 通过现有 `--ui-item-bg` 为内嵌 collection 提供默认背景：glass surface 使用 `var(--bg-a10)`，其它 surface 使用 `var(--block)`；普通 collection 与所有交互状态保持不变 | `source/css/_components/widgets/widgets.styl`、`docs/knowledge/06-数据服务与组件/widget-architecture.md`、`docs/designs/2026-08-20-markdown-widget-collection-background/` |
