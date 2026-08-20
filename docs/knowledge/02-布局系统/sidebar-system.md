@@ -254,12 +254,14 @@ graph TB
 | CSS 类 | 角色 |
 |--------|------|
 | `.search-wrapper` | 外层包装，`padding-bottom: 32px` |
-| `.search-form` | `position: sticky; top: 0`——滚动结果时保持可见 |
-| `.search-input` | 全宽文本输入框，使用 `$ff-body` 字体 |
-| `.search-button` | 图标按钮；SVG `path[p-id="1562"]` 在命中（`$c-green`）或无结果（`$c-red`）时变色 |
+| `.search-form` | 带 `role="search"` 的非提交容器；`position: sticky; top: 0`，滚动结果时保持可见 |
+| `.search-input` | `type="search"` 的全宽输入框，使用本地化 placeholder 作为无障碍名称 |
+| `.search-button` | 关联输入框的图标 `<label>`，点击时原生聚焦；SVG `path[p-id="1562"]` 在命中（`$c-green`）或无结果（`$c-red`）时变色 |
 | `#search-result` | 可滚动结果列表，`max-height: 60vh`，隐藏滚动条 |
 | `.search-result-list` | 结果 `<li>` 列表 |
 | `.search-keyword` | 匹配词以 `$c-red` 高亮并带虚线下划线 |
+
+搜索组件采用输入即检索，不执行表单提交：搜索图标只负责聚焦输入框，按 Enter 不会刷新或跳转页面。本地搜索与 Algolia 继续通过 `#search-input` 监听输入，并共用相同的过滤和结果状态接口。
 
 状态通过 `.search-wrapper` 上的 `searching` 与 `noresult` 属性管理：
 

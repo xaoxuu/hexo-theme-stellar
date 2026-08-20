@@ -17,7 +17,7 @@ function layoutDiv() {
     return el
   }
   el += `<div class="search-wrapper" id="search-wrapper">`
-  el += `<form class="search-form">`
+  el += `<div class="search-form" role="search">`
   var filter = ''
   if (item.filter == 'auto') {
     if (page.wiki) {
@@ -31,20 +31,20 @@ function layoutDiv() {
       filter = item.filter
     }
   }
-  el += `<a class="search-button" onclick="document.getElementById(&quot;search-input&quot;).focus();">`
-  el += icon('default:search', '', true)
-  el += `</a>`
-  el += `<input type="text" class="search-input" id="search-input"`
-  if (filter.length > 0) {
-    if (!filter.startsWith('/')) {
-      filter = '/' + filter
-    }
-    el += ` data-filter="${filter}"`
-    el += ` placeholder="${item.placeholder || __('search.search_in', filter)}">`
-  } else {
-    el += ` placeholder="${item.placeholder || __('search.search')}">`
+  if (filter.length > 0 && !filter.startsWith('/')) {
+    filter = '/' + filter
   }
-  el += `</form>`
+  var placeholder = item.placeholder || (filter.length > 0 ? __('search.search_in', filter) : __('search.search'))
+  var escapedPlaceholder = escape_html(placeholder)
+  el += `<label class="search-button" for="search-input" aria-hidden="true">`
+  el += icon('default:search', '', true)
+  el += `</label>`
+  el += `<input type="search" class="search-input" id="search-input" aria-label="${escapedPlaceholder}"`
+  if (filter.length > 0) {
+    el += ` data-filter="${escape_html(filter)}"`
+  }
+  el += ` placeholder="${escapedPlaceholder}">`
+  el += `</div>`
   el += `<div id="search-result"></div>`
   el += `<div class="search-no-result">${__('search.no_results')}</div>`
   el += `</div>`

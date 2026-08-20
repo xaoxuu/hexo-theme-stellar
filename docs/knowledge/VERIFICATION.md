@@ -21,6 +21,8 @@
 
 ## 二、版本与事实修正
 
+| 2026-08-21 | 搜索图标使用无 `href` 的 `<a>` 与内联 `onclick` 聚焦输入框，外层无目标 `<form>` 还可能在搜索脚本初始化前因 Enter 触发页面刷新 | 搜索区域改为 `role="search"` 的非提交容器，图标改用关联 `#search-input` 的原生 `<label>`，输入框使用 `type="search"` 与本地化 `aria-label`；保留实时搜索、过滤、状态着色及本地搜索/Algolia 接口，并新增模板结构回归测试 | `layout/_partial/sidebar/search.ejs`、`source/css/_components/sidebar/search.styl`、`test/search_markup.test.js`、`docs/knowledge/02-布局系统/sidebar-system.md`、`docs/designs/2026-08-21-search-widget-semantics/` |
+
 | 2026-08-20 | 笔记页标签行（`note_tags`）仍使用早期的 `.md-text .tag-list` 方形标签样式，与文章末尾标签行的 `tag-chip()` 胶囊样式不一致 | `note_tags` 改用 `article-tags` 容器（含 scroll-reveal、hashtag 图标与转义标签名），与文章标签行共用同一套胶囊样式；移除 `notebook.styl` 中仅服务该旧样式的 `.md-text .tag-list` 规则 | `layout/_partial/main/notebook/note_tags.ejs`、`source/css/_components/pages/notebook.styl`、`docs/knowledge/03-内容系统/article-footer-metadata.md`、`docs/knowledge/03-内容系统/notebook-system.md` |
 
 | 2026-08-20 | Wiki Hero 的源码、文档与自定义 action 按钮未接入 Card Hover，源码按钮的宽泛 `span` 反色规则还会影响运行时注入的 Spotlight 层 | 三类按钮统一输出 `.card-hover.card-hover--spotlight`，只启用鼠标跟随光斑而不启用 Tilt；源码按钮反色规则收窄到直接子级图标与非 Spotlight 标题，保留原有布局、配色、链接及环境降级行为 | `layout/_partial/cover/wiki_cover.ejs`、`source/css/_components/partial/cover.styl`、`test/card_hover_markup.test.js`、`docs/designs/2026-08-20-wiki-cover-action-spotlight/` |

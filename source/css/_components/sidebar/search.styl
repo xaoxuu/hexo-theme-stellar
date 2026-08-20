@@ -53,12 +53,17 @@
       &:after
         opacity: 1
   .search-input
+    -webkit-appearance: none
+    appearance: none
     width: 100%
     box-sizing: border-box
     font-family: $ff-body
     font-size: $fs-14
     padding: 12px 0
     color: var(--text)
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-decoration
+      -webkit-appearance: none
     &::placeholder
       color: var(--text-p3)
       :root[data-theme="dark"] &
@@ -74,6 +79,7 @@
     flex-shrink: 0
     width: 1.5rem
     height: 1.5rem
+    cursor: pointer
     svg
       height: 1rem
       width: 1rem
