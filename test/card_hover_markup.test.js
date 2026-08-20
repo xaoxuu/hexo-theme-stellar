@@ -13,6 +13,7 @@ const COLLECTION_ITEM_SOURCE = fs.readFileSync(path.join(__dirname, '../layout/_
 const LAYOUT_DROPDOWN_SOURCE = fs.readFileSync(path.join(__dirname, '../layout/_partial/dropdown.ejs'), 'utf8');
 const PIN_SLIDER_SOURCE = fs.readFileSync(path.join(__dirname, '../layout/_partial/main/pin_slider.ejs'), 'utf8');
 const LATEST_POST_CARD_SOURCE = fs.readFileSync(path.join(__dirname, '../layout/_partial/main/post_list/latest_post_card.ejs'), 'utf8');
+const WIKI_COVER_SOURCE = fs.readFileSync(path.join(__dirname, '../layout/_partial/cover/wiki_cover.ejs'), 'utf8');
 
 function createContext() {
   const fakeHexo = {
@@ -74,4 +75,11 @@ test('dropdown 标签条目只输出 Spotlight 组合类', () => {
 test('置顶轮播容器和专栏最新文章卡片输出完整 Hover 组合类', () => {
   assert.match(PIN_SLIDER_SOURCE, new RegExp(`class="pin-slider ${HOVER_CLASSES}"`));
   assert.match(LATEST_POST_CARD_SOURCE, new RegExp(`class="cover ${HOVER_CLASSES}"`));
+});
+
+test('Wiki Hero 操作按钮只输出 Spotlight 组合类', () => {
+  const actionButtons = WIKI_COVER_SOURCE.match(/class="button(?: wiki-cover-source)? card-hover card-hover--spotlight"/g);
+
+  assert.equal(actionButtons.length, 3);
+  assert.doesNotMatch(WIKI_COVER_SOURCE, /card-hover--tilt/);
 });

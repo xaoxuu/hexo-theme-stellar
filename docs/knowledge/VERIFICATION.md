@@ -21,6 +21,8 @@
 
 ## 二、版本与事实修正
 
+| 2026-08-20 | Wiki Hero 的源码、文档与自定义 action 按钮未接入 Card Hover，源码按钮的宽泛 `span` 反色规则还会影响运行时注入的 Spotlight 层 | 三类按钮统一输出 `.card-hover.card-hover--spotlight`，只启用鼠标跟随光斑而不启用 Tilt；源码按钮反色规则收窄到直接子级图标与非 Spotlight 标题，保留原有布局、配色、链接及环境降级行为 | `layout/_partial/cover/wiki_cover.ejs`、`source/css/_components/partial/cover.styl`、`test/card_hover_markup.test.js`、`docs/designs/2026-08-20-wiki-cover-action-spotlight/` |
+
 | 2026-08-20 | Footer Social 的内联 SVG 固定为 24×24px，图片图标却使用自动宽高，URL 图标会按固有尺寸撑宽按钮或被裁切 | 将 `.social img` 固定为 24×24px 并使用 `object-fit: contain` 等比容纳，与 SVG 共用图标尺寸；按钮几何、灰阶、高亮、dropdown 与 surface 行为不变 | `source/css/_components/sidebar/footer.styl`、`docs/knowledge/02-布局系统/sidebar-system.md`、`docs/designs/2026-08-20-footer-social-img-size/` |
 
 | 2026-08-20 | 有背景卡片的鼠标跟随光效与倾斜若按业务选择器硬编码，难以扩展且易覆盖 ScrollReveal/link/grid/轮播轨道的既有 transform；Spotlight 离开时若立即重置坐标，会在淡出期间出现回中闪动 | 新增默认关闭的 `plugins.card_hover` 与 `.card-hover` + spotlight/tilt 组合类契约，默认使用半透明白色光斑；文章、笔记、笔记本、Wiki、置顶轮播外层、专栏最新文章、link、`grid bg:card` 和标准 UI Collection 按约定接入，其中 Collection 仅启用 Spotlight；轮播内部轨道与专栏标题/归档条目保持独立；公开 `stellar.cardHover.mountAll(root)` / `destroy()`，支持动态 Markdown、键盘中心光斑及触屏/减少动态效果降级；离开时 Tilt 立即回正，Spotlight 在最后位置淡出后才回中，快速重入不会被旧过渡覆盖；不引入 React 或第三方依赖 | `_config.yml`、`layout/_plugins/card_hover.ejs`、`source/js/plugins/card-hover.js`、`source/css/_plugins/card-hover.styl`、`layout/index.ejs`、`layout/index_wiki.ejs`、`layout/notes.ejs`、`layout/notebooks.ejs`、`layout/_partial/main/pin_slider.ejs`、`layout/_partial/main/post_list/latest_post_card.ejs`、`layout/_partial/components/collection-item.ejs`、`layout/_partial/dropdown.ejs`、`scripts/tags/lib/link.js`、`scripts/tags/lib/grid.js`、`scripts/tags/lib/dropdown.js`、`test/card_hover_client.test.js`、`test/card_hover_markup.test.js`、`test/dropdown.test.js`、`docs/designs/2026-08-20-card-hover-effects/` |
@@ -317,6 +319,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `00c3e3c` | feat(card-hover): 增加卡片光效与倾斜 | 设计文档 `2026-08-20-card-hover-effects/`；知识库 configuration.md、post-lists-cards.md、link-grid-banner-tags.md、client-side-overview.md、widget-architecture.md、plugin-system.md；跨卡片 Spotlight/Tilt 生命周期、组合类接入、降级与测试 |
 | `c8c6874` | release: 1.43.1 | 版本号、CHANGELOG 与安装知识库同步至 1.43.1 |
 | `976e1a7` | fix(sidebar): 修复 Footer 图片图标尺寸 | 设计文档 `2026-08-20-footer-social-img-size/`；知识库 `02-布局系统/sidebar-system.md`；Footer Social 图片图标与 SVG 统一为 24×24px |
 | `e0b6dc3` | feat(topic): 增加归档式可折叠文章列表 | 设计文档 `2026-08-20-topic-archive-more-list/`；知识库 `03-内容系统/post-lists-cards.md`；专栏排序、归档列表折叠交互与三语文案 |

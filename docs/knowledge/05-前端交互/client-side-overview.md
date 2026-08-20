@@ -377,7 +377,7 @@ sequenceDiagram
 
 Spotlight 是卡片末尾注入的独立 `span.card-hover__spotlight[aria-hidden=true]`，不接收指针事件；纯键盘进入或指针离开时仍保持 `focus-within`，都会立即使用居中光斑。快速重新移入后，旧的淡出结束事件不会覆盖新指针坐标。Tilt 作用于卡片本体，不占用 ScrollReveal 的 `.post-card-wrap` transform。
 
-置顶轮播外层和专栏列表的最新文章封面卡片复用完整 Spotlight + Tilt；轮播轨道与专栏标题、描述、归档式文章条目不参与 Tilt。标准 `.ui-collection__item` 复用同一生命周期，但只声明 Spotlight 修饰类，因此保留原有 surface hover/active 背景且不会产生位移或 3D transform；TOC 与搜索的 `.ui-collection-adapter` 不参与挂载。
+置顶轮播外层和专栏列表的最新文章封面卡片复用完整 Spotlight + Tilt；轮播轨道与专栏标题、描述、归档式文章条目不参与 Tilt。Wiki Hero 的源码、文档和自定义 action 按钮与标准 `.ui-collection__item` 复用同一生命周期，但只声明 Spotlight 修饰类，因此保留原有按钮或 surface hover/active 背景且不会产生位移或 3D transform；TOC 与搜索的 `.ui-collection-adapter` 不参与挂载。
 
 **参考源码**：[layout/_plugins/card_hover.ejs](../../../layout/_plugins/card_hover.ejs)、[source/js/plugins/card-hover.js](../../../source/js/plugins/card-hover.js)、[source/css/_plugins/card-hover.styl](../../../source/css/_plugins/card-hover.styl)
 
