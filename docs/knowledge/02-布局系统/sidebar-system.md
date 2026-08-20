@@ -21,6 +21,7 @@ tags:
 - [_data/widgets.yml](../../../_data/widgets.yml)
 - [source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)
 - [source/css/_components/sidebar/search.styl](../../../source/css/_components/sidebar/search.styl)
+- [source/js/search/shortcut.js](../../../source/js/search/shortcut.js)
 - [scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)
 
 </details>
@@ -263,6 +264,8 @@ graph TB
 
 搜索组件采用输入即检索，不执行表单提交：搜索图标只负责聚焦输入框，按 Enter 不会刷新或跳转页面。本地搜索与 Algolia 继续通过 `#search-input` 监听输入，并共用相同的过滤和结果状态接口。
 
+桌面布局支持 `Command+K` / `Ctrl+K` 快速聚焦搜索框。快捷键由搜索服务公共入口加载的 `source/js/search/shortcut.js` 统一处理；搜索框已有内容、选区和结果均保持不变。移动端左栏按钮可见时不响应；焦点位于其它输入框、文本域、下拉框或可编辑区域时也不接管浏览器快捷键。
+
 状态通过 `.search-wrapper` 上的 `searching` 与 `noresult` 属性管理：
 
 - `[searching='true']`：激活绿色图标
@@ -270,7 +273,7 @@ graph TB
 
 客户端搜索逻辑见[搜索功能](../07-外部集成/search.md)。
 
-**参考源码**：[source/css/_components/sidebar/search.styl](../../../source/css/_components/sidebar/search.styl)
+**参考源码**：[source/css/_components/sidebar/search.styl](../../../source/css/_components/sidebar/search.styl)、[source/js/search/shortcut.js](../../../source/js/search/shortcut.js)
 
 ---
 

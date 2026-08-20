@@ -22,6 +22,7 @@ tags:
 - [package.json](../../../package.json)
 - [source/js/search/local-search.js](../../../source/js/search/local-search.js)
 - [source/js/search/algolia-search.js](../../../source/js/search/algolia-search.js)
+- [source/js/search/shortcut.js](../../../source/js/search/shortcut.js)
 
 </details>
 
@@ -89,6 +90,16 @@ graph TB
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)
+
+---
+
+## 键盘激活
+
+本地搜索与 Algolia 共用 `source/js/search/shortcut.js`：桌面布局按 `Command+K`（macOS）或 `Ctrl+K`（Windows / Linux）会聚焦 `#search-input`。处理器只在搜索框存在、移动端左栏按钮不可见且当前不处于其它编辑区域时阻止浏览器默认行为；输入法组合状态、窄屏、无搜索框、其它 `input` / `textarea` / `select` / `contenteditable` 均保持原生快捷键。
+
+快捷键只调用 `focus()`，不会清空搜索词、改变现有选区或重置结果。搜索框已经聚焦时仍会阻止浏览器接管 `Command/Ctrl+K`。该行为没有配置项或可视提示。
+
+**参考源码**：[layout/_plugins/index.ejs](../../../layout/_plugins/index.ejs)、[source/js/search/shortcut.js](../../../source/js/search/shortcut.js)
 
 ---
 

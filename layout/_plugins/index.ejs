@@ -29,6 +29,7 @@ function loadPlugins() {
 
   // search
   if (theme.search[theme.search.service]) {
+    el += `<script>window.addEventListener('DOMContentLoaded', function () { utils.js('/js/search/shortcut.js', { defer: true }); });</script>`;
     el += partial(`search/${theme.search.service}`, {conf: theme.search[theme.search.service]});
   }
   
