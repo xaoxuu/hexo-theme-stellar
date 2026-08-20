@@ -120,7 +120,9 @@ graph TB
 | `leftbar` | `tagtree, recent` | 笔记本 YAML：`note_leftbar`<br/>笔记 front-matter：`leftbar` | 显示标签树与最近笔记 |
 | `rightbar` | `toc` | 笔记本 YAML：`note_rightbar`<br/>笔记 front-matter：`rightbar` | 默认显示目录 |
 
-**参考源码**：[_config.yml](../../../_config.yml)
+带 `tags` 的笔记在正文末尾渲染一行所属标签，点击跳转到笔记本标签过滤页；该行复用文章标签行的 `article-tags` 容器与胶囊样式，详见[文章页脚与元数据](article-footer-metadata.md)。
+
+**参考源码**：[_config.yml](../../../_config.yml)、[layout/_partial/main/notebook/note_tags.ejs](../../../layout/_partial/main/notebook/note_tags.ejs)
 
 ---
 

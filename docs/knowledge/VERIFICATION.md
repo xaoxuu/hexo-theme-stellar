@@ -21,6 +21,8 @@
 
 ## 二、版本与事实修正
 
+| 2026-08-20 | 笔记页标签行（`note_tags`）仍使用早期的 `.md-text .tag-list` 方形标签样式，与文章末尾标签行的 `tag-chip()` 胶囊样式不一致 | `note_tags` 改用 `article-tags` 容器（含 scroll-reveal、hashtag 图标与转义标签名），与文章标签行共用同一套胶囊样式；移除 `notebook.styl` 中仅服务该旧样式的 `.md-text .tag-list` 规则 | `layout/_partial/main/notebook/note_tags.ejs`、`source/css/_components/pages/notebook.styl`、`docs/knowledge/03-内容系统/article-footer-metadata.md`、`docs/knowledge/03-内容系统/notebook-system.md` |
+
 | 2026-08-20 | Footer Social 的内联 SVG 固定为 24×24px，图片图标却使用自动宽高，URL 图标会按固有尺寸撑宽按钮或被裁切 | 将 `.social img` 固定为 24×24px 并使用 `object-fit: contain` 等比容纳，与 SVG 共用图标尺寸；按钮几何、灰阶、高亮、dropdown 与 surface 行为不变 | `source/css/_components/sidebar/footer.styl`、`docs/knowledge/02-布局系统/sidebar-system.md`、`docs/designs/2026-08-20-footer-social-img-size/` |
 
 | 2026-08-20 | 1.43.0 发版只更新 `_config.yml` 与 `package.json`，安装知识库仍引用 1.42.1，导致发版提交的知识库 CI 失败 | 安装知识库 6 处版本引用同步为 1.43.0；发版脚本以后自动同步三个版本文件，并在最终待提交状态执行质量检查 | `release.js`、`docs/knowledge/00-总览与安装配置/installation.md`、`docs/guides/release-process.md`、`docs/designs/2026-08-20-release-version-sync/` |
