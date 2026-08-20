@@ -321,6 +321,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `ff2ee58` | style(notebook): 笔记标签行对齐文章标签胶囊样式 | 设计文档 `2026-08-20-note-tags-align-article-tags/`；知识库 `03-内容系统/article-footer-metadata.md`、`notebook-system.md`；笔记标签行复用文章标签容器、hashtag 图标与 `tag-chip()` 胶囊样式 |
 | `5e2751b` | feat(wiki): 增加 Hero 按钮 Spotlight | 设计文档 `2026-08-20-wiki-cover-action-spotlight/`；知识库 `03-内容系统/wiki-docs.md`、`05-前端交互/client-side-overview.md`、`07-外部集成/plugin-system.md`；Wiki Hero 三类操作按钮接入 Spotlight-only 生命周期 |
 | `00c3e3c` | feat(card-hover): 增加卡片光效与倾斜 | 设计文档 `2026-08-20-card-hover-effects/`；知识库 configuration.md、post-lists-cards.md、link-grid-banner-tags.md、client-side-overview.md、widget-architecture.md、plugin-system.md；跨卡片 Spotlight/Tilt 生命周期、组合类接入、降级与测试 |
 | `c8c6874` | release: 1.43.1 | 版本号、CHANGELOG 与安装知识库同步至 1.43.1 |
