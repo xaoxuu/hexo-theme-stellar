@@ -396,11 +396,11 @@ graph BT
 
 `style.leftbar.ui-style` 控制左栏外观：`glass` 为历史默认行为，保留上面的三层背景系统；`card` 时 `layout.ejs` 为 `.l_left` 追加 `leftbar-card` 类，容器改为 `background: var(--card)`（浅色纯白 / 深色主题深灰黑）与 `box-shadow: $boxshadow-float`（`0 4px 8px 0 rgba(0,0,0,0.05)`），并隐藏 `.sidebg` 与 `.leftbar-container:before/:after`。因类选择器特异性更高，桌面与移动端均生效。该配置项默认值为 `card`。
 
-紧凑列表、摘要条目和链接网格不再通过 `.l_left` / `.l_right` 高特异性选择器适配。`layout.ejs` 为左栏声明 `data-ui-surface="glass|card"`，为右栏声明 `sidebar`，为主内容声明 `content`；`.ui-collection` 只消费 `--ui-item-*` 等 surface 语义变量。list/grid/summary 的条目默认背景均透明，hover/active 时 glass 使用与 menubar 一致的半透明顶部高光，card/sidebar/content 使用 `var(--block)`，且背景、文字和 leading 图标不做过渡动画。Footer Social 复用相同的背景与阴影令牌，但保留自身的图标按钮几何。surface 不改变条目尺寸和网格几何。
+紧凑列表、摘要条目和链接网格不再通过 `.l_left` / `.l_right` 高特异性选择器适配。`layout.ejs` 为左栏声明 `data-ui-surface="glass|card"`，为右栏声明 `sidebar`，为主内容声明 `content`；`.ui-collection` 只消费 `--ui-item-*` 等 surface 语义变量。list/grid/summary 的条目默认背景均透明，hover/active 时 glass 使用与 menubar 一致的半透明顶部高光，card/sidebar/content 使用 `var(--block)`，且背景、文字和 leading 图标不做过渡动画。markdown widget 内嵌 collection 的默认背景是上述透明规则的组件级例外，具体契约见[通用集合组件](../06-数据服务与组件/widget-architecture.md#通用集合组件)。Widget Header 的 cap action hover 与 Footer Social 均复用 collection surface 的背景与阴影令牌；glass 左栏因此共享相同的顶部光照和高光边，两类按钮仍保留自身几何。surface 不改变条目尺寸和网格几何。
 
 搜索结果与 TOC 保留原有生成结构和交互，通过 `.ui-collection-adapter` 读取相同的 hover/active 令牌。`sidebar-light()` 仍服务于未迁移的专用侧栏元素，例如 wiki 内容页左上角「所有项目」返回胶囊；搜索条底部条继续读取 `--leftbar-search-line`。
 
-左栏 `card` 对 `--bg-a*` 的历史重映射仍用于 markdown、标签云、时间线等专用展示组件，但 collection 不依赖这组全局变量。linklist 改为显式 `view: list | grid`；`columns` 仅在 grid 下表示最大列数，窄容器自动降列，`show_title` 独立控制标题且默认为 `true`。
+左栏 `card` 对 `--bg-a*` 的历史重映射仍用于 markdown、标签云、时间线等专用展示组件。普通 collection 不依赖这组全局变量；markdown widget 仅通过 `--ui-item-bg` 定制内嵌 collection 的默认背景。linklist 改为显式 `view: list | grid`；`columns` 仅在 grid 下表示最大列数，窄容器自动降列，`show_title` 独立控制标题且默认为 `true`。
 
 ### CSS 变量集成
 

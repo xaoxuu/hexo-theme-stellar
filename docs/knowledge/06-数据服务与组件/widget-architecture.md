@@ -269,9 +269,9 @@ flowchart TD
 
 生成的 DOM 以 `.ui-collection`、`.ui-collection__item/content/title/description/meta/indicator` 为独立命名空间，激活状态统一为 `.is-active`。list 布局显示 active 指示圆点；grid 布局保留相同 DOM 与 `aria-current`，但隐藏圆点，仅使用背景、文字和图标表达激活状态。menu、recent、related、tree、tagtree、linklist 和 dropdown 菜单项直接使用该结构；dropdown 因浮层挂载会脱离原页面区域，所以在菜单自身声明 glass surface 和 compact 密度，并在 dropdown 作用域通过 `--ui-item-min-height` 统一可选 leading 条目的高度，无图标项不生成占位。该覆盖不改变 collection 的全局默认。TOC 与搜索结果保留各自生成结构和交互，只追加 `.ui-collection-adapter` 并消费相同 surface 令牌。
 
-collection 只读取 `--ui-item-*` 等语义变量，不判断 `.l_left` 或 `.l_right`。页面区域由 `layout.ejs` 的 `data-ui-surface="glass|card|sidebar|content"` 显式声明，因此同一组件可以放入左侧纯色/玻璃栏、右栏或正文区域。list/grid/summary 默认背景透明：glass 的 hover/active 复用 menubar 玻璃高亮，其它表面使用 `var(--block)`；条目和 leading 图标在交互状态间立即切换，不做过渡。未激活的内联 SVG 通过 `currentColor` 统一使用 `var(--text-p2)`，不叠加灰阶、亮度或透明度滤镜；外部图片图标保留原图颜色。未激活 `img` / `svg` 整体透明度为 `0.5`，hover/active 时恢复为 `1`，SVG 仍按条目主题色或渐变高亮。
+collection 只读取 `--ui-item-*` 等语义变量，不判断 `.l_left` 或 `.l_right`。页面区域由 `layout.ejs` 的 `data-ui-surface="glass|card|sidebar|content"` 显式声明，因此同一组件可以放入左侧纯色/玻璃栏、右栏或正文区域。list/grid/summary 默认背景透明；作为组合内容层次的例外，`.widget-wrapper.markdown` 内的 collection 默认显示背景，glass surface 使用 `var(--bg-a10)`，card/sidebar/content 等其它 surface 使用 `var(--block)`。glass 的 hover/active 复用 menubar 玻璃高亮，其它表面使用 `var(--block)`；条目和 leading 图标在交互状态间立即切换，不做过渡。未激活的内联 SVG 通过 `currentColor` 统一使用 `var(--text-p2)`，不叠加灰阶、亮度或透明度滤镜；外部图片图标保留原图颜色。未激活 `img` / `svg` 整体透明度为 `0.5`，hover/active 时恢复为 `1`，SVG 仍按条目主题色或渐变高亮。
 
-**参考源码**：[layout/_partial/components/](../../../layout/_partial/components/)、[source/css/_components/collection.styl](../../../source/css/_components/collection.styl)
+**参考源码**：[layout/_partial/components/](../../../layout/_partial/components/)、[source/css/_components/collection.styl](../../../source/css/_components/collection.styl)、[source/css/_components/widgets/widgets.styl](../../../source/css/_components/widgets/widgets.styl)
 
 ---
 

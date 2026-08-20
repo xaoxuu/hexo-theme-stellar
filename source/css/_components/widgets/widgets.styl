@@ -44,7 +44,8 @@
           fill: var(--text-p2)
         &:hover
           color: var(--accent)
-          sidebar-light(var(--bg-a50))
+          background: var(--ui-item-bg-hover)
+          box-shadow: var(--ui-item-shadow-hover)
           opacity 1
           svg
             fill: var(--accent)
@@ -65,6 +66,12 @@
   margin-top: 32px
   .widget-section+.widget-section
     margin-top: 24px
+
+.widget-wrapper.markdown
+  --ui-item-bg: var(--block)
+
+[data-ui-surface='glass'] .widget-wrapper.markdown
+  --ui-item-bg: var(--bg-a10)
 
 .l_left .widgets
   padding-bottom: 64px

@@ -21,6 +21,10 @@
 
 ## 二、版本与事实修正
 
+| 2026-08-20 | Widget Header 的 cap action hover 直接调用 `sidebar-light()`，未与 collection 的 surface 交互保持同步 | cap action hover 改为消费 `--ui-item-bg-hover` 与 `--ui-item-shadow-hover`；glass 左栏复用 collection 的半透明顶部光照与高光边，按钮几何、透明度和 accent 图标反馈不变 | `source/css/_components/widgets/widgets.styl`、`docs/knowledge/02-布局系统/sidebar-system.md`、`docs/designs/2026-08-20-widget-cap-action-surface-interaction/` |
+
+| 2026-08-20 | markdown widget 内嵌 collection 与普通 widget 一样默认透明，说明文字与链接条目缺少组合层次 | markdown widget 通过现有 `--ui-item-bg` 为内嵌 collection 提供默认背景：glass surface 使用 `var(--bg-a10)`，其它 surface 使用 `var(--block)`；普通 collection 与所有交互状态保持不变 | `source/css/_components/widgets/widgets.styl`、`docs/knowledge/06-数据服务与组件/widget-architecture.md`、`docs/designs/2026-08-20-markdown-widget-collection-background/` |
+
 | 2026-08-20 | 左栏 Footer Social 的 hover/open 背景固定使用 `var(--bg-a20)`，未复用 collection surface，无法随 glass/card 区分顶部光照、高光边与纯色反馈 | 普通 hover 消费 `--ui-item-bg-hover` / `--ui-item-shadow-hover`，dropdown 打开态消费 active 令牌；glass 与 collection 使用相同半透明高光，card 使用 `var(--block)` 且无阴影，同时移除背景与阴影过渡并保留原有按钮几何和图标反馈 | `source/css/_components/sidebar/footer.styl`、`docs/knowledge/02-布局系统/sidebar-system.md`、`docs/designs/2026-08-20-footer-social-surface-interactions/` |
 
 | 2026-08-20 | Footer dropdown 主按钮的图片尺寸和打开态与普通 social 按钮不一致，未激活主图标也缺少层级弱化；菜单项重复维护列表样式且强制要求图标；正文标签箭头位于标题左侧；混合图标菜单的条目高度不一致；菜单文字的多重明暗阴影会形成自带背景色的错觉 | Footer trigger 完全复用 `.social` 尺寸与 hover/open 高亮，主图标默认透明度 `0.5`、激活恢复 `1`；菜单声明 glass surface 并组合通用 collection list 的 compact 密度，最小宽度固定为 150px；Footer 配置与标签子项图标改为可选；正文箭头移至标题右侧；dropdown 局部最小行高统一为 leading 高度加纵向 padding，无图标项不保留占位；移除菜单文字阴影并保留玻璃表面与条目交互背景 | `layout/_partial/dropdown.ejs`、`scripts/tags/lib/dropdown.js`、`source/css/_common/dropdown.styl`、`source/css/_components/sidebar/footer.styl`、`docs/designs/2026-08-20-dropdown-style-alignment/` |
