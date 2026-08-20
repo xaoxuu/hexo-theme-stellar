@@ -20,6 +20,8 @@ tags:
 - [README.md](../../../README.md)
 - [_config.yml](../../../_config.yml)
 - [package.json](../../../package.json)
+- [source/css/_components/sidebar/search.styl](../../../source/css/_components/sidebar/search.styl)
+- [source/js/plugins/card-hover.js](../../../source/js/plugins/card-hover.js)
 - [source/js/search/local-search.js](../../../source/js/search/local-search.js)
 - [source/js/search/algolia-search.js](../../../source/js/search/algolia-search.js)
 - [source/js/search/shortcut.js](../../../source/js/search/shortcut.js)
@@ -226,6 +228,12 @@ flowchart LR
 `anchors` 为可选字段：有标题的页面会输出章节锚点（`id` 为标题锚点、`offset` 为标题文本在 `content` 中的起始位置），无标题页面省略。客户端按锚点把结果拆分为章节：每个命中章节生成一条结果（显示页面标题 + 章节名），点击链接携带 `?kw=<关键词>` 与 `#<锚点>` 直接跳转到对应章节；目标页加载后会用黄色 mark 高亮关键词。
 
 `content: false` 时只索引标题与 URL，显著减小文件但搜索仅限标题匹配。
+
+### 结果卡片交互
+
+本地搜索与 Algolia 使用一致的结果结构：页面标题位于链接上方，不参与跳转；章节名与摘要位于链接内。链接静止时即通过 `.ui-collection-adapter` 使用所在 surface 原本的 hover 背景与阴影：glass 显示半透明顶部光照和高光边，card/sidebar/content 使用对应实色反馈。
+
+启用 `plugins.card_hover` 后，只有链接组合 `.card-hover.card-hover--spotlight`，hover 仅叠加鼠标跟随光斑，不产生上浮或 3D 倾斜；页面标题保持静止。搜索每次替换结果前通过 `stellar.cardHover.unmountAll(resultArea)` 清理旧链接，插入后再用 `mountAll(resultList)` 挂载新链接。插件关闭、脚本失败、粗指针或减少动态效果时保留静态玻璃背景与原有跳转。
 
 **参考源码**：[_config.yml](../../../_config.yml)、[source/js/search/local-search.js](../../../source/js/search/local-search.js)
 

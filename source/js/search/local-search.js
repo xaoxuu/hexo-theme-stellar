@@ -129,6 +129,25 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
     });
   }
 
+  function getCardHoverApi() {
+    if (typeof stellar === 'undefined' || !stellar.cardHover) return null;
+    return stellar.cardHover;
+  }
+
+  function unmountResultCards(root) {
+    var cardHover = getCardHoverApi();
+    if (cardHover && typeof cardHover.unmountAll === 'function') {
+      cardHover.unmountAll(root);
+    }
+  }
+
+  function mountResultCards(root) {
+    var cardHover = getCardHoverApi();
+    if (cardHover && typeof cardHover.mountAll === 'function') {
+      cardHover.mountAll(root);
+    }
+  }
+
   // 构建单条搜索结果 DOM
   function buildResultElement(dataTitle, sectionName, secText, secFirst, pairs, href) {
     const li = document.createElement('li');
@@ -140,6 +159,7 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
     li.appendChild(titleSpan);
 
     const a = document.createElement('a');
+    a.className = 'card-hover card-hover--spotlight';
     a.href = href;
 
     if (sectionName) {
@@ -180,6 +200,7 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
 
     $input.addEventListener("input", function() {
       var rawValue = this.value.trim();
+      unmountResultCards($resultContent);
       $resultContent.innerHTML = "";
       if (rawValue.length <= 0) {
         $wrapper.setAttribute('searching', 'false');
@@ -283,6 +304,7 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
 
         $resultContent.innerHTML = '';
         $resultContent.appendChild(ul);
+        mountResultCards(ul);
       }
     });
 

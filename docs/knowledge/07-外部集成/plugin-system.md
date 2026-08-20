@@ -301,11 +301,11 @@ plugins:
 
 - `.card-hover` 声明参与通用 Hover 生命周期；两个修饰类可独立选用。
 - 单个组件可通过 `--card-hover-spotlight-color` 覆盖全局光斑颜色。
-- 内建接入包括文章、笔记、笔记本、Wiki 项目卡片、Wiki Hero 操作按钮、置顶轮播外层、专栏最新文章卡片、`{% link %}`、`{% grid bg:card %}` 单元格与标准 `.ui-collection__item`；Wiki Hero 操作按钮与 Collection 只组合 Spotlight，不启用 Tilt，其余所列卡片组合 Spotlight + Tilt。
-- 专栏标题、描述和归档式文章条目、非 Collection 的侧栏组件、sites、albums、posters、chat 内嵌链接、TOC/搜索 `.ui-collection-adapter`，以及 `bg:box`/无背景 grid 不接入。
+- 内建接入包括文章、笔记、笔记本、Wiki 项目卡片、Wiki Hero 操作按钮、置顶轮播外层、专栏最新文章卡片、搜索结果链接、`{% link %}`、`{% grid bg:card %}` 单元格与标准 `.ui-collection__item`；Wiki Hero 操作按钮、搜索结果链接与 Collection 只组合 Spotlight，其余所列卡片组合 Spotlight + Tilt。
+- 专栏标题、描述和归档式文章条目、搜索结果页面标题、非 Collection 的侧栏组件、sites、albums、posters、chat 内嵌链接、TOC `.ui-collection-adapter`，以及 `bg:box`/无背景 grid 不接入。
 - 仅在精细指针且允许动态效果时挂载；触屏、粗指针和 `prefers-reduced-motion: reduce` 保留原卡片行为。键盘焦点使用卡片中心光斑；指针离开时光斑停在最后位置淡出，完全透明且未重新激活后才回中，Tilt 则立即回正。
 
-JavaScript 只查询 `.card-hover`，并暴露 `stellar.cardHover.mountAll(root)` 与 `stellar.cardHover.destroy()`。动态内容可在插入后调用 `mountAll(root)`；内置远程 Markdown 服务会派发 `stellar:mdrender`，插件自动增量扫描。倾斜使用 `requestAnimationFrame` 节流，销毁时取消动画帧、移除监听器和注入的 `aria-hidden` 光斑层。
+JavaScript 只查询 `.card-hover`，并暴露 `stellar.cardHover.mountAll(root)`、`unmountAll(root)` 与 `destroy()`。动态内容可在插入后调用 `mountAll(root)`；移除前可用 `unmountAll(root)` 清理该容器自身及后代卡片，省略 `root` 时清理全部。内置远程 Markdown 服务会派发 `stellar:mdrender`，插件自动增量扫描。倾斜使用 `requestAnimationFrame` 节流，销毁时取消动画帧、移除监听器和注入的 `aria-hidden` 光斑层。
 
 **参考源码**：[layout/_plugins/card_hover.ejs](../../../layout/_plugins/card_hover.ejs)、[source/js/plugins/card-hover.js](../../../source/js/plugins/card-hover.js)、[source/css/_plugins/card-hover.styl](../../../source/css/_plugins/card-hover.styl)
 

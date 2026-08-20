@@ -103,8 +103,12 @@
     mounted.delete(state.element);
   }
 
-  function unmountAll() {
-    Array.from(mounted.values()).forEach(unmount);
+  function unmountAll(root) {
+    Array.from(mounted.values()).forEach(function (state) {
+      if (!root || state.element === root || (typeof root.contains === 'function' && root.contains(state.element))) {
+        unmount(state);
+      }
+    });
   }
 
   function mount(element) {
@@ -244,6 +248,7 @@
 
   stellar.cardHover = {
     mountAll: mountAll,
+    unmountAll: unmountAll,
     destroy: destroy
   };
 })();

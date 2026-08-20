@@ -125,11 +125,12 @@ function createRuntime({ finePointer = true, reduceMotion = false } = {}) {
   return { api: stellar.cardHover, document, documentListeners, media, windowListeners };
 }
 
-test('公开 mountAll/destroy 接口可挂载动态卡片并完整清理', () => {
+test('公开 mountAll/unmountAll/destroy 接口可挂载动态卡片并完整清理', () => {
   const card = createCard();
   const runtime = createRuntime();
 
   assert.equal(typeof runtime.api.mountAll, 'function');
+  assert.equal(typeof runtime.api.unmountAll, 'function');
   assert.equal(typeof runtime.api.destroy, 'function');
   runtime.api.mountAll(card);
 
@@ -166,6 +167,30 @@ test('公开 mountAll/destroy 接口可挂载动态卡片并完整清理', () =>
   assert.equal(dynamicCard.listeners.size, 0);
   assert.equal(runtime.documentListeners.size, 0);
   assert.equal(runtime.windowListeners.size, 0);
+});
+
+test('unmountAll(root) 仅清理指定容器内的动态卡片', () => {
+  const firstCard = createCard();
+  const secondCard = createCard();
+  const runtime = createRuntime();
+  runtime.api.mountAll(firstCard);
+  runtime.api.mountAll(secondCard);
+
+  const root = {
+    contains(element) {
+      return element === firstCard;
+    }
+  };
+  runtime.api.unmountAll(root);
+
+  assert.equal(firstCard.classList.contains('is-card-hover-ready'), false);
+  assert.equal(firstCard.children.length, 0);
+  assert.equal(firstCard.listeners.size, 0);
+  assert.equal(secondCard.classList.contains('is-card-hover-ready'), true);
+  assert.equal(secondCard.children.length, 1);
+  assert.notEqual(secondCard.listeners.size, 0);
+
+  runtime.api.destroy();
 });
 
 test('减少动态效果或非精细指针时不挂载动态能力', () => {

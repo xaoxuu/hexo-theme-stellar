@@ -370,6 +370,7 @@ sequenceDiagram
 启用 `plugins.card_hover` 后，`layout/_plugins/card_hover.ejs` 经 `stellar.initPlugin` 条件加载本地脚本，并把已校验的光斑颜色和最大倾角写入 `ctx.card_hover`。`source/js/plugins/card-hover.js` 只扫描 `.card-hover`，再按 `.card-hover--spotlight` 与 `.card-hover--tilt` 挂载对应能力：
 
 - `stellar.cardHover.mountAll(root)` 幂等扫描 Document、容器或单个卡片，供动态组件复用。
+- `stellar.cardHover.unmountAll(root)` 清理指定容器自身及后代的已挂载卡片；省略 `root` 时清理全部，供动态搜索替换结果和插件销毁复用。
 - `stellar:mdrender` 完成后自动对 `event.detail.target` 增量挂载。
 - 指针移动经 `requestAnimationFrame` 合并；离开时取消待执行帧、移除激活类并立即复位倾角，Spotlight 则停在最后指针位置淡出，`opacity` 过渡完成且卡片未重新激活、未持有焦点后才回到中心。
 - 页面隐藏时复位；`destroy()` 移除卡片与媒体查询监听、注入光斑层和根级配置变量。
@@ -377,7 +378,7 @@ sequenceDiagram
 
 Spotlight 是卡片末尾注入的独立 `span.card-hover__spotlight[aria-hidden=true]`，不接收指针事件；纯键盘进入或指针离开时仍保持 `focus-within`，都会立即使用居中光斑。快速重新移入后，旧的淡出结束事件不会覆盖新指针坐标。Tilt 作用于卡片本体，不占用 ScrollReveal 的 `.post-card-wrap` transform。
 
-置顶轮播外层和专栏列表的最新文章封面卡片复用完整 Spotlight + Tilt；轮播轨道与专栏标题、描述、归档式文章条目不参与 Tilt。Wiki Hero 的源码、文档和自定义 action 按钮与标准 `.ui-collection__item` 复用同一生命周期，但只声明 Spotlight 修饰类，因此保留原有按钮或 surface hover/active 背景且不会产生位移或 3D transform；TOC 与搜索的 `.ui-collection-adapter` 不参与挂载。
+置顶轮播外层和专栏列表的最新文章封面卡片复用完整 Spotlight + Tilt；轮播轨道与专栏标题、描述、归档式文章条目不参与 Tilt。Wiki Hero 的源码、文档和自定义 action 按钮、搜索结果链接与标准 `.ui-collection__item` 复用 Spotlight-only 生命周期，因此保留原有 surface 背景且不会产生位移或 3D transform。搜索的 `.ui-collection-adapter` 列表本身不挂载，只有内部可点击链接动态挂载，页面标题留在链接外；TOC adapter 仍不接入。
 
 **参考源码**：[layout/_plugins/card_hover.ejs](../../../layout/_plugins/card_hover.ejs)、[source/js/plugins/card-hover.js](../../../source/js/plugins/card-hover.js)、[source/css/_plugins/card-hover.styl](../../../source/css/_plugins/card-hover.styl)
 
