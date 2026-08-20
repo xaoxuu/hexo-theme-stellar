@@ -1,7 +1,7 @@
 # 发版流程
 
 > 创建日期: 2026-08-08
-> 更新日期: 2026-08-09（全自动化：npm 自动发布 + CHANGELOG 非空校验 + GitHub Release）
+> 更新日期: 2026-08-20（版本文件自动同步 + 最终态质量检查）
 
 ## 概述
 
@@ -48,10 +48,11 @@ npm run release:dry -- 1.34.1
 1. 校验版本号格式（`x.y.z` 或 `x.y.z-rc.n`）
 2. 校验当前分支为 `main`、工作区无无关改动
 3. 校验 CHANGELOG.md 已包含 `## <version>` 非空章节（内容由 AI/人工提前准备），缺失或为空则终止发版
-4. 更新 `_config.yml` → `stellar.version`（保留单引号格式）与 `package.json` → `version`
-5. 输出变更摘要（自上一个 tag 以来的提交）与 diff，供人工确认
-6. 二次确认后执行 `git add` / `commit` / `push`（main + npm 分支）
-7. dry-run 或取消时从内存恢复文件（CHANGELOG.md 不存在时恢复为删除），不依赖 `git checkout --`
+4. 读取 `package.json` 的当前版本，在内存中同时准备 `_config.yml`、`package.json` 与安装知识库的目标版本内容；任一文件无法安全更新时不写入任何文件
+5. 写入全部版本文件后执行 `npm run check`，让 lint、单测、提交登记与知识库核查基于最终待提交状态运行
+6. 输出变更摘要（自上一个 tag 以来的提交）与 diff，供人工确认
+7. 二次确认后将 CHANGELOG 与三个版本文件一并执行 `git add` / `commit` / `push`（main + npm 分支）
+8. dry-run、取消或最终态质量检查失败时从内存恢复全部受管文件，不依赖 `git checkout --`
 
 ## CI 自动化
 
@@ -68,6 +69,8 @@ npm run release:dry -- 1.34.1
 
 - dry-run 或二次确认取消：文件从内存恢复，工作区与执行前一致
 - CHANGELOG 章节缺失或为空：脚本校验拦截并终止，提示先由 AI/人工补充该版本章节
+- 安装知识库找不到当前包版本，或配置与包版本不一致：写入前终止，不产生部分更新
+- 最终态 `npm run check` 失败：恢复配置、包版本、CHANGELOG 与安装知识库，修复后重新预演
 - 提交登记缺失：`npm run check` 的提交登记完整性检查列出缺失短 SHA，补登记到 `docs/knowledge/VERIFICATION.md`「提交登记（发版前核对）」后重跑
 - 版本已发布：CI 自动跳过 publish 与 tag，可安全重跑
 - Release 已存在：CI 跳过创建，可安全重跑

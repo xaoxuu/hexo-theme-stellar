@@ -21,6 +21,8 @@
 
 ## 二、版本与事实修正
 
+| 2026-08-20 | 1.43.0 发版只更新 `_config.yml` 与 `package.json`，安装知识库仍引用 1.42.1，导致发版提交的知识库 CI 失败 | 安装知识库 6 处版本引用同步为 1.43.0；发版脚本以后自动同步三个版本文件，并在最终待提交状态执行质量检查 | `release.js`、`docs/knowledge/00-总览与安装配置/installation.md`、`docs/guides/release-process.md`、`docs/designs/2026-08-20-release-version-sync/` |
+
 | 2026-08-20 | Wiki Galaxy 的默认辉光偏强，鼠标仅带动整体视差，局部星点缺少轻量交互反馈 | `glowIntensity` 由 `0.5` 降为 `0.2`；启用鼠标排斥并将 `repulsionStrength` 设为 `0.1`，保留鼠标平滑与离开 Hero 后的交互强度淡出；其它星场、生命周期与降级参数不变 | `source/js/plugins/galaxy.js`、`docs/knowledge/03-内容系统/wiki-docs.md`、`docs/designs/2026-08-20-galaxy-interaction-tuning/` |
 
 | 2026-08-20 | glass collection 在深色模式下的 hover/active 基底偏亮，menubar 又单独将 `auto` 集合间距压缩为 2px，与通用 collection 几何不一致 | 深色 glass 交互基底由 `var(--bg-a50)` 改为 `var(--bg-a20)`，保留顶部光照与高光边；移除 menubar 的 2px 间距覆盖，与其它 `auto` collection 共用默认 4px 间距 | `source/css/_components/collection.styl`、`source/css/_components/sidebar/nav-area.styl`、`docs/designs/2026-08-20-collection-dark-highlight-menu-spacing/` |
