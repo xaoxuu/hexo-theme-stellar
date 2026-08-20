@@ -10,12 +10,12 @@ date: 2026-08-20
 - [x] `node --test test/release.test.js` 通过（6/6）
 - [x] `npm run check` 通过（lint、137/137 测试、规范引用、提交登记）
 - [x] `python3 docs/knowledge/tools/verify.py` 通过，版本不一致为 0
-- [ ] 主题主分支新 CI 全部通过
-- [ ] npm latest、1.43.0 tag 与 GitHub Release 保持不变
+- [x] 主题主分支新 CI 全部通过（[run 32333812519](https://github.com/xaoxuu/hexo-theme-stellar/actions/runs/32333812519)）
+- [x] npm latest、1.43.0 tag 与 GitHub Release 保持不变
 
 ## 文档与交付
 
 - [x] 安装知识库版本同步为 1.43.0
 - [x] `docs/guides/release-process.md` 已同步最终态检查与恢复规则
-- [ ] 主题修复仅推送 `main`，未推送 `npm` 分支
+- [x] 主题修复仅推送 `main`，`npm` 分支仍停在 `a558ac7`
 - [ ] 主仓库子模块指针已本地提交且未推送
