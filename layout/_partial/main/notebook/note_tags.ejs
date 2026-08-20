@@ -1,9 +1,9 @@
-<%# 笔记的所属标签 %>
+<%# 笔记的所属标签（容器与胶囊样式复用 article/article_tags.ejs 的 article-tags） %>
 <% if (page.tags) { %>
-  <div class="tag-list">
+  <div class="article-tags<%= scrollreveal(' ') %>">
     <% for (const t of page.tags) { %>
       <% const tag = notebook.tagTree.get(t.toLowerCase()) %>
-      <a class="tag" href="<%= pretty_url(tag.path) %>"><%= tag.name %></a>
+      <a class="tag" href="<%= pretty_url(tag.path) %>"><%- icon('default:hashtag') %><%- escape_html(tag.name) %></a>
     <% } %>
   </div>
 <% } %>

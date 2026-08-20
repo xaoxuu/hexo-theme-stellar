@@ -78,7 +78,7 @@ flowchart TD
 
 - 模板 [layout/_partial/main/article/article_tags.ejs](../../../layout/_partial/main/article/article_tags.ejs)：`page.tags` 为空时输出空字符串；每个标签渲染为 `<a class="tag" href="${pretty_url(tag.path)}">` 链接，链接内先内联 `default:hashtag` 图标再输出标签名，点击进入对应 Hexo 标签页。
 - 样式 [source/css/_components/partial/article-tags.styl](../../../source/css/_components/partial/article-tags.styl)：复用 [source/css/_defines/func.styl](../../../source/css/_defines/func.styl) 的 `tag-chip()` mixin——胶囊圆角（`border-radius: 999px`）、`var(--block)` 底色、`$fs-13`，前缀为内联 hashtag 图标（`.tag svg`：`1em`、`opacity: .4`）；hover 时文字变 `var(--text)`、背景变 `var(--block-border)`、图标变主题色且不透明；容器 `justify-content: center` 居中，`margin: 2rem -0.5rem 0` 抵消标签外边距并保留与正文的 2rem 间距。与标签页（`/blog/tags/`）标签胶囊为同一套样式。
-- 仅博客文章生效；wiki / 笔记页维持各自的标签展示（笔记页见 `note_tags` partial）。
+- 博客文章标签行由 `theme.article.tags` 控制，wiki 页不渲染标签行；笔记页由 [layout/_partial/main/notebook/note_tags.ejs](../../../layout/_partial/main/notebook/note_tags.ejs) 在正文末尾渲染笔记标签（标签名经笔记本标签树解析，点击进入笔记本标签过滤页），复用同一 `article-tags` 容器与 `tag-chip()` 胶囊样式。
 
 **参考源码**：[layout/_partial/main/article/article_tags.ejs](../../../layout/_partial/main/article/article_tags.ejs)、[layout/page.ejs](../../../layout/page.ejs)、[source/css/_components/partial/article-tags.styl](../../../source/css/_components/partial/article-tags.styl)、[source/css/_defines/func.styl](../../../source/css/_defines/func.styl)
 

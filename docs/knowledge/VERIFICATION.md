@@ -21,6 +21,8 @@
 
 ## 二、版本与事实修正
 
+| 2026-08-20 | 笔记页标签行（`note_tags`）仍使用早期的 `.md-text .tag-list` 方形标签样式，与文章末尾标签行的 `tag-chip()` 胶囊样式不一致 | `note_tags` 改用 `article-tags` 容器（含 scroll-reveal、hashtag 图标与转义标签名），与文章标签行共用同一套胶囊样式；移除 `notebook.styl` 中仅服务该旧样式的 `.md-text .tag-list` 规则 | `layout/_partial/main/notebook/note_tags.ejs`、`source/css/_components/pages/notebook.styl`、`docs/knowledge/03-内容系统/article-footer-metadata.md`、`docs/knowledge/03-内容系统/notebook-system.md` |
+
 | 2026-08-20 | Wiki Hero 的源码、文档与自定义 action 按钮未接入 Card Hover，源码按钮的宽泛 `span` 反色规则还会影响运行时注入的 Spotlight 层 | 三类按钮统一输出 `.card-hover.card-hover--spotlight`，只启用鼠标跟随光斑而不启用 Tilt；源码按钮反色规则收窄到直接子级图标与非 Spotlight 标题，保留原有布局、配色、链接及环境降级行为 | `layout/_partial/cover/wiki_cover.ejs`、`source/css/_components/partial/cover.styl`、`test/card_hover_markup.test.js`、`docs/designs/2026-08-20-wiki-cover-action-spotlight/` |
 
 | 2026-08-20 | Footer Social 的内联 SVG 固定为 24×24px，图片图标却使用自动宽高，URL 图标会按固有尺寸撑宽按钮或被裁切 | 将 `.social img` 固定为 24×24px 并使用 `object-fit: contain` 等比容纳，与 SVG 共用图标尺寸；按钮几何、灰阶、高亮、dropdown 与 surface 行为不变 | `source/css/_components/sidebar/footer.styl`、`docs/knowledge/02-布局系统/sidebar-system.md`、`docs/designs/2026-08-20-footer-social-img-size/` |
@@ -319,6 +321,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `ff2ee58` | style(notebook): 笔记标签行对齐文章标签胶囊样式 | 设计文档 `2026-08-20-note-tags-align-article-tags/`；知识库 `03-内容系统/article-footer-metadata.md`、`notebook-system.md`；笔记标签行复用文章标签容器、hashtag 图标与 `tag-chip()` 胶囊样式 |
 | `5e2751b` | feat(wiki): 增加 Hero 按钮 Spotlight | 设计文档 `2026-08-20-wiki-cover-action-spotlight/`；知识库 `03-内容系统/wiki-docs.md`、`05-前端交互/client-side-overview.md`、`07-外部集成/plugin-system.md`；Wiki Hero 三类操作按钮接入 Spotlight-only 生命周期 |
 | `00c3e3c` | feat(card-hover): 增加卡片光效与倾斜 | 设计文档 `2026-08-20-card-hover-effects/`；知识库 configuration.md、post-lists-cards.md、link-grid-banner-tags.md、client-side-overview.md、widget-architecture.md、plugin-system.md；跨卡片 Spotlight/Tilt 生命周期、组合类接入、降级与测试 |
 | `c8c6874` | release: 1.43.1 | 版本号、CHANGELOG 与安装知识库同步至 1.43.1 |
