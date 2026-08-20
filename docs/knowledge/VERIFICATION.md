@@ -311,6 +311,23 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `e0b6dc3` | feat(topic): 增加归档式可折叠文章列表 | 设计文档 `2026-08-20-topic-archive-more-list/`；知识库 `03-内容系统/post-lists-cards.md`；专栏排序、归档列表折叠交互与三语文案 |
+| `aa0eb19` | style(galaxy): 调整辉光与鼠标排斥 | 设计文档 `2026-08-20-galaxy-interaction-tuning/`；知识库 `03-内容系统/wiki-docs.md`；Wiki Hero 星河交互参数 |
+| `f8558d4` | style(collection): 收敛暗色高亮与菜单间距 | 设计文档 `2026-08-20-collection-dark-highlight-menu-spacing/`；知识库 `06-数据服务与组件/widget-architecture.md`；集合组件暗色状态与侧栏菜单间距 |
+| `9218a7b` | style(widgets): 统一集合背景与标题操作反馈 | 设计文档 `2026-08-20-markdown-widget-collection-background/`、`2026-08-20-widget-cap-action-surface-interaction/`；知识库 sidebar-system.md、widget-architecture.md；Widget 背景与标题操作态 |
+| `154aa55` | style(sidebar): 统一 Footer 与 collection 交互样式 | 设计文档 `2026-08-20-footer-social-surface-interactions/`；知识库 `02-布局系统/sidebar-system.md`；Footer social 与 collection 交互表面 |
+| `d9b723d` | refactor(dropdown): 统一菜单与集合组件样式 | 设计文档 `2026-08-20-dropdown-style-alignment/`；知识库 configuration.md、sidebar-system.md、tag-plugins-overview.md、widget-architecture.md；dropdown 模板、标签、样式与单测 |
+| `7776c1c` | refactor(collection): 简化密度与交互状态 | 设计文档 `2026-08-20-collection-density-simplification/`、`2026-08-20-collection-surface-interactions/`、`2026-08-20-grid-active-without-indicator/`；集合组件结构、密度与交互状态 |
+| `c1c67c8` | refactor(sidebar): 统一集合组件结构与样式 | 设计文档 `2026-08-19-sidebar-collections/`；知识库 design-tokens.md、sidebar-system.md、toc-system.md、widget-architecture.md；侧栏菜单、目录树、相关内容与搜索统一复用集合组件 |
+| `967992c` | fix(linklist): 修复激活圆点样式被标题规则影响 | `layout/_partial/widgets/components/link.ejs` 与 widgets 组件样式；修复 linklist 激活指示 |
+| `47e98fc` | fix(css): 统一文章分享图标尺寸 | 设计文档 `2026-08-19-article-share-icon-size/`；知识库 `03-内容系统/article-footer-metadata.md`；文章页与侧栏分享图标尺寸 |
+| `c078d5d` | feat(wiki): 升级 Hero 星河背景与版本标签布局 | 设计文档 `2026-08-19-wiki-galaxy-webgl/`、`2026-08-19-wiki-release-above-title/`；知识库 `03-内容系统/wiki-docs.md`；WebGL 星河、版本标签与第三方声明 |
+| `2ea608b` | feat(wiki): 优化 Hero 交互与导航 | 设计文档 `2026-08-18-wiki-hero-cover/`、`2026-08-18-wiki-links-without-start-anchor/`、`2026-08-19-wiki-hero-release-loading/`、`2026-08-19-wiki-hero-remove-divider/`；Wiki Hero 安装命令、链接、版本加载与导航交互 |
+| `feb23bd` | style(typography): 优化移动端基础字号 | 设计文档 `2026-08-18-mobile-font-size/`；知识库 configuration.md、design-tokens.md、responsive-design.md、typography.md；移动端根字号与正文排版 |
+| `16ea402` | feat(footer): 新增通用下拉菜单与社交布局优化 | 设计文档 `2026-08-18-footer-social-*`、`2026-08-18-unify-back-arrow-icon/`；知识库 configuration.md、sidebar-system.md、icon-tag.md、tag-plugins-overview.md；通用 dropdown、Footer spacer/social 与图标行为 |
+| `fad4b7e` | fix(sites): 复用 siteinfo 补充网站卡片图标 (#387) | 设计文档 `2026-08-18-sites-siteinfo-icon/`；知识库 social-content-card-tags.md、data-service-apis.md；sites 卡片缺图标时复用 siteinfo 服务并保留失败回退 |
+| `e68d304` | fix(mermaid): 修复样式配置失效与文字不可见 (#693) | 设计文档 `2026-08-18-mermaid-style-config/`；知识库 integrations-overview.md、plugin-system.md；Mermaid 官方主题与 Stellar 样式开关 |
+| `7ff4ada` | feat(wiki): 完善项目首页 Hero | 设计文档 `2026-08-18-wiki-hero-cover/`、`2026-08-18-wiki-hero-i18n/`；知识库 installation.md、wiki-docs.md、localization.md；Wiki Hero 模板、样式、交互与三语文案 |
 | `9618899` | feat(navigation): 增加原生跨文档页面过渡 | 设计文档 `2026-08-20-cross-document-page-transition/`；知识库 `07-外部集成/pjax-navigation.md`；默认配置与 `page-transition.styl` |
 | `b2c0a3e` | feat(wiki): 改造封面卡片布局 | 设计文档 `2026-08-17-wiki-cover-cards/`；知识库 `03-内容系统/post-lists-cards.md`、`wiki-docs.md`；三语 `meta.available`；Wiki 卡片模板、样式与 GitHub 数据服务 |
 | `3274cc1` | fix: navbar 无轮播区页面默认卡片样式，滚动 2px 后恢复玻璃 | 设计文档 `2026-08-17-navbar-pin-scroll-threshold/`；知识库 `05-前端交互/client-side-overview.md`；`source/js/main.js` |

@@ -1,5 +1,36 @@
 # Changelog
 
+## 1.43.0
+
+> 发布日期：2026-08-20
+
+### 新功能
+- Wiki 项目首页升级为完整 Hero：新增项目元信息、安装命令切换与复制、最新版本异步加载，并加入支持减弱动态效果的 WebGL 星河背景
+- Wiki 项目卡片重构为项目预览布局，补充适用范围、版本与仓库信息展示
+- Footer 新增通用下拉菜单、弹性占位项和自适应 social 布局；同时新增可复用的 `{% dropdown %}` 标签
+- 同源整页导航默认启用原生 View Transition，旧浏览器自动回退普通导航
+- 专栏列表按项目日期排序，文章列表超过阈值时以归档式折叠列表展示，可展开或收起其余文章
+
+### 修复
+- Mermaid 的 `style_optimization` 开关恢复正确语义，关闭时使用 Mermaid 官方主题，开启时应用 Stellar 优化样式，并修复图中文字不可见（#693）
+- `{% sites %}` 网站卡片缺少图标时复用 siteinfo 服务自动补全，请求失败时保留默认图标（#387）
+- navbar 在无轮播区页面顶部保持卡片样式，实际滚动 2px 后再切换为玻璃效果
+- 修复 linklist 激活圆点被标题样式覆盖，以及文章分享图标尺寸不一致的问题
+
+### 样式与重构
+- 侧栏菜单、目录树、相关内容、Widget 与下拉菜单统一复用 collection 组件，收敛结构、密度、背景、暗色高亮和交互反馈
+- Wiki Hero 调整版本标签布局、星河辉光与鼠标排斥效果
+- 移动端根字号自动增加 2px，并统一正文、标题、列表与标签插件的响应式排版
+- 评论区与异步数据服务统一使用自包含的三圆点 loading 动画，移除外部 loading 图标依赖
+
+### 升级注意（配置变更与破坏性改动）
+- 新增 `style.page_transition.enable`，默认 `true`；不需要原生跨文档过渡时可设为 `false`
+- 移除 `style.font-size.body`，正文与组件字号统一从 `style.font-size.root` 派生；移动端根字号会在配置值基础上增加 2px
+- 移除 `default.loading` 配置，loading 动画改为主题内置 SVG
+- `footer.social` 支持 `type: dropdown`、`items` 与 `spacer`；旧的普通链接配置继续兼容
+
+Full Changelog: [1.42.1...1.43.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.42.1...1.43.0)
+
 ## 1.42.1
 
 > 发布日期：2026-08-17
