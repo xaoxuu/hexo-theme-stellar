@@ -304,7 +304,7 @@ footer:
 
 未设置 `type` 的条目按普通 social 链接处理。dropdown 由 `layout/_partial/dropdown.ejs` 使用原生 `<details>/<summary>` 渲染；菜单保留通用玻璃容器，并声明 glass surface 和 compact 密度，子项组合 collection list 结构与交互样式。打开后菜单会由 `source/js/plugins/dropdown.js` 移入 `body` 下的全局浮层，使用 `position: fixed`，不受 sidebar 容器裁剪。鼠标移入触发按钮时自动展开，透明桥接区连接触发按钮与菜单之间的间隙；离开触发按钮、菜单和桥接区后立即关闭，不使用延迟计时器，菜单定位完成后淡入显示。未指定方向时，脚本根据触发按钮上下空间自动选择展开方向，并让菜单贴合触发按钮的左边或右边；菜单有视口高度上限，子项过多时可以垂直滚动。不支持嵌套 dropdown，也不包含具体业务语义。子项的 URL 沿用普通 social 的内链/外链处理规则。
 
-Social 按钮与 dropdown 触发器共用 32px 高度、4px 内边距和 8px 圆角；内联 SVG 统一为 24×24px，图片图标保留自动宽高，不接受通用 dropdown trigger 的 20px 覆盖。因此两类按钮中的同一图标尺寸一致。
+Social 按钮与 dropdown 触发器共用 32px 高度、4px 内边距和 8px 圆角；内联 SVG 与图片图标统一放入 24×24px 图标盒，图片使用 `object-fit: contain` 保持原始比例，且两者都不接受通用 dropdown trigger 的 20px 覆盖。
 
 普通 Social 按钮悬停时会取消灰阶，并将 SVG 中使用 `currentColor` 的填充或描边接入通用主题渐变（`--item-theme-light` 至 `--item-theme`）；渐变角度仍遵循 `style.gradient.angle`。Footer dropdown 主图标未激活时透明度为 `0.5`，hover 或菜单打开后恢复为 `1`，同时复用普通按钮高亮；未悬停、未打开时保留图标自身颜色的灰阶效果。按钮的 hover 与 dropdown 打开态分别消费 collection surface 的 hover/active 背景和阴影令牌，因此 glass 左栏显示半透明顶部光照与高光边，card 左栏使用 `var(--block)` 且无阴影；状态切换不使用背景或阴影过渡。
 
