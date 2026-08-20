@@ -323,6 +323,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `e64da8f` | feat(search): 支持快捷键聚焦搜索框 | 设计文档 `2026-08-21-search-focus-shortcut/`；知识库 `02-布局系统/sidebar-system.md`、`07-外部集成/search.md`；桌面 `Command/Ctrl+K` 聚焦、窄屏与编辑区域降级、公共加载入口及客户端测试 |
 | `83b8dfc` | refactor(search): 优化搜索控件语义 | 设计文档 `2026-08-21-search-widget-semantics/`；知识库 `02-布局系统/sidebar-system.md`；搜索地标、原生标签聚焦、无障碍名称、非提交行为与模板结构测试 |
 | `44526a0` | style(notebook): 笔记标签行对齐文章标签胶囊样式 (#694) | 设计文档 `2026-08-20-note-tags-align-article-tags/`；知识库 `03-内容系统/article-footer-metadata.md`、`notebook-system.md`；笔记标签行复用文章标签容器、hashtag 图标与 `tag-chip()` 胶囊样式 |
 | `5e2751b` | feat(wiki): 增加 Hero 按钮 Spotlight | 设计文档 `2026-08-20-wiki-cover-action-spotlight/`；知识库 `03-内容系统/wiki-docs.md`、`05-前端交互/client-side-overview.md`、`07-外部集成/plugin-system.md`；Wiki Hero 三类操作按钮接入 Spotlight-only 生命周期 |
