@@ -36,7 +36,7 @@ test('dropdown 标签渲染方向、对齐、默认展开和链接属性', () =>
   assert.match(html, /<summary class="dropdown-trigger" title="更多链接" aria-label="更多链接">/);
   assert.match(html, /<span>更多链接<\/span><svg class="dropdown-arrow" viewBox="0 0 24 24"/);
   assert.match(html, /<div class="dropdown-menu ui-collection" data-ui-surface="glass" data-layout="list" data-variant="nav" data-density="compact">/);
-  assert.match(html, /class="dropdown-item ui-collection__item"/);
+  assert.match(html, /class="dropdown-item ui-collection__item card-hover card-hover--spotlight"/);
   assert.match(html, /class="ui-collection__leading"><svg><\/svg><\/span>/);
   assert.match(html, /href="&#x2F;wiki&#x2F;" rel="noopener noreferrer"/);
   assert.match(html, /href="https:&#x2F;&#x2F;github\.com&#x2F;" target="_blank" rel="external nofollow noopener noreferrer"/);
@@ -52,7 +52,7 @@ test('dropdown 标签转义标题和链接属性，并支持无图标子项', ()
   assert.match(html, /<span class="ui-collection__title">A &amp; B<\/span>/);
   assert.match(html, /href="&#x2F;a\?x&#x3D;1&amp;y&#x3D;2"/);
   assert.match(html, /<span class="ui-collection__content"><span class="ui-collection__title">无图标<\/span><\/span>/);
-  const iconlessItem = html.match(/<a class="dropdown-item ui-collection__item" href="&#x2F;skip&#x2F;"[^>]*>(.*?)<\/a>/);
+  const iconlessItem = html.match(/<a class="dropdown-item ui-collection__item card-hover card-hover--spotlight" href="&#x2F;skip&#x2F;"[^>]*>(.*?)<\/a>/);
   assert.ok(iconlessItem);
   assert.doesNotMatch(iconlessItem[1], /ui-collection__leading/);
 });

@@ -85,9 +85,9 @@ function layout_post_card(layout, post, content) {
   if (hero) {
     // hero 封面卡片：背景图由 .post-card 自身背景承载（跟随 corner-shape 圆角裁剪），
     // 子图保留用于 hover 变暗/放大滤镜
-    el += `<a class="post-card ${layout}" style="--cover-url:url('${escape_html(post.cover.replace(/'/g, '%27'))}')" href="${pretty_url(post.link || post.path)}">`
+    el += `<a class="post-card ${layout} card-hover card-hover--spotlight card-hover--tilt" style="--cover-url:url('${escape_html(post.cover.replace(/'/g, '%27'))}')" href="${pretty_url(post.link || post.path)}">`
   } else {
-    el += `<a class="post-card ${layout}" href="${pretty_url(post.link || post.path)}">`
+    el += `<a class="post-card ${layout} card-hover card-hover--spotlight card-hover--tilt" href="${pretty_url(post.link || post.path)}">`
   }
   el += content;
   el += '</a>';

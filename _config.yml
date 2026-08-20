@@ -686,6 +686,12 @@ plugins:
   # 页面存在 [data-text-adaptive] 元素时才按需加载（theme：背景图平均色 lighten/darken；contrast：黑白对比）
   adaptive_text:
     enable: true
+
+  # 卡片鼠标跟随光斑与 3D 倾斜：通过 card-hover 组合类按组件接入
+  card_hover:
+    enable: false
+    spotlight_color: 'rgba(255, 255, 255, 0.25)'
+    max_tilt: 3 # 最大倾斜角度（deg），运行时限制在 0~8
   
   # 赫蹏 (Heti) - 专为中文网页内容设计的排版样式增强
   # https://github.com/sivan/heti

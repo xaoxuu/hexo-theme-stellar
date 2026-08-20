@@ -7,7 +7,7 @@ function layoutDiv() {
   var bg = background || theme.default.topic;
   // 注意：不能用 `var href` 承接，var 提升会遮蔽 partial 传入的 href 参数
   var link = pretty_url(href || '/');
-  el += '<a class="cover" position="bottom" style="--cover-url:url(\'' + escape_html(bg.replace(/'/g, '%27')) + '\')" href="' + link + '">';
+  el += '<a class="cover card-hover card-hover--spotlight card-hover--tilt" position="bottom" style="--cover-url:url(\'' + escape_html(bg.replace(/'/g, '%27')) + '\')" href="' + link + '">';
   el += '<img src="' + escape_html(bg) + '" alt=""/>';
   el += '<div class="cover-info" position="bottom" data-text-adaptive="split">';
   if (typeof label !== 'undefined' && label) {

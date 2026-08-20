@@ -281,6 +281,36 @@ scrollreveal:
 
 ---
 
+### Card Hover（卡片光效与倾斜）
+
+**用途**：通过组合类为有背景的卡片提供鼠标跟随光斑与 3D 倾斜，不依赖 React 或第三方运行时。
+
+```yaml
+plugins:
+  card_hover:
+    enable: false
+    spotlight_color: 'rgba(255, 255, 255, 0.25)'
+    max_tilt: 3
+```
+
+组件接入契约：
+
+```html
+<a class="card-hover card-hover--spotlight card-hover--tilt">...</a>
+```
+
+- `.card-hover` 声明参与通用 Hover 生命周期；两个修饰类可独立选用。
+- 单个组件可通过 `--card-hover-spotlight-color` 覆盖全局光斑颜色。
+- 内建接入包括文章、笔记、笔记本、Wiki 项目卡片、置顶轮播外层、专栏最新文章卡片、`{% link %}`、`{% grid bg:card %}` 单元格与标准 `.ui-collection__item`；Collection 只组合 Spotlight，不启用 Tilt，其余所列卡片组合 Spotlight + Tilt。
+- 专栏标题、描述和归档式文章条目、非 Collection 的侧栏组件、sites、albums、posters、chat 内嵌链接、TOC/搜索 `.ui-collection-adapter`，以及 `bg:box`/无背景 grid 不接入。
+- 仅在精细指针且允许动态效果时挂载；触屏、粗指针和 `prefers-reduced-motion: reduce` 保留原卡片行为。键盘焦点使用卡片中心光斑；指针离开时光斑停在最后位置淡出，完全透明且未重新激活后才回中，Tilt 则立即回正。
+
+JavaScript 只查询 `.card-hover`，并暴露 `stellar.cardHover.mountAll(root)` 与 `stellar.cardHover.destroy()`。动态内容可在插入后调用 `mountAll(root)`；内置远程 Markdown 服务会派发 `stellar:mdrender`，插件自动增量扫描。倾斜使用 `requestAnimationFrame` 节流，销毁时取消动画帧、移除监听器和注入的 `aria-hidden` 光斑层。
+
+**参考源码**：[layout/_plugins/card_hover.ejs](../../../layout/_plugins/card_hover.ejs)、[source/js/plugins/card-hover.js](../../../source/js/plugins/card-hover.js)、[source/css/_plugins/card-hover.styl](../../../source/css/_plugins/card-hover.styl)
+
+---
+
 ### Mermaid（图表渲染）
 
 **用途**：把 mermaid 语法渲染为流程图、时序图、甘特图等。
@@ -526,6 +556,7 @@ plugins:
 | `fancybox` | `true` | 图片灯箱 | @fancyapps/ui |
 | `swiper` | `true` | 轮播 | swiper |
 | `scrollreveal` | `true` | 滚动动画 | scrollreveal（CDN，GPL-3.0 不内置） |
+| `card_hover` | `false` | 卡片鼠标光斑与 3D 倾斜 | 无 |
 | `tianli_gpt` | `false` | AI 摘要 | 需要 API key |
 | `katex` | `false` | 数学渲染 | hexo-renderer-markdown-it-plus |
 | `mathjax` | `false` | 数学渲染（备选） | 无 |
@@ -554,6 +585,7 @@ plugins:
 |------|------|------|
 | 始终加载 | copycode、lazyload、scrollreveal、aplayer | 最小（防闪烁关键规则） |
 | 条件 CSS（构建期） | 核心样式表中的插件 | 禁用时为零 |
+| 条件本地 JS + CSS | card_hover | 仅启用时加载，无第三方依赖 |
 | 按需 CSS（运行时） | swiper、fancybox、mermaid、评论系统 | 页面存在对应元素才注入 |
 | 条件 JS | fancybox、swiper | 禁用时为零 |
 | 按需 | mermaid、tianli_gpt | 仅设置标志时 |

@@ -1,0 +1,32 @@
+<%
+var spotlightColor = typeof conf.spotlight_color === 'string' && conf.spotlight_color.trim().length > 0
+  ? conf.spotlight_color.trim()
+  : 'rgba(255, 255, 255, 0.25)';
+var maxTilt = Number(conf.max_tilt);
+if (conf.max_tilt == null || conf.max_tilt === '' || !Number.isFinite(maxTilt)) {
+  maxTilt = 3;
+}
+maxTilt = Math.max(0, Math.min(8, maxTilt));
+var cardHoverConfig = {
+  spotlightColor: spotlightColor,
+  maxTilt: maxTilt
+};
+var cardHoverConfigJson = JSON.stringify(cardHoverConfig).replace(/</g, '\\u003c');
+%>
+<script>
+  stellar.initPlugin(() => {
+    let disposed = false;
+    ctx.card_hover = <%- cardHoverConfigJson %>;
+    utils.js('/js/plugins/card-hover.js', { defer: true }).then(() => {
+      if (!disposed && stellar.cardHover && typeof stellar.cardHover.mountAll === 'function') {
+        stellar.cardHover.mountAll(document);
+      }
+    }).catch(() => {});
+    return () => {
+      disposed = true;
+      if (stellar.cardHover && typeof stellar.cardHover.destroy === 'function') {
+        stellar.cardHover.destroy();
+      }
+    };
+  }, 'card-hover');
+</script>

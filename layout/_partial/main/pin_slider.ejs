@@ -119,7 +119,7 @@ if (pinItems.length > 0) {
   var groupKey = pinType == 'wiki' ? 'wiki' : 'post'
   var sliderInterval = 5000 // 自动轮播间隔固定 5000ms
   var el = ''
-  el += '<div class="pin-slider" id="pin-slider" data-interval="' + sliderInterval + '" data-key="' + pinType + '" data-group="' + groupKey + '">'
+  el += '<div class="pin-slider card-hover card-hover--spotlight card-hover--tilt" id="pin-slider" data-interval="' + sliderInterval + '" data-key="' + pinType + '" data-group="' + groupKey + '">'
   el += '<div class="pin-slider-track">'
   el += slidesHtml
   el += '</div>'

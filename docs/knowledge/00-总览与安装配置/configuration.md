@@ -103,6 +103,22 @@ graph TB
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
+### 卡片 Hover 插件
+
+`plugins.card_hover` 提供可复用的鼠标跟随光斑与 3D 倾斜，默认关闭：
+
+```yaml
+plugins:
+  card_hover:
+    enable: false
+    spotlight_color: 'rgba(255, 255, 255, 0.25)'
+    max_tilt: 3
+```
+
+`spotlight_color` 控制光斑颜色；单个组件可用 CSS 变量 `--card-hover-spotlight-color` 覆盖。`max_tilt` 单位为度，无效值回退为 `3`，运行时限制在 `0`～`8` 的安全范围。插件采用 `.card-hover` 基础类与 `.card-hover--spotlight`、`.card-hover--tilt` 修饰类组合，关闭时这些类不会改变静态样式。完整的运行时接口与接入范围见[插件系统](../07-外部集成/plugin-system.md#card-hover卡片光效与倾斜)。
+
+**参考源码**：[_config.yml](../../../_config.yml)、[layout/_plugins/card_hover.ejs](../../../layout/_plugins/card_hover.ejs)
+
 ## 层级覆盖系统
 
 配置值的解析遵循「越具体的范围覆盖越宽泛的范围」：
