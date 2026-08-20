@@ -20,17 +20,13 @@
     overflow: hidden
     background: transparent
     trans3: box-shadow background transform
-    &:hover
-      z-index: 1
-      filter: unset
-      background: var(--bg-a20)
-      svg [fill="currentColor"]
-        fill: var(--item-grad)
-      svg [stroke="currentColor"]
-        stroke: var(--item-grad)
     img
+      flex: initial
+      width: auto
+      height: auto
       border-radius: 2px
     svg
+      flex: initial
       height: 24px
       width: 24px
 
@@ -47,13 +43,8 @@
     height: 32px
     line-height: 0
     >.dropdown-trigger.social
-      display: flex
-      box-sizing: border-box
-    &[open]
-      >.dropdown-trigger.social
-        z-index: 1
-        filter: unset
-        background: var(--bg-a100)
+      >img, >svg
+        opacity: .5
     // JS 未加载时保留向上展开的原生 details 兜底；正常情况下菜单会移入全局浮层。
     >.dropdown-menu
       top: auto
@@ -65,3 +56,14 @@
       right: 0
       left: auto
       transform: none
+
+  .social:hover, .social-dropdown[open] > .dropdown-trigger.social
+    z-index: 1
+    filter: unset
+    background: var(--bg-a20)
+    >img, >svg
+      opacity: 1
+    svg [fill="currentColor"]
+      fill: var(--item-grad)
+    svg [stroke="currentColor"]
+      stroke: var(--item-grad)

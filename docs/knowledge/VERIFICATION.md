@@ -21,6 +21,8 @@
 
 ## 二、版本与事实修正
 
+| 2026-08-20 | Footer dropdown 主按钮的图片尺寸和打开态与普通 social 按钮不一致，未激活主图标也缺少层级弱化；菜单项重复维护列表样式且强制要求图标；正文标签箭头位于标题左侧；混合图标菜单的条目高度不一致；菜单文字的多重明暗阴影会形成自带背景色的错觉 | Footer trigger 完全复用 `.social` 尺寸与 hover/open 高亮，主图标默认透明度 `0.5`、激活恢复 `1`；菜单声明 glass surface 并组合通用 collection list 的 compact 密度，最小宽度固定为 150px；Footer 配置与标签子项图标改为可选；正文箭头移至标题右侧；dropdown 局部最小行高统一为 leading 高度加纵向 padding，无图标项不保留占位；移除菜单文字阴影并保留玻璃表面与条目交互背景 | `layout/_partial/dropdown.ejs`、`scripts/tags/lib/dropdown.js`、`source/css/_common/dropdown.styl`、`source/css/_components/sidebar/footer.styl`、`docs/designs/2026-08-20-dropdown-style-alignment/` |
+
 | 2026-08-20 | PJAX 移除后的普通整页导航会销毁并重建完整文档，即使左栏内容相同也会出现可感知闪烁 | 默认启用原生同源跨文档 View Transition，左栏作为独立命名区域以 `0.2s ease-out` 平滑衔接；减少动态效果、配置关闭或浏览器不支持时回退普通整页导航，不恢复 PJAX 或脚本重入 | `_config.yml`、`source/css/_components/page-transition.styl`、`docs/knowledge/07-外部集成/pjax-navigation.md`、`docs/designs/2026-08-20-cross-document-page-transition/` |
 
 | 2026-08-20 | collection 的 grid/summary 静态背景会覆盖通用 hover/active，背景与图标 transition 在 glass 渐变切换时可出现闪烁；未激活图标的灰阶/亮度/透明度滤镜还会与 SVG 自身分层透明度叠加，造成深浅不一 | 移除布局/变体静态填充、collection 交互过渡和 leading 图标灰阶滤镜；条目默认透明，glass 的 hover/active 与 menubar 玻璃高亮一致，非 glass 统一为 `var(--block)`；未激活 SVG 使用 `var(--text-p2)`，外部图片保留原色，图标透明度统一为 `0.5`，hover/active 恢复为 `1` | `source/css/_components/collection.styl`、`docs/designs/2026-08-20-collection-surface-interactions/` |

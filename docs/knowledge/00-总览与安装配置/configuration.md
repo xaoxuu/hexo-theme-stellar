@@ -380,7 +380,7 @@ notebook:
 | `social.*.onclick` | String | 普通按钮点击脚本，与 `url` 二选一 |
 | `social.spacer` | Object / null | 弹性占位项；将其后的 social 按钮推至同一行右侧 |
 | `social.*.type` | `dropdown` | 将条目渲染为通用下拉菜单 |
-| `social.*.items` | Array | dropdown 子项列表，每项包含 `icon`、`title`、`url` |
+| `social.*.items` | Array | dropdown 子项列表；`title`、`url` 必填，`icon` 可选 |
 | `sitemap` | Array | 主内容区页脚的分组链接 |
 | `content` | String | 主内容区页脚的 Markdown 文本 |
 
@@ -397,6 +397,8 @@ footer:
         - icon: default:documents
           title: 文档
           url: /wiki/
+        - title: GitHub
+          url: https://github.com/
 ``@@BT@
 
 未设置 `type` 的 `social` 条目保持普通链接行为。若要在一组按钮中撑开中间空间，可在需要的位置加入 `spacer:`；其值会被忽略，只按配置位置输出弹性空白：
@@ -415,7 +417,7 @@ footer:
       items: []
 ``@@BT@
 
-dropdown 不关联语言或其它业务场景，也不支持嵌套菜单。打开后的菜单挂载到 `body` 下的全局浮层，并根据触发按钮周围的可用空间自动调整上下和左右位置。
+dropdown 子项图标可省略。菜单不关联语言或其它业务场景，也不支持嵌套；打开后挂载到 `body` 下的全局浮层，并根据触发按钮周围的可用空间自动调整上下和左右位置。菜单自身声明 glass surface，条目复用通用 collection list 的结构与交互样式。
 
 **参考源码**：[_config.yml](../../../_config.yml)、[layout/_partial/sidebar/index_leftbar.ejs](../../../layout/_partial/sidebar/index_leftbar.ejs)、[layout/_partial/dropdown.ejs](../../../layout/_partial/dropdown.ejs)、[layout/_partial/main/footer.ejs](../../../layout/_partial/main/footer.ejs)
 

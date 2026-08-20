@@ -235,12 +235,12 @@ args = ctx.args.map(args, ['color', 'style'], ['key', 'text'])
 
 ### dropdown 通用下拉菜单
 
-`dropdown` 是一个块级标签，用圆角端点绘制的箭头和标题作为触发按钮，用带 `icon:key` 的 Markdown 链接声明子项。它与 Footer Social 共用 `.dropdown` 样式、原生 `<details>/<summary>` 结构和全局浮层定位逻辑，不包含具体业务语义。展开时箭头旋转 180°。
+`dropdown` 是一个块级标签，以标题和位于其右侧的圆角端点箭头作为触发按钮，用 Markdown 链接声明子项。它与 Footer Social 共用 `.dropdown` 样式、原生 `<details>/<summary>` 结构和全局浮层定位逻辑，不包含具体业务语义。展开时箭头旋转 180°。
 
 ```md
 {% dropdown direction:down 更多链接 %}
 - icon:default:documents [文档](/wiki/)
-- icon:default:github [GitHub](https://github.com/)
+- [GitHub](https://github.com/)
 {% enddropdown %}
 ```
 
@@ -253,9 +253,9 @@ args = ctx.args.map(args, ['color', 'style'], ['key', 'text'])
 | `align` | `left` / `right` | `auto` | 菜单贴合触发按钮的左边或右边；未指定时根据视口空间自动选择 |
 | `open` | `true` | — | 是否默认展开 |
 
-主按钮固定使用内联 SVG 箭头，不需要 `icon` 参数；为兼容既有内容，传入的 `icon:` 参数会被忽略。
+主按钮固定使用位于标题右侧的内联 SVG 箭头，不需要 `icon` 参数；为兼容既有内容，传入的 `icon:` 参数会被忽略。
 
-子项格式为 `icon:key [标题](URL)`，也支持把 `icon:key` 放在链接之后。缺少图标或格式不匹配的行会被忽略；不支持嵌套 dropdown。菜单打开后挂载到 `body` 下的全局浮层，使用通用 `bar-glass()` 玻璃背景，自动调整上下和左右位置，不受正文或 sidebar 祖先容器裁剪；鼠标移入触发按钮时自动展开，透明桥接区连接触发按钮与菜单之间的间隙，离开三者后立即关闭，不使用延迟计时器；菜单定位完成后淡入显示；菜单高度受视口限制，超出后垂直滚动。
+子项格式为 `[标题](URL)`，可在链接前后增加 `icon:key`；缺少图标时仅显示标题，格式不匹配的行会被忽略。不支持嵌套 dropdown。菜单打开后挂载到 `body` 下的全局浮层，使用通用玻璃背景；菜单自身声明 glass surface，最小宽度固定为 150px，条目复用 collection list 的结构、`compact` 密度与 hover 样式。带图标与无图标条目共用由 leading 高度和纵向 padding 推导的最小行高；无图标项不输出空白 leading。浮层会自动调整上下和左右位置，不受正文或 sidebar 祖先容器裁剪；鼠标移入触发按钮时自动展开，透明桥接区连接触发按钮与菜单之间的间隙，离开三者后立即关闭，不使用延迟计时器；菜单定位完成后淡入显示；菜单高度受视口限制，超出后垂直滚动。
 
 **参考源码**：[scripts/tags/lib/dropdown.js](../../../scripts/tags/lib/dropdown.js)、[scripts/tags/index.js](../../../scripts/tags/index.js)、[source/js/plugins/dropdown.js](../../../source/js/plugins/dropdown.js)、[source/css/_common/dropdown.styl](../../../source/css/_common/dropdown.styl)
 

@@ -1,6 +1,6 @@
 <%
 const dropdownItem = typeof item !== 'undefined' && item ? item : {}
-const items = Array.isArray(dropdownItem.items) ? dropdownItem.items.filter(child => child && child.icon && child.title && child.url) : []
+const items = Array.isArray(dropdownItem.items) ? dropdownItem.items.filter(child => child && child.title && child.url) : []
 const classes = ['dropdown']
 const dropdownRootClass = typeof rootClass === 'string' ? rootClass : ''
 if (dropdownRootClass) {
@@ -46,11 +46,13 @@ function layoutDiv() {
     el += '<span>' + title + '</span>'
   }
   el += '</summary>'
-  el += '<div class="dropdown-menu">'
+  el += '<div class="dropdown-menu ui-collection" data-ui-surface="glass" data-layout="list" data-variant="nav" data-density="compact">'
   for (let child of items) {
-    el += '<a class="dropdown-item"' + linkAttrs(child) + '>'
-    el += icon(child.icon, 'no-lazy', true)
-    el += '<span>' + escape_html(child.title) + '</span>'
+    el += '<a class="dropdown-item ui-collection__item"' + linkAttrs(child) + '>'
+    if (child.icon) {
+      el += '<span class="ui-collection__leading">' + icon(child.icon, 'no-lazy', true) + '</span>'
+    }
+    el += '<span class="ui-collection__content"><span class="ui-collection__title">' + escape_html(child.title) + '</span></span>'
     el += '</a>'
   }
   el += '</div></details>'

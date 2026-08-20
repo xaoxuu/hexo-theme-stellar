@@ -27,7 +27,7 @@ module.exports = ctx => function(args, content = '') {
     return ''
   }
 
-  const items = content.split(/\r?\n/).map(parseItem).filter(item => item && item.icon)
+  const items = content.split(/\r?\n/).map(parseItem).filter(Boolean)
   if (items.length === 0) {
     return ''
   }
@@ -42,20 +42,22 @@ module.exports = ctx => function(args, content = '') {
   }
   el += '>'
   el += `<summary class="dropdown-trigger" title="${title}" aria-label="${title}">`
-  el += '<svg class="dropdown-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   el += `<span>${title}</span>`
+  el += '<svg class="dropdown-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   el += '</summary>'
-  el += '<div class="dropdown-menu">'
+  el += '<div class="dropdown-menu ui-collection" data-ui-surface="glass" data-layout="list" data-variant="nav" data-density="compact">'
   for (const item of items) {
     const url = String(item.url)
-    el += `<a class="dropdown-item" href="${escapeHTML(toUrl(url))}`
+    el += `<a class="dropdown-item ui-collection__item" href="${escapeHTML(toUrl(url))}`
     if (url.includes('://')) {
       el += '" target="_blank" rel="external nofollow noopener noreferrer">'
     } else {
       el += '" rel="noopener noreferrer">'
     }
-    el += ctx.utils.icon(item.icon, 'no-lazy', true)
-    el += `<span>${escapeHTML(item.title)}</span></a>`
+    if (item.icon) {
+      el += `<span class="ui-collection__leading">${ctx.utils.icon(item.icon, 'no-lazy', true)}</span>`
+    }
+    el += `<span class="ui-collection__content"><span class="ui-collection__title">${escapeHTML(item.title)}</span></span></a>`
   }
   el += '</div></details>'
   return el

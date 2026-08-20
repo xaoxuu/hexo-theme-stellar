@@ -11,7 +11,7 @@
     gap: 0.5rem
     box-sizing: border-box
     min-height: 2rem
-    padding: 0.5rem 1.25rem 0.5rem 0.75rem
+    padding: 0.5rem 0.75rem
     cursor: pointer
     list-style: none
     outline: none
@@ -48,7 +48,6 @@
   flex-direction: column
   gap: 0.125rem
   box-sizing: border-box
-  min-width: 10rem
   max-width: calc(100vw - 2rem)
   max-height: calc(100vh - 2rem)
   padding: 0.25rem
@@ -60,40 +59,19 @@
   corner-shape: $corner-shape
   background: rgba(white, 0.3)
   box-shadow: 0 0 2px rgba(black, .04), 0 2px 8px rgba(black, .04), 0 4px 16px rgba(black, .04)
-  text-shadow: 0 0 4px rgba(white, 1), 0 0 8px rgba(white, 0.8), 0 0 16px rgba(white, 0.6)
   backdrop-filter: saturate(300%) blur(16px)
   -webkit-backdrop-filter: saturate(300%) blur(16px)
   :root[data-theme="dark"] &
     background: rgba(white, 0.2)
-    text-shadow: 0 0 2px rgba(black, 0.2), 0 0 4px rgba(black, 0.4)
   :root:not([data-theme]) &
     @media (prefers-color-scheme: dark)
       background: rgba(white, 0.2)
-      text-shadow: 0 0 2px rgba(black, 0.2), 0 0 4px rgba(black, 0.4)
   text-align: left
   line-height: 1
-  .dropdown-item
-    display: flex
-    align-items: center
-    gap: 0.5rem
-    min-height: 2rem
-    padding: 0 0.5rem
-    overflow: hidden
-    border-radius: $border-bar
-    color: var(--text-p2)
-    text-decoration: none
-    line-height: 1.2
-    white-space: nowrap
-    &:hover, &:focus-visible
-      color: var(--text-p1)
-      background: var(--bg-a20)
-    >svg, >img, >.icon
-      flex: 0 0 1.25rem
-      width: 1.25rem
-      height: 1.25rem
-    >span
-      overflow: hidden
-      text-overflow: ellipsis
+
+.dropdown-menu.ui-collection[data-density='compact']
+  min-width: 150px
+  --ui-item-min-height: calc(1.5rem + 2 * var(--ui-item-padding-y))
 
 .dropdown > .dropdown-menu
   position: absolute
