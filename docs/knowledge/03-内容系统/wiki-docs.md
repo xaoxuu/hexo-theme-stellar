@@ -206,7 +206,8 @@ tree:
 | `tags` | 字符串转为单元素数组 | doc_tree.js |
 | `headline` | 不转换；卡片和 Hero 标题为空时回退 `title` | wiki_card.ejs、wiki_cover.ejs |
 | `available` | 不转换；可选字符串 | wiki_card.ejs |
-| `background` | URL 作为静态 Hero 背景，并让 Hero 文字沿用封面平均色自适应；`galaxy` 为内置 WebGL 动态星场，并以其基准底色驱动同一自适应取色 | wiki_cover.ejs、galaxy.js、adaptive-text.js |
+| `background` | URL 作为静态 Hero 背景，并让 Hero 文字沿用图片平均色自适应 | wiki_cover.ejs、adaptive-text.js |
+| `animation` | `type: galaxy` 启用内置 WebGL 星场；可选 `params` 自定义视觉与交互参数，并可与 `background` 图片叠加 | wiki_cover.ejs、galaxy.js |
 | `preview` | `terminal` 使用 `commands[].codes` 多行命令；`image` 使用 `src`/`alt` | wiki_cover.ejs |
 | `actions` | 可选自定义 Hero 按钮数组（`title`、`url`、可选 `icon`） | wiki_cover.ejs |
 | `sort` | 为 null 时默认 `0` | doc_tree.js |
@@ -214,9 +215,11 @@ tree:
 
 **wiki.shelf**——根文件 `_data/wiki.yml`（非子目录）定义哪些项目 ID 视为「已发布」。只有 shelf 中的项目出现在标签索引与相关项目列表中。
 
-`background: galaxy` 会由 `main.js` 检测 Canvas 后按需加载 `source/js/plugins/galaxy.js`。插件使用四层 WebGL 星场，固定启用纵深移动、低强度辉光、闪烁和自动旋转；鼠标移动会对附近星点产生轻微排斥，离开 Hero 后平滑淡出。透明 Canvas 下方使用纯黑 `#000000`，并以同一颜色作为 Hero 自适应文字的取色基准。Hero 离开视口或页面进入后台时暂停渲染，返回后恢复。用户启用 `prefers-reduced-motion`、浏览器不支持 WebGL、着色器初始化失败或插件加载失败时，不创建动态层，保留该静态底色。Canvas 不接收指针事件，不影响 Hero 中的链接、按钮和终端操作。
+`animation.type: galaxy` 会由 `main.js` 检测 Canvas 后按需加载 `source/js/plugins/galaxy.js`。插件使用四层 WebGL 星场，默认启用纵深移动、低强度辉光、闪烁、自动旋转和轻量鼠标排斥；鼠标离开 Hero 后交互强度平滑淡出。`animation.params` 可逐项覆盖 `focal`、`rotation`、`starSpeed`、`density`、`hueShift`、`speed`、`glowIntensity`、`saturation`、`mouseRepulsion`、`twinkleIntensity`、`rotationSpeed`、`repulsionStrength`、`autoCenterRepulsion`、`transparent`，缺失或非法值回退对应默认值，未知参数忽略。`focal` 限制在 `0–1`，色相归一化到 `0–360`，速度、密度和强度必须非负，`rotationSpeed` 可为负数。
 
-Wiki Hero 的左侧导航是无背景的站点标题按钮：文字取 Hexo `config.title`，颜色为 `--text-banner`，点击返回站点首页。项目配置 `repo` 时，最新版本标签作为外链按钮显示在项目标题上方，与站点导航分离；其边框沿用该主题色并以 50% 透明度显示。加载期间标签保留高度但不显示占位文字、边框或交互；成功取得 tag 后淡入。数据服务优先使用 tag 响应已提供的 `html_url`（如 Release 页面），否则按已有 `repo` 与 tag 拼接 GitHub tag 引用页；新标签页打开；无 tag 或请求失败时移除标签。主标题独立以 `data-text-adaptive="contrast"` 按封面明暗在黑白之间切换，不使用主题色填充；其轮廓以 `--text-banner-theme` 的半透明色呈现柔和外发光。说明与按钮等辅助文字继续使用该主题色变体。“源码”按钮的背景与边框使用 `--text-banner`，其文字和图标单独反转相同变量，因此深浅封面下始终与背景相反。启用 `plugins.card_hover` 后，源码、文档和自定义 action 按钮均显示鼠标跟随 Spotlight，但不启用 Tilt 或上浮；源码按钮的文字与图标反色不会作用于 Spotlight 层。`preview.terminal` 终端以封面平均色派生的 `--text-banner-theme` 与透明色 50% 混合填充、再以背景模糊呈现；变量不可用时回退到 `--background`，使终端毛玻璃与封面主题色保持一致。未配置任何背景时不会运行自适应取色：`--text-banner-theme` 回退为 `--text-p2`，版本标签与普通操作按钮的边框单独回退为 `--block-border`。工具栏文字使用 `--text-banner`，命令与 `$` 提示符使用 `--text-banner-theme`。内置按钮、终端标签与辅助标签均通过 `__()` 读取 `languages/`；它们随站点语言切换。`actions[].title` 是项目自定义内容，保持原值，不由主题翻译。
+Galaxy 默认以透明 Canvas 渲染。与 `background` 图片同时配置时，图片位于动态层下方，文字仍按图片平均色自适应；WebGL、着色器或脚本失败时图片保持可用。显式设置 `transparent: false` 会让不透明 Canvas 覆盖图片。仅配置 Galaxy 时使用纯黑 `#000000` 作为静态底色与文字取色基准。Hero 离开视口或页面进入后台时暂停，返回后恢复；用户启用 `prefers-reduced-motion` 时不加载动画。Canvas 不接收指针事件，不影响 Hero 中的链接、按钮和终端操作。`background: galaxy` 旧写法已移除，`background` 现在只表示静态图片。
+
+Wiki Hero 的左侧导航是无背景的站点标题按钮：文字取 Hexo `config.title`，颜色为 `--text-banner`，点击返回站点首页。项目配置 `repo` 时，最新版本标签作为外链按钮显示在项目标题上方，与站点导航分离；其边框沿用该主题色并以 50% 透明度显示。加载期间标签保留高度但不显示占位文字、边框或交互；成功取得 tag 后淡入。数据服务优先使用 tag 响应已提供的 `html_url`（如 Release 页面），否则按已有 `repo` 与 tag 拼接 GitHub tag 引用页；新标签页打开；无 tag 或请求失败时移除标签。主标题独立以 `data-text-adaptive="contrast"` 按封面明暗在黑白之间切换，不使用主题色填充；其轮廓以 `--text-banner-theme` 的半透明色呈现柔和外发光。说明与按钮等辅助文字继续使用该主题色变体。“源码”按钮的背景与边框使用 `--text-banner`，其文字和图标单独反转相同变量，因此深浅封面下始终与背景相反。启用 `plugins.card_hover` 后，源码、文档和自定义 action 按钮均显示鼠标跟随 Spotlight，但不启用 Tilt 或上浮；源码按钮的文字与图标反色不会作用于 Spotlight 层。`preview.terminal` 终端以封面平均色派生的 `--text-banner-theme` 与透明色 50% 混合填充、再以背景模糊呈现；变量不可用时回退到 `--background`，使终端毛玻璃与封面主题色保持一致。未配置 `background` 和 `animation` 时不会运行自适应取色：`--text-banner-theme` 回退为 `--text-p2`，版本标签与普通操作按钮的边框单独回退为 `--block-border`。工具栏文字使用 `--text-banner`，命令与 `$` 提示符使用 `--text-banner-theme`。内置按钮、终端标签与辅助标签均通过 `__()` 读取 `languages/`；它们随站点语言切换。`actions[].title` 是项目自定义内容，保持原值，不由主题翻译。
 
 Wiki Hero 完成后直接进入正文布局，不额外输出分隔线；正文或页脚自己的分隔线保持各自组件负责。
 

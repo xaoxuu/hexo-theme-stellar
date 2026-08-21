@@ -168,7 +168,7 @@ void main() {
 }
 `;
 
-  const params = {
+  const defaultParams = {
     focal: [0.5, 0.5],
     rotation: [1.0, 0.0],
     starSpeed: 2.0,
@@ -184,6 +184,69 @@ void main() {
     autoCenterRepulsion: 0.0,
     transparent: true
   };
+
+  function isFiniteNumber(value) {
+    return typeof value === 'number' && Number.isFinite(value);
+  }
+
+  function finiteOrDefault(value, fallback) {
+    return isFiniteNumber(value) ? value : fallback;
+  }
+
+  function nonNegativeOrDefault(value, fallback) {
+    return isFiniteNumber(value) && value >= 0 ? value : fallback;
+  }
+
+  function booleanOrDefault(value, fallback) {
+    return typeof value === 'boolean' ? value : fallback;
+  }
+
+  function pairOrDefault(value, fallback, clampToUnit) {
+    if (!Array.isArray(value) || value.length !== 2 || !isFiniteNumber(value[0]) || !isFiniteNumber(value[1])) {
+      return fallback.slice();
+    }
+    if (clampToUnit) {
+      return value.map(function (item) {
+        return Math.max(0, Math.min(1, item));
+      });
+    }
+    return value.slice();
+  }
+
+  function normalizeHue(value, fallback) {
+    if (!isFiniteNumber(value)) return fallback;
+    return ((value % 360) + 360) % 360;
+  }
+
+  function normalizeParams(value) {
+    const source = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+    return {
+      focal: pairOrDefault(source.focal, defaultParams.focal, true),
+      rotation: pairOrDefault(source.rotation, defaultParams.rotation, false),
+      starSpeed: nonNegativeOrDefault(source.starSpeed, defaultParams.starSpeed),
+      density: nonNegativeOrDefault(source.density, defaultParams.density),
+      hueShift: normalizeHue(source.hueShift, defaultParams.hueShift),
+      speed: nonNegativeOrDefault(source.speed, defaultParams.speed),
+      glowIntensity: nonNegativeOrDefault(source.glowIntensity, defaultParams.glowIntensity),
+      saturation: nonNegativeOrDefault(source.saturation, defaultParams.saturation),
+      mouseRepulsion: booleanOrDefault(source.mouseRepulsion, defaultParams.mouseRepulsion),
+      twinkleIntensity: nonNegativeOrDefault(source.twinkleIntensity, defaultParams.twinkleIntensity),
+      rotationSpeed: finiteOrDefault(source.rotationSpeed, defaultParams.rotationSpeed),
+      repulsionStrength: nonNegativeOrDefault(source.repulsionStrength, defaultParams.repulsionStrength),
+      autoCenterRepulsion: nonNegativeOrDefault(source.autoCenterRepulsion, defaultParams.autoCenterRepulsion),
+      transparent: booleanOrDefault(source.transparent, defaultParams.transparent)
+    };
+  }
+
+  function readParams(canvas) {
+    const raw = canvas.getAttribute('data-galaxy-params');
+    if (!raw) return normalizeParams({});
+    try {
+      return normalizeParams(JSON.parse(raw));
+    } catch (e) {
+      return normalizeParams({});
+    }
+  }
 
   function createShader(gl, type, source) {
     const shader = gl.createShader(type);
@@ -235,6 +298,7 @@ void main() {
     const background = canvas.parentElement;
     const interactionTarget = canvas.closest('.wiki-hero') || background;
     if (!background || !interactionTarget) return;
+    const params = readParams(canvas);
 
     let gl;
     try {
