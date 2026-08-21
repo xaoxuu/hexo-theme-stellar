@@ -334,6 +334,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `ecbf5a5` | feat(v2): 重构内容配置与 Brand 体系 | 设计文档 `2026-08-21-v2-content-schema/`、`2026-08-22-brand-regressions/`、`2026-08-22-topic-brand-inheritance/`、`2026-08-22-related-wiki-title/`；v2 严格 schema、Brand 资源与手机端显示矩阵、Wiki / Notebook 自动 Brand、Topic 站点 Brand 继承、Galaxy 参数边界、旧字段拒绝、相关 Wiki 标题修复及回归测试 |
 | `2415fdc` | feat(wiki): 支持 Hero 动画独立配置 | 设计文档 `2026-08-21-wiki-hero-animation-config/`；知识库 `03-内容系统/wiki-docs.md`；独立 `animation.type/params` 配置、图片叠加、逐 Canvas 参数校验、WebGL 降级与客户端测试 |
 | `08a61a4` | feat(search): 优化搜索结果光效 | 设计文档 `2026-08-21-search-result-card-hover/`；知识库 `02-布局系统/sidebar-system.md`、`05-前端交互/client-side-overview.md`、`06-数据服务与组件/widget-architecture.md`、`07-外部集成/plugin-system.md`、`search.md`；搜索结果 surface、Spotlight 生命周期及客户端测试 |
 | `e64da8f` | feat(search): 支持快捷键聚焦搜索框 | 设计文档 `2026-08-21-search-focus-shortcut/`；知识库 `02-布局系统/sidebar-system.md`、`07-外部集成/search.md`；桌面 `Command/Ctrl+K` 聚焦、窄屏与编辑区域降级、公共加载入口及客户端测试 |
