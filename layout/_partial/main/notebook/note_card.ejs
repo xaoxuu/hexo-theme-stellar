@@ -1,8 +1,9 @@
 <%# 笔记卡片 %>
+<% const notebook = theme.notebooks.tree[collection_id(note, 'notebook')] %>
 <article class="md-text">
-  <% if (note.cover) { %>
+  <% if (note.card?.cover) { %>
     <div class="post-cover">
-      <img src="<%= note.cover %>" alt="cover" />
+      <img src="<%= note.card.cover %>" alt="cover" />
     </div>
   <% } %>
   <h2 class="post-title"><%= note.title %></h2>
@@ -12,13 +13,13 @@
         <%= strip_html(note.excerpt) %>
       <% } else if (note.description) { %>
         <%= note.description %>
-      <% } else if (note.content && theme.notebook.auto_excerpt > 0) { %>
-        <%= truncate(strip_html(note.content), { length: theme.notebook.auto_excerpt }) %>
+      <% } else if (note.content && notebook?.listing?.excerpt_length > 0) { %>
+        <%= truncate(strip_html(note.content), { length: notebook.listing.excerpt_length }) %>
       <% } %>
     </p>
   </div>
   <div class="meta cap">
-    <% if (note.pin) { %>
+    <% if (note.listing?.priority > 0) { %>
       <span class="pin"><%- icon('default:pin') %></span>
     <% } %>
     <span class="cap" id="post-meta">

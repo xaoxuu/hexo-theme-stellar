@@ -1,5 +1,5 @@
 <%
-var notebook = theme.notebooks.tree[page.notebook]
+var notebook = theme.notebooks.tree[collection_id(page, "notebook")]
 var tagTree = notebook?.tagTree
 
 function isLeaf(tag) {
@@ -7,8 +7,8 @@ function isLeaf(tag) {
 }
 
 function getTagcon(tag) {
-  var tagcons = theme.notebook.tagcons || {}
-  return tagcons[tag.name] || tagcons[tag.id] || tagcons[tag.part] || tagcons[tag.part.toLowerCase()] || tagcons['']
+  var tagIcons = theme.notebook.tag_icons || {}
+  return tagIcons[tag.name] || tagIcons[tag.id] || tagIcons[tag.part] || tagIcons[tag.part.toLowerCase()] || tagIcons['']
 }
 
 function layoutTag(tag, level) {
@@ -67,7 +67,7 @@ function layoutDiv() {
     className: 'tag-tree-widget',
     title: __('meta.tag_tree'),
     body: body,
-    attrs: {'data-notebook': page.notebook}
+    attrs: {'data-notebook': collection_id(page, "notebook")}
   })
 }
 %>

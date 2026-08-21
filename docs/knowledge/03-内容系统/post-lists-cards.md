@@ -8,6 +8,9 @@ tags:
 
 # 文章列表与卡片组件
 
+> [!IMPORTANT]
+> v2 已统一卡片、横幅与集合标题的角色字段；本页涉及内容字段时，以[内容配置 Schema v2](content-schema-v2.md)为准。
+
 <details>
 <summary>相关源码文件</summary>
 
@@ -151,9 +154,9 @@ graph LR
 
 | 属性 | 来源 | 用途 |
 |------|------|------|
-| `obj.image` | `post.cover` | 封面图 URL |
+| `obj.image` | `post.card.cover` | 封面图 URL |
 | headline | `post.title` | hero 卡片的大号展示文本（无标题回退日期） |
-| caption | `post.subtitle`（` | ` 前缀优先）→ `post.description` → excerpt 前 50 字 | hero 卡片与置顶轮播共用的单行小字（`subtitle()` helper，空则不渲染） |
+| caption | `post.card.tagline` → `post.description` → excerpt 前 50 字 | hero 卡片与置顶轮播共用的单行小字（`caption()` helper，空则不渲染） |
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
 
@@ -273,7 +276,7 @@ graph TB
 
 ### 定位逻辑
 
-hero 卡片文字区固定 `bottom`：标题（headline）与单行小字（caption）始终叠加在封面底部；不再支持 top 布局，也不再渲染主题小字（原 `poster.topic` 已移除）。小字取值统一由 `subtitle()` helper（`scripts/lib/subtitle.js`）提供：显式 `post.subtitle` 含 ` | ` 且左侧非空时只取左侧；其他 `subtitle` 原样保留，之后依次回退 `post.description`、`excerpt || content` 去 HTML、压缩空白后截断 50 字（省略号由 CSS 单行处理），都没有则不渲染；置顶轮播复用同一取值。
+hero 卡片文字区固定 `bottom`：标题（headline）与单行小字（caption）始终叠加在封面底部；不再支持 top 布局，也不再渲染主题小字（原 `poster.topic` 已移除）。小字取值统一由 `caption()` helper（`scripts/lib/caption.js`）提供：优先取当前角色的显式 tagline（文章卡片为 `post.card.tagline`，Banner 为 `post.banner.tagline`，集合为 `proj.tagline`），之后依次回退 `description`、`excerpt || content` 去 HTML、压缩空白后截断 50 字；都没有则不渲染，置顶轮播复用同一取值。
 
 ### 渐变模糊层与黑色蒙版
 
@@ -409,15 +412,14 @@ flowchart TD
 
 | 属性 | 兜底 | 用途 |
 |------|------|------|
-| `proj.cover` | — | 卡片背景图；未配置时保留纯色空背景 |
-| `proj.icon` | `theme.default.project` | 底栏项目图标 |
+| `proj.card.cover` | — | 卡片背景图；未配置时保留纯色空背景 |
+| `proj.identity.icon` | `theme.default.project` | 底栏项目图标 |
 | `proj.tags` | — | 顶部标签字符串数组 |
-| `proj.headline` | `proj.title` → `proj.name` | 可选营销标题 |
-| `proj.title` | `proj.name` | 既有项目标题与营销标题回退 |
-| `proj.available` | — | 可选适用范围字符串（标签由 `meta.available` 本地化输出） |
-| `proj.repo` | — | GitHub star 动态数据源 |
-| `proj.name` | `proj.title` | 底栏项目标题 |
-| `subtitle(proj)` | `subtitle`（` | ` 前缀优先）→ `description` → excerpt/content | 底栏项目副标题 |
+| `proj.headline` | `proj.name` | 可选营销标题 |
+| `proj.audience` | — | 可选适用范围字符串（标签由 `meta.available` 本地化输出） |
+| `proj.source.repository` | — | GitHub star 动态数据源 |
+| `proj.name` | — | 底栏项目标题 |
+| `caption(proj, 'collection')` | `tagline` → `description` → excerpt/content | 底栏项目副标题 |
 
 ### 渲染结构
 
@@ -435,7 +437,7 @@ graph TD
     Meta["div.wiki-meta: available + heat"]
     Platform["default:platforms + 适用于 + available"]
     Star["default:fire + stargazers_count（热度）"]
-    Project["div.wiki-project: proj.icon or default:documents + name + subtitle(proj)"]
+    Project["div.wiki-project: identity.icon or default:documents + name + caption(proj)"]
 
     Article --> Cover
     Cover --> Info

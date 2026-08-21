@@ -118,13 +118,13 @@ test('isEmptyContent 剪裁空白后判空', () => {
 });
 
 test('isWikiReadmePage 首页空正文 + repo 触发', () => {
-  const proj = { repo: 'xaoxuu/star-vote', homepage: { path: 'wiki/star-vote/index.html' } };
+  const proj = { source: { repository: 'xaoxuu/star-vote' }, homepage: { path: 'wiki/star-vote/index.html' } };
   assert.equal(isWikiReadmePage(proj, { content: '', path: 'wiki/star-vote/index.html' }), true);
   assert.equal(isWikiReadmePage(proj, { content: '  \n  ', path: 'wiki/star-vote/index.html' }), true);
 });
 
 test('isWikiReadmePage 非首页/无 repo/正文非空不触发', () => {
-  const proj = { repo: 'xaoxuu/star-vote', homepage: { path: 'wiki/star-vote/index.html' } };
+  const proj = { source: { repository: 'xaoxuu/star-vote' }, homepage: { path: 'wiki/star-vote/index.html' } };
   assert.equal(isWikiReadmePage(proj, { content: '', path: 'wiki/star-vote/other.html' }), false);
   assert.equal(
     isWikiReadmePage({ homepage: { path: 'wiki/star-vote/index.html' } }, { content: '', path: 'wiki/star-vote/index.html' }),
@@ -135,13 +135,13 @@ test('isWikiReadmePage 非首页/无 repo/正文非空不触发', () => {
 });
 
 test('wikiReadmeHtml 不适用时返回空串', () => {
-  const proj = { repo: 'xaoxuu/star-vote', homepage: { path: 'wiki/star-vote/index.html' } };
+  const proj = { source: { repository: 'xaoxuu/star-vote' }, homepage: { path: 'wiki/star-vote/index.html' } };
   assert.equal(wikiReadmeHtml(proj, { content: '有内容', path: 'wiki/star-vote/index.html' }, { ghraw: 'raw.github.xaox.cc' }), '');
   assert.equal(wikiReadmeHtml(null, { content: '', path: 'wiki/star-vote/index.html' }), '');
 });
 
 test('wikiReadmeHtml 适用时输出镜像 + replace 占位', () => {
-  const proj = { repo: 'xaoxuu/star-vote', homepage: { path: 'wiki/star-vote/index.html' } };
+  const proj = { source: { repository: 'xaoxuu/star-vote' }, homepage: { path: 'wiki/star-vote/index.html' } };
   const html = wikiReadmeHtml(proj, { content: '', path: 'wiki/star-vote/index.html' }, { ghraw: 'raw.github.xaox.cc' });
   assert.ok(html.includes('src="https://raw.github.xaox.cc/xaoxuu/star-vote/HEAD/README.md"'));
   assert.ok(html.includes('data-base="https://raw.github.xaox.cc/xaoxuu/star-vote/HEAD/"'));

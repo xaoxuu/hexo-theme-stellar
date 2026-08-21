@@ -9,6 +9,9 @@ tags:
 
 # 页面模板与路由
 
+> [!IMPORTANT]
+> v2 已重构页面 Front Matter、导航和侧边栏字段；本页涉及字段名时，以[内容配置 Schema v2](../03-内容系统/content-schema-v2.md)为准。
+
 <details>
 <summary>相关源码文件</summary>
 

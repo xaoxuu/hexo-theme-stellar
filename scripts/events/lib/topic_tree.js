@@ -20,11 +20,13 @@ function getTopicTree(ctx) {
       let newKey = key.replace('topic/', '')
       let obj = data[key]
       obj.id = newKey
-      if (obj.order_by == null) {
-        obj.order_by = '-date'
+      obj.listing ||= {}
+      if (obj.listing.order_by == null) {
+        obj.listing.order_by = '-date'
       }
-      if (obj.path == null) {
-        obj.path = `/topic/${newKey}/`
+      obj.routing ||= {}
+      if (obj.routing.path == null) {
+        obj.routing.path = `/topic/${newKey}/`
       }
       obj.pages = []
       list.push(obj)

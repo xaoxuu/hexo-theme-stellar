@@ -3,6 +3,7 @@
  */
 const { normalize_path } = require('../lib/path_utils')
 const { buildSearchIndex } = require('../lib/search_index')
+const { isSearchable } = require('../lib/content-config')
 
 hexo.extend.generator.register('search_json_generator', function (locals) {
   if (this.theme.config.search.service != 'local_search') { return {} }
@@ -74,7 +75,7 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
       var layout_list = ["post"]
       if (!layout_list.includes(post.layout)) return
       if (cfg.skip_search && matchAndExit(post.path, skipSearchPatterns)) return
-      if (post.indexing == false) return
+      if (!isSearchable(post)) return
       let temp_post = generateJson(post)
       res.push(temp_post)
     }) 
@@ -84,7 +85,7 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
       var layout_list = ["page", "wiki"]
       if (!layout_list.includes(page.layout)) return
       if (cfg.skip_search && matchAndExit(page.path, skipSearchPatterns)) return
-      if (page.indexing == false) return
+      if (!isSearchable(page)) return
       let temp_post = generateJson(page)
       res.push(temp_post)
     })

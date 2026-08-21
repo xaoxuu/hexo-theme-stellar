@@ -5,22 +5,15 @@ var pinType = type || 'post'
 var pinItems = []
 
 function pinValue(item) {
-  return item.pin != null ? item.pin : item.sticky
+  return item.listing?.priority
 }
 
-// 只要设置了 pin（含 0、负数）即视为置顶，未设置 / false 不置顶
 function isPinned(item) {
-  var v = pinValue(item)
-  return v !== false && v != null
+  return pinValue(item) > 0
 }
 
-// 排序仅比较数值大小，true 视作 1
 function pinWeight(item) {
-  var v = pinValue(item)
-  if (v === true) {
-    return 1
-  }
-  var n = Number(v)
+  var n = Number(pinValue(item))
   return isNaN(n) ? 0 : n
 }
 
@@ -36,7 +29,7 @@ if (pinType == 'wiki') {
   var allPosts = site.posts.toArray() || []
   for (var pi = 0; pi < allPosts.length; pi++) {
     var post = allPosts[pi]
-    if (post.indexing === false) {
+    if (post.visibility?.listed === false) {
       continue
     }
     if (isPinned(post)) {
@@ -50,20 +43,21 @@ pinItems.sort(function(a, b) {
 })
 
 // 文章幻灯片：固定「标题 + 一行小字」结构。
-// 标题：post.title；小字由 subtitle() helper 统一取值（subtitle > description > excerpt 前 50 字）。
+// 标题：post.title；小字由 caption() helper 统一取值。
 // 样式与 hero 卡片 cover-info 一致；无封面时为纯白卡片（文字按普通文章颜色）。
 function postSlide(post) {
-  var noCover = !(post.cover != null && post.cover.length > 0)
+  var cover = post.card?.cover
+  var noCover = !(cover != null && cover.length > 0)
   var headline = post.title
-  var sub = subtitle(post)
+  var sub = caption(post)
   var el = ''
   el += '<a class="pin-slide post-slide' + (noCover ? ' no-cover' : '') + '" href="' + escape_html(pretty_url(post.link || post.path)) + '"'
   if (!noCover) {
-    el += ' style="--pin-cover-url:url(\'' + escape_html(post.cover.replace(/'/g, '%27')) + '\')"'
+    el += ' style="--pin-cover-url:url(\'' + escape_html(cover.replace(/'/g, '%27')) + '\')"'
   }
   el += '>'
   if (!noCover) {
-    el += '<img class="pin-slide-bg" src="' + escape_html(post.cover) + '" alt=""/>'
+    el += '<img class="pin-slide-bg" src="' + escape_html(cover) + '" alt=""/>'
   }
   // 有封面时文字颜色自适应（大字 contrast、小字 theme）；无封面保持普通文章文字颜色
   el += '<div class="pin-slide-text"' + (noCover ? '' : ' data-text-adaptive="split"') + '>'
@@ -85,13 +79,19 @@ function projectChips(tags) {
 }
 
 function wikiSlide(proj) {
-  var img = proj.cover || proj.icon || theme.default.project
-  var title = proj.title || proj.name || proj.id
+  var img = proj.card?.cover
+  var title = proj.headline || proj.name || proj.id
   var excerpt = proj.description || ''
   var el = ''
-  el += '<a class="pin-slide" href="' + escape_html(pretty_url(proj.homepage?.path || '/')) + '" style="--pin-cover-url:url(\'' + escape_html(img.replace(/'/g, '%27')) + '\')">'
-  el += '<img class="pin-slide-bg" src="' + escape_html(img) + '" alt=""/>'
-  el += '<div class="pin-slide-info" data-text-adaptive="split">'
+  el += '<a class="pin-slide' + (img ? '' : ' no-cover') + '" href="' + escape_html(pretty_url(proj.homepage?.path || '/')) + '"'
+  if (img) {
+    el += ' style="--pin-cover-url:url(\'' + escape_html(img.replace(/'/g, '%27')) + '\')"'
+  }
+  el += '>'
+  if (img) {
+    el += '<img class="pin-slide-bg" src="' + escape_html(img) + '" alt=""/>'
+  }
+  el += '<div class="pin-slide-info"' + (img ? ' data-text-adaptive="split"' : '') + '>'
   el += '<div class="pin-slide-caps">' + projectChips(proj.tags) + '</div>'
   el += '<div class="pin-slide-title">' + escape_html(title) + '</div>'
   if (excerpt.length > 0) {

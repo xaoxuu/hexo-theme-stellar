@@ -1,6 +1,6 @@
 <%
 function layoutDiv() {
-  const topicObject = theme.topic.tree[page.topic]
+  const topicObject = theme.topic.tree[collection_id(page, "topic")]
   var el = ''
   if (topicObject) { // 专栏文章
     // 专栏列表页

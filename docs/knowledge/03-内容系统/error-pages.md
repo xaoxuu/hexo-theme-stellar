@@ -8,6 +8,9 @@ tags:
 
 # 错误页
 
+> [!IMPORTANT]
+> v2 已重构页面 Front Matter；本页涉及字段名时，以[内容配置 Schema v2](content-schema-v2.md)为准。
+
 <details>
 <summary>相关源码文件</summary>
 

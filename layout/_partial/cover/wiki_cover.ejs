@@ -1,32 +1,34 @@
 <%
 function layoutWikiCover() {
   var el = '';
-  const proj = theme.wiki.tree[page.wiki];
+  const proj = theme.wiki.tree[collection_id(page, "wiki")];
   if (proj == undefined || proj.homepage.path !== page.path) {
     return el;
   }
-  if (proj.coverpage == undefined || proj.coverpage === false || proj.coverpage === '[]') {
+  var hero = proj.hero || {};
+  if (hero.enabled !== true) {
     return el;
   }
 
-  var background = typeof proj.background === 'string' && proj.background.length > 0 ? proj.background : '';
-  var animation = proj.animation && typeof proj.animation === 'object' ? proj.animation : {};
-  var preview = proj.preview || {};
+  var backgroundConfig = hero.background || {};
+  var background = typeof backgroundConfig.image === 'string' && backgroundConfig.image.length > 0 ? backgroundConfig.image : '';
+  var effect = backgroundConfig.effect || {};
+  var preview = hero.preview || {};
   var commands = Array.isArray(preview.commands) ? preview.commands.filter(function (item) {
     return item && item.codes;
   }) : [];
   var hasPreview = (preview.type === 'image' && preview.src) || commands.length > 0;
-  var title = proj.headline || proj.title || page.title;
+  var title = proj.headline || proj.name;
   var desc = proj.description || page.description;
-  var repo = proj.repo;
-  var actions = Array.isArray(proj.actions) ? proj.actions.filter(function (item) {
+  var repo = proj.source?.repository;
+  var actions = Array.isArray(hero.actions) ? hero.actions.filter(function (item) {
     return item && item.title && item.url;
   }) : [];
-  var isGalaxy = animation.type === 'galaxy';
+  var isGalaxy = effect.type === 'galaxy';
   var isImageBackground = background.length > 0;
-  var galaxyParams = animation.params && typeof animation.params === 'object' && !Array.isArray(animation.params) ? animation.params : {};
+  var galaxyParams = effect.options && typeof effect.options === 'object' && !Array.isArray(effect.options) ? effect.options : {};
   var galaxyParamsJson = escape_html(JSON.stringify(galaxyParams));
-  var projectName = proj.name || proj.title || page.wiki;
+  var projectName = proj.name || collection_id(page, "wiki");
   var adaptiveTextAttr = '';
   if (isImageBackground) {
     adaptiveTextAttr = ' data-text-adaptive="split" style="--cover-url:url(\'' + escape_html(background.replace(/'/g, '%27')) + '\')"';

@@ -7,6 +7,8 @@ hexo.on('generateBefore', () => {
   require('./lib/path_normalize')(hexo);
   // Merge config.
   require('./lib/config')(hexo);
+  // Stellar v2 公开内容配置严格校验，先于数据树构建执行。
+  require('./lib/content-config')(hexo);
   require('./lib/links')(hexo);
   require('./lib/authors')(hexo);
   require('./lib/doc_tree')(hexo);

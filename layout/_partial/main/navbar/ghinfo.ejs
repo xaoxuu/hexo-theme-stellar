@@ -1,6 +1,6 @@
 <%
 function layoutDiv() {
-  const repo = page.repo || theme.wiki.tree[page.wiki]?.repo
+  const repo = page.source?.repository || theme.wiki.tree[collection_id(page, "wiki")]?.source?.repository
   if (repo == null) {
     return ''
   }

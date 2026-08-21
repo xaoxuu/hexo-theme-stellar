@@ -3,13 +3,13 @@ function layoutDiv() {
   var el = '';
   var repo;
   var branch = 'main';
-  if (page.repo) {
-    repo = page.repo
-  } else if (theme.wiki.tree[page.wiki]?.repo) {
-    const proj = theme.wiki.tree[page.wiki]
-    repo = proj.repo
-    if (proj.branch != undefined) {
-      branch = proj.branch
+  if (page.source?.repository) {
+    repo = page.source.repository
+  } else if (theme.wiki.tree[collection_id(page, "wiki")]?.source?.repository) {
+    const proj = theme.wiki.tree[collection_id(page, "wiki")]
+    repo = proj.source?.repository
+    if (proj.source?.branch != undefined) {
+      branch = proj.source.branch
     }
   }
   if (repo == undefined) {

@@ -9,6 +9,9 @@ tags:
 
 # 笔记本系统
 
+> [!IMPORTANT]
+> v2 已重构笔记本配置与页面 Front Matter；本页涉及字段名时，以[内容配置 Schema v2](content-schema-v2.md)为准。
+
 <details>
 <summary>相关源码文件</summary>
 
@@ -356,12 +359,19 @@ share: true
 ```yaml
 site_tree:
   notebooks:
-    leftbar: recent  # 跨全部笔记本的最近笔记
+    sidebar:
+      left:
+        widgets: [recent]  # 跨全部笔记本的最近笔记
   notes:
-    leftbar: tagtree, recent  # 当前笔记本的标签树 + 最近笔记
+    sidebar:
+      left:
+        widgets: [tagtree, recent]  # 当前笔记本的标签树 + 最近笔记
   note:
-    leftbar: tagtree, recent  # 同 notes 页
-    rightbar: toc  # 当前笔记的目录
+    sidebar:
+      left:
+        widgets: [tagtree, recent]  # 同 notes 页
+      right:
+        widgets: [toc]  # 当前笔记的目录
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)
@@ -399,9 +409,9 @@ graph LR
 
 **覆盖层级：**
 
-1. 全局默认：`site_tree.notebooks.menu_id`、`site_tree.notes.menu_id`
-2. 笔记本 YAML：`menu_id`（影响 notes 与 note 页）
-3. 笔记 front-matter：`menu_id`（仅影响该笔记）
+1. 全局默认：`site_tree.notebooks.navigation.menu`、`site_tree.notes.navigation.menu`
+2. 笔记本 YAML：`navigation.menu`（影响 notes 与 note 页）
+3. 笔记 front-matter：`navigation.menu`（仅影响该笔记）
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
@@ -459,13 +469,18 @@ source/
 
 ```yaml
 # _data/notebooks/mynotebook.yml
-title: My Notebook
-menu_id: notebooks
-leftbar: tagtree, recent
-per_page: 15
-order_by: -updated
-license: true
-share: ['link']
+name: My Notebook
+navigation:
+  menu: notebooks
+sidebar:
+  left:
+    widgets: [tagtree, recent]
+listing:
+  per_page: 15
+  order_by: -updated
+footer:
+  license: true
+  share: true
 ```
 
 注意：笔记本数据在**用户站点**的 `source/_data/notebooks/`，不属于主题仓库。

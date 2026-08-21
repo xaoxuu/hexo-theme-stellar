@@ -9,6 +9,9 @@ tags:
 
 # 配置系统
 
+> [!IMPORTANT]
+> 本页保留部分 v1 配置示例用于说明系统组成。v2 的内容字段、页面 Front Matter 与命名规范以[内容配置 Schema v2](../03-内容系统/content-schema-v2.md)为准。
+
 <details>
 <summary>相关源码文件</summary>
 
@@ -84,7 +87,7 @@ graph TB
 |------|------|
 | `stellar` | 主题元数据与资源路径 |
 | `preconnect`、`canonical`、`open_graph`、`structured_data` | SEO 与 meta 标签 |
-| `logo`、`menubar` | 侧边栏品牌与导航 |
+| `brand`、`menubar` | 侧边栏品牌与导航 |
 | `site_tree` | 各页面类型布局定义与侧边栏小部件分配 |
 | `notebook` | 笔记本系统配置 |
 | `article` | 文章显示与元数据设置 |
@@ -150,22 +153,22 @@ graph LR
 
 **参考源码**：[_config.yml](../../../_config.yml)（`site_tree` 小节）
 
-### 示例：`menu_id` 解析
+### 示例：`navigation.menu` 解析
 
-对 wiki 页面，`menu_id`（控制菜单栏高亮）的解析顺序为：
+对 wiki 页面，`navigation.menu`（控制菜单栏高亮）的解析顺序为：
 
-1. **页面级**：`page.menu_id`（front-matter）
-2. **项目级**：`wiki.tree[project_name].menu_id`
-3. **布局级**：`theme.site_tree.wiki.menu_id`
+1. **页面级**：`page.navigation.menu`（front-matter）
+2. **项目级**：`wiki.tree[project_name].navigation.menu`
+3. **布局级**：`theme.site_tree.wiki.navigation.menu`
 4. **全局兜底**：`undefined`
 
 ### 示例：侧边栏小部件分配
 
 侧边栏小部件遵循同样模式：
 
-1. **页面级**：`page.leftbar` / `page.rightbar`（front-matter）
-2. **笔记本级**：笔记页使用笔记本 YAML 中的 `note_leftbar` / `note_rightbar`
-3. **布局级**：`theme.site_tree[layout].leftbar` / `rightbar`
+1. **页面级**：`page.sidebar.left.widgets` / `page.sidebar.right.widgets`（front-matter）
+2. **笔记本级**：笔记页使用笔记本 YAML 中的 `note.sidebar.left/right.widgets`
+3. **布局级**：`theme.site_tree[layout].sidebar.left/right.widgets`
 4. **默认**：空侧边栏
 
 **参考源码**：[_config.yml](../../../_config.yml)（`site_tree` 小节）
@@ -201,18 +204,22 @@ stellar:
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
-### Logo 与菜单栏配置
+### Brand 与菜单栏配置
 
-`logo` 小节支持从 `_config.yml` 动态替换值：
+`brand` 小节支持从 `_config.yml` 动态替换值：
 
 ```yaml
-logo:
-  avatar: '[{config.avatar}](/about/)'
-  title: '[{config.title}](/)' 
-  subtitle: '{config.subtitle}'
+brand:
+  image:
+    src: '{config.avatar}'
+    style: avatar
+    url: /about/
+  name: '{config.title}'
+  tagline: '{config.subtitle}'
+  url: /
 ```
 
-`{config.*}` 占位符会被替换为 Hexo 主 `_config.yml` 中的值。`menubar` 定义导航按钮（`id`、`theme`、`icon`、`title`、`url` 等属性）。
+`{config.*}` 占位符会被替换为 Hexo 主 `_config.yml` 中的值。Brand 不解析 Markdown 链接，图片和名称链接分别写入 `image.url` 与根级 `url`。`menubar` 定义导航按钮（`id`、`theme`、`icon`、`title`、`url` 等属性）。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
@@ -284,18 +291,22 @@ graph TB
 | 属性 | 类型 | 用途 |
 |------|------|------|
 | `base_dir` | String | 生成页面的 URL 路径前缀 |
-| `menu_id` | String | 要高亮的菜单栏项 ID |
-| `leftbar` | String/Array | 左栏小部件列表（逗号分隔） |
-| `rightbar` | String/Array | 右栏小部件列表（逗号分隔） |
-| `nav_tabs` | Object | 次级导航标签（标题-URL 对） |
+| `navigation.menu` | String | 要高亮的菜单栏项 ID |
+| `sidebar.left.widgets` | Array | 左栏小部件列表 |
+| `sidebar.right.widgets` | Array | 右栏小部件列表 |
+| `navigation.tabs` | Object | 次级导航标签（标题-URL 对） |
 
 #### 示例：博客文章布局
 
 ```yaml
 post:
-  menu_id: post
-  leftbar: related, recent
-  rightbar: ghrepo, toc
+  navigation:
+    menu: post
+  sidebar:
+    left:
+      widgets: [related, recent]
+    right:
+      widgets: [ghrepo, toc]
 ```
 
 所有博客文章（`layout: post`）将：
@@ -311,16 +322,24 @@ post:
 ```yaml
 index_wiki:
   base_dir: wiki
-  menu_id: wiki
-  leftbar: related, recent
-  rightbar: 
-  nav_tabs:
-    # 'more': https://github.com/xaoxuu
+  navigation:
+    menu: wiki
+    tabs:
+      # 'more': https://github.com/xaoxuu
+  sidebar:
+    left:
+      widgets: [related, recent]
+    right:
+      widgets: []
 
 wiki:
-  menu_id: wiki
-  leftbar: tree, related, recent
-  rightbar: ghrepo, toc
+  navigation:
+    menu: wiki
+  sidebar:
+    left:
+      widgets: [tree, related, recent]
+    right:
+      widgets: [ghrepo, toc]
 ```
 
 `index_wiki` 定义 wiki 列表页，`wiki` 定义单个 wiki 页面。注意 wiki 页面左栏的 `tree` 小部件用于展示项目结构。
@@ -676,16 +695,19 @@ system:
 
 ### 2. 菜单 ID 一致性
 
-保持相关布局的 `menu_id` 一致。例如所有博客相关页面都用 `menu_id: post`：
+保持相关布局的 `navigation.menu` 一致。例如所有博客相关页面都使用 `post`：
 
 ```yaml
 site_tree:
   index_blog:
-    menu_id: post
+    navigation:
+      menu: post
   post:
-    menu_id: post
+    navigation:
+      menu: post
   topic:
-    menu_id: post
+    navigation:
+      menu: post
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)

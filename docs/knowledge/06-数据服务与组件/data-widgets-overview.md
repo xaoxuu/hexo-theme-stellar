@@ -9,6 +9,9 @@ tags:
 
 # 数据服务与组件总览
 
+> [!IMPORTANT]
+> v2 的集合与页面侧栏字段已重构；本页涉及内容字段时，以[内容配置 Schema v2](../03-内容系统/content-schema-v2.md)为准。
+
 <details>
 <summary>相关源码文件</summary>
 

@@ -7,6 +7,7 @@
 
 const util = require('hexo-util');
 const { postImages, postDescription } = require('../lib/seo');
+const { getCollectionId } = require('../lib/content-config');
 
 hexo.extend.helper.register('json_ld', function(args) {
   const page = this.page;
@@ -39,8 +40,8 @@ hexo.extend.helper.register('json_ld', function(args) {
 
   if (this.is_post()) {
     const images = postImages({
-      cover: page.cover,
-      banner: page.banner,
+      cardCover: page.card?.cover,
+      bannerImage: page.banner?.image,
       photos: page.photos,
       content: page.content,
       defaultCover: this.theme.default && this.theme.default.cover
@@ -95,8 +96,8 @@ hexo.extend.helper.register('json_ld', function(args) {
 
       if (page.excerpt || page.description) {
         schema.description = this.strip_html(page.description || page.excerpt);
-      } else if (page.wiki) {
-        const proj = this.theme.wiki.tree[page.wiki];
+      } else if (getCollectionId(page, 'wiki')) {
+        const proj = this.theme.wiki.tree[getCollectionId(page, 'wiki')];
         if (proj && proj.description) {
           schema.description = proj.description;
         }

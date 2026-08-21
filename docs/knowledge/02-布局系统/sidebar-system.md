@@ -9,6 +9,9 @@ tags:
 
 # 侧边栏系统
 
+> [!IMPORTANT]
+> v2 页面与集合统一使用 `sidebar.left` / `sidebar.right`；本页涉及内容字段时，以[内容配置 Schema v2](../03-内容系统/content-schema-v2.md)为准。
+
 <details>
 <summary>相关源码文件</summary>
 
@@ -16,7 +19,7 @@ tags:
 
 - [layout/_partial/sidebar/index_leftbar.ejs](../../../layout/_partial/sidebar/index_leftbar.ejs)
 - [layout/_partial/sidebar/index_rightbar.ejs](../../../layout/_partial/sidebar/index_rightbar.ejs)
-- [layout/_partial/sidebar/logo.ejs](../../../layout/_partial/sidebar/logo.ejs)
+- [layout/_partial/sidebar/brand.ejs](../../../layout/_partial/sidebar/brand.ejs)
 - [layout/_partial/widgets/](../../../layout/_partial/widgets/)
 - [_data/widgets.yml](../../../_data/widgets.yml)
 - [source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)
@@ -28,13 +31,13 @@ tags:
 
 ## 目的与范围
 
-侧边栏系统负责渲染 Stellar 主题的左右侧边栏区域。本文覆盖侧边栏容器结构、小部件加载机制、Logo 组件解析层级、背景分层系统与响应式行为。具体小部件（搜索、最近文章、TOC 等）见对应组件文档；页面布局编排与模板路由见[页面模板与路由](page-templates-routing.md)。
+侧边栏系统负责渲染 Stellar 主题的左右侧边栏区域。本文覆盖侧边栏容器结构、小部件加载机制、Brand 组件、背景分层系统与响应式行为。具体小部件（搜索、最近文章、TOC 等）见对应组件文档；页面布局编排与模板路由见[页面模板与路由](page-templates-routing.md)。
 
 ---
 
 ## 架构概览
 
-侧边栏系统由两个主容器组成（`.l_left` 与 `.l_right`），位于主内容区两侧。每个侧边栏根据配置加载多个小部件，左栏还通过 `logo.ejs` 包含 Logo/页头组件。
+侧边栏系统由两个主容器组成（`.l_left` 与 `.l_right`），位于主内容区两侧。每个侧边栏根据配置加载多个小部件，左栏还通过 `brand.ejs` 包含 Brand 组件。
 
 **侧边栏组件结构**
 
@@ -43,15 +46,15 @@ graph TB
     subgraph l_left["l_left (Left Sidebar)"]
         sidebg[".sidebg (background layer)"]
         leftbar_container[".leftbar-container"]
-        header_logo["logo.ejs → .header"]
+        header_brand["brand.ejs → .brand-header"]
         widgets_left[".widgets (leftbar widget list)"]
-        leftbar_container --> header_logo
+        leftbar_container --> header_brand
         leftbar_container --> widgets_left
     end
 
     subgraph l_main["l_main (Main Content)"]
         article_content["Article / List Content"]
-        mobile_header["logo.ejs → .header.mobile-only"]
+        mobile_brand["brand.ejs → .brand-header.mobile-only"]
     end
 
     subgraph l_right["l_right (Right Sidebar)"]
@@ -68,9 +71,9 @@ graph TB
     float_panel["float-panel (mobile)"] -.->|"mobile nav replacement"| l_left
 ```
 
-**架构总结**：`.l_left` 包裹 `.sidebg`（装饰背景层）与 `.leftbar-container`（Logo + 堆叠小部件）；`.l_right` 放置 TOC 等上下文小部件。两个侧边栏在移动端折叠，Logo 改为在 `.l_main` 中以 `.header.mobile-only` 渲染。
+**架构总结**：`.l_left` 包裹 `.sidebg`（装饰背景层）与 `.leftbar-container`（Brand + 堆叠小部件）；`.l_right` 放置 TOC 等上下文小部件。两个侧边栏在移动端折叠，指定索引/列表页会在 `.l_main` 中渲染 `.brand-header.mobile-only`。
 
-**参考源码**：[source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)、[layout/_partial/sidebar/logo.ejs](../../../layout/_partial/sidebar/logo.ejs)
+**参考源码**：[source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)、[layout/_partial/sidebar/brand.ejs](../../../layout/_partial/sidebar/brand.ejs)
 
 ---
 
@@ -122,102 +125,17 @@ graph TB
 
 ---
 
-## 左栏：Logo 组件
+## 左栏：Brand 组件
 
-### Logo 解析层级
+左栏顶部使用统一 Brand resolver，优先级依次为页面 `sidebar.left.brand`、集合 `sidebar.left.brand`、Wiki / Notebook 自动 Brand 和全局 `brand`。Topic 不自动生成 Brand，未显式覆盖时直接使用站点 Brand。根字段逐项合并，`image` 始终整体替换。
 
-左栏顶部的 Logo 组件遵循三级解析层级，随页面上下文适配：wiki 项目可以展示自己的品牌，同时保留主题级默认。
+Brand 图片通过 `image.style` 明确为 `avatar`、`icon` 或 `plain`。外层统一负责 48×48 尺寸、链接和显式背景；图片元素只负责 `cover` 或 `contain`。完整契约见 [Brand、导航与页头](logo-navigation-headers.md)。
 
-```mermaid
-graph TB
-    Start["Logo Rendering Request"] --> CheckPageLogo{"page.logo<br/>exists?"}
-    
-    CheckPageLogo -->|"Yes"| PageLogo["Use page.logo<br/>Merge with theme.logo"]
-    CheckPageLogo -->|"No"| CheckWiki{"page.wiki<br/>exists?"}
-    
-    CheckWiki -->|"Yes"| CheckWikiTree{"theme.wiki.tree<br/>[page.wiki]<br/>exists?"}
-    CheckWiki -->|"No"| DefaultLogo["Use theme.logo"]
-    
-    CheckWikiTree -->|"Yes"| CheckProjLogo{"proj.logo<br/>exists?"}
-    CheckWikiTree -->|"No"| DefaultLogo
-    
-    CheckProjLogo -->|"Yes"| ProjLogo["Use proj.logo"]
-    CheckProjLogo -->|"No"| CheckProjMeta{"proj.name or<br/>proj.icon?"}
-    
-    CheckProjMeta -->|"Yes"| BuildLogo["Build logo from:<br/>proj.icon, proj.name<br/>proj.subtitle, proj.homepage"]
-    CheckProjMeta -->|"No"| DefaultLogo
-    
-    PageLogo --> Render["Render Logo Component"]
-    ProjLogo --> Render
-    BuildLogo --> Render
-    DefaultLogo --> Render
-```
+Wiki 内容页在 Brand 上方显示“所有项目”入口，链接到 `theme.site_tree.index_wiki.base_dir`。页面与项目的 `sidebar.left.wiki_home` 可控制此入口，默认显示；它不影响 Brand 本身。
 
-**解析逻辑**：先查页面级 Logo 覆盖，再查页面所属 wiki 项目是否有自己的品牌，最后回退到主题全局 Logo 配置。三级体系在保持品牌一致的同时提供最大灵活性。
+手机端 Brand 不读取 Front Matter 开关，只在主页、分类/标签与指定集合索引/笔记列表渲染。内容页、归档、作者页和 404 隐藏。
 
-**参考源码**：[layout/_partial/sidebar/logo.ejs](../../../layout/_partial/sidebar/logo.ejs)
-
-### Logo 组件结构
-
-Logo 组件最多包含三个元素：图标/头像、主标题、副标题。渲染逻辑根据配置了哪些元素自适应。
-
-| 元素 | 配置键 | 说明 | 默认来源 |
-|------|--------|------|----------|
-| 头像 | `logo.avatar` | 用户/站点头像图片 | Hexo 的 `config.avatar` |
-| 图标 | `logo.icon` | 项目/wiki 图标 | 无（仅 wiki 项目） |
-| 标题 | `logo.title` | 带链接的主标题文本 | Hexo 的 `config.title` |
-| 副标题 | `logo.subtitle` | 副标题文本（支持 `|` 分隔的悬停切换效果） | Hexo 的 `config.subtitle` |
-
-**动态头像**：`style.animated_avatar.animate` 启用时，头像包含一个悬停淡入的 CSS 锥形渐变光环（`style.gradient.avatar`，默认彩虹色），以 4s 匀速旋转产生装饰动画。
-
-**Wiki 返回入口**：Wiki 内容页在左栏 Logo 上方显示“所有项目”入口，链接到 `theme.site_tree.index_wiki.base_dir`。`page.wiki_home` 优先于项目配置的 `wiki_home` 控制其显示，默认显示；图标复用列表分页上一页的 `default:arrow-left`，并以内联 SVG 保持首屏可见。
-
-**参考源码**：[_config.yml](../../../_config.yml)、[layout/_partial/sidebar/logo.ejs](../../../layout/_partial/sidebar/logo.ejs)
-
-### 标题与副标题渲染
-
-标题支持 Markdown 风格链接语法 `[text](url)` 与特殊副标题格式：
-
-```mermaid
-graph LR
-    SubtitleText["logo.subtitle value"] --> CheckPipe{"Contains '|'<br/>separator?"}
-    
-    CheckPipe -->|"Yes"| SplitText["Split on '|'"]
-    CheckPipe -->|"No"| SingleSub["Render single .sub element"]
-    
-    SplitText --> NormalDiv["First part:<br/>.sub.normal (visible)"]
-    SplitText --> HoverDiv["Remaining parts:<br/>.sub.hover (opacity:0)"]
-    
-    NormalDiv --> HoverEffect["CSS hover toggles opacity<br/>for alternating effect"]
-    HoverDiv --> HoverEffect
-```
-
-**副标题悬停效果**：副标题含 `|`（如 `'Text 1 | Text 2'`）时，主题创建两个副标题 div：默认可见的 `.sub.normal` 与隐藏的 `.sub.hover`（`opacity:0`）。CSS 悬停切换两者透明度，实现文字切换动画。
-
-**参考源码**：[layout/_partial/sidebar/logo.ejs](../../../layout/_partial/sidebar/logo.ejs)
-
-### 条件显示逻辑
-
-Logo 组件在主内容区（移动端页头）的可见性规则与左栏中不同：
-
-```mermaid
-graph TB
-    RenderRequest["Logo Render in Main Area"] --> CheckHeader{"page.header<br/>explicitly set?"}
-    
-    CheckHeader -->|"false"| HideComponent["Return empty string<br/>(don't render)"]
-    CheckHeader -->|"null/undefined"| CheckTabs{"page.nav_tabs<br/>exists?"}
-    CheckHeader -->|"true"| RenderComponent["Render Logo Component"]
-    
-    CheckTabs -->|"Yes"| RenderComponent
-    CheckTabs -->|"No"| CheckLayout{"page.layout<br/>?"}
-    
-    CheckLayout -->|"post, page, or wiki"| HideComponent
-    CheckLayout -->|"other"| RenderComponent
-```
-
-**移动端页头逻辑**：在主内容区渲染时，内容页（post/page/wiki）默认隐藏 Logo，除非有 `nav_tabs`（表明是列表页）或 front-matter 显式设置 `header: true`。避免内容页出现重复页头。
-
-**参考源码**：[layout/_partial/sidebar/logo.ejs](../../../layout/_partial/sidebar/logo.ejs)
+**参考源码**：[layout/_partial/sidebar/brand.ejs](../../../layout/_partial/sidebar/brand.ejs)、[scripts/lib/brand.js](../../../scripts/lib/brand.js)
 
 ---
 
@@ -441,16 +359,16 @@ graph TB
     
     MobileLayout --> HideLeft["Left Sidebar<br/>l_left: hidden"]
     MobileLayout --> HideRight["Right Sidebar<br/>l_right: hidden"]
-    MobileLayout --> MobileHeader["Mobile Header<br/>Logo in main area<br/>.mobile-only class"]
+    MobileLayout --> MobileHeader["Mobile Brand<br/>eligible list pages only<br/>.brand-header.mobile-only"]
     MobileLayout --> FloatPanel["Float Panel<br/>Navigation controls"]
     
     ShowLeft -.-> SidebarScroll["Independent scrolling<br/>overflow-y: auto"]
     ShowRight -.-> SidebarScroll
 ```
 
-**移动端策略**：移动端两个侧边栏都用 display 属性隐藏。Logo 组件改为在主内容区以 `.mobile-only` 类渲染，充当移动端页头。浮动面板提供原本在左栏中的导航入口。
+**移动端策略**：移动端两个侧边栏都用 display 属性隐藏。符合页面矩阵的列表/索引页在主内容区渲染 `.brand-header.mobile-only`；浮动面板提供原本在左栏中的导航入口。
 
-**参考源码**：[layout/_partial/sidebar/logo.ejs](../../../layout/_partial/sidebar/logo.ejs)
+**参考源码**：[layout/_partial/sidebar/brand.ejs](../../../layout/_partial/sidebar/brand.ejs)
 
 ### 侧边栏宽度与间距
 
@@ -502,8 +420,11 @@ graph TB
 ```yaml
 ---
 title: Custom Page
-leftbar: custom, widgets
-rightbar: special, toc
+sidebar:
+  left:
+    widgets: [custom, widgets]
+  right:
+    widgets: [special, toc]
 ---
 ```
 
@@ -520,7 +441,7 @@ rightbar: special, toc
 侧边栏系统提供灵活、多层的导航与上下文信息展示架构：
 
 1. **双栏架构**：独立的左栏（导航/小部件）与右栏（上下文信息），各自独立配置
-2. **Logo 解析层级**：支持页面、wiki 项目、主题级的三级品牌兜底
+2. **Brand 解析层级**：支持页面、集合、集合自动值和全局配置，图片原子替换
 3. **小部件组合**：模块化小部件系统，每种布局类型可自由定制
 4. **精细样式**：多层背景系统，支持玻璃拟态与深色模式
 5. **响应式设计**：移动优先，隐藏侧边栏并提供替代导航

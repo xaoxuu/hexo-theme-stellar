@@ -10,7 +10,7 @@ function layoutDiv() {
       title: __(menuItem.title),
       icon: menuItem.icon,
       theme: menuItem.theme,
-      active: menuItem.id == page.menu_id,
+      active: menuItem.id == page.navigation?.menu,
       className: menuItem.theme?.length > 0 ? 'is-themed' : '',
       gradientId: 'menu-grad-' + menuItem.id
     })

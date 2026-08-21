@@ -16,6 +16,8 @@ tags:
 
 - [layout/404.ejs](../../../layout/404.ejs)
 - [layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)
+- [layout/_partial/widgets/related.ejs](../../../layout/_partial/widgets/related.ejs)
+- [layout/_partial/components/collection.ejs](../../../layout/_partial/components/collection.ejs)
 - [scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)
 - [scripts/helpers/related_posts.js](../../../scripts/helpers/related_posts.js)
 
@@ -206,7 +208,9 @@ wiki.tree['my-project'].relatedItems = [
 
 该结构让 wiki 布局按共享标签分组渲染相关项目。
 
-**参考源码**：[scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)
+左栏 `related` 小部件按 `items` 中的 id 取得 Wiki 项目，并将项目 `name`、`description` 与首页链接传给公共 Collection 组件。因此“更多：…”下的每个条目同时显示项目名称和说明。
+
+**参考源码**：[scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)、[layout/_partial/widgets/related.ejs](../../../layout/_partial/widgets/related.ejs)、[layout/_partial/components/collection.ejs](../../../layout/_partial/components/collection.ejs)
 
 ---
 

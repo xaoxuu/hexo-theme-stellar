@@ -21,19 +21,19 @@ test('firstContentImage 空内容返回空串', () => {
   assert.equal(firstContentImage('<p>无图</p>'), '');
 });
 
-test('postImages 优先级：cover 优先于 banner/photos', () => {
+test('postImages 优先级：cardCover 优先于 bannerImage/photos', () => {
   const result = postImages({
-    cover: 'https://res.xaox.cc/cover.webp',
-    banner: 'https://res.xaox.cc/banner.webp',
+    cardCover: 'https://res.xaox.cc/cover.webp',
+    bannerImage: 'https://res.xaox.cc/banner.webp',
     photos: ['https://res.xaox.cc/p1.webp'],
     content: '<img src="https://res.xaox.cc/in.webp">'
   });
   assert.deepEqual(result, ['https://res.xaox.cc/cover.webp', 'https://res.xaox.cc/p1.webp']);
 });
 
-test('postImages 无 cover 时 banner 前置', () => {
+test('postImages 无 cardCover 时 bannerImage 前置', () => {
   const result = postImages({
-    banner: 'https://res.xaox.cc/banner.webp',
+    bannerImage: 'https://res.xaox.cc/banner.webp',
     photos: ['https://res.xaox.cc/p1.webp']
   });
   assert.deepEqual(result, ['https://res.xaox.cc/banner.webp', 'https://res.xaox.cc/p1.webp']);

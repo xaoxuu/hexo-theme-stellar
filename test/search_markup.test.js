@@ -27,8 +27,8 @@ test('搜索控件不再输出伪链接、内联聚焦事件或可提交表单',
   assert.doesNotMatch(SEARCH_TEMPLATE_SOURCE, /<form class="search-form"/);
 });
 
-test('page.search 为 false 时仍跳过搜索控件', () => {
-  assert.match(SEARCH_TEMPLATE_SOURCE, /if \(page\.search == false\) \{\s+return el\s+\}/);
+test('sidebar.left.search 为 false 时跳过搜索控件', () => {
+  assert.match(SEARCH_TEMPLATE_SOURCE, /if \(page\.sidebar\?\.left\?\.search === false\) \{\s+return el\s+\}/);
 });
 
 test('本地搜索与 Algolia 从公共入口加载同一份快捷键脚本', () => {

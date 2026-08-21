@@ -2,7 +2,7 @@
 function layoutDiv() {
   var el = '';
   var item = [];
-  if (page.references?.length > 0) {
+  if (page.footer?.references?.length > 0) {
     item.push('references');
   }
   if (theme.article.license?.length > 0) {
@@ -19,10 +19,10 @@ function layoutDiv() {
     return el;
   }
   el += `<div class="article-footer${scrollreveal(' ')}">`
-  if (page.references?.length > 0) {
+  if (page.footer?.references?.length > 0) {
     function refList() {
       var el = '';
-      for (let ref of page.references) {
+      for (let ref of page.footer.references) {
         el += `
         <li class="post-title">
           ${markdown(ref)}
@@ -42,29 +42,29 @@ function layoutDiv() {
   }
 
   var license = ''
-  if (page.wiki) {
-    const proj = theme.wiki.tree[page.wiki]
-    if (page.license != null) {
-      license = page.license || theme.article.license
-    } else if (proj?.license != null) {
-      if (proj.license == true) {
+  if (collection_id(page, "wiki")) {
+    const proj = theme.wiki.tree[collection_id(page, "wiki")]
+    if (page.footer?.license != null) {
+      license = page.footer.license || theme.article.license
+    } else if (proj?.footer?.license != null) {
+      if (proj.footer.license == true) {
         license = theme.article.license
       } else {
-        license = proj.license
+        license = proj.footer.license
       }
     }
   } else if (page.layout == 'post') {
-    if (theme.article.license && (page.license != false)) {
-      license = page.license || theme.article.license
+    if (theme.article.license && (page.footer?.license != false)) {
+      license = page.footer?.license || theme.article.license
     }
-  } else if (page.license) {
-    license = page.license === true ? theme.article.license : page.license
+  } else if (page.footer?.license) {
+    license = page.footer.license === true ? theme.article.license : page.footer.license
   }
   if (license?.length > 0) {
     var author = null
     if (theme.authors) {
-      if (page.author?.length > 0 && theme.authors[page.author] != null) {
-        author = theme.authors[page.author]
+      if (page.article?.author?.length > 0 && theme.authors[page.article.author] != null) {
+        author = theme.authors[page.article.author]
       } else {
         author = theme.default_author
       }
@@ -85,16 +85,16 @@ function layoutDiv() {
   }
 
   var showSharePlugin = false
-  if (page.wiki) {
-    const proj = theme.wiki.tree[page.wiki]
-    if (page.share != null) {
-      showSharePlugin = page.share == true
+  if (collection_id(page, "wiki")) {
+    const proj = theme.wiki.tree[collection_id(page, "wiki")]
+    if (page.footer?.share != null) {
+      showSharePlugin = page.footer.share == true
     } else if (proj != null) {
-      showSharePlugin = proj.share == true
+      showSharePlugin = proj.footer?.share == true
     }
   } else if (page.layout == 'post') {
-    showSharePlugin = page.share != false
-  } else if (page.share) {
+    showSharePlugin = page.footer?.share != false
+  } else if (page.footer?.share) {
     showSharePlugin = true
   }
   if (theme.article.share && showSharePlugin) {
@@ -114,10 +114,11 @@ function layoutDiv() {
           } else if (item == 'weibo') {
             el += ' href="https://service.weibo.com/share/share.php?url=' + urlenc(page.permalink);
             el += '&title=' + urlenc(page.title + ' - ' + config.title);
-            if (page.layout == 'post' && page.cover) {
-              el += '&pics=' + urlenc(page.cover);
-            } else if (page.wiki && page.icon) {
-              el += '&pics=' + urlenc(page.icon);
+            if (page.card?.cover) {
+              el += '&pics=' + urlenc(page.card.cover);
+            } else if (collection_id(page, "wiki")) {
+              const projectCover = theme.wiki.tree[collection_id(page, "wiki")]?.card?.cover
+              if (projectCover) el += '&pics=' + urlenc(projectCover)
             }
             el += '&summary=' + urlenc(truncate(page.description || strip_html(page.excerpt || page.content), {length: 120}));
             el += '"';

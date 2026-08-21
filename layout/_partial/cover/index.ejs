@@ -1,6 +1,6 @@
 <%
 function layoutCover() {
-  if (page.wiki) {
+  if (collection_id(page, "wiki")) {
     return partial('wiki_cover')
   }
   return ''

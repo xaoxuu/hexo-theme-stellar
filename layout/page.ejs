@@ -3,26 +3,29 @@ const { layout } = page
 // 是否使用 Heti 布局插件
 const isUsingHeti = theme.plugins.heti?.enable
 
-const notebook = theme.notebooks.tree[page.notebook]
+const notebook = theme.notebooks.tree[collection_id(page, "notebook")]
 if (notebook) {
-    page.menu_id ??= notebook.menu_id
-    page.license ??= notebook.license
-    page.share ??= notebook.share
+  page.navigation ||= {}
+  page.footer ||= {}
+  page.navigation.menu ??= notebook.navigation?.menu
+  page.footer.license ??= notebook.footer?.license
+  page.footer.share ??= notebook.footer?.share
 }
 
-// 默认的 menu_id
-if (page.menu_id == null) {
-  if (page.wiki?.length > 0) {
-    page.menu_id = theme.site_tree.wiki.menu_id
-  } else if (page.topic?.length > 0) {
-    page.menu_id = theme.site_tree.topic.menu_id
+// 默认主导航菜单
+page.navigation ||= {}
+if (page.navigation.menu == null) {
+  if (collection_id(page, "wiki")?.length > 0) {
+    page.navigation.menu = theme.site_tree.wiki.navigation.menu
+  } else if (collection_id(page, "topic")?.length > 0) {
+    page.navigation.menu = theme.site_tree.topic.navigation.menu
   } else {
-    page.menu_id = theme.site_tree.post.menu_id
+    page.navigation.menu = theme.site_tree.post.navigation.menu
   }
 }
 // 默认的 title
 if (page.title == null) {
-  if (page.wiki) {
+  if (collection_id(page, "wiki")) {
     page.title = __('btn.wiki')
   }
 }
@@ -37,10 +40,7 @@ function articleClass() {
 
 function layoutDiv() {
   var el = ''
-  if (page.nav_tabs) {
-    el += partial('_partial/main/navbar/nav_tabs_blog')
-  }
-  if (page.h1 || page.title || (page.content && page.content.length > 0)) {
+  if (page.banner?.headline || page.title || (page.content && page.content.length > 0)) {
     el += partial('_partial/main/navbar/article_banner')
   }
   el += `<article class="${articleClass()}">`
@@ -49,19 +49,19 @@ function layoutDiv() {
   } else {
     // wiki 项目首页正文为空（剪裁空白后）且配置了 repo 时，
     // 以该仓库 README.md 作为主页正文（应用层 helper，复用底层远程 md 渲染组件）
-    el += wiki_readme_html(theme.wiki.tree[page.wiki], page)
+    el += wiki_readme_html(theme.wiki.tree[collection_id(page, "wiki")], page)
   }
   if (notebook) {
     el += partial('_partial/main/notebook/note_tags', { notebook: notebook })
   }
   el += `</article>`
-  if (layout === 'post' || page.wiki || notebook) {
+  if (layout === 'post' || collection_id(page, "wiki") || notebook) {
     if (layout === 'post' && theme.article.tags) {
       el += partial('_partial/main/article/article_tags')
     }
     el += partial('_partial/main/article/article_footer')
   }
-  if (layout === 'post' || page.wiki) {
+  if (layout === 'post' || collection_id(page, "wiki")) {
     el += partial('_partial/main/article/read_next')
   }
   if (layout === 'post') {

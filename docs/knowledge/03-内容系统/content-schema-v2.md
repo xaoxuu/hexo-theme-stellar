@@ -1,0 +1,97 @@
+# v2 内容配置契约
+
+> 本页是 v2 公开 YAML / Front Matter 的权威边界。其它章节中与本页冲突的 v1 字段名仅属历史记录，v2 运行时不会读取。
+
+## 命名边界
+
+- Stellar 自有 YAML / Front Matter 字段：`snake_case`。
+- JavaScript 变量、函数与对象 API：`camelCase`；类：`PascalCase`。
+- CSS class、HTML 自有扩展属性与文件名：`kebab-case`。
+- 第三方参数袋保持上游字段：Galaxy options 使用 `starSpeed` 等 React Bits props，Giscus 使用 `data-repo` 等 HTML 属性。
+
+## 集合字段
+
+Wiki、Topic 和 Notebook 共用：
+
+| 字段 | 语义 |
+| --- | --- |
+| `name` | 面包屑等紧凑位置的短名称，必填 |
+| `headline` | 集合卡片和 Hero 主标题，缺失时取 `name` |
+| `tagline` | 一行辅助文案 |
+| `description` | 完整描述与 SEO 回退 |
+| `identity.icon` | 项目身份图标 |
+| `card.cover` | 集合列表卡片封面 |
+| `hero` | 集合首页 Hero |
+| `sidebar.left/right` | 集合页面的左右栏 |
+| `navigation` | 菜单与导航 |
+| `article` | 集合内容默认排版 |
+| `footer` | 许可、分享与参考资料 |
+| `comments` | 集合评论默认值 |
+| `source` | 源码仓库与分支 |
+| `routing` | 内容路径 |
+| `listing` | 集合排序、分页和摘要 |
+
+`identity.icon`、`card.cover`、`hero.background.image` 不互相充当回退。即使使用同一资源，也要在对应作用域显式配置。
+
+## 页面字段
+
+| 对象 | 子字段 |
+| --- | --- |
+| `collection` | `type`, `id` |
+| `card` | `cover`, `tagline` |
+| `banner` | `enabled`, `image`, `avatar`, `headline`, `tagline` |
+| `sidebar.left` | `widgets`, `search`, `menu`, `brand`, `wiki_home` |
+| `sidebar.right` | `widgets` |
+| `navigation` | `menu`, `breadcrumb` |
+| `article` | `type`, `indent`, `author`, `ai_label` |
+| `footer` | `references`, `license`, `share` |
+| `comments` | `enabled`, `title`, `id`, `service`, 各服务参数袋 |
+| `visibility` | `listed`, `searchable` |
+| `listing` | `priority` |
+| `source` | `repository`, `branch` |
+
+`visibility.listed: false` 从博客、专栏、笔记本与 Wiki 目录/最近列表中排除页面，不影响路由生成。`visibility.searchable: false` 仅从站内搜索索引排除。
+
+`listing.priority` 必须是不小于 `0` 的有限数字；只有大于 `0` 时置顶。
+
+## Brand
+
+全局 `brand` 与页面/集合的 `sidebar.left.brand` 使用相同结构：
+
+```yaml
+brand:
+  image:
+    src: /images/avatar.webp
+    style: avatar
+    url: /about/
+    background: 'var(--block)'
+  name: Stellar
+  tagline: 每个人的独立博客
+  url: /
+```
+
+`image.style` 只能是：
+
+- `avatar`：正圆裁剪、`object-fit: cover`，保留头像旋转背景效果。
+- `icon`：`$border-card-s` 圆角矩形裁剪、`object-fit: contain`。
+- `plain`：`object-fit: contain`，不裁剪、不设置圆角；禁止配置 `background`。
+
+`image` 是原子对象：覆盖时必须同时提供 `src` 和 `style`，不会继承上级图片的部分字段。背景默认透明，只能显式配置。`image.url` 控制图片链接，Brand 根级 `url` 控制名称链接。`name` 可包含受信任的内联 HTML，但不解析 Markdown 链接；完整 `[文本](链接)` 写法会在构建期报迁移错误。
+
+解析顺序是页面 `sidebar.left.brand`、集合 `sidebar.left.brand`、类型默认和全局 `brand`。Wiki / Notebook 的类型默认会从 `identity.icon`自动生成 Brand，缺失时使用 `theme.default.project`，不从 `card.cover` 等其它角色回退。Topic 的类型默认是直接继承全局 Brand，只有显式的 `sidebar.left.brand` 才覆盖。
+
+手机端 Brand 自动显示于主页、分类/标签页面及索引、专栏索引、Wiki 索引、笔记本索引和笔记列表；文章、普通页面、Wiki/Topic/Notebook 内容页、归档、作者页和 404 隐藏。v2 不提供显示开关。
+
+## 第三方边界
+
+Galaxy 的路径为 `hero.background.effect.options`，字段白名单在 `scripts/lib/content-config.js` 的 `GALAXY_OPTION_TYPES` 中与 React Bits props 对齐。评论服务对象仅校验为 object，内部字段由对应上游服务规定。
+
+## 校验与消费链
+
+- `scripts/events/lib/content-config.js` 读取 `_data/wiki|topic|notebooks` 与源 Markdown Front Matter，在数据树构建前校验。
+- `scripts/lib/content-config.js` 定义结构、类型、旧字段拒绝规则与 `isListed` / `isSearchable`。
+- `scripts/helpers/collection.js` 向 EJS 提供 `collection_id(page, type)`，不再读取 `page.wiki/topic/notebook`。
+- `scripts/lib/brand.js` 与 `scripts/helpers/brand.js` 解析 Brand 优先级、集合自动值和手机端显示矩阵。
+- Wiki、Topic、Notebook 数据树和搜索生成器消费共享可见性语义。
+
+旧字段、未知字段和错误类型都会汇总为 `ContentConfigError`，消息包含源文件与字段路径；运行时没有 v1 别名或错误类型自动转换。

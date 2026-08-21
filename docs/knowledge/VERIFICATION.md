@@ -1,6 +1,6 @@
 # 核查与修正记录
 
-> 记录中文知识库对照 `themes/stellar/` 源码（版本 1.41.0，HEAD b1501d9）核查与修正的偏差记录。
+> 记录中文知识库对照 `themes/stellar/` 源码持续核查与修正的偏差记录；当前 v2 内容配置以 `docs/knowledge/03-内容系统/content-schema-v2.md` 为准。
 > 规则：行号引用一律改为文件路径；无法在代码中找到对应实现的主张保留原文并标注「未核实」。
 
 ## 一、已移除功能（整页改写为当前实现）
@@ -21,7 +21,14 @@
 
 ## 二、版本与事实修正
 
-| 2026-08-21 | Wiki Hero 以 `background: galaxy` 同时选择动态效果和静态底色，无法与图片背景叠加，Galaxy 参数也全部硬编码 | `background` 收敛为静态图片；新增 `animation.type: galaxy` 与 `animation.params`，按 Canvas 独立校验并应用全部现有参数；图片与透明 Galaxy 可叠加且文字按图片取色，仅 Galaxy 时保留黑底降级；移除旧 `background: galaxy` 写法 | `layout/_partial/cover/wiki_cover.ejs`、`source/css/_components/partial/cover.styl`、`source/js/plugins/galaxy.js`、`test/galaxy_client.test.js`、`test/wiki_cover_animation_markup.test.js`、`docs/knowledge/03-内容系统/wiki-docs.md`、`docs/designs/2026-08-21-wiki-hero-animation-config/` |
+| 日期 | 原问题 | 修正 | 依据 |
+| --- | --- | --- | --- |
+| 2026-08-22 | v2 Wiki 项目名称已统一为 `name`，左栏 `related` 仍读取已移除的 `relatedProject.title`，导致“更多：…”下的条目只显示说明、标题 DOM 为空 | Related 条目改为使用 `relatedProject.name`，保留原有链接、说明、分组和 Collection 样式；增加模板字段映射回归测试 | `layout/_partial/widgets/related.ejs`、`test/related_widget_markup.test.js`、`docs/designs/2026-08-22-related-wiki-title/` |
+| 2026-08-22 | Topic 是博客文章的组织方式，根据 Topic 的 Identity 与文案自动生成 Brand 会让文章加入专栏后无意切换站点品牌 | 自动 Brand 仅保留给 Wiki / Notebook；Topic 默认完整继承全局 Brand，只有显式的 `sidebar.left.brand` 才会覆盖，页面覆盖仍保持最高优先级 | `scripts/lib/brand.js`、`test/brand.test.js`、`docs/designs/2026-08-22-topic-brand-inheritance/` |
+| 2026-08-22 | v2 Brand 头像图片的字符串 `calc()` 被浏览器忽略，叠加 margin 后相对旋转光环向右下偏移；主站 Topic 迁移又把与卡片封面相同的旧 `icon` 误标成 Identity | 头像图片改为绝对定位并以 2px inset + 有效 `calc()` 与光环保持同心；清理主站 Topic 的错误 `identity.icon`，Topic 默认继承站点 Brand，不会读取 `card.cover` | `source/css/_components/sidebar/brand.styl`、`test/brand_markup.test.js`、`test/brand.test.js`、`docs/designs/2026-08-22-brand-regressions/` |
+| 2026-08-22 | 全局 `logo`、侧栏 Logo 的 `avatar/icon` 与 `navigation.mobile_header` 混合了品牌资源、视觉形态和显示位置，透明底图片还会被隐式裁剪或填充 | v2 统一为根级 `brand` 与 `sidebar.left.brand`；`brand.image` 以原子对象提供 `avatar`、`icon`、`plain` 三种样式，背景只允许显式配置；Wiki / Notebook 自动 Brand 仅使用 Identity；手机端 Brand 改为页面类型矩阵；旧字段和 Markdown 链接写法构建失败 | `scripts/lib/brand.js`、`scripts/helpers/brand.js`、`scripts/lib/content-config.js`、`layout/_partial/sidebar/brand.ejs`、`source/css/_components/sidebar/brand.styl`、`test/brand.test.js`、`test/brand_markup.test.js`、`docs/knowledge/02-布局系统/logo-navigation-headers.md` |
+| 2026-08-21 | Wiki、Topic、Notebook 与页面 Front Matter 的扁平字段无法表达组件角色，历史兜底会掩盖错误配置 | 建立 v2 分组 schema，严格拒绝旧字段、未知字段和错误类型；`visibility.listed/searchable` 分别控制聚合与搜索；第三方参数袋保持上游命名 | `scripts/lib/content-config.js`、`scripts/events/lib/content-config.js`、`docs/knowledge/03-内容系统/content-schema-v2.md`、`docs/designs/2026-08-21-v2-content-schema/` |
+| 2026-08-21 | Wiki Hero 以 `background: galaxy` 同时选择动态效果和静态底色，无法与图片背景叠加，Galaxy 参数也全部硬编码 | v2 使用 `hero.background.image` 与 `hero.background.effect` 分离图像和效果；Galaxy 参数位于 `hero.background.effect.options`，按 React Bits props 白名单保持 `starSpeed` 等原始字段；图片与透明 Galaxy 可叠加 | `layout/_partial/cover/wiki_cover.ejs`、`source/css/_components/partial/cover.styl`、`source/js/plugins/galaxy.js`、`test/galaxy_client.test.js`、`test/wiki_cover_animation_markup.test.js`、`docs/knowledge/03-内容系统/wiki-docs.md`、`docs/designs/2026-08-21-v2-content-schema/` |
 
 | 2026-08-21 | 搜索结果链接仍引用已移除的 `--ui-summary-item-bg`，导致静止态背景失效；本地搜索与 Algolia 的标题点击范围不一致，动态结果也没有 Card Hover 的按容器清理入口 | 两种搜索统一为链接外页面标题与链接内章节/摘要；链接静止时直接显示原 hover surface 的玻璃背景与阴影，hover 只组合 Spotlight、不启用 Tilt；新增 `stellar.cardHover.unmountAll(root)`，结果替换前卸载旧链接、插入后挂载新链接，插件不可用时保留静态搜索行为 | `source/css/_components/sidebar/search.styl`、`source/js/search/local-search.js`、`source/js/search/algolia-search.js`、`source/js/plugins/card-hover.js`、`test/search_result_hover.test.js`、`test/card_hover_client.test.js`、`docs/designs/2026-08-21-search-result-card-hover/` |
 

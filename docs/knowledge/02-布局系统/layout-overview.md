@@ -9,6 +9,9 @@ tags:
 
 # 布局系统
 
+> [!IMPORTANT]
+> v2 的页面归属、排版与侧栏字段已重构；本页涉及内容字段时，以[内容配置 Schema v2](../03-内容系统/content-schema-v2.md)为准。
+
 <details>
 <summary>相关源码文件</summary>
 
@@ -16,7 +19,7 @@ tags:
 
 - [layout/layout.ejs](../../../layout/layout.ejs)
 - [layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
-- [layout/_partial/sidebar/logo.ejs](../../../layout/_partial/sidebar/logo.ejs)
+- [layout/_partial/sidebar/brand.ejs](../../../layout/_partial/sidebar/brand.ejs)
 - [layout/_partial/cover/index.ejs](../../../layout/_partial/cover/index.ejs)
 - [layout/_partial/sidebar/index_leftbar.ejs](../../../layout/_partial/sidebar/index_leftbar.ejs)
 - [layout/_partial/sidebar/index_rightbar.ejs](../../../layout/_partial/sidebar/index_rightbar.ejs)
@@ -28,7 +31,7 @@ tags:
 
 本页说明 `layout.ejs` 如何作为根模板，如何从 partial 组装页面骨架，以及三栏 `l_body` 网格如何组织左栏、主内容区与右栏。
 
-布局选择逻辑与各页面类型模板见[页面模板与路由](page-templates-routing.md)；侧边栏小部件配置与渲染见[侧边栏系统](sidebar-system.md)；Logo、导航栏与页头渲染见[Logo、导航与页头](logo-navigation-headers.md)；`<head>` 与 SEO 元数据见[HTML Head 与 SEO 元数据](head-seo.md)。
+布局选择逻辑与各页面类型模板见[页面模板与路由](page-templates-routing.md)；侧边栏小部件配置与渲染见[侧边栏系统](sidebar-system.md)；Brand、导航栏与页头渲染见[Brand、导航与页头](logo-navigation-headers.md)；`<head>` 与 SEO 元数据见[HTML Head 与 SEO 元数据](head-seo.md)。
 
 ## 模板架构概览
 
@@ -44,7 +47,7 @@ graph TD
     HeadPartial["_partial/head"]
     CoverPartial["_partial/cover/index"]
     LeftbarPartial["_partial/sidebar/index_leftbar"]
-    LogoPartial["_partial/sidebar/logo (where=main)"]
+    BrandPartial["_partial/sidebar/brand (placement=main)"]
     BodyVar["body 变量（渲染出的页面内容）"]
     FooterPartial["_partial/main/footer"]
     RightbarPartial["_partial/sidebar/index_rightbar"]
@@ -56,7 +59,7 @@ graph TD
     LayoutEJS --> HeadPartial
     LayoutEJS --> CoverPartial
     LayoutEJS --> LeftbarPartial
-    LayoutEJS --> LogoPartial
+    LayoutEJS --> BrandPartial
     LayoutEJS --> BodyVar
     LayoutEJS --> FooterPartial
     LayoutEJS --> RightbarPartial
@@ -187,7 +190,7 @@ graph TD
     LLEFT --> SIDEBG["div.sidebg"]
     LLEFT --> LEFTBAR["div.leftbar-container[.leftbar-blur?]
 (_partial/sidebar/index_leftbar)"]
-    LMAIN --> LOGO["_partial/sidebar/logo (where=main)"]
+    LMAIN --> BRAND["_partial/sidebar/brand (eligible mobile pages)"]
     LMAIN --> PAGEBODY["body（页面布局输出）"]
     LMAIN --> FOOTER["_partial/main/footer"]
     LMAIN --> MAINMASK["div.main-mask"]
@@ -247,7 +250,7 @@ graph TD
 | `_partial/head` | `<html>` 内、`<body>` 前 | `<head>` 标签：meta、CSS、SEO——见[HTML Head 与 SEO 元数据](head-seo.md) |
 | `_partial/cover/index` | `#l_cover` 内 | 网格上方的封面/横幅组件 |
 | `_partial/sidebar/index_leftbar` | `.l_left > .leftbar-container` 内 | 左栏小部件——见[侧边栏系统](sidebar-system.md) |
-| `_partial/sidebar/logo` | `.l_main` 第一项，`where='main'` | 移动端显示的 Logo/页头——见[Logo、导航与页头](logo-navigation-headers.md) |
+| `_partial/sidebar/brand` | 符合页面矩阵时作为 `.l_main` 第一项 | 移动端 Brand 栏——见[Brand、导航与页头](logo-navigation-headers.md) |
 | `_partial/main/footer` | `.l_main` 中 `body` 之后 | 页面页脚 |
 | `_partial/sidebar/index_rightbar` | `.l_right` 内 | 右栏小部件——见[侧边栏系统](sidebar-system.md) |
 | `_partial/menubtn` | `.l_body` 内、侧栏之后 | 移动端浮动侧边栏开关按钮 |
@@ -294,7 +297,7 @@ graph TD
 
 - **配置系统**（[配置系统](../00-总览与安装配置/configuration.md)）：读取 `site_tree` 与插件设置，决定组件包含
 - **侧边栏系统**（[侧边栏系统](sidebar-system.md)）：按页面类型配置渲染左右栏
-- **导航与页头**（[Logo、导航与页头](logo-navigation-headers.md)）：引入导航栏与面包屑 partial
+- **导航与页头**（[Brand、导航与页头](logo-navigation-headers.md)）：引入 Brand、导航栏与面包屑 partial
 - **标签插件**（[标签插件](../04-标签插件/tag-plugins-overview.md)）：处理页面内容中的自定义标签语法
 - **前端交互**（[前端交互](../05-前端交互/client-side-overview.md)）：为 JavaScript 初始化提供数据属性与结构
 - **样式系统**（[样式系统](../01-样式系统/styling-overview.md)）：应用引用 Stylus 生成样式的 CSS 类

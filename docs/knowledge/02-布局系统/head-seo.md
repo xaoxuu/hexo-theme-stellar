@@ -9,6 +9,9 @@ tags:
 
 # HTML Head 与 SEO 元数据
 
+> [!IMPORTANT]
+> v2 的页面归属和卡片/Banner 字段已重构；本页涉及内容字段时，以[内容配置 Schema v2](../03-内容系统/content-schema-v2.md)为准。
+
 <details>
 <summary>相关源码文件</summary>
 

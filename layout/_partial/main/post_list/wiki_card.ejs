@@ -1,10 +1,10 @@
 <%
 function layoutDiv() {
   var el = '';
-  var cover = proj.cover;
-  var projectIcon = proj.icon;
-  var caption = subtitle(proj);
-  var headline = proj.headline || proj.title || proj.name || '';
+  var cover = proj.card?.cover;
+  var projectIcon = proj.identity?.icon;
+  var caption = proj.tagline || proj.description || '';
+  var headline = proj.headline || proj.name || '';
   el += '<article class="wiki-card-content">';
   el += '<div class="wiki-card-cover' + (cover ? '' : ' no-cover') + '" position="bottom"';
   if (cover) {
@@ -28,13 +28,13 @@ function layoutDiv() {
     el += '</div>';
   }
   el += '<h2 class="headline">' + escape_html(headline) + '</h2>';
-  if (proj.available || proj.repo) {
+  if (proj.audience || proj.source?.repository) {
     el += '<div class="wiki-meta">';
-    if (proj.available) {
-      el += '<span class="wiki-available">' + icon('default:platforms') + '<span class="label">' + escape_html(__('meta.available')) + '</span><span class="value">' + escape_html(proj.available) + '</span></span>';
+    if (proj.audience) {
+      el += '<span class="wiki-available">' + icon('default:platforms') + '<span class="label">' + escape_html(__('meta.available')) + '</span><span class="value">' + escape_html(proj.audience) + '</span></span>';
     }
-    if (proj.repo) {
-      el += '<span class="wiki-stars data-service ds-ghinfo" data-api="https://' + theme.api_host.ghapi + '/repos/' + escape_html(proj.repo) + '">';
+    if (proj.source?.repository) {
+      el += '<span class="wiki-stars data-service ds-ghinfo" data-api="https://' + theme.api_host.ghapi + '/repos/' + escape_html(proj.source.repository) + '">';
       el += icon('default:fire') + '<span type="text" id="stargazers_count"></span>';
       el += '</span>';
     }
@@ -49,7 +49,7 @@ function layoutDiv() {
     el += icon('default:documents');
   }
   el += '</div>';
-  el += '<div class="project-text"><div class="project-name">' + escape_html(proj.name || proj.title || '') + '</div>';
+  el += '<div class="project-text"><div class="project-name">' + escape_html(proj.name || '') + '</div>';
   if (caption.length > 0) {
     el += '<div class="project-subtitle">' + escape_html(caption) + '</div>';
   }

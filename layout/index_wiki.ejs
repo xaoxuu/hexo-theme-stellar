@@ -14,10 +14,11 @@ function layout_wiki_list(partial) {
       // wikiList
       el += `<div class="post-card-wrap${scrollreveal(' ')}">`
       var coverStyle = ''
-      if (proj.cover) {
-        coverStyle = ` style="--cover-url:url('${escape_html(proj.cover.replace(/'/g, '%27'))}')"`
+      const cover = proj.card?.cover
+      if (cover) {
+        coverStyle = ` style="--cover-url:url('${escape_html(cover.replace(/'/g, '%27'))}')"`
       }
-      el += `<a class="wiki-card card-hover card-hover--spotlight card-hover--tilt${proj.cover ? '' : ' no-cover'}"${coverStyle} href="${pretty_url(proj.homepage?.path || '/')}">`
+      el += `<a class="wiki-card card-hover card-hover--spotlight card-hover--tilt${cover ? '' : ' no-cover'}"${coverStyle} href="${pretty_url(proj.homepage?.path || '/')}">`
       el += partial(proj)
       el += `</a>`
       el += `</div>`
@@ -25,10 +26,11 @@ function layout_wiki_list(partial) {
       // filtered wikiList
       el += `<div class="post-card-wrap${scrollreveal(' ')} filter">`
       var coverStyle = ''
-      if (proj.cover) {
-        coverStyle = ` style="--cover-url:url('${escape_html(proj.cover.replace(/'/g, '%27'))}')"`
+      const cover = proj.card?.cover
+      if (cover) {
+        coverStyle = ` style="--cover-url:url('${escape_html(cover.replace(/'/g, '%27'))}')"`
       }
-      el += `<a class="wiki-card card-hover card-hover--spotlight card-hover--tilt${proj.cover ? '' : ' no-cover'}"${coverStyle} href="${pretty_url(proj.homepage?.path || '/')}">`
+      el += `<a class="wiki-card card-hover card-hover--spotlight card-hover--tilt${cover ? '' : ' no-cover'}"${coverStyle} href="${pretty_url(proj.homepage?.path || '/')}">`
       el += partial(proj)
       el += `</a>`
       el += `</div>`

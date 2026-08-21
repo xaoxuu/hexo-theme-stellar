@@ -1,8 +1,8 @@
 <%
 function layoutDiv() {
   var el = '';
-  var bg = topic.cover || topic.icon || theme.default.topic;
-  var label = topic.title || topic.name;
+  var bg = topic.card?.cover || theme.default.topic;
+  var label = topic.headline || topic.name;
   var latest = topic.homepage;
   el += '<article class="md-text">';
   // 专栏标题（story 文章 h2 样式，置于卡片外）

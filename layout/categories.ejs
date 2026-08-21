@@ -1,7 +1,8 @@
 <%
 page.robots = 'noindex,follow';
-if (page.menu_id == undefined) {
-  page.menu_id = 'post';
+page.navigation ||= {}
+if (page.navigation.menu == undefined) {
+  page.navigation.menu = 'post';
 }
 %>
 <% if (site.categories.length) { %>

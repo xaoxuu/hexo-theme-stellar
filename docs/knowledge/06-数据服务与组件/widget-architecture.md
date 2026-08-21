@@ -9,6 +9,9 @@ tags:
 
 # 小部件系统架构
 
+> [!IMPORTANT]
+> v2 页面与集合统一使用 `sidebar.left/right.widgets`；本页涉及内容字段时，以[内容配置 Schema v2](../03-内容系统/content-schema-v2.md)为准。
+
 <details>
 <summary>相关源码文件</summary>
 
@@ -84,7 +87,7 @@ graph TB
 
 | 容器 | CSS 选择器 | 用途 | 位置 |
 |------|------------|------|------|
-| 左栏 | `.l_left` | Logo、导航与左栏小部件容器 | layout.ejs |
+| 左栏 | `.l_left` | Brand、导航与左栏小部件容器 | layout.ejs |
 | 左栏小部件区 | `.l_left .widgets` | 左栏小部件 | layout.ejs |
 | 右栏 | `.l_right` | 右栏小部件容器 | layout.ejs |
 | 右栏小部件区 | `.l_right .widgets` | 右栏小部件 | layout.ejs |
@@ -139,7 +142,7 @@ graph LR
 
 | 部件 | CSS 选择器 | 用途 |
 |------|------------|------|
-| 页头 | `.header` | 侧边栏 Logo 与品牌 |
+| Brand | `.brand-header` | 侧边栏与符合规则的移动端品牌栏 |
 | 导航区 | `.nav-area` | 菜单导航链接 |
 | 小部件容器 | `.widgets` | 小部件列表容器 |
 | 页脚 | `.footer` | 侧边栏页脚内容 |
@@ -215,17 +218,17 @@ flowchart TD
 
 | 页面上下文 | 侧边栏来源 |
 |------------|------------|
-| 首页 | `site_tree.home.leftbar` |
-| 笔记本列表页 | `site_tree.notebooks.leftbar` |
-| 笔记列表页 | 笔记本配置或 `site_tree.notes.leftbar` |
+| 首页 | `site_tree.home.sidebar.left.widgets` |
+| 笔记本列表页 | `site_tree.notebooks.sidebar.left.widgets` |
+| 笔记列表页 | 笔记本配置或 `site_tree.notes.sidebar.left.widgets` |
 | 笔记本文章页 | 笔记本 `note_leftbar` / `note_rightbar` |
-| 分类/标签/归档 | `site_tree.index_blog.leftbar` |
-| 专栏列表页 | `site_tree.index_blog.leftbar` |
-| wiki 列表页 | `site_tree.index_wiki.leftbar` |
-| wiki 页面 | `site_tree.wiki.leftbar` |
-| 404 | `site_tree.error_page.leftbar` |
-| 通用页面 | `site_tree.page.leftbar` |
-| 文章 | `site_tree.post.leftbar` |
+| 分类/标签/归档 | `site_tree.index_blog.sidebar.left.widgets` |
+| 专栏列表页 | `site_tree.index_blog.sidebar.left.widgets` |
+| wiki 列表页 | `site_tree.index_wiki.sidebar.left.widgets` |
+| wiki 页面 | `site_tree.wiki.sidebar.left.widgets` |
+| 404 | `site_tree.error_page.sidebar.left.widgets` |
+| 通用页面 | `site_tree.page.sidebar.left.widgets` |
+| 文章 | `site_tree.post.sidebar.left.widgets` |
 
 专题/项目级配置（`topic.leftbar`、`wiki.leftbar`）可进一步覆盖。字符串数组经逗号切分，对象项支持 `override` 与 `layout`。
 

@@ -26,7 +26,7 @@ function isEmptyContent(page) {
  * 判定是否 README 主页：配置了 repo 的项目首页且正文为空。
  */
 function isWikiReadmePage(proj, page) {
-  if (!proj || !proj.repo || !page || !proj.homepage) {
+  if (!proj || !proj.source?.repository || !page || !proj.homepage) {
     return false;
   }
   if (!isEmptyContent(page)) {
@@ -43,7 +43,7 @@ function wikiReadmeHtml(proj, page, options = {}) {
   if (!isWikiReadmePage(proj, page)) {
     return '';
   }
-  return mdrenderHtml(readmeUrl(proj.repo, proj.branch, options.ghraw), {
+  return mdrenderHtml(readmeUrl(proj.source.repository, proj.source.branch, options.ghraw), {
     ghraw: options.ghraw,
     replace: true
   });

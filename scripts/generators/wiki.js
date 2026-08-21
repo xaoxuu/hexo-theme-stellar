@@ -14,7 +14,7 @@ hexo.extend.generator.register('wiki', function (locals) {
     layout: ['index_wiki'],
     data: {
       layout: 'index_wiki',
-      menu_id: site_tree.index_wiki.menu_id,
+      navigation: { menu: site_tree.index_wiki.navigation.menu },
       filter: false
     }
   })
@@ -26,7 +26,7 @@ hexo.extend.generator.register('wiki', function (locals) {
         layout: ['index_wiki'],
         data: {
           layout: 'index_wiki',
-          menu_id: site_tree.index_wiki.menu_id,
+          navigation: { menu: site_tree.index_wiki.navigation.menu },
           filter: true,
           tagName: tag.name,
           title: tag.name

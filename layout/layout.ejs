@@ -2,29 +2,27 @@
 // 页面类型：索引页面还是内容页面
 var page_type = 'index'
 if (['post', 'page', 'wiki', null].includes(page.layout)) {
-  if (!page.nav_tabs) {
-    page_type = 'content'
-  }
+  page_type = 'content'
 }
 // 文章类型：技术类文章/文学类文章
 var article_type = theme.article.type
 if (page_type == 'index') {
   article_type = undefined
-} else if (page.type?.length > 0) {
-  article_type = page.type
-} else if (theme.topic.tree[page.topic]?.type != null) {
-  article_type = theme.topic.tree[page.topic]?.type
-} else if (theme.wiki.tree[page.wiki]?.type != null) {
-  article_type = theme.wiki.tree[page.wiki]?.type
+} else if (page.article?.type?.length > 0) {
+  article_type = page.article.type
+} else if (theme.topic.tree[collection_id(page, "topic")]?.article?.type != null) {
+  article_type = theme.topic.tree[collection_id(page, "topic")].article.type
+} else if (theme.wiki.tree[collection_id(page, "wiki")]?.article?.type != null) {
+  article_type = theme.wiki.tree[collection_id(page, "wiki")].article.type
 }
 // 是否缩进
 var indent = false
-if (page.indent != null) {
-  indent = page.indent
-} else if (theme.topic.tree[page.topic]?.indent != null) {
-  indent = theme.topic.tree[page.topic]?.indent
-} else if (theme.wiki.tree[page.wiki]?.indent != null) {
-  indent = theme.wiki.tree[page.wiki]?.indent
+if (page.article?.indent != null) {
+  indent = page.article.indent
+} else if (theme.topic.tree[collection_id(page, "topic")]?.article?.indent != null) {
+  indent = theme.topic.tree[collection_id(page, "topic")].article.indent
+} else if (theme.wiki.tree[collection_id(page, "wiki")]?.article?.indent != null) {
+  indent = theme.wiki.tree[collection_id(page, "wiki")].article.indent
 } else if (theme.article.indent != null) {
   indent = theme.article.indent
 } else {
@@ -37,6 +35,12 @@ if (theme.style.site && theme.style.site['background-image']) {
   site_background += `<div class="siteblur"></div>`
   site_background += `</div>`
 }
+
+var mobileBrandVisible = showMobileBrand(page, {
+  isHome: is_home(),
+  isCategory: is_category(),
+  isTag: is_tag()
+})
 
 var html = `<!DOCTYPE html>`
 if (theme.style.prefers_theme === 'auto') {
@@ -57,7 +61,9 @@ if (theme.style.prefers_theme === 'auto') {
         html += `</div>`
       html += `</aside>`
       html += `<div class="l_main" id="main" data-ui-surface="content">`
-        html += partial('_partial/sidebar/logo', {where: 'main'})
+        if (mobileBrandVisible) {
+          html += partial('_partial/sidebar/brand', {placement: 'main'})
+        }
         html += body
         html += partial('_partial/main/footer')
         html += `<div class="main-mask" onclick="sidebar.dismiss()"></div>`

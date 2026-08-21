@@ -1,0 +1,66 @@
+<%
+var brand = brandConfig(page)
+
+function layoutBrandTitle() {
+  const name = brandText(brand.name)
+  if (!name) return ''
+  const tagline = brandText(brand.tagline)
+  const url = brandText(brand.url)
+  const tag = url ? 'a' : 'div'
+  var el = `<${tag} class="brand-title"${url ? ` href="${escape_html(url_for(url))}"` : ''}>`
+  el += `<div class="brand-name">${name}</div>`
+  if (tagline) {
+    const parts = tagline.split('|')
+    if (parts.length > 1) {
+      el += `<div class="brand-tagline normal cap">${parts.shift().trim()}</div>`
+      el += `<div class="brand-tagline hover cap" style="opacity:0">${parts.join('|')}</div>`
+    } else {
+      el += `<div class="brand-tagline cap">${tagline}</div>`
+    }
+  }
+  el += `</${tag}>`
+  return el
+}
+
+function layoutBrandImage() {
+  const image = brand.image
+  if (!image?.src) return ''
+  const src = brandText(image.src)
+  const url = brandText(image.url)
+  const tag = url ? 'a' : 'div'
+  const style = image.style
+  const background = image.background ? ` style="--brand-image-background:${escape_html(image.background)}"` : ''
+  var el = `<${tag} class="brand-image brand-image--${style}"${url ? ` href="${escape_html(url_for(url))}"` : ''}${background}>`
+  if (style === 'avatar' && theme.style.animated_avatar.animate) {
+    el += `<div class="brand-image-bg"></div>`
+  }
+  el += `<img no-lazy src="${escape_html(src)}" alt="">`
+  el += `</${tag}>`
+  return el
+}
+
+function layoutWikiHome() {
+  if (placement !== 'sidebar' || !collection_id(page, 'wiki')) return ''
+  const wiki = theme.wiki.tree[collection_id(page, 'wiki')]
+  const enabled = page.sidebar?.left?.wiki_home ?? wiki?.sidebar?.left?.wiki_home ?? true
+  if (enabled === false) return ''
+  var el = `<div class="wiki-home-wrap">`
+  el += `<a class="wiki-home cap" href="${pretty_url(theme.site_tree.index_wiki.base_dir)}">`
+  el += icon('default:arrow-left', '', true)
+  el += `<span>${__('btn.all_wiki')}</span>`
+  el += `</a></div>`
+  return el
+}
+
+function layoutBrand() {
+  if (!brand.image?.src && !brand.name) return ''
+  var el = `<header class="brand-header${placement === 'main' ? ' mobile-only' : ''}">`
+  el += `<div class="brand-wrap">`
+  el += layoutBrandImage()
+  el += layoutBrandTitle()
+  el += `</div></header>`
+  return el
+}
+%>
+<%- layoutWikiHome() %>
+<%- layoutBrand() %>

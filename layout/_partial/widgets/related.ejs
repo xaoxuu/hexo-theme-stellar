@@ -1,9 +1,9 @@
 <%
 function relatedPostsInTopic() {
-  if (page.topic?.length == 0) {
+  if (collection_id(page, "topic")?.length == 0) {
     return ''
   }
-  var topic = theme.topic.tree[page.topic]
+  var topic = theme.topic.tree[collection_id(page, "topic")]
   if (topic == null) {
     return ''
   }
@@ -23,14 +23,14 @@ function relatedPostsInTopic() {
   }})
   return partial('_partial/components/widget-frame', {
     className: 'related-widget',
-    title: __('btn.topic') + __('symbol.colon') + (topic.name || topic.title),
+    title: __('btn.topic') + __('symbol.colon') + (topic.headline || topic.name),
     body: body,
     reveal: false
   })
 }
 
 function relatedWiki() {
-  var thisItemObject = theme.wiki.tree[page.wiki]
+  var thisItemObject = theme.wiki.tree[collection_id(page, "wiki")]
   if (thisItemObject == null) {
     return ''
   }
@@ -43,7 +43,7 @@ function relatedWiki() {
       if (relatedProject) {
         entries.push({
           href: pretty_url(relatedProject.homepage?.path),
-          title: relatedProject.title,
+          title: relatedProject.name,
           description: relatedProject.description,
           indicator: false
         })
@@ -65,9 +65,9 @@ function relatedWiki() {
 }
 
 function layoutDiv() {
-  if (page.wiki?.length > 0) {
+  if (collection_id(page, "wiki")?.length > 0) {
     return relatedWiki()
-  } else if (page.topic?.length > 0) {
+  } else if (collection_id(page, "topic")?.length > 0) {
     return relatedPostsInTopic()
   }
   return ''

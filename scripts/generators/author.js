@@ -16,9 +16,8 @@ hexo.extend.generator.register('author', function (locals) {
       layout: ['archive'],
       data: {
         author: author,
-        leftbar: site_tree.author.leftbar,
-        menu_id: site_tree.author.menu_id,
-        breadcrumb: false
+        sidebar: site_tree.author.sidebar,
+        navigation: { menu: site_tree.author.navigation.menu, breadcrumb: false }
       }
     })
   }

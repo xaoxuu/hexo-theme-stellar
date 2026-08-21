@@ -30,16 +30,20 @@ structured_data:
 
 
 ######## Sidebar ########
-# 左上角显示的 logo 区域，包含图标、大标题、副标题
-logo:
-  avatar: '[{config.avatar}](/about/)' # you can set avatar link in _config.yml or '[https://xxx.png](/about/)'
-  title: '[{config.title}](/)' # you can set html tag like: '[<img no-lazy height="32px" src="xxx"/>](/)'
-  subtitle: '{config.subtitle}' # '文字1 | 文字2' (鼠标放上去会切换到文字2)
+# 左上角显示的品牌区域，包含图片、名称和标语
+brand:
+  image:
+    src: '{config.avatar}'
+    style: avatar # avatar: 圆形裁剪；icon: 圆角矩形；plain: 保留透明原图
+    url: /about/
+  name: '{config.title}' # 支持可信任的内联 HTML
+  tagline: '{config.subtitle}' # '文字1 | 文字2' (鼠标放上去会切换到文字2)
+  url: /
 
 # 侧边栏主功能导航菜单
 menubar:
   items: # 可按照自己需求增加，符合以下格式即可
-    # id: 页面中高亮的 menu_id 
+    # id: 对应 navigation.menu，用于页面高亮
     # theme: 高亮时的颜色，仅 svg 中 fill="currentColor" 时有效
     # icon: 支持 svg/img 标签，可以定义在 icons.yml 文件中，也支持外部图片的 URL
     # title: 标题
@@ -72,123 +76,154 @@ site_tree:
   # -- 列表类页面 -- #
   # 主页配置
   home:
-    leftbar: welcome, recent
-    rightbar: 
+    sidebar:
+      left:
+        widgets: [welcome, recent]
+      right:
+        widgets: []
     # 首页评论区，默认不显示。可设为 true 使用全局评论服务，
-    # 或参考页面 front-matter 覆盖评论参数：
-    # service、comment_title、comment_id 及 beaudar/utterances/giscus/twikoo/waline/artalk 各服务参数。
+    # 或参考页面 comments 对象覆盖 enabled/title/id/service 及各服务参数。
     comments:
   # 博客列表页配置
   index_blog:
     base_dir: blog # 只影响自动生成的页面路径
-    menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 post 的页面默认使用这里配置的 menu_id
-    leftbar: welcome, recent # for categories/tags/archives
-    rightbar: 
-    nav_tabs:  # 近期发布 分类 标签 专栏 归档 and ...
-      # '朋友文章': /friends/rss/
+    navigation:
+      menu: post
+      tabs:  # 近期发布 分类 标签 专栏 归档 and ...
+        # '朋友文章': /friends/rss/
+    sidebar:
+      left:
+        widgets: [welcome, recent]
+      right:
+        widgets: []
   # 博客专栏列表页配置
   index_topic:
     base_dir: topic # 只影响自动生成的页面路径
-    menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 topic 的页面默认使用这里配置的 menu_id
+    navigation:
+      menu: post
   # 文档列表页配置
   index_wiki:
     base_dir: wiki # 只影响自动生成的页面路径
-    menu_id: wiki # 未在 front-matter 中指定 menu_id 时，layout 为 wiki 的页面默认使用这里配置的 menu_id
-    leftbar: related, recent # for wiki
-    rightbar: 
-    nav_tabs:
-      # 'more': https://github.com/xaoxuu
+    navigation:
+      menu: wiki
+      tabs:
+        # 'more': https://github.com/xaoxuu
+    sidebar:
+      left:
+        widgets: [related, recent]
+      right:
+        widgets: []
   # -- 内容类页面 -- #
   # 博客文章内页配置
   post:
-    menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 post 的页面默认使用这里配置的 menu_id
-    leftbar: related, recent # for pages using 'layout:post'
-    rightbar: ghrepo, toc
+    navigation:
+      menu: post
+    sidebar:
+      left:
+        widgets: [related, recent]
+      right:
+        widgets: [ghrepo, toc]
   # 博客专栏文章内页配置
   topic:
-    menu_id: post
+    navigation:
+      menu: post
   # 文档内页配置
   wiki:
-    menu_id: wiki # 未在 front-matter 中指定 menu_id 时，layout 为 wiki 的页面默认使用这里配置的 menu_id
-    leftbar: tree, related, recent # for wiki
-    rightbar: ghrepo, toc
+    navigation:
+      menu: wiki
+    sidebar:
+      left:
+        widgets: [tree, related, recent]
+      right:
+        widgets: [ghrepo, toc]
   # 笔记本列表页配置
   notebooks:
     base_dir: notebooks # 笔记本列表页的路径。以及未指定 base_dir 的笔记本的路径前缀。
-    menu_id: notebooks # 笔记本列表页高亮的主导航栏菜单按钮。
-    # 笔记本列表页的左侧栏和右侧栏。
-    leftbar: recent # recent within all notebooks
-    rightbar: null
+    navigation:
+      menu: notebooks
+    sidebar:
+      left:
+        widgets: [recent]
+      right:
+        widgets: []
   # 笔记列表页配置
   notes:
     # 笔记列表页和笔记页高亮的主导航栏菜单按钮。
-    # 可以在笔记本 yaml 的 menu_id 字段中覆盖此参数。
-    # 可以在笔记的 front-matter/menu_id 中覆盖此参数。
-    menu_id: notebooks
-    # 笔记列表页的左侧栏和右侧栏。可以在笔记本 yaml 的 leftbar 和 rightbar 字段中覆盖此参数。
-    leftbar: tagtree, recent # recent of current notebook
-    rightbar: null
+    # 可以在笔记本或笔记的 navigation.menu 中覆盖。
+    navigation:
+      menu: notebooks
+    sidebar:
+      left:
+        widgets: [tagtree, recent]
+      right:
+        widgets: []
   # 笔记页配置
   note:
     # 笔记页的左侧栏和右侧栏
-    # 可以在笔记本 yaml 的 note_leftbar 和 note_rightbar 字段中覆盖此参数。
-    # 可以在笔记的 front-matter/leftbar 和 rightbar 字段中覆盖此参数。
-    leftbar: tagtree, recent # recent of current notebook
-    rightbar: toc
+    # 可以在笔记本 note.sidebar 或笔记 sidebar 中覆盖。
+    sidebar:
+      left:
+        widgets: [tagtree, recent]
+      right:
+        widgets: [toc]
   # 作者信息配置
   author: 
     base_dir: author # 只影响自动生成的页面路径
-    menu_id: post
-    leftbar: recent
-    rightbar: 
+    navigation:
+      menu: post
+    sidebar:
+      left:
+        widgets: [recent]
+      right:
+        widgets: []
   # 错误页配置
   error_page:
-    menu_id: post
+    navigation:
+      menu: post
     '404': '/404.html'
-    leftbar: recent
-    rightbar: 
+    sidebar:
+      left:
+        widgets: [recent]
+      right:
+        widgets: []
   # 其它自定义页面配置 layout: page
   page:
-    leftbar: recent
-    rightbar: toc
+    sidebar:
+      left:
+        widgets: [recent]
+      right:
+        widgets: [toc]
 
 
 ######## Notebook ########
 notebook:
-  # 如果没有指定 excerpt 和 description，将自动取多长的内容作为文章摘要。
-  auto_excerpt: 128
+  listing:
+    # 如果没有指定 excerpt 和 description，将自动取多长的内容作为文章摘要。
+    excerpt_length: 128
+    # 每页显示多少篇笔记。0 表示不分页，null 则使用 Hexo 的配置。
+    per_page: null
+    # 笔记的排序方式。默认按 updated 降序排序。
+    order_by: -updated
   # 可以为某个 tag 设定图标（显示在标签树中）。
-  tagcons:
+  tag_icons:
     '': quot:hashtag
-  # 每页显示多少篇笔记。0 表示不分页，null 则 fallback 到 hexo 的配置。
-  # 可以在笔记本 yaml 的 per_page 字段中覆盖此参数。
-  per_page: null
-  # 笔记的排序方式。默认按照 updated 降序排序。
-  # 可以在笔记本 yaml 的 order_by 字段中覆盖此参数。
-  # 注意：置顶的笔记会始终排在最前面。
-  # 在 front-matter 中设置 pin:true|number 或 sticky:true|number 来置顶。
-  order_by: -updated
-  # 是否在笔记页面显示许可协议。false 表示不显示。true 表示沿用主题许可协议内容。也可以给定具体的文本指定协议内容。
-  # 可以在笔记本 yaml 的 license 字段中覆盖此参数。
-  # 可以在笔记的 front-matter/license 中覆盖此参数。
-  license: false
-  # 是否在笔记页面显示分享按钮。
-  # 可以在笔记本 yaml 的 share 字段中覆盖此参数。
-  # 可以在笔记的 front-matter/share 中覆盖此参数。
-  share: false
+  footer:
+    # 是否在笔记页面显示许可协议与分享按钮。
+    license: false
+    share: false
 
 
 ######## Article ########
 article:
   # 置顶文章样式：carousel = 轮播（默认）， flat = 平铺（不渲染轮播，置顶文章在首页文章列表靠前展示，排序规则与轮播一致）
   pin_style: carousel
-  # 文章类型，决定布局风格，可以在 front-matter/topic/wiki 中覆盖此参数
+  # 文章类型，可以在页面或集合的 article.type 中覆盖
   type: tech # tech: 默认技术类文章, story: 图文类文章，文字和段落间增距大
-  # 缩进两个文字宽度，适合文字类博客，可以在 front-matter/topic/wiki 中覆盖此参数
+  # 缩进两个文字宽度，可以在页面或集合的 article.indent 中覆盖
   indent: # true / false
   # 封面图宽高比
   cover_ratio: 2
-  # 文章卡片样式：hero = 全图文字封面卡片（有 cover 时标题 + 一行小字，文字区固定底部），classic = 普通卡片（封面/标题/摘要/meta）
+  # 文章卡片样式：hero = 全图文字封面卡片（使用 card.cover），classic = 普通卡片
   card_style: hero
   # 文章内横幅宽高比
   banner_ratio: 2.5
@@ -197,7 +232,7 @@ article:
   # 分类颜色
   category_color:
     '探索号': '#f44336'
-  # 文章 AI 成分标签：front-matter 用 ai_label: manual / reviewed / polished / generated 标记，
+  # 文章 AI 成分标签：front-matter 用 article.ai_label 标记，
   # 未设置时取 default（为空则不显示）；文案由多语言系统提供（languages/*.yml 的 meta.ai_label.*），
   # 此处配置各档文字颜色与可选 icon；文章页显示在顶部面包屑行最右（阅读时长右侧）
   ai_label:

@@ -1,20 +1,18 @@
 <%
 page.robots = 'noindex,follow';
-if (page.menu_id == undefined) {
-  page.menu_id = 'post';
-}
-if (page.author) {
-  page.header = false;
+page.navigation ||= {}
+if (page.navigation.menu == undefined) {
+  page.navigation.menu = 'post';
 }
 function layoutArchiveList() {
   var el = ''
   var cls = ''
   if (page.author) {
     page.title = page.author.name
-    page.banner = page.author.banner
-    page.banner_info = {
+    page.banner = {
+      image: page.author.banner,
       avatar: page.author.avatar,
-      subtitle: page.author.description
+      tagline: page.author.description
     }
     el += partial('_partial/main/navbar/article_banner')
     cls += ' author'
@@ -25,7 +23,7 @@ function layoutArchiveList() {
   el += `<div class="post-list${cls} archives">`
   var years = []
   var posts = page.author != null ? site.posts.filter(function(post) {
-    return (post.author || theme.default_author.id) == page.author.id
+    return (post.article?.author || theme.default_author.id) == page.author.id
   }) : site.posts
   posts.sort('date', -1).each(function(post) {
     post.year = date(post.date, 'YYYY')

@@ -3,11 +3,11 @@ function layoutDiv() {
   // 作者
   var el = ''
   el += `<div class="flex-row" id="post-meta">`
-  if (page.wiki) {
+  if (collection_id(page, "wiki")) {
     el += `<span class="text created">${__("meta.updated") + __("symbol.colon")}`
     el += `<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time>`
     el += `</span>`
-  } else if (page.notebook) {
+  } else if (collection_id(page, "notebook")) {
     // 更新日期
     el += `<span class="text created">${__("meta.updated") + __("symbol.colon")}`
     el += `<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time>`
@@ -19,7 +19,7 @@ function layoutDiv() {
     el += `<time datetime="${date_xml(page.date)}">${date(page.date, config.date_format)}</time>`
     el += `</span>`
   } else {
-    const author = theme.authors ? (theme.authors[page.author] || theme.default_author) : null
+    const author = theme.authors ? (theme.authors[page.article?.author] || theme.default_author) : null
     if (author) {
       el += `<a class="author" href="${pretty_url(author.path)}">${author.name}</a>`
       el += `<span class="sep"></span>`

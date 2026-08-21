@@ -14,7 +14,7 @@ hexo.extend.generator.register('index_topic', function (locals) {
     layout: ['index_topic'],
     data: {
       layout: 'index_topic',
-      menu_id: site_tree.index_topic.menu_id
+      navigation: { menu: site_tree.index_topic.navigation.menu }
     }
   })
   return ret

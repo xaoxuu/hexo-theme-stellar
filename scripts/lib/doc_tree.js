@@ -2,7 +2,7 @@
  * doc_tree.js v2 | https://github.com/xaoxuu/hexo-theme-stellar/
  *
  * Wiki 文档树构建（纯函数，供 events/lib/doc_tree.js 调用与单测覆盖）。
- * 与旧实现的输出语义保持一致，仅把重复的 filter/some 遍历改为单遍 Map 索引：
+ * 使用 v2 collection/routing/listing 结构，并把重复的 filter/some 遍历改为单遍 Map 索引：
  * - 页面按 wiki 分组一次（O(W+P) 替代 O(W*P)）；
  * - 项目内按 path_key 分组一次，首页解析与 sections 组装改走索引查询；
  * - all_tags / relatedItems 用 Set/Map 去重，输出顺序不变。
@@ -11,16 +11,18 @@
 'use strict';
 
 const { normalize_path } = require('./path_utils');
+const { getCollectionId, isListed } = require('./content-config');
 
 class WikiPage {
   constructor(page) {
     this.id = page._id;
-    this.wiki = page.wiki;
+    this.collectionId = getCollectionId(page, 'wiki');
     this.title = page.title;
     this.path = page.path;
     this.path_key = normalize_path(page.path);
     this.layout = page.layout;
     this.updated = page.updated;
+    this.listed = isListed(page);
   }
 }
 
@@ -34,30 +36,25 @@ function getWikiObject(data) {
     if (key.includes('wiki/') && key.length > 5) {
       let newKey = key.replace('wiki/', '');
       let obj = data[key];
-      if ((typeof obj.tags == 'string') && obj.tags.constructor == String) {
-        obj.tags = [obj.tags];
-      }
       if ((typeof obj.tree == 'object') && obj.tree.constructor == Array) {
         obj.tree = { '': obj.tree };
       }
       obj.id = newKey;
-      if (obj.sort == null) {
-        obj.sort = 0;
-      }
-      if (obj.base_dir) {
-        if (obj.base_dir.startsWith('/')) {
-          obj.base_dir = obj.base_dir.substring(1);
+      obj.listing ||= {};
+      obj.listing.sort ??= 0;
+      const baseDir = obj.routing?.base_dir || '';
+      if (baseDir) {
+        if (baseDir.startsWith('/')) {
+          obj.routing.base_dir = baseDir.substring(1);
         }
-        if (obj.base_dir.length > 1 && obj.base_dir.endsWith('/') == false) {
-          obj.base_dir = obj.base_dir + '/';
+        if (obj.routing.base_dir.length > 1 && obj.routing.base_dir.endsWith('/') == false) {
+          obj.routing.base_dir = obj.routing.base_dir + '/';
         }
-      } else {
-        obj.base_dir = '';
       }
       list.push(obj);
     }
   }
-  list = list.sort((p1, p2) => p2.sort - p1.sort);
+  list = list.sort((p1, p2) => p2.listing.sort - p1.listing.sort);
   for (let item of list) {
     wiki.tree[item.id] = item;
   }
@@ -76,15 +73,15 @@ function buildWikiTree({ data, pages, shelf, siteTree }) {
   // wiki 配置
   var wiki = getWikiObject(data);
   // wiki 所有页面
-  const wiki_pages = pages.filter(p => (p.wiki != null)).map(p => new WikiPage(p));
+  const allWikiPages = pages.filter(p => (getCollectionId(p, 'wiki') != null)).map(p => new WikiPage(p));
 
   // 单遍分组：wiki id → WikiPage[]（保持 wiki_pages 原始顺序）
   const pagesByWiki = new Map();
-  for (const wp of wiki_pages) {
-    let arr = pagesByWiki.get(wp.wiki);
+  for (const wp of allWikiPages) {
+    let arr = pagesByWiki.get(wp.collectionId);
     if (arr == null) {
       arr = [];
-      pagesByWiki.set(wp.wiki, arr);
+      pagesByWiki.set(wp.collectionId, arr);
     }
     arr.push(wp);
   }
@@ -114,11 +111,11 @@ function buildWikiTree({ data, pages, shelf, siteTree }) {
   for (let id of wiki_list) {
     let item = wiki.tree[id];
     item.id = id;
-    if (item.title == undefined || item.title.length === 0) {
-      item.title = id;
-    }
     if (item.name == undefined || item.name.length == 0) {
       item.name = id;
+    }
+    if (item.headline == undefined || item.headline.length === 0) {
+      item.headline = item.name;
     }
   }
 
@@ -126,11 +123,12 @@ function buildWikiTree({ data, pages, shelf, siteTree }) {
   for (let i = 0; i < wiki_list.length; i++) {
     let id = wiki_list[i];
     let item = wiki.tree[id];
-    let sub_pages = pagesByWiki.get(id) || [];
+    const projectPages = pagesByWiki.get(id) || [];
+    let sub_pages = projectPages.filter(page => page.listed);
 
     // 单遍 path_key 索引：同一 path_key 可能对应多个页面，保持数组与顺序
     const pagesByPathKey = new Map();
-    for (const p of sub_pages) {
+    for (const p of projectPages) {
       let arr = pagesByPathKey.get(p.path_key);
       if (arr == null) {
         arr = [];
@@ -146,7 +144,7 @@ function buildWikiTree({ data, pages, shelf, siteTree }) {
       for (let tid of Object.keys(item.tree)) {
         const sec = item.tree[tid];
         for (let key of sec) {
-          const hs = pagesByPathKey.get(normalize_path(item.base_dir + key)) || [];
+          const hs = pagesByPathKey.get(normalize_path((item.routing?.base_dir || '') + key)) || [];
           if (hs.length > 0) {
             homepage = hs[0];
             break;
@@ -158,7 +156,7 @@ function buildWikiTree({ data, pages, shelf, siteTree }) {
       }
     }
     if (homepage == null) {
-      homepage = sub_pages[0];
+      homepage = projectPages[0];
     }
     if (typeof homepage == 'string') {
       homepage = { path: homepage };
@@ -175,8 +173,8 @@ function buildWikiTree({ data, pages, shelf, siteTree }) {
       for (let title of Object.keys(item.tree)) {
         var sec = { title: title, pages: [] };
         for (let key of item.tree[title]) {
-          const pagePathKey = normalize_path(item.base_dir + key);
-          const matched = pagesByPathKey.get(pagePathKey) || [];
+          const pagePathKey = normalize_path((item.routing?.base_dir || '') + key);
+          const matched = (pagesByPathKey.get(pagePathKey) || []).filter(page => page.listed);
           sec.pages = sec.pages.concat(matched);
           if (matched.length > 0) {
             assignedPathKeys.add(pagePathKey);
@@ -214,7 +212,6 @@ function buildWikiTree({ data, pages, shelf, siteTree }) {
   var all_tags = {};
   all_tag_name.forEach((tag_name, i) => {
     var items = [];
-    // 与旧实现 items.includes(tag_name) 判定等价（项目 id 恰等于标签名时的去重行为）
     var itemsSet = new Set();
     for (let id of wiki_list) {
       let item = wiki.tree[id];
@@ -226,7 +223,7 @@ function buildWikiTree({ data, pages, shelf, siteTree }) {
       if (!wiki.shelf.includes(item.id)) {
         continue;
       }
-      if (item.tags && item.tags.includes(tag_name) === true && itemsSet.has(tag_name) === false) {
+      if (item.tags && item.tags.includes(tag_name) === true && itemsSet.has(item.id) === false) {
         itemsSet.add(item.id);
         items.push(item.id);
       }
@@ -257,7 +254,7 @@ function buildWikiTree({ data, pages, shelf, siteTree }) {
   }
 
   wiki.all_tags = all_tags;
-  wiki.all_pages = wiki_pages;
+  wiki.all_pages = allWikiPages.filter(page => page.listed);
   return wiki;
 }
 

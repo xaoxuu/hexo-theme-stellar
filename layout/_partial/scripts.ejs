@@ -16,11 +16,11 @@ function custom_inject() {
 
 // tagtree 脚本仅在与 tagtree 小部件渲染相同的条件下加载（见 _partial/sidebar/index_leftbar.ejs）
 function tagtreeWidgetOnPage() {
-  const leftbar = page && page.leftbar;
-  if (!Array.isArray(leftbar)) {
+  const widgets = page?.sidebar?.left?.widgets;
+  if (!Array.isArray(widgets)) {
     return false;
   }
-  return leftbar.some(function (w) {
+  return widgets.some(function (w) {
     if (typeof w === 'string') {
       return w === 'tagtree';
     }

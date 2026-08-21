@@ -8,9 +8,9 @@ const path = require('node:path');
 const WIKI_COVER_SOURCE = fs.readFileSync(path.join(__dirname, '../layout/_partial/cover/wiki_cover.ejs'), 'utf8');
 const MAIN_SOURCE = fs.readFileSync(path.join(__dirname, '../source/js/main.js'), 'utf8');
 
-test('Wiki Hero 分别从 background 和 animation 判断图片与 Galaxy', () => {
+test('Wiki Hero 分别从 hero.background.image 和 effect 判断图片与 Galaxy', () => {
   assert.match(WIKI_COVER_SOURCE, /var isImageBackground = background\.length > 0;/);
-  assert.match(WIKI_COVER_SOURCE, /var isGalaxy = animation\.type === 'galaxy';/);
+  assert.match(WIKI_COVER_SOURCE, /var isGalaxy = effect\.type === 'galaxy';/);
   assert.doesNotMatch(WIKI_COVER_SOURCE, /background === ['"]galaxy['"]/);
 });
 

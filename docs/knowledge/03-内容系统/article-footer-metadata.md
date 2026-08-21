@@ -10,6 +10,9 @@ tags:
 
 # 文章页脚与元数据
 
+> [!IMPORTANT]
+> v2 页面与集合统一使用 `footer`、`article` 与 `collection`；本页涉及字段名时，以[内容配置 Schema v2](content-schema-v2.md)为准。
+
 <details>
 <summary>相关源码文件</summary>
 

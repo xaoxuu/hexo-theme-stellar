@@ -1,5 +1,5 @@
 /**
- * notebooks.js v1
+ * notebooks.js v2
  *
  * 笔记本系统构建（纯函数部分，供 events/lib/notebooks.js 调用与单测覆盖）。
  * 把「每个笔记本全量 filter 一遍全部页面」改为单遍分组（O(NB+P) 替代 O(NB*P)），
@@ -9,11 +9,12 @@
 'use strict';
 
 const { normalize_path } = require('./path_utils');
+const { getCollectionId } = require('./content-config');
 
 class NotePage {
   constructor(page) {
     this.id = page._id;
-    this.notebook = page.notebook;
+    this.collectionId = getCollectionId(page, 'notebook');
     this.title = page.title;
     this.tags = page.tags;
     this.path = page.path;
@@ -22,14 +23,7 @@ class NotePage {
     this.date = page.date;
     this.updated = page.updated || page.date;
 
-    const pin = page.pin ?? page.sticky ?? 0;
-    if (pin === true) {
-      this.pin = 1;
-    } else if (pin === false) {
-      this.pin = 0;
-    } else {
-      this.pin = pin;
-    }
+    this.priority = page.listing?.priority || 0;
   }
 }
 
@@ -39,20 +33,21 @@ function splitTag(tag) {
 
 /**
  * 单遍按 notebook id 分组页面。
- * 等价的旧逻辑：对每个笔记本执行 allPages.filter(p => p.notebook === notebook.id)。
+ * 页面按 collection.type/id 归属笔记本。
  * @param {Array} pages 页面数组（warehouse Query 的 .data）
  * @returns {Map<string, Array>}
  */
 function groupPagesByNotebook(pages) {
   const pagesByNotebook = new Map();
   for (const page of pages) {
-    if (page.notebook == null) {
+    const notebookId = getCollectionId(page, 'notebook');
+    if (notebookId == null) {
       continue;
     }
-    let arr = pagesByNotebook.get(page.notebook);
+    let arr = pagesByNotebook.get(notebookId);
     if (arr == null) {
       arr = [];
-      pagesByNotebook.set(page.notebook, arr);
+      pagesByNotebook.set(notebookId, arr);
     }
     arr.push(page);
   }
@@ -63,30 +58,38 @@ function prepareNotebook(id, info, ctx, pages) {
   const notebook = info;
   notebook.id = id;
 
-  if (notebook.base_dir) {
-    if (notebook.base_dir.startsWith('/')) {
-      notebook.base_dir = notebook.base_dir.substring(1);
+  notebook.routing ||= {};
+  notebook.listing ||= {};
+  notebook.navigation ||= {};
+  notebook.footer ||= {};
+  notebook.sidebar ||= {};
+  notebook.note ||= {};
+  notebook.note.sidebar ||= {};
+
+  if (notebook.routing.base_dir) {
+    if (notebook.routing.base_dir.startsWith('/')) {
+      notebook.routing.base_dir = notebook.routing.base_dir.substring(1);
     }
-    if (notebook.base_dir.length > 1 && !notebook.base_dir.endsWith('/')) {
-      notebook.base_dir = notebook.base_dir + '/';
+    if (notebook.routing.base_dir.length > 1 && !notebook.routing.base_dir.endsWith('/')) {
+      notebook.routing.base_dir = notebook.routing.base_dir + '/';
     }
   } else {
     const notebooksBaseDir = ctx.theme.config.site_tree.notebooks.base_dir;
-    notebook.base_dir = notebooksBaseDir ? `${notebooksBaseDir}/${id}` : id;
+    notebook.routing.base_dir = notebooksBaseDir ? `${notebooksBaseDir}/${id}` : id;
   }
 
-  notebook.sort ||= 0;
-  notebook.auto_excerpt ||= ctx.theme.config.notebook.auto_excerpt || 0;
-  notebook.per_page ??= ctx.theme.config.notebook.per_page ?? ctx.config.per_page ?? 10;
-  notebook.order_by ||= ctx.theme.config.notebook.order_by || '-updated';
-  notebook.menu_id ??= ctx.theme.config.site_tree.notes.menu_id;
-  notebook.license ??= ctx.theme.config.notebook.license;
-  notebook.share ??= ctx.theme.config.notebook.share;
+  notebook.listing.sort ||= 0;
+  notebook.listing.excerpt_length ||= ctx.theme.config.notebook.listing.excerpt_length || 0;
+  notebook.listing.per_page ??= ctx.theme.config.notebook.listing.per_page ?? ctx.config.per_page ?? 10;
+  notebook.listing.order_by ||= ctx.theme.config.notebook.listing.order_by || '-updated';
+  notebook.navigation.menu ??= ctx.theme.config.site_tree.notes.navigation.menu;
+  notebook.footer.license ??= ctx.theme.config.notebook.footer.license;
+  notebook.footer.share ??= ctx.theme.config.notebook.footer.share;
 
-  notebook.leftbar ??= ctx.theme.config.site_tree.notes.leftbar;
-  notebook.rightbar ??= ctx.theme.config.site_tree.notes.rightbar;
-  notebook.note_leftbar ??= ctx.theme.config.site_tree.note.leftbar;
-  notebook.note_rightbar ??= ctx.theme.config.site_tree.note.rightbar;
+  notebook.sidebar.left ??= { widgets: ctx.theme.config.site_tree.notes.sidebar.left.widgets };
+  notebook.sidebar.right ??= { widgets: ctx.theme.config.site_tree.notes.sidebar.right.widgets };
+  notebook.note.sidebar.left ??= { widgets: ctx.theme.config.site_tree.note.sidebar.left.widgets };
+  notebook.note.sidebar.right ??= { widgets: ctx.theme.config.site_tree.note.sidebar.right.widgets };
 
   const tagMap = new Map(); // tagId: tagInfo
   notebook.tagTree = tagMap;
@@ -95,7 +98,7 @@ function prepareNotebook(id, info, ctx, pages) {
     id: '',
     name: '',
     part: '',
-    path: notebook.base_dir,
+    path: notebook.routing.base_dir,
     parent: null, // parent tag id
     childSet: new Set(), // child tag ids
     noteSet: new Set(), // note ids
@@ -122,7 +125,7 @@ function prepareNotebook(id, info, ctx, pages) {
             id: tagId,
             name: tagName,
             part: part,
-            path: `${notebook.base_dir}/tags/${tagId}`,
+            path: `${notebook.routing.base_dir}/tags/${tagId}`,
             parent: parent.id,
             childSet: new Set(),
             noteSet: new Set(),
@@ -166,7 +169,7 @@ function getNotebooksObject(ctx) {
     const id = key.substring(10);
     list.push(prepareNotebook(id, info, ctx, pagesByNotebook.get(id) || []));
   }
-  list.sort((a, b) => a.sort - b.sort);
+  list.sort((a, b) => a.listing.sort - b.listing.sort);
   for (const info of list) {
     notebooks.tree[info.id] = info;
   }

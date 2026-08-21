@@ -1,6 +1,6 @@
 <%
 var obj = {
-  image: post.cover
+  image: post.card?.cover
 };
 function div_default() {
   var el = '';
@@ -79,15 +79,15 @@ function div_default() {
 }
 function div_photo() {
   var el = '';
-  // 小字取值统一由 subtitle() helper 提供：subtitle > description > excerpt 前 50 字
-  var caption = subtitle(post);
+  // 小字取值统一由 caption() helper 提供：tagline > description > excerpt。
+  var cardCaption = caption(post);
   // hero 卡片文字区固定 bottom：标题 + 一行小字，不再有 top 布局
   el += '<div class="cover" position="bottom" style="--cover-url:url(\'' + escape_html(obj.image.replace(/'/g, '%27')) + '\')">';
   el += '<img src="' + escape_html(obj.image) + '"/>';
   el += '<div class="cover-info" position="bottom" data-text-adaptive="split">';
   el += '<div class="text headline">' + escape_html(post.title ? post.title : date(post.date, config.date_format)) + '</div>';
-  if (caption.length > 0) {
-    el += '<div class="text caption">' + escape_html(caption) + '</div>';
+  if (cardCaption.length > 0) {
+    el += '<div class="text caption">' + escape_html(cardCaption) + '</div>';
   }
   el += '</div>';
   el += '</div>';

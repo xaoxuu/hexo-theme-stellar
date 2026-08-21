@@ -9,7 +9,7 @@ hexo.extend.generator.register('404', function (locals) {
     layout: ['404'],
     data: {
       layout: '404',
-      menu_id: site_tree.error_page.menu_id
+      navigation: { menu: site_tree.error_page.navigation.menu }
     }
   }
 })

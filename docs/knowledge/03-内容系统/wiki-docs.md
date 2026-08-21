@@ -9,6 +9,9 @@ tags:
 
 # 文档系统（Wiki）
 
+> [!IMPORTANT]
+> v2 已重构 Wiki 配置与页面 Front Matter；本页涉及字段名时，以[内容配置 Schema v2](content-schema-v2.md)为准。
+
 <details>
 <summary>相关源码文件</summary>
 
@@ -160,18 +163,18 @@ wiki 系统采用三层配置：全局主题配置、项目数据文件、页面
 | 字段 | 默认 | 用途 |
 |---|---|---|
 | `base_dir` | `wiki` | wiki 索引页 URL 路径前缀 |
-| `menu_id` | `wiki` | wiki 页面高亮的菜单项 |
-| `leftbar` | `related, recent` | 左栏小部件配置 |
-| `rightbar` | （空） | 右栏小部件配置 |
-| `nav_tabs` | （自定义） | 索引页显示的导航标签 |
+| `navigation.menu` | `wiki` | wiki 页面高亮的菜单项 |
+| `navigation.tabs` | （自定义） | 索引页显示的导航标签 |
+| `sidebar.left.widgets` | `[related, recent]` | 左栏小部件配置 |
+| `sidebar.right.widgets` | `[]` | 右栏小部件配置 |
 
 **site_tree.wiki**——单个 wiki 页面配置：
 
 | 字段 | 默认 | 用途 |
 |---|---|---|
-| `menu_id` | `wiki` | 高亮的菜单项 |
-| `leftbar` | `tree, related, recent` | 左栏含导航树 |
-| `rightbar` | `ghrepo, toc` | 右栏显示 TOC 与 GitHub 仓库 |
+| `navigation.menu` | `wiki` | 高亮的菜单项 |
+| `sidebar.left.widgets` | `[tree, related, recent]` | 左栏含导航树 |
+| `sidebar.right.widgets` | `[ghrepo, toc]` | 右栏显示 TOC 与 GitHub 仓库 |
 
 ### 项目数据文件
 
@@ -180,11 +183,26 @@ wiki 项目配置位于**用户站点**的 `source/_data/wiki/`。`getWikiObject
 **示例项目配置：**
 
 ```yaml
-title: My Project
-name: my-project
-sort: 10
-pin: 1
-base_dir: docs/
+name: My Project
+headline: Build something remarkable
+tagline: Project tagline
+identity:
+  icon: /images/project.svg
+card:
+  cover: /images/project-card.webp
+hero:
+  enabled: true
+  background:
+    image: /images/project-hero.webp
+    effect:
+      type: galaxy
+      options:
+        starSpeed: 0.5
+routing:
+  base_dir: docs/
+listing:
+  priority: 1
+  sort: 10
 tags:
   - javascript
   - tutorial
@@ -197,29 +215,28 @@ tree:
     - docs/api
 ```
 
-**字段规范化：**
+**字段契约：**
 
-| 字段 | 规范化 | 位置 |
+| 字段 | 行为 | 位置 |
 |---|---|---|
 | `tree` | 数组包装为 `{ '': array }` | doc_tree.js |
-| `base_dir` | 去掉开头 `/`，补结尾 `/` | doc_tree.js |
-| `tags` | 字符串转为单元素数组 | doc_tree.js |
-| `headline` | 不转换；卡片和 Hero 标题为空时回退 `title` | wiki_card.ejs、wiki_cover.ejs |
-| `available` | 不转换；可选字符串 | wiki_card.ejs |
-| `background` | URL 作为静态 Hero 背景，并让 Hero 文字沿用图片平均色自适应 | wiki_cover.ejs、adaptive-text.js |
-| `animation` | `type: galaxy` 启用内置 WebGL 星场；可选 `params` 自定义视觉与交互参数，并可与 `background` 图片叠加 | wiki_cover.ejs、galaxy.js |
-| `preview` | `terminal` 使用 `commands[].codes` 多行命令；`image` 使用 `src`/`alt` | wiki_cover.ejs |
-| `actions` | 可选自定义 Hero 按钮数组（`title`、`url`、可选 `icon`） | wiki_cover.ejs |
-| `sort` | 为 null 时默认 `0` | doc_tree.js |
-| `pin` | 仅用于置顶轮播收集（有置顶内容即渲染），不改变列表顺序；设置即置顶，按数值降序 | pin_slider.ejs |
+| `routing.base_dir` | 去掉开头 `/`，补结尾 `/` | doc_tree.js |
+| `tags` | 必须是字符串数组 | content-config.js |
+| `headline` | 缺失时回退 `name` | wiki_card.ejs、wiki_cover.ejs |
+| `hero.background.image` | 静态 Hero 背景，并让 Hero 文字按图片平均色自适应 | wiki_cover.ejs、adaptive-text.js |
+| `hero.background.effect` | `type: galaxy` 启用内置 WebGL 星场；`options` 保持 React Bits props 原名 | wiki_cover.ejs、galaxy.js |
+| `hero.preview` | `terminal` 使用 `commands[].codes`；`image` 使用 `src` / `alt` | wiki_cover.ejs |
+| `hero.actions` | 自定义 Hero 按钮数组（`title`、`url`、可选 `icon`） | wiki_cover.ejs |
+| `listing.sort` | 缺失时按 `0` 处理 | doc_tree.js |
+| `listing.priority` | 大于 `0` 时进入置顶轮播，按数值降序 | pin_slider.ejs |
 
 **wiki.shelf**——根文件 `_data/wiki.yml`（非子目录）定义哪些项目 ID 视为「已发布」。只有 shelf 中的项目出现在标签索引与相关项目列表中。
 
-`animation.type: galaxy` 会由 `main.js` 检测 Canvas 后按需加载 `source/js/plugins/galaxy.js`。插件使用四层 WebGL 星场，默认启用纵深移动、低强度辉光、闪烁、自动旋转和轻量鼠标排斥；鼠标离开 Hero 后交互强度平滑淡出。`animation.params` 可逐项覆盖 `focal`、`rotation`、`starSpeed`、`density`、`hueShift`、`speed`、`glowIntensity`、`saturation`、`mouseRepulsion`、`twinkleIntensity`、`rotationSpeed`、`repulsionStrength`、`autoCenterRepulsion`、`transparent`，缺失或非法值回退对应默认值，未知参数忽略。`focal` 限制在 `0–1`，色相归一化到 `0–360`，速度、密度和强度必须非负，`rotationSpeed` 可为负数。
+`hero.background.effect.type: galaxy` 会由 `main.js` 检测 Canvas 后按需加载 `source/js/plugins/galaxy.js`。插件使用四层 WebGL 星场，默认启用纵深移动、低强度辉光、闪烁、自动旋转和轻量鼠标排斥；鼠标离开 Hero 后交互强度平滑淡出。`hero.background.effect.options` 可逐项覆盖 `focal`、`rotation`、`starSpeed`、`density`、`hueShift`、`disableAnimation`、`speed`、`mouseInteraction`、`glowIntensity`、`saturation`、`mouseRepulsion`、`twinkleIntensity`、`rotationSpeed`、`repulsionStrength`、`autoCenterRepulsion`、`transparent`。这些键保持 React Bits 上游命名；未知键或错误类型会在构建期报错。
 
-Galaxy 默认以透明 Canvas 渲染。与 `background` 图片同时配置时，图片位于动态层下方，文字仍按图片平均色自适应；WebGL、着色器或脚本失败时图片保持可用。显式设置 `transparent: false` 会让不透明 Canvas 覆盖图片。仅配置 Galaxy 时使用纯黑 `#000000` 作为静态底色与文字取色基准。Hero 离开视口或页面进入后台时暂停，返回后恢复；用户启用 `prefers-reduced-motion` 时不加载动画。Canvas 不接收指针事件，不影响 Hero 中的链接、按钮和终端操作。`background: galaxy` 旧写法已移除，`background` 现在只表示静态图片。
+Galaxy 默认以透明 Canvas 渲染。与 `hero.background.image` 同时配置时，图片位于动态层下方，文字仍按图片平均色自适应；WebGL、着色器或脚本失败时图片保持可用。显式设置 `transparent: false` 会让不透明 Canvas 覆盖图片。仅配置 Galaxy 时使用纯黑 `#000000` 作为静态底色与文字取色基准。Hero 离开视口或页面进入后台时暂停，返回后恢复；用户启用 `prefers-reduced-motion` 时不加载动画。Canvas 不接收指针事件，不影响 Hero 中的链接、按钮和终端操作。
 
-Wiki Hero 的左侧导航是无背景的站点标题按钮：文字取 Hexo `config.title`，颜色为 `--text-banner`，点击返回站点首页。项目配置 `repo` 时，最新版本标签作为外链按钮显示在项目标题上方，与站点导航分离；其边框沿用该主题色并以 50% 透明度显示。加载期间标签保留高度但不显示占位文字、边框或交互；成功取得 tag 后淡入。数据服务优先使用 tag 响应已提供的 `html_url`（如 Release 页面），否则按已有 `repo` 与 tag 拼接 GitHub tag 引用页；新标签页打开；无 tag 或请求失败时移除标签。主标题独立以 `data-text-adaptive="contrast"` 按封面明暗在黑白之间切换，不使用主题色填充；其轮廓以 `--text-banner-theme` 的半透明色呈现柔和外发光。说明与按钮等辅助文字继续使用该主题色变体。“源码”按钮的背景与边框使用 `--text-banner`，其文字和图标单独反转相同变量，因此深浅封面下始终与背景相反。启用 `plugins.card_hover` 后，源码、文档和自定义 action 按钮均显示鼠标跟随 Spotlight，但不启用 Tilt 或上浮；源码按钮的文字与图标反色不会作用于 Spotlight 层。`preview.terminal` 终端以封面平均色派生的 `--text-banner-theme` 与透明色 50% 混合填充、再以背景模糊呈现；变量不可用时回退到 `--background`，使终端毛玻璃与封面主题色保持一致。未配置 `background` 和 `animation` 时不会运行自适应取色：`--text-banner-theme` 回退为 `--text-p2`，版本标签与普通操作按钮的边框单独回退为 `--block-border`。工具栏文字使用 `--text-banner`，命令与 `$` 提示符使用 `--text-banner-theme`。内置按钮、终端标签与辅助标签均通过 `__()` 读取 `languages/`；它们随站点语言切换。`actions[].title` 是项目自定义内容，保持原值，不由主题翻译。
+Wiki Hero 的左侧导航是无背景的站点标题按钮：文字取 Hexo `config.title`，颜色为 `--text-banner`，点击返回站点首页。项目配置 `source.repository` 时，最新版本标签作为外链按钮显示在项目标题上方，与站点导航分离；其边框沿用该主题色并以 50% 透明度显示。加载期间标签保留高度但不显示占位文字、边框或交互；成功取得 tag 后淡入。数据服务优先使用 tag 响应已提供的 `html_url`（如 Release 页面），否则按仓库地址与 tag 拼接引用页；新标签页打开；无 tag 或请求失败时移除标签。主标题独立以 `data-text-adaptive="contrast"` 按封面明暗在黑白之间切换，不使用主题色填充；其轮廓以 `--text-banner-theme` 的半透明色呈现柔和外发光。说明与按钮等辅助文字继续使用该主题色变体。“源码”按钮的背景与边框使用 `--text-banner`，其文字和图标单独反转相同变量，因此深浅封面下始终与背景相反。启用 `plugins.card_hover` 后，源码、文档和 `hero.actions` 按钮均显示鼠标跟随 Spotlight，但不启用 Tilt 或上浮；源码按钮的文字与图标反色不会作用于 Spotlight 层。`hero.preview.type: terminal` 时，终端以封面平均色派生的 `--text-banner-theme` 与透明色 50% 混合填充、再以背景模糊呈现；变量不可用时回退到 `--background`。未配置 `hero.background.image` 和 `hero.background.effect` 时不会运行自适应取色：`--text-banner-theme` 回退为 `--text-p2`，版本标签与普通操作按钮的边框单独回退为 `--block-border`。工具栏文字使用 `--text-banner`，命令与 `$` 提示符使用 `--text-banner-theme`。内置按钮、终端标签与辅助标签均通过 `__()` 读取 `languages/`；它们随站点语言切换。`hero.actions[].title` 是项目自定义内容，保持原值，不由主题翻译。
 
 Wiki Hero 完成后直接进入正文布局，不额外输出分隔线；正文或页脚自己的分隔线保持各自组件负责。
 
@@ -367,7 +384,7 @@ wiki 页面使用标准布局系统，但带 wiki 专属配置与小部件。
 
 `layout.ejs` 根据 `page.wiki` 字段决定页面特征。存在 `page.wiki` 时：
 
-- `menu_id` 默认为 `site_tree.wiki.menu_id`（通常 `'wiki'`）
+- `navigation.menu` 默认为 `site_tree.wiki.navigation.menu`（通常 `'wiki'`）
 - 左栏配置为 `tree, related, recent`
 - 右栏配置为 `ghrepo, toc`
 
@@ -391,11 +408,11 @@ wiki 页面经标准 `page.ejs` 模板渲染，带条件小节：
 
 ```mermaid
 flowchart TD
-    A["page.ejs"] --> B["nav_tabs_blog\nif page.nav_tabs"]
+    A["page.ejs"] --> B["navigation tabs"]
     B --> C["article_banner"]
     C --> D["article element\npage.content"]
-    D --> E["article_footer\nif page.wiki"]
-    E --> F["read_next\nif page.wiki"]
+    D --> E["article_footer\nif collection.type = wiki"]
+    E --> F["read_next\nif collection.type = wiki"]
     F --> G["comments section"]
 ```
 
@@ -403,11 +420,11 @@ flowchart TD
 
 ### Wiki 索引页
 
-wiki 索引页（`index_wiki` 布局）显示 `wiki.shelf` 中所有已发布项目。仅配置 `cover` 的卡片使用全幅背景图、同图渐变模糊层与不透明度约 0.25 至 0 的黑色蒙版；未配置 `cover` 时保留纯色空背景。卡片显示：
+wiki 索引页（`index_wiki` 布局）显示 `wiki.shelf` 中所有已发布项目。仅配置 `card.cover` 的卡片使用全幅背景图、同图渐变模糊层与不透明度约 0.25 至 0 的黑色蒙版；未配置时保留纯色空背景。卡片显示：
 
-- `wiki.tree[id].tags` 标签、`headline` 营销标题（为空回退 `title`）与可选 `available` 适用范围文字；“适用于”由 `meta.available` 语言键输出
-- 有 `repo` 时从 GitHub 动态加载 star 数；无仓库或加载失败时隐藏该项
-- 底栏中的 `icon`（无值回退默认项目图）、`name` 项目标题和 `subtitle()` 项目副标题
+- `wiki.tree[id].tags` 标签、`headline` 营销标题（为空回退 `name`）与可选 `audience` 适用范围文字；“适用于”由 `meta.available` 语言键输出
+- 有 `source.repository` 时从 GitHub 动态加载 star 数；无仓库或加载失败时隐藏该项
+- 底栏中的 `identity.icon`（无值回退默认项目图）、`name` 项目标题和 `caption()` 项目副标题
 - 指向 `wiki.tree[id].homepage.path` 的链接
 
 索引页使用 `site_tree.index_wiki` 配置其侧边栏与导航。

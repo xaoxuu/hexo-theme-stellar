@@ -13,9 +13,9 @@ function strip_wiki_title(title, wiki) {
 }
 
 function generate_title() {
-  if (page.wiki) {
-    const proj = theme.wiki.tree[page.wiki]
-    const wiki = proj?.name || page.wiki
+  if (collection_id(page, "wiki")) {
+    const proj = theme.wiki.tree[collection_id(page, "wiki")]
+    const wiki = proj?.name || collection_id(page, "wiki")
     if (page.title) {
       var stripped = strip_wiki_title(page.title, wiki)
       if (stripped) {
@@ -44,8 +44,8 @@ function generate_description() {
   if (page.description) {
     return '<meta name="description" content="' + truncate(strip_html(page.description), {length: 150}) + '">';
   }
-  if (page.wiki) {
-    const proj = theme.wiki.tree[page.wiki]
+  if (collection_id(page, "wiki")) {
+    const proj = theme.wiki.tree[collection_id(page, "wiki")]
     if (proj?.description) {
       return '<meta name="description" content="' + proj.description + '">'
     }
@@ -84,16 +84,16 @@ function og_args() {
   if (theme.open_graph.twitter_id) {
     args.twitter_id = theme.open_graph.twitter_id;
   }
-  if (page.layout == 'post' && page.cover) {
+  if (page.layout == 'post' && page.card?.cover) {
     args.twitter_card = 'summary_large_image';
   }
-  if (page.wiki && !page.description) {
-    const proj = theme.wiki.tree[page.wiki];
+  if (collection_id(page, "wiki") && !page.description) {
+    const proj = theme.wiki.tree[collection_id(page, "wiki")];
     if (proj && proj.description) {
       args.description = proj.description;
     }
   }
-  args.image = page.cover || page.banner || first_content_image(page.content) || config.avatar || (config.email ? gravatar(config.email) : null);
+  args.image = page.card?.cover || page.banner?.image || first_content_image(page.content) || config.avatar || (config.email ? gravatar(config.email) : null);
   return Object.assign(args, page.open_graph);
 }
 

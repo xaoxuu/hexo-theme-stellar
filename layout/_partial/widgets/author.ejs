@@ -2,8 +2,8 @@
 
 var author = null
 if (theme.authors) {
-  if (page.author?.length > 0 && theme.authors[page.author] != null) {
-    author = theme.authors[page.author]
+  if (page.article?.author?.length > 0 && theme.authors[page.article.author] != null) {
+    author = theme.authors[page.article.author]
   } else {
     author = theme.default_author
   }

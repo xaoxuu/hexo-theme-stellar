@@ -1,5 +1,5 @@
 <%
-var proj = theme.wiki.tree[page.wiki]
+var proj = theme.wiki.tree[collection_id(page, "wiki")]
 
 function layoutSectionHeader(title) {
   if (!title || title.length === 0) {
@@ -49,7 +49,7 @@ function layoutDiv() {
   return partial('_partial/components/widget-frame', {
     className: 'doc-tree-widget',
     body: body,
-    attrs: {'data-wiki': page.wiki},
+    attrs: {'data-wiki': collection_id(page, "wiki")},
     reveal: false
   })
 }

@@ -4,6 +4,7 @@
 
 ## 页面
 
+- [v2 内容配置契约](content-schema-v2.md)——集合与页面字段、命名边界、第三方参数袋与严格校验
 - [内容组织](content-overview.md)——内容类型矩阵、doc_tree.js 数据结构与 wiki/笔记本架构
 - [文章列表与卡片组件](post-lists-cards.md)——列表渲染、卡片布局、封面图策略与元数据
 - [文档系统（Wiki）](wiki-docs.md)——wiki 数据处理流水线、小节构建、标签与首页解析

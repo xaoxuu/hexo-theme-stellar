@@ -1,26 +1,26 @@
 <%
-const notebook = theme.notebooks.tree[page.notebook]
+const notebook = theme.notebooks.tree[collection_id(page, "notebook")]
 if (item.filter == null) {
   item.filter = 'auto'
 }
 if (item.placeholder == null && item.filter == 'auto') {
-  if (theme.wiki.tree[page.wiki]?.name) {
-    item.placeholder = __('search.search_in', theme.wiki.tree[page.wiki]?.name) 
+  if (theme.wiki.tree[collection_id(page, "wiki")]?.name) {
+    item.placeholder = __('search.search_in', theme.wiki.tree[collection_id(page, "wiki")]?.name)
   } else if (notebook) {
     item.placeholder = __('search.search_in', notebook.name || __('btn.notebook'))
-    item.filter = notebook.base_dir
+    item.filter = notebook.routing.base_dir
   }
 }
 function layoutDiv() {
   var el = ''
-  if (page.search == false) {
+  if (page.sidebar?.left?.search === false) {
     return el
   }
   el += `<div class="search-wrapper" id="search-wrapper">`
   el += `<div class="search-form" role="search">`
   var filter = ''
   if (item.filter == 'auto') {
-    if (page.wiki) {
+    if (collection_id(page, "wiki")) {
       let matches = page.path.match(/(.*?)\/(.*?)\//i)
       if (matches?.length > 0) {
         filter = matches[0]

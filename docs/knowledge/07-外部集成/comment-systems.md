@@ -11,6 +11,9 @@ tags:
 
 # 评论系统
 
+> [!IMPORTANT]
+> v2 页面与集合统一使用 `comments.service` 与对应的 `comments.<service>` 参数袋；参数袋内字段保持上游原名。完整规则见[内容配置 Schema v2](../03-内容系统/content-schema-v2.md)。
+
 <details>
 <summary>相关源码文件</summary>
 

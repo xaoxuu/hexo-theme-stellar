@@ -140,7 +140,9 @@ test('Galaxy 逐项规范化自定义参数并忽略未知值', () => {
     starSpeed: 4,
     density: -1,
     hueShift: -20,
+    disableAnimation: true,
     speed: 1.5,
+    mouseInteraction: false,
     glowIntensity: 'bright',
     saturation: 0.8,
     mouseRepulsion: false,
@@ -158,7 +160,7 @@ test('Galaxy 逐项规范化自定义参数并忽略未知值', () => {
 
   assert.deepEqual(lastCall(target.calls, 'uniform2f', 'uFocal'), ['uniform2f', 'uFocal', 1, 0]);
   assert.deepEqual(lastCall(target.calls, 'uniform2f', 'uRotation'), ['uniform2f', 'uRotation', 0.25, -0.5]);
-  assert.deepEqual(lastCall(target.calls, 'uniform1f', 'uStarSpeed'), ['uniform1f', 'uStarSpeed', 0.4]);
+  assert.deepEqual(lastCall(target.calls, 'uniform1f', 'uStarSpeed'), ['uniform1f', 'uStarSpeed', 0]);
   assert.deepEqual(lastCall(target.calls, 'uniform1f', 'uDensity'), ['uniform1f', 'uDensity', 2]);
   assert.deepEqual(lastCall(target.calls, 'uniform1f', 'uHueShift'), ['uniform1f', 'uHueShift', 340]);
   assert.deepEqual(lastCall(target.calls, 'uniform1f', 'uSpeed'), ['uniform1f', 'uSpeed', 1.5]);
