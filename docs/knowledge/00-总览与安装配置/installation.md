@@ -133,7 +133,7 @@ graph LR
     PKG --> REPO
     
     META --> NAME["name: hexo-theme-stellar"]
-    META --> VER["version: 1.43.1"]
+    META --> VER["version: 1.44.0"]
     META --> DESC["description: Elegant and powerful theme"]
     
     DEPS --> CHEERIO["cheerio: ^1.1.0"]
@@ -251,7 +251,7 @@ node_modules/hexo-theme-stellar/_config.yml
 
 ```yaml
 stellar:
-  version: '1.43.1'           # 主题版本号
+  version: '1.44.0'           # 主题版本号
   homepage: 'https://xaoxuu.com/wiki/stellar/'  # 文档站
   repo: 'https://github.com/xaoxuu/hexo-theme-stellar'  # 源码仓库
   main_css: /css/main.css     # 主 CSS 包路径
@@ -372,7 +372,7 @@ graph TD
 
 ```mermaid
 graph LR
-    VER["Version: 1.43.1"]
+    VER["Version: 1.44.0"]
     
     PKG["package.json"]
     CONFIG["_config.yml<br/>stellar.version"]
@@ -385,8 +385,8 @@ graph LR
     CONFIG --> DOCS["Documentation links"]
 ```
 
-- **package.json**：`"version": "1.43.1"`，供 npm 分发使用
-- **_config.yml**：`stellar.version: '1.43.1'`，用于展示与文档链接
+- **package.json**：`"version": "1.44.0"`，供 npm 分发使用
+- **_config.yml**：`stellar.version: '1.44.0'`，用于展示与文档链接
 
 两处必须保持一致。版本号遵循 `MAJOR.MINOR.PATCH` 格式。
 
@@ -399,7 +399,7 @@ npm update hexo-theme-stellar
 或指定版本：
 
 ```bash
-npm install hexo-theme-stellar@1.43.1
+npm install hexo-theme-stellar@1.44.0
 ```
 
 更新后请重新生成站点：

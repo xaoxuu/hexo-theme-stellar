@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.44.0
+
+> 发布日期：2026-08-21
+
+### 新功能
+- 新增可选的卡片 Spotlight 光斑与 3D Tilt 倾斜效果，可通过 `plugins.card_hover` 配置启用、光斑颜色和最大倾斜角度，并按组件独立接入与降级
+- Wiki Hero 操作按钮接入 Spotlight 光效，背景图片与动画改为独立配置，Galaxy 支持逐实例参数覆盖、图片叠加和 WebGL 失败降级
+- 桌面端新增 `Command+K` / `Ctrl+K` 聚焦搜索框快捷键，在窄屏、编辑区域和输入法组合状态下保留原生行为
+
+### 样式与重构
+- 搜索控件改用原生搜索输入框、搜索地标和标签关联，完善无障碍语义；本地搜索与 Algolia 结果统一可点击区域、表面样式和 Spotlight 生命周期
+- 笔记标签行复用文章标签胶囊的 hashtag 图标、间距与交互样式
+
+### 升级注意（配置变更与破坏性改动）
+- Wiki Hero 的 Galaxy 配置由 `background: galaxy` 迁移为 `animation.type: galaxy`，参数放在 `animation.params`；`background` 现在仅用于背景图片，并可与动画同时显示
+- `plugins.card_hover.enable` 默认为 `false`，升级后不会自动启用卡片动态效果
+
+Full Changelog: [1.43.1...1.44.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.43.1...1.44.0)
+
 ## 1.43.1
 
 > 发布日期：2026-08-20
