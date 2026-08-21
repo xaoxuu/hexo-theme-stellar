@@ -327,6 +327,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `2415fdc` | feat(wiki): 支持 Hero 动画独立配置 | 设计文档 `2026-08-21-wiki-hero-animation-config/`；知识库 `03-内容系统/wiki-docs.md`；独立 `animation.type/params` 配置、图片叠加、逐 Canvas 参数校验、WebGL 降级与客户端测试 |
 | `08a61a4` | feat(search): 优化搜索结果光效 | 设计文档 `2026-08-21-search-result-card-hover/`；知识库 `02-布局系统/sidebar-system.md`、`05-前端交互/client-side-overview.md`、`06-数据服务与组件/widget-architecture.md`、`07-外部集成/plugin-system.md`、`search.md`；搜索结果 surface、Spotlight 生命周期及客户端测试 |
 | `e64da8f` | feat(search): 支持快捷键聚焦搜索框 | 设计文档 `2026-08-21-search-focus-shortcut/`；知识库 `02-布局系统/sidebar-system.md`、`07-外部集成/search.md`；桌面 `Command/Ctrl+K` 聚焦、窄屏与编辑区域降级、公共加载入口及客户端测试 |
 | `83b8dfc` | refactor(search): 优化搜索控件语义 | 设计文档 `2026-08-21-search-widget-semantics/`；知识库 `02-布局系统/sidebar-system.md`；搜索地标、原生标签聚焦、无障碍名称、非提交行为与模板结构测试 |
