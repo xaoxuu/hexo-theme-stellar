@@ -9,6 +9,7 @@ const {
   validatePageConfig,
   validateThemeConfig
 } = require('../../lib/content-config');
+const { buildPostPageViewModel } = require("../../lib/models");
 
 function sourcePathForData(key) {
   return `source/_data/${key}.yml`;
@@ -53,7 +54,11 @@ module.exports = ctx => {
   }
 
   const validatedSources = new Set();
-  for (const collection of [ctx.locals.get('posts'), ctx.locals.get('pages')]) {
+  const contentCollections = [
+    { type: "posts", collection: ctx.locals.get('posts') },
+    { type: "pages", collection: ctx.locals.get('pages') }
+  ];
+  for (const { type, collection } of contentCollections) {
     collection.each(page => {
       if (!page.source || validatedSources.has(page.source)) return;
       validatedSources.add(page.source);
@@ -61,6 +66,16 @@ module.exports = ctx => {
       if (config == null) return;
       try {
         validatePageConfig(config, sourcePathForPage(page));
+        if (type === "posts" && page.layout === "post" && config.collection == null) {
+          page.viewModel = buildPostPageViewModel({
+            source: sourcePathForPage(page),
+            themeSource: themeConfigSource,
+            siteConfig: ctx.config,
+            themeConfig: ctx.theme.config,
+            frontMatter: config,
+            page
+          });
+        }
       } catch (error) {
         if (!(error instanceof ContentConfigError)) throw error;
         issues.push(...error.issues);

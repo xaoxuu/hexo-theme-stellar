@@ -23,6 +23,7 @@
 
 | 日期 | 原问题 | 修正 | 依据 |
 | --- | --- | --- | --- |
+| 2026-08-22 | 普通 Post 在构建期仍向后续消费方暴露可变 Hexo Document、Query 与隐式配置来源，尚无可供其它 profile 复用的模型接缝 | 新增严格 Post profile 校验和 `buildPostPageViewModel()`；按页面、Post profile、主题全局配置完成级联与路径/日期/分类规范化，生成深度冻结的 `CollectionModel`、`ContentItemModel` 与 `PageViewModel`，并仅为普通 Post 挂载 `page.viewModel` | `scripts/lib/models/index.js`、`scripts/lib/content-config.js`、`scripts/events/lib/content-config.js`、`test/page-view-model.test.js`、`docs/designs/2026-08-22-v2-architecture/` |
 | 2026-08-22 | v2 Wiki 项目名称已统一为 `name`，左栏 `related` 仍读取已移除的 `relatedProject.title`，导致“更多：…”下的条目只显示说明、标题 DOM 为空 | Related 条目改为使用 `relatedProject.name`，保留原有链接、说明、分组和 Collection 样式；增加模板字段映射回归测试 | `layout/_partial/widgets/related.ejs`、`test/related_widget_markup.test.js`、`docs/designs/2026-08-22-related-wiki-title/` |
 | 2026-08-22 | Topic 是博客文章的组织方式，根据 Topic 的 Identity 与文案自动生成 Brand 会让文章加入专栏后无意切换站点品牌 | 自动 Brand 仅保留给 Wiki / Notebook；Topic 默认完整继承全局 Brand，只有显式的 `sidebar.left.brand` 才会覆盖，页面覆盖仍保持最高优先级 | `scripts/lib/brand.js`、`test/brand.test.js`、`docs/designs/2026-08-22-topic-brand-inheritance/` |
 | 2026-08-22 | v2 Brand 头像图片的字符串 `calc()` 被浏览器忽略，叠加 margin 后相对旋转光环向右下偏移；主站 Topic 迁移又把与卡片封面相同的旧 `icon` 误标成 Identity | 头像图片改为绝对定位并以 2px inset + 有效 `calc()` 与光环保持同心；清理主站 Topic 的错误 `identity.icon`，Topic 默认继承站点 Brand，不会读取 `card.cover` | `source/css/_components/sidebar/brand.styl`、`test/brand_markup.test.js`、`test/brand.test.js`、`docs/designs/2026-08-22-brand-regressions/` |

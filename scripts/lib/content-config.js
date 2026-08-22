@@ -54,6 +54,35 @@ const COMMENT_SERVICE_FIELDS = Object.freeze([
   'twikoo', 'waline', 'artalk'
 ]);
 
+const CONTENT_MODEL_FIELDS = Object.freeze({
+  article: Object.freeze(["type", "indent", "author", "ai_label"]),
+  banner: Object.freeze(["enabled", "image", "avatar", "headline", "tagline"]),
+  brand: Object.freeze(["image", "name", "tagline", "url"]),
+  brandImage: Object.freeze(["src", "style", "url", "background"]),
+  card: Object.freeze(["cover", "tagline"]),
+  comments: COMMENT_SERVICE_FIELDS,
+  footer: Object.freeze(["references", "license", "share"]),
+  navigation: Object.freeze(["menu", "breadcrumb"]),
+  sidebar: Object.freeze(["left", "right"]),
+  sidebarLeft: Object.freeze(["widgets", "search", "menu", "brand", "wiki_home"]),
+  sidebarRight: Object.freeze(["widgets"]),
+  source: Object.freeze(["repository", "branch"]),
+  visibility: Object.freeze(["listed", "searchable"])
+});
+
+const POST_PROFILE_FIELDS = Object.freeze({
+  article: Object.freeze([
+    "pin_style", "type", "indent", "cover_ratio", "card_style", "banner_ratio",
+    "auto_excerpt", "category_color", "ai_label", "license", "share",
+    "related_posts", "reading_time", "card_tags", "tags"
+  ]),
+  articleListing: Object.freeze(["pin_style", "card_style", "auto_excerpt"]),
+  articlePresentation: Object.freeze(["type", "indent"]),
+  comments: Object.freeze([...COMMENT_SERVICE_FIELDS, "comment_title", "custom_css"]),
+  indexBlog: Object.freeze(["base_dir", "navigation", "sidebar"]),
+  post: Object.freeze(["navigation", "sidebar"])
+});
+
 const BRAND_IMAGE_STYLES = Object.freeze(['avatar', 'icon', 'plain']);
 
 class ContentConfigError extends Error {
@@ -65,12 +94,17 @@ class ContentConfigError extends Error {
 }
 
 function isPlainObject(value) {
-  return value != null && typeof value === 'object' && !Array.isArray(value);
+  if (value == null || typeof value !== 'object' || Array.isArray(value)) return false;
+  const prototype = Object.getPrototypeOf(value);
+  return prototype === Object.prototype || prototype === null;
 }
 
 function valueType(value) {
   if (Array.isArray(value)) return 'array';
   if (value === null) return 'null';
+  if (typeof value === "object" && !isPlainObject(value)) {
+    return value.constructor?.name || "non-plain object";
+  }
   return typeof value;
 }
 
@@ -128,6 +162,42 @@ function validateStringArray(value, source, fieldPath, issues) {
   });
 }
 
+function validateStringRecord(value, source, fieldPath, issues) {
+  if (!validateObject(value, source, fieldPath, issues)) return;
+  for (const [key, child] of Object.entries(value)) {
+    if (child != null) validateString(child, source, `${fieldPath}.${key}`, issues);
+  }
+}
+
+function validateIndexBlogNavigation(value, source, fieldPath, issues) {
+  if (!validateObject(value, source, fieldPath, issues)) return;
+  validateKnownKeys(value, ["menu", "breadcrumb", "tabs"], source, fieldPath, issues);
+  if (value.menu != null) validateString(value.menu, source, `${fieldPath}.menu`, issues);
+  if (value.breadcrumb != null) validateBoolean(value.breadcrumb, source, `${fieldPath}.breadcrumb`, issues);
+  if (value.tabs != null) validateStringRecord(value.tabs, source, `${fieldPath}.tabs`, issues);
+}
+
+function validateAiLabelConfig(value, source, fieldPath, issues) {
+  if (!validateObject(value, source, fieldPath, issues)) return;
+  const keys = ["default", "manual", "reviewed", "polished", "generated"];
+  validateKnownKeys(value, keys, source, fieldPath, issues);
+  if (value.default != null) validateString(value.default, source, `${fieldPath}.default`, issues);
+  for (const key of keys.slice(1)) {
+    const item = value[key];
+    if (item == null || !validateObject(item, source, `${fieldPath}.${key}`, issues)) continue;
+    validateKnownKeys(item, ["color", "icon"], source, `${fieldPath}.${key}`, issues);
+    if (item.color != null) validateString(item.color, source, `${fieldPath}.${key}.color`, issues);
+    if (item.icon != null) validateString(item.icon, source, `${fieldPath}.${key}.icon`, issues);
+  }
+}
+
+function validateRelatedPostsConfig(value, source, fieldPath, issues) {
+  if (!validateObject(value, source, fieldPath, issues)) return;
+  validateKnownKeys(value, ["enable", "max_count"], source, fieldPath, issues);
+  if (value.enable != null) validateBoolean(value.enable, source, `${fieldPath}.enable`, issues);
+  if (value.max_count != null) validateNumber(value.max_count, source, `${fieldPath}.max_count`, issues);
+}
+
 function validateKnownKeys(value, allowedKeys, source, fieldPath, issues) {
   for (const key of Object.keys(value)) {
     if (!allowedKeys.includes(key)) {
@@ -142,7 +212,7 @@ function isMarkdownLink(value) {
 
 function validateBrand(brand, source, fieldPath, issues) {
   if (!validateObject(brand, source, fieldPath, issues)) return;
-  validateKnownKeys(brand, ['image', 'name', 'tagline', 'url', 'avatar', 'icon'], source, fieldPath, issues);
+  validateKnownKeys(brand, [...CONTENT_MODEL_FIELDS.brand, "avatar", "icon"], source, fieldPath, issues);
 
   for (const removedField of ['avatar', 'icon']) {
     if (Object.prototype.hasOwnProperty.call(brand, removedField)) {
@@ -158,7 +228,7 @@ function validateBrand(brand, source, fieldPath, issues) {
   }
 
   if (brand.image == null || !validateObject(brand.image, source, `${fieldPath}.image`, issues)) return;
-  validateKnownKeys(brand.image, ['src', 'style', 'url', 'background'], source, `${fieldPath}.image`, issues);
+  validateKnownKeys(brand.image, CONTENT_MODEL_FIELDS.brandImage, source, `${fieldPath}.image`, issues);
   if (brand.image.src == null) issues.push(`${source}: 缺少必填字段 ${fieldPath}.image.src`);
   if (brand.image.style == null) issues.push(`${source}: 缺少必填字段 ${fieldPath}.image.style`);
   for (const key of ['src', 'style', 'url', 'background']) {
@@ -271,7 +341,7 @@ function validateHero(hero, source, fieldPath, issues) {
 
 function validateSidebarSide(side, source, fieldPath, issues, isLeft) {
   if (!validateObject(side, source, fieldPath, issues)) return;
-  const allowedKeys = isLeft ? ['widgets', 'search', 'menu', 'brand', 'logo', 'wiki_home'] : ['widgets'];
+  const allowedKeys = isLeft ? [...CONTENT_MODEL_FIELDS.sidebarLeft, "logo"] : CONTENT_MODEL_FIELDS.sidebarRight;
   validateKnownKeys(side, allowedKeys, source, fieldPath, issues);
   if (side.widgets != null) validateWidgetArray(side.widgets, source, `${fieldPath}.widgets`, issues);
   if (isLeft) {
@@ -294,21 +364,21 @@ function validateSidebarSide(side, source, fieldPath, issues, isLeft) {
 
 function validateSidebar(sidebar, source, fieldPath, issues) {
   if (!validateObject(sidebar, source, fieldPath, issues)) return;
-  validateKnownKeys(sidebar, ['left', 'right'], source, fieldPath, issues);
+  validateKnownKeys(sidebar, CONTENT_MODEL_FIELDS.sidebar, source, fieldPath, issues);
   if (sidebar.left != null) validateSidebarSide(sidebar.left, source, `${fieldPath}.left`, issues, true);
   if (sidebar.right != null) validateSidebarSide(sidebar.right, source, `${fieldPath}.right`, issues, false);
 }
 
 function validateCard(card, source, fieldPath, issues) {
   if (!validateObject(card, source, fieldPath, issues)) return;
-  validateKnownKeys(card, ['cover', 'tagline'], source, fieldPath, issues);
+  validateKnownKeys(card, CONTENT_MODEL_FIELDS.card, source, fieldPath, issues);
   if (card.cover != null) validateString(card.cover, source, `${fieldPath}.cover`, issues);
   if (card.tagline != null) validateString(card.tagline, source, `${fieldPath}.tagline`, issues);
 }
 
 function validateBanner(banner, source, fieldPath, issues) {
   if (!validateObject(banner, source, fieldPath, issues)) return;
-  validateKnownKeys(banner, ['enabled', 'image', 'avatar', 'headline', 'tagline'], source, fieldPath, issues);
+  validateKnownKeys(banner, CONTENT_MODEL_FIELDS.banner, source, fieldPath, issues);
   if (banner.enabled != null) validateBoolean(banner.enabled, source, `${fieldPath}.enabled`, issues);
   for (const key of ['image', 'avatar', 'headline', 'tagline']) {
     if (banner[key] != null) validateString(banner[key], source, `${fieldPath}.${key}`, issues);
@@ -317,7 +387,7 @@ function validateBanner(banner, source, fieldPath, issues) {
 
 function validateNavigation(navigation, source, fieldPath, issues) {
   if (!validateObject(navigation, source, fieldPath, issues)) return;
-  validateKnownKeys(navigation, ['menu', 'breadcrumb', 'mobile_header'], source, fieldPath, issues);
+  validateKnownKeys(navigation, [...CONTENT_MODEL_FIELDS.navigation, "mobile_header"], source, fieldPath, issues);
   if (navigation.menu != null) validateString(navigation.menu, source, `${fieldPath}.menu`, issues);
   if (navigation.breadcrumb != null) validateBoolean(navigation.breadcrumb, source, `${fieldPath}.breadcrumb`, issues);
   if (Object.prototype.hasOwnProperty.call(navigation, 'mobile_header')) {
@@ -327,7 +397,7 @@ function validateNavigation(navigation, source, fieldPath, issues) {
 
 function validateArticle(article, source, fieldPath, issues) {
   if (!validateObject(article, source, fieldPath, issues)) return;
-  validateKnownKeys(article, ['type', 'indent', 'author', 'ai_label'], source, fieldPath, issues);
+  validateKnownKeys(article, CONTENT_MODEL_FIELDS.article, source, fieldPath, issues);
   if (article.type != null && !['tech', 'story'].includes(article.type)) {
     issues.push(`${source}: ${fieldPath}.type 必须是 tech 或 story`);
   }
@@ -338,7 +408,7 @@ function validateArticle(article, source, fieldPath, issues) {
 
 function validateFooter(footer, source, fieldPath, issues) {
   if (!validateObject(footer, source, fieldPath, issues)) return;
-  validateKnownKeys(footer, ['references', 'license', 'share'], source, fieldPath, issues);
+  validateKnownKeys(footer, CONTENT_MODEL_FIELDS.footer, source, fieldPath, issues);
   if (footer.references != null && !Array.isArray(footer.references)) {
     addTypeIssue(issues, source, `${fieldPath}.references`, 'array', footer.references);
   }
@@ -362,7 +432,7 @@ function validateComments(comments, source, fieldPath, issues) {
 
 function validateSource(sourceConfig, source, fieldPath, issues) {
   if (!validateObject(sourceConfig, source, fieldPath, issues)) return;
-  validateKnownKeys(sourceConfig, ['repository', 'branch'], source, fieldPath, issues);
+  validateKnownKeys(sourceConfig, CONTENT_MODEL_FIELDS.source, source, fieldPath, issues);
   if (sourceConfig.repository != null) validateString(sourceConfig.repository, source, `${fieldPath}.repository`, issues);
   if (sourceConfig.branch != null) validateString(sourceConfig.branch, source, `${fieldPath}.branch`, issues);
 }
@@ -413,6 +483,102 @@ function validateThemeConfig(config, source = '<theme>') {
     issues.push(`${source}: 根字段 logo 已移除，请使用 brand`);
   }
   if (config.brand != null) validateBrand(config.brand, source, 'brand', issues);
+  if (issues.length > 0) throw new ContentConfigError(issues);
+  return config;
+}
+
+function validatePostProfileConfig(config, source = "<theme>") {
+  const issues = [];
+  if (!validateObject(config, source, "root", issues)) throw new ContentConfigError(issues);
+
+  if (config.site_tree != null && validateObject(config.site_tree, source, "site_tree", issues)) {
+    const post = config.site_tree.post;
+    if (post != null && validateObject(post, source, "site_tree.post", issues)) {
+      validateKnownKeys(post, POST_PROFILE_FIELDS.post, source, "site_tree.post", issues);
+      if (post.navigation != null) {
+        validateNavigation(post.navigation, source, "site_tree.post.navigation", issues);
+      }
+      if (post.sidebar != null) validateSidebar(post.sidebar, source, "site_tree.post.sidebar", issues);
+    }
+
+    const indexBlog = config.site_tree.index_blog;
+    if (indexBlog != null && validateObject(indexBlog, source, "site_tree.index_blog", issues)) {
+      validateKnownKeys(indexBlog, POST_PROFILE_FIELDS.indexBlog, source, "site_tree.index_blog", issues);
+      if (indexBlog.base_dir != null) {
+        validateString(indexBlog.base_dir, source, "site_tree.index_blog.base_dir", issues);
+      }
+      if (indexBlog.navigation != null) {
+        validateIndexBlogNavigation(indexBlog.navigation, source, "site_tree.index_blog.navigation", issues);
+      }
+      if (indexBlog.sidebar != null) {
+        validateSidebar(indexBlog.sidebar, source, "site_tree.index_blog.sidebar", issues);
+      }
+    }
+  }
+
+  if (config.article != null && validateObject(config.article, source, "article", issues)) {
+    validateKnownKeys(config.article, POST_PROFILE_FIELDS.article, source, "article", issues);
+    for (const field of POST_PROFILE_FIELDS.articleListing.slice(0, 2)) {
+      if (config.article[field] != null) validateString(config.article[field], source, `article.${field}`, issues);
+    }
+    if (config.article.auto_excerpt != null) {
+      validateNumber(config.article.auto_excerpt, source, "article.auto_excerpt", issues);
+    }
+    for (const field of ["cover_ratio", "banner_ratio"]) {
+      if (config.article[field] != null) validateNumber(config.article[field], source, `article.${field}`, issues);
+    }
+    if (config.article.pin_style != null && !["carousel", "flat"].includes(config.article.pin_style)) {
+      issues.push(`${source}: article.pin_style 必须是 carousel 或 flat`);
+    }
+    if (config.article.card_style != null && !["hero", "classic"].includes(config.article.card_style)) {
+      issues.push(`${source}: article.card_style 必须是 hero 或 classic`);
+    }
+    if (config.article.type != null && !["tech", "story"].includes(config.article.type)) {
+      issues.push(`${source}: article.type 必须是 tech 或 story`);
+    }
+    if (config.article.indent != null) validateBoolean(config.article.indent, source, "article.indent", issues);
+    if (config.article.category_color != null) {
+      validateStringRecord(config.article.category_color, source, "article.category_color", issues);
+    }
+    if (config.article.ai_label != null) {
+      validateAiLabelConfig(config.article.ai_label, source, "article.ai_label", issues);
+    }
+    if (config.article.related_posts != null) {
+      validateRelatedPostsConfig(config.article.related_posts, source, "article.related_posts", issues);
+    }
+    for (const field of ["reading_time", "card_tags", "tags"]) {
+      if (config.article[field] != null) validateBoolean(config.article[field], source, `article.${field}`, issues);
+    }
+    if (config.article.license != null && typeof config.article.license !== "boolean" && typeof config.article.license !== "string") {
+      addTypeIssue(issues, source, "article.license", "boolean | string", config.article.license);
+    }
+    if (config.article.share != null && typeof config.article.share !== "boolean") {
+      if (!Array.isArray(config.article.share)) {
+        addTypeIssue(issues, source, "article.share", "boolean | string[]", config.article.share);
+      } else {
+        validateStringArray(config.article.share, source, "article.share", issues);
+      }
+    }
+  }
+
+  if (config.comments != null && validateObject(config.comments, source, "comments", issues)) {
+    validateKnownKeys(config.comments, POST_PROFILE_FIELDS.comments, source, "comments", issues);
+    if (config.comments.enabled != null) validateBoolean(config.comments.enabled, source, "comments.enabled", issues);
+    for (const field of ["title", "id", "service", "comment_title"]) {
+      if (config.comments[field] != null) validateString(config.comments[field], source, `comments.${field}`, issues);
+    }
+    for (const field of COMMENT_SERVICE_FIELDS.slice(4)) {
+      if (config.comments[field] != null) validateObject(config.comments[field], source, `comments.${field}`, issues);
+    }
+    if (config.comments.custom_css != null) {
+      if (typeof config.comments.custom_css !== "string" && !Array.isArray(config.comments.custom_css)) {
+        addTypeIssue(issues, source, "comments.custom_css", "string | string[]", config.comments.custom_css);
+      } else if (Array.isArray(config.comments.custom_css)) {
+        validateStringArray(config.comments.custom_css, source, "comments.custom_css", issues);
+      }
+    }
+  }
+
   if (issues.length > 0) throw new ContentConfigError(issues);
   return config;
 }
@@ -475,7 +641,7 @@ function validatePageConfig(config, source = '<page>') {
     }
   }
   if (config.visibility != null && validateObject(config.visibility, source, 'visibility', issues)) {
-    validateKnownKeys(config.visibility, ['listed', 'searchable'], source, 'visibility', issues);
+    validateKnownKeys(config.visibility, CONTENT_MODEL_FIELDS.visibility, source, 'visibility', issues);
     if (config.visibility.listed != null) validateBoolean(config.visibility.listed, source, 'visibility.listed', issues);
     if (config.visibility.searchable != null) validateBoolean(config.visibility.searchable, source, 'visibility.searchable', issues);
   }
@@ -507,16 +673,20 @@ function isSearchable(content) {
 
 module.exports = {
   BRAND_IMAGE_STYLES,
+  CONTENT_MODEL_FIELDS,
   ContentConfigError,
   GALAXY_OPTION_TYPES,
   LEGACY_COLLECTION_FIELDS,
   LEGACY_PAGE_FIELDS,
+  POST_PROFILE_FIELDS,
   getCollectionId,
+  isPlainObject,
   isListed,
   isSearchable,
   validateBrand,
   validateCollectionConfig,
   validateGalaxyOptions,
   validatePageConfig,
+  validatePostProfileConfig,
   validateThemeConfig
 };

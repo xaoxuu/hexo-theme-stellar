@@ -236,7 +236,7 @@ Artalk 编辑器、评论卡片与列表页脚的布局覆盖（圆角、间距�
 |----------|------|------|
 | `comments.service` | `string` | 激活的评论系统 |
 | `comments.comment_title` | `string` | 评论区块标题 |
-| `comments.custom_css` | `array` | 额外评论样式覆盖 |
+| `comments.custom_css` | `string \| string[]` | 额外评论样式覆盖；可指定单个服务或多个服务 |
 | `comments.artalk.*` | `object` | Artalk 专属选项（见上） |
 | `comments.waline.*` | `object` | Waline 专属选项（见上） |
 | `comments.twikoo.*` | `object` | Twikoo 专属选项（见上） |
