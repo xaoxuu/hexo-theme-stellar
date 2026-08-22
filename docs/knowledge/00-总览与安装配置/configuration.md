@@ -77,6 +77,10 @@ graph TB
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
+### v2 配置迁移边界
+
+Pre-alpha M1.5 已建立内部配置入口目录，但它不参与当前运行时解析；当前仍只有 `canonical` 接入声明式配置 Schema。字段职责、命名边界和后续迁移顺序只在[配置全景契约](../../designs/2026-08-22-v2-config-inventory/inventory.md)维护。
+
 配置从 `_config.yml` 经由 Hexo 的主题变量系统（`theme.*`）流动，页面级覆盖通过 `page.*` 变量实现。`hexo-config()` 辅助函数让 Stylus 文件也能访问配置值。
 
 ## 配置文件结构
