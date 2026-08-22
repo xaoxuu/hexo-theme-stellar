@@ -83,6 +83,14 @@ const POST_PROFILE_FIELDS = Object.freeze({
   post: Object.freeze(["navigation", "sidebar"])
 });
 
+const NOTEBOOK_PROFILE_FIELDS = Object.freeze({
+  notebook: Object.freeze(["listing", "tag_icons", "footer"]),
+  notebookListing: Object.freeze(["excerpt_length", "per_page", "order_by"]),
+  notebooks: Object.freeze(["base_dir", "navigation", "sidebar"]),
+  notes: Object.freeze(["navigation", "sidebar"]),
+  note: Object.freeze(["sidebar"])
+});
+
 const BRAND_IMAGE_STYLES = Object.freeze(['avatar', 'icon', 'plain']);
 
 class ContentConfigError extends Error {
@@ -583,6 +591,43 @@ function validatePostProfileConfig(config, source = "<theme>") {
   return config;
 }
 
+function validateNotebookProfileConfig(config, source = "<theme>") {
+  const issues = [];
+  if (!validateObject(config, source, "root", issues)) throw new ContentConfigError(issues);
+
+  if (config.site_tree != null && validateObject(config.site_tree, source, "site_tree", issues)) {
+    for (const profile of ["notebooks", "notes", "note"]) {
+      const value = config.site_tree[profile];
+      if (value == null || !validateObject(value, source, `site_tree.${profile}`, issues)) continue;
+      validateKnownKeys(value, NOTEBOOK_PROFILE_FIELDS[profile], source, `site_tree.${profile}`, issues);
+      if (value.base_dir != null) validateString(value.base_dir, source, `site_tree.${profile}.base_dir`, issues);
+      if (value.navigation != null) validateNavigation(value.navigation, source, `site_tree.${profile}.navigation`, issues);
+      if (value.sidebar != null) validateSidebar(value.sidebar, source, `site_tree.${profile}.sidebar`, issues);
+    }
+  }
+
+  if (config.notebook != null && validateObject(config.notebook, source, "notebook", issues)) {
+    validateKnownKeys(config.notebook, NOTEBOOK_PROFILE_FIELDS.notebook, source, "notebook", issues);
+    const listing = config.notebook.listing;
+    if (listing != null && validateObject(listing, source, "notebook.listing", issues)) {
+      validateKnownKeys(listing, NOTEBOOK_PROFILE_FIELDS.notebookListing, source, "notebook.listing", issues);
+      for (const field of ["excerpt_length", "per_page"]) {
+        if (listing[field] != null) validateNumber(listing[field], source, `notebook.listing.${field}`, issues);
+      }
+      if (listing.order_by != null) validateString(listing.order_by, source, "notebook.listing.order_by", issues);
+    }
+    if (config.notebook.tag_icons != null) {
+      validateStringRecord(config.notebook.tag_icons, source, "notebook.tag_icons", issues);
+    }
+    if (config.notebook.footer != null) {
+      validateFooter(config.notebook.footer, source, "notebook.footer", issues);
+    }
+  }
+
+  if (issues.length > 0) throw new ContentConfigError(issues);
+  return config;
+}
+
 function validateCollectionConfig(config, source = '<collection>') {
   const issues = [];
   if (!validateObject(config, source, 'root', issues)) throw new ContentConfigError(issues);
@@ -678,6 +723,7 @@ module.exports = {
   GALAXY_OPTION_TYPES,
   LEGACY_COLLECTION_FIELDS,
   LEGACY_PAGE_FIELDS,
+  NOTEBOOK_PROFILE_FIELDS,
   POST_PROFILE_FIELDS,
   getCollectionId,
   isPlainObject,
@@ -686,6 +732,7 @@ module.exports = {
   validateBrand,
   validateCollectionConfig,
   validateGalaxyOptions,
+  validateNotebookProfileConfig,
   validatePageConfig,
   validatePostProfileConfig,
   validateThemeConfig

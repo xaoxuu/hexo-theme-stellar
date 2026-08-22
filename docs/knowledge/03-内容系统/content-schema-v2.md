@@ -86,22 +86,32 @@ brand:
 
 Galaxy 的路径为 `hero.background.effect.options`，字段白名单在 `scripts/lib/content-config.js` 的 `GALAXY_OPTION_TYPES` 中与 React Bits props 对齐。评论服务对象仅校验为 object，内部字段由对应上游服务规定。
 
-## 构建期 Post 模型
+## 构建期内容模型
 
 普通 Post 在 `generateBefore` 的严格配置校验后生成 `page.viewModel`。该对象只提供冻结的 `collection` 与 `item`，不暴露可变的 Hexo Document、Query、Moment 或配置来源：
 
 - `collection` 是 Post profile 的 `CollectionModel`，顶层固定为 `id`、`profile`、`identity`、`source`、`route`、`navigation`、`listing`、`presentation`、`visibility`。
 - `item` 是 `ContentItemModel`，日期转为 ISO 字符串，标签与分类转为字符串数组，路径完成规范化；导航、列表、展示和可见性已经完成级联。
 - 级联顺序为页面 Front Matter、Post profile、主题全局配置；`false`、`0` 与空字符串是有效覆盖值。Brand 图片继续按原子对象替换，不继承上级图片子字段。
-- Topic、Wiki、Notebook 的同构模型以及 EJS 对 `page.viewModel` 的消费属于后续切片，本实现不会提前接管。
+- Notebook profile 已接入同一模型接缝；Topic、Wiki 的同构模型以及 EJS 对 `page.viewModel` 的消费属于后续切片，本阶段不会提前接管布局。
 
-纯构建入口位于 `scripts/lib/models/index.js`，生成期挂载位于 `scripts/events/lib/content-config.js`。
+纯构建入口位于 `scripts/lib/models/index.js`，Post 与 Note 的生成期挂载位于 `scripts/events/lib/content-config.js`。
+
+### Notebook 与 Note
+
+严格 `collection.type: notebook` 的 Note 在 `generateBefore` 阶段生成同构 `page.viewModel`：
+
+- `collection` 保留 Notebook 的名称/标题/说明/身份图标、源码仓库、规范化 `route.baseDir`、标签导航、列表分页/排序/摘要设置和 Note 展示默认值。
+- `navigation.tags` 只从同一严格 Notebook id 下的 Note 标签构造；层级标签拆为冻结的普通对象，包含规范化 id、名称、末段标签、父级和标签页路径。
+- `item` 在构建期完成页面导航、`listing.priority`、`visibility.listed/searchable`、侧栏、文章、页脚和评论级联；页面源码可以覆盖 Notebook 源码字段。
+- Note 必须显式声明严格 v2 `collection.type` 与 `collection.id`，id 必须存在于 `_data/notebooks/`；不会从布局、路径或 v1 `notebook` 字段推断归属。
+- 本切片只挂载模型，不改变现有 Notebook/Note EJS 消费链。
 
 ## 校验与消费链
 
 - `scripts/events/lib/content-config.js` 读取 `_data/wiki|topic|notebooks` 与源 Markdown Front Matter，在数据树构建前校验。
 - `scripts/lib/content-config.js` 定义结构、类型、旧字段拒绝规则与 `isListed` / `isSearchable`。
-- `scripts/lib/content-config.js` 同时校验 Post profile 使用的路由、导航、侧栏和全局文章字段；错误继续包含配置来源与字段路径。
+- `scripts/lib/content-config.js` 同时校验已接入 profile 使用的路由、导航、侧栏和全局字段；错误继续包含配置来源与字段路径。
 - `scripts/helpers/collection.js` 向 EJS 提供 `collection_id(page, type)`，不再读取 `page.wiki/topic/notebook`。
 - `scripts/lib/brand.js` 与 `scripts/helpers/brand.js` 解析 Brand 优先级、集合自动值和手机端显示矩阵。
 - Wiki、Topic、Notebook 数据树和搜索生成器消费共享可见性语义。

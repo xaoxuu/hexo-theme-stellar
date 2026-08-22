@@ -1,29 +1,56 @@
 'use strict';
 
-const fs = require('node:fs');
-const path = require('node:path');
-const frontMatter = require('hexo-front-matter');
 const {
   ContentConfigError,
   validateCollectionConfig,
   validatePageConfig,
   validateThemeConfig
 } = require('../../lib/content-config');
-const { buildPostPageViewModel } = require("../../lib/models");
+const {
+  readFrontMatter,
+  sourcePathForData,
+  sourcePathForPage
+} = require("../../lib/source-config");
+const {
+  buildNotebookPageViewModel,
+  buildPostPageViewModel
+} = require("../../lib/models");
 
-function sourcePathForData(key) {
-  return `source/_data/${key}.yml`;
+function plainTerms(value) {
+  if (value == null) return [];
+  const items = Array.isArray(value) ? value : [value];
+  return items.map(item => {
+    if (typeof item === "string") return item;
+    if (item != null && typeof item.name === "string") return item.name;
+    return null;
+  }).filter(Boolean);
 }
 
-function sourcePathForPage(page) {
-  return page.source ? `source/${page.source}` : (page.path || '<page>');
+function plainDate(value) {
+  if (value == null) return null;
+  if (typeof value.toISOString === "function") return value.toISOString();
+  return typeof value === "string" || typeof value === "number" ? value : null;
 }
 
-function readFrontMatter(ctx, page) {
-  if (!page.source) return null;
-  const sourcePath = path.join(ctx.source_dir, page.source);
-  if (!fs.existsSync(sourcePath)) return null;
-  return frontMatter.parse(fs.readFileSync(sourcePath, 'utf8'));
+function pageModelInput(page, config) {
+  return {
+    _id: String(page._id || page.source || page.path || ""),
+    source: typeof page.source === "string" ? page.source : "",
+    path: typeof page.path === "string" ? page.path : "",
+    permalink: typeof page.permalink === "string" ? page.permalink : "",
+    title: typeof page.title === "string" ? page.title : String(config.title || ""),
+    layout: typeof page.layout === "string" ? page.layout : String(config.layout || "page"),
+    content: typeof page.content === "string" ? page.content : "",
+    excerpt: typeof page.excerpt === "string" ? page.excerpt : "",
+    date: plainDate(page.date ?? config.date),
+    updated: plainDate(page.updated ?? config.updated ?? page.date ?? config.date),
+    tags: plainTerms(config.tags),
+    categories: plainTerms(config.categories),
+    collection: config.collection == null ? null : {
+      type: config.collection.type,
+      id: config.collection.id
+    }
+  };
 }
 
 module.exports = ctx => {
@@ -53,7 +80,25 @@ module.exports = ctx => {
     }
   }
 
+  const pageConfigs = new Map();
+  const configForPage = page => {
+    if (!pageConfigs.has(page)) pageConfigs.set(page, readFrontMatter(ctx, page));
+    return pageConfigs.get(page);
+  };
   const validatedSources = new Set();
+  const pages = ctx.locals.get('pages');
+  const notebookMemberInputs = [];
+  pages.each(page => {
+    const config = readFrontMatter(ctx, page);
+    if (config?.collection?.type !== 'notebook') return;
+    notebookMemberInputs.push({
+      collection: {
+        type: config.collection.type,
+        id: config.collection.id
+      },
+      tags: plainTerms(config.tags)
+    });
+  });
   const contentCollections = [
     { type: "posts", collection: ctx.locals.get('posts') },
     { type: "pages", collection: ctx.locals.get('pages') }
@@ -62,7 +107,7 @@ module.exports = ctx => {
     collection.each(page => {
       if (!page.source || validatedSources.has(page.source)) return;
       validatedSources.add(page.source);
-      const config = readFrontMatter(ctx, page);
+      const config = configForPage(page);
       if (config == null) return;
       try {
         validatePageConfig(config, sourcePathForPage(page));
@@ -73,7 +118,22 @@ module.exports = ctx => {
             siteConfig: ctx.config,
             themeConfig: ctx.theme.config,
             frontMatter: config,
-            page
+            page: pageModelInput(page, config)
+          });
+        }
+        if (type === "pages" && config.collection?.type === "notebook") {
+          const collectionId = config.collection.id;
+          page.viewModel = buildNotebookPageViewModel({
+            source: sourcePathForPage(page),
+            themeSource: themeConfigSource,
+            collectionSource: sourcePathForData(`notebooks/${collectionId}`),
+            collectionId,
+            siteConfig: ctx.config,
+            themeConfig: ctx.theme.config,
+            collectionConfig: data[`notebooks/${collectionId}`],
+            collectionItems: notebookMemberInputs,
+            frontMatter: config,
+            page: pageModelInput(page, config)
           });
         }
       } catch (error) {

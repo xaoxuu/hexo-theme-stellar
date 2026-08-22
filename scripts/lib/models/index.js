@@ -2,8 +2,11 @@
 
 const {
   CONTENT_MODEL_FIELDS,
+  ContentConfigError,
   POST_PROFILE_FIELDS,
   isPlainObject,
+  validateCollectionConfig,
+  validateNotebookProfileConfig,
   validatePageConfig,
   validatePostProfileConfig,
   validateThemeConfig
@@ -70,6 +73,10 @@ function normalizeTerms(value) {
   }).filter(item => item != null);
 }
 
+function normalizeCollectionPath(value) {
+  return normalizePath(value).replace(/^\/+/, "");
+}
+
 function normalizeBrand(brand, siteConfig) {
   const normalized = pick(brand, CONTENT_MODEL_FIELDS.brand);
   if (normalized.name == null) normalized.name = String(siteConfig.title || "");
@@ -120,7 +127,7 @@ function buildCollectionModel(themeConfig, siteConfig) {
   };
 }
 
-function buildContentItemModel(page, frontMatter, collection, source) {
+function buildContentItemModel(page, frontMatter, collection, source, options = {}) {
   const pageNavigation = pick(frontMatter.navigation, CONTENT_MODEL_FIELDS.navigation);
   const pageSidebar = pick(frontMatter.sidebar, CONTENT_MODEL_FIELDS.sidebar);
   const pageArticle = pick(frontMatter.article, CONTENT_MODEL_FIELDS.article);
@@ -140,25 +147,137 @@ function buildContentItemModel(page, frontMatter, collection, source) {
     categories: normalizeTerms(page.categories ?? frontMatter.categories),
     source: {
       file: String(page.source || source || ""),
+      ...cloneValue(options.source || collection.source || {}),
       ...pick(frontMatter.source, CONTENT_MODEL_FIELDS.source)
     },
     route: {
-      path: typeof page.path === "string" ? normalizePath(page.path) : "",
+      path: typeof page.path === "string" ? normalizeCollectionPath(page.path) : "",
       permalink: typeof page.permalink === "string" ? page.permalink : ""
     },
-    navigation: mergeConfig(collection.navigation, pageNavigation),
+    navigation: mergeConfig(
+      pick(collection.navigation, CONTENT_MODEL_FIELDS.navigation),
+      pageNavigation
+    ),
     listing: {
       priority: frontMatter.listing?.priority ?? 0
     },
     presentation: {
-      card: pick(frontMatter.card, CONTENT_MODEL_FIELDS.card),
+      card: mergeConfig(collection.presentation.card, pick(frontMatter.card, CONTENT_MODEL_FIELDS.card)),
       banner: pick(frontMatter.banner, CONTENT_MODEL_FIELDS.banner),
       sidebar: mergeConfig(collection.presentation.sidebar, pageSidebar, "sidebar"),
       article: mergeConfig(collection.presentation.article, pageArticle),
       footer: mergeConfig(collection.presentation.footer, pageFooter),
       comments: mergeConfig(collection.presentation.comments, pageComments)
     },
-    visibility: mergeConfig(collection.visibility, pageVisibility)
+    visibility: mergeConfig(options.visibility || collection.visibility, pageVisibility)
+  };
+}
+
+function normalizeCollectionIdentity(config) {
+  return {
+    name: String(config.name || ""),
+    headline: String(config.headline ?? config.name ?? ""),
+    tagline: String(config.tagline || ""),
+    description: String(config.description || ""),
+    audience: String(config.audience || ""),
+    icon: typeof config.identity?.icon === "string" ? config.identity.icon : ""
+  };
+}
+
+function normalizeCollectionComments(comments) {
+  const normalized = pick(comments, CONTENT_MODEL_FIELDS.comments);
+  if (normalized.title == null && typeof comments?.comment_title === "string") {
+    normalized.title = comments.comment_title;
+  }
+  return normalized;
+}
+
+function notebookBaseDir(collectionId, collectionConfig, themeConfig) {
+  if (typeof collectionConfig.routing?.base_dir === "string" && collectionConfig.routing.base_dir.length > 0) {
+    return normalizeCollectionPath(collectionConfig.routing.base_dir);
+  }
+  const root = typeof themeConfig.site_tree?.notebooks?.base_dir === "string"
+    ? normalizeCollectionPath(themeConfig.site_tree.notebooks.base_dir)
+    : "";
+  return normalizeCollectionPath([root, collectionId].filter(Boolean).join("/"));
+}
+
+function buildNotebookTagNavigation(collectionId, baseDir, collectionItems) {
+  const tags = new Map();
+  const items = Array.isArray(collectionItems) ? collectionItems : [];
+  for (const item of items) {
+    if (item?.collection?.type !== "notebook" || item.collection.id !== collectionId) continue;
+    for (const hierarchy of normalizeTerms(item.tags)) {
+      const parts = hierarchy.split("/").filter(Boolean);
+      for (let index = 0; index < parts.length; index += 1) {
+        const name = parts.slice(0, index + 1).join("/");
+        const id = name.toLowerCase();
+        if (tags.has(id)) continue;
+        const parentName = parts.slice(0, index).join("/");
+        tags.set(id, {
+          id,
+          name,
+          label: parts[index],
+          path: normalizeCollectionPath(`${baseDir}/tags/${id}`),
+          parentId: parentName.length > 0 ? parentName.toLowerCase() : null
+        });
+      }
+    }
+  }
+  return Array.from(tags.values()).sort((left, right) => left.id.localeCompare(right.id));
+}
+
+function buildNotebookCollectionModel(input, collectionId) {
+  const themeConfig = input.themeConfig;
+  const siteConfig = input.siteConfig;
+  const collectionConfig = input.collectionConfig;
+  const siteTree = isPlainObject(themeConfig.site_tree) ? themeConfig.site_tree : {};
+  const notebookDefaults = isPlainObject(themeConfig.notebook) ? themeConfig.notebook : {};
+  const collectionListing = isPlainObject(collectionConfig.listing) ? collectionConfig.listing : {};
+  const defaultListing = isPlainObject(notebookDefaults.listing) ? notebookDefaults.listing : {};
+  const baseDir = notebookBaseDir(collectionId, collectionConfig, themeConfig);
+  const profileNavigation = pick(siteTree.notes?.navigation, CONTENT_MODEL_FIELDS.navigation);
+  const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
+  const profileSidebar = pick(siteTree.note?.sidebar, CONTENT_MODEL_FIELDS.sidebar);
+  const collectionSidebar = pick(collectionConfig.note?.sidebar, CONTENT_MODEL_FIELDS.sidebar);
+  const globalArticle = pick(themeConfig.article, CONTENT_MODEL_FIELDS.article);
+  const globalFooter = {
+    references: [],
+    ...pick(notebookDefaults.footer, CONTENT_MODEL_FIELDS.footer)
+  };
+
+  return {
+    id: collectionId,
+    profile: "notebook",
+    identity: normalizeCollectionIdentity(collectionConfig),
+    source: pick(collectionConfig.source, CONTENT_MODEL_FIELDS.source),
+    route: { baseDir },
+    navigation: {
+      ...mergeConfig(profileNavigation, collectionNavigation),
+      tags: buildNotebookTagNavigation(collectionId, baseDir, input.collectionItems)
+    },
+    listing: {
+      priority: collectionListing.priority ?? 0,
+      sort: collectionListing.sort ?? 0,
+      excerptLength: collectionListing.excerpt_length ?? defaultListing.excerpt_length ?? 0,
+      perPage: collectionListing.per_page ?? defaultListing.per_page ?? siteConfig.per_page ?? 10,
+      orderBy: collectionListing.order_by ?? defaultListing.order_by ?? "-updated"
+    },
+    presentation: {
+      card: pick(collectionConfig.card, CONTENT_MODEL_FIELDS.card),
+      hero: cloneValue(collectionConfig.hero || {}),
+      sidebar: mergeConfig(profileSidebar, collectionSidebar, "sidebar"),
+      article: mergeConfig(globalArticle, pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)),
+      footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),
+      comments: mergeConfig(
+        normalizeCollectionComments(themeConfig.comments),
+        pick(collectionConfig.comments, CONTENT_MODEL_FIELDS.comments)
+      )
+    },
+    visibility: {
+      listed: true,
+      searchable: true
+    }
   };
 }
 
@@ -178,6 +297,51 @@ function buildPostPageViewModel(input) {
   return deepFreeze({ collection, item });
 }
 
+function buildNotebookPageViewModel(input) {
+  const source = input.source || "<page>";
+  const themeSource = input.themeSource || "<theme>";
+  const collectionSource = input.collectionSource || "<notebook>";
+  const siteConfig = isPlainObject(input.siteConfig) ? input.siteConfig : {};
+  const themeConfig = isPlainObject(input.themeConfig) ? input.themeConfig : {};
+  const collectionConfig = input.collectionConfig;
+  const frontMatter = isPlainObject(input.frontMatter) ? input.frontMatter : {};
+  const page = input.page || {};
+  const collectionId = input.collectionId;
+
+  validateThemeConfig(themeConfig, themeSource);
+  validatePostProfileConfig(themeConfig, themeSource);
+  validateNotebookProfileConfig(themeConfig, themeSource);
+  if (!isPlainObject(collectionConfig)) {
+    throw new ContentConfigError([`${source}: 未找到 Notebook collection ${collectionId || "<unknown>"}`]);
+  }
+  validateCollectionConfig(collectionConfig, collectionSource);
+  validatePageConfig(frontMatter, source);
+  if (frontMatter.collection?.type !== "notebook") {
+    throw new ContentConfigError([`${source}: Note 必须显式声明 collection.type: notebook`]);
+  }
+  if (typeof collectionId !== "string" || collectionId.length === 0) {
+    throw new ContentConfigError([`${source}: Notebook collection id 必须是非空字符串`]);
+  }
+  if (frontMatter.collection.id !== collectionId) {
+    throw new ContentConfigError([
+      `${source}: collection.id ${frontMatter.collection.id} 与 Notebook ${collectionId} 不匹配`
+    ]);
+  }
+
+  const collection = buildNotebookCollectionModel({
+    ...input,
+    siteConfig,
+    themeConfig,
+    collectionConfig
+  }, collectionId);
+  const item = buildContentItemModel(page, frontMatter, collection, source, {
+    source: collection.source,
+    visibility: { listed: true, searchable: true }
+  });
+  return deepFreeze({ collection, item });
+}
+
 module.exports = {
+  buildNotebookPageViewModel,
   buildPostPageViewModel
 };

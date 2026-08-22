@@ -23,6 +23,7 @@
 
 | 日期 | 原问题 | 修正 | 依据 |
 | --- | --- | --- | --- |
+| 2026-08-22 | 严格 v2 Notebook/Note 已完成配置校验与数据树构建，但后续消费方仍需读取可变 Hexo 页面和原始 Notebook 配置，且标签导航、列表优先级与可见性尚无同构模型出口 | 新增 `buildNotebookPageViewModel()` 与生成前挂载；只接受严格 Notebook collection 归属，在构建期生成身份、源码、规范化路由、标签导航、列表/展示/可见性级联后的深度冻结普通对象，不提前接管 EJS | `scripts/lib/models/index.js`、`scripts/lib/content-config.js`、`scripts/events/lib/content-config.js`、`test/notebook-page-view-model.test.js`、`docs/designs/2026-08-22-notebook-page-view-model/` |
 | 2026-08-22 | 普通 Post 在构建期仍向后续消费方暴露可变 Hexo Document、Query 与隐式配置来源，尚无可供其它 profile 复用的模型接缝 | 新增严格 Post profile 校验和 `buildPostPageViewModel()`；按页面、Post profile、主题全局配置完成级联与路径/日期/分类规范化，生成深度冻结的 `CollectionModel`、`ContentItemModel` 与 `PageViewModel`，并仅为普通 Post 挂载 `page.viewModel` | `scripts/lib/models/index.js`、`scripts/lib/content-config.js`、`scripts/events/lib/content-config.js`、`test/page-view-model.test.js`、`docs/designs/2026-08-22-v2-architecture/` |
 | 2026-08-22 | v2 Wiki 项目名称已统一为 `name`，左栏 `related` 仍读取已移除的 `relatedProject.title`，导致“更多：…”下的条目只显示说明、标题 DOM 为空 | Related 条目改为使用 `relatedProject.name`，保留原有链接、说明、分组和 Collection 样式；增加模板字段映射回归测试 | `layout/_partial/widgets/related.ejs`、`test/related_widget_markup.test.js`、`docs/designs/2026-08-22-related-wiki-title/` |
 | 2026-08-22 | Topic 是博客文章的组织方式，根据 Topic 的 Identity 与文案自动生成 Brand 会让文章加入专栏后无意切换站点品牌 | 自动 Brand 仅保留给 Wiki / Notebook；Topic 默认完整继承全局 Brand，只有显式的 `sidebar.left.brand` 才会覆盖，页面覆盖仍保持最高优先级 | `scripts/lib/brand.js`、`test/brand.test.js`、`docs/designs/2026-08-22-topic-brand-inheritance/` |
