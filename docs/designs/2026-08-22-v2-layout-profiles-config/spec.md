@@ -1,7 +1,7 @@
 ---
 title: Stellar v2 Layout Profile 配置消费链
 date: 2026-08-22
-status: 已通过
+status: 已实施
 ---
 
 # Layout Profile 配置消费链方案
