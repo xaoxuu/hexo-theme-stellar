@@ -3,10 +3,17 @@
 const wiki = theme.wiki.tree[collection_id(page, "wiki")]
 const topic = theme.topic.tree[collection_id(page, "topic")]
 const notebook = theme.notebooks.tree[collection_id(page, "notebook")]
+const postViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'post'
+  ? viewModel
+  : null
 
-page.sidebar ||= {}
-page.sidebar.right ||= {}
-if (page.sidebar.right.widgets == null) {
+var sidebarState
+if (postViewModel) {
+  sidebarState = postViewModel.item.presentation.sidebar?.right || {}
+} else {
+  page.sidebar ||= {}
+  page.sidebar.right ||= {}
+  if (page.sidebar.right.widgets == null) {
   const { site_tree } = theme
   var sidebar
   if (is_home()) {
@@ -51,16 +58,18 @@ if (page.sidebar.right.widgets == null) {
     sidebar = wiki.sidebar.right.widgets
   }
 
-  page.sidebar.right.widgets = sidebar
+    page.sidebar.right.widgets = sidebar
+  }
+  sidebarState = page.sidebar.right
 }
 
 function layoutWidgets() {
-  if (page.sidebar.right.widgets == null || page.sidebar.right.widgets.length == 0) {
+  if (sidebarState.widgets == null || sidebarState.widgets.length == 0) {
     return ''
   }
   var el = ''
-  if (page.sidebar.right.widgets) {
-    page.sidebar.right.widgets.forEach((w, i) => {
+  if (sidebarState.widgets) {
+    sidebarState.widgets.forEach((w, i) => {
       let name = ''
       let widget = {}
       if (typeof w == 'string') {

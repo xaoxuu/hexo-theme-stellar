@@ -11,6 +11,7 @@ const {
   buildWikiPageViewModel
 } = require("../scripts/lib/models");
 const processContentConfig = require("../scripts/events/lib/content-config");
+const { attachPageViewModel } = require("../scripts/filters/lib/page-view-model");
 const processWikiTree = require("../scripts/events/lib/doc_tree");
 
 function assertDeepFrozen(value) {
@@ -360,7 +361,7 @@ test("合法 Post profile 生成固定结构的冻结 PageViewModel", () => {
     }
   });
 
-  assert.deepEqual(Object.keys(viewModel), ["collection", "item"]);
+  assert.deepEqual(Object.keys(viewModel), ["collection", "item", "render"]);
   assert.deepEqual(Object.keys(viewModel.collection), [
     "id",
     "profile",
@@ -377,6 +378,84 @@ test("合法 Post profile 生成固定结构的冻结 PageViewModel", () => {
   assert.equal(viewModel.item.title, "Hello");
   assert.deepEqual(viewModel.item.tags, ["Hexo"]);
   assert.deepEqual(viewModel.item.categories, ["开发"]);
+  assert.equal(viewModel.render.document.language, "");
+  assert.equal(viewModel.render.layout.pageType, "content");
+  assert.equal(viewModel.render.layout.articleType, "tech");
+  assert.equal(viewModel.render.seo.title, "Hello - Stellar");
+  assertDeepFrozen(viewModel);
+});
+
+test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD 回退", () => {
+  const viewModel = buildPostPageViewModel({
+    source: "source/_posts/render.md",
+    siteConfig: {
+      title: "Stellar",
+      author: "xaoxuu",
+      url: "https://example.com",
+      avatar: "/avatar.webp",
+      language: ["zh-CN", "en"],
+      keywords: ["Site"],
+      index_generator: { path: "blog" }
+    },
+    themeConfig: {
+      brand: { name: "Stellar" },
+      canonical: { originalHost: "canonical.example.com" },
+      open_graph: { enable: true, twitter_id: "xaoxuu" },
+      structured_data: { links: ["https://github.com/xaoxuu"] },
+      default: { cover: "/default.webp" },
+      style: {
+        prefers_theme: "auto",
+        site: { "background-image": "/background.webp" },
+        leftbar: { "ui-style": "card", blur: true }
+      },
+      site_tree: { post: { navigation: { menu: "post", breadcrumb: true } } }
+    },
+    frontMatter: {
+      title: "Render",
+      description: "",
+      keywords: [],
+      robots: "",
+      inject: { head: ["<meta name=\"page\" content=\"render\">"] },
+      open_graph: { image: null },
+      article: { type: "story" }
+    },
+    page: {
+      _id: "render",
+      source: "_posts/render.md",
+      path: "blog/render/",
+      permalink: "https://example.com/blog/render/",
+      title: "Render",
+      layout: "post",
+      excerpt: "<p>Rendered intro</p>",
+      content: "<p>Body</p><img data-src=\"/content.webp\">",
+      date: new Date("2026-08-22T08:00:00.000Z"),
+      updated: new Date("2026-08-22T09:00:00.000Z"),
+      tags: ["Stellar", "Hexo"],
+      categoryLinks: [{ name: "开发", path: "blog/categories/dev/" }]
+    }
+  });
+
+  assert.deepEqual(viewModel.render.document, {
+    language: "zh-CN",
+    headInject: ["<meta name=\"page\" content=\"render\">"],
+    preferredTheme: "auto"
+  });
+  assert.equal(viewModel.render.layout.indent, true);
+  assert.equal(viewModel.render.layout.siteBackground, true);
+  assert.equal(viewModel.render.layout.leftbarSurface, "card");
+  assert.equal(viewModel.render.layout.leftbarBlur, true);
+  assert.deepEqual(viewModel.render.layout.breadcrumbs, [{ name: "开发", path: "blog/categories/dev" }]);
+  assert.equal(viewModel.render.seo.description, "Rendered intro");
+  assert.deepEqual(viewModel.render.seo.keywords, ["Stellar", "Hexo"]);
+  assert.equal(viewModel.render.seo.robots, null);
+  assert.equal(viewModel.render.seo.canonical, "https://canonical.example.com/blog/render/");
+  assert.equal(viewModel.render.seo.openGraph.args.image, null);
+  assert.equal(viewModel.render.seo.openGraph.args.description, "Rendered intro");
+  assert.equal(viewModel.render.seo.openGraph.args.language, "zh-CN");
+  assert.deepEqual(viewModel.render.seo.openGraph.tags, ["Hexo", "Stellar"]);
+  assert.equal(viewModel.render.seo.jsonLd.description, "Rendered intro");
+  assert.deepEqual(viewModel.render.seo.jsonLd.image, ["/content.webp"]);
+  assert.equal(viewModel.render.seo.jsonLd.author.image, "https://example.com/avatar.webp");
   assertDeepFrozen(viewModel);
 });
 
@@ -577,8 +656,15 @@ test("生成前事件为普通 Post 与严格 Topic 挂载各自的 PageViewMode
     locals: { get: key => collections[key] }
   });
 
-  assert.equal(post.viewModel.collection.profile, "post");
-  assert.equal(Object.isFrozen(post.viewModel), true);
+  const renderedPost = attachPageViewModel({
+    ...post,
+    permalink: "https://example.com/post/",
+    content: "<p>Post</p>",
+    excerpt: "<p>Post</p>"
+  });
+  assert.equal(renderedPost.viewModel.collection.profile, "post");
+  assert.equal(Object.isFrozen(renderedPost.viewModel), true);
+  assert.equal(post.viewModel, undefined);
   assert.equal(topic.viewModel.collection.profile, "topic");
   assert.equal(Object.isFrozen(topic.viewModel), true);
   assert.equal(about.viewModel, undefined);

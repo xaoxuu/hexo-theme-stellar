@@ -3,10 +3,17 @@
 const wiki = theme.wiki.tree[collection_id(page, "wiki")]
 const topic = theme.topic.tree[collection_id(page, "topic")]
 const notebook = theme.notebooks.tree[collection_id(page, "notebook")]
+const postViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'post'
+  ? viewModel
+  : null
 
-page.sidebar ||= {}
-page.sidebar.left ||= {}
-if (page.sidebar.left.widgets == null) {
+var sidebarState
+if (postViewModel) {
+  sidebarState = postViewModel.item.presentation.sidebar?.left || {}
+} else {
+  page.sidebar ||= {}
+  page.sidebar.left ||= {}
+  if (page.sidebar.left.widgets == null) {
   const { site_tree } = theme
   var sidebar
   if (is_home()) {
@@ -51,7 +58,9 @@ if (page.sidebar.left.widgets == null) {
     sidebar = wiki.sidebar.left.widgets
   }
 
-  page.sidebar.left.widgets = sidebar
+    page.sidebar.left.widgets = sidebar
+  }
+  sidebarState = page.sidebar.left
 }
 
 
@@ -62,8 +71,8 @@ function layoutWidgets() {
   el += partial('grad-def', {id: 'leftbar-active-icon-grad'})
   // 导航区放进组件滚动区，一起滚动
   el += layoutNavArea()
-  if (page.sidebar.left.widgets) {
-    page.sidebar.left.widgets.forEach((w, i) => {
+  if (sidebarState.widgets) {
+    sidebarState.widgets.forEach((w, i) => {
       let name = ''
       let widget = {}
       if (typeof w == 'string') {
@@ -86,18 +95,18 @@ function layoutWidgets() {
   return el;
 }
 function layoutSearch() {
-  if (!page.sidebar.left.widgets) {
+  if (!sidebarState.widgets) {
     return ''
   }
   var search = {}
-  if (page.sidebar.left.search) {
-    search = page.sidebar.left.search
+  if (sidebarState.search) {
+    search = sidebarState.search
   } else if (wiki?.sidebar?.left?.search) {
     search = wiki.sidebar.left.search
   } else if (topic?.sidebar?.left?.search) {
     search = topic.sidebar.left.search
   }
-  return partial('search', {item: search})
+  return partial('search', {item: search, disabled: sidebarState.search === false})
 }
 function layoutFooterDiv() {
   const { social } = theme.footer
@@ -145,22 +154,28 @@ function layoutFooterDiv() {
 }
 
 function layoutBrand() {
-  return partial('brand', {placement: 'sidebar'})
+  return partial('brand', {
+    placement: 'sidebar',
+    brandModel: postViewModel ? postViewModel.render.layout.brand : undefined
+  })
 }
 
 function layoutNavArea() {
   var el = ''
-  if (page.sidebar.left.menu === false) {
+  if (sidebarState.menu === false) {
     return el
   }
   // Wiki 内容页默认隐藏导航区，可在页面或项目左侧栏配置中开启。
   if (collection_id(page, "wiki")?.length > 0) {
-    if (page.sidebar.left.menu !== true && wiki?.sidebar?.left?.menu !== true) {
+    if (sidebarState.menu !== true && wiki?.sidebar?.left?.menu !== true) {
       return el
     }
   }
   el += `<div class="nav-area">`
-  el += partial('menu', {where: 'sidebar'})
+  el += partial('menu', {
+    where: 'sidebar',
+    activeMenu: postViewModel ? postViewModel.item.navigation.menu : undefined
+  })
   el += `</div>`
   return el
 }

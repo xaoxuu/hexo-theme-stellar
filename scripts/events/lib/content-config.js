@@ -13,9 +13,12 @@ const {
 } = require("../../lib/source-config");
 const {
   buildNotebookPageViewModel,
-  buildPostPageViewModel,
   buildTopicPageViewModel
 } = require("../../lib/models");
+const {
+  resetPageViewModels,
+  setPostViewModelInput
+} = require("../../lib/page-view-model-registry");
 
 function plainTerms(value) {
   if (value == null) return [];
@@ -25,6 +28,18 @@ function plainTerms(value) {
     if (item != null && typeof item.name === "string") return item.name;
     return null;
   }).filter(Boolean);
+}
+
+function plainTermLinks(value) {
+  let items = value;
+  if (items != null && !Array.isArray(items) && typeof items.toArray === "function") {
+    items = items.toArray();
+  }
+  if (!Array.isArray(items)) return [];
+  return items.map(item => ({
+    name: typeof item?.name === "string" ? item.name : "",
+    path: typeof item?.path === "string" ? item.path : ""
+  })).filter(item => item.name.length > 0 && item.path.length > 0);
 }
 
 function plainDate(value) {
@@ -47,6 +62,9 @@ function pageModelInput(page, config) {
     updated: plainDate(page.updated ?? config.updated ?? page.date ?? config.date),
     tags: plainTerms(config.tags),
     categories: plainTerms(config.categories),
+    categoryLinks: plainTermLinks(page.categories),
+    lang: typeof page.lang === "string" ? page.lang : "",
+    language: typeof page.language === "string" ? page.language : "",
     collection: config.collection == null ? null : {
       type: config.collection.type,
       id: config.collection.id
@@ -55,6 +73,7 @@ function pageModelInput(page, config) {
 }
 
 module.exports = ctx => {
+  resetPageViewModels();
   const issues = [];
   const data = ctx.locals.get('data');
   const themeConfig = ctx.config.theme_config || ctx.theme.config;
@@ -125,15 +144,17 @@ module.exports = ctx => {
       if (config == null) return;
       try {
         validatePageConfig(config, sourcePathForPage(page));
-        if (type === "posts" && page.layout === "post" && config.collection == null) {
-          page.viewModel = buildPostPageViewModel({
+        if (type === "posts" && config.collection == null) {
+          const viewModelInput = {
             source: sourcePathForPage(page),
             themeSource: themeConfigSource,
             siteConfig: ctx.config,
             themeConfig: ctx.theme.config,
             frontMatter: config,
-            page: pageModelInput(page, config)
-          });
+            page: pageModelInput(page, config),
+            isBackup: process.env.IS_BACKUP === "true"
+          };
+          setPostViewModelInput(page, viewModelInput);
         }
         if (type === "posts" && config.collection?.type === "topic") {
           const collectionId = config.collection.id;

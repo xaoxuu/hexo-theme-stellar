@@ -8,6 +8,7 @@ const path = require("node:path");
 
 const { buildTopicPageViewModel } = require("../scripts/lib/models");
 const processContentConfig = require("../scripts/events/lib/content-config");
+const { attachPageViewModel } = require("../scripts/filters/lib/page-view-model");
 
 function assertDeepFrozenPlain(value) {
   if (value == null || typeof value !== "object") return;
@@ -322,7 +323,14 @@ test("生成前事件为严格 Topic 成员挂载模型并拒绝缺失集合", t
   assert.equal(first.viewModel.collection.navigation.series[1].date, "2026-08-20T00:00:00.000Z");
   assertDeepFrozenPlain(first.viewModel);
   assert.equal(second.viewModel.collection.profile, "topic");
-  assert.equal(plain.viewModel.collection.profile, "post");
+  const renderedPlain = attachPageViewModel({
+    ...plain,
+    permalink: "https://example.com/plain/",
+    content: "<p>Plain</p>",
+    excerpt: "<p>Plain</p>"
+  });
+  assert.equal(renderedPlain.viewModel.collection.profile, "post");
+  assert.equal(plain.viewModel, undefined);
 
   fs.writeFileSync(path.join(sourceDir, "_posts/missing.md"), "---\ntitle: Missing\nlayout: post\ncollection:\n  type: topic\n  id: missing\n---\n");
   const missing = {

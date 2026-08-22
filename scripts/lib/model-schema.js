@@ -79,7 +79,7 @@ function assertPageViewModel(profile, value) {
     throw new ModelSchemaError([`未知 Collection profile ${profile}`]);
   }
   const issues = [];
-  validateNode(MODEL_SCHEMAS.PageViewModel.schema, value, "PageViewModel", profile, issues);
+  validateNode(MODEL_SCHEMAS.PageViewModel.profiles[profile], value, "PageViewModel", profile, issues);
   if (issues.length > 0) throw new ModelSchemaError(issues);
   return value;
 }

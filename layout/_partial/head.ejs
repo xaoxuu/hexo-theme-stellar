@@ -1,4 +1,9 @@
 <%
+const postViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'post'
+  ? viewModel
+  : null
+const postRender = postViewModel?.render
+
 function strip_wiki_title(title, wiki) {
   if (!wiki) { return title; }
   var t = String(title || '');
@@ -13,7 +18,9 @@ function strip_wiki_title(title, wiki) {
 }
 
 function generate_title() {
-  if (collection_id(page, "wiki")) {
+  if (postRender) {
+    return postRender.seo.title
+  } else if (collection_id(page, "wiki")) {
     const proj = theme.wiki.tree[collection_id(page, "wiki")]
     const wiki = proj?.name || collection_id(page, "wiki")
     if (page.title) {
@@ -38,6 +45,10 @@ function generate_title() {
   return config.title;
 }
 function generate_description() {
+  if (postRender) {
+    if (postRender.seo.openGraph) return ''
+    return '<meta name="description" content="' + escape_meta_content(postRender.seo.description) + '">'
+  }
   if (theme.open_graph && theme.open_graph.enable) {
     return '';
   }
@@ -56,7 +67,11 @@ function generate_description() {
   return '<meta name="description" content="' + config.description + '">';
 }
 function generate_keywords() {
-  if (page.keywords && page.keywords.length > 0) {
+  if (postRender) {
+    return postRender.seo.keywords.length > 0
+      ? '<meta name="keywords" content="' + escape_meta_content(postRender.seo.keywords.join(',')) + '">'
+      : ''
+  } else if (page.keywords && page.keywords.length > 0) {
     return '<meta name="keywords" content="' + page.keywords + '">';
   } else if (page.tags && page.tags.length > 0) {
     return '<meta name="keywords" content="' + page.tags.map(tag => tag.name).join(',') + '">';
@@ -68,6 +83,11 @@ function generate_keywords() {
 }
 
 function generate_robots() {
+  if (postRender) {
+    return postRender.seo.robots
+      ? '<meta name="robots" content="' + escape_meta_content(postRender.seo.robots) + '">'
+      : ''
+  }
   const IS_BACKUP = process.env.IS_BACKUP === 'true';
   if (IS_BACKUP) {
     return '<meta name="robots" content="noindex, nofollow">';
@@ -80,6 +100,9 @@ function generate_robots() {
   }
 }
 function og_args() {
+  if (postRender) {
+    return Object.assign({}, postRender.seo.openGraph?.args || {})
+  }
   var args = {};
   if (theme.open_graph.twitter_id) {
     args.twitter_id = theme.open_graph.twitter_id;
@@ -106,29 +129,47 @@ function escape_meta_content(content) {
 }
 
 function generate_og_title() {
-  return escape_meta_content(strip_html(page.title || config.title));
+  return escape_meta_content(strip_html(postRender ? postRender.seo.openGraph.title : page.title || config.title));
 }
 
 function generate_og_site_name() {
-  return escape_meta_content(strip_html(config.title));
+  return escape_meta_content(strip_html(postRender ? postRender.seo.openGraph.siteName : config.title));
+}
+
+function generate_twitter_title() {
+  return escape_meta_content(strip_html(postRender ? postRender.seo.openGraph.twitterTitle : page.title || config.title));
 }
 
 function render_open_graph() {
-  if (!(theme.open_graph && theme.open_graph.enable)) {
+  if (postRender ? !postRender.seo.openGraph : !(theme.open_graph && theme.open_graph.enable)) {
     return '';
   }
   let meta = open_graph(og_args());
+  if (postRender) {
+    meta = meta.replace(/<meta property="article:tag" content="[^"]*">\n?/g, '');
+    var articleMeta = ''
+    if (postRender.seo.openGraph.publishedTime) {
+      articleMeta += `<meta property="article:published_time" content="${escape_meta_content(postRender.seo.openGraph.publishedTime)}">\n`
+    }
+    if (postRender.seo.openGraph.modifiedTime) {
+      articleMeta += `<meta property="article:modified_time" content="${escape_meta_content(postRender.seo.openGraph.modifiedTime)}">\n`
+    }
+    for (const tag of postRender.seo.openGraph.tags) {
+      articleMeta += `<meta property="article:tag" content="${escape_meta_content(tag)}">\n`
+    }
+    meta = meta.replace(/<meta name="twitter:card"/, `${articleMeta}<meta name="twitter:card"`)
+  }
   meta = meta.replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${generate_og_title()}">`);
   if (meta.match(/<meta property="og:site_name" content="[^"]*">/)) {
     meta = meta.replace(/<meta property="og:site_name" content="[^"]*">/, `<meta property="og:site_name" content="${generate_og_site_name()}">`);
   } else {
     meta += `<meta property="og:site_name" content="${generate_og_site_name()}">`;
   }
-  if (page.title) {
+  if (postRender || page.title) {
     if (meta.match(/<meta name="twitter:title" content="[^"]*">/)) {
-      meta = meta.replace(/<meta name="twitter:title" content="[^"]*">/, `<meta name="twitter:title" content="${generate_og_title()}">`);
+      meta = meta.replace(/<meta name="twitter:title" content="[^"]*">/, `<meta name="twitter:title" content="${generate_twitter_title()}">`);
     } else {
-      meta += `<meta name="twitter:title" content="${generate_og_title()}">`;
+      meta += `<meta name="twitter:title" content="${generate_twitter_title()}">`;
     }
   }
   return meta;
@@ -150,13 +191,18 @@ function custom_inject() {
   for (let item of (theme.inject?.head || [])) {
     el += item;
   }
-  for (let item of (page.inject?.head || [])) {
+  for (let item of (postRender ? postRender.document.headInject : page.inject?.head || [])) {
     el += item;
   }
   return el;
 }
 
 function generate_canonical() {
+  if (postRender) {
+    return postRender.seo.canonical
+      ? `<link rel="canonical" href="${escape_meta_content(postRender.seo.canonical)}">`
+      : ''
+  }
   const originalHost = theme.canonical.originalHost || '';
   if (originalHost.length > 0) {
     var path = pretty_url(page.path) || '/';
@@ -220,7 +266,7 @@ function generate_canonical() {
     <%- css(theme.style.codeblock.highlightjs_theme) %>
   <% } %>
 
-  <%- json_ld() %>
+  <%- json_ld(postViewModel || undefined) %>
   <%- custom_inject() %>
 
   <!-- icons.yml 驱动的 CSS 装饰图标 -->

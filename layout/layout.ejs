@@ -1,4 +1,74 @@
 <%
+var activeProfile = page.viewModel?.collection?.profile
+var isOrdinaryPost = page.layout === 'post' && page.collection?.type !== 'topic'
+if (isOrdinaryPost && (activeProfile !== 'post' || page.viewModel?.render == null)) {
+  throw new Error(`Stellar v2: 普通 Post ${page.source || page.path || '<unknown>'} 缺少合法 PageViewModel.render`)
+}
+var postViewModel = activeProfile === 'post' ? page.viewModel : null
+var html = ''
+
+if (postViewModel) {
+  function primitiveItem(kind, content) {
+    return partial('_partial/primitives/item', {kind: kind, body: content})
+  }
+  function primitiveSection(slot, items) {
+    return partial('_partial/primitives/section', {slot: slot, items: items})
+  }
+
+  var siteBackground = ''
+  if (postViewModel.render.layout.siteBackground) {
+    siteBackground = `<div class="sitebg"><div class="siteblur"></div></div>`
+  }
+
+  var coverSection = primitiveSection('cover', [
+    primitiveItem('cover', partial('_partial/cover/index').trim())
+  ])
+  var coverRegion = partial('_partial/primitives/region', {
+    slot: 'cover',
+    body: coverSection
+  })
+
+  var leftSection = primitiveSection('sidebar', [
+    primitiveItem('widget', partial('_partial/sidebar/index_leftbar', {viewModel: postViewModel}))
+  ])
+  var leftbarSurface = postViewModel.render.layout.leftbarSurface
+  var leftRegion = partial('_partial/primitives/region', {
+    slot: 'left',
+    body: leftSection,
+    surface: leftbarSurface,
+    blur: postViewModel.render.layout.leftbarBlur
+  })
+
+  var mainSection = primitiveSection('content', [
+    primitiveItem('content', body),
+    primitiveItem('footer', partial('_partial/main/footer')),
+    primitiveItem('mask', `<div class="main-mask" onclick="sidebar.dismiss()"></div>`)
+  ])
+  var mainRegion = partial('_partial/primitives/region', {
+    slot: 'main',
+    body: mainSection
+  })
+
+  var rightSection = primitiveSection('sidebar', [
+    primitiveItem('widget', partial('_partial/sidebar/index_rightbar', {viewModel: postViewModel}).trim())
+  ])
+  var rightRegion = partial('_partial/primitives/region', {
+    slot: 'right',
+    body: rightSection
+  })
+
+  var regions = leftRegion + mainRegion + rightRegion
+  html = partial('_partial/primitives/shell', {
+    viewModel: postViewModel,
+    preferredTheme: postViewModel.render.document.preferredTheme,
+    head: partial('_partial/head', {viewModel: postViewModel}),
+    siteBackground: siteBackground,
+    cover: coverRegion,
+    regions: regions,
+    menuButton: primitiveItem('menu-button', partial('_partial/menubtn')),
+    scripts: primitiveSection('scripts', [primitiveItem('scripts', partial('_partial/scripts'))])
+  })
+} else {
 // 页面类型：索引页面还是内容页面
 var page_type = 'index'
 if (['post', 'page', 'wiki', null].includes(page.layout)) {
@@ -42,7 +112,7 @@ var mobileBrandVisible = showMobileBrand(page, {
   isTag: is_tag()
 })
 
-var html = `<!DOCTYPE html>`
+html = `<!DOCTYPE html>`
 if (theme.style.prefers_theme === 'auto') {
     html += `<html lang="${page.lang}">`
 } else {
@@ -78,5 +148,6 @@ if (theme.style.prefers_theme === 'auto') {
     html += `</div>`
   html += `</body>`
 html += `</html>`
+}
 %>
 <%- html %>

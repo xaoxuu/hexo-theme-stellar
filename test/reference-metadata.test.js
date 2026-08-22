@@ -29,7 +29,10 @@ test("Reference 元数据覆盖四类已交付模型且字段注解完整", () =
       "CollectionModel:topic",
       "CollectionModel:wiki",
       "ContentItemModel:shared",
-      "PageViewModel:shared"
+      "PageViewModel:notebook",
+      "PageViewModel:post",
+      "PageViewModel:topic",
+      "PageViewModel:wiki"
     ]
   );
 
@@ -57,6 +60,9 @@ test("Reference 只来自模型 Schema 且不提前公开后续契约", () => {
     "CollectionModel",
     "CollectionModel",
     "ContentItemModel",
+    "PageViewModel",
+    "PageViewModel",
+    "PageViewModel",
     "PageViewModel"
   ]);
   assert.equal("blueprints" in metadata, false);
@@ -87,6 +93,17 @@ test("Reference 只来自模型 Schema 且不提前公开后续契约", () => {
     wikiCollection.fields.find(field => field.path === "source.repository")
       .consumers.includes("ContentItemModel")
   );
+
+  const postViewModel = metadata.models.find(model => (
+    model.name === "PageViewModel" && model.profile === "post"
+  ));
+  assert.ok(postViewModel.fields.some(field => field.path === "render.document.language"));
+  assert.ok(postViewModel.fields.some(field => field.path === "render.layout.breadcrumbs[].path"));
+  assert.ok(postViewModel.fields.some(field => field.path === "render.seo.jsonLd"));
+  for (const profile of ["notebook", "topic", "wiki"]) {
+    const pageViewModel = metadata.models.find(model => model.name === "PageViewModel" && model.profile === profile);
+    assert.equal(pageViewModel.fields.some(field => field.path === "render"), false);
+  }
   assert.ok(
     wikiCollection.fields.find(field => field.path === "navigation.menu")
       .consumers.includes("ContentItemModel")
@@ -158,6 +175,7 @@ test("模型输出由同一份 Schema 拒绝缺失字段、未知字段和错误
       assert.match(error.message, /PageViewModel\.collection\.id 应为 string，实际为 number/);
       assert.match(error.message, /PageViewModel\.collection\.profile 缺少必填模型字段/);
       assert.match(error.message, /PageViewModel\.collection\.unexpected 未在模型 Schema 中声明/);
+      assert.match(error.message, /PageViewModel\.render 缺少必填模型字段/);
       assert.match(error.message, /PageViewModel\.extra 未在模型 Schema 中声明/);
       return true;
     }

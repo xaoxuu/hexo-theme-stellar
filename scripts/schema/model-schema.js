@@ -475,10 +475,10 @@ function contentItemSchema() {
   return object(properties, { required: true, example: { id: "post-hello", title: "Hello Stellar", layout: "post" } });
 }
 
-function pageViewModelSchema() {
-  const factory = createFieldFactory("PageViewModel", ["page.viewModel", "Reference generator"]);
-  const { object } = factory;
-  return object({
+function pageViewModelSchema(profile) {
+  const factory = createFieldFactory(`PageViewModel:${profile}`, ["page.viewModel", "Reference generator"]);
+  const { array, field, object } = factory;
+  const properties = {
     collection: object({}, {
       default: computed("由当前 profile 的 CollectionModel 构建器生成"),
       example: { id: "post", profile: "post" },
@@ -491,7 +491,77 @@ function pageViewModelSchema() {
       reference: "ContentItemModel",
       required: true
     })
-  }, { required: true, example: { collection: { id: "post", profile: "post" }, item: { id: "post-hello" } } });
+  };
+
+  if (profile === "post") {
+    const stringItem = field("string", {
+      default: computed("由构建期数组逐项归一化"),
+      example: "Stellar"
+    });
+    const breadcrumbItem = object({
+      name: field("string", { default: literal(""), example: "思考", required: true }),
+      path: field("string", { default: literal(""), example: "blog/categories/thinking", required: true })
+    }, { example: { name: "思考", path: "blog/categories/thinking" } });
+    const openGraph = field(["object", "null"], {
+      default: computed("由 theme.open_graph 与页面 open_graph 生成；禁用时为 null"),
+      example: {
+        args: { image: "/cover.webp", twitter_card: "summary_large_image" },
+        title: "Hello Stellar",
+        siteName: "Stellar",
+        twitterTitle: "Hello Stellar"
+      },
+      required: true,
+      properties: {
+        args: field("object", { example: { image: "/cover.webp" }, required: true, additionalProperties: true }),
+        title: field("string", { example: "Hello Stellar", required: true }),
+        siteName: field("string", { example: "Stellar", required: true }),
+        twitterTitle: field("string", { example: "Hello Stellar", required: true }),
+        publishedTime: field(["string", "null"], { example: "2026-08-22T00:00:00.000Z", required: true }),
+        modifiedTime: field(["string", "null"], { example: "2026-08-22T00:00:00.000Z", required: true }),
+        tags: array(stringItem, { default: literal([]), example: ["Hexo"], required: true })
+      }
+    });
+    const renderBrand = brandSchema(factory);
+    renderBrand.required = true;
+    properties.render = object({
+      document: object({
+        language: field("string", { default: derived("page.lang", "page.language", "site.language"), example: "zh-CN", required: true }),
+        headInject: array(stringItem, { default: literal([]), example: [], required: true }),
+        preferredTheme: field("string", { default: derived("theme.style.prefers_theme"), example: "auto", required: true })
+      }, { required: true, example: { language: "zh-CN", headInject: [], preferredTheme: "auto" } }),
+      layout: object({
+        pageType: field("string", { default: literal("content"), example: "content", required: true }),
+        articleType: field(["string", "null"], { default: inherited("item.presentation.article.type"), example: "tech", required: true }),
+        indent: field("boolean", { default: inherited("item.presentation.article.indent", "articleType === story"), example: false, required: true }),
+        siteBackground: field("boolean", { default: derived("theme.style.site.background-image"), example: false, required: true }),
+        leftbarSurface: field("string", { default: derived("theme.style.leftbar.ui-style"), example: "glass", required: true }),
+        leftbarBlur: field("boolean", { default: derived("theme.style.leftbar.blur"), example: false, required: true }),
+        blogPath: field("string", { default: derived("site.index_generator.path"), example: "blog", required: true }),
+        brand: renderBrand,
+        breadcrumbs: array(breadcrumbItem, { default: literal([]), example: [{ name: "思考", path: "blog/categories/thinking" }], required: true })
+      }, { required: true, example: { pageType: "content", articleType: "tech", indent: false, blogPath: "blog", brand: {}, breadcrumbs: [] } }),
+      seo: object({
+        title: field("string", { default: computed("由文章标题与站点标题组合"), example: "Hello Stellar - Stellar", required: true }),
+        description: field("string", { default: derived("page.description", "item.excerpt", "item.content"), example: "文章摘要", required: true }),
+        keywords: array(stringItem, { default: derived("page.keywords", "item.tags", "site.keywords"), example: ["Hexo", "Stellar"], required: true }),
+        robots: field(["string", "null"], { default: derived("IS_BACKUP", "page.robots"), example: "noindex, nofollow", required: true }),
+        canonical: field(["string", "null"], { default: derived("theme.canonical.originalHost", "item.route.path"), example: "https://example.com/blog/hello/", required: true }),
+        openGraph,
+        jsonLd: field("object", { default: computed("由 BlogPosting 结构化数据规则生成"), example: { "@type": "BlogPosting" }, required: true, additionalProperties: true })
+      }, { required: true, example: { title: "Hello Stellar - Stellar", description: "文章摘要", keywords: ["Hexo"], robots: null, canonical: null, openGraph: null, jsonLd: { "@type": "BlogPosting" } } })
+    }, {
+      default: computed("由 Post PageViewModel 构建器生成"),
+      example: { document: { language: "zh-CN", headInject: [] }, layout: { pageType: "content" }, seo: { title: "Hello Stellar - Stellar" } },
+      required: true
+    });
+  }
+
+  return object(properties, {
+    required: true,
+    example: profile === "post"
+      ? { collection: { id: "post", profile: "post" }, item: { id: "post-hello" }, render: { document: {}, layout: {}, seo: {} } }
+      : { collection: { id: profile, profile }, item: { id: `${profile}-hello` } }
+  });
 }
 
 const MODEL_SCHEMAS = deepFreeze({
@@ -502,7 +572,7 @@ const MODEL_SCHEMAS = deepFreeze({
     schema: contentItemSchema()
   },
   PageViewModel: {
-    schema: pageViewModelSchema()
+    profiles: Object.fromEntries(PROFILES.map(profile => [profile, pageViewModelSchema(profile)]))
   }
 });
 

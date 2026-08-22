@@ -27,7 +27,8 @@ date: 2026-08-22
 
 ## Pre-alpha M2–M5
 
-- [ ] 模板可从 `PageViewModel` 获取布局、文章与集合状态。
+- [x] 普通 Post 的根布局、侧栏、Brand、菜单、面包屑与 SEO 从 `PageViewModel` 获取，五类布局原语已建立（#700，M2 部分交付）。
+- [ ] 普通 Post 的文章内容/标签/评论/相关推荐/列表，以及 Wiki、Topic、Notebook 消费链完成迁移；全部完成前 M2 保持未完成。
 - [ ] 三套 Blueprint dry-run 与写入计划一致，已有文件不会被覆盖。
 - [ ] doctor 的 text/json 输出包含文件、字段、实际类型、期望结构和迁移章节。
 - [ ] Extension 支持 mount、unmount、按需 import 和失败隔离。

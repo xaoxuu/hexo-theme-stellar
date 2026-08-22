@@ -7,7 +7,7 @@ hexo.on('generateBefore', () => {
   require('./lib/path_normalize')(hexo);
   // Merge config.
   require('./lib/config')(hexo);
-  // Stellar v2 公开内容配置严格校验，先于数据树构建执行。
+  // 保留既有的早期严格校验与 collection 建模顺序。
   require('./lib/content-config')(hexo);
   require('./lib/links')(hexo);
   require('./lib/authors')(hexo);
@@ -16,6 +16,11 @@ hexo.on('generateBefore', () => {
   require('./lib/utils')(hexo);
   require('./lib/notebooks')(hexo);
 });
+
+// 冷构建时内容文件在 generateBefore 之后才全部进入 locals；生成器读取前用完整集合重建。
+hexo.extend.filter.register('before_generate', () => {
+  require('./lib/content-config')(hexo);
+}, 1);
 
 hexo.on('generateAfter', () => {
   require('./lib/merge_posts')(hexo);

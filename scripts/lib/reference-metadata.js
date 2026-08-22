@@ -50,6 +50,13 @@ function generateReferenceMetadata() {
       profile,
       fields: flattenFields(MODEL_SCHEMAS.CollectionModel.profiles[profile])
     }));
+  const pageViewModels = Object.keys(MODEL_SCHEMAS.PageViewModel.profiles)
+    .sort(compareText)
+    .map(profile => ({
+      name: "PageViewModel",
+      profile,
+      fields: flattenFields(MODEL_SCHEMAS.PageViewModel.profiles[profile])
+    }));
 
   return {
     schemaVersion: 1,
@@ -62,11 +69,7 @@ function generateReferenceMetadata() {
         profiles: [...PROFILES].sort(compareText),
         fields: flattenFields(MODEL_SCHEMAS.ContentItemModel.schema)
       },
-      {
-        name: "PageViewModel",
-        profiles: [...PROFILES].sort(compareText),
-        fields: flattenFields(MODEL_SCHEMAS.PageViewModel.schema)
-      }
+      ...pageViewModels
     ]
   };
 }

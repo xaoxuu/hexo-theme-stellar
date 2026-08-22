@@ -1,5 +1,6 @@
 "use strict";
 
+const { gravatar, stripHTML, truncate } = require("hexo-util");
 const {
   CONTENT_MODEL_FIELDS,
   ContentConfigError,
@@ -15,6 +16,8 @@ const {
 } = require("../content-config");
 const { assertPageViewModel } = require("../model-schema");
 const { normalize_path: normalizePath } = require("../path_utils");
+const { mergeBrand } = require("../brand");
+const { firstContentImage, postDescription, postImages } = require("../seo");
 
 function cloneValue(value) {
   if (Array.isArray(value)) return value.map(cloneValue);
@@ -58,9 +61,22 @@ function mergeConfig(base, override, path = "") {
 
 function normalizeDate(value) {
   if (value == null) return null;
+  if (typeof value.format === "function") return value.format();
   if (typeof value.toISOString === "function") return value.toISOString();
   const date = new Date(value);
   return Number.isNaN(date.getTime()) ? null : date.toISOString();
+}
+
+function normalizeLanguage(...values) {
+  for (const value of values) {
+    if (Array.isArray(value)) {
+      const language = value.find(item => typeof item === "string" && item.length > 0);
+      if (language) return language;
+    } else if (typeof value === "string" && value.length > 0) {
+      return value;
+    }
+  }
+  return "";
 }
 
 function normalizeTerms(value) {
@@ -78,6 +94,172 @@ function normalizeTerms(value) {
 
 function normalizeCollectionPath(value) {
   return normalizePath(value).replace(/^\/+/, "");
+}
+
+function normalizeStringList(value) {
+  if (Array.isArray(value)) {
+    return value.map(item => String(item)).filter(Boolean);
+  }
+  if (typeof value === "string" && value.length > 0) {
+    return value.split(",").map(item => item.trim()).filter(Boolean);
+  }
+  return [];
+}
+
+function normalizeHeadInject(value) {
+  if (!Array.isArray(value)) return [];
+  return value.filter(item => typeof item === "string");
+}
+
+function normalizeCategoryLinks(value) {
+  if (!Array.isArray(value)) return [];
+  return value.map(item => ({
+    name: typeof item?.name === "string" ? item.name : "",
+    path: typeof item?.path === "string" ? normalizeCollectionPath(item.path) : ""
+  })).filter(item => item.name.length > 0 && item.path.length > 0);
+}
+
+function absoluteSiteAsset(value, siteUrl) {
+  if (typeof value !== "string" || value.length === 0) return "";
+  if (/^https?:\/\//.test(value)) return value;
+  const root = String(siteUrl || "").replace(/\/+$/, "");
+  if (root.length === 0) return value;
+  return `${root}/${value.replace(/^\/+/, "")}`;
+}
+
+function canonicalUrl(originalHost, path) {
+  if (typeof originalHost !== "string" || originalHost.length === 0) return null;
+  const normalizedPath = normalizeCollectionPath(path);
+  if (normalizedPath === "404" || normalizedPath.startsWith("404/")) return null;
+  return `https://${originalHost.replace(/^https?:\/\//, "").replace(/\/+$/, "")}/${normalizedPath}${normalizedPath ? "/" : ""}`;
+}
+
+function buildPostRenderModel(input, collection, item) {
+  const siteConfig = input.siteConfig;
+  const themeConfig = input.themeConfig;
+  const frontMatter = input.frontMatter;
+  const page = input.page;
+  const articleType = typeof item.presentation.article?.type === "string"
+    ? item.presentation.article.type
+    : null;
+  const hasIndent = Object.prototype.hasOwnProperty.call(item.presentation.article || {}, "indent");
+  const explicitDescription = typeof frontMatter.description === "string" && frontMatter.description.length > 0
+    ? frontMatter.description
+    : "";
+  const descriptionSource = explicitDescription || item.excerpt || item.content;
+  const description = truncate(stripHTML(descriptionSource), { length: 150 });
+  const openGraphDescription = stripHTML(descriptionSource)
+    .substring(0, 200)
+    .trim()
+    .replace(/\n/g, " ");
+  const explicitKeywords = normalizeStringList(frontMatter.keywords);
+  const siteKeywords = normalizeStringList(siteConfig.keywords);
+  const keywords = explicitKeywords.length > 0
+    ? explicitKeywords
+    : item.tags.length > 0 ? item.tags.slice() : siteKeywords;
+  const cardCover = item.presentation.card?.cover || "";
+  const bannerImage = item.presentation.banner?.image || "";
+  const defaultOgImage = siteConfig.avatar || (siteConfig.email ? gravatar(siteConfig.email) : "");
+  const openGraphConfig = isPlainObject(themeConfig.open_graph) ? themeConfig.open_graph : {};
+  let openGraph = null;
+  if (openGraphConfig.enable === true) {
+    const pageOpenGraph = isPlainObject(frontMatter.open_graph) ? frontMatter.open_graph : {};
+    const args = {
+      type: "article",
+      title: item.title,
+      url: item.route.permalink,
+      site_name: String(siteConfig.title || ""),
+      description: openGraphDescription,
+      language: normalizeLanguage(page.lang, page.language, frontMatter.lang, frontMatter.language, siteConfig.language),
+      author: String(siteConfig.author || ""),
+      date: false,
+      updated: false
+    };
+    if (openGraphConfig.twitter_id) args.twitter_id = openGraphConfig.twitter_id;
+    if (cardCover) args.twitter_card = "summary_large_image";
+    args.image = cardCover || bannerImage || firstContentImage(item.content) || defaultOgImage || null;
+    Object.assign(args, cloneValue(pageOpenGraph));
+    openGraph = {
+      args,
+      title: item.title,
+      siteName: String(siteConfig.title || ""),
+      twitterTitle: item.title,
+      publishedTime: pageOpenGraph.date === false || !item.date ? null : new Date(item.date).toISOString(),
+      modifiedTime: pageOpenGraph.updated === false || !item.updated ? null : new Date(item.updated).toISOString(),
+      tags: item.tags.slice().sort()
+    };
+  }
+
+  let authorImage = siteConfig.avatar || (siteConfig.email ? gravatar(siteConfig.email) : "");
+  authorImage = absoluteSiteAsset(authorImage, siteConfig.url);
+  const author = {
+    "@type": "Person",
+    name: String(siteConfig.author || ""),
+    sameAs: Array.isArray(themeConfig.structured_data?.links)
+      ? cloneValue(themeConfig.structured_data.links)
+      : []
+  };
+  const publisher = { ...author, "@type": "Organization" };
+  if (authorImage) {
+    author.image = authorImage;
+    publisher.image = authorImage;
+    publisher.logo = { "@type": "ImageObject", url: authorImage };
+  }
+  const images = postImages({
+    cardCover,
+    bannerImage,
+    photos: Array.isArray(frontMatter.photos) ? frontMatter.photos : [],
+    content: item.content,
+    defaultCover: themeConfig.default?.cover
+  });
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    author,
+    dateCreated: item.date,
+    dateModified: item.updated,
+    datePublished: item.date,
+    description: postDescription({ excerpt: item.excerpt, content: item.content }),
+    headline: item.title,
+    mainEntityOfPage: { "@type": "WebPage", "@id": item.route.permalink },
+    publisher,
+    url: item.route.permalink,
+    image: images
+  };
+  if (item.tags.length > 0) jsonLd.keywords = item.tags.join(", ");
+  if (images.length > 0) jsonLd.thumbnailUrl = images[0];
+
+  return {
+    document: {
+      language: normalizeLanguage(page.lang, page.language, frontMatter.lang, frontMatter.language, siteConfig.language),
+      headInject: normalizeHeadInject(frontMatter.inject?.head),
+      preferredTheme: themeConfig.style?.prefers_theme === "auto"
+        ? "auto"
+        : String(themeConfig.style?.prefers_theme || "")
+    },
+    layout: {
+      pageType: "content",
+      articleType,
+      indent: hasIndent ? item.presentation.article.indent === true : articleType === "story",
+      siteBackground: Boolean(themeConfig.style?.site?.["background-image"]),
+      leftbarSurface: themeConfig.style?.leftbar?.["ui-style"] === "card" ? "card" : "glass",
+      leftbarBlur: themeConfig.style?.leftbar?.blur === true,
+      blogPath: typeof siteConfig.index_generator?.path === "string" ? normalizeCollectionPath(siteConfig.index_generator.path) : "",
+      brand: mergeBrand(collection.identity, item.presentation.sidebar?.left?.brand),
+      breadcrumbs: normalizeCategoryLinks(page.categoryLinks)
+    },
+    seo: {
+      title: item.title ? `${item.title} - ${String(siteConfig.title || "")}` : String(siteConfig.title || ""),
+      description,
+      keywords,
+      robots: input.isBackup === true
+        ? "noindex, nofollow"
+        : typeof frontMatter.robots === "string" && frontMatter.robots.length > 0 ? frontMatter.robots : null,
+      canonical: canonicalUrl(themeConfig.canonical?.originalHost, item.route.path),
+      openGraph,
+      jsonLd
+    }
+  };
 }
 
 function normalizeBrand(brand, siteConfig) {
@@ -485,7 +667,8 @@ function buildPostPageViewModel(input) {
   validatePageConfig(frontMatter, source);
   const collection = buildCollectionModel(themeConfig, siteConfig);
   const item = buildContentItemModel(page, frontMatter, collection, source);
-  return deepFreeze(assertPageViewModel("post", { collection, item }));
+  const render = buildPostRenderModel({ ...input, siteConfig, themeConfig, frontMatter, page }, collection, item);
+  return deepFreeze(assertPageViewModel("post", { collection, item, render }));
 }
 
 function buildWikiPageViewModel(input) {

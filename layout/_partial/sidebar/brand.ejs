@@ -1,5 +1,5 @@
 <%
-var brand = brandConfig(page)
+var brand = typeof brandModel !== 'undefined' ? brandModel : brandConfig(page)
 
 function layoutBrandTitle() {
   const name = brandText(brand.name)

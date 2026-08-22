@@ -1,5 +1,6 @@
 <%
 function layoutDiv() {
+  var currentMenu = typeof activeMenu !== 'undefined' ? activeMenu : page.navigation?.menu
   var entries = []
   for (var menuItem of (theme.menubar.items || [])) {
     if (menuItem == null || menuItem.id == null || menuItem.url == null || menuItem.title == null) {
@@ -10,20 +11,15 @@ function layoutDiv() {
       title: __(menuItem.title),
       icon: menuItem.icon,
       theme: menuItem.theme,
-      active: menuItem.id == page.navigation?.menu,
+      active: menuItem.id == currentMenu,
       className: menuItem.theme?.length > 0 ? 'is-themed' : '',
       gradientId: 'menu-grad-' + menuItem.id
     })
   }
-  var body = partial('_partial/components/collection', {options: {
-    layout: 'list',
-    variant: 'nav',
-    items: entries
-  }})
-  if ((body || '').trim().length === 0) {
-    return ''
-  }
-  return `<nav class="menu dis-select${where == 'main' ? ' mobile-hidden' : ''}">${body}</nav>`
+  return partial('_partial/primitives/navigation', {
+    placement: where == 'main' ? 'main' : 'sidebar',
+    entries: entries
+  })
 }
 %>
 

@@ -33,6 +33,22 @@ tags:
 
 布局选择逻辑与各页面类型模板见[页面模板与路由](page-templates-routing.md)；侧边栏小部件配置与渲染见[侧边栏系统](sidebar-system.md)；Brand、导航栏与页头渲染见[Brand、导航与页头](logo-navigation-headers.md)；`<head>` 与 SEO 元数据见[HTML Head 与 SEO 元数据](head-seo.md)。
 
+## v2 Post 渲染内核切片
+
+Pre-alpha M2 的首个切片只接管普通 Post。`layout.ejs` 要求 `page.viewModel.collection.profile === 'post'` 且存在合法 `render`；缺失时报告 `page.source` 并终止构建，不读取旧页面字段兜底。Wiki、Topic、Notebook、列表与普通 Page 仍走下文记录的既有分支。
+
+普通 Post 通过五类内部 EJS 原语保持原有 DOM、class 与视觉行为：
+
+| 原语 | 责任 |
+| --- | --- |
+| Shell | `html`、`body`、`l_body` 根骨架与文档属性 |
+| Region | `l_cover`、`l_left`、`l_main`、`l_right` 固定区域 |
+| Section | 封闭 slot 内的 Item 序列 |
+| Item | 封闭 kind 的受信任 HTML body |
+| Navigation | 显式条目与激活状态的菜单适配 |
+
+原语只接受显式 locals，不读取或修改 `page`、`theme`、`site`；slot/kind 不在白名单时立即失败。由主题内部 partial 生成的 body 按受信任 HTML 透传，所有原语生成的属性值仍进行转义。
+
 ## 模板架构概览
 
 所有渲染出的 HTML 页面都经过 `layout.ejs`。Hexo 的模板继承机制把匹配到的页面布局输出放入 `body` 变量，`layout.ejs` 再把它嵌入 `l_main` 内容区。

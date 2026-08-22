@@ -1,5 +1,18 @@
 <%
 function layoutDiv() {
+  const postViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'post'
+    ? viewModel
+    : null
+  if (postViewModel) {
+    var postHtml = ''
+    postHtml += `<span class="sep"></span>`
+    postHtml += `<a class="cap breadcrumb" href="${pretty_url(postViewModel.render.layout.blogPath)}">${__("btn.blog")}</a>`
+    for (var breadcrumb of postViewModel.render.layout.breadcrumbs) {
+      postHtml += `<span class="sep"></span>`
+      postHtml += `<a class="cap breadcrumb-link" href="${pretty_url(breadcrumb.path)}">${escape_html(breadcrumb.name)}</a>`
+    }
+    return postHtml
+  }
   const topicObject = theme.topic.tree[collection_id(page, "topic")]
   var el = ''
   if (topicObject) { // 专栏文章

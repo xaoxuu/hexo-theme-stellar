@@ -1,6 +1,7 @@
 <%
 
-var banner = Object.assign({}, page.banner || {})
+const postViewModel = page.viewModel?.collection?.profile === 'post' ? page.viewModel : null
+var banner = Object.assign({}, postViewModel ? postViewModel.item.presentation.banner : page.banner || {})
 
 if (banner.image == null && theme.topic.tree[collection_id(page, "topic")]?.hero?.background?.image != null) {
   banner.image = theme.topic.tree[collection_id(page, "topic")].hero.background.image
@@ -9,12 +10,12 @@ if (banner.image == null && theme.topic.tree[collection_id(page, "topic")]?.hero
 }
 // 标题
 if (banner.headline == null) {
-  banner.headline = page.title
+  banner.headline = postViewModel ? postViewModel.item.title : page.title
 }
 
 // 上块：第一行（左侧面包屑 + 右侧阅读时长 / AI 标签）+ 第二行（日期信息，靠左）
 function layoutTop() {
-  if (page.navigation?.breadcrumb === false) {
+  if ((postViewModel ? postViewModel.item.navigation.breadcrumb : page.navigation?.breadcrumb) === false) {
     return ''
   }
   var el = ''
@@ -31,7 +32,7 @@ function layoutTop() {
     } else if (collection_id(page, "notebook")) {
       el += partial('breadcrumb/note')
     } else if (page.layout == 'post') {
-      el += partial('breadcrumb/blog')
+      el += partial('breadcrumb/blog', {viewModel: postViewModel})
     } else {
       el += partial('breadcrumb/page')
     }
@@ -39,7 +40,7 @@ function layoutTop() {
   // 2.2 右：字数和预计阅读时长 + AI 成分标签（仅在有内容时渲染）
   var rightHtml = ''
   // 字数和预计阅读时长，置于第一行右侧（#302）
-  if (page.layout == 'post' && theme.article.reading_time) {
+  if ((postViewModel ? postViewModel.item.layout : page.layout) == 'post' && theme.article.reading_time) {
     var _wc = word_count(page)
     if (_wc > 0) {
       rightHtml += `<span class="cap reading">${__("meta.word_count", _wc)} · ${__("meta.reading_time", reading_time(page))}</span>`
@@ -48,7 +49,7 @@ function layoutTop() {
   // AI 成分标签：置于第一行最右（阅读时长右侧）；
   // banner 含图片时不用配置色，继承默认文字色（--text-banner）
   const bannerHasImage = banner.image && banner.image.length > 0
-  rightHtml += ai_label(page.article?.ai_label, 'cap', bannerHasImage)
+  rightHtml += ai_label(postViewModel ? postViewModel.item.presentation.article?.ai_label : page.article?.ai_label, 'cap', bannerHasImage)
   if (rightHtml.length > 0) {
     el += `<div class="right">${rightHtml}</div>`
   }

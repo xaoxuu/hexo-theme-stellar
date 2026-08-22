@@ -27,6 +27,12 @@ tags:
 
 本文介绍 Stellar 的 HTML `<head>` 生成与 SEO 元数据系统：meta 标签、Open Graph 协议、JSON-LD 结构化数据、规范链接（canonical URL）处理与克隆站检测。整体页面布局结构见[页面模板与路由](page-templates-routing.md)。
 
+## v2 普通 Post SEO 投影
+
+普通 Post 在 Markdown 渲染完成后的构建阶段生成 `PageViewModel.render.seo`，`head.ejs` 与 `json_ld()` 只消费该投影中的最终 title、description、keywords、robots、canonical、Open Graph 参数和 JSON-LD 对象。投影保留既有回退顺序：页面描述与关键词优先，随后为摘要/正文、标签和站点默认值；社交图片继续按卡片封面、横幅、正文首图、站点头像回退，JSON-LD 图片继续按卡片封面、横幅、相册、正文首图、默认封面回退。
+
+页面级空字符串或空数组仍按既有规则进入下一层回退；`open_graph` 参数中的显式空值作为最终覆盖保留。备用构建投影 `noindex, nofollow`，canonical 与 404 排除规则在模型层完成。其它 profile 继续使用本页后续章节描述的旧 head 分支。
+
 ## 系统概览
 
 HTML head 生成系统实现在 [layout/_partial/head.ejs](../../../layout/_partial/head.ejs)，为搜索引擎、社交平台与浏览器生成全部元数据：

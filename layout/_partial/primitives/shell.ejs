@@ -1,0 +1,23 @@
+<%
+if (!viewModel || viewModel.collection?.profile !== 'post' || !viewModel.render) {
+  throw new Error('Stellar Layout Shell: 普通 Post 缺少合法 PageViewModel.render')
+}
+var render = viewModel.render
+var item = viewModel.item
+var language = escape_html(render.document.language)
+var htmlAttributes = preferredTheme === 'auto' ? '' : ` data-theme="${escape_html(preferredTheme)}"`
+var articleType = render.layout.articleType == null ? 'undefined' : escape_html(render.layout.articleType)
+var html = `<!DOCTYPE html>`
+html += `<html lang="${language}"${htmlAttributes}>`
+html += head
+html += `<body>`
+html += siteBackground
+html += cover
+html += `<div class="l_body ${render.layout.pageType}" id="start" layout="${escape_html(item.layout)}" type="${articleType}" ${render.layout.indent ? 'text-indent' : ''}>`
+html += regions
+html += menuButton
+html += `</div>`
+html += `<div class="scripts">${scripts}</div>`
+html += `</body></html>`
+%>
+<%- html %>

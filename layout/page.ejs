@@ -1,10 +1,11 @@
 <%
 const { layout } = page
+const postViewModel = page.viewModel?.collection?.profile === 'post' ? page.viewModel : null
 // 是否使用 Heti 布局插件
 const isUsingHeti = theme.plugins.heti?.enable
 
 const notebook = theme.notebooks.tree[collection_id(page, "notebook")]
-if (notebook) {
+if (!postViewModel && notebook) {
   page.navigation ||= {}
   page.footer ||= {}
   page.navigation.menu ??= notebook.navigation?.menu
@@ -13,8 +14,8 @@ if (notebook) {
 }
 
 // 默认主导航菜单
-page.navigation ||= {}
-if (page.navigation.menu == null) {
+if (!postViewModel) page.navigation ||= {}
+if (!postViewModel && page.navigation.menu == null) {
   if (collection_id(page, "wiki")?.length > 0) {
     page.navigation.menu = theme.site_tree.wiki.navigation.menu
   } else if (collection_id(page, "topic")?.length > 0) {

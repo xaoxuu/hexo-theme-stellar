@@ -17,19 +17,21 @@ date: 2026-08-22
 
 ## Pre-alpha M2：渲染内核
 
-6. [ ] 用 ViewModel 接入页面根布局，并新增五类布局原语。
+6. [x] 普通 Post 用 ViewModel 接入根布局、侧栏、Brand、菜单、面包屑与 SEO，并新增五类布局原语（部分交付，[#700](https://github.com/xaoxuu/hexo-theme-stellar/issues/700)）。
+7. [ ] 迁移普通 Post 的文章内容、标签、评论、相关推荐与列表消费链。
+8. [ ] 迁移 Wiki、Topic、Notebook 的布局、导航、列表与 SEO 消费链；完成后才可标记 M2 完成。
 
 ## Pre-alpha M3：分发入口
 
-7. [ ] 实现三套 Blueprint、两套 Visual Style、init 与 doctor。
+9. [ ] 实现三套 Blueprint、两套 Visual Style、init 与 doctor。
 
 ## Pre-alpha M4：浏览器运行时
 
-8. [ ] 实现 ESM runtime、Extension registry、request/cache 与生命周期测试。
+10. [ ] 实现 ESM runtime、Extension registry、request/cache 与生命周期测试。
 
 ## Pre-alpha M5：Reference 与 Alpha 集成
 
-9. [ ] 用首批元数据完成公开 Reference 文档生成、链接集成与发布演练。
+11. [ ] 用首批元数据完成公开 Reference 文档生成、链接集成与发布演练。
 
 ## Alpha 1 门禁
 

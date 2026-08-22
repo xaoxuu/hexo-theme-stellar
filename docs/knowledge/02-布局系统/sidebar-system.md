@@ -12,6 +12,12 @@ tags:
 > [!IMPORTANT]
 > v2 页面与集合统一使用 `sidebar.left` / `sidebar.right`；本页涉及内容字段时，以[内容配置 Schema v2](../03-内容系统/content-schema-v2.md)为准。
 
+## v2 普通 Post 消费边界
+
+普通 Post 的左右栏选择改为读取 `PageViewModel.item.presentation.sidebar`，Brand 读取 `render.layout.brand`，菜单激活读取 `item.navigation.menu`。页面 Front Matter、Post profile 与全局默认值的级联在模型层完成；模板不再修改 Post 的 `page.sidebar`。Widget 的具体 partial、搜索交互和 footer social 继续复用既有渲染器，因此 DOM、class 与视觉行为不变。
+
+Topic、Wiki、Notebook、列表页和普通 Page 尚未进入本切片，仍按本页后续章节描述的旧选择链工作。
+
 <details>
 <summary>相关源码文件</summary>
 

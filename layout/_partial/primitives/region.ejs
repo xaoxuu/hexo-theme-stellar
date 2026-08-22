@@ -1,0 +1,22 @@
+<%
+var allowedSlots = ['cover', 'left', 'main', 'right']
+if (!allowedSlots.includes(slot)) {
+  throw new Error('Stellar Layout Region: 未知 slot ' + slot)
+}
+var regionBody = typeof body === 'string' ? body : ''
+var html = ''
+if (slot === 'cover') {
+  html = `<div id="l_cover">${regionBody}</div>`
+} else if (slot === 'left') {
+  var leftSurface = surface === 'card' ? 'card' : 'glass'
+  html += `<aside class="l_left${leftSurface === 'card' ? ' leftbar-card' : ''}" data-ui-surface="${leftSurface}">`
+  html += `<div class="sidebg"></div>`
+  html += `<div class="leftbar-container${blur === true ? ' leftbar-blur' : ''}">${regionBody}</div>`
+  html += `</aside>`
+} else if (slot === 'main') {
+  html = `<div class="l_main" id="main" data-ui-surface="content">${regionBody}</div>`
+} else if (slot === 'right') {
+  html = `<aside class="l_right" data-ui-surface="sidebar">${regionBody}</aside>`
+}
+%>
+<%- html %>

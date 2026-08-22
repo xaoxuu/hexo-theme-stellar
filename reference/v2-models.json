@@ -8272,12 +8272,7 @@
     },
     {
       "name": "PageViewModel",
-      "profiles": [
-        "notebook",
-        "post",
-        "topic",
-        "wiki"
-      ],
+      "profile": "notebook",
       "fields": [
         {
           "path": "collection",
@@ -8289,7 +8284,7 @@
             "kind": "computed",
             "description": "由当前 profile 的 CollectionModel 构建器生成"
           },
-          "scope": "PageViewModel",
+          "scope": "PageViewModel:notebook",
           "consumers": [
             "page.viewModel",
             "Reference generator"
@@ -8310,7 +8305,935 @@
             "kind": "computed",
             "description": "由 ContentItemModel 构建器生成"
           },
-          "scope": "PageViewModel",
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "id": "post-hello",
+            "title": "Hello Stellar",
+            "layout": "post"
+          },
+          "reference": "ContentItemModel"
+        }
+      ]
+    },
+    {
+      "name": "PageViewModel",
+      "profile": "post",
+      "fields": [
+        {
+          "path": "collection",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由当前 profile 的 CollectionModel 构建器生成"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "id": "post",
+            "profile": "post"
+          },
+          "reference": "CollectionModel"
+        },
+        {
+          "path": "item",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 ContentItemModel 构建器生成"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "id": "post-hello",
+            "title": "Hello Stellar",
+            "layout": "post"
+          },
+          "reference": "ContentItemModel"
+        },
+        {
+          "path": "render",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 Post PageViewModel 构建器生成"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "document": {
+              "language": "zh-CN",
+              "headInject": []
+            },
+            "layout": {
+              "pageType": "content"
+            },
+            "seo": {
+              "title": "Hello Stellar - Stellar"
+            }
+          }
+        },
+        {
+          "path": "render.document",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": {}
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "language": "zh-CN",
+            "headInject": [],
+            "preferredTheme": "auto"
+          }
+        },
+        {
+          "path": "render.document.headInject",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": []
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": []
+        },
+        {
+          "path": "render.document.language",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "page.lang",
+              "page.language",
+              "site.language"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "zh-CN"
+        },
+        {
+          "path": "render.document.preferredTheme",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "theme.style.prefers_theme"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "auto"
+        },
+        {
+          "path": "render.layout",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": {}
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "pageType": "content",
+            "articleType": "tech",
+            "indent": false,
+            "blogPath": "blog",
+            "brand": {},
+            "breadcrumbs": []
+          }
+        },
+        {
+          "path": "render.layout.articleType",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.presentation.article.type"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "tech"
+        },
+        {
+          "path": "render.layout.blogPath",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "site.index_generator.path"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "blog"
+        },
+        {
+          "path": "render.layout.brand",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "name": "Stellar",
+            "tagline": "每个人的独立博客",
+            "url": "/"
+          }
+        },
+        {
+          "path": "render.layout.brand.image",
+          "type": [
+            "object"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "src": "/images/avatar.webp",
+            "style": "avatar"
+          }
+        },
+        {
+          "path": "render.layout.brand.image.background",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "var(--block)"
+        },
+        {
+          "path": "render.layout.brand.image.src",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/images/avatar.webp"
+        },
+        {
+          "path": "render.layout.brand.image.style",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "avatar"
+        },
+        {
+          "path": "render.layout.brand.image.url",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/about/"
+        },
+        {
+          "path": "render.layout.brand.name",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "site.title"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Stellar"
+        },
+        {
+          "path": "render.layout.brand.tagline",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "site.subtitle"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "每个人的独立博客"
+        },
+        {
+          "path": "render.layout.brand.url",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/"
+        },
+        {
+          "path": "render.layout.breadcrumbs",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": []
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": [
+            {
+              "name": "思考",
+              "path": "blog/categories/thinking"
+            }
+          ]
+        },
+        {
+          "path": "render.layout.breadcrumbs[].name",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "思考"
+        },
+        {
+          "path": "render.layout.breadcrumbs[].path",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "blog/categories/thinking"
+        },
+        {
+          "path": "render.layout.indent",
+          "type": [
+            "boolean"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.presentation.article.indent",
+              "articleType === story"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": false
+        },
+        {
+          "path": "render.layout.leftbarBlur",
+          "type": [
+            "boolean"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "theme.style.leftbar.blur"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": false
+        },
+        {
+          "path": "render.layout.leftbarSurface",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "theme.style.leftbar.ui-style"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "glass"
+        },
+        {
+          "path": "render.layout.pageType",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": "content"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "content"
+        },
+        {
+          "path": "render.layout.siteBackground",
+          "type": [
+            "boolean"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "theme.style.site.background-image"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": false
+        },
+        {
+          "path": "render.seo",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": {}
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "title": "Hello Stellar - Stellar",
+            "description": "文章摘要",
+            "keywords": [
+              "Hexo"
+            ],
+            "robots": null,
+            "canonical": null,
+            "openGraph": null,
+            "jsonLd": {
+              "@type": "BlogPosting"
+            }
+          }
+        },
+        {
+          "path": "render.seo.canonical",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "theme.canonical.originalHost",
+              "item.route.path"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "https://example.com/blog/hello/"
+        },
+        {
+          "path": "render.seo.description",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "page.description",
+              "item.excerpt",
+              "item.content"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "文章摘要"
+        },
+        {
+          "path": "render.seo.jsonLd",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 BlogPosting 结构化数据规则生成"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "@type": "BlogPosting"
+          },
+          "open": true
+        },
+        {
+          "path": "render.seo.keywords",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "page.keywords",
+              "item.tags",
+              "site.keywords"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": [
+            "Hexo",
+            "Stellar"
+          ]
+        },
+        {
+          "path": "render.seo.openGraph",
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 theme.open_graph 与页面 open_graph 生成；禁用时为 null"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "args": {
+              "image": "/cover.webp",
+              "twitter_card": "summary_large_image"
+            },
+            "title": "Hello Stellar",
+            "siteName": "Stellar",
+            "twitterTitle": "Hello Stellar"
+          }
+        },
+        {
+          "path": "render.seo.openGraph.args",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由构建期模型归一化"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "image": "/cover.webp"
+          },
+          "open": true
+        },
+        {
+          "path": "render.seo.openGraph.modifiedTime",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由构建期模型归一化"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "2026-08-22T00:00:00.000Z"
+        },
+        {
+          "path": "render.seo.openGraph.publishedTime",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由构建期模型归一化"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "2026-08-22T00:00:00.000Z"
+        },
+        {
+          "path": "render.seo.openGraph.siteName",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由构建期模型归一化"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Stellar"
+        },
+        {
+          "path": "render.seo.openGraph.tags",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": []
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": [
+            "Hexo"
+          ]
+        },
+        {
+          "path": "render.seo.openGraph.title",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由构建期模型归一化"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Hello Stellar"
+        },
+        {
+          "path": "render.seo.openGraph.twitterTitle",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由构建期模型归一化"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Hello Stellar"
+        },
+        {
+          "path": "render.seo.robots",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "IS_BACKUP",
+              "page.robots"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "noindex, nofollow"
+        },
+        {
+          "path": "render.seo.title",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由文章标题与站点标题组合"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Hello Stellar - Stellar"
+        }
+      ]
+    },
+    {
+      "name": "PageViewModel",
+      "profile": "topic",
+      "fields": [
+        {
+          "path": "collection",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由当前 profile 的 CollectionModel 构建器生成"
+          },
+          "scope": "PageViewModel:topic",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "id": "post",
+            "profile": "post"
+          },
+          "reference": "CollectionModel"
+        },
+        {
+          "path": "item",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 ContentItemModel 构建器生成"
+          },
+          "scope": "PageViewModel:topic",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "id": "post-hello",
+            "title": "Hello Stellar",
+            "layout": "post"
+          },
+          "reference": "ContentItemModel"
+        }
+      ]
+    },
+    {
+      "name": "PageViewModel",
+      "profile": "wiki",
+      "fields": [
+        {
+          "path": "collection",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由当前 profile 的 CollectionModel 构建器生成"
+          },
+          "scope": "PageViewModel:wiki",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "id": "post",
+            "profile": "post"
+          },
+          "reference": "CollectionModel"
+        },
+        {
+          "path": "item",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 ContentItemModel 构建器生成"
+          },
+          "scope": "PageViewModel:wiki",
           "consumers": [
             "page.viewModel",
             "Reference generator"

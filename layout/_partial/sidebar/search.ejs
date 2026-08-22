@@ -13,7 +13,7 @@ if (item.placeholder == null && item.filter == 'auto') {
 }
 function layoutDiv() {
   var el = ''
-  if (page.sidebar?.left?.search === false) {
+  if (typeof disabled !== 'undefined' && disabled === true) {
     return el
   }
   el += `<div class="search-wrapper" id="search-wrapper">`
