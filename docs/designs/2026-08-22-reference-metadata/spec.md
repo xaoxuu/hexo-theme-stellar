@@ -8,7 +8,7 @@ status: 实施中
 
 ## 1. 问题与目标
 
-[#699](https://github.com/xaoxuu/hexo-theme-stellar/issues/699) 要把 Alpha 1 已交付的 post、wiki、topic、notebook 构建期模型转为文档与工具可消费的首批 Reference 元数据。当前 `CollectionModel`、`ContentItemModel` 与 `PageViewModel` 已有稳定实现和行为测试，但字段事实仍隐含在模型构造代码与断言中，无法稳定生成 Reference，也容易在另写字段表后产生漂移。
+[#699](https://github.com/xaoxuu/hexo-theme-stellar/issues/699) 要把 Pre-alpha M1 已交付的 post、wiki、topic、notebook 构建期模型转为文档与工具可消费的首批 Reference 元数据。当前 `CollectionModel`、`ContentItemModel` 与 `PageViewModel` 已有稳定实现和行为测试，但字段事实仍隐含在模型构造代码与断言中，无法稳定生成 Reference，也容易在另写字段表后产生漂移。
 
 本切片建立一个声明式模型 Schema 作为模型结构校验与 Reference 生成的共同事实来源。每个已交付字段都声明类型、默认值语义、作用域、当前消费方和最小示例；生成结果可重复、顺序稳定，并且只覆盖四类已交付 profile 的三个模型。
 
@@ -49,7 +49,7 @@ status: 实施中
 
 - 新增：`scripts/schema/`、Reference 生成库与命令、生成的 JSON、单元测试。
 - 修改：`scripts/lib/models/index.js`、`package.json`、v2 architecture spec/plan/checklist、内容 Schema 知识库与 `VERIFICATION.md`。
-- 主工程：只更新 `docs/specs/stellar-v2-blueprint/` 中 Alpha 1 与 #699 的事实状态，不更新子模块指针，不提交任何改动。
+- 主工程：只更新 `docs/specs/stellar-v2-blueprint/` 中 Pre-alpha M1 与 #699 的事实状态，不更新子模块指针，不提交任何改动。
 
 ## 5. 验证方式
 

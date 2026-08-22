@@ -5,7 +5,9 @@ date: 2026-08-22
 
 # 执行计划
 
-## Alpha 1：模型与 Reference 接缝
+工程里程碑不等同于版本阶段；只有下列 Pre-alpha M1–M5 全部完成并通过端到端门禁，才能建立 `2.0.0-alpha.1`。
+
+## Pre-alpha M1：模型与 Reference 接缝（已完成）
 
 1. [x] 用 post profile 贯通 Schema、CollectionModel、ContentItemModel 与冻结的 PageViewModel（[#695](https://github.com/xaoxuu/hexo-theme-stellar/issues/695)）。
 2. [x] 让 wiki profile 生成同构 ViewModel；依赖步骤 1（[#698](https://github.com/xaoxuu/hexo-theme-stellar/issues/698)）。
@@ -13,12 +15,30 @@ date: 2026-08-22
 4. [x] 让 notebook profile 生成同构 ViewModel；依赖步骤 1，可与步骤 2、3 并行（[#696](https://github.com/xaoxuu/hexo-theme-stellar/issues/696)）。
 5. [x] 从四类已交付 Schema 生成第一批公共 Reference 元数据；依赖步骤 1–4（[#699](https://github.com/xaoxuu/hexo-theme-stellar/issues/699)）。
 
-## 后续阶段
+## Pre-alpha M2：渲染内核
 
 6. [ ] 用 ViewModel 接入页面根布局，并新增五类布局原语。
+
+## Pre-alpha M3：分发入口
+
 7. [ ] 实现三套 Blueprint、两套 Visual Style、init 与 doctor。
+
+## Pre-alpha M4：浏览器运行时
+
 8. [ ] 实现 ESM runtime、Extension registry、request/cache 与生命周期测试。
+
+## Pre-alpha M5：Reference 与 Alpha 集成
+
 9. [ ] 用首批元数据完成公开 Reference 文档生成、链接集成与发布演练。
+
+## Alpha 1 门禁
+
+- [ ] 预发布包可安装到干净的 Hexo 8 / Node.js 22 工程。
+- [ ] 三套 Blueprint 的 init、冲突拒绝、独立构建与 doctor 检查通过。
+- [ ] 四类 Collection profile 通过 ViewModel 消费链渲染。
+- [ ] Schema、布局原语、CLI 与 Extension 生命周期测试通过。
+- [ ] Reference 与已交付契约一致，主题检查、主工程构建和预发布安装演练通过。
+- [ ] Alpha 发布说明列出仍不稳定的契约与未交付范围。
 
 ## 风险与回退
 

@@ -26,6 +26,6 @@ date: 2026-08-22
 
 - [x] `docs/knowledge/03-内容系统/content-schema-v2.md` 已记录 Reference 接缝。
 - [x] `docs/knowledge/VERIFICATION.md` 已登记实现事实。
-- [x] `docs/designs/2026-08-22-v2-architecture/` 的 Alpha 1 状态已同步。
-- [x] 主工程 `docs/specs/stellar-v2-blueprint/` 的 Alpha 1 与 #699 状态已同步。
+- [x] `docs/designs/2026-08-22-v2-architecture/` 的 Pre-alpha M1 状态已同步。
+- [x] 主工程 `docs/specs/stellar-v2-blueprint/` 的 Pre-alpha M1 与 #699 状态已同步。
 - [x] 主工程公开 Wiki、迁移、SEO、EJS/UI 为 N/A，并已在验收记录说明原因。

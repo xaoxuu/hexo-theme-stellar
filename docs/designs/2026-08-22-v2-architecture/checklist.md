@@ -5,12 +5,13 @@ date: 2026-08-22
 
 # 检查清单 / 验证记录
 
-## Alpha 1
+## Pre-alpha M1
 
 - [x] post profile 贯通严格 Schema、CollectionModel、ContentItemModel 与冻结的 PageViewModel。
 - [x] wiki、topic、notebook profile 都生成同构模型，并保留各自的身份、路由、导航、列表与可见性语义。
 - [x] Reference 元数据包含已交付字段的类型、默认值、作用域、消费方和最小示例。
-- [x] Alpha 1 未提前公开 Blueprint、CLI、布局或 Extension 字段。
+- [x] M1 未提前公开 Blueprint、CLI、布局或 Extension 字段。
+- [x] M1 完成只表示领域模型与 Reference 元数据能力已交付，不建立 Alpha 版本。
 
 ## #699 Reference 元数据验证记录
 
@@ -24,7 +25,7 @@ date: 2026-08-22
 - [x] Standards / Spec 双轴 code review 通过，无未解决发现。
 - [x] 公开 Wiki、迁移/SEO、EJS/UI 验收为 N/A：本切片只交付供后续文档和工具消费的构建期元数据，不新增公开配置、URL 或模板行为。
 
-## 后续阶段
+## Pre-alpha M2–M5
 
 - [ ] 模板可从 `PageViewModel` 获取布局、文章与集合状态。
 - [ ] 三套 Blueprint dry-run 与写入计划一致，已有文件不会被覆盖。
@@ -33,6 +34,15 @@ date: 2026-08-22
 - [ ] request/cache 不修改原生 fetch/XHR。
 - [ ] 后续阶段完整实现后 `npm run check` 通过。
 - [ ] 后续阶段完整实现后主工程 `npm run g` 通过。
+
+## Alpha 1 端到端门禁
+
+- [ ] M1–M5 全部完成。
+- [ ] 预发布包可安装到干净的 Hexo 8 / Node.js 22 工程。
+- [ ] 三套 Blueprint 可初始化且生成结果独立构建，doctor 检查通过。
+- [ ] 四类 Collection profile 通过 ViewModel 消费链渲染，Extension 生命周期可验证。
+- [ ] Reference、主题检查、主工程构建与预发布安装演练全部通过。
+- [ ] Alpha 发布说明列出仍不稳定的契约与未交付范围。
 
 ## #695 Post PageViewModel 验证记录
 

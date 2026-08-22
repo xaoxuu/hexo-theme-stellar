@@ -45,7 +45,7 @@ status: 实施中
 
 - 修改：`scripts/lib/models/index.js`、`scripts/events/lib/content-config.js`、聚焦测试、v2 架构计划/检查清单与主题知识库。
 - 不修改：EJS、Stylus、浏览器 JS、公开 YAML Schema、迁移与 SEO；本切片不新增用户操作步骤，因此主工程公开 Wiki 同步为 N/A。
-- 主工程总蓝图只在 Alpha 1 总状态需要变化时更新；#697 完成不等于四类 profile 或 Alpha 1 完成。
+- 主工程总蓝图只在 Pre-alpha 里程碑状态需要变化时更新；#697 完成只是 M1 的局部能力证据，不等于 M1 或 Alpha 1 完成。
 
 ## 验收
 

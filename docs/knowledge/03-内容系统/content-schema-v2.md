@@ -131,7 +131,7 @@ Galaxy 的路径为 `hero.background.effect.options`，字段白名单在 `scrip
 
 ## Reference 元数据
 
-Alpha 1 已从模型 Schema 生成首批机器可读 Reference：
+Pre-alpha M1 已从模型 Schema 生成首批机器可读 Reference；这项能力是 Alpha 1 的前置交付，不代表 Alpha 版本已经建立：
 
 - 唯一事实来源是 `scripts/schema/model-schema.js`，它同时约束 post、wiki、topic、notebook 的 `CollectionModel`、共享 `ContentItemModel` 与 `PageViewModel` 输出。
 - 每个已交付字段均带类型、默认值语义、作用域、当前消费方和最小示例。动态默认值用 `derived`、`inherited` 或 `computed` 描述，不伪造固定字面量。
