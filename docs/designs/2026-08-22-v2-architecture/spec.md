@@ -25,9 +25,11 @@ Alpha 1 的首条公开构建期接缝为 `buildPostPageViewModel(input)`。它�
 
 Wiki slice 复用同一接缝，由 `buildWikiPageViewModel(input)` 接收严格 Wiki 项目配置、页面 Front Matter 和 `doc_tree` 已解析状态。它保留 Wiki identity/source/route/listing/visibility，把 `sections` 投影为普通树形 navigation，并在构建期完成主题、Wiki profile、项目与页面级联。只有显式 `collection.type: wiki` 且 id 能解析到项目配置的页面会在 `doc_tree` 完成后获得冻结 `page.viewModel`；shelf 的项目可见性不隐式覆盖页面自身可见性。本阶段仍不让 EJS 消费该字段。
 
+Topic slice 提供同构的 `buildTopicPageViewModel(input)`：集合身份与源码直接来自严格 `source/_data/topic/{id}.yml`，路由在构建期规范化，`navigation.series` 只收集显式归属同一 Topic 且允许列出的文章，并按集合 `listing.order_by` 稳定排序。Topic 索引可见性与单篇文章的 `visibility` 相互独立；本阶段仍不让 EJS 消费该字段。
+
 `ContentItemModel` 只保留文章标识、标题、布局、正文与摘要、ISO 日期、字符串标签与分类、文件来源、规范化路由，以及已经完成级联的导航、列表、展示和可见性。全部模型均为深度冻结的普通对象，不保留 Hexo Document、Query、Moment 或输入配置引用。
 
-已交付 slice 复用 `scripts/lib/content-config.js` 的严格校验、共享字段组与 `ContentConfigError`，复用 `scripts/lib/path_utils.js` 的路径规范化，不新增依赖或第二套字段表。`CONTENT_MODEL_FIELDS` 是页面配置校验器与模型投影共同消费的公开内容字段白名单；各 profile 字段表只约束对应现有配置来源，不新增 YAML 字段或兼容别名。`visibility.listed/searchable: true` 表示页面未显式隐藏时参与聚合与搜索，`listing.priority: 0` 表示默认不置顶，列表样式与摘要长度缺失时使用 `null` 表示没有模型层覆盖。这些默认值只作用于构建期模型，不改变现有配置边界。
+各切片复用 `scripts/lib/content-config.js` 的严格校验、共享字段组与 `ContentConfigError`，复用 `scripts/lib/path_utils.js` 的路径规范化，不新增依赖或第二套字段表。`CONTENT_MODEL_FIELDS` 是页面配置校验器与模型投影共同消费的公开内容字段白名单；各 profile 的字段表只约束对应现有配置来源，不新增 YAML 字段或兼容别名。`visibility.listed/searchable: true` 表示页面未显式隐藏时参与聚合与搜索，`listing.priority: 0` 表示默认不置顶，列表样式与摘要长度缺失时使用 `null` 表示没有模型层覆盖。这些默认值只作用于构建期模型，不改变现有配置边界。
 
 ## 3. 兼容与迁移
 

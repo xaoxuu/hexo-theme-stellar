@@ -530,7 +530,7 @@ test("Post 模型继续拒绝 v1、未知和错误类型字段", () => {
   });
 });
 
-test("生成前事件只为普通 Post 挂载 PageViewModel", t => {
+test("生成前事件为普通 Post 与严格 Topic 挂载各自的 PageViewModel", t => {
   const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-page-view-model-"));
   t.after(() => fs.rmSync(sourceDir, { recursive: true, force: true }));
   fs.mkdirSync(path.join(sourceDir, "_posts"));
@@ -563,7 +563,7 @@ test("生成前事件只为普通 Post 挂载 PageViewModel", t => {
   const collections = {
     posts: { each: callback => [post, topic].forEach(callback) },
     pages: { each: callback => [about].forEach(callback) },
-    data: {}
+    data: { "topic/v2": { name: "V2" } }
   };
   const themeConfig = {
     brand: { name: "Stellar" },
@@ -579,7 +579,8 @@ test("生成前事件只为普通 Post 挂载 PageViewModel", t => {
 
   assert.equal(post.viewModel.collection.profile, "post");
   assert.equal(Object.isFrozen(post.viewModel), true);
-  assert.equal(topic.viewModel, undefined);
+  assert.equal(topic.viewModel.collection.profile, "topic");
+  assert.equal(Object.isFrozen(topic.viewModel), true);
   assert.equal(about.viewModel, undefined);
 });
 

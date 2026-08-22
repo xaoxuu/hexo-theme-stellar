@@ -97,6 +97,17 @@ Galaxy 的路径为 `hero.background.effect.options`，字段白名单在 `scrip
 
 纯构建入口位于 `scripts/lib/models/index.js`。Post 与 Note 在 `scripts/events/lib/content-config.js` 挂载；Wiki 页面在 `doc_tree` 完成树形解析后由 `scripts/events/lib/doc_tree.js` 挂载。
 
+### Topic 与文章
+
+严格 `collection.type: topic` 的文章在 `generateBefore` 阶段生成同构 `page.viewModel`：
+
+- `collection` 保留 Topic 名称、标题、说明、受众、身份图标、源码仓库、规范化路由、集合列表设置和展示配置；顶层字段与 Post profile 一致。
+- `navigation.series` 只包含 Front Matter 显式归属同一 Topic id 且 `visibility.listed !== false` 的文章，默认按日期降序稳定排列；每项只投影普通 id、标题、规范化路径、ISO 日期和当前项标记。
+- Topic 是否位于 `topic.publish_list` 只进入 `collection.visibility.listed`；单篇文章从独立的默认可见性开始，再接受页面 `visibility` 覆盖，不把集合下架隐式传播为文章隐藏。
+- Topic 默认沿用站点 Brand 和普通 Post 侧栏，之后依次接受 Topic profile、集合与页面展示覆盖；文章、页脚和评论同样在构建期完成级联。
+- Topic 文章必须显式声明严格 v2 `collection.type` 与 `collection.id`，id 必须存在于 `_data/topic/`；不会从路径、布局、旧 `topic` 字段或运行时 Topic tree 推断归属。
+- 本切片只挂载模型，不改变现有 Topic EJS 消费链。
+
 ### Wiki 与 Wiki 页面
 
 严格 `collection.type: wiki` 页面在 Wiki 树构建完成后生成同构 `page.viewModel`：

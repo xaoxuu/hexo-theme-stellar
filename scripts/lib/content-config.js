@@ -88,6 +88,11 @@ const WIKI_PROFILE_FIELDS = Object.freeze({
   wiki: Object.freeze(["navigation", "sidebar"])
 });
 
+const TOPIC_PROFILE_FIELDS = Object.freeze({
+  indexTopic: Object.freeze(["base_dir", "navigation", "sidebar"]),
+  topic: Object.freeze(["navigation", "sidebar"])
+});
+
 const NOTEBOOK_PROFILE_FIELDS = Object.freeze({
   notebook: Object.freeze(["listing", "tag_icons", "footer"]),
   notebookListing: Object.freeze(["excerpt_length", "per_page", "order_by"]),
@@ -623,6 +628,33 @@ function validateWikiProfileConfig(config, source = "<theme>") {
   return config;
 }
 
+function validateTopicProfileConfig(config, source = "<theme>") {
+  const issues = [];
+  if (!validateObject(config, source, "root", issues)) throw new ContentConfigError(issues);
+
+  if (config.site_tree != null && validateObject(config.site_tree, source, "site_tree", issues)) {
+    const topic = config.site_tree.topic;
+    if (topic != null && validateObject(topic, source, "site_tree.topic", issues)) {
+      validateKnownKeys(topic, TOPIC_PROFILE_FIELDS.topic, source, "site_tree.topic", issues);
+      if (topic.navigation != null) validateNavigation(topic.navigation, source, "site_tree.topic.navigation", issues);
+      if (topic.sidebar != null) validateSidebar(topic.sidebar, source, "site_tree.topic.sidebar", issues);
+    }
+
+    const indexTopic = config.site_tree.index_topic;
+    if (indexTopic != null && validateObject(indexTopic, source, "site_tree.index_topic", issues)) {
+      validateKnownKeys(indexTopic, TOPIC_PROFILE_FIELDS.indexTopic, source, "site_tree.index_topic", issues);
+      if (indexTopic.base_dir != null) validateString(indexTopic.base_dir, source, "site_tree.index_topic.base_dir", issues);
+      if (indexTopic.navigation != null) {
+        validateIndexNavigation(indexTopic.navigation, source, "site_tree.index_topic.navigation", issues);
+      }
+      if (indexTopic.sidebar != null) validateSidebar(indexTopic.sidebar, source, "site_tree.index_topic.sidebar", issues);
+    }
+  }
+
+  if (issues.length > 0) throw new ContentConfigError(issues);
+  return config;
+}
+
 function validateNotebookProfileConfig(config, source = "<theme>") {
   const issues = [];
   if (!validateObject(config, source, "root", issues)) throw new ContentConfigError(issues);
@@ -757,6 +789,7 @@ module.exports = {
   LEGACY_PAGE_FIELDS,
   NOTEBOOK_PROFILE_FIELDS,
   POST_PROFILE_FIELDS,
+  TOPIC_PROFILE_FIELDS,
   WIKI_PROFILE_FIELDS,
   getCollectionId,
   isPlainObject,
@@ -769,5 +802,6 @@ module.exports = {
   validatePageConfig,
   validatePostProfileConfig,
   validateThemeConfig,
+  validateTopicProfileConfig,
   validateWikiProfileConfig
 };

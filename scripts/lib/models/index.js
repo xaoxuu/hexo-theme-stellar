@@ -10,6 +10,7 @@ const {
   validatePageConfig,
   validatePostProfileConfig,
   validateThemeConfig,
+  validateTopicProfileConfig,
   validateWikiProfileConfig
 } = require("../content-config");
 const { normalize_path: normalizePath } = require("../path_utils");
@@ -270,6 +271,117 @@ function buildWikiCollectionModel(input, collectionId) {
   };
 }
 
+function buildTopicSeries(collectionId, members, currentId, orderBy) {
+  const items = [];
+  for (const [index, member] of (Array.isArray(members) ? members : []).entries()) {
+    const config = isPlainObject(member?.frontMatter) ? member.frontMatter : {};
+    const page = member?.page || {};
+    if (config.collection?.type !== "topic" || config.collection.id !== collectionId) continue;
+    if (config.visibility?.listed === false) continue;
+    items.push({
+      index,
+      id: String(page._id || page.source || page.path || ""),
+      title: String(page.title || config.title || ""),
+      path: typeof page.path === "string" ? normalizeCollectionPath(page.path) : "",
+      date: normalizeDate(page.date ?? config.date),
+      current: String(page._id || page.source || page.path || "") === currentId
+    });
+  }
+
+  const field = String(orderBy || "-date").replace(/^-/, "");
+  const direction = String(orderBy || "-date").startsWith("-") ? -1 : 1;
+  if (field === "date") {
+    items.sort((left, right) => {
+      const compared = String(left.date || "").localeCompare(String(right.date || "")) * direction;
+      return compared || left.index - right.index;
+    });
+  }
+  return items.map(({ index, ...item }) => item);
+}
+
+function buildTopicCollectionModel(input, collectionId, currentId) {
+  const themeConfig = input.themeConfig;
+  const siteConfig = input.siteConfig;
+  const collectionConfig = input.collectionConfig;
+  const siteTree = isPlainObject(themeConfig.site_tree) ? themeConfig.site_tree : {};
+  const postProfile = isPlainObject(siteTree.post) ? siteTree.post : {};
+  const topicProfile = isPlainObject(siteTree.topic) ? siteTree.topic : {};
+  const indexTopic = isPlainObject(siteTree.index_topic) ? siteTree.index_topic : {};
+  const collectionRouting = isPlainObject(collectionConfig.routing) ? collectionConfig.routing : {};
+  const collectionListing = isPlainObject(collectionConfig.listing) ? collectionConfig.listing : {};
+  const article = isPlainObject(themeConfig.article) ? themeConfig.article : {};
+  const baseDir = collectionRouting.base_dir || indexTopic.base_dir || "topic";
+  const routePath = collectionRouting.path || `${baseDir}/${collectionId}`;
+  const orderBy = collectionListing.order_by ?? "-date";
+
+  const profileNavigation = mergeConfig(
+    pick(postProfile.navigation, CONTENT_MODEL_FIELDS.navigation),
+    pick(topicProfile.navigation, CONTENT_MODEL_FIELDS.navigation)
+  );
+  const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
+  const siteBrand = normalizeBrand(themeConfig.brand, siteConfig);
+  const brandSidebar = { left: { brand: siteBrand } };
+  const postSidebar = mergeConfig(
+    brandSidebar,
+    pick(postProfile.sidebar, CONTENT_MODEL_FIELDS.sidebar),
+    "sidebar"
+  );
+  const profileSidebar = mergeConfig(
+    postSidebar,
+    pick(topicProfile.sidebar, CONTENT_MODEL_FIELDS.sidebar),
+    "sidebar"
+  );
+  const collectionSidebar = pick(collectionConfig.sidebar, CONTENT_MODEL_FIELDS.sidebar);
+  const globalFooter = {
+    references: [],
+    license: article.license ?? null,
+    share: article.share ?? null
+  };
+
+  return {
+    id: collectionId,
+    profile: "topic",
+    identity: normalizeCollectionIdentity(collectionConfig),
+    source: pick(collectionConfig.source, CONTENT_MODEL_FIELDS.source),
+    route: {
+      baseDir: normalizeCollectionPath(baseDir),
+      path: normalizeCollectionPath(routePath),
+      start: typeof collectionRouting.start === "string"
+        ? normalizeCollectionPath(collectionRouting.start)
+        : ""
+    },
+    navigation: {
+      ...mergeConfig(profileNavigation, collectionNavigation),
+      series: buildTopicSeries(collectionId, input.members, currentId, orderBy)
+    },
+    listing: {
+      priority: collectionListing.priority ?? 0,
+      sort: collectionListing.sort ?? null,
+      excerptLength: collectionListing.excerpt_length ?? null,
+      perPage: collectionListing.per_page ?? null,
+      orderBy
+    },
+    presentation: {
+      card: pick(collectionConfig.card, CONTENT_MODEL_FIELDS.card),
+      hero: cloneValue(collectionConfig.hero || {}),
+      sidebar: mergeConfig(profileSidebar, collectionSidebar, "sidebar"),
+      article: mergeConfig(
+        pick(article, CONTENT_MODEL_FIELDS.article),
+        pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)
+      ),
+      footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),
+      comments: mergeConfig(
+        normalizeCollectionComments(themeConfig.comments),
+        pick(collectionConfig.comments, CONTENT_MODEL_FIELDS.comments)
+      )
+    },
+    visibility: {
+      listed: input.collectionListed !== false,
+      searchable: true
+    }
+  };
+}
+
 function notebookBaseDir(collectionId, collectionConfig, themeConfig) {
   if (typeof collectionConfig.routing?.base_dir === "string" && collectionConfig.routing.base_dir.length > 0) {
     return normalizeCollectionPath(collectionConfig.routing.base_dir);
@@ -420,6 +532,54 @@ function buildWikiPageViewModel(input) {
   return deepFreeze({ collection, item });
 }
 
+function buildTopicPageViewModel(input) {
+  const source = input.source || "<page>";
+  const themeSource = input.themeSource || "<theme>";
+  const collectionSource = input.collectionSource || "<topic>";
+  const siteConfig = isPlainObject(input.siteConfig) ? input.siteConfig : {};
+  const themeConfig = isPlainObject(input.themeConfig) ? input.themeConfig : {};
+  const collectionConfig = input.collectionConfig;
+  const frontMatter = isPlainObject(input.frontMatter) ? input.frontMatter : {};
+  const page = input.page || {};
+  const collectionId = input.collectionId || frontMatter.collection?.id;
+
+  validateThemeConfig(themeConfig, themeSource);
+  validatePostProfileConfig(themeConfig, themeSource);
+  validateTopicProfileConfig(themeConfig, themeSource);
+  if (!isPlainObject(collectionConfig)) {
+    throw new ContentConfigError([`${source}: collection.id 无法解析 Topic ${collectionId || "<unknown>"}`]);
+  }
+  validateCollectionConfig(collectionConfig, collectionSource);
+  validatePageConfig(frontMatter, source);
+  if (frontMatter.collection?.type !== "topic") {
+    throw new ContentConfigError([`${source}: collection.type 必须是 topic`]);
+  }
+  if (collectionId !== frontMatter.collection.id) {
+    throw new ContentConfigError([
+      `${source}: collection.id ${frontMatter.collection.id} 与 Topic ${collectionId} 不匹配`
+    ]);
+  }
+  for (const member of (Array.isArray(input.members) ? input.members : [])) {
+    validatePageConfig(
+      isPlainObject(member?.frontMatter) ? member.frontMatter : {},
+      member?.source || "<topic-member>"
+    );
+  }
+
+  const currentId = String(page._id || page.source || page.path || "");
+  const collection = buildTopicCollectionModel({
+    ...input,
+    siteConfig,
+    themeConfig,
+    collectionConfig
+  }, collectionId, currentId);
+  const item = buildContentItemModel(page, frontMatter, collection, source, {
+    source: collection.source,
+    visibility: { listed: true, searchable: true }
+  });
+  return deepFreeze({ collection, item });
+}
+
 function buildNotebookPageViewModel(input) {
   const source = input.source || "<page>";
   const themeSource = input.themeSource || "<theme>";
@@ -467,5 +627,6 @@ function buildNotebookPageViewModel(input) {
 module.exports = {
   buildNotebookPageViewModel,
   buildPostPageViewModel,
+  buildTopicPageViewModel,
   buildWikiPageViewModel
 };

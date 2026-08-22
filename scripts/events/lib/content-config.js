@@ -13,7 +13,8 @@ const {
 } = require("../../lib/source-config");
 const {
   buildNotebookPageViewModel,
-  buildPostPageViewModel
+  buildPostPageViewModel,
+  buildTopicPageViewModel
 } = require("../../lib/models");
 
 function plainTerms(value) {
@@ -85,6 +86,19 @@ module.exports = ctx => {
     if (!pageConfigs.has(page)) pageConfigs.set(page, readFrontMatter(ctx, page));
     return pageConfigs.get(page);
   };
+  const posts = ctx.locals.get("posts");
+  const topicMembers = [];
+  posts.each(page => {
+    const config = configForPage(page);
+    if (config?.collection?.type === "topic") {
+      topicMembers.push({
+        source: sourcePathForPage(page),
+        frontMatter: config,
+        page: pageModelInput(page, config)
+      });
+    }
+  });
+
   const validatedSources = new Set();
   const pages = ctx.locals.get('pages');
   const notebookMemberInputs = [];
@@ -117,6 +131,25 @@ module.exports = ctx => {
             themeSource: themeConfigSource,
             siteConfig: ctx.config,
             themeConfig: ctx.theme.config,
+            frontMatter: config,
+            page: pageModelInput(page, config)
+          });
+        }
+        if (type === "posts" && config.collection?.type === "topic") {
+          const collectionId = config.collection.id;
+          const publishList = Array.isArray(data.topic?.publish_list)
+            ? data.topic.publish_list
+            : null;
+          page.viewModel = buildTopicPageViewModel({
+            source: sourcePathForPage(page),
+            themeSource: themeConfigSource,
+            collectionSource: sourcePathForData(`topic/${collectionId}`),
+            collectionId,
+            collectionListed: publishList == null || publishList.includes(collectionId),
+            siteConfig: ctx.config,
+            themeConfig: ctx.theme.config,
+            collectionConfig: data[`topic/${collectionId}`],
+            members: topicMembers,
             frontMatter: config,
             page: pageModelInput(page, config)
           });

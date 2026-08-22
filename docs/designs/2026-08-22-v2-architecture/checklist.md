@@ -8,7 +8,7 @@ date: 2026-08-22
 ## Alpha 1
 
 - [x] post profile 贯通严格 Schema、CollectionModel、ContentItemModel 与冻结的 PageViewModel。
-- [ ] wiki、topic、notebook profile 都生成同构模型，并保留各自的身份、路由、导航、列表与可见性语义；Wiki 与 Notebook 已分别由 #698、#696 交付。
+- [x] wiki、topic、notebook profile 都生成同构模型，并保留各自的身份、路由、导航、列表与可见性语义。
 - [ ] Reference 元数据包含已交付字段的类型、默认值、作用域、消费方和最小示例。
 - [ ] Alpha 1 未提前公开 Blueprint、CLI、布局或 Extension 字段。
 
@@ -56,4 +56,16 @@ date: 2026-08-22
 - [x] `npm run check` 通过（215 项测试）。
 - [x] 主工程 `npm run g` 通过（生成并压缩 254 个文件）。
 - [x] `python3 docs/knowledge/tools/verify.py` 通过（版本不一致与行号越界均为 0）。
+- [x] 公开 Wiki、迁移/SEO、EJS/UI 验收为 N/A：本切片不新增公开配置或模板消费。
+
+## #697 Topic PageViewModel 验证记录
+
+- [x] `buildTopicPageViewModel()` 与 Post reference slice 输出同构的 `CollectionModel`、`ContentItemModel` 和深度冻结 `PageViewModel`。
+- [x] Topic 身份、源码、规范化路由、系列导航、集合列表配置与可见性均在构建期解析。
+- [x] Topic 文章与系列成员只接受严格 `collection.type: topic` 和匹配 id；不存在的 Topic 会给出页面来源与字段语义可定位错误。
+- [x] 系列导航稳定遵循 `listing.order_by` 并排除 `visibility.listed: false` 的成员；Topic 索引可见性与文章可见性保持独立。
+- [x] 页面导航、普通 Post 侧栏、Topic 展示、全局文章、页脚、评论和页面 Front Matter 级联保留 `false`、`0` 与空字符串。
+- [x] `npm run check` 通过（215 项测试）。
+- [x] 主工程 `npm run g` 通过（生成并压缩 254 个文件）。
+- [x] `python3 docs/knowledge/tools/verify.py` 通过硬门禁（版本不一致与行号越界均为 0）。
 - [x] 公开 Wiki、迁移/SEO、EJS/UI 验收为 N/A：本切片不新增公开配置或模板消费。
