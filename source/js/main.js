@@ -579,9 +579,9 @@ const init = {
     // 真实主站域名优先从 encoded（base64）反解，避免被「批量替换域名」的克隆站把提示指向自己
     const getOriginalHost = () => {
       try {
-        return atob(canonical.encoded || '') || canonical.originalHost || '';
+        return atob(canonical.encoded || '') || canonical.host || '';
       } catch (e) {
-        return canonical.originalHost || '';
+        return canonical.host || '';
       }
     };
     function originStatusCheck() {
@@ -646,7 +646,7 @@ const init = {
       if (isCurrentHostValid) {
         return;
       }
-      if (canonical.officialHosts?.includes(currentHost)) {
+      if (canonical.allowedHosts?.includes(currentHost)) {
         showTip(true);
         return;
       }
@@ -660,7 +660,7 @@ const init = {
     if (isCanonicalHostValid && isCurrentHostValid) {
       return;
     }
-    showTip(canonical.officialHosts?.includes(currentHost));
+    showTip(canonical.allowedHosts?.includes(currentHost));
   }
 
 }

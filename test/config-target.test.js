@@ -6,6 +6,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const { CONFIG_SCHEMA } = require("../scripts/schema/config-schema");
+const { flattenConfigFields } = require("../scripts/lib/config-reference-metadata");
 const { CONFIG_DOMAIN_CATALOG } = require("../scripts/schema/config-inventory");
 const {
   CONFIG_DOMAIN_TARGETS,
@@ -98,7 +99,7 @@ test("每个可配置目标节点声明完整状态化契约", () => {
     assert.ok(field.runtimePath.length > 0, `${field.path} 缺少运行时键`);
     assert.ok(field.consumers.length > 0, `${field.path} 缺少消费方`);
     assert.ok(field.migration.length > 0, `${field.path} 缺少迁移章节`);
-    assert.equal(field.status, "planned", `${field.path} 不应在冻结切片提前交付`);
+    assert.ok(["planned", "delivered"].includes(field.status), `${field.path} 状态非法`);
     assert.ok(allowedBoundaries.has(field.boundary), `${field.path} 边界非法`);
 
     for (const scope of field.scopes) {
@@ -174,7 +175,13 @@ test("主题默认配置的活动叶子与注释示例字段族都有迁移证�
   const activeLeaves = activeYamlLeaves(fs.readFileSync(THEME_CONFIG, "utf8"));
   for (const leaf of activeLeaves) {
     const domainId = leaf.split(".")[0].replace(/\[\]$/, "");
-    assert.ok(resolveConfigMigration(domainId, leaf), `${leaf} 没有迁移结果`);
+    if (Object.prototype.hasOwnProperty.call(CONFIG_SCHEMA.properties, domainId)) {
+      const targetPath = leaf.replace(/\[\]$/, "");
+      const target = CONFIG_TARGET_FIELDS.find(field => field.path === targetPath && field.scopes.includes("theme"));
+      assert.equal(target?.status, "delivered", `${leaf} 未登记为已交付目标字段`);
+    } else {
+      assert.ok(resolveConfigMigration(domainId, leaf), `${leaf} 没有迁移结果`);
+    }
   }
 
   const requiredCommentFamilies = [
@@ -218,10 +225,39 @@ test("官方脚本样式与内部集成有显式内部化清单", () => {
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("style.loading.*"));
 });
 
-test("规划契约不参与当前解析或 Reference 投影", () => {
+test("运行时只投影 head/SEO 已交付节点且根配置仍未封闭", () => {
   assert.equal(CONFIG_SCHEMA.sealed, false);
-  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["canonical"]);
-  assert.ok(CONFIG_TARGET_FIELDS.every(field => field.status === "planned"));
+  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["seo", "resources", "inject"]);
+  assert.deepEqual(
+    CONFIG_TARGET_FIELDS.filter(field => field.status === "delivered").map(field => field.path),
+    [
+      "seo.canonical.host",
+      "seo.canonical.allowed_hosts",
+      "seo.open_graph.enabled",
+      "seo.open_graph.twitter_id",
+      "seo.structured_data.same_as",
+      "resources.preconnect",
+      "inject.head",
+      "inject.script"
+    ]
+  );
+  assert.ok(CONFIG_TARGET_FIELDS.some(field => field.status === "planned"));
+});
+
+test("运行时 Schema 完整投影已交付目标节点契约", () => {
+  const activeFields = new Map(flattenConfigFields(CONFIG_SCHEMA).map(field => [field.path, field]));
+  const delivered = CONFIG_TARGET_FIELDS.filter(field => field.status === "delivered");
+  for (const target of delivered) {
+    const active = activeFields.get(target.path);
+    assert.ok(active, `${target.path} 未进入运行时 Schema`);
+    assert.deepEqual(active.type, target.type, `${target.path} 类型漂移`);
+    assert.deepEqual(active.default, target.default, `${target.path} 默认值漂移`);
+    assert.deepEqual(active.cascade, target.cascade, `${target.path} 级联顺序漂移`);
+    assert.equal(active.normalization, target.normalization, `${target.path} 规范化规则漂移`);
+    assert.deepEqual(active.consumers, target.consumers, `${target.path} 消费方漂移`);
+    assert.equal(active.migration, target.migration, `${target.path} 迁移章节漂移`);
+    assert.equal(active.runtimePath, target.runtimePath, `${target.path} 运行时键漂移`);
+  }
 });
 
 test("目标契约对象深度冻结", () => {

@@ -388,9 +388,9 @@ Spotlight 是卡片末尾注入的独立 `span.card-hover__spotlight[aria-hidden
 
 ```javascript
 window.canonical = {
-  originalHost: '...',
+  host: '...',
+  allowedHosts: [...],
   encoded: '...',
-  officialHosts: [...],
   param: {
     permalink: '...',
     checklink: '...'

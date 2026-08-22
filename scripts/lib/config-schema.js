@@ -67,23 +67,40 @@ function issue(code, source, path, actualType, expected, migration) {
 
 function normalizeValue(node, value) {
   if (node.normalizer === "nullable_host") {
-    return value == null ? "" : value.trim();
+    return value == null ? "" : normalizeHost(value);
   }
   if (node.normalizer === "host_list") {
-    const seen = new Set();
-    const result = [];
-    for (const item of value) {
-      const normalized = item.trim();
-      if (normalized.length === 0 || seen.has(normalized)) continue;
-      seen.add(normalized);
-      result.push(normalized);
-    }
-    return result;
+    return normalizeStringList(value, item => item.trim());
+  }
+  if (node.normalizer === "origin_list") {
+    return normalizeStringList(value, item => item.trim().replace(/\/+$/, ""));
+  }
+  if (node.normalizer === "trimmed_string_list") {
+    return normalizeStringList(value, item => item.trim());
+  }
+  if (node.normalizer === "identity" || node.normalizer === "trusted_text") {
+    return value;
   }
   if (node.normalizer !== "object") {
     throw new TypeError(`未知配置归一化器：${node.normalizer || "<missing>"}`);
   }
   return clone(value);
+}
+
+function normalizeHost(value) {
+  return value.trim().replace(/^https?:\/\//i, "").replace(/\/+$/, "");
+}
+
+function normalizeStringList(value, normalize) {
+  const seen = new Set();
+  const result = [];
+  for (const item of value) {
+    const normalized = normalize(item);
+    if (normalized.length === 0 || seen.has(normalized)) continue;
+    seen.add(normalized);
+    result.push(normalized);
+  }
+  return result;
 }
 
 function parseNode(node, input, source, path, issues) {
@@ -114,22 +131,20 @@ function parseNode(node, input, source, path, issues) {
   if (!node.type.includes("object")) return normalizeValue(node, input);
 
   const properties = node.properties || {};
-  if (node.sealed) {
-    for (const key of Object.keys(input)) {
-      const childPath = path ? `${path}.${key}` : key;
-      if (Object.prototype.hasOwnProperty.call(node.removedProperties || {}, key)) {
-        const replacement = node.removedProperties[key];
-        issues.push(issue(
-          "removed_field",
-          source,
-          childPath,
-          valueType(input[key]),
-          path ? `${path}.${replacement}` : replacement,
-          properties[replacement]?.migration || node.migration
-        ));
-      } else if (!Object.prototype.hasOwnProperty.call(properties, key)) {
-        issues.push(issue("unknown_field", source, childPath, valueType(input[key]), "known field", node.migration));
-      }
+  for (const key of Object.keys(input)) {
+    const childPath = path ? `${path}.${key}` : key;
+    if (Object.prototype.hasOwnProperty.call(node.removedProperties || {}, key)) {
+      const replacement = node.removedProperties[key];
+      issues.push(issue(
+        "removed_field",
+        source,
+        childPath,
+        valueType(input[key]),
+        path ? `${path}.${replacement}` : replacement,
+        node.migration
+      ));
+    } else if (node.sealed && !Object.prototype.hasOwnProperty.call(properties, key)) {
+      issues.push(issue("unknown_field", source, childPath, valueType(input[key]), "known field", node.migration));
     }
   }
 

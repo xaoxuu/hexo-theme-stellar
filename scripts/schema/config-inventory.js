@@ -4,8 +4,15 @@
 const { deepFreeze } = require("./schema-utils");
 const {
   CONFIG_DOMAIN_MIGRATIONS,
-  CONFIG_DOMAIN_TARGETS
+  CONFIG_DOMAIN_TARGETS,
+  CONFIG_TARGET_FIELDS
 } = require("./config-target");
+
+function deliveredTargetStatus(targetPath) {
+  if (targetPath === null) return "excluded";
+  const targets = CONFIG_TARGET_FIELDS.filter(field => field.scopes.includes("theme") && (field.path === targetPath || field.path.startsWith(`${targetPath}.`)));
+  return targets.length > 0 && targets.every(field => field.status === "delivered") ? "delivered" : "planned";
+}
 
 function domain(id, options) {
   return {
@@ -15,7 +22,7 @@ function domain(id, options) {
     owner: options.owner || "stellar",
     boundary: options.boundary,
     targetPath: CONFIG_DOMAIN_TARGETS[id],
-    targetStatus: CONFIG_DOMAIN_TARGETS[id] === null ? "excluded" : "planned",
+    targetStatus: deliveredTargetStatus(CONFIG_DOMAIN_TARGETS[id]),
     runtimeTarget: options.runtimeTarget,
     consumers: options.consumers,
     status: options.status,
@@ -79,15 +86,15 @@ const CONFIG_DOMAIN_CATALOG = deepFreeze([
   domain("preconnect", {
     sources: THEME_SOURCES,
     boundary: "sealed",
-    runtimeTarget: "hexo.stellar.config.preconnect",
+    runtimeTarget: "hexo.stellar.config.resources.preconnect",
     consumers: ["head renderer"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "head-seo",
   }),
   domain("canonical", {
     sources: THEME_SOURCES,
     boundary: "sealed",
-    runtimeTarget: "hexo.stellar.config.canonical",
+    runtimeTarget: "hexo.stellar.config.seo.canonical",
     consumers: ["Post PageViewModel", "head renderer", "browser canonical check", "Reference generator"],
     status: "delivered",
     migrationSlice: "head-seo",
@@ -95,17 +102,17 @@ const CONFIG_DOMAIN_CATALOG = deepFreeze([
   domain("open_graph", {
     sources: THEME_SOURCES,
     boundary: "sealed",
-    runtimeTarget: "hexo.stellar.config.openGraph",
+    runtimeTarget: "hexo.stellar.config.seo.openGraph",
     consumers: ["Post PageViewModel", "head renderer"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "head-seo",
   }),
   domain("structured_data", {
     sources: THEME_SOURCES,
     boundary: "sealed",
-    runtimeTarget: "hexo.stellar.config.structuredData",
+    runtimeTarget: "hexo.stellar.config.seo.structuredData",
     consumers: ["Post PageViewModel", "json_ld helper"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "head-seo",
   }),
   domain("brand", {
@@ -258,7 +265,7 @@ const CONFIG_DOMAIN_CATALOG = deepFreeze([
     boundary: "sealed",
     runtimeTarget: "hexo.stellar.config.inject",
     consumers: ["head renderer", "script renderer", "PageViewModel"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "head-seo",
   }),
   domain("cache", {

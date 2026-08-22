@@ -3,6 +3,8 @@ const postViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?
   ? viewModel
   : null
 const postRender = postViewModel?.render
+var stellarSeo = stellar_config('seo')
+var stellarResources = stellar_config('resources')
 
 function strip_wiki_title(title, wiki) {
   if (!wiki) { return title; }
@@ -49,7 +51,7 @@ function generate_description() {
     if (postRender.seo.openGraph) return ''
     return '<meta name="description" content="' + escape_meta_content(postRender.seo.description) + '">'
   }
-  if (theme.open_graph && theme.open_graph.enable) {
+  if (stellarSeo.openGraph.enabled) {
     return '';
   }
   if (page.description) {
@@ -104,8 +106,8 @@ function og_args() {
     return Object.assign({}, postRender.seo.openGraph?.args || {})
   }
   var args = {};
-  if (theme.open_graph.twitter_id) {
-    args.twitter_id = theme.open_graph.twitter_id;
+  if (stellarSeo.openGraph.twitterId) {
+    args.twitter_id = stellarSeo.openGraph.twitterId;
   }
   if (page.layout == 'post' && page.card?.cover) {
     args.twitter_card = 'summary_large_image';
@@ -141,7 +143,7 @@ function generate_twitter_title() {
 }
 
 function render_open_graph() {
-  if (postRender ? !postRender.seo.openGraph : !(theme.open_graph && theme.open_graph.enable)) {
+  if (postRender ? !postRender.seo.openGraph : !stellarSeo.openGraph.enabled) {
     return '';
   }
   let meta = open_graph(og_args());
@@ -177,24 +179,14 @@ function render_open_graph() {
 
 function preconnect() {
   var el = '';
-  for (let href of (theme.preconnect || [])) {
+  for (var href of stellarResources.preconnect) {
     el += `<link rel="preconnect" href="${href}" crossorigin>`;
   }
   return el;
 }
 
 function custom_inject() {
-  var el = '';
-  for (let item of (config.inject?.head || [])) {
-    el += item;
-  }
-  for (let item of (theme.inject?.head || [])) {
-    el += item;
-  }
-  for (let item of (postRender ? postRender.document.headInject : page.inject?.head || [])) {
-    el += item;
-  }
-  return el;
+  return stellar_inject('head', postRender ? postRender.document.headInject : page.inject?.head)
 }
 
 function generate_canonical() {
@@ -203,13 +195,13 @@ function generate_canonical() {
       ? `<link rel="canonical" href="${escape_meta_content(postRender.seo.canonical)}">`
       : ''
   }
-  const originalHost = stellar_config('canonical').originalHost;
-  if (originalHost.length > 0) {
+  var host = stellarSeo.canonical.host;
+  if (host.length > 0) {
     var path = pretty_url(page.path) || '/';
     if (path.startsWith('/404') || path.startsWith('404')) {
       return '';
     }
-    return `<link rel="canonical" href="https://${originalHost}${path}">`;
+    return `<link rel="canonical" href="https://${host}${path}">`;
   }
   return '';
 }

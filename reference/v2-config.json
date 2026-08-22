@@ -4,8 +4,8 @@
   "status": "partial",
   "fields": [
     {
-      "path": "canonical",
-      "runtimePath": "canonical",
+      "path": "inject",
+      "runtimePath": "inject",
       "type": [
         "object"
       ],
@@ -15,29 +15,210 @@
       },
       "scope": "theme",
       "cascade": [
-        "theme default",
+        "schema default",
         "site theme override"
       ],
       "normalizer": "object",
-      "normalization": "parse child fields into a frozen JavaScript object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "head renderer",
+        "script renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "head": "<meta name=\"example\" content=\"stellar\">",
+        "script": "<script>console.log('stellar')</script>"
+      },
+      "migration": "configuration/inject",
+      "sealed": true
+    },
+    {
+      "path": "inject.head",
+      "runtimePath": "inject.head",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "trusted_text",
+      "normalization": "preserve trusted source text exactly; append page text after site text with one newline",
+      "consumers": [
+        "head renderer",
+        "script renderer",
+        "PageViewModel"
+      ],
+      "example": "<meta name=\"example\" content=\"stellar\">",
+      "migration": "configuration/inject"
+    },
+    {
+      "path": "inject.script",
+      "runtimePath": "inject.script",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "trusted_text",
+      "normalization": "preserve trusted source text exactly; append page text after site text with one newline",
+      "consumers": [
+        "head renderer",
+        "script renderer",
+        "PageViewModel"
+      ],
+      "example": "<script>console.log('stellar')</script>",
+      "migration": "configuration/inject"
+    },
+    {
+      "path": "resources",
+      "runtimePath": "resources",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "head renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "preconnect": [
+          "https://cdn.jsdelivr.net"
+        ]
+      },
+      "migration": "configuration/resources",
+      "sealed": true
+    },
+    {
+      "path": "resources.preconnect",
+      "runtimePath": "resources.preconnect",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": []
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "origin_list",
+      "normalization": "normalize origins; stable-deduplicate; replace on site override",
+      "consumers": [
+        "head renderer",
+        "PageViewModel",
+        "tag renderers",
+        "image fallback filters"
+      ],
+      "example": [
+        "https://cdn.jsdelivr.net"
+      ],
+      "migration": "configuration/resources"
+    },
+    {
+      "path": "seo",
+      "runtimePath": "seo",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
       "consumers": [
         "Post PageViewModel",
-        "canonical head renderer",
+        "head renderer",
+        "JSON-LD helper",
         "browser canonical check",
         "Reference generator"
       ],
       "example": {
-        "original_host": "example.com",
-        "official_hosts": [
-          "mirror.example.com"
-        ]
+        "canonical": {
+          "host": "example.com",
+          "allowed_hosts": [
+            "mirror.example.com"
+          ]
+        },
+        "open_graph": {
+          "enabled": true,
+          "twitter_id": "stellar"
+        },
+        "structured_data": {
+          "same_as": [
+            "https://github.com/xaoxuu"
+          ]
+        }
       },
-      "migration": "configuration/canonical",
+      "migration": "configuration/seo",
       "sealed": true
     },
     {
-      "path": "canonical.official_hosts",
-      "runtimePath": "canonical.officialHosts",
+      "path": "seo.canonical",
+      "runtimePath": "seo.canonical",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Post PageViewModel",
+        "head renderer",
+        "JSON-LD helper",
+        "browser canonical check",
+        "Reference generator"
+      ],
+      "example": {
+        "host": "example.com",
+        "allowed_hosts": [
+          "mirror.example.com"
+        ]
+      },
+      "migration": "configuration/seo#canonical",
+      "sealed": true
+    },
+    {
+      "path": "seo.canonical.allowed_hosts",
+      "runtimePath": "seo.canonical.allowedHosts",
       "type": [
         "array"
       ],
@@ -49,26 +230,26 @@
       },
       "scope": "theme",
       "cascade": [
-        "theme default",
-        "site theme override"
+        "schema default",
+        "_config.stellar.yml"
       ],
       "normalizer": "host_list",
-      "normalization": "trim strings, remove empty values, stable deduplicate",
+      "normalization": "trim hosts; remove empty values; stable-deduplicate; replace on site override",
       "consumers": [
-        "Post PageViewModel",
-        "canonical head renderer",
-        "browser canonical check",
-        "Reference generator"
+        "PageViewModel",
+        "head renderer",
+        "JSON-LD helper",
+        "browser canonical check"
       ],
       "example": [
         "mirror.example.com",
         "localhost"
       ],
-      "migration": "configuration/canonical#official-hosts"
+      "migration": "configuration/seo"
     },
     {
-      "path": "canonical.original_host",
-      "runtimePath": "canonical.originalHost",
+      "path": "seo.canonical.host",
+      "runtimePath": "seo.canonical.host",
       "type": [
         "string",
         "null"
@@ -79,19 +260,163 @@
       },
       "scope": "theme",
       "cascade": [
-        "theme default",
-        "site theme override"
+        "schema default",
+        "_config.stellar.yml"
       ],
       "normalizer": "nullable_host",
-      "normalization": "trim; null becomes an empty string",
+      "normalization": "trim; remove scheme and trailing slash; null disables canonical output",
+      "consumers": [
+        "PageViewModel",
+        "head renderer",
+        "JSON-LD helper",
+        "browser canonical check"
+      ],
+      "example": "example.com",
+      "migration": "configuration/seo"
+    },
+    {
+      "path": "seo.open_graph",
+      "runtimePath": "seo.openGraph",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
       "consumers": [
         "Post PageViewModel",
-        "canonical head renderer",
+        "head renderer",
+        "JSON-LD helper",
         "browser canonical check",
         "Reference generator"
       ],
-      "example": "example.com",
-      "migration": "configuration/canonical#original-host"
+      "example": {
+        "enabled": true,
+        "twitter_id": "stellar"
+      },
+      "migration": "configuration/seo#open-graph",
+      "sealed": true
+    },
+    {
+      "path": "seo.open_graph.enabled",
+      "runtimePath": "seo.openGraph.enabled",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "head renderer",
+        "JSON-LD helper",
+        "browser canonical check"
+      ],
+      "example": true,
+      "migration": "configuration/seo"
+    },
+    {
+      "path": "seo.open_graph.twitter_id",
+      "runtimePath": "seo.openGraph.twitterId",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "head renderer",
+        "JSON-LD helper",
+        "browser canonical check"
+      ],
+      "example": "stellar",
+      "migration": "configuration/seo"
+    },
+    {
+      "path": "seo.structured_data",
+      "runtimePath": "seo.structuredData",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Post PageViewModel",
+        "head renderer",
+        "JSON-LD helper",
+        "browser canonical check",
+        "Reference generator"
+      ],
+      "example": {
+        "same_as": [
+          "https://github.com/xaoxuu"
+        ]
+      },
+      "migration": "configuration/seo#structured-data",
+      "sealed": true
+    },
+    {
+      "path": "seo.structured_data.same_as",
+      "runtimePath": "seo.structuredData.sameAs",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": []
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "trimmed_string_list",
+      "normalization": "trim URLs; remove empty values; stable-deduplicate; replace on site override",
+      "consumers": [
+        "PageViewModel",
+        "head renderer",
+        "JSON-LD helper",
+        "browser canonical check"
+      ],
+      "example": [
+        "https://github.com/xaoxuu"
+      ],
+      "migration": "configuration/seo"
     }
   ]
 }

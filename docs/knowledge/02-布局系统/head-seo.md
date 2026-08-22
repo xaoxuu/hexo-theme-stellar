@@ -54,7 +54,7 @@ HTML head 生成系统实现在 [layout/_partial/head.ejs](../../../layout/_part
 graph TB
     subgraph "Configuration Sources"
         CONFIG["_config.yml<br/>Global config"]
-        THEMECONFIG["theme config<br/>open_graph, canonical"]
+        THEMECONFIG["frozen config<br/>seo, resources, inject"]
         FRONTMATTER["page object<br/>Front-matter variables"]
     end
     
@@ -165,7 +165,7 @@ flowchart TD
 
 `generate_description()` 按优先级级联：
 
-1. **Open Graph 启用时跳过**：`theme.open_graph.enable` 为 true 时返回空（由 OG 标签处理描述）
+1. **Open Graph 启用时跳过**：`stellar_config('seo.openGraph').enabled` 为 true 时返回空（由 OG 标签处理描述）
 2. **页面级描述**：`page.description`（截断至 150 字符）
 3. **Wiki 项目描述**：有 `theme.wiki.tree[page.wiki].description` 时使用（项目级兜底，正文为空的远程 README 主页也适用）
 4. **页面摘要**：`page.excerpt`、截断的 `page.content`（150 字符）
@@ -175,7 +175,7 @@ flowchart TD
 
 **参考源码**：[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 
-> 说明：站点启用 Open Graph（`open_graph.enable: true`，默认配置）时，实际生效的 `<meta name="description">` 由 `og_args()` 传入 Hexo 内置 `open_graph()` helper 生成，级联语义与上述一致：页面级 `page.description` / `page.open_graph.description` 优先，其次 wiki 项目描述，最后页面摘要与站点默认描述。
+> 说明：站点启用 Open Graph（`seo.open_graph.enabled: true`，默认配置）时，实际生效的 `<meta name="description">` 由 `og_args()` 传入 Hexo 内置 `open_graph()` helper 生成，级联语义与上述一致：页面级 `page.description` / `page.open_graph.description` 优先，其次 wiki 项目描述，最后页面摘要与站点默认描述。页面字段会在后续 Front Matter 切片迁入 `seo.open_graph`。
 
 ### 关键词生成
 
@@ -218,14 +218,14 @@ graph LR
 
 ```javascript
 {
-  twitter_id: theme.open_graph.twitter_id,
+  twitter_id: stellar_config('seo.openGraph').twitterId,
   twitter_card: 'summary_large_image',  // 仅 post 且有 cover 时
   image: page.cover || page.banner || first_content_image(page.content) || config.avatar || (config.email ? gravatar(config.email) : null),
   ...page.open_graph  // 页面级覆盖
 }
 ```
 
-`theme.open_graph.enable` 为 true 时生成 OG 标签，并对 `og:title`、`og:site_name`、`twitter:title` 做主题定制替换（经 `generate_og_title()` / `generate_og_site_name()` 转义处理）。`og:site_name` 始终输出站点名 `config.title`，`og:image` 按 封面 → 横幅 → 正文首图 → 头像 回退。
+`stellar_config('seo.openGraph').enabled` 为 true 时生成 OG 标签，并对 `og:title`、`og:site_name`、`twitter:title` 做主题定制替换（经 `generate_og_title()` / `generate_og_site_name()` 转义处理）。`og:site_name` 始终输出站点名 `config.title`，`og:image` 按 封面 → 横幅 → 正文首图 → 头像 回退。
 
 `og_args()` 还会在 `page.wiki` 存在且页面未显式设置 `page.description` 时，把 wiki 项目 YAML 的 `description` 传入 `description`，使 `<meta name="description">` 与 `og:description` 使用项目描述；`page.open_graph.description` 仍可经 front-matter 覆盖。
 
@@ -239,13 +239,13 @@ graph LR
 
 ```mermaid
 flowchart TD
-    START["generate_canonical()"] --> CHECK{"stellar_config('canonical').originalHost<br/>configured?"}
+    START["generate_canonical()"] --> CHECK{"stellar_config('seo.canonical').host<br/>configured?"}
     CHECK -->|No| EMPTY["Return empty string"]
     CHECK -->|Yes| GETPATH["path = pretty_url(page.path)"]
     GETPATH --> IS404{"path starts with /404?"}
     IS404 -->|Yes| EMPTY
     IS404 -->|No| CLEANHTML["Remove .html suffix if present"]
-    CLEANHTML --> CANON["<link rel='canonical'<br/>href='https://{originalHost}{path}'>"]
+    CLEANHTML --> CANON["<link rel='canonical'<br/>href='https://{host}{path}'>"]
     CANON --> OUTPUT["Output to <head>"]
     EMPTY --> OUTPUT
 ```
@@ -254,14 +254,14 @@ flowchart TD
 
 ### 客户端校验与克隆站检测
 
-`window.canonical` 在 [layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs) 中构建：`encoded` 是 `originalHost` 的 base64 编码，`param` 含 `permalink` 与 `checklink`（取自 `theme.data_services.video.js`）。
+`window.canonical` 在 [layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs) 中构建：`encoded` 是 `host` 的 base64 编码，`param` 含 `permalink` 与 `checklink`（取自 `theme.data_services.video.js`）。
 
 `init.canonicalCheck()`（[source/js/main.js](../../../source/js/main.js)）实现克隆检测：
 
 ```mermaid
 graph TB
     subgraph "Canonical Check Process"
-        START["canonicalCheck() invoked"] --> HASCANON{"canonical.originalHost<br/>configured?"}
+        START["canonicalCheck() invoked"] --> HASCANON{"canonical.host<br/>configured?"}
         HASCANON -->|No| EXIT["Return"]
         HASCANON -->|Yes| GETHOST["currentHost = location.hostname"]
         GETHOST --> LOCALHOST{"currentHost == localhost?"}
@@ -270,7 +270,7 @@ graph TB
         ENCODE --> VALIDATE{"encodedCurrentHost ==<br/>canonical.encoded?"}
         
         VALIDATE -->|Yes| HASTAG{"<link rel=canonical> exists?"}
-        VALIDATE -->|No| CHECKOFFICIAL{"currentHost in<br/>canonical.officialHosts?"}
+        VALIDATE -->|No| CHECKOFFICIAL{"currentHost in<br/>canonical.allowedHosts?"}
         
         HASTAG -->|No| CHECKOFFICIAL
         HASTAG -->|Yes| VALIDCANON["Validate canonical host encoding"]
@@ -293,13 +293,14 @@ graph TB
 
 ### 克隆检测配置
 
-`_config.yml` 中的 `canonical` 小节：
+`_config.yml` 中的 `seo.canonical` 小节：
 
 ```yaml
-canonical:
-  original_host: 'example.com'   # 主站域名主机
-  official_hosts:                # 官方备用主机列表
-    - 'backup.example.com'
+seo:
+  canonical:
+    host: example.com
+    allowed_hosts:
+      - backup.example.com
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)
@@ -366,7 +367,7 @@ graph LR
     CONFIG["config.author<br/>config.email<br/>config.avatar"] --> AUTHOR["author object<br/>@type: Person"]
     CONFIG --> PUBLISHER["publisher object<br/>@type: Organization"]
     
-    STRUCTDATA["theme.structured_data.links"] --> AUTHOR
+    STRUCTDATA["stellar_config('seo.structuredData').sameAs"] --> AUTHOR
     
     AUTHOR --> SCHEMA["JSON-LD schema"]
     PUBLISHER --> SCHEMA
@@ -386,7 +387,7 @@ graph LR
 <link rel="preconnect" href="https://cdn.example.com" crossorigin>
 ```
 
-**配置**：`_config.yml` 的 `preconnect` 数组。
+**配置**：`resources.preconnect` 数组；站点数组完整替换 Schema 默认列表，trim、去空与稳定去重在构建期完成。
 
 **参考源码**：[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 
@@ -404,23 +405,22 @@ head 模板包含 DNS 预取控制：
 
 ## 自定义注入系统
 
-`custom_inject()` 提供三个 head 注入点：
+`stellar_inject()` 组合两个可信 head 注入来源：
 
 ```mermaid
 graph TD
-    START["custom_inject()"] --> CONFIGINJECT["Iterate config.inject.head array"]
-    CONFIGINJECT --> THEMEINJECT["Iterate theme.inject.head array"]
-    THEMEINJECT --> PAGEINJECT["Iterate page.inject.head array"]
-    
-    PAGEINJECT --> CONCAT["Concatenate all items"]
+    START["stellar_inject('head')"] --> SITEINJECT["frozen inject.head string"]
+    SITEINJECT --> PAGEINJECT["current page inject.head"]
+    PAGEINJECT --> CONCAT["site text + one inserted newline + page text"]
     CONCAT --> OUTPUT["Output raw HTML to <head>"]
 ```
 
 **优先级：**
 
-1. 全局 Hexo 配置（`config.inject.head`）
-2. 主题配置（`theme.inject.head`）
-3. 页面 front-matter（`page.inject.head`）
+1. 站点主题配置 `_config.stellar.yml` 的 `inject.head` 多行字符串
+2. 页面 Front Matter 的 `inject.head`（当前数组或后续最终字符串形态）
+
+不再读取 Hexo `_config.yml.inject` 或合并后的 `theme.inject`。两段原文均不解析、不格式化；仅在两段都非空时插入一个换行。页尾脚本使用相同规则组合 `inject.script`。
 
 无需修改主题模板即可注入自定义 meta、分析脚本或 CSS。
 
@@ -491,35 +491,36 @@ sequenceDiagram
 
 ## 配置参考
 
-### 主题配置（_config.yml）
+### 主题默认配置（_config.yml）
 
 ```yaml
-# Open Graph 设置
-open_graph:
-  enable: true
-  twitter_id: '@username'
+seo:
+  canonical:
+    host: example.com
+    allowed_hosts:
+      - backup.example.com
+  open_graph:
+    enabled: true
+    twitter_id: username
+  structured_data:
+    same_as:
+      - https://github.com/username
 
-# 规范链接与克隆站检测
-canonical:
-  original_host: 'example.com'
-  official_hosts:
-    - 'backup.example.com'
+resources:
+  preconnect:
+    - https://cdn.jsdelivr.net
+    - https://fonts.googleapis.com
 
-# 结构化数据
-structured_data:
-  links:
-    - 'https://twitter.com/username'
-    - 'https://github.com/username'
+```
 
-# 性能提示
-preconnect:
-  - 'https://cdn.jsdelivr.net'
-  - 'https://fonts.googleapis.com'
+### 站点主题覆盖（_config.stellar.yml）
 
-# 自定义 head 注入
+`inject` 只允许出现在站点主题覆盖与页面 Front Matter，不属于主题默认输入：
+
+```yaml
 inject:
-  head:
-    - '<meta name="custom" content="value">'
+  head: |
+    <meta name="custom" content="value">
 ```
 
 ### 页面 Front-Matter

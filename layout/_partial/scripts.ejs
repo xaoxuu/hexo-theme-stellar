@@ -1,17 +1,7 @@
 <%
 
 function custom_inject() {
-  var el = '';
-  for (let item of (config.inject?.script || [])) {
-    el += item;
-  }
-  for (let item of (theme.inject?.script || [])) {
-    el += item;
-  }
-  for (let item of (page.inject?.script || [])) {
-    el += item;
-  }
-  return el;
+  return stellar_inject('script', page.inject?.script)
 }
 
 // tagtree 脚本仅在与 tagtree 小部件渲染相同的条件下加载（见 _partial/sidebar/index_leftbar.ejs）

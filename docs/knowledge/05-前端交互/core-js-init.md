@@ -428,7 +428,7 @@ canonical 检查只在初始加载运行一次（涉及网络请求并创建持�
 
 ### 规范链接配置
 
-`head.ejs` 模板用 `generate_canonical()` 生成 canonical link 标签，从冻结的 `stellar_config('canonical').originalHost` 构造规范 URL。其 YAML 来源为 `canonical.original_host`，该值同时供 `init.canonicalCheck()` 校验当前主机名使用。
+`head.ejs` 模板用 `generate_canonical()` 生成 canonical link 标签，从冻结的 `stellar_config('seo.canonical').host` 构造规范 URL。其 YAML 来源为 `seo.canonical.host`，该值与 `allowed_hosts` 规范化后同时供 `init.canonicalCheck()` 校验当前主机名使用。
 
 `window.canonical` 对象（含 `encoded` 与 `param`）在 [layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs) 中注入。
 

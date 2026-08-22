@@ -244,17 +244,18 @@ api_host:
 
 ## DNS Preconnect 提示
 
-`_config.yml` 的 `preconnect` 列表在 HTML `<head>` 输出 `<link rel="preconnect">` 标签，提示浏览器在资源请求前与 CDN 源建立 TCP+TLS 连接。
+v2 的 `resources.preconnect` 列表在 HTML `<head>` 输出 `<link rel="preconnect">` 标签，提示浏览器在资源请求前与 CDN 源建立 TCP+TLS 连接。默认值由 Schema 唯一提供，主题 `_config.yml` 镜像展示该值；站点在 `_config.stellar.yml` 中完整替换该数组。
 
 ```yaml
-preconnect:
-  # - https://gcore.jsdelivr.net
-  # - https://unpkg.com
+resources:
+  preconnect:
+    - https://gcore.jsdelivr.net
+    - https://unpkg.com
 ```
 
-**参考源码**：[_config.yml](../../../_config.yml)
+**参考源码**：[_config.yml](../../../_config.yml)、[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 
-默认全部注释。添加实际使用的 CDN 源（如 jsDelivr、unpkg、Cloudflare）。`<link>` 标签由 head partial 渲染。head 模板细节见[HTML Head 与 SEO 元数据](../02-布局系统/head-seo.md)。
+默认为空数组。只添加页面实际使用的 CDN 源（如 jsDelivr、unpkg、Cloudflare）。解析期会规范化并稳定去重 origin，`<link>` 标签由 head partial 渲染。head 模板细节见[HTML Head 与 SEO 元数据](../02-布局系统/head-seo.md)。
 
 ---
 

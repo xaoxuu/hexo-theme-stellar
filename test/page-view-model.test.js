@@ -414,9 +414,11 @@ test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD �
     },
     themeConfig: {
       brand: { name: "Stellar" },
-      canonical: { original_host: "canonical.example.com" },
-      open_graph: { enable: true, twitter_id: "xaoxuu" },
-      structured_data: { links: ["https://github.com/xaoxuu"] },
+      seo: {
+        canonical: { host: "canonical.example.com" },
+        open_graph: { enabled: true, twitter_id: "xaoxuu" },
+        structured_data: { same_as: ["https://github.com/xaoxuu"] }
+      },
       default: { cover: "/default.webp" },
       style: {
         prefers_theme: "auto",

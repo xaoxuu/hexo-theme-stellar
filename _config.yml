@@ -8,25 +8,21 @@ stellar:
 
 
 ######## head tags ########
-preconnect:
-  - https://gcore.jsdelivr.net
-  - https://unpkg.com
-  - https://cdn.jsdelivr.net
-  - https://cdnjs.cloudflare.com
+seo:
+  # 一旦设置主站 host，非主站地址将不会被 SEO 收录，并且访问时弹出提示。
+  # 如果访问地址不在 allowed_hosts，则警告信息为非法克隆。
+  canonical:
+    host: # 例如 xaoxuu.com
+    allowed_hosts:
+      - localhost
+  open_graph:
+    enabled: true
+    twitter_id:
+  structured_data:
+    same_as: [] # 作者或组织的公开社交链接
 
-# 一旦设置源站地址，非源站地址将不会被SEO收录，并且访问时弹出提示
-# 如果访问地址不在备用站主机列表，则警告信息为非法克隆
-canonical:
-  original_host: # 主站点域名主机，例如 xaoxuu.com
-  official_hosts: # 官方主机列表，每行一个，例如 xaoxuu.vercel.app
-    - localhost
-
-open_graph:
-  enable: true
-  twitter_id: # for open_graph meta
-
-structured_data:
-  links: [] # your social links.
+resources:
+  preconnect: []
 
 
 ######## Sidebar ########

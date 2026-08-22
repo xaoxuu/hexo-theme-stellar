@@ -1,11 +1,11 @@
 <%
-  const canonical = stellar_config('canonical')
-  const encoded = Buffer.from(canonical.originalHost || '').toString('base64');
-  const canonicalWithEncoded = Object.assign({}, canonical, {
+  var canonical = stellar_config('seo.canonical')
+  var encoded = Buffer.from(canonical.host || '').toString('base64');
+  var canonicalWithEncoded = Object.assign({}, canonical, {
     encoded: encoded
   });
-  const permalink = page.permalink || canonical.originalHost;
-  const checklink = theme.data_services.video.js
+  var permalink = page.permalink || canonical.host;
+  var checklink = theme.data_services.video.js
 %>
 
 <script type="text/javascript">

@@ -15,74 +15,93 @@ function assertDeepFrozen(value) {
   Object.values(value).forEach(assertDeepFrozen);
 }
 
-test("canonical Schema 提供稳定默认值并忽略尚未迁移的顶层配置", () => {
+test("head/SEO Schema 提供最终路径默认值并忽略尚未迁移的根域", () => {
   const config = parseStellarConfig({
     source: "themes/stellar/_config.yml",
     themeConfig: { article: { type: "tech" } }
   });
 
   assert.deepEqual(config, {
-    canonical: {
-      originalHost: "",
-      officialHosts: ["localhost"]
-    }
+    seo: {
+      canonical: { host: "", allowedHosts: ["localhost"] },
+      openGraph: { enabled: true, twitterId: null },
+      structuredData: { sameAs: [] }
+    },
+    resources: { preconnect: [] },
+    inject: { head: "", script: "" }
   });
   assertDeepFrozen(config);
 });
 
-test("canonical 站点覆盖完成 trim、空值删除与稳定去重", () => {
+test("站点覆盖完成规范化、数组替换、稳定去重并保留注入原文", () => {
+  const head = "<meta name=\"first\">\n  <meta name=\"second\">";
   const config = parseStellarConfig({
     source: "_config.stellar.yml",
     themeConfig: {
-      canonical: {
-        original_host: "  xaoxuu.com  ",
-        official_hosts: [" mirror.example.com ", "", "localhost", "mirror.example.com"]
-      }
+      seo: {
+        canonical: {
+          host: "  https://xaoxuu.com/  ",
+          allowed_hosts: [" mirror.example.com ", "", "localhost", "mirror.example.com"]
+        },
+        open_graph: { enabled: false, twitter_id: "  xaoxuu  " },
+        structured_data: { same_as: [" https://github.com/xaoxuu ", "", "https://github.com/xaoxuu"] }
+      },
+      resources: {
+        preconnect: [" https://cdn.example.com/ ", "", "https://cdn.example.com"]
+      },
+      inject: { head, script: "<script>window.example = true</script>" }
     }
   });
 
-  assert.deepEqual(config.canonical, {
-    originalHost: "xaoxuu.com",
-    officialHosts: ["mirror.example.com", "localhost"]
+  assert.deepEqual(config, {
+    seo: {
+      canonical: { host: "xaoxuu.com", allowedHosts: ["mirror.example.com", "localhost"] },
+      openGraph: { enabled: false, twitterId: "  xaoxuu  " },
+      structuredData: { sameAs: ["https://github.com/xaoxuu"] }
+    },
+    resources: { preconnect: ["https://cdn.example.com"] },
+    inject: { head, script: "<script>window.example = true</script>" }
   });
 });
 
-test("canonical null 主机规范化为空字符串且不做类型转换", () => {
+test("canonical null 禁用输出且 Schema 不做类型转换", () => {
   assert.equal(parseStellarConfig({
-    themeConfig: { canonical: { original_host: null } }
-  }).canonical.originalHost, "");
+    themeConfig: { seo: { canonical: { host: null } } }
+  }).seo.canonical.host, "");
 
   assert.throws(
     () => parseStellarConfig({
       source: "_config.stellar.yml",
-      themeConfig: { canonical: { original_host: 42 } }
+      themeConfig: {
+        seo: { canonical: { host: 42 }, open_graph: { enabled: "true" } },
+        inject: { head: ["<meta>"] }
+      }
     }),
     error => {
       assert.ok(error instanceof ConfigSchemaError);
-      assert.deepEqual(error.issues[0], {
-        code: "invalid_type",
-        source: "_config.stellar.yml",
-        path: "canonical.original_host",
-        actualType: "number",
-        expected: "string | null",
-        migration: "configuration/canonical#original-host"
-      });
+      assert.deepEqual(error.issues.map(item => [item.path, item.actualType, item.expected]), [
+        ["seo.canonical.host", "number", "string | null"],
+        ["seo.open_graph.enabled", "string", "boolean"],
+        ["inject.head", "array", "string"]
+      ]);
       return true;
     }
   );
 });
 
-test("canonical 聚合旧字段、未知字段和数组元素类型诊断", () => {
+test("已迁移旧根、旧子字段和新子树未知字段产生结构化诊断", () => {
   assert.throws(
     () => parseStellarConfig({
       source: "_config.stellar.yml",
       themeConfig: {
-        canonical: {
-          originalHost: "legacy.example.com",
-          officialHosts: ["legacy.example.com"],
-          extra: true,
-          official_hosts: ["mirror.example.com", 7]
-        }
+        canonical: { original_host: "legacy.example.com" },
+        open_graph: { enable: true },
+        seo: {
+          canonical: { original_host: "legacy.example.com", extra: true },
+          open_graph: { enable: true },
+          structured_data: { links: [] }
+        },
+        resources: { unknown: true }
       }
     }),
     error => {
@@ -90,35 +109,38 @@ test("canonical 聚合旧字段、未知字段和数组元素类型诊断", () =
       assert.deepEqual(error.issues.map(item => item.code), [
         "removed_field",
         "removed_field",
+        "removed_field",
         "unknown_field",
-        "invalid_type"
+        "removed_field",
+        "removed_field",
+        "unknown_field"
       ]);
-      assert.match(error.message, /canonical\.originalHost 已移除/);
-      assert.match(error.message, /期望 canonical\.original_host/);
-      assert.match(error.message, /未知字段 canonical\.extra/);
-      assert.match(error.message, /canonical\.official_hosts\[1\] 应为 string，实际为 number/);
+      assert.match(error.message, /canonical 已移除，期望 seo\.canonical/);
+      assert.match(error.message, /seo\.canonical\.original_host 已移除，期望 seo\.canonical\.host/);
+      assert.match(error.message, /未知字段 resources\.unknown/);
       return true;
     }
   );
 });
 
-test("构建事件把冻结配置挂载到 hexo.stellar.config", () => {
+test("构建事件把最终路径冻结挂载到 hexo.stellar.config", () => {
   const ctx = {
     config: {
       theme_config: {
-        canonical: {
-          original_host: "example.com",
-          official_hosts: ["mirror.example.com"]
-        }
+        seo: {
+          canonical: { host: "example.com", allowed_hosts: ["mirror.example.com"] },
+          structured_data: { same_as: ["https://github.com/example"] }
+        },
+        inject: { head: "<meta name=\"site\">" }
       }
     }
   };
 
   attachConfig(ctx);
 
-  assert.deepEqual(ctx.stellar.config.canonical, {
-    originalHost: "example.com",
-    officialHosts: ["mirror.example.com"]
-  });
+  assert.equal(ctx.stellar.config.seo.canonical.host, "example.com");
+  assert.deepEqual(ctx.stellar.config.seo.canonical.allowedHosts, ["mirror.example.com"]);
+  assert.deepEqual(ctx.stellar.config.seo.structuredData.sameAs, ["https://github.com/example"]);
+  assert.equal(ctx.stellar.config.inject.head, "<meta name=\"site\">");
   assertDeepFrozen(ctx.stellar.config);
 });

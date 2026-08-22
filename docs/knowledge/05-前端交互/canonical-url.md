@@ -50,19 +50,19 @@ tags:
 
 ## 配置
 
-YAML 使用 `canonical.original_host` 与 `canonical.official_hosts`。构建期 Schema 完成严格校验、站点覆盖、trim、空值删除和备用主机稳定去重，冻结结果位于 `hexo.stellar.config.canonical`。旧 `originalHost` / `officialHosts` YAML 字段不会兼容读取。
+YAML 使用 `seo.canonical.host` 与 `seo.canonical.allowed_hosts`。构建期 Schema 完成严格校验、站点覆盖、scheme/尾斜杠清理、空值删除和备用主机稳定去重，冻结结果位于 `hexo.stellar.config.seo.canonical`。旧根字段与旧子字段不会兼容读取。
 
 浏览器仍从 `window.canonical` 读取 camelCase 运行时对象。`init.canonicalCheck()` 使用的字段：
 
 | 字段 | 类型 | 必填 | 说明 |
 |------|------|------|------|
-| `originalHost` | `string` | 是 | 主规范主机名（如 `example.com`）。为空禁用系统。 |
-| `encoded` | `string` | 是 | `originalHost` 的 base64：`btoa(originalHost)`。用于防篡改校验。 |
-| `officialHosts` | `string[]` | 否 | 受信任的镜像/备用主机名数组。 |
+| `host` | `string` | 是 | 主规范主机名（如 `example.com`）。为空禁用系统。 |
+| `encoded` | `string` | 是 | `host` 的 base64：`btoa(host)`。用于防篡改校验。 |
+| `allowedHosts` | `string[]` | 否 | 受信任的镜像/备用主机名数组。 |
 | `param.checklink` | `string` | 否 | 可用性探测路径（如 `/js/check.js`）。 |
 | `param.permalink` | `string` | 否 | 当前页面 URL，用于警告提示链接。 |
 
-`encoded` 与 `param` 由 [layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs) 在构建期计算注入（`encoded = base64(originalHost)`；`param.checklink` 取自 `theme.data_services.video.js`，`param.permalink` 取自 `page.permalink`）。
+`encoded` 与 `param` 由 [layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs) 在构建期计算注入（`encoded = base64(host)`；`param.checklink` 取自 `theme.data_services.video.js`，`param.permalink` 取自 `page.permalink`）。
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)、[layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs)
 
@@ -74,11 +74,11 @@ YAML 使用 `canonical.original_host` 与 `canonical.official_hosts`。构建期
 
 **逻辑：**
 
-1. 读取 `stellar_config('canonical').originalHost`
+1. 读取 `stellar_config('seo.canonical').host`
 2. 为空则返回 `''`（不输出标签）
 3. 跳过 404 页面（路径以 `/404` 或 `404` 开头）
 4. 去掉路径的 `.html` 后缀
-5. 输出 `<link rel="canonical" href="https://${originalHost}${path}">`
+5. 输出 `<link rel="canonical" href="https://${host}${path}">`
 
 该标签在运行时被 `init.canonicalCheck()` 检测，判断当前页面是否有有效的 canonical 引用。
 
@@ -100,7 +100,7 @@ YAML 使用 `canonical.original_host` 与 `canonical.official_hosts`。构建期
 
 ```mermaid
 flowchart TD
-    A["init.canonicalCheck()"] --> B{"originalHost\nconfigured?"}
+    A["init.canonicalCheck()"] --> B{"host\nconfigured?"}
     B -- "No" --> Z["return (no-op)"]
     B -- "Yes" --> C{"currentHost\n== localhost?"}
     C -- "Yes" --> Z
@@ -109,13 +109,13 @@ flowchart TD
     E --> F{"canonicalTag\nin DOM?"}
     F -- "No tag" --> G{"isCurrentHostValid?"}
     G -- "Yes" --> Z
-    G -- "No" --> H{"currentHost in\nofficialHosts?"}
+    G -- "No" --> H{"currentHost in\nallowedHosts?"}
     H -- "Yes" --> I["showTip(true)\nofficial banner"]
     H -- "No" --> J["showTip(false)\nunofficial warning"]
     F -- "Tag found" --> K["parse canonicalTag.href\ncompute isCanonicalHostValid"]
     K --> L{"both hosts valid?"}
     L -- "Yes" --> Z
-    L -- "No" --> M{"currentHost in\nofficialHosts?"}
+    L -- "No" --> M{"currentHost in\nallowedHosts?"}
     M -- "Yes" --> I
     M -- "No" --> J
 ```
@@ -131,7 +131,7 @@ const encodedCurrentHost = window.btoa(currentHost);
 const isCurrentHostValid = canonical.encoded === encodedCurrentHost;
 ```
 
-`canonical.encoded` 预先计算为 `btoa(originalHost)` 并嵌入页面。比较前从当前 URL 与 canonical URL 都去掉 `www.` 前缀。
+`canonical.encoded` 预先计算为 `btoa(host)` 并嵌入页面。比较前从当前 URL 与 canonical URL 都去掉 `www.` 前缀。
 
 `getOriginalHost()` 优先从 `encoded` 反解真实主站域名（`atob`），避免「批量替换域名」的克隆站把提示指向自己。
 
@@ -141,7 +141,7 @@ const isCurrentHostValid = canonical.encoded === encodedCurrentHost;
 
 该异步辅助函数判断原始（主）主机当前是否可达。仅在**官方**提示路径调用，主站不可达时抑制提示。
 
-**机制**：动态追加指向 `https://{originalHost}{param.checklink}` 的 `<script>` 标签。脚本加载成功表示主站可达（`resolve(true)`）；出错表示不可达（`resolve(false)`）。
+**机制**：动态追加指向 `https://{host}{param.checklink}` 的 `<script>` 标签。脚本加载成功表示主站可达（`resolve(true)`）；出错表示不可达（`resolve(false)`）。
 
 当前主机**就是**原始主机时立即 `resolve(true)`，不做网络探测。
 
@@ -211,8 +211,8 @@ flowchart TD
 ```mermaid
 flowchart LR
     subgraph "Build Time"
-        yaml["canonical.*\n(_config.yml / site override)"] --> schema["Config Schema parser"]
-        schema --> cfg["hexo.stellar.config.canonical\n(frozen normalized result)"]
+        yaml["seo.canonical.*\n(_config.yml / site override)"] --> schema["Config Schema parser"]
+        schema --> cfg["hexo.stellar.config.seo.canonical\n(frozen normalized result)"]
         cfg --> postSeo["Post PageViewModel SEO"]
         cfg --> genCanon["legacy generate_canonical()\nhead.ejs"]
         postSeo --> canonTag["<link rel=canonical>\nin <head>"]
@@ -230,7 +230,7 @@ flowchart LR
         showTip --> metaNoindex["inject <meta robots\nnoindex,nofollow>"]
         showTip --> officialDiv["div.canonical-tip.official"]
         showTip --> unofficialDiv["div.canonical-tip.unofficial"]
-        originCheck -- "script probe" --> primaryHost["https://originalHost\n/param.checklink"]
+        originCheck -- "script probe" --> primaryHost["https://host\n/param.checklink"]
     end
 ```
 

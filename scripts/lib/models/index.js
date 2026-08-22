@@ -295,17 +295,18 @@ function absoluteSiteAsset(value, siteUrl) {
   return `${root}/${value.replace(/^\/+/, "")}`;
 }
 
-function canonicalUrl(originalHost, path) {
-  if (typeof originalHost !== "string" || originalHost.length === 0) return null;
+function canonicalUrl(host, path) {
+  if (typeof host !== "string" || host.length === 0) return null;
   const normalizedPath = normalizeCollectionPath(path);
   if (normalizedPath === "404" || normalizedPath.startsWith("404/")) return null;
-  return `https://${originalHost.replace(/^https?:\/\//, "").replace(/\/+$/, "")}/${normalizedPath}${normalizedPath ? "/" : ""}`;
+  return `https://${host}/${normalizedPath}${normalizedPath ? "/" : ""}`;
 }
 
 function buildPostRenderModel(input, collection, item) {
   const siteConfig = input.siteConfig;
   const themeConfig = input.themeConfig;
-  const canonicalConfig = input.stellarConfig.canonical;
+  const seoConfig = input.stellarConfig.seo;
+  const canonicalConfig = seoConfig.canonical;
   const frontMatter = input.frontMatter;
   const page = input.page;
   const articleType = typeof item.presentation.article?.type === "string"
@@ -329,9 +330,9 @@ function buildPostRenderModel(input, collection, item) {
   const cardCover = item.presentation.card?.cover || "";
   const bannerImage = item.presentation.banner?.image || "";
   const defaultOgImage = siteConfig.avatar || (siteConfig.email ? gravatar(siteConfig.email) : "");
-  const openGraphConfig = isPlainObject(themeConfig.open_graph) ? themeConfig.open_graph : {};
+  const openGraphConfig = seoConfig.openGraph;
   let openGraph = null;
-  if (openGraphConfig.enable === true) {
+  if (openGraphConfig.enabled === true) {
     const pageOpenGraph = isPlainObject(frontMatter.open_graph) ? frontMatter.open_graph : {};
     const args = {
       type: "article",
@@ -344,7 +345,7 @@ function buildPostRenderModel(input, collection, item) {
       date: false,
       updated: false
     };
-    if (openGraphConfig.twitter_id) args.twitter_id = openGraphConfig.twitter_id;
+    if (openGraphConfig.twitterId) args.twitter_id = openGraphConfig.twitterId;
     if (cardCover) args.twitter_card = "summary_large_image";
     args.image = cardCover || bannerImage || firstContentImage(item.content) || defaultOgImage || null;
     Object.assign(args, cloneValue(pageOpenGraph));
@@ -364,9 +365,7 @@ function buildPostRenderModel(input, collection, item) {
   const author = {
     "@type": "Person",
     name: String(siteConfig.author || ""),
-    sameAs: Array.isArray(themeConfig.structured_data?.links)
-      ? cloneValue(themeConfig.structured_data.links)
-      : []
+    sameAs: cloneValue(seoConfig.structuredData.sameAs)
   };
   const publisher = { ...author, "@type": "Organization" };
   if (authorImage) {
@@ -424,7 +423,7 @@ function buildPostRenderModel(input, collection, item) {
       robots: input.isBackup === true
         ? "noindex, nofollow"
         : typeof frontMatter.robots === "string" && frontMatter.robots.length > 0 ? frontMatter.robots : null,
-      canonical: canonicalUrl(canonicalConfig.originalHost, item.route.path),
+      canonical: canonicalUrl(canonicalConfig.host, item.route.path),
       openGraph,
       jsonLd
     },
@@ -833,14 +832,14 @@ function buildPostPageViewModel(input) {
   const frontMatter = isPlainObject(input.frontMatter) ? input.frontMatter : {};
   const page = input.page || {};
 
-  if (!isPlainConfigObject(input.stellarConfig) || !isPlainConfigObject(input.stellarConfig.canonical)) {
+  if (!isPlainConfigObject(input.stellarConfig) || !isPlainConfigObject(input.stellarConfig.seo)) {
     throw new ConfigSchemaError([Object.freeze({
       code: "invalid_type",
       source: themeSource,
-      path: "stellarConfig.canonical",
+      path: "stellarConfig.seo",
       actualType: input.stellarConfig == null ? "undefined" : typeof input.stellarConfig,
-      expected: "normalized canonical object",
-      migration: "configuration/canonical"
+      expected: "normalized SEO object",
+      migration: "configuration/seo"
     })]);
   }
 

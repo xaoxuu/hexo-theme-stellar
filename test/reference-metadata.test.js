@@ -22,35 +22,46 @@ const ROOT = path.resolve(__dirname, "..");
 const OUTPUT = path.join(ROOT, "reference/v2-models.json");
 const CONFIG_OUTPUT = path.join(ROOT, "reference/v2-config.json");
 
-test("配置 Reference 只公开已交付 canonical 契约", () => {
+test("配置 Reference 只公开已交付 head/SEO 契约", () => {
   const metadata = generateConfigReferenceMetadata();
 
   assert.equal(metadata.status, "partial");
   assert.deepEqual(metadata.fields.map(field => field.path), [
-    "canonical",
-    "canonical.official_hosts",
-    "canonical.original_host"
+    "inject",
+    "inject.head",
+    "inject.script",
+    "resources",
+    "resources.preconnect",
+    "seo",
+    "seo.canonical",
+    "seo.canonical.allowed_hosts",
+    "seo.canonical.host",
+    "seo.open_graph",
+    "seo.open_graph.enabled",
+    "seo.open_graph.twitter_id",
+    "seo.structured_data",
+    "seo.structured_data.same_as"
   ]);
   assert.equal(metadata.fields[0].sealed, true);
   assert.deepEqual(
-    metadata.fields.find(field => field.path === "canonical.original_host"),
+    metadata.fields.find(field => field.path === "seo.canonical.host"),
     {
-      path: "canonical.original_host",
-      runtimePath: "canonical.originalHost",
+      path: "seo.canonical.host",
+      runtimePath: "seo.canonical.host",
       type: ["string", "null"],
       default: { kind: "literal", value: null },
       scope: "theme",
-      cascade: ["theme default", "site theme override"],
+      cascade: ["schema default", "_config.stellar.yml"],
       normalizer: "nullable_host",
-      normalization: "trim; null becomes an empty string",
+      normalization: "trim; remove scheme and trailing slash; null disables canonical output",
       consumers: [
-        "Post PageViewModel",
-        "canonical head renderer",
-        "browser canonical check",
-        "Reference generator"
+        "PageViewModel",
+        "head renderer",
+        "JSON-LD helper",
+        "browser canonical check"
       ],
       example: "example.com",
-      migration: "configuration/canonical#original-host"
+      migration: "configuration/seo"
     }
   );
 });

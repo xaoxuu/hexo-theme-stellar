@@ -18,7 +18,7 @@ hexo.extend.helper.register('json_ld', function(args) {
   }
   const page = this.page;
   const config = this.config;
-  const structured_data = this.theme.structured_data;
+  const structuredData = this.stellar_config("seo.structuredData");
   const authorEmail = config.email;
   let authorImage = config.avatar || (authorEmail ? this.gravatar(authorEmail) : null);
   const isPage = page.layout == 'page';
@@ -29,7 +29,7 @@ hexo.extend.helper.register('json_ld', function(args) {
   const author = {
     '@type': 'Person',
     name: config.author,
-    sameAs: structured_data.links || []
+    sameAs: structuredData.sameAs
   };
   // Google does not accept `Person` as item type for the publisher property
   const publisher = Object.assign({}, author, {'@type': 'Organization'});

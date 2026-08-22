@@ -9937,7 +9937,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.canonical.originalHost",
+              "hexo.stellar.config.seo.canonical.host",
               "item.route.path"
             ]
           },
@@ -10022,7 +10022,7 @@
           "required": true,
           "default": {
             "kind": "computed",
-            "description": "由 theme.open_graph 与页面 open_graph 生成；禁用时为 null"
+            "description": "由 hexo.stellar.config.seo.openGraph 与页面 Open Graph 覆盖生成；禁用时为 null"
           },
           "scope": "PageViewModel:post",
           "consumers": [

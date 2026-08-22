@@ -81,9 +81,9 @@ graph TB
 
 Pre-alpha M1.5 已建立内部配置入口目录，并进一步把 v2 最终公开主题配置冻结为 `site`、`seo`、`layout`、`content`、`appearance`、`resources`、`extensions`、`inject` 八个职责根域。完整目标树、命名、级联和旧→新迁移矩阵见[最终配置契约](../../designs/2026-08-22-v2-config-target-contract/target-contract.md)。
 
-该目标契约不参与当前运行时解析：当前仍只有 `canonical.original_host/official_hosts` 接入声明式 Schema，公开 Reference 也仍只包含 canonical。后续纵向切片会直接迁入 `seo.canonical.host/allowed_hosts` 等最终路径，不会先迁到 #703 的临时目录再二次改名。
+head/SEO 纵向切片已把 `seo`、`resources.preconnect` 与站点 `inject` 接入声明式 Schema，运行时与配置 Reference 只投影这些已交付节点；其它目标字段仍保持 `planned`。后续切片继续直接实现最终路径，不经过 #703 的临时目录。
 
-配置从 `_config.yml` 经由 Hexo 的主题变量系统（`theme.*`）流动，页面级覆盖通过 `page.*` 变量实现。`hexo-config()` 辅助函数让 Stylus 文件也能访问配置值。
+已交付 v2 字段从 Schema 与 `_config.stellar.yml` 解析到冻结的 `hexo.stellar.config`；尚未迁移的字段仍经 Hexo 主题变量系统（`theme.*`）流动，页面级覆盖继续通过 `page.*` 变量实现。`hexo-config()` 辅助函数让 Stylus 文件也能访问旧链配置值。
 
 ## 配置文件结构
 
@@ -92,7 +92,7 @@ Pre-alpha M1.5 已建立内部配置入口目录，并进一步把 v2 最终公�
 | 小节 | 用途 |
 |------|------|
 | `stellar` | 主题元数据与资源路径 |
-| `preconnect`、`canonical`、`open_graph`、`structured_data` | SEO 与 meta 标签 |
+| `seo`、`resources.preconnect` | SEO 与资源提示（v2 已交付） |
 | `brand`、`menubar` | 侧边栏品牌与导航 |
 | `site_tree` | 各页面类型布局定义与侧边栏小部件分配 |
 | `notebook` | 笔记本系统配置 |
@@ -111,6 +111,8 @@ Pre-alpha M1.5 已建立内部配置入口目录，并进一步把 v2 最终公�
 | `system` | 内部 Hexo 覆盖 |
 
 **参考源码**：[_config.yml](../../../_config.yml)
+
+`inject.head/script` 也已交付，但它是站点与页面级的可信逃生口，只从站点 `_config.stellar.yml` 和页面 Front Matter 读取，不是主题 `_config.yml` 的默认配置小节。
 
 ### 卡片 Hover 插件
 
@@ -200,22 +202,29 @@ stellar:
 
 ### SEO 与 meta 标签
 
-`canonical`、`open_graph`、`structured_data` 小节控制 SEO 行为：
+`seo` 小节统一控制索引、分享与结构化数据：
 
-- **`canonical`**：通过 `original_host` 与 `official_hosts` 校验域名，检测并警告克隆站
-- **`open_graph`**：启用 Open Graph meta 标签，用于社交分享
-- **`structured_data`**：为 JSON-LD 结构化数据生成提供数据
+- **`seo.canonical`**：通过 `host` 与 `allowed_hosts` 校验域名，检测并警告克隆站
+- **`seo.open_graph`**：启用 Open Graph meta 标签，用于社交分享
+- **`seo.structured_data`**：通过 `same_as` 为 JSON-LD 作者/组织提供公开身份链接
 
-Pre-alpha M1.5 已先为 canonical 建立声明式配置接缝：Schema 定义默认值、类型、站点覆盖、规范化、消费方与 Reference 元数据，解析结果以冻结的 `hexo.stellar.config.canonical` 提供给 Post ViewModel、迁移期 head 与浏览器配置。YAML 使用 snake_case，规范化后的 JavaScript 对象继续使用 `originalHost` / `officialHosts`；旧 camelCase YAML 字段直接报迁移错误。
+Pre-alpha M1.5 的声明式 Schema 定义默认值、类型、站点覆盖、规范化、消费方与 Reference 元数据，冻结结果位于 `hexo.stellar.config.seo`。YAML 使用 snake_case，JavaScript 使用 `openGraph/structuredData/allowedHosts/twitterId/sameAs`；已迁移旧根和旧子字段直接报迁移错误。
 
 ```yaml
-canonical:
-  original_host: example.com
-  official_hosts:
-    - mirror.example.com
+seo:
+  canonical:
+    host: example.com
+    allowed_hosts:
+      - mirror.example.com
+  open_graph:
+    enabled: true
+    twitter_id:
+  structured_data:
+    same_as:
+      - https://github.com/example
 ```
 
-当前只封闭 canonical 子树，其它公开配置仍由 M1.5 后续切片迁移；目标命名 `seo.canonical.host/allowed_hosts` 尚不可用。实现细节见[HTML Head 与 SEO 元数据](../02-布局系统/head-seo.md)和[Canonical URL 系统](../05-前端交互/canonical-url.md)。
+`seo` 子树已封闭，配置根仍保持开放以容纳尚未迁移的其它域。`resources.preconnect` 数组由站点层完整替换；`inject.head/script` 是可信多行字符串。实现细节见[HTML Head 与 SEO 元数据](../02-布局系统/head-seo.md)和[Canonical URL 系统](../05-前端交互/canonical-url.md)。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
@@ -545,8 +554,6 @@ plugins:
 - 插件专属选项
 
 `adaptive_text` 为内置能力（默认 `enable: true`）：背景图/背景色上方的文字颜色随背景亮度自适应，页面存在 `[data-text-adaptive]` 元素时才懒加载 `source/js/color.js`（`window.stellar.color`）与 `source/js/plugins/adaptive-text.js`，计算并写入 `--text-banner` / `--text-banner-theme`。属性值：`theme`（默认，背景图平均色 lighten/darken）、`contrast`（黑白对比）、`split`（大字低饱和 theme（接近黑白）+ 小字完整 theme，用于封面/banner/轮播容器）；明暗判定默认阈值 0.6、彩色背景（饱和度 > 0.2）上浮至 0.65，偏向采纳浅色文字；透明背景图按实际渲染背景做 alpha 合成后再平均；低饱和彩色平均色（如大面积浅灰 + 彩色 logo）做饱和度增强，主题小字保留色相带出主色倾向。接入场景：文章 photo 封面、专栏最新文章卡片、置顶轮播（post/wiki 幻灯片）、页顶 banner、`{% banner %}` 标签。
-
-`inject` 字段允许直接注入内联脚本/样式，而无需单独创建 EJS 文件。
 
 插件加载机制见[插件系统](../07-外部集成/plugin-system.md)。
 

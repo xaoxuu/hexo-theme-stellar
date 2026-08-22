@@ -9,6 +9,16 @@ const FRONT_MATTER_SCOPE = Object.freeze(["front_matter"]);
 const THEME_CASCADE = Object.freeze(["schema default", "_config.stellar.yml"]);
 const COLLECTION_CASCADE = Object.freeze(["schema default", "theme profile", "collection"]);
 const FRONT_MATTER_CASCADE = Object.freeze(["schema default", "theme profile", "collection", "front matter"]);
+const DELIVERED_TARGET_PATHS = new Set([
+  "seo.canonical.host",
+  "seo.canonical.allowed_hosts",
+  "seo.open_graph.enabled",
+  "seo.open_graph.twitter_id",
+  "seo.structured_data.same_as",
+  "resources.preconnect",
+  "inject.head",
+  "inject.script"
+]);
 
 function literal(value) {
   return { kind: "literal", value };
@@ -45,7 +55,7 @@ function targetField(path, options) {
     runtimePath: options.runtimePath || runtimePath(path),
     consumers: options.consumers,
     migration: options.migration || `configuration/${path.split(".")[0]}`,
-    status: options.status || "planned",
+    status: options.status || (scopes.includes("theme") && DELIVERED_TARGET_PATHS.has(path) ? "delivered" : "planned"),
     boundary,
     ...(options.items ? { items: options.items } : {}),
     ...(options.values ? { values: options.values } : {})

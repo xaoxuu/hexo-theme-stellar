@@ -28,9 +28,13 @@ test("配置目录完整覆盖主题默认顶层域与站点专属入口", () =>
   const themeDomains = CONFIG_DOMAIN_CATALOG
     .filter(item => item.sourceKind === "theme")
     .map(item => item.id);
+  const registeredRoots = new Set([...themeDomains, ...Object.keys(CONFIG_SCHEMA.properties)]);
 
   assert.equal(new Set(actual).size, actual.length, "主题默认配置不应重复定义顶层域");
-  assert.deepEqual([...themeDomains].sort(), [...actual].sort());
+  for (const root of actual) assert.ok(registeredRoots.has(root), `${root} 未登记到迁移目录或运行时 Schema`);
+  for (const legacyRoot of ["preconnect", "canonical", "open_graph", "structured_data"]) {
+    assert.equal(actual.includes(legacyRoot), false, `${legacyRoot} 不应继续作为主题默认根域`);
+  }
 
   const inject = CONFIG_DOMAIN_CATALOG.find(item => item.id === "inject");
   assert.equal(inject.sourceKind, "site_theme_override");
@@ -57,7 +61,7 @@ test("每个配置域都有唯一职责、边界、目标和迁移切片", () =>
   const owners = new Set(["stellar", "package", "hexo", "internal"]);
   const boundaries = new Set(["sealed", "record", "external", "derived"]);
   const statuses = new Set(["delivered", "planned", "partial", "excluded", "external", "derived"]);
-  const targetStatuses = new Set(["planned", "excluded"]);
+  const targetStatuses = new Set(["planned", "delivered", "excluded"]);
   const sliceIds = new Set(CONFIG_MIGRATION_SLICES.map(item => item.id));
 
   for (const item of CONFIG_DOMAIN_CATALOG) {
@@ -73,7 +77,7 @@ test("每个配置域都有唯一职责、边界、目标和迁移切片", () =>
     assert.ok(typeof item.runtimeTarget === "string" && item.runtimeTarget.length > 0, `${item.id} 缺少运行时目标`);
     assert.ok(sliceIds.has(item.migrationSlice), `${item.id} 指向未知迁移切片`);
     assert.ok(Array.isArray(item.migrations) && item.migrations.length > 0, `${item.id} 缺少迁移矩阵`);
-    if (item.targetStatus === "planned") {
+    if (item.targetStatus !== "excluded") {
       assert.ok(typeof item.targetPath === "string" && item.targetPath.length > 0, `${item.id} 缺少目标路径`);
     } else {
       assert.equal(item.targetPath, null);
@@ -151,14 +155,14 @@ test("五个迁移切片按序且每个配置域恰好出现一次", () => {
   }
 });
 
-test("运行时 Schema 仍只交付 canonical，规划目录不会提前封闭根配置", () => {
+test("运行时 Schema 只交付 head/SEO 切片且不会提前封闭根配置", () => {
   assert.equal(CONFIG_SCHEMA.sealed, false);
-  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["canonical"]);
+  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["seo", "resources", "inject"]);
   assert.deepEqual(
     CONFIG_DOMAIN_CATALOG.filter(item => item.status === "delivered").map(item => item.id),
-    ["canonical"]
+    ["preconnect", "canonical", "open_graph", "structured_data", "inject"]
   );
-  assert.equal(CONFIG_DOMAIN_CATALOG.find(item => item.id === "canonical").targetStatus, "planned");
+  assert.equal(CONFIG_DOMAIN_CATALOG.find(item => item.id === "canonical").targetStatus, "delivered");
   assert.equal(CONFIG_DOMAIN_CATALOG.find(item => item.id === "canonical").targetPath, "seo.canonical");
 });
 

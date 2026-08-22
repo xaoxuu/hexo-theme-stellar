@@ -499,7 +499,7 @@ function pageViewModelSchema(profile) {
       path: field("string", { default: literal(""), example: "blog/categories/thinking", required: true })
     }, { example: { name: "思考", path: "blog/categories/thinking" } });
     const openGraph = field(["object", "null"], {
-      default: computed("由 theme.open_graph 与页面 open_graph 生成；禁用时为 null"),
+      default: computed("由 hexo.stellar.config.seo.openGraph 与页面 Open Graph 覆盖生成；禁用时为 null"),
       example: {
         args: { image: "/cover.webp", twitter_card: "summary_large_image" },
         title: "Hello Stellar",
@@ -581,7 +581,7 @@ function pageViewModelSchema(profile) {
         description: field("string", { default: derived("page.description", "item.excerpt", "item.content"), example: "文章摘要", required: true }),
         keywords: array(stringItem, { default: derived("page.keywords", "item.tags", "site.keywords"), example: ["Hexo", "Stellar"], required: true }),
         robots: field(["string", "null"], { default: derived("IS_BACKUP", "page.robots"), example: "noindex, nofollow", required: true }),
-        canonical: field(["string", "null"], { default: derived("hexo.stellar.config.canonical.originalHost", "item.route.path"), example: "https://example.com/blog/hello/", required: true }),
+        canonical: field(["string", "null"], { default: derived("hexo.stellar.config.seo.canonical.host", "item.route.path"), example: "https://example.com/blog/hello/", required: true }),
         openGraph,
         jsonLd: field("object", { default: computed("由 BlogPosting 结构化数据规则生成"), example: { "@type": "BlogPosting" }, required: true, additionalProperties: true })
       }, { required: true, example: { title: "Hello Stellar - Stellar", description: "文章摘要", keywords: ["Hexo"], robots: null, canonical: null, openGraph: null, jsonLd: { "@type": "BlogPosting" } } }),
