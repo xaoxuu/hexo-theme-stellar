@@ -79,7 +79,9 @@ graph TB
 
 ### v2 配置迁移边界
 
-Pre-alpha M1.5 已建立内部配置入口目录，但它不参与当前运行时解析；当前仍只有 `canonical` 接入声明式配置 Schema。字段职责、命名边界和后续迁移顺序只在[配置全景契约](../../designs/2026-08-22-v2-config-inventory/inventory.md)维护。
+Pre-alpha M1.5 已建立内部配置入口目录，并进一步把 v2 最终公开主题配置冻结为 `site`、`seo`、`layout`、`content`、`appearance`、`resources`、`extensions`、`inject` 八个职责根域。完整目标树、命名、级联和旧→新迁移矩阵见[最终配置契约](../../designs/2026-08-22-v2-config-target-contract/target-contract.md)。
+
+该目标契约不参与当前运行时解析：当前仍只有 `canonical.original_host/official_hosts` 接入声明式 Schema，公开 Reference 也仍只包含 canonical。后续纵向切片会直接迁入 `seo.canonical.host/allowed_hosts` 等最终路径，不会先迁到 #703 的临时目录再二次改名。
 
 配置从 `_config.yml` 经由 Hexo 的主题变量系统（`theme.*`）流动，页面级覆盖通过 `page.*` 变量实现。`hexo-config()` 辅助函数让 Stylus 文件也能访问配置值。
 
@@ -213,7 +215,7 @@ canonical:
     - mirror.example.com
 ```
 
-本切片只封闭 canonical 子树，其它公开配置仍由 M1.5 后续切片迁移。实现细节见[HTML Head 与 SEO 元数据](../02-布局系统/head-seo.md)和[Canonical URL 系统](../05-前端交互/canonical-url.md)。
+当前只封闭 canonical 子树，其它公开配置仍由 M1.5 后续切片迁移；目标命名 `seo.canonical.host/allowed_hosts` 尚不可用。实现细节见[HTML Head 与 SEO 元数据](../02-布局系统/head-seo.md)和[Canonical URL 系统](../05-前端交互/canonical-url.md)。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
