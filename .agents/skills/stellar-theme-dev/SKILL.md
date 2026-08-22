@@ -38,10 +38,11 @@ description: 主题仓库（hexo-theme-stellar）开发全流程：方案 → �
 
 - 任务完成后**不自动提交**：改动保留在工作区供用户审查。
 - 仅在用户明确要求提交时执行；提交前须通过第 3 步中应执行的验证。
+- 例外：`$stellar-v2-program` 已将当前切片绑定到主题实施 issue 且目标为 `v2` 分支时，执行 `docs/agents/issue-tracker.md` 的「v2 实施 issue 自动闭环」；该流程已获持续授权，无需再次询问提交、推送或 issue 评论权限。
 - 使用 Conventional Commits，一次提交对应一个需求点；如果几个需求任务逻辑相似，可以合并为一次提交；类型与格式见 `AGENTS.md`「Git 规范」（§7）。
 - 合并代码时，把合并提交 / PR 标题改为 Conventional Commits 格式（见 `AGENTS.md`「Git 规范」§7），不保留默认的 `Merge branch ...` / `Merge pull request ...` 标题。
 - 改动只提交在本仓库（stellar）；仅当用户明确要求时 push。
-- 完成条件：改动已通过应执行的验证并保留在工作区；如用户要求提交，提交符合规范；如用户要求 push，已推送且远端为最新。
+- 完成条件：普通任务的改动已通过应执行的验证并保留在工作区；如用户要求提交，提交符合规范；如用户要求 push，已推送且远端为最新。v2 实施 issue 仅在主题提交到达 `origin/v2`、交付评论已发布且 CI 已关闭 issue 后完成。
 
 ### 5. 发版
 

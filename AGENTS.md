@@ -144,6 +144,7 @@ module.exports = function(hexo) {
 **提交门禁**：
 
 - 遵循 §7 Git 规范：一次提交对应一个需求点，逻辑相似的需求可合并；不自动提交，改动保留在工作区供审查，仅在用户明确要求时提交（发版流程除外）与 push
+- `$stellar-v2-program` 接管且目标为本仓库 `v2` 分支的实施 issue，按 `docs/agents/issue-tracker.md`「v2 实施 issue 自动闭环」执行已授权的提交、推送与 issue 收尾
 
 **文档同步门禁**：
 
@@ -191,6 +192,7 @@ module.exports = function(hexo) {
 - 与 issue 相关的提交，在提交标题末尾带上 issue 号（用户已提供 issue 号或链接时），如 `fix(scope): 修复 xxx (#123)`
 - 每个需求完成后不自动提交，改动保留在工作区供用户审查（见 §5 提交门禁）
 - 只有用户明确要求时才 push；发版前须与用户确认版本号
+- v2 实施 issue 的自动提交与推送是 §5 提交门禁中的限定例外，交付目标固定为 `origin/v2`
 
 ## 8. 发版规范
 
@@ -219,6 +221,7 @@ npm run release → push main + npm → CI 自动触发 → npm publish + git ta
 
 ## 10. Issue 处理
 
-- 调查 issue 问题后，先询问用户是否进行回复，得到确认后再发出回复或处理
+- 普通 issue 调查后，先询问用户是否进行回复，得到确认后再发出回复或处理
+- `$stellar-v2-program` 接管的 v2 实施 issue 按 `docs/agents/issue-tracker.md` 自动评论交付证据并添加 `resolved` 标签
 - 回复已修复的 issue 时，**不要手动关闭 issue**，只需添加 `resolved` 标签
 - 关闭由 label-commenter CI（`.github/workflows/label-commenter.yml`）处理：检测到 `resolved` 标签后自动关闭并附上回复；`fixed`、`duplicate`、`wontfix` 等标签同样由 CI 处理，agent 不直接调用 close

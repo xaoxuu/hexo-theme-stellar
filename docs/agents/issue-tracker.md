@@ -51,3 +51,22 @@ GitHub 的 issue 与 PR 共用编号空间。遇到裸编号 `#42` 时，先尝�
 ## 完成 issue
 
 实现与验证完成后，评论结果并添加 `resolved` 标签。不要手动关闭 issue；仓库的 label-commenter CI 会负责关闭。
+
+## v2 实施 issue 自动闭环
+
+仅当 `$stellar-v2-program` 已把当前切片绑定到本仓库的实施 issue，且交付目标明确为 `v2` 分支时使用本流程。该条件同时构成提交、推送、交付评论与添加 `resolved` 标签的持续授权。
+
+开始交付前确认：
+
+- 当前分支为 `v2`，上游为 `origin/v2`。
+- 当前 issue 范围可以和工作区中的其他修改清晰隔离。
+- 主题开发 Skill 要求的实现、文档、状态记录、code review 与验证门禁全部通过。
+
+按顺序完成闭环：
+
+1. 只暂存当前 issue 的文件，以带 issue 号的 Conventional Commit 提交。
+2. 推送到 `origin/v2`，确认远端 `v2` 已包含该提交。
+3. 在 issue 评论用户结果、提交 SHA、验证命令与结果，以及适用项中的 `N/A` 理由。
+4. 添加 `resolved` 标签，并确认 label-commenter CI 已将 issue 关闭。
+
+任一前置条件或门禁未满足时，保留 issue 为 open，评论已经取得的证据、阻塞影响与下一责任方。CI 未能关闭时保留 `resolved` 标签并报告自动化失败，不以手动关闭替代。主仓库的提交、推送与子模块指针更新不属于本闭环。
