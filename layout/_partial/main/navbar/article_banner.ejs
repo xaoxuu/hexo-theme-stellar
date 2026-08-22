@@ -1,7 +1,8 @@
 <%
 
 const postViewModel = page.viewModel?.collection?.profile === 'post' ? page.viewModel : null
-var banner = Object.assign({}, postViewModel ? postViewModel.item.presentation.banner : page.banner || {})
+var pageConfig = content_config(page)
+var banner = Object.assign({}, postViewModel ? postViewModel.item.presentation.banner : pageConfig.banner || {})
 
 if (banner.image == null && theme.topic.tree[collection_id(page, "topic")]?.hero?.background?.image != null) {
   banner.image = theme.topic.tree[collection_id(page, "topic")].hero.background.image
@@ -15,7 +16,7 @@ if (banner.headline == null) {
 
 // 上块：第一行（左侧面包屑 + 右侧阅读时长 / AI 标签）+ 第二行（日期信息，靠左）
 function layoutTop() {
-  if ((postViewModel ? postViewModel.item.navigation.breadcrumb : page.navigation?.breadcrumb) === false) {
+  if ((postViewModel ? postViewModel.item.navigation.breadcrumb : pageConfig.navigation?.breadcrumb) === false) {
     return ''
   }
   var el = ''
@@ -49,7 +50,7 @@ function layoutTop() {
   // AI 成分标签：置于第一行最右（阅读时长右侧）；
   // banner 含图片时不用配置色，继承默认文字色（--text-banner）
   const bannerHasImage = banner.image && banner.image.length > 0
-  rightHtml += ai_label(postViewModel ? postViewModel.item.presentation.article?.ai_label : page.article?.ai_label, 'cap', bannerHasImage)
+  rightHtml += ai_label(postViewModel ? postViewModel.item.presentation.article?.aiLabel : pageConfig.article?.aiLabel, 'cap', bannerHasImage)
   if (rightHtml.length > 0) {
     el += `<div class="right">${rightHtml}</div>`
   }

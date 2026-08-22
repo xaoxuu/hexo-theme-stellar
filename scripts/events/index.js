@@ -9,19 +9,18 @@ hexo.on('generateBefore', () => {
   require('./lib/config-schema')(hexo);
   // Merge config.
   require('./lib/config')(hexo);
-  // 保留既有的早期严格校验与 collection 建模顺序。
-  require('./lib/content-config')(hexo);
   require('./lib/links')(hexo);
   require('./lib/authors')(hexo);
-  require('./lib/doc_tree')(hexo);
-  require('./lib/topic_tree')(hexo);
   require('./lib/utils')(hexo);
-  require('./lib/notebooks')(hexo);
 });
 
-// 冷构建时内容文件在 generateBefore 之后才全部进入 locals；生成器读取前用完整集合重建。
-hexo.extend.filter.register('before_generate', () => {
-  require('./lib/content-config')(hexo);
+hexo.extend.filter.register("before_generate", () => {
+  // locals 已失效并从完整 source 库重建；内容配置只解析一次，
+  // 所有 Collection 派生树和 ViewModel 紧随其后消费同一份冻结结果。
+  require("./lib/content-config")(hexo);
+  require("./lib/doc_tree")(hexo);
+  require("./lib/topic_tree")(hexo);
+  require("./lib/notebooks")(hexo);
 }, 1);
 
 hexo.on('generateAfter', () => {

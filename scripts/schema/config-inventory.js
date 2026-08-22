@@ -292,9 +292,9 @@ const CONFIG_DOMAIN_CATALOG = deepFreeze([
     boundary: "sealed",
     runtimeTarget: "CollectionModel",
     consumers: ["CollectionModel", "ContentItemModel", "PageViewModel"],
-    status: "partial",
+    status: "delivered",
     migrationSlice: "collection-front-matter",
-    parameterBags: ["comments.<service>", "hero.background.effect.options"]
+    parameterBags: ["comments.options", "hero.background.effect.options"]
   }),
   domain("front_matter", {
     sourceKind: "front_matter",
@@ -302,9 +302,9 @@ const CONFIG_DOMAIN_CATALOG = deepFreeze([
     boundary: "sealed",
     runtimeTarget: "ContentItemModel and PageViewModel",
     consumers: ["ContentItemModel", "PageViewModel", "Hexo core"],
-    status: "partial",
+    status: "delivered",
     migrationSlice: "collection-front-matter",
-    parameterBags: ["comments.<service>", "open_graph", "mermaid"]
+    parameterBags: ["comments.options", "seo.open_graph", "render.diagrams"]
   }),
   domain("hexo", {
     sourceKind: "hexo",

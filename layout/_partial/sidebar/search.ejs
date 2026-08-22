@@ -8,7 +8,7 @@ if (item.placeholder == null && item.filter == 'auto') {
     item.placeholder = __('search.search_in', theme.wiki.tree[collection_id(page, "wiki")]?.name)
   } else if (notebook) {
     item.placeholder = __('search.search_in', notebook.name || __('btn.notebook'))
-    item.filter = notebook.routing.base_dir
+    item.filter = notebook.route.path
   }
 }
 function layoutDiv() {

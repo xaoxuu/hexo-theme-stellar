@@ -5,7 +5,6 @@
 
 "use strict";
 
-const { isListed } = require('../lib/content-config')
 const { generatorPath, requireLayoutProfiles, toRenderNavigation } = require("../lib/layout-config");
 
 hexo.extend.generator.register('notebooks', function (locals) {
@@ -56,7 +55,10 @@ hexo.extend.generator.register('notebooks', function (locals) {
   })
 
   for (const notebook of Object.values(notebooks.tree)) {
-    const pages = locals.pages.filter(p => notebook.noteMap.has(p._id) && isListed(p)).sort(notebook.listing.order_by)
+    const pages = locals.pages.filter(p => {
+      const note = notebook.noteMap.get(p._id);
+      return note != null && note.listed !== false;
+    }).sort(notebook.listing.order_by);
     pages.data.sort((a, b) => notebook.noteMap.get(b._id).priority - notebook.noteMap.get(a._id).priority)
 
     // Note list pages (for every tag) of current notebook.
@@ -68,7 +70,7 @@ hexo.extend.generator.register('notebooks', function (locals) {
         data: {
           layout: 'notes',
           navigation: { menu: notebook.navigation.menu ?? profiles.noteIndex.navigation.activeMenu },
-          collection: { type: 'notebook', id: notebook.id },
+          stellarConfig: { collection: { profile: "notebook", id: notebook.id } },
           activeTag: tag.id,
         }
       })

@@ -26,6 +26,18 @@
 <%
 function loadPlugins() {
   var el = ''
+  var render = content_config(page).render || {}
+
+  function pageFeature(id) {
+    if (id === 'katex' || id === 'mathjax') {
+      return render.math === id
+    }
+    if (id === 'mermaid') {
+      if (render.diagrams === true || render.diagrams === 'mermaid') return true
+      if (render.diagrams && typeof render.diagrams === 'object') return render.diagrams
+    }
+    return false
+  }
 
   // search
   if (theme.search[theme.search.service]) {
@@ -34,9 +46,10 @@ function loadPlugins() {
   }
   
   // others
-  for (let id of Object.keys(theme.plugins)) {
-    const conf = Object.assign({}, theme.plugins[id], page[id])
-    if (page[id] == true || conf.enable) {
+  for (var id of Object.keys(theme.plugins)) {
+    var pageConf = pageFeature(id)
+    var conf = Object.assign({}, theme.plugins[id], pageConf && typeof pageConf === 'object' ? pageConf : {})
+    if (pageConf === true || conf.enable) {
       if (conf.inject?.length > 0) {
         el += conf.inject
       } else {

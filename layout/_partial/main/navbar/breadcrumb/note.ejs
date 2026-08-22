@@ -4,5 +4,5 @@
 <% const notebook = theme.notebooks.tree[collection_id(page, "notebook")] %>
 <% if (notebook) { %>
   <span class="sep"></span>
-  <a class="cap breadcrumb" href="<%= pretty_url(notebook.routing.base_dir) %>"><%= notebook.headline || notebook.name %></a>
+  <a class="cap breadcrumb" href="<%= pretty_url(notebook.route.path) %>"><%= notebook.headline || notebook.name %></a>
 <% } %>

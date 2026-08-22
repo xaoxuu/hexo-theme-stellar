@@ -1,6 +1,7 @@
 <%
 var activeProfile = page.viewModel?.collection?.profile
-var isOrdinaryPost = page.layout === 'post' && page.collection?.type !== 'topic'
+var pageConfig = content_config(page)
+var isOrdinaryPost = page.layout === 'post' && pageConfig.collection?.profile !== 'topic'
 if (isOrdinaryPost && (activeProfile !== 'post' || page.viewModel?.render == null)) {
   throw new Error(`Stellar v2: 普通 Post ${page.source || page.path || '<unknown>'} 缺少合法 PageViewModel.render`)
 }
@@ -79,8 +80,8 @@ var articleDefaults = stellar_config('content.article')
 var article_type = articleDefaults.type
 if (page_type == 'index') {
   article_type = undefined
-} else if (page.article?.type?.length > 0) {
-  article_type = page.article.type
+} else if (pageConfig.article?.type?.length > 0) {
+  article_type = pageConfig.article.type
 } else if (theme.topic.tree[collection_id(page, "topic")]?.article?.type != null) {
   article_type = theme.topic.tree[collection_id(page, "topic")].article.type
 } else if (theme.wiki.tree[collection_id(page, "wiki")]?.article?.type != null) {
@@ -88,8 +89,8 @@ if (page_type == 'index') {
 }
 // 是否缩进
 var indent = false
-if (page.article?.indent != null) {
-  indent = page.article.indent
+if (pageConfig.article?.indent != null) {
+  indent = pageConfig.article.indent
 } else if (theme.topic.tree[collection_id(page, "topic")]?.article?.indent != null) {
   indent = theme.topic.tree[collection_id(page, "topic")].article.indent
 } else if (theme.wiki.tree[collection_id(page, "wiki")]?.article?.indent != null) {

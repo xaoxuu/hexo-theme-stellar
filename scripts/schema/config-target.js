@@ -153,8 +153,8 @@ const CONTENT_OVERRIDE_DEFINITIONS = [
   ["card.cover", ["string", "null"], derived("theme or collection card.cover")],
   ["card.tagline", ["string", "null"], derived("theme or collection card.tagline")],
   ["sidebar", "object", derived("theme profile sidebar"), { boundary: "sealed" }],
-  ["sidebar.left.widgets", "array", derived("theme or collection left widgets"), { items: { type: ["string", "object"] } }],
-  ["sidebar.right.widgets", "array", derived("theme or collection right widgets"), { items: { type: ["string", "object"] } }],
+  ["sidebar.left.widgets", "array", derived("theme or collection left widgets"), { items: { type: ["string", "object"], boundary: "parameter_bag" } }],
+  ["sidebar.right.widgets", "array", derived("theme or collection right widgets"), { items: { type: ["string", "object"], boundary: "parameter_bag" } }],
   ["sidebar.left.search", ["boolean", "object"], derived("theme or collection search"), { boundary: "sealed" }],
   ["sidebar.left.search.filter", ["string", "null"], literal(null)],
   ["sidebar.left.search.placeholder", ["string", "null"], literal(null)],
@@ -213,10 +213,10 @@ const COLLECTION_TARGET_DEFINITIONS = [
   ["route.path", "string", derived("collection route"), { normalization: "normalize to a collection-relative path" }],
   ["route.start", ["string", "null"], literal(null)],
   ["listing", "object", literal({}), { boundary: "sealed" }],
-  ["listing.priority", ["number", "null"], literal(null)],
+  ["listing.priority", ["number", "null"], literal(null), { minimum: 0 }],
   ["listing.sort", ["number", "null"], literal(null)],
-  ["listing.excerpt_length", ["number", "null"], literal(null)],
-  ["listing.per_page", ["number", "null"], literal(null)],
+  ["listing.excerpt_length", ["number", "null"], literal(null), { minimum: 0 }],
+  ["listing.per_page", ["number", "null"], literal(null), { minimum: 0 }],
   ["listing.order_by", ["string", "null"], literal(null)],
   ["note_defaults", "object", literal({}), { boundary: "sealed" }],
   ["note_defaults.sidebar", "object", literal({}), { boundary: "registered_schema" }],
@@ -237,9 +237,9 @@ const FRONT_MATTER_TARGET_DEFINITIONS = [
   ["visibility.listed", "boolean", literal(true)],
   ["visibility.searchable", "boolean", literal(true)],
   ["listing", "object", literal({}), { boundary: "sealed" }],
-  ["listing.priority", "number", literal(0)],
+  ["listing.priority", "number", literal(0), { minimum: 0 }],
   ["render", "object", literal({}), { boundary: "sealed" }],
-  ["render.math", ["boolean", "string"], literal(false)],
+  ["render.math", ["boolean", "string"], literal(false), { values: [false, "katex", "mathjax"] }],
   ["render.diagrams", ["boolean", "string", "object"], literal(false), { boundary: "parameter_bag" }],
   ["seo", "object", literal({}), { boundary: "sealed" }],
   ["seo.open_graph", "object", literal({}), { boundary: "parameter_bag" }],
@@ -613,22 +613,26 @@ const CONFIG_TARGET_FIELDS = deepFreeze([
   ...fields(CONTENT_CONSUMERS, CONTENT_OVERRIDE_DEFINITIONS, {
     scopes: COLLECTION_SCOPE,
     cascade: COLLECTION_CASCADE,
-    migration: "content-schema/collection"
+    migration: "content-schema/collection",
+    status: "delivered"
   }),
   ...fields(CONTENT_CONSUMERS, CONTENT_OVERRIDE_DEFINITIONS, {
     scopes: FRONT_MATTER_SCOPE,
     cascade: FRONT_MATTER_CASCADE,
-    migration: "content-schema/front-matter"
+    migration: "content-schema/front-matter",
+    status: "delivered"
   }),
   ...fields(CONTENT_CONSUMERS, COLLECTION_TARGET_DEFINITIONS, {
     scopes: COLLECTION_SCOPE,
     cascade: COLLECTION_CASCADE,
-    migration: "content-schema/collection"
+    migration: "content-schema/collection",
+    status: "delivered"
   }),
   ...fields(CONTENT_CONSUMERS, FRONT_MATTER_TARGET_DEFINITIONS, {
     scopes: FRONT_MATTER_SCOPE,
     cascade: FRONT_MATTER_CASCADE,
-    migration: "content-schema/front-matter"
+    migration: "content-schema/front-matter",
+    status: "delivered"
   })
 ]);
 

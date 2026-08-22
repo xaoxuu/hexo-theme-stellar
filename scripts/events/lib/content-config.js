@@ -2,8 +2,8 @@
 
 const {
   ContentConfigError,
-  validateCollectionConfig,
-  validatePageConfig,
+  parseCollectionConfig,
+  parsePageConfig,
   validateThemeConfig
 } = require('../../lib/content-config');
 const {
@@ -17,6 +17,7 @@ const {
 } = require("../../lib/models");
 const {
   resetPageViewModels,
+  setPageConfig,
   setPostViewModelInput
 } = require("../../lib/page-view-model-registry");
 
@@ -79,7 +80,7 @@ function pageModelInput(page, config) {
     lang: typeof page.lang === "string" ? page.lang : "",
     language: typeof page.language === "string" ? page.language : "",
     collection: config.collection == null ? null : {
-      type: config.collection.type,
+      profile: config.collection.profile,
       id: config.collection.id
     }
   };
@@ -89,6 +90,10 @@ module.exports = ctx => {
   resetPageViewModels();
   const issues = [];
   const data = ctx.locals.get('data');
+  const collectionConfigs = new Map();
+  const pageConfigs = new Map();
+  ctx.stellar ||= {};
+  ctx.stellar.contentConfig = { collectionConfigs, pageConfigs };
   const themeConfig = ctx.config.theme_config || ctx.theme.config;
   const themeConfigSource = ctx.config.theme_config
     ? '_config.stellar.yml'
@@ -106,23 +111,38 @@ module.exports = ctx => {
       continue;
     }
     try {
-      validateCollectionConfig(value, sourcePathForData(key));
+      collectionConfigs.set(key, parseCollectionConfig(value, sourcePathForData(key)));
     } catch (error) {
       if (!(error instanceof ContentConfigError)) throw error;
       issues.push(...error.issues);
     }
   }
 
-  const pageConfigs = new Map();
   const configForPage = page => {
-    if (!pageConfigs.has(page)) pageConfigs.set(page, readFrontMatter(ctx, page));
+    if (!pageConfigs.has(page)) {
+      const raw = readFrontMatter(ctx, page);
+      if (raw == null) {
+        pageConfigs.set(page, null);
+      } else {
+        try {
+          const parsed = parsePageConfig(raw, sourcePathForPage(page));
+          pageConfigs.set(page, parsed);
+          setPageConfig(page, parsed);
+          page.stellarConfig = parsed;
+        } catch (error) {
+          if (!(error instanceof ContentConfigError)) throw error;
+          issues.push(...error.issues);
+          pageConfigs.set(page, null);
+        }
+      }
+    }
     return pageConfigs.get(page);
   };
   const posts = ctx.locals.get("posts");
   const topicMembers = [];
   posts.each(page => {
     const config = configForPage(page);
-    if (config?.collection?.type === "topic") {
+    if (config?.collection?.profile === "topic") {
       topicMembers.push({
         source: sourcePathForPage(page),
         frontMatter: config,
@@ -135,11 +155,11 @@ module.exports = ctx => {
   const pages = ctx.locals.get('pages');
   const notebookMemberInputs = [];
   pages.each(page => {
-    const config = readFrontMatter(ctx, page);
-    if (config?.collection?.type !== 'notebook') return;
+    const config = configForPage(page);
+    if (config?.collection?.profile !== "notebook") return;
     notebookMemberInputs.push({
       collection: {
-        type: config.collection.type,
+        profile: config.collection.profile,
         id: config.collection.id
       },
       tags: plainTerms(config.tags)
@@ -156,7 +176,6 @@ module.exports = ctx => {
       const config = configForPage(page);
       if (config == null) return;
       try {
-        validatePageConfig(config, sourcePathForPage(page));
         if (type === "posts" && config.collection == null) {
           const viewModelInput = {
             source: sourcePathForPage(page),
@@ -170,7 +189,7 @@ module.exports = ctx => {
           };
           setPostViewModelInput(page, viewModelInput);
         }
-        if (type === "posts" && config.collection?.type === "topic") {
+        if (type === "posts" && config.collection?.profile === "topic") {
           const collectionId = config.collection.id;
           const publishList = Array.isArray(data.topic?.publish_list)
             ? data.topic.publish_list
@@ -184,13 +203,13 @@ module.exports = ctx => {
             siteConfig: ctx.config,
             themeConfig: ctx.theme.config,
             stellarConfig: ctx.stellar?.config,
-            collectionConfig: data[`topic/${collectionId}`],
+            collectionConfig: collectionConfigs.get(`topic/${collectionId}`),
             members: topicMembers,
             frontMatter: config,
             page: pageModelInput(page, config)
           });
         }
-        if (type === "pages" && config.collection?.type === "notebook") {
+        if (type === "pages" && config.collection?.profile === "notebook") {
           const collectionId = config.collection.id;
           page.viewModel = buildNotebookPageViewModel({
             source: sourcePathForPage(page),
@@ -200,7 +219,7 @@ module.exports = ctx => {
             siteConfig: ctx.config,
             themeConfig: ctx.theme.config,
             stellarConfig: ctx.stellar?.config,
-            collectionConfig: data[`notebooks/${collectionId}`],
+            collectionConfig: collectionConfigs.get(`notebooks/${collectionId}`),
             collectionItems: notebookMemberInputs,
             frontMatter: config,
             page: pageModelInput(page, config)

@@ -4,7 +4,7 @@ function layoutDiv() {
   el += '<div id="waline_container" class="waline_thread with-fancybox"';
   let cfg = {};
   const explicit = typeof comments !== 'undefined' ? comments : null
-  const commentId = explicit ? explicit.id : page.comments?.id
+  const commentId = explicit ? explicit.id : content_config(page).comments?.id
   if (commentId) {
     cfg['comment_id'] = commentId;
   }

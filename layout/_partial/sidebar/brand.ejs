@@ -42,7 +42,7 @@ function layoutBrandImage() {
 function layoutWikiHome() {
   if (placement !== 'sidebar' || !collection_id(page, 'wiki')) return ''
   const wiki = theme.wiki.tree[collection_id(page, 'wiki')]
-  const enabled = page.sidebar?.left?.wiki_home ?? wiki?.sidebar?.left?.wiki_home ?? true
+  const enabled = content_config(page).sidebar?.left?.wikiHome ?? wiki?.sidebar?.left?.wikiHome ?? true
   if (enabled === false) return ''
   var el = `<div class="wiki-home-wrap">`
   el += `<a class="wiki-home cap" href="${pretty_url(stellar_config('layout.profiles.wikiIndex.path'))}">`

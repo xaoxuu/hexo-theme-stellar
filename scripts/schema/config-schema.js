@@ -23,7 +23,9 @@ function structuralOptions(options) {
     "allowedPropertyKeys",
     "minimum",
     "exclusiveMinimum",
+    "externalProperties",
     "removedProperties",
+    "requiredProperties",
     "sealed"
   ]) {
     if (options[key] !== undefined) result[key] = options[key];
@@ -43,6 +45,7 @@ function field(type, options) {
     example: options.example,
     migration: options.migration,
     runtimeKey: options.runtimeKey,
+    validator: options.validator,
     ...structuralOptions(options)
   };
 }

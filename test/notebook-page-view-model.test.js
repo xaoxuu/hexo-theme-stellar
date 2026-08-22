@@ -8,11 +8,16 @@ const path = require("node:path");
 
 const { buildNotebookPageViewModel: buildNotebookPageViewModelRaw } = require("../scripts/lib/models");
 const { parseStellarConfig } = require("../scripts/lib/config-schema");
+const { parseCollectionConfig, parsePageConfig } = require("../scripts/lib/content-config");
 const processContentConfig = require("../scripts/events/lib/content-config");
 
 function buildNotebookPageViewModel(input) {
   return buildNotebookPageViewModelRaw({
     ...input,
+    collectionConfig: input.collectionConfig == null
+      ? input.collectionConfig
+      : parseCollectionConfig(input.collectionConfig, input.collectionSource),
+    frontMatter: parsePageConfig(input.frontMatter, input.source),
     stellarConfig: input.stellarConfig || parseStellarConfig({
       source: input.themeSource || "<theme>",
       themeConfig: input.themeConfig,
@@ -50,13 +55,13 @@ function notebookInput(overrides = {}) {
     description: "Web、Node.js 与工具链笔记。",
     identity: { icon: "/images/notebook.svg" },
     source: { repository: "xaoxuu/notes", branch: "v2" },
-    routing: { base_dir: "/notes/dev/index.html" },
+    route: { path: "/notes/dev/index.html" },
     navigation: { menu: "notes", breadcrumb: true },
     listing: { sort: 2, excerpt_length: 64, per_page: 5, order_by: "-updated" },
     article: { type: "tech", indent: true },
     footer: { license: "CC BY 4.0", share: true },
-    comments: { enabled: true, service: "giscus", giscus: { "data-repo": "xaoxuu/notes" } },
-    note: {
+    comments: { enabled: true, provider: "giscus", options: { "data-repo": "xaoxuu/notes" } },
+    note_defaults: {
       sidebar: {
         left: { widgets: ["tagtree", "recent"] },
         right: { widgets: ["toc"] }
@@ -66,7 +71,7 @@ function notebookInput(overrides = {}) {
   const frontMatter = {
     title: "Node.js",
     layout: "page",
-    collection: { type: "notebook", id: "dev" },
+    collection: { profile: "notebook", id: "dev" },
     tags: ["knowledge/nodejs", "tools"],
     navigation: { menu: "", breadcrumb: false },
     listing: { priority: 7 },
@@ -84,7 +89,7 @@ function notebookInput(overrides = {}) {
     excerpt: "<p>Node</p>",
     date: new Date("2026-08-20T00:00:00.000Z"),
     tags: [{ name: "knowledge/nodejs" }, { name: "tools" }],
-    collection: { type: "notebook", id: "dev" }
+    collection: { profile: "notebook", id: "dev" }
   };
 
   return {
@@ -118,12 +123,12 @@ function notebookInput(overrides = {}) {
       page,
       {
         _id: "note-http",
-        collection: { type: "notebook", id: "dev" },
+        collection: { profile: "notebook", id: "dev" },
         tags: ["knowledge/http", "tools/cli"]
       },
       {
         _id: "other",
-        collection: { type: "notebook", id: "other" },
+        collection: { profile: "notebook", id: "other" },
         tags: ["ignored"]
       }
     ],
@@ -180,12 +185,12 @@ test("Notebook profile 生成与 Post 同构的冻结 PageViewModel", () => {
   assert.equal(viewModel.item.presentation.article.indent, true);
   assert.equal(viewModel.item.presentation.footer.license, "CC BY 4.0");
   assert.equal(viewModel.item.presentation.footer.share, false);
-  assert.equal(viewModel.item.presentation.comments.giscus["data-theme"], "light");
-  assert.equal(viewModel.item.presentation.comments.giscus["data-repo"], "xaoxuu/notes");
+  assert.equal(viewModel.item.presentation.comments.provider, "giscus");
+  assert.equal(viewModel.item.presentation.comments.options["data-repo"], "xaoxuu/notes");
   assertDeepFrozenPlain(viewModel);
 
   input.collectionConfig.name = "Changed";
-  input.collectionConfig.note.sidebar.left.widgets.push("changed");
+  input.collectionConfig.note_defaults.sidebar.left.widgets.push("changed");
   input.collectionItems[0].tags.push("changed");
   assert.equal(viewModel.collection.identity.name, "开发笔记");
   assert.deepEqual(viewModel.item.presentation.sidebar.left.widgets, ["tagtree", "recent"]);
@@ -196,10 +201,10 @@ test("Notebook profile 使用既有主题默认值完成列表和展示级联", 
   const input = notebookInput();
   input.collectionConfig = {
     name: "默认笔记本",
-    routing: {},
+    route: {},
     listing: {},
     navigation: {},
-    note: {}
+    note_defaults: {}
   };
   input.frontMatter.collection.id = "default";
   input.collectionId = "default";
@@ -234,11 +239,11 @@ test("Notebook identity 保留显式空 headline", () => {
 test("Notebook builder 严格拒绝缺失、错误类型和不匹配的 v2 collection 归属", () => {
   const missing = notebookInput();
   delete missing.frontMatter.collection;
-  assert.throws(() => buildNotebookPageViewModel(missing), /必须显式声明 collection\.type: notebook/);
+  assert.throws(() => buildNotebookPageViewModel(missing), /必须显式声明 collection\.profile: notebook/);
 
   const wrongType = notebookInput();
-  wrongType.frontMatter.collection = { type: "wiki", id: "dev" };
-  assert.throws(() => buildNotebookPageViewModel(wrongType), /必须显式声明 collection\.type: notebook/);
+  wrongType.frontMatter.collection = { profile: "wiki", id: "dev" };
+  assert.throws(() => buildNotebookPageViewModel(wrongType), /必须显式声明 collection\.profile: notebook/);
 
   const wrongId = notebookInput();
   wrongId.frontMatter.collection.id = "other";
@@ -246,15 +251,15 @@ test("Notebook builder 严格拒绝缺失、错误类型和不匹配的 v2 colle
 
   const invalidCollection = notebookInput();
   invalidCollection.collectionConfig.listing.priority = "high";
-  assert.throws(() => buildNotebookPageViewModel(invalidCollection), /source\/_data\/notebooks\/dev\.yml: listing\.priority 应为 finite number/);
+  assert.throws(() => buildNotebookPageViewModel(invalidCollection), /source\/_data\/notebooks\/dev\.yml: listing\.priority 应为 number/);
 });
 
 test("生成前事件只为可解析的严格 Notebook Note 挂载 PageViewModel", t => {
   const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-notebook-view-model-"));
   t.after(() => fs.rmSync(sourceDir, { recursive: true, force: true }));
   fs.mkdirSync(path.join(sourceDir, "notes"), { recursive: true });
-  fs.writeFileSync(path.join(sourceDir, "notes/note.md"), "---\ntitle: Note\ncollection:\n  type: notebook\n  id: dev\ntags: [tools/cli]\nlisting:\n  priority: 3\n---\n");
-  fs.writeFileSync(path.join(sourceDir, "notes/wiki.md"), "---\ntitle: Wiki\ncollection:\n  type: wiki\n  id: docs\n---\n");
+  fs.writeFileSync(path.join(sourceDir, "notes/note.md"), "---\ntitle: Note\ncollection:\n  profile: notebook\n  id: dev\ntags: [tools/cli]\nlisting:\n  priority: 3\n---\n");
+  fs.writeFileSync(path.join(sourceDir, "notes/wiki.md"), "---\ntitle: Wiki\ncollection:\n  profile: wiki\n  id: docs\n---\n");
 
   const note = {
     _id: "note",
@@ -262,7 +267,7 @@ test("生成前事件只为可解析的严格 Notebook Note 挂载 PageViewModel
     path: "notes/note/",
     title: "Note",
     layout: "page",
-    collection: { type: "notebook", id: "dev" },
+    collection: { profile: "notebook", id: "dev" },
     tags: ["runtime/ignored"]
   };
   const wiki = {
@@ -271,12 +276,12 @@ test("生成前事件只为可解析的严格 Notebook Note 挂载 PageViewModel
     path: "wiki/",
     title: "Wiki",
     layout: "page",
-    collection: { type: "wiki", id: "docs" }
+    collection: { profile: "wiki", id: "docs" }
   };
   const data = {
     "notebooks/dev": {
       name: "开发笔记",
-      routing: { base_dir: "notes/dev" },
+      route: { path: "notes/dev" },
       navigation: { menu: "notes" }
     },
     "wiki/docs": { name: "Docs" }
@@ -315,7 +320,7 @@ test("生成前事件拒绝引用不存在 Notebook 的 Note", t => {
   const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-missing-notebook-"));
   t.after(() => fs.rmSync(sourceDir, { recursive: true, force: true }));
   fs.mkdirSync(path.join(sourceDir, "notes"), { recursive: true });
-  fs.writeFileSync(path.join(sourceDir, "notes/missing.md"), "---\ntitle: Missing\ncollection:\n  type: notebook\n  id: missing\n---\n");
+  fs.writeFileSync(path.join(sourceDir, "notes/missing.md"), "---\ntitle: Missing\ncollection:\n  profile: notebook\n  id: missing\n---\n");
 
   const missing = {
     _id: "missing",
@@ -323,7 +328,7 @@ test("生成前事件拒绝引用不存在 Notebook 的 Note", t => {
     path: "notes/missing/",
     title: "Missing",
     layout: "page",
-    collection: { type: "notebook", id: "missing" }
+    collection: { profile: "notebook", id: "missing" }
   };
   const collections = {
     posts: { each() {}, data: [] },

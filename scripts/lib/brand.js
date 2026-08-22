@@ -41,7 +41,7 @@ function mergeBrand(base, override) {
 
 function collectionBrandUrl(collection, type) {
   if (type === "wiki") return collection?.homepage?.path;
-  if (type === "notebook") return collection?.routing?.base_dir;
+  if (type === "notebook") return collection?.route?.path;
   return undefined;
 }
 

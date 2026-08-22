@@ -2,8 +2,9 @@
 function layoutDiv() {
   var el = '';
   var item = [];
+  var pageConfig = content_config(page)
   var articleFooter = stellar_config('content.article.footer')
-  if (page.footer?.references?.length > 0) {
+  if (pageConfig.footer?.references?.length > 0) {
     item.push('references');
   }
   if (typeof articleFooter.license === 'string' && articleFooter.license.length > 0) {
@@ -20,10 +21,10 @@ function layoutDiv() {
     return el;
   }
   el += `<div class="article-footer${scrollreveal(' ')}">`
-  if (page.footer?.references?.length > 0) {
+  if (pageConfig.footer?.references?.length > 0) {
     function refList() {
       var el = '';
-      for (let ref of page.footer.references) {
+      for (let ref of pageConfig.footer.references) {
         el += `
         <li class="post-title">
           ${markdown(ref)}
@@ -45,8 +46,8 @@ function layoutDiv() {
   var license = ''
   if (collection_id(page, "wiki")) {
     const proj = theme.wiki.tree[collection_id(page, "wiki")]
-    if (page.footer?.license != null) {
-      license = page.footer.license || articleFooter.license
+    if (pageConfig.footer?.license != null) {
+      license = pageConfig.footer.license || articleFooter.license
     } else if (proj?.footer?.license != null) {
       if (proj.footer.license == true) {
         license = articleFooter.license
@@ -55,17 +56,17 @@ function layoutDiv() {
       }
     }
   } else if (page.layout == 'post') {
-    if (articleFooter.license && (page.footer?.license != false)) {
-      license = page.footer?.license || articleFooter.license
+    if (articleFooter.license && (pageConfig.footer?.license != false)) {
+      license = pageConfig.footer?.license || articleFooter.license
     }
-  } else if (page.footer?.license) {
-    license = page.footer.license === true ? articleFooter.license : page.footer.license
+  } else if (pageConfig.footer?.license) {
+    license = pageConfig.footer.license === true ? articleFooter.license : pageConfig.footer.license
   }
   if (license?.length > 0) {
     var author = null
     if (theme.authors) {
-      if (page.article?.author?.length > 0 && theme.authors[page.article.author] != null) {
-        author = theme.authors[page.article.author]
+      if (pageConfig.article?.author?.length > 0 && theme.authors[pageConfig.article.author] != null) {
+        author = theme.authors[pageConfig.article.author]
       } else {
         author = theme.default_author
       }
@@ -88,14 +89,14 @@ function layoutDiv() {
   var showSharePlugin = false
   if (collection_id(page, "wiki")) {
     const proj = theme.wiki.tree[collection_id(page, "wiki")]
-    if (page.footer?.share != null) {
-      showSharePlugin = page.footer.share == true
+    if (pageConfig.footer?.share != null) {
+      showSharePlugin = pageConfig.footer.share == true
     } else if (proj != null) {
       showSharePlugin = proj.footer?.share == true
     }
   } else if (page.layout == 'post') {
-    showSharePlugin = page.footer?.share != false
-  } else if (page.footer?.share) {
+    showSharePlugin = pageConfig.footer?.share != false
+  } else if (pageConfig.footer?.share) {
     showSharePlugin = true
   }
   if (Array.isArray(articleFooter.share) && showSharePlugin) {
@@ -115,8 +116,8 @@ function layoutDiv() {
           } else if (item == 'weibo') {
             el += ' href="https://service.weibo.com/share/share.php?url=' + urlenc(page.permalink);
             el += '&title=' + urlenc(page.title + ' - ' + config.title);
-            if (page.card?.cover) {
-              el += '&pics=' + urlenc(page.card.cover);
+            if (pageConfig.card?.cover) {
+              el += '&pics=' + urlenc(pageConfig.card.cover);
             } else if (collection_id(page, "wiki")) {
               const projectCover = theme.wiki.tree[collection_id(page, "wiki")]?.card?.cover
               if (projectCover) el += '&pics=' + urlenc(projectCover)

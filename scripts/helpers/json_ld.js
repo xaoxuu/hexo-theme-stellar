@@ -8,6 +8,7 @@
 const util = require('hexo-util');
 const { postImages, postDescription } = require('../lib/seo');
 const { getCollectionId } = require('../lib/content-config');
+const { getPageConfig } = require("../lib/page-view-model-registry");
 
 hexo.extend.helper.register('json_ld', function(args) {
   if (args?.collection?.profile === 'post') {
@@ -17,6 +18,7 @@ hexo.extend.helper.register('json_ld', function(args) {
     return `<script type="application/ld+json">${JSON.stringify(args.render.seo.jsonLd)}</script>`;
   }
   const page = this.page;
+  const pageConfig = getPageConfig(page) || page.stellarConfig || {};
   const config = this.config;
   const structuredData = this.stellar_config("seo.structuredData");
   const authorEmail = config.email;
@@ -46,8 +48,8 @@ hexo.extend.helper.register('json_ld', function(args) {
 
   if (this.is_post()) {
     const images = postImages({
-      cardCover: page.card?.cover,
-      bannerImage: page.banner?.image,
+      cardCover: pageConfig.card?.cover,
+      bannerImage: pageConfig.banner?.image,
       photos: page.photos,
       content: page.content,
       defaultCover: this.theme.default && this.theme.default.cover
@@ -102,8 +104,8 @@ hexo.extend.helper.register('json_ld', function(args) {
 
       if (page.excerpt || page.description) {
         schema.description = this.strip_html(page.description || page.excerpt);
-      } else if (getCollectionId(page, 'wiki')) {
-        const proj = this.theme.wiki.tree[getCollectionId(page, 'wiki')];
+      } else if (getCollectionId(pageConfig, "wiki")) {
+        const proj = this.theme.wiki.tree[getCollectionId(pageConfig, "wiki")];
         if (proj && proj.description) {
           schema.description = proj.description;
         }

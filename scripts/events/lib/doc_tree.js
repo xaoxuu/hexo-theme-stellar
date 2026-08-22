@@ -12,7 +12,6 @@ const { buildWikiTree } = require("../../lib/doc_tree");
 const { requireLayoutProfiles } = require("../../lib/layout-config");
 const { buildWikiPageViewModel } = require("../../lib/models");
 const {
-  readFrontMatter,
   sourcePathForData,
   sourcePathForPage
 } = require("../../lib/source-config");
@@ -32,16 +31,23 @@ function eachPage(pages, callback) {
 module.exports = ctx => {
   const data = ctx.locals.get("data");
   const pages = ctx.locals.get("pages");
+  const parsedCollections = ctx.stellar?.contentConfig?.collectionConfigs || new Map();
+  const parsedPages = ctx.stellar?.contentConfig?.pageConfigs || new Map();
   const collectionConfigs = new Map();
-  for (const [key, value] of Object.entries(data)) {
+  const normalizedData = { ...data };
+  for (const [key, value] of parsedCollections) {
+    normalizedData[key] = cloneConfig(value);
+  }
+  for (const [key, value] of Object.entries(normalizedData)) {
     if (key.startsWith("wiki/") && key.length > 5) {
       collectionConfigs.set(key.slice(5), cloneConfig(value));
     }
   }
 
   const wiki = buildWikiTree({
-    data,
+    data: normalizedData,
     pages,
+    pageConfigs: parsedPages,
     shelf: data.wiki || [],
     wikiIndexPath: requireLayoutProfiles(ctx.stellar?.config).wikiIndex.path
   });
@@ -52,10 +58,10 @@ module.exports = ctx => {
     ? "_config.stellar.yml"
     : "themes/stellar/_config.yml";
   eachPage(pages, page => {
-    const collectionId = getCollectionId(page, "wiki");
-    if (collectionId == null) return;
-    const config = readFrontMatter(ctx, page);
+    const config = parsedPages.get(page);
     if (config == null) return;
+    const collectionId = getCollectionId(config, "wiki");
+    if (collectionId == null) return;
     page.viewModel = buildWikiPageViewModel({
       source: sourcePathForPage(page),
       themeSource,

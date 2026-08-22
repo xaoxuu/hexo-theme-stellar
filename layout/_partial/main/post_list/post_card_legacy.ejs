@@ -1,6 +1,6 @@
 <%
 // Topic Post 在 M2 迁移期继续消费旧模型；普通 Post 必须走 post_card.ejs 的 ViewModel 分支。
-var image = post.card?.cover
+var image = content_config(post).card?.cover
 var articleListing = stellar_config('content.article.listing')
 
 function divDefault() {

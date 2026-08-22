@@ -18,15 +18,15 @@ function getTopicTree(ctx) {
     }
     if (key.startsWith('topic/') && key.length > 5) {
       let newKey = key.replace('topic/', '')
-      let obj = data[key]
+      let obj = structuredClone(ctx.stellar?.contentConfig?.collectionConfigs?.get(key) || data[key]);
       obj.id = newKey
       obj.listing ||= {}
       if (obj.listing.order_by == null) {
         obj.listing.order_by = '-date'
       }
-      obj.routing ||= {}
-      if (obj.routing.path == null) {
-        obj.routing.path = `/topic/${newKey}/`
+      obj.route ||= {};
+      if (obj.route.path == null) {
+        obj.route.path = `topic/${newKey}/`;
       }
       obj.pages = []
       list.push(obj)

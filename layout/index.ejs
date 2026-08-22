@@ -32,7 +32,7 @@ function pinValue(post) {
   return postListing(post).priority
 }
 function isTopicPost(post) {
-  return post?.collection?.type === 'topic'
+  return collection_id(post, 'topic') != null
 }
 function requirePostViewModel(post) {
   var viewModel = post_view_model(post)
@@ -43,10 +43,11 @@ function requirePostViewModel(post) {
 }
 function postListing(post) {
   if (isTopicPost(post)) {
+    var config = content_config(post)
     return {
-      priority: post.listing?.priority || 0,
-      listed: post.visibility?.listed !== false,
-      cover: post.card?.cover,
+      priority: config.listing?.priority || 0,
+      listed: config.visibility?.listed !== false,
+      cover: config.card?.cover,
       cardStyle: articleDefaults.listing.cardLayout,
       href: post.link || post.path
     }

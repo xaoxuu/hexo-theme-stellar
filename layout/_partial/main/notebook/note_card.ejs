@@ -1,9 +1,10 @@
 <%# 笔记卡片 %>
 <% const notebook = theme.notebooks.tree[collection_id(note, 'notebook')] %>
+<% var noteConfig = content_config(note) %>
 <article class="md-text">
-  <% if (note.card?.cover) { %>
+  <% if (noteConfig.card?.cover) { %>
     <div class="post-cover">
-      <img src="<%= note.card.cover %>" alt="cover" />
+      <img src="<%= noteConfig.card.cover %>" alt="cover" />
     </div>
   <% } %>
   <h2 class="post-title"><%= note.title %></h2>
@@ -19,7 +20,7 @@
     </p>
   </div>
   <div class="meta cap">
-    <% if (note.listing?.priority > 0) { %>
+    <% if (noteConfig.listing?.priority > 0) { %>
       <span class="pin"><%- icon('default:pin') %></span>
     <% } %>
     <span class="cap" id="post-meta">

@@ -28,7 +28,7 @@ Wiki、Topic 和 Notebook 共用：
 | `footer` | 许可、分享与参考资料 |
 | `comments` | 集合评论默认值 |
 | `source` | 源码仓库与分支 |
-| `routing` | 内容路径 |
+| `route` | 内容路径：Wiki / Notebook 使用 `path`，Topic 可额外使用 `start` |
 | `listing` | 集合排序、分页和摘要 |
 
 `identity.icon`、`card.cover`、`hero.background.image` 不互相充当回退。即使使用同一资源，也要在对应作用域显式配置。
@@ -37,7 +37,7 @@ Wiki、Topic 和 Notebook 共用：
 
 | 对象 | 子字段 |
 | --- | --- |
-| `collection` | `type`, `id` |
+| `collection` | `profile`, `id` |
 | `card` | `cover`, `tagline` |
 | `banner` | `enabled`, `image`, `avatar`, `headline`, `tagline` |
 | `sidebar.left` | `widgets`, `search`, `menu`, `brand`, `wiki_home` |
@@ -45,10 +45,13 @@ Wiki、Topic 和 Notebook 共用：
 | `navigation` | `menu`, `breadcrumb` |
 | `article` | `type`, `indent`, `author`, `ai_label` |
 | `footer` | `references`, `license`, `share` |
-| `comments` | `enabled`, `title`, `id`, `service`, 各服务参数袋 |
+| `comments` | `enabled`, `title`, `id`, `provider`, `options` |
 | `visibility` | `listed`, `searchable` |
 | `listing` | `priority` |
 | `source` | `repository`, `branch` |
+| `render` | `math`, `diagrams` |
+| `seo` | `open_graph` |
+| `inject` | `head`, `script` |
 
 `visibility.listed: false` 从博客、专栏、笔记本与 Wiki 目录/最近列表中排除页面，不影响路由生成。`visibility.searchable: false` 仅从站内搜索索引排除。
 
@@ -85,7 +88,7 @@ ViewModel 的 `image.variant` 只能是：
 
 ## 第三方边界
 
-Galaxy 的路径为 `hero.background.effect.options`，字段白名单在 `scripts/lib/content-config.js` 的 `GALAXY_OPTION_TYPES` 中与 React Bits props 对齐。评论服务对象仅校验为 object，内部字段由对应上游服务规定。
+Galaxy 的路径为 `hero.background.effect.options`，其 React Bits props 保持上游 camelCase；评论系统的上游字段统一放入 `comments.options`。两类参数袋的父级容器严格封闭，不在根级放行第三方字段。
 
 ## 构建期内容模型
 
@@ -104,53 +107,55 @@ Galaxy 的路径为 `hero.background.effect.options`，字段白名单在 `scrip
 
 ### Topic 与文章
 
-严格 `collection.type: topic` 的文章在 `generateBefore` 阶段生成同构 `page.viewModel`：
+严格 `collection.profile: topic` 的文章在 `generateBefore` 阶段生成同构 `page.viewModel`：
 
 - `collection` 保留 Topic 名称、标题、说明、受众、身份图标、源码仓库、规范化路由、集合列表设置和展示配置；顶层字段与 Post profile 一致。
 - `navigation.series` 只包含 Front Matter 显式归属同一 Topic id 且 `visibility.listed !== false` 的文章，默认按日期降序稳定排列；每项只投影普通 id、标题、规范化路径、ISO 日期和当前项标记。
 - Topic 是否位于 `topic.publish_list` 只进入 `collection.visibility.listed`；单篇文章从独立的默认可见性开始，再接受页面 `visibility` 覆盖，不把集合下架隐式传播为文章隐藏。
 - Topic 默认沿用站点 Brand 和普通 Post 侧栏，之后依次接受 Topic profile、集合与页面展示覆盖；文章、页脚和评论同样在构建期完成级联。
-- Topic 文章必须显式声明严格 v2 `collection.type` 与 `collection.id`，id 必须存在于 `_data/topic/`；不会从路径、布局、旧 `topic` 字段或运行时 Topic tree 推断归属。
+- Topic 文章必须显式声明严格 v2 `collection.profile` 与 `collection.id`，id 必须存在于 `_data/topic/`；不会从路径、布局、旧 `topic` 字段或运行时 Topic tree 推断归属。
 - 本切片只挂载模型，不改变现有 Topic EJS 消费链。
 
 ### Wiki 与 Wiki 页面
 
-严格 `collection.type: wiki` 页面在 Wiki 树构建完成后生成同构 `page.viewModel`：
+严格 `collection.profile: wiki` 页面在 Wiki 树构建完成后生成同构 `page.viewModel`：
 
-- `collection` 保留 Wiki 的名称、主标题、副标题、长描述、受众与身份图标，以及项目源码仓库、规范化 `route.baseDir/homepage`、列表与 shelf 可见性。
+- `collection` 保留 Wiki 的名称、主标题、副标题、长描述、受众与身份图标，以及项目源码仓库、规范化 `route.path/homepage`、列表与 shelf 可见性。
 - `navigation.tree` 从 `doc_tree.sections` 投影为冻结的普通分组与页面节点，包含 id、标题、规范化路径、页码和首页标记，不保留 `WikiPage` 实例。
 - `item` 在构建期完成页面导航、列表、展示、源码与可见性级联；页面源码可以逐字段覆盖 Wiki 源码，项目 `hero.background.image` 作为页面 Banner 图片默认值并可被页面显式覆盖。
 - shelf 只表示 Wiki collection 的聚合可见性，不会隐式隐藏项目内页面；页面继续由自身 `visibility.listed/searchable` 决定。
-- 页面必须显式声明严格 v2 `collection.type` 与 `collection.id`，id 必须能解析到 `_data/wiki/` 项目；不从布局、路径或 v1 `wiki` 字段推断归属。
+- 页面必须显式声明严格 v2 `collection.profile` 与 `collection.id`，id 必须能解析到 `_data/wiki/` 项目；不从布局、路径或 v1 `wiki` 字段推断归属。
 - 本切片只挂载模型，不改变现有 Wiki EJS 消费链。
 
 ### Notebook 与 Note
 
-严格 `collection.type: notebook` 的 Note 在 `generateBefore` 阶段生成同构 `page.viewModel`：
+严格 `collection.profile: notebook` 的 Note 在 `generateBefore` 阶段生成同构 `page.viewModel`：
 
-- `collection` 保留 Notebook 的名称/标题/说明/身份图标、源码仓库、规范化 `route.baseDir`、标签导航、列表分页/排序/摘要设置和 Note 展示默认值。
+- `collection` 保留 Notebook 的名称/标题/说明/身份图标、源码仓库、规范化 `route.path`、标签导航、列表分页/排序/摘要设置和 Note 展示默认值。
 - `navigation.tags` 只从同一严格 Notebook id 下的 Note 标签构造；层级标签拆为冻结的普通对象，包含规范化 id、名称、末段标签、父级和标签页路径。
 - `item` 在构建期完成页面导航、`listing.priority`、`visibility.listed/searchable`、侧栏、文章、页脚和评论级联；页面源码可以覆盖 Notebook 源码字段。
-- Note 必须显式声明严格 v2 `collection.type` 与 `collection.id`，id 必须存在于 `_data/notebooks/`；不会从布局、路径或 v1 `notebook` 字段推断归属。
+- Note 必须显式声明严格 v2 `collection.profile` 与 `collection.id`，id 必须存在于 `_data/notebooks/`；不会从布局、路径或 v1 `notebook` 字段推断归属。
 - 本切片只挂载模型，不改变现有 Notebook/Note EJS 消费链。
 
 ## Reference 元数据
 
 Pre-alpha M1 已从模型 Schema 生成首批机器可读 Reference；这项能力是 Alpha 1 的前置交付，不代表 Alpha 版本已经建立：
 
-- 唯一事实来源是 `scripts/schema/model-schema.js`，它同时约束 post、wiki、topic、notebook 的 `CollectionModel`、共享 `ContentItemModel` 与 `PageViewModel` 输出。
+- 模型事实来源是 `scripts/schema/model-schema.js`；Collection / Front Matter 输入事实来源是 `scripts/schema/config-target.js` 与由它投影的 `scripts/schema/content-config-schema.js`。
 - 每个已交付字段均带类型、默认值语义、作用域、当前消费方和最小示例。动态默认值用 `derived`、`inherited` 或 `computed` 描述，不伪造固定字面量。
 - `scripts/lib/models/` 在冻结模型前使用同一 Schema 拒绝缺失字段、未声明字段和错误类型，避免实现与 Reference 漂移。
-- `npm run reference:generate` 稳定生成 `reference/v2-models.json`；`npm run reference:check` 只读检查产物是否与 Schema 一致，并已纳入 `npm run check`。
+- `npm run reference:generate` 稳定生成 `reference/v2-models.json` 和 `reference/v2-config.json`；后者已包含 delivered 的 Theme、Collection 与 Front Matter 作用域，并排除 Hexo 自有字段。`npm run reference:check` 只读检查漂移，已纳入 `npm run check`。
 - 第三方评论参数袋、widget 对象和 effect options 保持开放对象边界；元数据不复制上游字段表。
 
 Reference 输出仍不包含 Blueprint、CLI、布局原语或 Extension Schema；五类原语是内部 EJS 契约，不进入当前模型 Reference。`ContentItemModel.layout` 是 #695–#698 已交付的模型字段。
 
 ## 校验与消费链
 
-- `scripts/events/lib/content-config.js` 读取 `_data/wiki|topic|notebooks` 与源 Markdown Front Matter；普通 Post 在 `before_generate` 登记模型输入，在 `after_post_render` 使用最终 HTML、标签关系、prev/next 与可选相关文章插件结果完成详情模型。博客聚合通过 `scripts/helpers/post_view_model.js` 消费同一登记输入，不保留 Hexo Query 或 Document 引用。
-- `scripts/lib/content-config.js` 定义结构、类型、旧字段拒绝规则与 `isListed` / `isSearchable`。
-- `scripts/lib/content-config.js` 同时校验已接入 profile 使用的路由、导航、侧栏和全局字段；错误继续包含配置来源与字段路径。
+Collection 与 Front Matter 不再由手写字段表定义：`scripts/schema/content-config-schema.js` 直接从目标契约投影两个作用域 Schema，`scripts/lib/config-schema.js` 统一执行类型、封闭边界、迁移错误、规范化、camelCase 投影与深冻结。`scripts/events/lib/content-config.js` 对每个输入只解析一次，并登记冻结的 `collectionConfigs` / `pageConfigs`。
+
+- 普通 Post 在 `before_generate` 登记已解析输入，在 `after_post_render` 使用最终 HTML、标签关系、prev/next 与可选相关文章结果完成详情模型；博客聚合消费同一登记输入。
+- `scripts/lib/content-config.js` 保留作用域包装、来源化错误和 `isListed` / `isSearchable` 等内容语义，不再维护第二套手写字段表。
+- 路由、导航、侧栏和页面字段由声明式 Schema 严格校验；错误继续包含配置来源、字段路径与迁移目标。
 - `scripts/helpers/collection.js` 向 EJS 提供 `collection_id(page, type)`，不再读取 `page.wiki/topic/notebook`。
 - `scripts/lib/brand.js` 与 `scripts/helpers/brand.js` 解析 Brand 优先级、集合自动值和手机端显示矩阵。
 - Wiki、Topic、Notebook 数据树和搜索生成器消费共享可见性语义。

@@ -62,6 +62,9 @@ function expectedType(node) {
 }
 
 function formatIssue(issue) {
+  if (issue.code === "missing_field") {
+    return `${issue.source}: 缺少必填字段 ${issue.path}，期望 ${issue.expected}（迁移：${issue.migration}）`;
+  }
   if (issue.code === "removed_field") {
     return `${issue.source}: ${issue.path} 已移除，期望 ${issue.expected}（迁移：${issue.migration}）`;
   }
@@ -94,8 +97,26 @@ function normalizeValue(node, value) {
   if (node.normalizer === "root_relative_path") {
     return normalizeRootRelativePath(value);
   }
+  if (node.normalizer === "collection_path") {
+    return normalizeCollectionPath(value);
+  }
   if (node.normalizer === "parameter_bag") {
     return clone(value);
+  }
+  if (node.normalizer === "effect") {
+    if (value == null) return null;
+    const result = { type: value.type };
+    if (Object.prototype.hasOwnProperty.call(value, "options")) result.options = clone(value.options);
+    if (isPlainObject(value.runtime)) {
+      result.runtime = {};
+      if (Object.prototype.hasOwnProperty.call(value.runtime, "pause_when_hidden")) {
+        result.runtime.pauseWhenHidden = value.runtime.pause_when_hidden;
+      }
+      if (Object.prototype.hasOwnProperty.call(value.runtime, "respect_reduced_motion")) {
+        result.runtime.respectReducedMotion = value.runtime.respect_reduced_motion;
+      }
+    }
+    return result;
   }
   if (node.normalizer === "identity" || node.normalizer === "trusted_text" || node.normalizer === "array") {
     return value;
@@ -113,6 +134,12 @@ function normalizeRootRelativePath(value) {
   const rooted = `/${normalized.replace(/^\/+|\/+$/g, "")}`;
   const lastSegment = rooted.split("/").at(-1);
   return lastSegment.includes(".") ? rooted : `${rooted}/`;
+}
+
+function normalizeCollectionPath(value) {
+  const normalized = value.trim().replace(/\\/g, "/").replace(/^\/+/, "");
+  if (normalized.length === 0) return "";
+  return normalized.replace(/\/{2,}/g, "/");
 }
 
 function valueAtPath(value, path) {
@@ -163,6 +190,127 @@ function normalizeStringList(value, normalize) {
   return result;
 }
 
+const GALAXY_OPTION_TYPES = Object.freeze({
+  focal: "number_array",
+  rotation: "number_array",
+  starSpeed: "number",
+  density: "number",
+  hueShift: "number",
+  disableAnimation: "boolean",
+  speed: "number",
+  mouseInteraction: "boolean",
+  glowIntensity: "number",
+  saturation: "number",
+  mouseRepulsion: "boolean",
+  repulsionStrength: "number",
+  twinkleIntensity: "number",
+  rotationSpeed: "number",
+  autoCenterRepulsion: "number",
+  transparent: "boolean"
+});
+
+function validateNonEmptyString(node, input, source, path, issues, nullable) {
+  if (nullable && input == null) return;
+  if (typeof input === "string" && input.length > 0) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), "non-empty string", node.migration));
+}
+
+function validateStringTree(node, input, source, path, issues) {
+  const entries = Array.isArray(input) ? [[path, input]] : Object.entries(input).map(([key, value]) => [`${path}.${key}`, value]);
+  for (const [entryPath, items] of entries) {
+    if (!Array.isArray(items)) {
+      issues.push(issue("invalid_type", source, entryPath, valueType(items), "array", node.migration));
+      continue;
+    }
+    items.forEach((item, index) => {
+      if (typeof item !== "string") {
+        issues.push(issue("invalid_type", source, `${entryPath}[${index}]`, valueType(item), "string", node.migration));
+      }
+    });
+  }
+}
+
+function validateGalaxyOptions(node, options, source, path, issues) {
+  if (!isPlainObject(options)) {
+    issues.push(issue("invalid_type", source, path, valueType(options), "object", node.migration));
+    return;
+  }
+  for (const [key, value] of Object.entries(options)) {
+    const expected = GALAXY_OPTION_TYPES[key];
+    const optionPath = `${path}.${key}`;
+    if (!expected) {
+      issues.push(issue("unknown_field", source, optionPath, valueType(value), "known Galaxy option", node.migration));
+    } else if (expected === "number" && (typeof value !== "number" || !Number.isFinite(value))) {
+      issues.push(issue("invalid_type", source, optionPath, valueType(value), "finite number", node.migration));
+    } else if (expected === "boolean" && typeof value !== "boolean") {
+      issues.push(issue("invalid_type", source, optionPath, valueType(value), "boolean", node.migration));
+    } else if (expected === "number_array" && (!Array.isArray(value) || value.some(item => typeof item !== "number" || !Number.isFinite(item)))) {
+      issues.push(issue("invalid_type", source, optionPath, valueType(value), "number[]", node.migration));
+    }
+  }
+}
+
+function validateEffect(node, input, source, path, issues) {
+  if (input == null) return;
+  const allowed = ["type", "options", "runtime"];
+  for (const key of Object.keys(input)) {
+    if (!allowed.includes(key)) {
+      issues.push(issue("unknown_field", source, `${path}.${key}`, valueType(input[key]), allowed.join(" | "), node.migration));
+    }
+  }
+  if (typeof input.type !== "string" || input.type.length === 0) {
+    issues.push(issue("missing_field", source, `${path}.type`, valueType(input.type), "non-empty string", node.migration));
+  }
+  if (input.options != null && input.type === "galaxy") {
+    validateGalaxyOptions(node, input.options, source, `${path}.options`, issues);
+  } else if (input.options != null && !isPlainObject(input.options)) {
+    issues.push(issue("invalid_type", source, `${path}.options`, valueType(input.options), "object", node.migration));
+  }
+  if (input.runtime != null) {
+    if (!isPlainObject(input.runtime)) {
+      issues.push(issue("invalid_type", source, `${path}.runtime`, valueType(input.runtime), "object", node.migration));
+    } else {
+      const runtimeKeys = ["pause_when_hidden", "respect_reduced_motion"];
+      for (const [key, value] of Object.entries(input.runtime)) {
+        if (!runtimeKeys.includes(key)) {
+          issues.push(issue("unknown_field", source, `${path}.runtime.${key}`, valueType(value), runtimeKeys.join(" | "), node.migration));
+        } else if (typeof value !== "boolean") {
+          issues.push(issue("invalid_type", source, `${path}.runtime.${key}`, valueType(value), "boolean", node.migration));
+        }
+      }
+    }
+  }
+}
+
+function validateBrand(node, input, source, path, issues) {
+  if (input == null) return;
+  const image = input.image;
+  if (typeof input.name === "string" && /^\[[\s\S]*\]\([\s\S]*\)$/.test(input.name.trim())) {
+    issues.push(issue("invalid_value", source, `${path}.name`, "string", `${path}.url`, node.migration));
+  }
+  if (!isPlainObject(image)) return;
+  if (typeof image.src === "string" && /^\[[\s\S]*\]\([\s\S]*\)$/.test(image.src.trim())) {
+    issues.push(issue("invalid_value", source, `${path}.image.src`, "string", `${path}.image.url`, node.migration));
+  }
+  if (image.variant === "plain" && image.background != null) {
+    issues.push(issue("invalid_value", source, `${path}.image.background`, valueType(image.background), "null when variant is plain", node.migration));
+  }
+}
+
+function validateCustom(node, input, source, path, issues) {
+  if (!node.validator) return;
+  if (node.validator === "non_empty_string") validateNonEmptyString(node, input, source, path, issues, false);
+  else if (node.validator === "nullable_non_empty_string") validateNonEmptyString(node, input, source, path, issues, true);
+  else if (node.validator === "string_tree") validateStringTree(node, input, source, path, issues);
+  else if (node.validator === "effect") validateEffect(node, input, source, path, issues);
+  else if (node.validator === "brand") validateBrand(node, input, source, path, issues);
+  else if (node.validator === "topic_route_start" && input != null && !/[\\/]topic[\\/]/.test(source)) {
+    issues.push(issue("invalid_scope", source, path, valueType(input), "Topic Collection only", node.migration));
+  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "topic_route_start"].includes(node.validator)) {
+    throw new TypeError(`未知配置校验器：${node.validator}`);
+  }
+}
+
 function parseNode(node, input, source, path, issues, context) {
   if (!matchesType(input, node.type)) {
     issues.push(issue("invalid_type", source, path, valueType(input), expectedType(node), node.migration));
@@ -188,6 +336,8 @@ function parseNode(node, input, source, path, issues, context) {
       return undefined;
     }
   }
+
+  validateCustom(node, input, source, path, issues);
 
   if (Array.isArray(input) && node.items) {
     let valid = true;
@@ -220,10 +370,10 @@ function parseNode(node, input, source, path, issues, context) {
   }
 
   if (!isPlainObject(input)) return normalizeValue(node, input);
-  if (node.default?.kind === "literal" && isPlainObject(node.default.value)) {
+  if (context.applyDefaults && node.default?.kind === "literal" && isPlainObject(node.default.value)) {
     input = mergeObjects(node.default.value, input);
   }
-  if (node.normalizer === "parameter_bag") return normalizeValue(node, input);
+  if (node.normalizer === "parameter_bag" || node.normalizer === "effect") return normalizeValue(node, input);
 
   const properties = node.properties || {};
   for (const key of Object.keys(input)) {
@@ -238,6 +388,8 @@ function parseNode(node, input, source, path, issues, context) {
         path ? `${path}.${replacement}` : replacement,
         node.migration
       ));
+    } else if (node.externalProperties?.includes(key)) {
+      continue;
     } else if (node.allowedPropertyKeys && !node.allowedPropertyKeys.includes(key)) {
       issues.push(issue("unknown_field", source, childPath, valueType(input[key]), node.allowedPropertyKeys.join(" | "), node.migration));
     } else if (node.sealed && !node.additionalProperties && !Object.prototype.hasOwnProperty.call(properties, key)) {
@@ -246,9 +398,20 @@ function parseNode(node, input, source, path, issues, context) {
   }
 
   const result = {};
+  for (const key of node.externalProperties || []) {
+    if (Object.prototype.hasOwnProperty.call(input, key)) result[key] = clone(input[key]);
+  }
+  for (const key of node.requiredProperties || []) {
+    if (!Object.prototype.hasOwnProperty.call(input, key)) {
+      const child = properties[key] || node;
+      const childPath = path ? `${path}.${key}` : key;
+      issues.push(issue("missing_field", source, childPath, "undefined", expectedType(child), child.migration || node.migration));
+    }
+  }
   for (const [key, child] of Object.entries(properties)) {
     const childPath = path ? `${path}.${key}` : key;
     const hasValue = Object.prototype.hasOwnProperty.call(input, key);
+    if (!hasValue && !context.applyDefaults) continue;
     const value = hasValue ? input[key] : resolveDefault(child, context);
     const parsed = parseNode(child, value, source, childPath, issues, context);
     if (parsed !== undefined) result[child.runtimeKey || key] = parsed;
@@ -264,14 +427,23 @@ function parseNode(node, input, source, path, issues, context) {
   return result;
 }
 
+function parseConfigSchema(schema, input = {}, options = {}) {
+  const source = options.source || "<config>";
+  const siteConfig = isPlainObject(options.siteConfig) ? options.siteConfig : {};
+  const issues = [];
+  const parsed = parseNode(schema, isPlainObject(input) ? input : input, source, "", issues, {
+    siteConfig,
+    applyDefaults: options.applyDefaults ?? schema.applyDefaults ?? false
+  });
+  if (issues.length > 0) throw new ConfigSchemaError(issues);
+  return deepFreeze(parsed);
+}
+
 function parseStellarConfig(input = {}) {
   const source = input.source || "_config.stellar.yml";
   const themeConfig = isPlainObject(input.themeConfig) ? input.themeConfig : {};
   const siteConfig = isPlainObject(input.siteConfig) ? input.siteConfig : {};
-  const issues = [];
-  const parsed = parseNode(CONFIG_SCHEMA, themeConfig, source, "", issues, { siteConfig });
-  if (issues.length > 0) throw new ConfigSchemaError(issues);
-  return deepFreeze(parsed);
+  return parseConfigSchema(CONFIG_SCHEMA, themeConfig, { source, siteConfig, applyDefaults: true });
 }
 
 module.exports = {
@@ -279,6 +451,7 @@ module.exports = {
   deepFreeze,
   formatIssue,
   isPlainObject,
+  parseConfigSchema,
   parseStellarConfig,
   valueType
 };

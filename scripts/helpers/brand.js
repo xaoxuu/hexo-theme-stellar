@@ -7,15 +7,16 @@ const {
   shouldShowMobileBrand
 } = require("../lib/brand");
 const { getCollectionId } = require("../lib/content-config");
+const { getPageConfig } = require("../lib/page-view-model-registry");
 
-function activeCollection(page) {
+function activeCollection(config) {
   const { wiki, topic, notebooks } = hexo.theme.config;
   for (const [type, tree] of [
     ["wiki", wiki?.tree],
     ["topic", topic?.tree],
     ["notebook", notebooks?.tree]
   ]) {
-    const id = getCollectionId(page, type);
+    const id = getCollectionId(config, type);
     if (id != null && tree?.[id] != null) {
       return { collection: tree[id], type };
     }
@@ -24,10 +25,11 @@ function activeCollection(page) {
 }
 
 hexo.extend.helper.register("brandConfig", function(page) {
-  const active = activeCollection(page);
+  const config = getPageConfig(page) || page?.stellarConfig || {};
+  const active = activeCollection(config);
   return resolveBrand({
     siteBrand: hexo.stellar.config.site.brand,
-    pageBrand: page?.sidebar?.left?.brand,
+    pageBrand: config.sidebar?.left?.brand,
     collection: active.collection,
     collectionType: active.type,
     defaultIcon: hexo.theme.config.default.project

@@ -40,14 +40,13 @@ tags:
 graph TB
     subgraph "Configuration Sources"
         THEMECONFIG["_config.yml<br/>(Theme Root)"]
-        PROJMETA["Project Metadata<br/>(wiki.tree, notebook yaml)"]
+        PROJMETA["Collection YAML<br/>(wiki, topic, notebook)"]
         PAGEMETA["Page Front-matter<br/>(post/wiki/note files)"]
     end
     
     subgraph "Runtime Resolution"
-        HEXOCONFIG["hexo-config()<br/>Helper Function"]
-        PAGEVAR["page.* variables<br/>in templates"]
-        THEMEVAR["theme.* variables<br/>in templates"]
+        THEMESCHEMA["Theme Config Schema<br/>hexo.stellar.config"]
+        CONTENTSCHEMA["Content Config Schema<br/>stellarConfig"]
     end
     
     subgraph "Consumption Points"
@@ -58,17 +57,18 @@ graph TB
         DOCTREE["doc_tree.js<br/>Wiki processing"]
     end
     
-    THEMECONFIG --> HEXOCONFIG
-    PROJMETA -.overrides.-> HEXOCONFIG
-    PAGEMETA -.overrides.-> PAGEVAR
+    THEMECONFIG --> THEMESCHEMA
+    PROJMETA --> CONTENTSCHEMA
+    PAGEMETA --> CONTENTSCHEMA
     
-    HEXOCONFIG --> THEMEVAR
-    THEMEVAR --> LAYOUT
-    THEMEVAR --> PARTIAL
-    THEMEVAR --> CSSGEN
-    THEMEVAR --> JSLOAD
-    PAGEVAR --> LAYOUT
-    PAGEVAR --> DOCTREE
+    THEMESCHEMA --> LAYOUT
+    THEMESCHEMA --> PARTIAL
+    THEMESCHEMA --> CSSGEN
+    THEMESCHEMA --> JSLOAD
+    CONTENTSCHEMA --> LAYOUT
+    CONTENTSCHEMA --> PARTIAL
+    CONTENTSCHEMA --> JSLOAD
+    CONTENTSCHEMA --> DOCTREE
     
     LAYOUT --> OUTPUT["Rendered HTML"]
     CSSGEN --> OUTPUT
@@ -81,9 +81,9 @@ graph TB
 
 Pre-alpha M1.5 已建立内部配置入口目录，并进一步把 v2 最终公开主题配置冻结为 `site`、`seo`、`layout`、`content`、`appearance`、`resources`、`extensions`、`inject` 八个职责根域。完整目标树、命名、级联和旧→新迁移矩阵见[最终配置契约](../../designs/2026-08-22-v2-config-target-contract/target-contract.md)。
 
-head/SEO、site Shell、Layout Profile 与内容默认值纵向切片已把 `seo`、`resources.preconnect`、站点 `inject`、`site.brand/menu/footer`、`layout.profiles` 以及 `content.article/notebook` 接入声明式 Schema，运行时与配置 Reference 只投影这些已交付节点；其它目标字段仍保持 `planned`。后续切片继续直接实现最终路径，不经过 #703 的临时目录。
+head/SEO、site Shell、Layout Profile、内容默认值、Collection 与 Front Matter 纵向切片已把 `seo`、`resources.preconnect`、站点 `inject`、`site.brand/menu/footer`、`layout.profiles`、`content.article/notebook` 以及内容作用域的最终字段接入声明式 Schema。运行时与配置 Reference 只投影这些已交付节点；其它目标字段仍保持 `planned`。
 
-已交付 v2 字段从 Schema 与 `_config.stellar.yml` 解析到冻结的 `hexo.stellar.config`；尚未迁移的字段仍经 Hexo 主题变量系统（`theme.*`）流动，页面级覆盖继续通过 `page.*` 变量实现。Article / Notebook 的主题默认由 Schema 单源提供，Stylus 也只读取 `content.article` 最终路径。
+已交付的主题字段从 Schema 与 `_config.stellar.yml` 解析到冻结的 `hexo.stellar.config`；Collection YAML 与 Front Matter 分别解析为冻结的 camelCase 对象，由生成器、数据树、ViewModel 与按需插件消费。Hexo 自有 Front Matter 保持原名，不进入 Stellar Reference。
 
 ## 配置文件结构
 
@@ -162,10 +162,10 @@ graph LR
 
 ### 示例：导航高亮解析
 
-对 wiki 页面，配置 Profile 的最终字段是 `navigation.active_menu`；Collection / Front Matter 在下一切片前仍以迁移期字段进入现有模型适配层。当前解析顺序为：
+对 wiki 页面，配置 Profile 的最终字段是 `navigation.active_menu`；Collection / Front Matter 的 `navigation.menu` 在声明式 Schema 边界冻结为 `navigation.menu`。解析顺序为：
 
 1. **页面级**：`page.navigation.menu`（front-matter）
-2. **项目级**：`wiki.tree[project_name].navigation.menu`
+2. **集合级**：Collection YAML 的 `navigation.menu`
 3. **布局级**：`hexo.stellar.config.layout.profiles.wiki.navigation.activeMenu`
 4. **全局兜底**：`undefined`
 
@@ -174,7 +174,7 @@ graph LR
 侧边栏小部件遵循同样模式：
 
 1. **页面级**：`page.sidebar.left.widgets` / `page.sidebar.right.widgets`（front-matter）
-2. **笔记本级**：笔记页使用笔记本 YAML 中的 `note.sidebar.left/right.widgets`
+2. **笔记本级**：笔记页使用笔记本 YAML 中的 `note_defaults.sidebar.left/right.widgets`
 3. **布局级**：`hexo.stellar.config.layout.profiles[profile].sidebar.left/right.widgets`
 4. **默认**：空侧边栏
 

@@ -6,7 +6,7 @@ const assert = require('node:assert/strict');
 const { buildWikiTree } = require('../scripts/lib/doc_tree');
 
 function collection(id) {
-  return { type: 'wiki', id };
+  return { profile: 'wiki', id };
 }
 
 function makeFixture() {
@@ -16,24 +16,24 @@ function makeFixture() {
       headline: 'Alpha Project',
       listing: { sort: 2 },
       tags: ['guide'],
-      tree: {
+      navigation: { tree: {
         '基础': ['intro.html', 'setup.md'],
         '进阶': ['advanced.html']
-      },
-      routing: { base_dir: '/wiki/alpha/' }
+      } },
+      route: { path: '/wiki/alpha/' }
     },
     'wiki/beta': {
       name: 'Beta',
       listing: { sort: 1 },
-      tree: ['one.html', 'two.html'],
+      navigation: { tree: ['one.html', 'two.html'] },
       tags: ['guide', 'extra'],
-      routing: { base_dir: 'wiki/beta' }
+      route: { path: 'wiki/beta' }
     },
     'wiki/gamma': { name: 'Gamma', listing: { sort: 0 }, tags: ['empty'] },
     'wiki/delta': {
       name: 'Delta',
       listing: { sort: 0 },
-      tree: { S: ['nonexistent.html'] },
+      navigation: { tree: { S: ['nonexistent.html'] } },
       tags: ['solo']
     }
   };
@@ -50,7 +50,15 @@ function makeFixture() {
     { _id: 'p11', collection: collection('alpha'), title: 'Hidden', path: 'wiki/alpha/hidden.html', visibility: { listed: false } },
     { _id: 'p10', title: 'No Wiki', path: 'about/index.html', layout: 'page', updated: '2026-04-01' }
   ];
-  return { data, pages, shelf: ['alpha', 'beta'], wikiIndexPath: '/wiki/' };
+  const pageConfigs = new Map(pages.map(page => [page, {
+    collection: page.collection,
+    visibility: page.visibility || {}
+  }]));
+  for (const page of pages) {
+    delete page.collection;
+    delete page.visibility;
+  }
+  return { data, pages, pageConfigs, shelf: ['alpha', 'beta'], wikiIndexPath: '/wiki/' };
 }
 
 test('doc_tree 按 v2 collection 归属页面并规范化路由', () => {
@@ -60,8 +68,8 @@ test('doc_tree 按 v2 collection 归属页面并规范化路由', () => {
   assert.deepStrictEqual(wiki.all_pages.map(page => page.collectionId), [
     'alpha', 'alpha', 'alpha', 'alpha', 'alpha', 'beta', 'beta', 'delta', 'delta'
   ]);
-  assert.equal(wiki.tree.alpha.routing.base_dir, 'wiki/alpha/');
-  assert.equal(wiki.tree.beta.routing.base_dir, 'wiki/beta/');
+  assert.equal(wiki.tree.alpha.route.path, 'wiki/alpha/');
+  assert.equal(wiki.tree.beta.route.path, 'wiki/beta/');
   assert.equal(wiki.tree.beta.headline, 'Beta');
 });
 
@@ -112,6 +120,8 @@ test('项目 id 与标签同名时不丢失其它项目', () => {
     shelf: ['guide', 'other'],
     wikiIndexPath: '/wiki/'
   };
+  fixture.pageConfigs = new Map(fixture.pages.map(page => [page, { collection: page.collection }]));
+  fixture.pages.forEach(page => { delete page.collection; });
   const wiki = buildWikiTree(structuredClone(fixture));
   assert.deepStrictEqual(wiki.all_tags.guide.items, ['guide', 'other']);
 });

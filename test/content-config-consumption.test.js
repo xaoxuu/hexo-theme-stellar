@@ -37,17 +37,73 @@ test("Article 与 Notebook 消费链只读取冻结的 content 配置", () => {
   assert.doesNotMatch(consumers, /theme\.(?:article|notebook)(?:\.|\?)/);
 });
 
-test("主题 profile 校验不再接受旧内容根，Collection / Front Matter 边界仍保留", () => {
+test("Collection / Front Matter 复用声明式解析器且消费链不再读取旧字段", () => {
   const contentConfig = read("scripts/lib/content-config.js");
-  const themeProfiles = contentConfig.slice(
-    contentConfig.indexOf("function validatePostProfileConfig"),
-    contentConfig.indexOf("function validateCollectionConfig")
-  );
-  const collectionAndPage = contentConfig.slice(contentConfig.indexOf("function validateCollectionConfig"));
+  const schema = read("scripts/schema/content-config-schema.js");
+  const consumers = [
+    "scripts/events/lib/content-config.js",
+    "scripts/events/lib/doc_tree.js",
+    "scripts/events/lib/topic_tree.js",
+    "scripts/lib/doc_tree.js",
+    "scripts/lib/notebooks.js",
+    "scripts/lib/models/index.js",
+    "layout/_plugins/index.ejs",
+    "layout/layout.ejs",
+    "layout/index.ejs",
+    "layout/archive.ejs",
+    "layout/_partial/main/pin_slider.ejs",
+    "layout/_partial/head.ejs",
+    "layout/_partial/scripts.ejs"
+  ].map(read).join("\n");
 
-  assert.doesNotMatch(themeProfiles, /config\.(?:article|notebook)/);
-  assert.match(collectionAndPage, /config\.article/);
-  assert.doesNotMatch(contentConfig, /function validateNotebookProfileConfig/);
+  assert.match(contentConfig, /parseConfigSchema\(COLLECTION_CONFIG_SCHEMA/);
+  assert.match(contentConfig, /parseConfigSchema\(FRONT_MATTER_CONFIG_SCHEMA/);
+  assert.match(schema, /CONFIG_TARGET_FIELDS/);
+  assert.doesNotMatch(contentConfig, /function validate(?:Collection|Page|Routing|Comments)/);
+  assert.doesNotMatch(consumers, /collection\?*\.type|collectionConfig\.routing|\.routing\?*\.base_dir|collectionConfig\.note\?*\.sidebar|frontMatter\.open_graph|page\.open_graph|page\.inject|page\[id\]/);
+});
+
+test("完整内容集合只解析一次且派生步骤紧随同一份结果", () => {
+  const events = read("scripts/events/index.js");
+  const parseCall = "require(\"./lib/content-config\")(hexo)";
+  assert.equal(events.split(parseCall).length - 1, 1);
+  const parseIndex = events.indexOf(parseCall);
+  for (const derived of [
+    "require(\"./lib/doc_tree\")(hexo)",
+    "require(\"./lib/topic_tree\")(hexo)",
+    "require(\"./lib/notebooks\")(hexo)"
+  ]) {
+    assert.ok(events.indexOf(derived) > parseIndex);
+  }
+});
+
+test("生成器、helper 与后处理链只消费冻结 Front Matter", () => {
+  const consumers = [
+    "scripts/generators/notebooks.js",
+    "scripts/generators/search.js",
+    "scripts/events/lib/merge_posts.js",
+    "scripts/helpers/brand.js",
+    "scripts/helpers/collection.js",
+    "scripts/helpers/json_ld.js",
+    "scripts/helpers/mdrender.js",
+    "layout/index.ejs",
+    "layout/archive.ejs",
+    "layout/_partial/main/navbar/ghinfo.ejs",
+    "layout/_partial/main/pin_slider.ejs",
+    "layout/_partial/main/notebook/note_card.ejs",
+    "layout/_partial/main/post_list/post_card_legacy.ejs",
+    "layout/_partial/widgets/ghissues.ejs",
+    "layout/_partial/widgets/ghrepo.ejs"
+  ].map(read).join("\n");
+
+  assert.match(consumers, /stellarConfig/);
+  assert.match(consumers, /pageConfigs/);
+  assert.match(consumers, /getPageConfig/);
+  assert.match(consumers, /content_config\(page\)/);
+  assert.doesNotMatch(consumers, /collection:\s*\{\s*type:/);
+  assert.doesNotMatch(consumers, /\b(?:post|note)\.(?:collection|visibility|listing|card|article)\b/);
+  assert.doesNotMatch(consumers, /(?:getCollectionId|isListed|isSearchable)\((?:page|post),/);
+  assert.doesNotMatch(consumers, /page\.source\.repository/);
 });
 
 test("主题默认与 Stylus 只声明最终内容路径", () => {

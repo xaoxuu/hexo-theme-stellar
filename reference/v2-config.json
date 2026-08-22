@@ -1,6 +1,9 @@
 {
   "schemaVersion": 1,
-  "source": "scripts/schema/config-schema.js",
+  "source": [
+    "scripts/schema/config-schema.js",
+    "scripts/schema/content-config-schema.js"
+  ],
   "status": "partial",
   "fields": [
     {
@@ -7075,6 +7078,4534 @@
       ],
       "example": "/",
       "migration": "configuration/site"
+    },
+    {
+      "path": "article",
+      "runtimePath": "article",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "content.article"
+        ]
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "article.ai_label",
+      "runtimePath": "article.aiLabel",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "article.author",
+      "runtimePath": "article.author",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "article.indent",
+      "runtimePath": "article.indent",
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "article.type",
+      "runtimePath": "article.type",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true,
+      "values": [
+        "tech",
+        "story"
+      ]
+    },
+    {
+      "path": "audience",
+      "runtimePath": "audience",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "card",
+      "runtimePath": "card",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme profile card"
+        ]
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "card.cover",
+      "runtimePath": "card.cover",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme or collection card.cover"
+        ]
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "",
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "card.tagline",
+      "runtimePath": "card.tagline",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme or collection card.tagline"
+        ]
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "",
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "comments",
+      "runtimePath": "comments",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "extensions.comments and broader content scope"
+        ]
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "comments.enabled",
+      "runtimePath": "comments.enabled",
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "comments.id",
+      "runtimePath": "comments.id",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "comments.options",
+      "runtimePath": "comments.options",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "parameter_bag",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/collection"
+    },
+    {
+      "path": "comments.provider",
+      "runtimePath": "comments.provider",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "comments.title",
+      "runtimePath": "comments.title",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "description",
+      "runtimePath": "description",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "footer",
+      "runtimePath": "footer",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "content defaults footer"
+        ]
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "footer.license",
+      "runtimePath": "footer.license",
+      "type": [
+        "boolean",
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "footer.references",
+      "runtimePath": "footer.references",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": []
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "array",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": [],
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "footer.share",
+      "runtimePath": "footer.share",
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "headline",
+      "runtimePath": "headline",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "hero",
+      "runtimePath": "hero",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "hero.actions",
+      "runtimePath": "hero.actions",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": []
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "array",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": [],
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "hero.actions[].icon",
+      "runtimePath": "hero.actions[].icon",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "hero.actions[].title",
+      "runtimePath": "hero.actions[].title",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "hero.actions[].url",
+      "runtimePath": "hero.actions[].url",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "hero.background",
+      "runtimePath": "hero.background",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "hero.background.effect",
+      "runtimePath": "hero.background.effect",
+      "type": [
+        "object",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "effect",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection"
+    },
+    {
+      "path": "hero.background.image",
+      "runtimePath": "hero.background.image",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "hero.enabled",
+      "runtimePath": "hero.enabled",
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "hero.preview",
+      "runtimePath": "hero.preview",
+      "type": [
+        "object",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "hero.preview.alt",
+      "runtimePath": "hero.preview.alt",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "hero.preview.commands",
+      "runtimePath": "hero.preview.commands",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": []
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "array",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": [],
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "hero.preview.commands[].codes",
+      "runtimePath": "hero.preview.commands[].codes",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "hero.preview.commands[].label",
+      "runtimePath": "hero.preview.commands[].label",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "hero.preview.src",
+      "runtimePath": "hero.preview.src",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "hero.preview.type",
+      "runtimePath": "hero.preview.type",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true,
+      "values": [
+        "terminal",
+        "image"
+      ]
+    },
+    {
+      "path": "identity",
+      "runtimePath": "identity",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "identity.icon",
+      "runtimePath": "identity.icon",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "listing",
+      "runtimePath": "listing",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "listing.excerpt_length",
+      "runtimePath": "listing.excerptLength",
+      "type": [
+        "number",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true,
+      "minimum": 0
+    },
+    {
+      "path": "listing.order_by",
+      "runtimePath": "listing.orderBy",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "listing.per_page",
+      "runtimePath": "listing.perPage",
+      "type": [
+        "number",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true,
+      "minimum": 0
+    },
+    {
+      "path": "listing.priority",
+      "runtimePath": "listing.priority",
+      "type": [
+        "number",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true,
+      "minimum": 0
+    },
+    {
+      "path": "listing.sort",
+      "runtimePath": "listing.sort",
+      "type": [
+        "number",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "name",
+      "runtimePath": "name",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "required collection identity"
+        ]
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "",
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "navigation",
+      "runtimePath": "navigation",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme profile navigation"
+        ]
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "navigation.breadcrumb",
+      "runtimePath": "navigation.breadcrumb",
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "navigation.menu",
+      "runtimePath": "navigation.menu",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "navigation.tree",
+      "runtimePath": "navigation.tree",
+      "type": [
+        "array",
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": []
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "parameter_bag",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": [],
+      "migration": "content-schema/collection"
+    },
+    {
+      "path": "note_defaults",
+      "runtimePath": "noteDefaults",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "note_defaults.sidebar",
+      "runtimePath": "noteDefaults.sidebar",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "note_defaults.sidebar.left",
+      "runtimePath": "noteDefaults.sidebar.left",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "note_defaults.sidebar.left.brand",
+      "runtimePath": "noteDefaults.sidebar.left.brand",
+      "type": [
+        "object",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection"
+    },
+    {
+      "path": "note_defaults.sidebar.left.menu",
+      "runtimePath": "noteDefaults.sidebar.left.menu",
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "note_defaults.sidebar.left.search",
+      "runtimePath": "noteDefaults.sidebar.left.search",
+      "type": [
+        "boolean",
+        "object"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme or collection search"
+        ]
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "note_defaults.sidebar.left.search.filter",
+      "runtimePath": "noteDefaults.sidebar.left.search.filter",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "note_defaults.sidebar.left.search.placeholder",
+      "runtimePath": "noteDefaults.sidebar.left.search.placeholder",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "note_defaults.sidebar.left.widgets",
+      "runtimePath": "noteDefaults.sidebar.left.widgets",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme or collection left widgets"
+        ]
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "array",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": [],
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "note_defaults.sidebar.left.wiki_home",
+      "runtimePath": "noteDefaults.sidebar.left.wikiHome",
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "note_defaults.sidebar.right",
+      "runtimePath": "noteDefaults.sidebar.right",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "note_defaults.sidebar.right.widgets",
+      "runtimePath": "noteDefaults.sidebar.right.widgets",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme or collection right widgets"
+        ]
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "array",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": [],
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "route",
+      "runtimePath": "route",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "route.path",
+      "runtimePath": "route.path",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "collection route"
+        ]
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "collection_path",
+      "normalization": "normalize to a collection-relative path",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "",
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "route.start",
+      "runtimePath": "route.start",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "sidebar",
+      "runtimePath": "sidebar",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme profile sidebar"
+        ]
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left",
+      "runtimePath": "sidebar.left",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.brand",
+      "runtimePath": "sidebar.left.brand",
+      "type": [
+        "object",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.brand.image",
+      "runtimePath": "sidebar.left.brand.image",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "src": "/avatar.webp",
+        "variant": "avatar",
+        "url": "/about/"
+      },
+      "migration": "configuration/site",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.brand.image.background",
+      "runtimePath": "sidebar.left.brand.image.background",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "var(--block)",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "sidebar.left.brand.image.src",
+      "runtimePath": "sidebar.left.brand.image.src",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "hexo.config.avatar"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "/avatar.webp",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "sidebar.left.brand.image.url",
+      "runtimePath": "sidebar.left.brand.image.url",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "/about/",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "sidebar.left.brand.image.variant",
+      "runtimePath": "sidebar.left.brand.image.variant",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "avatar"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "avatar",
+      "migration": "configuration/site",
+      "values": [
+        "avatar",
+        "icon",
+        "plain"
+      ]
+    },
+    {
+      "path": "sidebar.left.brand.name",
+      "runtimePath": "sidebar.left.brand.name",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "hexo.config.title"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "Stellar",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "sidebar.left.brand.tagline",
+      "runtimePath": "sidebar.left.brand.tagline",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "hexo.config.subtitle"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "每个人的独立博客",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "sidebar.left.brand.url",
+      "runtimePath": "sidebar.left.brand.url",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "/"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "/",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "sidebar.left.menu",
+      "runtimePath": "sidebar.left.menu",
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.search",
+      "runtimePath": "sidebar.left.search",
+      "type": [
+        "boolean",
+        "object"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme or collection search"
+        ]
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.search.filter",
+      "runtimePath": "sidebar.left.search.filter",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.search.placeholder",
+      "runtimePath": "sidebar.left.search.placeholder",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.widgets",
+      "runtimePath": "sidebar.left.widgets",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme or collection left widgets"
+        ]
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "array",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": [],
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.wiki_home",
+      "runtimePath": "sidebar.left.wikiHome",
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.right",
+      "runtimePath": "sidebar.right",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.right.widgets",
+      "runtimePath": "sidebar.right.widgets",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme or collection right widgets"
+        ]
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "array",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": [],
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "source",
+      "runtimePath": "source",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "source.branch",
+      "runtimePath": "source.branch",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "source.repository",
+      "runtimePath": "source.repository",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "tagline",
+      "runtimePath": "tagline",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "tags",
+      "runtimePath": "tags",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": []
+      },
+      "scope": "collection",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection"
+      ],
+      "normalizer": "array",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": [],
+      "migration": "content-schema/collection",
+      "sealed": true
+    },
+    {
+      "path": "article",
+      "runtimePath": "article",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "content.article"
+        ]
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "article.ai_label",
+      "runtimePath": "article.aiLabel",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "article.author",
+      "runtimePath": "article.author",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "article.indent",
+      "runtimePath": "article.indent",
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "article.type",
+      "runtimePath": "article.type",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true,
+      "values": [
+        "tech",
+        "story"
+      ]
+    },
+    {
+      "path": "banner",
+      "runtimePath": "banner",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "collection or theme banner"
+        ]
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "banner.avatar",
+      "runtimePath": "banner.avatar",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "banner.enabled",
+      "runtimePath": "banner.enabled",
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "banner.headline",
+      "runtimePath": "banner.headline",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "banner.image",
+      "runtimePath": "banner.image",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "banner.tagline",
+      "runtimePath": "banner.tagline",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "card",
+      "runtimePath": "card",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme profile card"
+        ]
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "card.cover",
+      "runtimePath": "card.cover",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme or collection card.cover"
+        ]
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "",
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "card.tagline",
+      "runtimePath": "card.tagline",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme or collection card.tagline"
+        ]
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "",
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "collection",
+      "runtimePath": "collection",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "collection.id",
+      "runtimePath": "collection.id",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "required collection ID"
+        ]
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "",
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "collection.profile",
+      "runtimePath": "collection.profile",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "required collection profile"
+        ]
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "",
+      "migration": "content-schema/front-matter",
+      "sealed": true,
+      "values": [
+        "wiki",
+        "topic",
+        "notebook"
+      ]
+    },
+    {
+      "path": "comments",
+      "runtimePath": "comments",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "extensions.comments and broader content scope"
+        ]
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "comments.enabled",
+      "runtimePath": "comments.enabled",
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "comments.id",
+      "runtimePath": "comments.id",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "comments.options",
+      "runtimePath": "comments.options",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "parameter_bag",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter"
+    },
+    {
+      "path": "comments.provider",
+      "runtimePath": "comments.provider",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "comments.title",
+      "runtimePath": "comments.title",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "footer",
+      "runtimePath": "footer",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "content defaults footer"
+        ]
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "footer.license",
+      "runtimePath": "footer.license",
+      "type": [
+        "boolean",
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "footer.references",
+      "runtimePath": "footer.references",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": []
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "array",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": [],
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "footer.share",
+      "runtimePath": "footer.share",
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "inject",
+      "runtimePath": "inject",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "inject.head",
+      "runtimePath": "inject.head",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "",
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "inject.script",
+      "runtimePath": "inject.script",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "",
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "listing",
+      "runtimePath": "listing",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "listing.priority",
+      "runtimePath": "listing.priority",
+      "type": [
+        "number"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": 0
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": 0,
+      "migration": "content-schema/front-matter",
+      "sealed": true,
+      "minimum": 0
+    },
+    {
+      "path": "navigation",
+      "runtimePath": "navigation",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme profile navigation"
+        ]
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "navigation.breadcrumb",
+      "runtimePath": "navigation.breadcrumb",
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "navigation.menu",
+      "runtimePath": "navigation.menu",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "render",
+      "runtimePath": "render",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "render.diagrams",
+      "runtimePath": "render.diagrams",
+      "type": [
+        "boolean",
+        "string",
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": false
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "parameter_bag",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": false,
+      "migration": "content-schema/front-matter"
+    },
+    {
+      "path": "render.math",
+      "runtimePath": "render.math",
+      "type": [
+        "boolean",
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": false
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": false,
+      "migration": "content-schema/front-matter",
+      "sealed": true,
+      "values": [
+        false,
+        "katex",
+        "mathjax"
+      ]
+    },
+    {
+      "path": "seo",
+      "runtimePath": "seo",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "seo.open_graph",
+      "runtimePath": "seo.openGraph",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "parameter_bag",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter"
+    },
+    {
+      "path": "sidebar",
+      "runtimePath": "sidebar",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme profile sidebar"
+        ]
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left",
+      "runtimePath": "sidebar.left",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.brand",
+      "runtimePath": "sidebar.left.brand",
+      "type": [
+        "object",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.brand.image",
+      "runtimePath": "sidebar.left.brand.image",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "src": "/avatar.webp",
+        "variant": "avatar",
+        "url": "/about/"
+      },
+      "migration": "configuration/site",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.brand.image.background",
+      "runtimePath": "sidebar.left.brand.image.background",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "var(--block)",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "sidebar.left.brand.image.src",
+      "runtimePath": "sidebar.left.brand.image.src",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "hexo.config.avatar"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "/avatar.webp",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "sidebar.left.brand.image.url",
+      "runtimePath": "sidebar.left.brand.image.url",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "/about/",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "sidebar.left.brand.image.variant",
+      "runtimePath": "sidebar.left.brand.image.variant",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "avatar"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "avatar",
+      "migration": "configuration/site",
+      "values": [
+        "avatar",
+        "icon",
+        "plain"
+      ]
+    },
+    {
+      "path": "sidebar.left.brand.name",
+      "runtimePath": "sidebar.left.brand.name",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "hexo.config.title"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "Stellar",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "sidebar.left.brand.tagline",
+      "runtimePath": "sidebar.left.brand.tagline",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "hexo.config.subtitle"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "每个人的独立博客",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "sidebar.left.brand.url",
+      "runtimePath": "sidebar.left.brand.url",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "/"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "/",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "sidebar.left.menu",
+      "runtimePath": "sidebar.left.menu",
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.search",
+      "runtimePath": "sidebar.left.search",
+      "type": [
+        "boolean",
+        "object"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme or collection search"
+        ]
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.search.filter",
+      "runtimePath": "sidebar.left.search.filter",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.search.placeholder",
+      "runtimePath": "sidebar.left.search.placeholder",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.widgets",
+      "runtimePath": "sidebar.left.widgets",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme or collection left widgets"
+        ]
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "array",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": [],
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.wiki_home",
+      "runtimePath": "sidebar.left.wikiHome",
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.right",
+      "runtimePath": "sidebar.right",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.right.widgets",
+      "runtimePath": "sidebar.right.widgets",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "theme or collection right widgets"
+        ]
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "array",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": [],
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "source",
+      "runtimePath": "source",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "source.branch",
+      "runtimePath": "source.branch",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "source.repository",
+      "runtimePath": "source.repository",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "visibility",
+      "runtimePath": "visibility",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {},
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "visibility.listed",
+      "runtimePath": "visibility.listed",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": true,
+      "migration": "content-schema/front-matter",
+      "sealed": true
+    },
+    {
+      "path": "visibility.searchable",
+      "runtimePath": "visibility.searchable",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "front_matter",
+      "cascade": [
+        "schema default",
+        "theme profile",
+        "collection",
+        "front matter"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": true,
+      "migration": "content-schema/front-matter",
+      "sealed": true
     }
   ]
 }

@@ -6,6 +6,10 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const { CONFIG_SCHEMA } = require("../scripts/schema/config-schema");
+const {
+  COLLECTION_CONFIG_SCHEMA,
+  FRONT_MATTER_CONFIG_SCHEMA
+} = require("../scripts/schema/content-config-schema");
 const { flattenConfigFields } = require("../scripts/lib/config-reference-metadata");
 const { CONFIG_DOMAIN_CATALOG } = require("../scripts/schema/config-inventory");
 const {
@@ -238,7 +242,9 @@ test("官方脚本样式与内部集成有显式内部化清单", () => {
 test("运行时只投影 site Shell、Layout、内容默认与 head/SEO 已交付节点且根配置仍未封闭", () => {
   assert.equal(CONFIG_SCHEMA.sealed, false);
   assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "layout", "content", "seo", "resources", "inject"]);
-  const deliveredPaths = CONFIG_TARGET_FIELDS.filter(field => field.status === "delivered").map(field => field.path);
+  const deliveredPaths = CONFIG_TARGET_FIELDS
+    .filter(field => field.status === "delivered" && field.scopes.includes("theme"))
+    .map(field => field.path);
   assert.deepEqual(
     deliveredPaths.filter(pathValue => !pathValue.startsWith("layout.") && !pathValue.startsWith("content.")),
     [
@@ -306,21 +312,29 @@ test("运行时只投影 site Shell、Layout、内容默认与 head/SEO 已交�
     assert.ok(deliveredLayoutPaths.includes(`layout.profiles.home.${suffix}`));
   }
   assert.ok(CONFIG_TARGET_FIELDS.some(field => field.status === "planned"));
+  assert.ok(CONFIG_TARGET_FIELDS.some(field => field.status === "delivered" && field.scopes.includes("collection")));
+  assert.ok(CONFIG_TARGET_FIELDS.some(field => field.status === "delivered" && field.scopes.includes("front_matter")));
 });
 
 test("运行时 Schema 完整投影已交付目标节点契约", () => {
-  const activeFields = new Map(flattenConfigFields(CONFIG_SCHEMA).map(field => [field.path, field]));
+  const activeFields = new Map([
+    ...flattenConfigFields(CONFIG_SCHEMA),
+    ...flattenConfigFields(COLLECTION_CONFIG_SCHEMA),
+    ...flattenConfigFields(FRONT_MATTER_CONFIG_SCHEMA)
+  ].map(field => [`${field.scope}:${field.path}`, field]));
   const delivered = CONFIG_TARGET_FIELDS.filter(field => field.status === "delivered");
   for (const target of delivered) {
-    const active = activeFields.get(target.path);
-    assert.ok(active, `${target.path} 未进入运行时 Schema`);
-    assert.deepEqual(active.type, target.type, `${target.path} 类型漂移`);
-    assert.deepEqual(active.default, target.default, `${target.path} 默认值漂移`);
-    assert.deepEqual(active.cascade, target.cascade, `${target.path} 级联顺序漂移`);
-    assert.equal(active.normalization, target.normalization, `${target.path} 规范化规则漂移`);
-    assert.deepEqual(active.consumers, target.consumers, `${target.path} 消费方漂移`);
-    assert.equal(active.migration, target.migration, `${target.path} 迁移章节漂移`);
-    assert.equal(active.runtimePath, target.runtimePath, `${target.path} 运行时键漂移`);
+    for (const scope of target.scopes) {
+      const active = activeFields.get(`${scope}:${target.path}`);
+      assert.ok(active, `${scope}:${target.path} 未进入运行时 Schema`);
+      assert.deepEqual(active.type, target.type, `${scope}:${target.path} 类型漂移`);
+      assert.deepEqual(active.default, target.default, `${scope}:${target.path} 默认值漂移`);
+      assert.deepEqual(active.cascade, target.cascade, `${scope}:${target.path} 级联顺序漂移`);
+      assert.equal(active.normalization, target.normalization, `${scope}:${target.path} 规范化规则漂移`);
+      assert.deepEqual(active.consumers, target.consumers, `${scope}:${target.path} 消费方漂移`);
+      assert.equal(active.migration, target.migration, `${scope}:${target.path} 迁移章节漂移`);
+      assert.equal(active.runtimePath, target.runtimePath, `${scope}:${target.path} 运行时键漂移`);
+    }
   }
 });
 

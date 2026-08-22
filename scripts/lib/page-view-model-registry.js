@@ -1,6 +1,7 @@
 "use strict";
 
 const postInputs = new Map();
+const pageConfigs = new Map();
 
 function keysForPage(page) {
   return [page?.source, page?.path, page?._id]
@@ -9,6 +10,18 @@ function keysForPage(page) {
 
 function resetPageViewModels() {
   postInputs.clear();
+  pageConfigs.clear();
+}
+
+function setPageConfig(page, config) {
+  for (const key of keysForPage(page)) pageConfigs.set(key, config);
+}
+
+function getPageConfig(page) {
+  for (const key of keysForPage(page)) {
+    if (pageConfigs.has(key)) return pageConfigs.get(key);
+  }
+  return null;
 }
 
 function setPostViewModelInput(page, input) {
@@ -23,7 +36,9 @@ function getPostViewModelInput(page) {
 }
 
 module.exports = {
+  getPageConfig,
   getPostViewModelInput,
   resetPageViewModels,
+  setPageConfig,
   setPostViewModelInput
 };

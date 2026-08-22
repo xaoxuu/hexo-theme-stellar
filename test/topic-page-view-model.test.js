@@ -8,12 +8,21 @@ const path = require("node:path");
 
 const { buildTopicPageViewModel: buildTopicPageViewModelRaw } = require("../scripts/lib/models");
 const { parseStellarConfig } = require("../scripts/lib/config-schema");
+const { parseCollectionConfig, parsePageConfig } = require("../scripts/lib/content-config");
 const processContentConfig = require("../scripts/events/lib/content-config");
 const { attachPageViewModel } = require("../scripts/filters/lib/page-view-model");
 
 function buildTopicPageViewModel(input) {
   return buildTopicPageViewModelRaw({
     ...input,
+    collectionConfig: input.collectionConfig == null
+      ? input.collectionConfig
+      : parseCollectionConfig(input.collectionConfig, input.collectionSource),
+    frontMatter: parsePageConfig(input.frontMatter, input.source),
+    members: (input.members || []).map(member => ({
+      ...member,
+      frontMatter: parsePageConfig(member.frontMatter, member.source)
+    })),
     stellarConfig: input.stellarConfig || parseStellarConfig({
       source: input.themeSource || "<theme>",
       themeConfig: input.themeConfig,
@@ -36,7 +45,7 @@ function topicMember(id, title, date, options = {}) {
   const frontMatter = {
     title,
     layout: "post",
-    collection: { type: "topic", id: topicId }
+    collection: { profile: "topic", id: topicId }
   };
   if (options.visibility != null) frontMatter.visibility = options.visibility;
   return {
@@ -70,7 +79,7 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
     audience: "Theme developers",
     identity: { icon: "/topic.svg" },
     source: { repository: "xaoxuu/hexo-theme-stellar", branch: "v2" },
-    routing: { path: "/columns/stellar-v2/index.html" },
+    route: { path: "/columns/stellar-v2/index.html" },
     navigation: { breadcrumb: false },
     listing: { priority: 3, excerpt_length: 96, per_page: 10, order_by: "-date" },
     card: { cover: "/cover.webp", tagline: "Collection card" },
@@ -78,7 +87,7 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
     sidebar: { left: { widgets: ["recent"] } },
     article: { type: "story", indent: true },
     footer: { license: "Topic license", share: false },
-    comments: { enabled: true, title: "Topic comments", service: "giscus" }
+    comments: { enabled: true, title: "Topic comments", provider: "giscus", options: {} }
   };
   const viewModel = buildTopicPageViewModel({
     source: current.source,
@@ -218,23 +227,23 @@ test("Topic profile 只接受匹配的严格 v2 collection 归属", () => {
   assert.throws(() => buildTopicPageViewModel({
     ...base,
     frontMatter: { title: "Topic", layout: "post" }
-  }), /source\/_posts\/topic\.md: collection\.type 必须是 topic/);
+  }), /source\/_posts\/topic\.md: collection\.profile 必须是 topic/);
   assert.throws(() => buildTopicPageViewModel({
     ...base,
     collectionId: "stellar-v2",
     frontMatter: {
       title: "Topic",
       layout: "post",
-      collection: { type: "wiki", id: "stellar-v2" }
+      collection: { profile: "wiki", id: "stellar-v2" }
     }
-  }), /source\/_posts\/topic\.md: collection\.type 必须是 topic/);
+  }), /source\/_posts\/topic\.md: collection\.profile 必须是 topic/);
   assert.throws(() => buildTopicPageViewModel({
     ...base,
     collectionId: "other",
     frontMatter: {
       title: "Topic",
       layout: "post",
-      collection: { type: "topic", id: "stellar-v2" }
+      collection: { profile: "topic", id: "stellar-v2" }
     }
   }), /source\/_posts\/topic\.md: collection\.id stellar-v2 与 Topic other 不匹配/);
   assert.throws(() => buildTopicPageViewModel({
@@ -249,7 +258,7 @@ test("Topic profile 只接受匹配的严格 v2 collection 归属", () => {
     frontMatter: {
       title: "Topic",
       layout: "post",
-      collection: { type: "topic", id: "stellar-v2" }
+      collection: { profile: "topic", id: "stellar-v2" }
     }
   }), error => {
     assert.match(error.message, /_config\.stellar\.yml: layout\.profiles\.topic_index\.path 应为 string \| null/);
@@ -262,8 +271,8 @@ test("生成前事件为严格 Topic 成员挂载模型并拒绝缺失集合", t
   const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-topic-view-model-"));
   t.after(() => fs.rmSync(sourceDir, { recursive: true, force: true }));
   fs.mkdirSync(path.join(sourceDir, "_posts"));
-  fs.writeFileSync(path.join(sourceDir, "_posts/first.md"), "---\ntitle: First\nlayout: post\ncollection:\n  type: topic\n  id: v2\n---\n");
-  fs.writeFileSync(path.join(sourceDir, "_posts/second.md"), "---\ntitle: Second\nlayout: post\ncollection:\n  type: topic\n  id: v2\n---\n");
+  fs.writeFileSync(path.join(sourceDir, "_posts/first.md"), "---\ntitle: First\nlayout: post\ncollection:\n  profile: topic\n  id: v2\n---\n");
+  fs.writeFileSync(path.join(sourceDir, "_posts/second.md"), "---\ntitle: Second\nlayout: post\ncollection:\n  profile: topic\n  id: v2\n---\n");
   fs.writeFileSync(path.join(sourceDir, "_posts/plain.md"), "---\ntitle: Plain\nlayout: post\n---\n");
 
   class MomentLike {
@@ -308,7 +317,7 @@ test("生成前事件为严格 Topic 成员挂载模型并拒绝缺失集合", t
   const data = {
     "topic/v2": {
       name: "V2",
-      routing: { path: "/topic/v2/" },
+      route: { path: "/topic/v2/" },
       listing: { order_by: "-date" }
     }
   };
@@ -351,7 +360,7 @@ test("生成前事件为严格 Topic 成员挂载模型并拒绝缺失集合", t
   assert.equal(renderedPlain.viewModel.collection.profile, "post");
   assert.equal(plain.viewModel, undefined);
 
-  fs.writeFileSync(path.join(sourceDir, "_posts/missing.md"), "---\ntitle: Missing\nlayout: post\ncollection:\n  type: topic\n  id: missing\n---\n");
+  fs.writeFileSync(path.join(sourceDir, "_posts/missing.md"), "---\ntitle: Missing\nlayout: post\ncollection:\n  profile: topic\n  id: missing\n---\n");
   const missing = {
     _id: "missing",
     source: "_posts/missing.md",

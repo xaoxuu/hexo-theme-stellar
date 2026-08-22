@@ -23,7 +23,7 @@ const ROOT = path.resolve(__dirname, "..");
 const OUTPUT = path.join(ROOT, "reference/v2-models.json");
 const CONFIG_OUTPUT = path.join(ROOT, "reference/v2-config.json");
 
-test("配置 Reference 只公开已交付 site Shell、Layout Profile、内容默认与 head/SEO 契约", () => {
+test("配置 Reference 只公开已交付 Theme、Collection 与 Front Matter 契约", () => {
   const metadata = generateConfigReferenceMetadata();
 
   assert.equal(metadata.status, "partial");
@@ -34,13 +34,13 @@ test("配置 Reference 只公开已交付 site Shell、Layout Profile、内容�
   for (const targetPath of deliveredTargetPaths) {
     assert.equal(paths.includes(targetPath), true, `${targetPath} 未进入配置 Reference`);
   }
-  assert.deepEqual(
-    [...new Set(paths.map(fieldPath => fieldPath.split(".")[0]))].sort(),
-    ["content", "inject", "layout", "resources", "seo", "site"]
-  );
+  assert.deepEqual([...new Set(metadata.fields.map(field => field.scope))].sort(), ["collection", "front_matter", "theme"]);
   assert.equal(metadata.fields.some(field => field.path === "layout.profiles.blog_index.path"), true);
   assert.equal(metadata.fields.some(field => field.path === "content.article.listing.card_layout"), true);
   assert.equal(metadata.fields.some(field => field.path === "content.notebook.tag_icons.<tag>"), true);
+  assert.equal(metadata.fields.some(field => field.scope === "collection" && field.path === "route.path"), true);
+  assert.equal(metadata.fields.some(field => field.scope === "front_matter" && field.path === "collection.profile"), true);
+  assert.equal(metadata.fields.some(field => field.scope === "front_matter" && field.path === "title"), false);
   assert.equal(metadata.fields[0].sealed, true);
   assert.deepEqual(
     metadata.fields.find(field => field.path === "seo.canonical.host"),
@@ -126,7 +126,7 @@ test("Reference 只来自模型 Schema 且不提前公开后续契约", () => {
   const contentItem = metadata.models.find(model => model.name === "ContentItemModel");
   assert.ok(contentItem.fields.some(field => field.path === "layout"));
   assert.deepEqual(
-    contentItem.fields.find(field => field.path === "presentation.article.ai_label").type,
+    contentItem.fields.find(field => field.path === "presentation.article.aiLabel").type,
     ["string", "object"]
   );
 

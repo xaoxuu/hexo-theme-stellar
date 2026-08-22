@@ -3,6 +3,7 @@ const postViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?
   ? viewModel
   : null
 const postRender = postViewModel?.render
+var pageConfig = content_config(page)
 var stellarSeo = stellar_config('seo')
 var stellarResources = stellar_config('resources')
 
@@ -109,7 +110,7 @@ function og_args() {
   if (stellarSeo.openGraph.twitterId) {
     args.twitter_id = stellarSeo.openGraph.twitterId;
   }
-  if (page.layout == 'post' && page.card?.cover) {
+  if (page.layout == 'post' && pageConfig.card?.cover) {
     args.twitter_card = 'summary_large_image';
   }
   if (collection_id(page, "wiki") && !page.description) {
@@ -118,8 +119,8 @@ function og_args() {
       args.description = proj.description;
     }
   }
-  args.image = page.card?.cover || page.banner?.image || first_content_image(page.content) || config.avatar || (config.email ? gravatar(config.email) : null);
-  return Object.assign(args, page.open_graph);
+  args.image = pageConfig.card?.cover || pageConfig.banner?.image || first_content_image(page.content) || config.avatar || (config.email ? gravatar(config.email) : null);
+  return Object.assign(args, pageConfig.seo?.openGraph || {});
 }
 
 function escape_meta_content(content) {
@@ -186,7 +187,7 @@ function preconnect() {
 }
 
 function custom_inject() {
-  return stellar_inject('head', postRender ? postRender.document.headInject : page.inject?.head)
+  return stellar_inject('head', postRender ? postRender.document.headInject : pageConfig.inject?.head)
 }
 
 function generate_canonical() {

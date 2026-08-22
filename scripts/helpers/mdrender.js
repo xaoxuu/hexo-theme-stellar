@@ -4,6 +4,7 @@
 const { mdrenderHtml, PLACEHOLDER_CLASS } = require('../lib/mdrender_html');
 const { wikiReadmeHtml, isWikiReadmePage } = require('../lib/wiki_readme');
 const { getCollectionId } = require('../lib/content-config');
+const { getPageConfig } = require("../lib/page-view-model-registry");
 
 // 远程 Markdown 渲染占位标记（底层组件服务端入口，供 EJS 模板复用）
 hexo.extend.helper.register('mdrender_html', function (src, options = {}) {
@@ -26,5 +27,6 @@ hexo.extend.helper.register('has_remote_md', function (page) {
   if (page.content && page.content.indexOf(PLACEHOLDER_CLASS) >= 0) {
     return true;
   }
-  return isWikiReadmePage(hexo.theme.config.wiki.tree[getCollectionId(page, 'wiki')], page);
+  const config = getPageConfig(page) || page.stellarConfig || {};
+  return isWikiReadmePage(hexo.theme.config.wiki.tree[getCollectionId(config, "wiki")], page);
 });

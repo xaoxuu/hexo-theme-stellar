@@ -9,6 +9,7 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
   if (this.theme.config.search.service != 'local_search') { return {} }
   const { root } = this.config
   const { local_search: cfg } = this.theme.config.search
+  const pageConfigs = this.stellar?.contentConfig?.pageConfigs || new Map();
   cfg.sort = '-date'
   cfg.field = cfg.field?.trim()
 
@@ -75,7 +76,8 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
       var layout_list = ["post"]
       if (!layout_list.includes(post.layout)) return
       if (cfg.skip_search && matchAndExit(post.path, skipSearchPatterns)) return
-      if (!isSearchable(post)) return
+      const config = pageConfigs.get(post);
+      if (!config || !isSearchable(config)) return;
       let temp_post = generateJson(post)
       res.push(temp_post)
     }) 
@@ -85,7 +87,8 @@ hexo.extend.generator.register('search_json_generator', function (locals) {
       var layout_list = ["page", "wiki"]
       if (!layout_list.includes(page.layout)) return
       if (cfg.skip_search && matchAndExit(page.path, skipSearchPatterns)) return
-      if (!isSearchable(page)) return
+      const config = pageConfigs.get(page);
+      if (!config || !isSearchable(config)) return;
       let temp_post = generateJson(page)
       res.push(temp_post)
     })

@@ -1,7 +1,7 @@
 <%
 
 function custom_inject() {
-  return stellar_inject('script', page.inject?.script)
+  return stellar_inject('script', content_config(page).inject?.script)
 }
 
 // tagtree 脚本仅在与 tagtree 小部件渲染相同的条件下加载（见 _partial/sidebar/index_leftbar.ejs）

@@ -11,9 +11,11 @@ const {
   buildWikiPageViewModel: buildWikiPageViewModelRaw
 } = require("../scripts/lib/models");
 const { parseStellarConfig } = require("../scripts/lib/config-schema");
+const { parseCollectionConfig, parsePageConfig } = require("../scripts/lib/content-config");
 const processContentConfig = require("../scripts/events/lib/content-config");
 const { attachPageViewModel } = require("../scripts/filters/lib/page-view-model");
 const {
+  getPageConfig,
   resetPageViewModels,
   setPostViewModelInput
 } = require("../scripts/lib/page-view-model-registry");
@@ -22,6 +24,7 @@ const processWikiTree = require("../scripts/events/lib/doc_tree");
 function buildPostPageViewModel(input) {
   return buildPostPageViewModelRaw({
     ...input,
+    frontMatter: parsePageConfig(input.frontMatter, input.source),
     stellarConfig: input.stellarConfig || parseStellarConfig({
       source: input.themeSource || "<theme>",
       themeConfig: input.themeConfig,
@@ -33,6 +36,10 @@ function buildPostPageViewModel(input) {
 function buildWikiPageViewModel(input) {
   return buildWikiPageViewModelRaw({
     ...input,
+    collectionConfig: input.collectionConfig == null
+      ? input.collectionConfig
+      : parseCollectionConfig(input.collectionConfig, input.collectionSource),
+    frontMatter: parsePageConfig(input.frontMatter, input.source),
     stellarConfig: input.stellarConfig || parseStellarConfig({
       source: input.themeSource || "<theme>",
       themeConfig: input.themeConfig,
@@ -80,16 +87,15 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
       audience: "独立博主",
       identity: { icon: "/stellar.svg" },
       source: { repository: "xaoxuu/hexo-theme-stellar", branch: "v2" },
-      routing: { base_dir: "/wiki/stellar/" },
+      route: { path: "/wiki/stellar/" },
       listing: { priority: 2, sort: 10, excerpt_length: 128, per_page: 20, order_by: "updated" },
-      navigation: { breadcrumb: true },
+      navigation: { breadcrumb: true, tree: { "快速开始": ["index", "install"] } },
       card: { cover: "/cover.webp" },
       hero: { enabled: true, background: { image: "/hero.webp" } },
       sidebar: { left: { search: true } },
       article: { indent: true },
       footer: { share: false },
-      comments: { enabled: true, title: "Wiki comments" },
-      tree: { "快速开始": ["index", "install"] }
+      comments: { enabled: true, title: "Wiki comments" }
     },
     collectionState: {
       homepage: { _id: "wiki-home", title: "开始", path: "wiki/stellar/", page_number: 0, is_homepage: true },
@@ -105,7 +111,7 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
     frontMatter: {
       title: "开始",
       layout: "wiki",
-      collection: { type: "wiki", id: "stellar" }
+      collection: { profile: "wiki", id: "stellar" }
     },
     page: {
       _id: "wiki-home",
@@ -183,7 +189,7 @@ test("Wiki 树构建事件只为严格 v2 Wiki 页面挂载 PageViewModel", t =>
     "title: Start",
     "layout: wiki",
     "collection:",
-    "  type: wiki",
+    "  profile: wiki",
     "  id: stellar",
     "---",
     ""
@@ -195,7 +201,7 @@ test("Wiki 树构建事件只为严格 v2 Wiki 页面挂载 PageViewModel", t =>
     path: "wiki/stellar/index.html",
     title: "Start",
     layout: "wiki",
-    collection: { type: "wiki", id: "stellar" }
+    collection: { profile: "wiki", id: "stellar" }
   };
   const ordinaryPage = {
     _id: "about",
@@ -208,8 +214,8 @@ test("Wiki 树构建事件只为严格 v2 Wiki 页面挂载 PageViewModel", t =>
     wiki: ["stellar"],
     "wiki/stellar": {
       name: "Stellar",
-      routing: { base_dir: "/wiki/stellar/" },
-      tree: ["index"]
+      route: { path: "/wiki/stellar/" },
+      navigation: { tree: ["index"] }
     }
   };
   const themeConfig = {
@@ -220,23 +226,25 @@ test("Wiki 树构建事件只为严格 v2 Wiki 页面挂载 PageViewModel", t =>
     content: { article: { indent: true } },
     comments: { service: "giscus" }
   };
-  const collections = { data, pages: [wikiPage, ordinaryPage] };
-
-  processWikiTree({
+  const pages = [wikiPage, ordinaryPage];
+  pages.each = callback => [wikiPage, ordinaryPage].forEach(callback);
+  const collections = { data, posts: { each() {} }, pages };
+  const ctx = {
     source_dir: sourceDir,
-    config: {
-      theme_config: themeConfig
-    },
+    config: { theme_config: themeConfig },
     theme: { config: themeConfig },
     stellar: { config: parseStellarConfig({ themeConfig }) },
     locals: { get: key => collections[key] }
-  });
+  };
+
+  processContentConfig(ctx);
+  processWikiTree(ctx);
 
   assert.equal(wikiPage.viewModel.collection.id, "stellar");
   assert.equal(wikiPage.viewModel.collection.profile, "wiki");
   assert.equal(wikiPage.viewModel.collection.navigation.tree[0].items[0].title, "Start");
   assert.equal(wikiPage.viewModel.item.presentation.article.indent, true);
-  assert.equal(wikiPage.viewModel.item.presentation.comments.service, "giscus");
+  assert.equal(wikiPage.viewModel.item.presentation.comments.provider, "giscus");
   assert.equal(Object.isFrozen(wikiPage.viewModel), true);
   assert.equal(ordinaryPage.viewModel, undefined);
 });
@@ -250,7 +258,7 @@ test("Wiki 模型严格拒绝缺失项目、错误归属与 v1 字段", () => {
     frontMatter: {
       title: "Missing",
       layout: "wiki",
-      collection: { type: "wiki", id: "missing" }
+      collection: { profile: "wiki", id: "missing" }
     },
     page: { title: "Missing", layout: "wiki" }
   }), /source\/wiki\/missing\/index\.md: collection\.id missing 未找到 Wiki 项目配置 source\/_data\/wiki\/missing\.yml/);
@@ -265,10 +273,10 @@ test("Wiki 模型严格拒绝缺失项目、错误归属与 v1 字段", () => {
       title: "Legacy",
       layout: "wiki",
       wiki: "stellar",
-      collection: { type: "wiki", id: "stellar" }
+      collection: { profile: "wiki", id: "stellar" }
     },
     page: { title: "Legacy", layout: "wiki" }
-  }), /source\/wiki\/stellar\/legacy\.md: v1 字段 wiki 已移除/);
+  }), /source\/wiki\/stellar\/legacy\.md: wiki 已移除，期望 collection\.id/);
 
   assert.throws(() => buildWikiPageViewModel({
     source: "source/wiki/stellar/mismatch.md",
@@ -279,7 +287,7 @@ test("Wiki 模型严格拒绝缺失项目、错误归属与 v1 字段", () => {
     frontMatter: {
       title: "Mismatch",
       layout: "wiki",
-      collection: { type: "wiki", id: "stellar" }
+      collection: { profile: "wiki", id: "stellar" }
     },
     page: { title: "Mismatch", layout: "wiki" }
   }), /source\/wiki\/stellar\/mismatch\.md: collection\.id stellar 与 Wiki 项目 other 不匹配/);
@@ -291,7 +299,7 @@ test("Wiki 模型隔离输入引用并区分项目与页面可见性", () => {
     source: { repository: "owner/wiki", branch: "main" },
     hero: { background: { image: "/collection-hero.webp" } },
     sidebar: { left: { widgets: ["tree"] } },
-    tree: ["index"]
+    navigation: { tree: ["index"] }
   };
   const collectionState = {
     homepage: { id: "home", path: "/wiki/private/index.html" },
@@ -308,7 +316,7 @@ test("Wiki 模型隔离输入引用并区分项目与页面可见性", () => {
     frontMatter: {
       title: "Home",
       layout: "wiki",
-      collection: { type: "wiki", id: "private" },
+      collection: { profile: "wiki", id: "private" },
       banner: { image: "/page-banner.webp" },
       source: { branch: "page" },
       visibility: { listed: true, searchable: false }
@@ -451,8 +459,8 @@ test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD �
       description: "",
       keywords: [],
       robots: "",
-      inject: { head: ["<meta name=\"page\" content=\"render\">"] },
-      open_graph: { image: null },
+      inject: { head: "<meta name=\"page\" content=\"render\">" },
+      seo: { open_graph: { image: null } },
       article: { type: "story" }
     },
     page: {
@@ -473,7 +481,7 @@ test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD �
 
   assert.deepEqual(viewModel.render.document, {
     language: "zh-CN",
-    headInject: ["<meta name=\"page\" content=\"render\">"],
+    headInject: "<meta name=\"page\" content=\"render\">",
     preferredTheme: "auto"
   });
   assert.equal(viewModel.render.layout.indent, true);
@@ -596,8 +604,8 @@ test("Post 列表与评论投影保留覆盖、摘要优先级、五标签和隐
       description: "Description wins",
       footer: { share: true },
       comments: {
-        service: "waline",
-        waline: { serverURL: "https://page.example.com" }
+        provider: "waline",
+        options: { serverURL: "https://page.example.com" }
       },
       visibility: { listed: false }
     },
@@ -662,7 +670,7 @@ test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆�
       sidebar: {
         left: {
           widgets: [],
-          brand: { image: { src: "/page.svg", style: "plain" } }
+          brand: { image: { src: "/page.svg", variant: "plain" } }
         }
       },
       article: { indent: false },
@@ -768,9 +776,9 @@ test("Post 模型继续拒绝 v1、未知和错误类型字段", () => {
     },
     page: { title: "Legacy", layout: "post" }
   }), error => {
-    assert.match(error.message, /source\/_posts\/legacy\.md: v1 字段 cover 已移除/);
-    assert.match(error.message, /source\/_posts\/legacy\.md: 未知字段 root\.mystery/);
-    assert.match(error.message, /source\/_posts\/legacy\.md: visibility\.listed 应为 boolean，实际为 string/);
+    assert.match(error.message, /source\/_posts\/legacy\.md: cover 已移除，期望 card\.cover/);
+    assert.match(error.message, /source\/_posts\/legacy\.md: 未知字段 mystery/);
+    assert.match(error.message, /source\/_posts\/legacy\.md: visibility\.listed 应为 boolean/);
     return true;
   });
 });
@@ -813,7 +821,7 @@ test("生成前事件为普通 Post 与严格 Topic 挂载各自的 PageViewMode
   t.after(() => fs.rmSync(sourceDir, { recursive: true, force: true }));
   fs.mkdirSync(path.join(sourceDir, "_posts"));
   fs.writeFileSync(path.join(sourceDir, "_posts/post.md"), "---\ntitle: Post\nlayout: post\n---\n");
-  fs.writeFileSync(path.join(sourceDir, "_posts/topic.md"), "---\ntitle: Topic\nlayout: post\ncollection:\n  type: topic\n  id: v2\n---\n");
+  fs.writeFileSync(path.join(sourceDir, "_posts/topic.md"), "---\ntitle: Topic\nlayout: post\ncollection:\n  profile: topic\n  id: v2\n---\n");
   fs.writeFileSync(path.join(sourceDir, "about.md"), "---\ntitle: About\nlayout: page\n---\n");
 
   const post = {
@@ -829,7 +837,7 @@ test("生成前事件为普通 Post 与严格 Topic 挂载各自的 PageViewMode
     path: "topic/",
     title: "Topic",
     layout: "post",
-    collection: { type: "topic", id: "v2" }
+    collection: { profile: "topic", id: "v2" }
   };
   const about = {
     _id: "about",
@@ -865,6 +873,7 @@ test("生成前事件为普通 Post 与严格 Topic 挂载各自的 PageViewMode
   assert.equal(renderedPost.viewModel.collection.profile, "post");
   assert.equal(Object.isFrozen(renderedPost.viewModel), true);
   assert.equal(post.viewModel, undefined);
+  assert.equal(getPageConfig({ ...topic }), topic.stellarConfig);
   assert.equal(topic.viewModel.collection.profile, "topic");
   assert.equal(Object.isFrozen(topic.viewModel), true);
   assert.equal(about.viewModel, undefined);
@@ -929,8 +938,8 @@ test("Post 模型拒绝非普通配置对象而不是保留输入引用", () => 
     frontMatter: {
       title: "Non Plain",
       layout: "post",
-      comments: { service: "giscus", giscus }
+      comments: { provider: "giscus", options: giscus }
     },
     page: { title: "Non Plain", layout: "post" }
-  }), /source\/_posts\/non-plain\.md: comments\.giscus 应为 object/);
+  }), /source\/_posts\/non-plain\.md: comments\.options 应为 object/);
 });

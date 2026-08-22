@@ -2,6 +2,10 @@
 "use strict";
 
 const { CONFIG_SCHEMA } = require("../schema/config-schema");
+const {
+  COLLECTION_CONFIG_SCHEMA,
+  FRONT_MATTER_CONFIG_SCHEMA
+} = require("../schema/content-config-schema");
 
 function clone(value) {
   if (Array.isArray(value)) return value.map(clone);
@@ -66,9 +70,16 @@ function flattenConfigFields(schema) {
 function generateConfigReferenceMetadata() {
   return {
     schemaVersion: 1,
-    source: "scripts/schema/config-schema.js",
+    source: [
+      "scripts/schema/config-schema.js",
+      "scripts/schema/content-config-schema.js"
+    ],
     status: "partial",
-    fields: flattenConfigFields(CONFIG_SCHEMA)
+    fields: [
+      ...flattenConfigFields(CONFIG_SCHEMA),
+      ...flattenConfigFields(COLLECTION_CONFIG_SCHEMA),
+      ...flattenConfigFields(FRONT_MATTER_CONFIG_SCHEMA)
+    ]
   };
 }
 

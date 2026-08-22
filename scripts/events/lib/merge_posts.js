@@ -9,9 +9,9 @@ const { normalize_path } = require('../../lib/path_utils');
 const { getCollectionId, isListed } = require('../../lib/content-config');
 
 class RelatedPage {
-  constructor(page) { 
+  constructor(page, config) {
     this.id = page._id
-    this.collection = page.collection
+    this.stellarConfig = config;
     this.title = page.title
     this.path = page.path
     this.path_key = normalize_path(page.path)
@@ -24,11 +24,13 @@ class RelatedPage {
 module.exports = ctx => {
   var topic = ctx.theme.config.topic
   const posts = ctx.locals.get('posts')
+  const pageConfigs = ctx.stellar?.contentConfig?.pageConfigs || new Map();
   posts.sort('date').each(function(post) {
-    if (!isListed(post)) return
-    let obj = new RelatedPage(post)
+    const config = pageConfigs.get(post);
+    if (!config || !isListed(config)) return;
+    let obj = new RelatedPage(post, config);
     // 合并拥有共同 topic 的文章到 topic.tree
-    const topicId = getCollectionId(post, 'topic')
+    const topicId = getCollectionId(config, "topic");
     if (topicId) {
       var topicObject = topic.tree[topicId]
       if (topicObject) {

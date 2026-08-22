@@ -492,7 +492,7 @@
           }
         },
         {
-          "path": "presentation.article.ai_label",
+          "path": "presentation.article.aiLabel",
           "type": [
             "string",
             "object"
@@ -502,7 +502,7 @@
             "kind": "inherited",
             "from": [
               "hexo.stellar.config.content.article.aiLabel",
-              "page.article.ai_label"
+              "page.article.aiLabel"
             ]
           },
           "scope": "CollectionModel:notebook",
@@ -646,44 +646,11 @@
           ],
           "example": {
             "enabled": true,
-            "service": "giscus"
+            "provider": "giscus",
+            "options": {
+              "data-repo": "xaoxuu/xaoxuu.com"
+            }
           }
-        },
-        {
-          "path": "presentation.comments.artalk",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:notebook",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
-        },
-        {
-          "path": "presentation.comments.beaudar",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:notebook",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
         },
         {
           "path": "presentation.comments.enabled",
@@ -706,7 +673,24 @@
           "example": true
         },
         {
-          "path": "presentation.comments.giscus",
+          "path": "presentation.comments.id",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:notebook",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "post-hello"
+        },
+        {
+          "path": "presentation.comments.options",
           "type": [
             "object"
           ],
@@ -726,26 +710,10 @@
           "open": true
         },
         {
-          "path": "presentation.comments.id",
+          "path": "presentation.comments.provider",
           "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:notebook",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "post-hello"
-        },
-        {
-          "path": "presentation.comments.service",
-          "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -782,60 +750,6 @@
             "Reference generator"
           ],
           "example": "参与讨论"
-        },
-        {
-          "path": "presentation.comments.twikoo",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:notebook",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
-        },
-        {
-          "path": "presentation.comments.utterances",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:notebook",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
-        },
-        {
-          "path": "presentation.comments.waline",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:notebook",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
         },
         {
           "path": "presentation.footer",
@@ -1088,11 +1002,11 @@
             "Reference generator"
           ],
           "example": {
-            "pause_when_hidden": true
+            "pauseWhenHidden": true
           }
         },
         {
-          "path": "presentation.hero.background.effect.runtime.pause_when_hidden",
+          "path": "presentation.hero.background.effect.runtime.pauseWhenHidden",
           "type": [
             "boolean"
           ],
@@ -1108,7 +1022,7 @@
           "example": true
         },
         {
-          "path": "presentation.hero.background.effect.runtime.respect_reduced_motion",
+          "path": "presentation.hero.background.effect.runtime.respectReducedMotion",
           "type": [
             "boolean"
           ],
@@ -1604,7 +1518,7 @@
           ]
         },
         {
-          "path": "presentation.sidebar.left.wiki_home",
+          "path": "presentation.sidebar.left.wikiHome",
           "type": [
             "boolean"
           ],
@@ -1687,7 +1601,7 @@
             "kind": "derived",
             "from": [
               "profile.route",
-              "collection.routing"
+              "collection.route"
             ]
           },
           "scope": "CollectionModel:notebook",
@@ -1708,8 +1622,8 @@
           "default": {
             "kind": "derived",
             "from": [
-              "profile.base_dir",
-              "collection.routing.base_dir"
+              "profile.path",
+              "collection.route.path"
             ]
           },
           "scope": "CollectionModel:notebook",
@@ -2209,7 +2123,7 @@
           }
         },
         {
-          "path": "presentation.article.ai_label",
+          "path": "presentation.article.aiLabel",
           "type": [
             "string",
             "object"
@@ -2219,7 +2133,7 @@
             "kind": "inherited",
             "from": [
               "hexo.stellar.config.content.article.aiLabel",
-              "page.article.ai_label"
+              "page.article.aiLabel"
             ]
           },
           "scope": "CollectionModel:post",
@@ -2310,44 +2224,11 @@
           ],
           "example": {
             "enabled": true,
-            "service": "giscus"
+            "provider": "giscus",
+            "options": {
+              "data-repo": "xaoxuu/xaoxuu.com"
+            }
           }
-        },
-        {
-          "path": "presentation.comments.artalk",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:post",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
-        },
-        {
-          "path": "presentation.comments.beaudar",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:post",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
         },
         {
           "path": "presentation.comments.enabled",
@@ -2370,7 +2251,24 @@
           "example": true
         },
         {
-          "path": "presentation.comments.giscus",
+          "path": "presentation.comments.id",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:post",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "post-hello"
+        },
+        {
+          "path": "presentation.comments.options",
           "type": [
             "object"
           ],
@@ -2390,26 +2288,10 @@
           "open": true
         },
         {
-          "path": "presentation.comments.id",
+          "path": "presentation.comments.provider",
           "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:post",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "post-hello"
-        },
-        {
-          "path": "presentation.comments.service",
-          "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -2446,60 +2328,6 @@
             "Reference generator"
           ],
           "example": "参与讨论"
-        },
-        {
-          "path": "presentation.comments.twikoo",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:post",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
-        },
-        {
-          "path": "presentation.comments.utterances",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:post",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
-        },
-        {
-          "path": "presentation.comments.waline",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:post",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
         },
         {
           "path": "presentation.footer",
@@ -2901,7 +2729,7 @@
           ]
         },
         {
-          "path": "presentation.sidebar.left.wiki_home",
+          "path": "presentation.sidebar.left.wikiHome",
           "type": [
             "boolean"
           ],
@@ -2984,7 +2812,7 @@
             "kind": "derived",
             "from": [
               "profile.route",
-              "collection.routing"
+              "collection.route"
             ]
           },
           "scope": "CollectionModel:post",
@@ -3005,8 +2833,8 @@
           "default": {
             "kind": "derived",
             "from": [
-              "profile.base_dir",
-              "collection.routing.base_dir"
+              "profile.path",
+              "collection.route.path"
             ]
           },
           "scope": "CollectionModel:post",
@@ -3615,7 +3443,7 @@
           }
         },
         {
-          "path": "presentation.article.ai_label",
+          "path": "presentation.article.aiLabel",
           "type": [
             "string",
             "object"
@@ -3625,7 +3453,7 @@
             "kind": "inherited",
             "from": [
               "hexo.stellar.config.content.article.aiLabel",
-              "page.article.ai_label"
+              "page.article.aiLabel"
             ]
           },
           "scope": "CollectionModel:topic",
@@ -3769,44 +3597,11 @@
           ],
           "example": {
             "enabled": true,
-            "service": "giscus"
+            "provider": "giscus",
+            "options": {
+              "data-repo": "xaoxuu/xaoxuu.com"
+            }
           }
-        },
-        {
-          "path": "presentation.comments.artalk",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:topic",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
-        },
-        {
-          "path": "presentation.comments.beaudar",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:topic",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
         },
         {
           "path": "presentation.comments.enabled",
@@ -3829,7 +3624,24 @@
           "example": true
         },
         {
-          "path": "presentation.comments.giscus",
+          "path": "presentation.comments.id",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:topic",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "post-hello"
+        },
+        {
+          "path": "presentation.comments.options",
           "type": [
             "object"
           ],
@@ -3849,26 +3661,10 @@
           "open": true
         },
         {
-          "path": "presentation.comments.id",
+          "path": "presentation.comments.provider",
           "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:topic",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "post-hello"
-        },
-        {
-          "path": "presentation.comments.service",
-          "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -3905,60 +3701,6 @@
             "Reference generator"
           ],
           "example": "参与讨论"
-        },
-        {
-          "path": "presentation.comments.twikoo",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:topic",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
-        },
-        {
-          "path": "presentation.comments.utterances",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:topic",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
-        },
-        {
-          "path": "presentation.comments.waline",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:topic",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
         },
         {
           "path": "presentation.footer",
@@ -4211,11 +3953,11 @@
             "Reference generator"
           ],
           "example": {
-            "pause_when_hidden": true
+            "pauseWhenHidden": true
           }
         },
         {
-          "path": "presentation.hero.background.effect.runtime.pause_when_hidden",
+          "path": "presentation.hero.background.effect.runtime.pauseWhenHidden",
           "type": [
             "boolean"
           ],
@@ -4231,7 +3973,7 @@
           "example": true
         },
         {
-          "path": "presentation.hero.background.effect.runtime.respect_reduced_motion",
+          "path": "presentation.hero.background.effect.runtime.respectReducedMotion",
           "type": [
             "boolean"
           ],
@@ -4727,7 +4469,7 @@
           ]
         },
         {
-          "path": "presentation.sidebar.left.wiki_home",
+          "path": "presentation.sidebar.left.wikiHome",
           "type": [
             "boolean"
           ],
@@ -4810,7 +4552,7 @@
             "kind": "derived",
             "from": [
               "profile.route",
-              "collection.routing"
+              "collection.route"
             ]
           },
           "scope": "CollectionModel:topic",
@@ -4831,8 +4573,8 @@
           "default": {
             "kind": "derived",
             "from": [
-              "profile.base_dir",
-              "collection.routing.base_dir"
+              "profile.path",
+              "collection.route.path"
             ]
           },
           "scope": "CollectionModel:topic",
@@ -4851,7 +4593,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "collection.routing.path"
+              "collection.route.path"
             ]
           },
           "scope": "CollectionModel:topic",
@@ -5523,7 +5265,7 @@
           }
         },
         {
-          "path": "presentation.article.ai_label",
+          "path": "presentation.article.aiLabel",
           "type": [
             "string",
             "object"
@@ -5533,7 +5275,7 @@
             "kind": "inherited",
             "from": [
               "hexo.stellar.config.content.article.aiLabel",
-              "page.article.ai_label"
+              "page.article.aiLabel"
             ]
           },
           "scope": "CollectionModel:wiki",
@@ -5677,44 +5419,11 @@
           ],
           "example": {
             "enabled": true,
-            "service": "giscus"
+            "provider": "giscus",
+            "options": {
+              "data-repo": "xaoxuu/xaoxuu.com"
+            }
           }
-        },
-        {
-          "path": "presentation.comments.artalk",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:wiki",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
-        },
-        {
-          "path": "presentation.comments.beaudar",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:wiki",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
         },
         {
           "path": "presentation.comments.enabled",
@@ -5737,7 +5446,24 @@
           "example": true
         },
         {
-          "path": "presentation.comments.giscus",
+          "path": "presentation.comments.id",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:wiki",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "post-hello"
+        },
+        {
+          "path": "presentation.comments.options",
           "type": [
             "object"
           ],
@@ -5757,26 +5483,10 @@
           "open": true
         },
         {
-          "path": "presentation.comments.id",
+          "path": "presentation.comments.provider",
           "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:wiki",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "post-hello"
-        },
-        {
-          "path": "presentation.comments.service",
-          "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -5813,60 +5523,6 @@
             "Reference generator"
           ],
           "example": "参与讨论"
-        },
-        {
-          "path": "presentation.comments.twikoo",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:wiki",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
-        },
-        {
-          "path": "presentation.comments.utterances",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:wiki",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
-        },
-        {
-          "path": "presentation.comments.waline",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:wiki",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
         },
         {
           "path": "presentation.footer",
@@ -6121,11 +5777,11 @@
             "Reference generator"
           ],
           "example": {
-            "pause_when_hidden": true
+            "pauseWhenHidden": true
           }
         },
         {
-          "path": "presentation.hero.background.effect.runtime.pause_when_hidden",
+          "path": "presentation.hero.background.effect.runtime.pauseWhenHidden",
           "type": [
             "boolean"
           ],
@@ -6141,7 +5797,7 @@
           "example": true
         },
         {
-          "path": "presentation.hero.background.effect.runtime.respect_reduced_motion",
+          "path": "presentation.hero.background.effect.runtime.respectReducedMotion",
           "type": [
             "boolean"
           ],
@@ -6638,7 +6294,7 @@
           ]
         },
         {
-          "path": "presentation.sidebar.left.wiki_home",
+          "path": "presentation.sidebar.left.wikiHome",
           "type": [
             "boolean"
           ],
@@ -6721,7 +6377,7 @@
             "kind": "derived",
             "from": [
               "profile.route",
-              "collection.routing"
+              "collection.route"
             ]
           },
           "scope": "CollectionModel:wiki",
@@ -6742,8 +6398,8 @@
           "default": {
             "kind": "derived",
             "from": [
-              "profile.base_dir",
-              "collection.routing.base_dir"
+              "profile.path",
+              "collection.route.path"
             ]
           },
           "scope": "CollectionModel:wiki",
@@ -7152,7 +6808,7 @@
           }
         },
         {
-          "path": "presentation.article.ai_label",
+          "path": "presentation.article.aiLabel",
           "type": [
             "string",
             "object"
@@ -7162,7 +6818,7 @@
             "kind": "inherited",
             "from": [
               "hexo.stellar.config.content.article.aiLabel",
-              "page.article.ai_label"
+              "page.article.aiLabel"
             ]
           },
           "scope": "ContentItemModel",
@@ -7397,42 +7053,11 @@
           ],
           "example": {
             "enabled": true,
-            "service": "giscus"
+            "provider": "giscus",
+            "options": {
+              "data-repo": "xaoxuu/xaoxuu.com"
+            }
           }
-        },
-        {
-          "path": "presentation.comments.artalk",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "ContentItemModel",
-          "consumers": [
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
-        },
-        {
-          "path": "presentation.comments.beaudar",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "ContentItemModel",
-          "consumers": [
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
         },
         {
           "path": "presentation.comments.enabled",
@@ -7454,7 +7079,23 @@
           "example": true
         },
         {
-          "path": "presentation.comments.giscus",
+          "path": "presentation.comments.id",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "ContentItemModel",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "post-hello"
+        },
+        {
+          "path": "presentation.comments.options",
           "type": [
             "object"
           ],
@@ -7473,25 +7114,10 @@
           "open": true
         },
         {
-          "path": "presentation.comments.id",
+          "path": "presentation.comments.provider",
           "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "ContentItemModel",
-          "consumers": [
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "post-hello"
-        },
-        {
-          "path": "presentation.comments.service",
-          "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -7526,57 +7152,6 @@
             "Reference generator"
           ],
           "example": "参与讨论"
-        },
-        {
-          "path": "presentation.comments.twikoo",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "ContentItemModel",
-          "consumers": [
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
-        },
-        {
-          "path": "presentation.comments.utterances",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "ContentItemModel",
-          "consumers": [
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
-        },
-        {
-          "path": "presentation.comments.waline",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "ContentItemModel",
-          "consumers": [
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {},
-          "open": true
         },
         {
           "path": "presentation.footer",
@@ -7958,7 +7533,7 @@
           ]
         },
         {
-          "path": "presentation.sidebar.left.wiki_home",
+          "path": "presentation.sidebar.left.wikiHome",
           "type": [
             "boolean"
           ],
@@ -8382,7 +7957,7 @@
           "example": {
             "document": {
               "language": "zh-CN",
-              "headInject": []
+              "headInject": ""
             },
             "layout": {
               "pageType": "content"
@@ -9166,26 +8741,26 @@
           ],
           "example": {
             "language": "zh-CN",
-            "headInject": [],
+            "headInject": "",
             "preferredTheme": "auto"
           }
         },
         {
           "path": "render.document.headInject",
           "type": [
-            "array"
+            "string"
           ],
           "required": true,
           "default": {
             "kind": "literal",
-            "value": []
+            "value": ""
           },
           "scope": "PageViewModel:post",
           "consumers": [
             "page.viewModel",
             "Reference generator"
           ],
-          "example": []
+          "example": ""
         },
         {
           "path": "render.document.language",

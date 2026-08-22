@@ -11,9 +11,8 @@ var sidebarState
 if (postViewModel) {
   sidebarState = postViewModel.item.presentation.sidebar?.left || {}
 } else {
-  page.sidebar ||= {}
-  page.sidebar.left ||= {}
-  if (page.sidebar.left.widgets == null) {
+  sidebarState = Object.assign({}, content_config(page).sidebar?.left || {})
+  if (sidebarState.widgets == null) {
     var profiles = stellar_config('layout.profiles')
     var sidebar
     if (is_home()) {
@@ -26,7 +25,7 @@ if (postViewModel) {
       sidebar = notebook ? notebook.sidebar?.left?.widgets : profiles.noteIndex.sidebar.left.widgets
     } else if (notebook) {
       // 笔记本文章内页
-      sidebar = notebook.note?.sidebar?.left?.widgets || profiles.note.sidebar.left.widgets
+      sidebar = notebook.noteDefaults?.sidebar?.left?.widgets || profiles.note.sidebar.left.widgets
     } else if (is_category() || is_tag() || is_archive() || ['categories', 'tags', 'archives'].includes(page.layout)) {
       sidebar = profiles.blogIndex.sidebar.left.widgets
     } else if (page.layout === 'index_topic') {
@@ -56,9 +55,8 @@ if (postViewModel) {
       sidebar = wiki.sidebar.left.widgets
     }
 
-    page.sidebar.left.widgets = sidebar
+    sidebarState.widgets = sidebar
   }
-  sidebarState = page.sidebar.left
 }
 
 

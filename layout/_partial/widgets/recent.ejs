@@ -7,7 +7,7 @@ function layoutDiv() {
     action += '</a>'
   }
   var arr = []
-  if (page.navigation?.menu == 'wiki') {
+  if (content_config(page).navigation?.menu == 'wiki') {
     arr = theme.wiki.all_pages.filter(function(p) {
       if (p.collectionId) {
         var proj = theme.wiki.tree[p.collectionId]

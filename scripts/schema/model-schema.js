@@ -178,7 +178,7 @@ function sidebarSchema(factory) {
       }),
       menu: field("boolean", { example: true }),
       brand: brandSchema(factory),
-      wiki_home: field("boolean", { example: true })
+      wikiHome: field("boolean", { example: true })
     }, { example: { widgets: ["recent"] } }),
     right: object({
       widgets: array(widget, { example: ["toc"] })
@@ -230,9 +230,9 @@ function heroSchema(factory, options = {}) {
           additionalProperties: true
         }),
         runtime: object({
-          pause_when_hidden: field("boolean", { example: true }),
-          respect_reduced_motion: field("boolean", { example: true })
-        }, { example: { pause_when_hidden: true } })
+          pauseWhenHidden: field("boolean", { example: true }),
+          respectReducedMotion: field("boolean", { example: true })
+        }, { example: { pauseWhenHidden: true } })
       }, { example: { type: "galaxy", options: { starSpeed: 0.5 } } })
     }, {
       example: { image: "/hero.webp" },
@@ -258,8 +258,8 @@ function articleSchema(factory) {
     type: field("string", { default: inherited("hexo.stellar.config.content.article.type"), example: "tech" }),
     indent: field("boolean", { default: inherited("hexo.stellar.config.content.article.indent"), example: false }),
     author: field("string", { example: "xaoxuu" }),
-    ai_label: field(["string", "object"], {
-      default: inherited("hexo.stellar.config.content.article.aiLabel", "page.article.ai_label"),
+    aiLabel: field(["string", "object"], {
+      default: inherited("hexo.stellar.config.content.article.aiLabel", "page.article.aiLabel"),
       example: "reviewed",
       additionalProperties: true
     })
@@ -291,17 +291,12 @@ function commentsSchema(factory) {
     enabled: field("boolean", { default: inherited("theme.comments.enabled"), example: true }),
     title: field("string", { default: derived("theme.comments.title", "theme.comments.comment_title"), example: "参与讨论" }),
     id: field("string", { example: "post-hello" }),
-    service: field("string", { default: inherited("theme.comments.service"), example: "giscus" })
+    provider: field(["string", "null"], { default: inherited("theme.comments.service"), example: "giscus" }),
+    options: field("object", { example: { "data-repo": "xaoxuu/xaoxuu.com" }, additionalProperties: true })
   };
-  for (const service of ["beaudar", "utterances", "giscus", "twikoo", "waline", "artalk"]) {
-    properties[service] = field("object", {
-      example: service === "giscus" ? { "data-repo": "xaoxuu/xaoxuu.com" } : {},
-      additionalProperties: true
-    });
-  }
   return object(properties, {
     default: inherited("theme.comments", "collection.comments", "page.comments"),
-    example: { enabled: true, service: "giscus" }
+    example: { enabled: true, provider: "giscus", options: { "data-repo": "xaoxuu/xaoxuu.com" } }
   });
 }
 
@@ -344,13 +339,13 @@ function collectionSchema(profile) {
   };
 
   const routeProperties = {
-    baseDir: field("string", { default: derived("profile.base_dir", "collection.routing.base_dir"), example: profile === "post" ? "blog" : `${profile}/example`, required: true })
+    baseDir: field("string", { default: derived("profile.path", "collection.route.path"), example: profile === "post" ? "blog" : `${profile}/example`, required: true })
   };
   if (profile === "wiki") {
     routeProperties.homepage = field("string", { default: literal(""), example: "wiki/stellar", required: true });
   }
   if (profile === "topic") {
-    routeProperties.path = field("string", { default: derived("collection.routing.path"), example: "topic/stellar-v2", required: true });
+    routeProperties.path = field("string", { default: derived("collection.route.path"), example: "topic/stellar-v2", required: true });
     routeProperties.start = field("string", { default: literal(""), example: "topic/stellar-v2/start", required: true });
   }
 
@@ -423,7 +418,7 @@ function collectionSchema(profile) {
       ? brandSchema(factory, { requiredName: true, requiredTagline: true })
       : identitySchema(factory)),
     source: sourceSchema(cascadeFactory, { required: true }),
-    route: object(routeProperties, { default: derived("profile.route", "collection.routing"), example: { baseDir: profile === "post" ? "blog" : `${profile}/stellar` }, required: true }),
+    route: object(routeProperties, { default: derived("profile.route", "collection.route"), example: { baseDir: profile === "post" ? "blog" : `${profile}/stellar` }, required: true }),
     navigation: navigationSchema(cascadeFactory, navigationExtension),
     listing: object(listingProperties, { default: inherited("profile.listing", "collection.listing"), example: {}, required: true }),
     presentation: presentationSchema(factory, {
@@ -562,9 +557,9 @@ function pageViewModelSchema(profile) {
     properties.render = object({
       document: object({
         language: field("string", { default: derived("page.lang", "page.language", "site.language"), example: "zh-CN", required: true }),
-        headInject: array(stringItem, { default: literal([]), example: [], required: true }),
+        headInject: field("string", { default: literal(""), example: "", required: true }),
         preferredTheme: field("string", { default: derived("theme.style.prefers_theme"), example: "auto", required: true })
-      }, { required: true, example: { language: "zh-CN", headInject: [], preferredTheme: "auto" } }),
+      }, { required: true, example: { language: "zh-CN", headInject: "", preferredTheme: "auto" } }),
       layout: object({
         pageType: field("string", { default: literal("content"), example: "content", required: true }),
         articleType: field(["string", "null"], { default: inherited("item.presentation.article.type"), example: "tech", required: true }),
@@ -629,7 +624,7 @@ function pageViewModelSchema(profile) {
       }, { required: true, example: { href: "blog/hello", title: "Hello Stellar", layout: "post", date: null, cover: "", caption: "", excerpt: "", categories: [], categoryStyle: "", tags: [], authorId: "", priority: 0, listed: true, cardStyle: "classic" } })
     }, {
       default: computed("由 Post PageViewModel 构建器生成"),
-      example: { document: { language: "zh-CN", headInject: [] }, layout: { pageType: "content" }, seo: { title: "Hello Stellar - Stellar" } },
+      example: { document: { language: "zh-CN", headInject: "" }, layout: { pageType: "content" }, seo: { title: "Hello Stellar - Stellar" } },
       required: true
     });
   }

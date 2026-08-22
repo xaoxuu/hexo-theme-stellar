@@ -1,6 +1,8 @@
 <%
 function layoutDiv() {
-  var currentMenu = typeof activeMenu !== 'undefined' ? activeMenu : page.navigation?.menu
+  var currentMenu = typeof activeMenu !== 'undefined'
+    ? activeMenu
+    : content_config(page).navigation?.menu ?? page.navigation?.menu
   var entries = []
   for (var menuItem of stellar_config('site.menu.items')) {
     if (menuItem == null || menuItem.id == null || menuItem.url == null || menuItem.title == null) {

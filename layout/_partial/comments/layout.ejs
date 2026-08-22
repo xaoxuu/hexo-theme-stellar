@@ -7,16 +7,16 @@ if (explicitComments) {
 } else {
   const proj = theme.wiki.tree[collection_id(page, "wiki")]
   const projectComments = proj?.comments || {}
-  const pageComments = page.comments || {}
+  const pageComments = content_config(page).comments || page.comments || {}
   const settings = Object.assign({}, projectComments, pageComments)
-  const service = settings.service || theme.comments.service || ''
+  const service = settings.provider || theme.comments.service || ''
   commentModel = {
     enabled: settings.enabled !== false && service.length > 0,
     title: settings.title || theme.comments.comment_title || '',
     id: settings.id || '',
     service: service,
     options: service
-      ? Object.assign({}, theme.comments[service], projectComments[service], pageComments[service])
+      ? Object.assign({}, theme.comments[service], projectComments.options, pageComments.options)
       : {},
     pageTitle: page.title || ''
   }
