@@ -8,7 +8,7 @@ date: 2026-08-22
 ## Alpha 1：模型与 Reference 接缝
 
 1. [x] 用 post profile 贯通 Schema、CollectionModel、ContentItemModel 与冻结的 PageViewModel（[#695](https://github.com/xaoxuu/hexo-theme-stellar/issues/695)）。
-2. [ ] 让 wiki profile 生成同构 ViewModel；依赖步骤 1（[#698](https://github.com/xaoxuu/hexo-theme-stellar/issues/698)）。
+2. [x] 让 wiki profile 生成同构 ViewModel；依赖步骤 1（[#698](https://github.com/xaoxuu/hexo-theme-stellar/issues/698)）。
 3. [ ] 让 topic profile 生成同构 ViewModel；依赖步骤 1，可与步骤 2、4 并行（[#697](https://github.com/xaoxuu/hexo-theme-stellar/issues/697)）。
 4. [x] 让 notebook profile 生成同构 ViewModel；依赖步骤 1，可与步骤 2、3 并行（[#696](https://github.com/xaoxuu/hexo-theme-stellar/issues/696)）。
 5. [ ] 从四类已交付 Schema 生成第一批公共 Reference 元数据；依赖步骤 1–4（[#699](https://github.com/xaoxuu/hexo-theme-stellar/issues/699)）。

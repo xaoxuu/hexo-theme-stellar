@@ -5,16 +5,68 @@
  * 保持 ctx.theme.config.wiki 输出结构与旧实现一致。
  */
 
-'use strict';
+"use strict";
 
-const { buildWikiTree } = require('../../lib/doc_tree');
+const { getCollectionId } = require("../../lib/content-config");
+const { buildWikiTree } = require("../../lib/doc_tree");
+const { buildWikiPageViewModel } = require("../../lib/models");
+const {
+  readFrontMatter,
+  sourcePathForData,
+  sourcePathForPage
+} = require("../../lib/source-config");
+
+function cloneConfig(value) {
+  return value == null ? value : structuredClone(value);
+}
+
+function eachPage(pages, callback) {
+  if (typeof pages.each === "function") {
+    pages.each(callback);
+    return;
+  }
+  pages.forEach(callback);
+}
 
 module.exports = ctx => {
+  const data = ctx.locals.get("data");
+  const pages = ctx.locals.get("pages");
+  const collectionConfigs = new Map();
+  for (const [key, value] of Object.entries(data)) {
+    if (key.startsWith("wiki/") && key.length > 5) {
+      collectionConfigs.set(key.slice(5), cloneConfig(value));
+    }
+  }
+
   const wiki = buildWikiTree({
-    data: ctx.locals.get('data'),
-    pages: ctx.locals.get('pages'),
-    shelf: ctx.locals.get('data').wiki || [],
+    data,
+    pages,
+    shelf: data.wiki || [],
     siteTree: ctx.theme.config.site_tree
   });
   ctx.theme.config.wiki = wiki;
+
+  const themeConfig = ctx.theme.config;
+  const themeSource = ctx.config.theme_config
+    ? "_config.stellar.yml"
+    : "themes/stellar/_config.yml";
+  eachPage(pages, page => {
+    const collectionId = getCollectionId(page, "wiki");
+    if (collectionId == null) return;
+    const config = readFrontMatter(ctx, page);
+    if (config == null) return;
+    page.viewModel = buildWikiPageViewModel({
+      source: sourcePathForPage(page),
+      themeSource,
+      collectionSource: sourcePathForData(`wiki/${collectionId}`),
+      siteConfig: ctx.config,
+      themeConfig,
+      collectionId,
+      collectionConfig: collectionConfigs.get(collectionId),
+      collectionState: wiki.tree[collectionId],
+      collectionListed: wiki.shelf.includes(collectionId),
+      frontMatter: config,
+      page
+    });
+  });
 };

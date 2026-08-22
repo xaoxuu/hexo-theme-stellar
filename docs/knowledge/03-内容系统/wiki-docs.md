@@ -24,6 +24,9 @@ tags:
 - [_config.yml](../../../_config.yml)
 - [package.json](../../../package.json)
 - [scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)
+- [scripts/lib/doc_tree.js](../../../scripts/lib/doc_tree.js)
+- [scripts/lib/models/index.js](../../../scripts/lib/models/index.js)
+- [scripts/lib/source-config.js](../../../scripts/lib/source-config.js)
 - [layout/page.ejs](../../../layout/page.ejs)
 - [source/js/main.js](../../../source/js/main.js)
 - [source/js/plugins/galaxy.js](../../../source/js/plugins/galaxy.js)
@@ -38,7 +41,7 @@ wiki 侧边栏渲染见[侧边栏系统](../02-布局系统/sidebar-system.md)�
 
 ## 架构概览
 
-wiki 系统有两个阶段：**构建期数据处理阶段**（Node.js 服务端）与**渲染期模板阶段**（EJS）。数据处理阶段每次构建运行一次，组装一个结构化的 `wiki` 对象（挂载为 `theme.wiki`）。模板在渲染期读取该对象。
+wiki 系统有两个阶段：**构建期数据处理阶段**（Node.js 服务端）与**渲染期模板阶段**（EJS）。数据处理阶段每次构建运行一次，组装结构化的 `wiki` 对象（挂载为 `theme.wiki`），并为严格 v2 Wiki 页面生成冻结 `page.viewModel`。当前 EJS 仍读取 `theme.wiki` 与原页面数据，ViewModel 的布局接入属于后续阶段。
 
 wiki 系统由 `_config.yml` 的两个小节配置：
 
@@ -50,7 +53,7 @@ wiki 系统由 `_config.yml` 的两个小节配置：
 ```mermaid
 flowchart TD
     A["_data/wiki/*.yml"] --> B["getWikiObject(ctx)"]
-    C["Hexo pages\nwiki: project-id"] --> D["WikiPage[]"]
+    C["Hexo pages\ncollection.type/id"] --> D["WikiPage[]"]
     B --> E["wiki.tree{}"]
     D --> F["doc_tree.js\nmodule.exports"]
     E --> F
@@ -60,11 +63,12 @@ flowchart TD
     F --> J["wiki.all_tags{}"]
     F --> K["wiki.tree[id].relatedItems[]"]
     F --> L["theme.wiki"]
+    F --> V["frozen page.viewModel"]
     L --> M["layout.ejs\npage.ejs"]
     
     subgraph "_config.yml"
-        N["site_tree.index_wiki\nbase_dir, menu_id,\nleftbar, rightbar"]
-        O["site_tree.wiki\nmenu_id, leftbar,\nrightbar"]
+        N["site_tree.index_wiki\nbase_dir, navigation, sidebar"]
+        O["site_tree.wiki\nnavigation, sidebar"]
     end
     
     N -.configures.-> M
@@ -79,12 +83,12 @@ flowchart TD
 
 ### `WikiPage`
 
-定义于 [scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)。每个带 `wiki` front-matter 字段的 Hexo 页面被包装为 `WikiPage` 实例。
+定义于 [scripts/lib/doc_tree.js](../../../scripts/lib/doc_tree.js)。每个显式声明 `collection.type: wiki` 和 `collection.id` 的 Hexo 页面被包装为 `WikiPage` 实例。
 
 | 字段 | 来源 | 说明 |
 |---|---|---|
 | `id` | `page._id` | Hexo 内部页面 ID |
-| `wiki` | `page.wiki` | 页面所属 wiki 项目 ID |
+| `collectionId` | `page.collection.id` | 页面所属 Wiki 项目 ID |
 | `title` | `page.title` | 页面标题 |
 | `path` | `page.path` | URL 路径（如 `docs/intro.html`） |
 | `path_key` | `page.path` 去掉 `.html` | 用于树匹配（如 `docs/intro`） |
@@ -100,13 +104,13 @@ flowchart TD
 | 字段 | 来源 | 说明 |
 |---|---|---|
 | `id` | 由文件名派生 | `wiki.tree` 中的键 |
-| `title` | 数据文件 | 显示标题 |
 | `name` | 数据文件 | 短名 |
+| `headline` | 数据文件 | 主标题，缺失时在构建期使用 `name` |
 | `tags` | 数据文件 | 标签名字符串或数组；规范化为数组 |
 | `tree` | 数据文件 | 导航树（见下文） |
-| `base_dir` | 数据文件 | 页面键匹配的路径前缀 |
-| `sort` | 数据文件 | 排序；默认 `0` |
-| `pin` | 数据文件 | 置顶轮播排序值（可选，设置即置顶，数值降序，`true` 视作 1，0/负数同样参与） |
+| `routing.base_dir` | 数据文件 | 页面键匹配的路径前缀 |
+| `listing.sort` | 数据文件 | 普通项目排序，默认 `0` |
+| `listing.priority` | 数据文件 | 置顶优先级 |
 | `homepage` | 数据文件或流水线 | 指定首页 `WikiPage` |
 | `sections` | 流水线 | 由 `tree` 构建的有序 `Section[]` |
 | `pages` | 流水线 | 属于该项目的全部 `WikiPage[]` |
@@ -149,6 +153,18 @@ flowchart TD
 ```
 
 **参考源码**：[scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)
+
+### Wiki `PageViewModel`
+
+`scripts/events/lib/doc_tree.js` 在树形导航解析完成后调用 `buildWikiPageViewModel()`。输出顶层与 Post reference slice 一致，只包含 `collection` 和 `item`：
+
+- `collection` 固定包含 `id`、`profile`、`identity`、`source`、`route`、`navigation`、`listing`、`presentation`、`visibility`。
+- `navigation.tree` 是 `sections` 的普通对象投影，不保留 `WikiPage` 实例；路径、页码与首页标记已规范化。
+- `item` 已完成项目源码继承以及页面级导航、列表、展示和可见性覆盖；项目 `hero.background.image` 已解析为页面 Banner 图片默认值。
+- collection 的 `visibility.listed` 反映 shelf 状态；页面 `item.visibility` 独立从默认可列出、可搜索起算。
+- 整个输出深度冻结且仅含普通对象/数组，不保留 Hexo Document、Query、Moment 或输入配置引用。
+
+本阶段只建立构建期接缝，EJS 仍未改为消费 `page.viewModel`。
 
 ---
 
@@ -242,16 +258,18 @@ Wiki Hero 完成后直接进入正文布局，不额外输出分隔线；正文�
 
 ### 页面级 Front-Matter
 
-单个 wiki 页面通过 `wiki` front-matter 字段指定所属项目：
+单个 Wiki 页面通过严格 v2 `collection` front-matter 指定所属项目：
 
 ```yaml
 ---
-wiki: project-id
 title: Page Title
+collection:
+  type: wiki
+  id: project-id
 ---
 ```
 
-`wiki` 字段值必须匹配 `_data/wiki/` 中的项目 `id`。页面随后被过滤并包装为 `WikiPage` 实例。
+`collection.type` 必须为 `wiki`，`collection.id` 必须匹配 `_data/wiki/` 中的项目 id。v1 `wiki` 字段、缺失项目或不匹配 id 会在构建期报出带来源的错误，不会从路径或布局推断归属。
 
 **参考源码**：[scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)、[_config.yml](../../../_config.yml)
 
@@ -273,7 +291,7 @@ sequenceDiagram
     H->>G: "ctx.locals.get('data')"
     G-->>P: "wiki.tree (raw project index)"
     H->>P: "ctx.locals.get('pages')"
-    P->>P: "filter pages with wiki != null → WikiPage[]"
+    P->>P: "filter strict collection.type/id → WikiPage[]"
     P->>P: "collect all tag names from wiki.tree"
     P->>P: "normalize title/name for each project"
     P->>P: "for each project: resolve homepage"

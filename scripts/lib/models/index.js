@@ -9,7 +9,8 @@ const {
   validateNotebookProfileConfig,
   validatePageConfig,
   validatePostProfileConfig,
-  validateThemeConfig
+  validateThemeConfig,
+  validateWikiProfileConfig
 } = require("../content-config");
 const { normalize_path: normalizePath } = require("../path_utils");
 
@@ -184,12 +185,89 @@ function normalizeCollectionIdentity(config) {
   };
 }
 
+function normalizeWikiTree(sections) {
+  if (!Array.isArray(sections)) return [];
+  return sections.map(section => ({
+    title: typeof section?.title === "string" ? section.title : "",
+    items: Array.isArray(section?.pages) ? section.pages.map(page => ({
+      id: String(page?._id || page?.id || page?.path || ""),
+      title: String(page?.title || ""),
+      path: typeof page?.path === "string" ? normalizeCollectionPath(page.path) : "",
+      pageNumber: Number.isFinite(page?.page_number) ? page.page_number : null,
+      isHomepage: page?.is_homepage === true
+    })) : []
+  }));
+}
+
 function normalizeCollectionComments(comments) {
   const normalized = pick(comments, CONTENT_MODEL_FIELDS.comments);
   if (normalized.title == null && typeof comments?.comment_title === "string") {
     normalized.title = comments.comment_title;
   }
   return normalized;
+}
+
+function buildWikiCollectionModel(input, collectionId) {
+  const themeConfig = input.themeConfig;
+  const collectionConfig = input.collectionConfig;
+  const collectionState = isPlainObject(input.collectionState) ? input.collectionState : {};
+  const siteTree = isPlainObject(themeConfig.site_tree) ? themeConfig.site_tree : {};
+  const wikiProfile = isPlainObject(siteTree.wiki) ? siteTree.wiki : {};
+  const indexWiki = isPlainObject(siteTree.index_wiki) ? siteTree.index_wiki : {};
+  const article = isPlainObject(themeConfig.article) ? themeConfig.article : {};
+  const collectionRouting = isPlainObject(collectionConfig.routing) ? collectionConfig.routing : {};
+  const collectionListing = isPlainObject(collectionConfig.listing) ? collectionConfig.listing : {};
+  const baseDir = collectionRouting.base_dir || `${indexWiki.base_dir || "wiki"}/${collectionId}`;
+
+  const profileNavigation = pick(wikiProfile.navigation, CONTENT_MODEL_FIELDS.navigation);
+  const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
+  const profileSidebar = pick(wikiProfile.sidebar, CONTENT_MODEL_FIELDS.sidebar);
+  const collectionSidebar = pick(collectionConfig.sidebar, CONTENT_MODEL_FIELDS.sidebar);
+  const globalArticle = pick(article, CONTENT_MODEL_FIELDS.article);
+  const globalFooter = {
+    references: [],
+    license: article.license ?? null,
+    share: article.share ?? null
+  };
+
+  return {
+    id: collectionId,
+    profile: "wiki",
+    identity: normalizeCollectionIdentity(collectionConfig),
+    source: pick(collectionConfig.source, CONTENT_MODEL_FIELDS.source),
+    route: {
+      baseDir: normalizeCollectionPath(baseDir),
+      homepage: typeof collectionState.homepage?.path === "string"
+        ? normalizeCollectionPath(collectionState.homepage.path)
+        : ""
+    },
+    navigation: {
+      ...mergeConfig(profileNavigation, collectionNavigation),
+      tree: normalizeWikiTree(collectionState.sections)
+    },
+    listing: {
+      priority: collectionListing.priority ?? 0,
+      sort: collectionListing.sort ?? 0,
+      excerptLength: collectionListing.excerpt_length ?? null,
+      perPage: collectionListing.per_page ?? null,
+      orderBy: collectionListing.order_by ?? null
+    },
+    presentation: {
+      card: pick(collectionConfig.card, CONTENT_MODEL_FIELDS.card),
+      hero: cloneValue(collectionConfig.hero || {}),
+      sidebar: mergeConfig(profileSidebar, collectionSidebar, "sidebar"),
+      article: mergeConfig(globalArticle, pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)),
+      footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),
+      comments: mergeConfig(
+        normalizeCollectionComments(themeConfig.comments),
+        pick(collectionConfig.comments, CONTENT_MODEL_FIELDS.comments)
+      )
+    },
+    visibility: {
+      listed: input.collectionListed !== false,
+      searchable: true
+    }
+  };
 }
 
 function notebookBaseDir(collectionId, collectionConfig, themeConfig) {
@@ -297,6 +375,51 @@ function buildPostPageViewModel(input) {
   return deepFreeze({ collection, item });
 }
 
+function buildWikiPageViewModel(input) {
+  const source = input.source || "<page>";
+  const themeSource = input.themeSource || "<theme>";
+  const collectionSource = input.collectionSource || "<collection>";
+  const themeConfig = isPlainObject(input.themeConfig) ? input.themeConfig : {};
+  const frontMatter = isPlainObject(input.frontMatter) ? input.frontMatter : {};
+  const page = input.page || {};
+
+  if (!isPlainObject(input.collectionConfig)) {
+    const collectionId = input.collectionId || frontMatter.collection?.id || "<unknown>";
+    throw new ContentConfigError([
+      `${source}: collection.id ${collectionId} 未找到 Wiki 项目配置 ${collectionSource}`
+    ]);
+  }
+  const collectionConfig = input.collectionConfig;
+
+  validateThemeConfig(themeConfig, themeSource);
+  validatePostProfileConfig(themeConfig, themeSource);
+  validateWikiProfileConfig(themeConfig, themeSource);
+  validateCollectionConfig(collectionConfig, collectionSource);
+  validatePageConfig(frontMatter, source);
+
+  const collectionId = input.collectionId || frontMatter.collection?.id;
+  if (frontMatter.collection?.type !== "wiki") {
+    throw new ContentConfigError([`${source}: collection.type 必须是 wiki`]);
+  }
+  if (collectionId !== frontMatter.collection.id) {
+    throw new ContentConfigError([
+      `${source}: collection.id ${frontMatter.collection.id} 与 Wiki 项目 ${collectionId} 不匹配`
+    ]);
+  }
+
+  const collection = buildWikiCollectionModel({ ...input, themeConfig, collectionConfig }, collectionId);
+  const item = buildContentItemModel(page, frontMatter, collection, source, {
+    source: collection.source,
+    visibility: { listed: true, searchable: true }
+  });
+  const heroImage = collection.presentation.hero?.background?.image;
+  item.presentation.banner = mergeConfig(
+    typeof heroImage === "string" ? { image: heroImage } : {},
+    item.presentation.banner
+  );
+  return deepFreeze({ collection, item });
+}
+
 function buildNotebookPageViewModel(input) {
   const source = input.source || "<page>";
   const themeSource = input.themeSource || "<theme>";
@@ -343,5 +466,6 @@ function buildNotebookPageViewModel(input) {
 
 module.exports = {
   buildNotebookPageViewModel,
-  buildPostPageViewModel
+  buildPostPageViewModel,
+  buildWikiPageViewModel
 };

@@ -93,9 +93,20 @@ Galaxy 的路径为 `hero.background.effect.options`，字段白名单在 `scrip
 - `collection` 是 Post profile 的 `CollectionModel`，顶层固定为 `id`、`profile`、`identity`、`source`、`route`、`navigation`、`listing`、`presentation`、`visibility`。
 - `item` 是 `ContentItemModel`，日期转为 ISO 字符串，标签与分类转为字符串数组，路径完成规范化；导航、列表、展示和可见性已经完成级联。
 - 级联顺序为页面 Front Matter、Post profile、主题全局配置；`false`、`0` 与空字符串是有效覆盖值。Brand 图片继续按原子对象替换，不继承上级图片子字段。
-- Notebook profile 已接入同一模型接缝；Topic、Wiki 的同构模型以及 EJS 对 `page.viewModel` 的消费属于后续切片，本阶段不会提前接管布局。
+- 各 Collection profile 按独立切片接入同一模型接缝；EJS 对 `page.viewModel` 的消费属于后续阶段，本阶段不会提前接管布局。
 
-纯构建入口位于 `scripts/lib/models/index.js`，Post 与 Note 的生成期挂载位于 `scripts/events/lib/content-config.js`。
+纯构建入口位于 `scripts/lib/models/index.js`。Post 与 Note 在 `scripts/events/lib/content-config.js` 挂载；Wiki 页面在 `doc_tree` 完成树形解析后由 `scripts/events/lib/doc_tree.js` 挂载。
+
+### Wiki 与 Wiki 页面
+
+严格 `collection.type: wiki` 页面在 Wiki 树构建完成后生成同构 `page.viewModel`：
+
+- `collection` 保留 Wiki 的名称、主标题、副标题、长描述、受众与身份图标，以及项目源码仓库、规范化 `route.baseDir/homepage`、列表与 shelf 可见性。
+- `navigation.tree` 从 `doc_tree.sections` 投影为冻结的普通分组与页面节点，包含 id、标题、规范化路径、页码和首页标记，不保留 `WikiPage` 实例。
+- `item` 在构建期完成页面导航、列表、展示、源码与可见性级联；页面源码可以逐字段覆盖 Wiki 源码，项目 `hero.background.image` 作为页面 Banner 图片默认值并可被页面显式覆盖。
+- shelf 只表示 Wiki collection 的聚合可见性，不会隐式隐藏项目内页面；页面继续由自身 `visibility.listed/searchable` 决定。
+- 页面必须显式声明严格 v2 `collection.type` 与 `collection.id`，id 必须能解析到 `_data/wiki/` 项目；不从布局、路径或 v1 `wiki` 字段推断归属。
+- 本切片只挂载模型，不改变现有 Wiki EJS 消费链。
 
 ### Notebook 与 Note
 

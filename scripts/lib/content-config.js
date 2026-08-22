@@ -83,6 +83,11 @@ const POST_PROFILE_FIELDS = Object.freeze({
   post: Object.freeze(["navigation", "sidebar"])
 });
 
+const WIKI_PROFILE_FIELDS = Object.freeze({
+  indexWiki: Object.freeze(["base_dir", "navigation", "sidebar"]),
+  wiki: Object.freeze(["navigation", "sidebar"])
+});
+
 const NOTEBOOK_PROFILE_FIELDS = Object.freeze({
   notebook: Object.freeze(["listing", "tag_icons", "footer"]),
   notebookListing: Object.freeze(["excerpt_length", "per_page", "order_by"]),
@@ -177,7 +182,7 @@ function validateStringRecord(value, source, fieldPath, issues) {
   }
 }
 
-function validateIndexBlogNavigation(value, source, fieldPath, issues) {
+function validateIndexNavigation(value, source, fieldPath, issues) {
   if (!validateObject(value, source, fieldPath, issues)) return;
   validateKnownKeys(value, ["menu", "breadcrumb", "tabs"], source, fieldPath, issues);
   if (value.menu != null) validateString(value.menu, source, `${fieldPath}.menu`, issues);
@@ -516,7 +521,7 @@ function validatePostProfileConfig(config, source = "<theme>") {
         validateString(indexBlog.base_dir, source, "site_tree.index_blog.base_dir", issues);
       }
       if (indexBlog.navigation != null) {
-        validateIndexBlogNavigation(indexBlog.navigation, source, "site_tree.index_blog.navigation", issues);
+        validateIndexNavigation(indexBlog.navigation, source, "site_tree.index_blog.navigation", issues);
       }
       if (indexBlog.sidebar != null) {
         validateSidebar(indexBlog.sidebar, source, "site_tree.index_blog.sidebar", issues);
@@ -584,6 +589,33 @@ function validatePostProfileConfig(config, source = "<theme>") {
       } else if (Array.isArray(config.comments.custom_css)) {
         validateStringArray(config.comments.custom_css, source, "comments.custom_css", issues);
       }
+    }
+  }
+
+  if (issues.length > 0) throw new ContentConfigError(issues);
+  return config;
+}
+
+function validateWikiProfileConfig(config, source = "<theme>") {
+  const issues = [];
+  if (!validateObject(config, source, "root", issues)) throw new ContentConfigError(issues);
+
+  if (config.site_tree != null && validateObject(config.site_tree, source, "site_tree", issues)) {
+    const wiki = config.site_tree.wiki;
+    if (wiki != null && validateObject(wiki, source, "site_tree.wiki", issues)) {
+      validateKnownKeys(wiki, WIKI_PROFILE_FIELDS.wiki, source, "site_tree.wiki", issues);
+      if (wiki.navigation != null) validateNavigation(wiki.navigation, source, "site_tree.wiki.navigation", issues);
+      if (wiki.sidebar != null) validateSidebar(wiki.sidebar, source, "site_tree.wiki.sidebar", issues);
+    }
+
+    const indexWiki = config.site_tree.index_wiki;
+    if (indexWiki != null && validateObject(indexWiki, source, "site_tree.index_wiki", issues)) {
+      validateKnownKeys(indexWiki, WIKI_PROFILE_FIELDS.indexWiki, source, "site_tree.index_wiki", issues);
+      if (indexWiki.base_dir != null) validateString(indexWiki.base_dir, source, "site_tree.index_wiki.base_dir", issues);
+      if (indexWiki.navigation != null) {
+        validateIndexNavigation(indexWiki.navigation, source, "site_tree.index_wiki.navigation", issues);
+      }
+      if (indexWiki.sidebar != null) validateSidebar(indexWiki.sidebar, source, "site_tree.index_wiki.sidebar", issues);
     }
   }
 
@@ -725,6 +757,7 @@ module.exports = {
   LEGACY_PAGE_FIELDS,
   NOTEBOOK_PROFILE_FIELDS,
   POST_PROFILE_FIELDS,
+  WIKI_PROFILE_FIELDS,
   getCollectionId,
   isPlainObject,
   isListed,
@@ -735,5 +768,6 @@ module.exports = {
   validateNotebookProfileConfig,
   validatePageConfig,
   validatePostProfileConfig,
-  validateThemeConfig
+  validateThemeConfig,
+  validateWikiProfileConfig
 };

@@ -6,8 +6,12 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 
-const { buildPostPageViewModel } = require("../scripts/lib/models");
+const {
+  buildPostPageViewModel,
+  buildWikiPageViewModel
+} = require("../scripts/lib/models");
 const processContentConfig = require("../scripts/events/lib/content-config");
+const processWikiTree = require("../scripts/events/lib/doc_tree");
 
 function assertDeepFrozen(value) {
   if (value == null || typeof value !== "object") return;
@@ -17,6 +21,289 @@ function assertDeepFrozen(value) {
   }
   Object.values(value).forEach(assertDeepFrozen);
 }
+
+test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
+  const viewModel = buildWikiPageViewModel({
+    source: "source/wiki/stellar/index.md",
+    collectionSource: "source/_data/wiki/stellar.yml",
+    themeConfig: {
+      site_tree: {
+        index_wiki: { base_dir: "wiki" },
+        wiki: {
+          navigation: { menu: "wiki" },
+          sidebar: {
+            left: { widgets: ["tree", "related"] },
+            right: { widgets: ["toc"] }
+          }
+        }
+      },
+      article: { type: "tech", indent: false, license: "Global license", share: true },
+      comments: { service: "giscus" }
+    },
+    collectionConfig: {
+      name: "Stellar",
+      headline: "每个人的独立博客",
+      tagline: "基于 Hexo 的全能型个人知识库",
+      description: "Stellar Wiki",
+      audience: "独立博主",
+      identity: { icon: "/stellar.svg" },
+      source: { repository: "xaoxuu/hexo-theme-stellar", branch: "v2" },
+      routing: { base_dir: "/wiki/stellar/" },
+      listing: { priority: 2, sort: 10, excerpt_length: 128, per_page: 20, order_by: "updated" },
+      navigation: { breadcrumb: true },
+      card: { cover: "/cover.webp" },
+      hero: { enabled: true, background: { image: "/hero.webp" } },
+      sidebar: { left: { search: true } },
+      article: { indent: true },
+      footer: { share: false },
+      comments: { enabled: true, title: "Wiki comments" },
+      tree: { "快速开始": ["index", "install"] }
+    },
+    collectionState: {
+      homepage: { _id: "wiki-home", title: "开始", path: "wiki/stellar/", page_number: 0, is_homepage: true },
+      sections: [{
+        title: "快速开始",
+        pages: [
+          { _id: "wiki-home", title: "开始", path: "wiki/stellar/", page_number: 0, is_homepage: true },
+          { _id: "wiki-install", title: "安装", path: "wiki/stellar/install/", page_number: 1 }
+        ]
+      }]
+    },
+    collectionListed: true,
+    frontMatter: {
+      title: "开始",
+      layout: "wiki",
+      collection: { type: "wiki", id: "stellar" }
+    },
+    page: {
+      _id: "wiki-home",
+      source: "wiki/stellar/index.md",
+      path: "wiki/stellar/index.html",
+      permalink: "https://example.com/wiki/stellar/",
+      title: "开始",
+      layout: "wiki",
+      content: "<p>Start</p>",
+      date: new Date("2026-08-22T08:00:00.000Z")
+    }
+  });
+
+  assert.deepEqual(Object.keys(viewModel), ["collection", "item"]);
+  assert.deepEqual(Object.keys(viewModel.collection), [
+    "id",
+    "profile",
+    "identity",
+    "source",
+    "route",
+    "navigation",
+    "listing",
+    "presentation",
+    "visibility"
+  ]);
+  assert.equal(viewModel.collection.id, "stellar");
+  assert.equal(viewModel.collection.profile, "wiki");
+  assert.deepEqual(viewModel.collection.identity, {
+    name: "Stellar",
+    headline: "每个人的独立博客",
+    tagline: "基于 Hexo 的全能型个人知识库",
+    description: "Stellar Wiki",
+    audience: "独立博主",
+    icon: "/stellar.svg"
+  });
+  assert.deepEqual(viewModel.collection.source, {
+    repository: "xaoxuu/hexo-theme-stellar",
+    branch: "v2"
+  });
+  assert.deepEqual(viewModel.collection.route, {
+    baseDir: "wiki/stellar",
+    homepage: "wiki/stellar"
+  });
+  assert.deepEqual(viewModel.collection.navigation.tree, [{
+    title: "快速开始",
+    items: [
+      { id: "wiki-home", title: "开始", path: "wiki/stellar", pageNumber: 0, isHomepage: true },
+      { id: "wiki-install", title: "安装", path: "wiki/stellar/install", pageNumber: 1, isHomepage: false }
+    ]
+  }]);
+  assert.deepEqual(viewModel.collection.listing, {
+    priority: 2,
+    sort: 10,
+    excerptLength: 128,
+    perPage: 20,
+    orderBy: "updated"
+  });
+  assert.deepEqual(viewModel.collection.visibility, { listed: true, searchable: true });
+  assert.equal(viewModel.item.source.repository, "xaoxuu/hexo-theme-stellar");
+  assert.equal(viewModel.item.navigation.menu, "wiki");
+  assert.equal(viewModel.item.navigation.breadcrumb, true);
+  assert.equal(viewModel.item.presentation.article.indent, true);
+  assert.equal(viewModel.item.presentation.banner.image, "/hero.webp");
+  assert.equal(viewModel.item.presentation.footer.share, false);
+  assert.equal(viewModel.item.presentation.comments.title, "Wiki comments");
+  assertDeepFrozen(viewModel);
+});
+
+test("Wiki 树构建事件只为严格 v2 Wiki 页面挂载 PageViewModel", t => {
+  const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-wiki-view-model-"));
+  t.after(() => fs.rmSync(sourceDir, { recursive: true, force: true }));
+  fs.mkdirSync(path.join(sourceDir, "wiki/stellar"), { recursive: true });
+  fs.writeFileSync(path.join(sourceDir, "wiki/stellar/index.md"), [
+    "---",
+    "title: Start",
+    "layout: wiki",
+    "collection:",
+    "  type: wiki",
+    "  id: stellar",
+    "---",
+    ""
+  ].join("\n"));
+
+  const wikiPage = {
+    _id: "wiki-home",
+    source: "wiki/stellar/index.md",
+    path: "wiki/stellar/index.html",
+    title: "Start",
+    layout: "wiki",
+    collection: { type: "wiki", id: "stellar" }
+  };
+  const ordinaryPage = {
+    _id: "about",
+    source: "about.md",
+    path: "about/",
+    title: "About",
+    layout: "page"
+  };
+  const data = {
+    wiki: ["stellar"],
+    "wiki/stellar": {
+      name: "Stellar",
+      routing: { base_dir: "/wiki/stellar/" },
+      tree: ["index"]
+    }
+  };
+  const themeConfig = {
+    site_tree: {
+      index_wiki: { base_dir: "wiki" },
+      wiki: { navigation: { menu: "wiki" } }
+    },
+    article: { indent: true },
+    comments: { service: "giscus" }
+  };
+  const collections = { data, pages: [wikiPage, ordinaryPage] };
+
+  processWikiTree({
+    source_dir: sourceDir,
+    config: {
+      theme_config: {
+        site_tree: { wiki: { navigation: { menu: "wiki" } } }
+      }
+    },
+    theme: { config: themeConfig },
+    locals: { get: key => collections[key] }
+  });
+
+  assert.equal(wikiPage.viewModel.collection.id, "stellar");
+  assert.equal(wikiPage.viewModel.collection.profile, "wiki");
+  assert.equal(wikiPage.viewModel.collection.navigation.tree[0].items[0].title, "Start");
+  assert.equal(wikiPage.viewModel.item.presentation.article.indent, true);
+  assert.equal(wikiPage.viewModel.item.presentation.comments.service, "giscus");
+  assert.equal(Object.isFrozen(wikiPage.viewModel), true);
+  assert.equal(ordinaryPage.viewModel, undefined);
+});
+
+test("Wiki 模型严格拒绝缺失项目、错误归属与 v1 字段", () => {
+  assert.throws(() => buildWikiPageViewModel({
+    source: "source/wiki/missing/index.md",
+    collectionSource: "source/_data/wiki/missing.yml",
+    themeConfig: {},
+    collectionId: "missing",
+    frontMatter: {
+      title: "Missing",
+      layout: "wiki",
+      collection: { type: "wiki", id: "missing" }
+    },
+    page: { title: "Missing", layout: "wiki" }
+  }), /source\/wiki\/missing\/index\.md: collection\.id missing 未找到 Wiki 项目配置 source\/_data\/wiki\/missing\.yml/);
+
+  assert.throws(() => buildWikiPageViewModel({
+    source: "source/wiki/stellar/legacy.md",
+    collectionSource: "source/_data/wiki/stellar.yml",
+    themeConfig: {},
+    collectionId: "stellar",
+    collectionConfig: { name: "Stellar" },
+    frontMatter: {
+      title: "Legacy",
+      layout: "wiki",
+      wiki: "stellar",
+      collection: { type: "wiki", id: "stellar" }
+    },
+    page: { title: "Legacy", layout: "wiki" }
+  }), /source\/wiki\/stellar\/legacy\.md: v1 字段 wiki 已移除/);
+
+  assert.throws(() => buildWikiPageViewModel({
+    source: "source/wiki/stellar/mismatch.md",
+    collectionSource: "source/_data/wiki/other.yml",
+    themeConfig: {},
+    collectionId: "other",
+    collectionConfig: { name: "Other" },
+    frontMatter: {
+      title: "Mismatch",
+      layout: "wiki",
+      collection: { type: "wiki", id: "stellar" }
+    },
+    page: { title: "Mismatch", layout: "wiki" }
+  }), /source\/wiki\/stellar\/mismatch\.md: collection\.id stellar 与 Wiki 项目 other 不匹配/);
+});
+
+test("Wiki 模型隔离输入引用并区分项目与页面可见性", () => {
+  const collectionConfig = {
+    name: "Private Wiki",
+    source: { repository: "owner/wiki", branch: "main" },
+    hero: { background: { image: "/collection-hero.webp" } },
+    sidebar: { left: { widgets: ["tree"] } },
+    tree: ["index"]
+  };
+  const collectionState = {
+    homepage: { id: "home", path: "/wiki/private/index.html" },
+    sections: [{ title: "", pages: [{ id: "home", title: "Home", path: "/wiki/private/index.html" }] }]
+  };
+  const viewModel = buildWikiPageViewModel({
+    source: "source/wiki/private/index.md",
+    collectionSource: "source/_data/wiki/private.yml",
+    themeConfig: {},
+    collectionId: "private",
+    collectionConfig,
+    collectionState,
+    collectionListed: false,
+    frontMatter: {
+      title: "Home",
+      layout: "wiki",
+      collection: { type: "wiki", id: "private" },
+      banner: { image: "/page-banner.webp" },
+      source: { branch: "page" },
+      visibility: { listed: true, searchable: false }
+    },
+    page: { _id: "home", title: "Home", layout: "wiki", path: "/wiki/private/index.html" }
+  });
+
+  collectionConfig.name = "Changed";
+  collectionConfig.sidebar.left.widgets.push("changed");
+  collectionState.sections[0].pages[0].title = "Changed";
+
+  assert.deepEqual(viewModel.collection.visibility, { listed: false, searchable: true });
+  assert.deepEqual(viewModel.item.visibility, { listed: true, searchable: false });
+  assert.deepEqual(viewModel.item.source, {
+    file: "source/wiki/private/index.md",
+    repository: "owner/wiki",
+    branch: "page"
+  });
+  assert.equal(viewModel.collection.identity.name, "Private Wiki");
+  assert.deepEqual(viewModel.collection.presentation.sidebar.left.widgets, ["tree"]);
+  assert.equal(viewModel.item.presentation.banner.image, "/page-banner.webp");
+  assert.equal(viewModel.collection.navigation.tree[0].items[0].title, "Home");
+  assert.equal(viewModel.collection.navigation.tree[0].items[0].path, "wiki/private");
+  assert.equal(Object.isFrozen(collectionConfig), false);
+  assert.equal(Object.isFrozen(collectionState), false);
+});
 
 test("合法 Post profile 生成固定结构的冻结 PageViewModel", () => {
   const viewModel = buildPostPageViewModel({

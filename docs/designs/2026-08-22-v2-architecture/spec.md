@@ -23,9 +23,11 @@ Alpha 1 以构建期模型输出作为公开接缝：先用 post profile 贯通�
 
 Alpha 1 的首条公开构建期接缝为 `buildPostPageViewModel(input)`。它只接收普通配置投影和页面数据，输出 `{ collection, item }`；生成前事件把结果挂载到普通 Post 的 `page.viewModel`，但本阶段不让 EJS 消费该字段。`CollectionModel` 固定公开 `id`、`profile`、`identity`、`source`、`route`、`navigation`、`listing`、`presentation`、`visibility`，Post 的 `id` 与 `profile` 均为 `post`。
 
+Wiki slice 复用同一接缝，由 `buildWikiPageViewModel(input)` 接收严格 Wiki 项目配置、页面 Front Matter 和 `doc_tree` 已解析状态。它保留 Wiki identity/source/route/listing/visibility，把 `sections` 投影为普通树形 navigation，并在构建期完成主题、Wiki profile、项目与页面级联。只有显式 `collection.type: wiki` 且 id 能解析到项目配置的页面会在 `doc_tree` 完成后获得冻结 `page.viewModel`；shelf 的项目可见性不隐式覆盖页面自身可见性。本阶段仍不让 EJS 消费该字段。
+
 `ContentItemModel` 只保留文章标识、标题、布局、正文与摘要、ISO 日期、字符串标签与分类、文件来源、规范化路由，以及已经完成级联的导航、列表、展示和可见性。全部模型均为深度冻结的普通对象，不保留 Hexo Document、Query、Moment 或输入配置引用。
 
-本切片复用 `scripts/lib/content-config.js` 的严格校验、共享字段组与 `ContentConfigError`，复用 `scripts/lib/path_utils.js` 的路径规范化，不新增依赖或第二套字段表。`CONTENT_MODEL_FIELDS` 是页面配置校验器与模型投影共同消费的公开内容字段白名单；`POST_PROFILE_FIELDS` 描述现有 `site_tree.post`、`site_tree.index_blog`、`article`、`comments` 配置中 Post profile 允许读取的字段，以及其中进入 listing/presentation 的子集，由 `validatePostProfileConfig` 与 Post 模型构建器共同消费。两者只约束本切片现有配置来源，不新增 YAML 字段或兼容别名。`visibility.listed/searchable: true` 表示页面未显式隐藏时参与聚合与搜索，`listing.priority: 0` 表示默认不置顶，列表样式与摘要长度缺失时使用 `null` 表示没有模型层覆盖。这些默认值只作用于构建期模型，不改变现有配置边界。
+已交付 slice 复用 `scripts/lib/content-config.js` 的严格校验、共享字段组与 `ContentConfigError`，复用 `scripts/lib/path_utils.js` 的路径规范化，不新增依赖或第二套字段表。`CONTENT_MODEL_FIELDS` 是页面配置校验器与模型投影共同消费的公开内容字段白名单；各 profile 字段表只约束对应现有配置来源，不新增 YAML 字段或兼容别名。`visibility.listed/searchable: true` 表示页面未显式隐藏时参与聚合与搜索，`listing.priority: 0` 表示默认不置顶，列表样式与摘要长度缺失时使用 `null` 表示没有模型层覆盖。这些默认值只作用于构建期模型，不改变现有配置边界。
 
 ## 3. 兼容与迁移
 
