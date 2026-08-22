@@ -20,7 +20,7 @@ date: 2026-08-23
 - [x] 知识库硬核查通过。
 - [x] 主工程 `npm run g` 生成并压缩 254 个文件，日志无 `ERROR/FATAL`，关键产物抽查通过。
 - [x] Standards / Spec review 无剩余 finding。
-- [ ] 主题提交已推送 `origin/v2`，#709 已评论证据并以 `resolved` 闭环。
+- [x] 主题提交 `097950c` 与验证登记 `5ebdf29` 已推送 `origin/v2`，#709 已评论证据并以 `resolved` 闭环。
 - [x] 主工程保持未提交且未提交子模块指针。
 
 ## N/A

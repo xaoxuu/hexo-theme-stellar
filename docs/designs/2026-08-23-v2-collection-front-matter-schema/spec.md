@@ -1,7 +1,7 @@
 ---
 title: Stellar v2 Collection 与 Front Matter 配置 Schema
 date: 2026-08-23
-status: 复核中
+status: 已交付
 ---
 
 # Collection 与 Front Matter 配置 Schema 方案
