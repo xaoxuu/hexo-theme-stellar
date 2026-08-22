@@ -196,75 +196,64 @@ layout:
           widgets: [toc]
 
 
-######## Notebook ########
-notebook:
-  listing:
-    # 如果没有指定 excerpt 和 description，将自动取多长的内容作为文章摘要。
-    excerpt_length: 128
-    # 每页显示多少篇笔记。0 表示不分页，null 则使用 Hexo 的配置。
-    per_page: null
-    # 笔记的排序方式。默认按 updated 降序排序。
-    order_by: -updated
-  # 可以为某个 tag 设定图标（显示在标签树中）。
-  tag_icons:
-    '': quot:hashtag
-  footer:
-    # 是否在笔记页面显示许可协议与分享按钮。
-    license: false
-    share: false
+######## Content ########
+content:
+  article:
+    # 文章类型，可以在页面或集合的 article.type 中覆盖。
+    type: tech # tech: 默认技术类文章, story: 图文类文章，文字和段落间增距大
+    # null 保留 story 自动缩进；true / false 表示显式覆盖。
+    indent: null
+    listing:
+      # 置顶文章布局：carousel = 轮播，flat = 平铺。
+      pinned_layout: carousel
+      # 文章卡片布局：hero = 全图文字封面卡片，classic = 普通卡片。
+      card_layout: hero
+      cover_ratio: 2
+      # 没有 excerpt 和 description 时的自动摘要长度。
+      excerpt_length: 128
+      # 文章卡片是否显示标签（最多 5 个）。
+      show_tags: false
+    banner:
+      ratio: 2.5
+    category_colors:
+      '探索号': '#f44336'
+    # Front Matter 仍使用 article.ai_label 选择等级；此处配置等级样式。
+    ai_label:
+      default: null
+      manual:
+        color: '#03a9f4'
+        icon: default:shield-user
+      reviewed:
+        color: '#4caf50'
+        icon: default:shield-check
+      polished:
+        color: '#4caf50'
+        icon: default:shield-up
+      generated:
+        color: '#ff9800'
+        icon: default:shield-warning
+    footer:
+      license: '本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。'
+      share: false # 或 [wechat, weibo, email, link]
+    # 需要安装 hexo-related-popular-posts。
+    related_posts:
+      enabled: false
+      limit: 5
+    show_reading_time: false
+    # 文章末尾是否显示本文标签。
+    show_tags: true
 
-
-######## Article ########
-article:
-  # 置顶文章样式：carousel = 轮播（默认）， flat = 平铺（不渲染轮播，置顶文章在首页文章列表靠前展示，排序规则与轮播一致）
-  pin_style: carousel
-  # 文章类型，可以在页面或集合的 article.type 中覆盖
-  type: tech # tech: 默认技术类文章, story: 图文类文章，文字和段落间增距大
-  # 缩进两个文字宽度，可以在页面或集合的 article.indent 中覆盖
-  indent: # true / false
-  # 封面图宽高比
-  cover_ratio: 2
-  # 文章卡片样式：hero = 全图文字封面卡片（使用 card.cover），classic = 普通卡片
-  card_style: hero
-  # 文章内横幅宽高比
-  banner_ratio: 2.5
-  # 如果没有指定 excerpt 和 description，将自动取多长的内容作为文章摘要？
-  auto_excerpt: 128
-  # 分类颜色
-  category_color:
-    '探索号': '#f44336'
-  # 文章 AI 成分标签：front-matter 用 article.ai_label 标记，
-  # 未设置时取 default（为空则不显示）；文案由多语言系统提供（languages/*.yml 的 meta.ai_label.*），
-  # 此处配置各档文字颜色与可选 icon；文章页显示在顶部面包屑行最右（阅读时长右侧）
-  ai_label:
-    default:
-    manual:
-      color: '#03a9f4'
-      icon: default:shield-user
-    reviewed:
-      color: '#4caf50'
-      icon: default:shield-check
-    polished:
-      color: '#4caf50'
-      icon: default:shield-up
-    generated:
-      color: '#ff9800'
-      icon: default:shield-warning
-  # 文章许可协议
-  license: '本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。'
-  # 分享
-  share: # [wechat, weibo, email, link]
-  # 相关文章，需要安装插件 (for layout: post)
-  # npm i hexo-related-popular-posts
-  related_posts:
-    enable: false
-    max_count: 5
-  # 文章页是否显示字数和预计阅读时长（#302）
-  reading_time: false
-  # 文章卡片是否显示标签（最多 5 个，#580）
-  card_tags: false
-  # 文章末尾是否显示本文标签（位于 article-footer 之前）
-  tags: true
+  notebook:
+    listing:
+      excerpt_length: 128
+      # 0 表示不分页，null 使用 Hexo 的配置。
+      per_page: null
+      order_by: -updated
+    tag_icons:
+      '': quot:hashtag
+    footer:
+      license: false
+      share: false
 
 search:
   service: local_search # local_search, algolia_search, todo...

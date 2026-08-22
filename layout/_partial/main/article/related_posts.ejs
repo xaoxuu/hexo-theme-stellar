@@ -1,11 +1,12 @@
 <%
 function layoutDiv() {
-  if (theme.article.related_posts.enable) {
+  var relatedPosts = stellar_config('content.article.relatedPosts')
+  if (relatedPosts.enabled) {
     var el = '';
     el += `<div class="related-wrap${scrollreveal(' ')}" id="related-posts">`
     el += popular_posts_wrapper({
-      title: theme.article.related_posts.title || __('meta.related_posts'),
-      json: popular_posts_json({ maxCount: theme.article.related_posts.max_count , ulClass: 'related-posts' , PPMixingRate: 0.2 , isImage: true , isExcerpt: true} , page )
+      title: __('meta.related_posts'),
+      json: popular_posts_json({ maxCount: relatedPosts.limit , ulClass: 'related-posts' , PPMixingRate: 0.2 , isImage: true , isExcerpt: true} , page )
     });
     el += '</div>';
     return el;

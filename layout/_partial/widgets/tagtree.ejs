@@ -7,7 +7,7 @@ function isLeaf(tag) {
 }
 
 function getTagcon(tag) {
-  var tagIcons = theme.notebook.tag_icons || {}
+  var tagIcons = stellar_config('content.notebook.tagIcons') || {}
   return tagIcons[tag.name] || tagIcons[tag.id] || tagIcons[tag.part] || tagIcons[tag.part.toLowerCase()] || tagIcons['']
 }
 

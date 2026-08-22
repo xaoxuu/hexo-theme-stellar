@@ -67,6 +67,16 @@ function isSnakeSegment(segment) {
     || /^[a-z][a-z0-9_]*(?:\[\])?$/.test(segment);
 }
 
+function themeTargetForPath(pathValue) {
+  return CONFIG_TARGET_FIELDS.find(field => {
+    if (!field.scopes.includes("theme")) return false;
+    const pattern = field.path
+      .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+      .replace(/<[^>]+>/g, "[^.]*");
+    return new RegExp(`^${pattern}$`).test(pathValue);
+  });
+}
+
 test("目标主题配置只暴露八个职责根域", () => {
   assert.deepEqual(CONFIG_TARGET_ROOTS.map(root => root.id), TARGET_ROOT_IDS);
   assert.equal(new Set(CONFIG_TARGET_ROOTS.map(root => root.id)).size, 8);
@@ -177,7 +187,7 @@ test("主题默认配置的活动叶子与注释示例字段族都有迁移证�
     const domainId = leaf.split(".")[0].replace(/\[\]$/, "");
     if (Object.prototype.hasOwnProperty.call(CONFIG_SCHEMA.properties, domainId)) {
       const targetPath = leaf.replace(/\[\]$/, "");
-      const target = CONFIG_TARGET_FIELDS.find(field => field.path === targetPath && field.scopes.includes("theme"));
+      const target = themeTargetForPath(targetPath);
       assert.equal(target?.status, "delivered", `${leaf} 未登记为已交付目标字段`);
     } else {
       assert.ok(resolveConfigMigration(domainId, leaf), `${leaf} 没有迁移结果`);
@@ -225,12 +235,12 @@ test("官方脚本样式与内部集成有显式内部化清单", () => {
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("style.loading.*"));
 });
 
-test("运行时只投影 site Shell、Layout 与 head/SEO 已交付节点且根配置仍未封闭", () => {
+test("运行时只投影 site Shell、Layout、内容默认与 head/SEO 已交付节点且根配置仍未封闭", () => {
   assert.equal(CONFIG_SCHEMA.sealed, false);
-  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "layout", "seo", "resources", "inject"]);
+  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "layout", "content", "seo", "resources", "inject"]);
   const deliveredPaths = CONFIG_TARGET_FIELDS.filter(field => field.status === "delivered").map(field => field.path);
   assert.deepEqual(
-    deliveredPaths.filter(pathValue => !pathValue.startsWith("layout.")),
+    deliveredPaths.filter(pathValue => !pathValue.startsWith("layout.") && !pathValue.startsWith("content.")),
     [
       "site.brand.image.src",
       "site.brand.image.variant",
@@ -270,6 +280,15 @@ test("运行时只投影 site Shell、Layout 与 head/SEO 已交付节点且根�
       "inject.script"
     ]
   );
+  const deliveredContentPaths = deliveredPaths.filter(pathValue => pathValue.startsWith("content."));
+  assert.equal(deliveredContentPaths.length, 26);
+  for (const pathValue of [
+    "content.article.listing.card_layout",
+    "content.article.category_colors.<category>",
+    "content.article.related_posts.enabled",
+    "content.notebook.listing.order_by",
+    "content.notebook.tag_icons.<tag>"
+  ]) assert.ok(deliveredContentPaths.includes(pathValue));
   const deliveredLayoutPaths = deliveredPaths.filter(pathValue => pathValue.startsWith("layout."));
   assert.equal(deliveredLayoutPaths.length, 85);
   assert.ok(deliveredLayoutPaths.includes("layout.profiles"));

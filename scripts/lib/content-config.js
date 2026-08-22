@@ -70,21 +70,7 @@ const CONTENT_MODEL_FIELDS = Object.freeze({
   visibility: Object.freeze(["listed", "searchable"])
 });
 
-const POST_PROFILE_FIELDS = Object.freeze({
-  article: Object.freeze([
-    "pin_style", "type", "indent", "cover_ratio", "card_style", "banner_ratio",
-    "auto_excerpt", "category_color", "ai_label", "license", "share",
-    "related_posts", "reading_time", "card_tags", "tags"
-  ]),
-  articleListing: Object.freeze(["pin_style", "card_style", "auto_excerpt"]),
-  articlePresentation: Object.freeze(["type", "indent"]),
-  comments: Object.freeze([...COMMENT_SERVICE_FIELDS, "comment_title", "custom_css"])
-});
-
-const NOTEBOOK_PROFILE_FIELDS = Object.freeze({
-  notebook: Object.freeze(["listing", "tag_icons", "footer"]),
-  notebookListing: Object.freeze(["excerpt_length", "per_page", "order_by"])
-});
+const THEME_COMMENT_FIELDS = Object.freeze([...COMMENT_SERVICE_FIELDS, "comment_title", "custom_css"]);
 
 const BRAND_IMAGE_STYLES = Object.freeze(['avatar', 'icon', 'plain']);
 
@@ -163,34 +149,6 @@ function validateStringArray(value, source, fieldPath, issues) {
       addTypeIssue(issues, source, `${fieldPath}[${index}]`, 'string', item);
     }
   });
-}
-
-function validateStringRecord(value, source, fieldPath, issues) {
-  if (!validateObject(value, source, fieldPath, issues)) return;
-  for (const [key, child] of Object.entries(value)) {
-    if (child != null) validateString(child, source, `${fieldPath}.${key}`, issues);
-  }
-}
-
-function validateAiLabelConfig(value, source, fieldPath, issues) {
-  if (!validateObject(value, source, fieldPath, issues)) return;
-  const keys = ["default", "manual", "reviewed", "polished", "generated"];
-  validateKnownKeys(value, keys, source, fieldPath, issues);
-  if (value.default != null) validateString(value.default, source, `${fieldPath}.default`, issues);
-  for (const key of keys.slice(1)) {
-    const item = value[key];
-    if (item == null || !validateObject(item, source, `${fieldPath}.${key}`, issues)) continue;
-    validateKnownKeys(item, ["color", "icon"], source, `${fieldPath}.${key}`, issues);
-    if (item.color != null) validateString(item.color, source, `${fieldPath}.${key}.color`, issues);
-    if (item.icon != null) validateString(item.icon, source, `${fieldPath}.${key}.icon`, issues);
-  }
-}
-
-function validateRelatedPostsConfig(value, source, fieldPath, issues) {
-  if (!validateObject(value, source, fieldPath, issues)) return;
-  validateKnownKeys(value, ["enable", "max_count"], source, fieldPath, issues);
-  if (value.enable != null) validateBoolean(value.enable, source, `${fieldPath}.enable`, issues);
-  if (value.max_count != null) validateNumber(value.max_count, source, `${fieldPath}.max_count`, issues);
 }
 
 function validateKnownKeys(value, allowedKeys, source, fieldPath, issues) {
@@ -486,53 +444,8 @@ function validatePostProfileConfig(config, source = "<theme>") {
   const issues = [];
   if (!validateObject(config, source, "root", issues)) throw new ContentConfigError(issues);
 
-  if (config.article != null && validateObject(config.article, source, "article", issues)) {
-    validateKnownKeys(config.article, POST_PROFILE_FIELDS.article, source, "article", issues);
-    for (const field of POST_PROFILE_FIELDS.articleListing.slice(0, 2)) {
-      if (config.article[field] != null) validateString(config.article[field], source, `article.${field}`, issues);
-    }
-    if (config.article.auto_excerpt != null) {
-      validateNumber(config.article.auto_excerpt, source, "article.auto_excerpt", issues);
-    }
-    for (const field of ["cover_ratio", "banner_ratio"]) {
-      if (config.article[field] != null) validateNumber(config.article[field], source, `article.${field}`, issues);
-    }
-    if (config.article.pin_style != null && !["carousel", "flat"].includes(config.article.pin_style)) {
-      issues.push(`${source}: article.pin_style 必须是 carousel 或 flat`);
-    }
-    if (config.article.card_style != null && !["hero", "classic"].includes(config.article.card_style)) {
-      issues.push(`${source}: article.card_style 必须是 hero 或 classic`);
-    }
-    if (config.article.type != null && !["tech", "story"].includes(config.article.type)) {
-      issues.push(`${source}: article.type 必须是 tech 或 story`);
-    }
-    if (config.article.indent != null) validateBoolean(config.article.indent, source, "article.indent", issues);
-    if (config.article.category_color != null) {
-      validateStringRecord(config.article.category_color, source, "article.category_color", issues);
-    }
-    if (config.article.ai_label != null) {
-      validateAiLabelConfig(config.article.ai_label, source, "article.ai_label", issues);
-    }
-    if (config.article.related_posts != null) {
-      validateRelatedPostsConfig(config.article.related_posts, source, "article.related_posts", issues);
-    }
-    for (const field of ["reading_time", "card_tags", "tags"]) {
-      if (config.article[field] != null) validateBoolean(config.article[field], source, `article.${field}`, issues);
-    }
-    if (config.article.license != null && typeof config.article.license !== "boolean" && typeof config.article.license !== "string") {
-      addTypeIssue(issues, source, "article.license", "boolean | string", config.article.license);
-    }
-    if (config.article.share != null && typeof config.article.share !== "boolean") {
-      if (!Array.isArray(config.article.share)) {
-        addTypeIssue(issues, source, "article.share", "boolean | string[]", config.article.share);
-      } else {
-        validateStringArray(config.article.share, source, "article.share", issues);
-      }
-    }
-  }
-
   if (config.comments != null && validateObject(config.comments, source, "comments", issues)) {
-    validateKnownKeys(config.comments, POST_PROFILE_FIELDS.comments, source, "comments", issues);
+    validateKnownKeys(config.comments, THEME_COMMENT_FIELDS, source, "comments", issues);
     if (config.comments.enabled != null) validateBoolean(config.comments.enabled, source, "comments.enabled", issues);
     for (const field of ["title", "id", "service", "comment_title"]) {
       if (config.comments[field] != null) validateString(config.comments[field], source, `comments.${field}`, issues);
@@ -563,32 +476,6 @@ function validateWikiProfileConfig(config, source = "<theme>") {
 function validateTopicProfileConfig(config, source = "<theme>") {
   const issues = [];
   if (!validateObject(config, source, "root", issues)) throw new ContentConfigError(issues);
-  if (issues.length > 0) throw new ContentConfigError(issues);
-  return config;
-}
-
-function validateNotebookProfileConfig(config, source = "<theme>") {
-  const issues = [];
-  if (!validateObject(config, source, "root", issues)) throw new ContentConfigError(issues);
-
-  if (config.notebook != null && validateObject(config.notebook, source, "notebook", issues)) {
-    validateKnownKeys(config.notebook, NOTEBOOK_PROFILE_FIELDS.notebook, source, "notebook", issues);
-    const listing = config.notebook.listing;
-    if (listing != null && validateObject(listing, source, "notebook.listing", issues)) {
-      validateKnownKeys(listing, NOTEBOOK_PROFILE_FIELDS.notebookListing, source, "notebook.listing", issues);
-      for (const field of ["excerpt_length", "per_page"]) {
-        if (listing[field] != null) validateNumber(listing[field], source, `notebook.listing.${field}`, issues);
-      }
-      if (listing.order_by != null) validateString(listing.order_by, source, "notebook.listing.order_by", issues);
-    }
-    if (config.notebook.tag_icons != null) {
-      validateStringRecord(config.notebook.tag_icons, source, "notebook.tag_icons", issues);
-    }
-    if (config.notebook.footer != null) {
-      validateFooter(config.notebook.footer, source, "notebook.footer", issues);
-    }
-  }
-
   if (issues.length > 0) throw new ContentConfigError(issues);
   return config;
 }
@@ -688,8 +575,6 @@ module.exports = {
   GALAXY_OPTION_TYPES,
   LEGACY_COLLECTION_FIELDS,
   LEGACY_PAGE_FIELDS,
-  NOTEBOOK_PROFILE_FIELDS,
-  POST_PROFILE_FIELDS,
   getCollectionId,
   isPlainObject,
   isListed,
@@ -697,7 +582,6 @@ module.exports = {
   validateBrand,
   validateCollectionConfig,
   validateGalaxyOptions,
-  validateNotebookProfileConfig,
   validatePageConfig,
   validatePostProfileConfig,
   validateThemeConfig,

@@ -132,7 +132,7 @@ flowchart TD
     E -->|Yes| F["article_type = topic.type"]
     E -->|No| G["theme.wiki.tree[page.wiki].type set?"]
     G -->|Yes| H["article_type = wiki.type"]
-    G -->|No| I["article_type = theme.article.type"]
+    G -->|No| I["article_type = content.article.type"]
 ```
 
 常见取值 `'tech'`（技术文章）与 `'story'`（文学/散文文章）。解析结果写入 `div.l_body` 的 `type` 属性。
@@ -150,8 +150,8 @@ flowchart TD
     C -->|Yes| D["indent = topic.indent"]
     C -->|No| E["theme.wiki.tree[page.wiki].indent set?"]
     E -->|Yes| F["indent = wiki.indent"]
-    E -->|No| G["theme.article.indent set?"]
-    G -->|Yes| H["indent = theme.article.indent"]
+    E -->|No| G["content.article.indent set?"]
+    G -->|Yes| H["indent = content.article.indent"]
     G -->|No| I["indent = (article_type === 'story')"]
 ```
 
@@ -174,7 +174,7 @@ flowchart TD
     BANNER --> ARTICLE["article.md-text.content[.heti]"]
     ARTICLE --> CONTENT["page.content"]
     CONTENT --> NOTETAGS["notebook set?\n→ partial: notebook/note_tags"]
-    NOTETAGS --> TAGS["layout==='post' AND theme.article.tags?\n→ partial: article/article_tags"]
+    NOTETAGS --> TAGS["layout==='post' AND content.article.showTags?\n→ partial: article/article_tags"]
     TAGS --> FOOTER["layout==='post' OR page.wiki OR notebook?\n→ partial: article/article_footer"]
     FOOTER --> READNEXT["layout==='post' OR page.wiki?\n→ partial: article/read_next"]
     READNEXT --> RELATED["layout==='post'?\n→ partial: article/related_posts"]
@@ -189,7 +189,7 @@ flowchart TD
 |---|---|---|---|---|
 | `nav_tabs_blog` | 有 `page.nav_tabs` 时 | 有 `page.nav_tabs` 时 | 有 `page.nav_tabs` 时 | 有 `page.nav_tabs` 时 |
 | `article_banner` | 有标题/内容时 | 有标题/内容时 | 有标题/内容时 | 有标题/内容时 |
-| `article_tags` | 有 `theme.article.tags` 时 | ✗ | ✗ | ✗ |
+| `article_tags` | `content.article.showTags` 为 true 时 | ✗ | ✗ | ✗ |
 | `article_footer` | ✓ | ✓ | ✓ | ✗ |
 | `read_next` | ✓ | ✓ | ✗ | ✗ |
 | `related_posts` | ✓ | ✗ | ✗ | ✗ |
@@ -199,7 +199,7 @@ flowchart TD
 
 ### 笔记本集成
 
-`page.notebook` 匹配 `theme.notebooks.tree` 中的条目时，`page.ejs` 先把笔记本配置中的 `menu_id`、`license`、`share` 传播到页面对象，再开始渲染。
+页面的 `collection.type: notebook` 匹配 `theme.notebooks.tree` 中的条目时，`page.ejs` 先把 Notebook Collection 的导航与 Footer 覆盖传播到页面对象，再开始渲染；主题默认值来自 `content.notebook`。
 
 **参考源码**：[layout/page.ejs](../../../layout/page.ejs)
 

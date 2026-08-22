@@ -81,9 +81,9 @@ graph TB
 
 Pre-alpha M1.5 已建立内部配置入口目录，并进一步把 v2 最终公开主题配置冻结为 `site`、`seo`、`layout`、`content`、`appearance`、`resources`、`extensions`、`inject` 八个职责根域。完整目标树、命名、级联和旧→新迁移矩阵见[最终配置契约](../../designs/2026-08-22-v2-config-target-contract/target-contract.md)。
 
-head/SEO、site Shell 与 Layout Profile 纵向切片已把 `seo`、`resources.preconnect`、站点 `inject`、`site.brand/menu/footer` 以及 `layout.profiles` 接入声明式 Schema，运行时与配置 Reference 只投影这些已交付节点；其它目标字段仍保持 `planned`。后续切片继续直接实现最终路径，不经过 #703 的临时目录。
+head/SEO、site Shell、Layout Profile 与内容默认值纵向切片已把 `seo`、`resources.preconnect`、站点 `inject`、`site.brand/menu/footer`、`layout.profiles` 以及 `content.article/notebook` 接入声明式 Schema，运行时与配置 Reference 只投影这些已交付节点；其它目标字段仍保持 `planned`。后续切片继续直接实现最终路径，不经过 #703 的临时目录。
 
-已交付 v2 字段从 Schema 与 `_config.stellar.yml` 解析到冻结的 `hexo.stellar.config`；尚未迁移的字段仍经 Hexo 主题变量系统（`theme.*`）流动，页面级覆盖继续通过 `page.*` 变量实现。`hexo-config()` 辅助函数让 Stylus 文件也能访问旧链配置值。
+已交付 v2 字段从 Schema 与 `_config.stellar.yml` 解析到冻结的 `hexo.stellar.config`；尚未迁移的字段仍经 Hexo 主题变量系统（`theme.*`）流动，页面级覆盖继续通过 `page.*` 变量实现。Article / Notebook 的主题默认由 Schema 单源提供，Stylus 也只读取 `content.article` 最终路径。
 
 ## 配置文件结构
 
@@ -95,8 +95,8 @@ head/SEO、site Shell 与 Layout Profile 纵向切片已把 `seo`、`resources.p
 | `seo`、`resources.preconnect` | SEO 与资源提示（v2 已交付） |
 | `site` | 站点 Brand、主菜单、左栏操作与页尾内容（v2 已交付） |
 | `layout.profiles` | 13 类页面的路径、导航与左右侧栏默认值（v2 已交付） |
-| `notebook` | 笔记本系统配置 |
-| `article` | 文章显示与元数据设置 |
+| `content.article` | 文章显示、列表、Footer 与相关内容默认值（v2 已交付） |
+| `content.notebook` | 笔记本列表、标签图标与 Footer 默认值（v2 已交付） |
 | `search` | 搜索服务配置 |
 | `comments` | 评论系统集成 |
 | `tag_plugins` | 标签插件外观与行为 |
@@ -326,57 +326,62 @@ layout:
 
 ### 置顶内容轮播
 
-置顶内容的展示样式由 `article.pin_style` 控制：`carousel`（默认）为轮播；`flat`（平铺）时文章不进入轮播区，改为在首页第一页文章列表靠前展示（排序规则与轮播一致）。
+置顶内容的展示样式由 `content.article.listing.pinned_layout` 控制：`carousel`（默认）为轮播；`flat`（平铺）时文章不进入轮播区，改为在首页第一页文章列表靠前展示（排序规则与轮播一致）。
 
 `carousel`（默认）：所有带 navbar top 的博客类列表页（首页/归档/标签/分类/专栏等）上方自动展示置顶文章轮播，无需开关配置：只要有置顶内容即渲染，自动轮播间隔固定 5000ms；首页第一页列表不再重复展示置顶文章。
 
 `flat`（平铺）：博客类列表页不渲染文章轮播；首页第一页文章列表顶部按轮播同款规则展示全部置顶文章（含超出单页切片的老文章），同页不重复；归档/分类/标签/首页第二页起的列表中置顶文章按日期正常出现。
 
 - 置顶文章判定与排序（两种样式通用）：文章 front-matter `pin: true|number`，兼容 `sticky` 别名；只要设置即置顶，按数值降序排序，`true` 视作 1，0/负数同样参与，非数字视作 0，权重相同保持 `site.posts` 原顺序；
-- wiki 列表放置顶 wiki 项目（数据文件 `pin: true|number`，规则同上），始终以轮播展示，不受 `article.pin_style` 影响；
-- 轮播区宽高比与非置顶文章统一，由 `article.cover_ratio` 控制（修改该值即可整体调整）；
+- wiki 列表放置顶 wiki 项目（数据文件 `pin: true|number`，规则同上），始终以轮播展示，不受 `content.article.listing.pinned_layout` 影响；
+- 轮播区宽高比与非置顶文章统一，由 `content.article.listing.cover_ratio` 控制；
 - 无置顶内容时不渲染；轮播进度按内容类型分组缓存到 localStorage（切换 tab 不重置）。
 
 **参考源码**：[_config.yml](../../../_config.yml)、[layout/_partial/main/pin_slider.ejs](../../../layout/_partial/main/pin_slider.ejs)
 
 ### 笔记本配置
 
-`notebook` 小节提供默认值，可被单个笔记本 YAML 覆盖：
+`content.notebook` 提供主题默认值，可被迁移期的单个笔记本 YAML 覆盖：
 
 ```yaml
-notebook:
-  auto_excerpt: 128
-  per_page: null  # null 继承 Hexo 配置
-  order_by: -updated
-  license: false
-  share: false
+content:
+  notebook:
+    listing:
+      excerpt_length: 128
+      per_page: null  # null 继承 Hexo 配置
+      order_by: -updated
+    tag_icons: {}
+    footer:
+      license: false
+      share: false
 ```
 
-这些值会级联到笔记本 YAML（如 `source/_data/notebooks/mynotebook.yml`），后者可覆盖 `per_page`、`order_by`、`license`、`share`、`leftbar`、`rightbar`、`note_leftbar`、`note_rightbar` 等字段。
+这些冻结默认值进入 Notebook CollectionModel；当前笔记本 YAML 仍可用 `listing`、`footer`、`sidebar` 与 `note.sidebar` 覆盖，最终 Collection 命名留待后续切片。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
 ### 文章配置
 
-`article` 小节控制内容显示特征：
+`content.article` 控制文章主题默认值；YAML 为 snake_case，冻结 JavaScript 为 camelCase：
 
 | 字段 | 类型 | 默认 | 用途 |
 |------|------|------|------|
 | `type` | `tech` / `story` | `tech` | 布局风格（tech 紧凑、story 宽松） |
-| `indent` | Boolean | `false` | 段落首行两字缩进 |
-| `pin_style` | `carousel` / `flat` | `carousel` | 置顶文章展示样式：carousel 轮播；flat 平铺（不渲染轮播，置顶文章在首页列表靠前展示，排序规则与轮播一致） |
-| `cover_ratio` | Number | `2` | 文章卡片封面宽高比 |
-| `card_style` | `hero` / `classic` | `hero` | 文章卡片样式：hero 全图文字封面卡片（有 cover 时标题 + 单行小字，文字区固定底部）；classic 普通卡片（封面/标题/摘要/meta） |
-| `banner_ratio` | Number | `2.5` | 文章横幅宽高比 |
-| `auto_excerpt` | Number | `128` | 自动摘要提取字符数 |
-| `reading_time` | Boolean | `false` | 文章页显示字数与预计阅读时长 |
-| `card_tags` | Boolean | `false` | 文章卡片显示标签（最多 5 个） |
-| `tags` | Boolean | `true` | 文章页末尾（`article-footer` 之前）显示本文标签，链接到对应标签页 |
+| `indent` | Boolean / null | `null` | null 保留 story 自动缩进；布尔值显式覆盖 |
+| `listing.pinned_layout` | `carousel` / `flat` | `carousel` | 置顶文章布局 |
+| `listing.cover_ratio` | 正数 | `2` | 文章卡片与置顶轮播封面宽高比 |
+| `listing.card_layout` | `hero` / `classic` | `hero` | hero 全图文字封面；classic 普通卡片 |
+| `banner.ratio` | 正数 | `2.5` | 文章横幅宽高比 |
+| `listing.excerpt_length` | 非负数 | `128` | 自动摘要提取字符数 |
+| `show_reading_time` | Boolean | `false` | 文章页显示字数与预计阅读时长 |
+| `listing.show_tags` | Boolean | `false` | 文章卡片显示标签（最多 5 个） |
+| `show_tags` | Boolean | `true` | 文章页末尾显示本文标签 |
 | `ai_label` | Object | 四档默认 | 文章 AI 成分标签：`manual` / `polished` / `generated` / `reviewed` 的文字颜色（无底色）与可选 `icon`，front-matter 用 `ai_label` 字段选择；文案由多语言系统提供（`languages/*.yml` 的 `meta.ai_label.*`，缺失时不渲染）；`default` 为空时未标记文章不渲染，非空时未标记文章按默认档渲染；banner 含图片时文字用默认颜色 |
-| `license` | String/Boolean | 许可文本 | 文章默认许可声明 |
-| `share` | Array | `[]` | 分享按钮：`wechat`、`weibo`、`email`、`link` |
+| `footer.license` | String/Boolean | 许可文本 | 文章默认许可声明 |
+| `footer.share` | Boolean / Array | `false` | 分享按钮：`wechat`、`weibo`、`email`、`link` |
+| `related_posts.enabled/limit` | Boolean / 非负数 | `false` / `5` | 相关文章开关与数量上限 |
 
-这些可在专栏配置或页面 front-matter 中覆盖。
+主题级旧根 `article` / `notebook` 不再兼容读取。Collection / Front Matter 仍通过现有 `article`、`footer` 等局部覆盖进入模型，待后续统一 Schema 切片再改名。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 

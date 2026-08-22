@@ -23,7 +23,8 @@ if (homeCmt && homeCmt !== false && is_home_first_page()) {
 }
 
 // 置顶文章样式：carousel = 轮播（默认），flat = 平铺（首页列表靠前展示）
-var pinStyle = theme.article?.pin_style || 'carousel'
+var articleDefaults = stellar_config('content.article')
+var pinStyle = articleDefaults.listing.pinnedLayout
 var pinFlat = pinStyle === 'flat'
 
 // 与 pin_slider.ejs 保持一致的置顶判定与排序权重
@@ -46,7 +47,7 @@ function postListing(post) {
       priority: post.listing?.priority || 0,
       listed: post.visibility?.listed !== false,
       cover: post.card?.cover,
-      cardStyle: theme.article.card_style,
+      cardStyle: articleDefaults.listing.cardLayout,
       href: post.link || post.path
     }
   }

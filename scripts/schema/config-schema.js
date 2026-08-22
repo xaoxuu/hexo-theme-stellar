@@ -20,6 +20,9 @@ function structuralOptions(options) {
     "properties",
     "additionalProperties",
     "additionalPropertyKey",
+    "allowedPropertyKeys",
+    "minimum",
+    "exclusiveMinimum",
     "removedProperties",
     "sealed"
   ]) {
@@ -61,7 +64,9 @@ function deliveredField(path, options) {
     migration: target.migration,
     runtimeKey: target.runtimePath.split(".").pop(),
     items: options.items ?? target.items,
-    values: target.values
+    values: target.values,
+    minimum: target.minimum,
+    exclusiveMinimum: target.exclusiveMinimum
   });
 }
 
@@ -102,6 +107,39 @@ const LAYOUT_CONSUMERS = Object.freeze([
 ]);
 const PRECONNECT_CONSUMERS = Object.freeze(["head renderer", "Reference generator"]);
 const INJECT_CONSUMERS = Object.freeze(["head renderer", "script renderer", "Reference generator"]);
+const CONTENT_CONSUMERS = Object.freeze([
+  "CollectionModel",
+  "PageViewModel",
+  "article renderer",
+  "listing renderer",
+  "Reference generator"
+]);
+
+const AI_LABEL_DEFAULTS = Object.freeze({
+  manual: { color: "#03a9f4", icon: "default:shield-user" },
+  reviewed: { color: "#4caf50", icon: "default:shield-check" },
+  polished: { color: "#4caf50", icon: "default:shield-up" },
+  generated: { color: "#ff9800", icon: "default:shield-warning" }
+});
+
+function aiLabelLevelSchema() {
+  return object({
+    consumers: CONTENT_CONSUMERS,
+    example: { color: "#03a9f4", icon: "default:shield-user" },
+    migration: "configuration/content",
+    runtimeKey: "<level>",
+    properties: {
+      color: deliveredField("content.article.ai_label.<level>.color", {
+        normalizer: "identity",
+        example: "#03a9f4"
+      }),
+      icon: deliveredField("content.article.ai_label.<level>.icon", {
+        normalizer: "identity",
+        example: "default:shield-user"
+      })
+    }
+  });
+}
 
 function runtimeProfileKey(profile) {
   return profile.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
@@ -241,7 +279,9 @@ const CONFIG_SCHEMA = deepFreeze({
     preconnect: "resources.preconnect",
     canonical: "seo.canonical",
     open_graph: "seo.open_graph",
-    structured_data: "seo.structured_data"
+    structured_data: "seo.structured_data",
+    article: "content.article",
+    notebook: "content.notebook"
   },
   properties: {
     site: object({
@@ -373,6 +413,146 @@ const CONFIG_SCHEMA = deepFreeze({
       runtimeKey: "layout",
       properties: {
         profiles: layoutProfilesSchema()
+      }
+    }),
+    content: object({
+      consumers: CONTENT_CONSUMERS,
+      example: { article: { listing: { card_layout: "hero" } }, notebook: { listing: { order_by: "-updated" } } },
+      migration: "configuration/content",
+      runtimeKey: "content",
+      properties: {
+        article: object({
+          consumers: CONTENT_CONSUMERS,
+          example: { type: "tech", listing: { pinned_layout: "carousel", card_layout: "hero" } },
+          migration: "configuration/content",
+          runtimeKey: "article",
+          removedProperties: {
+            pin_style: "listing.pinned_layout",
+            cover_ratio: "listing.cover_ratio",
+            card_style: "listing.card_layout",
+            banner_ratio: "banner.ratio",
+            auto_excerpt: "listing.excerpt_length",
+            category_color: "category_colors",
+            license: "footer.license",
+            share: "footer.share",
+            reading_time: "show_reading_time",
+            card_tags: "listing.show_tags",
+            tags: "show_tags"
+          },
+          properties: {
+            type: deliveredField("content.article.type", { normalizer: "identity", example: "tech" }),
+            indent: deliveredField("content.article.indent", { normalizer: "identity", example: null }),
+            listing: object({
+              consumers: CONTENT_CONSUMERS,
+              example: { pinned_layout: "carousel", card_layout: "hero", cover_ratio: 2, excerpt_length: 128, show_tags: false },
+              migration: "configuration/content",
+              runtimeKey: "listing",
+              removedProperties: { pin_style: "pinned_layout", card_style: "card_layout", auto_excerpt: "excerpt_length", card_tags: "show_tags" },
+              properties: {
+                pinned_layout: deliveredField("content.article.listing.pinned_layout", { normalizer: "identity", example: "carousel" }),
+                card_layout: deliveredField("content.article.listing.card_layout", { normalizer: "identity", example: "hero" }),
+                cover_ratio: deliveredField("content.article.listing.cover_ratio", { normalizer: "identity", example: 2, exclusiveMinimum: 0 }),
+                excerpt_length: deliveredField("content.article.listing.excerpt_length", { normalizer: "identity", example: 128, minimum: 0 }),
+                show_tags: deliveredField("content.article.listing.show_tags", { normalizer: "identity", example: false })
+              }
+            }),
+            banner: object({
+              consumers: CONTENT_CONSUMERS,
+              example: { ratio: 2.5 },
+              migration: "configuration/content",
+              runtimeKey: "banner",
+              properties: {
+                ratio: deliveredField("content.article.banner.ratio", { normalizer: "identity", example: 2.5, exclusiveMinimum: 0 })
+              }
+            }),
+            category_colors: deliveredField("content.article.category_colors", {
+              normalizer: "object",
+              example: { "探索号": "#f44336" },
+              sealed: false,
+              additionalPropertyKey: "<category>",
+              additionalProperties: deliveredField("content.article.category_colors.<category>", {
+                normalizer: "identity",
+                example: "#f44336"
+              })
+            }),
+            ai_label: object({
+              default: literal({ default: null, ...AI_LABEL_DEFAULTS }),
+              consumers: CONTENT_CONSUMERS,
+              example: { default: null, manual: AI_LABEL_DEFAULTS.manual },
+              migration: "configuration/content",
+              runtimeKey: "aiLabel",
+              sealed: false,
+              allowedPropertyKeys: ["default", "manual", "reviewed", "polished", "generated"],
+              properties: {
+                default: deliveredField("content.article.ai_label.default", { normalizer: "identity", example: null })
+              },
+              additionalPropertyKey: "<level>",
+              additionalProperties: aiLabelLevelSchema()
+            }),
+            footer: object({
+              consumers: CONTENT_CONSUMERS,
+              example: { license: true, share: ["wechat", "link"] },
+              migration: "configuration/content",
+              runtimeKey: "footer",
+              properties: {
+                license: deliveredField("content.article.footer.license", { normalizer: "identity", example: true }),
+                share: deliveredField("content.article.footer.share", { normalizer: "identity", example: ["wechat", "link"] })
+              }
+            }),
+            related_posts: object({
+              consumers: CONTENT_CONSUMERS,
+              example: { enabled: false, limit: 5 },
+              migration: "configuration/content",
+              runtimeKey: "relatedPosts",
+              removedProperties: { enable: "enabled", max_count: "limit" },
+              properties: {
+                enabled: deliveredField("content.article.related_posts.enabled", { normalizer: "identity", example: false }),
+                limit: deliveredField("content.article.related_posts.limit", { normalizer: "identity", example: 5, minimum: 0 })
+              }
+            }),
+            show_reading_time: deliveredField("content.article.show_reading_time", { normalizer: "identity", example: false }),
+            show_tags: deliveredField("content.article.show_tags", { normalizer: "identity", example: true })
+          }
+        }),
+        notebook: object({
+          consumers: CONTENT_CONSUMERS,
+          example: { listing: { excerpt_length: 128, per_page: null, order_by: "-updated" }, tag_icons: {} },
+          migration: "configuration/content",
+          runtimeKey: "notebook",
+          properties: {
+            listing: object({
+              consumers: CONTENT_CONSUMERS,
+              example: { excerpt_length: 128, per_page: null, order_by: "-updated" },
+              migration: "configuration/content",
+              runtimeKey: "listing",
+              properties: {
+                excerpt_length: deliveredField("content.notebook.listing.excerpt_length", { normalizer: "identity", example: 128, minimum: 0 }),
+                per_page: deliveredField("content.notebook.listing.per_page", { normalizer: "identity", example: null, minimum: 0 }),
+                order_by: deliveredField("content.notebook.listing.order_by", { normalizer: "identity", example: "-updated" })
+              }
+            }),
+            tag_icons: deliveredField("content.notebook.tag_icons", {
+              normalizer: "object",
+              example: { "": "quot:hashtag" },
+              sealed: false,
+              additionalPropertyKey: "<tag>",
+              additionalProperties: deliveredField("content.notebook.tag_icons.<tag>", {
+                normalizer: "identity",
+                example: "quot:hashtag"
+              })
+            }),
+            footer: object({
+              consumers: CONTENT_CONSUMERS,
+              example: { license: false, share: false },
+              migration: "configuration/content",
+              runtimeKey: "footer",
+              properties: {
+                license: deliveredField("content.notebook.footer.license", { normalizer: "identity", example: false }),
+                share: deliveredField("content.notebook.footer.share", { normalizer: "identity", example: false })
+              }
+            })
+          }
+        })
       }
     }),
     seo: object({

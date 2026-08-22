@@ -58,6 +58,7 @@ function groupPagesByNotebook(pages) {
 function prepareNotebook(id, info, ctx, pages) {
   const notebook = info;
   const profiles = requireLayoutProfiles(ctx.stellar?.config);
+  const notebookDefaults = ctx.stellar.config.content.notebook;
   notebook.id = id;
 
   notebook.routing ||= {};
@@ -81,11 +82,11 @@ function prepareNotebook(id, info, ctx, pages) {
   }
 
   notebook.listing.sort ||= 0;
-  notebook.listing.excerpt_length ||= ctx.theme.config.notebook.listing.excerpt_length || 0;
-  notebook.listing.per_page ??= ctx.theme.config.notebook.listing.per_page ?? ctx.config.per_page ?? 10;
-  notebook.listing.order_by ||= ctx.theme.config.notebook.listing.order_by || '-updated';
-  notebook.footer.license ??= ctx.theme.config.notebook.footer.license;
-  notebook.footer.share ??= ctx.theme.config.notebook.footer.share;
+  notebook.listing.excerpt_length ||= notebookDefaults.listing.excerptLength;
+  notebook.listing.per_page ??= notebookDefaults.listing.perPage ?? ctx.config.per_page ?? 10;
+  notebook.listing.order_by ||= notebookDefaults.listing.orderBy;
+  notebook.footer.license ??= notebookDefaults.footer.license;
+  notebook.footer.share ??= notebookDefaults.footer.share;
 
   notebook.sidebar.left ??= { widgets: profiles.noteIndex.sidebar.left.widgets };
   notebook.sidebar.right ??= { widgets: profiles.noteIndex.sidebar.right.widgets };

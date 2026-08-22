@@ -2,7 +2,7 @@
 function layoutDiv() {
   var el = '';
   // 置顶文章样式为平铺时不渲染轮播，置顶文章改由首页文章列表靠前展示
-  if (theme.article?.pin_style !== 'flat') {
+  if (stellar_config('content.article.listing.pinnedLayout') !== 'flat') {
     el += partial('_partial/main/pin_slider', {type: 'post'});
   }
   el += '<div class="navbar top">';

@@ -131,7 +131,7 @@ page_type = 'index'
 | 1 | `page.type`（front matter） |
 | 2 | `theme.topic.tree[page.topic].type` |
 | 3 | `theme.wiki.tree[page.wiki].type` |
-| 4 | `theme.article.type`（全局默认） |
+| 4 | `hexo.stellar.config.content.article.type`（全局默认） |
 | — | 列表页为 `undefined` |
 
 最终值写为 `.l_body` 上的 `type="{article_type}"`。最值得关注的值是 `"story"`，启用文学/缩进风格排版。
@@ -149,7 +149,7 @@ page_type = 'index'
 | 1 | `page.indent`（front matter） |
 | 2 | `theme.topic.tree[page.topic].indent` |
 | 3 | `theme.wiki.tree[page.wiki].indent` |
-| 4 | `theme.article.indent` |
+| 4 | `hexo.stellar.config.content.article.indent` |
 | 5 | `article_type === 'story'`（自动推导） |
 
 **变量解析总结：**
@@ -169,14 +169,14 @@ AND no page.nav_tabs?"]
     H -->|"yes"| I["article_type = topic.type"]
     H -->|"no"| J["wiki.type set?"]
     J -->|"yes"| K["article_type = wiki.type"]
-    J -->|"no"| L["article_type = theme.article.type"]
+    J -->|"no"| L["article_type = content.article.type"]
 
     M["page.indent set?"]
     M -->|"yes"| N["indent = page.indent"]
     M -->|"no"| O["topic/wiki indent set?"]
     O -->|"yes"| P["indent = that value"]
-    O -->|"no"| Q["theme.article.indent set?"]
-    Q -->|"yes"| R["indent = theme.article.indent"]
+    O -->|"no"| Q["content.article.indent set?"]
+    Q -->|"yes"| R["indent = content.article.indent"]
     Q -->|"no"| S["indent = (article_type === 'story')"]
 ```
 
@@ -296,7 +296,8 @@ graph TD
 | 变量 | 类型 | 说明 |
 |---|---|---|
 | `page` | Object | 当前页面 front matter 与渲染内容 |
-| `theme` | Object | 来自 `_config.yml` 的主题配置（`theme.article`、`theme.wiki` 等） |
+| `theme` | Object | 尚未迁移的主题配置与派生集合对象（如 `theme.wiki`） |
+| `hexo.stellar.config` | Object | 已交付的冻结 v2 配置（如 `content.article`、`layout.profiles`） |
 | `config` | Object | Hexo 站点配置（`config.title`、`config.url` 等） |
 | `body` | String | 页面布局模板输出的 HTML 字符串；注入 `.l_main` |
 | `is_home()` | Function | 首页返回 true |

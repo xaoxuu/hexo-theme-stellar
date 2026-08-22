@@ -91,7 +91,7 @@ function layoutDiv() {
   }
   el += `</article>`
   if (layout === 'post' || collection_id(page, "wiki") || notebook) {
-    if (layout === 'post' && theme.article.tags) {
+    if (layout === 'post' && stellar_config('content.article.showTags')) {
       el += partial('_partial/main/article/article_tags')
     }
     el += partial('_partial/main/article/article_footer')

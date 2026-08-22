@@ -1,6 +1,7 @@
 <%
 // Topic Post 在 M2 迁移期继续消费旧模型；普通 Post 必须走 post_card.ejs 的 ViewModel 分支。
 var image = post.card?.cover
+var articleListing = stellar_config('content.article.listing')
 
 function divDefault() {
   var el = '<article class="md-text">'
@@ -13,8 +14,8 @@ function divDefault() {
     el += escape_html(strip_html(post.excerpt))
   } else if (post.description) {
     el += escape_html(post.description)
-  } else if (post.content && theme.article.auto_excerpt > 0) {
-    el += escape_html(truncate(strip_html(post.content), {length: theme.article.auto_excerpt}))
+  } else if (post.content && articleListing.excerptLength > 0) {
+    el += escape_html(truncate(strip_html(post.content), {length: articleListing.excerptLength}))
   }
   el += `</p></div><div class="meta cap"><span class="cap" id="post-meta">${icon('default:calendar')}`
   el += `<time datetime="${date_xml(post.date)}">${date(post.date, config.date_format)}</time></span>`
@@ -27,7 +28,7 @@ function divDefault() {
       el += `<span class="cap breadcrumb"${category_color(lastCategory)}>${icon('default:category')}<span>${escape_html(categoryNames)}</span></span>`
     }
   }
-  if (theme.article.card_tags && post.tags && post.tags.length > 0) {
+  if (articleListing.showTags && post.tags && post.tags.length > 0) {
     el += '<span class="card-tags">'
     post.tags.forEach(function(tag, index) {
       if (index < 5) el += `<span class="cap tag-chip">${icon('default:hashtag')}${escape_html(tag.name)}</span>`
@@ -47,4 +48,4 @@ function divPhoto() {
   return el + '</div></div>'
 }
 %>
-<%- theme.article.card_style == 'hero' && image ? divPhoto() : divDefault() %>
+<%- articleListing.cardLayout == 'hero' && image ? divPhoto() : divDefault() %>

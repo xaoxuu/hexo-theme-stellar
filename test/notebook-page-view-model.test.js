@@ -104,11 +104,13 @@ function notebookInput(overrides = {}) {
           sidebar: { left: { widgets: ["tagtree"] }, right: { widgets: ["toc"] } }
         }
       } },
-      notebook: {
-        listing: { excerpt_length: 128, per_page: null, order_by: "-updated" },
-        footer: { license: false, share: false }
+      content: {
+        notebook: {
+          listing: { excerpt_length: 128, per_page: null, order_by: "-updated" },
+          footer: { license: false, share: false }
+        },
+        article: { type: "story", indent: false }
       },
-      article: { type: "story", indent: false },
       comments: { enabled: false, service: "giscus", giscus: { "data-theme": "light" } }
     },
     collectionConfig,
@@ -290,7 +292,7 @@ test("生成前事件只为可解析的严格 Notebook Note 挂载 PageViewModel
       note_index: { navigation: { active_menu: "notebooks" } },
       note: {}
     } },
-    notebook: { listing: {}, footer: {} }
+    content: { notebook: { listing: {}, footer: {} } }
   };
 
   processContentConfig({
@@ -328,7 +330,7 @@ test("生成前事件拒绝引用不存在 Notebook 的 Note", t => {
     pages: { each: callback => callback(missing), data: [missing] },
     data: {}
   };
-  const themeConfig = { layout: { profiles: {} }, notebook: {} };
+  const themeConfig = { layout: { profiles: {} }, content: { notebook: {} } };
 
   assert.throws(() => processContentConfig({
     source_dir: sourceDir,

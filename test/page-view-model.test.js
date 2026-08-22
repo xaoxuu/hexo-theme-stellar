@@ -65,7 +65,11 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
           }
         }
       } },
-      article: { type: "tech", indent: false, license: "Global license", share: true },
+      content: { article: {
+        type: "tech",
+        indent: false,
+        footer: { license: "Global license", share: true }
+      } },
       comments: { service: "giscus" }
     },
     collectionConfig: {
@@ -213,7 +217,7 @@ test("Wiki 树构建事件只为严格 v2 Wiki 页面挂载 PageViewModel", t =>
       wiki_index: { path: "/wiki/" },
       wiki: { navigation: { active_menu: "wiki" } }
     } },
-    article: { indent: true },
+    content: { article: { indent: true } },
     comments: { service: "giscus" }
   };
   const collections = { data, pages: [wikiPage, ordinaryPage] };
@@ -358,15 +362,16 @@ test("合法 Post profile 生成固定结构的冻结 PageViewModel", () => {
           }
         }
       } },
-      article: {
-        pin_style: "carousel",
-        card_style: "hero",
-        auto_excerpt: 128,
+      content: { article: {
+        listing: {
+          pinned_layout: "carousel",
+          card_layout: "hero",
+          excerpt_length: 128
+        },
         type: "tech",
         indent: false,
-        license: "CC BY-NC-SA 4.0",
-        share: false
-      },
+        footer: { license: "CC BY-NC-SA 4.0", share: false }
+      } },
       comments: { service: "giscus" }
     },
     frontMatter: {
@@ -495,16 +500,13 @@ test("Post render 投影详情关系、Footer、评论和列表条目", () => {
     source: "source/_posts/article.md",
     siteConfig: { title: "Stellar" },
     themeConfig: {
-      article: {
-        tags: true,
-        card_tags: true,
-        card_style: "hero",
-        auto_excerpt: 80,
-        category_color: { "开发": "f44336" },
-        license: "By {author.name} ({author.url})",
-        share: ["wechat", "link"],
-        related_posts: { enable: true, max_count: 2 }
-      },
+      content: { article: {
+        show_tags: true,
+        listing: { show_tags: true, card_layout: "hero", excerpt_length: 80 },
+        category_colors: { "开发": "f44336" },
+        footer: { license: "By {author.name} ({author.url})", share: ["wechat", "link"] },
+        related_posts: { enabled: true, limit: 2 }
+      } },
       authors: { xaoxuu: { name: "xaoxuu", url: "https://xaoxuu.com" } },
       default_author: { id: "xaoxuu", name: "xaoxuu", url: "https://xaoxuu.com" },
       comments: {
@@ -578,12 +580,10 @@ test("Post 列表与评论投影保留覆盖、摘要优先级、五标签和隐
     source: "source/_posts/overrides.md",
     siteConfig: { title: "Stellar" },
     themeConfig: {
-      article: {
-        card_style: "classic",
-        auto_excerpt: 6,
-        card_tags: true,
-        share: ["email", "link"]
-      },
+      content: { article: {
+        listing: { card_layout: "classic", excerpt_length: 6, show_tags: true },
+        footer: { share: ["email", "link"] }
+      } },
       comments: {
         service: "giscus",
         giscus: { "data-repo": "owner/repo" },
@@ -645,12 +645,11 @@ test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆�
           }
         }
       } },
-      article: {
+      content: { article: {
         type: "tech",
         indent: true,
-        license: "Global license",
-        share: true
-      },
+        footer: { license: "Global license", share: true }
+      } },
       comments: {
         enabled: true,
         title: "Global title",
@@ -781,8 +780,10 @@ test("相关文章构建边界复用插件结果，并在插件缺失时报告�
   const input = {
     source: "source/_posts/related.md",
     siteConfig: { title: "Stellar" },
-    themeConfig: { article: { related_posts: { enable: true, max_count: 2 } } },
-    stellarConfig: parseStellarConfig(),
+    themeConfig: { content: { article: { related_posts: { enabled: true, limit: 2 } } } },
+    stellarConfig: parseStellarConfig({
+      themeConfig: { content: { article: { related_posts: { enabled: true, limit: 2 } } } }
+    }),
     frontMatter: { title: "Related", layout: "post" },
     page
   };
@@ -791,7 +792,7 @@ test("相关文章构建边界复用插件结果，并在插件缺失时报告�
 
   assert.throws(
     () => attachPageViewModel.call({ extend: { helper: { get: () => null } } }, { ...page }),
-    /source\/_posts\/related\.md 已启用 article\.related_posts.*hexo-related-popular-posts/
+    /source\/_posts\/related\.md 已启用 content\.article\.related_posts.*hexo-related-popular-posts/
   );
 
   const rendered = attachPageViewModel.call({
@@ -869,51 +870,47 @@ test("生成前事件为普通 Post 与严格 Topic 挂载各自的 PageViewMode
   assert.equal(about.viewModel, undefined);
 });
 
-test("Post profile 严格拒绝剩余内容默认值的未知键与错误类型", () => {
+test("Post profile 严格拒绝已迁移内容默认值的未知键与错误类型", () => {
   assert.throws(() => buildPostPageViewModel({
     themeSource: "_config.stellar.yml",
     themeConfig: {
-      article: {
-        author: 42,
-        share: {}
+      content: {
+        article: {
+          author: 42,
+          footer: { share: {} }
+        }
       },
-      comments: {
-        service: "giscus",
-        giscus: "bad"
-      }
+      comments: { service: "giscus" }
     },
     frontMatter: { title: "Strict", layout: "post" },
     page: { title: "Strict", layout: "post" }
   }), error => {
-    assert.match(error.message, /未知字段 article\.author/);
-    assert.match(error.message, /article\.share 应为 boolean \| string\[\]/);
-    assert.match(error.message, /comments\.giscus 应为 object，实际为 string/);
+    assert.match(error.message, /未知字段 content\.article\.author/);
+    assert.match(error.message, /content\.article\.footer\.share 应为 boolean \| array/);
     return true;
   });
 });
 
-test("Post profile 严格校验全部未迁移内容配置袋", () => {
+test("Post profile 严格校验全部已迁移内容配置袋", () => {
   assert.throws(() => buildPostPageViewModel({
     themeSource: "_config.stellar.yml",
     themeConfig: {
-      article: {
-        cover_ratio: "wide",
+      content: { article: {
+        listing: { cover_ratio: "wide" },
         ai_label: 42,
-        category_color: [],
+        category_colors: [],
         related_posts: false,
-        reading_time: "yes"
-      },
-      comments: { custom_css: 42 }
+        show_reading_time: "yes"
+      } }
     },
     frontMatter: { title: "Strict bags", layout: "post" },
     page: { title: "Strict bags", layout: "post" }
   }), error => {
-    assert.match(error.message, /article\.cover_ratio 应为 finite number，实际为 string/);
-    assert.match(error.message, /article\.ai_label 应为 object，实际为 number/);
-    assert.match(error.message, /article\.category_color 应为 object，实际为 array/);
-    assert.match(error.message, /article\.related_posts 应为 object，实际为 boolean/);
-    assert.match(error.message, /article\.reading_time 应为 boolean，实际为 string/);
-    assert.match(error.message, /comments\.custom_css 应为 string \| string\[\]，实际为 number/);
+    assert.match(error.message, /content\.article\.listing\.cover_ratio 应为 number，实际为 string/);
+    assert.match(error.message, /content\.article\.ai_label 应为 object，实际为 number/);
+    assert.match(error.message, /content\.article\.category_colors 应为 object，实际为 array/);
+    assert.match(error.message, /content\.article\.related_posts 应为 object，实际为 boolean/);
+    assert.match(error.message, /content\.article\.show_reading_time 应为 boolean，实际为 string/);
     return true;
   });
 });

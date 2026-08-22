@@ -31,7 +31,10 @@ function flattenConfigFields(schema) {
       consumers: clone(node.consumers),
       example: clone(node.example),
       migration: node.migration,
-      ...(node.sealed ? { sealed: true } : {})
+      ...(node.sealed ? { sealed: true } : {}),
+      ...(node.values ? { values: clone(node.values) } : {}),
+      ...(node.minimum !== undefined ? { minimum: node.minimum } : {}),
+      ...(node.exclusiveMinimum !== undefined ? { exclusiveMinimum: node.exclusiveMinimum } : {})
     });
   }
 

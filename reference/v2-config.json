@@ -4,6 +4,1105 @@
   "status": "partial",
   "fields": [
     {
+      "path": "content",
+      "runtimePath": "content",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "article": {
+          "listing": {
+            "card_layout": "hero"
+          }
+        },
+        "notebook": {
+          "listing": {
+            "order_by": "-updated"
+          }
+        }
+      },
+      "migration": "configuration/content",
+      "sealed": true
+    },
+    {
+      "path": "content.article",
+      "runtimePath": "content.article",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "type": "tech",
+        "listing": {
+          "pinned_layout": "carousel",
+          "card_layout": "hero"
+        }
+      },
+      "migration": "configuration/content",
+      "sealed": true
+    },
+    {
+      "path": "content.article.ai_label",
+      "runtimePath": "content.article.aiLabel",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "default": null,
+          "manual": {
+            "color": "#03a9f4",
+            "icon": "default:shield-user"
+          },
+          "reviewed": {
+            "color": "#4caf50",
+            "icon": "default:shield-check"
+          },
+          "polished": {
+            "color": "#4caf50",
+            "icon": "default:shield-up"
+          },
+          "generated": {
+            "color": "#ff9800",
+            "icon": "default:shield-warning"
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "default": null,
+        "manual": {
+          "color": "#03a9f4",
+          "icon": "default:shield-user"
+        }
+      },
+      "migration": "configuration/content"
+    },
+    {
+      "path": "content.article.ai_label.default",
+      "runtimePath": "content.article.aiLabel.default",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "configuration/content"
+    },
+    {
+      "path": "content.article.ai_label.<level>",
+      "runtimePath": "content.article.aiLabel.<level>",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "color": "#03a9f4",
+        "icon": "default:shield-user"
+      },
+      "migration": "configuration/content",
+      "sealed": true
+    },
+    {
+      "path": "content.article.ai_label.<level>.color",
+      "runtimePath": "content.article.aiLabel.<level>.color",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "current AI label palette"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "#03a9f4",
+      "migration": "configuration/content"
+    },
+    {
+      "path": "content.article.ai_label.<level>.icon",
+      "runtimePath": "content.article.aiLabel.<level>.icon",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "default:shield-user",
+      "migration": "configuration/content"
+    },
+    {
+      "path": "content.article.banner",
+      "runtimePath": "content.article.banner",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "ratio": 2.5
+      },
+      "migration": "configuration/content",
+      "sealed": true
+    },
+    {
+      "path": "content.article.banner.ratio",
+      "runtimePath": "content.article.banner.ratio",
+      "type": [
+        "number"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": 2.5
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": 2.5,
+      "migration": "configuration/content",
+      "exclusiveMinimum": 0
+    },
+    {
+      "path": "content.article.category_colors",
+      "runtimePath": "content.article.categoryColors",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "探索号": "#f44336"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {
+        "探索号": "#f44336"
+      },
+      "migration": "configuration/content"
+    },
+    {
+      "path": "content.article.category_colors.<category>",
+      "runtimePath": "content.article.categoryColors.<category>",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "current category color map"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "#f44336",
+      "migration": "configuration/content"
+    },
+    {
+      "path": "content.article.footer",
+      "runtimePath": "content.article.footer",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "license": true,
+        "share": [
+          "wechat",
+          "link"
+        ]
+      },
+      "migration": "configuration/content",
+      "sealed": true
+    },
+    {
+      "path": "content.article.footer.license",
+      "runtimePath": "content.article.footer.license",
+      "type": [
+        "boolean",
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": true,
+      "migration": "configuration/content"
+    },
+    {
+      "path": "content.article.footer.share",
+      "runtimePath": "content.article.footer.share",
+      "type": [
+        "boolean",
+        "array"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": false
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": [
+        "wechat",
+        "link"
+      ],
+      "migration": "configuration/content"
+    },
+    {
+      "path": "content.article.indent",
+      "runtimePath": "content.article.indent",
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "configuration/content"
+    },
+    {
+      "path": "content.article.listing",
+      "runtimePath": "content.article.listing",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "pinned_layout": "carousel",
+        "card_layout": "hero",
+        "cover_ratio": 2,
+        "excerpt_length": 128,
+        "show_tags": false
+      },
+      "migration": "configuration/content",
+      "sealed": true
+    },
+    {
+      "path": "content.article.listing.card_layout",
+      "runtimePath": "content.article.listing.cardLayout",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "hero"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "hero",
+      "migration": "configuration/content",
+      "values": [
+        "hero",
+        "classic"
+      ]
+    },
+    {
+      "path": "content.article.listing.cover_ratio",
+      "runtimePath": "content.article.listing.coverRatio",
+      "type": [
+        "number"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": 2
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": 2,
+      "migration": "configuration/content",
+      "exclusiveMinimum": 0
+    },
+    {
+      "path": "content.article.listing.excerpt_length",
+      "runtimePath": "content.article.listing.excerptLength",
+      "type": [
+        "number"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": 128
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": 128,
+      "migration": "configuration/content",
+      "minimum": 0
+    },
+    {
+      "path": "content.article.listing.pinned_layout",
+      "runtimePath": "content.article.listing.pinnedLayout",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "carousel"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "carousel",
+      "migration": "configuration/content",
+      "values": [
+        "carousel",
+        "flat"
+      ]
+    },
+    {
+      "path": "content.article.listing.show_tags",
+      "runtimePath": "content.article.listing.showTags",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": false
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": false,
+      "migration": "configuration/content"
+    },
+    {
+      "path": "content.article.related_posts",
+      "runtimePath": "content.article.relatedPosts",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "enabled": false,
+        "limit": 5
+      },
+      "migration": "configuration/content",
+      "sealed": true
+    },
+    {
+      "path": "content.article.related_posts.enabled",
+      "runtimePath": "content.article.relatedPosts.enabled",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": false
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": false,
+      "migration": "configuration/content"
+    },
+    {
+      "path": "content.article.related_posts.limit",
+      "runtimePath": "content.article.relatedPosts.limit",
+      "type": [
+        "number"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": 5
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": 5,
+      "migration": "configuration/content",
+      "minimum": 0
+    },
+    {
+      "path": "content.article.show_reading_time",
+      "runtimePath": "content.article.showReadingTime",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": false
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": false,
+      "migration": "configuration/content"
+    },
+    {
+      "path": "content.article.show_tags",
+      "runtimePath": "content.article.showTags",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": true,
+      "migration": "configuration/content"
+    },
+    {
+      "path": "content.article.type",
+      "runtimePath": "content.article.type",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "tech"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "tech",
+      "migration": "configuration/content",
+      "values": [
+        "tech",
+        "story"
+      ]
+    },
+    {
+      "path": "content.notebook",
+      "runtimePath": "content.notebook",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "listing": {
+          "excerpt_length": 128,
+          "per_page": null,
+          "order_by": "-updated"
+        },
+        "tag_icons": {}
+      },
+      "migration": "configuration/content",
+      "sealed": true
+    },
+    {
+      "path": "content.notebook.footer",
+      "runtimePath": "content.notebook.footer",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "license": false,
+        "share": false
+      },
+      "migration": "configuration/content",
+      "sealed": true
+    },
+    {
+      "path": "content.notebook.footer.license",
+      "runtimePath": "content.notebook.footer.license",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": false
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": false,
+      "migration": "configuration/content"
+    },
+    {
+      "path": "content.notebook.footer.share",
+      "runtimePath": "content.notebook.footer.share",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": false
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": false,
+      "migration": "configuration/content"
+    },
+    {
+      "path": "content.notebook.listing",
+      "runtimePath": "content.notebook.listing",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "excerpt_length": 128,
+        "per_page": null,
+        "order_by": "-updated"
+      },
+      "migration": "configuration/content",
+      "sealed": true
+    },
+    {
+      "path": "content.notebook.listing.excerpt_length",
+      "runtimePath": "content.notebook.listing.excerptLength",
+      "type": [
+        "number"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": 128
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": 128,
+      "migration": "configuration/content",
+      "minimum": 0
+    },
+    {
+      "path": "content.notebook.listing.order_by",
+      "runtimePath": "content.notebook.listing.orderBy",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "-updated"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "-updated",
+      "migration": "configuration/content"
+    },
+    {
+      "path": "content.notebook.listing.per_page",
+      "runtimePath": "content.notebook.listing.perPage",
+      "type": [
+        "number",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": null,
+      "migration": "configuration/content",
+      "minimum": 0
+    },
+    {
+      "path": "content.notebook.tag_icons",
+      "runtimePath": "content.notebook.tagIcons",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "": "quot:hashtag"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": {
+        "": "quot:hashtag"
+      },
+      "migration": "configuration/content"
+    },
+    {
+      "path": "content.notebook.tag_icons.<tag>",
+      "runtimePath": "content.notebook.tagIcons.<tag>",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "current notebook tag icon map"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ],
+      "example": "quot:hashtag",
+      "migration": "configuration/content"
+    },
+    {
       "path": "inject",
       "runtimePath": "inject",
       "type": [
@@ -5229,7 +6328,12 @@
         "footer renderer"
       ],
       "example": "avatar",
-      "migration": "configuration/site"
+      "migration": "configuration/site",
+      "values": [
+        "avatar",
+        "icon",
+        "plain"
+      ]
     },
     {
       "path": "site.brand.name",

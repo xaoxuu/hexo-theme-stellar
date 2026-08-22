@@ -238,7 +238,7 @@ graph TD
 **摘要**
 
 - 优先级：`post.excerpt` → `post.description` → 由 `post.content` 自动生成
-- 自动摘要长度由 `theme.article.auto_excerpt` 控制
+- 自动摘要长度由 `content.article.listing.excerpt_length` 控制
 - 排版插件启用时应用 `heti` 类
 - 用 `strip_html()` 辅助函数去 HTML
 
@@ -374,7 +374,7 @@ graph LR
 
 **卡片标签**
 
-- 由 `article.card_tags` 配置控制（默认关闭），最多显示 5 个
+- 由 `content.article.listing.show_tags` 控制（默认关闭），最多显示 5 个
 - 标签为纯文字（`cap` 小字样式，无胶囊底色），前缀为内联 `default:hashtag` 图标（`.card-tags svg`：1em、`margin-right: .25em`、`opacity: .4`），与标签页图标一致
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
@@ -404,10 +404,10 @@ flowchart TD
 
 仅当同时满足以下条件时使用 **hero 卡片**：
 
-1. `article.card_style` 为 `hero`（默认）
+1. `content.article.listing.card_layout` 为 `hero`（默认）
 2. `obj.image` 已定义且长度非零（文章有封面）
 
-否则回退到 **classic 卡片**。也就是说文章可以有封面图但仍用普通卡片（`article.card_style` 为 `classic` 或文章没有封面时）。
+否则回退到 **classic 卡片**。也就是说文章可以有封面图但仍用普通卡片（`content.article.listing.card_layout` 为 `classic` 或文章没有封面时）。
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
 

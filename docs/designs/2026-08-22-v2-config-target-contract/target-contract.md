@@ -65,7 +65,7 @@ content:
     indent:
     listing:
       pinned_layout: carousel
-      card_layout: classic
+      card_layout: hero
       cover_ratio: 2
       excerpt_length: 128
       show_tags: false
@@ -77,13 +77,13 @@ content:
       reviewed: {}
       polished: {}
       generated: {}
-    footer: { license: true, share: false }
+    footer: { license: '默认许可文本', share: false }
     related_posts: { enabled: false, limit: 5 }
     show_reading_time: false
     show_tags: true
   notebook:
     listing: { excerpt_length: 128, per_page: null, order_by: -updated }
-    tag_icons: {}
+    tag_icons: { '': quot:hashtag }
     footer: { license: false, share: false }
 
 appearance:
@@ -210,6 +210,8 @@ Profile ID 固定迁移：`index_blog/index_topic/index_wiki → blog_index/topi
 Extension ID 固定迁移：`fancybox → lightbox`、`scrollreveal → reveal`、`tianli_gpt → ai_summary`、`katex/mathjax → math`、`mermaid → diagrams`、`copycode → code_copy`、`heti → cjk_typography`；Swiper 作为内置轮播实现内部化。服务 ID 中 `siteinfo → site_info`，其余官方服务使用 snake_case 注册 ID。
 
 逐字段的唯一动作、理由、动态记录和外部边界不在文档中复制第二份；以 `CONFIG_DOMAIN_MIGRATIONS` 为唯一机器矩阵。
+
+> #708 运行时切片落实默认值时，根据 #704 已声明的“类型与默认值由后续纵向切片交付”校正三项占位：`indent` 使用 `null` 保留 story 自动缩进，`card_layout` 保持现有 `hero` 行为，`footer.license` 保留当前协议文本。字段路径与信息架构未改变。
 
 ## Collection 与 Front Matter
 

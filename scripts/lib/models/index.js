@@ -4,10 +4,8 @@ const { gravatar, stripHTML, truncate } = require("hexo-util");
 const {
   CONTENT_MODEL_FIELDS,
   ContentConfigError,
-  POST_PROFILE_FIELDS,
   isPlainObject,
   validateCollectionConfig,
-  validateNotebookProfileConfig,
   validatePageConfig,
   validatePostProfileConfig,
   validateThemeConfig,
@@ -29,6 +27,11 @@ const {
 const { mergeBrand, normalizeBrand } = require("../brand");
 const { firstContentImage, postDescription, postImages } = require("../seo");
 const { caption } = require("../caption");
+const {
+  articleFooterDefaults,
+  articlePresentationDefaults,
+  requireContentConfig
+} = require("../content-defaults");
 
 function cloneValue(value) {
   if (Array.isArray(value)) return value.map(cloneValue);
@@ -235,6 +238,7 @@ function buildContributor(item, themeConfig) {
 
 function buildPostArticleRender(input, item) {
   const themeConfig = input.themeConfig;
+  const articleConfig = requireContentConfig(input.stellarConfig, input.themeSource).article;
   const frontMatter = input.frontMatter;
   const footer = item.presentation.footer || {};
   const comments = item.presentation.comments || {};
@@ -244,20 +248,18 @@ function buildPostArticleRender(input, item) {
   if (service === "giscus" && preferredTheme !== "auto" && commentOptions["data-theme"] === "preferred_color_scheme") {
     commentOptions["data-theme"] = preferredTheme;
   }
-  const configuredShare = Array.isArray(footer.share) ? footer.share : themeConfig.article?.share;
+  const configuredShare = Array.isArray(footer.share) ? footer.share : articleConfig.footer.share;
   const shareServices = footer.share !== false && Array.isArray(configuredShare)
     ? configuredShare.filter(name => ["wechat", "weibo", "email", "link"].includes(name))
     : [];
   const summarySource = typeof frontMatter.description === "string" && frontMatter.description.length > 0
     ? frontMatter.description
     : item.excerpt || item.content;
-  const relatedConfig = isPlainObject(themeConfig.article?.related_posts)
-    ? themeConfig.article.related_posts
-    : {};
+  const relatedConfig = articleConfig.relatedPosts;
 
   return {
     heti: themeConfig.plugins?.heti?.enable === true,
-    tags: themeConfig.article?.tags === true ? normalizeLinks(input.page.tagLinks) : [],
+    tags: articleConfig.showTags === true ? normalizeLinks(input.page.tagLinks) : [],
     footer: {
       references: Array.isArray(footer.references) ? cloneValue(footer.references) : [],
       license: resolveLicense(footer.license, item, themeConfig),
@@ -273,9 +275,9 @@ function buildPostArticleRender(input, item) {
     previous: normalizePostLink(input.page.previous),
     next: normalizePostLink(input.page.next),
     related: {
-      enabled: relatedConfig.enable === true,
-      title: typeof relatedConfig.title === "string" ? relatedConfig.title : "",
-      maxCount: Number.isFinite(relatedConfig.max_count) ? relatedConfig.max_count : 5,
+      enabled: relatedConfig.enabled === true,
+      title: "",
+      maxCount: relatedConfig.limit,
       items: normalizeRelatedItems(input.relatedItems)
     },
     comments: {
@@ -292,6 +294,7 @@ function buildPostArticleRender(input, item) {
 }
 
 function buildPostListingRender(input, collection, item) {
+  const articleConfig = requireContentConfig(input.stellarConfig, input.themeSource).article;
   const categories = normalizeCategoryLinks(input.page.categoryLinks);
   const tagLinks = normalizeLinks(input.page.tagLinks);
   const description = typeof input.frontMatter.description === "string" ? input.frontMatter.description : "";
@@ -317,8 +320,8 @@ function buildPostListingRender(input, collection, item) {
     }),
     excerpt,
     categories: categories.map(category => category.name),
-    categoryStyle: categoryStyle(lastCategory, input.themeConfig.article?.category_color),
-    tags: input.themeConfig.article?.card_tags === true
+    categoryStyle: categoryStyle(lastCategory, articleConfig.categoryColors),
+    tags: articleConfig.listing.showTags === true
       ? tagLinks.slice(0, 5).map(tag => tag.name)
       : [],
     authorId: typeof item.presentation.article?.author === "string" && item.presentation.article.author.length > 0
@@ -479,7 +482,8 @@ function buildCollectionModel(themeConfig, stellarConfig) {
   const profiles = requireLayoutProfiles(stellarConfig);
   const postProfile = profiles.post;
   const blogIndex = profiles.blogIndex;
-  const article = isPlainObject(themeConfig.article) ? themeConfig.article : {};
+  const content = requireContentConfig(stellarConfig);
+  const article = content.article;
   const comments = pick(themeConfig.comments, CONTENT_MODEL_FIELDS.comments);
   if (comments.title == null && typeof themeConfig.comments?.comment_title === "string") {
     comments.title = themeConfig.comments.comment_title;
@@ -497,18 +501,14 @@ function buildCollectionModel(themeConfig, stellarConfig) {
     },
     navigation,
     listing: {
-      pinStyle: article.pin_style ?? null,
-      cardStyle: article.card_style ?? null,
-      excerptLength: article.auto_excerpt ?? null
+      pinStyle: article.listing.pinnedLayout,
+      cardStyle: article.listing.cardLayout,
+      excerptLength: article.listing.excerptLength
     },
     presentation: {
       sidebar,
-      article: pick(article, POST_PROFILE_FIELDS.articlePresentation),
-      footer: {
-        references: [],
-        license: article.license ?? null,
-        share: article.share ?? null
-      },
+      article: articlePresentationDefaults(content),
+      footer: articleFooterDefaults(content),
       comments
     },
     visibility: {
@@ -604,7 +604,7 @@ function buildWikiCollectionModel(input, collectionId) {
   const profiles = requireLayoutProfiles(input.stellarConfig);
   const wikiProfile = profiles.wiki;
   const indexWiki = profiles.wikiIndex;
-  const article = isPlainObject(themeConfig.article) ? themeConfig.article : {};
+  const content = requireContentConfig(input.stellarConfig, input.themeSource);
   const collectionRouting = isPlainObject(collectionConfig.routing) ? collectionConfig.routing : {};
   const collectionListing = isPlainObject(collectionConfig.listing) ? collectionConfig.listing : {};
   const baseDir = collectionRouting.base_dir || `${profilePath(indexWiki.path) || "wiki"}/${collectionId}`;
@@ -613,12 +613,8 @@ function buildWikiCollectionModel(input, collectionId) {
   const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
   const profileSidebar = pick(wikiProfile.sidebar, CONTENT_MODEL_FIELDS.sidebar);
   const collectionSidebar = pick(collectionConfig.sidebar, CONTENT_MODEL_FIELDS.sidebar);
-  const globalArticle = pick(article, CONTENT_MODEL_FIELDS.article);
-  const globalFooter = {
-    references: [],
-    license: article.license ?? null,
-    share: article.share ?? null
-  };
+  const globalArticle = articlePresentationDefaults(content);
+  const globalFooter = articleFooterDefaults(content);
 
   return {
     id: collectionId,
@@ -698,7 +694,7 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
   const indexTopic = profiles.topicIndex;
   const collectionRouting = isPlainObject(collectionConfig.routing) ? collectionConfig.routing : {};
   const collectionListing = isPlainObject(collectionConfig.listing) ? collectionConfig.listing : {};
-  const article = isPlainObject(themeConfig.article) ? themeConfig.article : {};
+  const content = requireContentConfig(input.stellarConfig, input.themeSource);
   const baseDir = collectionRouting.base_dir || profilePath(indexTopic.path) || "topic";
   const routePath = collectionRouting.path || `${baseDir}/${collectionId}`;
   const orderBy = collectionListing.order_by ?? "-date";
@@ -721,11 +717,8 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
     "sidebar"
   );
   const collectionSidebar = pick(collectionConfig.sidebar, CONTENT_MODEL_FIELDS.sidebar);
-  const globalFooter = {
-    references: [],
-    license: article.license ?? null,
-    share: article.share ?? null
-  };
+  const globalArticle = articlePresentationDefaults(content);
+  const globalFooter = articleFooterDefaults(content);
 
   return {
     id: collectionId,
@@ -755,7 +748,7 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
       hero: cloneValue(collectionConfig.hero || {}),
       sidebar: normalizeSidebarBrand(mergeConfig(profileSidebar, collectionSidebar, "sidebar")),
       article: mergeConfig(
-        pick(article, CONTENT_MODEL_FIELDS.article),
+        globalArticle,
         pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)
       ),
       footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),
@@ -809,18 +802,20 @@ function buildNotebookCollectionModel(input, collectionId) {
   const siteConfig = input.siteConfig;
   const collectionConfig = input.collectionConfig;
   const profiles = requireLayoutProfiles(input.stellarConfig);
-  const notebookDefaults = isPlainObject(themeConfig.notebook) ? themeConfig.notebook : {};
+  const content = requireContentConfig(input.stellarConfig, input.themeSource);
+  const notebookDefaults = content.notebook;
   const collectionListing = isPlainObject(collectionConfig.listing) ? collectionConfig.listing : {};
-  const defaultListing = isPlainObject(notebookDefaults.listing) ? notebookDefaults.listing : {};
+  const defaultListing = notebookDefaults.listing;
   const baseDir = notebookBaseDir(collectionId, collectionConfig, input.stellarConfig);
   const profileNavigation = toRenderNavigation(profiles.noteIndex);
   const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
   const profileSidebar = pick(profiles.note.sidebar, CONTENT_MODEL_FIELDS.sidebar);
   const collectionSidebar = pick(collectionConfig.note?.sidebar, CONTENT_MODEL_FIELDS.sidebar);
-  const globalArticle = pick(themeConfig.article, CONTENT_MODEL_FIELDS.article);
+  const globalArticle = articlePresentationDefaults(content);
   const globalFooter = {
     references: [],
-    ...pick(notebookDefaults.footer, CONTENT_MODEL_FIELDS.footer)
+    license: notebookDefaults.footer.license,
+    share: notebookDefaults.footer.share
   };
 
   return {
@@ -836,9 +831,9 @@ function buildNotebookCollectionModel(input, collectionId) {
     listing: {
       priority: collectionListing.priority ?? 0,
       sort: collectionListing.sort ?? 0,
-      excerptLength: collectionListing.excerpt_length ?? defaultListing.excerpt_length ?? 0,
-      perPage: collectionListing.per_page ?? defaultListing.per_page ?? siteConfig.per_page ?? 10,
-      orderBy: collectionListing.order_by ?? defaultListing.order_by ?? "-updated"
+      excerptLength: collectionListing.excerpt_length ?? defaultListing.excerptLength,
+      perPage: collectionListing.per_page ?? defaultListing.perPage ?? siteConfig.per_page ?? 10,
+      orderBy: collectionListing.order_by ?? defaultListing.orderBy
     },
     presentation: {
       card: pick(collectionConfig.card, CONTENT_MODEL_FIELDS.card),
@@ -1011,7 +1006,6 @@ function buildNotebookPageViewModel(input) {
 
   validateThemeConfig(themeConfig, themeSource);
   validatePostProfileConfig(themeConfig, themeSource);
-  validateNotebookProfileConfig(themeConfig, themeSource);
   if (!isPlainObject(collectionConfig)) {
     throw new ContentConfigError([`${source}: 未找到 Notebook collection ${collectionId || "<unknown>"}`]);
   }

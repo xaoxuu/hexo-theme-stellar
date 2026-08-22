@@ -255,15 +255,15 @@ function heroSchema(factory, options = {}) {
 function articleSchema(factory) {
   const { field, object } = factory;
   return object({
-    type: field("string", { default: inherited("theme.article.type"), example: "tech" }),
-    indent: field("boolean", { default: inherited("theme.article.indent"), example: false }),
+    type: field("string", { default: inherited("hexo.stellar.config.content.article.type"), example: "tech" }),
+    indent: field("boolean", { default: inherited("hexo.stellar.config.content.article.indent"), example: false }),
     author: field("string", { example: "xaoxuu" }),
     ai_label: field(["string", "object"], {
-      default: inherited("theme.article.ai_label", "page.article.ai_label"),
+      default: inherited("hexo.stellar.config.content.article.aiLabel", "page.article.ai_label"),
       example: "reviewed",
       additionalProperties: true
     })
-  }, { default: inherited("theme.article", "collection.article", "page.article"), example: { type: "tech", indent: false } });
+  }, { default: inherited("hexo.stellar.config.content.article", "collection.article", "page.article"), example: { type: "tech", indent: false } });
 }
 
 function footerSchema(factory, options = {}) {
@@ -275,14 +275,14 @@ function footerSchema(factory, options = {}) {
       additionalProperties: true
     }), { default: literal([]), example: [] }),
     license: field(["boolean", "string", "null"], {
-      default: options.licenseDefault || inherited("theme.article.license"),
+      default: options.licenseDefault || inherited("hexo.stellar.config.content.article.footer.license"),
       example: "CC BY-NC-SA 4.0"
     }),
     share: field(["boolean", "array", "null"], {
-      default: options.shareDefault || inherited("theme.article.share"),
+      default: options.shareDefault || inherited("hexo.stellar.config.content.article.footer.share"),
       example: true
     })
-  }, { default: inherited("theme.article", "collection.footer", "page.footer"), example: { references: [], share: true } });
+  }, { default: inherited("hexo.stellar.config.content.article.footer", "collection.footer", "page.footer"), example: { references: [], share: true } });
 }
 
 function commentsSchema(factory) {
@@ -392,20 +392,20 @@ function collectionSchema(profile) {
 
   const listingProperties = profile === "post"
     ? {
-        pinStyle: field(["string", "null"], { default: inherited("theme.article.pin_style"), example: "carousel", required: true }),
-        cardStyle: field(["string", "null"], { default: inherited("theme.article.card_style"), example: "classic", required: true }),
-        excerptLength: field(["number", "null"], { default: inherited("theme.article.auto_excerpt"), example: 128, required: true })
+        pinStyle: field(["string", "null"], { default: inherited("hexo.stellar.config.content.article.listing.pinnedLayout"), example: "carousel", required: true }),
+        cardStyle: field(["string", "null"], { default: inherited("hexo.stellar.config.content.article.listing.cardLayout"), example: "hero", required: true }),
+        excerptLength: field(["number", "null"], { default: inherited("hexo.stellar.config.content.article.listing.excerptLength"), example: 128, required: true })
       }
     : {
         priority: field("number", { default: literal(0), example: 0, required: true }),
         sort: field(["number", "null"], { default: profile === "topic" ? literal(null) : literal(0), example: 0, required: true }),
         excerptLength: field(["number", "null"], {
-          default: profile === "notebook" ? inherited("theme.notebook.listing.excerpt_length") : literal(null),
+          default: profile === "notebook" ? inherited("hexo.stellar.config.content.notebook.listing.excerptLength") : literal(null),
           example: 128,
           required: true
         }),
         perPage: field(["number", "null"], {
-          default: profile === "notebook" ? inherited("theme.notebook.listing.per_page", "site.per_page") : literal(null),
+          default: profile === "notebook" ? inherited("hexo.stellar.config.content.notebook.listing.perPage", "site.per_page") : literal(null),
           example: 10,
           required: true
         }),
@@ -587,7 +587,7 @@ function pageViewModelSchema(profile) {
       }, { required: true, example: { title: "Hello Stellar - Stellar", description: "文章摘要", keywords: ["Hexo"], robots: null, canonical: null, openGraph: null, jsonLd: { "@type": "BlogPosting" } } }),
       article: object({
         heti: field("boolean", { default: derived("theme.plugins.heti.enable"), example: false, required: true }),
-        tags: array(tagLink, { default: computed("由 Hexo 标签关系规范化；theme.article.tags 禁用时为空"), example: [{ name: "Hexo", path: "tags/hexo" }], required: true }),
+        tags: array(tagLink, { default: computed("由 Hexo 标签关系规范化；content.article.showTags 禁用时为空"), example: [{ name: "Hexo", path: "tags/hexo" }], required: true }),
         footer: object({
           references: array(field("any", { additionalProperties: true }), { default: inherited("item.presentation.footer.references"), example: [], required: true }),
           license: field("string", { default: computed("由最终许可协议与作者信息生成"), example: "CC BY 4.0", required: true }),
@@ -597,7 +597,7 @@ function pageViewModelSchema(profile) {
         previous: postLink,
         next: postLink,
         related: object({
-          enabled: field("boolean", { default: derived("theme.article.related_posts.enable"), example: false, required: true }),
+          enabled: field("boolean", { default: derived("hexo.stellar.config.content.article.relatedPosts.enabled"), example: false, required: true }),
           title: field("string", { default: literal(""), example: "Related Posts", required: true }),
           maxCount: field("number", { default: literal(5), example: 5, required: true }),
           items: array(relatedItem, { default: literal([]), example: [], required: true })
@@ -620,8 +620,8 @@ function pageViewModelSchema(profile) {
         caption: field("string", { default: computed("由 card.tagline/description/excerpt/content 生成"), example: "文章说明", required: true }),
         excerpt: field("string", { default: computed("由 excerpt/description/content 和列表长度生成"), example: "文章摘要", required: true }),
         categories: array(stringItem, { default: inherited("item.categories"), example: ["开发"], required: true }),
-        categoryStyle: field("string", { default: derived("theme.article.category_color"), example: "--text-p2:#f44336;--theme-block:#f4433620", required: true }),
-        tags: array(stringItem, { default: computed("theme.article.card_tags 启用时最多五项"), example: ["Hexo"], required: true }),
+        categoryStyle: field("string", { default: derived("hexo.stellar.config.content.article.categoryColors"), example: "--text-p2:#f44336;--theme-block:#f4433620", required: true }),
+        tags: array(stringItem, { default: computed("content.article.listing.showTags 启用时最多五项"), example: ["Hexo"], required: true }),
         authorId: field("string", { default: derived("item.presentation.article.author", "theme.default_author.id"), example: "xaoxuu", required: true }),
         priority: field("number", { default: inherited("item.listing.priority"), example: 1, required: true }),
         listed: field("boolean", { default: inherited("item.visibility.listed"), example: true, required: true }),

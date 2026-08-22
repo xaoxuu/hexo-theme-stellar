@@ -83,7 +83,7 @@ flowchart TD
 
 - 模板 [post_tags.ejs](../../../layout/_partial/main/article/post_tags.ejs) 只接收显式 `tags` local；每个标签仍渲染为 `<a class="tag" href="${pretty_url(tag.path)}">`，链接内先输出 `default:hashtag` 图标再输出标签名。迁移期 `article_tags.ejs` 保持旧入口。
 - 样式 [source/css/_components/partial/article-tags.styl](../../../source/css/_components/partial/article-tags.styl)：复用 [source/css/_defines/func.styl](../../../source/css/_defines/func.styl) 的 `tag-chip()` mixin——胶囊圆角（`border-radius: 999px`）、`var(--block)` 底色、`$fs-13`，前缀为内联 hashtag 图标（`.tag svg`：`1em`、`opacity: .4`）；hover 时文字变 `var(--text)`、背景变 `var(--block-border)`、图标变主题色且不透明；容器 `justify-content: center` 居中，`margin: 2rem -0.5rem 0` 抵消标签外边距并保留与正文的 2rem 间距。与标签页（`/blog/tags/`）标签胶囊为同一套样式。
-- 博客文章标签行由 `theme.article.tags` 控制，wiki 页不渲染标签行；笔记页由 [layout/_partial/main/notebook/note_tags.ejs](../../../layout/_partial/main/notebook/note_tags.ejs) 在正文末尾渲染笔记标签（标签名经笔记本标签树解析，点击进入笔记本标签过滤页），复用同一 `article-tags` 容器与 `tag-chip()` 胶囊样式。
+- 博客文章标签行由 `content.article.show_tags` 控制，wiki 页不渲染标签行；笔记页由 [layout/_partial/main/notebook/note_tags.ejs](../../../layout/_partial/main/notebook/note_tags.ejs) 在正文末尾渲染笔记标签（标签名经笔记本标签树解析，点击进入笔记本标签过滤页），复用同一 `article-tags` 容器与 `tag-chip()` 胶囊样式。
 
 **参考源码**：[layout/_partial/main/article/article_tags.ejs](../../../layout/_partial/main/article/article_tags.ejs)、[layout/page.ejs](../../../layout/page.ejs)、[source/css/_components/partial/article-tags.styl](../../../source/css/_components/partial/article-tags.styl)、[source/css/_defines/func.styl](../../../source/css/_defines/func.styl)
 
@@ -117,14 +117,14 @@ flowchart TD
   start["Resolve license string"]
   isWiki{"page.wiki\nset?"}
   wikiPageLic{"page.license\n!= null?"}
-  wikiPageLicVal["license = page.license\n|| theme.article.license"]
+  wikiPageLicVal["license = page.footer.license\n|| content.article.footer.license"]
   projLic{"proj.license\n!= null?"}
   projLicTrue{"proj.license\n== true?"}
   projLicUse["license = proj.license"]
-  themeDefault["license = theme.article.license"]
+  themeDefault["license = content.article.footer.license"]
   isPost{"page.layout\n== 'post'?"}
-  postCheck{"theme.article.license\n&& page.license != false?"}
-  postLic["license = page.license\n|| theme.article.license"]
+  postCheck{"content.article.footer.license\n&& page.footer.license != false?"}
+  postLic["license = page.footer.license\n|| content.article.footer.license"]
   isOther{"page.license\nset?"}
   otherLicTrue{"page.license\n=== true?"}
   otherLicUse["license = page.license"]
@@ -158,12 +158,12 @@ flowchart TD
 
 | 页面类型 | 关闭机制 | 开启机制 | 默认来源 |
 |----------|----------|----------|----------|
-| `post` | `page.license: false` | `page.license: <string>` | `theme.article.license` |
+| `post` | `page.footer.license: false` | `page.footer.license: <string>` | `content.article.footer.license` |
 | wiki 页面 | 页面省略 `license` | `page.license: <string>` | `proj.license` 或主题默认 |
-| 其他布局 | （默认不显示） | `page.license: true` 或 `<string>` | `theme.article.license` |
+| 其他布局 | （默认不显示） | `page.footer.license: true` 或 `<string>` | `content.article.footer.license` |
 
 - `proj` 指 `theme.wiki.tree[page.wiki]`——项目级 wiki 配置对象，构建方式见[文档系统](wiki-docs.md)
-- `proj.license: true` 表示「使用全局 `theme.article.license`」
+- Collection `footer.license: true` 表示使用全局 `content.article.footer.license`
 - `proj.license: false` 表示无论页面级设置如何都不显示许可
 
 ### 作者插值
@@ -178,8 +178,10 @@ flowchart TD
 `_config.yml` 中的示例许可模板：
 
 ```yaml
-article:
-  license: 'This work by [{author.name}](../../../{author.url}) is licensed under CC BY-NC-SA 4.0.'
+content:
+  article:
+    footer:
+      license: 'This work by [{author.name}]({author.url}) is licensed under CC BY-NC-SA 4.0.'
 ```
 
 **参考源码**：[layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)
@@ -217,11 +219,11 @@ article:
 | `post` | `page.share != false`（默认显示） |
 | 其他布局 | `page.share == true` |
 
-另外，`theme.article.share` 必须是非空数组才会渲染按钮。
+另外，`content.article.footer.share` 必须是非空数组才会渲染按钮。
 
 ### 支持的平台
 
-`theme.article.share` 数组支持的值：
+`content.article.footer.share` 数组支持的值：
 
 | 平台 | 行为 |
 |------|------|
@@ -297,7 +299,7 @@ flowchart LR
 ```mermaid
 flowchart TD
   pageData["page frontmatter\n(references, license,\nauthor, share, wiki)"]
-  themeConfig["theme config\n(article.license,\narticle.share,\nwiki.tree, authors,\ndefault_author,\ndata_services.contributors)"]
+  themeConfig["theme config\n(content.article.footer,\nwiki.tree, authors,\ndefault_author,\ndata_services.contributors)"]
   ejs["article_footer.ejs\nlayoutDiv()"]
 
   secRef["section#references\nmarkdown() each ref"]

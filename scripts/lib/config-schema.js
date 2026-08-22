@@ -32,6 +32,16 @@ function clone(value) {
   return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, clone(child)]));
 }
 
+function mergeObjects(base, override) {
+  const result = clone(base);
+  for (const [key, value] of Object.entries(override)) {
+    result[key] = isPlainObject(value) && isPlainObject(result[key])
+      ? mergeObjects(result[key], value)
+      : clone(value);
+  }
+  return result;
+}
+
 function deepFreeze(value) {
   if (value == null || typeof value !== "object" || Object.isFrozen(value)) return value;
   Object.values(value).forEach(deepFreeze);
@@ -164,7 +174,22 @@ function parseNode(node, input, source, path, issues, context) {
     return undefined;
   }
 
-  if (node.type.includes("array") && node.items) {
+  if (typeof input === "number") {
+    if (!Number.isFinite(input)) {
+      issues.push(issue("invalid_value", source, path, valueType(input), "finite number", node.migration));
+      return undefined;
+    }
+    if (node.minimum !== undefined && input < node.minimum) {
+      issues.push(issue("invalid_value", source, path, valueType(input), `number >= ${node.minimum}`, node.migration));
+      return undefined;
+    }
+    if (node.exclusiveMinimum !== undefined && input <= node.exclusiveMinimum) {
+      issues.push(issue("invalid_value", source, path, valueType(input), `number > ${node.exclusiveMinimum}`, node.migration));
+      return undefined;
+    }
+  }
+
+  if (Array.isArray(input) && node.items) {
     let valid = true;
     const result = [];
     const structuredItems = node.items.properties || node.items.additionalProperties || node.items.normalizer;
@@ -195,6 +220,9 @@ function parseNode(node, input, source, path, issues, context) {
   }
 
   if (!isPlainObject(input)) return normalizeValue(node, input);
+  if (node.default?.kind === "literal" && isPlainObject(node.default.value)) {
+    input = mergeObjects(node.default.value, input);
+  }
   if (node.normalizer === "parameter_bag") return normalizeValue(node, input);
 
   const properties = node.properties || {};
@@ -210,6 +238,8 @@ function parseNode(node, input, source, path, issues, context) {
         path ? `${path}.${replacement}` : replacement,
         node.migration
       ));
+    } else if (node.allowedPropertyKeys && !node.allowedPropertyKeys.includes(key)) {
+      issues.push(issue("unknown_field", source, childPath, valueType(input[key]), node.allowedPropertyKeys.join(" | "), node.migration));
     } else if (node.sealed && !node.additionalProperties && !Object.prototype.hasOwnProperty.call(properties, key)) {
       issues.push(issue("unknown_field", source, childPath, valueType(input[key]), "known field", node.migration));
     }

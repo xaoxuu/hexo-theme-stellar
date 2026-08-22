@@ -75,7 +75,8 @@ if (['post', 'page', 'wiki', null].includes(page.layout)) {
   page_type = 'content'
 }
 // 文章类型：技术类文章/文学类文章
-var article_type = theme.article.type
+var articleDefaults = stellar_config('content.article')
+var article_type = articleDefaults.type
 if (page_type == 'index') {
   article_type = undefined
 } else if (page.article?.type?.length > 0) {
@@ -93,8 +94,8 @@ if (page.article?.indent != null) {
   indent = theme.topic.tree[collection_id(page, "topic")].article.indent
 } else if (theme.wiki.tree[collection_id(page, "wiki")]?.article?.indent != null) {
   indent = theme.wiki.tree[collection_id(page, "wiki")].article.indent
-} else if (theme.article.indent != null) {
-  indent = theme.article.indent
+} else if (articleDefaults.indent != null) {
+  indent = articleDefaults.indent
 } else {
   indent = article_type === 'story'
 }

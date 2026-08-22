@@ -142,17 +142,17 @@ const CONFIG_DOMAIN_CATALOG = deepFreeze([
   domain("notebook", {
     sources: THEME_SOURCES,
     boundary: "sealed",
-    runtimeTarget: "hexo.stellar.config.notebook",
+    runtimeTarget: "hexo.stellar.config.content.notebook",
     consumers: ["Notebook CollectionModel", "notebook builder"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "shell-content-defaults",
   }),
   domain("article", {
     sources: THEME_SOURCES,
     boundary: "sealed",
-    runtimeTarget: "hexo.stellar.config.article",
+    runtimeTarget: "hexo.stellar.config.content.article",
     consumers: ["Post PageViewModel", "CollectionModel", "article renderer", "listing renderer"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "shell-content-defaults",
   }),
   domain("search", {

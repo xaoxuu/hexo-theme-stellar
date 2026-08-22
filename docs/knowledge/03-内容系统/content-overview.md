@@ -331,7 +331,7 @@ graph TB
   - 摘要生成（未指定时取前 128 字符）
   - 许可页脚（默认 CC BY-NC-SA 4.0）
   - 相关文章计算（需 `hexo-related-popular-posts` 插件）
-  - AI 成分标签：front-matter `ai_label` 字段（`manual` / `polished` / `generated` / `reviewed`）标记文章 AI 成分，文案由多语言系统提供（`languages/*.yml` 的 `meta.ai_label.*`，缺失时不渲染），颜色与可选图标由 `article.ai_label` 配置（彩色文字、无底色）；未设置时取 `default`（为空则不显示）；文章页显示在顶部横幅第一行右侧（阅读时长右侧），banner 含图片时文字用默认颜色，文章列表卡片不显示
+  - AI 成分标签：front-matter `article.ai_label` 字段（`manual` / `polished` / `generated` / `reviewed`）标记文章 AI 成分，文案由多语言系统提供，颜色与可选图标由主题 `content.article.ai_label` 配置；未设置时取 `default`（为空则不显示）；文章页显示在顶部横幅第一行右侧，banner 含图片时文字用默认颜色，文章列表卡片不显示
 - **顶部横幅覆盖层**：`page.banner`（或 `banner_info` 关联配置）提供图片时，页面顶部横幅经通用覆盖层 `cover-overlay()`（与文章列表封面、置顶轮播统一，见[文章列表卡片](post-lists-cards.md#渐变模糊层与黑色蒙版)；`{% banner %}` 标签不使用该覆盖层）渲染同图渐变模糊层与黑色渐变蒙版（`.banner-mask-top` / `.banner-mask-bottom`）；模糊层与黑色蒙版均**始终显示**（文字所在边缘不透明度约 0.25 → 垂直中线 0，贴满横幅），hover 时背景图与模糊层同步放大至 `scale(1.05)`（图片 1.5s、模糊层 0.5s 缓动）并变暗（亮度 75%、饱和度 120%）。Safari 26.4/26.5 对带 filter 的合成子层不执行父级 `overflow:hidden` + `border-radius` 圆角裁剪（WebKit 312584/319993，子层自身 border-radius/overflow 及父层 clip-path 均被绕过），`.article.banner` 自身加 `isolation: isolate` + `transform: translateZ(0)`（圆角父层成为层叠上下文并强制合成，WebKit 67950 官方建议），并保留 `clip-path: inset(0 round $border-card-l)` 作正常浏览器裁剪；移动端随 `.banner.top` 归零时一并关闭，规避 hover 时方角漏出。banner 含图片时 `.content` 带 `data-text-adaptive="split"`：标题大字用 contrast（黑白对比，阈值 0.6 偏向浅色文字），面包屑/日期/副标题等小字用 theme（背景图平均色 lighten/darken）；JS 懒加载计算并写入 `--text-banner` / `--text-banner-theme`
 
 **参考源码**：[_config.yml](../../../_config.yml)

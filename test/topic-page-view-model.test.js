@@ -105,7 +105,11 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
         },
         topic: { navigation: { active_menu: "post" } }
       } },
-      article: { type: "tech", indent: false, license: "Global", share: true },
+      content: { article: {
+        type: "tech",
+        indent: false,
+        footer: { license: "Global", share: true }
+      } },
       comments: { enabled: true, title: "Global", service: "artalk" }
     },
     collectionConfig,

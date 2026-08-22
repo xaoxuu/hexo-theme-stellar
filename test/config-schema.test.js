@@ -15,19 +15,19 @@ function assertDeepFrozen(value) {
   Object.values(value).forEach(assertDeepFrozen);
 }
 
-function withoutLayout(config) {
-  const { layout, ...rest } = config;
+function withoutLayoutAndContent(config) {
+  const { layout, content, ...rest } = config;
   return rest;
 }
 
-test("site/layout/head Schema 提供默认值并忽略尚未迁移的根域", () => {
+test("site/layout/content/head Schema 提供默认值并拒绝已迁移旧根域", () => {
   const config = parseStellarConfig({
     source: "themes/stellar/_config.yml",
-    themeConfig: { article: { type: "tech" } },
+    themeConfig: {},
     siteConfig: { avatar: "/avatar.webp", title: "Stellar", subtitle: "每个人的独立博客" }
   });
 
-  assert.deepEqual(withoutLayout(config), {
+  assert.deepEqual(withoutLayoutAndContent(config), {
     site: {
       brand: {
         image: { src: "/avatar.webp", variant: "avatar", url: null, background: null },
@@ -62,6 +62,15 @@ test("site/layout/head Schema 提供默认值并忽略尚未迁移的根域", ()
     navigation: { activeMenu: "post", tabs: {} },
     sidebar: { left: { widgets: ["recent"] }, right: { widgets: [] } }
   });
+  assert.deepEqual(config.content.article.listing, {
+    pinnedLayout: "carousel",
+    cardLayout: "hero",
+    coverRatio: 2,
+    excerptLength: 128,
+    showTags: false
+  });
+  assert.equal(config.content.article.indent, null);
+  assert.equal(config.content.notebook.tagIcons[""], "quot:hashtag");
   assertDeepFrozen(config);
 });
 
@@ -85,7 +94,7 @@ test("站点覆盖完成规范化、数组替换、稳定去重并保留注入�
     }
   });
 
-  assert.deepEqual(withoutLayout(config), {
+  assert.deepEqual(withoutLayoutAndContent(config), {
     site: {
       brand: {
         image: { src: null, variant: "avatar", url: null, background: null },
@@ -103,6 +112,97 @@ test("站点覆盖完成规范化、数组替换、稳定去重并保留注入�
     },
     resources: { preconnect: ["https://cdn.example.com"] },
     inject: { head, script: "<script>window.example = true</script>" }
+  });
+});
+
+test("Content Schema 解析最终命名、动态记录、数组替换与 camelCase 运行时", () => {
+  const config = parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: {
+      content: {
+        article: {
+          type: "story",
+          indent: null,
+          listing: {
+            pinned_layout: "flat",
+            card_layout: "classic",
+            cover_ratio: 1.5,
+            excerpt_length: 0,
+            show_tags: true
+          },
+          banner: { ratio: 3 },
+          category_colors: { Tech: "2196f3" },
+          ai_label: {
+            default: "reviewed",
+            reviewed: { color: "#0f0", icon: null }
+          },
+          footer: { license: false, share: ["link"] },
+          related_posts: { enabled: true, limit: 0 },
+          show_reading_time: true,
+          show_tags: false
+        },
+        notebook: {
+          listing: { excerpt_length: 0, per_page: 0, order_by: "updated" },
+          tag_icons: { tools: "default:tools" },
+          footer: { license: true, share: true }
+        }
+      }
+    }
+  });
+
+  assert.deepEqual(config.content.article, {
+    type: "story",
+    indent: null,
+    listing: { pinnedLayout: "flat", cardLayout: "classic", coverRatio: 1.5, excerptLength: 0, showTags: true },
+    banner: { ratio: 3 },
+    categoryColors: { "探索号": "#f44336", Tech: "2196f3" },
+    aiLabel: {
+      default: "reviewed",
+      manual: { color: "#03a9f4", icon: "default:shield-user" },
+      reviewed: { color: "#0f0", icon: null },
+      polished: { color: "#4caf50", icon: "default:shield-up" },
+      generated: { color: "#ff9800", icon: "default:shield-warning" }
+    },
+    footer: { license: false, share: ["link"] },
+    relatedPosts: { enabled: true, limit: 0 },
+    showReadingTime: true,
+    showTags: false
+  });
+  assert.deepEqual(config.content.notebook, {
+    listing: { excerptLength: 0, perPage: 0, orderBy: "updated" },
+    tagIcons: { "": "quot:hashtag", tools: "default:tools" },
+    footer: { license: true, share: true }
+  });
+  assertDeepFrozen(config.content);
+});
+
+test("Content Schema 拒绝旧根、旧子字段、未知等级、错误类型和非法数值", () => {
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: {
+      article: { card_style: "hero" },
+      notebook: { listing: {} },
+      content: { article: {
+        card_style: "hero",
+        listing: { card_style: "hero", cover_ratio: 0, excerpt_length: -1 },
+        ai_label: { unknown: { color: "#fff" }, manual: { color: 42 } },
+        footer: { share: "link" },
+        related_posts: { enable: true, limit: -1 }
+      } }
+    }
+  }), error => {
+    assert.match(error.message, /article 已移除，期望 content\.article/);
+    assert.match(error.message, /notebook 已移除，期望 content\.notebook/);
+    assert.match(error.message, /content\.article\.card_style 已移除/);
+    assert.match(error.message, /content\.article\.listing\.card_style 已移除/);
+    assert.match(error.message, /content\.article\.listing\.cover_ratio 的值不在 number > 0/);
+    assert.match(error.message, /content\.article\.listing\.excerpt_length 的值不在 number >= 0/);
+    assert.match(error.message, /未知字段 content\.article\.ai_label\.unknown/);
+    assert.match(error.message, /content\.article\.ai_label\.manual\.color 应为 string/);
+    assert.match(error.message, /content\.article\.footer\.share 应为 boolean \| array/);
+    assert.match(error.message, /content\.article\.related_posts\.enable 已移除/);
+    assert.match(error.message, /content\.article\.related_posts\.limit 的值不在 number >= 0/);
+    return true;
   });
 });
 

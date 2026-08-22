@@ -38,7 +38,7 @@ test('NotePage 使用 listing.priority 与 updated 回退', () => {
 
 test("Notebook 集合只保留显式菜单覆盖，不用 note_index 默认遮蔽 note Profile", () => {
   const themeConfig = {
-    notebook: { listing: {}, footer: {} },
+    content: { notebook: { listing: {}, footer: {} } },
     layout: { profiles: {
       notebook_index: { path: "/notebooks/" },
       note_index: { navigation: { active_menu: "notebooks" } },

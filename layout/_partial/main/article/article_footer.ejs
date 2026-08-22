@@ -2,13 +2,14 @@
 function layoutDiv() {
   var el = '';
   var item = [];
+  var articleFooter = stellar_config('content.article.footer')
   if (page.footer?.references?.length > 0) {
     item.push('references');
   }
-  if (theme.article.license?.length > 0) {
+  if (typeof articleFooter.license === 'string' && articleFooter.license.length > 0) {
     item.push('license');
   }
-  if (theme.article.share?.length > 0) {
+  if (Array.isArray(articleFooter.share) && articleFooter.share.length > 0) {
     item.push('share');
   }
   var contributors = partial('contributors', {map: theme.data_services.contributors.edit_this_page})
@@ -45,20 +46,20 @@ function layoutDiv() {
   if (collection_id(page, "wiki")) {
     const proj = theme.wiki.tree[collection_id(page, "wiki")]
     if (page.footer?.license != null) {
-      license = page.footer.license || theme.article.license
+      license = page.footer.license || articleFooter.license
     } else if (proj?.footer?.license != null) {
       if (proj.footer.license == true) {
-        license = theme.article.license
+        license = articleFooter.license
       } else {
         license = proj.footer.license
       }
     }
   } else if (page.layout == 'post') {
-    if (theme.article.license && (page.footer?.license != false)) {
-      license = page.footer?.license || theme.article.license
+    if (articleFooter.license && (page.footer?.license != false)) {
+      license = page.footer?.license || articleFooter.license
     }
   } else if (page.footer?.license) {
-    license = page.footer.license === true ? theme.article.license : page.footer.license
+    license = page.footer.license === true ? articleFooter.license : page.footer.license
   }
   if (license?.length > 0) {
     var author = null
@@ -97,13 +98,13 @@ function layoutDiv() {
   } else if (page.footer?.share) {
     showSharePlugin = true
   }
-  if (theme.article.share && showSharePlugin) {
+  if (Array.isArray(articleFooter.share) && showSharePlugin) {
     function urlenc(v) {
       return encodeURIComponent(v == null ? '' : String(v))
     }
     function socialButtons() {
       var el = ''
-      theme.article.share.forEach((item, i) => {
+      articleFooter.share.forEach((item, i) => {
         if (['wechat', 'weibo', 'email', 'link'].includes(item)) {
           el += '<a class="social share-item ' + item + '"';
           if (item == 'weibo') {
@@ -136,7 +137,7 @@ function layoutDiv() {
       return el;
     }
     function qrcode() {
-      if (theme.article.share.includes('wechat')) {
+      if (articleFooter.share.includes('wechat')) {
         return `
         <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
           <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${urlenc(page.permalink)}"/>
