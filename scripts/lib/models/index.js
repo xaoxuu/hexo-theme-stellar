@@ -13,6 +13,7 @@ const {
   validateTopicProfileConfig,
   validateWikiProfileConfig
 } = require("../content-config");
+const { assertPageViewModel } = require("../model-schema");
 const { normalize_path: normalizePath } = require("../path_utils");
 
 function cloneValue(value) {
@@ -484,7 +485,7 @@ function buildPostPageViewModel(input) {
   validatePageConfig(frontMatter, source);
   const collection = buildCollectionModel(themeConfig, siteConfig);
   const item = buildContentItemModel(page, frontMatter, collection, source);
-  return deepFreeze({ collection, item });
+  return deepFreeze(assertPageViewModel("post", { collection, item }));
 }
 
 function buildWikiPageViewModel(input) {
@@ -529,7 +530,7 @@ function buildWikiPageViewModel(input) {
     typeof heroImage === "string" ? { image: heroImage } : {},
     item.presentation.banner
   );
-  return deepFreeze({ collection, item });
+  return deepFreeze(assertPageViewModel("wiki", { collection, item }));
 }
 
 function buildTopicPageViewModel(input) {
@@ -577,7 +578,7 @@ function buildTopicPageViewModel(input) {
     source: collection.source,
     visibility: { listed: true, searchable: true }
   });
-  return deepFreeze({ collection, item });
+  return deepFreeze(assertPageViewModel("topic", { collection, item }));
 }
 
 function buildNotebookPageViewModel(input) {
@@ -621,7 +622,7 @@ function buildNotebookPageViewModel(input) {
     source: collection.source,
     visibility: { listed: true, searchable: true }
   });
-  return deepFreeze({ collection, item });
+  return deepFreeze(assertPageViewModel("notebook", { collection, item }));
 }
 
 module.exports = {

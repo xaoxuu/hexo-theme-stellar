@@ -11,14 +11,14 @@ date: 2026-08-22
 2. [x] 让 wiki profile 生成同构 ViewModel；依赖步骤 1（[#698](https://github.com/xaoxuu/hexo-theme-stellar/issues/698)）。
 3. [x] 让 topic profile 生成同构 ViewModel；依赖步骤 1，可与步骤 2、4 并行（[#697](https://github.com/xaoxuu/hexo-theme-stellar/issues/697)）。
 4. [x] 让 notebook profile 生成同构 ViewModel；依赖步骤 1，可与步骤 2、3 并行（[#696](https://github.com/xaoxuu/hexo-theme-stellar/issues/696)）。
-5. [ ] 从四类已交付 Schema 生成第一批公共 Reference 元数据；依赖步骤 1–4（[#699](https://github.com/xaoxuu/hexo-theme-stellar/issues/699)）。
+5. [x] 从四类已交付 Schema 生成第一批公共 Reference 元数据；依赖步骤 1–4（[#699](https://github.com/xaoxuu/hexo-theme-stellar/issues/699)）。
 
 ## 后续阶段
 
 6. [ ] 用 ViewModel 接入页面根布局，并新增五类布局原语。
 7. [ ] 实现三套 Blueprint、两套 Visual Style、init 与 doctor。
 8. [ ] 实现 ESM runtime、Extension registry、request/cache 与生命周期测试。
-9. [ ] 完成公共 Reference 生成、知识库同步与全量构建演练。
+9. [ ] 用首批元数据完成公开 Reference 文档生成、链接集成与发布演练。
 
 ## 风险与回退
 

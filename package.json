@@ -6,7 +6,9 @@
   "scripts": {
     "lint": "eslint .",
     "test": "node ci/check-require-decls.js && node --test && node ci/check-spec-refs.js",
-    "check": "npm run lint && npm test && python3 docs/knowledge/tools/verify.py && node ci/check-release-docs.js",
+    "reference:generate": "node scripts/generate-reference.js",
+    "reference:check": "node scripts/generate-reference.js --check",
+    "check": "npm run lint && npm test && npm run reference:check && python3 docs/knowledge/tools/verify.py && node ci/check-release-docs.js",
     "release": "node release.js",
     "release:dry": "node release.js --dry-run"
   },

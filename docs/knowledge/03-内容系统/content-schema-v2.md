@@ -129,6 +129,18 @@ Galaxy 的路径为 `hero.background.effect.options`，字段白名单在 `scrip
 - Note 必须显式声明严格 v2 `collection.type` 与 `collection.id`，id 必须存在于 `_data/notebooks/`；不会从布局、路径或 v1 `notebook` 字段推断归属。
 - 本切片只挂载模型，不改变现有 Notebook/Note EJS 消费链。
 
+## Reference 元数据
+
+Alpha 1 已从模型 Schema 生成首批机器可读 Reference：
+
+- 唯一事实来源是 `scripts/schema/model-schema.js`，它同时约束 post、wiki、topic、notebook 的 `CollectionModel`、共享 `ContentItemModel` 与 `PageViewModel` 输出。
+- 每个已交付字段均带类型、默认值语义、作用域、当前消费方和最小示例。动态默认值用 `derived`、`inherited` 或 `computed` 描述，不伪造固定字面量。
+- `scripts/lib/models/` 在冻结模型前使用同一 Schema 拒绝缺失字段、未声明字段和错误类型，避免实现与 Reference 漂移。
+- `npm run reference:generate` 稳定生成 `reference/v2-models.json`；`npm run reference:check` 只读检查产物是否与 Schema 一致，并已纳入 `npm run check`。
+- 第三方评论参数袋、widget 对象和 effect options 保持开放对象边界；元数据不复制上游字段表。
+
+本批输出不包含 Blueprint、CLI、布局原语或 Extension Schema。`ContentItemModel.layout` 是 #695–#698 已交付的模型字段，收录它不代表提前公开布局原语契约。
+
 ## 校验与消费链
 
 - `scripts/events/lib/content-config.js` 读取 `_data/wiki|topic|notebooks` 与源 Markdown Front Matter，在数据树构建前校验。

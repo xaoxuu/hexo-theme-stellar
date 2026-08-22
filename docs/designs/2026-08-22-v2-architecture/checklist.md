@@ -9,8 +9,20 @@ date: 2026-08-22
 
 - [x] post profile 贯通严格 Schema、CollectionModel、ContentItemModel 与冻结的 PageViewModel。
 - [x] wiki、topic、notebook profile 都生成同构模型，并保留各自的身份、路由、导航、列表与可见性语义。
-- [ ] Reference 元数据包含已交付字段的类型、默认值、作用域、消费方和最小示例。
-- [ ] Alpha 1 未提前公开 Blueprint、CLI、布局或 Extension 字段。
+- [x] Reference 元数据包含已交付字段的类型、默认值、作用域、消费方和最小示例。
+- [x] Alpha 1 未提前公开 Blueprint、CLI、布局或 Extension 字段。
+
+## #699 Reference 元数据验证记录
+
+- [x] post、wiki、topic、notebook 的 `CollectionModel`、共享 `ContentItemModel` 与 `PageViewModel` 都由同一声明式 Schema 约束。
+- [x] 每个输出字段包含机器可读的类型、默认值语义、作用域、消费方和最小示例。
+- [x] 模型构建在冻结前拒绝 Schema 外字段、缺失的必需字段与错误类型；现有四类模型回归通过。
+- [x] `npm run reference:generate` 重复运行输出稳定，`npm run reference:check` 已纳入主检查。
+- [x] `reference/v2-models.json` 不包含 Blueprint、CLI、布局原语或 Extension Schema；`ContentItemModel.layout` 仅表示已交付模型字段。
+- [x] `npm run check` 通过（#699 工作区，220 项测试）。
+- [x] 主工程 `npm run g` 通过（#699 工作区，生成并压缩 254 个文件）。
+- [x] Standards / Spec 双轴 code review 通过，无未解决发现。
+- [x] 公开 Wiki、迁移/SEO、EJS/UI 验收为 N/A：本切片只交付供后续文档和工具消费的构建期元数据，不新增公开配置、URL 或模板行为。
 
 ## 后续阶段
 
@@ -19,8 +31,8 @@ date: 2026-08-22
 - [ ] doctor 的 text/json 输出包含文件、字段、实际类型、期望结构和迁移章节。
 - [ ] Extension 支持 mount、unmount、按需 import 和失败隔离。
 - [ ] request/cache 不修改原生 fetch/XHR。
-- [ ] `npm run check` 通过。
-- [ ] 主工程 `npm run g` 通过。
+- [ ] 后续阶段完整实现后 `npm run check` 通过。
+- [ ] 后续阶段完整实现后主工程 `npm run g` 通过。
 
 ## #695 Post PageViewModel 验证记录
 
