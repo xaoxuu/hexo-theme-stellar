@@ -3,6 +3,16 @@
 > 本文件是 hexo-theme-stellar 主题仓库的 **AI 协作唯一权威规范**，供所有 AI 编码工具（Codex、Claude Code、Cursor、Copilot、Trae 等）与开发者共同遵守；`CLAUDE.md` 与 `.github/copilot-instructions.md` 是兼容入口，冲突以本文件为准。
 > `$stellar-theme-dev` skill（Codex：`.agents/skills/`；Claude Code：`.claude/skills/`，逐字一致，CI 强制同步）是本流程的执行清单；Codex 与 Claude Code 涉及主题开发、验证或发版时先调用它，其他环境直接按本文件 §5 门禁执行。
 
+## Agent skills
+
+### Issue tracker
+
+工程 skills 创建、读取或发布 spec、ticket 和 issue 时使用 `xaoxuu/hexo-theme-stellar` GitHub Issues；操作约定见 `docs/agents/issue-tracker.md`。
+
+### Domain docs
+
+工程 skills 探索代码库、命名领域概念或检查架构决策时，按 single-context 规则读取领域文档；消费规则见 `docs/agents/domain.md`。
+
 ## 1. 仓库职责与协作边界
 
 这是 Hexo 主题 **Stellar** 的独立仓库，主题以 npm 包形式发布，被 [xaoxuu.com](https://xaoxuu.com) 等站点通过 git submodule 引用。
