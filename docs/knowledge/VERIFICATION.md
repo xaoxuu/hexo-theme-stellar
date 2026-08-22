@@ -339,6 +339,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `8ef7d92` | feat(v2): 生成首批 Reference 元数据 (#699) | 设计文档 `2026-08-22-reference-metadata/`、`2026-08-22-v2-architecture/`；知识库 `03-内容系统/content-schema-v2.md`；四类 Collection profile、共享 ContentItemModel 与 PageViewModel 的声明式 Schema、模型输出校验、稳定 Reference 生成与漂移检查 |
 | `7248a1f` | feat(v2): 让 Topic 生成同构 ViewModel (#697) | 设计文档 `2026-08-22-topic-page-view-model/`、`2026-08-22-v2-architecture/`；知识库 `03-内容系统/content-schema-v2.md`；严格 Topic profile、深度冻结同构 ViewModel、生成前挂载、稳定系列导航、独立可见性与回归测试 |
 | `59ab3c9` | feat(v2): 建立 Wiki PageViewModel 链路 (#698) | 设计文档 `2026-08-22-wiki-page-view-model/`、`2026-08-22-v2-architecture/`；知识库 `03-内容系统/content-schema-v2.md`、`wiki-docs.md`；严格 Wiki profile、深度冻结同构 ViewModel、树构建后挂载、源码与可见性级联及回归测试 |
 | `9dfb085` | feat(v2): 让 Notebook 生成同构 ViewModel (#696) | 设计文档 `2026-08-22-notebook-page-view-model/`、`2026-08-22-v2-architecture/`；知识库 `03-内容系统/content-schema-v2.md`、`notebook-system.md`；严格 Notebook profile、深度冻结同构 ViewModel、生成前挂载、标签导航与回归测试 |
