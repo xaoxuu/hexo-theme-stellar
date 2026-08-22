@@ -347,6 +347,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `d278597` | refactor(v2): 迁移 site Shell 配置 (#706) | 设计文档 `2026-08-22-v2-site-shell-config/`；`site.brand/menu/footer` 的派生默认、严格 Schema、冻结运行时、动态 action/对象数组、Brand/ViewModel/菜单/Footer 消费链、双 Reference、266 项测试与主工程 254 个生成文件；Standards / Spec 双轨 review 无剩余 finding |
 | `c004f16` | refactor(v2): 迁移 head 与 SEO 配置 (#705) | 设计文档 `2026-08-22-v2-head-seo-config/`；知识库配置、head/SEO、canonical、客户端与性能边界；`seo`、`resources.preconnect`、站点 `inject` 的最终 Schema 路径、冻结运行时、Post/迁移期 head/JSON-LD/浏览器消费链、可信注入合并、配置 Reference 及 262 项测试、主工程 254 个生成文件与 Standards / Spec 双轨 review 证据 |
 | `91356ad` | refactor(v2): 冻结最终配置契约 (#704) | 设计文档 `2026-08-22-v2-config-target-contract/`；知识库 `00-总览与安装配置/configuration.md`；八个公开根域、完整 Theme / Collection / Front Matter 目标树、逐字段五类迁移矩阵、作用域与级联边界、内部化资源清单及 257 项测试、双 Reference 无漂移、主工程 254 个生成文件与 Standards / Spec 双轨 review 证据 |
 | `91eede0` | refactor(v2): 冻结配置全景契约 (#703) | 设计文档 `2026-08-22-v2-config-inventory/`；知识库 `00-总览与安装配置/configuration.md`；深度冻结的配置入口目录、字段所有权与消费边界、五段迁移队列、共享 Schema 冻结工具及 246 项测试、双 Reference 无漂移和主工程构建证据 |
