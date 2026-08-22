@@ -28,10 +28,10 @@ function layoutBrandImage() {
   const src = brandText(image.src)
   const url = brandText(image.url)
   const tag = url ? 'a' : 'div'
-  const style = image.style
+  var variant = image.variant
   const background = image.background ? ` style="--brand-image-background:${escape_html(image.background)}"` : ''
-  var el = `<${tag} class="brand-image brand-image--${style}"${url ? ` href="${escape_html(url_for(url))}"` : ''}${background}>`
-  if (style === 'avatar' && theme.style.animated_avatar.animate) {
+  var el = `<${tag} class="brand-image brand-image--${variant}"${url ? ` href="${escape_html(url_for(url))}"` : ''}${background}>`
+  if (variant === 'avatar' && theme.style.animated_avatar.animate) {
     el += `<div class="brand-image-bg"></div>`
   }
   el += `<img no-lazy src="${escape_html(src)}" alt="">`

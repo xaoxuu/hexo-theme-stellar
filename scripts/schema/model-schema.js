@@ -90,10 +90,10 @@ function brandSchema(factory, options = {}) {
   return object({
     image: object({
       src: field("string", { example: "/images/avatar.webp" }),
-      style: field("string", { example: "avatar" }),
+      variant: field("string", { example: "avatar" }),
       url: field("string", { example: "/about/" }),
       background: field("string", { example: "var(--block)" })
-    }, { example: { src: "/images/avatar.webp", style: "avatar" } }),
+    }, { example: { src: "/images/avatar.webp", variant: "avatar" } }),
     name: field("string", {
       default: options.nameDefault || derived("site.title"),
       example: "Stellar",
@@ -107,7 +107,7 @@ function brandSchema(factory, options = {}) {
     url: field("string", { example: "/" })
   }, {
     default: options.default || (options.requiredName
-      ? derived("theme.brand", "site.title", "site.subtitle")
+      ? derived("hexo.stellar.config.site.brand")
       : omitted()),
     example: { name: "Stellar", tagline: "每个人的独立博客", url: "/" }
   });

@@ -65,11 +65,6 @@ module.exports = ctx => {
   }
   ctx.theme.config.icons = icons
 
-  // default menu
-  if (ctx.theme.config.menubar == undefined) {
-    ctx.theme.config.menubar = {}
-  }
-
   // chat users
   ctx.theme.config.chat_users = data.chat_users;
 

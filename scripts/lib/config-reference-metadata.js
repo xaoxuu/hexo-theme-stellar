@@ -18,27 +18,41 @@ function compareText(left, right) {
 function flattenConfigFields(schema) {
   const fields = [];
 
+  function addField(node, path, runtimePath) {
+    fields.push({
+      path,
+      runtimePath,
+      type: clone(node.type),
+      default: clone(node.default),
+      scope: node.scope,
+      cascade: clone(node.cascade),
+      normalizer: node.normalizer,
+      normalization: node.normalization,
+      consumers: clone(node.consumers),
+      example: clone(node.example),
+      migration: node.migration,
+      ...(node.sealed ? { sealed: true } : {})
+    });
+  }
+
   function visit(node, yamlPrefix, runtimePrefix) {
     for (const key of Object.keys(node.properties || {}).sort(compareText)) {
       const child = node.properties[key];
       const path = yamlPrefix ? `${yamlPrefix}.${key}` : key;
       const runtimeKey = child.runtimeKey || key;
       const runtimePath = runtimePrefix ? `${runtimePrefix}.${runtimeKey}` : runtimeKey;
-      fields.push({
-        path,
-        runtimePath,
-        type: clone(child.type),
-        default: clone(child.default),
-        scope: child.scope,
-        cascade: clone(child.cascade),
-        normalizer: child.normalizer,
-        normalization: child.normalization,
-        consumers: clone(child.consumers),
-        example: clone(child.example),
-        migration: child.migration,
-        ...(child.sealed ? { sealed: true } : {})
-      });
+      addField(child, path, runtimePath);
       visit(child, path, runtimePath);
+      if (child.items?.properties || child.items?.additionalProperties) {
+        visit(child.items, `${path}[]`, `${runtimePath}[]`);
+      }
+      if (child.additionalProperties) {
+        const recordKey = child.additionalPropertyKey || "<key>";
+        const recordPath = `${path}.${recordKey}`;
+        const recordRuntimePath = `${runtimePath}.${recordKey}`;
+        addField(child.additionalProperties, recordPath, recordRuntimePath);
+        visit(child.additionalProperties, recordPath, recordRuntimePath);
+      }
     }
   }
 

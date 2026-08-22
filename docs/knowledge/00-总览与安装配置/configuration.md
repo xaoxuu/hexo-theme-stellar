@@ -81,7 +81,7 @@ graph TB
 
 Pre-alpha M1.5 已建立内部配置入口目录，并进一步把 v2 最终公开主题配置冻结为 `site`、`seo`、`layout`、`content`、`appearance`、`resources`、`extensions`、`inject` 八个职责根域。完整目标树、命名、级联和旧→新迁移矩阵见[最终配置契约](../../designs/2026-08-22-v2-config-target-contract/target-contract.md)。
 
-head/SEO 纵向切片已把 `seo`、`resources.preconnect` 与站点 `inject` 接入声明式 Schema，运行时与配置 Reference 只投影这些已交付节点；其它目标字段仍保持 `planned`。后续切片继续直接实现最终路径，不经过 #703 的临时目录。
+head/SEO 与 site Shell 纵向切片已把 `seo`、`resources.preconnect`、站点 `inject` 以及 `site.brand/menu/footer` 接入声明式 Schema，运行时与配置 Reference 只投影这些已交付节点；其它目标字段仍保持 `planned`。后续切片继续直接实现最终路径，不经过 #703 的临时目录。
 
 已交付 v2 字段从 Schema 与 `_config.stellar.yml` 解析到冻结的 `hexo.stellar.config`；尚未迁移的字段仍经 Hexo 主题变量系统（`theme.*`）流动，页面级覆盖继续通过 `page.*` 变量实现。`hexo-config()` 辅助函数让 Stylus 文件也能访问旧链配置值。
 
@@ -93,13 +93,12 @@ head/SEO 纵向切片已把 `seo`、`resources.preconnect` 与站点 `inject` �
 |------|------|
 | `stellar` | 主题元数据与资源路径 |
 | `seo`、`resources.preconnect` | SEO 与资源提示（v2 已交付） |
-| `brand`、`menubar` | 侧边栏品牌与导航 |
+| `site` | 站点 Brand、主菜单、左栏操作与页尾内容（v2 已交付） |
 | `site_tree` | 各页面类型布局定义与侧边栏小部件分配 |
 | `notebook` | 笔记本系统配置 |
 | `article` | 文章显示与元数据设置 |
 | `search` | 搜索服务配置 |
 | `comments` | 评论系统集成 |
-| `footer` | 页脚内容与社交链接 |
 | `tag_plugins` | 标签插件外观与行为 |
 | `dependencies` | 核心 JavaScript 依赖（CDN） |
 | `data_services` | 按需加载的数据服务 |
@@ -228,22 +227,33 @@ seo:
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
-### Brand 与菜单栏配置
+### 站点 Shell：Brand、菜单与 Footer
 
-`brand` 小节支持从 `_config.yml` 动态替换值：
+`site` 小节统一承载站点外壳。Brand 的 `image.src/name/tagline` 省略时直接从 Hexo `avatar/title/subtitle` 派生，不再要求站点配置写 `{config.*}` 占位符：
 
 ```yaml
-brand:
-  image:
-    src: '{config.avatar}'
-    style: avatar
-    url: /about/
-  name: '{config.title}'
-  tagline: '{config.subtitle}'
-  url: /
+site:
+  brand:
+    image:
+      variant: avatar
+      url: /about/
+    url: /
+  menu:
+    items:
+      - id: post
+        title: 博客
+        icon: default:documents
+        url: /
+        accent: '#1BCDFC'
+  footer:
+    actions: {}
+    sections: []
+    content: |
 ```
 
-`{config.*}` 占位符会被替换为 Hexo 主 `_config.yml` 中的值。Brand 不解析 Markdown 链接，图片和名称链接分别写入 `image.url` 与根级 `url`。`menubar` 定义导航按钮（`id`、`theme`、`icon`、`title`、`url` 等属性）。
+Brand 图片展示变体使用 `image.variant`（`avatar/icon/plain`），图片和名称链接分别写入 `image.url` 与根级 `url`。菜单数组使用 `id/title/icon/url/accent`；站点层完整替换数组。Footer 的动态操作记录位于 `actions`，分栏链接位于 `sections`，版权或说明原文位于 `content`。旧主题根 `brand/menubar/footer` 及其 `style/theme/social/sitemap/type/onclick` 子字段不会兼容读取，而会报告目标路径。
+
+解析后 JavaScript 只消费冻结的 `hexo.stellar.config.site`；菜单与 Footer 不再直接读取 `theme.menubar/footer`，Post 与 Topic 的全局 Brand 也不再从 `theme.brand` 推断。Collection 与 Front Matter 的 Brand 覆盖仍在内容边界适配，最终字段收敛留给后续切片。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
@@ -428,52 +438,54 @@ notebook:
 
 ### 页脚配置
 
-`footer` 包含左栏底部的 social 按钮、主内容区页脚站点地图和 Markdown 文本：
+`site.footer` 包含左栏底部操作、主内容区页脚分栏和 Markdown 文本：
 
 | 字段 | 类型 | 用途 |
 |------|------|------|
-| `social` | Object | 左栏底部的 social 按钮；按 YAML 字段顺序显示 |
-| `social.*.icon` | String | 普通按钮或 dropdown 主按钮图标 |
-| `social.*.title` | String | 普通按钮 tooltip 或 dropdown 无障碍标签 |
-| `social.*.url` | String | 普通按钮链接 |
-| `social.*.onclick` | String | 普通按钮点击脚本，与 `url` 二选一 |
-| `social.spacer` | Object / null | 弹性占位项；将其后的 social 按钮推至同一行右侧 |
-| `social.*.type` | `dropdown` | 将条目渲染为通用下拉菜单 |
-| `social.*.items` | Array | dropdown 子项列表；`title`、`url` 必填，`icon` 可选 |
-| `sitemap` | Array | 主内容区页脚的分组链接 |
+| `actions` | Object | 左栏底部操作；按 YAML 字段顺序显示 |
+| `actions.*.icon` | String | 普通按钮或 dropdown 主按钮图标 |
+| `actions.*.title` | String | 普通按钮 tooltip 或 dropdown 无障碍标签 |
+| `actions.*.url` | String | 普通按钮链接 |
+| `actions.*.action` | String | 普通按钮受信任点击脚本，与 `url` 二选一 |
+| `actions.spacer` | Object | 弹性占位项；将其后的按钮推至同一行右侧 |
+| `actions.*.variant` | `dropdown` | 将条目渲染为通用下拉菜单 |
+| `actions.*.items` | Array | dropdown 子项列表；`title`、`url` 必填，`icon` 可选 |
+| `sections` | Array | 主内容区页脚的分组链接 |
 | `content` | String | 主内容区页脚的 Markdown 文本 |
 
 dropdown 示例：
 
 ``@@BT@yaml
-footer:
-  social:
-    links:
-      type: dropdown
-      icon: default:documents
-      title: 更多链接
-      items:
-        - icon: default:documents
-          title: 文档
-          url: /wiki/
-        - title: GitHub
-          url: https://github.com/
+site:
+  footer:
+    actions:
+      links:
+        variant: dropdown
+        icon: default:documents
+        title: 更多链接
+        items:
+          - icon: default:documents
+            title: 文档
+            url: /wiki/
+          - title: GitHub
+            url: https://github.com/
 ``@@BT@
 
-未设置 `type` 的 `social` 条目保持普通链接行为。若要在一组按钮中撑开中间空间，可在需要的位置加入 `spacer:`；其值会被忽略，只按配置位置输出弹性空白：
+未设置 `variant` 的 action 保持普通链接或动作行为。若要在一组按钮中撑开中间空间，可在需要的位置加入 `spacer: {}`：
 
 ``@@BT@yaml
-footer:
-  social:
-    github:
-      icon: default:github
-      url: https://github.com/
-    spacer:
-    links:
-      type: dropdown
-      icon: default:documents
-      title: 更多链接
-      items: []
+site:
+  footer:
+    actions:
+      github:
+        icon: default:github
+        url: https://github.com/
+      spacer: {}
+      links:
+        variant: dropdown
+        icon: default:documents
+        title: 更多链接
+        items: []
 ``@@BT@
 
 dropdown 子项图标可省略。菜单不关联语言或其它业务场景，也不支持嵌套；打开后挂载到 `body` 下的全局浮层，并根据触发按钮周围的可用空间自动调整上下和左右位置。菜单自身声明 glass surface，条目复用通用 collection list 的结构与交互样式。

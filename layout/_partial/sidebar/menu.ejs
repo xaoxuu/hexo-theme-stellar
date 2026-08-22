@@ -2,7 +2,7 @@
 function layoutDiv() {
   var currentMenu = typeof activeMenu !== 'undefined' ? activeMenu : page.navigation?.menu
   var entries = []
-  for (var menuItem of (theme.menubar.items || [])) {
+  for (var menuItem of stellar_config('site.menu.items')) {
     if (menuItem == null || menuItem.id == null || menuItem.url == null || menuItem.title == null) {
       continue
     }
@@ -10,9 +10,9 @@ function layoutDiv() {
       href: pretty_url(menuItem.url),
       title: __(menuItem.title),
       icon: menuItem.icon,
-      theme: menuItem.theme,
+      theme: menuItem.accent,
       active: menuItem.id == currentMenu,
-      className: menuItem.theme?.length > 0 ? 'is-themed' : '',
+      className: menuItem.accent?.length > 0 ? 'is-themed' : '',
       gradientId: 'menu-grad-' + menuItem.id
     })
   }

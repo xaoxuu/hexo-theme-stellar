@@ -26,44 +26,33 @@ resources:
 
 
 ######## Sidebar ########
-# 左上角显示的品牌区域，包含图片、名称和标语
-brand:
-  image:
-    src: '{config.avatar}'
-    style: avatar # avatar: 圆形裁剪；icon: 圆角矩形；plain: 保留透明原图
-    url: /about/
-  name: '{config.title}' # 支持可信任的内联 HTML
-  tagline: '{config.subtitle}' # '文字1 | 文字2' (鼠标放上去会切换到文字2)
-  url: /
+site:
+  # src/name/tagline 默认分别派生自 Hexo avatar/title/subtitle。
+  brand:
+    image:
+      variant: avatar # avatar: 圆形裁剪；icon: 圆角矩形；plain: 保留透明原图
+    url: /
 
-# 侧边栏主功能导航菜单
-menubar:
-  items: # 可按照自己需求增加，符合以下格式即可
-    # id: 对应 navigation.menu，用于页面高亮
-    # theme: 高亮时的颜色，仅 svg 中 fill="currentColor" 时有效
-    # icon: 支持 svg/img 标签，可以定义在 icons.yml 文件中，也支持外部图片的 URL
-    # title: 标题
-    # url: 点击跳转到哪，支持相对路径和绝对路径
+  menu:
+    items: []
     # - id: post
-    #   theme: '#1BCDFC'
+    #   accent: '#1BCDFC'
     #   icon: default:documents
     #   title: 博客
     #   url: /
-    # - id: wiki
-    #   theme: '#3DC550'
-    #   icon: example:notebook
-    #   title: 文档
-    #   url: /wiki/
-    # - id: explore
-    #   theme: '#FA6400'
-    #   icon: example:planet
-    #   title: 探索
-    #   url: /explore/
-    # - id: social
-    #   theme: '#F44336'
-    #   icon: example:chat
-    #   title: 社交
-    #   url: /friends/
+
+  footer:
+    actions: {}
+    # github:
+    #   icon: default:github
+    #   title: GitHub
+    #   url: https://github.com/
+    sections: []
+    # - title: 博客
+    #   items:
+    #     - '[近期发布](/)'
+    #     - '[归档](/blog/archives/)'
+    content: |
 
 
 ######## Main ########
@@ -384,64 +373,6 @@ comments:
       # api: 'https://xxxxxx/api/v1/upload' # 图床上传地址
       # token: 'Bearer xxxxxxxxxxxxxx' # 图床验证
       # resp: 'data.links.url' # 图片地址返回值的字段
-
-
-######## Footer ########
-footer:
-  social:
-    # github:
-    #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/>'
-    #   url: /
-    # music:
-    #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/3845874.svg"/>'
-    #   url: /
-    # unsplash:
-    #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/3616429.svg"/>'
-    #   url: /
-    # comments:
-    #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/942ebbf1a4b91.svg"/>'
-    #   url: /about/#comments
-    # spacer: # 弹性占位项：将其后的 social 按钮推至右侧
-    # links:
-    #   type: dropdown
-    #   icon: default:documents
-    #   title: 更多链接
-    #   items:
-    #     - icon: default:documents
-    #       title: 文档
-    #       url: /wiki/
-    #     - icon: default:github
-    #       title: GitHub
-    #       url: https://github.com/
-  sitemap:
-    # - title: 博客
-    #   items:
-    #     - '[近期发布](/)'
-    #     - '[分类](/blog/categories/)'
-    #     - '[标签](/blog/tags/)'
-    #     - '[归档](/blog/archives/)'
-    # - title: 项目
-    #   items:
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-    # - title: 社交
-    #   items:
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-    # - title: 关于
-    #   items:
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-  content: | # 支持 Markdown 格式
-    本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。
-    本博客所有文章除特别声明外，均采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。
-  # 主题用户越多，开发者维护和更新的积极性就越高，如果您喜欢本主题，请在适当的位置显示主题信息和仓库链接以表支持。
 
 
 ######## Tag Plugins ########

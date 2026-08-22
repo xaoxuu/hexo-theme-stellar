@@ -6,10 +6,21 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 
-const { buildTopicPageViewModel } = require("../scripts/lib/models");
+const { buildTopicPageViewModel: buildTopicPageViewModelRaw } = require("../scripts/lib/models");
 const { parseStellarConfig } = require("../scripts/lib/config-schema");
 const processContentConfig = require("../scripts/events/lib/content-config");
 const { attachPageViewModel } = require("../scripts/filters/lib/page-view-model");
+
+function buildTopicPageViewModel(input) {
+  return buildTopicPageViewModelRaw({
+    ...input,
+    stellarConfig: input.stellarConfig || parseStellarConfig({
+      source: input.themeSource || "<theme>",
+      themeConfig: input.themeConfig,
+      siteConfig: input.siteConfig
+    })
+  });
+}
 
 function assertDeepFrozenPlain(value) {
   if (value == null || typeof value !== "object") return;
@@ -75,11 +86,13 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
     collectionListed: false,
     siteConfig: { title: "Site", subtitle: "Subtitle" },
     themeConfig: {
-      brand: {
-        image: { src: "/avatar.webp", style: "avatar" },
-        name: "Site Brand",
-        tagline: "Site tagline",
-        url: "/"
+      site: {
+        brand: {
+          image: { src: "/avatar.webp", variant: "avatar" },
+          name: "Site Brand",
+          tagline: "Site tagline",
+          url: "/"
+        }
       },
       site_tree: {
         index_topic: { base_dir: "topic" },
@@ -296,7 +309,7 @@ test("生成前事件为严格 Topic 成员挂载模型并拒绝缺失集合", t
     }
   };
   const themeConfig = {
-    brand: { name: "Stellar" },
+    site: { brand: { name: "Stellar" } },
     site_tree: {
       index_topic: { base_dir: "topic" },
       post: { navigation: { menu: "post" } },

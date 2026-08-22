@@ -14,7 +14,7 @@ tags:
 
 ## v2 普通 Post 消费边界
 
-普通 Post 的左右栏选择改为读取 `PageViewModel.item.presentation.sidebar`，Brand 读取 `render.layout.brand`，菜单激活读取 `item.navigation.menu`。页面 Front Matter、Post profile 与全局默认值的级联在模型层完成；模板不再修改 Post 的 `page.sidebar`。Widget 的具体 partial、搜索交互和 footer social 继续复用既有渲染器，因此 DOM、class 与视觉行为不变。
+普通 Post 的左右栏选择改为读取 `PageViewModel.item.presentation.sidebar`，Brand 读取 `render.layout.brand`，菜单激活读取 `item.navigation.menu`。页面 Front Matter、Post profile 与全局默认值的级联在模型层完成；模板不再修改 Post 的 `page.sidebar`。Widget 的具体 partial 与搜索交互继续复用既有渲染器；Footer 操作已迁到 `site.footer.actions`，但 DOM、class 与视觉行为不变。
 
 Topic、Wiki、Notebook、列表页和普通 Page 尚未进入本切片，仍按本页后续章节描述的旧选择链工作。
 
@@ -133,9 +133,9 @@ graph TB
 
 ## 左栏：Brand 组件
 
-左栏顶部使用统一 Brand resolver，优先级依次为页面 `sidebar.left.brand`、集合 `sidebar.left.brand`、Wiki / Notebook 自动 Brand 和全局 `brand`。Topic 不自动生成 Brand，未显式覆盖时直接使用站点 Brand。根字段逐项合并，`image` 始终整体替换。
+左栏顶部使用统一 Brand resolver，优先级依次为页面 `sidebar.left.brand`、集合 `sidebar.left.brand`、Wiki / Notebook 自动 Brand 和全局 `site.brand`。Topic 不自动生成 Brand，未显式覆盖时直接使用站点 Brand。根字段逐项合并，`image` 始终整体替换。
 
-Brand 图片通过 `image.style` 明确为 `avatar`、`icon` 或 `plain`。外层统一负责 48×48 尺寸、链接和显式背景；图片元素只负责 `cover` 或 `contain`。完整契约见 [Brand、导航与页头](logo-navigation-headers.md)。
+冻结后的 Brand 图片通过 `image.variant` 明确为 `avatar`、`icon` 或 `plain`。外层统一负责 48×48 尺寸、链接和显式背景；图片元素只负责 `cover` 或 `contain`。完整契约见 [Brand、导航与页头](logo-navigation-headers.md)。
 
 Wiki 内容页在 Brand 上方显示“所有项目”入口，链接到 `theme.site_tree.index_wiki.base_dir`。页面与项目的 `sidebar.left.wiki_home` 可控制此入口，默认显示；它不影响 Brand 本身。
 
@@ -201,56 +201,59 @@ Wiki 内容页在 Brand 上方显示“所有项目”入口，链接到 `theme.
 
 ---
 
-## 左栏：Footer Social
+## 左栏：Footer Actions
 
-左栏底部的 `.footer` 由 `theme.footer.social` 驱动。social 配置使用 YAML 映射的字段顺序决定按钮顺序，普通条目继续支持 `icon`、`title`、`url` 和 `onclick`：
-
-``@@BT@yaml
-footer:
-  social:
-    github:
-      icon: default:github
-      title: GitHub
-      url: https://github.com/
-``@@BT@
-
-将条目的 `type` 设置为 `dropdown`，即可渲染通用下拉菜单。主按钮使用必填的 `icon` 和 `title`，子项使用 `title`、`url` 与可选的 `icon`：
+左栏底部的 `.footer` 由冻结的 `site.footer.actions` 驱动。YAML 映射的字段顺序决定按钮顺序，普通条目支持 `icon`、`title`、`url` 和受信任原文 `action`：
 
 ``@@BT@yaml
-footer:
-  social:
-    links:
-      type: dropdown
-      icon: default:documents
-      title: 更多链接
-      items:
-        - icon: default:documents
-          title: 文档
-          url: /wiki/
-        - title: GitHub
-          url: https://github.com/
+site:
+  footer:
+    actions:
+      github:
+        icon: default:github
+        title: GitHub
+        url: https://github.com/
 ``@@BT@
 
-未设置 `type` 的条目按普通 social 链接处理。dropdown 由 `layout/_partial/dropdown.ejs` 使用原生 `<details>/<summary>` 渲染；菜单保留通用玻璃容器，并声明 glass surface 和 compact 密度，子项组合 collection list 结构与交互样式。打开后菜单会由 `source/js/plugins/dropdown.js` 移入 `body` 下的全局浮层，使用 `position: fixed`，不受 sidebar 容器裁剪。鼠标移入触发按钮时自动展开，透明桥接区连接触发按钮与菜单之间的间隙；离开触发按钮、菜单和桥接区后立即关闭，不使用延迟计时器，菜单定位完成后淡入显示。未指定方向时，脚本根据触发按钮上下空间自动选择展开方向，并让菜单贴合触发按钮的左边或右边；菜单有视口高度上限，子项过多时可以垂直滚动。不支持嵌套 dropdown，也不包含具体业务语义。子项的 URL 沿用普通 social 的内链/外链处理规则。
+将条目的 `variant` 设置为 `dropdown`，即可渲染通用下拉菜单。主按钮使用 `icon` 和 `title`，子项使用 `title`、`url` 与可选的 `icon`：
+
+``@@BT@yaml
+site:
+  footer:
+    actions:
+      links:
+        variant: dropdown
+        icon: default:documents
+        title: 更多链接
+        items:
+          - icon: default:documents
+            title: 文档
+            url: /wiki/
+          - title: GitHub
+            url: https://github.com/
+``@@BT@
+
+未设置 `variant` 的条目按普通操作处理。dropdown 由 `layout/_partial/dropdown.ejs` 使用原生 `<details>/<summary>` 渲染；菜单保留通用玻璃容器，并声明 glass surface 和 compact 密度，子项组合 collection list 结构与交互样式。打开后菜单会由 `source/js/plugins/dropdown.js` 移入 `body` 下的全局浮层，使用 `position: fixed`，不受 sidebar 容器裁剪。鼠标移入触发按钮时自动展开，透明桥接区连接触发按钮与菜单之间的间隙；离开触发按钮、菜单和桥接区后立即关闭，不使用延迟计时器，菜单定位完成后淡入显示。未指定方向时，脚本根据触发按钮上下空间自动选择展开方向，并让菜单贴合触发按钮的左边或右边；菜单有视口高度上限，子项过多时可以垂直滚动。不支持嵌套 dropdown，也不包含具体业务语义。子项的 URL 沿用普通操作的内链/外链处理规则。
 
 Social 按钮与 dropdown 触发器共用 32px 高度、4px 内边距和 8px 圆角；内联 SVG 与图片图标统一放入 24×24px 图标盒，图片使用 `object-fit: contain` 保持原始比例，且两者都不接受通用 dropdown trigger 的 20px 覆盖。
 
-普通 Social 按钮悬停时会取消灰阶，并将 SVG 中使用 `currentColor` 的填充或描边接入通用主题渐变（`--item-theme-light` 至 `--item-theme`）；渐变角度仍遵循 `style.gradient.angle`。Footer dropdown 主图标未激活时透明度为 `0.5`，hover 或菜单打开后恢复为 `1`，同时复用普通按钮高亮；未悬停、未打开时保留图标自身颜色的灰阶效果。按钮的 hover 与 dropdown 打开态分别消费 collection surface 的 hover/active 背景和阴影令牌，因此 glass 左栏显示半透明顶部光照与高光边，card 左栏使用 `var(--block)` 且无阴影；状态切换不使用背景或阴影过渡。
+普通操作按钮悬停时会取消灰阶，并将 SVG 中使用 `currentColor` 的填充或描边接入通用主题渐变（`--item-theme-light` 至 `--item-theme`）；渐变角度仍遵循 `style.gradient.angle`。Footer dropdown 主图标未激活时透明度为 `0.5`，hover 或菜单打开后恢复为 `1`，同时复用普通按钮高亮；未悬停、未打开时保留图标自身颜色的灰阶效果。按钮的 hover 与 dropdown 打开态分别消费 collection surface 的 hover/active 背景和阴影令牌，因此 glass 左栏显示半透明顶部光照与高光边，card 左栏使用 `var(--block)` 且无阴影；状态切换不使用背景或阴影过渡。
 
-`spacer` 是保留的占位标识。将 `spacer:` 放在两个 social 条目之间时，主题会输出弹性空白，把它之后的按钮推至同一行右侧；它不渲染图标、链接或提示，配置值也会被忽略：
+`spacer` 是保留的占位 ID。将 `spacer: {}` 放在两个 action 条目之间时，主题会输出弹性空白，把它之后的按钮推至同一行右侧；它不渲染图标、链接或提示：
 
 ``@@BT@yaml
-footer:
-  social:
-    github:
-      icon: default:github
-      url: https://github.com/
-    spacer:
-    links:
-      type: dropdown
-      icon: default:documents
-      title: 更多链接
-      items: []
+site:
+  footer:
+    actions:
+      github:
+        icon: default:github
+        url: https://github.com/
+      spacer: {}
+      links:
+        variant: dropdown
+        icon: default:documents
+        title: 更多链接
+        items: []
 ``@@BT@
 
 **参考源码**：[layout/_partial/sidebar/index_leftbar.ejs](../../../layout/_partial/sidebar/index_leftbar.ejs)、[layout/_partial/dropdown.ejs](../../../layout/_partial/dropdown.ejs)、[source/js/plugins/dropdown.js](../../../source/js/plugins/dropdown.js)、[source/css/_common/dropdown.styl](../../../source/css/_common/dropdown.styl)、[source/css/_components/sidebar/footer.styl](../../../source/css/_components/sidebar/footer.styl)、[_config.yml](../../../_config.yml)
@@ -325,7 +328,7 @@ graph BT
 
 `style.leftbar.ui-style` 控制左栏外观：`glass` 为历史默认行为，保留上面的三层背景系统；`card` 时 `layout.ejs` 为 `.l_left` 追加 `leftbar-card` 类，容器改为 `background: var(--card)`（浅色纯白 / 深色主题深灰黑）与 `box-shadow: $boxshadow-float`（`0 4px 8px 0 rgba(0,0,0,0.05)`），并隐藏 `.sidebg` 与 `.leftbar-container:before/:after`。因类选择器特异性更高，桌面与移动端均生效。该配置项默认值为 `card`。
 
-紧凑列表、摘要条目和链接网格不再通过 `.l_left` / `.l_right` 高特异性选择器适配。`layout.ejs` 为左栏声明 `data-ui-surface="glass|card"`，为右栏声明 `sidebar`，为主内容声明 `content`；`.ui-collection` 只消费 `--ui-item-*` 等 surface 语义变量。list/grid/summary 的条目默认背景均透明，hover/active 时 glass 使用与 menubar 一致的半透明顶部高光，card/sidebar/content 使用 `var(--block)`，且背景、文字和 leading 图标不做过渡动画。markdown widget 内嵌 collection 的默认背景是上述透明规则的组件级例外，具体契约见[通用集合组件](../06-数据服务与组件/widget-architecture.md#通用集合组件)。Widget Header 的 cap action hover 与 Footer Social 均复用 collection surface 的背景与阴影令牌；glass 左栏因此共享相同的顶部光照和高光边，两类按钮仍保留自身几何。surface 不改变条目尺寸和网格几何。
+紧凑列表、摘要条目和链接网格不再通过 `.l_left` / `.l_right` 高特异性选择器适配。`layout.ejs` 为左栏声明 `data-ui-surface="glass|card"`，为右栏声明 `sidebar`，为主内容声明 `content`；`.ui-collection` 只消费 `--ui-item-*` 等 surface 语义变量。list/grid/summary 的条目默认背景均透明，hover/active 时 glass 使用与菜单一致的半透明顶部高光，card/sidebar/content 使用 `var(--block)`，且背景、文字和 leading 图标不做过渡动画。markdown widget 内嵌 collection 的默认背景是上述透明规则的组件级例外，具体契约见[通用集合组件](../06-数据服务与组件/widget-architecture.md#通用集合组件)。Widget Header 的 cap action hover 与 Footer Actions 均复用 collection surface 的背景与阴影令牌；glass 左栏因此共享相同的顶部光照和高光边，两类按钮仍保留自身几何。surface 不改变条目尺寸和网格几何。
 
 搜索结果与 TOC 保留原有生成结构和交互，通过 `.ui-collection-adapter` 读取相同的 hover/active 令牌。搜索结果的页面标题位于链接外；链接静止时直接显示原 hover surface 的背景与阴影，启用 Card Hover 后 hover 仅动态叠加 Spotlight，不启用 Tilt，替换结果前按容器卸载旧实例。`sidebar-light()` 仍服务于未迁移的专用侧栏元素，例如 wiki 内容页左上角「所有项目」返回胶囊；搜索条底部条继续读取 `--leftbar-search-line`。
 

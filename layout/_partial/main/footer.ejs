@@ -1,24 +1,25 @@
 <%
-const content = theme.footer.content?.replace('{author.name}', (config.author || 'Anonymity'))?.replace('{theme.name}', stellar_info('name'))?.replace('{theme.version}', stellar_info('version'))?.replace('{theme.tree}', stellar_info('tree'))
+var siteFooter = stellar_config('site.footer')
+var content = siteFooter.content?.replace('{author.name}', (config.author || 'Anonymity'))?.replace('{theme.name}', stellar_info('name'))?.replace('{theme.version}', stellar_info('version'))?.replace('{theme.tree}', stellar_info('tree'))
 function layoutDiv() {
   var el = ''
   el += `<footer class="page-footer${scrollreveal(' ')} footnote">`
   el += '<hr>'
   // sitemap
-  const sitemap = theme.footer.sitemap
-  if (sitemap?.length > 0) {
-    var count = sitemap.length
+  var sections = siteFooter.sections
+  if (sections.length > 0) {
+    var count = sections.length
     if ([6].includes(count)) {
       count = 3
     } else if ([7,8].includes(count)) {
       count = 4
     } else {
-      count = Math.min(sitemap.length, 5)
+      count = Math.min(sections.length, 5)
     }
     el += `<div class="sitemap" style="column-count:${count};">`
-    for (let group of sitemap) {
-      let title = group.title
-      let items = group.items
+    for (var group of sections) {
+      var title = group.title
+      var items = group.items
       if (items == undefined || items.length == 0) {
         continue
       }

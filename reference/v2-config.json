@@ -417,6 +417,975 @@
         "https://github.com/xaoxuu"
       ],
       "migration": "configuration/seo"
+    },
+    {
+      "path": "site",
+      "runtimePath": "site",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "brand": {
+          "name": "Stellar",
+          "tagline": "每个人的独立博客",
+          "url": "/"
+        },
+        "menu": {
+          "items": [
+            {
+              "id": "post",
+              "title": "博客",
+              "icon": "default:documents",
+              "url": "/",
+              "accent": "#1BCDFC"
+            }
+          ]
+        },
+        "footer": {
+          "actions": {},
+          "sections": [],
+          "content": ""
+        }
+      },
+      "migration": "configuration/site",
+      "sealed": true
+    },
+    {
+      "path": "site.brand",
+      "runtimePath": "site.brand",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "image": {
+          "src": "/avatar.webp",
+          "variant": "avatar",
+          "url": "/about/"
+        },
+        "name": "Stellar",
+        "tagline": "每个人的独立博客",
+        "url": "/"
+      },
+      "migration": "configuration/site",
+      "sealed": true
+    },
+    {
+      "path": "site.brand.image",
+      "runtimePath": "site.brand.image",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "src": "/avatar.webp",
+        "variant": "avatar",
+        "url": "/about/"
+      },
+      "migration": "configuration/site",
+      "sealed": true
+    },
+    {
+      "path": "site.brand.image.background",
+      "runtimePath": "site.brand.image.background",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "var(--block)",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.brand.image.src",
+      "runtimePath": "site.brand.image.src",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "hexo.config.avatar"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "/avatar.webp",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.brand.image.url",
+      "runtimePath": "site.brand.image.url",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "/about/",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.brand.image.variant",
+      "runtimePath": "site.brand.image.variant",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "avatar"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "avatar",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.brand.name",
+      "runtimePath": "site.brand.name",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "hexo.config.title"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "Stellar",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.brand.tagline",
+      "runtimePath": "site.brand.tagline",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "hexo.config.subtitle"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "每个人的独立博客",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.brand.url",
+      "runtimePath": "site.brand.url",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "/"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "/",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.footer",
+      "runtimePath": "site.footer",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "actions": {},
+        "sections": [],
+        "content": ""
+      },
+      "migration": "configuration/site",
+      "sealed": true
+    },
+    {
+      "path": "site.footer.actions",
+      "runtimePath": "site.footer.actions",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": {
+        "github": {
+          "icon": "default:github",
+          "title": "GitHub",
+          "url": "https://github.com/"
+        }
+      },
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.footer.actions.<id>",
+      "runtimePath": "site.footer.actions.<id>",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": {
+        "icon": "default:github",
+        "title": "GitHub",
+        "url": "https://github.com/"
+      },
+      "migration": "configuration/site",
+      "sealed": true
+    },
+    {
+      "path": "site.footer.actions.<id>.action",
+      "runtimePath": "site.footer.actions.<id>.action",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "trusted_text",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "window.example()",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.footer.actions.<id>.icon",
+      "runtimePath": "site.footer.actions.<id>.icon",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "default:github",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.footer.actions.<id>.items",
+      "runtimePath": "site.footer.actions.<id>.items",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": []
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "array",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": [
+        {
+          "icon": "default:github",
+          "title": "GitHub",
+          "url": "https://github.com/"
+        }
+      ],
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.footer.actions.<id>.items[].icon",
+      "runtimePath": "site.footer.actions.<id>.items[].icon",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "default:github",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.footer.actions.<id>.items[].title",
+      "runtimePath": "site.footer.actions.<id>.items[].title",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "GitHub",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.footer.actions.<id>.items[].url",
+      "runtimePath": "site.footer.actions.<id>.items[].url",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "https://github.com/",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.footer.actions.<id>.title",
+      "runtimePath": "site.footer.actions.<id>.title",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "GitHub",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.footer.actions.<id>.url",
+      "runtimePath": "site.footer.actions.<id>.url",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "https://github.com/",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.footer.actions.<id>.variant",
+      "runtimePath": "site.footer.actions.<id>.variant",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "dropdown",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.footer.content",
+      "runtimePath": "site.footer.content",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "trusted_text",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "本站由 Stellar 生成。",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.footer.sections",
+      "runtimePath": "site.footer.sections",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": []
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "array",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": [
+        {
+          "title": "博客",
+          "items": [
+            "[归档](/blog/archives/)"
+          ]
+        }
+      ],
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.footer.sections[].items",
+      "runtimePath": "site.footer.sections[].items",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": []
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": [
+        "[归档](/blog/archives/)"
+      ],
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.footer.sections[].title",
+      "runtimePath": "site.footer.sections[].title",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "博客",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.menu",
+      "runtimePath": "site.menu",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "items": [
+          {
+            "id": "post",
+            "title": "博客",
+            "icon": "default:documents",
+            "url": "/",
+            "accent": "#1BCDFC"
+          }
+        ]
+      },
+      "migration": "configuration/site",
+      "sealed": true
+    },
+    {
+      "path": "site.menu.items",
+      "runtimePath": "site.menu.items",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": []
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "array",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": [
+        {
+          "id": "post",
+          "title": "博客",
+          "icon": "default:documents",
+          "url": "/",
+          "accent": "#1BCDFC"
+        }
+      ],
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.menu.items[].accent",
+      "runtimePath": "site.menu.items[].accent",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "#1BCDFC",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.menu.items[].icon",
+      "runtimePath": "site.menu.items[].icon",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "default:documents",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.menu.items[].id",
+      "runtimePath": "site.menu.items[].id",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "site menu item"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "post",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.menu.items[].title",
+      "runtimePath": "site.menu.items[].title",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "博客",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.menu.items[].url",
+      "runtimePath": "site.menu.items[].url",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "/",
+      "migration": "configuration/site"
     }
   ]
 }

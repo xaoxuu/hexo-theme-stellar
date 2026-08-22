@@ -225,12 +225,40 @@ test("官方脚本样式与内部集成有显式内部化清单", () => {
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("style.loading.*"));
 });
 
-test("运行时只投影 head/SEO 已交付节点且根配置仍未封闭", () => {
+test("运行时只投影 site Shell 与 head/SEO 已交付节点且根配置仍未封闭", () => {
   assert.equal(CONFIG_SCHEMA.sealed, false);
-  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["seo", "resources", "inject"]);
+  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "seo", "resources", "inject"]);
   assert.deepEqual(
     CONFIG_TARGET_FIELDS.filter(field => field.status === "delivered").map(field => field.path),
     [
+      "site.brand.image.src",
+      "site.brand.image.variant",
+      "site.brand.image.url",
+      "site.brand.image.background",
+      "site.brand.name",
+      "site.brand.tagline",
+      "site.brand.url",
+      "site.menu.items",
+      "site.menu.items[].id",
+      "site.menu.items[].title",
+      "site.menu.items[].icon",
+      "site.menu.items[].url",
+      "site.menu.items[].accent",
+      "site.footer.actions",
+      "site.footer.actions.<id>",
+      "site.footer.actions.<id>.variant",
+      "site.footer.actions.<id>.icon",
+      "site.footer.actions.<id>.title",
+      "site.footer.actions.<id>.url",
+      "site.footer.actions.<id>.action",
+      "site.footer.actions.<id>.items",
+      "site.footer.actions.<id>.items[].icon",
+      "site.footer.actions.<id>.items[].title",
+      "site.footer.actions.<id>.items[].url",
+      "site.footer.sections",
+      "site.footer.sections[].title",
+      "site.footer.sections[].items",
+      "site.footer.content",
       "seo.canonical.host",
       "seo.canonical.allowed_hosts",
       "seo.open_graph.enabled",

@@ -17,7 +17,7 @@ test('Wiki 与 Notebook 自动 Brand 使用 identity、文案和集合首页', (
     identity: { icon: '/project.svg' }
   };
   assert.deepStrictEqual(automaticCollectionBrand({ ...base, homepage: { path: '/wiki/project/' } }, 'wiki', '/default.svg'), {
-    image: { src: '/project.svg', style: 'icon' },
+    image: { src: '/project.svg', variant: 'icon' },
     name: 'Project',
     tagline: 'Tagline',
     url: '/wiki/project/'
@@ -46,7 +46,7 @@ test('Brand 按页面、集合、自动值和全局值解析，image 整体替�
     }
   };
   assert.deepStrictEqual(resolveBrand({
-    themeBrand: {
+    siteBrand: {
       image: { src: '/site.svg', style: 'avatar' },
       name: 'Site',
       tagline: 'Site tagline',
@@ -57,25 +57,25 @@ test('Brand 按页面、集合、自动值和全局值解析，image 整体替�
     defaultIcon: '/default.svg',
     pageBrand: { name: 'Page' }
   }), {
-    image: { src: '/collection.svg', style: 'plain' },
+    image: { src: '/collection.svg', variant: 'plain' },
     name: 'Page',
     tagline: 'Collection override',
     url: '/'
   });
   assert.deepStrictEqual(resolveBrand({
-    themeBrand: { image: { src: '/site.svg', style: 'avatar' }, name: 'Site' },
+    siteBrand: { image: { src: '/site.svg', style: 'avatar' }, name: 'Site' },
     pageBrand: { tagline: 'Page' }
   }), {
-    image: { src: '/site.svg', style: 'avatar' },
+    image: { src: '/site.svg', variant: 'avatar' },
     name: 'Site',
     tagline: 'Page'
   });
   assert.deepStrictEqual(resolveBrand({
-    themeBrand: { tagline: 'Site fallback', url: '/' },
+    siteBrand: { tagline: 'Site fallback', url: '/' },
     collection: { name: 'Collection', identity: { icon: '/auto.svg' } },
     collectionType: 'wiki'
   }), {
-    image: { src: '/auto.svg', style: 'icon' },
+    image: { src: '/auto.svg', variant: 'icon' },
     name: 'Collection',
     tagline: 'Site fallback',
     url: '/'
@@ -83,8 +83,8 @@ test('Brand 按页面、集合、自动值和全局值解析，image 整体替�
 });
 
 test('Topic 默认完整继承全局 Brand，只有显式 Brand 才覆盖', () => {
-  const themeBrand = {
-    image: { src: '/site.svg', style: 'avatar' },
+  const siteBrand = {
+    image: { src: '/site.svg', variant: 'avatar' },
     name: 'Site',
     tagline: 'Site tagline',
     url: '/'
@@ -96,20 +96,20 @@ test('Topic 默认完整继承全局 Brand，只有显式 Brand 才覆盖', () =
     routing: { path: '/topic/example/' }
   };
   assert.deepStrictEqual(resolveBrand({
-    themeBrand,
+    siteBrand,
     collection: topic,
     collectionType: 'topic',
     defaultIcon: '/default.svg'
-  }), themeBrand);
+  }), siteBrand);
 
   topic.sidebar = { left: { brand: { name: 'Custom Topic' } } };
   assert.deepStrictEqual(resolveBrand({
-    themeBrand,
+    siteBrand,
     collection: topic,
     collectionType: 'topic',
     defaultIcon: '/default.svg'
   }), {
-    ...themeBrand,
+    ...siteBrand,
     name: 'Custom Topic'
   });
 });

@@ -183,6 +183,7 @@ module.exports = ctx => {
             collectionListed: publishList == null || publishList.includes(collectionId),
             siteConfig: ctx.config,
             themeConfig: ctx.theme.config,
+            stellarConfig: ctx.stellar?.config,
             collectionConfig: data[`topic/${collectionId}`],
             members: topicMembers,
             frontMatter: config,

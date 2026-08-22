@@ -24,7 +24,8 @@ function buildPostPageViewModel(input) {
     ...input,
     stellarConfig: input.stellarConfig || parseStellarConfig({
       source: input.themeSource || "<theme>",
-      themeConfig: input.themeConfig
+      themeConfig: input.themeConfig,
+      siteConfig: input.siteConfig
     })
   });
 }
@@ -329,11 +330,13 @@ test("合法 Post profile 生成固定结构的冻结 PageViewModel", () => {
       subtitle: "独立博客"
     },
     themeConfig: {
-      brand: {
-        image: { src: "/avatar.webp", style: "avatar" },
-        name: "Stellar",
-        tagline: "独立博客",
-        url: "/"
+      site: {
+        brand: {
+          image: { src: "/avatar.webp", variant: "avatar" },
+          name: "Stellar",
+          tagline: "独立博客",
+          url: "/"
+        }
       },
       site_tree: {
         index_blog: { base_dir: "blog" },
@@ -413,7 +416,7 @@ test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD �
       index_generator: { path: "blog" }
     },
     themeConfig: {
-      brand: { name: "Stellar" },
+      site: { brand: { name: "Stellar" } },
       seo: {
         canonical: { host: "canonical.example.com" },
         open_graph: { enabled: true, twitter_id: "xaoxuu" },
@@ -619,7 +622,7 @@ test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆�
     source: "source/_posts/cascade.md",
     siteConfig: {},
     themeConfig: {
-      brand: { name: "Global" },
+      site: { brand: { name: "Global" } },
       site_tree: {
         post: {
           navigation: { menu: "post", breadcrumb: true },
@@ -669,7 +672,7 @@ test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆�
   assert.deepEqual(viewModel.item.presentation.sidebar.left.widgets, []);
   assert.deepEqual(viewModel.item.presentation.sidebar.left.brand.image, {
     src: "/page.svg",
-    style: "plain"
+    variant: "plain"
   });
   assert.equal(viewModel.item.presentation.sidebar.left.brand.name, "Profile");
   assert.equal(viewModel.item.presentation.article.indent, false);
@@ -700,7 +703,7 @@ test("Post profile 错误包含配置来源和字段路径", () => {
 
 test("Post 模型规范化 Hexo 值且不保留输入引用", () => {
   const brand = {
-    image: { src: "/avatar.webp", style: "avatar" },
+    image: { src: "/avatar.webp", variant: "avatar" },
     name: "Before"
   };
   const tags = {
@@ -710,7 +713,7 @@ test("Post 模型规范化 Hexo 值且不保留输入引用", () => {
   };
   const viewModel = buildPostPageViewModel({
     source: "source/_posts/plain.md",
-    themeConfig: { brand },
+    themeConfig: { site: { brand } },
     frontMatter: {
       title: "Plain",
       layout: "post",
@@ -834,7 +837,7 @@ test("生成前事件为普通 Post 与严格 Topic 挂载各自的 PageViewMode
     data: { "topic/v2": { name: "V2" } }
   };
   const themeConfig = {
-    brand: { name: "Stellar" },
+    site: { brand: { name: "Stellar" } },
     site_tree: { post: { navigation: { menu: "post" } } }
   };
 

@@ -15,9 +15,13 @@ const {
   validateWikiProfileConfig
 } = require("../content-config");
 const { assertPageViewModel } = require("../model-schema");
-const { ConfigSchemaError, isPlainObject: isPlainConfigObject } = require("../config-schema");
+const {
+  ConfigSchemaError,
+  isPlainObject: isPlainConfigObject,
+  valueType: configValueType
+} = require("../config-schema");
 const { normalize_path: normalizePath } = require("../path_utils");
-const { mergeBrand } = require("../brand");
+const { mergeBrand, normalizeBrand } = require("../brand");
 const { firstContentImage, postDescription, postImages } = require("../seo");
 const { caption } = require("../caption");
 
@@ -59,6 +63,31 @@ function mergeConfig(base, override, path = "") {
     }
   }
   return result;
+}
+
+function normalizeSidebarBrand(sidebar) {
+  const normalized = cloneValue(isPlainObject(sidebar) ? sidebar : {});
+  if (isPlainObject(normalized.left?.brand)) {
+    normalized.left.brand = normalizeBrand(normalized.left.brand);
+  }
+  return normalized;
+}
+
+function assertNormalizedConfig(stellarConfig, source, requirements) {
+  const issues = [];
+  for (const requirement of requirements) {
+    const value = requirement.read(stellarConfig);
+    if (isPlainConfigObject(value)) continue;
+    issues.push(Object.freeze({
+      code: "invalid_type",
+      source,
+      path: requirement.path,
+      actualType: configValueType(value),
+      expected: requirement.expected,
+      migration: requirement.migration
+    }));
+  }
+  if (issues.length > 0) throw new ConfigSchemaError(issues);
 }
 
 function normalizeDate(value) {
@@ -432,14 +461,7 @@ function buildPostRenderModel(input, collection, item) {
   };
 }
 
-function normalizeBrand(brand, siteConfig) {
-  const normalized = pick(brand, CONTENT_MODEL_FIELDS.brand);
-  if (normalized.name == null) normalized.name = String(siteConfig.title || "");
-  if (normalized.tagline == null) normalized.tagline = String(siteConfig.subtitle || "");
-  return normalized;
-}
-
-function buildCollectionModel(themeConfig, siteConfig) {
+function buildCollectionModel(themeConfig, stellarConfig) {
   const siteTree = isPlainObject(themeConfig.site_tree) ? themeConfig.site_tree : {};
   const postProfile = isPlainObject(siteTree.post) ? siteTree.post : {};
   const blogIndex = isPlainObject(siteTree.index_blog) ? siteTree.index_blog : {};
@@ -449,12 +471,12 @@ function buildCollectionModel(themeConfig, siteConfig) {
     comments.title = themeConfig.comments.comment_title;
   }
   const navigation = pick(postProfile.navigation, CONTENT_MODEL_FIELDS.navigation);
-  const sidebar = pick(postProfile.sidebar, CONTENT_MODEL_FIELDS.sidebar);
+  const sidebar = normalizeSidebarBrand(pick(postProfile.sidebar, CONTENT_MODEL_FIELDS.sidebar));
 
   return {
     id: "post",
     profile: "post",
-    identity: normalizeBrand(themeConfig.brand, siteConfig),
+    identity: normalizeBrand(stellarConfig.site.brand),
     source: {},
     route: {
       baseDir: typeof blogIndex.base_dir === "string" ? normalizePath(blogIndex.base_dir) : ""
@@ -519,7 +541,7 @@ function buildContentItemModel(page, frontMatter, collection, source, options = 
     presentation: {
       card: mergeConfig(collection.presentation.card, pick(frontMatter.card, CONTENT_MODEL_FIELDS.card)),
       banner: pick(frontMatter.banner, CONTENT_MODEL_FIELDS.banner),
-      sidebar: mergeConfig(collection.presentation.sidebar, pageSidebar, "sidebar"),
+      sidebar: normalizeSidebarBrand(mergeConfig(collection.presentation.sidebar, pageSidebar, "sidebar")),
       article: mergeConfig(collection.presentation.article, pageArticle),
       footer: mergeConfig(collection.presentation.footer, pageFooter),
       comments: mergeConfig(collection.presentation.comments, pageComments)
@@ -609,7 +631,7 @@ function buildWikiCollectionModel(input, collectionId) {
     presentation: {
       card: pick(collectionConfig.card, CONTENT_MODEL_FIELDS.card),
       hero: cloneValue(collectionConfig.hero || {}),
-      sidebar: mergeConfig(profileSidebar, collectionSidebar, "sidebar"),
+      sidebar: normalizeSidebarBrand(mergeConfig(profileSidebar, collectionSidebar, "sidebar")),
       article: mergeConfig(globalArticle, pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)),
       footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),
       comments: mergeConfig(
@@ -672,7 +694,7 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
     pick(topicProfile.navigation, CONTENT_MODEL_FIELDS.navigation)
   );
   const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
-  const siteBrand = normalizeBrand(themeConfig.brand, siteConfig);
+  const siteBrand = normalizeBrand(input.stellarConfig.site.brand);
   const brandSidebar = { left: { brand: siteBrand } };
   const postSidebar = mergeConfig(
     brandSidebar,
@@ -717,7 +739,7 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
     presentation: {
       card: pick(collectionConfig.card, CONTENT_MODEL_FIELDS.card),
       hero: cloneValue(collectionConfig.hero || {}),
-      sidebar: mergeConfig(profileSidebar, collectionSidebar, "sidebar"),
+      sidebar: normalizeSidebarBrand(mergeConfig(profileSidebar, collectionSidebar, "sidebar")),
       article: mergeConfig(
         pick(article, CONTENT_MODEL_FIELDS.article),
         pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)
@@ -809,7 +831,7 @@ function buildNotebookCollectionModel(input, collectionId) {
     presentation: {
       card: pick(collectionConfig.card, CONTENT_MODEL_FIELDS.card),
       hero: cloneValue(collectionConfig.hero || {}),
-      sidebar: mergeConfig(profileSidebar, collectionSidebar, "sidebar"),
+      sidebar: normalizeSidebarBrand(mergeConfig(profileSidebar, collectionSidebar, "sidebar")),
       article: mergeConfig(globalArticle, pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)),
       footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),
       comments: mergeConfig(
@@ -832,21 +854,25 @@ function buildPostPageViewModel(input) {
   const frontMatter = isPlainObject(input.frontMatter) ? input.frontMatter : {};
   const page = input.page || {};
 
-  if (!isPlainConfigObject(input.stellarConfig) || !isPlainConfigObject(input.stellarConfig.seo)) {
-    throw new ConfigSchemaError([Object.freeze({
-      code: "invalid_type",
-      source: themeSource,
+  assertNormalizedConfig(input.stellarConfig, themeSource, [
+    {
+      path: "stellarConfig.site.brand",
+      read: config => config?.site?.brand,
+      expected: "normalized site brand object",
+      migration: "configuration/site"
+    },
+    {
       path: "stellarConfig.seo",
-      actualType: input.stellarConfig == null ? "undefined" : typeof input.stellarConfig,
+      read: config => config?.seo,
       expected: "normalized SEO object",
       migration: "configuration/seo"
-    })]);
-  }
+    }
+  ]);
 
   validateThemeConfig(themeConfig, themeSource);
   validatePostProfileConfig(themeConfig, themeSource);
   validatePageConfig(frontMatter, source);
-  const collection = buildCollectionModel(themeConfig, siteConfig);
+  const collection = buildCollectionModel(themeConfig, input.stellarConfig);
   const item = buildContentItemModel(page, frontMatter, collection, source);
   const render = buildPostRenderModel({ ...input, siteConfig, themeConfig, frontMatter, page }, collection, item);
   return deepFreeze(assertPageViewModel("post", { collection, item, render }));
@@ -907,6 +933,13 @@ function buildTopicPageViewModel(input) {
   const frontMatter = isPlainObject(input.frontMatter) ? input.frontMatter : {};
   const page = input.page || {};
   const collectionId = input.collectionId || frontMatter.collection?.id;
+
+  assertNormalizedConfig(input.stellarConfig, themeSource, [{
+    path: "stellarConfig.site.brand",
+    read: config => config?.site?.brand,
+    expected: "normalized site brand object",
+    migration: "configuration/site"
+  }]);
 
   validateThemeConfig(themeConfig, themeSource);
   validatePostProfileConfig(themeConfig, themeSource);

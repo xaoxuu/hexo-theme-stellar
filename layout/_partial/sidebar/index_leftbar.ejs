@@ -109,25 +109,25 @@ function layoutSearch() {
   return partial('search', {item: search, disabled: sidebarState.search === false})
 }
 function layoutFooterDiv() {
-  const { social } = theme.footer
-  if (social == null) {
+  var actions = stellar_config('site.footer.actions')
+  if (Object.keys(actions).length === 0) {
     return ''
   }
   var el = '<footer class="footer dis-select">';
   el += '<div class="social-wrap" style="--item-grad:url(#footer-social-icon-grad)">';
   el += partial('grad-def', {id: 'footer-social-icon-grad'})
-  for (let id of Object.keys(social)) {
-    let item = social[id];
+  for (var id of Object.keys(actions)) {
+    var item = actions[id];
     if (id === 'spacer') {
       el += '<span class="social-spacer" aria-hidden="true"></span>';
-    } else if (item?.type === 'dropdown') {
+    } else if (item?.variant === 'dropdown') {
       el += partial('../dropdown', {
         item: item,
         rootClass: 'social-dropdown',
         triggerClass: 'social',
         showTitle: false
       })
-    } else if (item?.icon && (item.url || item.onclick)) {
+    } else if (item?.icon && (item.url || item.action)) {
       el += '<a class="social"';
       if (item.title) {
         el += ' title="' + escape_html(item.title) + '"';
@@ -139,9 +139,8 @@ function layoutFooterDiv() {
         } else {
           el += ' rel="noopener noreferrer"';
         }
-      } else if (item.onclick) {
-        item.onclick = item.onclick.replace(/"|\'/g, '&quot;');
-        el += ' onclick="' + item.onclick + '"';
+      } else if (item.action) {
+        el += ' onclick="' + item.action.replace(/"|\'/g, '&quot;') + '"';
       }
       el += '>';
       el += icon(item.icon, 'no-lazy')

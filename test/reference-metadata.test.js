@@ -22,7 +22,7 @@ const ROOT = path.resolve(__dirname, "..");
 const OUTPUT = path.join(ROOT, "reference/v2-models.json");
 const CONFIG_OUTPUT = path.join(ROOT, "reference/v2-config.json");
 
-test("配置 Reference 只公开已交付 head/SEO 契约", () => {
+test("配置 Reference 只公开已交付 site Shell 与 head/SEO 契约", () => {
   const metadata = generateConfigReferenceMetadata();
 
   assert.equal(metadata.status, "partial");
@@ -40,7 +40,40 @@ test("配置 Reference 只公开已交付 head/SEO 契约", () => {
     "seo.open_graph.enabled",
     "seo.open_graph.twitter_id",
     "seo.structured_data",
-    "seo.structured_data.same_as"
+    "seo.structured_data.same_as",
+    "site",
+    "site.brand",
+    "site.brand.image",
+    "site.brand.image.background",
+    "site.brand.image.src",
+    "site.brand.image.url",
+    "site.brand.image.variant",
+    "site.brand.name",
+    "site.brand.tagline",
+    "site.brand.url",
+    "site.footer",
+    "site.footer.actions",
+    "site.footer.actions.<id>",
+    "site.footer.actions.<id>.action",
+    "site.footer.actions.<id>.icon",
+    "site.footer.actions.<id>.items",
+    "site.footer.actions.<id>.items[].icon",
+    "site.footer.actions.<id>.items[].title",
+    "site.footer.actions.<id>.items[].url",
+    "site.footer.actions.<id>.title",
+    "site.footer.actions.<id>.url",
+    "site.footer.actions.<id>.variant",
+    "site.footer.content",
+    "site.footer.sections",
+    "site.footer.sections[].items",
+    "site.footer.sections[].title",
+    "site.menu",
+    "site.menu.items",
+    "site.menu.items[].accent",
+    "site.menu.items[].icon",
+    "site.menu.items[].id",
+    "site.menu.items[].title",
+    "site.menu.items[].url"
   ]);
   assert.equal(metadata.fields[0].sealed, true);
   assert.deepEqual(

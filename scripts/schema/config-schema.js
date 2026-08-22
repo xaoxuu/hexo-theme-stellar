@@ -8,6 +8,22 @@ function literal(value) {
   return { kind: "literal", value };
 }
 
+function structuralOptions(options) {
+  const result = {};
+  for (const key of [
+    "items",
+    "values",
+    "properties",
+    "additionalProperties",
+    "additionalPropertyKey",
+    "removedProperties",
+    "sealed"
+  ]) {
+    if (options[key] !== undefined) result[key] = options[key];
+  }
+  return result;
+}
+
 function field(type, options) {
   return {
     type: Array.isArray(type) ? type : [type],
@@ -20,7 +36,7 @@ function field(type, options) {
     example: options.example,
     migration: options.migration,
     runtimeKey: options.runtimeKey,
-    ...(options.items ? { items: options.items } : {})
+    ...structuralOptions(options)
   };
 }
 
@@ -30,6 +46,7 @@ function deliveredField(path, options) {
     throw new Error(`配置目标 ${path} 尚未交付`);
   }
   return field(target.type, {
+    ...options,
     default: target.default,
     scope: target.scopes[0],
     cascade: target.cascade,
@@ -39,7 +56,8 @@ function deliveredField(path, options) {
     example: options.example,
     migration: target.migration,
     runtimeKey: target.runtimePath.split(".").pop(),
-    ...(target.items ? { items: target.items } : {})
+    items: options.items ?? target.items,
+    values: target.values
   });
 }
 
@@ -63,6 +81,13 @@ const SEO_CONSUMERS = Object.freeze([
   "browser canonical check",
   "Reference generator"
 ]);
+const SITE_CONSUMERS = Object.freeze([
+  "PageViewModel",
+  "Shell renderer",
+  "menu renderer",
+  "footer renderer",
+  "Reference generator"
+]);
 const PRECONNECT_CONSUMERS = Object.freeze(["head renderer", "Reference generator"]);
 const INJECT_CONSUMERS = Object.freeze(["head renderer", "script renderer", "Reference generator"]);
 
@@ -72,12 +97,137 @@ const CONFIG_SCHEMA = deepFreeze({
   sealed: false,
   migration: "configuration/v2",
   removedProperties: {
+    brand: "site.brand",
+    menubar: "site.menu",
+    footer: "site.footer",
     preconnect: "resources.preconnect",
     canonical: "seo.canonical",
     open_graph: "seo.open_graph",
     structured_data: "seo.structured_data"
   },
   properties: {
+    site: object({
+      consumers: SITE_CONSUMERS,
+      example: {
+        brand: { name: "Stellar", tagline: "每个人的独立博客", url: "/" },
+        menu: { items: [{ id: "post", title: "博客", icon: "default:documents", url: "/", accent: "#1BCDFC" }] },
+        footer: { actions: {}, sections: [], content: "" }
+      },
+      migration: "configuration/site",
+      runtimeKey: "site",
+      properties: {
+        brand: object({
+          consumers: SITE_CONSUMERS,
+          example: {
+            image: { src: "/avatar.webp", variant: "avatar", url: "/about/" },
+            name: "Stellar",
+            tagline: "每个人的独立博客",
+            url: "/"
+          },
+          migration: "configuration/site",
+          runtimeKey: "brand",
+          properties: {
+            image: object({
+              consumers: SITE_CONSUMERS,
+              example: { src: "/avatar.webp", variant: "avatar", url: "/about/" },
+              migration: "configuration/site",
+              runtimeKey: "image",
+              removedProperties: { style: "variant" },
+              properties: {
+                src: deliveredField("site.brand.image.src", { normalizer: "identity", example: "/avatar.webp" }),
+                variant: deliveredField("site.brand.image.variant", { normalizer: "identity", example: "avatar" }),
+                url: deliveredField("site.brand.image.url", { normalizer: "identity", example: "/about/" }),
+                background: deliveredField("site.brand.image.background", { normalizer: "identity", example: "var(--block)" })
+              }
+            }),
+            name: deliveredField("site.brand.name", { normalizer: "identity", example: "Stellar" }),
+            tagline: deliveredField("site.brand.tagline", { normalizer: "identity", example: "每个人的独立博客" }),
+            url: deliveredField("site.brand.url", { normalizer: "identity", example: "/" })
+          }
+        }),
+        menu: object({
+          consumers: SITE_CONSUMERS,
+          example: { items: [{ id: "post", title: "博客", icon: "default:documents", url: "/", accent: "#1BCDFC" }] },
+          migration: "configuration/site",
+          runtimeKey: "menu",
+          properties: {
+            items: deliveredField("site.menu.items", {
+              normalizer: "array",
+              example: [{ id: "post", title: "博客", icon: "default:documents", url: "/", accent: "#1BCDFC" }],
+              items: object({
+                consumers: SITE_CONSUMERS,
+                example: { id: "post", title: "博客", icon: "default:documents", url: "/", accent: "#1BCDFC" },
+                migration: "configuration/site",
+                removedProperties: { theme: "accent" },
+                properties: {
+                  id: deliveredField("site.menu.items[].id", { normalizer: "identity", example: "post" }),
+                  title: deliveredField("site.menu.items[].title", { normalizer: "identity", example: "博客" }),
+                  icon: deliveredField("site.menu.items[].icon", { normalizer: "identity", example: "default:documents" }),
+                  url: deliveredField("site.menu.items[].url", { normalizer: "identity", example: "/" }),
+                  accent: deliveredField("site.menu.items[].accent", { normalizer: "identity", example: "#1BCDFC" })
+                }
+              })
+            })
+          }
+        }),
+        footer: object({
+          consumers: SITE_CONSUMERS,
+          example: { actions: {}, sections: [], content: "" },
+          migration: "configuration/site",
+          runtimeKey: "footer",
+          removedProperties: { social: "actions", sitemap: "sections" },
+          properties: {
+            actions: deliveredField("site.footer.actions", {
+              normalizer: "object",
+              example: { github: { icon: "default:github", title: "GitHub", url: "https://github.com/" } },
+              sealed: false,
+              additionalPropertyKey: "<id>",
+              additionalProperties: deliveredField("site.footer.actions.<id>", {
+                normalizer: "object",
+                example: { icon: "default:github", title: "GitHub", url: "https://github.com/" },
+                sealed: true,
+                properties: {
+                  variant: deliveredField("site.footer.actions.<id>.variant", { normalizer: "identity", example: "dropdown" }),
+                  icon: deliveredField("site.footer.actions.<id>.icon", { normalizer: "identity", example: "default:github" }),
+                  title: deliveredField("site.footer.actions.<id>.title", { normalizer: "identity", example: "GitHub" }),
+                  url: deliveredField("site.footer.actions.<id>.url", { normalizer: "identity", example: "https://github.com/" }),
+                  action: deliveredField("site.footer.actions.<id>.action", { normalizer: "trusted_text", example: "window.example()" }),
+                  items: deliveredField("site.footer.actions.<id>.items", {
+                    normalizer: "array",
+                    example: [{ icon: "default:github", title: "GitHub", url: "https://github.com/" }],
+                    items: object({
+                      consumers: SITE_CONSUMERS,
+                      example: { icon: "default:github", title: "GitHub", url: "https://github.com/" },
+                      migration: "configuration/site",
+                      properties: {
+                        icon: deliveredField("site.footer.actions.<id>.items[].icon", { normalizer: "identity", example: "default:github" }),
+                        title: deliveredField("site.footer.actions.<id>.items[].title", { normalizer: "identity", example: "GitHub" }),
+                        url: deliveredField("site.footer.actions.<id>.items[].url", { normalizer: "identity", example: "https://github.com/" })
+                      }
+                    })
+                  })
+                },
+                removedProperties: { type: "variant", onclick: "action" }
+              })
+            }),
+            sections: deliveredField("site.footer.sections", {
+              normalizer: "array",
+              example: [{ title: "博客", items: ["[归档](/blog/archives/)"] }],
+              items: object({
+                consumers: SITE_CONSUMERS,
+                example: { title: "博客", items: ["[归档](/blog/archives/)"] },
+                migration: "configuration/site",
+                properties: {
+                  title: deliveredField("site.footer.sections[].title", { normalizer: "identity", example: "博客" }),
+                  items: deliveredField("site.footer.sections[].items", { normalizer: "identity", example: ["[归档](/blog/archives/)"] })
+                }
+              })
+            }),
+            content: deliveredField("site.footer.content", { normalizer: "trusted_text", example: "本站由 Stellar 生成。" })
+          }
+        })
+      }
+    }),
     seo: object({
       consumers: SEO_CONSUMERS,
       example: {

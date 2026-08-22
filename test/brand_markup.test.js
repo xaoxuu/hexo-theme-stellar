@@ -19,7 +19,7 @@ const LAYOUT_TEMPLATE = fs.readFileSync(
 );
 
 test('Brand 模板只输出统一 wrapper 和三种语义样式 class', () => {
-  assert.match(BRAND_TEMPLATE, /class="brand-image brand-image--\$\{style\}"/);
+  assert.match(BRAND_TEMPLATE, /class="brand-image brand-image--\$\{variant\}"/);
   assert.match(BRAND_TEMPLATE, /class="brand-wrap"/);
   assert.match(BRAND_TEMPLATE, /class="brand-header/);
   assert.doesNotMatch(BRAND_TEMPLATE, /logo-wrap|class="icon"|class="avatar"/);
@@ -46,7 +46,7 @@ test('avatar 图片用 inset 在光环内保持同心，不使用 margin 或字�
 });
 
 test('头像旋转背景仅由 avatar 分支生成和控制', () => {
-  assert.match(BRAND_TEMPLATE, /style === 'avatar'[\s\S]*brand-image-bg/);
+  assert.match(BRAND_TEMPLATE, /variant === 'avatar'[\s\S]*brand-image-bg/);
   assert.match(BRAND_STYLE, /\.brand-image--avatar[\s\S]*\.brand-image-bg/);
   assert.doesNotMatch(BRAND_STYLE, /\.brand-image--(?:icon|plain)[\s\S]*\.brand-image-bg/);
 });

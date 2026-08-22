@@ -1383,7 +1383,7 @@
           ],
           "example": {
             "src": "/images/avatar.webp",
-            "style": "avatar"
+            "variant": "avatar"
           }
         },
         {
@@ -1421,23 +1421,6 @@
           "example": "/images/avatar.webp"
         },
         {
-          "path": "presentation.sidebar.left.brand.image.style",
-          "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:notebook",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "avatar"
-        },
-        {
           "path": "presentation.sidebar.left.brand.image.url",
           "type": [
             "string"
@@ -1453,6 +1436,23 @@
             "Reference generator"
           ],
           "example": "/about/"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.image.variant",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:notebook",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "avatar"
         },
         {
           "path": "presentation.sidebar.left.brand.name",
@@ -1863,9 +1863,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "theme.brand",
-              "site.title",
-              "site.subtitle"
+              "hexo.stellar.config.site.brand"
             ]
           },
           "scope": "CollectionModel:post",
@@ -1895,7 +1893,7 @@
           ],
           "example": {
             "src": "/images/avatar.webp",
-            "style": "avatar"
+            "variant": "avatar"
           }
         },
         {
@@ -1931,22 +1929,6 @@
           "example": "/images/avatar.webp"
         },
         {
-          "path": "identity.image.style",
-          "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:post",
-          "consumers": [
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "avatar"
-        },
-        {
           "path": "identity.image.url",
           "type": [
             "string"
@@ -1961,6 +1943,22 @@
             "Reference generator"
           ],
           "example": "/about/"
+        },
+        {
+          "path": "identity.image.variant",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:post",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "avatar"
         },
         {
           "path": "identity.name",
@@ -2682,7 +2680,7 @@
           ],
           "example": {
             "src": "/images/avatar.webp",
-            "style": "avatar"
+            "variant": "avatar"
           }
         },
         {
@@ -2720,23 +2718,6 @@
           "example": "/images/avatar.webp"
         },
         {
-          "path": "presentation.sidebar.left.brand.image.style",
-          "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:post",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "avatar"
-        },
-        {
           "path": "presentation.sidebar.left.brand.image.url",
           "type": [
             "string"
@@ -2752,6 +2733,23 @@
             "Reference generator"
           ],
           "example": "/about/"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.image.variant",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:post",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "avatar"
         },
         {
           "path": "presentation.sidebar.left.brand.name",
@@ -4508,7 +4506,7 @@
           ],
           "example": {
             "src": "/images/avatar.webp",
-            "style": "avatar"
+            "variant": "avatar"
           }
         },
         {
@@ -4546,23 +4544,6 @@
           "example": "/images/avatar.webp"
         },
         {
-          "path": "presentation.sidebar.left.brand.image.style",
-          "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:topic",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "avatar"
-        },
-        {
           "path": "presentation.sidebar.left.brand.image.url",
           "type": [
             "string"
@@ -4578,6 +4559,23 @@
             "Reference generator"
           ],
           "example": "/about/"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.image.variant",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:topic",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "avatar"
         },
         {
           "path": "presentation.sidebar.left.brand.name",
@@ -6419,7 +6417,7 @@
           ],
           "example": {
             "src": "/images/avatar.webp",
-            "style": "avatar"
+            "variant": "avatar"
           }
         },
         {
@@ -6457,23 +6455,6 @@
           "example": "/images/avatar.webp"
         },
         {
-          "path": "presentation.sidebar.left.brand.image.style",
-          "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:wiki",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "avatar"
-        },
-        {
           "path": "presentation.sidebar.left.brand.image.url",
           "type": [
             "string"
@@ -6489,6 +6470,23 @@
             "Reference generator"
           ],
           "example": "/about/"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.image.variant",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:wiki",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "avatar"
         },
         {
           "path": "presentation.sidebar.left.brand.name",
@@ -7751,7 +7749,7 @@
           ],
           "example": {
             "src": "/images/avatar.webp",
-            "style": "avatar"
+            "variant": "avatar"
           }
         },
         {
@@ -7787,22 +7785,6 @@
           "example": "/images/avatar.webp"
         },
         {
-          "path": "presentation.sidebar.left.brand.image.style",
-          "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "ContentItemModel",
-          "consumers": [
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "avatar"
-        },
-        {
           "path": "presentation.sidebar.left.brand.image.url",
           "type": [
             "string"
@@ -7817,6 +7799,22 @@
             "Reference generator"
           ],
           "example": "/about/"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.image.variant",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "ContentItemModel",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "avatar"
         },
         {
           "path": "presentation.sidebar.left.brand.name",
@@ -9328,7 +9326,7 @@
           ],
           "example": {
             "src": "/images/avatar.webp",
-            "style": "avatar"
+            "variant": "avatar"
           }
         },
         {
@@ -9364,22 +9362,6 @@
           "example": "/images/avatar.webp"
         },
         {
-          "path": "render.layout.brand.image.style",
-          "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "PageViewModel:post",
-          "consumers": [
-            "page.viewModel",
-            "Reference generator"
-          ],
-          "example": "avatar"
-        },
-        {
           "path": "render.layout.brand.image.url",
           "type": [
             "string"
@@ -9394,6 +9376,22 @@
             "Reference generator"
           ],
           "example": "/about/"
+        },
+        {
+          "path": "render.layout.brand.image.variant",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "avatar"
         },
         {
           "path": "render.layout.brand.name",

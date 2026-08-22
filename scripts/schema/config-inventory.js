@@ -118,17 +118,17 @@ const CONFIG_DOMAIN_CATALOG = deepFreeze([
   domain("brand", {
     sources: THEME_SOURCES,
     boundary: "sealed",
-    runtimeTarget: "hexo.stellar.config.brand",
+    runtimeTarget: "hexo.stellar.config.site.brand",
     consumers: ["PageViewModel", "brand helper", "sidebar renderer"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "shell-content-defaults",
   }),
   domain("menubar", {
     sources: THEME_SOURCES,
     boundary: "sealed",
-    runtimeTarget: "hexo.stellar.config.menubar",
+    runtimeTarget: "hexo.stellar.config.site.menu",
     consumers: ["PageViewModel", "menu renderer"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "shell-content-defaults",
   }),
   domain("site_tree", {
@@ -179,9 +179,9 @@ const CONFIG_DOMAIN_CATALOG = deepFreeze([
   domain("footer", {
     sources: THEME_SOURCES,
     boundary: "sealed",
-    runtimeTarget: "hexo.stellar.config.footer",
+    runtimeTarget: "hexo.stellar.config.site.footer",
     consumers: ["PageViewModel", "sidebar footer renderer", "main footer renderer"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "shell-content-defaults",
     dynamicRecords: ["footer.social.<id>"]
   }),
