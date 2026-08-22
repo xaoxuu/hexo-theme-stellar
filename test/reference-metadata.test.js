@@ -10,12 +10,50 @@ const {
   generateReferenceMetadata,
   stringifyReferenceMetadata
 } = require("../scripts/lib/reference-metadata");
+const {
+  generateConfigReferenceMetadata,
+  stringifyConfigReferenceMetadata
+} = require("../scripts/lib/config-reference-metadata");
 const { assertPageViewModel } = require("../scripts/lib/model-schema");
 const { MODEL_SCHEMAS } = require("../scripts/schema/model-schema");
 const generateReference = require("../scripts/generate-reference");
 
 const ROOT = path.resolve(__dirname, "..");
 const OUTPUT = path.join(ROOT, "reference/v2-models.json");
+const CONFIG_OUTPUT = path.join(ROOT, "reference/v2-config.json");
+
+test("配置 Reference 只公开已交付 canonical 契约", () => {
+  const metadata = generateConfigReferenceMetadata();
+
+  assert.equal(metadata.status, "partial");
+  assert.deepEqual(metadata.fields.map(field => field.path), [
+    "canonical",
+    "canonical.official_hosts",
+    "canonical.original_host"
+  ]);
+  assert.equal(metadata.fields[0].sealed, true);
+  assert.deepEqual(
+    metadata.fields.find(field => field.path === "canonical.original_host"),
+    {
+      path: "canonical.original_host",
+      runtimePath: "canonical.originalHost",
+      type: ["string", "null"],
+      default: { kind: "literal", value: null },
+      scope: "theme",
+      cascade: ["theme default", "site theme override"],
+      normalizer: "nullable_host",
+      normalization: "trim; null becomes an empty string",
+      consumers: [
+        "Post PageViewModel",
+        "canonical head renderer",
+        "browser canonical check",
+        "Reference generator"
+      ],
+      example: "example.com",
+      migration: "configuration/canonical#original-host"
+    }
+  );
+});
 
 test("Reference 元数据覆盖四类已交付模型且字段注解完整", () => {
   const metadata = generateReferenceMetadata();
@@ -147,23 +185,39 @@ test("Reference JSON 重复生成稳定并与仓库产物一致", () => {
   assert.equal(first.endsWith("\n"), true);
   assert.deepEqual(JSON.parse(first), generateReferenceMetadata());
   assert.equal(fs.readFileSync(OUTPUT, "utf8"), first);
+
+  const configFirst = stringifyConfigReferenceMetadata();
+  const configSecond = stringifyConfigReferenceMetadata();
+  assert.equal(configFirst, configSecond);
+  assert.deepEqual(JSON.parse(configFirst), generateConfigReferenceMetadata());
+  assert.equal(fs.readFileSync(CONFIG_OUTPUT, "utf8"), configFirst);
 });
 
 test("生成命令可重复覆盖相同产物并检出漂移", t => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-reference-"));
   const output = path.join(directory, "v2-models.json");
+  const configOutput = path.join(directory, "v2-config.json");
   t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
 
-  generateReference({ output });
+  generateReference({ output, configOutput });
   const first = fs.readFileSync(output, "utf8");
-  generateReference({ output });
+  const firstConfig = fs.readFileSync(configOutput, "utf8");
+  generateReference({ output, configOutput });
   assert.equal(fs.readFileSync(output, "utf8"), first);
-  assert.equal(generateReference({ check: true, output }), output);
+  assert.equal(fs.readFileSync(configOutput, "utf8"), firstConfig);
+  assert.equal(generateReference({ check: true, output, configOutput }), output);
 
   fs.writeFileSync(output, "{}\n", "utf8");
   assert.throws(
-    () => generateReference({ check: true, output }),
+    () => generateReference({ check: true, output, configOutput }),
     /v2-models\.json 与模型 Schema 不一致/
+  );
+
+  generateReference({ output, configOutput });
+  fs.writeFileSync(configOutput, "{}\n", "utf8");
+  assert.throws(
+    () => generateReference({ check: true, output, configOutput }),
+    /v2-config\.json 与配置 Schema 不一致/
   );
 });
 

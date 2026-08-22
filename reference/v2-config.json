@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "source": "scripts/schema/config-schema.js",
+  "status": "partial",
+  "fields": [
+    {
+      "path": "canonical",
+      "runtimePath": "canonical",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "theme default",
+        "site theme override"
+      ],
+      "normalizer": "object",
+      "normalization": "parse child fields into a frozen JavaScript object",
+      "consumers": [
+        "Post PageViewModel",
+        "canonical head renderer",
+        "browser canonical check",
+        "Reference generator"
+      ],
+      "example": {
+        "original_host": "example.com",
+        "official_hosts": [
+          "mirror.example.com"
+        ]
+      },
+      "migration": "configuration/canonical",
+      "sealed": true
+    },
+    {
+      "path": "canonical.official_hosts",
+      "runtimePath": "canonical.officialHosts",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": [
+          "localhost"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "theme default",
+        "site theme override"
+      ],
+      "normalizer": "host_list",
+      "normalization": "trim strings, remove empty values, stable deduplicate",
+      "consumers": [
+        "Post PageViewModel",
+        "canonical head renderer",
+        "browser canonical check",
+        "Reference generator"
+      ],
+      "example": [
+        "mirror.example.com",
+        "localhost"
+      ],
+      "migration": "configuration/canonical#official-hosts"
+    },
+    {
+      "path": "canonical.original_host",
+      "runtimePath": "canonical.originalHost",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "theme default",
+        "site theme override"
+      ],
+      "normalizer": "nullable_host",
+      "normalization": "trim; null becomes an empty string",
+      "consumers": [
+        "Post PageViewModel",
+        "canonical head renderer",
+        "browser canonical check",
+        "Reference generator"
+      ],
+      "example": "example.com",
+      "migration": "configuration/canonical#original-host"
+    }
+  ]
+}

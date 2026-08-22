@@ -15,6 +15,7 @@ const {
   validateWikiProfileConfig
 } = require("../content-config");
 const { assertPageViewModel } = require("../model-schema");
+const { ConfigSchemaError, isPlainObject: isPlainConfigObject } = require("../config-schema");
 const { normalize_path: normalizePath } = require("../path_utils");
 const { mergeBrand } = require("../brand");
 const { firstContentImage, postDescription, postImages } = require("../seo");
@@ -304,6 +305,7 @@ function canonicalUrl(originalHost, path) {
 function buildPostRenderModel(input, collection, item) {
   const siteConfig = input.siteConfig;
   const themeConfig = input.themeConfig;
+  const canonicalConfig = input.stellarConfig.canonical;
   const frontMatter = input.frontMatter;
   const page = input.page;
   const articleType = typeof item.presentation.article?.type === "string"
@@ -422,7 +424,7 @@ function buildPostRenderModel(input, collection, item) {
       robots: input.isBackup === true
         ? "noindex, nofollow"
         : typeof frontMatter.robots === "string" && frontMatter.robots.length > 0 ? frontMatter.robots : null,
-      canonical: canonicalUrl(themeConfig.canonical?.originalHost, item.route.path),
+      canonical: canonicalUrl(canonicalConfig.originalHost, item.route.path),
       openGraph,
       jsonLd
     },
@@ -830,6 +832,17 @@ function buildPostPageViewModel(input) {
   const themeConfig = isPlainObject(input.themeConfig) ? input.themeConfig : {};
   const frontMatter = isPlainObject(input.frontMatter) ? input.frontMatter : {};
   const page = input.page || {};
+
+  if (!isPlainConfigObject(input.stellarConfig) || !isPlainConfigObject(input.stellarConfig.canonical)) {
+    throw new ConfigSchemaError([Object.freeze({
+      code: "invalid_type",
+      source: themeSource,
+      path: "stellarConfig.canonical",
+      actualType: input.stellarConfig == null ? "undefined" : typeof input.stellarConfig,
+      expected: "normalized canonical object",
+      migration: "configuration/canonical"
+    })]);
+  }
 
   validateThemeConfig(themeConfig, themeSource);
   validatePostProfileConfig(themeConfig, themeSource);

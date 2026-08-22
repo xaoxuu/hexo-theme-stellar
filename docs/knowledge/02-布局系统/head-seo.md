@@ -239,7 +239,7 @@ graph LR
 
 ```mermaid
 flowchart TD
-    START["generate_canonical()"] --> CHECK{"theme.canonical.originalHost<br/>configured?"}
+    START["generate_canonical()"] --> CHECK{"stellar_config('canonical').originalHost<br/>configured?"}
     CHECK -->|No| EMPTY["Return empty string"]
     CHECK -->|Yes| GETPATH["path = pretty_url(page.path)"]
     GETPATH --> IS404{"path starts with /404?"}
@@ -297,8 +297,8 @@ graph TB
 
 ```yaml
 canonical:
-  originalHost: 'example.com'   # 主站域名主机
-  officialHosts:                # 官方备用主机列表
+  original_host: 'example.com'   # 主站域名主机
+  official_hosts:                # 官方备用主机列表
     - 'backup.example.com'
 ```
 
@@ -501,8 +501,8 @@ open_graph:
 
 # 规范链接与克隆站检测
 canonical:
-  originalHost: 'example.com'
-  officialHosts:
+  original_host: 'example.com'
+  official_hosts:
     - 'backup.example.com'
 
 # 结构化数据

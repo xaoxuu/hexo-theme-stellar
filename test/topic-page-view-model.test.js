@@ -7,6 +7,7 @@ const os = require("node:os");
 const path = require("node:path");
 
 const { buildTopicPageViewModel } = require("../scripts/lib/models");
+const { parseStellarConfig } = require("../scripts/lib/config-schema");
 const processContentConfig = require("../scripts/events/lib/content-config");
 const { attachPageViewModel } = require("../scripts/filters/lib/page-view-model");
 
@@ -306,6 +307,7 @@ test("生成前事件为严格 Topic 成员挂载模型并拒绝缺失集合", t
     source_dir: sourceDir,
     config: { title: "Site", theme_config: themeConfig },
     theme: { config: themeConfig },
+    stellar: { config: parseStellarConfig({ themeConfig }) },
     locals: {
       get: key => ({
         posts: { each: callback => [first, second, plain].forEach(callback) },

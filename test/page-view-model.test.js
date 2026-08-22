@@ -7,9 +7,10 @@ const os = require("node:os");
 const path = require("node:path");
 
 const {
-  buildPostPageViewModel,
+  buildPostPageViewModel: buildPostPageViewModelRaw,
   buildWikiPageViewModel
 } = require("../scripts/lib/models");
+const { parseStellarConfig } = require("../scripts/lib/config-schema");
 const processContentConfig = require("../scripts/events/lib/content-config");
 const { attachPageViewModel } = require("../scripts/filters/lib/page-view-model");
 const {
@@ -17,6 +18,16 @@ const {
   setPostViewModelInput
 } = require("../scripts/lib/page-view-model-registry");
 const processWikiTree = require("../scripts/events/lib/doc_tree");
+
+function buildPostPageViewModel(input) {
+  return buildPostPageViewModelRaw({
+    ...input,
+    stellarConfig: input.stellarConfig || parseStellarConfig({
+      source: input.themeSource || "<theme>",
+      themeConfig: input.themeConfig
+    })
+  });
+}
 
 function assertDeepFrozen(value) {
   if (value == null || typeof value !== "object") return;
@@ -403,7 +414,7 @@ test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD �
     },
     themeConfig: {
       brand: { name: "Stellar" },
-      canonical: { originalHost: "canonical.example.com" },
+      canonical: { original_host: "canonical.example.com" },
       open_graph: { enable: true, twitter_id: "xaoxuu" },
       structured_data: { links: ["https://github.com/xaoxuu"] },
       default: { cover: "/default.webp" },
@@ -760,6 +771,7 @@ test("相关文章构建边界复用插件结果，并在插件缺失时报告�
     source: "source/_posts/related.md",
     siteConfig: { title: "Stellar" },
     themeConfig: { article: { related_posts: { enable: true, max_count: 2 } } },
+    stellarConfig: parseStellarConfig(),
     frontMatter: { title: "Related", layout: "post" },
     page
   };
@@ -828,6 +840,7 @@ test("生成前事件为普通 Post 与严格 Topic 挂载各自的 PageViewMode
     source_dir: sourceDir,
     config: { title: "Site", theme_config: themeConfig },
     theme: { config: themeConfig },
+    stellar: { config: parseStellarConfig({ themeConfig }) },
     locals: { get: key => collections[key] }
   });
 

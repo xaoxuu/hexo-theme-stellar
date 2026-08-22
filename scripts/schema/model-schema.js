@@ -585,7 +585,7 @@ function pageViewModelSchema(profile) {
         description: field("string", { default: derived("page.description", "item.excerpt", "item.content"), example: "文章摘要", required: true }),
         keywords: array(stringItem, { default: derived("page.keywords", "item.tags", "site.keywords"), example: ["Hexo", "Stellar"], required: true }),
         robots: field(["string", "null"], { default: derived("IS_BACKUP", "page.robots"), example: "noindex, nofollow", required: true }),
-        canonical: field(["string", "null"], { default: derived("theme.canonical.originalHost", "item.route.path"), example: "https://example.com/blog/hello/", required: true }),
+        canonical: field(["string", "null"], { default: derived("hexo.stellar.config.canonical.originalHost", "item.route.path"), example: "https://example.com/blog/hello/", required: true }),
         openGraph,
         jsonLd: field("object", { default: computed("由 BlogPosting 结构化数据规则生成"), example: { "@type": "BlogPosting" }, required: true, additionalProperties: true })
       }, { required: true, example: { title: "Hello Stellar - Stellar", description: "文章摘要", keywords: ["Hexo"], robots: null, canonical: null, openGraph: null, jsonLd: { "@type": "BlogPosting" } } }),

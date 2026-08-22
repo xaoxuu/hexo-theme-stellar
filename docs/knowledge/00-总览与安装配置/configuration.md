@@ -196,11 +196,20 @@ stellar:
 
 `canonical`、`open_graph`、`structured_data` 小节控制 SEO 行为：
 
-- **`canonical`**：通过 `originalHost` 与备用站主机列表校验域名，检测并警告克隆站
+- **`canonical`**：通过 `original_host` 与 `official_hosts` 校验域名，检测并警告克隆站
 - **`open_graph`**：启用 Open Graph meta 标签，用于社交分享
 - **`structured_data`**：为 JSON-LD 结构化数据生成提供数据
 
-这些由 head 模板消费并生成相应 meta 标签。实现细节见[HTML Head 与 SEO 元数据](../02-布局系统/head-seo.md)。
+Pre-alpha M1.5 已先为 canonical 建立声明式配置接缝：Schema 定义默认值、类型、站点覆盖、规范化、消费方与 Reference 元数据，解析结果以冻结的 `hexo.stellar.config.canonical` 提供给 Post ViewModel、迁移期 head 与浏览器配置。YAML 使用 snake_case，规范化后的 JavaScript 对象继续使用 `originalHost` / `officialHosts`；旧 camelCase YAML 字段直接报迁移错误。
+
+```yaml
+canonical:
+  original_host: example.com
+  official_hosts:
+    - mirror.example.com
+```
+
+本切片只封闭 canonical 子树，其它公开配置仍由 M1.5 后续切片迁移。实现细节见[HTML Head 与 SEO 元数据](../02-布局系统/head-seo.md)和[Canonical URL 系统](../05-前端交互/canonical-url.md)。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 

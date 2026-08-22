@@ -203,7 +203,7 @@ function generate_canonical() {
       ? `<link rel="canonical" href="${escape_meta_content(postRender.seo.canonical)}">`
       : ''
   }
-  const originalHost = theme.canonical.originalHost || '';
+  const originalHost = stellar_config('canonical').originalHost;
   if (originalHost.length > 0) {
     var path = pretty_url(page.path) || '/';
     if (path.startsWith('/404') || path.startsWith('404')) {

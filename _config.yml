@@ -17,8 +17,8 @@ preconnect:
 # 一旦设置源站地址，非源站地址将不会被SEO收录，并且访问时弹出提示
 # 如果访问地址不在备用站主机列表，则警告信息为非法克隆
 canonical:
-  originalHost: # 主站点域名主机，例如 xaoxuu.com
-  officialHosts: # 官方主机列表，每行一个，例如 xaoxuu.vercel.app
+  original_host: # 主站点域名主机，例如 xaoxuu.com
+  official_hosts: # 官方主机列表，每行一个，例如 xaoxuu.vercel.app
     - localhost
 
 open_graph:

@@ -5,6 +5,8 @@
 hexo.on('generateBefore', () => {
   // 页面路径归一化：xxx.html → xxx/，必须先于所有读取 page.path 的逻辑
   require('./lib/path_normalize')(hexo);
+  // v2 声明式配置必须先于所有主题配置消费方完成解析。
+  require('./lib/config-schema')(hexo);
   // Merge config.
   require('./lib/config')(hexo);
   // 保留既有的早期严格校验与 collection 建模顺序。

@@ -1,5 +1,5 @@
 <%
-  const canonical = theme.canonical || {}
+  const canonical = stellar_config('canonical')
   const encoded = Buffer.from(canonical.originalHost || '').toString('base64');
   const canonicalWithEncoded = Object.assign({}, canonical, {
     encoded: encoded

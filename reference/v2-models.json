@@ -9937,7 +9937,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "theme.canonical.originalHost",
+              "hexo.stellar.config.canonical.originalHost",
               "item.route.path"
             ]
           },

@@ -50,7 +50,9 @@ tags:
 
 ## 配置
 
-系统从 `window.canonical` 读取配置，该对象由主题 `canonical` 配置小节填充。`init.canonicalCheck()` 使用的配置字段：
+YAML 使用 `canonical.original_host` 与 `canonical.official_hosts`。构建期 Schema 完成严格校验、站点覆盖、trim、空值删除和备用主机稳定去重，冻结结果位于 `hexo.stellar.config.canonical`。旧 `originalHost` / `officialHosts` YAML 字段不会兼容读取。
+
+浏览器仍从 `window.canonical` 读取 camelCase 运行时对象。`init.canonicalCheck()` 使用的字段：
 
 | 字段 | 类型 | 必填 | 说明 |
 |------|------|------|------|
@@ -72,7 +74,7 @@ tags:
 
 **逻辑：**
 
-1. 读取 `theme.canonical.originalHost`
+1. 读取 `stellar_config('canonical').originalHost`
 2. 为空则返回 `''`（不输出标签）
 3. 跳过 404 页面（路径以 `/404` 或 `404` 开头）
 4. 去掉路径的 `.html` 后缀
@@ -209,10 +211,13 @@ flowchart TD
 ```mermaid
 flowchart LR
     subgraph "Build Time"
-        cfg["theme.canonical\n(_config.yml)"] --> genCanon["generate_canonical()\nhead.ejs"]
-        cfg --> genRobots["generate_robots()\nhead.ejs"]
+        yaml["canonical.*\n(_config.yml / site override)"] --> schema["Config Schema parser"]
+        schema --> cfg["hexo.stellar.config.canonical\n(frozen normalized result)"]
+        cfg --> postSeo["Post PageViewModel SEO"]
+        cfg --> genCanon["legacy generate_canonical()\nhead.ejs"]
+        postSeo --> canonTag["<link rel=canonical>\nin <head>"]
         IS_BACKUP["ENV: IS_BACKUP=true"] --> genRobots
-        genCanon --> canonTag["<link rel=canonical>\nin <head>"]
+        genCanon --> canonTag
         genRobots --> robotsTag["<meta name=robots\nnoindex,nofollow>\nin <head>"]
         cfg --> defines["defines.ejs\nencoded + param 注入"]
         defines --> winCanonical["window.canonical"]

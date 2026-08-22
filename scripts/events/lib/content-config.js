@@ -163,6 +163,7 @@ module.exports = ctx => {
             themeSource: themeConfigSource,
             siteConfig: ctx.config,
             themeConfig: ctx.theme.config,
+            stellarConfig: ctx.stellar?.config,
             frontMatter: config,
             page: pageModelInput(page, config),
             isBackup: process.env.IS_BACKUP === "true"

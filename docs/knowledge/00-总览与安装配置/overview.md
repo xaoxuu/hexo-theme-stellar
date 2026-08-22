@@ -23,6 +23,7 @@ tags:
 - [layout/layout.ejs](../../../layout/layout.ejs)
 - [package.json](../../../package.json)
 - [scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
+- [scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)
 - [source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)
 - [source/js/main.js](../../../source/js/main.js)
 
@@ -36,7 +37,7 @@ Stellar 是一个功能全面的 Hexo 主题，内置四套并行内容管理系
 
 Stellar 采用**五层架构**，把配置、数据处理、渲染、客户端行为与样式分离，使主题可以支持多种内容类型并保持一致性，同时允许深度定制。
 
-主题是**配置驱动**的：几乎所有行为都由 [_config.yml](../../../_config.yml) 控制，它是主题设置、内容布局、插件启用与样式参数的唯一事实来源。
+主题是**配置驱动**的：[_config.yml](../../../_config.yml) 仍是主题默认配置的主要入口；v2 迁移中的配置域由声明式 Schema 定义默认值与运行时契约。当前仅 `canonical` 子树已接入该链路，其余顶层配置仍按旧链解析。
 
 ### 核心架构分层
 
@@ -82,7 +83,7 @@ graph TB
     CUSTOM --> COMPONENTS
 ```
 
-**参考源码**：[_config.yml](../../../_config.yml)、[layout/layout.ejs](../../../layout/layout.ejs)、[source/js/main.js](../../../source/js/main.js)、[scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
+**参考源码**：[_config.yml](../../../_config.yml)、[scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)、[layout/layout.ejs](../../../layout/layout.ejs)、[source/js/main.js](../../../source/js/main.js)、[scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
 
 ## 配置级联
 
