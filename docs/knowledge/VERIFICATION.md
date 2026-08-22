@@ -349,6 +349,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `ae09d1a` | refactor(v2): 迁移内容默认配置 (#708) | 设计文档 `2026-08-23-v2-content-defaults-config/`；`content.article/notebook` 的严格 Schema、保行为默认、冻结 camelCase 运行时、Collection/PageViewModel、相关内容、helper、EJS 与 Stylus 消费链、旧根诊断、双 Reference、279 项测试与主工程 254 个生成文件；Standards / Spec 双轨 review 无剩余 finding |
 | `70c0841` | refactor(v2): 迁移 Layout Profile 配置 (#707) | 设计文档 `2026-08-22-v2-layout-profiles-config/`；13 个封闭 `layout.profiles` 的严格 Schema、冻结 camelCase 运行时、路径/菜单/tabs/侧栏/首页评论消费链、旧 `site_tree` 诊断、配置 Reference、274 项测试与主工程 254 个生成文件；Standards / Spec 双轨 review 无剩余 finding |
 | `d278597` | refactor(v2): 迁移 site Shell 配置 (#706) | 设计文档 `2026-08-22-v2-site-shell-config/`；`site.brand/menu/footer` 的派生默认、严格 Schema、冻结运行时、动态 action/对象数组、Brand/ViewModel/菜单/Footer 消费链、双 Reference、266 项测试与主工程 254 个生成文件；Standards / Spec 双轨 review 无剩余 finding |
 | `c004f16` | refactor(v2): 迁移 head 与 SEO 配置 (#705) | 设计文档 `2026-08-22-v2-head-seo-config/`；知识库配置、head/SEO、canonical、客户端与性能边界；`seo`、`resources.preconnect`、站点 `inject` 的最终 Schema 路径、冻结运行时、Post/迁移期 head/JSON-LD/浏览器消费链、可信注入合并、配置 Reference 及 262 项测试、主工程 254 个生成文件与 Standards / Spec 双轨 review 证据 |
