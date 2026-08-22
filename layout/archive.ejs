@@ -22,9 +22,24 @@ function layoutArchiveList() {
   }
   el += `<div class="post-list${cls} archives">`
   var years = []
-  var posts = page.author != null ? site.posts.filter(function(post) {
-    return (post.article?.author || theme.default_author.id) == page.author.id
-  }) : site.posts
+  function isTopicPost(post) {
+    return post?.collection?.type === 'topic'
+  }
+  function requirePostViewModel(post) {
+    var viewModel = post_view_model(post)
+    if (viewModel?.collection?.profile !== 'post' || !viewModel.render?.listing) {
+      throw new Error(`Stellar v2: 普通 Post ${post?.source || post?.path || '<unknown>'} 缺少归档列表 ViewModel`)
+    }
+    return viewModel
+  }
+  var posts = site.posts.filter(function(post) {
+    if (isTopicPost(post)) {
+      return page.author == null || (post.article?.author || theme.default_author.id) == page.author.id
+    }
+    var listing = requirePostViewModel(post).render.listing
+    if (!listing.listed) return false
+    return page.author == null || listing.authorId == page.author.id
+  })
   posts.sort('date', -1).each(function(post) {
     post.year = date(post.date, 'YYYY')
     if (post.year && (years.includes(post.year) == false) && (post.title || post.date)) {
@@ -38,7 +53,11 @@ function layoutArchiveList() {
       post.year = date(post.date, 'YYYY')
       return post.year == year
     }).each(function(post) {
-      el += partial('_partial/main/post_list/archive_item', {post: post})
+      if (isTopicPost(post)) {
+        el += partial('_partial/main/post_list/archive_item', {post: post})
+      } else {
+        el += partial('_partial/main/post_list/archive_item', {viewModel: requirePostViewModel(post)})
+      }
     })
     el += `</article>`
   }

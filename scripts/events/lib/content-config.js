@@ -48,12 +48,22 @@ function plainDate(value) {
   return typeof value === "string" || typeof value === "number" ? value : null;
 }
 
+function plainPostLink(value) {
+  if (value == null) return null;
+  return {
+    title: typeof value.title === "string" ? value.title : "",
+    path: typeof value.path === "string" ? value.path : "",
+    date: plainDate(value.date)
+  };
+}
+
 function pageModelInput(page, config) {
   return {
     _id: String(page._id || page.source || page.path || ""),
     source: typeof page.source === "string" ? page.source : "",
     path: typeof page.path === "string" ? page.path : "",
     permalink: typeof page.permalink === "string" ? page.permalink : "",
+    link: typeof page.link === "string" ? page.link : typeof config.link === "string" ? config.link : "",
     title: typeof page.title === "string" ? page.title : String(config.title || ""),
     layout: typeof page.layout === "string" ? page.layout : String(config.layout || "page"),
     content: typeof page.content === "string" ? page.content : "",
@@ -63,6 +73,9 @@ function pageModelInput(page, config) {
     tags: plainTerms(config.tags),
     categories: plainTerms(config.categories),
     categoryLinks: plainTermLinks(page.categories),
+    tagLinks: plainTermLinks(page.tags),
+    previous: plainPostLink(page.prev),
+    next: plainPostLink(page.next),
     lang: typeof page.lang === "string" ? page.lang : "",
     language: typeof page.language === "string" ? page.language : "",
     collection: config.collection == null ? null : {

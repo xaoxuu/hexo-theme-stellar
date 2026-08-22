@@ -19,23 +19,25 @@ tags:
 生成此页面时参考的主题源码文件：
 
 - [layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)
+- [layout/_partial/main/article/post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs)
+- [layout/_partial/main/article/post_tags.ejs](../../../layout/_partial/main/article/post_tags.ejs)
 - [layout/_partial/main/article/contributors.ejs](../../../layout/_partial/main/article/contributors.ejs)
 - [source/css/_components/partial/article-footer.styl](../../../source/css/_components/partial/article-footer.styl)
 - [scripts/helpers/related_posts.js](../../../scripts/helpers/related_posts.js)
 
 </details>
 
-本页介绍文章正文下方的标签行与 `article_footer.ejs` 页脚组件——文章、wiki 页面与自定义页面内容下方渲染的块。涵盖标签行、引用渲染、许可解析、贡献者显示与社交分享。文章之间的导航元素（上一篇/下一篇、相关文章）见[相关内容与导航](related-content.md)；侧边栏与页面级元数据见[侧边栏系统](../02-布局系统/sidebar-system.md)。
+本页介绍文章正文下方的标签行与页脚组件——文章、wiki 页面与自定义页面内容下方渲染的块。普通 Post 由 `post_tags.ejs`、`post_footer.ejs` 消费已解析的 `PageViewModel.render.article`；Wiki、Topic、Notebook 与其它页面继续由迁移期 `article_tags.ejs`、`article_footer.ejs` 读取旧模型。两条分支保持相同 DOM、class 与可见行为。文章之间的导航元素见[相关内容与导航](related-content.md)。
 
 ---
 
 ## 组件概览
 
-文章页脚由 [layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs) 的单个函数 `layoutDiv()` 渲染，条件组装最多四个区块：
+普通 Post 页脚由 [post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs) 接收显式 `footer` local，迁移期页面由 [article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs) 的 `layoutDiv()` 渲染。两者条件组装相同的最多四个区块；许可、分享、贡献者与引用的配置级联只在普通 Post ViewModel 构建时执行一次：
 
 | 区块 ID | 显示条件 | 本地化键 |
 |---------|----------|----------|
-| `#references` | `page.references` 数组非空 | `meta.references` |
+| `#references` | 已解析的 `references` 投影数组非空 | `meta.references` |
 | `#license` | 许可字符串解析为非空（多级逻辑） | `meta.license` |
 | `#contributors` | `contributors` partial 渲染非空输出 | （partial 内部） |
 | `#share` | 分享启用且平台列表非空 | `meta.share` |
@@ -77,9 +79,9 @@ flowchart TD
 
 ## 文章标签行
 
-`layout: post` 且 `theme.article.tags` 开启（默认 `true`）时，正文结束后、`article-footer` 之前渲染一行本文标签：
+普通 Post 的 `render.article.tags` 已在构建边界合并 Hexo 标签名称和路径；数组非空时，正文结束后、`article-footer` 之前渲染一行本文标签：
 
-- 模板 [layout/_partial/main/article/article_tags.ejs](../../../layout/_partial/main/article/article_tags.ejs)：`page.tags` 为空时输出空字符串；每个标签渲染为 `<a class="tag" href="${pretty_url(tag.path)}">` 链接，链接内先内联 `default:hashtag` 图标再输出标签名，点击进入对应 Hexo 标签页。
+- 模板 [post_tags.ejs](../../../layout/_partial/main/article/post_tags.ejs) 只接收显式 `tags` local；每个标签仍渲染为 `<a class="tag" href="${pretty_url(tag.path)}">`，链接内先输出 `default:hashtag` 图标再输出标签名。迁移期 `article_tags.ejs` 保持旧入口。
 - 样式 [source/css/_components/partial/article-tags.styl](../../../source/css/_components/partial/article-tags.styl)：复用 [source/css/_defines/func.styl](../../../source/css/_defines/func.styl) 的 `tag-chip()` mixin——胶囊圆角（`border-radius: 999px`）、`var(--block)` 底色、`$fs-13`，前缀为内联 hashtag 图标（`.tag svg`：`1em`、`opacity: .4`）；hover 时文字变 `var(--text)`、背景变 `var(--block-border)`、图标变主题色且不透明；容器 `justify-content: center` 居中，`margin: 2rem -0.5rem 0` 抵消标签外边距并保留与正文的 2rem 间距。与标签页（`/blog/tags/`）标签胶囊为同一套样式。
 - 博客文章标签行由 `theme.article.tags` 控制，wiki 页不渲染标签行；笔记页由 [layout/_partial/main/notebook/note_tags.ejs](../../../layout/_partial/main/notebook/note_tags.ejs) 在正文末尾渲染笔记标签（标签名经笔记本标签树解析，点击进入笔记本标签过滤页），复用同一 `article-tags` 容器与 `tag-chip()` 胶囊样式。
 

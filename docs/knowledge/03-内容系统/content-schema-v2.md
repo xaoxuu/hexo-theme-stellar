@@ -93,11 +93,13 @@ Galaxy 的路径为 `hero.background.effect.options`，字段白名单在 `scrip
 - `collection` 是 Post profile 的 `CollectionModel`，顶层固定为 `id`、`profile`、`identity`、`source`、`route`、`navigation`、`listing`、`presentation`、`visibility`。
 - `item` 是 `ContentItemModel`，日期转为 ISO 字符串，标签与分类转为字符串数组，路径完成规范化；导航、列表、展示和可见性已经完成级联。
 - `render.document` 固化最终语言、页面级 head 注入与根文档主题状态；`render.layout` 固化 `pageType`、`articleType`、缩进、侧栏表面、Brand、博客路径与面包屑；`render.seo` 固化 title、description、keywords、robots、canonical、Open Graph 与 JSON-LD。
+- `render.article` 固化正文排版开关、带路径的标签、已解析 Footer、上下篇、相关文章结果，以及评论服务、线程 id 与服务参数袋。
+- `render.listing` 固化博客卡片、置顶轮播、平铺列表与归档需要的路由、封面、摘要、日期、分类、最多五个标签、作者、优先级和可见性。
 - Post 的 Schema 校验、模型构建、Reference 与 EJS 消费同一 `render` 事实来源；缺少或非法 `render` 时按源文件构建失败，不回退到 `page` 或主题字段。
 - 级联顺序为页面 Front Matter、Post profile、主题全局配置；`false`、`0` 与空字符串是有效覆盖值。Brand 图片继续按原子对象替换，不继承上级图片子字段。
-- 当前只迁移普通 Post 的根 Shell、左右侧栏选择、Brand、菜单激活、博客面包屑、head 与 JSON-LD。文章正文、标签、评论、相关推荐、列表页，以及 Wiki、Topic、Notebook 的 EJS 消费链仍待后续 M2 切片。
+- 普通 Post 的根 Shell、左右侧栏、Brand、菜单、面包屑、SEO、正文、标签、Footer、上下篇、相关推荐、评论和博客聚合条目均已消费 ViewModel。Hexo 仍提供分页及当前分类/标签查询状态；Topic Post、Wiki 与 Notebook 的 EJS 消费链留在后续 M2 切片。
 
-纯构建入口位于 `scripts/lib/models/index.js`。Post 与 Note 在 `scripts/events/lib/content-config.js` 挂载；Wiki 页面在 `doc_tree` 完成树形解析后由 `scripts/events/lib/doc_tree.js` 挂载。
+纯构建入口位于 `scripts/lib/models/index.js`。普通 Post 在 `before_generate` 登记输入，详情页由 `after_post_render` 结合最终正文和 Hexo 关系完成模型，列表条目由 `post_view_model` helper 从同一登记输入重建冻结投影；Wiki 页面在 `doc_tree` 完成树形解析后挂载，Topic 与 Note 在生成前挂载。
 
 ### Topic 与文章
 
@@ -145,7 +147,7 @@ Reference 输出仍不包含 Blueprint、CLI、布局原语或 Extension Schema�
 
 ## 校验与消费链
 
-- `scripts/events/lib/content-config.js` 读取 `_data/wiki|topic|notebooks` 与源 Markdown Front Matter；普通 Post 在 `before_generate` 登记模型输入，在 `after_post_render` 使用最终 HTML 完成 SEO 投影并挂载 ViewModel。
+- `scripts/events/lib/content-config.js` 读取 `_data/wiki|topic|notebooks` 与源 Markdown Front Matter；普通 Post 在 `before_generate` 登记模型输入，在 `after_post_render` 使用最终 HTML、标签关系、prev/next 与可选相关文章插件结果完成详情模型。博客聚合通过 `scripts/helpers/post_view_model.js` 消费同一登记输入，不保留 Hexo Query 或 Document 引用。
 - `scripts/lib/content-config.js` 定义结构、类型、旧字段拒绝规则与 `isListed` / `isSearchable`。
 - `scripts/lib/content-config.js` 同时校验已接入 profile 使用的路由、导航、侧栏和全局字段；错误继续包含配置来源与字段路径。
 - `scripts/helpers/collection.js` 向 EJS 提供 `collection_id(page, type)`，不再读取 `page.wiki/topic/notebook`。

@@ -3,8 +3,10 @@ function layoutDiv() {
   var el = '';
   el += `<div class="artalk with-fancybox" id="artalk_container"`;
   let cfg = {};
-  if (page.comments?.id) {
-    cfg['comment_id'] = page.comments.id;
+  const explicit = typeof comments !== 'undefined' ? comments : null
+  const commentId = explicit ? explicit.id : page.comments?.id
+  if (commentId) {
+    cfg['comment_id'] = commentId;
   }
   for (let key of Object.keys(cfg)) {
     if (cfg[key]) {

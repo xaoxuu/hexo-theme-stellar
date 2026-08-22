@@ -12,6 +12,10 @@ const {
 } = require("../scripts/lib/models");
 const processContentConfig = require("../scripts/events/lib/content-config");
 const { attachPageViewModel } = require("../scripts/filters/lib/page-view-model");
+const {
+  resetPageViewModels,
+  setPostViewModelInput
+} = require("../scripts/lib/page-view-model-registry");
 const processWikiTree = require("../scripts/events/lib/doc_tree");
 
 function assertDeepFrozen(value) {
@@ -459,6 +463,144 @@ test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD �
   assertDeepFrozen(viewModel);
 });
 
+test("Post render 投影详情关系、Footer、评论和列表条目", () => {
+  const viewModel = buildPostPageViewModel({
+    source: "source/_posts/article.md",
+    siteConfig: { title: "Stellar" },
+    themeConfig: {
+      article: {
+        tags: true,
+        card_tags: true,
+        card_style: "hero",
+        auto_excerpt: 80,
+        category_color: { "开发": "f44336" },
+        license: "By {author.name} ({author.url})",
+        share: ["wechat", "link"],
+        related_posts: { enable: true, max_count: 2 }
+      },
+      authors: { xaoxuu: { name: "xaoxuu", url: "https://xaoxuu.com" } },
+      default_author: { id: "xaoxuu", name: "xaoxuu", url: "https://xaoxuu.com" },
+      comments: {
+        service: "giscus",
+        comment_title: "参与讨论",
+        giscus: { "data-repo": "owner/repo", "data-theme": "preferred_color_scheme" }
+      },
+      style: { prefers_theme: "dark" },
+      plugins: { heti: { enable: true } },
+      api_host: { ghapi: "api.github.com" },
+      data_services: {
+        contributors: {
+          edit_this_page: { "_posts/": "https://github.com/owner/repo/blob/main/" }
+        }
+      }
+    },
+    frontMatter: {
+      title: "Article",
+      layout: "post",
+      card: { cover: "/cover.webp", tagline: "Card caption" },
+      article: { author: "xaoxuu" },
+      footer: { references: ["[Hexo](https://hexo.io)"], share: true },
+      comments: { id: "article-thread" },
+      listing: { priority: 3 }
+    },
+    page: {
+      _id: "article",
+      source: "_posts/article.md",
+      path: "blog/article/",
+      permalink: "https://example.com/blog/article/",
+      link: "https://example.net/external-article",
+      title: "Article",
+      layout: "post",
+      content: "<p>Body</p>",
+      excerpt: "<p>Excerpt</p>",
+      date: "2026-08-22T00:00:00.000Z",
+      tagLinks: [{ name: "Hexo", path: "blog/tags/hexo/" }],
+      categoryLinks: [{ name: "开发", path: "blog/categories/dev/" }],
+      previous: { title: "Newer", path: "blog/newer/", date: "2026-08-23T00:00:00.000Z" },
+      next: { title: "Older", path: "blog/older/", date: "2026-08-21T00:00:00.000Z" }
+    },
+    relatedItems: [{ title: "Related", path: "/blog/related/", excerpt: "<p>Related excerpt</p>" }]
+  });
+
+  assert.equal(viewModel.render.article.heti, true);
+  assert.deepEqual(viewModel.render.article.tags, [{ name: "Hexo", path: "blog/tags/hexo" }]);
+  assert.equal(viewModel.render.article.footer.license, "By xaoxuu (https://xaoxuu.com)");
+  assert.deepEqual(viewModel.render.article.footer.share.services, ["wechat", "link"]);
+  assert.equal(viewModel.render.article.footer.contributor.editUrl, "https://github.com/owner/repo/blob/main/article.md");
+  assert.equal(viewModel.render.article.footer.contributor.commitsUrl, "https://api.github.com/repos/owner/repo/commits?path=article.md");
+  assert.equal(viewModel.render.article.previous.path, "blog/newer");
+  assert.equal(viewModel.render.article.next.path, "blog/older");
+  assert.equal(viewModel.render.article.related.items[0].title, "Related");
+  assert.equal(viewModel.render.article.comments.enabled, true);
+  assert.equal(viewModel.render.article.comments.title, "参与讨论");
+  assert.equal(viewModel.render.article.comments.id, "article-thread");
+  assert.equal(viewModel.render.article.comments.options["data-theme"], "dark");
+  assert.equal(viewModel.render.listing.href, "https://example.net/external-article");
+  assert.equal(viewModel.render.listing.caption, "Card caption");
+  assert.equal(viewModel.render.listing.excerpt, "Excerpt");
+  assert.deepEqual(viewModel.render.listing.categories, ["开发"]);
+  assert.equal(viewModel.render.listing.categoryStyle, "--text-p2:#f44336;--theme-block:#f4433620");
+  assert.deepEqual(viewModel.render.listing.tags, ["Hexo"]);
+  assert.equal(viewModel.render.listing.authorId, "xaoxuu");
+  assert.equal(viewModel.render.listing.priority, 3);
+  assertDeepFrozen(viewModel);
+});
+
+test("Post 列表与评论投影保留覆盖、摘要优先级、五标签和隐藏语义", () => {
+  const viewModel = buildPostPageViewModel({
+    source: "source/_posts/overrides.md",
+    siteConfig: { title: "Stellar" },
+    themeConfig: {
+      article: {
+        card_style: "classic",
+        auto_excerpt: 6,
+        card_tags: true,
+        share: ["email", "link"]
+      },
+      comments: {
+        service: "giscus",
+        giscus: { "data-repo": "owner/repo" },
+        waline: { serverURL: "https://global.example.com", lang: "zh-CN" }
+      }
+    },
+    frontMatter: {
+      title: "Overrides",
+      layout: "post",
+      description: "Description wins",
+      footer: { share: true },
+      comments: {
+        service: "waline",
+        waline: { serverURL: "https://page.example.com" }
+      },
+      visibility: { listed: false }
+    },
+    page: {
+      _id: "overrides",
+      source: "_posts/overrides.md",
+      path: "blog/overrides/",
+      title: "Overrides",
+      layout: "post",
+      content: "<p>Content fallback</p>",
+      tagLinks: ["one", "two", "three", "four", "five", "six"].map(name => ({
+        name,
+        path: `blog/tags/${name}/`
+      }))
+    }
+  });
+
+  assert.equal(viewModel.render.listing.cardStyle, "classic");
+  assert.equal(viewModel.render.listing.excerpt, "Description wins");
+  assert.deepEqual(viewModel.render.listing.tags, ["one", "two", "three", "four", "five"]);
+  assert.equal(viewModel.render.listing.listed, false);
+  assert.deepEqual(viewModel.render.article.footer.share.services, ["email", "link"]);
+  assert.equal(viewModel.render.article.comments.service, "waline");
+  assert.deepEqual(viewModel.render.article.comments.options, {
+    serverURL: "https://page.example.com",
+    lang: "zh-CN"
+  });
+  assertDeepFrozen(viewModel);
+});
+
 test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆盖", () => {
   const viewModel = buildPostPageViewModel({
     source: "source/_posts/cascade.md",
@@ -520,8 +662,11 @@ test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆�
   assert.equal(viewModel.item.presentation.article.indent, false);
   assert.equal(viewModel.item.presentation.footer.license, "");
   assert.equal(viewModel.item.presentation.footer.share, false);
+  assert.equal(viewModel.render.article.footer.share, null);
   assert.equal(viewModel.item.presentation.comments.enabled, false);
   assert.equal(viewModel.item.presentation.comments.title, "");
+  assert.equal(viewModel.render.article.comments.enabled, false);
+  assert.equal(viewModel.render.listing.listed, false);
   assert.equal(viewModel.item.listing.priority, 0);
   assert.deepEqual(viewModel.item.visibility, { listed: false, searchable: true });
 });
@@ -607,6 +752,36 @@ test("Post 模型继续拒绝 v1、未知和错误类型字段", () => {
     assert.match(error.message, /source\/_posts\/legacy\.md: visibility\.listed 应为 boolean，实际为 string/);
     return true;
   });
+});
+
+test("相关文章构建边界复用插件结果，并在插件缺失时报告源文件", () => {
+  const page = { _id: "related", source: "_posts/related.md", path: "blog/related/", layout: "post", title: "Related" };
+  const input = {
+    source: "source/_posts/related.md",
+    siteConfig: { title: "Stellar" },
+    themeConfig: { article: { related_posts: { enable: true, max_count: 2 } } },
+    frontMatter: { title: "Related", layout: "post" },
+    page
+  };
+  resetPageViewModels();
+  setPostViewModelInput(page, input);
+
+  assert.throws(
+    () => attachPageViewModel.call({ extend: { helper: { get: () => null } } }, { ...page }),
+    /source\/_posts\/related\.md 已启用 article\.related_posts.*hexo-related-popular-posts/
+  );
+
+  const rendered = attachPageViewModel.call({
+    extend: {
+      helper: {
+        get: () => () => ({ json: [{ title: "Another", path: "/another/", excerpt: "<p>Excerpt</p>" }] })
+      }
+    }
+  }, { ...page });
+  assert.deepEqual(rendered.viewModel.render.article.related.items, [
+    { title: "Another", path: "/another/", excerpt: "<p>Excerpt</p>" }
+  ]);
+  resetPageViewModels();
 });
 
 test("生成前事件为普通 Post 与严格 Topic 挂载各自的 PageViewModel", t => {

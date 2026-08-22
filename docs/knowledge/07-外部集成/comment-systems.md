@@ -38,7 +38,7 @@ tags:
 
 ## 架构概览
 
-所有评论系统遵循相同结构模式：每个系统的 EJS partial 渲染容器元素与定义初始化函数的 `<script>` 块。实际评论库在容器滚动进入视口时懒加载（`util.viewportLazyload`），初始化在页面加载时执行一次（整页导航，PJAX 已移除）。
+所有评论系统遵循相同结构模式：每个系统的 EJS partial 渲染容器元素与定义初始化函数的 `<script>` 块。普通 Post 的评论服务、标题、线程 id 和服务参数袋已在 `PageViewModel.render.article.comments` 完成页面/Profile/主题级联，布局与脚本 partial 只接收显式 `comments` local；Wiki、Topic、Notebook 仍由迁移期分支解析旧输入。浏览器初始化机制不变，实际评论库在容器滚动进入视口时懒加载（`util.viewportLazyload`），ESM 生命周期留给 v2 M4。
 
 例外：Artalk 页面 URL 携带定位目标（`?atk_comment=<id>` 或 `#atk-comment-<id>`，如邮件通知链接与侧栏最近评论链接）时跳过视口懒加载立即初始化，以便 Artalk 的 `list-goto` 逻辑完成评论定位。
 
@@ -88,7 +88,7 @@ util.viewportLazyload(el, load_fn)
 
 ### 评论线程标识（`comment_id` 属性）
 
-所有系统以相同方式解析评论线程标识：
+所有系统以相同方式使用评论线程标识；普通 Post 的 `comment_id` 属性来自 ViewModel，缺失时仍回退当前 URL：
 
 ```js
 const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);

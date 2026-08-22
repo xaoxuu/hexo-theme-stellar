@@ -100,6 +100,9 @@ test("Reference 只来自模型 Schema 且不提前公开后续契约", () => {
   assert.ok(postViewModel.fields.some(field => field.path === "render.document.language"));
   assert.ok(postViewModel.fields.some(field => field.path === "render.layout.breadcrumbs[].path"));
   assert.ok(postViewModel.fields.some(field => field.path === "render.seo.jsonLd"));
+  assert.ok(postViewModel.fields.some(field => field.path === "render.article.comments.options"));
+  assert.ok(postViewModel.fields.some(field => field.path === "render.article.tags[].path"));
+  assert.ok(postViewModel.fields.some(field => field.path === "render.listing.priority"));
   for (const profile of ["notebook", "topic", "wiki"]) {
     const pageViewModel = metadata.models.find(model => model.name === "PageViewModel" && model.profile === profile);
     assert.equal(pageViewModel.fields.some(field => field.path === "render"), false);

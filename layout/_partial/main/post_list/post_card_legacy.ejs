@@ -1,0 +1,50 @@
+<%
+// Topic Post 在 M2 迁移期继续消费旧模型；普通 Post 必须走 post_card.ejs 的 ViewModel 分支。
+var image = post.card?.cover
+
+function divDefault() {
+  var el = '<article class="md-text">'
+  if (image && image.includes('/')) {
+    el += `<div class="post-cover"><img src="${escape_html(image)}"/></div>`
+  }
+  el += `<h2 class="post-title">${post.title ? escape_html(post.title) : date(post.date, config.date_format)}</h2>`
+  el += `<div class="excerpt${theme.plugins.heti?.enable ? ' heti' : ''}"><p>`
+  if (post.excerpt) {
+    el += escape_html(strip_html(post.excerpt))
+  } else if (post.description) {
+    el += escape_html(post.description)
+  } else if (post.content && theme.article.auto_excerpt > 0) {
+    el += escape_html(truncate(strip_html(post.content), {length: theme.article.auto_excerpt}))
+  }
+  el += `</p></div><div class="meta cap"><span class="cap" id="post-meta">${icon('default:calendar')}`
+  el += `<time datetime="${date_xml(post.date)}">${date(post.date, config.date_format)}</time></span>`
+  if (post.categories && post.categories.length > 0) {
+    var categories = []
+    post.categories.forEach(function(category) { categories.push(category.name) })
+    if (categories.length > 0) {
+      var categoryNames = categories.join(' / ')
+      var lastCategory = categories[categories.length - 1]
+      el += `<span class="cap breadcrumb"${category_color(lastCategory)}>${icon('default:category')}<span>${escape_html(categoryNames)}</span></span>`
+    }
+  }
+  if (theme.article.card_tags && post.tags && post.tags.length > 0) {
+    el += '<span class="card-tags">'
+    post.tags.forEach(function(tag, index) {
+      if (index < 5) el += `<span class="cap tag-chip">${icon('default:hashtag')}${escape_html(tag.name)}</span>`
+    })
+    el += '</span>'
+  }
+  return el + '</div></article>'
+}
+
+function divPhoto() {
+  var cardCaption = caption(post)
+  var title = post.title ? post.title : date(post.date, config.date_format)
+  var el = `<div class="cover" position="bottom" style="--cover-url:url('${escape_html(image.replace(/'/g, '%27'))}')">`
+  el += `<img src="${escape_html(image)}"/><div class="cover-info" position="bottom" data-text-adaptive="split">`
+  el += `<div class="text headline">${escape_html(title)}</div>`
+  if (cardCaption.length > 0) el += `<div class="text caption">${escape_html(cardCaption)}</div>`
+  return el + '</div></div>'
+}
+%>
+<%- theme.article.card_style == 'hero' && image ? divPhoto() : divDefault() %>

@@ -1,11 +1,12 @@
 <%
 function layoutDiv() {
   var el = '';
-  const cmt = page.cmt;
+  const explicit = typeof comments !== 'undefined' ? comments : null
+  const cmt = explicit || page.cmt;
   if (cmt?.service?.length > 0) {
     const name = cmt.service;
-    var body = cmt[name];
-    if (theme.style.prefers_theme != 'auto' && body['data-theme'] == 'preferred_color_scheme') {
+    var body = explicit ? cmt.options : cmt[name];
+    if (!explicit && theme.style.prefers_theme != 'auto' && body['data-theme'] == 'preferred_color_scheme') {
       body['data-theme'] = theme.style.prefers_theme
     }
     el += '<div id="' + name + '"';

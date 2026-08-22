@@ -17,8 +17,12 @@ tags:
 生成此页面时参考的主题源码文件：
 
 - [layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
+- [layout/_partial/main/post_list/post_card_legacy.ejs](../../../layout/_partial/main/post_list/post_card_legacy.ejs)
+- [layout/_partial/main/pin_slider.ejs](../../../layout/_partial/main/pin_slider.ejs)
 - [layout/_partial/main/post_list/wiki_card.ejs](../../../layout/_partial/main/post_list/wiki_card.ejs)
 - [layout/index.ejs](../../../layout/index.ejs)
+- [layout/archive.ejs](../../../layout/archive.ejs)
+- [scripts/helpers/post_view_model.js](../../../scripts/helpers/post_view_model.js)
 - [source/css/_components/list.styl](../../../source/css/_components/list.styl)
 
 </details>
@@ -33,7 +37,7 @@ tags:
 
 ## 架构概览
 
-文章列表系统采用两层架构：容器层（`index.ejs`）遍历文章并调用卡片渲染器（`post_card.ejs`）渲染每篇文章；独立的 `wiki_card.ejs` partial 用不同数据结构与布局渲染 wiki 项目卡片。
+文章列表系统采用两层架构：Hexo 提供 `page.posts`、分页和当前分类/标签查询状态；容器层为每个普通 Post 取得冻结的 `render.listing`，再调用只接收 ViewModel 的 `post_card.ejs`。首页平铺置顶、轮播与归档消费同一投影，不在 EJS 重做页面/Profile/主题级联。严格 Topic Post 在 M2 迁移期仍通过 `post_card_legacy.ejs` 保持原输出，不进入普通 Post 链；Wiki 使用独立的 `wiki_card.ejs`。
 
 **文件与函数映射：**
 
@@ -41,6 +45,8 @@ tags:
 |------|----------|------|
 | `layout/index.ejs` | `layout_post_list()`、`layout_post_card()` | 遍历 `page.posts`，包装卡片 |
 | `layout/_partial/main/post_list/post_card.ejs` | `div()`、`div_default()`、`div_photo()` | 渲染单篇文章卡片 |
+| `layout/_partial/main/post_list/post_card_legacy.ejs` | `divDefault()`、`divPhoto()` | 迁移期只渲染 Topic Post |
+| `scripts/helpers/post_view_model.js` | `post_view_model()` | 从构建登记输入生成普通 Post 列表 ViewModel，缺失时按源文件失败 |
 | `layout/_partial/main/post_list/wiki_card.ejs` | `layoutDiv()` | 渲染 wiki 项目卡片 |
 | `layout/_partial/main/post_list/topic_card.ejs`、`latest_post_card.ejs` | `layoutDiv()` | 渲染专栏容器（最新文章卡片 + 其他文章列表） |
 | `layout/_partial/main/navbar/nav_tabs_blog` | — | 文章列表上方的导航标签 |
@@ -91,7 +97,7 @@ graph TB
 |------|------|
 | **输入** | `partial`——渲染单篇文章卡片的回调函数 |
 | **数据源** | `page.posts`——Hexo 文章集合 |
-| **过滤条件** | `post.indexing != false`——排除显式禁用收录的文章 |
+| **过滤条件** | 普通 Post 使用 `render.listing.listed`；Topic Post 暂用旧 `visibility.listed` |
 | **输出** | 包装在 `<div class="post-list post">` 中的 HTML |
 
 ```mermaid
@@ -99,7 +105,7 @@ flowchart TD
     Start["layout_post_list(partial)"]
     OpenDiv["el += '<div class=\"post-list post\">'"]
     Iterate["page.posts.each(post)"]
-    CheckIndex{"post.indexing<br/>!= false?"}
+    CheckIndex{"render.listing.listed?"}
     CallWrapper["layout_post_card('post', post, partial(post))"]
     AppendCard["el += card_html"]
     CloseDiv["el += '</div>'"]
@@ -124,9 +130,9 @@ flowchart TD
 
 ```mermaid
 graph LR
-    PostObject["post object"]
-    CheckCover{"post.cover<br/>defined?"}
-    CheckCardStyle{"article.card_style<br/>== 'hero'?"}
+    PostObject["render.listing"]
+    CheckCover{"listing.cover<br/>defined?"}
+    CheckCardStyle{"listing.cardStyle<br/>== 'hero'?"}
     PhotoLayout["layout = 'post photo'"]
     DefaultLayout["layout = 'post'"]
     WrapHTML["Wrap in <a class='post-card {layout}'>"]
@@ -150,13 +156,16 @@ graph LR
 
 ### 数据结构初始化
 
-渲染先由文章 front-matter 构造 `obj` 对象：
+普通 Post 卡片直接读取 `PageViewModel.render.listing`：
 
 | 属性 | 来源 | 用途 |
 |------|------|------|
-| `obj.image` | `post.card.cover` | 封面图 URL |
-| headline | `post.title` | hero 卡片的大号展示文本（无标题回退日期） |
-| caption | `post.card.tagline` → `post.description` → excerpt 前 50 字 | hero 卡片与置顶轮播共用的单行小字（`caption()` helper，空则不渲染） |
+| `cover` | 已级联的 `card.cover` | 封面图 URL |
+| `title` | 文章标题 | hero 卡片的大号展示文本（无标题回退日期） |
+| `caption` | `card.tagline` → description → excerpt | hero 卡片与置顶轮播共用的单行小字 |
+| `excerpt` | excerpt → description → 正文自动截断 | classic 卡片摘要 |
+| `categories` / `tags` | Hexo 关系投影 | 分类面包屑与最多五个标签 |
+| `priority` / `listed` | 已解析列表设置与可见性 | 置顶排序、去重和隐藏过滤 |
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
 
@@ -590,15 +599,18 @@ graph TD
 ---
 title: My Post Title
 date: 2024-01-01
-cover: /images/cover.jpg  # 仅显式完整 URL 时渲染封面
+card:
+  cover: /images/cover.jpg
 categories:
   - Category A
   - Category B
 tags:
   - tag1
   - tag2
-sticky: true  # 可选：置顶
-indexing: true  # 可选：是否进入列表（默认 true）
+listing:
+  priority: 1  # 大于 0 时置顶
+visibility:
+  listed: true
 excerpt: Custom excerpt text  # 可选
 description: SEO description  # 可选兜底
 ---
@@ -615,8 +627,9 @@ article:
 ---
 title: My Photo Post
 date: 2024-01-01
-cover: /images/hero.jpg
-subtitle: Caption text  # 可选：一行小字（subtitle > description > excerpt 前 50 字）
+card:
+  cover: /images/hero.jpg
+  tagline: Caption text
 ---
 ```
 

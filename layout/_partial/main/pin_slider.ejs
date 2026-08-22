@@ -5,6 +5,8 @@ var pinType = type || 'post'
 var pinItems = []
 
 function pinValue(item) {
+  if (item?.collection?.profile === 'post') return item.render.listing.priority
+  if (item?.legacyPost) return item.legacyPost.listing?.priority
   return item.listing?.priority
 }
 
@@ -29,11 +31,19 @@ if (pinType == 'wiki') {
   var allPosts = site.posts.toArray() || []
   for (var pi = 0; pi < allPosts.length; pi++) {
     var post = allPosts[pi]
-    if (post.visibility?.listed === false) {
+    if (post?.collection?.type === 'topic') {
+      if (post.visibility?.listed !== false && isPinned(post)) {
+        pinItems.push({legacyPost: post})
+      }
       continue
     }
-    if (isPinned(post)) {
-      pinItems.push(post)
+    var viewModel = post_view_model(post)
+    if (viewModel?.collection?.profile !== 'post' || !viewModel.render?.listing) {
+      throw new Error(`Stellar v2: 普通 Post ${post?.source || post?.path || '<unknown>'} 缺少置顶列表 ViewModel`)
+    }
+    if (!viewModel.render.listing.listed) continue
+    if (isPinned(viewModel)) {
+      pinItems.push(viewModel)
     }
   }
 }
@@ -45,13 +55,20 @@ pinItems.sort(function(a, b) {
 // 文章幻灯片：固定「标题 + 一行小字」结构。
 // 标题：post.title；小字由 caption() helper 统一取值。
 // 样式与 hero 卡片 cover-info 一致；无封面时为纯白卡片（文字按普通文章颜色）。
-function postSlide(post) {
-  var cover = post.card?.cover
+function postSlide(viewModel) {
+  var legacy = viewModel?.legacyPost
+  var post = legacy ? {
+    cover: legacy.card?.cover,
+    title: legacy.title,
+    caption: caption(legacy),
+    href: legacy.link || legacy.path
+  } : viewModel.render.listing
+  var cover = post.cover
   var noCover = !(cover != null && cover.length > 0)
   var headline = post.title
-  var sub = caption(post)
+  var sub = post.caption
   var el = ''
-  el += '<a class="pin-slide post-slide' + (noCover ? ' no-cover' : '') + '" href="' + escape_html(pretty_url(post.link || post.path)) + '"'
+  el += '<a class="pin-slide post-slide' + (noCover ? ' no-cover' : '') + '" href="' + escape_html(pretty_url(post.href)) + '"'
   if (!noCover) {
     el += ' style="--pin-cover-url:url(\'' + escape_html(cover.replace(/'/g, '%27')) + '\')"'
   }

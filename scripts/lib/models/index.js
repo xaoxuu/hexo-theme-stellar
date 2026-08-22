@@ -18,6 +18,7 @@ const { assertPageViewModel } = require("../model-schema");
 const { normalize_path: normalizePath } = require("../path_utils");
 const { mergeBrand } = require("../brand");
 const { firstContentImage, postDescription, postImages } = require("../seo");
+const { caption } = require("../caption");
 
 function cloneValue(value) {
   if (Array.isArray(value)) return value.map(cloneValue);
@@ -117,6 +118,172 @@ function normalizeCategoryLinks(value) {
     name: typeof item?.name === "string" ? item.name : "",
     path: typeof item?.path === "string" ? normalizeCollectionPath(item.path) : ""
   })).filter(item => item.name.length > 0 && item.path.length > 0);
+}
+
+function normalizeLinks(value) {
+  if (!Array.isArray(value)) return [];
+  return value.map(item => ({
+    name: typeof item?.name === "string" ? item.name : "",
+    path: typeof item?.path === "string" ? normalizeCollectionPath(item.path) : ""
+  })).filter(item => item.name.length > 0 && item.path.length > 0);
+}
+
+function normalizePostLink(value) {
+  if (value == null || typeof value !== "object") return null;
+  const path = typeof value.path === "string" ? normalizeCollectionPath(value.path) : "";
+  if (path.length === 0) return null;
+  return {
+    title: typeof value.title === "string" ? value.title : "",
+    path,
+    date: normalizeDate(value.date)
+  };
+}
+
+function normalizeRelatedItems(value) {
+  if (!Array.isArray(value)) return [];
+  return value.map(item => ({
+    title: typeof item?.title === "string" ? item.title : "",
+    path: typeof item?.path === "string" ? item.path : "",
+    excerpt: typeof item?.excerpt === "string" ? item.excerpt : ""
+  })).filter(item => item.title.length > 0 && item.path.length > 0);
+}
+
+function categoryStyle(category, categoryColors) {
+  if (typeof category !== "string" || category.length === 0 || !isPlainObject(categoryColors)) return "";
+  const raw = categoryColors[category];
+  if (typeof raw !== "string" || raw.length === 0) return "";
+  const color = raw.startsWith("#") ? raw : `#${raw}`;
+  const background = color.length === 4 ? `${color}2` : color.length === 7 ? `${color}20` : color;
+  return `--text-p2:${color};--theme-block:${background}`;
+}
+
+function resolveLicense(license, item, themeConfig) {
+  if (typeof license !== "string" || license.length === 0) return "";
+  const authors = isPlainObject(themeConfig.authors) ? themeConfig.authors : null;
+  if (!authors) return license;
+  const authorId = item.presentation.article?.author;
+  const author = typeof authorId === "string" && isPlainObject(authors[authorId])
+    ? authors[authorId]
+    : isPlainObject(themeConfig.default_author) ? themeConfig.default_author : null;
+  if (!author) return license;
+  return license
+    .replace("{author.name}", String(author.name || ""))
+    .replace("{author.url}", String(author.url || ""));
+}
+
+function buildContributor(item, themeConfig) {
+  const map = themeConfig.data_services?.contributors?.edit_this_page;
+  if (!isPlainObject(map)) return null;
+  const source = item.source.file || "";
+  for (const [prefix, replacement] of Object.entries(map)) {
+    if (!source.startsWith(prefix) || typeof replacement !== "string" || replacement.length === 0) continue;
+    const editUrl = source.replace(prefix, replacement);
+    const apiHost = String(themeConfig.api_host?.ghapi || "api.github.com");
+    return {
+      editUrl,
+      commitsUrl: editUrl
+        .replace("/github.com/", `/${apiHost}/repos/`)
+        .replace("/blob/main/", "/commits?path=")
+    };
+  }
+  return null;
+}
+
+function buildPostArticleRender(input, item) {
+  const themeConfig = input.themeConfig;
+  const frontMatter = input.frontMatter;
+  const footer = item.presentation.footer || {};
+  const comments = item.presentation.comments || {};
+  const service = typeof comments.service === "string" ? comments.service : "";
+  const commentOptions = service && isPlainObject(comments[service]) ? cloneValue(comments[service]) : {};
+  const preferredTheme = themeConfig.style?.prefers_theme;
+  if (service === "giscus" && preferredTheme !== "auto" && commentOptions["data-theme"] === "preferred_color_scheme") {
+    commentOptions["data-theme"] = preferredTheme;
+  }
+  const configuredShare = Array.isArray(footer.share) ? footer.share : themeConfig.article?.share;
+  const shareServices = footer.share !== false && Array.isArray(configuredShare)
+    ? configuredShare.filter(name => ["wechat", "weibo", "email", "link"].includes(name))
+    : [];
+  const summarySource = typeof frontMatter.description === "string" && frontMatter.description.length > 0
+    ? frontMatter.description
+    : item.excerpt || item.content;
+  const relatedConfig = isPlainObject(themeConfig.article?.related_posts)
+    ? themeConfig.article.related_posts
+    : {};
+
+  return {
+    heti: themeConfig.plugins?.heti?.enable === true,
+    tags: themeConfig.article?.tags === true ? normalizeLinks(input.page.tagLinks) : [],
+    footer: {
+      references: Array.isArray(footer.references) ? cloneValue(footer.references) : [],
+      license: resolveLicense(footer.license, item, themeConfig),
+      share: shareServices.length > 0 ? {
+        services: shareServices,
+        permalink: item.route.permalink,
+        title: `${item.title} - ${String(input.siteConfig.title || "")}`,
+        image: item.presentation.card?.cover || "",
+        summary: truncate(stripHTML(summarySource), { length: 120 })
+      } : null,
+      contributor: buildContributor(item, themeConfig)
+    },
+    previous: normalizePostLink(input.page.previous),
+    next: normalizePostLink(input.page.next),
+    related: {
+      enabled: relatedConfig.enable === true,
+      title: typeof relatedConfig.title === "string" ? relatedConfig.title : "",
+      maxCount: Number.isFinite(relatedConfig.max_count) ? relatedConfig.max_count : 5,
+      items: normalizeRelatedItems(input.relatedItems)
+    },
+    comments: {
+      enabled: comments.enabled !== false && service.length > 0,
+      title: typeof comments.title === "string" && comments.title.length > 0
+        ? comments.title
+        : String(themeConfig.comments?.comment_title || ""),
+      id: typeof comments.id === "string" ? comments.id : "",
+      service,
+      options: commentOptions,
+      pageTitle: item.title
+    }
+  };
+}
+
+function buildPostListingRender(input, collection, item) {
+  const categories = normalizeCategoryLinks(input.page.categoryLinks);
+  const tagLinks = normalizeLinks(input.page.tagLinks);
+  const description = typeof input.frontMatter.description === "string" ? input.frontMatter.description : "";
+  const excerpt = item.excerpt
+    ? stripHTML(item.excerpt)
+    : description || (collection.listing.excerptLength > 0
+      ? truncate(stripHTML(item.content), { length: collection.listing.excerptLength })
+      : "");
+  const lastCategory = categories.length > 0 ? categories[categories.length - 1].name : "";
+  return {
+    href: typeof input.page.link === "string" && input.page.link.length > 0
+      ? input.page.link
+      : item.route.path,
+    title: item.title,
+    layout: item.layout,
+    date: item.date,
+    cover: item.presentation.card?.cover || "",
+    caption: caption({
+      card: item.presentation.card,
+      description,
+      excerpt: item.excerpt,
+      content: item.content
+    }),
+    excerpt,
+    categories: categories.map(category => category.name),
+    categoryStyle: categoryStyle(lastCategory, input.themeConfig.article?.category_color),
+    tags: input.themeConfig.article?.card_tags === true
+      ? tagLinks.slice(0, 5).map(tag => tag.name)
+      : [],
+    authorId: typeof item.presentation.article?.author === "string" && item.presentation.article.author.length > 0
+      ? item.presentation.article.author
+      : String(input.themeConfig.default_author?.id || ""),
+    priority: item.listing.priority,
+    listed: item.visibility.listed !== false,
+    cardStyle: collection.listing.cardStyle || "classic"
+  };
 }
 
 function absoluteSiteAsset(value, siteUrl) {
@@ -258,7 +425,9 @@ function buildPostRenderModel(input, collection, item) {
       canonical: canonicalUrl(themeConfig.canonical?.originalHost, item.route.path),
       openGraph,
       jsonLd
-    }
+    },
+    article: buildPostArticleRender(input, item),
+    listing: buildPostListingRender(input, collection, item)
   };
 }
 

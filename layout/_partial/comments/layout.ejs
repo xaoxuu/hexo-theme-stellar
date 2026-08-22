@@ -1,25 +1,37 @@
 <%
-const proj = theme.wiki.tree[collection_id(page, "wiki")]
-const projectComments = proj?.comments || {}
-const pageComments = page.comments || {}
-const settings = Object.assign({}, projectComments, pageComments)
-var cmt = {
-  service: settings.service || theme.comments.service
+var explicitComments = typeof comments !== 'undefined' ? comments : null
+var commentModel
+
+if (explicitComments) {
+  commentModel = explicitComments
+} else {
+  const proj = theme.wiki.tree[collection_id(page, "wiki")]
+  const projectComments = proj?.comments || {}
+  const pageComments = page.comments || {}
+  const settings = Object.assign({}, projectComments, pageComments)
+  const service = settings.service || theme.comments.service || ''
+  commentModel = {
+    enabled: settings.enabled !== false && service.length > 0,
+    title: settings.title || theme.comments.comment_title || '',
+    id: settings.id || '',
+    service: service,
+    options: service
+      ? Object.assign({}, theme.comments[service], projectComments[service], pageComments[service])
+      : {},
+    pageTitle: page.title || ''
+  }
+  page.cmt = {service: service}
+  if (service) page.cmt[service] = commentModel.options
+  page.cmt_rendered = commentModel.enabled
 }
-if (cmt.service) {
-  cmt[cmt.service] = Object.assign({}, theme.comments[cmt.service], projectComments[cmt.service], pageComments[cmt.service])
-}
-const loadComment = settings.enabled !== false && cmt.service?.length > 0
-page.cmt = cmt
-page.cmt_rendered = loadComment
 %>
-<% if (loadComment) { %>
+<% if (commentModel.enabled) { %>
   <div class="related-wrap md-text<%- scrollreveal(' ') %>" id="comments">
-    <section class='header cmt-title cap theme'>
-      <%- markdown(settings.title || theme.comments.comment_title) %>
+    <section class="header cmt-title cap theme">
+      <%- markdown(commentModel.title || (explicitComments ? '' : theme.comments.comment_title)) %>
     </section>
-    <section class='body cmt-body <%- cmt.service %>'>
-      <%- partial(cmt.service + '/layout') %>
+    <section class="body cmt-body <%- commentModel.service %>">
+      <%- partial(commentModel.service + '/layout', {comments: commentModel}) %>
     </section>
   </div>
 <% } %>

@@ -523,6 +523,46 @@ function pageViewModelSchema(profile) {
     });
     const renderBrand = brandSchema(factory);
     renderBrand.required = true;
+    const postLink = field(["object", "null"], {
+      default: computed("由 Hexo prev/next 关系规范化；不存在时为 null"),
+      example: { title: "上一篇", path: "blog/previous", date: "2026-08-21T00:00:00.000Z" },
+      required: true,
+      properties: {
+        title: field("string", { default: literal(""), example: "上一篇", required: true }),
+        path: field("string", { default: literal(""), example: "blog/previous", required: true }),
+        date: field(["string", "null"], { default: literal(null), example: "2026-08-21T00:00:00.000Z", required: true })
+      }
+    });
+    const tagLink = object({
+      name: field("string", { default: literal(""), example: "Hexo", required: true }),
+      path: field("string", { default: literal(""), example: "tags/hexo", required: true })
+    }, { example: { name: "Hexo", path: "tags/hexo" } });
+    const relatedItem = object({
+      title: field("string", { default: literal(""), example: "Related Post", required: true }),
+      path: field("string", { default: literal(""), example: "/blog/related/", required: true }),
+      excerpt: field("string", { default: literal(""), example: "Related excerpt", required: true })
+    }, { example: { title: "Related Post", path: "/blog/related/", excerpt: "Related excerpt" } });
+    const share = field(["object", "null"], {
+      default: computed("由最终 footer.share 与文章分享数据生成；禁用时为 null"),
+      example: { services: ["link"], permalink: "https://example.com/blog/hello/", title: "Hello - Stellar" },
+      required: true,
+      properties: {
+        services: array(stringItem, { default: literal([]), example: ["wechat", "link"], required: true }),
+        permalink: field("string", { default: inherited("item.route.permalink"), example: "https://example.com/blog/hello/", required: true }),
+        title: field("string", { default: computed("由文章标题与站点标题组合"), example: "Hello - Stellar", required: true }),
+        image: field("string", { default: inherited("item.presentation.card.cover"), example: "/cover.webp", required: true }),
+        summary: field("string", { default: computed("由 description/excerpt/content 截断"), example: "文章摘要", required: true })
+      }
+    });
+    const contributor = field(["object", "null"], {
+      default: computed("由 data_services.contributors.edit_this_page 与源文件生成"),
+      example: { editUrl: "https://github.com/example/repo/blob/main/post.md", commitsUrl: "https://api.github.com/repos/example/repo/commits?path=post.md" },
+      required: true,
+      properties: {
+        editUrl: field("string", { default: literal(""), example: "https://github.com/example/repo/blob/main/post.md", required: true }),
+        commitsUrl: field("string", { default: literal(""), example: "https://api.github.com/repos/example/repo/commits?path=post.md", required: true })
+      }
+    });
     properties.render = object({
       document: object({
         language: field("string", { default: derived("page.lang", "page.language", "site.language"), example: "zh-CN", required: true }),
@@ -548,7 +588,49 @@ function pageViewModelSchema(profile) {
         canonical: field(["string", "null"], { default: derived("theme.canonical.originalHost", "item.route.path"), example: "https://example.com/blog/hello/", required: true }),
         openGraph,
         jsonLd: field("object", { default: computed("由 BlogPosting 结构化数据规则生成"), example: { "@type": "BlogPosting" }, required: true, additionalProperties: true })
-      }, { required: true, example: { title: "Hello Stellar - Stellar", description: "文章摘要", keywords: ["Hexo"], robots: null, canonical: null, openGraph: null, jsonLd: { "@type": "BlogPosting" } } })
+      }, { required: true, example: { title: "Hello Stellar - Stellar", description: "文章摘要", keywords: ["Hexo"], robots: null, canonical: null, openGraph: null, jsonLd: { "@type": "BlogPosting" } } }),
+      article: object({
+        heti: field("boolean", { default: derived("theme.plugins.heti.enable"), example: false, required: true }),
+        tags: array(tagLink, { default: computed("由 Hexo 标签关系规范化；theme.article.tags 禁用时为空"), example: [{ name: "Hexo", path: "tags/hexo" }], required: true }),
+        footer: object({
+          references: array(field("any", { additionalProperties: true }), { default: inherited("item.presentation.footer.references"), example: [], required: true }),
+          license: field("string", { default: computed("由最终许可协议与作者信息生成"), example: "CC BY 4.0", required: true }),
+          share,
+          contributor
+        }, { required: true, example: { references: [], license: "", share: null, contributor: null } }),
+        previous: postLink,
+        next: postLink,
+        related: object({
+          enabled: field("boolean", { default: derived("theme.article.related_posts.enable"), example: false, required: true }),
+          title: field("string", { default: literal(""), example: "Related Posts", required: true }),
+          maxCount: field("number", { default: literal(5), example: 5, required: true }),
+          items: array(relatedItem, { default: literal([]), example: [], required: true })
+        }, { required: true, example: { enabled: false, title: "", maxCount: 5, items: [] } }),
+        comments: object({
+          enabled: field("boolean", { default: computed("由最终 comments.enabled 与 service 生成"), example: true, required: true }),
+          title: field("string", { default: inherited("item.presentation.comments.title"), example: "参与讨论", required: true }),
+          id: field("string", { default: inherited("item.presentation.comments.id"), example: "post-hello", required: true }),
+          service: field("string", { default: inherited("item.presentation.comments.service"), example: "giscus", required: true }),
+          options: field("object", { default: computed("由激活服务参数袋生成"), example: { "data-repo": "example/repo" }, required: true, additionalProperties: true }),
+          pageTitle: field("string", { default: inherited("item.title"), example: "Hello Stellar", required: true })
+        }, { required: true, example: { enabled: true, title: "参与讨论", id: "", service: "giscus", options: {}, pageTitle: "Hello Stellar" } })
+      }, { required: true, example: { heti: false, tags: [], footer: {}, previous: null, next: null, related: {}, comments: {} } }),
+      listing: object({
+        href: field("string", { default: derived("page.link", "item.route.path"), example: "blog/hello", required: true }),
+        title: field("string", { default: inherited("item.title"), example: "Hello Stellar", required: true }),
+        layout: field("string", { default: inherited("item.layout"), example: "post", required: true }),
+        date: field(["string", "null"], { default: inherited("item.date"), example: "2026-08-22T00:00:00.000Z", required: true }),
+        cover: field("string", { default: inherited("item.presentation.card.cover"), example: "/cover.webp", required: true }),
+        caption: field("string", { default: computed("由 card.tagline/description/excerpt/content 生成"), example: "文章说明", required: true }),
+        excerpt: field("string", { default: computed("由 excerpt/description/content 和列表长度生成"), example: "文章摘要", required: true }),
+        categories: array(stringItem, { default: inherited("item.categories"), example: ["开发"], required: true }),
+        categoryStyle: field("string", { default: derived("theme.article.category_color"), example: "--text-p2:#f44336;--theme-block:#f4433620", required: true }),
+        tags: array(stringItem, { default: computed("theme.article.card_tags 启用时最多五项"), example: ["Hexo"], required: true }),
+        authorId: field("string", { default: derived("item.presentation.article.author", "theme.default_author.id"), example: "xaoxuu", required: true }),
+        priority: field("number", { default: inherited("item.listing.priority"), example: 1, required: true }),
+        listed: field("boolean", { default: inherited("item.visibility.listed"), example: true, required: true }),
+        cardStyle: field("string", { default: inherited("collection.listing.cardStyle"), example: "hero", required: true })
+      }, { required: true, example: { href: "blog/hello", title: "Hello Stellar", layout: "post", date: null, cover: "", caption: "", excerpt: "", categories: [], categoryStyle: "", tags: [], authorId: "", priority: 0, listed: true, cardStyle: "classic" } })
     }, {
       default: computed("由 Post PageViewModel 构建器生成"),
       example: { document: { language: "zh-CN", headInject: [] }, layout: { pageType: "content" }, seo: { title: "Hello Stellar - Stellar" } },

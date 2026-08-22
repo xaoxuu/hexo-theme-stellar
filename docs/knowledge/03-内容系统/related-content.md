@@ -16,10 +16,13 @@ tags:
 
 - [layout/404.ejs](../../../layout/404.ejs)
 - [layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)
+- [layout/_partial/main/article/post_read_next.ejs](../../../layout/_partial/main/article/post_read_next.ejs)
+- [layout/_partial/main/article/post_related.ejs](../../../layout/_partial/main/article/post_related.ejs)
 - [layout/_partial/widgets/related.ejs](../../../layout/_partial/widgets/related.ejs)
 - [layout/_partial/components/collection.ejs](../../../layout/_partial/components/collection.ejs)
 - [scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)
 - [scripts/helpers/related_posts.js](../../../scripts/helpers/related_posts.js)
+- [scripts/filters/lib/page-view-model.js](../../../scripts/filters/lib/page-view-model.js)
 
 </details>
 
@@ -37,17 +40,17 @@ tags:
 
 ### 配置与启用
 
-相关文章系统由 `article.related_posts.enable` 配置标志控制。辅助函数在该标志不是 `true` 时提前返回：
+相关文章系统由 `article.related_posts.enable` 控制。普通 Post 在 `after_post_render` 构建边界调用 `hexo-related-popular-posts` 提供的 `popular_posts_json`，把普通的 `path`、`title`、`excerpt` 数组冻结到 `render.article.related.items`，详情模板 `post_related.ejs` 只消费该投影。开关未启用时不调用插件；已启用但 helper 不存在时，构建错误包含源文章路径。
 
 **配置检查流程**
 
 ```mermaid
 flowchart TD
-    CONFIG["hexo.theme.config.article.related_posts.enable"]
-    HELPER["popular_posts_wrapper helper"]
+    CONFIG["article.related_posts.enable"]
+    HELPER["after_post_render adapter"]
     CHECK{"enable == true?"}
-    GENERATE["Generate HTML sections"]
-    RETURN["Return empty string"]
+    GENERATE["popular_posts_json → render.article.related"]
+    RETURN["items = []"]
     
     CONFIG --> HELPER
     HELPER --> CHECK
@@ -63,9 +66,9 @@ flowchart TD
 
 **参考源码**：[scripts/helpers/related_posts.js](../../../scripts/helpers/related_posts.js)
 
-### 辅助函数：`popular_posts_wrapper`
+### 迁移期辅助函数：`popular_posts_wrapper`
 
-该辅助函数注册在 Hexo 辅助系统，接收 `hexo-related-popular-posts` 插件数据：
+该辅助函数仍供未迁移页面使用，接收 `hexo-related-popular-posts` 插件数据；普通 Post 不再让 EJS 调用它：
 
 | 参数 | 类型 | 用途 |
 |------|------|------|

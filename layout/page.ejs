@@ -39,7 +39,36 @@ function articleClass() {
   return str
 }
 
+function postArticleClass(article) {
+  var str = `md-text content${scrollreveal(' ')}`
+  if (article.heti) str += ' heti'
+  return str
+}
+
+function postLayoutDiv() {
+  var item = postViewModel.item
+  var article = postViewModel.render.article
+  var el = ''
+  if (item.presentation.banner?.headline || item.title || item.content.length > 0) {
+    el += partial('_partial/main/navbar/article_banner', {viewModel: postViewModel})
+  }
+  el += `<article class="${postArticleClass(article)}">`
+  el += item.content
+  el += '</article>'
+  el += partial('_partial/main/article/post_tags', {tags: article.tags})
+  el += partial('_partial/main/article/post_footer', {footer: article.footer})
+  el += partial('_partial/main/article/post_read_next', {
+    previous: article.previous,
+    next: article.next
+  })
+  el += partial('_partial/main/article/post_related', {related: article.related})
+  page.cmt_rendered = article.comments.enabled
+  el += partial('_partial/comments/layout', {comments: article.comments})
+  return el
+}
+
 function layoutDiv() {
+  if (postViewModel) return postLayoutDiv()
   var el = ''
   if (page.banner?.headline || page.title || (page.content && page.content.length > 0)) {
     el += partial('_partial/main/navbar/article_banner')

@@ -60,7 +60,7 @@ function tagtreeWidgetOnPage() {
 <%- partial('scripts/lazyload') %>
 
 <!-- optional -->
-<%- partial('comments/script') %>
+<%- partial('comments/script', {viewModel: typeof viewModel !== 'undefined' ? viewModel : null}) %>
 
 <script defer src="<%- url_for('/js/services.js') %>?v=<%- stellar_info('version') %>"></script>
 <%- partial('../_plugins/index') %>

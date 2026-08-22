@@ -1,0 +1,14 @@
+<%
+function layoutDiv() {
+  if (!related.enabled || related.items.length === 0) return ''
+  var items = related.items.map(function(item) {
+    var excerpt = item.excerpt
+      ? `<span class="excerpt">${escape_html(truncate(strip_html(item.excerpt), {length: 120}))}</span>`
+      : ''
+    return `<a class="item" href="${escape_html(item.path)}" title="${escape_html(item.title)}"><span class="title">${escape_html(item.title)}</span>${excerpt}</a>`
+  }).join('')
+  var title = related.title || __('meta.related_posts')
+  return `<div class="related-wrap${scrollreveal(' ')}" id="related-posts"><section class="header"><div class="title cap theme">${escape_html(title)}</div></section><section class="body"><div class="related-posts">${items}</div></section></div>`
+}
+%>
+<%- layoutDiv() %>

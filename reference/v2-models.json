@@ -8395,6 +8395,763 @@
           }
         },
         {
+          "path": "render.article",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": {}
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "heti": false,
+            "tags": [],
+            "footer": {},
+            "previous": null,
+            "next": null,
+            "related": {},
+            "comments": {}
+          }
+        },
+        {
+          "path": "render.article.comments",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": {}
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "enabled": true,
+            "title": "参与讨论",
+            "id": "",
+            "service": "giscus",
+            "options": {},
+            "pageTitle": "Hello Stellar"
+          }
+        },
+        {
+          "path": "render.article.comments.enabled",
+          "type": [
+            "boolean"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由最终 comments.enabled 与 service 生成"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": true
+        },
+        {
+          "path": "render.article.comments.id",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.presentation.comments.id"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "post-hello"
+        },
+        {
+          "path": "render.article.comments.options",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由激活服务参数袋生成"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "data-repo": "example/repo"
+          },
+          "open": true
+        },
+        {
+          "path": "render.article.comments.pageTitle",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.title"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Hello Stellar"
+        },
+        {
+          "path": "render.article.comments.service",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.presentation.comments.service"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "giscus"
+        },
+        {
+          "path": "render.article.comments.title",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.presentation.comments.title"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "参与讨论"
+        },
+        {
+          "path": "render.article.footer",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": {}
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "references": [],
+            "license": "",
+            "share": null,
+            "contributor": null
+          }
+        },
+        {
+          "path": "render.article.footer.contributor",
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 data_services.contributors.edit_this_page 与源文件生成"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "editUrl": "https://github.com/example/repo/blob/main/post.md",
+            "commitsUrl": "https://api.github.com/repos/example/repo/commits?path=post.md"
+          }
+        },
+        {
+          "path": "render.article.footer.contributor.commitsUrl",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "https://api.github.com/repos/example/repo/commits?path=post.md"
+        },
+        {
+          "path": "render.article.footer.contributor.editUrl",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "https://github.com/example/repo/blob/main/post.md"
+        },
+        {
+          "path": "render.article.footer.license",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由最终许可协议与作者信息生成"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "CC BY 4.0"
+        },
+        {
+          "path": "render.article.footer.references",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.presentation.footer.references"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": []
+        },
+        {
+          "path": "render.article.footer.share",
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由最终 footer.share 与文章分享数据生成；禁用时为 null"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "services": [
+              "link"
+            ],
+            "permalink": "https://example.com/blog/hello/",
+            "title": "Hello - Stellar"
+          }
+        },
+        {
+          "path": "render.article.footer.share.image",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.presentation.card.cover"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/cover.webp"
+        },
+        {
+          "path": "render.article.footer.share.permalink",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.route.permalink"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "https://example.com/blog/hello/"
+        },
+        {
+          "path": "render.article.footer.share.services",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": []
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": [
+            "wechat",
+            "link"
+          ]
+        },
+        {
+          "path": "render.article.footer.share.summary",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 description/excerpt/content 截断"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "文章摘要"
+        },
+        {
+          "path": "render.article.footer.share.title",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由文章标题与站点标题组合"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Hello - Stellar"
+        },
+        {
+          "path": "render.article.heti",
+          "type": [
+            "boolean"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "theme.plugins.heti.enable"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": false
+        },
+        {
+          "path": "render.article.next",
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 Hexo prev/next 关系规范化；不存在时为 null"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "title": "上一篇",
+            "path": "blog/previous",
+            "date": "2026-08-21T00:00:00.000Z"
+          }
+        },
+        {
+          "path": "render.article.next.date",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": null
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "2026-08-21T00:00:00.000Z"
+        },
+        {
+          "path": "render.article.next.path",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "blog/previous"
+        },
+        {
+          "path": "render.article.next.title",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "上一篇"
+        },
+        {
+          "path": "render.article.previous",
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 Hexo prev/next 关系规范化；不存在时为 null"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "title": "上一篇",
+            "path": "blog/previous",
+            "date": "2026-08-21T00:00:00.000Z"
+          }
+        },
+        {
+          "path": "render.article.previous.date",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": null
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "2026-08-21T00:00:00.000Z"
+        },
+        {
+          "path": "render.article.previous.path",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "blog/previous"
+        },
+        {
+          "path": "render.article.previous.title",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "上一篇"
+        },
+        {
+          "path": "render.article.related",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": {}
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "enabled": false,
+            "title": "",
+            "maxCount": 5,
+            "items": []
+          }
+        },
+        {
+          "path": "render.article.related.enabled",
+          "type": [
+            "boolean"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "theme.article.related_posts.enable"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": false
+        },
+        {
+          "path": "render.article.related.items",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": []
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": []
+        },
+        {
+          "path": "render.article.related.items[].excerpt",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Related excerpt"
+        },
+        {
+          "path": "render.article.related.items[].path",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/blog/related/"
+        },
+        {
+          "path": "render.article.related.items[].title",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Related Post"
+        },
+        {
+          "path": "render.article.related.maxCount",
+          "type": [
+            "number"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": 5
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": 5
+        },
+        {
+          "path": "render.article.related.title",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Related Posts"
+        },
+        {
+          "path": "render.article.tags",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 Hexo 标签关系规范化；theme.article.tags 禁用时为空"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": [
+            {
+              "name": "Hexo",
+              "path": "tags/hexo"
+            }
+          ]
+        },
+        {
+          "path": "render.article.tags[].name",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Hexo"
+        },
+        {
+          "path": "render.article.tags[].path",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "tags/hexo"
+        },
+        {
           "path": "render.document",
           "type": [
             "object"
@@ -8841,6 +9598,305 @@
             "Reference generator"
           ],
           "example": false
+        },
+        {
+          "path": "render.listing",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": {}
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "href": "blog/hello",
+            "title": "Hello Stellar",
+            "layout": "post",
+            "date": null,
+            "cover": "",
+            "caption": "",
+            "excerpt": "",
+            "categories": [],
+            "categoryStyle": "",
+            "tags": [],
+            "authorId": "",
+            "priority": 0,
+            "listed": true,
+            "cardStyle": "classic"
+          }
+        },
+        {
+          "path": "render.listing.authorId",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "item.presentation.article.author",
+              "theme.default_author.id"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "xaoxuu"
+        },
+        {
+          "path": "render.listing.caption",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 card.tagline/description/excerpt/content 生成"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "文章说明"
+        },
+        {
+          "path": "render.listing.cardStyle",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "collection.listing.cardStyle"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "hero"
+        },
+        {
+          "path": "render.listing.categories",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.categories"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": [
+            "开发"
+          ]
+        },
+        {
+          "path": "render.listing.categoryStyle",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "theme.article.category_color"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "--text-p2:#f44336;--theme-block:#f4433620"
+        },
+        {
+          "path": "render.listing.cover",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.presentation.card.cover"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/cover.webp"
+        },
+        {
+          "path": "render.listing.date",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.date"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "2026-08-22T00:00:00.000Z"
+        },
+        {
+          "path": "render.listing.excerpt",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 excerpt/description/content 和列表长度生成"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "文章摘要"
+        },
+        {
+          "path": "render.listing.href",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "page.link",
+              "item.route.path"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "blog/hello"
+        },
+        {
+          "path": "render.listing.layout",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.layout"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "post"
+        },
+        {
+          "path": "render.listing.listed",
+          "type": [
+            "boolean"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.visibility.listed"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": true
+        },
+        {
+          "path": "render.listing.priority",
+          "type": [
+            "number"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.listing.priority"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": 1
+        },
+        {
+          "path": "render.listing.tags",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "theme.article.card_tags 启用时最多五项"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": [
+            "Hexo"
+          ]
+        },
+        {
+          "path": "render.listing.title",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.title"
+            ]
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Hello Stellar"
         },
         {
           "path": "render.seo",

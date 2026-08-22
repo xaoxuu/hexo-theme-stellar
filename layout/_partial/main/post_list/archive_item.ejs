@@ -1,8 +1,12 @@
 <%
-var item = post || {};
-var href = pretty_url(item.link || item.path || '/');
-var itemDate = item.date ? date(item.date, 'MM-DD') : '';
-var itemTitle = item.title || (item.date ? date(item.date, config.date_format) : '');
+var postViewModel = typeof viewModel !== 'undefined' ? viewModel : null
+if (postViewModel && (postViewModel.collection?.profile !== 'post' || !postViewModel.render?.listing)) {
+  throw new Error('Stellar v2: 归档条目缺少合法 PageViewModel.render.listing')
+}
+var item = postViewModel ? postViewModel.render.listing : (typeof post !== 'undefined' ? post : {})
+var href = pretty_url(postViewModel ? (item.href || '/') : (item.link || item.path || '/'))
+var itemDate = item.date ? date(item.date, 'MM-DD') : ''
+var itemTitle = item.title || (item.date ? date(item.date, config.date_format) : '')
 %>
 <div class="archive-list">
   <a class="post fs14" href="<%- escape_html(href) %>">
