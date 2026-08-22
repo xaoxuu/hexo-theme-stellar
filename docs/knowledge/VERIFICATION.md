@@ -343,6 +343,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `e9079fd` | refactor(v2): 建立 canonical 配置 Schema (#702) | 设计文档 `2026-08-22-v2-canonical-config-schema/`；知识库 `00-总览与安装配置/configuration.md`、`overview.md`、`02-布局系统/head-seo.md`、`05-前端交互/canonical-url.md`、`core-js-init.md`；canonical 声明式 Schema、严格诊断、冻结运行时配置、Post/迁移期 head/浏览器消费链与双 Reference，含 239 项测试及主工程构建证据 |
 | `c51e7f1` | feat(v2): 完成普通 Post 消费链 (#701) | 设计文档 `2026-08-22-post-consumption-chain/`；知识库 `03-内容系统/content-schema-v2.md`、`article-footer-metadata.md`、`post-lists-cards.md`、`related-content.md`、`07-外部集成/comment-systems.md`；普通 Post 的正文、Footer、关系、评论与博客聚合 ViewModel 消费链及 233 项测试、主工程构建证据 |
 | `705d5bd` | feat(v2): 建立 Post 渲染内核 (#700) | 设计文档 `2026-08-22-post-render-kernel/`、`2026-08-22-v2-architecture/`；知识库 `02-布局系统/head-seo.md`、`layout-overview.md`、`sidebar-system.md`、`03-内容系统/content-schema-v2.md`；普通 Post 的 `render.document/layout/seo` 投影、五类布局原语、根布局/侧栏/Brand/菜单/面包屑/head/JSON-LD 的 ViewModel 消费链、Reference 与回归测试 |
 | `8ef7d92` | feat(v2): 生成首批 Reference 元数据 (#699) | 设计文档 `2026-08-22-reference-metadata/`、`2026-08-22-v2-architecture/`；知识库 `03-内容系统/content-schema-v2.md`；四类 Collection profile、共享 ContentItemModel 与 PageViewModel 的声明式 Schema、模型输出校验、稳定 Reference 生成与漂移检查 |
