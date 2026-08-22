@@ -345,6 +345,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `91356ad` | refactor(v2): 冻结最终配置契约 (#704) | 设计文档 `2026-08-22-v2-config-target-contract/`；知识库 `00-总览与安装配置/configuration.md`；八个公开根域、完整 Theme / Collection / Front Matter 目标树、逐字段五类迁移矩阵、作用域与级联边界、内部化资源清单及 257 项测试、双 Reference 无漂移、主工程 254 个生成文件与 Standards / Spec 双轨 review 证据 |
 | `91eede0` | refactor(v2): 冻结配置全景契约 (#703) | 设计文档 `2026-08-22-v2-config-inventory/`；知识库 `00-总览与安装配置/configuration.md`；深度冻结的配置入口目录、字段所有权与消费边界、五段迁移队列、共享 Schema 冻结工具及 246 项测试、双 Reference 无漂移和主工程构建证据 |
 | `e9079fd` | refactor(v2): 建立 canonical 配置 Schema (#702) | 设计文档 `2026-08-22-v2-canonical-config-schema/`；知识库 `00-总览与安装配置/configuration.md`、`overview.md`、`02-布局系统/head-seo.md`、`05-前端交互/canonical-url.md`、`core-js-init.md`；canonical 声明式 Schema、严格诊断、冻结运行时配置、Post/迁移期 head/浏览器消费链与双 Reference，含 239 项测试及主工程构建证据 |
 | `c51e7f1` | feat(v2): 完成普通 Post 消费链 (#701) | 设计文档 `2026-08-22-post-consumption-chain/`；知识库 `03-内容系统/content-schema-v2.md`、`article-footer-metadata.md`、`post-lists-cards.md`、`related-content.md`、`07-外部集成/comment-systems.md`；普通 Post 的正文、Footer、关系、评论与博客聚合 ViewModel 消费链及 233 项测试、主工程构建证据 |

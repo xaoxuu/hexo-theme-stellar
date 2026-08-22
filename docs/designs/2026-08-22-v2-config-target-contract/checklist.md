@@ -17,6 +17,6 @@ issue: 704
 - [x] `python3 docs/knowledge/tools/verify.py`（已由 `npm run check` 执行）
 - [x] 主工程 `npm run g`（生成并压缩 254 个文件）
 - [x] Standards / Spec 双轨 review 无剩余问题
-- [ ] 主题 `v2` 已提交并推送，#704 已附验证证据并标记 `resolved`
+- [x] 主题 `v2` 已提交并推送，#704 已附验证证据并标记 `resolved`
 
 页面抽查、SEO 输出对比与公开迁移：N/A，本切片不改变运行时结果。
