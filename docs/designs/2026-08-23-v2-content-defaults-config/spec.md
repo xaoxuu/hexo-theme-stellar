@@ -1,7 +1,7 @@
 ---
 title: Stellar v2 Article 与 Notebook 内容默认配置
 date: 2026-08-23
-status: 实施中
+status: 已交付
 ---
 
 # Article 与 Notebook 内容默认配置方案

@@ -19,8 +19,8 @@ date: 2026-08-23
 - [x] 知识库硬核查通过。
 - [x] 主工程 `npm run g` 生成并压缩 254 个文件，Article、Notebook 与 CSS 比例产物抽查通过。
 - [x] Standards / Spec review 无剩余 finding。
-- [ ] 主题提交已推送 `origin/v2`，#708 已评论证据并以 `resolved` 闭环。
-- [ ] 主工程保持未提交且未提交子模块指针。
+- [x] 主题提交 `ae09d1a` 与验证登记 `b1f8960` 已推送 `origin/v2`，#708 已评论证据并以 `resolved` 闭环。
+- [x] 主工程保持未提交且未提交子模块指针。
 
 ## N/A
 
