@@ -134,9 +134,9 @@ const CONFIG_DOMAIN_CATALOG = deepFreeze([
   domain("site_tree", {
     sources: THEME_SOURCES,
     boundary: "sealed",
-    runtimeTarget: "hexo.stellar.config.siteTree",
+    runtimeTarget: "hexo.stellar.config.layout.profiles",
     consumers: ["CollectionModel", "PageViewModel", "page generators", "sidebar renderer"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "shell-content-defaults",
   }),
   domain("notebook", {

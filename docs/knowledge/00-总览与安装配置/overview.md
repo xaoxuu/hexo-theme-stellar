@@ -93,7 +93,7 @@ graph TB
 graph LR
     subgraph Global["Global Configuration"]
         STELLAR["stellar:<br/>version, homepage"]
-        SITETREE["site_tree:<br/>Layout definitions"]
+        PROFILES["layout.profiles:<br/>Page defaults"]
         ARTICLE["article:<br/>Content settings"]
         PLUGINS["plugins:<br/>Feature toggles"]
     end
@@ -107,9 +107,9 @@ graph LR
         FRONTMATTER["Front-matter:<br/>page.* variables"]
     end
     
-    STELLAR --> SITETREE
-    SITETREE --> WIKITREE
-    SITETREE --> TOPICTREE
+    STELLAR --> PROFILES
+    PROFILES --> WIKITREE
+    PROFILES --> TOPICTREE
     WIKITREE --> FRONTMATTER
     TOPICTREE --> FRONTMATTER
     ARTICLE --> FRONTMATTER
@@ -120,7 +120,7 @@ graph LR
 
 **参考源码**：[_config.yml](../../../_config.yml)、[layout/layout.ejs](../../../layout/layout.ejs)
 
-`site_tree` 配置为不同类型的页面（博客文章、wiki 页面、笔记本页面等）定义默认布局，单个页面可通过 front-matter 覆盖这些默认值。同样，`article.type`、`article.indent` 等样式选项也可以在 wiki/topic 项目级或页面级覆盖。
+`layout.profiles` 为不同类型的页面（博客文章、Wiki、笔记本页面等）定义路径、导航和侧边栏默认值，单个页面与 Collection 覆盖继续由模型层级联。`content` 根域尚未交付，当前 `article.type`、`article.indent` 等内容默认值仍保持迁移期路径。
 
 ## 页面渲染流水线
 
@@ -237,9 +237,9 @@ graph TB
     NOTELIST --> NOTEPAGE
 ```
 
-**参考源码**：[_config.yml](../../../_config.yml)（`site_tree` 小节）、[README.md](../../../README.md)
+**参考源码**：[_config.yml](../../../_config.yml)（`layout.profiles` 小节）、[README.md](../../../README.md)
 
-每个系统通过 `site_tree` 配置决定左右侧边栏显示哪些小部件。例如 wiki 页面左侧显示 tree（页面树）小部件，博客文章显示相关文章小部件。
+每个系统通过对应的 `layout.profiles.*.sidebar` 决定左右侧边栏显示哪些小部件。例如 Wiki 页面左侧显示 tree（页面树）小部件，博客文章显示相关文章小部件。表格与图中的 `index_blog`、`index_wiki` 等仍是 Hexo 内部模板 / layout 名，公开配置 Profile ID 分别为 `blog_index`、`wiki_index`。
 
 ## 关键子系统
 

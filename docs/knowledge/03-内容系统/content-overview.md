@@ -24,7 +24,7 @@ tags:
 
 </details>
 
-本文介绍 Stellar 如何组织与处理不同内容类型：文章（post）、wiki 页面、笔记本与自定义页面。涵盖 `site_tree` 配置定义的内容类型层级、构建期处理 wiki 文档结构的 `doc_tree.js`，以及 `theme.wiki.tree` 与 `theme.notebooks.tree` 对象的构建方式。
+本文介绍 Stellar 如何组织与处理不同内容类型：文章（post）、wiki 页面、笔记本与自定义页面。涵盖 `layout.profiles` 定义的页面默认布局、构建期处理 wiki 文档结构的 `doc_tree.js`，以及 `theme.wiki.tree` 与 `theme.notebooks.tree` 对象的构建方式。
 
 渲染这些内容类型见[页面模板与路由](../02-布局系统/page-templates-routing.md)；列表中的内容项展示见[文章列表与卡片组件](post-lists-cards.md)与[文档系统](wiki-docs.md)。
 
@@ -35,7 +35,7 @@ Stellar 支持四种主要内容类型，各有独立布局特征与配置项。
 ```mermaid
 graph TB
     subgraph "Content Type Definitions"
-        CONFIG["_config.yml<br/>site_tree section"]
+        CONFIG["_config.yml<br/>layout.profiles"]
     end
     
     subgraph "Content Types"
@@ -84,20 +84,20 @@ graph TB
 
 ### 内容类型配置矩阵
 
-每种内容类型在 `_config.yml` 的 `site_tree` 小节中配置：
+每种内容类型的默认布局在 `_config.yml` 的 `layout.profiles` 中配置：
 
 | 内容类型 | 配置键 | 基础目录 | 菜单 ID | 左栏小部件 | 右栏小部件 |
 |----------|--------|----------|---------|------------|------------|
 | **文章** | `post` | N/A | `post` | `related, recent` | `ghrepo, toc` |
-| **文章索引** | `index_blog` | `blog` | `post` | `welcome, recent` | （空） |
-| **专栏** | `topic` | N/A | `post` | （继承 post） | （继承 post） |
-| **专栏索引** | `index_topic` | `topic` | `post` | （继承 index_blog） | （继承 index_blog） |
+| **文章索引** | `blog_index` | `/blog/` | `post` | `welcome, recent` | （空） |
+| **专栏** | `topic` | N/A | `post` | `related, recent` | `ghrepo, toc` |
+| **专栏索引** | `topic_index` | `/topic/` | `post` | `welcome, recent` | （空） |
 | **Wiki 页面** | `wiki` | N/A | `wiki` | `tree, related, recent` | `ghrepo, toc` |
-| **Wiki 索引** | `index_wiki` | `wiki` | `wiki` | `related, recent` | （空） |
-| **笔记本** | `notebooks` | `notebooks` | `notebooks` | `recent` | `null` |
-| **笔记列表** | `notes` | N/A | `notebooks` | `tagtree, recent` | `null` |
+| **Wiki 索引** | `wiki_index` | `/wiki/` | `wiki` | `related, recent` | （空） |
+| **笔记本** | `notebook_index` | `/notebooks/` | `notebooks` | `recent` | （空） |
+| **笔记列表** | `note_index` | N/A | `notebooks` | `tagtree, recent` | （空） |
 | **笔记页面** | `note` | N/A | `notebooks` | `tagtree, recent` | `toc` |
-| **页面** | `page` | N/A | （无） | `recent` | `toc` |
+| **页面** | `page` | N/A | `post` | `recent` | `toc` |
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
@@ -324,7 +324,7 @@ graph TB
 文章使用 `post` 布局，通常存放在 `source/_posts/`：
 
 - **默认 menu_id**：`post`（可被 front-matter 覆盖）
-- **索引页**：生成于 `{site_tree.index_blog.base_dir}/`（默认 `/blog/`）
+- **博客命名空间**：`layout.profiles.blog_index.path`（默认 `/blog/`）进入 Post Collection 的 `route.baseDir`；近期文章首页仍由 Hexo `index_generator.path` 生成
 - **侧边栏配置**：左 `related, recent` / 右 `ghrepo, toc`
 - **自动特性**：
   - 封面图解析（显式 `cover` 完整 URL 时渲染）
@@ -338,7 +338,7 @@ graph TB
 
 ### 专栏
 
-专栏是文章的集合，使用 `topic` 布局，继承 `post` 类型的大部分配置，可在 `{site_tree.index_topic.base_dir}/`（默认 `/topic/`）建立独立索引。
+专栏是文章的集合，使用 `topic` 布局，其有效侧栏默认值已显式写入 `layout.profiles.topic`，并在 `layout.profiles.topic_index.path`（默认 `/topic/`）建立独立索引。
 
 专栏列表页与其他博客列表页一致，在 navbar 上方展示置顶文章轮播（无需开关配置，有置顶文章即渲染）。
 
@@ -450,9 +450,9 @@ graph TD
     
     DETERMINE_MENU_ID --> MENU_ID_SET{"menu_id in<br/>front-matter?"}
     MENU_ID_SET -->|Yes| USE_FM_MENU["Use front-matter menu_id"]
-    MENU_ID_SET -->|No| LOOKUP_DEFAULT["Lookup site_tree[layout].menu_id"]
+    MENU_ID_SET -->|No| LOOKUP_DEFAULT["Lookup layout.profiles.*.navigation.activeMenu"]
     
-    USE_FM_MENU --> APPLY_CONFIG["Apply site_tree config<br/>for layout and menu_id"]
+    USE_FM_MENU --> APPLY_CONFIG["Apply Layout Profile defaults<br/>and migration-stage overrides"]
     LOOKUP_DEFAULT --> APPLY_CONFIG
     
     APPLY_CONFIG --> RENDER["Render with layout template"]

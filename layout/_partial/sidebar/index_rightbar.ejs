@@ -14,49 +14,47 @@ if (postViewModel) {
   page.sidebar ||= {}
   page.sidebar.right ||= {}
   if (page.sidebar.right.widgets == null) {
-  const { site_tree } = theme
-  var sidebar
-  if (is_home()) {
-    sidebar = site_tree.home.sidebar.right.widgets
-  } else if (page.layout === 'notebooks') {
-    // 笔记本列表页
-    sidebar = site_tree.notebooks.sidebar.right.widgets
-  } else if (page.layout === 'notes') {
-    // 笔记列表页
-    sidebar = notebook ? notebook.sidebar?.right?.widgets : site_tree.notes.sidebar.right.widgets
-  } else if (notebook) {
-    // 笔记本文章内页
-    sidebar = notebook.note?.sidebar?.right?.widgets
-  } else if (is_category() || is_tag() || is_archive() || ['categories', 'tags', 'archives'].includes(page.layout)) {
-    sidebar = site_tree.index_blog.sidebar.right.widgets
-  } else if (page.layout === 'index_topic') {
-    // 专栏列表页等同于博客列表页
-    sidebar = site_tree.index_blog.sidebar.right.widgets
-  } else if (collection_id(page, "topic")?.length > 0) {
-    // 专栏文章内页等同于普通文章内页
-    sidebar = site_tree.post.sidebar.right.widgets
-  } else if (page.layout === 'index_wiki') {
-    sidebar = site_tree.index_wiki.sidebar.right.widgets
-  } else if (collection_id(page, "wiki")?.length > 0) {
-    sidebar = site_tree.wiki.sidebar.right.widgets
-  } else if (page.layout === '404') {
-    sidebar = site_tree.error_page.sidebar.right.widgets
-  } else if (page.layout === 'page') {
-    sidebar = site_tree.page.sidebar.right.widgets
-  } else if (page.layout === 'post') {
-    sidebar = site_tree.post.sidebar.right.widgets
-  } else if (page.layout == null) {
-    sidebar = site_tree.page.sidebar.right.widgets
-  } else {
-    sidebar = []
-  }
+    var profiles = stellar_config('layout.profiles')
+    var sidebar
+    if (is_home()) {
+      sidebar = profiles.home.sidebar.right.widgets
+    } else if (page.layout === 'notebooks') {
+      // 笔记本列表页
+      sidebar = profiles.notebookIndex.sidebar.right.widgets
+    } else if (page.layout === 'notes') {
+      // 笔记列表页
+      sidebar = notebook ? notebook.sidebar?.right?.widgets : profiles.noteIndex.sidebar.right.widgets
+    } else if (notebook) {
+      // 笔记本文章内页
+      sidebar = notebook.note?.sidebar?.right?.widgets || profiles.note.sidebar.right.widgets
+    } else if (is_category() || is_tag() || is_archive() || ['categories', 'tags', 'archives'].includes(page.layout)) {
+      sidebar = profiles.blogIndex.sidebar.right.widgets
+    } else if (page.layout === 'index_topic') {
+      sidebar = profiles.topicIndex.sidebar.right.widgets
+    } else if (collection_id(page, "topic")?.length > 0) {
+      sidebar = profiles.topic.sidebar.right.widgets
+    } else if (page.layout === 'index_wiki') {
+      sidebar = profiles.wikiIndex.sidebar.right.widgets
+    } else if (collection_id(page, "wiki")?.length > 0) {
+      sidebar = profiles.wiki.sidebar.right.widgets
+    } else if (page.layout === '404') {
+      sidebar = profiles.error.sidebar.right.widgets
+    } else if (page.layout === 'page') {
+      sidebar = profiles.page.sidebar.right.widgets
+    } else if (page.layout === 'post') {
+      sidebar = profiles.post.sidebar.right.widgets
+    } else if (page.layout == null) {
+      sidebar = profiles.page.sidebar.right.widgets
+    } else {
+      sidebar = []
+    }
 
-  if (topic?.sidebar?.right?.widgets) {
-    sidebar = topic.sidebar.right.widgets
-  }
-  if (wiki?.sidebar?.right?.widgets) {
-    sidebar = wiki.sidebar.right.widgets
-  }
+    if (topic?.sidebar?.right?.widgets) {
+      sidebar = topic.sidebar.right.widgets
+    }
+    if (wiki?.sidebar?.right?.widgets) {
+      sidebar = wiki.sidebar.right.widgets
+    }
 
     page.sidebar.right.widgets = sidebar
   }

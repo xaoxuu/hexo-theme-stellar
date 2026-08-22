@@ -4,7 +4,7 @@ domain: 总览与安装配置
 tags:
   - 配置
   - YAML
-  - site_tree
+  - layout profiles
 ---
 
 # 配置系统
@@ -81,7 +81,7 @@ graph TB
 
 Pre-alpha M1.5 已建立内部配置入口目录，并进一步把 v2 最终公开主题配置冻结为 `site`、`seo`、`layout`、`content`、`appearance`、`resources`、`extensions`、`inject` 八个职责根域。完整目标树、命名、级联和旧→新迁移矩阵见[最终配置契约](../../designs/2026-08-22-v2-config-target-contract/target-contract.md)。
 
-head/SEO 与 site Shell 纵向切片已把 `seo`、`resources.preconnect`、站点 `inject` 以及 `site.brand/menu/footer` 接入声明式 Schema，运行时与配置 Reference 只投影这些已交付节点；其它目标字段仍保持 `planned`。后续切片继续直接实现最终路径，不经过 #703 的临时目录。
+head/SEO、site Shell 与 Layout Profile 纵向切片已把 `seo`、`resources.preconnect`、站点 `inject`、`site.brand/menu/footer` 以及 `layout.profiles` 接入声明式 Schema，运行时与配置 Reference 只投影这些已交付节点；其它目标字段仍保持 `planned`。后续切片继续直接实现最终路径，不经过 #703 的临时目录。
 
 已交付 v2 字段从 Schema 与 `_config.stellar.yml` 解析到冻结的 `hexo.stellar.config`；尚未迁移的字段仍经 Hexo 主题变量系统（`theme.*`）流动，页面级覆盖继续通过 `page.*` 变量实现。`hexo-config()` 辅助函数让 Stylus 文件也能访问旧链配置值。
 
@@ -94,7 +94,7 @@ head/SEO 与 site Shell 纵向切片已把 `seo`、`resources.preconnect`、站�
 | `stellar` | 主题元数据与资源路径 |
 | `seo`、`resources.preconnect` | SEO 与资源提示（v2 已交付） |
 | `site` | 站点 Brand、主菜单、左栏操作与页尾内容（v2 已交付） |
-| `site_tree` | 各页面类型布局定义与侧边栏小部件分配 |
+| `layout.profiles` | 13 类页面的路径、导航与左右侧栏默认值（v2 已交付） |
 | `notebook` | 笔记本系统配置 |
 | `article` | 文章显示与元数据设置 |
 | `search` | 搜索服务配置 |
@@ -142,11 +142,11 @@ graph LR
         PAGE["Page Config<br/>page.menu_id, page.leftbar"]
     end
     
-    subgraph "Example: menu_id Resolution"
+    subgraph "Example: active menu Resolution"
         direction TB
-        CHECK1["Check page.menu_id<br/>(front-matter)"]
-        CHECK2["Check project config<br/>(wiki.tree or notebook)"]
-        CHECK3["Check site_tree[layout].menu_id<br/>(layout default)"]
+        CHECK1["Check page navigation override<br/>(front-matter)"]
+        CHECK2["Check collection navigation<br/>(wiki or notebook YAML)"]
+        CHECK3["Check layout.profiles.*<br/>.navigation.active_menu"]
         FALLBACK["Fallback: undefined"]
     end
     
@@ -158,15 +158,15 @@ graph LR
     CHECK3 -->|"if undefined"| FALLBACK
 ```
 
-**参考源码**：[_config.yml](../../../_config.yml)（`site_tree` 小节）
+**参考源码**：[_config.yml](../../../_config.yml)（`layout.profiles` 小节）
 
-### 示例：`navigation.menu` 解析
+### 示例：导航高亮解析
 
-对 wiki 页面，`navigation.menu`（控制菜单栏高亮）的解析顺序为：
+对 wiki 页面，配置 Profile 的最终字段是 `navigation.active_menu`；Collection / Front Matter 在下一切片前仍以迁移期字段进入现有模型适配层。当前解析顺序为：
 
 1. **页面级**：`page.navigation.menu`（front-matter）
 2. **项目级**：`wiki.tree[project_name].navigation.menu`
-3. **布局级**：`theme.site_tree.wiki.navigation.menu`
+3. **布局级**：`hexo.stellar.config.layout.profiles.wiki.navigation.activeMenu`
 4. **全局兜底**：`undefined`
 
 ### 示例：侧边栏小部件分配
@@ -175,10 +175,10 @@ graph LR
 
 1. **页面级**：`page.sidebar.left.widgets` / `page.sidebar.right.widgets`（front-matter）
 2. **笔记本级**：笔记页使用笔记本 YAML 中的 `note.sidebar.left/right.widgets`
-3. **布局级**：`theme.site_tree[layout].sidebar.left/right.widgets`
+3. **布局级**：`hexo.stellar.config.layout.profiles[profile].sidebar.left/right.widgets`
 4. **默认**：空侧边栏
 
-**参考源码**：[_config.yml](../../../_config.yml)（`site_tree` 小节）
+**参考源码**：[_config.yml](../../../_config.yml)（`layout.profiles` 小节）
 
 ## 核心配置小节
 
@@ -257,75 +257,16 @@ Brand 图片展示变体使用 `image.variant`（`avatar/icon/plain`），图片
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
-### 站点树：布局定义
+### Layout Profile：页面默认布局
 
-`site_tree` 是最关键的配置块，为每种页面类型定义布局特征：
+`layout.profiles` 是 v2 的页面布局契约。公开 YAML 固定使用 `home`、`blog_index`、`topic_index`、`wiki_index`、`post`、`topic`、`wiki`、`notebook_index`、`note_index`、`note`、`author`、`error`、`page` 十三个 Profile ID；解析后的 JavaScript ViewModel 使用 `blogIndex`、`wikiIndex` 等 camelCase 键。
 
-```mermaid
-graph TB
-    subgraph "site_tree Structure"
-        SITETREE["site_tree"]
-        
-        subgraph "Index Layouts"
-            HOME["home<br/>Main homepage"]
-            INDEXBLOG["index_blog<br/>Post list"]
-            INDEXTOPIC["index_topic<br/>Topic list"]
-            INDEXWIKI["index_wiki<br/>Wiki list"]
-            NOTEBOOKS["notebooks<br/>Notebook list"]
-        end
-        
-        subgraph "Content Layouts"
-            POST["post<br/>Blog posts"]
-            TOPIC["topic<br/>Topic articles"]
-            WIKI["wiki<br/>Wiki pages"]
-            NOTES["notes<br/>Note list"]
-            NOTE["note<br/>Individual notes"]
-            AUTHOR["author<br/>Author pages"]
-        end
-        
-        subgraph "Special Layouts"
-            ERROR["error_page<br/>404 pages"]
-            PAGE["page<br/>Generic pages"]
-        end
-    end
-    
-    subgraph "Layout Properties"
-        BASEDIR["base_dir<br/>URL path prefix"]
-        MENUID["menu_id<br/>Menubar highlight"]
-        LEFTBAR["leftbar<br/>Widget list"]
-        RIGHTBAR["rightbar<br/>Widget list"]
-        NAVTABS["nav_tabs<br/>Secondary nav"]
-    end
-    
-    SITETREE --> HOME
-    SITETREE --> INDEXBLOG
-    SITETREE --> INDEXTOPIC
-    SITETREE --> INDEXWIKI
-    SITETREE --> NOTEBOOKS
-    SITETREE --> POST
-    SITETREE --> TOPIC
-    SITETREE --> WIKI
-    SITETREE --> NOTES
-    SITETREE --> NOTE
-    SITETREE --> AUTHOR
-    SITETREE --> ERROR
-    SITETREE --> PAGE
-    
-    INDEXBLOG -.uses.-> BASEDIR
-    INDEXBLOG -.uses.-> MENUID
-    INDEXBLOG -.uses.-> LEFTBAR
-    INDEXBLOG -.uses.-> RIGHTBAR
-    INDEXBLOG -.uses.-> NAVTABS
-```
-
-**参考源码**：[_config.yml](../../../_config.yml)（`site_tree` 小节）
-
-每种布局定义可包含：
+每个 Profile 是封闭对象，可包含：
 
 | 属性 | 类型 | 用途 |
 |------|------|------|
-| `base_dir` | String | 生成页面的 URL 路径前缀 |
-| `navigation.menu` | String | 要高亮的菜单栏项 ID |
+| `path` | String / null | 生成页面的根相对路径；目录路径以 `/` 结尾 |
+| `navigation.active_menu` | String / null | 要高亮的 `site.menu.items[].id` |
 | `sidebar.left.widgets` | Array | 左栏小部件列表 |
 | `sidebar.right.widgets` | Array | 右栏小部件列表 |
 | `navigation.tabs` | Object | 次级导航标签（标题-URL 对） |
@@ -333,14 +274,16 @@ graph TB
 #### 示例：博客文章布局
 
 ```yaml
-post:
-  navigation:
-    menu: post
-  sidebar:
-    left:
-      widgets: [related, recent]
-    right:
-      widgets: [ghrepo, toc]
+layout:
+  profiles:
+    post:
+      navigation:
+        active_menu: post
+      sidebar:
+        left:
+          widgets: [related, recent]
+        right:
+          widgets: [ghrepo, toc]
 ```
 
 所有博客文章（`layout: post`）将：
@@ -354,29 +297,30 @@ post:
 #### 示例：Wiki 布局
 
 ```yaml
-index_wiki:
-  base_dir: wiki
-  navigation:
-    menu: wiki
-    tabs:
-      # 'more': https://github.com/xaoxuu
-  sidebar:
-    left:
-      widgets: [related, recent]
-    right:
-      widgets: []
+layout:
+  profiles:
+    wiki_index:
+      path: /wiki/
+      navigation:
+        active_menu: wiki
+        tabs: {}
+      sidebar:
+        left:
+          widgets: [related, recent]
+        right:
+          widgets: []
 
-wiki:
-  navigation:
-    menu: wiki
-  sidebar:
-    left:
-      widgets: [tree, related, recent]
-    right:
-      widgets: [ghrepo, toc]
+    wiki:
+      navigation:
+        active_menu: wiki
+      sidebar:
+        left:
+          widgets: [tree, related, recent]
+        right:
+          widgets: [ghrepo, toc]
 ```
 
-`index_wiki` 定义 wiki 列表页，`wiki` 定义单个 wiki 页面。注意 wiki 页面左栏的 `tree` 小部件用于展示项目结构。
+`wiki_index` 定义 wiki 列表页，`wiki` 定义单个 wiki 页面。wiki 页面左栏的 `tree` 小部件用于展示项目结构。数组在站点层完整替换；`navigation.tabs` 按键合并。旧 `site_tree`、`base_dir`、`navigation.menu` 与旧 Profile ID 不保留兼容读取。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
@@ -623,7 +567,7 @@ comments:
   Version: <%= theme.stellar.version %>
 <% } %>
 
-<% const menuId = page.menu_id || theme.site_tree[layout]?.menu_id %>
+<% const menuId = stellar_config(`layout.profiles.${profile}.navigation.activeMenu`) %>
 ```
 
 ### Stylus 文件中
@@ -647,7 +591,7 @@ Node.js 脚本通过 Hexo 的 `config` 对象访问配置：
 
 ```javascript
 // 在 scripts/events/lib/doc_tree.js 中
-hexo.theme.config.site_tree.index_wiki.base_dir
+hexo.stellar.config.layout.profiles.wikiIndex.path
 ```
 
 ## 配置解析示例
@@ -658,15 +602,15 @@ hexo.theme.config.site_tree.index_wiki.base_dir
 flowchart TD
     START["Wiki page requested<br/>layout: wiki<br/>wiki_name: stellar"]
     
-    CHECK_MENU["Resolve menu_id"]
-    PAGE_MENU{"page.menu_id<br/>exists?"}
-    PROJ_MENU{"wiki.tree[stellar]<br/>.menu_id exists?"}
-    LAYOUT_MENU["Use site_tree.wiki<br/>.menu_id = 'wiki'"]
+    CHECK_MENU["Resolve active menu"]
+    PAGE_MENU{"page navigation<br/>override exists?"}
+    PROJ_MENU{"wiki collection<br/>navigation exists?"}
+    LAYOUT_MENU["Use layout.profiles.wiki<br/>.navigation.active_menu"]
     
     CHECK_SIDEBAR["Resolve leftbar widgets"]
     PAGE_LB{"page.leftbar<br/>exists?"}
     PROJ_LB{"wiki.tree[stellar]<br/>.leftbar exists?"}
-    LAYOUT_LB["Use site_tree.wiki<br/>.leftbar = 'tree, related, recent'"]
+    LAYOUT_LB["Use layout.profiles.wiki<br/>.sidebar.left.widgets"]
     
     RENDER["Render page with<br/>menu_id + leftbar"]
     
@@ -729,19 +673,20 @@ system:
 
 ### 2. 菜单 ID 一致性
 
-保持相关布局的 `navigation.menu` 一致。例如所有博客相关页面都使用 `post`：
+保持相关 Profile 的 `navigation.active_menu` 一致。例如所有博客相关页面都使用 `post`：
 
 ```yaml
-site_tree:
-  index_blog:
-    navigation:
-      menu: post
-  post:
-    navigation:
-      menu: post
-  topic:
-    navigation:
-      menu: post
+layout:
+  profiles:
+    blog_index:
+      navigation:
+        active_menu: post
+    post:
+      navigation:
+        active_menu: post
+    topic:
+      navigation:
+        active_menu: post
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)

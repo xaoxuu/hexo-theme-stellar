@@ -4,7 +4,7 @@
 
 | 英文 / 原文 | 中文 |
 |------------|------|
-| site_tree | 站点树（site_tree） |
+| Layout Profile | 页面默认布局契约（`layout.profiles`） |
 | front matter | 前置元数据（front-matter） |
 | widget | 小部件 |
 | sidebar / leftbar / rightbar | 侧边栏 / 左栏 / 右栏 |

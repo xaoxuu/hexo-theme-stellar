@@ -12,6 +12,7 @@
 
 const { normalize_path } = require('./path_utils');
 const { getCollectionId, isListed } = require('./content-config');
+const { profilePath } = require("./layout-config");
 
 class WikiPage {
   constructor(page) {
@@ -67,9 +68,9 @@ function getWikiObject(data) {
  * @param {Object} options.data 站点 _data（含 wiki/ 前缀的 YAML 数据）
  * @param {Array|Object} options.pages 站点 pages（warehouse Query 或数组）
  * @param {Array} options.shelf 上架项目 id 列表
- * @param {Object} options.siteTree 主题配置 site_tree（取 index_wiki.base_dir）
+ * @param {string} options.wikiIndexPath 冻结的 Wiki Index Profile 路径
  */
-function buildWikiTree({ data, pages, shelf, siteTree }) {
+function buildWikiTree({ data, pages, shelf, wikiIndexPath }) {
   // wiki 配置
   var wiki = getWikiObject(data);
   // wiki 所有页面
@@ -230,7 +231,7 @@ function buildWikiTree({ data, pages, shelf, siteTree }) {
     }
     all_tags[tag_name] = {
       name: tag_name,
-      path: (siteTree.index_wiki.base_dir) + '/tags/' + tag_name + '/index.html',
+      path: profilePath(wikiIndexPath) + "/tags/" + tag_name + "/index.html",
       items: items
     };
   });

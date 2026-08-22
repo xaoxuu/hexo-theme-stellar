@@ -218,17 +218,17 @@ flowchart TD
 
 | 页面上下文 | 侧边栏来源 |
 |------------|------------|
-| 首页 | `site_tree.home.sidebar.left.widgets` |
-| 笔记本列表页 | `site_tree.notebooks.sidebar.left.widgets` |
-| 笔记列表页 | 笔记本配置或 `site_tree.notes.sidebar.left.widgets` |
+| 首页 | `layout.profiles.home.sidebar.left.widgets` |
+| 笔记本列表页 | `layout.profiles.notebook_index.sidebar.left.widgets` |
+| 笔记列表页 | 笔记本配置或 `layout.profiles.note_index.sidebar.left.widgets` |
 | 笔记本文章页 | 笔记本 `note_leftbar` / `note_rightbar` |
-| 分类/标签/归档 | `site_tree.index_blog.sidebar.left.widgets` |
-| 专栏列表页 | `site_tree.index_blog.sidebar.left.widgets` |
-| wiki 列表页 | `site_tree.index_wiki.sidebar.left.widgets` |
-| wiki 页面 | `site_tree.wiki.sidebar.left.widgets` |
-| 404 | `site_tree.error_page.sidebar.left.widgets` |
-| 通用页面 | `site_tree.page.sidebar.left.widgets` |
-| 文章 | `site_tree.post.sidebar.left.widgets` |
+| 分类/标签/归档 | `layout.profiles.blog_index.sidebar.left.widgets` |
+| 专栏列表页 | `layout.profiles.topic_index.sidebar.left.widgets` |
+| wiki 列表页 | `layout.profiles.wiki_index.sidebar.left.widgets` |
+| wiki 页面 | `layout.profiles.wiki.sidebar.left.widgets` |
+| 404 | `layout.profiles.error.sidebar.left.widgets` |
+| 通用页面 | `layout.profiles.page.sidebar.left.widgets` |
+| 文章 | `layout.profiles.post.sidebar.left.widgets` |
 
 专题/项目级配置（`topic.leftbar`、`wiki.leftbar`）可进一步覆盖。字符串数组经逗号切分，对象项支持 `override` 与 `layout`。
 

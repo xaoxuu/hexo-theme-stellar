@@ -10,6 +10,7 @@
 
 const { normalize_path } = require('./path_utils');
 const { getCollectionId } = require('./content-config');
+const { profilePath, requireLayoutProfiles } = require("./layout-config");
 
 class NotePage {
   constructor(page) {
@@ -56,6 +57,7 @@ function groupPagesByNotebook(pages) {
 
 function prepareNotebook(id, info, ctx, pages) {
   const notebook = info;
+  const profiles = requireLayoutProfiles(ctx.stellar?.config);
   notebook.id = id;
 
   notebook.routing ||= {};
@@ -74,7 +76,7 @@ function prepareNotebook(id, info, ctx, pages) {
       notebook.routing.base_dir = notebook.routing.base_dir + '/';
     }
   } else {
-    const notebooksBaseDir = ctx.theme.config.site_tree.notebooks.base_dir;
+    const notebooksBaseDir = profilePath(profiles.notebookIndex.path);
     notebook.routing.base_dir = notebooksBaseDir ? `${notebooksBaseDir}/${id}` : id;
   }
 
@@ -82,14 +84,13 @@ function prepareNotebook(id, info, ctx, pages) {
   notebook.listing.excerpt_length ||= ctx.theme.config.notebook.listing.excerpt_length || 0;
   notebook.listing.per_page ??= ctx.theme.config.notebook.listing.per_page ?? ctx.config.per_page ?? 10;
   notebook.listing.order_by ||= ctx.theme.config.notebook.listing.order_by || '-updated';
-  notebook.navigation.menu ??= ctx.theme.config.site_tree.notes.navigation.menu;
   notebook.footer.license ??= ctx.theme.config.notebook.footer.license;
   notebook.footer.share ??= ctx.theme.config.notebook.footer.share;
 
-  notebook.sidebar.left ??= { widgets: ctx.theme.config.site_tree.notes.sidebar.left.widgets };
-  notebook.sidebar.right ??= { widgets: ctx.theme.config.site_tree.notes.sidebar.right.widgets };
-  notebook.note.sidebar.left ??= { widgets: ctx.theme.config.site_tree.note.sidebar.left.widgets };
-  notebook.note.sidebar.right ??= { widgets: ctx.theme.config.site_tree.note.sidebar.right.widgets };
+  notebook.sidebar.left ??= { widgets: profiles.noteIndex.sidebar.left.widgets };
+  notebook.sidebar.right ??= { widgets: profiles.noteIndex.sidebar.right.widgets };
+  notebook.note.sidebar.left ??= { widgets: profiles.note.sidebar.left.widgets };
+  notebook.note.sidebar.right ??= { widgets: profiles.note.sidebar.right.widgets };
 
   const tagMap = new Map(); // tagId: tagInfo
   notebook.tagTree = tagMap;

@@ -81,6 +81,12 @@ function normalizeValue(node, value) {
   if (node.normalizer === "trimmed_string_list") {
     return normalizeStringList(value, item => item.trim());
   }
+  if (node.normalizer === "root_relative_path") {
+    return normalizeRootRelativePath(value);
+  }
+  if (node.normalizer === "parameter_bag") {
+    return clone(value);
+  }
   if (node.normalizer === "identity" || node.normalizer === "trusted_text" || node.normalizer === "array") {
     return value;
   }
@@ -88,6 +94,15 @@ function normalizeValue(node, value) {
     throw new TypeError(`未知配置归一化器：${node.normalizer || "<missing>"}`);
   }
   return clone(value);
+}
+
+function normalizeRootRelativePath(value) {
+  if (value == null) return null;
+  const normalized = value.trim().replace(/\\/g, "/");
+  if (normalized.length === 0 || normalized === "/") return "/";
+  const rooted = `/${normalized.replace(/^\/+|\/+$/g, "")}`;
+  const lastSegment = rooted.split("/").at(-1);
+  return lastSegment.includes(".") ? rooted : `${rooted}/`;
 }
 
 function valueAtPath(value, path) {
@@ -179,7 +194,8 @@ function parseNode(node, input, source, path, issues, context) {
     return normalizeValue(node, result);
   }
 
-  if (!node.type.includes("object")) return normalizeValue(node, input);
+  if (!isPlainObject(input)) return normalizeValue(node, input);
+  if (node.normalizer === "parameter_bag") return normalizeValue(node, input);
 
   const properties = node.properties || {};
   for (const key of Object.keys(input)) {

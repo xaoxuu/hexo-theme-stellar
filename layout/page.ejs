@@ -8,7 +8,7 @@ const notebook = theme.notebooks.tree[collection_id(page, "notebook")]
 if (!postViewModel && notebook) {
   page.navigation ||= {}
   page.footer ||= {}
-  page.navigation.menu ??= notebook.navigation?.menu
+  page.navigation.menu ??= notebook.navigation?.menu ?? stellar_config('layout.profiles.note.navigation.activeMenu')
   page.footer.license ??= notebook.footer?.license
   page.footer.share ??= notebook.footer?.share
 }
@@ -16,12 +16,17 @@ if (!postViewModel && notebook) {
 // 默认主导航菜单
 if (!postViewModel) page.navigation ||= {}
 if (!postViewModel && page.navigation.menu == null) {
+  var profiles = stellar_config('layout.profiles')
   if (collection_id(page, "wiki")?.length > 0) {
-    page.navigation.menu = theme.site_tree.wiki.navigation.menu
+    page.navigation.menu = profiles.wiki.navigation.activeMenu
   } else if (collection_id(page, "topic")?.length > 0) {
-    page.navigation.menu = theme.site_tree.topic.navigation.menu
+    page.navigation.menu = profiles.topic.navigation.activeMenu
+  } else if (notebook) {
+    page.navigation.menu = profiles.note.navigation.activeMenu
+  } else if (page.layout === 'page' || page.layout == null) {
+    page.navigation.menu = profiles.page.navigation.activeMenu
   } else {
-    page.navigation.menu = theme.site_tree.post.navigation.menu
+    page.navigation.menu = profiles.post.navigation.activeMenu
   }
 }
 // 默认的 title

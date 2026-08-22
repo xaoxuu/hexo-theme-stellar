@@ -225,11 +225,12 @@ test("官方脚本样式与内部集成有显式内部化清单", () => {
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("style.loading.*"));
 });
 
-test("运行时只投影 site Shell 与 head/SEO 已交付节点且根配置仍未封闭", () => {
+test("运行时只投影 site Shell、Layout 与 head/SEO 已交付节点且根配置仍未封闭", () => {
   assert.equal(CONFIG_SCHEMA.sealed, false);
-  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "seo", "resources", "inject"]);
+  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "layout", "seo", "resources", "inject"]);
+  const deliveredPaths = CONFIG_TARGET_FIELDS.filter(field => field.status === "delivered").map(field => field.path);
   assert.deepEqual(
-    CONFIG_TARGET_FIELDS.filter(field => field.status === "delivered").map(field => field.path),
+    deliveredPaths.filter(pathValue => !pathValue.startsWith("layout.")),
     [
       "site.brand.image.src",
       "site.brand.image.variant",
@@ -269,6 +270,22 @@ test("运行时只投影 site Shell 与 head/SEO 已交付节点且根配置仍�
       "inject.script"
     ]
   );
+  const deliveredLayoutPaths = deliveredPaths.filter(pathValue => pathValue.startsWith("layout."));
+  assert.equal(deliveredLayoutPaths.length, 85);
+  assert.ok(deliveredLayoutPaths.includes("layout.profiles"));
+  for (const profile of PROFILE_IDS) {
+    for (const suffix of [
+      "path",
+      "navigation.active_menu",
+      "navigation.tabs",
+      "navigation.tabs.<title>",
+      "sidebar.left.widgets",
+      "sidebar.right.widgets"
+    ]) assert.ok(deliveredLayoutPaths.includes(`layout.profiles.${profile}.${suffix}`));
+  }
+  for (const suffix of ["comments", "comments.enabled", "comments.title", "comments.id", "comments.provider", "comments.options"]) {
+    assert.ok(deliveredLayoutPaths.includes(`layout.profiles.home.${suffix}`));
+  }
   assert.ok(CONFIG_TARGET_FIELDS.some(field => field.status === "planned"));
 });
 

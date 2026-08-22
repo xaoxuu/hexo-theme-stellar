@@ -9,6 +9,7 @@
 
 const { getCollectionId } = require("../../lib/content-config");
 const { buildWikiTree } = require("../../lib/doc_tree");
+const { requireLayoutProfiles } = require("../../lib/layout-config");
 const { buildWikiPageViewModel } = require("../../lib/models");
 const {
   readFrontMatter,
@@ -42,7 +43,7 @@ module.exports = ctx => {
     data,
     pages,
     shelf: data.wiki || [],
-    siteTree: ctx.theme.config.site_tree
+    wikiIndexPath: requireLayoutProfiles(ctx.stellar?.config).wikiIndex.path
   });
   ctx.theme.config.wiki = wiki;
 
@@ -61,6 +62,7 @@ module.exports = ctx => {
       collectionSource: sourcePathForData(`wiki/${collectionId}`),
       siteConfig: ctx.config,
       themeConfig,
+      stellarConfig: ctx.stellar?.config,
       collectionId,
       collectionConfig: collectionConfigs.get(collectionId),
       collectionState: wiki.tree[collectionId],

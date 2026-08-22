@@ -16,65 +16,30 @@ const {
 } = require("../scripts/lib/config-reference-metadata");
 const { assertPageViewModel } = require("../scripts/lib/model-schema");
 const { MODEL_SCHEMAS } = require("../scripts/schema/model-schema");
+const { CONFIG_TARGET_FIELDS } = require("../scripts/schema/config-target");
 const generateReference = require("../scripts/generate-reference");
 
 const ROOT = path.resolve(__dirname, "..");
 const OUTPUT = path.join(ROOT, "reference/v2-models.json");
 const CONFIG_OUTPUT = path.join(ROOT, "reference/v2-config.json");
 
-test("配置 Reference 只公开已交付 site Shell 与 head/SEO 契约", () => {
+test("配置 Reference 只公开已交付 site Shell、Layout Profile 与 head/SEO 契约", () => {
   const metadata = generateConfigReferenceMetadata();
 
   assert.equal(metadata.status, "partial");
-  assert.deepEqual(metadata.fields.map(field => field.path), [
-    "inject",
-    "inject.head",
-    "inject.script",
-    "resources",
-    "resources.preconnect",
-    "seo",
-    "seo.canonical",
-    "seo.canonical.allowed_hosts",
-    "seo.canonical.host",
-    "seo.open_graph",
-    "seo.open_graph.enabled",
-    "seo.open_graph.twitter_id",
-    "seo.structured_data",
-    "seo.structured_data.same_as",
-    "site",
-    "site.brand",
-    "site.brand.image",
-    "site.brand.image.background",
-    "site.brand.image.src",
-    "site.brand.image.url",
-    "site.brand.image.variant",
-    "site.brand.name",
-    "site.brand.tagline",
-    "site.brand.url",
-    "site.footer",
-    "site.footer.actions",
-    "site.footer.actions.<id>",
-    "site.footer.actions.<id>.action",
-    "site.footer.actions.<id>.icon",
-    "site.footer.actions.<id>.items",
-    "site.footer.actions.<id>.items[].icon",
-    "site.footer.actions.<id>.items[].title",
-    "site.footer.actions.<id>.items[].url",
-    "site.footer.actions.<id>.title",
-    "site.footer.actions.<id>.url",
-    "site.footer.actions.<id>.variant",
-    "site.footer.content",
-    "site.footer.sections",
-    "site.footer.sections[].items",
-    "site.footer.sections[].title",
-    "site.menu",
-    "site.menu.items",
-    "site.menu.items[].accent",
-    "site.menu.items[].icon",
-    "site.menu.items[].id",
-    "site.menu.items[].title",
-    "site.menu.items[].url"
-  ]);
+  const paths = metadata.fields.map(field => field.path);
+  const deliveredTargetPaths = CONFIG_TARGET_FIELDS
+    .filter(field => field.status === "delivered")
+    .map(field => field.path);
+  for (const targetPath of deliveredTargetPaths) {
+    assert.equal(paths.includes(targetPath), true, `${targetPath} 未进入配置 Reference`);
+  }
+  assert.deepEqual(
+    [...new Set(paths.map(fieldPath => fieldPath.split(".")[0]))].sort(),
+    ["inject", "layout", "resources", "seo", "site"]
+  );
+  assert.equal(metadata.fields.some(field => field.path === "layout.profiles.blog_index.path"), true);
+  assert.equal(metadata.fields.some(field => field.path.startsWith("content.")), false);
   assert.equal(metadata.fields[0].sealed, true);
   assert.deepEqual(
     metadata.fields.find(field => field.path === "seo.canonical.host"),

@@ -16,7 +16,7 @@ tags:
 
 普通 Post 的左右栏选择改为读取 `PageViewModel.item.presentation.sidebar`，Brand 读取 `render.layout.brand`，菜单激活读取 `item.navigation.menu`。页面 Front Matter、Post profile 与全局默认值的级联在模型层完成；模板不再修改 Post 的 `page.sidebar`。Widget 的具体 partial 与搜索交互继续复用既有渲染器；Footer 操作已迁到 `site.footer.actions`，但 DOM、class 与视觉行为不变。
 
-Topic、Wiki、Notebook、列表页和普通 Page 尚未进入本切片，仍按本页后续章节描述的旧选择链工作。
+Layout Profile 切片已将 Topic、Wiki、Notebook、列表页、404 和普通 Page 的默认侧栏一并迁入 `layout.profiles`。Collection / Front Matter 覆盖仍由现有模型适配层合并，最终公开字段将在后续切片收敛。
 
 <details>
 <summary>相关源码文件</summary>
@@ -67,9 +67,9 @@ graph TB
         widgets_right[".widgets (rightbar widget list)"]
     end
 
-    site_tree["site_tree in _config.yml"] --> widgets_left
-    site_tree --> widgets_right
-    page_layout["page.layout / page.wiki"] --> site_tree
+    profiles["layout.profiles in _config.yml"] --> widgets_left
+    profiles --> widgets_right
+    page_profile["resolved page profile"] --> profiles
 
     sidebg -.->|"absolute positioned behind"| leftbar_container
     l_left -.->|"desktop only"| l_main
@@ -87,15 +87,15 @@ graph TB
 
 ### 配置层级
 
-侧边栏通过 `_config.yml` 的 `site_tree` 小节配置，每种页面布局有不同设置。主题支持级联配置：页面级设置可覆盖布局默认值。
+侧边栏默认值通过 `_config.yml` 的 `layout.profiles` 配置，每种页面 Profile 都显式声明左右小部件数组。主题支持级联配置：页面级设置可覆盖 Profile 默认值。
 
 ```mermaid
 graph TB
-    GlobalConfig["_config.yml<br/>site_tree"] --> LayoutConfigs["Layout-Specific Configs"]
+    GlobalConfig["_config.yml<br/>layout.profiles"] --> LayoutConfigs["Profile Defaults"]
     
-    LayoutConfigs --> IndexLayouts["Index Layouts<br/>home, index_blog, index_wiki"]
+    LayoutConfigs --> IndexLayouts["Index Profiles<br/>home, blog_index, wiki_index"]
     LayoutConfigs --> ContentLayouts["Content Layouts<br/>post, wiki, page, note"]
-    LayoutConfigs --> SpecialLayouts["Special Layouts<br/>notebooks, error_page"]
+    LayoutConfigs --> SpecialLayouts["Special Profiles<br/>notebook_index, error"]
     
     IndexLayouts --> LeftbarList1["leftbar: welcome, recent"]
     IndexLayouts --> RightbarList1["rightbar: (empty)"]
@@ -108,20 +108,20 @@ graph TB
     NotebookYAML["notebook YAML<br/>leftbar/rightbar"] -.->|"override for notebooks"| LayoutConfigs
 ```
 
-**配置解析顺序**：先查页面 front-matter 覆盖，再查 wiki/notebook YAML，然后回退到 `site_tree` 布局默认值，最后到主题默认。
+**配置解析顺序**：先查页面 Front Matter 覆盖，再查 Wiki / Notebook YAML，然后回退到已规范化的 `layout.profiles` 默认值。Schema 默认是唯一主题默认来源。
 
-**参考源码**：[_config.yml](../../../_config.yml)（`site_tree` 小节）
+**参考源码**：[_config.yml](../../../_config.yml)（`layout.profiles` 小节）
 
 ### 各布局类型的默认配置
 
 | 布局类型 | 默认左栏 | 默认右栏 | 用途 |
 |----------|----------|----------|------|
 | `home` | `welcome, recent` | （空） | 首页列表 |
-| `index_blog` | `welcome, recent` | （空） | 博客列表 |
-| `index_wiki` | `related, recent` | （空） | wiki 项目列表 |
+| `blog_index` | `welcome, recent` | （空） | 博客列表 |
+| `wiki_index` | `related, recent` | （空） | wiki 项目列表 |
 | `post` | `related, recent` | `ghrepo, toc` | 博客文章 |
 | `wiki` | `tree, related, recent` | `ghrepo, toc` | wiki 页面 |
-| `notes` | `tagtree, recent` | （空） | 笔记本列表 |
+| `note_index` | `tagtree, recent` | （空） | 笔记列表 |
 | `note` | `tagtree, recent` | `toc` | 单条笔记 |
 | `page` | `recent` | `toc` | 通用页面 |
 
@@ -137,7 +137,7 @@ graph TB
 
 冻结后的 Brand 图片通过 `image.variant` 明确为 `avatar`、`icon` 或 `plain`。外层统一负责 48×48 尺寸、链接和显式背景；图片元素只负责 `cover` 或 `contain`。完整契约见 [Brand、导航与页头](logo-navigation-headers.md)。
 
-Wiki 内容页在 Brand 上方显示“所有项目”入口，链接到 `theme.site_tree.index_wiki.base_dir`。页面与项目的 `sidebar.left.wiki_home` 可控制此入口，默认显示；它不影响 Brand 本身。
+Wiki 内容页在 Brand 上方显示“所有项目”入口，链接到冻结的 `layout.profiles.wikiIndex.path`。页面与项目的 `sidebar.left.wiki_home` 可控制此入口，默认显示；它不影响 Brand 本身。
 
 手机端 Brand 不读取 Front Matter 开关，只在主页、分类/标签与指定集合索引/笔记列表渲染。内容页、归档、作者页和 404 隐藏。
 
@@ -415,7 +415,7 @@ graph TB
 - 左栏：`tagtree, recent`——笔记本内基于标签的组织
 - 右栏：`toc`（单条笔记）——页面结构导航
 
-**索引页（`home`、`index_blog`、`index_wiki`）**：
+**索引 Profile（`home`、`blog_index`、`wiki_index`）**：
 
 - 左栏：`welcome, recent` 或 `related, recent`——介绍性内容
 - 右栏：通常为空——聚焦主内容列表

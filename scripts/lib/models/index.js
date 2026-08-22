@@ -21,6 +21,11 @@ const {
   valueType: configValueType
 } = require("../config-schema");
 const { normalize_path: normalizePath } = require("../path_utils");
+const {
+  profilePath,
+  requireLayoutProfiles,
+  toRenderNavigation
+} = require("../layout-config");
 const { mergeBrand, normalizeBrand } = require("../brand");
 const { firstContentImage, postDescription, postImages } = require("../seo");
 const { caption } = require("../caption");
@@ -88,6 +93,15 @@ function assertNormalizedConfig(stellarConfig, source, requirements) {
     }));
   }
   if (issues.length > 0) throw new ConfigSchemaError(issues);
+}
+
+function layoutConfigRequirement() {
+  return {
+    path: "stellarConfig.layout.profiles",
+    read: config => config?.layout?.profiles,
+    expected: "normalized Layout Profile object",
+    migration: "configuration/layout"
+  };
 }
 
 function normalizeDate(value) {
@@ -462,15 +476,15 @@ function buildPostRenderModel(input, collection, item) {
 }
 
 function buildCollectionModel(themeConfig, stellarConfig) {
-  const siteTree = isPlainObject(themeConfig.site_tree) ? themeConfig.site_tree : {};
-  const postProfile = isPlainObject(siteTree.post) ? siteTree.post : {};
-  const blogIndex = isPlainObject(siteTree.index_blog) ? siteTree.index_blog : {};
+  const profiles = requireLayoutProfiles(stellarConfig);
+  const postProfile = profiles.post;
+  const blogIndex = profiles.blogIndex;
   const article = isPlainObject(themeConfig.article) ? themeConfig.article : {};
   const comments = pick(themeConfig.comments, CONTENT_MODEL_FIELDS.comments);
   if (comments.title == null && typeof themeConfig.comments?.comment_title === "string") {
     comments.title = themeConfig.comments.comment_title;
   }
-  const navigation = pick(postProfile.navigation, CONTENT_MODEL_FIELDS.navigation);
+  const navigation = toRenderNavigation(postProfile);
   const sidebar = normalizeSidebarBrand(pick(postProfile.sidebar, CONTENT_MODEL_FIELDS.sidebar));
 
   return {
@@ -479,7 +493,7 @@ function buildCollectionModel(themeConfig, stellarConfig) {
     identity: normalizeBrand(stellarConfig.site.brand),
     source: {},
     route: {
-      baseDir: typeof blogIndex.base_dir === "string" ? normalizePath(blogIndex.base_dir) : ""
+      baseDir: profilePath(blogIndex.path)
     },
     navigation,
     listing: {
@@ -587,15 +601,15 @@ function buildWikiCollectionModel(input, collectionId) {
   const themeConfig = input.themeConfig;
   const collectionConfig = input.collectionConfig;
   const collectionState = isPlainObject(input.collectionState) ? input.collectionState : {};
-  const siteTree = isPlainObject(themeConfig.site_tree) ? themeConfig.site_tree : {};
-  const wikiProfile = isPlainObject(siteTree.wiki) ? siteTree.wiki : {};
-  const indexWiki = isPlainObject(siteTree.index_wiki) ? siteTree.index_wiki : {};
+  const profiles = requireLayoutProfiles(input.stellarConfig);
+  const wikiProfile = profiles.wiki;
+  const indexWiki = profiles.wikiIndex;
   const article = isPlainObject(themeConfig.article) ? themeConfig.article : {};
   const collectionRouting = isPlainObject(collectionConfig.routing) ? collectionConfig.routing : {};
   const collectionListing = isPlainObject(collectionConfig.listing) ? collectionConfig.listing : {};
-  const baseDir = collectionRouting.base_dir || `${indexWiki.base_dir || "wiki"}/${collectionId}`;
+  const baseDir = collectionRouting.base_dir || `${profilePath(indexWiki.path) || "wiki"}/${collectionId}`;
 
-  const profileNavigation = pick(wikiProfile.navigation, CONTENT_MODEL_FIELDS.navigation);
+  const profileNavigation = toRenderNavigation(wikiProfile);
   const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
   const profileSidebar = pick(wikiProfile.sidebar, CONTENT_MODEL_FIELDS.sidebar);
   const collectionSidebar = pick(collectionConfig.sidebar, CONTENT_MODEL_FIELDS.sidebar);
@@ -678,20 +692,20 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
   const themeConfig = input.themeConfig;
   const siteConfig = input.siteConfig;
   const collectionConfig = input.collectionConfig;
-  const siteTree = isPlainObject(themeConfig.site_tree) ? themeConfig.site_tree : {};
-  const postProfile = isPlainObject(siteTree.post) ? siteTree.post : {};
-  const topicProfile = isPlainObject(siteTree.topic) ? siteTree.topic : {};
-  const indexTopic = isPlainObject(siteTree.index_topic) ? siteTree.index_topic : {};
+  const profiles = requireLayoutProfiles(input.stellarConfig);
+  const postProfile = profiles.post;
+  const topicProfile = profiles.topic;
+  const indexTopic = profiles.topicIndex;
   const collectionRouting = isPlainObject(collectionConfig.routing) ? collectionConfig.routing : {};
   const collectionListing = isPlainObject(collectionConfig.listing) ? collectionConfig.listing : {};
   const article = isPlainObject(themeConfig.article) ? themeConfig.article : {};
-  const baseDir = collectionRouting.base_dir || indexTopic.base_dir || "topic";
+  const baseDir = collectionRouting.base_dir || profilePath(indexTopic.path) || "topic";
   const routePath = collectionRouting.path || `${baseDir}/${collectionId}`;
   const orderBy = collectionListing.order_by ?? "-date";
 
   const profileNavigation = mergeConfig(
-    pick(postProfile.navigation, CONTENT_MODEL_FIELDS.navigation),
-    pick(topicProfile.navigation, CONTENT_MODEL_FIELDS.navigation)
+    toRenderNavigation(postProfile),
+    toRenderNavigation(topicProfile)
   );
   const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
   const siteBrand = normalizeBrand(input.stellarConfig.site.brand);
@@ -757,13 +771,11 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
   };
 }
 
-function notebookBaseDir(collectionId, collectionConfig, themeConfig) {
+function notebookBaseDir(collectionId, collectionConfig, stellarConfig) {
   if (typeof collectionConfig.routing?.base_dir === "string" && collectionConfig.routing.base_dir.length > 0) {
     return normalizeCollectionPath(collectionConfig.routing.base_dir);
   }
-  const root = typeof themeConfig.site_tree?.notebooks?.base_dir === "string"
-    ? normalizeCollectionPath(themeConfig.site_tree.notebooks.base_dir)
-    : "";
+  const root = profilePath(requireLayoutProfiles(stellarConfig).notebookIndex.path);
   return normalizeCollectionPath([root, collectionId].filter(Boolean).join("/"));
 }
 
@@ -796,14 +808,14 @@ function buildNotebookCollectionModel(input, collectionId) {
   const themeConfig = input.themeConfig;
   const siteConfig = input.siteConfig;
   const collectionConfig = input.collectionConfig;
-  const siteTree = isPlainObject(themeConfig.site_tree) ? themeConfig.site_tree : {};
+  const profiles = requireLayoutProfiles(input.stellarConfig);
   const notebookDefaults = isPlainObject(themeConfig.notebook) ? themeConfig.notebook : {};
   const collectionListing = isPlainObject(collectionConfig.listing) ? collectionConfig.listing : {};
   const defaultListing = isPlainObject(notebookDefaults.listing) ? notebookDefaults.listing : {};
-  const baseDir = notebookBaseDir(collectionId, collectionConfig, themeConfig);
-  const profileNavigation = pick(siteTree.notes?.navigation, CONTENT_MODEL_FIELDS.navigation);
+  const baseDir = notebookBaseDir(collectionId, collectionConfig, input.stellarConfig);
+  const profileNavigation = toRenderNavigation(profiles.noteIndex);
   const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
-  const profileSidebar = pick(siteTree.note?.sidebar, CONTENT_MODEL_FIELDS.sidebar);
+  const profileSidebar = pick(profiles.note.sidebar, CONTENT_MODEL_FIELDS.sidebar);
   const collectionSidebar = pick(collectionConfig.note?.sidebar, CONTENT_MODEL_FIELDS.sidebar);
   const globalArticle = pick(themeConfig.article, CONTENT_MODEL_FIELDS.article);
   const globalFooter = {
@@ -866,7 +878,8 @@ function buildPostPageViewModel(input) {
       read: config => config?.seo,
       expected: "normalized SEO object",
       migration: "configuration/seo"
-    }
+    },
+    layoutConfigRequirement()
   ]);
 
   validateThemeConfig(themeConfig, themeSource);
@@ -885,6 +898,8 @@ function buildWikiPageViewModel(input) {
   const themeConfig = isPlainObject(input.themeConfig) ? input.themeConfig : {};
   const frontMatter = isPlainObject(input.frontMatter) ? input.frontMatter : {};
   const page = input.page || {};
+
+  assertNormalizedConfig(input.stellarConfig, themeSource, [layoutConfigRequirement()]);
 
   if (!isPlainObject(input.collectionConfig)) {
     const collectionId = input.collectionId || frontMatter.collection?.id || "<unknown>";
@@ -934,12 +949,15 @@ function buildTopicPageViewModel(input) {
   const page = input.page || {};
   const collectionId = input.collectionId || frontMatter.collection?.id;
 
-  assertNormalizedConfig(input.stellarConfig, themeSource, [{
-    path: "stellarConfig.site.brand",
-    read: config => config?.site?.brand,
-    expected: "normalized site brand object",
-    migration: "configuration/site"
-  }]);
+  assertNormalizedConfig(input.stellarConfig, themeSource, [
+    {
+      path: "stellarConfig.site.brand",
+      read: config => config?.site?.brand,
+      expected: "normalized site brand object",
+      migration: "configuration/site"
+    },
+    layoutConfigRequirement()
+  ]);
 
   validateThemeConfig(themeConfig, themeSource);
   validatePostProfileConfig(themeConfig, themeSource);
@@ -988,6 +1006,8 @@ function buildNotebookPageViewModel(input) {
   const frontMatter = isPlainObject(input.frontMatter) ? input.frontMatter : {};
   const page = input.page || {};
   const collectionId = input.collectionId;
+
+  assertNormalizedConfig(input.stellarConfig, themeSource, [layoutConfigRequirement()]);
 
   validateThemeConfig(themeConfig, themeSource);
   validatePostProfileConfig(themeConfig, themeSource);

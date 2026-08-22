@@ -95,7 +95,7 @@ graph TD
 | `layout/index.ejs` | （首页） | 文章卡片列表 |
 | `layout/archive.ejs`、`tags.ejs`、`categories.ejs` 等 | 归档/标签/分类 | 列表页 |
 
-注意：主题**没有** `post.ejs` / `wiki.ejs` 独立文件；post、wiki、topic、note 等内容页面由 `layout.ejs` 根据 `page.layout` 值内联区分（结合 `_partial` 组件与 `site_tree` 配置）。
+注意：主题**没有** `post.ejs` / `wiki.ejs` 独立文件；post、wiki、topic、note 等内容页面由 `layout.ejs` 根据 `page.layout` 值内联区分，并结合 `_partial` 组件与冻结的 `layout.profiles` 配置。
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
 
@@ -311,7 +311,7 @@ graph TD
 
 布局系统与以下主题子系统集成：
 
-- **配置系统**（[配置系统](../00-总览与安装配置/configuration.md)）：读取 `site_tree` 与插件设置，决定组件包含
+- **配置系统**（[配置系统](../00-总览与安装配置/configuration.md)）：读取 `layout.profiles` 与其它已交付根域，决定组件包含
 - **侧边栏系统**（[侧边栏系统](sidebar-system.md)）：按页面类型配置渲染左右栏
 - **导航与页头**（[Brand、导航与页头](logo-navigation-headers.md)）：引入 Brand、导航栏与面包屑 partial
 - **标签插件**（[标签插件](../04-标签插件/tag-plugins-overview.md)）：处理页面内容中的自定义标签语法
@@ -320,4 +320,4 @@ graph TD
 
 布局系统是组装层，把内容、配置与表现整合起来生成最终 HTML 页面。
 
-**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)、[_config.yml](../../../_config.yml)（`site_tree` 小节）
+**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)、[_config.yml](../../../_config.yml)（`layout.profiles` 小节）

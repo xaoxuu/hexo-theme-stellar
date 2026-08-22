@@ -56,128 +56,144 @@ site:
 
 
 ######## Main ########
-# 站点主结构树
-site_tree:
-  # -- 列表类页面 -- #
-  # 主页配置
-  home:
-    sidebar:
-      left:
-        widgets: [welcome, recent]
-      right:
-        widgets: []
-    # 首页评论区，默认不显示。可设为 true 使用全局评论服务，
-    # 或参考页面 comments 对象覆盖 enabled/title/id/service 及各服务参数。
-    comments:
-  # 博客列表页配置
-  index_blog:
-    base_dir: blog # 只影响自动生成的页面路径
-    navigation:
-      menu: post
-      tabs:  # 近期发布 分类 标签 专栏 归档 and ...
-        # '朋友文章': /friends/rss/
-    sidebar:
-      left:
-        widgets: [welcome, recent]
-      right:
-        widgets: []
-  # 博客专栏列表页配置
-  index_topic:
-    base_dir: topic # 只影响自动生成的页面路径
-    navigation:
-      menu: post
-  # 文档列表页配置
-  index_wiki:
-    base_dir: wiki # 只影响自动生成的页面路径
-    navigation:
-      menu: wiki
-      tabs:
-        # 'more': https://github.com/xaoxuu
-    sidebar:
-      left:
-        widgets: [related, recent]
-      right:
-        widgets: []
-  # -- 内容类页面 -- #
-  # 博客文章内页配置
-  post:
-    navigation:
-      menu: post
-    sidebar:
-      left:
-        widgets: [related, recent]
-      right:
-        widgets: [ghrepo, toc]
-  # 博客专栏文章内页配置
-  topic:
-    navigation:
-      menu: post
-  # 文档内页配置
-  wiki:
-    navigation:
-      menu: wiki
-    sidebar:
-      left:
-        widgets: [tree, related, recent]
-      right:
-        widgets: [ghrepo, toc]
-  # 笔记本列表页配置
-  notebooks:
-    base_dir: notebooks # 笔记本列表页的路径。以及未指定 base_dir 的笔记本的路径前缀。
-    navigation:
-      menu: notebooks
-    sidebar:
-      left:
-        widgets: [recent]
-      right:
-        widgets: []
-  # 笔记列表页配置
-  notes:
-    # 笔记列表页和笔记页高亮的主导航栏菜单按钮。
-    # 可以在笔记本或笔记的 navigation.menu 中覆盖。
-    navigation:
-      menu: notebooks
-    sidebar:
-      left:
-        widgets: [tagtree, recent]
-      right:
-        widgets: []
-  # 笔记页配置
-  note:
-    # 笔记页的左侧栏和右侧栏
-    # 可以在笔记本 note.sidebar 或笔记 sidebar 中覆盖。
-    sidebar:
-      left:
-        widgets: [tagtree, recent]
-      right:
-        widgets: [toc]
-  # 作者信息配置
-  author: 
-    base_dir: author # 只影响自动生成的页面路径
-    navigation:
-      menu: post
-    sidebar:
-      left:
-        widgets: [recent]
-      right:
-        widgets: []
-  # 错误页配置
-  error_page:
-    navigation:
-      menu: post
-    '404': '/404.html'
-    sidebar:
-      left:
-        widgets: [recent]
-      right:
-        widgets: []
-  # 其它自定义页面配置 layout: page
-  page:
-    sidebar:
-      left:
-        widgets: [recent]
-      right:
-        widgets: [toc]
+# 页面 Profile 默认布局
+layout:
+  profiles:
+    # -- 列表类页面 -- #
+    # 主页配置
+    home:
+      navigation:
+        active_menu: post
+      sidebar:
+        left:
+          widgets: [welcome, recent]
+        right:
+          widgets: []
+      # 首页评论区，默认不显示。可设为 true 使用全局评论服务，
+      # 或用 enabled/title/id/provider/options 覆盖。
+      comments:
+    # 博客列表页配置
+    blog_index:
+      path: /blog/ # 只影响自动生成的页面路径
+      navigation:
+        active_menu: post
+        tabs:  # 近期发布 分类 标签 专栏 归档 and ...
+          # '朋友文章': /friends/rss/
+      sidebar:
+        left:
+          widgets: [welcome, recent]
+        right:
+          widgets: []
+    # 博客专栏列表页配置
+    topic_index:
+      path: /topic/ # 只影响自动生成的页面路径
+      navigation:
+        active_menu: post
+      sidebar:
+        left:
+          widgets: [welcome, recent]
+        right:
+          widgets: []
+    # 文档列表页配置
+    wiki_index:
+      path: /wiki/ # 只影响自动生成的页面路径
+      navigation:
+        active_menu: wiki
+        tabs:
+          # 'more': https://github.com/xaoxuu
+      sidebar:
+        left:
+          widgets: [related, recent]
+        right:
+          widgets: []
+    # -- 内容类页面 -- #
+    # 博客文章内页配置
+    post:
+      navigation:
+        active_menu: post
+      sidebar:
+        left:
+          widgets: [related, recent]
+        right:
+          widgets: [ghrepo, toc]
+    # 博客专栏文章内页配置
+    topic:
+      navigation:
+        active_menu: post
+      sidebar:
+        left:
+          widgets: [related, recent]
+        right:
+          widgets: [ghrepo, toc]
+    # 文档内页配置
+    wiki:
+      navigation:
+        active_menu: wiki
+      sidebar:
+        left:
+          widgets: [tree, related, recent]
+        right:
+          widgets: [ghrepo, toc]
+    # 笔记本列表页配置
+    notebook_index:
+      path: /notebooks/ # 笔记本列表页路径，以及未指定路径的笔记本前缀。
+      navigation:
+        active_menu: notebooks
+      sidebar:
+        left:
+          widgets: [recent]
+        right:
+          widgets: []
+    # 笔记列表页配置
+    note_index:
+      # 笔记列表页和笔记页高亮的主导航栏菜单按钮。
+      # 可以在笔记本或笔记的 navigation.menu 中覆盖。
+      navigation:
+        active_menu: notebooks
+      sidebar:
+        left:
+          widgets: [tagtree, recent]
+        right:
+          widgets: []
+    # 笔记页配置
+    note:
+      navigation:
+        active_menu: notebooks
+      # 可以在笔记本 note.sidebar 或笔记 sidebar 中覆盖。
+      sidebar:
+        left:
+          widgets: [tagtree, recent]
+        right:
+          widgets: [toc]
+    # 作者信息配置
+    author:
+      path: /author/ # 只影响自动生成的页面路径
+      navigation:
+        active_menu: post
+      sidebar:
+        left:
+          widgets: [recent]
+        right:
+          widgets: []
+    # 错误页配置
+    error:
+      path: /404.html
+      navigation:
+        active_menu: post
+      sidebar:
+        left:
+          widgets: [recent]
+        right:
+          widgets: []
+    # 其它自定义页面配置 layout: page
+    page:
+      navigation:
+        active_menu: post
+      sidebar:
+        left:
+          widgets: [recent]
+        right:
+          widgets: [toc]
 
 
 ######## Notebook ########

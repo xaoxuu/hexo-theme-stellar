@@ -1,25 +1,31 @@
+/* global hexo */
 /**
  * author v1 | https://github.com/xaoxuu/hexo-theme-stellar/
  */
 
-hexo.extend.generator.register('author', function (locals) {
-  const { site_tree, authors } = hexo.theme.config
-  var pages = []
+"use strict";
+
+const { requireLayoutProfiles, toRenderNavigation } = require("../lib/layout-config");
+
+hexo.extend.generator.register("author", function () {
+  const { authors } = hexo.theme.config;
+  const profile = requireLayoutProfiles(hexo.stellar?.config).author;
+  var pages = [];
   for (let key of Object.keys(authors)) {
-    var author = authors[key]
+    var author = authors[key];
     if (author.hidden) {
       continue
     }
-    author.id = key
+    author.id = key;
     pages.push({
       path: author.path,
-      layout: ['archive'],
+      layout: ["archive"],
       data: {
         author: author,
-        sidebar: site_tree.author.sidebar,
-        navigation: { menu: site_tree.author.navigation.menu, breadcrumb: false }
+        sidebar: profile.sidebar,
+        navigation: { ...toRenderNavigation(profile), breadcrumb: false }
       }
-    })
+    });
   }
-  return pages
+  return pages;
 });

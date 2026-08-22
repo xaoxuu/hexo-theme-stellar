@@ -1,15 +1,25 @@
 <%
 page.navigation ||= {}
 if (page.navigation.menu == undefined) {
-  page.navigation.menu = 'post';
+  page.navigation.menu = stellar_config('layout.profiles.home.navigation.activeMenu');
 }
 if (page.title && collection_id(page, "wiki")) {
   page.robots = 'noindex,follow';
 }
-// 首页评论区：仅首页第一页，默认不显示，可通过 site_tree.home.comments 开启/覆盖
-var homeCmt = theme.site_tree?.home?.comments
+// 首页评论区：仅首页第一页，默认不显示，可通过 layout.profiles.home.comments 开启/覆盖
+var homeCmt = stellar_config('layout.profiles.home.comments')
 if (homeCmt && homeCmt !== false && is_home_first_page()) {
-  page.comments = typeof homeCmt === 'object' ? Object.assign({enabled: true}, homeCmt) : {enabled: true}
+  if (typeof homeCmt === 'object') {
+    page.comments = {
+      enabled: homeCmt.enabled !== false,
+      title: homeCmt.title,
+      id: homeCmt.id,
+      service: homeCmt.provider
+    }
+    if (homeCmt.provider) page.comments[homeCmt.provider] = homeCmt.options
+  } else {
+    page.comments = {enabled: true}
+  }
 }
 
 // 置顶文章样式：carousel = 轮播（默认），flat = 平铺（首页列表靠前展示）

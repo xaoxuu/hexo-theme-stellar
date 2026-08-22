@@ -50,7 +50,7 @@ function makeFixture() {
     { _id: 'p11', collection: collection('alpha'), title: 'Hidden', path: 'wiki/alpha/hidden.html', visibility: { listed: false } },
     { _id: 'p10', title: 'No Wiki', path: 'about/index.html', layout: 'page', updated: '2026-04-01' }
   ];
-  return { data, pages, shelf: ['alpha', 'beta'], siteTree: { index_wiki: { base_dir: '/wiki' } } };
+  return { data, pages, shelf: ['alpha', 'beta'], wikiIndexPath: '/wiki/' };
 }
 
 test('doc_tree 按 v2 collection 归属页面并规范化路由', () => {
@@ -88,7 +88,7 @@ test('doc_tree 汇总上架项目标签与关联项目', () => {
   assert.deepStrictEqual(wiki.all_tags.guide.items, ['alpha', 'beta']);
   assert.deepStrictEqual(wiki.all_tags.extra.items, ['beta']);
   assert.deepStrictEqual(wiki.all_tags.solo.items, []);
-  assert.equal(wiki.all_tags.guide.path, '/wiki/tags/guide/index.html');
+  assert.equal(wiki.all_tags.guide.path, 'wiki/tags/guide/index.html');
   assert.deepStrictEqual(wiki.tree.alpha.relatedItems, [{ name: 'guide', items: ['beta'] }]);
   assert.deepStrictEqual(wiki.tree.beta.relatedItems, [{ name: 'guide', items: ['alpha'] }]);
 });
@@ -110,7 +110,7 @@ test('项目 id 与标签同名时不丢失其它项目', () => {
       { _id: 'o1', collection: collection('other'), title: 'O', path: 'wiki/other/b.html' }
     ],
     shelf: ['guide', 'other'],
-    siteTree: { index_wiki: { base_dir: '/wiki' } }
+    wikiIndexPath: '/wiki/'
   };
   const wiki = buildWikiTree(structuredClone(fixture));
   assert.deepStrictEqual(wiki.all_tags.guide.items, ['guide', 'other']);

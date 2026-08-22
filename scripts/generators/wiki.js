@@ -1,38 +1,44 @@
+/* global hexo */
 /**
  * wiki v1 | https://github.com/xaoxuu/hexo-theme-stellar/
  */
 
-hexo.extend.generator.register('wiki', function (locals) {
-  const { site_tree, wiki } = hexo.theme.config
-  const wikiIdList = Object.keys(wiki.tree)
+"use strict";
+
+const { generatorPath, requireLayoutProfiles, toRenderNavigation } = require("../lib/layout-config");
+
+hexo.extend.generator.register("wiki", function () {
+  const { wiki } = hexo.theme.config;
+  const profile = requireLayoutProfiles(hexo.stellar?.config).wikiIndex;
+  const wikiIdList = Object.keys(wiki.tree);
   if (wikiIdList.length == 0) {
-    return {}
+    return {};
   }
-  var ret = []
+  var ret = [];
   ret.push({
-    path: site_tree.index_wiki.base_dir + '/index.html',
-    layout: ['index_wiki'],
+    path: generatorPath(profile.path),
+    layout: ["index_wiki"],
     data: {
-      layout: 'index_wiki',
-      navigation: { menu: site_tree.index_wiki.navigation.menu },
+      layout: "index_wiki",
+      navigation: toRenderNavigation(profile),
       filter: false
     }
-  })
+  });
   if (wiki.all_tags) {
     for (let id of Object.keys(wiki.all_tags)) {
-      let tag = wiki.all_tags[id]
+      let tag = wiki.all_tags[id];
       ret.push({
         path: tag.path,
-        layout: ['index_wiki'],
+        layout: ["index_wiki"],
         data: {
-          layout: 'index_wiki',
-          navigation: { menu: site_tree.index_wiki.navigation.menu },
+          layout: "index_wiki",
+          navigation: toRenderNavigation(profile),
           filter: true,
           tagName: tag.name,
           title: tag.name
         }
-      })
+      });
     }
   }
-  return ret
-})
+  return ret;
+});

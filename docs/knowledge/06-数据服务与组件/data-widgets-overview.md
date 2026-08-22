@@ -208,16 +208,16 @@ graph TD
 
 ## 组件系统架构
 
-组件是定义在 `_config.yml` `site_tree` 小节中的模块化侧边栏组件。组件系统支持左右两个侧边栏，每种页面类型有不同组件集。
+组件是由 `_config.yml` 的 `layout.profiles.*.sidebar` 编排的模块化侧边栏单元。组件系统支持左右两个侧边栏，每种页面 Profile 有不同组件集。
 
 **组件配置层级**
 
 ```mermaid
 graph TB
-  SiteTree["site_tree config"]
-  PageType["Page Type\nhome, post, wiki, etc."]
-  LeftBar["leftbar: []"]
-  RightBar["rightbar: []"]
+  SiteTree["layout.profiles config"]
+  PageType["Page Profile\nhome, post, wiki, etc."]
+  LeftBar["sidebar.left.widgets"]
+  RightBar["sidebar.right.widgets"]
   
   WidgetTypes["Widget Types"]
   RecentWidget["recent\nRecent posts"]
@@ -267,16 +267,23 @@ graph TB
 ### 组件配置示例
 
 ```yaml
-site_tree:
-  post:
-    leftbar: related, recent
-    rightbar: ghrepo, toc
-  wiki:
-    leftbar: tree, related, recent
-    rightbar: ghrepo, toc
+layout:
+  profiles:
+    post:
+      sidebar:
+        left:
+          widgets: [related, recent]
+        right:
+          widgets: [ghrepo, toc]
+    wiki:
+      sidebar:
+        left:
+          widgets: [tree, related, recent]
+        right:
+          widgets: [ghrepo, toc]
 ```
 
-组件列表按从左到右、从上到下顺序处理。`leftbar` 与 `rightbar` 字段接受逗号分隔的组件 ID。无效组件 ID 静默忽略。
+组件列表按数组顺序处理。每个成员可以是 Widget ID 字符串，或带参数的已注册 Widget 对象；站点覆盖时数组完整替换。无效 Widget 仍由渲染器静默跳过。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 

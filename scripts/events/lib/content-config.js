@@ -199,6 +199,7 @@ module.exports = ctx => {
             collectionId,
             siteConfig: ctx.config,
             themeConfig: ctx.theme.config,
+            stellarConfig: ctx.stellar?.config,
             collectionConfig: data[`notebooks/${collectionId}`],
             collectionItems: notebookMemberInputs,
             frontMatter: config,

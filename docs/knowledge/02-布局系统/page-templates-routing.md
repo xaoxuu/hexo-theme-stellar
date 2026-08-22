@@ -203,15 +203,20 @@ flowchart TD
 
 **参考源码**：[layout/page.ejs](../../../layout/page.ejs)
 
-### `menu_id` 默认解析
+### Layout Profile 路径与菜单默认值
 
-`page.ejs` 按页面所属内容类型设置 `page.menu_id`：
+v2 配置在 `layout.profiles` 中为各页面 Profile 声明 `path` 和 `navigation.active_menu`。YAML 路径在 Schema 中规范化为根相对路径，目录以 `/` 结尾。Topic、Wiki、Notebook、Author 与 Error Profile 的路径由主题生成器投影为 Hexo route path；`blog_index.path` 只进入 Post `CollectionModel.route.baseDir`，近期文章首页仍由 Hexo 自有 `index_generator.path` 生成，主题配置不会反写该字段。配置运行时使用 camelCase，进入现有页面 ViewModel 或渲染上下文时仍投影为内部 `navigation.menu`：
 
-| 条件 | `menu_id` 来源 |
+| 条件 | 冻结配置来源 |
 |---|---|
-| 设置了 `page.wiki` | `theme.site_tree.wiki.menu_id` |
-| 设置了 `page.topic` | `theme.site_tree.topic.menu_id` |
-| 其他 | `theme.site_tree.post.menu_id` |
+| 首页 | `layout.profiles.home.navigation.activeMenu` |
+| 分类 / 标签 / 归档 | `layout.profiles.blogIndex.navigation.activeMenu` |
+| Wiki 内容页 | `layout.profiles.wiki.navigation.activeMenu` |
+| Topic 内容页 | `layout.profiles.topic.navigation.activeMenu` |
+| 普通 Post | `layout.profiles.post.navigation.activeMenu` |
+| Notebook Note | `layout.profiles.note.navigation.activeMenu` |
+| Wiki / Topic / Notebook 索引 | 对应 `wikiIndex` / `topicIndex` / `notebookIndex` Profile |
+| 404 与普通页 | `error` / `page` Profile |
 
 **参考源码**：[layout/page.ejs](../../../layout/page.ejs)
 

@@ -43,10 +43,10 @@ wiki 侧边栏渲染见[侧边栏系统](../02-布局系统/sidebar-system.md)�
 
 wiki 系统有两个阶段：**构建期数据处理阶段**（Node.js 服务端）与**渲染期模板阶段**（EJS）。数据处理阶段每次构建运行一次，组装结构化的 `wiki` 对象（挂载为 `theme.wiki`），并为严格 v2 Wiki 页面生成冻结 `page.viewModel`。当前 EJS 仍读取 `theme.wiki` 与原页面数据，ViewModel 的布局接入属于后续阶段。
 
-wiki 系统由 `_config.yml` 的两个小节配置：
+wiki 系统由 `_config.yml` 的两个 Layout Profile 配置：
 
-- `site_tree.index_wiki`——wiki 列表/索引页
-- `site_tree.wiki`——单个 wiki 文档页
+- `layout.profiles.wiki_index`——wiki 列表/索引页
+- `layout.profiles.wiki`——单个 wiki 文档页
 
 **Wiki 系统架构**
 
@@ -67,8 +67,8 @@ flowchart TD
     L --> M["layout.ejs\npage.ejs"]
     
     subgraph "_config.yml"
-        N["site_tree.index_wiki\nbase_dir, navigation, sidebar"]
-        O["site_tree.wiki\nnavigation, sidebar"]
+        N["layout.profiles.wiki_index\npath, navigation, sidebar"]
+        O["layout.profiles.wiki\nnavigation, sidebar"]
     end
     
     N -.configures.-> M
@@ -174,21 +174,21 @@ wiki 系统采用三层配置：全局主题配置、项目数据文件、页面
 
 ### 全局配置（_config.yml）
 
-**site_tree.index_wiki**——wiki 列表/索引页配置：
+**layout.profiles.wiki_index**——wiki 列表/索引页配置：
 
 | 字段 | 默认 | 用途 |
 |---|---|---|
-| `base_dir` | `wiki` | wiki 索引页 URL 路径前缀 |
-| `navigation.menu` | `wiki` | wiki 页面高亮的菜单项 |
+| `path` | `/wiki/` | wiki 索引页的根相对 URL 路径 |
+| `navigation.active_menu` | `wiki` | wiki 页面高亮的菜单项 |
 | `navigation.tabs` | （自定义） | 索引页显示的导航标签 |
 | `sidebar.left.widgets` | `[related, recent]` | 左栏小部件配置 |
 | `sidebar.right.widgets` | `[]` | 右栏小部件配置 |
 
-**site_tree.wiki**——单个 wiki 页面配置：
+**layout.profiles.wiki**——单个 wiki 页面配置：
 
 | 字段 | 默认 | 用途 |
 |---|---|---|
-| `navigation.menu` | `wiki` | 高亮的菜单项 |
+| `navigation.active_menu` | `wiki` | 高亮的菜单项 |
 | `sidebar.left.widgets` | `[tree, related, recent]` | 左栏含导航树 |
 | `sidebar.right.widgets` | `[ghrepo, toc]` | 右栏显示 TOC 与 GitHub 仓库 |
 
@@ -383,10 +383,10 @@ graph LR
     C --> D["Filter:\n1. homepage != null\n2. item.id in wiki.shelf"]
     D --> E["TagEntry.items[]\n(shelf project IDs)"]
     E --> F["relatedItems per project\n(shared-tag neighbors)"]
-    C --> G["TagEntry.path\n= site_tree.index_wiki.base_dir\n  + /tags/:name/index.html"]
+    C --> G["TagEntry.path\n= layout.profiles.wikiIndex.path\n  + /tags/:name/index.html"]
 ```
 
-- 标签路径用 `theme.site_tree.index_wiki.base_dir` 构造
+- 标签路径用冻结的 `layout.profiles.wikiIndex.path` 构造
 - 项目只有同时满足「在 `wiki.shelf` 中」且「已解析 homepage」才出现在标签的 `items`
 - 项目的 `relatedItems` 由所有共享至少一个标签的其他项目构建，按标签名分组
 
@@ -402,7 +402,7 @@ wiki 页面使用标准布局系统，但带 wiki 专属配置与小部件。
 
 `layout.ejs` 根据 `page.wiki` 字段决定页面特征。存在 `page.wiki` 时：
 
-- `navigation.menu` 默认为 `site_tree.wiki.navigation.menu`（通常 `'wiki'`）
+- 内部 `navigation.menu` 由 `layout.profiles.wiki.navigation.activeMenu` 投影（通常 `'wiki'`）
 - 左栏配置为 `tree, related, recent`
 - 右栏配置为 `ghrepo, toc`
 
@@ -445,7 +445,7 @@ wiki 索引页（`index_wiki` 布局）显示 `wiki.shelf` 中所有已发布项
 - 底栏中的 `identity.icon`（无值回退默认项目图）、`name` 项目标题和 `caption()` 项目副标题
 - 指向 `wiki.tree[id].homepage.path` 的链接
 
-索引页使用 `site_tree.index_wiki` 配置其侧边栏与导航。
+索引页使用 `layout.profiles.wiki_index` 配置其侧边栏与导航。
 
 **参考源码**：[_config.yml](../../../_config.yml)、[scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)
 

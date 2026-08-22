@@ -52,9 +52,9 @@ graph TB
     
     subgraph "Configuration Sources"
         GLOBAL["notebook: config<br/>_config.yml"]
-        NOTEBOOKS_CFG["site_tree.notebooks"]
-        NOTES_CFG["site_tree.notes"]
-        NOTE_CFG["site_tree.note"]
+        NOTEBOOKS_CFG["layout.profiles.notebook_index"]
+        NOTES_CFG["layout.profiles.note_index"]
+        NOTE_CFG["layout.profiles.note"]
         YAML["Notebook YAML file<br/>User-defined metadata"]
         FRONTMATTER["Note front-matter<br/>Per-note overrides"]
     end
@@ -99,10 +99,10 @@ Notebook/Note 的冻结模型字段、严格归属、构建期挂载与 EJS 阶�
 
 | 配置键 | 默认值 | 说明 |
 |--------|--------|------|
-| `base_dir` | `notebooks` | 笔记本列表的 URL 路径；也是未设置自定义 `base_dir` 的笔记本的默认路径前缀 |
-| `menu_id` | `notebooks` | 导航栏中高亮的菜单项 |
-| `leftbar` | `recent` | 左栏显示跨全部笔记本的最近笔记 |
-| `rightbar` | `null` | 默认空右栏 |
+| `path` | `/notebooks/` | 笔记本列表的根相对 URL 路径 |
+| `navigation.active_menu` | `notebooks` | 导航栏中高亮的菜单项 |
+| `sidebar.left.widgets` | `[recent]` | 左栏显示跨全部笔记本的最近笔记 |
+| `sidebar.right.widgets` | `[]` | 默认空右栏 |
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
@@ -361,21 +361,22 @@ share: true
 **小部件配置模式：**
 
 ```yaml
-site_tree:
-  notebooks:
-    sidebar:
-      left:
-        widgets: [recent]  # 跨全部笔记本的最近笔记
-  notes:
-    sidebar:
-      left:
-        widgets: [tagtree, recent]  # 当前笔记本的标签树 + 最近笔记
-  note:
-    sidebar:
-      left:
-        widgets: [tagtree, recent]  # 同 notes 页
-      right:
-        widgets: [toc]  # 当前笔记的目录
+layout:
+  profiles:
+    notebook_index:
+      sidebar:
+        left:
+          widgets: [recent]  # 跨全部笔记本的最近笔记
+    note_index:
+      sidebar:
+        left:
+          widgets: [tagtree, recent]  # 当前笔记本的标签树 + 最近笔记
+    note:
+      sidebar:
+        left:
+          widgets: [tagtree, recent]  # 同 note_index 页
+        right:
+          widgets: [toc]  # 当前笔记的目录
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)
@@ -389,14 +390,14 @@ site_tree:
 ```mermaid
 graph LR
     subgraph "Menu Configuration"
-        MENUBAR["menubar.items"]
+        MENUBAR["site.menu.items"]
         ITEM["Menu item with<br/>id: notebooks"]
     end
     
     subgraph "Page Configuration"
-        NB_MENU["notebooks.menu_id<br/>Default: notebooks"]
-        NT_MENU["notes.menu_id<br/>Default: notebooks"]
-        N_MENU["note.menu_id<br/>Can override"]
+        NB_MENU["notebook_index.active_menu<br/>Default: notebooks"]
+        NT_MENU["note_index.active_menu<br/>Default: notebooks"]
+        N_MENU["note.active_menu<br/>Default: notebooks"]
     end
     
     subgraph "Rendered Page"
@@ -413,7 +414,7 @@ graph LR
 
 **覆盖层级：**
 
-1. 全局默认：`site_tree.notebooks.navigation.menu`、`site_tree.notes.navigation.menu`
+1. 全局默认：`layout.profiles.notebook_index.navigation.active_menu`、`layout.profiles.note_index.navigation.active_menu`
 2. 笔记本 YAML：`navigation.menu`（影响 notes 与 note 页）
 3. 笔记 front-matter：`navigation.menu`（仅影响该笔记）
 

@@ -4,9 +4,11 @@
 
 'use strict';
 
+const { profilePath, requireLayoutProfiles } = require("../../lib/layout-config");
+
 module.exports = ctx => {
   var authors = ctx.locals.get('data').authors || {}
-  let basePath = ctx.theme.config.site_tree.author.base_dir
+  let basePath = profilePath(requireLayoutProfiles(ctx.stellar?.config).author.path);
   // url
   for (let key of Object.keys(authors)) {
     let author = authors[key]

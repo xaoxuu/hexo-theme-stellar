@@ -1,6 +1,6 @@
 <%# 笔记页面的面包屑 %>
 <span class="sep"></span>
-<a class="cap breadcrumb" href="<%= pretty_url(theme.site_tree.notebooks.base_dir) %>"><%= __('btn.notebook') %></a>
+<a class="cap breadcrumb" href="<%= pretty_url(stellar_config('layout.profiles.notebookIndex.path')) %>"><%= __('btn.notebook') %></a>
 <% const notebook = theme.notebooks.tree[collection_id(page, "notebook")] %>
 <% if (notebook) { %>
   <span class="sep"></span>

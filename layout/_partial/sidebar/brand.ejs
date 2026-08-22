@@ -45,7 +45,7 @@ function layoutWikiHome() {
   const enabled = page.sidebar?.left?.wiki_home ?? wiki?.sidebar?.left?.wiki_home ?? true
   if (enabled === false) return ''
   var el = `<div class="wiki-home-wrap">`
-  el += `<a class="wiki-home cap" href="${pretty_url(theme.site_tree.index_wiki.base_dir)}">`
+  el += `<a class="wiki-home cap" href="${pretty_url(stellar_config('layout.profiles.wikiIndex.path'))}">`
   el += icon('default:arrow-left', '', true)
   el += `<span>${__('btn.all_wiki')}</span>`
   el += `</a></div>`

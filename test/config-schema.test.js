@@ -15,14 +15,19 @@ function assertDeepFrozen(value) {
   Object.values(value).forEach(assertDeepFrozen);
 }
 
-test("site/head Schema 提供派生默认值并忽略尚未迁移的根域", () => {
+function withoutLayout(config) {
+  const { layout, ...rest } = config;
+  return rest;
+}
+
+test("site/layout/head Schema 提供默认值并忽略尚未迁移的根域", () => {
   const config = parseStellarConfig({
     source: "themes/stellar/_config.yml",
     themeConfig: { article: { type: "tech" } },
     siteConfig: { avatar: "/avatar.webp", title: "Stellar", subtitle: "每个人的独立博客" }
   });
 
-  assert.deepEqual(config, {
+  assert.deepEqual(withoutLayout(config), {
     site: {
       brand: {
         image: { src: "/avatar.webp", variant: "avatar", url: null, background: null },
@@ -40,6 +45,22 @@ test("site/head Schema 提供派生默认值并忽略尚未迁移的根域", () 
     },
     resources: { preconnect: [] },
     inject: { head: "", script: "" }
+  });
+  assert.deepEqual(Object.keys(config.layout.profiles), [
+    "home", "blogIndex", "topicIndex", "wikiIndex", "post", "topic", "wiki",
+    "notebookIndex", "noteIndex", "note", "author", "error", "page"
+  ]);
+  assert.deepEqual(config.layout.profiles.blogIndex, {
+    path: "/blog/",
+    navigation: { activeMenu: "post", tabs: {} },
+    sidebar: { left: { widgets: ["welcome", "recent"] }, right: { widgets: [] } }
+  });
+  assert.equal(config.layout.profiles.home.navigation.activeMenu, "post");
+  assert.equal(config.layout.profiles.page.navigation.activeMenu, "post");
+  assert.deepEqual(config.layout.profiles.error, {
+    path: "/404.html",
+    navigation: { activeMenu: "post", tabs: {} },
+    sidebar: { left: { widgets: ["recent"] }, right: { widgets: [] } }
   });
   assertDeepFrozen(config);
 });
@@ -64,7 +85,7 @@ test("站点覆盖完成规范化、数组替换、稳定去重并保留注入�
     }
   });
 
-  assert.deepEqual(config, {
+  assert.deepEqual(withoutLayout(config), {
     site: {
       brand: {
         image: { src: null, variant: "avatar", url: null, background: null },
@@ -82,6 +103,94 @@ test("站点覆盖完成规范化、数组替换、稳定去重并保留注入�
     },
     resources: { preconnect: ["https://cdn.example.com"] },
     inject: { head, script: "<script>window.example = true</script>" }
+  });
+});
+
+test("Layout Profile 解析最终 ID、路径、动态 tabs、Widget 数组和首页评论参数袋", () => {
+  const config = parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: {
+      layout: {
+        profiles: {
+          home: {
+            comments: {
+              enabled: true,
+              title: "留言",
+              provider: "giscus",
+              options: { "data-repo": "owner/repo", nestedOption: { enabled: true } }
+            }
+          },
+          blog_index: {
+            path: " custom/blog ",
+            navigation: {
+              active_menu: "notes",
+              tabs: { "朋友文章": "/friends/rss/" }
+            },
+            sidebar: {
+              left: { widgets: ["recent", { layout: "markdown", content: "hello" }] },
+              right: { widgets: ["toc"] }
+            }
+          },
+          error: { path: "errors/404.html" }
+        }
+      }
+    }
+  });
+
+  assert.deepEqual(config.layout.profiles.home.comments, {
+    enabled: true,
+    title: "留言",
+    id: null,
+    provider: "giscus",
+    options: { "data-repo": "owner/repo", nestedOption: { enabled: true } }
+  });
+  assert.deepEqual(config.layout.profiles.blogIndex, {
+    path: "/custom/blog/",
+    navigation: { activeMenu: "notes", tabs: { "朋友文章": "/friends/rss/" } },
+    sidebar: {
+      left: { widgets: ["recent", { layout: "markdown", content: "hello" }] },
+      right: { widgets: ["toc"] }
+    }
+  });
+  assert.equal(config.layout.profiles.error.path, "/errors/404.html");
+  assertDeepFrozen(config.layout);
+});
+
+test("Layout Profile 拒绝旧根、旧 ID、旧子字段、未知字段和错误类型", () => {
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: {
+      site_tree: { home: {} },
+      layout: {
+        profiles: {
+          index_blog: {},
+          unknown_profile: {},
+          blog_index: {
+            base_dir: "blog",
+            unknown: true,
+            path: 42,
+            navigation: { menu: "post", tabs: [] },
+            sidebar: { left: { widgets: [true] } }
+          },
+          error: { "404": "/404.html" },
+          home: { comments: "true" }
+        }
+      }
+    }
+  }), error => {
+    assert.ok(error instanceof ConfigSchemaError);
+    assert.match(error.message, /site_tree 已移除，期望 layout\.profiles/);
+    assert.match(error.message, /layout\.profiles\.index_blog 已移除，期望 layout\.profiles\.blog_index/);
+    assert.match(error.message, /未知字段 layout\.profiles\.unknown_profile/);
+    assert.match(error.message, /layout\.profiles\.blog_index\.base_dir 已移除/);
+    assert.match(error.message, /未知字段 layout\.profiles\.blog_index\.unknown/);
+    assert.match(error.message, /layout\.profiles\.blog_index\.path 应为 string \| null/);
+    assert.match(error.message, /layout\.profiles\.blog_index\.navigation\.menu 已移除/);
+    assert.match(error.message, /layout\.profiles\.blog_index\.navigation\.tabs 应为 object/);
+    assert.match(error.message, /layout\.profiles\.blog_index\.sidebar\.left\.widgets\[0\] 应为 string \| object/);
+    assert.match(error.message, /layout\.profiles\.error\.404 已移除/);
+    assert.match(error.message, /layout\.profiles\.home\.comments 应为 boolean \| object \| null/);
+    return true;
   });
 });
 

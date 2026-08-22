@@ -229,7 +229,7 @@ node_modules/hexo-theme-stellar/_config.yml
 | `preconnect` | 需要预连接的 CDN 域名 |
 | `canonical` | 源站域名、备用站与克隆站检测 |
 | `open_graph` / `structured_data` | SEO 元数据 |
-| `site_tree` | 站点结构树：各页面类型的菜单与左右侧栏 |
+| `layout.profiles` | 页面 Profile：路径、激活菜单、导航标签与左右侧栏 |
 | `notebook` | 笔记本系统配置 |
 | `article` | 文章显示、摘要、许可等 |
 | `comments` | 评论服务（beaudar / utterances / giscus / twikoo / waline / artalk） |

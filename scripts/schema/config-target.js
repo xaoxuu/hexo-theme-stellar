@@ -241,6 +241,100 @@ const PROFILE_ID_MIGRATIONS = deepFreeze({
   page: "page"
 });
 
+const LAYOUT_PROFILE_DEFAULTS = deepFreeze({
+  home: {
+    path: null,
+    activeMenu: "post",
+    tabs: {},
+    leftWidgets: ["welcome", "recent"],
+    rightWidgets: []
+  },
+  blog_index: {
+    path: "/blog/",
+    activeMenu: "post",
+    tabs: {},
+    leftWidgets: ["welcome", "recent"],
+    rightWidgets: []
+  },
+  topic_index: {
+    path: "/topic/",
+    activeMenu: "post",
+    tabs: {},
+    leftWidgets: ["welcome", "recent"],
+    rightWidgets: []
+  },
+  wiki_index: {
+    path: "/wiki/",
+    activeMenu: "wiki",
+    tabs: {},
+    leftWidgets: ["related", "recent"],
+    rightWidgets: []
+  },
+  post: {
+    path: null,
+    activeMenu: "post",
+    tabs: {},
+    leftWidgets: ["related", "recent"],
+    rightWidgets: ["ghrepo", "toc"]
+  },
+  topic: {
+    path: null,
+    activeMenu: "post",
+    tabs: {},
+    leftWidgets: ["related", "recent"],
+    rightWidgets: ["ghrepo", "toc"]
+  },
+  wiki: {
+    path: null,
+    activeMenu: "wiki",
+    tabs: {},
+    leftWidgets: ["tree", "related", "recent"],
+    rightWidgets: ["ghrepo", "toc"]
+  },
+  notebook_index: {
+    path: "/notebooks/",
+    activeMenu: "notebooks",
+    tabs: {},
+    leftWidgets: ["recent"],
+    rightWidgets: []
+  },
+  note_index: {
+    path: null,
+    activeMenu: "notebooks",
+    tabs: {},
+    leftWidgets: ["tagtree", "recent"],
+    rightWidgets: []
+  },
+  note: {
+    path: null,
+    activeMenu: "notebooks",
+    tabs: {},
+    leftWidgets: ["tagtree", "recent"],
+    rightWidgets: ["toc"]
+  },
+  author: {
+    path: "/author/",
+    activeMenu: "post",
+    tabs: {},
+    leftWidgets: ["recent"],
+    rightWidgets: []
+  },
+  error: {
+    path: "/404.html",
+    activeMenu: "post",
+    tabs: {},
+    leftWidgets: ["recent"],
+    rightWidgets: []
+  },
+  page: {
+    path: null,
+    activeMenu: "post",
+    tabs: {},
+    leftWidgets: ["recent"],
+    rightWidgets: ["toc"]
+  }
+});
+
 const TAG_EXTENSION_IDS = deepFreeze([
   "note", "checkbox", "quot", "emoji", "icon", "button", "image", "copy",
   "timeline", "mark", "hashtag", "okr", "gallery", "chat"
@@ -285,6 +379,51 @@ const CONFIG_INTERNALIZED_RESOURCES = deepFreeze([
   "system.override_pretty_urls"
 ]);
 
+function layoutProfileFields() {
+  const definitions = [
+    ["layout.profiles", "object", literal({}), { boundary: "sealed", status: "delivered" }]
+  ];
+  for (const profile of PROFILE_IDS) {
+    const defaults = LAYOUT_PROFILE_DEFAULTS[profile];
+    const base = `layout.profiles.${profile}`;
+    definitions.push(
+      [
+        `${base}.path`,
+        profile === "error" ? "string" : ["string", "null"],
+        literal(defaults.path),
+        {
+          normalization: "normalize to a root-relative path; directory paths end with a slash",
+          status: "delivered"
+        }
+      ],
+      [`${base}.navigation.active_menu`, ["string", "null"], literal(defaults.activeMenu), { status: "delivered" }],
+      [`${base}.navigation.tabs`, "object", literal(defaults.tabs), { boundary: "record", status: "delivered" }],
+      [`${base}.navigation.tabs.<title>`, "string", literal(""), { status: "delivered" }],
+      [
+        `${base}.sidebar.left.widgets`,
+        "array",
+        literal(defaults.leftWidgets),
+        { items: { type: ["string", "object"], boundary: "registered_schema" }, status: "delivered" }
+      ],
+      [
+        `${base}.sidebar.right.widgets`,
+        "array",
+        literal(defaults.rightWidgets),
+        { items: { type: ["string", "object"], boundary: "registered_schema" }, status: "delivered" }
+      ]
+    );
+  }
+  definitions.push(
+    ["layout.profiles.home.comments", ["boolean", "object", "null"], literal(null), { boundary: "sealed", status: "delivered" }],
+    ["layout.profiles.home.comments.enabled", ["boolean", "null"], literal(null), { status: "delivered" }],
+    ["layout.profiles.home.comments.title", ["string", "null"], literal(null), { status: "delivered" }],
+    ["layout.profiles.home.comments.id", ["string", "null"], literal(null), { status: "delivered" }],
+    ["layout.profiles.home.comments.provider", ["string", "null"], literal(null), { status: "delivered" }],
+    ["layout.profiles.home.comments.options", "object", literal({}), { boundary: "parameter_bag", status: "delivered" }]
+  );
+  return fields(LAYOUT_CONSUMERS, definitions);
+}
+
 const CONFIG_TARGET_FIELDS = deepFreeze([
   ...fields(SITE_CONSUMERS, [
     ["site.brand.image.src", ["string", "null"], derived("hexo.config.avatar")],
@@ -323,17 +462,7 @@ const CONFIG_TARGET_FIELDS = deepFreeze([
     ["seo.open_graph.twitter_id", ["string", "null"], literal(null)],
     ["seo.structured_data.same_as", "array", literal([]), { items: { type: ["string"] }, normalization: "trim URLs; remove empty values; stable-deduplicate; replace on site override" }]
   ]),
-  ...fields(LAYOUT_CONSUMERS, [
-    ["layout.profiles", "object", literal({}), { boundary: "sealed" }],
-    ["layout.profiles.<profile>.path", ["string", "null"], literal(null), { normalization: "normalize to a root-relative collection path" }],
-    ["layout.profiles.<profile>.navigation.active_menu", ["string", "null"], literal(null)],
-    ["layout.profiles.<profile>.navigation.tabs", "object", literal({}), { boundary: "record" }],
-    ["layout.profiles.<profile>.navigation.tabs.<title>", "string", literal("")],
-    ["layout.profiles.<profile>.sidebar.left.widgets", "array", literal([]), { items: { type: ["string", "object"] } }],
-    ["layout.profiles.<profile>.sidebar.right.widgets", "array", literal([]), { items: { type: ["string", "object"] } }],
-    ["layout.profiles.home.comments", ["boolean", "object", "null"], literal(null)],
-    ["layout.profiles.error.path", "string", literal("/404.html")]
-  ]),
+  ...layoutProfileFields(),
   ...fields(CONTENT_CONSUMERS, [
     ["content.article.type", "string", literal("tech"), { values: ["tech", "story"] }],
     ["content.article.indent", "boolean", literal(false)],

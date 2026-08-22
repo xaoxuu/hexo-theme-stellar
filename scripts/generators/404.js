@@ -1,15 +1,20 @@
+/* global hexo */
 /**
  * 404 v1 | https://github.com/xaoxuu/hexo-theme-stellar/
  */
 
-hexo.extend.generator.register('404', function (locals) {
-  const { site_tree } = hexo.theme.config
+"use strict";
+
+const { generatorPath, requireLayoutProfiles, toRenderNavigation } = require("../lib/layout-config");
+
+hexo.extend.generator.register("404", function () {
+  const profile = requireLayoutProfiles(hexo.stellar?.config).error;
   return {
-    path: site_tree.error_page['404'],
-    layout: ['404'],
+    path: generatorPath(profile.path),
+    layout: ["404"],
     data: {
-      layout: '404',
-      navigation: { menu: site_tree.error_page.navigation.menu }
+      layout: "404",
+      navigation: toRenderNavigation(profile)
     }
-  }
-})
+  };
+});

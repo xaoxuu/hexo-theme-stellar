@@ -94,17 +94,17 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
           url: "/"
         }
       },
-      site_tree: {
-        index_topic: { base_dir: "topic" },
+      layout: { profiles: {
+        topic_index: { path: "/topic/" },
         post: {
-          navigation: { menu: "post", breadcrumb: true },
+          navigation: { active_menu: "post" },
           sidebar: {
             left: { widgets: ["global-left"] },
             right: { widgets: ["toc"] }
           }
         },
-        topic: { navigation: { menu: "post", breadcrumb: true } }
-      },
+        topic: { navigation: { active_menu: "post" } }
+      } },
       article: { type: "tech", indent: false, license: "Global", share: true },
       comments: { enabled: true, title: "Global", service: "artalk" }
     },
@@ -237,10 +237,10 @@ test("Topic profile 只接受匹配的严格 v2 collection 归属", () => {
     ...base,
     themeSource: "_config.stellar.yml",
     themeConfig: {
-      site_tree: {
-        index_topic: { base_dir: 42 },
+      layout: { profiles: {
+        topic_index: { path: 42 },
         topic: { navigation: "post" }
-      }
+      } }
     },
     frontMatter: {
       title: "Topic",
@@ -248,8 +248,8 @@ test("Topic profile 只接受匹配的严格 v2 collection 归属", () => {
       collection: { type: "topic", id: "stellar-v2" }
     }
   }), error => {
-    assert.match(error.message, /_config\.stellar\.yml: site_tree\.index_topic\.base_dir 应为 string/);
-    assert.match(error.message, /_config\.stellar\.yml: site_tree\.topic\.navigation 应为 object/);
+    assert.match(error.message, /_config\.stellar\.yml: layout\.profiles\.topic_index\.path 应为 string \| null/);
+    assert.match(error.message, /_config\.stellar\.yml: layout\.profiles\.topic\.navigation 应为 object/);
     return true;
   });
 });
@@ -310,11 +310,11 @@ test("生成前事件为严格 Topic 成员挂载模型并拒绝缺失集合", t
   };
   const themeConfig = {
     site: { brand: { name: "Stellar" } },
-    site_tree: {
-      index_topic: { base_dir: "topic" },
-      post: { navigation: { menu: "post" } },
-      topic: { navigation: { menu: "post" } }
-    }
+    layout: { profiles: {
+      topic_index: { path: "/topic/" },
+      post: { navigation: { active_menu: "post" } },
+      topic: { navigation: { active_menu: "post" } }
+    } }
   };
   const ctx = {
     source_dir: sourceDir,

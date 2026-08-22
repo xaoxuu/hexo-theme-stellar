@@ -78,24 +78,30 @@ flowchart TD
 
 ## 配置
 
-### `site_tree.error_page`
+### `layout.profiles.error`
 
-404 页面的侧边栏布局、菜单高亮与路径由 `_config.yml` 的 `site_tree.error_page` 块控制：
+404 页面的侧边栏布局、菜单高亮与路径由 `_config.yml` 的 `layout.profiles.error` 块控制：
 
 ```yaml
-error_page:
-  menu_id: post
-  '404': '/404.html'
-  leftbar: recent
-  rightbar: 
+layout:
+  profiles:
+    error:
+      path: /404.html
+      navigation:
+        active_menu: post
+      sidebar:
+        left:
+          widgets: [recent]
+        right:
+          widgets: []
 ```
 
 | 键 | 值 | 说明 |
 |---|---|---|
-| `menu_id` | `post` | 错误页激活时高亮侧边栏导航中的 "post" 菜单项 |
-| `'404'` | `/404.html` | 生成的 404 页面路径 |
-| `leftbar` | `recent` | 错误页左栏小部件 |
-| `rightbar` | （空） | 错误页右栏小部件 |
+| `navigation.active_menu` | `post` | 错误页激活时高亮侧边栏导航中的 "post" 菜单项 |
+| `path` | `/404.html` | 生成的 404 页面路径 |
+| `sidebar.left.widgets` | `[recent]` | 错误页左栏小部件 |
+| `sidebar.right.widgets` | `[]` | 错误页右栏小部件 |
 
 侧边栏小部件名（`recent` 等）从 `_data/widgets.yml` 解析。配置细节见[侧边栏系统](../02-布局系统/sidebar-system.md)。
 
@@ -119,10 +125,10 @@ style:
 ```mermaid
 flowchart LR
   subgraph "_config.yml"
-    S1["site_tree.error_page.menu_id"]
-    S2["site_tree.error_page.'404'"]
-    S3["site_tree.error_page.leftbar"]
-    S4["site_tree.error_page.rightbar"]
+    S1["layout.profiles.error.navigation.active_menu"]
+    S2["layout.profiles.error.path"]
+    S3["layout.profiles.error.sidebar.left.widgets"]
+    S4["layout.profiles.error.sidebar.right.widgets"]
     S5["style.error_page"]
   end
 
@@ -184,7 +190,7 @@ flowchart LR
 ```mermaid
 flowchart TD
   subgraph "Configuration (_config.yml)"
-    C1["site_tree.error_page\n(menu_id, leftbar, rightbar)"]
+    C1["layout.profiles.error\n(path, navigation, sidebar)"]
     C2["style.error_page\n(illustration URL)"]
     C3["comments.service\n(comment backend)"]
   end

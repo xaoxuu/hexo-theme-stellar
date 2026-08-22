@@ -6,8 +6,20 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 
-const { buildNotebookPageViewModel } = require("../scripts/lib/models");
+const { buildNotebookPageViewModel: buildNotebookPageViewModelRaw } = require("../scripts/lib/models");
+const { parseStellarConfig } = require("../scripts/lib/config-schema");
 const processContentConfig = require("../scripts/events/lib/content-config");
+
+function buildNotebookPageViewModel(input) {
+  return buildNotebookPageViewModelRaw({
+    ...input,
+    stellarConfig: input.stellarConfig || parseStellarConfig({
+      source: input.themeSource || "<theme>",
+      themeConfig: input.themeConfig,
+      siteConfig: input.siteConfig
+    })
+  });
+}
 
 const COLLECTION_MODEL_KEYS = [
   "id",
@@ -81,16 +93,17 @@ function notebookInput(overrides = {}) {
     collectionSource: "source/_data/notebooks/dev.yml",
     siteConfig: { per_page: 10 },
     themeConfig: {
-      site_tree: {
-        notebooks: { base_dir: "notebooks" },
-        notes: {
-          navigation: { menu: "notebooks", breadcrumb: false },
+      layout: { profiles: {
+        notebook_index: { path: "/notebooks/" },
+        note_index: {
+          navigation: { active_menu: "notebooks" },
           sidebar: { left: { widgets: ["recent"] }, right: { widgets: [] } }
         },
         note: {
+          navigation: { active_menu: "notebooks" },
           sidebar: { left: { widgets: ["tagtree"] }, right: { widgets: ["toc"] } }
         }
-      },
+      } },
       notebook: {
         listing: { excerpt_length: 128, per_page: null, order_by: "-updated" },
         footer: { license: false, share: false }
@@ -272,11 +285,11 @@ test("生成前事件只为可解析的严格 Notebook Note 挂载 PageViewModel
     data
   };
   const themeConfig = {
-    site_tree: {
-      notebooks: { base_dir: "notebooks" },
-      notes: { navigation: { menu: "notebooks" }, sidebar: {} },
-      note: { sidebar: {} }
-    },
+    layout: { profiles: {
+      notebook_index: { path: "/notebooks/" },
+      note_index: { navigation: { active_menu: "notebooks" } },
+      note: {}
+    } },
     notebook: { listing: {}, footer: {} }
   };
 
@@ -284,6 +297,7 @@ test("生成前事件只为可解析的严格 Notebook Note 挂载 PageViewModel
     source_dir: sourceDir,
     config: { per_page: 10, theme_config: themeConfig },
     theme: { config: themeConfig },
+    stellar: { config: parseStellarConfig({ themeConfig }) },
     locals: { get: key => collections[key] }
   });
 
@@ -314,12 +328,13 @@ test("生成前事件拒绝引用不存在 Notebook 的 Note", t => {
     pages: { each: callback => callback(missing), data: [missing] },
     data: {}
   };
-  const themeConfig = { site_tree: { notebooks: {}, notes: {}, note: {} }, notebook: {} };
+  const themeConfig = { layout: { profiles: {} }, notebook: {} };
 
   assert.throws(() => processContentConfig({
     source_dir: sourceDir,
     config: { theme_config: themeConfig },
     theme: { config: themeConfig },
+    stellar: { config: parseStellarConfig({ themeConfig }) },
     locals: { get: key => collections[key] }
   }), /source\/notes\/missing\.md: 未找到 Notebook collection missing/);
 });

@@ -78,27 +78,12 @@ const POST_PROFILE_FIELDS = Object.freeze({
   ]),
   articleListing: Object.freeze(["pin_style", "card_style", "auto_excerpt"]),
   articlePresentation: Object.freeze(["type", "indent"]),
-  comments: Object.freeze([...COMMENT_SERVICE_FIELDS, "comment_title", "custom_css"]),
-  indexBlog: Object.freeze(["base_dir", "navigation", "sidebar"]),
-  post: Object.freeze(["navigation", "sidebar"])
-});
-
-const WIKI_PROFILE_FIELDS = Object.freeze({
-  indexWiki: Object.freeze(["base_dir", "navigation", "sidebar"]),
-  wiki: Object.freeze(["navigation", "sidebar"])
-});
-
-const TOPIC_PROFILE_FIELDS = Object.freeze({
-  indexTopic: Object.freeze(["base_dir", "navigation", "sidebar"]),
-  topic: Object.freeze(["navigation", "sidebar"])
+  comments: Object.freeze([...COMMENT_SERVICE_FIELDS, "comment_title", "custom_css"])
 });
 
 const NOTEBOOK_PROFILE_FIELDS = Object.freeze({
   notebook: Object.freeze(["listing", "tag_icons", "footer"]),
-  notebookListing: Object.freeze(["excerpt_length", "per_page", "order_by"]),
-  notebooks: Object.freeze(["base_dir", "navigation", "sidebar"]),
-  notes: Object.freeze(["navigation", "sidebar"]),
-  note: Object.freeze(["sidebar"])
+  notebookListing: Object.freeze(["excerpt_length", "per_page", "order_by"])
 });
 
 const BRAND_IMAGE_STYLES = Object.freeze(['avatar', 'icon', 'plain']);
@@ -185,14 +170,6 @@ function validateStringRecord(value, source, fieldPath, issues) {
   for (const [key, child] of Object.entries(value)) {
     if (child != null) validateString(child, source, `${fieldPath}.${key}`, issues);
   }
-}
-
-function validateIndexNavigation(value, source, fieldPath, issues) {
-  if (!validateObject(value, source, fieldPath, issues)) return;
-  validateKnownKeys(value, ["menu", "breadcrumb", "tabs"], source, fieldPath, issues);
-  if (value.menu != null) validateString(value.menu, source, `${fieldPath}.menu`, issues);
-  if (value.breadcrumb != null) validateBoolean(value.breadcrumb, source, `${fieldPath}.breadcrumb`, issues);
-  if (value.tabs != null) validateStringRecord(value.tabs, source, `${fieldPath}.tabs`, issues);
 }
 
 function validateAiLabelConfig(value, source, fieldPath, issues) {
@@ -509,31 +486,6 @@ function validatePostProfileConfig(config, source = "<theme>") {
   const issues = [];
   if (!validateObject(config, source, "root", issues)) throw new ContentConfigError(issues);
 
-  if (config.site_tree != null && validateObject(config.site_tree, source, "site_tree", issues)) {
-    const post = config.site_tree.post;
-    if (post != null && validateObject(post, source, "site_tree.post", issues)) {
-      validateKnownKeys(post, POST_PROFILE_FIELDS.post, source, "site_tree.post", issues);
-      if (post.navigation != null) {
-        validateNavigation(post.navigation, source, "site_tree.post.navigation", issues);
-      }
-      if (post.sidebar != null) validateSidebar(post.sidebar, source, "site_tree.post.sidebar", issues);
-    }
-
-    const indexBlog = config.site_tree.index_blog;
-    if (indexBlog != null && validateObject(indexBlog, source, "site_tree.index_blog", issues)) {
-      validateKnownKeys(indexBlog, POST_PROFILE_FIELDS.indexBlog, source, "site_tree.index_blog", issues);
-      if (indexBlog.base_dir != null) {
-        validateString(indexBlog.base_dir, source, "site_tree.index_blog.base_dir", issues);
-      }
-      if (indexBlog.navigation != null) {
-        validateIndexNavigation(indexBlog.navigation, source, "site_tree.index_blog.navigation", issues);
-      }
-      if (indexBlog.sidebar != null) {
-        validateSidebar(indexBlog.sidebar, source, "site_tree.index_blog.sidebar", issues);
-      }
-    }
-  }
-
   if (config.article != null && validateObject(config.article, source, "article", issues)) {
     validateKnownKeys(config.article, POST_PROFILE_FIELDS.article, source, "article", issues);
     for (const field of POST_PROFILE_FIELDS.articleListing.slice(0, 2)) {
@@ -604,26 +556,6 @@ function validatePostProfileConfig(config, source = "<theme>") {
 function validateWikiProfileConfig(config, source = "<theme>") {
   const issues = [];
   if (!validateObject(config, source, "root", issues)) throw new ContentConfigError(issues);
-
-  if (config.site_tree != null && validateObject(config.site_tree, source, "site_tree", issues)) {
-    const wiki = config.site_tree.wiki;
-    if (wiki != null && validateObject(wiki, source, "site_tree.wiki", issues)) {
-      validateKnownKeys(wiki, WIKI_PROFILE_FIELDS.wiki, source, "site_tree.wiki", issues);
-      if (wiki.navigation != null) validateNavigation(wiki.navigation, source, "site_tree.wiki.navigation", issues);
-      if (wiki.sidebar != null) validateSidebar(wiki.sidebar, source, "site_tree.wiki.sidebar", issues);
-    }
-
-    const indexWiki = config.site_tree.index_wiki;
-    if (indexWiki != null && validateObject(indexWiki, source, "site_tree.index_wiki", issues)) {
-      validateKnownKeys(indexWiki, WIKI_PROFILE_FIELDS.indexWiki, source, "site_tree.index_wiki", issues);
-      if (indexWiki.base_dir != null) validateString(indexWiki.base_dir, source, "site_tree.index_wiki.base_dir", issues);
-      if (indexWiki.navigation != null) {
-        validateIndexNavigation(indexWiki.navigation, source, "site_tree.index_wiki.navigation", issues);
-      }
-      if (indexWiki.sidebar != null) validateSidebar(indexWiki.sidebar, source, "site_tree.index_wiki.sidebar", issues);
-    }
-  }
-
   if (issues.length > 0) throw new ContentConfigError(issues);
   return config;
 }
@@ -631,26 +563,6 @@ function validateWikiProfileConfig(config, source = "<theme>") {
 function validateTopicProfileConfig(config, source = "<theme>") {
   const issues = [];
   if (!validateObject(config, source, "root", issues)) throw new ContentConfigError(issues);
-
-  if (config.site_tree != null && validateObject(config.site_tree, source, "site_tree", issues)) {
-    const topic = config.site_tree.topic;
-    if (topic != null && validateObject(topic, source, "site_tree.topic", issues)) {
-      validateKnownKeys(topic, TOPIC_PROFILE_FIELDS.topic, source, "site_tree.topic", issues);
-      if (topic.navigation != null) validateNavigation(topic.navigation, source, "site_tree.topic.navigation", issues);
-      if (topic.sidebar != null) validateSidebar(topic.sidebar, source, "site_tree.topic.sidebar", issues);
-    }
-
-    const indexTopic = config.site_tree.index_topic;
-    if (indexTopic != null && validateObject(indexTopic, source, "site_tree.index_topic", issues)) {
-      validateKnownKeys(indexTopic, TOPIC_PROFILE_FIELDS.indexTopic, source, "site_tree.index_topic", issues);
-      if (indexTopic.base_dir != null) validateString(indexTopic.base_dir, source, "site_tree.index_topic.base_dir", issues);
-      if (indexTopic.navigation != null) {
-        validateIndexNavigation(indexTopic.navigation, source, "site_tree.index_topic.navigation", issues);
-      }
-      if (indexTopic.sidebar != null) validateSidebar(indexTopic.sidebar, source, "site_tree.index_topic.sidebar", issues);
-    }
-  }
-
   if (issues.length > 0) throw new ContentConfigError(issues);
   return config;
 }
@@ -658,17 +570,6 @@ function validateTopicProfileConfig(config, source = "<theme>") {
 function validateNotebookProfileConfig(config, source = "<theme>") {
   const issues = [];
   if (!validateObject(config, source, "root", issues)) throw new ContentConfigError(issues);
-
-  if (config.site_tree != null && validateObject(config.site_tree, source, "site_tree", issues)) {
-    for (const profile of ["notebooks", "notes", "note"]) {
-      const value = config.site_tree[profile];
-      if (value == null || !validateObject(value, source, `site_tree.${profile}`, issues)) continue;
-      validateKnownKeys(value, NOTEBOOK_PROFILE_FIELDS[profile], source, `site_tree.${profile}`, issues);
-      if (value.base_dir != null) validateString(value.base_dir, source, `site_tree.${profile}.base_dir`, issues);
-      if (value.navigation != null) validateNavigation(value.navigation, source, `site_tree.${profile}.navigation`, issues);
-      if (value.sidebar != null) validateSidebar(value.sidebar, source, `site_tree.${profile}.sidebar`, issues);
-    }
-  }
 
   if (config.notebook != null && validateObject(config.notebook, source, "notebook", issues)) {
     validateKnownKeys(config.notebook, NOTEBOOK_PROFILE_FIELDS.notebook, source, "notebook", issues);
@@ -789,8 +690,6 @@ module.exports = {
   LEGACY_PAGE_FIELDS,
   NOTEBOOK_PROFILE_FIELDS,
   POST_PROFILE_FIELDS,
-  TOPIC_PROFILE_FIELDS,
-  WIKI_PROFILE_FIELDS,
   getCollectionId,
   isPlainObject,
   isListed,

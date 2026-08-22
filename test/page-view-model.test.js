@@ -8,7 +8,7 @@ const path = require("node:path");
 
 const {
   buildPostPageViewModel: buildPostPageViewModelRaw,
-  buildWikiPageViewModel
+  buildWikiPageViewModel: buildWikiPageViewModelRaw
 } = require("../scripts/lib/models");
 const { parseStellarConfig } = require("../scripts/lib/config-schema");
 const processContentConfig = require("../scripts/events/lib/content-config");
@@ -21,6 +21,17 @@ const processWikiTree = require("../scripts/events/lib/doc_tree");
 
 function buildPostPageViewModel(input) {
   return buildPostPageViewModelRaw({
+    ...input,
+    stellarConfig: input.stellarConfig || parseStellarConfig({
+      source: input.themeSource || "<theme>",
+      themeConfig: input.themeConfig,
+      siteConfig: input.siteConfig
+    })
+  });
+}
+
+function buildWikiPageViewModel(input) {
+  return buildWikiPageViewModelRaw({
     ...input,
     stellarConfig: input.stellarConfig || parseStellarConfig({
       source: input.themeSource || "<theme>",
@@ -44,16 +55,16 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
     source: "source/wiki/stellar/index.md",
     collectionSource: "source/_data/wiki/stellar.yml",
     themeConfig: {
-      site_tree: {
-        index_wiki: { base_dir: "wiki" },
+      layout: { profiles: {
+        wiki_index: { path: "/wiki/" },
         wiki: {
-          navigation: { menu: "wiki" },
+          navigation: { active_menu: "wiki" },
           sidebar: {
             left: { widgets: ["tree", "related"] },
             right: { widgets: ["toc"] }
           }
         }
-      },
+      } },
       article: { type: "tech", indent: false, license: "Global license", share: true },
       comments: { service: "giscus" }
     },
@@ -198,10 +209,10 @@ test("Wiki 树构建事件只为严格 v2 Wiki 页面挂载 PageViewModel", t =>
     }
   };
   const themeConfig = {
-    site_tree: {
-      index_wiki: { base_dir: "wiki" },
-      wiki: { navigation: { menu: "wiki" } }
-    },
+    layout: { profiles: {
+      wiki_index: { path: "/wiki/" },
+      wiki: { navigation: { active_menu: "wiki" } }
+    } },
     article: { indent: true },
     comments: { service: "giscus" }
   };
@@ -210,11 +221,10 @@ test("Wiki 树构建事件只为严格 v2 Wiki 页面挂载 PageViewModel", t =>
   processWikiTree({
     source_dir: sourceDir,
     config: {
-      theme_config: {
-        site_tree: { wiki: { navigation: { menu: "wiki" } } }
-      }
+      theme_config: themeConfig
     },
     theme: { config: themeConfig },
+    stellar: { config: parseStellarConfig({ themeConfig }) },
     locals: { get: key => collections[key] }
   });
 
@@ -338,16 +348,16 @@ test("合法 Post profile 生成固定结构的冻结 PageViewModel", () => {
           url: "/"
         }
       },
-      site_tree: {
-        index_blog: { base_dir: "blog" },
+      layout: { profiles: {
+        blog_index: { path: "/blog/" },
         post: {
-          navigation: { menu: "post" },
+          navigation: { active_menu: "post" },
           sidebar: {
             left: { widgets: ["recent"] },
             right: { widgets: ["toc"] }
           }
         }
-      },
+      } },
       article: {
         pin_style: "carousel",
         card_style: "hero",
@@ -393,6 +403,7 @@ test("合法 Post profile 生成固定结构的冻结 PageViewModel", () => {
   ]);
   assert.equal(viewModel.collection.id, "post");
   assert.equal(viewModel.collection.profile, "post");
+  assert.equal(viewModel.collection.route.baseDir, "blog");
   assert.equal(viewModel.item.title, "Hello");
   assert.deepEqual(viewModel.item.tags, ["Hexo"]);
   assert.deepEqual(viewModel.item.categories, ["开发"]);
@@ -428,7 +439,7 @@ test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD �
         site: { "background-image": "/background.webp" },
         leftbar: { "ui-style": "card", blur: true }
       },
-      site_tree: { post: { navigation: { menu: "post", breadcrumb: true } } }
+      layout: { profiles: { post: { navigation: { active_menu: "post" } } } }
     },
     frontMatter: {
       title: "Render",
@@ -623,21 +634,17 @@ test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆�
     siteConfig: {},
     themeConfig: {
       site: { brand: { name: "Global" } },
-      site_tree: {
+      layout: { profiles: {
         post: {
-          navigation: { menu: "post", breadcrumb: true },
+          navigation: { active_menu: "post" },
           sidebar: {
             left: {
-              widgets: ["recent"],
-              brand: {
-                image: { src: "/profile.svg", style: "icon", background: "red" },
-                name: "Profile"
-              }
+              widgets: ["recent"]
             },
             right: { widgets: ["toc"] }
           }
         }
-      },
+      } },
       article: {
         type: "tech",
         indent: true,
@@ -674,7 +681,8 @@ test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆�
     src: "/page.svg",
     variant: "plain"
   });
-  assert.equal(viewModel.item.presentation.sidebar.left.brand.name, "Profile");
+  assert.equal(viewModel.item.presentation.sidebar.left.brand.name, undefined);
+  assert.equal(viewModel.render.layout.brand.name, "Global");
   assert.equal(viewModel.item.presentation.article.indent, false);
   assert.equal(viewModel.item.presentation.footer.license, "");
   assert.equal(viewModel.item.presentation.footer.share, false);
@@ -692,13 +700,11 @@ test("Post profile 错误包含配置来源和字段路径", () => {
     source: "source/_posts/error.md",
     themeSource: "_config.stellar.yml",
     themeConfig: {
-      site_tree: {
-        post: { navigation: "post" }
-      }
+      layout: { profiles: { post: { navigation: "post" } } }
     },
     frontMatter: { title: "Error", layout: "post" },
     page: { title: "Error", layout: "post" }
-  }), /_config\.stellar\.yml: site_tree\.post\.navigation 应为 object，实际为 string/);
+  }), /_config\.stellar\.yml: layout\.profiles\.post\.navigation 应为 object，实际为 string/);
 });
 
 test("Post 模型规范化 Hexo 值且不保留输入引用", () => {
@@ -838,7 +844,7 @@ test("生成前事件为普通 Post 与严格 Topic 挂载各自的 PageViewMode
   };
   const themeConfig = {
     site: { brand: { name: "Stellar" } },
-    site_tree: { post: { navigation: { menu: "post" } } }
+    layout: { profiles: { post: { navigation: { active_menu: "post" } } } }
   };
 
   processContentConfig({
@@ -863,13 +869,10 @@ test("生成前事件为普通 Post 与严格 Topic 挂载各自的 PageViewMode
   assert.equal(about.viewModel, undefined);
 });
 
-test("Post profile 严格拒绝消费字段的未知键与错误类型", () => {
+test("Post profile 严格拒绝剩余内容默认值的未知键与错误类型", () => {
   assert.throws(() => buildPostPageViewModel({
     themeSource: "_config.stellar.yml",
     themeConfig: {
-      site_tree: {
-        index_blog: { base_dir: "blog", mystery: true }
-      },
       article: {
         author: 42,
         share: {}
@@ -882,7 +885,6 @@ test("Post profile 严格拒绝消费字段的未知键与错误类型", () => {
     frontMatter: { title: "Strict", layout: "post" },
     page: { title: "Strict", layout: "post" }
   }), error => {
-    assert.match(error.message, /未知字段 site_tree\.index_blog\.mystery/);
     assert.match(error.message, /未知字段 article\.author/);
     assert.match(error.message, /article\.share 应为 boolean \| string\[\]/);
     assert.match(error.message, /comments\.giscus 应为 object，实际为 string/);
@@ -890,16 +892,10 @@ test("Post profile 严格拒绝消费字段的未知键与错误类型", () => {
   });
 });
 
-test("Post profile 严格校验全部已声明配置袋", () => {
+test("Post profile 严格校验全部未迁移内容配置袋", () => {
   assert.throws(() => buildPostPageViewModel({
     themeSource: "_config.stellar.yml",
     themeConfig: {
-      site_tree: {
-        index_blog: {
-          navigation: "post",
-          sidebar: []
-        }
-      },
       article: {
         cover_ratio: "wide",
         ai_label: 42,
@@ -912,8 +908,6 @@ test("Post profile 严格校验全部已声明配置袋", () => {
     frontMatter: { title: "Strict bags", layout: "post" },
     page: { title: "Strict bags", layout: "post" }
   }), error => {
-    assert.match(error.message, /site_tree\.index_blog\.navigation 应为 object，实际为 string/);
-    assert.match(error.message, /site_tree\.index_blog\.sidebar 应为 object，实际为 array/);
     assert.match(error.message, /article\.cover_ratio 应为 finite number，实际为 string/);
     assert.match(error.message, /article\.ai_label 应为 object，实际为 number/);
     assert.match(error.message, /article\.category_color 应为 object，实际为 array/);

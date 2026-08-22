@@ -2,7 +2,11 @@
 "use strict";
 
 const { deepFreeze } = require("./schema-utils");
-const { CONFIG_TARGET_FIELDS } = require("./config-target");
+const {
+  CONFIG_TARGET_FIELDS,
+  PROFILE_ID_MIGRATIONS,
+  PROFILE_IDS
+} = require("./config-target");
 
 function literal(value) {
   return { kind: "literal", value };
@@ -88,8 +92,141 @@ const SITE_CONSUMERS = Object.freeze([
   "footer renderer",
   "Reference generator"
 ]);
+const LAYOUT_CONSUMERS = Object.freeze([
+  "CollectionModel",
+  "PageViewModel",
+  "page generators",
+  "navigation renderer",
+  "sidebar renderer",
+  "Reference generator"
+]);
 const PRECONNECT_CONSUMERS = Object.freeze(["head renderer", "Reference generator"]);
 const INJECT_CONSUMERS = Object.freeze(["head renderer", "script renderer", "Reference generator"]);
+
+function runtimeProfileKey(profile) {
+  return profile.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+}
+
+function layoutProfileSchema(profile) {
+  const base = `layout.profiles.${profile}`;
+  const removedProperties = { base_dir: "path" };
+  if (profile === "error") removedProperties["404"] = "path";
+
+  const properties = {
+    path: deliveredField(`${base}.path`, {
+      normalizer: "root_relative_path",
+      example: profile === "error" ? "/404.html" : "/blog/"
+    }),
+    navigation: object({
+      consumers: LAYOUT_CONSUMERS,
+      example: { active_menu: "post", tabs: {} },
+      migration: "configuration/layout",
+      runtimeKey: "navigation",
+      removedProperties: { menu: "active_menu" },
+      properties: {
+        active_menu: deliveredField(`${base}.navigation.active_menu`, {
+          normalizer: "identity",
+          example: "post"
+        }),
+        tabs: deliveredField(`${base}.navigation.tabs`, {
+          normalizer: "object",
+          example: { "朋友文章": "/friends/rss/" },
+          sealed: false,
+          additionalPropertyKey: "<title>",
+          additionalProperties: deliveredField(`${base}.navigation.tabs.<title>`, {
+            normalizer: "identity",
+            example: "/friends/rss/"
+          })
+        })
+      }
+    }),
+    sidebar: object({
+      consumers: LAYOUT_CONSUMERS,
+      example: { left: { widgets: ["recent"] }, right: { widgets: ["toc"] } },
+      migration: "configuration/layout",
+      runtimeKey: "sidebar",
+      properties: {
+        left: object({
+          consumers: LAYOUT_CONSUMERS,
+          example: { widgets: ["recent"] },
+          migration: "configuration/layout",
+          runtimeKey: "left",
+          properties: {
+            widgets: deliveredField(`${base}.sidebar.left.widgets`, {
+              normalizer: "array",
+              example: ["recent"]
+            })
+          }
+        }),
+        right: object({
+          consumers: LAYOUT_CONSUMERS,
+          example: { widgets: ["toc"] },
+          migration: "configuration/layout",
+          runtimeKey: "right",
+          properties: {
+            widgets: deliveredField(`${base}.sidebar.right.widgets`, {
+              normalizer: "array",
+              example: ["toc"]
+            })
+          }
+        })
+      }
+    })
+  };
+
+  if (profile === "home") {
+    properties.comments = deliveredField("layout.profiles.home.comments", {
+      normalizer: "identity",
+      example: { enabled: true, provider: "giscus", options: {} },
+      properties: {
+        enabled: deliveredField("layout.profiles.home.comments.enabled", {
+          normalizer: "identity",
+          example: true
+        }),
+        title: deliveredField("layout.profiles.home.comments.title", {
+          normalizer: "identity",
+          example: "留言"
+        }),
+        id: deliveredField("layout.profiles.home.comments.id", {
+          normalizer: "identity",
+          example: "home"
+        }),
+        provider: deliveredField("layout.profiles.home.comments.provider", {
+          normalizer: "identity",
+          example: "giscus"
+        }),
+        options: deliveredField("layout.profiles.home.comments.options", {
+          normalizer: "parameter_bag",
+          example: { "data-repo": "owner/repo" },
+          sealed: false
+        })
+      }
+    });
+  }
+
+  return object({
+    consumers: LAYOUT_CONSUMERS,
+    example: {},
+    migration: "configuration/layout",
+    runtimeKey: runtimeProfileKey(profile),
+    removedProperties,
+    properties
+  });
+}
+
+function layoutProfilesSchema() {
+  const properties = Object.fromEntries(PROFILE_IDS.map(profile => [profile, layoutProfileSchema(profile)]));
+  const removedProperties = Object.fromEntries(
+    Object.entries(PROFILE_ID_MIGRATIONS).filter(([legacy, target]) => legacy !== target)
+  );
+  return deliveredField("layout.profiles", {
+    normalizer: "object",
+    example: { blog_index: { path: "/blog/" } },
+    sealed: true,
+    removedProperties,
+    properties
+  });
+}
 
 const CONFIG_SCHEMA = deepFreeze({
   type: ["object"],
@@ -100,6 +237,7 @@ const CONFIG_SCHEMA = deepFreeze({
     brand: "site.brand",
     menubar: "site.menu",
     footer: "site.footer",
+    site_tree: "layout.profiles",
     preconnect: "resources.preconnect",
     canonical: "seo.canonical",
     open_graph: "seo.open_graph",
@@ -226,6 +364,15 @@ const CONFIG_SCHEMA = deepFreeze({
             content: deliveredField("site.footer.content", { normalizer: "trusted_text", example: "本站由 Stellar 生成。" })
           }
         })
+      }
+    }),
+    layout: object({
+      consumers: LAYOUT_CONSUMERS,
+      example: { profiles: { blog_index: { path: "/blog/" } } },
+      migration: "configuration/layout",
+      runtimeKey: "layout",
+      properties: {
+        profiles: layoutProfilesSchema()
       }
     }),
     seo: object({

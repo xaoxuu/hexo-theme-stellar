@@ -1,11 +1,17 @@
+/* global hexo */
 /**
  * notebooks v1
  */
 
+"use strict";
+
 const { isListed } = require('../lib/content-config')
+const { generatorPath, requireLayoutProfiles, toRenderNavigation } = require("../lib/layout-config");
 
 hexo.extend.generator.register('notebooks', function (locals) {
-  const { site_tree, notebooks } = hexo.theme.config
+  const { notebooks } = hexo.theme.config;
+  const profiles = requireLayoutProfiles(hexo.stellar?.config);
+  const profile = profiles.notebookIndex;
   if (!notebooks?.tree || Object.keys(notebooks.tree).length === 0) {
     return []
   }
@@ -41,11 +47,11 @@ hexo.extend.generator.register('notebooks', function (locals) {
 
   // The index page of all notebooks.
   routes.push({
-    path: site_tree.notebooks.base_dir + '/index.html',
+    path: generatorPath(profile.path),
     layout: ['notebooks'],
     data: {
       layout: 'notebooks',
-      navigation: { menu: site_tree.notebooks.navigation.menu },
+      navigation: toRenderNavigation(profile),
     }
   })
 
@@ -61,7 +67,7 @@ hexo.extend.generator.register('notebooks', function (locals) {
         layout: ['notes'],
         data: {
           layout: 'notes',
-          navigation: { menu: notebook.navigation.menu },
+          navigation: { menu: notebook.navigation.menu ?? profiles.noteIndex.navigation.activeMenu },
           collection: { type: 'notebook', id: notebook.id },
           activeTag: tag.id,
         }

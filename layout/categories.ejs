@@ -2,7 +2,7 @@
 page.robots = 'noindex,follow';
 page.navigation ||= {}
 if (page.navigation.menu == undefined) {
-  page.navigation.menu = 'post';
+  page.navigation.menu = stellar_config('layout.profiles.blogIndex.navigation.activeMenu');
 }
 %>
 <% if (site.categories.length) { %>
