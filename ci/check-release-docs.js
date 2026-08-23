@@ -50,9 +50,13 @@ function lastTag() {
   }
 }
 
+function shortSha(sha) {
+  return String(sha || '').slice(0, 7).toLowerCase();
+}
+
 function commitShasSince(tag) {
-  const out = runGit(['log', '--format=%h', '--no-merges', `${tag}..HEAD`]);
-  return out ? out.split('\n').filter(Boolean) : [];
+  const out = runGit(['log', '--format=%H', '--no-merges', `${tag}..HEAD`]);
+  return out ? out.split('\n').filter(Boolean).map(shortSha) : [];
 }
 
 function touchesBehaviorFiles(sha) {
@@ -88,7 +92,7 @@ function registeredShas() {
   for (const line of body.split('\n')) {
     const m = line.match(/^\|\s*`?([0-9a-f]{7,40})`?\s*\|/i);
     if (m) {
-      shas.add(m[1].toLowerCase());
+      shas.add(shortSha(m[1]));
     }
   }
   return shas;
@@ -118,4 +122,10 @@ function main() {
   console.log(`提交登记完整性检查通过（自 ${tag} 以来 ${shas.length} 个涉及主题行为的提交均已登记）。`);
 }
 
-main();
+if (require.main === module) {
+  main();
+}
+
+module.exports = {
+  shortSha,
+};

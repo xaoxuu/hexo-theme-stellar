@@ -16,11 +16,11 @@ date: 2026-08-23
 
 ## 验证与闭环
 
-- [x] 主题 `npm run check` 与双 Reference 检查通过（286 项测试）。
+- [x] 主题 `npm run check` 与双 Reference 检查通过（287 项测试）。
 - [x] 知识库硬核查通过。
 - [x] 主工程 `npm run g` 与关键产物抽查通过（254 个文件；日志无 `ERROR` 或 `Render HTML failed`）。
 - [x] Standards / Spec review 无剩余 finding。
-- [ ] 主题提交已推送 `origin/v2`，#711 已评论证据并以 `resolved` 闭环。
+- [x] 主题提交已推送 `origin/v2`，#711 已评论证据并以 `resolved` 闭环。
 - [x] 主工程保持未提交且未提交子模块指针。
 
 ## N/A
