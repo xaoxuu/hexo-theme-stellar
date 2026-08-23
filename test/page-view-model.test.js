@@ -499,6 +499,53 @@ test("合法 Post profile 生成固定结构的冻结 PageViewModel", () => {
   assertDeepFrozen(viewModel);
 });
 
+test("Wiki 未显式配置 Footer 时不继承 Post 的全局许可与分享", () => {
+  const viewModel = buildWikiPageViewModel({
+    source: "source/wiki/plain/index.md",
+    collectionSource: "source/_data/wiki/plain.yml",
+    siteConfig: { title: "Example", url: "https://example.com" },
+    themeConfig: {
+      layout: { profiles: {
+        wiki_index: { path: "/wiki/" },
+        wiki: { navigation: { active_menu: "wiki" } }
+      } },
+      content: { article: {
+        footer: { license: "Global license", share: ["wechat", "link"] }
+      } }
+    },
+    collectionConfig: {
+      name: "Plain",
+      route: { path: "/wiki/plain/" }
+    },
+    collectionState: {
+      homepage: { _id: "plain-home", title: "Plain", path: "wiki/plain/", page_number: 0 },
+      sections: [{
+        title: "Plain",
+        pages: [{ _id: "plain-home", title: "Plain", path: "wiki/plain/", page_number: 0 }]
+      }]
+    },
+    frontMatter: {
+      title: "Plain",
+      layout: "wiki",
+      collection: { profile: "wiki", id: "plain" }
+    },
+    page: {
+      _id: "plain-home",
+      source: "wiki/plain/index.md",
+      path: "wiki/plain/",
+      permalink: "https://example.com/wiki/plain/",
+      title: "Plain",
+      layout: "wiki"
+    }
+  });
+
+  assert.deepEqual(viewModel.collection.presentation.footer, {});
+  assert.deepEqual(viewModel.item.presentation.footer, {});
+  assert.equal(viewModel.render.article.footer.license, "");
+  assert.equal(viewModel.render.article.footer.share, null);
+  assertDeepFrozen(viewModel);
+});
+
 test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD 回退", () => {
   const viewModel = buildPostPageViewModel({
     source: "source/_posts/render.md",

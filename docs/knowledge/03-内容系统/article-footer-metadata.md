@@ -38,8 +38,8 @@ tags:
 | 区块 ID | 显示条件 | 本地化键 |
 |---------|----------|----------|
 | `#references` | 已解析的 `references` 投影数组非空 | `meta.references` |
-| `#license` | 许可字符串解析为非空（多级逻辑） | `meta.license` |
-| `#contributors` | `contributors` partial 渲染非空输出 | （partial 内部） |
+| `#license` | 已解析的 `footer.license` 非空 | `meta.license` |
+| `#contributors` | `footer.contributor` 非 null | `meta.contributors` |
 | `#share` | 分享启用且平台列表非空 | `meta.share` |
 
 外层容器是 `<div class="article-footer">`，仅当至少一个区块存在时输出；空的 `article-footer` 经 `&:empty { display: none }` 隐藏。
@@ -50,8 +50,8 @@ tags:
 flowchart TD
   layoutDiv["layoutDiv()"]
   chkRef{"footer.references\n.length > 0?"}
-  chkLic{"license string\nresolves?"}
-  chkCon{"contributors\npartial non-empty?"}
+  chkLic{"footer.license\nnon-empty?"}
+  chkCon{"footer.contributor\nnon-null?"}
   chkShr{"share enabled\n& visible?"}
   secRef["section#references"]
   secLic["section#license"]
@@ -294,8 +294,9 @@ flowchart TD
   themeConfig --> model
   model --> ejs
   ejs --> secRef
-  ejs --> licResolve
-  licResolve --> authorInterp --> secLic
+  model --> licResolve --> authorInterp
+  authorInterp --> ejs
+  ejs --> secLic
   ejs --> contribPartial --> secCon
   ejs --> shareVis --> socialBtns --> secShr
   shareVis --> qrcode --> secShr

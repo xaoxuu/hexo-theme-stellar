@@ -875,7 +875,6 @@ function buildWikiCollectionModel(input, collectionId) {
   const profileSidebar = pick(wikiProfile.sidebar, CONTENT_MODEL_FIELDS.sidebar);
   const collectionSidebar = pick(collectionConfig.sidebar, CONTENT_MODEL_FIELDS.sidebar);
   const globalArticle = articlePresentationDefaults(content);
-  const globalFooter = articleFooterDefaults(content);
 
   return {
     id: collectionId,
@@ -904,7 +903,7 @@ function buildWikiCollectionModel(input, collectionId) {
       hero: cloneValue(collectionConfig.hero || {}),
       sidebar: normalizeSidebarBrand(mergeConfig(profileSidebar, collectionSidebar, "sidebar")),
       article: mergeConfig(globalArticle, pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)),
-      footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),
+      footer: pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer),
       comments: mergeConfig(
         normalizeThemeComments(input.stellarConfig.extensions.comments),
         pick(collectionConfig.comments, CONTENT_MODEL_FIELDS.comments)
