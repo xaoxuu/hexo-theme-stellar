@@ -31,4 +31,4 @@ date: 2026-08-23
 - [x] 公共字段新增为 N/A：Blueprint 只生成既有 v2 YAML / Front Matter 字段。
 - [x] URL、CSS、语言文案、浏览器 API、迁移/SEO 跳转和公开 Wiki 为 N/A。
 - [x] M3 标记完成；M4–M5 与 Alpha 1 保持未完成。
-- [ ] 实现提交和验证登记提交已推送 `origin/v2`，issue 由 `resolved` CI 自动关闭。
+- [x] 实现提交和验证登记提交已推送 `origin/v2`，issue 由 `resolved` CI 自动关闭。
