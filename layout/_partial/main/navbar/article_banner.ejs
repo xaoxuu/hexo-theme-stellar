@@ -1,22 +1,24 @@
 <%
 
 const postViewModel = page.viewModel?.collection?.profile === 'post' ? page.viewModel : null
+const wikiViewModel = page.viewModel?.collection?.profile === 'wiki' ? page.viewModel : null
+const renderViewModel = postViewModel || wikiViewModel
 var pageConfig = content_config(page)
-var banner = Object.assign({}, postViewModel ? postViewModel.item.presentation.banner : pageConfig.banner || {})
+var banner = Object.assign({}, wikiViewModel ? wikiViewModel.render.article.banner : postViewModel ? postViewModel.item.presentation.banner : pageConfig.banner || {})
 
-if (banner.image == null && stellar_data('topic').tree[collection_id(page, "topic")]?.hero?.background?.image != null) {
+if (!renderViewModel && banner.image == null && stellar_data('topic').tree[collection_id(page, "topic")]?.hero?.background?.image != null) {
   banner.image = stellar_data('topic').tree[collection_id(page, "topic")].hero.background.image
-} else if (banner.image == null && stellar_data('wiki').tree[collection_id(page, "wiki")]?.hero?.background?.image != null) {
+} else if (!renderViewModel && banner.image == null && stellar_data('wiki').tree[collection_id(page, "wiki")]?.hero?.background?.image != null) {
   banner.image = stellar_data('wiki').tree[collection_id(page, "wiki")].hero.background.image
 }
 // 标题
 if (banner.headline == null) {
-  banner.headline = postViewModel ? postViewModel.item.title : page.title
+  banner.headline = renderViewModel ? renderViewModel.item.title : page.title
 }
 
 // 上块：第一行（左侧面包屑 + 右侧阅读时长 / AI 标签）+ 第二行（日期信息，靠左）
 function layoutTop() {
-  if ((postViewModel ? postViewModel.item.navigation.breadcrumb : pageConfig.navigation?.breadcrumb) === false) {
+  if ((renderViewModel ? renderViewModel.item.navigation.breadcrumb : pageConfig.navigation?.breadcrumb) === false) {
     return ''
   }
   var el = ''
@@ -28,7 +30,9 @@ function layoutTop() {
   el += `<div class="left" id="breadcrumb">`
     // 首页
     el += `<a class="cap breadcrumb" href="${pretty_url(config.root)}">${__("btn.home")}</a>`
-    if (stellar_data('wiki').tree[collection_id(page, "wiki")]) {
+    if (wikiViewModel) {
+      el += partial('breadcrumb/wiki', {viewModel: wikiViewModel})
+    } else if (stellar_data('wiki').tree[collection_id(page, "wiki")]) {
       el += partial('breadcrumb/wiki')
     } else if (collection_id(page, "notebook")) {
       el += partial('breadcrumb/note')
@@ -41,7 +45,7 @@ function layoutTop() {
   // 2.2 右：字数和预计阅读时长 + AI 成分标签（仅在有内容时渲染）
   var rightHtml = ''
   // 字数和预计阅读时长，置于第一行右侧（#302）
-  if ((postViewModel ? postViewModel.item.layout : page.layout) == 'post' && stellar_config('content.article.showReadingTime')) {
+  if ((renderViewModel ? renderViewModel.item.layout : page.layout) == 'post' && stellar_config('content.article.showReadingTime')) {
     var _wc = word_count(page)
     if (_wc > 0) {
       rightHtml += `<span class="cap reading">${__("meta.word_count", _wc)} · ${__("meta.reading_time", reading_time(page))}</span>`
@@ -50,7 +54,7 @@ function layoutTop() {
   // AI 成分标签：置于第一行最右（阅读时长右侧）；
   // banner 含图片时不用配置色，继承默认文字色（--text-banner）
   const bannerHasImage = banner.image && banner.image.length > 0
-  rightHtml += ai_label(postViewModel ? postViewModel.item.presentation.article?.aiLabel : pageConfig.article?.aiLabel, 'cap', bannerHasImage)
+  rightHtml += ai_label(renderViewModel ? renderViewModel.item.presentation.article?.aiLabel : pageConfig.article?.aiLabel, 'cap', bannerHasImage)
   if (rightHtml.length > 0) {
     el += `<div class="right">${rightHtml}</div>`
   }
@@ -58,7 +62,7 @@ function layoutTop() {
   el += `</div>`
   // 3.第二行：日期信息，靠左
   el += `<div class="meta-row">`
-  el += partial('dateinfo')
+  el += partial('dateinfo', {viewModel: renderViewModel})
   el += `</div>`
   // end 1.上块
   el += `</div>`

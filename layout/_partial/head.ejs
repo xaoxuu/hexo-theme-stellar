@@ -1,8 +1,9 @@
 <%
-const postViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'post'
+const renderViewModel = typeof viewModel !== 'undefined' && ['post', 'wiki'].includes(viewModel?.collection?.profile)
   ? viewModel
   : null
-const postRender = postViewModel?.render
+const postViewModel = renderViewModel
+const postRender = renderViewModel?.render
 var pageConfig = content_config(page)
 var stellarSeo = stellar_config('seo')
 var stellarResources = stellar_config('resources')

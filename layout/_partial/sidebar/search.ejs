@@ -1,10 +1,16 @@
 <%
-var notebook = stellar_data('notebooks').tree[collection_id(page, "notebook")]
+var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
+  ? viewModel
+  : null
+var notebook = wikiViewModel ? null : stellar_data('notebooks').tree[collection_id(page, "notebook")]
+item = item && typeof item === 'object' ? Object.assign({}, item) : {}
 if (item.filter == null) {
   item.filter = 'auto'
 }
 if (item.placeholder == null && item.filter == 'auto') {
-  if (stellar_data('wiki').tree[collection_id(page, "wiki")]?.name) {
+  if (wikiViewModel) {
+    item.placeholder = __('search.search_in', wikiViewModel.collection.identity.name)
+  } else if (stellar_data('wiki').tree[collection_id(page, "wiki")]?.name) {
     item.placeholder = __('search.search_in', stellar_data('wiki').tree[collection_id(page, "wiki")]?.name)
   } else if (notebook) {
     item.placeholder = __('search.search_in', notebook.name || __('btn.notebook'))
@@ -20,7 +26,9 @@ function layoutDiv() {
   el += `<div class="search-form" role="search">`
   var filter = ''
   if (item.filter == 'auto') {
-    if (collection_id(page, "wiki")) {
+    if (wikiViewModel) {
+      filter = wikiViewModel.collection.route.baseDir
+    } else if (collection_id(page, "wiki")) {
       let matches = page.path.match(/(.*?)\/(.*?)\//i)
       if (matches?.length > 0) {
         filter = matches[0]

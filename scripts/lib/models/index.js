@@ -21,6 +21,7 @@ const {
 const { mergeBrand, normalizeBrand } = require("../brand");
 const { firstContentImage, postDescription, postImages } = require("../seo");
 const { caption } = require("../caption");
+const { wikiReadmeHtml } = require("../wiki_readme");
 const {
   articleFooterDefaults,
   articlePresentationDefaults,
@@ -477,6 +478,277 @@ function buildPostRenderModel(input, collection, item) {
   };
 }
 
+function wikiTitle(itemTitle, collectionName, siteTitle, language) {
+  const title = String(itemTitle || "");
+  const wiki = String(collectionName || "");
+  let stripped = title;
+  if (title.toLowerCase() === wiki.toLowerCase()) {
+    stripped = "";
+  } else if (wiki.length > 0) {
+    const flex = wiki.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/[\s-]+/g, "[\\s-]*");
+    const matched = title.match(new RegExp(`^${flex}[\\s-]*[：:\\-](.*)$`, "i"));
+    if (matched?.[1]) stripped = matched[1].trim();
+  }
+  const colon = String(language || "").toLowerCase().startsWith("zh") ? "：" : ": ";
+  const subject = stripped ? `${wiki}${colon}${stripped}` : wiki;
+  return subject ? `${subject} - ${String(siteTitle || "")}` : String(siteTitle || "");
+}
+
+function buildWikiComments(input, item) {
+  const comments = item.presentation.comments || {};
+  const service = typeof comments.provider === "string" ? comments.provider : "";
+  const extensionConfig = input.stellarConfig.extensions;
+  const options = mergeConfig(
+    service && isPlainObject(extensionConfig.comments.providers?.[service])
+      ? extensionConfig.comments.providers[service]
+      : {},
+    isPlainObject(comments.options) ? comments.options : {}
+  );
+  const preferredTheme = input.stellarConfig.appearance.colorScheme;
+  if (service === "giscus" && preferredTheme !== "auto" && options["data-theme"] === "preferred_color_scheme") {
+    options["data-theme"] = preferredTheme;
+  }
+  return {
+    enabled: comments.enabled !== false && service.length > 0,
+    title: typeof comments.title === "string" && comments.title.length > 0
+      ? comments.title
+      : extensionConfig.comments.title,
+    id: typeof comments.id === "string" ? comments.id : "",
+    service,
+    options,
+    pageTitle: item.title
+  };
+}
+
+function wikiPageLink(value) {
+  if (!value || typeof value.path !== "string" || value.path.length === 0) return null;
+  return {
+    title: String(value.title || ""),
+    path: normalizeCollectionPath(value.path),
+    date: null
+  };
+}
+
+function wikiReadNext(collection, item) {
+  const pages = collection.navigation.tree.flatMap(section => section.items || [])
+    .filter(page => Number.isFinite(page.pageNumber))
+    .sort((left, right) => left.pageNumber - right.pageNumber);
+  const current = pages.find(page => page.path === item.route.path);
+  if (!current) return { previous: null, next: null };
+  return {
+    previous: wikiPageLink(pages.find(page => page.pageNumber === current.pageNumber - 1)),
+    next: wikiPageLink(pages.find(page => page.pageNumber === current.pageNumber + 1))
+  };
+}
+
+function buildWikiRelated(input) {
+  if (!Array.isArray(input.relatedCollections)) return [];
+  return input.relatedCollections.map(group => ({
+    name: String(group?.name || ""),
+    items: Array.isArray(group?.items) ? group.items.map(project => ({
+      href: normalizeCollectionPath(project?.homepage?.path || project?.route?.path || ""),
+      title: String(project?.name || project?.id || ""),
+      description: String(project?.description || "")
+    })).filter(project => project.href.length > 0 && project.title.length > 0) : []
+  })).filter(group => group.name.length > 0 && group.items.length > 0);
+}
+
+function buildWikiListingRender(input, collection) {
+  const repository = typeof collection.source.repository === "string" ? collection.source.repository : "";
+  const githubApi = input.stellarConfig.extensions.services.github.apiUrl;
+  return {
+    id: collection.id,
+    href: collection.route.homepage,
+    name: collection.identity.name,
+    headline: collection.identity.headline,
+    caption: collection.identity.tagline || collection.identity.description,
+    description: collection.identity.description,
+    tags: normalizeTerms(input.collectionConfig.tags),
+    audience: collection.identity.audience,
+    icon: collection.identity.icon,
+    cover: collection.presentation.card?.cover || "",
+    repository,
+    repositoryApi: repository ? `${githubApi}/repos/${repository}` : "",
+    priority: collection.listing.priority,
+    sort: collection.listing.sort ?? 0,
+    listed: collection.visibility.listed !== false
+  };
+}
+
+function buildWikiRenderModel(input, collection, item) {
+  const siteConfig = input.siteConfig;
+  const stellarConfig = input.stellarConfig;
+  const frontMatter = input.frontMatter;
+  const appearance = stellarConfig.appearance;
+  const seoConfig = stellarConfig.seo;
+  const language = normalizeLanguage(
+    input.page.lang,
+    input.page.language,
+    frontMatter.lang,
+    frontMatter.language,
+    siteConfig.language
+  );
+  const articleType = typeof item.presentation.article?.type === "string"
+    ? item.presentation.article.type
+    : null;
+  const hasIndent = Object.prototype.hasOwnProperty.call(item.presentation.article || {}, "indent");
+  const explicitDescription = typeof frontMatter.description === "string" && frontMatter.description.length > 0
+    ? frontMatter.description
+    : "";
+  const descriptionSource = explicitDescription || collection.identity.description || item.excerpt || item.content;
+  const description = truncate(stripHTML(descriptionSource), { length: 150 });
+  const keywords = normalizeStringList(frontMatter.keywords);
+  if (keywords.length === 0) keywords.push(...(item.tags.length > 0 ? item.tags : normalizeStringList(siteConfig.keywords)));
+  const cardCover = item.presentation.card?.cover || collection.presentation.card?.cover || "";
+  const bannerImage = item.presentation.banner?.image || "";
+  const openGraphConfig = seoConfig.openGraph;
+  let openGraph = null;
+  if (openGraphConfig.enabled === true) {
+    const pageOpenGraph = isPlainObject(frontMatter.seo?.openGraph) ? frontMatter.seo.openGraph : {};
+    const args = {
+      type: "website",
+      title: item.title || collection.identity.headline,
+      url: item.route.permalink,
+      site_name: String(siteConfig.title || ""),
+      description: stripHTML(descriptionSource).substring(0, 200).trim().replace(/\n/g, " "),
+      language,
+      author: String(siteConfig.author || ""),
+      date: false,
+      updated: false,
+      image: cardCover || bannerImage || firstContentImage(item.content) || siteConfig.avatar || null
+    };
+    if (openGraphConfig.twitterId) args.twitter_id = openGraphConfig.twitterId;
+    if (cardCover || bannerImage) args.twitter_card = "summary_large_image";
+    Object.assign(args, cloneValue(pageOpenGraph));
+    openGraph = {
+      args,
+      title: item.title || collection.identity.headline,
+      siteName: String(siteConfig.title || ""),
+      twitterTitle: item.title || collection.identity.headline,
+      publishedTime: null,
+      modifiedTime: null,
+      tags: []
+    };
+  }
+
+  const articleDefaults = articleFooterDefaults(requireContentConfig(stellarConfig, input.themeSource));
+  const footer = item.presentation.footer || {};
+  const resolvedLicense = footer.license === true
+    ? articleDefaults.license
+    : footer.license === false || footer.license == null ? "" : footer.license;
+  const configuredShare = footer.share === true
+    ? articleDefaults.share
+    : Array.isArray(footer.share) ? footer.share : [];
+  const shareServices = configuredShare.filter(name => ["wechat", "weibo", "email", "link"].includes(name));
+  const readNext = wikiReadNext(collection, item);
+  const isHomepage = collection.route.homepage.length > 0 && collection.route.homepage === item.route.path;
+  const hero = collection.presentation.hero || {};
+  const repository = typeof collection.source.repository === "string" ? collection.source.repository : "";
+  const githubApi = stellarConfig.extensions.services.github.apiUrl;
+  const rawUrl = stellarConfig.extensions.services.github.rawUrl;
+  const defaultIcon = stellarConfig.resources.fallbacks.projectIcon;
+  const automaticBrand = {
+    image: { src: collection.identity.icon || defaultIcon, variant: "icon" },
+    name: collection.identity.name,
+    tagline: collection.identity.tagline,
+    url: collection.route.homepage
+  };
+  const brand = mergeBrand(
+    mergeBrand(stellarConfig.site.brand, automaticBrand),
+    item.presentation.sidebar?.left?.brand
+  );
+  const banner = mergeConfig({}, item.presentation.banner || {});
+  if (banner.headline == null) banner.headline = item.title;
+  const readmeHtml = isHomepage ? wikiReadmeHtml(
+    { source: collection.source, homepage: { path: item.route.path } },
+    { path: item.route.path, content: item.content },
+    { rawUrl }
+  ) : "";
+
+  return {
+    document: {
+      language,
+      headInject: normalizeHeadInject(frontMatter.inject?.head),
+      preferredTheme: appearance.colorScheme === "auto" ? "auto" : String(appearance.colorScheme || "")
+    },
+    layout: {
+      pageType: "content",
+      articleType,
+      indent: hasIndent ? item.presentation.article.indent === true : articleType === "story",
+      siteBackground: Boolean(appearance.backgrounds.page.image),
+      leftbarSurface: appearance.backgrounds.sidebar.surface === "card" ? "card" : "glass",
+      leftbarBlur: false,
+      brand,
+      wikiIndexPath: profilePath(requireLayoutProfiles(stellarConfig).wikiIndex.path),
+      showWikiHome: item.presentation.sidebar?.left?.wikiHome !== false,
+      sidebar: cloneValue(item.presentation.sidebar || {}),
+      breadcrumbs: [{
+        name: collection.identity.name,
+        path: collection.route.homepage
+      }]
+    },
+    seo: {
+      title: wikiTitle(item.title, collection.identity.name, siteConfig.title, language),
+      description,
+      keywords,
+      robots: input.isBackup === true
+        ? "noindex, nofollow"
+        : typeof frontMatter.robots === "string" && frontMatter.robots.length > 0 ? frontMatter.robots : null,
+      canonical: canonicalUrl(seoConfig.canonical.host, item.route.path),
+      openGraph,
+      jsonLd: {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": item.route.permalink,
+        name: item.title || collection.identity.headline,
+        description,
+        url: item.route.permalink,
+        isPartOf: {
+          "@type": "WebSite",
+          name: String(siteConfig.title || ""),
+          url: String(siteConfig.url || "")
+        }
+      }
+    },
+    cover: {
+      enabled: isHomepage && hero.enabled === true,
+      background: cloneValue(hero.background || {}),
+      preview: cloneValue(hero.preview || {}),
+      actions: cloneValue(Array.isArray(hero.actions) ? hero.actions : []),
+      title: collection.identity.headline || collection.identity.name,
+      description: collection.identity.description || explicitDescription,
+      repository,
+      sourceUrl: repository ? `https://github.com/${repository}` : "",
+      releaseApi: repository ? `${githubApi}/repos/${repository}/tags` : "",
+      projectName: collection.identity.name || collection.id,
+      siteName: String(siteConfig.title || "")
+    },
+    article: {
+      heti: stellarConfig.extensions.features.cjkTypography.enabled === true,
+      banner,
+      updated: item.updated,
+      readmeHtml,
+      footer: {
+        references: Array.isArray(footer.references) ? cloneValue(footer.references) : [],
+        license: resolveLicense(String(resolvedLicense || ""), item, input.runtimeData),
+        share: shareServices.length > 0 ? {
+          services: shareServices,
+          permalink: item.route.permalink,
+          title: `${item.title} - ${String(siteConfig.title || "")}`,
+          image: cardCover,
+          summary: truncate(stripHTML(descriptionSource), { length: 120 })
+        } : null,
+        contributor: buildContributor(item, stellarConfig)
+      },
+      previous: readNext.previous,
+      next: readNext.next,
+      comments: buildWikiComments(input, item),
+      related: buildWikiRelated(input)
+    },
+    listing: buildWikiListingRender(input, collection)
+  };
+}
+
 function buildCollectionModel(stellarConfig) {
   const profiles = requireLayoutProfiles(stellarConfig);
   const postProfile = profiles.post;
@@ -887,7 +1159,21 @@ function buildWikiPageViewModel(input) {
   const frontMatter = isPlainObject(input.frontMatter) ? input.frontMatter : {};
   const page = input.page || {};
 
-  assertNormalizedConfig(input.stellarConfig, themeSource, [layoutConfigRequirement()]);
+  assertNormalizedConfig(input.stellarConfig, themeSource, [
+    {
+      path: "stellarConfig.site.brand",
+      read: config => config?.site?.brand,
+      expected: "normalized site brand object",
+      migration: "configuration/site"
+    },
+    {
+      path: "stellarConfig.seo",
+      read: config => config?.seo,
+      expected: "normalized SEO object",
+      migration: "configuration/seo"
+    },
+    layoutConfigRequirement()
+  ]);
 
   if (!isPlainObject(input.collectionConfig)) {
     const collectionId = input.collectionId || frontMatter.collection?.id || "<unknown>";
@@ -917,7 +1203,14 @@ function buildWikiPageViewModel(input) {
     typeof heroImage === "string" ? { image: heroImage } : {},
     item.presentation.banner
   );
-  return deepFreeze(assertPageViewModel("wiki", { collection, item }));
+  const render = buildWikiRenderModel({
+    ...input,
+    siteConfig: isPlainObject(input.siteConfig) ? input.siteConfig : {},
+    runtimeData: isPlainObject(input.runtimeData) ? input.runtimeData : {},
+    frontMatter,
+    page
+  }, collection, item);
+  return deepFreeze(assertPageViewModel("wiki", { collection, item, render }));
 }
 
 function buildTopicPageViewModel(input) {

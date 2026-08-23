@@ -415,20 +415,22 @@ flowchart TD
 
 ## Wiki 卡片变体
 
-`wiki_card.ejs` partial 渲染 wiki 项目条目卡片，使用 `proj` 数据对象而非 `post` 对象。模板使用独立的 `wiki-card` / `wiki-card-cover` / `wiki-card-info` 类，不复用文章 hero 的 `.cover` 或 `cover-overlay()`；底部内容区采用 Wiki 专属 Today 风格的同图渐变模糊层与封面主题色蒙版。
+`wiki_card.ejs` partial 渲染 Wiki 项目条目卡片，只接收生成器投影的 `render.listing` 普通对象，不读取原始 Wiki 项目配置。模板使用独立的 `wiki-card` / `wiki-card-cover` / `wiki-card-info` 类，不复用文章 hero 的 `.cover` 或 `cover-overlay()`；底部内容区采用 Wiki 专属 Today 风格的同图渐变模糊层与封面主题色蒙版。
 
-### 数据对象 `proj`
+### 数据对象 `render.listing`
 
 | 属性 | 兜底 | 用途 |
 |------|------|------|
-| `proj.card.cover` | — | 卡片背景图；未配置时保留纯色空背景 |
-| `proj.identity.icon` | `hexo.stellar.config.resources.fallbacks.projectIcon` | 底栏项目图标 |
-| `proj.tags` | — | 顶部标签字符串数组 |
-| `proj.headline` | `proj.name` | 可选营销标题 |
-| `proj.audience` | — | 可选适用范围字符串（标签由 `meta.available` 本地化输出） |
-| `proj.source.repository` | — | GitHub star 动态数据源 |
-| `proj.name` | — | 底栏项目标题 |
-| `caption(proj, 'collection')` | `tagline` → `description` → excerpt/content | 底栏项目副标题 |
+| `cover` | — | 卡片背景图；未配置时保留纯色空背景 |
+| `icon` | 资源 fallback 已在模型边界解析 | 底栏项目图标 |
+| `tags` | `[]` | 顶部标签字符串数组 |
+| `headline` | `name` | 营销标题 |
+| `audience` | `''` | 可选适用范围字符串（标签由 `meta.available` 本地化输出） |
+| `repositoryApi` | `''` | GitHub star 动态数据源 |
+| `name` | — | 底栏项目标题 |
+| `caption` | `tagline` → `description` | 已解析的底栏项目副标题 |
+| `href` | collection homepage | 卡片链接 |
+| `priority/sort/listed` | `0/0/true` | 置顶、排序与聚合可见性 |
 
 ### 渲染结构
 

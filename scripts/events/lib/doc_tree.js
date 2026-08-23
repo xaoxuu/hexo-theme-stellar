@@ -12,6 +12,7 @@ const { buildWikiTree } = require("../../lib/doc_tree");
 const { requireLayoutProfiles } = require("../../lib/layout-config");
 const { buildWikiPageViewModel } = require("../../lib/models");
 const { ensureRuntimeData } = require("../../lib/runtime-data");
+const { setPageViewModel } = require("../../lib/page-view-model-registry");
 const {
   sourcePathForData,
   sourcePathForPage
@@ -58,11 +59,16 @@ module.exports = ctx => {
   const themeSource = ctx.config.theme_config
     ? "_config.stellar.yml"
     : "themes/stellar/_config.yml";
+  const viewModelsByCollection = new Map();
   eachPage(pages, page => {
     const config = parsedPages.get(page);
     if (config == null) return;
     const collectionId = getCollectionId(config, "wiki");
     if (collectionId == null) return;
+    const relatedCollections = (wiki.tree[collectionId]?.relatedItems || []).map(group => ({
+      name: group.name,
+      items: (group.items || []).map(id => wiki.tree[id]).filter(Boolean)
+    }));
     page.viewModel = buildWikiPageViewModel({
       source: sourcePathForPage(page),
       themeSource,
@@ -74,8 +80,25 @@ module.exports = ctx => {
       collectionConfig: collectionConfigs.get(collectionId),
       collectionState: wiki.tree[collectionId],
       collectionListed: wiki.shelf.includes(collectionId),
+      relatedCollections,
+      isBackup: process.env.IS_BACKUP === "true",
       frontMatter: config,
       page
     });
+    setPageViewModel(page, page.viewModel);
+    if (!viewModelsByCollection.has(collectionId) || page.viewModel.item.route.path === page.viewModel.collection.route.homepage) {
+      viewModelsByCollection.set(collectionId, page.viewModel);
+    }
   });
+
+  wiki.index = {
+    items: wiki.shelf
+      .map(id => viewModelsByCollection.get(id)?.render?.listing)
+      .filter(item => item?.listed === true),
+    tags: Object.values(wiki.all_tags || {}).map(tag => ({
+      name: String(tag.name || ""),
+      path: String(tag.path || ""),
+      itemIds: Array.isArray(tag.items) ? tag.items.slice() : []
+    }))
+  };
 };

@@ -11,9 +11,11 @@ function itemHtml(id, item, label) {
 
 function layoutDiv() {
   if (!previous && !next) return ''
+  var prevLabel = typeof previousLabel !== 'undefined' ? previousLabel : __('meta.newer')
+  var nextLabelText = typeof nextLabel !== 'undefined' ? nextLabel : __('meta.older')
   return `<div class="related-wrap${scrollreveal(' ')}" id="read-next"><section class="body">` +
-    itemHtml('prev', previous, __('meta.newer')) +
-    itemHtml('next', next, __('meta.older')) +
+    itemHtml('prev', previous, prevLabel) +
+    itemHtml('next', next, nextLabelText) +
     '</section></div>'
 }
 %>

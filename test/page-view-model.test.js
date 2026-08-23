@@ -16,6 +16,7 @@ const processContentConfig = require("../scripts/events/lib/content-config");
 const { attachPageViewModel } = require("../scripts/filters/lib/page-view-model");
 const {
   getPageConfig,
+  getPageViewModel,
   resetPageViewModels,
   setPostViewModelInput
 } = require("../scripts/lib/page-view-model-registry");
@@ -58,9 +59,15 @@ function assertDeepFrozen(value) {
 }
 
 test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
-  const viewModel = buildWikiPageViewModel({
+  const input = {
     source: "source/wiki/stellar/index.md",
     collectionSource: "source/_data/wiki/stellar.yml",
+    siteConfig: {
+      title: "Example",
+      url: "https://example.com",
+      language: "zh-CN",
+      author: "Example Author"
+    },
     themeConfig: {
       layout: { profiles: {
         wiki_index: { path: "/wiki/" },
@@ -84,6 +91,7 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
       headline: "每个人的独立博客",
       tagline: "基于 Hexo 的全能型个人知识库",
       description: "Stellar Wiki",
+      tags: ["博客主题"],
       audience: "独立博主",
       identity: { icon: "/stellar.svg" },
       source: { repository: "xaoxuu/hexo-theme-stellar", branch: "v2" },
@@ -108,6 +116,15 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
       }]
     },
     collectionListed: true,
+    relatedCollections: [{
+      name: "博客主题",
+      items: [{
+        id: "example",
+        name: "Example",
+        description: "Another Wiki",
+        homepage: { path: "wiki/example/" }
+      }]
+    }],
     frontMatter: {
       title: "开始",
       layout: "wiki",
@@ -121,11 +138,13 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
       title: "开始",
       layout: "wiki",
       content: "<p>Start</p>",
-      date: new Date("2026-08-22T08:00:00.000Z")
+      date: new Date("2026-08-22T08:00:00.000Z"),
+      updated: new Date("2026-08-23T08:00:00.000Z")
     }
-  });
+  };
+  const viewModel = buildWikiPageViewModel(input);
 
-  assert.deepEqual(Object.keys(viewModel), ["collection", "item"]);
+  assert.deepEqual(Object.keys(viewModel), ["collection", "item", "render"]);
   assert.deepEqual(Object.keys(viewModel.collection), [
     "id",
     "profile",
@@ -177,7 +196,43 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
   assert.equal(viewModel.item.presentation.banner.image, "/hero.webp");
   assert.equal(viewModel.item.presentation.footer.share, false);
   assert.equal(viewModel.item.presentation.comments.title, "Wiki comments");
+  assert.equal(viewModel.render.document.language, "zh-CN");
+  assert.equal(viewModel.render.layout.pageType, "content");
+  assert.equal(viewModel.render.layout.brand.name, "Stellar");
+  assert.equal(viewModel.render.layout.wikiIndexPath, "wiki");
+  assert.equal(viewModel.render.seo.title, "Stellar：开始 - Example");
+  assert.equal(viewModel.render.seo.canonical, null);
+  assert.equal(viewModel.render.seo.jsonLd["@type"], "WebPage");
+  assert.equal(viewModel.render.cover.enabled, true);
+  assert.equal(viewModel.render.cover.projectName, "Stellar");
+  assert.equal(viewModel.render.article.readmeHtml, "");
+  assert.equal(viewModel.render.article.next.title, "安装");
+  assert.equal(viewModel.render.article.comments.service, "giscus");
+  assert.equal(viewModel.render.article.related[0].items[0].href, "wiki/example");
+  assert.deepEqual(viewModel.render.listing.tags, ["博客主题"]);
+  assert.equal(viewModel.render.listing.href, "wiki/stellar");
+  assert.equal(viewModel.render.listing.listed, true);
   assertDeepFrozen(viewModel);
+
+  const readmeInput = structuredClone(input);
+  readmeInput.page.content = "  \n";
+  const readmeViewModel = buildWikiPageViewModel(readmeInput);
+  assert.match(readmeViewModel.render.article.readmeHtml, /mdrender/);
+
+  const innerInput = structuredClone(input);
+  innerInput.source = "source/wiki/stellar/install.md";
+  innerInput.frontMatter.title = "安装";
+  innerInput.page._id = "wiki-install";
+  innerInput.page.source = "wiki/stellar/install.md";
+  innerInput.page.path = "wiki/stellar/install/";
+  innerInput.page.permalink = "https://example.com/wiki/stellar/install/";
+  innerInput.page.title = "安装";
+  innerInput.page.content = "";
+  const innerViewModel = buildWikiPageViewModel(innerInput);
+  assert.equal(innerViewModel.render.cover.enabled, false);
+  assert.equal(innerViewModel.render.article.readmeHtml, "");
+  assert.equal(innerViewModel.render.article.previous.title, "开始");
+  assert.equal(innerViewModel.render.article.next, null);
 });
 
 test("Wiki 树构建事件只为严格 v2 Wiki 页面挂载 PageViewModel", t => {
@@ -242,9 +297,13 @@ test("Wiki 树构建事件只为严格 v2 Wiki 页面挂载 PageViewModel", t =>
 
   assert.equal(wikiPage.viewModel.collection.id, "stellar");
   assert.equal(wikiPage.viewModel.collection.profile, "wiki");
+  assert.equal(getPageViewModel({ ...wikiPage }), wikiPage.viewModel);
+  assert.equal(attachPageViewModel({ ...wikiPage }).viewModel, wikiPage.viewModel);
   assert.equal(wikiPage.viewModel.collection.navigation.tree[0].items[0].title, "Start");
   assert.equal(wikiPage.viewModel.item.presentation.article.indent, true);
   assert.equal(wikiPage.viewModel.item.presentation.comments.provider, "giscus");
+  assert.equal(wikiPage.viewModel.render.layout.wikiIndexPath, "wiki");
+  assert.deepEqual(ctx.stellar.data.wiki.index.items.map(item => item.id), ["stellar"]);
   assert.equal(Object.isFrozen(wikiPage.viewModel), true);
   assert.equal(ordinaryPage.viewModel, undefined);
 });

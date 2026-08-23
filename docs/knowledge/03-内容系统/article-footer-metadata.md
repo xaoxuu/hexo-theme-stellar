@@ -27,7 +27,7 @@ tags:
 
 </details>
 
-本页介绍文章正文下方的标签行与页脚组件——文章、wiki 页面与自定义页面内容下方渲染的块。普通 Post 由 `post_tags.ejs`、`post_footer.ejs` 消费已解析的 `PageViewModel.render.article`；Wiki、Topic、Notebook 与其它页面继续由迁移期 `article_tags.ejs`、`article_footer.ejs` 读取旧模型。两条分支保持相同 DOM、class 与可见行为。文章之间的导航元素见[相关内容与导航](related-content.md)。
+本页介绍文章正文下方的标签行与页脚组件——文章、wiki 页面与自定义页面内容下方渲染的块。普通 Post 与 Wiki 都由 `post_footer.ejs` 消费已解析的 `PageViewModel.render.article.footer`，普通 Post 另由 `post_tags.ejs` 消费标签投影；Topic、Notebook 与其它页面继续由迁移期 `article_tags.ejs`、`article_footer.ejs` 读取旧模型。两条分支保持相同 DOM、class 与可见行为。文章之间的导航元素见[相关内容与导航](related-content.md)。
 
 ---
 

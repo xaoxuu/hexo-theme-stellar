@@ -1,34 +1,35 @@
 <%
 function layoutWikiCover() {
   var el = '';
-  var proj = stellar_data('wiki').tree[collection_id(page, "wiki")];
-  if (proj == undefined || proj.homepage.path !== page.path) {
+  var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
+    ? viewModel
+    : null
+  if (!wikiViewModel?.render?.cover) {
+    throw new Error('Stellar v2: Wiki Hero 缺少显式 render.cover')
+  }
+  var cover = wikiViewModel.render.cover
+  if (!cover.enabled) {
     return el;
   }
-  var hero = proj.hero || {};
-  if (hero.enabled !== true) {
-    return el;
-  }
-
-  var backgroundConfig = hero.background || {};
+  var backgroundConfig = cover.background || {};
   var background = typeof backgroundConfig.image === 'string' && backgroundConfig.image.length > 0 ? backgroundConfig.image : '';
   var effect = backgroundConfig.effect || {};
-  var preview = hero.preview || {};
+  var preview = cover.preview || {};
   var commands = Array.isArray(preview.commands) ? preview.commands.filter(function (item) {
     return item && item.codes;
   }) : [];
   var hasPreview = (preview.type === 'image' && preview.src) || commands.length > 0;
-  var title = proj.headline || proj.name;
-  var desc = proj.description || page.description;
-  var repo = proj.source?.repository;
-  var actions = Array.isArray(hero.actions) ? hero.actions.filter(function (item) {
+  var title = cover.title;
+  var desc = cover.description;
+  var repo = cover.repository;
+  var actions = Array.isArray(cover.actions) ? cover.actions.filter(function (item) {
     return item && item.title && item.url;
   }) : [];
   var isGalaxy = effect.type === 'galaxy';
   var isImageBackground = background.length > 0;
   var galaxyParams = effect.options && typeof effect.options === 'object' && !Array.isArray(effect.options) ? effect.options : {};
   var galaxyParamsJson = escape_html(JSON.stringify(galaxyParams));
-  var projectName = proj.name || collection_id(page, "wiki");
+  var projectName = cover.projectName;
   var adaptiveTextAttr = '';
   if (isImageBackground) {
     adaptiveTextAttr = ' data-text-adaptive="split" style="--cover-url:url(\'' + escape_html(background.replace(/'/g, '%27')) + '\')"';
@@ -47,13 +48,13 @@ function layoutWikiCover() {
   }
   el += '<div class="wiki-cover-background-overlay"></div></div>';
   el += '<div class="wiki-cover-layout"' + adaptiveTextAttr + '>';
-  el += '<nav class="wiki-navbar" aria-label="' + escape_html(config.title) + '">';
-  el += '<a class="wiki-navbar-home" href="' + escape_html(pretty_url('/')) + '">' + escape_html(config.title) + '</a>';
+  el += '<nav class="wiki-navbar" aria-label="' + escape_html(cover.siteName) + '">';
+  el += '<a class="wiki-navbar-home" href="' + escape_html(pretty_url('/')) + '">' + escape_html(cover.siteName) + '</a>';
   el += '</nav>';
   el += '<article class="cover-wrap wiki-cover-content">';
   el += '<section class="wiki-cover-intro">';
   if (repo) {
-    el += '<a class="wiki-cover-release ds-ghinfo is-loading" data-project-name="' + escape_html(projectName) + '" data-repo="' + escape_html(repo) + '" data-api="' + stellar_config('extensions.services.github.apiUrl') + '/repos/' + escape_html(repo) + '/tags" index="0" target="_blank" rel="external nofollow noopener noreferrer">';
+    el += '<a class="wiki-cover-release ds-ghinfo is-loading" data-project-name="' + escape_html(projectName) + '" data-repo="' + escape_html(repo) + '" data-api="' + escape_html(cover.releaseApi) + '" index="0" target="_blank" rel="external nofollow noopener noreferrer">';
     el += '<span class="wiki-cover-release-value"><span type="text" id="latest-tag-name"></span></span></a>';
   }
   if (title) {
@@ -64,7 +65,7 @@ function layoutWikiCover() {
   }
   el += '<div class="wiki-cover-actions">';
   if (repo) {
-    el += '<a class="button wiki-cover-source card-hover card-hover--spotlight" href="https://github.com/' + escape_html(repo) + '" target="_blank" rel="external nofollow noopener noreferrer">' + icon('default:github') + '<span>' + escape_html(__('btn.source')) + '</span></a>';
+    el += '<a class="button wiki-cover-source card-hover card-hover--spotlight" href="' + escape_html(cover.sourceUrl) + '" target="_blank" rel="external nofollow noopener noreferrer">' + icon('default:github') + '<span>' + escape_html(__('btn.source')) + '</span></a>';
   }
   el += '<a class="button card-hover card-hover--spotlight" href="#start">' + icon('default:documents') + '<span>' + escape_html(__('btn.docs')) + '</span></a>';
   actions.forEach(function (item) {

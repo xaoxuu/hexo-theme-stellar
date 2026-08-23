@@ -30,6 +30,34 @@ function relatedPostsInTopic() {
 }
 
 function relatedWiki() {
+  var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
+    ? viewModel
+    : null
+  if (wikiViewModel) {
+    var el = ''
+    for (var relatedItem of wikiViewModel.render.article.related) {
+      var entries = relatedItem.items.map(function(project) {
+        return {
+          href: pretty_url(project.href),
+          title: project.title,
+          description: project.description,
+          indicator: false
+        }
+      })
+      var body = partial('_partial/components/collection', {options: {
+        layout: 'list',
+        variant: 'summary',
+        density: 'compact',
+        items: entries
+      }})
+      el += partial('_partial/components/widget-frame', {
+        className: 'related-summary-widget',
+        title: __('meta.more') + __('symbol.colon') + relatedItem.name,
+        body: body
+      })
+    }
+    return el
+  }
   var thisItemObject = stellar_data('wiki').tree[collection_id(page, "wiki")]
   if (thisItemObject == null) {
     return ''
@@ -65,7 +93,9 @@ function relatedWiki() {
 }
 
 function layoutDiv() {
-  if (collection_id(page, "wiki")?.length > 0) {
+  if (typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki') {
+    return relatedWiki()
+  } else if (collection_id(page, "wiki")?.length > 0) {
     return relatedWiki()
   } else if (collection_id(page, "topic")?.length > 0) {
     return relatedPostsInTopic()

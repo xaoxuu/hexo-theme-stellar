@@ -1,5 +1,8 @@
 <%
-var proj = stellar_data('wiki').tree[collection_id(page, "wiki")]
+var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
+  ? viewModel
+  : null
+var proj = wikiViewModel ? null : stellar_data('wiki').tree[collection_id(page, "wiki")]
 
 function layoutSectionHeader(title) {
   if (!title || title.length === 0) {
@@ -10,14 +13,19 @@ function layoutSectionHeader(title) {
 
 function layoutDocTree(pages) {
   var entries = []
+  var totalPages = wikiViewModel
+    ? wikiViewModel.collection.navigation.tree.reduce(function(sum, section) { return sum + (section.items || []).length }, 0)
+    : proj.pages.length
   for (var docPage of pages) {
-    if (docPage.title == null || docPage.title.length === 0 || proj.pages.length <= 1) {
+    if (docPage.title == null || docPage.title.length === 0 || totalPages <= 1) {
       continue
     }
     entries.push({
       href: pretty_url(docPage.path),
       title: docPage.title,
-      active: docPage.path === page.path,
+      active: wikiViewModel
+        ? docPage.path === wikiViewModel.item.route.path
+        : docPage.path === page.path,
       gradientRef: 'leftbar-active-icon-grad'
     })
   }
@@ -30,6 +38,26 @@ function layoutDocTree(pages) {
 }
 
 function layoutDiv() {
+  if (wikiViewModel) {
+    var sections = wikiViewModel.collection.navigation.tree
+    if (!Array.isArray(sections) || sections.length === 0) return ''
+    var body = ''
+    for (var section of sections) {
+      var collection = (layoutDocTree(section.items || []) || '').trim()
+      if (collection.length > 0) {
+        body += '<section class="widget-section">'
+        body += layoutSectionHeader(section.title)
+        body += collection
+        body += '</section>'
+      }
+    }
+    return partial('_partial/components/widget-frame', {
+      className: 'doc-tree-widget',
+      body: body,
+      attrs: {'data-wiki': wikiViewModel.collection.id},
+      reveal: false
+    })
+  }
   if (proj == null || proj.pages == null || proj.pages.length === 0 || proj.sections == null || proj.sections.length === 0) {
     return ''
   }

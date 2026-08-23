@@ -101,7 +101,7 @@ Galaxy 的路径为 `hero.background.effect.options`，其 React Bits props 保�
 - `render.listing` 固化博客卡片、置顶轮播、平铺列表与归档需要的路由、封面、摘要、日期、分类、最多五个标签、作者、优先级和可见性。
 - Post 的 Schema 校验、模型构建、Reference 与 EJS 消费同一 `render` 事实来源；缺少或非法 `render` 时按源文件构建失败，不回退到 `page` 或主题字段。
 - 级联顺序为页面 Front Matter、Post profile、主题全局配置；`false`、`0` 与空字符串是有效覆盖值。Brand 图片继续按原子对象替换，不继承上级图片子字段。
-- 普通 Post 的根 Shell、左右侧栏、Brand、菜单、面包屑、SEO、正文、标签、Footer、上下篇、相关推荐、评论和博客聚合条目均已消费 ViewModel。Hexo 仍提供分页及当前分类/标签查询状态；Topic Post、Wiki 与 Notebook 的 EJS 消费链留在后续 M2 切片。
+- 普通 Post 的根 Shell、左右侧栏、Brand、菜单、面包屑、SEO、正文、标签、Footer、上下篇、相关推荐、评论和博客聚合条目均已消费 ViewModel。Wiki 详情与索引也已完成迁移；Hexo 仍为聚合页提供分页及当前筛选状态，Topic 与 Notebook 的 EJS 消费链留在后续 M2 切片。
 
 纯构建入口位于 `scripts/lib/models/index.js`。普通 Post 在 `before_generate` 登记输入，详情页由 `after_post_render` 结合最终正文和 Hexo 关系完成模型，列表条目由 `post_view_model` helper 从同一登记输入重建冻结投影；Wiki 页面在 `doc_tree` 完成树形解析后挂载，Topic 与 Note 在生成前挂载。
 
@@ -125,7 +125,8 @@ Galaxy 的路径为 `hero.background.effect.options`，其 React Bits props 保�
 - `item` 在构建期完成页面导航、列表、展示、源码与可见性级联；页面源码可以逐字段覆盖 Wiki 源码，项目 `hero.background.image` 作为页面 Banner 图片默认值并可被页面显式覆盖。
 - shelf 只表示 Wiki collection 的聚合可见性，不会隐式隐藏项目内页面；页面继续由自身 `visibility.listed/searchable` 决定。
 - 页面必须显式声明严格 v2 `collection.profile` 与 `collection.id`，id 必须能解析到 `_data/wiki/` 项目；不从布局、路径或 v1 `wiki` 字段推断归属。
-- 本切片只挂载模型，不改变现有 Wiki EJS 消费链。
+- `render.document/layout/seo` 固化文档、布局、最终 Brand、导航和完整 SEO；`render.cover` 只允许集合首页启用 Hero；`render.article` 固化 Banner、README、Footer、上下篇、评论和 related；`render.listing` 固化 Wiki 卡片、排序、置顶与可见性。
+- Wiki 详情页复用公共 Shell/Region/Section/Item/Navigation 并向 partial 传递显式 ViewModel locals；缺少合法 `render` 时构建失败。Wiki 索引生成器只传递 `wikiIndex.items/allItems/tags`，卡片、筛选、置顶和 tabs 不读取原始 Wiki tree。
 
 ### Notebook 与 Note
 
@@ -158,6 +159,6 @@ Collection 与 Front Matter 不再由手写字段表定义：`scripts/schema/con
 - 路由、导航、侧栏和页面字段由声明式 Schema 严格校验；错误继续包含配置来源、字段路径与迁移目标。
 - `scripts/helpers/collection.js` 向 EJS 提供 `collection_id(page, type)`，不再读取 `page.wiki/topic/notebook`。
 - `scripts/lib/brand.js` 与 `scripts/helpers/brand.js` 解析 Brand 优先级、集合自动值和手机端显示矩阵。
-- Wiki、Topic、Notebook 数据树和搜索生成器消费共享可见性语义。
+- Wiki 数据树在两阶段建模后投影索引 listing 与标签导航；Topic、Notebook 数据树和搜索生成器继续消费共享可见性语义。
 
 旧字段、未知字段和错误类型都会汇总为 `ContentConfigError`，消息包含源文件与字段路径；运行时没有 v1 别名或错误类型自动转换。

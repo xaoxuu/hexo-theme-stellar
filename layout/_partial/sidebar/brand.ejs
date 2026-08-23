@@ -40,6 +40,18 @@ function layoutBrandImage() {
 }
 
 function layoutWikiHome() {
+  var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
+    ? viewModel
+    : null
+  if (wikiViewModel) {
+    if (placement !== 'sidebar' || wikiViewModel.render.layout.showWikiHome === false) return ''
+    var el = `<div class="wiki-home-wrap">`
+    el += `<a class="wiki-home cap" href="${pretty_url(wikiViewModel.render.layout.wikiIndexPath)}">`
+    el += icon('default:arrow-left', '', true)
+    el += `<span>${__('btn.all_wiki')}</span>`
+    el += `</a></div>`
+    return el
+  }
   if (placement !== 'sidebar' || !collection_id(page, 'wiki')) return ''
   var wiki = stellar_data('wiki').tree[collection_id(page, 'wiki')]
   const enabled = content_config(page).sidebar?.left?.wikiHome ?? wiki?.sidebar?.left?.wikiHome ?? true

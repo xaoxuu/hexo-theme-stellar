@@ -1,10 +1,10 @@
 <%
-var postComments = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'post'
+var renderComments = typeof viewModel !== 'undefined' && viewModel?.render?.article?.comments
   ? viewModel.render.article.comments
   : null
-var service = postComments ? postComments.service : page.cmt?.service
+var service = renderComments ? renderComments.service : page.cmt?.service
 var commentConfig = stellar_config('extensions.comments')
-var scriptComments = postComments || {
+var scriptComments = renderComments || {
   id: '',
   service: service || '',
   options: service ? Object.assign({}, commentConfig.providers[service], page.cmt?.[service]) : {},

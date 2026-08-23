@@ -1,7 +1,10 @@
 "use strict";
 
 const { buildPostPageViewModel } = require("../../lib/models");
-const { getPostViewModelInput } = require("../../lib/page-view-model-registry");
+const {
+  getPageViewModel,
+  getPostViewModelInput
+} = require("../../lib/page-view-model-registry");
 
 function plainTermLinks(value) {
   let items = value;
@@ -83,6 +86,9 @@ function attachPageViewModel(data) {
     data.viewModel = buildPostViewModelFromData(data, input, {
       relatedItems: relatedItems(this, data, input)
     });
+  } else {
+    const viewModel = getPageViewModel(data);
+    if (viewModel) data.viewModel = viewModel;
   }
   return data;
 }

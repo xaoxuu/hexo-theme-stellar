@@ -1,5 +1,11 @@
 <%
 function layoutCover() {
+  var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
+    ? viewModel
+    : null
+  if (wikiViewModel) {
+    return partial('wiki_cover', {viewModel: wikiViewModel})
+  }
   if (collection_id(page, "wiki")) {
     return partial('wiki_cover')
   }

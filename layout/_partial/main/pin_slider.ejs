@@ -7,6 +7,7 @@ var pinItems = []
 function pinValue(item) {
   if (item?.collection?.profile === 'post') return item.render.listing.priority
   if (item?.legacyPost) return content_config(item.legacyPost).listing?.priority
+  if (pinType == 'wiki' && item?.id && item?.href) return item.priority
   return item.listing?.priority
 }
 
@@ -20,10 +21,12 @@ function pinWeight(item) {
 }
 
 if (pinType == 'wiki') {
-  var shelf = stellar_data('wiki')?.shelf || []
-  for (var wi = 0; wi < shelf.length; wi++) {
-    var wproj = stellar_data('wiki').tree[shelf[wi]]
-    if (wproj != null && isPinned(wproj)) {
+  if (!Array.isArray(wikiItems)) {
+    throw new Error('Stellar v2: Wiki 置顶列表缺少显式 render.listing')
+  }
+  for (var wi = 0; wi < wikiItems.length; wi++) {
+    var wproj = wikiItems[wi]
+    if (wproj.listed && isPinned(wproj)) {
       pinItems.push(wproj)
     }
   }
@@ -97,11 +100,11 @@ function projectChips(tags) {
 }
 
 function wikiSlide(proj) {
-  var img = proj.card?.cover
+  var img = proj.cover
   var title = proj.headline || proj.name || proj.id
   var excerpt = proj.description || ''
   var el = ''
-  el += '<a class="pin-slide' + (img ? '' : ' no-cover') + '" href="' + escape_html(pretty_url(proj.homepage?.path || '/')) + '"'
+  el += '<a class="pin-slide' + (img ? '' : ' no-cover') + '" href="' + escape_html(pretty_url(proj.href || '/')) + '"'
   if (img) {
     el += ' style="--pin-cover-url:url(\'' + escape_html(img.replace(/'/g, '%27')) + '\')"'
   }

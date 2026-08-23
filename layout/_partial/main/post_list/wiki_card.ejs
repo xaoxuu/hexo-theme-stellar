@@ -1,10 +1,13 @@
 <%
 function layoutDiv() {
   var el = '';
-  var cover = proj.card?.cover;
-  var projectIcon = proj.identity?.icon;
-  var caption = proj.tagline || proj.description || '';
-  var headline = proj.headline || proj.name || '';
+  if (!listing || typeof listing !== 'object') {
+    throw new Error('Stellar v2: Wiki 卡片缺少显式 render.listing')
+  }
+  var cover = listing.cover;
+  var projectIcon = listing.icon;
+  var caption = listing.caption;
+  var headline = listing.headline || listing.name;
   el += '<article class="wiki-card-content">';
   el += '<div class="wiki-card-cover' + (cover ? '' : ' no-cover') + '" position="bottom"';
   if (cover) {
@@ -19,22 +22,22 @@ function layoutDiv() {
   }
   el += '>';
   el += '<div class="wiki-card-summary">';
-  if (proj.tags && proj.tags.length > 0) {
+  if (listing.tags && listing.tags.length > 0) {
     el += '<div class="wiki-tags wiki-meta">';
-    for (var i = 0; i < proj.tags.length; i++) {
-      var tag = proj.tags[i];
+    for (var i = 0; i < listing.tags.length; i++) {
+      var tag = listing.tags[i];
       el += '<span>' + escape_html(tag) + '</span>';
     }
     el += '</div>';
   }
   el += '<h2 class="headline">' + escape_html(headline) + '</h2>';
-  if (proj.audience || proj.source?.repository) {
+  if (listing.audience || listing.repository) {
     el += '<div class="wiki-meta">';
-    if (proj.audience) {
-      el += '<span class="wiki-available">' + icon('default:platforms') + '<span class="label">' + escape_html(__('meta.available')) + '</span><span class="value">' + escape_html(proj.audience) + '</span></span>';
+    if (listing.audience) {
+      el += '<span class="wiki-available">' + icon('default:platforms') + '<span class="label">' + escape_html(__('meta.available')) + '</span><span class="value">' + escape_html(listing.audience) + '</span></span>';
     }
-    if (proj.source?.repository) {
-      el += '<span class="wiki-stars data-service ds-ghinfo" data-api="' + stellar_config('extensions.services.github.apiUrl') + '/repos/' + escape_html(proj.source.repository) + '">';
+    if (listing.repository) {
+      el += '<span class="wiki-stars data-service ds-ghinfo" data-api="' + escape_html(listing.repositoryApi) + '">';
       el += icon('default:fire') + '<span type="text" id="stargazers_count"></span>';
       el += '</span>';
     }
@@ -49,7 +52,7 @@ function layoutDiv() {
     el += icon('default:documents');
   }
   el += '</div>';
-  el += '<div class="project-text"><div class="project-name">' + escape_html(proj.name || '') + '</div>';
+  el += '<div class="project-text"><div class="project-name">' + escape_html(listing.name || '') + '</div>';
   if (caption.length > 0) {
     el += '<div class="project-subtitle">' + escape_html(caption) + '</div>';
   }

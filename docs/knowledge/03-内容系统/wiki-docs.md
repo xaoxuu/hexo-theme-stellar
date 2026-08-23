@@ -41,7 +41,7 @@ wiki 侧边栏渲染见[侧边栏系统](../02-布局系统/sidebar-system.md)�
 
 ## 架构概览
 
-wiki 系统有两个阶段：**构建期数据处理阶段**（Node.js 服务端）与**渲染期模板阶段**（EJS）。数据处理阶段每次构建运行一次，组装结构化的 `wiki` 对象并挂载到 `hexo.stellar.data.wiki`，同时为严格 v2 Wiki 页面生成冻结 `page.viewModel`。当前 EJS 通过 `stellar_data('wiki')` 读取该运行时数据与原页面数据，ViewModel 的布局接入属于后续阶段。
+wiki 系统有两个阶段：**构建期数据处理阶段**（Node.js 服务端）与**渲染期模板阶段**（EJS）。数据处理阶段每次构建运行一次，先组装结构化的 `wiki` 树，再为严格 v2 Wiki 页面生成带必需 `render` 的冻结 `page.viewModel`；索引数据由首页 ViewModel 的 `render.listing` 投影得到。详情页 EJS 只消费显式 ViewModel locals，索引页只消费生成器提供的 `wikiIndex`，不再从原始 Wiki 配置树重做级联。
 
 wiki 系统由 `_config.yml` 的两个 Layout Profile 配置：
 
@@ -63,8 +63,11 @@ flowchart TD
     F --> J["wiki.all_tags{}"]
     F --> K["wiki.tree[id].relatedItems[]"]
     F --> L["hexo.stellar.data.wiki"]
-    F --> V["frozen page.viewModel"]
-    L --> M["layout.ejs\npage.ejs"]
+    F --> V["frozen PageViewModel\ncollection + item + render"]
+    V --> M["Shell / Region / Section / Item\nWiki detail partials"]
+    V --> X["wiki.index\nlisting + tags"]
+    X --> Y["Wiki index generator\npage.wikiIndex"]
+    Y --> Z["index_wiki / wiki_card"]
     
     subgraph "_config.yml"
         N["layout.profiles.wiki_index\npath, navigation, sidebar"]
@@ -108,7 +111,7 @@ flowchart TD
 | `headline` | 数据文件 | 主标题，缺失时在构建期使用 `name` |
 | `tags` | 数据文件 | 标签名字符串或数组；规范化为数组 |
 | `tree` | 数据文件 | 导航树（见下文） |
-| `routing.base_dir` | 数据文件 | 页面键匹配的路径前缀 |
+| `route.path` | 数据文件 | 页面键匹配的路径前缀 |
 | `listing.sort` | 数据文件 | 普通项目排序，默认 `0` |
 | `listing.priority` | 数据文件 | 置顶优先级 |
 | `homepage` | 数据文件或流水线 | 指定首页 `WikiPage` |
@@ -156,15 +159,19 @@ flowchart TD
 
 ### Wiki `PageViewModel`
 
-`scripts/events/lib/doc_tree.js` 在树形导航解析完成后调用 `buildWikiPageViewModel()`。输出顶层与 Post reference slice 一致，只包含 `collection` 和 `item`：
+`scripts/events/lib/doc_tree.js` 在树形导航解析完成后调用 `buildWikiPageViewModel()`。输出顶层与 Post 一致，固定为 `collection`、`item` 和 Wiki 必需的 `render`：
 
 - `collection` 固定包含 `id`、`profile`、`identity`、`source`、`route`、`navigation`、`listing`、`presentation`、`visibility`。
 - `navigation.tree` 是 `sections` 的普通对象投影，不保留 `WikiPage` 实例；路径、页码与首页标记已规范化。
 - `item` 已完成项目源码继承以及页面级导航、列表、展示和可见性覆盖；项目 `hero.background.image` 已解析为页面 Banner 图片默认值。
 - collection 的 `visibility.listed` 反映 shelf 状态；页面 `item.visibility` 独立从默认可列出、可搜索起算。
+- `render.document/layout/seo` 固化语言、head 注入、主题状态、布局状态、最终 Brand、Wiki 返回入口、面包屑，以及 title、description、keywords、robots、canonical、Open Graph 和 WebPage JSON-LD。
+- `render.cover` 固化 Hero 背景、预览、操作、源码和 release 数据；只有集合首页可以启用 Hero，普通内页始终为禁用状态。
+- `render.article` 固化 Banner、远程 README 占位、Footer、上下篇、评论、related 与正文排版状态；远程 README 也只在首页正文为空且仓库可解析时生成。
+- `render.listing` 固化 Wiki 索引卡片需要的链接、身份、标签、受众、图标、封面、仓库、排序、置顶与可见性。
 - 整个输出深度冻结且仅含普通对象/数组，不保留 Hexo Document、Query、Moment 或输入配置引用。
 
-本阶段只建立构建期接缝，EJS 仍未改为消费 `page.viewModel`。
+由于 Hexo Page 文档不会持久保存任意自定义字段，构建事件同时按 source/path/id 登记冻结 ViewModel，并在 `after_post_render` 恢复到最终模板数据。详情链缺少合法 Wiki `render` 时按源文件构建失败，不回退到原始配置。
 
 ---
 
@@ -400,11 +407,11 @@ wiki 页面使用标准布局系统，但带 wiki 专属配置与小部件。
 
 ### 布局判定
 
-`layout.ejs` 通过 `collection_id(page, 'wiki')` 解析页面归属。能解析 Wiki Collection 时：
+`layout.ejs` 以 `page.viewModel.collection.profile === 'wiki'` 进入 Wiki 新链；Front Matter 已解析为 Wiki、但渲染数据缺少合法 `render` 时立即构建失败。合法 Wiki 详情页：
 
-- 内部 `navigation.menu` 由 `layout.profiles.wiki.navigation.activeMenu` 投影（通常 `'wiki'`）
-- 左栏配置为 `tree, related, recent`
-- 右栏配置为 `ghrepo, toc`
+- 与普通 Post 共用 Shell、Region、Section、Item、Navigation 原语，同时由 `render.layout` 提供页面类型、缩进、背景、侧栏表面、最终 Brand、返回入口、侧栏和面包屑。
+- Hero、Brand、搜索、tree、related、ghrepo、Banner、Footer、上下篇、评论与 head partial 都接收显式 ViewModel locals。
+- Topic 与 Notebook 不满足 Wiki profile 判定，继续进入原有布局分支。
 
 ### 侧边栏小部件
 
@@ -412,11 +419,11 @@ wiki 专属侧边栏配置启用专用小部件：
 
 | 小部件 | 位置 | 用途 |
 |---|---|---|
-| `tree` | 左栏 | 显示来自 `wiki.tree[id].sections` 的层级导航树 |
-| `related` | 左栏 | 经 `wiki.tree[id].relatedItems` 显示相关 wiki 项目 |
+| `tree` | 左栏 | 显示 `viewModel.collection.navigation.tree` 的冻结层级导航 |
+| `related` | 左栏 | 显示 `viewModel.render.article.related` 的普通对象投影 |
 | `recent` | 左栏 | 当前 wiki 项目的最近页面 |
 | `toc` | 右栏 | 当前页面目录 |
-| `ghrepo` | 右栏 | GitHub 仓库信息小部件 |
+| `ghrepo` | 右栏 | 使用 `render.listing.repositoryApi` 加载 GitHub 仓库信息 |
 
 `tree` 小部件是 wiki 页面独有的，渲染基于 `doc_tree.js` 构建的小节导航。
 
@@ -426,24 +433,23 @@ wiki 页面经标准 `page.ejs` 模板渲染，带条件小节：
 
 ```mermaid
 flowchart TD
-    A["page.ejs"] --> B["navigation tabs"]
-    B --> C["article_banner"]
-    C --> D["article element\npage.content"]
-    D --> E["article_footer\nif collection.profile = wiki"]
-    E --> F["read_next\nif collection.profile = wiki"]
-    F --> G["comments section"]
+    A["page.ejs\nWiki ViewModel"] --> B["article_banner(render.article.banner)"]
+    B --> C["article\nitem.content or render.article.readmeHtml"]
+    C --> D["post_footer(render.article.footer)"]
+    D --> E["post_read_next(previous / next)"]
+    E --> F["comments(render.article.comments)"]
 ```
 
-`article_footer` 包含许可与贡献者信息。`read_next` 组件用 `page.page_number` 顺序导航 wiki 页面。
+Footer、上下篇和评论复用普通 Post 的显式 locals partial，DOM 和 class 保持原状。上下篇已由模型根据冻结导航树中的 `pageNumber` 投影，EJS 不再自行查询 Wiki tree。
 
 ### Wiki 索引页
 
-wiki 索引页（`index_wiki` 布局）显示 `wiki.shelf` 中所有已发布项目。仅配置 `card.cover` 的卡片使用全幅背景图、同图渐变模糊层与不透明度约 0.25 至 0 的黑色蒙版；未配置时保留纯色空背景。卡片显示：
+wiki 索引页（`index_wiki` 布局）保留通用 index Shell，但生成器必须显式提供 `page.wikiIndex`。其中 `items/allItems` 来自各项目首页 ViewModel 的 `render.listing`，`tags` 是普通标签导航对象；筛选、tabs、置顶与卡片只消费这份投影，不读取 `wiki.tree`。仅配置 `cover` 的卡片使用全幅背景图、同图渐变模糊层与不透明度约 0.25 至 0 的黑色蒙版；未配置时保留纯色空背景。卡片显示：
 
-- `wiki.tree[id].tags` 标签、`headline` 营销标题（为空回退 `name`）与可选 `audience` 适用范围文字；“适用于”由 `meta.available` 语言键输出
-- 有 `source.repository` 时从 GitHub 动态加载 star 数；无仓库或加载失败时隐藏该项
-- 底栏中的 `identity.icon`（无值回退默认项目图）、`name` 项目标题和 `caption()` 项目副标题
-- 指向 `wiki.tree[id].homepage.path` 的链接
+- `listing.tags`、`headline` 和可选 `audience`；“适用于”由 `meta.available` 语言键输出
+- 有 `listing.repositoryApi` 时动态加载 star 数；无仓库或加载失败时隐藏该项
+- 底栏中的 `listing.icon`、`name` 和已解析 `caption`
+- 指向 `listing.href` 的链接
 
 索引页使用 `layout.profiles.wiki_index` 配置其侧边栏与导航。
 
@@ -472,7 +478,10 @@ wiki
 │       ├── name
 │       ├── path
 │       └── items            # string[]（项目 ID）
-└── all_pages                # WikiPage[]（跨全部项目）
+├── all_pages                # WikiPage[]（跨全部项目）
+└── index
+    ├── items                # render.listing[]（仅 shelf 且 listed）
+    └── tags                 # { name, path, itemIds }[]
 ```
 
 **参考源码**：[scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)

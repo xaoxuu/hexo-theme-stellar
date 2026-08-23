@@ -1,26 +1,27 @@
 <%
 function layoutDiv() {
+  if (!wikiIndex || !Array.isArray(wikiIndex.items) || !Array.isArray(wikiIndex.allItems) || !Array.isArray(wikiIndex.tags)) {
+    throw new Error('Stellar v2: Wiki tabs 缺少显式索引投影')
+  }
   var el = '';
-  el += partial('_partial/main/pin_slider', {type: 'wiki'});
+  el += partial('_partial/main/pin_slider', {type: 'wiki', wikiItems: wikiIndex.allItems});
   el += '<div class="navbar top">';
   el += '<div class="navbar-blur">';
     el += '<div class="navbar-container">';
   el += '<nav class="wiki">';
   // 所有项目
   el += '<a';
-  if (page.filter === false) {
+  if (wikiIndex.filter === false) {
     el += ' class="active"';
   }
-  el += ' href="' + pretty_url(stellar_config('layout.profiles.wikiIndex.path')) + '">' + __("btn.all_wiki") + '</a>';
+  el += ' href="' + pretty_url(wikiIndex.path) + '">' + __("btn.all_wiki") + '</a>';
   el += '</a>';
   // 项目分类
-  var { shelf, all_tags } = stellar_data('wiki');
-  for (let id of Object.keys(all_tags)) {
-    let tag = all_tags[id];
-    let projects = tag.items.filter(item => shelf.includes(item))
-    if (projects && projects.length > 0) {
+  for (let tag of wikiIndex.tags) {
+    let projects = tag.itemIds.filter(id => wikiIndex.allItems.some(item => item.id === id))
+    if (projects.length > 0) {
       el += '<a';
-      if (tag.name && tag.name.length > 0 && page.tagName === tag.name) {
+      if (tag.name && tag.name.length > 0 && wikiIndex.tagName === tag.name) {
         el += ' class="active"';
       }
       el += ' href="' + escape_html(pretty_url(tag.path)) + '">' + escape_html(tag.name) + '</a>';

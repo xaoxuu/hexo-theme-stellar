@@ -10,6 +10,10 @@ const { generatorPath, requireLayoutProfiles, toRenderNavigation } = require("..
 hexo.extend.generator.register("wiki", function () {
   const { wiki } = hexo.stellar.data;
   const profile = requireLayoutProfiles(hexo.stellar?.config).wikiIndex;
+  const index = wiki.index;
+  if (!index || !Array.isArray(index.items) || !Array.isArray(index.tags)) {
+    throw new Error("Stellar v2: Wiki 索引缺少显式 render.listing 投影");
+  }
   const wikiIdList = Object.keys(wiki.tree);
   if (wikiIdList.length == 0) {
     return {};
@@ -21,7 +25,14 @@ hexo.extend.generator.register("wiki", function () {
     data: {
       layout: "index_wiki",
       navigation: toRenderNavigation(profile),
-      filter: false
+      wikiIndex: {
+        items: structuredClone(index.items),
+        allItems: structuredClone(index.items),
+        tags: structuredClone(index.tags),
+        filter: false,
+        tagName: "",
+        path: profile.path
+      }
     }
   });
   if (wiki.all_tags) {
@@ -33,9 +44,15 @@ hexo.extend.generator.register("wiki", function () {
         data: {
           layout: "index_wiki",
           navigation: toRenderNavigation(profile),
-          filter: true,
-          tagName: tag.name,
-          title: tag.name
+          title: tag.name,
+          wikiIndex: {
+            items: index.items.filter(item => item.tags.includes(tag.name)).map(item => structuredClone(item)),
+            allItems: structuredClone(index.items),
+            tags: structuredClone(index.tags),
+            filter: true,
+            tagName: tag.name,
+            path: profile.path
+          }
         }
       });
     }

@@ -2,6 +2,7 @@
 
 const postInputs = new Map();
 const pageConfigs = new Map();
+const pageViewModels = new Map();
 
 function keysForPage(page) {
   return [page?.source, page?.path, page?._id]
@@ -11,6 +12,7 @@ function keysForPage(page) {
 function resetPageViewModels() {
   postInputs.clear();
   pageConfigs.clear();
+  pageViewModels.clear();
 }
 
 function setPageConfig(page, config) {
@@ -35,10 +37,23 @@ function getPostViewModelInput(page) {
   return null;
 }
 
+function setPageViewModel(page, viewModel) {
+  for (const key of keysForPage(page)) pageViewModels.set(key, viewModel);
+}
+
+function getPageViewModel(page) {
+  for (const key of keysForPage(page)) {
+    if (pageViewModels.has(key)) return pageViewModels.get(key);
+  }
+  return null;
+}
+
 module.exports = {
   getPageConfig,
+  getPageViewModel,
   getPostViewModelInput,
   resetPageViewModels,
   setPageConfig,
+  setPageViewModel,
   setPostViewModelInput
 };

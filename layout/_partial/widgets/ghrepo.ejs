@@ -4,7 +4,13 @@ function layoutDiv() {
   var repo;
   var branch = 'main';
   var pageConfig = content_config(page);
-  if (pageConfig.source?.repository) {
+  var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
+    ? viewModel
+    : null
+  if (wikiViewModel) {
+    repo = wikiViewModel.collection.source.repository
+    branch = wikiViewModel.collection.source.branch || branch
+  } else if (pageConfig.source?.repository) {
     repo = pageConfig.source.repository
   } else if (stellar_data('wiki').tree[collection_id(page, "wiki")]?.source?.repository) {
     var proj = stellar_data('wiki').tree[collection_id(page, "wiki")]
@@ -20,7 +26,8 @@ function layoutDiv() {
   el += `<widget class="widget-wrapper${scrollreveal(' ')} ghrepo">`
   // body
   el += '<div class="widget-body">';
-  el += '<div class="items data-service ds-ghinfo" data-api="' + stellar_config('extensions.services.github.apiUrl') + '/repos/' + repo + '">';
+  var repoApi = wikiViewModel ? wikiViewModel.render.listing.repositoryApi : stellar_config('extensions.services.github.apiUrl') + '/repos/' + repo
+  el += '<div class="items data-service ds-ghinfo" data-api="' + escape_html(repoApi) + '">';
   el += '<a class="repo" href="https://github.com/' + repo + '" target="_blank" rel="external nofollow noopener noreferrer">';
     el += '<div class="repo-name flex-row">';
       el += icon('github:repo')

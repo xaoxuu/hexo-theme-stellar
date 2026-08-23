@@ -5,11 +5,17 @@ var isOrdinaryPost = page.layout === 'post' && pageConfig.collection?.profile !=
 if (isOrdinaryPost && (activeProfile !== 'post' || page.viewModel?.render == null)) {
   throw new Error(`Stellar v2: 普通 Post ${page.source || page.path || '<unknown>'} 缺少合法 PageViewModel.render`)
 }
+var isWikiPage = pageConfig.collection?.profile === 'wiki'
+if (isWikiPage && (activeProfile !== 'wiki' || page.viewModel?.render == null)) {
+  throw new Error(`Stellar v2: Wiki 页面 ${page.source || page.path || '<unknown>'} 缺少合法 PageViewModel.render`)
+}
 var postViewModel = activeProfile === 'post' ? page.viewModel : null
+var wikiViewModel = activeProfile === 'wiki' ? page.viewModel : null
+var renderViewModel = postViewModel || wikiViewModel
 var appearance = stellar_config('appearance')
 var html = ''
 
-if (postViewModel) {
+if (renderViewModel) {
   function primitiveItem(kind, content) {
     return partial('_partial/primitives/item', {kind: kind, body: content})
   }
@@ -18,12 +24,12 @@ if (postViewModel) {
   }
 
   var siteBackground = ''
-  if (postViewModel.render.layout.siteBackground) {
+  if (renderViewModel.render.layout.siteBackground) {
     siteBackground = `<div class="sitebg"><div class="siteblur"></div></div>`
   }
 
   var coverSection = primitiveSection('cover', [
-    primitiveItem('cover', partial('_partial/cover/index').trim())
+    primitiveItem('cover', partial('_partial/cover/index', {viewModel: renderViewModel}).trim())
   ])
   var coverRegion = partial('_partial/primitives/region', {
     slot: 'cover',
@@ -31,14 +37,14 @@ if (postViewModel) {
   })
 
   var leftSection = primitiveSection('sidebar', [
-    primitiveItem('widget', partial('_partial/sidebar/index_leftbar', {viewModel: postViewModel}))
+    primitiveItem('widget', partial('_partial/sidebar/index_leftbar', {viewModel: renderViewModel}))
   ])
-  var leftbarSurface = postViewModel.render.layout.leftbarSurface
+  var leftbarSurface = renderViewModel.render.layout.leftbarSurface
   var leftRegion = partial('_partial/primitives/region', {
     slot: 'left',
     body: leftSection,
     surface: leftbarSurface,
-    blur: postViewModel.render.layout.leftbarBlur
+    blur: renderViewModel.render.layout.leftbarBlur
   })
 
   var mainSection = primitiveSection('content', [
@@ -52,7 +58,7 @@ if (postViewModel) {
   })
 
   var rightSection = primitiveSection('sidebar', [
-    primitiveItem('widget', partial('_partial/sidebar/index_rightbar', {viewModel: postViewModel}).trim())
+    primitiveItem('widget', partial('_partial/sidebar/index_rightbar', {viewModel: renderViewModel}).trim())
   ])
   var rightRegion = partial('_partial/primitives/region', {
     slot: 'right',
@@ -61,14 +67,14 @@ if (postViewModel) {
 
   var regions = leftRegion + mainRegion + rightRegion
   html = partial('_partial/primitives/shell', {
-    viewModel: postViewModel,
-    preferredTheme: postViewModel.render.document.preferredTheme,
-    head: partial('_partial/head', {viewModel: postViewModel}),
+    viewModel: renderViewModel,
+    preferredTheme: renderViewModel.render.document.preferredTheme,
+    head: partial('_partial/head', {viewModel: renderViewModel}),
     siteBackground: siteBackground,
     cover: coverRegion,
     regions: regions,
     menuButton: primitiveItem('menu-button', partial('_partial/menubtn')),
-    scripts: primitiveSection('scripts', [primitiveItem('scripts', partial('_partial/scripts', {viewModel: postViewModel}))])
+    scripts: primitiveSection('scripts', [primitiveItem('scripts', partial('_partial/scripts', {viewModel: renderViewModel}))])
   })
 } else {
 // 页面类型：索引页面还是内容页面

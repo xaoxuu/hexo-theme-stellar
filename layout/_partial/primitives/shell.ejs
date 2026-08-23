@@ -1,6 +1,6 @@
 <%
-if (!viewModel || viewModel.collection?.profile !== 'post' || !viewModel.render) {
-  throw new Error('Stellar Layout Shell: 普通 Post 缺少合法 PageViewModel.render')
+if (!viewModel || !['post', 'wiki'].includes(viewModel.collection?.profile) || !viewModel.render) {
+  throw new Error('Stellar Layout Shell: 页面缺少合法 PageViewModel.render')
 }
 var render = viewModel.render
 var item = viewModel.item

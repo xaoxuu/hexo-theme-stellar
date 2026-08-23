@@ -1,6 +1,9 @@
 <%
 
-var wiki = stellar_data('wiki').tree[collection_id(page, "wiki")]
+const wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
+  ? viewModel
+  : null
+var wiki = wikiViewModel ? null : stellar_data('wiki').tree[collection_id(page, "wiki")]
 var topic = stellar_data('topic').tree[collection_id(page, "topic")]
 var notebook = stellar_data('notebooks').tree[collection_id(page, "notebook")]
 const postViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'post'
@@ -8,8 +11,11 @@ const postViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?
   : null
 
 var sidebarState
-if (postViewModel) {
-  sidebarState = postViewModel.item.presentation.sidebar?.left || {}
+if (postViewModel || wikiViewModel) {
+  var activeViewModel = postViewModel || wikiViewModel
+  sidebarState = wikiViewModel
+    ? wikiViewModel.render.layout.sidebar?.left || {}
+    : postViewModel.item.presentation.sidebar?.left || {}
 } else {
   sidebarState = Object.assign({}, content_config(page).sidebar?.left || {})
   if (sidebarState.widgets == null) {
@@ -83,7 +89,7 @@ function layoutWidgets() {
         Object.assign(widget, w)
       }
       if (widget && widget.layout) {
-        el += partial('../widgets/' + widget.layout, {item: widget})
+        el += partial('../widgets/' + widget.layout, {item: widget, viewModel: postViewModel || wikiViewModel})
       }
     });
   }
@@ -102,7 +108,7 @@ function layoutSearch() {
   } else if (topic?.sidebar?.left?.search) {
     search = topic.sidebar.left.search
   }
-  return partial('search', {item: search, disabled: sidebarState.search === false})
+  return partial('search', {item: search, disabled: sidebarState.search === false, viewModel: wikiViewModel})
 }
 function layoutFooterDiv() {
   var actions = stellar_config('site.footer.actions')
@@ -151,7 +157,8 @@ function layoutFooterDiv() {
 function layoutBrand() {
   return partial('brand', {
     placement: 'sidebar',
-    brandModel: postViewModel ? postViewModel.render.layout.brand : undefined
+    brandModel: (postViewModel || wikiViewModel) ? (postViewModel || wikiViewModel).render.layout.brand : undefined,
+    viewModel: wikiViewModel
   })
 }
 
@@ -161,7 +168,9 @@ function layoutNavArea() {
     return el
   }
   // Wiki 内容页默认隐藏导航区，可在页面或项目左侧栏配置中开启。
-  if (collection_id(page, "wiki")?.length > 0) {
+  if (wikiViewModel) {
+    if (sidebarState.menu !== true) return el
+  } else if (collection_id(page, "wiki")?.length > 0) {
     if (sidebarState.menu !== true && wiki?.sidebar?.left?.menu !== true) {
       return el
     }
@@ -169,7 +178,7 @@ function layoutNavArea() {
   el += `<div class="nav-area">`
   el += partial('menu', {
     where: 'sidebar',
-    activeMenu: postViewModel ? postViewModel.item.navigation.menu : undefined
+    activeMenu: (postViewModel || wikiViewModel) ? (postViewModel || wikiViewModel).item.navigation.menu : undefined
   })
   el += `</div>`
   return el

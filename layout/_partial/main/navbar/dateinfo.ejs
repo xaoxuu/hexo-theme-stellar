@@ -1,9 +1,19 @@
 <%
 function layoutDiv() {
+  var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
+    ? viewModel
+    : null
   // 作者
   var el = ''
   el += `<div class="flex-row" id="post-meta">`
-  if (collection_id(page, "wiki")) {
+  if (wikiViewModel) {
+    var updated = wikiViewModel.render.article.updated
+    if (updated) {
+      el += `<span class="text created">${__("meta.updated") + __("symbol.colon")}`
+      el += `<time datetime="${date_xml(updated)}">${date(updated, config.date_format)}</time>`
+      el += `</span>`
+    }
+  } else if (collection_id(page, "wiki")) {
     el += `<span class="text created">${__("meta.updated") + __("symbol.colon")}`
     el += `<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time>`
     el += `</span>`

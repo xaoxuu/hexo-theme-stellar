@@ -629,10 +629,154 @@ function pageViewModelSchema(profile) {
     });
   }
 
+  if (profile === "wiki") {
+    const stringItem = field("string", { default: computed("由构建期数组逐项归一化"), example: "Stellar" });
+    const renderBrand = brandSchema(factory);
+    renderBrand.required = true;
+    const wikiLink = field(["object", "null"], {
+      default: computed("由 Wiki navigation.tree 当前页码计算；不存在时为 null"),
+      example: { title: "安装", path: "wiki/stellar/install", date: null },
+      required: true,
+      properties: {
+        title: field("string", { default: literal(""), example: "安装", required: true }),
+        path: field("string", { default: literal(""), example: "wiki/stellar/install", required: true }),
+        date: field(["string", "null"], { default: literal(null), example: null, required: true })
+      }
+    });
+    const share = field(["object", "null"], {
+      default: computed("由最终 footer.share 生成；禁用时为 null"),
+      example: { services: ["link"], permalink: "https://example.com/wiki/stellar/", title: "Stellar - Example" },
+      required: true,
+      properties: {
+        services: array(stringItem, { default: literal([]), example: ["wechat", "link"], required: true }),
+        permalink: field("string", { default: inherited("item.route.permalink"), example: "https://example.com/wiki/stellar/", required: true }),
+        title: field("string", { default: computed("由页面标题与站点标题组合"), example: "Stellar - Example", required: true }),
+        image: field("string", { default: inherited("item.presentation.card.cover"), example: "/cover.webp", required: true }),
+        summary: field("string", { default: computed("由 description/excerpt/content 截断"), example: "Wiki 摘要", required: true })
+      }
+    });
+    const contributor = field(["object", "null"], {
+      default: computed("由 contributors.edit_page 与源文件生成"),
+      example: { editUrl: "https://github.com/example/repo/blob/main/index.md", commitsUrl: "https://api.github.com/repos/example/repo/commits?path=index.md" },
+      required: true,
+      properties: {
+        editUrl: field("string", { default: literal(""), example: "https://github.com/example/repo/blob/main/index.md", required: true }),
+        commitsUrl: field("string", { default: literal(""), example: "https://api.github.com/repos/example/repo/commits?path=index.md", required: true })
+      }
+    });
+    const comments = object({
+      enabled: field("boolean", { default: computed("由最终 comments.enabled 与 service 生成"), example: true, required: true }),
+      title: field("string", { default: inherited("item.presentation.comments.title"), example: "参与讨论", required: true }),
+      id: field("string", { default: inherited("item.presentation.comments.id"), example: "wiki-stellar", required: true }),
+      service: field("string", { default: inherited("item.presentation.comments.provider"), example: "giscus", required: true }),
+      options: field("object", { default: computed("由激活服务参数袋生成"), example: { "data-repo": "example/repo" }, required: true, additionalProperties: true }),
+      pageTitle: field("string", { default: inherited("item.title"), example: "开始", required: true })
+    }, { required: true, example: { enabled: true, title: "参与讨论", id: "", service: "giscus", options: {}, pageTitle: "开始" } });
+    const relatedItem = object({
+      href: field("string", { default: literal(""), example: "wiki/example", required: true }),
+      title: field("string", { default: literal(""), example: "Example", required: true }),
+      description: field("string", { default: literal(""), example: "Related Wiki", required: true })
+    }, { example: { href: "wiki/example", title: "Example", description: "Related Wiki" } });
+    const relatedGroup = object({
+      name: field("string", { default: literal(""), example: "博客主题", required: true }),
+      items: array(relatedItem, { default: literal([]), example: [], required: true })
+    }, { example: { name: "博客主题", items: [] } });
+    const breadcrumb = object({
+      name: field("string", { default: inherited("collection.identity.name"), example: "Stellar", required: true }),
+      path: field("string", { default: inherited("collection.route.homepage"), example: "wiki/stellar", required: true })
+    }, { example: { name: "Stellar", path: "wiki/stellar" } });
+    const openGraph = field(["object", "null"], {
+      default: computed("由 SEO 配置与页面 Open Graph 覆盖生成；禁用时为 null"),
+      example: { args: { image: "/cover.webp" }, title: "开始", siteName: "Example", twitterTitle: "开始", publishedTime: null, modifiedTime: null, tags: [] },
+      required: true,
+      additionalProperties: true
+    });
+
+    properties.render = object({
+      document: object({
+        language: field("string", { default: derived("page.lang", "page.language", "site.language"), example: "zh-CN", required: true }),
+        headInject: field("string", { default: literal(""), example: "", required: true }),
+        preferredTheme: field("string", { default: derived("hexo.stellar.config.appearance.colorScheme"), example: "auto", required: true })
+      }, { required: true, example: { language: "zh-CN", headInject: "", preferredTheme: "auto" } }),
+      layout: object({
+        pageType: field("string", { default: literal("content"), example: "content", required: true }),
+        articleType: field(["string", "null"], { default: inherited("item.presentation.article.type"), example: "tech", required: true }),
+        indent: field("boolean", { default: inherited("item.presentation.article.indent", "articleType === story"), example: false, required: true }),
+        siteBackground: field("boolean", { default: derived("hexo.stellar.config.appearance.backgrounds.page.image"), example: false, required: true }),
+        leftbarSurface: field("string", { default: derived("hexo.stellar.config.appearance.backgrounds.sidebar.surface"), example: "glass", required: true }),
+        leftbarBlur: field("boolean", { default: literal(false), example: false, required: true }),
+        brand: renderBrand,
+        wikiIndexPath: field("string", { default: derived("layout.profiles.wiki_index.path"), example: "wiki", required: true }),
+        showWikiHome: field("boolean", { default: inherited("item.presentation.sidebar.left.wikiHome"), example: true, required: true }),
+        sidebar: field("object", { default: inherited("item.presentation.sidebar"), example: { left: { widgets: ["tree"] }, right: { widgets: ["toc"] } }, required: true, additionalProperties: true }),
+        breadcrumbs: array(breadcrumb, { default: literal([]), example: [{ name: "Stellar", path: "wiki/stellar" }], required: true })
+      }, { required: true, example: { pageType: "content", articleType: "tech", indent: false, brand: {}, wikiIndexPath: "wiki", showWikiHome: true, sidebar: {}, breadcrumbs: [] } }),
+      seo: object({
+        title: field("string", { default: computed("由 Wiki 名、页面标题和站点标题组合"), example: "Stellar：开始 - Example", required: true }),
+        description: field("string", { default: derived("page.description", "collection.identity.description", "item.excerpt", "item.content"), example: "Wiki 摘要", required: true }),
+        keywords: array(stringItem, { default: derived("page.keywords", "item.tags", "site.keywords"), example: ["Stellar"], required: true }),
+        robots: field(["string", "null"], { default: derived("IS_BACKUP", "page.robots"), example: null, required: true }),
+        canonical: field(["string", "null"], { default: derived("seo.canonical.host", "item.route.path"), example: "https://example.com/wiki/stellar/", required: true }),
+        openGraph,
+        jsonLd: field("object", { default: computed("由 WebPage 结构化数据规则生成"), example: { "@type": "WebPage" }, required: true, additionalProperties: true })
+      }, { required: true, example: { title: "Stellar：开始 - Example", description: "Wiki 摘要", keywords: ["Stellar"], robots: null, canonical: null, openGraph: null, jsonLd: { "@type": "WebPage" } } }),
+      cover: object({
+        enabled: field("boolean", { default: computed("仅 Wiki 首页且 hero.enabled 时启用"), example: true, required: true }),
+        background: field("object", { default: inherited("collection.presentation.hero.background"), example: { effect: { type: "galaxy" } }, required: true, additionalProperties: true }),
+        preview: field("object", { default: inherited("collection.presentation.hero.preview"), example: { type: "terminal" }, required: true, additionalProperties: true }),
+        actions: array(field("object", { additionalProperties: true }), { default: literal([]), example: [], required: true }),
+        title: field("string", { default: inherited("collection.identity.headline"), example: "每个人的独立博客", required: true }),
+        description: field("string", { default: inherited("collection.identity.description"), example: "Stellar 文档", required: true }),
+        repository: field("string", { default: inherited("collection.source.repository"), example: "xaoxuu/hexo-theme-stellar", required: true }),
+        sourceUrl: field("string", { default: computed("由 repository 生成"), example: "https://github.com/xaoxuu/hexo-theme-stellar", required: true }),
+        releaseApi: field("string", { default: computed("由 GitHub service API 与 repository 生成"), example: "https://api.github.com/repos/xaoxuu/hexo-theme-stellar/tags", required: true }),
+        projectName: field("string", { default: inherited("collection.identity.name"), example: "Stellar", required: true }),
+        siteName: field("string", { default: derived("site.title"), example: "Example", required: true })
+      }, { required: true, example: { enabled: true, background: {}, preview: {}, actions: [], title: "Stellar", description: "", repository: "", sourceUrl: "", releaseApi: "", projectName: "Stellar", siteName: "Example" } }),
+      article: object({
+        heti: field("boolean", { default: derived("extensions.features.cjkTypography.enabled"), example: false, required: true }),
+        banner: field("object", { default: inherited("item.presentation.banner"), example: { headline: "开始" }, required: true, additionalProperties: true }),
+        updated: field(["string", "null"], { default: inherited("item.updated"), example: "2026-08-23T00:00:00.000Z", required: true }),
+        readmeHtml: field("string", { default: computed("Wiki 首页正文为空且配置 repository 时生成远程 README 占位"), example: "", required: true }),
+        footer: object({
+          references: array(field("any", { additionalProperties: true }), { default: inherited("item.presentation.footer.references"), example: [], required: true }),
+          license: field("string", { default: computed("由最终许可协议与作者信息生成"), example: "CC BY-NC-SA 4.0", required: true }),
+          share,
+          contributor
+        }, { required: true, example: { references: [], license: "", share: null, contributor: null } }),
+        previous: wikiLink,
+        next: wikiLink,
+        comments,
+        related: array(relatedGroup, { default: literal([]), example: [], required: true })
+      }, { required: true, example: { heti: false, banner: {}, updated: null, readmeHtml: "", footer: {}, previous: null, next: null, comments: {}, related: [] } }),
+      listing: object({
+        id: field("string", { default: inherited("collection.id"), example: "stellar", required: true }),
+        href: field("string", { default: inherited("collection.route.homepage"), example: "wiki/stellar", required: true }),
+        name: field("string", { default: inherited("collection.identity.name"), example: "Stellar", required: true }),
+        headline: field("string", { default: inherited("collection.identity.headline"), example: "每个人的独立博客", required: true }),
+        caption: field("string", { default: computed("由 collection tagline/description 生成"), example: "基于 Hexo 的全能型主题", required: true }),
+        description: field("string", { default: inherited("collection.identity.description"), example: "Stellar 文档", required: true }),
+        tags: array(stringItem, { default: derived("collection.tags"), example: ["博客主题"], required: true }),
+        audience: field("string", { default: inherited("collection.identity.audience"), example: "独立博主", required: true }),
+        icon: field("string", { default: inherited("collection.identity.icon"), example: "/stellar.svg", required: true }),
+        cover: field("string", { default: inherited("collection.presentation.card.cover"), example: "/cover.webp", required: true }),
+        repository: field("string", { default: inherited("collection.source.repository"), example: "xaoxuu/hexo-theme-stellar", required: true }),
+        repositoryApi: field("string", { default: computed("由 GitHub service API 与 repository 生成"), example: "https://api.github.com/repos/xaoxuu/hexo-theme-stellar", required: true }),
+        priority: field("number", { default: inherited("collection.listing.priority"), example: 1, required: true }),
+        sort: field("number", { default: inherited("collection.listing.sort"), example: 0, required: true }),
+        listed: field("boolean", { default: inherited("collection.visibility.listed"), example: true, required: true })
+      }, { required: true, example: { id: "stellar", href: "wiki/stellar", name: "Stellar", headline: "Stellar", caption: "", description: "", tags: [], audience: "", icon: "", cover: "", repository: "", repositoryApi: "", priority: 0, sort: 0, listed: true } })
+    }, {
+      default: computed("由 Wiki PageViewModel 构建器生成"),
+      example: { document: { language: "zh-CN" }, layout: { pageType: "content" }, seo: { title: "Stellar - Example" } },
+      required: true
+    });
+  }
+
   return object(properties, {
     required: true,
-    example: profile === "post"
-      ? { collection: { id: "post", profile: "post" }, item: { id: "post-hello" }, render: { document: {}, layout: {}, seo: {} } }
+    example: profile === "post" || profile === "wiki"
+      ? { collection: { id: profile, profile }, item: { id: `${profile}-hello` }, render: { document: {}, layout: {}, seo: {} } }
       : { collection: { id: profile, profile }, item: { id: `${profile}-hello` } }
   });
 }
