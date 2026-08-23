@@ -352,6 +352,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `fe8d810` | refactor(v2): 封闭配置根与运行时数据边界 (#712) | 设计文档 `2026-08-23-v2-config-root-seal/`；八根主题 Schema 根级封闭、旧根/非对象诊断、package 元数据与核心资源内部化、pretty URL 内部策略、`hexo.stellar.data` 运行时数据边界、Node/EJS 消费链、已交付配置 Reference、292 项测试与主工程 254 个生成文件；Standards / Spec 双轨 review 无剩余 finding，Pre-alpha M1.5 完成，M2–M5 与 Alpha 1 未完成 |
 | `5b27db6` | refactor(v2): 迁移 Extension 与服务配置 (#711) | 设计文档 `2026-08-23-v2-extension-services-config/`；`extensions.search/comments/tags/features/services/cache` 严格 Schema、冻结 camelCase 运行时、第三方参数袋、完整服务 URL、官方资源内部化、Node / EJS / tag plugin / Stylus / 客户端注入消费链、双 Reference、287 项测试与主工程 254 个生成文件；Standards / Spec 双轨 review 无剩余 finding |
 | `11b637b` | fix(v2): 修复外观配置审查问题 (#710) | Standards / Spec 双轨 review 修复：`appearance.backgrounds.sidebar.opacity: 0` 无条件投影到 Stylus 变量，补充回归断言；知识库的标签插件兜底与段落对齐路径同步为 `resources.fallbacks` / `appearance.typography` |
 | `6bb55ef` | refactor(v2): 迁移外观与资源兜底配置 (#710) | 设计文档 `2026-08-23-v2-appearance-resources-config/`；`appearance` / `resources.fallbacks` 严格 Schema、冻结 camelCase 运行时、EJS / helper / tag plugin / Stylus 消费链、语言化 loading 文案、配置与模型 Reference、282 项测试与主工程 254 个生成文件；Standards / Spec 双轨 review 问题修复后无剩余 finding |

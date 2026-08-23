@@ -12,4 +12,4 @@ date: 2026-08-23
 5. [x] 同步契约测试、Reference、知识库、`VERIFICATION.md` 与主工程总蓝图。
 6. [x] 执行主题检查、主工程构建与关键产物抽查。
 7. [x] 完成 Standards / Spec 双轨 review，修复全部 finding。
-8. [ ] 提交并推送主题 `v2`，评论证据并以 `resolved` 闭环 #712。
+8. [x] 提交并推送主题 `v2`，评论证据并以 `resolved` 闭环 #712。

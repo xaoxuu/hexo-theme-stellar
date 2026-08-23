@@ -21,7 +21,7 @@ date: 2026-08-23
 - [x] 知识库硬核查通过。
 - [x] 主工程 `npm run g` 通过（254 个文件）；已抽查 `/`、`/blog/20260226/`、`/blog/20260815/`、`/wiki/stellar/`、`/notes/` 的标题、canonical、核心 CSS/JS 与主题元数据。
 - [x] Standards / Spec review 无剩余 finding。
-- [ ] 主题提交已推送 `origin/v2`，#712 已评论证据并以 `resolved` 闭环。
+- [x] 主题提交已推送 `origin/v2`，#712 已评论证据并以 `resolved` 闭环。
 - [x] 主工程保持未提交且未提交子模块指针。
 
 ## 阶段状态
