@@ -2,7 +2,6 @@
 function layoutDiv() {
   var el = '';
   var repo;
-  var branch = 'main';
   var repoApi;
   var tagsApi;
   var pageConfig = content_config(page);
@@ -10,8 +9,7 @@ function layoutDiv() {
     ? viewModel
     : null
   if (wikiViewModel) {
-    repo = wikiViewModel.collection.source.repository
-    branch = wikiViewModel.collection.source.branch || branch
+    repo = wikiViewModel.render.listing.repository
     repoApi = wikiViewModel.render.listing.repositoryApi
     tagsApi = repoApi ? repoApi + '/tags' : ''
   } else if (pageConfig.source?.repository) {
@@ -19,9 +17,6 @@ function layoutDiv() {
   } else if (stellar_data('wiki').tree[collection_id(page, "wiki")]?.source?.repository) {
     var proj = stellar_data('wiki').tree[collection_id(page, "wiki")]
     repo = proj.source?.repository
-    if (proj.source?.branch != undefined) {
-      branch = proj.source.branch
-    }
   }
   if (!repo) {
     return el;

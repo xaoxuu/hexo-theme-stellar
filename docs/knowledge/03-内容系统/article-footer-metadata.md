@@ -49,7 +49,7 @@ tags:
 ```mermaid
 flowchart TD
   layoutDiv["layoutDiv()"]
-  chkRef{"page.references\n.length > 0?"}
+  chkRef{"footer.references\n.length > 0?"}
   chkLic{"license string\nresolves?"}
   chkCon{"contributors\npartial non-empty?"}
   chkShr{"share enabled\n& visible?"}
@@ -73,7 +73,7 @@ flowchart TD
   secRef & secLic & secCon & secShr --> out
 ```
 
-**参考源码**：[layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)
+**参考源码**：[layout/_partial/main/article/post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs)、[layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)
 
 ---
 
@@ -91,10 +91,10 @@ flowchart TD
 
 ## 引用区块
 
-`page.references` 为非空数组时渲染。每个条目经 Hexo 的 `markdown()` 辅助函数处理，包装在 `<ul>` 内的 `<li class="post-title">` 元素中。
+Post/Wiki 的 `render.article.footer.references` 为非空数组时渲染；legacy 页面继续从页面配置读取。每个条目经 Hexo 的 `markdown()` 辅助函数处理，包装在 `<ul>` 内的 `<li class="post-title">` 元素中。
 
 ```
-page.references: [
+render.article.footer.references: [
   "[Author, Title](url)",
   "Plain text reference"
 ]
@@ -102,56 +102,30 @@ page.references: [
 
 `.post-title` 列表项样式设置 `line-height: 1.2` 与 `word-break: break-all`，适合 URL 显示。
 
-**参考源码**：[layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)、[source/css/_components/partial/article-footer.styl](../../../source/css/_components/partial/article-footer.styl)
+**参考源码**：[layout/_partial/main/article/post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs)、[source/css/_components/partial/article-footer.styl](../../../source/css/_components/partial/article-footer.styl)
 
 ---
 
 ## 许可解析
 
-许可文本按页面布局与是否属于 wiki 项目经三级兜底解析。解析出的字符串可能包含 `{author.name}` 与 `{author.url}` 占位符，从 `stellar_data('authors')` 插值。
+Post/Wiki 的许可文本在 ViewModel 构建期按页面、Collection/Profile 与主题默认级联；模板只接收最终字符串。解析出的字符串可能包含 `{author.name}` 与 `{author.url}` 占位符，由模型使用已登记作者数据插值。legacy 页面仍在 `article_footer.ejs` 中解析。
 
 ### 解析逻辑
 
 ```mermaid
 flowchart TD
-  start["Resolve license string"]
-  isWiki{"collection_id(page, 'wiki')\nset?"}
-  wikiPageLic{"page.license\n!= null?"}
-  wikiPageLicVal["license = page.footer.license\n|| content.article.footer.license"]
-  projLic{"proj.license\n!= null?"}
-  projLicTrue{"proj.license\n== true?"}
-  projLicUse["license = proj.license"]
-  themeDefault["license = content.article.footer.license"]
-  isPost{"page.layout\n== 'post'?"}
-  postCheck{"content.article.footer.license\n&& page.footer.license != false?"}
-  postLic["license = page.footer.license\n|| content.article.footer.license"]
-  isOther{"page.license\nset?"}
-  otherLicTrue{"page.license\n=== true?"}
-  otherLicUse["license = page.license"]
-  noLicense["license = ''"]
-  authorInterp["Interpolate\n{author.name}\n{author.url}"]
-  render["markdown(license)\ninto section#license"]
+  page["Front Matter footer.license"]
+  collection["Collection/Profile footer.license"]
+  theme["content.article.footer.license"]
+  cascade["ViewModel cascade\nfalse → empty\ntrue → theme default\nstring → final value"]
+  authorInterp["resolveLicense()\n{author.name} / {author.url}"]
+  render["render.article.footer.license"]
+  partial["post_footer.ejs\nmarkdown() → section#license"]
 
-  start --> isWiki
-  isWiki -- yes --> wikiPageLic
-  wikiPageLic -- yes --> wikiPageLicVal
-  wikiPageLic -- no --> projLic
-  projLic -- yes --> projLicTrue
-  projLicTrue -- yes --> themeDefault
-  projLicTrue -- no --> projLicUse
-  projLic -- no --> noLicense
-  isWiki -- no --> isPost
-  isPost -- yes --> postCheck
-  postCheck -- yes --> postLic
-  postCheck -- no --> noLicense
-  isPost -- no --> isOther
-  isOther -- yes --> otherLicTrue
-  otherLicTrue -- yes --> themeDefault
-  otherLicTrue -- no --> otherLicUse
-  isOther -- no --> noLicense
-  wikiPageLicVal & themeDefault & projLicUse & postLic & otherLicUse --> authorInterp
-  authorInterp --> render
-  noLicense --> render
+  page --> cascade
+  collection --> cascade
+  theme --> cascade
+  cascade --> authorInterp --> render --> partial
 ```
 
 ### 按页面类型的解析
@@ -159,19 +133,18 @@ flowchart TD
 | 页面类型 | 关闭机制 | 开启机制 | 默认来源 |
 |----------|----------|----------|----------|
 | `post` | `page.footer.license: false` | `page.footer.license: <string>` | `content.article.footer.license` |
-| wiki 页面 | 页面省略 `license` | `page.license: <string>` | `proj.license` 或主题默认 |
+| wiki 页面 | `footer.license: false` | `footer.license: true` 或 `<string>` | Wiki Collection → `content.article.footer.license` |
 | 其他布局 | （默认不显示） | `page.footer.license: true` 或 `<string>` | `content.article.footer.license` |
 
-- `proj` 指 `stellar_data('wiki').tree[collection_id(page, 'wiki')]`——项目级 wiki 配置对象，构建方式见[文档系统](wiki-docs.md)
 - Collection `footer.license: true` 表示使用全局 `content.article.footer.license`
-- `proj.license: false` 表示无论页面级设置如何都不显示许可
+- 页面级 `footer.license` 覆盖 Collection；`false` 生成空许可字符串
 
 ### 作者插值
 
 对解析出的许可字符串做替换：
 
-- `page.author` 匹配 `stellar_data('authors')` 中的键时使用该作者对象
-- 否则使用 `stellar_data('defaultAuthor')`
+- `item.presentation.article.author` 匹配运行时作者表中的键时使用该作者对象
+- 否则使用运行时 `defaultAuthor`
 - `{author.name}` → `author.name`
 - `{author.url}` → `author.url`
 
@@ -184,13 +157,13 @@ content:
       license: 'This work by [{author.name}]({author.url}) is licensed under CC BY-NC-SA 4.0.'
 ```
 
-**参考源码**：[layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)
+**参考源码**：[scripts/lib/models/index.js](../../../scripts/lib/models/index.js)、[layout/_partial/main/article/post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs)
 
 ---
 
 ## 贡献者区块
 
-贡献者区块通过调用 `partial('contributors', {map: stellar_config('extensions.services.contributors.editPage')})` 生成。partial 渲染为空时整个区块省略。
+Post/Wiki 的模型根据 `extensions.services.contributors.editPage` 与 `item.source.file` 生成 `render.article.footer.contributor`；`post_footer.ejs` 只消费最终的编辑 URL 和 commits API。无法匹配映射时整个区块省略。legacy 页面继续调用原 contributors partial。
 
 关键样式：
 
@@ -203,7 +176,7 @@ content:
 
 `edit_page` URL 映射（来自 `extensions.services.contributors`）决定贡献者头部是否显示「编辑本页」链接。配置结构见[数据服务与组件](../06-数据服务与组件/data-widgets-overview.md)。
 
-**参考源码**：[layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)、[source/css/_components/partial/article-footer.styl](../../../source/css/_components/partial/article-footer.styl)
+**参考源码**：[scripts/lib/models/index.js](../../../scripts/lib/models/index.js)、[layout/_partial/main/article/post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs)、[source/css/_components/partial/article-footer.styl](../../../source/css/_components/partial/article-footer.styl)
 
 ---
 
@@ -215,11 +188,11 @@ content:
 
 | 页面类型 | 是否显示分享 |
 |----------|--------------|
-| wiki 页面 | `page.share == true` 或 `proj.share == true` |
-| `post` | `page.share != false`（默认显示） |
+| wiki 页面 | `render.article.footer.share` 非 null |
+| `post` | `render.article.footer.share` 非 null |
 | 其他布局 | `page.share == true` |
 
-另外，`content.article.footer.share` 必须是非空数组才会渲染按钮。
+模型只保留 `wechat/weibo/email/link` 四个平台；解析后的 services 非空时才生成 share 对象和按钮。
 
 ### 支持的平台
 
@@ -240,10 +213,10 @@ content:
 
 | 参数 | 来源 |
 |------|------|
-| `url` | `page.permalink` |
-| `title` | `page.title + ' - ' + config.title` |
-| `pics` | `page.cover`（文章）或 `page.icon`（wiki 页面） |
-| `summary` | `page.description` 或截断的 `page.excerpt` / `page.content` |
+| `url` | `footer.share.permalink` |
+| `title` | `footer.share.title` |
+| `pics` | `footer.share.image` |
+| `summary` | `footer.share.summary` |
 
 所有分享参数（URL、标题、图片、摘要）均经 `encodeURIComponent` 编码后拼入 `href`；`copy-link` 输入框的 `value` 与复制提示文案经 HTML 转义输出，标题/摘要含引号、`&`、`<` 等字符时不会破坏 HTML 结构。
 
@@ -252,7 +225,7 @@ content:
 分享列表含 `wechat` 时，额外渲染 `<div class="qrcode" id="qrcode-wechat">`：
 
 ```html
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data={encodeURIComponent(page.permalink)}"/>
+<img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data={encodeURIComponent(footer.share.permalink)}"/>
 ```
 
 二维码面板经 CSS 过渡动画。初始 `opacity: 0; height: 0; transform: scale(0.01)`；`util.toggle("qrcode-wechat")` 添加 `display` 类后面板动画到 `height: 128px; transform: scale(1)`。
@@ -262,14 +235,14 @@ flowchart LR
   shareClick["User clicks\nwechat button"]
   toggleFn["util.toggle\n('qrcode-wechat')"]
   cssClass["toggles .display\nclass on #qrcode-wechat"]
-  qrcodeImg["img from\napi.qrserver.com\n?data=page.permalink"]
+  qrcodeImg["img from\napi.qrserver.com\n?data=footer.share.permalink"]
   transition["CSS trans1:\nheight 0 -> 128px\nscale 0.01 -> 1"]
 
   shareClick --> toggleFn --> cssClass --> transition
   cssClass --> qrcodeImg
 ```
 
-**参考源码**：[layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)、[source/css/_components/partial/article-footer.styl](../../../source/css/_components/partial/article-footer.styl)
+**参考源码**：[layout/_partial/main/article/post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs)、[source/css/_components/partial/article-footer.styl](../../../source/css/_components/partial/article-footer.styl)
 
 ---
 
@@ -298,24 +271,28 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-  pageData["page frontmatter\n(references, license,\nauthor, share, wiki)"]
-  themeConfig["theme config\n(content.article.footer,\nwiki.tree, authors,\ndefault_author,\nextensions.services.contributors)"]
-  ejs["article_footer.ejs\nlayoutDiv()"]
+  pageData["Front Matter\nfooter / article.author"]
+  collection["Collection/Profile\nfooter defaults"]
+  themeConfig["theme/runtime\narticle footer, authors, contributors"]
+  model["buildPost/Wiki render\nresolve + freeze"]
+  ejs["post_footer.ejs\nexplicit footer local"]
 
   secRef["section#references\nmarkdown() each ref"]
-  licResolve["License resolution\n(wiki / post / other)"]
+  licResolve["Resolved license"]
   authorInterp["Author interpolation\n{author.name} {author.url}"]
   secLic["section#license\nmarkdown(license)"]
-  contribPartial["partial('contributors',\n{map: edit_this_page_url})"]
+  contribPartial["footer.contributor"]
   secCon["section#contributors"]
-  shareVis["Share visibility\n(wiki / post / other)"]
+  shareVis["footer.share or null"]
   socialBtns["socialButtons()\nwechat weibo email link"]
   qrcode["qrcode()\n#qrcode-wechat"]
   secShr["section#share"]
   output["div.article-footer"]
 
-  pageData --> ejs
-  themeConfig --> ejs
+  pageData --> model
+  collection --> model
+  themeConfig --> model
+  model --> ejs
   ejs --> secRef
   ejs --> licResolve
   licResolve --> authorInterp --> secLic
@@ -325,4 +302,4 @@ flowchart TD
   secRef & secLic & secCon & secShr --> output
 ```
 
-**参考源码**：[layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)、[source/css/_components/partial/article-footer.styl](../../../source/css/_components/partial/article-footer.styl)
+**参考源码**：[scripts/lib/models/index.js](../../../scripts/lib/models/index.js)、[layout/_partial/main/article/post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs)、[source/css/_components/partial/article-footer.styl](../../../source/css/_components/partial/article-footer.styl)
