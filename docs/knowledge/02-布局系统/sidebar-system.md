@@ -12,11 +12,11 @@ tags:
 > [!IMPORTANT]
 > v2 页面与集合统一使用 `sidebar.left` / `sidebar.right`；本页涉及内容字段时，以[内容配置 Schema v2](../03-内容系统/content-schema-v2.md)为准。
 
-## v2 Post 与 Wiki 消费边界
+## v2 Post、Topic 与 Wiki 消费边界
 
-普通 Post 的左右栏选择读取 `PageViewModel.item.presentation.sidebar`；Wiki 从 `render.layout.sidebar` 取得相同的最终左右栏对象。两类页面的 Brand 都读取 `render.layout.brand`，菜单激活读取 `item.navigation.menu`。页面 Front Matter、Collection/Profile 与全局默认值的级联在模型层完成，模板不再修改这两类页面的 `page.sidebar`。
+普通 Post 的左右栏选择读取 `PageViewModel.item.presentation.sidebar`；Topic 与 Wiki 从 `render.layout.sidebar` 取得相同的最终左右栏对象。三类页面的 Brand 都读取 `render.layout.brand`，菜单激活读取 `item.navigation.menu`。页面 Front Matter、Collection/Profile 与全局默认值的级联在模型层完成，模板不再修改这些页面的 `page.sidebar`。
 
-Wiki 的 Brand、搜索、tree、related、ghrepo 与 toc partial 都接收显式 ViewModel local：搜索范围来自 `render.layout.searchFilter`，tree 来自 `collection.navigation.tree`，related 来自 `render.article.related`，仓库 API 来自 `render.listing.repositoryApi`。DOM、class、搜索匹配范围和客户端交互保持不变。Topic、Notebook 与普通 Page 继续使用 legacy 侧栏分支。
+Wiki 的 Brand、搜索、tree、related、ghrepo 与 toc partial 都接收显式 ViewModel local：搜索范围来自 `render.layout.searchFilter`，tree 来自 `collection.navigation.tree`，related 来自 `render.article.related`，仓库 API 来自 `render.listing.repositoryApi`。Topic 的 related widget 从 `collection.navigation.series` 构建显式专栏导航，左右栏与 Brand 使用最终 ViewModel。DOM、class、搜索匹配范围和客户端交互保持不变；Notebook 与普通 Page 继续使用 legacy 侧栏分支。
 
 <details>
 <summary>相关源码文件</summary>

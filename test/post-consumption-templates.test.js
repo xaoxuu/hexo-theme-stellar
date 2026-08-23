@@ -36,16 +36,16 @@ test("Post 卡片与归档条目优先消费 render.listing", () => {
   assert.match(source("layout/_partial/main/pin_slider.ejs"), /viewModel\.render\.listing/);
 });
 
-test("Post 列表保留 flat 排序去重，并把 Topic Post 隔离到旧分支", () => {
+test("Post 列表保留 flat 排序去重，并让 Topic 复用显式 listing", () => {
   const index = source("layout/index.ejs");
   const slider = source("layout/_partial/main/pin_slider.ejs");
   assert.match(index, /flatPins\.sort/);
   assert.match(index, /pinWeight\(b\.post\) - pinWeight\(a\.post\)/);
   assert.match(index, /pinnedPaths\[item\.post\.path\]/);
-  assert.match(index, /post_card_legacy/);
-  assert.match(index, /collection_id\(post, 'topic'\) != null/);
-  assert.match(index, /content_config\(post\)/);
-  assert.match(slider, /legacyPost/);
+  assert.doesNotMatch(index, /post_card_legacy/);
+  assert.match(index, /\['post', 'topic'\]\.includes/);
+  assert.doesNotMatch(index, /content_config\(post\)/);
+  assert.doesNotMatch(slider, /legacyPost/);
   assert.doesNotMatch(source("layout/_partial/main/post_list/post_card.ejs"), /legacyPost/);
 });
 

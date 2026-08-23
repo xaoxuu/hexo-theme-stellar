@@ -1,17 +1,25 @@
 <%
-var activeProfile = page.viewModel?.collection?.profile
 var pageConfig = content_config(page)
 var isOrdinaryPost = page.layout === 'post' && pageConfig.collection?.profile !== 'topic'
-if (isOrdinaryPost && (activeProfile !== 'post' || page.viewModel?.render == null)) {
+var activeViewModel = (isOrdinaryPost || pageConfig.collection?.profile === 'topic')
+  ? post_view_model(page)
+  : page.viewModel
+var activeProfile = activeViewModel?.collection?.profile
+if (isOrdinaryPost && (activeProfile !== 'post' || activeViewModel?.render == null)) {
   throw new Error(`Stellar v2: 普通 Post ${page.source || page.path || '<unknown>'} 缺少合法 PageViewModel.render`)
 }
 var isWikiPage = pageConfig.collection?.profile === 'wiki'
-if (isWikiPage && (activeProfile !== 'wiki' || page.viewModel?.render == null)) {
+if (isWikiPage && (activeProfile !== 'wiki' || activeViewModel?.render == null)) {
   throw new Error(`Stellar v2: Wiki 页面 ${page.source || page.path || '<unknown>'} 缺少合法 PageViewModel.render`)
 }
-var postViewModel = activeProfile === 'post' ? page.viewModel : null
-var wikiViewModel = activeProfile === 'wiki' ? page.viewModel : null
-var renderViewModel = postViewModel || wikiViewModel
+var isTopicPage = pageConfig.collection?.profile === 'topic'
+if (isTopicPage && (activeProfile !== 'topic' || activeViewModel?.render == null)) {
+  throw new Error(`Stellar v2: Topic 页面 ${page.source || page.path || '<unknown>'} 缺少合法 PageViewModel.render`)
+}
+var postViewModel = activeProfile === 'post' ? activeViewModel : null
+var wikiViewModel = activeProfile === 'wiki' ? activeViewModel : null
+var topicViewModel = activeProfile === 'topic' ? activeViewModel : null
+var renderViewModel = postViewModel || wikiViewModel || topicViewModel
 var appearance = stellar_config('appearance')
 var html = ''
 

@@ -37,7 +37,7 @@ tags:
 
 ## 架构概览
 
-文章列表系统采用两层架构：Hexo 提供 `page.posts`、分页和当前分类/标签查询状态；容器层为每个普通 Post 取得冻结的 `render.listing`，再调用只接收 ViewModel 的 `post_card.ejs`。首页平铺置顶、轮播与归档消费同一投影，不在 EJS 重做页面/Profile/主题级联。严格 Topic Post 在 M2 迁移期仍通过 `post_card_legacy.ejs` 保持原输出，不进入普通 Post 链；Wiki 使用独立的 `wiki_card.ejs`。
+文章列表系统采用两层架构：Hexo 提供 `page.posts`、分页和当前分类/标签查询状态；容器层为每个普通 Post 或 Topic Post 取得冻结的 `render.listing`，再调用只接收 ViewModel 的 `post_card.ejs`。首页平铺置顶、轮播与归档消费同一投影，不在 EJS 重做页面/Profile/主题级联；Wiki 使用独立的 `wiki_card.ejs`。
 
 **文件与函数映射：**
 
@@ -45,8 +45,7 @@ tags:
 |------|----------|------|
 | `layout/index.ejs` | `layout_post_list()`、`layout_post_card()` | 遍历 `page.posts`，包装卡片 |
 | `layout/_partial/main/post_list/post_card.ejs` | `div()`、`div_default()`、`div_photo()` | 渲染单篇文章卡片 |
-| `layout/_partial/main/post_list/post_card_legacy.ejs` | `divDefault()`、`divPhoto()` | 迁移期只渲染 Topic Post |
-| `scripts/helpers/post_view_model.js` | `post_view_model()` | 从构建登记输入生成普通 Post 列表 ViewModel，缺失时按源文件失败 |
+| `scripts/helpers/post_view_model.js` | `post_view_model()` | 从构建登记输入生成普通 Post / Topic 列表 ViewModel，缺失时按源文件失败 |
 | `layout/_partial/main/post_list/wiki_card.ejs` | `layoutDiv()` | 渲染 wiki 项目卡片 |
 | `layout/_partial/main/post_list/topic_card.ejs`、`latest_post_card.ejs` | `layoutDiv()` | 渲染专栏容器（最新文章卡片 + 其他文章列表） |
 | `layout/_partial/main/navbar/nav_tabs_blog` | — | 文章列表上方的导航标签 |
@@ -97,7 +96,7 @@ graph TB
 |------|------|
 | **输入** | `partial`——渲染单篇文章卡片的回调函数 |
 | **数据源** | `page.posts`——Hexo 文章集合 |
-| **过滤条件** | 普通 Post 使用 `render.listing.listed`；Topic Post 暂用旧 `visibility.listed` |
+| **过滤条件** | 普通 Post 与 Topic Post 都使用 `render.listing.listed` |
 | **输出** | 包装在 `<div class="post-list post">` 中的 HTML |
 
 ```mermaid
@@ -507,17 +506,17 @@ Wiki 卡片用 `list.styl` 中的封面布局，内容固定在卡片底部：
 
 ## Topic 卡片变体
 
-`index_topic.ejs` 读取 `stellar_data('topic').publish_list` 作为上架专栏集合，并按各专栏最新文章 `homepage.date` 降序排列后，经 `topic_card.ejs` 渲染每个专栏容器；无文章的专栏排在末尾，同日期保持配置中的相对顺序。每个容器上下排布：顶部为 `h2.topic-title` 专栏标题（复用 story 文章 h2 样式，`story-title()` mixin）与其下 `p.topic-desc` 专栏描述，中间为**最新文章卡片**（`latest_post_card.ejs` 公共组件，整卡跳转最新文章），底部为该专栏其他文章的归档式列表。其他文章与归档页共同复用 `archive_item.ejs`，显示 `MM-DD + 标题`；默认显示 3 篇，超过后通过原生 `<details>` 展开全部剩余文章并可再次收起。专栏容器之间以加大内边距拉开间隔。
+Topic 索引生成器从构建期 `topicIndex.items` 复制上架专栏投影，并按各专栏 `sortDate`（最新文章日期）降序排列后，以 `page.topicIndex.items` 显式 local 交给 `index_topic.ejs` 和 `topic_card.ejs`；卡片不读取原始 Topic tree。无文章的专栏排在末尾，同日期保持配置中的相对顺序。每个容器上下排布：顶部为 `h2.topic-title` 专栏标题（复用 story 文章 h2 样式，`story-title()` mixin）与其下 `p.topic-desc` 专栏描述，中间为**最新文章卡片**（`latest_post_card.ejs` 公共组件，整卡跳转最新文章），底部为该专栏其他文章的归档式列表。其他文章与归档页共同复用 `archive_item.ejs`，显示 `MM-DD + 标题`；默认显示 3 篇，超过后通过原生 `<details>` 展开全部剩余文章并可再次收起。专栏容器之间以加大内边距拉开间隔。
 
 ### 数据对象 `topic`
 
 | 属性 | 兜底 | 用途 |
 |------|------|------|
-| `topic.cover` | `topic.icon` → `hexo.stellar.config.resources.fallbacks.topicCover` | 最新文章卡片背景图（2:1 裁剪） |
-| `topic.title` | `topic.name` | 容器顶部 `h2.topic-title` 专栏标题（置于卡片外） |
+| `topic.cover` | 构建期已解析 `card.cover` → `resources.fallbacks.topicCover` | 最新文章卡片背景图（2:1 裁剪） |
+| `topic.headline` | `topic.name` | 容器顶部 `h2.topic-title` 专栏标题（置于卡片外） |
 | `topic.description` | — | 标题下方的 `p.topic-desc` 一句话描述 |
-| `topic.homepage` | — | 最新文章（`pages[0]`），整卡跳转目标 |
-| `topic.pages` | `[]` | 专栏文章列表；`slice(1)` 排除最新，前 3 篇默认显示，其余折叠 |
+| `topic.latest` | — | 最新文章，整卡跳转目标 |
+| `topic.items` | `[]` | 排除最新后的专栏文章列表；前 3 篇默认显示，其余折叠 |
 
 ### 最新文章卡片结构
 

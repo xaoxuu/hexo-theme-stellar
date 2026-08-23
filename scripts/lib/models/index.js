@@ -1214,7 +1214,7 @@ function buildWikiPageViewModel(input) {
   return completeWikiPageViewModel(input, buildWikiPageViewModelBase(input));
 }
 
-function buildTopicPageViewModel(input) {
+function buildTopicPageViewModelBase(input) {
   const source = input.source || "<page>";
   const themeSource = input.themeSource || "<theme>";
   const siteConfig = isPlainObject(input.siteConfig) ? input.siteConfig : {};
@@ -1229,6 +1229,12 @@ function buildTopicPageViewModel(input) {
       read: config => config?.site?.brand,
       expected: "normalized site brand object",
       migration: "configuration/site"
+    },
+    {
+      path: "stellarConfig.seo",
+      read: config => config?.seo,
+      expected: "normalized SEO object",
+      migration: "configuration/seo"
     },
     layoutConfigRequirement()
   ]);
@@ -1250,11 +1256,68 @@ function buildTopicPageViewModel(input) {
     siteConfig,
     collectionConfig
   }, collectionId, currentId);
-  const item = buildContentItemModel(page, frontMatter, collection, source, {
+  return deepFreeze({ collection });
+}
+
+function completeTopicPageViewModel(input, base) {
+  const source = input.source || "<page>";
+  const frontMatter = isPlainObject(input.frontMatter) ? input.frontMatter : {};
+  const collection = base.collection;
+  const item = buildContentItemModel(input.page || {}, frontMatter, collection, source, {
     source: collection.source,
     visibility: { listed: true, searchable: true }
   });
-  return deepFreeze(assertPageViewModel("topic", { collection, item }));
+  const heroImage = collection.presentation.hero?.background?.image;
+  item.presentation.banner = mergeConfig(
+    typeof heroImage === "string" ? { image: heroImage } : {},
+    item.presentation.banner
+  );
+  const render = buildPostRenderModel({
+    ...input,
+    siteConfig: isPlainObject(input.siteConfig) ? input.siteConfig : {},
+    runtimeData: isPlainObject(input.runtimeData) ? input.runtimeData : {},
+    frontMatter: isPlainObject(input.frontMatter) ? input.frontMatter : {},
+    page: input.page || {}
+  }, collection, item);
+  render.layout.brand = cloneValue(
+    item.presentation.sidebar?.left?.brand || input.stellarConfig.site.brand
+  );
+  render.layout.sidebar = cloneValue(item.presentation.sidebar || {});
+  render.layout.blogPath = collection.route.baseDir;
+  render.layout.breadcrumbs = [{
+    name: collection.identity.headline || collection.identity.name || collection.id,
+    path: collection.navigation.series[0]?.path || collection.route.path
+  }];
+  render.article.banner = cloneValue(item.presentation.banner || {});
+  return deepFreeze(assertPageViewModel("topic", { collection, item, render }));
+}
+
+function buildTopicPageViewModel(input) {
+  return completeTopicPageViewModel(input, buildTopicPageViewModelBase(input));
+}
+
+function buildTopicIndexRender(input) {
+  const collectionId = input.collectionId;
+  const collection = buildTopicCollectionModel(input, collectionId, "");
+  const pages = collection.navigation.series.map(item => ({
+    title: item.title,
+    path: item.path,
+    date: item.date
+  }));
+  const latest = pages[0] || null;
+  const cover = collection.presentation.card?.cover || input.stellarConfig.resources.fallbacks.topicCover;
+  return deepFreeze({
+    id: collection.id,
+    name: collection.identity.name,
+    headline: collection.identity.headline,
+    description: collection.identity.description,
+    cover: typeof cover === "string" ? cover : "",
+    href: latest?.path || "/",
+    latest,
+    items: pages.slice(1),
+    sortDate: latest?.date || null,
+    listed: collection.visibility.listed !== false
+  });
 }
 
 function buildNotebookPageViewModel(input) {
@@ -1298,10 +1361,13 @@ function buildNotebookPageViewModel(input) {
 module.exports = {
   buildNotebookPageViewModel,
   buildPostPageViewModel,
+  buildTopicIndexRender,
   buildTopicPageViewModel,
+  buildTopicPageViewModelBase,
   buildWikiListingRender,
   buildWikiPageViewModel,
   buildWikiPageViewModelBase,
   buildWikiRelated,
+  completeTopicPageViewModel,
   completeWikiPageViewModel
 };

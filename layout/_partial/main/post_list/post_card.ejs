@@ -1,5 +1,5 @@
 <%
-if (!viewModel || viewModel.collection?.profile !== 'post' || !viewModel.render?.listing) {
+if (!viewModel || !['post', 'topic'].includes(viewModel.collection?.profile) || !viewModel.render?.listing) {
   throw new Error('Stellar v2: Post 卡片缺少合法 PageViewModel.render.listing')
 }
 var listing = viewModel.render.listing

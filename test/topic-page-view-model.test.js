@@ -6,14 +6,22 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 
-const { buildTopicPageViewModel: buildTopicPageViewModelRaw } = require("../scripts/lib/models");
+const {
+  buildTopicPageViewModel: buildTopicPageViewModelRaw,
+  buildTopicPageViewModelBase: buildTopicPageViewModelBaseRaw,
+  completeTopicPageViewModel
+} = require("../scripts/lib/models");
 const { parseStellarConfig } = require("../scripts/lib/config-schema");
 const { parseCollectionConfig, parsePageConfig } = require("../scripts/lib/content-config");
 const processContentConfig = require("../scripts/events/lib/content-config");
 const { attachPageViewModel } = require("../scripts/filters/lib/page-view-model");
+const {
+  getTopicViewModelBase,
+  getTopicViewModelInput
+} = require("../scripts/lib/page-view-model-registry");
 
-function buildTopicPageViewModel(input) {
-  return buildTopicPageViewModelRaw({
+function normalizeTopicInput(input) {
+  return {
     ...input,
     collectionConfig: input.collectionConfig == null
       ? input.collectionConfig
@@ -28,7 +36,11 @@ function buildTopicPageViewModel(input) {
       themeConfig: input.themeConfig,
       siteConfig: input.siteConfig
     })
-  });
+  };
+}
+
+function buildTopicPageViewModel(input) {
+  return buildTopicPageViewModelRaw(normalizeTopicInput(input));
 }
 
 function assertDeepFrozenPlain(value) {
@@ -89,7 +101,7 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
     footer: { license: "Topic license", share: false },
     comments: { enabled: true, title: "Topic comments", provider: "giscus", options: {} }
   };
-  const viewModel = buildTopicPageViewModel({
+  const input = {
     source: current.source,
     collectionSource: "source/_data/topic/stellar-v2.yml",
     collectionListed: false,
@@ -117,7 +129,8 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
       content: { article: {
         type: "tech",
         indent: false,
-        footer: { license: "Global", share: true }
+        footer: { license: "Global", share: true },
+        related_posts: { enabled: true, limit: 2 }
       } },
       extensions: { comments: { title: "Global", provider: "artalk" } }
     },
@@ -134,8 +147,18 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
       visibility: { listed: true, searchable: false },
       source: { branch: "page-branch" }
     },
-    page: current.page
-  });
+    page: {
+      ...current.page,
+      previous: { title: "Newer", path: "blog/newer/", date: "2026-08-21T00:00:00.000Z" },
+      next: { title: "Older", path: "blog/older/", date: "2026-08-19T00:00:00.000Z" }
+    },
+    relatedItems: [{ title: "Related", path: "/blog/related/", excerpt: "<p>Related excerpt</p>" }]
+  };
+  const normalizedInput = normalizeTopicInput(input);
+  const base = buildTopicPageViewModelBaseRaw(normalizedInput);
+  assertDeepFrozenPlain(base);
+  assert.deepEqual(Object.keys(base), ["collection"]);
+  const viewModel = completeTopicPageViewModel(normalizedInput, base);
 
   assert.deepEqual(Object.keys(viewModel.collection), [
     "id",
@@ -148,6 +171,7 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
     "presentation",
     "visibility"
   ]);
+  assert.deepEqual(Object.keys(viewModel), ["collection", "item", "render"]);
   assert.equal(viewModel.collection.id, "stellar-v2");
   assert.equal(viewModel.collection.profile, "topic");
   assert.deepEqual(viewModel.collection.identity, {
@@ -204,8 +228,29 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
   assert.equal(viewModel.item.presentation.article.indent, false);
   assert.equal(viewModel.item.presentation.footer.license, "");
   assert.equal(viewModel.item.presentation.comments.enabled, false);
+  assert.equal(viewModel.item.presentation.banner.image, "/hero.webp");
   assert.equal(viewModel.item.listing.priority, 0);
   assert.deepEqual(viewModel.item.visibility, { listed: true, searchable: false });
+  assert.equal(viewModel.render.document.preferredTheme, "auto");
+  assert.equal(viewModel.render.layout.blogPath, "topic");
+  assert.equal(viewModel.render.layout.brand.name, "Site Brand");
+  assert.deepEqual(viewModel.render.layout.sidebar.left.widgets, []);
+  assert.deepEqual(viewModel.render.layout.sidebar.right.widgets, ["ghrepo", "toc"]);
+  assert.deepEqual(viewModel.render.layout.breadcrumbs, [{
+    name: "Build the future",
+    path: "topic/latest"
+  }]);
+  assert.equal(viewModel.render.seo.title, "Current - Site");
+  assert.equal(viewModel.render.seo.jsonLd["@type"], "BlogPosting");
+  assert.equal(viewModel.render.article.banner.image, "/hero.webp");
+  assert.equal(viewModel.render.article.footer.license, "");
+  assert.equal(viewModel.render.article.footer.share, null);
+  assert.equal(viewModel.render.article.previous.path, "blog/newer");
+  assert.equal(viewModel.render.article.next.path, "blog/older");
+  assert.equal(viewModel.render.article.related.items[0].title, "Related");
+  assert.equal(viewModel.render.article.comments.enabled, false);
+  assert.equal(viewModel.render.listing.listed, true);
+  assert.equal(viewModel.render.listing.priority, 0);
   assertDeepFrozenPlain(viewModel);
 
   collectionConfig.name = "Changed";
@@ -350,6 +395,20 @@ test("生成前事件为严格 Topic 成员挂载模型并拒绝缺失集合", t
   assert.equal(first.viewModel.item.date, "2026-08-20T00:00:00.000Z");
   assert.equal(first.viewModel.collection.navigation.series[1].date, "2026-08-20T00:00:00.000Z");
   assertDeepFrozenPlain(first.viewModel);
+  const registeredInput = getTopicViewModelInput(first);
+  const registeredBase = getTopicViewModelBase(first);
+  assert.equal(Object.isFrozen(registeredInput), true);
+  assert.equal(Object.hasOwn(registeredInput, "relatedItems"), false);
+  assertDeepFrozenPlain(registeredBase);
+  const renderedFirst = attachPageViewModel.call(ctx, {
+    ...first,
+    content: "<p>Rendered Topic</p>",
+    excerpt: "<p>Rendered excerpt</p>",
+    prev: { title: "Previous", path: "previous/", date: new Date("2026-08-21T00:00:00.000Z") }
+  });
+  assert.equal(renderedFirst.viewModel.item.content, "<p>Rendered Topic</p>");
+  assert.equal(renderedFirst.viewModel.render.article.previous.path, "previous");
+  assert.equal(Object.hasOwn(registeredInput, "relatedItems"), false);
   assert.equal(second.viewModel.collection.profile, "topic");
   const renderedPlain = attachPageViewModel({
     ...plain,

@@ -1,15 +1,17 @@
 <%
 function layoutDiv() {
-  const postViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'post'
+  var postViewModel = typeof viewModel !== 'undefined' && ['post', 'topic'].includes(viewModel?.collection?.profile)
     ? viewModel
     : null
   if (postViewModel) {
     var postHtml = ''
     postHtml += `<span class="sep"></span>`
-    postHtml += `<a class="cap breadcrumb" href="${pretty_url(postViewModel.render.layout.blogPath)}">${__("btn.blog")}</a>`
+    var isTopic = postViewModel.collection.profile === 'topic'
+    postHtml += `<a class="cap breadcrumb"${isTopic ? ' id="menu"' : ''} href="${pretty_url(postViewModel.render.layout.blogPath)}">${__(isTopic ? "btn.topic" : "btn.blog")}</a>`
     for (var breadcrumb of postViewModel.render.layout.breadcrumbs) {
+      if (isTopic && pretty_url(breadcrumb.path) == pretty_url(postViewModel.render.layout.blogPath)) continue
       postHtml += `<span class="sep"></span>`
-      postHtml += `<a class="cap breadcrumb-link" href="${pretty_url(breadcrumb.path)}">${escape_html(breadcrumb.name)}</a>`
+      postHtml += `<a class="cap ${isTopic ? 'breadcrumb' : 'breadcrumb-link'}"${isTopic ? ' id="proj"' : ''} href="${pretty_url(breadcrumb.path)}">${escape_html(breadcrumb.name)}</a>`
     }
     return postHtml
   }

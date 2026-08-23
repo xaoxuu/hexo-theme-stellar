@@ -484,7 +484,7 @@ function pageViewModelSchema(profile) {
     })
   };
 
-  if (profile === "post") {
+  if (profile === "post" || profile === "topic") {
     const stringItem = field("string", {
       default: computed("由构建期数组逐项归一化"),
       example: "Stellar"
@@ -569,6 +569,14 @@ function pageViewModelSchema(profile) {
         leftbarBlur: field("boolean", { default: computed("v2 appearance 不再公开 sidebar blur 开关"), example: false, required: true }),
         blogPath: field("string", { default: derived("site.index_generator.path"), example: "blog", required: true }),
         brand: renderBrand,
+        ...(profile === "topic" ? {
+          sidebar: field("object", {
+            default: inherited("item.presentation.sidebar"),
+            example: { left: { widgets: ["related"] }, right: { widgets: ["toc"] } },
+            required: true,
+            additionalProperties: true
+          })
+        } : {}),
         breadcrumbs: array(breadcrumbItem, { default: literal([]), example: [{ name: "思考", path: "blog/categories/thinking" }], required: true })
       }, { required: true, example: { pageType: "content", articleType: "tech", indent: false, blogPath: "blog", brand: {}, breadcrumbs: [] } }),
       seo: object({
@@ -582,6 +590,14 @@ function pageViewModelSchema(profile) {
       }, { required: true, example: { title: "Hello Stellar - Stellar", description: "文章摘要", keywords: ["Hexo"], robots: null, canonical: null, openGraph: null, jsonLd: { "@type": "BlogPosting" } } }),
       article: object({
         heti: field("boolean", { default: derived("hexo.stellar.config.extensions.features.cjkTypography.enabled"), example: false, required: true }),
+        ...(profile === "topic" ? {
+          banner: field("object", {
+            default: inherited("item.presentation.banner"),
+            example: { image: "/topic.webp", headline: "Topic" },
+            required: true,
+            additionalProperties: true
+          })
+        } : {}),
         tags: array(tagLink, { default: computed("由 Hexo 标签关系规范化；content.article.showTags 禁用时为空"), example: [{ name: "Hexo", path: "tags/hexo" }], required: true }),
         footer: object({
           references: array(field("any", { additionalProperties: true }), { default: inherited("item.presentation.footer.references"), example: [], required: true }),
@@ -623,7 +639,7 @@ function pageViewModelSchema(profile) {
         cardStyle: field("string", { default: inherited("collection.listing.cardStyle"), example: "hero", required: true })
       }, { required: true, example: { href: "blog/hello", title: "Hello Stellar", layout: "post", date: null, cover: "", caption: "", excerpt: "", categories: [], categoryStyle: "", tags: [], authorId: "", priority: 0, listed: true, cardStyle: "classic" } })
     }, {
-      default: computed("由 Post PageViewModel 构建器生成"),
+      default: computed(`由 ${profile === "topic" ? "Topic" : "Post"} PageViewModel 构建器生成`),
       example: { document: { language: "zh-CN", headInject: "" }, layout: { pageType: "content" }, seo: { title: "Hello Stellar - Stellar" } },
       required: true
     });

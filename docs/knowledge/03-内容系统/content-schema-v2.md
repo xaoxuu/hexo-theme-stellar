@@ -101,20 +101,21 @@ Galaxy 的路径为 `hero.background.effect.options`，其 React Bits props 保�
 - `render.listing` 固化博客卡片、置顶轮播、平铺列表与归档需要的路由、封面、摘要、日期、分类、最多五个标签、作者、优先级和可见性。
 - Post 的 Schema 校验、模型构建、Reference 与 EJS 消费同一 `render` 事实来源；缺少或非法 `render` 时按源文件构建失败，不回退到 `page` 或主题字段。
 - 级联顺序为页面 Front Matter、Post profile、主题全局配置；`false`、`0` 与空字符串是有效覆盖值。Brand 图片继续按原子对象替换，不继承上级图片子字段。
-- 普通 Post 的根 Shell、左右侧栏、Brand、菜单、面包屑、SEO、正文、标签、Footer、上下篇、相关推荐、评论和博客聚合条目均已消费 ViewModel。Wiki 详情与索引也已完成迁移；Hexo 仍为聚合页提供分页及当前筛选状态，Topic 与 Notebook 的 EJS 消费链留在后续 M2 切片。
+- 普通 Post 与 Topic 的根 Shell、左右侧栏、Brand、菜单、面包屑、SEO、正文、标签、Footer、上下篇、相关推荐、评论和博客聚合条目均已消费 ViewModel。Wiki 详情与索引也已完成迁移；Hexo 仍为聚合页提供分页及当前筛选状态，Notebook 的 EJS 消费链留在后续 M2 切片。
 
 纯构建入口位于 `scripts/lib/models/index.js`。普通 Post 在 `before_generate` 登记输入，详情页由 `after_post_render` 结合最终正文和 Hexo 关系完成模型，列表条目由 `post_view_model` helper 从同一登记输入重建冻结投影；Wiki 页面在 `doc_tree` 完成树形解析后挂载，Topic 与 Note 在生成前挂载。
 
 ### Topic 与文章
 
-严格 `collection.profile: topic` 的文章在 `generateBefore` 阶段生成同构 `page.viewModel`：
+严格 `collection.profile: topic` 的文章在生成前登记基础输入，并在 `after_post_render` 取得最终正文、上下篇与相关文章后生成同构、深度冻结的 `page.viewModel`：
 
 - `collection` 保留 Topic 名称、标题、说明、受众、身份图标、源码仓库、规范化路由、集合列表设置和展示配置；顶层字段与 Post profile 一致。
 - `navigation.series` 只包含 Front Matter 显式归属同一 Topic id 且 `visibility.listed !== false` 的文章，默认按日期降序稳定排列；每项只投影普通 id、标题、规范化路径、ISO 日期和当前项标记。
 - Topic 是否位于 `topic.publish_list` 只进入 `collection.visibility.listed`；单篇文章从独立的默认可见性开始，再接受页面 `visibility` 覆盖，不把集合下架隐式传播为文章隐藏。
 - Topic 默认沿用站点 Brand 和普通 Post 侧栏，之后依次接受 Topic profile、集合与页面展示覆盖；文章、页脚和评论同样在构建期完成级联。
 - Topic 文章必须显式声明严格 v2 `collection.profile` 与 `collection.id`，id 必须存在于 `_data/topic/`；不会从路径、布局、旧 `topic` 字段或运行时 Topic tree 推断归属。
-- 本切片只挂载模型，不改变现有 Topic EJS 消费链。
+- `render.document/layout/seo/article/listing` 复用 Post 的文章语义；Topic Hero 背景只作为成员 Banner 回退，`navigation.series` 只服务侧栏专栏导航，不替换正文的 Hexo 全站上下篇。
+- Topic 详情、博客列表/置顶/归档与 Topic 索引均消费显式 ViewModel 或生成器投影，不再由 EJS 读取 Topic tree 推断最终状态。
 
 ### Wiki 与 Wiki 页面
 

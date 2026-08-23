@@ -158,7 +158,14 @@ test("Reference 只来自模型 Schema 且不提前公开后续契约", () => {
   assert.ok(wikiViewModel.fields.some(field => field.path === "render.cover.enabled"));
   assert.ok(wikiViewModel.fields.some(field => field.path === "render.article.readmeHtml"));
   assert.ok(wikiViewModel.fields.some(field => field.path === "render.listing.listed"));
-  for (const profile of ["notebook", "topic"]) {
+  const topicViewModel = metadata.models.find(model => (
+    model.name === "PageViewModel" && model.profile === "topic"
+  ));
+  assert.ok(topicViewModel.fields.some(field => field.path === "render.document.language"));
+  assert.ok(topicViewModel.fields.some(field => field.path === "render.seo.jsonLd"));
+  assert.ok(topicViewModel.fields.some(field => field.path === "render.article.comments.options"));
+  assert.ok(topicViewModel.fields.some(field => field.path === "render.listing.listed"));
+  for (const profile of ["notebook"]) {
     const pageViewModel = metadata.models.find(model => model.name === "PageViewModel" && model.profile === profile);
     assert.equal(pageViewModel.fields.some(field => field.path === "render"), false);
   }

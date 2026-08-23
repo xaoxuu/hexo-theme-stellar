@@ -1,9 +1,11 @@
 <%
 function layoutDiv() {
   var el = '';
-  var bg = topic.card?.cover || stellar_config('resources.fallbacks.topicCover');
+  if (!viewModel?.render?.listing) throw new Error('Stellar v2: Topic 卡片缺少显式 render.listing')
+  var topic = viewModel.render.listing
+  var bg = topic.cover;
   var label = topic.headline || topic.name;
-  var latest = topic.homepage;
+  var latest = topic.latest;
   el += '<article class="md-text">';
   // 专栏标题（story 文章 h2 样式，置于卡片外）
   el += '<h2 class="topic-title">' + escape_html(label) + '</h2>';
@@ -18,8 +20,8 @@ function layoutDiv() {
     post: latest
   });
   // 其他文章（排除最新，默认展示 3 条，剩余文章可展开）
-  if (topic.pages && topic.pages.length > 1) {
-    var otherPosts = topic.pages.slice(1);
+  if (topic.items && topic.items.length > 0) {
+    var otherPosts = topic.items;
     var visiblePosts = otherPosts.slice(0, 3);
     var hiddenPosts = otherPosts.slice(3);
     el += '<div class="topic-posts">';

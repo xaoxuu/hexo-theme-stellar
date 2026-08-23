@@ -1,6 +1,9 @@
 "use strict";
 
 const postInputs = new Map();
+const topicInputs = new Map();
+const topicBases = new Map();
+const relatedItems = new Map();
 const pageConfigs = new Map();
 const pageViewModels = new Map();
 
@@ -11,49 +14,84 @@ function keysForPage(page) {
 
 function resetPageViewModels() {
   postInputs.clear();
+  topicInputs.clear();
+  topicBases.clear();
+  relatedItems.clear();
   pageConfigs.clear();
   pageViewModels.clear();
 }
 
+function setValue(store, page, value) {
+  for (const key of keysForPage(page)) store.set(key, value);
+}
+
+function getValue(store, page) {
+  for (const key of keysForPage(page)) {
+    if (store.has(key)) return store.get(key);
+  }
+  return null;
+}
+
 function setPageConfig(page, config) {
-  for (const key of keysForPage(page)) pageConfigs.set(key, config);
+  setValue(pageConfigs, page, config);
 }
 
 function getPageConfig(page) {
-  for (const key of keysForPage(page)) {
-    if (pageConfigs.has(key)) return pageConfigs.get(key);
-  }
-  return null;
+  return getValue(pageConfigs, page);
 }
 
 function setPostViewModelInput(page, input) {
-  for (const key of keysForPage(page)) postInputs.set(key, input);
+  setValue(postInputs, page, input);
 }
 
 function getPostViewModelInput(page) {
-  for (const key of keysForPage(page)) {
-    if (postInputs.has(key)) return postInputs.get(key);
-  }
-  return null;
+  return getValue(postInputs, page);
+}
+
+function setTopicViewModelInput(page, input) {
+  setValue(topicInputs, page, input);
+}
+
+function getTopicViewModelInput(page) {
+  return getValue(topicInputs, page);
+}
+
+function setTopicViewModelBase(page, base) {
+  setValue(topicBases, page, base);
+}
+
+function getTopicViewModelBase(page) {
+  return getValue(topicBases, page);
+}
+
+function setRelatedItems(page, items) {
+  setValue(relatedItems, page, Object.freeze(items.slice()));
+}
+
+function getRelatedItems(page) {
+  return getValue(relatedItems, page) || [];
 }
 
 function setPageViewModel(page, viewModel) {
-  for (const key of keysForPage(page)) pageViewModels.set(key, viewModel);
+  setValue(pageViewModels, page, viewModel);
 }
 
 function getPageViewModel(page) {
-  for (const key of keysForPage(page)) {
-    if (pageViewModels.has(key)) return pageViewModels.get(key);
-  }
-  return null;
+  return getValue(pageViewModels, page);
 }
 
 module.exports = {
   getPageConfig,
   getPageViewModel,
   getPostViewModelInput,
+  getRelatedItems,
+  getTopicViewModelBase,
+  getTopicViewModelInput,
   resetPageViewModels,
   setPageConfig,
   setPageViewModel,
-  setPostViewModelInput
+  setPostViewModelInput,
+  setRelatedItems,
+  setTopicViewModelBase,
+  setTopicViewModelInput
 };

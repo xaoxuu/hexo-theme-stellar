@@ -13,12 +13,16 @@ const {
 } = require("../../lib/source-config");
 const {
   buildNotebookPageViewModel,
-  buildTopicPageViewModel
+  buildTopicIndexRender,
+  buildTopicPageViewModelBase,
+  completeTopicPageViewModel
 } = require("../../lib/models");
 const {
   resetPageViewModels,
   setPageConfig,
-  setPostViewModelInput
+  setPostViewModelInput,
+  setTopicViewModelBase,
+  setTopicViewModelInput
 } = require("../../lib/page-view-model-registry");
 const { ensureRuntimeData } = require("../../lib/runtime-data");
 
@@ -145,12 +149,42 @@ module.exports = ctx => {
   posts.each(page => {
     const config = configForPage(page);
     if (config?.collection?.profile === "topic") {
-      topicMembers.push({
+      topicMembers.push(Object.freeze({
         source: sourcePathForPage(page),
         frontMatter: config,
-        page: pageModelInput(page, config)
-      });
+        page: Object.freeze(pageModelInput(page, config))
+      }));
     }
+  });
+  const frozenTopicMembers = Object.freeze(topicMembers.slice());
+
+  const topicPublishList = Array.isArray(data.topic?.publish_list)
+    ? data.topic.publish_list
+    : null;
+  const topicIndexItems = [];
+  for (const [key, collectionConfig] of collectionConfigs) {
+    if (!key.startsWith("topic/")) continue;
+    const collectionId = key.slice("topic/".length);
+    try {
+      topicIndexItems.push(buildTopicIndexRender({
+        source: sourcePathForData(key),
+        themeSource: themeConfigSource,
+        collectionSource: sourcePathForData(key),
+        collectionId,
+        collectionListed: topicPublishList == null || topicPublishList.includes(collectionId),
+        siteConfig: ctx.config,
+        runtimeData,
+        stellarConfig: ctx.stellar?.config,
+        collectionConfig,
+        members: frozenTopicMembers
+      }));
+    } catch (error) {
+      if (!(error instanceof ContentConfigError)) throw error;
+      issues.push(...error.issues);
+    }
+  }
+  runtimeData.topicIndex = Object.freeze({
+    items: Object.freeze(topicIndexItems.slice())
   });
 
   const validatedSources = new Set();
@@ -179,16 +213,16 @@ module.exports = ctx => {
       if (config == null) return;
       try {
         if (type === "posts" && config.collection == null) {
-          const viewModelInput = {
+          const viewModelInput = Object.freeze({
             source: sourcePathForPage(page),
             themeSource: themeConfigSource,
             siteConfig: ctx.config,
             runtimeData,
             stellarConfig: ctx.stellar?.config,
             frontMatter: config,
-            page: pageModelInput(page, config),
+            page: Object.freeze(pageModelInput(page, config)),
             isBackup: process.env.IS_BACKUP === "true"
-          };
+          });
           setPostViewModelInput(page, viewModelInput);
         }
         if (type === "posts" && config.collection?.profile === "topic") {
@@ -196,7 +230,7 @@ module.exports = ctx => {
           const publishList = Array.isArray(data.topic?.publish_list)
             ? data.topic.publish_list
             : null;
-          page.viewModel = buildTopicPageViewModel({
+          const viewModelInput = Object.freeze({
             source: sourcePathForPage(page),
             themeSource: themeConfigSource,
             collectionSource: sourcePathForData(`topic/${collectionId}`),
@@ -206,10 +240,14 @@ module.exports = ctx => {
             runtimeData,
             stellarConfig: ctx.stellar?.config,
             collectionConfig: collectionConfigs.get(`topic/${collectionId}`),
-            members: topicMembers,
+            members: frozenTopicMembers,
             frontMatter: config,
-            page: pageModelInput(page, config)
+            page: Object.freeze(pageModelInput(page, config))
           });
+          const base = buildTopicPageViewModelBase(viewModelInput);
+          setTopicViewModelInput(page, viewModelInput);
+          setTopicViewModelBase(page, base);
+          page.viewModel = completeTopicPageViewModel(viewModelInput, base);
         }
         if (type === "pages" && config.collection?.profile === "notebook") {
           const collectionId = config.collection.id;

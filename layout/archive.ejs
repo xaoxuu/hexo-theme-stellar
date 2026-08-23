@@ -22,20 +22,14 @@ function layoutArchiveList() {
   }
   el += `<div class="post-list${cls} archives">`
   var years = []
-  function isTopicPost(post) {
-    return post?.collection?.profile === 'topic'
-  }
   function requirePostViewModel(post) {
     var viewModel = post_view_model(post)
-    if (viewModel?.collection?.profile !== 'post' || !viewModel.render?.listing) {
-      throw new Error(`Stellar v2: 普通 Post ${post?.source || post?.path || '<unknown>'} 缺少归档列表 ViewModel`)
+    if (!['post', 'topic'].includes(viewModel?.collection?.profile) || !viewModel.render?.listing) {
+      throw new Error(`Stellar v2: Post ${post?.source || post?.path || '<unknown>'} 缺少归档列表 ViewModel`)
     }
     return viewModel
   }
   var posts = site.posts.filter(function(post) {
-    if (isTopicPost(post)) {
-      return page.author == null || (content_config(post).article?.author || stellar_data('defaultAuthor').id) == page.author.id
-    }
     var listing = requirePostViewModel(post).render.listing
     if (!listing.listed) return false
     return page.author == null || listing.authorId == page.author.id
@@ -53,11 +47,7 @@ function layoutArchiveList() {
       post.year = date(post.date, 'YYYY')
       return post.year == year
     }).each(function(post) {
-      if (isTopicPost(post)) {
-        el += partial('_partial/main/post_list/archive_item', {post: post})
-      } else {
-        el += partial('_partial/main/post_list/archive_item', {viewModel: requirePostViewModel(post)})
-      }
+      el += partial('_partial/main/post_list/archive_item', {viewModel: requirePostViewModel(post)})
     })
     el += `</article>`
   }

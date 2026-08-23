@@ -1,12 +1,16 @@
 <%
 
-var renderViewModel = typeof viewModel !== 'undefined' && ['post', 'wiki'].includes(viewModel?.collection?.profile)
+var renderViewModel = typeof viewModel !== 'undefined' && ['post', 'wiki', 'topic'].includes(viewModel?.collection?.profile)
   ? viewModel
   : null
-var postViewModel = renderViewModel?.collection?.profile === 'post' ? renderViewModel : null
+var postViewModel = ['post', 'topic'].includes(renderViewModel?.collection?.profile) ? renderViewModel : null
 var wikiViewModel = renderViewModel?.collection?.profile === 'wiki' ? renderViewModel : null
 var pageConfig = content_config(page)
-var banner = Object.assign({}, wikiViewModel ? wikiViewModel.render.article.banner : postViewModel ? postViewModel.item.presentation.banner : pageConfig.banner || {})
+var banner = Object.assign({}, wikiViewModel
+  ? wikiViewModel.render.article.banner
+  : postViewModel?.collection?.profile === 'topic'
+    ? postViewModel.render.article.banner
+    : postViewModel ? postViewModel.item.presentation.banner : pageConfig.banner || {})
 
 if (!renderViewModel && banner.image == null && stellar_data('topic').tree[collection_id(page, "topic")]?.hero?.background?.image != null) {
   banner.image = stellar_data('topic').tree[collection_id(page, "topic")].hero.background.image

@@ -1,6 +1,6 @@
 <%
-var postViewModel = typeof viewModel !== 'undefined' ? viewModel : null
-if (postViewModel && (postViewModel.collection?.profile !== 'post' || !postViewModel.render?.listing)) {
+var postViewModel = typeof post === 'undefined' && typeof viewModel !== 'undefined' ? viewModel : null
+if (postViewModel && (!['post', 'topic'].includes(postViewModel.collection?.profile) || !postViewModel.render?.listing)) {
   throw new Error('Stellar v2: 归档条目缺少合法 PageViewModel.render.listing')
 }
 var item = postViewModel ? postViewModel.render.listing : (typeof post !== 'undefined' ? post : {})

@@ -1,20 +1,16 @@
 <%
 function relatedPostsInTopic() {
-  if (collection_id(page, "topic")?.length == 0) {
-    return ''
-  }
-  var topic = stellar_data('topic').tree[collection_id(page, "topic")]
-  if (topic == null) {
-    return ''
-  }
-  var entries = []
-  for (var post of topic.pages) {
-    entries.push({
+  var topicViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'topic'
+    ? viewModel
+    : null
+  if (!topicViewModel) return ''
+  var entries = topicViewModel.collection.navigation.series.map(function(post) {
+    return {
       href: pretty_url(post.path),
       title: post.title,
-      active: post.path == page.path
-    })
-  }
+      active: post.current
+    }
+  })
   var body = partial('_partial/components/collection', {options: {
     layout: 'list',
     variant: 'nav',
@@ -23,7 +19,7 @@ function relatedPostsInTopic() {
   }})
   return partial('_partial/components/widget-frame', {
     className: 'related-widget',
-    title: __('btn.topic') + __('symbol.colon') + (topic.headline || topic.name),
+    title: __('btn.topic') + __('symbol.colon') + (topicViewModel.collection.identity.headline || topicViewModel.collection.identity.name),
     body: body,
     reveal: false
   })
@@ -93,12 +89,12 @@ function relatedWiki() {
 }
 
 function layoutDiv() {
-  if (typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki') {
+  if (typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'topic') {
+    return relatedPostsInTopic()
+  } else if (typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki') {
     return relatedWiki()
   } else if (collection_id(page, "wiki")?.length > 0) {
     return relatedWiki()
-  } else if (collection_id(page, "topic")?.length > 0) {
-    return relatedPostsInTopic()
   }
   return ''
 }

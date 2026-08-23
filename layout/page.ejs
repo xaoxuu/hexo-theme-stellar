@@ -1,6 +1,9 @@
 <%
 const { layout } = page
-const postViewModel = page.viewModel?.collection?.profile === 'post' ? page.viewModel : null
+var registeredProfile = content_config(page).collection?.profile
+var postViewModel = page.layout === 'post' && (registeredProfile == null || registeredProfile === 'topic')
+  ? post_view_model(page)
+  : null
 var wikiViewModel = page.viewModel?.collection?.profile === 'wiki' ? page.viewModel : null
 var pageConfig = content_config(page)
 // 是否使用 Heti 布局插件

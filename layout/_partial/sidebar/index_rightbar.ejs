@@ -4,9 +4,11 @@ var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.p
   ? viewModel
   : null
 var wiki = wikiViewModel ? null : stellar_data('wiki').tree[collection_id(page, "wiki")]
-var topic = stellar_data('topic').tree[collection_id(page, "topic")]
+var topic = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'topic'
+  ? null
+  : stellar_data('topic').tree[collection_id(page, "topic")]
 var notebook = stellar_data('notebooks').tree[collection_id(page, "notebook")]
-const postViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'post'
+var postViewModel = typeof viewModel !== 'undefined' && ['post', 'topic'].includes(viewModel?.collection?.profile)
   ? viewModel
   : null
 
@@ -14,7 +16,9 @@ var sidebarState
 if (postViewModel || wikiViewModel) {
   sidebarState = wikiViewModel
     ? wikiViewModel.render.layout.sidebar?.right || {}
-    : postViewModel.item.presentation.sidebar?.right || {}
+    : postViewModel.collection.profile === 'topic'
+      ? postViewModel.render.layout.sidebar?.right || {}
+      : postViewModel.item.presentation.sidebar?.right || {}
 } else {
   sidebarState = Object.assign({}, content_config(page).sidebar?.right || {})
   if (sidebarState.widgets == null) {

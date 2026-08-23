@@ -104,19 +104,19 @@ test("Wiki 索引、卡片和 tabs 不再读取原始 Wiki tree", () => {
   assert.match(source("layout/_partial/main/pin_slider.ejs"), /Wiki 置顶列表缺少显式 render\.listing/);
 });
 
-test("Wiki 详情页要求合法 render，并与 Topic、Notebook legacy 分支隔离", () => {
+test("Wiki 详情页要求合法 render，并与 Topic 新链、Notebook legacy 分支隔离", () => {
   const root = source("layout/layout.ejs");
   const page = source("layout/page.ejs");
   assert.match(root, /Wiki 页面 .*缺少合法 PageViewModel\.render/);
-  assert.match(root, /renderViewModel = postViewModel \|\| wikiViewModel/);
+  assert.match(root, /renderViewModel = postViewModel \|\| wikiViewModel \|\| topicViewModel/);
   assert.match(root, /partial\('_partial\/cover\/index', \{viewModel: renderViewModel\}\)/);
-  assert.match(source("layout/_partial/primitives/shell.ejs"), /\['post', 'wiki'\]/);
+  assert.match(source("layout/_partial/primitives/shell.ejs"), /\['post', 'wiki', 'topic'\]/);
   assert.match(page, /wikiViewModel\.render\.article/);
   assert.doesNotMatch(source("layout/_partial/main/navbar/article_banner.ejs"), /page\.viewModel/);
   assert.match(page, /post_footer'.*footer: article\.footer/);
   assert.match(page, /comments\/layout'.*comments: article\.comments/);
   assert.match(root, /else \{/);
-  assert.match(page, /collection_id\(page, "topic"\)/);
+  assert.match(page, /registeredProfile === 'topic'/);
   assert.match(page, /var notebook = stellar_data\('notebooks'\)/);
 });
 
@@ -129,5 +129,5 @@ test("Wiki Hero 与详情辅助 partial 优先消费显式 Wiki ViewModel", () =
   assert.match(source("layout/_partial/widgets/ghrepo.ejs"), /tagsApi = repoApi \? repoApi \+ '\/tags'/);
   assert.match(source("layout/_partial/sidebar/search.ejs"), /wikiViewModel\.render\.layout\.searchFilter/);
   assert.match(source("layout/_partial/widgets/toc.ejs"), /wikiViewModel\.render\.article\.readmeHtml/);
-  assert.match(source("layout/_partial/head.ejs"), /\['post', 'wiki'\]/);
+  assert.match(source("layout/_partial/head.ejs"), /\['post', 'wiki', 'topic'\]/);
 });

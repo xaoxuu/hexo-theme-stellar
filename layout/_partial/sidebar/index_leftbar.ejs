@@ -4,9 +4,11 @@ var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.p
   ? viewModel
   : null
 var wiki = wikiViewModel ? null : stellar_data('wiki').tree[collection_id(page, "wiki")]
-var topic = stellar_data('topic').tree[collection_id(page, "topic")]
+var topic = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'topic'
+  ? null
+  : stellar_data('topic').tree[collection_id(page, "topic")]
 var notebook = stellar_data('notebooks').tree[collection_id(page, "notebook")]
-const postViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'post'
+var postViewModel = typeof viewModel !== 'undefined' && ['post', 'topic'].includes(viewModel?.collection?.profile)
   ? viewModel
   : null
 
@@ -15,7 +17,9 @@ if (postViewModel || wikiViewModel) {
   var activeViewModel = postViewModel || wikiViewModel
   sidebarState = wikiViewModel
     ? wikiViewModel.render.layout.sidebar?.left || {}
-    : postViewModel.item.presentation.sidebar?.left || {}
+    : postViewModel.collection.profile === 'topic'
+      ? postViewModel.render.layout.sidebar?.left || {}
+      : postViewModel.item.presentation.sidebar?.left || {}
 } else {
   sidebarState = Object.assign({}, content_config(page).sidebar?.left || {})
   if (sidebarState.widgets == null) {
@@ -108,7 +112,7 @@ function layoutSearch() {
   } else if (topic?.sidebar?.left?.search) {
     search = topic.sidebar.left.search
   }
-  return partial('search', {item: search, disabled: sidebarState.search === false, viewModel: wikiViewModel})
+  return partial('search', {item: search, disabled: sidebarState.search === false, viewModel: postViewModel || wikiViewModel})
 }
 function layoutFooterDiv() {
   var actions = stellar_config('site.footer.actions')
@@ -158,7 +162,7 @@ function layoutBrand() {
   return partial('brand', {
     placement: 'sidebar',
     brandModel: (postViewModel || wikiViewModel) ? (postViewModel || wikiViewModel).render.layout.brand : undefined,
-    viewModel: wikiViewModel
+    viewModel: postViewModel || wikiViewModel
   })
 }
 

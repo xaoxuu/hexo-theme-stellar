@@ -8,19 +8,23 @@
 const { generatorPath, requireLayoutProfiles, toRenderNavigation } = require("../lib/layout-config");
 
 hexo.extend.generator.register("index_topic", function () {
-  const { topic } = hexo.stellar.data;
+  const { topicIndex } = hexo.stellar.data;
   const profile = requireLayoutProfiles(hexo.stellar?.config).topicIndex;
-  const topicIdList = Object.keys(topic.tree);
-  if (topicIdList.length == 0) {
+  if (!Array.isArray(topicIndex?.items) || topicIndex.items.length === 0) {
     return {};
   }
+  const items = topicIndex.items
+    .filter(item => item.listed)
+    .slice()
+    .sort((left, right) => String(right.sortDate || "").localeCompare(String(left.sortDate || "")));
   var ret = [];
   ret.push({
     path: generatorPath(profile.path),
     layout: ["index_topic"],
     data: {
       layout: "index_topic",
-      navigation: toRenderNavigation(profile)
+      navigation: toRenderNavigation(profile),
+      topicIndex: { items }
     }
   });
   return ret;

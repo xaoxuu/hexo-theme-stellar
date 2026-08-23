@@ -31,27 +31,14 @@ var pinFlat = pinStyle === 'flat'
 function pinValue(post) {
   return postListing(post).priority
 }
-function isTopicPost(post) {
-  return collection_id(post, 'topic') != null
-}
 function requirePostViewModel(post) {
   var viewModel = post_view_model(post)
-  if (viewModel?.collection?.profile !== 'post' || !viewModel.render?.listing) {
-    throw new Error(`Stellar v2: 普通 Post ${post?.source || post?.path || '<unknown>'} 缺少列表 ViewModel`)
+  if (!['post', 'topic'].includes(viewModel?.collection?.profile) || !viewModel.render?.listing) {
+    throw new Error(`Stellar v2: Post ${post?.source || post?.path || '<unknown>'} 缺少列表 ViewModel`)
   }
   return viewModel
 }
 function postListing(post) {
-  if (isTopicPost(post)) {
-    var config = content_config(post)
-    return {
-      priority: config.listing?.priority || 0,
-      listed: config.visibility?.listed !== false,
-      cover: config.card?.cover,
-      cardStyle: articleDefaults.listing.cardLayout,
-      href: post.link || post.path
-    }
-  }
   return requirePostViewModel(post).render.listing
 }
 function isPinned(post) {
@@ -146,9 +133,6 @@ function layout_post_list(partial) {
 
 <%- partial('_partial/main/navbar/nav_tabs_blog') %>
 <%- layout_post_list(function(post){
-  if (isTopicPost(post)) {
-    return partial('_partial/main/post_list/post_card_legacy', {post: post})
-  }
   return partial('_partial/main/post_list/post_card', {viewModel: requirePostViewModel(post)})
 }) %>
 <%- partial('_partial/main/post_list/paginator') %>

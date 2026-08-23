@@ -4,7 +4,7 @@
 // 专栏列表页与未来首页等场景复用；无 post 时仅渲染 label。
 function layoutDiv() {
   var el = '';
-  var bg = background || stellar_config('resources.fallbacks.topicCover');
+  var bg = background || '';
   // 注意：不能用 `var href` 承接，var 提升会遮蔽 partial 传入的 href 参数
   var link = pretty_url(href || '/');
   el += '<a class="cover card-hover card-hover--spotlight card-hover--tilt" position="bottom" style="--cover-url:url(\'' + escape_html(bg.replace(/'/g, '%27')) + '\')" href="' + link + '">';

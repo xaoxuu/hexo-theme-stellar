@@ -33,11 +33,11 @@ tags:
 
 布局选择逻辑与各页面类型模板见[页面模板与路由](page-templates-routing.md)；侧边栏小部件配置与渲染见[侧边栏系统](sidebar-system.md)；Brand、导航栏与页头渲染见[Brand、导航与页头](logo-navigation-headers.md)；`<head>` 与 SEO 元数据见[HTML Head 与 SEO 元数据](head-seo.md)。
 
-## v2 Post 渲染内核切片
+## v2 内容渲染内核
 
-Pre-alpha M2 的首个切片只接管普通 Post。`layout.ejs` 要求 `page.viewModel.collection.profile === 'post'` 且存在合法 `render`；缺失时报告 `page.source` 并终止构建，不读取旧页面字段兜底。Wiki、Topic、Notebook、列表与普通 Page 仍走下文记录的既有分支。
+Pre-alpha M2 已接管普通 Post、Wiki 与 Topic。`layout.ejs` 按 `page.viewModel.collection.profile` 要求这三类内容存在合法 `render`；缺失时报告 `page.source` 并终止构建，不读取旧页面字段兜底。Notebook、普通 Page 和其它索引继续走下文记录的既有分支。
 
-普通 Post 通过五类内部 EJS 原语保持原有 DOM、class 与视觉行为：
+普通 Post、Wiki 与 Topic 通过五类内部 EJS 原语保持原有 DOM、class 与视觉行为：
 
 | 原语 | 责任 |
 | --- | --- |
