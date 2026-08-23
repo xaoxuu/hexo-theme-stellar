@@ -20,6 +20,7 @@ const {
   setPageConfig,
   setPostViewModelInput
 } = require("../../lib/page-view-model-registry");
+const { ensureRuntimeData } = require("../../lib/runtime-data");
 
 function plainTerms(value) {
   if (value == null) return [];
@@ -94,10 +95,11 @@ module.exports = ctx => {
   const pageConfigs = new Map();
   ctx.stellar ||= {};
   ctx.stellar.contentConfig = { collectionConfigs, pageConfigs };
-  const themeConfig = ctx.config.theme_config || ctx.theme.config;
-  const themeConfigSource = ctx.config.theme_config
+  const themeConfig = ctx.config.theme_config ?? ctx.theme.config;
+  const themeConfigSource = ctx.config.theme_config !== undefined
     ? '_config.stellar.yml'
     : 'themes/stellar/_config.yml';
+  const runtimeData = ensureRuntimeData(ctx);
 
   try {
     validateThemeConfig(themeConfig, themeConfigSource);
@@ -181,7 +183,7 @@ module.exports = ctx => {
             source: sourcePathForPage(page),
             themeSource: themeConfigSource,
             siteConfig: ctx.config,
-            themeConfig: ctx.theme.config,
+            runtimeData,
             stellarConfig: ctx.stellar?.config,
             frontMatter: config,
             page: pageModelInput(page, config),
@@ -201,7 +203,7 @@ module.exports = ctx => {
             collectionId,
             collectionListed: publishList == null || publishList.includes(collectionId),
             siteConfig: ctx.config,
-            themeConfig: ctx.theme.config,
+            runtimeData,
             stellarConfig: ctx.stellar?.config,
             collectionConfig: collectionConfigs.get(`topic/${collectionId}`),
             members: topicMembers,
@@ -217,7 +219,7 @@ module.exports = ctx => {
             collectionSource: sourcePathForData(`notebooks/${collectionId}`),
             collectionId,
             siteConfig: ctx.config,
-            themeConfig: ctx.theme.config,
+            runtimeData,
             stellarConfig: ctx.stellar?.config,
             collectionConfig: collectionConfigs.get(`notebooks/${collectionId}`),
             collectionItems: notebookMemberInputs,

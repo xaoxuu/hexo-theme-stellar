@@ -75,7 +75,7 @@ function generateConfigReferenceMetadata() {
       "scripts/schema/config-schema.js",
       "scripts/schema/content-config-schema.js"
     ],
-    status: "partial",
+    status: "delivered",
     fields: [
       ...flattenConfigFields(CONFIG_SCHEMA),
       ...flattenConfigFields(COLLECTION_CONFIG_SCHEMA),

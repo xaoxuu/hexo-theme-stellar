@@ -7,8 +7,8 @@ const applyThemeUtils = require('../scripts/events/lib/utils.js');
 
 function createDropdownTag() {
   const fakeHexo = {
-    theme: {
-      config: {
+    stellar: {
+      data: {
         icons: {
           'default:documents': '<svg></svg>',
           'default:github': '<svg></svg>'

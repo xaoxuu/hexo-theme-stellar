@@ -8,7 +8,7 @@
 const { generatorPath, requireLayoutProfiles, toRenderNavigation } = require("../lib/layout-config");
 
 hexo.extend.generator.register("index_topic", function () {
-  const { topic } = hexo.theme.config;
+  const { topic } = hexo.stellar.data;
   const profile = requireLayoutProfiles(hexo.stellar?.config).topicIndex;
   const topicIdList = Object.keys(topic.tree);
   if (topicIdList.length == 0) {

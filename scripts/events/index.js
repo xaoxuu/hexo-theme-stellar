@@ -34,14 +34,14 @@ hexo.on('ready', () => {
   if (isClean) {
     return;
   }
-  const { version, homepage, repository } = require('../../package.json');
+  const { version, homepage, repository } = require("../lib/theme-metadata");
   console.log(``);
 
   const line = '------------------------------------------------';
   hexo.log.info(line);
   hexo.log.info(`Welcome to \x1b[33mStellar ${version}\x1b[0m
 \x1b[32mDOCS\x1b[0m  ${homepage}
-\x1b[32mREPO\x1b[0m  ${repository.url}`);
+\x1b[32mREPO\x1b[0m  ${repository}`);
   hexo.log.info(line);
   console.log(``);
   // version check

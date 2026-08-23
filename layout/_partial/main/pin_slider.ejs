@@ -20,9 +20,9 @@ function pinWeight(item) {
 }
 
 if (pinType == 'wiki') {
-  var shelf = theme.wiki?.shelf || []
+  var shelf = stellar_data('wiki')?.shelf || []
   for (var wi = 0; wi < shelf.length; wi++) {
-    var wproj = theme.wiki.tree[shelf[wi]]
+    var wproj = stellar_data('wiki').tree[shelf[wi]]
     if (wproj != null && isPinned(wproj)) {
       pinItems.push(wproj)
     }

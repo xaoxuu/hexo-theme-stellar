@@ -17,11 +17,9 @@ function createVersionFixture(t, options = {}) {
   const knowledgeDir = path.join(root, 'docs/knowledge/00-总览与安装配置');
   fs.mkdirSync(knowledgeDir, { recursive: true });
   const files = {
-    config: path.join(root, '_config.yml'),
     package: path.join(root, 'package.json'),
     knowledge: path.join(knowledgeDir, 'installation.md'),
   };
-  fs.writeFileSync(files.config, options.config || "stellar:\n  version: '1.42.1'\n  homepage: https://example.com/\n");
   fs.writeFileSync(files.package, options.package || '{\n  "name": "hexo-theme-stellar",\n  "version": "1.42.1"\n}\n');
   fs.writeFileSync(
     files.knowledge,
@@ -72,14 +70,13 @@ test('hasNonEmptyChangelogSection 仅含发布日期视为空章节', () => {
   assert.equal(hasNonEmptyChangelogSection(text, '1.38.0'), false);
 });
 
-test('prepareVersionFiles 同步全部主题版本引用并保留无关版本', (t) => {
+test('prepareVersionFiles 同步 package 与知识库版本并保留无关版本', (t) => {
   const { root, files } = createVersionFixture(t);
 
   const result = prepareVersionFiles(root, '1.43.0');
 
   assert.equal(result.previousVersion, '1.42.1');
   assert.equal(result.knowledgeReplacements, 2);
-  assert.match(fs.readFileSync(files.config, 'utf8'), /version: '1\.43\.0'/);
   assert.equal(JSON.parse(fs.readFileSync(files.package, 'utf8')).version, '1.43.0');
   const knowledge = fs.readFileSync(files.knowledge, 'utf8');
   assert.equal(knowledge.includes('1.42.1'), false);

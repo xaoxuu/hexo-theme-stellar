@@ -8,9 +8,9 @@ function layoutDiv() {
   }
   var arr = []
   if (content_config(page).navigation?.menu == 'wiki') {
-    arr = theme.wiki.all_pages.filter(function(p) {
+    arr = stellar_data('wiki').all_pages.filter(function(p) {
       if (p.collectionId) {
-        var proj = theme.wiki.tree[p.collectionId]
+        var proj = stellar_data('wiki').tree[p.collectionId]
         return proj?.index != false
       }
       return false
@@ -44,10 +44,10 @@ function layoutDiv() {
     const wikiId = collection_id(post, 'wiki') || post.collectionId
     const notebookId = collection_id(post, 'notebook')
     if (wikiId) {
-      var proj = theme.wiki.tree[wikiId]
+      var proj = stellar_data('wiki').tree[wikiId]
       prefix = proj?.name || wikiId
     } else if (page.layout === 'notebooks') {
-      var notebook = theme.notebooks.tree[notebookId]
+      var notebook = stellar_data('notebooks').tree[notebookId]
       prefix = notebook?.name || notebookId || ''
     }
     entries.push({

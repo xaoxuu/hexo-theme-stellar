@@ -44,7 +44,7 @@ tags:
 
 1. 提供 `api:` 参数 → 直接使用该 URL
 2. 提供 `repo:` 参数 → 构造 URL `https://{ghraw_host}/{owner/repo}/output/v2/data.json`
-3. 提供位置参数 `group` → 从 `ctx.theme.config.links[group]` 同步读取
+3. 提供位置参数 `group` → 从 `ctx.stellar.data.links[group]` 同步读取
 
 GitHub raw 基址来自冻结的 `extensions.services.github.rawUrl`，值是完整 HTTP(S) URL。
 
@@ -57,7 +57,7 @@ flowchart TD
     B -- "no" --> D{"repo: arg present?"}
     D -- "yes" --> E["build URL from ghraw host + repo path"]
     D -- "no" --> F{"group arg present?"}
-    F -- "yes" --> G["read ctx.theme.config.links[group]"]
+    F -- "yes" --> G["read ctx.stellar.data.links[group]"]
     F -- "no" --> H["render empty wrapper"]
     C --> I["render data-service div\n(lazy fetch at runtime)"]
     E --> I
@@ -82,7 +82,7 @@ flowchart TD
 
 | 参数 | 类型 | 默认 | 说明 |
 |------|------|------|------|
-| `group` | 位置参数 | — | `ctx.theme.config.links` 中读取条目的键 |
+| `group` | 位置参数 | — | `ctx.stellar.data.links` 中读取条目的键 |
 | `repo` | 命名参数 | — | GitHub 托管数据文件的 `owner/repo` 路径 |
 | `api` | 命名参数 | — | 显式 API URL |
 | `posts` | 命名参数 | — | 为 `true` 时在友链旁包含最近文章 |
@@ -122,7 +122,7 @@ flowchart TD
 
 | 参数 | 类型 | 默认 | 说明 |
 |------|------|------|------|
-| `group` | 位置参数 | — | `ctx.theme.config.links` 中的键 |
+| `group` | 位置参数 | — | `ctx.stellar.data.links` 中的键 |
 | `repo` | 命名参数 | — | GitHub 托管数据源 |
 | `api` | 命名参数 | — | 显式 API URL |
 
@@ -162,7 +162,7 @@ item.cover
 
 | 参数 | 类型 | 默认 | 说明 |
 |------|------|------|------|
-| `group` | 位置参数 | — | `ctx.theme.config.links` 中的键 |
+| `group` | 位置参数 | — | `ctx.stellar.data.links` 中的键 |
 | `repo` | 命名参数 | — | GitHub 托管数据源 |
 | `api` | 命名参数 | — | 显式 API URL |
 | `size` | 命名参数 | `xs` | 网格单元格尺寸变体 |
@@ -196,7 +196,7 @@ item.cover
 
 | 参数 | 类型 | 默认 | 说明 |
 |------|------|------|------|
-| `group` | 位置参数 | — | `ctx.theme.config.links` 中的键 |
+| `group` | 位置参数 | — | `ctx.stellar.data.links` 中的键 |
 | `repo` | 命名参数 | — | GitHub 托管数据源 |
 | `api` | 命名参数 | — | 显式 API URL |
 | `size` | 命名参数 | `s` | 网格单元格尺寸变体 |
@@ -255,9 +255,9 @@ flowchart TD
 
 ---
 
-## 本地数据源：`ctx.theme.config.links`
+## 本地数据源：`ctx.stellar.data.links`
 
-四个插件都从 `ctx.theme.config.links` 读取，对应 `_config.yml` 的 `links:` 键。每个值都是条目对象数组。
+四个插件都从 `ctx.stellar.data.links` 读取。构建期会将站点 `source/_data/links/*.yml` 中已登记的数据归一化到该运行时容器，每个值都是条目对象数组。
 
 **各插件支持的条目字段：**
 
@@ -270,7 +270,7 @@ flowchart TD
 | `snapshot` / `screenshot` | sites（截图） |
 | `description` | sites（标题下方副标题） |
 
-`_config.yml` 结构示例：
+`source/_data/links/*.yml` 结构示例：
 
 ```yaml
 links:
@@ -342,7 +342,7 @@ div.tag-plugin.ghcard
 flowchart LR
     subgraph "Grid Plugins"
         GP["friends / sites / posters / albums"]
-        GP --> LP["local: reads ctx.theme.config.links"]
+        GP --> LP["local: reads ctx.stellar.data.links"]
         GP --> AP["api/repo: data-service div\n(ds-friends or ds-sites)"]
         AP --> JS["JS fetches at runtime"]
     end

@@ -37,7 +37,7 @@ Stellar 是一个功能全面的 Hexo 主题，内置四套并行内容管理系
 
 Stellar 采用**五层架构**，把配置、数据处理、渲染、客户端行为与样式分离，使主题可以支持多种内容类型并保持一致性，同时允许深度定制。
 
-主题是**配置驱动**的：[_config.yml](../../../_config.yml) 是主题默认配置入口，v2 声明式 Schema 已交付 `site`、`seo`、`layout`、`content`、`appearance`、`resources`、`extensions` 和 `inject` 八个根域的默认值与运行时契约。根级未知字段拒绝仍属于后续封闭切片。
+主题是**配置驱动**的：[_config.yml](../../../_config.yml) 提供主题默认值，站点只通过 `_config.stellar.yml` 覆盖；v2 声明式 Schema 已交付并封闭 `site`、`seo`、`layout`、`content`、`appearance`、`resources`、`extensions` 和 `inject` 八个根域。
 
 ### 核心架构分层
 
@@ -92,10 +92,10 @@ graph TB
 ```mermaid
 graph LR
     subgraph Global["Global Configuration"]
-        STELLAR["stellar:<br/>version, homepage"]
+        SITE["site:<br/>Shell identity"]
         PROFILES["layout.profiles:<br/>Page defaults"]
-        ARTICLE["article:<br/>Content settings"]
-        PLUGINS["plugins:<br/>Feature toggles"]
+        CONTENT["content:<br/>Content settings"]
+        EXTENSIONS["extensions:<br/>Feature registry"]
     end
     
     subgraph Project["Project-Level"]
@@ -107,20 +107,20 @@ graph LR
         FRONTMATTER["Front-matter:<br/>page.* variables"]
     end
     
-    STELLAR --> PROFILES
+    SITE --> PROFILES
     PROFILES --> WIKITREE
     PROFILES --> TOPICTREE
     WIKITREE --> FRONTMATTER
     TOPICTREE --> FRONTMATTER
-    ARTICLE --> FRONTMATTER
-    PLUGINS --> FRONTMATTER
+    CONTENT --> FRONTMATTER
+    EXTENSIONS --> FRONTMATTER
     
     FRONTMATTER --> OUTPUT["Rendered page<br/>with merged settings"]
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)、[layout/layout.ejs](../../../layout/layout.ejs)
 
-`layout.profiles` 为不同类型的页面（博客文章、Wiki、笔记本页面等）定义路径、导航和侧边栏默认值，单个页面与 Collection 覆盖继续由模型层级联。`content` 根域尚未交付，当前 `article.type`、`article.indent` 等内容默认值仍保持迁移期路径。
+`layout.profiles` 为不同类型的页面（博客文章、Wiki、笔记本页面等）定义路径、导航和侧边栏默认值，单个页面与 Collection 覆盖继续由模型层级联。`content` 根域提供 Article 与 Notebook 默认值，所有公开主题配置均通过已封闭的声明式 Schema 进入运行时。
 
 ## 页面渲染流水线
 
@@ -328,7 +328,7 @@ flowchart TD
 - **原生 JavaScript**：客户端代码无框架依赖
 - **外部库（CDN）**：marked.js（运行时 Markdown 渲染）、vanilla-lazyload（图片懒加载）
 
-**依赖** 定义在 [package.json](../../../package.json) 与 [_config.yml](../../../_config.yml)（`dependencies` 小节）。
+**依赖** 定义在 [package.json](../../../package.json)；Extension 的可配置行为位于 `_config.yml` 的 `extensions` 根域，官方资源路径由内部注册表管理。
 
 ## 目录结构概览
 
@@ -352,13 +352,11 @@ flowchart TD
 
 ## 版本与分发
 
-主题版本定义在两处：
-- [_config.yml](../../../_config.yml) — `stellar.version`
-- [package.json](../../../package.json) — `version` 字段
+主题版本只由 [package.json](../../../package.json) 的 `version` 字段定义，模板通过 `stellar_info('version')` 读取相同的 package metadata。
 
 Stellar 通过 npm 以 `hexo-theme-stellar` 分发，采用 MIT 协议开源。
 
-**参考源码**：[_config.yml](../../../_config.yml)、[package.json](../../../package.json)、[README.md](../../../README.md)
+**参考源码**：[package.json](../../../package.json)、[scripts/lib/theme-metadata.js](../../../scripts/lib/theme-metadata.js)、[README.md](../../../README.md)
 
 ---
 

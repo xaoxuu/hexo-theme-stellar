@@ -505,7 +505,7 @@ Wiki 卡片用 `list.styl` 中的封面布局，内容固定在卡片底部：
 
 ## Topic 卡片变体
 
-`index_topic.ejs` 读取 `theme.topic.publish_list` 作为上架专栏集合，并按各专栏最新文章 `homepage.date` 降序排列后，经 `topic_card.ejs` 渲染每个专栏容器；无文章的专栏排在末尾，同日期保持配置中的相对顺序。每个容器上下排布：顶部为 `h2.topic-title` 专栏标题（复用 story 文章 h2 样式，`story-title()` mixin）与其下 `p.topic-desc` 专栏描述，中间为**最新文章卡片**（`latest_post_card.ejs` 公共组件，整卡跳转最新文章），底部为该专栏其他文章的归档式列表。其他文章与归档页共同复用 `archive_item.ejs`，显示 `MM-DD + 标题`；默认显示 3 篇，超过后通过原生 `<details>` 展开全部剩余文章并可再次收起。专栏容器之间以加大内边距拉开间隔。
+`index_topic.ejs` 读取 `stellar_data('topic').publish_list` 作为上架专栏集合，并按各专栏最新文章 `homepage.date` 降序排列后，经 `topic_card.ejs` 渲染每个专栏容器；无文章的专栏排在末尾，同日期保持配置中的相对顺序。每个容器上下排布：顶部为 `h2.topic-title` 专栏标题（复用 story 文章 h2 样式，`story-title()` mixin）与其下 `p.topic-desc` 专栏描述，中间为**最新文章卡片**（`latest_post_card.ejs` 公共组件，整卡跳转最新文章），底部为该专栏其他文章的归档式列表。其他文章与归档页共同复用 `archive_item.ejs`，显示 `MM-DD + 标题`；默认显示 3 篇，超过后通过原生 `<details>` 展开全部剩余文章并可再次收起。专栏容器之间以加大内边距拉开间隔。
 
 ### 数据对象 `topic`
 
@@ -585,7 +585,7 @@ graph TD
 
 ### Wiki 收录标志
 
-`index.ejs` 用于 wiki 索引页（设置 `page.wiki`）时，自动设置 `robots` meta 为 `noindex,follow`，防止搜索引擎收录生成的 wiki 列表页。
+`index.ejs` 用于 wiki 索引页（`collection_id(page, 'wiki')` 可解析）时，自动设置 `robots` meta 为 `noindex,follow`，防止搜索引擎收录生成的 wiki 列表页。
 
 **参考源码**：[layout/index.ejs](../../../layout/index.ejs)
 

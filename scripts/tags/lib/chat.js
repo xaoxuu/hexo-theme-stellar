@@ -32,31 +32,12 @@
 var chatIndex = 0;
 
 module.exports = ctx => function(args, content) {
-  function isObject(item) {
-    return item && typeof item === 'object' && !Array.isArray(item);
-  }
-
-  function merge(target, source) {
-    for (const key in source) {
-      if (isObject(target[key]) && isObject(source[key])) {
-        merge(target[key], source[key]);
-      } else {
-        target[key] = source[key];
-      }
-    }
-    return target;
-  }
-
   args = ctx.args.map(args, ['style', 'title', 'scene', 'me', 'labelColorStyle'], ['device'])
 
   // users
   var arr = content.split(/<!--\s*([\s\S]*?)\s*-->/g).filter(item => item.trim().length > 0)
   if (arr.length > 0) {
-    // 避免用户在没有配置chat_users.yaml时出错
-    if (ctx.theme.config.chat_users){
-      var users = merge(ctx.theme.config.chat_users, ctx.render.renderSync({ text: (arr[0] || ''), engine: 'yaml' }));
-    }
-    var users = ctx.render.renderSync({ text: (arr[0] || ''), engine: 'yaml' });
+    var users = ctx.render.renderSync({ text: (arr[0] || ""), engine: "yaml" });
   }
 
 

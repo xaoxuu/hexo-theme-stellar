@@ -94,8 +94,8 @@ test("目标主题配置只暴露八个职责根域", () => {
   assert.equal(new Set(CONFIG_TARGET_ROOTS.map(root => root.id)).size, 8);
   for (const root of CONFIG_TARGET_ROOTS) {
     assert.equal(root.owner, "stellar");
-    assert.equal(root.status, "planned");
-    assert.ok(["sealed", "registered_record"].includes(root.boundary));
+    assert.equal(root.status, "delivered");
+    assert.equal(root.boundary, "sealed");
     assert.ok(root.purpose.length > 0);
   }
 });
@@ -247,8 +247,8 @@ test("官方脚本样式与内部集成有显式内部化清单", () => {
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("style.loading.*"));
 });
 
-test("运行时只投影已交付配置节点且根配置仍未封闭", () => {
-  assert.equal(CONFIG_SCHEMA.sealed, false);
+test("运行时只投影已交付配置节点且根配置已经封闭", () => {
+  assert.equal(CONFIG_SCHEMA.sealed, true);
   assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "layout", "content", "appearance", "seo", "resources", "extensions", "inject"]);
   const deliveredPaths = CONFIG_TARGET_FIELDS
     .filter(field => field.status === "delivered" && field.scopes.includes("theme"))
@@ -329,7 +329,7 @@ test("运行时只投影已交付配置节点且根配置仍未封闭", () => {
   for (const suffix of ["comments", "comments.enabled", "comments.title", "comments.id", "comments.provider", "comments.options"]) {
     assert.ok(deliveredLayoutPaths.includes(`layout.profiles.home.${suffix}`));
   }
-  assert.ok(CONFIG_TARGET_ROOTS.some(root => root.status === "planned"));
+  assert.equal(CONFIG_TARGET_ROOTS.every(root => root.status === "delivered"), true);
   assert.ok(CONFIG_TARGET_FIELDS.some(field => field.status === "delivered" && field.scopes.includes("collection")));
   assert.ok(CONFIG_TARGET_FIELDS.some(field => field.status === "delivered" && field.scopes.includes("front_matter")));
 });

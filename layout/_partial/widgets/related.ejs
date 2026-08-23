@@ -3,7 +3,7 @@ function relatedPostsInTopic() {
   if (collection_id(page, "topic")?.length == 0) {
     return ''
   }
-  var topic = theme.topic.tree[collection_id(page, "topic")]
+  var topic = stellar_data('topic').tree[collection_id(page, "topic")]
   if (topic == null) {
     return ''
   }
@@ -30,7 +30,7 @@ function relatedPostsInTopic() {
 }
 
 function relatedWiki() {
-  var thisItemObject = theme.wiki.tree[collection_id(page, "wiki")]
+  var thisItemObject = stellar_data('wiki').tree[collection_id(page, "wiki")]
   if (thisItemObject == null) {
     return ''
   }
@@ -39,7 +39,7 @@ function relatedWiki() {
   for (var relatedItem of relatedItems) {
     var entries = []
     for (var id of relatedItem.items) {
-      var relatedProject = theme.wiki.tree[id]
+      var relatedProject = stellar_data('wiki').tree[id]
       if (relatedProject) {
         entries.push({
           href: pretty_url(relatedProject.homepage?.path),

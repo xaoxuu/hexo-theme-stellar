@@ -9197,7 +9197,7 @@
             "kind": "derived",
             "from": [
               "item.presentation.article.author",
-              "theme.default_author.id"
+              "stellar.data.defaultAuthor.id"
             ]
           },
           "scope": "PageViewModel:post",

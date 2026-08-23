@@ -26,7 +26,7 @@ module.exports = ctx => function(args) {
     el += '<div class="grid-box"></div>'
     el += '</div>'
   } else if (args.group) {
-    const links = ctx.theme.config.links || {}
+    const links = ctx.stellar.data.links || {};
     el += '<div class="grid-box">'
     for (let item of (links[args.group] || [])) {
       if (item?.url && item?.title) {

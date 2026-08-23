@@ -10,7 +10,7 @@ const { getCollectionId } = require("../lib/content-config");
 const { getPageConfig } = require("../lib/page-view-model-registry");
 
 function activeCollection(config) {
-  const { wiki, topic, notebooks } = hexo.theme.config;
+  const { wiki, topic, notebooks } = hexo.stellar.data;
   for (const [type, tree] of [
     ["wiki", wiki?.tree],
     ["topic", topic?.tree],

@@ -5,7 +5,7 @@ var pageConfig = content_config(page)
 // 是否使用 Heti 布局插件
 const isUsingHeti = stellar_config('extensions.features.cjkTypography.enabled')
 
-const notebook = theme.notebooks.tree[collection_id(page, "notebook")]
+var notebook = stellar_data('notebooks').tree[collection_id(page, "notebook")]
 if (!postViewModel && notebook) {
   page.navigation = Object.assign({}, pageConfig.navigation)
   page.footer = Object.assign({}, pageConfig.footer)
@@ -85,7 +85,7 @@ function layoutDiv() {
   } else {
     // wiki 项目首页正文为空（剪裁空白后）且配置了 repo 时，
     // 以该仓库 README.md 作为主页正文（应用层 helper，复用底层远程 md 渲染组件）
-    el += wiki_readme_html(theme.wiki.tree[collection_id(page, "wiki")], page)
+    el += wiki_readme_html(stellar_data('wiki').tree[collection_id(page, "wiki")], page)
   }
   if (notebook) {
     el += partial('_partial/main/notebook/note_tags', { notebook: notebook })

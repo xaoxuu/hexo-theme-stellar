@@ -1,6 +1,6 @@
 <%
 function layoutDiv() {
-  const wikiObject = theme.wiki.tree[collection_id(page, "wiki")]
+  var wikiObject = stellar_data('wiki').tree[collection_id(page, "wiki")]
   var el = ''
   // 文档列表页
   el += `<span class="sep"></span>`

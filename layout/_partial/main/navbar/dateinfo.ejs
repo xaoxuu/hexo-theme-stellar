@@ -19,7 +19,7 @@ function layoutDiv() {
     el += `<time datetime="${date_xml(page.date)}">${date(page.date, config.date_format)}</time>`
     el += `</span>`
   } else {
-    const author = theme.authors ? (theme.authors[content_config(page).article?.author] || theme.default_author) : null
+    var author = stellar_data('authors') ? (stellar_data('authors')[content_config(page).article?.author] || stellar_data('defaultAuthor')) : null
     if (author) {
       el += `<a class="author" href="${pretty_url(author.path)}">${author.name}</a>`
       el += `<span class="sep"></span>`

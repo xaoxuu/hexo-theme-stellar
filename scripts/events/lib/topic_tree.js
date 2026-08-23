@@ -6,7 +6,10 @@
  * 
  */
 
-'use strict';
+/* global hexo */
+"use strict";
+
+const { ensureRuntimeData } = require("../../lib/runtime-data");
 
 function getTopicTree(ctx) {
   var tree = {}
@@ -46,5 +49,5 @@ module.exports = ctx => {
   if (topic.publish_list == null) {
     topic.publish_list = Object.keys(topic.tree)
   }
-  ctx.theme.config.topic = topic
+  ensureRuntimeData(ctx).topic = topic;
 }

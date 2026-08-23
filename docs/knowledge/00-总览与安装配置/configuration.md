@@ -28,7 +28,7 @@ tags:
 
 ## 目的与范围
 
-配置系统是驱动 Stellar 主题行为、外观与功能启用的核心控制机制。本文介绍 `_config.yml` 的结构、层级覆盖模式、配置值在渲染流水线中的流向，以及各子系统如何消费配置。
+配置系统是驱动 Stellar 主题行为、外观与功能启用的核心控制机制。本文介绍主题默认 `_config.yml`、站点 `_config.stellar.yml`、Collection YAML 与 Front Matter 的职责边界，以及配置值在渲染流水线中的流向。
 
 安装与初始化见[安装与启动](installation.md)，样式相关配置见[样式系统](../01-样式系统/styling-overview.md)，插件配置见[插件系统](../07-外部集成/plugin-system.md)。
 
@@ -81,7 +81,7 @@ graph TB
 
 Pre-alpha M1.5 已建立内部配置入口目录，并进一步把 v2 最终公开主题配置冻结为 `site`、`seo`、`layout`、`content`、`appearance`、`resources`、`extensions`、`inject` 八个职责根域。完整目标树、命名、级联和旧→新迁移矩阵见[最终配置契约](../../designs/2026-08-22-v2-config-target-contract/target-contract.md)。
 
-head/SEO、site Shell、Layout Profile、内容默认值、Collection / Front Matter、Appearance、资源兜底、Extension 与服务纵向切片已把八根域的业务配置接入声明式 Schema。运行时与配置 Reference 只投影已交付节点；根级封闭和 `system` 内部化仍保持 `planned`。
+head/SEO、site Shell、Layout Profile、内容默认值、Collection / Front Matter、Appearance、资源兜底、Extension 与服务纵向切片已把八根域的业务配置接入声明式 Schema。M1.5 最终切片已封闭根级未知字段，并把主题元数据、核心资源、URL 策略与构建派生对象移出公开 YAML。
 
 已交付的主题字段从 Schema 与 `_config.stellar.yml` 解析到冻结的 `hexo.stellar.config`；Collection YAML 与 Front Matter 分别解析为冻结的 camelCase 对象，由生成器、数据树、ViewModel 与按需插件消费。Hexo 自有 Front Matter 保持原名，不进入 Stellar Reference。
 
@@ -91,7 +91,6 @@ head/SEO、site Shell、Layout Profile、内容默认值、Collection / Front Ma
 
 | 小节 | 用途 |
 |------|------|
-| `stellar` | 主题元数据与资源路径 |
 | `seo` | SEO、Canonical、Open Graph 与结构化数据（v2 已交付） |
 | `site` | 站点 Brand、主菜单、左栏操作与页尾内容（v2 已交付） |
 | `layout.profiles` | 13 类页面的路径、导航与左右侧栏默认值（v2 已交付） |
@@ -105,7 +104,6 @@ head/SEO、site Shell、Layout Profile、内容默认值、Collection / Front Ma
 | `extensions.features` | 可选 Feature 的注册式配置 |
 | `extensions.services` | 业务端点与 GitHub 完整 URL |
 | `extensions.cache` | 浏览器数据缓存策略 |
-| `system` | 内部 Hexo 覆盖 |
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
@@ -181,22 +179,11 @@ graph LR
 
 ## 核心配置小节
 
-### Stellar 元数据
+### 主题元数据与核心资源
 
-`stellar` 小节定义主题身份与核心资源路径：
+主题名称、版本、主页和仓库地址由 `package.json` 唯一提供；核心 CSS/JS 路径由内部资源清单固定。它们不属于站点可配置行为，因此 v2 不再暴露 `stellar` YAML 根域。模板通过 `stellar_info()` 获取只读元数据与内部资源路径。
 
-```yaml
-stellar:
-  version: '1.39.1'
-  homepage: 'https://xaoxuu.com/wiki/stellar/'
-  repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
-  main_css: /css/main.css
-  main_js: /js/main.js
-```
-
-这些值用于模板中的版本展示、资源加载与文档链接。
-
-**参考源码**：[_config.yml](../../../_config.yml)
+**参考源码**：[package.json](../../../package.json)、[scripts/lib/theme-metadata.js](../../../scripts/lib/theme-metadata.js)、[scripts/helpers/stellar_info.js](../../../scripts/helpers/stellar_info.js)
 
 ### SEO 与 meta 标签
 
@@ -222,7 +209,7 @@ seo:
       - https://github.com/example
 ```
 
-`seo` 子树已封闭，配置根仍保持开放以容纳尚未迁移的其它域。`resources.preconnect` 数组由站点层完整替换；`inject.head/script` 是可信多行字符串。实现细节见[HTML Head 与 SEO 元数据](../02-布局系统/head-seo.md)和[Canonical URL 系统](../05-前端交互/canonical-url.md)。
+`seo` 子树与配置根均已封闭。`resources.preconnect` 数组由站点层完整替换；`inject.head/script` 是可信多行字符串。实现细节见[HTML Head 与 SEO 元数据](../02-布局系统/head-seo.md)和[Canonical URL 系统](../05-前端交互/canonical-url.md)。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
@@ -556,14 +543,12 @@ extensions:
 
 ### EJS 模板中
 
-已交付的 Stellar 配置通过 `stellar_config()` 读取冻结运行时；`theme` 只保留尚未迁移的内部元数据：
+已交付的 Stellar 配置通过 `stellar_config()` 读取冻结运行时；主题元数据通过 `stellar_info()` 读取，构建派生数据通过 `stellar_data()` 读取：
 
 ```ejs
-<% if (theme.stellar.version) { %>
-  Version: <%= theme.stellar.version %>
-<% } %>
-
-<% const menuId = stellar_config(`layout.profiles.${profile}.navigation.activeMenu`) %>
+Version: <%= stellar_info('version') %>
+<% var menuId = stellar_config(`layout.profiles.${profile}.navigation.activeMenu`) %>
+<% var wiki = stellar_data('wiki') %>
 ```
 
 ### Stylus 文件中
@@ -583,11 +568,12 @@ $theme-color = hexo-config('appearance.colors.theme')
 
 ### 数据处理脚本中
 
-Node.js 脚本通过 Hexo 的 `config` 对象访问配置：
+Node.js 脚本从 `hexo.stellar.config` 读取公开配置，从 `hexo.stellar.data` 读取注册数据与构建派生对象：
 
 ```javascript
 // 在 scripts/events/lib/doc_tree.js 中
 hexo.stellar.config.layout.profiles.wikiIndex.path
+hexo.stellar.data.wiki.tree
 ```
 
 ## 配置解析示例
@@ -647,18 +633,11 @@ flowchart TD
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
-## 系统配置
+## 内部系统边界
 
-`system` 小节包含内部覆盖：
+v2 不公开 `system`、`cache` 或 `language_switcher` 兼容根。规范 URL 的 `trailing_index` 与 `trailing_html` 策略由构建集成固定；Hexo 自有配置仍归 `hexo.config`，不会复制进主题配置。图标、Widget、作者、链接、Collection 树等运行时数据统一位于 `hexo.stellar.data`，不会回写 `theme.config`。
 
-```yaml
-system:
-  override_pretty_urls: true
-```
-
-这确保 URL 格式化不受 Hexo `pretty_urls` 配置影响，减少边界情况、提升可靠性。
-
-**参考源码**：[_config.yml](../../../_config.yml)
+**参考源码**：[scripts/events/lib/config.js](../../../scripts/events/lib/config.js)、[scripts/lib/runtime-data.js](../../../scripts/lib/runtime-data.js)
 
 ## 配置最佳实践
 
@@ -710,7 +689,7 @@ layout:
 
 ### 5. 插件按需启用
 
-只启用需要的插件以优化性能。`enable: false` 的插件不会贡献任何代码。
+只启用需要的插件以优化性能。`enabled: false` 的 Extension 不会贡献对应行为。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 

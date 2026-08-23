@@ -4,8 +4,9 @@
 const { parseStellarConfig } = require("../../lib/config-schema");
 
 module.exports = ctx => {
-  const source = ctx.config.theme_config ? "_config.stellar.yml" : "themes/stellar/_config.yml";
-  const themeConfig = ctx.config.theme_config || {};
+  const hasSiteThemeConfig = ctx.config.theme_config !== undefined;
+  const source = hasSiteThemeConfig ? "_config.stellar.yml" : "themes/stellar/_config.yml";
+  const themeConfig = hasSiteThemeConfig ? ctx.config.theme_config : {};
   ctx.stellar = ctx.stellar || {};
   ctx.stellar.config = parseStellarConfig({ source, themeConfig, siteConfig: ctx.config });
 };

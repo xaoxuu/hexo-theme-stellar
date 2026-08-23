@@ -1,7 +1,7 @@
 <%
 function layout_wiki_list(partial) {
   var el = ''
-  const { shelf, tree } = theme.wiki
+  var { shelf, tree } = stellar_data('wiki')
   for (let pid of shelf) {
     let proj = tree[pid]
     if (proj == null) {

@@ -31,6 +31,7 @@ test("配置目录完整覆盖主题默认顶层域与站点专属入口", () =>
   const registeredRoots = new Set([...themeDomains, ...Object.keys(CONFIG_SCHEMA.properties)]);
 
   assert.equal(new Set(actual).size, actual.length, "主题默认配置不应重复定义顶层域");
+  assert.deepEqual([...actual].sort(), Object.keys(CONFIG_SCHEMA.properties).filter(root => root !== "inject").sort());
   for (const root of actual) assert.ok(registeredRoots.has(root), `${root} 未登记到迁移目录或运行时 Schema`);
   for (const legacyRoot of ["preconnect", "canonical", "open_graph", "structured_data"]) {
     assert.equal(actual.includes(legacyRoot), false, `${legacyRoot} 不应继续作为主题默认根域`);
@@ -155,15 +156,17 @@ test("五个迁移切片按序且每个配置域恰好出现一次", () => {
   }
 });
 
-test("运行时 Schema 交付 Shell、Layout、内容、外观、资源与 head/SEO 且不会提前封闭根配置", () => {
-  assert.equal(CONFIG_SCHEMA.sealed, false);
+test("运行时 Schema 交付完整八根契约并封闭根配置", () => {
+  assert.equal(CONFIG_SCHEMA.sealed, true);
   assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "layout", "content", "appearance", "seo", "resources", "extensions", "inject"]);
   assert.deepEqual(
     CONFIG_DOMAIN_CATALOG.filter(item => item.status === "delivered").map(item => item.id),
-    ["preconnect", "canonical", "open_graph", "structured_data", "brand", "menubar", "site_tree", "notebook", "article", "search", "comments", "footer", "tag_plugins", "dependencies", "data_services", "data_cache", "plugins", "style", "default", "api_host", "inject", "collection", "front_matter"]
+    ["preconnect", "canonical", "open_graph", "structured_data", "brand", "menubar", "site_tree", "notebook", "article", "search", "comments", "footer", "tag_plugins", "dependencies", "data_services", "data_cache", "plugins", "style", "default", "api_host", "inject", "collection", "front_matter", "theme_data"]
   );
   assert.equal(CONFIG_DOMAIN_CATALOG.find(item => item.id === "canonical").targetStatus, "delivered");
   assert.equal(CONFIG_DOMAIN_CATALOG.find(item => item.id === "canonical").targetPath, "seo.canonical");
+  assert.equal(CONFIG_DOMAIN_CATALOG.find(item => item.id === "theme_data").runtimeTarget, "hexo.stellar.data registered inputs");
+  assert.equal(CONFIG_DOMAIN_CATALOG.find(item => item.id === "derived_runtime").runtimeTarget, "hexo.stellar.data internal runtime");
 });
 
 test("配置目录对象深度冻结", () => {

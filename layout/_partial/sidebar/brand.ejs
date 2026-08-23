@@ -41,7 +41,7 @@ function layoutBrandImage() {
 
 function layoutWikiHome() {
   if (placement !== 'sidebar' || !collection_id(page, 'wiki')) return ''
-  const wiki = theme.wiki.tree[collection_id(page, 'wiki')]
+  var wiki = stellar_data('wiki').tree[collection_id(page, 'wiki')]
   const enabled = content_config(page).sidebar?.left?.wikiHome ?? wiki?.sidebar?.left?.wikiHome ?? true
   if (enabled === false) return ''
   var el = `<div class="wiki-home-wrap">`

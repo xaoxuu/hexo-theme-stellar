@@ -4,7 +4,7 @@
 // 构建期生成客户端图标白名单文件：避免把 SVG 图标数据内联进每个页面的 defines。
 // 与 layout/_partial/scripts/defines.ejs 中旧的白名单保持一致（客户端通过 ctx.icons 读取）。
 hexo.extend.generator.register('stellar_icons', function () {
-  const icons = (this.theme.config && this.theme.config.icons) || {};
+  const icons = this.stellar?.data?.icons || {};
   const keys = ['default:tocomment', 'default:warning', 'weibo:repeat', 'weibo:like'];
   const out = {};
   // 去除 SVG 注释（避免 <!-- / </script> 解析风险），再转义 <
@@ -20,10 +20,10 @@ hexo.extend.generator.register('stellar_icons', function () {
 
 // 构建期生成按命名空间拆分的图标数据文件（js/icons/{ns}.json）：
 // 供客户端加载器 /js/icons.js 对非首屏图标占位符（svg.icon[data-icon]）做异步原位替换。
-// 数据源为合并后的 theme.config.icons（主题 _data/icons.yml + 站点 source/_data/icons.yml 覆盖），
+// 数据源为合并后的 stellar.data.icons（主题 _data/icons.yml + 站点 source/_data/icons.yml 覆盖），
 // 仅收集内联 SVG 值（URL 值由服务端直接输出 <img>，无需下发）。
 hexo.extend.generator.register('stellar_icon_sets', function () {
-  const icons = (this.theme.config && this.theme.config.icons) || {};
+  const icons = this.stellar?.data?.icons || {};
   const sets = {};
   for (const key of Object.keys(icons)) {
     const value = icons[key];

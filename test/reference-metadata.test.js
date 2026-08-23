@@ -26,7 +26,7 @@ const CONFIG_OUTPUT = path.join(ROOT, "reference/v2-config.json");
 test("配置 Reference 只公开已交付 Theme、Collection 与 Front Matter 契约", () => {
   const metadata = generateConfigReferenceMetadata();
 
-  assert.equal(metadata.status, "partial");
+  assert.equal(metadata.status, "delivered");
   const paths = metadata.fields.map(field => field.path);
   const deliveredTargetPaths = CONFIG_TARGET_FIELDS
     .filter(field => field.status === "delivered")

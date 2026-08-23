@@ -1,12 +1,3 @@
-######## Stellar info ########
-stellar:
-  version: '1.44.0'
-  homepage: 'https://xaoxuu.com/wiki/stellar/'
-  repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
-  main_css: /css/main.css
-  main_js: /js/main.js
-
-
 ######## head tags ########
 seo:
   # 一旦设置主站 host，非主站地址将不会被 SEO 收录，并且访问时弹出提示。
@@ -541,9 +532,3 @@ appearance:
         radius: 100px
         overlay: var(--bg-a75)
         saturation: 300%
-
-
-# 非资深hexo开发者尽量不要动这块
-system:
-  # hexo 支持输出的链接格式众多，维护成本高，为了减少出错，统一成推荐的格式。
-  override_pretty_urls: true

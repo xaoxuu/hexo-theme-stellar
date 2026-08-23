@@ -21,7 +21,7 @@ module.exports = ctx => function(args) {
   if (api) {
     el += `<div class="data-service ds-friends${args.posts ? '_and_posts' : ''}" ${ctx.args.joinTags(args, ['size']).join(' ')} data-api="${api}"><div class="grid-box"></div></div>`
   } else if (args.group) {
-    const links = ctx.theme.config.links || {}
+    const links = ctx.stellar.data.links || {};
     el += '<div class="grid-box">'
     for (let item of (links[args.group] || [])) {
       if (item?.url && item?.title) {

@@ -25,7 +25,7 @@ module.exports = ctx => function(args) {
   if (api) {
     el += `<div class="data-service ds-friends" data-api="${api}"><div class="tag-plugin gallery grid-box" layout="grid" ratio="square" ${ctx.args.joinTags(args, ['size']).join(' ')}></div></div>`
   } else if (args.group) {
-    const links = ctx.theme.config.links || {}
+    const links = ctx.stellar.data.links || {};
     el += `<div class="tag-plugin gallery grid-box" layout="grid" ratio="portrait" ${ctx.args.joinTags(args, ['size']).join(' ')}>`
     for (let item of (links[args.group] || [])) {
       if (item?.url) {

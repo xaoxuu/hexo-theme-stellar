@@ -24,7 +24,7 @@ function generate_title() {
   if (postRender) {
     return postRender.seo.title
   } else if (collection_id(page, "wiki")) {
-    const proj = theme.wiki.tree[collection_id(page, "wiki")]
+    var proj = stellar_data('wiki').tree[collection_id(page, "wiki")]
     const wiki = proj?.name || collection_id(page, "wiki")
     if (page.title) {
       var stripped = strip_wiki_title(page.title, wiki)
@@ -59,7 +59,7 @@ function generate_description() {
     return '<meta name="description" content="' + truncate(strip_html(page.description), {length: 150}) + '">';
   }
   if (collection_id(page, "wiki")) {
-    const proj = theme.wiki.tree[collection_id(page, "wiki")]
+    var proj = stellar_data('wiki').tree[collection_id(page, "wiki")]
     if (proj?.description) {
       return '<meta name="description" content="' + proj.description + '">'
     }
@@ -114,7 +114,7 @@ function og_args() {
     args.twitter_card = 'summary_large_image';
   }
   if (collection_id(page, "wiki") && !page.description) {
-    const proj = theme.wiki.tree[collection_id(page, "wiki")];
+    var proj = stellar_data('wiki').tree[collection_id(page, "wiki")];
     if (proj && proj.description) {
       args.description = proj.description;
     }
@@ -247,8 +247,8 @@ function generate_canonical() {
     <% }) %>
   <% } %>
 
-  <link rel="preload" href="<%- url_for(`${theme.stellar.main_css}?v=${stellar_info('version')}`) %>" as="style">
-  <link rel="stylesheet" href="<%- url_for(`${theme.stellar.main_css}?v=${stellar_info('version')}`) %>">
+  <link rel="preload" href="<%- url_for(`${stellar_info('main_css')}?v=${stellar_info('version')}`) %>" as="style">
+  <link rel="stylesheet" href="<%- url_for(`${stellar_info('main_css')}?v=${stellar_info('version')}`) %>">
   <style>:root{--text-loading:<%- JSON.stringify(__('message.loading')) %>;--text-loading-error:<%- JSON.stringify(__('message.loading_failed')) %>}</style>
 
 
@@ -274,11 +274,11 @@ function generate_canonical() {
       };
       let vars = [];
       for (const [name, key] of Object.entries(map)) {
-        const raw = theme.icons && theme.icons[key];
+        var raw = stellar_data('icons') && stellar_data('icons')[key];
         if (raw) vars.push(`  ${name}: url("data:image/svg+xml,${encodeURIComponent(raw)}");`);
       }
       // 加载占位：由 icons.yml 的 default:loading 提供（内联 SVG 编码为 data URI，URL 直用）
-      const loadingRaw = theme.icons && theme.icons['default:loading'];
+      var loadingRaw = stellar_data('icons') && stellar_data('icons')['default:loading'];
       if (loadingRaw) {
         if (loadingRaw.trim().startsWith('<svg')) {
           vars.push(`  --icon-loading: url("data:image/svg+xml,${encodeURIComponent(loadingRaw)}");`);

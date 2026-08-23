@@ -1,8 +1,8 @@
 <%
 function layout_topic_list(partial) {
   var el = ''
-  var publish_list = theme.topic.publish_list
-  var tree = theme.topic.tree
+  var publish_list = stellar_data('topic').publish_list
+  var tree = stellar_data('topic').tree
   var topics = publish_list.map(function(id) {
     return tree[id]
   }).filter(function(topic) {

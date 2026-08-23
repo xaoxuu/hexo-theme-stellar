@@ -617,7 +617,7 @@ function pageViewModelSchema(profile) {
         categories: array(stringItem, { default: inherited("item.categories"), example: ["开发"], required: true }),
         categoryStyle: field("string", { default: derived("hexo.stellar.config.content.article.categoryColors"), example: "--text-p2:#f44336;--theme-block:#f4433620", required: true }),
         tags: array(stringItem, { default: computed("content.article.listing.showTags 启用时最多五项"), example: ["Hexo"], required: true }),
-        authorId: field("string", { default: derived("item.presentation.article.author", "theme.default_author.id"), example: "xaoxuu", required: true }),
+        authorId: field("string", { default: derived("item.presentation.article.author", "stellar.data.defaultAuthor.id"), example: "xaoxuu", required: true }),
         priority: field("number", { default: inherited("item.listing.priority"), example: 1, required: true }),
         listed: field("boolean", { default: inherited("item.visibility.listed"), example: true, required: true }),
         cardStyle: field("string", { default: inherited("collection.listing.cardStyle"), example: "hero", required: true })

@@ -517,8 +517,6 @@ test("Post render 投影详情关系、Footer、评论和列表条目", () => {
         footer: { license: "By {author.name} ({author.url})", share: ["wechat", "link"] },
         related_posts: { enabled: true, limit: 2 }
       } },
-      authors: { xaoxuu: { name: "xaoxuu", url: "https://xaoxuu.com" } },
-      default_author: { id: "xaoxuu", name: "xaoxuu", url: "https://xaoxuu.com" },
       extensions: {
         comments: {
           provider: "giscus",
@@ -532,6 +530,10 @@ test("Post render 投影详情关系、Footer、评论和列表条目", () => {
         }
       },
       appearance: { color_scheme: "dark" },
+    },
+    runtimeData: {
+      authors: { xaoxuu: { name: "xaoxuu", url: "https://xaoxuu.com" } },
+      defaultAuthor: { id: "xaoxuu", name: "xaoxuu", url: "https://xaoxuu.com" }
     },
     frontMatter: {
       title: "Article",

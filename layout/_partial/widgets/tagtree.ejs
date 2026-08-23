@@ -1,5 +1,5 @@
 <%
-var notebook = theme.notebooks.tree[collection_id(page, "notebook")]
+var notebook = stellar_data('notebooks').tree[collection_id(page, "notebook")]
 var tagTree = notebook?.tagTree
 
 function isLeaf(tag) {

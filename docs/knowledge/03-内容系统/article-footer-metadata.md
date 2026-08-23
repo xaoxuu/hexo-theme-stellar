@@ -108,14 +108,14 @@ page.references: [
 
 ## 许可解析
 
-许可文本按页面布局与是否属于 wiki 项目经三级兜底解析。解析出的字符串可能包含 `{author.name}` 与 `{author.url}` 占位符，从 `theme.authors` 插值。
+许可文本按页面布局与是否属于 wiki 项目经三级兜底解析。解析出的字符串可能包含 `{author.name}` 与 `{author.url}` 占位符，从 `stellar_data('authors')` 插值。
 
 ### 解析逻辑
 
 ```mermaid
 flowchart TD
   start["Resolve license string"]
-  isWiki{"page.wiki\nset?"}
+  isWiki{"collection_id(page, 'wiki')\nset?"}
   wikiPageLic{"page.license\n!= null?"}
   wikiPageLicVal["license = page.footer.license\n|| content.article.footer.license"]
   projLic{"proj.license\n!= null?"}
@@ -162,7 +162,7 @@ flowchart TD
 | wiki 页面 | 页面省略 `license` | `page.license: <string>` | `proj.license` 或主题默认 |
 | 其他布局 | （默认不显示） | `page.footer.license: true` 或 `<string>` | `content.article.footer.license` |
 
-- `proj` 指 `theme.wiki.tree[page.wiki]`——项目级 wiki 配置对象，构建方式见[文档系统](wiki-docs.md)
+- `proj` 指 `stellar_data('wiki').tree[collection_id(page, 'wiki')]`——项目级 wiki 配置对象，构建方式见[文档系统](wiki-docs.md)
 - Collection `footer.license: true` 表示使用全局 `content.article.footer.license`
 - `proj.license: false` 表示无论页面级设置如何都不显示许可
 
@@ -170,8 +170,8 @@ flowchart TD
 
 对解析出的许可字符串做替换：
 
-- `page.author` 匹配 `theme.authors` 中的键时使用该作者对象
-- 否则使用 `theme.default_author`
+- `page.author` 匹配 `stellar_data('authors')` 中的键时使用该作者对象
+- 否则使用 `stellar_data('defaultAuthor')`
 - `{author.name}` → `author.name`
 - `{author.url}` → `author.url`
 

@@ -39,11 +39,11 @@ function tagtreeWidgetOnPage() {
 <!-- 非首屏图标异步加载：占位符替换依赖构建期生成的 js/icons/{ns}.json -->
 <script defer src="<%- url_for('/js/icons.js') %>?v=<%- stellar_info('version') %>" data-version="<%- stellar_info('version') %>"></script>
 <script defer src="<%- url_for('/js/plugins/dropdown.js') %>?v=<%- stellar_info('version') %>"></script>
-<script src="<%- url_for(`${theme.stellar.main_js}?v=${stellar_info('version')}`) %>" defer></script>
+<script src="<%- url_for(`${stellar_info('main_js')}?v=${stellar_info('version')}`) %>" defer></script>
 <script defer src="<%- url_for('/js/theme.js') %>?v=<%- stellar_info('version') %>"></script>
 
 <% if (tagtreeWidgetOnPage()) { %>
-  <script>window.__STELLAR_TAGTREE__ = { expand_active: <%- JSON.stringify(!!(theme.widgets.tagtree && theme.widgets.tagtree.expand_active)) %> };</script>
+  <script>window.__STELLAR_TAGTREE__ = { expand_active: <%- JSON.stringify(!!(stellar_data('widgets').tagtree && stellar_data('widgets').tagtree.expand_active)) %> };</script>
   <script defer src="<%- url_for('/js/tagtree.js') %>?v=<%- stellar_info('version') %>"></script>
 <% } %>
 

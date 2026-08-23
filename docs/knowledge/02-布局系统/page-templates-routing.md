@@ -126,12 +126,12 @@ div.l_body.${page_type}  layout="${page.layout}"  type="${article_type}"  [text-
 ```mermaid
 flowchart TD
     A["page_type == 'index'?"] -->|Yes| B["article_type = undefined"]
-    A -->|No| C["page.type set?"]
-    C -->|Yes| D["article_type = page.type"]
-    C -->|No| E["theme.topic.tree[page.topic].type set?"]
-    E -->|Yes| F["article_type = topic.type"]
-    E -->|No| G["theme.wiki.tree[page.wiki].type set?"]
-    G -->|Yes| H["article_type = wiki.type"]
+    A -->|No| C["pageConfig.article.type set?"]
+    C -->|Yes| D["article_type = pageConfig.article.type"]
+    C -->|No| E["topic tree[collection_id].article.type set?"]
+    E -->|Yes| F["article_type = topic.article.type"]
+    E -->|No| G["wiki tree[collection_id].article.type set?"]
+    G -->|Yes| H["article_type = wiki.article.type"]
     G -->|No| I["article_type = content.article.type"]
 ```
 
@@ -145,11 +145,11 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A["page.indent != null?"] -->|Yes| B["indent = page.indent"]
-    A -->|No| C["theme.topic.tree[page.topic].indent set?"]
-    C -->|Yes| D["indent = topic.indent"]
-    C -->|No| E["theme.wiki.tree[page.wiki].indent set?"]
-    E -->|Yes| F["indent = wiki.indent"]
+    A["pageConfig.article.indent != null?"] -->|Yes| B["indent = pageConfig.article.indent"]
+    A -->|No| C["topic tree[collection_id].article.indent set?"]
+    C -->|Yes| D["indent = topic.article.indent"]
+    C -->|No| E["wiki tree[collection_id].article.indent set?"]
+    E -->|Yes| F["indent = wiki.article.indent"]
     E -->|No| G["content.article.indent set?"]
     G -->|Yes| H["indent = content.article.indent"]
     G -->|No| I["indent = (article_type === 'story')"]
@@ -175,8 +175,8 @@ flowchart TD
     ARTICLE --> CONTENT["page.content"]
     CONTENT --> NOTETAGS["notebook set?\n→ partial: notebook/note_tags"]
     NOTETAGS --> TAGS["layout==='post' AND content.article.showTags?\n→ partial: article/article_tags"]
-    TAGS --> FOOTER["layout==='post' OR page.wiki OR notebook?\n→ partial: article/article_footer"]
-    FOOTER --> READNEXT["layout==='post' OR page.wiki?\n→ partial: article/read_next"]
+    TAGS --> FOOTER["layout==='post' OR wiki collection OR notebook?\n→ partial: article/article_footer"]
+    FOOTER --> READNEXT["layout==='post' OR wiki collection?\n→ partial: article/read_next"]
     READNEXT --> RELATED["layout==='post'?\n→ partial: article/related_posts"]
     RELATED --> COMMENTS["partial: comments/layout"]
 ```
@@ -185,7 +185,7 @@ flowchart TD
 
 ### 组件渲染矩阵
 
-| 组件 | `layout === 'post'` | 设置了 `page.wiki` | 设置了 `notebook` | `layout === 'page'`（普通） |
+| 组件 | `layout === 'post'` | `collection_id(page, 'wiki')` 可解析 | 匹配 `notebook` | `layout === 'page'`（普通） |
 |---|---|---|---|---|
 | `nav_tabs_blog` | 有 `page.nav_tabs` 时 | 有 `page.nav_tabs` 时 | 有 `page.nav_tabs` 时 | 有 `page.nav_tabs` 时 |
 | `article_banner` | 有标题/内容时 | 有标题/内容时 | 有标题/内容时 | 有标题/内容时 |
@@ -199,7 +199,7 @@ flowchart TD
 
 ### 笔记本集成
 
-页面的 `collection.type: notebook` 匹配 `theme.notebooks.tree` 中的条目时，`page.ejs` 先把 Notebook Collection 的导航与 Footer 覆盖传播到页面对象，再开始渲染；主题默认值来自 `content.notebook`。
+页面的 `collection.profile: notebook` 经 `collection_id(page, 'notebook')` 解析后匹配 `stellar_data('notebooks').tree` 中的条目时，`page.ejs` 先把 Notebook Collection 的导航与 Footer 覆盖传播到页面对象，再开始渲染；主题默认值来自 `content.notebook`。
 
 **参考源码**：[layout/page.ejs](../../../layout/page.ejs)
 

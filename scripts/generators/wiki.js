@@ -8,7 +8,7 @@
 const { generatorPath, requireLayoutProfiles, toRenderNavigation } = require("../lib/layout-config");
 
 hexo.extend.generator.register("wiki", function () {
-  const { wiki } = hexo.theme.config;
+  const { wiki } = hexo.stellar.data;
   const profile = requireLayoutProfiles(hexo.stellar?.config).wikiIndex;
   const wikiIdList = Object.keys(wiki.tree);
   if (wikiIdList.length == 0) {

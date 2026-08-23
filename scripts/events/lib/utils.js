@@ -72,7 +72,7 @@ module.exports = hexo => {
   };
   hexo.utils = {
     icon: (key, args, inline) => {
-      const { icons } = hexo.theme.config
+      const { icons } = hexo.stellar.data;
       var result = ''
       if (icons[key]) {
         result = icons[key]
@@ -91,7 +91,7 @@ module.exports = hexo => {
       }
     },
     iconData: (key) => {
-      const { icons } = hexo.theme.config
+      const { icons } = hexo.stellar.data;
       return icons && icons[key] ? icons[key] : ''
     }
   };

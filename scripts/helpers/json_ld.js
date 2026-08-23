@@ -105,7 +105,7 @@ hexo.extend.helper.register('json_ld', function(args) {
       if (page.excerpt || page.description) {
         schema.description = this.strip_html(page.description || page.excerpt);
       } else if (getCollectionId(pageConfig, "wiki")) {
-        const proj = this.theme.wiki.tree[getCollectionId(pageConfig, "wiki")];
+        const proj = this.stellar_data("wiki.tree")[getCollectionId(pageConfig, "wiki")];
         if (proj && proj.description) {
           schema.description = proj.description;
         }

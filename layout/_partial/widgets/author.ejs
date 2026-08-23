@@ -2,11 +2,11 @@
 
 var author = null
 var article = content_config(page).article || {}
-if (theme.authors) {
-  if (article.author?.length > 0 && theme.authors[article.author] != null) {
-    author = theme.authors[article.author]
+if (stellar_data('authors')) {
+  if (article.author?.length > 0 && stellar_data('authors')[article.author] != null) {
+    author = stellar_data('authors')[article.author]
   } else {
-    author = theme.default_author
+    author = stellar_data('defaultAuthor')
   }
 }
 

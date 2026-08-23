@@ -1,7 +1,7 @@
 <%
 function layoutWikiCover() {
   var el = '';
-  const proj = theme.wiki.tree[collection_id(page, "wiki")];
+  var proj = stellar_data('wiki').tree[collection_id(page, "wiki")];
   if (proj == undefined || proj.homepage.path !== page.path) {
     return el;
   }

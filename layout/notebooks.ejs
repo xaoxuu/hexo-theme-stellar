@@ -1,5 +1,5 @@
 <%# 笔记本列表页主体部分 %>
-<% for (const notebook of Object.values(theme.notebooks.tree)) { %>
+<% for (var notebook of Object.values(stellar_data('notebooks').tree)) { %>
   <div class="post-list wiki">
     <div class="post-card-wrap<%= scrollreveal(' ') %>">
     <a class="post-card wiki card-hover card-hover--spotlight card-hover--tilt" href="<%= pretty_url(notebook.route.path) %>">

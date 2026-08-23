@@ -128,9 +128,9 @@ page_type = 'index'
 
 | 优先级 | 来源 |
 |--------|------|
-| 1 | `page.type`（front matter） |
-| 2 | `theme.topic.tree[page.topic].type` |
-| 3 | `theme.wiki.tree[page.wiki].type` |
+| 1 | Front Matter `article.type` → `pageConfig.article.type` |
+| 2 | `stellar_data('topic').tree[collection_id(page, 'topic')].article.type` |
+| 3 | `stellar_data('wiki').tree[collection_id(page, 'wiki')].article.type` |
 | 4 | `hexo.stellar.config.content.article.type`（全局默认） |
 | — | 列表页为 `undefined` |
 
@@ -146,9 +146,9 @@ page_type = 'index'
 
 | 优先级 | 来源 |
 |--------|------|
-| 1 | `page.indent`（front matter） |
-| 2 | `theme.topic.tree[page.topic].indent` |
-| 3 | `theme.wiki.tree[page.wiki].indent` |
+| 1 | Front Matter `article.indent` → `pageConfig.article.indent` |
+| 2 | `stellar_data('topic').tree[collection_id(page, 'topic')].article.indent` |
+| 3 | `stellar_data('wiki').tree[collection_id(page, 'wiki')].article.indent` |
 | 4 | `hexo.stellar.config.content.article.indent` |
 | 5 | `article_type === 'story'`（自动推导） |
 
@@ -163,17 +163,17 @@ AND no page.nav_tabs?"]
 
     D["page_type == 'index'?"]
     D -->|"yes"| E["article_type = undefined"]
-    D -->|"no"| F["page.type set?"]
-    F -->|"yes"| G["article_type = page.type"]
-    F -->|"no"| H["topic.type set?"]
-    H -->|"yes"| I["article_type = topic.type"]
-    H -->|"no"| J["wiki.type set?"]
-    J -->|"yes"| K["article_type = wiki.type"]
+    D -->|"no"| F["pageConfig.article.type set?"]
+    F -->|"yes"| G["article_type = pageConfig.article.type"]
+    F -->|"no"| H["topic.article.type set?"]
+    H -->|"yes"| I["article_type = topic.article.type"]
+    H -->|"no"| J["wiki.article.type set?"]
+    J -->|"yes"| K["article_type = wiki.article.type"]
     J -->|"no"| L["article_type = content.article.type"]
 
-    M["page.indent set?"]
-    M -->|"yes"| N["indent = page.indent"]
-    M -->|"no"| O["topic/wiki indent set?"]
+    M["pageConfig.article.indent set?"]
+    M -->|"yes"| N["indent = pageConfig.article.indent"]
+    M -->|"no"| O["topic/wiki article.indent set?"]
     O -->|"yes"| P["indent = that value"]
     O -->|"no"| Q["content.article.indent set?"]
     Q -->|"yes"| R["indent = content.article.indent"]
@@ -290,8 +290,9 @@ graph TD
 | 变量 | 类型 | 说明 |
 |---|---|---|
 | `page` | Object | 当前页面 front matter 与渲染内容 |
-| `theme` | Object | 尚未迁移的主题配置与派生集合对象（如 `theme.wiki`） |
+| `theme` | Object | Hexo 提供的主题模板上下文；v2 不在此挂载派生数据 |
 | `hexo.stellar.config` | Object | 已交付的冻结 v2 配置（如 `content.article`、`layout.profiles`） |
+| `stellar_data(path)` | Function | 读取 `hexo.stellar.data` 中的构建期主题数据与派生对象 |
 | `config` | Object | Hexo 站点配置（`config.title`、`config.url` 等） |
 | `body` | String | 页面布局模板输出的 HTML 字符串；注入 `.l_main` |
 | `is_home()` | Function | 首页返回 true |

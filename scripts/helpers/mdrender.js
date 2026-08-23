@@ -28,5 +28,5 @@ hexo.extend.helper.register('has_remote_md', function (page) {
     return true;
   }
   const config = getPageConfig(page) || page.stellarConfig || {};
-  return isWikiReadmePage(hexo.theme.config.wiki.tree[getCollectionId(config, "wiki")], page);
+  return isWikiReadmePage(hexo.stellar.data.wiki.tree[getCollectionId(config, "wiki")], page);
 });

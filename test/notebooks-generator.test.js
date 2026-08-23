@@ -25,9 +25,9 @@ test("Notebook 聚合页输出最终 collection.profile 到冻结配置入口", 
     sort() { return this; }
   };
   const context = Object.assign(global.hexo, {
-    stellar: { config: parseStellarConfig({ themeConfig: {} }) },
-    theme: {
-      config: {
+    stellar: {
+      config: parseStellarConfig({ themeConfig: {} }),
+      data: {
         notebooks: {
           tree: {
             dev: {

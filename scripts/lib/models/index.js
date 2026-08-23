@@ -4,8 +4,7 @@ const { gravatar, stripHTML, truncate } = require("hexo-util");
 const {
   CONTENT_MODEL_FIELDS,
   ContentConfigError,
-  isPlainObject,
-  validateThemeConfig
+  isPlainObject
 } = require("../content-config");
 const { assertPageViewModel } = require("../model-schema");
 const {
@@ -198,21 +197,21 @@ function categoryStyle(category, categoryColors) {
   return `--text-p2:${color};--theme-block:${background}`;
 }
 
-function resolveLicense(license, item, themeConfig) {
+function resolveLicense(license, item, runtimeData) {
   if (typeof license !== "string" || license.length === 0) return "";
-  const authors = isPlainObject(themeConfig.authors) ? themeConfig.authors : null;
+  const authors = isPlainObject(runtimeData.authors) ? runtimeData.authors : null;
   if (!authors) return license;
   const authorId = item.presentation.article?.author;
   const author = typeof authorId === "string" && isPlainObject(authors[authorId])
     ? authors[authorId]
-    : isPlainObject(themeConfig.default_author) ? themeConfig.default_author : null;
+    : isPlainObject(runtimeData.defaultAuthor) ? runtimeData.defaultAuthor : null;
   if (!author) return license;
   return license
     .replace("{author.name}", String(author.name || ""))
     .replace("{author.url}", String(author.url || ""));
 }
 
-function buildContributor(item, themeConfig, stellarConfig) {
+function buildContributor(item, stellarConfig) {
   const map = stellarConfig.extensions.services.contributors.editPage;
   if (!isPlainObject(map)) return null;
   const source = item.source.file || "";
@@ -231,7 +230,7 @@ function buildContributor(item, themeConfig, stellarConfig) {
 }
 
 function buildPostArticleRender(input, item) {
-  const themeConfig = input.themeConfig;
+  const runtimeData = input.runtimeData;
   const articleConfig = requireContentConfig(input.stellarConfig, input.themeSource).article;
   const appearance = input.stellarConfig.appearance;
   const frontMatter = input.frontMatter;
@@ -261,7 +260,7 @@ function buildPostArticleRender(input, item) {
     tags: articleConfig.showTags === true ? normalizeLinks(input.page.tagLinks) : [],
     footer: {
       references: Array.isArray(footer.references) ? cloneValue(footer.references) : [],
-      license: resolveLicense(footer.license, item, themeConfig),
+      license: resolveLicense(footer.license, item, runtimeData),
       share: shareServices.length > 0 ? {
         services: shareServices,
         permalink: item.route.permalink,
@@ -269,7 +268,7 @@ function buildPostArticleRender(input, item) {
         image: item.presentation.card?.cover || "",
         summary: truncate(stripHTML(summarySource), { length: 120 })
       } : null,
-      contributor: buildContributor(item, themeConfig, input.stellarConfig)
+      contributor: buildContributor(item, input.stellarConfig)
     },
     previous: normalizePostLink(input.page.previous),
     next: normalizePostLink(input.page.next),
@@ -325,7 +324,7 @@ function buildPostListingRender(input, collection, item) {
       : [],
     authorId: typeof item.presentation.article?.author === "string" && item.presentation.article.author.length > 0
       ? item.presentation.article.author
-      : String(input.themeConfig.default_author?.id || ""),
+      : String(input.runtimeData.defaultAuthor?.id || ""),
     priority: item.listing.priority,
     listed: item.visibility.listed !== false,
     cardStyle: collection.listing.cardStyle || "classic"
@@ -349,7 +348,6 @@ function canonicalUrl(host, path) {
 
 function buildPostRenderModel(input, collection, item) {
   const siteConfig = input.siteConfig;
-  const themeConfig = input.themeConfig;
   const seoConfig = input.stellarConfig.seo;
   const appearance = input.stellarConfig.appearance;
   const fallbacks = input.stellarConfig.resources.fallbacks;
@@ -479,7 +477,7 @@ function buildPostRenderModel(input, collection, item) {
   };
 }
 
-function buildCollectionModel(themeConfig, stellarConfig) {
+function buildCollectionModel(stellarConfig) {
   const profiles = requireLayoutProfiles(stellarConfig);
   const postProfile = profiles.post;
   const blogIndex = profiles.blogIndex;
@@ -600,7 +598,6 @@ function normalizeThemeComments(comments) {
 }
 
 function buildWikiCollectionModel(input, collectionId) {
-  const themeConfig = input.themeConfig;
   const collectionConfig = input.collectionConfig;
   const collectionState = isPlainObject(input.collectionState) ? input.collectionState : {};
   const profiles = requireLayoutProfiles(input.stellarConfig);
@@ -687,7 +684,6 @@ function buildTopicSeries(collectionId, members, currentId, orderBy) {
 }
 
 function buildTopicCollectionModel(input, collectionId, currentId) {
-  const themeConfig = input.themeConfig;
   const siteConfig = input.siteConfig;
   const collectionConfig = input.collectionConfig;
   const profiles = requireLayoutProfiles(input.stellarConfig);
@@ -800,7 +796,6 @@ function buildNotebookTagNavigation(collectionId, baseDir, collectionItems) {
 }
 
 function buildNotebookCollectionModel(input, collectionId) {
-  const themeConfig = input.themeConfig;
   const siteConfig = input.siteConfig;
   const collectionConfig = input.collectionConfig;
   const profiles = requireLayoutProfiles(input.stellarConfig);
@@ -859,7 +854,7 @@ function buildPostPageViewModel(input) {
   const source = input.source || "<page>";
   const themeSource = input.themeSource || "<theme>";
   const siteConfig = isPlainObject(input.siteConfig) ? input.siteConfig : {};
-  const themeConfig = isPlainObject(input.themeConfig) ? input.themeConfig : {};
+  const runtimeData = isPlainObject(input.runtimeData) ? input.runtimeData : {};
   const frontMatter = isPlainObject(input.frontMatter) ? input.frontMatter : {};
   const page = input.page || {};
 
@@ -879,10 +874,9 @@ function buildPostPageViewModel(input) {
     layoutConfigRequirement()
   ]);
 
-  validateThemeConfig(themeConfig, themeSource);
-  const collection = buildCollectionModel(themeConfig, input.stellarConfig);
+  const collection = buildCollectionModel(input.stellarConfig);
   const item = buildContentItemModel(page, frontMatter, collection, source);
-  const render = buildPostRenderModel({ ...input, siteConfig, themeConfig, frontMatter, page }, collection, item);
+  const render = buildPostRenderModel({ ...input, siteConfig, runtimeData, frontMatter, page }, collection, item);
   return deepFreeze(assertPageViewModel("post", { collection, item, render }));
 }
 
@@ -890,7 +884,6 @@ function buildWikiPageViewModel(input) {
   const source = input.source || "<page>";
   const themeSource = input.themeSource || "<theme>";
   const collectionSource = input.collectionSource || "<collection>";
-  const themeConfig = isPlainObject(input.themeConfig) ? input.themeConfig : {};
   const frontMatter = isPlainObject(input.frontMatter) ? input.frontMatter : {};
   const page = input.page || {};
 
@@ -904,8 +897,6 @@ function buildWikiPageViewModel(input) {
   }
   const collectionConfig = input.collectionConfig;
 
-  validateThemeConfig(themeConfig, themeSource);
-
   const collectionId = input.collectionId || frontMatter.collection?.id;
   if (frontMatter.collection?.profile !== "wiki") {
     throw new ContentConfigError([`${source}: collection.profile 必须是 wiki`]);
@@ -916,7 +907,7 @@ function buildWikiPageViewModel(input) {
     ]);
   }
 
-  const collection = buildWikiCollectionModel({ ...input, themeConfig, collectionConfig }, collectionId);
+  const collection = buildWikiCollectionModel({ ...input, collectionConfig }, collectionId);
   const item = buildContentItemModel(page, frontMatter, collection, source, {
     source: collection.source,
     visibility: { listed: true, searchable: true }
@@ -933,7 +924,6 @@ function buildTopicPageViewModel(input) {
   const source = input.source || "<page>";
   const themeSource = input.themeSource || "<theme>";
   const siteConfig = isPlainObject(input.siteConfig) ? input.siteConfig : {};
-  const themeConfig = isPlainObject(input.themeConfig) ? input.themeConfig : {};
   const collectionConfig = input.collectionConfig;
   const frontMatter = isPlainObject(input.frontMatter) ? input.frontMatter : {};
   const page = input.page || {};
@@ -949,7 +939,6 @@ function buildTopicPageViewModel(input) {
     layoutConfigRequirement()
   ]);
 
-  validateThemeConfig(themeConfig, themeSource);
   if (!isPlainObject(collectionConfig)) {
     throw new ContentConfigError([`${source}: collection.id 无法解析 Topic ${collectionId || "<unknown>"}`]);
   }
@@ -965,7 +954,6 @@ function buildTopicPageViewModel(input) {
   const collection = buildTopicCollectionModel({
     ...input,
     siteConfig,
-    themeConfig,
     collectionConfig
   }, collectionId, currentId);
   const item = buildContentItemModel(page, frontMatter, collection, source, {
@@ -979,7 +967,6 @@ function buildNotebookPageViewModel(input) {
   const source = input.source || "<page>";
   const themeSource = input.themeSource || "<theme>";
   const siteConfig = isPlainObject(input.siteConfig) ? input.siteConfig : {};
-  const themeConfig = isPlainObject(input.themeConfig) ? input.themeConfig : {};
   const collectionConfig = input.collectionConfig;
   const frontMatter = isPlainObject(input.frontMatter) ? input.frontMatter : {};
   const page = input.page || {};
@@ -987,7 +974,6 @@ function buildNotebookPageViewModel(input) {
 
   assertNormalizedConfig(input.stellarConfig, themeSource, [layoutConfigRequirement()]);
 
-  validateThemeConfig(themeConfig, themeSource);
   if (!isPlainObject(collectionConfig)) {
     throw new ContentConfigError([`${source}: 未找到 Notebook collection ${collectionId || "<unknown>"}`]);
   }
@@ -1006,7 +992,6 @@ function buildNotebookPageViewModel(input) {
   const collection = buildNotebookCollectionModel({
     ...input,
     siteConfig,
-    themeConfig,
     collectionConfig
   }, collectionId);
   const item = buildContentItemModel(page, frontMatter, collection, source, {

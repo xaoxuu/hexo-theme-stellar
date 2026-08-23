@@ -8,7 +8,7 @@
 const { requireLayoutProfiles, toRenderNavigation } = require("../lib/layout-config");
 
 hexo.extend.generator.register("author", function () {
-  const { authors } = hexo.theme.config;
+  const { authors } = hexo.stellar.data;
   const profile = requireLayoutProfiles(hexo.stellar?.config).author;
   var pages = [];
   for (let key of Object.keys(authors)) {

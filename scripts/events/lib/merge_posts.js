@@ -22,7 +22,7 @@ class RelatedPage {
 }
 
 module.exports = ctx => {
-  var topic = ctx.theme.config.topic
+  var topic = ctx.stellar.data.topic;
   const posts = ctx.locals.get('posts')
   const pageConfigs = ctx.stellar?.contentConfig?.pageConfigs || new Map();
   posts.sort('date').each(function(post) {

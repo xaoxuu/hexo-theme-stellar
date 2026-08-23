@@ -1,8 +1,8 @@
 <%
 
-const wiki = theme.wiki.tree[collection_id(page, "wiki")]
-const topic = theme.topic.tree[collection_id(page, "topic")]
-const notebook = theme.notebooks.tree[collection_id(page, "notebook")]
+var wiki = stellar_data('wiki').tree[collection_id(page, "wiki")]
+var topic = stellar_data('topic').tree[collection_id(page, "topic")]
+var notebook = stellar_data('notebooks').tree[collection_id(page, "notebook")]
 const postViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'post'
   ? viewModel
   : null
@@ -76,8 +76,8 @@ function layoutWidgets() {
       } else if (typeof w == 'object' && w.override) {
         name = w.override
       }
-      if (name in theme.widgets) {
-        Object.assign(widget, theme.widgets[name])
+      if (name in stellar_data('widgets')) {
+        Object.assign(widget, stellar_data('widgets')[name])
       }
       if (typeof w == 'object' && (w.override || w.layout)) {
         Object.assign(widget, w)

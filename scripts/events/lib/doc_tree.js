@@ -2,7 +2,7 @@
  * doc_tree.js v2 | https://github.com/xaoxuu/hexo-theme-stellar/
  *
  * Wiki 文档树构建入口：委托 scripts/lib/doc_tree.js 的纯函数，
- * 保持 ctx.theme.config.wiki 输出结构与旧实现一致。
+ * 将 Wiki 运行时树写入 ctx.stellar.data.wiki。
  */
 
 "use strict";
@@ -11,6 +11,7 @@ const { getCollectionId } = require("../../lib/content-config");
 const { buildWikiTree } = require("../../lib/doc_tree");
 const { requireLayoutProfiles } = require("../../lib/layout-config");
 const { buildWikiPageViewModel } = require("../../lib/models");
+const { ensureRuntimeData } = require("../../lib/runtime-data");
 const {
   sourcePathForData,
   sourcePathForPage
@@ -51,9 +52,9 @@ module.exports = ctx => {
     shelf: data.wiki || [],
     wikiIndexPath: requireLayoutProfiles(ctx.stellar?.config).wikiIndex.path
   });
-  ctx.theme.config.wiki = wiki;
+  const runtimeData = ensureRuntimeData(ctx);
+  runtimeData.wiki = wiki;
 
-  const themeConfig = ctx.theme.config;
   const themeSource = ctx.config.theme_config
     ? "_config.stellar.yml"
     : "themes/stellar/_config.yml";
@@ -67,7 +68,7 @@ module.exports = ctx => {
       themeSource,
       collectionSource: sourcePathForData(`wiki/${collectionId}`),
       siteConfig: ctx.config,
-      themeConfig,
+      runtimeData,
       stellarConfig: ctx.stellar?.config,
       collectionId,
       collectionConfig: collectionConfigs.get(collectionId),

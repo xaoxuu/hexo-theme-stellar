@@ -225,7 +225,6 @@ node_modules/hexo-theme-stellar/_config.yml
 
 | 小节 | 用途 |
 |------|------|
-| `stellar` | 主题版本、首页、仓库地址、资源路径 |
 | `site` | Brand、菜单与 Footer 站点外壳 |
 | `seo` | canonical、Open Graph 与结构化数据 |
 | `layout` | 页面 Profile：路径、导航与左右侧栏 |
@@ -233,25 +232,13 @@ node_modules/hexo-theme-stellar/_config.yml
 | `appearance` | 排版、颜色、形状、动效和背景 |
 | `resources` | preconnect 与按角色命名的资源兜底 |
 | `extensions` | 搜索、评论、标签、Feature、服务与缓存 |
-| `inject` | 受信任的 head / script 原文注入 |
-| `system` | 内部系统覆盖 |
+| `inject` | 站点 `_config.stellar.yml` 与页面 Front Matter 的受信任原文注入 |
 
-### 关键配置字段
+### 主题元数据
 
-主题通过以下字段标识自身：
+主题版本、主页与仓库地址来自 `package.json`，核心 CSS/JS 路径来自内部资源清单。它们不是站点配置项，v2 不允许在 `_config.stellar.yml` 中覆盖。
 
-```yaml
-stellar:
-  version: '1.44.0'           # 主题版本号
-  homepage: 'https://xaoxuu.com/wiki/stellar/'  # 文档站
-  repo: 'https://github.com/xaoxuu/hexo-theme-stellar'  # 源码仓库
-  main_css: /css/main.css     # 主 CSS 包路径
-  main_js: /js/main.js        # 主 JS 包路径
-```
-
-这些值用于主题版本展示、文档链接与资源加载。
-
-**参考源码**：[_config.yml](../../../_config.yml)
+**参考源码**：[package.json](../../../package.json)、[scripts/lib/theme-metadata.js](../../../scripts/lib/theme-metadata.js)
 
 ---
 
@@ -357,7 +344,7 @@ graph TD
 
 ## 版本管理
 
-主题采用语义化版本，版本信息维护在两处。
+主题采用语义化版本，版本信息由 `package.json` 唯一维护。
 
 ### 版本位置
 
@@ -366,20 +353,15 @@ graph LR
     VER["Version: 1.44.0"]
     
     PKG["package.json"]
-    CONFIG["_config.yml<br/>stellar.version"]
-    
     VER --> PKG
-    VER --> CONFIG
-    
     PKG --> NPM["npm registry"]
-    CONFIG --> FOOTER["Footer display"]
-    CONFIG --> DOCS["Documentation links"]
+    PKG --> FOOTER["stellar_info() / Footer"]
+    PKG --> DOCS["Documentation links"]
 ```
 
 - **package.json**：`"version": "1.44.0"`，供 npm 分发使用
-- **_config.yml**：`stellar.version: '1.44.0'`，用于展示与文档链接
 
-两处必须保持一致。版本号遵循 `MAJOR.MINOR.PATCH` 格式。
+版本号遵循 `MAJOR.MINOR.PATCH` 格式；发版脚本同步 package 版本到安装知识库，不再修改主题配置。
 
 ### 更新主题
 
@@ -400,7 +382,7 @@ hexo clean
 hexo generate
 ```
 
-**参考源码**：[package.json](../../../package.json)、[_config.yml](../../../_config.yml)、[.github/workflows/npm-publish.yml](../../../.github/workflows/npm-publish.yml)
+**参考源码**：[package.json](../../../package.json)、[release.js](../../../release.js)、[.github/workflows/npm-publish.yml](../../../.github/workflows/npm-publish.yml)
 
 ---
 

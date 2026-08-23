@@ -518,6 +518,39 @@ test("已迁移旧根、旧子字段和新子树未知字段产生结构化诊�
   );
 });
 
+test("根级只接受八个公开域并拒绝内部、兼容与非对象输入", () => {
+  assert.throws(
+    () => parseStellarConfig({
+      source: "_config.stellar.yml",
+      themeConfig: {
+        stellar: { version: "1.0.0" },
+        system: { override_pretty_urls: true },
+        cache: { enable: true },
+        language_switcher: { enable: true },
+        unknown_root: true
+      }
+    }),
+    error => {
+      assert.ok(error instanceof ConfigSchemaError);
+      assert.deepEqual(error.issues.map(issue => issue.path), [
+        "stellar", "system", "cache", "language_switcher", "unknown_root"
+      ]);
+      assert.ok(error.issues.every(issue => ["removed_field", "unknown_field"].includes(issue.code)));
+      return true;
+    }
+  );
+
+  assert.throws(
+    () => parseStellarConfig({ source: "_config.stellar.yml", themeConfig: [] }),
+    error => {
+      assert.ok(error instanceof ConfigSchemaError);
+      assert.equal(error.issues[0].path, "root");
+      assert.equal(error.issues[0].actualType, "array");
+      return true;
+    }
+  );
+});
+
 test("构建事件把最终路径冻结挂载到 hexo.stellar.config", () => {
   const ctx = {
     config: {

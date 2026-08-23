@@ -11,7 +11,7 @@ const ROOT = path.join(__dirname, '..');
 
 test('iconData 返回 icons.yml 原始值（不包 <img>，缺失返回空串）', () => {
   const hexo = {
-    theme: { config: { icons: {
+    stellar: { data: { icons: {
       'test:svg': '<svg></svg>',
       'test:url': 'https://example.com/a.svg'
     } } }
@@ -24,7 +24,7 @@ test('iconData 返回 icons.yml 原始值（不包 <img>，缺失返回空串）
 
 test('icon() 对 SVG 默认输出异步占位符，inline=true 原样输出，URL 输出 <img>', () => {
   const hexo = {
-    theme: { config: { icons: {
+    stellar: { data: { icons: {
       'test:svg': '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M0 0"/></svg>',
       'test:url': 'https://example.com/a.svg',
       'test:plain': 'plain-value'
@@ -53,7 +53,7 @@ test('stellar_icon_sets 生成器：按命名空间输出 JSON、去注释、跳
   }
   assert.equal(typeof registrations.stellar_icons, 'function');
   const files = registrations.stellar_icon_sets.call({
-    theme: { config: { icons: {
+    stellar: { data: { icons: {
       'a:one': '<svg><!-- c --><path/></svg>',
       'a:two': '<svg><path/></svg>',
       'b:url': 'https://example.com/a.svg',

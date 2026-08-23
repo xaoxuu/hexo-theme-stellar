@@ -34,7 +34,7 @@ function layoutArchiveList() {
   }
   var posts = site.posts.filter(function(post) {
     if (isTopicPost(post)) {
-      return page.author == null || (content_config(post).article?.author || theme.default_author.id) == page.author.id
+      return page.author == null || (content_config(post).article?.author || stellar_data('defaultAuthor').id) == page.author.id
     }
     var listing = requirePostViewModel(post).render.listing
     if (!listing.listed) return false

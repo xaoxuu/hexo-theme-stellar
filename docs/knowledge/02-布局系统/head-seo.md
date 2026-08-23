@@ -119,7 +119,7 @@ graph TB
 | 首页（第 1 页） | `{site}` | `My Site` |
 | 首页分页（第 2 页起） | `{site} - Page {n}` | `My Site - Page 2` |
 
-函数使用 i18n 本地化符号（`__('symbol.colon')`、`__('symbol.page')`），并从 `theme.wiki.tree[page.wiki]` 读取 wiki 项目名。
+函数使用 i18n 本地化符号（`__('symbol.colon')`、`__('symbol.page')`），先用 `collection_id(page, 'wiki')` 解析集合 ID，再从 `stellar_data('wiki').tree[id]` 读取 wiki 项目名。
 
 wiki 标题去重规则：当 `page.title` 与 wiki 项目名相同，或以 `：`/`:`/` - ` 为前缀重复 wiki 名时，只保留一次（如 `GHAPI JSON Generator：GHAPI JSON Generator` 会归一为 `GHAPI JSON Generator`）；wiki 名中的空格/连字符按同义处理（`cloud shell` 可匹配 `cloud-shell`）。
 
@@ -127,10 +127,10 @@ wiki 标题去重规则：当 `page.title` 与 wiki 项目名相同，或以 `�
 
 ```mermaid
 flowchart TD
-    START["generate_title() invoked"] --> ISWIKI{"page.wiki exists?"}
+    START["generate_title() invoked"] --> ISWIKI{"collection_id(page, 'wiki') exists?"}
     
-    ISWIKI -->|Yes| GETPROJ["Access theme.wiki.tree[page.wiki]"]
-    GETPROJ --> GETNAME["wiki = proj?.name || page.wiki"]
+    ISWIKI -->|Yes| GETPROJ["Access stellar_data('wiki').tree[wiki_id]"]
+    GETPROJ --> GETNAME["wiki = proj?.name || wiki_id"]
     GETNAME --> STRIP["strip_wiki_title() 去除标题中的 wiki 名前缀"]
     STRIP --> HASTITLE{"page.title exists?"}
     HASTITLE -->|Yes| WIKITITL{"去重后仍有剩余标题?"}
@@ -167,7 +167,7 @@ flowchart TD
 
 1. **Open Graph 启用时跳过**：`stellar_config('seo.openGraph').enabled` 为 true 时返回空（由 OG 标签处理描述）
 2. **页面级描述**：`page.description`（截断至 150 字符）
-3. **Wiki 项目描述**：有 `theme.wiki.tree[page.wiki].description` 时使用（项目级兜底，正文为空的远程 README 主页也适用）
+3. **Wiki 项目描述**：先用 `collection_id(page, 'wiki')` 解析集合 ID，有 `stellar_data('wiki').tree[id].description` 时使用（项目级兜底，正文为空的远程 README 主页也适用）
 4. **页面摘要**：`page.excerpt`、截断的 `page.content`（150 字符）
 5. **兜底**：`config.description`
 
@@ -175,7 +175,7 @@ flowchart TD
 
 **参考源码**：[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 
-> 说明：站点启用 Open Graph（`seo.open_graph.enabled: true`，默认配置）时，实际生效的 `<meta name="description">` 由 `og_args()` 传入 Hexo 内置 `open_graph()` helper 生成，级联语义与上述一致：页面级 `page.description` / `page.open_graph.description` 优先，其次 wiki 项目描述，最后页面摘要与站点默认描述。页面字段会在后续 Front Matter 切片迁入 `seo.open_graph`。
+> 说明：站点启用 Open Graph（`seo.open_graph.enabled: true`，默认配置）时，实际生效的 `<meta name="description">` 由 `og_args()` 传入 Hexo 内置 `open_graph()` helper 生成，级联语义与上述一致：页面级 `page.description` 与 Front Matter Open Graph description 优先，其次 wiki 项目描述，最后页面摘要与站点默认描述。Front Matter 由声明式 Schema 投影为 `pageConfig.seo.openGraph`。
 
 ### 关键词生成
 
@@ -220,14 +220,14 @@ graph LR
 {
   twitter_id: stellar_config('seo.openGraph').twitterId,
   twitter_card: 'summary_large_image',  // 仅 post 且有 cover 时
-  image: page.cover || page.banner || first_content_image(page.content) || config.avatar || (config.email ? gravatar(config.email) : null),
-  ...page.open_graph  // 页面级覆盖
+  image: pageConfig.card?.cover || pageConfig.banner?.image || first_content_image(page.content) || config.avatar || (config.email ? gravatar(config.email) : null),
+  ...pageConfig.seo?.openGraph  // Front Matter seo.open_graph 覆盖
 }
 ```
 
 `stellar_config('seo.openGraph').enabled` 为 true 时生成 OG 标签，并对 `og:title`、`og:site_name`、`twitter:title` 做主题定制替换（经 `generate_og_title()` / `generate_og_site_name()` 转义处理）。`og:site_name` 始终输出站点名 `config.title`，`og:image` 按 封面 → 横幅 → 正文首图 → 头像 回退。
 
-`og_args()` 还会在 `page.wiki` 存在且页面未显式设置 `page.description` 时，把 wiki 项目 YAML 的 `description` 传入 `description`，使 `<meta name="description">` 与 `og:description` 使用项目描述；`page.open_graph.description` 仍可经 front-matter 覆盖。
+`og_args()` 还会在 `collection_id(page, 'wiki')` 可解析且页面未显式设置 `page.description` 时，把 wiki 项目 YAML 的 `description` 传入 `description`，使 `<meta name="description">` 与 `og:description` 使用项目描述；Front Matter 的 Open Graph description 仍可经 `pageConfig.seo.openGraph` 覆盖。
 
 **参考源码**：[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 

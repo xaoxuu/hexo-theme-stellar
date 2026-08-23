@@ -41,7 +41,7 @@ wiki 侧边栏渲染见[侧边栏系统](../02-布局系统/sidebar-system.md)�
 
 ## 架构概览
 
-wiki 系统有两个阶段：**构建期数据处理阶段**（Node.js 服务端）与**渲染期模板阶段**（EJS）。数据处理阶段每次构建运行一次，组装结构化的 `wiki` 对象（挂载为 `theme.wiki`），并为严格 v2 Wiki 页面生成冻结 `page.viewModel`。当前 EJS 仍读取 `theme.wiki` 与原页面数据，ViewModel 的布局接入属于后续阶段。
+wiki 系统有两个阶段：**构建期数据处理阶段**（Node.js 服务端）与**渲染期模板阶段**（EJS）。数据处理阶段每次构建运行一次，组装结构化的 `wiki` 对象并挂载到 `hexo.stellar.data.wiki`，同时为严格 v2 Wiki 页面生成冻结 `page.viewModel`。当前 EJS 通过 `stellar_data('wiki')` 读取该运行时数据与原页面数据，ViewModel 的布局接入属于后续阶段。
 
 wiki 系统由 `_config.yml` 的两个 Layout Profile 配置：
 
@@ -53,7 +53,7 @@ wiki 系统由 `_config.yml` 的两个 Layout Profile 配置：
 ```mermaid
 flowchart TD
     A["_data/wiki/*.yml"] --> B["getWikiObject(ctx)"]
-    C["Hexo pages\ncollection.type/id"] --> D["WikiPage[]"]
+    C["Hexo pages\ncollection.profile/id"] --> D["WikiPage[]"]
     B --> E["wiki.tree{}"]
     D --> F["doc_tree.js\nmodule.exports"]
     E --> F
@@ -62,7 +62,7 @@ flowchart TD
     F --> I["wiki.tree[id].homepage"]
     F --> J["wiki.all_tags{}"]
     F --> K["wiki.tree[id].relatedItems[]"]
-    F --> L["theme.wiki"]
+    F --> L["hexo.stellar.data.wiki"]
     F --> V["frozen page.viewModel"]
     L --> M["layout.ejs\npage.ejs"]
     
@@ -83,7 +83,7 @@ flowchart TD
 
 ### `WikiPage`
 
-定义于 [scripts/lib/doc_tree.js](../../../scripts/lib/doc_tree.js)。每个显式声明 `collection.type: wiki` 和 `collection.id` 的 Hexo 页面被包装为 `WikiPage` 实例。
+定义于 [scripts/lib/doc_tree.js](../../../scripts/lib/doc_tree.js)。每个显式声明 `collection.profile: wiki` 和 `collection.id` 的 Hexo 页面被包装为 `WikiPage` 实例。
 
 | 字段 | 来源 | 说明 |
 |---|---|---|
@@ -264,12 +264,12 @@ Wiki Hero 完成后直接进入正文布局，不额外输出分隔线；正文�
 ---
 title: Page Title
 collection:
-  type: wiki
+  profile: wiki
   id: project-id
 ---
 ```
 
-`collection.type` 必须为 `wiki`，`collection.id` 必须匹配 `_data/wiki/` 中的项目 id。v1 `wiki` 字段、缺失项目或不匹配 id 会在构建期报出带来源的错误，不会从路径或布局推断归属。
+`collection.profile` 必须为 `wiki`，`collection.id` 必须匹配 `_data/wiki/` 中的项目 id。v1 `wiki` 字段、缺失项目或不匹配 id 会在构建期报出带来源的错误，不会从路径或布局推断归属。
 
 **参考源码**：[scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)、[_config.yml](../../../_config.yml)
 
@@ -286,12 +286,12 @@ sequenceDiagram
     participant H as "Hexo ctx"
     participant G as "getWikiObject(ctx)"
     participant P as "Pipeline (main export)"
-    participant T as "theme.wiki"
+    participant T as "stellar_data('wiki')"
 
     H->>G: "ctx.locals.get('data')"
     G-->>P: "wiki.tree (raw project index)"
     H->>P: "ctx.locals.get('pages')"
-    P->>P: "filter strict collection.type/id → WikiPage[]"
+    P->>P: "filter strict collection.profile/id → WikiPage[]"
     P->>P: "collect all tag names from wiki.tree"
     P->>P: "normalize title/name for each project"
     P->>P: "for each project: resolve homepage"
@@ -400,7 +400,7 @@ wiki 页面使用标准布局系统，但带 wiki 专属配置与小部件。
 
 ### 布局判定
 
-`layout.ejs` 根据 `page.wiki` 字段决定页面特征。存在 `page.wiki` 时：
+`layout.ejs` 通过 `collection_id(page, 'wiki')` 解析页面归属。能解析 Wiki Collection 时：
 
 - 内部 `navigation.menu` 由 `layout.profiles.wiki.navigation.activeMenu` 投影（通常 `'wiki'`）
 - 左栏配置为 `tree, related, recent`
@@ -429,8 +429,8 @@ flowchart TD
     A["page.ejs"] --> B["navigation tabs"]
     B --> C["article_banner"]
     C --> D["article element\npage.content"]
-    D --> E["article_footer\nif collection.type = wiki"]
-    E --> F["read_next\nif collection.type = wiki"]
+    D --> E["article_footer\nif collection.profile = wiki"]
+    E --> F["read_next\nif collection.profile = wiki"]
     F --> G["comments section"]
 ```
 
@@ -453,7 +453,7 @@ wiki 索引页（`index_wiki` 布局）显示 `wiki.shelf` 中所有已发布项
 
 ## 数据对象参考
 
-流水线最终产生的 `theme.wiki` 对象结构：
+流水线最终产生的 `hexo.stellar.data.wiki` 对象结构（EJS 通过 `stellar_data('wiki')` 访问）：
 
 ```
 wiki

@@ -8,7 +8,7 @@
  *   1. 解析版本号与参数（--dry-run / --yes / --help）
  *   2. 校验版本号格式、当前分支、工作区状态
  *   3. 校验 CHANGELOG.md 已包含该版本非空章节（内容由 AI/人工提前准备），否则终止
- *   4. 准备 _config.yml、package.json 与安装知识库的最终版本内容
+ *   4. 准备 package.json 与安装知识库的最终版本内容
  *   5. 在最终待提交状态执行质量检查
  *   6. 输出变更摘要与 diff，正式模式执行前二次确认
  *   7. dry-run、取消或质量检查失败时从内存恢复文件，不依赖 git checkout --
@@ -26,8 +26,8 @@ const ROOT = __dirname;
 const VERSION_RE = /^\d+\.\d+\.\d+(-rc\.\d+)?$/;
 const CHANGELOG_FILE = "CHANGELOG.md";
 const INSTALLATION_FILE = "docs/knowledge/00-总览与安装配置/installation.md";
-const WORKSPACE_ALLOWED_FILES = new Set(["_config.yml", "package.json", CHANGELOG_FILE]);
-const MANAGED_FILES = ["_config.yml", "package.json", CHANGELOG_FILE, INSTALLATION_FILE];
+const WORKSPACE_ALLOWED_FILES = new Set(["package.json", CHANGELOG_FILE]);
+const MANAGED_FILES = ["package.json", CHANGELOG_FILE, INSTALLATION_FILE];
 const WORKFLOW_URL = 'https://github.com/xaoxuu/hexo-theme-stellar/actions/workflows/npm-publish.yml';
 
 function usage() {
@@ -106,33 +106,6 @@ function changeSummary() {
   return log ? `(未找到 tag，展示最近 10 条提交)\n${log}` : '(无法获取提交记录)';
 }
 
-function updatedConfigYml(raw, previousVersion, version) {
-  const lines = raw.split('\n');
-  const stellarIdx = lines.findIndex((line) => /^stellar:\s*$/.test(line));
-  if (stellarIdx === -1) {
-    throw new Error("未在 _config.yml 中找到 stellar: 配置块");
-  }
-  let versionIdx = -1;
-  for (let i = stellarIdx + 1; i < lines.length; i++) {
-    if (/^\S/.test(lines[i])) {
-      break; // 已越过 stellar 配置块
-    }
-    if (/^\s+version:/.test(lines[i])) {
-      versionIdx = i;
-      break;
-    }
-  }
-  if (versionIdx === -1) {
-    throw new Error("未在 stellar: 配置块中找到 version 字段");
-  }
-  const current = lines[versionIdx].match(/^\s+version:\s*['"]?([^'"\s#]+)/);
-  if (current === null || current[1] !== previousVersion) {
-    throw new Error(`_config.yml 的主题版本与 package.json 不一致（预期 ${previousVersion}）`);
-  }
-  lines[versionIdx] = lines[versionIdx].replace(/^(\s*version:).*$/, `$1 '${version}'`);
-  return lines.join('\n');
-}
-
 function packageVersion(raw) {
   let pkg;
   try {
@@ -181,19 +154,15 @@ function prepareVersionFiles(root, version) {
   if (!VERSION_RE.test(version)) {
     throw new Error(`版本号格式不正确: ${version}`);
   }
-  const configPath = path.join(root, "_config.yml");
   const packagePath = path.join(root, "package.json");
   const installationPath = path.join(root, INSTALLATION_FILE);
-  const configRaw = fs.readFileSync(configPath, "utf8");
   const packageRaw = fs.readFileSync(packagePath, "utf8");
   const installationRaw = fs.readFileSync(installationPath, "utf8");
   const previousVersion = packageVersion(packageRaw);
-  const configContent = updatedConfigYml(configRaw, previousVersion, version);
   const packageContent = updatedPackageJson(packageRaw, previousVersion, version);
   const installation = updatedInstallation(installationRaw, previousVersion, version);
 
   const updates = new Map([
-    [configPath, configContent],
     [packagePath, packageContent],
     [installationPath, installation.content],
   ]);

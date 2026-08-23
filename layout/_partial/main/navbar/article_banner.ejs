@@ -4,10 +4,10 @@ const postViewModel = page.viewModel?.collection?.profile === 'post' ? page.view
 var pageConfig = content_config(page)
 var banner = Object.assign({}, postViewModel ? postViewModel.item.presentation.banner : pageConfig.banner || {})
 
-if (banner.image == null && theme.topic.tree[collection_id(page, "topic")]?.hero?.background?.image != null) {
-  banner.image = theme.topic.tree[collection_id(page, "topic")].hero.background.image
-} else if (banner.image == null && theme.wiki.tree[collection_id(page, "wiki")]?.hero?.background?.image != null) {
-  banner.image = theme.wiki.tree[collection_id(page, "wiki")].hero.background.image
+if (banner.image == null && stellar_data('topic').tree[collection_id(page, "topic")]?.hero?.background?.image != null) {
+  banner.image = stellar_data('topic').tree[collection_id(page, "topic")].hero.background.image
+} else if (banner.image == null && stellar_data('wiki').tree[collection_id(page, "wiki")]?.hero?.background?.image != null) {
+  banner.image = stellar_data('wiki').tree[collection_id(page, "wiki")].hero.background.image
 }
 // 标题
 if (banner.headline == null) {
@@ -28,7 +28,7 @@ function layoutTop() {
   el += `<div class="left" id="breadcrumb">`
     // 首页
     el += `<a class="cap breadcrumb" href="${pretty_url(config.root)}">${__("btn.home")}</a>`
-    if (theme.wiki.tree[collection_id(page, "wiki")]) {
+    if (stellar_data('wiki').tree[collection_id(page, "wiki")]) {
       el += partial('breadcrumb/wiki')
     } else if (collection_id(page, "notebook")) {
       el += partial('breadcrumb/note')

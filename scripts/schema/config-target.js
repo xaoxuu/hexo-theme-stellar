@@ -184,14 +184,14 @@ function fields(consumers, definitions, options = {}) {
 }
 
 const CONFIG_TARGET_ROOTS = deepFreeze([
-  { id: "site", owner: "stellar", boundary: "sealed", status: "planned", purpose: "站点身份、菜单和 Footer 外壳" },
-  { id: "seo", owner: "stellar", boundary: "sealed", status: "planned", purpose: "canonical、Open Graph 与结构化数据" },
-  { id: "layout", owner: "stellar", boundary: "sealed", status: "planned", purpose: "页面 Profile 的路由、导航与侧边栏默认值" },
-  { id: "content", owner: "stellar", boundary: "sealed", status: "planned", purpose: "Article 与 Notebook 内容默认值" },
-  { id: "appearance", owner: "stellar", boundary: "sealed", status: "planned", purpose: "Visual Style 语义令牌" },
-  { id: "resources", owner: "stellar", boundary: "sealed", status: "planned", purpose: "连接提示与资源兜底" },
-  { id: "extensions", owner: "stellar", boundary: "registered_record", status: "planned", purpose: "搜索、评论、标签、特性、服务与缓存" },
-  { id: "inject", owner: "stellar", boundary: "sealed", status: "planned", purpose: "可信原文注入逃生口" }
+  { id: "site", owner: "stellar", boundary: "sealed", status: "delivered", purpose: "站点身份、菜单和 Footer 外壳" },
+  { id: "seo", owner: "stellar", boundary: "sealed", status: "delivered", purpose: "canonical、Open Graph 与结构化数据" },
+  { id: "layout", owner: "stellar", boundary: "sealed", status: "delivered", purpose: "页面 Profile 的路由、导航与侧边栏默认值" },
+  { id: "content", owner: "stellar", boundary: "sealed", status: "delivered", purpose: "Article 与 Notebook 内容默认值" },
+  { id: "appearance", owner: "stellar", boundary: "sealed", status: "delivered", purpose: "Visual Style 语义令牌" },
+  { id: "resources", owner: "stellar", boundary: "sealed", status: "delivered", purpose: "连接提示与资源兜底" },
+  { id: "extensions", owner: "stellar", boundary: "sealed", status: "delivered", purpose: "搜索、评论、标签、特性、服务与缓存" },
+  { id: "inject", owner: "stellar", boundary: "sealed", status: "delivered", purpose: "可信原文注入逃生口" }
 ]);
 
 const SITE_CONSUMERS = Object.freeze(["PageViewModel", "Shell renderer", "menu renderer", "footer renderer"]);

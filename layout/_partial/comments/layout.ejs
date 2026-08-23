@@ -5,7 +5,7 @@ var commentModel
 if (explicitComments) {
   commentModel = explicitComments
 } else {
-  var proj = theme.wiki.tree[collection_id(page, "wiki")]
+  var proj = stellar_data('wiki').tree[collection_id(page, "wiki")]
   var projectComments = proj?.comments || {}
   var pageComments = content_config(page).comments || page.comments || {}
   var settings = Object.assign({}, projectComments, pageComments)

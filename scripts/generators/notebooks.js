@@ -8,7 +8,7 @@
 const { generatorPath, requireLayoutProfiles, toRenderNavigation } = require("../lib/layout-config");
 
 hexo.extend.generator.register('notebooks', function (locals) {
-  const { notebooks } = hexo.theme.config;
+  const { notebooks } = hexo.stellar.data;
   const profiles = requireLayoutProfiles(hexo.stellar?.config);
   const profile = profiles.notebookIndex;
   if (!notebooks?.tree || Object.keys(notebooks.tree).length === 0) {

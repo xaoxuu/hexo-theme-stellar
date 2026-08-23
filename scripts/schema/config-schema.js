@@ -607,7 +607,7 @@ function layoutProfilesSchema() {
 const CONFIG_SCHEMA = deepFreeze({
   type: ["object"],
   scope: "theme",
-  sealed: false,
+  sealed: true,
   migration: "configuration/v2",
   removedProperties: {
     brand: "site.brand",

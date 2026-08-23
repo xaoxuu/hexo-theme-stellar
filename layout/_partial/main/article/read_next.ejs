@@ -10,7 +10,7 @@ function layoutDiv() {
   } else if (collection_id(page, "wiki")?.length > 0) {
     var title_prev = __('meta.prev');
     var title_next = __('meta.next');
-    const proj = theme.wiki.tree[collection_id(page, "wiki")];
+    var proj = stellar_data('wiki').tree[collection_id(page, "wiki")];
     if (proj) {
       let ps = proj.pages?.filter(p => p.path == page.path)
       if (ps?.length > 0) {

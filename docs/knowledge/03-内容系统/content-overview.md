@@ -24,7 +24,7 @@ tags:
 
 </details>
 
-本文介绍 Stellar 如何组织与处理不同内容类型：文章（post）、wiki 页面、笔记本与自定义页面。涵盖 `layout.profiles` 定义的页面默认布局、构建期处理 wiki 文档结构的 `doc_tree.js`，以及 `theme.wiki.tree` 与 `theme.notebooks.tree` 对象的构建方式。
+本文介绍 Stellar 如何组织与处理不同内容类型：文章（post）、wiki 页面、笔记本与自定义页面。涵盖 `layout.profiles` 定义的页面默认布局、构建期处理 wiki 文档结构的 `doc_tree.js`，以及 `stellar_data('wiki').tree` 与 `stellar_data('notebooks').tree` 对象的构建方式。
 
 渲染这些内容类型见[页面模板与路由](../02-布局系统/page-templates-routing.md)；列表中的内容项展示见[文章列表与卡片组件](post-lists-cards.md)与[文档系统](wiki-docs.md)。
 
@@ -124,10 +124,10 @@ graph LR
     end
     
     subgraph "Output Structure"
-        WIKI_TREE["theme.wiki.tree<br/>{project_id: {...}}"]
-        WIKI_SHELF["theme.wiki.shelf<br/>Array of IDs"]
-        ALL_TAGS["theme.wiki.all_tags<br/>{tag_name: {...}}"]
-        ALL_PAGES["theme.wiki.all_pages<br/>WikiPage[]"]
+        WIKI_TREE["stellar_data('wiki').tree<br/>{project_id: {...}}"]
+        WIKI_SHELF["stellar_data('wiki').shelf<br/>Array of IDs"]
+        ALL_TAGS["stellar_data('wiki').all_tags<br/>{tag_name: {...}}"]
+        ALL_PAGES["stellar_data('wiki').all_pages<br/>WikiPage[]"]
     end
     
     DATA_WIKI --> GET_WIKI
@@ -155,9 +155,9 @@ graph LR
 
 ```javascript
 class WikiPage {
-  constructor(page) { 
+  constructor(page, config) {
     this.id = page._id
-    this.wiki = page.wiki            // front-matter 中的项目 ID
+    this.collectionId = getCollectionId(config, 'wiki')
     this.title = page.title
     this.path = page.path            // 带 .html 的完整路径
     this.path_key = page.path.replace('.html', '')
@@ -356,9 +356,9 @@ graph TB
 
 ## 内容组织数据结构
 
-### theme.wiki 对象结构
+### Wiki 运行时对象结构
 
-`doc_tree.js` 处理后，模板中通过 `theme.wiki` 访问 wiki 数据：
+`doc_tree.js` 处理后，wiki 数据保存在 `hexo.stellar.data.wiki`，EJS 模板通过 `stellar_data('wiki')` 访问：
 
 ```javascript
 {
@@ -411,19 +411,19 @@ EJS 模板中访问 wiki 数据的常见方式：
 
 ```javascript
 // 获取指定项目
-const project = theme.wiki.tree['project-id']
+var project = stellar_data('wiki').tree['project-id']
 
 // 遍历所有项目
-for (let id in theme.wiki.tree) {
-  const project = theme.wiki.tree[id]
+for (var id in stellar_data('wiki').tree) {
+  var project = stellar_data('wiki').tree[id]
 }
 
 // 检查项目是否已发布
-if (theme.wiki.shelf.includes(project_id)) { ... }
+if (stellar_data('wiki').shelf.includes(project_id)) { ... }
 
 // 获取带指定标签的所有页面
-const tag_info = theme.wiki.all_tags['documentation']
-const project_ids = tag_info.items
+var tag_info = stellar_data('wiki').all_tags['documentation']
+var project_ids = tag_info.items
 ```
 
 **参考源码**：[scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)

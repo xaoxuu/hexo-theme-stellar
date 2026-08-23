@@ -155,7 +155,7 @@ graph LR
 
 ### `_data/widgets.yml` 定义
 
-小部件在主题的 `_data/widgets.yml` 中定义，每个小部件有 `layout` 字段指向 `layout/_partial/widgets/` 下的模板：
+小部件默认值在主题 `_data/widgets.yml` 中定义，站点可用 `_data/widgets.yml` 按键覆盖。构建期合并后存入 `hexo.stellar.data.widgets`，每个小部件的 `layout` 字段指向 `layout/_partial/widgets/` 下的模板：
 
 ```yaml
 ghrepo:
@@ -176,7 +176,7 @@ toc:
   collapse: false
 ```
 
-小部件 ID 可以带自定义配置项（如 `recent.limit`、`toc.min_depth`），渲染时经 `theme.widgets[name]` 合并。
+小部件 ID 可以带自定义配置项（如 `recent.limit`、`toc.min_depth`），EJS 通过 `stellar_data('widgets')[name]` 取出定义后合并页面覆盖。
 
 **参考源码**：[_data/widgets.yml](../../../_data/widgets.yml)
 
@@ -184,7 +184,7 @@ toc:
 
 `index_leftbar.ejs` / `index_rightbar.ejs` 遍历配置的 `leftbar` / `rightbar` 数组：
 
-1. 按名称从 `theme.widgets` 读取小部件定义
+1. 按名称从 `stellar_data('widgets')` 读取小部件定义
 2. 支持对象形式覆盖（`override` / `layout` 字段）
 3. 经 `partial('../widgets/' + widget.layout, {item: widget})` 渲染对应模板
 4. 模板不存在或输出为空时静默跳过
@@ -193,7 +193,7 @@ toc:
 flowchart TD
     START["渲染侧边栏"] --> CONFIG["page.leftbar / page.rightbar"]
     CONFIG --> LOOP["遍历每个小部件项"]
-    LOOP --> LOOKUP{"name in theme.widgets?"}
+    LOOP --> LOOKUP{"name in stellar_data('widgets')?"}
     LOOKUP -->|"Yes"| MERGE["合并 widget 定义"]
     LOOKUP -->|"No"| SKIP["跳过（静默）"]
     MERGE --> RENDER["partial('../widgets/' + layout)"]

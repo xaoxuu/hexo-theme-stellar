@@ -1,5 +1,5 @@
 <%# 笔记卡片 %>
-<% const notebook = theme.notebooks.tree[collection_id(note, 'notebook')] %>
+<% var notebook = stellar_data('notebooks').tree[collection_id(note, 'notebook')] %>
 <% var noteConfig = content_config(note) %>
 <article class="md-text">
   <% if (noteConfig.card?.cover) { %>

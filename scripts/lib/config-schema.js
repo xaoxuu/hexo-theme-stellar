@@ -324,7 +324,7 @@ function validateCustom(node, input, source, path, issues) {
 
 function parseNode(node, input, source, path, issues, context) {
   if (!matchesType(input, node.type)) {
-    issues.push(issue("invalid_type", source, path, valueType(input), expectedType(node), node.migration));
+    issues.push(issue("invalid_type", source, path || "root", valueType(input), expectedType(node), node.migration));
     return undefined;
   }
 
@@ -455,7 +455,7 @@ function parseConfigSchema(schema, input = {}, options = {}) {
 
 function parseStellarConfig(input = {}) {
   const source = input.source || "_config.stellar.yml";
-  const themeConfig = isPlainObject(input.themeConfig) ? input.themeConfig : {};
+  const themeConfig = input.themeConfig === undefined ? {} : input.themeConfig;
   const siteConfig = isPlainObject(input.siteConfig) ? input.siteConfig : {};
   return parseConfigSchema(CONFIG_SCHEMA, themeConfig, { source, siteConfig, applyDefaults: true });
 }

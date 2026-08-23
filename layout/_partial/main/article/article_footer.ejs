@@ -45,7 +45,7 @@ function layoutDiv() {
 
   var license = ''
   if (collection_id(page, "wiki")) {
-    const proj = theme.wiki.tree[collection_id(page, "wiki")]
+    var proj = stellar_data('wiki').tree[collection_id(page, "wiki")]
     if (pageConfig.footer?.license != null) {
       license = pageConfig.footer.license || articleFooter.license
     } else if (proj?.footer?.license != null) {
@@ -64,11 +64,11 @@ function layoutDiv() {
   }
   if (license?.length > 0) {
     var author = null
-    if (theme.authors) {
-      if (pageConfig.article?.author?.length > 0 && theme.authors[pageConfig.article.author] != null) {
-        author = theme.authors[pageConfig.article.author]
+    if (stellar_data('authors')) {
+      if (pageConfig.article?.author?.length > 0 && stellar_data('authors')[pageConfig.article.author] != null) {
+        author = stellar_data('authors')[pageConfig.article.author]
       } else {
-        author = theme.default_author
+        author = stellar_data('defaultAuthor')
       }
     }
     if (author) {
@@ -88,7 +88,7 @@ function layoutDiv() {
 
   var showSharePlugin = false
   if (collection_id(page, "wiki")) {
-    const proj = theme.wiki.tree[collection_id(page, "wiki")]
+    var proj = stellar_data('wiki').tree[collection_id(page, "wiki")]
     if (pageConfig.footer?.share != null) {
       showSharePlugin = pageConfig.footer.share == true
     } else if (proj != null) {
@@ -119,7 +119,7 @@ function layoutDiv() {
             if (pageConfig.card?.cover) {
               el += '&pics=' + urlenc(pageConfig.card.cover);
             } else if (collection_id(page, "wiki")) {
-              const projectCover = theme.wiki.tree[collection_id(page, "wiki")]?.card?.cover
+              var projectCover = stellar_data('wiki').tree[collection_id(page, "wiki")]?.card?.cover
               if (projectCover) el += '&pics=' + urlenc(projectCover)
             }
             el += '&summary=' + urlenc(truncate(page.description || strip_html(page.excerpt || page.content), {length: 120}));

@@ -1,11 +1,11 @@
 <%
-const notebook = theme.notebooks.tree[collection_id(page, "notebook")]
+var notebook = stellar_data('notebooks').tree[collection_id(page, "notebook")]
 if (item.filter == null) {
   item.filter = 'auto'
 }
 if (item.placeholder == null && item.filter == 'auto') {
-  if (theme.wiki.tree[collection_id(page, "wiki")]?.name) {
-    item.placeholder = __('search.search_in', theme.wiki.tree[collection_id(page, "wiki")]?.name)
+  if (stellar_data('wiki').tree[collection_id(page, "wiki")]?.name) {
+    item.placeholder = __('search.search_in', stellar_data('wiki').tree[collection_id(page, "wiki")]?.name)
   } else if (notebook) {
     item.placeholder = __('search.search_in', notebook.name || __('btn.notebook'))
     item.filter = notebook.route.path

@@ -1,7 +1,7 @@
 <%
 function layoutDiv() {
   var pageConfig = content_config(page);
-  var repo = pageConfig.source?.repository || theme.wiki.tree[collection_id(page, "wiki")]?.source?.repository
+  var repo = pageConfig.source?.repository || stellar_data('wiki').tree[collection_id(page, "wiki")]?.source?.repository
   if (repo == null) {
     return ''
   }
