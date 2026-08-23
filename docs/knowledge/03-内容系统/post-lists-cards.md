@@ -37,7 +37,9 @@ tags:
 
 ## 架构概览
 
-文章列表系统采用两层架构：Hexo 提供 `page.posts`、分页和当前分类/标签查询状态；容器层为每个普通 Post 或 Topic Post 取得冻结的 `render.listing`，再调用只接收 ViewModel 的 `post_card.ejs`。首页平铺置顶、轮播与归档消费同一投影，不在 EJS 重做页面/Profile/主题级联；Wiki 使用独立的 `wiki_card.ejs`。
+文章列表系统采用两层架构：Hexo 提供 `page.posts`、分页和当前分类/标签查询状态；容器层为每个普通 Post 或 Topic Post 取得冻结的 `render.listing`，再调用只接收 ViewModel 的 `post_card.ejs`。首页平铺置顶、轮播与归档消费同一投影，不在 EJS 重做页面/Profile/主题级联；Wiki 使用独立的 `wiki_card.ejs`。Notebook 总索引与 Note 列表同样只消费生成器投影的 `page.notebookIndex`，两类卡片分别接收最终 listing，不读取原始 Notebook tree。
+
+Notebook 投影把集合链接、标题、说明、图标、排序和可见性，以及 Note 的链接、标题、摘要、标签、封面、日期、优先级与可见性固化为普通对象。总索引按 collection sort 稳定排列并过滤 `listed: false`；集合首页与标签分页在生成器内按同一 `listed` 语义筛选，再把分页切片深度冻结后交给模板。
 
 **文件与函数映射：**
 

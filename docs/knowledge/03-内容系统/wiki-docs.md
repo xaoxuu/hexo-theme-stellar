@@ -411,7 +411,7 @@ wiki 页面使用标准布局系统，但带 wiki 专属配置与小部件。
 
 - 与普通 Post 共用 Shell、Region、Section、Item、Navigation 原语，同时由 `render.layout` 提供页面类型、缩进、背景、侧栏表面、最终 Brand、返回入口、侧栏和面包屑。
 - Hero、Brand、搜索、tree、related、ghrepo、Banner、Footer、上下篇、评论与 head partial 都接收显式 ViewModel locals。
-- Topic 与 Notebook 不满足 Wiki profile 判定，继续进入原有布局分支。
+- Topic 与 Notebook 不满足 Wiki profile 判定，分别进入各自要求严格 ViewModel 的 v2 布局分支。
 
 ### 侧边栏小部件
 

@@ -12,13 +12,15 @@ const {
   sourcePathForPage
 } = require("../../lib/source-config");
 const {
-  buildNotebookPageViewModel,
+  buildNotebookPageViewModelBase,
   buildTopicIndexRender,
   buildTopicPageViewModelBase,
   completeTopicPageViewModel
 } = require("../../lib/models");
 const {
   resetPageViewModels,
+  setNotebookViewModelBase,
+  setNotebookViewModelInput,
   setPageConfig,
   setPostViewModelInput,
   setTopicViewModelBase,
@@ -251,7 +253,7 @@ module.exports = ctx => {
         }
         if (type === "pages" && config.collection?.profile === "notebook") {
           const collectionId = config.collection.id;
-          page.viewModel = buildNotebookPageViewModel({
+          const viewModelInput = Object.freeze({
             source: sourcePathForPage(page),
             themeSource: themeConfigSource,
             collectionSource: sourcePathForData(`notebooks/${collectionId}`),
@@ -262,8 +264,11 @@ module.exports = ctx => {
             collectionConfig: collectionConfigs.get(`notebooks/${collectionId}`),
             collectionItems: notebookMemberInputs,
             frontMatter: config,
-            page: pageModelInput(page, config)
+            page: Object.freeze(pageModelInput(page, config))
           });
+          const base = buildNotebookPageViewModelBase(viewModelInput);
+          setNotebookViewModelInput(page, viewModelInput);
+          setNotebookViewModelBase(page, base);
         }
       } catch (error) {
         if (!(error instanceof ContentConfigError)) throw error;

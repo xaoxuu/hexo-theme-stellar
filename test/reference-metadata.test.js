@@ -165,10 +165,15 @@ test("Reference 只来自模型 Schema 且不提前公开后续契约", () => {
   assert.ok(topicViewModel.fields.some(field => field.path === "render.seo.jsonLd"));
   assert.ok(topicViewModel.fields.some(field => field.path === "render.article.comments.options"));
   assert.ok(topicViewModel.fields.some(field => field.path === "render.listing.listed"));
-  for (const profile of ["notebook"]) {
-    const pageViewModel = metadata.models.find(model => model.name === "PageViewModel" && model.profile === profile);
-    assert.equal(pageViewModel.fields.some(field => field.path === "render"), false);
-  }
+  const notebookViewModel = metadata.models.find(model => (
+    model.name === "PageViewModel" && model.profile === "notebook"
+  ));
+  assert.ok(notebookViewModel.fields.some(field => field.path === "render.document.language"));
+  assert.ok(notebookViewModel.fields.some(field => field.path === "render.layout.tagTree[].itemIds") === false);
+  assert.ok(notebookViewModel.fields.some(field => field.path === "render.layout.tagTree[].children"));
+  assert.ok(notebookViewModel.fields.some(field => field.path === "render.seo.jsonLd"));
+  assert.ok(notebookViewModel.fields.some(field => field.path === "render.article.tags[].path"));
+  assert.ok(notebookViewModel.fields.some(field => field.path === "render.listing.listed"));
   assert.ok(
     wikiCollection.fields.find(field => field.path === "navigation.menu")
       .consumers.includes("ContentItemModel")

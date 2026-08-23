@@ -1,12 +1,12 @@
 <%# 笔记列表页主体部分 %>
 <div class="post-list post">
-  <% page.posts.each(post => { %>
+  <% page.notebookIndex.items.forEach(post => { %>
     <div class="post-card-wrap<%= scrollreveal(' ') %>">
     <a
       class="post-card post card-hover card-hover--spotlight card-hover--tilt"
-      href="<%= pretty_url(post.link || post.path) %><%= page.activeTag ? `?tag=${page.activeTag}` : '' %>"
+      href="<%= pretty_url(post.href) %><%= page.notebookIndex.activeTag ? `?tag=${page.notebookIndex.activeTag}` : '' %>"
     >
-      <%- include('_partial/main/notebook/note_card', { note: post }) %>
+      <%- include('_partial/main/notebook/note_card', { render: {listing: post} }) %>
     </a>
     </div>
   <% }) %>

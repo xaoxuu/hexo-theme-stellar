@@ -35,9 +35,9 @@ tags:
 
 ## v2 内容渲染内核
 
-Pre-alpha M2 已接管普通 Post、Wiki 与 Topic。`layout.ejs` 按 `page.viewModel.collection.profile` 要求这三类内容存在合法 `render`；缺失时报告 `page.source` 并终止构建，不读取旧页面字段兜底。Notebook、普通 Page 和其它索引继续走下文记录的既有分支。
+Pre-alpha M2 已接管普通 Post、Wiki、Topic 与 Notebook。`layout.ejs` 按 `page.viewModel.collection.profile` 要求这四类内容存在合法 `render`；缺失时报告 `page.source` 并终止构建，不读取旧页面字段兜底。普通 Page 和其它通用索引继续走下文记录的既有分支。
 
-普通 Post、Wiki 与 Topic 通过五类内部 EJS 原语保持原有 DOM、class 与视觉行为：
+普通 Post、Wiki、Topic 与 Notebook 通过五类内部 EJS 原语保持原有 DOM、class 与视觉行为：
 
 | 原语 | 责任 |
 | --- | --- |

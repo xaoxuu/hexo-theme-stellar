@@ -1,5 +1,5 @@
 <%
-var pageViewModel = typeof viewModel !== 'undefined' && ['post', 'wiki', 'topic'].includes(viewModel?.collection?.profile)
+var pageViewModel = typeof viewModel !== 'undefined' && ['post', 'wiki', 'topic', 'notebook'].includes(viewModel?.collection?.profile)
   ? viewModel
   : null
 var pageRender = pageViewModel?.render

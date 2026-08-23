@@ -7,15 +7,20 @@ var wiki = wikiViewModel ? null : stellar_data('wiki').tree[collection_id(page, 
 var topic = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'topic'
   ? null
   : stellar_data('topic').tree[collection_id(page, "topic")]
-var notebook = stellar_data('notebooks').tree[collection_id(page, "notebook")]
+var notebookViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'notebook'
+  ? viewModel
+  : null
+var notebookIndex = page.notebookIndex?.mode === 'notes' ? page.notebookIndex.collection : null
 var postViewModel = typeof viewModel !== 'undefined' && ['post', 'topic'].includes(viewModel?.collection?.profile)
   ? viewModel
   : null
 
 var sidebarState
-if (postViewModel || wikiViewModel) {
+if (postViewModel || wikiViewModel || notebookViewModel) {
   sidebarState = wikiViewModel
     ? wikiViewModel.render.layout.sidebar?.right || {}
+    : notebookViewModel
+      ? notebookViewModel.render.layout.sidebar?.right || {}
     : postViewModel.collection.profile === 'topic'
       ? postViewModel.render.layout.sidebar?.right || {}
       : postViewModel.item.presentation.sidebar?.right || {}
@@ -31,10 +36,7 @@ if (postViewModel || wikiViewModel) {
       sidebar = profiles.notebookIndex.sidebar.right.widgets
     } else if (page.layout === 'notes') {
       // 笔记列表页
-      sidebar = notebook ? notebook.sidebar?.right?.widgets : profiles.noteIndex.sidebar.right.widgets
-    } else if (notebook) {
-      // 笔记本文章内页
-      sidebar = notebook.noteDefaults?.sidebar?.right?.widgets || profiles.note.sidebar.right.widgets
+      sidebar = notebookIndex?.layout.sidebar?.right?.widgets || profiles.noteIndex.sidebar.right.widgets
     } else if (is_category() || is_tag() || is_archive() || ['categories', 'tags', 'archives'].includes(page.layout)) {
       sidebar = profiles.blogIndex.sidebar.right.widgets
     } else if (page.layout === 'index_topic') {
@@ -89,7 +91,7 @@ function layoutWidgets() {
         Object.assign(widget, w)
       }
       if (widget && widget.layout) {
-        el += partial('../widgets/' + widget.layout, {item: widget, viewModel: postViewModel || wikiViewModel})
+        el += partial('../widgets/' + widget.layout, {item: widget, viewModel: postViewModel || wikiViewModel || notebookViewModel})
       }
     });
   }

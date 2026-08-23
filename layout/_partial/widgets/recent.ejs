@@ -7,7 +7,19 @@ function layoutDiv() {
     action += '</a>'
   }
   var arr = []
-  if (content_config(page).navigation?.menu == 'wiki') {
+  var notebookViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'notebook'
+    ? viewModel
+    : null
+  var notebookItems = notebookViewModel
+    ? notebookViewModel.render.layout.recentItems
+    : page.notebookIndex?.mode === 'collections'
+      ? page.notebookIndex.recentItems
+      : page.notebookIndex?.mode === 'notes'
+        ? page.notebookIndex.collection.recentItems
+        : null
+  if (notebookItems) {
+    arr = notebookItems.slice()
+  } else if (content_config(page).navigation?.menu == 'wiki') {
     arr = stellar_data('wiki').all_pages.filter(function(p) {
       if (p.collectionId) {
         var proj = stellar_data('wiki').tree[p.collectionId]
@@ -18,14 +30,6 @@ function layoutDiv() {
     arr = arr.sort(function(p1, p2) {
       return p1.updated > p2.updated ? -1 : 1
     })
-  } else if (page.layout === 'notebooks') {
-    arr = site.pages.filter(function(p) {
-      return collection_id(p, 'notebook')
-    }).sort('-updated')
-  } else if (collection_id(page, "notebook")) {
-    arr = site.pages.filter(function(p) {
-      return collection_id(p, 'notebook') === collection_id(page, "notebook")
-    }).sort('-updated')
   } else {
     arr = site.posts.filter(function(p) {
       return p.title && p.title.length > 0
@@ -41,17 +45,15 @@ function layoutDiv() {
       return
     }
     var prefix = ''
-    const wikiId = collection_id(post, 'wiki') || post.collectionId
-    const notebookId = collection_id(post, 'notebook')
+    var wikiId = notebookItems ? null : collection_id(post, 'wiki') || post.collectionId
     if (wikiId) {
       var proj = stellar_data('wiki').tree[wikiId]
       prefix = proj?.name || wikiId
-    } else if (page.layout === 'notebooks') {
-      var notebook = stellar_data('notebooks').tree[notebookId]
-      prefix = notebook?.name || notebookId || ''
+    } else if (notebookItems && page.notebookIndex?.mode === 'collections') {
+      prefix = post.collectionName || post.collectionId || ''
     }
     entries.push({
-      href: pretty_url(post.link || post.path),
+      href: pretty_url(notebookItems ? post.href : post.link || post.path),
       title: post.title,
       prefix: prefix,
       indicator: false

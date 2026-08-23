@@ -790,9 +790,110 @@ function pageViewModelSchema(profile) {
     });
   }
 
+  if (profile === "notebook") {
+    const stringItem = field("string", { default: computed("由构建期数组逐项归一化"), example: "tools" });
+    const renderBrand = brandSchema(factory);
+    renderBrand.required = true;
+    const breadcrumb = object({
+      name: field("string", { default: inherited("collection.identity.headline"), example: "Development Notes", required: true }),
+      path: field("string", { default: inherited("collection.route.baseDir"), example: "notes/dev", required: true })
+    }, { example: { name: "Development Notes", path: "notes/dev" } });
+    const tagLink = object({
+      name: field("string", { default: literal(""), example: "tools/cli", required: true }),
+      path: field("string", { default: computed("由 Notebook 标签导航映射"), example: "notes/dev/tags/tools/cli", required: true })
+    }, { example: { name: "tools/cli", path: "notes/dev/tags/tools/cli" } });
+    const tagTreeItem = object({
+      id: field("string", { default: literal(""), example: "tools/cli", required: true }),
+      name: field("string", { default: literal(""), example: "tools/cli", required: true }),
+      label: field("string", { default: literal(""), example: "cli", required: true }),
+      path: field("string", { default: inherited("collection.navigation.tags.path"), example: "notes/dev/tags/tools/cli", required: true }),
+      parentId: field(["string", "null"], { default: literal(null), example: "tools", required: true }),
+      children: array(stringItem, { default: literal([]), example: [], required: true })
+    }, { example: { id: "tools/cli", name: "tools/cli", label: "cli", path: "notes/dev/tags/tools/cli", parentId: "tools", children: [] } });
+    const comments = object({
+      enabled: field("boolean", { default: computed("由最终 comments.enabled 与 service 生成"), example: true, required: true }),
+      title: field("string", { default: inherited("item.presentation.comments.title"), example: "参与讨论", required: true }),
+      id: field("string", { default: inherited("item.presentation.comments.id"), example: "note-node", required: true }),
+      service: field("string", { default: inherited("item.presentation.comments.provider"), example: "giscus", required: true }),
+      options: field("object", { default: computed("由激活服务参数袋生成"), example: {}, required: true, additionalProperties: true }),
+      pageTitle: field("string", { default: inherited("item.title"), example: "Node.js", required: true })
+    }, { required: true, example: { enabled: true, title: "参与讨论", id: "", service: "giscus", options: {}, pageTitle: "Node.js" } });
+    const share = field(["object", "null"], {
+      default: computed("由 Notebook Footer 分享配置生成；禁用时为 null"),
+      example: null,
+      required: true,
+      additionalProperties: true
+    });
+
+    properties.render = object({
+      document: object({
+        language: field("string", { default: derived("page.lang", "page.language", "site.language"), example: "zh-CN", required: true }),
+        headInject: field("string", { default: literal(""), example: "", required: true }),
+        preferredTheme: field("string", { default: derived("appearance.colorScheme"), example: "auto", required: true })
+      }, { required: true, example: { language: "zh-CN", headInject: "", preferredTheme: "auto" } }),
+      layout: object({
+        pageType: field("string", { default: literal("content"), example: "content", required: true }),
+        articleType: field(["string", "null"], { default: inherited("item.presentation.article.type"), example: "tech", required: true }),
+        indent: field("boolean", { default: inherited("item.presentation.article.indent", "articleType === story"), example: false, required: true }),
+        siteBackground: field("boolean", { default: derived("appearance.backgrounds.page.image"), example: false, required: true }),
+        leftbarSurface: field("string", { default: derived("appearance.backgrounds.sidebar.surface"), example: "glass", required: true }),
+        leftbarBlur: field("boolean", { default: literal(false), example: false, required: true }),
+        brand: renderBrand,
+        notebookIndexPath: field("string", { default: derived("layout.profiles.notebook_index.path"), example: "notebooks", required: true }),
+        notebookPath: field("string", { default: inherited("collection.route.baseDir"), example: "notes/dev", required: true }),
+        searchFilter: field("string", { default: inherited("collection.route.baseDir"), example: "notes/dev", required: true }),
+        sidebar: field("object", { default: inherited("item.presentation.sidebar"), example: {}, required: true, additionalProperties: true }),
+        breadcrumbs: array(breadcrumb, { default: literal([]), example: [], required: true }),
+        tagTree: array(tagTreeItem, { default: literal([]), example: [], required: true }),
+        recentItems: array(field("object", { additionalProperties: true }), { default: literal([]), example: [], required: true })
+      }, { required: true, example: { pageType: "content", articleType: "tech", indent: false, brand: {}, notebookIndexPath: "notebooks", notebookPath: "notes/dev", searchFilter: "notes/dev", sidebar: {}, breadcrumbs: [], tagTree: [] } }),
+      seo: object({
+        title: field("string", { default: computed("由 Note 标题与站点标题组合"), example: "Node.js - Example", required: true }),
+        description: field("string", { default: derived("page.description", "item.excerpt", "item.content"), example: "Note 摘要", required: true }),
+        keywords: array(stringItem, { default: derived("page.keywords", "item.tags", "site.keywords"), example: ["Node.js"], required: true }),
+        robots: field(["string", "null"], { default: derived("IS_BACKUP", "page.robots"), example: null, required: true }),
+        canonical: field(["string", "null"], { default: derived("seo.canonical.host", "item.route.path"), example: "https://example.com/notes/dev/node/", required: true }),
+        openGraph: field(["object", "null"], { default: computed("由 SEO 与页面 Open Graph 配置生成"), example: null, required: true, additionalProperties: true }),
+        jsonLd: field("object", { default: computed("由 WebPage 结构化数据规则生成"), example: { "@type": "WebPage" }, required: true, additionalProperties: true })
+      }, { required: true, example: { title: "Node.js - Example", description: "Note 摘要", keywords: [], robots: null, canonical: null, openGraph: null, jsonLd: { "@type": "WebPage" } } }),
+      article: object({
+        heti: field("boolean", { default: derived("extensions.features.cjkTypography.enabled"), example: false, required: true }),
+        banner: field("object", { default: inherited("item.presentation.banner"), example: {}, required: true, additionalProperties: true }),
+        created: field(["string", "null"], { default: inherited("item.date"), example: "2026-08-23T00:00:00.000Z", required: true }),
+        updated: field(["string", "null"], { default: inherited("item.updated"), example: "2026-08-23T00:00:00.000Z", required: true }),
+        tags: array(tagLink, { default: literal([]), example: [], required: true }),
+        footer: object({
+          references: array(field("any", { additionalProperties: true }), { default: inherited("item.presentation.footer.references"), example: [], required: true }),
+          license: field("string", { default: computed("由最终许可协议与作者信息生成"), example: "CC BY 4.0", required: true }),
+          share,
+          contributor: field(["object", "null"], { default: computed("由 contributors.edit_page 与源文件生成"), example: null, required: true, additionalProperties: true })
+        }, { required: true, example: { references: [], license: "", share: null, contributor: null } }),
+        comments
+      }, { required: true, example: { heti: false, banner: {}, created: null, updated: null, tags: [], footer: {}, comments: {} } }),
+      listing: object({
+        id: field("string", { default: inherited("item.id"), example: "note-node", required: true }),
+        collectionId: field("string", { default: inherited("collection.id"), example: "dev", required: true }),
+        collectionName: field("string", { default: inherited("collection.identity.name"), example: "Development Notes", required: true }),
+        href: field("string", { default: derived("page.link", "item.route.path"), example: "notes/dev/node", required: true }),
+        title: field("string", { default: inherited("item.title"), example: "Node.js", required: true }),
+        cover: field("string", { default: inherited("item.presentation.card.cover"), example: "", required: true }),
+        excerpt: field("string", { default: computed("由 excerpt/description/content 与 Notebook 摘要长度生成"), example: "Note 摘要", required: true }),
+        tags: array(stringItem, { default: inherited("item.tags"), example: ["tools"], required: true }),
+        date: field(["string", "null"], { default: inherited("item.date"), example: null, required: true }),
+        updated: field(["string", "null"], { default: inherited("item.updated"), example: null, required: true }),
+        priority: field("number", { default: inherited("item.listing.priority"), example: 0, required: true }),
+        listed: field("boolean", { default: inherited("item.visibility.listed"), example: true, required: true })
+      }, { required: true, example: { id: "note-node", collectionId: "dev", collectionName: "Development Notes", href: "notes/dev/node", title: "Node.js", cover: "", excerpt: "", tags: [], date: null, updated: null, priority: 0, listed: true } })
+    }, {
+      default: computed("由 Notebook PageViewModel 构建器生成"),
+      example: { document: { language: "zh-CN" }, layout: { pageType: "content" }, seo: { title: "Node.js - Example" } },
+      required: true
+    });
+  }
+
   return object(properties, {
     required: true,
-    example: profile === "post" || profile === "wiki"
+    example: profile === "post" || profile === "wiki" || profile === "notebook"
       ? { collection: { id: profile, profile }, item: { id: `${profile}-hello` }, render: { document: {}, layout: {}, seo: {} } }
       : { collection: { id: profile, profile }, item: { id: `${profile}-hello` } }
   });

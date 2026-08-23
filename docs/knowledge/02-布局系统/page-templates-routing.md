@@ -173,12 +173,15 @@ flowchart TD
     NAVTABS --> BANNER["page.h1 OR page.title OR page.content?\n→ partial: navbar/article_banner"]
     BANNER --> ARTICLE["article.md-text.content[.heti]"]
     ARTICLE --> CONTENT["page.content"]
-    CONTENT --> NOTETAGS["notebook set?\n→ partial: notebook/note_tags"]
-    NOTETAGS --> TAGS["layout==='post' AND content.article.showTags?\n→ partial: article/article_tags"]
-    TAGS --> FOOTER["layout==='post' OR wiki collection OR notebook?\n→ partial: article/article_footer"]
-    FOOTER --> READNEXT["layout==='post' OR wiki collection?\n→ partial: article/read_next"]
-    READNEXT --> RELATED["layout==='post'?\n→ partial: article/related_posts"]
-    RELATED --> COMMENTS["partial: comments/layout"]
+    CONTENT --> STRICT{"Post / Topic / Wiki / Notebook ViewModel?"}
+    STRICT --> NOTETAGS["Notebook\n→ note_tags(tags local)"]
+    STRICT --> POSTTAGS["Post / Topic\n→ post_tags(tags local)"]
+    NOTETAGS --> FOOTER["post_footer(footer local)"]
+    POSTTAGS --> FOOTER
+    STRICT --> FOOTER
+    FOOTER --> READNEXT["Post / Topic / Wiki\n→ post_read_next"]
+    READNEXT --> RELATED["Post / Topic\n→ post_related"]
+    RELATED --> COMMENTS["comments/layout(comments local)"]
 ```
 
 **参考源码**：[layout/page.ejs](../../../layout/page.ejs)
@@ -189,17 +192,17 @@ flowchart TD
 |---|---|---|---|---|
 | `nav_tabs_blog` | 有 `page.nav_tabs` 时 | 有 `page.nav_tabs` 时 | 有 `page.nav_tabs` 时 | 有 `page.nav_tabs` 时 |
 | `article_banner` | 有标题/内容时 | 有标题/内容时 | 有标题/内容时 | 有标题/内容时 |
-| `article_tags` | `content.article.showTags` 为 true 时 | ✗ | ✗ | ✗ |
-| `article_footer` | ✓ | ✓ | ✓ | ✗ |
+| `article_tags` | `render.article.tags` 非空时 | ✗ | `render.article.tags` 非空时 | ✗ |
+| `article_footer` | `render.article.footer` | `render.article.footer` | `render.article.footer` | ✗ |
 | `read_next` | ✓ | ✓ | ✗ | ✗ |
-| `related_posts` | ✓ | ✗ | ✗ | ✗ |
+| `related_posts` | Post/Topic 投影决定 | ✗ | ✗ | ✗ |
 | `comments/layout` | ✓ | ✓ | ✓ | ✓ |
 
 **参考源码**：[layout/page.ejs](../../../layout/page.ejs)
 
 ### 笔记本集成
 
-页面的 `collection.profile: notebook` 经 `collection_id(page, 'notebook')` 解析后匹配 `stellar_data('notebooks').tree` 中的条目时，`page.ejs` 先把 Notebook Collection 的导航与 Footer 覆盖传播到页面对象，再开始渲染；主题默认值来自 `content.notebook`。
+页面的 `collection.profile: notebook` 必须带有合法、深度冻结的 `page.viewModel.render`。`page.ejs` 只消费 `render.article` 与 `item`，将显式的 Banner、正文排版、标签、Footer 和评论传给对应 partial；导航、侧栏、Brand 与 SEO 由根 Shell 消费 `render.document/layout/seo`。Notebook Collection、Profile 与主题默认值的级联已经在模型构建期完成，模板不读取 `stellar_data('notebooks').tree`，也不修改页面对象。
 
 **参考源码**：[layout/page.ejs](../../../layout/page.ejs)
 

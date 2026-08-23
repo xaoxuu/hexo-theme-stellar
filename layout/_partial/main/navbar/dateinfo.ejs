@@ -6,6 +6,9 @@ function layoutDiv() {
   var postViewModel = typeof viewModel !== 'undefined' && ['post', 'topic'].includes(viewModel?.collection?.profile)
     ? viewModel
     : null
+  var notebookViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'notebook'
+    ? viewModel
+    : null
   // 作者
   var el = ''
   el += `<div class="flex-row" id="post-meta">`
@@ -20,16 +23,15 @@ function layoutDiv() {
     el += `<span class="text created">${__("meta.updated") + __("symbol.colon")}`
     el += `<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time>`
     el += `</span>`
-  } else if (collection_id(page, "notebook")) {
-    // 更新日期
+  } else if (notebookViewModel) {
+    var notebookArticle = notebookViewModel.render.article
     el += `<span class="text created">${__("meta.updated") + __("symbol.colon")}`
-    el += `<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time>`
+    el += `<time datetime="${date_xml(notebookArticle.updated)}">${date(notebookArticle.updated, config.date_format)}</time>`
     el += `</span>`
-    // 发布日期
     el += `<span class="sep updated"></span>`
     el += `<span class="text updated">`
     el += `${__("meta.created") + __("symbol.colon")}`
-    el += `<time datetime="${date_xml(page.date)}">${date(page.date, config.date_format)}</time>`
+    el += `<time datetime="${date_xml(notebookArticle.created)}">${date(notebookArticle.created, config.date_format)}</time>`
     el += `</span>`
   } else {
     var authorId = postViewModel

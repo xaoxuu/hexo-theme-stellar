@@ -24,7 +24,7 @@ tags:
 
 </details>
 
-本文介绍 Stellar 如何组织与处理不同内容类型：文章（post）、wiki 页面、笔记本与自定义页面。涵盖 `layout.profiles` 定义的页面默认布局、构建期处理 wiki 文档结构的 `doc_tree.js`，以及 `stellar_data('wiki').tree` 与 `stellar_data('notebooks').tree` 对象的构建方式。
+本文介绍 Stellar 如何组织与处理不同内容类型：文章（post）、wiki 页面、笔记本与自定义页面。涵盖 `layout.profiles` 定义的页面默认布局、构建期处理 Wiki / Notebook 数据树的事件，以及供详情和索引模板消费的冻结 ViewModel / listing 投影。原始数据树仍作为构建期中间表示保留，不是 v2 模板接口。
 
 渲染这些内容类型见[页面模板与路由](../02-布局系统/page-templates-routing.md)；列表中的内容项展示见[文章列表与卡片组件](post-lists-cards.md)与[文档系统](wiki-docs.md)。
 
@@ -286,6 +286,8 @@ graph TB
 ## 笔记本系统
 
 笔记本系统比 wiki 更简单：笔记本是按标签组织的笔记集合，而非层级树结构。
+
+v2 在 Notebook 树完成后先从每条 Note 的 `render.listing` 构建冻结 `notebookIndex`，再以该投影中的标签树和最近笔记完成详情 ViewModel。总索引、集合首页、标签分页、卡片和侧栏小部件只接收这些显式普通对象，不读取原始 tree；完整流程见[笔记本系统](notebook-system.md#v2-构建与渲染消费链)。
 
 ### 笔记本配置
 

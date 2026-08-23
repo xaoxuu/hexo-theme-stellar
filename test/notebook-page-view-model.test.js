@@ -10,6 +10,7 @@ const { buildNotebookPageViewModel: buildNotebookPageViewModelRaw } = require(".
 const { parseStellarConfig } = require("../scripts/lib/config-schema");
 const { parseCollectionConfig, parsePageConfig } = require("../scripts/lib/content-config");
 const processContentConfig = require("../scripts/events/lib/content-config");
+const processNotebooks = require("../scripts/events/lib/notebooks");
 
 function buildNotebookPageViewModel(input) {
   return buildNotebookPageViewModelRaw({
@@ -96,7 +97,13 @@ function notebookInput(overrides = {}) {
     source: "source/notes/dev/nodejs.md",
     collectionId: "dev",
     collectionSource: "source/_data/notebooks/dev.yml",
-    siteConfig: { per_page: 10 },
+    siteConfig: {
+      per_page: 10,
+      title: "Example",
+      url: "https://example.com",
+      language: "zh-CN",
+      author: "Tester"
+    },
     themeConfig: {
       layout: { profiles: {
         notebook_index: { path: "/notebooks/" },
@@ -141,11 +148,11 @@ function notebookInput(overrides = {}) {
   };
 }
 
-test("Notebook profile 生成与 Post 同构的冻结 PageViewModel", () => {
+test("Notebook profile 生成包含最终详情与列表消费状态的冻结 PageViewModel", () => {
   const input = notebookInput();
   const viewModel = buildNotebookPageViewModel(input);
 
-  assert.deepEqual(Object.keys(viewModel), ["collection", "item"]);
+  assert.deepEqual(Object.keys(viewModel), ["collection", "item", "render"]);
   assert.deepEqual(Object.keys(viewModel.collection), COLLECTION_MODEL_KEYS);
   assert.equal(viewModel.collection.id, "dev");
   assert.equal(viewModel.collection.profile, "notebook");
@@ -190,6 +197,47 @@ test("Notebook profile 生成与 Post 同构的冻结 PageViewModel", () => {
   assert.equal(viewModel.item.presentation.footer.share, false);
   assert.equal(viewModel.item.presentation.comments.provider, "giscus");
   assert.equal(viewModel.item.presentation.comments.options["data-repo"], "xaoxuu/notes");
+  assert.deepEqual(viewModel.render.document, {
+    language: "zh-CN",
+    headInject: "",
+    preferredTheme: "auto"
+  });
+  assert.equal(viewModel.render.layout.pageType, "content");
+  assert.equal(viewModel.render.layout.articleType, "tech");
+  assert.equal(viewModel.render.layout.indent, true);
+  assert.equal(viewModel.render.layout.notebookIndexPath, "notebooks");
+  assert.equal(viewModel.render.layout.notebookPath, "notes/dev");
+  assert.equal(viewModel.render.layout.searchFilter, "notes/dev");
+  assert.deepEqual(viewModel.render.layout.breadcrumbs, [{
+    name: "Development Notes",
+    path: "notes/dev"
+  }]);
+  assert.equal(viewModel.render.layout.brand.name, "开发笔记");
+  assert.equal(viewModel.render.layout.brand.url, "notes/dev");
+  assert.equal(viewModel.render.layout.brand.image.src, "/images/notebook.svg");
+  assert.equal(viewModel.render.seo.title, "Node.js - Example");
+  assert.equal(viewModel.render.seo.openGraph.args.type, "website");
+  assert.equal(viewModel.render.seo.openGraph.publishedTime, "2026-08-20T00:00:00.000Z");
+  assert.equal(viewModel.render.seo.openGraph.modifiedTime, "2026-08-20T00:00:00.000Z");
+  assert.deepEqual(viewModel.render.seo.openGraph.tags, ["knowledge/nodejs", "tools"]);
+  assert.equal(viewModel.render.seo.jsonLd["@type"], "WebPage");
+  assert.equal(viewModel.render.article.created, "2026-08-20T00:00:00.000Z");
+  assert.equal(viewModel.render.article.updated, "2026-08-20T00:00:00.000Z");
+  assert.deepEqual(viewModel.render.article.tags, [
+    { name: "knowledge/nodejs", path: "notes/dev/tags/knowledge/nodejs" },
+    { name: "tools", path: "notes/dev/tags/tools" }
+  ]);
+  assert.equal(viewModel.render.article.footer.license, "CC BY 4.0");
+  assert.equal(viewModel.render.article.footer.share, null);
+  assert.equal(viewModel.render.article.comments.enabled, true);
+  assert.equal(viewModel.render.listing.href, "notes/dev/nodejs");
+  assert.equal(viewModel.render.listing.collectionId, "dev");
+  assert.equal(viewModel.render.listing.collectionName, "开发笔记");
+  assert.equal(viewModel.render.listing.title, "Node.js");
+  assert.equal(viewModel.render.listing.excerpt, "Node");
+  assert.deepEqual(viewModel.render.listing.tags, ["knowledge/nodejs", "tools"]);
+  assert.equal(viewModel.render.listing.priority, 7);
+  assert.equal(viewModel.render.listing.listed, false);
   assertDeepFrozenPlain(viewModel);
 
   input.collectionConfig.name = "Changed";
@@ -230,6 +278,17 @@ test("Notebook profile 使用既有主题默认值完成列表和展示级联", 
   assert.equal(viewModel.item.presentation.footer.license, false);
 });
 
+test("Notebook footer.license true 映射到全局 Article 许可", () => {
+  const input = notebookInput();
+  input.themeConfig.content.article.footer = { license: "Global license", share: [] };
+  input.frontMatter.footer = { license: true, share: false };
+
+  const viewModel = buildNotebookPageViewModel(input);
+
+  assert.equal(viewModel.item.presentation.footer.license, true);
+  assert.equal(viewModel.render.article.footer.license, "Global license");
+});
+
 test("Notebook identity 保留显式空 headline", () => {
   const input = notebookInput();
   input.collectionConfig.headline = "";
@@ -262,6 +321,7 @@ test("生成前事件只为可解析的严格 Notebook Note 挂载 PageViewModel
   t.after(() => fs.rmSync(sourceDir, { recursive: true, force: true }));
   fs.mkdirSync(path.join(sourceDir, "notes"), { recursive: true });
   fs.writeFileSync(path.join(sourceDir, "notes/note.md"), "---\ntitle: Note\ncollection:\n  profile: notebook\n  id: dev\ntags: [tools/cli]\nlisting:\n  priority: 3\n---\n");
+  fs.writeFileSync(path.join(sourceDir, "notes/hidden.md"), "---\ntitle: Hidden\ncollection:\n  profile: notebook\n  id: dev\ntags: [tools/cli]\nlisting:\n  priority: 9\nvisibility:\n  listed: false\n---\n");
   fs.writeFileSync(path.join(sourceDir, "notes/wiki.md"), "---\ntitle: Wiki\ncollection:\n  profile: wiki\n  id: docs\n---\n");
 
   const note = {
@@ -281,6 +341,14 @@ test("生成前事件只为可解析的严格 Notebook Note 挂载 PageViewModel
     layout: "page",
     collection: { profile: "wiki", id: "docs" }
   };
+  const hidden = {
+    _id: "hidden",
+    source: "notes/hidden.md",
+    path: "notes/hidden/",
+    title: "Hidden",
+    layout: "page",
+    collection: { profile: "notebook", id: "dev" }
+  };
   const data = {
     "notebooks/dev": {
       name: "开发笔记",
@@ -291,7 +359,7 @@ test("生成前事件只为可解析的严格 Notebook Note 挂载 PageViewModel
   };
   const collections = {
     posts: { each() {}, data: [] },
-    pages: { each: callback => [note, wiki].forEach(callback), data: [note, wiki] },
+    pages: { each: callback => [note, hidden, wiki].forEach(callback), data: [note, hidden, wiki] },
     data
   };
   const themeConfig = {
@@ -303,19 +371,31 @@ test("生成前事件只为可解析的严格 Notebook Note 挂载 PageViewModel
     content: { notebook: { listing: {}, footer: {} } }
   };
 
-  processContentConfig({
+  const context = {
     source_dir: sourceDir,
     config: { per_page: 10, theme_config: themeConfig },
     theme: { config: themeConfig },
     stellar: { config: parseStellarConfig({ themeConfig }) },
     locals: { get: key => collections[key] }
-  });
+  };
+  processContentConfig(context);
+  processNotebooks(context);
 
   assert.equal(note.viewModel.collection.id, "dev");
   assert.equal(note.viewModel.collection.profile, "notebook");
+  assert.equal(note.viewModel.render.layout.notebookPath, "notes/dev");
   assert.equal(note.viewModel.item.listing.priority, 3);
   assert.deepEqual(note.viewModel.collection.navigation.tags.map(tag => tag.id), ["tools", "tools/cli"]);
+  assert.deepEqual(note.viewModel.render.layout.tagTree.map(tag => tag.id), ["", "tools", "tools/cli"]);
   assert.equal(Object.isFrozen(note.viewModel), true);
+  assert.equal(Object.isFrozen(context.stellar.data.notebookIndex), true);
+  assert.deepEqual(context.stellar.data.notebookIndex.items.map(item => item.id), ["dev"]);
+  assert.equal(context.stellar.data.notebookIndex.items[0].listed, true);
+  assert.deepEqual(context.stellar.data.notebookIndex.collections.dev.items.map(item => item.title), ["Hidden", "Note"]);
+  assert.equal(context.stellar.data.notebookIndex.collections.dev.items[0].listed, false);
+  assert.deepEqual(context.stellar.data.notebookIndex.collections.dev.recentItems.map(item => item.title), ["Note"]);
+  assert.deepEqual(context.stellar.data.notebookIndex.recentItems.map(item => item.title), ["Note"]);
+  assert.deepEqual(context.stellar.data.notebookIndex.collections.dev.tags[2].itemIds, ["note", "hidden"]);
   assert.equal(wiki.viewModel, undefined);
 });
 

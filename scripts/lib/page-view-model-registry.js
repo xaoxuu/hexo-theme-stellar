@@ -3,6 +3,8 @@
 const postInputs = new Map();
 const topicInputs = new Map();
 const topicBases = new Map();
+const notebookInputs = new Map();
+const notebookBases = new Map();
 const relatedItems = new Map();
 const pageConfigs = new Map();
 const pageViewModels = new Map();
@@ -16,6 +18,8 @@ function resetPageViewModels() {
   postInputs.clear();
   topicInputs.clear();
   topicBases.clear();
+  notebookInputs.clear();
+  notebookBases.clear();
   relatedItems.clear();
   pageConfigs.clear();
   pageViewModels.clear();
@@ -64,6 +68,22 @@ function getTopicViewModelBase(page) {
   return getValue(topicBases, page);
 }
 
+function setNotebookViewModelInput(page, input) {
+  setValue(notebookInputs, page, input);
+}
+
+function getNotebookViewModelInput(page) {
+  return getValue(notebookInputs, page);
+}
+
+function setNotebookViewModelBase(page, base) {
+  setValue(notebookBases, page, base);
+}
+
+function getNotebookViewModelBase(page) {
+  return getValue(notebookBases, page);
+}
+
 function setRelatedItems(page, items) {
   setValue(relatedItems, page, Object.freeze(items.slice()));
 }
@@ -83,6 +103,8 @@ function getPageViewModel(page) {
 module.exports = {
   getPageConfig,
   getPageViewModel,
+  getNotebookViewModelBase,
+  getNotebookViewModelInput,
   getPostViewModelInput,
   getRelatedItems,
   getTopicViewModelBase,
@@ -90,6 +112,8 @@ module.exports = {
   resetPageViewModels,
   setPageConfig,
   setPageViewModel,
+  setNotebookViewModelBase,
+  setNotebookViewModelInput,
   setPostViewModelInput,
   setRelatedItems,
   setTopicViewModelBase,

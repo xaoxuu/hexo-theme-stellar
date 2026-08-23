@@ -7874,6 +7874,1495 @@
             "layout": "post"
           },
           "reference": "ContentItemModel"
+        },
+        {
+          "path": "render",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 Notebook PageViewModel 构建器生成"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "document": {
+              "language": "zh-CN"
+            },
+            "layout": {
+              "pageType": "content"
+            },
+            "seo": {
+              "title": "Node.js - Example"
+            }
+          }
+        },
+        {
+          "path": "render.article",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": {}
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "heti": false,
+            "banner": {},
+            "created": null,
+            "updated": null,
+            "tags": [],
+            "footer": {},
+            "comments": {}
+          }
+        },
+        {
+          "path": "render.article.banner",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.presentation.banner"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {},
+          "open": true
+        },
+        {
+          "path": "render.article.comments",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": {}
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "enabled": true,
+            "title": "参与讨论",
+            "id": "",
+            "service": "giscus",
+            "options": {},
+            "pageTitle": "Node.js"
+          }
+        },
+        {
+          "path": "render.article.comments.enabled",
+          "type": [
+            "boolean"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由最终 comments.enabled 与 service 生成"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": true
+        },
+        {
+          "path": "render.article.comments.id",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.presentation.comments.id"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "note-node"
+        },
+        {
+          "path": "render.article.comments.options",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由激活服务参数袋生成"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {},
+          "open": true
+        },
+        {
+          "path": "render.article.comments.pageTitle",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.title"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Node.js"
+        },
+        {
+          "path": "render.article.comments.service",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.presentation.comments.provider"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "giscus"
+        },
+        {
+          "path": "render.article.comments.title",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.presentation.comments.title"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "参与讨论"
+        },
+        {
+          "path": "render.article.created",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.date"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "2026-08-23T00:00:00.000Z"
+        },
+        {
+          "path": "render.article.footer",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": {}
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "references": [],
+            "license": "",
+            "share": null,
+            "contributor": null
+          }
+        },
+        {
+          "path": "render.article.footer.contributor",
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 contributors.edit_page 与源文件生成"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": null,
+          "open": true
+        },
+        {
+          "path": "render.article.footer.license",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由最终许可协议与作者信息生成"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "CC BY 4.0"
+        },
+        {
+          "path": "render.article.footer.references",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.presentation.footer.references"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": []
+        },
+        {
+          "path": "render.article.footer.share",
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 Notebook Footer 分享配置生成；禁用时为 null"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": null,
+          "open": true
+        },
+        {
+          "path": "render.article.heti",
+          "type": [
+            "boolean"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "extensions.features.cjkTypography.enabled"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": false
+        },
+        {
+          "path": "render.article.tags",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": []
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": []
+        },
+        {
+          "path": "render.article.tags[].name",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "tools/cli"
+        },
+        {
+          "path": "render.article.tags[].path",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 Notebook 标签导航映射"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "notes/dev/tags/tools/cli"
+        },
+        {
+          "path": "render.article.updated",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.updated"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "2026-08-23T00:00:00.000Z"
+        },
+        {
+          "path": "render.document",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": {}
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "language": "zh-CN",
+            "headInject": "",
+            "preferredTheme": "auto"
+          }
+        },
+        {
+          "path": "render.document.headInject",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": ""
+        },
+        {
+          "path": "render.document.language",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "page.lang",
+              "page.language",
+              "site.language"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "zh-CN"
+        },
+        {
+          "path": "render.document.preferredTheme",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "appearance.colorScheme"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "auto"
+        },
+        {
+          "path": "render.layout",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": {}
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "pageType": "content",
+            "articleType": "tech",
+            "indent": false,
+            "brand": {},
+            "notebookIndexPath": "notebooks",
+            "notebookPath": "notes/dev",
+            "searchFilter": "notes/dev",
+            "sidebar": {},
+            "breadcrumbs": [],
+            "tagTree": []
+          }
+        },
+        {
+          "path": "render.layout.articleType",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.presentation.article.type"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "tech"
+        },
+        {
+          "path": "render.layout.brand",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "name": "Stellar",
+            "tagline": "每个人的独立博客",
+            "url": "/"
+          }
+        },
+        {
+          "path": "render.layout.brand.image",
+          "type": [
+            "object"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "src": "/images/avatar.webp",
+            "variant": "avatar"
+          }
+        },
+        {
+          "path": "render.layout.brand.image.background",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "var(--block)"
+        },
+        {
+          "path": "render.layout.brand.image.src",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/images/avatar.webp"
+        },
+        {
+          "path": "render.layout.brand.image.url",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/about/"
+        },
+        {
+          "path": "render.layout.brand.image.variant",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "avatar"
+        },
+        {
+          "path": "render.layout.brand.name",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "site.title"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Stellar"
+        },
+        {
+          "path": "render.layout.brand.tagline",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "site.subtitle"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "每个人的独立博客"
+        },
+        {
+          "path": "render.layout.brand.url",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/"
+        },
+        {
+          "path": "render.layout.breadcrumbs",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": []
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": []
+        },
+        {
+          "path": "render.layout.breadcrumbs[].name",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "collection.identity.headline"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Development Notes"
+        },
+        {
+          "path": "render.layout.breadcrumbs[].path",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "collection.route.baseDir"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "notes/dev"
+        },
+        {
+          "path": "render.layout.indent",
+          "type": [
+            "boolean"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.presentation.article.indent",
+              "articleType === story"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": false
+        },
+        {
+          "path": "render.layout.leftbarBlur",
+          "type": [
+            "boolean"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": false
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": false
+        },
+        {
+          "path": "render.layout.leftbarSurface",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "appearance.backgrounds.sidebar.surface"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "glass"
+        },
+        {
+          "path": "render.layout.notebookIndexPath",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "layout.profiles.notebook_index.path"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "notebooks"
+        },
+        {
+          "path": "render.layout.notebookPath",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "collection.route.baseDir"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "notes/dev"
+        },
+        {
+          "path": "render.layout.pageType",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": "content"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "content"
+        },
+        {
+          "path": "render.layout.recentItems",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": []
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": []
+        },
+        {
+          "path": "render.layout.searchFilter",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "collection.route.baseDir"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "notes/dev"
+        },
+        {
+          "path": "render.layout.sidebar",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.presentation.sidebar"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {},
+          "open": true
+        },
+        {
+          "path": "render.layout.siteBackground",
+          "type": [
+            "boolean"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "appearance.backgrounds.page.image"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": false
+        },
+        {
+          "path": "render.layout.tagTree",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": []
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": []
+        },
+        {
+          "path": "render.layout.tagTree[].children",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": []
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": []
+        },
+        {
+          "path": "render.layout.tagTree[].id",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "tools/cli"
+        },
+        {
+          "path": "render.layout.tagTree[].label",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "cli"
+        },
+        {
+          "path": "render.layout.tagTree[].name",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "tools/cli"
+        },
+        {
+          "path": "render.layout.tagTree[].parentId",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": null
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "tools"
+        },
+        {
+          "path": "render.layout.tagTree[].path",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "collection.navigation.tags.path"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "notes/dev/tags/tools/cli"
+        },
+        {
+          "path": "render.listing",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": {}
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "id": "note-node",
+            "collectionId": "dev",
+            "collectionName": "Development Notes",
+            "href": "notes/dev/node",
+            "title": "Node.js",
+            "cover": "",
+            "excerpt": "",
+            "tags": [],
+            "date": null,
+            "updated": null,
+            "priority": 0,
+            "listed": true
+          }
+        },
+        {
+          "path": "render.listing.collectionId",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "collection.id"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "dev"
+        },
+        {
+          "path": "render.listing.collectionName",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "collection.identity.name"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Development Notes"
+        },
+        {
+          "path": "render.listing.cover",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.presentation.card.cover"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": ""
+        },
+        {
+          "path": "render.listing.date",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.date"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": null
+        },
+        {
+          "path": "render.listing.excerpt",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 excerpt/description/content 与 Notebook 摘要长度生成"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Note 摘要"
+        },
+        {
+          "path": "render.listing.href",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "page.link",
+              "item.route.path"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "notes/dev/node"
+        },
+        {
+          "path": "render.listing.id",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.id"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "note-node"
+        },
+        {
+          "path": "render.listing.listed",
+          "type": [
+            "boolean"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.visibility.listed"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": true
+        },
+        {
+          "path": "render.listing.priority",
+          "type": [
+            "number"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.listing.priority"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": 0
+        },
+        {
+          "path": "render.listing.tags",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.tags"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": [
+            "tools"
+          ]
+        },
+        {
+          "path": "render.listing.title",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.title"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Node.js"
+        },
+        {
+          "path": "render.listing.updated",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "item.updated"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": null
+        },
+        {
+          "path": "render.seo",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": {}
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "title": "Node.js - Example",
+            "description": "Note 摘要",
+            "keywords": [],
+            "robots": null,
+            "canonical": null,
+            "openGraph": null,
+            "jsonLd": {
+              "@type": "WebPage"
+            }
+          }
+        },
+        {
+          "path": "render.seo.canonical",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "seo.canonical.host",
+              "item.route.path"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "https://example.com/notes/dev/node/"
+        },
+        {
+          "path": "render.seo.description",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "page.description",
+              "item.excerpt",
+              "item.content"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Note 摘要"
+        },
+        {
+          "path": "render.seo.jsonLd",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 WebPage 结构化数据规则生成"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "@type": "WebPage"
+          },
+          "open": true
+        },
+        {
+          "path": "render.seo.keywords",
+          "type": [
+            "array"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "page.keywords",
+              "item.tags",
+              "site.keywords"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": [
+            "Node.js"
+          ]
+        },
+        {
+          "path": "render.seo.openGraph",
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 SEO 与页面 Open Graph 配置生成"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": null,
+          "open": true
+        },
+        {
+          "path": "render.seo.robots",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "derived",
+            "from": [
+              "IS_BACKUP",
+              "page.robots"
+            ]
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": null
+        },
+        {
+          "path": "render.seo.title",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 Note 标题与站点标题组合"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "Node.js - Example"
         }
       ]
     },

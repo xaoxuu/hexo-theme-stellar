@@ -7,16 +7,21 @@ var wiki = wikiViewModel ? null : stellar_data('wiki').tree[collection_id(page, 
 var topic = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'topic'
   ? null
   : stellar_data('topic').tree[collection_id(page, "topic")]
-var notebook = stellar_data('notebooks').tree[collection_id(page, "notebook")]
+var notebookViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'notebook'
+  ? viewModel
+  : null
+var notebookIndex = page.notebookIndex?.mode === 'notes' ? page.notebookIndex.collection : null
 var postViewModel = typeof viewModel !== 'undefined' && ['post', 'topic'].includes(viewModel?.collection?.profile)
   ? viewModel
   : null
 
 var sidebarState
-if (postViewModel || wikiViewModel) {
-  var activeViewModel = postViewModel || wikiViewModel
+if (postViewModel || wikiViewModel || notebookViewModel) {
+  var activeViewModel = postViewModel || wikiViewModel || notebookViewModel
   sidebarState = wikiViewModel
     ? wikiViewModel.render.layout.sidebar?.left || {}
+    : notebookViewModel
+      ? notebookViewModel.render.layout.sidebar?.left || {}
     : postViewModel.collection.profile === 'topic'
       ? postViewModel.render.layout.sidebar?.left || {}
       : postViewModel.item.presentation.sidebar?.left || {}
@@ -32,10 +37,7 @@ if (postViewModel || wikiViewModel) {
       sidebar = profiles.notebookIndex.sidebar.left.widgets
     } else if (page.layout === 'notes') {
       // 笔记列表页
-      sidebar = notebook ? notebook.sidebar?.left?.widgets : profiles.noteIndex.sidebar.left.widgets
-    } else if (notebook) {
-      // 笔记本文章内页
-      sidebar = notebook.noteDefaults?.sidebar?.left?.widgets || profiles.note.sidebar.left.widgets
+      sidebar = notebookIndex?.layout.sidebar?.left?.widgets || profiles.noteIndex.sidebar.left.widgets
     } else if (is_category() || is_tag() || is_archive() || ['categories', 'tags', 'archives'].includes(page.layout)) {
       sidebar = profiles.blogIndex.sidebar.left.widgets
     } else if (page.layout === 'index_topic') {
@@ -93,7 +95,7 @@ function layoutWidgets() {
         Object.assign(widget, w)
       }
       if (widget && widget.layout) {
-        el += partial('../widgets/' + widget.layout, {item: widget, viewModel: postViewModel || wikiViewModel})
+        el += partial('../widgets/' + widget.layout, {item: widget, viewModel: activeViewModel})
       }
     });
   }
@@ -112,7 +114,7 @@ function layoutSearch() {
   } else if (topic?.sidebar?.left?.search) {
     search = topic.sidebar.left.search
   }
-  return partial('search', {item: search, disabled: sidebarState.search === false, viewModel: postViewModel || wikiViewModel})
+  return partial('search', {item: search, disabled: sidebarState.search === false, viewModel: activeViewModel})
 }
 function layoutFooterDiv() {
   var actions = stellar_config('site.footer.actions')
@@ -161,8 +163,8 @@ function layoutFooterDiv() {
 function layoutBrand() {
   return partial('brand', {
     placement: 'sidebar',
-    brandModel: (postViewModel || wikiViewModel) ? (postViewModel || wikiViewModel).render.layout.brand : undefined,
-    viewModel: postViewModel || wikiViewModel
+    brandModel: activeViewModel ? activeViewModel.render.layout.brand : notebookIndex?.layout.brand,
+    viewModel: activeViewModel
   })
 }
 
@@ -182,7 +184,7 @@ function layoutNavArea() {
   el += `<div class="nav-area">`
   el += partial('menu', {
     where: 'sidebar',
-    activeMenu: (postViewModel || wikiViewModel) ? (postViewModel || wikiViewModel).item.navigation.menu : undefined
+    activeMenu: activeViewModel ? activeViewModel.item.navigation.menu : notebookIndex?.navigation.menu
   })
   el += `</div>`
   return el

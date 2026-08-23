@@ -27,11 +27,11 @@ tags:
 
 本文介绍 Stellar 的 HTML `<head>` 生成与 SEO 元数据系统：meta 标签、Open Graph 协议、JSON-LD 结构化数据、规范链接（canonical URL）处理与克隆站检测。整体页面布局结构见[页面模板与路由](page-templates-routing.md)。
 
-## v2 Post、Topic 与 Wiki SEO 投影
+## v2 内容 SEO 投影
 
-普通 Post 与 Topic 在 Markdown 渲染完成后的构建阶段生成 `PageViewModel.render.seo`，Wiki 在文档树完成后的两阶段模型构建中生成相同出口。`head.ejs` 与 `json_ld()` 对这三类页面只消费投影中的最终 title、description、keywords、robots、canonical、Open Graph 参数和 JSON-LD 对象。Post 与 Topic 的结构化数据类型为 `BlogPosting`，Wiki 为 `WebPage`；三者都在模型边界完成页面、Collection/Profile 与站点配置级联。
+普通 Post 与 Topic 在 Markdown 渲染完成后的构建阶段生成 `PageViewModel.render.seo`，Wiki 与 Notebook 分别在各自数据树完成后的两阶段模型构建中生成相同出口。`head.ejs` 与 `json_ld()` 对这四类页面只消费投影中的最终 title、description、keywords、robots、canonical、Open Graph 参数和 JSON-LD 对象。Post 与 Topic 的结构化数据类型为 `BlogPosting`，Wiki 与 Notebook 为 `WebPage`；四者都在模型边界完成页面、Collection/Profile 与站点配置级联。
 
-页面级空字符串或空数组仍按既有规则进入下一层回退；`open_graph` 参数中的显式空值作为最终覆盖保留。备用构建投影 `noindex, nofollow`，canonical 与 404 排除规则在模型层完成。Notebook 与普通 Page 继续使用本页后续章节描述的 legacy head 分支。
+页面级空字符串或空数组仍按既有规则进入下一层回退；`open_graph` 参数中的显式空值作为最终覆盖保留。备用构建投影 `noindex, nofollow`，canonical 与 404 排除规则在模型层完成。普通 Page 继续使用本页后续章节描述的 legacy head 分支。
 
 ## 系统概览
 
@@ -119,7 +119,7 @@ graph TB
 | 首页（第 1 页） | `{site}` | `My Site` |
 | 首页分页（第 2 页起） | `{site} - Page {n}` | `My Site - Page 2` |
 
-Post、Topic 与 Wiki 新链直接返回 `render.seo.title`。Wiki 标题在模型层使用页面语言决定全角或半角冒号，并从 `collection.identity.name` 与 `item.title` 组合，不由 EJS 查询原始 Wiki tree。下述通用页面、分类、标签和分页格式仍由 legacy `generate_title()` 分支生成。
+Post、Topic、Wiki 与 Notebook 新链直接返回 `render.seo.title`。Wiki 与 Notebook 标题在模型层从 collection identity 与 item title 组合，不由 EJS 查询原始数据树。下述通用页面、分类、标签和分页格式仍由 legacy `generate_title()` 分支生成。
 
 wiki 标题去重规则：当 `page.title` 与 wiki 项目名相同，或以 `：`/`:`/` - ` 为前缀重复 wiki 名时，只保留一次（如 `GHAPI JSON Generator：GHAPI JSON Generator` 会归一为 `GHAPI JSON Generator`）；wiki 名中的空格/连字符按同义处理（`cloud shell` 可匹配 `cloud-shell`）。
 
@@ -127,7 +127,7 @@ wiki 标题去重规则：当 `page.title` 与 wiki 项目名相同，或以 `�
 
 ```mermaid
 flowchart TD
-    START["generate_title() invoked"] --> HASMODEL{"Post / Topic / Wiki render.seo?"}
+    START["generate_title() invoked"] --> HASMODEL{"Post / Topic / Wiki / Notebook render.seo?"}
     HASMODEL -->|Yes| MODELTITLE["Return render.seo.title"]
     HASMODEL -->|No| PAGECHECK{"page.title exists?"}
     PAGECHECK -->|Yes| PAGETITLE["Return title + - + site"]
@@ -153,7 +153,7 @@ flowchart TD
 
 ### 描述生成
 
-Post、Topic 与 Wiki 新链直接读取 `render.seo.description`；Open Graph 启用时由 `render.seo.openGraph.args` 输出同一模型已解析的说明。legacy 页面由 `generate_description()` 按以下优先级级联：
+Post、Topic、Wiki 与 Notebook 新链直接读取 `render.seo.description`；Open Graph 启用时由 `render.seo.openGraph.args` 输出同一模型已解析的说明。legacy 页面由 `generate_description()` 按以下优先级级联：
 
 1. **Open Graph 启用时跳过**：`stellar_config('seo.openGraph').enabled` 为 true 时返回空（由 OG 标签处理描述）
 2. **页面级描述**：`page.description`（截断至 150 字符）
@@ -164,7 +164,7 @@ Post、Topic 与 Wiki 新链直接读取 `render.seo.description`；Open Graph �
 
 **参考源码**：[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 
-> 说明：站点启用 Open Graph（`seo.open_graph.enabled: true`，默认配置）时，Post/Topic/Wiki 的 `<meta name="description">` 与 `og:description` 均来自 `render.seo.openGraph.args.description`；其它页面由 `og_args()` 传入 Hexo 内置 `open_graph()` helper。Front Matter 由声明式 Schema 投影为 `pageConfig.seo.openGraph`。
+> 说明：站点启用 Open Graph（`seo.open_graph.enabled: true`，默认配置）时，Post/Topic/Wiki/Notebook 的 `<meta name="description">` 与 `og:description` 均来自 `render.seo.openGraph.args.description`；其它页面由 `og_args()` 传入 Hexo 内置 `open_graph()` helper。Front Matter 由声明式 Schema 投影为 `pageConfig.seo.openGraph`。
 
 ### 关键词生成
 
@@ -216,7 +216,7 @@ graph LR
 
 `stellar_config('seo.openGraph').enabled` 为 true 时生成 OG 标签，并对 `og:title`、`og:site_name`、`twitter:title` 做主题定制替换（经 `generate_og_title()` / `generate_og_site_name()` 转义处理）。`og:site_name` 始终输出站点名 `config.title`，`og:image` 按 封面 → 横幅 → 正文首图 → 头像 回退。
 
-Post/Topic/Wiki 的 `og_args()` 直接复制 `render.seo.openGraph.args`；Wiki 项目 description、页面 description 与 Front Matter `seo.open_graph` 的优先级已在模型层完成。legacy 页面仍在 helper 调用前从 `pageConfig` 组装参数。
+Post/Topic/Wiki/Notebook 的 `og_args()` 直接复制 `render.seo.openGraph.args`；Collection description、页面 description 与 Front Matter `seo.open_graph` 的优先级已在模型层完成。legacy 页面仍在 helper 调用前从 `pageConfig` 组装参数。
 
 **参考源码**：[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 
@@ -343,7 +343,7 @@ seo:
 
 **条件**：`page.layout == 'page'` 或 `this.is_home()`
 
-**描述优先级**：legacy Page 使用 page.description → page.excerpt → 截断内容（200 字符）；Wiki 的 WebPage JSON-LD 直接使用 `render.seo.description`。
+**描述优先级**：legacy Page 使用 page.description → page.excerpt → 截断内容（200 字符）；Wiki 与 Notebook 的 WebPage JSON-LD 直接使用 `render.seo.description`。
 
 **参考源码**：[scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
 

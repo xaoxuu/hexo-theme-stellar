@@ -72,20 +72,20 @@ test("Topic 索引、卡片、博客列表与置顶不再读取原始 Topic tree
   assert.match(source("layout/archive.ejs"), /\['post', 'topic'\]/);
 });
 
-test("Topic 详情页要求合法 render，并与 Notebook legacy 分支隔离", () => {
+test("Topic 详情页要求合法 render，并与 Notebook 新链隔离", () => {
   const root = source("layout/layout.ejs");
   const page = source("layout/page.ejs");
   assert.match(root, /Topic 页面 .*缺少合法 PageViewModel\.render/);
-  assert.match(root, /renderViewModel = postViewModel \|\| wikiViewModel \|\| topicViewModel/);
-  assert.match(source("layout/_partial/primitives/shell.ejs"), /\['post', 'wiki', 'topic'\]/);
+  assert.match(root, /renderViewModel = postViewModel \|\| wikiViewModel \|\| topicViewModel \|\| notebookViewModel/);
+  assert.match(source("layout/_partial/primitives/shell.ejs"), /\['post', 'wiki', 'topic', 'notebook'\]/);
   assert.match(page, /registeredProfile === 'topic'/);
   assert.match(page, /post_view_model\(page\)/);
-  assert.match(page, /var notebook = stellar_data\('notebooks'\)/);
-  assert.match(source("layout/_partial/head.ejs"), /\['post', 'wiki', 'topic'\]/);
+  assert.match(page, /notebookViewModel = page\.viewModel\?\.collection\?\.profile === 'notebook'/);
+  assert.match(source("layout/_partial/head.ejs"), /\['post', 'wiki', 'topic', 'notebook'\]/);
 });
 
 test("Topic 导航、侧栏和辅助 partial 优先消费显式 ViewModel", () => {
-  assert.match(source("layout/_partial/main/navbar/article_banner.ejs"), /\['post', 'wiki', 'topic'\]/);
+  assert.match(source("layout/_partial/main/navbar/article_banner.ejs"), /\['post', 'wiki', 'topic', 'notebook'\]/);
   assert.match(source("layout/_partial/main/navbar/breadcrumb/blog.ejs"), /postViewModel\.collection\.profile === 'topic'/);
   assert.match(source("layout/_partial/widgets/related.ejs"), /topicViewModel\.collection\.navigation\.series/);
   assert.match(source("layout/_partial/sidebar/index_leftbar.ejs"), /\['post', 'topic'\]\.includes/);

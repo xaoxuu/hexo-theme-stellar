@@ -101,9 +101,9 @@ Galaxy 的路径为 `hero.background.effect.options`，其 React Bits props 保�
 - `render.listing` 固化博客卡片、置顶轮播、平铺列表与归档需要的路由、封面、摘要、日期、分类、最多五个标签、作者、优先级和可见性。
 - Post 的 Schema 校验、模型构建、Reference 与 EJS 消费同一 `render` 事实来源；缺少或非法 `render` 时按源文件构建失败，不回退到 `page` 或主题字段。
 - 级联顺序为页面 Front Matter、Post profile、主题全局配置；`false`、`0` 与空字符串是有效覆盖值。Brand 图片继续按原子对象替换，不继承上级图片子字段。
-- 普通 Post 与 Topic 的根 Shell、左右侧栏、Brand、菜单、面包屑、SEO、正文、标签、Footer、上下篇、相关推荐、评论和博客聚合条目均已消费 ViewModel。Wiki 详情与索引也已完成迁移；Hexo 仍为聚合页提供分页及当前筛选状态，Notebook 的 EJS 消费链留在后续 M2 切片。
+- 普通 Post、Topic、Wiki 与 Notebook 的根 Shell、左右侧栏、Brand、菜单、面包屑、SEO、正文辅助区、Footer、导航、评论和聚合条目均已消费 ViewModel。Hexo 仍只为聚合页提供分页及当前筛选状态；生成器把最终列表投影作为显式 local 交给模板。
 
-纯构建入口位于 `scripts/lib/models/index.js`。普通 Post 在 `before_generate` 登记输入，详情页由 `after_post_render` 结合最终正文和 Hexo 关系完成模型，列表条目由 `post_view_model` helper 从同一登记输入重建冻结投影；Wiki 页面在 `doc_tree` 完成树形解析后挂载，Topic 与 Note 在生成前挂载。
+纯构建入口位于 `scripts/lib/models/index.js`。普通 Post 在 `before_generate` 登记输入，详情页由 `after_post_render` 结合最终正文和 Hexo 关系完成模型，列表条目由 `post_view_model` helper 从同一登记输入重建冻结投影；Wiki 页面在 `doc_tree` 完成树形解析后挂载，Topic 在文章渲染阶段完成，Note 则在 Notebook 树完成后以两阶段流程完成。
 
 ### Topic 与文章
 
@@ -131,13 +131,16 @@ Galaxy 的路径为 `hero.background.effect.options`，其 React Bits props 保�
 
 ### Notebook 与 Note
 
-严格 `collection.profile: notebook` 的 Note 在 `generateBefore` 阶段生成同构 `page.viewModel`：
+严格 `collection.profile: notebook` 的 Note 在生成前先登记冻结输入和 collection base，Notebook 树完成后再生成同构 `page.viewModel`：
 
 - `collection` 保留 Notebook 的名称/标题/说明/身份图标、源码仓库、规范化 `route.path`、标签导航、列表分页/排序/摘要设置和 Note 展示默认值。
 - `navigation.tags` 只从同一严格 Notebook id 下的 Note 标签构造；层级标签拆为冻结的普通对象，包含规范化 id、名称、末段标签、父级和标签页路径。
 - `item` 在构建期完成页面导航、`listing.priority`、`visibility.listed/searchable`、侧栏、文章、页脚和评论级联；页面源码可以覆盖 Notebook 源码字段。
 - Note 必须显式声明严格 v2 `collection.profile` 与 `collection.id`，id 必须存在于 `_data/notebooks/`；不会从布局、路径或 v1 `notebook` 字段推断归属。
-- 本切片只挂载模型，不改变现有 Notebook/Note EJS 消费链。
+- `render.document/layout/seo/article/listing` 固化文档状态、布局、最终 Brand、完整 WebPage SEO、Banner、日期、标签、Footer、评论与卡片字段；缺少合法 `render` 时按来源终止构建。
+- Notebook Open Graph 保持 WebPage 的 `website` 类型，并保留既有发布时间、更新时间与标签 meta；`footer.license: true` 在模型层映射到全局 Article 许可文本，保留既有启用语义。
+- 第一阶段用已完成的临时 ViewModel 投影所有 Notebook、标签与 Note 列表，形成深度冻结的 `notebookIndex`；第二阶段把显式 `tagTree` 与 `recentItems` 写入每个详情 ViewModel 后再次校验和冻结。
+- Notebook 总索引、集合首页和标签分页只消费生成器传入的 `page.notebookIndex`；卡片、筛选、置顶、标签树、最近笔记和详情 partial 不读取原始 Notebook tree。`visibility.listed: false` 的 Note 不进入列表与 recent 投影；原始 tree 仅保留给尚未迁移的非模板兼容接口。
 
 ## Reference 元数据
 
@@ -160,6 +163,6 @@ Collection 与 Front Matter 不再由手写字段表定义：`scripts/schema/con
 - 路由、导航、侧栏和页面字段由声明式 Schema 严格校验；错误继续包含配置来源、字段路径与迁移目标。
 - `scripts/helpers/collection.js` 向 EJS 提供 `collection_id(page, type)`，不再读取 `page.wiki/topic/notebook`。
 - `scripts/lib/brand.js` 与 `scripts/helpers/brand.js` 解析 Brand 优先级、集合自动值和手机端显示矩阵。
-- Wiki 数据树在两阶段建模后投影索引 listing 与标签导航；Topic、Notebook 数据树和搜索生成器继续消费共享可见性语义。
+- Wiki 与 Notebook 数据树都在两阶段建模后投影冻结的索引、导航和列表数据；Topic 索引也只消费显式投影。搜索生成器继续消费共享可见性语义。
 
 旧字段、未知字段和错误类型都会汇总为 `ContentConfigError`，消息包含源文件与字段路径；运行时没有 v1 别名或错误类型自动转换。

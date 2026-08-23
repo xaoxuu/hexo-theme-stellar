@@ -1,26 +1,27 @@
 /* global hexo */
 /**
- * notebooks v1
+ * notebooks v2 explicit listing projection
  */
 
 "use strict";
 
 const { generatorPath, requireLayoutProfiles, toRenderNavigation } = require("../lib/layout-config");
+const { deepFreeze } = require("../schema/schema-utils");
 
-hexo.extend.generator.register('notebooks', function (locals) {
-  const { notebooks } = hexo.stellar.data;
+hexo.extend.generator.register("notebooks", function (locals) {
+  const { notebookIndex } = hexo.stellar.data;
   const profiles = requireLayoutProfiles(hexo.stellar?.config);
   const profile = profiles.notebookIndex;
-  if (!notebooks?.tree || Object.keys(notebooks.tree).length === 0) {
-    return []
+  if (!notebookIndex?.items || notebookIndex.items.length === 0) {
+    return [];
   }
   // 不用 blog 和 notebooks 时不必依赖 hexo-pagination
-  const pagination = require('hexo-pagination')
+  const pagination = require("hexo-pagination");
 
-  function paginationWithEmpty(base, posts, options={}) {
-    const { layout, data = {} } = options
+  function paginationWithEmpty(base, posts, options = {}) {
+    const { layout, data = {} } = options;
     if (posts.length === 0) {
-      base = `${base}/`
+      base = `${base}/`;
       return [{
         path: base,
         layout: layout,
@@ -32,51 +33,64 @@ hexo.extend.generator.register('notebooks', function (locals) {
           current_url: base,
           posts: posts,
           prev: 0,
-          prev_link: '',
+          prev_link: "",
           next: 0,
-          next_link: '',
+          next_link: "",
         }
-      }]
+      }];
     } else {
-      return pagination(base, posts, options)
+      return pagination(base, posts, options);
     }
   }
 
-  const routes = []
+  const routes = [];
+  const collections = notebookIndex.items
+    .filter(item => item.listed !== false)
+    .slice()
+    .sort((left, right) => left.sort - right.sort);
 
   // The index page of all notebooks.
   routes.push({
     path: generatorPath(profile.path),
-    layout: ['notebooks'],
+    layout: ["notebooks"],
     data: {
-      layout: 'notebooks',
+      layout: "notebooks",
       navigation: toRenderNavigation(profile),
+      notebookIndex: deepFreeze({
+        mode: "collections",
+        items: collections,
+        recentItems: notebookIndex.recentItems
+      })
     }
-  })
+  });
 
-  for (const notebook of Object.values(notebooks.tree)) {
-    const pages = locals.pages.filter(p => {
-      const note = notebook.noteMap.get(p._id);
-      return note != null && note.listed !== false;
-    }).sort(notebook.listing.order_by);
-    pages.data.sort((a, b) => notebook.noteMap.get(b._id).priority - notebook.noteMap.get(a._id).priority)
-
+  for (const notebook of notebookIndex.items) {
     // Note list pages (for every tag) of current notebook.
-    for (const [_, tag] of notebook.tagTree) {
-      const notes = pages.filter(p => tag.noteSet.has(p._id))
+    for (const tag of notebook.tags) {
+      const notes = notebook.items.filter(item => item.listed !== false && tag.itemIds.includes(item.id));
       const slices = paginationWithEmpty(tag.path, notes, {
-        perPage: notebook.listing.per_page,
-        layout: ['notes'],
+        perPage: notebook.perPage,
+        layout: ["notes"],
         data: {
-          layout: 'notes',
+          layout: "notes",
           navigation: { menu: notebook.navigation.menu ?? profiles.noteIndex.navigation.activeMenu },
           stellarConfig: { collection: { profile: "notebook", id: notebook.id } },
-          activeTag: tag.id,
         }
-      })
-      routes.push(...slices)
+      });
+      for (const slice of slices) {
+        const items = deepFreeze(slice.data.posts.slice());
+        slice.data.notebookIndex = deepFreeze({
+          mode: "notes",
+          collection: notebook,
+          tags: notebook.tags,
+          activeTag: tag.id,
+          items
+        });
+        slice.data.activeTag = tag.id;
+      }
+      routes.push(...slices);
     }
   }
 
-  return routes
-})
+  return routes;
+});

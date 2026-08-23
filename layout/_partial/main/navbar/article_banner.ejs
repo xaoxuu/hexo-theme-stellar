@@ -1,13 +1,16 @@
 <%
 
-var renderViewModel = typeof viewModel !== 'undefined' && ['post', 'wiki', 'topic'].includes(viewModel?.collection?.profile)
+var renderViewModel = typeof viewModel !== 'undefined' && ['post', 'wiki', 'topic', 'notebook'].includes(viewModel?.collection?.profile)
   ? viewModel
   : null
 var postViewModel = ['post', 'topic'].includes(renderViewModel?.collection?.profile) ? renderViewModel : null
 var wikiViewModel = renderViewModel?.collection?.profile === 'wiki' ? renderViewModel : null
+var notebookViewModel = renderViewModel?.collection?.profile === 'notebook' ? renderViewModel : null
 var pageConfig = content_config(page)
 var banner = Object.assign({}, wikiViewModel
   ? wikiViewModel.render.article.banner
+  : notebookViewModel
+    ? notebookViewModel.render.article.banner
   : postViewModel?.collection?.profile === 'topic'
     ? postViewModel.render.article.banner
     : postViewModel ? postViewModel.item.presentation.banner : pageConfig.banner || {})
@@ -40,8 +43,8 @@ function layoutTop() {
       el += partial('breadcrumb/wiki', {viewModel: wikiViewModel})
     } else if (stellar_data('wiki').tree[collection_id(page, "wiki")]) {
       el += partial('breadcrumb/wiki')
-    } else if (collection_id(page, "notebook")) {
-      el += partial('breadcrumb/note')
+    } else if (notebookViewModel) {
+      el += partial('breadcrumb/note', {viewModel: notebookViewModel})
     } else if (page.layout == 'post') {
       el += partial('breadcrumb/blog', {viewModel: postViewModel})
     } else {

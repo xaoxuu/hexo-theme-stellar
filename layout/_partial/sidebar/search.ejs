@@ -2,7 +2,10 @@
 var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
   ? viewModel
   : null
-var notebook = wikiViewModel ? null : stellar_data('notebooks').tree[collection_id(page, "notebook")]
+var notebookViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'notebook'
+  ? viewModel
+  : null
+var notebookIndex = page.notebookIndex?.mode === 'notes' ? page.notebookIndex.collection : null
 item = item && typeof item === 'object' ? Object.assign({}, item) : {}
 if (item.filter == null) {
   item.filter = 'auto'
@@ -12,9 +15,12 @@ if (item.placeholder == null && item.filter == 'auto') {
     item.placeholder = __('search.search_in', wikiViewModel.collection.identity.name)
   } else if (stellar_data('wiki').tree[collection_id(page, "wiki")]?.name) {
     item.placeholder = __('search.search_in', stellar_data('wiki').tree[collection_id(page, "wiki")]?.name)
-  } else if (notebook) {
-    item.placeholder = __('search.search_in', notebook.name || __('btn.notebook'))
-    item.filter = notebook.route.path
+  } else if (notebookViewModel) {
+    item.placeholder = __('search.search_in', notebookViewModel.collection.identity.name || __('btn.notebook'))
+    item.filter = notebookViewModel.render.layout.searchFilter
+  } else if (notebookIndex) {
+    item.placeholder = __('search.search_in', notebookIndex.name || __('btn.notebook'))
+    item.filter = notebookIndex.layout.searchFilter
   }
 }
 function layoutDiv() {
@@ -28,6 +34,10 @@ function layoutDiv() {
   if (item.filter == 'auto') {
     if (wikiViewModel) {
       filter = wikiViewModel.render.layout.searchFilter
+    } else if (notebookViewModel) {
+      filter = notebookViewModel.render.layout.searchFilter
+    } else if (notebookIndex) {
+      filter = notebookIndex.layout.searchFilter
     } else if (collection_id(page, "wiki")) {
       let matches = page.path.match(/(.*?)\/(.*?)\//i)
       if (matches?.length > 0) {

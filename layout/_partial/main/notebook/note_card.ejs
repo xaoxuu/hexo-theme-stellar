@@ -1,34 +1,27 @@
 <%# 笔记卡片 %>
-<% var notebook = stellar_data('notebooks').tree[collection_id(note, 'notebook')] %>
-<% var noteConfig = content_config(note) %>
+<% var listing = render.listing %>
 <article class="md-text">
-  <% if (noteConfig.card?.cover) { %>
+  <% if (listing.cover) { %>
     <div class="post-cover">
-      <img src="<%= noteConfig.card.cover %>" alt="cover" />
+      <img src="<%= listing.cover %>" alt="cover" />
     </div>
   <% } %>
-  <h2 class="post-title"><%= note.title %></h2>
+  <h2 class="post-title"><%= listing.title %></h2>
   <div class="excerpt<% if (stellar_config('extensions.features.cjkTypography.enabled')) { %> heti<% } %>">
     <p>
-      <% if (note.excerpt) { %>
-        <%= strip_html(note.excerpt) %>
-      <% } else if (note.description) { %>
-        <%= note.description %>
-      <% } else if (note.content && notebook?.listing?.excerpt_length > 0) { %>
-        <%= truncate(strip_html(note.content), { length: notebook.listing.excerpt_length }) %>
-      <% } %>
+      <%= listing.excerpt %>
     </p>
   </div>
   <div class="meta cap">
-    <% if (noteConfig.listing?.priority > 0) { %>
+    <% if (listing.priority > 0) { %>
       <span class="pin"><%- icon('default:pin') %></span>
     <% } %>
     <span class="cap" id="post-meta">
       <%- icon('default:calendar') %>
-      <time datetime="<%= date_xml(note.updated || note.date) %>"><%= date(note.updated || note.date, config.date_format) %></time>
+      <time datetime="<%= date_xml(listing.updated || listing.date) %>"><%= date(listing.updated || listing.date, config.date_format) %></time>
     </span>
-    <% if (note.tags) { %>
-      <% note.tags.forEach((tag, i) => { %>
+    <% if (listing.tags) { %>
+      <% listing.tags.forEach((tag, i) => { %>
         <span class="cap breadcrumb" %>>
           <span class="tag"><%= tag %></span>
         </span>

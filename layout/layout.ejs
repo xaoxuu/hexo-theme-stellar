@@ -16,10 +16,15 @@ var isTopicPage = pageConfig.collection?.profile === 'topic'
 if (isTopicPage && (activeProfile !== 'topic' || activeViewModel?.render == null)) {
   throw new Error(`Stellar v2: Topic 页面 ${page.source || page.path || '<unknown>'} 缺少合法 PageViewModel.render`)
 }
+var isNotebookPage = pageConfig.collection?.profile === 'notebook'
+if (isNotebookPage && (activeProfile !== 'notebook' || activeViewModel?.render == null)) {
+  throw new Error(`Stellar v2: Notebook 页面 ${page.source || page.path || '<unknown>'} 缺少合法 PageViewModel.render`)
+}
 var postViewModel = activeProfile === 'post' ? activeViewModel : null
 var wikiViewModel = activeProfile === 'wiki' ? activeViewModel : null
 var topicViewModel = activeProfile === 'topic' ? activeViewModel : null
-var renderViewModel = postViewModel || wikiViewModel || topicViewModel
+var notebookViewModel = activeProfile === 'notebook' ? activeViewModel : null
+var renderViewModel = postViewModel || wikiViewModel || topicViewModel || notebookViewModel
 var appearance = stellar_config('appearance')
 var html = ''
 

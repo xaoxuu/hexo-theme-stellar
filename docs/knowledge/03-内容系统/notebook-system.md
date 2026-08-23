@@ -85,9 +85,17 @@ graph TB
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
-## v2 构建期模型接缝
+## v2 构建与渲染消费链
 
-Notebook/Note 的冻结模型字段、严格归属、构建期挂载与 EJS 阶段边界统一记录在[内容配置契约的“构建期内容模型”](content-schema-v2.md#构建期内容模型)，本页不重复维护该契约。对笔记本领域而言，模型中的标签导航是下文标签树的普通对象投影，Note 的 `listing.priority` 继续对应下文排序语义。
+Notebook/Note 的冻结模型字段与严格归属统一记录在[内容配置契约的“构建期内容模型”](content-schema-v2.md#构建期内容模型)。笔记本领域采用树完成后的两阶段构建，保证标签导航、最近笔记和索引卡片都来自同一批纯对象：
+
+1. `content-config` 解析严格 Collection / Front Matter，登记冻结输入与 collection base，不把 Hexo Document 放入模型。
+2. `notebooks` 事件完成原始标签树后，先构建临时 Note ViewModel，并从 `render.listing` 投影 Notebook、标签、Note 卡片与分页所需数组。
+3. 深度冻结 `hexo.stellar.data.notebookIndex`，再把该集合对应的 `tagTree` 与 `recentItems` 注入详情 ViewModel，执行 Schema 校验并再次深度冻结。
+4. 详情页要求合法 `PageViewModel:notebook.render`，通过公共 Shell、Region、Section、Item、Navigation 渲染；Brand、搜索、标签树、最近笔记、Banner、日期、标签、Footer、评论与 head 都接收显式 local。
+5. Notebook 总索引、集合首页与标签分页只消费生成器传入的 `page.notebookIndex`；卡片、筛选、排序、置顶和标签导航不读取原始 Notebook 配置树。
+
+`render.document/layout/seo/article/listing` 分别固化文档状态、布局与侧栏、WebPage SEO、正文辅助区及列表卡片。Open Graph 保持页面的 `website` 类型和既有时间/标签 meta，许可 `true` 继续映射全局 Article 许可。Note 的 `listing.priority` 继续对应下文排序语义，`visibility.listed` 决定列表和 recent 可见性；单篇详情 URL 与浏览器行为不变。
 
 ---
 

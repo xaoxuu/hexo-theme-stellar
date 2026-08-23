@@ -12,11 +12,11 @@ tags:
 > [!IMPORTANT]
 > v2 页面与集合统一使用 `sidebar.left` / `sidebar.right`；本页涉及内容字段时，以[内容配置 Schema v2](../03-内容系统/content-schema-v2.md)为准。
 
-## v2 Post、Topic 与 Wiki 消费边界
+## v2 内容消费边界
 
-普通 Post 的左右栏选择读取 `PageViewModel.item.presentation.sidebar`；Topic 与 Wiki 从 `render.layout.sidebar` 取得相同的最终左右栏对象。三类页面的 Brand 都读取 `render.layout.brand`，菜单激活读取 `item.navigation.menu`。页面 Front Matter、Collection/Profile 与全局默认值的级联在模型层完成，模板不再修改这些页面的 `page.sidebar`。
+普通 Post、Topic、Wiki 与 Notebook 的左右栏都从冻结 ViewModel 取得最终对象；四类页面的 Brand 读取 `render.layout.brand`，菜单激活读取最终导航投影。页面 Front Matter、Collection/Profile 与全局默认值的级联在模型层完成，模板不再修改这些页面的 `page.sidebar`。
 
-Wiki 的 Brand、搜索、tree、related、ghrepo 与 toc partial 都接收显式 ViewModel local：搜索范围来自 `render.layout.searchFilter`，tree 来自 `collection.navigation.tree`，related 来自 `render.article.related`，仓库 API 来自 `render.listing.repositoryApi`。Topic 的 related widget 从 `collection.navigation.series` 构建显式专栏导航，左右栏与 Brand 使用最终 ViewModel。DOM、class、搜索匹配范围和客户端交互保持不变；Notebook 与普通 Page 继续使用 legacy 侧栏分支。
+Wiki 的 Brand、搜索、tree、related、ghrepo 与 toc partial 都接收显式 ViewModel local：搜索范围来自 `render.layout.searchFilter`，tree 来自 `collection.navigation.tree`，related 来自 `render.article.related`，仓库 API 来自 `render.listing.repositoryApi`。Topic 的 related widget 从 `collection.navigation.series` 构建显式专栏导航。Notebook 的搜索、tagtree 与 recent 则分别消费 `render.layout.searchFilter`、`render.layout.tagTree` 与 `render.layout.recentItems`，索引页消费生成器传入的 `notebookIndex`。DOM、class、搜索匹配范围和客户端交互保持不变；普通 Page 继续使用 legacy 侧栏分支。
 
 <details>
 <summary>相关源码文件</summary>
@@ -108,7 +108,7 @@ graph TB
     NotebookYAML["notebook YAML<br/>leftbar/rightbar"] -.->|"override for notebooks"| LayoutConfigs
 ```
 
-**配置解析顺序**：Wiki 在 ViewModel 层按页面 Front Matter、Wiki Collection、`layout.profiles.wiki` 与主题默认完成级联；Notebook 的 legacy 分支仍按页面、Notebook YAML 和 Profile 解析。Schema 默认是唯一主题默认来源。
+**配置解析顺序**：Wiki 与 Notebook 都在 ViewModel 层按页面 Front Matter、Collection、对应 Profile 与主题默认完成级联。Schema 默认是唯一主题默认来源。
 
 **参考源码**：[_config.yml](../../../_config.yml)（`layout.profiles` 小节）
 
@@ -133,7 +133,7 @@ graph TB
 
 ## 左栏：Brand 组件
 
-左栏顶部使用统一 Brand resolver，优先级依次为页面 `sidebar.left.brand`、集合 `sidebar.left.brand`、Wiki / Notebook 自动 Brand 和全局 `site.brand`。Wiki 的最终结果随 `render.layout.brand` 传给模板；Topic 不自动生成 Brand，未显式覆盖时直接使用站点 Brand。根字段逐项合并，`image` 始终整体替换。
+左栏顶部使用统一 Brand resolver，优先级依次为页面 `sidebar.left.brand`、集合 `sidebar.left.brand`、Wiki / Notebook 自动 Brand 和全局 `site.brand`。Wiki 与 Notebook 的最终结果随 `render.layout.brand` 传给模板；Topic 不自动生成 Brand，未显式覆盖时直接使用站点 Brand。根字段逐项合并，`image` 始终整体替换。
 
 冻结后的 Brand 图片通过 `image.variant` 明确为 `avatar`、`icon` 或 `plain`。外层统一负责 48×48 尺寸、链接和显式背景；图片元素只负责 `cover` 或 `contain`。完整契约见 [Brand、导航与页头](logo-navigation-headers.md)。
 

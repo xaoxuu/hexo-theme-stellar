@@ -1111,6 +1111,150 @@ function buildNotebookCollectionModel(input, collectionId) {
   };
 }
 
+function buildNotebookTagTree(collection, inputTags) {
+  const tags = Array.isArray(inputTags) && inputTags.length > 0
+    ? inputTags
+    : [{
+        id: "",
+        name: "",
+        label: "",
+        path: collection.route.baseDir,
+        parentId: null
+      }, ...collection.navigation.tags];
+  const children = new Map();
+  for (const tag of tags) {
+    const parentId = typeof tag?.parentId === "string" ? tag.parentId : "";
+    if (!children.has(parentId)) children.set(parentId, []);
+    if (typeof tag?.id === "string" && tag.id.length > 0) children.get(parentId).push(tag.id);
+  }
+  return tags.map(tag => ({
+    id: typeof tag?.id === "string" ? tag.id : "",
+    name: typeof tag?.name === "string" ? tag.name : "",
+    label: typeof tag?.label === "string"
+      ? tag.label
+      : typeof tag?.part === "string" ? tag.part : "",
+    path: typeof tag?.path === "string" ? normalizeCollectionPath(tag.path) : collection.route.baseDir,
+    parentId: typeof tag?.parentId === "string"
+      ? tag.parentId
+      : typeof tag?.parent === "string" && tag.parent.length > 0 ? tag.parent : null,
+    children: Array.isArray(tag?.children) ? tag.children.slice() : (children.get(tag?.id || "") || []).slice()
+  }));
+}
+
+function buildNotebookArticleTags(collection, item) {
+  const navigation = new Map(collection.navigation.tags.map(tag => [tag.id, tag]));
+  return item.tags.map(name => {
+    const id = String(name).toLowerCase();
+    const tag = navigation.get(id);
+    return {
+      name: String(name),
+      path: tag?.path || normalizeCollectionPath(`${collection.route.baseDir}/tags/${id}`)
+    };
+  });
+}
+
+function buildNotebookRenderModel(input, collection, item) {
+  const core = buildPostRenderModel(input, collection, item);
+  const content = requireContentConfig(input.stellarConfig, input.themeSource);
+  const automaticBrand = {
+    image: {
+      src: collection.identity.icon || input.stellarConfig.resources.fallbacks.projectIcon || "",
+      variant: "icon"
+    },
+    name: collection.identity.name,
+    tagline: collection.identity.tagline,
+    url: collection.route.baseDir
+  };
+  const brand = mergeBrand(
+    mergeBrand(input.stellarConfig.site.brand, automaticBrand),
+    item.presentation.sidebar?.left?.brand
+  );
+  const explicitDescription = typeof input.frontMatter.description === "string"
+    ? input.frontMatter.description
+    : "";
+  const excerpt = item.excerpt
+    ? stripHTML(item.excerpt)
+    : explicitDescription || (collection.listing.excerptLength > 0
+      ? truncate(stripHTML(item.content), { length: collection.listing.excerptLength })
+      : "");
+  const collectionTitle = collection.identity.headline || collection.identity.name || collection.id;
+  const configuredLicense = item.presentation.footer?.license === true
+    ? content.article.footer.license
+    : item.presentation.footer?.license;
+  const openGraph = core.seo.openGraph == null ? null : {
+    ...core.seo.openGraph,
+    args: {
+      ...core.seo.openGraph.args,
+      type: "website"
+    }
+  };
+
+  return {
+    document: core.document,
+    layout: {
+      pageType: core.layout.pageType,
+      articleType: core.layout.articleType,
+      indent: core.layout.indent,
+      siteBackground: core.layout.siteBackground,
+      leftbarSurface: core.layout.leftbarSurface,
+      leftbarBlur: core.layout.leftbarBlur,
+      brand,
+      notebookIndexPath: profilePath(requireLayoutProfiles(input.stellarConfig).notebookIndex.path),
+      notebookPath: collection.route.baseDir,
+      searchFilter: collection.route.baseDir,
+      sidebar: cloneValue(item.presentation.sidebar || {}),
+      breadcrumbs: [{ name: collectionTitle, path: collection.route.baseDir }],
+      tagTree: buildNotebookTagTree(collection, input.tagTree),
+      recentItems: cloneValue(Array.isArray(input.recentItems) ? input.recentItems : [])
+    },
+    seo: {
+      ...core.seo,
+      openGraph,
+      jsonLd: {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "@id": item.route.permalink,
+        name: item.title,
+        description: core.seo.description,
+        url: item.route.permalink,
+        isPartOf: {
+          "@type": "WebSite",
+          name: String(input.siteConfig.title || ""),
+          url: String(input.siteConfig.url || "")
+        }
+      }
+    },
+    article: {
+      heti: core.article.heti,
+      banner: cloneValue(item.presentation.banner || {}),
+      created: item.date,
+      updated: item.updated,
+      tags: buildNotebookArticleTags(collection, item),
+      footer: {
+        ...core.article.footer,
+        license: resolveLicense(configuredLicense, item, input.runtimeData)
+      },
+      comments: core.article.comments
+    },
+    listing: {
+      id: item.id,
+      collectionId: collection.id,
+      collectionName: collection.identity.name,
+      href: typeof input.page.link === "string" && input.page.link.length > 0
+        ? input.page.link
+        : item.route.path,
+      title: item.title,
+      cover: item.presentation.card?.cover || "",
+      excerpt,
+      tags: item.tags.slice(),
+      date: item.date,
+      updated: item.updated,
+      priority: item.listing.priority,
+      listed: item.visibility.listed !== false
+    }
+  };
+}
+
 function buildPostPageViewModel(input) {
   const source = input.source || "<page>";
   const themeSource = input.themeSource || "<theme>";
@@ -1320,7 +1464,7 @@ function buildTopicIndexRender(input) {
   });
 }
 
-function buildNotebookPageViewModel(input) {
+function buildNotebookPageViewModelBase(input) {
   const source = input.source || "<page>";
   const themeSource = input.themeSource || "<theme>";
   const siteConfig = isPlainObject(input.siteConfig) ? input.siteConfig : {};
@@ -1351,14 +1495,33 @@ function buildNotebookPageViewModel(input) {
     siteConfig,
     collectionConfig
   }, collectionId);
-  const item = buildContentItemModel(page, frontMatter, collection, source, {
+  return deepFreeze({ collection });
+}
+
+function completeNotebookPageViewModel(input, base) {
+  const source = input.source || "<page>";
+  const frontMatter = isPlainObject(input.frontMatter) ? input.frontMatter : {};
+  const collection = base.collection;
+  const item = buildContentItemModel(input.page || {}, frontMatter, collection, source, {
     source: collection.source,
     visibility: { listed: true, searchable: true }
   });
-  return deepFreeze(assertPageViewModel("notebook", { collection, item }));
+  const render = buildNotebookRenderModel({
+    ...input,
+    siteConfig: isPlainObject(input.siteConfig) ? input.siteConfig : {},
+    runtimeData: isPlainObject(input.runtimeData) ? input.runtimeData : {},
+    frontMatter,
+    page: input.page || {}
+  }, collection, item);
+  return deepFreeze(assertPageViewModel("notebook", { collection, item, render }));
+}
+
+function buildNotebookPageViewModel(input) {
+  return completeNotebookPageViewModel(input, buildNotebookPageViewModelBase(input));
 }
 
 module.exports = {
+  buildNotebookPageViewModelBase,
   buildNotebookPageViewModel,
   buildPostPageViewModel,
   buildTopicIndexRender,
@@ -1368,6 +1531,7 @@ module.exports = {
   buildWikiPageViewModel,
   buildWikiPageViewModelBase,
   buildWikiRelated,
+  completeNotebookPageViewModel,
   completeTopicPageViewModel,
   completeWikiPageViewModel
 };
