@@ -1,7 +1,7 @@
 ---
 title: Stellar v2 外观与资源兜底配置
 date: 2026-08-23
-status: 实施中
+status: 已完成
 ---
 
 # 外观与资源兜底配置方案
