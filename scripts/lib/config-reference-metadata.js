@@ -38,6 +38,7 @@ function flattenConfigFields(schema) {
       ...(node.sealed ? { sealed: true } : {}),
       ...(node.values ? { values: clone(node.values) } : {}),
       ...(node.minimum !== undefined ? { minimum: node.minimum } : {}),
+      ...(node.maximum !== undefined ? { maximum: node.maximum } : {}),
       ...(node.exclusiveMinimum !== undefined ? { exclusiveMinimum: node.exclusiveMinimum } : {})
     });
   }

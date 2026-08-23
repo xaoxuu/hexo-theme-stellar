@@ -28,9 +28,9 @@ body>.sitebg
     --blur-px: 0
     --blur-sat: 200%
     blur-effect()
-    if hexo-config('style.site.blur-sat') 
-      --blur-sat: convert(hexo-config('style.site.blur-sat'))
-    if hexo-config('style.site.blur-px')
-      --blur-px: convert(hexo-config('style.site.blur-px'))
-    if hexo-config('style.site.blur-bg')
-      --blur-bg: convert(hexo-config('style.site.blur-bg'))
+    if hexo-config('appearance.backgrounds.page.blur.saturation')
+      --blur-sat: convert(hexo-config('appearance.backgrounds.page.blur.saturation'))
+    if hexo-config('appearance.backgrounds.page.blur.radius')
+      --blur-px: convert(hexo-config('appearance.backgrounds.page.blur.radius'))
+    if hexo-config('appearance.backgrounds.page.blur.overlay')
+      --blur-bg: convert(hexo-config('appearance.backgrounds.page.blur.overlay'))

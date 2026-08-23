@@ -52,7 +52,7 @@ hexo.extend.helper.register('json_ld', function(args) {
       bannerImage: pageConfig.banner?.image,
       photos: page.photos,
       content: page.content,
-      defaultCover: this.theme.default && this.theme.default.cover
+      defaultCover: this.stellar_config("resources.fallbacks.cover")
     });
     schema = {
       '@context': 'https://schema.org',

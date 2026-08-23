@@ -422,7 +422,7 @@ flowchart TD
 | 属性 | 兜底 | 用途 |
 |------|------|------|
 | `proj.card.cover` | — | 卡片背景图；未配置时保留纯色空背景 |
-| `proj.identity.icon` | `theme.default.project` | 底栏项目图标 |
+| `proj.identity.icon` | `hexo.stellar.config.resources.fallbacks.projectIcon` | 底栏项目图标 |
 | `proj.tags` | — | 顶部标签字符串数组 |
 | `proj.headline` | `proj.name` | 可选营销标题 |
 | `proj.audience` | — | 可选适用范围字符串（标签由 `meta.available` 本地化输出） |
@@ -511,7 +511,7 @@ Wiki 卡片用 `list.styl` 中的封面布局，内容固定在卡片底部：
 
 | 属性 | 兜底 | 用途 |
 |------|------|------|
-| `topic.cover` | `topic.icon` → `theme.default.topic` | 最新文章卡片背景图（2:1 裁剪） |
+| `topic.cover` | `topic.icon` → `hexo.stellar.config.resources.fallbacks.topicCover` | 最新文章卡片背景图（2:1 裁剪） |
 | `topic.title` | `topic.name` | 容器顶部 `h2.topic-title` 专栏标题（置于卡片外） |
 | `topic.description` | — | 标题下方的 `p.topic-desc` 一句话描述 |
 | `topic.homepage` | — | 最新文章（`pages[0]`），整卡跳转目标 |

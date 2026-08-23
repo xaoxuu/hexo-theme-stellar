@@ -156,12 +156,12 @@ test("Notebook 生成页 Brand 消费 stellarConfig 而非原始页面字段", (
       config: {
         site: {
           brand: { name: "Site", url: "/" }
-        }
+        },
+        resources: { fallbacks: { projectIcon: "/default.svg" } }
       }
     },
     theme: {
       config: {
-        default: { project: "/default.svg" },
         wiki: { tree: {} },
         topic: { tree: {} },
         notebooks: {

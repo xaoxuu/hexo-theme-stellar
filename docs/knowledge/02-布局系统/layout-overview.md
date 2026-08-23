@@ -194,7 +194,7 @@ graph TD
     HTML --> HEAD["head (via _partial/head)"]
     HTML --> BODY["body"]
     BODY --> SITEBG["div.sitebg + div.siteblur
-(if theme.style.site.background-image)"]
+(if hexo.stellar.config.appearance.backgrounds.page.image)"]
     BODY --> LCOVER["div#l_cover
 (_partial/cover/index)"]
     BODY --> LBODY["div.l_body.{page_type}#start
@@ -204,7 +204,7 @@ graph TD
     LBODY --> LRIGHT["aside.l_right"]
     LBODY --> MENUBTN["_partial/menubtn"]
     LLEFT --> SIDEBG["div.sidebg"]
-    LLEFT --> LEFTBAR["div.leftbar-container[.leftbar-blur?]
+    LLEFT --> LEFTBAR["div.leftbar-container
 (_partial/sidebar/index_leftbar)"]
     LMAIN --> BRAND["_partial/sidebar/brand (eligible mobile pages)"]
     LMAIN --> PAGEBODY["body（页面布局输出）"]
@@ -221,11 +221,11 @@ graph TD
 | CSS 选择器 | HTML 元素 | 角色 |
 |---|---|---|
 | `.l_body` | `<div class="l_body {page_type}" id="start">` | 三栏网格容器；接收计算出的类与属性 |
-| `.l_left` | `<aside class="l_left[.leftbar-card?]">` | 左栏；`style.leftbar.ui-style: card` 时追加 `leftbar-card` 类 |
+| `.l_left` | `<aside class="l_left[.leftbar-card?]">` | 左栏；`appearance.backgrounds.sidebar.surface: card` 时追加 `leftbar-card` 类 |
 | `.l_main` | `<div class="l_main" id="main">` | 中央内容列 |
 | `.l_right` | `<aside class="l_right">` | 右栏 |
 | `#l_cover` | `<div id="l_cover">` | 网格上方的全宽封面区 |
-| `.leftbar-container` | `.l_left` 内 | 包裹侧边栏小部件；`theme.style.leftbar.blur` 为 true 时加 `.leftbar-blur` 类 |
+| `.leftbar-container` | `.l_left` 内 | 包裹侧边栏小部件 |
 | `.sidebg` | `.l_left` 首个子元素 | 背景装饰元素 |
 | `.main-mask` | `.l_main` 内 | 移动端点击关闭侧边栏的遮罩（`onclick="sidebar.dismiss()"`） |
 
@@ -245,15 +245,9 @@ graph TD
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
 
-### 左栏模糊效果
+### 左栏表面
 
-`theme.style.leftbar.blur` 为 `true` 时，`.leftbar-container` 追加 `leftbar-blur` 类，为左栏背景启用磨砂玻璃 CSS 效果。
-
-**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
-
-### 左栏风格（ui-style）
-
-`style.leftbar.ui-style` 控制左栏外观：`glass`（默认历史行为，背景图 + 磨砂玻璃效果）不追加额外类；`card` 时 `.l_left` 追加 `leftbar-card` 类，配合 `sidebar.styl` 呈现纯色卡片 + 中间阴影。配置默认值为 `card`。
+`appearance.backgrounds.sidebar.surface` 控制左栏外观：`glass`（默认历史行为，背景图 + 磨砂玻璃效果）不追加额外类；`card` 时 `.l_left` 追加 `leftbar-card` 类，配合 `sidebar.styl` 呈现纯色卡片 + 中间阴影。配置默认值为 `card`。
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)、[source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)
 
@@ -276,10 +270,10 @@ graph TD
 
 ## 深色模式与 `data-theme`
 
-`theme.style.prefers_theme` 不是 `'auto'` 时，`<html>` 元素接收 `data-theme` 属性：
+`hexo.stellar.config.appearance.colorScheme` 不是 `'auto'` 时，`<html>` 元素接收 `data-theme` 属性：
 
-- `prefers_theme === 'auto'`：`<html lang="...">`——由浏览器 `prefers-color-scheme` 媒体查询控制深浅
-- 其他值：`<html lang="..." data-theme="{prefers_theme}">`——强制指定主题
+- `colorScheme === 'auto'`：`<html lang="...">`——由浏览器 `prefers-color-scheme` 媒体查询控制深浅
+- 其他值：`<html lang="..." data-theme="{colorScheme}">`——强制指定主题
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
 

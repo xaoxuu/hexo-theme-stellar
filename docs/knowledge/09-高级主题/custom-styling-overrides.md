@@ -39,12 +39,12 @@ tags:
 
 | 配置键 | 用途 |
 | --- | --- |
-| `style.prefers_theme` | 初始主题模式：`auto`、`light` 或 `dark` |
-| `style.font-size.root` | 页面字号基准 |
-| `style.font-family.*` | 正文、代码和代码块字体栈 |
-| `style.color.theme` / `accent` / `link` | 主题色、强调色和链接色 |
-| `style.border-radius.*` | 卡片、图片和横条圆角 |
-| `style.leftbar.*` | 左栏背景和背景图 |
+| `appearance.color_scheme` | 初始主题模式：`auto`、`light` 或 `dark` |
+| `appearance.typography.font_size.root` | 页面字号基准 |
+| `appearance.typography.font_family.*` | 正文、代码和代码块字体栈 |
+| `appearance.colors.theme` / `accent` / `link` | 主题色、强调色和链接色 |
+| `appearance.shape.radius.*` | 卡片、图片和横条圆角 |
+| `appearance.backgrounds.sidebar.*` | 左栏背景和背景图 |
 
 实际可用配置以主题 `_config.yml` 为准；已移除的配置不会因为文档示例仍然存在而恢复。
 

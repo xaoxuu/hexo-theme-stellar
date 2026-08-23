@@ -17,9 +17,13 @@ const WIKI_COVER_SOURCE = fs.readFileSync(path.join(__dirname, '../layout/_parti
 
 function createContext() {
   const fakeHexo = {
+    stellar: {
+      config: {
+        resources: { fallbacks: { linkCard: '/images/default-link.svg' } }
+      }
+    },
     theme: {
       config: {
-        default: { link: '/images/default-link.svg' },
         data_services: { siteinfo: {} },
         icons: {}
       }

@@ -29,7 +29,7 @@ function firstContentImage(content) {
  * @param {string} opts.bannerImage
  * @param {Array} opts.photos
  * @param {string} opts.content
- * @param {string} opts.defaultCover 主题默认封面（theme.default.cover）
+ * @param {string} opts.defaultCover 主题默认封面（resources.fallbacks.cover）
  * @returns {Array<string>}
  */
 function postImages(opts) {

@@ -35,7 +35,7 @@ tags:
 ```
 layout/404.ejs
   → 设置 page.comment_title、page.header、page.robots
-  → 从 theme.style.error_page 渲染 img#error
+  → 从 hexo.stellar.config.resources.fallbacks.errorPage 渲染 img#error
   → 经 __('page.error.*') 渲染本地化字符串
   → 渲染指向 config.root 的返回按钮
   → 引入 _partial/comments/layout
@@ -49,7 +49,7 @@ flowchart TD
   A --> C["Set page.header = false"]
   A --> D["Set page.robots = 'none'"]
   A --> E["article.md-text.error-page"]
-  E --> F["img#error\nsrc: theme.style.error_page"]
+  E --> F["img#error\nsrc: hexo.stellar.config.resources.fallbacks.errorPage"]
   E --> G["p.what\n__('page.error.what')"]
   E --> H["p.why\n__('page.error.why')"]
   E --> I["a.button#back\nhref: config.root"]
@@ -105,16 +105,17 @@ layout:
 
 侧边栏小部件名（`recent` 等）从 `_data/widgets.yml` 解析。配置细节见[侧边栏系统](../02-布局系统/sidebar-system.md)。
 
-### `style.error_page`
+### `resources.fallbacks.error_page`
 
-`img#error` 中显示的插图图片在 `style.error_page` 下配置：
+`img#error` 中显示的插图图片在 `resources.fallbacks.error_page` 下配置：
 
 ```yaml
-style:
-  error_page: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg
+resources:
+  fallbacks:
+    error_page: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg
 ```
 
-模板中以 `theme.style.error_page` 引用，可替换为任意自定义 SVG 或图片 URL。
+模板中以 `hexo.stellar.config.resources.fallbacks.errorPage` 引用，可替换为任意自定义 SVG 或图片 URL。
 
 **参考源码**：[_config.yml](../../../_config.yml)、[layout/404.ejs](../../../layout/404.ejs)
 

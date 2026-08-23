@@ -32,7 +32,7 @@ tags:
 
 ## 颜色配置系统
 
-主题颜色始于 `_config.yml` 的 `style.color` 小节，经 `_custom.styl`、`theme_base.styl` 与 `:root` CSS 块三阶段流水线转换为 Stylus 变量与 CSS 自定义属性。
+主题颜色始于 `_config.yml` 的 `appearance.colors` 小节，经 `_custom.styl`、`theme_base.styl` 与 `:root` CSS 块三阶段流水线转换为 Stylus 变量与 CSS 自定义属性。
 
 ### 配置到 CSS 的流程
 
@@ -41,7 +41,7 @@ tags:
 ```mermaid
 graph TD
     CONFIG[""_config.yml
- style.color.*""]
+ appearance.colors.*""]
     CUSTOM[""_custom.styl
  $c-theme, $c-accent, $c-link""]
     THEME_BASE[""theme_base.styl
@@ -69,9 +69,9 @@ graph TD
 
 | 配置键 | Stylus 变量 | 生成的 CSS 属性 |
 |--------|-------------|----------------|
-| `style.color.theme` | `$c-theme` | `--theme`、`--theme-a10/20/30`、`--hue`、`--sat`、`--light` |
-| `style.color.accent` | `$c-accent` | `--accent` |
-| `style.color.link` | `$c-link` | `--link`、`--link-a20` |
+| `appearance.colors.theme` | `$c-theme` | `--theme`、`--theme-a10/20/30`、`--hue`、`--sat`、`--light` |
+| `appearance.colors.accent` | `$c-accent` | `--accent` |
+| `appearance.colors.link` | `$c-link` | `--link`、`--link-a20` |
 
 配置转换使用 `hexo-config()` 与 `convert()`。
 

@@ -16,7 +16,7 @@ tags:
 
 生成此页面时参考的主题源码文件：
 
-- [_config.yml](../../../_config.yml)（`style.page_transition`、`plugins.preload` 小节）
+- [_config.yml](../../../_config.yml)（`appearance.motion.page_transition`、`plugins.preload` 小节）
 - [source/css/_components/page-transition.styl](../../../source/css/_components/page-transition.styl)
 - [layout/_plugins/preload.ejs](../../../layout/_plugins/preload.ejs)
 - [layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs)
@@ -72,14 +72,14 @@ Stellar 使用**普通整页导航**。早期版本曾内置自定义 PJAX 实�
 默认配置如下：
 
 ```yaml
-style:
-  page_transition:
-    enable: true
+appearance:
+  motion:
+    page_transition: true
 ```
 
 启用后，主题输出 `@view-transition { navigation: auto; }`，由浏览器为同源、用户触发的整页导航保留旧页面快照，直到新文档首帧可以呈现。`.l_left` 使用独立的 `view-transition-name: leftbar`：内容未变化时左栏保持视觉连续，内容变化时与新页面自然交叉过渡；页面 DOM 仍会完整重建，不保留左栏运行状态。
 
-根页面和左栏统一使用 `0.2s ease-out`。`prefers-reduced-motion: reduce` 下关闭跨文档动效。将 `style.page_transition.enable` 设为 `false` 时不输出相关规则；不支持该能力的浏览器也会忽略规则并回退普通整页导航。跨域链接、刷新、地址栏导航和页内锚点不由该能力接管。
+根页面和左栏统一使用 `0.2s ease-out`。`prefers-reduced-motion: reduce` 下关闭跨文档动效。将 `appearance.motion.page_transition` 设为 `false` 时不输出相关规则；不支持该能力的浏览器也会忽略规则并回退普通整页导航。跨域链接、刷新、地址栏导航和页内锚点不由该能力接管。
 
 **参考源码**：[source/css/_components/page-transition.styl](../../../source/css/_components/page-transition.styl)、[_config.yml](../../../_config.yml)
 

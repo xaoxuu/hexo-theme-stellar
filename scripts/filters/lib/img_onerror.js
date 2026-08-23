@@ -10,7 +10,7 @@ module.exports.processSite = function(htmlContent) {
   if (typeof htmlContent !== 'string' || !/<img/i.test(htmlContent)) {
     return htmlContent;
   }
-  const default_image = this.theme.config.default.image;
+  const default_image = this.stellar.config.resources.fallbacks.image.content;
   return htmlContent.replace(/<img(.*?)src="(.*?)"(.*?)>/gi, function(imgTag) {
     if (/="data:image(.*?)/gi.test(imgTag)) {
       return imgTag;

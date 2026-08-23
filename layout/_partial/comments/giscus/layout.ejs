@@ -6,8 +6,9 @@ function layoutDiv() {
   if (cmt?.service?.length > 0) {
     const name = cmt.service;
     var body = explicit ? cmt.options : cmt[name];
-    if (!explicit && theme.style.prefers_theme != 'auto' && body['data-theme'] == 'preferred_color_scheme') {
-      body['data-theme'] = theme.style.prefers_theme
+    var preferredTheme = stellar_config('appearance.colorScheme')
+    if (!explicit && preferredTheme != 'auto' && body['data-theme'] == 'preferred_color_scheme') {
+      body['data-theme'] = preferredTheme
     }
     el += '<div id="' + name + '"';
     for (let key of Object.keys(body)) {

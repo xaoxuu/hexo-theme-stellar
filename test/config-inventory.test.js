@@ -155,12 +155,12 @@ test("五个迁移切片按序且每个配置域恰好出现一次", () => {
   }
 });
 
-test("运行时 Schema 交付 site Shell、Layout Profile、内容默认与 head/SEO 且不会提前封闭根配置", () => {
+test("运行时 Schema 交付 Shell、Layout、内容、外观、资源与 head/SEO 且不会提前封闭根配置", () => {
   assert.equal(CONFIG_SCHEMA.sealed, false);
-  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "layout", "content", "seo", "resources", "inject"]);
+  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "layout", "content", "appearance", "seo", "resources", "inject"]);
   assert.deepEqual(
     CONFIG_DOMAIN_CATALOG.filter(item => item.status === "delivered").map(item => item.id),
-    ["preconnect", "canonical", "open_graph", "structured_data", "brand", "menubar", "site_tree", "notebook", "article", "footer", "inject", "collection", "front_matter"]
+    ["preconnect", "canonical", "open_graph", "structured_data", "brand", "menubar", "site_tree", "notebook", "article", "footer", "style", "default", "inject", "collection", "front_matter"]
   );
   assert.equal(CONFIG_DOMAIN_CATALOG.find(item => item.id === "canonical").targetStatus, "delivered");
   assert.equal(CONFIG_DOMAIN_CATALOG.find(item => item.id === "canonical").targetPath, "seo.canonical");

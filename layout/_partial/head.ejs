@@ -249,6 +249,7 @@ function generate_canonical() {
 
   <link rel="preload" href="<%- url_for(`${theme.stellar.main_css}?v=${stellar_info('version')}`) %>" as="style">
   <link rel="stylesheet" href="<%- url_for(`${theme.stellar.main_css}?v=${stellar_info('version')}`) %>">
+  <style>:root{--text-loading:<%- JSON.stringify(__('message.loading')) %>;--text-loading-error:<%- JSON.stringify(__('message.loading_failed')) %>}</style>
 
 
   <% if (config.favicon) { %>
@@ -256,7 +257,7 @@ function generate_canonical() {
   <% } %>
 
   <% if (config.highlight && config.highlight.enable == true && config.highlight.hljs == true) { %>
-    <%- css(theme.style.codeblock.highlightjs_theme) %>
+    <%- css(stellar_config('appearance.codeBlock.highlightTheme')) %>
   <% } %>
 
   <%- json_ld(postViewModel || undefined) %>

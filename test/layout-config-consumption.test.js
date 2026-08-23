@@ -57,7 +57,7 @@ test("主题默认配置只声明最终 Profile ID 与字段名", () => {
   assert.match(config, /^ {6}path: \/blog\//m);
   assert.match(config, /^ {8}active_menu: post/m);
   assert.doesNotMatch(config, /^site_tree:/m);
-  assert.doesNotMatch(config, /^ {4}(?:index_blog|index_topic|index_wiki|notebooks|notes|error_page):/m);
+  assert.doesNotMatch(config, /^ {4}(?:index_blog|index_topic|index_wiki|notebooks|notes):/m);
   assert.doesNotMatch(config, /^ {6}(?:base_dir|404):/m);
   assert.doesNotMatch(config, /^ {8}menu:/m);
 });

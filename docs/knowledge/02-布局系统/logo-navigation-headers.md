@@ -73,7 +73,7 @@ Brand resolver 的优先级为：
 3. Wiki / Notebook 自动 Brand
 4. 全局 `site.brand`
 
-Wiki 与 Notebook 的自动 Brand 使用集合 `identity.icon`、`name`、`tagline` 和首页 URL；缺少 `identity.icon` 时只回退 `theme.default.project`。身份图片不会从 `card.cover`、Hero 背景或 Banner 等其它角色获取。
+Wiki 与 Notebook 的自动 Brand 使用集合 `identity.icon`、`name`、`tagline` 和首页 URL；缺少 `identity.icon` 时只回退 `hexo.stellar.config.resources.fallbacks.projectIcon`。身份图片不会从 `card.cover`、Hero 背景或 Banner 等其它角色获取。
 
 Topic 默认完整继承站点 Brand，不使用 Topic 的 `identity`、文案或路由自动生成品牌；只有显式的 `sidebar.left.brand` 才会覆盖站点 Brand。Wiki URL 取生成后的 `homepage.path`，Notebook URL 取 `routing.base_dir`。
 

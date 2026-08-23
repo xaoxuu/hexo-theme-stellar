@@ -82,7 +82,7 @@ ViewModel 的 `image.variant` 只能是：
 
 `image` 是原子对象：内容作用域覆盖不会继承上级图片的部分字段，并在建模边界规范化为 `variant`。背景默认透明，只能显式配置。`image.url` 控制图片链接，Brand 根级 `url` 控制名称链接。`name` 可包含受信任的内联 HTML，但不解析 Markdown 链接；完整 `[文本](链接)` 写法会在构建期报迁移错误。
 
-解析顺序是页面 `sidebar.left.brand`、集合 `sidebar.left.brand`、类型默认和全局 `site.brand`。Wiki / Notebook 的类型默认会从 `identity.icon`自动生成 Brand，缺失时使用 `theme.default.project`，不从 `card.cover` 等其它角色回退。Topic 的类型默认是直接继承全局 Brand，只有显式的 `sidebar.left.brand` 才覆盖。
+解析顺序是页面 `sidebar.left.brand`、集合 `sidebar.left.brand`、类型默认和全局 `site.brand`。Wiki / Notebook 的类型默认会从 `identity.icon`自动生成 Brand，缺失时使用 `hexo.stellar.config.resources.fallbacks.projectIcon`，不从 `card.cover` 等其它角色回退。Topic 的类型默认是直接继承全局 Brand，只有显式的 `sidebar.left.brand` 才覆盖。
 
 手机端 Brand 自动显示于主页、分类/标签页面及索引、专栏索引、Wiki 索引、笔记本索引和笔记列表；文章、普通页面、Wiki/Topic/Notebook 内容页、归档、作者页和 404 隐藏。v2 不提供显示开关。
 

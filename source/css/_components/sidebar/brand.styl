@@ -34,8 +34,8 @@
     .brand-image-bg
       position: absolute
       inset: 0
-      background: convert(hexo-config('style.gradient.avatar'))
-    if hexo-config('style.animated_avatar.animate')
+      background: convert(hexo-config('appearance.gradients.avatar_ring'))
+    if hexo-config('appearance.motion.avatar')
       .brand-image-bg
         trans1: opacity
         opacity: 0 !important
@@ -44,11 +44,11 @@
           transform: rotate(0deg)
         to
           transform: rotate(360deg)
-    if hexo-config('style.animated_avatar.animate') == 'always'
+    if hexo-config('appearance.motion.avatar') == 'always'
       .brand-image-bg
         opacity: 1 !important
         animation: spin infinite 4s linear
-    if hexo-config('style.animated_avatar.animate') == 'auto'
+    if hexo-config('appearance.motion.avatar') == 'auto'
       &:hover .brand-image-bg
         opacity: 1 !important
         animation: spin infinite 4s linear

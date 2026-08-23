@@ -31,7 +31,7 @@ function layoutBrandImage() {
   var variant = image.variant
   const background = image.background ? ` style="--brand-image-background:${escape_html(image.background)}"` : ''
   var el = `<${tag} class="brand-image brand-image--${variant}"${url ? ` href="${escape_html(url_for(url))}"` : ''}${background}>`
-  if (variant === 'avatar' && theme.style.animated_avatar.animate) {
+  if (variant === 'avatar' && stellar_config('appearance.motion.avatar') !== 'never') {
     el += `<div class="brand-image-bg"></div>`
   }
   el += `<img no-lazy src="${escape_html(src)}" alt="">`

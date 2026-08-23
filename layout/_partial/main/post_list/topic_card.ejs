@@ -1,7 +1,7 @@
 <%
 function layoutDiv() {
   var el = '';
-  var bg = topic.card?.cover || theme.default.topic;
+  var bg = topic.card?.cover || stellar_config('resources.fallbacks.topicCover');
   var label = topic.headline || topic.name;
   var latest = topic.homepage;
   el += '<article class="md-text">';

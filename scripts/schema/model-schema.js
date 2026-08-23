@@ -558,15 +558,15 @@ function pageViewModelSchema(profile) {
       document: object({
         language: field("string", { default: derived("page.lang", "page.language", "site.language"), example: "zh-CN", required: true }),
         headInject: field("string", { default: literal(""), example: "", required: true }),
-        preferredTheme: field("string", { default: derived("theme.style.prefers_theme"), example: "auto", required: true })
+        preferredTheme: field("string", { default: derived("hexo.stellar.config.appearance.colorScheme"), example: "auto", required: true })
       }, { required: true, example: { language: "zh-CN", headInject: "", preferredTheme: "auto" } }),
       layout: object({
         pageType: field("string", { default: literal("content"), example: "content", required: true }),
         articleType: field(["string", "null"], { default: inherited("item.presentation.article.type"), example: "tech", required: true }),
         indent: field("boolean", { default: inherited("item.presentation.article.indent", "articleType === story"), example: false, required: true }),
-        siteBackground: field("boolean", { default: derived("theme.style.site.background-image"), example: false, required: true }),
-        leftbarSurface: field("string", { default: derived("theme.style.leftbar.ui-style"), example: "glass", required: true }),
-        leftbarBlur: field("boolean", { default: derived("theme.style.leftbar.blur"), example: false, required: true }),
+        siteBackground: field("boolean", { default: derived("hexo.stellar.config.appearance.backgrounds.page.image"), example: false, required: true }),
+        leftbarSurface: field("string", { default: derived("hexo.stellar.config.appearance.backgrounds.sidebar.surface"), example: "glass", required: true }),
+        leftbarBlur: field("boolean", { default: computed("v2 appearance 不再公开 sidebar blur 开关"), example: false, required: true }),
         blogPath: field("string", { default: derived("site.index_generator.path"), example: "blog", required: true }),
         brand: renderBrand,
         breadcrumbs: array(breadcrumbItem, { default: literal([]), example: [{ name: "思考", path: "blog/categories/thinking" }], required: true })

@@ -229,17 +229,17 @@ const CONFIG_DOMAIN_CATALOG = deepFreeze([
   domain("style", {
     sources: THEME_SOURCES,
     boundary: "sealed",
-    runtimeTarget: "hexo.stellar.config.style",
+    runtimeTarget: "hexo.stellar.config.appearance",
     consumers: ["PageViewModel", "layout renderer", "Stylus compiler", "browser theme state"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "shell-content-defaults",
   }),
   domain("default", {
     sources: THEME_SOURCES,
     boundary: "sealed",
-    runtimeTarget: "hexo.stellar.config.defaultAssets",
+    runtimeTarget: "hexo.stellar.config.resources.fallbacks",
     consumers: ["PageViewModel", "tag renderers", "image fallback filters"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "shell-content-defaults",
   }),
   domain("api_host", {

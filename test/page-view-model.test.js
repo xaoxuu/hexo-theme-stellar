@@ -446,11 +446,13 @@ test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD �
         open_graph: { enabled: true, twitter_id: "xaoxuu" },
         structured_data: { same_as: ["https://github.com/xaoxuu"] }
       },
-      default: { cover: "/default.webp" },
-      style: {
-        prefers_theme: "auto",
-        site: { "background-image": "/background.webp" },
-        leftbar: { "ui-style": "card", blur: true }
+      resources: { fallbacks: { cover: "/default.webp" } },
+      appearance: {
+        color_scheme: "auto",
+        backgrounds: {
+          page: { image: "/background.webp" },
+          sidebar: { surface: "card" }
+        }
       },
       layout: { profiles: { post: { navigation: { active_menu: "post" } } } }
     },
@@ -487,7 +489,7 @@ test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD �
   assert.equal(viewModel.render.layout.indent, true);
   assert.equal(viewModel.render.layout.siteBackground, true);
   assert.equal(viewModel.render.layout.leftbarSurface, "card");
-  assert.equal(viewModel.render.layout.leftbarBlur, true);
+  assert.equal(viewModel.render.layout.leftbarBlur, false);
   assert.deepEqual(viewModel.render.layout.breadcrumbs, [{ name: "开发", path: "blog/categories/dev" }]);
   assert.equal(viewModel.render.seo.description, "Rendered intro");
   assert.deepEqual(viewModel.render.seo.keywords, ["Stellar", "Hexo"]);
@@ -522,7 +524,7 @@ test("Post render 投影详情关系、Footer、评论和列表条目", () => {
         comment_title: "参与讨论",
         giscus: { "data-repo": "owner/repo", "data-theme": "preferred_color_scheme" }
       },
-      style: { prefers_theme: "dark" },
+      appearance: { color_scheme: "dark" },
       plugins: { heti: { enable: true } },
       api_host: { ghapi: "api.github.com" },
       data_services: {

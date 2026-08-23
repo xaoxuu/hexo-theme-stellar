@@ -75,6 +75,8 @@ search:
 message:
   copied: Copied!
   fetching_latest_release: '%s is fetching the latest release…'
+  loading: Loading
+  loading_failed: Failed to load. Please try again later.
   theme_switched:
     light: Switched to Light Mode
     dark: Switched to Dark Mode

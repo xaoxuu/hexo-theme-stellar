@@ -32,7 +32,7 @@ hexo.extend.helper.register("brandConfig", function(page) {
     pageBrand: config.sidebar?.left?.brand,
     collection: active.collection,
     collectionType: active.type,
-    defaultIcon: hexo.theme.config.default.project
+    defaultIcon: hexo.stellar.config.resources.fallbacks.projectIcon
   });
 });
 

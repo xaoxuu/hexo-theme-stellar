@@ -45,12 +45,12 @@ tags:
 
 | 令牌 | 配置来源 | 语义 |
 | --- | --- | --- |
-| `$ff-body` | `style.font-family.body` | 正文字体栈 |
-| `$ff-code` | `style.font-family.code` | 行内代码字体栈 |
-| `$ff-codeblock` | `style.font-family.codeblock` | 代码块字体栈 |
-| `$fs-root` / `--fs-root` | `style.font-size.root` | 页面字号基准；移动端按响应式规则调整 |
-| `$fs-code` | `style.font-size.code` | 行内代码字号 |
-| `$fs-codeblock` | `style.font-size.codeblock` | 代码块字号 |
+| `$ff-body` | `appearance.typography.font_family.body` | 正文字体栈 |
+| `$ff-code` | `appearance.typography.font_family.inline_code` | 行内代码字体栈 |
+| `$ff-codeblock` | `appearance.typography.font_family.code_block` | 代码块字体栈 |
+| `$fs-root` / `--fs-root` | `appearance.typography.font_size.root` | 页面字号基准；移动端按响应式规则调整 |
+| `$fs-code` | `appearance.typography.font_size.inline_code` | 行内代码字号 |
+| `$fs-codeblock` | `appearance.typography.font_size.code_block` | 代码块字号 |
 
 标题令牌从当前内容字号派生：`--fsh2`、`--fsh3`、`--fsh4` 分别用于 H2、H3、H4。组件需要局部调整排版时优先覆盖 `--fs-content`，让标题和段落继续沿用同一比例尺。
 
@@ -58,12 +58,12 @@ tags:
 
 | 令牌 | 配置来源 | 语义 |
 | --- | --- | --- |
-| `$c-theme` | `style.color.theme` | 主题主色 |
-| `$c-accent` | `style.color.accent` | 强调色 |
-| `$c-link` | `style.color.link` | 链接色 |
+| `$c-theme` | `appearance.colors.theme` | 主题主色 |
+| `$c-accent` | `appearance.colors.accent` | 强调色 |
+| `$c-link` | `appearance.colors.link` | 链接色 |
 | `$c-base-hue` | 主题固定值 | 背景和文字色生成的基础色相 |
-| `$site-background-image` | `style.site.background-image` | 全站背景图 |
-| `$leftbar-background-image` | `style.leftbar.background-image` | 左栏背景图 |
+| `$site-background-image` | `appearance.backgrounds.page.image` | 全站背景图 |
+| `$leftbar-background-image` | `appearance.backgrounds.sidebar.image` | 左栏背景图 |
 
 组件优先使用语义颜色变量，例如 `var(--text-p1)`、`var(--card)`、`var(--block-border)` 和 `var(--theme)`；组件文档不应复制整套颜色值。
 
@@ -105,7 +105,7 @@ tags:
 
 ## 集合组件 Surface 令牌
 
-`layout.ejs` 为页面区域声明 `data-ui-surface`：左栏按 `style.leftbar.ui-style` 取 `glass` 或 `card`，右栏取 `sidebar`，主内容区取 `content`。通用集合组件不读取页面位置，而由以下组件级语义变量适配表面：
+`layout.ejs` 为页面区域声明 `data-ui-surface`：左栏按 `appearance.backgrounds.sidebar.surface` 取 `glass` 或 `card`，右栏取 `sidebar`，主内容区取 `content`。通用集合组件不读取页面位置，而由以下组件级语义变量适配表面：
 
 | 令牌组 | 语义 |
 | --- | --- |

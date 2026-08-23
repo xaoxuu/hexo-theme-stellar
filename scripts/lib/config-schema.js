@@ -331,6 +331,10 @@ function parseNode(node, input, source, path, issues, context) {
       issues.push(issue("invalid_value", source, path, valueType(input), `number >= ${node.minimum}`, node.migration));
       return undefined;
     }
+    if (node.maximum !== undefined && input > node.maximum) {
+      issues.push(issue("invalid_value", source, path, valueType(input), `number <= ${node.maximum}`, node.migration));
+      return undefined;
+    }
     if (node.exclusiveMinimum !== undefined && input <= node.exclusiveMinimum) {
       issues.push(issue("invalid_value", source, path, valueType(input), `number > ${node.exclusiveMinimum}`, node.migration));
       return undefined;

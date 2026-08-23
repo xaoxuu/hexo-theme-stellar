@@ -81,7 +81,7 @@ graph TB
 
 Pre-alpha M1.5 已建立内部配置入口目录，并进一步把 v2 最终公开主题配置冻结为 `site`、`seo`、`layout`、`content`、`appearance`、`resources`、`extensions`、`inject` 八个职责根域。完整目标树、命名、级联和旧→新迁移矩阵见[最终配置契约](../../designs/2026-08-22-v2-config-target-contract/target-contract.md)。
 
-head/SEO、site Shell、Layout Profile、内容默认值、Collection 与 Front Matter 纵向切片已把 `seo`、`resources.preconnect`、站点 `inject`、`site.brand/menu/footer`、`layout.profiles`、`content.article/notebook` 以及内容作用域的最终字段接入声明式 Schema。运行时与配置 Reference 只投影这些已交付节点；其它目标字段仍保持 `planned`。
+head/SEO、site Shell、Layout Profile、内容默认值、Collection / Front Matter、Appearance 与资源兜底纵向切片已把 `seo`、`site`、`layout`、`content`、`appearance`、`resources`、站点 `inject` 以及内容作用域的最终字段接入声明式 Schema。运行时与配置 Reference 只投影这些已交付节点；`extensions` 与根级封闭仍保持 `planned`。
 
 已交付的主题字段从 Schema 与 `_config.stellar.yml` 解析到冻结的 `hexo.stellar.config`；Collection YAML 与 Front Matter 分别解析为冻结的 camelCase 对象，由生成器、数据树、ViewModel 与按需插件消费。Hexo 自有 Front Matter 保持原名，不进入 Stellar Reference。
 
@@ -92,19 +92,19 @@ head/SEO、site Shell、Layout Profile、内容默认值、Collection 与 Front 
 | 小节 | 用途 |
 |------|------|
 | `stellar` | 主题元数据与资源路径 |
-| `seo`、`resources.preconnect` | SEO 与资源提示（v2 已交付） |
+| `seo` | SEO、Canonical、Open Graph 与结构化数据（v2 已交付） |
 | `site` | 站点 Brand、主菜单、左栏操作与页尾内容（v2 已交付） |
 | `layout.profiles` | 13 类页面的路径、导航与左右侧栏默认值（v2 已交付） |
 | `content.article` | 文章显示、列表、Footer 与相关内容默认值（v2 已交付） |
 | `content.notebook` | 笔记本列表、标签图标与 Footer 默认值（v2 已交付） |
+| `appearance` | 排版、形状、颜色、渐变、动效、代码块与页面背景（v2 已交付） |
+| `resources` | 预连接提示与图片资源兜底（v2 已交付） |
 | `search` | 搜索服务配置 |
 | `comments` | 评论系统集成 |
 | `tag_plugins` | 标签插件外观与行为 |
 | `dependencies` | 核心 JavaScript 依赖（CDN） |
 | `data_services` | 按需加载的数据服务 |
 | `plugins` | 功能插件启用与 CDN 地址 |
-| `style` | 设计令牌与主题变量 |
-| `default` | 默认资源兜底 |
 | `api_host` | API 端点主机 |
 | `data_cache` | 数据缓存 |
 | `system` | 内部 Hexo 覆盖 |
@@ -441,22 +441,22 @@ dropdown 子项图标可省略。菜单不关联语言或其它业务场景，�
 
 **参考源码**：[_config.yml](../../../_config.yml)、[layout/_partial/sidebar/index_leftbar.ejs](../../../layout/_partial/sidebar/index_leftbar.ejs)、[layout/_partial/dropdown.ejs](../../../layout/_partial/dropdown.ejs)、[layout/_partial/main/footer.ejs](../../../layout/_partial/main/footer.ejs)
 
-### 样式配置
+### Appearance 与资源兜底
 
-`style` 小节定义设计令牌，由 `source/css/_custom.styl` 消费：
+`appearance` 小节定义视觉语义，`resources.fallbacks` 集中管理图片兜底；YAML 使用 snake_case，运行时由 Schema 投影为冻结的 camelCase：
 
 ```mermaid
 graph TB
-    subgraph "style Configuration"
-        STYLE["style section<br/>in _config.yml"]
+    subgraph "Appearance Configuration"
+        STYLE["appearance section<br/>in _config.yml"]
         
-        THEME["prefers_theme: auto/light/dark"]
-        FONTSIZE["font-size: root, body, code, codeblock"]
-        FONTFAMILY["font-family: body, code, codeblock"]
-        BORDER["border-radius: card-l, card, card-s, bar, image-*"]
-        COLOR["color: theme, accent, link"]
-        LEFTBAR["leftbar: background, blur settings"]
-        GRADIENT["gradient: CSS gradient strings"]
+        THEME["color_scheme: auto/light/dark"]
+        FONTSIZE["typography.font_size"]
+        FONTFAMILY["typography.font_family"]
+        BORDER["shape.radius"]
+        COLOR["colors: theme, accent, link"]
+        LEFTBAR["backgrounds.sidebar/page"]
+        GRADIENT["gradients"]
     end
     
     subgraph "CSS Variable Generation"
@@ -480,14 +480,15 @@ graph TB
     CSSROOT --> CODEBLOCK
 ```
 
-**参考源码**：[_config.yml](../../../_config.yml)（`style` 小节）
+**参考源码**：[_config.yml](../../../_config.yml)（`appearance`、`resources` 小节）
 
 关键样式配置：
 
-1. **字号**：`font-size.root` 设置桌面端根字号（影响所有 `rem` 单位）；移动端自动增加 2px。页面基准使用 `--fs-content-base`，组件字号使用 `--fs-content`。旧字段 `style.font-size.body` 已移除，不再生效。
-2. **圆角**：`border-radius` 从 `card-l`（24px，大卡片）到 `card-s`（12px，小卡片）渐进
-3. **颜色**：`color.theme` / `color.accent` / `color.link` 使用 HSL 值，便于精确调色
+1. **字号**：`appearance.typography.font_size.root` 设置桌面端根字号；行内代码与代码块分别使用 `inline_code` / `code_block`。
+2. **圆角**：`appearance.shape.radius` 使用 `card_large/card/card_small` 与 `image_large/image/image_small` 的完整语义名。
+3. **颜色**：`appearance.colors.theme/accent/link` 使用 HSL 值，便于精确调色。
 4. **左栏外观**：支持纯色、渐变或带模糊效果的背景图
+5. **资源兜底**：`resources.fallbacks` 按 `avatar/link_card/cover/project_icon/banner/topic_cover/image/error_page` 的实际角色命名。
 
 完整样式细节见[设计令牌与 CSS 变量](../01-样式系统/design-tokens.md)。
 
@@ -580,8 +581,8 @@ comments:
 `hexo-config()` 函数从 `_config.yml` 取值：
 
 ```stylus
-$root-font-size = hexo-config('style.font-size.root')
-$theme-color = hexo-config('style.color.theme')
+$root-font-size = hexo-config('appearance.typography.font_size.root')
+$theme-color = hexo-config('appearance.colors.theme')
 
 :root
   font-size: $root-font-size
@@ -710,9 +711,9 @@ layout:
 
 优先使用设计令牌而非硬编码值：
 
-- 用 `style.color.theme`、`style.color.accent` 保持一致配色
-- 用 `style.border-radius.*` 保持统一圆角
-- 用 `style.font-size.*` 实现可伸缩排版
+- 用 `appearance.colors.theme`、`appearance.colors.accent` 保持一致配色
+- 用 `appearance.shape.radius.*` 保持统一圆角
+- 用 `appearance.typography.font_size.*` 实现可伸缩排版
 
 ### 5. 插件按需启用
 

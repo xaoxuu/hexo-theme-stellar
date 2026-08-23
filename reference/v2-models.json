@@ -8792,7 +8792,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "theme.style.prefers_theme"
+              "hexo.stellar.config.appearance.colorScheme"
             ]
           },
           "scope": "PageViewModel:post",
@@ -9105,10 +9105,8 @@
           ],
           "required": true,
           "default": {
-            "kind": "derived",
-            "from": [
-              "theme.style.leftbar.blur"
-            ]
+            "kind": "computed",
+            "description": "v2 appearance 不再公开 sidebar blur 开关"
           },
           "scope": "PageViewModel:post",
           "consumers": [
@@ -9126,7 +9124,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "theme.style.leftbar.ui-style"
+              "hexo.stellar.config.appearance.backgrounds.sidebar.surface"
             ]
           },
           "scope": "PageViewModel:post",
@@ -9162,7 +9160,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "theme.style.site.background-image"
+              "hexo.stellar.config.appearance.backgrounds.page.image"
             ]
           },
           "scope": "PageViewModel:post",

@@ -22,6 +22,7 @@ function structuralOptions(options) {
     "additionalPropertyKey",
     "allowedPropertyKeys",
     "minimum",
+    "maximum",
     "exclusiveMinimum",
     "externalProperties",
     "removedProperties",
@@ -69,6 +70,7 @@ function deliveredField(path, options) {
     items: options.items ?? target.items,
     values: target.values,
     minimum: target.minimum,
+    maximum: target.maximum,
     exclusiveMinimum: target.exclusiveMinimum
   });
 }
@@ -115,6 +117,20 @@ const CONTENT_CONSUMERS = Object.freeze([
   "PageViewModel",
   "article renderer",
   "listing renderer",
+  "Reference generator"
+]);
+const APPEARANCE_CONSUMERS = Object.freeze([
+  "PageViewModel",
+  "layout renderer",
+  "Stylus compiler",
+  "browser theme state",
+  "Reference generator"
+]);
+const RESOURCE_CONSUMERS = Object.freeze([
+  "PageViewModel",
+  "tag renderers",
+  "image fallback filters",
+  "error renderer",
   "Reference generator"
 ]);
 
@@ -284,7 +300,9 @@ const CONFIG_SCHEMA = deepFreeze({
     open_graph: "seo.open_graph",
     structured_data: "seo.structured_data",
     article: "content.article",
-    notebook: "content.notebook"
+    notebook: "content.notebook",
+    style: "appearance",
+    default: "resources.fallbacks"
   },
   properties: {
     site: object({
@@ -558,6 +576,220 @@ const CONFIG_SCHEMA = deepFreeze({
         })
       }
     }),
+    appearance: object({
+      consumers: APPEARANCE_CONSUMERS,
+      example: { color_scheme: "auto", shape: { radius: { card: "16px" } } },
+      migration: "configuration/appearance",
+      runtimeKey: "appearance",
+      removedProperties: {
+        prefers_theme: "color_scheme",
+        "font-size": "typography.font_size",
+        "font-family": "typography.font_family",
+        "text-align": "typography.text_align",
+        prefix: "removed",
+        "border-radius": "shape.radius",
+        "corner-shape": "shape.corner",
+        color: "colors",
+        animated_avatar: "motion.avatar",
+        codeblock: "code_block",
+        loading: "language files",
+        gradient: "gradients",
+        leftbar: "backgrounds.sidebar",
+        site: "backgrounds.page",
+        header_prefix: "typography.heading_prefixes",
+        error_page: "resources.fallbacks.error_page"
+      },
+      properties: {
+        color_scheme: deliveredField("appearance.color_scheme", { normalizer: "identity", example: "auto" }),
+        typography: object({
+          consumers: APPEARANCE_CONSUMERS,
+          example: { font_size: { root: "16px" }, text_align: "left", heading_prefixes: { h2: "#" } },
+          migration: "configuration/appearance#typography",
+          runtimeKey: "typography",
+          removedProperties: { "font-size": "font_size", "font-family": "font_family", "text-align": "text_align", header_prefix: "heading_prefixes" },
+          properties: {
+            font_size: object({
+              consumers: APPEARANCE_CONSUMERS,
+              example: { root: "16px", inline_code: "85%", code_block: "0.8125rem" },
+              migration: "configuration/appearance#typography",
+              runtimeKey: "fontSize",
+              removedProperties: { code: "inline_code", codeblock: "code_block" },
+              properties: {
+                root: deliveredField("appearance.typography.font_size.root", { normalizer: "identity", example: "16px" }),
+                inline_code: deliveredField("appearance.typography.font_size.inline_code", { normalizer: "identity", example: "85%" }),
+                code_block: deliveredField("appearance.typography.font_size.code_block", { normalizer: "identity", example: "0.8125rem" })
+              }
+            }),
+            font_family: object({
+              consumers: APPEARANCE_CONSUMERS,
+              example: { body: "system-ui, sans-serif", inline_code: "Menlo, monospace", code_block: "Menlo, monospace" },
+              migration: "configuration/appearance#typography",
+              runtimeKey: "fontFamily",
+              removedProperties: { code: "inline_code", codeblock: "code_block" },
+              properties: {
+                body: deliveredField("appearance.typography.font_family.body", { normalizer: "identity", example: "system-ui, sans-serif" }),
+                inline_code: deliveredField("appearance.typography.font_family.inline_code", { normalizer: "identity", example: "Menlo, monospace" }),
+                code_block: deliveredField("appearance.typography.font_family.code_block", { normalizer: "identity", example: "Menlo, monospace" })
+              }
+            }),
+            text_align: deliveredField("appearance.typography.text_align", { normalizer: "identity", example: "left" }),
+            heading_prefixes: deliveredField("appearance.typography.heading_prefixes", {
+              normalizer: "object",
+              example: { h2: "#", h3: "=", h4: "|", h5: ":" },
+              sealed: true,
+              properties: {
+                h2: deliveredField("appearance.typography.heading_prefixes.h2", { normalizer: "identity", example: "#" }),
+                h3: deliveredField("appearance.typography.heading_prefixes.h3", { normalizer: "identity", example: "=" }),
+                h4: deliveredField("appearance.typography.heading_prefixes.h4", { normalizer: "identity", example: "|" }),
+                h5: deliveredField("appearance.typography.heading_prefixes.h5", { normalizer: "identity", example: ":" })
+              }
+            })
+          }
+        }),
+        shape: object({
+          consumers: APPEARANCE_CONSUMERS,
+          example: { corner: "superellipse(1.25)", radius: { card: "16px" } },
+          migration: "configuration/appearance#shape",
+          runtimeKey: "shape",
+          removedProperties: { "corner-shape": "corner", "border-radius": "radius" },
+          properties: {
+            corner: deliveredField("appearance.shape.corner", { normalizer: "identity", example: "superellipse(1.25)" }),
+            radius: object({
+              consumers: APPEARANCE_CONSUMERS,
+              example: { card_large: "24px", card: "16px", card_small: "12px" },
+              migration: "configuration/appearance#shape",
+              runtimeKey: "radius",
+              removedProperties: { "card-l": "card_large", "card-s": "card_small", "image-l": "image_large", "image-s": "image_small" },
+              properties: {
+                card_large: deliveredField("appearance.shape.radius.card_large", { normalizer: "identity", example: "24px" }),
+                card: deliveredField("appearance.shape.radius.card", { normalizer: "identity", example: "16px" }),
+                card_small: deliveredField("appearance.shape.radius.card_small", { normalizer: "identity", example: "12px" }),
+                bar: deliveredField("appearance.shape.radius.bar", { normalizer: "identity", example: "12px" }),
+                image_large: deliveredField("appearance.shape.radius.image_large", { normalizer: "identity", example: "24px" }),
+                image: deliveredField("appearance.shape.radius.image", { normalizer: "identity", example: "16px" }),
+                image_small: deliveredField("appearance.shape.radius.image_small", { normalizer: "identity", example: "8px" })
+              }
+            })
+          }
+        }),
+        colors: object({
+          consumers: APPEARANCE_CONSUMERS,
+          example: { theme: "hsl(192 98% 55%)", accent: "hsl(14 100% 57%)", link: "hsl(207 90% 54%)" },
+          migration: "configuration/appearance#colors",
+          runtimeKey: "colors",
+          properties: {
+            theme: deliveredField("appearance.colors.theme", { normalizer: "identity", example: "hsl(192 98% 55%)" }),
+            accent: deliveredField("appearance.colors.accent", { normalizer: "identity", example: "hsl(14 100% 57%)" }),
+            link: deliveredField("appearance.colors.link", { normalizer: "identity", example: "hsl(207 90% 54%)" })
+          }
+        }),
+        gradients: object({
+          consumers: APPEARANCE_CONSUMERS,
+          example: { primary_action: "linear-gradient(to right, #00f, #0ff)", angle: "210deg" },
+          migration: "configuration/appearance#gradients",
+          runtimeKey: "gradients",
+          removedProperties: { start: "primary_action", searchbar: "search_bar", avatar: "avatar_ring" },
+          properties: {
+            primary_action: deliveredField("appearance.gradients.primary_action", { normalizer: "identity", example: "linear-gradient(to right, #00f, #0ff)" }),
+            search_bar: deliveredField("appearance.gradients.search_bar", { normalizer: "identity", example: "linear-gradient(to right, #0ff, #f0f)" }),
+            avatar_ring: deliveredField("appearance.gradients.avatar_ring", { normalizer: "identity", example: "conic-gradient(from 0deg, #0ff, #f0f, #0ff)" }),
+            angle: deliveredField("appearance.gradients.angle", { normalizer: "identity", example: "210deg" })
+          }
+        }),
+        motion: object({
+          consumers: APPEARANCE_CONSUMERS,
+          example: { page_transition: true, avatar: "auto" },
+          migration: "configuration/appearance#motion",
+          runtimeKey: "motion",
+          removedProperties: { animated_avatar: "avatar" },
+          properties: {
+            page_transition: deliveredField("appearance.motion.page_transition", { normalizer: "identity", example: true }),
+            avatar: deliveredField("appearance.motion.avatar", { normalizer: "identity", example: "auto" })
+          }
+        }),
+        code_block: object({
+          consumers: APPEARANCE_CONSUMERS,
+          example: { scrollbar_width: "4px", highlight_theme: "https://example.com/highlight.css" },
+          migration: "configuration/appearance#code-block",
+          runtimeKey: "codeBlock",
+          removedProperties: { scrollbar: "scrollbar_width", highlightjs_theme: "highlight_theme" },
+          properties: {
+            scrollbar_width: deliveredField("appearance.code_block.scrollbar_width", { normalizer: "identity", example: "4px" }),
+            highlight_theme: deliveredField("appearance.code_block.highlight_theme", { normalizer: "identity", example: "https://example.com/highlight.css" })
+          }
+        }),
+        backgrounds: object({
+          consumers: APPEARANCE_CONSUMERS,
+          example: { sidebar: { surface: "card", opacity: 0.8 }, page: { image: null } },
+          migration: "configuration/appearance#backgrounds",
+          runtimeKey: "backgrounds",
+          removedProperties: { leftbar: "sidebar", site: "page" },
+          properties: {
+            sidebar: object({
+              consumers: APPEARANCE_CONSUMERS,
+              example: { surface: "card", color: { light: "var(--card)", dark: "var(--card)" }, opacity: 0.8 },
+              migration: "configuration/appearance#backgrounds",
+              runtimeKey: "sidebar",
+              removedProperties: {
+                "ui-style": "surface",
+                "background-color-light": "color.light",
+                "background-color-dark": "color.dark",
+                "background-image": "image",
+                "background-opacity": "opacity",
+                "blur-px": "blur.radius",
+                "blur-bg": "blur.overlay"
+              },
+              properties: {
+                surface: deliveredField("appearance.backgrounds.sidebar.surface", { normalizer: "identity", example: "card" }),
+                color: object({
+                  consumers: APPEARANCE_CONSUMERS,
+                  example: { light: "var(--card)", dark: "var(--card)" },
+                  migration: "configuration/appearance#backgrounds",
+                  runtimeKey: "color",
+                  properties: {
+                    light: deliveredField("appearance.backgrounds.sidebar.color.light", { normalizer: "identity", example: "var(--card)" }),
+                    dark: deliveredField("appearance.backgrounds.sidebar.color.dark", { normalizer: "identity", example: "var(--card)" })
+                  }
+                }),
+                image: deliveredField("appearance.backgrounds.sidebar.image", { normalizer: "identity", example: "url(/sidebar.webp)" }),
+                opacity: deliveredField("appearance.backgrounds.sidebar.opacity", { normalizer: "identity", example: 0.8, minimum: 0, maximum: 1 }),
+                blur: object({
+                  consumers: APPEARANCE_CONSUMERS,
+                  example: { radius: "100px", overlay: "var(--bg-a60)" },
+                  migration: "configuration/appearance#backgrounds",
+                  runtimeKey: "blur",
+                  properties: {
+                    radius: deliveredField("appearance.backgrounds.sidebar.blur.radius", { normalizer: "identity", example: "100px" }),
+                    overlay: deliveredField("appearance.backgrounds.sidebar.blur.overlay", { normalizer: "identity", example: "var(--bg-a60)" })
+                  }
+                })
+              }
+            }),
+            page: object({
+              consumers: APPEARANCE_CONSUMERS,
+              example: { image: null, blur: { radius: "100px", overlay: "var(--bg-a75)", saturation: "300%" } },
+              migration: "configuration/appearance#backgrounds",
+              runtimeKey: "page",
+              removedProperties: { "background-image": "image", "blur-px": "blur.radius", "blur-bg": "blur.overlay", "blur-sat": "blur.saturation" },
+              properties: {
+                image: deliveredField("appearance.backgrounds.page.image", { normalizer: "identity", example: null }),
+                blur: object({
+                  consumers: APPEARANCE_CONSUMERS,
+                  example: { radius: "100px", overlay: "var(--bg-a75)", saturation: "300%" },
+                  migration: "configuration/appearance#backgrounds",
+                  runtimeKey: "blur",
+                  properties: {
+                    radius: deliveredField("appearance.backgrounds.page.blur.radius", { normalizer: "identity", example: "100px" }),
+                    overlay: deliveredField("appearance.backgrounds.page.blur.overlay", { normalizer: "identity", example: "var(--bg-a75)" }),
+                    saturation: deliveredField("appearance.backgrounds.page.blur.saturation", { normalizer: "identity", example: "300%" })
+                  }
+                })
+              }
+            })
+          }
+        })
+      }
+    }),
     seo: object({
       consumers: SEO_CONSUMERS,
       example: {
@@ -623,14 +855,40 @@ const CONFIG_SCHEMA = deepFreeze({
       }
     }),
     resources: object({
-      consumers: PRECONNECT_CONSUMERS,
-      example: { preconnect: ["https://cdn.jsdelivr.net"] },
+      consumers: [...PRECONNECT_CONSUMERS, ...RESOURCE_CONSUMERS],
+      example: { preconnect: ["https://cdn.jsdelivr.net"], fallbacks: { cover: "/cover.svg" } },
       migration: "configuration/resources",
       runtimeKey: "resources",
       properties: {
         preconnect: deliveredField("resources.preconnect", {
           normalizer: "origin_list",
           example: ["https://cdn.jsdelivr.net"]
+        }),
+        fallbacks: object({
+          consumers: RESOURCE_CONSUMERS,
+          example: { avatar: "/avatar.svg", link_card: "/link.svg", cover: "/cover.svg", image: { content: "/image.svg", tag_plugin: "/error.svg" } },
+          migration: "configuration/resources#fallbacks",
+          runtimeKey: "fallbacks",
+          removedProperties: { link: "link_card", project: "project_icon", topic: "topic_cover", image_onerror: "image.tag_plugin" },
+          properties: {
+            avatar: deliveredField("resources.fallbacks.avatar", { normalizer: "identity", example: "/avatar.svg" }),
+            link_card: deliveredField("resources.fallbacks.link_card", { normalizer: "identity", example: "/link.svg" }),
+            cover: deliveredField("resources.fallbacks.cover", { normalizer: "identity", example: "/cover.svg" }),
+            project_icon: deliveredField("resources.fallbacks.project_icon", { normalizer: "identity", example: "/project.png" }),
+            banner: deliveredField("resources.fallbacks.banner", { normalizer: "identity", example: "/banner.jpg" }),
+            topic_cover: deliveredField("resources.fallbacks.topic_cover", { normalizer: "identity", example: "/topic.png" }),
+            image: object({
+              consumers: RESOURCE_CONSUMERS,
+              example: { content: "/image.svg", tag_plugin: "/error.svg" },
+              migration: "configuration/resources#fallbacks",
+              runtimeKey: "image",
+              properties: {
+                content: deliveredField("resources.fallbacks.image.content", { normalizer: "identity", example: "/image.svg" }),
+                tag_plugin: deliveredField("resources.fallbacks.image.tag_plugin", { normalizer: "identity", example: "/error.svg" })
+              }
+            }),
+            error_page: deliveredField("resources.fallbacks.error_page", { normalizer: "identity", example: "/404.svg" })
+          }
         })
       }
     }),

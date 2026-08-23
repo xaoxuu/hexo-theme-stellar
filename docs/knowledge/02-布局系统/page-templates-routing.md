@@ -76,7 +76,7 @@ flowchart TD
 flowchart TD
     HTML["html[lang][data-theme]"] --> HEAD["partial: _partial/head"]
     HTML --> BODY["body"]
-    BODY --> SITEBG["div.sitebg\n(conditional: style.site.background-image)"]
+    BODY --> SITEBG["div.sitebg\n(conditional: appearance.backgrounds.page.image)"]
     BODY --> LCOVER["div#l_cover\npartial: _partial/cover/index"]
     BODY --> LBODY["div.l_body#start\n[layout][type][text-indent]"]
     BODY --> SCRIPTS["div.scripts\npartial: _partial/scripts"]

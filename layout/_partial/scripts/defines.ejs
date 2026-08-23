@@ -167,8 +167,8 @@
     }
   }
   const def = {
-    avatar: `<%- theme.default.avatar %>`,
-    cover: `<%- theme.default.cover %>`,
+    avatar: `<%- stellar_config('resources.fallbacks.avatar') %>`,
+    cover: `<%- stellar_config('resources.fallbacks.cover') %>`,
     data_cache: <%- JSON.stringify(theme.data_cache || {}) %>,
   };
   const deps = {

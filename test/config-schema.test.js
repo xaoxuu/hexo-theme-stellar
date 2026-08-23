@@ -16,11 +16,11 @@ function assertDeepFrozen(value) {
 }
 
 function withoutLayoutAndContent(config) {
-  const { layout, content, ...rest } = config;
-  return rest;
+  const { layout, content, appearance, ...rest } = config;
+  return { ...rest, resources: { preconnect: rest.resources.preconnect } };
 }
 
-test("site/layout/content/head Schema 提供默认值并拒绝已迁移旧根域", () => {
+test("site/layout/content/appearance/resources/head Schema 提供默认值并拒绝已迁移旧根域", () => {
   const config = parseStellarConfig({
     source: "themes/stellar/_config.yml",
     themeConfig: {},
@@ -71,6 +71,11 @@ test("site/layout/content/head Schema 提供默认值并拒绝已迁移旧根域
   });
   assert.equal(config.content.article.indent, null);
   assert.equal(config.content.notebook.tagIcons[""], "quot:hashtag");
+  assert.equal(config.appearance.colorScheme, "auto");
+  assert.equal(config.appearance.shape.radius.cardLarge, "24px");
+  assert.equal(config.appearance.backgrounds.sidebar.opacity, 0.8);
+  assert.match(config.resources.fallbacks.cover, /\/cover\/76b86c0226ffd\.svg$/);
+  assert.match(config.resources.fallbacks.image.tagPlugin, /^data:image\/svg\+xml/);
   assertDeepFrozen(config);
 });
 
@@ -112,6 +117,68 @@ test("站点覆盖完成规范化、数组替换、稳定去重并保留注入�
     },
     resources: { preconnect: ["https://cdn.example.com"] },
     inject: { head, script: "<script>window.example = true</script>" }
+  });
+});
+
+test("Appearance 与资源兜底解析最终路径并投影 camelCase 运行时", () => {
+  const config = parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: {
+      appearance: {
+        color_scheme: "dark",
+        typography: { font_size: { root: "18px" } },
+        shape: { radius: { card_large: "28px" } },
+        motion: { page_transition: false, avatar: "never" },
+        code_block: { scrollbar_width: "0px" },
+        backgrounds: { sidebar: { surface: "glass", opacity: 0 } }
+      },
+      resources: {
+        fallbacks: {
+          link_card: "/link.svg",
+          project_icon: "/project.svg",
+          image: { content: "/image.svg" },
+          error_page: "/404.svg"
+        }
+      }
+    }
+  });
+
+  assert.equal(config.appearance.colorScheme, "dark");
+  assert.equal(config.appearance.typography.fontSize.root, "18px");
+  assert.equal(config.appearance.shape.radius.cardLarge, "28px");
+  assert.deepEqual(config.appearance.motion, { pageTransition: false, avatar: "never" });
+  assert.equal(config.appearance.codeBlock.scrollbarWidth, "0px");
+  assert.equal(config.appearance.backgrounds.sidebar.surface, "glass");
+  assert.equal(config.appearance.backgrounds.sidebar.opacity, 0);
+  assert.equal(config.resources.fallbacks.linkCard, "/link.svg");
+  assert.equal(config.resources.fallbacks.projectIcon, "/project.svg");
+  assert.equal(config.resources.fallbacks.image.content, "/image.svg");
+  assert.equal(config.resources.fallbacks.errorPage, "/404.svg");
+});
+
+test("Appearance 与资源兜底拒绝旧根、旧字段、未知字段和非法范围", () => {
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: {
+      style: { prefers_theme: "dark" },
+      default: { cover: "/cover.svg" },
+      appearance: {
+        color_scheme: "sepia",
+        motion: { enable: true },
+        backgrounds: { sidebar: { opacity: 1.2, unknown: true } }
+      },
+      resources: { fallbacks: { link: "/link.svg", image: { unknown: "/image.svg" } } }
+    }
+  }), error => {
+    assert.match(error.message, /style 已移除，期望 appearance/);
+    assert.match(error.message, /default 已移除，期望 resources\.fallbacks/);
+    assert.match(error.message, /appearance\.color_scheme 的值不在 auto \| light \| dark/);
+    assert.match(error.message, /未知字段 appearance\.motion\.enable/);
+    assert.match(error.message, /appearance\.backgrounds\.sidebar\.opacity 的值不在 number <= 1/);
+    assert.match(error.message, /未知字段 appearance\.backgrounds\.sidebar\.unknown/);
+    assert.match(error.message, /resources\.fallbacks\.link 已移除/);
+    assert.match(error.message, /未知字段 resources\.fallbacks\.image\.unknown/);
+    return true;
   });
 });
 

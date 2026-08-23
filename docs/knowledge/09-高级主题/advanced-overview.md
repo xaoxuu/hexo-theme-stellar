@@ -187,9 +187,9 @@ graph LR
 
 | 任务 | 扩展点 | 关键文件 | 配置 |
 |------|--------|----------|------|
-| **改颜色/字体** | 设计令牌 | [source/css/_custom.styl](../../../source/css/_custom.styl) | `style.color`、`style.font-family` |
+| **改颜色/字体** | 设计令牌 | [source/css/_custom.styl](../../../source/css/_custom.styl) | `appearance.colors`、`appearance.typography.font_family` |
 | **添加 CSS 效果** | 工具混入 | [source/css/_defines/func.styl](../../../source/css/_defines/func.styl) | N/A |
-| **自定义侧边栏背景** | 组件样式 | `source/css/_components/sidebar/sidebar.styl` | `style.leftbar.background-image` |
+| **自定义侧边栏背景** | 组件样式 | `source/css/_components/sidebar/sidebar.styl` | `appearance.backgrounds.sidebar.image` |
 | **新 Markdown 语法** | 标签插件 | `scripts/tags/lib/*.js` | `tag_plugins.*` |
 | **自定义小部件** | 小部件系统 | `layout/_partial/widgets/*.ejs` | `_data/widgets.yml` |
 | **外部 API 数据** | 数据服务 | `source/js/services/*.js` | `data_services.*` |

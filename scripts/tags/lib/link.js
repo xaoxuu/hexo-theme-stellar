@@ -47,7 +47,7 @@ module.exports = ctx => function(args) {
 
   function loadIcon() {
     var el = ''
-    el += '<div class="lazy img" data-bg="' + (args.icon || ctx.theme.config.default.link) + '"></div>'
+    el += '<div class="lazy img" data-bg="' + (args.icon || ctx.stellar.config.resources.fallbacks.linkCard) + '"></div>'
     return el
   }
   function loadTitle() {

@@ -138,7 +138,7 @@ graph TB
 **组件中的应用：**
 
 - `.navbar nav a` 与 `.float-panel button` 通过 `bar-item()` 共用基础 UI（尺寸、间距、与容器同心的圆角），一处修改两处生效
-- `.navbar-blur` 与 `.float-panel` 通过 `bar-glass()`（默认圆角 `$border-bar-container`，由 `style.border-radius.bar` 派生）复用 `newblur()` 玻璃层，共用「长条圆角矩形 + 玻璃」UI
+- `.navbar-blur` 与 `.float-panel` 通过 `bar-glass()`（默认圆角 `$border-bar-container`，由 `appearance.shape.radius.bar` 派生）复用 `newblur()` 玻璃层，共用「长条圆角矩形 + 玻璃」UI
 - 侧边栏打开时，`.float-panel` 中对应的按钮（`leftbar-toggle` / `rightbar-toggle`）调用 `bar-item-active()` 复用 navbar item 激活样式（背景 + 阴影 + saturate），面板保持玻璃效果
 - 左栏在 `sidebar.styl` 中手写 backdrop-filter 规则，不直接调用该混入（便于精细控制饱和度、模糊半径与透明度）
 

@@ -28,13 +28,13 @@ svg.loading
   .lazy-icon
     display: inline-block
   &:after 
-    content: hexo-config('style.loading.loading')
+    content: var(--text-loading)
     color: var(--text-p1)
     display: block
     font-size: 14px
   &.error
     &:after
-      content: hexo-config('style.loading.error')
+      content: var(--text-loading-error)
 
 .article-footer
   .loading-wrap

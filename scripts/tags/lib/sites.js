@@ -36,12 +36,12 @@ module.exports = ctx => function(args) {
         el += `<div class="grid-cell site-card">`
         el += `<a class="card-link"${itemSiteinfoApi ? ` data-siteinfo-api="${itemSiteinfoApi}"` : ''} target="_blank" rel="external nofollow noopener noreferrer" href="${item.url}">`
         el += `<div class="lazy-box snapshot">`
-        el += `<img class="lazy" data-src="${item.cover || item.snapshot || item.screenshot || ('https://image.thum.io/get/width/1280/crop/720/' + item.url)}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${ctx.theme.config.default.cover}&quot;;"/>`
+        el += `<img class="lazy" data-src="${item.cover || item.snapshot || item.screenshot || ('https://image.thum.io/get/width/1280/crop/720/' + item.url)}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${ctx.stellar.config.resources.fallbacks.cover}&quot;;"/>`
         el += `<div class="lazy-icon"></div>`
         el += `</div>`
         el += `<div class="info">`
         el += `<div class="lazy-box icon">`
-        el += `<img class="lazy siteinfo-icon" data-src="${item.icon || item.avatar || ctx.theme.config.default.link}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${item.icon || item.avatar || ctx.theme.config.default.link}&quot;;"/>`
+        el += `<img class="lazy siteinfo-icon" data-src="${item.icon || item.avatar || ctx.stellar.config.resources.fallbacks.linkCard}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${item.icon || item.avatar || ctx.stellar.config.resources.fallbacks.linkCard}&quot;;"/>`
         el += `<div class="lazy-icon"></div>`
         el += `</div>`
         el += `<span class="title">${item.title}</span>`

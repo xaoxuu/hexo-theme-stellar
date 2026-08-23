@@ -16,7 +16,7 @@
     margin-left: var(--gap-page)
     margin-right: auto
 
-// 纯色卡片风格（style.leftbar.ui-style: card）：
+// 纯色卡片风格（appearance.backgrounds.sidebar.surface: card）：
 // 实色 var(--card) 背景 + 中间档阴影，隐藏图片背景与磨砂叠加层
 .l_left.leftbar-card
   background: var(--card)
@@ -50,22 +50,22 @@
     right: var(--inset)
     border-radius: $border-card-l
     --saturate: 400%
-    --blur-px: convert(hexo-config('style.leftbar.blur-px'))
+    --blur-px: convert(hexo-config('appearance.backgrounds.sidebar.blur.radius'))
     --background-opacity: 1
     if $leftbar-background-image
       background-position: center
       background-size: cover
-      if hexo-config('style.leftbar.blur-px')
+      if hexo-config('appearance.backgrounds.sidebar.blur.radius')
         --inset: 32px
-      if hexo-config('style.leftbar.background-opacity')
-        --background-opacity: hexo-config('style.leftbar.background-opacity')
-      background-image: convert(hexo-config('style.leftbar.background-image'))
+      if hexo-config('appearance.backgrounds.sidebar.opacity')
+        --background-opacity: hexo-config('appearance.backgrounds.sidebar.opacity')
+      background-image: convert(hexo-config('appearance.backgrounds.sidebar.image'))
       filter: saturate(var(--saturate)) blur(var(--blur-px)) opacity(var(--background-opacity))
       :root[data-theme="dark"] &
-        --background-opacity: hexo-config('style.leftbar.background-opacity') * 0.75
+        --background-opacity: hexo-config('appearance.backgrounds.sidebar.opacity') * 0.75
       :root:not([data-theme]) &
         @media screen and (prefers-color-scheme: dark)
-          --background-opacity: hexo-config('style.leftbar.background-opacity') * 0.75
+          --background-opacity: hexo-config('appearance.backgrounds.sidebar.opacity') * 0.75
     else if $leftbar-background-color-light || $leftbar-background-color-dark
       background-color: convert($leftbar-background-color-light)
       :root:not([data-theme]) &

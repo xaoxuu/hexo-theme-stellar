@@ -114,7 +114,7 @@ module.exports = ctx => function(args, content) {
 
   function loadIcon(url) {
     var el = ''
-    el += '<div class="lazy img" data-bg="' + ctx.theme.config.default.link + '"></div>'
+    el += '<div class="lazy img" data-bg="' + ctx.stellar.config.resources.fallbacks.linkCard + '"></div>'
     return el
   }
 

@@ -441,12 +441,12 @@ Gist 集成覆盖 GitHub 默认样式：
 滚动条应用到 `.highlight` 内的嵌套表格：
 
 ```stylus
-scrollbar-codeblock(convert(hexo-config('style.codeblock.scrollbar')))
+scrollbar-codeblock(convert(hexo-config('appearance.code_block.scrollbar_width')))
 ```
 
 该调用：
 
-1. 从 `_config.yml` 读取 `style.codeblock.scrollbar`
+1. 从 `_config.yml` 读取 `appearance.code_block.scrollbar_width`
 2. 用 `convert()` 转换
 3. 通过 `scrollbar-codeblock()` 混入应用滚动条样式
 

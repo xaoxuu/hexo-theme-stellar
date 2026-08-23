@@ -233,6 +233,7 @@ function buildContributor(item, themeConfig) {
 function buildPostArticleRender(input, item) {
   const themeConfig = input.themeConfig;
   const articleConfig = requireContentConfig(input.stellarConfig, input.themeSource).article;
+  const appearance = input.stellarConfig.appearance;
   const frontMatter = input.frontMatter;
   const footer = item.presentation.footer || {};
   const comments = item.presentation.comments || {};
@@ -241,7 +242,7 @@ function buildPostArticleRender(input, item) {
     service && isPlainObject(themeConfig.comments?.[service]) ? themeConfig.comments[service] : {},
     isPlainObject(comments.options) ? comments.options : {}
   );
-  const preferredTheme = themeConfig.style?.prefers_theme;
+  const preferredTheme = appearance.colorScheme;
   if (service === "giscus" && preferredTheme !== "auto" && commentOptions["data-theme"] === "preferred_color_scheme") {
     commentOptions["data-theme"] = preferredTheme;
   }
@@ -349,6 +350,8 @@ function buildPostRenderModel(input, collection, item) {
   const siteConfig = input.siteConfig;
   const themeConfig = input.themeConfig;
   const seoConfig = input.stellarConfig.seo;
+  const appearance = input.stellarConfig.appearance;
+  const fallbacks = input.stellarConfig.resources.fallbacks;
   const canonicalConfig = seoConfig.canonical;
   const frontMatter = input.frontMatter;
   const page = input.page;
@@ -421,7 +424,7 @@ function buildPostRenderModel(input, collection, item) {
     bannerImage,
     photos: Array.isArray(frontMatter.photos) ? frontMatter.photos : [],
     content: item.content,
-    defaultCover: themeConfig.default?.cover
+    defaultCover: fallbacks.cover
   });
   const jsonLd = {
     "@context": "https://schema.org",
@@ -444,17 +447,17 @@ function buildPostRenderModel(input, collection, item) {
     document: {
       language: normalizeLanguage(page.lang, page.language, frontMatter.lang, frontMatter.language, siteConfig.language),
       headInject: normalizeHeadInject(frontMatter.inject?.head),
-      preferredTheme: themeConfig.style?.prefers_theme === "auto"
+      preferredTheme: appearance.colorScheme === "auto"
         ? "auto"
-        : String(themeConfig.style?.prefers_theme || "")
+        : String(appearance.colorScheme || "")
     },
     layout: {
       pageType: "content",
       articleType,
       indent: hasIndent ? item.presentation.article.indent === true : articleType === "story",
-      siteBackground: Boolean(themeConfig.style?.site?.["background-image"]),
-      leftbarSurface: themeConfig.style?.leftbar?.["ui-style"] === "card" ? "card" : "glass",
-      leftbarBlur: themeConfig.style?.leftbar?.blur === true,
+      siteBackground: Boolean(appearance.backgrounds.page.image),
+      leftbarSurface: appearance.backgrounds.sidebar.surface === "card" ? "card" : "glass",
+      leftbarBlur: false,
       blogPath: typeof siteConfig.index_generator?.path === "string" ? normalizeCollectionPath(siteConfig.index_generator.path) : "",
       brand: mergeBrand(collection.identity, item.presentation.sidebar?.left?.brand),
       breadcrumbs: normalizeCategoryLinks(page.categoryLinks)

@@ -239,14 +239,14 @@ test("官方脚本样式与内部集成有显式内部化清单", () => {
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("style.loading.*"));
 });
 
-test("运行时只投影 site Shell、Layout、内容默认与 head/SEO 已交付节点且根配置仍未封闭", () => {
+test("运行时只投影已交付配置节点且根配置仍未封闭", () => {
   assert.equal(CONFIG_SCHEMA.sealed, false);
-  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "layout", "content", "seo", "resources", "inject"]);
+  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "layout", "content", "appearance", "seo", "resources", "inject"]);
   const deliveredPaths = CONFIG_TARGET_FIELDS
     .filter(field => field.status === "delivered" && field.scopes.includes("theme"))
     .map(field => field.path);
   assert.deepEqual(
-    deliveredPaths.filter(pathValue => !pathValue.startsWith("layout.") && !pathValue.startsWith("content.")),
+    deliveredPaths.filter(pathValue => !pathValue.startsWith("layout.") && !pathValue.startsWith("content.") && !pathValue.startsWith("appearance.") && !pathValue.startsWith("resources.fallbacks.")),
     [
       "site.brand.image.src",
       "site.brand.image.variant",
@@ -286,6 +286,10 @@ test("运行时只投影 site Shell、Layout、内容默认与 head/SEO 已交�
       "inject.script"
     ]
   );
+  assert.ok(deliveredPaths.includes("appearance.typography.font_family.inline_code"));
+  assert.ok(deliveredPaths.includes("appearance.backgrounds.page.blur.saturation"));
+  assert.ok(deliveredPaths.includes("resources.fallbacks.image.tag_plugin"));
+  assert.ok(deliveredPaths.includes("resources.fallbacks.error_page"));
   const deliveredContentPaths = deliveredPaths.filter(pathValue => pathValue.startsWith("content."));
   assert.equal(deliveredContentPaths.length, 26);
   for (const pathValue of [

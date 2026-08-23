@@ -331,7 +331,7 @@ seo:
 
 **条件**：`this.is_post()` 为 true
 
-**图片来源优先级**：封面（cover）→ 横幅（banner）→ 相册（photos）→ 正文首图（`data-src`/`src`）→ 默认封面（`theme.default.cover`）
+**图片来源优先级**：封面（cover）→ 横幅（banner）→ 相册（photos）→ 正文首图（`data-src`/`src`）→ 默认封面（`hexo.stellar.config.resources.fallbacks.cover`）
 
 **描述来源**：摘要（`page.excerpt`）优先，缺失时回退正文前 200 字符（去除 HTML）。
 
