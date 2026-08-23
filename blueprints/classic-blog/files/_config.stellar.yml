@@ -1,0 +1,62 @@
+site:
+  brand:
+    name: My Stellar Blog
+    tagline: Ideas, notes and stories
+    url: /
+  menu:
+    items:
+      - id: post
+        title: Blog
+        icon: default:documents
+        url: /
+        accent: '#1BCDFC'
+  footer:
+    sections:
+      - title: Blog
+        items:
+          - '[Recent posts](/)'
+          - '[Archives](/blog/archives/)'
+
+layout:
+  profiles:
+    home:
+      navigation:
+        active_menu: post
+      sidebar:
+        left:
+          widgets: [welcome, recent]
+        right:
+          widgets: []
+    blog_index:
+      path: /blog/
+      navigation:
+        active_menu: post
+      sidebar:
+        left:
+          widgets: [welcome, recent]
+        right:
+          widgets: []
+    post:
+      navigation:
+        active_menu: post
+      sidebar:
+        left:
+          widgets: [related, recent]
+        right:
+          widgets: [toc]
+
+content:
+  article:
+    type: tech
+    listing:
+      pinned_layout: carousel
+      card_layout: hero
+      show_tags: true
+    show_reading_time: true
+    show_tags: true
+
+extensions:
+  search:
+    provider: local
+
+{{visual_style}}

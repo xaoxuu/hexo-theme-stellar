@@ -1,0 +1,27 @@
+appearance:
+  color_scheme: auto
+  typography:
+    font_size:
+      root: 16px
+    text_align: left
+  shape:
+    corner: superellipse(1.25)
+    radius:
+      card_large: 24px
+      card: 16px
+      card_small: 12px
+      bar: 12px
+      image_large: 24px
+      image: 16px
+      image_small: 8px
+  colors:
+    theme: 'hsl(192 98% 55%)'
+    accent: 'hsl(14 100% 57%)'
+    link: 'hsl(207 90% 54%)'
+  motion:
+    page_transition: true
+    avatar: auto
+  backgrounds:
+    sidebar:
+      surface: card
+      opacity: 0.8

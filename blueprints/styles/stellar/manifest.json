@@ -1,0 +1,7 @@
+{
+  "schema_version": 1,
+  "id": "stellar",
+  "name": "Stellar",
+  "description": "Stellar 的明快色彩、柔和表面与动态反馈。",
+  "fragment": "appearance.yml"
+}

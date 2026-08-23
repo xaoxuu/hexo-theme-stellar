@@ -1,0 +1,52 @@
+site:
+  brand:
+    name: Product Docs
+    tagline: Guides and reference in one place
+    url: /wiki/
+  menu:
+    items:
+      - id: wiki
+        title: Docs
+        icon: default:book
+        url: /wiki/
+        accent: '#1BCDFC'
+  footer:
+    sections:
+      - title: Documentation
+        items:
+          - '[Docs home](/wiki/)'
+          - '[Getting started](/wiki/docs-reference/getting-started/)'
+
+layout:
+  profiles:
+    home:
+      navigation:
+        active_menu: wiki
+      sidebar:
+        left:
+          widgets: [related, recent]
+        right:
+          widgets: []
+    wiki_index:
+      path: /wiki/
+      navigation:
+        active_menu: wiki
+      sidebar:
+        left:
+          widgets: [related, recent]
+        right:
+          widgets: []
+    wiki:
+      navigation:
+        active_menu: wiki
+      sidebar:
+        left:
+          widgets: [tree, related]
+        right:
+          widgets: [toc]
+
+extensions:
+  search:
+    provider: local
+
+{{visual_style}}

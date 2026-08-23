@@ -1,0 +1,12 @@
+name: Product Docs
+tagline: A small but complete documentation starter
+tags:
+  - Documentation
+audience: Product users
+route:
+  path: /wiki/docs-reference/
+navigation:
+  tree:
+    Start:
+      - index
+      - getting-started

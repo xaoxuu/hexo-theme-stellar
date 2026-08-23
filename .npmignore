@@ -49,5 +49,6 @@ AGENTS.md
 # source/      CSS / JS 资源
 # languages/   多语言文案
 # _data/       主题默认数据
+# blueprints/  v2 init 所需 Blueprint 与 Visual Style 资产
 # _config.yml  主题默认配置
 # README.md / LICENSE / package.json

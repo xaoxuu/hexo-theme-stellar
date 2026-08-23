@@ -149,10 +149,10 @@ Pre-alpha M1 已从模型 Schema 生成首批机器可读 Reference；这项能�
 - 模型事实来源是 `scripts/schema/model-schema.js`；Collection / Front Matter 输入事实来源是 `scripts/schema/config-target.js` 与由它投影的 `scripts/schema/content-config-schema.js`。
 - 每个已交付字段均带类型、默认值语义、作用域、当前消费方和最小示例。动态默认值用 `derived`、`inherited` 或 `computed` 描述，不伪造固定字面量。
 - `scripts/lib/models/` 在冻结模型前使用同一 Schema 拒绝缺失字段、未声明字段和错误类型，避免实现与 Reference 漂移。
-- `npm run reference:generate` 稳定生成 `reference/v2-models.json` 和 `reference/v2-config.json`；后者已包含 delivered 的 Theme、Collection 与 Front Matter 作用域，并排除 Hexo 自有字段。`npm run reference:check` 只读检查漂移，已纳入 `npm run check`。
+- `npm run reference:generate` 稳定生成 `reference/v2-models.json`、`reference/v2-config.json` 和 `reference/v2-blueprints.json`；配置 Reference 已包含 delivered 的 Theme、Collection 与 Front Matter 作用域并排除 Hexo 自有字段，Blueprint Reference 登记 M3 已交付的三套 Blueprint、两套 Visual Style、封闭 manifest、安全相对路径/唯一目标/物理根包含约束与 CLI 选项。`npm run reference:check` 只读检查漂移，已纳入 `npm run check`。
 - 第三方评论参数袋、widget 对象和 effect options 保持开放对象边界；元数据不复制上游字段表。
 
-Reference 输出仍不包含 Blueprint、CLI、布局原语或 Extension Schema；五类原语是内部 EJS 契约，不进入当前模型 Reference。`ContentItemModel.layout` 是 #695–#698 已交付的模型字段。
+模型 Reference 仍不混入 Blueprint、CLI、布局原语或 Extension Schema；Blueprint/CLI 使用独立的 `v2-blueprints.json`，五类原语是内部 EJS 契约。`ContentItemModel.layout` 是 #695–#698 已交付的模型字段。
 
 ## 校验与消费链
 
@@ -166,3 +166,7 @@ Collection 与 Front Matter 不再由手写字段表定义：`scripts/schema/con
 - Wiki 与 Notebook 数据树都在两阶段建模后投影冻结的索引、导航和列表数据；Topic 索引也只消费显式投影。搜索生成器继续消费共享可见性语义。
 
 旧字段、未知字段和错误类型都会汇总为 `ContentConfigError`，消息包含源文件与字段路径；运行时没有 v1 别名或错误类型自动转换。
+
+### doctor 的 Schema 消费
+
+`stellar doctor` 读取站点 `_config.yml` 与 `_config.stellar.yml`，扫描 `source/_data/{wiki,topic,notebooks}/` 和 `source/` 下带 Front Matter 的 Markdown，再分别调用 `parseStellarConfig()`、`parseCollectionConfig()` 与 `parsePageConfig()`。doctor 只聚合问题，不触发生成器、不写回文件，也不提供旧字段别名或自动迁移。text/json 输出中的问题统一保留 `source/path/actualType/expected/migration`，因此命令行诊断和构建期失败指向同一字段事实；机器读取 JSON 时使用 `hexo stellar doctor --format json --silent`，屏蔽 Hexo 在命令加载前输出的框架日志。

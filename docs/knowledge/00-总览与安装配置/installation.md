@@ -19,7 +19,9 @@ tags:
 - [LICENSE](../../../LICENSE)
 - [README.md](../../../README.md)
 - [_config.yml](../../../_config.yml)
+- [blueprints/](../../../blueprints/)
 - [package.json](../../../package.json)
+- [scripts/commands/stellar.js](../../../scripts/commands/stellar.js)
 
 </details>
 
@@ -157,6 +159,7 @@ graph LR
 | **glob** | ^10.4.0 | 文件通配匹配 |
 | **hexo-renderer-ejs** | ^2.0.0 | EJS 模板渲染引擎（渲染布局文件） |
 | **hexo-renderer-stylus** | ^3.0.1 | Stylus CSS 预处理器（编译主题样式） |
+| **js-yaml** | ^4.1.0 | Blueprint manifest、生成配置与 doctor 的 YAML 读取 |
 | **probe-image-size** | ^7.2.3 | 图片尺寸探测（懒加载占位） |
 
 这些依赖分别负责：
@@ -165,6 +168,7 @@ graph LR
 - **glob**：脚本中的文件批量匹配
 - **hexo-renderer-ejs**：渲染 `.ejs` 布局模板
 - **hexo-renderer-stylus**：把 `.styl` 编译为 CSS
+- **js-yaml**：读取 Blueprint 资产和 doctor 检查的站点配置，不负责自动改写
 - **probe-image-size**：无需下载完整图片即可获取图片尺寸
 
 **参考源码**：[package.json](../../../package.json)
@@ -208,6 +212,29 @@ theme: stellar
 这一行告诉 Hexo 使用 Stellar 主题。如果主题不在传统的 `themes/` 目录，Hexo 会自动在 `node_modules/hexo-theme-stellar/` 中查找。
 
 **参考源码**：[README.md](../../../README.md)
+
+---
+
+## v2 Blueprint 初始化与检查
+
+Pre-alpha M3 提供三套一次性 Blueprint：`classic-blog`、`minimal-reading`、`docs-reference`，以及 `stellar`、`minimal` 两套 Visual Style。主题启用后可以先预览写入计划：
+
+```bash
+npx hexo stellar init --blueprint classic-blog --style stellar --dry-run --non-interactive
+```
+
+确认目标文件均可创建后，移除 `--dry-run` 执行写入。init 会整体拒绝任何已有目标，不覆盖或合并用户文件。生成结果是普通 `_config.stellar.yml`、Collection 数据与 Markdown 内容；其中没有 Blueprint ID、锁文件或运行时继承关系。
+
+生成后运行只读检查：
+
+```bash
+npx hexo stellar doctor --format text
+npx hexo stellar doctor --format json --silent
+```
+
+JSON 模式必须使用 Hexo 全局 `--silent`，避免命令加载前的 Hexo 启动日志混入标准输出，保证 stdout 是可直接解析的单一 JSON 文档。doctor 检查 Node.js、Hexo、`theme: stellar`、主题配置、Collection YAML 与 Markdown Front Matter；失败问题包含来源、字段路径、实际类型、期望结构和迁移章节，但不会修改文件。
+
+**参考源码**：[blueprints/](../../../blueprints/)、[scripts/commands/stellar.js](../../../scripts/commands/stellar.js)、[scripts/lib/blueprints/](../../../scripts/lib/blueprints/)、[scripts/lib/doctor.js](../../../scripts/lib/doctor.js)
 
 ---
 

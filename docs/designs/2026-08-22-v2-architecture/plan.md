@@ -18,12 +18,12 @@ date: 2026-08-22
 ## Pre-alpha M2：渲染内核
 
 6. [x] 普通 Post 用 ViewModel 接入根布局、侧栏、Brand、菜单、面包屑与 SEO，并新增五类布局原语（部分交付，[#700](https://github.com/xaoxuu/hexo-theme-stellar/issues/700)）。
-7. [ ] 迁移普通 Post 的文章内容、标签、评论、相关推荐与列表消费链。
-8. [ ] 迁移 Wiki、Topic、Notebook 的布局、导航、列表与 SEO 消费链；完成后才可标记 M2 完成。
+7. [x] 迁移普通 Post 的文章内容、标签、评论、相关推荐与列表消费链（#701）。
+8. [x] 迁移 Wiki、Topic、Notebook 的布局、导航、列表与 SEO 消费链（#713–#715）；M2 已完成。
 
 ## Pre-alpha M3：分发入口
 
-9. [ ] 实现三套 Blueprint、两套 Visual Style、init 与 doctor。
+9. [x] 实现三套 Blueprint、两套 Visual Style、init 与 doctor（#716）；M3 已完成。
 
 ## Pre-alpha M4：浏览器运行时
 
@@ -36,7 +36,7 @@ date: 2026-08-22
 ## Alpha 1 门禁
 
 - [ ] 预发布包可安装到干净的 Hexo 8 / Node.js 22 工程。
-- [ ] 三套 Blueprint 的 init、冲突拒绝、独立构建与 doctor 检查通过。
+- [x] 三套 Blueprint 的 init、冲突拒绝、独立构建与 doctor 检查通过（#716）。
 - [ ] 四类 Collection profile 通过 ViewModel 消费链渲染。
 - [ ] Schema、布局原语、CLI 与 Extension 生命周期测试通过。
 - [ ] Reference 与已交付契约一致，主题检查、主工程构建和预发布安装演练通过。

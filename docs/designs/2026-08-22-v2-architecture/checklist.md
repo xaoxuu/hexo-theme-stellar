@@ -28,9 +28,9 @@ date: 2026-08-22
 ## Pre-alpha M2–M5
 
 - [x] 普通 Post 的根布局、侧栏、Brand、菜单、面包屑与 SEO 从 `PageViewModel` 获取，五类布局原语已建立（#700，M2 部分交付）。
-- [ ] 普通 Post 的文章内容/标签/评论/相关推荐/列表，以及 Wiki、Topic、Notebook 消费链完成迁移；全部完成前 M2 保持未完成。
-- [ ] 三套 Blueprint dry-run 与写入计划一致，已有文件不会被覆盖。
-- [ ] doctor 的 text/json 输出包含文件、字段、实际类型、期望结构和迁移章节。
+- [x] 普通 Post 的文章内容/标签/评论/相关推荐/列表，以及 Wiki、Topic、Notebook 消费链完成迁移；M2 已完成。
+- [x] 三套 Blueprint dry-run 与写入计划一致，已有文件不会被覆盖（#716）。
+- [x] doctor 的 text/json 输出包含文件、字段、实际类型、期望结构和迁移章节（#716）。
 - [ ] Extension 支持 mount、unmount、按需 import 和失败隔离。
 - [ ] request/cache 不修改原生 fetch/XHR。
 - [ ] 后续阶段完整实现后 `npm run check` 通过。
@@ -40,7 +40,7 @@ date: 2026-08-22
 
 - [ ] M1–M5 全部完成。
 - [ ] 预发布包可安装到干净的 Hexo 8 / Node.js 22 工程。
-- [ ] 三套 Blueprint 可初始化且生成结果独立构建，doctor 检查通过。
+- [x] 三套 Blueprint 可初始化且生成结果独立构建，doctor 检查通过（#716）。
 - [ ] 四类 Collection profile 通过 ViewModel 消费链渲染，Extension 生命周期可验证。
 - [ ] Reference、主题检查、主工程构建与预发布安装演练全部通过。
 - [ ] Alpha 发布说明列出仍不稳定的契约与未交付范围。

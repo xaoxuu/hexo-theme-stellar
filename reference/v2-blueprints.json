@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "source": [
+    "scripts/schema/blueprint-schema.js",
+    "blueprints/*/manifest.json",
+    "blueprints/styles/*/manifest.json"
+  ],
+  "status": "delivered",
+  "manifestContract": {
+    "schemaVersion": 1,
+    "sealed": true,
+    "blueprintIds": [
+      "classic-blog",
+      "minimal-reading",
+      "docs-reference"
+    ],
+    "visualStyleIds": [
+      "stellar",
+      "minimal"
+    ],
+    "paths": "safe non-empty relative path",
+    "uniqueBlueprintTargets": true,
+    "physicalContainment": "theme and site roots, including symlink resolution"
+  },
+  "blueprints": [
+    {
+      "id": "classic-blog",
+      "name": "Classic Blog",
+      "description": "适合持续发布文章、分类与标签内容的经典个人博客。",
+      "defaultStyle": "stellar",
+      "files": [
+        "_config.stellar.yml",
+        "source/_posts/welcome-to-stellar.md"
+      ]
+    },
+    {
+      "id": "minimal-reading",
+      "name": "Minimal Reading",
+      "description": "适合长文、随笔与低干扰阅读体验的内容站点。",
+      "defaultStyle": "minimal",
+      "files": [
+        "_config.stellar.yml",
+        "source/_posts/a-quiet-place-to-write.md"
+      ]
+    },
+    {
+      "id": "docs-reference",
+      "name": "Docs Reference",
+      "description": "适合产品文档、项目手册与结构化知识库的 Wiki 站点。",
+      "defaultStyle": "stellar",
+      "files": [
+        "_config.stellar.yml",
+        "source/_data/wiki.yml",
+        "source/_data/wiki/docs-reference.yml",
+        "source/wiki/docs-reference/index.md",
+        "source/wiki/docs-reference/getting-started.md"
+      ]
+    }
+  ],
+  "visualStyles": [
+    {
+      "id": "stellar",
+      "name": "Stellar",
+      "description": "Stellar 的明快色彩、柔和表面与动态反馈。"
+    },
+    {
+      "id": "minimal",
+      "name": "Minimal",
+      "description": "以正文为中心的克制色彩、紧凑圆角与低动效。"
+    }
+  ],
+  "cli": {
+    "command": "stellar",
+    "subcommands": {
+      "init": {
+        "options": [
+          "blueprint",
+          "style",
+          "dry-run",
+          "non-interactive"
+        ]
+      },
+      "doctor": {
+        "formats": [
+          "text",
+          "json"
+        ],
+        "options": [
+          "format"
+        ],
+        "jsonGlobalOptions": [
+          "silent"
+        ]
+      }
+    }
+  }
+}

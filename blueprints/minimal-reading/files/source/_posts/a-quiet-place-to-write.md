@@ -1,0 +1,14 @@
+---
+title: A Quiet Place to Write
+date: {{generated_date}}
+description: Your first long-form note in a Stellar v2 site.
+article:
+  type: story
+  indent: true
+---
+
+This site was created from the **Minimal Reading** Blueprint.
+
+<!-- more -->
+
+Use this space for essays, reading notes and stories worth keeping.

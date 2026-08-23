@@ -30,6 +30,9 @@ hexo.on('generateAfter', () => {
 hexo.on('ready', () => {
   if (process.env.HEXO_READY === '1') return;
   process.env.HEXO_READY = '1';
+  // `hexo stellar doctor --format json --silent` 必须保持 stdout 为单一 JSON 文档；
+  // init/doctor 不需要常规浏览/构建命令的欢迎信息和版本联网检查。
+  if (hexo.env?.cmd === 'stellar') return;
   const isClean = ['cl', 'clean'].some(arg => process.argv.includes(arg));
   if (isClean) {
     return;

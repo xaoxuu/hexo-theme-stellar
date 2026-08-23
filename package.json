@@ -32,6 +32,7 @@
     "hexo-renderer-ejs": "^2.0.0",
     "hexo-renderer-stylus": "^3.0.1",
     "hexo-pagination": "^3.0.0",
+    "js-yaml": "^4.1.0",
     "probe-image-size": "^7.2.3"
   },
   "homepage": "https://xaoxuu.com/wiki/stellar/",

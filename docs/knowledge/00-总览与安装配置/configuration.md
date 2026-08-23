@@ -85,6 +85,8 @@ head/SEO、site Shell、Layout Profile、内容默认值、Collection / Front Ma
 
 已交付的主题字段从 Schema 与 `_config.stellar.yml` 解析到冻结的 `hexo.stellar.config`；Collection YAML 与 Front Matter 分别解析为冻结的 camelCase 对象，由生成器、数据树、ViewModel 与按需插件消费。Hexo 自有 Front Matter 保持原名，不进入 Stellar Reference。
 
+Pre-alpha M3 的 Blueprint 只在 init 时把选择结果展开为上述显式配置，不增加 `blueprint` 或 `style` 配置根，也不参与运行时级联。`stellar doctor` 直接复用同一 Theme、Collection 与 Front Matter Schema 做只读检查；不存在 CLI 专用的第二套字段白名单。三套 Blueprint、两套 Visual Style 和命令契约的机器可读登记位于 `reference/v2-blueprints.json`。
+
 ## 配置文件结构
 
 `_config.yml` 按逻辑小节组织，控制不同子系统：

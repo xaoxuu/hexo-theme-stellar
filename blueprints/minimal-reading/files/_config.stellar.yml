@@ -1,0 +1,62 @@
+site:
+  brand:
+    name: Reading Notes
+    tagline: A quiet place to think and write
+    url: /
+  menu:
+    items:
+      - id: post
+        title: Reading
+        icon: default:bookmark
+        url: /
+        accent: '#73584A'
+  footer:
+    sections: []
+
+layout:
+  profiles:
+    home:
+      navigation:
+        active_menu: post
+      sidebar:
+        left:
+          widgets: []
+        right:
+          widgets: []
+    blog_index:
+      path: /blog/
+      navigation:
+        active_menu: post
+      sidebar:
+        left:
+          widgets: []
+        right:
+          widgets: []
+    post:
+      navigation:
+        active_menu: post
+      sidebar:
+        left:
+          widgets: []
+        right:
+          widgets: [toc]
+
+content:
+  article:
+    type: story
+    indent: true
+    listing:
+      pinned_layout: flat
+      card_layout: classic
+      show_tags: false
+    show_reading_time: true
+    show_tags: false
+
+extensions:
+  search:
+    provider: local
+  features:
+    reveal:
+      enabled: false
+
+{{visual_style}}

@@ -1,6 +1,8 @@
 /* global hexo */
 "use strict";
 
+const nodePath = require("node:path");
+
 const { CONFIG_SCHEMA } = require("../schema/config-schema");
 
 class ConfigSchemaError extends Error {
@@ -307,6 +309,27 @@ function validateAbsoluteHttpUrl(node, input, source, path, issues) {
   issues.push(issue("invalid_value", source, path, valueType(input), "absolute HTTP(S) URL", node.migration));
 }
 
+function validateSafeRelativePath(node, input, source, path, issues) {
+  const unixPath = input.replace(/\\/g, "/");
+  const normalized = nodePath.posix.normalize(unixPath);
+  const hasDriveRoot = /^[A-Za-z]:/.test(unixPath);
+  if (input.length === 0 || nodePath.isAbsolute(input) || nodePath.posix.isAbsolute(unixPath) || hasDriveRoot || /^\.\/?$/.test(normalized) || unixPath.split("/").includes("..")) {
+    issues.push(issue("invalid_value", source, path, valueType(input), "safe non-empty relative path", node.migration));
+  }
+}
+
+function validateUniqueBlueprintTargets(node, input, source, path, issues) {
+  const targets = new Set();
+  input.forEach((item, index) => {
+    if (!isPlainObject(item) || typeof item.target !== "string") return;
+    const target = nodePath.posix.normalize(item.target.replace(/\\/g, "/"));
+    if (targets.has(target)) {
+      issues.push(issue("invalid_value", source, `${path}[${index}].target`, "string", "unique Blueprint target path", node.migration));
+    }
+    targets.add(target);
+  });
+}
+
 function validateCustom(node, input, source, path, issues) {
   if (!node.validator) return;
   if (node.validator === "non_empty_string") validateNonEmptyString(node, input, source, path, issues, false);
@@ -315,9 +338,11 @@ function validateCustom(node, input, source, path, issues) {
   else if (node.validator === "effect") validateEffect(node, input, source, path, issues);
   else if (node.validator === "brand") validateBrand(node, input, source, path, issues);
   else if (node.validator === "absolute_http_url") validateAbsoluteHttpUrl(node, input, source, path, issues);
+  else if (node.validator === "safe_relative_path") validateSafeRelativePath(node, input, source, path, issues);
+  else if (node.validator === "unique_blueprint_targets") validateUniqueBlueprintTargets(node, input, source, path, issues);
   else if (node.validator === "topic_route_start" && input != null && !/[\\/]topic[\\/]/.test(source)) {
     issues.push(issue("invalid_scope", source, path, valueType(input), "Topic Collection only", node.migration));
-  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "topic_route_start"].includes(node.validator)) {
+  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "safe_relative_path", "unique_blueprint_targets", "topic_route_start"].includes(node.validator)) {
     throw new TypeError(`未知配置校验器：${node.validator}`);
   }
 }

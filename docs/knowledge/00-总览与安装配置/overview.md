@@ -356,7 +356,9 @@ flowchart TD
 
 Stellar 通过 npm 以 `hexo-theme-stellar` 分发，采用 MIT 协议开源。
 
-**参考源码**：[package.json](../../../package.json)、[scripts/lib/theme-metadata.js](../../../scripts/lib/theme-metadata.js)、[README.md](../../../README.md)
+Pre-alpha M3 还提供 `stellar init` 与 `stellar doctor`：前者从三套 Blueprint 和两套 Visual Style 生成一次性的显式站点文件，后者复用 v2 Schema 只读检查环境与配置。Blueprint 不进入页面运行时，也不会成为新的配置根；机器可读契约位于 `reference/v2-blueprints.json`。
+
+**参考源码**：[package.json](../../../package.json)、[blueprints/](../../../blueprints/)、[scripts/commands/stellar.js](../../../scripts/commands/stellar.js)、[scripts/lib/theme-metadata.js](../../../scripts/lib/theme-metadata.js)、[README.md](../../../README.md)
 
 ---
 

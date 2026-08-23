@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "minimal-reading",
+  "name": "Minimal Reading",
+  "description": "适合长文、随笔与低干扰阅读体验的内容站点。",
+  "default_style": "minimal",
+  "files": [
+    {
+      "source": "_config.stellar.yml",
+      "target": "_config.stellar.yml",
+      "template": true
+    },
+    {
+      "source": "source/_posts/a-quiet-place-to-write.md",
+      "target": "source/_posts/a-quiet-place-to-write.md",
+      "template": true
+    }
+  ]
+}
