@@ -32,8 +32,8 @@ issue: 718
 - [x] 主题 `npm run check` 通过（357 项测试）。
 - [x] 主题知识库核查通过（行号异常与版本不一致均为 0）。
 - [x] 主工程 `npm run g` 通过（生成并压缩 262 个文件）。
-- [ ] Standards review 无剩余 finding。
-- [ ] Spec review 无剩余 finding。
-- [ ] 主题知识库、架构状态、`VERIFICATION.md` 与主仓库三份蓝图状态已同步。
+- [x] Standards review 无剩余硬违规；保留两份独立 CI 门禁脚本重复 helper 的判断项，不在本切片扩大抽象范围。
+- [x] Spec review 无剩余 finding。
+- [x] 主题知识库、架构状态、`VERIFICATION.md` 与主仓库三份蓝图状态已同步。
 - [x] 主仓库 `source/`、既有内容改动和 v2 子模块指针未暂存、未提交。
-- [ ] 实现与验证登记提交已推送 `origin/v2`，issue 由 `resolved` CI 自动关闭。
+- [x] 实现与验证登记提交已推送 `origin/v2`，issue 由 `resolved` CI 自动关闭。

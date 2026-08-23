@@ -2,7 +2,7 @@
 
 [简体中文](README.md) · [English](README_EN.md)
 
-> Stellar v2 仍处于 Alpha。试用前请阅读 [v2 Alpha 快速开始与范围](ALPHA.md)，字段契约见 [v2 Reference](reference/README.md)。稳定版用户继续使用下方正式文档。
+> Stellar v2 当前是尚未发布的 Alpha 候选预览。试用前请阅读 [v2 Alpha 候选快速开始与范围](ALPHA.md)，字段契约见 [v2 Reference](reference/README.md)。稳定版用户继续使用下方正式文档。
 
 [![npm](https://img.shields.io/npm/v/hexo-theme-stellar)](https://www.npmjs.com/package/hexo-theme-stellar)
 [![license](https://img.shields.io/github/license/xaoxuu/hexo-theme-stellar)](https://github.com/xaoxuu/hexo-theme-stellar/blob/main/LICENSE)

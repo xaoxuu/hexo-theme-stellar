@@ -11,8 +11,8 @@ issue: 718
 3. [x] 增加 `ALPHA.md` 与 README 入口，真实验证 init/doctor 示例并记录不稳定契约和未交付范围。
 4. [x] 建立 npm tarball 安装门禁，在三个隔离 Hexo 8 工程运行 init → doctor → generate，覆盖四类 profile 与 Runtime Manifest。
 5. [x] 固化 v1/v2 首屏核心 JS gzip 口径并达到 30% 阈值；建立 `2.0.0-alpha.1` 字符的候选包，不代表 Alpha 1 最终决策。
-6. [ ] 同步主题知识库、架构状态、`VERIFICATION.md` 和主仓库三份 v2 蓝图状态文档。
-7. [ ] 运行主题、主工程、Reference、打包、端到端与双轨 review 门禁，提交推送并以 `resolved` 闭环 #718。
+6. [x] 同步主题知识库、架构状态、`VERIFICATION.md` 和主仓库三份 v2 蓝图状态文档。
+7. [x] 运行主题、主工程、Reference、打包、端到端与双轨 review 门禁，提交推送并以 `resolved` 闭环 #718。
 
 # 风险与回退
 

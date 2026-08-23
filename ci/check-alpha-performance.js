@@ -152,7 +152,7 @@ function extractCurrentTarball(root) {
 }
 
 function buildReport() {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-alpha-performance-"));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-alpha-performance-"));
   try {
     const baselineTheme = extractBaseline(root);
     const currentTheme = extractCurrentTarball(root);
