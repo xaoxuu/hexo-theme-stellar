@@ -350,6 +350,8 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `11b637b` | fix(v2): 修复外观配置审查问题 (#710) | Standards / Spec 双轨 review 修复：`appearance.backgrounds.sidebar.opacity: 0` 无条件投影到 Stylus 变量，补充回归断言；知识库的标签插件兜底与段落对齐路径同步为 `resources.fallbacks` / `appearance.typography` |
+| `6bb55ef` | refactor(v2): 迁移外观与资源兜底配置 (#710) | 设计文档 `2026-08-23-v2-appearance-resources-config/`；`appearance` / `resources.fallbacks` 严格 Schema、冻结 camelCase 运行时、EJS / helper / tag plugin / Stylus 消费链、语言化 loading 文案、配置与模型 Reference、282 项测试与主工程 254 个生成文件；Standards / Spec 双轨 review 问题修复后无剩余 finding |
 | `097950c` | refactor(v2): 迁移内容配置 Schema (#709) | 设计文档 `2026-08-23-v2-collection-front-matter-schema/`；Collection / Front Matter 声明式 Schema、最终 snake_case 输入与冻结 camelCase 对象、来源化严格诊断、Wiki / Topic / Notebook / Post 消费链、配置与模型 Reference、主工程真实输入迁移、278 项测试与主工程 254 个生成文件；Standards / Spec 双轨 review 无剩余 finding |
 | `ae09d1a` | refactor(v2): 迁移内容默认配置 (#708) | 设计文档 `2026-08-23-v2-content-defaults-config/`；`content.article/notebook` 的严格 Schema、保行为默认、冻结 camelCase 运行时、Collection/PageViewModel、相关内容、helper、EJS 与 Stylus 消费链、旧根诊断、双 Reference、279 项测试与主工程 254 个生成文件；Standards / Spec 双轨 review 无剩余 finding |
 | `70c0841` | refactor(v2): 迁移 Layout Profile 配置 (#707) | 设计文档 `2026-08-22-v2-layout-profiles-config/`；13 个封闭 `layout.profiles` 的严格 Schema、冻结 camelCase 运行时、路径/菜单/tabs/侧栏/首页评论消费链、旧 `site_tree` 诊断、配置 Reference、274 项测试与主工程 254 个生成文件；Standards / Spec 双轨 review 无剩余 finding |
