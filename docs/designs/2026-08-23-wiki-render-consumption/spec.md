@@ -1,7 +1,7 @@
 ---
 title: Stellar v2 Wiki 完整渲染消费链
 date: 2026-08-23
-status: 待验收
+status: 已完成
 ---
 
 # Wiki 完整渲染消费链方案

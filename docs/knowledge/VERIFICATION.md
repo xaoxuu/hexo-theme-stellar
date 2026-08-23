@@ -354,6 +354,10 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `a86a782` | fix(v2): 保持 Wiki Footer 显式启用语义 (#713) | #713 Spec 复审回归修正：Wiki Collection 不再无条件继承 Post 全局 Footer；只有页面或 Collection 显式启用时才解析全局许可/分享，未配置 Wiki 保持无 license/share DOM；补缺省 Footer 模型测试和文章页脚模型期数据流文档，主题 297 项测试与主工程 254 个生成文件通过 |
+| `a42407e` | fix(v2): 完成 Wiki 消费链规格收尾 (#713) | #713 Spec 复审收尾：Wiki ghrepo 的仓库名称与 API 均只取 `render.listing` 显式投影；文章页脚知识库完整改写为 Post/Wiki ViewModel 构建期级联与 `post_footer.ejs` 显式 local 消费链 |
+| `a7da7c4` | fix(v2): 修复 Wiki 消费链审查问题 (#713) | #713 Standards / Spec 首轮审查修复：恢复 Wiki 搜索过滤路径语义，Banner、ghrepo、head 改为显式 ViewModel 数据源，Wiki 改为真正的纯对象两阶段构建，Post/Wiki 共用评论投影，并补齐模板与知识库回归 |
+| `8fba7a6` | refactor(v2): 迁移 Wiki 渲染消费链 (#713) | 设计文档 `2026-08-23-wiki-render-consumption/`；Wiki 必需 `render.document/layout/seo/cover/article/listing`、两阶段深冻结模型、详情 Shell/Region/Section/Item/Navigation 与显式辅助 partial、索引 listing/标签投影、配置 Reference、296 项测试和主工程 254 个生成文件；Topic/Notebook 保持旧链，M2 与 Alpha 1 仍为部分交付 |
 | `a5bda3a` | fix(v2): 恢复 site Footer 默认文案 | 设计文档 `2026-08-23-v2-site-footer-default/`；恢复 `site.footer.content` 的主题署名默认值，同步 `_config.yml`、声明式 Schema、配置 Reference、解析测试与知识库；显式空字符串仍可关闭，文章许可继续由 `content.article.footer.license` 管理；292 项测试与主工程 254 个生成文件通过 |
 | `fe8d810` | refactor(v2): 封闭配置根与运行时数据边界 (#712) | 设计文档 `2026-08-23-v2-config-root-seal/`；八根主题 Schema 根级封闭、旧根/非对象诊断、package 元数据与核心资源内部化、pretty URL 内部策略、`hexo.stellar.data` 运行时数据边界、Node/EJS 消费链、已交付配置 Reference、292 项测试与主工程 254 个生成文件；Standards / Spec 双轨 review 无剩余 finding，Pre-alpha M1.5 完成，M2–M5 与 Alpha 1 未完成 |
 | `5b27db6` | refactor(v2): 迁移 Extension 与服务配置 (#711) | 设计文档 `2026-08-23-v2-extension-services-config/`；`extensions.search/comments/tags/features/services/cache` 严格 Schema、冻结 camelCase 运行时、第三方参数袋、完整服务 URL、官方资源内部化、Node / EJS / tag plugin / Stylus / 客户端注入消费链、双 Reference、287 项测试与主工程 254 个生成文件；Standards / Spec 双轨 review 无剩余 finding |
