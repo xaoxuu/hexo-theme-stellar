@@ -36,7 +36,11 @@ test("site/layout/content/appearance/resources/head Schema 提供默认值并拒
         url: "/"
       },
       menu: { items: [] },
-      footer: { actions: {}, sections: [], content: "" }
+      footer: {
+        actions: {},
+        sections: [],
+        content: "本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。"
+      }
     },
     seo: {
       canonical: { host: "", allowedHosts: ["localhost"] },
@@ -89,6 +93,7 @@ test("站点覆盖完成规范化、数组替换、稳定去重并保留注入�
   const config = parseStellarConfig({
     source: "_config.stellar.yml",
     themeConfig: {
+      site: { footer: { content: "" } },
       seo: {
         canonical: {
           host: "  https://xaoxuu.com/  ",

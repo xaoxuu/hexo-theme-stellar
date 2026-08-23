@@ -536,7 +536,7 @@ const CONFIG_TARGET_FIELDS = deepFreeze([
     ["site.footer.sections", "array", literal([]), { items: { type: ["object"] } }],
     ["site.footer.sections[].title", "string", literal("")],
     ["site.footer.sections[].items", "array", literal([]), { items: { type: ["string"] } }],
-    ["site.footer.content", "string", literal("")]
+    ["site.footer.content", "string", literal("本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。")]
   ]),
   ...fields(SEO_CONSUMERS, [
     ["seo.canonical.host", ["string", "null"], literal(null), { normalization: "trim; remove scheme and trailing slash; null disables canonical output" }],

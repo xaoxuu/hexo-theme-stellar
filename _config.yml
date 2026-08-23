@@ -55,6 +55,7 @@ site:
     #     - '[近期发布](/)'
     #     - '[归档](/blog/archives/)'
     content: |
+      本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。
 
 
 ######## Main ########

@@ -235,9 +235,10 @@ site:
     actions: {}
     sections: []
     content: |
+      本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。
 ```
 
-Brand 图片展示变体使用 `image.variant`（`avatar/icon/plain`），图片和名称链接分别写入 `image.url` 与根级 `url`。菜单数组使用 `id/title/icon/url/accent`；站点层完整替换数组。Footer 的动态操作记录位于 `actions`，分栏链接位于 `sections`，版权或说明原文位于 `content`。旧主题根 `brand/menubar/footer` 及其 `style/theme/social/sitemap/type/onclick` 子字段不会兼容读取，而会报告目标路径。
+Brand 图片展示变体使用 `image.variant`（`avatar/icon/plain`），图片和名称链接分别写入 `image.url` 与根级 `url`。菜单数组使用 `id/title/icon/url/accent`；站点层完整替换数组。Footer 的动态操作记录位于 `actions`，分栏链接位于 `sections`，版权或说明原文位于 `content`；默认文案显示作者与主题署名，显式空字符串可关闭。文章许可由 `content.article.footer.license` 独立管理。旧主题根 `brand/menubar/footer` 及其 `style/theme/social/sitemap/type/onclick` 子字段不会兼容读取，而会报告目标路径。
 
 解析后 JavaScript 只消费冻结的 `hexo.stellar.config.site`；菜单与 Footer 不再直接读取 `theme.menubar/footer`，Post 与 Topic 的全局 Brand 也不再从 `theme.brand` 推断。Collection 与 Front Matter 的 Brand 覆盖仍在内容边界适配，最终字段收敛留给后续切片。
 
@@ -386,7 +387,7 @@ content:
 | `actions.*.variant` | `dropdown` | 将条目渲染为通用下拉菜单 |
 | `actions.*.items` | Array | dropdown 子项列表；`title`、`url` 必填，`icon` 可选 |
 | `sections` | Array | 主内容区页脚的分组链接 |
-| `content` | String | 主内容区页脚的 Markdown 文本 |
+| `content` | String | 主内容区页脚的 Markdown 文本；默认显示作者与主题署名，显式空字符串可关闭 |
 
 dropdown 示例：
 

@@ -12480,7 +12480,7 @@
         "footer": {
           "actions": {},
           "sections": [],
-          "content": ""
+          "content": "本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。"
         }
       },
       "migration": "configuration/site",
@@ -13100,7 +13100,7 @@
       ],
       "default": {
         "kind": "literal",
-        "value": ""
+        "value": "本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。"
       },
       "scope": "theme",
       "cascade": [
@@ -13115,7 +13115,7 @@
         "menu renderer",
         "footer renderer"
       ],
-      "example": "本站由 Stellar 生成。",
+      "example": "本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。",
       "migration": "configuration/site"
     },
     {

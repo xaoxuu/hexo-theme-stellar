@@ -637,7 +637,11 @@ const CONFIG_SCHEMA = deepFreeze({
       example: {
         brand: { name: "Stellar", tagline: "每个人的独立博客", url: "/" },
         menu: { items: [{ id: "post", title: "博客", icon: "default:documents", url: "/", accent: "#1BCDFC" }] },
-        footer: { actions: {}, sections: [], content: "" }
+        footer: {
+          actions: {},
+          sections: [],
+          content: "本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。"
+        }
       },
       migration: "configuration/site",
       runtimeKey: "site",
@@ -749,7 +753,10 @@ const CONFIG_SCHEMA = deepFreeze({
                 }
               })
             }),
-            content: deliveredField("site.footer.content", { normalizer: "trusted_text", example: "本站由 Stellar 生成。" })
+            content: deliveredField("site.footer.content", {
+              normalizer: "trusted_text",
+              example: "本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。"
+            })
           }
         })
       }
