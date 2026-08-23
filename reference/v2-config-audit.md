@@ -2,7 +2,7 @@
 
 > 本页由当前配置 Schema 与 M6 退出字段清单自动生成。请勿手工编辑。
 
-结论计数：`public=569`、`localize=10`、`derive=0`、`internalize=12`、`remove=0`。
+结论计数：`public=569`、`localize=9`、`derive=0`、`internalize=12`、`remove=1`。
 
 | Scope | Path | Accepted | Disposition | Default source | Consumers | Rationale |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -349,7 +349,7 @@
 | theme | extensions.tags.chat.endpoint | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.tags.checkbox | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.tags.checkbox.interactive | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | extensions.tags.copy | no | localize | languages/*.yml | configuration diagnostics<br>migration guidance | copy 标签没有站点级行为选择，成功提示由 message.copied 提供 |
+| theme | extensions.tags.copy | no | remove | removed | configuration diagnostics<br>migration guidance | copy 标签没有站点级行为选择，空配置节点退出公开契约 |
 | theme | extensions.tags.copy.toast | no | localize | languages/*.yml | configuration diagnostics<br>migration guidance | 复制成功提示属于主题 UI 文案 |
 | theme | extensions.tags.emoji | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.tags.emoji.&lt;provider&gt; | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |

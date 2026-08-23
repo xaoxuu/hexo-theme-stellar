@@ -13,7 +13,7 @@ if (explicitComments) {
   var service = settings.provider || commentConfig.provider || ''
   commentModel = {
     enabled: settings.enabled !== false && service.length > 0,
-    title: settings.title || commentConfig.title || '',
+    title: settings.title ?? commentConfig.title ?? null,
     id: settings.id || '',
     service: service,
     options: service
@@ -29,7 +29,7 @@ if (explicitComments) {
 <% if (commentModel.enabled) { %>
   <div class="related-wrap md-text<%- scrollreveal(' ') %>" id="comments">
     <section class="header cmt-title cap theme">
-      <%- markdown(commentModel.title || __('btn.comments')) %>
+      <%- markdown(commentModel.title ?? __('btn.comments')) %>
     </section>
     <section class="body cmt-body <%- commentModel.service %>">
       <%- partial(commentModel.service + '/layout', {comments: commentModel}) %>

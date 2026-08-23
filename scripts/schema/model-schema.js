@@ -289,7 +289,7 @@ function commentsSchema(factory) {
   const { field, object } = factory;
   const properties = {
     enabled: field("boolean", { default: computed("provider 非空时默认启用，可由 collection/page comments.enabled 覆盖"), example: true }),
-    title: field("string", { default: inherited("hexo.stellar.config.extensions.comments.title"), example: "参与讨论" }),
+    title: field(["string", "null"], { default: inherited("hexo.stellar.config.extensions.comments.title"), example: "参与讨论" }),
     id: field("string", { example: "post-hello" }),
     provider: field(["string", "null"], { default: inherited("hexo.stellar.config.extensions.comments.provider"), example: "giscus" }),
     options: field("object", { example: { "data-repo": "xaoxuu/xaoxuu.com" }, additionalProperties: true })
@@ -615,7 +615,7 @@ function pageViewModelSchema(profile) {
         }, { required: true, example: { enabled: false, title: "", maxCount: 5, items: [] } }),
         comments: object({
           enabled: field("boolean", { default: computed("由最终 comments.enabled 与 service 生成"), example: true, required: true }),
-          title: field("string", { default: inherited("item.presentation.comments.title"), example: "参与讨论", required: true }),
+          title: field(["string", "null"], { default: inherited("item.presentation.comments.title"), example: "参与讨论", required: true }),
           id: field("string", { default: inherited("item.presentation.comments.id"), example: "post-hello", required: true }),
           service: field("string", { default: inherited("item.presentation.comments.service"), example: "giscus", required: true }),
           options: field("object", { default: computed("由激活服务参数袋生成"), example: { "data-repo": "example/repo" }, required: true, additionalProperties: true }),
@@ -682,7 +682,7 @@ function pageViewModelSchema(profile) {
     });
     const comments = object({
       enabled: field("boolean", { default: computed("由最终 comments.enabled 与 service 生成"), example: true, required: true }),
-      title: field("string", { default: inherited("item.presentation.comments.title"), example: "参与讨论", required: true }),
+      title: field(["string", "null"], { default: inherited("item.presentation.comments.title"), example: "参与讨论", required: true }),
       id: field("string", { default: inherited("item.presentation.comments.id"), example: "wiki-stellar", required: true }),
       service: field("string", { default: inherited("item.presentation.comments.provider"), example: "giscus", required: true }),
       options: field("object", { default: computed("由激活服务参数袋生成"), example: { "data-repo": "example/repo" }, required: true, additionalProperties: true }),
@@ -812,7 +812,7 @@ function pageViewModelSchema(profile) {
     }, { example: { id: "tools/cli", name: "tools/cli", label: "cli", path: "notes/dev/tags/tools/cli", parentId: "tools", children: [] } });
     const comments = object({
       enabled: field("boolean", { default: computed("由最终 comments.enabled 与 service 生成"), example: true, required: true }),
-      title: field("string", { default: inherited("item.presentation.comments.title"), example: "参与讨论", required: true }),
+      title: field(["string", "null"], { default: inherited("item.presentation.comments.title"), example: "参与讨论", required: true }),
       id: field("string", { default: inherited("item.presentation.comments.id"), example: "note-node", required: true }),
       service: field("string", { default: inherited("item.presentation.comments.provider"), example: "giscus", required: true }),
       options: field("object", { default: computed("由激活服务参数袋生成"), example: {}, required: true, additionalProperties: true }),

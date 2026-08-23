@@ -458,7 +458,6 @@ const CONFIG_INTERNALIZED_RESOURCES = deepFreeze([
   "plugins.<official_extension>.{js,css,inject}",
   "data_services.<official_service>.js",
   "comments.custom_css",
-  "extensions.tags.copy",
   "extensions.features.{preload,lightbox,reveal,ai_summary,diagrams}.provider",
   "extensions.features.ai_summary.interface.version",
   "extensions.cache.*",
@@ -645,7 +644,7 @@ const CONFIG_TARGET_FIELDS = deepFreeze([
     ["extensions.search.providers.local.exclude", "array", literal([]), { items: { type: ["string"] } }],
     ["extensions.search.providers.algolia", "object", registered("Algolia"), { boundary: "parameter_bag" }],
     ["extensions.comments.provider", ["string", "null"], literal(null), { values: [null, "beaudar", "utterances", "giscus", "twikoo", "waline", "artalk"] }],
-    ["extensions.comments.title", "string", literal("")],
+    ["extensions.comments.title", ["string", "null"], literal(null)],
     ["extensions.comments.providers.<provider>", "object", registered("comment provider"), { boundary: "parameter_bag" }],
     ...TAG_EXTENSION_IDS.map(id => [`extensions.tags.${id}`, "object", registered(`tag:${id}`), {
       boundary: "registered_schema",

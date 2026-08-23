@@ -3171,11 +3171,12 @@
       "path": "extensions.comments.title",
       "runtimePath": "extensions.comments.title",
       "type": [
-        "string"
+        "string",
+        "null"
       ],
       "default": {
         "kind": "literal",
-        "value": ""
+        "value": null
       },
       "scope": "theme",
       "cascade": [
@@ -3298,7 +3299,7 @@
           "interface": {
             "name": null,
             "introduce": null,
-            "buttons": []
+            "buttons": null
           }
         }
       },
@@ -3328,7 +3329,7 @@
         "interface": {
           "name": null,
           "introduce": null,
-          "buttons": []
+          "buttons": null
         }
       },
       "migration": "configuration/extensions",
@@ -3397,7 +3398,7 @@
         "value": {
           "name": null,
           "introduce": null,
-          "buttons": []
+          "buttons": null
         }
       },
       "scope": "theme",
@@ -3416,7 +3417,7 @@
       "example": {
         "name": null,
         "introduce": null,
-        "buttons": []
+        "buttons": null
       },
       "migration": "configuration/extensions",
       "sealed": true
@@ -3425,11 +3426,12 @@
       "path": "extensions.features.ai_summary.interface.buttons",
       "runtimePath": "extensions.features.aiSummary.interface.buttons",
       "type": [
-        "array"
+        "array",
+        "null"
       ],
       "default": {
         "kind": "literal",
-        "value": []
+        "value": null
       },
       "scope": "theme",
       "cascade": [
@@ -3444,7 +3446,7 @@
         "browser Extension runtime",
         "Reference generator"
       ],
-      "example": [],
+      "example": null,
       "migration": "configuration/extensions"
     },
     {

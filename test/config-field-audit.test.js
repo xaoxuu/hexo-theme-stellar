@@ -82,6 +82,7 @@ test("M6 配置审计覆盖当前与退出字段且每项只有一个结论", ()
     assert.ok(Array.isArray(field.consumers) && field.consumers.length > 0, `${field.path}: consumers`);
   }
   assert.ok(retired.some(field => field.path === "extensions.cache" && field.disposition === "internalize"));
+  assert.ok(retired.some(field => field.path === "extensions.tags.copy" && field.disposition === "remove"));
   assert.ok(retired.some(field => field.path === "extensions.tags.copy.toast" && field.disposition === "localize"));
   assert.ok(accepted.some(field => field.path === "extensions.comments.title" && field.disposition === "localize"));
 });
@@ -109,6 +110,7 @@ test("三套内置语言键一致且 M6 系统文案不再写入公开主题默�
 
 test("内部常量入口深度冻结并拥有资源、provider、缓存与时序", () => {
   assert.equal(Object.isFrozen(INTERNAL_CONSTANTS), true);
+  assert.equal(Object.isFrozen(INTERNAL_CONSTANTS.assets.runtime.modules), true);
   assert.equal(Object.isFrozen(INTERNAL_CONSTANTS.assets.features), true);
   assert.equal(Object.isFrozen(INTERNAL_CONSTANTS.runtime.cache.ttl), true);
   assert.equal(INTERNAL_CONSTANTS.providers.lightbox, "fancybox");

@@ -106,7 +106,7 @@ async function mountLightbox(root, context, config) {
   let selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon]):not([class*="emo"]), .with-fancybox .tk-content img:not([atk-emoticon]):not([class*="emo"]), .with-fancybox .wl-content img:not([atk-emoticon]):not([class*="emo"])';
   if (config.selector) selector += `, ${config.selector}`;
   await Promise.all([
-    context.assets.style('/css/plugins/fancybox.css'),
+    context.assets.style(config.assets.localCss),
     context.assets.style(config.assets.css),
     context.assets.script(config.assets.js)
   ]);
@@ -197,10 +197,10 @@ async function mountAiSummary(root, context, config) {
   if (root.nodeType !== 9) {
     throw new TypeError('[stellar runtime] AI summary compatibility adapter requires a document root');
   }
-  await context.assets.script(config.asset);
+  await context.assets.script(config.assets.js);
   const instance = new window.ChucklePostAI({
     el: 'article.content',
-    css: context.assets.resolve('/css/_plugins/tianli_gpt'),
+    css: context.assets.resolve(config.assets.localCss),
     field: config.scope,
     key: config.key,
     total_length: config.maxLength,
@@ -257,8 +257,8 @@ async function mountMathJax(root, context, config) {
 }
 
 async function mountDiagrams(root, context, config) {
-  if (config.styleOptimization === true) await context.assets.style('/css/plugins/mermaid.css');
-  await context.assets.script(config.asset);
+  if (config.styleOptimization === true) await context.assets.style(config.assets.localCss);
+  await context.assets.script(config.assets.js);
   const theme = config.colorScheme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches
     ? 'dark'
     : config.theme;
@@ -286,15 +286,15 @@ async function mountCodeCopy(root, context, config) {
     feedback_ms: policy.codeCopyFeedbackMs,
     toast_ms: policy.codeCopyToastMs
   };
-  await context.assets.script('/js/plugins/copycode.js');
+  await context.assets.script(config.assets.js);
   const elements = queryAll(root, '.code');
   window.createCopyButtons?.(elements);
   return () => elements.forEach(element => element.querySelector('.copy-btn')?.remove());
 }
 
-async function mountAdaptiveText(root, context) {
-  await context.assets.script('/js/color.js');
-  await context.assets.script('/js/plugins/adaptive-text.js');
+async function mountAdaptiveText(root, context, config) {
+  await context.assets.script(config.assets.colorJs);
+  await context.assets.script(config.assets.js);
   return window.stellarAdaptiveText?.mount?.(queryAll(root, '[data-text-adaptive]')) || (() => {});
 }
 
@@ -303,7 +303,7 @@ async function mountCardHover(root, context, config) {
     spotlightColor: config.spotlightColor,
     maxTilt: config.maxTilt
   };
-  await context.assets.script('/js/plugins/card-hover.js');
+  await context.assets.script(config.assets.js);
   window.stellar?.cardHover?.mountAll?.(root);
   return () => window.stellar?.cardHover?.unmountAll?.(root);
 }
@@ -318,7 +318,7 @@ async function mountCjk(root, context, config) {
 
 async function mountSwiper(root, context, config) {
   await Promise.all([
-    context.assets.style('/css/plugins/swiper.css'),
+    context.assets.style(config.assets.localCss),
     context.assets.style(config.assets.css),
     context.assets.script(config.assets.js)
   ]);
@@ -339,8 +339,8 @@ export async function mount(root, context) {
   const config = context.extension.config;
   switch (config.feature) {
     case 'lazy-loading': return mountLazyLoading(root, context, config);
-    case 'deferred-icons': return mountLegacyAsset(root, context, '/js/icons.js', 'deferredIcons');
-    case 'dropdown': return mountLegacyAsset(root, context, '/js/plugins/dropdown.js', 'dropdown');
+    case 'deferred-icons': return mountLegacyAsset(root, context, config.asset, 'deferredIcons');
+    case 'dropdown': return mountLegacyAsset(root, context, config.asset, 'dropdown');
     case 'preload':
       window.FPConfig = { delay: 0, ignoreKeywords: [], maxRPS: 5, hoverDelay: 25 };
       await context.assets.script(config.asset);

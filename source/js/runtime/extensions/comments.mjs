@@ -53,7 +53,7 @@ async function mountArtalk(root, context, config) {
   let historyTimer = null;
   const cleanupViewport = viewportLoad(element, async isActive => {
     await Promise.all([
-      context.assets.style('/css/comments/artalk.css'),
+      context.assets.style(config.assets.localCss),
       context.assets.style(config.assets.css),
       context.assets.script(config.assets.js)
     ]);
@@ -134,7 +134,7 @@ function mountTwikoo(root, context, config) {
   if (!element) return;
   let instance = null;
   const cleanupViewport = viewportLoad(element, async isActive => {
-    await context.assets.style('/css/comments/twikoo.css');
+    await context.assets.style(config.assets.localCss);
     await context.assets.script(config.assets.js);
     if (!isActive()) return;
     const created = await window.twikoo.init(Object.assign({}, config.options, {
@@ -156,7 +156,7 @@ function mountWaline(root, context, config) {
   let instance = null;
   const cleanupViewport = viewportLoad(element, async isActive => {
     await Promise.all([
-      context.assets.style('/css/comments/waline.css'),
+      context.assets.style(config.assets.localCss),
       context.assets.style(config.assets.css),
       context.assets.style(config.assets.metaCss)
     ]);
@@ -187,12 +187,12 @@ export async function mount(root, context) {
   switch (config.provider) {
     case 'artalk': return mountArtalk(root, context, config);
     case 'beaudar':
-      await context.assets.style('/css/comments/beaudar.css');
-      return mountEmbed(root, 'beaudar', 'https://beaudar.lipk.org/client.js', context);
+      await context.assets.style(config.assets.localCss);
+      return mountEmbed(root, 'beaudar', config.assets.js, context);
     case 'giscus': return mountEmbed(root, 'giscus', config.assets.js, context);
     case 'utterances':
-      await context.assets.style('/css/comments/utterances.css');
-      return mountEmbed(root, 'utterances', 'https://utteranc.es/client.js', context);
+      await context.assets.style(config.assets.localCss);
+      return mountEmbed(root, 'utterances', config.assets.js, context);
     case 'twikoo': return mountTwikoo(root, context, config);
     case 'waline': return mountWaline(root, context, config);
     default: throw new TypeError(`unknown comment provider ${config.provider}`);

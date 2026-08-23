@@ -14,10 +14,10 @@
   ],
   "counts": {
     "public": 569,
-    "localize": 10,
+    "localize": 9,
     "derive": 0,
     "internalize": 12,
-    "remove": 0
+    "remove": 1
   },
   "fields": [
     {
@@ -4810,14 +4810,14 @@
     {
       "scope": "theme",
       "path": "extensions.tags.copy",
-      "disposition": "localize",
+      "disposition": "remove",
       "accepted": false,
-      "defaultSource": "languages/*.yml",
+      "defaultSource": "removed",
       "consumers": [
         "configuration diagnostics",
         "migration guidance"
       ],
-      "rationale": "copy 标签没有站点级行为选择，成功提示由 message.copied 提供"
+      "rationale": "copy 标签没有站点级行为选择，空配置节点退出公开契约"
     },
     {
       "scope": "theme",

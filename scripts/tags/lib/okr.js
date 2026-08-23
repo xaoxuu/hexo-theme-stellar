@@ -13,14 +13,14 @@
 
 'use strict'
 
-const BUILTIN_STATUS_IDS = new Set(['in_track', 'at_risk', 'off_track', 'finished', 'unfinished'])
+const BUILTIN_STATUS_IDS = new Set(["in_track", "at_risk", "off_track", "finished", "unfinished"]);
 
 function localizeStatuses(ctx, statuses) {
   const __ = ctx.theme.i18n.__(ctx.config.language)
   return Object.fromEntries(Object.entries(statuses).map(([id, status]) => [id, {
     ...status,
-    label: status.label || (BUILTIN_STATUS_IDS.has(id) ? __('tag_plugins.okr.status.' + id) : '')
-  }]))
+    label: status.label || (BUILTIN_STATUS_IDS.has(id) ? __("tag_plugins.okr.status." + id) : "")
+  }]));
 }
 
 function splitContentAndNote(input) {

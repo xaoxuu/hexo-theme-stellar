@@ -303,11 +303,11 @@ function featureExtensionSchemas() {
       interface: extensionObject({
         name: extensionValue(["string", "null"], null),
         introduce: extensionValue(["string", "null"], null),
-        buttons: extensionValue("array", [], { items: { type: ["string"] } })
+        buttons: extensionValue(["array", "null"], null, { items: { type: ["string"] } })
       }, {
         name: null,
         introduce: null,
-        buttons: []
+        buttons: null
       }, { removedProperties: { button: "buttons", version: "internalized" } })
     }, {
       enabled: false,
@@ -322,7 +322,7 @@ function featureExtensionSchemas() {
       interface: {
         name: null,
         introduce: null,
-        buttons: []
+        buttons: null
       }
     }, { removedProperties: { enable: "enabled", provider: "internalized", js: "internalized", field: "scope", total_length: "max_length", summary_directly: "show_immediately", rec_method: "recommendation" } }),
     math: extensionObject({

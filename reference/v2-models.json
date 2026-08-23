@@ -731,7 +731,8 @@
         {
           "path": "presentation.comments.title",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -2306,7 +2307,8 @@
         {
           "path": "presentation.comments.title",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -3676,7 +3678,8 @@
         {
           "path": "presentation.comments.title",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -5495,7 +5498,8 @@
         {
           "path": "presentation.comments.title",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -7122,7 +7126,8 @@
         {
           "path": "presentation.comments.title",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -8066,7 +8071,8 @@
         {
           "path": "render.article.comments.title",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": true,
           "default": {
@@ -9587,7 +9593,8 @@
         {
           "path": "render.article.comments.title",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": true,
           "default": {
@@ -11494,7 +11501,8 @@
         {
           "path": "render.article.comments.title",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": true,
           "default": {
@@ -13432,7 +13440,8 @@
         {
           "path": "render.article.comments.title",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": true,
           "default": {

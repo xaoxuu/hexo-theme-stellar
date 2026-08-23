@@ -490,7 +490,7 @@ function buildCommentsRender(stellarConfig, item) {
   }
   return {
     enabled: comments.enabled !== false && service.length > 0,
-    title: typeof comments.title === "string" && comments.title.length > 0
+    title: typeof comments.title === "string"
       ? comments.title
       : extensionConfig.comments.title,
     id: typeof comments.id === "string" ? comments.id : "",

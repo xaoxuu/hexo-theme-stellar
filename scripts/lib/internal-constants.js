@@ -47,6 +47,15 @@ module.exports = deepFreeze({
     }
   },
   assets: {
+    runtime: {
+      bootstrap: "/js/runtime/index.mjs",
+      modules: {
+        search: "/js/runtime/extensions/search.mjs",
+        services: "/js/runtime/extensions/services.mjs",
+        comments: "/js/runtime/extensions/comments.mjs",
+        feature: "/js/runtime/extensions/feature.mjs"
+      }
+    },
     dependencies: {
       marked: "https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js",
       lazyLoading: "https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"
@@ -55,34 +64,63 @@ module.exports = deepFreeze({
       algolia: "https://gcore.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"
     },
     comments: {
+      beaudar: {
+        js: "https://beaudar.lipk.org/client.js",
+        localCss: "/css/comments/beaudar.css"
+      },
+      utterances: {
+        js: "https://utteranc.es/client.js",
+        localCss: "/css/comments/utterances.css"
+      },
       giscus: { js: "https://giscus.app/client.js" },
-      twikoo: { js: "https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js" },
+      twikoo: {
+        js: "https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js",
+        localCss: "/css/comments/twikoo.css"
+      },
       waline: {
         js: "https://gcore.jsdelivr.net/npm/@waline/client@3.15.2/dist/waline.js",
         css: "https://gcore.jsdelivr.net/npm/@waline/client@3.15.2/dist/waline.css",
-        metaCss: "https://gcore.jsdelivr.net/npm/@waline/client@3.15.2/dist/waline-meta.css"
+        metaCss: "https://gcore.jsdelivr.net/npm/@waline/client@3.15.2/dist/waline-meta.css",
+        localCss: "/css/comments/waline.css"
       },
       artalk: {
         js: "https://unpkg.com/artalk@2.9/dist/artalk.js",
-        css: "https://unpkg.com/artalk@2.9/dist/artalk.css"
+        css: "https://unpkg.com/artalk@2.9/dist/artalk.css",
+        localCss: "/css/comments/artalk.css"
       }
     },
     features: {
       preload: "https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js",
       lightbox: {
         js: "https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js",
-        css: "https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"
+        css: "https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css",
+        localCss: "/css/plugins/fancybox.css"
       },
       swiper: {
         js: "https://unpkg.com/swiper@10.3/swiper-bundle.min.js",
-        css: "https://unpkg.com/swiper@10.3/swiper-bundle.min.css"
+        css: "https://unpkg.com/swiper@10.3/swiper-bundle.min.css",
+        localCss: "/css/plugins/swiper.css"
       },
       reveal: "https://gcore.jsdelivr.net/npm/scrollreveal@4.0/dist/scrollreveal.min.js",
-      aiSummary: "https://jsd.onmicrosoft.cn/gh/qxchuckle/Post-Summary-AI@6.0/chuckle-post-ai.min.js",
+      aiSummary: {
+        js: "https://jsd.onmicrosoft.cn/gh/qxchuckle/Post-Summary-AI@6.0/chuckle-post-ai.min.js",
+        localCss: "/css/_plugins/tianli_gpt"
+      },
       katexCss: "https://cdn.jsdelivr.net/npm/katex@0.16.23/dist/katex.min.css",
       mathjaxV2: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML",
       mathjaxV3: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js",
-      diagrams: "https://gcore.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js",
+      diagrams: {
+        js: "https://gcore.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js",
+        localCss: "/css/plugins/mermaid.css"
+      },
+      codeCopy: { js: "/js/plugins/copycode.js" },
+      adaptiveText: {
+        colorJs: "/js/color.js",
+        js: "/js/plugins/adaptive-text.js"
+      },
+      cardHover: { js: "/js/plugins/card-hover.js" },
+      deferredIcons: { js: "/js/icons.js" },
+      dropdown: { js: "/js/plugins/dropdown.js" },
       cjkTypography: {
         css: "https://unpkg.com/heti@0.9/umd/heti.min.css",
         js: "https://unpkg.com/heti@0.9/umd/heti-addon.min.js"

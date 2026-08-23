@@ -185,10 +185,10 @@ test("非首屏图标与 dropdown 通过 selector Extension 按需加载", async
         const detail = source === "/js/icons.js" ? adapters.deferredIcons : adapters.dropdown;
         listeners.forEach(listener => listener({ detail }));
       } },
-      extension: { config: { feature: "deferred-icons" } }
+      extension: { config: { feature: "deferred-icons", asset: "/js/icons.js" } }
     };
     const iconsCleanup = await feature.mount(target, context);
-    context.extension.config = { feature: "dropdown" };
+    context.extension.config = { feature: "dropdown", asset: "/js/plugins/dropdown.js" };
     const dropdownCleanup = await feature.mount(target, context);
     assert.deepEqual(assets, ["/js/icons.js", "/js/plugins/dropdown.js"]);
     assert.deepEqual(calls.slice(0, 2), [["mount-icons", target], ["mount-dropdown", target]]);

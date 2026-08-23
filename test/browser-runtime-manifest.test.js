@@ -8,6 +8,7 @@ const {
   buildBrowserRuntimeManifest,
   serializeBrowserRuntimeManifest
 } = require("../scripts/lib/browser-runtime");
+const INTERNAL_CONSTANTS = require("../scripts/lib/internal-constants");
 
 function fixture(overrides = {}) {
   return Object.assign({
@@ -39,6 +40,7 @@ function fixture(overrides = {}) {
       }
     },
     assets: {
+      runtime: INTERNAL_CONSTANTS.assets.runtime,
       dependencies: { marked: "https://cdn.example/marked.js", lazyLoading: "https://cdn.example/lazy.js" },
       search: { algolia: "https://cdn.example/algolia.js" },
       comments: { giscus: { js: "https://giscus.app/client.js" } },
@@ -84,6 +86,23 @@ test("Runtime Manifest 以显式 AI 界面覆盖语言默认", () => {
     introduce: "Custom intro",
     version: "TianliGPT",
     buttons: ["Custom"]
+  });
+});
+
+test("Runtime Manifest 保留 AI 界面的显式空值", () => {
+  const input = fixture();
+  input.extensions.features.aiSummary.interface = {
+    name: "",
+    introduce: "",
+    buttons: []
+  };
+  const manifest = buildBrowserRuntimeManifest(input);
+  const ai = manifest.extensions.find(item => item.id === "ai-summary").config.interface;
+  assert.deepEqual(ai, {
+    name: "",
+    introduce: "",
+    version: "TianliGPT",
+    buttons: []
   });
 });
 

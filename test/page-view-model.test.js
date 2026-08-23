@@ -820,6 +820,7 @@ test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆�
   assert.equal(viewModel.item.presentation.comments.enabled, false);
   assert.equal(viewModel.item.presentation.comments.title, "");
   assert.equal(viewModel.render.article.comments.enabled, false);
+  assert.equal(viewModel.render.article.comments.title, "");
   assert.equal(viewModel.render.listing.listed, false);
   assert.equal(viewModel.item.listing.priority, 0);
   assert.deepEqual(viewModel.item.visibility, { listed: false, searchable: true });

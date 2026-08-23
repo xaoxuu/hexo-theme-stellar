@@ -15,7 +15,7 @@ const LOCALIZED_PATHS = new Set([
 ]);
 
 const RETIRED_FIELDS = Object.freeze([
-  ["extensions.tags.copy", "localize", "languages/*.yml", "copy 标签没有站点级行为选择，成功提示由 message.copied 提供"],
+  ["extensions.tags.copy", "remove", "removed", "copy 标签没有站点级行为选择，空配置节点退出公开契约"],
   ["extensions.tags.copy.toast", "localize", "languages/*.yml", "复制成功提示属于主题 UI 文案"],
   ["extensions.features.code_copy.idle_text", "localize", "languages/*.yml", "代码复制按钮默认文案属于主题 UI 文案"],
   ["extensions.features.code_copy.success_text", "localize", "languages/*.yml", "代码复制成功状态属于主题 UI 文案"],
