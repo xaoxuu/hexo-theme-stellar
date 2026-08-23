@@ -26,13 +26,13 @@ flowchart LR
   YAML["_config.stellar.yml\nextensions"] --> SCHEMA["声明式 Schema"]
   SCHEMA --> CONFIG["hexo.stellar.config.extensions"]
   CONFIG --> SERVER["生成器 / helper / tag plugin"]
-  CONFIG --> EJS["Extension partial"]
+  CONFIG --> EJS["Runtime Manifest"]
   CONFIG --> STYLUS["编译期条件"]
   ASSETS["内部资源注册表"] --> EJS
-  EJS --> PAGE["页面按需脚本与样式"]
+  EJS --> PAGE["ESM lifecycle / 按需脚本与样式"]
 ```
 
-`layout/_plugins/index.ejs` 根据搜索 provider、全局 Feature 和页面 `render.math/render.diagrams` 选择 partial。搜索、评论和数据组件沿用当前浏览器运行时；EJS 只把最终配置投影成现有内部 `ctx/def` 形状。原生 ESM 生命周期、统一 request/cache 和全局补载清理属于 M4。
+`scripts/lib/browser-runtime.js` 根据搜索/评论 provider、全局 Feature、页面 profile 与 `render.math/render.diagrams` 生成严格、深冻结的 manifest。`layout/_partial/scripts/runtime.ejs` 只注入 JSON 与单一 module bootstrap；浏览器按 `when.selector/always` dynamic import search、comments、services 或 Feature adapter，并以 mount/unmount 管理实例。旧全局补载队列和网络 monkey patch 已删除。
 
 ## 内部资源
 
@@ -51,7 +51,7 @@ flowchart LR
 - 评论：`extensions.comments.provider/title/providers` 定义站点默认；Collection / Front Matter 通过 `comments.provider/options` 覆盖。
 - 数学：全局 `extensions.features.math.provider` 可选择默认实现，页面 `render.math` 可覆盖。
 - 图表：`extensions.features.diagrams` 定义 Mermaid 默认，页面 `render.diagrams` 决定单页启用或覆盖选项。
-- 其它 Feature：统一使用 `enabled`，由对应 partial 按页面需要加载内部资源。
+- 其它 Feature：统一使用 `enabled`，由 Runtime Manifest adapter 按页面声明与 DOM 条件加载内部资源。
 
 Swiper 是主题内置容器能力，依据页面 DOM 按需加载，不提供公开配置。图片懒加载是主题基础行为，公开配置只保留过渡与比例修正参数。
 
@@ -59,7 +59,7 @@ Swiper 是主题内置容器能力，依据页面 DOM 按需加载，不提供�
 
 `extensions.services` 只公开业务端点和完整 GitHub URL。站点信息、评分与投票使用 `endpoint`；GitHub 使用 `api_url/raw_url/gist_url/card_url`，且必须是绝对 HTTP(S) URL。
 
-`extensions.cache` 提供 `enabled/default_ttl/ttl/max_entries`。`ttl` 是按服务名开放的数值记录；当前客户端由 EJS 投影到既有缓存内部对象，算法重写留给 M4。
+`extensions.cache` 提供 `enabled/default_ttl/ttl/max_entries`。`ttl` 是按服务名开放的数值记录；ESM request/cache 客户端直接消费 manifest 投影，提供并发去重、TTL、重试、stale fallback 与淘汰，并且不替换浏览器原生网络 API。
 
 ## 已移除入口
 
@@ -70,7 +70,9 @@ Swiper 是主题内置容器能力，依据页面 DOM 按需加载，不提供�
 - [_config.yml](../../../_config.yml)（`extensions`）
 - [scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)
 - [scripts/lib/extension-assets.js](../../../scripts/lib/extension-assets.js)
-- [layout/_plugins/index.ejs](../../../layout/_plugins/index.ejs)
+- [scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)
+- [layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)
+- [source/js/runtime/](../../../source/js/runtime/)
 - [layout/_partial/comments/](../../../layout/_partial/comments/)
 - [source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)
 

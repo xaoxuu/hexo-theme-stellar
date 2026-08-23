@@ -139,19 +139,17 @@ if (pinItems.length > 0) {
 %>
 <%- el %>
 <script>
-function initWhenReady() {
-  if (typeof stellar === 'object' && typeof stellar.initPlugin === 'function') {
-    stellar.initPlugin(initPinSlider, 'pin-slider');
-  } else {
-    // pin_slider 内联脚本渲染在 scripts/bootstrap 之前，等待 DOMContentLoaded 后注册
-    document.addEventListener('DOMContentLoaded', function () {
-      if (typeof stellar === 'object' && typeof stellar.initPlugin === 'function') {
-        stellar.initPlugin(initPinSlider, 'pin-slider');
-      }
-    });
+function mountPinSliderWhenReady() {
+  var cleanup = initPinSlider();
+  if (typeof cleanup === 'function') {
+    window.addEventListener('pagehide', cleanup, { once: true });
   }
 }
-initWhenReady();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', mountPinSliderWhenReady, { once: true });
+} else {
+  mountPinSliderWhenReady();
+}
 function initPinSlider() {
   var slider = document.getElementById('pin-slider');
   if (!slider) return;

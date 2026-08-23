@@ -1,0 +1,34 @@
+<%
+var runtimeViewModel = typeof viewModel !== 'undefined' ? viewModel : null
+var runtimeRender = content_config(page).render || {}
+var runtimeExtensions = stellar_config('extensions')
+var runtimeAssets = extension_assets()
+var runtimeMathProvider = runtimeRender.math || runtimeExtensions.features.math.provider
+var runtimeCommentModel = runtimeViewModel?.render?.article?.comments || null
+var runtimeCommentService = runtimeCommentModel ? runtimeCommentModel.service : page.cmt?.service
+var runtimeComments = runtimeCommentModel || {
+  service: runtimeCommentService || '',
+  options: runtimeCommentService
+    ? Object.assign({}, runtimeExtensions.comments.providers[runtimeCommentService], page.cmt?.[runtimeCommentService])
+    : {},
+  pageTitle: page.title || ''
+}
+var runtimeProfile = page.layout || ''
+if (collection_id(page, 'wiki')) runtimeProfile = 'wiki'
+if (collection_id(page, 'topic')) runtimeProfile = 'topic'
+if (collection_id(page, 'notebook')) runtimeProfile = 'notebook'
+var runtimeJson = browser_runtime_manifest({
+  root: config.root,
+  extensions: runtimeExtensions,
+  assets: runtimeAssets,
+  render: runtimeRender,
+  comments: runtimeComments,
+  profile: runtimeProfile,
+  colorScheme: stellar_config('appearance.colorScheme')
+})
+%>
+<% if (runtimeMathProvider === 'katex') { %>
+<link rel="stylesheet" href="<%- url_for(runtimeAssets.features.katexCss) %>" integrity="sha384-//SZkxyB7axjCAopkAL1E1rve+ZSPKapD89Lo/lLhcsXR+zOYl5z6zJZEFXil+q0" crossorigin="anonymous">
+<% } %>
+<script type="application/json" id="stellar-runtime-config"><%- runtimeJson %></script>
+<script type="module" src="<%- url_for('/js/runtime/index.mjs') %>?v=<%- stellar_info('version') %>&runtime=1"></script>

@@ -107,4 +107,20 @@ module.exports = [
     },
     rules: CORRECTNESS_RULES,
   },
+  {
+    files: ['source/js/**/*.mjs'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: {
+        ...globals.browser,
+        setCardLink: 'readonly',
+        createVoiceDom: 'readonly',
+        videoEvents: 'readonly',
+        downloadFileEvent: 'readonly',
+        searchFunc: 'readonly',
+      },
+    },
+    rules: CORRECTNESS_RULES,
+  },
 ];

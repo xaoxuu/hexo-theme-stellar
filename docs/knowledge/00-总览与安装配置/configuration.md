@@ -126,7 +126,7 @@ extensions:
 
 `spotlight_color` 控制光斑颜色；单个组件可用 CSS 变量 `--card-hover-spotlight-color` 覆盖。`max_tilt` 单位为度，无效值回退为 `3`，运行时限制在 `0`～`8` 的安全范围。插件采用 `.card-hover` 基础类与 `.card-hover--spotlight`、`.card-hover--tilt` 修饰类组合，关闭时这些类不会改变静态样式。完整的运行时接口与接入范围见[插件系统](../07-外部集成/plugin-system.md#card-hover卡片光效与倾斜)。
 
-**参考源码**：[_config.yml](../../../_config.yml)、[layout/_plugins/card_hover.ejs](../../../layout/_plugins/card_hover.ejs)
+**参考源码**：[_config.yml](../../../_config.yml)、[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
 ## 层级覆盖系统
 

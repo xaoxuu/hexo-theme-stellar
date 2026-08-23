@@ -18,7 +18,7 @@ tags:
 
 - [_config.yml](../../../_config.yml)（`appearance.motion.page_transition`、`extensions.features.preload`）
 - [source/css/_components/page-transition.styl](../../../source/css/_components/page-transition.styl)
-- [layout/_plugins/preload.ejs](../../../layout/_plugins/preload.ejs)
+- [source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 - [layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs)
 - [docs/designs/2026-08-08-pjax-removal.md](../../../docs/designs/2026-08-08-pjax-removal.md)
 - [docs/designs/2026-08-20-cross-document-page-transition/spec.md](../../../docs/designs/2026-08-20-cross-document-page-transition/spec.md)
@@ -115,7 +115,7 @@ plugins:
 
 flying-pages 在**鼠标悬停**到站内链接时预取目标页面（延迟 65ms 防误触、视口内优先、避开非链接资源），用户点击时页面已缓存，导航几乎瞬时完成。这是对整页导航的有效补充，兼顾简单可靠与体感速度。
 
-**参考源码**：[_config.yml](../../../_config.yml)、[layout/_plugins/preload.ejs](../../../layout/_plugins/preload.ejs)
+**参考源码**：[_config.yml](../../../_config.yml)、[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
 ## 与其他系统的关系
 

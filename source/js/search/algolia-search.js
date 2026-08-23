@@ -1,13 +1,19 @@
-utils.js(window.searchConfig.js).then(() => {
-  var inputArea = document.querySelector("input#search-input");
+(function() {
+  var roots = new WeakMap();
+  function mount(root) {
+  root = root || document;
+  if (roots.has(root)) return roots.get(root);
+  var inputArea = root.querySelector("input#search-input");
   if (!inputArea) {
-    return;
+    return function () {};
   }
 
-  var resultArea = document.querySelector("#search-result");
-  var searchWrapper = document.querySelector("#search-wrapper");
+  var ownerDocument = inputArea.ownerDocument || document;
+  var resultArea = root.querySelector("#search-result");
+  var searchWrapper = root.querySelector("#search-wrapper");
   var client = algoliasearch(window.searchConfig.appId, window.searchConfig.apiKey);
   var index = client.initIndex(window.searchConfig.indexName);
+  var active = true;
 
   function getCardHoverApi() {
     if (typeof stellar === 'undefined' || !stellar.cardHover) return null;
@@ -35,7 +41,7 @@ utils.js(window.searchConfig.js).then(() => {
   }
 
   function displayResults(hits) {
-    var resultList = document.createElement("ul");
+    var resultList = ownerDocument.createElement("ul");
     resultList.classList.add("search-result-list", "ui-collection-adapter");
     if (hits.length === 0) {
       searchWrapper.classList.add('noresult');
@@ -44,16 +50,16 @@ utils.js(window.searchConfig.js).then(() => {
       hits.forEach(function(hit) {
         var contentSnippet = hit._snippetResult.content.value;
         var title = hit.hierarchy.lvl1 || 'Untitled';
-        var item = document.createElement("li");
-        var titleSpan = document.createElement("span");
+        var item = ownerDocument.createElement("li");
+        var titleSpan = ownerDocument.createElement("span");
         titleSpan.className = "search-result-title";
         titleSpan.textContent = title;
 
-        var link = document.createElement("a");
+        var link = ownerDocument.createElement("a");
         link.className = "card-hover card-hover--spotlight";
         link.href = hit.url;
 
-        var content = document.createElement("p");
+        var content = ownerDocument.createElement("p");
         content.className = "search-result-content";
         content.innerHTML = contentSnippet;
 
@@ -68,7 +74,7 @@ utils.js(window.searchConfig.js).then(() => {
     mountResultCards(resultList);
   }
 
-  inputArea.addEventListener("input", function() {
+  var onInput = function() {
     var query = inputArea.value.trim();
     var filterPath = inputArea.getAttribute('data-filter');
 
@@ -89,15 +95,17 @@ utils.js(window.searchConfig.js).then(() => {
       highlightPostTag: '</span>',
       restrictSearchableAttributes: ['content']
     }).then(function(responses) {
-      displayResults(filterResults(responses.hits, filterPath));
+      if (active) displayResults(filterResults(responses.hits, filterPath));
     });
-  });
+  };
 
-  inputArea.addEventListener("keydown", function(e) {
+  var onKeydown = function(e) {
     if (e.key == 'Enter') {
       e.preventDefault();
     }
-  });
+  };
+  inputArea.addEventListener("input", onInput);
+  inputArea.addEventListener("keydown", onKeydown);
 
   var observer = new MutationObserver(function(mutationsList) {
     if (mutationsList.length === 1) {
@@ -110,4 +118,16 @@ utils.js(window.searchConfig.js).then(() => {
   });
 
   observer.observe(resultArea, { childList: true });
-});
+  var cleanup = function() {
+    active = false;
+    inputArea.removeEventListener("input", onInput);
+    inputArea.removeEventListener("keydown", onKeydown);
+    observer.disconnect();
+    unmountResultCards(resultArea);
+    roots.delete(root);
+  };
+  roots.set(root, cleanup);
+  return cleanup;
+  }
+  window.stellarAlgoliaSearch = { mount: mount };
+})();

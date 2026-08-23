@@ -28,14 +28,15 @@ function createRuntime(options = {}) {
   const leftbarToggle = {};
   const document = {
     readyState: options.readyState || 'complete',
-    getElementById(id) {
-      return id === 'search-input' ? input : null;
-    },
     querySelector(selector) {
+      if (selector === '#search-input') return input;
       return selector === '.mobile-only.leftbar-toggle' ? leftbarToggle : null;
     },
     addEventListener(type, handler) {
       listeners[type] = handler;
+    },
+    removeEventListener(type, handler) {
+      if (listeners[type] === handler) delete listeners[type];
     },
   };
   const window = {
@@ -45,6 +46,7 @@ function createRuntime(options = {}) {
   };
 
   vm.runInNewContext(SHORTCUT_SOURCE, { document, window });
+  const cleanup = window.stellarSearchShortcut.mount(document);
 
   function dispatch(overrides = {}) {
     const state = { prevented: false };
@@ -70,7 +72,7 @@ function createRuntime(options = {}) {
     return state;
   }
 
-  return { input, listeners, dispatch };
+  return { input, listeners, dispatch, cleanup };
 }
 
 test('桌面端 Command+K 与 Ctrl+K 聚焦搜索框并保留输入状态', () => {
@@ -139,11 +141,9 @@ test('错误按键、附加修饰键和已处理事件不触发搜索', () => {
   });
 });
 
-test('脚本在 DOM 就绪后只注册一个键盘监听器', () => {
-  const runtime = createRuntime({ readyState: 'loading' });
-  assert.equal(typeof runtime.listeners.DOMContentLoaded, 'function');
-  assert.equal(runtime.listeners.keydown, undefined);
-
-  runtime.listeners.DOMContentLoaded();
+test('显式 mount 只注册一个键盘监听器且 cleanup 可释放', () => {
+  const runtime = createRuntime();
   assert.equal(typeof runtime.listeners.keydown, 'function');
+  runtime.cleanup();
+  assert.equal(runtime.listeners.keydown, undefined);
 });

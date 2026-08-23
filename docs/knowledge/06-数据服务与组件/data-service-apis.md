@@ -65,15 +65,15 @@ extensions:
 
 ## 内部服务注册表
 
-`mdrender/siteinfo/ghinfo/rating/vote/sites/friends/timeline/memos/comments latest` 等浏览器模块的脚本路径登记在 `scripts/lib/extension-assets.js`，不属于公开配置。EJS 将这份冻结注册表投影给现有 `ctx.services`，客户端继续按 DOM 中的 `.data-service` / `.ds-<id>` 标记按需加载。
+`mdrender/siteinfo/ghinfo/rating/vote/sites/friends/timeline/memos/comments latest` 等浏览器模块的脚本路径登记在 `scripts/lib/extension-assets.js`，不属于公开配置。构建期把冻结注册表投影到 Runtime Manifest；`services` ESM adapter 只在 DOM 命中 `.data-service` / `.ds-<id>` 等标记时 import，再加载对应内部模块。
 
 ```mermaid
 flowchart LR
   A[extensions.services 业务端点] --> B[严格 Schema]
   B --> C[冻结 runtime]
-  D[internal extension assets] --> E[EJS client context]
+  D[internal extension assets] --> E[Runtime Manifest]
   C --> F[tag/helper/PageViewModel]
-  E --> G[source/js/services.js]
+  E --> G[services ESM adapter]
   F --> H[data-api / data-service markup]
   H --> G
 ```
@@ -91,7 +91,9 @@ extensions:
     max_entries: 200
 ```
 
-`ttl.<service>` 是动态记录，省略时使用 `default_ttl`。`max_entries: 0` 与 `enabled: false` 均按原值保留，不做类型强转。当前客户端仍由 EJS 把最终 camelCase 配置投影成既有 `def.data_cache` 内部形状；request/cache 生命周期统一改造留给 M4。
+`ttl.<service>` 是动态记录，省略时使用 `default_ttl`。`max_entries: 0` 与 `enabled: false` 均按原值保留，不做类型强转。ESM request/cache 客户端直接消费最终 camelCase 配置，提供 GET 并发去重、超时重试、fresh 命中、stale 失败回退、单条 200 KiB 限制和按最旧时间淘汰；非 GET、`no-store` 与时间戳破坏参数不缓存。
+
+缓存前缀为 `Stellar.request-cache.v2.`。客户端不替换 `window.fetch` 或 `XMLHttpRequest`，只在自身请求开始/结束时派发 `stellar:request-start/end`。`utils.request` / `requestWithoutLoading` 是迁移期数据服务 callback/loading 适配，不再包含第二份缓存算法。
 
 ## 远程 Markdown
 
@@ -104,4 +106,4 @@ extensions:
 - 标签或小部件自带的单次 `api` 参数仍属于组件输入，不自动上升为全局服务配置。
 - 第三方响应与 CORS 由端点提供方负责；主题在请求失败时保持静态兜底或空状态。
 
-相关源码：[scripts/lib/extension-assets.js](../../../scripts/lib/extension-assets.js)、[scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)、[layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs)、[source/js/services.js](../../../source/js/services.js)。
+相关源码：[scripts/lib/extension-assets.js](../../../scripts/lib/extension-assets.js)、[scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/extensions/services.mjs](../../../source/js/runtime/extensions/services.mjs)、[source/js/runtime/request-cache.mjs](../../../source/js/runtime/request-cache.mjs)、[source/js/runtime/legacy-request-adapter.mjs](../../../source/js/runtime/legacy-request-adapter.mjs)。

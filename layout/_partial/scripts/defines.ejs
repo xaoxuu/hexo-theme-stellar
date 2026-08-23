@@ -51,55 +51,12 @@
             });
             observer.observe({ entryTypes: ['resource'] });
           } catch (e) {}
-          // 统计进行中的 fetch/XHR 请求，异步组件（timeline 等）未完成前不判定布局稳定
-          let pendingRequests = 0;
-          const trackRequest = (fn) => {
-            pendingRequests++;
-            try {
-              const result = fn();
-              if (result && typeof result.finally === 'function') {
-                result.finally(function () {
-                  pendingRequests = Math.max(0, pendingRequests - 1);
-                });
-              } else {
-                pendingRequests = Math.max(0, pendingRequests - 1);
-              }
-              return result;
-            } catch (e) {
-              pendingRequests = Math.max(0, pendingRequests - 1);
-              throw e;
-            }
-          };
-          if (typeof window.fetch === 'function') {
-            const origFetch = window.fetch.bind(window);
-            window.fetch = function () {
-              const args = arguments;
-              return trackRequest(function () {
-                return origFetch.apply(window, args);
-              });
-            };
-          }
-          if (window.XMLHttpRequest) {
-            const origOpen = window.XMLHttpRequest.prototype.open;
-            const origSend = window.XMLHttpRequest.prototype.send;
-            window.XMLHttpRequest.prototype.open = function () {
-              this.__anchorTracked = true;
-              return origOpen.apply(this, arguments);
-            };
-            window.XMLHttpRequest.prototype.send = function () {
-              if (this.__anchorTracked) {
-                pendingRequests++;
-                const done = () => {
-                  if (this.__anchorTracked) {
-                    this.__anchorTracked = false;
-                    pendingRequests = Math.max(0, pendingRequests - 1);
-                  }
-                };
-                this.addEventListener('loadend', done);
-              }
-              return origSend.apply(this, arguments);
-            };
-          }
+          // 只跟踪主题 request/cache 客户端，不替换浏览器原生 fetch/XHR。
+          const pendingRequests = new Set();
+          const onRequestStart = event => pendingRequests.add(event.detail.key);
+          const onRequestEnd = event => pendingRequests.delete(event.detail.key);
+          document.addEventListener('stellar:request-start', onRequestStart);
+          document.addEventListener('stellar:request-end', onRequestEnd);
           const cancel = () => {
             if (timer !== null) {
               clearInterval(timer);
@@ -110,6 +67,8 @@
                 observer.disconnect();
               } catch (e) {}
             }
+            document.removeEventListener('stellar:request-start', onRequestStart);
+            document.removeEventListener('stellar:request-end', onRequestEnd);
           };
           const adjust = () => {
             const y = targetY();
@@ -124,7 +83,7 @@
             attempts++;
             const resourceQuiet = performance.now() - lastResourceTime > 3000;
             // 位置连续 1.8 秒无变化、无进行中的请求且最近 3 秒无资源加载才视为稳定；最长等待 30 秒
-            if ((quiet >= 3 && pendingRequests === 0 && resourceQuiet) || attempts >= 50) {
+            if ((quiet >= 3 && pendingRequests.size === 0 && resourceQuiet) || attempts >= 50) {
               cancel();
             }
           };
@@ -183,17 +142,15 @@
   const def = {
     avatar: `<%- stellar_config('resources.fallbacks.avatar') %>`,
     cover: `<%- stellar_config('resources.fallbacks.cover') %>`,
-    data_cache: <%- JSON.stringify({
-      enable: extensions.cache.enabled,
-      default_ttl: extensions.cache.defaultTtl,
-      ttl: extensions.cache.ttl,
-      max_entries: extensions.cache.maxEntries
-    }) %>,
   };
   const deps = {
     marked: `<%- url_for(assets.dependencies.marked) %>`,
     lazyload: `<%- url_for(assets.dependencies.lazyLoading) %>`
   }
+  // 迁移期经典脚本仍消费这些只读投影；ESM runtime 只通过该兼容表面读取。
+  window.ctx = ctx;
+  window.def = def;
+  window.deps = deps;
 
   // 主题切换提示文案（供 /js/theme.js 使用）
   window.__STELLAR_I18N__ = {
@@ -208,8 +165,7 @@
       if (!window.location.search) return;
       if (!new URLSearchParams(window.location.search).has('kw')) return;
       document.addEventListener('DOMContentLoaded', function () {
-        // utils 由 /js/utils.js 定义（同时暴露 window.utils）；
-        // 未就绪时由 bootstrap 队列兜底，此处按就绪状态判断
+        // utils 由前置 /js/utils.js 同步定义（同时暴露 window.utils）。
         if (typeof utils === 'object' && typeof utils.js === 'function') {
           utils.js('<%- url_for('/js/search/highlight.js') %>', { defer: true }).catch(function () {});
         }

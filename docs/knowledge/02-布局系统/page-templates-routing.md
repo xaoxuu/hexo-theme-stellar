@@ -21,7 +21,7 @@ tags:
 - [layout/page.ejs](../../../layout/page.ejs)
 - [layout/index.ejs](../../../layout/index.ejs)
 - [layout/archive.ejs](../../../layout/archive.ejs)
-- [layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+- [source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 - [scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
 
 </details>

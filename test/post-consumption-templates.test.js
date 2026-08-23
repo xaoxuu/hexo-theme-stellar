@@ -49,13 +49,13 @@ test("Post 列表保留 flat 排序去重，并让 Topic 复用显式 listing", 
   assert.doesNotMatch(source("layout/_partial/main/post_list/post_card.ejs"), /legacyPost/);
 });
 
-test("评论 Post 分支从 ViewModel 向服务 partial 传递参数袋", () => {
+test("评论 Post 分支从 ViewModel 向 Runtime Manifest 传递参数袋", () => {
   const layout = source("layout/_partial/comments/layout.ejs");
-  const script = source("layout/_partial/comments/script.ejs");
+  const script = source("layout/_partial/scripts/runtime.ejs");
   assert.match(layout, /explicitComments/);
   assert.match(layout, /\{comments: commentModel\}/);
-  assert.match(script, /viewModel\.render\.article\.comments/);
-  assert.match(script, /var scriptComments = renderComments \|\|/);
-  assert.match(script, /commentConfig\.providers\[service\]/);
-  assert.match(script, /\{comments: scriptComments\}/);
+  assert.match(script, /runtimeViewModel\?\.render\?\.article\?\.comments/);
+  assert.match(script, /runtimeCommentModel \|\|/);
+  assert.match(script, /runtimeExtensions\.comments\.providers\[runtimeCommentService\]/);
+  assert.match(script, /comments: runtimeComments/);
 });

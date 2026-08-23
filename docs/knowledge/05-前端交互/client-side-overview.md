@@ -17,7 +17,8 @@ tags:
 - [source/js/main.js](../../../source/js/main.js)
 - [source/js/utils.js](../../../source/js/utils.js)
 - [source/js/theme.js](../../../source/js/theme.js)
-- [source/js/services.js](../../../source/js/services.js)
+- [source/js/runtime/index.mjs](../../../source/js/runtime/index.mjs)
+- [source/js/runtime/extensions/services.mjs](../../../source/js/runtime/extensions/services.mjs)
 - [source/js/tagtree.js](../../../source/js/tagtree.js)
 - [layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 - [layout/_partial/scripts/](../../../layout/_partial/scripts/)
@@ -116,24 +117,20 @@ graph TB
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)
 
-#### 解析期脚本与插件注册队列（utils bootstrap）
+#### ESM Runtime Manifest 与 Extension 生命周期
 
-`utils.js` 是解析期依赖：页尾内联插件片段在解析时就调用 `utils.initPlugin(...)` 注册，因此主题要求其同步加载。为防御第三方优化器把 `utils.js` 改写为占位符/加 `defer`（曾导致首页文章列表空白、控制台大量 `utils is not defined`），`scripts.ejs` 在 `utils.js` 标签前输出 `layout/_partial/scripts/bootstrap.ejs`：
+`layout/_partial/scripts/runtime.ejs` 在页尾输出不可执行的 `#stellar-runtime-config` JSON，再由 `/js/runtime/index.mjs` 解析。构建期 builder 已校验 manifest 版本、根路径、重复 ID、本地 module 路径、`when` 条件与配置对象，并深度冻结结果；序列化会转义 HTML 敏感字符。
 
-- `window.stellar.initPlugin(fn, name, options)`：utils 就绪时直接委托 `utils.initPlugin`，未就绪时入队 `window.stellar._pluginQueue`；utils.js 加载完成后经 `_flushPlugins()` 统一补跑。
-- 紧随 `utils.js` 的解析期看门狗：`typeof utils === 'undefined'` 时用 `document.write` 同步补载，恢复「utils 先于插件片段定义」的不变量。
-- `utils.js` 整体包 IIFE（`window.__stellarUtilsLoaded` 防重复执行），末尾暴露 `window.utils`；DOMContentLoaded 时若仍缺失则动态补载，失败时给 `<html>` 加 `sr-fallback` 兜底显示内容。
-- scrollreveal 的 3 秒 `sr-fallback` 看门狗独立于 `utils`/ScrollReveal，即使插件初始化完全失败，`.slide-up` 内容也会在 3 秒后强制显示。
-- `layout/_plugins/index.ejs` 另有兜底 shim：bootstrap 被第三方优化器改写/移除导致 `stellar.initPlugin` 缺失时，补一个等价注册点（utils 就绪时直接委托、未就绪时入队），避免 `stellar is not defined` 连锁报错。
-- bootstrap 的动态补载脚本用 `s.setAttribute('src', ...)` 赋值：图片懒加载过滤器（`after_render:html`）与脚本延迟优化器都基于 `s.src = "..."` 做朴素正则，改为 `setAttribute` 后不再被误改写（曾因 `img_lazyload` 跨标签越界把补载 URL 改写成占位图 + `data-src` 导致整个 bootstrap 语法错误）。
+浏览器 `ExtensionRegistry` 根据 `when.selector/always` 决定是否 dynamic import adapter，随后调用 `mount(root, context)`。重复 mount 先 unmount，释放顺序与挂载相反；任一 Extension 的 import/mount/unmount 失败都被隔离并派发 `stellar:extension-error`。bootstrap 自身失败会立即添加 `sr-fallback`，不等待看门狗。
 
-**参考源码**：[layout/_partial/scripts/bootstrap.ejs](../../../layout/_partial/scripts/bootstrap.ejs)、[layout/_partial/scripts.ejs](../../../layout/_partial/scripts.ejs)、[source/js/utils.js](../../../source/js/utils.js)
+旧 `document.write`、同步 utils 补载、`_pluginQueue`、`initPlugin` 和 ScrollReveal 恢复看门狗已经删除。`utils.js` 仍同步提供迁移期经典 DOM/资源工具，但不再注册插件或实现 request/cache。
 
+**参考源码**：[layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/index.mjs](../../../source/js/runtime/index.mjs)、[source/js/runtime/extension-registry.mjs](../../../source/js/runtime/extension-registry.mjs)
 ---
 
 ### 置顶内容轮播（pin-slider）
 
-列表页 navbar top 上方可渲染置顶内容轮播（`layout/_partial/main/pin_slider.ejs`，无需开关配置，有置顶内容即渲染，自动轮播间隔固定 5000ms）：纯原生实现（无第三方依赖），经 `utils.initPlugin` 注册并返回清理函数，支持自动播放（hover/focus/页面隐藏时暂停）、圆点点击切换、悬停显示左右翻页按钮（solar 双箭头图标 + navbar 玻璃效果容器）、触摸松手滑动与 `prefers-reduced-motion` 降级。分页圆点按钮无文本、不设 `aria-label`（避免用户内容注入 HTML 属性导致解析失败），激活态由 `aria-current` 标识。幻灯片中的标题、小字、封面 URL、wiki 标题/摘要/标签等用户内容均经 `escape_html` 转义后输出（属性与文本统一转义）。轮播进度按内容类型分组（`post`/`wiki`）缓存到 localStorage（键 `stellar.pin-slider.<group>`），内容或张数变化后自动失效。文章幻灯片为固定「标题 + 一行小字」结构：标题取 `title`，小字由 `subtitle()` helper 统一取值（`subtitle` > `description` > excerpt 前 50 字）；post 封面幻灯片与 wiki/项目幻灯片共用通用覆盖层 `cover-overlay()`（同文章列表封面，见[文章列表卡片](../03-内容系统/post-lists-cards.md#渐变模糊层与黑色蒙版)）：常驻底部同图渐变模糊层 + 黑色渐变蒙版（边缘不透明度约 0.25 → 垂直中线 0），hover 时背景图与模糊层同步放大至 `scale(1.05)`（图片 1.5s、模糊层 0.5s 缓动）并变暗（亮度 75%、饱和度 120%）；文字区与 hero 卡片 cover-info 观感一致，文字容器带 `data-text-adaptive="split"`（大字 headline/title 用低饱和 theme（接近黑白）、小字 caption/chip/excerpt 用完整 theme，见[文字自适应颜色插件](#文字自适应颜色插件)）；左右箭头图标颜色随当前幻灯片封面自适应（contrast：深色封面白箭头、浅色封面深箭头，随切换实时更新）；有封面时封面铺满整卡，无封面时为纯白卡片（文字按普通文章颜色）；轮播区宽高比与非置顶文章一致，由 `content.article.listing.cover_ratio` 控制。启用 `extensions.features.card_hover.enabled` 时，外层 `.pin-slider` 组合 Spotlight + Tilt，内部 `.pin-slider-track` 仍独立维护横向切换 transform，圆点、箭头和暂停逻辑不变。
+列表页 navbar top 上方可渲染置顶内容轮播（`layout/_partial/main/pin_slider.ejs`，无需开关配置，有置顶内容即渲染，自动轮播间隔固定 5000ms）：纯原生实现（无第三方依赖），在 DOM 就绪后直接挂载并于 `pagehide` 执行清理函数，支持自动播放（hover/focus/页面隐藏时暂停）、圆点点击切换、悬停显示左右翻页按钮（solar 双箭头图标 + navbar 玻璃效果容器）、触摸松手滑动与 `prefers-reduced-motion` 降级。分页圆点按钮无文本、不设 `aria-label`（避免用户内容注入 HTML 属性导致解析失败），激活态由 `aria-current` 标识。幻灯片中的标题、小字、封面 URL、wiki 标题/摘要/标签等用户内容均经 `escape_html` 转义后输出（属性与文本统一转义）。轮播进度按内容类型分组（`post`/`wiki`）缓存到 localStorage（键 `stellar.pin-slider.<group>`），内容或张数变化后自动失效。文章幻灯片为固定「标题 + 一行小字」结构：标题取 `title`，小字由 `subtitle()` helper 统一取值（`subtitle` > `description` > excerpt 前 50 字）；post 封面幻灯片与 wiki/项目幻灯片共用通用覆盖层 `cover-overlay()`（同文章列表封面，见[文章列表卡片](../03-内容系统/post-lists-cards.md#渐变模糊层与黑色蒙版)）：常驻底部同图渐变模糊层 + 黑色渐变蒙版（边缘不透明度约 0.25 → 垂直中线 0），hover 时背景图与模糊层同步放大至 `scale(1.05)`（图片 1.5s、模糊层 0.5s 缓动）并变暗（亮度 75%、饱和度 120%）；文字区与 hero 卡片 cover-info 观感一致，文字容器带 `data-text-adaptive="split"`（大字 headline/title 用低饱和 theme（接近黑白）、小字 caption/chip/excerpt 用完整 theme，见[文字自适应颜色插件](#文字自适应颜色插件)）；左右箭头图标颜色随当前幻灯片封面自适应（contrast：深色封面白箭头、浅色封面深箭头，随切换实时更新）；有封面时封面铺满整卡，无封面时为纯白卡片（文字按普通文章颜色）；轮播区宽高比与非置顶文章一致，由 `content.article.listing.cover_ratio` 控制。启用 `extensions.features.card_hover.enabled` 时，外层 `.pin-slider` 组合 Spotlight + Tilt，内部 `.pin-slider-track` 仍独立维护横向切换 transform，圆点、箭头和暂停逻辑不变。
 
 **参考源码**：[layout/_partial/main/pin_slider.ejs](../../../layout/_partial/main/pin_slider.ejs)、[source/css/_components/pin-slider.styl](../../../source/css/_components/pin-slider.styl)
 
@@ -361,13 +358,13 @@ sequenceDiagram
 
 ### 文字自适应颜色插件
 
-背景图/背景色上方的文字颜色自适应由内置 Feature `adaptive_text` 提供（`extensions.features.adaptive_text.enabled`，默认开启）。`layout/_plugins/adaptive_text.ejs` 经 `utils.initPlugin` 注册，仅当页面存在 `[data-text-adaptive]` 元素时按需加载 `source/js/color.js` 与 `source/js/plugins/adaptive-text.js`：插件按 `--cover-url` → `--pin-cover-url` → `--bg-url` → `background-image` → `background-color` 解析背景来源，调用 `stellar.color.getAverageColor()`（canvas 等比缩至最长边 ≤64px 取平均色与平均透明度，按 URL 缓存原始均值；透明图按元素/祖先/`body` 的实际背景色做 alpha 合成后再平均，避免透明像素把平均色拉偏；CORS/解码失败返回 `null`）或直接解析背景色，再用 `stellar.color.adaptiveTextColor()` 计算文字颜色并写入内联变量。属性值：`theme`（默认，背景图平均色为基色，背景偏暗时 lighten 到明度 0.85、偏亮时 darken 到明度 0.3，低饱和彩色平均色先经 `enhanceSaturation` 抬升饱和度再取色，`saturationScale` 可调小饱和度使其接近黑白）、`contrast`（黑白对比：深色背景白字、浅色背景深字）、`split`（封面/banner/轮播容器：大字用低饱和 theme（接近黑白）、小字用完整 theme）。明暗判定默认阈值 0.6、彩色背景（饱和度 > 0.2）上浮至 0.65，偏向采纳浅色文字。`split` 模式写入 `--text-banner`（大字，`saturationScale: 0.05`）与 `--text-banner-theme`（小字，完整 theme）两个变量，其余模式两个变量同色。元素已有内联 `--text-banner` 或内联 `color` 时 Feature 跳过，用户显式覆盖优先。
+背景图/背景色上方的文字颜色自适应由内置 Feature `adaptive_text` 提供（`extensions.features.adaptive_text.enabled`，默认开启）。Runtime Manifest 仅在页面存在 `[data-text-adaptive]` 元素时 import Feature adapter，再按需加载 `source/js/color.js` 与 `source/js/plugins/adaptive-text.js`：插件按 `--cover-url` → `--pin-cover-url` → `--bg-url` → `background-image` → `background-color` 解析背景来源，调用 `stellar.color.getAverageColor()`（canvas 等比缩至最长边 ≤64px 取平均色与平均透明度，按 URL 缓存原始均值；透明图按元素/祖先/`body` 的实际背景色做 alpha 合成后再平均，避免透明像素把平均色拉偏；CORS/解码失败返回 `null`）或直接解析背景色，再用 `stellar.color.adaptiveTextColor()` 计算文字颜色并写入内联变量。属性值：`theme`（默认，背景图平均色为基色，背景偏暗时 lighten 到明度 0.85、偏亮时 darken 到明度 0.3，低饱和彩色平均色先经 `enhanceSaturation` 抬升饱和度再取色，`saturationScale` 可调小饱和度使其接近黑白）、`contrast`（黑白对比：深色背景白字、浅色背景深字）、`split`（封面/banner/轮播容器：大字用低饱和 theme（接近黑白）、小字用完整 theme）。明暗判定默认阈值 0.6、彩色背景（饱和度 > 0.2）上浮至 0.65，偏向采纳浅色文字。`split` 模式写入 `--text-banner`（大字，`saturationScale: 0.05`）与 `--text-banner-theme`（小字，完整 theme）两个变量，其余模式两个变量同色。元素已有内联 `--text-banner` 或内联 `color` 时 Feature 跳过，用户显式覆盖优先。
 
-**参考源码**：[layout/_plugins/adaptive_text.ejs](../../../layout/_plugins/adaptive_text.ejs)、[source/js/color.js](../../../source/js/color.js)、[source/js/plugins/adaptive-text.js](../../../source/js/plugins/adaptive-text.js)
+**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)、[source/js/color.js](../../../source/js/color.js)、[source/js/plugins/adaptive-text.js](../../../source/js/plugins/adaptive-text.js)
 
 ### 卡片 Hover 生命周期
 
-启用 `extensions.features.card_hover.enabled` 后，`layout/_plugins/card_hover.ejs` 经 `stellar.initPlugin` 条件加载本地脚本，并把已校验的光斑颜色和最大倾角写入 `ctx.card_hover`。`source/js/plugins/card-hover.js` 只扫描 `.card-hover`，再按 `.card-hover--spotlight` 与 `.card-hover--tilt` 挂载对应能力：
+启用 `extensions.features.card_hover.enabled` 后，Runtime Manifest 在页面命中 `.card-hover` 时 import Feature adapter，并把已校验的光斑颜色和最大倾角写入 `ctx.card_hover`。`source/js/plugins/card-hover.js` 只扫描 `.card-hover`，再按 `.card-hover--spotlight` 与 `.card-hover--tilt` 挂载对应能力：
 
 - `stellar.cardHover.mountAll(root)` 幂等扫描 Document、容器或单个卡片，供动态组件复用。
 - `stellar.cardHover.unmountAll(root)` 清理指定容器自身及后代的已挂载卡片；省略 `root` 时清理全部，供动态搜索替换结果和插件销毁复用。
@@ -380,7 +377,7 @@ Spotlight 是卡片末尾注入的独立 `span.card-hover__spotlight[aria-hidden
 
 置顶轮播外层和专栏列表的最新文章封面卡片复用完整 Spotlight + Tilt；轮播轨道与专栏标题、描述、归档式文章条目不参与 Tilt。Wiki Hero 的源码、文档和自定义 action 按钮、搜索结果链接与标准 `.ui-collection__item` 复用 Spotlight-only 生命周期，因此保留原有 surface 背景且不会产生位移或 3D transform。搜索的 `.ui-collection-adapter` 列表本身不挂载，只有内部可点击链接动态挂载，页面标题留在链接外；TOC adapter 仍不接入。
 
-**参考源码**：[layout/_plugins/card_hover.ejs](../../../layout/_plugins/card_hover.ejs)、[source/js/plugins/card-hover.js](../../../source/js/plugins/card-hover.js)、[source/css/_plugins/card-hover.styl](../../../source/css/_plugins/card-hover.styl)
+**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)、[source/js/plugins/card-hover.js](../../../source/js/plugins/card-hover.js)、[source/css/_plugins/card-hover.styl](../../../source/css/_plugins/card-hover.styl)
 
 ### 与 Head 配置的集成
 

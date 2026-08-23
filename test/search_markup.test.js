@@ -10,7 +10,7 @@ const SEARCH_TEMPLATE_SOURCE = fs.readFileSync(
   'utf8'
 );
 const SEARCH_PLUGIN_SOURCE = fs.readFileSync(
-  path.join(__dirname, '../layout/_plugins/index.ejs'),
+  path.join(__dirname, '../source/js/runtime/extensions/search.mjs'),
   'utf8'
 );
 
@@ -34,5 +34,7 @@ test('sidebar.left.search 为 false 时跳过搜索控件', () => {
 test('本地搜索与 Algolia 从公共入口加载同一份快捷键脚本', () => {
   const shortcutReferences = SEARCH_PLUGIN_SOURCE.match(/\/js\/search\/shortcut\.js/g) || [];
   assert.equal(shortcutReferences.length, 1);
-  assert.match(SEARCH_PLUGIN_SOURCE, /var searchProvider = extensions\.search\.provider[\s\S]*searchPartials\[searchProvider\][\s\S]*shortcut\.js[\s\S]*partial\(`search\/\$\{searchPartials\[searchProvider\]\}`/);
+  assert.match(SEARCH_PLUGIN_SOURCE, /config\.provider === 'algolia'[\s\S]*algolia-search\.js/);
+  assert.match(SEARCH_PLUGIN_SOURCE, /config\.provider === 'local'[\s\S]*local-search\.js/);
+  assert.match(SEARCH_PLUGIN_SOURCE, /await assets\.script\('\/js\/search\/shortcut\.js'\)/);
 });

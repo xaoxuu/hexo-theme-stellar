@@ -20,7 +20,7 @@ const SEARCH_STYLE_SOURCE = fs.readFileSync(
 const HOVER_CLASSES = 'card-hover card-hover--spotlight';
 
 test('本地搜索只为标题下方的可点击链接输出 Spotlight 组合类', () => {
-  assert.match(LOCAL_SEARCH_SOURCE, /li\.appendChild\(titleSpan\);[\s\S]*const a = document\.createElement\('a'\);/);
+  assert.match(LOCAL_SEARCH_SOURCE, /li\.appendChild\(titleSpan\);[\s\S]*const a = ownerDocument\.createElement\('a'\);/);
   assert.match(LOCAL_SEARCH_SOURCE, new RegExp(`a\\.className = '${HOVER_CLASSES}'`));
   assert.match(LOCAL_SEARCH_SOURCE, /li\.appendChild\(a\);/);
   assert.doesNotMatch(LOCAL_SEARCH_SOURCE, /titleSpan\.className = ['"]search-result-title card-hover/);

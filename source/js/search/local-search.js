@@ -96,10 +96,12 @@ function fetchSearchData(path) {
   return searchFetchPromise;
 }
 
-var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
-  var $input = document.getElementById(searchId);
+var searchFunc = function(path, filter, wrapperId, searchId, contentId, root) {
+  root = root || document;
+  var $input = root.querySelector('#' + searchId);
   if (!$input || $input._searchInitialized === true) return;
   if ($input._searchInitialized === 'pending') return; // 数据加载中，等待完成后初始化
+  var ownerDocument = $input.ownerDocument || document;
 
   function getAllCombinations(keywords) {
     const result = [];
@@ -150,20 +152,20 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
 
   // 构建单条搜索结果 DOM
   function buildResultElement(dataTitle, sectionName, secText, secFirst, pairs, href) {
-    const li = document.createElement('li');
+    const li = ownerDocument.createElement('li');
 
     // 文章标题位于链接上方，不参与跳转
-    const titleSpan = document.createElement('span');
+    const titleSpan = ownerDocument.createElement('span');
     titleSpan.className = 'search-result-title';
     titleSpan.textContent = dataTitle;
     li.appendChild(titleSpan);
 
-    const a = document.createElement('a');
+    const a = ownerDocument.createElement('a');
     a.className = 'card-hover card-hover--spotlight';
     a.href = href;
 
     if (sectionName) {
-      const sectionSpan = document.createElement('span');
+      const sectionSpan = ownerDocument.createElement('span');
       sectionSpan.className = 'search-result-section';
       sectionSpan.textContent = sectionName;
       a.appendChild(sectionSpan);
@@ -180,7 +182,7 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
         return "<span class=\"search-keyword\">" + keyword + "</span>";
       });
 
-      const para = document.createElement('p');
+      const para = ownerDocument.createElement('p');
       para.className = 'search-result-content';
       para.innerHTML = matchContent + '...';
       a.appendChild(para);
@@ -195,10 +197,10 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
     if ($input._searchInitialized === true) return; // 防止重复绑定
     $input._searchInitialized = true;
 
-    var $resultContent = document.getElementById(contentId);
-    var $wrapper = document.getElementById(wrapperId);
+    var $resultContent = root.querySelector('#' + contentId);
+    var $wrapper = root.querySelector('#' + wrapperId);
 
-    $input.addEventListener("input", function() {
+    var onInput = function() {
       var rawValue = this.value.trim();
       unmountResultCards($resultContent);
       $resultContent.innerHTML = "";
@@ -296,7 +298,7 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
           return b.rank - a.rank || a.offset - b.offset;
         });
 
-        const ul = document.createElement('ul');
+        const ul = ownerDocument.createElement('ul');
         ul.className = 'search-result-list ui-collection-adapter';
         resultList.forEach(function(item) {
           ul.appendChild(item.element);
@@ -306,13 +308,21 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
         $resultContent.appendChild(ul);
         mountResultCards(ul);
       }
-    });
+    };
 
-    $input.addEventListener("keydown", function(e) {
+    var onKeydown = function(e) {
       if (e.key == 'Enter') {
         e.preventDefault();
       }
-    });
+    };
+    $input.addEventListener("input", onInput);
+    $input.addEventListener("keydown", onKeydown);
+    $input._searchCleanup = function() {
+      $input.removeEventListener("input", onInput);
+      $input.removeEventListener("keydown", onKeydown);
+      $input._searchInitialized = undefined;
+      $input._searchCleanup = undefined;
+    };
 
     // 同步当前状态：已有文字立即执行一次搜索，否则清除加载态
     if ($input.value && $input.value.trim().length > 0) {
@@ -345,7 +355,7 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
       if ($input._searchInitialized === 'pending') {
         $input._searchInitialized = undefined; // 允许下次聚焦重试
       }
-      var $wrapper = document.getElementById(wrapperId);
+      var $wrapper = root.querySelector('#' + wrapperId);
       if ($wrapper) $wrapper.setAttribute('searching', 'false');
     });
 };
@@ -359,43 +369,56 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId) {
 })();
 
 // 聚焦触发：懒加载模式下首次聚焦搜索框才加载数据
-document.addEventListener("focusin", function(e) {
-  var input = e.target;
-  if (!input || input.id !== 'search-input') return;
-  var path = getSearchPath();
-  var filter = input.getAttribute('data-filter') || '';
+var localSearchRoots = new WeakMap();
 
-  // 已初始化：仅按需后台刷新（刷新失败下次聚焦自动重试）
-  if (input._searchInitialized === true) {
-    if (needsFetch()) {
-      fetchSearchData(path).catch(function() {});
+function mountLocalSearch(root) {
+  root = root || document;
+  if (localSearchRoots.has(root)) return localSearchRoots.get(root);
+  var resultArea = root.querySelector("div#search-result");
+  var observer = null;
+  var onFocus = function(e) {
+    var input = e.target;
+    if (!input || input.id !== 'search-input') return;
+    var path = getSearchPath();
+    var filter = input.getAttribute('data-filter') || '';
+    if (input._searchInitialized === true) {
+      if (needsFetch()) fetchSearchData(path).catch(function() {});
+      return;
     }
-    return;
+    if (searchLazyLoad && !searchCache && !loadCacheIntoMemory()) {
+      var wrapper = root.querySelector('#search-wrapper');
+      if (wrapper) wrapper.setAttribute('searching', 'true');
+    }
+    searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result', root);
+    if (searchCache && needsFetch()) fetchSearchData(path).catch(function() {});
+  };
+  root.addEventListener("focusin", onFocus);
+  if (resultArea) {
+    observer = new MutationObserver(function() {
+      var hasResults = resultArea.querySelector(".search-result-list li");
+      var wrapper = root.querySelector('.search-wrapper');
+      if (wrapper) wrapper.classList.toggle('noresult', !hasResults);
+    });
+    observer.observe(resultArea, { childList: true, subtree: true });
   }
-
-  // 懒加载：无可用数据时显示加载态（复用 searching 绿色图标状态）
-  if (searchLazyLoad && !searchCache && !loadCacheIntoMemory()) {
-    var $wrapper = document.getElementById('search-wrapper');
-    if ($wrapper) $wrapper.setAttribute('searching', 'true');
+  if (!searchLazyLoad) {
+    var input = root.querySelector('#search-input');
+    if (input && input._searchInitialized !== true) {
+      searchFunc(getSearchPath(), input.getAttribute('data-filter') || '', 'search-wrapper', 'search-input', 'search-result', root);
+    }
   }
+  var cleanup = function() {
+    root.removeEventListener("focusin", onFocus);
+    observer?.disconnect();
+    var input = root.querySelector('#search-input');
+    if (input) {
+      input._searchCleanup?.();
+      input._searchInitialized = undefined;
+    }
+    localSearchRoots.delete(root);
+  };
+  localSearchRoots.set(root, cleanup);
+  return cleanup;
+}
 
-  searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
-
-  // 有数据但已过期（或 ttl=0）→ 后台刷新
-  if (searchCache && needsFetch()) {
-    fetchSearchData(path).catch(function() {});
-  }
-});
-
-// 无结果/有结果状态兜底
-(function() {
-  var resultArea = document.querySelector("div#search-result");
-  if (!resultArea) return;
-
-  var observer = new MutationObserver(function(mutationsList) {
-    var hasResults = resultArea.querySelector(".search-result-list li");
-    var wrapper = document.querySelector('.search-wrapper');
-    if (wrapper) wrapper.classList.toggle('noresult', !hasResults);
-  });
-  observer.observe(resultArea, { childList: true, subtree: true });
-})();
+window.stellarLocalSearch = { mount: mountLocalSearch };

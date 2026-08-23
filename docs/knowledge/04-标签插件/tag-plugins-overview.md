@@ -58,7 +58,7 @@ flowchart LR
   MD["Markdown tag"] --> HANDLER["scripts/tags/lib/*"]
   CONFIG["extensions.tags / services"] --> HANDLER
   HANDLER --> HTML["静态 HTML / data-service 占位"]
-  ASSETS["内部服务模块"] --> CLIENT["source/js/services.js"]
+  ASSETS["内部服务模块"] --> CLIENT["source/js/runtime/extensions/services.mjs"]
   HTML --> CLIENT
 ```
 
@@ -69,7 +69,7 @@ flowchart LR
 - [_config.yml](../../../_config.yml)（`extensions.tags`）
 - [scripts/tags/](../../../scripts/tags/)
 - [scripts/lib/extension-assets.js](../../../scripts/lib/extension-assets.js)
-- [source/js/services.js](../../../source/js/services.js)
+- [source/js/runtime/extensions/services.mjs](../../../source/js/runtime/extensions/services.mjs)
 - [source/css/_components/tag-plugins/](../../../source/css/_components/tag-plugins/)
 
 具体语法见本目录各专题页面与 [README](README.md)。

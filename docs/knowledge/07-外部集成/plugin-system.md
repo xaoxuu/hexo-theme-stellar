@@ -9,7 +9,7 @@ tags:
 
 # Extension 系统
 
-Stellar v2 把搜索、评论、标签能力、可选功能、数据服务与缓存统一归入 `extensions`。本切片交付的是配置入口、严格 Schema、冻结运行时和现有加载链迁移；完整 Extension 生命周期、模块协议与 request/cache 重构仍属于 M4。
+Stellar v2 把搜索、评论、标签能力、可选功能、数据服务与缓存统一归入 `extensions`。构建期生成严格的页面 Runtime Manifest，浏览器由单一 ESM bootstrap 建立 Extension 生命周期与 request/cache 客户端。
 
 ## 配置结构
 
@@ -95,13 +95,16 @@ extensions:
 flowchart LR
   A[extensions.features] --> B[声明式 Schema]
   B --> C[冻结 camelCase runtime]
-  C --> D[layout/_plugins/index.ejs]
-  D --> E[Feature partial]
-  E --> F[internal asset registry]
-  E --> G[local initializer]
+  C --> D[Runtime Manifest]
+  D --> E[ExtensionRegistry]
+  E --> F[dynamic import adapter]
+  F --> G[internal asset registry]
+  F --> H[mount root context]
 ```
 
-Feature partial 经 `stellar.initPlugin(fn, name, options)` 注册。`bootstrap.ejs` 在 `utils.js` 前提供队列，`layout/_plugins/index.ejs` 保留兜底注册点；ScrollReveal 仍有独立看门狗，第三方库失败时恢复 `.slide-up` 内容可见性。
+`layout/_partial/scripts/runtime.ejs` 只输出 `#stellar-runtime-config` JSON 和 `/js/runtime/index.mjs`。manifest 条目含 `id/module/config/when`；`when.selector` 未命中时不会 import adapter。`ExtensionRegistry.mount(root, context)` 顺序挂载，重复 mount 先释放旧实例，`unmount(root)` 逆序清理；import、mount、unmount 失败只派发 `stellar:extension-error`，不会阻断其它 Extension。Runtime 启动失败时立即添加 `sr-fallback`，正文保持可见。
+
+旧 `document.write`、同步 utils 补载、`_pluginQueue`、`stellar.initPlugin` 与插件恢复看门狗已删除。`utils.js` 只保留迁移期 DOM/经典资源工具，不再拥有 Extension 注册或网络缓存算法。
 
 核心防闪烁样式在构建期按 `extensions.features.*.enabled` 条件导入；Swiper、Fancybox、Mermaid 与评论样式在 DOM 命中时按需注入。
 
@@ -124,6 +127,6 @@ extensions:
     max_entries: 200
 ```
 
-GitHub 地址统一为完整 URL。浏览器当前仍接收由 EJS 投影的内部 service/cache 形状，以保持本切片行为不变；公开 YAML 和 Node/EJS 消费方不再读取旧根。M4 再替换内部生命周期协议。
+GitHub 地址统一为完整 URL。manifest 直接携带冻结的 camelCase cache 配置；`createRequestClient()` 提供同 method+URL 并发去重、按 service TTL、超时重试、fresh 命中、stale 失败回退、200 KiB 单条限制和最旧条目淘汰。它调用原生 `fetch` 而不替换 `window.fetch` 或 XHR 原型，并以 `stellar:request-start/end` 通知锚点稳定器。迁移期 `utils.request` 只是数据服务 callback/loading 语义的薄适配。
 
-相关源码：[_config.yml](../../../_config.yml)、[scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)、[layout/_plugins/index.ejs](../../../layout/_plugins/index.ejs)、[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)。
+相关源码：[_config.yml](../../../_config.yml)、[scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)、[source/js/runtime/index.mjs](../../../source/js/runtime/index.mjs)、[source/js/runtime/extension-registry.mjs](../../../source/js/runtime/extension-registry.mjs)、[source/js/runtime/request-cache.mjs](../../../source/js/runtime/request-cache.mjs)、[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)。

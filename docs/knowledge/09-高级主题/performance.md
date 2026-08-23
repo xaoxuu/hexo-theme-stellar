@@ -20,7 +20,7 @@ tags:
 - [LICENSE](../../../LICENSE)
 - [README.md](../../../README.md)
 - [_config.yml](../../../_config.yml)
-- [layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+- [source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 - [layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 - [layout/layout.ejs](../../../layout/layout.ejs)
 - [package.json](../../../package.json)
@@ -57,7 +57,7 @@ flowchart TD
   A --> G["extensions.search.providers.local"]
 
   B --> B1["scripts/filters/lib/img_lazyload.js"]
-  B --> B2["layout/_partial/scripts/lazyload.ejs"]
+  B --> B2["source/js/runtime/extensions/feature.mjs"]
   B --> B3["source/css/_plugins/lazyload.styl"]
 
   D --> D1["flying-pages CDN script"]
@@ -82,7 +82,7 @@ flowchart TD
 | 层 | 文件 | 职责 |
 |----|------|------|
 | 构建过滤器 | `scripts/filters/lib/img_lazyload.js` | 在渲染 HTML 中把 `src` 重写为 `data-src` |
-| 运行时脚本 | `layout/_partial/scripts/lazyload.ejs` | 加载 `vanilla-lazyload` 并配置回调 |
+| 运行时脚本 | `source/js/runtime/extensions/feature.mjs` | 加载 `vanilla-lazyload` 并配置回调 |
 | CSS 过渡 | `source/css/_plugins/lazyload.styl` | 定义占位与淡入/模糊进入动画 |
 
 **懒加载流水线**
@@ -92,7 +92,7 @@ sequenceDiagram
   participant "Hexo Build" as build
   participant "img_lazyload.js filter" as filter
   participant "Browser" as browser
-  participant "lazyload.ejs script" as script
+  participant "feature.mjs script" as script
   participant "vanilla-lazyload" as lib
 
   build->>filter: "HTML post-render"
@@ -107,7 +107,7 @@ sequenceDiagram
   lib->>browser: "callback_loaded: add class loaded"
 ```
 
-**参考源码**：[scripts/filters/lib/img_lazyload.js](../../../scripts/filters/lib/img_lazyload.js)、[layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+**参考源码**：[scripts/filters/lib/img_lazyload.js](../../../scripts/filters/lib/img_lazyload.js)、[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
 ### 配置
 
@@ -138,9 +138,9 @@ dependencies:
 
 `window.wrapLazyloadImages(container)` 辅助函数供动态生成的内容（如数据服务小部件）使用，把普通 `<img src>` 即时转换为懒加载兼容标记，并调用 `lazyLoadInstance.update()` 重新扫描。
 
-`lazyload.ejs` 同时内置 MutationObserver 兜底：检测到新增 `.lazy` 元素后自动调用 `lazyLoadInstance.update()` 重新注册，因此直接插入懒加载标记（`<img class="lazy" data-src="…">`）的第三方脚本无需手动触发更新。
+`feature.mjs` 同时内置 MutationObserver 兜底：检测到新增 `.lazy` 元素后自动调用 `lazyLoadInstance.update()` 重新注册，因此直接插入懒加载标记（`<img class="lazy" data-src="…">`）的第三方脚本无需手动触发更新。
 
-**参考源码**：[layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
 ---
 
@@ -302,7 +302,7 @@ resources:
 
 | 特性 | 配置键 | 默认 | 主要文件 |
 |------|--------|------|----------|
-| 图片懒加载 | 内置 Feature | 启用 | `img_lazyload.js`、`lazyload.ejs`、`lazyload.styl` |
+| 图片懒加载 | 内置 Feature | 启用 | `img_lazyload.js`、`feature.mjs`、`lazyload.styl` |
 | 懒加载过渡 | `extensions.features.lazy_loading.transition` | `fade` | `lazyload.styl` |
 | 链接预加载 | `extensions.features.preload.enabled` | `true`（flying_pages） | 内部资源注册表 |
 | 图片比例缓存 | Hexo 事件 | 自动 | `get_image_ratios.js`、`fix_image_tags.js` |

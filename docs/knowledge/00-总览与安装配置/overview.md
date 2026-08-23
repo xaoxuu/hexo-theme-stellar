@@ -19,7 +19,7 @@ tags:
 - [README.md](../../../README.md)
 - [_config.yml](../../../_config.yml)
 - [layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
-- [layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+- [source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 - [layout/layout.ejs](../../../layout/layout.ejs)
 - [package.json](../../../package.json)
 - [scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
@@ -60,8 +60,9 @@ graph TB
     
     subgraph ClientSide["Client-Side Layer"]
         MAINJS["main.js<br/>Page initialization"]
-        PRELOAD["preload<br/>flying_pages 预加载"]
-        PLUGINS["Plugin scripts<br/>lazyload, comments"]
+        MANIFEST["Runtime Manifest<br/>Page Extension declarations"]
+        REGISTRY["ESM ExtensionRegistry<br/>mount / cleanup"]
+        EXTENSIONS["On-demand adapters<br/>search, comments, services, features"]
     end
     
     subgraph Styling["Styling Layer"]
@@ -78,8 +79,9 @@ graph TB
     HELPERS --> LAYOUT
     LAYOUT --> PARTIALS
     LAYOUT --> MAINJS
-    MAINJS --> PRELOAD
-    MAINJS --> PLUGINS
+    LAYOUT --> MANIFEST
+    MANIFEST --> REGISTRY
+    REGISTRY --> EXTENSIONS
     CUSTOM --> COMPONENTS
 ```
 
@@ -255,7 +257,7 @@ graph TB
 
 ### 插件系统
 
-Extension 采用条件加载模式（[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)）。主题读取冻结的 `extensions.features.*.enabled` 与页面 `render.math/render.diagrams`，按需加载对应 CSS 与 JavaScript，包括：
+Extension 采用 Runtime Manifest 条件加载模式（[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/](../../../source/js/runtime/)）。主题读取冻结的 `extensions.features.*.enabled` 与页面 `render.math/render.diagrams`，由 ESM Registry 按声明和 DOM 条件加载对应 CSS 与 JavaScript，包括：
 
 - 图片增强（fancybox、swiper）
 - 代码功能（copycode、语法高亮）
@@ -267,7 +269,7 @@ Extension 采用条件加载模式（[source/css/_plugins/index.styl](../../../s
 
 ### 评论集成
 
-评论系统根据 `extensions.comments.provider` 与页面 `comments.provider/options` 选择实现。Beaudar、Utterances、Giscus、Twikoo、Waline、Artalk 各自通过评论 partial 按需初始化；官方脚本和样式来自主题内部资源注册表。
+评论系统根据 `extensions.comments.provider` 与页面 `comments.provider/options` 选择实现。Beaudar、Utterances、Giscus、Twikoo、Waline、Artalk 的 markup 由评论 partial 输出，初始化统一交给 [source/js/runtime/extensions/comments.mjs](../../../source/js/runtime/extensions/comments.mjs)；官方脚本和样式来自主题内部资源注册表。
 
 详见[评论系统](../07-外部集成/comment-systems.md)。
 
@@ -310,10 +312,10 @@ flowchart TD
     
     STATICHTML --> BROWSER["Browser loads page"]
     
-    BROWSER --> MAINJS["main.js: stellar.initPage()<br/>Interactive features"]
-    BROWSER --> LAZYLOAD["lazyload.js<br/>Image loading"]
-    BROWSER --> COMMENTS["Comment system init"]
-    BROWSER --> PRELOAD["preload (flying_pages)<br/>Link prefetching"]
+    BROWSER --> MAINJS["main.js: stellar.initPage()<br/>Core interactions"]
+    BROWSER --> RUNTIME["runtime/index.mjs<br/>Read Runtime Manifest"]
+    RUNTIME --> REGISTRY["ExtensionRegistry<br/>selector / always conditions"]
+    REGISTRY --> ADAPTERS["ESM adapters<br/>search, comments, services, features"]
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)、[layout/layout.ejs](../../../layout/layout.ejs)、[source/js/main.js](../../../source/js/main.js)
@@ -337,11 +339,12 @@ flowchart TD
 - `layout/` — EJS 模板
   - `layout.ejs` — 主布局编排
   - `_partial/` — 可复用模板组件
-  - `_plugins/` — 插件集成模板
+    - `layout/_partial/scripts/runtime.ejs` — Runtime Manifest 与单一 ESM 入口
 - `source/` — 客户端资源
   - `css/` — Stylus 样式
   - `js/` — JavaScript
     - `main.js` — 核心初始化
+    - `runtime/` — ESM Registry、request/cache、资源加载与 Extension adapters
     - `plugins/` — 可选功能
     - `services/` — 数据服务
 - `scripts/` — Hexo 构建期脚本

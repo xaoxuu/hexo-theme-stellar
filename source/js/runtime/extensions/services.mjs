@@ -1,77 +1,72 @@
-const initServices = () => {
+export async function mount(root, context) {
+  if (root.nodeType !== 9) {
+    throw new TypeError('[stellar runtime] legacy data-service adapter requires a document root');
+  }
+  const assets = context.assets;
+  const config = context.extension.config;
+  const services = Object.assign({}, config.services, {
+    siteinfo: Object.assign({}, config.services.siteinfo, { api: config.siteInfoEndpoint })
+  });
+  const deps = { marked: config.marked };
+  const loads = [];
   // 用于存储需要清理的资源
-  let timers = [];
+  let intervals = [];
+  let timeouts = [];
 
-  for (let id of Object.keys(ctx.services)) {
-    const js = ctx.services[id].js;
+  for (let id of Object.keys(services)) {
+    const js = services[id].js;
     if (id == 'siteinfo') {
-      const cardlinks = document.querySelectorAll('a.link-card[cardlink]');
-      const siteCards = document.querySelectorAll('.ds-sites, .site-card .card-link[data-siteinfo-api]');
+      const cardlinks = root.querySelectorAll('a.link-card[cardlink]');
+      const siteCards = root.querySelectorAll('.ds-sites, .site-card .card-link[data-siteinfo-api]');
       if (cardlinks?.length > 0 || siteCards?.length > 0) {
-        utils.js(js, { defer: true }).then(function () {
+        loads.push(assets.script(js).then(function () {
           if (cardlinks?.length > 0) {
             setCardLink(cardlinks);
           }
-        });
+        }));
       }
     } else if (id == 'ghinfo') {
-      const els = document.querySelectorAll('.ds-ghinfo');
+      const els = root.querySelectorAll('.ds-ghinfo');
       if (els.length > 0) {
-        utils.js(js, { defer: true });
+        loads.push(assets.script(js));
       }
     } else if (id == 'voice') {
-      const voiceAudios = document.querySelectorAll('.voice>audio');
+      const voiceAudios = root.querySelectorAll('.voice>audio');
       if (voiceAudios?.length > 0) {
-        utils.js(js, { defer: true }).then(function () {
+        loads.push(assets.script(js).then(function () {
           createVoiceDom(voiceAudios);
-        });
+        }));
       }
     } else if (id == 'video') {
-      const videos = document.querySelectorAll('.video>video');
+      const videos = root.querySelectorAll('.video>video');
       if (videos?.length > 0) {
-        utils.js(js, { defer: true }).then(function () {
+        loads.push(assets.script(js).then(function () {
           videoEvents(videos);
-        });
+        }));
       }
     } else if (id == 'download-file') {
-      const files = document.querySelectorAll('.chat-file');
+      const files = root.querySelectorAll('.chat-file');
       if (files?.length > 0) {
-        utils.js(js, { defer: true }).then(function () {
+        loads.push(assets.script(js).then(function () {
           downloadFileEvent(files);
-        });
+        }));
       }
     } else {
-      const els = document.getElementsByClassName(`ds-${id}`);
+      const els = root.getElementsByClassName(`ds-${id}`);
       if (els?.length > 0) {
         if (id == 'timeline' || id == 'memos' || id == 'marked' || id == 'mdrender') {
-          utils.js(deps.marked).then(function () {
-            utils.js(js, { defer: true });
-          });
+          loads.push(assets.script(deps.marked).then(function () {
+            return assets.script(js);
+          }));
         } else {
-          utils.js(js, { defer: true });
+          loads.push(assets.script(js));
         }
       }
     }
   }
 
-  // search
-  if (ctx.search && typeof searchFunc === 'function') {
-    const searchCfg = ctx.search.local_search;
-    const lazyLoad = searchCfg ? searchCfg.lazy_load !== false : true;
-    // 懒加载模式下由 local-search.js 的聚焦事件负责初始化，此处跳过
-    if (!lazyLoad) {
-      const inputArea = document.querySelector("input#search-input");
-      if (inputArea && !inputArea._searchInitialized) {
-        const path = ctx.search.path.startsWith('/') ? ctx.root + ctx.search.path.substring(1) : ctx.root + ctx.search.path;
-        const filter = inputArea.getAttribute('data-filter') || '';
-        searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result');
-        // searchFunc 内部管理 _searchInitialized（pending → true），此处不再覆盖
-      }
-    }
-  }
-
   // chat iphone time
-  let phoneTimes = document.querySelectorAll('.chat .status-bar .time');
+  let phoneTimes = root.querySelectorAll('.chat .status-bar .time');
   let firstAdjustInterval = null;
   let mainInterval = null;
 
@@ -80,7 +75,7 @@ const initServices = () => {
     const date = new Date();
     const sec = date.getSeconds();
     firstAdjustInterval = setInterval(firstAdjustTime, 1000 * (60 - sec));
-    timers.push(firstAdjustInterval);
+    intervals.push(firstAdjustInterval);
 
     function firstAdjustTime() {
       NowTime();
@@ -89,7 +84,7 @@ const initServices = () => {
         firstAdjustInterval = null;
       }
       mainInterval = setInterval(NowTime, 1000 * 60);
-      timers.push(mainInterval);
+      intervals.push(mainInterval);
     }
 
     function NowTime() {
@@ -115,19 +110,22 @@ const initServices = () => {
   const chat_quote_obverser = new IntersectionObserver((entries, observer) => {
     entries.filter((entry) => { return entry.isIntersecting }).sort((a, b) => a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
         observer.unobserve(entry.target);
-        setTimeout(() => {
+        const blinkStart = setTimeout(() => {
           entry.target.classList.add('quote-blink');
-          setTimeout(() => {
+          const blinkEnd = setTimeout(() => {
             entry.target.classList.remove('quote-blink');
           }, 1000);
+          timeouts.push(blinkEnd);
         }, Math.max(100, 16) * (index + 1));
+        timeouts.push(blinkStart);
       });
   });
 
-  var chatQuotes = document.querySelectorAll(".chat .talk .quote");
+  var chatQuotes = root.querySelectorAll(".chat .talk .quote");
   chatQuotes.forEach((quote) => {
     const handler = function () {
-      var chatCellDom = document.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+      var candidate = root.getElementById("quote-" + quote.getAttribute("quotedCellTag"));
+      var chatCellDom = candidate && root.documentElement.contains(candidate) ? candidate : null;
       if (chatCellDom) {
         var chatDiv = chatCellDom.parentElement;
         var mid = chatDiv.clientHeight / 2;
@@ -151,12 +149,16 @@ const initServices = () => {
   });
 
   // 返回清理函数，用于清理定时器和观察器
-  return () => {
+  const cleanup = () => {
     // 清理所有定时器（包括可能未完成的 firstAdjustInterval）
-    timers.forEach(timer => {
+    intervals.forEach(timer => {
       if (timer) clearInterval(timer);
     });
-    timers = [];
+    intervals = [];
+    timeouts.forEach(timer => {
+      if (timer) clearTimeout(timer);
+    });
+    timeouts = [];
     if (firstAdjustInterval) {
       clearInterval(firstAdjustInterval);
       firstAdjustInterval = null;
@@ -177,6 +179,11 @@ const initServices = () => {
     });
     quoteClickHandlers.clear();
   };
-};
-
-stellar.initPlugin(initServices, 'services');
+  try {
+    await Promise.all(loads);
+  } catch (error) {
+    cleanup();
+    throw error;
+  }
+  return cleanup;
+}

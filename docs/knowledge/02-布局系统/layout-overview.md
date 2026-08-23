@@ -18,7 +18,7 @@ tags:
 生成此页面时参考的主题源码文件：
 
 - [layout/layout.ejs](../../../layout/layout.ejs)
-- [layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+- [source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 - [layout/_partial/sidebar/brand.ejs](../../../layout/_partial/sidebar/brand.ejs)
 - [layout/_partial/cover/index.ejs](../../../layout/_partial/cover/index.ejs)
 - [layout/_partial/sidebar/index_leftbar.ejs](../../../layout/_partial/sidebar/index_leftbar.ejs)

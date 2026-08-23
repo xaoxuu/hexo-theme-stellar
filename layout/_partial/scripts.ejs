@@ -27,17 +27,8 @@ function tagtreeWidgetOnPage() {
 %>
 <%- partial('scripts/defines') %>
 
-<%- partial('scripts/bootstrap') %>
-
-<!-- core: utils 必须同步加载（页尾内联插件片段在解析期即调用 utils.initPlugin） -->
+<!-- core: 迁移期 DOM/资源兼容工具；Extension 注册与生命周期由 ESM runtime 所有 -->
 <script src="<%- url_for('/js/utils.js') %>?v=<%- stellar_info('version') %>"></script>
-<script>
-  // 解析期检测 utils 是否已就绪；未就绪时同步补载，
-  // 保证「utils 先于页尾插件片段定义」的不变量。
-  if (typeof utils === 'undefined') {
-    document.write('<script src="<%- url_for('/js/utils.js') %>?v=<%- stellar_info('version') %>"><\/script>');
-  }
-</script>
 <script defer src="<%- url_for('/js/stellar-icons.js') %>?v=<%- stellar_info('version') %>"></script>
 <!-- 非首屏图标异步加载：占位符替换依赖构建期生成的 js/icons/{ns}.json -->
 <script defer src="<%- url_for('/js/icons.js') %>?v=<%- stellar_info('version') %>" data-version="<%- stellar_info('version') %>"></script>
@@ -50,13 +41,7 @@ function tagtreeWidgetOnPage() {
   <script defer src="<%- url_for('/js/tagtree.js') %>?v=<%- stellar_info('version') %>"></script>
 <% } %>
 
-<%- partial('scripts/lazyload') %>
-
-<!-- optional -->
-<%- partial('comments/script', {viewModel: typeof viewModel !== 'undefined' ? viewModel : null}) %>
-
-<script defer src="<%- url_for('/js/services.js') %>?v=<%- stellar_info('version') %>"></script>
-<%- partial('../_plugins/index') %>
+<%- partial('scripts/runtime', {viewModel: typeof viewModel !== 'undefined' ? viewModel : null}) %>
 
 <!-- inject -->
 <%- custom_inject() %>

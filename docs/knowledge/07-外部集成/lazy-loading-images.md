@@ -14,7 +14,7 @@ tags:
 
 生成此页面时参考的主题源码文件：
 
-- [layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+- [source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 - [layout/layout.ejs](../../../layout/layout.ejs)
 - [source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)
 - [source/css/_plugins/lazyload.styl](../../../source/css/_plugins/lazyload.styl)
@@ -43,7 +43,7 @@ tags:
 | `wrapLazyloadImages()` | 把普通图片转换为可懒加载格式的工具函数 |
 | `.lazy-box` 包装 | 带加载指示的懒加载图片容器结构 |
 
-**参考源码**：[layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
 ---
 
@@ -52,7 +52,10 @@ tags:
 ```mermaid
 graph TB
     subgraph "Initialization Phase"
-        SCRIPT["lazyload.ejs<br/>Script Block"]
+        MANIFEST["Runtime Manifest<br/>lazy-loading declaration"]
+        REGISTRY["ExtensionRegistry<br/>selector match"]
+        MOUNT["feature.mjs<br/>mount(root, context)"]
+        SCRIPT["Asset Loader"]
         CDN["Vanilla LazyLoad Library<br/>internal Extension asset"]
         OPTIONS["window.lazyLoadOptions<br/>{elements_selector, callback_loaded}"]
         EVENT["LazyLoad::Initialized Event"]
@@ -73,12 +76,14 @@ graph TB
     end
     
     subgraph "Integration Points"
-        DOMREADY["DOMContentLoaded Event"]
         CALLBACK["callback_loaded<br/>Add 'loaded' class"]
     end
     
+    MANIFEST --> REGISTRY
+    REGISTRY --> MOUNT
+    MOUNT --> SCRIPT
+    MOUNT --> OPTIONS
     SCRIPT --> CDN
-    SCRIPT --> OPTIONS
     CDN --> EVENT
     EVENT --> INSTANCE
     
@@ -91,7 +96,7 @@ graph TB
     OPTIONS --> INSTANCE
     INSTANCE --> UPDATE
     
-    DOMREADY --> UPDATE
+    MOUNT --> UPDATE
     
     LAZYIMG --> INSTANCE
     INSTANCE --> CALLBACK
@@ -102,7 +107,7 @@ graph TB
     style OPTIONS fill:#f9f9f9
 ```
 
-**参考源码**：[layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
 ---
 
@@ -113,13 +118,13 @@ graph TB
 ### 库加载
 
 ```javascript
-// 从主题内部资源注册表异步加载
-<script async src="<%- url_for(extension_assets().dependencies.lazyLoading) %>"></script>
+// feature.mjs 在 mount 中通过共享 asset loader 加载内部注册资源
+await context.assets.script(config.asset)
 ```
 
 `window.lazyLoadOptions` 在脚本加载前定义时库自动初始化，就绪时派发自定义 `LazyLoad::Initialized` 事件。
 
-**参考源码**：[layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
 ---
 
@@ -139,11 +144,11 @@ graph TB
 1. 给图片元素添加 `loaded` 类
 2. 从包装中移除加载指示（`.lazy-icon`）
 
-**参考源码**：[layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
 ### 实例引用
 
-主题捕获并存储 LazyLoad 实例供手动控制：
+Extension 在加载库前监听初始化事件，并存储 LazyLoad 实例供手动控制：
 
 ```javascript
 window.addEventListener("LazyLoad::Initialized", function (event) {
@@ -157,19 +162,18 @@ window.addEventListener("LazyLoad::Initialized", function (event) {
 - 强制加载特定图片
 - 整页导航后的重新扫描
 
-**参考源码**：[layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
 ### 初始更新触发
 
 页面加载时懒加载系统显式更新以检测懒图片：
 
 ```javascript
-document.addEventListener('DOMContentLoaded', function () {
-    window.lazyLoadInstance?.update();
-});
+await context.assets.script(config.asset)
+window.lazyLoadInstance?.update()
 ```
 
-**参考源码**：[layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
 ---
 
@@ -212,7 +216,7 @@ graph TD
 | N/A | `data-src` 属性（LazyLoad 目标） |
 | N/A | `.lazy` 类（选择器匹配） |
 
-**参考源码**：[layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
 ---
 
@@ -278,21 +282,21 @@ flowchart TD
 
 1. **跳过条件**：已带 `.lazy` 类的图片跳过，避免重复处理
 2. **属性迁移**：把 `src` 复制到 `data-src` 并移除 `src`
-3. **图标配置**：用 `def.loading`（全局默认）作加载指示背景图
+3. **加载指示**：追加 `.lazy-icon`，由主题 CSS 变量提供图形
 4. **更新通知**：调用 `lazyLoadInstance.update()` 注册新的懒图片
 
-**参考源码**：[layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
 ---
 
 ## 页面加载后的懒加载更新
 
-主题为普通整页导航，每次页面加载执行一次初始化扫描（DOMContentLoaded 时 `lazyLoadInstance.update()`）。
+主题为普通整页导航，每次 `lazy-loading` Extension mount 在资源加载完成后执行一次初始化扫描。
 
-- **动态插入的 `.lazy` 元素**：`lazyload.ejs` 内置 MutationObserver（rAF 节流），检测到新增 `.lazy` 元素后自动调用 `lazyLoadInstance.update()` 重新注册，第三方自定义脚本无需手动触发。
+- **动态插入的 `.lazy` 元素**：`feature.mjs` 内置 MutationObserver，检测到新增 `.lazy` 元素后自动调用 `lazyLoadInstance.update()` 重新注册，第三方自定义脚本无需手动触发。
 - **普通 `<img src>` 转换**：数据服务动态插入的普通图片仍经 `wrapLazyloadImages()` 包装为懒加载标记，该函数末尾同样调用 update 注册。
 
-**参考源码**：[layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
 ---
 
@@ -375,7 +379,7 @@ callback_loaded: (el) => {
 2. 向上查找 `.lazy-box` 包装
 3. 查找并移除 `.lazy-icon` 加载指示
 
-**参考源码**：[layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
 ---
 
@@ -392,4 +396,4 @@ callback_loaded: (el) => {
 | 加载指示 | `.lazy-icon` | 随包装创建 |
 | 已加载状态 | `.loaded` 类 | 回调时添加 |
 
-**参考源码**：[layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)、[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)
+**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)、[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)
