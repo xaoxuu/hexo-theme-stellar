@@ -13,7 +13,7 @@ const { getPageConfig } = require("../lib/page-view-model-registry");
 hexo.extend.helper.register('json_ld', function(args) {
   if (args?.render?.seo) {
     if (!args.render?.seo?.jsonLd) {
-      throw new Error(`Stellar v2: ${args.collection?.profile || '页面'} ${args.item?.source?.file || '<unknown>'} 缺少 render.seo.jsonLd`);
+      throw new Error(`Stellar v2: ${args.collection?.profile || "页面"} ${args.item?.source?.file || "<unknown>"} 缺少 render.seo.jsonLd`);
     }
     return `<script type="application/ld+json">${JSON.stringify(args.render.seo.jsonLd)}</script>`;
   }

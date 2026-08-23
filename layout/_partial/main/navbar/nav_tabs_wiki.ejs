@@ -17,8 +17,8 @@ function layoutDiv() {
   el += ' href="' + pretty_url(wikiIndex.path) + '">' + __("btn.all_wiki") + '</a>';
   el += '</a>';
   // 项目分类
-  for (let tag of wikiIndex.tags) {
-    let projects = tag.itemIds.filter(id => wikiIndex.allItems.some(item => item.id === id))
+  for (var tag of wikiIndex.tags) {
+    var projects = tag.itemIds.filter(id => wikiIndex.allItems.some(item => item.id === id))
     if (projects.length > 0) {
       el += '<a';
       if (tag.name && tag.name.length > 0 && wikiIndex.tagName === tag.name) {

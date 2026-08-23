@@ -8,7 +8,9 @@ const path = require("node:path");
 
 const {
   buildPostPageViewModel: buildPostPageViewModelRaw,
-  buildWikiPageViewModel: buildWikiPageViewModelRaw
+  buildWikiPageViewModel: buildWikiPageViewModelRaw,
+  buildWikiPageViewModelBase: buildWikiPageViewModelBaseRaw,
+  completeWikiPageViewModel
 } = require("../scripts/lib/models");
 const { parseStellarConfig } = require("../scripts/lib/config-schema");
 const { parseCollectionConfig, parsePageConfig } = require("../scripts/lib/content-config");
@@ -34,8 +36,8 @@ function buildPostPageViewModel(input) {
   });
 }
 
-function buildWikiPageViewModel(input) {
-  return buildWikiPageViewModelRaw({
+function normalizedWikiInput(input) {
+  return {
     ...input,
     collectionConfig: input.collectionConfig == null
       ? input.collectionConfig
@@ -46,7 +48,11 @@ function buildWikiPageViewModel(input) {
       themeConfig: input.themeConfig,
       siteConfig: input.siteConfig
     })
-  });
+  };
+}
+
+function buildWikiPageViewModel(input) {
+  return buildWikiPageViewModelRaw(normalizedWikiInput(input));
 }
 
 function assertDeepFrozen(value) {
@@ -142,7 +148,12 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
       updated: new Date("2026-08-23T08:00:00.000Z")
     }
   };
-  const viewModel = buildWikiPageViewModel(input);
+  const normalizedInput = normalizedWikiInput(input);
+  const base = buildWikiPageViewModelBaseRaw(normalizedInput);
+  assert.deepEqual(Object.keys(base), ["collection", "item"]);
+  assert.equal("render" in base, false);
+  assert.equal(Object.isFrozen(base), false);
+  const viewModel = completeWikiPageViewModel(normalizedInput, base);
 
   assert.deepEqual(Object.keys(viewModel), ["collection", "item", "render"]);
   assert.deepEqual(Object.keys(viewModel.collection), [
@@ -200,6 +211,7 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
   assert.equal(viewModel.render.layout.pageType, "content");
   assert.equal(viewModel.render.layout.brand.name, "Stellar");
   assert.equal(viewModel.render.layout.wikiIndexPath, "wiki");
+  assert.equal(viewModel.render.layout.searchFilter, "wiki/stellar/");
   assert.equal(viewModel.render.seo.title, "Stellar：开始 - Example");
   assert.equal(viewModel.render.seo.canonical, null);
   assert.equal(viewModel.render.seo.jsonLd["@type"], "WebPage");
@@ -230,6 +242,7 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
   innerInput.page.content = "";
   const innerViewModel = buildWikiPageViewModel(innerInput);
   assert.equal(innerViewModel.render.cover.enabled, false);
+  assert.equal(innerViewModel.render.layout.searchFilter, "wiki/stellar/");
   assert.equal(innerViewModel.render.article.readmeHtml, "");
   assert.equal(innerViewModel.render.article.previous.title, "开始");
   assert.equal(innerViewModel.render.article.next, null);

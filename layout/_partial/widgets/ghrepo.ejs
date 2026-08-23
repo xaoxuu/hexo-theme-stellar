@@ -3,6 +3,8 @@ function layoutDiv() {
   var el = '';
   var repo;
   var branch = 'main';
+  var repoApi;
+  var tagsApi;
   var pageConfig = content_config(page);
   var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
     ? viewModel
@@ -10,6 +12,8 @@ function layoutDiv() {
   if (wikiViewModel) {
     repo = wikiViewModel.collection.source.repository
     branch = wikiViewModel.collection.source.branch || branch
+    repoApi = wikiViewModel.render.listing.repositoryApi
+    tagsApi = repoApi ? repoApi + '/tags' : ''
   } else if (pageConfig.source?.repository) {
     repo = pageConfig.source.repository
   } else if (stellar_data('wiki').tree[collection_id(page, "wiki")]?.source?.repository) {
@@ -19,14 +23,17 @@ function layoutDiv() {
       branch = proj.source.branch
     }
   }
-  if (repo == undefined) {
+  if (!repo) {
     return el;
+  }
+  if (!wikiViewModel) {
+    repoApi = stellar_config('extensions.services.github.apiUrl') + '/repos/' + repo
+    tagsApi = repoApi + '/tags'
   }
   // 布局
   el += `<widget class="widget-wrapper${scrollreveal(' ')} ghrepo">`
   // body
   el += '<div class="widget-body">';
-  var repoApi = wikiViewModel ? wikiViewModel.render.listing.repositoryApi : stellar_config('extensions.services.github.apiUrl') + '/repos/' + repo
   el += '<div class="items data-service ds-ghinfo" data-api="' + escape_html(repoApi) + '">';
   el += '<a class="repo" href="https://github.com/' + repo + '" target="_blank" rel="external nofollow noopener noreferrer">';
     el += '<div class="repo-name flex-row">';
@@ -43,7 +50,7 @@ function layoutDiv() {
         el += icon('github:fork')
         el += '<span type="text" id="forks_count"></span>';
       el += '</div>';
-      el += '<div class="flex-row data-service ds-ghinfo" index="0" data-api="' + stellar_config('extensions.services.github.apiUrl') + '/repos/' + repo + '/tags">';
+      el += '<div class="flex-row data-service ds-ghinfo" index="0" data-api="' + escape_html(tagsApi) + '">';
         el += icon('github:tag')
         el += '<span type="text" id="latest-tag-name">0</span>';
       el += '</div>';

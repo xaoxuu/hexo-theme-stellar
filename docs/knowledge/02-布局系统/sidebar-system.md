@@ -12,11 +12,11 @@ tags:
 > [!IMPORTANT]
 > v2 页面与集合统一使用 `sidebar.left` / `sidebar.right`；本页涉及内容字段时，以[内容配置 Schema v2](../03-内容系统/content-schema-v2.md)为准。
 
-## v2 普通 Post 消费边界
+## v2 Post 与 Wiki 消费边界
 
-普通 Post 的左右栏选择改为读取 `PageViewModel.item.presentation.sidebar`，Brand 读取 `render.layout.brand`，菜单激活读取 `item.navigation.menu`。页面 Front Matter、Post profile 与全局默认值的级联在模型层完成；模板不再修改 Post 的 `page.sidebar`。Widget 的具体 partial 与搜索交互继续复用既有渲染器；Footer 操作已迁到 `site.footer.actions`，但 DOM、class 与视觉行为不变。
+普通 Post 的左右栏选择读取 `PageViewModel.item.presentation.sidebar`；Wiki 从 `render.layout.sidebar` 取得相同的最终左右栏对象。两类页面的 Brand 都读取 `render.layout.brand`，菜单激活读取 `item.navigation.menu`。页面 Front Matter、Collection/Profile 与全局默认值的级联在模型层完成，模板不再修改这两类页面的 `page.sidebar`。
 
-Layout Profile 切片已将 Topic、Wiki、Notebook、列表页、404 和普通 Page 的默认侧栏一并迁入 `layout.profiles`。Collection / Front Matter 覆盖仍由现有模型适配层合并，最终公开字段将在后续切片收敛。
+Wiki 的 Brand、搜索、tree、related、ghrepo 与 toc partial 都接收显式 ViewModel local：搜索范围来自 `render.layout.searchFilter`，tree 来自 `collection.navigation.tree`，related 来自 `render.article.related`，仓库 API 来自 `render.listing.repositoryApi`。DOM、class、搜索匹配范围和客户端交互保持不变。Topic、Notebook 与普通 Page 继续使用 legacy 侧栏分支。
 
 <details>
 <summary>相关源码文件</summary>
@@ -108,7 +108,7 @@ graph TB
     NotebookYAML["notebook YAML<br/>leftbar/rightbar"] -.->|"override for notebooks"| LayoutConfigs
 ```
 
-**配置解析顺序**：先查页面 Front Matter 覆盖，再查 Wiki / Notebook YAML，然后回退到已规范化的 `layout.profiles` 默认值。Schema 默认是唯一主题默认来源。
+**配置解析顺序**：Wiki 在 ViewModel 层按页面 Front Matter、Wiki Collection、`layout.profiles.wiki` 与主题默认完成级联；Notebook 的 legacy 分支仍按页面、Notebook YAML 和 Profile 解析。Schema 默认是唯一主题默认来源。
 
 **参考源码**：[_config.yml](../../../_config.yml)（`layout.profiles` 小节）
 
@@ -133,11 +133,11 @@ graph TB
 
 ## 左栏：Brand 组件
 
-左栏顶部使用统一 Brand resolver，优先级依次为页面 `sidebar.left.brand`、集合 `sidebar.left.brand`、Wiki / Notebook 自动 Brand 和全局 `site.brand`。Topic 不自动生成 Brand，未显式覆盖时直接使用站点 Brand。根字段逐项合并，`image` 始终整体替换。
+左栏顶部使用统一 Brand resolver，优先级依次为页面 `sidebar.left.brand`、集合 `sidebar.left.brand`、Wiki / Notebook 自动 Brand 和全局 `site.brand`。Wiki 的最终结果随 `render.layout.brand` 传给模板；Topic 不自动生成 Brand，未显式覆盖时直接使用站点 Brand。根字段逐项合并，`image` 始终整体替换。
 
 冻结后的 Brand 图片通过 `image.variant` 明确为 `avatar`、`icon` 或 `plain`。外层统一负责 48×48 尺寸、链接和显式背景；图片元素只负责 `cover` 或 `contain`。完整契约见 [Brand、导航与页头](logo-navigation-headers.md)。
 
-Wiki 内容页在 Brand 上方显示“所有项目”入口，链接到冻结的 `layout.profiles.wikiIndex.path`。页面与项目的 `sidebar.left.wiki_home` 可控制此入口，默认显示；它不影响 Brand 本身。
+Wiki 内容页在 Brand 上方显示“所有项目”入口，链接使用 `render.layout.wikiIndexPath`。页面与项目的 `sidebar.left.wiki_home` 已投影为 `render.layout.showWikiHome`，默认显示；它不影响 Brand 本身。
 
 手机端 Brand 不读取 Front Matter 开关，只在主页、分类/标签与指定集合索引/笔记列表渲染。内容页、归档、作者页和 404 隐藏。
 
@@ -166,7 +166,7 @@ Wiki 内容页在 Brand 上方显示“所有项目”入口，链接到冻结�
 
 完整列表以 `_data/widgets.yml` 为准。
 
-**Wiki 文档树链接**：`tree` 小部件中的每个条目（包括项目首页）都直接链接到其规范化页面路径，不附加 `#start` 锚点。Wiki 项目列表卡片同样使用项目首页的纯路径。
+**Wiki 文档树链接**：`tree` 小部件只消费 `collection.navigation.tree`；每个条目（包括项目首页）都直接链接到其规范化页面路径，不附加 `#start` 锚点。Wiki 项目列表卡片同样使用 `render.listing.href` 的纯路径。
 
 **小部件加载**：遍历 `leftbar` 数组并引入对应 partial。模板不存在或返回空内容时静默跳过，不报错。
 

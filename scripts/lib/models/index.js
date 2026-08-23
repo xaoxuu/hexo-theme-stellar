@@ -233,20 +233,9 @@ function buildContributor(item, stellarConfig) {
 function buildPostArticleRender(input, item) {
   const runtimeData = input.runtimeData;
   const articleConfig = requireContentConfig(input.stellarConfig, input.themeSource).article;
-  const appearance = input.stellarConfig.appearance;
   const frontMatter = input.frontMatter;
   const footer = item.presentation.footer || {};
-  const comments = item.presentation.comments || {};
-  const service = typeof comments.provider === "string" ? comments.provider : "";
   const extensionConfig = input.stellarConfig.extensions;
-  const commentOptions = mergeConfig(
-    service && isPlainObject(extensionConfig.comments.providers?.[service]) ? extensionConfig.comments.providers[service] : {},
-    isPlainObject(comments.options) ? comments.options : {}
-  );
-  const preferredTheme = appearance.colorScheme;
-  if (service === "giscus" && preferredTheme !== "auto" && commentOptions["data-theme"] === "preferred_color_scheme") {
-    commentOptions["data-theme"] = preferredTheme;
-  }
   const configuredShare = Array.isArray(footer.share) ? footer.share : articleConfig.footer.share;
   const shareServices = footer.share !== false && Array.isArray(configuredShare)
     ? configuredShare.filter(name => ["wechat", "weibo", "email", "link"].includes(name))
@@ -279,16 +268,7 @@ function buildPostArticleRender(input, item) {
       maxCount: relatedConfig.limit,
       items: normalizeRelatedItems(input.relatedItems)
     },
-    comments: {
-      enabled: comments.enabled !== false && service.length > 0,
-      title: typeof comments.title === "string" && comments.title.length > 0
-        ? comments.title
-        : extensionConfig.comments.title,
-      id: typeof comments.id === "string" ? comments.id : "",
-      service,
-      options: commentOptions,
-      pageTitle: item.title
-    }
+    comments: buildCommentsRender(input.stellarConfig, item)
   };
 }
 
@@ -494,17 +474,17 @@ function wikiTitle(itemTitle, collectionName, siteTitle, language) {
   return subject ? `${subject} - ${String(siteTitle || "")}` : String(siteTitle || "");
 }
 
-function buildWikiComments(input, item) {
+function buildCommentsRender(stellarConfig, item) {
   const comments = item.presentation.comments || {};
   const service = typeof comments.provider === "string" ? comments.provider : "";
-  const extensionConfig = input.stellarConfig.extensions;
+  const extensionConfig = stellarConfig.extensions;
   const options = mergeConfig(
     service && isPlainObject(extensionConfig.comments.providers?.[service])
       ? extensionConfig.comments.providers[service]
       : {},
     isPlainObject(comments.options) ? comments.options : {}
   );
-  const preferredTheme = input.stellarConfig.appearance.colorScheme;
+  const preferredTheme = stellarConfig.appearance.colorScheme;
   if (service === "giscus" && preferredTheme !== "auto" && options["data-theme"] === "preferred_color_scheme") {
     options["data-theme"] = preferredTheme;
   }
@@ -545,11 +525,15 @@ function buildWikiRelated(input) {
   if (!Array.isArray(input.relatedCollections)) return [];
   return input.relatedCollections.map(group => ({
     name: String(group?.name || ""),
-    items: Array.isArray(group?.items) ? group.items.map(project => ({
-      href: normalizeCollectionPath(project?.homepage?.path || project?.route?.path || ""),
-      title: String(project?.name || project?.id || ""),
-      description: String(project?.description || "")
-    })).filter(project => project.href.length > 0 && project.title.length > 0) : []
+    items: Array.isArray(group?.items) ? group.items.map(project => {
+      const identity = isPlainObject(project?.identity) ? project.identity : project;
+      const route = isPlainObject(project?.route) ? project.route : {};
+      return {
+        href: normalizeCollectionPath(route.homepage || project?.homepage?.path || route.path || ""),
+        title: String(identity?.name || project?.id || ""),
+        description: String(identity?.description || "")
+      };
+    }).filter(project => project.href.length > 0 && project.title.length > 0) : []
   })).filter(group => group.name.length > 0 && group.items.length > 0);
 }
 
@@ -681,6 +665,10 @@ function buildWikiRenderModel(input, collection, item) {
       brand,
       wikiIndexPath: profilePath(requireLayoutProfiles(stellarConfig).wikiIndex.path),
       showWikiHome: item.presentation.sidebar?.left?.wikiHome !== false,
+      searchFilter: (() => {
+        const matched = `${item.route.path}/`.match(/(.*?)\/(.*?)\//i);
+        return matched?.[0] || "";
+      })(),
       sidebar: cloneValue(item.presentation.sidebar || {}),
       breadcrumbs: [{
         name: collection.identity.name,
@@ -742,10 +730,12 @@ function buildWikiRenderModel(input, collection, item) {
       },
       previous: readNext.previous,
       next: readNext.next,
-      comments: buildWikiComments(input, item),
-      related: buildWikiRelated(input)
+      comments: buildCommentsRender(stellarConfig, item),
+      related: Array.isArray(input.related) ? cloneValue(input.related) : buildWikiRelated(input)
     },
-    listing: buildWikiListingRender(input, collection)
+    listing: isPlainObject(input.listing)
+      ? cloneValue(input.listing)
+      : buildWikiListingRender(input, collection)
   };
 }
 
@@ -1152,7 +1142,7 @@ function buildPostPageViewModel(input) {
   return deepFreeze(assertPageViewModel("post", { collection, item, render }));
 }
 
-function buildWikiPageViewModel(input) {
+function buildWikiPageViewModelBase(input) {
   const source = input.source || "<page>";
   const themeSource = input.themeSource || "<theme>";
   const collectionSource = input.collectionSource || "<collection>";
@@ -1203,6 +1193,14 @@ function buildWikiPageViewModel(input) {
     typeof heroImage === "string" ? { image: heroImage } : {},
     item.presentation.banner
   );
+  return { collection, item };
+}
+
+function completeWikiPageViewModel(input, base) {
+  const frontMatter = isPlainObject(input.frontMatter) ? input.frontMatter : {};
+  const page = input.page || {};
+  const collection = base.collection;
+  const item = base.item;
   const render = buildWikiRenderModel({
     ...input,
     siteConfig: isPlainObject(input.siteConfig) ? input.siteConfig : {},
@@ -1211,6 +1209,10 @@ function buildWikiPageViewModel(input) {
     page
   }, collection, item);
   return deepFreeze(assertPageViewModel("wiki", { collection, item, render }));
+}
+
+function buildWikiPageViewModel(input) {
+  return completeWikiPageViewModel(input, buildWikiPageViewModelBase(input));
 }
 
 function buildTopicPageViewModel(input) {
@@ -1298,5 +1300,9 @@ module.exports = {
   buildNotebookPageViewModel,
   buildPostPageViewModel,
   buildTopicPageViewModel,
-  buildWikiPageViewModel
+  buildWikiListingRender,
+  buildWikiPageViewModel,
+  buildWikiPageViewModelBase,
+  buildWikiRelated,
+  completeWikiPageViewModel
 };

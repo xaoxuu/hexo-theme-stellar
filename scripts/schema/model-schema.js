@@ -708,9 +708,10 @@ function pageViewModelSchema(profile) {
         brand: renderBrand,
         wikiIndexPath: field("string", { default: derived("layout.profiles.wiki_index.path"), example: "wiki", required: true }),
         showWikiHome: field("boolean", { default: inherited("item.presentation.sidebar.left.wikiHome"), example: true, required: true }),
+        searchFilter: field("string", { default: computed("由页面路径保留 Wiki 搜索的既有两段目录范围"), example: "wiki/stellar/", required: true }),
         sidebar: field("object", { default: inherited("item.presentation.sidebar"), example: { left: { widgets: ["tree"] }, right: { widgets: ["toc"] } }, required: true, additionalProperties: true }),
         breadcrumbs: array(breadcrumb, { default: literal([]), example: [{ name: "Stellar", path: "wiki/stellar" }], required: true })
-      }, { required: true, example: { pageType: "content", articleType: "tech", indent: false, brand: {}, wikiIndexPath: "wiki", showWikiHome: true, sidebar: {}, breadcrumbs: [] } }),
+      }, { required: true, example: { pageType: "content", articleType: "tech", indent: false, brand: {}, wikiIndexPath: "wiki", showWikiHome: true, searchFilter: "wiki/stellar/", sidebar: {}, breadcrumbs: [] } }),
       seo: object({
         title: field("string", { default: computed("由 Wiki 名、页面标题和站点标题组合"), example: "Stellar：开始 - Example", required: true }),
         description: field("string", { default: derived("page.description", "collection.identity.description", "item.excerpt", "item.content"), example: "Wiki 摘要", required: true }),

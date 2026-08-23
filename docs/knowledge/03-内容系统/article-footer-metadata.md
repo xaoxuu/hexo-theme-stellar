@@ -33,7 +33,7 @@ tags:
 
 ## 组件概览
 
-普通 Post 页脚由 [post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs) 接收显式 `footer` local，迁移期页面由 [article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs) 的 `layoutDiv()` 渲染。两者条件组装相同的最多四个区块；许可、分享、贡献者与引用的配置级联只在普通 Post ViewModel 构建时执行一次：
+普通 Post 与 Wiki 页脚由 [post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs) 接收显式 `footer` local，迁移期页面由 [article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs) 的 `layoutDiv()` 渲染。两者条件组装相同的最多四个区块；Post/Wiki 的许可、分享、贡献者与引用级联都只在各自 ViewModel 构建时执行一次：
 
 | 区块 ID | 显示条件 | 本地化键 |
 |---------|----------|----------|

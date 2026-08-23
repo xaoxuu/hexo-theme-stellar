@@ -1,6 +1,6 @@
 <%
 
-const wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
+var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
   ? viewModel
   : null
 var wiki = wikiViewModel ? null : stellar_data('wiki').tree[collection_id(page, "wiki")]

@@ -1,8 +1,10 @@
 <%
 
-const postViewModel = page.viewModel?.collection?.profile === 'post' ? page.viewModel : null
-const wikiViewModel = page.viewModel?.collection?.profile === 'wiki' ? page.viewModel : null
-const renderViewModel = postViewModel || wikiViewModel
+var renderViewModel = typeof viewModel !== 'undefined' && ['post', 'wiki'].includes(viewModel?.collection?.profile)
+  ? viewModel
+  : null
+var postViewModel = renderViewModel?.collection?.profile === 'post' ? renderViewModel : null
+var wikiViewModel = renderViewModel?.collection?.profile === 'wiki' ? renderViewModel : null
 var pageConfig = content_config(page)
 var banner = Object.assign({}, wikiViewModel ? wikiViewModel.render.article.banner : postViewModel ? postViewModel.item.presentation.banner : pageConfig.banner || {})
 

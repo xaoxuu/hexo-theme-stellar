@@ -5,10 +5,10 @@ function layout_wiki_list(partial) {
   if (!wikiIndex || !Array.isArray(wikiIndex.items)) {
     throw new Error('Stellar v2: Wiki 索引模板缺少显式 listing 数据')
   }
-  for (let listing of wikiIndex.items) {
+  for (var listing of wikiIndex.items) {
     el += `<div class="post-card-wrap${scrollreveal(' ')}${wikiIndex.filter ? ' filter' : ''}">`
     var coverStyle = ''
-    const cover = listing.cover
+    var cover = listing.cover
     if (cover) {
       coverStyle = ` style="--cover-url:url('${escape_html(cover.replace(/'/g, '%27'))}')"`
     }

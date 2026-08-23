@@ -112,6 +112,7 @@ test("Wiki 详情页要求合法 render，并与 Topic、Notebook legacy 分支�
   assert.match(root, /partial\('_partial\/cover\/index', \{viewModel: renderViewModel\}\)/);
   assert.match(source("layout/_partial/primitives/shell.ejs"), /\['post', 'wiki'\]/);
   assert.match(page, /wikiViewModel\.render\.article/);
+  assert.doesNotMatch(source("layout/_partial/main/navbar/article_banner.ejs"), /page\.viewModel/);
   assert.match(page, /post_footer'.*footer: article\.footer/);
   assert.match(page, /comments\/layout'.*comments: article\.comments/);
   assert.match(root, /else \{/);
@@ -125,6 +126,8 @@ test("Wiki Hero 与详情辅助 partial 优先消费显式 Wiki ViewModel", () =
   assert.match(source("layout/_partial/widgets/tree.ejs"), /wikiViewModel\.collection\.navigation\.tree/);
   assert.match(source("layout/_partial/widgets/related.ejs"), /wikiViewModel\.render\.article\.related/);
   assert.match(source("layout/_partial/widgets/ghrepo.ejs"), /wikiViewModel\.render\.listing\.repositoryApi/);
+  assert.match(source("layout/_partial/widgets/ghrepo.ejs"), /tagsApi = repoApi \? repoApi \+ '\/tags'/);
+  assert.match(source("layout/_partial/sidebar/search.ejs"), /wikiViewModel\.render\.layout\.searchFilter/);
   assert.match(source("layout/_partial/widgets/toc.ejs"), /wikiViewModel\.render\.article\.readmeHtml/);
   assert.match(source("layout/_partial/head.ejs"), /\['post', 'wiki'\]/);
 });

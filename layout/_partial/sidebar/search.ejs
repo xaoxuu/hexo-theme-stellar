@@ -27,7 +27,7 @@ function layoutDiv() {
   var filter = ''
   if (item.filter == 'auto') {
     if (wikiViewModel) {
-      filter = wikiViewModel.collection.route.baseDir
+      filter = wikiViewModel.render.layout.searchFilter
     } else if (collection_id(page, "wiki")) {
       let matches = page.path.match(/(.*?)\/(.*?)\//i)
       if (matches?.length > 0) {

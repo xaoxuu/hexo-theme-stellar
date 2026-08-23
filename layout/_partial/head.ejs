@@ -1,9 +1,8 @@
 <%
-const renderViewModel = typeof viewModel !== 'undefined' && ['post', 'wiki'].includes(viewModel?.collection?.profile)
+var pageViewModel = typeof viewModel !== 'undefined' && ['post', 'wiki'].includes(viewModel?.collection?.profile)
   ? viewModel
   : null
-const postViewModel = renderViewModel
-const postRender = renderViewModel?.render
+var pageRender = pageViewModel?.render
 var pageConfig = content_config(page)
 var stellarSeo = stellar_config('seo')
 var stellarResources = stellar_config('resources')
@@ -22,8 +21,8 @@ function strip_wiki_title(title, wiki) {
 }
 
 function generate_title() {
-  if (postRender) {
-    return postRender.seo.title
+  if (pageRender) {
+    return pageRender.seo.title
   } else if (collection_id(page, "wiki")) {
     var proj = stellar_data('wiki').tree[collection_id(page, "wiki")]
     const wiki = proj?.name || collection_id(page, "wiki")
@@ -49,9 +48,9 @@ function generate_title() {
   return config.title;
 }
 function generate_description() {
-  if (postRender) {
-    if (postRender.seo.openGraph) return ''
-    return '<meta name="description" content="' + escape_meta_content(postRender.seo.description) + '">'
+  if (pageRender) {
+    if (pageRender.seo.openGraph) return ''
+    return '<meta name="description" content="' + escape_meta_content(pageRender.seo.description) + '">'
   }
   if (stellarSeo.openGraph.enabled) {
     return '';
@@ -71,9 +70,9 @@ function generate_description() {
   return '<meta name="description" content="' + config.description + '">';
 }
 function generate_keywords() {
-  if (postRender) {
-    return postRender.seo.keywords.length > 0
-      ? '<meta name="keywords" content="' + escape_meta_content(postRender.seo.keywords.join(',')) + '">'
+  if (pageRender) {
+    return pageRender.seo.keywords.length > 0
+      ? '<meta name="keywords" content="' + escape_meta_content(pageRender.seo.keywords.join(',')) + '">'
       : ''
   } else if (page.keywords && page.keywords.length > 0) {
     return '<meta name="keywords" content="' + page.keywords + '">';
@@ -87,9 +86,9 @@ function generate_keywords() {
 }
 
 function generate_robots() {
-  if (postRender) {
-    return postRender.seo.robots
-      ? '<meta name="robots" content="' + escape_meta_content(postRender.seo.robots) + '">'
+  if (pageRender) {
+    return pageRender.seo.robots
+      ? '<meta name="robots" content="' + escape_meta_content(pageRender.seo.robots) + '">'
       : ''
   }
   const IS_BACKUP = process.env.IS_BACKUP === 'true';
@@ -104,8 +103,8 @@ function generate_robots() {
   }
 }
 function og_args() {
-  if (postRender) {
-    return Object.assign({}, postRender.seo.openGraph?.args || {})
+  if (pageRender) {
+    return Object.assign({}, pageRender.seo.openGraph?.args || {})
   }
   var args = {};
   if (stellarSeo.openGraph.twitterId) {
@@ -133,32 +132,32 @@ function escape_meta_content(content) {
 }
 
 function generate_og_title() {
-  return escape_meta_content(strip_html(postRender ? postRender.seo.openGraph.title : page.title || config.title));
+  return escape_meta_content(strip_html(pageRender ? pageRender.seo.openGraph.title : page.title || config.title));
 }
 
 function generate_og_site_name() {
-  return escape_meta_content(strip_html(postRender ? postRender.seo.openGraph.siteName : config.title));
+  return escape_meta_content(strip_html(pageRender ? pageRender.seo.openGraph.siteName : config.title));
 }
 
 function generate_twitter_title() {
-  return escape_meta_content(strip_html(postRender ? postRender.seo.openGraph.twitterTitle : page.title || config.title));
+  return escape_meta_content(strip_html(pageRender ? pageRender.seo.openGraph.twitterTitle : page.title || config.title));
 }
 
 function render_open_graph() {
-  if (postRender ? !postRender.seo.openGraph : !stellarSeo.openGraph.enabled) {
+  if (pageRender ? !pageRender.seo.openGraph : !stellarSeo.openGraph.enabled) {
     return '';
   }
   let meta = open_graph(og_args());
-  if (postRender) {
+  if (pageRender) {
     meta = meta.replace(/<meta property="article:tag" content="[^"]*">\n?/g, '');
     var articleMeta = ''
-    if (postRender.seo.openGraph.publishedTime) {
-      articleMeta += `<meta property="article:published_time" content="${escape_meta_content(postRender.seo.openGraph.publishedTime)}">\n`
+    if (pageRender.seo.openGraph.publishedTime) {
+      articleMeta += `<meta property="article:published_time" content="${escape_meta_content(pageRender.seo.openGraph.publishedTime)}">\n`
     }
-    if (postRender.seo.openGraph.modifiedTime) {
-      articleMeta += `<meta property="article:modified_time" content="${escape_meta_content(postRender.seo.openGraph.modifiedTime)}">\n`
+    if (pageRender.seo.openGraph.modifiedTime) {
+      articleMeta += `<meta property="article:modified_time" content="${escape_meta_content(pageRender.seo.openGraph.modifiedTime)}">\n`
     }
-    for (const tag of postRender.seo.openGraph.tags) {
+    for (var tag of pageRender.seo.openGraph.tags) {
       articleMeta += `<meta property="article:tag" content="${escape_meta_content(tag)}">\n`
     }
     meta = meta.replace(/<meta name="twitter:card"/, `${articleMeta}<meta name="twitter:card"`)
@@ -169,7 +168,7 @@ function render_open_graph() {
   } else {
     meta += `<meta property="og:site_name" content="${generate_og_site_name()}">`;
   }
-  if (postRender || page.title) {
+  if (pageRender || page.title) {
     if (meta.match(/<meta name="twitter:title" content="[^"]*">/)) {
       meta = meta.replace(/<meta name="twitter:title" content="[^"]*">/, `<meta name="twitter:title" content="${generate_twitter_title()}">`);
     } else {
@@ -188,13 +187,13 @@ function preconnect() {
 }
 
 function custom_inject() {
-  return stellar_inject('head', postRender ? postRender.document.headInject : pageConfig.inject?.head)
+  return stellar_inject('head', pageRender ? pageRender.document.headInject : pageConfig.inject?.head)
 }
 
 function generate_canonical() {
-  if (postRender) {
-    return postRender.seo.canonical
-      ? `<link rel="canonical" href="${escape_meta_content(postRender.seo.canonical)}">`
+  if (pageRender) {
+    return pageRender.seo.canonical
+      ? `<link rel="canonical" href="${escape_meta_content(pageRender.seo.canonical)}">`
       : ''
   }
   var host = stellarSeo.canonical.host;
@@ -261,7 +260,7 @@ function generate_canonical() {
     <%- css(stellar_config('appearance.codeBlock.highlightTheme')) %>
   <% } %>
 
-  <%- json_ld(postViewModel || undefined) %>
+  <%- json_ld(pageViewModel || undefined) %>
   <%- custom_inject() %>
 
   <!-- icons.yml 驱动的 CSS 装饰图标 -->

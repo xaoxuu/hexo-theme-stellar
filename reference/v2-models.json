@@ -10943,6 +10943,7 @@
             "brand": {},
             "wikiIndexPath": "wiki",
             "showWikiHome": true,
+            "searchFilter": "wiki/stellar/",
             "sidebar": {},
             "breadcrumbs": []
           }
@@ -11256,6 +11257,23 @@
             "Reference generator"
           ],
           "example": "content"
+        },
+        {
+          "path": "render.layout.searchFilter",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由页面路径保留 Wiki 搜索的既有两段目录范围"
+          },
+          "scope": "PageViewModel:wiki",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "wiki/stellar/"
         },
         {
           "path": "render.layout.showWikiHome",
