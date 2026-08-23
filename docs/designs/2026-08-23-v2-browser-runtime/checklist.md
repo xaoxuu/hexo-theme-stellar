@@ -34,4 +34,4 @@ date: 2026-08-23
 - [x] 主仓库三份 v2 蓝图状态文档已同步并保持未提交。
 - [x] 公共字段、公开 Wiki、URL、SEO、迁移跳转和 CSS token 变化为 N/A。
 - [x] M4 标记完成；M5、Alpha 1 与首屏核心 JS gzip 30% 门禁保持未完成。
-- [ ] 实现提交和验证登记提交已推送 `origin/v2`，issue 由 `resolved` CI 自动关闭。
+- [x] 实现提交和验证登记提交已推送 `origin/v2`，issue 由 `resolved` CI 自动关闭。

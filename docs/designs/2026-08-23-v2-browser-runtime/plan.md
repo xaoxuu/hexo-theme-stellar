@@ -13,4 +13,4 @@ date: 2026-08-23
 6. [x] 补充 runtime/模板/生成回归测试；同步知识库、`VERIFICATION.md` 和主仓库三份 v2 蓝图状态文档。
 7. [x] 运行主题完整检查、知识库核查、主工程构建和关键页面产物抽查。
 8. [x] 对固定基线 `13081b49` 执行 Standards / Spec 双轨 review 并修复全部 finding。
-9. [ ] 提交并推送 `origin/v2`，登记验证提交，评论证据、添加 `resolved` 并等待 CI 自动关闭 issue。
+9. [x] 提交并推送 `origin/v2`，登记验证提交，评论证据、添加 `resolved` 并等待 CI 自动关闭 issue。
