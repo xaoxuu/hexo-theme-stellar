@@ -1,7 +1,7 @@
 ---
 title: Stellar v2 M6 配置、语言与内部常量收敛验收
 date: 2026-08-24
-status: 实施中
+status: 已完成
 issue: 724
 ---
 
@@ -35,11 +35,11 @@ issue: 724
 ## 验证
 
 - [x] `npm run reference:check`
-- [x] `npm run check`（Node.js 22.23.2，363 项测试，首屏核心 JS gzip 较 v1.44.0 降低 46.6093%）
+- [x] `npm run check`（Node.js 22.23.2，364 项测试，首屏核心 JS gzip 较 v1.44.0 降低 46.6093%）
 - [x] `python3 docs/knowledge/tools/verify.py`
 - [x] 主工程 `npm run g`（262 个生成文件）
-- [ ] Standards / Spec 双轨 review 无剩余 finding
-- [ ] `origin/v2` 包含 #724 提交，交付评论与 `resolved` 自动关闭完成
+- [x] Standards / Spec 双轨 review 无剩余 finding
+- [x] `origin/v2` 包含 #724 提交，交付评论与 `resolved` 自动关闭完成
 
 ## N/A
 

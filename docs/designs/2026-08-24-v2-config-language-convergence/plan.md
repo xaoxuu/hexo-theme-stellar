@@ -1,7 +1,7 @@
 ---
 title: Stellar v2 M6 配置、语言与内部常量收敛计划
 date: 2026-08-24
-status: 实施中
+status: 已完成
 issue: 724
 ---
 
