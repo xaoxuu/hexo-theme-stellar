@@ -16,7 +16,7 @@ module.exports = ctx => function(args) {
   }
   const url = full_url_for(args.url)
   const safeTitle = escapeHTML(args.title || '')
-  args.api = ctx.theme.config.data_services.siteinfo?.api
+  args.api = ctx.stellar.config.extensions.services.siteInfo.endpoint
   if (args.api) {
     args.api = args.api.replace('{href}', url)
   }

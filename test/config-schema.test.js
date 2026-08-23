@@ -16,7 +16,7 @@ function assertDeepFrozen(value) {
 }
 
 function withoutLayoutAndContent(config) {
-  const { layout, content, appearance, ...rest } = config;
+  const { layout, content, appearance, extensions, ...rest } = config;
   return { ...rest, resources: { preconnect: rest.resources.preconnect } };
 }
 
@@ -76,6 +76,11 @@ test("site/layout/content/appearance/resources/head Schema 提供默认值并拒
   assert.equal(config.appearance.backgrounds.sidebar.opacity, 0.8);
   assert.match(config.resources.fallbacks.cover, /\/cover\/76b86c0226ffd\.svg$/);
   assert.match(config.resources.fallbacks.image.tagPlugin, /^data:image\/svg\+xml/);
+  assert.equal(config.extensions.search.provider, "local");
+  assert.equal(config.extensions.comments.provider, null);
+  assert.equal(config.extensions.features.reveal.enabled, true);
+  assert.equal(config.extensions.services.github.rawUrl, "https://raw.githubusercontent.com");
+  assert.equal(config.extensions.cache.enabled, true);
   assertDeepFrozen(config);
 });
 

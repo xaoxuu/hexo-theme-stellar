@@ -15,7 +15,7 @@ module.exports = ctx => function(args) {
   }
   const { title } = args
   if (args.color == null) {
-    args.color = ctx.theme.config.tag_plugins.note.default_color
+    args.color = ctx.stellar.config.extensions.tags.note.defaultColor
   }
   var el = ''
   // header

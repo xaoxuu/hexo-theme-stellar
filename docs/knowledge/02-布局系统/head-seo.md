@@ -254,7 +254,7 @@ flowchart TD
 
 ### 客户端校验与克隆站检测
 
-`window.canonical` 在 [layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs) 中构建：`encoded` 是 `host` 的 base64 编码，`param` 含 `permalink` 与 `checklink`（取自 `theme.data_services.video.js`）。
+`window.canonical` 在 [layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs) 中构建：`encoded` 是 `host` 的 base64 编码，`param` 含 `permalink` 与 `checklink`；`checklink` 来自主题内部服务资源表的 video 模块路径。
 
 `init.canonicalCheck()`（[source/js/main.js](../../../source/js/main.js)）实现克隆检测：
 

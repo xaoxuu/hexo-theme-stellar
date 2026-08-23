@@ -345,7 +345,7 @@ module.exports = ctx => function(args, content) {
           el += `<img lazy fancybox="true" src="${cell['image']}">`
       } else if (cell['emoji']) {
           el += ' emoji">'
-          const config = ctx.theme.config.tag_plugins.emoji
+          const config = ctx.stellar.config.extensions.tags.emoji
           if (cell['source'] === undefined) {
             for (let id in config) {
               if (config[id]) {
@@ -417,7 +417,7 @@ module.exports = ctx => function(args, content) {
           let urlTarget = cell['link'].includes('://') ? ' target="_blank" rel="external nofollow noopener noreferrer"' : ''
           let linkFrom = cell['from'] || 'QQ小程序'
           el += `
-            <a class="link-card rich" href="${cell['link']}"${urlTarget} data-api="${ctx.theme.config.tag_plugins.chat?.api + '?url=' + cell['link']}" cardlink autofill="title,icon,desc">
+            <a class="link-card rich" href="${cell['link']}"${urlTarget} data-api="${ctx.stellar.config.extensions.tags.chat.endpoint + '?url=' + cell['link']}" cardlink autofill="title,icon,desc">
             <div class="top">
               <span class="title">${cell['link']}</span>
             </div>

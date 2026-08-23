@@ -1,14 +1,30 @@
 <% 
-const { field } = theme.plugins.tianli_gpt;
-const matchesField = field === 'all' || field === page.layout || (field === 'wiki' && collection_id(page, "wiki")) || (field === 'topic' && collection_id(page, "topic"));
+var scope = conf.scope;
+var matchesField = scope === 'all' || scope === page.layout || (scope === 'wiki' && collection_id(page, "wiki")) || (scope === 'topic' && collection_id(page, "topic"));
+var providerConfig = {
+  field: conf.scope,
+  key: conf.key,
+  total_length: conf.maxLength,
+  typewriter: conf.typewriter,
+  summary_directly: conf.showImmediately,
+  rec_method: conf.recommendation,
+  hide_shuttle: conf.hideShuttle,
+  summary_toggle: conf.summaryToggle,
+  interface: {
+    name: conf.interface.name,
+    introduce: conf.interface.introduce,
+    version: conf.interface.version,
+    button: conf.interface.buttons
+  }
+};
 if (matchesField) { %>
-  <script defer src="<%- theme.plugins.tianli_gpt?.js %>"></script>
+  <script defer src="<%- extension_assets().features.aiSummary %>"></script>
   <script defer>
     window.addEventListener('DOMContentLoaded', (event) => {
       new ChucklePostAI(Object.assign({
         el: 'article.content',
         css: `/css/_plugins/tianli_gpt`
-      }, JSON.parse(`<%- JSON.stringify(theme.plugins.tianli_gpt) %>`)))
+      }, JSON.parse(`<%- JSON.stringify(providerConfig) %>`)))
     });
   </script>
 <% } %>

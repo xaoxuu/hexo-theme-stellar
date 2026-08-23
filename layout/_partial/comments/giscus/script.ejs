@@ -12,6 +12,7 @@
           console.error(error);
         }
         const script = document.createElement('script');
+        script.src = '<%- extension_assets().comments.giscus.js %>';
         script.async = true;
         for (const key of Object.keys(el.attributes)) {
           const attr = el.attributes[key];

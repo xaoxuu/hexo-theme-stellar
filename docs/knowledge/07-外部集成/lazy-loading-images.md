@@ -53,7 +53,7 @@ tags:
 graph TB
     subgraph "Initialization Phase"
         SCRIPT["lazyload.ejs<br/>Script Block"]
-        CDN["Vanilla LazyLoad Library<br/>dependencies.lazyload.js"]
+        CDN["Vanilla LazyLoad Library<br/>internal Extension asset"]
         OPTIONS["window.lazyLoadOptions<br/>{elements_selector, callback_loaded}"]
         EVENT["LazyLoad::Initialized Event"]
         INSTANCE["window.lazyLoadInstance"]
@@ -108,13 +108,13 @@ graph TB
 
 ## Vanilla LazyLoad 集成
 
-主题用 **vanilla-lazyload** 库，一个轻量、无依赖的懒加载方案。库从配置的 CDN 异步加载。
+主题用 **vanilla-lazyload** 库，一个轻量、无依赖的懒加载方案。库地址由内部 Extension 资源注册表所有并异步加载，不是公开配置。
 
 ### 库加载
 
 ```javascript
-// 从 dependencies 配置异步加载
-<script async src="<%- url_for(theme.dependencies.lazyload.js) %>"></script>
+// 从主题内部资源注册表异步加载
+<script async src="<%- url_for(extension_assets().dependencies.lazyLoading) %>"></script>
 ```
 
 `window.lazyLoadOptions` 在脚本加载前定义时库自动初始化，就绪时派发自定义 `LazyLoad::Initialized` 事件。
@@ -307,8 +307,8 @@ flowchart TD
 @import 'lazyload'
 
 // 其他插件条件导入
-if hexo-config('plugins.swiper.enable')
-  @import 'swiper'
+if hexo-config('extensions.features.reveal.enabled')
+  @import 'scrollreveal'
 ```
 
 `lazyload.styl` 无条件导入，因为懒加载被视为核心性能特性而非可选插件。

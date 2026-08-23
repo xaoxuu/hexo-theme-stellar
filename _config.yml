@@ -266,418 +266,220 @@ content:
       license: false
       share: false
 
-search:
-  service: local_search # local_search, algolia_search, todo...
-  local_search: # 在 front-matter 中设置 indexing:false 来避免被搜索索引
-    field: all # post, page, all
-    path: /search.json # 搜索文件存放位置
-    content: true # 是否搜索内容
-    lazy_load: true # 懒加载：首次聚焦搜索框时才加载搜索数据（默认开启）；站点内容较多时建议关闭，防止首次搜索卡顿
-    cache_ttl: 86400 # 搜索数据缓存时长（秒），默认 1 天；设为 0 表示不缓存，建议按内容更新频率调整
-    skip_search:  # 指定 path 中的内容不被搜索。
-  algolia_search: # Docsearch https://docsearch.algolia.com/apply/ 申请
-    appId: 
-    apiKey: 
-    indexName: 
-    js: https://gcore.jsdelivr.net/algoliasearch/3/algoliasearch.min.js
+extensions:
+  search:
+    provider: local # local / algolia
+    providers:
+      local:
+        scope: all # post / page / all
+        index_path: /search.json
+        include_content: true
+        lazy: true
+        cache_ttl: 86400
+        exclude: []
+      algolia:
+        appId:
+        apiKey:
+        indexName:
 
+  comments:
+    provider: # beaudar / utterances / giscus / twikoo / waline / artalk
+    title: 快来参与讨论吧~
+    providers:
+      beaudar:
+        repo: xxx/xxx
+        issue-term: pathname
+        issue-number:
+        theme: preferred-color-scheme
+        label:
+        input-position: top
+        comment-order: desc
+        keep-theme:
+        loading: false
+        branch: main
+      utterances:
+        repo: xxx/xxx
+        issue-term: pathname
+        issue-number:
+        theme: preferred-color-scheme
+        label:
+      giscus:
+        data-repo: xxx/xxx
+        data-repo-id:
+        data-category:
+        data-category-id:
+        data-mapping: pathname
+        data-strict: 0
+        data-reactions-enabled: 1
+        data-emit-metadata: 0
+        data-input-position: top
+        data-theme: preferred_color_scheme
+        data-lang: zh-CN
+        data-loading:
+        crossorigin: anonymous
+      twikoo:
+        envId: https://xxx
+      waline:
+        serverURL: https://waline.vercel.app
+        commentCount: true
+        pageview: false
+      artalk:
+        server:
+        site: ''
+        darkMode: auto
+        imageUploader:
 
-######## Comments ########
-comments:
-  service: # beaudar, utterances, giscus, twikoo, waline, artalk
-  comment_title: 快来参与讨论吧~
-  custom_css: # artalk,twikoo,... 可以为没有全局启用的评论加载自定义样式
-  # beaudar
-  # https://beaudar.lipk.org/
-  beaudar:
-    repo: xxx/xxx
-    issue-term: pathname
-    issue-number:
-    theme: preferred-color-scheme
-    label:
-    input-position: top # top/bottom 评论框位置
-    comment-order: desc # desc 排序
-    keep-theme: # true/false
-    loading: false
-    branch: main
-  # utterances
-  # https://utteranc.es/
-  utterances:
-    repo: xxx/xxx
-    issue-term: pathname
-    issue-number:
-    theme: preferred-color-scheme
-    label:
-  # giscus
-  # https://giscus.app/zh-CN
-  giscus:
-    src: https://giscus.app/client.js
-    data-repo: xxx/xxx # [在此输入仓库]
-    data-repo-id: # [在此输入仓库 ID]
-    data-category: # [在此输入分类名]
-    data-category-id:
-    data-mapping: pathname
-    data-strict: 0
-    data-reactions-enabled: 1
-    data-emit-metadata: 0
-    data-input-position: top # top, bottom
-    data-theme: preferred_color_scheme
-    data-lang: zh-CN
-    data-loading: # lazy
-    crossorigin: anonymous
-
-  # Twikoo
-  # https://twikoo.js.org/
-  twikoo:
-    js: https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js # 建议锁定版本
-    envId: https://xxx # vercel函数
-
-  # Waline
-  # https://waline.js.org/
-  waline:
-    js: https://gcore.jsdelivr.net/npm/@waline/client@3.15.2/dist/waline.js
-    css: https://gcore.jsdelivr.net/npm/@waline/client@3.15.2/dist/waline.css
-    meta_css: https://gcore.jsdelivr.net/npm/@waline/client@3.15.2/dist/waline-meta.css
-    # Waline server address url, you should set this to your own link
-    serverURL: https://waline.vercel.app
-    # If false, comment count will only be displayed in post page, not in home page
-    commentCount: true
-    # Pageviews count, Note: You should not enable both `waline.pageview` and `leancloud_visitors`.
-    pageview: false
-    # Custom emoji
-    # emoji:
-    #   - https://unpkg.com/@waline/emojis@1.1.0/weibo
-    #   - https://unpkg.com/@waline/emojis@1.1.0/alus
-    #   - https://unpkg.com/@waline/emojis@1.1.0/bilibili
-    #   - https://unpkg.com/@waline/emojis@1.1.0/qq
-    #   - https://unpkg.com/@waline/emojis@1.1.0/tieba
-    #   - https://unpkg.com/@waline/emojis@1.1.0/tw-emoji
-    #   - https://unpkg.com/@waline/emojis@1.1.0/bmoji
-    # 设置自己的图床服务，替换默认的 Base 64 编码嵌入（有体积大小限制），在评论中上传图片更加方便
-    # imageUploader:
-      # 适配了兰空图床V1、V2版本
-      # 以兰空图床V1为例，下列填写内容为：
-      # fileName: file
-      # tokenName: Authorization
-      # api: https://xxxxxx/api/v1/upload
-      # token: Bearer xxxxxxxxxxxxxx
-      # resp: data.links.url
-      # 以兰空图床V2为例，下列填写内容为：
-      # fileName: image
-      # tokenName: token
-      # api: https://xxxxxx/api/upload
-      # token: xxxxxxxxxxxxxx
-      # resp: data.url
-    #   fileName: # 根据版本二选一
-    #   tokenName: # 根据版本二选一
-    #   api: # 图床 api 地址
-    #   token: # 图床验证
-    #   resp: # 图片地址返回值的字段
-
-  # Artalk
-  # https://artalk.js.org/
-  artalk:
-    css: https://unpkg.com/artalk@2.9/dist/artalk.css
-    js: https://unpkg.com/artalk@2.9/dist/artalk.js
-    server: # 后端服务地址
-    site: '' # 站点名称
-    darkMode: auto # 其它模式都有问题，慎用，否则后果自负
-    # artalk 有三类图片：1.上传至服务端 2.上传至服务端后利用upgit上传至图床 3.前端上传至图床（本配置为此类）
-    # 配置此项时将覆盖服务端上传能力
-    imageUploader:
-      # 以兰空图床为例，下列填写内容为：
-      # api: 'https://xxxxxx/api/v1/upload' # 图床上传地址
-      # token: 'Bearer xxxxxxxxxxxxxx' # 图床验证
-      # resp: 'data.links.url' # 图片地址返回值的字段
-
-
-######## Tag Plugins ########
-tag_plugins:
-  # {% box %} / {% note %}
-  note:
-    default_color: '' # light, dark, red, orange, yellow, green, cyan, blue, purple, warning, error
-    border: true # true / false
-  # {% checkbox %}
-  checkbox:
-    interactive: false # enable interactive for user
-  # {% quot %}
-  quot:
-    default: # 可以自行配置多种图标方案，支持icons.yml中配置的图片key，也支持直接设置svg/png等文件链接
-      prefix: quot:quote-left
-      suffix: quot:quote-right
+  tags:
+    note:
+      default_color: ''
+      border: true
+    checkbox:
+      interactive: false
+    quot:
+      default:
+        prefix: quot:quote-left
+        suffix: quot:quote-right
+      hashtag:
+        prefix: quot:hashtag
+      question:
+        prefix: quot:question
+    emoji:
+      default: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif
+      twemoji: https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg
+      qq: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif
+      aru: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif
+      tieba: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png
+      blobcat: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif
+    icon:
+      default_color: accent
+    button:
+      default_color: theme
+    image:
+      parse_markdown: false
+    copy:
+      toast: 复制成功
+    timeline:
+      max_height: 80vh
+    mark:
+      default_color: yellow
     hashtag:
-      prefix: quot:hashtag
-    question:
-      prefix: quot:question
-  # {% emoji %}
-  emoji:
-    default: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif
-    twemoji: https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg
-    qq: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif
-    aru: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif
-    tieba: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png
-    blobcat: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif
-  icon:
-    # 留空时，图标和文字颜色相同
-    default_color: accent # theme, accent, red, orange, yellow, green, cyan, blue, purple
-  # {% button 标题 链接 %}
-  button:
-    default_color: theme # theme, accent, red, orange, yellow, green, cyan, blue, purple
-  # {% image %}
-  image:
-    parse_markdown: false # true / false（自动将 markdown 图片转为 {% image %} 标签）
-  # {% copy xxx %}
-  copy:
-    toast: 复制成功
-  # {% timeline %}
-  timeline:
-    max-height: 80vh
-  # {% mark %}
-  mark:
-    default_color: yellow # light, dark, red, orange, yellow, green, cyan, blue, purple, warning, error
-  # {% hashtag %}
-  hashtag:
-    default_color: # red, orange, yellow, green, cyan, blue, purple
-  # {% okr o1 percent:50 status:in_track/at_risk/off_track/finished/unfinished %}
-  okr:
-    border: true # 是否显示边框
-    status: # 可以自行增加
-      # 进行中状态
-      in_track:
-        color: blue # red, orange, yellow, green, cyan, blue, purple
-        label: 正常
-      at_risk: 
-        color: yellow
-        label: 风险
-      off_track:
-        color: orange
-        label: 延期
-      # 结果状态
-      finished:
-        color: green
-        label: 已完成
-      unfinished:
-        color: red
-        label: 未完成
-  # {% gallery %}
-  gallery:
-    layout: grid # grid / flow
-    size: mix # s / m / l / xl / mix
-    ratio: square # origin / square
-  chat:
-    api: https://siteinfo.listentothewind.cn/api/v1
+      default_color:
+    okr:
+      border: true
+      status:
+        in_track:
+          color: blue
+          label: 正常
+        at_risk:
+          color: yellow
+          label: 风险
+        off_track:
+          color: orange
+          label: 延期
+        finished:
+          color: green
+          label: 已完成
+        unfinished:
+          color: red
+          label: 未完成
+    gallery:
+      layout: grid
+      size: mix
+      ratio: square
+    chat:
+      endpoint: https://siteinfo.listentothewind.cn/api/v1
 
+  features:
+    lazy_loading:
+      transition: fade
+      fix_ratio: true
+    preload:
+      enabled: true
+      provider: flying_pages
+    lightbox:
+      enabled: true
+      provider: fancybox
+      mode: auto
+      selector: .timenode p>img
+    reveal:
+      enabled: true
+      provider: scrollreveal
+      distance: 8px
+      duration: 1000
+      interval: 100
+      scale: 1
+    ai_summary:
+      enabled: false
+      provider: tianli_gpt
+      scope: post
+      key: 5Q5mpqRK5DkwT1X9Gi5e
+      max_length: 1000
+      typewriter: true
+      show_immediately: true
+      recommendation: all
+      hide_shuttle: true
+      summary_toggle: false
+      interface:
+        name: AI摘要
+        introduce: '我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。'
+        version: TianliGPT
+        buttons: [介绍自己, 推荐文章, 生成摘要, 矩阵穿梭]
+    math:
+      provider:
+      providers:
+        katex: {}
+        mathjax:
+          v3: false
+    diagrams:
+      enabled: false
+      provider: mermaid
+      style_optimization: false
+      theme: neutral
+    code_copy:
+      enabled: true
+      idle_text: Copy
+      success_text: Copied
+      toast: 复制成功
+    adaptive_text:
+      enabled: true
+    card_hover:
+      enabled: false
+      spotlight_color: 'rgba(255, 255, 255, 0.25)'
+      max_tilt: 3
+    cjk_typography:
+      enabled: false
 
-# 基础依赖
-dependencies:
-  marked: https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js
-  # 懒加载强制开启（无 enable 开关），图片默认懒加载，no-lazy 是唯一例外
-  lazyload:
-    js: https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js
-    transition: fade # blur, fade
-    fix_ratio: true # true / false
+  services:
+    site_info:
+      endpoint:
+    rating:
+      endpoint: https://star-vote.xaox.cc/api/rating
+    vote:
+      endpoint: https://star-vote.xaox.cc/api/vote
+    contributors:
+      edit_page:
+        '_posts/':
+        'wiki/stellar/': https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/
+    github:
+      api_url: https://api.github.com
+      raw_url: https://raw.githubusercontent.com
+      gist_url: https://gist.github.com
+      card_url: https://github-readme-stats.vercel.app
 
-# 内置服务，按需加载（页面内用到了就会加载，没有用到就不会加载）
-data_services:
-  # 外部 md 渲染
-  mdrender:
-    js: /js/services/mdrender.js
-  # 数据填充类
-  siteinfo:
-    js: /js/services/siteinfo.js
-    # 设置 api 可以自动提取网页标题、图标，服务部署方法：https://github.com/xaoxuu/site-info-api/
-    # 接口测试通过后，把按钮的 href 部分替换成 {href} 之后填写到下方，例如：https://api.xaox.cc/site_info/v1?url={href}
-    api: 
-  ghinfo:
-    js: /js/services/ghinfo.js
-  # 打分
-  rating:
-    js: /js/services/rating.js
-    api: https://star-vote.xaox.cc/api/rating
-  # 投票
-  vote:
-    js: /js/services/vote.js
-    api: https://star-vote.xaox.cc/api/vote
-  # 网格布局类
-  sites:
-    js: /js/services/sites.js
-  friends:
-    js: /js/services/friends.js
-  friends_and_posts:
-    js: /js/services/friends_and_posts.js
-  # 列表布局类
-  timeline:
-    js: /js/services/timeline.js
-  fcircle:
-    js: /js/services/fcircle.js
-  weibo:
-    js: /js/services/weibo.js
-  memos:
-    js: /js/services/memos.js
-  # chat
-  voice: 
-    js: /js/plugins/voice.js
-  video: 
-    js: /js/plugins/video.js
-  download-file: 
-    js: /js/plugins/download-file.js
-  # 最新评论获取类
-  twikoo:
-    js: /js/services/twikoo_latest_comment.js
-  waline:
-    js: /js/services/waline_latest_comment.js
-  artalk:
-    js: /js/services/artalk_latest_comment.js
-  giscus:
-    js: /js/services/giscus_latest_comment.js
-  contributors:
-    edit_this_page: # 从开头开始匹配替换
-      '_posts/': # https://github.com/xaoxuu/xaoxuu.com/blob/main/source/_posts/
-      'wiki/stellar/': https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/
-    js: /js/services/contributors.js
-  rss:
-    js: /js/services/rss.js
-
-# 动态数据缓存
-# 将动态数据缓存到浏览器本地：TTL 未过期直接显示缓存，过期后先显示缓存再后台刷新
-data_cache:
-  enable: true # 总开关
-  default_ttl: 3600 # 默认缓存时长（秒）
-  ttl: # 按服务覆盖缓存时长（秒），未列出的服务使用 default_ttl；设为 0 表示该服务不缓存
-    giscus: 600
-    waline: 600
-    artalk: 600
-    memos: 600
-    memos-user: 86400
-    sites: 86400
-    friends: 86400
-    friends_and_posts: 86400
-    siteinfo: 86400
-  max_entries: 200 # 本地缓存条目上限，超出后按写入时间淘汰最旧的
-
-# 扩展插件接入方法：(插件名下面用 #plugin# 代替)
-# 1. 在这里增加 #plugin# 配置，至少应含有 enable 字段，默认为空（不启用）
-# 2. 新建文件 layout/_plugins/#plugin#.ejs 文件中设置编写加载代码。
-# 2.1. 在该文件中可以直接使用 conf 来读取用户在【步骤 1】填写的配置字段内容
-# 2.2. 如果需要引入 css 或 js，可以使用 utils.css(xxx)、utils.js(xxx)，具体可参考 layout/_plugins/fancybox.ejs
-# 2.3. 如果需要本地 js 文件，请放入 /source/js/plugins 文件夹中，引入方式为：utils.js('/js/plugins/xxx.js');
-# 3. 如果这个插件只需要引入外部文件，可以在【步骤 1】处增加 inject 字段，而无需进入【步骤 2】创建 ejs，参考 katex
-plugins:
-
-  # preload
-  preload:
-    enable: true
-    service: flying_pages # flying_pages
-    flying_pages: https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js
-
-  # https://fancyapps.com/docs/ui/fancybox/
-  # available for {% image xxx %}
-  # mode: auto=按需（页面有可弹窗图片才加载）/ global=全局（所有页面加载）
-  fancybox:
-    enable: true # 插件注册必需字段，恒为 true（不再支持关闭）
-    mode: auto # auto / global
-    js: https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js
-    css: https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css
-    # 让 md 语法图片支持放大可以这样写: .md-text img:not([class]), .md-text .image img
-    # 可以处理评论区的图片（不支持 iframe 类评论系统）例如：
-    # 使用 twikoo 评论可以写: .tk-content img:not([class*="emo"])
-    # 使用 waline 评论可以写: #waline_container .vcontent img
-    selector: .timenode p>img # 多个选择器用英文逗号隔开
-
-  # swiper
-  swiper:
-    enable: true
-    css: https://unpkg.com/swiper@10.3/swiper-bundle.min.css
-    js: https://unpkg.com/swiper@10.3/swiper-bundle.min.js
-
-  # https://scrollrevealjs.org/api/reveal.html
-  scrollreveal:
-    enable: true
-    js: https://gcore.jsdelivr.net/npm/scrollreveal@4.0/dist/scrollreveal.min.js
-    distance: 8px
-    duration: 1000 # ms
-    interval: 100 # ms
-    scale: 1 # 0.1~1
-  
-  # AI 摘要
-  # https://github.com/qxchuckle/Post-Summary-AI
-  tianli_gpt: 
-    enable: #true
-    js: https://jsd.onmicrosoft.cn/gh/qxchuckle/Post-Summary-AI@6.0/chuckle-post-ai.min.js
-    field: post # all, post, wiki
-    key: 5Q5mpqRK5DkwT1X9Gi5e # tianli_gpt key
-    total_length: 1000 # 设置提交的字数限制，默认为1000字，上限为5000，超过5000字符将被截断
-    typewriter: true # 打字机动画 
-    summary_directly: true # 是否直接显示摘要，否则显示 AI 简介
-    rec_method: all # all, web # 文章推荐方式，all：匹配数据库内所有文章进行推荐，web：仅当前站内的文章，默认all
-    hide_shuttle: true # 是否隐藏矩阵穿梭
-    summary_toggle: false
-    interface:
-      name: AI摘要
-      introduce: '我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。'
-      version: TianliGPT
-      button: ["介绍自己", "推荐文章", "生成摘要", "矩阵穿梭"]
-
-
-  # Katex - The fastest math typesetting library for the web
-  # https://katex.org/docs/autorender.html
-  # https://github.com/KaTeX/KaTeX
-  # 使用 hexo-renderer-markdown-it-plus 作为公式渲染器：npm uninstall hexo-renderer-marked --save npm install hexo-renderer-markdown-it-plus --save
-  katex:
-    enable: #true # hexo-renderer-markdown-it-plus 默认开启 katex，此选项仅用于引入样式
-    inject: |
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.23/dist/katex.min.css" integrity="sha384-//SZkxyB7axjCAopkAL1E1rve+ZSPKapD89Lo/lLhcsXR+zOYl5z6zJZEFXil+q0" crossorigin="anonymous">
-
-  # MathJax
-  # 需在Markdown文件开头加入mathjax: true
-  # 推荐使用Pandoc: npm uninstall hexo-renderer-marked --save & npm install hexo-renderer-pandoc --save
-  mathjax:
-    v3: false # 若使用 v3，需將 js 設置為 https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js
-    enable: # true # 可以在特定文章的 front-matter 中设置 mathjax: true 来开启，也可以在这里设置全局开启
-    js: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML
-
-  # Mermaid - markdwon to flow chart, seq chart, class chart ...
-  # 需要安装 npm install --save hexo-filter-mermaid-diagrams
-  # 使用时 需要在Markdown文件开头加入 mermaid: true
-  # 使用示例：
-  # ```mermaid
-  # graph LR
-  #   A(Section A) -->|option 1| B(Section A)
-  #   B -->|option 2| C(Section C)
-  # ```
-  mermaid:
-    enable: # true # 可以在特定文章的 front-matter 中设置 mermaid: true 来开启，也可以在这里设置全局开启
-    style_optimization: false # true: use custom style in Stellar; false: use Mermaid official theme
-    # js: https://unpkg.com/mermaid@11/dist/mermaid.min.js
-    js: https://gcore.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js
-    # Available themes: default | dark | forest | neutral
-    theme: neutral
-  
-  # 代码块复制按钮
-  copycode:
-    enable: true
-    default_text: 'Copy'
-    success_text: 'Copied'
-    toast: 复制成功
-
-  # 文字自适应颜色：背景图/背景色上方的文字随背景亮度自适应
-  # 页面存在 [data-text-adaptive] 元素时才按需加载（theme：背景图平均色 lighten/darken；contrast：黑白对比）
-  adaptive_text:
-    enable: true
-
-  # 卡片鼠标跟随光斑与 3D 倾斜：通过 card-hover 组合类按组件接入
-  card_hover:
-    enable: false
-    spotlight_color: 'rgba(255, 255, 255, 0.25)'
-    max_tilt: 3 # 最大倾斜角度（deg），运行时限制在 0~8
-  
-  # 赫蹏 (Heti) - 专为中文网页内容设计的排版样式增强
-  # https://github.com/sivan/heti
-  heti:
-    enable: false # 此插件会和代码块冲突，仅适用于纯中文博主。
-    css: https://unpkg.com/heti@0.9/umd/heti.min.css
-    js: https://unpkg.com/heti@0.9/umd/heti-addon.min.js
-
+  cache:
+    enabled: true
+    default_ttl: 3600
+    ttl:
+      giscus: 600
+      waline: 600
+      artalk: 600
+      memos: 600
+      memos-user: 86400
+      sites: 86400
+      friends: 86400
+      friends_and_posts: 86400
+      siteinfo: 86400
+    max_entries: 200
 
 
 appearance:
@@ -739,15 +541,6 @@ appearance:
         radius: 100px
         overlay: var(--bg-a75)
         saturation: 300%
-
-
-api_host:
-  ghapi: api.github.com
-  ghraw: raw.githubusercontent.com
-  gist: gist.github.com
-  # https://github.com/anuraghazra/github-readme-stats
-  ghcard: github-readme-stats.vercel.app
-
 
 
 # 非资深hexo开发者尽量不要动这块

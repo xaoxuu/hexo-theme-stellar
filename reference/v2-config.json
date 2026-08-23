@@ -19,7 +19,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -54,7 +54,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -90,7 +90,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -125,7 +125,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -262,7 +262,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -297,7 +297,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -380,7 +380,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -548,7 +548,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -663,7 +663,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -773,7 +773,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -908,7 +908,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -996,7 +996,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -1055,7 +1055,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -1269,7 +1269,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -1305,7 +1305,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -1415,7 +1415,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -1692,7 +1692,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -1731,7 +1731,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -1783,7 +1783,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -1843,7 +1843,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -1929,7 +1929,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -2044,7 +2044,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -2162,7 +2162,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -2336,7 +2336,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -2502,7 +2502,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -2537,7 +2537,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -2620,7 +2620,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -2779,6 +2779,4355 @@
       "migration": "configuration/content"
     },
     {
+      "path": "extensions",
+      "runtimePath": "extensions",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "search": {
+          "provider": "local"
+        },
+        "comments": {
+          "provider": "giscus"
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.cache",
+      "runtimePath": "extensions.cache",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "enabled": true,
+          "default_ttl": 3600,
+          "ttl": {
+            "giscus": 600,
+            "waline": 600,
+            "artalk": 600,
+            "memos": 600,
+            "memos-user": 86400,
+            "sites": 86400,
+            "friends": 86400,
+            "friends_and_posts": 86400,
+            "siteinfo": 86400
+          },
+          "max_entries": 200
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "enabled": true,
+        "default_ttl": 3600,
+        "ttl": {
+          "giscus": 600,
+          "waline": 600,
+          "artalk": 600,
+          "memos": 600,
+          "memos-user": 86400,
+          "sites": 86400,
+          "friends": 86400,
+          "friends_and_posts": 86400,
+          "siteinfo": 86400
+        },
+        "max_entries": 200
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.cache.default_ttl",
+      "runtimePath": "extensions.cache.defaultTtl",
+      "type": [
+        "number"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": 3600
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": 3600,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.cache.enabled",
+      "runtimePath": "extensions.cache.enabled",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": true,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.cache.max_entries",
+      "runtimePath": "extensions.cache.maxEntries",
+      "type": [
+        "number"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": 200
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": 200,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.cache.ttl",
+      "runtimePath": "extensions.cache.ttl",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "giscus": 600,
+          "waline": 600,
+          "artalk": 600,
+          "memos": 600,
+          "memos-user": 86400,
+          "sites": 86400,
+          "friends": 86400,
+          "friends_and_posts": 86400,
+          "siteinfo": 86400
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "giscus": 600
+      },
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.cache.ttl.<service>",
+      "runtimePath": "extensions.cache.ttl.<service>",
+      "type": [
+        "number"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "extensions.cache.default_ttl"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": 600,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.comments",
+      "runtimePath": "extensions.comments",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {},
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.comments.provider",
+      "runtimePath": "extensions.comments.provider",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": null,
+      "migration": "configuration/extensions",
+      "values": [
+        null,
+        "beaudar",
+        "utterances",
+        "giscus",
+        "twikoo",
+        "waline",
+        "artalk"
+      ]
+    },
+    {
+      "path": "extensions.comments.providers",
+      "runtimePath": "extensions.comments.providers",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {},
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.comments.providers.artalk",
+      "runtimePath": "extensions.comments.providers.artalk",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "server": null,
+          "site": "",
+          "darkMode": "auto",
+          "imageUploader": null
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "parameter_bag",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "server": null,
+        "site": "",
+        "darkMode": "auto",
+        "imageUploader": null
+      },
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.comments.providers.beaudar",
+      "runtimePath": "extensions.comments.providers.beaudar",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "repo": "xxx/xxx",
+          "issue-term": "pathname",
+          "issue-number": null,
+          "theme": "preferred-color-scheme",
+          "label": null,
+          "input-position": "top",
+          "comment-order": "desc",
+          "keep-theme": null,
+          "loading": false,
+          "branch": "main"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "parameter_bag",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "repo": "xxx/xxx",
+        "issue-term": "pathname",
+        "issue-number": null,
+        "theme": "preferred-color-scheme",
+        "label": null,
+        "input-position": "top",
+        "comment-order": "desc",
+        "keep-theme": null,
+        "loading": false,
+        "branch": "main"
+      },
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.comments.providers.giscus",
+      "runtimePath": "extensions.comments.providers.giscus",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "data-repo": "xxx/xxx",
+          "data-repo-id": null,
+          "data-category": null,
+          "data-category-id": null,
+          "data-mapping": "pathname",
+          "data-strict": 0,
+          "data-reactions-enabled": 1,
+          "data-emit-metadata": 0,
+          "data-input-position": "top",
+          "data-theme": "preferred_color_scheme",
+          "data-lang": "zh-CN",
+          "data-loading": null,
+          "crossorigin": "anonymous"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "parameter_bag",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "data-repo": "xxx/xxx",
+        "data-repo-id": null,
+        "data-category": null,
+        "data-category-id": null,
+        "data-mapping": "pathname",
+        "data-strict": 0,
+        "data-reactions-enabled": 1,
+        "data-emit-metadata": 0,
+        "data-input-position": "top",
+        "data-theme": "preferred_color_scheme",
+        "data-lang": "zh-CN",
+        "data-loading": null,
+        "crossorigin": "anonymous"
+      },
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.comments.providers.twikoo",
+      "runtimePath": "extensions.comments.providers.twikoo",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "envId": "https://xxx"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "parameter_bag",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "envId": "https://xxx"
+      },
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.comments.providers.utterances",
+      "runtimePath": "extensions.comments.providers.utterances",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "repo": "xxx/xxx",
+          "issue-term": "pathname",
+          "issue-number": null,
+          "theme": "preferred-color-scheme",
+          "label": null
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "parameter_bag",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "repo": "xxx/xxx",
+        "issue-term": "pathname",
+        "issue-number": null,
+        "theme": "preferred-color-scheme",
+        "label": null
+      },
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.comments.providers.waline",
+      "runtimePath": "extensions.comments.providers.waline",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "serverURL": "https://waline.vercel.app",
+          "commentCount": true,
+          "pageview": false
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "parameter_bag",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "serverURL": "https://waline.vercel.app",
+        "commentCount": true,
+        "pageview": false
+      },
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.comments.providers.<provider>",
+      "runtimePath": "extensions.comments.providers.<provider>",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "registered",
+        "owner": "comment provider"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "parameter_bag",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {},
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.comments.title",
+      "runtimePath": "extensions.comments.title",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "快来参与讨论吧~"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "快来参与讨论吧~",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features",
+      "runtimePath": "extensions.features",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {},
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.adaptive_text",
+      "runtimePath": "extensions.features.adaptiveText",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "enabled": true
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "enabled": true
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.adaptive_text.enabled",
+      "runtimePath": "extensions.features.adaptiveText.enabled",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": true,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.ai_summary",
+      "runtimePath": "extensions.features.aiSummary",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "enabled": false,
+          "provider": "tianli_gpt",
+          "scope": "post",
+          "key": "5Q5mpqRK5DkwT1X9Gi5e",
+          "max_length": 1000,
+          "typewriter": true,
+          "show_immediately": true,
+          "recommendation": "all",
+          "hide_shuttle": true,
+          "summary_toggle": false,
+          "interface": {
+            "name": "AI摘要",
+            "introduce": "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。",
+            "version": "TianliGPT",
+            "buttons": [
+              "介绍自己",
+              "推荐文章",
+              "生成摘要",
+              "矩阵穿梭"
+            ]
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "enabled": false,
+        "provider": "tianli_gpt",
+        "scope": "post",
+        "key": "5Q5mpqRK5DkwT1X9Gi5e",
+        "max_length": 1000,
+        "typewriter": true,
+        "show_immediately": true,
+        "recommendation": "all",
+        "hide_shuttle": true,
+        "summary_toggle": false,
+        "interface": {
+          "name": "AI摘要",
+          "introduce": "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。",
+          "version": "TianliGPT",
+          "buttons": [
+            "介绍自己",
+            "推荐文章",
+            "生成摘要",
+            "矩阵穿梭"
+          ]
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.ai_summary.enabled",
+      "runtimePath": "extensions.features.aiSummary.enabled",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": false
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": false,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.ai_summary.hide_shuttle",
+      "runtimePath": "extensions.features.aiSummary.hideShuttle",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": true,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.ai_summary.interface",
+      "runtimePath": "extensions.features.aiSummary.interface",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "name": "AI摘要",
+          "introduce": "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。",
+          "version": "TianliGPT",
+          "buttons": [
+            "介绍自己",
+            "推荐文章",
+            "生成摘要",
+            "矩阵穿梭"
+          ]
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "name": "AI摘要",
+        "introduce": "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。",
+        "version": "TianliGPT",
+        "buttons": [
+          "介绍自己",
+          "推荐文章",
+          "生成摘要",
+          "矩阵穿梭"
+        ]
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.ai_summary.interface.buttons",
+      "runtimePath": "extensions.features.aiSummary.interface.buttons",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": [
+          "介绍自己",
+          "推荐文章",
+          "生成摘要",
+          "矩阵穿梭"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "array",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": [
+        "介绍自己",
+        "推荐文章",
+        "生成摘要",
+        "矩阵穿梭"
+      ],
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.ai_summary.interface.introduce",
+      "runtimePath": "extensions.features.aiSummary.interface.introduce",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.ai_summary.interface.name",
+      "runtimePath": "extensions.features.aiSummary.interface.name",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "AI摘要"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "AI摘要",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.ai_summary.interface.version",
+      "runtimePath": "extensions.features.aiSummary.interface.version",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "TianliGPT"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "TianliGPT",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.ai_summary.key",
+      "runtimePath": "extensions.features.aiSummary.key",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "5Q5mpqRK5DkwT1X9Gi5e"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "5Q5mpqRK5DkwT1X9Gi5e",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.ai_summary.max_length",
+      "runtimePath": "extensions.features.aiSummary.maxLength",
+      "type": [
+        "number"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": 1000
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": 1000,
+      "migration": "configuration/extensions",
+      "minimum": 0,
+      "maximum": 5000
+    },
+    {
+      "path": "extensions.features.ai_summary.provider",
+      "runtimePath": "extensions.features.aiSummary.provider",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "tianli_gpt"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "tianli_gpt",
+      "migration": "configuration/extensions",
+      "values": [
+        "tianli_gpt"
+      ]
+    },
+    {
+      "path": "extensions.features.ai_summary.recommendation",
+      "runtimePath": "extensions.features.aiSummary.recommendation",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "all"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "all",
+      "migration": "configuration/extensions",
+      "values": [
+        "all",
+        "web"
+      ]
+    },
+    {
+      "path": "extensions.features.ai_summary.scope",
+      "runtimePath": "extensions.features.aiSummary.scope",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "post"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "post",
+      "migration": "configuration/extensions",
+      "values": [
+        "all",
+        "post",
+        "wiki",
+        "topic"
+      ]
+    },
+    {
+      "path": "extensions.features.ai_summary.show_immediately",
+      "runtimePath": "extensions.features.aiSummary.showImmediately",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": true,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.ai_summary.summary_toggle",
+      "runtimePath": "extensions.features.aiSummary.summaryToggle",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": false
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": false,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.ai_summary.typewriter",
+      "runtimePath": "extensions.features.aiSummary.typewriter",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": true,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.card_hover",
+      "runtimePath": "extensions.features.cardHover",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "enabled": false,
+          "spotlight_color": "rgba(255, 255, 255, 0.25)",
+          "max_tilt": 3
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "enabled": false,
+        "spotlight_color": "rgba(255, 255, 255, 0.25)",
+        "max_tilt": 3
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.card_hover.enabled",
+      "runtimePath": "extensions.features.cardHover.enabled",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": false
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": false,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.card_hover.max_tilt",
+      "runtimePath": "extensions.features.cardHover.maxTilt",
+      "type": [
+        "number"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": 3
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": 3,
+      "migration": "configuration/extensions",
+      "minimum": 0,
+      "maximum": 8
+    },
+    {
+      "path": "extensions.features.card_hover.spotlight_color",
+      "runtimePath": "extensions.features.cardHover.spotlightColor",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "rgba(255, 255, 255, 0.25)"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "rgba(255, 255, 255, 0.25)",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.cjk_typography",
+      "runtimePath": "extensions.features.cjkTypography",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "enabled": false
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "enabled": false
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.cjk_typography.enabled",
+      "runtimePath": "extensions.features.cjkTypography.enabled",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": false
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": false,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.code_copy",
+      "runtimePath": "extensions.features.codeCopy",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "enabled": true,
+          "idle_text": "Copy",
+          "success_text": "Copied",
+          "toast": "复制成功"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "enabled": true,
+        "idle_text": "Copy",
+        "success_text": "Copied",
+        "toast": "复制成功"
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.code_copy.enabled",
+      "runtimePath": "extensions.features.codeCopy.enabled",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": true,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.code_copy.idle_text",
+      "runtimePath": "extensions.features.codeCopy.idleText",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "Copy"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "Copy",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.code_copy.success_text",
+      "runtimePath": "extensions.features.codeCopy.successText",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "Copied"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "Copied",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.code_copy.toast",
+      "runtimePath": "extensions.features.codeCopy.toast",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "复制成功"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "复制成功",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.diagrams",
+      "runtimePath": "extensions.features.diagrams",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "enabled": false,
+          "provider": "mermaid",
+          "style_optimization": false,
+          "theme": "neutral"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "enabled": false,
+        "provider": "mermaid",
+        "style_optimization": false,
+        "theme": "neutral"
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.diagrams.enabled",
+      "runtimePath": "extensions.features.diagrams.enabled",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": false
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": false,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.diagrams.provider",
+      "runtimePath": "extensions.features.diagrams.provider",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "mermaid"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "mermaid",
+      "migration": "configuration/extensions",
+      "values": [
+        "mermaid"
+      ]
+    },
+    {
+      "path": "extensions.features.diagrams.style_optimization",
+      "runtimePath": "extensions.features.diagrams.styleOptimization",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": false
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": false,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.diagrams.theme",
+      "runtimePath": "extensions.features.diagrams.theme",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "neutral"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "neutral",
+      "migration": "configuration/extensions",
+      "values": [
+        "default",
+        "dark",
+        "forest",
+        "neutral"
+      ]
+    },
+    {
+      "path": "extensions.features.lazy_loading",
+      "runtimePath": "extensions.features.lazyLoading",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "transition": "fade",
+          "fix_ratio": true
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "transition": "fade",
+        "fix_ratio": true
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.lazy_loading.fix_ratio",
+      "runtimePath": "extensions.features.lazyLoading.fixRatio",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": true,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.lazy_loading.transition",
+      "runtimePath": "extensions.features.lazyLoading.transition",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "fade"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "fade",
+      "migration": "configuration/extensions",
+      "values": [
+        "blur",
+        "fade"
+      ]
+    },
+    {
+      "path": "extensions.features.lightbox",
+      "runtimePath": "extensions.features.lightbox",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "enabled": true,
+          "provider": "fancybox",
+          "mode": "auto",
+          "selector": ".timenode p>img"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "enabled": true,
+        "provider": "fancybox",
+        "mode": "auto",
+        "selector": ".timenode p>img"
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.lightbox.enabled",
+      "runtimePath": "extensions.features.lightbox.enabled",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": true,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.lightbox.mode",
+      "runtimePath": "extensions.features.lightbox.mode",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "auto"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "auto",
+      "migration": "configuration/extensions",
+      "values": [
+        "auto",
+        "global"
+      ]
+    },
+    {
+      "path": "extensions.features.lightbox.provider",
+      "runtimePath": "extensions.features.lightbox.provider",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "fancybox"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "fancybox",
+      "migration": "configuration/extensions",
+      "values": [
+        "fancybox"
+      ]
+    },
+    {
+      "path": "extensions.features.lightbox.selector",
+      "runtimePath": "extensions.features.lightbox.selector",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ".timenode p>img"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": ".timenode p>img",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.math",
+      "runtimePath": "extensions.features.math",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "provider": null,
+          "providers": {
+            "katex": {},
+            "mathjax": {
+              "v3": false
+            }
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "provider": null,
+        "providers": {
+          "katex": {},
+          "mathjax": {
+            "v3": false
+          }
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.math.provider",
+      "runtimePath": "extensions.features.math.provider",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": null,
+      "migration": "configuration/extensions",
+      "values": [
+        null,
+        "katex",
+        "mathjax"
+      ]
+    },
+    {
+      "path": "extensions.features.math.providers",
+      "runtimePath": "extensions.features.math.providers",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "katex": {},
+          "mathjax": {
+            "v3": false
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "katex": {},
+        "mathjax": {
+          "v3": false
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.math.providers.katex",
+      "runtimePath": "extensions.features.math.providers.katex",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "parameter_bag",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {},
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.math.providers.mathjax",
+      "runtimePath": "extensions.features.math.providers.mathjax",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "v3": false
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "parameter_bag",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "v3": false
+      },
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.preload",
+      "runtimePath": "extensions.features.preload",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "enabled": true,
+          "provider": "flying_pages"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "enabled": true,
+        "provider": "flying_pages"
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.preload.enabled",
+      "runtimePath": "extensions.features.preload.enabled",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": true,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.preload.provider",
+      "runtimePath": "extensions.features.preload.provider",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "flying_pages"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "flying_pages",
+      "migration": "configuration/extensions",
+      "values": [
+        "flying_pages"
+      ]
+    },
+    {
+      "path": "extensions.features.reveal",
+      "runtimePath": "extensions.features.reveal",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "enabled": true,
+          "provider": "scrollreveal",
+          "distance": "8px",
+          "duration": 1000,
+          "interval": 100,
+          "scale": 1
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "enabled": true,
+        "provider": "scrollreveal",
+        "distance": "8px",
+        "duration": 1000,
+        "interval": 100,
+        "scale": 1
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.reveal.distance",
+      "runtimePath": "extensions.features.reveal.distance",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "8px"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "8px",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.reveal.duration",
+      "runtimePath": "extensions.features.reveal.duration",
+      "type": [
+        "number"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": 1000
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": 1000,
+      "migration": "configuration/extensions",
+      "minimum": 0
+    },
+    {
+      "path": "extensions.features.reveal.enabled",
+      "runtimePath": "extensions.features.reveal.enabled",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": true,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.features.reveal.interval",
+      "runtimePath": "extensions.features.reveal.interval",
+      "type": [
+        "number"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": 100
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": 100,
+      "migration": "configuration/extensions",
+      "minimum": 0
+    },
+    {
+      "path": "extensions.features.reveal.provider",
+      "runtimePath": "extensions.features.reveal.provider",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "scrollreveal"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "scrollreveal",
+      "migration": "configuration/extensions",
+      "values": [
+        "scrollreveal"
+      ]
+    },
+    {
+      "path": "extensions.features.reveal.scale",
+      "runtimePath": "extensions.features.reveal.scale",
+      "type": [
+        "number"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": 1
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": 1,
+      "migration": "configuration/extensions",
+      "minimum": 0,
+      "maximum": 1
+    },
+    {
+      "path": "extensions.search",
+      "runtimePath": "extensions.search",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {},
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.search.provider",
+      "runtimePath": "extensions.search.provider",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "local"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "require a registered provider ID; preserve null as disabled",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "local",
+      "migration": "configuration/extensions",
+      "values": [
+        null,
+        "local",
+        "algolia"
+      ]
+    },
+    {
+      "path": "extensions.search.providers",
+      "runtimePath": "extensions.search.providers",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "local": {
+            "scope": "all",
+            "index_path": "/search.json",
+            "include_content": true,
+            "lazy": true,
+            "cache_ttl": 86400,
+            "exclude": []
+          },
+          "algolia": {
+            "appId": null,
+            "apiKey": null,
+            "indexName": null
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "local": {
+          "scope": "all",
+          "index_path": "/search.json",
+          "include_content": true,
+          "lazy": true,
+          "cache_ttl": 86400,
+          "exclude": []
+        },
+        "algolia": {
+          "appId": null,
+          "apiKey": null,
+          "indexName": null
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.search.providers.algolia",
+      "runtimePath": "extensions.search.providers.algolia",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "registered",
+        "owner": "Algolia"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "parameter_bag",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "appId": "",
+        "apiKey": "",
+        "indexName": ""
+      },
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.search.providers.local",
+      "runtimePath": "extensions.search.providers.local",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "scope": "all",
+          "index_path": "/search.json",
+          "include_content": true,
+          "lazy": true,
+          "cache_ttl": 86400,
+          "exclude": []
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "scope": "all",
+        "index_path": "/search.json",
+        "include_content": true,
+        "lazy": true,
+        "cache_ttl": 86400,
+        "exclude": []
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.search.providers.local.cache_ttl",
+      "runtimePath": "extensions.search.providers.local.cacheTtl",
+      "type": [
+        "number"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": 86400
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": 86400,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.search.providers.local.exclude",
+      "runtimePath": "extensions.search.providers.local.exclude",
+      "type": [
+        "array"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": []
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "array",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": [],
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.search.providers.local.include_content",
+      "runtimePath": "extensions.search.providers.local.includeContent",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": true,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.search.providers.local.index_path",
+      "runtimePath": "extensions.search.providers.local.indexPath",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "/search.json"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "root_relative_path",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "/search.json",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.search.providers.local.lazy",
+      "runtimePath": "extensions.search.providers.local.lazy",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": true,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.search.providers.local.scope",
+      "runtimePath": "extensions.search.providers.local.scope",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "all"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "all",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.services",
+      "runtimePath": "extensions.services",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {},
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.services.contributors",
+      "runtimePath": "extensions.services.contributors",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "edit_page": {
+            "_posts/": null,
+            "wiki/stellar/": "https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "edit_page": {
+          "_posts/": null,
+          "wiki/stellar/": "https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.services.contributors.edit_page",
+      "runtimePath": "extensions.services.contributors.editPage",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "_posts/": null,
+          "wiki/stellar/": "https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "wiki/stellar/": "https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"
+      },
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.services.contributors.edit_page.<prefix>",
+      "runtimePath": "extensions.services.contributors.editPage.<prefix>",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "https://github.com/example/repo/blob/main/",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.services.github",
+      "runtimePath": "extensions.services.github",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "api_url": "https://api.github.com",
+          "raw_url": "https://raw.githubusercontent.com",
+          "gist_url": "https://gist.github.com",
+          "card_url": "https://github-readme-stats.vercel.app"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "api_url": "https://api.github.com",
+        "raw_url": "https://raw.githubusercontent.com",
+        "gist_url": "https://gist.github.com",
+        "card_url": "https://github-readme-stats.vercel.app"
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.services.github.api_url",
+      "runtimePath": "extensions.services.github.apiUrl",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "https://api.github.com"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "require an absolute HTTP(S) URL; preserve the URL",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "https://api.github.com",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.services.github.card_url",
+      "runtimePath": "extensions.services.github.cardUrl",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "https://github-readme-stats.vercel.app"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "require an absolute HTTP(S) URL; preserve the URL",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "https://github-readme-stats.vercel.app",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.services.github.gist_url",
+      "runtimePath": "extensions.services.github.gistUrl",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "https://gist.github.com"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "require an absolute HTTP(S) URL; preserve the URL",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "https://gist.github.com",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.services.github.raw_url",
+      "runtimePath": "extensions.services.github.rawUrl",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "https://raw.githubusercontent.com"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "require an absolute HTTP(S) URL; preserve the URL",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "https://raw.githubusercontent.com",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.services.rating",
+      "runtimePath": "extensions.services.rating",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "endpoint": "https://star-vote.xaox.cc/api/rating"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "endpoint": "https://star-vote.xaox.cc/api/rating"
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.services.rating.endpoint",
+      "runtimePath": "extensions.services.rating.endpoint",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "https://star-vote.xaox.cc/api/rating"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "https://star-vote.xaox.cc/api/rating",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.services.site_info",
+      "runtimePath": "extensions.services.siteInfo",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "endpoint": null
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "endpoint": null
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.services.site_info.endpoint",
+      "runtimePath": "extensions.services.siteInfo.endpoint",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": null,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.services.vote",
+      "runtimePath": "extensions.services.vote",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "endpoint": "https://star-vote.xaox.cc/api/vote"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "endpoint": "https://star-vote.xaox.cc/api/vote"
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.services.vote.endpoint",
+      "runtimePath": "extensions.services.vote.endpoint",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "https://star-vote.xaox.cc/api/vote"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "https://star-vote.xaox.cc/api/vote",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags",
+      "runtimePath": "extensions.tags",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {},
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.tags.button",
+      "runtimePath": "extensions.tags.button",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "default_color": "theme"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "default_color": "theme"
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.tags.button.default_color",
+      "runtimePath": "extensions.tags.button.defaultColor",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "theme"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "theme",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.chat",
+      "runtimePath": "extensions.tags.chat",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "endpoint": "https://siteinfo.listentothewind.cn/api/v1"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "endpoint": "https://siteinfo.listentothewind.cn/api/v1"
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.tags.chat.endpoint",
+      "runtimePath": "extensions.tags.chat.endpoint",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "https://siteinfo.listentothewind.cn/api/v1"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "https://siteinfo.listentothewind.cn/api/v1",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.checkbox",
+      "runtimePath": "extensions.tags.checkbox",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "interactive": false
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "interactive": false
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.tags.checkbox.interactive",
+      "runtimePath": "extensions.tags.checkbox.interactive",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": false
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": false,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.copy",
+      "runtimePath": "extensions.tags.copy",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "toast": "复制成功"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "toast": "复制成功"
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.tags.copy.toast",
+      "runtimePath": "extensions.tags.copy.toast",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "复制成功"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "复制成功",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.emoji",
+      "runtimePath": "extensions.tags.emoji",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "default": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif",
+          "twemoji": "https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg",
+          "qq": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif",
+          "aru": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif",
+          "tieba": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png",
+          "blobcat": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "default": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif",
+        "twemoji": "https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg",
+        "qq": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif",
+        "aru": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif",
+        "tieba": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png",
+        "blobcat": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif"
+      },
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.emoji.<provider>",
+      "runtimePath": "extensions.tags.emoji.<provider>",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.gallery",
+      "runtimePath": "extensions.tags.gallery",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "layout": "grid",
+          "size": "mix",
+          "ratio": "square"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "layout": "grid",
+        "size": "mix",
+        "ratio": "square"
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.tags.gallery.layout",
+      "runtimePath": "extensions.tags.gallery.layout",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "grid"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "grid",
+      "migration": "configuration/extensions",
+      "values": [
+        "grid",
+        "flow"
+      ]
+    },
+    {
+      "path": "extensions.tags.gallery.ratio",
+      "runtimePath": "extensions.tags.gallery.ratio",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "square"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "square",
+      "migration": "configuration/extensions",
+      "values": [
+        "origin",
+        "square"
+      ]
+    },
+    {
+      "path": "extensions.tags.gallery.size",
+      "runtimePath": "extensions.tags.gallery.size",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "mix"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "mix",
+      "migration": "configuration/extensions",
+      "values": [
+        "s",
+        "m",
+        "l",
+        "xl",
+        "mix"
+      ]
+    },
+    {
+      "path": "extensions.tags.hashtag",
+      "runtimePath": "extensions.tags.hashtag",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "default_color": null
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "default_color": null
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.tags.hashtag.default_color",
+      "runtimePath": "extensions.tags.hashtag.defaultColor",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": null,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.icon",
+      "runtimePath": "extensions.tags.icon",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "default_color": "accent"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "default_color": "accent"
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.tags.icon.default_color",
+      "runtimePath": "extensions.tags.icon.defaultColor",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "accent"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "accent",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.image",
+      "runtimePath": "extensions.tags.image",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "parse_markdown": false
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "parse_markdown": false
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.tags.image.parse_markdown",
+      "runtimePath": "extensions.tags.image.parseMarkdown",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": false
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": false,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.mark",
+      "runtimePath": "extensions.tags.mark",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "default_color": "yellow"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "default_color": "yellow"
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.tags.mark.default_color",
+      "runtimePath": "extensions.tags.mark.defaultColor",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "yellow"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "yellow",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.note",
+      "runtimePath": "extensions.tags.note",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "default_color": "",
+          "border": true
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "default_color": "",
+        "border": true
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.tags.note.border",
+      "runtimePath": "extensions.tags.note.border",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": true,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.note.default_color",
+      "runtimePath": "extensions.tags.note.defaultColor",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.okr",
+      "runtimePath": "extensions.tags.okr",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "border": true,
+          "status": {
+            "in_track": {
+              "color": "blue",
+              "label": "正常"
+            },
+            "at_risk": {
+              "color": "yellow",
+              "label": "风险"
+            },
+            "off_track": {
+              "color": "orange",
+              "label": "延期"
+            },
+            "finished": {
+              "color": "green",
+              "label": "已完成"
+            },
+            "unfinished": {
+              "color": "red",
+              "label": "未完成"
+            }
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "border": true,
+        "status": {
+          "in_track": {
+            "color": "blue",
+            "label": "正常"
+          },
+          "at_risk": {
+            "color": "yellow",
+            "label": "风险"
+          },
+          "off_track": {
+            "color": "orange",
+            "label": "延期"
+          },
+          "finished": {
+            "color": "green",
+            "label": "已完成"
+          },
+          "unfinished": {
+            "color": "red",
+            "label": "未完成"
+          }
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.tags.okr.border",
+      "runtimePath": "extensions.tags.okr.border",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": true,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.okr.status",
+      "runtimePath": "extensions.tags.okr.status",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "in_track": {
+            "color": "blue",
+            "label": "正常"
+          },
+          "at_risk": {
+            "color": "yellow",
+            "label": "风险"
+          },
+          "off_track": {
+            "color": "orange",
+            "label": "延期"
+          },
+          "finished": {
+            "color": "green",
+            "label": "已完成"
+          },
+          "unfinished": {
+            "color": "red",
+            "label": "未完成"
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "in_track": {
+          "color": "blue",
+          "label": "正常"
+        },
+        "at_risk": {
+          "color": "yellow",
+          "label": "风险"
+        },
+        "off_track": {
+          "color": "orange",
+          "label": "延期"
+        },
+        "finished": {
+          "color": "green",
+          "label": "已完成"
+        },
+        "unfinished": {
+          "color": "red",
+          "label": "未完成"
+        }
+      },
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.okr.status.<status>",
+      "runtimePath": "extensions.tags.okr.status.<status>",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {},
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.tags.okr.status.<status>.color",
+      "runtimePath": "extensions.tags.okr.status.<status>.color",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.okr.status.<status>.label",
+      "runtimePath": "extensions.tags.okr.status.<status>.label",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.quot",
+      "runtimePath": "extensions.tags.quot",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "default": {
+            "prefix": "quot:quote-left",
+            "suffix": "quot:quote-right"
+          },
+          "hashtag": {
+            "prefix": "quot:hashtag",
+            "suffix": null
+          },
+          "question": {
+            "prefix": "quot:question",
+            "suffix": null
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "default": {
+          "prefix": "quot:quote-left",
+          "suffix": "quot:quote-right"
+        },
+        "hashtag": {
+          "prefix": "quot:hashtag",
+          "suffix": null
+        },
+        "question": {
+          "prefix": "quot:question",
+          "suffix": null
+        }
+      },
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.quot.<variant>",
+      "runtimePath": "extensions.tags.quot.<variant>",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {},
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.tags.quot.<variant>.prefix",
+      "runtimePath": "extensions.tags.quot.<variant>.prefix",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": null,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.quot.<variant>.suffix",
+      "runtimePath": "extensions.tags.quot.<variant>.suffix",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": null,
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.timeline",
+      "runtimePath": "extensions.tags.timeline",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "max_height": "80vh"
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "max_height": "80vh"
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.tags.timeline.max_height",
+      "runtimePath": "extensions.tags.timeline.maxHeight",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "80vh"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "80vh",
+      "migration": "configuration/extensions"
+    },
+    {
       "path": "inject",
       "runtimePath": "inject",
       "type": [
@@ -2791,7 +7140,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -2870,7 +7219,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -2936,7 +7285,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -2965,7 +7314,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -3105,7 +7454,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -3145,7 +7494,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -3208,7 +7557,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -3269,7 +7618,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -3298,7 +7647,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -3438,7 +7787,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -3478,7 +7827,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -3542,7 +7891,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -3603,7 +7952,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -3632,7 +7981,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -3771,7 +8120,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -3811,7 +8160,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -3874,7 +8223,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -3935,7 +8284,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -4132,7 +8481,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -4272,7 +8621,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -4312,7 +8661,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -4376,7 +8725,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -4437,7 +8786,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -4466,7 +8815,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -4606,7 +8955,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -4646,7 +8995,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -4710,7 +9059,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -4773,7 +9122,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -4802,7 +9151,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -4942,7 +9291,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -4982,7 +9331,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -5046,7 +9395,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -5107,7 +9456,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -5136,7 +9485,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -5276,7 +9625,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -5316,7 +9665,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -5379,7 +9728,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -5440,7 +9789,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -5469,7 +9818,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -5609,7 +9958,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -5649,7 +9998,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -5712,7 +10061,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -5775,7 +10124,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -5804,7 +10153,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -5944,7 +10293,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -5984,7 +10333,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -6048,7 +10397,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -6112,7 +10461,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -6141,7 +10490,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -6281,7 +10630,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -6321,7 +10670,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -6385,7 +10734,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -6449,7 +10798,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -6478,7 +10827,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -6618,7 +10967,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -6658,7 +11007,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -6722,7 +11071,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -6783,7 +11132,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -6812,7 +11161,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -6952,7 +11301,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -6992,7 +11341,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -7057,7 +11406,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -7121,7 +11470,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -7150,7 +11499,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -7290,7 +11639,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -7330,7 +11679,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -7394,7 +11743,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -7455,7 +11804,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -7492,7 +11841,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -7632,7 +11981,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -7821,7 +12170,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -7865,7 +12214,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -7956,7 +12305,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -8040,7 +12389,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -8100,7 +12449,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -8150,7 +12499,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -8187,7 +12536,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -8415,7 +12764,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -8869,7 +13218,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -11050,7 +15399,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
@@ -12957,7 +17306,7 @@
       "scope": "theme",
       "cascade": [
         "schema default",
-        "site theme override"
+        "_config.stellar.yml"
       ],
       "normalizer": "object",
       "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",

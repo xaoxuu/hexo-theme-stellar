@@ -288,14 +288,14 @@ function footerSchema(factory, options = {}) {
 function commentsSchema(factory) {
   const { field, object } = factory;
   const properties = {
-    enabled: field("boolean", { default: inherited("theme.comments.enabled"), example: true }),
-    title: field("string", { default: derived("theme.comments.title", "theme.comments.comment_title"), example: "参与讨论" }),
+    enabled: field("boolean", { default: computed("provider 非空时默认启用，可由 collection/page comments.enabled 覆盖"), example: true }),
+    title: field("string", { default: inherited("hexo.stellar.config.extensions.comments.title"), example: "参与讨论" }),
     id: field("string", { example: "post-hello" }),
-    provider: field(["string", "null"], { default: inherited("theme.comments.service"), example: "giscus" }),
+    provider: field(["string", "null"], { default: inherited("hexo.stellar.config.extensions.comments.provider"), example: "giscus" }),
     options: field("object", { example: { "data-repo": "xaoxuu/xaoxuu.com" }, additionalProperties: true })
   };
   return object(properties, {
-    default: inherited("theme.comments", "collection.comments", "page.comments"),
+    default: inherited("hexo.stellar.config.extensions.comments", "collection.comments", "page.comments"),
     example: { enabled: true, provider: "giscus", options: { "data-repo": "xaoxuu/xaoxuu.com" } }
   });
 }
@@ -546,7 +546,7 @@ function pageViewModelSchema(profile) {
       }
     });
     const contributor = field(["object", "null"], {
-      default: computed("由 data_services.contributors.edit_this_page 与源文件生成"),
+      default: computed("由 extensions.services.contributors.edit_page 与源文件生成"),
       example: { editUrl: "https://github.com/example/repo/blob/main/post.md", commitsUrl: "https://api.github.com/repos/example/repo/commits?path=post.md" },
       required: true,
       properties: {
@@ -581,7 +581,7 @@ function pageViewModelSchema(profile) {
         jsonLd: field("object", { default: computed("由 BlogPosting 结构化数据规则生成"), example: { "@type": "BlogPosting" }, required: true, additionalProperties: true })
       }, { required: true, example: { title: "Hello Stellar - Stellar", description: "文章摘要", keywords: ["Hexo"], robots: null, canonical: null, openGraph: null, jsonLd: { "@type": "BlogPosting" } } }),
       article: object({
-        heti: field("boolean", { default: derived("theme.plugins.heti.enable"), example: false, required: true }),
+        heti: field("boolean", { default: derived("hexo.stellar.config.extensions.features.cjkTypography.enabled"), example: false, required: true }),
         tags: array(tagLink, { default: computed("由 Hexo 标签关系规范化；content.article.showTags 禁用时为空"), example: [{ name: "Hexo", path: "tags/hexo" }], required: true }),
         footer: object({
           references: array(field("any", { additionalProperties: true }), { default: inherited("item.presentation.footer.references"), example: [], required: true }),

@@ -34,7 +34,7 @@ function layoutDiv() {
       el += '<span class="wiki-available">' + icon('default:platforms') + '<span class="label">' + escape_html(__('meta.available')) + '</span><span class="value">' + escape_html(proj.audience) + '</span></span>';
     }
     if (proj.source?.repository) {
-      el += '<span class="wiki-stars data-service ds-ghinfo" data-api="https://' + theme.api_host.ghapi + '/repos/' + escape_html(proj.source.repository) + '">';
+      el += '<span class="wiki-stars data-service ds-ghinfo" data-api="' + stellar_config('extensions.services.github.apiUrl') + '/repos/' + escape_html(proj.source.repository) + '">';
       el += icon('default:fire') + '<span type="text" id="stargazers_count"></span>';
       el += '</span>';
     }

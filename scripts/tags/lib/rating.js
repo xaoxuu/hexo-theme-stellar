@@ -12,7 +12,7 @@
 module.exports = ctx => function (args) {
   args = ctx.args.map(args, ['id', 'icon'], ['title'])
   
-  const api = ctx.theme.config.data_services.rating.api
+  const api = ctx.stellar.config.extensions.services.rating.endpoint
   const id = args.id || 'default'
 
   const star = ctx.utils.icon(args.icon || 'rating:star')

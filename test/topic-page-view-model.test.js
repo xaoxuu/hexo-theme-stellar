@@ -119,7 +119,7 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
         indent: false,
         footer: { license: "Global", share: true }
       } },
-      comments: { enabled: true, title: "Global", service: "artalk" }
+      extensions: { comments: { title: "Global", provider: "artalk" } }
     },
     collectionConfig,
     members: [current, latest, hidden, other],

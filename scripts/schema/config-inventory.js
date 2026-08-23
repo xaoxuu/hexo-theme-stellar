@@ -160,20 +160,20 @@ const CONFIG_DOMAIN_CATALOG = deepFreeze([
     boundary: "sealed",
     runtimeTarget: "hexo.stellar.config.extensions.search",
     consumers: ["search generator", "search renderer", "browser search extension"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "extensions-services",
-    parameterBags: ["search.algolia_search"]
+    parameterBags: ["search.algolia_search.<option>"]
   }),
   domain("comments", {
     sources: THEME_SOURCES,
     boundary: "sealed",
     runtimeTarget: "hexo.stellar.config.extensions.comments",
     consumers: ["Post PageViewModel", "comments renderer", "comment extensions"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "extensions-services",
     parameterBags: [
-      "comments.beaudar", "comments.utterances", "comments.giscus",
-      "comments.twikoo", "comments.waline", "comments.artalk"
+      "comments.beaudar.<option>", "comments.utterances.<option>", "comments.giscus.<option>",
+      "comments.twikoo.<option>", "comments.waline.<option>", "comments.artalk.<option>"
     ]
   }),
   domain("footer", {
@@ -188,42 +188,42 @@ const CONFIG_DOMAIN_CATALOG = deepFreeze([
   domain("tag_plugins", {
     sources: THEME_SOURCES,
     boundary: "record",
-    runtimeTarget: "hexo.stellar.config.extensions.tagPlugins",
+    runtimeTarget: "hexo.stellar.config.extensions.tags",
     consumers: ["tag renderers", "browser tag extensions"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "extensions-services",
   }),
   domain("dependencies", {
     sources: THEME_SOURCES,
     boundary: "record",
-    runtimeTarget: "hexo.stellar.config.extensions.dependencies",
+    runtimeTarget: "scripts/lib/extension-assets.js",
     consumers: ["head renderer", "script loader", "browser extension loader"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "extensions-services",
   }),
   domain("data_services", {
     sources: THEME_SOURCES,
     boundary: "record",
-    runtimeTarget: "hexo.stellar.config.extensions.dataServices",
+    runtimeTarget: "hexo.stellar.config.extensions.services",
     consumers: ["tag renderers", "browser data service loader"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "extensions-services",
   }),
   domain("data_cache", {
     sources: THEME_SOURCES,
     boundary: "sealed",
-    runtimeTarget: "hexo.stellar.config.extensions.dataCache",
+    runtimeTarget: "hexo.stellar.config.extensions.cache",
     consumers: ["browser request/cache client"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "extensions-services",
     dynamicRecords: ["data_cache.ttl.<service>"]
   }),
   domain("plugins", {
     sources: THEME_SOURCES,
     boundary: "record",
-    runtimeTarget: "hexo.stellar.config.extensions.plugins",
+    runtimeTarget: "hexo.stellar.config.extensions.features",
     consumers: ["plugin renderer", "browser extension loader", "style compiler"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "extensions-services",
   }),
   domain("style", {
@@ -245,9 +245,9 @@ const CONFIG_DOMAIN_CATALOG = deepFreeze([
   domain("api_host", {
     sources: THEME_SOURCES,
     boundary: "sealed",
-    runtimeTarget: "hexo.stellar.config.extensions.apiHost",
+    runtimeTarget: "hexo.stellar.config.extensions.services.github",
     consumers: ["tag renderers", "data service renderers"],
-    status: "planned",
+    status: "delivered",
     migrationSlice: "extensions-services",
   }),
   domain("system", {

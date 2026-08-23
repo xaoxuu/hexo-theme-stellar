@@ -12,7 +12,7 @@ function layoutDiv() {
   if (url == null) {
     return ''
   }
-  const commits = url.replace('/github.com/', `/${theme.api_host.ghapi}/repos/`).replace('/blob/main/', '/commits?path=');
+  const commits = url.replace('https://github.com/', `${stellar_config('extensions.services.github.apiUrl')}/repos/`).replace('/blob/main/', '/commits?path=');
   var el = `
   <section id="contributors">
     <div class="header">

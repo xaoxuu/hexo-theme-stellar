@@ -65,7 +65,7 @@ tags:
 
 ## 注入和站点自定义 CSS
 
-使用方可以通过主题支持的 `plugins.*.inject` 入口加载站点 CSS，也可以在站点工程维护自己的 CSS 文件。自定义样式应：
+官方 Extension 不提供资源覆盖入口。使用方可以在站点工程维护自己的 CSS 文件，或在受信任的 `inject.head` 中显式加入 `<link>` / `<style>`。自定义样式应：
 
 - 放在使用方工程，不修改主题发布包；
 - 使用 `var(--theme)`、`var(--card)`、`var(--text-p1)` 等语义变量；

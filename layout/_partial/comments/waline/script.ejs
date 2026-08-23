@@ -1,8 +1,8 @@
 <%
-var commentOptions = typeof comments !== 'undefined' ? comments.options : theme.comments.waline
+var commentOptions = comments.options
 %>
 <script type="module">
-  import { init } from '<%- commentOptions.js %>';
+  import { init } from '<%- extension_assets().comments.waline.js %>';
 
   
   function initWaline() {
@@ -11,8 +11,8 @@ var commentOptions = typeof comments !== 'undefined' ? comments.options : theme.
 
     function load_waline() {
       utils.css('<%- url_for('/css/comments/waline.css') %>?v=<%- stellar_info('version') %>');
-      utils.css('<%- commentOptions.css %>');
-      utils.css('<%- commentOptions.meta_css %>');
+      utils.css('<%- extension_assets().comments.waline.css %>');
+      utils.css('<%- extension_assets().comments.waline.metaCss %>');
 
       const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
       const waline = init(Object.assign(<%- JSON.stringify(commentOptions) %>, {

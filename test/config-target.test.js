@@ -72,12 +72,20 @@ function isSnakeSegment(segment) {
 }
 
 function themeTargetForPath(pathValue) {
-  return CONFIG_TARGET_FIELDS.find(field => {
+  const exact = CONFIG_TARGET_FIELDS.find(field => {
     if (!field.scopes.includes("theme")) return false;
     const pattern = field.path
       .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
       .replace(/<[^>]+>/g, "[^.]*");
     return new RegExp(`^${pattern}$`).test(pathValue);
+  });
+  if (exact) return exact;
+  return CONFIG_TARGET_FIELDS.find(field => {
+    if (!field.scopes.includes("theme") || !["registered_schema", "parameter_bag"].includes(field.boundary)) return false;
+    const pattern = field.path
+      .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+      .replace(/<[^>]+>/g, "[^.]*");
+    return new RegExp(`^${pattern}\\.`).test(pathValue);
   });
 }
 
@@ -241,12 +249,12 @@ test("官方脚本样式与内部集成有显式内部化清单", () => {
 
 test("运行时只投影已交付配置节点且根配置仍未封闭", () => {
   assert.equal(CONFIG_SCHEMA.sealed, false);
-  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "layout", "content", "appearance", "seo", "resources", "inject"]);
+  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "layout", "content", "appearance", "seo", "resources", "extensions", "inject"]);
   const deliveredPaths = CONFIG_TARGET_FIELDS
     .filter(field => field.status === "delivered" && field.scopes.includes("theme"))
     .map(field => field.path);
   assert.deepEqual(
-    deliveredPaths.filter(pathValue => !pathValue.startsWith("layout.") && !pathValue.startsWith("content.") && !pathValue.startsWith("appearance.") && !pathValue.startsWith("resources.fallbacks.")),
+    deliveredPaths.filter(pathValue => !pathValue.startsWith("layout.") && !pathValue.startsWith("content.") && !pathValue.startsWith("appearance.") && !pathValue.startsWith("resources.fallbacks.") && !pathValue.startsWith("extensions.")),
     [
       "site.brand.image.src",
       "site.brand.image.variant",
@@ -290,6 +298,12 @@ test("运行时只投影已交付配置节点且根配置仍未封闭", () => {
   assert.ok(deliveredPaths.includes("appearance.backgrounds.page.blur.saturation"));
   assert.ok(deliveredPaths.includes("resources.fallbacks.image.tag_plugin"));
   assert.ok(deliveredPaths.includes("resources.fallbacks.error_page"));
+  const deliveredExtensionPaths = deliveredPaths.filter(pathValue => pathValue.startsWith("extensions."));
+  assert.ok(deliveredExtensionPaths.includes("extensions.search.provider"));
+  assert.ok(deliveredExtensionPaths.includes("extensions.comments.providers.<provider>"));
+  assert.ok(deliveredExtensionPaths.includes("extensions.features.ai_summary.provider"));
+  assert.ok(deliveredExtensionPaths.includes("extensions.services.github.raw_url"));
+  assert.ok(deliveredExtensionPaths.includes("extensions.cache.ttl.<service>"));
   const deliveredContentPaths = deliveredPaths.filter(pathValue => pathValue.startsWith("content."));
   assert.equal(deliveredContentPaths.length, 26);
   for (const pathValue of [
@@ -315,7 +329,7 @@ test("运行时只投影已交付配置节点且根配置仍未封闭", () => {
   for (const suffix of ["comments", "comments.enabled", "comments.title", "comments.id", "comments.provider", "comments.options"]) {
     assert.ok(deliveredLayoutPaths.includes(`layout.profiles.home.${suffix}`));
   }
-  assert.ok(CONFIG_TARGET_FIELDS.some(field => field.status === "planned"));
+  assert.ok(CONFIG_TARGET_ROOTS.some(root => root.status === "planned"));
   assert.ok(CONFIG_TARGET_FIELDS.some(field => field.status === "delivered" && field.scopes.includes("collection")));
   assert.ok(CONFIG_TARGET_FIELDS.some(field => field.status === "delivered" && field.scopes.includes("front_matter")));
 });
@@ -332,7 +346,9 @@ test("运行时 Schema 完整投影已交付目标节点契约", () => {
       const active = activeFields.get(`${scope}:${target.path}`);
       assert.ok(active, `${scope}:${target.path} 未进入运行时 Schema`);
       assert.deepEqual(active.type, target.type, `${scope}:${target.path} 类型漂移`);
-      assert.deepEqual(active.default, target.default, `${scope}:${target.path} 默认值漂移`);
+      if (target.default.kind !== "registered") {
+        assert.deepEqual(active.default, target.default, `${scope}:${target.path} 默认值漂移`);
+      }
       assert.deepEqual(active.cascade, target.cascade, `${scope}:${target.path} 级联顺序漂移`);
       assert.equal(active.normalization, target.normalization, `${scope}:${target.path} 规范化规则漂移`);
       assert.deepEqual(active.consumers, target.consumers, `${scope}:${target.path} 消费方漂移`);

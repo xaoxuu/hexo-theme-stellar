@@ -37,7 +37,7 @@ Stellar 是一个功能全面的 Hexo 主题，内置四套并行内容管理系
 
 Stellar 采用**五层架构**，把配置、数据处理、渲染、客户端行为与样式分离，使主题可以支持多种内容类型并保持一致性，同时允许深度定制。
 
-主题是**配置驱动**的：[_config.yml](../../../_config.yml) 仍是主题默认配置的主要入口；v2 迁移中的配置域由声明式 Schema 定义默认值与运行时契约。当前 `seo`、`resources.preconnect` 与站点 `inject` 已接入该链路，其余配置仍按旧链解析。
+主题是**配置驱动**的：[_config.yml](../../../_config.yml) 是主题默认配置入口，v2 声明式 Schema 已交付 `site`、`seo`、`layout`、`content`、`appearance`、`resources`、`extensions` 和 `inject` 八个根域的默认值与运行时契约。根级未知字段拒绝仍属于后续封闭切片。
 
 ### 核心架构分层
 
@@ -180,9 +180,9 @@ flowchart TD
 
 ### 阶段 4：页面导航与预加载
 
-主题使用普通整页导航；可选的 `plugins.preload`（flying_pages）会在鼠标悬停时预加载站内链接，提升导航体验。PJAX 已于 v1.35.0 移除，详见主题仓库 `docs/designs/2026-08-08-pjax-removal.md`。
+主题使用普通整页导航；可选的 `extensions.features.preload`（flying_pages）会在鼠标悬停时预加载站内链接，提升导航体验。PJAX 已于 v1.35.0 移除，详见主题仓库 `docs/designs/2026-08-08-pjax-removal.md`。
 
-**参考源码**：[source/js/main.js](../../../source/js/main.js)、[_config.yml](../../../_config.yml)（`plugins.preload` 小节）
+**参考源码**：[source/js/main.js](../../../source/js/main.js)、[_config.yml](../../../_config.yml)（`extensions.features.preload`）
 
 ## 内容类型系统
 
@@ -255,7 +255,7 @@ graph TB
 
 ### 插件系统
 
-插件采用条件加载模式（[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)）。主题检查配置中的 `plugins.*.enable` 标志，按需加载对应 CSS 与 JavaScript，包括：
+Extension 采用条件加载模式（[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)）。主题读取冻结的 `extensions.features.*.enabled` 与页面 `render.math/render.diagrams`，按需加载对应 CSS 与 JavaScript，包括：
 
 - 图片增强（fancybox、swiper）
 - 代码功能（copycode、语法高亮）
@@ -267,7 +267,7 @@ graph TB
 
 ### 评论集成
 
-评论系统根据 `comments.service` 配置条件加载。每种评论服务（Beaudar、Twikoo、Waline、Artalk、Giscus）都在 `window.stellar.initComments` 注册自己的初始化函数，页面加载完成后调用。
+评论系统根据 `extensions.comments.provider` 与页面 `comments.provider/options` 选择实现。Beaudar、Utterances、Giscus、Twikoo、Waline、Artalk 各自通过评论 partial 按需初始化；官方脚本和样式来自主题内部资源注册表。
 
 详见[评论系统](../07-外部集成/comment-systems.md)。
 

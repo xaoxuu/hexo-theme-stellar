@@ -9,7 +9,7 @@ function divDefault() {
     el += `<div class="post-cover"><img src="${escape_html(image)}"/></div>`
   }
   el += `<h2 class="post-title">${post.title ? escape_html(post.title) : date(post.date, config.date_format)}</h2>`
-  el += `<div class="excerpt${theme.plugins.heti?.enable ? ' heti' : ''}"><p>`
+  el += `<div class="excerpt${stellar_config('extensions.features.cjkTypography.enabled') ? ' heti' : ''}"><p>`
   if (post.excerpt) {
     el += escape_html(strip_html(post.excerpt))
   } else if (post.description) {

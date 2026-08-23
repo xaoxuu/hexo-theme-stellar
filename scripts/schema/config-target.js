@@ -200,7 +200,7 @@ const LAYOUT_CONSUMERS = Object.freeze(["CollectionModel", "PageViewModel", "pag
 const CONTENT_CONSUMERS = Object.freeze(["CollectionModel", "PageViewModel", "article renderer", "listing renderer"]);
 const APPEARANCE_CONSUMERS = Object.freeze(["PageViewModel", "layout renderer", "Stylus compiler", "browser theme state"]);
 const RESOURCE_CONSUMERS = Object.freeze(["head renderer", "PageViewModel", "tag renderers", "image fallback filters"]);
-const EXTENSION_CONSUMERS = Object.freeze(["Extension registry", "Extension renderer", "browser Extension runtime"]);
+const EXTENSION_CONSUMERS = Object.freeze(["Extension registry", "Extension renderer", "browser Extension runtime", "Reference generator"]);
 const INJECT_CONSUMERS = Object.freeze(["head renderer", "script renderer", "PageViewModel"]);
 
 const CONTENT_OVERRIDE_DEFINITIONS = [
@@ -632,7 +632,7 @@ const CONFIG_TARGET_FIELDS = deepFreeze([
     ["resources.fallbacks.error_page", "string", literal("https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg")]
   ]),
   ...fields(EXTENSION_CONSUMERS, [
-    ["extensions.search.provider", ["string", "null"], literal("local"), { normalization: "map local_search to local and algolia_search to algolia; otherwise require a registered provider ID" }],
+    ["extensions.search.provider", ["string", "null"], literal("local"), { values: [null, "local", "algolia"], normalization: "require a registered provider ID; preserve null as disabled" }],
     ["extensions.search.providers.local.scope", "string", literal("all")],
     ["extensions.search.providers.local.index_path", "string", literal("/search.json")],
     ["extensions.search.providers.local.include_content", "boolean", literal(true)],
@@ -640,31 +640,37 @@ const CONFIG_TARGET_FIELDS = deepFreeze([
     ["extensions.search.providers.local.cache_ttl", "number", literal(86400)],
     ["extensions.search.providers.local.exclude", "array", literal([]), { items: { type: ["string"] } }],
     ["extensions.search.providers.algolia", "object", registered("Algolia"), { boundary: "parameter_bag" }],
-    ["extensions.comments.provider", ["string", "null"], literal(null)],
-    ["extensions.comments.title", "string", literal("")],
+    ["extensions.comments.provider", ["string", "null"], literal(null), { values: [null, "beaudar", "utterances", "giscus", "twikoo", "waline", "artalk"] }],
+    ["extensions.comments.title", "string", literal("快来参与讨论吧~")],
     ["extensions.comments.providers.<provider>", "object", registered("comment provider"), { boundary: "parameter_bag" }],
-    ...TAG_EXTENSION_IDS.map(id => [`extensions.tags.${id}`, "object", registered(`tag:${id}`), { boundary: "registered_schema" }]),
-    ...FEATURE_EXTENSION_IDS.map(id => [`extensions.features.${id}`, "object", registered(`feature:${id}`), { boundary: "registered_schema" }]),
-    ["extensions.features.lightbox.provider", "string", literal("fancybox")],
-    ["extensions.features.reveal.provider", "string", literal("scrollreveal")],
-    ["extensions.features.ai_summary.provider", "string", literal("tianli_gpt")],
-    ["extensions.features.math.provider", ["string", "null"], literal(null), { values: ["katex", "mathjax"] }],
-    ["extensions.features.diagrams.provider", "string", literal("mermaid")],
+    ...TAG_EXTENSION_IDS.map(id => [`extensions.tags.${id}`, "object", registered(`tag:${id}`), {
+      boundary: "registered_schema",
+      normalization: "merge declared child fields; deep-freeze the normalized JavaScript object"
+    }]),
+    ...FEATURE_EXTENSION_IDS.map(id => [`extensions.features.${id}`, "object", registered(`feature:${id}`), {
+      boundary: "registered_schema",
+      normalization: "merge declared child fields; deep-freeze the normalized JavaScript object"
+    }]),
+    ["extensions.features.lightbox.provider", "string", literal("fancybox"), { values: ["fancybox"] }],
+    ["extensions.features.reveal.provider", "string", literal("scrollreveal"), { values: ["scrollreveal"] }],
+    ["extensions.features.ai_summary.provider", "string", literal("tianli_gpt"), { values: ["tianli_gpt"] }],
+    ["extensions.features.math.provider", ["string", "null"], literal(null), { values: [null, "katex", "mathjax"] }],
+    ["extensions.features.diagrams.provider", "string", literal("mermaid"), { values: ["mermaid"] }],
     ["extensions.services.site_info.endpoint", ["string", "null"], literal(null)],
-    ["extensions.services.rating.endpoint", ["string", "null"], literal(null)],
-    ["extensions.services.vote.endpoint", ["string", "null"], literal(null)],
-    ["extensions.services.contributors.edit_page", "object", literal({}), { boundary: "record" }],
+    ["extensions.services.rating.endpoint", ["string", "null"], literal("https://star-vote.xaox.cc/api/rating")],
+    ["extensions.services.vote.endpoint", ["string", "null"], literal("https://star-vote.xaox.cc/api/vote")],
+    ["extensions.services.contributors.edit_page", "object", literal({ "_posts/": null, "wiki/stellar/": "https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/" }), { boundary: "record" }],
     ["extensions.services.contributors.edit_page.<prefix>", ["string", "null"], literal(null)],
-    ["extensions.services.github.api_url", "string", literal("https://api.github.com")],
-    ["extensions.services.github.raw_url", "string", literal("https://raw.githubusercontent.com")],
-    ["extensions.services.github.gist_url", "string", literal("https://gist.github.com")],
-    ["extensions.services.github.card_url", "string", literal("https://github-readme-stats.vercel.app")],
+    ["extensions.services.github.api_url", "string", literal("https://api.github.com"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }],
+    ["extensions.services.github.raw_url", "string", literal("https://raw.githubusercontent.com"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }],
+    ["extensions.services.github.gist_url", "string", literal("https://gist.github.com"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }],
+    ["extensions.services.github.card_url", "string", literal("https://github-readme-stats.vercel.app"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }],
     ["extensions.cache.enabled", "boolean", literal(true)],
     ["extensions.cache.default_ttl", "number", literal(3600)],
-    ["extensions.cache.ttl", "object", literal({}), { boundary: "record" }],
+    ["extensions.cache.ttl", "object", literal({ giscus: 600, waline: 600, artalk: 600, memos: 600, "memos-user": 86400, sites: 86400, friends: 86400, friends_and_posts: 86400, siteinfo: 86400 }), { boundary: "record" }],
     ["extensions.cache.ttl.<service>", "number", derived("extensions.cache.default_ttl")],
     ["extensions.cache.max_entries", "number", literal(200)]
-  ]),
+  ], { status: "delivered" }),
   ...fields(INJECT_CONSUMERS, [
     ["inject.head", "string", literal(""), { normalization: "preserve trusted source text exactly; append page text after site text with one newline" }],
     ["inject.script", "string", literal(""), { normalization: "preserve trusted source text exactly; append page text after site text with one newline" }]
@@ -819,13 +825,18 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
     migration("search.local_search.lazy_load", "rename", "extensions.search.providers.local.lazy", "简化重复后缀"),
     migration("search.local_search.cache_ttl", "move", "extensions.search.providers.local.cache_ttl", "provider 参数归 providers"),
     migration("search.local_search.skip_search[]", "rename", "extensions.search.providers.local.exclude[]", "字段描述排除规则"),
-    migration("search.algolia_search.*", "move", "extensions.search.providers.algolia.*", "上游参数袋保持原字段")
+    migration("search.algolia_search.js", "internalize", null, "官方 Algolia 客户端由主题内部资源注册表提供"),
+    migration("search.algolia_search.<option>", "move", "extensions.search.providers.algolia.<option>", "上游参数袋保持原字段")
   ],
   comments: [
     migration("comments.service", "rename", "extensions.comments.provider", "第三方实现统一称 provider"),
     migration("comments.comment_title", "rename", "extensions.comments.title", "去掉父级已表达的重复前缀"),
     migration("comments.custom_css", "remove", null, "Extension 自行按需加载样式"),
-    migration("comments.<service>.*", "move", "extensions.comments.providers.<provider>.*", "上游参数袋归 providers")
+    migration("comments.<service>.js", "internalize", null, "官方评论客户端由主题内部资源注册表提供"),
+    migration("comments.<service>.css", "internalize", null, "官方评论样式由主题内部资源注册表提供"),
+    migration("comments.<service>.meta_css", "internalize", null, "官方评论元数据样式由主题内部资源注册表提供"),
+    migration("comments.<service>.src", "internalize", null, "官方评论客户端由主题内部资源注册表提供"),
+    migration("comments.<service>.<option>", "move", "extensions.comments.providers.<provider>.<option>", "上游参数袋归 providers")
   ],
   footer: [
     migration("footer.social", "rename", "site.footer.actions", "空操作表与动态记录统一归 actions"),

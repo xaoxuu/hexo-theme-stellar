@@ -1,9 +1,9 @@
-<script defer type="text/javascript" src="<%- conf.js %>"></script>
+<script defer type="text/javascript" src="<%- extension_assets().features.diagrams %>"></script>
 <script>
   stellar.initPlugin(() => {
     const els = document.querySelectorAll('.mermaid');
     if (els.length > 0) {
-      if (<%- conf.style_optimization === true %>) {
+      if (<%- conf.styleOptimization === true %>) {
         utils.css(`<%- url_for('/css/plugins/mermaid.css') %>?v=<%- stellar_info('version') %>`);
       }
       const mermaid_config = {

@@ -212,18 +212,18 @@ function resolveLicense(license, item, themeConfig) {
     .replace("{author.url}", String(author.url || ""));
 }
 
-function buildContributor(item, themeConfig) {
-  const map = themeConfig.data_services?.contributors?.edit_this_page;
+function buildContributor(item, themeConfig, stellarConfig) {
+  const map = stellarConfig.extensions.services.contributors.editPage;
   if (!isPlainObject(map)) return null;
   const source = item.source.file || "";
   for (const [prefix, replacement] of Object.entries(map)) {
     if (!source.startsWith(prefix) || typeof replacement !== "string" || replacement.length === 0) continue;
     const editUrl = source.replace(prefix, replacement);
-    const apiHost = String(themeConfig.api_host?.ghapi || "api.github.com");
+    const apiUrl = stellarConfig.extensions.services.github.apiUrl;
     return {
       editUrl,
       commitsUrl: editUrl
-        .replace("/github.com/", `/${apiHost}/repos/`)
+        .replace("https://github.com/", `${apiUrl}/repos/`)
         .replace("/blob/main/", "/commits?path=")
     };
   }
@@ -238,8 +238,9 @@ function buildPostArticleRender(input, item) {
   const footer = item.presentation.footer || {};
   const comments = item.presentation.comments || {};
   const service = typeof comments.provider === "string" ? comments.provider : "";
+  const extensionConfig = input.stellarConfig.extensions;
   const commentOptions = mergeConfig(
-    service && isPlainObject(themeConfig.comments?.[service]) ? themeConfig.comments[service] : {},
+    service && isPlainObject(extensionConfig.comments.providers?.[service]) ? extensionConfig.comments.providers[service] : {},
     isPlainObject(comments.options) ? comments.options : {}
   );
   const preferredTheme = appearance.colorScheme;
@@ -256,7 +257,7 @@ function buildPostArticleRender(input, item) {
   const relatedConfig = articleConfig.relatedPosts;
 
   return {
-    heti: themeConfig.plugins?.heti?.enable === true,
+    heti: extensionConfig.features.cjkTypography.enabled === true,
     tags: articleConfig.showTags === true ? normalizeLinks(input.page.tagLinks) : [],
     footer: {
       references: Array.isArray(footer.references) ? cloneValue(footer.references) : [],
@@ -268,7 +269,7 @@ function buildPostArticleRender(input, item) {
         image: item.presentation.card?.cover || "",
         summary: truncate(stripHTML(summarySource), { length: 120 })
       } : null,
-      contributor: buildContributor(item, themeConfig)
+      contributor: buildContributor(item, themeConfig, input.stellarConfig)
     },
     previous: normalizePostLink(input.page.previous),
     next: normalizePostLink(input.page.next),
@@ -282,7 +283,7 @@ function buildPostArticleRender(input, item) {
       enabled: comments.enabled !== false && service.length > 0,
       title: typeof comments.title === "string" && comments.title.length > 0
         ? comments.title
-        : String(themeConfig.comments?.comment_title || ""),
+        : extensionConfig.comments.title,
       id: typeof comments.id === "string" ? comments.id : "",
       service,
       options: commentOptions,
@@ -484,7 +485,7 @@ function buildCollectionModel(themeConfig, stellarConfig) {
   const blogIndex = profiles.blogIndex;
   const content = requireContentConfig(stellarConfig);
   const article = content.article;
-  const comments = normalizeThemeComments(themeConfig.comments);
+  const comments = normalizeThemeComments(stellarConfig.extensions.comments);
   const navigation = toRenderNavigation(postProfile);
   const sidebar = normalizeSidebarBrand(pick(postProfile.sidebar, CONTENT_MODEL_FIELDS.sidebar));
 
@@ -588,10 +589,10 @@ function normalizeWikiTree(sections) {
 
 function normalizeThemeComments(comments) {
   const source = isPlainObject(comments) ? comments : {};
-  const provider = typeof source.service === "string" ? source.service : null;
+  const provider = typeof source.provider === "string" ? source.provider : null;
   return {
     enabled: source.enabled !== false,
-    title: typeof source.title === "string" ? source.title : String(source.comment_title || ""),
+    title: typeof source.title === "string" ? source.title : "",
     id: typeof source.id === "string" ? source.id : "",
     provider,
     options: {}
@@ -646,7 +647,7 @@ function buildWikiCollectionModel(input, collectionId) {
       article: mergeConfig(globalArticle, pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)),
       footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),
       comments: mergeConfig(
-        normalizeThemeComments(themeConfig.comments),
+        normalizeThemeComments(input.stellarConfig.extensions.comments),
         pick(collectionConfig.comments, CONTENT_MODEL_FIELDS.comments)
       )
     },
@@ -754,7 +755,7 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
       ),
       footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),
       comments: mergeConfig(
-        normalizeThemeComments(themeConfig.comments),
+        normalizeThemeComments(input.stellarConfig.extensions.comments),
         pick(collectionConfig.comments, CONTENT_MODEL_FIELDS.comments)
       )
     },
@@ -843,7 +844,7 @@ function buildNotebookCollectionModel(input, collectionId) {
       article: mergeConfig(globalArticle, pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)),
       footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),
       comments: mergeConfig(
-        normalizeThemeComments(themeConfig.comments),
+        normalizeThemeComments(input.stellarConfig.extensions.comments),
         pick(collectionConfig.comments, CONTENT_MODEL_FIELDS.comments)
       )
     },

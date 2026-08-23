@@ -252,7 +252,7 @@ tree:
 
 Galaxy 默认以透明 Canvas 渲染。与 `hero.background.image` 同时配置时，图片位于动态层下方，文字仍按图片平均色自适应；WebGL、着色器或脚本失败时图片保持可用。显式设置 `transparent: false` 会让不透明 Canvas 覆盖图片。仅配置 Galaxy 时使用纯黑 `#000000` 作为静态底色与文字取色基准。Hero 离开视口或页面进入后台时暂停，返回后恢复；用户启用 `prefers-reduced-motion` 时不加载动画。Canvas 不接收指针事件，不影响 Hero 中的链接、按钮和终端操作。
 
-Wiki Hero 的左侧导航是无背景的站点标题按钮：文字取 Hexo `config.title`，颜色为 `--text-banner`，点击返回站点首页。项目配置 `source.repository` 时，最新版本标签作为外链按钮显示在项目标题上方，与站点导航分离；其边框沿用该主题色并以 50% 透明度显示。加载期间标签保留高度但不显示占位文字、边框或交互；成功取得 tag 后淡入。数据服务优先使用 tag 响应已提供的 `html_url`（如 Release 页面），否则按仓库地址与 tag 拼接引用页；新标签页打开；无 tag 或请求失败时移除标签。主标题独立以 `data-text-adaptive="contrast"` 按封面明暗在黑白之间切换，不使用主题色填充；其轮廓以 `--text-banner-theme` 的半透明色呈现柔和外发光。说明与按钮等辅助文字继续使用该主题色变体。“源码”按钮的背景与边框使用 `--text-banner`，其文字和图标单独反转相同变量，因此深浅封面下始终与背景相反。启用 `plugins.card_hover` 后，源码、文档和 `hero.actions` 按钮均显示鼠标跟随 Spotlight，但不启用 Tilt 或上浮；源码按钮的文字与图标反色不会作用于 Spotlight 层。`hero.preview.type: terminal` 时，终端以封面平均色派生的 `--text-banner-theme` 与透明色 50% 混合填充、再以背景模糊呈现；变量不可用时回退到 `--background`。未配置 `hero.background.image` 和 `hero.background.effect` 时不会运行自适应取色：`--text-banner-theme` 回退为 `--text-p2`，版本标签与普通操作按钮的边框单独回退为 `--block-border`。工具栏文字使用 `--text-banner`，命令与 `$` 提示符使用 `--text-banner-theme`。内置按钮、终端标签与辅助标签均通过 `__()` 读取 `languages/`；它们随站点语言切换。`hero.actions[].title` 是项目自定义内容，保持原值，不由主题翻译。
+Wiki Hero 的左侧导航是无背景的站点标题按钮：文字取 Hexo `config.title`，颜色为 `--text-banner`，点击返回站点首页。项目配置 `source.repository` 时，最新版本标签作为外链按钮显示在项目标题上方，与站点导航分离；其边框沿用该主题色并以 50% 透明度显示。加载期间标签保留高度但不显示占位文字、边框或交互；成功取得 tag 后淡入。数据服务优先使用 tag 响应已提供的 `html_url`（如 Release 页面），否则按仓库地址与 tag 拼接引用页；新标签页打开；无 tag 或请求失败时移除标签。主标题独立以 `data-text-adaptive="contrast"` 按封面明暗在黑白之间切换，不使用主题色填充；其轮廓以 `--text-banner-theme` 的半透明色呈现柔和外发光。说明与按钮等辅助文字继续使用该主题色变体。“源码”按钮的背景与边框使用 `--text-banner`，其文字和图标单独反转相同变量，因此深浅封面下始终与背景相反。启用 `extensions.features.card_hover.enabled` 后，源码、文档和 `hero.actions` 按钮均显示鼠标跟随 Spotlight，但不启用 Tilt 或上浮；源码按钮的文字与图标反色不会作用于 Spotlight 层。`hero.preview.type: terminal` 时，终端以封面平均色派生的 `--text-banner-theme` 与透明色 50% 混合填充、再以背景模糊呈现；变量不可用时回退到 `--background`。未配置 `hero.background.image` 和 `hero.background.effect` 时不会运行自适应取色：`--text-banner-theme` 回退为 `--text-p2`，版本标签与普通操作按钮的边框单独回退为 `--block-border`。工具栏文字使用 `--text-banner`，命令与 `$` 提示符使用 `--text-banner-theme`。内置按钮、终端标签与辅助标签均通过 `__()` 读取 `languages/`；它们随站点语言切换。`hero.actions[].title` 是项目自定义内容，保持原值，不由主题翻译。
 
 Wiki Hero 完成后直接进入正文布局，不额外输出分隔线；正文或页脚自己的分隔线保持各自组件负责。
 
@@ -335,7 +335,7 @@ flowchart TD
 wiki 项目数据文件配置 `repo`（必填）与可选 `branch` 后，若项目首页（如 `source/wiki/{id}/index.md`）正文为空——剪裁多余空行、空格后为空——该页正文自动渲染为该 GitHub 仓库的 README.md：
 
 - 渲染复用底层远程 md 组件（`scripts/lib/mdrender_html.js` 通用占位生成器 + `scripts/lib/wiki_readme.js` wiki 应用判定 + `source/js/services/mdrender.js` 客户端服务），占位元素被原地替换，最终 DOM 无外部容器；
-- README 地址由 `scripts/lib/wiki_readme.js` 的 `readmeUrl` 按主题配置 `api_host.ghraw` 构造（配置即唯一默认值来源，代码不兜底），相对图片/链接解析到同一镜像基址；
+- README 地址由 `scripts/lib/wiki_readme.js` 的 `readmeUrl` 按 `extensions.services.github.raw_url` 完整 URL 构造（Schema 默认值是唯一来源，代码不兼容裸 host），相对图片/链接解析到同一镜像基址；
 - 标题默认适配本地文章格式：补齐标题 id、追加 `headerlink` 锚点（与 hexo-renderer-marked 输出一致），h1 视为页面标题直接隐藏（页面标题已由 banner 展示，不降级）；
 - 首页正文非空时以本地内容为准（本地内容优先）；`branch` 缺省用 GitHub `HEAD`（自动指向默认分支）。
 

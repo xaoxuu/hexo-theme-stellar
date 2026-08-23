@@ -1,5 +1,5 @@
 <%
-var commentOptions = typeof comments !== 'undefined' ? comments.options : theme.comments.twikoo
+var commentOptions = comments.options
 %>
 <script type="module">
   (function() {
@@ -10,7 +10,7 @@ var commentOptions = typeof comments !== 'undefined' ? comments.options : theme.
       
       function load_twikoo() {
         utils.css('<%- url_for('/css/comments/twikoo.css') %>?v=<%- stellar_info('version') %>');
-        utils.js('<%- commentOptions.js %>', {defer: true}).then(function () {
+        utils.js('<%- extension_assets().comments.twikoo.js %>', {defer: true}).then(function () {
           const path = el.getAttribute('comment_id') ?? decodeURI(window.location.pathname);
           twikoo.init(Object.assign(<%- JSON.stringify(commentOptions) %>, {
             el: '#twikoo_container',

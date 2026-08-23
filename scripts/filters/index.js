@@ -6,7 +6,7 @@ hexo.extend.filter.register('after_render:html', require('./lib/img_onerror').pr
 hexo.extend.filter.register('after_post_render', require('./lib/md_table').processPost);
 
 function change_image(data) {
-    if (this.theme.config.tag_plugins.image.parse_markdown) {
+    if (this.stellar.config.extensions.tags.image.parseMarkdown) {
       // data.content = data.content.replace(
       //     /!\[(.*?)\]\((.*?)\s*(?:"(.*?)")?\)/g,
       //     '{% image $2 $3 %}'

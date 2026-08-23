@@ -116,7 +116,10 @@ function notebookInput(overrides = {}) {
         },
         article: { type: "story", indent: false }
       },
-      comments: { enabled: false, service: "giscus", giscus: { "data-theme": "light" } }
+      extensions: { comments: {
+        provider: "giscus",
+        providers: { giscus: { "data-theme": "light" } }
+      } }
     },
     collectionConfig,
     collectionItems: [

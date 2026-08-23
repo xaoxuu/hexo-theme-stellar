@@ -12,7 +12,7 @@
 module.exports = ctx => function (args) {
   args = ctx.args.map(args, ['id', 'yes', 'no'], ['title'])
 
-  const api = ctx.theme.config.data_services.vote.api
+  const api = ctx.stellar.config.extensions.services.vote.endpoint
   const id = args.id || 'default'
 
   var el = `<div class="tag-plugin ds-vote" data-api="${api}" data-id="${id}">`

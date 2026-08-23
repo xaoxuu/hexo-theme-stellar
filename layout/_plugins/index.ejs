@@ -27,36 +27,48 @@
 function loadPlugins() {
   var el = ''
   var render = content_config(page).render || {}
-
-  function pageFeature(id) {
-    if (id === 'katex' || id === 'mathjax') {
-      return render.math === id
-    }
-    if (id === 'mermaid') {
-      if (render.diagrams === true || render.diagrams === 'mermaid') return true
-      if (render.diagrams && typeof render.diagrams === 'object') return render.diagrams
-    }
-    return false
-  }
+  var extensions = stellar_config('extensions')
+  var features = extensions.features
 
   // search
-  if (theme.search[theme.search.service]) {
+  var searchProvider = extensions.search.provider
+  var searchPartials = {local: 'local_search', algolia: 'algolia_search'}
+  if (searchProvider && searchPartials[searchProvider] && extensions.search.providers[searchProvider]) {
     el += `<script>window.addEventListener('DOMContentLoaded', function () { utils.js('/js/search/shortcut.js', { defer: true }); });</script>`;
-    el += partial(`search/${theme.search.service}`, {conf: theme.search[theme.search.service]});
+    el += partial(`search/${searchPartials[searchProvider]}`, {conf: extensions.search.providers[searchProvider]});
   }
-  
-  // others
-  for (var id of Object.keys(theme.plugins)) {
-    var pageConf = pageFeature(id)
-    var conf = Object.assign({}, theme.plugins[id], pageConf && typeof pageConf === 'object' ? pageConf : {})
-    if (pageConf === true || conf.enable) {
-      if (conf.inject?.length > 0) {
-        el += conf.inject
-      } else {
-        el += partial(`${id}`, {conf: conf})
-      }
+
+  var featurePartials = {
+    preload: 'preload',
+    lightbox: 'fancybox',
+    reveal: 'scrollreveal',
+    aiSummary: 'tianli_gpt',
+    codeCopy: 'copycode',
+    adaptiveText: 'adaptive_text',
+    cardHover: 'card_hover',
+    cjkTypography: 'heti'
+  }
+  for (var featureId of Object.keys(featurePartials)) {
+    var feature = features[featureId]
+    if (feature.enabled) {
+      el += partial(featurePartials[featureId], {conf: feature})
     }
   }
+
+  var mathProvider = render.math || features.math.provider
+  if (mathProvider === 'katex') {
+    el += partial('katex', {conf: features.math.providers.katex})
+  } else if (mathProvider === 'mathjax') {
+    el += partial('mathjax', {conf: features.math.providers.mathjax})
+  }
+
+  if (render.diagrams || features.diagrams.enabled) {
+    var diagramOptions = render.diagrams && typeof render.diagrams === 'object' ? render.diagrams : {}
+    el += partial('mermaid', {conf: Object.assign({}, features.diagrams, diagramOptions)})
+  }
+
+  // Swiper 是主题内置容器能力，资源按页面 DOM 需求加载，不再开放用户配置。
+  el += partial('swiper', {conf: {}})
   return el
 }
 %>

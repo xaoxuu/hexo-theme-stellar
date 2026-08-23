@@ -633,7 +633,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "theme.comments",
+              "hexo.stellar.config.extensions.comments",
               "collection.comments",
               "page.comments"
             ]
@@ -659,10 +659,8 @@
           ],
           "required": false,
           "default": {
-            "kind": "inherited",
-            "from": [
-              "theme.comments.enabled"
-            ]
+            "kind": "computed",
+            "description": "provider 非空时默认启用，可由 collection/page comments.enabled 覆盖"
           },
           "scope": "CollectionModel:notebook",
           "consumers": [
@@ -719,7 +717,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "theme.comments.service"
+              "hexo.stellar.config.extensions.comments.provider"
             ]
           },
           "scope": "CollectionModel:notebook",
@@ -737,10 +735,9 @@
           ],
           "required": false,
           "default": {
-            "kind": "derived",
+            "kind": "inherited",
             "from": [
-              "theme.comments.title",
-              "theme.comments.comment_title"
+              "hexo.stellar.config.extensions.comments.title"
             ]
           },
           "scope": "CollectionModel:notebook",
@@ -2211,7 +2208,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "theme.comments",
+              "hexo.stellar.config.extensions.comments",
               "collection.comments",
               "page.comments"
             ]
@@ -2237,10 +2234,8 @@
           ],
           "required": false,
           "default": {
-            "kind": "inherited",
-            "from": [
-              "theme.comments.enabled"
-            ]
+            "kind": "computed",
+            "description": "provider 非空时默认启用，可由 collection/page comments.enabled 覆盖"
           },
           "scope": "CollectionModel:post",
           "consumers": [
@@ -2297,7 +2292,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "theme.comments.service"
+              "hexo.stellar.config.extensions.comments.provider"
             ]
           },
           "scope": "CollectionModel:post",
@@ -2315,10 +2310,9 @@
           ],
           "required": false,
           "default": {
-            "kind": "derived",
+            "kind": "inherited",
             "from": [
-              "theme.comments.title",
-              "theme.comments.comment_title"
+              "hexo.stellar.config.extensions.comments.title"
             ]
           },
           "scope": "CollectionModel:post",
@@ -3584,7 +3578,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "theme.comments",
+              "hexo.stellar.config.extensions.comments",
               "collection.comments",
               "page.comments"
             ]
@@ -3610,10 +3604,8 @@
           ],
           "required": false,
           "default": {
-            "kind": "inherited",
-            "from": [
-              "theme.comments.enabled"
-            ]
+            "kind": "computed",
+            "description": "provider 非空时默认启用，可由 collection/page comments.enabled 覆盖"
           },
           "scope": "CollectionModel:topic",
           "consumers": [
@@ -3670,7 +3662,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "theme.comments.service"
+              "hexo.stellar.config.extensions.comments.provider"
             ]
           },
           "scope": "CollectionModel:topic",
@@ -3688,10 +3680,9 @@
           ],
           "required": false,
           "default": {
-            "kind": "derived",
+            "kind": "inherited",
             "from": [
-              "theme.comments.title",
-              "theme.comments.comment_title"
+              "hexo.stellar.config.extensions.comments.title"
             ]
           },
           "scope": "CollectionModel:topic",
@@ -5406,7 +5397,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "theme.comments",
+              "hexo.stellar.config.extensions.comments",
               "collection.comments",
               "page.comments"
             ]
@@ -5432,10 +5423,8 @@
           ],
           "required": false,
           "default": {
-            "kind": "inherited",
-            "from": [
-              "theme.comments.enabled"
-            ]
+            "kind": "computed",
+            "description": "provider 非空时默认启用，可由 collection/page comments.enabled 覆盖"
           },
           "scope": "CollectionModel:wiki",
           "consumers": [
@@ -5492,7 +5481,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "theme.comments.service"
+              "hexo.stellar.config.extensions.comments.provider"
             ]
           },
           "scope": "CollectionModel:wiki",
@@ -5510,10 +5499,9 @@
           ],
           "required": false,
           "default": {
-            "kind": "derived",
+            "kind": "inherited",
             "from": [
-              "theme.comments.title",
-              "theme.comments.comment_title"
+              "hexo.stellar.config.extensions.comments.title"
             ]
           },
           "scope": "CollectionModel:wiki",
@@ -7041,7 +7029,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "theme.comments",
+              "hexo.stellar.config.extensions.comments",
               "collection.comments",
               "page.comments"
             ]
@@ -7066,10 +7054,8 @@
           ],
           "required": false,
           "default": {
-            "kind": "inherited",
-            "from": [
-              "theme.comments.enabled"
-            ]
+            "kind": "computed",
+            "description": "provider 非空时默认启用，可由 collection/page comments.enabled 覆盖"
           },
           "scope": "ContentItemModel",
           "consumers": [
@@ -7123,7 +7109,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "theme.comments.service"
+              "hexo.stellar.config.extensions.comments.provider"
             ]
           },
           "scope": "ContentItemModel",
@@ -7140,10 +7126,9 @@
           ],
           "required": false,
           "default": {
-            "kind": "derived",
+            "kind": "inherited",
             "from": [
-              "theme.comments.title",
-              "theme.comments.comment_title"
+              "hexo.stellar.config.extensions.comments.title"
             ]
           },
           "scope": "ContentItemModel",
@@ -8160,7 +8145,7 @@
           "required": true,
           "default": {
             "kind": "computed",
-            "description": "由 data_services.contributors.edit_this_page 与源文件生成"
+            "description": "由 extensions.services.contributors.edit_page 与源文件生成"
           },
           "scope": "PageViewModel:post",
           "consumers": [
@@ -8367,7 +8352,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "theme.plugins.heti.enable"
+              "hexo.stellar.config.extensions.features.cjkTypography.enabled"
             ]
           },
           "scope": "PageViewModel:post",

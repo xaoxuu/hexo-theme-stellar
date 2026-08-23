@@ -226,23 +226,14 @@ node_modules/hexo-theme-stellar/_config.yml
 | 小节 | 用途 |
 |------|------|
 | `stellar` | 主题版本、首页、仓库地址、资源路径 |
-| `preconnect` | 需要预连接的 CDN 域名 |
-| `canonical` | 源站域名、备用站与克隆站检测 |
-| `open_graph` / `structured_data` | SEO 元数据 |
-| `layout.profiles` | 页面 Profile：路径、激活菜单、导航标签与左右侧栏 |
-| `notebook` | 笔记本系统配置 |
-| `article` | 文章显示、摘要、许可等 |
-| `comments` | 评论服务（beaudar / utterances / giscus / twikoo / waline / artalk） |
-| `search` | 搜索服务（local_search / algolia_search） |
-| `footer` | 页脚社交链接等 |
-| `tag_plugins` | 标签插件行为与样式 |
-| `dependencies` | marked、lazyload 等 CDN 依赖 |
-| `data_services` | 按需加载的数据服务 API |
-| `plugins` | 外部插件集成（fancybox、swiper、scrollreveal、mermaid、katex 等） |
-| `style` | 设计令牌、颜色、字体、间距 |
-| `default` | 默认占位图 |
-| `api_host` | GitHub API 端点 |
-| `data_cache` | 数据缓存 |
+| `site` | Brand、菜单与 Footer 站点外壳 |
+| `seo` | canonical、Open Graph 与结构化数据 |
+| `layout` | 页面 Profile：路径、导航与左右侧栏 |
+| `content` | Article 与 Notebook 内容默认值 |
+| `appearance` | 排版、颜色、形状、动效和背景 |
+| `resources` | preconnect 与按角色命名的资源兜底 |
+| `extensions` | 搜索、评论、标签、Feature、服务与缓存 |
+| `inject` | 受信任的 head / script 原文注入 |
 | `system` | 内部系统覆盖 |
 
 ### 关键配置字段

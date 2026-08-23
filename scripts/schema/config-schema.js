@@ -80,7 +80,7 @@ function object(options) {
     type: ["object"],
     default: literal({}),
     scope: "theme",
-    cascade: ["schema default", "site theme override"],
+    cascade: ["schema default", "_config.stellar.yml"],
     normalizer: "object",
     normalization: "merge declared child fields; deep-freeze the normalized JavaScript object",
     sealed: true,
@@ -133,6 +133,12 @@ const RESOURCE_CONSUMERS = Object.freeze([
   "error renderer",
   "Reference generator"
 ]);
+const EXTENSION_CONSUMERS = Object.freeze([
+  "Extension registry",
+  "Extension renderer",
+  "browser Extension runtime",
+  "Reference generator"
+]);
 
 const AI_LABEL_DEFAULTS = Object.freeze({
   manual: { color: "#03a9f4", icon: "default:shield-user" },
@@ -140,6 +146,319 @@ const AI_LABEL_DEFAULTS = Object.freeze({
   polished: { color: "#4caf50", icon: "default:shield-up" },
   generated: { color: "#ff9800", icon: "default:shield-warning" }
 });
+
+function extensionValue(type, defaultValue, options = {}) {
+  const types = Array.isArray(type) ? type : [type];
+  const normalizer = options.normalizer || (types.includes("array") ? "array" : (types.includes("object") ? "object" : "identity"));
+  return field(type, {
+    default: literal(defaultValue),
+    scope: "theme",
+    cascade: ["schema default", "_config.stellar.yml"],
+    normalizer,
+    normalization: options.normalization || "validate the declared type; preserve the value; deep-freeze the result",
+    consumers: EXTENSION_CONSUMERS,
+    example: options.example ?? defaultValue,
+    migration: options.migration || "configuration/extensions",
+    runtimeKey: options.runtimeKey,
+    ...options
+  });
+}
+
+function extensionObject(properties, defaultValue = {}, options = {}) {
+  const runtimeProperties = Object.fromEntries(Object.entries(properties).map(([key, definition]) => [
+    key,
+    definition.runtimeKey ? definition : {
+      ...definition,
+      runtimeKey: key.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase())
+    }
+  ]));
+  return object({
+    default: literal(defaultValue),
+    consumers: EXTENSION_CONSUMERS,
+    example: options.example ?? defaultValue,
+    migration: options.migration || "configuration/extensions",
+    runtimeKey: options.runtimeKey,
+    properties: runtimeProperties,
+    ...options
+  });
+}
+
+function parameterBag(defaultValue = {}, options = {}) {
+  return extensionValue("object", defaultValue, {
+    normalizer: "parameter_bag",
+    sealed: false,
+    ...options
+  });
+}
+
+function tagExtensionSchemas() {
+  const quotVariant = extensionObject({
+    prefix: extensionValue(["string", "null"], null),
+    suffix: extensionValue(["string", "null"], null)
+  });
+  const okrStatus = extensionObject({
+    color: extensionValue("string", ""),
+    label: extensionValue("string", "")
+  });
+  return {
+    note: extensionObject({
+      default_color: extensionValue("string", ""),
+      border: extensionValue("boolean", true)
+    }, { default_color: "", border: true }),
+    checkbox: extensionObject({ interactive: extensionValue("boolean", false) }, { interactive: false }),
+    quot: extensionObject({}, {
+      default: { prefix: "quot:quote-left", suffix: "quot:quote-right" },
+      hashtag: { prefix: "quot:hashtag", suffix: null },
+      question: { prefix: "quot:question", suffix: null }
+    }, {
+      sealed: false,
+      additionalPropertyKey: "<variant>",
+      additionalProperties: quotVariant
+    }),
+    emoji: extensionObject({}, {
+      default: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif",
+      twemoji: "https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg",
+      qq: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif",
+      aru: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif",
+      tieba: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png",
+      blobcat: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif"
+    }, {
+      sealed: false,
+      additionalPropertyKey: "<provider>",
+      additionalProperties: extensionValue("string", "")
+    }),
+    icon: extensionObject({ default_color: extensionValue(["string", "null"], "accent") }, { default_color: "accent" }),
+    button: extensionObject({ default_color: extensionValue(["string", "null"], "theme") }, { default_color: "theme" }),
+    image: extensionObject({ parse_markdown: extensionValue("boolean", false) }, { parse_markdown: false }),
+    copy: extensionObject({ toast: extensionValue("string", "复制成功") }, { toast: "复制成功" }),
+    timeline: extensionObject({ max_height: extensionValue("string", "80vh") }, { max_height: "80vh" }, {
+      removedProperties: { "max-height": "max_height" }
+    }),
+    mark: extensionObject({ default_color: extensionValue("string", "yellow") }, { default_color: "yellow" }),
+    hashtag: extensionObject({ default_color: extensionValue(["string", "null"], null) }, { default_color: null }),
+    okr: extensionObject({
+      border: extensionValue("boolean", true),
+      status: extensionObject({}, {
+        in_track: { color: "blue", label: "正常" },
+        at_risk: { color: "yellow", label: "风险" },
+        off_track: { color: "orange", label: "延期" },
+        finished: { color: "green", label: "已完成" },
+        unfinished: { color: "red", label: "未完成" }
+      }, {
+        sealed: false,
+        additionalPropertyKey: "<status>",
+        additionalProperties: okrStatus
+      })
+    }, {
+      border: true,
+      status: {
+        in_track: { color: "blue", label: "正常" },
+        at_risk: { color: "yellow", label: "风险" },
+        off_track: { color: "orange", label: "延期" },
+        finished: { color: "green", label: "已完成" },
+        unfinished: { color: "red", label: "未完成" }
+      }
+    }),
+    gallery: extensionObject({
+      layout: extensionValue("string", "grid", { values: ["grid", "flow"] }),
+      size: extensionValue("string", "mix", { values: ["s", "m", "l", "xl", "mix"] }),
+      ratio: extensionValue("string", "square", { values: ["origin", "square"] })
+    }, { layout: "grid", size: "mix", ratio: "square" }),
+    chat: extensionObject({ endpoint: extensionValue(["string", "null"], "https://siteinfo.listentothewind.cn/api/v1") }, {
+      endpoint: "https://siteinfo.listentothewind.cn/api/v1"
+    }, { removedProperties: { api: "endpoint" } })
+  };
+}
+
+function featureExtensionSchemas() {
+  return {
+    lazy_loading: extensionObject({
+      transition: extensionValue("string", "fade", { values: ["blur", "fade"] }),
+      fix_ratio: extensionValue("boolean", true)
+    }, { transition: "fade", fix_ratio: true }),
+    preload: extensionObject({
+      enabled: extensionValue("boolean", true),
+      provider: extensionValue("string", "flying_pages", { values: ["flying_pages"] })
+    }, { enabled: true, provider: "flying_pages" }, { removedProperties: { enable: "enabled", service: "provider", flying_pages: "internalized" } }),
+    lightbox: extensionObject({
+      enabled: extensionValue("boolean", true),
+      provider: deliveredField("extensions.features.lightbox.provider", { normalizer: "identity", example: "fancybox" }),
+      mode: extensionValue("string", "auto", { values: ["auto", "global"] }),
+      selector: extensionValue("string", ".timenode p>img")
+    }, { enabled: true, provider: "fancybox", mode: "auto", selector: ".timenode p>img" }, { removedProperties: { enable: "enabled", js: "internalized", css: "internalized" } }),
+    reveal: extensionObject({
+      enabled: extensionValue("boolean", true),
+      provider: deliveredField("extensions.features.reveal.provider", { normalizer: "identity", example: "scrollreveal" }),
+      distance: extensionValue("string", "8px"),
+      duration: extensionValue("number", 1000, { minimum: 0 }),
+      interval: extensionValue("number", 100, { minimum: 0 }),
+      scale: extensionValue("number", 1, { minimum: 0, maximum: 1 })
+    }, { enabled: true, provider: "scrollreveal", distance: "8px", duration: 1000, interval: 100, scale: 1 }, { removedProperties: { enable: "enabled", js: "internalized" } }),
+    ai_summary: extensionObject({
+      enabled: extensionValue("boolean", false),
+      provider: deliveredField("extensions.features.ai_summary.provider", { normalizer: "identity", example: "tianli_gpt" }),
+      scope: extensionValue("string", "post", { values: ["all", "post", "wiki", "topic"] }),
+      key: extensionValue("string", "5Q5mpqRK5DkwT1X9Gi5e"),
+      max_length: extensionValue("number", 1000, { minimum: 0, maximum: 5000 }),
+      typewriter: extensionValue("boolean", true),
+      show_immediately: extensionValue("boolean", true),
+      recommendation: extensionValue("string", "all", { values: ["all", "web"] }),
+      hide_shuttle: extensionValue("boolean", true),
+      summary_toggle: extensionValue("boolean", false),
+      interface: extensionObject({
+        name: extensionValue("string", "AI摘要"),
+        introduce: extensionValue("string", "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。"),
+        version: extensionValue("string", "TianliGPT"),
+        buttons: extensionValue("array", ["介绍自己", "推荐文章", "生成摘要", "矩阵穿梭"], { items: { type: ["string"] } })
+      }, {
+        name: "AI摘要",
+        introduce: "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。",
+        version: "TianliGPT",
+        buttons: ["介绍自己", "推荐文章", "生成摘要", "矩阵穿梭"]
+      }, { removedProperties: { button: "buttons" } })
+    }, {
+      enabled: false,
+      provider: "tianli_gpt",
+      scope: "post",
+      key: "5Q5mpqRK5DkwT1X9Gi5e",
+      max_length: 1000,
+      typewriter: true,
+      show_immediately: true,
+      recommendation: "all",
+      hide_shuttle: true,
+      summary_toggle: false,
+      interface: {
+        name: "AI摘要",
+        introduce: "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。",
+        version: "TianliGPT",
+        buttons: ["介绍自己", "推荐文章", "生成摘要", "矩阵穿梭"]
+      }
+    }, { removedProperties: { enable: "enabled", js: "internalized", field: "scope", total_length: "max_length", summary_directly: "show_immediately", rec_method: "recommendation" } }),
+    math: extensionObject({
+      provider: deliveredField("extensions.features.math.provider", { normalizer: "identity", example: null }),
+      providers: extensionObject({
+        katex: parameterBag({}, { removedProperties: { js: "internalized", css: "internalized", inject: "internalized" } }),
+        mathjax: parameterBag({ v3: false }, { removedProperties: { js: "internalized", css: "internalized", inject: "internalized" } })
+      }, { katex: {}, mathjax: { v3: false } })
+    }, { provider: null, providers: { katex: {}, mathjax: { v3: false } } }, { removedProperties: { katex: "provider", mathjax: "provider" } }),
+    diagrams: extensionObject({
+      enabled: extensionValue("boolean", false),
+      provider: deliveredField("extensions.features.diagrams.provider", { normalizer: "identity", example: "mermaid" }),
+      style_optimization: extensionValue("boolean", false),
+      theme: extensionValue("string", "neutral", { values: ["default", "dark", "forest", "neutral"] })
+    }, { enabled: false, provider: "mermaid", style_optimization: false, theme: "neutral" }, { removedProperties: { enable: "enabled", js: "internalized" } }),
+    code_copy: extensionObject({
+      enabled: extensionValue("boolean", true),
+      idle_text: extensionValue("string", "Copy"),
+      success_text: extensionValue("string", "Copied"),
+      toast: extensionValue("string", "复制成功")
+    }, { enabled: true, idle_text: "Copy", success_text: "Copied", toast: "复制成功" }, { removedProperties: { enable: "enabled", default_text: "idle_text" } }),
+    adaptive_text: extensionObject({ enabled: extensionValue("boolean", true) }, { enabled: true }, { removedProperties: { enable: "enabled" } }),
+    card_hover: extensionObject({
+      enabled: extensionValue("boolean", false),
+      spotlight_color: extensionValue("string", "rgba(255, 255, 255, 0.25)"),
+      max_tilt: extensionValue("number", 3, { minimum: 0, maximum: 8 })
+    }, { enabled: false, spotlight_color: "rgba(255, 255, 255, 0.25)", max_tilt: 3 }, { removedProperties: { enable: "enabled" } }),
+    cjk_typography: extensionObject({ enabled: extensionValue("boolean", false) }, { enabled: false }, { removedProperties: { enable: "enabled", css: "internalized", js: "internalized" } })
+  };
+}
+
+function extensionsSchema() {
+  const internalAssetKeys = {
+    js: "internalized",
+    css: "internalized",
+    meta_css: "internalized",
+    src: "internalized",
+    inject: "internalized"
+  };
+  const providerBag = defaultValue => parameterBag(defaultValue, { removedProperties: internalAssetKeys });
+  const commentProvider = deliveredField("extensions.comments.providers.<provider>", {
+    normalizer: "parameter_bag",
+    example: {},
+    sealed: false,
+    removedProperties: internalAssetKeys
+  });
+  return object({
+    consumers: EXTENSION_CONSUMERS,
+    example: { search: { provider: "local" }, comments: { provider: "giscus" } },
+    migration: "configuration/extensions",
+    runtimeKey: "extensions",
+    properties: {
+      search: extensionObject({
+        provider: deliveredField("extensions.search.provider", { normalizer: "identity", example: "local" }),
+        providers: extensionObject({
+          local: extensionObject({
+            scope: deliveredField("extensions.search.providers.local.scope", { normalizer: "identity", example: "all" }),
+            index_path: deliveredField("extensions.search.providers.local.index_path", { normalizer: "root_relative_path", example: "/search.json" }),
+            include_content: deliveredField("extensions.search.providers.local.include_content", { normalizer: "identity", example: true }),
+            lazy: deliveredField("extensions.search.providers.local.lazy", { normalizer: "identity", example: true }),
+            cache_ttl: deliveredField("extensions.search.providers.local.cache_ttl", { normalizer: "identity", example: 86400, minimum: 0 }),
+            exclude: deliveredField("extensions.search.providers.local.exclude", { normalizer: "array", example: [] })
+          }, { scope: "all", index_path: "/search.json", include_content: true, lazy: true, cache_ttl: 86400, exclude: [] }, {
+            removedProperties: { field: "scope", path: "index_path", content: "include_content", lazy_load: "lazy", skip_search: "exclude" }
+          }),
+          algolia: deliveredField("extensions.search.providers.algolia", {
+            normalizer: "parameter_bag",
+            example: { appId: "", apiKey: "", indexName: "" },
+            sealed: false,
+            removedProperties: internalAssetKeys,
+            default: literal({ appId: null, apiKey: null, indexName: null })
+          })
+        }, { local: { scope: "all", index_path: "/search.json", include_content: true, lazy: true, cache_ttl: 86400, exclude: [] }, algolia: { appId: null, apiKey: null, indexName: null } })
+      }, {}, { removedProperties: { service: "provider", local_search: "providers.local", algolia_search: "providers.algolia" } }),
+      comments: extensionObject({
+        provider: deliveredField("extensions.comments.provider", { normalizer: "identity", example: null }),
+        title: deliveredField("extensions.comments.title", { normalizer: "identity", example: "快来参与讨论吧~" }),
+        providers: extensionObject({
+          beaudar: providerBag({ repo: "xxx/xxx", "issue-term": "pathname", "issue-number": null, theme: "preferred-color-scheme", label: null, "input-position": "top", "comment-order": "desc", "keep-theme": null, loading: false, branch: "main" }),
+          utterances: providerBag({ repo: "xxx/xxx", "issue-term": "pathname", "issue-number": null, theme: "preferred-color-scheme", label: null }),
+          giscus: providerBag({ "data-repo": "xxx/xxx", "data-repo-id": null, "data-category": null, "data-category-id": null, "data-mapping": "pathname", "data-strict": 0, "data-reactions-enabled": 1, "data-emit-metadata": 0, "data-input-position": "top", "data-theme": "preferred_color_scheme", "data-lang": "zh-CN", "data-loading": null, crossorigin: "anonymous" }),
+          twikoo: providerBag({ envId: "https://xxx" }),
+          waline: providerBag({ serverURL: "https://waline.vercel.app", commentCount: true, pageview: false }),
+          artalk: providerBag({ server: null, site: "", darkMode: "auto", imageUploader: null })
+        }, {}, {
+          sealed: false,
+          additionalPropertyKey: "<provider>",
+          additionalProperties: commentProvider
+        })
+      }, {}, { removedProperties: { service: "provider", comment_title: "title", custom_css: "removed" } }),
+      tags: extensionObject(tagExtensionSchemas(), {}),
+      features: extensionObject(featureExtensionSchemas(), {}),
+      services: extensionObject({
+        site_info: extensionObject({ endpoint: deliveredField("extensions.services.site_info.endpoint", { normalizer: "identity", example: null }) }, { endpoint: null }, { removedProperties: { api: "endpoint" } }),
+        rating: extensionObject({ endpoint: deliveredField("extensions.services.rating.endpoint", { normalizer: "identity", example: "https://star-vote.xaox.cc/api/rating" }) }, { endpoint: "https://star-vote.xaox.cc/api/rating" }, { removedProperties: { api: "endpoint" } }),
+        vote: extensionObject({ endpoint: deliveredField("extensions.services.vote.endpoint", { normalizer: "identity", example: "https://star-vote.xaox.cc/api/vote" }) }, { endpoint: "https://star-vote.xaox.cc/api/vote" }, { removedProperties: { api: "endpoint" } }),
+        contributors: extensionObject({
+          edit_page: deliveredField("extensions.services.contributors.edit_page", {
+            normalizer: "object",
+            example: { "wiki/stellar/": "https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/" },
+            sealed: false,
+            additionalPropertyKey: "<prefix>",
+            additionalProperties: deliveredField("extensions.services.contributors.edit_page.<prefix>", { normalizer: "identity", example: "https://github.com/example/repo/blob/main/" })
+          })
+        }, { edit_page: { "_posts/": null, "wiki/stellar/": "https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/" } }, { removedProperties: { edit_this_page: "edit_page", js: "internalized" } }),
+        github: extensionObject({
+          api_url: deliveredField("extensions.services.github.api_url", { normalizer: "identity", validator: "absolute_http_url", example: "https://api.github.com" }),
+          raw_url: deliveredField("extensions.services.github.raw_url", { normalizer: "identity", validator: "absolute_http_url", example: "https://raw.githubusercontent.com" }),
+          gist_url: deliveredField("extensions.services.github.gist_url", { normalizer: "identity", validator: "absolute_http_url", example: "https://gist.github.com" }),
+          card_url: deliveredField("extensions.services.github.card_url", { normalizer: "identity", validator: "absolute_http_url", example: "https://github-readme-stats.vercel.app" })
+        }, { api_url: "https://api.github.com", raw_url: "https://raw.githubusercontent.com", gist_url: "https://gist.github.com", card_url: "https://github-readme-stats.vercel.app" })
+      }, {}),
+      cache: extensionObject({
+        enabled: deliveredField("extensions.cache.enabled", { normalizer: "identity", example: true }),
+        default_ttl: deliveredField("extensions.cache.default_ttl", { normalizer: "identity", example: 3600, minimum: 0 }),
+        ttl: deliveredField("extensions.cache.ttl", {
+          normalizer: "object",
+          example: { giscus: 600 },
+          sealed: false,
+          additionalPropertyKey: "<service>",
+          additionalProperties: deliveredField("extensions.cache.ttl.<service>", { normalizer: "identity", example: 600, minimum: 0 })
+        }),
+        max_entries: deliveredField("extensions.cache.max_entries", { normalizer: "identity", example: 200, minimum: 0 })
+      }, { enabled: true, default_ttl: 3600, ttl: { giscus: 600, waline: 600, artalk: 600, memos: 600, "memos-user": 86400, sites: 86400, friends: 86400, friends_and_posts: 86400, siteinfo: 86400 }, max_entries: 200 }, { removedProperties: { enable: "enabled" } })
+    }
+  });
+}
 
 function aiLabelLevelSchema() {
   return object({
@@ -302,7 +621,15 @@ const CONFIG_SCHEMA = deepFreeze({
     article: "content.article",
     notebook: "content.notebook",
     style: "appearance",
-    default: "resources.fallbacks"
+    default: "resources.fallbacks",
+    search: "extensions.search",
+    comments: "extensions.comments",
+    tag_plugins: "extensions.tags",
+    dependencies: "extensions.features",
+    data_services: "extensions.services",
+    data_cache: "extensions.cache",
+    plugins: "extensions.features",
+    api_host: "extensions.services.github"
   },
   properties: {
     site: object({
@@ -892,6 +1219,7 @@ const CONFIG_SCHEMA = deepFreeze({
         })
       }
     }),
+    extensions: extensionsSchema(),
     inject: object({
       consumers: INJECT_CONSUMERS,
       example: { head: "<meta name=\"example\" content=\"stellar\">", script: "<script>console.log('stellar')</script>" },

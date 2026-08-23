@@ -3,8 +3,8 @@
     const swiper_api = document.getElementById('swiper-api');
     if (swiper_api != undefined) {
       utils.css(`<%- url_for('/css/plugins/swiper.css') %>?v=<%- stellar_info('version') %>`);
-      utils.css(`<%- conf.css %>`);
-      utils.js(`<%- conf.js %>`, { defer: true }).then(function () {
+      utils.css(`<%- extension_assets().features.swiper.css %>`);
+      utils.js(`<%- extension_assets().features.swiper.js %>`, { defer: true }).then(function () {
         const effect = swiper_api.getAttribute('effect') || '';
         var swiper = new Swiper('.swiper#swiper-api', {
           slidesPerView: 'auto',

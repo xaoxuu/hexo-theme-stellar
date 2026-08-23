@@ -77,7 +77,7 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
         indent: false,
         footer: { license: "Global license", share: true }
       } },
-      comments: { service: "giscus" }
+      extensions: { comments: { provider: "giscus" } }
     },
     collectionConfig: {
       name: "Stellar",
@@ -224,7 +224,7 @@ test("Wiki 树构建事件只为严格 v2 Wiki 页面挂载 PageViewModel", t =>
       wiki: { navigation: { active_menu: "wiki" } }
     } },
     content: { article: { indent: true } },
-    comments: { service: "giscus" }
+    extensions: { comments: { provider: "giscus" } }
   };
   const pages = [wikiPage, ordinaryPage];
   pages.each = callback => [wikiPage, ordinaryPage].forEach(callback);
@@ -380,7 +380,7 @@ test("合法 Post profile 生成固定结构的冻结 PageViewModel", () => {
         indent: false,
         footer: { license: "CC BY-NC-SA 4.0", share: false }
       } },
-      comments: { service: "giscus" }
+      extensions: { comments: { provider: "giscus" } }
     },
     frontMatter: {
       title: "Hello",
@@ -519,19 +519,19 @@ test("Post render 投影详情关系、Footer、评论和列表条目", () => {
       } },
       authors: { xaoxuu: { name: "xaoxuu", url: "https://xaoxuu.com" } },
       default_author: { id: "xaoxuu", name: "xaoxuu", url: "https://xaoxuu.com" },
-      comments: {
-        service: "giscus",
-        comment_title: "参与讨论",
-        giscus: { "data-repo": "owner/repo", "data-theme": "preferred_color_scheme" }
+      extensions: {
+        comments: {
+          provider: "giscus",
+          title: "参与讨论",
+          providers: { giscus: { "data-repo": "owner/repo", "data-theme": "preferred_color_scheme" } }
+        },
+        features: { cjk_typography: { enabled: true } },
+        services: {
+          contributors: { edit_page: { "_posts/": "https://github.com/owner/repo/blob/main/" } },
+          github: { api_url: "https://api.github.com" }
+        }
       },
       appearance: { color_scheme: "dark" },
-      plugins: { heti: { enable: true } },
-      api_host: { ghapi: "api.github.com" },
-      data_services: {
-        contributors: {
-          edit_this_page: { "_posts/": "https://github.com/owner/repo/blob/main/" }
-        }
-      }
     },
     frontMatter: {
       title: "Article",
@@ -594,11 +594,13 @@ test("Post 列表与评论投影保留覆盖、摘要优先级、五标签和隐
         listing: { card_layout: "classic", excerpt_length: 6, show_tags: true },
         footer: { share: ["email", "link"] }
       } },
-      comments: {
-        service: "giscus",
-        giscus: { "data-repo": "owner/repo" },
-        waline: { serverURL: "https://global.example.com", lang: "zh-CN" }
-      }
+      extensions: { comments: {
+        provider: "giscus",
+        providers: {
+          giscus: { "data-repo": "owner/repo" },
+          waline: { serverURL: "https://global.example.com", lang: "zh-CN" }
+        }
+      } }
     },
     frontMatter: {
       title: "Overrides",
@@ -633,6 +635,8 @@ test("Post 列表与评论投影保留覆盖、摘要优先级、五标签和隐
   assert.equal(viewModel.render.article.comments.service, "waline");
   assert.deepEqual(viewModel.render.article.comments.options, {
     serverURL: "https://page.example.com",
+    commentCount: true,
+    pageview: false,
     lang: "zh-CN"
   });
   assertDeepFrozen(viewModel);
@@ -660,11 +664,7 @@ test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆�
         indent: true,
         footer: { license: "Global license", share: true }
       } },
-      comments: {
-        enabled: true,
-        title: "Global title",
-        service: "giscus"
-      }
+      extensions: { comments: { title: "Global title", provider: "giscus" } }
     },
     frontMatter: {
       title: "Cascade",
@@ -891,7 +891,7 @@ test("Post profile 严格拒绝已迁移内容默认值的未知键与错误类�
           footer: { share: {} }
         }
       },
-      comments: { service: "giscus" }
+      extensions: { comments: { provider: "giscus" } }
     },
     frontMatter: { title: "Strict", layout: "post" },
     page: { title: "Strict", layout: "post" }

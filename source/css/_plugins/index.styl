@@ -2,14 +2,14 @@
 @import 'aplayer'
 
 // 根据主题配置加载
-if hexo-config('plugins.scrollreveal.enable')
+if hexo-config('extensions.features.reveal.enabled')
   @import 'scrollreveal'
-if hexo-config('plugins.copycode.enable')
+if hexo-config('extensions.features.code_copy.enabled')
   @import 'copycode'
-if hexo-config('plugins.tianli_gpt.enable')
+if hexo-config('extensions.features.ai_summary.enabled')
   @import 'tianli_gpt'
-if hexo-config('plugins.katex.enable')
+if hexo-config('extensions.features.math.provider') == 'katex'
   @import 'katex'
-if hexo-config('plugins.card_hover.enable')
+if hexo-config('extensions.features.card_hover.enabled')
   // 最后加载，组合并覆盖 link/grid 既有 hover transform
   @import 'card-hover'

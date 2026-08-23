@@ -1,6 +1,6 @@
 <script>
-  utils.css(`<%- conf.css %>`);
-  utils.js(`<%- conf.js %>`, { defer: true }).then(function () {
+  utils.css(`<%- extension_assets().features.cjkTypography.css %>`);
+  utils.js(`<%- extension_assets().features.cjkTypography.js %>`, { defer: true }).then(function () {
     const heti = new Heti('.heti');
     
     // Copied from heti.autoSpacing() without DOMContentLoaded.

@@ -3,7 +3,14 @@ var postComments = typeof viewModel !== 'undefined' && viewModel?.collection?.pr
   ? viewModel.render.article.comments
   : null
 var service = postComments ? postComments.service : page.cmt?.service
+var commentConfig = stellar_config('extensions.comments')
+var scriptComments = postComments || {
+  id: '',
+  service: service || '',
+  options: service ? Object.assign({}, commentConfig.providers[service], page.cmt?.[service]) : {},
+  pageTitle: page.title || ''
+}
 %>
 <% if (service && service.length > 0) { %>
-  <%- partial(service + '/script', postComments ? {comments: postComments} : {}) %>
+  <%- partial(service + '/script', {comments: scriptComments}) %>
 <% } %>

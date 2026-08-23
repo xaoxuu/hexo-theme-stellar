@@ -8,7 +8,7 @@
     </div>
   <% } %>
   <h2 class="post-title"><%= note.title %></h2>
-  <div class="excerpt<% if (theme.plugins.heti?.enable) { %> heti<% } %>">
+  <div class="excerpt<% if (stellar_config('extensions.features.cjkTypography.enabled')) { %> heti<% } %>">
     <p>
       <% if (note.excerpt) { %>
         <%= strip_html(note.excerpt) %>

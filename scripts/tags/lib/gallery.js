@@ -37,10 +37,10 @@ function img(src, alt) {
 module.exports = ctx => function(args, content) {
   args = ctx.args.map(args, ['layout', 'size', 'ratio'])
   if (args.size == null) {
-    args.size = ctx.theme.config.tag_plugins.gallery.size
+    args.size = ctx.stellar.config.extensions.tags.gallery.size
   }
   if (args.ratio == null) {
-    args.ratio = ctx.theme.config.tag_plugins.gallery.ratio
+    args.ratio = ctx.stellar.config.extensions.tags.gallery.ratio
   }
   var el = ''
   var layoutType = 'grid'

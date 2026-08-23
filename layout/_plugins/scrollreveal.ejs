@@ -72,7 +72,7 @@
       easing: "ease-out"
     };
 
-    utils.js(`<%- conf.js %>`, { defer: true })
+    utils.js(`<%- extension_assets().features.reveal %>`, { defer: true })
       .then(() => {
         if (fallbackApplied) return;
         if (typeof ScrollReveal !== 'function') {

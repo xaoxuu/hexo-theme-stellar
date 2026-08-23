@@ -53,7 +53,7 @@ function layoutWikiCover() {
   el += '<article class="cover-wrap wiki-cover-content">';
   el += '<section class="wiki-cover-intro">';
   if (repo) {
-    el += '<a class="wiki-cover-release ds-ghinfo is-loading" data-project-name="' + escape_html(projectName) + '" data-repo="' + escape_html(repo) + '" data-api="https://' + theme.api_host.ghapi + '/repos/' + escape_html(repo) + '/tags" index="0" target="_blank" rel="external nofollow noopener noreferrer">';
+    el += '<a class="wiki-cover-release ds-ghinfo is-loading" data-project-name="' + escape_html(projectName) + '" data-repo="' + escape_html(repo) + '" data-api="' + stellar_config('extensions.services.github.apiUrl') + '/repos/' + escape_html(repo) + '/tags" index="0" target="_blank" rel="external nofollow noopener noreferrer">';
     el += '<span class="wiki-cover-release-value"><span type="text" id="latest-tag-name"></span></span></a>';
   }
   if (title) {

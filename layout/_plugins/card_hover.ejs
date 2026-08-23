@@ -1,9 +1,9 @@
 <%
-var spotlightColor = typeof conf.spotlight_color === 'string' && conf.spotlight_color.trim().length > 0
-  ? conf.spotlight_color.trim()
+var spotlightColor = typeof conf.spotlightColor === 'string' && conf.spotlightColor.trim().length > 0
+  ? conf.spotlightColor.trim()
   : 'rgba(255, 255, 255, 0.25)';
-var maxTilt = Number(conf.max_tilt);
-if (conf.max_tilt == null || conf.max_tilt === '' || !Number.isFinite(maxTilt)) {
+var maxTilt = Number(conf.maxTilt);
+if (conf.maxTilt == null || conf.maxTilt === '' || !Number.isFinite(maxTilt)) {
   maxTilt = 3;
 }
 maxTilt = Math.max(0, Math.min(8, maxTilt));

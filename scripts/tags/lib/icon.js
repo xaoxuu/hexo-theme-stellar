@@ -11,7 +11,7 @@
 module.exports = ctx => function(args) {
   args = ctx.args.map(args, ['color', 'style'], ['key', 'text'])
   if (args.color == null) {
-    args.color = ctx.theme.config.tag_plugins.icon.default_color
+    args.color = ctx.stellar.config.extensions.tags.icon.defaultColor
   }
   var el = ''
   if (args.text) {

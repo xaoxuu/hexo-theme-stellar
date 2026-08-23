@@ -133,7 +133,7 @@ widget.widget-wrapper.toc#data-toc[collapse="..."]
       └── a.buttom            （onclick="util.scrollComment()"）[条件渲染]
 ```
 
-`a.buttom` 元素仅在 `theme.comments.service` 非空且 `page.comments !== false` 时渲染。
+`a.buttom` 元素仅在最终评论模型已启用且页面没有显式关闭评论时渲染。
 
 adapter 类只接入 collection 的 surface/state 令牌；TOC 非激活条目悬停时消费 hover 背景与阴影。激活条目静止时保持透明且无阴影，仅显示激活文字色和左侧主题色指示条；指示条宽 `4px`，距条目上下各 `4px`。鼠标悬停到激活条目时仍显示普通 hover 效果。TOC 的层级缩进、折叠属性、链接类名和滚动同步协议保持不变。远程 Markdown 在运行时生成的 `ol.toc` 同样由 `main.js` 追加 adapter 类。
 
@@ -329,7 +329,7 @@ sequenceDiagram
 
 该按钮仅在两条件同时满足时渲染：
 
-1. `theme.comments.service` 已配置（非空字符串）
+1. `extensions.comments.provider` 或页面 `comments.provider` 已选择已注册实现
 2. `page.comments !== false`（页面未禁用评论）
 
 模板中的条件检查防止在未启用评论的页面出现按钮。

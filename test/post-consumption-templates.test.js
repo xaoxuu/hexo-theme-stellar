@@ -55,5 +55,7 @@ test("评论 Post 分支从 ViewModel 向服务 partial 传递参数袋", () => 
   assert.match(layout, /explicitComments/);
   assert.match(layout, /\{comments: commentModel\}/);
   assert.match(script, /viewModel\.render\.article\.comments/);
-  assert.match(script, /\{comments: postComments\}/);
+  assert.match(script, /var scriptComments = postComments \|\|/);
+  assert.match(script, /commentConfig\.providers\[service\]/);
+  assert.match(script, /\{comments: scriptComments\}/);
 });

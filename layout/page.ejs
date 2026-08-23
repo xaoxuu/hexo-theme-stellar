@@ -3,7 +3,7 @@ const { layout } = page
 const postViewModel = page.viewModel?.collection?.profile === 'post' ? page.viewModel : null
 var pageConfig = content_config(page)
 // 是否使用 Heti 布局插件
-const isUsingHeti = theme.plugins.heti?.enable
+const isUsingHeti = stellar_config('extensions.features.cjkTypography.enabled')
 
 const notebook = theme.notebooks.tree[collection_id(page, "notebook")]
 if (!postViewModel && notebook) {

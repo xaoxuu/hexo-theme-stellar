@@ -84,7 +84,7 @@ module.exports = ctx => function(args, content = '') {
     console.error('invalid okr tag:', contentArray);
     return ''
   }
-  const statusList = ctx.theme.config.tag_plugins.okr.status
+  const statusList = ctx.stellar.config.extensions.tags.okr.status
   const oMeta = args
   const oBody = splitContentAndNote(contentArray.shift())
   const krList = generateKRList(ctx, contentArray)

@@ -17,7 +17,7 @@ module.exports = ctx => function (args) {
   }
 
   function content() {
-    const cfg = ctx.theme.config.tag_plugins.quot[args.icon || 'default']
+    const cfg = ctx.stellar.config.extensions.tags.quot[args.icon || 'default']
     var el = ''
     var prefix = null
     var suffix = null

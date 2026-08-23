@@ -2,8 +2,8 @@
   ctx.fancybox = {
     mode: `<%- conf.mode || 'auto' %>`,
     selector: `<%- conf.selector %>`,
-    css: `<%- conf.css %>`,
-    js: `<%- conf.js %>`
+    css: `<%- extension_assets().features.lightbox.css %>`,
+    js: `<%- extension_assets().features.lightbox.js %>`
   };
   // auto=按需：页面存在可弹窗图片才加载；global=全局：所有页面加载
   const isGlobal = ctx.fancybox.mode === 'global';

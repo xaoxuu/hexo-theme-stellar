@@ -81,7 +81,7 @@ graph TB
 
 Pre-alpha M1.5 已建立内部配置入口目录，并进一步把 v2 最终公开主题配置冻结为 `site`、`seo`、`layout`、`content`、`appearance`、`resources`、`extensions`、`inject` 八个职责根域。完整目标树、命名、级联和旧→新迁移矩阵见[最终配置契约](../../designs/2026-08-22-v2-config-target-contract/target-contract.md)。
 
-head/SEO、site Shell、Layout Profile、内容默认值、Collection / Front Matter、Appearance 与资源兜底纵向切片已把 `seo`、`site`、`layout`、`content`、`appearance`、`resources`、站点 `inject` 以及内容作用域的最终字段接入声明式 Schema。运行时与配置 Reference 只投影这些已交付节点；`extensions` 与根级封闭仍保持 `planned`。
+head/SEO、site Shell、Layout Profile、内容默认值、Collection / Front Matter、Appearance、资源兜底、Extension 与服务纵向切片已把八根域的业务配置接入声明式 Schema。运行时与配置 Reference 只投影已交付节点；根级封闭和 `system` 内部化仍保持 `planned`。
 
 已交付的主题字段从 Schema 与 `_config.stellar.yml` 解析到冻结的 `hexo.stellar.config`；Collection YAML 与 Front Matter 分别解析为冻结的 camelCase 对象，由生成器、数据树、ViewModel 与按需插件消费。Hexo 自有 Front Matter 保持原名，不进入 Stellar Reference。
 
@@ -99,14 +99,12 @@ head/SEO、site Shell、Layout Profile、内容默认值、Collection / Front Ma
 | `content.notebook` | 笔记本列表、标签图标与 Footer 默认值（v2 已交付） |
 | `appearance` | 排版、形状、颜色、渐变、动效、代码块与页面背景（v2 已交付） |
 | `resources` | 预连接提示与图片资源兜底（v2 已交付） |
-| `search` | 搜索服务配置 |
-| `comments` | 评论系统集成 |
-| `tag_plugins` | 标签插件外观与行为 |
-| `dependencies` | 核心 JavaScript 依赖（CDN） |
-| `data_services` | 按需加载的数据服务 |
-| `plugins` | 功能插件启用与 CDN 地址 |
-| `api_host` | API 端点主机 |
-| `data_cache` | 数据缓存 |
+| `extensions.search` | Local / Algolia 搜索 provider |
+| `extensions.comments` | 评论 provider 与第三方参数袋 |
+| `extensions.tags` | 标签 Extension 行为 |
+| `extensions.features` | 可选 Feature 的注册式配置 |
+| `extensions.services` | 业务端点与 GitHub 完整 URL |
+| `extensions.cache` | 浏览器数据缓存策略 |
 | `system` | 内部 Hexo 覆盖 |
 
 **参考源码**：[_config.yml](../../../_config.yml)
@@ -115,14 +113,15 @@ head/SEO、site Shell、Layout Profile、内容默认值、Collection / Front Ma
 
 ### 卡片 Hover 插件
 
-`plugins.card_hover` 提供可复用的鼠标跟随光斑与 3D 倾斜，默认关闭：
+`extensions.features.card_hover` 提供可复用的鼠标跟随光斑与 3D 倾斜，默认关闭：
 
 ```yaml
-plugins:
-  card_hover:
-    enable: false
-    spotlight_color: 'rgba(255, 255, 255, 0.25)'
-    max_tilt: 3
+extensions:
+  features:
+    card_hover:
+      enabled: false
+      spotlight_color: 'rgba(255, 255, 255, 0.25)'
+      max_tilt: 3
 ```
 
 `spotlight_color` 控制光斑颜色；单个组件可用 CSS 变量 `--card-hover-spotlight-color` 覆盖。`max_tilt` 单位为度，无效值回退为 `3`，运行时限制在 `0`～`8` 的安全范围。插件采用 `.card-hover` 基础类与 `.card-hover--spotlight`、`.card-hover--tilt` 修饰类组合，关闭时这些类不会改变静态样式。完整的运行时接口与接入范围见[插件系统](../07-外部集成/plugin-system.md#card-hover卡片光效与倾斜)。
@@ -494,79 +493,70 @@ graph TB
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
-### 插件配置
+### Extension 配置
 
-`plugins` 小节采用条件加载模式：
+可选能力位于 `extensions.features`，统一使用 `enabled`：
 
 ```yaml
-plugins:
-  fancybox:
-    enable: true
-    js: https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js
-    css: https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css
-    selector: .timenode p>img
-  adaptive_text:
-    enable: true
+extensions:
+  features:
+    lightbox:
+      enabled: true
+      provider: fancybox
+      selector: .timenode p>img
+    adaptive_text:
+      enabled: true
 ```
 
-每个插件配置通常包含：
+官方 JavaScript、CSS 与 inject 资源由主题内部注册表所有，不是公开配置。Feature 只保留启用状态、provider 与业务行为参数。
 
-- `enable`：布尔开关，控制是否加载
-- JavaScript / CSS 的 CDN 地址
-- 插件专属选项
-
-`adaptive_text` 为内置能力（默认 `enable: true`）：背景图/背景色上方的文字颜色随背景亮度自适应，页面存在 `[data-text-adaptive]` 元素时才懒加载 `source/js/color.js`（`window.stellar.color`）与 `source/js/plugins/adaptive-text.js`，计算并写入 `--text-banner` / `--text-banner-theme`。属性值：`theme`（默认，背景图平均色 lighten/darken）、`contrast`（黑白对比）、`split`（大字低饱和 theme（接近黑白）+ 小字完整 theme，用于封面/banner/轮播容器）；明暗判定默认阈值 0.6、彩色背景（饱和度 > 0.2）上浮至 0.65，偏向采纳浅色文字；透明背景图按实际渲染背景做 alpha 合成后再平均；低饱和彩色平均色（如大面积浅灰 + 彩色 logo）做饱和度增强，主题小字保留色相带出主色倾向。接入场景：文章 photo 封面、专栏最新文章卡片、置顶轮播（post/wiki 幻灯片）、页顶 banner、`{% banner %}` 标签。
+`adaptive_text` 为内置能力（默认 `enabled: true`）：背景图/背景色上方的文字颜色随背景亮度自适应，页面存在 `[data-text-adaptive]` 元素时才加载计算脚本并写入 `--text-banner` / `--text-banner-theme`。
 
 插件加载机制见[插件系统](../07-外部集成/plugin-system.md)。
 
-**参考源码**：[_config.yml](../../../_config.yml)（`plugins` 小节）
+**参考源码**：[_config.yml](../../../_config.yml)（`extensions.features` 小节）
 
 ### 数据服务配置
 
-`data_services` 小节定义数据组件的按需加载：
+`extensions.services` 只定义公开业务端点；官方客户端模块由主题内部注册表按需加载：
 
 ```yaml
-data_services:
-  mdrender:
-    js: /js/services/mdrender.js
-  siteinfo:
-    js: /js/services/siteinfo.js
-    api: https://api.xaox.cc/site_info/v1?url={href}
-  rating:
-    js: /js/services/rating.js
-    api: https://star-vote.xaox.cc/api/rating
+extensions:
+  services:
+    site_info:
+      endpoint: https://api.xaox.cc/site_info/v1?url={href}
+    rating:
+      endpoint: https://star-vote.xaox.cc/api/rating
 ```
 
-每个服务指定：
+服务仅在对应标签插件或组件生成匹配 DOM 时加载。`js` 不再是公开字段；业务 URL 统一称 `endpoint`。
 
-- `js`：客户端 JavaScript 实现路径
-- `api`：（可选）后端 API 端点，支持 `{href}` 等占位符
-
-服务仅在对应标签插件被使用时加载（如 `{% ghinfo %}` 触发 `ghinfo.js`）。
-
-**参考源码**：[_config.yml](../../../_config.yml)（`data_services` 小节）
+**参考源码**：[_config.yml](../../../_config.yml)（`extensions.services` 小节）
 
 ### 评论系统配置
 
-`comments` 小节支持多种第三方服务，采用单服务激活模型：
+`extensions.comments` 支持多种第三方 provider，采用单 provider 激活模型：
 
 ```yaml
-comments:
-  service: beaudar  # beaudar, utterances, giscus, twikoo, waline, artalk
-  comment_title: 快来参与讨论吧~
+extensions:
+  comments:
+    provider: beaudar
+    title: 快来参与讨论吧~
+    providers:
+      beaudar: {}
 ```
 
-每个服务有专属子配置小节。只有 `comments.service` 指定的服务会被加载。
+每个 provider 的上游字段位于 `providers.<provider>` 参数袋。页面与 Collection 覆盖统一使用 `comments.provider/options`。
 
 集成细节见[评论系统](../07-外部集成/comment-systems.md)。
 
-**参考源码**：[_config.yml](../../../_config.yml)（`comments` 小节）
+**参考源码**：[_config.yml](../../../_config.yml)（`extensions.comments` 小节）
 
 ## 配置访问方式
 
 ### EJS 模板中
 
-通过 `theme` 对象访问配置：
+已交付的 Stellar 配置通过 `stellar_config()` 读取冻结运行时；`theme` 只保留尚未迁移的内部元数据：
 
 ```ejs
 <% if (theme.stellar.version) { %>
@@ -640,15 +630,18 @@ flowchart TD
 
 ## 默认资源配置
 
-`default` 小节为缺失资源提供兜底：
+`resources.fallbacks` 为缺失资源提供兜底：
 
 | 资源类型 | 用途 | 示例 |
 |----------|------|------|
 | `avatar` | 用户头像 | 默认头像 |
 | `cover` | 文章封面 | 缺失封面的占位 |
 | `banner` | 文章横幅 | 默认头图 |
-| `loading` | 加载指示 | 由 `_data/icons.yml` 的 `default:loading`（内联 SVG，`currentColor`）经 `head.ejs` 生成 `--icon-loading`，`.lazy-icon` 以蒙版 + `background-color: var(--theme)` 显示主题色；无配置覆盖项 |
-| `image_onerror` | 图片加载失败兜底 | 图片加载失败时显示的图标（兼容回退，新值位于 `_data/icons.yml` 的 `image:onerror`） |
+| `link_card` | 链接卡片图标 | 站点信息不可用时显示 |
+| `project_icon` | 项目图标 | Wiki/项目缺少图标时显示 |
+| `image.content` | 正文图片错误兜底 | 普通内容图片加载失败时使用 |
+| `image.tag_plugin` | 标签图片错误兜底 | 图片型标签加载失败时使用 |
+| `error_page` | 错误页插图 | 404 页面资源兜底 |
 
 这些默认值避免出现破图，保证资源缺失时的一致性体验。
 

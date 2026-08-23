@@ -1,9 +1,9 @@
-'use strict';
+/* global hexo */
+"use strict";
 
-hexo.extend.helper.register('scrollreveal', function(args) {
-  if (hexo.theme.config.plugins.scrollreveal?.enable) {
-    return `${args ? args : ''}slide-up`
-  } else {
-    return ''
+hexo.extend.helper.register("scrollreveal", function(args) {
+  if (hexo.stellar.config.extensions.features.reveal.enabled) {
+    return `${args ? args : ""}slide-up`;
   }
-})
+  return "";
+});

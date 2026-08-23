@@ -103,8 +103,8 @@ test("当前字段族都有唯一迁移结果，参数袋边界明确", () => {
   }
 
   const parameterBags = CONFIG_DOMAIN_CATALOG.flatMap(item => item.parameterBags || []);
-  assert.ok(parameterBags.includes("comments.giscus"));
-  assert.ok(parameterBags.includes("search.algolia_search"));
+  assert.ok(parameterBags.includes("comments.giscus.<option>"));
+  assert.ok(parameterBags.includes("search.algolia_search.<option>"));
   assert.ok(parameterBags.includes("hero.background.effect.options"));
 
   const footer = CONFIG_DOMAIN_CATALOG.find(item => item.id === "footer");
@@ -157,10 +157,10 @@ test("五个迁移切片按序且每个配置域恰好出现一次", () => {
 
 test("运行时 Schema 交付 Shell、Layout、内容、外观、资源与 head/SEO 且不会提前封闭根配置", () => {
   assert.equal(CONFIG_SCHEMA.sealed, false);
-  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "layout", "content", "appearance", "seo", "resources", "inject"]);
+  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "layout", "content", "appearance", "seo", "resources", "extensions", "inject"]);
   assert.deepEqual(
     CONFIG_DOMAIN_CATALOG.filter(item => item.status === "delivered").map(item => item.id),
-    ["preconnect", "canonical", "open_graph", "structured_data", "brand", "menubar", "site_tree", "notebook", "article", "footer", "style", "default", "inject", "collection", "front_matter"]
+    ["preconnect", "canonical", "open_graph", "structured_data", "brand", "menubar", "site_tree", "notebook", "article", "search", "comments", "footer", "tag_plugins", "dependencies", "data_services", "data_cache", "plugins", "style", "default", "api_host", "inject", "collection", "front_matter"]
   );
   assert.equal(CONFIG_DOMAIN_CATALOG.find(item => item.id === "canonical").targetStatus, "delivered");
   assert.equal(CONFIG_DOMAIN_CATALOG.find(item => item.id === "canonical").targetPath, "seo.canonical");

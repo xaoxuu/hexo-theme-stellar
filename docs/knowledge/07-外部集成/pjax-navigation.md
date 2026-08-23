@@ -16,7 +16,7 @@ tags:
 
 生成此页面时参考的主题源码文件：
 
-- [_config.yml](../../../_config.yml)（`appearance.motion.page_transition`、`plugins.preload` 小节）
+- [_config.yml](../../../_config.yml)（`appearance.motion.page_transition`、`extensions.features.preload`）
 - [source/css/_components/page-transition.styl](../../../source/css/_components/page-transition.styl)
 - [layout/_plugins/preload.ejs](../../../layout/_plugins/preload.ejs)
 - [layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs)
@@ -27,7 +27,7 @@ tags:
 
 ## 概览
 
-Stellar 使用**普通整页导航**。早期版本曾内置自定义 PJAX 实现（约 640 行，涉及 DOM diff、小部件合并、评论脚本重执行、滚动恢复等复杂逻辑），因维护成本极高且边缘情况层出不穷，已于 **v1.35.0（2026-08-08）移除**。当前主题在整页导航之上使用原生跨文档 View Transition 平滑衔接同源页面，并通过 `plugins.preload`（flying_pages）在鼠标悬停时预加载站内链接；两者均不改变页面脚本的单次初始化模型。
+Stellar 使用**普通整页导航**。早期版本曾内置自定义 PJAX 实现（约 640 行，涉及 DOM diff、小部件合并、评论脚本重执行、滚动恢复等复杂逻辑），因维护成本极高且边缘情况层出不穷，已于 **v1.35.0（2026-08-08）移除**。当前主题在整页导航之上使用原生跨文档 View Transition 平滑衔接同源页面，并通过 `extensions.features.preload`（flying_pages）在鼠标悬停时预加载站内链接；两者均不改变页面脚本的单次初始化模型。
 
 ## PJAX 移除背景
 

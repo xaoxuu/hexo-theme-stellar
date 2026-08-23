@@ -1,6 +1,6 @@
 <%
-var commentOptions = typeof comments !== 'undefined' ? comments.options : theme.comments.artalk
-var commentPageTitle = typeof comments !== 'undefined' ? comments.pageTitle : page.title
+var commentOptions = comments.options
+var commentPageTitle = comments.pageTitle
 %>
 <script type="module">
   (function() {
@@ -15,8 +15,8 @@ var commentPageTitle = typeof comments !== 'undefined' ? comments.pageTitle : pa
       
       function load_artalk() {
         utils.css('<%- url_for('/css/comments/artalk.css') %>?v=<%- stellar_info('version') %>');
-        utils.css('<%- commentOptions.css %>');
-        utils.js('<%- commentOptions.js %>', {defer: true}).then(function () {
+        utils.css('<%- extension_assets().comments.artalk.css %>');
+        utils.js('<%- extension_assets().comments.artalk.js %>', {defer: true}).then(function () {
           // 监听 Artalk 事件
           // FIXME: Artalk开启了懒加载会导致评论输入预览框里的图也变成data-src，导致看不到图
           // Artalk.use((ctx) => {

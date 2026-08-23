@@ -50,11 +50,11 @@ tags:
 
 ```mermaid
 flowchart TD
-  A["_config.yml"] --> B["dependencies.lazyload"]
-  A --> D["plugins.preload"]
-  A --> E["preconnect"]
-  A --> F["api_host"]
-  A --> G["search.local_search"]
+  A["_config.yml"] --> B["extensions.features.lazy_loading"]
+  A --> D["extensions.features.preload"]
+  A --> E["resources.preconnect"]
+  A --> F["extensions.services.github"]
+  A --> G["extensions.search.providers.local"]
 
   B --> B1["scripts/filters/lib/img_lazyload.js"]
   B --> B2["layout/_partial/scripts/lazyload.ejs"]
@@ -212,9 +212,9 @@ flowchart LR
 
 ## 搜索数据缓存
 
-本地搜索系统在构建期把全部站点内容序列化为 `/search.json`。客户端缓存带 TTL（`search.local_search.cache_ttl`，默认 `86400` 秒 = 1 天），以 `search_cache_v2` 键写入 `localStorage`（结构 `{ ts, ttl, data }`）：TTL 未过期直接使用缓存、不发请求；过期后先用旧缓存出结果并后台刷新；`cache_ttl: 0` 表示不缓存。
+本地搜索系统在构建期把全部站点内容序列化为 `/search.json`。客户端缓存带 TTL（`extensions.search.providers.local.cache_ttl`，默认 `86400` 秒 = 1 天），以 `search_cache_v4` 键写入 `localStorage`（结构 `{ ts, ttl, data }`）：TTL 未过期直接使用缓存、不发请求；过期后先用旧缓存出结果并后台刷新；`cache_ttl: 0` 表示不缓存。
 
-`search.local_search.lazy_load`（默认 `true`）控制加载时机：开启时页面加载不请求搜索数据，首次聚焦搜索框才加载（缓存优先 + 后台刷新）；关闭时页面加载预取，但缓存新鲜时同样不重复请求。
+`extensions.search.providers.local.lazy`（默认 `true`）控制加载时机：开启时页面加载不请求搜索数据，首次聚焦搜索框才加载（缓存优先 + 后台刷新）；关闭时页面加载预取，但缓存新鲜时同样不重复请求。
 
 内容较多的站点建议关闭懒加载（`lazy_load: false`），避免首次搜索卡顿；`cache_ttl` 建议按内容更新频率自行调整（默认 1 天，`0` 表示不缓存）。
 
@@ -224,16 +224,18 @@ flowchart LR
 
 ---
 
-## CDN 与 API 主机替换
+## GitHub 服务 URL
 
-`_config.yml` 的 `api_host` 小节允许替换默认 GitHub API 与原始内容主机名，适合经代理镜像或本地缓存层路由。
+`extensions.services.github` 使用完整 URL 配置 GitHub API、Raw、Gist 与卡片服务，适合经代理镜像或本地缓存层路由。
 
 ```yaml
-api_host:
-  ghapi: api.github.com           # GitHub REST API
-  ghraw: raw.githubusercontent.com # 原始文件内容
-  gist:  gist.github.com
-  ghcard: github-readme-stats.vercel.app
+extensions:
+  services:
+    github:
+      api_url: https://api.github.com
+      raw_url: https://raw.githubusercontent.com
+      gist_url: https://gist.github.com
+      card_url: https://github-readme-stats.vercel.app
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)
@@ -300,13 +302,13 @@ resources:
 
 | 特性 | 配置键 | 默认 | 主要文件 |
 |------|--------|------|----------|
-| 图片懒加载 | `dependencies.lazyload` | 启用 | `img_lazyload.js`、`lazyload.ejs`、`lazyload.styl` |
-| 懒加载过渡 | `dependencies.lazyload.transition` | `fade` | `lazyload.styl` |
-| 链接预加载 | `plugins.preload.enable` | `true`（flying_pages） | CDN 脚本 |
+| 图片懒加载 | 内置 Feature | 启用 | `img_lazyload.js`、`lazyload.ejs`、`lazyload.styl` |
+| 懒加载过渡 | `extensions.features.lazy_loading.transition` | `fade` | `lazyload.styl` |
+| 链接预加载 | `extensions.features.preload.enabled` | `true`（flying_pages） | 内部资源注册表 |
 | 图片比例缓存 | Hexo 事件 | 自动 | `get_image_ratios.js`、`fix_image_tags.js` |
-| 搜索缓存 | `search.local_search.lazy_load` / `cache_ttl` | `localStorage`（TTL 默认 1 天） | `local-search.js`（客户端） |
-| API 主机覆盖 | `api_host` | GitHub 默认 | 数据服务脚本 |
-| DNS preconnect | `preconnect` | 空 | `head.ejs` |
+| 搜索缓存 | `extensions.search.providers.local.lazy` / `cache_ttl` | `localStorage`（TTL 默认 1 天） | `local-search.js`（客户端） |
+| GitHub URL | `extensions.services.github` | GitHub 默认 | 数据服务脚本 |
+| DNS preconnect | `resources.preconnect` | 空 | `head.ejs` |
 | 按需样式 | 插件/评论 CSS 独立文件 | 运行时注入 | `plugins/*.css`、`comments/*.css` |
 | 脚本外置 | 构建期生成 icons + 外部 JS | 每页内联减少约 20KB | `utils.js`、`stellar-icons.js` |
 | 图标异步加载 | 按命名空间生成 `js/icons/*.json`，defer 占位符替换 | 非首屏图标不再进入 HTML | `stellar-icons.js`、`icons.js` |

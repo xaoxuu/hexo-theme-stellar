@@ -5,7 +5,13 @@
     encoded: encoded
   });
   var permalink = page.permalink || canonical.host;
-  var checklink = theme.data_services.video.js
+  var extensions = stellar_config('extensions')
+  var assets = extension_assets()
+  var checklink = assets.services.video.js
+  var clientServices = JSON.parse(JSON.stringify(assets.services))
+  clientServices.siteinfo.api = extensions.services.siteInfo.endpoint
+  var localSearch = extensions.search.providers.local
+  var searchProvider = extensions.search.provider === 'local' ? 'local_search' : extensions.search.provider
 %>
 
 <script type="text/javascript">
@@ -150,30 +156,43 @@
     },
     root : `<%- config.root %>`,
     tag_plugins: {
-      chat: Object.assign(<%- JSON.stringify(theme.tag_plugins.chat) %>),
+      chat: {api: <%- JSON.stringify(extensions.tags.chat.endpoint) %>},
     },
     // 图标由构建期生成的 /js/stellar-icons.js 填充（defer，早于 DOMContentLoaded 就绪）
     icons: {},
-    services: <%- JSON.stringify(theme.data_services || {}) %>,
+    services: <%- JSON.stringify(clientServices) %>,
   };
 
   // required plugins (only load if needs)
-  if (`<%- theme.search.service %>`) {
+  if (`<%- searchProvider || '' %>`) {
     ctx.search = {};
-    ctx.search.service = `<%- theme.search.service %>`;
+    ctx.search.service = `<%- searchProvider || '' %>`;
     if (ctx.search.service == 'local_search') {
-      let service_obj = Object.assign({}, `<%- JSON.stringify(theme.search.local_search) %>`);
+      let service_obj = <%- JSON.stringify({
+        field: localSearch.scope,
+        path: localSearch.indexPath,
+        content: localSearch.includeContent,
+        lazy_load: localSearch.lazy,
+        cache_ttl: localSearch.cacheTtl,
+        skip_search: localSearch.exclude
+      }) %>;
       ctx.search[ctx.search.service] = service_obj;
+      ctx.search.path = service_obj.path;
     }
   }
   const def = {
     avatar: `<%- stellar_config('resources.fallbacks.avatar') %>`,
     cover: `<%- stellar_config('resources.fallbacks.cover') %>`,
-    data_cache: <%- JSON.stringify(theme.data_cache || {}) %>,
+    data_cache: <%- JSON.stringify({
+      enable: extensions.cache.enabled,
+      default_ttl: extensions.cache.defaultTtl,
+      ttl: extensions.cache.ttl,
+      max_entries: extensions.cache.maxEntries
+    }) %>,
   };
   const deps = {
-    marked: `<%- url_for(theme.dependencies.marked) %>`,
-    lazyload: `<%- url_for(theme.dependencies.lazyload.js) %>`
+    marked: `<%- url_for(assets.dependencies.marked) %>`,
+    lazyload: `<%- url_for(assets.dependencies.lazyLoading) %>`
   }
 
   // 主题切换提示文案（供 /js/theme.js 使用）

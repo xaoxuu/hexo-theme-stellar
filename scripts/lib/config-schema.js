@@ -297,6 +297,16 @@ function validateBrand(node, input, source, path, issues) {
   }
 }
 
+function validateAbsoluteHttpUrl(node, input, source, path, issues) {
+  try {
+    const url = new URL(input);
+    if ((url.protocol === "http:" || url.protocol === "https:") && url.host.length > 0) return;
+  } catch (error) {
+    // Report the same structured invalid-value diagnostic for every parse failure.
+  }
+  issues.push(issue("invalid_value", source, path, valueType(input), "absolute HTTP(S) URL", node.migration));
+}
+
 function validateCustom(node, input, source, path, issues) {
   if (!node.validator) return;
   if (node.validator === "non_empty_string") validateNonEmptyString(node, input, source, path, issues, false);
@@ -304,9 +314,10 @@ function validateCustom(node, input, source, path, issues) {
   else if (node.validator === "string_tree") validateStringTree(node, input, source, path, issues);
   else if (node.validator === "effect") validateEffect(node, input, source, path, issues);
   else if (node.validator === "brand") validateBrand(node, input, source, path, issues);
+  else if (node.validator === "absolute_http_url") validateAbsoluteHttpUrl(node, input, source, path, issues);
   else if (node.validator === "topic_route_start" && input != null && !/[\\/]topic[\\/]/.test(source)) {
     issues.push(issue("invalid_scope", source, path, valueType(input), "Topic Collection only", node.migration));
-  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "topic_route_start"].includes(node.validator)) {
+  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "topic_route_start"].includes(node.validator)) {
     throw new TypeError(`未知配置校验器：${node.validator}`);
   }
 }
@@ -318,7 +329,7 @@ function parseNode(node, input, source, path, issues, context) {
   }
 
   if (node.values && !node.values.includes(input)) {
-    issues.push(issue("invalid_value", source, path, valueType(input), node.values.join(" | "), node.migration));
+    issues.push(issue("invalid_value", source, path, valueType(input), node.values.map(value => value === null ? "null" : value).join(" | "), node.migration));
     return undefined;
   }
 
@@ -377,8 +388,6 @@ function parseNode(node, input, source, path, issues, context) {
   if (context.applyDefaults && node.default?.kind === "literal" && isPlainObject(node.default.value)) {
     input = mergeObjects(node.default.value, input);
   }
-  if (node.normalizer === "parameter_bag" || node.normalizer === "effect") return normalizeValue(node, input);
-
   const properties = node.properties || {};
   for (const key of Object.keys(input)) {
     const childPath = path ? `${path}.${key}` : key;
@@ -400,6 +409,7 @@ function parseNode(node, input, source, path, issues, context) {
       issues.push(issue("unknown_field", source, childPath, valueType(input[key]), "known field", node.migration));
     }
   }
+  if (node.normalizer === "parameter_bag" || node.normalizer === "effect") return normalizeValue(node, input);
 
   const result = {};
   for (const key of node.externalProperties || []) {

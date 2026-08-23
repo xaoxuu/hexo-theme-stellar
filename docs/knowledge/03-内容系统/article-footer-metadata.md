@@ -190,7 +190,7 @@ content:
 
 ## 贡献者区块
 
-贡献者区块通过调用 `partial('contributors', {map: theme.data_services.contributors.edit_this_page})` 生成。partial 渲染为空时整个区块省略。
+贡献者区块通过调用 `partial('contributors', {map: stellar_config('extensions.services.contributors.editPage')})` 生成。partial 渲染为空时整个区块省略。
 
 关键样式：
 
@@ -201,7 +201,7 @@ content:
 | `.users-wrap .grid-box` | CSS grid，`minmax(72px, 1fr)` 列 |
 | `.user-card .card-link` | 32×32px 头像图片 |
 
-`edit_this_page` URL 映射（来自 `theme.data_services.contributors`）决定贡献者头部是否显示「编辑本页」链接。`data_services` 配置结构见[数据服务与组件](../06-数据服务与组件/data-widgets-overview.md)。
+`edit_page` URL 映射（来自 `extensions.services.contributors`）决定贡献者头部是否显示「编辑本页」链接。配置结构见[数据服务与组件](../06-数据服务与组件/data-widgets-overview.md)。
 
 **参考源码**：[layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)、[source/css/_components/partial/article-footer.styl](../../../source/css/_components/partial/article-footer.styl)
 
@@ -299,7 +299,7 @@ flowchart LR
 ```mermaid
 flowchart TD
   pageData["page frontmatter\n(references, license,\nauthor, share, wiki)"]
-  themeConfig["theme config\n(content.article.footer,\nwiki.tree, authors,\ndefault_author,\ndata_services.contributors)"]
+  themeConfig["theme config\n(content.article.footer,\nwiki.tree, authors,\ndefault_author,\nextensions.services.contributors)"]
   ejs["article_footer.ejs\nlayoutDiv()"]
 
   secRef["section#references\nmarkdown() each ref"]

@@ -25,7 +25,7 @@ function createMdTag() {
   const fakeHexo = {};
   applyThemeUtils(fakeHexo);
   const ctx = {
-    theme: { config: { api_host: { ghraw: 'raw.github.xaox.cc' } } },
+    stellar: { config: { extensions: { services: { github: { rawUrl: 'https://raw.github.xaox.cc' } } } } },
     args: fakeHexo.args
   };
   return require('../scripts/tags/lib/md.js')(ctx);
@@ -58,17 +58,17 @@ test('mdrenderHtml heading:false 不输出 data-heading', () => {
   assert.ok(!html.includes('data-heading'));
 });
 
-test('mdrenderHtml 传 ghraw 时替换为镜像并输出 data-base', () => {
+test('mdrenderHtml 传 rawUrl 时替换为镜像并输出 data-base', () => {
   const html = mdrenderHtml(
     'https://raw.githubusercontent.com/xaoxuu/star-vote/HEAD/README.md',
-    { ghraw: 'raw.github.xaox.cc', replace: true }
+    { rawUrl: 'https://raw.github.xaox.cc', replace: true }
   );
   assert.ok(html.includes('src="https://raw.github.xaox.cc/xaoxuu/star-vote/HEAD/README.md"'));
   assert.ok(html.includes('data-base="https://raw.github.xaox.cc/xaoxuu/star-vote/HEAD/"'));
   assert.ok(html.includes('data-replace="true"'));
 });
 
-test('mdrenderHtml 未传 ghraw 时保留 src 原 host，不硬编码默认值', () => {
+test('mdrenderHtml 未传 rawUrl 时保留 src 原 host，不硬编码默认值', () => {
   const html = mdrenderHtml('https://raw.githubusercontent.com/xaoxuu/a/main/b.md');
   assert.ok(html.includes('src="https://raw.githubusercontent.com/xaoxuu/a/main/b.md"'));
   assert.ok(html.includes('data-base="https://raw.githubusercontent.com/xaoxuu/a/main/"'));
@@ -99,13 +99,13 @@ test('parseGitHubRaw 非 GitHub 或非法地址返回 null', () => {
 
 // ---------- wiki 应用层 ----------
 
-test('readmeUrl 用配置 host 构造 README 地址，branch 缺省 HEAD', () => {
+test('readmeUrl 用完整配置 URL 构造 README 地址，branch 缺省 HEAD', () => {
   assert.equal(
-    readmeUrl('xaoxuu/star-vote', undefined, 'raw.github.xaox.cc'),
+    readmeUrl('xaoxuu/star-vote', undefined, 'https://raw.github.xaox.cc'),
     'https://raw.github.xaox.cc/xaoxuu/star-vote/HEAD/README.md'
   );
   assert.equal(
-    readmeUrl('xaoxuu/star-vote', 'main', 'raw.githubusercontent.com'),
+    readmeUrl('xaoxuu/star-vote', 'main', 'https://raw.githubusercontent.com'),
     'https://raw.githubusercontent.com/xaoxuu/star-vote/main/README.md'
   );
 });
@@ -136,13 +136,13 @@ test('isWikiReadmePage 非首页/无 repo/正文非空不触发', () => {
 
 test('wikiReadmeHtml 不适用时返回空串', () => {
   const proj = { source: { repository: 'xaoxuu/star-vote' }, homepage: { path: 'wiki/star-vote/index.html' } };
-  assert.equal(wikiReadmeHtml(proj, { content: '有内容', path: 'wiki/star-vote/index.html' }, { ghraw: 'raw.github.xaox.cc' }), '');
+  assert.equal(wikiReadmeHtml(proj, { content: '有内容', path: 'wiki/star-vote/index.html' }, { rawUrl: 'https://raw.github.xaox.cc' }), '');
   assert.equal(wikiReadmeHtml(null, { content: '', path: 'wiki/star-vote/index.html' }), '');
 });
 
 test('wikiReadmeHtml 适用时输出镜像 + replace 占位', () => {
   const proj = { source: { repository: 'xaoxuu/star-vote' }, homepage: { path: 'wiki/star-vote/index.html' } };
-  const html = wikiReadmeHtml(proj, { content: '', path: 'wiki/star-vote/index.html' }, { ghraw: 'raw.github.xaox.cc' });
+  const html = wikiReadmeHtml(proj, { content: '', path: 'wiki/star-vote/index.html' }, { rawUrl: 'https://raw.github.xaox.cc' });
   assert.ok(html.includes('src="https://raw.github.xaox.cc/xaoxuu/star-vote/HEAD/README.md"'));
   assert.ok(html.includes('data-base="https://raw.github.xaox.cc/xaoxuu/star-vote/HEAD/"'));
   assert.ok(html.includes('data-replace="true"'));

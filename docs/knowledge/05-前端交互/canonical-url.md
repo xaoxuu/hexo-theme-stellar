@@ -62,7 +62,7 @@ YAML 使用 `seo.canonical.host` 与 `seo.canonical.allowed_hosts`。构建期 S
 | `param.checklink` | `string` | 否 | 可用性探测路径（如 `/js/check.js`）。 |
 | `param.permalink` | `string` | 否 | 当前页面 URL，用于警告提示链接。 |
 
-`encoded` 与 `param` 由 [layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs) 在构建期计算注入（`encoded = base64(host)`；`param.checklink` 取自 `theme.data_services.video.js`，`param.permalink` 取自 `page.permalink`）。
+`encoded` 与 `param` 由 [layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs) 在构建期计算注入（`encoded = base64(host)`；`param.checklink` 取自主题内部 video 服务模块路径，`param.permalink` 取自 `page.permalink`）。
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)、[layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs)
 

@@ -19,12 +19,12 @@ function createContext() {
   const fakeHexo = {
     stellar: {
       config: {
-        resources: { fallbacks: { linkCard: '/images/default-link.svg' } }
+        resources: { fallbacks: { linkCard: '/images/default-link.svg' } },
+        extensions: { services: { siteInfo: { endpoint: null } } }
       }
     },
     theme: {
       config: {
-        data_services: { siteinfo: {} },
         icons: {}
       }
     },

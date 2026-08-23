@@ -46,7 +46,7 @@ tags:
 2. 提供 `repo:` 参数 → 构造 URL `https://{ghraw_host}/{owner/repo}/output/v2/data.json`
 3. 提供位置参数 `group` → 从 `ctx.theme.config.links[group]` 同步读取
 
-`ghraw` 主机值来自 `ctx.theme.config.api_host.ghraw`（见 `_config.yml` 的 `api_host`）。
+GitHub raw 基址来自冻结的 `extensions.services.github.rawUrl`，值是完整 HTTP(S) URL。
 
 **数据源解析图**
 
@@ -315,7 +315,7 @@ links:
 
 ### URL 构造
 
-插件主机读取自 `ctx.theme.config.api_host.ghcard`。
+卡片服务基址读取自冻结的 `extensions.services.github.cardUrl`。
 
 - `repo` 参数含 `/` 时视为仓库：
   `https://{ghcard_host}/api/pin/?username={owner}&repo={name}`
@@ -349,7 +349,7 @@ flowchart LR
     subgraph "ghcard"
         GC["ghcard"]
         GC --> IMG["static img tag\n(URL built at build time)"]
-        IMG --> GHAPI["github-readme-stats API\n(api_host.ghcard)"]
+        IMG --> GHAPI["github-readme-stats API\n(extensions.services.github.cardUrl)"]
     end
 ```
 

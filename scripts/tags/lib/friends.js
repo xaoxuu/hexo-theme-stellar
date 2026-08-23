@@ -9,12 +9,12 @@
 
 module.exports = ctx => function(args) {
   args = ctx.args.map(args, ['repo', 'api', 'posts'], ['group'])
-  const host = ctx.theme.config.api_host.ghraw
+  const rawUrl = ctx.stellar.config.extensions.services.github.rawUrl.replace(/\/+$/, '')
   var api
   if (args.api) {
     api = args.api
   } else if (args.repo) {
-    api = `https://${host}/${args.repo}/output/v2/data.json`
+    api = `${rawUrl}/${args.repo}/output/v2/data.json`
   }
   
   var el = `<div class="tag-plugin ${args.posts ? 'users-posts-wrap' : 'users-wrap'}">`

@@ -31,7 +31,7 @@ module.exports = ctx => function(args) {
   }
 
   const copy_id = 'copy_' + ++copy_index
-  const toast = ctx.theme.config.tag_plugins.copy.toast
+  const toast = ctx.stellar.config.extensions.tags.copy.toast
 
   var el = ``
   el += `<div class="tag-plugin copy">`

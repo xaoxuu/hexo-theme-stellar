@@ -495,7 +495,7 @@ Wiki 卡片用 `list.styl` 中的封面布局，内容固定在卡片底部：
 <a class="... card-hover card-hover--spotlight card-hover--tilt">...</a>
 ```
 
-启用 `plugins.card_hover` 后，光斑跟随指针，倾斜最多采用配置的 `max_tilt` 并上浮 2px；离开时 Tilt 立即回正，Spotlight 在最后指针位置淡出后再回中。文章/Wiki 的 Tilt 只变换内层 `.post-card` / `.wiki-card`，避免覆盖外层 `.post-card-wrap` 的 ScrollReveal transform；置顶轮播只变换 `.pin-slider` 外层，不占用 `.pin-slider-track` 的横向切换 transform。插件样式把列表阴影从等尺寸包装器移到卡片本体，使阴影随倾斜移动，同时保留文章、轮播和专栏封面缩放/变暗及 Wiki hover 边框等子元素动效。
+启用 `extensions.features.card_hover.enabled` 后，光斑跟随指针，倾斜最多采用 `max_tilt` 并上浮 2px；离开时 Tilt 立即回正，Spotlight 在最后指针位置淡出后再回中。文章/Wiki 的 Tilt 只变换内层 `.post-card` / `.wiki-card`，避免覆盖外层 `.post-card-wrap` 的 ScrollReveal transform；置顶轮播只变换 `.pin-slider` 外层，不占用 `.pin-slider-track` 的横向切换 transform。Feature 样式把列表阴影从等尺寸包装器移到卡片本体，使阴影随倾斜移动，同时保留文章、轮播和专栏封面缩放/变暗及 Wiki hover 边框等子元素动效。
 
 专栏最新文章卡片与置顶轮播外层输出完整组合类；专栏标题、描述和下方归档式文章条目仍保持静态，不随卡片倾斜。插件关闭、触屏、粗指针或减少动态效果时，组合类不产生动态行为。
 
