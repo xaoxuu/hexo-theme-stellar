@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* global hexo */
 "use strict";
 
 const fs = require("node:fs");
@@ -106,36 +107,59 @@ function addNotebookFixture(root) {
 function expectedPages(blueprint) {
   if (blueprint === "classic-blog") {
     return [
-      { path: "public/blog/2026/08/23/alpha-topic/index.html", marker: "Topic profile integration marker." },
-      { marker: "Classic Blog" }
+      { path: "public/blog/2026/08/23/alpha-topic/index.html", marker: "Topic profile integration marker.", profile: "topic" },
+      { marker: "Classic Blog", profile: "post" }
     ];
   }
   if (blueprint === "minimal-reading") {
     return [
-      { path: "public/notes/alpha/integration/index.html", marker: "Notebook profile integration marker." },
-      { marker: "Minimal Reading" }
+      { path: "public/notes/alpha/integration/index.html", marker: "Notebook profile integration marker.", profile: "notebook" },
+      { marker: "Minimal Reading", profile: "post" }
     ];
   }
   return [
-    { path: "public/wiki/docs-reference/index.html", marker: "Product Documentation" },
-    { path: "public/wiki/docs-reference/getting-started/index.html", marker: "Getting Started" }
+    { path: "public/wiki/docs-reference/index.html", marker: "Product Documentation", profile: "wiki" },
+    { path: "public/wiki/docs-reference/getting-started/index.html", marker: "Getting Started", profile: "wiki" }
   ];
 }
 
-function findHtmlWithMarker(root, marker) {
+function hasProfileOutput(html, profile) {
+  const shell = /<div class="l_body content" id="start" layout="(?:post|page)"/.test(html);
+  if (!shell) return false;
+  if (profile === "post") {
+    return /<div class="l_body content" id="start" layout="post"/.test(html)
+      && /<meta property="og:type" content="article">/.test(html);
+  }
+  if (profile === "topic") {
+    return /<div class="l_body content" id="start" layout="post"/.test(html)
+      && /<a class="cap breadcrumb" id="proj"[^>]*>Alpha Topic<\/a>/.test(html);
+  }
+  if (profile === "wiki") {
+    return /<div class="l_body content" id="start" layout="page"/.test(html)
+      && /<a class="cap breadcrumb" id="proj"[^>]*>Product Docs<\/a>/.test(html);
+  }
+  if (profile === "notebook") {
+    return /<div class="l_body content" id="start" layout="page"/.test(html)
+      && /<a class="cap breadcrumb"[^>]*>Alpha Notebook<\/a>/.test(html);
+  }
+  return false;
+}
+
+function findHtmlWithMarker(root, marker, profile) {
   for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
     const file = path.join(root, entry.name);
     if (entry.isDirectory()) {
-      const nested = findHtmlWithMarker(file, marker);
+      const nested = findHtmlWithMarker(file, marker, profile);
       if (nested) return nested;
-    } else if (entry.name.endsWith(".html") && fs.readFileSync(file, "utf8").includes(marker)) {
-      return file;
+    } else if (entry.name.endsWith(".html")) {
+      const html = fs.readFileSync(file, "utf8");
+      if (html.includes(marker) && hasProfileOutput(html, profile)) return file;
     }
   }
   return null;
 }
 
-function assertRuntime(html, relative) {
+function assertRuntime(html, relative, profile) {
   const manifests = [...html.matchAll(/<script type="application\/json" id="stellar-runtime-config">([\s\S]*?)<\/script>/g)];
   if (manifests.length !== 1) throw new Error(`${relative}: expected one Runtime Manifest, got ${manifests.length}`);
   const manifest = JSON.parse(manifests[0][1]);
@@ -144,7 +168,7 @@ function assertRuntime(html, relative) {
   }
   const entries = html.match(/<script type="module" src="[^"]*\/js\/runtime\/index\.mjs[^"]*"><\/script>/g) || [];
   if (entries.length !== 1) throw new Error(`${relative}: expected one ESM runtime entry, got ${entries.length}`);
-  if (!html.includes("<div class=\"l_body")) throw new Error(`${relative}: missing ViewModel Shell output`);
+  if (!hasProfileOutput(html, profile)) throw new Error(`${relative}: missing ${profile} PageViewModel output marker`);
 }
 
 function assertPackageFiles(pack) {
@@ -207,12 +231,12 @@ function checkSite(root, blueprint, tarball) {
   for (const expected of expectedPages(blueprint)) {
     const output = expected.path
       ? path.join(root, expected.path)
-      : findHtmlWithMarker(path.join(root, "public"), expected.marker);
+      : findHtmlWithMarker(path.join(root, "public"), expected.marker, expected.profile);
     const relative = output ? path.relative(root, output) : `<page containing ${expected.marker}>`;
     if (!output || !fs.existsSync(output)) throw new Error(`${blueprint}: missing ${relative}`);
     const html = fs.readFileSync(output, "utf8");
     if (!html.includes(expected.marker)) throw new Error(`${relative}: missing content marker ${expected.marker}`);
-    assertRuntime(html, relative);
+    assertRuntime(html, relative, expected.profile);
   }
   process.stdout.write(`${blueprint}: tarball install → init → doctor → generate passed\n`);
 }
@@ -249,5 +273,6 @@ module.exports = {
   assertPackageFiles,
   assertRuntime,
   expectedPages,
-  findHtmlWithMarker
+  findHtmlWithMarker,
+  hasProfileOutput
 };

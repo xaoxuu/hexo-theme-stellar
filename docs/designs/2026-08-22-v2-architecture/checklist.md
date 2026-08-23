@@ -33,10 +33,10 @@ date: 2026-08-22
 - [x] doctor 的 text/json 输出包含文件、字段、实际类型、期望结构和迁移章节（#716）。
 - [x] Extension 支持 mount、unmount、按需 import 和失败隔离（#717）。
 - [x] request/cache 不修改原生 fetch/XHR（#717）。
-- [x] M5 完整实现后 `npm run check` 通过（353 项测试）。
+- [x] M5 完整实现后 `npm run check` 通过（357 项测试）。
 - [x] M5 完整实现后主工程 `npm run g` 通过（262 个生成文件）。
 
-## Alpha 1 端到端门禁
+## Alpha 1 候选自动基线
 
 - [x] M1–M5 全部完成。
 - [x] 预发布包可安装到干净的 Hexo 8 / Node.js 22 工程。
@@ -44,6 +44,7 @@ date: 2026-08-22
 - [x] 四类 Collection profile 通过 ViewModel 消费链渲染，Extension 生命周期可验证。
 - [x] Reference、主题检查、主工程构建与预发布安装演练全部通过。
 - [x] Alpha 发布说明列出仍不稳定的契约与未交付范围。
+- [ ] M6–M11 最终契约重新生成证据并通过站长人工验收；本 M5 记录不单独建立 Alpha 1。
 
 ## #695 Post PageViewModel 验证记录
 

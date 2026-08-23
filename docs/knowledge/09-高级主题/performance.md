@@ -300,9 +300,9 @@ resources:
 
 ## Alpha 首屏核心 JS 门禁
 
-M5 用固定 Classic Blog 输入分别构建 tag `1.44.0` 与当前 v2。统计口径是首页无条件输出的本地 script、可执行 inline script 以及 ESM 入口无条件 import 的模块；每个唯一资源使用 gzip level 9 后求和。selector 未命中的 Extension 和第三方资源不计入核心集合。
+M5 用固定 Classic Blog 输入分别构建 tag `1.44.0` 与当前 v2 npm tarball。统计口径是首页无条件输出的本地 script、可执行 inline script 以及 ESM 入口的静态 import；dynamic import、selector 未命中的 Extension 和第三方资源不计入核心集合。每个唯一资源使用 Node.js 22 的 gzip level 9 后求和，避免不同 Node/zlib 版本造成基线漂移。
 
-结果记录在 [reference/v2-alpha-performance.json](../../../reference/v2-alpha-performance.json)：v1 为 34,918 bytes，`2.0.0-alpha.1` 为 23,880 bytes，降低 31.6112%，通过至少 30% 的门禁。`npm run alpha:performance` 会重新构建两边并逐字节检查记录，已纳入 `npm run check`。
+结果记录在 [reference/v2-alpha-performance.json](../../../reference/v2-alpha-performance.json)：v1 为 35,184 bytes，`2.0.0-alpha.1` 候选 tarball 为 18,771 bytes，降低 46.649%，通过至少 30% 的门禁。`npm run alpha:performance` 会重新构建两边并逐字节检查记录，已纳入 `npm run check`。
 
 本次下降不是删除功能：`/js/icons.js` 与 `/js/plugins/dropdown.js` 从全页无条件 script 改为 Runtime Manifest 中的 `svg.icon[data-icon]` / `details.dropdown` selector Extension；命中页面仍加载原脚本，未命中页面不再支付首屏核心成本。
 

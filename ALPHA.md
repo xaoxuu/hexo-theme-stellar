@@ -1,6 +1,6 @@
 # Stellar v2 Alpha
 
-Stellar v2 Alpha 用于验证新的严格配置契约、四类内容模型、Blueprint/CLI 和 ESM Extension 运行时。它不兼容 v1 配置，也不承诺 Alpha 之间所有构建期契约保持不变；生产站点请继续使用 1.x 稳定版。
+Stellar v2 Alpha 指南用于验证新的严格配置契约、四类内容模型、Blueprint/CLI 和 ESM Extension 运行时。当前 `2.0.0-alpha.1` 只是本地候选包的版本字符，尚未发布 npm、创建 tag 或完成 Alpha 1 人工决策。它不兼容 v1 配置，也不承诺 Alpha 之间所有构建期契约保持不变；生产站点请继续使用 1.x 稳定版。
 
 ## 环境
 

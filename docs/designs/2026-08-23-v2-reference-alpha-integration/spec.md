@@ -1,7 +1,7 @@
 ---
 title: Stellar v2 Reference 与 Alpha 集成方案
 date: 2026-08-23
-status: 实施中
+status: M5 已完成，Alpha 候选基线
 issue: 718
 ---
 
@@ -9,7 +9,7 @@ issue: 718
 
 Pre-alpha M1–M4 已交付严格 Schema、四类完整渲染消费链、Blueprint/CLI 和浏览器 Extension 运行时，但当前 `reference/v2-*.json` 仍只是机器产物，README 也只指向 v1 文档。已有 Blueprint 构建门禁通过源码软链接和宿主 `node_modules` 运行，尚未证明 npm tarball 可以在隔离的 Hexo 8 工程安装并带齐 Blueprint、Reference 和运行时文件。
 
-本切片完成 M5：从既有 Schema/manifest 单源生成公开可读 Reference，提供最小 Alpha 使用与范围说明，并建立预发布包安装到三套干净工程的端到端验收。只有 M5 与全部 Alpha 门禁（包括首屏核心 JS gzip 阈值）同时通过，才允许把 `2.0.0-alpha.1` 标记为可交付；本 issue 不执行 npm publish。
+本切片完成 M5：从既有 Schema/manifest 单源生成公开可读 Reference，提供最小 Alpha 使用与范围说明，并建立预发布包安装到三套干净工程的端到端验收。M5 与当前自动门禁（包括首屏核心 JS gzip 阈值）同时通过后，只建立 `2.0.0-alpha.1` 字符的本地候选基线；是否进入 Alpha 1 仍受 M6–M11 与站长人工验收约束，本 issue 不执行 npm publish。
 
 # 2. 公开 Reference
 
@@ -42,7 +42,7 @@ Pre-alpha M1–M4 已交付严格 Schema、四类完整渲染消费链、Bluepri
 # 6. 版本与边界
 
 - M5 可以完成而 Alpha 1 仍因任一端到端门禁失败保持未完成；状态文档必须分别记录。
-- 只有全部门禁通过后才把 v2 分支包版本和 Alpha 状态更新为 `2.0.0-alpha.1`。本 issue 只推送 `origin/v2`，不创建 tag、不发布 npm。
+- 只有全部 M5 门禁通过后才把 v2 分支包版本更新为 `2.0.0-alpha.1` 候选字符。根据后续扩展的 v2 总蓝图，是否进入 Alpha 1 仍由 M6–M11 与站长人工验收决定；本 issue 只推送 `origin/v2`，不创建 tag、不发布 npm。
 - 不新增或修改公开 YAML/Front Matter 字段、页面 URL、DOM、CSS、语言文案或客户端公共 API。
 - 主仓库只更新 `docs/specs/stellar-v2-blueprint/{spec,plan,checklist}.md` 且保持未提交；不修改 `source/`，不更新子模块指针。
 

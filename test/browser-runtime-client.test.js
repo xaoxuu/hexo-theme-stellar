@@ -158,16 +158,38 @@ test("Lazy Extension 资源失败时撤销已安装的全局与 observer", async
 test("非首屏图标与 dropdown 通过 selector Extension 按需加载", async () => {
   const feature = await import(moduleUrl("source/js/runtime/extensions/feature.mjs"));
   const assets = [];
-  const context = {
-    assets: { script: async source => assets.push(source) },
-    extension: { config: { feature: "deferred-icons" } }
+  const previousAddEventListener = globalThis.addEventListener;
+  const previousRemoveEventListener = globalThis.removeEventListener;
+  const listeners = new Set();
+  const calls = [];
+  const adapters = {
+    deferredIcons: { feature: "deferredIcons", mount(target) { calls.push(["mount-icons", target]); return () => calls.push(["cleanup-icons"]); } },
+    dropdown: { feature: "dropdown", mount(target) { calls.push(["mount-dropdown", target]); return () => calls.push(["cleanup-dropdown"]); } }
   };
-  const iconsCleanup = await feature.mount({}, context);
-  context.extension.config = { feature: "dropdown" };
-  const dropdownCleanup = await feature.mount({}, context);
-  assert.deepEqual(assets, ["/js/icons.js", "/js/plugins/dropdown.js"]);
-  assert.equal(typeof iconsCleanup, "function");
-  assert.equal(typeof dropdownCleanup, "function");
+  globalThis.addEventListener = (_type, listener) => listeners.add(listener);
+  globalThis.removeEventListener = (_type, listener) => listeners.delete(listener);
+  const target = {};
+  try {
+    const context = {
+      assets: { script: async source => {
+        assets.push(source);
+        const detail = source === "/js/icons.js" ? adapters.deferredIcons : adapters.dropdown;
+        listeners.forEach(listener => listener({ detail }));
+      } },
+      extension: { config: { feature: "deferred-icons" } }
+    };
+    const iconsCleanup = await feature.mount(target, context);
+    context.extension.config = { feature: "dropdown" };
+    const dropdownCleanup = await feature.mount(target, context);
+    assert.deepEqual(assets, ["/js/icons.js", "/js/plugins/dropdown.js"]);
+    assert.deepEqual(calls.slice(0, 2), [["mount-icons", target], ["mount-dropdown", target]]);
+    iconsCleanup();
+    dropdownCleanup();
+    assert.deepEqual(calls.slice(2), [["cleanup-icons"], ["cleanup-dropdown"]]);
+  } finally {
+    globalThis.addEventListener = previousAddEventListener;
+    globalThis.removeEventListener = previousRemoveEventListener;
+  }
 });
 
 test("Fancybox Extension 对 element root 使用容器级 bind/unbind", async () => {

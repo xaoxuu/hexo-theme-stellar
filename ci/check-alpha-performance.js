@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* global hexo */
 "use strict";
 
 const fs = require("node:fs");
@@ -12,8 +13,8 @@ const HOST_ROOT = path.resolve(process.argv.find(arg => arg.startsWith("--host="
 const BASELINE_TAG = "1.44.0";
 const MIN_REDUCTION = 0.3;
 
-function run(command, args, cwd) {
-  const result = spawnSync(command, args, { cwd, encoding: "utf8", env: { ...process.env, HEXO_READY: "" } });
+function run(command, args, cwd, env = {}) {
+  const result = spawnSync(command, args, { cwd, encoding: "utf8", env: { ...process.env, HEXO_READY: "", ...env } });
   if (result.status !== 0) {
     process.stderr.write(result.stdout || "");
     process.stderr.write(result.stderr || "");
@@ -63,7 +64,9 @@ function createSite(root, themeRoot) {
   fs.mkdirSync(path.join(root, "themes"), { recursive: true });
   fs.symlinkSync(path.join(HOST_ROOT, "node_modules"), path.join(root, "node_modules"), "dir");
   fs.symlinkSync(themeRoot, path.join(root, "themes", "stellar"), "dir");
-  run(path.join(HOST_ROOT, "node_modules", ".bin", "hexo"), ["generate"], root);
+  run(path.join(HOST_ROOT, "node_modules", ".bin", "hexo"), ["generate"], root, {
+    NODE_PATH: path.join(HOST_ROOT, "node_modules")
+  });
 }
 
 function gzipBytes(content) {
@@ -81,9 +84,7 @@ function localScriptSource(attributes) {
 function moduleImports(content) {
   const imports = new Set();
   const staticPattern = /(?:from\s+|import\s*)["'](\.\.?\/[^"']+\.mjs)["']/g;
-  const dynamicPattern = /import\(\s*["'`](\.\.?\/[^"'`$]+\.mjs)(?:\$\{[^}]+\})?["'`]\s*\)/g;
   for (const match of content.matchAll(staticPattern)) imports.add(match[1]);
-  for (const match of content.matchAll(dynamicPattern)) imports.add(match[1]);
   return [...imports];
 }
 
@@ -137,14 +138,28 @@ function extractBaseline(root) {
   return theme;
 }
 
+function extractCurrentTarball(root) {
+  const packOutput = run("npm", ["pack", "--json", "--pack-destination", root], THEME_ROOT, {
+    npm_config_cache: path.join(root, "npm-cache")
+  });
+  const packs = JSON.parse(packOutput);
+  if (!Array.isArray(packs) || packs.length !== 1) throw new Error("npm pack did not return one package");
+  const archive = path.join(root, packs[0].filename);
+  const theme = path.join(root, "theme-v2");
+  fs.mkdirSync(theme, { recursive: true });
+  run("tar", ["-xf", archive, "-C", theme, "--strip-components=1"], THEME_ROOT);
+  return theme;
+}
+
 function buildReport() {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-alpha-performance-"));
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-alpha-performance-"));
   try {
     const baselineTheme = extractBaseline(root);
+    const currentTheme = extractCurrentTarball(root);
     const baselineSite = path.join(root, "site-v1");
     const currentSite = path.join(root, "site-v2");
     createSite(baselineSite, baselineTheme);
-    createSite(currentSite, THEME_ROOT);
+    createSite(currentSite, currentTheme);
     const baseline = collectCoreScripts(path.join(baselineSite, "public"), path.join(baselineSite, "public", "index.html"));
     const current = collectCoreScripts(path.join(currentSite, "public"), path.join(currentSite, "public", "index.html"));
     const reduction = (baseline.gzipBytes - current.gzipBytes) / baseline.gzipBytes;
@@ -163,6 +178,9 @@ function buildReport() {
 }
 
 function main() {
+  if (process.versions.node.split(".")[0] !== "22") {
+    throw new Error(`Alpha performance requires Node.js 22 for stable gzip output, got ${process.versions.node}`);
+  }
   const report = buildReport();
   const output = `${JSON.stringify(report, null, 2)}\n`;
   const reportFile = path.join(THEME_ROOT, "reference", "v2-alpha-performance.json");

@@ -388,7 +388,7 @@ graph LR
 
 - **package.json**：`"version": "2.0.0-alpha.1"`，供 npm 分发使用
 
-版本号遵循 `MAJOR.MINOR.PATCH` 格式；发版脚本同步 package 版本到安装知识库，不再修改主题配置。
+版本号遵循 SemVer `MAJOR.MINOR.PATCH`，预发布版可带 `-alpha.N`、`-beta.N` 或 `-rc.N`；发版脚本同步 package 版本到安装知识库，不再修改主题配置。
 
 ### 更新主题
 

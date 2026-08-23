@@ -1,7 +1,7 @@
 ---
 title: Stellar v2 领域内核、Blueprint 与 Extension 架构
 date: 2026-08-22
-status: Alpha 1 门禁收口中
+status: M5 已完成，Alpha 候选基线
 ---
 
 # Stellar v2 工程架构方案
@@ -12,7 +12,7 @@ status: Alpha 1 门禁收口中
 
 Pre-alpha M1 以构建期模型输出作为首条工程接缝：先用 post profile 贯通严格 Schema、CollectionModel、ContentItemModel 与冻结的 PageViewModel，再让 wiki、topic、notebook 生成同构结果，最后从已交付 Schema 生成 Reference 元数据。模板、导航、列表和 SEO 对 PageViewModel 的消费属于 Pre-alpha M2，不在 M1 提前承诺。M1 完成只说明领域契约能力已交付，不代表 Alpha 版本成立。
 
-Pre-alpha M1–M5 已分别交付领域契约、完整渲染消费链、Blueprint/CLI、ESM Extension runtime 与公开 Reference。M5 以真实 npm tarball 在三套隔离 Node.js 22 / Hexo 8 工程贯通 init → doctor → generate，并用固定 v1 基线验证首屏核心 JS gzip 降幅不低于 30%。完整产品首页、学习路径、v1 归档、迁移对照、重定向与 SEO 集成仍属于 Beta。
+Pre-alpha M1–M5 已分别交付领域契约、完整渲染消费链、Blueprint/CLI、ESM Extension runtime 与公开 Reference。M5 以真实 npm tarball 在三套隔离 Node.js 22 / Hexo 8 工程贯通 init → doctor → generate，并用固定 v1 基线验证首屏核心 JS gzip 降幅不低于 30%。根据后续扩展的 v2 总蓝图，这些证据只是 M6–M11 收敛前的候选基线，不代表已进入 Alpha 1；完整产品首页、学习路径、v1 归档、迁移对照、重定向与 SEO 集成仍属于 Beta。
 
 ## 2. 模块边界
 
@@ -53,4 +53,4 @@ v2 只接受 v2 字段。doctor 复用严格校验器，但收集并结构化问
 - post reference slice 建立共享模型接缝；wiki、topic、notebook 只依赖该接缝，三者可并行交付。
 - Reference 元数据只描述已经交付的公开字段，不提前公开 Blueprint、CLI、布局或 Extension 契约。
 - 每个切片独立保持主题检查与主工程构建可通过；阶段完成仍以总蓝图门禁为准。
-- Pre-alpha M1–M5 是能力里程碑，不使用版本号；只有领域契约、渲染内核、分发入口、浏览器运行时、Reference 与 Alpha 集成全部完成，并通过干净工程的 init → build → doctor → 页面与 Extension 验收接缝，才能建立 `2.0.0-alpha.1`。
+- Pre-alpha M1–M5 是能力里程碑；完成领域契约、渲染内核、分发入口、浏览器运行时、Reference 与干净工程集成后，可以建立 `2.0.0-alpha.1` 字符的候选包。是否进入 Alpha 1 仍以 v2 总蓝图的 M6–M11 和站长人工决策为准。

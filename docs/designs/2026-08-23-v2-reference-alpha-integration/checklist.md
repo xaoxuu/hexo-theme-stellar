@@ -24,12 +24,12 @@ issue: 718
 
 - [x] 固定 v1 tag、输入、资源分类与 gzip 统计算法。
 - [x] v2 首屏核心 JS gzip 相比 v1 至少下降 30%。
-- [x] 只有全部门禁通过后才建立 `2.0.0-alpha.1`；不发布 npm、不创建 tag。
+- [x] 全部 M5 门禁通过后建立 `2.0.0-alpha.1` 字符的候选包；不发布 npm、不创建 tag，不单独宣告 Alpha 1。
 
 # 仓库门禁
 
 - [x] `npm run reference:check` 通过。
-- [x] 主题 `npm run check` 通过（353 项测试）。
+- [x] 主题 `npm run check` 通过（357 项测试）。
 - [x] 主题知识库核查通过（行号异常与版本不一致均为 0）。
 - [x] 主工程 `npm run g` 通过（生成并压缩 262 个文件）。
 - [ ] Standards review 无剩余 finding。

@@ -85,8 +85,10 @@ test("Search、services、comments 与 Feature 只消费 manifest context", () =
   assert.doesNotMatch(feature, /case 'katex'/);
   assert.match(feature, /context\.assets\.resolve\('\/css\/_plugins\/tianli_gpt'\)/);
   assert.match(feature, /stellarAdaptiveText\?\.mount/);
-  assert.match(feature, /case 'deferred-icons': return mountLegacyAsset\(context, '\/js\/icons\.js'\)/);
-  assert.match(feature, /case 'dropdown': return mountLegacyAsset\(context, '\/js\/plugins\/dropdown\.js'\)/);
+  assert.match(feature, /case 'deferred-icons': return mountLegacyAsset\(root, context, '\/js\/icons\.js', 'deferredIcons'\)/);
+  assert.match(feature, /case 'dropdown': return mountLegacyAsset\(root, context, '\/js\/plugins\/dropdown\.js', 'dropdown'\)/);
+  assert.match(feature, /stellar:legacy-feature-ready/);
+  assert.doesNotMatch(feature, /__stellarLegacyFeatures/);
   assert.match(feature, /AI summary compatibility adapter requires a document root/);
   const adaptive = read("source/js/plugins/adaptive-text.js");
   assert.doesNotMatch(adaptive, /adaptiveText(?:Elements|Observer|Active)/);
