@@ -135,10 +135,10 @@ target="_blank" rel="external nofollow noopener noreferrer"
 图标始终渲染为懒加载背景图：
 
 ```html
-<div class="lazy img" data-bg="<icon-url or default.link>"></div>
+<div class="lazy img" data-bg="<icon-url or resources.fallbacks.link_card>"></div>
 ```
 
-兜底图标 URL 来自 `ctx.theme.config.default.link`。
+兜底图标 URL 来自冻结运行时配置 `ctx.stellar.config.resources.fallbacks.linkCard`，对应 YAML 路径 `resources.fallbacks.link_card`。
 
 **参考源码**：[scripts/tags/lib/link.js](../../../scripts/tags/lib/link.js)
 
@@ -280,7 +280,7 @@ graph TD
 |------|------|------|
 | `title` | 位置参数 | 横幅标题文本 |
 | `subtitle` | 位置参数 | 横幅副标题文本 |
-| `bg` | 命名参数 | 背景图 URL（回退 `ctx.theme.config.default.banner`） |
+| `bg` | 命名参数 | 背景图 URL（回退冻结运行时配置 `ctx.stellar.config.resources.fallbacks.banner`） |
 | `avatar` | 命名参数 | 头像图片 URL |
 | `link` | 命名参数 | 设置后把横幅包装为 `<a class="banner-link">` 并隐藏返回按钮 |
 

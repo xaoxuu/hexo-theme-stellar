@@ -13,6 +13,7 @@ function read(file) {
 
 test("主题默认、模板、模型与 Stylus 只消费最终 Appearance 路径", () => {
   const config = read("_config.yml");
+  const sidebar = read("source/css/_components/sidebar/sidebar.styl");
   const consumers = [
     "layout/layout.ejs",
     "layout/_partial/head.ejs",
@@ -38,6 +39,8 @@ test("主题默认、模板、模型与 Stylus 只消费最终 Appearance 路径
   assert.match(consumers, /appearance\.backgrounds\.sidebar/);
   assert.match(consumers, /appearance\.motion\.page_transition/);
   assert.doesNotMatch(consumers, /theme\.style|themeConfig\.style|hexo-config\('style\./);
+  assert.match(sidebar, /--background-opacity: hexo-config\('appearance\.backgrounds\.sidebar\.opacity'\)/);
+  assert.doesNotMatch(sidebar, /if hexo-config\('appearance\.backgrounds\.sidebar\.opacity'\)/);
 });
 
 test("资源兜底消费链只读取 resources.fallbacks 并内部化加载文案", () => {

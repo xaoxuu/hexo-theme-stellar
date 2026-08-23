@@ -364,7 +364,7 @@ if (args.color == null) {
 
 | 场景 | 用法 |
 |------|------|
-| 加载失败兜底 onerror | `ctx.theme.config.default.image_onerror \|\| ctx.utils.iconData('image:onerror')` |
+| 加载失败兜底 onerror | `ctx.stellar.config.resources.fallbacks.image.tagPlugin \|\| ctx.utils.iconData('image:onerror')` |
 | 加载占位（`--icon-loading`） | `head.ejs` 由 `icons['default:loading']` 内联 SVG 经 `encodeURIComponent` 生成 data URI；`.lazy-icon` 经 `svg-mask-icon` 蒙版 + `background-color: var(--theme)` 上色 |
 | CSS 变量生成（head.ejs） | 从 `theme.icons[key]` 经 `encodeURIComponent` 生成 data URI |
 

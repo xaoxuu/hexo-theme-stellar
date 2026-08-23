@@ -644,14 +644,14 @@ ul, ol
 ```stylus
 // source/css/_common/base.styl
 .md-text p:not([class])
-  text-align: convert(hexo-config('style.text-align'))
+  text-align: convert(hexo-config('appearance.typography.text_align'))
 ```
 
 | 选择器部分 | 用途 |
 |-----------|------|
 | `.md-text` | 包裹 Markdown 生成的 HTML 内容 |
 | `p:not([class])` | 只作用于普通段落（排除标签插件段落） |
-| `convert(hexo-config(...))` | 从 `_config.yml` 提取 `style.text-align` |
+| `convert(hexo-config(...))` | 从 `_config.yml` 提取 `appearance.typography.text_align` |
 
 支持 `left`、`right`、`center`、`justify`。`:not([class])` 防止覆盖 note 块等专用组件中的对齐。
 

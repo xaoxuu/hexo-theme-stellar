@@ -57,8 +57,7 @@
       background-size: cover
       if hexo-config('appearance.backgrounds.sidebar.blur.radius')
         --inset: 32px
-      if hexo-config('appearance.backgrounds.sidebar.opacity')
-        --background-opacity: hexo-config('appearance.backgrounds.sidebar.opacity')
+      --background-opacity: hexo-config('appearance.backgrounds.sidebar.opacity')
       background-image: convert(hexo-config('appearance.backgrounds.sidebar.image'))
       filter: saturate(var(--saturate)) blur(var(--blur-px)) opacity(var(--background-opacity))
       :root[data-theme="dark"] &
