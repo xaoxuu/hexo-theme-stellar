@@ -74,6 +74,8 @@ search:
 
 message:
   copied: Copied!
+  copy_denied: Clipboard permission was denied
+  copy_unsupported: Clipboard requires a supported browser and HTTPS
   fetching_latest_release: '%s is fetching the latest release…'
   loading: Loading
   loading_failed: Failed to load. Please try again later.
@@ -91,6 +93,13 @@ symbol:
   page: "Page %s"
 
 tag_plugins:
+  okr:
+    status:
+      in_track: On Track
+      at_risk: At Risk
+      off_track: Delayed
+      finished: Completed
+      unfinished: Incomplete
   mbti:
     title: 'My MBTI Type: %s (%s)'
     types:
@@ -126,3 +135,13 @@ tag_plugins:
       identity:
         left: Assertive
         right: Turbulent
+
+feature:
+  ai_summary:
+    name: AI Summary
+    introduce: I am QX-AI, your reading assistant. Use the actions below to introduce me, recommend related posts, or summarize this article.
+    buttons:
+      introduce: Introduce yourself
+      recommend: Recommend posts
+      summarize: Summarize article
+      shuttle: Explore more

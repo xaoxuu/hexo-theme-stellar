@@ -117,8 +117,8 @@
       },
       {
         "path": "/js/runtime/index.mjs",
-        "bytes": 2666,
-        "gzipBytes": 1046
+        "bytes": 2735,
+        "gzipBytes": 1060
       },
       {
         "path": "/js/stellar-icons.js",
@@ -141,11 +141,11 @@
         "gzipBytes": 3099
       }
     ],
-    "bytes": 53978,
-    "gzipBytes": 18771
+    "bytes": 54047,
+    "gzipBytes": 18785
   },
   "metric": "sum of gzip-9 bytes for unconditional local first-screen scripts, inline executable scripts, and unconditional module imports",
   "minimumReduction": 0.3,
-  "reduction": 0.46649,
+  "reduction": 0.466093,
   "passed": true
 }

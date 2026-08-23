@@ -74,6 +74,8 @@ search:
 
 message:
   copied: 複製成功
+  copy_denied: 未取得剪貼簿權限
+  copy_unsupported: 目前瀏覽器不支援剪貼簿或頁面不是 HTTPS
   fetching_latest_release: '%s 正在取得最新版本…'
   loading: 正在載入
   loading_failed: 載入失敗，請稍後再試。
@@ -91,6 +93,13 @@ symbol:
   page: "第 %s 頁"
 
 tag_plugins:
+  okr:
+    status:
+      in_track: 正常
+      at_risk: 風險
+      off_track: 延期
+      finished: 已完成
+      unfinished: 未完成
   mbti:
     title: 我的 MBTI 人格：%s（%s）
     types:
@@ -126,3 +135,13 @@ tag_plugins:
       identity:
         left: 自信果斷
         right: 情緒易波動
+
+feature:
+  ai_summary:
+    name: AI 摘要
+    introduce: 我是文章輔助 AI：QX-AI，點擊下方按鈕可以認識我、推薦相關文章或產生本文摘要。
+    buttons:
+      introduce: 介紹自己
+      recommend: 推薦文章
+      summarize: 產生摘要
+      shuttle: 矩陣穿梭

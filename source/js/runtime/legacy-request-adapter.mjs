@@ -1,6 +1,9 @@
-export function installLegacyRequestAdapter(utils, client) {
+export function installLegacyRequestAdapter(utils, client, policy) {
   if (!utils || typeof utils !== 'object') {
     throw new TypeError('[stellar runtime] utils is required for the data-service adapter');
+  }
+  if (!policy || !Number.isInteger(policy.retries) || !(policy.timeoutMs > 0)) {
+    throw new TypeError('[stellar runtime] request policy is required for the data-service adapter');
   }
   const loaded = new WeakSet();
 
@@ -12,7 +15,7 @@ export function installLegacyRequestAdapter(utils, client) {
 
   const request = function request(element, url, callback, onFailure, options = {}) {
     if (element && loaded.has(element)) return Promise.resolve(null);
-    const requestOptions = Object.assign({ retries: 2, timeout: 5000 }, options, {
+    const requestOptions = Object.assign({ retries: policy.retries, timeout: policy.timeoutMs }, options, {
       service: serviceId(element, options),
       onNetworkStart: () => utils.onLoading?.(element)
     });
@@ -28,7 +31,7 @@ export function installLegacyRequestAdapter(utils, client) {
     });
   };
 
-  const requestWithoutLoading = function requestWithoutLoading(url, options = {}, maxRetry = 2, timeout = 5000) {
+  const requestWithoutLoading = function requestWithoutLoading(url, options = {}, maxRetry = policy.retries, timeout = policy.timeoutMs) {
     return client.request(url, Object.assign({}, options, {
       retries: maxRetry,
       timeout

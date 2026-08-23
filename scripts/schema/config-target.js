@@ -419,7 +419,7 @@ const LAYOUT_PROFILE_DEFAULTS = deepFreeze({
 });
 
 const TAG_EXTENSION_IDS = deepFreeze([
-  "note", "checkbox", "quot", "emoji", "icon", "button", "image", "copy",
+  "note", "checkbox", "quot", "emoji", "icon", "button", "image",
   "timeline", "mark", "hashtag", "okr", "gallery", "chat"
 ]);
 
@@ -458,6 +458,10 @@ const CONFIG_INTERNALIZED_RESOURCES = deepFreeze([
   "plugins.<official_extension>.{js,css,inject}",
   "data_services.<official_service>.js",
   "comments.custom_css",
+  "extensions.tags.copy",
+  "extensions.features.{preload,lightbox,reveal,ai_summary,diagrams}.provider",
+  "extensions.features.ai_summary.interface.version",
+  "extensions.cache.*",
   "style.loading.*",
   "system.override_pretty_urls"
 ]);
@@ -641,7 +645,7 @@ const CONFIG_TARGET_FIELDS = deepFreeze([
     ["extensions.search.providers.local.exclude", "array", literal([]), { items: { type: ["string"] } }],
     ["extensions.search.providers.algolia", "object", registered("Algolia"), { boundary: "parameter_bag" }],
     ["extensions.comments.provider", ["string", "null"], literal(null), { values: [null, "beaudar", "utterances", "giscus", "twikoo", "waline", "artalk"] }],
-    ["extensions.comments.title", "string", literal("快来参与讨论吧~")],
+    ["extensions.comments.title", "string", literal("")],
     ["extensions.comments.providers.<provider>", "object", registered("comment provider"), { boundary: "parameter_bag" }],
     ...TAG_EXTENSION_IDS.map(id => [`extensions.tags.${id}`, "object", registered(`tag:${id}`), {
       boundary: "registered_schema",
@@ -651,11 +655,7 @@ const CONFIG_TARGET_FIELDS = deepFreeze([
       boundary: "registered_schema",
       normalization: "merge declared child fields; deep-freeze the normalized JavaScript object"
     }]),
-    ["extensions.features.lightbox.provider", "string", literal("fancybox"), { values: ["fancybox"] }],
-    ["extensions.features.reveal.provider", "string", literal("scrollreveal"), { values: ["scrollreveal"] }],
-    ["extensions.features.ai_summary.provider", "string", literal("tianli_gpt"), { values: ["tianli_gpt"] }],
     ["extensions.features.math.provider", ["string", "null"], literal(null), { values: [null, "katex", "mathjax"] }],
-    ["extensions.features.diagrams.provider", "string", literal("mermaid"), { values: ["mermaid"] }],
     ["extensions.services.site_info.endpoint", ["string", "null"], literal(null)],
     ["extensions.services.rating.endpoint", ["string", "null"], literal("https://star-vote.xaox.cc/api/rating")],
     ["extensions.services.vote.endpoint", ["string", "null"], literal("https://star-vote.xaox.cc/api/vote")],
@@ -664,12 +664,7 @@ const CONFIG_TARGET_FIELDS = deepFreeze([
     ["extensions.services.github.api_url", "string", literal("https://api.github.com"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }],
     ["extensions.services.github.raw_url", "string", literal("https://raw.githubusercontent.com"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }],
     ["extensions.services.github.gist_url", "string", literal("https://gist.github.com"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }],
-    ["extensions.services.github.card_url", "string", literal("https://github-readme-stats.vercel.app"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }],
-    ["extensions.cache.enabled", "boolean", literal(true)],
-    ["extensions.cache.default_ttl", "number", literal(3600)],
-    ["extensions.cache.ttl", "object", literal({ giscus: 600, waline: 600, artalk: 600, memos: 600, "memos-user": 86400, sites: 86400, friends: 86400, friends_and_posts: 86400, siteinfo: 86400 }), { boundary: "record" }],
-    ["extensions.cache.ttl.<service>", "number", derived("extensions.cache.default_ttl")],
-    ["extensions.cache.max_entries", "number", literal(200)]
+    ["extensions.services.github.card_url", "string", literal("https://github-readme-stats.vercel.app"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }]
   ], { status: "delivered" }),
   ...fields(INJECT_CONSUMERS, [
     ["inject.head", "string", literal(""), { normalization: "preserve trusted source text exactly; append page text after site text with one newline" }],
@@ -727,7 +722,7 @@ const CONFIG_DOMAIN_TARGETS = deepFreeze({
   tag_plugins: "extensions.tags",
   dependencies: "extensions.features",
   data_services: "extensions.services",
-  data_cache: "extensions.cache",
+  data_cache: null,
   plugins: "extensions.features",
   style: "appearance",
   default: "resources.fallbacks",
@@ -873,10 +868,10 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
     migration("data_services.contributors.edit_this_page.*", "rename", "extensions.services.contributors.edit_page.*", "去掉父级已表达的重复代词")
   ],
   data_cache: [
-    migration("data_cache.enable", "rename", "extensions.cache.enabled", "布尔状态统一使用 enabled"),
-    migration("data_cache.default_ttl", "move", "extensions.cache.default_ttl", "缓存归 Extension request/cache 客户端"),
-    migration("data_cache.ttl.<service>", "move", "extensions.cache.ttl.<service>", "缓存归 Extension request/cache 客户端"),
-    migration("data_cache.max_entries", "move", "extensions.cache.max_entries", "缓存归 Extension request/cache 客户端")
+    migration("data_cache.enable", "internalize", null, "缓存策略由内部 request/cache 常量拥有"),
+    migration("data_cache.default_ttl", "internalize", null, "缓存策略由内部 request/cache 常量拥有"),
+    migration("data_cache.ttl.<service>", "internalize", null, "服务 TTL 由内部 request/cache 常量拥有"),
+    migration("data_cache.max_entries", "internalize", null, "容量策略由内部 request/cache 常量拥有")
   ],
   plugins: [
     migration("plugins.swiper.enable", "internalize", null, "Swiper 是主题内置轮播实现，不再作为公开 Feature"),

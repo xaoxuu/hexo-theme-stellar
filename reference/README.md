@@ -4,6 +4,7 @@
 
 - [Alpha 候选快速开始与范围](../ALPHA.md)
 - [配置 Reference](v2-config.md) · [JSON](v2-config.json)
+- [配置字段审计](v2-config-audit.md) · [JSON](v2-config-audit.json)
 - [模型 Reference](v2-models.md) · [JSON](v2-models.json)
 - [Blueprint 与 CLI Reference](v2-blueprints.md) · [JSON](v2-blueprints.json)
 - [Alpha 候选首屏核心 JS 性能记录](v2-alpha-performance.json)

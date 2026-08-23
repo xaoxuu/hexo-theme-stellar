@@ -84,7 +84,7 @@ test("site/layout/content/appearance/resources/head Schema 提供默认值并拒
   assert.equal(config.extensions.comments.provider, null);
   assert.equal(config.extensions.features.reveal.enabled, true);
   assert.equal(config.extensions.services.github.rawUrl, "https://raw.githubusercontent.com");
-  assert.equal(config.extensions.cache.enabled, true);
+  assert.equal("cache" in config.extensions, false);
   assertDeepFrozen(config);
 });
 

@@ -29,8 +29,7 @@ test("Extension 配置使用最终路径并投影 camelCase 运行时", () => {
         services: {
           site_info: { endpoint: "https://example.com/site?url={href}" },
           github: { raw_url: "https://raw.example.com" }
-        },
-        cache: { enabled: false, ttl: { custom_service: 42 }, max_entries: 0 }
+        }
       }
     }
   });
@@ -46,9 +45,7 @@ test("Extension 配置使用最终路径并投影 camelCase 运行时", () => {
   assert.equal(config.extensions.features.cardHover.maxTilt, 0);
   assert.equal(config.extensions.services.siteInfo.endpoint, "https://example.com/site?url={href}");
   assert.equal(config.extensions.services.github.rawUrl, "https://raw.example.com");
-  assert.equal(config.extensions.cache.enabled, false);
-  assert.equal(config.extensions.cache.ttl.custom_service, 42);
-  assert.equal(config.extensions.cache.maxEntries, 0);
+  assert.equal("cache" in config.extensions, false);
   assert.equal(Object.isFrozen(config.extensions), true);
   assert.equal(Object.isFrozen(config.extensions.comments.providers.giscus), true);
 });
@@ -92,7 +89,7 @@ test("Extension Schema 拒绝旧根、旧命名、未知能力和官方资源覆
     assert.match(error.message, /comments 已移除，期望 extensions\.comments/);
     assert.match(error.message, /plugins 已移除，期望 extensions\.features/);
     assert.match(error.message, /data_services 已移除，期望 extensions\.services/);
-    assert.match(error.message, /data_cache 已移除，期望 extensions\.cache/);
+    assert.match(error.message, /data_cache 已移除，期望 internalized/);
     assert.match(error.message, /api_host 已移除，期望 extensions\.services\.github/);
     assert.match(error.message, /extensions\.search\.provider 的值不在/);
     assert.match(error.message, /extensions\.comments\.provider 的值不在/);
@@ -100,11 +97,11 @@ test("Extension Schema 拒绝旧根、旧命名、未知能力和官方资源覆
     assert.match(error.message, /extensions\.comments\.providers\.giscus\.src 已移除/);
     assert.match(error.message, /extensions\.comments\.providers\.waline\.meta_css 已移除/);
     assert.match(error.message, /extensions\.features\.lightbox\.js 已移除/);
-    assert.match(error.message, /extensions\.features\.lightbox\.provider 的值不在/);
-    assert.match(error.message, /extensions\.features\.reveal\.provider 的值不在/);
-    assert.match(error.message, /extensions\.features\.ai_summary\.provider 的值不在/);
+    assert.match(error.message, /extensions\.features\.lightbox\.provider 已移除/);
+    assert.match(error.message, /extensions\.features\.reveal\.provider 已移除/);
+    assert.match(error.message, /extensions\.features\.ai_summary\.provider 已移除/);
     assert.match(error.message, /extensions\.features\.math\.providers\.katex\.inject 已移除/);
-    assert.match(error.message, /extensions\.features\.diagrams\.provider 的值不在/);
+    assert.match(error.message, /extensions\.features\.diagrams\.provider 已移除/);
     assert.match(error.message, /未知字段 extensions\.features\.mystery/);
     assert.match(error.message, /未知字段 extensions\.services\.site_info\.js/);
     assert.match(error.message, /extensions\.services\.github\.api_url 的值不在 absolute HTTP\(S\) URL 中/);

@@ -19,7 +19,6 @@ Stellar 内置 Beaudar、Utterances、Giscus、Twikoo、Waline 与 Artalk 六种
 extensions:
   comments:
     provider: giscus
-    title: 快来参与讨论吧~
     providers:
       giscus:
         data-repo: owner/repo
@@ -33,7 +32,7 @@ extensions:
         site: Example
 ```
 
-`provider` 选择全局实现，`title` 是默认评论区标题，`providers.<provider>` 是第三方参数袋。参数袋保留上游字段名并按键合并；官方脚本、样式和注入资源由主题内部注册表提供，`js/css/src/inject` 不能作为资源覆盖入口。旧 `comments.service/comment_title/custom_css` 和 `comments.<service>` 不兼容读取。
+`provider` 选择全局实现，`title` 可显式覆盖评论区标题；省略时使用当前语言的 `btn.comments`。`providers.<provider>` 是第三方参数袋。参数袋保留上游字段名并按键合并；官方脚本、样式和注入资源由主题内部注册表提供，`js/css/src/inject` 不能作为资源覆盖入口。旧 `comments.service/comment_title/custom_css` 和 `comments.<service>` 不兼容读取。
 
 主题级配置没有全局 `enabled`；未配置 provider 即停用。页面/Profile/Collection 可用内容作用域的 `comments.enabled` 关闭或开启既有 provider：
 

@@ -15,7 +15,6 @@ Stellar v2 把用户可配置的外部能力统一放在 `extensions`。构建�
 | `extensions.tags` | Stellar 官方标签插件行为参数 | `extensions.tags` |
 | `extensions.features` | 懒加载、预加载、灯箱、动效、数学、图表等页面能力 | `extensions.features` |
 | `extensions.services` | 站点信息、评分、投票、贡献者与 GitHub 端点 | `extensions.services` |
-| `extensions.cache` | 浏览器动态数据缓存策略 | `extensions.cache` |
 
 公开 YAML 使用 snake_case，冻结 JavaScript 使用 camelCase。Stellar 所有父级对象严格封闭；只有明确声明的第三方 provider 参数袋保留上游键名。数组完整替换，对象和参数袋按已声明边界逐键合并，不做类型强转。
 
@@ -36,7 +35,7 @@ flowchart LR
 
 ## 内部资源
 
-官方脚本、样式和主题自带服务模块由 `scripts/lib/extension-assets.js` 注册，不再是公开配置：
+官方脚本、样式、主题自带服务模块、固定 provider 和 request/cache policy 由 `scripts/lib/internal-constants.js` 注册，不是公开配置：
 
 - marked 与 lazyload CDN；
 - 评论实现的 `js/css/src/meta_css`；
@@ -55,11 +54,11 @@ flowchart LR
 
 Swiper 是主题内置容器能力，依据页面 DOM 按需加载，不提供公开配置。图片懒加载是主题基础行为，公开配置只保留过渡与比例修正参数。
 
-## 服务与缓存
+## 服务与内部缓存
 
 `extensions.services` 只公开业务端点和完整 GitHub URL。站点信息、评分与投票使用 `endpoint`；GitHub 使用 `api_url/raw_url/gist_url/card_url`，且必须是绝对 HTTP(S) URL。
 
-`extensions.cache` 提供 `enabled/default_ttl/ttl/max_entries`。`ttl` 是按服务名开放的数值记录；ESM request/cache 客户端直接消费 manifest 投影，提供并发去重、TTL、重试、stale fallback 与淘汰，并且不替换浏览器原生网络 API。
+request/cache 的 TTL、重试、超时、容量与淘汰规则是主题内部实现策略。ESM 客户端消费 Runtime Manifest 中的冻结 policy，不替换浏览器原生网络 API。
 
 ## 已移除入口
 
@@ -69,7 +68,7 @@ Swiper 是主题内置容器能力，依据页面 DOM 按需加载，不提供�
 
 - [_config.yml](../../../_config.yml)（`extensions`）
 - [scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)
-- [scripts/lib/extension-assets.js](../../../scripts/lib/extension-assets.js)
+- [scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)
 - [scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)
 - [layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)
 - [source/js/runtime/](../../../source/js/runtime/)

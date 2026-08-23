@@ -13,6 +13,16 @@
 
 'use strict'
 
+const BUILTIN_STATUS_IDS = new Set(['in_track', 'at_risk', 'off_track', 'finished', 'unfinished'])
+
+function localizeStatuses(ctx, statuses) {
+  const __ = ctx.theme.i18n.__(ctx.config.language)
+  return Object.fromEntries(Object.entries(statuses).map(([id, status]) => [id, {
+    ...status,
+    label: status.label || (BUILTIN_STATUS_IDS.has(id) ? __('tag_plugins.okr.status.' + id) : '')
+  }]))
+}
+
 function splitContentAndNote(input) {
   var arr = input.trim().split('\n').filter(item => item.trim().length > 0)
   if (arr.length == 0) {
@@ -84,7 +94,7 @@ module.exports = ctx => function(args, content = '') {
     console.error('invalid okr tag:', contentArray);
     return ''
   }
-  const statusList = ctx.stellar.config.extensions.tags.okr.status
+  const statusList = localizeStatuses(ctx, ctx.stellar.config.extensions.tags.okr.status)
   const oMeta = args
   const oBody = splitContentAndNote(contentArray.shift())
   const krList = generateKRList(ctx, contentArray)

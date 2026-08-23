@@ -212,11 +212,10 @@ const CONFIG_DOMAIN_CATALOG = deepFreeze([
   domain("data_cache", {
     sources: THEME_SOURCES,
     boundary: "sealed",
-    runtimeTarget: "hexo.stellar.config.extensions.cache",
+    runtimeTarget: "scripts/lib/internal-constants.js runtime.cache",
     consumers: ["browser request/cache client"],
-    status: "delivered",
-    migrationSlice: "extensions-services",
-    dynamicRecords: ["data_cache.ttl.<service>"]
+    status: "excluded",
+    migrationSlice: "extensions-services"
   }),
   domain("plugins", {
     sources: THEME_SOURCES,

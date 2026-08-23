@@ -276,7 +276,7 @@ extensions:
 
   comments:
     provider: # beaudar / utterances / giscus / twikoo / waline / artalk
-    title: 快来参与讨论吧~
+    title:
     providers:
       beaudar:
         repo: xxx/xxx
@@ -348,8 +348,6 @@ extensions:
       default_color: theme
     image:
       parse_markdown: false
-    copy:
-      toast: 复制成功
     timeline:
       max_height: 80vh
     mark:
@@ -361,19 +359,14 @@ extensions:
       status:
         in_track:
           color: blue
-          label: 正常
         at_risk:
           color: yellow
-          label: 风险
         off_track:
           color: orange
-          label: 延期
         finished:
           color: green
-          label: 已完成
         unfinished:
           color: red
-          label: 未完成
     gallery:
       layout: grid
       size: mix
@@ -387,22 +380,18 @@ extensions:
       fix_ratio: true
     preload:
       enabled: true
-      provider: flying_pages
     lightbox:
       enabled: true
-      provider: fancybox
       mode: auto
       selector: .timenode p>img
     reveal:
       enabled: true
-      provider: scrollreveal
       distance: 8px
       duration: 1000
       interval: 100
       scale: 1
     ai_summary:
       enabled: false
-      provider: tianli_gpt
       scope: post
       key: 5Q5mpqRK5DkwT1X9Gi5e
       max_length: 1000
@@ -411,11 +400,6 @@ extensions:
       recommendation: all
       hide_shuttle: true
       summary_toggle: false
-      interface:
-        name: AI摘要
-        introduce: '我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。'
-        version: TianliGPT
-        buttons: [介绍自己, 推荐文章, 生成摘要, 矩阵穿梭]
     math:
       provider:
       providers:
@@ -424,14 +408,10 @@ extensions:
           v3: false
     diagrams:
       enabled: false
-      provider: mermaid
       style_optimization: false
       theme: neutral
     code_copy:
       enabled: true
-      idle_text: Copy
-      success_text: Copied
-      toast: 复制成功
     adaptive_text:
       enabled: true
     card_hover:
@@ -457,22 +437,6 @@ extensions:
       raw_url: https://raw.githubusercontent.com
       gist_url: https://gist.github.com
       card_url: https://github-readme-stats.vercel.app
-
-  cache:
-    enabled: true
-    default_ttl: 3600
-    ttl:
-      giscus: 600
-      waline: 600
-      artalk: 600
-      memos: 600
-      memos-user: 86400
-      sites: 86400
-      friends: 86400
-      friends_and_posts: 86400
-      siteinfo: 86400
-    max_entries: 200
-
 
 appearance:
   color_scheme: auto # auto / light / dark

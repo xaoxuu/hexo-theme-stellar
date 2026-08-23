@@ -7,6 +7,7 @@ const path = require("node:path");
 const { generateReferenceMetadata } = require("./reference-metadata");
 const { generateConfigReferenceMetadata } = require("./config-reference-metadata");
 const { generateBlueprintReferenceMetadata } = require("./blueprint-reference-metadata");
+const { generateConfigFieldAudit } = require("./config-field-audit");
 
 function compareText(left, right) {
   if (left < right) return -1;
@@ -82,6 +83,24 @@ function configReferenceMarkdown(metadata = generateConfigReferenceMetadata()) {
     }
     lines.push("");
   }
+  return markdown(lines);
+}
+
+function configAuditMarkdown(metadata = generateConfigFieldAudit()) {
+  const lines = [
+    "# Stellar v2 配置字段审计",
+    "",
+    "> 本页由当前配置 Schema 与 M6 退出字段清单自动生成。请勿手工编辑。",
+    "",
+    `结论计数：${metadata.dispositions.map(id => `\`${id}=${metadata.counts[id]}\``).join("、")}。`,
+    "",
+    "| Scope | Path | Accepted | Disposition | Default source | Consumers | Rationale |",
+    "| --- | --- | --- | --- | --- | --- | --- |"
+  ];
+  for (const field of metadata.fields) {
+    lines.push(`| ${text(field.scope)} | ${text(field.path)} | ${field.accepted ? "yes" : "no"} | ${text(field.disposition)} | ${text(field.defaultSource)} | ${list(field.consumers)} | ${text(field.rationale)} |`);
+  }
+  lines.push("");
   return markdown(lines);
 }
 
@@ -161,6 +180,7 @@ function referenceIndexMarkdown() {
     "",
     "- [Alpha 候选快速开始与范围](../ALPHA.md)",
     "- [配置 Reference](v2-config.md) · [JSON](v2-config.json)",
+    "- [配置字段审计](v2-config-audit.md) · [JSON](v2-config-audit.json)",
     "- [模型 Reference](v2-models.md) · [JSON](v2-models.json)",
     "- [Blueprint 与 CLI Reference](v2-blueprints.md) · [JSON](v2-blueprints.json)",
     "- [Alpha 候选首屏核心 JS 性能记录](v2-alpha-performance.json)",
@@ -183,6 +203,7 @@ function validatePublicReferenceLinks(root) {
     path.join(root, "ALPHA.md"),
     path.join(root, "reference", "README.md"),
     path.join(root, "reference", "v2-config.md"),
+    path.join(root, "reference", "v2-config-audit.md"),
     path.join(root, "reference", "v2-models.md"),
     path.join(root, "reference", "v2-blueprints.md")
   ];
@@ -221,6 +242,7 @@ function validatePublicReferenceLinks(root) {
 
 module.exports = {
   blueprintReferenceMarkdown,
+  configAuditMarkdown,
   configReferenceMarkdown,
   headingAnchor,
   markdownAnchors,

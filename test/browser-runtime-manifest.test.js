@@ -16,6 +16,10 @@ function fixture(overrides = {}) {
     colorScheme: "auto",
     render: {},
     comments: { service: "giscus", options: { "data-repo": "x/y" }, pageTitle: "Docs" },
+    messages: {
+      copy: { idle: "Copy", success: "Copied!", denied: "Denied", unsupported: "Unsupported", toast: "Copied!" },
+      aiSummary: { name: "AI Summary", introduce: "Read with AI", buttons: ["One", "Two", "Three", "Four"] }
+    },
     extensions: {
       search: { provider: "local", providers: { local: { indexPath: "/search.json", lazy: true } } },
       comments: {},
@@ -54,10 +58,33 @@ test("Runtime Manifest 投影页面需要的 Extension 并深度冻结", () => {
     "reveal", "ai-summary", "code-copy", "adaptive-text", "swiper"
   ]);
   assert.equal(manifest.extensions.find(item => item.id === "services").config.siteInfoEndpoint, "https://example.com/?url={href}");
+  assert.equal(manifest.extensions.find(item => item.id === "code-copy").config.messages.denied, "Denied");
+  assert.equal(manifest.extensions.find(item => item.id === "ai-summary").config.interface.name, "AI Summary");
+  assert.equal(manifest.extensions.find(item => item.id === "ai-summary").config.interface.version, "TianliGPT");
+  assert.equal(manifest.policy.cache.defaultTtl, 3600);
+  assert.equal(manifest.policy.request.timeoutMs, 5000);
   assert.equal(manifest.extensions.find(item => item.id === "lightbox").when.selector.includes(".with-fancybox"), true);
   assert.equal(manifest.extensions.find(item => item.id === "lightbox").when.selector.includes(".custom"), true);
   assert.equal(Object.isFrozen(manifest), true);
   assert.equal(Object.isFrozen(manifest.extensions[0].config), true);
+  assert.equal(Object.isFrozen(manifest.policy), true);
+});
+
+test("Runtime Manifest 以显式 AI 界面覆盖语言默认", () => {
+  const input = fixture();
+  input.extensions.features.aiSummary.interface = {
+    name: "Custom AI",
+    introduce: "Custom intro",
+    buttons: ["Custom"]
+  };
+  const manifest = buildBrowserRuntimeManifest(input);
+  const ai = manifest.extensions.find(item => item.id === "ai-summary").config.interface;
+  assert.deepEqual(ai, {
+    name: "Custom AI",
+    introduce: "Custom intro",
+    version: "TianliGPT",
+    buttons: ["Custom"]
+  });
 });
 
 test("Runtime Manifest 按 profile/render 选择 AI、Math 与 diagrams", () => {

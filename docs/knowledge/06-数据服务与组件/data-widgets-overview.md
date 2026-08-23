@@ -14,7 +14,8 @@ Stellar 的数据组件采用“服务端生成占位、浏览器进入视口后
 ```mermaid
 flowchart LR
   INPUT["页面 / 标签参数"] --> PLACEHOLDER[".data-service 占位"]
-  CONFIG["extensions.services / cache"] --> CONTEXT["Runtime Manifest"]
+  CONFIG["extensions.services"] --> CONTEXT["Runtime Manifest"]
+  POLICY["内部 request/cache policy"] --> CONTEXT
   ASSETS["内部 services 模块表"] --> CONTEXT
   PLACEHOLDER --> RUNTIME["services ESM adapter"]
   CONTEXT --> RUNTIME
@@ -45,7 +46,7 @@ extensions:
 
 ## 缓存
 
-`extensions.cache` 定义 `enabled/default_ttl/ttl/max_entries`。`ttl.<service>` 是开放的数值记录；`0` 表示该服务不缓存。浏览器 request/cache 客户端直接消费 camelCase manifest 投影，不修改原生 fetch/XHR。
+request/cache policy 由 `scripts/lib/internal-constants.js` 所有，构建期投影到 Runtime Manifest。浏览器客户端显式消费该 policy，站点不再公开调节 TTL、容量、重试或超时，也不修改原生 fetch/XHR。
 
 ## 失败降级
 
@@ -53,7 +54,7 @@ extensions:
 
 ## 参考源码
 
-- [scripts/lib/extension-assets.js](../../../scripts/lib/extension-assets.js)
+- [scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)
 - [layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)
 - [source/js/runtime/extensions/services.mjs](../../../source/js/runtime/extensions/services.mjs)
 - [source/js/runtime/request-cache.mjs](../../../source/js/runtime/request-cache.mjs)

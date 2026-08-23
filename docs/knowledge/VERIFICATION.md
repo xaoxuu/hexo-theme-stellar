@@ -359,6 +359,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `5c88837` | docs(v2): 登记 Reference 与 Alpha 验证 (#718) | #718 最终登记：校正 Reference 目录与公开文档链接，收紧 Node.js 22 性能验证的 `--check` 入口，完成 M5 设计状态、验证台账与 README 导航收尾；不改变已验收的运行时行为 |
 | `a4e442c` | fix(v2): 修正 Alpha 集成与生命周期门禁 (#718) | #718 审查修正：性能对照改为构建当前 npm tarball且排除 dynamic import；三站集成显式验证 post/wiki/topic/notebook 输出；图标请求与 dropdown observer/全局监听/RAF 建立真实 cleanup，并通过内部事件握手避免新增全局 API；补齐对应测试与候选状态边界，主题 357 项测试和 Node.js 22 性能门禁通过 |
 | `6085acc` | feat(v2): 完成 Reference 与 Alpha 集成门禁 (#718) | 设计文档 `2026-08-23-v2-reference-alpha-integration/`；从已交付 Schema/manifest 生成公开配置、模型与 Blueprint JSON/Markdown Reference，增加 Alpha 候选指南、npm tarball 三站点 init → doctor → generate 集成、四类 profile 与 Runtime Manifest 验收、固定 v1 `1.44.0` 的首屏核心 JS gzip 门禁；不发布 npm、不创建 tag，M5 只建立候选基线 |
 | `c51f615` | refactor(v2): 建立浏览器 ESM 运行时 (#717) | 设计文档 `2026-08-23-v2-browser-runtime/`；严格深冻结 Runtime Manifest、单一 ESM bootstrap、Extension register/mount/unmount/按需 import/失败隔离、统一 request/cache 客户端、search/comments/services/Feature adapter 与旧补载/队列/网络 monkey patch 清理；347 项测试、三份 Reference、知识库硬门禁、主工程 262 个生成文件与 Wiki/Post/KaTeX 浏览器 smoke 通过，Standards / Spec 双轨 review 0 findings；M4 完成，M5、Alpha 1 与首屏 gzip 30% 门禁仍未完成 |

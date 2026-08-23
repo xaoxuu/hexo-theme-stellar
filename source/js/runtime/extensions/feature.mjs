@@ -136,7 +136,7 @@ async function mountReveal(root, context, config) {
     fallbackApplied = true;
     document.documentElement.classList.add('sr-fallback');
   };
-  const watchdog = setTimeout(revealFallback, 3000);
+  const watchdog = setTimeout(revealFallback, context.manifest.policy.features.revealWatchdogMs);
   try {
     await context.assets.script(config.asset);
     if (typeof window.ScrollReveal !== 'function') throw new TypeError('ScrollReveal is unavailable');
@@ -275,10 +275,16 @@ async function mountDiagrams(root, context, config) {
 }
 
 async function mountCodeCopy(root, context, config) {
+  const messages = config.messages || {};
+  const policy = context.manifest.policy.features;
   context.legacy.ctx.copycode = {
-    default_text: config.idleText,
-    success_text: config.successText,
-    toast: config.toast
+    default_text: messages.idle || '',
+    success_text: messages.success || '',
+    denied_text: messages.denied || '',
+    unsupported_text: messages.unsupported || '',
+    toast: messages.toast || '',
+    feedback_ms: policy.codeCopyFeedbackMs,
+    toast_ms: policy.codeCopyToastMs
   };
   await context.assets.script('/js/plugins/copycode.js');
   const elements = queryAll(root, '.code');

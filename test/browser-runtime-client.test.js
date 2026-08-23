@@ -4,6 +4,15 @@ const { test } = require("node:test");
 const assert = require("node:assert/strict");
 const path = require("node:path");
 const { pathToFileURL } = require("node:url");
+const INTERNAL_CONSTANTS = require("../scripts/lib/internal-constants");
+
+const REQUEST_POLICY = INTERNAL_CONSTANTS.runtime.request;
+
+function cachePolicy(overrides = {}) {
+  return Object.assign({}, INTERNAL_CONSTANTS.runtime.cache, overrides, {
+    ttl: Object.assign({}, INTERNAL_CONSTANTS.runtime.cache.ttl, overrides.ttl || {})
+  });
+}
 
 function moduleUrl(relative) {
   return pathToFileURL(path.join(__dirname, "..", relative)).href;
@@ -226,8 +235,9 @@ test("request/cache 对 GET 去重、写入 TTL 并在 fresh 命中时不联网"
   let release;
   const gate = new Promise(resolve => { release = resolve; });
   const client = createRequestClient({
+    policy: REQUEST_POLICY,
     storage,
-    cache: { enabled: true, defaultTtl: 60, ttl: {}, maxEntries: 10 },
+    cache: cachePolicy({ defaultTtl: 60, ttl: {}, maxEntries: 10 }),
     scheduler: fn => fn(),
     dispatch: name => events.push(name),
     fetch: async () => {
@@ -256,9 +266,10 @@ test("request/cache 最终失败回退 stale，且非 GET 不缓存", async () =
   }));
   let calls = 0;
   const client = createRequestClient({
+    policy: REQUEST_POLICY,
     storage,
     clock: () => 5000,
-    cache: { enabled: true, defaultTtl: 1, ttl: {}, maxEntries: 10 },
+    cache: cachePolicy({ defaultTtl: 1, ttl: {}, maxEntries: 10 }),
     fetch: async () => { calls++; throw new Error("offline"); }
   });
   assert.equal(await (await client.request("https://example.com/stale", { retries: 1 })).text(), "stale");
@@ -272,7 +283,8 @@ test("request/cache 在调用方已有 signal 时仍执行超时与有限重试"
   const caller = new AbortController();
   let attempts = 0;
   const client = createRequestClient({
-    cache: { enabled: false },
+    policy: REQUEST_POLICY,
+    cache: cachePolicy({ enabled: false }),
     fetch: async (_url, options) => new Promise((_resolve, reject) => {
       attempts++;
       options.signal.addEventListener("abort", () => reject(new Error("timed out")), { once: true });
@@ -291,7 +303,8 @@ test("request/cache 的 cache=false 只禁用 Stellar 缓存，不透传非法 R
   const { createRequestClient } = await import(moduleUrl("source/js/runtime/request-cache.mjs"));
   let received;
   const client = createRequestClient({
-    cache: { enabled: true, defaultTtl: 60, ttl: {}, maxEntries: 10 },
+    policy: REQUEST_POLICY,
+    cache: cachePolicy({ defaultTtl: 60, ttl: {}, maxEntries: 10 }),
     fetch: async (_url, options) => {
       received = options;
       return new Response("ok", { status: 200 });
@@ -311,10 +324,11 @@ test("request/cache 按 maxEntries 淘汰最旧条目，并以 UTF-8 字节限�
     ["https://example.com/large", "中".repeat(70 * 1024)]
   ]);
   const client = createRequestClient({
+    policy: REQUEST_POLICY,
     storage,
     clock: () => ++clock,
     scheduler: fn => fn(),
-    cache: { enabled: true, defaultTtl: 60, ttl: {}, maxEntries: 1 },
+    cache: cachePolicy({ defaultTtl: 60, ttl: {}, maxEntries: 1 }),
     fetch: async url => new Response(bodies.get(url), { status: 200 })
   });
   await client.request("https://example.com/one");
@@ -339,7 +353,7 @@ test("旧 request adapter 从 ds-* 推导 service，fresh 命中不显示 loadin
       return new Response("fresh", { status: 200 });
     }
   };
-  installLegacyRequestAdapter(utils, client);
+  installLegacyRequestAdapter(utils, client, REQUEST_POLICY);
   await utils.request({ className: "data-service ds-memos" }, "/memos", async response => {
     calls.push(await response.text());
   });
@@ -359,7 +373,7 @@ test("旧 request bridge 将 runtime 启动前的调用排队到真实 adapter",
       calls.push(url);
       return new Response("drained", { status: 200 });
     }
-  });
+  }, REQUEST_POLICY);
   assert.equal(await pending, "drained");
   assert.deepEqual(calls, ["/queued"]);
   assert.equal(globalThis.__stellarRequestBridge.resolve, undefined);
@@ -405,9 +419,10 @@ test("request client 仅在真正联网时调用 onNetworkStart", async () => {
   storage.setItem(REQUEST_CACHE_PREFIX + "/fresh", JSON.stringify({ text: "fresh", contentType: "text/plain", ts: 10, ttl: 60 }));
   const starts = [];
   const client = createRequestClient({
+    policy: REQUEST_POLICY,
     storage,
     clock: () => 20,
-    cache: { enabled: true, defaultTtl: 60, ttl: {}, maxEntries: 10 },
+    cache: cachePolicy({ defaultTtl: 60, ttl: {}, maxEntries: 10 }),
     fetch: async () => new Response("network", { status: 200 })
   });
   await client.request("/fresh", { onNetworkStart: () => starts.push("fresh") });

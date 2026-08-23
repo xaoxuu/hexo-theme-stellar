@@ -35,10 +35,11 @@ async function start() {
   const manifest = readManifest(document);
   const assets = createAssetLoader({ document, root: manifest.root, version: RUNTIME_QUERY });
   const request = createRequestClient({
-    cache: manifest.cache,
+    cache: manifest.policy.cache,
+    policy: manifest.policy.request,
     dispatch
   });
-  installLegacyRequestAdapter(globalThis.utils, request);
+  installLegacyRequestAdapter(globalThis.utils, request, manifest.policy.request);
 
   const registry = createExtensionRegistry({
     onError(detail) {

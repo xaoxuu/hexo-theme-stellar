@@ -29,7 +29,7 @@ if (explicitComments) {
 <% if (commentModel.enabled) { %>
   <div class="related-wrap md-text<%- scrollreveal(' ') %>" id="comments">
     <section class="header cmt-title cap theme">
-      <%- markdown(commentModel.title || (explicitComments ? '' : stellar_config('extensions.comments.title'))) %>
+      <%- markdown(commentModel.title || __('btn.comments')) %>
     </section>
     <section class="body cmt-body <%- commentModel.service %>">
       <%- partial(commentModel.service + '/layout', {comments: commentModel}) %>

@@ -19,15 +19,13 @@ extensions:
       ratio: square
     chat:
       endpoint: https://siteinfo.listentothewind.cn/api/v1
-    copy:
-      toast: 复制成功
     okr:
       border: true
       status:
-        in_track: {color: blue, label: 正常}
+        in_track: {color: blue}
 ```
 
-运行时分别使用 `maxHeight`、`endpoint` 等 camelCase 键。`emoji.<provider>`、`okr.status.<status>` 与 `quot.<variant>` 是明确开放的动态记录，其值仍受 Schema 约束。
+运行时分别使用 `maxHeight`、`endpoint` 等 camelCase 键。`emoji.<provider>`、`okr.status.<status>` 与 `quot.<variant>` 是明确开放的动态记录，其值仍受 Schema 约束。OKR 内置状态的标签来自语言包；自定义状态可显式提供 `label`。
 
 ## 服务模块
 
@@ -38,8 +36,8 @@ timeline、voice、video 与 download-file 等动态能力使用 `.data-service`
 - timeline：用成对标签组织时间节点，可受 `max_height` 限制并滚动。
 - gallery：`layout` 支持 `grid/flow`，`size` 与 `ratio` 控制媒体几何。
 - emoji：provider 模板中的 `{name}` 替换为表情名。
-- copy：复制成功后显示 `extensions.tags.copy.toast`。
-- OKR：`status` 参数必须匹配 `extensions.tags.okr.status` 中的键。
+- copy：复制成功后显示当前语言的 `message.copied`。
+- OKR：`status` 参数必须匹配 `extensions.tags.okr.status` 中的键；内置键默认使用 `tag_plugins.okr.status.*` 翻译。
 
 ## 参考源码
 

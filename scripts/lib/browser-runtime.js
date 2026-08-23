@@ -2,6 +2,8 @@
 
 "use strict";
 
+const INTERNAL_CONSTANTS = require("./internal-constants");
+
 const RUNTIME_VERSION = 1;
 const RUNTIME_CONFIG_ID = "stellar-runtime-config";
 const LOCAL_MODULE_PREFIX = "/js/runtime/";
@@ -77,6 +79,7 @@ function buildBrowserRuntimeManifest(input) {
   const features = plainObject(extensions.features, "extensions.features");
   const assets = plainObject(source.assets, "assets");
   const render = plainObject(source.render, "render");
+  const messages = plainObject(source.messages, "messages");
   const entries = [];
   const root = normalizeRoot(source.root);
 
@@ -145,8 +148,21 @@ function buildBrowserRuntimeManifest(input) {
   const ai = features.aiSummary || {};
   const profile = source.profile || "";
   const aiMatches = ai.scope === "all" || ai.scope === profile;
+  const aiInterface = plainObject(ai.interface, "extensions.features.ai_summary.interface");
+  const aiMessages = plainObject(messages.aiSummary, "messages.aiSummary");
+  const aiButtons = Array.isArray(aiInterface.buttons) && aiInterface.buttons.length > 0
+    ? aiInterface.buttons
+    : (Array.isArray(aiMessages.buttons) ? aiMessages.buttons : []);
   addFeature(entries, "ai-summary", ai.enabled === true && aiMatches, { selector: "article.content" },
-    Object.assign({}, ai, { asset: assets.features?.aiSummary || null }));
+    Object.assign({}, ai, {
+      asset: assets.features?.aiSummary || null,
+      interface: {
+        name: aiInterface.name || aiMessages.name || "",
+        introduce: aiInterface.introduce || aiMessages.introduce || "",
+        version: INTERNAL_CONSTANTS.providers.aiSummaryVersion,
+        buttons: aiButtons
+      }
+    }));
 
   const mathProvider = render.math || features.math?.provider;
   if (mathProvider === "mathjax") {
@@ -164,7 +180,9 @@ function buildBrowserRuntimeManifest(input) {
     asset: assets.features?.diagrams || null,
     colorScheme: source.colorScheme || "auto"
   }));
-  addFeature(entries, "code-copy", features.codeCopy?.enabled === true, { selector: ".code" }, features.codeCopy);
+  addFeature(entries, "code-copy", features.codeCopy?.enabled === true, { selector: ".code" }, Object.assign({}, features.codeCopy, {
+    messages: plainObject(messages.copy, "messages.copy")
+  }));
   addFeature(entries, "adaptive-text", features.adaptiveText?.enabled === true, { selector: "[data-text-adaptive]" }, {});
   addFeature(entries, "card-hover", features.cardHover?.enabled === true, { selector: ".card-hover" }, features.cardHover);
   addFeature(entries, "cjk-typography", features.cjkTypography?.enabled === true, { selector: ".heti" }, Object.assign({}, features.cjkTypography, {
@@ -175,7 +193,7 @@ function buildBrowserRuntimeManifest(input) {
   const manifest = {
     version: RUNTIME_VERSION,
     root,
-    cache: extensions.cache || {},
+    policy: Object.assign({}, INTERNAL_CONSTANTS.runtime, { providers: INTERNAL_CONSTANTS.providers }),
     dependencies: assets.dependencies || {},
     extensions: entries
   };

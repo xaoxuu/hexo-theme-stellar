@@ -17,6 +17,25 @@ var runtimeProfile = page.layout || ''
 if (collection_id(page, 'wiki')) runtimeProfile = 'wiki'
 if (collection_id(page, 'topic')) runtimeProfile = 'topic'
 if (collection_id(page, 'notebook')) runtimeProfile = 'notebook'
+var runtimeMessages = {
+  copy: {
+    idle: __('btn.copy'),
+    success: __('message.copied'),
+    denied: __('message.copy_denied'),
+    unsupported: __('message.copy_unsupported'),
+    toast: __('message.copied')
+  },
+  aiSummary: {
+    name: __('feature.ai_summary.name'),
+    introduce: __('feature.ai_summary.introduce'),
+    buttons: [
+      __('feature.ai_summary.buttons.introduce'),
+      __('feature.ai_summary.buttons.recommend'),
+      __('feature.ai_summary.buttons.summarize'),
+      __('feature.ai_summary.buttons.shuttle')
+    ]
+  }
+}
 var runtimeJson = browser_runtime_manifest({
   root: config.root,
   extensions: runtimeExtensions,
@@ -24,7 +43,8 @@ var runtimeJson = browser_runtime_manifest({
   render: runtimeRender,
   comments: runtimeComments,
   profile: runtimeProfile,
-  colorScheme: stellar_config('appearance.colorScheme')
+  colorScheme: stellar_config('appearance.colorScheme'),
+  messages: runtimeMessages
 })
 %>
 <% if (runtimeMathProvider === 'katex') { %>

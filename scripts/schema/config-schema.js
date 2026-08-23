@@ -198,7 +198,7 @@ function tagExtensionSchemas() {
   });
   const okrStatus = extensionObject({
     color: extensionValue("string", ""),
-    label: extensionValue("string", "")
+    label: extensionValue(["string", "null"], null)
   });
   return {
     note: extensionObject({
@@ -230,7 +230,6 @@ function tagExtensionSchemas() {
     icon: extensionObject({ default_color: extensionValue(["string", "null"], "accent") }, { default_color: "accent" }),
     button: extensionObject({ default_color: extensionValue(["string", "null"], "theme") }, { default_color: "theme" }),
     image: extensionObject({ parse_markdown: extensionValue("boolean", false) }, { parse_markdown: false }),
-    copy: extensionObject({ toast: extensionValue("string", "复制成功") }, { toast: "复制成功" }),
     timeline: extensionObject({ max_height: extensionValue("string", "80vh") }, { max_height: "80vh" }, {
       removedProperties: { "max-height": "max_height" }
     }),
@@ -239,11 +238,11 @@ function tagExtensionSchemas() {
     okr: extensionObject({
       border: extensionValue("boolean", true),
       status: extensionObject({}, {
-        in_track: { color: "blue", label: "正常" },
-        at_risk: { color: "yellow", label: "风险" },
-        off_track: { color: "orange", label: "延期" },
-        finished: { color: "green", label: "已完成" },
-        unfinished: { color: "red", label: "未完成" }
+        in_track: { color: "blue", label: null },
+        at_risk: { color: "yellow", label: null },
+        off_track: { color: "orange", label: null },
+        finished: { color: "green", label: null },
+        unfinished: { color: "red", label: null }
       }, {
         sealed: false,
         additionalPropertyKey: "<status>",
@@ -252,11 +251,11 @@ function tagExtensionSchemas() {
     }, {
       border: true,
       status: {
-        in_track: { color: "blue", label: "正常" },
-        at_risk: { color: "yellow", label: "风险" },
-        off_track: { color: "orange", label: "延期" },
-        finished: { color: "green", label: "已完成" },
-        unfinished: { color: "red", label: "未完成" }
+        in_track: { color: "blue", label: null },
+        at_risk: { color: "yellow", label: null },
+        off_track: { color: "orange", label: null },
+        finished: { color: "green", label: null },
+        unfinished: { color: "red", label: null }
       }
     }),
     gallery: extensionObject({
@@ -277,26 +276,22 @@ function featureExtensionSchemas() {
       fix_ratio: extensionValue("boolean", true)
     }, { transition: "fade", fix_ratio: true }),
     preload: extensionObject({
-      enabled: extensionValue("boolean", true),
-      provider: extensionValue("string", "flying_pages", { values: ["flying_pages"] })
-    }, { enabled: true, provider: "flying_pages" }, { removedProperties: { enable: "enabled", service: "provider", flying_pages: "internalized" } }),
+      enabled: extensionValue("boolean", true)
+    }, { enabled: true }, { removedProperties: { enable: "enabled", provider: "internalized", service: "internalized", flying_pages: "internalized" } }),
     lightbox: extensionObject({
       enabled: extensionValue("boolean", true),
-      provider: deliveredField("extensions.features.lightbox.provider", { normalizer: "identity", example: "fancybox" }),
       mode: extensionValue("string", "auto", { values: ["auto", "global"] }),
       selector: extensionValue("string", ".timenode p>img")
-    }, { enabled: true, provider: "fancybox", mode: "auto", selector: ".timenode p>img" }, { removedProperties: { enable: "enabled", js: "internalized", css: "internalized" } }),
+    }, { enabled: true, mode: "auto", selector: ".timenode p>img" }, { removedProperties: { enable: "enabled", provider: "internalized", js: "internalized", css: "internalized" } }),
     reveal: extensionObject({
       enabled: extensionValue("boolean", true),
-      provider: deliveredField("extensions.features.reveal.provider", { normalizer: "identity", example: "scrollreveal" }),
       distance: extensionValue("string", "8px"),
       duration: extensionValue("number", 1000, { minimum: 0 }),
       interval: extensionValue("number", 100, { minimum: 0 }),
       scale: extensionValue("number", 1, { minimum: 0, maximum: 1 })
-    }, { enabled: true, provider: "scrollreveal", distance: "8px", duration: 1000, interval: 100, scale: 1 }, { removedProperties: { enable: "enabled", js: "internalized" } }),
+    }, { enabled: true, distance: "8px", duration: 1000, interval: 100, scale: 1 }, { removedProperties: { enable: "enabled", provider: "internalized", js: "internalized" } }),
     ai_summary: extensionObject({
       enabled: extensionValue("boolean", false),
-      provider: deliveredField("extensions.features.ai_summary.provider", { normalizer: "identity", example: "tianli_gpt" }),
       scope: extensionValue("string", "post", { values: ["all", "post", "wiki", "topic"] }),
       key: extensionValue("string", "5Q5mpqRK5DkwT1X9Gi5e"),
       max_length: extensionValue("number", 1000, { minimum: 0, maximum: 5000 }),
@@ -306,19 +301,16 @@ function featureExtensionSchemas() {
       hide_shuttle: extensionValue("boolean", true),
       summary_toggle: extensionValue("boolean", false),
       interface: extensionObject({
-        name: extensionValue("string", "AI摘要"),
-        introduce: extensionValue("string", "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。"),
-        version: extensionValue("string", "TianliGPT"),
-        buttons: extensionValue("array", ["介绍自己", "推荐文章", "生成摘要", "矩阵穿梭"], { items: { type: ["string"] } })
+        name: extensionValue(["string", "null"], null),
+        introduce: extensionValue(["string", "null"], null),
+        buttons: extensionValue("array", [], { items: { type: ["string"] } })
       }, {
-        name: "AI摘要",
-        introduce: "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。",
-        version: "TianliGPT",
-        buttons: ["介绍自己", "推荐文章", "生成摘要", "矩阵穿梭"]
-      }, { removedProperties: { button: "buttons" } })
+        name: null,
+        introduce: null,
+        buttons: []
+      }, { removedProperties: { button: "buttons", version: "internalized" } })
     }, {
       enabled: false,
-      provider: "tianli_gpt",
       scope: "post",
       key: "5Q5mpqRK5DkwT1X9Gi5e",
       max_length: 1000,
@@ -328,12 +320,11 @@ function featureExtensionSchemas() {
       hide_shuttle: true,
       summary_toggle: false,
       interface: {
-        name: "AI摘要",
-        introduce: "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。",
-        version: "TianliGPT",
-        buttons: ["介绍自己", "推荐文章", "生成摘要", "矩阵穿梭"]
+        name: null,
+        introduce: null,
+        buttons: []
       }
-    }, { removedProperties: { enable: "enabled", js: "internalized", field: "scope", total_length: "max_length", summary_directly: "show_immediately", rec_method: "recommendation" } }),
+    }, { removedProperties: { enable: "enabled", provider: "internalized", js: "internalized", field: "scope", total_length: "max_length", summary_directly: "show_immediately", rec_method: "recommendation" } }),
     math: extensionObject({
       provider: deliveredField("extensions.features.math.provider", { normalizer: "identity", example: null }),
       providers: extensionObject({
@@ -343,16 +334,12 @@ function featureExtensionSchemas() {
     }, { provider: null, providers: { katex: {}, mathjax: { v3: false } } }, { removedProperties: { katex: "provider", mathjax: "provider" } }),
     diagrams: extensionObject({
       enabled: extensionValue("boolean", false),
-      provider: deliveredField("extensions.features.diagrams.provider", { normalizer: "identity", example: "mermaid" }),
       style_optimization: extensionValue("boolean", false),
       theme: extensionValue("string", "neutral", { values: ["default", "dark", "forest", "neutral"] })
-    }, { enabled: false, provider: "mermaid", style_optimization: false, theme: "neutral" }, { removedProperties: { enable: "enabled", js: "internalized" } }),
+    }, { enabled: false, style_optimization: false, theme: "neutral" }, { removedProperties: { enable: "enabled", provider: "internalized", js: "internalized" } }),
     code_copy: extensionObject({
-      enabled: extensionValue("boolean", true),
-      idle_text: extensionValue("string", "Copy"),
-      success_text: extensionValue("string", "Copied"),
-      toast: extensionValue("string", "复制成功")
-    }, { enabled: true, idle_text: "Copy", success_text: "Copied", toast: "复制成功" }, { removedProperties: { enable: "enabled", default_text: "idle_text" } }),
+      enabled: extensionValue("boolean", true)
+    }, { enabled: true }, { removedProperties: { enable: "enabled", idle_text: "localized", success_text: "localized", toast: "localized", default_text: "localized" } }),
     adaptive_text: extensionObject({ enabled: extensionValue("boolean", true) }, { enabled: true }, { removedProperties: { enable: "enabled" } }),
     card_hover: extensionObject({
       enabled: extensionValue("boolean", false),
@@ -408,7 +395,7 @@ function extensionsSchema() {
       }, {}, { removedProperties: { service: "provider", local_search: "providers.local", algolia_search: "providers.algolia" } }),
       comments: extensionObject({
         provider: deliveredField("extensions.comments.provider", { normalizer: "identity", example: null }),
-        title: deliveredField("extensions.comments.title", { normalizer: "identity", example: "快来参与讨论吧~" }),
+        title: deliveredField("extensions.comments.title", { normalizer: "identity", example: "Join discussion" }),
         providers: extensionObject({
           beaudar: providerBag({ repo: "xxx/xxx", "issue-term": "pathname", "issue-number": null, theme: "preferred-color-scheme", label: null, "input-position": "top", "comment-order": "desc", "keep-theme": null, loading: false, branch: "main" }),
           utterances: providerBag({ repo: "xxx/xxx", "issue-term": "pathname", "issue-number": null, theme: "preferred-color-scheme", label: null }),
@@ -422,7 +409,7 @@ function extensionsSchema() {
           additionalProperties: commentProvider
         })
       }, {}, { removedProperties: { service: "provider", comment_title: "title", custom_css: "removed" } }),
-      tags: extensionObject(tagExtensionSchemas(), {}),
+      tags: extensionObject(tagExtensionSchemas(), {}, { removedProperties: { copy: "localized" } }),
       features: extensionObject(featureExtensionSchemas(), {}),
       services: extensionObject({
         site_info: extensionObject({ endpoint: deliveredField("extensions.services.site_info.endpoint", { normalizer: "identity", example: null }) }, { endpoint: null }, { removedProperties: { api: "endpoint" } }),
@@ -443,20 +430,9 @@ function extensionsSchema() {
           gist_url: deliveredField("extensions.services.github.gist_url", { normalizer: "identity", validator: "absolute_http_url", example: "https://gist.github.com" }),
           card_url: deliveredField("extensions.services.github.card_url", { normalizer: "identity", validator: "absolute_http_url", example: "https://github-readme-stats.vercel.app" })
         }, { api_url: "https://api.github.com", raw_url: "https://raw.githubusercontent.com", gist_url: "https://gist.github.com", card_url: "https://github-readme-stats.vercel.app" })
-      }, {}),
-      cache: extensionObject({
-        enabled: deliveredField("extensions.cache.enabled", { normalizer: "identity", example: true }),
-        default_ttl: deliveredField("extensions.cache.default_ttl", { normalizer: "identity", example: 3600, minimum: 0 }),
-        ttl: deliveredField("extensions.cache.ttl", {
-          normalizer: "object",
-          example: { giscus: 600 },
-          sealed: false,
-          additionalPropertyKey: "<service>",
-          additionalProperties: deliveredField("extensions.cache.ttl.<service>", { normalizer: "identity", example: 600, minimum: 0 })
-        }),
-        max_entries: deliveredField("extensions.cache.max_entries", { normalizer: "identity", example: 200, minimum: 0 })
-      }, { enabled: true, default_ttl: 3600, ttl: { giscus: 600, waline: 600, artalk: 600, memos: 600, "memos-user": 86400, sites: 86400, friends: 86400, friends_and_posts: 86400, siteinfo: 86400 }, max_entries: 200 }, { removedProperties: { enable: "enabled" } })
-    }
+      }, {})
+    },
+    removedProperties: { cache: "internalized" }
   });
 }
 
@@ -627,7 +603,7 @@ const CONFIG_SCHEMA = deepFreeze({
     tag_plugins: "extensions.tags",
     dependencies: "extensions.features",
     data_services: "extensions.services",
-    data_cache: "extensions.cache",
+    data_cache: "internalized",
     plugins: "extensions.features",
     api_host: "extensions.services.github"
   },

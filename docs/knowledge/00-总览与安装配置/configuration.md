@@ -105,7 +105,6 @@ Pre-alpha M3 的 Blueprint 只在 init 时把选择结果展开为上述显式�
 | `extensions.tags` | 标签 Extension 行为 |
 | `extensions.features` | 可选 Feature 的注册式配置 |
 | `extensions.services` | 业务端点与 GitHub 完整 URL |
-| `extensions.cache` | 浏览器数据缓存策略 |
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
@@ -492,13 +491,12 @@ extensions:
   features:
     lightbox:
       enabled: true
-      provider: fancybox
       selector: .timenode p>img
     adaptive_text:
       enabled: true
 ```
 
-官方 JavaScript、CSS 与 inject 资源由主题内部注册表所有，不是公开配置。Feature 只保留启用状态、provider 与业务行为参数。
+官方 JavaScript、CSS、inject 资源与固定 provider 由主题内部常量注册表所有，不是公开配置。Feature 只保留启用状态和真正会改变业务行为的参数；可替换实现仍以显式公开 provider 表达，例如 `extensions.features.math.provider`。
 
 `adaptive_text` 为内置能力（默认 `enabled: true`）：背景图/背景色上方的文字颜色随背景亮度自适应，页面存在 `[data-text-adaptive]` 元素时才加载计算脚本并写入 `--text-banner` / `--text-banner-theme`。
 
@@ -531,12 +529,11 @@ extensions:
 extensions:
   comments:
     provider: beaudar
-    title: 快来参与讨论吧~
     providers:
       beaudar: {}
 ```
 
-每个 provider 的上游字段位于 `providers.<provider>` 参数袋。页面与 Collection 覆盖统一使用 `comments.provider/options`。
+每个 provider 的上游字段位于 `providers.<provider>` 参数袋。页面与 Collection 覆盖统一使用 `comments.provider/options`。未显式设置 `comments.title` 时，标题使用当前语言的 `btn.comments`；显式标题仍保持站点配置值。
 
 集成细节见[评论系统](../07-外部集成/comment-systems.md)。
 
@@ -638,9 +635,11 @@ flowchart TD
 
 ## 内部系统边界
 
-v2 不公开 `system`、`cache` 或 `language_switcher` 兼容根。规范 URL 的 `trailing_index` 与 `trailing_html` 策略由构建集成固定；Hexo 自有配置仍归 `hexo.config`，不会复制进主题配置。图标、Widget、作者、链接、Collection 树等运行时数据统一位于 `hexo.stellar.data`，不会回写 `theme.config`。
+v2 不公开 `system`、`cache` 或 `language_switcher` 兼容根。规范 URL 策略由构建集成固定；官方资源、固定 provider、request/cache 策略与交互计时由 `scripts/lib/internal-constants.js` 统一所有。Hexo 自有配置仍归 `hexo.config`，不会复制进主题配置。图标、Widget、作者、链接、Collection 树等运行时数据统一位于 `hexo.stellar.data`，不会回写 `theme.config`。
 
-**参考源码**：[scripts/events/lib/config.js](../../../scripts/events/lib/config.js)、[scripts/lib/runtime-data.js](../../../scripts/lib/runtime-data.js)
+配置 Reference 同时生成 [`reference/v2-config-audit.md`](../../../reference/v2-config-audit.md)，对每个当前字段和 M6 退出字段标注 `public/localize/derive/internalize/remove`，作为公开配置边界的机器可核查证据。
+
+**参考源码**：[scripts/events/lib/config.js](../../../scripts/events/lib/config.js)、[scripts/lib/runtime-data.js](../../../scripts/lib/runtime-data.js)、[scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)、[scripts/lib/config-field-audit.js](../../../scripts/lib/config-field-audit.js)
 
 ## 配置最佳实践
 

@@ -1,5 +1,4 @@
 export const REQUEST_CACHE_PREFIX = 'Stellar.request-cache.v2.';
-export const MAX_CACHE_ENTRY_BYTES = 200 * 1024;
 
 function responseFrom(entry) {
   return new Response(entry.text, {
@@ -19,18 +18,25 @@ function utf8Bytes(value) {
 }
 
 export function createRequestClient(options = {}) {
+  const policy = options.policy;
+  if (!policy || !Number.isInteger(policy.retries) || !(policy.timeoutMs > 0) || !(policy.idleTimeoutMs > 0) || !(policy.maxCacheEntryBytes > 0)) {
+    throw new TypeError('[stellar runtime] request policy is required');
+  }
   const fetchImpl = options.fetch || globalThis.fetch?.bind(globalThis);
   const storage = options.storage || globalThis.localStorage;
   const now = options.clock || Date.now;
   const schedule = options.scheduler || (fn => {
     if (typeof globalThis.requestIdleCallback === 'function') {
-      globalThis.requestIdleCallback(fn, { timeout: 3000 });
+      globalThis.requestIdleCallback(fn, { timeout: policy.idleTimeoutMs });
     } else {
       setTimeout(fn, 0);
     }
   });
   const dispatch = typeof options.dispatch === 'function' ? options.dispatch : () => {};
-  const config = Object.assign({ enabled: true, defaultTtl: 3600, ttl: {}, maxEntries: 200 }, options.cache || {});
+  const config = options.cache;
+  if (!config || typeof config.enabled !== 'boolean' || !(config.defaultTtl >= 0) || !config.ttl || !(config.maxEntries >= 0)) {
+    throw new TypeError('[stellar runtime] cache policy is required');
+  }
   const pending = new Map();
   let cacheEnabled = config.enabled === true;
 
@@ -97,7 +103,7 @@ export function createRequestClient(options = {}) {
   }
 
   function write(url, text, contentType, ttl) {
-    if (!storage || !(ttl > 0) || utf8Bytes(text) > MAX_CACHE_ENTRY_BYTES) return;
+    if (!storage || !(ttl > 0) || utf8Bytes(text) > policy.maxCacheEntryBytes) return;
     const key = REQUEST_CACHE_PREFIX + url;
     const value = JSON.stringify({ text, contentType, ts: now(), ttl });
     try {
@@ -163,8 +169,8 @@ export function createRequestClient(options = {}) {
     if (isFresh(cached)) return responseFrom(cached);
     if (typeof requestOptions.onNetworkStart === 'function') requestOptions.onNetworkStart();
 
-    const retries = Number.isInteger(requestOptions.retries) ? requestOptions.retries : 2;
-    const timeout = typeof requestOptions.timeout === 'number' ? requestOptions.timeout : 5000;
+    const retries = Number.isInteger(requestOptions.retries) ? requestOptions.retries : policy.retries;
+    const timeout = typeof requestOptions.timeout === 'number' ? requestOptions.timeout : policy.timeoutMs;
     let error;
     for (let attempt = 0; attempt <= retries; attempt++) {
       try {

@@ -19,6 +19,9 @@ tags:
 - [languages/zh-TW.yml](../../../languages/zh-TW.yml)
 - [layout/_partial/menubtn.ejs](../../../layout/_partial/menubtn.ejs)
 - [layout/_partial/widgets/toc.ejs](../../../layout/_partial/widgets/toc.ejs)
+- [layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)
+- [scripts/tags/lib/copy.js](../../../scripts/tags/lib/copy.js)
+- [scripts/tags/lib/okr.js](../../../scripts/tags/lib/okr.js)
 
 </details>
 
@@ -42,7 +45,7 @@ tags:
 
 ## 文件结构
 
-每个语言文件是扁平的 YAML 文档，组织为六个顶层分组。每个文件必须定义相同键；缺失键按 Hexo 默认行为回退到 `en.yml` 的值。
+每个语言文件是分组的 YAML 文档。每个文件必须定义相同键；缺失键按 Hexo 默认行为回退到 `en.yml` 的值。
 
 **语言文件分组映射：**
 
@@ -55,6 +58,8 @@ graph TD
   LangFile --> search["search\n(搜索 UI 字符串)"]
   LangFile --> message["message\n(toast/反馈消息)"]
   LangFile --> symbol["symbol\n(标点字符)"]
+  LangFile --> tagplugins["tag_plugins\n(标签插件内置文案)"]
+  LangFile --> feature["feature\n(可选功能内置文案)"]
 ```
 
 **参考源码**：[languages/en.yml](../../../languages/en.yml)、[languages/zh-CN.yml](../../../languages/zh-CN.yml)、[languages/zh-TW.yml](../../../languages/zh-TW.yml)
@@ -165,12 +170,32 @@ graph TD
 | 键 | `en.yml` 值 | 说明 |
 |----|-------------|------|
 | `message.copied` | `Copied!` | 复制到剪贴板后 |
+| `message.copy_denied` | `Clipboard permission was denied` | 剪贴板授权被拒绝 |
+| `message.copy_unsupported` | `Clipboard requires a supported browser and HTTPS` | 当前环境不支持剪贴板 |
 | `message.fetching_latest_release` | `'%s is fetching the latest release…'` | 历史兼容键；Wiki Hero 已改为无文字加载态，当前不再使用 |
 | `message.theme_switched.light` | `Switched to Light Mode` | |
 | `message.theme_switched.dark` | `Switched to Dark Mode` | |
 | `message.theme_switched.auto` | `Switched to Auto Mode` | |
 
 **参考源码**：[languages/en.yml](../../../languages/en.yml)
+
+---
+
+### `tag_plugins`——标签插件内置文案
+
+OKR 的五个内置状态标签位于 `tag_plugins.okr.status.*`。站点可在 `extensions.tags.okr.status.<status>.label` 显式覆盖；未覆盖时使用当前语言的文案。
+
+| 键 | `en.yml` 值 |
+|----|-------------|
+| `tag_plugins.okr.status.in_track` | `On Track` |
+| `tag_plugins.okr.status.at_risk` | `At Risk` |
+| `tag_plugins.okr.status.off_track` | `Delayed` |
+| `tag_plugins.okr.status.finished` | `Completed` |
+| `tag_plugins.okr.status.unfinished` | `Incomplete` |
+
+### `feature`——可选功能内置文案
+
+`feature.ai_summary` 提供 AI 摘要的名称、介绍和四个操作按钮。构建期由 `runtime.ejs` 投影当前语言文案到 Runtime Manifest，浏览器不再依赖公开配置中的简体中文默认值。站点显式设置 `extensions.features.ai_summary.interface` 时仍可覆盖对应文案。
 
 ---
 
@@ -280,7 +305,7 @@ sequenceDiagram
 添加新语言（如日语 `ja`）的步骤：
 
 1. 创建 `languages/ja.yml`
-2. 以 `languages/en.yml` 完整结构为模板复制——六个键组必须齐全
+2. 以 `languages/en.yml` 的完整结构为模板复制，保持所有键路齐全
 3. 翻译每个值，特别注意：
    - `meta.created_author` 与 `search.search_in` 中的 `%s` 占位符——翻译字符串中必须保留
    - `symbol.*` 键——使用适合语言环境的标点
@@ -288,14 +313,9 @@ sequenceDiagram
 
 **新语言文件的最小清单：**
 
-| 组 | 要翻译的键 |
-|----|------------|
-| `btn` | 18 个键 |
-| `meta` | 19 个键 + 5 个 `date_suffix` 子键 |
-| `page` | `page.error` 下 3 个键 |
-| `search` | 3 个键 |
-| `message` | 4 个键 |
-| `symbol` | 5 个标点键 |
+- 复制 `en.yml` 的全部键路，不依赖容易过时的手工数量清单。
+- 特别检查 `message.copy_*`、`tag_plugins.okr.status.*` 与 `feature.ai_summary.*`。
+- 运行配置字段审计测试，它会同时检查三个内置语言的键路一致性。
 
 **参考源码**：[languages/en.yml](../../../languages/en.yml)
 

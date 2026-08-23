@@ -2813,207 +2813,6 @@
       "sealed": true
     },
     {
-      "path": "extensions.cache",
-      "runtimePath": "extensions.cache",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {
-          "enabled": true,
-          "default_ttl": 3600,
-          "ttl": {
-            "giscus": 600,
-            "waline": 600,
-            "artalk": 600,
-            "memos": 600,
-            "memos-user": 86400,
-            "sites": 86400,
-            "friends": 86400,
-            "friends_and_posts": 86400,
-            "siteinfo": 86400
-          },
-          "max_entries": 200
-        }
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": {
-        "enabled": true,
-        "default_ttl": 3600,
-        "ttl": {
-          "giscus": 600,
-          "waline": 600,
-          "artalk": 600,
-          "memos": 600,
-          "memos-user": 86400,
-          "sites": 86400,
-          "friends": 86400,
-          "friends_and_posts": 86400,
-          "siteinfo": 86400
-        },
-        "max_entries": 200
-      },
-      "migration": "configuration/extensions",
-      "sealed": true
-    },
-    {
-      "path": "extensions.cache.default_ttl",
-      "runtimePath": "extensions.cache.defaultTtl",
-      "type": [
-        "number"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": 3600
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": 3600,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.cache.enabled",
-      "runtimePath": "extensions.cache.enabled",
-      "type": [
-        "boolean"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": true
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": true,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.cache.max_entries",
-      "runtimePath": "extensions.cache.maxEntries",
-      "type": [
-        "number"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": 200
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": 200,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.cache.ttl",
-      "runtimePath": "extensions.cache.ttl",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {
-          "giscus": 600,
-          "waline": 600,
-          "artalk": 600,
-          "memos": 600,
-          "memos-user": 86400,
-          "sites": 86400,
-          "friends": 86400,
-          "friends_and_posts": 86400,
-          "siteinfo": 86400
-        }
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": {
-        "giscus": 600
-      },
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.cache.ttl.<service>",
-      "runtimePath": "extensions.cache.ttl.<service>",
-      "type": [
-        "number"
-      ],
-      "default": {
-        "kind": "derived",
-        "sources": [
-          "extensions.cache.default_ttl"
-        ]
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": 600,
-      "migration": "configuration/extensions"
-    },
-    {
       "path": "extensions.comments",
       "runtimePath": "extensions.comments",
       "type": [
@@ -3376,7 +3175,7 @@
       ],
       "default": {
         "kind": "literal",
-        "value": "快来参与讨论吧~"
+        "value": ""
       },
       "scope": "theme",
       "cascade": [
@@ -3391,7 +3190,7 @@
         "browser Extension runtime",
         "Reference generator"
       ],
-      "example": "快来参与讨论吧~",
+      "example": "Join discussion",
       "migration": "configuration/extensions"
     },
     {
@@ -3488,7 +3287,6 @@
         "kind": "literal",
         "value": {
           "enabled": false,
-          "provider": "tianli_gpt",
           "scope": "post",
           "key": "5Q5mpqRK5DkwT1X9Gi5e",
           "max_length": 1000,
@@ -3498,15 +3296,9 @@
           "hide_shuttle": true,
           "summary_toggle": false,
           "interface": {
-            "name": "AI摘要",
-            "introduce": "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。",
-            "version": "TianliGPT",
-            "buttons": [
-              "介绍自己",
-              "推荐文章",
-              "生成摘要",
-              "矩阵穿梭"
-            ]
+            "name": null,
+            "introduce": null,
+            "buttons": []
           }
         }
       },
@@ -3525,7 +3317,6 @@
       ],
       "example": {
         "enabled": false,
-        "provider": "tianli_gpt",
         "scope": "post",
         "key": "5Q5mpqRK5DkwT1X9Gi5e",
         "max_length": 1000,
@@ -3535,15 +3326,9 @@
         "hide_shuttle": true,
         "summary_toggle": false,
         "interface": {
-          "name": "AI摘要",
-          "introduce": "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。",
-          "version": "TianliGPT",
-          "buttons": [
-            "介绍自己",
-            "推荐文章",
-            "生成摘要",
-            "矩阵穿梭"
-          ]
+          "name": null,
+          "introduce": null,
+          "buttons": []
         }
       },
       "migration": "configuration/extensions",
@@ -3610,15 +3395,9 @@
       "default": {
         "kind": "literal",
         "value": {
-          "name": "AI摘要",
-          "introduce": "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。",
-          "version": "TianliGPT",
-          "buttons": [
-            "介绍自己",
-            "推荐文章",
-            "生成摘要",
-            "矩阵穿梭"
-          ]
+          "name": null,
+          "introduce": null,
+          "buttons": []
         }
       },
       "scope": "theme",
@@ -3635,15 +3414,9 @@
         "Reference generator"
       ],
       "example": {
-        "name": "AI摘要",
-        "introduce": "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。",
-        "version": "TianliGPT",
-        "buttons": [
-          "介绍自己",
-          "推荐文章",
-          "生成摘要",
-          "矩阵穿梭"
-        ]
+        "name": null,
+        "introduce": null,
+        "buttons": []
       },
       "migration": "configuration/extensions",
       "sealed": true
@@ -3656,12 +3429,7 @@
       ],
       "default": {
         "kind": "literal",
-        "value": [
-          "介绍自己",
-          "推荐文章",
-          "生成摘要",
-          "矩阵穿梭"
-        ]
+        "value": []
       },
       "scope": "theme",
       "cascade": [
@@ -3676,23 +3444,19 @@
         "browser Extension runtime",
         "Reference generator"
       ],
-      "example": [
-        "介绍自己",
-        "推荐文章",
-        "生成摘要",
-        "矩阵穿梭"
-      ],
+      "example": [],
       "migration": "configuration/extensions"
     },
     {
       "path": "extensions.features.ai_summary.interface.introduce",
       "runtimePath": "extensions.features.aiSummary.interface.introduce",
       "type": [
-        "string"
+        "string",
+        "null"
       ],
       "default": {
         "kind": "literal",
-        "value": "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。"
+        "value": null
       },
       "scope": "theme",
       "cascade": [
@@ -3707,18 +3471,19 @@
         "browser Extension runtime",
         "Reference generator"
       ],
-      "example": "我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。",
+      "example": null,
       "migration": "configuration/extensions"
     },
     {
       "path": "extensions.features.ai_summary.interface.name",
       "runtimePath": "extensions.features.aiSummary.interface.name",
       "type": [
-        "string"
+        "string",
+        "null"
       ],
       "default": {
         "kind": "literal",
-        "value": "AI摘要"
+        "value": null
       },
       "scope": "theme",
       "cascade": [
@@ -3733,33 +3498,7 @@
         "browser Extension runtime",
         "Reference generator"
       ],
-      "example": "AI摘要",
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.ai_summary.interface.version",
-      "runtimePath": "extensions.features.aiSummary.interface.version",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "TianliGPT"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "TianliGPT",
+      "example": null,
       "migration": "configuration/extensions"
     },
     {
@@ -3815,35 +3554,6 @@
       "migration": "configuration/extensions",
       "minimum": 0,
       "maximum": 5000
-    },
-    {
-      "path": "extensions.features.ai_summary.provider",
-      "runtimePath": "extensions.features.aiSummary.provider",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "tianli_gpt"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "tianli_gpt",
-      "migration": "configuration/extensions",
-      "values": [
-        "tianli_gpt"
-      ]
     },
     {
       "path": "extensions.features.ai_summary.recommendation",
@@ -4166,10 +3876,7 @@
       "default": {
         "kind": "literal",
         "value": {
-          "enabled": true,
-          "idle_text": "Copy",
-          "success_text": "Copied",
-          "toast": "复制成功"
+          "enabled": true
         }
       },
       "scope": "theme",
@@ -4186,10 +3893,7 @@
         "Reference generator"
       ],
       "example": {
-        "enabled": true,
-        "idle_text": "Copy",
-        "success_text": "Copied",
-        "toast": "复制成功"
+        "enabled": true
       },
       "migration": "configuration/extensions",
       "sealed": true
@@ -4221,84 +3925,6 @@
       "migration": "configuration/extensions"
     },
     {
-      "path": "extensions.features.code_copy.idle_text",
-      "runtimePath": "extensions.features.codeCopy.idleText",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "Copy"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "Copy",
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.code_copy.success_text",
-      "runtimePath": "extensions.features.codeCopy.successText",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "Copied"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "Copied",
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.code_copy.toast",
-      "runtimePath": "extensions.features.codeCopy.toast",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "复制成功"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "复制成功",
-      "migration": "configuration/extensions"
-    },
-    {
       "path": "extensions.features.diagrams",
       "runtimePath": "extensions.features.diagrams",
       "type": [
@@ -4308,7 +3934,6 @@
         "kind": "literal",
         "value": {
           "enabled": false,
-          "provider": "mermaid",
           "style_optimization": false,
           "theme": "neutral"
         }
@@ -4328,7 +3953,6 @@
       ],
       "example": {
         "enabled": false,
-        "provider": "mermaid",
         "style_optimization": false,
         "theme": "neutral"
       },
@@ -4360,35 +3984,6 @@
       ],
       "example": false,
       "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.diagrams.provider",
-      "runtimePath": "extensions.features.diagrams.provider",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "mermaid"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "mermaid",
-      "migration": "configuration/extensions",
-      "values": [
-        "mermaid"
-      ]
     },
     {
       "path": "extensions.features.diagrams.style_optimization",
@@ -4547,7 +4142,6 @@
         "kind": "literal",
         "value": {
           "enabled": true,
-          "provider": "fancybox",
           "mode": "auto",
           "selector": ".timenode p>img"
         }
@@ -4567,7 +4161,6 @@
       ],
       "example": {
         "enabled": true,
-        "provider": "fancybox",
         "mode": "auto",
         "selector": ".timenode p>img"
       },
@@ -4628,35 +4221,6 @@
       "values": [
         "auto",
         "global"
-      ]
-    },
-    {
-      "path": "extensions.features.lightbox.provider",
-      "runtimePath": "extensions.features.lightbox.provider",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "fancybox"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "fancybox",
-      "migration": "configuration/extensions",
-      "values": [
-        "fancybox"
       ]
     },
     {
@@ -4862,8 +4426,7 @@
       "default": {
         "kind": "literal",
         "value": {
-          "enabled": true,
-          "provider": "flying_pages"
+          "enabled": true
         }
       },
       "scope": "theme",
@@ -4880,8 +4443,7 @@
         "Reference generator"
       ],
       "example": {
-        "enabled": true,
-        "provider": "flying_pages"
+        "enabled": true
       },
       "migration": "configuration/extensions",
       "sealed": true
@@ -4913,35 +4475,6 @@
       "migration": "configuration/extensions"
     },
     {
-      "path": "extensions.features.preload.provider",
-      "runtimePath": "extensions.features.preload.provider",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "flying_pages"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "flying_pages",
-      "migration": "configuration/extensions",
-      "values": [
-        "flying_pages"
-      ]
-    },
-    {
       "path": "extensions.features.reveal",
       "runtimePath": "extensions.features.reveal",
       "type": [
@@ -4951,7 +4484,6 @@
         "kind": "literal",
         "value": {
           "enabled": true,
-          "provider": "scrollreveal",
           "distance": "8px",
           "duration": 1000,
           "interval": 100,
@@ -4973,7 +4505,6 @@
       ],
       "example": {
         "enabled": true,
-        "provider": "scrollreveal",
         "distance": "8px",
         "duration": 1000,
         "interval": 100,
@@ -5087,35 +4618,6 @@
       "example": 100,
       "migration": "configuration/extensions",
       "minimum": 0
-    },
-    {
-      "path": "extensions.features.reveal.provider",
-      "runtimePath": "extensions.features.reveal.provider",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "scrollreveal"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "scrollreveal",
-      "migration": "configuration/extensions",
-      "values": [
-        "scrollreveal"
-      ]
     },
     {
       "path": "extensions.features.reveal.scale",
@@ -6124,63 +5626,6 @@
       "migration": "configuration/extensions"
     },
     {
-      "path": "extensions.tags.copy",
-      "runtimePath": "extensions.tags.copy",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {
-          "toast": "复制成功"
-        }
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": {
-        "toast": "复制成功"
-      },
-      "migration": "configuration/extensions",
-      "sealed": true
-    },
-    {
-      "path": "extensions.tags.copy.toast",
-      "runtimePath": "extensions.tags.copy.toast",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "复制成功"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "复制成功",
-      "migration": "configuration/extensions"
-    },
-    {
       "path": "extensions.tags.emoji",
       "runtimePath": "extensions.tags.emoji",
       "type": [
@@ -6702,23 +6147,23 @@
           "status": {
             "in_track": {
               "color": "blue",
-              "label": "正常"
+              "label": null
             },
             "at_risk": {
               "color": "yellow",
-              "label": "风险"
+              "label": null
             },
             "off_track": {
               "color": "orange",
-              "label": "延期"
+              "label": null
             },
             "finished": {
               "color": "green",
-              "label": "已完成"
+              "label": null
             },
             "unfinished": {
               "color": "red",
-              "label": "未完成"
+              "label": null
             }
           }
         }
@@ -6741,23 +6186,23 @@
         "status": {
           "in_track": {
             "color": "blue",
-            "label": "正常"
+            "label": null
           },
           "at_risk": {
             "color": "yellow",
-            "label": "风险"
+            "label": null
           },
           "off_track": {
             "color": "orange",
-            "label": "延期"
+            "label": null
           },
           "finished": {
             "color": "green",
-            "label": "已完成"
+            "label": null
           },
           "unfinished": {
             "color": "red",
-            "label": "未完成"
+            "label": null
           }
         }
       },
@@ -6801,23 +6246,23 @@
         "value": {
           "in_track": {
             "color": "blue",
-            "label": "正常"
+            "label": null
           },
           "at_risk": {
             "color": "yellow",
-            "label": "风险"
+            "label": null
           },
           "off_track": {
             "color": "orange",
-            "label": "延期"
+            "label": null
           },
           "finished": {
             "color": "green",
-            "label": "已完成"
+            "label": null
           },
           "unfinished": {
             "color": "red",
-            "label": "未完成"
+            "label": null
           }
         }
       },
@@ -6837,23 +6282,23 @@
       "example": {
         "in_track": {
           "color": "blue",
-          "label": "正常"
+          "label": null
         },
         "at_risk": {
           "color": "yellow",
-          "label": "风险"
+          "label": null
         },
         "off_track": {
           "color": "orange",
-          "label": "延期"
+          "label": null
         },
         "finished": {
           "color": "green",
-          "label": "已完成"
+          "label": null
         },
         "unfinished": {
           "color": "red",
-          "label": "未完成"
+          "label": null
         }
       },
       "migration": "configuration/extensions"
@@ -6915,11 +6360,12 @@
       "path": "extensions.tags.okr.status.<status>.label",
       "runtimePath": "extensions.tags.okr.status.<status>.label",
       "type": [
-        "string"
+        "string",
+        "null"
       ],
       "default": {
         "kind": "literal",
-        "value": ""
+        "value": null
       },
       "scope": "theme",
       "cascade": [
@@ -6934,7 +6380,7 @@
         "browser Extension runtime",
         "Reference generator"
       ],
-      "example": "",
+      "example": null,
       "migration": "configuration/extensions"
     },
     {

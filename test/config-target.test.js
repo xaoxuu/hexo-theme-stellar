@@ -244,6 +244,8 @@ test("官方脚本样式与内部集成有显式内部化清单", () => {
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("dependencies.marked"));
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("plugins.<official_extension>.{js,css,inject}"));
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("data_services.<official_service>.js"));
+  assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("extensions.cache.*"));
+  assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("extensions.features.{preload,lightbox,reveal,ai_summary,diagrams}.provider"));
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("style.loading.*"));
 });
 
@@ -301,9 +303,9 @@ test("运行时只投影已交付配置节点且根配置已经封闭", () => {
   const deliveredExtensionPaths = deliveredPaths.filter(pathValue => pathValue.startsWith("extensions."));
   assert.ok(deliveredExtensionPaths.includes("extensions.search.provider"));
   assert.ok(deliveredExtensionPaths.includes("extensions.comments.providers.<provider>"));
-  assert.ok(deliveredExtensionPaths.includes("extensions.features.ai_summary.provider"));
+  assert.equal(deliveredExtensionPaths.includes("extensions.features.ai_summary.provider"), false);
   assert.ok(deliveredExtensionPaths.includes("extensions.services.github.raw_url"));
-  assert.ok(deliveredExtensionPaths.includes("extensions.cache.ttl.<service>"));
+  assert.equal(deliveredExtensionPaths.some(pathValue => pathValue.startsWith("extensions.cache")), false);
   const deliveredContentPaths = deliveredPaths.filter(pathValue => pathValue.startsWith("content."));
   assert.equal(deliveredContentPaths.length, 26);
   for (const pathValue of [

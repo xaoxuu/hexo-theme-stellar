@@ -8,8 +8,10 @@ const path = require("node:path");
 const { generateReferenceMetadata } = require("../scripts/lib/reference-metadata");
 const { generateConfigReferenceMetadata } = require("../scripts/lib/config-reference-metadata");
 const { generateBlueprintReferenceMetadata } = require("../scripts/lib/blueprint-reference-metadata");
+const { generateConfigFieldAudit } = require("../scripts/lib/config-field-audit");
 const {
   blueprintReferenceMarkdown,
+  configAuditMarkdown,
   configReferenceMarkdown,
   modelReferenceMarkdown,
   referenceIndexMarkdown,
@@ -30,6 +32,14 @@ test("公开配置 Reference 覆盖每个 Schema 字段的完整注解", () => {
   }
   assert.equal(markdown.split("\n").filter(line => / \| <code>\[/.test(line)).length, metadata.fields.length);
   assert.equal(fs.readFileSync(path.join(ROOT, "reference/v2-config.md"), "utf8"), markdown);
+});
+
+test("配置字段审计稳定覆盖当前与退出字段", () => {
+  const audit = configAuditMarkdown(generateConfigFieldAudit());
+  assert.equal(fs.readFileSync(path.join(ROOT, "reference/v2-config-audit.md"), "utf8"), audit);
+  assert.match(audit, /extensions\.cache/);
+  assert.match(audit, /internalize/);
+  assert.match(audit, /localize/);
 });
 
 test("公开模型与 Blueprint Reference 稳定来自机器契约", () => {

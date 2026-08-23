@@ -113,7 +113,8 @@ test("当前字段族都有唯一迁移结果，参数袋边界明确", () => {
   assert.equal(footer.boundary, "sealed");
   assert.deepEqual(footer.dynamicRecords, ["footer.social.<id>"]);
   assert.equal(dataCache.boundary, "sealed");
-  assert.deepEqual(dataCache.dynamicRecords, ["data_cache.ttl.<service>"]);
+  assert.equal(dataCache.status, "excluded");
+  assert.equal(dataCache.runtimeTarget, "scripts/lib/internal-constants.js runtime.cache");
   assert.equal(parameterBags.includes("data_cache.ttl"), false);
 
   const themeData = CONFIG_DOMAIN_CATALOG.find(item => item.id === "theme_data");
@@ -161,7 +162,7 @@ test("运行时 Schema 交付完整八根契约并封闭根配置", () => {
   assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "layout", "content", "appearance", "seo", "resources", "extensions", "inject"]);
   assert.deepEqual(
     CONFIG_DOMAIN_CATALOG.filter(item => item.status === "delivered").map(item => item.id),
-    ["preconnect", "canonical", "open_graph", "structured_data", "brand", "menubar", "site_tree", "notebook", "article", "search", "comments", "footer", "tag_plugins", "dependencies", "data_services", "data_cache", "plugins", "style", "default", "api_host", "inject", "collection", "front_matter", "theme_data"]
+    ["preconnect", "canonical", "open_graph", "structured_data", "brand", "menubar", "site_tree", "notebook", "article", "search", "comments", "footer", "tag_plugins", "dependencies", "data_services", "plugins", "style", "default", "api_host", "inject", "collection", "front_matter", "theme_data"]
   );
   assert.equal(CONFIG_DOMAIN_CATALOG.find(item => item.id === "canonical").targetStatus, "delivered");
   assert.equal(CONFIG_DOMAIN_CATALOG.find(item => item.id === "canonical").targetPath, "seo.canonical");

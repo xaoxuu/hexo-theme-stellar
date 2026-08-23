@@ -15,21 +15,21 @@ function createCopyButtons(codeElements) {
           await navigator.clipboard.writeText(codeToCopy);
           codeCopyBtn.textContent = ctx.copycode.success_text;
           codeCopyBtn.classList.add('success');
-          hud.toast(ctx.copycode.toast, 2500);
+          hud.toast(ctx.copycode.toast, ctx.copycode.toast_ms);
         } catch (error) {
-          codeCopyBtn.textContent = '未获得用户许可';
+          codeCopyBtn.textContent = ctx.copycode.denied_text;
           codeCopyBtn.classList.add('warning');
         }
       } else {
-        codeCopyBtn.textContent = '浏览器不支持/非HTTPS';
+        codeCopyBtn.textContent = ctx.copycode.unsupported_text;
         codeCopyBtn.classList.add('warning');
       }
 
-      // 3秒后恢复默认文本
+      // 固定反馈时序由内部 Runtime policy 提供。
       setTimeout(() => {
         codeCopyBtn.textContent = ctx.copycode.default_text;
         codeCopyBtn.classList.remove('success', 'warning');
-      }, 3000);
+      }, ctx.copycode.feedback_ms);
     });
   });
 }
