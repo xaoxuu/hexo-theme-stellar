@@ -31,19 +31,19 @@ date: 2026-08-22
 - [x] 普通 Post 的文章内容/标签/评论/相关推荐/列表，以及 Wiki、Topic、Notebook 消费链完成迁移；M2 已完成。
 - [x] 三套 Blueprint dry-run 与写入计划一致，已有文件不会被覆盖（#716）。
 - [x] doctor 的 text/json 输出包含文件、字段、实际类型、期望结构和迁移章节（#716）。
-- [ ] Extension 支持 mount、unmount、按需 import 和失败隔离。
-- [ ] request/cache 不修改原生 fetch/XHR。
-- [ ] 后续阶段完整实现后 `npm run check` 通过。
-- [ ] 后续阶段完整实现后主工程 `npm run g` 通过。
+- [x] Extension 支持 mount、unmount、按需 import 和失败隔离（#717）。
+- [x] request/cache 不修改原生 fetch/XHR（#717）。
+- [x] M5 完整实现后 `npm run check` 通过（353 项测试）。
+- [x] M5 完整实现后主工程 `npm run g` 通过（262 个生成文件）。
 
 ## Alpha 1 端到端门禁
 
-- [ ] M1–M5 全部完成。
-- [ ] 预发布包可安装到干净的 Hexo 8 / Node.js 22 工程。
+- [x] M1–M5 全部完成。
+- [x] 预发布包可安装到干净的 Hexo 8 / Node.js 22 工程。
 - [x] 三套 Blueprint 可初始化且生成结果独立构建，doctor 检查通过（#716）。
-- [ ] 四类 Collection profile 通过 ViewModel 消费链渲染，Extension 生命周期可验证。
-- [ ] Reference、主题检查、主工程构建与预发布安装演练全部通过。
-- [ ] Alpha 发布说明列出仍不稳定的契约与未交付范围。
+- [x] 四类 Collection profile 通过 ViewModel 消费链渲染，Extension 生命周期可验证。
+- [x] Reference、主题检查、主工程构建与预发布安装演练全部通过。
+- [x] Alpha 发布说明列出仍不稳定的契约与未交付范围。
 
 ## #695 Post PageViewModel 验证记录
 

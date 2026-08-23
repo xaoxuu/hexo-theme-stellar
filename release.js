@@ -23,7 +23,7 @@ const readline = require('readline');
 const { execFileSync } = require('child_process');
 
 const ROOT = __dirname;
-const VERSION_RE = /^\d+\.\d+\.\d+(-rc\.\d+)?$/;
+const VERSION_RE = /^\d+\.\d+\.\d+(?:-(?:alpha|beta|rc)\.\d+)?$/;
 const CHANGELOG_FILE = "CHANGELOG.md";
 const INSTALLATION_FILE = "docs/knowledge/00-总览与安装配置/installation.md";
 const WORKSPACE_ALLOWED_FILES = new Set(["package.json", CHANGELOG_FILE]);
@@ -295,7 +295,7 @@ async function main() {
   }
 
   if (!VERSION_RE.test(version)) {
-    fail(`版本号格式不正确: ${version}（应为 x.y.z 或 x.y.z-rc.n）`);
+    fail(`版本号格式不正确: ${version}（应为 x.y.z 或 x.y.z-alpha.n / beta.n / rc.n）`);
   }
 
   const branch = currentBranch();

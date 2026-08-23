@@ -21,6 +21,10 @@ test("页面使用单一 Runtime Manifest 与 ESM bootstrap", () => {
   assert.match(runtime, /integrity="sha384-/);
   assert.match(runtime, /crossorigin="anonymous"/);
   assert.doesNotMatch(scripts, /comments\/script|_plugins\/index|services\.js/);
+  assert.doesNotMatch(scripts, /\/js\/icons\.js|\/js\/plugins\/dropdown\.js/);
+  const builder = read("scripts/lib/browser-runtime.js");
+  assert.match(builder, /"deferred-icons".*selector: "svg\.icon\[data-icon\]"/s);
+  assert.match(builder, /"dropdown".*selector: "details\.dropdown"/s);
 });
 
 test("ESM 入口把版本查询参数传给全部静态与动态子模块", () => {
@@ -81,6 +85,8 @@ test("Search、services、comments 与 Feature 只消费 manifest context", () =
   assert.doesNotMatch(feature, /case 'katex'/);
   assert.match(feature, /context\.assets\.resolve\('\/css\/_plugins\/tianli_gpt'\)/);
   assert.match(feature, /stellarAdaptiveText\?\.mount/);
+  assert.match(feature, /case 'deferred-icons': return mountLegacyAsset\(context, '\/js\/icons\.js'\)/);
+  assert.match(feature, /case 'dropdown': return mountLegacyAsset\(context, '\/js\/plugins\/dropdown\.js'\)/);
   assert.match(feature, /AI summary compatibility adapter requires a document root/);
   const adaptive = read("source/js/plugins/adaptive-text.js");
   assert.doesNotMatch(adaptive, /adaptiveText(?:Elements|Observer|Active)/);

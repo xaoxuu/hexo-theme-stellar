@@ -33,7 +33,8 @@ EXTS = 'json|yaml|styl|ejs|yml|js|md|css|svg|png|jpg|ico|txt|sh'
 FILE_RE = re.compile(r'([\w./@-]+\.(?:' + EXTS + r'))')
 LINE_REF_RE = re.compile(r'([\w./-]+\.(?:' + EXTS + r')):?(\d+)(?:-(\d+))?')
 IDENT_RE = re.compile(r'^[a-zA-Z_$][\w$]*(\.[a-zA-Z_$][\w$]*)*$')
-THEME_VERSION_CTX_RE = re.compile(r'version:?\s*(?:v)?\d+\.\d+\.\d+', re.I)
+SEMVER_RE = r'\d+\.\d+\.\d+(?:-(?:alpha|beta|rc)\.\d+)?'
+THEME_VERSION_CTX_RE = re.compile(r'version:?\s*(?:v)?' + SEMVER_RE, re.I)
 
 
 def theme_version():
@@ -178,7 +179,7 @@ def extract_facts(text):
                 idents.add(tok)
     # 5) 版本号（theme 版本语境，如 version: 1.33.1）
     for m in THEME_VERSION_CTX_RE.finditer(text):
-        versions.add(re.search(r'\d+\.\d+\.\d+', m.group(0)).group(0))
+        versions.add(re.search(SEMVER_RE, m.group(0), re.I).group(0))
     return files, line_refs, idents, versions
 
 

@@ -27,20 +27,20 @@ date: 2026-08-22
 
 ## Pre-alpha M4：浏览器运行时
 
-10. [ ] 实现 ESM runtime、Extension registry、request/cache 与生命周期测试。
+10. [x] 实现 ESM runtime、Extension registry、request/cache 与生命周期测试（#717）；M4 已完成。
 
 ## Pre-alpha M5：Reference 与 Alpha 集成
 
-11. [ ] 用首批元数据完成公开 Reference 文档生成、链接集成与发布演练。
+11. [x] 用已交付 Schema/manifest 完成公开 Reference 文档生成、链接集成与 npm tarball 发布演练（#718）；M5 已完成。
 
 ## Alpha 1 门禁
 
-- [ ] 预发布包可安装到干净的 Hexo 8 / Node.js 22 工程。
+- [x] 预发布包可安装到干净的 Hexo 8 / Node.js 22 工程。
 - [x] 三套 Blueprint 的 init、冲突拒绝、独立构建与 doctor 检查通过（#716）。
-- [ ] 四类 Collection profile 通过 ViewModel 消费链渲染。
-- [ ] Schema、布局原语、CLI 与 Extension 生命周期测试通过。
-- [ ] Reference 与已交付契约一致，主题检查、主工程构建和预发布安装演练通过。
-- [ ] Alpha 发布说明列出仍不稳定的契约与未交付范围。
+- [x] 四类 Collection profile 通过 ViewModel 消费链渲染。
+- [x] Schema、布局原语、CLI 与 Extension 生命周期测试通过。
+- [x] Reference 与已交付契约一致，主题检查、主工程构建和预发布安装演练通过。
+- [x] Alpha 发布说明列出仍不稳定的契约与未交付范围。
 
 ## 风险与回退
 

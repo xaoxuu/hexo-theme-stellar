@@ -29,7 +29,12 @@
   });
 
   const script = document.currentScript;
-  const version = (script && script.getAttribute('data-version')) || '';
+  let version = (script && script.getAttribute('data-version')) || '';
+  if (!version && script && script.src) {
+    try {
+      version = new URL(script.src, window.location.href).searchParams.get('v') || '';
+    } catch (error) {}
+  }
   const root = (typeof ctx !== 'undefined' && ctx.root) || '/';
 
   Object.keys(groups).forEach((ns) => {

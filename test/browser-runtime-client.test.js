@@ -155,6 +155,21 @@ test("Lazy Extension 资源失败时撤销已安装的全局与 observer", async
   }
 });
 
+test("非首屏图标与 dropdown 通过 selector Extension 按需加载", async () => {
+  const feature = await import(moduleUrl("source/js/runtime/extensions/feature.mjs"));
+  const assets = [];
+  const context = {
+    assets: { script: async source => assets.push(source) },
+    extension: { config: { feature: "deferred-icons" } }
+  };
+  const iconsCleanup = await feature.mount({}, context);
+  context.extension.config = { feature: "dropdown" };
+  const dropdownCleanup = await feature.mount({}, context);
+  assert.deepEqual(assets, ["/js/icons.js", "/js/plugins/dropdown.js"]);
+  assert.equal(typeof iconsCleanup, "function");
+  assert.equal(typeof dropdownCleanup, "function");
+});
+
 test("Fancybox Extension 对 element root 使用容器级 bind/unbind", async () => {
   const feature = await import(moduleUrl("source/js/runtime/extensions/feature.mjs"));
   const previousWindow = globalThis.window;

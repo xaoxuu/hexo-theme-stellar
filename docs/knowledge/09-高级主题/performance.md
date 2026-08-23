@@ -266,8 +266,8 @@ resources:
 主题把「每页都可能用到」与「少数页面才用到」的资源分开：
 
 - **核心样式 `main.css`** 只保留基础与防闪烁规则（`.lazy` 显隐、`.slide-up` 显隐、aplayer、copycode 等）；swiper/fancybox/mermaid 与五种评论系统样式移入 `source/css/plugins/`、`source/css/comments/` 独立编译，前端在 DOM 检测命中时经 `utils.css()` 按需注入。
-- **重复脚本外置**：`utils`（同步加载，保证解析期插件注册可用）、`theme`/`services`/`tagtree`（defer）不再内联进每个 HTML；图标白名单由构建期生成器 `scripts/generators/stellar-icons.js` 输出为 `/js/stellar-icons.js`，约 6KB 的 SVG 数据不再随每个页面重复传输。
-- **图标异步加载**：除首屏关键图标（搜索、菜单、leftbar/rightbar、arrow-left）与 TOC 底部操作按钮（回到顶部/参与讨论，由模板调用处 `inline=true` 内联）外，`icon()` 输出的其余 SVG 改为 `<svg data-icon>` 占位符；构建期生成器按命名空间输出 `js/icons/{ns}.json`，客户端 `/js/icons.js`（defer）按页拉取实际用到的命名空间后原位替换为内联 SVG。页面 HTML 不再重复携带全量图标（全站由约 3MB 内联 SVG 降至仅首屏关键图标），图标数据跨页与回访命中缓存。
+- **重复脚本外置**：`utils` 保持同步基础能力，页面级功能由单一 ESM runtime 按 Runtime Manifest 启动；图标白名单由构建期生成器 `scripts/generators/stellar-icons.js` 输出为 `/js/stellar-icons.js`，约 6KB 的 SVG 数据不再随每个页面重复传输。
+- **图标异步加载**：除首屏关键图标（搜索、菜单、leftbar/rightbar、arrow-left）与 TOC 底部操作按钮（回到顶部/参与讨论，由模板调用处 `inline=true` 内联）外，`icon()` 输出的其余 SVG 改为 `<svg data-icon>` 占位符；构建期生成器按命名空间输出 `js/icons/{ns}.json`，Runtime Manifest 仅在 `svg.icon[data-icon]` selector 命中时加载 `/js/icons.js`，再按页拉取实际用到的命名空间并原位替换为内联 SVG。页面 HTML 不再重复携带全量图标（全站由约 3MB 内联 SVG 降至仅首屏关键图标），图标数据跨页与回访命中缓存。
 - **按页裁剪**：`tagtree.js` 仅在与 tagtree 小部件渲染相同的条件下输出；评论脚本本就按页输出。
 
 收益：每页内联脚本由约 31~34KB 降至约 10~13KB；无插件/评论页面不再下载对应 CSS；外置文件跨页与回访命中缓存。
@@ -298,6 +298,16 @@ resources:
 
 ---
 
+## Alpha 首屏核心 JS 门禁
+
+M5 用固定 Classic Blog 输入分别构建 tag `1.44.0` 与当前 v2。统计口径是首页无条件输出的本地 script、可执行 inline script 以及 ESM 入口无条件 import 的模块；每个唯一资源使用 gzip level 9 后求和。selector 未命中的 Extension 和第三方资源不计入核心集合。
+
+结果记录在 [reference/v2-alpha-performance.json](../../../reference/v2-alpha-performance.json)：v1 为 34,918 bytes，`2.0.0-alpha.1` 为 23,880 bytes，降低 31.6112%，通过至少 30% 的门禁。`npm run alpha:performance` 会重新构建两边并逐字节检查记录，已纳入 `npm run check`。
+
+本次下降不是删除功能：`/js/icons.js` 与 `/js/plugins/dropdown.js` 从全页无条件 script 改为 Runtime Manifest 中的 `svg.icon[data-icon]` / `details.dropdown` selector Extension；命中页面仍加载原脚本，未命中页面不再支付首屏核心成本。
+
+**参考源码**：[ci/check-alpha-performance.js](../../../ci/check-alpha-performance.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[layout/_partial/scripts.ejs](../../../layout/_partial/scripts.ejs)、[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+
 ## 汇总表
 
 | 特性 | 配置键 | 默认 | 主要文件 |
@@ -311,6 +321,6 @@ resources:
 | DNS preconnect | `resources.preconnect` | 空 | `head.ejs` |
 | 按需样式 | 插件/评论 CSS 独立文件 | 运行时注入 | `plugins/*.css`、`comments/*.css` |
 | 脚本外置 | 构建期生成 icons + 外部 JS | 每页内联减少约 20KB | `utils.js`、`stellar-icons.js` |
-| 图标异步加载 | 按命名空间生成 `js/icons/*.json`，defer 占位符替换 | 非首屏图标不再进入 HTML | `stellar-icons.js`、`icons.js` |
+| 图标异步加载 | 按命名空间生成 `js/icons/*.json`，selector 命中后替换占位符 | 非首屏图标不再进入 HTML | `stellar-icons.js`、`icons.js` |
 
 **参考源码**：[_config.yml](../../../_config.yml)

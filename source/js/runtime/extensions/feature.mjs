@@ -2,6 +2,11 @@ function queryAll(root, selector) {
   return Array.from(root.querySelectorAll(selector));
 }
 
+async function mountLegacyAsset(context, asset) {
+  await context.assets.script(asset);
+  return () => {};
+}
+
 async function mountLazyLoading(root, context, config) {
   if (root.nodeType !== 9) {
     throw new TypeError('[stellar runtime] lazy-loading compatibility adapter requires a document root');
@@ -300,6 +305,8 @@ export async function mount(root, context) {
   const config = context.extension.config;
   switch (config.feature) {
     case 'lazy-loading': return mountLazyLoading(root, context, config);
+    case 'deferred-icons': return mountLegacyAsset(context, '/js/icons.js');
+    case 'dropdown': return mountLegacyAsset(context, '/js/plugins/dropdown.js');
     case 'preload':
       window.FPConfig = { delay: 0, ignoreKeywords: [], maxRPS: 5, hoverDelay: 25 };
       await context.assets.script(config.asset);

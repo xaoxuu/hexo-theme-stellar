@@ -84,6 +84,14 @@ test('prepareVersionFiles 同步 package 与知识库版本并保留无关版本
   assert.match(knowledge, /Hexo: 8\.1\.2/);
 });
 
+test('prepareVersionFiles 接受 alpha、beta 与 rc 预发布版本', (t) => {
+  for (const version of ['2.0.0-alpha.1', '2.0.0-beta.2', '2.0.0-rc.3']) {
+    const { root, files } = createVersionFixture(t);
+    prepareVersionFiles(root, version);
+    assert.equal(JSON.parse(fs.readFileSync(files.package, 'utf8')).version, version);
+  }
+});
+
 test('prepareVersionFiles 缺失预期旧版本时拒绝且不产生部分写入', (t) => {
   const { root, files } = createVersionFixture(t, {
     knowledge: 'Version: 1.42.0\nHexo: 8.1.2\n',

@@ -1,7 +1,7 @@
 ---
 title: Stellar v2 领域内核、Blueprint 与 Extension 架构
 date: 2026-08-22
-status: 实施中
+status: Alpha 1 门禁收口中
 ---
 
 # Stellar v2 工程架构方案
@@ -12,13 +12,15 @@ status: 实施中
 
 Pre-alpha M1 以构建期模型输出作为首条工程接缝：先用 post profile 贯通严格 Schema、CollectionModel、ContentItemModel 与冻结的 PageViewModel，再让 wiki、topic、notebook 生成同构结果，最后从已交付 Schema 生成 Reference 元数据。模板、导航、列表和 SEO 对 PageViewModel 的消费属于 Pre-alpha M2，不在 M1 提前承诺。M1 完成只说明领域契约能力已交付，不代表 Alpha 版本成立。
 
+Pre-alpha M1–M5 已分别交付领域契约、完整渲染消费链、Blueprint/CLI、ESM Extension runtime 与公开 Reference。M5 以真实 npm tarball 在三套隔离 Node.js 22 / Hexo 8 工程贯通 init → doctor → generate，并用固定 v1 基线验证首屏核心 JS gzip 降幅不低于 30%。完整产品首页、学习路径、v1 归档、迁移对照、重定向与 SEO 集成仍属于 Beta。
+
 ## 2. 模块边界
 
 - `scripts/lib/models/`：构建 `CollectionModel`、`ContentItemModel`、`PageViewModel`，只接收普通对象并返回冻结的普通对象。
 - `scripts/schema/`：按切片定义已交付公开契约，是 Reference 生成器的唯一输入。Pre-alpha M1 当前只包含四类 CollectionModel、共享 ContentItemModel 与 PageViewModel，尚未交付的 Blueprint、CLI、布局和 Extension 不入 Schema。
 - `scripts/lib/blueprints/` 与 `blueprints/`：读取声明、生成文件计划、检测冲突并一次性写入。
 - `scripts/commands/stellar.js`：提供 `stellar init` 与 `stellar doctor`，命令层只负责参数和输出格式。
-- `source/js/core/`：ESM runtime、Extension registry 与 request/cache client，不暴露可变全局。
+- `source/js/runtime/`：ESM runtime、Extension registry 与 request/cache client，不暴露可变全局。
 - `layout/_partial/primitives/`：Shell、Region、Section、Item、Navigation 五个可组合 partial。
 
 Pre-alpha M1 的首条公开构建期接缝为 `buildPostPageViewModel(input)`。它只接收普通配置投影和页面数据，输出 `{ collection, item }`；生成前事件把结果挂载到普通 Post 的 `page.viewModel`，但本里程碑不让 EJS 消费该字段。`CollectionModel` 固定公开 `id`、`profile`、`identity`、`source`、`route`、`navigation`、`listing`、`presentation`、`visibility`，Post 的 `id` 与 `profile` 均为 `post`。

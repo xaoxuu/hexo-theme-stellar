@@ -50,7 +50,7 @@ test("Runtime Manifest 投影页面需要的 Extension 并深度冻结", () => {
   assert.equal(RUNTIME_CONFIG_ID, "stellar-runtime-config");
   assert.equal(manifest.root, "/docs/");
   assert.deepEqual(manifest.extensions.map(item => item.id), [
-    "search", "lazy-loading", "services", "comments", "preload", "lightbox",
+    "search", "lazy-loading", "deferred-icons", "dropdown", "services", "comments", "preload", "lightbox",
     "reveal", "ai-summary", "code-copy", "adaptive-text", "swiper"
   ]);
   assert.equal(manifest.extensions.find(item => item.id === "services").config.siteInfoEndpoint, "https://example.com/?url={href}");

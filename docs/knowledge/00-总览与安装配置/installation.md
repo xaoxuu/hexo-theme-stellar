@@ -135,7 +135,7 @@ graph LR
     PKG --> REPO
     
     META --> NAME["name: hexo-theme-stellar"]
-    META --> VER["version: 1.44.0"]
+    META --> VER["version: 2.0.0-alpha.1"]
     META --> DESC["description: Elegant and powerful theme"]
     
     DEPS --> CHEERIO["cheerio: ^1.1.0"]
@@ -377,7 +377,7 @@ graph TD
 
 ```mermaid
 graph LR
-    VER["Version: 1.44.0"]
+    VER["Version: 2.0.0-alpha.1"]
     
     PKG["package.json"]
     VER --> PKG
@@ -386,7 +386,7 @@ graph LR
     PKG --> DOCS["Documentation links"]
 ```
 
-- **package.json**：`"version": "1.44.0"`，供 npm 分发使用
+- **package.json**：`"version": "2.0.0-alpha.1"`，供 npm 分发使用
 
 版本号遵循 `MAJOR.MINOR.PATCH` 格式；发版脚本同步 package 版本到安装知识库，不再修改主题配置。
 
@@ -399,7 +399,7 @@ npm update hexo-theme-stellar
 或指定版本：
 
 ```bash
-npm install hexo-theme-stellar@1.44.0
+npm install hexo-theme-stellar@2.0.0-alpha.1
 ```
 
 更新后请重新生成站点：

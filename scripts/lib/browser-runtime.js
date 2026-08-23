@@ -100,6 +100,8 @@ function buildBrowserRuntimeManifest(input) {
   }, {
     asset: assets.dependencies?.lazyLoading || null
   });
+  addFeature(entries, "deferred-icons", true, { selector: "svg.icon[data-icon]" }, {});
+  addFeature(entries, "dropdown", true, { selector: "details.dropdown" }, {});
 
   entries.push({
     id: "services",
