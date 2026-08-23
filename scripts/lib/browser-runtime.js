@@ -94,7 +94,11 @@ function buildBrowserRuntimeManifest(input) {
       config: {
         provider: search.provider,
         options: provider,
-        algoliaAsset: assets.search?.algolia || null
+        assets: {
+          client: search.provider === "algolia" ? assets.search?.algolia || null : null,
+          provider: assets.search?.providers?.[search.provider] || null,
+          shortcut: assets.search?.shortcut || null
+        }
       }
     });
   }

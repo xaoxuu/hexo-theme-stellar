@@ -33,7 +33,7 @@ module.exports = ctx => function(args) {
   }
 
   const copy_id = 'copy_' + ++copy_index
-  const __ = ctx.theme.i18n.__(ctx.config.language)
+  const __ = ctx.theme.i18n.__(ctx.config.language);
   const toast = escapeHTML(__("message.copied"));
 
   var el = ``

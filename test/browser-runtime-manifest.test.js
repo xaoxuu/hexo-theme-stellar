@@ -42,7 +42,7 @@ function fixture(overrides = {}) {
     assets: {
       runtime: INTERNAL_CONSTANTS.assets.runtime,
       dependencies: { marked: "https://cdn.example/marked.js", lazyLoading: "https://cdn.example/lazy.js" },
-      search: { algolia: "https://cdn.example/algolia.js" },
+      search: Object.assign({}, INTERNAL_CONSTANTS.assets.search, { algolia: "https://cdn.example/algolia.js" }),
       comments: { giscus: { js: "https://giscus.app/client.js" } },
       features: { preload: "https://cdn.example/preload.js", lightbox: {}, reveal: "https://cdn.example/reveal.js", aiSummary: "https://cdn.example/ai.js", swiper: {} },
       services: { siteinfo: { js: "/js/services/siteinfo.js" } }
@@ -60,6 +60,11 @@ test("Runtime Manifest 投影页面需要的 Extension 并深度冻结", () => {
     "reveal", "ai-summary", "code-copy", "adaptive-text", "swiper"
   ]);
   assert.equal(manifest.extensions.find(item => item.id === "services").config.siteInfoEndpoint, "https://example.com/?url={href}");
+  assert.deepEqual(manifest.extensions.find(item => item.id === "search").config.assets, {
+    client: null,
+    provider: "/js/search/local-search.js",
+    shortcut: "/js/search/shortcut.js"
+  });
   assert.equal(manifest.extensions.find(item => item.id === "code-copy").config.messages.denied, "Denied");
   assert.equal(manifest.extensions.find(item => item.id === "ai-summary").config.interface.name, "AI Summary");
   assert.equal(manifest.extensions.find(item => item.id === "ai-summary").config.interface.version, "TianliGPT");

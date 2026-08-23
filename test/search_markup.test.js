@@ -32,9 +32,8 @@ test('sidebar.left.search 为 false 时跳过搜索控件', () => {
 });
 
 test('本地搜索与 Algolia 从公共入口加载同一份快捷键脚本', () => {
-  const shortcutReferences = SEARCH_PLUGIN_SOURCE.match(/\/js\/search\/shortcut\.js/g) || [];
-  assert.equal(shortcutReferences.length, 1);
-  assert.match(SEARCH_PLUGIN_SOURCE, /config\.provider === 'algolia'[\s\S]*algolia-search\.js/);
-  assert.match(SEARCH_PLUGIN_SOURCE, /config\.provider === 'local'[\s\S]*local-search\.js/);
-  assert.match(SEARCH_PLUGIN_SOURCE, /await assets\.script\('\/js\/search\/shortcut\.js'\)/);
+  assert.match(SEARCH_PLUGIN_SOURCE, /config\.provider === 'algolia'[\s\S]*assets\.script\(config\.assets\.provider\)/);
+  assert.match(SEARCH_PLUGIN_SOURCE, /config\.provider === 'local'[\s\S]*assets\.script\(config\.assets\.provider\)/);
+  assert.match(SEARCH_PLUGIN_SOURCE, /await assets\.script\(config\.assets\.shortcut\)/);
+  assert.doesNotMatch(SEARCH_PLUGIN_SOURCE, /['"]\/js\/search\//);
 });

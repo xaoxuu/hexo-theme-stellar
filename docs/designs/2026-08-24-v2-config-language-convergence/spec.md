@@ -45,7 +45,7 @@ Theme、Collection 与 Front Matter 的当前 Schema 字段由 `scripts/lib/conf
 
 - `{% copy %}` 的成功提示只读取 `message.copied`；`extensions.tags.copy` 退出公开 Schema。
 - code-copy 只保留 `enabled`；idle、success、拒绝授权、不支持环境与 toast 文案从 Runtime Manifest 的页面语言投影取得。
-- AI 摘要 `interface.name/introduce/buttons` 保留显式站点覆盖能力，但 Schema 默认改为 `null`/空数组，运行时仅在缺失时使用语言文件；`interface.version` 是 provider 固定事实，内部化。
+- AI 摘要 `interface.name/introduce/buttons` 保留显式站点覆盖能力，Schema 默认统一改为 `null`，运行时仅在缺失时使用语言文件，并保留显式空字符串和空数组；`interface.version` 是 provider 固定事实，内部化。
 - OKR 内置五种状态只保留可配置颜色；默认 label 从语言文件取得。动态自定义状态仍允许显式 `label`。
 
 ### 内部化配置

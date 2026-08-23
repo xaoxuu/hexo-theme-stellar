@@ -61,7 +61,12 @@ module.exports = deepFreeze({
       lazyLoading: "https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"
     },
     search: {
-      algolia: "https://gcore.jsdelivr.net/algoliasearch/3/algoliasearch.min.js"
+      algolia: "https://gcore.jsdelivr.net/algoliasearch/3/algoliasearch.min.js",
+      providers: {
+        algolia: "/js/search/algolia-search.js",
+        local: "/js/search/local-search.js"
+      },
+      shortcut: "/js/search/shortcut.js"
     },
     comments: {
       beaudar: {
