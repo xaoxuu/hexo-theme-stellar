@@ -356,6 +356,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `dd3e7ba` | refactor(v2): 迁移 Notebook 渲染消费链 (#715) | 设计文档 `2026-08-23-notebook-render-consumption/`；Notebook 必需 `render.document/layout/seo/article/listing`、不可变 collection base 与深冻结完成器、详情 Shell/Brand/侧栏/面包屑/Banner/Footer/上下篇/评论/SEO 显式消费、Notebook 索引与标签 listing 投影、配置 Reference、307 项测试和主工程 254 个生成文件；Standards / Spec 双轨 review 无剩余 finding，M2 完成，Alpha 1 仍受后续里程碑门禁约束 |
 | `690d044` | refactor(v2): 迁移 Topic 渲染消费链 (#714) | 设计文档 `2026-08-23-topic-render-consumption/`；Topic 必需 `render.document/layout/seo/article/listing`、不可变 collection base 与深冻结完成器、详情 Shell/Brand/侧栏/面包屑/Banner/Footer/全站上下篇/相关文章/评论/SEO 显式消费、博客聚合与 Topic 索引 listing 投影、配置 Reference、301 项测试和主工程 254 个生成文件；Standards / Spec 双轨 review 无剩余 finding，Notebook 保持旧链，M2 与 Alpha 1 仍为部分交付 |
 | `a86a782` | fix(v2): 保持 Wiki Footer 显式启用语义 (#713) | #713 Spec 复审回归修正：Wiki Collection 不再无条件继承 Post 全局 Footer；只有页面或 Collection 显式启用时才解析全局许可/分享，未配置 Wiki 保持无 license/share DOM；补缺省 Footer 模型测试和文章页脚模型期数据流文档，主题 297 项测试与主工程 254 个生成文件通过 |
 | `a42407e` | fix(v2): 完成 Wiki 消费链规格收尾 (#713) | #713 Spec 复审收尾：Wiki ghrepo 的仓库名称与 API 均只取 `render.listing` 显式投影；文章页脚知识库完整改写为 Post/Wiki ViewModel 构建期级联与 `post_footer.ejs` 显式 local 消费链 |
