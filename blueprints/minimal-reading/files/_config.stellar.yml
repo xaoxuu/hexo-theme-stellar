@@ -1,8 +1,10 @@
 site:
   brand:
     name: Reading Notes
-    tagline: A quiet place to think and write
-    url: /
+    tagline:
+      text: A quiet place to think and write
+      hover:
+    href: /
   menu:
     items:
       - id: post
@@ -19,27 +21,36 @@ layout:
       navigation:
         active_menu: post
       sidebar:
-        left:
-          widgets: []
-        right:
-          widgets: []
+        left: []
+        right: []
     blog_index:
       path: /blog/
       navigation:
         active_menu: post
       sidebar:
-        left:
-          widgets: []
-        right:
-          widgets: []
+        left: []
+        right: []
     post:
       navigation:
         active_menu: post
       sidebar:
-        left:
-          widgets: []
-        right:
-          widgets: [toc]
+        left: []
+        right: [toc]
+    wiki_index:
+      navigation:
+        active_menu: post
+    wiki:
+      navigation:
+        active_menu: post
+    notebook_index:
+      navigation:
+        active_menu: post
+    note_index:
+      navigation:
+        active_menu: post
+    note:
+      navigation:
+        active_menu: post
 
 content:
   article:

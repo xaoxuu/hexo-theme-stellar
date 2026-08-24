@@ -109,11 +109,11 @@ function notebookInput(overrides = {}) {
         notebook_index: { path: "/notebooks/" },
         note_index: {
           navigation: { active_menu: "notebooks" },
-          sidebar: { left: { widgets: ["recent"] }, right: { widgets: [] } }
+          sidebar: { left: ["recent"], right: [] }
         },
         note: {
           navigation: { active_menu: "notebooks" },
-          sidebar: { left: { widgets: ["tagtree"] }, right: { widgets: ["toc"] } }
+          sidebar: { left: ["tagtree"], right: ["toc"] }
         }
       } },
       content: {
@@ -213,7 +213,7 @@ test("Notebook profile 生成包含最终详情与列表消费状态的冻结 Pa
     path: "notes/dev"
   }]);
   assert.equal(viewModel.render.layout.brand.name, "开发笔记");
-  assert.equal(viewModel.render.layout.brand.url, "notes/dev");
+  assert.equal(viewModel.render.layout.brand.href, "notes/dev");
   assert.equal(viewModel.render.layout.brand.image.src, "/images/notebook.svg");
   assert.equal(viewModel.render.seo.title, "Node.js - Example");
   assert.equal(viewModel.render.seo.openGraph.args.type, "website");

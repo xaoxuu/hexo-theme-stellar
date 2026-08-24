@@ -67,20 +67,22 @@ site:
     image:
       src: /images/avatar.webp
       variant: avatar
-      url: /about/
-      background: 'var(--block)'
+      href: /about/
     name: Stellar
-    tagline: 每个人的独立博客
-    url: /
+    wordmark: /images/wordmark.svg
+    tagline:
+      text: 每个人的独立博客
+      hover: example.com
+    href: /
 ```
 
 ViewModel 的 `image.variant` 只能是：
 
 - `avatar`：正圆裁剪、`object-fit: cover`，保留头像旋转背景效果。
 - `icon`：`$border-card-s` 圆角矩形裁剪、`object-fit: contain`。
-- `plain`：`object-fit: contain`，不裁剪、不设置圆角；禁止配置 `background`。
+- `plain`：`object-fit: contain`，不裁剪、不设置圆角。
 
-`image` 是原子对象：内容作用域覆盖不会继承上级图片的部分字段，并在建模边界规范化为 `variant`。背景默认透明，只能显式配置。`image.url` 控制图片链接，Brand 根级 `url` 控制名称链接。`name` 可包含受信任的内联 HTML，但不解析 Markdown 链接；完整 `[文本](链接)` 写法会在构建期报迁移错误。
+`image` 是原子对象：内容作用域覆盖不会继承上级图片的部分字段。`image.href` 控制图片链接，Brand 根级 `href` 控制名称或字标链接。`name` 只接受纯文本；字标图片使用 `wordmark`，普通与悬停标语分别使用 `tagline.text/hover`。
 
 解析顺序是页面 `sidebar.left.brand`、集合 `sidebar.left.brand`、类型默认和全局 `site.brand`。Wiki / Notebook 的类型默认会从 `identity.icon`自动生成 Brand，缺失时使用 `hexo.stellar.config.resources.fallbacks.projectIcon`，不从 `card.cover` 等其它角色回退。Topic 的类型默认是直接继承全局 Brand，只有显式的 `sidebar.left.brand` 才覆盖。
 

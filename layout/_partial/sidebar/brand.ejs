@@ -3,19 +3,22 @@ var brand = typeof brandModel !== 'undefined' ? brandModel : brandConfig(page)
 
 function layoutBrandTitle() {
   const name = brandText(brand.name)
-  if (!name) return ''
-  const tagline = brandText(brand.tagline)
-  const url = brandText(brand.url)
-  const tag = url ? 'a' : 'div'
-  var el = `<${tag} class="brand-title"${url ? ` href="${escape_html(url_for(url))}"` : ''}>`
-  el += `<div class="brand-name">${name}</div>`
+  const wordmark = brandText(brand.wordmark)
+  if (!name && !wordmark) return ''
+  const tagline = brandText(brand.tagline?.text)
+  const taglineHover = brandText(brand.tagline?.hover)
+  const href = brandText(brand.href)
+  const tag = href ? 'a' : 'div'
+  var el = `<${tag} class="brand-title"${href ? ` href="${escape_html(url_for(href))}"` : ''}>`
+  if (wordmark) {
+    el += `<img class="brand-wordmark" no-lazy src="${escape_html(wordmark)}" alt="${escape_html(name)}">`
+  } else {
+    el += `<div class="brand-name">${escape_html(name)}</div>`
+  }
   if (tagline) {
-    const parts = tagline.split('|')
-    if (parts.length > 1) {
-      el += `<div class="brand-tagline normal cap">${parts.shift().trim()}</div>`
-      el += `<div class="brand-tagline hover cap" style="opacity:0">${parts.join('|')}</div>`
-    } else {
-      el += `<div class="brand-tagline cap">${tagline}</div>`
+    el += `<div class="brand-tagline${taglineHover ? ' normal' : ''} cap">${escape_html(tagline)}</div>`
+    if (taglineHover) {
+      el += `<div class="brand-tagline hover cap" style="opacity:0">${escape_html(taglineHover)}</div>`
     }
   }
   el += `</${tag}>`
@@ -26,11 +29,10 @@ function layoutBrandImage() {
   const image = brand.image
   if (!image?.src) return ''
   const src = brandText(image.src)
-  const url = brandText(image.url)
-  const tag = url ? 'a' : 'div'
+  const href = brandText(image.href)
+  const tag = href ? 'a' : 'div'
   var variant = image.variant
-  const background = image.background ? ` style="--brand-image-background:${escape_html(image.background)}"` : ''
-  var el = `<${tag} class="brand-image brand-image--${variant}"${url ? ` href="${escape_html(url_for(url))}"` : ''}${background}>`
+  var el = `<${tag} class="brand-image brand-image--${variant}"${href ? ` href="${escape_html(url_for(href))}"` : ''}>`
   if (variant === 'avatar' && stellar_config('appearance.motion.avatar') !== 'never') {
     el += `<div class="brand-image-bg"></div>`
   }
@@ -65,7 +67,7 @@ function layoutWikiHome() {
 }
 
 function layoutBrand() {
-  if (!brand.image?.src && !brand.name) return ''
+  if (!brand.image?.src && !brand.name && !brand.wordmark) return ''
   var el = `<header class="brand-header${placement === 'main' ? ' mobile-only' : ''}">`
   el += `<div class="brand-wrap">`
   el += layoutBrandImage()

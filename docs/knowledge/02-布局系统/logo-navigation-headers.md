@@ -26,16 +26,19 @@ tags:
 
 ## Brand 配置
 
-站点默认 Brand 位于 `site.brand`，省略的 `image.src/name/tagline` 分别从 Hexo `avatar/title/subtitle` 派生：
+站点默认 Brand 位于 `site.brand`，省略的 `image.src/name/tagline.text` 分别从 Hexo `avatar/title/subtitle` 派生：
 
 ```yaml
 site:
   brand:
     image:
       variant: avatar
-      url: /about/
-      background: 'var(--block)'
-    url: /
+      href: /about/
+    wordmark: /images/wordmark.svg
+    tagline:
+      text: 每个人的独立博客
+      hover: example.com
+    href: /
 ```
 
 页面或集合暂时仍在 `sidebar.left.brand` 中覆盖，并在 ViewModel 边界收敛到同一输出结构。Brand 根字段逐项合并，但覆盖层中的 `image` 是不可拆分的原子对象。
@@ -44,13 +47,13 @@ site:
 | --- | --- |
 | `image.src` | 图片资源 |
 | `image.variant` | `avatar`、`icon` 或 `plain` |
-| `image.url` | 点击图片后的链接 |
-| `image.background` | 显式图片背景，省略时透明 |
-| `name` | 品牌名称，可使用受信任的内联 HTML |
-| `tagline` | 辅助文案；使用 `|` 可配置 hover 替换文案 |
-| `url` | 点击名称后的链接 |
+| `image.href` | 点击图片后的链接 |
+| `name` | 纯文本品牌名称；省略时使用 Hexo title |
+| `wordmark` | 字标图片资源；用于替代 HTML Logo |
+| `tagline.text/hover` | 普通与悬停辅助文案 |
+| `href` | 点击名称或字标后的链接 |
 
-`name` 与 `image.src` 不解析 Markdown 链接。完整 `[文本](链接)` 会在构建期报错，链接必须写入对应的 `url`。
+`name` 不接受 HTML 或 Markdown 链接；链接必须写入对应的 `href`。
 
 ## 图片样式
 
@@ -58,9 +61,9 @@ site:
 
 | variant | 几何与填充 | 背景 |
 | --- | --- | --- |
-| `avatar` | 正圆裁剪，`object-fit: cover` | 默认透明，可显式配置；支持头像旋转背景 |
-| `icon` | `$border-card-s` 圆角矩形，`object-fit: contain` | 默认透明，可显式配置 |
-| `plain` | 不裁剪、不设圆角，`object-fit: contain` | 永远透明，配置背景会构建失败 |
+| `avatar` | 正圆裁剪，`object-fit: cover` | 支持头像旋转背景 |
+| `icon` | `$border-card-s` 圆角矩形，`object-fit: contain` | 透明 |
+| `plain` | 不裁剪、不设圆角，`object-fit: contain` | 透明 |
 
 头像动画只在 `avatar` 分支输出 `.brand-image-bg`，不会影响图标或透明原图。
 

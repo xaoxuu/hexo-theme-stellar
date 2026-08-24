@@ -111,8 +111,8 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
         brand: {
           image: { src: "/avatar.webp", variant: "avatar" },
           name: "Site Brand",
-          tagline: "Site tagline",
-          url: "/"
+          tagline: { text: "Site tagline", hover: null },
+          href: "/"
         }
       },
       layout: { profiles: {
@@ -120,8 +120,8 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
         post: {
           navigation: { active_menu: "post" },
           sidebar: {
-            left: { widgets: ["global-left"] },
-            right: { widgets: ["toc"] }
+            left: ["global-left"],
+            right: ["toc"]
           }
         },
         topic: { navigation: { active_menu: "post" } }
@@ -306,7 +306,7 @@ test("Topic profile 只接受匹配的严格 v2 collection 归属", () => {
       collection: { profile: "topic", id: "stellar-v2" }
     }
   }), error => {
-    assert.match(error.message, /_config\.stellar\.yml: layout\.profiles\.topic_index\.path 应为 string \| null/);
+    assert.match(error.message, /_config\.stellar\.yml: layout\.profiles\.topic_index\.path 应为 string/);
     assert.match(error.message, /_config\.stellar\.yml: layout\.profiles\.topic\.navigation 应为 object/);
     return true;
   });

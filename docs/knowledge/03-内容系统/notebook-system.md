@@ -109,8 +109,8 @@ Notebook/Note 的冻结模型字段与严格归属统一记录在[内容配置�
 |--------|--------|------|
 | `path` | `/notebooks/` | 笔记本列表的根相对 URL 路径 |
 | `navigation.active_menu` | `notebooks` | 导航栏中高亮的菜单项 |
-| `sidebar.left.widgets` | `[recent]` | 左栏显示跨全部笔记本的最近笔记 |
-| `sidebar.right.widgets` | `[]` | 默认空右栏 |
+| `sidebar.left` | `[recent]` | 左栏显示跨全部笔记本的最近笔记 |
+| `sidebar.right` | `[]` | 默认空右栏 |
 
 **参考源码**：[_config.yml](../../../_config.yml)
 

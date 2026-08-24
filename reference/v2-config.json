@@ -6710,7 +6710,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": {
         "blog_index": {
@@ -6775,8 +6777,7 @@
         "Reference generator"
       ],
       "example": {
-        "active_menu": "post",
-        "tabs": {}
+        "active_menu": "post"
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -6803,71 +6804,18 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "post",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.author.navigation.tabs",
-      "runtimePath": "layout.profiles.author.navigation.tabs",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": {
-        "朋友文章": "/friends/rss/"
-      },
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.author.navigation.tabs.<title>",
-      "runtimePath": "layout.profiles.author.navigation.tabs.<title>",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": ""
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/friends/rss/",
       "migration": "configuration/layout"
     },
     {
       "path": "layout.profiles.author.path",
       "runtimePath": "layout.profiles.author.path",
       "type": [
-        "string",
-        "null"
+        "string"
       ],
       "default": {
         "kind": "literal",
@@ -6884,7 +6832,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "/blog/",
       "migration": "configuration/layout"
@@ -6915,16 +6865,12 @@
         "Reference generator"
       ],
       "example": {
-        "left": {
-          "widgets": [
-            "recent"
-          ]
-        },
-        "right": {
-          "widgets": [
-            "toc"
-          ]
-        }
+        "left": [
+          "recent"
+        ],
+        "right": [
+          "toc"
+        ]
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -6932,39 +6878,6 @@
     {
       "path": "layout.profiles.author.sidebar.left",
       "runtimePath": "layout.profiles.author.sidebar.left",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "recent"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.author.sidebar.left.widgets",
-      "runtimePath": "layout.profiles.author.sidebar.left.widgets",
       "type": [
         "array"
       ],
@@ -6985,7 +6898,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "recent"
@@ -6995,39 +6910,6 @@
     {
       "path": "layout.profiles.author.sidebar.right",
       "runtimePath": "layout.profiles.author.sidebar.right",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "toc"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.author.sidebar.right.widgets",
-      "runtimePath": "layout.profiles.author.sidebar.right.widgets",
       "type": [
         "array"
       ],
@@ -7046,7 +6928,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "toc"
@@ -7108,8 +6992,7 @@
         "Reference generator"
       ],
       "example": {
-        "active_menu": "post",
-        "tabs": {}
+        "active_menu": "post"
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -7136,7 +7019,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "post",
       "migration": "configuration/layout"
@@ -7145,33 +7030,38 @@
       "path": "layout.profiles.blog_index.navigation.tabs",
       "runtimePath": "layout.profiles.blogIndex.navigation.tabs",
       "type": [
-        "object"
+        "array"
       ],
       "default": {
         "kind": "literal",
-        "value": {}
+        "value": []
       },
       "scope": "theme",
       "cascade": [
         "schema default",
         "_config.stellar.yml"
       ],
-      "normalizer": "object",
+      "normalizer": "array",
       "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
-      "example": {
-        "朋友文章": "/friends/rss/"
-      },
+      "example": [
+        {
+          "title": "朋友文章",
+          "url": "/friends/rss/"
+        }
+      ],
       "migration": "configuration/layout"
     },
     {
-      "path": "layout.profiles.blog_index.navigation.tabs.<title>",
-      "runtimePath": "layout.profiles.blogIndex.navigation.tabs.<title>",
+      "path": "layout.profiles.blog_index.navigation.tabs[].title",
+      "runtimePath": "layout.profiles.blogIndex.navigation.tabs[].title",
       "type": [
         "string"
       ],
@@ -7190,7 +7080,37 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
+      ],
+      "example": "朋友文章",
+      "migration": "configuration/layout"
+    },
+    {
+      "path": "layout.profiles.blog_index.navigation.tabs[].url",
+      "runtimePath": "layout.profiles.blogIndex.navigation.tabs[].url",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "/friends/rss/",
       "migration": "configuration/layout"
@@ -7199,8 +7119,7 @@
       "path": "layout.profiles.blog_index.path",
       "runtimePath": "layout.profiles.blogIndex.path",
       "type": [
-        "string",
-        "null"
+        "string"
       ],
       "default": {
         "kind": "literal",
@@ -7217,7 +7136,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "/blog/",
       "migration": "configuration/layout"
@@ -7248,16 +7169,12 @@
         "Reference generator"
       ],
       "example": {
-        "left": {
-          "widgets": [
-            "recent"
-          ]
-        },
-        "right": {
-          "widgets": [
-            "toc"
-          ]
-        }
+        "left": [
+          "recent"
+        ],
+        "right": [
+          "toc"
+        ]
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -7265,39 +7182,6 @@
     {
       "path": "layout.profiles.blog_index.sidebar.left",
       "runtimePath": "layout.profiles.blogIndex.sidebar.left",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "recent"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.blog_index.sidebar.left.widgets",
-      "runtimePath": "layout.profiles.blogIndex.sidebar.left.widgets",
       "type": [
         "array"
       ],
@@ -7319,7 +7203,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "recent"
@@ -7329,39 +7215,6 @@
     {
       "path": "layout.profiles.blog_index.sidebar.right",
       "runtimePath": "layout.profiles.blogIndex.sidebar.right",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "toc"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.blog_index.sidebar.right.widgets",
-      "runtimePath": "layout.profiles.blogIndex.sidebar.right.widgets",
       "type": [
         "array"
       ],
@@ -7380,7 +7233,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "toc"
@@ -7442,8 +7297,7 @@
         "Reference generator"
       ],
       "example": {
-        "active_menu": "post",
-        "tabs": {}
+        "active_menu": "post"
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -7470,63 +7324,11 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "post",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.error.navigation.tabs",
-      "runtimePath": "layout.profiles.error.navigation.tabs",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": {
-        "朋友文章": "/friends/rss/"
-      },
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.error.navigation.tabs.<title>",
-      "runtimePath": "layout.profiles.error.navigation.tabs.<title>",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": ""
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/friends/rss/",
       "migration": "configuration/layout"
     },
     {
@@ -7550,7 +7352,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "/404.html",
       "migration": "configuration/layout"
@@ -7581,16 +7385,12 @@
         "Reference generator"
       ],
       "example": {
-        "left": {
-          "widgets": [
-            "recent"
-          ]
-        },
-        "right": {
-          "widgets": [
-            "toc"
-          ]
-        }
+        "left": [
+          "recent"
+        ],
+        "right": [
+          "toc"
+        ]
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -7598,39 +7398,6 @@
     {
       "path": "layout.profiles.error.sidebar.left",
       "runtimePath": "layout.profiles.error.sidebar.left",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "recent"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.error.sidebar.left.widgets",
-      "runtimePath": "layout.profiles.error.sidebar.left.widgets",
       "type": [
         "array"
       ],
@@ -7651,7 +7418,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "recent"
@@ -7661,39 +7430,6 @@
     {
       "path": "layout.profiles.error.sidebar.right",
       "runtimePath": "layout.profiles.error.sidebar.right",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "toc"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.error.sidebar.right.widgets",
-      "runtimePath": "layout.profiles.error.sidebar.right.widgets",
       "type": [
         "array"
       ],
@@ -7712,7 +7448,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "toc"
@@ -7752,44 +7490,50 @@
       "path": "layout.profiles.home.comments",
       "runtimePath": "layout.profiles.home.comments",
       "type": [
-        "boolean",
-        "object",
-        "null"
+        "object"
       ],
       "default": {
         "kind": "literal",
-        "value": null
+        "value": {
+          "enabled": false,
+          "title": null,
+          "id": null,
+          "provider": null,
+          "options": {}
+        }
       },
       "scope": "theme",
       "cascade": [
         "schema default",
         "_config.stellar.yml"
       ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
       "consumers": [
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": {
         "enabled": true,
         "provider": "giscus",
         "options": {}
       },
-      "migration": "configuration/layout"
+      "migration": "configuration/layout",
+      "sealed": true
     },
     {
       "path": "layout.profiles.home.comments.enabled",
       "runtimePath": "layout.profiles.home.comments.enabled",
       "type": [
-        "boolean",
-        "null"
+        "boolean"
       ],
       "default": {
         "kind": "literal",
-        "value": null
+        "value": false
       },
       "scope": "theme",
       "cascade": [
@@ -7802,7 +7546,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": true,
       "migration": "configuration/layout"
@@ -7823,13 +7569,15 @@
         "schema default",
         "_config.stellar.yml"
       ],
-      "normalizer": "identity",
+      "normalizer": "nullable_trimmed_string",
       "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "home",
       "migration": "configuration/layout"
@@ -7855,7 +7603,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": {
         "data-repo": "owner/repo"
@@ -7884,10 +7634,21 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "giscus",
-      "migration": "configuration/layout"
+      "migration": "configuration/layout",
+      "values": [
+        null,
+        "beaudar",
+        "utterances",
+        "giscus",
+        "twikoo",
+        "waline",
+        "artalk"
+      ]
     },
     {
       "path": "layout.profiles.home.comments.title",
@@ -7911,7 +7672,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "留言",
       "migration": "configuration/layout"
@@ -7942,8 +7705,7 @@
         "Reference generator"
       ],
       "example": {
-        "active_menu": "post",
-        "tabs": {}
+        "active_menu": "post"
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -7970,90 +7732,11 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "post",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.home.navigation.tabs",
-      "runtimePath": "layout.profiles.home.navigation.tabs",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": {
-        "朋友文章": "/friends/rss/"
-      },
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.home.navigation.tabs.<title>",
-      "runtimePath": "layout.profiles.home.navigation.tabs.<title>",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": ""
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/friends/rss/",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.home.path",
-      "runtimePath": "layout.profiles.home.path",
-      "type": [
-        "string",
-        "null"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": null
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "root_relative_path",
-      "normalization": "normalize to a root-relative path; directory paths end with a slash",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/blog/",
       "migration": "configuration/layout"
     },
     {
@@ -8082,16 +7765,12 @@
         "Reference generator"
       ],
       "example": {
-        "left": {
-          "widgets": [
-            "recent"
-          ]
-        },
-        "right": {
-          "widgets": [
-            "toc"
-          ]
-        }
+        "left": [
+          "recent"
+        ],
+        "right": [
+          "toc"
+        ]
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -8099,39 +7778,6 @@
     {
       "path": "layout.profiles.home.sidebar.left",
       "runtimePath": "layout.profiles.home.sidebar.left",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "recent"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.home.sidebar.left.widgets",
-      "runtimePath": "layout.profiles.home.sidebar.left.widgets",
       "type": [
         "array"
       ],
@@ -8153,7 +7799,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "recent"
@@ -8163,39 +7811,6 @@
     {
       "path": "layout.profiles.home.sidebar.right",
       "runtimePath": "layout.profiles.home.sidebar.right",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "toc"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.home.sidebar.right.widgets",
-      "runtimePath": "layout.profiles.home.sidebar.right.widgets",
       "type": [
         "array"
       ],
@@ -8214,7 +7829,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "toc"
@@ -8276,8 +7893,7 @@
         "Reference generator"
       ],
       "example": {
-        "active_menu": "post",
-        "tabs": {}
+        "active_menu": "post"
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -8304,90 +7920,11 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "post",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.note.navigation.tabs",
-      "runtimePath": "layout.profiles.note.navigation.tabs",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": {
-        "朋友文章": "/friends/rss/"
-      },
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.note.navigation.tabs.<title>",
-      "runtimePath": "layout.profiles.note.navigation.tabs.<title>",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": ""
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/friends/rss/",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.note.path",
-      "runtimePath": "layout.profiles.note.path",
-      "type": [
-        "string",
-        "null"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": null
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "root_relative_path",
-      "normalization": "normalize to a root-relative path; directory paths end with a slash",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/blog/",
       "migration": "configuration/layout"
     },
     {
@@ -8416,16 +7953,12 @@
         "Reference generator"
       ],
       "example": {
-        "left": {
-          "widgets": [
-            "recent"
-          ]
-        },
-        "right": {
-          "widgets": [
-            "toc"
-          ]
-        }
+        "left": [
+          "recent"
+        ],
+        "right": [
+          "toc"
+        ]
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -8433,39 +7966,6 @@
     {
       "path": "layout.profiles.note.sidebar.left",
       "runtimePath": "layout.profiles.note.sidebar.left",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "recent"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.note.sidebar.left.widgets",
-      "runtimePath": "layout.profiles.note.sidebar.left.widgets",
       "type": [
         "array"
       ],
@@ -8487,7 +7987,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "recent"
@@ -8497,39 +7999,6 @@
     {
       "path": "layout.profiles.note.sidebar.right",
       "runtimePath": "layout.profiles.note.sidebar.right",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "toc"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.note.sidebar.right.widgets",
-      "runtimePath": "layout.profiles.note.sidebar.right.widgets",
       "type": [
         "array"
       ],
@@ -8550,7 +8019,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "toc"
@@ -8612,8 +8083,7 @@
         "Reference generator"
       ],
       "example": {
-        "active_menu": "post",
-        "tabs": {}
+        "active_menu": "post"
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -8640,90 +8110,11 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "post",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.note_index.navigation.tabs",
-      "runtimePath": "layout.profiles.noteIndex.navigation.tabs",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": {
-        "朋友文章": "/friends/rss/"
-      },
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.note_index.navigation.tabs.<title>",
-      "runtimePath": "layout.profiles.noteIndex.navigation.tabs.<title>",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": ""
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/friends/rss/",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.note_index.path",
-      "runtimePath": "layout.profiles.noteIndex.path",
-      "type": [
-        "string",
-        "null"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": null
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "root_relative_path",
-      "normalization": "normalize to a root-relative path; directory paths end with a slash",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/blog/",
       "migration": "configuration/layout"
     },
     {
@@ -8752,16 +8143,12 @@
         "Reference generator"
       ],
       "example": {
-        "left": {
-          "widgets": [
-            "recent"
-          ]
-        },
-        "right": {
-          "widgets": [
-            "toc"
-          ]
-        }
+        "left": [
+          "recent"
+        ],
+        "right": [
+          "toc"
+        ]
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -8769,39 +8156,6 @@
     {
       "path": "layout.profiles.note_index.sidebar.left",
       "runtimePath": "layout.profiles.noteIndex.sidebar.left",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "recent"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.note_index.sidebar.left.widgets",
-      "runtimePath": "layout.profiles.noteIndex.sidebar.left.widgets",
       "type": [
         "array"
       ],
@@ -8823,7 +8177,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "recent"
@@ -8833,39 +8189,6 @@
     {
       "path": "layout.profiles.note_index.sidebar.right",
       "runtimePath": "layout.profiles.noteIndex.sidebar.right",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "toc"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.note_index.sidebar.right.widgets",
-      "runtimePath": "layout.profiles.noteIndex.sidebar.right.widgets",
       "type": [
         "array"
       ],
@@ -8884,7 +8207,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "toc"
@@ -8946,8 +8271,7 @@
         "Reference generator"
       ],
       "example": {
-        "active_menu": "post",
-        "tabs": {}
+        "active_menu": "post"
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -8974,71 +8298,18 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "post",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.notebook_index.navigation.tabs",
-      "runtimePath": "layout.profiles.notebookIndex.navigation.tabs",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": {
-        "朋友文章": "/friends/rss/"
-      },
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.notebook_index.navigation.tabs.<title>",
-      "runtimePath": "layout.profiles.notebookIndex.navigation.tabs.<title>",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": ""
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/friends/rss/",
       "migration": "configuration/layout"
     },
     {
       "path": "layout.profiles.notebook_index.path",
       "runtimePath": "layout.profiles.notebookIndex.path",
       "type": [
-        "string",
-        "null"
+        "string"
       ],
       "default": {
         "kind": "literal",
@@ -9055,7 +8326,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "/blog/",
       "migration": "configuration/layout"
@@ -9086,16 +8359,12 @@
         "Reference generator"
       ],
       "example": {
-        "left": {
-          "widgets": [
-            "recent"
-          ]
-        },
-        "right": {
-          "widgets": [
-            "toc"
-          ]
-        }
+        "left": [
+          "recent"
+        ],
+        "right": [
+          "toc"
+        ]
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -9103,39 +8372,6 @@
     {
       "path": "layout.profiles.notebook_index.sidebar.left",
       "runtimePath": "layout.profiles.notebookIndex.sidebar.left",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "recent"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.notebook_index.sidebar.left.widgets",
-      "runtimePath": "layout.profiles.notebookIndex.sidebar.left.widgets",
       "type": [
         "array"
       ],
@@ -9156,7 +8392,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "recent"
@@ -9166,39 +8404,6 @@
     {
       "path": "layout.profiles.notebook_index.sidebar.right",
       "runtimePath": "layout.profiles.notebookIndex.sidebar.right",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "toc"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.notebook_index.sidebar.right.widgets",
-      "runtimePath": "layout.profiles.notebookIndex.sidebar.right.widgets",
       "type": [
         "array"
       ],
@@ -9217,7 +8422,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "toc"
@@ -9279,8 +8486,7 @@
         "Reference generator"
       ],
       "example": {
-        "active_menu": "post",
-        "tabs": {}
+        "active_menu": "post"
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -9307,90 +8513,11 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "post",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.page.navigation.tabs",
-      "runtimePath": "layout.profiles.page.navigation.tabs",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": {
-        "朋友文章": "/friends/rss/"
-      },
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.page.navigation.tabs.<title>",
-      "runtimePath": "layout.profiles.page.navigation.tabs.<title>",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": ""
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/friends/rss/",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.page.path",
-      "runtimePath": "layout.profiles.page.path",
-      "type": [
-        "string",
-        "null"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": null
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "root_relative_path",
-      "normalization": "normalize to a root-relative path; directory paths end with a slash",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/blog/",
       "migration": "configuration/layout"
     },
     {
@@ -9419,16 +8546,12 @@
         "Reference generator"
       ],
       "example": {
-        "left": {
-          "widgets": [
-            "recent"
-          ]
-        },
-        "right": {
-          "widgets": [
-            "toc"
-          ]
-        }
+        "left": [
+          "recent"
+        ],
+        "right": [
+          "toc"
+        ]
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -9436,39 +8559,6 @@
     {
       "path": "layout.profiles.page.sidebar.left",
       "runtimePath": "layout.profiles.page.sidebar.left",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "recent"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.page.sidebar.left.widgets",
-      "runtimePath": "layout.profiles.page.sidebar.left.widgets",
       "type": [
         "array"
       ],
@@ -9489,7 +8579,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "recent"
@@ -9500,39 +8592,6 @@
       "path": "layout.profiles.page.sidebar.right",
       "runtimePath": "layout.profiles.page.sidebar.right",
       "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "toc"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.page.sidebar.right.widgets",
-      "runtimePath": "layout.profiles.page.sidebar.right.widgets",
-      "type": [
         "array"
       ],
       "default": {
@@ -9552,7 +8611,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "toc"
@@ -9614,8 +8675,7 @@
         "Reference generator"
       ],
       "example": {
-        "active_menu": "post",
-        "tabs": {}
+        "active_menu": "post"
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -9642,90 +8702,11 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "post",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.post.navigation.tabs",
-      "runtimePath": "layout.profiles.post.navigation.tabs",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": {
-        "朋友文章": "/friends/rss/"
-      },
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.post.navigation.tabs.<title>",
-      "runtimePath": "layout.profiles.post.navigation.tabs.<title>",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": ""
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/friends/rss/",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.post.path",
-      "runtimePath": "layout.profiles.post.path",
-      "type": [
-        "string",
-        "null"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": null
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "root_relative_path",
-      "normalization": "normalize to a root-relative path; directory paths end with a slash",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/blog/",
       "migration": "configuration/layout"
     },
     {
@@ -9754,16 +8735,12 @@
         "Reference generator"
       ],
       "example": {
-        "left": {
-          "widgets": [
-            "recent"
-          ]
-        },
-        "right": {
-          "widgets": [
-            "toc"
-          ]
-        }
+        "left": [
+          "recent"
+        ],
+        "right": [
+          "toc"
+        ]
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -9771,39 +8748,6 @@
     {
       "path": "layout.profiles.post.sidebar.left",
       "runtimePath": "layout.profiles.post.sidebar.left",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "recent"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.post.sidebar.left.widgets",
-      "runtimePath": "layout.profiles.post.sidebar.left.widgets",
       "type": [
         "array"
       ],
@@ -9825,7 +8769,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "recent"
@@ -9835,39 +8781,6 @@
     {
       "path": "layout.profiles.post.sidebar.right",
       "runtimePath": "layout.profiles.post.sidebar.right",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "toc"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.post.sidebar.right.widgets",
-      "runtimePath": "layout.profiles.post.sidebar.right.widgets",
       "type": [
         "array"
       ],
@@ -9889,7 +8802,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "toc"
@@ -9951,8 +8866,7 @@
         "Reference generator"
       ],
       "example": {
-        "active_menu": "post",
-        "tabs": {}
+        "active_menu": "post"
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -9979,90 +8893,11 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "post",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.topic.navigation.tabs",
-      "runtimePath": "layout.profiles.topic.navigation.tabs",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": {
-        "朋友文章": "/friends/rss/"
-      },
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.topic.navigation.tabs.<title>",
-      "runtimePath": "layout.profiles.topic.navigation.tabs.<title>",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": ""
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/friends/rss/",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.topic.path",
-      "runtimePath": "layout.profiles.topic.path",
-      "type": [
-        "string",
-        "null"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": null
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "root_relative_path",
-      "normalization": "normalize to a root-relative path; directory paths end with a slash",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/blog/",
       "migration": "configuration/layout"
     },
     {
@@ -10091,16 +8926,12 @@
         "Reference generator"
       ],
       "example": {
-        "left": {
-          "widgets": [
-            "recent"
-          ]
-        },
-        "right": {
-          "widgets": [
-            "toc"
-          ]
-        }
+        "left": [
+          "recent"
+        ],
+        "right": [
+          "toc"
+        ]
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -10108,39 +8939,6 @@
     {
       "path": "layout.profiles.topic.sidebar.left",
       "runtimePath": "layout.profiles.topic.sidebar.left",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "recent"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.topic.sidebar.left.widgets",
-      "runtimePath": "layout.profiles.topic.sidebar.left.widgets",
       "type": [
         "array"
       ],
@@ -10162,7 +8960,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "recent"
@@ -10172,39 +8972,6 @@
     {
       "path": "layout.profiles.topic.sidebar.right",
       "runtimePath": "layout.profiles.topic.sidebar.right",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "toc"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.topic.sidebar.right.widgets",
-      "runtimePath": "layout.profiles.topic.sidebar.right.widgets",
       "type": [
         "array"
       ],
@@ -10226,7 +8993,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "toc"
@@ -10288,8 +9057,7 @@
         "Reference generator"
       ],
       "example": {
-        "active_menu": "post",
-        "tabs": {}
+        "active_menu": "post"
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -10316,71 +9084,18 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "post",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.topic_index.navigation.tabs",
-      "runtimePath": "layout.profiles.topicIndex.navigation.tabs",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": {
-        "朋友文章": "/friends/rss/"
-      },
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.topic_index.navigation.tabs.<title>",
-      "runtimePath": "layout.profiles.topicIndex.navigation.tabs.<title>",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": ""
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/friends/rss/",
       "migration": "configuration/layout"
     },
     {
       "path": "layout.profiles.topic_index.path",
       "runtimePath": "layout.profiles.topicIndex.path",
       "type": [
-        "string",
-        "null"
+        "string"
       ],
       "default": {
         "kind": "literal",
@@ -10397,7 +9112,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "/blog/",
       "migration": "configuration/layout"
@@ -10428,16 +9145,12 @@
         "Reference generator"
       ],
       "example": {
-        "left": {
-          "widgets": [
-            "recent"
-          ]
-        },
-        "right": {
-          "widgets": [
-            "toc"
-          ]
-        }
+        "left": [
+          "recent"
+        ],
+        "right": [
+          "toc"
+        ]
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -10445,39 +9158,6 @@
     {
       "path": "layout.profiles.topic_index.sidebar.left",
       "runtimePath": "layout.profiles.topicIndex.sidebar.left",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "recent"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.topic_index.sidebar.left.widgets",
-      "runtimePath": "layout.profiles.topicIndex.sidebar.left.widgets",
       "type": [
         "array"
       ],
@@ -10499,7 +9179,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "recent"
@@ -10509,39 +9191,6 @@
     {
       "path": "layout.profiles.topic_index.sidebar.right",
       "runtimePath": "layout.profiles.topicIndex.sidebar.right",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "toc"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.topic_index.sidebar.right.widgets",
-      "runtimePath": "layout.profiles.topicIndex.sidebar.right.widgets",
       "type": [
         "array"
       ],
@@ -10560,7 +9209,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "toc"
@@ -10622,8 +9273,7 @@
         "Reference generator"
       ],
       "example": {
-        "active_menu": "post",
-        "tabs": {}
+        "active_menu": "post"
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -10650,90 +9300,11 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "post",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.wiki.navigation.tabs",
-      "runtimePath": "layout.profiles.wiki.navigation.tabs",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": {
-        "朋友文章": "/friends/rss/"
-      },
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.wiki.navigation.tabs.<title>",
-      "runtimePath": "layout.profiles.wiki.navigation.tabs.<title>",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": ""
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/friends/rss/",
-      "migration": "configuration/layout"
-    },
-    {
-      "path": "layout.profiles.wiki.path",
-      "runtimePath": "layout.profiles.wiki.path",
-      "type": [
-        "string",
-        "null"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": null
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "root_relative_path",
-      "normalization": "normalize to a root-relative path; directory paths end with a slash",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "sidebar renderer"
-      ],
-      "example": "/blog/",
       "migration": "configuration/layout"
     },
     {
@@ -10762,16 +9333,12 @@
         "Reference generator"
       ],
       "example": {
-        "left": {
-          "widgets": [
-            "recent"
-          ]
-        },
-        "right": {
-          "widgets": [
-            "toc"
-          ]
-        }
+        "left": [
+          "recent"
+        ],
+        "right": [
+          "toc"
+        ]
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -10779,39 +9346,6 @@
     {
       "path": "layout.profiles.wiki.sidebar.left",
       "runtimePath": "layout.profiles.wiki.sidebar.left",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "recent"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.wiki.sidebar.left.widgets",
-      "runtimePath": "layout.profiles.wiki.sidebar.left.widgets",
       "type": [
         "array"
       ],
@@ -10834,7 +9368,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "recent"
@@ -10844,39 +9380,6 @@
     {
       "path": "layout.profiles.wiki.sidebar.right",
       "runtimePath": "layout.profiles.wiki.sidebar.right",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "toc"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.wiki.sidebar.right.widgets",
-      "runtimePath": "layout.profiles.wiki.sidebar.right.widgets",
       "type": [
         "array"
       ],
@@ -10898,7 +9401,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "toc"
@@ -10960,8 +9465,7 @@
         "Reference generator"
       ],
       "example": {
-        "active_menu": "post",
-        "tabs": {}
+        "active_menu": "post"
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -10988,7 +9492,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "post",
       "migration": "configuration/layout"
@@ -10997,33 +9503,38 @@
       "path": "layout.profiles.wiki_index.navigation.tabs",
       "runtimePath": "layout.profiles.wikiIndex.navigation.tabs",
       "type": [
-        "object"
+        "array"
       ],
       "default": {
         "kind": "literal",
-        "value": {}
+        "value": []
       },
       "scope": "theme",
       "cascade": [
         "schema default",
         "_config.stellar.yml"
       ],
-      "normalizer": "object",
+      "normalizer": "array",
       "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
-      "example": {
-        "朋友文章": "/friends/rss/"
-      },
+      "example": [
+        {
+          "title": "朋友文章",
+          "url": "/friends/rss/"
+        }
+      ],
       "migration": "configuration/layout"
     },
     {
-      "path": "layout.profiles.wiki_index.navigation.tabs.<title>",
-      "runtimePath": "layout.profiles.wikiIndex.navigation.tabs.<title>",
+      "path": "layout.profiles.wiki_index.navigation.tabs[].title",
+      "runtimePath": "layout.profiles.wikiIndex.navigation.tabs[].title",
       "type": [
         "string"
       ],
@@ -11042,7 +9553,37 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
+      ],
+      "example": "朋友文章",
+      "migration": "configuration/layout"
+    },
+    {
+      "path": "layout.profiles.wiki_index.navigation.tabs[].url",
+      "runtimePath": "layout.profiles.wikiIndex.navigation.tabs[].url",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "/friends/rss/",
       "migration": "configuration/layout"
@@ -11051,8 +9592,7 @@
       "path": "layout.profiles.wiki_index.path",
       "runtimePath": "layout.profiles.wikiIndex.path",
       "type": [
-        "string",
-        "null"
+        "string"
       ],
       "default": {
         "kind": "literal",
@@ -11069,7 +9609,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": "/blog/",
       "migration": "configuration/layout"
@@ -11100,16 +9642,12 @@
         "Reference generator"
       ],
       "example": {
-        "left": {
-          "widgets": [
-            "recent"
-          ]
-        },
-        "right": {
-          "widgets": [
-            "toc"
-          ]
-        }
+        "left": [
+          "recent"
+        ],
+        "right": [
+          "toc"
+        ]
       },
       "migration": "configuration/layout",
       "sealed": true
@@ -11117,39 +9655,6 @@
     {
       "path": "layout.profiles.wiki_index.sidebar.left",
       "runtimePath": "layout.profiles.wikiIndex.sidebar.left",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "recent"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.wiki_index.sidebar.left.widgets",
-      "runtimePath": "layout.profiles.wikiIndex.sidebar.left.widgets",
       "type": [
         "array"
       ],
@@ -11171,7 +9676,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "recent"
@@ -11181,39 +9688,6 @@
     {
       "path": "layout.profiles.wiki_index.sidebar.right",
       "runtimePath": "layout.profiles.wikiIndex.sidebar.right",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "widgets": [
-          "toc"
-        ]
-      },
-      "migration": "configuration/layout",
-      "sealed": true
-    },
-    {
-      "path": "layout.profiles.wiki_index.sidebar.right.widgets",
-      "runtimePath": "layout.profiles.wikiIndex.sidebar.right.widgets",
       "type": [
         "array"
       ],
@@ -11232,7 +9706,9 @@
         "CollectionModel",
         "PageViewModel",
         "page generators",
-        "sidebar renderer"
+        "navigation renderer",
+        "sidebar renderer",
+        "Reference generator"
       ],
       "example": [
         "toc"
@@ -11911,8 +10387,11 @@
       "example": {
         "brand": {
           "name": "Stellar",
-          "tagline": "每个人的独立博客",
-          "url": "/"
+          "tagline": {
+            "text": "每个人的独立博客",
+            "hover": null
+          },
+          "href": "/"
         },
         "menu": {
           "items": [
@@ -11926,7 +10405,7 @@
           ]
         },
         "footer": {
-          "actions": {},
+          "actions": [],
           "sections": [],
           "content": "本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。"
         }
@@ -11962,14 +10441,45 @@
         "image": {
           "src": "/avatar.webp",
           "variant": "avatar",
-          "url": "/about/"
+          "href": "/about/"
         },
         "name": "Stellar",
-        "tagline": "每个人的独立博客",
-        "url": "/"
+        "wordmark": null,
+        "tagline": {
+          "text": "每个人的独立博客",
+          "hover": null
+        },
+        "href": "/"
       },
       "migration": "configuration/site",
       "sealed": true
+    },
+    {
+      "path": "site.brand.href",
+      "runtimePath": "site.brand.href",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "/"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "/",
+      "migration": "configuration/site"
     },
     {
       "path": "site.brand.image",
@@ -11998,14 +10508,14 @@
       "example": {
         "src": "/avatar.webp",
         "variant": "avatar",
-        "url": "/about/"
+        "href": "/about/"
       },
       "migration": "configuration/site",
       "sealed": true
     },
     {
-      "path": "site.brand.image.background",
-      "runtimePath": "site.brand.image.background",
+      "path": "site.brand.image.href",
+      "runtimePath": "site.brand.image.href",
       "type": [
         "string",
         "null"
@@ -12027,7 +10537,7 @@
         "menu renderer",
         "footer renderer"
       ],
-      "example": "var(--block)",
+      "example": "/about/",
       "migration": "configuration/site"
     },
     {
@@ -12057,33 +10567,6 @@
         "footer renderer"
       ],
       "example": "/avatar.webp",
-      "migration": "configuration/site"
-    },
-    {
-      "path": "site.brand.image.url",
-      "runtimePath": "site.brand.image.url",
-      "type": [
-        "string",
-        "null"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": null
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer"
-      ],
-      "example": "/about/",
       "migration": "configuration/site"
     },
     {
@@ -12121,7 +10604,8 @@
       "path": "site.brand.name",
       "runtimePath": "site.brand.name",
       "type": [
-        "string"
+        "string",
+        "null"
       ],
       "default": {
         "kind": "derived",
@@ -12149,7 +10633,66 @@
       "path": "site.brand.tagline",
       "runtimePath": "site.brand.tagline",
       "type": [
-        "string"
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "text": "每个人的独立博客",
+        "hover": "example.com"
+      },
+      "migration": "configuration/site",
+      "sealed": true
+    },
+    {
+      "path": "site.brand.tagline.hover",
+      "runtimePath": "site.brand.tagline.hover",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "example.com",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.brand.tagline.text",
+      "runtimePath": "site.brand.tagline.text",
+      "type": [
+        "string",
+        "null"
       ],
       "default": {
         "kind": "derived",
@@ -12174,14 +10717,15 @@
       "migration": "configuration/site"
     },
     {
-      "path": "site.brand.url",
-      "runtimePath": "site.brand.url",
+      "path": "site.brand.wordmark",
+      "runtimePath": "site.brand.wordmark",
       "type": [
-        "string"
+        "string",
+        "null"
       ],
       "default": {
         "kind": "literal",
-        "value": "/"
+        "value": null
       },
       "scope": "theme",
       "cascade": [
@@ -12196,7 +10740,7 @@
         "menu renderer",
         "footer renderer"
       ],
-      "example": "/",
+      "example": "/wordmark.svg",
       "migration": "configuration/site"
     },
     {
@@ -12224,7 +10768,7 @@
         "Reference generator"
       ],
       "example": {
-        "actions": {},
+        "actions": [],
         "sections": [],
         "content": ""
       },
@@ -12235,18 +10779,18 @@
       "path": "site.footer.actions",
       "runtimePath": "site.footer.actions",
       "type": [
-        "object"
+        "array"
       ],
       "default": {
         "kind": "literal",
-        "value": {}
+        "value": []
       },
       "scope": "theme",
       "cascade": [
         "schema default",
         "_config.stellar.yml"
       ],
-      "normalizer": "object",
+      "normalizer": "array",
       "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
         "PageViewModel",
@@ -12254,76 +10798,19 @@
         "menu renderer",
         "footer renderer"
       ],
-      "example": {
-        "github": {
+      "example": [
+        {
+          "type": "link",
           "icon": "default:github",
           "title": "GitHub",
           "url": "https://github.com/"
         }
-      },
+      ],
       "migration": "configuration/site"
     },
     {
-      "path": "site.footer.actions.<id>",
-      "runtimePath": "site.footer.actions.<id>",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer"
-      ],
-      "example": {
-        "icon": "default:github",
-        "title": "GitHub",
-        "url": "https://github.com/"
-      },
-      "migration": "configuration/site",
-      "sealed": true
-    },
-    {
-      "path": "site.footer.actions.<id>.action",
-      "runtimePath": "site.footer.actions.<id>.action",
-      "type": [
-        "string",
-        "null"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": null
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "trusted_text",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer"
-      ],
-      "example": "window.example()",
-      "migration": "configuration/site"
-    },
-    {
-      "path": "site.footer.actions.<id>.icon",
-      "runtimePath": "site.footer.actions.<id>.icon",
+      "path": "site.footer.actions[].icon",
+      "runtimePath": "site.footer.actions[].icon",
       "type": [
         "string",
         "null"
@@ -12349,8 +10836,8 @@
       "migration": "configuration/site"
     },
     {
-      "path": "site.footer.actions.<id>.items",
-      "runtimePath": "site.footer.actions.<id>.items",
+      "path": "site.footer.actions[].items",
+      "runtimePath": "site.footer.actions[].items",
       "type": [
         "array"
       ],
@@ -12381,8 +10868,8 @@
       "migration": "configuration/site"
     },
     {
-      "path": "site.footer.actions.<id>.items[].icon",
-      "runtimePath": "site.footer.actions.<id>.items[].icon",
+      "path": "site.footer.actions[].items[].icon",
+      "runtimePath": "site.footer.actions[].items[].icon",
       "type": [
         "string",
         "null"
@@ -12408,8 +10895,8 @@
       "migration": "configuration/site"
     },
     {
-      "path": "site.footer.actions.<id>.items[].title",
-      "runtimePath": "site.footer.actions.<id>.items[].title",
+      "path": "site.footer.actions[].items[].title",
+      "runtimePath": "site.footer.actions[].items[].title",
       "type": [
         "string"
       ],
@@ -12434,8 +10921,8 @@
       "migration": "configuration/site"
     },
     {
-      "path": "site.footer.actions.<id>.items[].url",
-      "runtimePath": "site.footer.actions.<id>.items[].url",
+      "path": "site.footer.actions[].items[].url",
+      "runtimePath": "site.footer.actions[].items[].url",
       "type": [
         "string"
       ],
@@ -12460,15 +10947,14 @@
       "migration": "configuration/site"
     },
     {
-      "path": "site.footer.actions.<id>.title",
-      "runtimePath": "site.footer.actions.<id>.title",
+      "path": "site.footer.actions[].title",
+      "runtimePath": "site.footer.actions[].title",
       "type": [
-        "string",
-        "null"
+        "string"
       ],
       "default": {
         "kind": "literal",
-        "value": null
+        "value": ""
       },
       "scope": "theme",
       "cascade": [
@@ -12487,8 +10973,41 @@
       "migration": "configuration/site"
     },
     {
-      "path": "site.footer.actions.<id>.url",
-      "runtimePath": "site.footer.actions.<id>.url",
+      "path": "site.footer.actions[].type",
+      "runtimePath": "site.footer.actions[].type",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "footer action"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "link",
+      "migration": "configuration/site",
+      "values": [
+        "link",
+        "dropdown",
+        "spacer"
+      ]
+    },
+    {
+      "path": "site.footer.actions[].url",
+      "runtimePath": "site.footer.actions[].url",
       "type": [
         "string",
         "null"
@@ -12511,33 +11030,6 @@
         "footer renderer"
       ],
       "example": "https://github.com/",
-      "migration": "configuration/site"
-    },
-    {
-      "path": "site.footer.actions.<id>.variant",
-      "runtimePath": "site.footer.actions.<id>.variant",
-      "type": [
-        "string",
-        "null"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": null
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer"
-      ],
-      "example": "dropdown",
       "migration": "configuration/site"
     },
     {
@@ -12593,7 +11085,10 @@
         {
           "title": "博客",
           "items": [
-            "[归档](/blog/archives/)"
+            {
+              "title": "归档",
+              "url": "/blog/archives/"
+            }
           ]
         }
       ],
@@ -12614,7 +11109,7 @@
         "schema default",
         "_config.stellar.yml"
       ],
-      "normalizer": "identity",
+      "normalizer": "array",
       "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
         "PageViewModel",
@@ -12623,8 +11118,63 @@
         "footer renderer"
       ],
       "example": [
-        "[归档](/blog/archives/)"
+        {
+          "title": "归档",
+          "url": "/blog/archives/"
+        }
       ],
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.footer.sections[].items[].title",
+      "runtimePath": "site.footer.sections[].items[].title",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "归档",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "site.footer.sections[].items[].url",
+      "runtimePath": "site.footer.sections[].items[].url",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "/blog/archives/",
       "migration": "configuration/site"
     },
     {
@@ -12756,11 +11306,12 @@
       "path": "site.menu.items[].icon",
       "runtimePath": "site.menu.items[].icon",
       "type": [
-        "string"
+        "string",
+        "null"
       ],
       "default": {
         "kind": "literal",
-        "value": ""
+        "value": null
       },
       "scope": "theme",
       "cascade": [
@@ -14835,6 +13386,33 @@
       "sealed": true
     },
     {
+      "path": "sidebar.left.brand.href",
+      "runtimePath": "sidebar.left.brand.href",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "/"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "/",
+      "migration": "configuration/site"
+    },
+    {
       "path": "sidebar.left.brand.image",
       "runtimePath": "sidebar.left.brand.image",
       "type": [
@@ -14861,14 +13439,14 @@
       "example": {
         "src": "/avatar.webp",
         "variant": "avatar",
-        "url": "/about/"
+        "href": "/about/"
       },
       "migration": "configuration/site",
       "sealed": true
     },
     {
-      "path": "sidebar.left.brand.image.background",
-      "runtimePath": "sidebar.left.brand.image.background",
+      "path": "sidebar.left.brand.image.href",
+      "runtimePath": "sidebar.left.brand.image.href",
       "type": [
         "string",
         "null"
@@ -14890,7 +13468,7 @@
         "menu renderer",
         "footer renderer"
       ],
-      "example": "var(--block)",
+      "example": "/about/",
       "migration": "configuration/site"
     },
     {
@@ -14920,33 +13498,6 @@
         "footer renderer"
       ],
       "example": "/avatar.webp",
-      "migration": "configuration/site"
-    },
-    {
-      "path": "sidebar.left.brand.image.url",
-      "runtimePath": "sidebar.left.brand.image.url",
-      "type": [
-        "string",
-        "null"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": null
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer"
-      ],
-      "example": "/about/",
       "migration": "configuration/site"
     },
     {
@@ -14984,7 +13535,8 @@
       "path": "sidebar.left.brand.name",
       "runtimePath": "sidebar.left.brand.name",
       "type": [
-        "string"
+        "string",
+        "null"
       ],
       "default": {
         "kind": "derived",
@@ -15012,7 +13564,66 @@
       "path": "sidebar.left.brand.tagline",
       "runtimePath": "sidebar.left.brand.tagline",
       "type": [
-        "string"
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "text": "每个人的独立博客",
+        "hover": "example.com"
+      },
+      "migration": "configuration/site",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.brand.tagline.hover",
+      "runtimePath": "sidebar.left.brand.tagline.hover",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "example.com",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "sidebar.left.brand.tagline.text",
+      "runtimePath": "sidebar.left.brand.tagline.text",
+      "type": [
+        "string",
+        "null"
       ],
       "default": {
         "kind": "derived",
@@ -15037,14 +13648,15 @@
       "migration": "configuration/site"
     },
     {
-      "path": "sidebar.left.brand.url",
-      "runtimePath": "sidebar.left.brand.url",
+      "path": "sidebar.left.brand.wordmark",
+      "runtimePath": "sidebar.left.brand.wordmark",
       "type": [
-        "string"
+        "string",
+        "null"
       ],
       "default": {
         "kind": "literal",
-        "value": "/"
+        "value": null
       },
       "scope": "theme",
       "cascade": [
@@ -15059,7 +13671,7 @@
         "menu renderer",
         "footer renderer"
       ],
-      "example": "/",
+      "example": "/wordmark.svg",
       "migration": "configuration/site"
     },
     {
@@ -16742,6 +15354,33 @@
       "sealed": true
     },
     {
+      "path": "sidebar.left.brand.href",
+      "runtimePath": "sidebar.left.brand.href",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "/"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "/",
+      "migration": "configuration/site"
+    },
+    {
       "path": "sidebar.left.brand.image",
       "runtimePath": "sidebar.left.brand.image",
       "type": [
@@ -16768,14 +15407,14 @@
       "example": {
         "src": "/avatar.webp",
         "variant": "avatar",
-        "url": "/about/"
+        "href": "/about/"
       },
       "migration": "configuration/site",
       "sealed": true
     },
     {
-      "path": "sidebar.left.brand.image.background",
-      "runtimePath": "sidebar.left.brand.image.background",
+      "path": "sidebar.left.brand.image.href",
+      "runtimePath": "sidebar.left.brand.image.href",
       "type": [
         "string",
         "null"
@@ -16797,7 +15436,7 @@
         "menu renderer",
         "footer renderer"
       ],
-      "example": "var(--block)",
+      "example": "/about/",
       "migration": "configuration/site"
     },
     {
@@ -16827,33 +15466,6 @@
         "footer renderer"
       ],
       "example": "/avatar.webp",
-      "migration": "configuration/site"
-    },
-    {
-      "path": "sidebar.left.brand.image.url",
-      "runtimePath": "sidebar.left.brand.image.url",
-      "type": [
-        "string",
-        "null"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": null
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer"
-      ],
-      "example": "/about/",
       "migration": "configuration/site"
     },
     {
@@ -16891,7 +15503,8 @@
       "path": "sidebar.left.brand.name",
       "runtimePath": "sidebar.left.brand.name",
       "type": [
-        "string"
+        "string",
+        "null"
       ],
       "default": {
         "kind": "derived",
@@ -16919,7 +15532,66 @@
       "path": "sidebar.left.brand.tagline",
       "runtimePath": "sidebar.left.brand.tagline",
       "type": [
-        "string"
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "text": "每个人的独立博客",
+        "hover": "example.com"
+      },
+      "migration": "configuration/site",
+      "sealed": true
+    },
+    {
+      "path": "sidebar.left.brand.tagline.hover",
+      "runtimePath": "sidebar.left.brand.tagline.hover",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ],
+      "example": "example.com",
+      "migration": "configuration/site"
+    },
+    {
+      "path": "sidebar.left.brand.tagline.text",
+      "runtimePath": "sidebar.left.brand.tagline.text",
+      "type": [
+        "string",
+        "null"
       ],
       "default": {
         "kind": "derived",
@@ -16944,14 +15616,15 @@
       "migration": "configuration/site"
     },
     {
-      "path": "sidebar.left.brand.url",
-      "runtimePath": "sidebar.left.brand.url",
+      "path": "sidebar.left.brand.wordmark",
+      "runtimePath": "sidebar.left.brand.wordmark",
       "type": [
-        "string"
+        "string",
+        "null"
       ],
       "default": {
         "kind": "literal",
-        "value": "/"
+        "value": null
       },
       "scope": "theme",
       "cascade": [
@@ -16966,7 +15639,7 @@
         "menu renderer",
         "footer renderer"
       ],
-      "example": "/",
+      "example": "/wordmark.svg",
       "migration": "configuration/site"
     },
     {

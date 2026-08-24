@@ -192,7 +192,7 @@ test("Brand 注册 Schema 使用 variant 并保持跨字段约束", () => {
   }), /image\.style 已移除，期望 .*variant/);
   assert.throws(() => parsePageConfig({
     sidebar: { left: { brand: { image: { src: "/brand.svg", variant: "plain", background: "#fff" } } } }
-  }), /background 的值不在 null when variant is plain/);
+  }), /image\.background 已移除/);
 });
 
 test("getCollectionId 使用 profile，visibility 两个维度彼此独立", () => {

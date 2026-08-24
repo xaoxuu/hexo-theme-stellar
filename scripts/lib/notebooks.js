@@ -91,10 +91,10 @@ function prepareNotebook(id, info, ctx, pages) {
   notebook.footer.license ??= notebookDefaults.footer.license;
   notebook.footer.share ??= notebookDefaults.footer.share;
 
-  notebook.sidebar.left ??= { widgets: profiles.noteIndex.sidebar.left.widgets };
-  notebook.sidebar.right ??= { widgets: profiles.noteIndex.sidebar.right.widgets };
-  notebook.noteDefaults.sidebar.left ??= { widgets: profiles.note.sidebar.left.widgets };
-  notebook.noteDefaults.sidebar.right ??= { widgets: profiles.note.sidebar.right.widgets };
+  notebook.sidebar.left ??= { widgets: profiles.noteIndex.sidebar.left.slice() };
+  notebook.sidebar.right ??= { widgets: profiles.noteIndex.sidebar.right.slice() };
+  notebook.noteDefaults.sidebar.left ??= { widgets: profiles.note.sidebar.left.slice() };
+  notebook.noteDefaults.sidebar.right ??= { widgets: profiles.note.sidebar.right.slice() };
 
   const tagMap = new Map(); // tagId: tagInfo
   notebook.tagTree = tagMap;

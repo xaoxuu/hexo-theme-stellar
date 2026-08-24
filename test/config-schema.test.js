@@ -30,14 +30,15 @@ test("site/layout/content/appearance/resources/head Schema 提供默认值并拒
   assert.deepEqual(withoutLayoutAndContent(config), {
     site: {
       brand: {
-        image: { src: "/avatar.webp", variant: "avatar", url: null, background: null },
+        image: { src: "/avatar.webp", variant: "avatar", href: null },
         name: "Stellar",
-        tagline: "每个人的独立博客",
-        url: "/"
+        wordmark: null,
+        tagline: { text: "每个人的独立博客", hover: null },
+        href: "/"
       },
       menu: { items: [] },
       footer: {
-        actions: {},
+        actions: [],
         sections: [],
         content: "本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。"
       }
@@ -56,15 +57,15 @@ test("site/layout/content/appearance/resources/head Schema 提供默认值并拒
   ]);
   assert.deepEqual(config.layout.profiles.blogIndex, {
     path: "/blog/",
-    navigation: { activeMenu: "post", tabs: {} },
-    sidebar: { left: { widgets: ["welcome", "recent"] }, right: { widgets: [] } }
+    navigation: { activeMenu: "post", tabs: [] },
+    sidebar: { left: ["welcome", "recent"], right: [] }
   });
   assert.equal(config.layout.profiles.home.navigation.activeMenu, "post");
   assert.equal(config.layout.profiles.page.navigation.activeMenu, "post");
   assert.deepEqual(config.layout.profiles.error, {
     path: "/404.html",
-    navigation: { activeMenu: "post", tabs: {} },
-    sidebar: { left: { widgets: ["recent"] }, right: { widgets: [] } }
+    navigation: { activeMenu: "post" },
+    sidebar: { left: ["recent"], right: [] }
   });
   assert.deepEqual(config.content.article.listing, {
     pinnedLayout: "carousel",
@@ -112,13 +113,14 @@ test("站点覆盖完成规范化、数组替换、稳定去重并保留注入�
   assert.deepEqual(withoutLayoutAndContent(config), {
     site: {
       brand: {
-        image: { src: null, variant: "avatar", url: null, background: null },
-        name: "",
-        tagline: "",
-        url: "/"
+        image: { src: null, variant: "avatar", href: null },
+        name: null,
+        wordmark: null,
+        tagline: { text: null, hover: null },
+        href: "/"
       },
       menu: { items: [] },
-      footer: { actions: {}, sections: [], content: "" }
+      footer: { actions: [], sections: [], content: "" }
     },
     seo: {
       canonical: { host: "xaoxuu.com", allowedHosts: ["mirror.example.com", "localhost"] },
@@ -301,11 +303,11 @@ test("Layout Profile 解析最终 ID、路径、动态 tabs、Widget 数组和�
             path: " custom/blog ",
             navigation: {
               active_menu: "notes",
-              tabs: { "朋友文章": "/friends/rss/" }
+              tabs: [{ title: "朋友文章", url: "/friends/rss/" }]
             },
             sidebar: {
-              left: { widgets: ["recent", { layout: "markdown", content: "hello" }] },
-              right: { widgets: ["toc"] }
+              left: ["recent", { layout: "markdown", content: "hello" }],
+              right: ["toc"]
             }
           },
           error: { path: "errors/404.html" }
@@ -323,10 +325,10 @@ test("Layout Profile 解析最终 ID、路径、动态 tabs、Widget 数组和�
   });
   assert.deepEqual(config.layout.profiles.blogIndex, {
     path: "/custom/blog/",
-    navigation: { activeMenu: "notes", tabs: { "朋友文章": "/friends/rss/" } },
+    navigation: { activeMenu: "notes", tabs: [{ title: "朋友文章", url: "/friends/rss/" }] },
     sidebar: {
-      left: { widgets: ["recent", { layout: "markdown", content: "hello" }] },
-      right: { widgets: ["toc"] }
+      left: ["recent", { layout: "markdown", content: "hello" }],
+      right: ["toc"]
     }
   });
   assert.equal(config.layout.profiles.error.path, "/errors/404.html");
@@ -361,12 +363,11 @@ test("Layout Profile 拒绝旧根、旧 ID、旧子字段、未知字段和错�
     assert.match(error.message, /未知字段 layout\.profiles\.unknown_profile/);
     assert.match(error.message, /layout\.profiles\.blog_index\.base_dir 已移除/);
     assert.match(error.message, /未知字段 layout\.profiles\.blog_index\.unknown/);
-    assert.match(error.message, /layout\.profiles\.blog_index\.path 应为 string \| null/);
+    assert.match(error.message, /layout\.profiles\.blog_index\.path 应为 string/);
     assert.match(error.message, /layout\.profiles\.blog_index\.navigation\.menu 已移除/);
-    assert.match(error.message, /layout\.profiles\.blog_index\.navigation\.tabs 应为 object/);
-    assert.match(error.message, /layout\.profiles\.blog_index\.sidebar\.left\.widgets\[0\] 应为 string \| object/);
+    assert.match(error.message, /layout\.profiles\.blog_index\.sidebar\.left 应为 array/);
     assert.match(error.message, /layout\.profiles\.error\.404 已移除/);
-    assert.match(error.message, /layout\.profiles\.home\.comments 应为 boolean \| object \| null/);
+    assert.match(error.message, /layout\.profiles\.home\.comments 应为 object/);
     return true;
   });
 });
@@ -376,21 +377,26 @@ test("site Shell 解析封闭对象数组、动态 action 记录并完整替换�
     siteConfig: { avatar: "/avatar.webp", title: "Site", subtitle: "Subtitle" },
     themeConfig: {
       site: {
-        brand: { image: { variant: "icon", url: "/about/" }, url: "/home/" },
+        brand: { image: { variant: "icon", href: "/about/" }, href: "/home/" },
         menu: {
-          items: [{ id: "post", title: "Blog", icon: "documents", url: "/", accent: "#abc" }]
+          items: [
+            { id: "post", title: "Blog", icon: "documents", url: "/", accent: "#abc" },
+            { id: "wiki", title: "Wiki", icon: "box", url: "/wiki/", accent: null },
+            { id: "notebooks", title: "Notes", icon: "note", url: "/notebooks/", accent: null }
+          ]
         },
         footer: {
-          actions: {
-            more: {
-              variant: "dropdown",
+          actions: [
+            {
+              type: "dropdown",
               icon: "more",
               title: "More",
               items: [{ title: "About", url: "/about/" }]
             },
-            command: { icon: "play", action: "run()" }
-          },
-          sections: [{ title: "Links", items: ["[Home](/)"] }],
+            { type: "spacer" },
+            { type: "link", icon: "home", title: "Home", url: "/" }
+          ],
+          sections: [{ title: "Links", items: [{ title: "Home", url: "/" }] }],
           content: "Footer"
         }
       }
@@ -399,34 +405,31 @@ test("site Shell 解析封闭对象数组、动态 action 记录并完整替换�
 
   assert.deepEqual(config.site, {
     brand: {
-      image: { src: "/avatar.webp", variant: "icon", url: "/about/", background: null },
+      image: { src: "/avatar.webp", variant: "icon", href: "/about/" },
       name: "Site",
-      tagline: "Subtitle",
-      url: "/home/"
+      wordmark: null,
+      tagline: { text: "Subtitle", hover: null },
+      href: "/home/"
     },
     menu: {
-      items: [{ id: "post", title: "Blog", icon: "documents", url: "/", accent: "#abc" }]
+      items: [
+        { id: "post", title: "Blog", icon: "documents", url: "/", accent: "#abc" },
+        { id: "wiki", title: "Wiki", icon: "box", url: "/wiki/", accent: null },
+        { id: "notebooks", title: "Notes", icon: "note", url: "/notebooks/", accent: null }
+      ]
     },
     footer: {
-      actions: {
-        more: {
-          variant: "dropdown",
+      actions: [
+        {
+          type: "dropdown",
           icon: "more",
           title: "More",
-          url: null,
-          action: null,
           items: [{ icon: null, title: "About", url: "/about/" }]
         },
-        command: {
-          variant: null,
-          icon: "play",
-          title: null,
-          url: null,
-          action: "run()",
-          items: []
-        }
-      },
-      sections: [{ title: "Links", items: ["[Home](/)"] }],
+        { type: "spacer" },
+        { type: "link", icon: "home", title: "Home", url: "/" }
+      ],
+      sections: [{ title: "Links", items: [{ title: "Home", url: "/" }] }],
       content: "Footer"
     }
   });
@@ -454,11 +457,62 @@ test("site Shell 拒绝旧子字段、未知字段、错误类型和非法枚举
     assert.match(error.message, /site\.menu\.items\[0\]\.theme 已移除/);
     assert.match(error.message, /未知字段 site\.menu\.items\[0\]\.unknown/);
     assert.match(error.message, /site\.footer\.social 已移除/);
-    assert.match(error.message, /site\.footer\.actions\.more\.type 已移除/);
-    assert.match(error.message, /未知字段 site\.footer\.actions\.more\.unknown/);
+    assert.match(error.message, /site\.footer\.actions 应为 array/);
     assert.match(error.message, /site\.footer\.sections\[0\]\.items 应为 array/);
     return true;
   });
+});
+
+test("site Shell 与 Layout 拒绝不安全链接、重复菜单、无效引用和越权 Profile 字段", () => {
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: {
+      site: {
+        menu: { items: [
+          { id: "bad_id", title: "", icon: null, url: "javascript:alert(1)", accent: "not a color" },
+          { id: "bad_id", title: "Duplicate", icon: null, url: "/duplicate/", accent: null }
+        ] },
+        footer: {
+          actions: [
+            { type: "spacer", title: "magic spacer" },
+            { type: "link", icon: "home", title: "Unsafe", url: "javascript:alert(1)" },
+            { type: "dropdown", icon: null, title: "", items: [] }
+          ]
+        }
+      },
+      layout: { profiles: {
+        home: { comments: { id: "   ", provider: "unknown" } },
+        post: { path: "/post/", navigation: { active_menu: "missing", tabs: [] } }
+      } }
+    }
+  }), error => {
+    assert.ok(error instanceof ConfigSchemaError);
+    assert.match(error.message, /site\.menu\.items\[0\]\.id 的值不在 non-empty kebab-case id/);
+    assert.match(error.message, /site\.menu\.items\[1\]\.id 的值不在 unique menu id/);
+    assert.match(error.message, /site\.menu\.items\[0\] 的值不在 non-empty title or icon/);
+    assert.match(error.message, /site\.menu\.items\[0\]\.url 的值不在 safe navigable URL/);
+    assert.match(error.message, /site\.menu\.items\[0\]\.accent 的值不在 valid CSS color/);
+    assert.match(error.message, /site\.footer\.actions\[0\]\.title/);
+    assert.match(error.message, /site\.footer\.actions\[1\]\.url 的值不在 safe navigable URL/);
+    assert.match(error.message, /site\.footer\.actions\[2\].*non-empty title or icon/);
+    assert.match(error.message, /layout\.profiles\.home\.comments\.id 的值不在 non-empty string/);
+    assert.match(error.message, /layout\.profiles\.home\.comments\.provider 的值不在 .*giscus/);
+    assert.match(error.message, /layout\.profiles\.post\.path 已移除/);
+    assert.match(error.message, /layout\.profiles\.post\.navigation\.tabs 已移除/);
+    return true;
+  });
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: {
+      site: { menu: { items: [
+        { id: "post", title: "Post", icon: null, url: "/", accent: null },
+        { id: "wiki", title: "Wiki", icon: null, url: "/wiki/", accent: null },
+        { id: "notebooks", title: "Notes", icon: null, url: "/notebooks/", accent: null }
+      ] } },
+      layout: { profiles: { home: { navigation: { active_menu: "missing" } } } }
+    }
+  }), /layout\.profiles\.home\.navigation\.active_menu.*id present in site\.menu\.items/);
 });
 
 test("canonical null 禁用输出且 Schema 不做类型转换", () => {
@@ -563,7 +617,11 @@ test("构建事件把最终路径冻结挂载到 hexo.stellar.config", () => {
       title: "Example",
       subtitle: "Example subtitle",
       theme_config: {
-        site: { menu: { items: [{ id: "post", title: "Blog", icon: "documents", url: "/" }] } },
+        site: { menu: { items: [
+          { id: "post", title: "Blog", icon: "documents", url: "/" },
+          { id: "wiki", title: "Wiki", icon: "box", url: "/wiki/" },
+          { id: "notebooks", title: "Notes", icon: "note", url: "/notebooks/" }
+        ] } },
         seo: {
           canonical: { host: "example.com", allowed_hosts: ["mirror.example.com"] },
           structured_data: { same_as: ["https://github.com/example"] }

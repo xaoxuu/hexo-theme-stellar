@@ -80,8 +80,8 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
         wiki: {
           navigation: { active_menu: "wiki" },
           sidebar: {
-            left: { widgets: ["tree", "related"] },
-            right: { widgets: ["toc"] }
+            left: ["tree", "related"],
+            right: ["toc"]
           }
         }
       } },
@@ -428,8 +428,8 @@ test("合法 Post profile 生成固定结构的冻结 PageViewModel", () => {
         brand: {
           image: { src: "/avatar.webp", variant: "avatar" },
           name: "Stellar",
-          tagline: "独立博客",
-          url: "/"
+          tagline: { text: "独立博客", hover: null },
+          href: "/"
         }
       },
       layout: { profiles: {
@@ -437,8 +437,8 @@ test("合法 Post profile 生成固定结构的冻结 PageViewModel", () => {
         post: {
           navigation: { active_menu: "post" },
           sidebar: {
-            left: { widgets: ["recent"] },
-            right: { widgets: ["toc"] }
+            left: ["recent"],
+            right: ["toc"]
           }
         }
       } },
@@ -773,10 +773,8 @@ test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆�
         post: {
           navigation: { active_menu: "post" },
           sidebar: {
-            left: {
-              widgets: ["recent"]
-            },
-            right: { widgets: ["toc"] }
+            left: ["recent"],
+            right: ["toc"]
           }
         }
       } },

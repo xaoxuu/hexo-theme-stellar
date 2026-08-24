@@ -28,8 +28,8 @@ test("Shell 消费链只读取冻结的 site 配置", () => {
   assert.doesNotMatch(menu, /theme\.menubar|menuItem\.theme/);
 
   assert.match(leftFooter, /stellar_config\('site\.footer\.actions'\)/);
-  assert.match(leftFooter, /item\.variant|item\.action/);
-  assert.doesNotMatch(leftFooter, /theme\.footer|\.social|\.onclick/);
+  assert.match(leftFooter, /item\.type === 'link'|item\.type === 'dropdown'/);
+  assert.doesNotMatch(leftFooter, /theme\.footer|item\.variant|item\.action|\.onclick/);
 
   assert.match(mainFooter, /stellar_config\('site\.footer'\)/);
   assert.match(mainFooter, /siteFooter\.sections|siteFooter\.content/);

@@ -15,8 +15,8 @@ const {
 const CONTENT_MODEL_FIELDS = Object.freeze({
   article: Object.freeze(["type", "indent", "author", "aiLabel"]),
   banner: Object.freeze(["enabled", "image", "avatar", "headline", "tagline"]),
-  brand: Object.freeze(["image", "name", "tagline", "url"]),
-  brandImage: Object.freeze(["src", "variant", "url", "background"]),
+  brand: Object.freeze(["image", "name", "wordmark", "tagline", "href"]),
+  brandImage: Object.freeze(["src", "variant", "href"]),
   card: Object.freeze(["cover", "tagline"]),
   comments: Object.freeze(["enabled", "title", "id", "provider", "options"]),
   footer: Object.freeze(["references", "license", "share"]),

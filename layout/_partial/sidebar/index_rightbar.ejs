@@ -30,31 +30,31 @@ if (postViewModel || wikiViewModel || notebookViewModel) {
     var profiles = stellar_config('layout.profiles')
     var sidebar
     if (is_home()) {
-      sidebar = profiles.home.sidebar.right.widgets
+      sidebar = profiles.home.sidebar.right
     } else if (page.layout === 'notebooks') {
       // 笔记本列表页
-      sidebar = profiles.notebookIndex.sidebar.right.widgets
+      sidebar = profiles.notebookIndex.sidebar.right
     } else if (page.layout === 'notes') {
       // 笔记列表页
-      sidebar = notebookIndex?.layout.sidebar?.right?.widgets || profiles.noteIndex.sidebar.right.widgets
+      sidebar = notebookIndex?.layout.sidebar?.right?.widgets || profiles.noteIndex.sidebar.right
     } else if (is_category() || is_tag() || is_archive() || ['categories', 'tags', 'archives'].includes(page.layout)) {
-      sidebar = profiles.blogIndex.sidebar.right.widgets
+      sidebar = profiles.blogIndex.sidebar.right
     } else if (page.layout === 'index_topic') {
-      sidebar = profiles.topicIndex.sidebar.right.widgets
+      sidebar = profiles.topicIndex.sidebar.right
     } else if (collection_id(page, "topic")?.length > 0) {
-      sidebar = profiles.topic.sidebar.right.widgets
+      sidebar = profiles.topic.sidebar.right
     } else if (page.layout === 'index_wiki') {
-      sidebar = profiles.wikiIndex.sidebar.right.widgets
+      sidebar = profiles.wikiIndex.sidebar.right
     } else if (collection_id(page, "wiki")?.length > 0) {
-      sidebar = profiles.wiki.sidebar.right.widgets
+      sidebar = profiles.wiki.sidebar.right
     } else if (page.layout === '404') {
-      sidebar = profiles.error.sidebar.right.widgets
+      sidebar = profiles.error.sidebar.right
     } else if (page.layout === 'page') {
-      sidebar = profiles.page.sidebar.right.widgets
+      sidebar = profiles.page.sidebar.right
     } else if (page.layout === 'post') {
-      sidebar = profiles.post.sidebar.right.widgets
+      sidebar = profiles.post.sidebar.right
     } else if (page.layout == null) {
-      sidebar = profiles.page.sidebar.right.widgets
+      sidebar = profiles.page.sidebar.right
     } else {
       sidebar = []
     }

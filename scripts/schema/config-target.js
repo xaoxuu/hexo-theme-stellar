@@ -12,11 +12,12 @@ const FRONT_MATTER_CASCADE = Object.freeze(["schema default", "theme profile", "
 const DELIVERED_TARGET_PATHS = new Set([
   "site.brand.image.src",
   "site.brand.image.variant",
-  "site.brand.image.url",
-  "site.brand.image.background",
+  "site.brand.image.href",
   "site.brand.name",
-  "site.brand.tagline",
-  "site.brand.url",
+  "site.brand.wordmark",
+  "site.brand.tagline.text",
+  "site.brand.tagline.hover",
+  "site.brand.href",
   "site.menu.items",
   "site.menu.items[].id",
   "site.menu.items[].title",
@@ -24,19 +25,19 @@ const DELIVERED_TARGET_PATHS = new Set([
   "site.menu.items[].url",
   "site.menu.items[].accent",
   "site.footer.actions",
-  "site.footer.actions.<id>",
-  "site.footer.actions.<id>.variant",
-  "site.footer.actions.<id>.icon",
-  "site.footer.actions.<id>.title",
-  "site.footer.actions.<id>.url",
-  "site.footer.actions.<id>.action",
-  "site.footer.actions.<id>.items",
-  "site.footer.actions.<id>.items[].icon",
-  "site.footer.actions.<id>.items[].title",
-  "site.footer.actions.<id>.items[].url",
+  "site.footer.actions[].type",
+  "site.footer.actions[].icon",
+  "site.footer.actions[].title",
+  "site.footer.actions[].url",
+  "site.footer.actions[].items",
+  "site.footer.actions[].items[].icon",
+  "site.footer.actions[].items[].title",
+  "site.footer.actions[].items[].url",
   "site.footer.sections",
   "site.footer.sections[].title",
   "site.footer.sections[].items",
+  "site.footer.sections[].items[].title",
+  "site.footer.sections[].items[].url",
   "site.footer.content",
   "seo.canonical.host",
   "seo.canonical.allowed_hosts",
@@ -196,7 +197,7 @@ const CONFIG_TARGET_ROOTS = deepFreeze([
 
 const SITE_CONSUMERS = Object.freeze(["PageViewModel", "Shell renderer", "menu renderer", "footer renderer"]);
 const SEO_CONSUMERS = Object.freeze(["PageViewModel", "head renderer", "JSON-LD helper", "browser canonical check"]);
-const LAYOUT_CONSUMERS = Object.freeze(["CollectionModel", "PageViewModel", "page generators", "sidebar renderer"]);
+const LAYOUT_CONSUMERS = Object.freeze(["CollectionModel", "PageViewModel", "page generators", "navigation renderer", "sidebar renderer", "Reference generator"]);
 const CONTENT_CONSUMERS = Object.freeze(["CollectionModel", "PageViewModel", "article renderer", "listing renderer"]);
 const APPEARANCE_CONSUMERS = Object.freeze(["PageViewModel", "layout renderer", "Stylus compiler", "browser theme state"]);
 const RESOURCE_CONSUMERS = Object.freeze(["head renderer", "PageViewModel", "tag renderers", "image fallback filters"]);
@@ -328,91 +329,91 @@ const LAYOUT_PROFILE_DEFAULTS = deepFreeze({
   home: {
     path: null,
     activeMenu: "post",
-    tabs: {},
+    tabs: [],
     leftWidgets: ["welcome", "recent"],
     rightWidgets: []
   },
   blog_index: {
     path: "/blog/",
     activeMenu: "post",
-    tabs: {},
+    tabs: [],
     leftWidgets: ["welcome", "recent"],
     rightWidgets: []
   },
   topic_index: {
     path: "/topic/",
     activeMenu: "post",
-    tabs: {},
+    tabs: [],
     leftWidgets: ["welcome", "recent"],
     rightWidgets: []
   },
   wiki_index: {
     path: "/wiki/",
     activeMenu: "wiki",
-    tabs: {},
+    tabs: [],
     leftWidgets: ["related", "recent"],
     rightWidgets: []
   },
   post: {
     path: null,
     activeMenu: "post",
-    tabs: {},
+    tabs: [],
     leftWidgets: ["related", "recent"],
     rightWidgets: ["ghrepo", "toc"]
   },
   topic: {
     path: null,
     activeMenu: "post",
-    tabs: {},
+    tabs: [],
     leftWidgets: ["related", "recent"],
     rightWidgets: ["ghrepo", "toc"]
   },
   wiki: {
     path: null,
     activeMenu: "wiki",
-    tabs: {},
+    tabs: [],
     leftWidgets: ["tree", "related", "recent"],
     rightWidgets: ["ghrepo", "toc"]
   },
   notebook_index: {
     path: "/notebooks/",
     activeMenu: "notebooks",
-    tabs: {},
+    tabs: [],
     leftWidgets: ["recent"],
     rightWidgets: []
   },
   note_index: {
     path: null,
     activeMenu: "notebooks",
-    tabs: {},
+    tabs: [],
     leftWidgets: ["tagtree", "recent"],
     rightWidgets: []
   },
   note: {
     path: null,
     activeMenu: "notebooks",
-    tabs: {},
+    tabs: [],
     leftWidgets: ["tagtree", "recent"],
     rightWidgets: ["toc"]
   },
   author: {
     path: "/author/",
     activeMenu: "post",
-    tabs: {},
+    tabs: [],
     leftWidgets: ["recent"],
     rightWidgets: []
   },
   error: {
     path: "/404.html",
     activeMenu: "post",
-    tabs: {},
+    tabs: [],
     leftWidgets: ["recent"],
     rightWidgets: []
   },
   page: {
     path: null,
     activeMenu: "post",
-    tabs: {},
+    tabs: [],
     leftWidgets: ["recent"],
     rightWidgets: ["toc"]
   }
@@ -466,45 +467,61 @@ const CONFIG_INTERNALIZED_RESOURCES = deepFreeze([
 ]);
 
 function layoutProfileFields() {
+  const pathProfiles = new Set(["blog_index", "topic_index", "wiki_index", "notebook_index", "author", "error"]);
+  const tabProfiles = new Set(["blog_index", "wiki_index"]);
   const definitions = [
     ["layout.profiles", "object", literal({}), { boundary: "sealed", status: "delivered" }]
   ];
   for (const profile of PROFILE_IDS) {
     const defaults = LAYOUT_PROFILE_DEFAULTS[profile];
     const base = `layout.profiles.${profile}`;
-    definitions.push(
-      [
+    if (pathProfiles.has(profile)) {
+      definitions.push([
         `${base}.path`,
-        profile === "error" ? "string" : ["string", "null"],
+        "string",
         literal(defaults.path),
         {
           normalization: "normalize to a root-relative path; directory paths end with a slash",
           status: "delivered"
         }
-      ],
+      ]);
+    }
+    definitions.push(
       [`${base}.navigation.active_menu`, ["string", "null"], literal(defaults.activeMenu), { status: "delivered" }],
-      [`${base}.navigation.tabs`, "object", literal(defaults.tabs), { boundary: "record", status: "delivered" }],
-      [`${base}.navigation.tabs.<title>`, "string", literal(""), { status: "delivered" }],
       [
-        `${base}.sidebar.left.widgets`,
+        `${base}.sidebar.left`,
         "array",
         literal(defaults.leftWidgets),
         { items: { type: ["string", "object"], boundary: "registered_schema" }, status: "delivered" }
       ],
       [
-        `${base}.sidebar.right.widgets`,
+        `${base}.sidebar.right`,
         "array",
         literal(defaults.rightWidgets),
         { items: { type: ["string", "object"], boundary: "registered_schema" }, status: "delivered" }
       ]
     );
+    if (tabProfiles.has(profile)) {
+      definitions.push(
+        [`${base}.navigation.tabs`, "array", literal(defaults.tabs), { items: { type: ["object"] }, status: "delivered" }],
+        [`${base}.navigation.tabs[].title`, "string", literal(""), { status: "delivered" }],
+        [`${base}.navigation.tabs[].url`, "string", literal(""), { status: "delivered" }]
+      );
+    }
   }
   definitions.push(
-    ["layout.profiles.home.comments", ["boolean", "object", "null"], literal(null), { boundary: "sealed", status: "delivered" }],
-    ["layout.profiles.home.comments.enabled", ["boolean", "null"], literal(null), { status: "delivered" }],
+    ["layout.profiles.home.comments", "object", literal({ enabled: false, title: null, id: null, provider: null, options: {} }), {
+      boundary: "sealed",
+      normalization: "merge declared child fields; deep-freeze the normalized JavaScript object",
+      status: "delivered"
+    }],
+    ["layout.profiles.home.comments.enabled", "boolean", literal(false), { status: "delivered" }],
     ["layout.profiles.home.comments.title", ["string", "null"], literal(null), { status: "delivered" }],
     ["layout.profiles.home.comments.id", ["string", "null"], literal(null), { status: "delivered" }],
-    ["layout.profiles.home.comments.provider", ["string", "null"], literal(null), { status: "delivered" }],
+    ["layout.profiles.home.comments.provider", ["string", "null"], literal(null), {
+      values: [null, "beaudar", "utterances", "giscus", "twikoo", "waline", "artalk"],
+      status: "delivered"
+    }],
     ["layout.profiles.home.comments.options", "object", literal({}), { boundary: "parameter_bag", status: "delivered" }]
   );
   return fields(LAYOUT_CONSUMERS, definitions);
@@ -514,31 +531,32 @@ const CONFIG_TARGET_FIELDS = deepFreeze([
   ...fields(SITE_CONSUMERS, [
     ["site.brand.image.src", ["string", "null"], derived("hexo.config.avatar")],
     ["site.brand.image.variant", "string", literal("avatar"), { values: ["avatar", "icon", "plain"] }],
-    ["site.brand.image.url", ["string", "null"], literal(null)],
-    ["site.brand.image.background", ["string", "null"], literal(null)],
-    ["site.brand.name", "string", derived("hexo.config.title")],
-    ["site.brand.tagline", "string", derived("hexo.config.subtitle")],
-    ["site.brand.url", "string", literal("/")],
+    ["site.brand.image.href", ["string", "null"], literal(null)],
+    ["site.brand.name", ["string", "null"], derived("hexo.config.title")],
+    ["site.brand.wordmark", ["string", "null"], literal(null)],
+    ["site.brand.tagline.text", ["string", "null"], derived("hexo.config.subtitle")],
+    ["site.brand.tagline.hover", ["string", "null"], literal(null)],
+    ["site.brand.href", ["string", "null"], literal("/")],
     ["site.menu.items", "array", literal([]), { items: { type: ["object"] } }],
     ["site.menu.items[].id", "string", derived("site menu item")],
     ["site.menu.items[].title", "string", literal("")],
-    ["site.menu.items[].icon", "string", literal("")],
+    ["site.menu.items[].icon", ["string", "null"], literal(null)],
     ["site.menu.items[].url", "string", literal("")],
     ["site.menu.items[].accent", ["string", "null"], literal(null)],
-    ["site.footer.actions", "object", literal({}), { boundary: "record" }],
-    ["site.footer.actions.<id>", "object", literal({}), { boundary: "sealed" }],
-    ["site.footer.actions.<id>.variant", ["string", "null"], literal(null)],
-    ["site.footer.actions.<id>.icon", ["string", "null"], literal(null)],
-    ["site.footer.actions.<id>.title", ["string", "null"], literal(null)],
-    ["site.footer.actions.<id>.url", ["string", "null"], literal(null)],
-    ["site.footer.actions.<id>.action", ["string", "null"], literal(null)],
-    ["site.footer.actions.<id>.items", "array", literal([]), { items: { type: ["object"] } }],
-    ["site.footer.actions.<id>.items[].icon", ["string", "null"], literal(null)],
-    ["site.footer.actions.<id>.items[].title", "string", literal("")],
-    ["site.footer.actions.<id>.items[].url", "string", literal("")],
+    ["site.footer.actions", "array", literal([]), { items: { type: ["object"] } }],
+    ["site.footer.actions[].type", "string", derived("footer action"), { values: ["link", "dropdown", "spacer"] }],
+    ["site.footer.actions[].icon", ["string", "null"], literal(null)],
+    ["site.footer.actions[].title", "string", literal("")],
+    ["site.footer.actions[].url", ["string", "null"], literal(null)],
+    ["site.footer.actions[].items", "array", literal([]), { items: { type: ["object"] } }],
+    ["site.footer.actions[].items[].icon", ["string", "null"], literal(null)],
+    ["site.footer.actions[].items[].title", "string", literal("")],
+    ["site.footer.actions[].items[].url", "string", literal("")],
     ["site.footer.sections", "array", literal([]), { items: { type: ["object"] } }],
     ["site.footer.sections[].title", "string", literal("")],
-    ["site.footer.sections[].items", "array", literal([]), { items: { type: ["string"] } }],
+    ["site.footer.sections[].items", "array", literal([]), { items: { type: ["object"] } }],
+    ["site.footer.sections[].items[].title", "string", literal("")],
+    ["site.footer.sections[].items[].url", "string", literal("")],
     ["site.footer.content", "string", literal("本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。")]
   ]),
   ...fields(SEO_CONSUMERS, [
@@ -759,11 +777,11 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
   brand: [
     migration("brand.image.src", "move", "site.brand.image.src", "站点身份归 site 所有"),
     migration("brand.image.style", "rename", "site.brand.image.variant", "值表示展示变体而非任意样式"),
-    migration("brand.image.url", "move", "site.brand.image.url", "站点身份归 site 所有"),
-    migration("brand.image.background", "move", "site.brand.image.background", "站点身份归 site 所有"),
+    migration("brand.image.url", "rename", "site.brand.image.href", "链接字段统一使用 href"),
+    migration("brand.image.background", "remove", null, "图片背景不再属于公开 Brand 契约"),
     migration("brand.name", "move", "site.brand.name", "站点身份归 site 所有"),
-    migration("brand.tagline", "move", "site.brand.tagline", "站点身份归 site 所有"),
-    migration("brand.url", "move", "site.brand.url", "站点身份归 site 所有")
+    migration("brand.tagline", "rename", "site.brand.tagline.text", "标语改为显式文本，悬停文本按需单独配置"),
+    migration("brand.url", "rename", "site.brand.href", "链接字段统一使用 href")
   ],
   menubar: [
     migration("menubar.items", "move", "site.menu.items", "空菜单与菜单记录统一归 site shell 所有"),
@@ -776,10 +794,9 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
   site_tree: [
     migration("site_tree.<profile>.base_dir", "rename", "layout.profiles.<profile>.path", "Profile 公开最终路由路径"),
     migration("site_tree.<profile>.navigation.menu", "rename", "layout.profiles.<profile>.navigation.active_menu", "字段选择高亮菜单项"),
-    migration("site_tree.<profile>.navigation.tabs", "move", "layout.profiles.<profile>.navigation.tabs", "空标签表与动态记录统一归 Profile 导航"),
-    migration("site_tree.<profile>.navigation.tabs.<title>", "move", "layout.profiles.<profile>.navigation.tabs.<title>", "Profile 布局归 layout 所有"),
-    migration("site_tree.<profile>.sidebar.left.widgets[]", "move", "layout.profiles.<profile>.sidebar.left.widgets[]", "Profile 布局归 layout 所有"),
-    migration("site_tree.<profile>.sidebar.right.widgets[]", "move", "layout.profiles.<profile>.sidebar.right.widgets[]", "Profile 布局归 layout 所有"),
+    migration("site_tree.<profile>.navigation.tabs.<title>", "rename", "layout.profiles.<profile>.navigation.tabs[]", "动态记录改为有序 title/url 对象数组"),
+    migration("site_tree.<profile>.sidebar.left.widgets[]", "rename", "layout.profiles.<profile>.sidebar.left[]", "Profile 侧栏直接使用 Widget 数组"),
+    migration("site_tree.<profile>.sidebar.right.widgets[]", "rename", "layout.profiles.<profile>.sidebar.right[]", "Profile 侧栏直接使用 Widget 数组"),
     migration("site_tree.home.comments", "move", "layout.profiles.home.comments", "首页评论是 Profile 默认行为"),
     migration("site_tree.error_page.404", "rename", "layout.profiles.error.path", "错误页路径使用统一 Profile path")
   ],
@@ -834,18 +851,18 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
   ],
   footer: [
     migration("footer.social", "rename", "site.footer.actions", "空操作表与动态记录统一归 actions"),
-    migration("footer.social.<id>.type", "rename", "site.footer.actions.<id>.variant", "集合包含非社交操作且值表示展示变体"),
-    migration("footer.social.<id>.icon", "move", "site.footer.actions.<id>.icon", "Footer 归 site shell 所有"),
-    migration("footer.social.<id>.title", "move", "site.footer.actions.<id>.title", "Footer 归 site shell 所有"),
-    migration("footer.social.<id>.url", "move", "site.footer.actions.<id>.url", "Footer 归 site shell 所有"),
-    migration("footer.social.<id>.onclick", "rename", "site.footer.actions.<id>.action", "字段表达受信任动作"),
-    migration("footer.social.<id>.items[]", "move", "site.footer.actions.<id>.items[]", "Footer 归 site shell 所有"),
-    migration("footer.social.<id>.items[].icon", "move", "site.footer.actions.<id>.items[].icon", "Dropdown item 图标保持显式"),
-    migration("footer.social.<id>.items[].title", "move", "site.footer.actions.<id>.items[].title", "Dropdown item 标题保持显式"),
-    migration("footer.social.<id>.items[].url", "move", "site.footer.actions.<id>.items[].url", "Dropdown item 链接保持显式"),
+    migration("footer.social.<id>.type", "rename", "site.footer.actions[].type", "动态记录改为有序判别联合数组"),
+    migration("footer.social.<id>.icon", "rename", "site.footer.actions[].icon", "动态记录改为有序判别联合数组"),
+    migration("footer.social.<id>.title", "rename", "site.footer.actions[].title", "动态记录改为有序判别联合数组"),
+    migration("footer.social.<id>.url", "rename", "site.footer.actions[].url", "动态记录改为有序判别联合数组"),
+    migration("footer.social.<id>.onclick", "remove", null, "Footer 不再接受可执行 JavaScript"),
+    migration("footer.social.<id>.items[]", "rename", "site.footer.actions[].items[]", "动态记录改为有序判别联合数组"),
+    migration("footer.social.<id>.items[].icon", "rename", "site.footer.actions[].items[].icon", "Dropdown item 图标保持显式"),
+    migration("footer.social.<id>.items[].title", "rename", "site.footer.actions[].items[].title", "Dropdown item 标题保持显式"),
+    migration("footer.social.<id>.items[].url", "rename", "site.footer.actions[].items[].url", "Dropdown item 链接保持显式"),
     migration("footer.sitemap[]", "rename", "site.footer.sections[]", "该数组是 Footer 分栏而非 sitemap 输出"),
     migration("footer.sitemap[].title", "move", "site.footer.sections[].title", "Footer section 标题保持显式"),
-    migration("footer.sitemap[].items[]", "move", "site.footer.sections[].items[]", "Footer section 链接列表保持显式"),
+    migration("footer.sitemap[].items[]", "rename", "site.footer.sections[].items[]", "Markdown 链接改为显式 title/url 对象"),
     migration("footer.content", "move", "site.footer.content", "Footer 归 site shell 所有")
   ],
   tag_plugins: [

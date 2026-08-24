@@ -89,27 +89,30 @@ function brandSchema(factory, options = {}) {
   const { field, object } = factory;
   return object({
     image: object({
-      src: field("string", { example: "/images/avatar.webp" }),
+      src: field(["string", "null"], { example: "/images/avatar.webp" }),
       variant: field("string", { example: "avatar" }),
-      url: field("string", { example: "/about/" }),
-      background: field("string", { example: "var(--block)" })
+      href: field(["string", "null"], { example: "/about/" })
     }, { example: { src: "/images/avatar.webp", variant: "avatar" } }),
-    name: field("string", {
+    name: field(["string", "null"], {
       default: options.nameDefault || derived("site.title"),
       example: "Stellar",
       required: options.requiredName === true
     }),
-    tagline: field("string", {
+    wordmark: field(["string", "null"], { example: "/wordmark.svg" }),
+    tagline: object({
+      text: field(["string", "null"], { example: "每个人的独立博客" }),
+      hover: field(["string", "null"], { example: "example.com" })
+    }, {
       default: options.taglineDefault || derived("site.subtitle"),
-      example: "每个人的独立博客",
+      example: { text: "每个人的独立博客", hover: null },
       required: options.requiredTagline === true
     }),
-    url: field("string", { example: "/" })
+    href: field(["string", "null"], { example: "/" })
   }, {
     default: options.default || (options.requiredName
       ? derived("hexo.stellar.config.site.brand")
       : omitted()),
-    example: { name: "Stellar", tagline: "每个人的独立博客", url: "/" }
+    example: { name: "Stellar", tagline: { text: "每个人的独立博客", hover: null }, href: "/" }
   });
 }
 

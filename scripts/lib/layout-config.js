@@ -17,6 +17,13 @@ function toRenderNavigation(profile) {
   return activeMenu == null ? {} : { menu: activeMenu };
 }
 
+function toRenderSidebar(profile) {
+  return {
+    left: { widgets: Array.isArray(profile?.sidebar?.left) ? profile.sidebar.left.slice() : [] },
+    right: { widgets: Array.isArray(profile?.sidebar?.right) ? profile.sidebar.right.slice() : [] }
+  };
+}
+
 function requireLayoutProfiles(stellarConfig) {
   const profiles = stellarConfig?.layout?.profiles;
   if (profiles == null || typeof profiles !== "object" || Array.isArray(profiles)) {
@@ -29,5 +36,6 @@ module.exports = {
   generatorPath,
   profilePath,
   requireLayoutProfiles,
-  toRenderNavigation
+  toRenderNavigation,
+  toRenderSidebar
 };

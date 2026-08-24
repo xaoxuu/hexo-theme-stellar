@@ -221,11 +221,13 @@ test("主题默认配置的活动叶子与注释示例字段族都有迁移证�
   for (const family of requiredCommentFamilies) assert.ok(catalogFields.has(family), `${family} 未登记`);
 
   for (const targetPath of [
-    "site.footer.actions.<id>.items[].icon",
-    "site.footer.actions.<id>.items[].title",
-    "site.footer.actions.<id>.items[].url",
+    "site.footer.actions[].items[].icon",
+    "site.footer.actions[].items[].title",
+    "site.footer.actions[].items[].url",
     "site.footer.sections[].title",
-    "site.footer.sections[].items"
+    "site.footer.sections[].items",
+    "site.footer.sections[].items[].title",
+    "site.footer.sections[].items[].url"
   ]) assert.ok(CONFIG_TARGET_FIELDS.some(field => field.path === targetPath), `${targetPath} 未冻结目标结构`);
 });
 
@@ -260,11 +262,12 @@ test("运行时只投影已交付配置节点且根配置已经封闭", () => {
     [
       "site.brand.image.src",
       "site.brand.image.variant",
-      "site.brand.image.url",
-      "site.brand.image.background",
+      "site.brand.image.href",
       "site.brand.name",
-      "site.brand.tagline",
-      "site.brand.url",
+      "site.brand.wordmark",
+      "site.brand.tagline.text",
+      "site.brand.tagline.hover",
+      "site.brand.href",
       "site.menu.items",
       "site.menu.items[].id",
       "site.menu.items[].title",
@@ -272,19 +275,19 @@ test("运行时只投影已交付配置节点且根配置已经封闭", () => {
       "site.menu.items[].url",
       "site.menu.items[].accent",
       "site.footer.actions",
-      "site.footer.actions.<id>",
-      "site.footer.actions.<id>.variant",
-      "site.footer.actions.<id>.icon",
-      "site.footer.actions.<id>.title",
-      "site.footer.actions.<id>.url",
-      "site.footer.actions.<id>.action",
-      "site.footer.actions.<id>.items",
-      "site.footer.actions.<id>.items[].icon",
-      "site.footer.actions.<id>.items[].title",
-      "site.footer.actions.<id>.items[].url",
+      "site.footer.actions[].type",
+      "site.footer.actions[].icon",
+      "site.footer.actions[].title",
+      "site.footer.actions[].url",
+      "site.footer.actions[].items",
+      "site.footer.actions[].items[].icon",
+      "site.footer.actions[].items[].title",
+      "site.footer.actions[].items[].url",
       "site.footer.sections",
       "site.footer.sections[].title",
       "site.footer.sections[].items",
+      "site.footer.sections[].items[].title",
+      "site.footer.sections[].items[].url",
       "site.footer.content",
       "seo.canonical.host",
       "seo.canonical.allowed_hosts",
@@ -316,17 +319,20 @@ test("运行时只投影已交付配置节点且根配置已经封闭", () => {
     "content.notebook.tag_icons.<tag>"
   ]) assert.ok(deliveredContentPaths.includes(pathValue));
   const deliveredLayoutPaths = deliveredPaths.filter(pathValue => pathValue.startsWith("layout."));
-  assert.equal(deliveredLayoutPaths.length, 85);
+  assert.equal(deliveredLayoutPaths.length, 58);
   assert.ok(deliveredLayoutPaths.includes("layout.profiles"));
   for (const profile of PROFILE_IDS) {
-    for (const suffix of [
-      "path",
-      "navigation.active_menu",
-      "navigation.tabs",
-      "navigation.tabs.<title>",
-      "sidebar.left.widgets",
-      "sidebar.right.widgets"
-    ]) assert.ok(deliveredLayoutPaths.includes(`layout.profiles.${profile}.${suffix}`));
+    for (const suffix of ["navigation.active_menu", "sidebar.left", "sidebar.right"]) {
+      assert.ok(deliveredLayoutPaths.includes(`layout.profiles.${profile}.${suffix}`));
+    }
+  }
+  for (const profile of ["blog_index", "topic_index", "wiki_index", "notebook_index", "author", "error"]) {
+    assert.ok(deliveredLayoutPaths.includes(`layout.profiles.${profile}.path`));
+  }
+  for (const profile of ["blog_index", "wiki_index"]) {
+    for (const suffix of ["navigation.tabs", "navigation.tabs[].title", "navigation.tabs[].url"]) {
+      assert.ok(deliveredLayoutPaths.includes(`layout.profiles.${profile}.${suffix}`));
+    }
   }
   for (const suffix of ["comments", "comments.enabled", "comments.title", "comments.id", "comments.provider", "comments.options"]) {
     assert.ok(deliveredLayoutPaths.includes(`layout.profiles.home.${suffix}`));

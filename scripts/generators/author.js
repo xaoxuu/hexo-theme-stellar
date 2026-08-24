@@ -5,7 +5,7 @@
 
 "use strict";
 
-const { requireLayoutProfiles, toRenderNavigation } = require("../lib/layout-config");
+const { requireLayoutProfiles, toRenderNavigation, toRenderSidebar } = require("../lib/layout-config");
 
 hexo.extend.generator.register("author", function () {
   const { authors } = hexo.stellar.data;
@@ -22,7 +22,7 @@ hexo.extend.generator.register("author", function () {
       layout: ["archive"],
       data: {
         author: author,
-        sidebar: profile.sidebar,
+        sidebar: toRenderSidebar(profile),
         navigation: { ...toRenderNavigation(profile), breadcrumb: false }
       }
     });

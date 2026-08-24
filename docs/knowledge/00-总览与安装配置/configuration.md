@@ -216,15 +216,19 @@ seo:
 
 ### 站点 Shell：Brand、菜单与 Footer
 
-`site` 小节统一承载站点外壳。Brand 的 `image.src/name/tagline` 省略时直接从 Hexo `avatar/title/subtitle` 派生，不再要求站点配置写 `{config.*}` 占位符：
+`site` 小节统一承载站点外壳。Brand 的 `image.src/name/tagline.text` 省略时直接从 Hexo `avatar/title/subtitle` 派生：
 
 ```yaml
 site:
   brand:
     image:
       variant: avatar
-      url: /about/
-    url: /
+      href: /about/
+    wordmark: /images/wordmark.svg
+    tagline:
+      text: 每个人的独立博客
+      hover: example.com
+    href: /
   menu:
     items:
       - id: post
@@ -233,13 +237,13 @@ site:
         url: /
         accent: '#1BCDFC'
   footer:
-    actions: {}
+    actions: []
     sections: []
     content: |
       本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。
 ```
 
-Brand 图片展示变体使用 `image.variant`（`avatar/icon/plain`），图片和名称链接分别写入 `image.url` 与根级 `url`。菜单数组使用 `id/title/icon/url/accent`；站点层完整替换数组。Footer 的动态操作记录位于 `actions`，分栏链接位于 `sections`，版权或说明原文位于 `content`；默认文案显示作者与主题署名，显式空字符串可关闭。文章许可由 `content.article.footer.license` 独立管理。旧主题根 `brand/menubar/footer` 及其 `style/theme/social/sitemap/type/onclick` 子字段不会兼容读取，而会报告目标路径。
+Brand 图片展示变体使用 `image.variant`（`avatar/icon/plain`），图片和标题链接分别写入 `image.href` 与根级 `href`；`name` 只接受纯文本，HTML 字标使用 `wordmark`。菜单是有序对象数组，`id` 必须唯一且为 kebab-case，`url` 必须是安全导航地址，空标题必须配图标，`accent` 必须是 CSS Color。Footer `actions` 是 `link/dropdown/spacer` 判别联合数组，不接受 JavaScript；`sections.items` 使用 `{title,url}` 对象。`content` 保留可信 Markdown 原文。
 
 解析后 JavaScript 只消费冻结的 `hexo.stellar.config.site`；菜单与 Footer 不再直接读取 `theme.menubar/footer`，Post 与 Topic 的全局 Brand 也不再从 `theme.brand` 推断。Collection 与 Front Matter 的 Brand 覆盖仍在内容边界适配，最终字段收敛留给后续切片。
 
@@ -253,11 +257,11 @@ Brand 图片展示变体使用 `image.variant`（`avatar/icon/plain`），图片
 
 | 属性 | 类型 | 用途 |
 |------|------|------|
-| `path` | String / null | 生成页面的根相对路径；目录路径以 `/` 结尾 |
+| `path` | String | 仅六个真实生成器 Profile 可用：`blog_index/topic_index/wiki_index/notebook_index/author/error` |
 | `navigation.active_menu` | String / null | 要高亮的 `site.menu.items[].id` |
-| `sidebar.left.widgets` | Array | 左栏小部件列表 |
-| `sidebar.right.widgets` | Array | 右栏小部件列表 |
-| `navigation.tabs` | Object | 次级导航标签（标题-URL 对） |
+| `sidebar.left` | Array | 左栏小部件列表 |
+| `sidebar.right` | Array | 右栏小部件列表 |
+| `navigation.tabs` | Array | 仅 `blog_index/wiki_index` 可用的 `{title,url}` 次级导航数组 |
 
 #### 示例：博客文章布局
 
@@ -268,10 +272,8 @@ layout:
       navigation:
         active_menu: post
       sidebar:
-        left:
-          widgets: [related, recent]
-        right:
-          widgets: [ghrepo, toc]
+        left: [related, recent]
+        right: [ghrepo, toc]
 ```
 
 所有博客文章（`layout: post`）将：
@@ -291,24 +293,20 @@ layout:
       path: /wiki/
       navigation:
         active_menu: wiki
-        tabs: {}
+        tabs: []
       sidebar:
-        left:
-          widgets: [related, recent]
-        right:
-          widgets: []
+        left: [related, recent]
+        right: []
 
     wiki:
       navigation:
         active_menu: wiki
       sidebar:
-        left:
-          widgets: [tree, related, recent]
-        right:
-          widgets: [ghrepo, toc]
+        left: [tree, related, recent]
+        right: [ghrepo, toc]
 ```
 
-`wiki_index` 定义 wiki 列表页，`wiki` 定义单个 wiki 页面。wiki 页面左栏的 `tree` 小部件用于展示项目结构。数组在站点层完整替换；`navigation.tabs` 按键合并。旧 `site_tree`、`base_dir`、`navigation.menu` 与旧 Profile ID 不保留兼容读取。
+`wiki_index` 定义 wiki 列表页，`wiki` 定义单个 wiki 页面。所有数组在站点层完整替换；`active_menu` 在菜单非空时必须引用真实菜单 ID。旧 `site_tree`、`base_dir`、`navigation.menu` 与旧 Profile ID 不保留兼容读取。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
@@ -379,14 +377,12 @@ content:
 
 | 字段 | 类型 | 用途 |
 |------|------|------|
-| `actions` | Object | 左栏底部操作；按 YAML 字段顺序显示 |
-| `actions.*.icon` | String | 普通按钮或 dropdown 主按钮图标 |
-| `actions.*.title` | String | 普通按钮 tooltip 或 dropdown 无障碍标签 |
-| `actions.*.url` | String | 普通按钮链接 |
-| `actions.*.action` | String | 普通按钮受信任点击脚本，与 `url` 二选一 |
-| `actions.spacer` | Object | 弹性占位项；将其后的按钮推至同一行右侧 |
-| `actions.*.variant` | `dropdown` | 将条目渲染为通用下拉菜单 |
-| `actions.*.items` | Array | dropdown 子项列表；`title`、`url` 必填，`icon` 可选 |
+| `actions` | Array | 左栏底部有序操作列表 |
+| `actions[].type` | `link` / `dropdown` / `spacer` | 判别条目类型；`spacer` 将后续按钮推至同一行右侧 |
+| `actions[].icon` | String / null | link 或 dropdown 主按钮图标 |
+| `actions[].title` | String | link tooltip 或 dropdown 无障碍标签 |
+| `actions[].url` | String / null | link 安全导航地址；不接受 JavaScript |
+| `actions[].items` | Array | dropdown 子项列表；`title`、`url` 必填，`icon` 可选 |
 | `sections` | Array | 主内容区页脚的分组链接 |
 | `content` | String | 主内容区页脚的 Markdown 文本；默认显示作者与主题署名，显式空字符串可关闭 |
 

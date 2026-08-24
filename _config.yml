@@ -33,7 +33,7 @@ site:
   brand:
     image:
       variant: avatar # avatar: 圆形裁剪；icon: 圆角矩形；plain: 保留透明原图
-    url: /
+    href: /
 
   menu:
     items: []
@@ -44,16 +44,18 @@ site:
     #   url: /
 
   footer:
-    actions: {}
-    # github:
+    actions: []
+    # - type: link
     #   icon: default:github
     #   title: GitHub
     #   url: https://github.com/
     sections: []
     # - title: 博客
     #   items:
-    #     - '[近期发布](/)'
-    #     - '[归档](/blog/archives/)'
+    #     - title: 近期发布
+    #       url: /
+    #     - title: 归档
+    #       url: /blog/archives/
     content: |
       本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。
 
@@ -68,85 +70,74 @@ layout:
       navigation:
         active_menu: post
       sidebar:
-        left:
-          widgets: [welcome, recent]
-        right:
-          widgets: []
-      # 首页评论区，默认不显示。可设为 true 使用全局评论服务，
-      # 或用 enabled/title/id/provider/options 覆盖。
+        left: [welcome, recent]
+        right: []
       comments:
+        enabled: false
+        title:
+        id:
+        provider:
+        options: {}
     # 博客列表页配置
     blog_index:
       path: /blog/ # 只影响自动生成的页面路径
       navigation:
         active_menu: post
-        tabs:  # 近期发布 分类 标签 专栏 归档 and ...
-          # '朋友文章': /friends/rss/
+        tabs: [] # 近期发布 分类 标签 专栏 归档 and ...
+          # - title: 朋友文章
+          #   url: /friends/rss/
       sidebar:
-        left:
-          widgets: [welcome, recent]
-        right:
-          widgets: []
+        left: [welcome, recent]
+        right: []
     # 博客专栏列表页配置
     topic_index:
       path: /topic/ # 只影响自动生成的页面路径
       navigation:
         active_menu: post
       sidebar:
-        left:
-          widgets: [welcome, recent]
-        right:
-          widgets: []
+        left: [welcome, recent]
+        right: []
     # 文档列表页配置
     wiki_index:
       path: /wiki/ # 只影响自动生成的页面路径
       navigation:
         active_menu: wiki
-        tabs:
-          # 'more': https://github.com/xaoxuu
+        tabs: []
+          # - title: more
+          #   url: https://github.com/xaoxuu
       sidebar:
-        left:
-          widgets: [related, recent]
-        right:
-          widgets: []
+        left: [related, recent]
+        right: []
     # -- 内容类页面 -- #
     # 博客文章内页配置
     post:
       navigation:
         active_menu: post
       sidebar:
-        left:
-          widgets: [related, recent]
-        right:
-          widgets: [ghrepo, toc]
+        left: [related, recent]
+        right: [ghrepo, toc]
     # 博客专栏文章内页配置
     topic:
       navigation:
         active_menu: post
       sidebar:
-        left:
-          widgets: [related, recent]
-        right:
-          widgets: [ghrepo, toc]
+        left: [related, recent]
+        right: [ghrepo, toc]
     # 文档内页配置
     wiki:
       navigation:
         active_menu: wiki
       sidebar:
-        left:
-          widgets: [tree, related, recent]
-        right:
-          widgets: [ghrepo, toc]
+        left: [tree, related, recent]
+        right: [ghrepo, toc]
     # 笔记本列表页配置
     notebook_index:
       path: /notebooks/ # 笔记本列表页路径，以及未指定路径的笔记本前缀。
       navigation:
         active_menu: notebooks
       sidebar:
-        left:
-          widgets: [recent]
-        right:
-          widgets: []
+        left: [recent]
+        right: []
     # 笔记列表页配置
     note_index:
       # 笔记列表页和笔记页高亮的主导航栏菜单按钮。
@@ -154,49 +145,39 @@ layout:
       navigation:
         active_menu: notebooks
       sidebar:
-        left:
-          widgets: [tagtree, recent]
-        right:
-          widgets: []
+        left: [tagtree, recent]
+        right: []
     # 笔记页配置
     note:
       navigation:
         active_menu: notebooks
       # 可以在笔记本 note.sidebar 或笔记 sidebar 中覆盖。
       sidebar:
-        left:
-          widgets: [tagtree, recent]
-        right:
-          widgets: [toc]
+        left: [tagtree, recent]
+        right: [toc]
     # 作者信息配置
     author:
       path: /author/ # 只影响自动生成的页面路径
       navigation:
         active_menu: post
       sidebar:
-        left:
-          widgets: [recent]
-        right:
-          widgets: []
+        left: [recent]
+        right: []
     # 错误页配置
     error:
       path: /404.html
       navigation:
         active_menu: post
       sidebar:
-        left:
-          widgets: [recent]
-        right:
-          widgets: []
+        left: [recent]
+        right: []
     # 其它自定义页面配置 layout: page
     page:
       navigation:
         active_menu: post
       sidebar:
-        left:
-          widgets: [recent]
-        right:
-          widgets: [toc]
+        left: [recent]
+        right: [toc]
 
 
 ######## Content ########

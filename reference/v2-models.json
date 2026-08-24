@@ -1274,9 +1274,30 @@
           ],
           "example": {
             "name": "Stellar",
-            "tagline": "每个人的独立博客",
-            "url": "/"
+            "tagline": {
+              "text": "每个人的独立博客",
+              "hover": null
+            },
+            "href": "/"
           }
+        },
+        {
+          "path": "presentation.sidebar.left.brand.href",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:notebook",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/"
         },
         {
           "path": "presentation.sidebar.left.brand.image",
@@ -1299,43 +1320,10 @@
           }
         },
         {
-          "path": "presentation.sidebar.left.brand.image.background",
+          "path": "presentation.sidebar.left.brand.image.href",
           "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:notebook",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "var(--block)"
-        },
-        {
-          "path": "presentation.sidebar.left.brand.image.src",
-          "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:notebook",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "/images/avatar.webp"
-        },
-        {
-          "path": "presentation.sidebar.left.brand.image.url",
-          "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -1348,6 +1336,24 @@
             "Reference generator"
           ],
           "example": "/about/"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.image.src",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:notebook",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/images/avatar.webp"
         },
         {
           "path": "presentation.sidebar.left.brand.image.variant",
@@ -1369,7 +1375,8 @@
         {
           "path": "presentation.sidebar.left.brand.name",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -1389,7 +1396,7 @@
         {
           "path": "presentation.sidebar.left.brand.tagline",
           "type": [
-            "string"
+            "object"
           ],
           "required": false,
           "default": {
@@ -1404,12 +1411,16 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "每个人的独立博客"
+          "example": {
+            "text": "每个人的独立博客",
+            "hover": null
+          }
         },
         {
-          "path": "presentation.sidebar.left.brand.url",
+          "path": "presentation.sidebar.left.brand.tagline.hover",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -1421,7 +1432,43 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "/"
+          "example": "example.com"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.tagline.text",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:notebook",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "每个人的独立博客"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.wordmark",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:notebook",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/wordmark.svg"
         },
         {
           "path": "presentation.sidebar.left.menu",
@@ -1785,9 +1832,29 @@
           ],
           "example": {
             "name": "Stellar",
-            "tagline": "每个人的独立博客",
-            "url": "/"
+            "tagline": {
+              "text": "每个人的独立博客",
+              "hover": null
+            },
+            "href": "/"
           }
+        },
+        {
+          "path": "identity.href",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:post",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/"
         },
         {
           "path": "identity.image",
@@ -1809,41 +1876,10 @@
           }
         },
         {
-          "path": "identity.image.background",
+          "path": "identity.image.href",
           "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:post",
-          "consumers": [
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "var(--block)"
-        },
-        {
-          "path": "identity.image.src",
-          "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:post",
-          "consumers": [
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "/images/avatar.webp"
-        },
-        {
-          "path": "identity.image.url",
-          "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -1855,6 +1891,23 @@
             "Reference generator"
           ],
           "example": "/about/"
+        },
+        {
+          "path": "identity.image.src",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:post",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/images/avatar.webp"
         },
         {
           "path": "identity.image.variant",
@@ -1875,7 +1928,8 @@
         {
           "path": "identity.name",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": true,
           "default": {
@@ -1894,7 +1948,7 @@
         {
           "path": "identity.tagline",
           "type": [
-            "string"
+            "object"
           ],
           "required": true,
           "default": {
@@ -1908,12 +1962,16 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "每个人的独立博客"
+          "example": {
+            "text": "每个人的独立博客",
+            "hover": null
+          }
         },
         {
-          "path": "identity.url",
+          "path": "identity.tagline.hover",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -1924,7 +1982,41 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "/"
+          "example": "example.com"
+        },
+        {
+          "path": "identity.tagline.text",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:post",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "每个人的独立博客"
+        },
+        {
+          "path": "identity.wordmark",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:post",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/wordmark.svg"
         },
         {
           "path": "listing",
@@ -2483,9 +2575,30 @@
           ],
           "example": {
             "name": "Stellar",
-            "tagline": "每个人的独立博客",
-            "url": "/"
+            "tagline": {
+              "text": "每个人的独立博客",
+              "hover": null
+            },
+            "href": "/"
           }
+        },
+        {
+          "path": "presentation.sidebar.left.brand.href",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:post",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/"
         },
         {
           "path": "presentation.sidebar.left.brand.image",
@@ -2508,43 +2621,10 @@
           }
         },
         {
-          "path": "presentation.sidebar.left.brand.image.background",
+          "path": "presentation.sidebar.left.brand.image.href",
           "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:post",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "var(--block)"
-        },
-        {
-          "path": "presentation.sidebar.left.brand.image.src",
-          "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:post",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "/images/avatar.webp"
-        },
-        {
-          "path": "presentation.sidebar.left.brand.image.url",
-          "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -2557,6 +2637,24 @@
             "Reference generator"
           ],
           "example": "/about/"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.image.src",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:post",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/images/avatar.webp"
         },
         {
           "path": "presentation.sidebar.left.brand.image.variant",
@@ -2578,7 +2676,8 @@
         {
           "path": "presentation.sidebar.left.brand.name",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -2598,7 +2697,7 @@
         {
           "path": "presentation.sidebar.left.brand.tagline",
           "type": [
-            "string"
+            "object"
           ],
           "required": false,
           "default": {
@@ -2613,12 +2712,16 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "每个人的独立博客"
+          "example": {
+            "text": "每个人的独立博客",
+            "hover": null
+          }
         },
         {
-          "path": "presentation.sidebar.left.brand.url",
+          "path": "presentation.sidebar.left.brand.tagline.hover",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -2630,7 +2733,43 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "/"
+          "example": "example.com"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.tagline.text",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:post",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "每个人的独立博客"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.wordmark",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:post",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/wordmark.svg"
         },
         {
           "path": "presentation.sidebar.left.menu",
@@ -4221,9 +4360,30 @@
           ],
           "example": {
             "name": "Stellar",
-            "tagline": "每个人的独立博客",
-            "url": "/"
+            "tagline": {
+              "text": "每个人的独立博客",
+              "hover": null
+            },
+            "href": "/"
           }
+        },
+        {
+          "path": "presentation.sidebar.left.brand.href",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:topic",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/"
         },
         {
           "path": "presentation.sidebar.left.brand.image",
@@ -4246,43 +4406,10 @@
           }
         },
         {
-          "path": "presentation.sidebar.left.brand.image.background",
+          "path": "presentation.sidebar.left.brand.image.href",
           "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:topic",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "var(--block)"
-        },
-        {
-          "path": "presentation.sidebar.left.brand.image.src",
-          "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:topic",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "/images/avatar.webp"
-        },
-        {
-          "path": "presentation.sidebar.left.brand.image.url",
-          "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -4295,6 +4422,24 @@
             "Reference generator"
           ],
           "example": "/about/"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.image.src",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:topic",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/images/avatar.webp"
         },
         {
           "path": "presentation.sidebar.left.brand.image.variant",
@@ -4316,7 +4461,8 @@
         {
           "path": "presentation.sidebar.left.brand.name",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -4336,7 +4482,7 @@
         {
           "path": "presentation.sidebar.left.brand.tagline",
           "type": [
-            "string"
+            "object"
           ],
           "required": false,
           "default": {
@@ -4351,12 +4497,16 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "每个人的独立博客"
+          "example": {
+            "text": "每个人的独立博客",
+            "hover": null
+          }
         },
         {
-          "path": "presentation.sidebar.left.brand.url",
+          "path": "presentation.sidebar.left.brand.tagline.hover",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -4368,7 +4518,43 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "/"
+          "example": "example.com"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.tagline.text",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:topic",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "每个人的独立博客"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.wordmark",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:topic",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/wordmark.svg"
         },
         {
           "path": "presentation.sidebar.left.menu",
@@ -6044,9 +6230,30 @@
           ],
           "example": {
             "name": "Stellar",
-            "tagline": "每个人的独立博客",
-            "url": "/"
+            "tagline": {
+              "text": "每个人的独立博客",
+              "hover": null
+            },
+            "href": "/"
           }
+        },
+        {
+          "path": "presentation.sidebar.left.brand.href",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:wiki",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/"
         },
         {
           "path": "presentation.sidebar.left.brand.image",
@@ -6069,43 +6276,10 @@
           }
         },
         {
-          "path": "presentation.sidebar.left.brand.image.background",
+          "path": "presentation.sidebar.left.brand.image.href",
           "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:wiki",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "var(--block)"
-        },
-        {
-          "path": "presentation.sidebar.left.brand.image.src",
-          "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "CollectionModel:wiki",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "/images/avatar.webp"
-        },
-        {
-          "path": "presentation.sidebar.left.brand.image.url",
-          "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -6118,6 +6292,24 @@
             "Reference generator"
           ],
           "example": "/about/"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.image.src",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:wiki",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/images/avatar.webp"
         },
         {
           "path": "presentation.sidebar.left.brand.image.variant",
@@ -6139,7 +6331,8 @@
         {
           "path": "presentation.sidebar.left.brand.name",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -6159,7 +6352,7 @@
         {
           "path": "presentation.sidebar.left.brand.tagline",
           "type": [
-            "string"
+            "object"
           ],
           "required": false,
           "default": {
@@ -6174,12 +6367,16 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "每个人的独立博客"
+          "example": {
+            "text": "每个人的独立博客",
+            "hover": null
+          }
         },
         {
-          "path": "presentation.sidebar.left.brand.url",
+          "path": "presentation.sidebar.left.brand.tagline.hover",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -6191,7 +6388,43 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "/"
+          "example": "example.com"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.tagline.text",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:wiki",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "每个人的独立博客"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.wordmark",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "CollectionModel:wiki",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/wordmark.svg"
         },
         {
           "path": "presentation.sidebar.left.menu",
@@ -7294,9 +7527,29 @@
           ],
           "example": {
             "name": "Stellar",
-            "tagline": "每个人的独立博客",
-            "url": "/"
+            "tagline": {
+              "text": "每个人的独立博客",
+              "hover": null
+            },
+            "href": "/"
           }
+        },
+        {
+          "path": "presentation.sidebar.left.brand.href",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "ContentItemModel",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/"
         },
         {
           "path": "presentation.sidebar.left.brand.image",
@@ -7318,41 +7571,10 @@
           }
         },
         {
-          "path": "presentation.sidebar.left.brand.image.background",
+          "path": "presentation.sidebar.left.brand.image.href",
           "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "ContentItemModel",
-          "consumers": [
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "var(--block)"
-        },
-        {
-          "path": "presentation.sidebar.left.brand.image.src",
-          "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "ContentItemModel",
-          "consumers": [
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": "/images/avatar.webp"
-        },
-        {
-          "path": "presentation.sidebar.left.brand.image.url",
-          "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -7364,6 +7586,23 @@
             "Reference generator"
           ],
           "example": "/about/"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.image.src",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "ContentItemModel",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/images/avatar.webp"
         },
         {
           "path": "presentation.sidebar.left.brand.image.variant",
@@ -7384,7 +7623,8 @@
         {
           "path": "presentation.sidebar.left.brand.name",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -7403,7 +7643,7 @@
         {
           "path": "presentation.sidebar.left.brand.tagline",
           "type": [
-            "string"
+            "object"
           ],
           "required": false,
           "default": {
@@ -7417,12 +7657,16 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "每个人的独立博客"
+          "example": {
+            "text": "每个人的独立博客",
+            "hover": null
+          }
         },
         {
-          "path": "presentation.sidebar.left.brand.url",
+          "path": "presentation.sidebar.left.brand.tagline.hover",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -7433,7 +7677,41 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "/"
+          "example": "example.com"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.tagline.text",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "ContentItemModel",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "每个人的独立博客"
+        },
+        {
+          "path": "presentation.sidebar.left.brand.wordmark",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "ContentItemModel",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "/wordmark.svg"
         },
         {
           "path": "presentation.sidebar.left.menu",
@@ -8436,9 +8714,29 @@
           ],
           "example": {
             "name": "Stellar",
-            "tagline": "每个人的独立博客",
-            "url": "/"
+            "tagline": {
+              "text": "每个人的独立博客",
+              "hover": null
+            },
+            "href": "/"
           }
+        },
+        {
+          "path": "render.layout.brand.href",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/"
         },
         {
           "path": "render.layout.brand.image",
@@ -8460,41 +8758,10 @@
           }
         },
         {
-          "path": "render.layout.brand.image.background",
+          "path": "render.layout.brand.image.href",
           "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "PageViewModel:notebook",
-          "consumers": [
-            "page.viewModel",
-            "Reference generator"
-          ],
-          "example": "var(--block)"
-        },
-        {
-          "path": "render.layout.brand.image.src",
-          "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "PageViewModel:notebook",
-          "consumers": [
-            "page.viewModel",
-            "Reference generator"
-          ],
-          "example": "/images/avatar.webp"
-        },
-        {
-          "path": "render.layout.brand.image.url",
-          "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -8506,6 +8773,23 @@
             "Reference generator"
           ],
           "example": "/about/"
+        },
+        {
+          "path": "render.layout.brand.image.src",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/images/avatar.webp"
         },
         {
           "path": "render.layout.brand.image.variant",
@@ -8526,7 +8810,8 @@
         {
           "path": "render.layout.brand.name",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -8545,7 +8830,7 @@
         {
           "path": "render.layout.brand.tagline",
           "type": [
-            "string"
+            "object"
           ],
           "required": false,
           "default": {
@@ -8559,12 +8844,16 @@
             "page.viewModel",
             "Reference generator"
           ],
-          "example": "每个人的独立博客"
+          "example": {
+            "text": "每个人的独立博客",
+            "hover": null
+          }
         },
         {
-          "path": "render.layout.brand.url",
+          "path": "render.layout.brand.tagline.hover",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -8575,7 +8864,41 @@
             "page.viewModel",
             "Reference generator"
           ],
-          "example": "/"
+          "example": "example.com"
+        },
+        {
+          "path": "render.layout.brand.tagline.text",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "每个人的独立博客"
+        },
+        {
+          "path": "render.layout.brand.wordmark",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/wordmark.svg"
         },
         {
           "path": "render.layout.breadcrumbs",
@@ -10362,9 +10685,29 @@
           ],
           "example": {
             "name": "Stellar",
-            "tagline": "每个人的独立博客",
-            "url": "/"
+            "tagline": {
+              "text": "每个人的独立博客",
+              "hover": null
+            },
+            "href": "/"
           }
+        },
+        {
+          "path": "render.layout.brand.href",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/"
         },
         {
           "path": "render.layout.brand.image",
@@ -10386,41 +10729,10 @@
           }
         },
         {
-          "path": "render.layout.brand.image.background",
+          "path": "render.layout.brand.image.href",
           "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "PageViewModel:post",
-          "consumers": [
-            "page.viewModel",
-            "Reference generator"
-          ],
-          "example": "var(--block)"
-        },
-        {
-          "path": "render.layout.brand.image.src",
-          "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "PageViewModel:post",
-          "consumers": [
-            "page.viewModel",
-            "Reference generator"
-          ],
-          "example": "/images/avatar.webp"
-        },
-        {
-          "path": "render.layout.brand.image.url",
-          "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -10432,6 +10744,23 @@
             "Reference generator"
           ],
           "example": "/about/"
+        },
+        {
+          "path": "render.layout.brand.image.src",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/images/avatar.webp"
         },
         {
           "path": "render.layout.brand.image.variant",
@@ -10452,7 +10781,8 @@
         {
           "path": "render.layout.brand.name",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -10471,7 +10801,7 @@
         {
           "path": "render.layout.brand.tagline",
           "type": [
-            "string"
+            "object"
           ],
           "required": false,
           "default": {
@@ -10485,12 +10815,16 @@
             "page.viewModel",
             "Reference generator"
           ],
-          "example": "每个人的独立博客"
+          "example": {
+            "text": "每个人的独立博客",
+            "hover": null
+          }
         },
         {
-          "path": "render.layout.brand.url",
+          "path": "render.layout.brand.tagline.hover",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -10501,7 +10835,41 @@
             "page.viewModel",
             "Reference generator"
           ],
-          "example": "/"
+          "example": "example.com"
+        },
+        {
+          "path": "render.layout.brand.tagline.text",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "每个人的独立博客"
+        },
+        {
+          "path": "render.layout.brand.wordmark",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/wordmark.svg"
         },
         {
           "path": "render.layout.breadcrumbs",
@@ -12270,9 +12638,29 @@
           ],
           "example": {
             "name": "Stellar",
-            "tagline": "每个人的独立博客",
-            "url": "/"
+            "tagline": {
+              "text": "每个人的独立博客",
+              "hover": null
+            },
+            "href": "/"
           }
+        },
+        {
+          "path": "render.layout.brand.href",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:topic",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/"
         },
         {
           "path": "render.layout.brand.image",
@@ -12294,41 +12682,10 @@
           }
         },
         {
-          "path": "render.layout.brand.image.background",
+          "path": "render.layout.brand.image.href",
           "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "PageViewModel:topic",
-          "consumers": [
-            "page.viewModel",
-            "Reference generator"
-          ],
-          "example": "var(--block)"
-        },
-        {
-          "path": "render.layout.brand.image.src",
-          "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "PageViewModel:topic",
-          "consumers": [
-            "page.viewModel",
-            "Reference generator"
-          ],
-          "example": "/images/avatar.webp"
-        },
-        {
-          "path": "render.layout.brand.image.url",
-          "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -12340,6 +12697,23 @@
             "Reference generator"
           ],
           "example": "/about/"
+        },
+        {
+          "path": "render.layout.brand.image.src",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:topic",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/images/avatar.webp"
         },
         {
           "path": "render.layout.brand.image.variant",
@@ -12360,7 +12734,8 @@
         {
           "path": "render.layout.brand.name",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -12379,7 +12754,7 @@
         {
           "path": "render.layout.brand.tagline",
           "type": [
-            "string"
+            "object"
           ],
           "required": false,
           "default": {
@@ -12393,12 +12768,16 @@
             "page.viewModel",
             "Reference generator"
           ],
-          "example": "每个人的独立博客"
+          "example": {
+            "text": "每个人的独立博客",
+            "hover": null
+          }
         },
         {
-          "path": "render.layout.brand.url",
+          "path": "render.layout.brand.tagline.hover",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -12409,7 +12788,41 @@
             "page.viewModel",
             "Reference generator"
           ],
-          "example": "/"
+          "example": "example.com"
+        },
+        {
+          "path": "render.layout.brand.tagline.text",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:topic",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "每个人的独立博客"
+        },
+        {
+          "path": "render.layout.brand.wordmark",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:topic",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/wordmark.svg"
         },
         {
           "path": "render.layout.breadcrumbs",
@@ -14371,9 +14784,29 @@
           ],
           "example": {
             "name": "Stellar",
-            "tagline": "每个人的独立博客",
-            "url": "/"
+            "tagline": {
+              "text": "每个人的独立博客",
+              "hover": null
+            },
+            "href": "/"
           }
+        },
+        {
+          "path": "render.layout.brand.href",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:wiki",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/"
         },
         {
           "path": "render.layout.brand.image",
@@ -14395,41 +14828,10 @@
           }
         },
         {
-          "path": "render.layout.brand.image.background",
+          "path": "render.layout.brand.image.href",
           "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "PageViewModel:wiki",
-          "consumers": [
-            "page.viewModel",
-            "Reference generator"
-          ],
-          "example": "var(--block)"
-        },
-        {
-          "path": "render.layout.brand.image.src",
-          "type": [
-            "string"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
-          },
-          "scope": "PageViewModel:wiki",
-          "consumers": [
-            "page.viewModel",
-            "Reference generator"
-          ],
-          "example": "/images/avatar.webp"
-        },
-        {
-          "path": "render.layout.brand.image.url",
-          "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -14441,6 +14843,23 @@
             "Reference generator"
           ],
           "example": "/about/"
+        },
+        {
+          "path": "render.layout.brand.image.src",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:wiki",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/images/avatar.webp"
         },
         {
           "path": "render.layout.brand.image.variant",
@@ -14461,7 +14880,8 @@
         {
           "path": "render.layout.brand.name",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -14480,7 +14900,7 @@
         {
           "path": "render.layout.brand.tagline",
           "type": [
-            "string"
+            "object"
           ],
           "required": false,
           "default": {
@@ -14494,12 +14914,16 @@
             "page.viewModel",
             "Reference generator"
           ],
-          "example": "每个人的独立博客"
+          "example": {
+            "text": "每个人的独立博客",
+            "hover": null
+          }
         },
         {
-          "path": "render.layout.brand.url",
+          "path": "render.layout.brand.tagline.hover",
           "type": [
-            "string"
+            "string",
+            "null"
           ],
           "required": false,
           "default": {
@@ -14510,7 +14934,41 @@
             "page.viewModel",
             "Reference generator"
           ],
-          "example": "/"
+          "example": "example.com"
+        },
+        {
+          "path": "render.layout.brand.tagline.text",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:wiki",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "每个人的独立博客"
+        },
+        {
+          "path": "render.layout.brand.wordmark",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "omitted"
+          },
+          "scope": "PageViewModel:wiki",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": "/wordmark.svg"
         },
         {
           "path": "render.layout.breadcrumbs",

@@ -15,15 +15,12 @@ const AUTO_BRAND_COLLECTION_TYPES = Object.freeze(["wiki", "notebook"]);
 function normalizeBrand(brand) {
   const result = {};
   for (const [key, value] of Object.entries(brand || {})) {
-    if (key !== "image" && value != null) result[key] = value;
+    if (key !== "image" && value !== undefined) result[key] = value;
   }
   if (brand?.image && typeof brand.image === "object") {
     const image = {};
     for (const [key, value] of Object.entries(brand.image)) {
-      if (key !== "style" && value != null) image[key] = value;
-    }
-    if (image.variant === undefined && brand.image.style != null) {
-      image.variant = brand.image.style;
+      if (value !== undefined) image[key] = value;
     }
     if (Object.keys(image).length > 0) result.image = image;
   }
@@ -51,8 +48,9 @@ function automaticCollectionBrand(collection, type, defaultIcon) {
   return {
     image: imageSrc ? { src: imageSrc, variant: "icon" } : undefined,
     name: collection.name,
-    tagline: collection.tagline,
-    url: collectionBrandUrl(collection, type)
+    wordmark: null,
+    tagline: collection.tagline == null ? undefined : { text: collection.tagline || null, hover: null },
+    href: collectionBrandUrl(collection, type)
   };
 }
 

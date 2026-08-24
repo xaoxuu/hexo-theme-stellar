@@ -16,7 +16,8 @@ const { normalize_path: normalizePath } = require("../path_utils");
 const {
   profilePath,
   requireLayoutProfiles,
-  toRenderNavigation
+  toRenderNavigation,
+  toRenderSidebar
 } = require("../layout-config");
 const { mergeBrand, normalizeBrand } = require("../brand");
 const { firstContentImage, postDescription, postImages } = require("../seo");
@@ -634,8 +635,9 @@ function buildWikiRenderModel(input, collection, item) {
   const automaticBrand = {
     image: { src: collection.identity.icon || defaultIcon, variant: "icon" },
     name: collection.identity.name,
-    tagline: collection.identity.tagline,
-    url: collection.route.homepage
+    wordmark: null,
+    tagline: { text: collection.identity.tagline || null, hover: null },
+    href: collection.route.homepage
   };
   const brand = mergeBrand(
     mergeBrand(stellarConfig.site.brand, automaticBrand),
@@ -747,7 +749,7 @@ function buildCollectionModel(stellarConfig) {
   const article = content.article;
   const comments = normalizeThemeComments(stellarConfig.extensions.comments);
   const navigation = toRenderNavigation(postProfile);
-  const sidebar = normalizeSidebarBrand(pick(postProfile.sidebar, CONTENT_MODEL_FIELDS.sidebar));
+  const sidebar = normalizeSidebarBrand(toRenderSidebar(postProfile));
 
   return {
     id: "post",
@@ -872,7 +874,7 @@ function buildWikiCollectionModel(input, collectionId) {
 
   const profileNavigation = toRenderNavigation(wikiProfile);
   const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
-  const profileSidebar = pick(wikiProfile.sidebar, CONTENT_MODEL_FIELDS.sidebar);
+  const profileSidebar = toRenderSidebar(wikiProfile);
   const collectionSidebar = pick(collectionConfig.sidebar, CONTENT_MODEL_FIELDS.sidebar);
   const globalArticle = articlePresentationDefaults(content);
 
@@ -967,12 +969,12 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
   const brandSidebar = { left: { brand: siteBrand } };
   const postSidebar = mergeConfig(
     brandSidebar,
-    pick(postProfile.sidebar, CONTENT_MODEL_FIELDS.sidebar),
+    toRenderSidebar(postProfile),
     "sidebar"
   );
   const profileSidebar = mergeConfig(
     postSidebar,
-    pick(topicProfile.sidebar, CONTENT_MODEL_FIELDS.sidebar),
+    toRenderSidebar(topicProfile),
     "sidebar"
   );
   const collectionSidebar = pick(collectionConfig.sidebar, CONTENT_MODEL_FIELDS.sidebar);
@@ -1067,7 +1069,7 @@ function buildNotebookCollectionModel(input, collectionId) {
   const baseDir = notebookBaseDir(collectionId, collectionConfig, input.stellarConfig);
   const profileNavigation = toRenderNavigation(profiles.noteIndex);
   const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
-  const profileSidebar = pick(profiles.note.sidebar, CONTENT_MODEL_FIELDS.sidebar);
+  const profileSidebar = toRenderSidebar(profiles.note);
   const collectionSidebar = pick(collectionConfig.noteDefaults?.sidebar, CONTENT_MODEL_FIELDS.sidebar);
   const globalArticle = articlePresentationDefaults(content);
   const globalFooter = {
@@ -1162,8 +1164,9 @@ function buildNotebookRenderModel(input, collection, item) {
       variant: "icon"
     },
     name: collection.identity.name,
-    tagline: collection.identity.tagline,
-    url: collection.route.baseDir
+    wordmark: null,
+    tagline: { text: collection.identity.tagline || null, hover: null },
+    href: collection.route.baseDir
   };
   const brand = mergeBrand(
     mergeBrand(input.stellarConfig.site.brand, automaticBrand),

@@ -19,11 +19,12 @@ test('Wiki 与 Notebook 自动 Brand 使用 identity、文案和集合首页', (
   assert.deepStrictEqual(automaticCollectionBrand({ ...base, homepage: { path: '/wiki/project/' } }, 'wiki', '/default.svg'), {
     image: { src: '/project.svg', variant: 'icon' },
     name: 'Project',
-    tagline: 'Tagline',
-    url: '/wiki/project/'
+    wordmark: null,
+    tagline: { text: 'Tagline', hover: null },
+    href: '/wiki/project/'
   });
   assert.deepStrictEqual(automaticCollectionBrand({ ...base, route: { path: '/topic/project/' } }, 'topic'), {});
-  assert.equal(automaticCollectionBrand({ ...base, route: { path: 'notes/project' } }, 'notebook').url, 'notes/project');
+  assert.equal(automaticCollectionBrand({ ...base, route: { path: 'notes/project' } }, 'notebook').href, 'notes/project');
   assert.equal(automaticCollectionBrand({
     name: 'Project',
     card: { cover: '/cover.webp' }
@@ -39,18 +40,18 @@ test('Brand 按页面、集合、自动值和全局值解析，image 整体替�
     sidebar: {
       left: {
         brand: {
-          image: { src: '/collection.svg', style: 'plain' },
-          tagline: 'Collection override'
+          image: { src: '/collection.svg', variant: 'plain' },
+          tagline: { text: 'Collection override', hover: null }
         }
       }
     }
   };
   assert.deepStrictEqual(resolveBrand({
     siteBrand: {
-      image: { src: '/site.svg', style: 'avatar' },
+      image: { src: '/site.svg', variant: 'avatar' },
       name: 'Site',
-      tagline: 'Site tagline',
-      url: '/'
+      tagline: { text: 'Site tagline', hover: null },
+      href: '/'
     },
     collection,
     collectionType: 'topic',
@@ -59,26 +60,27 @@ test('Brand 按页面、集合、自动值和全局值解析，image 整体替�
   }), {
     image: { src: '/collection.svg', variant: 'plain' },
     name: 'Page',
-    tagline: 'Collection override',
-    url: '/'
+    tagline: { text: 'Collection override', hover: null },
+    href: '/'
   });
   assert.deepStrictEqual(resolveBrand({
-    siteBrand: { image: { src: '/site.svg', style: 'avatar' }, name: 'Site' },
-    pageBrand: { tagline: 'Page' }
+    siteBrand: { image: { src: '/site.svg', variant: 'avatar' }, name: 'Site' },
+    pageBrand: { tagline: { text: 'Page', hover: null } }
   }), {
     image: { src: '/site.svg', variant: 'avatar' },
     name: 'Site',
-    tagline: 'Page'
+    tagline: { text: 'Page', hover: null }
   });
   assert.deepStrictEqual(resolveBrand({
-    siteBrand: { tagline: 'Site fallback', url: '/' },
+    siteBrand: { tagline: { text: 'Site fallback', hover: null }, href: '/' },
     collection: { name: 'Collection', identity: { icon: '/auto.svg' } },
     collectionType: 'wiki'
   }), {
     image: { src: '/auto.svg', variant: 'icon' },
     name: 'Collection',
-    tagline: 'Site fallback',
-    url: '/'
+    wordmark: null,
+    tagline: { text: 'Site fallback', hover: null },
+    href: '/'
   });
 });
 
@@ -86,8 +88,8 @@ test('Topic 默认完整继承全局 Brand，只有显式 Brand 才覆盖', () =
   const siteBrand = {
     image: { src: '/site.svg', variant: 'avatar' },
     name: 'Site',
-    tagline: 'Site tagline',
-    url: '/'
+    tagline: { text: 'Site tagline', hover: null },
+    href: '/'
   };
   const topic = {
     name: 'Topic',
@@ -155,7 +157,7 @@ test("Notebook 生成页 Brand 消费 stellarConfig 而非原始页面字段", (
     stellar: {
       config: {
         site: {
-          brand: { name: "Site", url: "/" }
+          brand: { name: "Site", href: "/" }
         },
         resources: { fallbacks: { projectIcon: "/default.svg" } }
       },
@@ -182,15 +184,16 @@ test("Notebook 生成页 Brand 消费 stellarConfig 而非原始页面字段", (
     layout: "notes",
     stellarConfig: {
       collection: { profile: "notebook", id: "dev" },
-      sidebar: { left: { brand: { tagline: "Generated page" } } }
+      sidebar: { left: { brand: { tagline: { text: "Generated page", hover: null } } } }
     }
   });
 
   assert.deepStrictEqual(brand, {
     image: { src: "/dev.svg", variant: "icon" },
     name: "Dev Notes",
-    tagline: "Generated page",
-    url: "notes/dev"
+    wordmark: null,
+    tagline: { text: "Generated page", hover: null },
+    href: "notes/dev"
   });
   delete require.cache[helperPath];
   global.hexo = previousHexo;

@@ -463,73 +463,90 @@ function layoutProfileSchema(profile) {
   const base = `layout.profiles.${profile}`;
   const removedProperties = { base_dir: "path" };
   if (profile === "error") removedProperties["404"] = "path";
+  const hasPath = ["blog_index", "topic_index", "wiki_index", "notebook_index", "author", "error"].includes(profile);
+  const hasTabs = ["blog_index", "wiki_index"].includes(profile);
 
   const properties = {
-    path: deliveredField(`${base}.path`, {
-      normalizer: "root_relative_path",
-      example: profile === "error" ? "/404.html" : "/blog/"
-    }),
     navigation: object({
       consumers: LAYOUT_CONSUMERS,
-      example: { active_menu: "post", tabs: {} },
+      example: { active_menu: "post" },
       migration: "configuration/layout",
       runtimeKey: "navigation",
       removedProperties: { menu: "active_menu" },
       properties: {
         active_menu: deliveredField(`${base}.navigation.active_menu`, {
           normalizer: "identity",
+          validator: "nullable_kebab_id",
           example: "post"
-        }),
-        tabs: deliveredField(`${base}.navigation.tabs`, {
-          normalizer: "object",
-          example: { "朋友文章": "/friends/rss/" },
-          sealed: false,
-          additionalPropertyKey: "<title>",
-          additionalProperties: deliveredField(`${base}.navigation.tabs.<title>`, {
-            normalizer: "identity",
-            example: "/friends/rss/"
-          })
         })
       }
     }),
     sidebar: object({
       consumers: LAYOUT_CONSUMERS,
-      example: { left: { widgets: ["recent"] }, right: { widgets: ["toc"] } },
+      example: { left: ["recent"], right: ["toc"] },
       migration: "configuration/layout",
       runtimeKey: "sidebar",
+      removedProperties: { leftbar: "left", rightbar: "right" },
       properties: {
-        left: object({
-          consumers: LAYOUT_CONSUMERS,
-          example: { widgets: ["recent"] },
-          migration: "configuration/layout",
-          runtimeKey: "left",
-          properties: {
-            widgets: deliveredField(`${base}.sidebar.left.widgets`, {
-              normalizer: "array",
-              example: ["recent"]
-            })
-          }
+        left: deliveredField(`${base}.sidebar.left`, {
+          normalizer: "array",
+          example: ["recent"],
+          removedProperties: { widgets: "left" }
         }),
-        right: object({
-          consumers: LAYOUT_CONSUMERS,
-          example: { widgets: ["toc"] },
-          migration: "configuration/layout",
-          runtimeKey: "right",
-          properties: {
-            widgets: deliveredField(`${base}.sidebar.right.widgets`, {
-              normalizer: "array",
-              example: ["toc"]
-            })
-          }
+        right: deliveredField(`${base}.sidebar.right`, {
+          normalizer: "array",
+          example: ["toc"],
+          removedProperties: { widgets: "right" }
         })
       }
     })
   };
 
+  if (hasPath) {
+    properties.path = deliveredField(`${base}.path`, {
+      normalizer: "root_relative_path",
+      validator: "non_empty_string",
+      example: profile === "error" ? "/404.html" : "/blog/"
+    });
+  } else {
+    removedProperties.path = null;
+  }
+
+  if (hasTabs) {
+    properties.navigation.properties.tabs = deliveredField(`${base}.navigation.tabs`, {
+      normalizer: "array",
+      validator: "navigation_tabs",
+      example: [{ title: "朋友文章", url: "/friends/rss/" }],
+      items: object({
+        consumers: LAYOUT_CONSUMERS,
+        example: { title: "朋友文章", url: "/friends/rss/" },
+        migration: "configuration/layout",
+        requiredProperties: ["title", "url"],
+        properties: {
+          title: deliveredField(`${base}.navigation.tabs[].title`, {
+            normalizer: "identity",
+            validator: "non_empty_string",
+            example: "朋友文章"
+          }),
+          url: deliveredField(`${base}.navigation.tabs[].url`, {
+            normalizer: "identity",
+            validator: "safe_navigation_url",
+            example: "/friends/rss/"
+          })
+        }
+      })
+    });
+  } else {
+    properties.navigation.removedProperties.tabs = null;
+  }
+
   if (profile === "home") {
-    properties.comments = deliveredField("layout.profiles.home.comments", {
-      normalizer: "identity",
+    properties.comments = object({
+      default: literal({ enabled: false, title: null, id: null, provider: null, options: {} }),
+      consumers: LAYOUT_CONSUMERS,
       example: { enabled: true, provider: "giscus", options: {} },
+      migration: "configuration/layout",
+      runtimeKey: "comments",
       properties: {
         enabled: deliveredField("layout.profiles.home.comments.enabled", {
           normalizer: "identity",
@@ -540,7 +557,8 @@ function layoutProfileSchema(profile) {
           example: "留言"
         }),
         id: deliveredField("layout.profiles.home.comments.id", {
-          normalizer: "identity",
+          normalizer: "nullable_trimmed_string",
+          validator: "nullable_non_empty_string",
           example: "home"
         }),
         provider: deliveredField("layout.profiles.home.comments.provider", {
@@ -611,10 +629,10 @@ const CONFIG_SCHEMA = deepFreeze({
     site: object({
       consumers: SITE_CONSUMERS,
       example: {
-        brand: { name: "Stellar", tagline: "每个人的独立博客", url: "/" },
+        brand: { name: "Stellar", tagline: { text: "每个人的独立博客", hover: null }, href: "/" },
         menu: { items: [{ id: "post", title: "博客", icon: "default:documents", url: "/", accent: "#1BCDFC" }] },
         footer: {
-          actions: {},
+          actions: [],
           sections: [],
           content: "本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。"
         }
@@ -625,30 +643,42 @@ const CONFIG_SCHEMA = deepFreeze({
         brand: object({
           consumers: SITE_CONSUMERS,
           example: {
-            image: { src: "/avatar.webp", variant: "avatar", url: "/about/" },
+            image: { src: "/avatar.webp", variant: "avatar", href: "/about/" },
             name: "Stellar",
-            tagline: "每个人的独立博客",
-            url: "/"
+            wordmark: null,
+            tagline: { text: "每个人的独立博客", hover: null },
+            href: "/"
           },
           migration: "configuration/site",
           runtimeKey: "brand",
+          validator: "brand",
+          removedProperties: { url: "href" },
           properties: {
             image: object({
               consumers: SITE_CONSUMERS,
-              example: { src: "/avatar.webp", variant: "avatar", url: "/about/" },
+              example: { src: "/avatar.webp", variant: "avatar", href: "/about/" },
               migration: "configuration/site",
               runtimeKey: "image",
-              removedProperties: { style: "variant" },
+              removedProperties: { style: "variant", url: "href", background: null },
               properties: {
-                src: deliveredField("site.brand.image.src", { normalizer: "identity", example: "/avatar.webp" }),
+                src: deliveredField("site.brand.image.src", { normalizer: "identity", validator: "nullable_non_empty_string", example: "/avatar.webp" }),
                 variant: deliveredField("site.brand.image.variant", { normalizer: "identity", example: "avatar" }),
-                url: deliveredField("site.brand.image.url", { normalizer: "identity", example: "/about/" }),
-                background: deliveredField("site.brand.image.background", { normalizer: "identity", example: "var(--block)" })
+                href: deliveredField("site.brand.image.href", { normalizer: "identity", validator: "nullable_safe_navigation_url", example: "/about/" })
               }
             }),
             name: deliveredField("site.brand.name", { normalizer: "identity", example: "Stellar" }),
-            tagline: deliveredField("site.brand.tagline", { normalizer: "identity", example: "每个人的独立博客" }),
-            url: deliveredField("site.brand.url", { normalizer: "identity", example: "/" })
+            wordmark: deliveredField("site.brand.wordmark", { normalizer: "identity", validator: "nullable_non_empty_string", example: "/wordmark.svg" }),
+            tagline: object({
+              consumers: SITE_CONSUMERS,
+              example: { text: "每个人的独立博客", hover: "example.com" },
+              migration: "configuration/site",
+              runtimeKey: "tagline",
+              properties: {
+                text: deliveredField("site.brand.tagline.text", { normalizer: "identity", example: "每个人的独立博客" }),
+                hover: deliveredField("site.brand.tagline.hover", { normalizer: "identity", example: "example.com" })
+              }
+            }),
+            href: deliveredField("site.brand.href", { normalizer: "identity", validator: "nullable_safe_navigation_url", example: "/" })
           }
         }),
         menu: object({
@@ -659,18 +689,20 @@ const CONFIG_SCHEMA = deepFreeze({
           properties: {
             items: deliveredField("site.menu.items", {
               normalizer: "array",
+              validator: "menu_items",
               example: [{ id: "post", title: "博客", icon: "default:documents", url: "/", accent: "#1BCDFC" }],
               items: object({
                 consumers: SITE_CONSUMERS,
                 example: { id: "post", title: "博客", icon: "default:documents", url: "/", accent: "#1BCDFC" },
                 migration: "configuration/site",
                 removedProperties: { theme: "accent" },
+                requiredProperties: ["id", "url"],
                 properties: {
-                  id: deliveredField("site.menu.items[].id", { normalizer: "identity", example: "post" }),
+                  id: deliveredField("site.menu.items[].id", { normalizer: "identity", validator: "kebab_id", example: "post" }),
                   title: deliveredField("site.menu.items[].title", { normalizer: "identity", example: "博客" }),
-                  icon: deliveredField("site.menu.items[].icon", { normalizer: "identity", example: "default:documents" }),
-                  url: deliveredField("site.menu.items[].url", { normalizer: "identity", example: "/" }),
-                  accent: deliveredField("site.menu.items[].accent", { normalizer: "identity", example: "#1BCDFC" })
+                  icon: deliveredField("site.menu.items[].icon", { normalizer: "identity", validator: "nullable_non_empty_string", example: "default:documents" }),
+                  url: deliveredField("site.menu.items[].url", { normalizer: "identity", validator: "safe_navigation_url", example: "/" }),
+                  accent: deliveredField("site.menu.items[].accent", { normalizer: "identity", validator: "nullable_css_color", example: "#1BCDFC" })
                 }
               })
             })
@@ -678,54 +710,70 @@ const CONFIG_SCHEMA = deepFreeze({
         }),
         footer: object({
           consumers: SITE_CONSUMERS,
-          example: { actions: {}, sections: [], content: "" },
+          example: { actions: [], sections: [], content: "" },
           migration: "configuration/site",
           runtimeKey: "footer",
           removedProperties: { social: "actions", sitemap: "sections" },
           properties: {
             actions: deliveredField("site.footer.actions", {
-              normalizer: "object",
-              example: { github: { icon: "default:github", title: "GitHub", url: "https://github.com/" } },
-              sealed: false,
-              additionalPropertyKey: "<id>",
-              additionalProperties: deliveredField("site.footer.actions.<id>", {
-                normalizer: "object",
-                example: { icon: "default:github", title: "GitHub", url: "https://github.com/" },
+              normalizer: "array",
+              validator: "footer_actions",
+              example: [{ type: "link", icon: "default:github", title: "GitHub", url: "https://github.com/" }],
+              items: object({
+                consumers: SITE_CONSUMERS,
+                normalizer: "footer_action",
+                example: { type: "link", icon: "default:github", title: "GitHub", url: "https://github.com/" },
+                migration: "configuration/site",
                 sealed: true,
+                requiredProperties: ["type"],
                 properties: {
-                  variant: deliveredField("site.footer.actions.<id>.variant", { normalizer: "identity", example: "dropdown" }),
-                  icon: deliveredField("site.footer.actions.<id>.icon", { normalizer: "identity", example: "default:github" }),
-                  title: deliveredField("site.footer.actions.<id>.title", { normalizer: "identity", example: "GitHub" }),
-                  url: deliveredField("site.footer.actions.<id>.url", { normalizer: "identity", example: "https://github.com/" }),
-                  action: deliveredField("site.footer.actions.<id>.action", { normalizer: "trusted_text", example: "window.example()" }),
-                  items: deliveredField("site.footer.actions.<id>.items", {
+                  type: deliveredField("site.footer.actions[].type", { normalizer: "identity", example: "link" }),
+                  icon: deliveredField("site.footer.actions[].icon", { normalizer: "identity", validator: "nullable_non_empty_string", example: "default:github" }),
+                  title: deliveredField("site.footer.actions[].title", { normalizer: "identity", example: "GitHub" }),
+                  url: deliveredField("site.footer.actions[].url", { normalizer: "identity", validator: "nullable_safe_navigation_url", example: "https://github.com/" }),
+                  items: deliveredField("site.footer.actions[].items", {
                     normalizer: "array",
                     example: [{ icon: "default:github", title: "GitHub", url: "https://github.com/" }],
                     items: object({
                       consumers: SITE_CONSUMERS,
                       example: { icon: "default:github", title: "GitHub", url: "https://github.com/" },
                       migration: "configuration/site",
+                      requiredProperties: ["title", "url"],
                       properties: {
-                        icon: deliveredField("site.footer.actions.<id>.items[].icon", { normalizer: "identity", example: "default:github" }),
-                        title: deliveredField("site.footer.actions.<id>.items[].title", { normalizer: "identity", example: "GitHub" }),
-                        url: deliveredField("site.footer.actions.<id>.items[].url", { normalizer: "identity", example: "https://github.com/" })
+                        icon: deliveredField("site.footer.actions[].items[].icon", { normalizer: "identity", validator: "nullable_non_empty_string", example: "default:github" }),
+                        title: deliveredField("site.footer.actions[].items[].title", { normalizer: "identity", validator: "non_empty_string", example: "GitHub" }),
+                        url: deliveredField("site.footer.actions[].items[].url", { normalizer: "identity", validator: "safe_navigation_url", example: "https://github.com/" })
                       }
                     })
                   })
                 },
-                removedProperties: { type: "variant", onclick: "action" }
+                removedProperties: { variant: "type", action: null, onclick: null }
               })
             }),
             sections: deliveredField("site.footer.sections", {
               normalizer: "array",
-              example: [{ title: "博客", items: ["[归档](/blog/archives/)"] }],
+              example: [{ title: "博客", items: [{ title: "归档", url: "/blog/archives/" }] }],
               items: object({
                 consumers: SITE_CONSUMERS,
-                example: { title: "博客", items: ["[归档](/blog/archives/)"] },
+                example: { title: "博客", items: [{ title: "归档", url: "/blog/archives/" }] },
                 migration: "configuration/site",
+                requiredProperties: ["title", "items"],
                 properties: {
-                  title: deliveredField("site.footer.sections[].title", { normalizer: "identity", example: "博客" }),
-                  items: deliveredField("site.footer.sections[].items", { normalizer: "identity", example: ["[归档](/blog/archives/)"] })
+                  title: deliveredField("site.footer.sections[].title", { normalizer: "identity", validator: "non_empty_string", example: "博客" }),
+                  items: deliveredField("site.footer.sections[].items", {
+                    normalizer: "array",
+                    example: [{ title: "归档", url: "/blog/archives/" }],
+                    items: object({
+                      consumers: SITE_CONSUMERS,
+                      example: { title: "归档", url: "/blog/archives/" },
+                      migration: "configuration/site",
+                      requiredProperties: ["title", "url"],
+                      properties: {
+                        title: deliveredField("site.footer.sections[].items[].title", { normalizer: "identity", validator: "non_empty_string", example: "归档" }),
+                        url: deliveredField("site.footer.sections[].items[].url", { normalizer: "identity", validator: "safe_navigation_url", example: "/blog/archives/" })
+                      }
+                    })
+                  })
                 }
               })
             }),

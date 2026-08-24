@@ -203,26 +203,25 @@ Wiki 内容页在 Brand 上方显示“所有项目”入口，链接使用 `ren
 
 ## 左栏：Footer Actions
 
-左栏底部的 `.footer` 由冻结的 `site.footer.actions` 驱动。YAML 映射的字段顺序决定按钮顺序，普通条目支持 `icon`、`title`、`url` 和受信任原文 `action`：
+左栏底部的 `.footer` 由冻结的 `site.footer.actions` 有序数组驱动。普通链接条目使用 `type: link`，不接受 JavaScript action：
 
 ``@@BT@yaml
 site:
   footer:
     actions:
-      github:
+      - type: link
         icon: default:github
         title: GitHub
         url: https://github.com/
 ``@@BT@
 
-将条目的 `variant` 设置为 `dropdown`，即可渲染通用下拉菜单。主按钮使用 `icon` 和 `title`，子项使用 `title`、`url` 与可选的 `icon`：
+`type: dropdown` 渲染通用下拉菜单：
 
 ``@@BT@yaml
 site:
   footer:
     actions:
-      links:
-        variant: dropdown
+      - type: dropdown
         icon: default:documents
         title: 更多链接
         items:
@@ -233,24 +232,23 @@ site:
             url: https://github.com/
 ``@@BT@
 
-未设置 `variant` 的条目按普通操作处理。dropdown 由 `layout/_partial/dropdown.ejs` 使用原生 `<details>/<summary>` 渲染；菜单保留通用玻璃容器，并声明 glass surface 和 compact 密度，子项组合 collection list 结构与交互样式。打开后菜单会由 `source/js/plugins/dropdown.js` 移入 `body` 下的全局浮层，使用 `position: fixed`，不受 sidebar 容器裁剪。鼠标移入触发按钮时自动展开，透明桥接区连接触发按钮与菜单之间的间隙；离开触发按钮、菜单和桥接区后立即关闭，不使用延迟计时器，菜单定位完成后淡入显示。未指定方向时，脚本根据触发按钮上下空间自动选择展开方向，并让菜单贴合触发按钮的左边或右边；菜单有视口高度上限，子项过多时可以垂直滚动。不支持嵌套 dropdown，也不包含具体业务语义。子项的 URL 沿用普通操作的内链/外链处理规则。
+dropdown 由 `layout/_partial/dropdown.ejs` 使用原生 `<details>/<summary>` 渲染；不支持嵌套 dropdown。子项的 URL 沿用普通操作的内链/外链处理规则。
 
 Social 按钮与 dropdown 触发器共用 32px 高度、4px 内边距和 8px 圆角；内联 SVG 与图片图标统一放入 24×24px 图标盒，图片使用 `object-fit: contain` 保持原始比例，且两者都不接受通用 dropdown trigger 的 20px 覆盖。
 
 普通操作按钮悬停时会取消灰阶，并将 SVG 中使用 `currentColor` 的填充或描边接入通用主题渐变（`--item-theme-light` 至 `--item-theme`）；渐变角度仍遵循 `appearance.gradients.angle`。Footer dropdown 主图标未激活时透明度为 `0.5`，hover 或菜单打开后恢复为 `1`，同时复用普通按钮高亮；未悬停、未打开时保留图标自身颜色的灰阶效果。按钮的 hover 与 dropdown 打开态分别消费 collection surface 的 hover/active 背景和阴影令牌，因此 glass 左栏显示半透明顶部光照与高光边，card 左栏使用 `var(--block)` 且无阴影；状态切换不使用背景或阴影过渡。
 
-`spacer` 是保留的占位 ID。将 `spacer: {}` 放在两个 action 条目之间时，主题会输出弹性空白，把它之后的按钮推至同一行右侧；它不渲染图标、链接或提示：
+`type: spacer` 是显式判别项，不再依赖魔法 ID：
 
 ``@@BT@yaml
 site:
   footer:
     actions:
-      github:
+      - type: link
         icon: default:github
         url: https://github.com/
-      spacer: {}
-      links:
-        variant: dropdown
+      - type: spacer
+      - type: dropdown
         icon: default:documents
         title: 更多链接
         items: []

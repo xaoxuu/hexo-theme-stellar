@@ -25,9 +25,11 @@ test('Brand 模板只输出统一 wrapper 和三种语义样式 class', () => {
   assert.doesNotMatch(BRAND_TEMPLATE, /logo-wrap|class="icon"|class="avatar"/);
 });
 
-test('Brand 图片背景只由显式配置写入 CSS 变量', () => {
-  assert.match(BRAND_TEMPLATE, /image\.background \? ` style="--brand-image-background:/);
-  assert.match(BRAND_STYLE, /background: var\(--brand-image-background, transparent\)/);
+test('Brand 图片背景不再开放配置，wordmark 使用固定高度', () => {
+  assert.doesNotMatch(BRAND_TEMPLATE, /image\.background|brand-image-background/);
+  assert.doesNotMatch(BRAND_STYLE, /brand-image-background/);
+  assert.match(BRAND_TEMPLATE, /brand-wordmark/);
+  assert.match(BRAND_STYLE, /height: 20px/);
 });
 
 test('avatar、icon、plain 分别遵守裁剪和填充契约', () => {

@@ -1,8 +1,10 @@
 site:
   brand:
     name: My Stellar Blog
-    tagline: Ideas, notes and stories
-    url: /
+    tagline:
+      text: Ideas, notes and stories
+      hover:
+    href: /
   menu:
     items:
       - id: post
@@ -14,8 +16,10 @@ site:
     sections:
       - title: Blog
         items:
-          - '[Recent posts](/)'
-          - '[Archives](/blog/archives/)'
+          - title: Recent posts
+            url: /
+          - title: Archives
+            url: /blog/archives/
 
 layout:
   profiles:
@@ -23,27 +27,36 @@ layout:
       navigation:
         active_menu: post
       sidebar:
-        left:
-          widgets: [welcome, recent]
-        right:
-          widgets: []
+        left: [welcome, recent]
+        right: []
     blog_index:
       path: /blog/
       navigation:
         active_menu: post
       sidebar:
-        left:
-          widgets: [welcome, recent]
-        right:
-          widgets: []
+        left: [welcome, recent]
+        right: []
     post:
       navigation:
         active_menu: post
       sidebar:
-        left:
-          widgets: [related, recent]
-        right:
-          widgets: [toc]
+        left: [related, recent]
+        right: [toc]
+    wiki_index:
+      navigation:
+        active_menu: post
+    wiki:
+      navigation:
+        active_menu: post
+    notebook_index:
+      navigation:
+        active_menu: post
+    note_index:
+      navigation:
+        active_menu: post
+    note:
+      navigation:
+        active_menu: post
 
 content:
   article:

@@ -102,6 +102,16 @@ function normalizeValue(node, value) {
   if (node.normalizer === "collection_path") {
     return normalizeCollectionPath(value);
   }
+  if (node.normalizer === "nullable_trimmed_string") {
+    return value == null ? null : value.trim();
+  }
+  if (node.normalizer === "footer_action") {
+    if (value.type === "spacer") return { type: "spacer" };
+    if (value.type === "link") {
+      return { type: "link", icon: value.icon, title: value.title, url: value.url };
+    }
+    return { type: "dropdown", icon: value.icon, title: value.title, items: value.items };
+  }
   if (node.normalizer === "parameter_bag") {
     return clone(value);
   }
@@ -213,7 +223,7 @@ const GALAXY_OPTION_TYPES = Object.freeze({
 
 function validateNonEmptyString(node, input, source, path, issues, nullable) {
   if (nullable && input == null) return;
-  if (typeof input === "string" && input.length > 0) return;
+  if (typeof input === "string" && input.trim().length > 0) return;
   issues.push(issue("invalid_value", source, path, valueType(input), "non-empty string", node.migration));
 }
 
@@ -288,14 +298,125 @@ function validateBrand(node, input, source, path, issues) {
   if (input == null) return;
   const image = input.image;
   if (typeof input.name === "string" && /^\[[\s\S]*\]\([\s\S]*\)$/.test(input.name.trim())) {
-    issues.push(issue("invalid_value", source, `${path}.name`, "string", `${path}.url`, node.migration));
+    issues.push(issue("invalid_value", source, `${path}.name`, "string", `${path}.href`, node.migration));
+  }
+  if (typeof input.name === "string" && /[<>]/.test(input.name)) {
+    issues.push(issue("invalid_value", source, `${path}.name`, "string", "plain text without HTML", node.migration));
   }
   if (!isPlainObject(image)) return;
   if (typeof image.src === "string" && /^\[[\s\S]*\]\([\s\S]*\)$/.test(image.src.trim())) {
-    issues.push(issue("invalid_value", source, `${path}.image.src`, "string", `${path}.image.url`, node.migration));
+    issues.push(issue("invalid_value", source, `${path}.image.src`, "string", `${path}.image.href`, node.migration));
   }
-  if (image.variant === "plain" && image.background != null) {
-    issues.push(issue("invalid_value", source, `${path}.image.background`, valueType(image.background), "null when variant is plain", node.migration));
+}
+
+function isSafeNavigationUrl(input) {
+  if (typeof input !== "string" || input.length === 0 || input.trim() !== input) return false;
+  if (input.startsWith("/") && !input.startsWith("//")) return true;
+  if (input.startsWith("#") && input.length > 1) return true;
+  try {
+    const url = new URL(input);
+    return ["http:", "https:", "mailto:", "tel:"].includes(url.protocol);
+  } catch (error) {
+    return false;
+  }
+}
+
+function validateSafeNavigationUrl(node, input, source, path, issues, nullable) {
+  if (nullable && input == null) return;
+  if (isSafeNavigationUrl(input)) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), "safe navigable URL or root-relative path", node.migration));
+}
+
+function isCssColor(input) {
+  if (typeof input !== "string" || input.length === 0 || /[;{}<>]/.test(input)) return false;
+  const value = input.trim();
+  if (value !== input) return false;
+  if (/^#[0-9a-f]{3,4}(?:[0-9a-f]{3,4})?$/i.test(value)) return true;
+  if (/^(?:rgb|rgba|hsl|hsla|hwb|lab|lch|oklab|oklch|color|color-mix)\([^\n]+\)$/i.test(value)) return true;
+  if (/^var\(--[a-z0-9_-]+(?:\s*,[^\n]+)?\)$/i.test(value)) return true;
+  return /^[a-z]+$/i.test(value);
+}
+
+function validateCssColor(node, input, source, path, issues, nullable) {
+  if (nullable && input == null) return;
+  if (isCssColor(input)) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), "valid CSS color", node.migration));
+}
+
+function validateKebabId(node, input, source, path, issues) {
+  if (typeof input === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(input)) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), "non-empty kebab-case id", node.migration));
+}
+
+function validateNullableKebabId(node, input, source, path, issues) {
+  if (input == null) return;
+  validateKebabId(node, input, source, path, issues);
+}
+
+function validateMenuItems(node, input, source, path, issues) {
+  const ids = new Set();
+  input.forEach((item, index) => {
+    if (!isPlainObject(item)) return;
+    const itemPath = `${path}[${index}]`;
+    if (typeof item.id === "string") {
+      if (ids.has(item.id)) {
+        issues.push(issue("invalid_value", source, `${itemPath}.id`, "string", "unique menu id", node.migration));
+      }
+      ids.add(item.id);
+    }
+    const title = typeof item.title === "string" ? item.title : "";
+    const icon = typeof item.icon === "string" ? item.icon : "";
+    if (title.length === 0 && icon.length === 0) {
+      issues.push(issue("invalid_value", source, itemPath, "object", "non-empty title or icon", node.migration));
+    }
+  });
+}
+
+function validateFooterActions(node, input, source, path, issues) {
+  input.forEach((item, index) => {
+    if (!isPlainObject(item)) return;
+    const itemPath = `${path}[${index}]`;
+    const keys = Object.keys(item);
+    const allowed = item.type === "link"
+      ? ["type", "icon", "title", "url"]
+      : item.type === "dropdown"
+        ? ["type", "icon", "title", "items"]
+        : item.type === "spacer" ? ["type"] : ["type"];
+    for (const key of keys) {
+      if (!allowed.includes(key)) {
+        issues.push(issue("unknown_field", source, `${itemPath}.${key}`, valueType(item[key]), allowed.join(" | "), node.migration));
+      }
+    }
+    if (item.type === "link") {
+      if (typeof item.icon !== "string" || item.icon.length === 0) {
+        issues.push(issue("missing_field", source, `${itemPath}.icon`, valueType(item.icon), "non-empty string", node.migration));
+      }
+      if (!isSafeNavigationUrl(item.url)) {
+        issues.push(issue("invalid_value", source, `${itemPath}.url`, valueType(item.url), "safe navigable URL or root-relative path", node.migration));
+      }
+    } else if (item.type === "dropdown") {
+      const title = typeof item.title === "string" ? item.title : "";
+      const icon = typeof item.icon === "string" ? item.icon : "";
+      if (title.length === 0 && icon.length === 0) {
+        issues.push(issue("invalid_value", source, itemPath, "object", "non-empty title or icon", node.migration));
+      }
+      if (!Array.isArray(item.items) || item.items.length === 0) {
+        issues.push(issue("invalid_value", source, `${itemPath}.items`, valueType(item.items), "non-empty array", node.migration));
+      }
+    }
+  });
+}
+
+function validateNavigationTabs(node, input, source, path, issues) {
+  if (input.length === 0) return;
+  for (const [index, item] of input.entries()) {
+    if (!isPlainObject(item)) continue;
+    if (typeof item.title !== "string" || item.title.length === 0) {
+      issues.push(issue("invalid_value", source, `${path}[${index}].title`, valueType(item.title), "non-empty string", node.migration));
+    }
+    if (!isSafeNavigationUrl(item.url)) {
+      issues.push(issue("invalid_value", source, `${path}[${index}].url`, valueType(item.url), "safe navigable URL or root-relative path", node.migration));
+    }
   }
 }
 
@@ -338,11 +459,20 @@ function validateCustom(node, input, source, path, issues) {
   else if (node.validator === "effect") validateEffect(node, input, source, path, issues);
   else if (node.validator === "brand") validateBrand(node, input, source, path, issues);
   else if (node.validator === "absolute_http_url") validateAbsoluteHttpUrl(node, input, source, path, issues);
+  else if (node.validator === "safe_navigation_url") validateSafeNavigationUrl(node, input, source, path, issues, false);
+  else if (node.validator === "nullable_safe_navigation_url") validateSafeNavigationUrl(node, input, source, path, issues, true);
+  else if (node.validator === "css_color") validateCssColor(node, input, source, path, issues, false);
+  else if (node.validator === "nullable_css_color") validateCssColor(node, input, source, path, issues, true);
+  else if (node.validator === "kebab_id") validateKebabId(node, input, source, path, issues);
+  else if (node.validator === "nullable_kebab_id") validateNullableKebabId(node, input, source, path, issues);
+  else if (node.validator === "menu_items") validateMenuItems(node, input, source, path, issues);
+  else if (node.validator === "footer_actions") validateFooterActions(node, input, source, path, issues);
+  else if (node.validator === "navigation_tabs") validateNavigationTabs(node, input, source, path, issues);
   else if (node.validator === "safe_relative_path") validateSafeRelativePath(node, input, source, path, issues);
   else if (node.validator === "unique_blueprint_targets") validateUniqueBlueprintTargets(node, input, source, path, issues);
   else if (node.validator === "topic_route_start" && input != null && !/[\\/]topic[\\/]/.test(source)) {
     issues.push(issue("invalid_scope", source, path, valueType(input), "Topic Collection only", node.migration));
-  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "safe_relative_path", "unique_blueprint_targets", "topic_route_start"].includes(node.validator)) {
+  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "safe_navigation_url", "nullable_safe_navigation_url", "css_color", "nullable_css_color", "kebab_id", "nullable_kebab_id", "menu_items", "footer_actions", "navigation_tabs", "safe_relative_path", "unique_blueprint_targets", "topic_route_start"].includes(node.validator)) {
     throw new TypeError(`未知配置校验器：${node.validator}`);
   }
 }
@@ -423,7 +553,7 @@ function parseNode(node, input, source, path, issues, context) {
         source,
         childPath,
         valueType(input[key]),
-        path ? `${path}.${replacement}` : replacement,
+        replacement == null ? "remove field without replacement" : (path ? `${path}.${replacement}` : replacement),
         node.migration
       ));
     } else if (node.externalProperties?.includes(key)) {
@@ -463,7 +593,28 @@ function parseNode(node, input, source, path, issues, context) {
       if (parsed !== undefined) result[key] = parsed;
     }
   }
-  return result;
+  return node.normalizer === "footer_action" ? normalizeValue(node, result) : result;
+}
+
+function validateStellarSemantics(config, source) {
+  const menuItems = config.site?.menu?.items || [];
+  if (menuItems.length === 0) return;
+  const ids = new Set(menuItems.map(item => item.id));
+  const issues = [];
+  for (const [profile, definition] of Object.entries(config.layout?.profiles || {})) {
+    const activeMenu = definition?.navigation?.activeMenu;
+    if (activeMenu != null && !ids.has(activeMenu)) {
+      issues.push(issue(
+        "invalid_value",
+        source,
+        `layout.profiles.${profile}.navigation.active_menu`,
+        "string",
+        "id present in site.menu.items",
+        "configuration/layout"
+      ));
+    }
+  }
+  if (issues.length > 0) throw new ConfigSchemaError(issues);
 }
 
 function parseConfigSchema(schema, input = {}, options = {}) {
@@ -482,7 +633,9 @@ function parseStellarConfig(input = {}) {
   const source = input.source || "_config.stellar.yml";
   const themeConfig = input.themeConfig === undefined ? {} : input.themeConfig;
   const siteConfig = isPlainObject(input.siteConfig) ? input.siteConfig : {};
-  return parseConfigSchema(CONFIG_SCHEMA, themeConfig, { source, siteConfig, applyDefaults: true });
+  const config = parseConfigSchema(CONFIG_SCHEMA, themeConfig, { source, siteConfig, applyDefaults: true });
+  validateStellarSemantics(config, source);
+  return config;
 }
 
 module.exports = {

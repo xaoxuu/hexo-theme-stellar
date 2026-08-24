@@ -1,8 +1,10 @@
 site:
   brand:
     name: Product Docs
-    tagline: Guides and reference in one place
-    url: /wiki/
+    tagline:
+      text: Guides and reference in one place
+      hover:
+    href: /wiki/
   menu:
     items:
       - id: wiki
@@ -14,8 +16,10 @@ site:
     sections:
       - title: Documentation
         items:
-          - '[Docs home](/wiki/)'
-          - '[Getting started](/wiki/docs-reference/getting-started/)'
+          - title: Docs home
+            url: /wiki/
+          - title: Getting started
+            url: /wiki/docs-reference/getting-started/
 
 layout:
   profiles:
@@ -23,27 +27,51 @@ layout:
       navigation:
         active_menu: wiki
       sidebar:
-        left:
-          widgets: [related, recent]
-        right:
-          widgets: []
+        left: [related, recent]
+        right: []
     wiki_index:
       path: /wiki/
       navigation:
         active_menu: wiki
       sidebar:
-        left:
-          widgets: [related, recent]
-        right:
-          widgets: []
+        left: [related, recent]
+        right: []
     wiki:
       navigation:
         active_menu: wiki
       sidebar:
-        left:
-          widgets: [tree, related]
-        right:
-          widgets: [toc]
+        left: [tree, related]
+        right: [toc]
+    blog_index:
+      navigation:
+        active_menu: wiki
+    topic_index:
+      navigation:
+        active_menu: wiki
+    post:
+      navigation:
+        active_menu: wiki
+    topic:
+      navigation:
+        active_menu: wiki
+    notebook_index:
+      navigation:
+        active_menu: wiki
+    note_index:
+      navigation:
+        active_menu: wiki
+    note:
+      navigation:
+        active_menu: wiki
+    author:
+      navigation:
+        active_menu: wiki
+    error:
+      navigation:
+        active_menu: wiki
+    page:
+      navigation:
+        active_menu: wiki
 
 extensions:
   search:

@@ -52,14 +52,12 @@ function layoutDiv() {
   }
   
   var nav_tabs = stellar_config('layout.profiles.blogIndex.navigation.tabs')
-  if (nav_tabs) {
-    for (let key of Object.keys(nav_tabs)) {
-      // 当 page 的末尾为 index.html 或者处于该 page 的某个子页面时也应该匹配
-      // if (full_url_for(page.path) == full_url_for(nav_tabs[key])) {
-      if (full_url_for(page.path).startsWith(full_url_for(nav_tabs[key]))){
-        el += '<a class="active" href="' + url_for(nav_tabs[key]) + '">' + key + '</a>';
+  if (Array.isArray(nav_tabs)) {
+    for (const item of nav_tabs) {
+      if (full_url_for(page.path).startsWith(full_url_for(item.url))){
+        el += '<a class="active" href="' + escape_html(url_for(item.url)) + '">' + escape_html(item.title) + '</a>';
       } else {
-        el += '<a href="' + url_for(nav_tabs[key]) + '">' + key + '</a>';
+        el += '<a href="' + escape_html(url_for(item.url)) + '">' + escape_html(item.title) + '</a>';
       }
     }
   }

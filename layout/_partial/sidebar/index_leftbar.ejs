@@ -31,31 +31,31 @@ if (postViewModel || wikiViewModel || notebookViewModel) {
     var profiles = stellar_config('layout.profiles')
     var sidebar
     if (is_home()) {
-      sidebar = profiles.home.sidebar.left.widgets
+      sidebar = profiles.home.sidebar.left
     } else if (page.layout === 'notebooks') {
       // 笔记本列表页
-      sidebar = profiles.notebookIndex.sidebar.left.widgets
+      sidebar = profiles.notebookIndex.sidebar.left
     } else if (page.layout === 'notes') {
       // 笔记列表页
-      sidebar = notebookIndex?.layout.sidebar?.left?.widgets || profiles.noteIndex.sidebar.left.widgets
+      sidebar = notebookIndex?.layout.sidebar?.left?.widgets || profiles.noteIndex.sidebar.left
     } else if (is_category() || is_tag() || is_archive() || ['categories', 'tags', 'archives'].includes(page.layout)) {
-      sidebar = profiles.blogIndex.sidebar.left.widgets
+      sidebar = profiles.blogIndex.sidebar.left
     } else if (page.layout === 'index_topic') {
-      sidebar = profiles.topicIndex.sidebar.left.widgets
+      sidebar = profiles.topicIndex.sidebar.left
     } else if (collection_id(page, "topic")?.length > 0) {
-      sidebar = profiles.topic.sidebar.left.widgets
+      sidebar = profiles.topic.sidebar.left
     } else if (page.layout === 'index_wiki') {
-      sidebar = profiles.wikiIndex.sidebar.left.widgets
+      sidebar = profiles.wikiIndex.sidebar.left
     } else if (collection_id(page, "wiki")?.length > 0) {
-      sidebar = profiles.wiki.sidebar.left.widgets
+      sidebar = profiles.wiki.sidebar.left
     } else if (page.layout === '404') {
-      sidebar = profiles.error.sidebar.left.widgets
+      sidebar = profiles.error.sidebar.left
     } else if (page.layout === 'page') {
-      sidebar = profiles.page.sidebar.left.widgets
+      sidebar = profiles.page.sidebar.left
     } else if (page.layout === 'post') {
-      sidebar = profiles.post.sidebar.left.widgets
+      sidebar = profiles.post.sidebar.left
     } else if (page.layout == null) {
-      sidebar = profiles.page.sidebar.left.widgets
+      sidebar = profiles.page.sidebar.left
     } else {
       sidebar = []
     }
@@ -118,24 +118,23 @@ function layoutSearch() {
 }
 function layoutFooterDiv() {
   var actions = stellar_config('site.footer.actions')
-  if (Object.keys(actions).length === 0) {
+  if (!Array.isArray(actions) || actions.length === 0) {
     return ''
   }
   var el = '<footer class="footer dis-select">';
   el += '<div class="social-wrap" style="--item-grad:url(#footer-social-icon-grad)">';
   el += partial('grad-def', {id: 'footer-social-icon-grad'})
-  for (var id of Object.keys(actions)) {
-    var item = actions[id];
-    if (id === 'spacer') {
+  for (var item of actions) {
+    if (item.type === 'spacer') {
       el += '<span class="social-spacer" aria-hidden="true"></span>';
-    } else if (item?.variant === 'dropdown') {
+    } else if (item.type === 'dropdown') {
       el += partial('../dropdown', {
         item: item,
         rootClass: 'social-dropdown',
         triggerClass: 'social',
         showTitle: false
       })
-    } else if (item?.icon && (item.url || item.action)) {
+    } else if (item.type === 'link') {
       el += '<a class="social"';
       if (item.title) {
         el += ' title="' + escape_html(item.title) + '"';
@@ -147,8 +146,6 @@ function layoutFooterDiv() {
         } else {
           el += ' rel="noopener noreferrer"';
         }
-      } else if (item.action) {
-        el += ' onclick="' + item.action.replace(/"|\'/g, '&quot;') + '"';
       }
       el += '>';
       el += icon(item.icon, 'no-lazy')
