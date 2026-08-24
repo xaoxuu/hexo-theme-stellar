@@ -40,15 +40,15 @@ tags:
 
 ### 配置与启用
 
-相关文章系统由 `content.article.related_posts.enabled` 控制，结果上限由 `limit` 指定。普通 Post 在 `after_post_render` 构建边界调用 `hexo-related-popular-posts` 提供的 `popular_posts_json`，把普通的 `path`、`title`、`excerpt` 数组冻结到 `render.article.related.items`，详情模板 `post_related.ejs` 只消费该投影。开关未启用时不调用插件；已启用但 helper 不存在时，构建错误包含源文章路径。
+相关文章系统由非负整数 `content.article.related_posts_limit` 控制：`0` 关闭，正整数表示结果上限。普通 Post 在 `after_post_render` 构建边界调用 `hexo-related-popular-posts` 提供的 `popular_posts_json`，把普通的 `path`、`title`、`excerpt` 数组冻结到 `render.article.related.items`，详情模板 `post_related.ejs` 只消费该投影。设为正数但 helper 不存在时，构建错误包含源文章路径。
 
 **配置检查流程**
 
 ```mermaid
 flowchart TD
-    CONFIG["content.article.related_posts.enabled"]
+    CONFIG["content.article.related_posts_limit"]
     HELPER["after_post_render adapter"]
-    CHECK{"enabled == true?"}
+    CHECK{"limit > 0?"}
     GENERATE["popular_posts_json → render.article.related"]
     RETURN["items = []"]
     

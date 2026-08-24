@@ -335,14 +335,16 @@ content:
     listing:
       excerpt_length: 128
       per_page: null  # null 继承 Hexo 配置
-      order_by: -updated
+      sort:
+        field: updated
+        direction: desc
     tag_icons: {}
     footer:
-      license: false
-      share: false
+      license: null
+      share: null
 ```
 
-这些冻结默认值进入 Notebook CollectionModel；当前笔记本 YAML 仍可用 `listing`、`footer`、`sidebar` 与 `note.sidebar` 覆盖，最终 Collection 命名留待后续切片。
+`per_page: 0` 关闭分页，`null` 继承 Hexo；`footer` 的 `null` 表示继承 Article，`false`（许可）或 `[]`（分享）表示关闭。冻结默认值进入 Notebook CollectionModel，单个笔记本 YAML 可继续覆盖最终字段。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 

@@ -258,15 +258,11 @@ function heroSchema(factory, options = {}) {
 function articleSchema(factory) {
   const { field, object } = factory;
   return object({
-    type: field("string", { default: inherited("hexo.stellar.config.content.article.type"), example: "tech" }),
-    indent: field("boolean", { default: inherited("hexo.stellar.config.content.article.indent"), example: false }),
+    style: field("string", { default: inherited("hexo.stellar.config.content.article.style"), example: "tech" }),
+    paragraphIndent: field("string", { default: inherited("hexo.stellar.config.content.article.paragraphIndent"), example: "auto" }),
     author: field("string", { example: "xaoxuu" }),
-    aiLabel: field(["string", "object"], {
-      default: inherited("hexo.stellar.config.content.article.aiLabel", "page.article.aiLabel"),
-      example: "reviewed",
-      additionalProperties: true
-    })
-  }, { default: inherited("hexo.stellar.config.content.article", "collection.article", "page.article"), example: { type: "tech", indent: false } });
+    aiLabel: field(["string", "null"], { default: inherited("collection.article.aiLabel", "page.article.aiLabel"), example: "reviewed" })
+  }, { default: inherited("hexo.stellar.config.content.article", "collection.article", "page.article"), example: { style: "tech", paragraphIndent: "auto" } });
 }
 
 function footerSchema(factory, options = {}) {
@@ -284,7 +280,8 @@ function footerSchema(factory, options = {}) {
     share: field(["boolean", "array", "null"], {
       default: options.shareDefault || inherited("hexo.stellar.config.content.article.footer.share"),
       example: true
-    })
+    }),
+    showTags: field(["boolean", "null"], { default: inherited("hexo.stellar.config.content.article.footer.showTags"), example: true })
   }, { default: inherited("hexo.stellar.config.content.article.footer", "collection.footer", "page.footer"), example: { references: [], share: true } });
 }
 
@@ -317,7 +314,7 @@ function presentationSchema(factory, options = {}) {
   for (const value of Object.values(properties)) value.required = true;
   return cascadeFactory.object(properties, {
     default: inherited("profile.presentation", "collection.presentation", "page.presentation"),
-    example: { article: { type: "tech", indent: false }, footer: { references: [] } },
+    example: { article: { style: "tech", paragraphIndent: "auto" }, footer: { references: [] } },
     required: true
   });
 }
@@ -396,7 +393,7 @@ function collectionSchema(profile) {
       }
     : {
         priority: field("number", { default: literal(0), example: 0, required: true }),
-        sort: field(["number", "null"], { default: profile === "topic" ? literal(null) : literal(0), example: 0, required: true }),
+        order: field(["number", "null"], { default: profile === "topic" ? literal(null) : literal(0), example: 0, required: true }),
         excerptLength: field(["number", "null"], {
           default: profile === "notebook" ? inherited("hexo.stellar.config.content.notebook.listing.excerptLength") : literal(null),
           example: 128,
@@ -407,10 +404,11 @@ function collectionSchema(profile) {
           example: 10,
           required: true
         }),
-        orderBy: field(["string", "null"], {
-          default: profile === "topic" ? literal("-date") : profile === "notebook" ? literal("-updated") : literal(null),
-          example: "-updated",
-          required: true
+        ...(profile === "wiki" ? {} : {
+          sort: object({
+            field: field("string", { default: profile === "topic" ? literal("date") : literal("updated"), example: "updated", required: true }),
+            direction: field("string", { default: literal("desc"), example: "desc", required: true })
+          }, { default: derived("collection.listing.sort", "content.notebook.listing.sort"), example: { field: "updated", direction: "desc" }, required: true })
         })
       };
 
@@ -565,8 +563,8 @@ function pageViewModelSchema(profile) {
       }, { required: true, example: { language: "zh-CN", headInject: "", preferredTheme: "auto" } }),
       layout: object({
         pageType: field("string", { default: literal("content"), example: "content", required: true }),
-        articleType: field(["string", "null"], { default: inherited("item.presentation.article.type"), example: "tech", required: true }),
-        indent: field("boolean", { default: inherited("item.presentation.article.indent", "articleType === story"), example: false, required: true }),
+        articleStyle: field(["string", "null"], { default: inherited("item.presentation.article.style"), example: "tech", required: true }),
+        indent: field("boolean", { default: computed("由 article.paragraphIndent 与 style 解析"), example: false, required: true }),
         siteBackground: field("boolean", { default: derived("hexo.stellar.config.appearance.backgrounds.page.image"), example: false, required: true }),
         leftbarSurface: field("string", { default: derived("hexo.stellar.config.appearance.backgrounds.sidebar.surface"), example: "glass", required: true }),
         leftbarBlur: field("boolean", { default: computed("v2 appearance 不再公开 sidebar blur 开关"), example: false, required: true }),
@@ -581,7 +579,7 @@ function pageViewModelSchema(profile) {
           })
         } : {}),
         breadcrumbs: array(breadcrumbItem, { default: literal([]), example: [{ name: "思考", path: "blog/categories/thinking" }], required: true })
-      }, { required: true, example: { pageType: "content", articleType: "tech", indent: false, blogPath: "blog", brand: {}, breadcrumbs: [] } }),
+      }, { required: true, example: { pageType: "content", articleStyle: "tech", indent: false, blogPath: "blog", brand: {}, breadcrumbs: [] } }),
       seo: object({
         title: field("string", { default: computed("由文章标题与站点标题组合"), example: "Hello Stellar - Stellar", required: true }),
         description: field("string", { default: derived("page.description", "item.excerpt", "item.content"), example: "文章摘要", required: true }),
@@ -601,7 +599,7 @@ function pageViewModelSchema(profile) {
             additionalProperties: true
           })
         } : {}),
-        tags: array(tagLink, { default: computed("由 Hexo 标签关系规范化；content.article.showTags 禁用时为空"), example: [{ name: "Hexo", path: "tags/hexo" }], required: true }),
+        tags: array(tagLink, { default: computed("由 Hexo 标签关系规范化；content.article.footer.showTags 禁用时为空"), example: [{ name: "Hexo", path: "tags/hexo" }], required: true }),
         footer: object({
           references: array(field("any", { additionalProperties: true }), { default: inherited("item.presentation.footer.references"), example: [], required: true }),
           license: field("string", { default: computed("由最终许可协议与作者信息生成"), example: "CC BY 4.0", required: true }),
@@ -611,7 +609,7 @@ function pageViewModelSchema(profile) {
         previous: postLink,
         next: postLink,
         related: object({
-          enabled: field("boolean", { default: derived("hexo.stellar.config.content.article.relatedPosts.enabled"), example: false, required: true }),
+          enabled: field("boolean", { default: derived("hexo.stellar.config.content.article.relatedPostsLimit > 0"), example: false, required: true }),
           title: field("string", { default: literal(""), example: "Related Posts", required: true }),
           maxCount: field("number", { default: literal(5), example: 5, required: true }),
           items: array(relatedItem, { default: literal([]), example: [], required: true })
@@ -719,8 +717,8 @@ function pageViewModelSchema(profile) {
       }, { required: true, example: { language: "zh-CN", headInject: "", preferredTheme: "auto" } }),
       layout: object({
         pageType: field("string", { default: literal("content"), example: "content", required: true }),
-        articleType: field(["string", "null"], { default: inherited("item.presentation.article.type"), example: "tech", required: true }),
-        indent: field("boolean", { default: inherited("item.presentation.article.indent", "articleType === story"), example: false, required: true }),
+        articleStyle: field(["string", "null"], { default: inherited("item.presentation.article.style"), example: "tech", required: true }),
+        indent: field("boolean", { default: computed("由 article.paragraphIndent 与 style 解析"), example: false, required: true }),
         siteBackground: field("boolean", { default: derived("hexo.stellar.config.appearance.backgrounds.page.image"), example: false, required: true }),
         leftbarSurface: field("string", { default: derived("hexo.stellar.config.appearance.backgrounds.sidebar.surface"), example: "glass", required: true }),
         leftbarBlur: field("boolean", { default: literal(false), example: false, required: true }),
@@ -730,7 +728,7 @@ function pageViewModelSchema(profile) {
         searchFilter: field("string", { default: computed("由页面路径保留 Wiki 搜索的既有两段目录范围"), example: "wiki/stellar/", required: true }),
         sidebar: field("object", { default: inherited("item.presentation.sidebar"), example: { left: { widgets: ["tree"] }, right: { widgets: ["toc"] } }, required: true, additionalProperties: true }),
         breadcrumbs: array(breadcrumb, { default: literal([]), example: [{ name: "Stellar", path: "wiki/stellar" }], required: true })
-      }, { required: true, example: { pageType: "content", articleType: "tech", indent: false, brand: {}, wikiIndexPath: "wiki", showWikiHome: true, searchFilter: "wiki/stellar/", sidebar: {}, breadcrumbs: [] } }),
+      }, { required: true, example: { pageType: "content", articleStyle: "tech", indent: false, brand: {}, wikiIndexPath: "wiki", showWikiHome: true, searchFilter: "wiki/stellar/", sidebar: {}, breadcrumbs: [] } }),
       seo: object({
         title: field("string", { default: computed("由 Wiki 名、页面标题和站点标题组合"), example: "Stellar：开始 - Example", required: true }),
         description: field("string", { default: derived("page.description", "collection.identity.description", "item.excerpt", "item.content"), example: "Wiki 摘要", required: true }),
@@ -783,9 +781,9 @@ function pageViewModelSchema(profile) {
         repository: field("string", { default: inherited("collection.source.repository"), example: "xaoxuu/hexo-theme-stellar", required: true }),
         repositoryApi: field("string", { default: computed("由 GitHub service API 与 repository 生成"), example: "https://api.github.com/repos/xaoxuu/hexo-theme-stellar", required: true }),
         priority: field("number", { default: inherited("collection.listing.priority"), example: 1, required: true }),
-        sort: field("number", { default: inherited("collection.listing.sort"), example: 0, required: true }),
+        order: field("number", { default: inherited("collection.listing.order"), example: 0, required: true }),
         listed: field("boolean", { default: inherited("collection.visibility.listed"), example: true, required: true })
-      }, { required: true, example: { id: "stellar", href: "wiki/stellar", name: "Stellar", headline: "Stellar", caption: "", description: "", tags: [], audience: "", icon: "", cover: "", repository: "", repositoryApi: "", priority: 0, sort: 0, listed: true } })
+      }, { required: true, example: { id: "stellar", href: "wiki/stellar", name: "Stellar", headline: "Stellar", caption: "", description: "", tags: [], audience: "", icon: "", cover: "", repository: "", repositoryApi: "", priority: 0, order: 0, listed: true } })
     }, {
       default: computed("由 Wiki PageViewModel 构建器生成"),
       example: { document: { language: "zh-CN" }, layout: { pageType: "content" }, seo: { title: "Stellar - Example" } },
@@ -836,8 +834,8 @@ function pageViewModelSchema(profile) {
       }, { required: true, example: { language: "zh-CN", headInject: "", preferredTheme: "auto" } }),
       layout: object({
         pageType: field("string", { default: literal("content"), example: "content", required: true }),
-        articleType: field(["string", "null"], { default: inherited("item.presentation.article.type"), example: "tech", required: true }),
-        indent: field("boolean", { default: inherited("item.presentation.article.indent", "articleType === story"), example: false, required: true }),
+        articleStyle: field(["string", "null"], { default: inherited("item.presentation.article.style"), example: "tech", required: true }),
+        indent: field("boolean", { default: computed("由 article.paragraphIndent 与 style 解析"), example: false, required: true }),
         siteBackground: field("boolean", { default: derived("appearance.backgrounds.page.image"), example: false, required: true }),
         leftbarSurface: field("string", { default: derived("appearance.backgrounds.sidebar.surface"), example: "glass", required: true }),
         leftbarBlur: field("boolean", { default: literal(false), example: false, required: true }),
@@ -849,7 +847,7 @@ function pageViewModelSchema(profile) {
         breadcrumbs: array(breadcrumb, { default: literal([]), example: [], required: true }),
         tagTree: array(tagTreeItem, { default: literal([]), example: [], required: true }),
         recentItems: array(field("object", { additionalProperties: true }), { default: literal([]), example: [], required: true })
-      }, { required: true, example: { pageType: "content", articleType: "tech", indent: false, brand: {}, notebookIndexPath: "notebooks", notebookPath: "notes/dev", searchFilter: "notes/dev", sidebar: {}, breadcrumbs: [], tagTree: [] } }),
+      }, { required: true, example: { pageType: "content", articleStyle: "tech", indent: false, brand: {}, notebookIndexPath: "notebooks", notebookPath: "notes/dev", searchFilter: "notes/dev", sidebar: {}, breadcrumbs: [], tagTree: [] } }),
       seo: object({
         title: field("string", { default: computed("由 Note 标题与站点标题组合"), example: "Node.js - Example", required: true }),
         description: field("string", { default: derived("page.description", "item.excerpt", "item.content"), example: "Note 摘要", required: true }),

@@ -1,12 +1,12 @@
 <%
 function layoutDiv() {
-  var relatedPosts = stellar_config('content.article.relatedPosts')
-  if (relatedPosts.enabled) {
+  var relatedPostsLimit = stellar_config('content.article.relatedPostsLimit')
+  if (relatedPostsLimit > 0) {
     var el = '';
     el += `<div class="related-wrap${scrollreveal(' ')}" id="related-posts">`
     el += popular_posts_wrapper({
       title: __('meta.related_posts'),
-      json: popular_posts_json({ maxCount: relatedPosts.limit , ulClass: 'related-posts' , PPMixingRate: 0.2 , isImage: true , isExcerpt: true} , page )
+      json: popular_posts_json({ maxCount: relatedPostsLimit , ulClass: 'related-posts' , PPMixingRate: 0.2 , isImage: true , isExcerpt: true} , page )
     });
     el += '</div>';
     return el;

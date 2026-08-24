@@ -201,22 +201,22 @@
           "example": 128
         },
         {
-          "path": "listing.orderBy",
+          "path": "listing.order",
           "type": [
-            "string",
+            "number",
             "null"
           ],
           "required": true,
           "default": {
             "kind": "literal",
-            "value": "-updated"
+            "value": 0
           },
           "scope": "CollectionModel:notebook",
           "consumers": [
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "-updated"
+          "example": 0
         },
         {
           "path": "listing.perPage",
@@ -259,20 +259,59 @@
         {
           "path": "listing.sort",
           "type": [
-            "number",
-            "null"
+            "object"
           ],
           "required": true,
           "default": {
-            "kind": "literal",
-            "value": 0
+            "kind": "derived",
+            "from": [
+              "collection.listing.sort",
+              "content.notebook.listing.sort"
+            ]
           },
           "scope": "CollectionModel:notebook",
           "consumers": [
             "PageViewModel",
             "Reference generator"
           ],
-          "example": 0
+          "example": {
+            "field": "updated",
+            "direction": "desc"
+          }
+        },
+        {
+          "path": "listing.sort.direction",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": "desc"
+          },
+          "scope": "CollectionModel:notebook",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "desc"
+        },
+        {
+          "path": "listing.sort.field",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": "updated"
+          },
+          "scope": "CollectionModel:notebook",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "updated"
         },
         {
           "path": "navigation",
@@ -458,8 +497,8 @@
           ],
           "example": {
             "article": {
-              "type": "tech",
-              "indent": false
+              "style": "tech",
+              "paragraphIndent": "auto"
             },
             "footer": {
               "references": []
@@ -487,21 +526,21 @@
             "Reference generator"
           ],
           "example": {
-            "type": "tech",
-            "indent": false
+            "style": "tech",
+            "paragraphIndent": "auto"
           }
         },
         {
           "path": "presentation.article.aiLabel",
           "type": [
             "string",
-            "object"
+            "null"
           ],
           "required": false,
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.aiLabel",
+              "collection.article.aiLabel",
               "page.article.aiLabel"
             ]
           },
@@ -511,8 +550,7 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "reviewed",
-          "open": true
+          "example": "reviewed"
         },
         {
           "path": "presentation.article.author",
@@ -532,15 +570,15 @@
           "example": "xaoxuu"
         },
         {
-          "path": "presentation.article.indent",
+          "path": "presentation.article.paragraphIndent",
           "type": [
-            "boolean"
+            "string"
           ],
           "required": false,
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.indent"
+              "hexo.stellar.config.content.article.paragraphIndent"
             ]
           },
           "scope": "CollectionModel:notebook",
@@ -549,10 +587,10 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": false
+          "example": "auto"
         },
         {
-          "path": "presentation.article.type",
+          "path": "presentation.article.style",
           "type": [
             "string"
           ],
@@ -560,7 +598,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.type"
+              "hexo.stellar.config.content.article.style"
             ]
           },
           "scope": "CollectionModel:notebook",
@@ -826,6 +864,27 @@
             "kind": "inherited",
             "from": [
               "hexo.stellar.config.content.article.footer.share"
+            ]
+          },
+          "scope": "CollectionModel:notebook",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": true
+        },
+        {
+          "path": "presentation.footer.showTags",
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "hexo.stellar.config.content.article.footer.showTags"
             ]
           },
           "scope": "CollectionModel:notebook",
@@ -2179,8 +2238,8 @@
           ],
           "example": {
             "article": {
-              "type": "tech",
-              "indent": false
+              "style": "tech",
+              "paragraphIndent": "auto"
             },
             "footer": {
               "references": []
@@ -2208,21 +2267,21 @@
             "Reference generator"
           ],
           "example": {
-            "type": "tech",
-            "indent": false
+            "style": "tech",
+            "paragraphIndent": "auto"
           }
         },
         {
           "path": "presentation.article.aiLabel",
           "type": [
             "string",
-            "object"
+            "null"
           ],
           "required": false,
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.aiLabel",
+              "collection.article.aiLabel",
               "page.article.aiLabel"
             ]
           },
@@ -2232,8 +2291,7 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "reviewed",
-          "open": true
+          "example": "reviewed"
         },
         {
           "path": "presentation.article.author",
@@ -2253,15 +2311,15 @@
           "example": "xaoxuu"
         },
         {
-          "path": "presentation.article.indent",
+          "path": "presentation.article.paragraphIndent",
           "type": [
-            "boolean"
+            "string"
           ],
           "required": false,
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.indent"
+              "hexo.stellar.config.content.article.paragraphIndent"
             ]
           },
           "scope": "CollectionModel:post",
@@ -2270,10 +2328,10 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": false
+          "example": "auto"
         },
         {
-          "path": "presentation.article.type",
+          "path": "presentation.article.style",
           "type": [
             "string"
           ],
@@ -2281,7 +2339,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.type"
+              "hexo.stellar.config.content.article.style"
             ]
           },
           "scope": "CollectionModel:post",
@@ -2494,6 +2552,27 @@
             "kind": "inherited",
             "from": [
               "hexo.stellar.config.content.article.footer.share"
+            ]
+          },
+          "scope": "CollectionModel:post",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": true
+        },
+        {
+          "path": "presentation.footer.showTags",
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "hexo.stellar.config.content.article.footer.showTags"
             ]
           },
           "scope": "CollectionModel:post",
@@ -3287,22 +3366,22 @@
           "example": 128
         },
         {
-          "path": "listing.orderBy",
+          "path": "listing.order",
           "type": [
-            "string",
+            "number",
             "null"
           ],
           "required": true,
           "default": {
             "kind": "literal",
-            "value": "-date"
+            "value": null
           },
           "scope": "CollectionModel:topic",
           "consumers": [
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "-updated"
+          "example": 0
         },
         {
           "path": "listing.perPage",
@@ -3342,20 +3421,59 @@
         {
           "path": "listing.sort",
           "type": [
-            "number",
-            "null"
+            "object"
           ],
           "required": true,
           "default": {
-            "kind": "literal",
-            "value": null
+            "kind": "derived",
+            "from": [
+              "collection.listing.sort",
+              "content.notebook.listing.sort"
+            ]
           },
           "scope": "CollectionModel:topic",
           "consumers": [
             "PageViewModel",
             "Reference generator"
           ],
-          "example": 0
+          "example": {
+            "field": "updated",
+            "direction": "desc"
+          }
+        },
+        {
+          "path": "listing.sort.direction",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": "desc"
+          },
+          "scope": "CollectionModel:topic",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "desc"
+        },
+        {
+          "path": "listing.sort.field",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": "date"
+          },
+          "scope": "CollectionModel:topic",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "updated"
         },
         {
           "path": "navigation",
@@ -3544,8 +3662,8 @@
           ],
           "example": {
             "article": {
-              "type": "tech",
-              "indent": false
+              "style": "tech",
+              "paragraphIndent": "auto"
             },
             "footer": {
               "references": []
@@ -3573,21 +3691,21 @@
             "Reference generator"
           ],
           "example": {
-            "type": "tech",
-            "indent": false
+            "style": "tech",
+            "paragraphIndent": "auto"
           }
         },
         {
           "path": "presentation.article.aiLabel",
           "type": [
             "string",
-            "object"
+            "null"
           ],
           "required": false,
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.aiLabel",
+              "collection.article.aiLabel",
               "page.article.aiLabel"
             ]
           },
@@ -3597,8 +3715,7 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "reviewed",
-          "open": true
+          "example": "reviewed"
         },
         {
           "path": "presentation.article.author",
@@ -3618,15 +3735,15 @@
           "example": "xaoxuu"
         },
         {
-          "path": "presentation.article.indent",
+          "path": "presentation.article.paragraphIndent",
           "type": [
-            "boolean"
+            "string"
           ],
           "required": false,
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.indent"
+              "hexo.stellar.config.content.article.paragraphIndent"
             ]
           },
           "scope": "CollectionModel:topic",
@@ -3635,10 +3752,10 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": false
+          "example": "auto"
         },
         {
-          "path": "presentation.article.type",
+          "path": "presentation.article.style",
           "type": [
             "string"
           ],
@@ -3646,7 +3763,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.type"
+              "hexo.stellar.config.content.article.style"
             ]
           },
           "scope": "CollectionModel:topic",
@@ -3912,6 +4029,27 @@
             "kind": "inherited",
             "from": [
               "hexo.stellar.config.content.article.footer.share"
+            ]
+          },
+          "scope": "CollectionModel:topic",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": true
+        },
+        {
+          "path": "presentation.footer.showTags",
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "hexo.stellar.config.content.article.footer.showTags"
             ]
           },
           "scope": "CollectionModel:topic",
@@ -5107,22 +5245,22 @@
           "example": 128
         },
         {
-          "path": "listing.orderBy",
+          "path": "listing.order",
           "type": [
-            "string",
+            "number",
             "null"
           ],
           "required": true,
           "default": {
             "kind": "literal",
-            "value": null
+            "value": 0
           },
           "scope": "CollectionModel:wiki",
           "consumers": [
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "-updated"
+          "example": 0
         },
         {
           "path": "listing.perPage",
@@ -5146,24 +5284,6 @@
           "path": "listing.priority",
           "type": [
             "number"
-          ],
-          "required": true,
-          "default": {
-            "kind": "literal",
-            "value": 0
-          },
-          "scope": "CollectionModel:wiki",
-          "consumers": [
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": 0
-        },
-        {
-          "path": "listing.sort",
-          "type": [
-            "number",
-            "null"
           ],
           "required": true,
           "default": {
@@ -5411,8 +5531,8 @@
           ],
           "example": {
             "article": {
-              "type": "tech",
-              "indent": false
+              "style": "tech",
+              "paragraphIndent": "auto"
             },
             "footer": {
               "references": []
@@ -5440,21 +5560,21 @@
             "Reference generator"
           ],
           "example": {
-            "type": "tech",
-            "indent": false
+            "style": "tech",
+            "paragraphIndent": "auto"
           }
         },
         {
           "path": "presentation.article.aiLabel",
           "type": [
             "string",
-            "object"
+            "null"
           ],
           "required": false,
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.aiLabel",
+              "collection.article.aiLabel",
               "page.article.aiLabel"
             ]
           },
@@ -5464,8 +5584,7 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "reviewed",
-          "open": true
+          "example": "reviewed"
         },
         {
           "path": "presentation.article.author",
@@ -5485,15 +5604,15 @@
           "example": "xaoxuu"
         },
         {
-          "path": "presentation.article.indent",
+          "path": "presentation.article.paragraphIndent",
           "type": [
-            "boolean"
+            "string"
           ],
           "required": false,
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.indent"
+              "hexo.stellar.config.content.article.paragraphIndent"
             ]
           },
           "scope": "CollectionModel:wiki",
@@ -5502,10 +5621,10 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": false
+          "example": "auto"
         },
         {
-          "path": "presentation.article.type",
+          "path": "presentation.article.style",
           "type": [
             "string"
           ],
@@ -5513,7 +5632,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.type"
+              "hexo.stellar.config.content.article.style"
             ]
           },
           "scope": "CollectionModel:wiki",
@@ -5779,6 +5898,27 @@
             "kind": "inherited",
             "from": [
               "hexo.stellar.config.content.article.footer.share"
+            ]
+          },
+          "scope": "CollectionModel:wiki",
+          "consumers": [
+            "ContentItemModel",
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": true
+        },
+        {
+          "path": "presentation.footer.showTags",
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "hexo.stellar.config.content.article.footer.showTags"
             ]
           },
           "scope": "CollectionModel:wiki",
@@ -7000,8 +7140,8 @@
           ],
           "example": {
             "article": {
-              "type": "tech",
-              "indent": false
+              "style": "tech",
+              "paragraphIndent": "auto"
             },
             "footer": {
               "references": []
@@ -7028,21 +7168,21 @@
             "Reference generator"
           ],
           "example": {
-            "type": "tech",
-            "indent": false
+            "style": "tech",
+            "paragraphIndent": "auto"
           }
         },
         {
           "path": "presentation.article.aiLabel",
           "type": [
             "string",
-            "object"
+            "null"
           ],
           "required": false,
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.aiLabel",
+              "collection.article.aiLabel",
               "page.article.aiLabel"
             ]
           },
@@ -7051,8 +7191,7 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "reviewed",
-          "open": true
+          "example": "reviewed"
         },
         {
           "path": "presentation.article.author",
@@ -7071,26 +7210,7 @@
           "example": "xaoxuu"
         },
         {
-          "path": "presentation.article.indent",
-          "type": [
-            "boolean"
-          ],
-          "required": false,
-          "default": {
-            "kind": "inherited",
-            "from": [
-              "hexo.stellar.config.content.article.indent"
-            ]
-          },
-          "scope": "ContentItemModel",
-          "consumers": [
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": false
-        },
-        {
-          "path": "presentation.article.type",
+          "path": "presentation.article.paragraphIndent",
           "type": [
             "string"
           ],
@@ -7098,7 +7218,26 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.type"
+              "hexo.stellar.config.content.article.paragraphIndent"
+            ]
+          },
+          "scope": "ContentItemModel",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "auto"
+        },
+        {
+          "path": "presentation.article.style",
+          "type": [
+            "string"
+          ],
+          "required": false,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "hexo.stellar.config.content.article.style"
             ]
           },
           "scope": "ContentItemModel",
@@ -7450,6 +7589,26 @@
             "kind": "inherited",
             "from": [
               "hexo.stellar.config.content.article.footer.share"
+            ]
+          },
+          "scope": "ContentItemModel",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": true
+        },
+        {
+          "path": "presentation.footer.showTags",
+          "type": [
+            "boolean",
+            "null"
+          ],
+          "required": false,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "hexo.stellar.config.content.article.footer.showTags"
             ]
           },
           "scope": "ContentItemModel",
@@ -8667,7 +8826,7 @@
           ],
           "example": {
             "pageType": "content",
-            "articleType": "tech",
+            "articleStyle": "tech",
             "indent": false,
             "brand": {},
             "notebookIndexPath": "notebooks",
@@ -8679,7 +8838,7 @@
           }
         },
         {
-          "path": "render.layout.articleType",
+          "path": "render.layout.articleStyle",
           "type": [
             "string",
             "null"
@@ -8688,7 +8847,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "item.presentation.article.type"
+              "item.presentation.article.style"
             ]
           },
           "scope": "PageViewModel:notebook",
@@ -8962,11 +9121,8 @@
           ],
           "required": true,
           "default": {
-            "kind": "inherited",
-            "from": [
-              "item.presentation.article.indent",
-              "articleType === story"
-            ]
+            "kind": "computed",
+            "description": "由 article.paragraphIndent 与 style 解析"
           },
           "scope": "PageViewModel:notebook",
           "consumers": [
@@ -10360,7 +10516,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.content.article.relatedPosts.enabled"
+              "hexo.stellar.config.content.article.relatedPostsLimit > 0"
             ]
           },
           "scope": "PageViewModel:post",
@@ -10480,7 +10636,7 @@
           "required": true,
           "default": {
             "kind": "computed",
-            "description": "由 Hexo 标签关系规范化；content.article.showTags 禁用时为空"
+            "description": "由 Hexo 标签关系规范化；content.article.footer.showTags 禁用时为空"
           },
           "scope": "PageViewModel:post",
           "consumers": [
@@ -10623,7 +10779,7 @@
           ],
           "example": {
             "pageType": "content",
-            "articleType": "tech",
+            "articleStyle": "tech",
             "indent": false,
             "blogPath": "blog",
             "brand": {},
@@ -10631,7 +10787,7 @@
           }
         },
         {
-          "path": "render.layout.articleType",
+          "path": "render.layout.articleStyle",
           "type": [
             "string",
             "null"
@@ -10640,7 +10796,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "item.presentation.article.type"
+              "item.presentation.article.style"
             ]
           },
           "scope": "PageViewModel:post",
@@ -10934,11 +11090,8 @@
           ],
           "required": true,
           "default": {
-            "kind": "inherited",
-            "from": [
-              "item.presentation.article.indent",
-              "articleType === story"
-            ]
+            "kind": "computed",
+            "description": "由 article.paragraphIndent 与 style 解析"
           },
           "scope": "PageViewModel:post",
           "consumers": [
@@ -12313,7 +12466,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.content.article.relatedPosts.enabled"
+              "hexo.stellar.config.content.article.relatedPostsLimit > 0"
             ]
           },
           "scope": "PageViewModel:topic",
@@ -12433,7 +12586,7 @@
           "required": true,
           "default": {
             "kind": "computed",
-            "description": "由 Hexo 标签关系规范化；content.article.showTags 禁用时为空"
+            "description": "由 Hexo 标签关系规范化；content.article.footer.showTags 禁用时为空"
           },
           "scope": "PageViewModel:topic",
           "consumers": [
@@ -12576,7 +12729,7 @@
           ],
           "example": {
             "pageType": "content",
-            "articleType": "tech",
+            "articleStyle": "tech",
             "indent": false,
             "blogPath": "blog",
             "brand": {},
@@ -12584,7 +12737,7 @@
           }
         },
         {
-          "path": "render.layout.articleType",
+          "path": "render.layout.articleStyle",
           "type": [
             "string",
             "null"
@@ -12593,7 +12746,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "item.presentation.article.type"
+              "item.presentation.article.style"
             ]
           },
           "scope": "PageViewModel:topic",
@@ -12887,11 +13040,8 @@
           ],
           "required": true,
           "default": {
-            "kind": "inherited",
-            "from": [
-              "item.presentation.article.indent",
-              "articleType === story"
-            ]
+            "kind": "computed",
+            "description": "由 article.paragraphIndent 与 style 解析"
           },
           "scope": "PageViewModel:topic",
           "consumers": [
@@ -14738,7 +14888,7 @@
           ],
           "example": {
             "pageType": "content",
-            "articleType": "tech",
+            "articleStyle": "tech",
             "indent": false,
             "brand": {},
             "wikiIndexPath": "wiki",
@@ -14749,7 +14899,7 @@
           }
         },
         {
-          "path": "render.layout.articleType",
+          "path": "render.layout.articleStyle",
           "type": [
             "string",
             "null"
@@ -14758,7 +14908,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "item.presentation.article.type"
+              "item.presentation.article.style"
             ]
           },
           "scope": "PageViewModel:wiki",
@@ -15037,11 +15187,8 @@
           ],
           "required": true,
           "default": {
-            "kind": "inherited",
-            "from": [
-              "item.presentation.article.indent",
-              "articleType === story"
-            ]
+            "kind": "computed",
+            "description": "由 article.paragraphIndent 与 style 解析"
           },
           "scope": "PageViewModel:wiki",
           "consumers": [
@@ -15237,7 +15384,7 @@
             "repository": "",
             "repositoryApi": "",
             "priority": 0,
-            "sort": 0,
+            "order": 0,
             "listed": true
           }
         },
@@ -15430,6 +15577,25 @@
           "example": "Stellar"
         },
         {
+          "path": "render.listing.order",
+          "type": [
+            "number"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "collection.listing.order"
+            ]
+          },
+          "scope": "PageViewModel:wiki",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": 0
+        },
+        {
           "path": "render.listing.priority",
           "type": [
             "number"
@@ -15483,25 +15649,6 @@
             "Reference generator"
           ],
           "example": "https://api.github.com/repos/xaoxuu/hexo-theme-stellar"
-        },
-        {
-          "path": "render.listing.sort",
-          "type": [
-            "number"
-          ],
-          "required": true,
-          "default": {
-            "kind": "inherited",
-            "from": [
-              "collection.listing.sort"
-            ]
-          },
-          "scope": "PageViewModel:wiki",
-          "consumers": [
-            "page.viewModel",
-            "Reference generator"
-          ],
-          "example": 0
         },
         {
           "path": "render.listing.tags",

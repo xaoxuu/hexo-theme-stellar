@@ -148,15 +148,15 @@ Notebook/Note 的冻结模型字段与严格归属统一记录在[内容配置�
 ```mermaid
 graph TD
     subgraph "Level 1: Global Defaults"
-        GLOBAL_CFG["notebook:<br/>auto_excerpt: 128<br/>tagcons: {}<br/>per_page: null<br/>order_by: -updated<br/>license: false<br/>share: false"]
+        GLOBAL_CFG["content.notebook:<br/>excerpt_length: 128<br/>tag_icons: {}<br/>per_page: null<br/>sort: updated/desc<br/>license: null<br/>share: null"]
     end
     
     subgraph "Level 2: Notebook YAML"
-        YAML_CFG["notebook.yml<br/>Can override:<br/>- menu_id<br/>- leftbar/rightbar<br/>- note_leftbar/note_rightbar<br/>- per_page<br/>- order_by<br/>- license<br/>- share"]
+        YAML_CFG["notebook.yml<br/>Can override:<br/>- navigation.menu<br/>- sidebar / note_defaults.sidebar<br/>- listing.per_page<br/>- listing.sort<br/>- footer.license<br/>- footer.share"]
     end
     
     subgraph "Level 3: Front-matter"
-        FM_CFG["note front-matter<br/>Can override:<br/>- menu_id<br/>- leftbar/rightbar<br/>- license<br/>- share<br/>- pin/sticky"]
+        FM_CFG["note front matter<br/>Can override:<br/>- navigation.menu<br/>- sidebar<br/>- footer.license<br/>- footer.share<br/>- listing.priority"]
     end
     
     subgraph "Runtime Behavior"
@@ -490,11 +490,15 @@ sidebar:
     widgets: [tagtree, recent]
 listing:
   per_page: 15
-  order_by: -updated
+  sort:
+    field: updated
+    direction: desc
 footer:
-  license: true
-  share: true
+  license: null
+  share: []
 ```
+
+`per_page: null` 继承 Hexo，`0` 关闭分页；`footer.license: null` 与 `footer.share: null` 继承 Article 默认值，`false` 与 `[]` 分别关闭许可和分享。`tag_icons` 的键必须是该站点真实出现的 Notebook 标签，未配置标签统一使用主题内置图标。
 
 注意：笔记本数据在**用户站点**的 `source/_data/notebooks/`，不属于主题仓库。
 

@@ -183,10 +183,10 @@ layout:
 ######## Content ########
 content:
   article:
-    # 文章类型，可以在页面或集合的 article.type 中覆盖。
-    type: tech # tech: 默认技术类文章, story: 图文类文章，文字和段落间增距大
-    # null 保留 story 自动缩进；true / false 表示显式覆盖。
-    indent: null
+    # 文章呈现风格，可以在页面或集合的 article.style 中覆盖。
+    style: tech # tech: 默认技术类文章, story: 图文类文章，文字和段落间增距大
+    # auto: story 缩进、tech 不缩进；always / never 显式覆盖。
+    paragraph_indent: auto
     listing:
       # 置顶文章布局：carousel = 轮播，flat = 平铺。
       pinned_layout: carousel
@@ -201,43 +201,27 @@ content:
       ratio: 2.5
     category_colors:
       '探索号': '#f44336'
-    # Front Matter 仍使用 article.ai_label 选择等级；此处配置等级样式。
-    ai_label:
-      default: null
-      manual:
-        color: '#03a9f4'
-        icon: default:shield-user
-      reviewed:
-        color: '#4caf50'
-        icon: default:shield-check
-      polished:
-        color: '#4caf50'
-        icon: default:shield-up
-      generated:
-        color: '#ff9800'
-        icon: default:shield-warning
     footer:
       license: '本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。'
-      share: false # 或 [wechat, weibo, email, link]
+      share: [] # 可选 wechat / weibo / email / link，空数组关闭。
+      show_tags: true
     # 需要安装 hexo-related-popular-posts。
-    related_posts:
-      enabled: false
-      limit: 5
+    # 0 关闭，正整数表示最大结果数。
+    related_posts_limit: 0
     show_reading_time: false
-    # 文章末尾是否显示本文标签。
-    show_tags: true
 
   notebook:
     listing:
       excerpt_length: 128
       # 0 表示不分页，null 使用 Hexo 的配置。
       per_page: null
-      order_by: -updated
-    tag_icons:
-      '': quot:hashtag
+      sort:
+        field: updated
+        direction: desc
+    tag_icons: {}
     footer:
-      license: false
-      share: false
+      license: null
+      share: null
 
 extensions:
   search:

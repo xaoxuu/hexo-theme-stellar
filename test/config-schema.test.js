@@ -74,8 +74,11 @@ test("site/layout/content/appearance/resources/head Schema 提供默认值并拒
     excerptLength: 128,
     showTags: false
   });
-  assert.equal(config.content.article.indent, null);
-  assert.equal(config.content.notebook.tagIcons[""], "quot:hashtag");
+  assert.equal(config.content.article.style, "tech");
+  assert.equal(config.content.article.paragraphIndent, "auto");
+  assert.deepEqual(config.content.article.footer.share, []);
+  assert.equal(config.content.article.relatedPostsLimit, 0);
+  assert.deepEqual(config.content.notebook.tagIcons, {});
   assert.equal(config.appearance.colorScheme, "auto");
   assert.equal(config.appearance.shape.radius.cardLarge, "24px");
   assert.equal(config.appearance.backgrounds.sidebar.opacity, 0.8);
@@ -200,8 +203,8 @@ test("Content Schema 解析最终命名、动态记录、数组替换与 camelCa
     themeConfig: {
       content: {
         article: {
-          type: "story",
-          indent: null,
+          style: "story",
+          paragraph_indent: "never",
           listing: {
             pinned_layout: "flat",
             card_layout: "classic",
@@ -210,47 +213,34 @@ test("Content Schema 解析最终命名、动态记录、数组替换与 camelCa
             show_tags: true
           },
           banner: { ratio: 3 },
-          category_colors: { Tech: "2196f3" },
-          ai_label: {
-            default: "reviewed",
-            reviewed: { color: "#0f0", icon: null }
-          },
-          footer: { license: false, share: ["link"] },
-          related_posts: { enabled: true, limit: 0 },
-          show_reading_time: true,
-          show_tags: false
+          category_colors: { Tech: "#2196f3" },
+          footer: { license: false, share: ["link", "link"], show_tags: false },
+          related_posts_limit: 0,
+          show_reading_time: true
         },
         notebook: {
-          listing: { excerpt_length: 0, per_page: 0, order_by: "updated" },
+          listing: { excerpt_length: 0, per_page: 0, sort: { field: "updated", direction: "asc" } },
           tag_icons: { tools: "default:tools" },
-          footer: { license: true, share: true }
+          footer: { license: null, share: ["link", "link"] }
         }
       }
     }
   });
 
   assert.deepEqual(config.content.article, {
-    type: "story",
-    indent: null,
+    style: "story",
+    paragraphIndent: "never",
     listing: { pinnedLayout: "flat", cardLayout: "classic", coverRatio: 1.5, excerptLength: 0, showTags: true },
     banner: { ratio: 3 },
-    categoryColors: { "探索号": "#f44336", Tech: "2196f3" },
-    aiLabel: {
-      default: "reviewed",
-      manual: { color: "#03a9f4", icon: "default:shield-user" },
-      reviewed: { color: "#0f0", icon: null },
-      polished: { color: "#4caf50", icon: "default:shield-up" },
-      generated: { color: "#ff9800", icon: "default:shield-warning" }
-    },
-    footer: { license: false, share: ["link"] },
-    relatedPosts: { enabled: true, limit: 0 },
-    showReadingTime: true,
-    showTags: false
+    categoryColors: { "探索号": "#f44336", Tech: "#2196f3" },
+    footer: { license: false, share: ["link"], showTags: false },
+    relatedPostsLimit: 0,
+    showReadingTime: true
   });
   assert.deepEqual(config.content.notebook, {
-    listing: { excerptLength: 0, perPage: 0, orderBy: "updated" },
-    tagIcons: { "": "quot:hashtag", tools: "default:tools" },
-    footer: { license: true, share: true }
+    listing: { excerptLength: 0, perPage: 0, sort: { field: "updated", direction: "asc" } },
+    tagIcons: { tools: "default:tools" },
+    footer: { license: null, share: ["link"] }
   });
   assertDeepFrozen(config.content);
 });
@@ -263,10 +253,12 @@ test("Content Schema 拒绝旧根、旧子字段、未知等级、错误类型�
       notebook: { listing: {} },
       content: { article: {
         card_style: "hero",
-        listing: { card_style: "hero", cover_ratio: 0, excerpt_length: -1 },
-        ai_label: { unknown: { color: "#fff" }, manual: { color: 42 } },
+        type: "story",
+        indent: true,
+        listing: { card_style: "hero", cover_ratio: 0, excerpt_length: 1.5 },
         footer: { share: "link" },
-        related_posts: { enable: true, limit: -1 }
+        related_posts: { enable: true, limit: -1 },
+        related_posts_limit: -1
       } }
     }
   }), error => {
@@ -275,12 +267,12 @@ test("Content Schema 拒绝旧根、旧子字段、未知等级、错误类型�
     assert.match(error.message, /content\.article\.card_style 已移除/);
     assert.match(error.message, /content\.article\.listing\.card_style 已移除/);
     assert.match(error.message, /content\.article\.listing\.cover_ratio 的值不在 number > 0/);
-    assert.match(error.message, /content\.article\.listing\.excerpt_length 的值不在 number >= 0/);
-    assert.match(error.message, /未知字段 content\.article\.ai_label\.unknown/);
-    assert.match(error.message, /content\.article\.ai_label\.manual\.color 应为 string/);
-    assert.match(error.message, /content\.article\.footer\.share 应为 boolean \| array/);
-    assert.match(error.message, /content\.article\.related_posts\.enable 已移除/);
-    assert.match(error.message, /content\.article\.related_posts\.limit 的值不在 number >= 0/);
+    assert.match(error.message, /content\.article\.type 已移除/);
+    assert.match(error.message, /content\.article\.indent 已移除/);
+    assert.match(error.message, /content\.article\.listing\.excerpt_length 的值不在 non-negative integer/);
+    assert.match(error.message, /content\.article\.footer\.share 应为 array/);
+    assert.match(error.message, /content\.article\.related_posts 已移除/);
+    assert.match(error.message, /content\.article\.related_posts_limit 的值不在 number >= 0/);
     return true;
   });
 });

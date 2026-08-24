@@ -60,6 +60,24 @@ test("doctor text/json 输出稳定表达同一结果", () => {
   assert.deepEqual(JSON.parse(formatDoctorJson(result)), result);
 });
 
+test("doctor 为 Content、Collection 与 Front Matter 旧路径给出最终迁移目标", () => {
+  const baseDir = initializedSite("classic-blog");
+  fs.mkdirSync(path.join(baseDir, "source/_data/topic"), { recursive: true });
+  fs.mkdirSync(path.join(baseDir, "source/_posts"), { recursive: true });
+  fs.writeFileSync(path.join(baseDir, "_config.stellar.yml"), "content:\n  article:\n    type: story\n    indent: true\n    related_posts:\n      enabled: true\n");
+  fs.writeFileSync(path.join(baseDir, "source/_data/topic/legacy.yml"), "name: Legacy\nlisting:\n  order_by: -date\n");
+  fs.writeFileSync(path.join(baseDir, "source/_posts/legacy.md"), "---\ntitle: Legacy\narticle:\n  type: story\n  indent: true\n---\n");
+
+  const result = runDoctor({ baseDir, nodeVersion: "22.0.0", hexoVersion: "8.1.0" });
+  assert.equal(result.ok, false);
+  assert.equal(result.issues.some(item => item.path === "content.article.type" && item.expected === "content.article.style"), true);
+  assert.equal(result.issues.some(item => item.path === "content.article.indent" && item.expected === "content.article.paragraph_indent"), true);
+  assert.equal(result.issues.some(item => item.path === "content.article.related_posts" && item.expected === "content.article.related_posts_limit"), true);
+  assert.equal(result.issues.some(item => item.path === "listing.order_by" && item.expected === "listing.sort"), true);
+  assert.equal(result.issues.some(item => item.path === "article.type" && item.expected === "article.style"), true);
+  assert.equal(result.issues.some(item => item.path === "article.indent" && item.expected === "article.paragraph_indent"), true);
+});
+
 test("doctor 接受 BOM 与 CRLF Front Matter", () => {
   const baseDir = initializedSite("classic-blog");
   const page = path.join(baseDir, "source/_posts/crlf.md");

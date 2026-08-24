@@ -47,7 +47,7 @@ hexo.extend.generator.register("notebooks", function (locals) {
   const collections = notebookIndex.items
     .filter(item => item.listed !== false)
     .slice()
-    .sort((left, right) => left.sort - right.sort);
+    .sort((left, right) => left.order - right.order);
 
   // The index page of all notebooks.
   routes.push({

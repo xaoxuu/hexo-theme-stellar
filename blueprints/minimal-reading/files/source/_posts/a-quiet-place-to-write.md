@@ -3,8 +3,8 @@ title: A Quiet Place to Write
 date: {{generated_date}}
 description: Your first long-form note in a Stellar v2 site.
 article:
-  type: story
-  indent: true
+  style: story
+  paragraph_indent: always
 ---
 
 This site was created from the **Minimal Reading** Blueprint.

@@ -60,13 +60,14 @@ layout:
 
 content:
   article:
-    type: tech
+    style: tech
     listing:
       pinned_layout: carousel
       card_layout: hero
       show_tags: true
     show_reading_time: true
-    show_tags: true
+    footer:
+      show_tags: true
 
 extensions:
   search:

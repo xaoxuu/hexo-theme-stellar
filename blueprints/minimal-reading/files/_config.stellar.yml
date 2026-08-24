@@ -54,14 +54,15 @@ layout:
 
 content:
   article:
-    type: story
-    indent: true
+    style: story
+    paragraph_indent: always
     listing:
       pinned_layout: flat
       card_layout: classic
       show_tags: false
     show_reading_time: true
-    show_tags: false
+    footer:
+      show_tags: false
 
 extensions:
   search:

@@ -44,8 +44,8 @@ const LEGACY_COLLECTION_ROOTS = Object.freeze({
   wiki_home: "sidebar.left.wiki_home",
   search: "sidebar.left.search",
   menu: "navigation.menu",
-  type: "article.type",
-  indent: "article.indent",
+  type: "article.style",
+  indent: "article.paragraph_indent",
   author: "article.author",
   ai_label: "article.ai_label",
   references: "footer.references",
@@ -80,8 +80,8 @@ const LEGACY_FRONT_MATTER_ROOTS = Object.freeze({
   search: "sidebar.left.search",
   menu: "navigation.menu",
   logo: "sidebar.left.brand",
-  type: "article.type",
-  indent: "article.indent",
+  type: "article.style",
+  indent: "article.paragraph_indent",
   author: "article.author",
   ai_label: "article.ai_label",
   references: "footer.references",
@@ -136,6 +136,7 @@ function exampleFor(target) {
 
 function normalizerFor(target) {
   if (target.path === "route.path") return "collection_path";
+  if (target.path === "footer.share") return "share_override";
   if (target.boundary === "parameter_bag" || target.boundary === "record") return "parameter_bag";
   if (target.type.includes("object")) return "object";
   if (target.type.includes("array")) return "array";
@@ -200,6 +201,7 @@ function itemNode(scope, path, item) {
     example: types.includes("object") ? {} : "",
     migration: `content-schema/${scope.replace("_", "-")}`,
     runtimeKey: path,
+    ...(item?.values ? { values: clone(item.values) } : {}),
     ...(types.includes("object") && !parameterBag ? { sealed: true, properties: {} } : {})
   };
 }
@@ -282,7 +284,13 @@ function decorateCommon(schema) {
     COMMENT_PROVIDER_FIELDS.map(field => [field, field === "service" ? "provider" : "options"])
   );
   schema.properties.comments.properties.provider.validator = "nullable_non_empty_string";
-  schema.properties.article.properties.type.values = ["tech", "story"];
+  schema.properties.article.removedProperties = { type: "style", indent: "paragraph_indent" };
+  schema.properties.article.properties.style.values = ["tech", "story"];
+  schema.properties.article.properties.paragraph_indent.values = ["auto", "always", "never"];
+  schema.properties.article.properties.ai_label.values = ["manual", "reviewed", "polished", "generated", null];
+  schema.properties.footer.properties.license.validator = "license_override";
+  schema.properties.footer.properties.share.validator = "share_override";
+  schema.properties.listing.properties.priority.validator = "non_negative_integer";
 }
 
 const COLLECTION_CONFIG_SCHEMA = schemaForScope("collection");
@@ -291,6 +299,10 @@ COLLECTION_CONFIG_SCHEMA.removedProperties = clone(LEGACY_COLLECTION_ROOTS);
 COLLECTION_CONFIG_SCHEMA.properties.name.validator = "non_empty_string";
 COLLECTION_CONFIG_SCHEMA.properties.route.removedProperties = { base_dir: "path" };
 COLLECTION_CONFIG_SCHEMA.properties.route.properties.start.validator = "topic_route_start";
+COLLECTION_CONFIG_SCHEMA.properties.listing.properties.order.validator = "nullable_non_negative_integer";
+COLLECTION_CONFIG_SCHEMA.properties.listing.properties.excerpt_length.validator = "nullable_non_negative_integer";
+COLLECTION_CONFIG_SCHEMA.properties.listing.properties.per_page.validator = "nullable_non_negative_integer";
+COLLECTION_CONFIG_SCHEMA.properties.listing.removedProperties = { order_by: "sort" };
 decorateSharedSchemas(COLLECTION_CONFIG_SCHEMA);
 decorateCommon(COLLECTION_CONFIG_SCHEMA);
 

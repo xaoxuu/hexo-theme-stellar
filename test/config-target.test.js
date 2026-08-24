@@ -172,13 +172,13 @@ test("Collection 与 Front Matter 的完整目标节点保持严格作用域", (
   const hasField = (scope, pathValue) => CONFIG_TARGET_FIELDS.some(field => field.path === pathValue && field.scopes.includes(scope));
   for (const pathValue of [
     "name", "identity.icon", "card.cover", "hero.background.effect", "sidebar.left.widgets",
-    "navigation.menu", "article.type", "footer.license", "comments.options", "source.repository",
-    "route.path", "listing.order_by", "note_defaults.sidebar", "navigation.tree"
+    "navigation.menu", "article.style", "footer.license", "comments.options", "source.repository",
+    "route.path", "listing.order", "listing.sort.field", "note_defaults.sidebar", "navigation.tree"
   ]) assert.equal(hasField("collection", pathValue), true, `Collection 缺少 ${pathValue}`);
 
   for (const pathValue of [
     "collection.profile", "collection.id", "card.cover", "banner.image", "sidebar.left.widgets",
-    "navigation.menu", "article.type", "footer.license", "comments.options", "visibility.listed",
+    "navigation.menu", "article.style", "footer.license", "comments.options", "visibility.listed",
     "listing.priority", "source.repository", "render.math", "render.diagrams", "seo.open_graph", "inject.head"
   ]) assert.equal(hasField("front_matter", pathValue), true, `Front Matter 缺少 ${pathValue}`);
 
@@ -310,12 +310,14 @@ test("运行时只投影已交付配置节点且根配置已经封闭", () => {
   assert.ok(deliveredExtensionPaths.includes("extensions.services.github.raw_url"));
   assert.equal(deliveredExtensionPaths.some(pathValue => pathValue.startsWith("extensions.cache")), false);
   const deliveredContentPaths = deliveredPaths.filter(pathValue => pathValue.startsWith("content."));
-  assert.equal(deliveredContentPaths.length, 26);
+  assert.equal(deliveredContentPaths.length, 23);
   for (const pathValue of [
     "content.article.listing.card_layout",
     "content.article.category_colors.<category>",
-    "content.article.related_posts.enabled",
-    "content.notebook.listing.order_by",
+    "content.article.related_posts_limit",
+    "content.article.footer.show_tags",
+    "content.notebook.listing.sort.field",
+    "content.notebook.listing.sort.direction",
     "content.notebook.tag_icons.<tag>"
   ]) assert.ok(deliveredContentPaths.includes(pathValue));
   const deliveredLayoutPaths = deliveredPaths.filter(pathValue => pathValue.startsWith("layout."));

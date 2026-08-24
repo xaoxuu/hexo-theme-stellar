@@ -97,29 +97,23 @@ if (['post', 'page', 'wiki', null].includes(page.layout)) {
 }
 // 文章类型：技术类文章/文学类文章
 var articleDefaults = stellar_config('content.article')
-var article_type = articleDefaults.type
+var article_type = articleDefaults.style
 if (page_type == 'index') {
   article_type = undefined
-} else if (pageConfig.article?.type?.length > 0) {
-  article_type = pageConfig.article.type
-} else if (stellar_data('topic').tree[collection_id(page, "topic")]?.article?.type != null) {
-  article_type = stellar_data('topic').tree[collection_id(page, "topic")].article.type
-} else if (stellar_data('wiki').tree[collection_id(page, "wiki")]?.article?.type != null) {
-  article_type = stellar_data('wiki').tree[collection_id(page, "wiki")].article.type
+} else if (pageConfig.article?.style?.length > 0) {
+  article_type = pageConfig.article.style
+} else if (stellar_data('topic').tree[collection_id(page, "topic")]?.article?.style != null) {
+  article_type = stellar_data('topic').tree[collection_id(page, "topic")].article.style
+} else if (stellar_data('wiki').tree[collection_id(page, "wiki")]?.article?.style != null) {
+  article_type = stellar_data('wiki').tree[collection_id(page, "wiki")].article.style
 }
 // 是否缩进
-var indent = false
-if (pageConfig.article?.indent != null) {
-  indent = pageConfig.article.indent
-} else if (stellar_data('topic').tree[collection_id(page, "topic")]?.article?.indent != null) {
-  indent = stellar_data('topic').tree[collection_id(page, "topic")].article.indent
-} else if (stellar_data('wiki').tree[collection_id(page, "wiki")]?.article?.indent != null) {
-  indent = stellar_data('wiki').tree[collection_id(page, "wiki")].article.indent
-} else if (articleDefaults.indent != null) {
-  indent = articleDefaults.indent
-} else {
-  indent = article_type === 'story'
-}
+var paragraph_indent = pageConfig.article?.paragraphIndent
+  || stellar_data('topic').tree[collection_id(page, "topic")]?.article?.paragraphIndent
+  || stellar_data('wiki').tree[collection_id(page, "wiki")]?.article?.paragraphIndent
+  || articleDefaults.paragraphIndent
+  || 'auto'
+var indent = paragraph_indent === 'always' || (paragraph_indent === 'auto' && article_type === 'story')
 
 var site_background = ''
 if (appearance.backgrounds.page.image) {

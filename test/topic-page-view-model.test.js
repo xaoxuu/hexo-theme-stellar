@@ -93,11 +93,11 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
     source: { repository: "xaoxuu/hexo-theme-stellar", branch: "v2" },
     route: { path: "/columns/stellar-v2/index.html" },
     navigation: { breadcrumb: false },
-    listing: { priority: 3, excerpt_length: 96, per_page: 10, order_by: "-date" },
+    listing: { priority: 3, excerpt_length: 96, per_page: 10, sort: { field: "date", direction: "desc" } },
     card: { cover: "/cover.webp", tagline: "Collection card" },
     hero: { enabled: true, background: { image: "/hero.webp" } },
     sidebar: { left: { widgets: ["recent"] } },
-    article: { type: "story", indent: true },
+    article: { style: "story", paragraph_indent: "always" },
     footer: { license: "Topic license", share: false },
     comments: { enabled: true, title: "Topic comments", provider: "giscus", options: {} }
   };
@@ -127,10 +127,10 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
         topic: { navigation: { active_menu: "post" } }
       } },
       content: { article: {
-        type: "tech",
-        indent: false,
-        footer: { license: "Global", share: true },
-        related_posts: { enabled: true, limit: 2 }
+        style: "tech",
+        paragraph_indent: "never",
+        footer: { license: "Global", share: ["link"] },
+        related_posts_limit: 2
       } },
       extensions: { comments: { title: "Global", provider: "artalk" } }
     },
@@ -140,8 +140,8 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
       ...current.frontMatter,
       navigation: { menu: "", breadcrumb: false },
       sidebar: { left: { widgets: [] } },
-      article: { indent: false },
-      footer: { license: "", share: false },
+      article: { paragraph_indent: "never" },
+      footer: { license: false, share: false },
       comments: { enabled: false, title: "" },
       listing: { priority: 0 },
       visibility: { listed: true, searchable: false },
@@ -211,10 +211,10 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
   ]);
   assert.deepEqual(viewModel.collection.listing, {
     priority: 3,
-    sort: null,
+    order: null,
     excerptLength: 96,
     perPage: 10,
-    orderBy: "-date"
+    sort: { field: "date", direction: "desc" }
   });
   assert.deepEqual(viewModel.collection.visibility, { listed: false, searchable: true });
   assert.deepEqual(viewModel.item.source, {
@@ -224,9 +224,9 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
   });
   assert.deepEqual(viewModel.item.presentation.sidebar.left.widgets, []);
   assert.equal(viewModel.item.presentation.sidebar.left.brand.name, "Site Brand");
-  assert.equal(viewModel.item.presentation.article.type, "story");
-  assert.equal(viewModel.item.presentation.article.indent, false);
-  assert.equal(viewModel.item.presentation.footer.license, "");
+  assert.equal(viewModel.item.presentation.article.style, "story");
+  assert.equal(viewModel.item.presentation.article.paragraphIndent, "never");
+  assert.equal(viewModel.item.presentation.footer.license, false);
   assert.equal(viewModel.item.presentation.comments.enabled, false);
   assert.equal(viewModel.item.presentation.banner.image, "/hero.webp");
   assert.equal(viewModel.item.listing.priority, 0);
@@ -363,7 +363,7 @@ test("生成前事件为严格 Topic 成员挂载模型并拒绝缺失集合", t
     "topic/v2": {
       name: "V2",
       route: { path: "/topic/v2/" },
-      listing: { order_by: "-date" }
+      listing: { sort: { field: "date", direction: "desc" } }
     }
   };
   const themeConfig = {

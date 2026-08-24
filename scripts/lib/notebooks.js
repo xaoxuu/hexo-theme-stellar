@@ -84,12 +84,12 @@ function prepareNotebook(id, info, ctx, pages) {
     notebook.route.path = notebooksBaseDir ? `${notebooksBaseDir}/${id}` : id;
   }
 
-  notebook.listing.sort ||= 0;
-  notebook.listing.excerpt_length ||= notebookDefaults.listing.excerptLength;
+  notebook.listing.order ??= 0;
+  notebook.listing.excerpt_length ??= notebookDefaults.listing.excerptLength;
   notebook.listing.per_page ??= notebookDefaults.listing.perPage ?? ctx.config.per_page ?? 10;
-  notebook.listing.order_by ||= notebookDefaults.listing.orderBy;
-  notebook.footer.license ??= notebookDefaults.footer.license;
-  notebook.footer.share ??= notebookDefaults.footer.share;
+  notebook.listing.sort ??= structuredClone(notebookDefaults.listing.sort);
+  notebook.footer.license ??= notebookDefaults.footer.license ?? ctx.stellar.config.content.article.footer.license;
+  notebook.footer.share ??= notebookDefaults.footer.share ?? ctx.stellar.config.content.article.footer.share;
 
   notebook.sidebar.left ??= { widgets: profiles.noteIndex.sidebar.left.slice() };
   notebook.sidebar.right ??= { widgets: profiles.noteIndex.sidebar.right.slice() };
@@ -176,7 +176,7 @@ function getNotebooksObject(ctx) {
     const info = structuredClone(value);
     list.push(prepareNotebook(id, info, ctx, pagesByNotebook.get(id) || []));
   }
-  list.sort((a, b) => a.listing.sort - b.listing.sort);
+  list.sort((a, b) => a.listing.order - b.listing.order);
   for (const info of list) {
     notebooks.tree[info.id] = info;
   }

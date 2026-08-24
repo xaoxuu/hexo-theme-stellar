@@ -120,7 +120,7 @@ page_type = 'index'
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
 
-### `article_type`
+### `article_style`
 
 控制正文排版，驱动 `l_body` 的 `type` HTML 属性。
 
@@ -128,29 +128,27 @@ page_type = 'index'
 
 | 优先级 | 来源 |
 |--------|------|
-| 1 | Front Matter `article.type` → `pageConfig.article.type` |
-| 2 | `stellar_data('topic').tree[collection_id(page, 'topic')].article.type` |
-| 3 | `stellar_data('wiki').tree[collection_id(page, 'wiki')].article.type` |
-| 4 | `hexo.stellar.config.content.article.type`（全局默认） |
+| 1 | Front Matter `article.style` |
+| 2 | Topic / Wiki / Notebook Collection 的 `article.style` |
+| 3 | `hexo.stellar.config.content.article.style`（全局默认） |
 | — | 列表页为 `undefined` |
 
-最终值写为 `.l_body` 上的 `type="{article_type}"`。最值得关注的值是 `"story"`，启用文学/缩进风格排版。
+最终值写为 `.l_body` 上的 `type="{article_style}"`。`tech` 与 `story` 是仅有的公开取值；HTML 属性名保留为内部 DOM 契约。
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
 
 ### `indent`
 
-布尔值，为 `.l_body` 添加 `text-indent` 属性，启用故事类文章的 CSS 首行缩进。
+最终布尔投影，为 `.l_body` 添加 `text-indent` 属性。公开配置使用 `article.paragraph_indent: auto|always|never`。
 
 解析顺序（先命中者优先）：
 
 | 优先级 | 来源 |
 |--------|------|
-| 1 | Front Matter `article.indent` → `pageConfig.article.indent` |
-| 2 | `stellar_data('topic').tree[collection_id(page, 'topic')].article.indent` |
-| 3 | `stellar_data('wiki').tree[collection_id(page, 'wiki')].article.indent` |
-| 4 | `hexo.stellar.config.content.article.indent` |
-| 5 | `article_type === 'story'`（自动推导） |
+| 1 | Front Matter `article.paragraph_indent` |
+| 2 | Topic / Wiki / Notebook Collection 的 `article.paragraph_indent` |
+| 3 | `content.article.paragraph_indent` |
+| 4 | `auto` 时由 `article.style === 'story'` 推导 |
 
 **变量解析总结：**
 
@@ -162,22 +160,15 @@ AND no page.nav_tabs?"]
     A -->|"no"| C["page_type = 'index'"]
 
     D["page_type == 'index'?"]
-    D -->|"yes"| E["article_type = undefined"]
-    D -->|"no"| F["pageConfig.article.type set?"]
-    F -->|"yes"| G["article_type = pageConfig.article.type"]
-    F -->|"no"| H["topic.article.type set?"]
-    H -->|"yes"| I["article_type = topic.article.type"]
-    H -->|"no"| J["wiki.article.type set?"]
-    J -->|"yes"| K["article_type = wiki.article.type"]
-    J -->|"no"| L["article_type = content.article.type"]
+    D -->|"yes"| E["article_style = undefined"]
+    D -->|"no"| F["resolve article.style cascade"]
+    F --> G["article_style = tech | story"]
 
-    M["pageConfig.article.indent set?"]
-    M -->|"yes"| N["indent = pageConfig.article.indent"]
-    M -->|"no"| O["topic/wiki article.indent set?"]
-    O -->|"yes"| P["indent = that value"]
-    O -->|"no"| Q["content.article.indent set?"]
-    Q -->|"yes"| R["indent = content.article.indent"]
-    Q -->|"no"| S["indent = (article_type === 'story')"]
+    M["resolve article.paragraph_indent cascade"]
+    M --> N{"mode"}
+    N -->|"always"| O["indent = true"]
+    N -->|"never"| P["indent = false"]
+    N -->|"auto"| Q["indent = (article_style === 'story')"]
 ```
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)

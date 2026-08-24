@@ -24,8 +24,8 @@ function getTopicTree(ctx) {
       let obj = structuredClone(ctx.stellar?.contentConfig?.collectionConfigs?.get(key) || data[key]);
       obj.id = newKey
       obj.listing ||= {}
-      if (obj.listing.order_by == null) {
-        obj.listing.order_by = '-date'
+      if (obj.listing.sort == null) {
+        obj.listing.sort = { field: 'date', direction: 'desc' }
       }
       obj.route ||= {};
       if (obj.route.path == null) {

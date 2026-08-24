@@ -21,16 +21,18 @@ function requireContentConfig(stellarConfig, source = "_config.stellar.yml") {
 }
 
 function articlePresentationDefaults(content) {
-  const result = { type: content.article.type };
-  if (typeof content.article.indent === "boolean") result.indent = content.article.indent;
-  return result;
+  return {
+    style: content.article.style,
+    paragraphIndent: content.article.paragraphIndent
+  };
 }
 
 function articleFooterDefaults(content) {
   return {
     references: [],
     license: content.article.footer.license,
-    share: content.article.footer.share
+    share: content.article.footer.share,
+    showTags: content.article.footer.showTags
   };
 }
 

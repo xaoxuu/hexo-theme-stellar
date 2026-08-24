@@ -13,7 +13,7 @@
     "remove"
   ],
   "counts": {
-    "public": 520,
+    "public": 519,
     "localize": 9,
     "derive": 0,
     "internalize": 12,
@@ -64,7 +64,7 @@
     },
     {
       "scope": "collection",
-      "path": "article.indent",
+      "path": "article.paragraph_indent",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -78,7 +78,7 @@
     },
     {
       "scope": "collection",
-      "path": "article.type",
+      "path": "article.style",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -289,6 +289,20 @@
     {
       "scope": "collection",
       "path": "footer.share",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "footer.show_tags",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -596,7 +610,7 @@
     },
     {
       "scope": "collection",
-      "path": "listing.order_by",
+      "path": "listing.order",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -639,6 +653,34 @@
     {
       "scope": "collection",
       "path": "listing.sort",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "listing.sort.direction",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "listing.sort.field",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -1190,7 +1232,7 @@
     },
     {
       "scope": "front_matter",
-      "path": "article.indent",
+      "path": "article.paragraph_indent",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -1204,7 +1246,7 @@
     },
     {
       "scope": "front_matter",
-      "path": "article.type",
+      "path": "article.style",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -1513,6 +1555,20 @@
     {
       "scope": "front_matter",
       "path": "footer.share",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "front_matter",
+      "path": "footer.show_tags",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -2814,78 +2870,6 @@
     },
     {
       "scope": "theme",
-      "path": "content.article.ai_label",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "content.article.ai_label.<level>",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "content.article.ai_label.<level>.color",
-      "disposition": "public",
-      "defaultSource": "derived:current AI label palette",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "content.article.ai_label.<level>.icon",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "content.article.ai_label.default",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "theme",
       "path": "content.article.banner",
       "disposition": "public",
       "defaultSource": "declarative schema",
@@ -2986,7 +2970,7 @@
     },
     {
       "scope": "theme",
-      "path": "content.article.indent",
+      "path": "content.article.footer.show_tags",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -3085,22 +3069,7 @@
     },
     {
       "scope": "theme",
-      "path": "content.article.related_posts",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "content.article.related_posts.enabled",
+      "path": "content.article.paragraph_indent",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -3114,7 +3083,7 @@
     },
     {
       "scope": "theme",
-      "path": "content.article.related_posts.limit",
+      "path": "content.article.related_posts_limit",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -3142,21 +3111,7 @@
     },
     {
       "scope": "theme",
-      "path": "content.article.show_tags",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "content.article.type",
+      "path": "content.article.style",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -3257,7 +3212,7 @@
     },
     {
       "scope": "theme",
-      "path": "content.notebook.listing.order_by",
+      "path": "content.notebook.listing.per_page",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -3271,7 +3226,36 @@
     },
     {
       "scope": "theme",
-      "path": "content.notebook.listing.per_page",
+      "path": "content.notebook.listing.sort",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "content.notebook.listing.sort.direction",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "content.notebook.listing.sort.field",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",

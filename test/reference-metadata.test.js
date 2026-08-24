@@ -127,7 +127,7 @@ test("Reference 只来自模型 Schema 且不提前公开后续契约", () => {
   assert.ok(contentItem.fields.some(field => field.path === "layout"));
   assert.deepEqual(
     contentItem.fields.find(field => field.path === "presentation.article.aiLabel").type,
-    ["string", "object"]
+    ["string", "null"]
   );
 
   const wikiCollection = metadata.models.find(model => (

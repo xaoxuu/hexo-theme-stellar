@@ -86,9 +86,9 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
         }
       } },
       content: { article: {
-        type: "tech",
-        indent: false,
-        footer: { license: "Global license", share: true }
+        style: "tech",
+        paragraph_indent: "never",
+        footer: { license: "Global license", share: ["link"] }
       } },
       extensions: { comments: { provider: "giscus" } }
     },
@@ -102,12 +102,12 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
       identity: { icon: "/stellar.svg" },
       source: { repository: "xaoxuu/hexo-theme-stellar", branch: "v2" },
       route: { path: "/wiki/stellar/" },
-      listing: { priority: 2, sort: 10, excerpt_length: 128, per_page: 20, order_by: "updated" },
+      listing: { priority: 2, order: 10, excerpt_length: 128, per_page: 20, sort: { field: "updated", direction: "asc" } },
       navigation: { breadcrumb: true, tree: { "快速开始": ["index", "install"] } },
       card: { cover: "/cover.webp" },
       hero: { enabled: true, background: { image: "/hero.webp" } },
       sidebar: { left: { search: true } },
-      article: { indent: true },
+      article: { paragraph_indent: "always" },
       footer: { share: false },
       comments: { enabled: true, title: "Wiki comments" }
     },
@@ -194,16 +194,15 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
   }]);
   assert.deepEqual(viewModel.collection.listing, {
     priority: 2,
-    sort: 10,
+    order: 10,
     excerptLength: 128,
     perPage: 20,
-    orderBy: "updated"
   });
   assert.deepEqual(viewModel.collection.visibility, { listed: true, searchable: true });
   assert.equal(viewModel.item.source.repository, "xaoxuu/hexo-theme-stellar");
   assert.equal(viewModel.item.navigation.menu, "wiki");
   assert.equal(viewModel.item.navigation.breadcrumb, true);
-  assert.equal(viewModel.item.presentation.article.indent, true);
+  assert.equal(viewModel.item.presentation.article.paragraphIndent, "always");
   assert.equal(viewModel.item.presentation.banner.image, "/hero.webp");
   assert.equal(viewModel.item.presentation.footer.share, false);
   assert.equal(viewModel.item.presentation.comments.title, "Wiki comments");
@@ -291,7 +290,7 @@ test("Wiki 树构建事件只为严格 v2 Wiki 页面挂载 PageViewModel", t =>
       wiki_index: { path: "/wiki/" },
       wiki: { navigation: { active_menu: "wiki" } }
     } },
-    content: { article: { indent: true } },
+    content: { article: { paragraph_indent: "always" } },
     extensions: { comments: { provider: "giscus" } }
   };
   const pages = [wikiPage, ordinaryPage];
@@ -313,7 +312,7 @@ test("Wiki 树构建事件只为严格 v2 Wiki 页面挂载 PageViewModel", t =>
   assert.equal(getPageViewModel({ ...wikiPage }), wikiPage.viewModel);
   assert.equal(attachPageViewModel({ ...wikiPage }).viewModel, wikiPage.viewModel);
   assert.equal(wikiPage.viewModel.collection.navigation.tree[0].items[0].title, "Start");
-  assert.equal(wikiPage.viewModel.item.presentation.article.indent, true);
+  assert.equal(wikiPage.viewModel.item.presentation.article.paragraphIndent, "always");
   assert.equal(wikiPage.viewModel.item.presentation.comments.provider, "giscus");
   assert.equal(wikiPage.viewModel.render.layout.wikiIndexPath, "wiki");
   assert.deepEqual(ctx.stellar.data.wiki.index.items.map(item => item.id), ["stellar"]);
@@ -448,9 +447,9 @@ test("合法 Post profile 生成固定结构的冻结 PageViewModel", () => {
           card_layout: "hero",
           excerpt_length: 128
         },
-        type: "tech",
-        indent: false,
-        footer: { license: "CC BY-NC-SA 4.0", share: false }
+        style: "tech",
+        paragraph_indent: "never",
+        footer: { license: "CC BY-NC-SA 4.0", share: [] }
       } },
       extensions: { comments: { provider: "giscus" } }
     },
@@ -494,7 +493,7 @@ test("合法 Post profile 生成固定结构的冻结 PageViewModel", () => {
   assert.deepEqual(viewModel.item.categories, ["开发"]);
   assert.equal(viewModel.render.document.language, "");
   assert.equal(viewModel.render.layout.pageType, "content");
-  assert.equal(viewModel.render.layout.articleType, "tech");
+  assert.equal(viewModel.render.layout.articleStyle, "tech");
   assert.equal(viewModel.render.seo.title, "Hello - Stellar");
   assertDeepFrozen(viewModel);
 });
@@ -582,7 +581,7 @@ test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD �
       robots: "",
       inject: { head: "<meta name=\"page\" content=\"render\">" },
       seo: { open_graph: { image: null } },
-      article: { type: "story" }
+      article: { style: "story" }
     },
     page: {
       _id: "render",
@@ -630,11 +629,10 @@ test("Post render 投影详情关系、Footer、评论和列表条目", () => {
     siteConfig: { title: "Stellar" },
     themeConfig: {
       content: { article: {
-        show_tags: true,
+        footer: { license: "By {author.name} ({author.url})", share: ["wechat", "link"], show_tags: true },
         listing: { show_tags: true, card_layout: "hero", excerpt_length: 80 },
-        category_colors: { "开发": "f44336" },
-        footer: { license: "By {author.name} ({author.url})", share: ["wechat", "link"] },
-        related_posts: { enabled: true, limit: 2 }
+        category_colors: { "开发": "#f44336" },
+        related_posts_limit: 2
       } },
       extensions: {
         comments: {
@@ -779,9 +777,9 @@ test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆�
         }
       } },
       content: { article: {
-        type: "tech",
-        indent: true,
-        footer: { license: "Global license", share: true }
+        style: "tech",
+        paragraph_indent: "always",
+        footer: { license: "Global license", share: ["link"] }
       } },
       extensions: { comments: { title: "Global title", provider: "giscus" } }
     },
@@ -794,8 +792,8 @@ test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆�
           brand: { image: { src: "/page.svg", variant: "plain" } }
         }
       },
-      article: { indent: false },
-      footer: { license: "", share: false },
+      article: { paragraph_indent: "never" },
+      footer: { license: false, share: false },
       comments: { enabled: false, title: "" },
       listing: { priority: 0 },
       visibility: { listed: false, searchable: true }
@@ -811,8 +809,8 @@ test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆�
   });
   assert.equal(viewModel.item.presentation.sidebar.left.brand.name, undefined);
   assert.equal(viewModel.render.layout.brand.name, "Global");
-  assert.equal(viewModel.item.presentation.article.indent, false);
-  assert.equal(viewModel.item.presentation.footer.license, "");
+  assert.equal(viewModel.item.presentation.article.paragraphIndent, "never");
+  assert.equal(viewModel.item.presentation.footer.license, false);
   assert.equal(viewModel.item.presentation.footer.share, false);
   assert.equal(viewModel.render.article.footer.share, null);
   assert.equal(viewModel.item.presentation.comments.enabled, false);
@@ -910,9 +908,9 @@ test("相关文章构建边界复用插件结果，并在插件缺失时报告�
   const input = {
     source: "source/_posts/related.md",
     siteConfig: { title: "Stellar" },
-    themeConfig: { content: { article: { related_posts: { enabled: true, limit: 2 } } } },
+    themeConfig: { content: { article: { related_posts_limit: 2 } } },
     stellarConfig: parseStellarConfig({
-      themeConfig: { content: { article: { related_posts: { enabled: true, limit: 2 } } } }
+      themeConfig: { content: { article: { related_posts_limit: 2 } } }
     }),
     frontMatter: { title: "Related", layout: "post" },
     page
@@ -922,7 +920,7 @@ test("相关文章构建边界复用插件结果，并在插件缺失时报告�
 
   assert.throws(
     () => attachPageViewModel.call({ extend: { helper: { get: () => null } } }, { ...page }),
-    /source\/_posts\/related\.md 已启用 content\.article\.related_posts.*hexo-related-popular-posts/
+    /source\/_posts\/related\.md 已启用 content\.article\.related_posts_limit.*hexo-related-popular-posts/
   );
 
   const rendered = attachPageViewModel.call({
@@ -1017,7 +1015,7 @@ test("Post profile 严格拒绝已迁移内容默认值的未知键与错误类�
     page: { title: "Strict", layout: "post" }
   }), error => {
     assert.match(error.message, /未知字段 content\.article\.author/);
-    assert.match(error.message, /content\.article\.footer\.share 应为 boolean \| array/);
+    assert.match(error.message, /content\.article\.footer\.share 应为 array/);
     return true;
   });
 });
@@ -1028,9 +1026,9 @@ test("Post profile 严格校验全部已迁移内容配置袋", () => {
     themeConfig: {
       content: { article: {
         listing: { cover_ratio: "wide" },
-        ai_label: 42,
+        style: "essay",
         category_colors: [],
-        related_posts: false,
+        related_posts_limit: false,
         show_reading_time: "yes"
       } }
     },
@@ -1038,9 +1036,9 @@ test("Post profile 严格校验全部已迁移内容配置袋", () => {
     page: { title: "Strict bags", layout: "post" }
   }), error => {
     assert.match(error.message, /content\.article\.listing\.cover_ratio 应为 number，实际为 string/);
-    assert.match(error.message, /content\.article\.ai_label 应为 object，实际为 number/);
+    assert.match(error.message, /content\.article\.style 的值不在 tech \| story/);
     assert.match(error.message, /content\.article\.category_colors 应为 object，实际为 array/);
-    assert.match(error.message, /content\.article\.related_posts 应为 object，实际为 boolean/);
+    assert.match(error.message, /content\.article\.related_posts_limit 应为 number，实际为 boolean/);
     assert.match(error.message, /content\.article\.show_reading_time 应为 boolean，实际为 string/);
     return true;
   });

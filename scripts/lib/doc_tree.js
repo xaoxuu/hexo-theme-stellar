@@ -43,7 +43,7 @@ function getWikiObject(data) {
       }
       obj.id = newKey;
       obj.listing ||= {};
-      obj.listing.sort ??= 0;
+      obj.listing.order ??= 0;
       const baseDir = obj.route?.path || "";
       if (baseDir) {
         if (baseDir.startsWith('/')) {
@@ -56,7 +56,7 @@ function getWikiObject(data) {
       list.push(obj);
     }
   }
-  list = list.sort((p1, p2) => p2.listing.sort - p1.listing.sort);
+  list = list.sort((p1, p2) => p2.listing.order - p1.listing.order);
   for (let item of list) {
     wiki.tree[item.id] = item;
   }

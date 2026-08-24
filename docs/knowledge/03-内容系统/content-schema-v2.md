@@ -98,7 +98,7 @@ Galaxy 的路径为 `hero.background.effect.options`，其 React Bits props 保�
 
 - `collection` 是 Post profile 的 `CollectionModel`，顶层固定为 `id`、`profile`、`identity`、`source`、`route`、`navigation`、`listing`、`presentation`、`visibility`。
 - `item` 是 `ContentItemModel`，日期转为 ISO 字符串，标签与分类转为字符串数组，路径完成规范化；导航、列表、展示和可见性已经完成级联。
-- `render.document` 固化最终语言、页面级 head 注入与根文档主题状态；`render.layout` 固化 `pageType`、`articleType`、缩进、侧栏表面、Brand、博客路径与面包屑；`render.seo` 固化 title、description、keywords、robots、canonical、Open Graph 与 JSON-LD。
+- `render.document` 固化最终语言、页面级 head 注入与根文档主题状态；`render.layout` 固化 `pageType`、`articleStyle`、由 `paragraphIndent` 解析出的缩进、侧栏表面、Brand、博客路径与面包屑；`render.seo` 固化 title、description、keywords、robots、canonical、Open Graph 与 JSON-LD。
 - `render.article` 固化正文排版开关、带路径的标签、已解析 Footer、上下篇、相关文章结果，以及评论服务、线程 id 与服务参数袋。
 - `render.listing` 固化博客卡片、置顶轮播、平铺列表与归档需要的路由、封面、摘要、日期、分类、最多五个标签、作者、优先级和可见性。
 - Post 的 Schema 校验、模型构建、Reference 与 EJS 消费同一 `render` 事实来源；缺少或非法 `render` 时按源文件构建失败，不回退到 `page` 或主题字段。

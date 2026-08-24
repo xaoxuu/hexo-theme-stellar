@@ -17,8 +17,8 @@ hexo.extend.helper.register('popular_posts_wrapper', function(args){
   if (json == undefined || json.length == 0) {
     return '';
   }
-  const cfg = hexo.stellar.config.content.article.relatedPosts;
-  if (cfg.enabled != true) return;
+  const limit = hexo.stellar.config.content.article.relatedPostsLimit;
+  if (limit <= 0) return;
   var returnHTML = "";
   var div = `
     <section class='header'>

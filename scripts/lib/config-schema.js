@@ -96,6 +96,12 @@ function normalizeValue(node, value) {
   if (node.normalizer === "trimmed_string_list") {
     return normalizeStringList(value, item => item.trim());
   }
+  if (node.normalizer === "nullable_trimmed_string_list") {
+    return value == null ? null : normalizeStringList(value, item => item.trim());
+  }
+  if (node.normalizer === "share_override") {
+    return Array.isArray(value) ? normalizeStringList(value, item => item.trim()) : value;
+  }
   if (node.normalizer === "root_relative_path") {
     return normalizeRootRelativePath(value);
   }
@@ -343,6 +349,30 @@ function validateCssColor(node, input, source, path, issues, nullable) {
   issues.push(issue("invalid_value", source, path, valueType(input), "valid CSS color", node.migration));
 }
 
+function validateNonNegativeInteger(node, input, source, path, issues, nullable) {
+  if (nullable && input == null) return;
+  if (Number.isInteger(input) && input >= 0) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), nullable ? "null or non-negative integer" : "non-negative integer", node.migration));
+}
+
+function validateNonEmptyRecordKeys(node, input, source, path, issues) {
+  for (const key of Object.keys(input)) {
+    if (key.trim().length > 0) continue;
+    issues.push(issue("invalid_value", source, path, "object", "record with non-empty keys", node.migration));
+  }
+}
+
+function validateLicense(node, input, source, path, issues, nullable) {
+  if (nullable && input == null) return;
+  if (input === false || (typeof input === "string" && input.length > 0)) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), nullable ? "null, false, or non-empty string" : "false or non-empty string", node.migration));
+}
+
+function validateShareOverride(node, input, source, path, issues) {
+  if (input == null || typeof input === "boolean" || Array.isArray(input)) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), "null, boolean, or provider array", node.migration));
+}
+
 function validateKebabId(node, input, source, path, issues) {
   if (typeof input === "string" && /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(input)) return;
   issues.push(issue("invalid_value", source, path, valueType(input), "non-empty kebab-case id", node.migration));
@@ -463,6 +493,12 @@ function validateCustom(node, input, source, path, issues) {
   else if (node.validator === "nullable_safe_navigation_url") validateSafeNavigationUrl(node, input, source, path, issues, true);
   else if (node.validator === "css_color") validateCssColor(node, input, source, path, issues, false);
   else if (node.validator === "nullable_css_color") validateCssColor(node, input, source, path, issues, true);
+  else if (node.validator === "non_negative_integer") validateNonNegativeInteger(node, input, source, path, issues, false);
+  else if (node.validator === "nullable_non_negative_integer") validateNonNegativeInteger(node, input, source, path, issues, true);
+  else if (node.validator === "non_empty_record_keys") validateNonEmptyRecordKeys(node, input, source, path, issues);
+  else if (node.validator === "license_value") validateLicense(node, input, source, path, issues, false);
+  else if (node.validator === "license_override") validateLicense(node, input, source, path, issues, true);
+  else if (node.validator === "share_override") validateShareOverride(node, input, source, path, issues);
   else if (node.validator === "kebab_id") validateKebabId(node, input, source, path, issues);
   else if (node.validator === "nullable_kebab_id") validateNullableKebabId(node, input, source, path, issues);
   else if (node.validator === "menu_items") validateMenuItems(node, input, source, path, issues);
@@ -472,7 +508,7 @@ function validateCustom(node, input, source, path, issues) {
   else if (node.validator === "unique_blueprint_targets") validateUniqueBlueprintTargets(node, input, source, path, issues);
   else if (node.validator === "topic_route_start" && input != null && !/[\\/]topic[\\/]/.test(source)) {
     issues.push(issue("invalid_scope", source, path, valueType(input), "Topic Collection only", node.migration));
-  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "safe_navigation_url", "nullable_safe_navigation_url", "css_color", "nullable_css_color", "kebab_id", "nullable_kebab_id", "menu_items", "footer_actions", "navigation_tabs", "safe_relative_path", "unique_blueprint_targets", "topic_route_start"].includes(node.validator)) {
+  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "safe_navigation_url", "nullable_safe_navigation_url", "css_color", "nullable_css_color", "non_negative_integer", "nullable_non_negative_integer", "non_empty_record_keys", "license_value", "license_override", "share_override", "kebab_id", "nullable_kebab_id", "menu_items", "footer_actions", "navigation_tabs", "safe_relative_path", "unique_blueprint_targets", "topic_route_start"].includes(node.validator)) {
     throw new TypeError(`未知配置校验器：${node.validator}`);
   }
 }

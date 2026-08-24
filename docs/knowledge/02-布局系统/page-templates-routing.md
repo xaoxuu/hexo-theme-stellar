@@ -119,20 +119,15 @@ div.l_body.${page_type}  layout="${page.layout}"  type="${article_type}"  [text-
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
 
-### `article_type`
+### `article_style`
 
 控制文章呈现风格，按优先级链解析：
 
 ```mermaid
 flowchart TD
-    A["page_type == 'index'?"] -->|Yes| B["article_type = undefined"]
-    A -->|No| C["pageConfig.article.type set?"]
-    C -->|Yes| D["article_type = pageConfig.article.type"]
-    C -->|No| E["topic tree[collection_id].article.type set?"]
-    E -->|Yes| F["article_type = topic.article.type"]
-    E -->|No| G["wiki tree[collection_id].article.type set?"]
-    G -->|Yes| H["article_type = wiki.article.type"]
-    G -->|No| I["article_type = content.article.type"]
+    A["page_type == 'index'?"] -->|Yes| B["article_style = undefined"]
+    A -->|No| C["resolve article.style cascade"]
+    C --> D["article_style = tech | story"]
 ```
 
 常见取值 `'tech'`（技术文章）与 `'story'`（文学/散文文章）。解析结果写入 `div.l_body` 的 `type` 属性。
@@ -141,18 +136,14 @@ flowchart TD
 
 ### `indent`
 
-控制是否应用文本缩进（通常用于 `story` 类型文章），按独立优先级链解析：
+控制是否应用文本缩进，公开配置为 `article.paragraph_indent: auto|always|never`：
 
 ```mermaid
 flowchart TD
-    A["pageConfig.article.indent != null?"] -->|Yes| B["indent = pageConfig.article.indent"]
-    A -->|No| C["topic tree[collection_id].article.indent set?"]
-    C -->|Yes| D["indent = topic.article.indent"]
-    C -->|No| E["wiki tree[collection_id].article.indent set?"]
-    E -->|Yes| F["indent = wiki.article.indent"]
-    E -->|No| G["content.article.indent set?"]
-    G -->|Yes| H["indent = content.article.indent"]
-    G -->|No| I["indent = (article_type === 'story')"]
+    A["resolve article.paragraph_indent cascade"] --> B{"mode"}
+    B -->|always| C["indent = true"]
+    B -->|never| D["indent = false"]
+    B -->|auto| E["indent = (article_style === 'story')"]
 ```
 
 `indent` 为 `true` 时给 `div.l_body` 添加 `text-indent` 属性；为 `false` 时不添加。

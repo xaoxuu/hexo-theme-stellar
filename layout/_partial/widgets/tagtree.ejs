@@ -16,7 +16,7 @@ function isLeaf(tag) {
 
 function getTagcon(tag) {
   var tagIcons = stellar_config('content.notebook.tagIcons') || {}
-  return tagIcons[tag.name] || tagIcons[tag.id] || tagIcons[tag.label] || tagIcons[tag.label.toLowerCase()] || tagIcons['']
+  return tagIcons[tag.name] || tagIcons[tag.id] || tagIcons[tag.label] || tagIcons[tag.label.toLowerCase()] || 'quot:hashtag'
 }
 
 function layoutTag(tag, level) {

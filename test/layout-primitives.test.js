@@ -88,7 +88,7 @@ test("Shell 转义属性、保留根布局契约并透传受信任区域", () =>
       item: { layout: 'post" data-x="1' },
       render: {
         document: { language: 'zh-CN" data-x="1' },
-        layout: { pageType: "content", articleType: 'story" data-x="1', indent: true }
+        layout: { pageType: "content", articleStyle: 'story" data-x="1', indent: true }
       }
     },
     preferredTheme: 'dark" data-x="1',

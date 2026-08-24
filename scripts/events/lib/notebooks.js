@@ -16,6 +16,7 @@ const {
   setPageViewModel
 } = require("../../lib/page-view-model-registry");
 const { ensureRuntimeData } = require("../../lib/runtime-data");
+const { ConfigSchemaError } = require("../../lib/config-schema");
 const { deepFreeze } = require("../../schema/schema-utils");
 
 function eachPage(pages, callback) {
@@ -38,11 +39,10 @@ function plainTagTree(notebook) {
   }));
 }
 
-function sortNoteItems(items, orderBy) {
+function sortNoteItems(items, sort) {
   const ordered = items.slice();
-  const rule = String(orderBy || "-updated");
-  const field = rule.replace(/^-/, "");
-  const direction = rule.startsWith("-") ? -1 : 1;
+  const field = sort?.field || "updated";
+  const direction = sort?.direction === "asc" ? 1 : -1;
   ordered.sort((left, right) => {
     const compared = String(left[field] || "").localeCompare(String(right[field] || "")) * direction;
     return compared;
@@ -51,8 +51,29 @@ function sortNoteItems(items, orderBy) {
   return ordered;
 }
 
+function validateTagIcons(notebooks, tagIcons) {
+  const known = new Set();
+  for (const notebook of Object.values(notebooks.tree)) {
+    for (const tag of notebook.tagTree.values()) {
+      for (const value of [tag.id, tag.name, tag.part, String(tag.part || "").toLowerCase()]) {
+        if (value) known.add(value);
+      }
+    }
+  }
+  const issues = Object.keys(tagIcons || {}).filter(key => !known.has(key)).map(key => Object.freeze({
+    code: "invalid_value",
+    source: "_config.stellar.yml",
+    path: `content.notebook.tag_icons.${key}`,
+    actualType: "string",
+    expected: "tag key present in a Notebook",
+    migration: "configuration/content"
+  }));
+  if (issues.length > 0) throw new ConfigSchemaError(issues);
+}
+
 module.exports = ctx => {
   const notebooks = getNotebooksObject(ctx);
+  validateTagIcons(notebooks, ctx.stellar.config.content.notebook.tagIcons);
   const runtimeData = ensureRuntimeData(ctx);
   runtimeData.notebooks = notebooks;
   const pages = ctx.locals.get("pages");
@@ -85,7 +106,7 @@ module.exports = ctx => {
     const tags = plainTagTree(notebook);
     const items = sortNoteItems(
       viewModels.map(viewModel => viewModel.render.listing),
-      collection?.listing.orderBy || notebook.listing.order_by
+      collection?.listing.sort || notebook.listing.sort
     );
     const recentItems = items.filter(item => item.listed !== false).sort((left, right) => (
       String(right.updated || right.date || "").localeCompare(String(left.updated || left.date || ""))
@@ -109,7 +130,7 @@ module.exports = ctx => {
       headline: identity.headline,
       description: identity.description,
       icon: identity.icon || ctx.stellar.config.resources.fallbacks.projectIcon || "",
-      sort: collection?.listing.sort ?? notebook.listing.sort ?? 0,
+      order: collection?.listing.order ?? notebook.listing.order ?? 0,
       listed: collection?.visibility.listed !== false && notebook.visibility?.listed !== false,
       navigation: {
         menu: notebook.navigation.menu ?? collection?.navigation.menu ?? null
@@ -127,7 +148,7 @@ module.exports = ctx => {
     collections.push(projection);
     collectionMap[notebook.id] = projection;
   }
-  collections.sort((left, right) => left.sort - right.sort);
+  collections.sort((left, right) => left.order - right.order);
   const recentItems = collections
     .filter(collection => collection.listed !== false)
     .flatMap(collection => collection.recentItems)

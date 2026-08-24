@@ -69,6 +69,12 @@ function mergeConfig(base, override, path = "") {
   return result;
 }
 
+function articleIndentEnabled(article) {
+  const style = article?.style;
+  const mode = article?.paragraphIndent || "auto";
+  return mode === "always" || (mode === "auto" && style === "story");
+}
+
 function normalizeSidebarBrand(sidebar) {
   const normalized = cloneValue(isPlainObject(sidebar) ? sidebar : {});
   if (isPlainObject(normalized.left?.brand)) {
@@ -237,18 +243,18 @@ function buildPostArticleRender(input, item) {
   const frontMatter = input.frontMatter;
   const footer = item.presentation.footer || {};
   const extensionConfig = input.stellarConfig.extensions;
-  const configuredShare = Array.isArray(footer.share) ? footer.share : articleConfig.footer.share;
-  const shareServices = footer.share !== false && Array.isArray(configuredShare)
-    ? configuredShare.filter(name => ["wechat", "weibo", "email", "link"].includes(name))
-    : [];
+  const configuredShare = footer.share === true
+    ? articleConfig.footer.share
+    : Array.isArray(footer.share) ? footer.share : [];
+  const shareServices = configuredShare.filter(name => ["wechat", "weibo", "email", "link"].includes(name));
   const summarySource = typeof frontMatter.description === "string" && frontMatter.description.length > 0
     ? frontMatter.description
     : item.excerpt || item.content;
-  const relatedConfig = articleConfig.relatedPosts;
+  const relatedPostsLimit = articleConfig.relatedPostsLimit;
 
   return {
     heti: extensionConfig.features.cjkTypography.enabled === true,
-    tags: articleConfig.showTags === true ? normalizeLinks(input.page.tagLinks) : [],
+    tags: footer.showTags === true ? normalizeLinks(input.page.tagLinks) : [],
     footer: {
       references: Array.isArray(footer.references) ? cloneValue(footer.references) : [],
       license: resolveLicense(footer.license, item, runtimeData),
@@ -264,9 +270,9 @@ function buildPostArticleRender(input, item) {
     previous: normalizePostLink(input.page.previous),
     next: normalizePostLink(input.page.next),
     related: {
-      enabled: relatedConfig.enabled === true,
+      enabled: relatedPostsLimit > 0,
       title: "",
-      maxCount: relatedConfig.limit,
+      maxCount: relatedPostsLimit,
       items: normalizeRelatedItems(input.relatedItems)
     },
     comments: buildCommentsRender(input.stellarConfig, item)
@@ -336,10 +342,9 @@ function buildPostRenderModel(input, collection, item) {
   const canonicalConfig = seoConfig.canonical;
   const frontMatter = input.frontMatter;
   const page = input.page;
-  const articleType = typeof item.presentation.article?.type === "string"
-    ? item.presentation.article.type
+  const articleStyle = typeof item.presentation.article?.style === "string"
+    ? item.presentation.article.style
     : null;
-  const hasIndent = Object.prototype.hasOwnProperty.call(item.presentation.article || {}, "indent");
   const explicitDescription = typeof frontMatter.description === "string" && frontMatter.description.length > 0
     ? frontMatter.description
     : "";
@@ -434,8 +439,8 @@ function buildPostRenderModel(input, collection, item) {
     },
     layout: {
       pageType: "content",
-      articleType,
-      indent: hasIndent ? item.presentation.article.indent === true : articleType === "story",
+      articleStyle,
+      indent: articleIndentEnabled(item.presentation.article),
       siteBackground: Boolean(appearance.backgrounds.page.image),
       leftbarSurface: appearance.backgrounds.sidebar.surface === "card" ? "card" : "glass",
       leftbarBlur: false,
@@ -555,7 +560,7 @@ function buildWikiListingRender(input, collection) {
     repository,
     repositoryApi: repository ? `${githubApi}/repos/${repository}` : "",
     priority: collection.listing.priority,
-    sort: collection.listing.sort ?? 0,
+    order: collection.listing.order ?? 0,
     listed: collection.visibility.listed !== false
   };
 }
@@ -573,10 +578,9 @@ function buildWikiRenderModel(input, collection, item) {
     frontMatter.language,
     siteConfig.language
   );
-  const articleType = typeof item.presentation.article?.type === "string"
-    ? item.presentation.article.type
+  const articleStyle = typeof item.presentation.article?.style === "string"
+    ? item.presentation.article.style
     : null;
-  const hasIndent = Object.prototype.hasOwnProperty.call(item.presentation.article || {}, "indent");
   const explicitDescription = typeof frontMatter.description === "string" && frontMatter.description.length > 0
     ? frontMatter.description
     : "";
@@ -659,8 +663,8 @@ function buildWikiRenderModel(input, collection, item) {
     },
     layout: {
       pageType: "content",
-      articleType,
-      indent: hasIndent ? item.presentation.article.indent === true : articleType === "story",
+      articleStyle,
+      indent: articleIndentEnabled(item.presentation.article),
       siteBackground: Boolean(appearance.backgrounds.page.image),
       leftbarSurface: appearance.backgrounds.sidebar.surface === "card" ? "card" : "glass",
       leftbarBlur: false,
@@ -895,10 +899,9 @@ function buildWikiCollectionModel(input, collectionId) {
     },
     listing: {
       priority: collectionListing.priority ?? 0,
-      sort: collectionListing.sort ?? 0,
+      order: collectionListing.order ?? 0,
       excerptLength: collectionListing.excerptLength ?? null,
-      perPage: collectionListing.perPage ?? null,
-      orderBy: collectionListing.orderBy ?? null
+      perPage: collectionListing.perPage ?? null
     },
     presentation: {
       card: pick(collectionConfig.card, CONTENT_MODEL_FIELDS.card),
@@ -918,7 +921,7 @@ function buildWikiCollectionModel(input, collectionId) {
   };
 }
 
-function buildTopicSeries(collectionId, members, currentId, orderBy) {
+function buildTopicSeries(collectionId, members, currentId, sort) {
   const items = [];
   for (const [index, member] of (Array.isArray(members) ? members : []).entries()) {
     const config = isPlainObject(member?.frontMatter) ? member.frontMatter : {};
@@ -935,8 +938,8 @@ function buildTopicSeries(collectionId, members, currentId, orderBy) {
     });
   }
 
-  const field = String(orderBy || "-date").replace(/^-/, "");
-  const direction = String(orderBy || "-date").startsWith("-") ? -1 : 1;
+  const field = sort?.field || "date";
+  const direction = sort?.direction === "asc" ? 1 : -1;
   if (field === "date") {
     items.sort((left, right) => {
       const compared = String(left.date || "").localeCompare(String(right.date || "")) * direction;
@@ -958,7 +961,7 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
   const content = requireContentConfig(input.stellarConfig, input.themeSource);
   const baseDir = profilePath(indexTopic.path) || "topic";
   const routePath = collectionRoute.path || `${baseDir}/${collectionId}`;
-  const orderBy = collectionListing.orderBy ?? "-date";
+  const sort = collectionListing.sort ?? { field: "date", direction: "desc" };
 
   const profileNavigation = mergeConfig(
     toRenderNavigation(postProfile),
@@ -995,14 +998,14 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
     },
     navigation: {
       ...mergeConfig(profileNavigation, collectionNavigation),
-      series: buildTopicSeries(collectionId, input.members, currentId, orderBy)
+      series: buildTopicSeries(collectionId, input.members, currentId, sort)
     },
     listing: {
       priority: collectionListing.priority ?? 0,
-      sort: collectionListing.sort ?? null,
+      order: collectionListing.order ?? null,
       excerptLength: collectionListing.excerptLength ?? null,
       perPage: collectionListing.perPage ?? null,
-      orderBy
+      sort
     },
     presentation: {
       card: pick(collectionConfig.card, CONTENT_MODEL_FIELDS.card),
@@ -1074,8 +1077,9 @@ function buildNotebookCollectionModel(input, collectionId) {
   const globalArticle = articlePresentationDefaults(content);
   const globalFooter = {
     references: [],
-    license: notebookDefaults.footer.license,
-    share: notebookDefaults.footer.share
+    license: notebookDefaults.footer.license ?? content.article.footer.license,
+    share: notebookDefaults.footer.share ?? content.article.footer.share,
+    showTags: content.article.footer.showTags
   };
 
   return {
@@ -1090,10 +1094,10 @@ function buildNotebookCollectionModel(input, collectionId) {
     },
     listing: {
       priority: collectionListing.priority ?? 0,
-      sort: collectionListing.sort ?? 0,
+      order: collectionListing.order ?? 0,
       excerptLength: collectionListing.excerptLength ?? defaultListing.excerptLength,
       perPage: collectionListing.perPage ?? defaultListing.perPage ?? siteConfig.per_page ?? 10,
-      orderBy: collectionListing.orderBy ?? defaultListing.orderBy
+      sort: collectionListing.sort ?? defaultListing.sort
     },
     presentation: {
       card: pick(collectionConfig.card, CONTENT_MODEL_FIELDS.card),
@@ -1181,9 +1185,7 @@ function buildNotebookRenderModel(input, collection, item) {
       ? truncate(stripHTML(item.content), { length: collection.listing.excerptLength })
       : "");
   const collectionTitle = collection.identity.headline || collection.identity.name || collection.id;
-  const configuredLicense = item.presentation.footer?.license === true
-    ? content.article.footer.license
-    : item.presentation.footer?.license;
+  const configuredLicense = item.presentation.footer?.license;
   const openGraph = core.seo.openGraph == null ? null : {
     ...core.seo.openGraph,
     args: {
@@ -1196,7 +1198,7 @@ function buildNotebookRenderModel(input, collection, item) {
     document: core.document,
     layout: {
       pageType: core.layout.pageType,
-      articleType: core.layout.articleType,
+      articleStyle: core.layout.articleStyle,
       indent: core.layout.indent,
       siteBackground: core.layout.siteBackground,
       leftbarSurface: core.layout.leftbarSurface,

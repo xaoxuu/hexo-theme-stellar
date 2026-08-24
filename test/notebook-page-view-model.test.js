@@ -58,8 +58,8 @@ function notebookInput(overrides = {}) {
     source: { repository: "xaoxuu/notes", branch: "v2" },
     route: { path: "/notes/dev/index.html" },
     navigation: { menu: "notes", breadcrumb: true },
-    listing: { sort: 2, excerpt_length: 64, per_page: 5, order_by: "-updated" },
-    article: { type: "tech", indent: true },
+    listing: { order: 2, excerpt_length: 64, per_page: 5, sort: { field: "updated", direction: "desc" } },
+    article: { style: "tech", paragraph_indent: "always" },
     footer: { license: "CC BY 4.0", share: true },
     comments: { enabled: true, provider: "giscus", options: { "data-repo": "xaoxuu/notes" } },
     note_defaults: {
@@ -118,10 +118,10 @@ function notebookInput(overrides = {}) {
       } },
       content: {
         notebook: {
-          listing: { excerpt_length: 128, per_page: null, order_by: "-updated" },
-          footer: { license: false, share: false }
+          listing: { excerpt_length: 128, per_page: null, sort: { field: "updated", direction: "desc" } },
+          footer: { license: false, share: [] }
         },
-        article: { type: "story", indent: false }
+        article: { style: "story", paragraph_indent: "never" }
       },
       extensions: { comments: {
         provider: "giscus",
@@ -180,10 +180,10 @@ test("Notebook profile 生成包含最终详情与列表消费状态的冻结 Pa
   ]);
   assert.deepEqual(viewModel.collection.listing, {
     priority: 0,
-    sort: 2,
+    order: 2,
     excerptLength: 64,
     perPage: 5,
-    orderBy: "-updated"
+    sort: { field: "updated", direction: "desc" }
   });
   assert.deepEqual(viewModel.collection.visibility, { listed: true, searchable: true });
   assert.deepEqual(viewModel.item.navigation, { menu: "", breadcrumb: false });
@@ -191,8 +191,8 @@ test("Notebook profile 生成包含最终详情与列表消费状态的冻结 Pa
   assert.deepEqual(viewModel.item.visibility, { listed: false, searchable: true });
   assert.equal(viewModel.item.route.path, "notes/dev/nodejs");
   assert.deepEqual(viewModel.item.presentation.sidebar.left.widgets, ["tagtree", "recent"]);
-  assert.equal(viewModel.item.presentation.article.type, "tech");
-  assert.equal(viewModel.item.presentation.article.indent, true);
+  assert.equal(viewModel.item.presentation.article.style, "tech");
+  assert.equal(viewModel.item.presentation.article.paragraphIndent, "always");
   assert.equal(viewModel.item.presentation.footer.license, "CC BY 4.0");
   assert.equal(viewModel.item.presentation.footer.share, false);
   assert.equal(viewModel.item.presentation.comments.provider, "giscus");
@@ -203,7 +203,7 @@ test("Notebook profile 生成包含最终详情与列表消费状态的冻结 Pa
     preferredTheme: "auto"
   });
   assert.equal(viewModel.render.layout.pageType, "content");
-  assert.equal(viewModel.render.layout.articleType, "tech");
+  assert.equal(viewModel.render.layout.articleStyle, "tech");
   assert.equal(viewModel.render.layout.indent, true);
   assert.equal(viewModel.render.layout.notebookIndexPath, "notebooks");
   assert.equal(viewModel.render.layout.notebookPath, "notes/dev");
@@ -267,26 +267,26 @@ test("Notebook profile 使用既有主题默认值完成列表和展示级联", 
   assert.deepEqual(viewModel.collection.route, { baseDir: "notebooks/default" });
   assert.deepEqual(viewModel.collection.listing, {
     priority: 0,
-    sort: 0,
+    order: 0,
     excerptLength: 128,
     perPage: 10,
-    orderBy: "-updated"
+    sort: { field: "updated", direction: "desc" }
   });
   assert.deepEqual(viewModel.item.presentation.sidebar.left.widgets, ["tagtree"]);
   assert.deepEqual(viewModel.item.presentation.sidebar.right.widgets, ["toc"]);
-  assert.equal(viewModel.item.presentation.article.type, "story");
+  assert.equal(viewModel.item.presentation.article.style, "story");
   assert.equal(viewModel.item.presentation.footer.license, false);
 });
 
-test("Notebook footer.license true 映射到全局 Article 许可", () => {
+test("Notebook footer.license null 继承 Collection 许可", () => {
   const input = notebookInput();
   input.themeConfig.content.article.footer = { license: "Global license", share: [] };
-  input.frontMatter.footer = { license: true, share: false };
+  input.frontMatter.footer = { license: null, share: false };
 
   const viewModel = buildNotebookPageViewModel(input);
 
-  assert.equal(viewModel.item.presentation.footer.license, true);
-  assert.equal(viewModel.render.article.footer.license, "Global license");
+  assert.equal(viewModel.item.presentation.footer.license, "CC BY 4.0");
+  assert.equal(viewModel.render.article.footer.license, "CC BY 4.0");
 });
 
 test("Notebook identity 保留显式空 headline", () => {

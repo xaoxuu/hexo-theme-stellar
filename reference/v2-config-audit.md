@@ -2,15 +2,15 @@
 
 > 本页由当前配置 Schema 与 M6 退出字段清单自动生成。请勿手工编辑。
 
-结论计数：`public=520`、`localize=9`、`derive=0`、`internalize=12`、`remove=1`。
+结论计数：`public=519`、`localize=9`、`derive=0`、`internalize=12`、`remove=1`。
 
 | Scope | Path | Accepted | Disposition | Default source | Consumers | Rationale |
 | --- | --- | --- | --- | --- | --- | --- |
 | collection | article | yes | public | derived:content.article | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | article.ai_label | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | article.author | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| collection | article.indent | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| collection | article.type | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| collection | article.paragraph_indent | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| collection | article.style | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | audience | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | card | yes | public | derived:theme profile card | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | card.cover | yes | public | derived:theme or collection card.cover | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
@@ -26,6 +26,7 @@
 | collection | footer.license | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | footer.references | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | footer.share | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| collection | footer.show_tags | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | headline | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | hero | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | hero.actions | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
@@ -47,10 +48,12 @@
 | collection | identity.icon | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | listing | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | listing.excerpt_length | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| collection | listing.order_by | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| collection | listing.order | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | listing.per_page | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | listing.priority | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | listing.sort | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| collection | listing.sort.direction | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| collection | listing.sort.field | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | name | yes | public | derived:required collection identity | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | navigation | yes | public | derived:theme profile navigation | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | collection | navigation.breadcrumb | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
@@ -90,8 +93,8 @@
 | front_matter | article | yes | public | derived:content.article | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | front_matter | article.ai_label | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | front_matter | article.author | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| front_matter | article.indent | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| front_matter | article.type | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| front_matter | article.paragraph_indent | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| front_matter | article.style | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | front_matter | banner | yes | public | derived:collection or theme banner | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | front_matter | banner.avatar | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | front_matter | banner.enabled | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
@@ -114,6 +117,7 @@
 | front_matter | footer.license | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | front_matter | footer.references | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | front_matter | footer.share | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| front_matter | footer.show_tags | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | front_matter | inject | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | front_matter | inject.head | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | front_matter | inject.script | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
@@ -205,11 +209,6 @@
 | theme | appearance.typography.text_align | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.article | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | content.article.ai_label | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | content.article.ai_label.&lt;level&gt; | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | content.article.ai_label.&lt;level&gt;.color | yes | public | derived:current AI label palette | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | content.article.ai_label.&lt;level&gt;.icon | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | content.article.ai_label.default | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.article.banner | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.article.banner.ratio | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.article.category_colors | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
@@ -217,27 +216,27 @@
 | theme | content.article.footer | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.article.footer.license | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.article.footer.share | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | content.article.indent | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | content.article.footer.show_tags | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.article.listing | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.article.listing.card_layout | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.article.listing.cover_ratio | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.article.listing.excerpt_length | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.article.listing.pinned_layout | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.article.listing.show_tags | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | content.article.related_posts | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | content.article.related_posts.enabled | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | content.article.related_posts.limit | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | content.article.paragraph_indent | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | content.article.related_posts_limit | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.article.show_reading_time | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | content.article.show_tags | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | content.article.type | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | content.article.style | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.notebook | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.notebook.footer | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.notebook.footer.license | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.notebook.footer.share | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.notebook.listing | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.notebook.listing.excerpt_length | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | content.notebook.listing.order_by | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.notebook.listing.per_page | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | content.notebook.listing.sort | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | content.notebook.listing.sort.direction | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | content.notebook.listing.sort.field | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.notebook.tag_icons | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.notebook.tag_icons.&lt;tag&gt; | yes | public | derived:current notebook tag icon map | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
