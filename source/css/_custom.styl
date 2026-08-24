@@ -3,8 +3,8 @@
 
 // font family
 $ff-body = convert(hexo-config('appearance.typography.font_family.body'))
-$ff-code = convert(hexo-config('appearance.typography.font_family.inline_code'))
-$ff-codeblock = convert(hexo-config('appearance.typography.font_family.code_block'))
+$ff-code = convert(hexo-config('appearance.typography.font_family.code'))
+$ff-codeblock = $ff-code
 
 // font size
 $fs-root = convert(hexo-config('appearance.typography.font_size.root'))
@@ -35,7 +35,7 @@ $leftbar-background-color-dark = hexo-config('appearance.backgrounds.sidebar.col
 
 
 // colors
-$c-theme = convert(hexo-config('appearance.colors.theme'))
+$c-theme = convert(hexo-config('appearance.colors.primary'))
 $c-accent = convert(hexo-config('appearance.colors.accent'))
 $c-link = convert(hexo-config('appearance.colors.link'))
 

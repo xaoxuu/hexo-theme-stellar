@@ -92,7 +92,7 @@ graph TB
 | 右栏 | `.l_right` | 右栏小部件容器 | layout.ejs |
 | 右栏小部件区 | `.l_right .widgets` | 右栏小部件 | layout.ejs |
 
-`.leftbar-container` 只负责承载左栏小部件；背景模糊半径与覆盖层由 `appearance.backgrounds.sidebar.blur` 在样式层消费。
+`.leftbar-container` 只负责承载左栏小部件；背景模糊半径与覆盖层由 `appearance.backgrounds.sidebar.backdrop` 在样式层消费。
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
 

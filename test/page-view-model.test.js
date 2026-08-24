@@ -579,7 +579,10 @@ test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD �
       description: "",
       keywords: [],
       robots: "",
-      inject: { head: "<meta name=\"page\" content=\"render\">" },
+      inject: {
+        head_end: "<meta name=\"page\" content=\"render\">",
+        body_end: "<script>window.pageRender = true</script>"
+      },
       seo: { open_graph: { image: null } },
       article: { style: "story" }
     },
@@ -601,7 +604,8 @@ test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD �
 
   assert.deepEqual(viewModel.render.document, {
     language: "zh-CN",
-    headInject: "<meta name=\"page\" content=\"render\">",
+    headEndInject: "<meta name=\"page\" content=\"render\">",
+    bodyEndInject: "<script>window.pageRender = true</script>",
     preferredTheme: "auto"
   });
   assert.equal(viewModel.render.layout.indent, true);

@@ -50,15 +50,15 @@
     right: var(--inset)
     border-radius: $border-card-l
     --saturate: 400%
-    --blur-px: convert(hexo-config('appearance.backgrounds.sidebar.blur.radius'))
+    --blur-px: convert(hexo-config('appearance.backgrounds.sidebar.backdrop.radius'))
     --background-opacity: 1
     if $leftbar-background-image
       background-position: center
       background-size: cover
-      if hexo-config('appearance.backgrounds.sidebar.blur.radius')
+      if hexo-config('appearance.backgrounds.sidebar.backdrop.radius')
         --inset: 32px
       --background-opacity: hexo-config('appearance.backgrounds.sidebar.opacity')
-      background-image: convert(hexo-config('appearance.backgrounds.sidebar.image'))
+      background-image: unquote("url('%s')" % $leftbar-background-image)
       filter: saturate(var(--saturate)) blur(var(--blur-px)) opacity(var(--background-opacity))
       :root[data-theme="dark"] &
         --background-opacity: hexo-config('appearance.backgrounds.sidebar.opacity') * 0.75
@@ -114,6 +114,9 @@
           @media screen and (prefers-color-scheme: dark)
             background: rgba(white, 0.05)
             box-shadow: inset 0 0 32px 1px rgba(white, 0.1)
+    &:after
+      if hexo-config('appearance.backgrounds.sidebar.backdrop.overlay')
+        background: convert(hexo-config('appearance.backgrounds.sidebar.backdrop.overlay'))
 
 @media screen and (max-width: $device-mobile-max)
   .l_left

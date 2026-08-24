@@ -199,7 +199,8 @@ test("Notebook profile 生成包含最终详情与列表消费状态的冻结 Pa
   assert.equal(viewModel.item.presentation.comments.options["data-repo"], "xaoxuu/notes");
   assert.deepEqual(viewModel.render.document, {
     language: "zh-CN",
-    headInject: "",
+    headEndInject: "",
+    bodyEndInject: "",
     preferredTheme: "auto"
   });
   assert.equal(viewModel.render.layout.pageType, "content");

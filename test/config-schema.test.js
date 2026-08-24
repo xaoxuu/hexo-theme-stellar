@@ -49,7 +49,7 @@ test("site/layout/content/appearance/resources/head Schema 提供默认值并拒
       structuredData: { sameAs: [] }
     },
     resources: { preconnect: [] },
-    inject: { head: "", script: "" }
+    inject: { headEnd: "", bodyEnd: "" }
   });
   assert.deepEqual(Object.keys(config.layout.profiles), [
     "home", "blogIndex", "topicIndex", "wikiIndex", "post", "topic", "wiki",
@@ -83,7 +83,7 @@ test("site/layout/content/appearance/resources/head Schema 提供默认值并拒
   assert.equal(config.appearance.shape.radius.cardLarge, "24px");
   assert.equal(config.appearance.backgrounds.sidebar.opacity, 0.8);
   assert.match(config.resources.fallbacks.cover, /\/cover\/76b86c0226ffd\.svg$/);
-  assert.match(config.resources.fallbacks.image.tagPlugin, /^data:image\/svg\+xml/);
+  assert.match(config.resources.errorPage.image, /\/404\/1c830bfcd517d\.svg$/);
   assert.equal(config.extensions.search.provider, "local");
   assert.equal(config.extensions.comments.provider, null);
   assert.equal(config.extensions.features.reveal.enabled, true);
@@ -109,7 +109,7 @@ test("站点覆盖完成规范化、数组替换、稳定去重并保留注入�
       resources: {
         preconnect: [" https://cdn.example.com/ ", "", "https://cdn.example.com"]
       },
-      inject: { head, script: "<script>window.example = true</script>" }
+      inject: { head_end: head, body_end: "<script>window.example = true</script>" }
     }
   });
 
@@ -131,7 +131,7 @@ test("站点覆盖完成规范化、数组替换、稳定去重并保留注入�
       structuredData: { sameAs: ["https://github.com/xaoxuu"] }
     },
     resources: { preconnect: ["https://cdn.example.com"] },
-    inject: { head, script: "<script>window.example = true</script>" }
+    inject: { headEnd: head, bodyEnd: "<script>window.example = true</script>" }
   });
 });
 
@@ -141,34 +141,35 @@ test("Appearance 与资源兜底解析最终路径并投影 camelCase 运行时"
     themeConfig: {
       appearance: {
         color_scheme: "dark",
-        typography: { font_size: { root: "18px" } },
+        typography: { font_size: { root: "18px" }, font_family: { code: "Menlo, monospace" }, content_align: "justify" },
         shape: { radius: { card_large: "28px" } },
         motion: { page_transition: false, avatar: "never" },
-        code_block: { scrollbar_width: "0px" },
-        backgrounds: { sidebar: { surface: "glass", opacity: 0 } }
+        colors: { primary: "#123456" },
+        code_block: { scrollbar_width: "0px", highlight_stylesheet: null },
+        backgrounds: { sidebar: { surface: "glass", image: "/sidebar.webp", opacity: 0, backdrop: { radius: "0px" } } }
       },
       resources: {
         fallbacks: {
-          link_card: "/link.svg",
-          project_icon: "/project.svg",
-          image: { content: "/image.svg" },
-          error_page: "/404.svg"
-        }
+          link_card: "/link.svg"
+        },
+        error_page: { image: null }
       }
     }
   });
 
   assert.equal(config.appearance.colorScheme, "dark");
   assert.equal(config.appearance.typography.fontSize.root, "18px");
+  assert.equal(config.appearance.typography.fontFamily.code, "Menlo, monospace");
+  assert.equal(config.appearance.typography.contentAlign, "justify");
   assert.equal(config.appearance.shape.radius.cardLarge, "28px");
   assert.deepEqual(config.appearance.motion, { pageTransition: false, avatar: "never" });
   assert.equal(config.appearance.codeBlock.scrollbarWidth, "0px");
+  assert.equal(config.appearance.codeBlock.highlightStylesheet, null);
   assert.equal(config.appearance.backgrounds.sidebar.surface, "glass");
   assert.equal(config.appearance.backgrounds.sidebar.opacity, 0);
   assert.equal(config.resources.fallbacks.linkCard, "/link.svg");
-  assert.equal(config.resources.fallbacks.projectIcon, "/project.svg");
-  assert.equal(config.resources.fallbacks.image.content, "/image.svg");
-  assert.equal(config.resources.fallbacks.errorPage, "/404.svg");
+  assert.equal(config.appearance.backgrounds.sidebar.image, "/sidebar.webp");
+  assert.equal(config.resources.errorPage.image, null);
 });
 
 test("Appearance 与资源兜底拒绝旧根、旧字段、未知字段和非法范围", () => {
@@ -192,7 +193,7 @@ test("Appearance 与资源兜底拒绝旧根、旧字段、未知字段和非法
     assert.match(error.message, /appearance\.backgrounds\.sidebar\.opacity 的值不在 number <= 1/);
     assert.match(error.message, /未知字段 appearance\.backgrounds\.sidebar\.unknown/);
     assert.match(error.message, /resources\.fallbacks\.link 已移除/);
-    assert.match(error.message, /未知字段 resources\.fallbacks\.image\.unknown/);
+    assert.match(error.message, /resources\.fallbacks\.image 已移除/);
     return true;
   });
 });
@@ -517,7 +518,7 @@ test("canonical null 禁用输出且 Schema 不做类型转换", () => {
       source: "_config.stellar.yml",
       themeConfig: {
         seo: { canonical: { host: 42 }, open_graph: { enabled: "true" } },
-        inject: { head: ["<meta>"] }
+        inject: { head_end: ["<meta>"] }
       }
     }),
     error => {
@@ -525,7 +526,7 @@ test("canonical null 禁用输出且 Schema 不做类型转换", () => {
       assert.deepEqual(error.issues.map(item => [item.path, item.actualType, item.expected]), [
         ["seo.canonical.host", "number", "string | null"],
         ["seo.open_graph.enabled", "string", "boolean"],
-        ["inject.head", "array", "string"]
+        ["inject.head_end", "array", "string"]
       ]);
       return true;
     }
@@ -618,7 +619,7 @@ test("构建事件把最终路径冻结挂载到 hexo.stellar.config", () => {
           canonical: { host: "example.com", allowed_hosts: ["mirror.example.com"] },
           structured_data: { same_as: ["https://github.com/example"] }
         },
-        inject: { head: "<meta name=\"site\">" }
+        inject: { head_end: "<meta name=\"site\">" }
       }
     }
   };
@@ -631,6 +632,6 @@ test("构建事件把最终路径冻结挂载到 hexo.stellar.config", () => {
   assert.equal(ctx.stellar.config.site.menu.items[0].id, "post");
   assert.deepEqual(ctx.stellar.config.seo.canonical.allowedHosts, ["mirror.example.com"]);
   assert.deepEqual(ctx.stellar.config.seo.structuredData.sameAs, ["https://github.com/example"]);
-  assert.equal(ctx.stellar.config.inject.head, "<meta name=\"site\">");
+  assert.equal(ctx.stellar.config.inject.headEnd, "<meta name=\"site\">");
   assertDeepFrozen(ctx.stellar.config);
 });

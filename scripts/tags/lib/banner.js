@@ -9,9 +9,11 @@
 
 'use strict';
 
+const INTERNAL = require('../../lib/internal-constants');
+
 module.exports = ctx => function(args, content) {
   args = ctx.args.map(args, ['bg', 'avatar', 'link'], ['title', 'subtitle'])
-  var bg = args.bg ? args.bg : ctx.stellar.config.resources.fallbacks.banner
+  var bg = args.bg ? args.bg : INTERNAL.resources.banner
   var el = ''
   el += `<div class="tag-plugin banner" style="--bg-url:url('${bg.replace(/'/g, '%27')}')">`
   // bg

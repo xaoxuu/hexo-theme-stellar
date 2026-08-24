@@ -349,6 +349,60 @@ function validateCssColor(node, input, source, path, issues, nullable) {
   issues.push(issue("invalid_value", source, path, valueType(input), "valid CSS color", node.migration));
 }
 
+function isCssLength(input) {
+  if (typeof input !== "string" || input.trim() !== input || /[;{}<>\n\r]/.test(input)) return false;
+  return input === "0" || /^(?:\d+|\d*\.\d+)(?:px|rem|em|%|vw|vh|vmin|vmax|ch|ex|cm|mm|in|pt|pc)$/.test(input);
+}
+
+function validateCssLength(node, input, source, path, issues) {
+  if (isCssLength(input)) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), "valid CSS length", node.migration));
+}
+
+function validateCssPercentage(node, input, source, path, issues) {
+  if (typeof input === "string" && input.trim() === input && /^(?:\d+|\d*\.\d+)%$/.test(input)) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), "non-negative CSS percentage", node.migration));
+}
+
+function validateCssFontFamily(node, input, source, path, issues) {
+  if (typeof input === "string" && input.trim() === input && input.length > 0 && !/[;{}<\n\r]/.test(input) && !/url\s*\(/i.test(input)) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), "safe CSS font-family list", node.migration));
+}
+
+function validateCssGradient(node, input, source, path, issues) {
+  if (typeof input === "string" && input.trim() === input && !/[;{}<>\n\r]/.test(input) && /^(?:repeating-)?(?:linear|radial|conic)-gradient\([\s\S]+\)$/i.test(input)) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), "valid CSS gradient", node.migration));
+}
+
+function validateCssSelector(node, input, source, path, issues) {
+  if (typeof input === "string" && input.trim() === input && input.length > 0 && !/[;{}<\n\r]/.test(input) && !/url\s*\(/i.test(input)) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), "safe CSS selector", node.migration));
+}
+
+function validateCornerShape(node, input, source, path, issues) {
+  if (typeof input === "string" && /^(?:round|scoop|bevel|notch|square|superellipse\((?:\d+|\d*\.\d+)\))$/.test(input)) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), "supported CSS corner-shape", node.migration));
+}
+
+function isResource(input) {
+  if (typeof input !== "string" || input.length === 0 || input.trim() !== input || /['"\\<>\n\r]/.test(input) || /^url\s*\(/i.test(input)) return false;
+  if (/^data:image\/[a-z0-9.+-]+(?:;[a-z0-9=.+-]+)*(?:;base64)?,/i.test(input)) return true;
+  if (input.startsWith("/") && !input.startsWith("//") && !input.split("/").includes("..")) return true;
+  try {
+    const url = new URL(input);
+    if ((url.protocol === "http:" || url.protocol === "https:") && url.host.length > 0) return true;
+  } catch (error) {
+    // Relative resources are checked below.
+  }
+  return !/^[a-z][a-z0-9+.-]*:/i.test(input) && !input.split(/[\\/]/).includes("..");
+}
+
+function validateResource(node, input, source, path, issues, nullable) {
+  if (nullable && input == null) return;
+  if (isResource(input)) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), nullable ? "null or safe Resource" : "safe Resource", node.migration));
+}
+
 function validateNonNegativeInteger(node, input, source, path, issues, nullable) {
   if (nullable && input == null) return;
   if (Number.isInteger(input) && input >= 0) return;
@@ -540,6 +594,14 @@ function validateCustom(node, input, source, path, issues) {
   else if (node.validator === "nullable_safe_navigation_url") validateSafeNavigationUrl(node, input, source, path, issues, true);
   else if (node.validator === "css_color") validateCssColor(node, input, source, path, issues, false);
   else if (node.validator === "nullable_css_color") validateCssColor(node, input, source, path, issues, true);
+  else if (node.validator === "css_length") validateCssLength(node, input, source, path, issues);
+  else if (node.validator === "css_percentage") validateCssPercentage(node, input, source, path, issues);
+  else if (node.validator === "css_font_family") validateCssFontFamily(node, input, source, path, issues);
+  else if (node.validator === "css_gradient") validateCssGradient(node, input, source, path, issues);
+  else if (node.validator === "css_selector") validateCssSelector(node, input, source, path, issues);
+  else if (node.validator === "corner_shape") validateCornerShape(node, input, source, path, issues);
+  else if (node.validator === "resource") validateResource(node, input, source, path, issues, false);
+  else if (node.validator === "nullable_resource") validateResource(node, input, source, path, issues, true);
   else if (node.validator === "non_negative_integer") validateNonNegativeInteger(node, input, source, path, issues, false);
   else if (node.validator === "nullable_non_negative_integer") validateNonNegativeInteger(node, input, source, path, issues, true);
   else if (node.validator === "non_empty_record_keys") validateNonEmptyRecordKeys(node, input, source, path, issues);
@@ -555,7 +617,7 @@ function validateCustom(node, input, source, path, issues) {
   else if (node.validator === "unique_blueprint_targets") validateUniqueBlueprintTargets(node, input, source, path, issues);
   else if (node.validator === "topic_route_start" && input != null && !/[\\/]topic[\\/]/.test(source)) {
     issues.push(issue("invalid_scope", source, path, valueType(input), "Topic Collection only", node.migration));
-  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "nullable_absolute_http_url", "emoji_template", "emoji_sources", "github_repository", "contributor_repositories", "diagrams_override", "safe_navigation_url", "nullable_safe_navigation_url", "css_color", "nullable_css_color", "non_negative_integer", "nullable_non_negative_integer", "non_empty_record_keys", "license_value", "license_override", "share_override", "kebab_id", "nullable_kebab_id", "menu_items", "footer_actions", "navigation_tabs", "safe_relative_path", "unique_blueprint_targets", "topic_route_start"].includes(node.validator)) {
+  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "nullable_absolute_http_url", "emoji_template", "emoji_sources", "github_repository", "contributor_repositories", "diagrams_override", "safe_navigation_url", "nullable_safe_navigation_url", "css_color", "nullable_css_color", "css_length", "css_percentage", "css_font_family", "css_gradient", "css_selector", "corner_shape", "resource", "nullable_resource", "non_negative_integer", "nullable_non_negative_integer", "non_empty_record_keys", "license_value", "license_override", "share_override", "kebab_id", "nullable_kebab_id", "menu_items", "footer_actions", "navigation_tabs", "safe_relative_path", "unique_blueprint_targets", "topic_route_start"].includes(node.validator)) {
     throw new TypeError(`未知配置校验器：${node.validator}`);
   }
 }

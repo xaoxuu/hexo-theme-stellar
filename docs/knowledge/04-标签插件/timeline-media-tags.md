@@ -29,7 +29,7 @@ timeline、voice、video 与 download-file 等动态能力使用 `.data-service`
 ## 常用语法
 
 - timeline：用成对标签组织时间节点。
-- gallery：标签参数 `layout` 支持 `grid/flow`，配置 `size` 与 `aspect_ratio` 控制媒体几何。
+- gallery：布局策略由主题内部维护，公开配置只用 `size` 与 `aspect_ratio` 控制媒体几何。
 - emoji：provider 模板中的 `{name}` 替换为表情名。
 - copy：复制成功后显示当前语言的 `message.copied`。
 - OKR：`status` 参数使用主题内置状态键与当前语言翻译。

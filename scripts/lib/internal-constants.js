@@ -44,6 +44,15 @@ module.exports = deepFreeze({
       codeCopyToastMs: 2500
     }
   },
+  appearance: {
+    gradientAngle: "210deg"
+  },
+  resources: {
+    projectIcon: "https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2779789.png",
+    banner: "https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/banner/books.jpg",
+    topicCover: "https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/10433048.png",
+    contentImage: "https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg"
+  },
   assets: {
     runtime: {
       bootstrap: "/js/runtime/index.mjs",

@@ -31,20 +31,21 @@ test("配置目录完整覆盖主题默认顶层域与站点专属入口", () =>
   const registeredRoots = new Set([...themeDomains, ...Object.keys(CONFIG_SCHEMA.properties)]);
 
   assert.equal(new Set(actual).size, actual.length, "主题默认配置不应重复定义顶层域");
-  assert.deepEqual([...actual].sort(), Object.keys(CONFIG_SCHEMA.properties).filter(root => root !== "inject").sort());
+  assert.deepEqual([...actual].sort(), Object.keys(CONFIG_SCHEMA.properties).sort());
   for (const root of actual) assert.ok(registeredRoots.has(root), `${root} 未登记到迁移目录或运行时 Schema`);
   for (const legacyRoot of ["preconnect", "canonical", "open_graph", "structured_data"]) {
     assert.equal(actual.includes(legacyRoot), false, `${legacyRoot} 不应继续作为主题默认根域`);
   }
 
   const inject = CONFIG_DOMAIN_CATALOG.find(item => item.id === "inject");
-  assert.equal(inject.sourceKind, "site_theme_override");
+  assert.equal(inject.sourceKind, "theme");
   assert.deepEqual(inject.fields, ["inject.head[]", "inject.script[]"]);
+  assert.deepEqual(inject.migrations.map(item => item.to), ["inject.head_end", "inject.body_end"]);
 
   const siteOnly = CONFIG_DOMAIN_CATALOG
     .filter(item => item.sourceKind === "site_theme_override")
     .map(item => item.id);
-  assert.deepEqual(siteOnly, ["inject", "cache", "language_switcher"]);
+  assert.deepEqual(siteOnly, ["cache", "language_switcher"]);
   for (const legacyId of ["cache", "language_switcher"]) {
     const item = CONFIG_DOMAIN_CATALOG.find(candidate => candidate.id === legacyId);
     assert.equal(item.status, "excluded");

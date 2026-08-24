@@ -20,10 +20,10 @@ test("head 与 SEO 消费链只读取冻结配置，不再读取旧主题路径�
 
   assert.match(head, /stellar_config\('seo'\)/);
   assert.match(head, /stellar_config\('resources'\)/);
-  assert.match(head, /stellar_inject\('head'/);
+  assert.match(head, /stellar_inject\('headEnd'/);
   assert.doesNotMatch(head, /theme\.open_graph|theme\.preconnect|config\.inject|theme\.inject/);
 
-  assert.match(scripts, /stellar_inject\('script'/);
+  assert.match(scripts, /stellar_inject\('bodyEnd'/);
   assert.doesNotMatch(scripts, /config\.inject|theme\.inject/);
 
   assert.match(defines, /stellar_config\('seo\.canonical'\)/);

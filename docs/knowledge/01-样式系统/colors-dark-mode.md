@@ -69,7 +69,7 @@ graph TD
 
 | 配置键 | Stylus 变量 | 生成的 CSS 属性 |
 |--------|-------------|----------------|
-| `appearance.colors.theme` | `$c-theme` | `--theme`、`--theme-a10/20/30`、`--hue`、`--sat`、`--light` |
+| `appearance.colors.primary` | `$c-theme` | `--theme`、`--theme-a10/20/30`、`--hue`、`--sat`、`--light` |
 | `appearance.colors.accent` | `$c-accent` | `--accent` |
 | `appearance.colors.link` | `$c-link` | `--link`、`--link-a20` |
 

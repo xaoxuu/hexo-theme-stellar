@@ -187,7 +187,7 @@ function preconnect() {
 }
 
 function custom_inject() {
-  return stellar_inject('head', pageRender ? pageRender.document.headInject : pageConfig.inject?.head)
+  return stellar_inject('headEnd', pageRender ? pageRender.document.headEndInject : pageConfig.inject?.headEnd)
 }
 
 function generate_canonical() {
@@ -257,7 +257,9 @@ function generate_canonical() {
   <% } %>
 
   <% if (config.highlight && config.highlight.enable == true && config.highlight.hljs == true) { %>
-    <%- css(stellar_config('appearance.codeBlock.highlightTheme')) %>
+    <% if (stellar_config('appearance.codeBlock.highlightStylesheet')) { %>
+      <%- css(stellar_config('appearance.codeBlock.highlightStylesheet')) %>
+    <% } %>
   <% } %>
 
   <%- json_ld(pageViewModel || undefined) %>

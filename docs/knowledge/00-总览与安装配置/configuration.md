@@ -105,10 +105,11 @@ Pre-alpha M3 的 Blueprint 只在 init 时把选择结果展开为上述显式�
 | `extensions.tags` | 标签 Extension 行为 |
 | `extensions.features` | 可选 Feature 的注册式配置 |
 | `extensions.services` | 业务端点与 GitHub 完整 URL |
+| `inject` | `<head>` 与 `<body>` 末尾的可信原文注入（v2 已交付） |
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
-`inject.head/script` 也已交付，但它是站点与页面级的可信逃生口，只从站点 `_config.stellar.yml` 和页面 Front Matter 读取，不是主题 `_config.yml` 的默认配置小节。
+`inject.head_end/body_end` 是主题、站点与页面级的可信逃生口。主题默认与站点覆盖使用字符串，页面 Front Matter 也只接受字符串；渲染时站点文本在前、页面文本在后，以一个换行拼接，原文不解析、不格式化。
 
 ### 卡片 Hover 插件
 
@@ -119,11 +120,9 @@ extensions:
   features:
     card_hover:
       enabled: false
-      spotlight_color: 'rgba(255, 255, 255, 0.25)'
-      max_tilt: 3
 ```
 
-`spotlight_color` 控制光斑颜色；单个组件可用 CSS 变量 `--card-hover-spotlight-color` 覆盖。`max_tilt` 单位为度，无效值回退为 `3`，运行时限制在 `0`～`8` 的安全范围。插件采用 `.card-hover` 基础类与 `.card-hover--spotlight`、`.card-hover--tilt` 修饰类组合，关闭时这些类不会改变静态样式。完整的运行时接口与接入范围见[插件系统](../07-外部集成/plugin-system.md#card-hover卡片光效与倾斜)。
+Card Hover 只公开 `enabled`；光斑颜色和最大倾斜角是主题内部策略。插件采用 `.card-hover` 基础类与 `.card-hover--spotlight`、`.card-hover--tilt` 修饰类组合，关闭时这些类不会改变静态样式。完整的运行时接口与接入范围见[插件系统](../07-外部集成/plugin-system.md#card-hover卡片光效与倾斜)。
 
 **参考源码**：[_config.yml](../../../_config.yml)、[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
@@ -210,7 +209,7 @@ seo:
       - https://github.com/example
 ```
 
-`seo` 子树与配置根均已封闭。`resources.preconnect` 数组由站点层完整替换；`inject.head/script` 是可信多行字符串。实现细节见[HTML Head 与 SEO 元数据](../02-布局系统/head-seo.md)和[Canonical URL 系统](../05-前端交互/canonical-url.md)。
+`seo` 子树与配置根均已封闭。`resources.preconnect` 数组由站点层完整替换；`inject.head_end/body_end` 是可信多行字符串。实现细节见[HTML Head 与 SEO 元数据](../02-布局系统/head-seo.md)和[Canonical URL 系统](../05-前端交互/canonical-url.md)。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
@@ -470,11 +469,11 @@ graph TB
 
 关键样式配置：
 
-1. **字号**：`appearance.typography.font_size.root` 设置桌面端根字号；行内代码与代码块分别使用 `inline_code` / `code_block`。
+1. **字号与字体**：`appearance.typography.font_size.root` 设置桌面端根字号；`font_family.body/code` 分别控制正文和全部代码字体。
 2. **圆角**：`appearance.shape.radius` 使用 `card_large/card/card_small` 与 `image_large/image/image_small` 的完整语义名。
-3. **颜色**：`appearance.colors.theme/accent/link` 使用 HSL 值，便于精确调色。
+3. **颜色**：`appearance.colors.primary/accent/link` 使用 CSS Color，便于精确调色。
 4. **左栏外观**：支持纯色、渐变或带模糊效果的背景图
-5. **资源兜底**：`resources.fallbacks` 按 `avatar/link_card/cover/project_icon/banner/topic_cover/image/error_page` 的实际角色命名。
+5. **资源兜底**：`resources.fallbacks` 只公开 `avatar/link_card/cover`；错误页插图使用可空的 `resources.error_page.image`，其余固定素材由主题内部维护。
 
 完整样式细节见[设计令牌与 CSS 变量](../01-样式系统/design-tokens.md)。
 
@@ -555,7 +554,7 @@ Version: <%= stellar_info('version') %>
 
 ```stylus
 $root-font-size = hexo-config('appearance.typography.font_size.root')
-$theme-color = hexo-config('appearance.colors.theme')
+$theme-color = hexo-config('appearance.colors.primary')
 
 :root
   font-size: $root-font-size
@@ -683,7 +682,7 @@ layout:
 
 优先使用设计令牌而非硬编码值：
 
-- 用 `appearance.colors.theme`、`appearance.colors.accent` 保持一致配色
+- 用 `appearance.colors.primary`、`appearance.colors.accent` 保持一致配色
 - 用 `appearance.shape.radius.*` 保持统一圆角
 - 用 `appearance.typography.font_size.*` 实现可伸缩排版
 

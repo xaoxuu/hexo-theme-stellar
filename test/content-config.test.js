@@ -59,7 +59,7 @@ test("Front Matter Schema 保留 Hexo 字段并解析最终 Stellar 字段", () 
     collection: { profile: "wiki", id: "stellar" },
     render: { math: "katex", diagrams: { theme: "dark" } },
     seo: { open_graph: { image: "/cover.webp" } },
-    inject: { head: "<meta name=\"example\">" }
+    inject: { head_end: "<meta name=\"example\">", body_end: "<script>example()</script>" }
   }, "source/wiki/stellar/index.md");
 
   assert.equal(parsed.title, "页面");
@@ -67,7 +67,8 @@ test("Front Matter Schema 保留 Hexo 字段并解析最终 Stellar 字段", () 
   assert.equal(parsed.render.math, "katex");
   assert.equal(parsed.render.diagrams.theme, "dark");
   assert.equal(parsed.seo.openGraph.image, "/cover.webp");
-  assert.equal(parsed.inject.head, "<meta name=\"example\">");
+  assert.equal(parsed.inject.headEnd, "<meta name=\"example\">");
+  assert.equal(parsed.inject.bodyEnd, "<script>example()</script>");
   assert.ok(Object.isFrozen(parsed.seo.openGraph));
 });
 

@@ -8748,12 +8748,30 @@
           ],
           "example": {
             "language": "zh-CN",
-            "headInject": "",
+            "headEndInject": "",
+            "bodyEndInject": "",
             "preferredTheme": "auto"
           }
         },
         {
-          "path": "render.document.headInject",
+          "path": "render.document.bodyEndInject",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": ""
+        },
+        {
+          "path": "render.document.headEndInject",
           "type": [
             "string"
           ],
@@ -9916,7 +9934,8 @@
           "example": {
             "document": {
               "language": "zh-CN",
-              "headInject": ""
+              "headEndInject": "",
+              "bodyEndInject": ""
             },
             "layout": {
               "pageType": "content"
@@ -10701,12 +10720,30 @@
           ],
           "example": {
             "language": "zh-CN",
-            "headInject": "",
+            "headEndInject": "",
+            "bodyEndInject": "",
             "preferredTheme": "auto"
           }
         },
         {
-          "path": "render.document.headInject",
+          "path": "render.document.bodyEndInject",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": ""
+        },
+        {
+          "path": "render.document.headEndInject",
           "type": [
             "string"
           ],
@@ -11843,7 +11880,8 @@
           "example": {
             "document": {
               "language": "zh-CN",
-              "headInject": ""
+              "headEndInject": "",
+              "bodyEndInject": ""
             },
             "layout": {
               "pageType": "content"
@@ -12651,12 +12689,30 @@
           ],
           "example": {
             "language": "zh-CN",
-            "headInject": "",
+            "headEndInject": "",
+            "bodyEndInject": "",
             "preferredTheme": "auto"
           }
         },
         {
-          "path": "render.document.headInject",
+          "path": "render.document.bodyEndInject",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:topic",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": ""
+        },
+        {
+          "path": "render.document.headEndInject",
           "type": [
             "string"
           ],
@@ -14810,12 +14866,30 @@
           ],
           "example": {
             "language": "zh-CN",
-            "headInject": "",
+            "headEndInject": "",
+            "bodyEndInject": "",
             "preferredTheme": "auto"
           }
         },
         {
-          "path": "render.document.headInject",
+          "path": "render.document.bodyEndInject",
+          "type": [
+            "string"
+          ],
+          "required": true,
+          "default": {
+            "kind": "literal",
+            "value": ""
+          },
+          "scope": "PageViewModel:wiki",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": ""
+        },
+        {
+          "path": "render.document.headEndInject",
           "type": [
             "string"
           ],

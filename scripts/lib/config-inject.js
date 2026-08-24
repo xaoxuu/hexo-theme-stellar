@@ -3,8 +3,7 @@
 
 function pageInjectText(value) {
   if (typeof value === "string") return value;
-  if (!Array.isArray(value)) return "";
-  return value.filter(item => typeof item === "string").join("\n");
+  return "";
 }
 
 function mergeTrustedInject(siteText, pageValue) {

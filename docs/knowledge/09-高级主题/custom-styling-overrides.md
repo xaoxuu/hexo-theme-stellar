@@ -41,8 +41,8 @@ tags:
 | --- | --- |
 | `appearance.color_scheme` | 初始主题模式：`auto`、`light` 或 `dark` |
 | `appearance.typography.font_size.root` | 页面字号基准 |
-| `appearance.typography.font_family.*` | 正文、代码和代码块字体栈 |
-| `appearance.colors.theme` / `accent` / `link` | 主题色、强调色和链接色 |
+| `appearance.typography.font_family.body` / `code` | 正文与代码字体栈 |
+| `appearance.colors.primary` / `accent` / `link` | 主色、强调色和链接色 |
 | `appearance.shape.radius.*` | 卡片、图片和横条圆角 |
 | `appearance.backgrounds.sidebar.*` | 左栏背景和背景图 |
 
@@ -65,7 +65,7 @@ tags:
 
 ## 注入和站点自定义 CSS
 
-官方 Extension 不提供资源覆盖入口。使用方可以在站点工程维护自己的 CSS 文件，或在受信任的 `inject.head` 中显式加入 `<link>` / `<style>`。自定义样式应：
+官方 Extension 不提供资源覆盖入口。使用方可以在站点工程维护自己的 CSS 文件，或在受信任的 `inject.head_end` 中显式加入 `<link>` / `<style>`。自定义样式应：
 
 - 放在使用方工程，不修改主题发布包；
 - 使用 `var(--theme)`、`var(--card)`、`var(--text-p1)` 等语义变量；

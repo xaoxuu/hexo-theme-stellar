@@ -2,7 +2,7 @@
 
 > 本页由当前配置 Schema 与 M6 退出字段清单自动生成。请勿手工编辑。
 
-结论计数：`public=492`、`localize=5`、`derive=0`、`internalize=9`、`remove=1`。
+结论计数：`public=485`、`localize=5`、`derive=0`、`internalize=9`、`remove=1`。
 
 | Scope | Path | Accepted | Disposition | Default source | Consumers | Rationale |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -119,8 +119,8 @@
 | front_matter | footer.share | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | front_matter | footer.show_tags | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | front_matter | inject | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| front_matter | inject.head | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| front_matter | inject.script | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| front_matter | inject.body_end | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| front_matter | inject.head_end | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | front_matter | listing | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | front_matter | listing.priority | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | front_matter | navigation | yes | public | derived:theme profile navigation | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
@@ -151,15 +151,15 @@
 | theme | appearance | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.backgrounds | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.backgrounds.page | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | appearance.backgrounds.page.blur | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | appearance.backgrounds.page.blur.overlay | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | appearance.backgrounds.page.blur.radius | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | appearance.backgrounds.page.blur.saturation | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | appearance.backgrounds.page.backdrop | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | appearance.backgrounds.page.backdrop.overlay | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | appearance.backgrounds.page.backdrop.radius | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | appearance.backgrounds.page.backdrop.saturation | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.backgrounds.page.image | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.backgrounds.sidebar | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | appearance.backgrounds.sidebar.blur | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | appearance.backgrounds.sidebar.blur.overlay | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | appearance.backgrounds.sidebar.blur.radius | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | appearance.backgrounds.sidebar.backdrop | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | appearance.backgrounds.sidebar.backdrop.overlay | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | appearance.backgrounds.sidebar.backdrop.radius | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.backgrounds.sidebar.color | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.backgrounds.sidebar.color.dark | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.backgrounds.sidebar.color.light | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
@@ -167,15 +167,14 @@
 | theme | appearance.backgrounds.sidebar.opacity | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.backgrounds.sidebar.surface | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.code_block | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | appearance.code_block.highlight_theme | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | appearance.code_block.highlight_stylesheet | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.code_block.scrollbar_width | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.color_scheme | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.colors | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.colors.accent | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.colors.link | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | appearance.colors.theme | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | appearance.colors.primary | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.gradients | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | appearance.gradients.angle | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.gradients.avatar_ring | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.gradients.primary_action | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.gradients.search_bar | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
@@ -193,10 +192,10 @@
 | theme | appearance.shape.radius.image_large | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.shape.radius.image_small | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.typography | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | appearance.typography.content_align | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.typography.font_family | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.typography.font_family.body | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | appearance.typography.font_family.code_block | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | appearance.typography.font_family.inline_code | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | appearance.typography.font_family.code | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.typography.font_size | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.typography.font_size.code_block | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.typography.font_size.inline_code | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
@@ -206,7 +205,6 @@
 | theme | appearance.typography.heading_prefixes.h3 | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.typography.heading_prefixes.h4 | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.typography.heading_prefixes.h5 | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | appearance.typography.text_align | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.article | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | content.article.banner | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>article renderer<br>listing renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
@@ -346,8 +344,8 @@
 | theme | extensions.tags.quot.&lt;variant&gt;.prefix | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.tags.quot.&lt;variant&gt;.suffix | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | inject | yes | public | declarative schema | head renderer<br>script renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | inject.head | yes | public | declarative schema | head renderer<br>script renderer<br>PageViewModel | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | inject.script | yes | public | declarative schema | head renderer<br>script renderer<br>PageViewModel | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | inject.body_end | yes | public | declarative schema | head renderer<br>script renderer<br>PageViewModel | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | inject.head_end | yes | public | declarative schema | head renderer<br>script renderer<br>PageViewModel | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | layout | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>page generators<br>navigation renderer<br>sidebar renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | layout.profiles | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>page generators<br>navigation renderer<br>sidebar renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | layout.profiles.author | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>page generators<br>navigation renderer<br>sidebar renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
@@ -447,17 +445,12 @@
 | theme | layout.profiles.wiki.sidebar.left | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>page generators<br>navigation renderer<br>sidebar renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | layout.profiles.wiki.sidebar.right | yes | public | declarative schema | CollectionModel<br>PageViewModel<br>page generators<br>navigation renderer<br>sidebar renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | resources | yes | public | declarative schema | head renderer<br>Reference generator<br>PageViewModel<br>tag renderers<br>image fallback filters<br>error renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | resources.error_page | yes | public | declarative schema | PageViewModel<br>tag renderers<br>image fallback filters<br>error renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | resources.error_page.image | yes | public | declarative schema | head renderer<br>PageViewModel<br>tag renderers<br>image fallback filters | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | resources.fallbacks | yes | public | declarative schema | PageViewModel<br>tag renderers<br>image fallback filters<br>error renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | resources.fallbacks.avatar | yes | public | declarative schema | head renderer<br>PageViewModel<br>tag renderers<br>image fallback filters | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | resources.fallbacks.banner | yes | public | declarative schema | head renderer<br>PageViewModel<br>tag renderers<br>image fallback filters | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | resources.fallbacks.cover | yes | public | declarative schema | head renderer<br>PageViewModel<br>tag renderers<br>image fallback filters | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | resources.fallbacks.error_page | yes | public | declarative schema | head renderer<br>PageViewModel<br>tag renderers<br>image fallback filters | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | resources.fallbacks.image | yes | public | declarative schema | PageViewModel<br>tag renderers<br>image fallback filters<br>error renderer<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | resources.fallbacks.image.content | yes | public | declarative schema | head renderer<br>PageViewModel<br>tag renderers<br>image fallback filters | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | resources.fallbacks.image.tag_plugin | yes | public | declarative schema | head renderer<br>PageViewModel<br>tag renderers<br>image fallback filters | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | resources.fallbacks.link_card | yes | public | declarative schema | head renderer<br>PageViewModel<br>tag renderers<br>image fallback filters | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | resources.fallbacks.project_icon | yes | public | declarative schema | head renderer<br>PageViewModel<br>tag renderers<br>image fallback filters | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | resources.fallbacks.topic_cover | yes | public | declarative schema | head renderer<br>PageViewModel<br>tag renderers<br>image fallback filters | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | resources.preconnect | yes | public | declarative schema | head renderer<br>PageViewModel<br>tag renderers<br>image fallback filters | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | seo | yes | public | declarative schema | Post PageViewModel<br>head renderer<br>JSON-LD helper<br>browser canonical check<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | seo.canonical | yes | public | declarative schema | Post PageViewModel<br>head renderer<br>JSON-LD helper<br>browser canonical check<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |

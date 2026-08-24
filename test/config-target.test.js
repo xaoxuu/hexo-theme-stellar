@@ -179,7 +179,7 @@ test("Collection 与 Front Matter 的完整目标节点保持严格作用域", (
   for (const pathValue of [
     "collection.profile", "collection.id", "card.cover", "banner.image", "sidebar.left.widgets",
     "navigation.menu", "article.style", "footer.license", "comments.options", "visibility.listed",
-    "listing.priority", "source.repository", "render.math", "render.diagrams", "seo.open_graph", "inject.head"
+    "listing.priority", "source.repository", "render.math", "render.diagrams", "seo.open_graph", "inject.head_end"
   ]) assert.equal(hasField("front_matter", pathValue), true, `Front Matter 缺少 ${pathValue}`);
 
   for (const pathValue of ["route.path", "route.start", "navigation.tree", "note_defaults.sidebar"]) {
@@ -190,7 +190,7 @@ test("Collection 与 Front Matter 的完整目标节点保持严格作用域", (
   assert.equal(resolveConfigMigration("collection", "comments.service").to, "comments.provider");
   assert.equal(resolveConfigMigration("front_matter", "collection.type").to, "collection.profile");
   assert.equal(resolveConfigMigration("front_matter", "comments.giscus.data-theme").to, "comments.options.*");
-  assert.equal(resolveConfigMigration("front_matter", "inject.head[]").to, "inject.head");
+  assert.equal(resolveConfigMigration("front_matter", "inject.head[]").to, "inject.head_end");
 });
 
 test("主题默认配置的活动叶子与注释示例字段族都有迁移证据", () => {
@@ -248,6 +248,8 @@ test("官方脚本样式与内部集成有显式内部化清单", () => {
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("data_services.<official_service>.js"));
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("extensions.cache.*"));
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("extensions.features.{link_prefetch,lightbox,reveal}.provider"));
+  assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("appearance.gradients.angle"));
+  assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("resources.fallbacks.{project_icon,banner,topic_cover,image}"));
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("style.loading.*"));
 });
 
@@ -295,14 +297,14 @@ test("运行时只投影已交付配置节点且根配置已经封闭", () => {
       "seo.open_graph.twitter_id",
       "seo.structured_data.same_as",
       "resources.preconnect",
-      "inject.head",
-      "inject.script"
+      "resources.error_page.image",
+      "inject.head_end",
+      "inject.body_end"
     ]
   );
-  assert.ok(deliveredPaths.includes("appearance.typography.font_family.inline_code"));
-  assert.ok(deliveredPaths.includes("appearance.backgrounds.page.blur.saturation"));
-  assert.ok(deliveredPaths.includes("resources.fallbacks.image.tag_plugin"));
-  assert.ok(deliveredPaths.includes("resources.fallbacks.error_page"));
+  assert.ok(deliveredPaths.includes("appearance.typography.font_family.code"));
+  assert.ok(deliveredPaths.includes("appearance.backgrounds.page.backdrop.saturation"));
+  assert.ok(deliveredPaths.includes("resources.error_page.image"));
   const deliveredExtensionPaths = deliveredPaths.filter(pathValue => pathValue.startsWith("extensions."));
   assert.ok(deliveredExtensionPaths.includes("extensions.search.provider"));
   assert.ok(deliveredExtensionPaths.includes("extensions.comments.providers.<provider>"));

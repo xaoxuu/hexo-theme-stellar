@@ -394,22 +394,22 @@ head 模板包含 DNS 预取控制：
 
 ## 自定义注入系统
 
-`stellar_inject()` 组合两个可信 head 注入来源：
+`stellar_inject()` 组合两个可信注入来源：
 
 ```mermaid
 graph TD
-    START["stellar_inject('head')"] --> SITEINJECT["frozen inject.head string"]
-    SITEINJECT --> PAGEINJECT["current page inject.head"]
+    START["stellar_inject('headEnd')"] --> SITEINJECT["frozen inject.headEnd string"]
+    SITEINJECT --> PAGEINJECT["current page inject.headEnd"]
     PAGEINJECT --> CONCAT["site text + one inserted newline + page text"]
     CONCAT --> OUTPUT["Output raw HTML to <head>"]
 ```
 
 **优先级：**
 
-1. 站点主题配置 `_config.stellar.yml` 的 `inject.head` 多行字符串
-2. 页面 Front Matter 的 `inject.head`（当前数组或后续最终字符串形态）
+1. 主题默认或站点覆盖的 `inject.head_end` 多行字符串
+2. 页面 Front Matter 的 `inject.head_end` 多行字符串
 
-不再读取 Hexo `_config.yml.inject` 或合并后的 `theme.inject`。两段原文均不解析、不格式化；仅在两段都非空时插入一个换行。页尾脚本使用相同规则组合 `inject.script`。
+不读取 Hexo `_config.yml.inject`。两段原文均不解析、不格式化；仅在两段都非空时插入一个换行。页尾脚本使用相同规则组合 `inject.body_end`，内部 camelCase 键为 `bodyEnd`。
 
 无需修改主题模板即可注入自定义 meta、分析脚本或 CSS。
 

@@ -64,7 +64,7 @@ x-set-text-colors($scheme, $p0 = 1, $p1 = 0.8, $p2 = 0.7, $p3 = 0.5, $p4 = 0.4)
 
 // ========== 通用主题色渐变 ==========
 // 约定：渐变颜色通过 --item-theme 提供，未设置时回退到站点主题色 var(--theme)；
-// 淡色变体为 --item-theme-light（默认与白色混合 50%）；角度默认取 appearance.gradients.angle。
+// 淡色变体为 --item-theme-light（默认与白色混合 50%）；角度由主题固定为 210deg。
 // 注意：局部覆盖 --item-theme 的元素需同时设置 --item-theme-light（如 x-theme-light()），
 // 否则淡色变体仍沿用 :root 上的主题色。
 // 用法示例：
@@ -77,7 +77,7 @@ x-set-text-colors($scheme, $p0 = 1, $p1 = 0.8, $p2 = 0.7, $p3 = 0.5, $p4 = 0.4)
 x-theme-light($color = unquote('var(--item-theme)'), $ratio = 50%)
   return unquote('color-mix(in srgb, %s %s, #fff)' % ($color $ratio))
 
-x-theme-gradient($color = unquote('var(--item-theme)'), $start = 20%, $end = 60%, $light-ratio = 50%, $angle = convert(hexo-config('appearance.gradients.angle')) or 225deg)
+x-theme-gradient($color = unquote('var(--item-theme)'), $start = 20%, $end = 60%, $light-ratio = 50%, $angle = 210deg)
   $light = x-theme-light($color, $light-ratio)
   return unquote('linear-gradient(%s, %s %s, %s %s)' % ($angle $light $start $color $end))
 

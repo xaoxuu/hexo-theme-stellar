@@ -259,8 +259,7 @@ const CONFIG_DOMAIN_CATALOG = deepFreeze([
     migrationSlice: "root-seal",
   }),
   domain("inject", {
-    sourceKind: "site_theme_override",
-    sources: ["_config.stellar.yml"],
+    sources: THEME_SOURCES,
     boundary: "sealed",
     runtimeTarget: "hexo.stellar.config.inject",
     consumers: ["head renderer", "script renderer", "PageViewModel"],

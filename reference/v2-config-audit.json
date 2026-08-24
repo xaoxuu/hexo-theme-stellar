@@ -13,7 +13,7 @@
     "remove"
   ],
   "counts": {
-    "public": 492,
+    "public": 485,
     "localize": 5,
     "derive": 0,
     "internalize": 9,
@@ -1596,7 +1596,7 @@
     },
     {
       "scope": "front_matter",
-      "path": "inject.head",
+      "path": "inject.body_end",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -1610,7 +1610,7 @@
     },
     {
       "scope": "front_matter",
-      "path": "inject.script",
+      "path": "inject.head_end",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -2043,7 +2043,7 @@
     },
     {
       "scope": "theme",
-      "path": "appearance.backgrounds.page.blur",
+      "path": "appearance.backgrounds.page.backdrop",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -2058,7 +2058,7 @@
     },
     {
       "scope": "theme",
-      "path": "appearance.backgrounds.page.blur.overlay",
+      "path": "appearance.backgrounds.page.backdrop.overlay",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -2072,7 +2072,7 @@
     },
     {
       "scope": "theme",
-      "path": "appearance.backgrounds.page.blur.radius",
+      "path": "appearance.backgrounds.page.backdrop.radius",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -2086,7 +2086,7 @@
     },
     {
       "scope": "theme",
-      "path": "appearance.backgrounds.page.blur.saturation",
+      "path": "appearance.backgrounds.page.backdrop.saturation",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -2129,7 +2129,7 @@
     },
     {
       "scope": "theme",
-      "path": "appearance.backgrounds.sidebar.blur",
+      "path": "appearance.backgrounds.sidebar.backdrop",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -2144,7 +2144,7 @@
     },
     {
       "scope": "theme",
-      "path": "appearance.backgrounds.sidebar.blur.overlay",
+      "path": "appearance.backgrounds.sidebar.backdrop.overlay",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -2158,7 +2158,7 @@
     },
     {
       "scope": "theme",
-      "path": "appearance.backgrounds.sidebar.blur.radius",
+      "path": "appearance.backgrounds.sidebar.backdrop.radius",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -2272,7 +2272,7 @@
     },
     {
       "scope": "theme",
-      "path": "appearance.code_block.highlight_theme",
+      "path": "appearance.code_block.highlight_stylesheet",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -2357,7 +2357,7 @@
     },
     {
       "scope": "theme",
-      "path": "appearance.colors.theme",
+      "path": "appearance.colors.primary",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -2382,20 +2382,6 @@
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.gradients.angle",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state"
       ]
     },
     {
@@ -2642,6 +2628,20 @@
     },
     {
       "scope": "theme",
+      "path": "appearance.typography.content_align",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "PageViewModel",
+        "layout renderer",
+        "Stylus compiler",
+        "browser theme state"
+      ]
+    },
+    {
+      "scope": "theme",
       "path": "appearance.typography.font_family",
       "disposition": "public",
       "defaultSource": "declarative schema",
@@ -2671,21 +2671,7 @@
     },
     {
       "scope": "theme",
-      "path": "appearance.typography.font_family.code_block",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.typography.font_family.inline_code",
+      "path": "appearance.typography.font_family.code",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -2813,20 +2799,6 @@
     {
       "scope": "theme",
       "path": "appearance.typography.heading_prefixes.h5",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.typography.text_align",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -4766,7 +4738,7 @@
     },
     {
       "scope": "theme",
-      "path": "inject.head",
+      "path": "inject.body_end",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -4779,7 +4751,7 @@
     },
     {
       "scope": "theme",
-      "path": "inject.script",
+      "path": "inject.head_end",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6376,6 +6348,35 @@
     },
     {
       "scope": "theme",
+      "path": "resources.error_page",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "PageViewModel",
+        "tag renderers",
+        "image fallback filters",
+        "error renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "resources.error_page.image",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "head renderer",
+        "PageViewModel",
+        "tag renderers",
+        "image fallback filters"
+      ]
+    },
+    {
+      "scope": "theme",
       "path": "resources.fallbacks",
       "disposition": "public",
       "defaultSource": "declarative schema",
@@ -6405,20 +6406,6 @@
     },
     {
       "scope": "theme",
-      "path": "resources.fallbacks.banner",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "head renderer",
-        "PageViewModel",
-        "tag renderers",
-        "image fallback filters"
-      ]
-    },
-    {
-      "scope": "theme",
       "path": "resources.fallbacks.cover",
       "disposition": "public",
       "defaultSource": "declarative schema",
@@ -6433,92 +6420,7 @@
     },
     {
       "scope": "theme",
-      "path": "resources.fallbacks.error_page",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "head renderer",
-        "PageViewModel",
-        "tag renderers",
-        "image fallback filters"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "resources.fallbacks.image",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "tag renderers",
-        "image fallback filters",
-        "error renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "resources.fallbacks.image.content",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "head renderer",
-        "PageViewModel",
-        "tag renderers",
-        "image fallback filters"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "resources.fallbacks.image.tag_plugin",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "head renderer",
-        "PageViewModel",
-        "tag renderers",
-        "image fallback filters"
-      ]
-    },
-    {
-      "scope": "theme",
       "path": "resources.fallbacks.link_card",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "head renderer",
-        "PageViewModel",
-        "tag renderers",
-        "image fallback filters"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "resources.fallbacks.project_icon",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "head renderer",
-        "PageViewModel",
-        "tag renderers",
-        "image fallback filters"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "resources.fallbacks.topic_cover",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",

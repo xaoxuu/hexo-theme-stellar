@@ -23,6 +23,7 @@ const { mergeBrand, normalizeBrand } = require("../brand");
 const { firstContentImage, postDescription, postImages } = require("../seo");
 const { caption } = require("../caption");
 const { wikiReadmeHtml } = require("../wiki_readme");
+const INTERNAL = require("../internal-constants");
 const {
   articleFooterDefaults,
   articlePresentationDefaults,
@@ -156,7 +157,7 @@ function normalizeStringList(value) {
   return [];
 }
 
-function normalizeHeadInject(value) {
+function normalizeInject(value) {
   return typeof value === "string" ? value : "";
 }
 
@@ -431,7 +432,8 @@ function buildPostRenderModel(input, collection, item) {
   return {
     document: {
       language: normalizeLanguage(page.lang, page.language, frontMatter.lang, frontMatter.language, siteConfig.language),
-      headInject: normalizeHeadInject(frontMatter.inject?.head),
+      headEndInject: normalizeInject(frontMatter.inject?.headEnd),
+      bodyEndInject: normalizeInject(frontMatter.inject?.bodyEnd),
       preferredTheme: appearance.colorScheme === "auto"
         ? "auto"
         : String(appearance.colorScheme || "")
@@ -634,7 +636,7 @@ function buildWikiRenderModel(input, collection, item) {
   const repository = typeof collection.source.repository === "string" ? collection.source.repository : "";
   const githubApi = stellarConfig.extensions.services.github.apiUrl;
   const rawUrl = stellarConfig.extensions.services.github.rawUrl;
-  const defaultIcon = stellarConfig.resources.fallbacks.projectIcon;
+  const defaultIcon = INTERNAL.resources.projectIcon;
   const automaticBrand = {
     image: { src: collection.identity.icon || defaultIcon, variant: "icon" },
     name: collection.identity.name,
@@ -657,7 +659,8 @@ function buildWikiRenderModel(input, collection, item) {
   return {
     document: {
       language,
-      headInject: normalizeHeadInject(frontMatter.inject?.head),
+      headEndInject: normalizeInject(frontMatter.inject?.headEnd),
+      bodyEndInject: normalizeInject(frontMatter.inject?.bodyEnd),
       preferredTheme: appearance.colorScheme === "auto" ? "auto" : String(appearance.colorScheme || "")
     },
     layout: {
@@ -1163,7 +1166,7 @@ function buildNotebookRenderModel(input, collection, item) {
   const content = requireContentConfig(input.stellarConfig, input.themeSource);
   const automaticBrand = {
     image: {
-      src: collection.identity.icon || input.stellarConfig.resources.fallbacks.projectIcon || "",
+      src: collection.identity.icon || INTERNAL.resources.projectIcon,
       variant: "icon"
     },
     name: collection.identity.name,
@@ -1453,7 +1456,7 @@ function buildTopicIndexRender(input) {
     date: item.date
   }));
   const latest = pages[0] || null;
-  const cover = collection.presentation.card?.cover || input.stellarConfig.resources.fallbacks.topicCover;
+  const cover = collection.presentation.card?.cover || INTERNAL.resources.topicCover;
   return deepFreeze({
     id: collection.id,
     name: collection.identity.name,

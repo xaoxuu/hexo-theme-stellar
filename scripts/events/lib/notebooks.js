@@ -18,6 +18,7 @@ const {
 const { ensureRuntimeData } = require("../../lib/runtime-data");
 const { ConfigSchemaError } = require("../../lib/config-schema");
 const { deepFreeze } = require("../../schema/schema-utils");
+const INTERNAL = require("../../lib/internal-constants");
 
 function eachPage(pages, callback) {
   if (typeof pages.each === "function") {
@@ -121,7 +122,7 @@ module.exports = ctx => {
       siteBrand: ctx.stellar.config.site.brand,
       collection: notebook,
       collectionType: "notebook",
-      defaultIcon: ctx.stellar.config.resources.fallbacks.projectIcon
+      defaultIcon: INTERNAL.resources.projectIcon
     });
     const projection = {
       id: notebook.id,
@@ -129,7 +130,7 @@ module.exports = ctx => {
       name: identity.name,
       headline: identity.headline,
       description: identity.description,
-      icon: identity.icon || ctx.stellar.config.resources.fallbacks.projectIcon || "",
+      icon: identity.icon || INTERNAL.resources.projectIcon,
       order: collection?.listing.order ?? notebook.listing.order ?? 0,
       listed: collection?.visibility.listed !== false && notebook.visibility?.listed !== false,
       navigation: {

@@ -236,7 +236,7 @@ dropdown 由 `layout/_partial/dropdown.ejs` 使用原生 `<details>/<summary>` �
 
 Social 按钮与 dropdown 触发器共用 32px 高度、4px 内边距和 8px 圆角；内联 SVG 与图片图标统一放入 24×24px 图标盒，图片使用 `object-fit: contain` 保持原始比例，且两者都不接受通用 dropdown trigger 的 20px 覆盖。
 
-普通操作按钮悬停时会取消灰阶，并将 SVG 中使用 `currentColor` 的填充或描边接入通用主题渐变（`--item-theme-light` 至 `--item-theme`）；渐变角度仍遵循 `appearance.gradients.angle`。Footer dropdown 主图标未激活时透明度为 `0.5`，hover 或菜单打开后恢复为 `1`，同时复用普通按钮高亮；未悬停、未打开时保留图标自身颜色的灰阶效果。按钮的 hover 与 dropdown 打开态分别消费 collection surface 的 hover/active 背景和阴影令牌，因此 glass 左栏显示半透明顶部光照与高光边，card 左栏使用 `var(--block)` 且无阴影；状态切换不使用背景或阴影过渡。
+普通操作按钮悬停时会取消灰阶，并将 SVG 中使用 `currentColor` 的填充或描边接入通用主题渐变（`--item-theme-light` 至 `--item-theme`）；渐变角度由主题内部固定为 `210deg`。Footer dropdown 主图标未激活时透明度为 `0.5`，hover 或菜单打开后恢复为 `1`，同时复用普通按钮高亮；未悬停、未打开时保留图标自身颜色的灰阶效果。按钮的 hover 与 dropdown 打开态分别消费 collection surface 的 hover/active 背景和阴影令牌，因此 glass 左栏显示半透明顶部光照与高光边，card 左栏使用 `var(--block)` 且无阴影；状态切换不使用背景或阴影过渡。
 
 `type: spacer` 是显式判别项，不再依赖魔法 ID：
 
@@ -313,7 +313,8 @@ graph BT
 |----------------------|----------|------|
 | `$leftbar-background-image` / `appearance.backgrounds.sidebar.image` | `.sidebg` 上的 `background-image` | sidebar.styl |
 | `appearance.backgrounds.sidebar.opacity` | `.sidebg` 上的 `--background-opacity` CSS 变量 | sidebar.styl |
-| `appearance.backgrounds.sidebar.blur.radius` | `--blur-px` CSS 变量 → `.sidebg` 的 `filter: blur(...)` | sidebar.styl |
+| `appearance.backgrounds.sidebar.backdrop.radius` | `--blur-px` CSS 变量 → `.sidebg` 的 `filter: blur(...)` | sidebar.styl |
+| `appearance.backgrounds.sidebar.backdrop.overlay` | `.leftbar-container:after` 的覆盖色 | sidebar.styl |
 | `$leftbar-background-color-light` | `.sidebg` 的 `background-color`（浅色模式） | sidebar.styl |
 | `$leftbar-background-color-dark` | `.sidebg` 的 `background-color`（深色模式经 `prefers-color-scheme`） | sidebar.styl |
 | `appearance.backgrounds.sidebar.surface` | `glass` / `card` 风格开关；同时为 `.l_left` 声明对应 `data-ui-surface` | layout.ejs / sidebar.styl / collection.styl |

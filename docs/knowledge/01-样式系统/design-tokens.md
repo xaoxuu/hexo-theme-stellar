@@ -46,8 +46,8 @@ tags:
 | 令牌 | 配置来源 | 语义 |
 | --- | --- | --- |
 | `$ff-body` | `appearance.typography.font_family.body` | 正文字体栈 |
-| `$ff-code` | `appearance.typography.font_family.inline_code` | 行内代码字体栈 |
-| `$ff-codeblock` | `appearance.typography.font_family.code_block` | 代码块字体栈 |
+| `$ff-code` | `appearance.typography.font_family.code` | 行内代码字体栈 |
+| `$ff-codeblock` | `appearance.typography.font_family.code` | 代码块字体栈 |
 | `$fs-root` / `--fs-root` | `appearance.typography.font_size.root` | 页面字号基准；移动端按响应式规则调整 |
 | `$fs-code` | `appearance.typography.font_size.inline_code` | 行内代码字号 |
 | `$fs-codeblock` | `appearance.typography.font_size.code_block` | 代码块字号 |
@@ -58,7 +58,7 @@ tags:
 
 | 令牌 | 配置来源 | 语义 |
 | --- | --- | --- |
-| `$c-theme` | `appearance.colors.theme` | 主题主色 |
+| `$c-theme` | `appearance.colors.primary` | 主题主色 |
 | `$c-accent` | `appearance.colors.accent` | 强调色 |
 | `$c-link` | `appearance.colors.link` | 链接色 |
 | `$c-base-hue` | 主题固定值 | 背景和文字色生成的基础色相 |

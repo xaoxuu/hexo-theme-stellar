@@ -3,7 +3,7 @@ appearance:
   typography:
     font_size:
       root: 16px
-    text_align: left
+    content_align: left
   shape:
     corner: superellipse(1.25)
     radius:
@@ -15,7 +15,7 @@ appearance:
       image: 16px
       image_small: 8px
   colors:
-    theme: 'hsl(192 98% 55%)'
+    primary: 'hsl(192 98% 55%)'
     accent: 'hsl(14 100% 57%)'
     link: 'hsl(207 90% 54%)'
   motion:

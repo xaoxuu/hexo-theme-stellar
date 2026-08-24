@@ -5,12 +5,14 @@
 
 'use strict';
 
+const INTERNAL = require('../../lib/internal-constants');
+
 module.exports.processSite = function(htmlContent) {
   // 短路：无 <img 的页面（如 404）无需正则扫描
   if (typeof htmlContent !== 'string' || !/<img/i.test(htmlContent)) {
     return htmlContent;
   }
-  const default_image = this.stellar.config.resources.fallbacks.image.content;
+  const default_image = INTERNAL.resources.contentImage;
   return htmlContent.replace(/<img(.*?)src="(.*?)"(.*?)>/gi, function(imgTag) {
     if (/="data:image(.*?)/gi.test(imgTag)) {
       return imgTag;

@@ -1,16 +1,9 @@
 <%
 // 隐藏的 SVG 线性渐变定义，配合 --item-grad 使用（用法见 menu.ejs 与 theme_base.styl 注释）。
-// 渐变角度来自 appearance.gradients.angle（CSS 角度，0=向上、顺时针），与 CSS 渐变方向保持一致；
+// 渐变角度由主题固定为 210deg（CSS 角度，0=向上、顺时针），与 CSS 渐变方向保持一致；
 // 颜色使用 --item-theme（默认 var(--theme)）与 --item-theme-light 两个 CSS 变量，
 // 因此同一份定义可被任意元素复用，局部覆盖 --item-theme 的元素需同时设置 --item-theme-light。
-var gradAngle = 225
-var configuredAngle = stellar_config('appearance.gradients.angle')
-if (configuredAngle) {
-  gradAngle = parseFloat(configuredAngle)
-  if (isNaN(gradAngle)) {
-    gradAngle = 225
-  }
-}
+var gradAngle = 210
 var gradRad = gradAngle * Math.PI / 180
 var gradVX = Math.sin(gradRad)
 var gradVY = -Math.cos(gradRad)

@@ -38,14 +38,18 @@ test("主题默认、模板、模型与 Stylus 只消费最终 Appearance 路径
   assert.match(config, /^appearance:/m);
   assert.doesNotMatch(config, /^(?:style|default):/m);
   assert.match(consumers, /appearance\.typography\.font_family\.body/);
+  assert.match(consumers, /appearance\.typography\.font_family\.code/);
+  assert.match(consumers, /appearance\.typography\.content_align/);
+  assert.match(consumers, /appearance\.colors\.primary/);
   assert.match(consumers, /appearance\.backgrounds\.sidebar/);
   assert.match(consumers, /appearance\.motion\.page_transition/);
   assert.doesNotMatch(consumers, /theme\.style|themeConfig\.style|hexo-config\('style\./);
+  assert.doesNotMatch(consumers, /appearance\.gradients\.angle|highlightTheme|backgrounds\.(?:sidebar|page)\.blur/);
   assert.match(sidebar, /--background-opacity: hexo-config\('appearance\.backgrounds\.sidebar\.opacity'\)/);
   assert.doesNotMatch(sidebar, /if hexo-config\('appearance\.backgrounds\.sidebar\.opacity'\)/);
 });
 
-test("资源兜底消费链只读取 resources.fallbacks 并内部化加载文案", () => {
+test("资源兜底消费链只读取三个公开 fallback，固定资源来自内部常量", () => {
   const consumers = [
     "layout/404.ejs",
     "layout/_partial/scripts/defines.ejs",
@@ -66,6 +70,9 @@ test("资源兜底消费链只读取 resources.fallbacks 并内部化加载文�
   ].map(read).join("\n");
 
   assert.match(consumers, /resources\.fallbacks/);
+  assert.match(consumers, /INTERNAL\.resources/);
+  assert.match(read("layout/404.ejs"), /resources\.errorPage\.image/);
+  assert.doesNotMatch(consumers, /fallbacks\.(?:projectIcon|banner|topicCover|image|errorPage)/);
   assert.doesNotMatch(consumers, /theme\.default|config\.default/);
   assert.match(read("source/css/_common/loading.styl"), /var\(--text-loading\)/);
   assert.doesNotMatch(read("source/css/_common/loading.styl"), /style\.loading/);

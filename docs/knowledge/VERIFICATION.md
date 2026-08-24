@@ -361,6 +361,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `e81d589` | refactor(v2): 收敛 Extensions 与 Services 配置 (#728) | 设计文档 `2026-08-24-v2-extensions-final-convergence/`；Search、Comments、Tags、Features 与 Services 收敛为最终 Schema/doctor/Reference/消费链，删除 AI Summary、MathJax v2 与旧 Mermaid CSS，新增 Gist 标签并迁移主站内容；主题 372 项测试、性能门禁与主工程 261 个生成文件通过，Issue #728 已闭环 |
 | `72efc0c` | refactor(v2): 收敛 Site Shell 与 Layout 配置 (#726) | 设计文档 `2026-08-24-v2-site-layout-final-convergence/`；Brand、菜单、Footer、13 个 Profile、双栏 Sidebar、Tabs、首页评论与 active menu 引用收敛为最终 Schema 和消费链；主题门禁与主工程构建通过，Issue #726 已闭环 |
 | `3fef786` | refactor(v2): 收敛 Content 与 Collection 配置 (#727) | 设计文档 `2026-08-24-v2-content-final-convergence/`；Article、Notebook、Collection、Front Matter 与生成器消费链收敛为最终 Schema，主站内容完成字段迁移；主题门禁与主工程构建通过，Issue #727 已闭环 |
 | `3b64803` | fix(v2): 完善 M6 搜索资源单源 (#724) | #724 最终复审修正：Algolia、本地搜索与快捷键脚本由内部常量经 Runtime Manifest 投影，浏览器搜索 Extension 不再硬编码资源路径；同步 AI 按钮缺省/显式空数组规格与资源单源回归 |

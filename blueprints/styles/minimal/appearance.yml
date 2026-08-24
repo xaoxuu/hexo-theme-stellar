@@ -5,7 +5,8 @@ appearance:
       root: 17px
     font_family:
       body: 'Charter, Georgia, "Times New Roman", serif'
-    text_align: left
+      code: 'Menlo, Monaco, Consolas, system-ui, monospace, sans-serif'
+    content_align: left
   shape:
     corner: superellipse(1.1)
     radius:
@@ -17,7 +18,7 @@ appearance:
       image: 8px
       image_small: 4px
   colors:
-    theme: 'hsl(220 12% 36%)'
+    primary: 'hsl(220 12% 36%)'
     accent: 'hsl(18 55% 46%)'
     link: 'hsl(215 45% 42%)'
   motion:

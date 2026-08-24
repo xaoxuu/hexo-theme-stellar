@@ -103,7 +103,7 @@
       ],
       "example": {
         "image": null,
-        "blur": {
+        "backdrop": {
           "radius": "100px",
           "overlay": "var(--bg-a75)",
           "saturation": "300%"
@@ -113,8 +113,8 @@
       "sealed": true
     },
     {
-      "path": "appearance.backgrounds.page.blur",
-      "runtimePath": "appearance.backgrounds.page.blur",
+      "path": "appearance.backgrounds.page.backdrop",
+      "runtimePath": "appearance.backgrounds.page.backdrop",
       "type": [
         "object"
       ],
@@ -145,8 +145,8 @@
       "sealed": true
     },
     {
-      "path": "appearance.backgrounds.page.blur.overlay",
-      "runtimePath": "appearance.backgrounds.page.blur.overlay",
+      "path": "appearance.backgrounds.page.backdrop.overlay",
+      "runtimePath": "appearance.backgrounds.page.backdrop.overlay",
       "type": [
         "string"
       ],
@@ -171,8 +171,8 @@
       "migration": "configuration/appearance"
     },
     {
-      "path": "appearance.backgrounds.page.blur.radius",
-      "runtimePath": "appearance.backgrounds.page.blur.radius",
+      "path": "appearance.backgrounds.page.backdrop.radius",
+      "runtimePath": "appearance.backgrounds.page.backdrop.radius",
       "type": [
         "string"
       ],
@@ -197,8 +197,8 @@
       "migration": "configuration/appearance"
     },
     {
-      "path": "appearance.backgrounds.page.blur.saturation",
-      "runtimePath": "appearance.backgrounds.page.blur.saturation",
+      "path": "appearance.backgrounds.page.backdrop.saturation",
+      "runtimePath": "appearance.backgrounds.page.backdrop.saturation",
       "type": [
         "string"
       ],
@@ -285,8 +285,8 @@
       "sealed": true
     },
     {
-      "path": "appearance.backgrounds.sidebar.blur",
-      "runtimePath": "appearance.backgrounds.sidebar.blur",
+      "path": "appearance.backgrounds.sidebar.backdrop",
+      "runtimePath": "appearance.backgrounds.sidebar.backdrop",
       "type": [
         "object"
       ],
@@ -316,8 +316,8 @@
       "sealed": true
     },
     {
-      "path": "appearance.backgrounds.sidebar.blur.overlay",
-      "runtimePath": "appearance.backgrounds.sidebar.blur.overlay",
+      "path": "appearance.backgrounds.sidebar.backdrop.overlay",
+      "runtimePath": "appearance.backgrounds.sidebar.backdrop.overlay",
       "type": [
         "string"
       ],
@@ -342,8 +342,8 @@
       "migration": "configuration/appearance"
     },
     {
-      "path": "appearance.backgrounds.sidebar.blur.radius",
-      "runtimePath": "appearance.backgrounds.sidebar.blur.radius",
+      "path": "appearance.backgrounds.sidebar.backdrop.radius",
+      "runtimePath": "appearance.backgrounds.sidebar.backdrop.radius",
       "type": [
         "string"
       ],
@@ -459,7 +459,7 @@
       ],
       "default": {
         "kind": "literal",
-        "value": "url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg)"
+        "value": "https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg"
       },
       "scope": "theme",
       "cascade": [
@@ -474,7 +474,7 @@
         "Stylus compiler",
         "browser theme state"
       ],
-      "example": "url(/sidebar.webp)",
+      "example": "/sidebar.webp",
       "migration": "configuration/appearance"
     },
     {
@@ -561,14 +561,14 @@
       ],
       "example": {
         "scrollbar_width": "4px",
-        "highlight_theme": "https://example.com/highlight.css"
+        "highlight_stylesheet": "https://example.com/highlight.css"
       },
       "migration": "configuration/appearance#code-block",
       "sealed": true
     },
     {
-      "path": "appearance.code_block.highlight_theme",
-      "runtimePath": "appearance.codeBlock.highlightTheme",
+      "path": "appearance.code_block.highlight_stylesheet",
+      "runtimePath": "appearance.codeBlock.highlightStylesheet",
       "type": [
         "string",
         "null"
@@ -675,7 +675,7 @@
         "Reference generator"
       ],
       "example": {
-        "theme": "hsl(192 98% 55%)",
+        "primary": "hsl(192 98% 55%)",
         "accent": "hsl(14 100% 57%)",
         "link": "hsl(207 90% 54%)"
       },
@@ -735,8 +735,8 @@
       "migration": "configuration/appearance"
     },
     {
-      "path": "appearance.colors.theme",
-      "runtimePath": "appearance.colors.theme",
+      "path": "appearance.colors.primary",
+      "runtimePath": "appearance.colors.primary",
       "type": [
         "string"
       ],
@@ -785,37 +785,10 @@
         "Reference generator"
       ],
       "example": {
-        "primary_action": "linear-gradient(to right, #00f, #0ff)",
-        "angle": "210deg"
+        "primary_action": "linear-gradient(to right, #00f, #0ff)"
       },
       "migration": "configuration/appearance#gradients",
       "sealed": true
-    },
-    {
-      "path": "appearance.gradients.angle",
-      "runtimePath": "appearance.gradients.angle",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "210deg"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state"
-      ],
-      "example": "210deg",
-      "migration": "configuration/appearance"
     },
     {
       "path": "appearance.gradients.avatar_ring",
@@ -1284,13 +1257,45 @@
         "font_size": {
           "root": "16px"
         },
-        "text_align": "left",
+        "content_align": "left",
         "heading_prefixes": {
           "h2": "#"
         }
       },
       "migration": "configuration/appearance#typography",
       "sealed": true
+    },
+    {
+      "path": "appearance.typography.content_align",
+      "runtimePath": "appearance.typography.contentAlign",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "left"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "PageViewModel",
+        "layout renderer",
+        "Stylus compiler",
+        "browser theme state"
+      ],
+      "example": "left",
+      "migration": "configuration/appearance",
+      "values": [
+        "left",
+        "center",
+        "right",
+        "justify"
+      ]
     },
     {
       "path": "appearance.typography.font_family",
@@ -1318,8 +1323,7 @@
       ],
       "example": {
         "body": "system-ui, sans-serif",
-        "inline_code": "Menlo, monospace",
-        "code_block": "Menlo, monospace"
+        "code": "Menlo, monospace"
       },
       "migration": "configuration/appearance#typography",
       "sealed": true
@@ -1351,34 +1355,8 @@
       "migration": "configuration/appearance"
     },
     {
-      "path": "appearance.typography.font_family.code_block",
-      "runtimePath": "appearance.typography.fontFamily.codeBlock",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "Menlo, Monaco, Consolas, system-ui, monospace, sans-serif"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state"
-      ],
-      "example": "Menlo, monospace",
-      "migration": "configuration/appearance"
-    },
-    {
-      "path": "appearance.typography.font_family.inline_code",
-      "runtimePath": "appearance.typography.fontFamily.inlineCode",
+      "path": "appearance.typography.font_family.code",
+      "runtimePath": "appearance.typography.fontFamily.code",
       "type": [
         "string"
       ],
@@ -1651,32 +1629,6 @@
         "browser theme state"
       ],
       "example": ":",
-      "migration": "configuration/appearance"
-    },
-    {
-      "path": "appearance.typography.text_align",
-      "runtimePath": "appearance.typography.textAlign",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "left"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state"
-      ],
-      "example": "left",
       "migration": "configuration/appearance"
     },
     {
@@ -5481,40 +5433,15 @@
         "Reference generator"
       ],
       "example": {
-        "head": "<meta name=\"example\" content=\"stellar\">",
-        "script": "<script>console.log('stellar')</script>"
+        "head_end": "<meta name=\"example\" content=\"stellar\">",
+        "body_end": "<script>console.log('stellar')</script>"
       },
       "migration": "configuration/inject",
       "sealed": true
     },
     {
-      "path": "inject.head",
-      "runtimePath": "inject.head",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": ""
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "trusted_text",
-      "normalization": "preserve trusted source text exactly; append page text after site text with one newline",
-      "consumers": [
-        "head renderer",
-        "script renderer",
-        "PageViewModel"
-      ],
-      "example": "<meta name=\"example\" content=\"stellar\">",
-      "migration": "configuration/inject"
-    },
-    {
-      "path": "inject.script",
-      "runtimePath": "inject.script",
+      "path": "inject.body_end",
+      "runtimePath": "inject.bodyEnd",
       "type": [
         "string"
       ],
@@ -5535,6 +5462,31 @@
         "PageViewModel"
       ],
       "example": "<script>console.log('stellar')</script>",
+      "migration": "configuration/inject"
+    },
+    {
+      "path": "inject.head_end",
+      "runtimePath": "inject.headEnd",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": ""
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "trusted_text",
+      "normalization": "preserve trusted source text exactly; append page text after site text with one newline",
+      "consumers": [
+        "head renderer",
+        "script renderer",
+        "PageViewModel"
+      ],
+      "example": "<meta name=\"example\" content=\"stellar\">",
       "migration": "configuration/inject"
     },
     {
@@ -8630,10 +8582,70 @@
         ],
         "fallbacks": {
           "cover": "/cover.svg"
+        },
+        "error_page": {
+          "image": "/404.svg"
         }
       },
       "migration": "configuration/resources",
       "sealed": true
+    },
+    {
+      "path": "resources.error_page",
+      "runtimePath": "resources.errorPage",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {}
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "PageViewModel",
+        "tag renderers",
+        "image fallback filters",
+        "error renderer",
+        "Reference generator"
+      ],
+      "example": {
+        "image": "/404.svg"
+      },
+      "migration": "configuration/resources#error-page",
+      "sealed": true
+    },
+    {
+      "path": "resources.error_page.image",
+      "runtimePath": "resources.errorPage.image",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "head renderer",
+        "PageViewModel",
+        "tag renderers",
+        "image fallback filters"
+      ],
+      "example": "/404.svg",
+      "migration": "configuration/resources"
     },
     {
       "path": "resources.fallbacks",
@@ -8662,11 +8674,7 @@
       "example": {
         "avatar": "/avatar.svg",
         "link_card": "/link.svg",
-        "cover": "/cover.svg",
-        "image": {
-          "content": "/image.svg",
-          "tag_plugin": "/error.svg"
-        }
+        "cover": "/cover.svg"
       },
       "migration": "configuration/resources#fallbacks",
       "sealed": true
@@ -8698,32 +8706,6 @@
       "migration": "configuration/resources"
     },
     {
-      "path": "resources.fallbacks.banner",
-      "runtimePath": "resources.fallbacks.banner",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/banner/books.jpg"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "head renderer",
-        "PageViewModel",
-        "tag renderers",
-        "image fallback filters"
-      ],
-      "example": "/banner.jpg",
-      "migration": "configuration/resources"
-    },
-    {
       "path": "resources.fallbacks.cover",
       "runtimePath": "resources.fallbacks.cover",
       "type": [
@@ -8750,115 +8732,6 @@
       "migration": "configuration/resources"
     },
     {
-      "path": "resources.fallbacks.error_page",
-      "runtimePath": "resources.fallbacks.errorPage",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "head renderer",
-        "PageViewModel",
-        "tag renderers",
-        "image fallback filters"
-      ],
-      "example": "/404.svg",
-      "migration": "configuration/resources"
-    },
-    {
-      "path": "resources.fallbacks.image",
-      "runtimePath": "resources.fallbacks.image",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "PageViewModel",
-        "tag renderers",
-        "image fallback filters",
-        "error renderer",
-        "Reference generator"
-      ],
-      "example": {
-        "content": "/image.svg",
-        "tag_plugin": "/error.svg"
-      },
-      "migration": "configuration/resources#fallbacks",
-      "sealed": true
-    },
-    {
-      "path": "resources.fallbacks.image.content",
-      "runtimePath": "resources.fallbacks.image.content",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "head renderer",
-        "PageViewModel",
-        "tag renderers",
-        "image fallback filters"
-      ],
-      "example": "/image.svg",
-      "migration": "configuration/resources"
-    },
-    {
-      "path": "resources.fallbacks.image.tag_plugin",
-      "runtimePath": "resources.fallbacks.image.tagPlugin",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "head renderer",
-        "PageViewModel",
-        "tag renderers",
-        "image fallback filters"
-      ],
-      "example": "/error.svg",
-      "migration": "configuration/resources"
-    },
-    {
       "path": "resources.fallbacks.link_card",
       "runtimePath": "resources.fallbacks.linkCard",
       "type": [
@@ -8882,58 +8755,6 @@
         "image fallback filters"
       ],
       "example": "/link.svg",
-      "migration": "configuration/resources"
-    },
-    {
-      "path": "resources.fallbacks.project_icon",
-      "runtimePath": "resources.fallbacks.projectIcon",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2779789.png"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "head renderer",
-        "PageViewModel",
-        "tag renderers",
-        "image fallback filters"
-      ],
-      "example": "/project.png",
-      "migration": "configuration/resources"
-    },
-    {
-      "path": "resources.fallbacks.topic_cover",
-      "runtimePath": "resources.fallbacks.topicCover",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/10433048.png"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "head renderer",
-        "PageViewModel",
-        "tag renderers",
-        "image fallback filters"
-      ],
-      "example": "/topic.png",
       "migration": "configuration/resources"
     },
     {
@@ -13943,8 +13764,8 @@
       "sealed": true
     },
     {
-      "path": "inject.head",
-      "runtimePath": "inject.head",
+      "path": "inject.body_end",
+      "runtimePath": "inject.bodyEnd",
       "type": [
         "string"
       ],
@@ -13972,8 +13793,8 @@
       "sealed": true
     },
     {
-      "path": "inject.script",
-      "runtimePath": "inject.script",
+      "path": "inject.head_end",
+      "runtimePath": "inject.headEnd",
       "type": [
         "string"
       ],

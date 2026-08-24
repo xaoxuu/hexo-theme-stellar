@@ -23,13 +23,13 @@ layout:
           widgets: []
 
 resources:
-  fallbacks:
-    error_page: https://example.com/404.svg
+  error_page:
+    image: https://example.com/404.svg
 ```
 
 - `layout.profiles.error.path` 决定生成路径。
 - `navigation.active_menu` 与 `sidebar` 决定 Shell 布局。
-- `resources.fallbacks.error_page` 提供插图，冻结运行时键为 `resources.fallbacks.errorPage`。
+- `resources.error_page.image` 提供可空插图，冻结运行时键为 `resources.errorPage.image`；设为 `null` 时不渲染图片。
 
 错误页不读取全局评论 provider，也不通过空标题间接隐藏评论。404 canonical 由 head 层明确跳过，`robots: none` 保持 Hexo 页面字段语义。
 
@@ -40,5 +40,5 @@ resources:
 ## 参考源码
 
 - [layout/404.ejs](../../../layout/404.ejs)
-- [_config.yml](../../../_config.yml)（`layout.profiles.error`、`resources.fallbacks.error_page`）
+- [_config.yml](../../../_config.yml)（`layout.profiles.error`、`resources.error_page.image`）
 - [评论系统](../07-外部集成/comment-systems.md)

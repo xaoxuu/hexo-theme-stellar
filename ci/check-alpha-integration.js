@@ -60,7 +60,7 @@ function addTopicFixture(root) {
     "headline: Alpha Topic",
     "description: Topic ViewModel integration fixture.",
     "article:",
-    "  type: tech",
+    "  style: tech",
     ""
   ].join("\n"));
   write(root, "source/_posts/alpha-topic.md", [

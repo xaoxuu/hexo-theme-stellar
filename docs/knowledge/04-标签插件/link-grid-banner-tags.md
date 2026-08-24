@@ -280,7 +280,7 @@ graph TD
 |------|------|------|
 | `title` | 位置参数 | 横幅标题文本 |
 | `subtitle` | 位置参数 | 横幅副标题文本 |
-| `bg` | 命名参数 | 背景图 URL（回退冻结运行时配置 `ctx.stellar.config.resources.fallbacks.banner`） |
+| `bg` | 命名参数 | 背景图 URL；省略时使用主题内部固定横幅资源 |
 | `avatar` | 命名参数 | 头像图片 URL |
 | `link` | 命名参数 | 设置后把横幅包装为 `<a class="banner-link">` 并隐藏返回按钮 |
 
