@@ -61,21 +61,10 @@ hexo.extend.generator.register("search_json_generator", function(locals) {
     return temp_post;
   }
 
-  // 循环外编译一次排除正则，避免每个 post/page 重复 new RegExp。
-  const excludePatterns = cfg.exclude.map(pattern => new RegExp("^" + pattern.replace(/\*/g, ".*") + "$"));
-
-  function matchAndExit(path, patterns) {
-    for (const pattern of patterns) {
-      if (path.match(pattern)) return true;
-    }
-    return false;
-  }
-
   if (posts) {
     posts.each(function(post) {
       var layouts = ["post"];
       if (!layouts.includes(post.layout)) return;
-      if (matchAndExit(post.path, excludePatterns)) return;
       const config = pageConfigs.get(post);
       if (!config || !isSearchable(config)) return;
       const item = generateJson(post);
@@ -86,7 +75,6 @@ hexo.extend.generator.register("search_json_generator", function(locals) {
     pages.each(function(page) {
       var layouts = ["page", "wiki"];
       if (!layouts.includes(page.layout)) return;
-      if (matchAndExit(page.path, excludePatterns)) return;
       const config = pageConfigs.get(page);
       if (!config || !isSearchable(config)) return;
       const item = generateJson(page);
@@ -94,7 +82,7 @@ hexo.extend.generator.register("search_json_generator", function(locals) {
     });
   }
   return {
-    path: cfg.indexPath,
+    path: "search.json",
     data: JSON.stringify(res)
   };
 });

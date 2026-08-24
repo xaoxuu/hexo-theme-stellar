@@ -30,52 +30,49 @@ YAML 中 Stellar 自有字段统一使用 snake_case，解析后的 JavaScript �
 
 | ID | 默认 | 用途 |
 |----|------|------|
-| `lazy_loading` | 始终启用 | 图片懒加载的 `transition/fix_ratio` 行为 |
-| `preload` | enabled | Flying Pages 预加载 |
+| `lazy_loading` | 始终启用 | 图片懒加载的 `transition/auto_aspect_ratio` 行为 |
+| `link_prefetch` | enabled | Flying Pages 链接预取 |
 | `lightbox` | enabled | Fancybox 图片灯箱 |
 | `reveal` | enabled | ScrollReveal 入场动画 |
-| `ai_summary` | disabled | Tianli GPT 摘要实现 |
 | `math` | provider=null | KaTeX / MathJax provider |
-| `diagrams` | disabled | Mermaid 图表 |
-| `code_copy` | enabled | 代码复制 |
-| `adaptive_text` | enabled | 背景自适应文字 |
+| `diagrams` | provider=null | Mermaid 图表 |
 | `card_hover` | disabled | 卡片光斑与倾斜 |
-| `cjk_typography` | disabled | Heti 中文排版 |
+| `heti` | disabled | Heti 中文排版 |
 
 ```yaml
 extensions:
   features:
     lightbox:
       enabled: true
-      mode: auto
       selector: .timenode p>img
     reveal:
       enabled: true
       distance: 8px
-      duration: 1000
-      interval: 100
+      duration_ms: 1000
+      interval_ms: 100
       scale: 1
     card_hover:
       enabled: true
-      spotlight_color: 'rgba(255, 255, 255, 0.25)'
-      max_tilt: 3
 ```
 
-所有布尔状态统一使用 `enabled`。Fancybox、ScrollReveal、Tianli GPT 与 Mermaid 是主题固定实现，不再暴露 provider；KaTeX 与 MathJax 仍是可替换实现，由 `features.math.provider` 显式选择。Swiper 是主题内置容器能力，按 DOM 需求加载，不公开配置。
+Fancybox 与 ScrollReveal 的实现固定；MathJax 只使用 v3。Mermaid 通过 `diagrams.provider: mermaid` 选择并使用官方样式。代码复制与自适应文字固定开启，不公开配置；AI Summary 已整体删除。
 
 页面 Front Matter 通过 `render.math` 与 `render.diagrams` 选择内容渲染能力，不直接配置官方资源 URL。
 
 ## Tag Extension
 
-标签插件行为位于 `extensions.tags.<tag_id>`。当前注册 `note/checkbox/quot/emoji/icon/button/image/timeline/mark/hashtag/okr/gallery/chat`；copy 的反馈文案已归入语言包，不再占用公开配置节点。
+标签插件行为位于 `extensions.tags.<tag_id>`。公开配置只注册 `note/checkbox/quot/emoji/icon/button/mark/hashtag/gallery`；Image、Timeline、OKR 与 Chat 的固定策略不再公开配置。
 
 ```yaml
 extensions:
   tags:
-    timeline:
-      max_height: 80vh
-    chat:
-      endpoint: https://siteinfo.listentothewind.cn/api/v1
+    emoji:
+      default_source: blobcat
+      sources:
+        blobcat: https://cdn.example/{name}.gif
+    gallery:
+      size: mix
+      aspect_ratio: square
 ```
 
 标签渲染器只读取冻结的 `hexo.stellar.config.extensions.tags`，不再访问 `theme.tag_plugins`。
@@ -118,7 +115,8 @@ extensions:
       api_url: https://api.github.com
       raw_url: https://raw.githubusercontent.com
       gist_url: https://gist.github.com
-      card_url: https://github-readme-stats.vercel.app
+    github_card:
+      endpoint: https://github-readme-stats.vercel.app
 ```
 
 GitHub 地址统一为完整 URL。Runtime Manifest 携带主题内部注入且冻结的 cache/request policy；`createRequestClient()` 提供同 method+URL 并发去重、按 service TTL、超时重试、fresh 命中、stale 失败回退、200 KiB 单条限制和最旧条目淘汰。站点不再调节这些实现常量。客户端调用原生 `fetch` 而不替换 `window.fetch` 或 XHR 原型，并以 `stellar:request-start/end` 通知锚点稳定器。

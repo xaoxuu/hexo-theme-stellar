@@ -23,10 +23,10 @@ module.exports = ctx => function(args) {
   var el = ''
   el += `<div class="tag-plugin posters-wrap">`
   if (api) {
-    el += `<div class="data-service ds-friends" data-api="${api}"><div class="tag-plugin gallery grid-box" layout="grid" ratio="square" ${ctx.args.joinTags(args, ['size']).join(' ')}></div></div>`
+    el += `<div class="data-service ds-friends" data-api="${api}"><div class="tag-plugin gallery grid-box" layout="grid" aspect_ratio="square" ${ctx.args.joinTags(args, ['size']).join(' ')}></div></div>`
   } else if (args.group) {
     const links = ctx.stellar.data.links || {};
-    el += `<div class="tag-plugin gallery grid-box" layout="grid" ratio="portrait" ${ctx.args.joinTags(args, ['size']).join(' ')}>`
+    el += `<div class="tag-plugin gallery grid-box" layout="grid" aspect_ratio="portrait" ${ctx.args.joinTags(args, ['size']).join(' ')}>`
     for (let item of (links[args.group] || [])) {
       if (item?.url) {
         el += `<div class="grid-cell poster-card">`

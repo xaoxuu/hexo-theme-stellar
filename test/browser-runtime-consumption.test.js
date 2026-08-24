@@ -83,14 +83,15 @@ test("Search、services、comments 与 Feature 只消费 manifest context", () =
   assert.match(search, /return \(\) =>/);
   const feature = read("source/js/runtime/extensions/feature.mjs");
   assert.doesNotMatch(feature, /case 'katex'/);
-  assert.match(feature, /context\.assets\.resolve\(config\.assets\.localCss\)/);
+  assert.doesNotMatch(feature, /AI summary|ChucklePostAI|TianliGPT/);
   assert.match(feature, /stellarAdaptiveText\?\.mount/);
   assert.match(feature, /case 'deferred-icons': return mountLegacyAsset\(root, context, config\.asset, 'deferredIcons'\)/);
   assert.match(feature, /case 'dropdown': return mountLegacyAsset\(root, context, config\.asset, 'dropdown'\)/);
   assert.doesNotMatch(feature, /context\.assets\.(?:style|script)\(['"]\//);
   assert.match(feature, /stellar:legacy-feature-ready/);
   assert.doesNotMatch(feature, /__stellarLegacyFeatures/);
-  assert.match(feature, /AI summary compatibility adapter requires a document root/);
+  assert.match(feature, /case 'link-prefetch'/);
+  assert.match(feature, /case 'heti'/);
   const adaptive = read("source/js/plugins/adaptive-text.js");
   assert.doesNotMatch(adaptive, /adaptiveText(?:Elements|Observer|Active)/);
   assert.match(adaptive, /var mountedElements =/);

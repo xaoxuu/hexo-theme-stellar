@@ -137,15 +137,15 @@
       },
       {
         "path": "inline:1",
-        "bytes": 7438,
-        "gzipBytes": 3048
+        "bytes": 7486,
+        "gzipBytes": 3052
       }
     ],
-    "bytes": 54047,
-    "gzipBytes": 18643
+    "bytes": 54095,
+    "gzipBytes": 18647
   },
   "metric": "sum of gzip-9 bytes for unconditional local first-screen scripts, inline executable scripts, and unconditional module imports",
   "minimumReduction": 0.3,
-  "reduction": 0.466382,
+  "reduction": 0.466268,
   "passed": true
 }

@@ -14,6 +14,13 @@
 'use strict'
 
 const BUILTIN_STATUS_IDS = new Set(["in_track", "at_risk", "off_track", "finished", "unfinished"]);
+const BUILTIN_STATUSES = Object.freeze({
+  in_track: Object.freeze({ color: "blue" }),
+  at_risk: Object.freeze({ color: "yellow" }),
+  off_track: Object.freeze({ color: "orange" }),
+  finished: Object.freeze({ color: "green" }),
+  unfinished: Object.freeze({ color: "red" })
+});
 
 function localizeStatuses(ctx, statuses) {
   const __ = ctx.theme.i18n.__(ctx.config.language);
@@ -94,7 +101,7 @@ module.exports = ctx => function(args, content = '') {
     console.error('invalid okr tag:', contentArray);
     return ''
   }
-  const statusList = localizeStatuses(ctx, ctx.stellar.config.extensions.tags.okr.status)
+  const statusList = localizeStatuses(ctx, BUILTIN_STATUSES)
   const oMeta = args
   const oBody = splitContentAndNote(contentArray.shift())
   const krList = generateKRList(ctx, contentArray)

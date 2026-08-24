@@ -10,7 +10,7 @@
 'use strict'
 
 module.exports = ctx => function(args) {
-  const config = ctx.stellar.config.extensions.tags.emoji
+  const { defaultSource, sources } = ctx.stellar.config.extensions.tags.emoji
   args = ctx.args.map(args, ['url', 'height', 'name'], ['source', 'name'])
   var el = ''
   el += '<span class="tag-plugin emoji">'
@@ -33,16 +33,11 @@ module.exports = ctx => function(args) {
   }
   if (args.name == undefined) {
     // 省略了 source
-    for (let id in config) {
-      if (config[id]) {
-        args.name = args.source
-        args.source = id
-        break
-      }
-    }
+    args.name = args.source
+    args.source = defaultSource
   }
-  if (config[args.source] && args.name) {
-    let url = config[args.source].replace('{name}', args.name)
+  if (sources[args.source] && args.name) {
+    let url = sources[args.source].replace('{name}', args.name)
     el += '<img no-lazy="" class="inline"'
     el += ' src="' + url + '"'
     if (args.height) {

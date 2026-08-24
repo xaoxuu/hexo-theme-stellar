@@ -183,7 +183,7 @@ graph TD
 
 ### `tag_plugins`——标签插件内置文案
 
-OKR 的五个内置状态标签位于 `tag_plugins.okr.status.*`。站点可在 `extensions.tags.okr.status.<status>.label` 显式覆盖；未覆盖时使用当前语言的文案。
+OKR 的五个内置状态标签位于 `tag_plugins.okr.status.*`，展示颜色与文案策略由主题内部固定。
 
 | 键 | `en.yml` 值 |
 |----|-------------|
@@ -192,10 +192,6 @@ OKR 的五个内置状态标签位于 `tag_plugins.okr.status.*`。站点可在 
 | `tag_plugins.okr.status.off_track` | `Delayed` |
 | `tag_plugins.okr.status.finished` | `Completed` |
 | `tag_plugins.okr.status.unfinished` | `Incomplete` |
-
-### `feature`——可选功能内置文案
-
-`feature.ai_summary` 提供 AI 摘要的名称、介绍和四个操作按钮。构建期由 `runtime.ejs` 投影当前语言文案到 Runtime Manifest，浏览器不再依赖公开配置中的简体中文默认值。站点显式设置 `extensions.features.ai_summary.interface` 时仍可覆盖对应文案。
 
 ---
 
@@ -314,7 +310,7 @@ sequenceDiagram
 **新语言文件的最小清单：**
 
 - 复制 `en.yml` 的全部键路，不依赖容易过时的手工数量清单。
-- 特别检查 `message.copy_*`、`tag_plugins.okr.status.*` 与 `feature.ai_summary.*`。
+- 特别检查 `message.copy_*` 与 `tag_plugins.okr.status.*`。
 - 运行配置字段审计测试，它会同时检查三个内置语言的键路一致性。
 
 **参考源码**：[languages/en.yml](../../../languages/en.yml)

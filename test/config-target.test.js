@@ -162,7 +162,7 @@ test("Profile 旧 ID 全量映射到冻结的语义 ID", () => {
 test("Extension 与服务旧 ID 映射到注册表 ID", () => {
   assert.equal(FEATURE_ID_MIGRATIONS.fancybox, "lightbox");
   assert.equal(FEATURE_ID_MIGRATIONS.scrollreveal, "reveal");
-  assert.equal(FEATURE_ID_MIGRATIONS.tianli_gpt, "ai_summary");
+  assert.equal(FEATURE_ID_MIGRATIONS.tianli_gpt, null);
   assert.equal(FEATURE_ID_MIGRATIONS.katex, FEATURE_ID_MIGRATIONS.mathjax);
   assert.equal(FEATURE_ID_MIGRATIONS.swiper, null);
   assert.equal(SERVICE_ID_MIGRATIONS.siteinfo, "site_info");
@@ -247,7 +247,7 @@ test("官方脚本样式与内部集成有显式内部化清单", () => {
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("plugins.<official_extension>.{js,css,inject}"));
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("data_services.<official_service>.js"));
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("extensions.cache.*"));
-  assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("extensions.features.{preload,lightbox,reveal,ai_summary,diagrams}.provider"));
+  assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("extensions.features.{link_prefetch,lightbox,reveal}.provider"));
   assert.ok(CONFIG_INTERNALIZED_RESOURCES.includes("style.loading.*"));
 });
 

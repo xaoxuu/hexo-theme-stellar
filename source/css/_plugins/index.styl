@@ -4,10 +4,7 @@
 // 根据主题配置加载
 if hexo-config('extensions.features.reveal.enabled')
   @import 'scrollreveal'
-if hexo-config('extensions.features.code_copy.enabled')
-  @import 'copycode'
-if hexo-config('extensions.features.ai_summary.enabled')
-  @import 'tianli_gpt'
+@import 'copycode'
 if hexo-config('extensions.features.math.provider') == 'katex'
   @import 'katex'
 if hexo-config('extensions.features.card_hover.enabled')

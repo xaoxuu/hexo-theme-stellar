@@ -135,13 +135,3 @@ tag_plugins:
       identity:
         left: Assertive
         right: Turbulent
-
-feature:
-  ai_summary:
-    name: AI Summary
-    introduce: I am QX-AI, your reading assistant. Use the actions below to introduce me, recommend related posts, or summarize this article.
-    buttons:
-      introduce: Introduce yourself
-      recommend: Recommend posts
-      summarize: Summarize article
-      shuttle: Explore more

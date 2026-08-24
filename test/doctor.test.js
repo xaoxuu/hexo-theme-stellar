@@ -78,6 +78,39 @@ test("doctor 为 Content、Collection 与 Front Matter 旧路径给出最终迁�
   assert.equal(result.issues.some(item => item.path === "article.indent" && item.expected === "article.paragraph_indent"), true);
 });
 
+test("doctor 为 Extensions 旧路径给出最终迁移目标或明确删除", () => {
+  const baseDir = initializedSite("classic-blog");
+  fs.writeFileSync(path.join(baseDir, "_config.stellar.yml"), [
+    "extensions:",
+    "  search:",
+    "    providers:",
+    "      local:",
+    "        index_path: /custom.json",
+    "        cache_ttl: 10",
+    "  tags:",
+    "    image:",
+    "      parse_markdown: true",
+    "  features:",
+    "    ai_summary:",
+    "      enabled: true",
+    "    preload:",
+    "      enabled: true",
+    "  services:",
+    "    github:",
+    "      card_url: https://cards.example.com",
+    ""
+  ].join("\n"));
+
+  const result = runDoctor({ baseDir, nodeVersion: "22.0.0", hexoVersion: "8.1.0" });
+  assert.equal(result.ok, false);
+  assert.equal(result.issues.some(item => item.path.endsWith("index_path") && item.expected.includes("remove field")), true);
+  assert.equal(result.issues.some(item => item.path.endsWith("cache_ttl") && item.expected.endsWith("cache_ttl_seconds")), true);
+  assert.equal(result.issues.some(item => item.path.endsWith("tags.image") && item.expected.includes("remove field")), true);
+  assert.equal(result.issues.some(item => item.path.endsWith("features.ai_summary") && item.expected.includes("remove field")), true);
+  assert.equal(result.issues.some(item => item.path.endsWith("features.preload") && item.expected.endsWith("link_prefetch")), true);
+  assert.equal(result.issues.some(item => item.path.endsWith("github.card_url") && item.expected.endsWith("extensions.services.github_card.endpoint")), true);
+});
+
 test("doctor 接受 BOM 与 CRLF Front Matter", () => {
   const baseDir = initializedSite("classic-blog");
   const page = path.join(baseDir, "source/_posts/crlf.md");

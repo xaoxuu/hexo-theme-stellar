@@ -229,11 +229,8 @@ extensions:
     providers:
       local:
         scope: all # post / page / all
-        index_path: /search.json
         include_content: true
-        lazy: true
-        cache_ttl: 86400
-        exclude: []
+        cache_ttl_seconds: 86400
       algolia:
         appId:
         apiKey:
@@ -301,107 +298,70 @@ extensions:
       question:
         prefix: quot:question
     emoji:
-      default: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif
-      twemoji: https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg
-      qq: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif
-      aru: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif
-      tieba: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png
-      blobcat: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif
+      default_source: blobcat
+      sources:
+        twemoji: https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg
+        qq: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif
+        aru: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif
+        tieba: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png
+        blobcat: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif
     icon:
       default_color: accent
     button:
       default_color: theme
-    image:
-      parse_markdown: false
-    timeline:
-      max_height: 80vh
     mark:
       default_color: yellow
     hashtag:
       default_color:
-    okr:
-      border: true
-      status:
-        in_track:
-          color: blue
-        at_risk:
-          color: yellow
-        off_track:
-          color: orange
-        finished:
-          color: green
-        unfinished:
-          color: red
     gallery:
-      layout: grid
       size: mix
-      ratio: square
-    chat:
-      endpoint: https://siteinfo.listentothewind.cn/api/v1
+      aspect_ratio: square
 
   features:
     lazy_loading:
       transition: fade
-      fix_ratio: true
-    preload:
+      auto_aspect_ratio: true
+    link_prefetch:
       enabled: true
     lightbox:
       enabled: true
-      mode: auto
       selector: .timenode p>img
     reveal:
       enabled: true
       distance: 8px
-      duration: 1000
-      interval: 100
+      duration_ms: 1000
+      interval_ms: 100
       scale: 1
-    ai_summary:
-      enabled: false
-      scope: post
-      key: 5Q5mpqRK5DkwT1X9Gi5e
-      max_length: 1000
-      typewriter: true
-      show_immediately: true
-      recommendation: all
-      hide_shuttle: true
-      summary_toggle: false
     math:
       provider:
       providers:
         katex: {}
-        mathjax:
-          v3: false
+        mathjax: {}
     diagrams:
-      enabled: false
-      style_optimization: false
-      theme: neutral
-    code_copy:
-      enabled: true
-    adaptive_text:
-      enabled: true
+      provider:
+      providers:
+        mermaid:
+          theme: neutral
     card_hover:
       enabled: false
-      spotlight_color: 'rgba(255, 255, 255, 0.25)'
-      max_tilt: 3
-    cjk_typography:
+    heti:
       enabled: false
 
   services:
     site_info:
       endpoint:
     rating:
-      endpoint: https://star-vote.xaox.cc/api/rating
+      endpoint:
     vote:
-      endpoint: https://star-vote.xaox.cc/api/vote
+      endpoint:
     contributors:
-      edit_page:
-        '_posts/':
-        'wiki/stellar/': https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/
+      repositories: []
     github:
       api_url: https://api.github.com
       raw_url: https://raw.githubusercontent.com
       gist_url: https://gist.github.com
-      card_url: https://github-readme-stats.vercel.app
+    github_card:
+      endpoint: https://github-readme-stats.vercel.app
 
 appearance:
   color_scheme: auto # auto / light / dark

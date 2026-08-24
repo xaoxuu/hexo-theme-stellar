@@ -29,6 +29,8 @@
 
 'use strict'
 
+const INTERNAL_CONSTANTS = require('../../lib/internal-constants')
+
 var chatIndex = 0;
 
 module.exports = ctx => function(args, content) {
@@ -326,17 +328,12 @@ module.exports = ctx => function(args, content) {
           el += `<img lazy fancybox="true" src="${cell['image']}">`
       } else if (cell['emoji']) {
           el += ' emoji">'
-          const config = ctx.stellar.config.extensions.tags.emoji
+          const { defaultSource, sources } = ctx.stellar.config.extensions.tags.emoji
           if (cell['source'] === undefined) {
-            for (let id in config) {
-              if (config[id]) {
-                cell['source'] = id
-                break
-              }
-            }
+            cell['source'] = defaultSource
           }
-          if (cell['source'] && config[cell['source']]) {
-            let url = config[cell['source']].replace('{name}', cell['emoji'])
+          if (cell['source'] && sources[cell['source']]) {
+            let url = sources[cell['source']].replace('{name}', cell['emoji'])
             el += `<img lazy src="${url}">`
           } else {
             el += `<img lazy src="${cell['emoji']}">`
@@ -398,7 +395,7 @@ module.exports = ctx => function(args, content) {
           let urlTarget = cell['link'].includes('://') ? ' target="_blank" rel="external nofollow noopener noreferrer"' : ''
           let linkFrom = cell['from'] || 'QQ小程序'
           el += `
-            <a class="link-card rich" href="${cell['link']}"${urlTarget} data-api="${ctx.stellar.config.extensions.tags.chat.endpoint + '?url=' + cell['link']}" cardlink autofill="title,icon,desc">
+            <a class="link-card rich" href="${cell['link']}"${urlTarget} data-api="${INTERNAL_CONSTANTS.assets.services.chat.endpoint + '?url=' + cell['link']}" cardlink autofill="title,icon,desc">
             <div class="top">
               <span class="title">${cell['link']}</span>
             </div>

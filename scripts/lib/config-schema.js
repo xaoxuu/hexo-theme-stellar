@@ -460,6 +460,47 @@ function validateAbsoluteHttpUrl(node, input, source, path, issues) {
   issues.push(issue("invalid_value", source, path, valueType(input), "absolute HTTP(S) URL", node.migration));
 }
 
+function validateNullableAbsoluteHttpUrl(node, input, source, path, issues) {
+  if (input == null) return;
+  validateAbsoluteHttpUrl(node, input, source, path, issues);
+}
+
+function validateEmojiTemplate(node, input, source, path, issues) {
+  if (typeof input === "string" && input.includes("{name}")) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), "URL template containing {name}", node.migration));
+}
+
+function validateEmojiSources(node, input, source, path, issues) {
+  const selected = input?.default_source;
+  const sources = input?.sources;
+  if (typeof selected === "string" && isPlainObject(sources) && Object.prototype.hasOwnProperty.call(sources, selected)) return;
+  issues.push(issue("invalid_value", source, `${path}.default_source`, valueType(selected), "key declared in emoji.sources", node.migration));
+}
+
+function validateGithubRepository(node, input, source, path, issues) {
+  if (typeof input === "string" && /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(input)) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), "GitHub owner/repository", node.migration));
+}
+
+function validateContributorRepositories(node, input, source, path, issues) {
+  const prefixes = new Set();
+  input.forEach((item, index) => {
+    if (!isPlainObject(item) || typeof item.source_prefix !== "string") return;
+    const prefix = item.source_prefix.replace(/\\/g, "/").replace(/^\.\//, "");
+    if (prefixes.has(prefix)) {
+      issues.push(issue("invalid_value", source, `${path}[${index}].source_prefix`, "string", "unique source_prefix", node.migration));
+    }
+    prefixes.add(prefix);
+  });
+}
+
+function validateDiagramsOverride(node, input, source, path, issues) {
+  if (input === false) return;
+  if (typeof input === "string" && input === "mermaid") return;
+  if (isPlainObject(input)) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), "false, mermaid, or Mermaid options object", node.migration));
+}
+
 function validateSafeRelativePath(node, input, source, path, issues) {
   const unixPath = input.replace(/\\/g, "/");
   const normalized = nodePath.posix.normalize(unixPath);
@@ -489,6 +530,12 @@ function validateCustom(node, input, source, path, issues) {
   else if (node.validator === "effect") validateEffect(node, input, source, path, issues);
   else if (node.validator === "brand") validateBrand(node, input, source, path, issues);
   else if (node.validator === "absolute_http_url") validateAbsoluteHttpUrl(node, input, source, path, issues);
+  else if (node.validator === "nullable_absolute_http_url") validateNullableAbsoluteHttpUrl(node, input, source, path, issues);
+  else if (node.validator === "emoji_template") validateEmojiTemplate(node, input, source, path, issues);
+  else if (node.validator === "emoji_sources") validateEmojiSources(node, input, source, path, issues);
+  else if (node.validator === "github_repository") validateGithubRepository(node, input, source, path, issues);
+  else if (node.validator === "contributor_repositories") validateContributorRepositories(node, input, source, path, issues);
+  else if (node.validator === "diagrams_override") validateDiagramsOverride(node, input, source, path, issues);
   else if (node.validator === "safe_navigation_url") validateSafeNavigationUrl(node, input, source, path, issues, false);
   else if (node.validator === "nullable_safe_navigation_url") validateSafeNavigationUrl(node, input, source, path, issues, true);
   else if (node.validator === "css_color") validateCssColor(node, input, source, path, issues, false);
@@ -508,7 +555,7 @@ function validateCustom(node, input, source, path, issues) {
   else if (node.validator === "unique_blueprint_targets") validateUniqueBlueprintTargets(node, input, source, path, issues);
   else if (node.validator === "topic_route_start" && input != null && !/[\\/]topic[\\/]/.test(source)) {
     issues.push(issue("invalid_scope", source, path, valueType(input), "Topic Collection only", node.migration));
-  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "safe_navigation_url", "nullable_safe_navigation_url", "css_color", "nullable_css_color", "non_negative_integer", "nullable_non_negative_integer", "non_empty_record_keys", "license_value", "license_override", "share_override", "kebab_id", "nullable_kebab_id", "menu_items", "footer_actions", "navigation_tabs", "safe_relative_path", "unique_blueprint_targets", "topic_route_start"].includes(node.validator)) {
+  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "nullable_absolute_http_url", "emoji_template", "emoji_sources", "github_repository", "contributor_repositories", "diagrams_override", "safe_navigation_url", "nullable_safe_navigation_url", "css_color", "nullable_css_color", "non_negative_integer", "nullable_non_negative_integer", "non_empty_record_keys", "license_value", "license_override", "share_override", "kebab_id", "nullable_kebab_id", "menu_items", "footer_actions", "navigation_tabs", "safe_relative_path", "unique_blueprint_targets", "topic_route_start"].includes(node.validator)) {
     throw new TypeError(`未知配置校验器：${node.validator}`);
   }
 }
@@ -584,12 +631,18 @@ function parseNode(node, input, source, path, issues, context) {
     const childPath = path ? `${path}.${key}` : key;
     if (Object.prototype.hasOwnProperty.call(node.removedProperties || {}, key)) {
       const replacement = node.removedProperties[key];
+      const absoluteRoots = new Set(["site", "seo", "layout", "content", "appearance", "resources", "extensions", "inject"]);
+      const replacementPath = replacement == null
+        ? null
+        : absoluteRoots.has(replacement.split(".")[0])
+          ? replacement
+          : (path ? `${path}.${replacement}` : replacement);
       issues.push(issue(
         "removed_field",
         source,
         childPath,
         valueType(input[key]),
-        replacement == null ? "remove field without replacement" : (path ? `${path}.${replacement}` : replacement),
+        replacementPath == null ? "remove field without replacement" : replacementPath,
         node.migration
       ));
     } else if (node.externalProperties?.includes(key)) {

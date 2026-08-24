@@ -2,14 +2,14 @@
  * gallery.js v2.1 | https://github.com/xaoxuu/hexo-theme-stellar/
  * 格式与官方标签插件一致使用空格分隔，中括号内的是可选参数（中括号不需要写出来）
  *
- * {% gallery [layout:grid/flow] [size:mix/s/m/l/xl] [ratio:origin/square] %}
+ * {% gallery [layout:grid/flow] [size:mix/s/m/l/xl] [aspect_ratio:original/square/portrait] %}
  * ![title](/xxx.png)
  * ![title](/xxx.png)
  * ![title](/xxx.png)
  * ![title](/xxx.png)
  * {% endgallery %}
  * 
- * layout:grid 网格布局，支持通过 size/ratio 设置尺寸和长宽比
+ * layout:grid 网格布局，支持通过 size/aspect_ratio 设置尺寸和长宽比
  * layout:flow 瀑布流布局，竖排，适合图片量大的时候使用（体验不佳请慎用）
  */
 
@@ -35,12 +35,12 @@ function img(src, alt) {
 }
 
 module.exports = ctx => function(args, content) {
-  args = ctx.args.map(args, ['layout', 'size', 'ratio'])
+  args = ctx.args.map(args, ['layout', 'size', 'aspect_ratio'])
   if (args.size == null) {
     args.size = ctx.stellar.config.extensions.tags.gallery.size
   }
-  if (args.ratio == null) {
-    args.ratio = ctx.stellar.config.extensions.tags.gallery.ratio
+  if (args.aspect_ratio == null) {
+    args.aspect_ratio = ctx.stellar.config.extensions.tags.gallery.aspectRatio
   }
   var el = ''
   var layoutType = 'grid'
@@ -48,7 +48,7 @@ module.exports = ctx => function(args, content) {
     layoutType = 'flow'
   }
   index += 1
-  el += `<div class="tag-plugin gallery ${layoutType}-box" ${ctx.args.joinTags(args, ['size', 'ratio']).join(' ')}>`
+  el += `<div class="tag-plugin gallery ${layoutType}-box" ${ctx.args.joinTags(args, ['size', 'aspect_ratio']).join(' ')}>`
   const img_mds = content.split('\n').filter(item => item.trim().length > 0)
   for (let md of img_mds) {
     const matches = md.match(/\!\[(.*?)\]\((.*?)\)/i)

@@ -8,7 +8,7 @@ var wikiViewModel = page.viewModel?.collection?.profile === 'wiki' ? page.viewMo
 var notebookViewModel = page.viewModel?.collection?.profile === 'notebook' ? page.viewModel : null
 var pageConfig = content_config(page)
 // 是否使用 Heti 布局插件
-const isUsingHeti = stellar_config('extensions.features.cjkTypography.enabled')
+const isUsingHeti = stellar_config('extensions.features.heti.enabled')
 
 // 默认主导航菜单
 if (!postViewModel && !wikiViewModel && !notebookViewModel) page.navigation = Object.assign({}, pageConfig.navigation)

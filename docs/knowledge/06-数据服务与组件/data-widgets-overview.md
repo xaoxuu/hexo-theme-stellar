@@ -30,16 +30,17 @@ extensions:
     site_info:
       endpoint:
     rating:
-      endpoint: https://star-vote.xaox.cc/api/rating
+      endpoint:
     vote:
-      endpoint: https://star-vote.xaox.cc/api/vote
+      endpoint:
     contributors:
-      edit_page: {}
+      repositories: []
     github:
       api_url: https://api.github.com
       raw_url: https://raw.githubusercontent.com
       gist_url: https://gist.github.com
-      card_url: https://github-readme-stats.vercel.app
+    github_card:
+      endpoint: https://github-readme-stats.vercel.app
 ```
 
 所有 GitHub 地址都是完整 URL，消费方不再为裸 host 补协议或路径。主题自带的 mdrender、siteinfo、ghinfo、rating、vote、sites、friends、timeline、memos、评论统计等模块路径不可配置。

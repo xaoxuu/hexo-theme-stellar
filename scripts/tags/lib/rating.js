@@ -13,10 +13,13 @@ module.exports = ctx => function (args) {
   args = ctx.args.map(args, ['id', 'icon'], ['title'])
   
   const api = ctx.stellar.config.extensions.services.rating.endpoint
+  if (api == null) {
+    throw new Error('[stellar tag:rating] extensions.services.rating.endpoint is required when {% rating %} is used')
+  }
   const id = args.id || 'default'
 
   const star = ctx.utils.icon(args.icon || 'rating:star')
-  let el = `<div class="tag-plugin ds-rating" data-api="${api}" data-api="${api}" data-id="${id}">`
+  let el = `<div class="tag-plugin ds-rating" data-api="${api}" data-id="${id}">`
   if (args.title) {
     el += `<div class="header"><span>${args.title}</span></div>`
   }

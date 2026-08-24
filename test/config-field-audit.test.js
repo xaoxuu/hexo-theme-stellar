@@ -97,8 +97,6 @@ test("三套内置语言键一致且 M6 系统文案不再写入公开主题默�
   for (const key of [
     "message.copy_denied",
     "message.copy_unsupported",
-    "feature.ai_summary.name",
-    "feature.ai_summary.buttons.summarize",
     "tag_plugins.okr.status.finished"
   ]) assert.ok(keys[0].includes(key), key);
 

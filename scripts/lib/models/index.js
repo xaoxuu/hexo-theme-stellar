@@ -220,21 +220,20 @@ function resolveLicense(license, item, runtimeData) {
 }
 
 function buildContributor(item, stellarConfig) {
-  const map = stellarConfig.extensions.services.contributors.editPage;
-  if (!isPlainObject(map)) return null;
+  const repositories = stellarConfig.extensions.services.contributors.repositories;
+  if (!Array.isArray(repositories)) return null;
   const source = item.source.file || "";
-  for (const [prefix, replacement] of Object.entries(map)) {
-    if (!source.startsWith(prefix) || typeof replacement !== "string" || replacement.length === 0) continue;
-    const editUrl = source.replace(prefix, replacement);
-    const apiUrl = stellarConfig.extensions.services.github.apiUrl;
-    return {
-      editUrl,
-      commitsUrl: editUrl
-        .replace("https://github.com/", `${apiUrl}/repos/`)
-        .replace("/blob/main/", "/commits?path=")
-    };
-  }
-  return null;
+  const matched = repositories
+    .filter(item => typeof item?.sourcePrefix === "string" && source.startsWith(item.sourcePrefix))
+    .sort((left, right) => right.sourcePrefix.length - left.sourcePrefix.length)[0];
+  if (!matched) return null;
+  const relativePath = source.slice(matched.sourcePrefix.length).replace(/^\/+/, "");
+  const branch = matched.branch || "main";
+  const apiUrl = stellarConfig.extensions.services.github.apiUrl.replace(/\/+$/, "");
+  return {
+    editUrl: `https://github.com/${matched.repository}/blob/${branch}/${relativePath}`,
+    commitsUrl: `${apiUrl}/repos/${matched.repository}/commits?path=${encodeURIComponent(relativePath)}`
+  };
 }
 
 function buildPostArticleRender(input, item) {
@@ -253,7 +252,7 @@ function buildPostArticleRender(input, item) {
   const relatedPostsLimit = articleConfig.relatedPostsLimit;
 
   return {
-    heti: extensionConfig.features.cjkTypography.enabled === true,
+    heti: extensionConfig.features.heti.enabled === true,
     tags: footer.showTags === true ? normalizeLinks(input.page.tagLinks) : [],
     footer: {
       references: Array.isArray(footer.references) ? cloneValue(footer.references) : [],
@@ -718,7 +717,7 @@ function buildWikiRenderModel(input, collection, item) {
       siteName: String(siteConfig.title || "")
     },
     article: {
-      heti: stellarConfig.extensions.features.cjkTypography.enabled === true,
+      heti: stellarConfig.extensions.features.heti.enabled === true,
       banner,
       updated: item.updated,
       readmeHtml,

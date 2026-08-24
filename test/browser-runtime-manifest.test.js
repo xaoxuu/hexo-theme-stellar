@@ -18,8 +18,7 @@ function fixture(overrides = {}) {
     render: {},
     comments: { service: "giscus", options: { "data-repo": "x/y" }, pageTitle: "Docs" },
     messages: {
-      copy: { idle: "Copy", success: "Copied!", denied: "Denied", unsupported: "Unsupported", toast: "Copied!" },
-      aiSummary: { name: "AI Summary", introduce: "Read with AI", buttons: ["One", "Two", "Three", "Four"] }
+      copy: { idle: "Copy", success: "Copied!", denied: "Denied", unsupported: "Unsupported", toast: "Copied!" }
     },
     extensions: {
       search: { provider: "local", providers: { local: { indexPath: "/search.json", lazy: true } } },
@@ -27,16 +26,13 @@ function fixture(overrides = {}) {
       services: { siteInfo: { endpoint: "https://example.com/?url={href}" } },
       cache: { enabled: true, defaultTtl: 60, ttl: { siteinfo: 30 }, maxEntries: 20 },
       features: {
-        preload: { enabled: true },
-        lightbox: { enabled: true, mode: "auto", selector: ".custom" },
+        linkPrefetch: { enabled: true },
+        lightbox: { enabled: true, selector: ".custom" },
         reveal: { enabled: true },
-        aiSummary: { enabled: true, scope: "wiki" },
         math: { provider: null, providers: {} },
-        diagrams: { enabled: false },
-        codeCopy: { enabled: true },
-        adaptiveText: { enabled: true },
+        diagrams: { provider: null, providers: { mermaid: { theme: "neutral" } } },
         cardHover: { enabled: false },
-        cjkTypography: { enabled: false }
+        heti: { enabled: false }
       }
     },
     assets: {
@@ -44,7 +40,7 @@ function fixture(overrides = {}) {
       dependencies: { marked: "https://cdn.example/marked.js", lazyLoading: "https://cdn.example/lazy.js" },
       search: Object.assign({}, INTERNAL_CONSTANTS.assets.search, { algolia: "https://cdn.example/algolia.js" }),
       comments: { giscus: { js: "https://giscus.app/client.js" } },
-      features: { preload: "https://cdn.example/preload.js", lightbox: {}, reveal: "https://cdn.example/reveal.js", aiSummary: "https://cdn.example/ai.js", swiper: {} },
+      features: { linkPrefetch: "https://cdn.example/prefetch.js", lightbox: {}, reveal: "https://cdn.example/reveal.js", codeCopy: {}, adaptiveText: {}, swiper: {} },
       services: { siteinfo: { js: "/js/services/siteinfo.js" } }
     }
   }, overrides);
@@ -56,8 +52,8 @@ test("Runtime Manifest 投影页面需要的 Extension 并深度冻结", () => {
   assert.equal(RUNTIME_CONFIG_ID, "stellar-runtime-config");
   assert.equal(manifest.root, "/docs/");
   assert.deepEqual(manifest.extensions.map(item => item.id), [
-    "search", "lazy-loading", "deferred-icons", "dropdown", "services", "comments", "preload", "lightbox",
-    "reveal", "ai-summary", "code-copy", "adaptive-text", "swiper"
+    "search", "lazy-loading", "deferred-icons", "dropdown", "services", "comments", "link-prefetch", "lightbox",
+    "reveal", "code-copy", "adaptive-text", "swiper"
   ]);
   assert.equal(manifest.extensions.find(item => item.id === "services").config.siteInfoEndpoint, "https://example.com/?url={href}");
   assert.deepEqual(manifest.extensions.find(item => item.id === "search").config.assets, {
@@ -66,8 +62,7 @@ test("Runtime Manifest 投影页面需要的 Extension 并深度冻结", () => {
     shortcut: "/js/search/shortcut.js"
   });
   assert.equal(manifest.extensions.find(item => item.id === "code-copy").config.messages.denied, "Denied");
-  assert.equal(manifest.extensions.find(item => item.id === "ai-summary").config.interface.name, "AI Summary");
-  assert.equal(manifest.extensions.find(item => item.id === "ai-summary").config.interface.version, "TianliGPT");
+  assert.equal(manifest.extensions.some(item => item.id === "ai-summary"), false);
   assert.equal(manifest.policy.cache.defaultTtl, 3600);
   assert.equal(manifest.policy.request.timeoutMs, 5000);
   assert.equal(manifest.extensions.find(item => item.id === "lightbox").when.selector.includes(".with-fancybox"), true);
@@ -77,47 +72,11 @@ test("Runtime Manifest 投影页面需要的 Extension 并深度冻结", () => {
   assert.equal(Object.isFrozen(manifest.policy), true);
 });
 
-test("Runtime Manifest 以显式 AI 界面覆盖语言默认", () => {
-  const input = fixture();
-  input.extensions.features.aiSummary.interface = {
-    name: "Custom AI",
-    introduce: "Custom intro",
-    buttons: ["Custom"]
-  };
-  const manifest = buildBrowserRuntimeManifest(input);
-  const ai = manifest.extensions.find(item => item.id === "ai-summary").config.interface;
-  assert.deepEqual(ai, {
-    name: "Custom AI",
-    introduce: "Custom intro",
-    version: "TianliGPT",
-    buttons: ["Custom"]
-  });
-});
-
-test("Runtime Manifest 保留 AI 界面的显式空值", () => {
-  const input = fixture();
-  input.extensions.features.aiSummary.interface = {
-    name: "",
-    introduce: "",
-    buttons: []
-  };
-  const manifest = buildBrowserRuntimeManifest(input);
-  const ai = manifest.extensions.find(item => item.id === "ai-summary").config.interface;
-  assert.deepEqual(ai, {
-    name: "",
-    introduce: "",
-    version: "TianliGPT",
-    buttons: []
-  });
-});
-
-test("Runtime Manifest 按 profile/render 选择 AI、Math 与 diagrams", () => {
+test("Runtime Manifest 按 render 选择 Math 与 diagrams", () => {
   const input = fixture({ profile: "post", render: { math: "mathjax", diagrams: { theme: "dark" } } });
-  input.extensions.features.aiSummary.scope = "wiki";
-  input.extensions.features.math = { provider: null, providers: { mathjax: { v3: true } } };
+  input.extensions.features.math = { provider: null, providers: { mathjax: {} } };
   const manifest = buildBrowserRuntimeManifest(input);
   const ids = manifest.extensions.map(item => item.id);
-  assert.equal(ids.includes("ai-summary"), false);
   assert.equal(ids.includes("mathjax"), true);
   assert.equal(ids.includes("diagrams"), true);
   assert.equal(manifest.extensions.find(item => item.id === "diagrams").config.theme, "dark");
@@ -127,6 +86,12 @@ test("KaTeX 只由服务端输出配套 CSS，不建立浏览器 Extension", () 
   const input = fixture({ render: { math: "katex" } });
   const manifest = buildBrowserRuntimeManifest(input);
   assert.equal(manifest.extensions.some(item => item.id === "katex"), false);
+});
+
+test("render.diagrams=false 显式关闭全局 Mermaid provider", () => {
+  const input = fixture({ render: { diagrams: false } });
+  input.extensions.features.diagrams.provider = "mermaid";
+  assert.equal(buildBrowserRuntimeManifest(input).extensions.some(item => item.id === "diagrams"), false);
 });
 
 test("Runtime Manifest 序列化阻断 HTML/script 注入", () => {

@@ -270,9 +270,9 @@ graph TD
 
 ## 页面导航机制
 
-主题使用普通整页导航（PJAX 已于 v1.35.0 移除，旧的 `page-loading-bar` 元素与 `pjax.js` 一并删除，见 `docs/designs/2026-08-08-pjax-removal.md`）。可选的 `extensions.features.preload`（flying_pages）在鼠标悬停时预加载站内链接以提升导航体验。
+主题使用普通整页导航（PJAX 已于 v1.35.0 移除，旧的 `page-loading-bar` 元素与 `pjax.js` 一并删除，见 `docs/designs/2026-08-08-pjax-removal.md`）。可选的 `extensions.features.link_prefetch`（flying_pages）在鼠标悬停时预加载站内链接以提升导航体验。
 
-**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)、[_config.yml](../../../_config.yml)（`extensions.features.preload`）
+**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)、[_config.yml](../../../_config.yml)（`extensions.features.link_prefetch`）
 
 ## 模板上下文变量
 

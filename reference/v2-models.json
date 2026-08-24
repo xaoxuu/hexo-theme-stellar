@@ -8576,7 +8576,7 @@
           "required": true,
           "default": {
             "kind": "computed",
-            "description": "由 contributors.edit_page 与源文件生成"
+            "description": "由 contributors.repositories 最长 source_prefix 匹配与源文件生成"
           },
           "scope": "PageViewModel:notebook",
           "consumers": [
@@ -8650,7 +8650,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "extensions.features.cjkTypography.enabled"
+              "extensions.features.heti.enabled"
             ]
           },
           "scope": "PageViewModel:notebook",
@@ -10120,7 +10120,7 @@
           "required": true,
           "default": {
             "kind": "computed",
-            "description": "由 extensions.services.contributors.edit_page 与源文件生成"
+            "description": "由 extensions.services.contributors.repositories 最长 source_prefix 匹配与源文件生成"
           },
           "scope": "PageViewModel:post",
           "consumers": [
@@ -10327,7 +10327,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.extensions.features.cjkTypography.enabled"
+              "hexo.stellar.config.extensions.features.heti.enabled"
             ]
           },
           "scope": "PageViewModel:post",
@@ -12070,7 +12070,7 @@
           "required": true,
           "default": {
             "kind": "computed",
-            "description": "由 extensions.services.contributors.edit_page 与源文件生成"
+            "description": "由 extensions.services.contributors.repositories 最长 source_prefix 匹配与源文件生成"
           },
           "scope": "PageViewModel:topic",
           "consumers": [
@@ -12277,7 +12277,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.extensions.features.cjkTypography.enabled"
+              "hexo.stellar.config.extensions.features.heti.enabled"
             ]
           },
           "scope": "PageViewModel:topic",
@@ -14051,7 +14051,7 @@
           "required": true,
           "default": {
             "kind": "computed",
-            "description": "由 contributors.edit_page 与源文件生成"
+            "description": "由 contributors.repositories 最长 source_prefix 匹配与源文件生成"
           },
           "scope": "PageViewModel:wiki",
           "consumers": [
@@ -14258,7 +14258,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "extensions.features.cjkTypography.enabled"
+              "extensions.features.heti.enabled"
             ]
           },
           "scope": "PageViewModel:wiki",

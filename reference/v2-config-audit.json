@@ -13,10 +13,10 @@
     "remove"
   ],
   "counts": {
-    "public": 519,
-    "localize": 9,
+    "public": 492,
+    "localize": 5,
     "derive": 0,
-    "internalize": 12,
+    "internalize": 9,
     "remove": 1
   },
   "fields": [
@@ -3551,254 +3551,6 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.features.adaptive_text",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.adaptive_text.enabled",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.ai_summary",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.ai_summary.enabled",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.ai_summary.hide_shuttle",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.ai_summary.interface",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.ai_summary.interface.buttons",
-      "disposition": "localize",
-      "defaultSource": "languages/*.yml",
-      "rationale": "字段保留显式站点覆盖能力；主题提供的缺省系统文案由语言文件拥有",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.ai_summary.interface.introduce",
-      "disposition": "localize",
-      "defaultSource": "languages/*.yml",
-      "rationale": "字段保留显式站点覆盖能力；主题提供的缺省系统文案由语言文件拥有",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.ai_summary.interface.name",
-      "disposition": "localize",
-      "defaultSource": "languages/*.yml",
-      "rationale": "字段保留显式站点覆盖能力；主题提供的缺省系统文案由语言文件拥有",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.ai_summary.interface.version",
-      "disposition": "internalize",
-      "accepted": false,
-      "defaultSource": "scripts/lib/internal-constants.js",
-      "consumers": [
-        "configuration diagnostics",
-        "migration guidance"
-      ],
-      "rationale": "界面版本跟随内置 provider，不是站点内容"
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.ai_summary.key",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.ai_summary.max_length",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.ai_summary.provider",
-      "disposition": "internalize",
-      "accepted": false,
-      "defaultSource": "scripts/lib/internal-constants.js",
-      "consumers": [
-        "configuration diagnostics",
-        "migration guidance"
-      ],
-      "rationale": "AI summary 只有 tianli_gpt 一个内置实现，不构成用户选择"
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.ai_summary.recommendation",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.ai_summary.scope",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.ai_summary.show_immediately",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.ai_summary.summary_toggle",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.ai_summary.typewriter",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
       "path": "extensions.features.card_hover",
       "disposition": "public",
       "defaultSource": "declarative schema",
@@ -3814,90 +3566,6 @@
     {
       "scope": "theme",
       "path": "extensions.features.card_hover.enabled",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.card_hover.max_tilt",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.card_hover.spotlight_color",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.cjk_typography",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.cjk_typography.enabled",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.code_copy",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.code_copy.enabled",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -3961,33 +3629,7 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.features.diagrams.enabled",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
       "path": "extensions.features.diagrams.provider",
-      "disposition": "internalize",
-      "accepted": false,
-      "defaultSource": "scripts/lib/internal-constants.js",
-      "consumers": [
-        "configuration diagnostics",
-        "migration guidance"
-      ],
-      "rationale": "diagrams 只有 mermaid 一个内置实现，不构成用户选择"
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.diagrams.style_optimization",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -4001,7 +3643,63 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.features.diagrams.theme",
+      "path": "extensions.features.diagrams.providers",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "extensions.features.diagrams.providers.mermaid",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "extensions.features.diagrams.providers.mermaid.theme",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "extensions.features.heti",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "extensions.features.heti.enabled",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -4029,7 +3727,7 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.features.lazy_loading.fix_ratio",
+      "path": "extensions.features.lazy_loading.auto_aspect_ratio",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -4085,20 +3783,6 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.features.lightbox.mode",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
       "path": "extensions.features.lightbox.provider",
       "disposition": "internalize",
       "accepted": false,
@@ -4122,6 +3806,46 @@
         "browser Extension runtime",
         "Reference generator"
       ]
+    },
+    {
+      "scope": "theme",
+      "path": "extensions.features.link_prefetch",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "extensions.features.link_prefetch.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "extensions.features.link_prefetch.provider",
+      "disposition": "internalize",
+      "accepted": false,
+      "defaultSource": "scripts/lib/internal-constants.js",
+      "consumers": [
+        "configuration diagnostics",
+        "migration guidance"
+      ],
+      "rationale": "link prefetch 只有 flying_pages 一个内置实现，不构成用户选择"
     },
     {
       "scope": "theme",
@@ -4195,46 +3919,6 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.features.preload",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.preload.enabled",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.features.preload.provider",
-      "disposition": "internalize",
-      "accepted": false,
-      "defaultSource": "scripts/lib/internal-constants.js",
-      "consumers": [
-        "configuration diagnostics",
-        "migration guidance"
-      ],
-      "rationale": "preload 只有 flying_pages 一个内置实现，不构成用户选择"
-    },
-    {
-      "scope": "theme",
       "path": "extensions.features.reveal",
       "disposition": "public",
       "defaultSource": "declarative schema",
@@ -4263,7 +3947,7 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.features.reveal.duration",
+      "path": "extensions.features.reveal.duration_ms",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -4291,7 +3975,7 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.features.reveal.interval",
+      "path": "extensions.features.reveal.interval_ms",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -4401,21 +4085,7 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.search.providers.local.cache_ttl",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.search.providers.local.exclude",
+      "path": "extensions.search.providers.local.cache_ttl_seconds",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -4430,34 +4100,6 @@
     {
       "scope": "theme",
       "path": "extensions.search.providers.local.include_content",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.search.providers.local.index_path",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.search.providers.local.lazy",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -4513,7 +4155,7 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.services.contributors.edit_page",
+      "path": "extensions.services.contributors.repositories",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -4527,9 +4169,37 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.services.contributors.edit_page.<prefix>",
+      "path": "extensions.services.contributors.repositories[].branch",
       "disposition": "public",
       "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "extensions.services.contributors.repositories[].repository",
+      "disposition": "public",
+      "defaultSource": "derived:GitHub owner/repository",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "extensions.services.contributors.repositories[].source_prefix",
+      "disposition": "public",
+      "defaultSource": "derived:repository source prefix",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
@@ -4555,7 +4225,7 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.services.github.api_url",
+      "path": "extensions.services.github_card",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -4569,7 +4239,21 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.services.github.card_url",
+      "path": "extensions.services.github_card.endpoint",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "extensions.services.github.api_url",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -4737,34 +4421,6 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.tags.chat",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.tags.chat.endpoint",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
       "path": "extensions.tags.checkbox",
       "disposition": "public",
       "defaultSource": "declarative schema",
@@ -4831,7 +4487,35 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.tags.emoji.<provider>",
+      "path": "extensions.tags.emoji.default_source",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "extensions.tags.emoji.sources",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "extensions.tags.emoji.sources.<source>",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -4859,21 +4543,7 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.tags.gallery.layout",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.tags.gallery.ratio",
+      "path": "extensions.tags.gallery.aspect_ratio",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -4957,34 +4627,6 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.tags.image",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.tags.image.parse_markdown",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
       "path": "extensions.tags.mark",
       "disposition": "public",
       "defaultSource": "declarative schema",
@@ -5055,90 +4697,6 @@
     },
     {
       "scope": "theme",
-      "path": "extensions.tags.okr",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.tags.okr.border",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.tags.okr.status",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.tags.okr.status.<status>",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.tags.okr.status.<status>.color",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.tags.okr.status.<status>.label",
-      "disposition": "localize",
-      "defaultSource": "languages/*.yml",
-      "rationale": "字段保留显式站点覆盖能力；主题提供的缺省系统文案由语言文件拥有",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
       "path": "extensions.tags.quot",
       "disposition": "public",
       "defaultSource": "declarative schema",
@@ -5182,34 +4740,6 @@
     {
       "scope": "theme",
       "path": "extensions.tags.quot.<variant>.suffix",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.tags.timeline",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "extensions.tags.timeline.max_height",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",

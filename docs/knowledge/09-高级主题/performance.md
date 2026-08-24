@@ -51,7 +51,7 @@ tags:
 ```mermaid
 flowchart TD
   A["_config.yml"] --> B["extensions.features.lazy_loading"]
-  A --> D["extensions.features.preload"]
+  A --> D["extensions.features.link_prefetch"]
   A --> E["resources.preconnect"]
   A --> F["extensions.services.github"]
   A --> G["extensions.search.providers.local"]
@@ -112,16 +112,16 @@ sequenceDiagram
 ### 配置
 
 ```yaml
-dependencies:
-  lazyload:
-    js: https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js
-    transition: fade   # blur | fade
-    fix_ratio: true    # true | false
+extensions:
+  features:
+    lazy_loading:
+      transition: fade   # blur | fade
+      auto_aspect_ratio: true
 ```
 
 - `transition: blur`——未加载图片应用 `filter: blur(20px)`，加载时过渡为清晰
 - `transition: fade`——仅透明度过渡（0.38s）
-- `fix_ratio`——为 `true` 时构建过滤器同时嵌入 1×1 透明占位，让图片加载前保留布局空间
+- `auto_aspect_ratio`——为 `true` 时，仅在 Hexo server 开发模式扫描图片并把 `ratio:W/H` 写回 Markdown；生产构建不改源文件
 
 ### 单图选择退出
 
@@ -146,14 +146,13 @@ dependencies:
 
 ## 链接预加载（Flying Pages）
 
-`preload` 插件在用户点击前把外部页面载入缓存，消除可感知的导航延迟。
+`link_prefetch` 在用户点击前预取页面资源，降低可感知的导航延迟。
 
 ```yaml
-plugins:
-  preload:
-    enable: true
-    service: flying_pages
-    flying_pages: https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js
+extensions:
+  features:
+    link_prefetch:
+      enabled: true
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)
@@ -212,11 +211,9 @@ flowchart LR
 
 ## 搜索数据缓存
 
-本地搜索系统在构建期把全部站点内容序列化为 `/search.json`。客户端缓存带 TTL（`extensions.search.providers.local.cache_ttl`，默认 `86400` 秒 = 1 天），以 `search_cache_v4` 键写入 `localStorage`（结构 `{ ts, ttl, data }`）：TTL 未过期直接使用缓存、不发请求；过期后先用旧缓存出结果并后台刷新；`cache_ttl: 0` 表示不缓存。
+本地搜索系统在构建期把可搜索内容序列化为固定的 `/search.json`。客户端缓存带 TTL（`extensions.search.providers.local.cache_ttl_seconds`，默认 `86400` 秒 = 1 天），以 `search_cache_v4` 键写入 `localStorage`；`0` 表示不缓存。
 
-`extensions.search.providers.local.lazy`（默认 `true`）控制加载时机：开启时页面加载不请求搜索数据，首次聚焦搜索框才加载（缓存优先 + 后台刷新）；关闭时页面加载预取，但缓存新鲜时同样不重复请求。
-
-内容较多的站点建议关闭懒加载（`lazy_load: false`），避免首次搜索卡顿；`cache_ttl` 建议按内容更新频率自行调整（默认 1 天，`0` 表示不缓存）。
+搜索索引固定按需懒加载；页面和 Collection 是否进入索引由 `visibility.searchable` 唯一控制。
 
 搜索数据生成与客户端 `searchFunc` 逻辑详见[搜索功能](../07-外部集成/search.md)。
 
@@ -235,7 +232,8 @@ extensions:
       api_url: https://api.github.com
       raw_url: https://raw.githubusercontent.com
       gist_url: https://gist.github.com
-      card_url: https://github-readme-stats.vercel.app
+    github_card:
+      endpoint: https://github-readme-stats.vercel.app
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)
@@ -292,7 +290,7 @@ resources:
 - **wiki 文档树**（`scripts/lib/doc_tree.js`）：页面按 `wiki` / `path_key` 单遍 `Map` 分组，替代旧实现的 O(W·P) `filter`/`some` 与 O(S·K·P) sections 组装；`all_tags`/`relatedItems` 用 `Set`/`Map` 去重，输出语义不变。
 - **笔记本系统**（`scripts/lib/notebooks.js`）：单遍 `groupPagesByNotebook` 分组，替代每个笔记本全量 `filter` 全部页面。
 - **内容过滤器短路**：`md_table` 在内容不含 `<table` 时跳过 cheerio 解析；`img_lazyload` / `img_onerror` 在无 `<img` 页面直接返回。
-- **搜索生成**：`skip_search` 通配正则循环外编译一次；`related_posts` helper 移除未使用的全量 `posts.filter` 死代码。
+- **搜索生成**：索引只读取 `visibility.searchable`，不再维护第二套路由排除规则；`related_posts` helper 移除未使用的全量 `posts.filter` 死代码。
 
 本站当前规模下 generate 耗时收益约 0.05–0.2s（主题脚本占比约 9%），主要价值是内容规模增大时复杂度由 O(N·M) 降为 O(N+M) 并减少 GC；更大单项收益（hexo-autonofollow ~0.5s、stylus ~0.55s、`gulp minify` ~5.5s）属站点构建配置或依赖层面，未纳入本次主题改动，作为后续可选方向。
 
@@ -314,9 +312,9 @@ M5 用固定 Classic Blog 输入分别构建 tag `1.44.0` 与当前 v2 npm tarba
 |------|--------|------|----------|
 | 图片懒加载 | 内置 Feature | 启用 | `img_lazyload.js`、`feature.mjs`、`lazyload.styl` |
 | 懒加载过渡 | `extensions.features.lazy_loading.transition` | `fade` | `lazyload.styl` |
-| 链接预加载 | `extensions.features.preload.enabled` | `true`（flying_pages） | 内部资源注册表 |
+| 链接预加载 | `extensions.features.link_prefetch.enabled` | `true`（flying_pages） | 内部资源注册表 |
 | 图片比例缓存 | Hexo 事件 | 自动 | `get_image_ratios.js`、`fix_image_tags.js` |
-| 搜索缓存 | `extensions.search.providers.local.lazy` / `cache_ttl` | `localStorage`（TTL 默认 1 天） | `local-search.js`（客户端） |
+| 搜索缓存 | `extensions.search.providers.local.cache_ttl_seconds` | `localStorage`（TTL 默认 1 天） | `local-search.js`（客户端） |
 | GitHub URL | `extensions.services.github` | GitHub 默认 | 数据服务脚本 |
 | DNS preconnect | `resources.preconnect` | 空 | `head.ejs` |
 | 按需样式 | 插件/评论 CSS 独立文件 | 运行时注入 | `plugins/*.css`、`comments/*.css` |

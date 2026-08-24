@@ -110,7 +110,6 @@ async function mountLightbox(root, context, config) {
     context.assets.style(config.assets.css),
     context.assets.script(config.assets.js)
   ]);
-  if (config.mode === 'global') selector += ', .md-text img:not(.inline):not([atk-emoticon])';
   const options = {
     hideScrollbar: false,
     Thumbs: { autoStart: false },
@@ -176,8 +175,8 @@ async function mountReveal(root, context, config) {
     const instance = window.ScrollReveal();
     const options = {
       distance: config.distance,
-      duration: config.duration,
-      interval: config.interval,
+      duration: config.durationMs,
+      interval: config.intervalMs,
       scale: config.scale,
       opacity: 0,
       easing: 'ease-out'
@@ -193,71 +192,27 @@ async function mountReveal(root, context, config) {
   }
 }
 
-async function mountAiSummary(root, context, config) {
-  if (root.nodeType !== 9) {
-    throw new TypeError('[stellar runtime] AI summary compatibility adapter requires a document root');
-  }
-  await context.assets.script(config.assets.js);
-  const instance = new window.ChucklePostAI({
-    el: 'article.content',
-    css: context.assets.resolve(config.assets.localCss),
-    field: config.scope,
-    key: config.key,
-    total_length: config.maxLength,
-    typewriter: config.typewriter,
-    summary_directly: config.showImmediately,
-    rec_method: config.recommendation,
-    hide_shuttle: config.hideShuttle,
-    summary_toggle: config.summaryToggle,
-    interface: {
-      name: config.interface.name,
-      introduce: config.interface.introduce,
-      version: config.interface.version,
-      button: config.interface.buttons
-    }
-  });
-  return () => instance?.destroy?.();
-}
-
 async function mountMathJax(root, context, config) {
-  const useV3 = config.options?.v3 === true;
-  if (useV3) {
-    window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        processEscapes: true,
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-      },
-      startup: {
-        ready() {
-          window.MathJax.startup.defaultReady();
-          window.MathJax.typesetPromise().then(() => {
-            queryAll(root, 'mjx-container').forEach(element => element.parentNode?.classList.add('has-jax'));
-          });
-        }
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    startup: {
+      ready() {
+        window.MathJax.startup.defaultReady();
+        window.MathJax.typesetPromise().then(() => {
+          queryAll(root, 'mjx-container').forEach(element => element.parentNode?.classList.add('has-jax'));
+        });
       }
-    };
-  }
-  await context.assets.script(useV3 ? config.assets.v3 : config.assets.v2);
-  if (!useV3) {
-    window.MathJax.Hub.Config({
-      tex2jax: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        processEscapes: true,
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-      }
-    });
-    window.MathJax.Hub.Queue(() => {
-      window.MathJax.Hub.getAllJax().forEach(jax => {
-        jax.SourceElement().parentNode?.classList.add('has-jax');
-      });
-    });
-  }
+    }
+  };
+  await context.assets.script(config.asset);
   return () => {};
 }
 
 async function mountDiagrams(root, context, config) {
-  if (config.styleOptimization === true) await context.assets.style(config.assets.localCss);
   await context.assets.script(config.assets.js);
   const theme = config.colorScheme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches
     ? 'dark'
@@ -299,16 +254,12 @@ async function mountAdaptiveText(root, context, config) {
 }
 
 async function mountCardHover(root, context, config) {
-  context.legacy.ctx.card_hover = {
-    spotlightColor: config.spotlightColor,
-    maxTilt: config.maxTilt
-  };
   await context.assets.script(config.assets.js);
   window.stellar?.cardHover?.mountAll?.(root);
   return () => window.stellar?.cardHover?.unmountAll?.(root);
 }
 
-async function mountCjk(root, context, config) {
+async function mountHeti(root, context, config) {
   await context.assets.style(config.assets.css);
   await context.assets.script(config.assets.js);
   const heti = new window.Heti('.heti');
@@ -341,19 +292,18 @@ export async function mount(root, context) {
     case 'lazy-loading': return mountLazyLoading(root, context, config);
     case 'deferred-icons': return mountLegacyAsset(root, context, config.asset, 'deferredIcons');
     case 'dropdown': return mountLegacyAsset(root, context, config.asset, 'dropdown');
-    case 'preload':
+    case 'link-prefetch':
       window.FPConfig = { delay: 0, ignoreKeywords: [], maxRPS: 5, hoverDelay: 25 };
       await context.assets.script(config.asset);
       return () => {};
     case 'lightbox': return mountLightbox(root, context, config);
     case 'reveal': return mountReveal(root, context, config);
-    case 'ai-summary': return mountAiSummary(root, context, config);
     case 'mathjax': return mountMathJax(root, context, config);
     case 'diagrams': return mountDiagrams(root, context, config);
     case 'code-copy': return mountCodeCopy(root, context, config);
     case 'adaptive-text': return mountAdaptiveText(root, context, config);
     case 'card-hover': return mountCardHover(root, context, config);
-    case 'cjk-typography': return mountCjk(root, context, config);
+    case 'heti': return mountHeti(root, context, config);
     case 'swiper': return mountSwiper(root, context, config);
     default: throw new TypeError(`unknown built-in feature ${config.feature}`);
   }

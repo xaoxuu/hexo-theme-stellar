@@ -19,21 +19,23 @@ extensions:
     site_info:
       endpoint:
     rating:
-      endpoint: https://star-vote.xaox.cc/api/rating
+      endpoint:
     vote:
-      endpoint: https://star-vote.xaox.cc/api/vote
+      endpoint:
     contributors:
-      edit_page:
-        '_posts/':
-        'wiki/stellar/': https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/
+      repositories:
+        - source_prefix: wiki/stellar/
+          repository: xaoxuu/hexo-theme-stellar-docs
+          branch: main
     github:
       api_url: https://api.github.com
       raw_url: https://raw.githubusercontent.com
       gist_url: https://gist.github.com
-      card_url: https://github-readme-stats.vercel.app
+    github_card:
+      endpoint: https://github-readme-stats.vercel.app
 ```
 
-YAML 解析后分别投影为 `siteInfo.endpoint`、`contributors.editPage` 和 `github.apiUrl/rawUrl/gistUrl/cardUrl`。GitHub 地址统一使用完整 URL，避免调用方重复决定协议与 host 拼接规则。
+YAML 解析后分别投影为 `siteInfo.endpoint`、`contributors.repositories`、`github.apiUrl/rawUrl/gistUrl` 和 `githubCard.endpoint`。
 
 ### Site Info
 
@@ -48,11 +50,11 @@ extensions:
 
 ### Rating 与 Vote
 
-`rating.endpoint` 和 `vote.endpoint` 分别供评分与投票标签构造 `data-api`。端点是业务 URL；客户端模块由主题内部提供。
+`rating.endpoint` 和 `vote.endpoint` 默认均为 `null`。使用相应标签时必须配置绝对 HTTP(S) URL，否则构建失败。
 
 ### Contributors
 
-`contributors.edit_page` 是动态记录：键为主题可识别的源文件路径前缀，值为对应仓库的编辑 URL 前缀或 `null`。Post PageViewModel 用最长可用前缀生成“编辑本页”链接，并通过 `github.api_url` 生成提交记录请求。
+`contributors.repositories` 是 `{source_prefix,repository,branch}` 数组。PageViewModel 按最长 `source_prefix` 匹配生成“编辑本页”和提交记录 URL。
 
 ### GitHub 服务
 
@@ -60,8 +62,9 @@ extensions:
 |------|--------|
 | `api_url` | ghuser、ghrepo、ghissues、contributors、Wiki release 数据 |
 | `raw_url` | 远程 Markdown、Wiki README、仓库资源 |
-| `gist_url` | Gist 链接/资源构造 |
-| `card_url` | GitHub Readme Stats 卡片 |
+| `gist_url` | `{% gist owner/id [file:name] %}` 脚本地址 |
+
+GitHub Readme Stats 卡片使用独立的 `github_card.endpoint`。
 
 ## 内部服务注册表
 

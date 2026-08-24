@@ -3082,482 +3082,6 @@
       "sealed": true
     },
     {
-      "path": "extensions.features.adaptive_text",
-      "runtimePath": "extensions.features.adaptiveText",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {
-          "enabled": true
-        }
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": {
-        "enabled": true
-      },
-      "migration": "configuration/extensions",
-      "sealed": true
-    },
-    {
-      "path": "extensions.features.adaptive_text.enabled",
-      "runtimePath": "extensions.features.adaptiveText.enabled",
-      "type": [
-        "boolean"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": true
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": true,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.ai_summary",
-      "runtimePath": "extensions.features.aiSummary",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {
-          "enabled": false,
-          "scope": "post",
-          "key": "5Q5mpqRK5DkwT1X9Gi5e",
-          "max_length": 1000,
-          "typewriter": true,
-          "show_immediately": true,
-          "recommendation": "all",
-          "hide_shuttle": true,
-          "summary_toggle": false,
-          "interface": {
-            "name": null,
-            "introduce": null,
-            "buttons": null
-          }
-        }
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": {
-        "enabled": false,
-        "scope": "post",
-        "key": "5Q5mpqRK5DkwT1X9Gi5e",
-        "max_length": 1000,
-        "typewriter": true,
-        "show_immediately": true,
-        "recommendation": "all",
-        "hide_shuttle": true,
-        "summary_toggle": false,
-        "interface": {
-          "name": null,
-          "introduce": null,
-          "buttons": null
-        }
-      },
-      "migration": "configuration/extensions",
-      "sealed": true
-    },
-    {
-      "path": "extensions.features.ai_summary.enabled",
-      "runtimePath": "extensions.features.aiSummary.enabled",
-      "type": [
-        "boolean"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": false
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": false,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.ai_summary.hide_shuttle",
-      "runtimePath": "extensions.features.aiSummary.hideShuttle",
-      "type": [
-        "boolean"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": true
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": true,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.ai_summary.interface",
-      "runtimePath": "extensions.features.aiSummary.interface",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {
-          "name": null,
-          "introduce": null,
-          "buttons": null
-        }
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": {
-        "name": null,
-        "introduce": null,
-        "buttons": null
-      },
-      "migration": "configuration/extensions",
-      "sealed": true
-    },
-    {
-      "path": "extensions.features.ai_summary.interface.buttons",
-      "runtimePath": "extensions.features.aiSummary.interface.buttons",
-      "type": [
-        "array",
-        "null"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": null
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "array",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": null,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.ai_summary.interface.introduce",
-      "runtimePath": "extensions.features.aiSummary.interface.introduce",
-      "type": [
-        "string",
-        "null"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": null
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": null,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.ai_summary.interface.name",
-      "runtimePath": "extensions.features.aiSummary.interface.name",
-      "type": [
-        "string",
-        "null"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": null
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": null,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.ai_summary.key",
-      "runtimePath": "extensions.features.aiSummary.key",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "5Q5mpqRK5DkwT1X9Gi5e"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "5Q5mpqRK5DkwT1X9Gi5e",
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.ai_summary.max_length",
-      "runtimePath": "extensions.features.aiSummary.maxLength",
-      "type": [
-        "number"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": 1000
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": 1000,
-      "migration": "configuration/extensions",
-      "minimum": 0,
-      "maximum": 5000
-    },
-    {
-      "path": "extensions.features.ai_summary.recommendation",
-      "runtimePath": "extensions.features.aiSummary.recommendation",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "all"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "all",
-      "migration": "configuration/extensions",
-      "values": [
-        "all",
-        "web"
-      ]
-    },
-    {
-      "path": "extensions.features.ai_summary.scope",
-      "runtimePath": "extensions.features.aiSummary.scope",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "post"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "post",
-      "migration": "configuration/extensions",
-      "values": [
-        "all",
-        "post",
-        "wiki",
-        "topic"
-      ]
-    },
-    {
-      "path": "extensions.features.ai_summary.show_immediately",
-      "runtimePath": "extensions.features.aiSummary.showImmediately",
-      "type": [
-        "boolean"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": true
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": true,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.ai_summary.summary_toggle",
-      "runtimePath": "extensions.features.aiSummary.summaryToggle",
-      "type": [
-        "boolean"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": false
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": false,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.ai_summary.typewriter",
-      "runtimePath": "extensions.features.aiSummary.typewriter",
-      "type": [
-        "boolean"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": true
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": true,
-      "migration": "configuration/extensions"
-    },
-    {
       "path": "extensions.features.card_hover",
       "runtimePath": "extensions.features.cardHover",
       "type": [
@@ -3566,9 +3090,7 @@
       "default": {
         "kind": "literal",
         "value": {
-          "enabled": false,
-          "spotlight_color": "rgba(255, 255, 255, 0.25)",
-          "max_tilt": 3
+          "enabled": false
         }
       },
       "scope": "theme",
@@ -3585,9 +3107,7 @@
         "Reference generator"
       ],
       "example": {
-        "enabled": false,
-        "spotlight_color": "rgba(255, 255, 255, 0.25)",
-        "max_tilt": 3
+        "enabled": false
       },
       "migration": "configuration/extensions",
       "sealed": true
@@ -3619,174 +3139,6 @@
       "migration": "configuration/extensions"
     },
     {
-      "path": "extensions.features.card_hover.max_tilt",
-      "runtimePath": "extensions.features.cardHover.maxTilt",
-      "type": [
-        "number"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": 3
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": 3,
-      "migration": "configuration/extensions",
-      "minimum": 0,
-      "maximum": 8
-    },
-    {
-      "path": "extensions.features.card_hover.spotlight_color",
-      "runtimePath": "extensions.features.cardHover.spotlightColor",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "rgba(255, 255, 255, 0.25)"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "rgba(255, 255, 255, 0.25)",
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.cjk_typography",
-      "runtimePath": "extensions.features.cjkTypography",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {
-          "enabled": false
-        }
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": {
-        "enabled": false
-      },
-      "migration": "configuration/extensions",
-      "sealed": true
-    },
-    {
-      "path": "extensions.features.cjk_typography.enabled",
-      "runtimePath": "extensions.features.cjkTypography.enabled",
-      "type": [
-        "boolean"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": false
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": false,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.code_copy",
-      "runtimePath": "extensions.features.codeCopy",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {
-          "enabled": true
-        }
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": {
-        "enabled": true
-      },
-      "migration": "configuration/extensions",
-      "sealed": true
-    },
-    {
-      "path": "extensions.features.code_copy.enabled",
-      "runtimePath": "extensions.features.codeCopy.enabled",
-      "type": [
-        "boolean"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": true
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": true,
-      "migration": "configuration/extensions"
-    },
-    {
       "path": "extensions.features.diagrams",
       "runtimePath": "extensions.features.diagrams",
       "type": [
@@ -3795,8 +3147,113 @@
       "default": {
         "kind": "literal",
         "value": {
-          "enabled": false,
-          "style_optimization": false,
+          "provider": null,
+          "providers": {
+            "mermaid": {
+              "theme": "neutral"
+            }
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "provider": null,
+        "providers": {
+          "mermaid": {
+            "theme": "neutral"
+          }
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.diagrams.provider",
+      "runtimePath": "extensions.features.diagrams.provider",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": null
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": null,
+      "migration": "configuration/extensions",
+      "values": [
+        null,
+        "mermaid"
+      ]
+    },
+    {
+      "path": "extensions.features.diagrams.providers",
+      "runtimePath": "extensions.features.diagrams.providers",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "mermaid": {
+            "theme": "neutral"
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "mermaid": {
+          "theme": "neutral"
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.diagrams.providers.mermaid",
+      "runtimePath": "extensions.features.diagrams.providers.mermaid",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
           "theme": "neutral"
         }
       },
@@ -3814,68 +3271,14 @@
         "Reference generator"
       ],
       "example": {
-        "enabled": false,
-        "style_optimization": false,
         "theme": "neutral"
       },
       "migration": "configuration/extensions",
       "sealed": true
     },
     {
-      "path": "extensions.features.diagrams.enabled",
-      "runtimePath": "extensions.features.diagrams.enabled",
-      "type": [
-        "boolean"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": false
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": false,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.diagrams.style_optimization",
-      "runtimePath": "extensions.features.diagrams.styleOptimization",
-      "type": [
-        "boolean"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": false
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": false,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.diagrams.theme",
-      "runtimePath": "extensions.features.diagrams.theme",
+      "path": "extensions.features.diagrams.providers.mermaid.theme",
+      "runtimePath": "extensions.features.diagrams.providers.mermaid.theme",
       "type": [
         "string"
       ],
@@ -3906,6 +3309,63 @@
       ]
     },
     {
+      "path": "extensions.features.heti",
+      "runtimePath": "extensions.features.heti",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "enabled": false
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "enabled": false
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.heti.enabled",
+      "runtimePath": "extensions.features.heti.enabled",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": false
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": false,
+      "migration": "configuration/extensions"
+    },
+    {
       "path": "extensions.features.lazy_loading",
       "runtimePath": "extensions.features.lazyLoading",
       "type": [
@@ -3915,7 +3375,7 @@
         "kind": "literal",
         "value": {
           "transition": "fade",
-          "fix_ratio": true
+          "auto_aspect_ratio": true
         }
       },
       "scope": "theme",
@@ -3933,14 +3393,14 @@
       ],
       "example": {
         "transition": "fade",
-        "fix_ratio": true
+        "auto_aspect_ratio": true
       },
       "migration": "configuration/extensions",
       "sealed": true
     },
     {
-      "path": "extensions.features.lazy_loading.fix_ratio",
-      "runtimePath": "extensions.features.lazyLoading.fixRatio",
+      "path": "extensions.features.lazy_loading.auto_aspect_ratio",
+      "runtimePath": "extensions.features.lazyLoading.autoAspectRatio",
       "type": [
         "boolean"
       ],
@@ -4004,7 +3464,6 @@
         "kind": "literal",
         "value": {
           "enabled": true,
-          "mode": "auto",
           "selector": ".timenode p>img"
         }
       },
@@ -4023,7 +3482,6 @@
       ],
       "example": {
         "enabled": true,
-        "mode": "auto",
         "selector": ".timenode p>img"
       },
       "migration": "configuration/extensions",
@@ -4056,36 +3514,6 @@
       "migration": "configuration/extensions"
     },
     {
-      "path": "extensions.features.lightbox.mode",
-      "runtimePath": "extensions.features.lightbox.mode",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "auto"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "auto",
-      "migration": "configuration/extensions",
-      "values": [
-        "auto",
-        "global"
-      ]
-    },
-    {
       "path": "extensions.features.lightbox.selector",
       "runtimePath": "extensions.features.lightbox.selector",
       "type": [
@@ -4112,6 +3540,63 @@
       "migration": "configuration/extensions"
     },
     {
+      "path": "extensions.features.link_prefetch",
+      "runtimePath": "extensions.features.linkPrefetch",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "enabled": true
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "enabled": true
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.features.link_prefetch.enabled",
+      "runtimePath": "extensions.features.linkPrefetch.enabled",
+      "type": [
+        "boolean"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": true
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": true,
+      "migration": "configuration/extensions"
+    },
+    {
       "path": "extensions.features.math",
       "runtimePath": "extensions.features.math",
       "type": [
@@ -4123,9 +3608,7 @@
           "provider": null,
           "providers": {
             "katex": {},
-            "mathjax": {
-              "v3": false
-            }
+            "mathjax": {}
           }
         }
       },
@@ -4146,9 +3629,7 @@
         "provider": null,
         "providers": {
           "katex": {},
-          "mathjax": {
-            "v3": false
-          }
+          "mathjax": {}
         }
       },
       "migration": "configuration/extensions",
@@ -4196,9 +3677,7 @@
         "kind": "literal",
         "value": {
           "katex": {},
-          "mathjax": {
-            "v3": false
-          }
+          "mathjax": {}
         }
       },
       "scope": "theme",
@@ -4216,9 +3695,7 @@
       ],
       "example": {
         "katex": {},
-        "mathjax": {
-          "v3": false
-        }
+        "mathjax": {}
       },
       "migration": "configuration/extensions",
       "sealed": true
@@ -4257,9 +3734,7 @@
       ],
       "default": {
         "kind": "literal",
-        "value": {
-          "v3": false
-        }
+        "value": {}
       },
       "scope": "theme",
       "cascade": [
@@ -4274,66 +3749,7 @@
         "browser Extension runtime",
         "Reference generator"
       ],
-      "example": {
-        "v3": false
-      },
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.preload",
-      "runtimePath": "extensions.features.preload",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {
-          "enabled": true
-        }
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": {
-        "enabled": true
-      },
-      "migration": "configuration/extensions",
-      "sealed": true
-    },
-    {
-      "path": "extensions.features.preload.enabled",
-      "runtimePath": "extensions.features.preload.enabled",
-      "type": [
-        "boolean"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": true
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": true,
+      "example": {},
       "migration": "configuration/extensions"
     },
     {
@@ -4347,8 +3763,8 @@
         "value": {
           "enabled": true,
           "distance": "8px",
-          "duration": 1000,
-          "interval": 100,
+          "duration_ms": 1000,
+          "interval_ms": 100,
           "scale": 1
         }
       },
@@ -4368,8 +3784,8 @@
       "example": {
         "enabled": true,
         "distance": "8px",
-        "duration": 1000,
-        "interval": 100,
+        "duration_ms": 1000,
+        "interval_ms": 100,
         "scale": 1
       },
       "migration": "configuration/extensions",
@@ -4402,8 +3818,8 @@
       "migration": "configuration/extensions"
     },
     {
-      "path": "extensions.features.reveal.duration",
-      "runtimePath": "extensions.features.reveal.duration",
+      "path": "extensions.features.reveal.duration_ms",
+      "runtimePath": "extensions.features.reveal.durationMs",
       "type": [
         "number"
       ],
@@ -4455,8 +3871,8 @@
       "migration": "configuration/extensions"
     },
     {
-      "path": "extensions.features.reveal.interval",
-      "runtimePath": "extensions.features.reveal.interval",
+      "path": "extensions.features.reveal.interval_ms",
+      "runtimePath": "extensions.features.reveal.intervalMs",
       "type": [
         "number"
       ],
@@ -4579,11 +3995,8 @@
         "value": {
           "local": {
             "scope": "all",
-            "index_path": "/search.json",
             "include_content": true,
-            "lazy": true,
-            "cache_ttl": 86400,
-            "exclude": []
+            "cache_ttl_seconds": 86400
           },
           "algolia": {
             "appId": null,
@@ -4608,11 +4021,8 @@
       "example": {
         "local": {
           "scope": "all",
-          "index_path": "/search.json",
           "include_content": true,
-          "lazy": true,
-          "cache_ttl": 86400,
-          "exclude": []
+          "cache_ttl_seconds": 86400
         },
         "algolia": {
           "appId": null,
@@ -4663,11 +4073,8 @@
         "kind": "literal",
         "value": {
           "scope": "all",
-          "index_path": "/search.json",
           "include_content": true,
-          "lazy": true,
-          "cache_ttl": 86400,
-          "exclude": []
+          "cache_ttl_seconds": 86400
         }
       },
       "scope": "theme",
@@ -4685,18 +4092,15 @@
       ],
       "example": {
         "scope": "all",
-        "index_path": "/search.json",
         "include_content": true,
-        "lazy": true,
-        "cache_ttl": 86400,
-        "exclude": []
+        "cache_ttl_seconds": 86400
       },
       "migration": "configuration/extensions",
       "sealed": true
     },
     {
-      "path": "extensions.search.providers.local.cache_ttl",
-      "runtimePath": "extensions.search.providers.local.cacheTtl",
+      "path": "extensions.search.providers.local.cache_ttl_seconds",
+      "runtimePath": "extensions.search.providers.local.cacheTtlSeconds",
       "type": [
         "number"
       ],
@@ -4718,89 +4122,12 @@
         "Reference generator"
       ],
       "example": 86400,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.search.providers.local.exclude",
-      "runtimePath": "extensions.search.providers.local.exclude",
-      "type": [
-        "array"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": []
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "array",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": [],
-      "migration": "configuration/extensions"
+      "migration": "configuration/extensions",
+      "minimum": 0
     },
     {
       "path": "extensions.search.providers.local.include_content",
       "runtimePath": "extensions.search.providers.local.includeContent",
-      "type": [
-        "boolean"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": true
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": true,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.search.providers.local.index_path",
-      "runtimePath": "extensions.search.providers.local.indexPath",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "/search.json"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "root_relative_path",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "/search.json",
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.search.providers.local.lazy",
-      "runtimePath": "extensions.search.providers.local.lazy",
       "type": [
         "boolean"
       ],
@@ -4886,10 +4213,7 @@
       "default": {
         "kind": "literal",
         "value": {
-          "edit_page": {
-            "_posts/": null,
-            "wiki/stellar/": "https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"
-          }
+          "repositories": []
         }
       },
       "scope": "theme",
@@ -4906,33 +4230,27 @@
         "Reference generator"
       ],
       "example": {
-        "edit_page": {
-          "_posts/": null,
-          "wiki/stellar/": "https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"
-        }
+        "repositories": []
       },
       "migration": "configuration/extensions",
       "sealed": true
     },
     {
-      "path": "extensions.services.contributors.edit_page",
-      "runtimePath": "extensions.services.contributors.editPage",
+      "path": "extensions.services.contributors.repositories",
+      "runtimePath": "extensions.services.contributors.repositories",
       "type": [
-        "object"
+        "array"
       ],
       "default": {
         "kind": "literal",
-        "value": {
-          "_posts/": null,
-          "wiki/stellar/": "https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"
-        }
+        "value": []
       },
       "scope": "theme",
       "cascade": [
         "schema default",
         "_config.stellar.yml"
       ],
-      "normalizer": "object",
+      "normalizer": "array",
       "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
         "Extension registry",
@@ -4940,21 +4258,24 @@
         "browser Extension runtime",
         "Reference generator"
       ],
-      "example": {
-        "wiki/stellar/": "https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/"
-      },
+      "example": [
+        {
+          "source_prefix": "wiki/stellar/",
+          "repository": "xaoxuu/hexo-theme-stellar-docs",
+          "branch": "main"
+        }
+      ],
       "migration": "configuration/extensions"
     },
     {
-      "path": "extensions.services.contributors.edit_page.<prefix>",
-      "runtimePath": "extensions.services.contributors.editPage.<prefix>",
+      "path": "extensions.services.contributors.repositories[].branch",
+      "runtimePath": "extensions.services.contributors.repositories[].branch",
       "type": [
-        "string",
-        "null"
+        "string"
       ],
       "default": {
         "kind": "literal",
-        "value": null
+        "value": "main"
       },
       "scope": "theme",
       "cascade": [
@@ -4969,7 +4290,63 @@
         "browser Extension runtime",
         "Reference generator"
       ],
-      "example": "https://github.com/example/repo/blob/main/",
+      "example": "main",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.services.contributors.repositories[].repository",
+      "runtimePath": "extensions.services.contributors.repositories[].repository",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "GitHub owner/repository"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "xaoxuu/hexo-theme-stellar-docs",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.services.contributors.repositories[].source_prefix",
+      "runtimePath": "extensions.services.contributors.repositories[].sourcePrefix",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "derived",
+        "sources": [
+          "repository source prefix"
+        ]
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "wiki/stellar/",
       "migration": "configuration/extensions"
     },
     {
@@ -4983,8 +4360,7 @@
         "value": {
           "api_url": "https://api.github.com",
           "raw_url": "https://raw.githubusercontent.com",
-          "gist_url": "https://gist.github.com",
-          "card_url": "https://github-readme-stats.vercel.app"
+          "gist_url": "https://gist.github.com"
         }
       },
       "scope": "theme",
@@ -5003,8 +4379,7 @@
       "example": {
         "api_url": "https://api.github.com",
         "raw_url": "https://raw.githubusercontent.com",
-        "gist_url": "https://gist.github.com",
-        "card_url": "https://github-readme-stats.vercel.app"
+        "gist_url": "https://gist.github.com"
       },
       "migration": "configuration/extensions",
       "sealed": true
@@ -5033,32 +4408,6 @@
         "Reference generator"
       ],
       "example": "https://api.github.com",
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.services.github.card_url",
-      "runtimePath": "extensions.services.github.cardUrl",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "https://github-readme-stats.vercel.app"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "require an absolute HTTP(S) URL; preserve the URL",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "https://github-readme-stats.vercel.app",
       "migration": "configuration/extensions"
     },
     {
@@ -5114,15 +4463,15 @@
       "migration": "configuration/extensions"
     },
     {
-      "path": "extensions.services.rating",
-      "runtimePath": "extensions.services.rating",
+      "path": "extensions.services.github_card",
+      "runtimePath": "extensions.services.githubCard",
       "type": [
         "object"
       ],
       "default": {
         "kind": "literal",
         "value": {
-          "endpoint": "https://star-vote.xaox.cc/api/rating"
+          "endpoint": "https://github-readme-stats.vercel.app"
         }
       },
       "scope": "theme",
@@ -5139,7 +4488,64 @@
         "Reference generator"
       ],
       "example": {
-        "endpoint": "https://star-vote.xaox.cc/api/rating"
+        "endpoint": "https://github-readme-stats.vercel.app"
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.services.github_card.endpoint",
+      "runtimePath": "extensions.services.githubCard.endpoint",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "https://github-readme-stats.vercel.app"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "require an absolute HTTP(S) URL; preserve the URL",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "https://github-readme-stats.vercel.app",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.services.rating",
+      "runtimePath": "extensions.services.rating",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "endpoint": null
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "endpoint": null
       },
       "migration": "configuration/extensions",
       "sealed": true
@@ -5153,7 +4559,7 @@
       ],
       "default": {
         "kind": "literal",
-        "value": "https://star-vote.xaox.cc/api/rating"
+        "value": null
       },
       "scope": "theme",
       "cascade": [
@@ -5168,7 +4574,7 @@
         "browser Extension runtime",
         "Reference generator"
       ],
-      "example": "https://star-vote.xaox.cc/api/rating",
+      "example": null,
       "migration": "configuration/extensions"
     },
     {
@@ -5238,7 +4644,7 @@
       "default": {
         "kind": "literal",
         "value": {
-          "endpoint": "https://star-vote.xaox.cc/api/vote"
+          "endpoint": null
         }
       },
       "scope": "theme",
@@ -5255,7 +4661,7 @@
         "Reference generator"
       ],
       "example": {
-        "endpoint": "https://star-vote.xaox.cc/api/vote"
+        "endpoint": null
       },
       "migration": "configuration/extensions",
       "sealed": true
@@ -5269,7 +4675,7 @@
       ],
       "default": {
         "kind": "literal",
-        "value": "https://star-vote.xaox.cc/api/vote"
+        "value": null
       },
       "scope": "theme",
       "cascade": [
@@ -5284,7 +4690,7 @@
         "browser Extension runtime",
         "Reference generator"
       ],
-      "example": "https://star-vote.xaox.cc/api/vote",
+      "example": null,
       "migration": "configuration/extensions"
     },
     {
@@ -5373,64 +4779,6 @@
       "migration": "configuration/extensions"
     },
     {
-      "path": "extensions.tags.chat",
-      "runtimePath": "extensions.tags.chat",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {
-          "endpoint": "https://siteinfo.listentothewind.cn/api/v1"
-        }
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": {
-        "endpoint": "https://siteinfo.listentothewind.cn/api/v1"
-      },
-      "migration": "configuration/extensions",
-      "sealed": true
-    },
-    {
-      "path": "extensions.tags.chat.endpoint",
-      "runtimePath": "extensions.tags.chat.endpoint",
-      "type": [
-        "string",
-        "null"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "https://siteinfo.listentothewind.cn/api/v1"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "https://siteinfo.listentothewind.cn/api/v1",
-      "migration": "configuration/extensions"
-    },
-    {
       "path": "extensions.tags.checkbox",
       "runtimePath": "extensions.tags.checkbox",
       "type": [
@@ -5496,7 +4844,77 @@
       "default": {
         "kind": "literal",
         "value": {
-          "default": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif",
+          "default_source": "blobcat",
+          "sources": {
+            "twemoji": "https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg",
+            "qq": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif",
+            "aru": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif",
+            "tieba": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png",
+            "blobcat": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif"
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "default_source": "blobcat",
+        "sources": {
+          "twemoji": "https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg",
+          "qq": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif",
+          "aru": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif",
+          "tieba": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png",
+          "blobcat": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif"
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.tags.emoji.default_source",
+      "runtimePath": "extensions.tags.emoji.defaultSource",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "blobcat"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "blobcat",
+      "migration": "configuration/extensions"
+    },
+    {
+      "path": "extensions.tags.emoji.sources",
+      "runtimePath": "extensions.tags.emoji.sources",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
           "twemoji": "https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg",
           "qq": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif",
           "aru": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif",
@@ -5518,7 +4936,6 @@
         "Reference generator"
       ],
       "example": {
-        "default": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif",
         "twemoji": "https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg",
         "qq": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif",
         "aru": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif",
@@ -5528,8 +4945,8 @@
       "migration": "configuration/extensions"
     },
     {
-      "path": "extensions.tags.emoji.<provider>",
-      "runtimePath": "extensions.tags.emoji.<provider>",
+      "path": "extensions.tags.emoji.sources.<source>",
+      "runtimePath": "extensions.tags.emoji.sources.<source>",
       "type": [
         "string"
       ],
@@ -5562,9 +4979,8 @@
       "default": {
         "kind": "literal",
         "value": {
-          "layout": "grid",
           "size": "mix",
-          "ratio": "square"
+          "aspect_ratio": "square"
         }
       },
       "scope": "theme",
@@ -5581,46 +4997,15 @@
         "Reference generator"
       ],
       "example": {
-        "layout": "grid",
         "size": "mix",
-        "ratio": "square"
+        "aspect_ratio": "square"
       },
       "migration": "configuration/extensions",
       "sealed": true
     },
     {
-      "path": "extensions.tags.gallery.layout",
-      "runtimePath": "extensions.tags.gallery.layout",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "grid"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "grid",
-      "migration": "configuration/extensions",
-      "values": [
-        "grid",
-        "flow"
-      ]
-    },
-    {
-      "path": "extensions.tags.gallery.ratio",
-      "runtimePath": "extensions.tags.gallery.ratio",
+      "path": "extensions.tags.gallery.aspect_ratio",
+      "runtimePath": "extensions.tags.gallery.aspectRatio",
       "type": [
         "string"
       ],
@@ -5644,8 +5029,9 @@
       "example": "square",
       "migration": "configuration/extensions",
       "values": [
-        "origin",
-        "square"
+        "original",
+        "square",
+        "portrait"
       ]
     },
     {
@@ -5798,63 +5184,6 @@
       "migration": "configuration/extensions"
     },
     {
-      "path": "extensions.tags.image",
-      "runtimePath": "extensions.tags.image",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {
-          "parse_markdown": false
-        }
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": {
-        "parse_markdown": false
-      },
-      "migration": "configuration/extensions",
-      "sealed": true
-    },
-    {
-      "path": "extensions.tags.image.parse_markdown",
-      "runtimePath": "extensions.tags.image.parseMarkdown",
-      "type": [
-        "boolean"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": false
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": false,
-      "migration": "configuration/extensions"
-    },
-    {
       "path": "extensions.tags.mark",
       "runtimePath": "extensions.tags.mark",
       "type": [
@@ -5997,255 +5326,6 @@
       "migration": "configuration/extensions"
     },
     {
-      "path": "extensions.tags.okr",
-      "runtimePath": "extensions.tags.okr",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {
-          "border": true,
-          "status": {
-            "in_track": {
-              "color": "blue",
-              "label": null
-            },
-            "at_risk": {
-              "color": "yellow",
-              "label": null
-            },
-            "off_track": {
-              "color": "orange",
-              "label": null
-            },
-            "finished": {
-              "color": "green",
-              "label": null
-            },
-            "unfinished": {
-              "color": "red",
-              "label": null
-            }
-          }
-        }
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": {
-        "border": true,
-        "status": {
-          "in_track": {
-            "color": "blue",
-            "label": null
-          },
-          "at_risk": {
-            "color": "yellow",
-            "label": null
-          },
-          "off_track": {
-            "color": "orange",
-            "label": null
-          },
-          "finished": {
-            "color": "green",
-            "label": null
-          },
-          "unfinished": {
-            "color": "red",
-            "label": null
-          }
-        }
-      },
-      "migration": "configuration/extensions",
-      "sealed": true
-    },
-    {
-      "path": "extensions.tags.okr.border",
-      "runtimePath": "extensions.tags.okr.border",
-      "type": [
-        "boolean"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": true
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": true,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.tags.okr.status",
-      "runtimePath": "extensions.tags.okr.status",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {
-          "in_track": {
-            "color": "blue",
-            "label": null
-          },
-          "at_risk": {
-            "color": "yellow",
-            "label": null
-          },
-          "off_track": {
-            "color": "orange",
-            "label": null
-          },
-          "finished": {
-            "color": "green",
-            "label": null
-          },
-          "unfinished": {
-            "color": "red",
-            "label": null
-          }
-        }
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": {
-        "in_track": {
-          "color": "blue",
-          "label": null
-        },
-        "at_risk": {
-          "color": "yellow",
-          "label": null
-        },
-        "off_track": {
-          "color": "orange",
-          "label": null
-        },
-        "finished": {
-          "color": "green",
-          "label": null
-        },
-        "unfinished": {
-          "color": "red",
-          "label": null
-        }
-      },
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.tags.okr.status.<status>",
-      "runtimePath": "extensions.tags.okr.status.<status>",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {}
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": {},
-      "migration": "configuration/extensions",
-      "sealed": true
-    },
-    {
-      "path": "extensions.tags.okr.status.<status>.color",
-      "runtimePath": "extensions.tags.okr.status.<status>.color",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": ""
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "",
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.tags.okr.status.<status>.label",
-      "runtimePath": "extensions.tags.okr.status.<status>.label",
-      "type": [
-        "string",
-        "null"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": null
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": null,
-      "migration": "configuration/extensions"
-    },
-    {
       "path": "extensions.tags.quot",
       "runtimePath": "extensions.tags.quot",
       "type": [
@@ -6376,63 +5456,6 @@
         "Reference generator"
       ],
       "example": null,
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.tags.timeline",
-      "runtimePath": "extensions.tags.timeline",
-      "type": [
-        "object"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": {
-          "max_height": "80vh"
-        }
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "object",
-      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": {
-        "max_height": "80vh"
-      },
-      "migration": "configuration/extensions",
-      "sealed": true
-    },
-    {
-      "path": "extensions.tags.timeline.max_height",
-      "runtimePath": "extensions.tags.timeline.maxHeight",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "80vh"
-      },
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "80vh",
       "migration": "configuration/extensions"
     },
     {

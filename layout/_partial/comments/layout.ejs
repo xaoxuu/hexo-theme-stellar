@@ -28,9 +28,12 @@ if (explicitComments) {
 %>
 <% if (commentModel.enabled) { %>
   <div class="related-wrap md-text<%- scrollreveal(' ') %>" id="comments">
+    <% var resolvedCommentTitle = commentModel.title == null ? __('btn.comments') : commentModel.title %>
+    <% if (resolvedCommentTitle !== '') { %>
     <section class="header cmt-title cap theme">
-      <%- markdown(commentModel.title ?? __('btn.comments')) %>
+      <%- markdown(resolvedCommentTitle) %>
     </section>
+    <% } %>
     <section class="body cmt-body <%- commentModel.service %>">
       <%- partial(commentModel.service + '/layout', {comments: commentModel}) %>
     </section>

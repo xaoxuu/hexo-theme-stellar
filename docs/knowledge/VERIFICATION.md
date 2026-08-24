@@ -362,6 +362,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
 | `72efc0c` | refactor(v2): 收敛 Site Shell 与 Layout 配置 (#726) | 设计文档 `2026-08-24-v2-site-layout-final-convergence/`；Brand、菜单、Footer、13 个 Profile、双栏 Sidebar、Tabs、首页评论与 active menu 引用收敛为最终 Schema 和消费链；主题门禁与主工程构建通过，Issue #726 已闭环 |
+| `3fef786` | refactor(v2): 收敛 Content 与 Collection 配置 (#727) | 设计文档 `2026-08-24-v2-content-final-convergence/`；Article、Notebook、Collection、Front Matter 与生成器消费链收敛为最终 Schema，主站内容完成字段迁移；主题门禁与主工程构建通过，Issue #727 已闭环 |
 | `3b64803` | fix(v2): 完善 M6 搜索资源单源 (#724) | #724 最终复审修正：Algolia、本地搜索与快捷键脚本由内部常量经 Runtime Manifest 投影，浏览器搜索 Extension 不再硬编码资源路径；同步 AI 按钮缺省/显式空数组规格与资源单源回归 |
 | `8dcd72b` | fix(v2): 修正 M6 边界审查问题 (#724) | #724 双轨审查修正：Runtime 模块及 Feature/评论本地与远端资源改由内部常量清单投影；AI 界面与评论标题保留显式空值；退出的 copy 容器字段归类为 remove、toast 子字段归类为 localize；补齐资源单源、显式空值和消费链回归，主题增至 364 项测试 |
 | `c204ec8` | refactor(v2): 收敛配置与语言边界 (#724) | 设计文档 `2026-08-24-v2-config-language-convergence/`；配置字段逐项审计，Extension 资源、唯一 provider、request/cache 与固定时序内部化，copy/code-copy/AI 摘要/OKR 三语言默认文案收敛，公开 Schema 与 Reference 删除内部字段；主工程 262 个生成文件与首屏 gzip 30% 门禁通过，M7–M11 不提前实施 |

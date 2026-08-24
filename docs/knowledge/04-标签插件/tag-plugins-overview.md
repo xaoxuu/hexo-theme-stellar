@@ -16,26 +16,23 @@ extensions:
       border: true
     checkbox:
       interactive: false
-    image:
-      parse_markdown: false
-    timeline:
-      max_height: 80vh
-    chat:
-      endpoint: https://siteinfo.listentothewind.cn/api/v1
+    gallery:
+      size: mix
+      aspect_ratio: square
 ```
 
-Stellar 字段使用 snake_case，运行时为 camelCase。官方 tag ID 的父级对象严格封闭；`quot` 的 variant、`emoji` 的 provider 与 `okr.status` 是明确声明的动态记录。旧 `tag_plugins` 根、`max-height` 与 `chat.api` 不兼容读取。
+Stellar 字段使用 snake_case，运行时为 camelCase。公开 Tag 配置只保留 `note/checkbox/quot/emoji/icon/button/mark/hashtag/gallery`；其它标签采用固定内部策略。
 
 ## 标签分类
 
 | 分类 | 标签 | 配置路径 |
 | --- | --- | --- |
 | 标注 | `note`、`box`、`mark`、`hashtag`、`quot` | `extensions.tags.<id>` |
-| 媒体 | `image`、`gallery`、`albums`、`posters`、`video`、`voice` | `extensions.tags.image/gallery` 或内部服务模块 |
-| 交互 | `button`、`checkbox`、`copy`、`chat` | `extensions.tags.button/checkbox/copy/chat` |
+| 媒体 | `image`、`gallery`、`albums`、`posters`、`video`、`voice` | `extensions.tags.gallery` 或内部服务模块 |
+| 交互 | `button`、`checkbox`、`copy`、`chat` | `extensions.tags.button/checkbox` 或固定策略 |
 | 图标与表情 | `icon`、`emoji` | `extensions.tags.icon/emoji` |
 | 数据组件 | `sites`、`friends`、`rating`、`vote`、`timeline`、GitHub 卡片 | `extensions.services` 与内部服务模块 |
-| 结构 | `tabs`、`folding`、`grid`、`okr` | `extensions.tags.okr` 或标签参数 |
+| 结构 | `tabs`、`folding`、`grid`、`okr` | 标签参数或固定策略 |
 
 并非每个标签都需要主题配置。标签语法参数仍由各处理器解析；只有跨页面默认值或业务端点进入 `extensions`。
 
@@ -43,7 +40,6 @@ Stellar 字段使用 snake_case，运行时为 camelCase。官方 tag ID 的父�
 
 标签输出 `.data-service` 占位时，客户端模块来自主题内部资源注册表。例如 voice、video、download-file、sites、rating 与 vote 的 JavaScript 路径均不可由站点覆盖。站点可配置的业务地址位于：
 
-- `extensions.tags.chat.endpoint`
 - `extensions.services.site_info.endpoint`
 - `extensions.services.rating.endpoint`
 - `extensions.services.vote.endpoint`

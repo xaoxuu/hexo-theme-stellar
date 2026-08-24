@@ -182,9 +182,9 @@ flowchart TD
 
 ### 阶段 4：页面导航与预加载
 
-主题使用普通整页导航；可选的 `extensions.features.preload`（flying_pages）会在鼠标悬停时预加载站内链接，提升导航体验。PJAX 已于 v1.35.0 移除，详见主题仓库 `docs/designs/2026-08-08-pjax-removal.md`。
+主题使用普通整页导航；可选的 `extensions.features.link_prefetch`（flying_pages）会在鼠标悬停时预加载站内链接，提升导航体验。PJAX 已于 v1.35.0 移除，详见主题仓库 `docs/designs/2026-08-08-pjax-removal.md`。
 
-**参考源码**：[source/js/main.js](../../../source/js/main.js)、[_config.yml](../../../_config.yml)（`extensions.features.preload`）
+**参考源码**：[source/js/main.js](../../../source/js/main.js)、[_config.yml](../../../_config.yml)（`extensions.features.link_prefetch`）
 
 ## 内容类型系统
 

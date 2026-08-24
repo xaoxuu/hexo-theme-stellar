@@ -547,7 +547,7 @@ function pageViewModelSchema(profile) {
       }
     });
     const contributor = field(["object", "null"], {
-      default: computed("由 extensions.services.contributors.edit_page 与源文件生成"),
+      default: computed("由 extensions.services.contributors.repositories 最长 source_prefix 匹配与源文件生成"),
       example: { editUrl: "https://github.com/example/repo/blob/main/post.md", commitsUrl: "https://api.github.com/repos/example/repo/commits?path=post.md" },
       required: true,
       properties: {
@@ -590,7 +590,7 @@ function pageViewModelSchema(profile) {
         jsonLd: field("object", { default: computed("由 BlogPosting 结构化数据规则生成"), example: { "@type": "BlogPosting" }, required: true, additionalProperties: true })
       }, { required: true, example: { title: "Hello Stellar - Stellar", description: "文章摘要", keywords: ["Hexo"], robots: null, canonical: null, openGraph: null, jsonLd: { "@type": "BlogPosting" } } }),
       article: object({
-        heti: field("boolean", { default: derived("hexo.stellar.config.extensions.features.cjkTypography.enabled"), example: false, required: true }),
+        heti: field("boolean", { default: derived("hexo.stellar.config.extensions.features.heti.enabled"), example: false, required: true }),
         ...(profile === "topic" ? {
           banner: field("object", {
             default: inherited("item.presentation.banner"),
@@ -673,7 +673,7 @@ function pageViewModelSchema(profile) {
       }
     });
     const contributor = field(["object", "null"], {
-      default: computed("由 contributors.edit_page 与源文件生成"),
+      default: computed("由 contributors.repositories 最长 source_prefix 匹配与源文件生成"),
       example: { editUrl: "https://github.com/example/repo/blob/main/index.md", commitsUrl: "https://api.github.com/repos/example/repo/commits?path=index.md" },
       required: true,
       properties: {
@@ -752,7 +752,7 @@ function pageViewModelSchema(profile) {
         siteName: field("string", { default: derived("site.title"), example: "Example", required: true })
       }, { required: true, example: { enabled: true, background: {}, preview: {}, actions: [], title: "Stellar", description: "", repository: "", sourceUrl: "", releaseApi: "", projectName: "Stellar", siteName: "Example" } }),
       article: object({
-        heti: field("boolean", { default: derived("extensions.features.cjkTypography.enabled"), example: false, required: true }),
+        heti: field("boolean", { default: derived("extensions.features.heti.enabled"), example: false, required: true }),
         banner: field("object", { default: inherited("item.presentation.banner"), example: { headline: "开始" }, required: true, additionalProperties: true }),
         updated: field(["string", "null"], { default: inherited("item.updated"), example: "2026-08-23T00:00:00.000Z", required: true }),
         readmeHtml: field("string", { default: computed("Wiki 首页正文为空且配置 repository 时生成远程 README 占位"), example: "", required: true }),
@@ -858,7 +858,7 @@ function pageViewModelSchema(profile) {
         jsonLd: field("object", { default: computed("由 WebPage 结构化数据规则生成"), example: { "@type": "WebPage" }, required: true, additionalProperties: true })
       }, { required: true, example: { title: "Node.js - Example", description: "Note 摘要", keywords: [], robots: null, canonical: null, openGraph: null, jsonLd: { "@type": "WebPage" } } }),
       article: object({
-        heti: field("boolean", { default: derived("extensions.features.cjkTypography.enabled"), example: false, required: true }),
+        heti: field("boolean", { default: derived("extensions.features.heti.enabled"), example: false, required: true }),
         banner: field("object", { default: inherited("item.presentation.banner"), example: {}, required: true, additionalProperties: true }),
         created: field(["string", "null"], { default: inherited("item.date"), example: "2026-08-23T00:00:00.000Z", required: true }),
         updated: field(["string", "null"], { default: inherited("item.updated"), example: "2026-08-23T00:00:00.000Z", required: true }),
@@ -867,7 +867,7 @@ function pageViewModelSchema(profile) {
           references: array(field("any", { additionalProperties: true }), { default: inherited("item.presentation.footer.references"), example: [], required: true }),
           license: field("string", { default: computed("由最终许可协议与作者信息生成"), example: "CC BY 4.0", required: true }),
           share,
-          contributor: field(["object", "null"], { default: computed("由 contributors.edit_page 与源文件生成"), example: null, required: true, additionalProperties: true })
+          contributor: field(["object", "null"], { default: computed("由 contributors.repositories 最长 source_prefix 匹配与源文件生成"), example: null, required: true, additionalProperties: true })
         }, { required: true, example: { references: [], license: "", share: null, contributor: null } }),
         comments
       }, { required: true, example: { heti: false, banner: {}, created: null, updated: null, tags: [], footer: {}, comments: {} } }),

@@ -115,7 +115,7 @@
     },
     root : `<%- config.root %>`,
     tag_plugins: {
-      chat: {api: <%- JSON.stringify(extensions.tags.chat.endpoint) %>},
+      chat: {api: <%- JSON.stringify(assets.services.chat.endpoint) %>},
     },
     // 图标由构建期生成的 /js/stellar-icons.js 填充（defer，早于 DOMContentLoaded 就绪）
     icons: {},
@@ -129,11 +129,10 @@
     if (ctx.search.service == 'local_search') {
       let service_obj = <%- JSON.stringify({
         field: localSearch.scope,
-        path: localSearch.indexPath,
+        path: '/search.json',
         content: localSearch.includeContent,
-        lazy_load: localSearch.lazy,
-        cache_ttl: localSearch.cacheTtl,
-        skip_search: localSearch.exclude
+        lazy_load: true,
+        cache_ttl: localSearch.cacheTtlSeconds
       }) %>;
       ctx.search[ctx.search.service] = service_obj;
       ctx.search.path = service_obj.path;

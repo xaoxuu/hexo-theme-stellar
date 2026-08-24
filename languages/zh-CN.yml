@@ -135,13 +135,3 @@ tag_plugins:
       identity:
         left: 自信果断
         right: 情绪易波动
-
-feature:
-  ai_summary:
-    name: AI 摘要
-    introduce: 我是文章辅助 AI：QX-AI，点击下方按钮可以了解我、推荐相关文章或生成本文摘要。
-    buttons:
-      introduce: 介绍自己
-      recommend: 推荐文章
-      summarize: 生成摘要
-      shuttle: 矩阵穿梭

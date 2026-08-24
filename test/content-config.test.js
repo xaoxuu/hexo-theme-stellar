@@ -71,6 +71,14 @@ test("Front Matter Schema 保留 Hexo 字段并解析最终 Stellar 字段", () 
   assert.ok(Object.isFrozen(parsed.seo.openGraph));
 });
 
+test("render.diagrams 接受最终 provider/参数对象并拒绝 true", () => {
+  assert.equal(parsePageConfig({ render: { diagrams: "mermaid" } }).render.diagrams, "mermaid");
+  assert.throws(
+    () => parsePageConfig({ render: { diagrams: true } }, "source/wiki/graph.md"),
+    /false, mermaid, or Mermaid options object/
+  );
+});
+
 test("Galaxy 注册 Schema 保持 React Bits camelCase，自有运行时键投影为 camelCase", () => {
   const parsed = parseCollectionConfig({
     name: "Stellar",

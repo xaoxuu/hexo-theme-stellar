@@ -420,28 +420,26 @@ const LAYOUT_PROFILE_DEFAULTS = deepFreeze({
 });
 
 const TAG_EXTENSION_IDS = deepFreeze([
-  "note", "checkbox", "quot", "emoji", "icon", "button", "image",
-  "timeline", "mark", "hashtag", "okr", "gallery", "chat"
+  "note", "checkbox", "quot", "emoji", "icon", "button", "mark", "hashtag", "gallery"
 ]);
 
 const FEATURE_EXTENSION_IDS = deepFreeze([
-  "lazy_loading", "preload", "lightbox", "reveal", "ai_summary", "math", "diagrams",
-  "code_copy", "adaptive_text", "card_hover", "cjk_typography"
+  "lazy_loading", "link_prefetch", "lightbox", "reveal", "math", "diagrams", "card_hover", "heti"
 ]);
 
 const FEATURE_ID_MIGRATIONS = deepFreeze({
-  preload: "preload",
+  preload: "link_prefetch",
   fancybox: "lightbox",
   swiper: null,
   scrollreveal: "reveal",
-  tianli_gpt: "ai_summary",
+  tianli_gpt: null,
   katex: "math",
   mathjax: "math",
   mermaid: "diagrams",
-  copycode: "code_copy",
-  adaptive_text: "adaptive_text",
+  copycode: null,
+  adaptive_text: null,
   card_hover: "card_hover",
-  heti: "cjk_typography"
+  heti: "heti"
 });
 
 const SERVICE_ID_MIGRATIONS = deepFreeze({
@@ -459,8 +457,10 @@ const CONFIG_INTERNALIZED_RESOURCES = deepFreeze([
   "plugins.<official_extension>.{js,css,inject}",
   "data_services.<official_service>.js",
   "comments.custom_css",
-  "extensions.features.{preload,lightbox,reveal,ai_summary,diagrams}.provider",
-  "extensions.features.ai_summary.interface.version",
+  "extensions.features.{link_prefetch,lightbox,reveal}.provider",
+  "extensions.features.{code_copy,adaptive_text}",
+  "extensions.features.ai_summary",
+  "extensions.tags.{image,timeline,okr,chat}",
   "extensions.cache.*",
   "style.loading.*",
   "system.override_pretty_urls"
@@ -652,11 +652,8 @@ const CONFIG_TARGET_FIELDS = deepFreeze([
   ...fields(EXTENSION_CONSUMERS, [
     ["extensions.search.provider", ["string", "null"], literal("local"), { values: [null, "local", "algolia"], normalization: "require a registered provider ID; preserve null as disabled" }],
     ["extensions.search.providers.local.scope", "string", literal("all")],
-    ["extensions.search.providers.local.index_path", "string", literal("/search.json")],
     ["extensions.search.providers.local.include_content", "boolean", literal(true)],
-    ["extensions.search.providers.local.lazy", "boolean", literal(true)],
-    ["extensions.search.providers.local.cache_ttl", "number", literal(86400)],
-    ["extensions.search.providers.local.exclude", "array", literal([]), { items: { type: ["string"] } }],
+    ["extensions.search.providers.local.cache_ttl_seconds", "number", literal(86400), { minimum: 0 }],
     ["extensions.search.providers.algolia", "object", registered("Algolia"), { boundary: "parameter_bag" }],
     ["extensions.comments.provider", ["string", "null"], literal(null), { values: [null, "beaudar", "utterances", "giscus", "twikoo", "waline", "artalk"] }],
     ["extensions.comments.title", ["string", "null"], literal(null)],
@@ -671,14 +668,16 @@ const CONFIG_TARGET_FIELDS = deepFreeze([
     }]),
     ["extensions.features.math.provider", ["string", "null"], literal(null), { values: [null, "katex", "mathjax"] }],
     ["extensions.services.site_info.endpoint", ["string", "null"], literal(null)],
-    ["extensions.services.rating.endpoint", ["string", "null"], literal("https://star-vote.xaox.cc/api/rating")],
-    ["extensions.services.vote.endpoint", ["string", "null"], literal("https://star-vote.xaox.cc/api/vote")],
-    ["extensions.services.contributors.edit_page", "object", literal({ "_posts/": null, "wiki/stellar/": "https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/" }), { boundary: "record" }],
-    ["extensions.services.contributors.edit_page.<prefix>", ["string", "null"], literal(null)],
+    ["extensions.services.rating.endpoint", ["string", "null"], literal(null)],
+    ["extensions.services.vote.endpoint", ["string", "null"], literal(null)],
+    ["extensions.services.contributors.repositories", "array", literal([]), { items: { type: ["object"], boundary: "sealed" } }],
+    ["extensions.services.contributors.repositories[].source_prefix", "string", derived("repository source prefix")],
+    ["extensions.services.contributors.repositories[].repository", "string", derived("GitHub owner/repository")],
+    ["extensions.services.contributors.repositories[].branch", "string", literal("main")],
     ["extensions.services.github.api_url", "string", literal("https://api.github.com"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }],
     ["extensions.services.github.raw_url", "string", literal("https://raw.githubusercontent.com"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }],
     ["extensions.services.github.gist_url", "string", literal("https://gist.github.com"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }],
-    ["extensions.services.github.card_url", "string", literal("https://github-readme-stats.vercel.app"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }]
+    ["extensions.services.github_card.endpoint", "string", literal("https://github-readme-stats.vercel.app"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }]
   ], { status: "delivered" }),
   ...fields(INJECT_CONSUMERS, [
     ["inject.head", "string", literal(""), { normalization: "preserve trusted source text exactly; append page text after site text with one newline" }],
@@ -826,11 +825,11 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
   search: [
     migration("search.service", "rename", "extensions.search.provider", "第三方实现统一称 provider"),
     migration("search.local_search.field", "rename", "extensions.search.providers.local.scope", "字段描述索引范围"),
-    migration("search.local_search.path", "rename", "extensions.search.providers.local.index_path", "字段描述索引文件路径"),
+    migration("search.local_search.path", "internalize", null, "本地索引固定为 /search.json"),
     migration("search.local_search.content", "rename", "extensions.search.providers.local.include_content", "布尔字段明确包含行为"),
-    migration("search.local_search.lazy_load", "rename", "extensions.search.providers.local.lazy", "简化重复后缀"),
-    migration("search.local_search.cache_ttl", "move", "extensions.search.providers.local.cache_ttl", "provider 参数归 providers"),
-    migration("search.local_search.skip_search[]", "rename", "extensions.search.providers.local.exclude[]", "字段描述排除规则"),
+    migration("search.local_search.lazy_load", "internalize", null, "本地搜索固定按需加载"),
+    migration("search.local_search.cache_ttl", "rename", "extensions.search.providers.local.cache_ttl_seconds", "字段名显式声明秒单位"),
+    migration("search.local_search.skip_search[]", "remove", null, "可搜索性由 visibility.searchable 唯一控制"),
     migration("search.algolia_search.js", "internalize", null, "官方 Algolia 客户端由主题内部资源注册表提供"),
     migration("search.algolia_search.<option>", "move", "extensions.search.providers.algolia.<option>", "上游参数袋保持原字段")
   ],
@@ -861,7 +860,11 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
     migration("footer.content", "move", "site.footer.content", "Footer 归 site shell 所有")
   ],
   tag_plugins: [
-    migration("tag_plugins.timeline.max-height", "rename", "extensions.tags.timeline.max_height", "Stellar 字段统一使用 snake_case"),
+    migration("tag_plugins.emoji.default", "rename", "extensions.tags.emoji.default_source", "默认值改为 source ID"),
+    migration("tag_plugins.emoji.<source>", "move", "extensions.tags.emoji.sources.<source>", "模板按 source 分组"),
+    migration("tag_plugins.gallery.ratio", "rename", "extensions.tags.gallery.aspect_ratio", "字段使用完整比例语义"),
+    migration("tag_plugins.gallery.layout", "remove", null, "布局只由单次标签参数决定"),
+    migration("tag_plugins.{image,timeline,okr,chat}.*", "internalize", null, "无效或固定标签策略不再公开"),
     migration("tag_plugins.<extension>.*", "move", "extensions.tags.<tag_id>.*", "标签能力进入注册式 Extension 注册 Schema")
   ],
   dependencies: [
@@ -869,14 +872,14 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
     migration("dependencies.<dependency>.js", "internalize", null, "官方模块随主题发布"),
     migration("dependencies.<dependency>.css", "internalize", null, "官方样式随主题发布"),
     migration("dependencies.lazyload.transition", "move", "extensions.features.lazy_loading.transition", "懒加载行为参数归语义 Feature"),
-    migration("dependencies.lazyload.fix_ratio", "move", "extensions.features.lazy_loading.fix_ratio", "懒加载行为参数归语义 Feature")
+    migration("dependencies.lazyload.fix_ratio", "rename", "extensions.features.lazy_loading.auto_aspect_ratio", "字段明确 Hexo server 自动写回图片比例")
   ],
   data_services: [
     migration("data_services.<service>.js", "internalize", null, "官方服务模块随主题发布"),
     migration("data_services.siteinfo.api", "rename", "extensions.services.site_info.endpoint", "服务 ID 使用 snake_case，业务地址统一称 endpoint"),
     migration("data_services.rating.api", "rename", "extensions.services.rating.endpoint", "业务地址统一称 endpoint"),
     migration("data_services.vote.api", "rename", "extensions.services.vote.endpoint", "业务地址统一称 endpoint"),
-    migration("data_services.contributors.edit_this_page.*", "rename", "extensions.services.contributors.edit_page.*", "去掉父级已表达的重复代词")
+    migration("data_services.contributors.edit_this_page.*", "rename", "extensions.services.contributors.repositories[]", "仓库映射改为按最长 source_prefix 匹配的对象数组")
   ],
   data_cache: [
     migration("data_cache.enable", "internalize", null, "缓存策略由内部 request/cache 常量拥有"),
@@ -888,6 +891,13 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
     migration("plugins.swiper.enable", "internalize", null, "Swiper 是主题内置轮播实现，不再作为公开 Feature"),
     migration("plugins.katex.enable", "merge", "extensions.features.math", "数学实现合并为 provider 驱动的 Feature"),
     migration("plugins.mathjax.enable", "merge", "extensions.features.math", "数学实现合并为 provider 驱动的 Feature"),
+    migration("plugins.preload.enable", "rename", "extensions.features.link_prefetch.enabled", "按用户可感知行为命名"),
+    migration("plugins.scrollreveal.duration", "rename", "extensions.features.reveal.duration_ms", "字段名显式声明毫秒单位"),
+    migration("plugins.scrollreveal.interval", "rename", "extensions.features.reveal.interval_ms", "字段名显式声明毫秒单位"),
+    migration("plugins.tianli_gpt.*", "remove", null, "AI Summary 整体退出 v2"),
+    migration("plugins.copycode.*", "internalize", null, "代码复制固定开启且策略内部化"),
+    migration("plugins.adaptive_text.*", "internalize", null, "自适应文字固定开启且策略内部化"),
+    migration("plugins.heti.enable", "rename", "extensions.features.heti.enabled", "使用产品名称并保留开关"),
     migration("plugins.<extension>.enable", "rename", "extensions.features.<feature>.enabled", "布尔状态统一使用 enabled"),
     migration("plugins.<extension>.js", "internalize", null, "官方模块随主题发布"),
     migration("plugins.<extension>.css", "internalize", null, "官方样式随主题发布"),
@@ -955,7 +965,7 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
     migration("api_host.ghapi", "rename", "extensions.services.github.api_url", "使用完整 URL 并归 GitHub 服务"),
     migration("api_host.ghraw", "rename", "extensions.services.github.raw_url", "使用完整 URL 并归 GitHub 服务"),
     migration("api_host.gist", "rename", "extensions.services.github.gist_url", "使用完整 URL 并归 GitHub 服务"),
-    migration("api_host.ghcard", "rename", "extensions.services.github.card_url", "使用完整 URL 并归 GitHub 服务")
+    migration("api_host.ghcard", "rename", "extensions.services.github_card.endpoint", "GitHub Card 使用独立服务 endpoint")
   ],
   system: [migration("system.override_pretty_urls", "internalize", null, "Hexo 集成策略不属于公开主题配置")],
   inject: [

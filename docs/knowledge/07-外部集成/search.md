@@ -20,28 +20,22 @@ extensions:
     providers:
       local:
         scope: all # post / page / all
-        index_path: /search.json
         include_content: true
-        lazy: true
-        cache_ttl: 86400
-        exclude: []
+        cache_ttl_seconds: 86400
       algolia:
         appId:
         apiKey:
         indexName:
 ```
 
-`providers.local` 是 Stellar 封闭 Schema；`providers.algolia` 是第三方参数袋，保留 Algolia 上游字段名。旧 `search.service`、`local_search`、`algolia_search` 及 `field/path/content/lazy_load/skip_search` 不兼容读取。
+`providers.local` 是 Stellar 封闭 Schema；`providers.algolia` 是第三方参数袋，保留 Algolia 上游字段名。索引固定输出 `/search.json`，客户端固定按首次需要懒加载；旧路径不兼容读取。
 
 | 字段 | 说明 |
 |------|------|
 | `provider` | 激活的搜索实现；`null` 停用搜索插件 |
 | `scope` | 索引 Post、Page 或两者 |
-| `index_path` | 本地索引输出路径 |
 | `include_content` | 是否把全文写入索引 |
-| `lazy` | 首次聚焦搜索框时再加载索引 |
-| `cache_ttl` | 本地搜索缓存秒数；`0` 不缓存 |
-| `exclude` | 构建期排除的路径模式数组 |
+| `cache_ttl_seconds` | 本地搜索缓存秒数；`0` 不缓存 |
 
 ## 本地搜索
 
@@ -49,12 +43,11 @@ extensions:
 
 客户端使用 `localStorage` 键 `search_cache_v4`：
 
-- `lazy: true` 时首次聚焦再加载；新鲜缓存直接使用，过期缓存先展示后后台刷新。
-- `lazy: false` 时页面加载后预取，但新鲜缓存仍避免重复请求。
-- `cache_ttl: 0` 时不复用缓存。
+- 首次聚焦搜索框时加载；新鲜缓存直接使用，过期缓存先展示后后台刷新。
+- `cache_ttl_seconds: 0` 时不复用缓存。
 - 请求失败时优先回退已有缓存；没有缓存则恢复可重试状态。
 
-页面与集合是否进入索引还受 v2 `visibility.searchable` 控制。数组 `exclude` 在站点覆盖层完整替换，不按项追加。
+页面与集合是否进入索引只由 v2 `visibility.searchable` 控制。
 
 ## Algolia
 

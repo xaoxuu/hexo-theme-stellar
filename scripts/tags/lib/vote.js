@@ -13,6 +13,9 @@ module.exports = ctx => function (args) {
   args = ctx.args.map(args, ['id', 'yes', 'no'], ['title'])
 
   const api = ctx.stellar.config.extensions.services.vote.endpoint
+  if (api == null) {
+    throw new Error('[stellar tag:vote] extensions.services.vote.endpoint is required when {% vote %} is used')
+  }
   const id = args.id || 'default'
 
   var el = `<div class="tag-plugin ds-vote" data-api="${api}" data-id="${id}">`

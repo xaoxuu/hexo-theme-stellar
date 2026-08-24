@@ -291,6 +291,9 @@ function decorateCommon(schema) {
   schema.properties.footer.properties.license.validator = "license_override";
   schema.properties.footer.properties.share.validator = "share_override";
   schema.properties.listing.properties.priority.validator = "non_negative_integer";
+  if (schema.properties.render?.properties?.diagrams) {
+    schema.properties.render.properties.diagrams.validator = "diagrams_override";
+  }
 }
 
 const COLLECTION_CONFIG_SCHEMA = schemaForScope("collection");

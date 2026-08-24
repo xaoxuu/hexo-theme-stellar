@@ -10,12 +10,10 @@ function deepFreeze(value) {
 
 module.exports = deepFreeze({
   providers: {
-    preload: "flying_pages",
+    linkPrefetch: "flying_pages",
     lightbox: "fancybox",
     reveal: "scrollreveal",
-    aiSummary: "tianli_gpt",
-    diagrams: "mermaid",
-    aiSummaryVersion: "TianliGPT"
+    diagrams: "mermaid"
   },
   runtime: {
     cache: {
@@ -95,7 +93,7 @@ module.exports = deepFreeze({
       }
     },
     features: {
-      preload: "https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js",
+      linkPrefetch: "https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js",
       lightbox: {
         js: "https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js",
         css: "https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css",
@@ -107,16 +105,10 @@ module.exports = deepFreeze({
         localCss: "/css/plugins/swiper.css"
       },
       reveal: "https://gcore.jsdelivr.net/npm/scrollreveal@4.0/dist/scrollreveal.min.js",
-      aiSummary: {
-        js: "https://jsd.onmicrosoft.cn/gh/qxchuckle/Post-Summary-AI@6.0/chuckle-post-ai.min.js",
-        localCss: "/css/_plugins/tianli_gpt"
-      },
       katexCss: "https://cdn.jsdelivr.net/npm/katex@0.16.23/dist/katex.min.css",
-      mathjaxV2: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML",
-      mathjaxV3: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js",
+      mathjax: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js",
       diagrams: {
-        js: "https://gcore.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js",
-        localCss: "/css/plugins/mermaid.css"
+        js: "https://gcore.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"
       },
       codeCopy: { js: "/js/plugins/copycode.js" },
       adaptiveText: {
@@ -126,12 +118,13 @@ module.exports = deepFreeze({
       cardHover: { js: "/js/plugins/card-hover.js" },
       deferredIcons: { js: "/js/icons.js" },
       dropdown: { js: "/js/plugins/dropdown.js" },
-      cjkTypography: {
+      heti: {
         css: "https://unpkg.com/heti@0.9/umd/heti.min.css",
         js: "https://unpkg.com/heti@0.9/umd/heti-addon.min.js"
       }
     },
     services: {
+      chat: { endpoint: "https://siteinfo.listentothewind.cn/api/v1" },
       mdrender: { js: "/js/services/mdrender.js" },
       siteinfo: { js: "/js/services/siteinfo.js" },
       ghinfo: { js: "/js/services/ghinfo.js" },

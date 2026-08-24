@@ -189,10 +189,6 @@ function tagExtensionSchemas() {
     prefix: extensionValue(["string", "null"], null),
     suffix: extensionValue(["string", "null"], null)
   });
-  const okrStatus = extensionObject({
-    color: extensionValue("string", ""),
-    label: extensionValue(["string", "null"], null)
-  });
   return {
     note: extensionObject({
       default_color: extensionValue("string", ""),
@@ -208,57 +204,37 @@ function tagExtensionSchemas() {
       additionalPropertyKey: "<variant>",
       additionalProperties: quotVariant
     }),
-    emoji: extensionObject({}, {
-      default: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif",
-      twemoji: "https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg",
-      qq: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif",
-      aru: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif",
-      tieba: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png",
-      blobcat: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif"
-    }, {
-      sealed: false,
-      additionalPropertyKey: "<provider>",
-      additionalProperties: extensionValue("string", "")
-    }),
-    icon: extensionObject({ default_color: extensionValue(["string", "null"], "accent") }, { default_color: "accent" }),
-    button: extensionObject({ default_color: extensionValue(["string", "null"], "theme") }, { default_color: "theme" }),
-    image: extensionObject({ parse_markdown: extensionValue("boolean", false) }, { parse_markdown: false }),
-    timeline: extensionObject({ max_height: extensionValue("string", "80vh") }, { max_height: "80vh" }, {
-      removedProperties: { "max-height": "max_height" }
-    }),
-    mark: extensionObject({ default_color: extensionValue("string", "yellow") }, { default_color: "yellow" }),
-    hashtag: extensionObject({ default_color: extensionValue(["string", "null"], null) }, { default_color: null }),
-    okr: extensionObject({
-      border: extensionValue("boolean", true),
-      status: extensionObject({}, {
-        in_track: { color: "blue", label: null },
-        at_risk: { color: "yellow", label: null },
-        off_track: { color: "orange", label: null },
-        finished: { color: "green", label: null },
-        unfinished: { color: "red", label: null }
+    emoji: extensionObject({
+      default_source: extensionValue("string", "blobcat", { validator: "non_empty_string" }),
+      sources: extensionObject({}, {
+        twemoji: "https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg",
+        qq: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif",
+        aru: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif",
+        tieba: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png",
+        blobcat: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif"
       }, {
         sealed: false,
-        additionalPropertyKey: "<status>",
-        additionalProperties: okrStatus
+        additionalPropertyKey: "<source>",
+        additionalProperties: extensionValue("string", "", { validator: "emoji_template" })
       })
     }, {
-      border: true,
-      status: {
-        in_track: { color: "blue", label: null },
-        at_risk: { color: "yellow", label: null },
-        off_track: { color: "orange", label: null },
-        finished: { color: "green", label: null },
-        unfinished: { color: "red", label: null }
+      default_source: "blobcat",
+      sources: {
+        twemoji: "https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg",
+        qq: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif",
+        aru: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif",
+        tieba: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png",
+        blobcat: "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif"
       }
-    }),
+    }, { validator: "emoji_sources", removedProperties: { default: "default_source" } }),
+    icon: extensionObject({ default_color: extensionValue(["string", "null"], "accent") }, { default_color: "accent" }),
+    button: extensionObject({ default_color: extensionValue(["string", "null"], "theme") }, { default_color: "theme" }),
+    mark: extensionObject({ default_color: extensionValue("string", "yellow") }, { default_color: "yellow" }),
+    hashtag: extensionObject({ default_color: extensionValue(["string", "null"], null) }, { default_color: null }),
     gallery: extensionObject({
-      layout: extensionValue("string", "grid", { values: ["grid", "flow"] }),
       size: extensionValue("string", "mix", { values: ["s", "m", "l", "xl", "mix"] }),
-      ratio: extensionValue("string", "square", { values: ["origin", "square"] })
-    }, { layout: "grid", size: "mix", ratio: "square" }),
-    chat: extensionObject({ endpoint: extensionValue(["string", "null"], "https://siteinfo.listentothewind.cn/api/v1") }, {
-      endpoint: "https://siteinfo.listentothewind.cn/api/v1"
-    }, { removedProperties: { api: "endpoint" } })
+      aspect_ratio: extensionValue("string", "square", { values: ["original", "square", "portrait"] })
+    }, { size: "mix", aspect_ratio: "square" }, { removedProperties: { layout: null, ratio: "aspect_ratio" } })
   };
 }
 
@@ -266,80 +242,41 @@ function featureExtensionSchemas() {
   return {
     lazy_loading: extensionObject({
       transition: extensionValue("string", "fade", { values: ["blur", "fade"] }),
-      fix_ratio: extensionValue("boolean", true)
-    }, { transition: "fade", fix_ratio: true }),
-    preload: extensionObject({
+      auto_aspect_ratio: extensionValue("boolean", true)
+    }, { transition: "fade", auto_aspect_ratio: true }, { removedProperties: { fix_ratio: "auto_aspect_ratio" } }),
+    link_prefetch: extensionObject({
       enabled: extensionValue("boolean", true)
     }, { enabled: true }, { removedProperties: { enable: "enabled", provider: "internalized", service: "internalized", flying_pages: "internalized" } }),
     lightbox: extensionObject({
       enabled: extensionValue("boolean", true),
-      mode: extensionValue("string", "auto", { values: ["auto", "global"] }),
       selector: extensionValue("string", ".timenode p>img")
-    }, { enabled: true, mode: "auto", selector: ".timenode p>img" }, { removedProperties: { enable: "enabled", provider: "internalized", js: "internalized", css: "internalized" } }),
+    }, { enabled: true, selector: ".timenode p>img" }, { removedProperties: { enable: "enabled", mode: null, provider: "internalized", js: "internalized", css: "internalized" } }),
     reveal: extensionObject({
       enabled: extensionValue("boolean", true),
       distance: extensionValue("string", "8px"),
-      duration: extensionValue("number", 1000, { minimum: 0 }),
-      interval: extensionValue("number", 100, { minimum: 0 }),
+      duration_ms: extensionValue("number", 1000, { minimum: 0 }),
+      interval_ms: extensionValue("number", 100, { minimum: 0 }),
       scale: extensionValue("number", 1, { minimum: 0, maximum: 1 })
-    }, { enabled: true, distance: "8px", duration: 1000, interval: 100, scale: 1 }, { removedProperties: { enable: "enabled", provider: "internalized", js: "internalized" } }),
-    ai_summary: extensionObject({
-      enabled: extensionValue("boolean", false),
-      scope: extensionValue("string", "post", { values: ["all", "post", "wiki", "topic"] }),
-      key: extensionValue("string", "5Q5mpqRK5DkwT1X9Gi5e"),
-      max_length: extensionValue("number", 1000, { minimum: 0, maximum: 5000 }),
-      typewriter: extensionValue("boolean", true),
-      show_immediately: extensionValue("boolean", true),
-      recommendation: extensionValue("string", "all", { values: ["all", "web"] }),
-      hide_shuttle: extensionValue("boolean", true),
-      summary_toggle: extensionValue("boolean", false),
-      interface: extensionObject({
-        name: extensionValue(["string", "null"], null),
-        introduce: extensionValue(["string", "null"], null),
-        buttons: extensionValue(["array", "null"], null, { items: { type: ["string"] } })
-      }, {
-        name: null,
-        introduce: null,
-        buttons: null
-      }, { removedProperties: { button: "buttons", version: "internalized" } })
-    }, {
-      enabled: false,
-      scope: "post",
-      key: "5Q5mpqRK5DkwT1X9Gi5e",
-      max_length: 1000,
-      typewriter: true,
-      show_immediately: true,
-      recommendation: "all",
-      hide_shuttle: true,
-      summary_toggle: false,
-      interface: {
-        name: null,
-        introduce: null,
-        buttons: null
-      }
-    }, { removedProperties: { enable: "enabled", provider: "internalized", js: "internalized", field: "scope", total_length: "max_length", summary_directly: "show_immediately", rec_method: "recommendation" } }),
+    }, { enabled: true, distance: "8px", duration_ms: 1000, interval_ms: 100, scale: 1 }, { removedProperties: { enable: "enabled", duration: "duration_ms", interval: "interval_ms", provider: "internalized", js: "internalized" } }),
     math: extensionObject({
       provider: deliveredField("extensions.features.math.provider", { normalizer: "identity", example: null }),
       providers: extensionObject({
         katex: parameterBag({}, { removedProperties: { js: "internalized", css: "internalized", inject: "internalized" } }),
-        mathjax: parameterBag({ v3: false }, { removedProperties: { js: "internalized", css: "internalized", inject: "internalized" } })
-      }, { katex: {}, mathjax: { v3: false } })
-    }, { provider: null, providers: { katex: {}, mathjax: { v3: false } } }, { removedProperties: { katex: "provider", mathjax: "provider" } }),
+        mathjax: parameterBag({}, { removedProperties: { v3: "internalized", js: "internalized", css: "internalized", inject: "internalized" } })
+      }, { katex: {}, mathjax: {} })
+    }, { provider: null, providers: { katex: {}, mathjax: {} } }, { removedProperties: { katex: "provider", mathjax: "provider" } }),
     diagrams: extensionObject({
-      enabled: extensionValue("boolean", false),
-      style_optimization: extensionValue("boolean", false),
-      theme: extensionValue("string", "neutral", { values: ["default", "dark", "forest", "neutral"] })
-    }, { enabled: false, style_optimization: false, theme: "neutral" }, { removedProperties: { enable: "enabled", provider: "internalized", js: "internalized" } }),
-    code_copy: extensionObject({
-      enabled: extensionValue("boolean", true)
-    }, { enabled: true }, { removedProperties: { enable: "enabled", idle_text: "localized", success_text: "localized", toast: "localized", default_text: "localized" } }),
-    adaptive_text: extensionObject({ enabled: extensionValue("boolean", true) }, { enabled: true }, { removedProperties: { enable: "enabled" } }),
+      provider: extensionValue(["string", "null"], null, { values: [null, "mermaid"] }),
+      providers: extensionObject({
+        mermaid: extensionObject({
+          theme: extensionValue("string", "neutral", { values: ["default", "dark", "forest", "neutral"] })
+        }, { theme: "neutral" })
+      }, { mermaid: { theme: "neutral" } })
+    }, { provider: null, providers: { mermaid: { theme: "neutral" } } }, { removedProperties: { enable: "provider", enabled: "provider", style_optimization: null, theme: "providers.mermaid.theme", js: "internalized" } }),
     card_hover: extensionObject({
-      enabled: extensionValue("boolean", false),
-      spotlight_color: extensionValue("string", "rgba(255, 255, 255, 0.25)"),
-      max_tilt: extensionValue("number", 3, { minimum: 0, maximum: 8 })
-    }, { enabled: false, spotlight_color: "rgba(255, 255, 255, 0.25)", max_tilt: 3 }, { removedProperties: { enable: "enabled" } }),
-    cjk_typography: extensionObject({ enabled: extensionValue("boolean", false) }, { enabled: false }, { removedProperties: { enable: "enabled", css: "internalized", js: "internalized" } })
+      enabled: extensionValue("boolean", false)
+    }, { enabled: false }, { removedProperties: { enable: "enabled", spotlight_color: null, max_tilt: null } }),
+    heti: extensionObject({ enabled: extensionValue("boolean", false) }, { enabled: false }, { removedProperties: { enable: "enabled", css: "internalized", js: "internalized" } })
   };
 }
 
@@ -369,13 +306,10 @@ function extensionsSchema() {
         providers: extensionObject({
           local: extensionObject({
             scope: deliveredField("extensions.search.providers.local.scope", { normalizer: "identity", example: "all" }),
-            index_path: deliveredField("extensions.search.providers.local.index_path", { normalizer: "root_relative_path", example: "/search.json" }),
             include_content: deliveredField("extensions.search.providers.local.include_content", { normalizer: "identity", example: true }),
-            lazy: deliveredField("extensions.search.providers.local.lazy", { normalizer: "identity", example: true }),
-            cache_ttl: deliveredField("extensions.search.providers.local.cache_ttl", { normalizer: "identity", example: 86400, minimum: 0 }),
-            exclude: deliveredField("extensions.search.providers.local.exclude", { normalizer: "array", example: [] })
-          }, { scope: "all", index_path: "/search.json", include_content: true, lazy: true, cache_ttl: 86400, exclude: [] }, {
-            removedProperties: { field: "scope", path: "index_path", content: "include_content", lazy_load: "lazy", skip_search: "exclude" }
+            cache_ttl_seconds: deliveredField("extensions.search.providers.local.cache_ttl_seconds", { normalizer: "identity", example: 86400, validator: "non_negative_integer" })
+          }, { scope: "all", include_content: true, cache_ttl_seconds: 86400 }, {
+            removedProperties: { field: "scope", path: null, index_path: null, content: "include_content", lazy: null, lazy_load: null, cache_ttl: "cache_ttl_seconds", exclude: null, skip_search: null }
           }),
           algolia: deliveredField("extensions.search.providers.algolia", {
             normalizer: "parameter_bag",
@@ -384,7 +318,7 @@ function extensionsSchema() {
             removedProperties: internalAssetKeys,
             default: literal({ appId: null, apiKey: null, indexName: null })
           })
-        }, { local: { scope: "all", index_path: "/search.json", include_content: true, lazy: true, cache_ttl: 86400, exclude: [] }, algolia: { appId: null, apiKey: null, indexName: null } })
+        }, { local: { scope: "all", include_content: true, cache_ttl_seconds: 86400 }, algolia: { appId: null, apiKey: null, indexName: null } })
       }, {}, { removedProperties: { service: "provider", local_search: "providers.local", algolia_search: "providers.algolia" } }),
       comments: extensionObject({
         provider: deliveredField("extensions.comments.provider", { normalizer: "identity", example: null }),
@@ -398,31 +332,37 @@ function extensionsSchema() {
           artalk: providerBag({ server: null, site: "", darkMode: "auto", imageUploader: null })
         }, {}, {
           sealed: false,
+          allowedPropertyKeys: ["beaudar", "utterances", "giscus", "twikoo", "waline", "artalk"],
           additionalPropertyKey: "<provider>",
           additionalProperties: commentProvider
         })
       }, {}, { removedProperties: { service: "provider", comment_title: "title", custom_css: "removed" } }),
-      tags: extensionObject(tagExtensionSchemas(), {}, { removedProperties: { copy: "localized" } }),
-      features: extensionObject(featureExtensionSchemas(), {}),
+      tags: extensionObject(tagExtensionSchemas(), {}, { removedProperties: { copy: "localized", image: null, timeline: null, okr: null, chat: null } }),
+      features: extensionObject(featureExtensionSchemas(), {}, { removedProperties: { preload: "link_prefetch", ai_summary: null, code_copy: null, adaptive_text: null, cjk_typography: "heti" } }),
       services: extensionObject({
-        site_info: extensionObject({ endpoint: deliveredField("extensions.services.site_info.endpoint", { normalizer: "identity", example: null }) }, { endpoint: null }, { removedProperties: { api: "endpoint" } }),
-        rating: extensionObject({ endpoint: deliveredField("extensions.services.rating.endpoint", { normalizer: "identity", example: "https://star-vote.xaox.cc/api/rating" }) }, { endpoint: "https://star-vote.xaox.cc/api/rating" }, { removedProperties: { api: "endpoint" } }),
-        vote: extensionObject({ endpoint: deliveredField("extensions.services.vote.endpoint", { normalizer: "identity", example: "https://star-vote.xaox.cc/api/vote" }) }, { endpoint: "https://star-vote.xaox.cc/api/vote" }, { removedProperties: { api: "endpoint" } }),
+        site_info: extensionObject({ endpoint: deliveredField("extensions.services.site_info.endpoint", { normalizer: "identity", validator: "nullable_absolute_http_url", example: null }) }, { endpoint: null }, { removedProperties: { api: "endpoint" } }),
+        rating: extensionObject({ endpoint: deliveredField("extensions.services.rating.endpoint", { normalizer: "identity", validator: "nullable_absolute_http_url", example: null }) }, { endpoint: null }, { removedProperties: { api: "endpoint" } }),
+        vote: extensionObject({ endpoint: deliveredField("extensions.services.vote.endpoint", { normalizer: "identity", validator: "nullable_absolute_http_url", example: null }) }, { endpoint: null }, { removedProperties: { api: "endpoint" } }),
         contributors: extensionObject({
-          edit_page: deliveredField("extensions.services.contributors.edit_page", {
-            normalizer: "object",
-            example: { "wiki/stellar/": "https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/" },
-            sealed: false,
-            additionalPropertyKey: "<prefix>",
-            additionalProperties: deliveredField("extensions.services.contributors.edit_page.<prefix>", { normalizer: "identity", example: "https://github.com/example/repo/blob/main/" })
+          repositories: deliveredField("extensions.services.contributors.repositories", {
+            normalizer: "array",
+            validator: "contributor_repositories",
+            example: [{ source_prefix: "wiki/stellar/", repository: "xaoxuu/hexo-theme-stellar-docs", branch: "main" }],
+            items: extensionObject({
+              source_prefix: deliveredField("extensions.services.contributors.repositories[].source_prefix", { normalizer: "identity", validator: "safe_relative_path", example: "wiki/stellar/" }),
+              repository: deliveredField("extensions.services.contributors.repositories[].repository", { normalizer: "identity", validator: "github_repository", example: "xaoxuu/hexo-theme-stellar-docs" }),
+              branch: deliveredField("extensions.services.contributors.repositories[].branch", { normalizer: "identity", validator: "non_empty_string", example: "main" })
+            }, { branch: "main" }, { requiredProperties: ["source_prefix", "repository"] })
           })
-        }, { edit_page: { "_posts/": null, "wiki/stellar/": "https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/" } }, { removedProperties: { edit_this_page: "edit_page", js: "internalized" } }),
+        }, { repositories: [] }, { removedProperties: { edit_page: "repositories", edit_this_page: "repositories", js: "internalized" } }),
         github: extensionObject({
           api_url: deliveredField("extensions.services.github.api_url", { normalizer: "identity", validator: "absolute_http_url", example: "https://api.github.com" }),
           raw_url: deliveredField("extensions.services.github.raw_url", { normalizer: "identity", validator: "absolute_http_url", example: "https://raw.githubusercontent.com" }),
-          gist_url: deliveredField("extensions.services.github.gist_url", { normalizer: "identity", validator: "absolute_http_url", example: "https://gist.github.com" }),
-          card_url: deliveredField("extensions.services.github.card_url", { normalizer: "identity", validator: "absolute_http_url", example: "https://github-readme-stats.vercel.app" })
-        }, { api_url: "https://api.github.com", raw_url: "https://raw.githubusercontent.com", gist_url: "https://gist.github.com", card_url: "https://github-readme-stats.vercel.app" })
+          gist_url: deliveredField("extensions.services.github.gist_url", { normalizer: "identity", validator: "absolute_http_url", example: "https://gist.github.com" })
+        }, { api_url: "https://api.github.com", raw_url: "https://raw.githubusercontent.com", gist_url: "https://gist.github.com" }, { removedProperties: { card_url: "extensions.services.github_card.endpoint" } }),
+        github_card: extensionObject({
+          endpoint: deliveredField("extensions.services.github_card.endpoint", { normalizer: "identity", validator: "absolute_http_url", example: "https://github-readme-stats.vercel.app" })
+        }, { endpoint: "https://github-readme-stats.vercel.app" })
       }, {})
     },
     removedProperties: { cache: "internalized" }

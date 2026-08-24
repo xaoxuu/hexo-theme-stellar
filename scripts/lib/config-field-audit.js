@@ -7,11 +7,7 @@ const { generateConfigReferenceMetadata } = require("./config-reference-metadata
 const DISPOSITIONS = Object.freeze(["public", "localize", "derive", "internalize", "remove"]);
 
 const LOCALIZED_PATHS = new Set([
-  "extensions.comments.title",
-  "extensions.features.ai_summary.interface.name",
-  "extensions.features.ai_summary.interface.introduce",
-  "extensions.features.ai_summary.interface.buttons",
-  "extensions.tags.okr.status.<status>.label"
+  "extensions.comments.title"
 ]);
 
 const RETIRED_FIELDS = Object.freeze([
@@ -20,12 +16,9 @@ const RETIRED_FIELDS = Object.freeze([
   ["extensions.features.code_copy.idle_text", "localize", "languages/*.yml", "代码复制按钮默认文案属于主题 UI 文案"],
   ["extensions.features.code_copy.success_text", "localize", "languages/*.yml", "代码复制成功状态属于主题 UI 文案"],
   ["extensions.features.code_copy.toast", "localize", "languages/*.yml", "代码复制 toast 属于主题 UI 文案"],
-  ["extensions.features.preload.provider", "internalize", "scripts/lib/internal-constants.js", "preload 只有 flying_pages 一个内置实现，不构成用户选择"],
+  ["extensions.features.link_prefetch.provider", "internalize", "scripts/lib/internal-constants.js", "link prefetch 只有 flying_pages 一个内置实现，不构成用户选择"],
   ["extensions.features.lightbox.provider", "internalize", "scripts/lib/internal-constants.js", "lightbox 只有 fancybox 一个内置实现，不构成用户选择"],
   ["extensions.features.reveal.provider", "internalize", "scripts/lib/internal-constants.js", "reveal 只有 scrollreveal 一个内置实现，不构成用户选择"],
-  ["extensions.features.ai_summary.provider", "internalize", "scripts/lib/internal-constants.js", "AI summary 只有 tianli_gpt 一个内置实现，不构成用户选择"],
-  ["extensions.features.ai_summary.interface.version", "internalize", "scripts/lib/internal-constants.js", "界面版本跟随内置 provider，不是站点内容"],
-  ["extensions.features.diagrams.provider", "internalize", "scripts/lib/internal-constants.js", "diagrams 只有 mermaid 一个内置实现，不构成用户选择"],
   ["extensions.cache", "internalize", "scripts/lib/internal-constants.js", "request/cache 是主题运行策略，不是内容或视觉选择"],
   ["extensions.cache.enabled", "internalize", "scripts/lib/internal-constants.js", "缓存启用策略由 Runtime 统一拥有"],
   ["extensions.cache.default_ttl", "internalize", "scripts/lib/internal-constants.js", "默认 TTL 是内部请求策略"],

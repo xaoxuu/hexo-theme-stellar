@@ -640,9 +640,9 @@ test("Post render 投影详情关系、Footer、评论和列表条目", () => {
           title: "参与讨论",
           providers: { giscus: { "data-repo": "owner/repo", "data-theme": "preferred_color_scheme" } }
         },
-        features: { cjk_typography: { enabled: true } },
+        features: { heti: { enabled: true } },
         services: {
-          contributors: { edit_page: { "_posts/": "https://github.com/owner/repo/blob/main/" } },
+          contributors: { repositories: [{ source_prefix: "_posts/", repository: "owner/repo", branch: "main" }] },
           github: { api_url: "https://api.github.com" }
         }
       },

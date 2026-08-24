@@ -56,7 +56,7 @@ Swiper 是主题内置容器能力，依据页面 DOM 按需加载，不提供�
 
 ## 服务与内部缓存
 
-`extensions.services` 只公开业务端点和完整 GitHub URL。站点信息、评分与投票使用 `endpoint`；GitHub 使用 `api_url/raw_url/gist_url/card_url`，且必须是绝对 HTTP(S) URL。
+`extensions.services` 只公开业务端点和完整 URL。站点信息、评分与投票使用 `endpoint`；GitHub 使用 `api_url/raw_url/gist_url`，卡片服务使用 `github_card.endpoint`，都必须是绝对 HTTP(S) URL。
 
 request/cache 的 TTL、重试、超时、容量与淘汰规则是主题内部实现策略。ESM 客户端消费 Runtime Manifest 中的冻结 policy，不替换浏览器原生网络 API。
 

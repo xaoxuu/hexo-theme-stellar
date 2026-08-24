@@ -216,7 +216,7 @@ v2 配置在 `layout.profiles` 中为各页面 Profile 声明 `path` 和 `naviga
 
 ### Heti 插件集成
 
-`extensions.features.cjk_typography.enabled` 为 `true` 时，`articleClass()` 给 `<article>` 元素添加 `heti` CSS 类，启用赫蹏（Heti）中文排版能力。
+`extensions.features.heti.enabled` 为 `true` 时，`articleClass()` 给 `<article>` 元素添加 `heti` CSS 类，启用赫蹏中文排版能力。
 
 ---
 
@@ -226,7 +226,7 @@ v2 配置在 `layout.profiles` 中为各页面 Profile 声明 `path` 和 `naviga
 
 - 基础：`md-text content`
 - `scrollreveal(...)`——插件启用时注入滚动显现触发属性
-- `heti`——冻结运行时 `extensions.features.cjkTypography.enabled` 为 true 时追加
+- `heti`——冻结运行时 `extensions.features.heti.enabled` 为 true 时追加
 
 **参考源码**：[layout/page.ejs](../../../layout/page.ejs)
 
@@ -234,9 +234,9 @@ v2 配置在 `layout.profiles` 中为各页面 Profile 声明 `path` 和 `naviga
 
 ## 页面导航机制
 
-主题使用普通整页导航（PJAX 已于 v1.35.0 移除，`source/js/plugins/pjax.js` 与 `layout/_plugins/pjax.ejs` 均已删除）。可选的 `extensions.features.preload`（flying_pages）在鼠标悬停时预加载站内链接，提升导航体验。
+主题使用普通整页导航（PJAX 已于 v1.35.0 移除，`source/js/plugins/pjax.js` 与 `layout/_plugins/pjax.ejs` 均已删除）。可选的 `extensions.features.link_prefetch`（flying_pages）在鼠标悬停时预加载站内链接，提升导航体验。
 
-**参考源码**：[source/js/main.js](../../../source/js/main.js)、[_config.yml](../../../_config.yml)（`extensions.features.preload`）
+**参考源码**：[source/js/main.js](../../../source/js/main.js)、[_config.yml](../../../_config.yml)（`extensions.features.link_prefetch`）
 
 ---
 

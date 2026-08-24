@@ -163,7 +163,7 @@ content:
 
 ## 贡献者区块
 
-Post/Topic/Wiki/Notebook 的模型根据 `extensions.services.contributors.editPage` 与 `item.source.file` 生成 `render.article.footer.contributor`；`post_footer.ejs` 只消费最终的编辑 URL 和 commits API。无法匹配映射时整个区块省略。legacy 页面继续调用原 contributors partial。
+Post/Topic/Wiki/Notebook 的模型根据 `extensions.services.contributors.repositories` 与 `item.source.file` 按最长 `sourcePrefix` 匹配，生成 `render.article.footer.contributor`；无法匹配时整个区块省略。
 
 关键样式：
 
@@ -174,7 +174,7 @@ Post/Topic/Wiki/Notebook 的模型根据 `extensions.services.contributors.editP
 | `.users-wrap .grid-box` | CSS grid，`minmax(72px, 1fr)` 列 |
 | `.user-card .card-link` | 32×32px 头像图片 |
 
-`edit_page` URL 映射（来自 `extensions.services.contributors`）决定贡献者头部是否显示「编辑本页」链接。配置结构见[数据服务与组件](../06-数据服务与组件/data-widgets-overview.md)。
+`repositories` 映射决定贡献者头部是否显示「编辑本页」链接。配置结构见[数据服务与组件](../06-数据服务与组件/data-widgets-overview.md)。
 
 **参考源码**：[scripts/lib/models/index.js](../../../scripts/lib/models/index.js)、[layout/_partial/main/article/post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs)、[source/css/_components/partial/article-footer.styl](../../../source/css/_components/partial/article-footer.styl)
 
