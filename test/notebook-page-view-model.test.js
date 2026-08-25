@@ -427,7 +427,7 @@ test("生成前事件拒绝引用不存在 Notebook 的 Note", t => {
     theme: { config: themeConfig },
     stellar: { config: parseStellarConfig({ themeConfig }) },
     locals: { get: key => collections[key] }
-  }), /source\/notes\/missing\.md: 未找到 Notebook collection missing/);
+  }), /source\/notes\/missing\.md: collection 应为 one registered Collection; candidates=<none>.*实际为 collection:notebook:missing/);
 });
 
 test("stellar new note 路径可唯一推断 Notebook 且不要求重复归属字段", t => {

@@ -10,7 +10,7 @@ Stellar v2 Alpha 指南用于验证新的严格配置契约、四类内容模型
 
 ## 安装与初始化
 
-在一个已经执行过 `hexo init` 的空工程中安装预发布包，然后选择一套 Blueprint：
+在一个已经执行过 `hexo init` 的空工程中安装预发布包。普通 Post/Page 可以不运行 `stellar init`、不创建 `_config.stellar.yml`，直接使用 Schema 默认值构建；需要完整 starter 时再选择一套 Blueprint：
 
 ```bash
 npm install hexo-theme-stellar@2.0.0-alpha.1
@@ -37,11 +37,13 @@ npx hexo stellar doctor --format json --silent
 - `minimal-reading` + `minimal`：低干扰的长文阅读站点。
 - `docs-reference` + `stellar`：带 Wiki 树与 Reference 入口的项目文档站点。
 
-三套 Blueprint 都可以显式选择 `stellar` 或 `minimal`。生成结果是普通 `_config.stellar.yml`、Collection YAML 和 Markdown，归站点所有；主题不会写锁文件，也不会在运行时继承 Blueprint。
+三套 Blueprint 都可以显式选择 `stellar` 或 `minimal`。生成结果是普通 `_config.stellar.yml`、Collection YAML 和 Markdown，归站点所有；主题不会写锁文件，也不会在运行时继承 Blueprint。输出只保留产品差异，不重复 Schema 默认值；`stellar` 是空 Visual Style 覆盖，starter Markdown 只要求 Hexo 的标题/日期等必要字段和通用语法。
 
 ## 严格配置
 
 v2 只接受八个主题配置根：`site`、`seo`、`layout`、`content`、`appearance`、`resources`、`extensions`、`inject`。Collection 与 Front Matter 同样使用 v2 字段；旧字段、未知字段和错误类型会在构建早期按文件和字段路径报错。
+
+Wiki、Topic 与 Notebook 从已注册 Collection、成员关系和源码路径收集候选。唯一候选自动归属；普通 Post/Page 零候选合法；集合命名空间零候选、多候选或显式 `collection` 冲突时拒绝猜测，doctor 与构建会列出候选和最小修复方式。
 
 - [配置 Reference](reference/v2-config.md)
 - [模型 Reference](reference/v2-models.md)

@@ -88,6 +88,8 @@ head/SEO、site Shell、Layout Profile、内容默认值、Collection / Front Ma
 
 Pre-alpha M3 的 Blueprint 只在 init 时把选择结果展开为上述显式配置，不增加 `blueprint` 或 `style` 配置根，也不参与运行时级联。`stellar doctor` 直接复用同一 Theme、Collection 与 Front Matter Schema 做只读检查；不存在 CLI 专用的第二套字段白名单。三套 Blueprint、两套 Visual Style 和命令契约的机器可读登记位于 `reference/v2-blueprints.json`。
 
+Pre-alpha M9 允许 `_config.stellar.yml` 缺失或为空：Schema 默认值仍生成完整站点，doctor 会明确显示正在检查 `Schema defaults`。Blueprint 输出不得重复 Schema 默认值；默认 `stellar` Visual Style 是空覆盖，只有真实产品差异才写入站点配置。普通 Post/Page 只需 Hexo 自有最小 Front Matter，Collection 内容的唯一候选归属与冲突诊断由构建和 doctor 共用同一解析器。
+
 ## 配置文件结构
 
 `_config.yml` 按逻辑小节组织，控制不同子系统：

@@ -37,7 +37,7 @@ Stellar 是一个功能全面的 Hexo 主题，内置四套并行内容管理系
 
 Stellar 采用**五层架构**，把配置、数据处理、渲染、客户端行为与样式分离，使主题可以支持多种内容类型并保持一致性，同时允许深度定制。
 
-主题是**配置驱动**的：[_config.yml](../../../_config.yml) 提供主题默认值，站点只通过 `_config.stellar.yml` 覆盖；v2 声明式 Schema 已交付并封闭 `site`、`seo`、`layout`、`content`、`appearance`、`resources`、`extensions` 和 `inject` 八个根域。
+主题是**配置驱动**的：[_config.yml](../../../_config.yml) 镜像 Schema 默认值，站点可通过 `_config.stellar.yml` 覆盖；该文件缺失或为空时仍可直接构建。v2 声明式 Schema 已交付并封闭 `site`、`seo`、`layout`、`content`、`appearance`、`resources`、`extensions` 和 `inject` 八个根域。
 
 ### 核心架构分层
 
@@ -361,7 +361,7 @@ Stellar 通过 npm 以 `hexo-theme-stellar` 分发，采用 MIT 协议开源。
 
 Pre-alpha M3 还提供 `stellar init` 与 `stellar doctor`：前者从三套 Blueprint 和两套 Visual Style 生成一次性的显式站点文件，后者复用 v2 Schema 只读检查环境与配置。Blueprint 不进入页面运行时，也不会成为新的配置根；机器可读契约位于 `reference/v2-blueprints.json`。
 
-Pre-alpha M5 把配置、模型与 Blueprint 机器元数据生成为 `reference/` 下的公开 JSON/Markdown，并用 npm tarball 在三个隔离的 Hexo 8 / Node.js 22 工程验证 init → doctor → generate。`2.0.0-alpha.1` 的最小使用与不稳定范围见根目录 `ALPHA.md`；完整产品首页、学习路径、v1 归档和迁移/SEO 跳转仍属于 Beta。
+Pre-alpha M9 完成默认内容体验：空配置或缺少 `_config.stellar.yml` 的普通 Post/Page 可直接生成，Wiki/Topic/Notebook 只在唯一候选时推断归属；三套 Blueprint 只保留产品差异，默认 Visual Style 是空覆盖，starter Markdown 不要求可选 Stellar 元数据。npm tarball 门禁在三个 Blueprint 站点和一个无 init 默认站点验证 doctor → generate。`2.0.0-alpha.1` 的最小使用与不稳定范围见根目录 `ALPHA.md`；完整产品首页、学习路径、v1 归档和迁移/SEO 跳转仍属于 Beta。
 
 **参考源码**：[package.json](../../../package.json)、[ALPHA.md](../../../ALPHA.md)、[reference/](../../../reference/)、[blueprints/](../../../blueprints/)、[scripts/commands/stellar.js](../../../scripts/commands/stellar.js)、[scripts/lib/theme-metadata.js](../../../scripts/lib/theme-metadata.js)、[README.md](../../../README.md)
 

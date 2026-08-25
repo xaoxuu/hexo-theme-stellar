@@ -1,12 +1,9 @@
 appearance:
-  color_scheme: auto
   typography:
     font_size:
       root: 17px
     font_family:
       body: 'Charter, Georgia, "Times New Roman", serif'
-      code: 'Menlo, Monaco, Consolas, system-ui, monospace, sans-serif'
-    content_align: left
   shape:
     corner: superellipse(1.1)
     radius:
@@ -26,6 +23,5 @@ appearance:
     avatar: never
   backgrounds:
     sidebar:
-      surface: card
       image:
       opacity: 1

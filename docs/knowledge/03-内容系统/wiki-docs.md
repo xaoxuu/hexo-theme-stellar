@@ -86,7 +86,7 @@ flowchart TD
 
 ### `WikiPage`
 
-定义于 [scripts/lib/doc_tree.js](../../../scripts/lib/doc_tree.js)。每个显式声明 `collection.profile: wiki` 和 `collection.id` 的 Hexo 页面被包装为 `WikiPage` 实例。
+定义于 [scripts/lib/doc_tree.js](../../../scripts/lib/doc_tree.js)。每个经共享归属解析器确定为 Wiki 成员的 Hexo 页面被包装为 `WikiPage` 实例；归属可来自唯一的项目、源码路径、route 与 tree 信号，也可由合法的显式 `collection` 消歧。
 
 | 字段 | 来源 | 说明 |
 |---|---|---|
@@ -265,7 +265,7 @@ Wiki Hero 完成后直接进入正文布局，不额外输出分隔线；正文�
 
 ### 页面级 Front-Matter
 
-单个 Wiki 页面通过严格 v2 `collection` front-matter 指定所属项目：
+单个 Wiki 页面通常放在 `source/wiki/<project-id>/`，并在对应项目 `navigation.tree` 中登记；唯一候选会自动确定归属。需要消歧时可写严格 v2 `collection` Front Matter：
 
 ```yaml
 ---
@@ -276,7 +276,7 @@ collection:
 ---
 ```
 
-`collection.profile` 必须为 `wiki`，`collection.id` 必须匹配 `_data/wiki/` 中的项目 id。v1 `wiki` 字段、缺失项目或不匹配 id 会在构建期报出带来源的错误，不会从路径或布局推断归属。
+`collection.profile` 必须为 `wiki`，`collection.id` 必须匹配 `_data/wiki/` 中的项目 id，并与 route/tree 成员关系一致。Wiki 物理目录名可作为历史别名被合法显式 id 覆盖；无显式声明时的命名空间零候选、多候选或显式成员冲突会在构建期报告来源、候选项目和最小修复方式。普通 Page 零候选则保持普通页面；v1 `wiki` 字段与 layout 不参与归属。
 
 **参考源码**：[scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)、[_config.yml](../../../_config.yml)
 

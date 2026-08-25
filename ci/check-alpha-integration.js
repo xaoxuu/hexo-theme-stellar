@@ -59,6 +59,8 @@ function addTopicFixture(root) {
     "name: Alpha Topic",
     "headline: Alpha Topic",
     "description: Topic ViewModel integration fixture.",
+    "route:",
+    "  start: alpha-topic",
     "article:",
     "  style: tech",
     ""
@@ -67,10 +69,6 @@ function addTopicFixture(root) {
     "---",
     "title: Alpha Topic Post",
     "date: 2026-08-23 08:00",
-    "description: Topic ViewModel integration fixture.",
-    "collection:",
-    "  profile: topic",
-    "  id: alpha",
     "---",
     "",
     "Topic profile integration marker.",
@@ -112,7 +110,7 @@ function expectedPages(blueprint) {
   if (blueprint === "classic-blog") {
     return [
       { path: "public/blog/2026/08/23/alpha-topic/index.html", marker: "Topic profile integration marker.", profile: "topic" },
-      { marker: "Classic Blog", profile: "post" }
+      { marker: "Your first Stellar page", profile: "post" }
     ];
   }
   if (blueprint === "minimal-reading") {
@@ -145,6 +143,9 @@ function hasProfileOutput(html, profile) {
   if (profile === "notebook") {
     return /<div class="l_body content" id="start" layout="page"/.test(html)
       && /<a class="cap breadcrumb"[^>]*>Alpha Notebook<\/a>/.test(html);
+  }
+  if (profile === "page") {
+    return /<div class="l_body content" id="start" layout="page"/.test(html);
   }
   return false;
 }
@@ -245,6 +246,65 @@ function checkSite(root, blueprint, tarball) {
   process.stdout.write(`${blueprint}: tarball install → init → doctor → generate passed\n`);
 }
 
+function checkDefaultSite(root, tarball) {
+  createSite(root);
+  write(root, "source/_posts/default-markdown.md", [
+    "---",
+    "title: Default Markdown",
+    "date: 2026-08-25 08:00",
+    "---",
+    "",
+    "# Default content",
+    "",
+    "Default configuration integration marker.",
+    "",
+    "- list item",
+    "",
+    "> quoted text",
+    "",
+    "```js",
+    "const ready = true;",
+    "```",
+    ""
+  ].join("\n"));
+  write(root, "source/about/index.md", [
+    "---",
+    "title: About",
+    "---",
+    "",
+    "Ordinary Page integration marker.",
+    ""
+  ].join("\n"));
+  process.stdout.write(`default-content: installing Hexo 8 and ${path.basename(tarball)}\n`);
+  run("npm", [
+    "install",
+    "--no-audit",
+    "--no-fund",
+    "--prefer-offline",
+    "--package-lock=false",
+    ...INSTALL_PACKAGES,
+    tarball
+  ], { cwd: root });
+  const hexo = path.join(root, "node_modules", ".bin", "hexo");
+  if (fs.existsSync(path.join(root, "_config.stellar.yml"))) {
+    throw new Error("default-content: fixture must not contain _config.stellar.yml");
+  }
+  const doctor = JSON.parse(run(hexo, ["stellar", "doctor", "--format", "json", "--silent"], { cwd: root }));
+  if (!doctor.ok || doctor.checked.themeConfig !== false) {
+    throw new Error("default-content: Schema-default doctor check failed");
+  }
+  run(hexo, ["generate"], { cwd: root });
+  const post = findHtmlWithMarker(path.join(root, "public"), "Default configuration integration marker.", "post");
+  if (!post) throw new Error("default-content: missing ordinary Post output");
+  assertRuntime(fs.readFileSync(post, "utf8"), path.relative(root, post), "post");
+  const page = path.join(root, "public/about/index.html");
+  if (!fs.existsSync(page)) throw new Error("default-content: missing ordinary Page output");
+  const pageHtml = fs.readFileSync(page, "utf8");
+  if (!pageHtml.includes("Ordinary Page integration marker.")) throw new Error("default-content: ordinary Page marker missing");
+  assertRuntime(pageHtml, path.relative(root, page), "page");
+  process.stdout.write("default-content: no init → doctor → generate passed\n");
+}
+
 function main() {
   if (process.versions.node.split(".")[0] !== "22") {
     throw new Error(`Alpha integration requires Node.js 22, got ${process.versions.node}`);
@@ -261,6 +321,7 @@ function main() {
     for (const blueprint of selected) {
       checkSite(path.join(root, blueprint), blueprint, tarball);
     }
+    checkDefaultSite(path.join(root, "default-content"), tarball);
     process.stdout.write(`Alpha package integration passed: ${path.basename(tarball)}\n`);
   } finally {
     if (process.env.STELLAR_KEEP_ALPHA_FIXTURE === "1" || process.argv.includes("--keep")) {

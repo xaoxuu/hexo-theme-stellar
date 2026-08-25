@@ -13,6 +13,7 @@ const {
   buildBlueprintPlan,
   formatBlueprintPlan,
   loadCatalog,
+  redundantThemeConfigPaths,
   safeRelativePath,
   writeBlueprintPlan
 } = require("../scripts/lib/blueprints");
@@ -46,9 +47,30 @@ test("三套 Blueprint 与两套 Visual Style 生成合法且深冻结的显式�
       assert.equal(plan.files.some(file => file.target === "_config.stellar.yml"), true);
       const config = plan.files.find(file => file.target === "_config.stellar.yml");
       assert.equal(config.content.includes("{{"), false);
-      parseStellarConfig({ source: config.target, themeConfig: yaml.load(config.content) });
+      const rawConfig = yaml.load(config.content);
+      parseStellarConfig({ source: config.target, themeConfig: rawConfig });
+      assert.deepEqual(redundantThemeConfigPaths(rawConfig), []);
       assertDeepFrozen(plan);
     }
+  }
+});
+
+test("默认 Visual Style 是空覆盖，starter 只保留必要 Front Matter 与场景差异", () => {
+  const catalog = loadCatalog();
+  assert.equal(catalog.styles.stellar.content, "");
+  const classic = fs.readFileSync(path.join(catalog.themeRoot, "blueprints/classic-blog/files/source/_posts/welcome-to-stellar.md"), "utf8");
+  assert.match(classic, /^---\ntitle: Welcome to Stellar\ndate: \{\{generated_date\}\}\n---/);
+  assert.doesNotMatch(classic, /\n(?:description|tags|collection|article):/);
+  for (const syntax of [/^# /m, /^- /m, /^> /m, /^```js$/m, /^!\[/m, /\[[^\]]+\]\(https:\/\//, /^\| Content \| Result \|$/m]) {
+    assert.match(classic, syntax);
+  }
+  for (const file of [
+    "blueprints/minimal-reading/files/source/_posts/a-quiet-place-to-write.md",
+    "blueprints/docs-reference/files/source/wiki/docs-reference/index.md",
+    "blueprints/docs-reference/files/source/wiki/docs-reference/getting-started.md"
+  ]) {
+    const content = fs.readFileSync(path.join(catalog.themeRoot, file), "utf8");
+    assert.doesNotMatch(content, /\n(?:description|collection|article):/);
   }
 });
 

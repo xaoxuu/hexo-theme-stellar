@@ -16,11 +16,11 @@ Stellar v2 保留 Post、Wiki、Topic、Notebook 四种产品形态，但它们�
 | Profile | 内容来源 | Collection 来源 | 用户旅程 | 导航与排序差异 |
 | --- | --- | --- | --- | --- |
 | `post` | `source/_posts/` | 主题 Post profile | 博客索引 → 文章详情 | 分类、标签、分页与全站上下篇 |
-| `wiki` | `source/` 页面 | `source/_data/wiki/*.yml` | Wiki 索引/标签 → 项目首页 → 文档页 | 手工章节 tree、项目内前后页、相关项目 |
+| `wiki` | `source/wiki/<id>/` 或显式归属页面 | `source/_data/wiki/*.yml` | Wiki 索引/标签 → 项目首页 → 文档页 | 手工章节 tree、项目内前后页、相关项目 |
 | `topic` | `source/_posts/` | `source/_data/topic/*.yml` | Topic 索引 → 系列文章 | series 默认按日期排序，只服务侧栏；正文仍用 Hexo 全站上下篇 |
 | `notebook` | `source/notebooks/<id>/` 或显式归属页面 | `source/_data/notebooks/*.yml` | 笔记本索引 → 单本/标签列表 → Note 详情 | 标签树、置顶、最近更新与分页 |
 
-Post 不声明 `collection`。Wiki 与 Topic 页面使用严格的 `collection.profile/id`。`stellar new note` 创建到 `source/notebooks/<id>/` 的 Note 可由路径唯一确定 Notebook，因此不重复写归属字段；其它位置的 Note 仍需显式声明。
+普通 Post/Page 不声明 `collection`。Wiki、Topic 与 Notebook 会从已注册 Collection、成员关系和源码路径收集候选：只有一个候选时自动归属，普通内容没有候选时保持普通类型，集合命名空间内没有候选或出现多个候选时拒绝猜测。显式 `collection.profile/id` 仍可用于消歧，但必须与注册项和权威成员关系一致；Wiki 物理目录可作为历史别名被合法显式 id 覆盖。
 
 ## Collection Pipeline
 
@@ -39,6 +39,7 @@ Post 不声明 `collection`。Wiki 与 Topic 页面使用严格的 `collection.p
 
 - `registry.js` 封闭登记 `post`、`topic`、`wiki`、`notebook` 四个 profile adapter。
 - `shared.js` 提供单遍发现、稳定排序、`listed`/tag 过滤、分页输入和 two-stage 生命周期原语。
+- `content-membership.js` 为构建与 doctor 提供同一归属解析器；失败诊断固定包含来源、候选集合与最小修复方式。
 - adapter 只保留内容来源、归属、导航、默认排序、首页与路由差异；页面身份、来源、可见性、优先级、摘要、SEO、Footer、评论和列表模型由共享模型事实来源提供。
 - 所有 Post/Page 在发现阶段各访问一次，再按 `profile:id` 分组；Wiki 与 Notebook 的树构建也保持单遍线性分组，不按 Collection 重扫全部页面。
 

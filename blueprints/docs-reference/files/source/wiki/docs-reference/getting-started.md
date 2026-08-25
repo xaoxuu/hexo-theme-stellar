@@ -1,9 +1,5 @@
 ---
 title: Getting Started
-description: Replace the starter content with your first real guide.
-collection:
-  profile: wiki
-  id: docs-reference
 ---
 
 ## Replace the starter

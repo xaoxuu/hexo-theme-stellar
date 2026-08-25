@@ -3,8 +3,6 @@ site:
     name: My Stellar Blog
     tagline:
       text: Ideas, notes and stories
-      hover:
-    href: /
   menu:
     items:
       - id: post
@@ -23,24 +21,8 @@ site:
 
 layout:
   profiles:
-    home:
-      navigation:
-        active_menu: post
-      sidebar:
-        left: [welcome, recent]
-        right: []
-    blog_index:
-      path: /blog/
-      navigation:
-        active_menu: post
-      sidebar:
-        left: [welcome, recent]
-        right: []
     post:
-      navigation:
-        active_menu: post
       sidebar:
-        left: [related, recent]
         right: [toc]
     wiki_index:
       navigation:
@@ -60,17 +42,8 @@ layout:
 
 content:
   article:
-    style: tech
     listing:
-      pinned_layout: carousel
-      card_layout: hero
       show_tags: true
     show_reading_time: true
-    footer:
-      show_tags: true
-
-extensions:
-  search:
-    provider: local
 
 {{visual_style}}

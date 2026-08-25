@@ -437,5 +437,5 @@ test("生成前事件为严格 Topic 成员挂载模型并拒绝缺失集合", t
       })[key]
     }
   };
-  assert.throws(() => processContentConfig(missingCtx), /source\/_posts\/missing\.md: collection\.id 无法解析 Topic missing/);
+  assert.throws(() => processContentConfig(missingCtx), /source\/_posts\/missing\.md: collection 应为 one registered Collection; candidates=<none>.*实际为 collection:topic:missing/);
 });

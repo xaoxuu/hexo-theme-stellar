@@ -87,7 +87,7 @@ function discoverContent({ posts, pages, configForPage }) {
 
   const visit = (kind, page) => {
     visits += 1;
-    const config = configForPage(page);
+    const config = configForPage(page, kind);
     if (config == null) return;
     let profile = config.collection?.profile || null;
     if (kind === "posts" && profile == null) profile = "post";

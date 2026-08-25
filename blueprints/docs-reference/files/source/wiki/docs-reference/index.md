@@ -1,9 +1,5 @@
 ---
 title: Product Documentation
-description: Start exploring this documentation site.
-collection:
-  profile: wiki
-  id: docs-reference
 ---
 
 Welcome to your **Docs Reference** site.

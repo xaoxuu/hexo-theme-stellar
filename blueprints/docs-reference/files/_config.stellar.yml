@@ -3,7 +3,6 @@ site:
     name: Product Docs
     tagline:
       text: Guides and reference in one place
-      hover:
     href: /wiki/
   menu:
     items:
@@ -28,17 +27,7 @@ layout:
         active_menu: wiki
       sidebar:
         left: [related, recent]
-        right: []
-    wiki_index:
-      path: /wiki/
-      navigation:
-        active_menu: wiki
-      sidebar:
-        left: [related, recent]
-        right: []
     wiki:
-      navigation:
-        active_menu: wiki
       sidebar:
         left: [tree, related]
         right: [toc]
@@ -72,9 +61,5 @@ layout:
     page:
       navigation:
         active_menu: wiki
-
-extensions:
-  search:
-    provider: local
 
 {{visual_style}}

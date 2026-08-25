@@ -112,10 +112,10 @@ Galaxy 的路径为 `hero.background.effect.options`，其 React Bits props 保�
 严格 `collection.profile: topic` 的文章在生成前登记基础输入，并在 `after_post_render` 取得最终正文、上下篇与相关文章后生成同构、深度冻结的 `page.viewModel`：
 
 - `collection` 保留 Topic 名称、标题、说明、受众、身份图标、源码仓库、规范化路由、集合列表设置和展示配置；顶层字段与 Post profile 一致。
-- `navigation.series` 只包含 Front Matter 显式归属同一 Topic id 且 `visibility.listed !== false` 的文章，默认按日期降序稳定排列；每项只投影普通 id、标题、规范化路径、ISO 日期和当前项标记。
+- `navigation.series` 只包含解析后归属同一 Topic id 且 `visibility.listed !== false` 的文章，默认按日期降序稳定排列；每项只投影普通 id、标题、规范化路径、ISO 日期和当前项标记。
 - Topic 是否位于 `topic.publish_list` 只进入 `collection.visibility.listed`；单篇文章从独立的默认可见性开始，再接受页面 `visibility` 覆盖，不把集合下架隐式传播为文章隐藏。
 - Topic 默认沿用站点 Brand 和普通 Post 侧栏，之后依次接受 Topic profile、集合与页面展示覆盖；文章、页脚和评论同样在构建期完成级联。
-- Topic 文章必须显式声明严格 v2 `collection.profile` 与 `collection.id`，id 必须存在于 `_data/topic/`；不会从路径、布局、旧 `topic` 字段或运行时 Topic tree 推断归属。
+- Topic 文章可由已注册 Topic 的 `route.start`、成员关系或约定源码目录唯一推断；显式 `collection.profile/id` 用于消歧且必须指向已注册 Topic。零候选的普通 Post 继续作为 Post；Topic 命名空间零候选、多候选或显式声明与候选冲突时构建失败。layout、旧 `topic` 字段和运行时 Topic tree 不参与兼容推断。
 - `render.document/layout/seo/article/listing` 复用 Post 的文章语义；Topic Hero 背景只作为成员 Banner 回退，`navigation.series` 只服务侧栏专栏导航，不替换正文的 Hexo 全站上下篇。
 - Topic 详情、博客列表/置顶/归档与 Topic 索引均消费显式 ViewModel 或生成器投影，不再由 EJS 读取 Topic tree 推断最终状态。
 
@@ -127,7 +127,7 @@ Galaxy 的路径为 `hero.background.effect.options`，其 React Bits props 保�
 - `navigation.tree` 从 `doc_tree.sections` 投影为冻结的普通分组与页面节点，包含 id、标题、规范化路径、页码和首页标记，不保留 `WikiPage` 实例。
 - `item` 在构建期完成页面导航、列表、展示、源码与可见性级联；页面源码可以逐字段覆盖 Wiki 源码，项目 `hero.background.image` 作为页面 Banner 图片默认值并可被页面显式覆盖。
 - shelf 只表示 Wiki collection 的聚合可见性，不会隐式隐藏项目内页面；页面继续由自身 `visibility.listed/searchable` 决定。
-- 页面必须显式声明严格 v2 `collection.profile` 与 `collection.id`，id 必须能解析到 `_data/wiki/` 项目；不从布局、路径或 v1 `wiki` 字段推断归属。
+- Wiki 页面可由已注册项目、`source/wiki/<id>/` 命名空间、`route.path` 与 `navigation.tree` 唯一推断；显式 `collection.profile/id` 用于消歧且必须与注册项目及 route/tree 成员关系一致。Wiki 物理目录允许作为历史别名被合法显式 id 覆盖；无显式声明时的命名空间零候选、多候选及显式成员冲突仍会构建失败。layout 与 v1 `wiki` 字段不参与兼容推断。
 - `render.document/layout/seo` 固化文档、布局、最终 Brand、导航和完整 SEO；`render.cover` 只允许集合首页启用 Hero；`render.article` 固化 Banner、README、Footer、上下篇、评论和 related；`render.listing` 固化 Wiki 卡片、排序、置顶与可见性。
 - Wiki 详情页复用公共 Shell/Region/Section/Item/Navigation 并向 partial 传递显式 ViewModel locals；缺少合法 `render` 时构建失败。Wiki 索引生成器只传递 `wikiIndex.items/allItems/tags`，卡片、筛选、置顶和 tabs 不读取原始 Wiki tree。
 
@@ -138,7 +138,7 @@ Galaxy 的路径为 `hero.background.effect.options`，其 React Bits props 保�
 - `collection` 保留 Notebook 的名称/标题/说明/身份图标、源码仓库、规范化 `route.path`、标签导航、列表分页/排序/摘要设置和 Note 展示默认值。
 - `navigation.tags` 只从同一严格 Notebook id 下的 Note 标签构造；层级标签拆为冻结的普通对象，包含规范化 id、名称、末段标签、父级和标签页路径。
 - `item` 在构建期完成页面导航、`listing.priority`、`visibility.listed/searchable`、侧栏、文章、页脚和评论级联；页面源码可以覆盖 Notebook 源码字段。
-- `source/notebooks/<id>/*.md` 在同名 `_data/notebooks/<id>.yml` 存在时可唯一推断 Notebook，`stellar new note` 因此只写最小 Front Matter；其它路径的 Note 必须显式声明严格 v2 `collection.profile/id`。不会从 layout、v1 `notebook` 字段或未知目录推断归属。
+- `source/notebooks/<id>/*.md` 在同名 `_data/notebooks/<id>.yml` 存在时可唯一推断 Notebook，`stellar new note` 因此只写最小 Front Matter；其它路径可用显式 `collection.profile/id` 消歧。Notebook 命名空间零候选、多候选或显式冲突时失败；不会从 layout、v1 `notebook` 字段或未知目录兼容推断。
 - `render.document/layout/seo/article/listing` 固化文档状态、布局、最终 Brand、完整 WebPage SEO、Banner、日期、标签、Footer、评论与卡片字段；缺少合法 `render` 时按来源终止构建。
 - Notebook Open Graph 保持 WebPage 的 `website` 类型，并保留既有发布时间、更新时间与标签 meta；`footer.license: true` 在模型层映射到全局 Article 许可文本，保留既有启用语义。
 - 第一阶段用已完成的临时 ViewModel 投影所有 Notebook、标签与 Note 列表，形成深度冻结的 `notebookIndex`；第二阶段把显式 `tagTree` 与 `recentItems` 写入每个详情 ViewModel 后再次校验和冻结。
@@ -161,6 +161,7 @@ Pre-alpha M1 建立机器元数据接缝，M5 再把同一份数据接入公开 
 
 Collection 与 Front Matter 不再由手写字段表定义：`scripts/schema/content-config-schema.js` 直接从目标契约投影两个作用域 Schema，`scripts/lib/config-schema.js` 统一执行类型、封闭边界、迁移错误、规范化、camelCase 投影与深冻结。`scripts/lib/collection-pipeline/` 对每个输入只解析一次，并登记冻结的 `collectionConfigs` / `pageConfigs`、profile 成员与 Collection 分组。
 
+- `scripts/lib/content-membership.js` 从已注册 Wiki/Topic/Notebook、成员关系和源码路径建立共享候选索引。唯一候选自动归属；普通 Post/Page 的零候选合法；集合命名空间零候选、多候选及显式冲突统一拒绝猜测。构建与 doctor 复用同一解析器，诊断固定给出来源、候选集合和最小修复方式。
 - 普通 Post 在 `before_generate` 登记已解析输入，在 `after_post_render` 使用最终 HTML、标签关系、prev/next 与可选相关文章结果完成详情模型；博客聚合消费同一登记输入。
 - `scripts/lib/content-config.js` 保留作用域包装、来源化错误和 `isListed` / `isSearchable` 等内容语义，不再维护第二套手写字段表。
 - 路由、导航、侧栏和页面字段由声明式 Schema 严格校验；错误继续包含配置来源、字段路径与迁移目标。
@@ -173,4 +174,4 @@ Collection 与 Front Matter 不再由手写字段表定义：`scripts/schema/con
 
 ### doctor 的 Schema 消费
 
-`stellar doctor` 读取站点 `_config.yml` 与 `_config.stellar.yml`，扫描 `source/_data/{wiki,topic,notebooks}/` 和 `source/` 下带 Front Matter 的 Markdown，再分别调用 `parseStellarConfig()`、`parseCollectionConfig()` 与 `parsePageConfig()`。doctor 只聚合问题，不触发生成器、不写回文件，也不提供旧字段别名或自动迁移。text/json 输出中的问题统一保留 `source/path/actualType/expected/migration`，因此命令行诊断和构建期失败指向同一字段事实；机器读取 JSON 时使用 `hexo stellar doctor --format json --silent`，屏蔽 Hexo 在命令加载前输出的框架日志。
+`stellar doctor` 读取站点 `_config.yml`；`_config.stellar.yml` 缺失或为空时直接使用 Schema 默认值，存在覆盖时再读取它。随后扫描 `source/_data/{wiki,topic,notebooks}/` 和 `source/` 下带 Front Matter 的 Markdown，分别调用 `parseStellarConfig()`、`parseCollectionConfig()`、`parsePageConfig()` 与共享归属解析器。doctor 只聚合问题，不触发生成器、不写回文件，也不提供旧字段别名或自动迁移。text/json 输出中的问题统一保留 `source/path/actualType/expected/migration`，因此命令行诊断和构建期失败指向同一字段事实；机器读取 JSON 时使用 `hexo stellar doctor --format json --silent`，屏蔽 Hexo 在命令加载前输出的框架日志。

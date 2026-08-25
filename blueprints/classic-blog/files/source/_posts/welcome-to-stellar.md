@@ -1,14 +1,25 @@
 ---
 title: Welcome to Stellar
 date: {{generated_date}}
-description: Your first post in a Stellar v2 site.
-tags:
-  - Stellar
-  - Hexo
 ---
 
-This site was created from the **Classic Blog** Blueprint.
+# Your first Stellar page
+
+This paragraph links to the [Stellar documentation](https://xaoxuu.com/wiki/stellar/) and demonstrates ordinary Markdown without theme-specific Front Matter.
 
 <!-- more -->
 
-Replace this starter post with your own ideas, notes and stories.
+- Write a paragraph.
+- Organize ideas in a list.
+
+> Keep the content clear before adding configuration.
+
+```js
+const site = "Stellar";
+```
+
+![A placeholder cover](https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg)
+
+| Content | Result |
+| --- | --- |
+| Markdown | A complete page |

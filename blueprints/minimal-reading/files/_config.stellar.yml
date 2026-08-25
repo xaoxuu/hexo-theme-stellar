@@ -3,8 +3,6 @@ site:
     name: Reading Notes
     tagline:
       text: A quiet place to think and write
-      hover:
-    href: /
   menu:
     items:
       - id: post
@@ -12,27 +10,15 @@ site:
         icon: default:bookmark
         url: /
         accent: '#73584A'
-  footer:
-    sections: []
-
 layout:
   profiles:
     home:
-      navigation:
-        active_menu: post
       sidebar:
         left: []
-        right: []
     blog_index:
-      path: /blog/
-      navigation:
-        active_menu: post
       sidebar:
         left: []
-        right: []
     post:
-      navigation:
-        active_menu: post
       sidebar:
         left: []
         right: [toc]
@@ -59,14 +45,11 @@ content:
     listing:
       pinned_layout: flat
       card_layout: classic
-      show_tags: false
     show_reading_time: true
     footer:
       show_tags: false
 
 extensions:
-  search:
-    provider: local
   features:
     reveal:
       enabled: false

@@ -9,13 +9,17 @@ const {
 const { resetPageViewModels, setPageConfig } = require("../page-view-model-registry");
 const { ensureRuntimeData } = require("../runtime-data");
 const { readFrontMatter, sourcePathForData, sourcePathForPage } = require("../source-config");
+const {
+  createCollectionRegistry,
+  resolveContentMembership
+} = require("../content-membership");
 const { discoverContent, memberKey } = require("./shared");
 const { profileAdapters } = require("./registry");
 
 function prepareCollectionPipeline(ctx) {
   resetPageViewModels();
   const issues = [];
-  const data = ctx.locals.get("data");
+  const data = ctx.locals.get("data") || {};
   const collectionConfigs = new Map();
   const pageConfigs = new Map();
   ctx.stellar ||= {};
@@ -41,8 +45,9 @@ function prepareCollectionPipeline(ctx) {
     if (!key.startsWith("wiki/") && !key.startsWith("topic/") && !key.startsWith("notebooks/")) continue;
     capture(() => collectionConfigs.set(key, parseCollectionConfig(value, sourcePathForData(key))));
   }
+  const membershipRegistry = createCollectionRegistry(collectionConfigs);
 
-  const configForPage = page => {
+  const configForPage = (page, kind) => {
     if (pageConfigs.has(page)) return pageConfigs.get(page);
     const raw = readFrontMatter(ctx, page);
     if (raw == null) {
@@ -50,14 +55,20 @@ function prepareCollectionPipeline(ctx) {
       return null;
     }
     let parsed = capture(() => parsePageConfig(raw, sourcePathForPage(page)));
-    const notebookPath = typeof page.source === "string"
-      ? page.source.replace(/\\/g, "/").match(/^notebooks\/([^/]+)\/.+\.md$/)
-      : null;
-    if (parsed?.collection == null && notebookPath && collectionConfigs.has(`notebooks/${notebookPath[1]}`)) {
-      parsed = Object.freeze({
-        ...parsed,
-        collection: Object.freeze({ profile: "notebook", id: notebookPath[1] })
+    if (parsed != null) {
+      const resolved = resolveContentMembership({
+        kind,
+        source: sourcePathForPage(page),
+        pagePath: page.path,
+        config: parsed,
+        registry: membershipRegistry
       });
+      if (resolved.issues.length > 0) {
+        issues.push(...resolved.issues);
+        parsed = null;
+      } else {
+        parsed = resolved.config;
+      }
     }
     pageConfigs.set(page, parsed);
     if (parsed != null) {

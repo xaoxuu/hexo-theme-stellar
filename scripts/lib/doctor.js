@@ -7,6 +7,11 @@ const yaml = require("js-yaml");
 
 const { ConfigSchemaError, deepFreeze, parseStellarConfig } = require("./config-schema");
 const { ContentConfigError, parseCollectionConfig, parsePageConfig } = require("./content-config");
+const {
+  createCollectionRegistry,
+  resolveContentMembership,
+  sourcePagePath
+} = require("./content-membership");
 const { FrontMatterParseError, parseFrontMatterYaml } = require("./front-matter");
 
 function issue(code, source, fieldPath, actualType, expected, migration) {
@@ -59,10 +64,11 @@ function filesBelow(root, predicate) {
 
 function collectSchemaIssues(callback, issues) {
   try {
-    callback();
+    return callback();
   } catch (error) {
     if (!(error instanceof ConfigSchemaError) && !(error instanceof ContentConfigError)) throw error;
     issues.push(...error.issues);
+    return null;
   }
 }
 
@@ -91,31 +97,54 @@ function runDoctor(options = {}) {
   }
 
   const stellarConfigPath = path.join(baseDir, "_config.stellar.yml");
-  if (!fs.existsSync(stellarConfigPath)) {
-    issues.push(issue("missing_file", "_config.stellar.yml", "root", "missing", "Stellar v2 theme config", "start/init"));
-  } else {
+  if (fs.existsSync(stellarConfigPath)) {
     const value = yamlValue(stellarConfigPath, "_config.stellar.yml", issues);
     if (value != null) collectSchemaIssues(() => parseStellarConfig({
       source: "_config.stellar.yml",
       themeConfig: value,
       siteConfig
     }), issues);
+  } else {
+    collectSchemaIssues(() => parseStellarConfig({
+      source: "Stellar Schema defaults",
+      themeConfig: {},
+      siteConfig
+    }), issues);
   }
 
+  const collectionConfigs = new Map();
   for (const collectionRoot of ["wiki", "topic", "notebooks"]) {
     const directory = path.join(baseDir, "source", "_data", collectionRoot);
     for (const file of filesBelow(directory, item => /\.ya?ml$/i.test(item))) {
       const source = relative(baseDir, file);
       const value = yamlValue(file, source, issues);
-      if (value != null) collectSchemaIssues(() => parseCollectionConfig(value, source), issues);
+      if (value != null) {
+        const parsed = collectSchemaIssues(() => parseCollectionConfig(value, source), issues);
+        if (parsed != null) {
+          const key = relative(path.join(baseDir, "source", "_data"), file).replace(/\.ya?ml$/i, "");
+          collectionConfigs.set(key, parsed);
+        }
+      }
     }
   }
 
+  const membershipRegistry = createCollectionRegistry(collectionConfigs);
   const sourceRoot = path.join(baseDir, "source");
   for (const file of filesBelow(sourceRoot, item => item.endsWith(".md"))) {
     const source = relative(baseDir, file);
     const value = frontMatterValue(file, source, issues);
-    if (value != null) collectSchemaIssues(() => parsePageConfig(value, source), issues);
+    if (value != null) {
+      const parsed = collectSchemaIssues(() => parsePageConfig(value, source), issues);
+      if (parsed == null) continue;
+      const resolved = resolveContentMembership({
+        kind: source.startsWith("source/_posts/") ? "posts" : "pages",
+        source,
+        pagePath: parsed.permalink || sourcePagePath(source),
+        config: parsed,
+        registry: membershipRegistry
+      });
+      issues.push(...resolved.issues);
+    }
   }
 
   return deepFreeze({
@@ -139,7 +168,7 @@ function formatDoctorText(result) {
     `Stellar doctor: ${result.ok ? "PASS" : "FAIL"}`,
     `Node.js: ${result.environment.node}`,
     `Hexo: ${result.environment.hexo}`,
-    `Checked: theme config, ${result.checked.collections} collection file(s), ${result.checked.pages} Markdown file(s)`
+    `Checked: ${result.checked.themeConfig ? "theme config" : "Schema defaults"}, ${result.checked.collections} collection file(s), ${result.checked.pages} Markdown file(s)`
   ];
   if (result.issues.length > 0) {
     lines.push(`Issues (${result.issues.length}):`);

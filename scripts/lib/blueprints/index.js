@@ -3,6 +3,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const { isDeepStrictEqual } = require("node:util");
 const yaml = require("js-yaml");
 
 const { parseStellarConfig } = require("../config-schema");
@@ -104,12 +105,15 @@ function loadCatalog(options = {}) {
     const content = fs.readFileSync(fragment.absolute, "utf8").trimEnd();
     let parsed;
     try {
-      parsed = yaml.load(content, { filename: fragment.absolute });
+      parsed = content.length === 0 ? {} : yaml.load(content, { filename: fragment.absolute });
     } catch (error) {
       throw new BlueprintError(`${fragment.absolute}: Visual Style YAML 无效（${error.message}）`);
     }
-    if (parsed == null || typeof parsed !== "object" || Array.isArray(parsed) || Object.keys(parsed).join(",") !== "appearance") {
-      throw new BlueprintError(`${fragment.absolute}: Visual Style 必须只包含 appearance 根`);
+    const roots = parsed != null && typeof parsed === "object" && !Array.isArray(parsed)
+      ? Object.keys(parsed)
+      : [];
+    if (parsed == null || typeof parsed !== "object" || Array.isArray(parsed) || (roots.length > 0 && roots.join(",") !== "appearance")) {
+      throw new BlueprintError(`${fragment.absolute}: Visual Style 必须为空覆盖或只包含 appearance 根`);
     }
     parseStellarConfig({ source: fragment.absolute, themeConfig: parsed });
     styles[id] = deepFreeze({ ...manifest, directory, content });
@@ -178,12 +182,54 @@ function parseFrontMatter(content, source) {
   }
 }
 
+function clone(value) {
+  return value == null || typeof value !== "object" ? value : structuredClone(value);
+}
+
+function leafPaths(value, prefix = [], result = []) {
+  if (value != null && typeof value === "object" && !Array.isArray(value) && Object.keys(value).length > 0) {
+    for (const [key, child] of Object.entries(value)) leafPaths(child, [...prefix, key], result);
+  } else if (prefix.length > 0) {
+    result.push(prefix);
+  }
+  return result;
+}
+
+function withoutPath(value, segments) {
+  const result = clone(value);
+  let current = result;
+  for (let index = 0; index < segments.length - 1; index += 1) current = current[segments[index]];
+  delete current[segments.at(-1)];
+  return result;
+}
+
+function redundantThemeConfigPaths(themeConfig) {
+  const normalized = parseStellarConfig({ source: "Blueprint", themeConfig });
+  const redundant = [];
+  for (const segments of leafPaths(themeConfig)) {
+    try {
+      const candidate = parseStellarConfig({
+        source: "Blueprint",
+        themeConfig: withoutPath(themeConfig, segments)
+      });
+      if (isDeepStrictEqual(candidate, normalized)) redundant.push(segments.join("."));
+    } catch (error) {
+      // Removing a required companion field is not a redundant override.
+    }
+  }
+  return Object.freeze(redundant);
+}
+
 function validateGeneratedFile(target, content) {
   try {
     let parsed;
     if (target === "_config.stellar.yml") {
       parsed = yaml.load(content, { filename: target }) || {};
       parseStellarConfig({ source: target, themeConfig: parsed });
+      const redundant = redundantThemeConfigPaths(parsed);
+      if (redundant.length > 0) {
+        throw new BlueprintError(`${target}: Blueprint 包含等同 Schema 默认值的冗余字段（${redundant.join(", ")}）`);
+      }
     } else if (/^source\/_data\/(wiki|topic|notebooks)\/.+\.ya?ml$/.test(target)) {
       parsed = yaml.load(content, { filename: target }) || {};
       parseCollectionConfig(parsed, target);
@@ -266,6 +312,7 @@ module.exports = {
   buildBlueprintPlan,
   formatBlueprintPlan,
   loadCatalog,
+  redundantThemeConfigPaths,
   resolveInside,
   safeRelativePath,
   writeBlueprintPlan

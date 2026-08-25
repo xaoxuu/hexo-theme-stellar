@@ -32,7 +32,7 @@ collection:
   id: dev
 ```
 
-路径推断只接受已存在的 `_data/notebooks/<id>.yml`。v2 不读取旧 `notebook`、`book`、layout 或任意目录名作为兼容归属，也不会在多个候选之间猜测。
+路径推断只接受已存在的 `_data/notebooks/<id>.yml`。显式 `collection` 可为其它目录中的 Note 消歧，但必须指向注册项并与源码信号一致。Notebook 命名空间零候选、多候选或显式冲突时，构建与 doctor 都会报告来源、候选集合和最小修复方式；v2 不读取旧 `notebook`、`book`、layout 或任意目录名作为兼容归属。
 
 ## 创建 Note
 

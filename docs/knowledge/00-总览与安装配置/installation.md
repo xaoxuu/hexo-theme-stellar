@@ -223,7 +223,9 @@ Pre-alpha M3 提供三套一次性 Blueprint：`classic-blog`、`minimal-reading
 npx hexo stellar init --blueprint classic-blog --style stellar --dry-run --non-interactive
 ```
 
-确认目标文件均可创建后，移除 `--dry-run` 执行写入。init 会整体拒绝任何已有目标，不覆盖或合并用户文件。生成结果是普通 `_config.stellar.yml`、Collection 数据与 Markdown 内容；其中没有 Blueprint ID、锁文件或运行时继承关系。
+确认目标文件均可创建后，移除 `--dry-run` 执行写入。init 会整体拒绝任何已有目标，不覆盖或合并用户文件。生成结果是普通 `_config.stellar.yml`、Collection 数据与 Markdown 内容；其中没有 Blueprint ID、锁文件或运行时继承关系，也不重复 Schema 默认值。默认 `stellar` Visual Style 是空覆盖，starter 只保留对应产品差异与最小 Markdown。
+
+`init` 不是构建前置条件。只有普通 Post/Page 的站点可以不创建 `_config.stellar.yml`，直接使用 Schema 默认值运行 doctor 和 generate；空文件与缺失文件语义相同。Wiki/Topic/Notebook 内容在已注册数据与源码关系唯一时也不必重复写 `collection`，冲突时按 doctor 给出的候选与最小修复处理。
 
 生成后运行只读检查：
 
@@ -232,7 +234,7 @@ npx hexo stellar doctor --format text
 npx hexo stellar doctor --format json --silent
 ```
 
-JSON 模式必须使用 Hexo 全局 `--silent`，避免命令加载前的 Hexo 启动日志混入标准输出，保证 stdout 是可直接解析的单一 JSON 文档。doctor 检查 Node.js、Hexo、`theme: stellar`、主题配置、Collection YAML 与 Markdown Front Matter；失败问题包含来源、字段路径、实际类型、期望结构和迁移章节，但不会修改文件。
+JSON 模式必须使用 Hexo 全局 `--silent`，避免命令加载前的 Hexo 启动日志混入标准输出，保证 stdout 是可直接解析的单一 JSON 文档。doctor 检查 Node.js、Hexo、`theme: stellar`、Schema 默认值或主题覆盖、Collection YAML、Markdown Front Matter 与成员归属；失败问题包含来源、字段路径、实际类型、期望结构、候选集合和迁移章节，但不会修改文件。
 
 **参考源码**：[blueprints/](../../../blueprints/)、[scripts/commands/stellar.js](../../../scripts/commands/stellar.js)、[scripts/lib/blueprints/](../../../scripts/lib/blueprints/)、[scripts/lib/doctor.js](../../../scripts/lib/doctor.js)
 
