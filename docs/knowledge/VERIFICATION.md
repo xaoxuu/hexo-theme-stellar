@@ -372,6 +372,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `205b8d8` | fix(runtime): 修复共享 Feature 组件分派 (#720) | 第二轮站长验收反馈修复：Manifest 投影同时按 contribution 产品类型与 `entry.adapter=feature` 注入共享 adapter 分派 ID，恢复 `deferred-icons`、dropdown 与 Swiper component；文章列表日历占位符已替换为 15.6px 内联 SVG，页面无残留占位符或新增控制台错误。Node.js 22 下 425 项测试、首屏 gzip 50.5052%、知识库核查与主工程 262 文件构建通过；未新增一次性验收工具，状态继续等待站长重新验收 |
 | `0f60f44` | fix(v2): 修复 M10 预览验收阻断 (#720) | 首轮站长验收反馈修复：M10 隔离站点固定安装 `hexo-server@3.0.0`，六站逐一启动回环预览并验证 HTTP 200 与 Stellar Shell，报告写入已验证命令；版本检查由“不相等即提示”改为严格 SemVer 较新判断，内部 v2 候选不再反向提示安装 v1 latest。Node.js 22 下 425 项测试、六站 tarball/HTTP smoke、首屏 gzip 50.5052%、主工程 262 文件构建与精确预览命令通过；状态回到等待站长重新验收 |
 | `aa45373` | fix(v2): 完成全系统回归候选 (#720) | 设计文档 `2026-08-25-v2-system-acceptance/`；真实 npm tarball 六站矩阵覆盖默认空配置、三套 Blueprint、三种语言、四类 Collection、CLI 事务、两条迁移路径、Reference、Runtime、搜索与路由，并生成固定人工验收包；Wiki/Notebook 在 Markdown 渲染后重建最终冻结 ViewModel，详情正文与搜索/SEO 恢复一致；Node.js 22 下 423 项测试、首屏 gzip 50.5052%、主工程 262 文件构建通过，状态保持等待站长人工验收 |
 | `17d8138` | refactor(config): 收敛 Schema 单源与生成注释 | 设计文档 `2026-08-25-v2-theme-schema-single-source/`；Theme 类型、字面量默认值、约束、语义描述和 YAML 展示元数据统一进入 `CONFIG_SCHEMA`，默认配置、Reference 与审计共用生成入口；Brand 三字段取消 Hexo fallback。活动叶子缺少描述时失败，类型/枚举/范围提示自动生成且示例显式选择；Node.js 22 下 423 项测试、四套 tarball、首屏 gzip 50.5052% 和主工程 262 文件构建通过 |
