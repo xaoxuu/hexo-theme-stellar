@@ -6,7 +6,7 @@
 
 "use strict";
 
-const { getNotebooksObject } = require("../../lib/notebooks");
+const { getNotebooksObject, groupPagesByNotebook } = require("../../lib/notebooks");
 const { resolveBrand } = require("../../lib/brand");
 const { normalize_path: normalizePath } = require("../../lib/path_utils");
 const { completeNotebookPageViewModel } = require("../../lib/models");
@@ -19,14 +19,7 @@ const { ensureRuntimeData } = require("../../lib/runtime-data");
 const { ConfigSchemaError } = require("../../lib/config-schema");
 const { deepFreeze } = require("../../schema/schema-utils");
 const INTERNAL = require("../../lib/internal-constants");
-
-function eachPage(pages, callback) {
-  if (typeof pages.each === "function") {
-    pages.each(callback);
-    return;
-  }
-  pages.forEach(callback);
-}
+const { runTwoStage, stableSort } = require("../../lib/collection-pipeline/shared");
 
 function plainTagTree(notebook) {
   return Array.from(notebook.tagTree.values()).map(tag => ({
@@ -41,15 +34,12 @@ function plainTagTree(notebook) {
 }
 
 function sortNoteItems(items, sort) {
-  const ordered = items.slice();
   const field = sort?.field || "updated";
   const direction = sort?.direction === "asc" ? 1 : -1;
-  ordered.sort((left, right) => {
-    const compared = String(left[field] || "").localeCompare(String(right[field] || "")) * direction;
-    return compared;
-  });
-  ordered.sort((left, right) => right.priority - left.priority);
-  return ordered;
+  return stableSort(items, (left, right) => (
+    (right.priority - left.priority) ||
+    (String(left[field] || "").localeCompare(String(right[field] || "")) * direction)
+  ));
 }
 
 function validateTagIcons(notebooks, tagIcons) {
@@ -72,102 +62,122 @@ function validateTagIcons(notebooks, tagIcons) {
   if (issues.length > 0) throw new ConfigSchemaError(issues);
 }
 
-module.exports = ctx => {
-  const notebooks = getNotebooksObject(ctx);
+module.exports = (ctx, pipeline = null) => {
+  const pages = pipeline == null
+    ? ctx.locals.get("pages").data
+    : pipeline.members("notebook").map(record => record.page);
+  const pageConfigs = ctx.stellar?.contentConfig?.pageConfigs || new Map();
+  const notebooks = getNotebooksObject(ctx, {
+    pagesByNotebook: groupPagesByNotebook(pages, pageConfigs)
+  });
   validateTagIcons(notebooks, ctx.stellar.config.content.notebook.tagIcons);
   const runtimeData = ensureRuntimeData(ctx);
   runtimeData.notebooks = notebooks;
-  const pages = ctx.locals.get("pages");
   const entries = [];
-  const entriesByCollection = new Map();
 
-  eachPage(pages, page => {
+  for (const page of pages) {
     const input = getNotebookViewModelInput(page);
     const base = getNotebookViewModelBase(page);
-    if (!input || !base) return;
+    if (!input || !base) continue;
     const notebook = notebooks.tree[base.collection.id];
-    if (!notebook) return;
-    const tags = plainTagTree(notebook);
-    const viewModel = completeNotebookPageViewModel({
-      ...input,
-      runtimeData,
-      tagTree: tags
-    }, base);
-    if (!entriesByCollection.has(base.collection.id)) entriesByCollection.set(base.collection.id, []);
-    entriesByCollection.get(base.collection.id).push(viewModel);
-    entries.push({ page, input, base });
-  });
-
-  const collections = [];
-  const collectionMap = {};
-  for (const notebook of Object.values(notebooks.tree)) {
-    const viewModels = entriesByCollection.get(notebook.id) || [];
-    const collection = viewModels[0]?.collection;
-    const baseDir = collection?.route.baseDir || normalizePath(notebook.route.path).replace(/^\/+/, "");
-    const tags = plainTagTree(notebook);
-    const items = sortNoteItems(
-      viewModels.map(viewModel => viewModel.render.listing),
-      collection?.listing.sort || notebook.listing.sort
-    );
-    const recentItems = items.filter(item => item.listed !== false).sort((left, right) => (
-      String(right.updated || right.date || "").localeCompare(String(left.updated || left.date || ""))
-    ));
-    const identity = collection?.identity || {
-      name: String(notebook.name || ""),
-      headline: String(notebook.headline ?? notebook.name ?? ""),
-      description: String(notebook.description || ""),
-      icon: String(notebook.identity?.icon || "")
-    };
-    const brand = resolveBrand({
-      siteBrand: ctx.stellar.config.site.brand,
-      collection: notebook,
-      collectionType: "notebook",
-      defaultIcon: INTERNAL.resources.projectIcon
-    });
-    const projection = {
-      id: notebook.id,
-      href: baseDir,
-      name: identity.name,
-      headline: identity.headline,
-      description: identity.description,
-      icon: identity.icon || INTERNAL.resources.projectIcon,
-      order: collection?.listing.order ?? notebook.listing.order ?? 0,
-      listed: collection?.visibility.listed !== false && notebook.visibility?.listed !== false,
-      navigation: {
-        menu: notebook.navigation.menu ?? collection?.navigation.menu ?? null
-      },
-      layout: {
-        brand,
-        sidebar: structuredClone(notebook.sidebar || {}),
-        searchFilter: baseDir
-      },
-      tags,
-      items,
-      recentItems,
-      perPage: collection?.listing.perPage ?? notebook.listing.per_page
-    };
-    collections.push(projection);
-    collectionMap[notebook.id] = projection;
+    if (!notebook) continue;
+    entries.push({ page, input, base, notebook });
   }
-  collections.sort((left, right) => left.order - right.order);
-  const recentItems = collections
-    .filter(collection => collection.listed !== false)
-    .flatMap(collection => collection.recentItems)
-    .sort((left, right) => String(right.updated || right.date || "").localeCompare(String(left.updated || left.date || "")));
-  runtimeData.notebookIndex = deepFreeze({
-    items: collections,
-    collections: collectionMap,
-    recentItems
+
+  const finalViewModels = runTwoStage(entries, {
+    buildBase(entry) {
+      return completeNotebookPageViewModel({
+        ...entry.input,
+        runtimeData,
+        tagTree: plainTagTree(entry.notebook)
+      }, entry.base);
+    },
+    aggregate(allEntries, viewModels) {
+      const entriesByCollection = new Map();
+      for (let index = 0; index < allEntries.length; index += 1) {
+        const id = allEntries[index].base.collection.id;
+        if (!entriesByCollection.has(id)) entriesByCollection.set(id, []);
+        entriesByCollection.get(id).push(viewModels[index]);
+      }
+      const collections = [];
+      const collectionMap = {};
+      for (const notebook of Object.values(notebooks.tree)) {
+        const collectionViewModels = entriesByCollection.get(notebook.id) || [];
+        const collection = collectionViewModels[0]?.collection;
+        const baseDir = collection?.route.baseDir || normalizePath(notebook.route.path).replace(/^\/+/, "");
+        const tags = plainTagTree(notebook);
+        const items = sortNoteItems(
+          collectionViewModels.map(viewModel => viewModel.render.listing),
+          collection?.listing.sort || notebook.listing.sort
+        );
+        const recentItems = stableSort(
+          items.filter(item => item.listed !== false),
+          (left, right) => String(right.updated || right.date || "").localeCompare(String(left.updated || left.date || ""))
+        );
+        const identity = collection?.identity || {
+          name: String(notebook.name || ""),
+          headline: String(notebook.headline ?? notebook.name ?? ""),
+          description: String(notebook.description || ""),
+          icon: String(notebook.identity?.icon || "")
+        };
+        const brand = resolveBrand({
+          siteBrand: ctx.stellar.config.site.brand,
+          collection: notebook,
+          collectionType: "notebook",
+          defaultIcon: INTERNAL.resources.projectIcon
+        });
+        const projection = {
+          id: notebook.id,
+          href: baseDir,
+          name: identity.name,
+          headline: identity.headline,
+          description: identity.description,
+          icon: identity.icon || INTERNAL.resources.projectIcon,
+          order: collection?.listing.order ?? notebook.listing.order ?? 0,
+          listed: collection?.visibility.listed !== false && notebook.visibility?.listed !== false,
+          navigation: {
+            menu: notebook.navigation.menu ?? collection?.navigation.menu ?? null
+          },
+          layout: {
+            brand,
+            sidebar: structuredClone(notebook.sidebar || {}),
+            searchFilter: baseDir
+          },
+          tags,
+          items,
+          recentItems,
+          perPage: collection?.listing.perPage ?? notebook.listing.per_page
+        };
+        collections.push(projection);
+        collectionMap[notebook.id] = projection;
+      }
+      const orderedCollections = stableSort(collections, (left, right) => left.order - right.order);
+      const recentItems = stableSort(
+        orderedCollections
+          .filter(collection => collection.listed !== false)
+          .flatMap(collection => collection.recentItems),
+        (left, right) => String(right.updated || right.date || "").localeCompare(String(left.updated || left.date || ""))
+      );
+      runtimeData.notebookIndex = deepFreeze({
+        items: orderedCollections,
+        collections: collectionMap,
+        recentItems
+      });
+      return runtimeData.notebookIndex;
+    },
+    complete(entry, viewModel, notebookIndex) {
+      const collection = notebookIndex.collections[entry.base.collection.id];
+      return completeNotebookPageViewModel({
+        ...entry.input,
+        runtimeData,
+        tagTree: collection.tags,
+        recentItems: collection.recentItems
+      }, entry.base);
+    }
   });
 
-  for (const entry of entries) {
-    const collection = runtimeData.notebookIndex.collections[entry.base.collection.id];
-    entry.page.viewModel = completeNotebookPageViewModel({
-      ...entry.input,
-      runtimeData,
-      tagTree: collection.tags,
-      recentItems: collection.recentItems
-    }, entry.base);
-    setPageViewModel(entry.page, entry.page.viewModel);
+  for (let index = 0; index < entries.length; index += 1) {
+    entries[index].page.viewModel = finalViewModels[index];
+    setPageViewModel(entries[index].page, finalViewModels[index]);
   }
 };

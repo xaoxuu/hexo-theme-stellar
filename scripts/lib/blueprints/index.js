@@ -266,6 +266,7 @@ module.exports = {
   buildBlueprintPlan,
   formatBlueprintPlan,
   loadCatalog,
+  resolveInside,
   safeRelativePath,
   writeBlueprintPlan
 };

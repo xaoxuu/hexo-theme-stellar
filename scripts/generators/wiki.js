@@ -6,6 +6,7 @@
 "use strict";
 
 const { generatorPath, requireLayoutProfiles, toRenderNavigation } = require("../lib/layout-config");
+const { selectListingItems } = require("../lib/collection-pipeline/shared");
 
 hexo.extend.generator.register("wiki", function () {
   const { wiki } = hexo.stellar.data;
@@ -46,7 +47,10 @@ hexo.extend.generator.register("wiki", function () {
           navigation: toRenderNavigation(profile),
           title: tag.name,
           wikiIndex: {
-            items: index.items.filter(item => item.tags.includes(tag.name)).map(item => structuredClone(item)),
+            items: selectListingItems(index.items, {
+              tagId: tag.name,
+              tags: index.tags
+            }).map(item => structuredClone(item)),
             allItems: structuredClone(index.items),
             tags: structuredClone(index.tags),
             filter: true,

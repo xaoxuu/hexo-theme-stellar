@@ -159,14 +159,14 @@ function prepareNotebook(id, info, ctx, pages) {
   return notebook;
 }
 
-function getNotebooksObject(ctx) {
+function getNotebooksObject(ctx, options = {}) {
   const notebooks = {
     tree: {},
   };
 
   const data = ctx.stellar?.contentConfig?.collectionConfigs || new Map();
   const pageConfigs = ctx.stellar?.contentConfig?.pageConfigs || new Map();
-  const pagesByNotebook = groupPagesByNotebook(ctx.locals.get("pages").data, pageConfigs);
+  const pagesByNotebook = options.pagesByNotebook || groupPagesByNotebook(ctx.locals.get("pages").data, pageConfigs);
   const list = [];
   for (const [key, value] of data) {
     if (!key.startsWith('notebooks/') || key.endsWith('.DS_Store')) {

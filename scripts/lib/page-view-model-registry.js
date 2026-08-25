@@ -1,10 +1,7 @@
 "use strict";
 
-const postInputs = new Map();
-const topicInputs = new Map();
-const topicBases = new Map();
-const notebookInputs = new Map();
-const notebookBases = new Map();
+const profileInputs = new Map();
+const profileBases = new Map();
 const relatedItems = new Map();
 const pageConfigs = new Map();
 const pageViewModels = new Map();
@@ -15,11 +12,8 @@ function keysForPage(page) {
 }
 
 function resetPageViewModels() {
-  postInputs.clear();
-  topicInputs.clear();
-  topicBases.clear();
-  notebookInputs.clear();
-  notebookBases.clear();
+  profileInputs.clear();
+  profileBases.clear();
   relatedItems.clear();
   pageConfigs.clear();
   pageViewModels.clear();
@@ -44,44 +38,65 @@ function getPageConfig(page) {
   return getValue(pageConfigs, page);
 }
 
+function profileStore(stores, profile) {
+  if (!stores.has(profile)) stores.set(profile, new Map());
+  return stores.get(profile);
+}
+
+function setProfileViewModelInput(profile, page, input) {
+  setValue(profileStore(profileInputs, profile), page, input);
+}
+
+function getProfileViewModelInput(profile, page) {
+  return getValue(profileStore(profileInputs, profile), page);
+}
+
+function setProfileViewModelBase(profile, page, base) {
+  setValue(profileStore(profileBases, profile), page, base);
+}
+
+function getProfileViewModelBase(profile, page) {
+  return getValue(profileStore(profileBases, profile), page);
+}
+
 function setPostViewModelInput(page, input) {
-  setValue(postInputs, page, input);
+  setProfileViewModelInput("post", page, input);
 }
 
 function getPostViewModelInput(page) {
-  return getValue(postInputs, page);
+  return getProfileViewModelInput("post", page);
 }
 
 function setTopicViewModelInput(page, input) {
-  setValue(topicInputs, page, input);
+  setProfileViewModelInput("topic", page, input);
 }
 
 function getTopicViewModelInput(page) {
-  return getValue(topicInputs, page);
+  return getProfileViewModelInput("topic", page);
 }
 
 function setTopicViewModelBase(page, base) {
-  setValue(topicBases, page, base);
+  setProfileViewModelBase("topic", page, base);
 }
 
 function getTopicViewModelBase(page) {
-  return getValue(topicBases, page);
+  return getProfileViewModelBase("topic", page);
 }
 
 function setNotebookViewModelInput(page, input) {
-  setValue(notebookInputs, page, input);
+  setProfileViewModelInput("notebook", page, input);
 }
 
 function getNotebookViewModelInput(page) {
-  return getValue(notebookInputs, page);
+  return getProfileViewModelInput("notebook", page);
 }
 
 function setNotebookViewModelBase(page, base) {
-  setValue(notebookBases, page, base);
+  setProfileViewModelBase("notebook", page, base);
 }
 
 function getNotebookViewModelBase(page) {
-  return getValue(notebookBases, page);
+  return getProfileViewModelBase("notebook", page);
 }
 
 function setRelatedItems(page, items) {
@@ -101,6 +116,8 @@ function getPageViewModel(page) {
 }
 
 module.exports = {
+  getProfileViewModelBase,
+  getProfileViewModelInput,
   getPageConfig,
   getPageViewModel,
   getNotebookViewModelBase,
@@ -112,6 +129,8 @@ module.exports = {
   resetPageViewModels,
   setPageConfig,
   setPageViewModel,
+  setProfileViewModelBase,
+  setProfileViewModelInput,
   setNotebookViewModelBase,
   setNotebookViewModelInput,
   setPostViewModelInput,

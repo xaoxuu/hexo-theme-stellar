@@ -357,6 +357,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 | 2026-08-16 | `0f4486d`（#688）· `source/css/_components/pages/archives.styl`、`partial/article-tags.styl` | 标签行负边距导致移动端页面横向溢出：修复 `.tag` 行负边距（仅此两文件），移动端不再横向溢出；行为回归修复，知识库无行为描述变更，仅登记（CHANGELOG 1.42.0「修复」） |
 | 2026-08-16 | `1f2f933`（#689）· `source/css/_components/tag-plugins/gallery.styl`、`source/css/_plugins/lazyload.styl` | albums/posters 在 Firefox/Safari 标题竖排与遮罩消失：修复 gallery 卡片标题竖排与遮罩丢失问题；行为回归修复，知识库无行为描述变更，仅登记（CHANGELOG 1.42.0「修复」） |
 | 2026-08-16 | `a198243` · `source/js/main.js` | Babel 转译将 `sidebar` 全局改名导致侧边栏失效：修复转译改名问题，侧边栏恢复（见 `docs/designs/2026-08-16-fix-babel-sidebar-rename/`），补登记 |
+| 2026-08-25 | `scripts/lib/collection-pipeline/`、`scripts/commands/stellar.js`、`scripts/lib/new-note.js`、内容系统知识库、`docs/designs/2026-08-25-v2-collection-pipeline/` | #723：四类内容收敛到单一 Collection Pipeline 与封闭 profile registry，Topic/Notebook 共用 two-stage、Wiki/Notebook 共用 listed/tag 过滤；`stellar new note` 以安全冻结计划创建最小 Front Matter，并由 `source/notebooks/<id>/` 唯一推断归属；395 项主题测试通过，完整 Alpha 与主工程证据待最终门禁登记 |
 
 ## 八、提交登记（发版前核对）
 
@@ -364,6 +365,8 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `5048c62` | docs(config): 补全主题配置项说明 | `_config.yml` 公开配置注释补全：为八个职责根域补充用途、类型、枚举、默认与参数袋边界说明；不改变活动配置值或运行时行为 |
+| `80a33fe` | refactor(v2): 统一第三方服务 Provider 契约 (#732) | 设计文档 `2026-08-25-v2-service-providers/`；第三方服务统一为显式 provider 配置、单一解析 helper 与冻结运行时投影，标签、Footer、Runtime Manifest 和模型消费同一契约；Schema、Reference、知识库与回归测试同步，Issue #732 已闭环 |
 | `18afba3` | docs(config): 补全主题配置可发现性 | 设计文档 `2026-08-25-v2-config-discoverability/`；六个 Brand 公开字段改为活动空键并把示例值保留为行尾注释，补齐 Footer dropdown/spacer、Notebook tag icon、contributors repository 及动态映射结构契约；新增 Schema 驱动的可发现性测试，暂存树独立测试 2 项通过，主题 382 项测试、Reference、知识库门禁与主工程 261 个生成文件通过 |
 | `bcdeb7b` | fix(v2): 默认启用自部署服务并静默降级 (#730) | 设计文档 `2026-08-25-v2-service-default-endpoints/`；Site Info、Rating 与 Vote 默认使用 xaox.cc 公共实例，自定义 URL 与显式 `null` 保持有效；远程加载、解析与提交失败时静默保留或回滚静态状态，非法配置与程序错误仍保留诊断；Node.js 22 下主题 380 项测试、Reference、首屏 gzip 降幅 46.5354% 的性能门禁与主工程 261 个生成文件通过 |
 | `09b139a` | refactor(v2): 收敛 Appearance、Resources 与 Inject 配置 (#729) | 设计文档 `2026-08-25-v2-appearance-resources-inject-final-convergence/`；Appearance、Resources 与 Inject 收敛为最终 Schema、doctor、Reference 和消费链，资源 fallback 与外观派生值统一由构建边界提供，主工程配置与内容同步迁移；Issue #729 已闭环 |

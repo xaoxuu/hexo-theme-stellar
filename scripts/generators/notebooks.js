@@ -7,6 +7,7 @@
 
 const { generatorPath, requireLayoutProfiles, toRenderNavigation } = require("../lib/layout-config");
 const { deepFreeze } = require("../schema/schema-utils");
+const { selectListingItems, stableSort } = require("../lib/collection-pipeline/shared");
 
 hexo.extend.generator.register("notebooks", function (locals) {
   const { notebookIndex } = hexo.stellar.data;
@@ -46,8 +47,8 @@ hexo.extend.generator.register("notebooks", function (locals) {
   const routes = [];
   const collections = notebookIndex.items
     .filter(item => item.listed !== false)
-    .slice()
-    .sort((left, right) => left.order - right.order);
+    .slice();
+  const orderedCollections = stableSort(collections, (left, right) => left.order - right.order);
 
   // The index page of all notebooks.
   routes.push({
@@ -58,7 +59,7 @@ hexo.extend.generator.register("notebooks", function (locals) {
       navigation: toRenderNavigation(profile),
       notebookIndex: deepFreeze({
         mode: "collections",
-        items: collections,
+        items: orderedCollections,
         recentItems: notebookIndex.recentItems
       })
     }
@@ -67,7 +68,10 @@ hexo.extend.generator.register("notebooks", function (locals) {
   for (const notebook of notebookIndex.items) {
     // Note list pages (for every tag) of current notebook.
     for (const tag of notebook.tags) {
-      const notes = notebook.items.filter(item => item.listed !== false && tag.itemIds.includes(item.id));
+      const notes = selectListingItems(notebook.items, {
+        tagId: tag.id,
+        tags: notebook.tags
+      });
       const slices = paginationWithEmpty(tag.path, notes, {
         perPage: notebook.perPage,
         layout: ["notes"],

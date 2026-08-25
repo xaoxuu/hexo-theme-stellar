@@ -11,6 +11,7 @@ const {
   writeBlueprintPlan
 } = require("../lib/blueprints");
 const { formatDoctorJson, formatDoctorText, runDoctor } = require("../lib/doctor");
+const { buildNewNotePlan, formatNewNotePlan, writeNewNotePlan } = require("../lib/new-note");
 const { BLUEPRINT_IDS, VISUAL_STYLE_IDS } = require("../schema/blueprint-schema");
 
 function requireChoice(value, choices, label) {
@@ -60,18 +61,22 @@ function hexoVersion(ctx) {
   }
 }
 
-hexo.extend.console.register("stellar", "Initialize and diagnose a Stellar v2 site.", {
-  usage: "<init|doctor> [options]",
+hexo.extend.console.register("stellar", "Initialize, diagnose, and author a Stellar v2 site.", {
+  usage: "<init|doctor|new note> [options]",
   commands: [
     { name: "init", desc: "Generate a Stellar v2 Blueprint." },
-    { name: "doctor", desc: "Validate the environment and v2 configuration." }
+    { name: "doctor", desc: "Validate the environment and v2 configuration." },
+    { name: "new note", desc: "Create a Note in a known Notebook." }
   ],
   options: [
     { name: "--blueprint <id>", desc: "classic-blog | minimal-reading | docs-reference" },
     { name: "--style <id>", desc: "stellar | minimal" },
     { name: "--dry-run", desc: "Print the init plan without writing files." },
     { name: "--non-interactive", desc: "Never prompt for input." },
-    { name: "--format <text|json>", desc: "Doctor output format; use Hexo global --silent with JSON." }
+    { name: "--format <text|json>", desc: "Doctor output format; use Hexo global --silent with JSON." },
+    { name: "--notebook <id>", desc: "Notebook id for stellar new note." },
+    { name: "--title <title>", desc: "Note title and filename for stellar new note." },
+    { name: "--tags <tags>", desc: "Comma-separated Note tags." }
   ]
 }, async function (args) {
   const subcommand = args._[0];
@@ -107,5 +112,20 @@ hexo.extend.console.register("stellar", "Initialize and diagnose a Stellar v2 si
     if (!result.ok) process.exitCode = 1;
     return result;
   }
-  throw new Error("Usage: hexo stellar <init|doctor>");
+  if (subcommand === "new" && args._[1] === "note") {
+    const plan = buildNewNotePlan({
+      baseDir: this.base_dir,
+      sourceDir: this.source_dir,
+      notebook: args.notebook,
+      title: args.title,
+      tags: args.tags
+    });
+    console.log(formatNewNotePlan(plan, { dryRun: args.dryRun }));
+    if (!args.dryRun) {
+      writeNewNotePlan(plan);
+      console.log(`Created ${plan.outputPath}`);
+    }
+    return plan;
+  }
+  throw new Error("Usage: hexo stellar <init|doctor|new note>");
 });

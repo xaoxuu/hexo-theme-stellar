@@ -27,17 +27,11 @@ function cloneConfig(value) {
   return value == null ? value : structuredClone(value);
 }
 
-function eachPage(pages, callback) {
-  if (typeof pages.each === "function") {
-    pages.each(callback);
-    return;
-  }
-  pages.forEach(callback);
-}
-
-module.exports = ctx => {
+module.exports = (ctx, pipeline = null) => {
   const data = ctx.locals.get("data");
-  const pages = ctx.locals.get("pages");
+  const pages = pipeline == null
+    ? ctx.locals.get("pages")
+    : pipeline.members("wiki").map(record => record.page);
   const parsedCollections = ctx.stellar?.contentConfig?.collectionConfigs || new Map();
   const parsedPages = ctx.stellar?.contentConfig?.pageConfigs || new Map();
   const collectionConfigs = new Map();
@@ -66,11 +60,11 @@ module.exports = ctx => {
     : "themes/stellar/_config.yml";
   const entries = [];
   const homepageEntries = new Map();
-  eachPage(pages, page => {
+  for (const page of pages) {
     const config = parsedPages.get(page);
-    if (config == null) return;
+    if (config == null) continue;
     const collectionId = getCollectionId(config, "wiki");
-    if (collectionId == null) return;
+    if (collectionId == null) continue;
     const input = {
       source: sourcePathForPage(page),
       themeSource,
@@ -92,7 +86,7 @@ module.exports = ctx => {
     if (!homepageEntries.has(collectionId) || base.item.route.path === base.collection.route.homepage) {
       homepageEntries.set(collectionId, entry);
     }
-  });
+  }
 
   const listings = new Map();
   for (const [collectionId, entry] of homepageEntries) {

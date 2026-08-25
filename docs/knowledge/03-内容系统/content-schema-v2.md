@@ -105,7 +105,7 @@ Galaxy 的路径为 `hero.background.effect.options`，其 React Bits props 保�
 - 级联顺序为页面 Front Matter、Post profile、主题全局配置；`false`、`0` 与空字符串是有效覆盖值。Brand 图片继续按原子对象替换，不继承上级图片子字段。
 - 普通 Post、Topic、Wiki 与 Notebook 的根 Shell、左右侧栏、Brand、菜单、面包屑、SEO、正文辅助区、Footer、导航、评论和聚合条目均已消费 ViewModel。Hexo 仍只为聚合页提供分页及当前筛选状态；生成器把最终列表投影作为显式 local 交给模板。
 
-纯构建入口位于 `scripts/lib/models/index.js`。普通 Post 在 `before_generate` 登记输入，详情页由 `after_post_render` 结合最终正文和 Hexo 关系完成模型，列表条目由 `post_view_model` helper 从同一登记输入重建冻结投影；Wiki 页面在 `doc_tree` 完成树形解析后挂载，Topic 在文章渲染阶段完成，Note 则在 Notebook 树完成后以两阶段流程完成。
+唯一编排入口位于 `scripts/lib/collection-pipeline/`，模型事实来源位于 `scripts/lib/models/index.js`。Pipeline 单遍发现 Post/Page 并按 profile/collection 分组；普通 Post 在 `before_generate` 登记输入，详情页由 `after_post_render` 结合最终正文和 Hexo 关系完成模型，列表条目由 `post_view_model` helper 从同一登记输入重建冻结投影；Wiki 在 tree barrier 后完成，Topic 与 Notebook 复用共享 two-stage 协议。
 
 ### Topic 与文章
 
@@ -138,7 +138,7 @@ Galaxy 的路径为 `hero.background.effect.options`，其 React Bits props 保�
 - `collection` 保留 Notebook 的名称/标题/说明/身份图标、源码仓库、规范化 `route.path`、标签导航、列表分页/排序/摘要设置和 Note 展示默认值。
 - `navigation.tags` 只从同一严格 Notebook id 下的 Note 标签构造；层级标签拆为冻结的普通对象，包含规范化 id、名称、末段标签、父级和标签页路径。
 - `item` 在构建期完成页面导航、`listing.priority`、`visibility.listed/searchable`、侧栏、文章、页脚和评论级联；页面源码可以覆盖 Notebook 源码字段。
-- Note 必须显式声明严格 v2 `collection.profile` 与 `collection.id`，id 必须存在于 `_data/notebooks/`；不会从布局、路径或 v1 `notebook` 字段推断归属。
+- `source/notebooks/<id>/*.md` 在同名 `_data/notebooks/<id>.yml` 存在时可唯一推断 Notebook，`stellar new note` 因此只写最小 Front Matter；其它路径的 Note 必须显式声明严格 v2 `collection.profile/id`。不会从 layout、v1 `notebook` 字段或未知目录推断归属。
 - `render.document/layout/seo/article/listing` 固化文档状态、布局、最终 Brand、完整 WebPage SEO、Banner、日期、标签、Footer、评论与卡片字段；缺少合法 `render` 时按来源终止构建。
 - Notebook Open Graph 保持 WebPage 的 `website` 类型，并保留既有发布时间、更新时间与标签 meta；`footer.license: true` 在模型层映射到全局 Article 许可文本，保留既有启用语义。
 - 第一阶段用已完成的临时 ViewModel 投影所有 Notebook、标签与 Note 列表，形成深度冻结的 `notebookIndex`；第二阶段把显式 `tagTree` 与 `recentItems` 写入每个详情 ViewModel 后再次校验和冻结。
@@ -159,7 +159,7 @@ Pre-alpha M1 建立机器元数据接缝，M5 再把同一份数据接入公开 
 
 ## 校验与消费链
 
-Collection 与 Front Matter 不再由手写字段表定义：`scripts/schema/content-config-schema.js` 直接从目标契约投影两个作用域 Schema，`scripts/lib/config-schema.js` 统一执行类型、封闭边界、迁移错误、规范化、camelCase 投影与深冻结。`scripts/events/lib/content-config.js` 对每个输入只解析一次，并登记冻结的 `collectionConfigs` / `pageConfigs`。
+Collection 与 Front Matter 不再由手写字段表定义：`scripts/schema/content-config-schema.js` 直接从目标契约投影两个作用域 Schema，`scripts/lib/config-schema.js` 统一执行类型、封闭边界、迁移错误、规范化、camelCase 投影与深冻结。`scripts/lib/collection-pipeline/` 对每个输入只解析一次，并登记冻结的 `collectionConfigs` / `pageConfigs`、profile 成员与 Collection 分组。
 
 - 普通 Post 在 `before_generate` 登记已解析输入，在 `after_post_render` 使用最终 HTML、标签关系、prev/next 与可选相关文章结果完成详情模型；博客聚合消费同一登记输入。
 - `scripts/lib/content-config.js` 保留作用域包装、来源化错误和 `isListed` / `isSearchable` 等内容语义，不再维护第二套手写字段表。
@@ -167,6 +167,7 @@ Collection 与 Front Matter 不再由手写字段表定义：`scripts/schema/con
 - `scripts/helpers/collection.js` 向 EJS 提供 `collection_id(page, type)`，不再读取 `page.wiki/topic/notebook`。
 - `scripts/lib/brand.js` 与 `scripts/helpers/brand.js` 解析 Brand 优先级、集合自动值和手机端显示矩阵。
 - Wiki 与 Notebook 数据树都在两阶段建模后投影冻结的索引、导航和列表数据；Topic 索引也只消费显式投影。搜索生成器继续消费共享可见性语义。
+- Wiki / Notebook 标签页共用 listed/tag membership 过滤原语，Topic / Notebook 共用 two-stage 生命周期；四类 adapter 只保留归属、导航、默认排序、首页与路由差异。
 
 旧字段、未知字段和错误类型都会汇总为 `ContentConfigError`，消息包含源文件与字段路径；运行时没有 v1 别名或错误类型自动转换。
 

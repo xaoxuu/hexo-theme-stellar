@@ -64,18 +64,22 @@ test("Collection / Front Matter 复用声明式解析器且消费链不再读取
   assert.doesNotMatch(consumers, /collection\?*\.type|collectionConfig\.routing|\.routing\?*\.base_dir|collectionConfig\.note\?*\.sidebar|frontMatter\.open_graph|page\.open_graph|page\.inject|page\[id\]/);
 });
 
-test("完整内容集合只解析一次且派生步骤紧随同一份结果", () => {
+test("完整内容集合只经过单一 Collection Pipeline 入口", () => {
   const events = read("scripts/events/index.js");
-  const parseCall = "require(\"./lib/content-config\")(hexo)";
-  assert.equal(events.split(parseCall).length - 1, 1);
-  const parseIndex = events.indexOf(parseCall);
-  for (const derived of [
-    "require(\"./lib/doc_tree\")(hexo)",
-    "require(\"./lib/topic_tree\")(hexo)",
-    "require(\"./lib/notebooks\")(hexo)"
-  ]) {
-    assert.ok(events.indexOf(derived) > parseIndex);
-  }
+  const adapters = [
+    "scripts/lib/collection-pipeline/adapters/wiki.js",
+    "scripts/lib/collection-pipeline/adapters/notebook.js"
+  ].map(read).join("\n");
+  const groupedConsumers = [
+    "scripts/events/lib/doc_tree.js",
+    "scripts/events/lib/notebooks.js"
+  ].map(read).join("\n");
+  const pipelineCall = "require(\"../lib/collection-pipeline\").runCollectionPipeline(hexo)";
+  assert.equal(events.split(pipelineCall).length - 1, 1);
+  assert.doesNotMatch(events, /lib\/(?:content-config|doc_tree|topic_tree|notebooks)\"\)\(hexo\)/);
+  assert.match(adapters, /\(pipeline\.ctx, pipeline\)/);
+  assert.match(groupedConsumers, /pipeline\.members\(\"wiki\"\)/);
+  assert.match(groupedConsumers, /pipeline\.members\(\"notebook\"\)/);
 });
 
 test("生成器、helper 与后处理链只消费冻结 Front Matter", () => {

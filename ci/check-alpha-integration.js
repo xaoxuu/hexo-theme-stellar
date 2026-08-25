@@ -78,7 +78,7 @@ function addTopicFixture(root) {
   ].join("\n"));
 }
 
-function addNotebookFixture(root) {
+function addNotebookFixture(root, hexo) {
   write(root, "source/_data/notebooks/alpha.yml", [
     "name: Alpha Notebook",
     "description: Notebook ViewModel integration fixture.",
@@ -88,20 +88,24 @@ function addNotebookFixture(root) {
     "  menu: post",
     ""
   ].join("\n"));
-  write(root, "source/notes/alpha/integration.md", [
-    "---",
-    "title: Alpha Notebook Note",
-    "date: 2026-08-23 08:10",
-    "collection:",
-    "  profile: notebook",
-    "  id: alpha",
-    "tags:",
-    "  - integration/runtime",
-    "---",
-    "",
-    "Notebook profile integration marker.",
-    ""
-  ].join("\n"));
+  const args = [
+    "stellar", "new", "note",
+    "--notebook", "alpha",
+    "--title", "Alpha Notebook Note",
+    "--tags", "integration/runtime"
+  ];
+  const dryRun = run(hexo, [...args, "--dry-run"], { cwd: root });
+  if (!dryRun.includes("source/notebooks/alpha/Alpha Notebook Note.md")) {
+    throw new Error("minimal-reading: stellar new note dry-run missing planned target");
+  }
+  const file = path.join(root, "source/notebooks/alpha/Alpha Notebook Note.md");
+  if (fs.existsSync(file)) throw new Error("minimal-reading: stellar new note dry-run wrote a file");
+  run(hexo, args, { cwd: root });
+  const generated = fs.readFileSync(file, "utf8");
+  if (/collection:|profile: notebook|\nid: alpha/.test(generated)) {
+    throw new Error("minimal-reading: stellar new note wrote redundant Collection ownership");
+  }
+  fs.appendFileSync(file, "Notebook profile integration marker.\n", "utf8");
 }
 
 function expectedPages(blueprint) {
@@ -113,7 +117,7 @@ function expectedPages(blueprint) {
   }
   if (blueprint === "minimal-reading") {
     return [
-      { path: "public/notes/alpha/integration/index.html", marker: "Notebook profile integration marker.", profile: "notebook" },
+      { marker: "Notebook profile integration marker.", profile: "notebook" },
       { marker: "Minimal Reading", profile: "post" }
     ];
   }
@@ -224,7 +228,7 @@ function checkSite(root, blueprint, tarball) {
   const hexo = path.join(root, "node_modules", ".bin", "hexo");
   run(hexo, ["stellar", "init", "--blueprint", blueprint, "--non-interactive"], { cwd: root });
   if (blueprint === "classic-blog") addTopicFixture(root);
-  if (blueprint === "minimal-reading") addNotebookFixture(root);
+  if (blueprint === "minimal-reading") addNotebookFixture(root, hexo);
   const doctor = JSON.parse(run(hexo, ["stellar", "doctor", "--format", "json", "--silent"], { cwd: root }));
   if (!doctor.ok) throw new Error(`${blueprint}: doctor failed`);
   run(hexo, ["generate"], { cwd: root });

@@ -6,6 +6,7 @@
 "use strict";
 
 const { generatorPath, requireLayoutProfiles, toRenderNavigation } = require("../lib/layout-config");
+const { stableSort } = require("../lib/collection-pipeline/shared");
 
 hexo.extend.generator.register("index_topic", function () {
   const { topicIndex } = hexo.stellar.data;
@@ -13,10 +14,10 @@ hexo.extend.generator.register("index_topic", function () {
   if (!Array.isArray(topicIndex?.items) || topicIndex.items.length === 0) {
     return {};
   }
-  const items = topicIndex.items
-    .filter(item => item.listed)
-    .slice()
-    .sort((left, right) => String(right.sortDate || "").localeCompare(String(left.sortDate || "")));
+  const items = stableSort(
+    topicIndex.items.filter(item => item.listed),
+    (left, right) => String(right.sortDate || "").localeCompare(String(left.sortDate || ""))
+  );
   var ret = [];
   ret.push({
     path: generatorPath(profile.path),

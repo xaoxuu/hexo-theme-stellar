@@ -6,57 +6,57 @@
       {
         "path": "/js/icons.js",
         "bytes": 1940,
-        "gzipBytes": 1073
+        "gzipBytes": 1056
       },
       {
         "path": "/js/main.js",
         "bytes": 23655,
-        "gzipBytes": 7521
+        "gzipBytes": 7432
       },
       {
         "path": "/js/plugins/dropdown.js",
         "bytes": 14067,
-        "gzipBytes": 3324
+        "gzipBytes": 3328
       },
       {
         "path": "/js/services.js",
         "bytes": 6201,
-        "gzipBytes": 2097
+        "gzipBytes": 2095
       },
       {
         "path": "/js/stellar-icons.js",
         "bytes": 6354,
-        "gzipBytes": 2542
+        "gzipBytes": 2591
       },
       {
         "path": "/js/theme.js",
         "bytes": 1801,
-        "gzipBytes": 772
+        "gzipBytes": 774
       },
       {
         "path": "/js/utils.js",
         "bytes": 25587,
-        "gzipBytes": 7268
+        "gzipBytes": 7196
       },
       {
         "path": "inline:1",
         "bytes": 9149,
-        "gzipBytes": 3500
+        "gzipBytes": 3445
       },
       {
         "path": "inline:10",
         "bytes": 889,
-        "gzipBytes": 416
+        "gzipBytes": 421
       },
       {
         "path": "inline:11",
         "bytes": 3565,
-        "gzipBytes": 1564
+        "gzipBytes": 1540
       },
       {
         "path": "inline:12",
         "bytes": 465,
-        "gzipBytes": 286
+        "gzipBytes": 287
       },
       {
         "path": "inline:13",
@@ -66,46 +66,46 @@
       {
         "path": "inline:2",
         "bytes": 1682,
-        "gzipBytes": 876
+        "gzipBytes": 862
       },
       {
         "path": "inline:3",
         "bytes": 255,
-        "gzipBytes": 263
+        "gzipBytes": 260
       },
       {
         "path": "inline:4",
         "bytes": 2962,
-        "gzipBytes": 1371
+        "gzipBytes": 1354
       },
       {
         "path": "inline:5",
         "bytes": 1187,
-        "gzipBytes": 577
+        "gzipBytes": 571
       },
       {
         "path": "inline:6",
         "bytes": 114,
-        "gzipBytes": 121
+        "gzipBytes": 122
       },
       {
         "path": "inline:7",
         "bytes": 355,
-        "gzipBytes": 249
+        "gzipBytes": 251
       },
       {
         "path": "inline:8",
         "bytes": 100,
-        "gzipBytes": 104
+        "gzipBytes": 101
       },
       {
         "path": "inline:9",
         "bytes": 2207,
-        "gzipBytes": 1018
+        "gzipBytes": 1009
       }
     ],
     "bytes": 102913,
-    "gzipBytes": 35184
+    "gzipBytes": 34937
   },
   "current": {
     "branch": "v2",
@@ -113,39 +113,39 @@
       {
         "path": "/js/main.js",
         "bytes": 23637,
-        "gzipBytes": 7522
+        "gzipBytes": 7434
       },
       {
         "path": "/js/runtime/index.mjs",
         "bytes": 2735,
-        "gzipBytes": 1060
+        "gzipBytes": 1058
       },
       {
         "path": "/js/stellar-icons.js",
         "bytes": 6354,
-        "gzipBytes": 2542
+        "gzipBytes": 2591
       },
       {
         "path": "/js/theme.js",
         "bytes": 1801,
-        "gzipBytes": 772
+        "gzipBytes": 774
       },
       {
         "path": "/js/utils.js",
         "bytes": 12082,
-        "gzipBytes": 3790
+        "gzipBytes": 3738
       },
       {
         "path": "inline:1",
         "bytes": 7527,
-        "gzipBytes": 3125
+        "gzipBytes": 3076
       }
     ],
     "bytes": 54136,
-    "gzipBytes": 18811
+    "gzipBytes": 18671
   },
   "metric": "sum of gzip-9 bytes for unconditional local first-screen scripts, inline executable scripts, and unconditional module imports",
   "minimumReduction": 0.3,
-  "reduction": 0.465354,
+  "reduction": 0.465581,
   "passed": true
 }

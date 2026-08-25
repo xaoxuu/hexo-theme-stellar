@@ -15,12 +15,9 @@ hexo.on('generateBefore', () => {
 });
 
 hexo.extend.filter.register("before_generate", () => {
-  // locals 已失效并从完整 source 库重建；内容配置只解析一次，
-  // 所有 Collection 派生树和 ViewModel 紧随其后消费同一份冻结结果。
-  require("./lib/content-config")(hexo);
-  require("./lib/doc_tree")(hexo);
-  require("./lib/topic_tree")(hexo);
-  require("./lib/notebooks")(hexo);
+  // locals 已失效并从完整 source 库重建；单一 Pipeline 依次完成配置解析、
+  // 内容发现、归属、Collection 状态、两阶段 ViewModel、聚合与路由投影。
+  require("../lib/collection-pipeline").runCollectionPipeline(hexo);
 }, 1);
 
 hexo.on('generateAfter', () => {

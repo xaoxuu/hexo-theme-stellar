@@ -429,3 +429,51 @@ test("生成前事件拒绝引用不存在 Notebook 的 Note", t => {
     locals: { get: key => collections[key] }
   }), /source\/notes\/missing\.md: 未找到 Notebook collection missing/);
 });
+
+test("stellar new note 路径可唯一推断 Notebook 且不要求重复归属字段", t => {
+  const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-inferred-notebook-"));
+  t.after(() => fs.rmSync(sourceDir, { recursive: true, force: true }));
+  fs.mkdirSync(path.join(sourceDir, "notebooks", "dev"), { recursive: true });
+  fs.writeFileSync(path.join(sourceDir, "notebooks", "dev", "hello.md"), "---\ndate: 2026-08-25 12:00\ntitle: Hello\ntags: [tools]\n---\n");
+
+  const note = {
+    _id: "inferred-note",
+    source: "notebooks/dev/hello.md",
+    path: "notebooks/dev/hello/",
+    permalink: "https://example.com/notebooks/dev/hello/",
+    title: "Hello",
+    layout: "page"
+  };
+  const data = {
+    "notebooks/dev": {
+      name: "Dev Notes",
+      route: { path: "notebooks/dev" }
+    }
+  };
+  const collections = {
+    posts: { each() {}, data: [] },
+    pages: { each: callback => callback(note), data: [note] },
+    data
+  };
+  const themeConfig = {
+    layout: { profiles: {
+      notebook_index: { path: "/notebooks/" },
+      note_index: {},
+      note: {}
+    } },
+    content: { notebook: { listing: {}, footer: {} } }
+  };
+  const context = {
+    source_dir: sourceDir,
+    config: { url: "https://example.com", theme_config: themeConfig },
+    theme: { config: themeConfig },
+    stellar: { config: parseStellarConfig({ themeConfig }) },
+    locals: { get: key => collections[key] }
+  };
+
+  processContentConfig(context);
+  processNotebooks(context);
+  assert.deepEqual(note.stellarConfig.collection, { profile: "notebook", id: "dev" });
+  assert.equal(note.viewModel.collection.id, "dev");
+  assert.equal(note.viewModel.item.title, "Hello");
+});
