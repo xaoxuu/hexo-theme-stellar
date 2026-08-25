@@ -33,6 +33,7 @@ giscus.json
 
 # ---- 开发工具（仅仓库内使用，不随包发布）----
 .agents/
+.claude/
 test/
 eslint.config.js
 ci/

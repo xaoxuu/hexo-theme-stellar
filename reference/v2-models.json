@@ -3604,7 +3604,7 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "alpha-1"
+          "example": "chapter-1"
         },
         {
           "path": "navigation.series[].path",
@@ -3621,7 +3621,7 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "posts/alpha-1"
+          "example": "posts/chapter-1"
         },
         {
           "path": "navigation.series[].title",
@@ -3638,7 +3638,7 @@
             "PageViewModel",
             "Reference generator"
           ],
-          "example": "Alpha 1"
+          "example": "Chapter 1"
         },
         {
           "path": "presentation",

@@ -27,7 +27,7 @@ Pre-alpha M1–M4 已交付严格 Schema、四类完整渲染消费链、Bluepri
 
 # 4. 预发布包与端到端门禁
 
-- `ci/check-alpha-integration.js` 在临时目录创建 `npm pack` tarball，并用 npm 把 tarball 安装到三个互相隔离的 Hexo 8 / Node.js 22 工程；不得通过主题源码或宿主 `node_modules` 软链接绕过包装边界。
+- `ci/check-package-integration.js` 在临时目录创建 `npm pack` tarball，并用 npm 把 tarball 安装到三个互相隔离的 Hexo 8 / Node.js 22 工程；不得通过主题源码或宿主 `node_modules` 软链接绕过包装边界。
 - 三套工程分别执行非交互 init、JSON doctor 和 generate；Classic Blog、Minimal Reading、Docs Reference 保持各自公开 starter 输出。
 - 集成 fixture 在生成计划之外为验收站点补入 Topic 与 Notebook 内容，使三站总体覆盖 post、wiki、topic、notebook。页面 HTML 必须带对应 profile/ViewModel 输出标志、合法 Runtime Manifest 和唯一 `type=module` runtime 入口。
 - 打包清单断言 Blueprint、Reference、Alpha 文档、EJS、Schema 与浏览器 runtime 存在，并拒绝 `test/`、`ci/`、`docs/knowledge/`、`.agents/` 和 lockfile。
@@ -37,7 +37,7 @@ Pre-alpha M1–M4 已交付严格 Schema、四类完整渲染消费链、Bluepri
 
 - 以同一最小 Classic Blog 输入分别构建固定 v1 基线（tag `1.44.0`）与当前 v2 tarball。
 - “首屏核心 JS”固定为首页 HTML 中无条件输出的本地 script/module 资源；dynamic import、selector 未命中的 Extension、搜索和数据服务不计入首屏核心。每个唯一资源按生成产物 gzip level 9 后求和，内联可执行脚本按同一规则计入。
-- 生成 `reference/v2-alpha-performance.json`，登记基线 tag、资源清单、gzip 字节和降幅；阈值固定为至少 30%。统计与检查共享同一实现，未达标时 Alpha 集成命令失败且 Alpha 1 保持未完成。
+- 生成 `test/fixtures/performance-baseline.json`，登记基线 tag、资源清单、gzip 字节和降幅；阈值固定为至少 30%。统计与检查共享同一实现，未达标时 Alpha 集成命令失败且 Alpha 1 保持未完成。
 
 # 6. 版本与边界
 

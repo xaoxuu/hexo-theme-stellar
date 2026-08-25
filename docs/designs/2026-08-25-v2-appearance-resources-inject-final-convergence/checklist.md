@@ -12,5 +12,5 @@ date: 2026-08-25
 - [x] SEO 与 `resources.preconnect` 配置和输出未改变。
 - [x] 最终旧字段与退出能力扫描通过。
 - [x] Node.js 22 下 `npm run check` 通过（376/376）。
-- [x] Node.js 22 下 `npm run alpha:check` 通过（三套 tarball 站点）。
+- [x] Node.js 22 下 `npm run integration:check` 通过（三套 tarball 站点）。
 - [x] 主工程 Node.js 22 下 `npm run g` 与目标页面抽查通过（261 个文件，搜索索引 112 条）。

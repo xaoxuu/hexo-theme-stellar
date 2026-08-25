@@ -190,14 +190,14 @@ flowchart LR
 - 用正则解析 `{% image <url> %}` 标签
 - 标签已含 `ratio:` 时直接存入缓存，不做网络访问
 - 否则用 `probe-image-size` 经 HTTP 获取图片尺寸
-- 每次探测后增量写入 `scripts/.cache/image-ratios.json`，避免中断丢数据
+- 每次探测后增量写入被 gitignore 忽略的 scripts 缓存目录中的 image-ratios.json，避免中断丢数据
 - 每次运行清理不再被 Markdown 引用的陈旧缓存条目
 
 **参考源码**：[scripts/events/lib/get_image_ratios.js](../../../scripts/events/lib/get_image_ratios.js)
 
 ### 阶段 2——`fix_image_tags.js`
 
-- 读取 `scripts/.cache/image-ratios.json`
+- 读取上述运行时生成的 image-ratios.json 缓存
 - 对每个无 `ratio:` 参数的 `{% image %}` 标签原位注入 `ratio:W/H`
 - 把修改后的 Markdown 文件写回磁盘
 
@@ -299,15 +299,15 @@ resources:
 
 ---
 
-## Alpha 首屏核心 JS 门禁
+## 候选包首屏核心 JS 门禁
 
 M5 用固定 Classic Blog 输入分别构建 tag `1.44.0` 与当前 v2 npm tarball。统计口径是首页无条件输出的本地 script、可执行 inline script 以及 ESM 入口的静态 import；dynamic import、selector 未命中的 Extension 和第三方资源不计入核心集合。每个唯一资源使用 Node.js 22 的 gzip level 9 后求和，避免不同 Node/zlib 版本造成基线漂移。
 
-结果记录在 [reference/v2-alpha-performance.json](../../../reference/v2-alpha-performance.json)：v1 为 34,937 bytes，`2.0.0-alpha.1` 候选 tarball 为 18,671 bytes，降低 46.5581%，通过至少 30% 的门禁。`npm run alpha:performance` 会重新构建两边并逐字节检查记录，已纳入 `npm run check`。
+结果记录在 [test/fixtures/performance-baseline.json](../../../test/fixtures/performance-baseline.json)：v1 为 34,937 bytes，当前 v2 本地候选 tarball 为 18,671 bytes，降低 46.5581%，通过至少 30% 的门禁。`npm run performance:check` 会重新构建两边并逐字节检查记录，已纳入 `npm run check`；该基线是开发测试资料，不进入 npm 包。
 
 本次下降不是删除功能：`/js/icons.js` 与 `/js/plugins/dropdown.js` 从全页无条件 script 改为 Runtime Manifest 中的 `svg.icon[data-icon]` / `details.dropdown` selector Extension；命中页面仍加载原脚本，未命中页面不再支付首屏核心成本。
 
-**参考源码**：[ci/check-alpha-performance.js](../../../ci/check-alpha-performance.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[layout/_partial/scripts.ejs](../../../layout/_partial/scripts.ejs)、[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+**参考源码**：[ci/check-performance.js](../../../ci/check-performance.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[layout/_partial/scripts.ejs](../../../layout/_partial/scripts.ejs)、[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
 ## 汇总表
 

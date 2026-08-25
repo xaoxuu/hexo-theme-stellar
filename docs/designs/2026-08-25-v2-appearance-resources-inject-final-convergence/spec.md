@@ -28,5 +28,5 @@ Appearance 仍公开重复字体、主题色旧命名、渐变角度和带 CSS �
 - Schema 正反例、默认值、级联、camelCase、封闭边界、doctor 与真实 CSS/EJS 消费链测试通过。
 - Error Page、Background、Highlight 与 trusted inject 有生成结果断言。
 - Reference、Blueprint、内部知识库、公开 Wiki 和主站覆盖一致。
-- Node.js 22 下 `npm run check`、`npm run alpha:check` 与主工程 `npm run g` 通过。
+- Node.js 22 下 `npm run check`、`npm run integration:check` 与主工程 `npm run g` 通过。
 - 最终扫描无旧字段、AI Summary、MathJax v2、旧 Mermaid CSS 和失效标签参数残留；SEO 与 preconnect 不变。

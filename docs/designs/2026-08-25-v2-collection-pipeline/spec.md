@@ -73,4 +73,4 @@ M2 已让 Post、Wiki、Topic、Notebook 输出同构 ViewModel，但构建编�
 - Pipeline 的内容发现和 Collection 分组为 O(P + C)，测试以访问计数证明不按 Collection 重扫全部内容。
 - Topic/Notebook two-stage、Wiki/Notebook 标签过滤与分页输入共用真实纯函数接缝。
 - `stellar new note` 覆盖 dry-run、真实写入、tags、未知 Notebook、冲突、路径安全、最小 Front Matter、doctor 与 generate。
-- `npm run check`、`npm run alpha:check`、知识库核查和主工程 `npm run g` 通过；Standards / Spec 复审无剩余 finding。
+- `npm run check`、`npm run integration:check`、知识库核查和主工程 `npm run g` 通过；Standards / Spec 复审无剩余 finding。

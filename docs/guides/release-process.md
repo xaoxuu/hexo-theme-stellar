@@ -7,6 +7,8 @@
 
 Stellar 发版一键全自动：AI/人工提前准备 CHANGELOG 章节，Node 脚本校验非空并更新版本号后推送，CI 在 npm 分支推送后自动完成 npm 发布、tag 创建与 GitHub Release 创建。
 
+Stellar v2 的 Alpha、Beta 只表示内部工程成熟度，不进入本流程，也不会自动修改 npm dist-tag、创建 Git tag 或 GitHub Release。发版脚本可以读取开发分支的内部候选 SemVer；稳定版或 RC 是否实际发布由维护者决定。
+
 ```
 npm run release → push main + npm → CI 自动触发 → npm publish + git tag + GitHub Release
 ```
@@ -91,5 +93,6 @@ npm run release:dry -- 1.34.1
 ## 版本号规范
 
 - 格式: `x.y.z` 或 `x.y.z-rc.n`
+- `alpha` / `beta` 不是可发布版本格式，只用于内部里程碑叙述
 - Tag 格式: 不带 `v` 前缀（如 `1.34.1`，非 `v1.34.1`）
 - 版本号由调用者显式传入，脚本不做自动推导

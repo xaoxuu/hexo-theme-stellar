@@ -39,4 +39,4 @@ issue: 732
 
 - 正反例覆盖默认、自定义、关闭、未知 provider、旧字段与未选参数袋。
 - 相关标签、贡献者 URL、GitHub Card URL 与 Runtime Manifest 输出保持不变。
-- 主题 `npm run check`、`npm run alpha:check` 与主工程 `npm run g` 通过。
+- 主题 `npm run check`、`npm run integration:check` 与主工程 `npm run g` 通过。

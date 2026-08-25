@@ -71,4 +71,4 @@ Card Hover 作为一个已有且可独立验证的简单 Feature，迁入独立 
 - Card Hover 作为独立 adapter 只在贡献注册表登记一次，浏览器行为回归通过。
 - 正例注册表通过六类一致性检查，每类失败都有负向单测。
 - 贡献指南的七类维护面可从当前代码和命令复现。
-- `npm run check`、`npm run alpha:check`、知识库核查和主工程 `npm run g` 通过；Standards / Spec 复审无剩余 finding。
+- `npm run check`、`npm run integration:check`、知识库核查和主工程 `npm run g` 通过；Standards / Spec 复审无剩余 finding。

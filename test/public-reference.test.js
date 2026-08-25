@@ -36,7 +36,7 @@ test("公开配置 Reference 覆盖每个 Schema 字段的完整注解", () => {
 
 test("配置字段审计稳定覆盖当前与退出字段", () => {
   const audit = configAuditMarkdown(generateConfigFieldAudit());
-  assert.equal(fs.readFileSync(path.join(ROOT, "reference/v2-config-audit.md"), "utf8"), audit);
+  assert.equal(fs.readFileSync(path.join(ROOT, "docs/audits/2026-08-24-v2-config-field-audit.md"), "utf8"), audit);
   assert.match(audit, /extensions\.cache/);
   assert.match(audit, /internalize/);
   assert.match(audit, /localize/);
@@ -54,8 +54,8 @@ test("公开模型与 Blueprint Reference 稳定来自机器契约", () => {
   assert.match(blueprints, /--non-interactive/);
 });
 
-test("公开 Reference 与 Alpha 文档的仓库内链接和锚点有效", () => {
+test("公开 Reference 的仓库内链接和锚点有效", () => {
   const files = validatePublicReferenceLinks(ROOT);
-  assert.ok(files.some(file => file.endsWith("ALPHA.md")));
+  assert.equal(files.some(file => file.endsWith("ALPHA.md")), false);
   assert.ok(files.some(file => file.endsWith("reference/README.md")));
 });

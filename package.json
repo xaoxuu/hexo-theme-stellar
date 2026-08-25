@@ -9,9 +9,9 @@
     "contributions:check": "node ci/check-contributions.js && node scripts/generate-reference.js --check",
     "reference:generate": "node scripts/generate-reference.js",
     "reference:check": "node scripts/generate-reference.js --check",
-    "alpha:check": "node ci/check-alpha-integration.js",
-    "alpha:performance": "node ci/check-alpha-performance.js --check",
-    "check": "npm run lint && npm test && npm run reference:check && npm run alpha:performance && python3 docs/knowledge/tools/verify.py && node ci/check-release-docs.js",
+    "integration:check": "node ci/check-package-integration.js",
+    "performance:check": "node ci/check-performance.js --check",
+    "check": "npm run lint && npm test && npm run reference:check && npm run performance:check && python3 docs/knowledge/tools/verify.py && node ci/check-release-docs.js",
     "release": "node release.js",
     "release:dry": "node release.js --dry-run"
   },

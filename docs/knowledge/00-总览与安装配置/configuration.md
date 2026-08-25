@@ -656,7 +656,7 @@ flowchart TD
 
 v2 不公开 `system`、`cache` 或 `language_switcher` 兼容根。规范 URL 策略由构建集成固定；官方资源、固定 provider、request/cache 策略与交互计时由 `scripts/lib/internal-constants.js` 统一所有。Hexo 自有配置仍归 `hexo.config`，不会复制进主题配置。图标、Widget、作者、链接、Collection 树等运行时数据统一位于 `hexo.stellar.data`，不会回写 `theme.config`。
 
-配置 Reference 同时生成 [`reference/v2-config-audit.md`](../../../reference/v2-config-audit.md)，对每个当前字段和 M6 退出字段标注 `public/localize/derive/internalize/remove`，作为公开配置边界的机器可核查证据。
+配置工程同时生成 [`docs/audits/2026-08-24-v2-config-field-audit.md`](../../../docs/audits/2026-08-24-v2-config-field-audit.md)，对每个当前字段和 M6 退出字段标注 `public/localize/derive/internalize/remove`，作为仓库内部的机器可核查证据，不进入公开 Reference 或 npm 包。
 
 **参考源码**：[scripts/events/lib/config.js](../../../scripts/events/lib/config.js)、[scripts/lib/runtime-data.js](../../../scripts/lib/runtime-data.js)、[scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)、[scripts/lib/config-field-audit.js](../../../scripts/lib/config-field-audit.js)
 

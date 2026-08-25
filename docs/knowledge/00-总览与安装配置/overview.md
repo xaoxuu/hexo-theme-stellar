@@ -361,9 +361,9 @@ Stellar 通过 npm 以 `hexo-theme-stellar` 分发，采用 MIT 协议开源。
 
 Pre-alpha M3 还提供 `stellar init` 与 `stellar doctor`：前者从三套 Blueprint 和两套 Visual Style 生成一次性的显式站点文件，后者复用 v2 Schema 只读检查环境与配置。Blueprint 不进入页面运行时，也不会成为新的配置根；机器可读契约位于 `reference/v2-blueprints.json`。
 
-Pre-alpha M9 完成默认内容体验：空配置或缺少 `_config.stellar.yml` 的普通 Post/Page 可直接生成，Wiki/Topic/Notebook 只在唯一候选时推断归属；三套 Blueprint 只保留产品差异，默认 Visual Style 是空覆盖，starter Markdown 不要求可选 Stellar 元数据。npm tarball 门禁在三个 Blueprint 站点和一个无 init 默认站点验证 doctor → generate。`2.0.0-alpha.1` 的最小使用与不稳定范围见根目录 `ALPHA.md`；完整产品首页、学习路径、v1 归档和迁移/SEO 跳转仍属于 Beta。
+Pre-alpha M9 完成默认内容体验：空配置或缺少 `_config.stellar.yml` 的普通 Post/Page 可直接生成，Wiki/Topic/Notebook 只在唯一候选时推断归属；三套 Blueprint 只保留产品差异，默认 Visual Style 是空覆盖，starter Markdown 不要求可选 Stellar 元数据。本地候选 tarball 门禁在三个 Blueprint 站点和一个无 init 默认站点验证 doctor → generate。Alpha、Beta 只是内部成熟度里程碑，不会发布 npm 版本、tag 或 GitHub Release；完整产品首页、学习路径、v1 归档和迁移/SEO 跳转仍由后续里程碑交付。
 
-**参考源码**：[package.json](../../../package.json)、[ALPHA.md](../../../ALPHA.md)、[reference/](../../../reference/)、[blueprints/](../../../blueprints/)、[scripts/commands/stellar.js](../../../scripts/commands/stellar.js)、[scripts/lib/theme-metadata.js](../../../scripts/lib/theme-metadata.js)、[README.md](../../../README.md)
+**参考源码**：[package.json](../../../package.json)、[reference/](../../../reference/)、[blueprints/](../../../blueprints/)、[ci/check-package-integration.js](../../../ci/check-package-integration.js)、[scripts/commands/stellar.js](../../../scripts/commands/stellar.js)、[scripts/lib/theme-metadata.js](../../../scripts/lib/theme-metadata.js)、[README.md](../../../README.md)
 
 ---
 

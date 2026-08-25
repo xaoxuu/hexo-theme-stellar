@@ -383,14 +383,14 @@ graph LR
     
     PKG["package.json"]
     VER --> PKG
-    PKG --> NPM["npm registry"]
+    PKG --> CANDIDATE["本地候选 tarball"]
     PKG --> FOOTER["stellar_info() / Footer"]
     PKG --> DOCS["Documentation links"]
 ```
 
-- **package.json**：`"version": "2.0.0-alpha.1"`，供 npm 分发使用
+- **package.json**：`"version": "2.0.0-alpha.1"`，当前仅作为 v2 本地候选 tarball 的 SemVer 字符，不发布到 npm
 
-版本号遵循 SemVer `MAJOR.MINOR.PATCH`，预发布版可带 `-alpha.N`、`-beta.N` 或 `-rc.N`；发版脚本同步 package 版本到安装知识库，不再修改主题配置。
+版本号遵循 SemVer `MAJOR.MINOR.PATCH`。Alpha、Beta 只是 v2 项目的内部里程碑，不进入正式发版流程；发版脚本只接受稳定版或 `-rc.N`，并同步 package 版本到安装知识库。
 
 ### 更新主题
 
@@ -401,7 +401,7 @@ npm update hexo-theme-stellar
 或指定版本：
 
 ```bash
-npm install hexo-theme-stellar@2.0.0-alpha.1
+npm install hexo-theme-stellar@1.44.0
 ```
 
 更新后请重新生成站点：

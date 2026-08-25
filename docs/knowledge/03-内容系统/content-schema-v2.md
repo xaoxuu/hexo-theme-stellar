@@ -146,13 +146,13 @@ Galaxy 的路径为 `hero.background.effect.options`，其 React Bits props 保�
 
 ## Reference 元数据
 
-Pre-alpha M1 建立机器元数据接缝，M5 再把同一份数据接入公开 Reference 与 Alpha 验收：
+Pre-alpha M1 建立机器元数据接缝，M5 再把同一份数据接入公开 Reference 与本地候选包验收：
 
 - 模型事实来源是 `scripts/schema/model-schema.js`；Collection / Front Matter 输入事实来源是 `scripts/schema/config-target.js` 与由它投影的 `scripts/schema/content-config-schema.js`。
 - 每个已交付字段均带类型、默认值语义、作用域、当前消费方和最小示例。动态默认值用 `derived`、`inherited` 或 `computed` 描述，不伪造固定字面量。
 - `scripts/lib/models/` 在冻结模型前使用同一 Schema 拒绝缺失字段、未声明字段和错误类型，避免实现与 Reference 漂移。
 - `npm run reference:generate` 稳定生成 `reference/v2-models.json`、`reference/v2-config.json`、`reference/v2-blueprints.json` 及对应 Markdown 字段页；配置 Reference 已包含 delivered 的 Theme、Collection 与 Front Matter 作用域并排除 Hexo 自有字段，Blueprint Reference 登记三套 Blueprint、两套 Visual Style、封闭 manifest、安全相对路径/唯一目标/物理根包含约束与 CLI 选项。
-- `reference/README.md` 是 npm tarball 与 GitHub 中的公开入口，`ALPHA.md` 提供最小安装/init/doctor 路径和未稳定范围。Markdown、JSON、相对链接与锚点由 `npm run reference:check` 一起阻止漂移，不存在手写的第二套字段表。
+- `reference/README.md` 是 npm tarball 与 GitHub 中的公开契约入口；环境、安装、init、doctor 与人工验收步骤保留在 M10 内部验收资料，不随 npm 包发布。Markdown、JSON、相对链接与锚点由 `npm run reference:check` 一起阻止漂移，不存在手写的第二套字段表。
 - 第三方评论参数袋、widget 对象和 effect options 保持开放对象边界；元数据不复制上游字段表。
 
 模型 Reference 仍不混入 Blueprint、CLI、布局原语或 Extension Schema；Blueprint/CLI 使用独立的 `v2-blueprints.json` / `v2-blueprints.md`，五类原语是内部 EJS 契约。`ContentItemModel.layout` 是 #695–#698 已交付的模型字段。

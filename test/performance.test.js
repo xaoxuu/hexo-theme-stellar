@@ -4,9 +4,9 @@
 const { test } = require("node:test");
 const assert = require("node:assert/strict");
 
-const { moduleImports } = require("../ci/check-alpha-performance");
+const { moduleImports } = require("../ci/check-performance");
 
-test("Alpha 性能口径只递归静态 import，不把 dynamic import 计入核心集合", () => {
+test("性能口径只递归静态 import，不把 dynamic import 计入核心集合", () => {
   const source = [
     "import './side-effect.mjs';",
     "import { value } from './static.mjs';",

@@ -26,7 +26,7 @@ issue: 723
 ## 验证
 
 - [x] `npm run check` 通过：lint、395 项测试、Reference、首屏 gzip 46.5581%、知识库与提交登记均通过。
-- [x] `npm run alpha:check` 三套 tarball 集成通过；minimal-reading 真实执行 `stellar new note` 后通过 doctor 与 generate。
+- [x] `npm run integration:check` 三套 tarball 集成通过；minimal-reading 真实执行 `stellar new note` 后通过 doctor 与 generate。
 - [x] `python3 docs/knowledge/tools/verify.py` 硬门禁通过：行号与版本异常均为 0；既有软提示保持可见。
 - [x] 主工程 `npm run g` 通过，生成 261 个文件；Post / Wiki / Topic 真实内容正常，Notebook 由 Alpha fixture 覆盖。
 - [x] Standards / Spec 双轴自审无剩余 finding；复审中修正 Wiki/Notebook adapter 二次读取全量 pages 的偏差。

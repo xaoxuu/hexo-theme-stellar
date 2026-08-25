@@ -17,7 +17,7 @@ date: 2026-08-25
 ## 验证
 
 - [x] Node.js 22 `npm run check` 通过（411 项测试）。
-- [x] Node.js 22 `npm run alpha:check` 通过三套 Blueprint 与默认空配置站点。
+- [x] Node.js 22 `npm run integration:check` 通过三套 Blueprint 与默认空配置站点。
 - [x] 主工程 `npm run g` 全量构建通过（262 个文件）。
 - [x] `python3 docs/knowledge/tools/verify.py`、Reference 与首屏性能门禁通过（gzip 降幅 46.5581%）。
 - [x] Standards / Spec 最终自审无剩余 finding。

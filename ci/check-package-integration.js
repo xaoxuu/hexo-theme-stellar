@@ -42,7 +42,7 @@ function createSite(root) {
     hexo: { version: "8.1.2" }
   }, null, 2)}\n`);
   write(root, "_config.yml", [
-    "title: Stellar Alpha Integration",
+    "title: Stellar Package Integration",
     "subtitle: Installed from an npm tarball",
     "author: Stellar",
     "language: zh-CN",
@@ -55,19 +55,19 @@ function createSite(root) {
 }
 
 function addTopicFixture(root) {
-  write(root, "source/_data/topic/alpha.yml", [
-    "name: Alpha Topic",
-    "headline: Alpha Topic",
+  write(root, "source/_data/topic/integration.yml", [
+    "name: Integration Topic",
+    "headline: Integration Topic",
     "description: Topic ViewModel integration fixture.",
     "route:",
-    "  start: alpha-topic",
+    "  start: integration-topic",
     "article:",
     "  style: tech",
     ""
   ].join("\n"));
-  write(root, "source/_posts/alpha-topic.md", [
+  write(root, "source/_posts/integration-topic.md", [
     "---",
-    "title: Alpha Topic Post",
+    "title: Integration Topic Post",
     "date: 2026-08-23 08:00",
     "---",
     "",
@@ -77,30 +77,30 @@ function addTopicFixture(root) {
 }
 
 function addNotebookFixture(root, hexo) {
-  write(root, "source/_data/notebooks/alpha.yml", [
-    "name: Alpha Notebook",
+  write(root, "source/_data/notebooks/integration.yml", [
+    "name: Integration Notebook",
     "description: Notebook ViewModel integration fixture.",
     "route:",
-    "  path: notes/alpha",
+    "  path: notes/integration",
     "navigation:",
     "  menu: post",
     ""
   ].join("\n"));
   const args = [
     "stellar", "new", "note",
-    "--notebook", "alpha",
-    "--title", "Alpha Notebook Note",
+    "--notebook", "integration",
+    "--title", "Integration Notebook Note",
     "--tags", "integration/runtime"
   ];
   const dryRun = run(hexo, [...args, "--dry-run"], { cwd: root });
-  if (!dryRun.includes("source/notebooks/alpha/Alpha Notebook Note.md")) {
+  if (!dryRun.includes("source/notebooks/integration/Integration Notebook Note.md")) {
     throw new Error("minimal-reading: stellar new note dry-run missing planned target");
   }
-  const file = path.join(root, "source/notebooks/alpha/Alpha Notebook Note.md");
+  const file = path.join(root, "source/notebooks/integration/Integration Notebook Note.md");
   if (fs.existsSync(file)) throw new Error("minimal-reading: stellar new note dry-run wrote a file");
   run(hexo, args, { cwd: root });
   const generated = fs.readFileSync(file, "utf8");
-  if (/collection:|profile: notebook|\nid: alpha/.test(generated)) {
+  if (/collection:|profile: notebook|\nid: integration/.test(generated)) {
     throw new Error("minimal-reading: stellar new note wrote redundant Collection ownership");
   }
   fs.appendFileSync(file, "Notebook profile integration marker.\n", "utf8");
@@ -109,7 +109,7 @@ function addNotebookFixture(root, hexo) {
 function expectedPages(blueprint) {
   if (blueprint === "classic-blog") {
     return [
-      { path: "public/blog/2026/08/23/alpha-topic/index.html", marker: "Topic profile integration marker.", profile: "topic" },
+      { path: "public/blog/2026/08/23/integration-topic/index.html", marker: "Topic profile integration marker.", profile: "topic" },
       { marker: "Your first Stellar page", profile: "post" }
     ];
   }
@@ -134,7 +134,7 @@ function hasProfileOutput(html, profile) {
   }
   if (profile === "topic") {
     return /<div class="l_body content" id="start" layout="post"/.test(html)
-      && /<a class="cap breadcrumb" id="proj"[^>]*>Alpha Topic<\/a>/.test(html);
+      && /<a class="cap breadcrumb" id="proj"[^>]*>Integration Topic<\/a>/.test(html);
   }
   if (profile === "wiki") {
     return /<div class="l_body content" id="start" layout="page"/.test(html)
@@ -142,7 +142,7 @@ function hasProfileOutput(html, profile) {
   }
   if (profile === "notebook") {
     return /<div class="l_body content" id="start" layout="page"/.test(html)
-      && /<a class="cap breadcrumb"[^>]*>Alpha Notebook<\/a>/.test(html);
+      && /<a class="cap breadcrumb"[^>]*>Integration Notebook<\/a>/.test(html);
   }
   if (profile === "page") {
     return /<div class="l_body content" id="start" layout="page"/.test(html);
@@ -179,7 +179,6 @@ function assertRuntime(html, relative, profile) {
 function assertPackageFiles(pack) {
   const files = new Set(pack.files.map(item => item.path));
   const required = [
-    "ALPHA.md",
     "reference/README.md",
     "reference/v2-config.json",
     "reference/v2-config.md",
@@ -187,7 +186,6 @@ function assertPackageFiles(pack) {
     "reference/v2-models.md",
     "reference/v2-blueprints.json",
     "reference/v2-blueprints.md",
-    "reference/v2-alpha-performance.json",
     "blueprints/classic-blog/manifest.json",
     "blueprints/minimal-reading/manifest.json",
     "blueprints/docs-reference/manifest.json",
@@ -198,7 +196,18 @@ function assertPackageFiles(pack) {
   for (const file of required) {
     if (!files.has(file)) throw new Error(`npm tarball missing ${file}`);
   }
-  const forbidden = ["test/", "ci/", "docs/", ".agents/", "package-lock.json"];
+  const forbidden = [
+    "test/",
+    "ci/",
+    "docs/",
+    ".agents/",
+    ".claude/",
+    "scripts/.cache/",
+    "package-lock.json",
+    "ALPHA.md",
+    "reference/v2-config-audit",
+    "reference/v2-alpha-performance"
+  ];
   for (const file of files) {
     if (forbidden.some(prefix => file === prefix || file.startsWith(prefix))) {
       throw new Error(`npm tarball includes development file ${file}`);
@@ -207,7 +216,9 @@ function assertPackageFiles(pack) {
 }
 
 function packTheme(root) {
-  const output = run("npm", ["pack", "--json", "--pack-destination", root]);
+  const output = run("npm", ["pack", "--json", "--pack-destination", root], {
+    env: { npm_config_cache: path.join(root, "npm-cache") }
+  });
   const result = JSON.parse(output);
   if (!Array.isArray(result) || result.length !== 1) throw new Error("npm pack did not return one package");
   assertPackageFiles(result[0]);
@@ -225,7 +236,7 @@ function checkSite(root, blueprint, tarball) {
     "--package-lock=false",
     ...INSTALL_PACKAGES,
     tarball
-  ], { cwd: root });
+  ], { cwd: root, env: { npm_config_cache: path.join(root, "npm-cache") } });
   const hexo = path.join(root, "node_modules", ".bin", "hexo");
   run(hexo, ["stellar", "init", "--blueprint", blueprint, "--non-interactive"], { cwd: root });
   if (blueprint === "classic-blog") addTopicFixture(root);
@@ -284,7 +295,7 @@ function checkDefaultSite(root, tarball) {
     "--package-lock=false",
     ...INSTALL_PACKAGES,
     tarball
-  ], { cwd: root });
+  ], { cwd: root, env: { npm_config_cache: path.join(root, "npm-cache") } });
   const hexo = path.join(root, "node_modules", ".bin", "hexo");
   if (fs.existsSync(path.join(root, "_config.stellar.yml"))) {
     throw new Error("default-content: fixture must not contain _config.stellar.yml");
@@ -307,24 +318,24 @@ function checkDefaultSite(root, tarball) {
 
 function main() {
   if (process.versions.node.split(".")[0] !== "22") {
-    throw new Error(`Alpha integration requires Node.js 22, got ${process.versions.node}`);
+    throw new Error(`Package integration requires Node.js 22, got ${process.versions.node}`);
   }
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-alpha-integration-"));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-package-integration-"));
   try {
     const tarball = packTheme(root);
     const selectedId = process.argv.find(argument => argument.startsWith("--blueprint="))?.slice(12)
-      || process.env.STELLAR_ALPHA_BLUEPRINT;
+      || process.env.STELLAR_INTEGRATION_BLUEPRINT;
     const selected = selectedId
       ? BLUEPRINTS.filter(blueprint => blueprint === selectedId)
       : BLUEPRINTS;
-    if (selected.length === 0) throw new Error(`Unknown Alpha integration Blueprint: ${selectedId}`);
+    if (selected.length === 0) throw new Error(`Unknown integration Blueprint: ${selectedId}`);
     for (const blueprint of selected) {
       checkSite(path.join(root, blueprint), blueprint, tarball);
     }
     checkDefaultSite(path.join(root, "default-content"), tarball);
-    process.stdout.write(`Alpha package integration passed: ${path.basename(tarball)}\n`);
+    process.stdout.write(`Package integration passed: ${path.basename(tarball)}\n`);
   } finally {
-    if (process.env.STELLAR_KEEP_ALPHA_FIXTURE === "1" || process.argv.includes("--keep")) {
+    if (process.env.STELLAR_KEEP_INTEGRATION_FIXTURE === "1" || process.argv.includes("--keep")) {
       process.stdout.write(`Kept integration fixture: ${root}\n`);
     } else {
       fs.rmSync(root, { recursive: true, force: true });

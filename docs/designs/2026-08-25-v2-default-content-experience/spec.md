@@ -46,6 +46,6 @@ status: 已通过
 ## 4. 验证方式
 
 - Node.js 22 下 `npm run check`，包含纯函数、doctor、Blueprint 与默认 ViewModel/Runtime 测试。
-- `npm run alpha:check`：三套 Blueprint tarball，加一套不运行 init、无 `_config.stellar.yml` 的默认站点。
+- `npm run integration:check`：三套 Blueprint tarball，加一套不运行 init、无 `_config.stellar.yml` 的默认站点。
 - 主工程 `npm run g`，检查首页、普通文章、普通 Page、Wiki、Topic、Notebook 与 Runtime Manifest。
 - `npm run reference:check`、知识库硬事实核查、首屏性能门禁与 Standards / Spec 最终自审。

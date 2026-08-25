@@ -21,12 +21,12 @@ const ROOT = path.resolve(__dirname, "..");
 const MODEL_OUTPUT = path.join(ROOT, "reference/v2-models.json");
 const CONFIG_OUTPUT = path.join(ROOT, "reference/v2-config.json");
 const BLUEPRINT_OUTPUT = path.join(ROOT, "reference/v2-blueprints.json");
-const CONFIG_AUDIT_OUTPUT = path.join(ROOT, "reference/v2-config-audit.json");
+const CONFIG_AUDIT_OUTPUT = path.join(ROOT, "docs/audits/2026-08-24-v2-config-field-audit.json");
 const INDEX_OUTPUT = path.join(ROOT, "reference/README.md");
 const MODEL_MARKDOWN_OUTPUT = path.join(ROOT, "reference/v2-models.md");
 const CONFIG_MARKDOWN_OUTPUT = path.join(ROOT, "reference/v2-config.md");
 const BLUEPRINT_MARKDOWN_OUTPUT = path.join(ROOT, "reference/v2-blueprints.md");
-const CONFIG_AUDIT_MARKDOWN_OUTPUT = path.join(ROOT, "reference/v2-config-audit.md");
+const CONFIG_AUDIT_MARKDOWN_OUTPUT = path.join(ROOT, "docs/audits/2026-08-24-v2-config-field-audit.md");
 
 function writeOrCheck(output, expected, message, check) {
   if (check) {
@@ -49,7 +49,6 @@ function generateReference(options = {}) {
         [INDEX_OUTPUT, referenceIndexMarkdown(), "reference/README.md 与公开 Reference 索引不一致"],
         [MODEL_MARKDOWN_OUTPUT, modelReferenceMarkdown(), "reference/v2-models.md 与模型 Schema 不一致"],
         [CONFIG_MARKDOWN_OUTPUT, configReferenceMarkdown(), "reference/v2-config.md 与配置 Schema 不一致"],
-        [CONFIG_AUDIT_MARKDOWN_OUTPUT, configAuditMarkdown(), "reference/v2-config-audit.md 与配置审计不一致"],
         [BLUEPRINT_MARKDOWN_OUTPUT, blueprintReferenceMarkdown(), "reference/v2-blueprints.md 与 Blueprint Schema/manifest 不一致"]
       ];
   writeOrCheck(
@@ -78,7 +77,13 @@ function generateReference(options = {}) {
     writeOrCheck(
       configAuditOutput,
       stringifyConfigFieldAudit(),
-      "reference/v2-config-audit.json 与配置审计不一致，请运行 npm run reference:generate",
+      "docs/audits/2026-08-24-v2-config-field-audit.json 与配置审计不一致，请运行 npm run reference:generate",
+      options.check
+    );
+    writeOrCheck(
+      CONFIG_AUDIT_MARKDOWN_OUTPUT,
+      configAuditMarkdown(),
+      "docs/audits/2026-08-24-v2-config-field-audit.md 与配置审计不一致，请运行 npm run reference:generate",
       options.check
     );
   }

@@ -366,12 +366,12 @@ function collectionSchema(profile) {
   }
   if (profile === "topic") {
     const seriesItem = object({
-      id: field("string", { default: derived("page._id", "page.path"), example: "alpha-1", required: true }),
-      title: field("string", { default: literal(""), example: "Alpha 1", required: true }),
-      path: field("string", { default: literal(""), example: "posts/alpha-1", required: true }),
+      id: field("string", { default: derived("page._id", "page.path"), example: "chapter-1", required: true }),
+      title: field("string", { default: literal(""), example: "Chapter 1", required: true }),
+      path: field("string", { default: literal(""), example: "posts/chapter-1", required: true }),
       date: field(["string", "null"], { default: literal(null), example: "2026-08-22T00:00:00.000Z", required: true }),
       current: field("boolean", { default: literal(false), example: true, required: true })
-    }, { example: { id: "alpha-1", title: "Alpha 1", path: "posts/alpha-1", date: "2026-08-22T00:00:00.000Z", current: true } });
+    }, { example: { id: "chapter-1", title: "Chapter 1", path: "posts/chapter-1", date: "2026-08-22T00:00:00.000Z", current: true } });
     navigationExtension.series = array(seriesItem, { example: [], required: true });
   }
   if (profile === "notebook") {

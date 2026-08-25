@@ -27,7 +27,7 @@ issue: 725
 - [x] 贡献指南覆盖配置、内容 profile、服务端功能、UI 组件、浏览器 Extension、标签插件和语言文案。
 - [x] Card Hover 演练从实现、descriptor、Schema、测试到文档可复现。
 - [x] Node.js 22 `npm run check` 通过：lint、400 项测试、Contribution/Reference、首屏 gzip 46.5581%、知识库与提交登记均通过。
-- [x] `npm run alpha:check` 三套 npm tarball 的 init → doctor → generate 全部通过。
+- [x] `npm run integration:check` 三套 npm tarball 的 init → doctor → generate 全部通过。
 - [x] 主工程 `npm run g` 通过，Hexo 生成 262 个文件并完成压缩；实际 HTML 投影独立 Card Hover ESM。
 - [x] Standards / Spec 双轴复审无剩余 finding；复审中修正旧 `runtime.modules` 测试成为真实 descriptor 所有权断言，并保留 Card Hover `config.feature` Manifest 形状。
 - [x] 公开配置、URL、DOM、CSS、语言文案、Runtime Manifest 格式、迁移/SEO 跳转、npm 发布与 tag 均为 N/A。

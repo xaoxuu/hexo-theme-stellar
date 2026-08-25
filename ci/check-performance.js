@@ -152,7 +152,7 @@ function extractCurrentTarball(root) {
 }
 
 function buildReport() {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-alpha-performance-"));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-performance-"));
   try {
     const baselineTheme = extractBaseline(root);
     const currentTheme = extractCurrentTarball(root);
@@ -179,15 +179,15 @@ function buildReport() {
 
 function main() {
   if (process.versions.node.split(".")[0] !== "22") {
-    throw new Error(`Alpha performance requires Node.js 22 for stable gzip output, got ${process.versions.node}`);
+    throw new Error(`Performance check requires Node.js 22 for stable gzip output, got ${process.versions.node}`);
   }
   const report = buildReport();
   const output = `${JSON.stringify(report, null, 2)}\n`;
-  const reportFile = path.join(THEME_ROOT, "reference", "v2-alpha-performance.json");
+  const reportFile = path.join(THEME_ROOT, "test", "fixtures", "performance-baseline.json");
   if (process.argv.includes("--write")) fs.writeFileSync(reportFile, output, "utf8");
   if (process.argv.includes("--check")) {
     const actual = fs.existsSync(reportFile) ? fs.readFileSync(reportFile, "utf8") : "";
-    if (actual !== output) throw new Error("reference/v2-alpha-performance.json 与当前 v1/v2 构建结果不一致");
+    if (actual !== output) throw new Error("test/fixtures/performance-baseline.json 与当前 v1/v2 构建结果不一致");
   }
   process.stdout.write(output);
   if (!report.passed && !process.argv.includes("--report-only")) {

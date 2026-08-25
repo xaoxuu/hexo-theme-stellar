@@ -23,7 +23,8 @@ const readline = require('readline');
 const { execFileSync } = require('child_process');
 
 const ROOT = __dirname;
-const VERSION_RE = /^\d+\.\d+\.\d+(?:-(?:alpha|beta|rc)\.\d+)?$/;
+const SEMVER_RE = /^\d+\.\d+\.\d+(?:-(?:alpha|beta|rc)\.\d+)?$/;
+const RELEASE_VERSION_RE = /^\d+\.\d+\.\d+(?:-rc\.\d+)?$/;
 const CHANGELOG_FILE = "CHANGELOG.md";
 const INSTALLATION_FILE = "docs/knowledge/00-总览与安装配置/installation.md";
 const WORKSPACE_ALLOWED_FILES = new Set(["package.json", CHANGELOG_FILE]);
@@ -113,7 +114,7 @@ function packageVersion(raw) {
   } catch (_) {
     throw new Error("package.json 解析失败，请检查文件格式");
   }
-  if (typeof pkg.version !== "string" || !VERSION_RE.test(pkg.version)) {
+  if (typeof pkg.version !== "string" || !SEMVER_RE.test(pkg.version)) {
     throw new Error("package.json 缺少有效的 version 字段");
   }
   return pkg.version;
@@ -151,7 +152,7 @@ function updatedInstallation(raw, previousVersion, version) {
 }
 
 function prepareVersionFiles(root, version) {
-  if (!VERSION_RE.test(version)) {
+  if (!RELEASE_VERSION_RE.test(version)) {
     throw new Error(`版本号格式不正确: ${version}`);
   }
   const packagePath = path.join(root, "package.json");
@@ -294,8 +295,8 @@ async function main() {
     }
   }
 
-  if (!VERSION_RE.test(version)) {
-    fail(`版本号格式不正确: ${version}（应为 x.y.z 或 x.y.z-alpha.n / beta.n / rc.n）`);
+  if (!RELEASE_VERSION_RE.test(version)) {
+    fail(`版本号格式不正确: ${version}（应为 x.y.z 或 x.y.z-rc.n；Alpha/Beta 仅为内部里程碑）`);
   }
 
   const branch = currentBranch();
