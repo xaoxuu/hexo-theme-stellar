@@ -1,0 +1,4 @@
+name: Migrated Topic
+description: A representative v1 Topic migrated into the v2 Collection contract.
+route:
+  start: migrated-topic

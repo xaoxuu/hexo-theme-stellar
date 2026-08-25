@@ -310,7 +310,14 @@ test("Wiki 树构建事件只为严格 v2 Wiki 页面挂载 PageViewModel", t =>
   assert.equal(wikiPage.viewModel.collection.id, "stellar");
   assert.equal(wikiPage.viewModel.collection.profile, "wiki");
   assert.equal(getPageViewModel({ ...wikiPage }), wikiPage.viewModel);
-  assert.equal(attachPageViewModel({ ...wikiPage }).viewModel, wikiPage.viewModel);
+  const renderedWiki = attachPageViewModel({
+    ...wikiPage,
+    permalink: "https://example.com/wiki/stellar/",
+    content: "<p>Rendered Wiki body</p>"
+  });
+  assert.notEqual(renderedWiki.viewModel, wikiPage.viewModel);
+  assert.equal(renderedWiki.viewModel.item.content, "<p>Rendered Wiki body</p>");
+  assert.equal(getPageViewModel({ ...wikiPage }), renderedWiki.viewModel);
   assert.equal(wikiPage.viewModel.collection.navigation.tree[0].items[0].title, "Start");
   assert.equal(wikiPage.viewModel.item.presentation.article.paragraphIndent, "always");
   assert.equal(wikiPage.viewModel.item.presentation.comments.provider, "giscus");

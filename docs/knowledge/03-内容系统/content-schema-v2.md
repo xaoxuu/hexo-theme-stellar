@@ -105,7 +105,7 @@ Galaxy 的路径为 `hero.background.effect.options`，其 React Bits props 保�
 - 级联顺序为页面 Front Matter、Post profile、主题全局配置；`false`、`0` 与空字符串是有效覆盖值。Brand 图片继续按原子对象替换，不继承上级图片子字段。
 - 普通 Post、Topic、Wiki 与 Notebook 的根 Shell、左右侧栏、Brand、菜单、面包屑、SEO、正文辅助区、Footer、导航、评论和聚合条目均已消费 ViewModel。Hexo 仍只为聚合页提供分页及当前筛选状态；生成器把最终列表投影作为显式 local 交给模板。
 
-唯一编排入口位于 `scripts/lib/collection-pipeline/`，模型事实来源位于 `scripts/lib/models/index.js`。Pipeline 单遍发现 Post/Page 并按 profile/collection 分组；普通 Post 在 `before_generate` 登记输入，详情页由 `after_post_render` 结合最终正文和 Hexo 关系完成模型，列表条目由 `post_view_model` helper 从同一登记输入重建冻结投影；Wiki 在 tree barrier 后完成，Topic 与 Notebook 复用共享 two-stage 协议。
+唯一编排入口位于 `scripts/lib/collection-pipeline/`，模型事实来源位于 `scripts/lib/models/index.js`。Pipeline 单遍发现 Post/Page 并按 profile/collection 分组；四类 profile 都在 `before_generate` 登记冻结输入，再由 `after_post_render` 把 Hexo 最终 HTML 正文写入新的冻结 ViewModel。Post/Topic 同时补全 Hexo 关系与相关文章；Wiki 保留 tree barrier 后的 related/listing 投影并以最终正文重建 item；Notebook 保留 two-stage 产生的 tag tree/recent items 并以最终正文完成 item。因此模板仍只消费 ViewModel，不需要回退读取可变 `page.content`；列表条目由 `post_view_model` helper 或生成器显式投影提供。
 
 ### Topic 与文章
 
@@ -162,7 +162,7 @@ Pre-alpha M1 建立机器元数据接缝，M5 再把同一份数据接入公开 
 Collection 与 Front Matter 不再由手写字段表定义：`scripts/schema/content-config-schema.js` 直接从目标契约投影两个作用域 Schema，`scripts/lib/config-schema.js` 统一执行类型、封闭边界、迁移错误、规范化、camelCase 投影与深冻结。`scripts/lib/collection-pipeline/` 对每个输入只解析一次，并登记冻结的 `collectionConfigs` / `pageConfigs`、profile 成员与 Collection 分组。
 
 - `scripts/lib/content-membership.js` 从已注册 Wiki/Topic/Notebook、成员关系和源码路径建立共享候选索引。唯一候选自动归属；普通 Post/Page 的零候选合法；集合命名空间零候选、多候选及显式冲突统一拒绝猜测。构建与 doctor 复用同一解析器，诊断固定给出来源、候选集合和最小修复方式。
-- 普通 Post 在 `before_generate` 登记已解析输入，在 `after_post_render` 使用最终 HTML、标签关系、prev/next 与可选相关文章结果完成详情模型；博客聚合消费同一登记输入。
+- 四类详情模型都在 `after_post_render` 使用最终 HTML 重建冻结 item/render；Post/Topic 额外纳入标签关系、prev/next 与可选相关文章，Wiki/Notebook 继承构建期已稳定的集合导航和聚合投影；博客聚合消费同一登记输入。
 - `scripts/lib/content-config.js` 保留作用域包装、来源化错误和 `isListed` / `isSearchable` 等内容语义，不再维护第二套手写字段表。
 - 路由、导航、侧栏和页面字段由声明式 Schema 严格校验；错误继续包含配置来源、字段路径与迁移目标。
 - `scripts/helpers/collection.js` 向 EJS 提供 `collection_id(page, type)`，不再读取 `page.wiki/topic/notebook`。

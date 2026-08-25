@@ -11,6 +11,7 @@ const { parseStellarConfig } = require("../scripts/lib/config-schema");
 const { parseCollectionConfig, parsePageConfig } = require("../scripts/lib/content-config");
 const processContentConfig = require("../scripts/events/lib/content-config");
 const processNotebooks = require("../scripts/events/lib/notebooks");
+const { attachPageViewModel } = require("../scripts/filters/lib/page-view-model");
 
 function buildNotebookPageViewModel(input) {
   return buildNotebookPageViewModelRaw({
@@ -398,6 +399,13 @@ test("生成前事件只为可解析的严格 Notebook Note 挂载 PageViewModel
   assert.deepEqual(context.stellar.data.notebookIndex.recentItems.map(item => item.title), ["Note"]);
   assert.deepEqual(context.stellar.data.notebookIndex.collections.dev.tags[2].itemIds, ["note", "hidden"]);
   assert.equal(wiki.viewModel, undefined);
+  const renderedNote = attachPageViewModel({
+    ...note,
+    content: "<p>Rendered Notebook body</p>"
+  });
+  assert.equal(renderedNote.viewModel.item.content, "<p>Rendered Notebook body</p>");
+  assert.equal(renderedNote.viewModel.render.listing.excerpt, "Rendered Notebook body");
+  assert.equal(Object.isFrozen(renderedNote.viewModel), true);
 });
 
 test("生成前事件拒绝引用不存在 Notebook 的 Note", t => {

@@ -1,0 +1,4 @@
+name: Migrated Notebook
+description: A representative v1 Notebook migrated into the v2 Collection contract.
+route:
+  path: notes/migrated-notebook

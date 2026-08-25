@@ -1,0 +1,10 @@
+brand:
+  name: Migrated Stellar Site
+article:
+  type: tech
+  reading_time: true
+search:
+  service: local_search
+  local_search:
+    field: all
+    content: true

@@ -1,15 +1,19 @@
 "use strict";
 
 const {
+  buildNotebookPageViewModel,
   buildPostPageViewModel,
+  buildWikiPageViewModel,
   buildTopicPageViewModel,
   completeTopicPageViewModel
 } = require("../../lib/models");
 const {
+  getProfileViewModelInput,
   getPageViewModel,
   getPostViewModelInput,
   getTopicViewModelBase,
   getTopicViewModelInput,
+  setPageViewModel,
   setRelatedItems
 } = require("../../lib/page-view-model-registry");
 
@@ -102,6 +106,20 @@ function buildTopicViewModelFromData(data, input, options = {}) {
     : buildTopicPageViewModel(completeInput);
 }
 
+function buildWikiViewModelFromData(data, input) {
+  return buildWikiPageViewModel({
+    ...input,
+    page: pageInputFromData(data, input)
+  });
+}
+
+function buildNotebookViewModelFromData(data, input) {
+  return buildNotebookPageViewModel({
+    ...input,
+    page: pageInputFromData(data, input)
+  });
+}
+
 function attachPageViewModel(data) {
   const postInput = getPostViewModelInput(data);
   const topicInput = getTopicViewModelInput(data);
@@ -116,14 +134,26 @@ function attachPageViewModel(data) {
         relatedItems: items
       });
   } else {
-    const viewModel = getPageViewModel(data);
-    if (viewModel) data.viewModel = viewModel;
+    const wikiInput = getProfileViewModelInput("wiki", data);
+    const notebookInput = getProfileViewModelInput("notebook", data);
+    if (wikiInput) {
+      data.viewModel = buildWikiViewModelFromData(data, wikiInput);
+      setPageViewModel(data, data.viewModel);
+    } else if (notebookInput) {
+      data.viewModel = buildNotebookViewModelFromData(data, notebookInput);
+      setPageViewModel(data, data.viewModel);
+    } else {
+      const viewModel = getPageViewModel(data);
+      if (viewModel) data.viewModel = viewModel;
+    }
   }
   return data;
 }
 
 module.exports = {
   attachPageViewModel,
+  buildNotebookViewModelFromData,
   buildPostViewModelFromData,
-  buildTopicViewModelFromData
+  buildTopicViewModelFromData,
+  buildWikiViewModelFromData
 };

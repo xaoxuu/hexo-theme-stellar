@@ -13,7 +13,8 @@ const { completeNotebookPageViewModel } = require("../../lib/models");
 const {
   getNotebookViewModelBase,
   getNotebookViewModelInput,
-  setPageViewModel
+  setPageViewModel,
+  setProfileViewModelInput
 } = require("../../lib/page-view-model-registry");
 const { ensureRuntimeData } = require("../../lib/runtime-data");
 const { ConfigSchemaError } = require("../../lib/config-schema");
@@ -167,17 +168,19 @@ module.exports = (ctx, pipeline = null) => {
     },
     complete(entry, viewModel, notebookIndex) {
       const collection = notebookIndex.collections[entry.base.collection.id];
-      return completeNotebookPageViewModel({
+      entry.completeInput = Object.freeze({
         ...entry.input,
         runtimeData,
         tagTree: collection.tags,
         recentItems: collection.recentItems
-      }, entry.base);
+      });
+      return completeNotebookPageViewModel(entry.completeInput, entry.base);
     }
   });
 
   for (let index = 0; index < entries.length; index += 1) {
     entries[index].page.viewModel = finalViewModels[index];
+    setProfileViewModelInput("notebook", entries[index].page, entries[index].completeInput);
     setPageViewModel(entries[index].page, finalViewModels[index]);
   }
 };

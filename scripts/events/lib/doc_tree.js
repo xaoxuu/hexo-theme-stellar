@@ -17,7 +17,11 @@ const {
   completeWikiPageViewModel
 } = require("../../lib/models");
 const { ensureRuntimeData } = require("../../lib/runtime-data");
-const { setPageViewModel } = require("../../lib/page-view-model-registry");
+const {
+  setPageViewModel,
+  setProfileViewModelBase,
+  setProfileViewModelInput
+} = require("../../lib/page-view-model-registry");
 const {
   sourcePathForData,
   sourcePathForPage
@@ -60,25 +64,33 @@ module.exports = (ctx, pipeline = null) => {
     : "themes/stellar/_config.yml";
   const entries = [];
   const homepageEntries = new Map();
+  const recordsByPage = pipeline == null
+    ? new Map()
+    : new Map(pipeline.members("wiki").map(record => [record.page, record]));
   for (const page of pages) {
     const config = parsedPages.get(page);
     if (config == null) continue;
     const collectionId = getCollectionId(config, "wiki");
     if (collectionId == null) continue;
+    const sharedInput = pipeline == null
+      ? {
+          source: sourcePathForPage(page),
+          themeSource,
+          siteConfig: ctx.config,
+          runtimeData,
+          stellarConfig: ctx.stellar?.config,
+          frontMatter: config,
+          page
+        }
+      : pipeline.modelInput(recordsByPage.get(page));
     const input = {
-      source: sourcePathForPage(page),
-      themeSource,
+      ...sharedInput,
       collectionSource: sourcePathForData(`wiki/${collectionId}`),
-      siteConfig: ctx.config,
-      runtimeData,
-      stellarConfig: ctx.stellar?.config,
       collectionId,
       collectionConfig: collectionConfigs.get(collectionId),
       collectionState: wiki.tree[collectionId],
       collectionListed: wiki.shelf.includes(collectionId),
-      isBackup: process.env.IS_BACKUP === "true",
-      frontMatter: config,
-      page
+      isBackup: process.env.IS_BACKUP === "true"
     };
     const base = buildWikiPageViewModelBase(input);
     const entry = { page, collectionId, input, base };
@@ -101,11 +113,14 @@ module.exports = (ctx, pipeline = null) => {
         .filter(Boolean)
     }));
     const related = buildWikiRelated({ relatedCollections });
-    entry.page.viewModel = completeWikiPageViewModel({
+    const completeInput = Object.freeze({
       ...entry.input,
       related,
       listing: listings.get(entry.collectionId)
-    }, entry.base);
+    });
+    entry.page.viewModel = completeWikiPageViewModel(completeInput, entry.base);
+    setProfileViewModelInput("wiki", entry.page, completeInput);
+    setProfileViewModelBase("wiki", entry.page, entry.base);
     setPageViewModel(entry.page, entry.page.viewModel);
   }
 

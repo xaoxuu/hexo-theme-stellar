@@ -1,0 +1,19 @@
+site:
+  brand:
+    name: Migrated Stellar Site
+content:
+  article:
+    style: tech
+    show_reading_time: true
+extensions:
+  search:
+    provider: local
+    providers:
+      local:
+        scope: all
+        include_content: true
+  comments:
+    provider: giscus
+    providers:
+      giscus:
+        data-repo: example/missing

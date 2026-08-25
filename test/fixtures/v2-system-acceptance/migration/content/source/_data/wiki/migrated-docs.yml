@@ -1,0 +1,8 @@
+name: Migrated Docs
+description: A representative v1 Wiki migrated without rewriting its body.
+route:
+  path: /wiki/migrated-docs/
+navigation:
+  tree:
+    Start:
+      - index
