@@ -37,8 +37,8 @@
 - 标签实现文件优先落在 `scripts/tags/lib/<name>.js`
 - 样式文件优先落在 `source/css/_components/tag-plugins/<name>.styl`
 - 需要前端增强时再补充 `source/js/services/<name>.js`
-- 展示配置优先放在 `_config.yml` 的 `tag_plugins.<name>`
-- 远程数据相关配置优先放在 `_config.yml` 的 `data_services.<name>`
+- 展示配置优先放在 `_config.yml` 的 `extensions.tags.<name>`
+- 远程数据相关配置优先放在 `_config.yml` 的 `extensions.services.<name>`
 - 有新增展示文案时同步更新 `languages/`
 
 ### 2.3 命名与结构共性
@@ -105,8 +105,8 @@
 
 ### 3.6 配置与国际化规则
 
-- 纯展示行为、默认配色、边框开关等，优先放在 `tag_plugins.<name>`
-- 远程接口、数据源、请求行为等，优先放在 `data_services.<name>`
+- 纯展示行为、默认配色、边框开关等，优先放在 `extensions.tags.<name>`
+- 远程接口、数据源、请求行为等，优先放在 `extensions.services.<name>`
 - 涉及新增可见文案时，必须同步补齐 `languages/`，避免只在某个语言下可用
 - 不要把具体站点的私有数据直接写入主题仓库；主题只定义接口与默认行为
 
@@ -154,7 +154,7 @@
 
 | 标签/家族 | 服务端实现 | 样式文件 | 前端服务 | 常见配置/说明 |
 | --- | --- | --- | --- | --- |
-| `note` / `box` | `scripts/tags/lib/note.js`、`scripts/tags/lib/box.js` | `tag-plugins/note.styl` | 无 | 展示类卡片，优先走 `tag_plugins.note` |
+| `note` / `box` | `scripts/tags/lib/note.js`、`scripts/tags/lib/box.js` | `tag-plugins/note.styl` | 无 | 展示类卡片，优先走 `extensions.tags.note` |
 | `tabs` / `folding` / `folders` | `scripts/tags/lib/*.js` | `tag-plugins/tabs.styl`、`folding.styl`、`folders.styl` | 无 | 容器类，关注嵌套结构与 Markdown 渲染 |
 | `friends` / `users` / `albums` / `sites` | `scripts/tags/lib/*.js` | `friends.styl`、`sites.styl` 等 | `source/js/services/sites.js` 等 | 数据类，常联动本地配置或远程接口 |
 | `rating` / `vote` / `timeline` | `scripts/tags/lib/*.js` | `rating.styl`、`vote.styl`、`timeline.styl` | `source/js/services/rating.js` 等 | 运行时增强类，优先占位后补全 |

@@ -253,12 +253,6 @@ async function mountAdaptiveText(root, context, config) {
   return window.stellarAdaptiveText?.mount?.(queryAll(root, '[data-text-adaptive]')) || (() => {});
 }
 
-async function mountCardHover(root, context, config) {
-  await context.assets.script(config.assets.js);
-  window.stellar?.cardHover?.mountAll?.(root);
-  return () => window.stellar?.cardHover?.unmountAll?.(root);
-}
-
 async function mountHeti(root, context, config) {
   await context.assets.style(config.assets.css);
   await context.assets.script(config.assets.js);
@@ -302,7 +296,6 @@ export async function mount(root, context) {
     case 'diagrams': return mountDiagrams(root, context, config);
     case 'code-copy': return mountCodeCopy(root, context, config);
     case 'adaptive-text': return mountAdaptiveText(root, context, config);
-    case 'card-hover': return mountCardHover(root, context, config);
     case 'heti': return mountHeti(root, context, config);
     case 'swiper': return mountSwiper(root, context, config);
     default: throw new TypeError(`unknown built-in feature ${config.feature}`);

@@ -13,6 +13,7 @@ const {
   generateConfigFieldAudit
 } = require("../scripts/lib/config-field-audit");
 const INTERNAL_CONSTANTS = require("../scripts/lib/internal-constants");
+const { CONTRIBUTIONS } = require("../scripts/lib/contribution-registry");
 const createCopyTag = require("../scripts/tags/lib/copy");
 const createOkrTag = require("../scripts/tags/lib/okr");
 
@@ -108,7 +109,9 @@ test("三套内置语言键一致且 M6 系统文案不再写入公开主题默�
 
 test("内部常量入口深度冻结并拥有资源、provider、缓存与时序", () => {
   assert.equal(Object.isFrozen(INTERNAL_CONSTANTS), true);
-  assert.equal(Object.isFrozen(INTERNAL_CONSTANTS.assets.runtime.modules), true);
+  assert.equal(INTERNAL_CONSTANTS.assets.runtime.modules, undefined);
+  assert.equal(Object.isFrozen(CONTRIBUTIONS), true);
+  assert.equal(CONTRIBUTIONS.find(item => item.id === "search").entry.path, "/js/runtime/extensions/search.mjs");
   assert.equal(Object.isFrozen(INTERNAL_CONSTANTS.assets.features), true);
   assert.equal(Object.isFrozen(INTERNAL_CONSTANTS.runtime.cache.ttl), true);
   assert.equal(INTERNAL_CONSTANTS.providers.lightbox, "fancybox");

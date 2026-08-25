@@ -5,7 +5,8 @@
   "main": "package.json",
   "scripts": {
     "lint": "eslint .",
-    "test": "node ci/check-require-decls.js && node --test && node ci/check-spec-refs.js",
+    "test": "node ci/check-require-decls.js && npm run contributions:check && node --test && node ci/check-spec-refs.js",
+    "contributions:check": "node ci/check-contributions.js && node scripts/generate-reference.js --check",
     "reference:generate": "node scripts/generate-reference.js",
     "reference:check": "node scripts/generate-reference.js --check",
     "alpha:check": "node ci/check-alpha-integration.js",

@@ -55,13 +55,7 @@ module.exports = deepFreeze({
   },
   assets: {
     runtime: {
-      bootstrap: "/js/runtime/index.mjs",
-      modules: {
-        search: "/js/runtime/extensions/search.mjs",
-        services: "/js/runtime/extensions/services.mjs",
-        comments: "/js/runtime/extensions/comments.mjs",
-        feature: "/js/runtime/extensions/feature.mjs"
-      }
+      bootstrap: "/js/runtime/index.mjs"
     },
     dependencies: {
       marked: "https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js",

@@ -22,9 +22,11 @@ test("页面使用单一 Runtime Manifest 与 ESM bootstrap", () => {
   assert.match(runtime, /crossorigin="anonymous"/);
   assert.doesNotMatch(scripts, /comments\/script|_plugins\/index|services\.js/);
   assert.doesNotMatch(scripts, /\/js\/icons\.js|\/js\/plugins\/dropdown\.js/);
-  const builder = read("scripts/lib/browser-runtime.js");
-  assert.match(builder, /"deferred-icons".*selector: "svg\.icon\[data-icon\]"/s);
-  assert.match(builder, /"dropdown".*selector: "details\.dropdown"/s);
+  const registry = read("scripts/lib/contribution-registry.js");
+  assert.match(registry, /id: "runtime-bootstrap"/);
+  assert.match(registry, /id: "katex-stylesheet"/);
+  assert.match(registry, /id: "deferred-icons".*selector\("svg\.icon\[data-icon\]"\)/s);
+  assert.match(registry, /id: "dropdown".*selector\("details\.dropdown"\)/s);
 });
 
 test("ESM 入口把版本查询参数传给全部静态与动态子模块", () => {
@@ -82,6 +84,7 @@ test("Search、services、comments 与 Feature 只消费 manifest context", () =
   assert.match(search, /shortcutCleanup/);
   assert.match(search, /return \(\) =>/);
   const feature = read("source/js/runtime/extensions/feature.mjs");
+  const cardHover = read("source/js/runtime/extensions/card-hover.mjs");
   assert.doesNotMatch(feature, /case 'katex'/);
   assert.doesNotMatch(feature, /AI summary|ChucklePostAI|TianliGPT/);
   assert.match(feature, /stellarAdaptiveText\?\.mount/);
@@ -92,6 +95,9 @@ test("Search、services、comments 与 Feature 只消费 manifest context", () =
   assert.doesNotMatch(feature, /__stellarLegacyFeatures/);
   assert.match(feature, /case 'link-prefetch'/);
   assert.match(feature, /case 'heti'/);
+  assert.doesNotMatch(feature, /case 'card-hover'/);
+  assert.match(cardHover, /stellar\?\.cardHover\?\.mountAll/);
+  assert.match(cardHover, /stellar\?\.cardHover\?\.unmountAll/);
   const adaptive = read("source/js/plugins/adaptive-text.js");
   assert.doesNotMatch(adaptive, /adaptiveText(?:Elements|Observer|Active)/);
   assert.match(adaptive, /var mountedElements =/);
@@ -101,10 +107,10 @@ test("Search、services、comments 与 Feature 只消费 manifest context", () =
 });
 
 test("动态数据服务在执行前由 Lazy Extension 提供图片包装工具", () => {
-  const builder = read("scripts/lib/browser-runtime.js");
+  const builder = read("scripts/lib/contribution-registry.js");
   const feature = read("source/js/runtime/extensions/feature.mjs");
-  assert.ok(builder.indexOf('"lazy-loading", true') < builder.indexOf('id: "services"'));
-  assert.match(builder, /selector: "\.lazy, \.data-service, \[class\*='ds-'\]"/);
+  assert.ok(builder.indexOf('id: "lazy-loading"') < builder.indexOf('id: "services"'));
+  assert.match(builder, /selector\("\.lazy, \.data-service, \[class\*='ds-'\]"\)/);
   assert.match(feature, /window\.wrapLazyloadImages = wrapLazyloadImages/);
   assert.match(feature, /lazy-loading compatibility adapter requires a document root/);
   assert.match(feature, /instance\?\.update\?\.\(\)/);

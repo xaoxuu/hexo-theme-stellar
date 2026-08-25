@@ -3,6 +3,7 @@
 "use strict";
 
 const INTERNAL_CONSTANTS = require("./internal-constants");
+const { buildContributionEntries } = require("./contribution-registry");
 const { resolveServiceProvider } = require("./service-provider");
 
 const RUNTIME_VERSION = 1;
@@ -64,16 +65,6 @@ function normalizeRoot(value) {
   return root.endsWith("/") ? root : `${root}/`;
 }
 
-function addFeature(entries, module, id, enabled, when, config) {
-  if (!enabled) return;
-  entries.push({
-    id,
-    module,
-    when,
-    config: Object.assign({ feature: id }, config || {})
-  });
-}
-
 function buildBrowserRuntimeManifest(input) {
   const source = plainObject(input, "input");
   const extensions = plainObject(source.extensions, "extensions");
@@ -81,113 +72,19 @@ function buildBrowserRuntimeManifest(input) {
   const assets = plainObject(source.assets, "assets");
   const render = plainObject(source.render, "render");
   const messages = plainObject(source.messages, "messages");
-  const runtimeModules = plainObject(assets.runtime?.modules, "assets.runtime.modules");
-  const entries = [];
   const root = normalizeRoot(source.root);
-
-  const search = plainObject(extensions.search, "extensions.search");
-  if (typeof search.provider === "string" && search.provider.length > 0) {
-    const provider = plainObject(search.providers?.[search.provider], `extensions.search.providers.${search.provider}`);
-    entries.push({
-      id: "search",
-      module: runtimeModules.search,
-      when: { selector: "#search-input" },
-      config: {
-        provider: search.provider,
-        options: provider,
-        assets: {
-          client: search.provider === "algolia" ? assets.search?.algolia || null : null,
-          provider: assets.search?.providers?.[search.provider] || null,
-          shortcut: assets.search?.shortcut || null
-        }
-      }
-    });
-  }
-
-  addFeature(entries, runtimeModules.feature, "lazy-loading", true, {
-    selector: ".lazy, .data-service, [class*='ds-']"
-  }, {
-    asset: assets.dependencies?.lazyLoading || null
-  });
-  addFeature(entries, runtimeModules.feature, "deferred-icons", true, { selector: "svg.icon[data-icon]" }, {
-    asset: assets.features?.deferredIcons?.js || null
-  });
-  addFeature(entries, runtimeModules.feature, "dropdown", true, { selector: "details.dropdown" }, {
-    asset: assets.features?.dropdown?.js || null
-  });
-
-  const siteInfo = resolveServiceProvider(extensions.services?.siteInfo);
-  entries.push({
-    id: "services",
-    module: runtimeModules.services,
-    when: {
-      selector: ".data-service, [class*='ds-'], a[cardlink], .site-card [data-siteinfo-api], .voice>audio, .video>video, .chat-file"
-    },
-    config: {
-      services: assets.services || {},
-      siteInfoEndpoint: siteInfo?.endpoint || null,
-      marked: assets.dependencies?.marked || null
-    }
-  });
-
   const comments = plainObject(source.comments, "comments");
-  if (typeof comments.service === "string" && comments.service.length > 0) {
-    entries.push({
-      id: "comments",
-      module: runtimeModules.comments,
-      when: { selector: "#comments" },
-      config: {
-        provider: comments.service,
-        options: comments.options || {},
-        pageTitle: comments.pageTitle || "",
-        assets: assets.comments?.[comments.service] || {}
-      }
-    });
-  }
-
-  addFeature(entries, runtimeModules.feature, "link-prefetch", features.linkPrefetch?.enabled === true, { always: true }, {
-    asset: assets.features?.linkPrefetch || null
+  const entries = buildContributionEntries({
+    assets,
+    colorScheme: source.colorScheme,
+    comments,
+    extensions,
+    features,
+    messages,
+    plainObject,
+    render,
+    resolveServiceProvider
   });
-  addFeature(entries, runtimeModules.feature, "lightbox", features.lightbox?.enabled === true, {
-    selector: ["[data-fancybox]:not(.error)", ".with-fancybox", ".ds-memos", features.lightbox?.selector]
-      .filter(Boolean).join(", ")
-  }, Object.assign({}, features.lightbox, { assets: assets.features?.lightbox || {} }));
-  addFeature(entries, runtimeModules.feature, "reveal", features.reveal?.enabled === true, { selector: ".slide-up" },
-    Object.assign({}, features.reveal, { asset: assets.features?.reveal || null }));
-
-  const mathProvider = render.math || features.math?.provider;
-  if (mathProvider === "mathjax") {
-    addFeature(entries, runtimeModules.feature, "mathjax", true, { selector: ".has-jax, script[type^='math/tex']" }, {
-      options: features.math?.providers?.mathjax || {},
-      asset: assets.features?.mathjax || null
-    });
-  }
-  const diagramOverride = render.diagrams;
-  const diagramProvider = diagramOverride === false
-    ? null
-    : typeof diagramOverride === "string"
-      ? diagramOverride
-      : (diagramOverride && typeof diagramOverride === "object" ? "mermaid" : features.diagrams?.provider);
-  const diagramOptions = diagramOverride && typeof diagramOverride === "object" ? diagramOverride : {};
-  addFeature(entries, runtimeModules.feature, "diagrams", diagramProvider === "mermaid", { selector: ".mermaid" }, Object.assign({}, features.diagrams?.providers?.mermaid, diagramOptions, {
-    provider: diagramProvider,
-    assets: assets.features?.diagrams || {},
-    colorScheme: source.colorScheme || "auto"
-  }));
-  addFeature(entries, runtimeModules.feature, "code-copy", true, { selector: ".code" }, {
-    assets: assets.features?.codeCopy || {},
-    messages: plainObject(messages.copy, "messages.copy")
-  });
-  addFeature(entries, runtimeModules.feature, "adaptive-text", true, { selector: "[data-text-adaptive]" }, {
-    assets: assets.features?.adaptiveText || {}
-  });
-  addFeature(entries, runtimeModules.feature, "card-hover", features.cardHover?.enabled === true, { selector: ".card-hover" }, {
-    assets: assets.features?.cardHover || {}
-  });
-  addFeature(entries, runtimeModules.feature, "heti", features.heti?.enabled === true, { selector: ".heti" }, {
-    assets: assets.features?.heti || {}
-  });
-  addFeature(entries, runtimeModules.feature, "swiper", true, { selector: "#swiper-api" }, { assets: assets.features?.swiper || {} });
 
   const manifest = {
     version: RUNTIME_VERSION,

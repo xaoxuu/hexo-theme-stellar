@@ -76,6 +76,7 @@ git submodule add https://github.com/<your-name>/hexo-theme-stellar.git themes/s
 - **浏览器 JS**：ES2015+ 语法；避免直接操作 DOM，使用主题工具函数
 - **不引入新构建系统**，保持 Hexo 原生 + Gulp 后处理；CSS 兼容 IE8，JS 兼容 ES2015+
 - 新增或重构标签插件时，先阅读 `docs/guides/tag-plugins-style-guide.md`
+- 新增配置、内容 profile、组件、Extension 或语言文案时，按 [`docs/guides/contribution-architecture.md`](docs/guides/contribution-architecture.md) 确认权威所有者与测试接缝
 
 ## 测试与验证
 
@@ -83,6 +84,7 @@ git submodule add https://github.com/<your-name>/hexo-theme-stellar.git themes/s
 
 ```bash
 npm run lint       # ESLint
+npm run contributions:check # 贡献注册表与 Schema/assets/i18n/docs/tests 一致性
 npm test           # node:test 单测
 python3 docs/knowledge/tools/verify.py   # 知识库硬事实核查
 npm run check      # 一键执行 lint + 单测 + 知识库核查
@@ -126,6 +128,7 @@ CI 会在 PR 上强制执行以下检查，全部通过后才可合并：
 |------|------|
 | Lint | ESLint |
 | Unit tests | node:test 单测 |
+| Contribution registry | 注册、默认值所有者、资源、Schema/Reference、i18n、文档与行为测试一致性 |
 | Conventional Commits | 提交信息符合规范 |
 | Skill mirror sync | `.agents/` 与 `.claude/` 技能镜像一致 |
 | Spec refs | AGENTS.md 章节引用与关键措辞一致性 |

@@ -31,7 +31,7 @@ flowchart LR
   EJS --> PAGE["ESM lifecycle / 按需脚本与样式"]
 ```
 
-`scripts/lib/browser-runtime.js` 根据搜索/评论 provider、全局 Feature、页面 profile 与 `render.math/render.diagrams` 生成严格、深冻结的 manifest。`layout/_partial/scripts/runtime.ejs` 只注入 JSON 与单一 module bootstrap；浏览器按 `when.selector/always` dynamic import search、comments、services 或 Feature adapter，并以 mount/unmount 管理实例。旧全局补载队列和网络 monkey patch 已删除。
+`scripts/lib/contribution-registry.js` 统一登记搜索、评论、服务、Feature 与 selector 组件的身份、入口、资源和激活；`scripts/lib/browser-runtime.js` 结合 provider、页面 profile 与 `render.math/render.diagrams` 投影严格、深冻结的 manifest。`layout/_partial/scripts/runtime.ejs` 只注入 JSON 与单一 module bootstrap；浏览器按 `when.selector/always` dynamic import adapter，并以 mount/unmount 管理实例。旧全局补载队列和网络 monkey patch 已删除。
 
 ## 内部资源
 

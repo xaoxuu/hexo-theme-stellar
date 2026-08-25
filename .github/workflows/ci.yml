@@ -34,6 +34,18 @@ jobs:
       - run: npm ci
       - run: npm test
 
+  contributions:
+    name: Contribution registry consistency
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run contributions:check
+
   commit-gate:
     name: Conventional Commits
     if: github.event_name == 'pull_request'

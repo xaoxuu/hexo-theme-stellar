@@ -153,6 +153,8 @@ graph LR
 
 ## 小部件定义与渲染
 
+UI 组件的模板、默认数据、样式与浏览器增强保持分层；新增或修改组件时，按[贡献架构与维护面](../../guides/contribution-architecture.md) 检查权威所有者、模板契约和必要的 mount/unmount 测试。Runtime selector 组件额外通过 contribution descriptor 登记入口、asset 与激活条件。
+
 ### `_data/widgets.yml` 定义
 
 小部件默认值在主题 `_data/widgets.yml` 中定义，站点可用 `_data/widgets.yml` 按键覆盖。构建期合并后存入 `hexo.stellar.data.widgets`，每个小部件的 `layout` 字段指向 `layout/_partial/widgets/` 下的模板：

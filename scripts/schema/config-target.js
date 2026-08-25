@@ -2,6 +2,7 @@
 "use strict";
 
 const { deepFreeze } = require("./schema-utils");
+const { contributionSchemaIds } = require("../lib/contribution-registry");
 
 const THEME_SCOPE = Object.freeze(["theme"]);
 const COLLECTION_SCOPE = Object.freeze(["collection"]);
@@ -417,9 +418,7 @@ const TAG_EXTENSION_IDS = deepFreeze([
   "note", "checkbox", "quot", "emoji", "icon", "button", "mark", "hashtag", "gallery"
 ]);
 
-const FEATURE_EXTENSION_IDS = deepFreeze([
-  "lazy_loading", "link_prefetch", "lightbox", "reveal", "math", "diagrams", "card_hover", "heti"
-]);
+const FEATURE_EXTENSION_IDS = deepFreeze(contributionSchemaIds("extensions.features"));
 
 const FEATURE_ID_MIGRATIONS = deepFreeze({
   preload: "link_prefetch",

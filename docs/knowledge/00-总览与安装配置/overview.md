@@ -257,7 +257,7 @@ graph TB
 
 ### 插件系统
 
-Extension 采用 Runtime Manifest 条件加载模式（[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/](../../../source/js/runtime/)）。主题读取冻结的 `extensions.features.*.enabled` 与页面 `render.math/render.diagrams`，由 ESM Registry 按声明和 DOM 条件加载对应 CSS 与 JavaScript，包括：
+Extension 采用 Runtime Manifest 条件加载模式（[scripts/lib/contribution-registry.js](../../../scripts/lib/contribution-registry.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/](../../../source/js/runtime/)）。主题读取冻结的 `extensions.features.*.enabled` 与页面 `render.math/render.diagrams`，从内置 descriptor 注册表投影页面声明，再由 ESM Registry 按 DOM 条件加载对应 CSS 与 JavaScript，包括：
 
 - 图片增强（fancybox、swiper）
 - 代码功能（copycode、语法高亮）

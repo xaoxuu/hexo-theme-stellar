@@ -26,7 +26,11 @@ YAML 中 Stellar 自有字段统一使用 snake_case，解析后的 JavaScript �
 
 旧根 `search/comments/tag_plugins/dependencies/data_services/data_cache/plugins/api_host` 已退出运行时并由 Schema 直接拒绝。
 
-## Feature 注册表
+## 贡献注册表与 Feature
+
+Runtime Manifest 内置 Extension、Feature 和 selector 组件由 [contribution-registry.js](../../../scripts/lib/contribution-registry.js) 的统一 descriptor 登记。每条声明包含 ID/类型、ESM 入口、内置资源键、激活条件、可选 Schema/i18n、文档与行为测试。`browser-runtime.js` 按注册表顺序投影页面 Manifest，不另存 ID、入口或资源白名单。
+
+该 descriptor 是主题内部构建契约，不是第三方 manifest/API。新增功能的维护面与 Card Hover 演练见[贡献架构指南](../../guides/contribution-architecture.md)。
 
 | ID | 默认 | 用途 |
 |----|------|------|
@@ -79,7 +83,7 @@ extensions:
 
 ## 内部资源所有权
 
-官方 Extension 的 JS/CSS/inject、Marked、LazyLoad、评论库、数据服务脚本，以及固定 provider 与 request/cache 策略由 [internal-constants.js](../../../scripts/lib/internal-constants.js) 深度冻结登记。`extension-assets.js` 仅保留兼容导出。公开 Schema 不提供这些实现细节。
+官方 Extension 的 JS/CSS/inject、Marked、LazyLoad、评论库、数据服务脚本，以及固定 provider 与 request/cache 策略由 [internal-constants.js](../../../scripts/lib/internal-constants.js) 深度冻结真值。每类 Runtime 资源的消费所有权由 contribution descriptor 登记，CI 拒绝未登记或重复所有的 asset。`extension-assets.js` 仅保留兼容导出。公开 Schema 不提供这些实现细节。
 
 这条边界把业务配置与主题实现资源分开：升级资源版本随主题代码评审和发布，不让站点配置形成第二套依赖锁。
 
@@ -89,11 +93,12 @@ extensions:
 flowchart LR
   A[extensions.features] --> B[声明式 Schema]
   B --> C[冻结 camelCase runtime]
-  C --> D[Runtime Manifest]
-  D --> E[ExtensionRegistry]
-  E --> F[dynamic import adapter]
-  F --> G[internal asset registry]
-  F --> H[mount root context]
+  C --> D[Contribution descriptors]
+  D --> E[Runtime Manifest]
+  E --> F[ExtensionRegistry]
+  F --> G[dynamic import adapter]
+  G --> H[internal asset registry]
+  G --> I[mount root context]
 ```
 
 `layout/_partial/scripts/runtime.ejs` 只输出 `#stellar-runtime-config` JSON 和 `/js/runtime/index.mjs`。manifest 条目含 `id/module/config/when`；`when.selector` 未命中时不会 import adapter。`ExtensionRegistry.mount(root, context)` 顺序挂载，重复 mount 先释放旧实例，`unmount(root)` 逆序清理；import、mount、unmount 失败只派发 `stellar:extension-error`，不会阻断其它 Extension。Runtime 启动失败时立即添加 `sr-fallback`，正文保持可见。
@@ -103,6 +108,8 @@ flowchart LR
 非首屏 SVG 占位符替换和 dropdown 浮层也使用内部 selector Extension：只有页面出现 `svg.icon[data-icon]` 或 `details.dropdown` 时，runtime 才加载 `/js/icons.js` 或 `/js/plugins/dropdown.js`。脚本通过内部 `stellar:legacy-feature-ready` 事件向 runtime 交付 `mount(root)` 适配器，不暴露新的全局 API；Extension 卸载时会中止图标请求，或断开 dropdown observer、全局监听与待执行动画帧。它们不新增公开配置，并保持原 DOM 与交互。
 
 核心防闪烁样式在构建期按 `extensions.features.*.enabled` 条件导入；Swiper、Fancybox、Mermaid 与评论样式在 DOM 命中时按需注入。
+
+Card Hover 使用独立 `card-hover.mjs` adapter 加载内置脚本并对当前 root 执行 `mountAll/unmountAll`。它的 ID、入口、asset、`.card-hover` 激活、Schema 与测试只在 descriptor 关联，不再出现于通用 Feature dispatch。
 
 ## 服务与内部缓存
 
@@ -137,4 +144,4 @@ extensions:
 
 Site Info、Rating 与 Vote 默认选择 xaox.cc 公共实例对应的 provider，可覆盖选中参数袋内的自部署地址或以 `provider: null` 关闭；三者的预期远程失败完全静默并保留静态兜底。统一解析接缝只向消费方提供选中的参数袋。GitHub 地址统一为完整 URL。Runtime Manifest 携带主题内部注入且冻结的 cache/request policy；`createRequestClient()` 提供同 method+URL 并发去重、按 service TTL、超时重试、fresh 命中、stale 失败回退、200 KiB 单条限制和最旧条目淘汰。站点不再调节这些实现常量。客户端调用原生 `fetch` 而不替换 `window.fetch` 或 XHR 原型，并以 `stellar:request-start/end` 通知锚点稳定器。
 
-相关源码：[_config.yml](../../../_config.yml)、[scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)、[scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)、[source/js/runtime/index.mjs](../../../source/js/runtime/index.mjs)、[source/js/runtime/extension-registry.mjs](../../../source/js/runtime/extension-registry.mjs)、[source/js/runtime/request-cache.mjs](../../../source/js/runtime/request-cache.mjs)、[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)。
+相关源码：[_config.yml](../../../_config.yml)、[scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)、[scripts/lib/contribution-registry.js](../../../scripts/lib/contribution-registry.js)、[scripts/lib/contribution-audit.js](../../../scripts/lib/contribution-audit.js)、[scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)、[source/js/runtime/index.mjs](../../../source/js/runtime/index.mjs)、[source/js/runtime/extension-registry.mjs](../../../source/js/runtime/extension-registry.mjs)、[source/js/runtime/request-cache.mjs](../../../source/js/runtime/request-cache.mjs)、[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)。

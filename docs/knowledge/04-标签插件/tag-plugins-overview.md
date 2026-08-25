@@ -50,6 +50,8 @@ Stellar 字段使用 snake_case，运行时为 camelCase。公开 Tag 配置只�
 
 完整服务契约见[数据服务 API](../06-数据服务与组件/data-service-apis.md)。
 
+新增标签时，注册、实现、Schema、样式、service Extension、语言与测试的维护面见[贡献架构指南](../../guides/contribution-architecture.md) 和[标签插件设计规范](../../guides/tag-plugins-style-guide.md)。
+
 ## 消费链
 
 ```mermaid
