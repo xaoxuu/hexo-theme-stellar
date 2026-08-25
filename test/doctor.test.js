@@ -96,6 +96,10 @@ test("doctor 为 Extensions 旧路径给出最终迁移目标或明确删除", (
     "    preload:",
     "      enabled: true",
     "  services:",
+    "    site_info:",
+    "      endpoint: null",
+    "    rating:",
+    "      endpoint: https://rating.example.com",
     "    github:",
     "      card_url: https://cards.example.com",
     ""
@@ -108,7 +112,9 @@ test("doctor 为 Extensions 旧路径给出最终迁移目标或明确删除", (
   assert.equal(result.issues.some(item => item.path.endsWith("tags.image") && item.expected.includes("remove field")), true);
   assert.equal(result.issues.some(item => item.path.endsWith("features.ai_summary") && item.expected.includes("remove field")), true);
   assert.equal(result.issues.some(item => item.path.endsWith("features.preload") && item.expected.endsWith("link_prefetch")), true);
-  assert.equal(result.issues.some(item => item.path.endsWith("github.card_url") && item.expected.endsWith("extensions.services.github_card.endpoint")), true);
+  assert.equal(result.issues.some(item => item.path.endsWith("site_info.endpoint") && item.expected.endsWith("site_info.provider")), true);
+  assert.equal(result.issues.some(item => item.path.endsWith("rating.endpoint") && item.expected.endsWith("rating.providers.star_vote.endpoint")), true);
+  assert.equal(result.issues.some(item => item.path.endsWith("github.card_url") && item.expected.endsWith("extensions.services.github_card.providers.github_readme_stats.endpoint")), true);
 });
 
 test("doctor 接受 BOM 与 CRLF Front Matter", () => {

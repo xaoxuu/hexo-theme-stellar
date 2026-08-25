@@ -26,6 +26,7 @@ function structuralOptions(options) {
     "exclusiveMinimum",
     "externalProperties",
     "removedProperties",
+    "removedNullProperties",
     "requiredProperties",
     "sealed"
   ]) {
@@ -295,6 +296,11 @@ function extensionsSchema() {
     sealed: false,
     removedProperties: internalAssetKeys
   });
+  const contributorRepository = extensionObject({
+    source_prefix: deliveredField("extensions.services.contributors.providers.github.repositories[].source_prefix", { normalizer: "identity", validator: "safe_relative_path", example: "wiki/stellar/" }),
+    repository: deliveredField("extensions.services.contributors.providers.github.repositories[].repository", { normalizer: "identity", validator: "github_repository", example: "xaoxuu/hexo-theme-stellar-docs" }),
+    branch: deliveredField("extensions.services.contributors.providers.github.repositories[].branch", { normalizer: "identity", validator: "non_empty_string", example: "main" })
+  }, { branch: "main" }, { requiredProperties: ["source_prefix", "repository"] });
   return object({
     consumers: EXTENSION_CONSUMERS,
     example: { search: { provider: "local" }, comments: { provider: "giscus" } },
@@ -340,29 +346,65 @@ function extensionsSchema() {
       tags: extensionObject(tagExtensionSchemas(), {}, { removedProperties: { copy: "localized", image: null, timeline: null, okr: null, chat: null } }),
       features: extensionObject(featureExtensionSchemas(), {}, { removedProperties: { preload: "link_prefetch", ai_summary: null, code_copy: null, adaptive_text: null, cjk_typography: "heti" } }),
       services: extensionObject({
-        site_info: extensionObject({ endpoint: deliveredField("extensions.services.site_info.endpoint", { normalizer: "identity", validator: "nullable_absolute_http_url", example: "https://api.xaox.cc/site_info/v1?url={href}" }) }, { endpoint: "https://api.xaox.cc/site_info/v1?url={href}" }, { removedProperties: { api: "endpoint" } }),
-        rating: extensionObject({ endpoint: deliveredField("extensions.services.rating.endpoint", { normalizer: "identity", validator: "nullable_absolute_http_url", example: "https://star-vote.xaox.cc/api/rating" }) }, { endpoint: "https://star-vote.xaox.cc/api/rating" }, { removedProperties: { api: "endpoint" } }),
-        vote: extensionObject({ endpoint: deliveredField("extensions.services.vote.endpoint", { normalizer: "identity", validator: "nullable_absolute_http_url", example: "https://star-vote.xaox.cc/api/vote" }) }, { endpoint: "https://star-vote.xaox.cc/api/vote" }, { removedProperties: { api: "endpoint" } }),
+        site_info: extensionObject({
+          provider: deliveredField("extensions.services.site_info.provider", { normalizer: "identity", example: "site_info_api" }),
+          providers: extensionObject({
+            site_info_api: extensionObject({
+              endpoint: deliveredField("extensions.services.site_info.providers.site_info_api.endpoint", { normalizer: "identity", validator: "absolute_http_url", example: "https://api.xaox.cc/site_info/v1?url={href}" })
+            }, { endpoint: "https://api.xaox.cc/site_info/v1?url={href}" }, { runtimeKey: "site_info_api" })
+          }, { site_info_api: { endpoint: "https://api.xaox.cc/site_info/v1?url={href}" } })
+        }, { provider: "site_info_api", providers: { site_info_api: { endpoint: "https://api.xaox.cc/site_info/v1?url={href}" } } }, {
+          removedProperties: { api: "providers.site_info_api.endpoint", endpoint: "providers.site_info_api.endpoint" },
+          removedNullProperties: { endpoint: "provider" }
+        }),
+        rating: extensionObject({
+          provider: deliveredField("extensions.services.rating.provider", { normalizer: "identity", example: "star_vote" }),
+          providers: extensionObject({
+            star_vote: extensionObject({
+              endpoint: deliveredField("extensions.services.rating.providers.star_vote.endpoint", { normalizer: "identity", validator: "absolute_http_url", example: "https://star-vote.xaox.cc/api/rating" })
+            }, { endpoint: "https://star-vote.xaox.cc/api/rating" }, { runtimeKey: "star_vote" })
+          }, { star_vote: { endpoint: "https://star-vote.xaox.cc/api/rating" } })
+        }, { provider: "star_vote", providers: { star_vote: { endpoint: "https://star-vote.xaox.cc/api/rating" } } }, {
+          removedProperties: { api: "providers.star_vote.endpoint", endpoint: "providers.star_vote.endpoint" },
+          removedNullProperties: { endpoint: "provider" }
+        }),
+        vote: extensionObject({
+          provider: deliveredField("extensions.services.vote.provider", { normalizer: "identity", example: "star_vote" }),
+          providers: extensionObject({
+            star_vote: extensionObject({
+              endpoint: deliveredField("extensions.services.vote.providers.star_vote.endpoint", { normalizer: "identity", validator: "absolute_http_url", example: "https://star-vote.xaox.cc/api/vote" })
+            }, { endpoint: "https://star-vote.xaox.cc/api/vote" }, { runtimeKey: "star_vote" })
+          }, { star_vote: { endpoint: "https://star-vote.xaox.cc/api/vote" } })
+        }, { provider: "star_vote", providers: { star_vote: { endpoint: "https://star-vote.xaox.cc/api/vote" } } }, {
+          removedProperties: { api: "providers.star_vote.endpoint", endpoint: "providers.star_vote.endpoint" },
+          removedNullProperties: { endpoint: "provider" }
+        }),
         contributors: extensionObject({
-          repositories: deliveredField("extensions.services.contributors.repositories", {
-            normalizer: "array",
-            validator: "contributor_repositories",
-            example: [{ source_prefix: "wiki/stellar/", repository: "xaoxuu/hexo-theme-stellar-docs", branch: "main" }],
-            items: extensionObject({
-              source_prefix: deliveredField("extensions.services.contributors.repositories[].source_prefix", { normalizer: "identity", validator: "safe_relative_path", example: "wiki/stellar/" }),
-              repository: deliveredField("extensions.services.contributors.repositories[].repository", { normalizer: "identity", validator: "github_repository", example: "xaoxuu/hexo-theme-stellar-docs" }),
-              branch: deliveredField("extensions.services.contributors.repositories[].branch", { normalizer: "identity", validator: "non_empty_string", example: "main" })
-            }, { branch: "main" }, { requiredProperties: ["source_prefix", "repository"] })
-          })
-        }, { repositories: [] }, { removedProperties: { edit_page: "repositories", edit_this_page: "repositories", js: "internalized" } }),
+          provider: deliveredField("extensions.services.contributors.provider", { normalizer: "identity", example: "github" }),
+          providers: extensionObject({
+            github: extensionObject({
+              repositories: deliveredField("extensions.services.contributors.providers.github.repositories", {
+                normalizer: "array",
+                validator: "contributor_repositories",
+                example: [{ source_prefix: "wiki/stellar/", repository: "xaoxuu/hexo-theme-stellar-docs", branch: "main" }],
+                items: contributorRepository
+              })
+            }, { repositories: [] })
+          }, { github: { repositories: [] } })
+        }, { provider: "github", providers: { github: { repositories: [] } } }, { removedProperties: { edit_page: "providers.github.repositories", edit_this_page: "providers.github.repositories", repositories: "providers.github.repositories", js: "internalized" } }),
         github: extensionObject({
           api_url: deliveredField("extensions.services.github.api_url", { normalizer: "identity", validator: "absolute_http_url", example: "https://api.github.com" }),
           raw_url: deliveredField("extensions.services.github.raw_url", { normalizer: "identity", validator: "absolute_http_url", example: "https://raw.githubusercontent.com" }),
           gist_url: deliveredField("extensions.services.github.gist_url", { normalizer: "identity", validator: "absolute_http_url", example: "https://gist.github.com" })
-        }, { api_url: "https://api.github.com", raw_url: "https://raw.githubusercontent.com", gist_url: "https://gist.github.com" }, { removedProperties: { card_url: "extensions.services.github_card.endpoint" } }),
+        }, { api_url: "https://api.github.com", raw_url: "https://raw.githubusercontent.com", gist_url: "https://gist.github.com" }, { removedProperties: { card_url: "extensions.services.github_card.providers.github_readme_stats.endpoint" } }),
         github_card: extensionObject({
-          endpoint: deliveredField("extensions.services.github_card.endpoint", { normalizer: "identity", validator: "absolute_http_url", example: "https://github-readme-stats.vercel.app" })
-        }, { endpoint: "https://github-readme-stats.vercel.app" })
+          provider: deliveredField("extensions.services.github_card.provider", { normalizer: "identity", example: "github_readme_stats" }),
+          providers: extensionObject({
+            github_readme_stats: extensionObject({
+              endpoint: deliveredField("extensions.services.github_card.providers.github_readme_stats.endpoint", { normalizer: "identity", validator: "absolute_http_url", example: "https://github-readme-stats.vercel.app" })
+            }, { endpoint: "https://github-readme-stats.vercel.app" }, { runtimeKey: "github_readme_stats" })
+          }, { github_readme_stats: { endpoint: "https://github-readme-stats.vercel.app" } })
+        }, { provider: "github_readme_stats", providers: { github_readme_stats: { endpoint: "https://github-readme-stats.vercel.app" } } }, { removedProperties: { endpoint: "providers.github_readme_stats.endpoint" } })
       }, {})
     },
     removedProperties: { cache: "internalized" }

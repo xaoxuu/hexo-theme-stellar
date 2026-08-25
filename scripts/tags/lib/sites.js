@@ -7,10 +7,12 @@
 
 'use strict'
 
+const { resolveServiceProvider } = require("../../lib/service-provider");
+
 module.exports = ctx => function(args) {
   args = ctx.args.map(args, ['repo', 'api'], ['group'])
   const rawUrl = ctx.stellar.config.extensions.services.github.rawUrl.replace(/\/+$/, '')
-  const siteinfoApi = ctx.stellar.config.extensions.services.siteInfo.endpoint
+  const siteinfoApi = resolveServiceProvider(ctx.stellar.config.extensions.services.siteInfo)?.endpoint;
   var api
   if (args.api) {
     api = args.api

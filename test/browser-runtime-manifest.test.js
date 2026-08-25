@@ -23,7 +23,7 @@ function fixture(overrides = {}) {
     extensions: {
       search: { provider: "local", providers: { local: { indexPath: "/search.json", lazy: true } } },
       comments: {},
-      services: { siteInfo: { endpoint: "https://example.com/?url={href}" } },
+      services: { siteInfo: { provider: "site_info_api", providers: { site_info_api: { endpoint: "https://example.com/?url={href}" } } } },
       cache: { enabled: true, defaultTtl: 60, ttl: { siteinfo: 30 }, maxEntries: 20 },
       features: {
         linkPrefetch: { enabled: true },
@@ -80,6 +80,16 @@ test("Runtime Manifest 按 render 选择 Math 与 diagrams", () => {
   assert.equal(ids.includes("mathjax"), true);
   assert.equal(ids.includes("diagrams"), true);
   assert.equal(manifest.extensions.find(item => item.id === "diagrams").config.theme, "dark");
+});
+
+test("Runtime Manifest 不投影未选中的 Site Info provider 参数袋", () => {
+  const input = fixture();
+  input.extensions.services.siteInfo.provider = null;
+  input.extensions.services.siteInfo.providers.site_info_api.endpoint = "https://unselected.example/?url={href}";
+  const manifest = buildBrowserRuntimeManifest(input);
+  const services = manifest.extensions.find(item => item.id === "services");
+  assert.equal(services.config.siteInfoEndpoint, null);
+  assert.doesNotMatch(JSON.stringify(manifest), /unselected\.example/);
 });
 
 test("KaTeX 只由服务端输出配套 CSS，不建立浏览器 Extension", () => {

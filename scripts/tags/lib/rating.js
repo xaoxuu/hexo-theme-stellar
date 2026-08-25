@@ -9,10 +9,12 @@
 
 'use strict'
 
+const { resolveServiceProvider } = require("../../lib/service-provider");
+
 module.exports = ctx => function (args) {
   args = ctx.args.map(args, ['id', 'icon'], ['title'])
   
-  const api = ctx.stellar.config.extensions.services.rating.endpoint
+  const api = resolveServiceProvider(ctx.stellar.config.extensions.services.rating)?.endpoint;
   const disabled = api == null
   const id = args.id || 'default'
 

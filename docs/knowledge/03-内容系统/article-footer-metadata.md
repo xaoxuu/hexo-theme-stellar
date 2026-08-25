@@ -163,7 +163,7 @@ content:
 
 ## 贡献者区块
 
-Post/Topic/Wiki/Notebook 的模型根据 `extensions.services.contributors.repositories` 与 `item.source.file` 按最长 `sourcePrefix` 匹配，生成 `render.article.footer.contributor`；无法匹配时整个区块省略。
+Post/Topic/Wiki/Notebook 的模型先解析 `extensions.services.contributors` 选中的 provider，再根据 `providers.github.repositories` 与 `item.source.file` 按最长 `sourcePrefix` 匹配，生成 `render.article.footer.contributor`；无法匹配时整个区块省略。
 
 关键样式：
 

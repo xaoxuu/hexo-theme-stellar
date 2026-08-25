@@ -7,6 +7,7 @@ const path = require("node:path");
 
 const createEmoji = require("../scripts/tags/lib/emoji");
 const createGallery = require("../scripts/tags/lib/gallery");
+const createGhcard = require("../scripts/tags/lib/ghcard");
 const createGist = require("../scripts/tags/lib/gist");
 const createRating = require("../scripts/tags/lib/rating");
 const createVote = require("../scripts/tags/lib/vote");
@@ -34,7 +35,8 @@ function context(config = {}) {
     stellar: { config },
     args: {
       map: mapArgs,
-      joinTags: (input, keys) => keys.filter(key => input[key] != null).map(key => `${key}="${input[key]}"`)
+      joinTags: (input, keys) => keys.filter(key => input[key] != null).map(key => `${key}="${input[key]}"`),
+      joinURLParams: () => ""
     },
     utils: { icon: value => `<i>${value}</i>` }
   };
@@ -69,10 +71,19 @@ test("Gist 标签消费 github.gist_url 并支持 file 参数", () => {
   assert.throws(() => createGist(ctx)(["invalid"]), /expected owner\/id/);
 });
 
+test("GitHub Card 只使用选中 provider 的 endpoint 构造原有图片 URL", () => {
+  const ctx = context({ extensions: { services: { githubCard: {
+    provider: "github_readme_stats",
+    providers: { github_readme_stats: { endpoint: "https://cards.example.com/" } }
+  } } } });
+  const html = createGhcard(ctx)(["owner/repo"]);
+  assert.match(html, /src="https:\/\/cards\.example\.com\/api\/pin\/\?username=owner&repo=repo&&show_owner=true"/);
+});
+
 test("Rating 与 Vote 使用 endpoint，并在显式关闭时输出静态禁用态", () => {
   const enabled = context({ extensions: { services: {
-    rating: { endpoint: "https://star-vote.xaox.cc/api/rating" },
-    vote: { endpoint: "https://star-vote.xaox.cc/api/vote" }
+    rating: { provider: "star_vote", providers: { star_vote: { endpoint: "https://star-vote.xaox.cc/api/rating" } } },
+    vote: { provider: "star_vote", providers: { star_vote: { endpoint: "https://star-vote.xaox.cc/api/vote" } } }
   } } });
   const rating = createRating(enabled)(["post"]);
   const vote = createVote(enabled)(["post"]);
@@ -81,7 +92,10 @@ test("Rating 与 Vote 使用 endpoint，并在显式关闭时输出静态禁用�
   assert.doesNotMatch(rating, /is-disabled| disabled/);
   assert.doesNotMatch(vote, /is-disabled| disabled/);
 
-  const ctx = context({ extensions: { services: { rating: { endpoint: null }, vote: { endpoint: null } } } });
+  const ctx = context({ extensions: { services: {
+    rating: { provider: null, providers: { star_vote: { endpoint: "https://star-vote.xaox.cc/api/rating" } } },
+    vote: { provider: null, providers: { star_vote: { endpoint: "https://star-vote.xaox.cc/api/vote" } } }
+  } } });
   const disabledRating = createRating(ctx)(["post"]);
   const disabledVote = createVote(ctx)(["post"]);
   assert.match(disabledRating, /class="tag-plugin ds-rating is-disabled"/);

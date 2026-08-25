@@ -9,7 +9,8 @@
   var assets = extension_assets()
   var checklink = assets.services.video.js
   var clientServices = JSON.parse(JSON.stringify(assets.services))
-  clientServices.siteinfo.api = extensions.services.siteInfo.endpoint
+  var siteInfoService = service_provider(extensions.services.siteInfo)
+  clientServices.siteinfo.api = siteInfoService ? siteInfoService.endpoint : null
   var localSearch = extensions.search.providers.local
   var searchProvider = extensions.search.provider === 'local' ? 'local_search' : extensions.search.provider
 %>

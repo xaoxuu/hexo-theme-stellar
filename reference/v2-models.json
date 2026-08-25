@@ -8576,7 +8576,7 @@
           "required": true,
           "default": {
             "kind": "computed",
-            "description": "由 contributors.repositories 最长 source_prefix 匹配与源文件生成"
+            "description": "由 contributors 选中 provider 的 repositories 最长 source_prefix 匹配与源文件生成"
           },
           "scope": "PageViewModel:notebook",
           "consumers": [
@@ -10139,7 +10139,7 @@
           "required": true,
           "default": {
             "kind": "computed",
-            "description": "由 extensions.services.contributors.repositories 最长 source_prefix 匹配与源文件生成"
+            "description": "由选中的 extensions.services.contributors provider 按最长 source_prefix 匹配与源文件生成"
           },
           "scope": "PageViewModel:post",
           "consumers": [
@@ -12108,7 +12108,7 @@
           "required": true,
           "default": {
             "kind": "computed",
-            "description": "由 extensions.services.contributors.repositories 最长 source_prefix 匹配与源文件生成"
+            "description": "由选中的 extensions.services.contributors provider 按最长 source_prefix 匹配与源文件生成"
           },
           "scope": "PageViewModel:topic",
           "consumers": [
@@ -14107,7 +14107,7 @@
           "required": true,
           "default": {
             "kind": "computed",
-            "description": "由 contributors.repositories 最长 source_prefix 匹配与源文件生成"
+            "description": "由 contributors 选中 provider 的 repositories 最长 source_prefix 匹配与源文件生成"
           },
           "scope": "PageViewModel:wiki",
           "consumers": [

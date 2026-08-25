@@ -7,6 +7,8 @@
 
 'use strict'
 
+const { resolveServiceProvider } = require("../../lib/service-provider");
+
 module.exports = ctx => function(args) {
   const full_url_for = require('hexo-util').full_url_for.bind(ctx)
   const escapeHTML = require('hexo-util').escapeHTML
@@ -16,7 +18,7 @@ module.exports = ctx => function(args) {
   }
   const url = full_url_for(args.url)
   const safeTitle = escapeHTML(args.title || '')
-  args.api = ctx.stellar.config.extensions.services.siteInfo.endpoint
+  args.api = resolveServiceProvider(ctx.stellar.config.extensions.services.siteInfo)?.endpoint;
   if (args.api) {
     args.api = args.api.replace('{href}', url)
   }

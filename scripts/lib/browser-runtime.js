@@ -3,6 +3,7 @@
 "use strict";
 
 const INTERNAL_CONSTANTS = require("./internal-constants");
+const { resolveServiceProvider } = require("./service-provider");
 
 const RUNTIME_VERSION = 1;
 const RUNTIME_CONFIG_ID = "stellar-runtime-config";
@@ -115,6 +116,7 @@ function buildBrowserRuntimeManifest(input) {
     asset: assets.features?.dropdown?.js || null
   });
 
+  const siteInfo = resolveServiceProvider(extensions.services?.siteInfo);
   entries.push({
     id: "services",
     module: runtimeModules.services,
@@ -123,7 +125,7 @@ function buildBrowserRuntimeManifest(input) {
     },
     config: {
       services: assets.services || {},
-      siteInfoEndpoint: extensions.services?.siteInfo?.endpoint || null,
+      siteInfoEndpoint: siteInfo?.endpoint || null,
       marked: assets.dependencies?.marked || null
     }
   });

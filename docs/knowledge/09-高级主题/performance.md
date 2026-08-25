@@ -223,7 +223,7 @@ flowchart LR
 
 ## GitHub 服务 URL
 
-`extensions.services.github` 使用完整 URL 配置 GitHub API、Raw、Gist 与卡片服务，适合经代理镜像或本地缓存层路由。
+`extensions.services.github` 使用完整 URL 配置明确的 GitHub API、Raw 与 Gist 地址；可替换的卡片能力单独使用 provider 结构，适合经代理镜像或本地缓存层路由。
 
 ```yaml
 extensions:
@@ -233,12 +233,15 @@ extensions:
       raw_url: https://raw.githubusercontent.com
       gist_url: https://gist.github.com
     github_card:
-      endpoint: https://github-readme-stats.vercel.app
+      provider: github_readme_stats
+      providers:
+        github_readme_stats:
+          endpoint: https://github-readme-stats.vercel.app
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
-这些值被数据服务脚本（ghinfo、ghcard、contributors 等）构造 API URL 时消费。替换为镜像主机可降低 `github.com` 访问缓慢地区用户的延迟。
+这些值被数据服务脚本（ghinfo、ghcard、contributors 等）构造 API URL 时消费；GitHub Card 只读取选中的 provider 参数袋。替换为镜像主机可降低 `github.com` 访问缓慢地区用户的延迟。
 
 ---
 

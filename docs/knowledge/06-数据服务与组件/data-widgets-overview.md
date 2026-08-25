@@ -4,7 +4,7 @@ title: 数据服务与组件总览
 
 # 数据服务与组件总览
 
-Stellar 的数据组件采用“服务端生成占位、浏览器进入视口后请求”的模式。v2 将公开业务端点收敛到 `extensions.services`，将主题自带 JavaScript 模块收敛到内部资源注册表。
+Stellar 的数据组件采用“服务端生成占位、浏览器进入视口后请求”的模式。v2 将可替换的第三方服务收敛为 `extensions.services` 下的 `provider + providers`，将主题自带 JavaScript 模块收敛到内部资源注册表。
 
 ## 两类组件
 
@@ -28,22 +28,37 @@ flowchart LR
 extensions:
   services:
     site_info:
-      endpoint: https://api.xaox.cc/site_info/v1?url={href}
+      provider: site_info_api
+      providers:
+        site_info_api:
+          endpoint: https://api.xaox.cc/site_info/v1?url={href}
     rating:
-      endpoint: https://star-vote.xaox.cc/api/rating
+      provider: star_vote
+      providers:
+        star_vote:
+          endpoint: https://star-vote.xaox.cc/api/rating
     vote:
-      endpoint: https://star-vote.xaox.cc/api/vote
+      provider: star_vote
+      providers:
+        star_vote:
+          endpoint: https://star-vote.xaox.cc/api/vote
     contributors:
-      repositories: []
+      provider: github
+      providers:
+        github:
+          repositories: []
     github:
       api_url: https://api.github.com
       raw_url: https://raw.githubusercontent.com
       gist_url: https://gist.github.com
     github_card:
-      endpoint: https://github-readme-stats.vercel.app
+      provider: github_readme_stats
+      providers:
+        github_readme_stats:
+          endpoint: https://github-readme-stats.vercel.app
 ```
 
-所有 GitHub 地址都是完整 URL，消费方不再为裸 host 补协议或路径。主题自带的 mdrender、siteinfo、ghinfo、rating、vote、sites、friends、timeline、memos、评论统计等模块路径不可配置。
+消费方通过统一解析接缝只取得选中的 provider 参数袋，未选中的实现不会进入 Runtime Manifest。所有 GitHub 地址都是完整 URL，消费方不再为裸 host 补协议或路径。主题自带的 mdrender、siteinfo、ghinfo、rating、vote、sites、friends、timeline、memos、评论统计等模块路径不可配置。
 
 ## 缓存
 

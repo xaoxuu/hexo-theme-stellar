@@ -20,7 +20,7 @@ function createContext() {
     stellar: {
       config: {
         resources: { fallbacks: { linkCard: '/images/default-link.svg' } },
-        extensions: { services: { siteInfo: { endpoint: null } } }
+        extensions: { services: { siteInfo: { provider: null, providers: {} } } }
       }
     },
     theme: {

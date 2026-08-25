@@ -547,7 +547,7 @@ function pageViewModelSchema(profile) {
       }
     });
     const contributor = field(["object", "null"], {
-      default: computed("由 extensions.services.contributors.repositories 最长 source_prefix 匹配与源文件生成"),
+      default: computed("由选中的 extensions.services.contributors provider 按最长 source_prefix 匹配与源文件生成"),
       example: { editUrl: "https://github.com/example/repo/blob/main/post.md", commitsUrl: "https://api.github.com/repos/example/repo/commits?path=post.md" },
       required: true,
       properties: {
@@ -674,7 +674,7 @@ function pageViewModelSchema(profile) {
       }
     });
     const contributor = field(["object", "null"], {
-      default: computed("由 contributors.repositories 最长 source_prefix 匹配与源文件生成"),
+      default: computed("由 contributors 选中 provider 的 repositories 最长 source_prefix 匹配与源文件生成"),
       example: { editUrl: "https://github.com/example/repo/blob/main/index.md", commitsUrl: "https://api.github.com/repos/example/repo/commits?path=index.md" },
       required: true,
       properties: {
@@ -870,7 +870,7 @@ function pageViewModelSchema(profile) {
           references: array(field("any", { additionalProperties: true }), { default: inherited("item.presentation.footer.references"), example: [], required: true }),
           license: field("string", { default: computed("由最终许可协议与作者信息生成"), example: "CC BY 4.0", required: true }),
           share,
-          contributor: field(["object", "null"], { default: computed("由 contributors.repositories 最长 source_prefix 匹配与源文件生成"), example: null, required: true, additionalProperties: true })
+          contributor: field(["object", "null"], { default: computed("由 contributors 选中 provider 的 repositories 最长 source_prefix 匹配与源文件生成"), example: null, required: true, additionalProperties: true })
         }, { required: true, example: { references: [], license: "", share: null, contributor: null } }),
         comments
       }, { required: true, example: { heti: false, banner: {}, created: null, updated: null, tags: [], footer: {}, comments: {} } }),

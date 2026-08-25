@@ -131,8 +131,10 @@ function registered(owner) {
 }
 
 function runtimePath(path) {
-  return path.split(".").map(segment => {
+  const segments = path.split(".");
+  return segments.map((segment, index) => {
     if (segment.startsWith("<")) return segment;
+    if (segments[index - 1] === "providers") return segment;
     return segment.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
   }).join(".");
 }
@@ -654,17 +656,22 @@ const CONFIG_TARGET_FIELDS = deepFreeze([
       normalization: "merge declared child fields; deep-freeze the normalized JavaScript object"
     }]),
     ["extensions.features.math.provider", ["string", "null"], literal(null), { values: [null, "katex", "mathjax"] }],
-    ["extensions.services.site_info.endpoint", ["string", "null"], literal("https://api.xaox.cc/site_info/v1?url={href}")],
-    ["extensions.services.rating.endpoint", ["string", "null"], literal("https://star-vote.xaox.cc/api/rating")],
-    ["extensions.services.vote.endpoint", ["string", "null"], literal("https://star-vote.xaox.cc/api/vote")],
-    ["extensions.services.contributors.repositories", "array", literal([]), { items: { type: ["object"], boundary: "sealed" } }],
-    ["extensions.services.contributors.repositories[].source_prefix", "string", derived("repository source prefix")],
-    ["extensions.services.contributors.repositories[].repository", "string", derived("GitHub owner/repository")],
-    ["extensions.services.contributors.repositories[].branch", "string", literal("main")],
+    ["extensions.services.site_info.provider", ["string", "null"], literal("site_info_api"), { values: [null, "site_info_api"] }],
+    ["extensions.services.site_info.providers.site_info_api.endpoint", "string", literal("https://api.xaox.cc/site_info/v1?url={href}")],
+    ["extensions.services.rating.provider", ["string", "null"], literal("star_vote"), { values: [null, "star_vote"] }],
+    ["extensions.services.rating.providers.star_vote.endpoint", "string", literal("https://star-vote.xaox.cc/api/rating")],
+    ["extensions.services.vote.provider", ["string", "null"], literal("star_vote"), { values: [null, "star_vote"] }],
+    ["extensions.services.vote.providers.star_vote.endpoint", "string", literal("https://star-vote.xaox.cc/api/vote")],
+    ["extensions.services.contributors.provider", "string", literal("github"), { values: ["github"] }],
+    ["extensions.services.contributors.providers.github.repositories", "array", literal([]), { items: { type: ["object"], boundary: "sealed" } }],
+    ["extensions.services.contributors.providers.github.repositories[].source_prefix", "string", derived("repository source prefix")],
+    ["extensions.services.contributors.providers.github.repositories[].repository", "string", derived("GitHub owner/repository")],
+    ["extensions.services.contributors.providers.github.repositories[].branch", "string", literal("main")],
     ["extensions.services.github.api_url", "string", literal("https://api.github.com"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }],
     ["extensions.services.github.raw_url", "string", literal("https://raw.githubusercontent.com"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }],
     ["extensions.services.github.gist_url", "string", literal("https://gist.github.com"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }],
-    ["extensions.services.github_card.endpoint", "string", literal("https://github-readme-stats.vercel.app"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }]
+    ["extensions.services.github_card.provider", "string", literal("github_readme_stats"), { values: ["github_readme_stats"] }],
+    ["extensions.services.github_card.providers.github_readme_stats.endpoint", "string", literal("https://github-readme-stats.vercel.app"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }]
   ], { status: "delivered" }),
   ...fields(INJECT_CONSUMERS, [
     ["inject.head_end", "string", literal(""), { normalization: "preserve trusted source text exactly; append page text after site text with one newline" }],
@@ -863,10 +870,10 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
   ],
   data_services: [
     migration("data_services.<service>.js", "internalize", null, "官方服务模块随主题发布"),
-    migration("data_services.siteinfo.api", "rename", "extensions.services.site_info.endpoint", "服务 ID 使用 snake_case，业务地址统一称 endpoint"),
-    migration("data_services.rating.api", "rename", "extensions.services.rating.endpoint", "业务地址统一称 endpoint"),
-    migration("data_services.vote.api", "rename", "extensions.services.vote.endpoint", "业务地址统一称 endpoint"),
-    migration("data_services.contributors.edit_this_page.*", "rename", "extensions.services.contributors.repositories[]", "仓库映射改为按最长 source_prefix 匹配的对象数组")
+    migration("data_services.siteinfo.api", "rename", "extensions.services.site_info.providers.site_info_api.endpoint", "服务 ID 使用 snake_case，并进入选中 provider 的参数袋"),
+    migration("data_services.rating.api", "rename", "extensions.services.rating.providers.star_vote.endpoint", "业务地址进入 Star Vote provider 参数袋"),
+    migration("data_services.vote.api", "rename", "extensions.services.vote.providers.star_vote.endpoint", "业务地址进入 Star Vote provider 参数袋"),
+    migration("data_services.contributors.edit_this_page.*", "rename", "extensions.services.contributors.providers.github.repositories[]", "仓库映射进入 GitHub provider，并按最长 source_prefix 匹配")
   ],
   data_cache: [
     migration("data_cache.enable", "internalize", null, "缓存策略由内部 request/cache 常量拥有"),
@@ -952,7 +959,7 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
     migration("api_host.ghapi", "rename", "extensions.services.github.api_url", "使用完整 URL 并归 GitHub 服务"),
     migration("api_host.ghraw", "rename", "extensions.services.github.raw_url", "使用完整 URL 并归 GitHub 服务"),
     migration("api_host.gist", "rename", "extensions.services.github.gist_url", "使用完整 URL 并归 GitHub 服务"),
-    migration("api_host.ghcard", "rename", "extensions.services.github_card.endpoint", "GitHub Card 使用独立服务 endpoint")
+    migration("api_host.ghcard", "rename", "extensions.services.github_card.providers.github_readme_stats.endpoint", "GitHub Card 地址进入 GitHub Readme Stats provider")
   ],
   system: [migration("system.override_pretty_urls", "internalize", null, "Hexo 集成策略不属于公开主题配置")],
   inject: [

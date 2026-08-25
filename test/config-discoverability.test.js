@@ -70,9 +70,9 @@ const STRUCTURAL_CONTRACTS = Object.freeze({
     fields: ["<value:string>"],
     markers: ["      # 表情源 ID 到资源模板的映射。[开放对象；值必须是包含 {name} 的字符串模板]", "        twemoji: https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg"]
   },
-  "extensions.services.contributors.repositories[]": {
+  "extensions.services.contributors.providers.github.repositories[]": {
     fields: ["source_prefix", "repository", "branch"],
-    markers: ["      # - source_prefix: wiki/stellar/", "      #   repository: xaoxuu/hexo-theme-stellar", "      #   branch: main"]
+    markers: ["          # - source_prefix: wiki/stellar/", "          #   repository: xaoxuu/hexo-theme-stellar", "          #   branch: main"]
   }
 });
 

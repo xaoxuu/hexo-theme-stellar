@@ -40,10 +40,13 @@ Stellar 字段使用 snake_case，运行时为 camelCase。公开 Tag 配置只�
 
 标签输出 `.data-service` 占位时，客户端模块来自主题内部资源注册表。例如 voice、video、download-file、sites、rating 与 vote 的 JavaScript 路径均不可由站点覆盖。站点可配置的业务地址位于：
 
-- `extensions.services.site_info.endpoint`
-- `extensions.services.rating.endpoint`
-- `extensions.services.vote.endpoint`
+- `extensions.services.site_info.providers.site_info_api.endpoint`
+- `extensions.services.rating.providers.star_vote.endpoint`
+- `extensions.services.vote.providers.star_vote.endpoint`
 - `extensions.services.github.*_url`
+- `extensions.services.github_card.providers.github_readme_stats.endpoint`
+
+前三项可通过各自的 `provider: null` 关闭；消费链只读取所选 provider 的封闭参数袋。
 
 完整服务契约见[数据服务 API](../06-数据服务与组件/data-service-apis.md)。
 

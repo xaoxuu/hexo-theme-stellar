@@ -512,20 +512,29 @@ extensions:
 
 ### 数据服务配置
 
-`extensions.services` 只定义公开业务端点；官方客户端模块由主题内部注册表按需加载：
+`extensions.services` 以 `provider + providers` 定义可替换的第三方服务；官方客户端模块由主题内部注册表按需加载：
 
 ```yaml
 extensions:
   services:
     site_info:
-      endpoint: https://api.xaox.cc/site_info/v1?url={href}
+      provider: site_info_api
+      providers:
+        site_info_api:
+          endpoint: https://api.xaox.cc/site_info/v1?url={href}
     rating:
-      endpoint: https://star-vote.xaox.cc/api/rating
+      provider: star_vote
+      providers:
+        star_vote:
+          endpoint: https://star-vote.xaox.cc/api/rating
     vote:
-      endpoint: https://star-vote.xaox.cc/api/vote
+      provider: star_vote
+      providers:
+        star_vote:
+          endpoint: https://star-vote.xaox.cc/api/vote
 ```
 
-三项服务默认使用 xaox.cc 公共实例，站点可覆盖为自己的绝对 HTTP(S) URL，或显式设为 `null` 关闭。服务仅在对应标签插件或组件生成匹配 DOM 时加载；公共实例不可用、响应异常或被关闭时保留静态内容，不显示错误，也不输出控制台日志。`js` 不再是公开字段；业务 URL 统一称 `endpoint`。
+三项服务默认使用 xaox.cc 公共实例，站点可覆盖选中 provider 参数袋内的绝对 HTTP(S) URL，或将 `provider` 显式设为 `null` 关闭。服务仅在对应标签插件或组件生成匹配 DOM 时加载；公共实例不可用、响应异常或被关闭时保留静态内容，不显示错误，也不输出控制台日志。新增实现只扩展 provider ID、封闭参数袋和适配器，不改变服务根结构；未选中的参数袋不会投影给浏览器。
 
 **参考源码**：[_config.yml](../../../_config.yml)（`extensions.services` 小节）
 

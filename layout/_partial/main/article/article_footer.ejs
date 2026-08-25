@@ -13,7 +13,8 @@ function layoutDiv() {
   if (Array.isArray(articleFooter.share) && articleFooter.share.length > 0) {
     item.push('share');
   }
-  var contributors = partial('contributors', {repositories: stellar_config('extensions.services.contributors.repositories')})
+  var contributorService = service_provider(stellar_config('extensions.services.contributors'))
+  var contributors = partial('contributors', {repositories: contributorService ? contributorService.repositories : []})
   if (contributors?.trim().length > 0) {
     item.push('contributors')
   }

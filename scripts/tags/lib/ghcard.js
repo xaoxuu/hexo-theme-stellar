@@ -13,11 +13,13 @@
 
 'use strict'
 
+const { resolveServiceProvider } = require("../../lib/service-provider");
+
 module.exports = ctx => function(args) {
   var params = ['show_owner', 'theme', 'title_color', 'text_color', 'icon_color', 'bg_color', 'hide_border', 'cache_seconds', 'locale']
   args = ctx.args.map(args, params, ['repo'])
   const path = args.repo
-  const cardUrl = ctx.stellar.config.extensions.services.githubCard.endpoint.replace(/\/+$/, '')
+  const cardUrl = resolveServiceProvider(ctx.stellar.config.extensions.services.githubCard).endpoint.replace(/\/+$/, "");
   var el = ''
   el += '<div class="tag-plugin ghcard">'
   el += '<a class="ghcard" rel="external nofollow noopener noreferrer" href="https://github.com/' + path + '">'

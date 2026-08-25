@@ -4165,6 +4165,111 @@
       "default": {
         "kind": "literal",
         "value": {
+          "provider": "github",
+          "providers": {
+            "github": {
+              "repositories": []
+            }
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "provider": "github",
+        "providers": {
+          "github": {
+            "repositories": []
+          }
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.services.contributors.provider",
+      "runtimePath": "extensions.services.contributors.provider",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "github"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "github",
+      "migration": "configuration/extensions",
+      "values": [
+        "github"
+      ]
+    },
+    {
+      "path": "extensions.services.contributors.providers",
+      "runtimePath": "extensions.services.contributors.providers",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "github": {
+            "repositories": []
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "github": {
+          "repositories": []
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.services.contributors.providers.github",
+      "runtimePath": "extensions.services.contributors.providers.github",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
           "repositories": []
         }
       },
@@ -4188,8 +4293,8 @@
       "sealed": true
     },
     {
-      "path": "extensions.services.contributors.repositories",
-      "runtimePath": "extensions.services.contributors.repositories",
+      "path": "extensions.services.contributors.providers.github.repositories",
+      "runtimePath": "extensions.services.contributors.providers.github.repositories",
       "type": [
         "array"
       ],
@@ -4220,8 +4325,8 @@
       "migration": "configuration/extensions"
     },
     {
-      "path": "extensions.services.contributors.repositories[].branch",
-      "runtimePath": "extensions.services.contributors.repositories[].branch",
+      "path": "extensions.services.contributors.providers.github.repositories[].branch",
+      "runtimePath": "extensions.services.contributors.providers.github.repositories[].branch",
       "type": [
         "string"
       ],
@@ -4246,8 +4351,8 @@
       "migration": "configuration/extensions"
     },
     {
-      "path": "extensions.services.contributors.repositories[].repository",
-      "runtimePath": "extensions.services.contributors.repositories[].repository",
+      "path": "extensions.services.contributors.providers.github.repositories[].repository",
+      "runtimePath": "extensions.services.contributors.providers.github.repositories[].repository",
       "type": [
         "string"
       ],
@@ -4274,8 +4379,8 @@
       "migration": "configuration/extensions"
     },
     {
-      "path": "extensions.services.contributors.repositories[].source_prefix",
-      "runtimePath": "extensions.services.contributors.repositories[].sourcePrefix",
+      "path": "extensions.services.contributors.providers.github.repositories[].source_prefix",
+      "runtimePath": "extensions.services.contributors.providers.github.repositories[].sourcePrefix",
       "type": [
         "string"
       ],
@@ -4423,6 +4528,111 @@
       "default": {
         "kind": "literal",
         "value": {
+          "provider": "github_readme_stats",
+          "providers": {
+            "github_readme_stats": {
+              "endpoint": "https://github-readme-stats.vercel.app"
+            }
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "provider": "github_readme_stats",
+        "providers": {
+          "github_readme_stats": {
+            "endpoint": "https://github-readme-stats.vercel.app"
+          }
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.services.github_card.provider",
+      "runtimePath": "extensions.services.githubCard.provider",
+      "type": [
+        "string"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "github_readme_stats"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "github_readme_stats",
+      "migration": "configuration/extensions",
+      "values": [
+        "github_readme_stats"
+      ]
+    },
+    {
+      "path": "extensions.services.github_card.providers",
+      "runtimePath": "extensions.services.githubCard.providers",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "github_readme_stats": {
+            "endpoint": "https://github-readme-stats.vercel.app"
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "github_readme_stats": {
+          "endpoint": "https://github-readme-stats.vercel.app"
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.services.github_card.providers.github_readme_stats",
+      "runtimePath": "extensions.services.githubCard.providers.github_readme_stats",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
           "endpoint": "https://github-readme-stats.vercel.app"
         }
       },
@@ -4446,8 +4656,8 @@
       "sealed": true
     },
     {
-      "path": "extensions.services.github_card.endpoint",
-      "runtimePath": "extensions.services.githubCard.endpoint",
+      "path": "extensions.services.github_card.providers.github_readme_stats.endpoint",
+      "runtimePath": "extensions.services.githubCard.providers.github_readme_stats.endpoint",
       "type": [
         "string"
       ],
@@ -4480,6 +4690,113 @@
       "default": {
         "kind": "literal",
         "value": {
+          "provider": "star_vote",
+          "providers": {
+            "star_vote": {
+              "endpoint": "https://star-vote.xaox.cc/api/rating"
+            }
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "provider": "star_vote",
+        "providers": {
+          "star_vote": {
+            "endpoint": "https://star-vote.xaox.cc/api/rating"
+          }
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.services.rating.provider",
+      "runtimePath": "extensions.services.rating.provider",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "star_vote"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "star_vote",
+      "migration": "configuration/extensions",
+      "values": [
+        null,
+        "star_vote"
+      ]
+    },
+    {
+      "path": "extensions.services.rating.providers",
+      "runtimePath": "extensions.services.rating.providers",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "star_vote": {
+            "endpoint": "https://star-vote.xaox.cc/api/rating"
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "star_vote": {
+          "endpoint": "https://star-vote.xaox.cc/api/rating"
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.services.rating.providers.star_vote",
+      "runtimePath": "extensions.services.rating.providers.star_vote",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
           "endpoint": "https://star-vote.xaox.cc/api/rating"
         }
       },
@@ -4503,11 +4820,10 @@
       "sealed": true
     },
     {
-      "path": "extensions.services.rating.endpoint",
-      "runtimePath": "extensions.services.rating.endpoint",
+      "path": "extensions.services.rating.providers.star_vote.endpoint",
+      "runtimePath": "extensions.services.rating.providers.star_vote.endpoint",
       "type": [
-        "string",
-        "null"
+        "string"
       ],
       "default": {
         "kind": "literal",
@@ -4538,6 +4854,113 @@
       "default": {
         "kind": "literal",
         "value": {
+          "provider": "site_info_api",
+          "providers": {
+            "site_info_api": {
+              "endpoint": "https://api.xaox.cc/site_info/v1?url={href}"
+            }
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "provider": "site_info_api",
+        "providers": {
+          "site_info_api": {
+            "endpoint": "https://api.xaox.cc/site_info/v1?url={href}"
+          }
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.services.site_info.provider",
+      "runtimePath": "extensions.services.siteInfo.provider",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "site_info_api"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "site_info_api",
+      "migration": "configuration/extensions",
+      "values": [
+        null,
+        "site_info_api"
+      ]
+    },
+    {
+      "path": "extensions.services.site_info.providers",
+      "runtimePath": "extensions.services.siteInfo.providers",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "site_info_api": {
+            "endpoint": "https://api.xaox.cc/site_info/v1?url={href}"
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "site_info_api": {
+          "endpoint": "https://api.xaox.cc/site_info/v1?url={href}"
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.services.site_info.providers.site_info_api",
+      "runtimePath": "extensions.services.siteInfo.providers.site_info_api",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
           "endpoint": "https://api.xaox.cc/site_info/v1?url={href}"
         }
       },
@@ -4561,11 +4984,10 @@
       "sealed": true
     },
     {
-      "path": "extensions.services.site_info.endpoint",
-      "runtimePath": "extensions.services.siteInfo.endpoint",
+      "path": "extensions.services.site_info.providers.site_info_api.endpoint",
+      "runtimePath": "extensions.services.siteInfo.providers.site_info_api.endpoint",
       "type": [
-        "string",
-        "null"
+        "string"
       ],
       "default": {
         "kind": "literal",
@@ -4596,6 +5018,113 @@
       "default": {
         "kind": "literal",
         "value": {
+          "provider": "star_vote",
+          "providers": {
+            "star_vote": {
+              "endpoint": "https://star-vote.xaox.cc/api/vote"
+            }
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "provider": "star_vote",
+        "providers": {
+          "star_vote": {
+            "endpoint": "https://star-vote.xaox.cc/api/vote"
+          }
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.services.vote.provider",
+      "runtimePath": "extensions.services.vote.provider",
+      "type": [
+        "string",
+        "null"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": "star_vote"
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "identity",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": "star_vote",
+      "migration": "configuration/extensions",
+      "values": [
+        null,
+        "star_vote"
+      ]
+    },
+    {
+      "path": "extensions.services.vote.providers",
+      "runtimePath": "extensions.services.vote.providers",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
+          "star_vote": {
+            "endpoint": "https://star-vote.xaox.cc/api/vote"
+          }
+        }
+      },
+      "scope": "theme",
+      "cascade": [
+        "schema default",
+        "_config.stellar.yml"
+      ],
+      "normalizer": "object",
+      "normalization": "merge declared child fields; deep-freeze the normalized JavaScript object",
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ],
+      "example": {
+        "star_vote": {
+          "endpoint": "https://star-vote.xaox.cc/api/vote"
+        }
+      },
+      "migration": "configuration/extensions",
+      "sealed": true
+    },
+    {
+      "path": "extensions.services.vote.providers.star_vote",
+      "runtimePath": "extensions.services.vote.providers.star_vote",
+      "type": [
+        "object"
+      ],
+      "default": {
+        "kind": "literal",
+        "value": {
           "endpoint": "https://star-vote.xaox.cc/api/vote"
         }
       },
@@ -4619,11 +5148,10 @@
       "sealed": true
     },
     {
-      "path": "extensions.services.vote.endpoint",
-      "runtimePath": "extensions.services.vote.endpoint",
+      "path": "extensions.services.vote.providers.star_vote.endpoint",
+      "runtimePath": "extensions.services.vote.providers.star_vote.endpoint",
       "type": [
-        "string",
-        "null"
+        "string"
       ],
       "default": {
         "kind": "literal",

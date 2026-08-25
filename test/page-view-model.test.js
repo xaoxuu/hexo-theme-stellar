@@ -646,7 +646,10 @@ test("Post render 投影详情关系、Footer、评论和列表条目", () => {
         },
         features: { heti: { enabled: true } },
         services: {
-          contributors: { repositories: [{ source_prefix: "_posts/", repository: "owner/repo", branch: "main" }] },
+          contributors: {
+            provider: "github",
+            providers: { github: { repositories: [{ source_prefix: "_posts/", repository: "owner/repo", branch: "main" }] } }
+          },
           github: { api_url: "https://api.github.com" }
         }
       },

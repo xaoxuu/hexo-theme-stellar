@@ -377,24 +377,39 @@ extensions:
 
   services:
     site_info:
-      endpoint: https://api.xaox.cc/site_info/v1?url={href}
+      provider: site_info_api
+      providers:
+        site_info_api:
+          endpoint: https://api.xaox.cc/site_info/v1?url={href}
     rating:
-      endpoint: https://star-vote.xaox.cc/api/rating
+      provider: star_vote
+      providers:
+        star_vote:
+          endpoint: https://star-vote.xaox.cc/api/rating
     vote:
-      endpoint: https://star-vote.xaox.cc/api/vote
+      provider: star_vote
+      providers:
+        star_vote:
+          endpoint: https://star-vote.xaox.cc/api/vote
     contributors:
-      # 映射列表。[对象数组；每项含 source_prefix、repository，branch 默认为 main；空数组关闭]
-      # source_prefix 为 source/ 下安全相对路径；repository 格式为 owner/repository；branch 为非空字符串。
-      repositories: []
-      # - source_prefix: wiki/stellar/
-      #   repository: xaoxuu/hexo-theme-stellar
-      #   branch: main
+      provider: github
+      providers:
+        github:
+          # 映射列表。[对象数组；每项含 source_prefix、repository，branch 默认为 main；空数组关闭]
+          # source_prefix 为 source/ 下安全相对路径；repository 格式为 owner/repository；branch 为非空字符串。
+          repositories: []
+          # - source_prefix: wiki/stellar/
+          #   repository: xaoxuu/hexo-theme-stellar
+          #   branch: main
     github:
       api_url: https://api.github.com
       raw_url: https://raw.githubusercontent.com
       gist_url: https://gist.github.com
     github_card:
-      endpoint: https://github-readme-stats.vercel.app
+      provider: github_readme_stats
+      providers:
+        github_readme_stats:
+          endpoint: https://github-readme-stats.vercel.app
 
 appearance:
   color_scheme: auto # auto / light / dark

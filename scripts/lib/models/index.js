@@ -24,6 +24,7 @@ const { firstContentImage, postDescription, postImages } = require("../seo");
 const { caption } = require("../caption");
 const { wikiReadmeHtml } = require("../wiki_readme");
 const INTERNAL = require("../internal-constants");
+const { resolveServiceProvider } = require("../service-provider");
 const {
   articleFooterDefaults,
   articlePresentationDefaults,
@@ -221,7 +222,7 @@ function resolveLicense(license, item, runtimeData) {
 }
 
 function buildContributor(item, stellarConfig) {
-  const repositories = stellarConfig.extensions.services.contributors.repositories;
+  const repositories = resolveServiceProvider(stellarConfig.extensions.services.contributors)?.repositories;
   if (!Array.isArray(repositories)) return null;
   const source = item.source.file || "";
   const matched = repositories

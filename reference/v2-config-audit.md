@@ -2,7 +2,7 @@
 
 > 本页由当前配置 Schema 与 M6 退出字段清单自动生成。请勿手工编辑。
 
-结论计数：`public=485`、`localize=5`、`derive=0`、`internalize=9`、`remove=1`。
+结论计数：`public=500`、`localize=5`、`derive=0`、`internalize=9`、`remove=1`。
 
 | Scope | Path | Accepted | Disposition | Default source | Consumers | Rationale |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -300,22 +300,37 @@
 | theme | extensions.search.providers.local.scope | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.services | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.services.contributors | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | extensions.services.contributors.repositories | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | extensions.services.contributors.repositories[].branch | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | extensions.services.contributors.repositories[].repository | yes | public | derived:GitHub owner/repository | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | extensions.services.contributors.repositories[].source_prefix | yes | public | derived:repository source prefix | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.contributors.provider | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.contributors.providers | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.contributors.providers.github | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.contributors.providers.github.repositories | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.contributors.providers.github.repositories[].branch | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.contributors.providers.github.repositories[].repository | yes | public | derived:GitHub owner/repository | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.contributors.providers.github.repositories[].source_prefix | yes | public | derived:repository source prefix | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.services.github | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.services.github_card | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | extensions.services.github_card.endpoint | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.github_card.provider | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.github_card.providers | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.github_card.providers.github_readme_stats | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.github_card.providers.github_readme_stats.endpoint | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.services.github.api_url | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.services.github.gist_url | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.services.github.raw_url | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.services.rating | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | extensions.services.rating.endpoint | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.rating.provider | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.rating.providers | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.rating.providers.star_vote | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.rating.providers.star_vote.endpoint | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.services.site_info | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | extensions.services.site_info.endpoint | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.site_info.provider | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.site_info.providers | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.site_info.providers.site_info_api | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.site_info.providers.site_info_api.endpoint | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.services.vote | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | extensions.services.vote.endpoint | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.vote.provider | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.vote.providers | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.vote.providers.star_vote | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.services.vote.providers.star_vote.endpoint | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.tags | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.tags.button | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.tags.button.default_color | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |

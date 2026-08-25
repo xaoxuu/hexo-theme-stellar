@@ -112,7 +112,7 @@ graph TD
 
 ### 自动填充与数据 API
 
-`title`、`icon` 或 `desc` 缺失时，对应字段名追加到锚元素的 `autofill` 属性。`cardlink` 属性同时标记元素。配置了 `ctx.stellar.config.extensions.services.siteInfo.endpoint` 时，URL 以 `endpoint.replace('{href}', url)` 插值并作为 `data-api` 存储到锚上，启用客户端自动填充。
+`title`、`icon` 或 `desc` 缺失时，对应字段名追加到锚元素的 `autofill` 属性。`cardlink` 属性同时标记元素。`site_info` 选中的 provider 参数袋含有效 `endpoint` 时，URL 以 `endpoint.replace('{href}', url)` 插值并作为 `data-api` 存储到锚上，启用客户端自动填充；`provider: null` 时不输出 `data-api`。
 
 ```
 <a class="link-card plain card-hover card-hover--spotlight card-hover--tilt" cardlink autofill="title,icon,desc" data-api="...">
