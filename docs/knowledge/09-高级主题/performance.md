@@ -303,9 +303,9 @@ resources:
 
 M5 用固定 Classic Blog 输入分别构建 tag `1.44.0` 与当前 v2 npm tarball。统计口径是首页无条件输出的本地 script、可执行 inline script 以及 ESM 入口的静态 import；dynamic import、selector 未命中的 Extension 和第三方资源不计入核心集合。每个唯一资源使用 Node.js 22 的 gzip level 9 后求和，避免不同 Node/zlib 版本造成基线漂移。
 
-结果记录在 [test/fixtures/performance-baseline.json](../../../test/fixtures/performance-baseline.json)：v1 为 34,937 bytes，当前 v2 本地候选 tarball 为 18,671 bytes，降低 46.5581%，通过至少 30% 的门禁。`npm run performance:check` 会重新构建两边并逐字节检查记录，已纳入 `npm run check`；该基线是开发测试资料，不进入 npm 包。
+结果记录在 [test/fixtures/performance-baseline.json](../../../test/fixtures/performance-baseline.json)：v1 为 34,937 bytes，当前 v2 本地候选 tarball 为 17,292 bytes，降低 50.5052%，通过至少 30% 的门禁。`npm run performance:check` 会重新构建两边并逐字节检查记录，已纳入 `npm run check`；该基线是开发测试资料，不进入 npm 包。
 
-本次下降不是删除功能：`/js/icons.js` 与 `/js/plugins/dropdown.js` 从全页无条件 script 改为 Runtime Manifest 中的 `svg.icon[data-icon]` / `details.dropdown` selector Extension；命中页面仍加载原脚本，未命中页面不再支付首屏核心成本。
+`/js/icons.js` 与 `/js/plugins/dropdown.js` 从全页无条件 script 改为 Runtime Manifest 中的 `svg.icon[data-icon]` / `details.dropdown` selector Extension；命中页面仍加载原脚本，未命中页面不再支付首屏核心成本。含糊的 `/js/theme.js` 也已退出核心集合：配色选择能力更名为 Color Scheme Extension，默认关闭，只有显式启用时才作为 dynamic import 请求，因此默认基线不再包含该资源。
 
 **参考源码**：[ci/check-performance.js](../../../ci/check-performance.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[layout/_partial/scripts.ejs](../../../layout/_partial/scripts.ejs)、[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
@@ -316,6 +316,7 @@ M5 用固定 Classic Blog 输入分别构建 tag `1.44.0` 与当前 v2 npm tarba
 | 图片懒加载 | 内置 Feature | 启用 | `img_lazyload.js`、`feature.mjs`、`lazyload.styl` |
 | 懒加载过渡 | `extensions.features.lazy_loading.transition` | `fade` | `lazyload.styl` |
 | 链接预加载 | `extensions.features.link_prefetch.enabled` | `true`（flying_pages） | 内部资源注册表 |
+| 配色选择器 | `extensions.features.color_scheme_switch.enabled` | `false` | `color-scheme-switch.mjs`（按需） |
 | 图片比例缓存 | Hexo 事件 | 自动 | `get_image_ratios.js`、`fix_image_tags.js` |
 | 搜索缓存 | `extensions.search.providers.local.cache_ttl_seconds` | `localStorage`（TTL 默认 1 天） | `local-search.js`（客户端） |
 | GitHub URL | `extensions.services.github` | GitHub 默认 | 数据服务脚本 |

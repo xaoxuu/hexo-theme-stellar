@@ -26,6 +26,8 @@ Emoji 使用 `default_source + sources`，每个模板必须含 `{name}`；`quot
 
 timeline、voice、video 与 download-file 等动态能力使用 `.data-service` 占位。客户端模块与 Chat 自动信息端点由内部资源注册表固定，站点不能覆盖。
 
+Voice 波形颜色不依赖全局暗色工具状态：显式 `<html data-theme="light|dark">` 优先，否则读取 `prefers-color-scheme`。组件同时监听 `stellar:color-scheme-change` 与系统偏好变化并重绘；Services Extension 卸载时会释放两类监听，已卸载的波形不再响应配色变化。
+
 ## 常用语法
 
 - timeline：用成对标签组织时间节点。

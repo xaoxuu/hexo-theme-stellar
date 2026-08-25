@@ -1,6 +1,11 @@
 <%
 const dropdownItem = typeof item !== 'undefined' && item ? item : {}
-const items = Array.isArray(dropdownItem.items) ? dropdownItem.items.filter(child => child && child.title && child.url) : []
+const items = Array.isArray(dropdownItem.items) ? dropdownItem.items.filter(child => {
+  if (!child || !child.title) return false
+  if (child.type === 'link') return !!child.url
+  if (child.type === 'button') return !!child.onclick
+  return false
+}) : []
 const classes = ['dropdown']
 const dropdownRootClass = typeof rootClass === 'string' ? rootClass : ''
 if (dropdownRootClass) {
@@ -23,6 +28,15 @@ function linkAttrs(child) {
     attrs += ' rel="noopener noreferrer"'
   }
   return attrs
+}
+
+function itemContent(child) {
+  var body = ''
+  if (child.icon) {
+    body += '<span class="ui-collection__leading">' + icon(child.icon, 'no-lazy', true) + '</span>'
+  }
+  body += '<span class="ui-collection__content"><span class="ui-collection__title">' + escape_html(child.title) + '</span></span>'
+  return body
 }
 
 function layoutDiv() {
@@ -48,12 +62,13 @@ function layoutDiv() {
   el += '</summary>'
   el += '<div class="dropdown-menu ui-collection" data-ui-surface="glass" data-layout="list" data-variant="nav" data-density="compact">'
   for (let child of items) {
-    el += '<a class="dropdown-item ui-collection__item card-hover card-hover--spotlight"' + linkAttrs(child) + '>'
-    if (child.icon) {
-      el += '<span class="ui-collection__leading">' + icon(child.icon, 'no-lazy', true) + '</span>'
+    if (child.type === 'button') {
+      el += '<button type="button" class="dropdown-item ui-collection__item card-hover card-hover--spotlight" onclick="' + escape_html(child.onclick) + '">'
+      el += itemContent(child) + '</button>'
+    } else {
+      el += '<a class="dropdown-item ui-collection__item card-hover card-hover--spotlight"' + linkAttrs(child) + '>'
+      el += itemContent(child) + '</a>'
     }
-    el += '<span class="ui-collection__content"><span class="ui-collection__title">' + escape_html(child.title) + '</span></span>'
-    el += '</a>'
   }
   el += '</div></details>'
   return el

@@ -116,7 +116,16 @@ function normalizeValue(node, value) {
     if (value.type === "link") {
       return { type: "link", icon: value.icon, title: value.title, url: value.url };
     }
+    if (value.type === "button") {
+      return { type: "button", icon: value.icon, title: value.title, onclick: value.onclick };
+    }
     return { type: "dropdown", icon: value.icon, title: value.title, items: value.items };
+  }
+  if (node.normalizer === "footer_action_item") {
+    if (value.type === "link") {
+      return { type: "link", icon: value.icon, title: value.title, url: value.url };
+    }
+    return { type: "button", icon: value.icon, title: value.title, onclick: value.onclick };
   }
   if (node.normalizer === "parameter_bag") {
     return clone(value);
@@ -457,28 +466,43 @@ function validateMenuItems(node, input, source, path, issues) {
 }
 
 function validateFooterActions(node, input, source, path, issues) {
-  input.forEach((item, index) => {
-    if (!isPlainObject(item)) return;
-    const itemPath = `${path}[${index}]`;
-    const keys = Object.keys(item);
+  const actionTypes = new Set(["link", "button", "dropdown", "spacer"]);
+  function validateAction(item, itemPath, nested) {
+    if (!actionTypes.has(item.type)) {
+      issues.push(issue("invalid_value", source, `${itemPath}.type`, valueType(item.type), "link | button | dropdown | spacer", node.migration));
+      return;
+    }
+    if (nested && !["link", "button"].includes(item.type)) {
+      issues.push(issue("invalid_value", source, `${itemPath}.type`, valueType(item.type), "link | button", node.migration));
+      return;
+    }
     const allowed = item.type === "link"
       ? ["type", "icon", "title", "url"]
-      : item.type === "dropdown"
-        ? ["type", "icon", "title", "items"]
-        : item.type === "spacer" ? ["type"] : ["type"];
-    for (const key of keys) {
+      : item.type === "button"
+        ? ["type", "icon", "title", "onclick"]
+        : item.type === "dropdown"
+          ? ["type", "icon", "title", "items"]
+          : ["type"];
+    for (const key of Object.keys(item)) {
       if (!allowed.includes(key)) {
         issues.push(issue("unknown_field", source, `${itemPath}.${key}`, valueType(item[key]), allowed.join(" | "), node.migration));
       }
     }
-    if (item.type === "link") {
-      if (typeof item.icon !== "string" || item.icon.length === 0) {
+    if (item.type === "link" && !isSafeNavigationUrl(item.url)) {
+      issues.push(issue("invalid_value", source, `${itemPath}.url`, valueType(item.url), "safe navigable URL or root-relative path", node.migration));
+    }
+    if (item.type === "button") {
+      if (typeof item.title !== "string" || item.title.length === 0) {
+        issues.push(issue("missing_field", source, `${itemPath}.title`, valueType(item.title), "non-empty string", node.migration));
+      }
+      if (!nested && (typeof item.icon !== "string" || item.icon.length === 0)) {
         issues.push(issue("missing_field", source, `${itemPath}.icon`, valueType(item.icon), "non-empty string", node.migration));
       }
-      if (!isSafeNavigationUrl(item.url)) {
-        issues.push(issue("invalid_value", source, `${itemPath}.url`, valueType(item.url), "safe navigable URL or root-relative path", node.migration));
+      if (typeof item.onclick !== "string" || item.onclick.length === 0) {
+        issues.push(issue("missing_field", source, `${itemPath}.onclick`, valueType(item.onclick), "non-empty string", node.migration));
       }
-    } else if (item.type === "dropdown") {
+    }
+    if (item.type === "dropdown") {
       const title = typeof item.title === "string" ? item.title : "";
       const icon = typeof item.icon === "string" ? item.icon : "";
       if (title.length === 0 && icon.length === 0) {
@@ -486,6 +510,20 @@ function validateFooterActions(node, input, source, path, issues) {
       }
       if (!Array.isArray(item.items) || item.items.length === 0) {
         issues.push(issue("invalid_value", source, `${itemPath}.items`, valueType(item.items), "non-empty array", node.migration));
+      } else {
+        item.items.forEach((child, childIndex) => {
+          if (isPlainObject(child)) validateAction(child, `${itemPath}.items[${childIndex}]`, true);
+        });
+      }
+    }
+  }
+  input.forEach((item, index) => {
+    if (!isPlainObject(item)) return;
+    const itemPath = `${path}[${index}]`;
+    validateAction(item, itemPath, false);
+    if (item.type === "link") {
+      if (typeof item.icon !== "string" || item.icon.length === 0) {
+        issues.push(issue("missing_field", source, `${itemPath}.icon`, valueType(item.icon), "non-empty string", node.migration));
       }
     }
   });
@@ -746,7 +784,9 @@ function parseNode(node, input, source, path, issues, context) {
       if (parsed !== undefined) result[key] = parsed;
     }
   }
-  return node.normalizer === "footer_action" ? normalizeValue(node, result) : result;
+  return ["footer_action", "footer_action_item"].includes(node.normalizer)
+    ? normalizeValue(node, result)
+    : result;
 }
 
 function validateStellarSemantics(config, source) {

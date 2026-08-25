@@ -173,9 +173,9 @@ graph TD
 | `message.copy_denied` | `Clipboard permission was denied` | 剪贴板授权被拒绝 |
 | `message.copy_unsupported` | `Clipboard requires a supported browser and HTTPS` | 当前环境不支持剪贴板 |
 | `message.fetching_latest_release` | `'%s is fetching the latest release…'` | 历史兼容键；Wiki Hero 已改为无文字加载态，当前不再使用 |
-| `message.theme_switched.light` | `Switched to Light Mode` | |
-| `message.theme_switched.dark` | `Switched to Dark Mode` | |
-| `message.theme_switched.auto` | `Switched to Auto Mode` | |
+| `message.color_scheme_switched.light` | `Switched to Light Mode` | 仅启用 Color Scheme Extension 时进入 Runtime Manifest |
+| `message.color_scheme_switched.dark` | `Switched to Dark Mode` | 仅启用 Color Scheme Extension 时进入 Runtime Manifest |
+| `message.color_scheme_switched.auto` | `Switched to Auto Mode` | 仅启用 Color Scheme Extension 时进入 Runtime Manifest |
 
 **参考源码**：[languages/en.yml](../../../languages/en.yml)
 
@@ -349,7 +349,7 @@ flowchart TD
 
   subgraph "message group"
     msgcopied["message.copied"]
-    msgtheme["message.theme_switched.*"]
+    msgtheme["message.color_scheme_switched.*"]
   end
 
   en --> btntop

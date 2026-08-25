@@ -45,9 +45,10 @@ test("统一 descriptor 契约登记 runtime-bootstrap、Extension、Feature 与
   assert.doesNotThrow(() => validateContributionDefinitions(CONTRIBUTIONS));
   assert.deepEqual(new Set(CONTRIBUTIONS.map(item => item.kind)), new Set(["extension", "feature", "component"]));
   assert.equal(CONTRIBUTIONS.some(item => item.id === "runtime-bootstrap"), true);
+  assert.equal(CONTRIBUTIONS.some(item => item.id === "color-scheme-switch"), true);
   assert.equal(CONTRIBUTIONS.some(item => item.id === "katex-stylesheet"), true);
   assert.deepEqual(contributionSchemaIds("extensions.features"), [
-    "lazy_loading", "link_prefetch", "lightbox", "reveal", "math", "diagrams", "card_hover", "heti"
+    "color_scheme_switch", "lazy_loading", "link_prefetch", "lightbox", "reveal", "math", "diagrams", "card_hover", "heti"
   ]);
   assert.deepEqual(audit(), []);
 });
@@ -60,6 +61,7 @@ test("Runtime Manifest 顺序直接来自 descriptor 注册表", () => {
     comments: {},
     extensions: { search: {}, services: {} },
     features: {
+      colorSchemeSwitch: { enabled: false },
       linkPrefetch: { enabled: false },
       lightbox: { enabled: false },
       reveal: { enabled: false },
@@ -84,7 +86,7 @@ test("Runtime Manifest 顺序直接来自 descriptor 注册表", () => {
 });
 
 test("负向门禁拒绝重复注册与冲突的 Schema 默认值所有者", () => {
-  const duplicate = [...CONTRIBUTIONS, { ...CONTRIBUTIONS[1] }];
+  const duplicate = [...CONTRIBUTIONS, { ...CONTRIBUTIONS.find(item => item.id === "search") }];
   assert.throws(() => validateContributionDefinitions(duplicate), /duplicate contribution id search/);
 
   const conflicting = CONTRIBUTIONS.map(item => item.id === "katex-stylesheet"

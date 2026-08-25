@@ -18,7 +18,8 @@ function fixture(overrides = {}) {
     render: {},
     comments: { service: "giscus", options: { "data-repo": "x/y" }, pageTitle: "Docs" },
     messages: {
-      copy: { idle: "Copy", success: "Copied!", denied: "Denied", unsupported: "Unsupported", toast: "Copied!" }
+      copy: { idle: "Copy", success: "Copied!", denied: "Denied", unsupported: "Unsupported", toast: "Copied!" },
+      colorScheme: { light: "Light", dark: "Dark", auto: "Auto" }
     },
     extensions: {
       search: { provider: "local", providers: { local: { indexPath: "/search.json", lazy: true } } },
@@ -26,6 +27,7 @@ function fixture(overrides = {}) {
       services: { siteInfo: { provider: "site_info_api", providers: { site_info_api: { endpoint: "https://example.com/?url={href}" } } } },
       cache: { enabled: true, defaultTtl: 60, ttl: { siteinfo: 30 }, maxEntries: 20 },
       features: {
+        colorSchemeSwitch: { enabled: false },
         linkPrefetch: { enabled: true },
         lightbox: { enabled: true, selector: ".custom" },
         reveal: { enabled: true },
@@ -80,6 +82,19 @@ test("Runtime Manifest 按 render 选择 Math 与 diagrams", () => {
   assert.equal(ids.includes("mathjax"), true);
   assert.equal(ids.includes("diagrams"), true);
   assert.equal(manifest.extensions.find(item => item.id === "diagrams").config.theme, "dark");
+});
+
+test("Color Scheme Switch 仅在显式启用时进入 Runtime Manifest", () => {
+  const disabled = buildBrowserRuntimeManifest(fixture());
+  assert.equal(disabled.extensions.some(item => item.id === "color-scheme-switch"), false);
+
+  const input = fixture();
+  input.extensions.features.colorSchemeSwitch.enabled = true;
+  const enabled = buildBrowserRuntimeManifest(input);
+  const extension = enabled.extensions.find(item => item.id === "color-scheme-switch");
+  assert.equal(extension.module, "/js/runtime/extensions/color-scheme-switch.mjs");
+  assert.deepEqual(extension.when, { always: true });
+  assert.deepEqual(extension.config.messages, { light: "Light", dark: "Dark", auto: "Auto" });
 });
 
 test("Runtime Manifest 不投影未选中的 Site Info provider 参数袋", () => {

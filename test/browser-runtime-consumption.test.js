@@ -22,8 +22,10 @@ test("页面使用单一 Runtime Manifest 与 ESM bootstrap", () => {
   assert.match(runtime, /crossorigin="anonymous"/);
   assert.doesNotMatch(scripts, /comments\/script|_plugins\/index|services\.js/);
   assert.doesNotMatch(scripts, /\/js\/icons\.js|\/js\/plugins\/dropdown\.js/);
+  assert.doesNotMatch(scripts, /theme\.js|color-scheme-switch/);
   const registry = read("scripts/lib/contribution-registry.js");
   assert.match(registry, /id: "runtime-bootstrap"/);
+  assert.match(registry, /id: "color-scheme-switch"/);
   assert.match(registry, /id: "katex-stylesheet"/);
   assert.match(registry, /id: "deferred-icons".*selector\("svg\.icon\[data-icon\]"\)/s);
   assert.match(registry, /id: "dropdown".*selector\("details\.dropdown"\)/s);

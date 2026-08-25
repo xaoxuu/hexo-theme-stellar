@@ -152,13 +152,6 @@
   window.def = def;
   window.deps = deps;
 
-  // 主题切换提示文案（供 /js/theme.js 使用）
-  window.__STELLAR_I18N__ = {
-    light: `<%- __('message.theme_switched.light') %>`,
-    dark: `<%- __('message.theme_switched.dark') %>`,
-    auto: `<%- __('message.theme_switched.auto') %>`,
-  };
-
   // 搜索跳转高亮：URL 带 ?kw= 时按需加载，定位正文中的匹配词
   (function () {
     try {

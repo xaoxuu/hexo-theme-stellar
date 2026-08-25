@@ -29,7 +29,9 @@ test("Shell 消费链只读取冻结的 site 配置", () => {
 
   assert.match(leftFooter, /stellar_config\('site\.footer\.actions'\)/);
   assert.match(leftFooter, /item\.type === 'link'|item\.type === 'dropdown'/);
-  assert.doesNotMatch(leftFooter, /theme\.footer|item\.variant|item\.action|\.onclick/);
+  assert.match(leftFooter, /item\.type === 'button'/);
+  assert.match(leftFooter, /escape_html\(item\.onclick\)/);
+  assert.doesNotMatch(leftFooter, /theme\.footer|item\.variant|item\.action/);
 
   assert.match(mainFooter, /stellar_config\('site\.footer'\)/);
   assert.match(mainFooter, /siteFooter\.sections|siteFooter\.content/);

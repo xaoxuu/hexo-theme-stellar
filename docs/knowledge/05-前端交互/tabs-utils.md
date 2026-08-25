@@ -17,7 +17,6 @@ tags:
 
 - [source/js/main.js](../../../source/js/main.js)
 - [layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
-- [source/js/theme.js](../../../source/js/theme.js)
 
 </details>
 
@@ -388,4 +387,4 @@ sequenceDiagram
 
 这些值来自语言文件（见[本地化](../08-本地化/localization.md)），由模板 partial 注入。
 
-**参考源码**：[source/js/main.js](../../../source/js/main.js)、[source/js/theme.js](../../../source/js/theme.js)
+**参考源码**：[source/js/main.js](../../../source/js/main.js)

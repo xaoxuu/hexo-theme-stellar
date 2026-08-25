@@ -79,7 +79,7 @@ message:
   fetching_latest_release: '%s is fetching the latest release…'
   loading: Loading
   loading_failed: Failed to load. Please try again later.
-  theme_switched:
+  color_scheme_switched:
     light: Switched to Light Mode
     dark: Switched to Dark Mode
     auto: Switched to Auto Mode

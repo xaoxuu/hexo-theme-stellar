@@ -82,19 +82,25 @@ site:
 
   # 页脚：actions 位于左栏底部，sections/content 位于主内容区底部。[对象]
   footer:
-    # 左栏底部操作。[对象数组；type 取 link / dropdown / spacer；空数组不显示]
+    # 左栏底部操作。[对象数组；type 取 link / button / dropdown / spacer；空数组不显示]
     actions: []
     # - type: link
     #   icon: default:github
     #   title: GitHub
     #   url: https://github.com/
     # - type: dropdown
-    #   icon: default:documents
-    #   title: 更多链接
+    #   icon: default:theme
+    #   title: 配色方案
     #   items:
-    #     - icon: default:link
-    #       title: 文档
-    #       url: /wiki/
+    #     - type: button
+    #       title: 浅色
+    #       onclick: window.setColorScheme?.('light')
+    #     - type: button
+    #       title: 深色
+    #       onclick: window.setColorScheme?.('dark')
+    #     - type: button
+    #       title: 跟随系统
+    #       onclick: window.setColorScheme?.('auto')
     # - type: spacer
     # 页脚导航分栏。[对象数组；每组含非空 title 和 items 链接数组；空数组不显示分栏]
     sections: []
@@ -564,6 +570,10 @@ extensions:
     link_prefetch:
       # 是否预取即将访问的站内页面。[布尔值：true / false]
       enabled: true
+    # 配色方案选择接口；启用后按需提供 window.setColorScheme(mode)。[对象]
+    color_scheme_switch:
+      # 是否启用。[布尔值：true / false]
+      enabled: false
     # 正文图片灯箱。[对象]
     lightbox:
       # 是否启用。[布尔值：true / false]

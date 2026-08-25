@@ -248,6 +248,9 @@ function featureExtensionSchemas() {
     link_prefetch: extensionObject({
       enabled: extensionValue("boolean", true)
     }, { enabled: true }, { removedProperties: { enable: "enabled", provider: "internalized", service: "internalized", flying_pages: "internalized" } }),
+    color_scheme_switch: extensionObject({
+      enabled: extensionValue("boolean", false)
+    }, { enabled: false }),
     lightbox: extensionObject({
       enabled: extensionValue("boolean", true),
       selector: extensionValue("string", ".timenode p>img", { validator: "css_selector" })
@@ -687,23 +690,27 @@ const CONFIG_SCHEMA = deepFreeze({
                   icon: deliveredField("site.footer.actions[].icon", { normalizer: "identity", validator: "nullable_non_empty_string", example: "default:github" }),
                   title: deliveredField("site.footer.actions[].title", { normalizer: "identity", example: "GitHub" }),
                   url: deliveredField("site.footer.actions[].url", { normalizer: "identity", validator: "nullable_safe_navigation_url", example: "https://github.com/" }),
+                  onclick: deliveredField("site.footer.actions[].onclick", { normalizer: "identity", validator: "nullable_non_empty_string", example: "window.setColorScheme?.('light')" }),
                   items: deliveredField("site.footer.actions[].items", {
                     normalizer: "array",
-                    example: [{ icon: "default:github", title: "GitHub", url: "https://github.com/" }],
+                    example: [{ type: "link", icon: "default:github", title: "GitHub", url: "https://github.com/" }],
                     items: object({
                       consumers: SITE_CONSUMERS,
-                      example: { icon: "default:github", title: "GitHub", url: "https://github.com/" },
+                      normalizer: "footer_action_item",
+                      example: { type: "link", icon: "default:github", title: "GitHub", url: "https://github.com/" },
                       migration: "configuration/site",
-                      requiredProperties: ["title", "url"],
+                      requiredProperties: ["type", "title"],
                       properties: {
+                        type: deliveredField("site.footer.actions[].items[].type", { normalizer: "identity", example: "link" }),
                         icon: deliveredField("site.footer.actions[].items[].icon", { normalizer: "identity", validator: "nullable_non_empty_string", example: "default:github" }),
                         title: deliveredField("site.footer.actions[].items[].title", { normalizer: "identity", validator: "non_empty_string", example: "GitHub" }),
-                        url: deliveredField("site.footer.actions[].items[].url", { normalizer: "identity", validator: "safe_navigation_url", example: "https://github.com/" })
+                        url: deliveredField("site.footer.actions[].items[].url", { normalizer: "identity", validator: "nullable_safe_navigation_url", example: "https://github.com/" }),
+                        onclick: deliveredField("site.footer.actions[].items[].onclick", { normalizer: "identity", validator: "nullable_non_empty_string", example: "window.setColorScheme?.('light')" })
                       }
                     })
                   })
                 },
-                removedProperties: { variant: "type", action: null, onclick: null }
+                removedProperties: { variant: "type", action: null }
               })
             }),
             sections: deliveredField("site.footer.sections", {

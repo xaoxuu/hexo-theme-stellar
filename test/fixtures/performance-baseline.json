@@ -112,8 +112,8 @@
     "files": [
       {
         "path": "/js/main.js",
-        "bytes": 23637,
-        "gzipBytes": 7434
+        "bytes": 23664,
+        "gzipBytes": 7444
       },
       {
         "path": "/js/runtime/index.mjs",
@@ -126,26 +126,21 @@
         "gzipBytes": 2591
       },
       {
-        "path": "/js/theme.js",
-        "bytes": 1801,
-        "gzipBytes": 774
-      },
-      {
         "path": "/js/utils.js",
-        "bytes": 12082,
-        "gzipBytes": 3738
+        "bytes": 10727,
+        "gzipBytes": 3237
       },
       {
         "path": "inline:1",
-        "bytes": 7527,
-        "gzipBytes": 3076
+        "bytes": 7320,
+        "gzipBytes": 2962
       }
     ],
-    "bytes": 54136,
-    "gzipBytes": 18671
+    "bytes": 50800,
+    "gzipBytes": 17292
   },
   "metric": "sum of gzip-9 bytes for unconditional local first-screen scripts, inline executable scripts, and unconditional module imports",
   "minimumReduction": 0.3,
-  "reduction": 0.465581,
+  "reduction": 0.505052,
   "passed": true
 }

@@ -13,7 +13,7 @@
     "remove"
   ],
   "counts": {
-    "public": 500,
+    "public": 505,
     "localize": 5,
     "derive": 0,
     "internalize": 9,
@@ -3584,6 +3584,34 @@
         "migration guidance"
       ],
       "rationale": "代码复制 toast 属于主题 UI 文案"
+    },
+    {
+      "scope": "theme",
+      "path": "extensions.features.color_scheme_switch",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "extensions.features.color_scheme_switch.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Extension registry",
+        "Extension renderer",
+        "browser Extension runtime",
+        "Reference generator"
+      ]
     },
     {
       "scope": "theme",
@@ -7173,6 +7201,20 @@
     },
     {
       "scope": "theme",
+      "path": "site.footer.actions[].items[].onclick",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ]
+    },
+    {
+      "scope": "theme",
       "path": "site.footer.actions[].items[].title",
       "disposition": "public",
       "defaultSource": "declarative schema",
@@ -7187,7 +7229,35 @@
     },
     {
       "scope": "theme",
+      "path": "site.footer.actions[].items[].type",
+      "disposition": "public",
+      "defaultSource": "derived:footer dropdown action",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ]
+    },
+    {
+      "scope": "theme",
       "path": "site.footer.actions[].items[].url",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "site.footer.actions[].onclick",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",

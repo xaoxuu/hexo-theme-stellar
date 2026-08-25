@@ -2,7 +2,7 @@
 
 > 本页由当前配置 Schema 与 M6 退出字段清单自动生成。请勿手工编辑。
 
-结论计数：`public=500`、`localize=5`、`derive=0`、`internalize=9`、`remove=1`。
+结论计数：`public=505`、`localize=5`、`derive=0`、`internalize=9`、`remove=1`。
 
 | Scope | Path | Accepted | Disposition | Default source | Consumers | Rationale |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -261,6 +261,8 @@
 | theme | extensions.features.code_copy.idle_text | no | localize | languages/*.yml | configuration diagnostics<br>migration guidance | 代码复制按钮默认文案属于主题 UI 文案 |
 | theme | extensions.features.code_copy.success_text | no | localize | languages/*.yml | configuration diagnostics<br>migration guidance | 代码复制成功状态属于主题 UI 文案 |
 | theme | extensions.features.code_copy.toast | no | localize | languages/*.yml | configuration diagnostics<br>migration guidance | 代码复制 toast 属于主题 UI 文案 |
+| theme | extensions.features.color_scheme_switch | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.features.color_scheme_switch.enabled | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.features.diagrams | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.features.diagrams.provider | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.features.diagrams.providers | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
@@ -503,8 +505,11 @@
 | theme | site.footer.actions[].icon | yes | public | declarative schema | PageViewModel<br>Shell renderer<br>menu renderer<br>footer renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | site.footer.actions[].items | yes | public | declarative schema | PageViewModel<br>Shell renderer<br>menu renderer<br>footer renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | site.footer.actions[].items[].icon | yes | public | declarative schema | PageViewModel<br>Shell renderer<br>menu renderer<br>footer renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | site.footer.actions[].items[].onclick | yes | public | declarative schema | PageViewModel<br>Shell renderer<br>menu renderer<br>footer renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | site.footer.actions[].items[].title | yes | public | declarative schema | PageViewModel<br>Shell renderer<br>menu renderer<br>footer renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | site.footer.actions[].items[].type | yes | public | derived:footer dropdown action | PageViewModel<br>Shell renderer<br>menu renderer<br>footer renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | site.footer.actions[].items[].url | yes | public | declarative schema | PageViewModel<br>Shell renderer<br>menu renderer<br>footer renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | site.footer.actions[].onclick | yes | public | declarative schema | PageViewModel<br>Shell renderer<br>menu renderer<br>footer renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | site.footer.actions[].title | yes | public | declarative schema | PageViewModel<br>Shell renderer<br>menu renderer<br>footer renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | site.footer.actions[].type | yes | public | derived:footer action | PageViewModel<br>Shell renderer<br>menu renderer<br>footer renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | site.footer.actions[].url | yes | public | declarative schema | PageViewModel<br>Shell renderer<br>menu renderer<br>footer renderer | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |

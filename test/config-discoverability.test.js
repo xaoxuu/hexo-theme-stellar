@@ -27,12 +27,12 @@ const STRUCTURAL_CONTRACTS = Object.freeze({
     markers: ["    # - id: post", "    #   accent: '#1BCDFC'", "    #   icon: default:documents", "    #   title: 博客", "    #   url: /"]
   },
   "site.footer.actions[]": {
-    fields: ["type", "icon", "title", "url", "items"],
+    fields: ["type", "icon", "title", "url", "onclick", "items"],
     markers: ["    # - type: link", "    # - type: dropdown", "    # - type: spacer"]
   },
   "site.footer.actions[].items[]": {
-    fields: ["icon", "title", "url"],
-    markers: ["    #   items:", "    #     - icon: default:link", "    #       title: 文档", "    #       url: /wiki/"]
+    fields: ["type", "icon", "title", "url", "onclick"],
+    markers: ["    #   items:", "    #     - type: button", "    #       title: 浅色", "    #       onclick: window.setColorScheme?.('light')"]
   },
   "site.footer.sections[]": {
     fields: ["title", "items"],

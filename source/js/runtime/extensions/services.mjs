@@ -9,6 +9,7 @@ export async function mount(root, context) {
   });
   const deps = { marked: config.marked };
   const loads = [];
+  const voiceCleanups = [];
   // 用于存储需要清理的资源
   let intervals = [];
   let timeouts = [];
@@ -34,7 +35,8 @@ export async function mount(root, context) {
       const voiceAudios = root.querySelectorAll('.voice>audio');
       if (voiceAudios?.length > 0) {
         loads.push(assets.script(js).then(function () {
-          createVoiceDom(voiceAudios);
+          const voiceCleanup = createVoiceDom(voiceAudios);
+          if (typeof voiceCleanup === 'function') voiceCleanups.push(voiceCleanup);
         }));
       }
     } else if (id == 'video') {
@@ -178,6 +180,10 @@ export async function mount(root, context) {
       quote.removeEventListener('click', handler);
     });
     quoteClickHandlers.clear();
+    for (let index = voiceCleanups.length - 1; index >= 0; index -= 1) {
+      voiceCleanups[index]();
+    }
+    voiceCleanups.length = 0;
   };
   try {
     await Promise.all(loads);

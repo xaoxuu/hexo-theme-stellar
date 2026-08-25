@@ -26,6 +26,13 @@ var runtimeMessages = {
     toast: __('message.copied')
   }
 }
+if (runtimeExtensions.features.colorSchemeSwitch.enabled) {
+  runtimeMessages.colorScheme = {
+    light: __('message.color_scheme_switched.light'),
+    dark: __('message.color_scheme_switched.dark'),
+    auto: __('message.color_scheme_switched.auto')
+  }
+}
 var runtimeJson = browser_runtime_manifest({
   root: config.root,
   extensions: runtimeExtensions,

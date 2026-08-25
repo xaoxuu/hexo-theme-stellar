@@ -668,6 +668,7 @@ const init = {
 
 // Stellar namespace
 window.stellar = window.stellar || {};
+stellar.toast = hud.toast;
 
 /**
  * Initialize page components

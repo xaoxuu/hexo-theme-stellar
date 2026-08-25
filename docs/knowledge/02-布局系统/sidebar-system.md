@@ -203,7 +203,7 @@ Wiki 内容页在 Brand 上方显示“所有项目”入口，链接使用 `ren
 
 ## 左栏：Footer Actions
 
-左栏底部的 `.footer` 由冻结的 `site.footer.actions` 有序数组驱动。普通链接条目使用 `type: link`，不接受 JavaScript action：
+左栏底部的 `.footer` 由冻结的 `site.footer.actions` 有序数组驱动。Action 使用严格判别类型：`link` 必须提供 `url` 且禁止 `onclick`；`button` 必须提供 `icon`、`title`、`onclick` 且禁止 `url/items`；`dropdown` 必须提供非空 `items`；`spacer` 保持为空的分隔项。普通链接示例：
 
 ``@@BT@yaml
 site:
@@ -215,24 +215,40 @@ site:
         url: https://github.com/
 ``@@BT@
 
-`type: dropdown` 渲染通用下拉菜单：
+`type: dropdown` 渲染通用下拉菜单。每个子项必须显式声明 `type: link | button`；link 渲染为 `<a>`，button 渲染为 `<button type="button">`。下面的可选配色入口只有在同时启用 Color Scheme Extension 时才有效：
 
 ``@@BT@yaml
 site:
   footer:
     actions:
       - type: dropdown
-        icon: default:documents
-        title: 更多链接
+        icon: default:theme
+        title: 配色方案
         items:
-          - icon: default:documents
-            title: 文档
-            url: /wiki/
-          - title: GitHub
-            url: https://github.com/
+          - type: button
+            title: 浅色
+            onclick: window.setColorScheme?.('light')
+          - type: button
+            title: 深色
+            onclick: window.setColorScheme?.('dark')
+          - type: button
+            title: 跟随系统
+            onclick: window.setColorScheme?.('auto')
 ``@@BT@
 
-dropdown 由 `layout/_partial/dropdown.ejs` 使用原生 `<details>/<summary>` 渲染；不支持嵌套 dropdown。子项的 URL 沿用普通操作的内链/外链处理规则。
+dropdown 由 `layout/_partial/dropdown.ejs` 使用原生 `<details>/<summary>` 渲染；不支持嵌套 dropdown。子项 link 的 URL 沿用普通操作的内链/外链处理规则；button 执行后关闭菜单，鼠标点击和键盘激活行为一致。无 JavaScript 时仍可用原生 `<details>` 展开，inline handler 也能直接执行。`onclick` 被视为受信任的站点配置，模板负责 HTML 属性转义，但不保证兼容禁止 inline handler 的严格 CSP。
+
+顶层也可直接声明确定操作按钮，例如：
+
+``@@BT@yaml
+site:
+  footer:
+    actions:
+      - type: button
+        icon: default:theme
+        title: 深色
+        onclick: window.setColorScheme?.('dark')
+``@@BT@
 
 Social 按钮与 dropdown 触发器共用 32px 高度、4px 内边距和 8px 圆角；内联 SVG 与图片图标统一放入 24×24px 图标盒，图片使用 `object-fit: contain` 保持原始比例，且两者都不接受通用 dropdown trigger 的 20px 覆盖。
 
@@ -251,7 +267,10 @@ site:
       - type: dropdown
         icon: default:documents
         title: 更多链接
-        items: []
+        items:
+          - type: link
+            title: 文档
+            url: /wiki/
 ``@@BT@
 
 **参考源码**：[layout/_partial/sidebar/index_leftbar.ejs](../../../layout/_partial/sidebar/index_leftbar.ejs)、[layout/_partial/dropdown.ejs](../../../layout/_partial/dropdown.ejs)、[source/js/plugins/dropdown.js](../../../source/js/plugins/dropdown.js)、[source/css/_common/dropdown.styl](../../../source/css/_common/dropdown.styl)、[source/css/_components/sidebar/footer.styl](../../../source/css/_components/sidebar/footer.styl)、[_config.yml](../../../_config.yml)

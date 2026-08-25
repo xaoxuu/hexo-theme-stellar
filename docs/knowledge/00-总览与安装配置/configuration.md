@@ -137,6 +137,21 @@ Card Hover 只公开 `enabled`；光斑颜色和最大倾斜角是主题内部�
 
 **参考源码**：[_config.yml](../../../_config.yml)、[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 
+### 可选配色选择器
+
+`extensions.features.color_scheme_switch` 默认关闭。关闭时不进入 Runtime Manifest、不输出配色切换文案，也不请求客户端模块；主题不会自动添加 UI：
+
+```yaml
+extensions:
+  features:
+    color_scheme_switch:
+      enabled: false
+```
+
+启用后提供 `window.setColorScheme('light' | 'dark' | 'auto')`。Footer Dropdown 的三项确定选择示例见[侧栏系统](../02-布局系统/sidebar-system.md#左栏footer-actions)。模块契约、存储键与事件见[前端交互概览](../05-前端交互/client-side-overview.md#可选配色选择器)。
+
+**参考源码**：[_config.yml](../../../_config.yml)、[source/js/runtime/extensions/color-scheme-switch.mjs](../../../source/js/runtime/extensions/color-scheme-switch.mjs)
+
 ## 层级覆盖系统
 
 配置值的解析遵循「越具体的范围覆盖越宽泛的范围」：

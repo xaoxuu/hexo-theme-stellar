@@ -150,6 +150,10 @@ function layoutFooterDiv() {
       el += '>';
       el += icon(item.icon, 'no-lazy')
       el += '</a>';
+    } else if (item.type === 'button') {
+      el += '<button type="button" class="social" title="' + escape_html(item.title) + '" aria-label="' + escape_html(item.title) + '" onclick="' + escape_html(item.onclick) + '">';
+      el += icon(item.icon, 'no-lazy')
+      el += '</button>';
     }
   }
   el += '</div>';

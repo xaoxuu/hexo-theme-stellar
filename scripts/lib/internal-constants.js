@@ -55,7 +55,8 @@ module.exports = deepFreeze({
   },
   assets: {
     runtime: {
-      bootstrap: "/js/runtime/index.mjs"
+      bootstrap: "/js/runtime/index.mjs",
+      colorSchemeSwitch: "/js/runtime/extensions/color-scheme-switch.mjs"
     },
     dependencies: {
       marked: "https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js",

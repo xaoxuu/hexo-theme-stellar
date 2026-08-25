@@ -41,6 +41,31 @@ const CONTRIBUTIONS = defineContributions([
     project: null
   },
   {
+    id: "color-scheme-switch",
+    kind: "feature",
+    entry: runtimeEntry("/js/runtime/extensions/color-scheme-switch.mjs"),
+    resources: ["runtime.colorSchemeSwitch"],
+    activation: { type: "always" },
+    schema: "extensions.features.color_scheme_switch",
+    i18n: {
+      namespace: "color-scheme-switch",
+      keys: [
+        "message.color_scheme_switched.light",
+        "message.color_scheme_switched.dark",
+        "message.color_scheme_switched.auto"
+      ]
+    },
+    docs: { category: "Extensions", path: "docs/knowledge/05-前端交互/client-side-overview.md" },
+    tests: ["test/color-scheme-switch.test.js", RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
+    defaultsOwner: CONFIG_OWNER("extensions.features.color_scheme_switch"),
+    project(context) {
+      if (context.features.colorSchemeSwitch?.enabled !== true) return null;
+      return configResult({
+        messages: context.plainObject(context.messages.colorScheme, "messages.colorScheme")
+      });
+    }
+  },
+  {
     id: "search",
     kind: "extension",
     entry: runtimeEntry("/js/runtime/extensions/search.mjs"),

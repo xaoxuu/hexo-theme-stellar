@@ -87,6 +87,7 @@ test("site/layout/content/appearance/resources/head Schema 提供默认值并拒
   assert.equal(config.extensions.search.provider, "local");
   assert.equal(config.extensions.comments.provider, null);
   assert.equal(config.extensions.features.reveal.enabled, true);
+  assert.equal(config.extensions.features.colorSchemeSwitch.enabled, false);
   assert.equal(config.extensions.services.github.rawUrl, "https://raw.githubusercontent.com");
   assert.equal("cache" in config.extensions, false);
   assertDeepFrozen(config);
@@ -384,7 +385,7 @@ test("site Shell 解析封闭对象数组、动态 action 记录并完整替换�
               type: "dropdown",
               icon: "more",
               title: "More",
-              items: [{ title: "About", url: "/about/" }]
+              items: [{ type: "link", title: "About", url: "/about/" }]
             },
             { type: "spacer" },
             { type: "link", icon: "home", title: "Home", url: "/" }
@@ -417,7 +418,7 @@ test("site Shell 解析封闭对象数组、动态 action 记录并完整替换�
           type: "dropdown",
           icon: "more",
           title: "More",
-          items: [{ icon: null, title: "About", url: "/about/" }]
+          items: [{ type: "link", icon: null, title: "About", url: "/about/" }]
         },
         { type: "spacer" },
         { type: "link", icon: "home", title: "Home", url: "/" }
@@ -506,6 +507,49 @@ test("site Shell 与 Layout 拒绝不安全链接、重复菜单、无效引用�
       layout: { profiles: { home: { navigation: { active_menu: "missing" } } } }
     }
   }), /layout\.profiles\.home\.navigation\.active_menu.*id present in site\.menu\.items/);
+});
+
+test("Footer Actions 严格区分 link、button 与 dropdown 子项", () => {
+  const config = parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: {
+      site: { footer: { actions: [
+        { type: "button", icon: "default:theme", title: "Theme", onclick: "window.setColorScheme?.('dark')" },
+        { type: "dropdown", icon: "default:theme", title: "Scheme", items: [
+          { type: "link", title: "Docs", url: "/wiki/" },
+          { type: "button", title: "Auto", onclick: "window.setColorScheme?.('auto')" }
+        ] }
+      ] } },
+      extensions: { features: { color_scheme_switch: { enabled: true } } }
+    }
+  });
+
+  assert.equal(config.extensions.features.colorSchemeSwitch.enabled, true);
+  assert.deepEqual(config.site.footer.actions, [
+    { type: "button", icon: "default:theme", title: "Theme", onclick: "window.setColorScheme?.('dark')" },
+    { type: "dropdown", icon: "default:theme", title: "Scheme", items: [
+      { type: "link", icon: null, title: "Docs", url: "/wiki/" },
+      { type: "button", icon: null, title: "Auto", onclick: "window.setColorScheme?.('auto')" }
+    ] }
+  ]);
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { site: { footer: { actions: [
+      { type: "link", icon: "default:link", title: "Bad", url: "/", onclick: "run()" },
+      { type: "button", icon: "default:theme", title: "Bad", onclick: "", url: "/" },
+      { type: "dropdown", icon: "default:theme", title: "Bad", items: [{ title: "Missing type", url: "/" }] },
+      { type: "unknown" }
+    ] } } }
+  }), error => {
+    assert.ok(error instanceof ConfigSchemaError);
+    assert.match(error.message, /actions\[0\]\.onclick/);
+    assert.match(error.message, /actions\[1\]\.url/);
+    assert.match(error.message, /actions\[1\]\.onclick 的值不在 non-empty string/);
+    assert.match(error.message, /actions\[2\]\.items\[0\]\.type/);
+    assert.match(error.message, /actions\[3\]\.type/);
+    return true;
+  });
 });
 
 test("canonical null 禁用输出且 Schema 不做类型转换", () => {

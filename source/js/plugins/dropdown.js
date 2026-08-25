@@ -343,6 +343,14 @@
         }
       })
     }
+    const menu = getDirectChild(dropdown, '.dropdown-menu')
+    if (menu) {
+      listen(state, menu, 'click', event => {
+        if (event.target.closest('.dropdown-item') && active?.dropdown === dropdown) {
+          closeState(active, false)
+        }
+      })
+    }
     listen(state, dropdown, 'mouseleave', () => {
       dropdown.__stellarDropdownHovering = false
     })

@@ -3,47 +3,6 @@
   if (window.__stellarUtilsLoaded) return;
   window.__stellarUtilsLoaded = true;
 
-  function RunItem() {
-    this.list = []; // 存放回调函数
-    this.start = () => {
-      for (var i = 0; i < this.list.length; i++) {
-        this.list[i].run();
-      }
-    };
-    this.push = (fn, name, setRequestAnimationFrame = true) => {
-      let myfn = fn
-      if (setRequestAnimationFrame) {
-        myfn = () => {
-          utils.requestAnimationFrame(fn)
-        }
-      }
-      var f = new Item(myfn, name);
-      this.list.push(f);
-    };
-    this.remove = (name) => {
-      // 倒序遍历避免 splice 后的索引问题
-      for (let index = this.list.length - 1; index >= 0; index--) {
-        const e = this.list[index];
-        if (e.name === name) {
-          this.list.splice(index, 1);
-        }
-      }
-    }
-    // 构造一个可以run的对象
-    function Item(fn, name) {
-      // 函数名称
-      this.name = name || fn.name;
-      // run方法
-      this.run = () => {
-        try {
-          fn()
-        } catch (error) {
-          console.log(error);
-        }
-      };
-    }
-  }
-
   const utils = {
     // 已加载样式缓存
     _loadedStyles: new Set(),
@@ -329,18 +288,7 @@
       }
       window.requestAnimationFrame(fn)
     },
-    dark: {},
   };
-
-  // utils.dark.mode 当前模式 dark or light
-  // utils.dark.toggle() 暗黑模式触发器
-  // utils.dark.push(callBack[,"callBackName"]) 传入触发器回调函数
-  utils.dark.method = {
-    toggle: new RunItem(),
-  };
-  utils.dark = Object.assign(utils.dark, {
-    push: utils.dark.method.toggle.push,
-  });
 
   // 自定义注入脚本可能在 type=module runtime 执行前调用 request；以 Promise 接缝排队，
   // runtime 安装真实 adapter 后统一放行，不在经典脚本中复制任何网络或缓存算法。

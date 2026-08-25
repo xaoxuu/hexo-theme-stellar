@@ -1,3 +1,27 @@
+function isDarkColorScheme(documentRef, mediaQuery) {
+    const explicit = documentRef.documentElement.getAttribute('data-theme');
+    if (explicit === 'dark') return true;
+    if (explicit === 'light') return false;
+    return mediaQuery.matches;
+}
+
+function listenColorScheme(documentRef, mediaQuery, callback) {
+    documentRef.addEventListener('stellar:color-scheme-change', callback);
+    if (typeof mediaQuery.addEventListener === 'function') {
+        mediaQuery.addEventListener('change', callback);
+    } else if (typeof mediaQuery.addListener === 'function') {
+        mediaQuery.addListener(callback);
+    }
+    return function cleanup() {
+        documentRef.removeEventListener('stellar:color-scheme-change', callback);
+        if (typeof mediaQuery.removeEventListener === 'function') {
+            mediaQuery.removeEventListener('change', callback);
+        } else if (typeof mediaQuery.removeListener === 'function') {
+            mediaQuery.removeListener(callback);
+        }
+    };
+}
+
 /**该方法用来绘制一个有填充色的圆角矩形 
     *@param cxt:canvas的上下文环境 
     *@param x:左上角x轴坐标 
@@ -152,6 +176,7 @@ function drawPlayLine(context, playLineHeight, playLineX, playLineColor) {
 }
 
 function createVoiceDom(audios) {
+    const cleanups = [];
     for (let i = 0; i < audios.length; ++i) {
         let audio = audios[i];
         audio.loop = false;
@@ -159,13 +184,17 @@ function createVoiceDom(audios) {
 
         if (audio.classList.contains('qq')) {
             if (isNaN(audio.duration) || audio.duration === Infinity) {
-                audio.addEventListener('durationchange', ()=>{
+                const handleDurationChange = ()=>{
                     // createCssStyle(audio, i);
-                    createWaveDom(audio);
-                });
+                    const cleanup = createWaveDom(audio);
+                    if (cleanup) cleanups.push(cleanup);
+                };
+                audio.addEventListener('durationchange', handleDurationChange, { once: true });
+                cleanups.push(() => audio.removeEventListener('durationchange', handleDurationChange));
             } else {
                 // createCssStyle(audio, i);
-                createWaveDom(audio);
+                const cleanup = createWaveDom(audio);
+                if (cleanup) cleanups.push(cleanup);
             }
         } else if (audio.classList.contains('wechat')) {
             if (isNaN(audio.duration) || audio.duration === Infinity) {
@@ -177,6 +206,10 @@ function createVoiceDom(audios) {
             }
         }
     }
+    return function cleanup() {
+        for (let index = cleanups.length - 1; index >= 0; index -= 1) cleanups[index]();
+        cleanups.length = 0;
+    };
 }
 
 // cancas 效果更好
@@ -213,22 +246,20 @@ function createWaveDom(audio) {
         var context = audioCanvas.getContext("2d"); //获取画布context的上下文环境 
         context.scale(dpr, 1);
 
-        let activeWaveColor = '#333';
-        let inactiveWaveColor = '#999';
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        let activeWaveColor;
+        let inactiveWaveColor;
 
-        if (audioCanvas.classList.contains('right')) {
-            activeWaveColor = '#ffffff';
-            inactiveWaveColor = '#1373b3';
-        }
-
-        if (utils.dark.mode === "dark") {
-            activeWaveColor = '#ccc';
-            inactiveWaveColor = '#707070';
+        function updateWaveColors() {
+            const dark = isDarkColorScheme(document, mediaQuery);
+            activeWaveColor = dark ? '#ccc' : '#333';
+            inactiveWaveColor = dark ? '#707070' : '#999';
             if (audioCanvas.classList.contains('right')) {
-                activeWaveColor = '#fff9';
-                inactiveWaveColor = '#6797b780';
+                activeWaveColor = dark ? '#fff9' : '#ffffff';
+                inactiveWaveColor = dark ? '#6797b780' : '#1373b3';
             }
         }
+        updateWaveColors();
 
         let playFlag = false;
 
@@ -237,21 +268,7 @@ function createWaveDom(audio) {
 
         audio.addEventListener('timeupdate', ()=>{
             if (audio.currentTime > 0) {
-                if (utils.dark.mode === "dark") {
-                    activeWaveColor = '#ccc';
-                    inactiveWaveColor = '#707070';
-                    if (audioCanvas.classList.contains('right')) {
-                        activeWaveColor = '#fff9';
-                        inactiveWaveColor = '#6797b780';
-                    }
-                } else {
-                    activeWaveColor = '#333';
-                    inactiveWaveColor = '#999';
-                    if (audioCanvas.classList.contains('right')) {
-                        activeWaveColor = '#ffffff';
-                        inactiveWaveColor = '#1373b3';
-                    }
-                }
+                updateWaveColors();
                 utils.requestAnimationFrame(()=>{
                     context.clearRect(0, 0, audioCanvas.width, audioCanvas.height);
                     drawWaveWhenPlaying(context,audioCanvas.height,(audio.currentTime / audio.duration) * audioCanvas.width / dpr,waveHeightArr,1,activeWaveColor,inactiveWaveColor);
@@ -285,23 +302,9 @@ function createWaveDom(audio) {
             }
         });
 
-        utils.dark.push(function () {
+        const cleanupColorScheme = listenColorScheme(document, mediaQuery, function () {
             if (!playFlag) {
-                if (utils.dark.mode === "dark") {
-                    activeWaveColor = '#ccc';
-                    inactiveWaveColor = '#707070';
-                    if (audioCanvas.classList.contains('right')) {
-                        activeWaveColor = '#fff9';
-                        inactiveWaveColor = '#6797b780';
-                    }
-                } else {
-                    activeWaveColor = '#333';
-                    inactiveWaveColor = '#999';
-                    if (audioCanvas.classList.contains('right')) {
-                        activeWaveColor = '#ffffff';
-                        inactiveWaveColor = '#1373b3';
-                    }
-                }
+                updateWaveColors();
                 if (audio.currentTime > 0) {
                     utils.requestAnimationFrame(()=>{
                         context.clearRect(0, 0, audioCanvas.width, audioCanvas.height);
@@ -316,7 +319,7 @@ function createWaveDom(audio) {
                 }
             }
         });
-        
+        return cleanupColorScheme;
     } else {
         console.log("浏览器不支持canvas");
     }

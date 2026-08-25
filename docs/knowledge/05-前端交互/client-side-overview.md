@@ -16,8 +16,8 @@ tags:
 
 - [source/js/main.js](../../../source/js/main.js)
 - [source/js/utils.js](../../../source/js/utils.js)
-- [source/js/theme.js](../../../source/js/theme.js)
 - [source/js/runtime/index.mjs](../../../source/js/runtime/index.mjs)
+- [source/js/runtime/extensions/color-scheme-switch.mjs](../../../source/js/runtime/extensions/color-scheme-switch.mjs)
 - [source/js/runtime/extensions/services.mjs](../../../source/js/runtime/extensions/services.mjs)
 - [source/js/tagtree.js](../../../source/js/tagtree.js)
 - [layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
@@ -126,6 +126,17 @@ graph TB
 旧 `document.write`、同步 utils 补载、`_pluginQueue`、`initPlugin` 和 ScrollReveal 恢复看门狗已经删除。`utils.js` 仍同步提供迁移期经典 DOM/资源工具，但不再注册插件或实现 request/cache。
 
 **参考源码**：[layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/index.mjs](../../../source/js/runtime/index.mjs)、[source/js/runtime/extension-registry.mjs](../../../source/js/runtime/extension-registry.mjs)
+
+#### 可选配色选择器
+
+配色切换不是核心资源。`extensions.features.color_scheme_switch.enabled` 默认为 `false`；关闭时 Runtime Manifest 不包含 `color-scheme-switch`，页面不输出其三条文案，也不会请求对应模块。启用后，Contribution Registry 把 `/js/runtime/extensions/color-scheme-switch.mjs` 作为 `always` Extension 安排在 Services 与 Voice 之前挂载，并暴露 `window.setColorScheme(mode)`。
+
+`mode` 只接受 `light`、`dark`、`auto`。固定模式写入 `<html data-theme>`，`auto` 移除该属性；所选状态保存到 `Stellar.colorScheme`。每次确定选择都会派发 `stellar:color-scheme-change`，事件详情包含选择状态与解析后的实际明暗；自动模式还会跟随 `prefers-color-scheme`。非法参数抛出 `TypeError`，卸载 Extension 时会移除系统监听并恢复挂载前的同名全局属性。
+
+主题不自动输出切换入口，也不提供循环切换函数。站点可在 Footer Dropdown 中用三个明确的 `type: button` 调用 setter，具体结构见[侧栏系统：Footer Actions](../02-布局系统/sidebar-system.md#左栏footer-actions)。
+
+**参考源码**：[scripts/lib/contribution-registry.js](../../../scripts/lib/contribution-registry.js)、[source/js/runtime/extensions/color-scheme-switch.mjs](../../../source/js/runtime/extensions/color-scheme-switch.mjs)、[layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)
+
 ---
 
 ### 置顶内容轮播（pin-slider）
