@@ -58,7 +58,7 @@
       if hexo-config('appearance.backgrounds.sidebar.backdrop.radius')
         --inset: 32px
       --background-opacity: hexo-config('appearance.backgrounds.sidebar.opacity')
-      background-image: unquote("url('%s')" % $leftbar-background-image)
+      background-image: url($leftbar-background-image)
       filter: saturate(var(--saturate)) blur(var(--blur-px)) opacity(var(--background-opacity))
       :root[data-theme="dark"] &
         --background-opacity: hexo-config('appearance.backgrounds.sidebar.opacity') * 0.75
@@ -98,6 +98,7 @@
       left: 0
       right: 0
       border-radius: $border-card-l
+      corner-shape: inherit
     &:before
       if $leftbar-background-image
         @media screen and (min-width: $device-mobile-max)

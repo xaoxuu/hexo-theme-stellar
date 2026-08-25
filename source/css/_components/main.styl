@@ -21,7 +21,7 @@ body>.sitebg
   bottom: 0
   background-size: cover
   if $site-background-image
-    background-image: unquote("url('%s')" % $site-background-image)
+    background-image: url($site-background-image)
   .siteblur
     width: 100%
     height: 100%

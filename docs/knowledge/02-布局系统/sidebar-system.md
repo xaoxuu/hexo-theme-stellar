@@ -340,6 +340,8 @@ graph BT
 
 设置 `$leftbar-background-image` 时，`.sidebg` 还扩展内缩进（`--inset: 32px`），让模糊略微溢出容器边缘，再由父元素 `border-radius` 裁剪。
 
+`.sidebg`、`.leftbar-container` 与其 `:before/:after` 覆盖层共享 `$border-card-l`。普通元素由全局规则应用 `appearance.shape.corner`；伪元素显式继承容器的 `corner-shape`，保证背景、玻璃高光和遮罩在有图、无图以及深浅色模式下使用同一连续曲率，避免圆角抗锯齿区域露出下层底色。
+
 移动端（`max-width: $device-mobile-max`）`.l_left` 直接使用 `background: var(--bg-a100)`，`.sidebg` 饱和度降到 `300%`。
 
 ### 纯色卡片表面（surface: card）

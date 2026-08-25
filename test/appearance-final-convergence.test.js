@@ -12,6 +12,46 @@ const { runDoctor } = require("../scripts/lib/doctor");
 
 const ROOT = path.resolve(__dirname, "..");
 const read = file => fs.readFileSync(path.join(ROOT, file), "utf8");
+let stylusRenderer;
+
+function loadStylusRenderer() {
+  if (stylusRenderer) return stylusRenderer;
+  let renderer;
+  global.hexo = {
+    extend: {
+      renderer: {
+        register(_extension, _output, candidate) {
+          renderer = candidate;
+        }
+      }
+    }
+  };
+  require("hexo-renderer-stylus");
+  delete global.hexo;
+  if (typeof renderer !== "function") throw new TypeError("hexo-renderer-stylus 未注册 renderer");
+  stylusRenderer = renderer;
+  return stylusRenderer;
+}
+
+function renderMainCss(themeConfig) {
+  const renderer = loadStylusRenderer();
+  const sourcePath = path.join(ROOT, "source/css/main.styl");
+  return new Promise((resolve, reject) => {
+    renderer.call({
+      config: { stylus: {} },
+      theme: { config: themeConfig },
+      execFilterSync(_name, style) {
+        return style;
+      }
+    }, {
+      path: sourcePath,
+      text: read("source/css/main.styl")
+    }, {}, (error, css) => {
+      if (error) reject(error);
+      else resolve(css);
+    });
+  });
+}
 
 test("Appearance 严格拒绝非法 CSS、Resource、selector 与 motion 值", () => {
   assert.throws(() => parseStellarConfig({
@@ -59,7 +99,6 @@ test("Resources、Background、Highlight、404 与 Inject 只消费最终结构"
   const config = read("_config.yml");
   const parsedConfig = yaml.load(config);
   const internal = read("scripts/lib/internal-constants.js");
-  const css = [read("source/css/_components/main.styl"), read("source/css/_components/sidebar/sidebar.styl")].join("\n");
   const head = read("layout/_partial/head.ejs");
   const scripts = read("layout/_partial/scripts.ejs");
   const errorPage = read("layout/404.ejs");
@@ -70,12 +109,35 @@ test("Resources、Background、Highlight、404 与 Inject 只消费最终结构"
   assert.match(internal, /resources: \{[\s\S]*projectIcon:[\s\S]*banner:[\s\S]*topicCover:[\s\S]*contentImage:/);
   assert.match(config, /image: https:\/\//);
   assert.doesNotMatch(config, /image: url\(/);
-  assert.match(css, /background-image: unquote\("url\('%s'\)"/);
   assert.match(head, /highlightStylesheet/);
   assert.match(errorPage, /resources\.errorPage\.image/);
   assert.match(errorPage, /if \(errorImage\)/);
   assert.match(head, /stellar_inject\('headEnd'/);
   assert.match(scripts, /stellar_inject\('bodyEnd'/);
+});
+
+test("原始 Background URL 编译为有效 CSS url()", async () => {
+  const config = yaml.load(read("_config.yml"));
+  config.appearance.backgrounds.sidebar.image = "https://example.test/sidebar.webp?variant=glass&size=small";
+  config.appearance.backgrounds.page.image = "https://example.test/page.webp?variant=cover&size=large";
+
+  const css = await renderMainCss(config);
+
+  assert.match(css, /background-image: url\((["']?)https:\/\/example\.test\/sidebar\.webp\?variant=glass&size=small\1\);/);
+  assert.match(css, /background-image: url\((["']?)https:\/\/example\.test\/page\.webp\?variant=cover&size=large\1\);/);
+  assert.doesNotMatch(css, /url\((?:''|"")/);
+});
+
+test("Glass 侧栏覆盖层继承容器连续曲率", async () => {
+  const config = yaml.load(read("_config.yml"));
+  config.appearance.backgrounds.sidebar.surface = "glass";
+  config.appearance.backgrounds.sidebar.image = null;
+
+  const css = await renderMainCss(config);
+  const overlayRule = css.match(/\.l_left \.leftbar-container:(?:before|after),\s*\.l_left \.leftbar-container:(?:before|after)\s*\{[^}]*\}/);
+
+  assert.ok(overlayRule, "应生成侧栏 before/after 共用规则");
+  assert.match(overlayRule[0], /corner-shape:\s*inherit;/);
 });
 
 test("搜索生成器按稳定页面键消费 visibility.searchable", () => {
