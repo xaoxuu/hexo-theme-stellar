@@ -53,12 +53,13 @@ async function loadVote(el) {
 
   try {
     const res = await fetch(`${api}/info?id=${encodeURIComponent(id)}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
 
     el.querySelector('.up').textContent = data.votes?.up ?? 0;
     el.querySelector('.down').textContent = data.votes?.down ?? 0;
-  } catch (e) {
-    console.warn(`[vote] 加载失败: id=${id}`, e);
+  } catch (error) {
+    void error;
   }
 }
 
@@ -80,8 +81,9 @@ function submitVote(el, value) {
   // 后台同步
   fetch(`${api}/update?id=${encodeURIComponent(id)}&value=${encodeURIComponent(value)}`, {
     method: 'POST'
-  }).catch(e => {
-    console.warn(`[vote] 后台同步失败，撤销投票: id=${id}`, e);
+  }).then(response => {
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  }).catch(() => {
     revertVote(el, value);
   });
 }

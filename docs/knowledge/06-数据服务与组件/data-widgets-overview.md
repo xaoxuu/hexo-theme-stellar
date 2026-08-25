@@ -28,11 +28,11 @@ flowchart LR
 extensions:
   services:
     site_info:
-      endpoint:
+      endpoint: https://api.xaox.cc/site_info/v1?url={href}
     rating:
-      endpoint:
+      endpoint: https://star-vote.xaox.cc/api/rating
     vote:
-      endpoint:
+      endpoint: https://star-vote.xaox.cc/api/vote
     contributors:
       repositories: []
     github:

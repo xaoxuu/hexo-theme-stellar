@@ -13,18 +13,16 @@ module.exports = ctx => function (args) {
   args = ctx.args.map(args, ['id', 'yes', 'no'], ['title'])
 
   const api = ctx.stellar.config.extensions.services.vote.endpoint
-  if (api == null) {
-    throw new Error('[stellar tag:vote] extensions.services.vote.endpoint is required when {% vote %} is used')
-  }
+  const disabled = api == null
   const id = args.id || 'default'
 
-  var el = `<div class="tag-plugin ds-vote" data-api="${api}" data-id="${id}">`
+  var el = `<div class="tag-plugin ds-vote${disabled ? ' is-disabled' : ''}"${disabled ? '' : ` data-api="${api}"`} data-id="${id}">`
   if (args.title) {
     el += `<div class="header"><span>${args.title}</span></div>`
   }
   el += `<div class="body">`
-  el += `<button class="vote-up">${ctx.utils.icon(args.yes || 'vote:thumbsup')} <span class="up">0</span></button>`
-  el += `<button class="vote-down">${ctx.utils.icon(args.no || 'vote:thumbsdown')} <span class="down">0</span></button>`
+  el += `<button class="vote-up"${disabled ? ' disabled' : ''}>${ctx.utils.icon(args.yes || 'vote:thumbsup')} <span class="up">0</span></button>`
+  el += `<button class="vote-down"${disabled ? ' disabled' : ''}>${ctx.utils.icon(args.no || 'vote:thumbsdown')} <span class="down">0</span></button>`
   el += `</div>`
   el += `</div>`
   return el.trim()

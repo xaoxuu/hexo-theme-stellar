@@ -17,11 +17,11 @@ tags:
 extensions:
   services:
     site_info:
-      endpoint:
+      endpoint: https://api.xaox.cc/site_info/v1?url={href}
     rating:
-      endpoint:
+      endpoint: https://star-vote.xaox.cc/api/rating
     vote:
-      endpoint:
+      endpoint: https://star-vote.xaox.cc/api/vote
     contributors:
       repositories:
         - source_prefix: wiki/stellar/
@@ -39,7 +39,7 @@ YAML 解析后分别投影为 `siteInfo.endpoint`、`contributors.repositories`�
 
 ### Site Info
 
-`site_info.endpoint` 支持 `{href}` 占位符。Link 与 Sites 标签在卡片缺少 icon/avatar 时可请求站点元信息；未配置 endpoint 时保留主题兜底，不自动发请求。
+`site_info.endpoint` 支持 `{href}` 占位符，默认使用 `https://api.xaox.cc/site_info/v1?url={href}`。Link 与 Sites 标签在卡片缺少 icon/avatar 时可请求站点元信息；显式设为 `null` 时不发请求，公共或自定义服务失败时保留原始标题、图标、描述等静态兜底。
 
 ```yaml
 extensions:
@@ -50,7 +50,7 @@ extensions:
 
 ### Rating 与 Vote
 
-`rating.endpoint` 和 `vote.endpoint` 默认均为 `null`。使用相应标签时必须配置绝对 HTTP(S) URL，否则构建失败。
+`rating.endpoint` 与 `vote.endpoint` 分别默认使用 `https://star-vote.xaox.cc/api/rating` 和 `https://star-vote.xaox.cc/api/vote`。站点可覆盖为自己的 [star-vote](https://github.com/xaoxuu/star-vote) 部署地址；显式设为 `null` 时标签仍可构建，但输出不可交互的静态状态。加载或提交失败时不显示错误、不输出控制台日志；加载保留初始值，失败的提交撤销本地乐观状态。
 
 ### Contributors
 
@@ -96,6 +96,6 @@ request/cache 是主题运行时实现策略，由 `scripts/lib/internal-constan
 - 站点只能配置已声明业务端点，不能覆盖官方 `js/css/inject`。
 - 服务 ID 使用 snake_case；浏览器内部旧 ID 仅是当前运行时桥接，不是公开 YAML。
 - 标签或小部件自带的单次 `api` 参数仍属于组件输入，不自动上升为全局服务配置。
-- 第三方响应与 CORS 由端点提供方负责；主题在请求失败时保持静态兜底或空状态。
+- 第三方响应与 CORS 由端点提供方负责；Site Info、Rating 与 Vote 在预期远程失败时完全静默并保持静态兜底或撤销失败交互，其它服务沿用各自的失败策略。
 
 相关源码：[scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)、[scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/extensions/services.mjs](../../../source/js/runtime/extensions/services.mjs)、[source/js/runtime/request-cache.mjs](../../../source/js/runtime/request-cache.mjs)、[source/js/runtime/legacy-request-adapter.mjs](../../../source/js/runtime/legacy-request-adapter.mjs)。

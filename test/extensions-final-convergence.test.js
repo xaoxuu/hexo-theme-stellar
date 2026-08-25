@@ -69,10 +69,27 @@ test("Gist 标签消费 github.gist_url 并支持 file 参数", () => {
   assert.throws(() => createGist(ctx)(["invalid"]), /expected owner\/id/);
 });
 
-test("Rating 与 Vote 使用时缺少 endpoint 会在构建期失败", () => {
+test("Rating 与 Vote 使用 endpoint，并在显式关闭时输出静态禁用态", () => {
+  const enabled = context({ extensions: { services: {
+    rating: { endpoint: "https://star-vote.xaox.cc/api/rating" },
+    vote: { endpoint: "https://star-vote.xaox.cc/api/vote" }
+  } } });
+  const rating = createRating(enabled)(["post"]);
+  const vote = createVote(enabled)(["post"]);
+  assert.match(rating, /data-api="https:\/\/star-vote\.xaox\.cc\/api\/rating"/);
+  assert.match(vote, /data-api="https:\/\/star-vote\.xaox\.cc\/api\/vote"/);
+  assert.doesNotMatch(rating, /is-disabled| disabled/);
+  assert.doesNotMatch(vote, /is-disabled| disabled/);
+
   const ctx = context({ extensions: { services: { rating: { endpoint: null }, vote: { endpoint: null } } } });
-  assert.throws(() => createRating(ctx)(["post"]), /rating\.endpoint is required/);
-  assert.throws(() => createVote(ctx)(["post"]), /vote\.endpoint is required/);
+  const disabledRating = createRating(ctx)(["post"]);
+  const disabledVote = createVote(ctx)(["post"]);
+  assert.match(disabledRating, /class="tag-plugin ds-rating is-disabled"/);
+  assert.match(disabledVote, /class="tag-plugin ds-vote is-disabled"/);
+  assert.doesNotMatch(disabledRating, /data-api=/);
+  assert.doesNotMatch(disabledVote, /data-api=/);
+  assert.equal((disabledRating.match(/ disabled/g) || []).length, 5);
+  assert.equal((disabledVote.match(/ disabled/g) || []).length, 2);
 });
 
 test("Comments title 的 null 与空字符串语义由模板显式区分", () => {

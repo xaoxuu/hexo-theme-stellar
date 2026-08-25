@@ -654,9 +654,9 @@ const CONFIG_TARGET_FIELDS = deepFreeze([
       normalization: "merge declared child fields; deep-freeze the normalized JavaScript object"
     }]),
     ["extensions.features.math.provider", ["string", "null"], literal(null), { values: [null, "katex", "mathjax"] }],
-    ["extensions.services.site_info.endpoint", ["string", "null"], literal(null)],
-    ["extensions.services.rating.endpoint", ["string", "null"], literal(null)],
-    ["extensions.services.vote.endpoint", ["string", "null"], literal(null)],
+    ["extensions.services.site_info.endpoint", ["string", "null"], literal("https://api.xaox.cc/site_info/v1?url={href}")],
+    ["extensions.services.rating.endpoint", ["string", "null"], literal("https://star-vote.xaox.cc/api/rating")],
+    ["extensions.services.vote.endpoint", ["string", "null"], literal("https://star-vote.xaox.cc/api/vote")],
     ["extensions.services.contributors.repositories", "array", literal([]), { items: { type: ["object"], boundary: "sealed" } }],
     ["extensions.services.contributors.repositories[].source_prefix", "string", derived("repository source prefix")],
     ["extensions.services.contributors.repositories[].repository", "string", derived("GitHub owner/repository")],

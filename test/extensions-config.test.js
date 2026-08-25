@@ -63,6 +63,29 @@ test("Extension 配置使用最终路径并投影 camelCase 运行时", () => {
   assert.equal(Object.isFrozen(config.extensions.comments.providers.giscus), true);
 });
 
+test("自部署服务提供公共默认值，并保留自定义与显式关闭", () => {
+  const defaults = parseStellarConfig({ source: "_config.stellar.yml", themeConfig: {} });
+  assert.equal(defaults.extensions.services.siteInfo.endpoint, "https://api.xaox.cc/site_info/v1?url={href}");
+  assert.equal(defaults.extensions.services.rating.endpoint, "https://star-vote.xaox.cc/api/rating");
+  assert.equal(defaults.extensions.services.vote.endpoint, "https://star-vote.xaox.cc/api/vote");
+
+  const configured = parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: {
+      extensions: {
+        services: {
+          site_info: { endpoint: null },
+          rating: { endpoint: "https://rating.example.com" },
+          vote: { endpoint: null }
+        }
+      }
+    }
+  });
+  assert.equal(configured.extensions.services.siteInfo.endpoint, null);
+  assert.equal(configured.extensions.services.rating.endpoint, "https://rating.example.com");
+  assert.equal(configured.extensions.services.vote.endpoint, null);
+});
+
 test("Extension Schema 拒绝旧根、旧命名、未知能力和官方资源覆盖", () => {
   assert.throws(() => parseStellarConfig({
     source: "_config.stellar.yml",

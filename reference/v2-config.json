@@ -4480,7 +4480,7 @@
       "default": {
         "kind": "literal",
         "value": {
-          "endpoint": null
+          "endpoint": "https://star-vote.xaox.cc/api/rating"
         }
       },
       "scope": "theme",
@@ -4497,7 +4497,7 @@
         "Reference generator"
       ],
       "example": {
-        "endpoint": null
+        "endpoint": "https://star-vote.xaox.cc/api/rating"
       },
       "migration": "configuration/extensions",
       "sealed": true
@@ -4511,7 +4511,7 @@
       ],
       "default": {
         "kind": "literal",
-        "value": null
+        "value": "https://star-vote.xaox.cc/api/rating"
       },
       "scope": "theme",
       "cascade": [
@@ -4526,7 +4526,7 @@
         "browser Extension runtime",
         "Reference generator"
       ],
-      "example": null,
+      "example": "https://star-vote.xaox.cc/api/rating",
       "migration": "configuration/extensions"
     },
     {
@@ -4538,7 +4538,7 @@
       "default": {
         "kind": "literal",
         "value": {
-          "endpoint": null
+          "endpoint": "https://api.xaox.cc/site_info/v1?url={href}"
         }
       },
       "scope": "theme",
@@ -4555,7 +4555,7 @@
         "Reference generator"
       ],
       "example": {
-        "endpoint": null
+        "endpoint": "https://api.xaox.cc/site_info/v1?url={href}"
       },
       "migration": "configuration/extensions",
       "sealed": true
@@ -4569,7 +4569,7 @@
       ],
       "default": {
         "kind": "literal",
-        "value": null
+        "value": "https://api.xaox.cc/site_info/v1?url={href}"
       },
       "scope": "theme",
       "cascade": [
@@ -4584,7 +4584,7 @@
         "browser Extension runtime",
         "Reference generator"
       ],
-      "example": null,
+      "example": "https://api.xaox.cc/site_info/v1?url={href}",
       "migration": "configuration/extensions"
     },
     {
@@ -4596,7 +4596,7 @@
       "default": {
         "kind": "literal",
         "value": {
-          "endpoint": null
+          "endpoint": "https://star-vote.xaox.cc/api/vote"
         }
       },
       "scope": "theme",
@@ -4613,7 +4613,7 @@
         "Reference generator"
       ],
       "example": {
-        "endpoint": null
+        "endpoint": "https://star-vote.xaox.cc/api/vote"
       },
       "migration": "configuration/extensions",
       "sealed": true
@@ -4627,7 +4627,7 @@
       ],
       "default": {
         "kind": "literal",
-        "value": null
+        "value": "https://star-vote.xaox.cc/api/vote"
       },
       "scope": "theme",
       "cascade": [
@@ -4642,7 +4642,7 @@
         "browser Extension runtime",
         "Reference generator"
       ],
-      "example": null,
+      "example": "https://star-vote.xaox.cc/api/vote",
       "migration": "configuration/extensions"
     },
     {

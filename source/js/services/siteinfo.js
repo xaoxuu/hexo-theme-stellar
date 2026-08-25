@@ -28,10 +28,8 @@ function setCardLink(nodes) {
         if (desc && data.desc && data.desc.length > 0 && autofill.includes('desc')) {
           desc.innerHTML = data.desc;
         }
-      }).catch(function(error) {
-        console.error(error);
       });
-    }, undefined, { service: 'siteinfo' });
+    }, undefined, { service: 'siteinfo' }).catch(function() {});
   })
 }
 
@@ -50,10 +48,8 @@ function setSiteCardIcon(nodes) {
             icon.setAttribute('data-src', data.icon);
           }
         }
-      }).catch(function(error) {
-        console.error(error);
       });
-    }, undefined, { service: 'siteinfo' });
+    }, undefined, { service: 'siteinfo' }).catch(function() {});
   })
 }
 

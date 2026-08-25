@@ -512,9 +512,11 @@ extensions:
       endpoint: https://api.xaox.cc/site_info/v1?url={href}
     rating:
       endpoint: https://star-vote.xaox.cc/api/rating
+    vote:
+      endpoint: https://star-vote.xaox.cc/api/vote
 ```
 
-服务仅在对应标签插件或组件生成匹配 DOM 时加载。`js` 不再是公开字段；业务 URL 统一称 `endpoint`。
+三项服务默认使用 xaox.cc 公共实例，站点可覆盖为自己的绝对 HTTP(S) URL，或显式设为 `null` 关闭。服务仅在对应标签插件或组件生成匹配 DOM 时加载；公共实例不可用、响应异常或被关闭时保留静态内容，不显示错误，也不输出控制台日志。`js` 不再是公开字段；业务 URL 统一称 `endpoint`。
 
 **参考源码**：[_config.yml](../../../_config.yml)（`extensions.services` 小节）
 

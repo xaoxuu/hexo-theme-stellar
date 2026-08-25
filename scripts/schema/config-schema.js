@@ -340,9 +340,9 @@ function extensionsSchema() {
       tags: extensionObject(tagExtensionSchemas(), {}, { removedProperties: { copy: "localized", image: null, timeline: null, okr: null, chat: null } }),
       features: extensionObject(featureExtensionSchemas(), {}, { removedProperties: { preload: "link_prefetch", ai_summary: null, code_copy: null, adaptive_text: null, cjk_typography: "heti" } }),
       services: extensionObject({
-        site_info: extensionObject({ endpoint: deliveredField("extensions.services.site_info.endpoint", { normalizer: "identity", validator: "nullable_absolute_http_url", example: null }) }, { endpoint: null }, { removedProperties: { api: "endpoint" } }),
-        rating: extensionObject({ endpoint: deliveredField("extensions.services.rating.endpoint", { normalizer: "identity", validator: "nullable_absolute_http_url", example: null }) }, { endpoint: null }, { removedProperties: { api: "endpoint" } }),
-        vote: extensionObject({ endpoint: deliveredField("extensions.services.vote.endpoint", { normalizer: "identity", validator: "nullable_absolute_http_url", example: null }) }, { endpoint: null }, { removedProperties: { api: "endpoint" } }),
+        site_info: extensionObject({ endpoint: deliveredField("extensions.services.site_info.endpoint", { normalizer: "identity", validator: "nullable_absolute_http_url", example: "https://api.xaox.cc/site_info/v1?url={href}" }) }, { endpoint: "https://api.xaox.cc/site_info/v1?url={href}" }, { removedProperties: { api: "endpoint" } }),
+        rating: extensionObject({ endpoint: deliveredField("extensions.services.rating.endpoint", { normalizer: "identity", validator: "nullable_absolute_http_url", example: "https://star-vote.xaox.cc/api/rating" }) }, { endpoint: "https://star-vote.xaox.cc/api/rating" }, { removedProperties: { api: "endpoint" } }),
+        vote: extensionObject({ endpoint: deliveredField("extensions.services.vote.endpoint", { normalizer: "identity", validator: "nullable_absolute_http_url", example: "https://star-vote.xaox.cc/api/vote" }) }, { endpoint: "https://star-vote.xaox.cc/api/vote" }, { removedProperties: { api: "endpoint" } }),
         contributors: extensionObject({
           repositories: deliveredField("extensions.services.contributors.repositories", {
             normalizer: "array",

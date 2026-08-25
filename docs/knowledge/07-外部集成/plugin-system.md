@@ -110,7 +110,11 @@ flowchart LR
 extensions:
   services:
     site_info:
-      endpoint:
+      endpoint: https://api.xaox.cc/site_info/v1?url={href}
+    rating:
+      endpoint: https://star-vote.xaox.cc/api/rating
+    vote:
+      endpoint: https://star-vote.xaox.cc/api/vote
     github:
       api_url: https://api.github.com
       raw_url: https://raw.githubusercontent.com
@@ -119,6 +123,6 @@ extensions:
       endpoint: https://github-readme-stats.vercel.app
 ```
 
-GitHub 地址统一为完整 URL。Runtime Manifest 携带主题内部注入且冻结的 cache/request policy；`createRequestClient()` 提供同 method+URL 并发去重、按 service TTL、超时重试、fresh 命中、stale 失败回退、200 KiB 单条限制和最旧条目淘汰。站点不再调节这些实现常量。客户端调用原生 `fetch` 而不替换 `window.fetch` 或 XHR 原型，并以 `stellar:request-start/end` 通知锚点稳定器。
+Site Info、Rating 与 Vote 默认使用 xaox.cc 公共实例，可覆盖为自部署地址或以 `null` 关闭；三者的预期远程失败完全静默并保留静态兜底。GitHub 地址统一为完整 URL。Runtime Manifest 携带主题内部注入且冻结的 cache/request policy；`createRequestClient()` 提供同 method+URL 并发去重、按 service TTL、超时重试、fresh 命中、stale 失败回退、200 KiB 单条限制和最旧条目淘汰。站点不再调节这些实现常量。客户端调用原生 `fetch` 而不替换 `window.fetch` 或 XHR 原型，并以 `stellar:request-start/end` 通知锚点稳定器。
 
 相关源码：[_config.yml](../../../_config.yml)、[scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)、[scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)、[source/js/runtime/index.mjs](../../../source/js/runtime/index.mjs)、[source/js/runtime/extension-registry.mjs](../../../source/js/runtime/extension-registry.mjs)、[source/js/runtime/request-cache.mjs](../../../source/js/runtime/request-cache.mjs)、[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)。
