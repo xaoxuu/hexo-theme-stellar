@@ -28,10 +28,26 @@ inject:
 
 ######## Sidebar ########
 site:
-  # src/name/tagline 默认分别派生自 Hexo avatar/title/subtitle。
+  # 左侧栏顶部品牌；省略 image.src / name / tagline.text 时分别派生自 Hexo avatar / title / subtitle。[对象]
   brand:
+    # 品牌图片。[对象]
     image:
-      variant: avatar # avatar: 圆形裁剪；icon: 圆角矩形；plain: 保留透明原图
+      # 图片来源；省略时继承 Hexo avatar。[字符串或 null；站内路径或绝对 HTTP(S) URL；null 隐藏图片]
+      src: # /avatar.webp
+      # 图片呈现方式。[字符串枚举：avatar = 圆形裁剪；icon = 圆角矩形；plain = 保留透明原图]
+      variant: avatar
+      # 点击品牌图片后的地址。[字符串或 null；站内路径、锚点或安全 HTTP(S) URL；null 表示不可点击]
+      href: # /about/
+    # 品牌纯文本名称；省略时继承 Hexo title。[字符串或 null；null 隐藏文字名称]
+    name: # Stellar
+    # 品牌字标图片；设置后替代纯文本名称。[非空资源字符串或 null；null 不显示字标]
+    wordmark: # /images/wordmark.svg
+    # 品牌标语；整个对象省略时从 Hexo subtitle 派生 text。[对象]
+    tagline:
+      # 标语正文。[字符串或 null；省略时继承 Hexo subtitle，null 隐藏]
+      text: # 每个人的独立博客
+      # 鼠标悬停时显示的替代文本。[字符串或 null；null 不切换]
+      hover: # example.com
     href: /
 
   menu:
@@ -48,6 +64,14 @@ site:
     #   icon: default:github
     #   title: GitHub
     #   url: https://github.com/
+    # - type: dropdown
+    #   icon: default:documents
+    #   title: 更多链接
+    #   items:
+    #     - icon: default:link
+    #       title: 文档
+    #       url: /wiki/
+    # - type: spacer
     sections: []
     # - title: 博客
     #   items:
@@ -217,7 +241,9 @@ content:
       sort:
         field: updated
         direction: desc
+    # 笔记标签到图标 ID 的映射。[对象；键为非空标签名，值为非空图标字符串；空对象不覆盖]
     tag_icons: {}
+    # tools: default:tools
     footer:
       license: null
       share: null
@@ -238,6 +264,7 @@ extensions:
   comments:
     provider: # beaudar / utterances / giscus / twikoo / waline / artalk
     title:
+    # 提供方参数袋；只读取 provider 选中的一组，字段按各上游 SDK 透传。[对象]
     providers:
       beaudar:
         repo: xxx/xxx
@@ -289,6 +316,7 @@ extensions:
     checkbox:
       interactive: false
     quot:
+      # 每个 variant 的 prefix/suffix 均为图标 ID 字符串或 null
       default:
         prefix: quot:quote-left
         suffix: quot:quote-right
@@ -298,6 +326,7 @@ extensions:
         prefix: quot:question
     emoji:
       default_source: blobcat
+      # 表情源 ID 到资源模板的映射。[开放对象；值必须是包含 {name} 的字符串模板]
       sources:
         twemoji: https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg
         qq: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif
@@ -354,7 +383,12 @@ extensions:
     vote:
       endpoint: https://star-vote.xaox.cc/api/vote
     contributors:
+      # 映射列表。[对象数组；每项含 source_prefix、repository，branch 默认为 main；空数组关闭]
+      # source_prefix 为 source/ 下安全相对路径；repository 格式为 owner/repository；branch 为非空字符串。
       repositories: []
+      # - source_prefix: wiki/stellar/
+      #   repository: xaoxuu/hexo-theme-stellar
+      #   branch: main
     github:
       api_url: https://api.github.com
       raw_url: https://raw.githubusercontent.com

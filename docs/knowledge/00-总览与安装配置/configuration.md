@@ -23,6 +23,7 @@ tags:
 - [README.md](../../../README.md)
 - [_config.yml](../../../_config.yml)
 - [package.json](../../../package.json)
+- [test/config-discoverability.test.js](../../../test/config-discoverability.test.js)
 
 </details>
 
@@ -108,6 +109,14 @@ Pre-alpha M3 的 Blueprint 只在 init 时把选择结果展开为上述显式�
 | `inject` | `<head>` 与 `<body>` 末尾的可信原文注入（v2 已交付） |
 
 **参考源码**：[_config.yml](../../../_config.yml)
+
+### 默认配置的可发现性契约
+
+主题 `_config.yml` 同时是默认值镜像和用户可阅读的配置入口。每个封闭的主题级公开字段都必须以活动 YAML 键出现；未设置的值保持为空，并把示例值写在同一行的注释中。对象数组和动态映射必须给出完整结构示例或明确的键值契约；新增 Schema 字段但未同步默认配置会由配置可发现性测试阻断。
+
+`site.brand.image.src`、`site.brand.name`、`site.brand.tagline.text` 等字段在默认配置中显示为空，运行时没有站点覆盖时仍由 Schema 从 Hexo 配置派生；在站点 `_config.stellar.yml` 中显式填写空值则表示用 `null` 覆盖。第三方 provider 参数袋只声明“透传给上游”并展示常用参数，不复制外部 SDK 的全部字段；主题内部常量不是公开配置。Collection YAML 与 Front Matter 属于独立配置边界，由相应 Reference 和内容文档说明，不混入主题 `_config.yml`。
+
+**参考源码**：[_config.yml](../../../_config.yml)、[test/config-discoverability.test.js](../../../test/config-discoverability.test.js)
 
 `inject.head_end/body_end` 是主题、站点与页面级的可信逃生口。主题默认与站点覆盖使用字符串，页面 Front Matter 也只接受字符串；渲染时站点文本在前、页面文本在后，以一个换行拼接，原文不解析、不格式化。
 
