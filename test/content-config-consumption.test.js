@@ -119,7 +119,7 @@ test("主题默认与 Stylus 只声明最终内容路径", () => {
     "source/css/_components/partial/article-banner.styl"
   ].map(read).join("\n");
 
-  assert.match(config, /^content:\n {2}article:/m);
+  assert.match(config, /^content:\n(?: {2}#.*\n)* {2}article:/m);
   assert.match(config, /^ {4}listing:/m);
   assert.match(config, /^ {6}pinned_layout: carousel/m);
   assert.match(config, /^ {2}notebook:/m);

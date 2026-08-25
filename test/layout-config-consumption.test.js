@@ -52,7 +52,7 @@ test("Layout Profile 消费链只读取冻结的 layout.profiles 配置", () => 
 test("主题默认配置只声明最终 Profile ID 与字段名", () => {
   const config = read("_config.yml");
 
-  assert.match(config, /^layout:\n {2}profiles:/m);
+  assert.match(config, /^layout:\n(?: {2}#.*\n)* {2}profiles:/m);
   assert.match(config, /^ {4}blog_index:/m);
   assert.match(config, /^ {6}path: \/blog\//m);
   assert.match(config, /^ {8}active_menu: post/m);

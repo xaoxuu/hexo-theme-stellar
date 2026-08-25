@@ -169,15 +169,6 @@ function normalizeCollectionPath(value) {
   return normalized.replace(/\/{2,}/g, "/");
 }
 
-function valueAtPath(value, path) {
-  let current = value;
-  for (const key of path.split(".")) {
-    if (current == null || !Object.prototype.hasOwnProperty.call(current, key)) return undefined;
-    current = current[key];
-  }
-  return current;
-}
-
 function fallbackDefault(node) {
   if (node.type.includes("null")) return null;
   if (node.type.includes("string")) return "";
@@ -188,16 +179,9 @@ function fallbackDefault(node) {
   return undefined;
 }
 
-function resolveDefault(node, context) {
+function resolveDefault(node) {
   const definition = node.default;
   if (definition?.kind === "literal") return clone(definition.value);
-  if (definition?.kind === "derived") {
-    for (const source of definition.sources || []) {
-      if (!source.startsWith("hexo.config.")) continue;
-      const value = valueAtPath(context.siteConfig, source.slice("hexo.config.".length));
-      if (value !== undefined) return clone(value);
-    }
-  }
   return fallbackDefault(node);
 }
 
@@ -812,10 +796,8 @@ function validateStellarSemantics(config, source) {
 
 function parseConfigSchema(schema, input = {}, options = {}) {
   const source = options.source || "<config>";
-  const siteConfig = isPlainObject(options.siteConfig) ? options.siteConfig : {};
   const issues = [];
   const parsed = parseNode(schema, isPlainObject(input) ? input : input, source, "", issues, {
-    siteConfig,
     applyDefaults: options.applyDefaults ?? schema.applyDefaults ?? false
   });
   if (issues.length > 0) throw new ConfigSchemaError(issues);
@@ -825,8 +807,7 @@ function parseConfigSchema(schema, input = {}, options = {}) {
 function parseStellarConfig(input = {}) {
   const source = input.source || "_config.stellar.yml";
   const themeConfig = input.themeConfig === undefined ? {} : input.themeConfig;
-  const siteConfig = isPlainObject(input.siteConfig) ? input.siteConfig : {};
-  const config = parseConfigSchema(CONFIG_SCHEMA, themeConfig, { source, siteConfig, applyDefaults: true });
+  const config = parseConfigSchema(CONFIG_SCHEMA, themeConfig, { source, applyDefaults: true });
   validateStellarSemantics(config, source);
   return config;
 }

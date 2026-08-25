@@ -4,123 +4,10 @@
 const { deepFreeze } = require("./schema-utils");
 const { contributionSchemaIds } = require("../lib/contribution-registry");
 
-const THEME_SCOPE = Object.freeze(["theme"]);
 const COLLECTION_SCOPE = Object.freeze(["collection"]);
 const FRONT_MATTER_SCOPE = Object.freeze(["front_matter"]);
-const THEME_CASCADE = Object.freeze(["schema default", "_config.stellar.yml"]);
 const COLLECTION_CASCADE = Object.freeze(["schema default", "theme profile", "collection"]);
 const FRONT_MATTER_CASCADE = Object.freeze(["schema default", "theme profile", "collection", "front matter"]);
-const DELIVERED_TARGET_PATHS = new Set([
-  "site.brand.image.src",
-  "site.brand.image.variant",
-  "site.brand.image.href",
-  "site.brand.name",
-  "site.brand.wordmark",
-  "site.brand.tagline.text",
-  "site.brand.tagline.hover",
-  "site.brand.href",
-  "site.menu.items",
-  "site.menu.items[].id",
-  "site.menu.items[].title",
-  "site.menu.items[].icon",
-  "site.menu.items[].url",
-  "site.menu.items[].accent",
-  "site.footer.actions",
-  "site.footer.actions[].type",
-  "site.footer.actions[].icon",
-  "site.footer.actions[].title",
-  "site.footer.actions[].url",
-  "site.footer.actions[].onclick",
-  "site.footer.actions[].items",
-  "site.footer.actions[].items[].type",
-  "site.footer.actions[].items[].icon",
-  "site.footer.actions[].items[].title",
-  "site.footer.actions[].items[].url",
-  "site.footer.actions[].items[].onclick",
-  "site.footer.sections",
-  "site.footer.sections[].title",
-  "site.footer.sections[].items",
-  "site.footer.sections[].items[].title",
-  "site.footer.sections[].items[].url",
-  "site.footer.content",
-  "seo.canonical.host",
-  "seo.canonical.allowed_hosts",
-  "seo.open_graph.enabled",
-  "seo.open_graph.twitter_id",
-  "seo.structured_data.same_as",
-  "resources.preconnect",
-  "inject.head_end",
-  "inject.body_end",
-  "content.article.style",
-  "content.article.paragraph_indent",
-  "content.article.listing.pinned_layout",
-  "content.article.listing.card_layout",
-  "content.article.listing.cover_ratio",
-  "content.article.listing.excerpt_length",
-  "content.article.listing.show_tags",
-  "content.article.banner.ratio",
-  "content.article.category_colors",
-  "content.article.category_colors.<category>",
-  "content.article.footer.license",
-  "content.article.footer.share",
-  "content.article.footer.show_tags",
-  "content.article.related_posts_limit",
-  "content.article.show_reading_time",
-  "content.notebook.listing.excerpt_length",
-  "content.notebook.listing.per_page",
-  "content.notebook.listing.sort.field",
-  "content.notebook.listing.sort.direction",
-  "content.notebook.tag_icons",
-  "content.notebook.tag_icons.<tag>",
-  "content.notebook.footer.license",
-  "content.notebook.footer.share",
-  "appearance.color_scheme",
-  "appearance.typography.font_size.root",
-  "appearance.typography.font_size.inline_code",
-  "appearance.typography.font_size.code_block",
-  "appearance.typography.font_family.body",
-  "appearance.typography.font_family.code",
-  "appearance.typography.content_align",
-  "appearance.typography.heading_prefixes",
-  "appearance.typography.heading_prefixes.h2",
-  "appearance.typography.heading_prefixes.h3",
-  "appearance.typography.heading_prefixes.h4",
-  "appearance.typography.heading_prefixes.h5",
-  "appearance.shape.corner",
-  "appearance.shape.radius.card_large",
-  "appearance.shape.radius.card",
-  "appearance.shape.radius.card_small",
-  "appearance.shape.radius.bar",
-  "appearance.shape.radius.image_large",
-  "appearance.shape.radius.image",
-  "appearance.shape.radius.image_small",
-  "appearance.colors.primary",
-  "appearance.colors.accent",
-  "appearance.colors.link",
-  "appearance.gradients.primary_action",
-  "appearance.gradients.search_bar",
-  "appearance.gradients.avatar_ring",
-  "appearance.motion.page_transition",
-  "appearance.motion.avatar",
-  "appearance.code_block.scrollbar_width",
-  "appearance.code_block.highlight_stylesheet",
-  "appearance.backgrounds.sidebar.surface",
-  "appearance.backgrounds.sidebar.color.light",
-  "appearance.backgrounds.sidebar.color.dark",
-  "appearance.backgrounds.sidebar.image",
-  "appearance.backgrounds.sidebar.opacity",
-  "appearance.backgrounds.sidebar.backdrop.radius",
-  "appearance.backgrounds.sidebar.backdrop.overlay",
-  "appearance.backgrounds.page.image",
-  "appearance.backgrounds.page.backdrop.radius",
-  "appearance.backgrounds.page.backdrop.overlay",
-  "appearance.backgrounds.page.backdrop.saturation",
-  "resources.fallbacks.avatar",
-  "resources.fallbacks.link_card",
-  "resources.fallbacks.cover",
-  "resources.error_page.image"
-]);
-
 
 function literal(value) {
   return { kind: "literal", value };
@@ -128,10 +15,6 @@ function literal(value) {
 
 function derived(...sources) {
   return { kind: "derived", sources };
-}
-
-function registered(owner) {
-  return { kind: "registered", owner };
 }
 
 function runtimePath(path) {
@@ -144,7 +27,7 @@ function runtimePath(path) {
 }
 
 function targetField(path, options) {
-  const scopes = options.scopes || THEME_SCOPE;
+  const scopes = options.scopes;
   const types = Array.isArray(options.type) ? options.type : [options.type];
   const boundary = options.boundary || "sealed";
   const hasMergeableUnion = types.length > 1 && (types.includes("array") || types.includes("object"));
@@ -153,13 +36,13 @@ function targetField(path, options) {
     type: types,
     default: options.default,
     scopes,
-    cascade: options.cascade || (scopes === THEME_SCOPE ? THEME_CASCADE : (scopes.length === 1 && scopes[0] === "collection" ? COLLECTION_CASCADE : FRONT_MATTER_CASCADE)),
+    cascade: options.cascade,
     normalization: options.normalization || "validate the declared type; preserve the value; deep-freeze the result",
     mergeStrategy: options.mergeStrategy || (hasMergeableUnion ? "by_value_type" : (types.includes("array") ? "replace" : (types.includes("object") ? (boundary === "parameter_bag" ? "merge_keys" : "merge_declared_keys") : "replace"))),
     runtimePath: options.runtimePath || runtimePath(path),
     consumers: options.consumers,
     migration: options.migration || `configuration/${path.split(".")[0]}`,
-    status: options.status || (scopes.includes("theme") && DELIVERED_TARGET_PATHS.has(path) ? "delivered" : "planned"),
+    status: options.status || "planned",
     boundary,
     ...(options.items ? { items: options.items } : {}),
     ...(options.values ? { values: options.values } : {}),
@@ -190,14 +73,7 @@ const CONFIG_TARGET_ROOTS = deepFreeze([
   { id: "inject", owner: "stellar", boundary: "sealed", status: "delivered", purpose: "可信原文注入逃生口" }
 ]);
 
-const SITE_CONSUMERS = Object.freeze(["PageViewModel", "Shell renderer", "menu renderer", "footer renderer"]);
-const SEO_CONSUMERS = Object.freeze(["PageViewModel", "head renderer", "JSON-LD helper", "browser canonical check"]);
-const LAYOUT_CONSUMERS = Object.freeze(["CollectionModel", "PageViewModel", "page generators", "navigation renderer", "sidebar renderer", "Reference generator"]);
 const CONTENT_CONSUMERS = Object.freeze(["CollectionModel", "PageViewModel", "article renderer", "listing renderer"]);
-const APPEARANCE_CONSUMERS = Object.freeze(["PageViewModel", "layout renderer", "Stylus compiler", "browser theme state"]);
-const RESOURCE_CONSUMERS = Object.freeze(["head renderer", "PageViewModel", "tag renderers", "image fallback filters"]);
-const EXTENSION_CONSUMERS = Object.freeze(["Extension registry", "Extension renderer", "browser Extension runtime", "Reference generator"]);
-const INJECT_CONSUMERS = Object.freeze(["head renderer", "script renderer", "PageViewModel"]);
 
 const CONTENT_OVERRIDE_DEFINITIONS = [
   ["card", "object", derived("theme profile card"), { boundary: "sealed" }],
@@ -323,100 +199,6 @@ const PROFILE_ID_MIGRATIONS = deepFreeze({
   page: "page"
 });
 
-const LAYOUT_PROFILE_DEFAULTS = deepFreeze({
-  home: {
-    path: null,
-    activeMenu: "post",
-    tabs: [],
-    leftWidgets: ["welcome", "recent"],
-    rightWidgets: []
-  },
-  blog_index: {
-    path: "/blog/",
-    activeMenu: "post",
-    tabs: [],
-    leftWidgets: ["welcome", "recent"],
-    rightWidgets: []
-  },
-  topic_index: {
-    path: "/topic/",
-    activeMenu: "post",
-    tabs: [],
-    leftWidgets: ["welcome", "recent"],
-    rightWidgets: []
-  },
-  wiki_index: {
-    path: "/wiki/",
-    activeMenu: "wiki",
-    tabs: [],
-    leftWidgets: ["related", "recent"],
-    rightWidgets: []
-  },
-  post: {
-    path: null,
-    activeMenu: "post",
-    tabs: [],
-    leftWidgets: ["related", "recent"],
-    rightWidgets: ["ghrepo", "toc"]
-  },
-  topic: {
-    path: null,
-    activeMenu: "post",
-    tabs: [],
-    leftWidgets: ["related", "recent"],
-    rightWidgets: ["ghrepo", "toc"]
-  },
-  wiki: {
-    path: null,
-    activeMenu: "wiki",
-    tabs: [],
-    leftWidgets: ["tree", "related", "recent"],
-    rightWidgets: ["ghrepo", "toc"]
-  },
-  notebook_index: {
-    path: "/notebooks/",
-    activeMenu: "notebooks",
-    tabs: [],
-    leftWidgets: ["recent"],
-    rightWidgets: []
-  },
-  note_index: {
-    path: null,
-    activeMenu: "notebooks",
-    tabs: [],
-    leftWidgets: ["tagtree", "recent"],
-    rightWidgets: []
-  },
-  note: {
-    path: null,
-    activeMenu: "notebooks",
-    tabs: [],
-    leftWidgets: ["tagtree", "recent"],
-    rightWidgets: ["toc"]
-  },
-  author: {
-    path: "/author/",
-    activeMenu: "post",
-    tabs: [],
-    leftWidgets: ["recent"],
-    rightWidgets: []
-  },
-  error: {
-    path: "/404.html",
-    activeMenu: "post",
-    tabs: [],
-    leftWidgets: ["recent"],
-    rightWidgets: []
-  },
-  page: {
-    path: null,
-    activeMenu: "post",
-    tabs: [],
-    leftWidgets: ["recent"],
-    rightWidgets: ["toc"]
-  }
-});
-
 const TAG_EXTENSION_IDS = deepFreeze([
   "note", "checkbox", "quot", "emoji", "icon", "button", "mark", "hashtag", "gallery"
 ]);
@@ -464,224 +246,7 @@ const CONFIG_INTERNALIZED_RESOURCES = deepFreeze([
   "system.override_pretty_urls"
 ]);
 
-function layoutProfileFields() {
-  const pathProfiles = new Set(["blog_index", "topic_index", "wiki_index", "notebook_index", "author", "error"]);
-  const tabProfiles = new Set(["blog_index", "wiki_index"]);
-  const definitions = [
-    ["layout.profiles", "object", literal({}), { boundary: "sealed", status: "delivered" }]
-  ];
-  for (const profile of PROFILE_IDS) {
-    const defaults = LAYOUT_PROFILE_DEFAULTS[profile];
-    const base = `layout.profiles.${profile}`;
-    if (pathProfiles.has(profile)) {
-      definitions.push([
-        `${base}.path`,
-        "string",
-        literal(defaults.path),
-        {
-          normalization: "normalize to a root-relative path; directory paths end with a slash",
-          status: "delivered"
-        }
-      ]);
-    }
-    definitions.push(
-      [`${base}.navigation.active_menu`, ["string", "null"], literal(defaults.activeMenu), { status: "delivered" }],
-      [
-        `${base}.sidebar.left`,
-        "array",
-        literal(defaults.leftWidgets),
-        { items: { type: ["string", "object"], boundary: "registered_schema" }, status: "delivered" }
-      ],
-      [
-        `${base}.sidebar.right`,
-        "array",
-        literal(defaults.rightWidgets),
-        { items: { type: ["string", "object"], boundary: "registered_schema" }, status: "delivered" }
-      ]
-    );
-    if (tabProfiles.has(profile)) {
-      definitions.push(
-        [`${base}.navigation.tabs`, "array", literal(defaults.tabs), { items: { type: ["object"] }, status: "delivered" }],
-        [`${base}.navigation.tabs[].title`, "string", literal(""), { status: "delivered" }],
-        [`${base}.navigation.tabs[].url`, "string", literal(""), { status: "delivered" }]
-      );
-    }
-  }
-  definitions.push(
-    ["layout.profiles.home.comments", "object", literal({ enabled: false, title: null, id: null, provider: null, options: {} }), {
-      boundary: "sealed",
-      normalization: "merge declared child fields; deep-freeze the normalized JavaScript object",
-      status: "delivered"
-    }],
-    ["layout.profiles.home.comments.enabled", "boolean", literal(false), { status: "delivered" }],
-    ["layout.profiles.home.comments.title", ["string", "null"], literal(null), { status: "delivered" }],
-    ["layout.profiles.home.comments.id", ["string", "null"], literal(null), { status: "delivered" }],
-    ["layout.profiles.home.comments.provider", ["string", "null"], literal(null), {
-      values: [null, "beaudar", "utterances", "giscus", "twikoo", "waline", "artalk"],
-      status: "delivered"
-    }],
-    ["layout.profiles.home.comments.options", "object", literal({}), { boundary: "parameter_bag", status: "delivered" }]
-  );
-  return fields(LAYOUT_CONSUMERS, definitions);
-}
-
 const CONFIG_TARGET_FIELDS = deepFreeze([
-  ...fields(SITE_CONSUMERS, [
-    ["site.brand.image.src", ["string", "null"], derived("hexo.config.avatar")],
-    ["site.brand.image.variant", "string", literal("avatar"), { values: ["avatar", "icon", "plain"] }],
-    ["site.brand.image.href", ["string", "null"], literal(null)],
-    ["site.brand.name", ["string", "null"], derived("hexo.config.title")],
-    ["site.brand.wordmark", ["string", "null"], literal(null)],
-    ["site.brand.tagline.text", ["string", "null"], derived("hexo.config.subtitle")],
-    ["site.brand.tagline.hover", ["string", "null"], literal(null)],
-    ["site.brand.href", ["string", "null"], literal("/")],
-    ["site.menu.items", "array", literal([]), { items: { type: ["object"] } }],
-    ["site.menu.items[].id", "string", derived("site menu item")],
-    ["site.menu.items[].title", "string", literal("")],
-    ["site.menu.items[].icon", ["string", "null"], literal(null)],
-    ["site.menu.items[].url", "string", literal("")],
-    ["site.menu.items[].accent", ["string", "null"], literal(null)],
-    ["site.footer.actions", "array", literal([]), { items: { type: ["object"] } }],
-    ["site.footer.actions[].type", "string", derived("footer action"), { values: ["link", "button", "dropdown", "spacer"] }],
-    ["site.footer.actions[].icon", ["string", "null"], literal(null)],
-    ["site.footer.actions[].title", "string", literal("")],
-    ["site.footer.actions[].url", ["string", "null"], literal(null)],
-    ["site.footer.actions[].onclick", ["string", "null"], literal(null)],
-    ["site.footer.actions[].items", "array", literal([]), { items: { type: ["object"] } }],
-    ["site.footer.actions[].items[].type", "string", derived("footer dropdown action"), { values: ["link", "button"] }],
-    ["site.footer.actions[].items[].icon", ["string", "null"], literal(null)],
-    ["site.footer.actions[].items[].title", "string", literal("")],
-    ["site.footer.actions[].items[].url", ["string", "null"], literal(null)],
-    ["site.footer.actions[].items[].onclick", ["string", "null"], literal(null)],
-    ["site.footer.sections", "array", literal([]), { items: { type: ["object"] } }],
-    ["site.footer.sections[].title", "string", literal("")],
-    ["site.footer.sections[].items", "array", literal([]), { items: { type: ["object"] } }],
-    ["site.footer.sections[].items[].title", "string", literal("")],
-    ["site.footer.sections[].items[].url", "string", literal("")],
-    ["site.footer.content", "string", literal("本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。")]
-  ]),
-  ...fields(SEO_CONSUMERS, [
-    ["seo.canonical.host", ["string", "null"], literal(null), { normalization: "trim; remove scheme and trailing slash; null disables canonical output" }],
-    ["seo.canonical.allowed_hosts", "array", literal(["localhost"]), { items: { type: ["string"] }, normalization: "trim hosts; remove empty values; stable-deduplicate; replace on site override" }],
-    ["seo.open_graph.enabled", "boolean", literal(true)],
-    ["seo.open_graph.twitter_id", ["string", "null"], literal(null)],
-    ["seo.structured_data.same_as", "array", literal([]), { items: { type: ["string"] }, normalization: "trim URLs; remove empty values; stable-deduplicate; replace on site override" }]
-  ]),
-  ...layoutProfileFields(),
-  ...fields(CONTENT_CONSUMERS, [
-    ["content.article.style", "string", literal("tech"), { values: ["tech", "story"] }],
-    ["content.article.paragraph_indent", "string", literal("auto"), { values: ["auto", "always", "never"] }],
-    ["content.article.listing.pinned_layout", "string", literal("carousel"), { values: ["carousel", "flat"] }],
-    ["content.article.listing.card_layout", "string", literal("hero"), { values: ["hero", "classic"] }],
-    ["content.article.listing.cover_ratio", "number", literal(2), { exclusiveMinimum: 0 }],
-    ["content.article.listing.excerpt_length", "number", literal(128), { minimum: 0 }],
-    ["content.article.listing.show_tags", "boolean", literal(false)],
-    ["content.article.banner.ratio", "number", literal(2.5), { exclusiveMinimum: 0 }],
-    ["content.article.category_colors", "object", literal({ "探索号": "#f44336" }), { boundary: "record" }],
-    ["content.article.category_colors.<category>", "string", derived("current category color map")],
-    ["content.article.footer.license", ["boolean", "string"], literal("本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。")],
-    ["content.article.footer.share", "array", literal([]), { items: { type: ["string"], values: ["wechat", "weibo", "email", "link"] }, normalization: "trim; stable-deduplicate; empty array disables sharing" }],
-    ["content.article.footer.show_tags", "boolean", literal(true)],
-    ["content.article.related_posts_limit", "number", literal(0), { minimum: 0, normalization: "non-negative integer; 0 disables related posts" }],
-    ["content.article.show_reading_time", "boolean", literal(false)],
-    ["content.notebook.listing.excerpt_length", "number", literal(128), { minimum: 0 }],
-    ["content.notebook.listing.per_page", ["number", "null"], literal(null), { minimum: 0 }],
-    ["content.notebook.listing.sort.field", "string", literal("updated"), { values: ["date", "updated", "title"] }],
-    ["content.notebook.listing.sort.direction", "string", literal("desc"), { values: ["asc", "desc"] }],
-    ["content.notebook.tag_icons", "object", literal({}), { boundary: "record" }],
-    ["content.notebook.tag_icons.<tag>", "string", derived("current notebook tag icon map")],
-    ["content.notebook.footer.license", ["string", "boolean", "null"], literal(null)],
-    ["content.notebook.footer.share", ["array", "null"], literal(null), { items: { type: ["string"], values: ["wechat", "weibo", "email", "link"] }, normalization: "trim; stable-deduplicate; null inherits article share; [] disables" }]
-  ]),
-  ...fields(APPEARANCE_CONSUMERS, [
-    ["appearance.color_scheme", "string", literal("auto"), { values: ["auto", "light", "dark"] }],
-    ["appearance.typography.font_size.root", "string", literal("16px")],
-    ["appearance.typography.font_size.inline_code", "string", literal("85%")],
-    ["appearance.typography.font_size.code_block", "string", literal("0.8125rem")],
-    ["appearance.typography.font_family.body", "string", literal("system-ui, \"Microsoft Yahei\", \"Segoe UI\", Arial, sans-serif")],
-    ["appearance.typography.font_family.code", "string", literal("Menlo, Monaco, Consolas, system-ui, monospace, sans-serif")],
-    ["appearance.typography.content_align", "string", literal("left"), { values: ["left", "center", "right", "justify"] }],
-    ["appearance.typography.heading_prefixes", "object", literal({ h2: "#", h3: "=", h4: "|", h5: ":" }), { boundary: "sealed" }],
-    ["appearance.typography.heading_prefixes.h2", "string", literal("#")],
-    ["appearance.typography.heading_prefixes.h3", "string", literal("=")],
-    ["appearance.typography.heading_prefixes.h4", "string", literal("|")],
-    ["appearance.typography.heading_prefixes.h5", "string", literal(":")],
-    ["appearance.shape.corner", "string", literal("superellipse(1.25)")],
-    ["appearance.shape.radius.card_large", "string", literal("24px")],
-    ["appearance.shape.radius.card", "string", literal("16px")],
-    ["appearance.shape.radius.card_small", "string", literal("12px")],
-    ["appearance.shape.radius.bar", "string", literal("12px")],
-    ["appearance.shape.radius.image_large", "string", literal("24px")],
-    ["appearance.shape.radius.image", "string", literal("16px")],
-    ["appearance.shape.radius.image_small", "string", literal("8px")],
-    ["appearance.colors.primary", "string", literal("hsl(192 98% 55%)")],
-    ["appearance.colors.accent", "string", literal("hsl(14 100% 57%)")],
-    ["appearance.colors.link", "string", literal("hsl(207 90% 54%)")],
-    ["appearance.gradients.primary_action", "string", literal("linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))")],
-    ["appearance.gradients.search_bar", "string", literal("linear-gradient(to right, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)")],
-    ["appearance.gradients.avatar_ring", "string", literal("conic-gradient(from 0deg, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)")],
-    ["appearance.motion.page_transition", "boolean", literal(true)],
-    ["appearance.motion.avatar", "string", literal("auto"), { values: ["auto", "always", "never"] }],
-    ["appearance.code_block.scrollbar_width", "string", literal("4px")],
-    ["appearance.code_block.highlight_stylesheet", ["string", "null"], literal("https://gcore.jsdelivr.net/gh/highlightjs/cdn-release@11.9/build/styles/atom-one-dark.min.css")],
-    ["appearance.backgrounds.sidebar.surface", "string", literal("card"), { values: ["glass", "card"] }],
-    ["appearance.backgrounds.sidebar.color.light", "string", literal("var(--card)")],
-    ["appearance.backgrounds.sidebar.color.dark", "string", literal("var(--card)")],
-    ["appearance.backgrounds.sidebar.image", ["string", "null"], literal("https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg")],
-    ["appearance.backgrounds.sidebar.opacity", "number", literal(0.8), { minimum: 0, maximum: 1 }],
-    ["appearance.backgrounds.sidebar.backdrop.radius", "string", literal("100px")],
-    ["appearance.backgrounds.sidebar.backdrop.overlay", "string", literal("var(--bg-a60)")],
-    ["appearance.backgrounds.page.image", ["string", "null"], literal(null)],
-    ["appearance.backgrounds.page.backdrop.radius", "string", literal("100px")],
-    ["appearance.backgrounds.page.backdrop.overlay", "string", literal("var(--bg-a75)")],
-    ["appearance.backgrounds.page.backdrop.saturation", "string", literal("300%")]
-  ]),
-  ...fields(RESOURCE_CONSUMERS, [
-    ["resources.preconnect", "array", literal([]), { items: { type: ["string"] }, normalization: "normalize origins; stable-deduplicate; replace on site override" }],
-    ["resources.fallbacks.avatar", "string", literal("https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg")],
-    ["resources.fallbacks.link_card", "string", literal("https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/link/8f277b4ee0ecd.svg")],
-    ["resources.fallbacks.cover", "string", literal("https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg")],
-    ["resources.error_page.image", ["string", "null"], literal("https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg")]
-  ]),
-  ...fields(EXTENSION_CONSUMERS, [
-    ["extensions.search.provider", ["string", "null"], literal("local"), { values: [null, "local", "algolia"], normalization: "require a registered provider ID; preserve null as disabled" }],
-    ["extensions.search.providers.local.scope", "string", literal("all")],
-    ["extensions.search.providers.local.include_content", "boolean", literal(true)],
-    ["extensions.search.providers.local.cache_ttl_seconds", "number", literal(86400), { minimum: 0 }],
-    ["extensions.search.providers.algolia", "object", registered("Algolia"), { boundary: "parameter_bag" }],
-    ["extensions.comments.provider", ["string", "null"], literal(null), { values: [null, "beaudar", "utterances", "giscus", "twikoo", "waline", "artalk"] }],
-    ["extensions.comments.title", ["string", "null"], literal(null)],
-    ["extensions.comments.providers.<provider>", "object", registered("comment provider"), { boundary: "parameter_bag" }],
-    ...TAG_EXTENSION_IDS.map(id => [`extensions.tags.${id}`, "object", registered(`tag:${id}`), {
-      boundary: "registered_schema",
-      normalization: "merge declared child fields; deep-freeze the normalized JavaScript object"
-    }]),
-    ...FEATURE_EXTENSION_IDS.map(id => [`extensions.features.${id}`, "object", registered(`feature:${id}`), {
-      boundary: "registered_schema",
-      normalization: "merge declared child fields; deep-freeze the normalized JavaScript object"
-    }]),
-    ["extensions.features.math.provider", ["string", "null"], literal(null), { values: [null, "katex", "mathjax"] }],
-    ["extensions.services.site_info.provider", ["string", "null"], literal("site_info_api"), { values: [null, "site_info_api"] }],
-    ["extensions.services.site_info.providers.site_info_api.endpoint", "string", literal("https://api.xaox.cc/site_info/v1?url={href}")],
-    ["extensions.services.rating.provider", ["string", "null"], literal("star_vote"), { values: [null, "star_vote"] }],
-    ["extensions.services.rating.providers.star_vote.endpoint", "string", literal("https://star-vote.xaox.cc/api/rating")],
-    ["extensions.services.vote.provider", ["string", "null"], literal("star_vote"), { values: [null, "star_vote"] }],
-    ["extensions.services.vote.providers.star_vote.endpoint", "string", literal("https://star-vote.xaox.cc/api/vote")],
-    ["extensions.services.contributors.provider", "string", literal("github"), { values: ["github"] }],
-    ["extensions.services.contributors.providers.github.repositories", "array", literal([]), { items: { type: ["object"], boundary: "sealed" } }],
-    ["extensions.services.contributors.providers.github.repositories[].source_prefix", "string", derived("repository source prefix")],
-    ["extensions.services.contributors.providers.github.repositories[].repository", "string", derived("GitHub owner/repository")],
-    ["extensions.services.contributors.providers.github.repositories[].branch", "string", literal("main")],
-    ["extensions.services.github.api_url", "string", literal("https://api.github.com"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }],
-    ["extensions.services.github.raw_url", "string", literal("https://raw.githubusercontent.com"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }],
-    ["extensions.services.github.gist_url", "string", literal("https://gist.github.com"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }],
-    ["extensions.services.github_card.provider", "string", literal("github_readme_stats"), { values: ["github_readme_stats"] }],
-    ["extensions.services.github_card.providers.github_readme_stats.endpoint", "string", literal("https://github-readme-stats.vercel.app"), { normalization: "require an absolute HTTP(S) URL; preserve the URL" }]
-  ], { status: "delivered" }),
-  ...fields(INJECT_CONSUMERS, [
-    ["inject.head_end", "string", literal(""), { normalization: "preserve trusted source text exactly; append page text after site text with one newline" }],
-    ["inject.body_end", "string", literal(""), { normalization: "preserve trusted source text exactly; append page text after site text with one newline" }]
-  ]),
   ...fields(CONTENT_CONSUMERS, CONTENT_OVERRIDE_DEFINITIONS, {
     scopes: COLLECTION_SCOPE,
     cascade: COLLECTION_CASCADE,

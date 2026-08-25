@@ -8,5 +8,5 @@ module.exports = ctx => {
   const source = hasSiteThemeConfig ? "_config.stellar.yml" : "themes/stellar/_config.yml";
   const themeConfig = hasSiteThemeConfig ? ctx.config.theme_config : {};
   ctx.stellar = ctx.stellar || {};
-  ctx.stellar.config = parseStellarConfig({ source, themeConfig, siteConfig: ctx.config });
+  ctx.stellar.config = parseStellarConfig({ source, themeConfig });
 };

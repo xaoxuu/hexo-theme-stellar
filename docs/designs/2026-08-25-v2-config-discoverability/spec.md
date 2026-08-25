@@ -14,7 +14,7 @@ Stellar v2 已用声明式 Schema 封闭主题公开配置，但默认 `_config.
 
 ## 2. 技术方案
 
-- 在 `_config.yml` 中补齐 `site.brand.image.src/image.href/name/wordmark/tagline.text/tagline.hover` 活动字段，将示例值写在行尾注释；运行时默认仍由 Schema 从 Hexo `avatar/title/subtitle` 派生。
+- 在 `_config.yml` 中补齐 `site.brand.image.src/image.href/name/wordmark/tagline.text/tagline.hover` 活动字段；后续由 `2026-08-25-v2-theme-schema-single-source` 改为从 Schema 生成，并取消 Hexo `avatar/title/subtitle` 派生。
 - 补充 Footer dropdown/spacer、Notebook tag icon 与 contributors repository 的可复制示例；第三方参数袋继续明确为上游透传，不穷举外部 SDK 字段。
 - 新增 Schema 驱动的可发现性测试：每个封闭叶子必须为活动 YAML，空值字段必须带已验证的行尾示例；对象数组与动态映射容器必须登记并命中配置中的结构契约。
 - 复用现有 `CONFIG_SCHEMA`、`js-yaml` 和 Node.js test runner，不增加依赖、运行时接口或第二份配置 Schema。

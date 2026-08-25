@@ -16,6 +16,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "颜色、排版、形状、动效与背景。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -51,6 +52,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "侧栏和页面背景。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -154,6 +156,7 @@
         "kind": "literal",
         "value": "var(--bg-a75)"
       },
+      "description": "页面背景遮罩颜色。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -165,7 +168,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "var(--bg-a75)",
       "migration": "configuration/appearance"
@@ -180,6 +184,7 @@
         "kind": "literal",
         "value": "100px"
       },
+      "description": "页面背景模糊半径。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -191,7 +196,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "100px",
       "migration": "configuration/appearance"
@@ -206,6 +212,7 @@
         "kind": "literal",
         "value": "300%"
       },
+      "description": "页面背景饱和度。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -217,7 +224,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "300%",
       "migration": "configuration/appearance"
@@ -233,6 +241,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "页面背景图片；null 不显示背景图。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -244,7 +253,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": null,
       "migration": "configuration/appearance"
@@ -325,6 +335,7 @@
         "kind": "literal",
         "value": "var(--bg-a60)"
       },
+      "description": "侧栏背景遮罩颜色。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -336,7 +347,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "var(--bg-a60)",
       "migration": "configuration/appearance"
@@ -351,6 +363,7 @@
         "kind": "literal",
         "value": "100px"
       },
+      "description": "侧栏背景模糊半径。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -362,7 +375,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "100px",
       "migration": "configuration/appearance"
@@ -408,6 +422,7 @@
         "kind": "literal",
         "value": "var(--card)"
       },
+      "description": "深色模式侧栏背景色。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -419,7 +434,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "var(--card)",
       "migration": "configuration/appearance"
@@ -434,6 +450,7 @@
         "kind": "literal",
         "value": "var(--card)"
       },
+      "description": "浅色模式侧栏背景色。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -445,7 +462,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "var(--card)",
       "migration": "configuration/appearance"
@@ -461,6 +479,7 @@
         "kind": "literal",
         "value": "https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg"
       },
+      "description": "侧栏背景图片；null 不显示背景图。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -472,7 +491,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "/sidebar.webp",
       "migration": "configuration/appearance"
@@ -487,6 +507,7 @@
         "kind": "literal",
         "value": 0.8
       },
+      "description": "侧栏背景不透明度。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -498,7 +519,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": 0.8,
       "migration": "configuration/appearance",
@@ -515,6 +537,7 @@
         "kind": "literal",
         "value": "card"
       },
+      "description": "侧栏背景表面样式。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -526,7 +549,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "card",
       "migration": "configuration/appearance",
@@ -545,6 +569,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "代码块滚动条与高亮样式。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -577,6 +602,7 @@
         "kind": "literal",
         "value": "https://gcore.jsdelivr.net/gh/highlightjs/cdn-release@11.9/build/styles/atom-one-dark.min.css"
       },
+      "description": "代码高亮样式表资源；null 不加载额外样式。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -588,7 +614,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "https://example.com/highlight.css",
       "migration": "configuration/appearance"
@@ -603,6 +630,7 @@
         "kind": "literal",
         "value": "4px"
       },
+      "description": "代码块滚动条宽度。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -614,7 +642,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "4px",
       "migration": "configuration/appearance"
@@ -629,6 +658,7 @@
         "kind": "literal",
         "value": "auto"
       },
+      "description": "站点默认配色方案。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -640,7 +670,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "auto",
       "migration": "configuration/appearance",
@@ -660,6 +691,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "主题主色、强调色和链接色。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -692,6 +724,7 @@
         "kind": "literal",
         "value": "hsl(14 100% 57%)"
       },
+      "description": "强调色。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -703,7 +736,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "hsl(14 100% 57%)",
       "migration": "configuration/appearance"
@@ -718,6 +752,7 @@
         "kind": "literal",
         "value": "hsl(207 90% 54%)"
       },
+      "description": "正文链接颜色。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -729,7 +764,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "hsl(207 90% 54%)",
       "migration": "configuration/appearance"
@@ -744,6 +780,7 @@
         "kind": "literal",
         "value": "hsl(192 98% 55%)"
       },
+      "description": "主题主色。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -755,7 +792,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "hsl(192 98% 55%)",
       "migration": "configuration/appearance"
@@ -770,6 +808,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "主要交互、搜索栏和头像环渐变。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -800,6 +839,7 @@
         "kind": "literal",
         "value": "conic-gradient(from 0deg, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)"
       },
+      "description": "头像装饰环渐变。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -811,7 +851,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "conic-gradient(from 0deg, #0ff, #f0f, #0ff)",
       "migration": "configuration/appearance"
@@ -826,6 +867,7 @@
         "kind": "literal",
         "value": "linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))"
       },
+      "description": "主要操作按钮渐变。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -837,7 +879,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "linear-gradient(to right, #00f, #0ff)",
       "migration": "configuration/appearance"
@@ -852,6 +895,7 @@
         "kind": "literal",
         "value": "linear-gradient(to right, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)"
       },
+      "description": "搜索栏边框渐变。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -863,7 +907,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "linear-gradient(to right, #0ff, #f0f)",
       "migration": "configuration/appearance"
@@ -878,6 +923,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "页面与头像动效策略。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -909,6 +955,7 @@
         "kind": "literal",
         "value": "auto"
       },
+      "description": "头像动效策略。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -920,7 +967,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "auto",
       "migration": "configuration/appearance",
@@ -940,6 +988,7 @@
         "kind": "literal",
         "value": true
       },
+      "description": "是否启用页面进入动效。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -951,7 +1000,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": true,
       "migration": "configuration/appearance"
@@ -966,6 +1016,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "卡片、图片和栏目的形状令牌。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -999,6 +1050,7 @@
         "kind": "literal",
         "value": "superellipse(1.25)"
       },
+      "description": "支持的 CSS corner-shape 值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1010,7 +1062,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "superellipse(1.25)",
       "migration": "configuration/appearance"
@@ -1057,6 +1110,7 @@
         "kind": "literal",
         "value": "12px"
       },
+      "description": "栏、按钮和输入框圆角。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1068,7 +1122,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "12px",
       "migration": "configuration/appearance"
@@ -1083,6 +1138,7 @@
         "kind": "literal",
         "value": "16px"
       },
+      "description": "普通卡片圆角。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1094,7 +1150,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "16px",
       "migration": "configuration/appearance"
@@ -1109,6 +1166,7 @@
         "kind": "literal",
         "value": "24px"
       },
+      "description": "大型卡片圆角。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1120,7 +1178,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "24px",
       "migration": "configuration/appearance"
@@ -1135,6 +1194,7 @@
         "kind": "literal",
         "value": "12px"
       },
+      "description": "小型卡片圆角。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1146,7 +1206,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "12px",
       "migration": "configuration/appearance"
@@ -1161,6 +1222,7 @@
         "kind": "literal",
         "value": "16px"
       },
+      "description": "普通图片圆角。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1172,7 +1234,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "16px",
       "migration": "configuration/appearance"
@@ -1187,6 +1250,7 @@
         "kind": "literal",
         "value": "24px"
       },
+      "description": "大型图片圆角。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1198,7 +1262,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "24px",
       "migration": "configuration/appearance"
@@ -1213,6 +1278,7 @@
         "kind": "literal",
         "value": "8px"
       },
+      "description": "小型图片圆角。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1224,7 +1290,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "8px",
       "migration": "configuration/appearance"
@@ -1239,6 +1306,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "正文、代码与标题的排版令牌。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1275,6 +1343,7 @@
         "kind": "literal",
         "value": "left"
       },
+      "description": "文章正文对齐方式。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1286,7 +1355,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "left",
       "migration": "configuration/appearance",
@@ -1338,6 +1408,7 @@
         "kind": "literal",
         "value": "system-ui, \"Microsoft Yahei\", \"Segoe UI\", Arial, sans-serif"
       },
+      "description": "正文与界面字体栈。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1349,7 +1420,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "system-ui, sans-serif",
       "migration": "configuration/appearance"
@@ -1364,6 +1436,7 @@
         "kind": "literal",
         "value": "Menlo, Monaco, Consolas, system-ui, monospace, sans-serif"
       },
+      "description": "代码字体栈。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1375,7 +1448,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "Menlo, monospace",
       "migration": "configuration/appearance"
@@ -1422,6 +1496,7 @@
         "kind": "literal",
         "value": "0.8125rem"
       },
+      "description": "代码块字号。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1433,7 +1508,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "0.8125rem",
       "migration": "configuration/appearance"
@@ -1448,6 +1524,7 @@
         "kind": "literal",
         "value": "85%"
       },
+      "description": "行内代码字号。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1459,7 +1536,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "85%",
       "migration": "configuration/appearance"
@@ -1474,6 +1552,7 @@
         "kind": "literal",
         "value": "16px"
       },
+      "description": "页面根字号。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1485,7 +1564,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "16px",
       "migration": "configuration/appearance"
@@ -1516,7 +1596,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": {
         "h2": "#",
@@ -1537,6 +1618,7 @@
         "kind": "literal",
         "value": "#"
       },
+      "description": "二级标题前缀字符。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1548,7 +1630,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "#",
       "migration": "configuration/appearance"
@@ -1563,6 +1646,7 @@
         "kind": "literal",
         "value": "="
       },
+      "description": "三级标题前缀字符。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1574,7 +1658,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "=",
       "migration": "configuration/appearance"
@@ -1589,6 +1674,7 @@
         "kind": "literal",
         "value": "|"
       },
+      "description": "四级标题前缀字符。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1600,7 +1686,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": "|",
       "migration": "configuration/appearance"
@@ -1615,6 +1702,7 @@
         "kind": "literal",
         "value": ":"
       },
+      "description": "五级标题前缀字符。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1626,7 +1714,8 @@
         "PageViewModel",
         "layout renderer",
         "Stylus compiler",
-        "browser theme state"
+        "browser theme state",
+        "Reference generator"
       ],
       "example": ":",
       "migration": "configuration/appearance"
@@ -1641,6 +1730,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "文章与 Notebook 的内容展示默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1683,6 +1773,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "博客文章及文章列表的展示默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1748,6 +1839,7 @@
         "kind": "literal",
         "value": 2.5
       },
+      "description": "文章 Banner 的宽高比。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1759,7 +1851,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": 2.5,
       "migration": "configuration/content",
@@ -1777,6 +1870,7 @@
           "探索号": "#f44336"
         }
       },
+      "description": "分类名称到 CSS 颜色的映射。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1788,7 +1882,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": {
         "探索号": "#f44336"
@@ -1802,10 +1897,8 @@
         "string"
       ],
       "default": {
-        "kind": "derived",
-        "sources": [
-          "current category color map"
-        ]
+        "kind": "literal",
+        "value": ""
       },
       "scope": "theme",
       "cascade": [
@@ -1818,7 +1911,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": "#f44336",
       "migration": "configuration/content"
@@ -1869,6 +1963,7 @@
         "kind": "literal",
         "value": "本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。"
       },
+      "description": "文章许可声明；false 隐藏，字符串作为自定义声明。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1880,7 +1975,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": false,
       "migration": "configuration/content"
@@ -1895,6 +1991,7 @@
         "kind": "literal",
         "value": []
       },
+      "description": "文章分享入口；空数组不显示。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1906,7 +2003,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": [
         "wechat",
@@ -1924,6 +2022,7 @@
         "kind": "literal",
         "value": true
       },
+      "description": "是否在文章页脚显示标签。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1935,7 +2034,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": true,
       "migration": "configuration/content"
@@ -1984,6 +2084,7 @@
         "kind": "literal",
         "value": "hero"
       },
+      "description": "普通文章卡片布局。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -1995,7 +2096,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": "hero",
       "migration": "configuration/content",
@@ -2014,6 +2116,7 @@
         "kind": "literal",
         "value": 2
       },
+      "description": "文章列表封面的宽高比。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2025,7 +2128,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": 2,
       "migration": "configuration/content",
@@ -2041,6 +2145,7 @@
         "kind": "literal",
         "value": 128
       },
+      "description": "自动摘要的最大字符数；0 不生成自动摘要。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2052,7 +2157,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": 128,
       "migration": "configuration/content",
@@ -2068,6 +2174,7 @@
         "kind": "literal",
         "value": "carousel"
       },
+      "description": "置顶文章列表布局。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2079,7 +2186,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": "carousel",
       "migration": "configuration/content",
@@ -2098,6 +2206,7 @@
         "kind": "literal",
         "value": false
       },
+      "description": "是否在文章卡片中显示标签。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2109,7 +2218,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": false,
       "migration": "configuration/content"
@@ -2124,6 +2234,7 @@
         "kind": "literal",
         "value": "auto"
       },
+      "description": "正文段落首行缩进策略。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2135,7 +2246,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": "auto",
       "migration": "configuration/content",
@@ -2155,6 +2267,7 @@
         "kind": "literal",
         "value": 0
       },
+      "description": "相关文章数量上限；0 关闭相关文章。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2166,7 +2279,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": 0,
       "migration": "configuration/content",
@@ -2182,6 +2296,7 @@
         "kind": "literal",
         "value": false
       },
+      "description": "是否显示预计阅读时间。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2193,7 +2308,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": false,
       "migration": "configuration/content"
@@ -2208,6 +2324,7 @@
         "kind": "literal",
         "value": "tech"
       },
+      "description": "文章默认排版风格。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2219,7 +2336,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": "tech",
       "migration": "configuration/content",
@@ -2238,6 +2356,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "Notebook 列表与页脚默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2309,6 +2428,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "Notebook 页脚许可声明；null 继承文章默认值，false 隐藏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2320,7 +2440,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": null,
       "migration": "configuration/content"
@@ -2336,6 +2457,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "Notebook 分享入口；null 继承文章默认值，空数组不显示。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2347,7 +2469,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": null,
       "migration": "configuration/content"
@@ -2397,6 +2520,7 @@
         "kind": "literal",
         "value": 128
       },
+      "description": "Notebook 列表摘要的最大字符数；0 不生成自动摘要。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2408,7 +2532,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": 128,
       "migration": "configuration/content",
@@ -2425,6 +2550,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "Notebook 每页条目数；null 使用站点分页设置。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2436,7 +2562,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": null,
       "migration": "configuration/content",
@@ -2483,6 +2610,7 @@
         "kind": "literal",
         "value": "desc"
       },
+      "description": "Notebook 条目的默认排序方向。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2494,7 +2622,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": "desc",
       "migration": "configuration/content",
@@ -2513,6 +2642,7 @@
         "kind": "literal",
         "value": "updated"
       },
+      "description": "Notebook 条目的默认排序字段。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2524,7 +2654,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": "updated",
       "migration": "configuration/content",
@@ -2544,6 +2675,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "Notebook 标签名称到图标 ID 的映射。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2555,7 +2687,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": {
         "tools": "quot:hashtag"
@@ -2569,10 +2702,8 @@
         "string"
       ],
       "default": {
-        "kind": "derived",
-        "sources": [
-          "current notebook tag icon map"
-        ]
+        "kind": "literal",
+        "value": ""
       },
       "scope": "theme",
       "cascade": [
@@ -2585,7 +2716,8 @@
         "CollectionModel",
         "PageViewModel",
         "article renderer",
-        "listing renderer"
+        "listing renderer",
+        "Reference generator"
       ],
       "example": "quot:hashtag",
       "migration": "configuration/content"
@@ -2600,6 +2732,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "搜索、评论、标签、特性与数据服务扩展。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2634,6 +2767,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "评论系统及其 Provider。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2662,6 +2796,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "默认评论 Provider；null 关闭评论。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2728,6 +2863,7 @@
           "imageUploader": null
         }
       },
+      "description": "Artalk Provider 参数。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2770,6 +2906,7 @@
           "branch": "main"
         }
       },
+      "description": "Beaudar Provider 参数。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2821,6 +2958,7 @@
           "crossorigin": "anonymous"
         }
       },
+      "description": "Giscus Provider 参数。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2863,6 +3001,7 @@
           "envId": "https://xxx"
         }
       },
+      "description": "Twikoo Provider 参数。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2897,6 +3036,7 @@
           "label": null
         }
       },
+      "description": "Utterances Provider 参数。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2933,6 +3073,7 @@
           "pageview": false
         }
       },
+      "description": "Waline Provider 参数。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -2960,8 +3101,8 @@
         "object"
       ],
       "default": {
-        "kind": "registered",
-        "owner": "comment provider"
+        "kind": "literal",
+        "value": {}
       },
       "scope": "theme",
       "cascade": [
@@ -2990,6 +3131,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "默认评论区标题；null 使用语言文件文案。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3016,6 +3158,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "浏览器 Feature 的启用与实现选择。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3074,6 +3217,7 @@
         "kind": "literal",
         "value": false
       },
+      "description": "是否启用卡片悬停聚光与倾斜效果。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3131,6 +3275,7 @@
         "kind": "literal",
         "value": false
       },
+      "description": "是否启用浏览器配色切换功能。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3199,6 +3344,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "图表 Provider；null 关闭图表渲染。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3295,6 +3441,7 @@
         "kind": "literal",
         "value": "neutral"
       },
+      "description": "Mermaid 图表主题。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3358,6 +3505,7 @@
         "kind": "literal",
         "value": false
       },
+      "description": "是否启用 Heti 中文排版增强。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3417,6 +3565,7 @@
         "kind": "literal",
         "value": true
       },
+      "description": "懒加载是否自动保留图片宽高比。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3443,6 +3592,7 @@
         "kind": "literal",
         "value": "fade"
       },
+      "description": "图片懒加载完成时的过渡效果。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3506,6 +3656,7 @@
         "kind": "literal",
         "value": true
       },
+      "description": "是否启用图片灯箱。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3532,6 +3683,7 @@
         "kind": "literal",
         "value": ".timenode p>img"
       },
+      "description": "进入灯箱的图片 CSS 选择器。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3589,6 +3741,7 @@
         "kind": "literal",
         "value": true
       },
+      "description": "是否在用户可能导航前预取站内页面。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3655,6 +3808,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "数学公式 Provider；null 关闭公式渲染。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3719,6 +3873,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "KaTeX Provider 参数。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3745,6 +3900,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "MathJax Provider 参数。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3810,6 +3966,7 @@
         "kind": "literal",
         "value": "8px"
       },
+      "description": "滚动进入动效的位移距离。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3836,6 +3993,7 @@
         "kind": "literal",
         "value": 1000
       },
+      "description": "滚动进入动效持续时间，单位为毫秒。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3863,6 +4021,7 @@
         "kind": "literal",
         "value": true
       },
+      "description": "是否启用滚动进入动效。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3889,6 +4048,7 @@
         "kind": "literal",
         "value": 100
       },
+      "description": "同组元素进入动效的间隔，单位为毫秒。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3916,6 +4076,7 @@
         "kind": "literal",
         "value": 1
       },
+      "description": "滚动进入动效的初始缩放比例。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3944,6 +4105,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "站内搜索及其 Provider。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -3972,6 +4134,7 @@
         "kind": "literal",
         "value": "local"
       },
+      "description": "站内搜索 Provider；null 关闭搜索。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -4049,9 +4212,14 @@
         "object"
       ],
       "default": {
-        "kind": "registered",
-        "owner": "Algolia"
+        "kind": "literal",
+        "value": {
+          "appId": null,
+          "apiKey": null,
+          "indexName": null
+        }
       },
+      "description": "Algolia Provider 参数。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -4117,6 +4285,7 @@
         "kind": "literal",
         "value": 86400
       },
+      "description": "本地搜索索引缓存有效期，单位为秒。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -4144,6 +4313,7 @@
         "kind": "literal",
         "value": true
       },
+      "description": "本地搜索索引是否包含正文。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -4170,6 +4340,7 @@
         "kind": "literal",
         "value": "all"
       },
+      "description": "本地搜索索引范围。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -4196,6 +4367,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "数据服务及其 Provider。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -4264,6 +4436,7 @@
         "kind": "literal",
         "value": "github"
       },
+      "description": "贡献者数据 Provider。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -4359,6 +4532,7 @@
         "kind": "literal",
         "value": []
       },
+      "description": "源码目录到 GitHub 仓库的映射；空数组不加载贡献者。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -4414,10 +4588,8 @@
         "string"
       ],
       "default": {
-        "kind": "derived",
-        "sources": [
-          "GitHub owner/repository"
-        ]
+        "kind": "literal",
+        "value": ""
       },
       "scope": "theme",
       "cascade": [
@@ -4442,10 +4614,8 @@
         "string"
       ],
       "default": {
-        "kind": "derived",
-        "sources": [
-          "repository source prefix"
-        ]
+        "kind": "literal",
+        "value": ""
       },
       "scope": "theme",
       "cascade": [
@@ -4508,6 +4678,7 @@
         "kind": "literal",
         "value": "https://api.github.com"
       },
+      "description": "GitHub REST API 基础地址。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -4534,6 +4705,7 @@
         "kind": "literal",
         "value": "https://gist.github.com"
       },
+      "description": "GitHub Gist 基础地址。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -4560,6 +4732,7 @@
         "kind": "literal",
         "value": "https://raw.githubusercontent.com"
       },
+      "description": "GitHub Raw 内容基础地址。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -4627,6 +4800,7 @@
         "kind": "literal",
         "value": "github_readme_stats"
       },
+      "description": "GitHub 卡片 Provider。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -4722,6 +4896,7 @@
         "kind": "literal",
         "value": "https://github-readme-stats.vercel.app"
       },
+      "description": "GitHub Readme Stats 服务地址。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -4790,6 +4965,7 @@
         "kind": "literal",
         "value": "star_vote"
       },
+      "description": "评分服务 Provider；null 关闭评分服务。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -4886,6 +5062,7 @@
         "kind": "literal",
         "value": "https://star-vote.xaox.cc/api/rating"
       },
+      "description": "Star Vote 评分接口地址。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -4954,6 +5131,7 @@
         "kind": "literal",
         "value": "site_info_api"
       },
+      "description": "站点信息服务 Provider；null 关闭自动补全。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -5050,6 +5228,7 @@
         "kind": "literal",
         "value": "https://api.xaox.cc/site_info/v1?url={href}"
       },
+      "description": "Site Info API 请求模板，使用 {href} 代入目标地址。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -5118,6 +5297,7 @@
         "kind": "literal",
         "value": "star_vote"
       },
+      "description": "投票服务 Provider；null 关闭投票服务。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -5214,6 +5394,7 @@
         "kind": "literal",
         "value": "https://star-vote.xaox.cc/api/vote"
       },
+      "description": "Star Vote 投票接口地址。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -5240,6 +5421,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "标签插件默认行为。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -5299,6 +5481,7 @@
         "kind": "literal",
         "value": "theme"
       },
+      "description": "Button 标签默认颜色；null 不注入颜色。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -5356,6 +5539,7 @@
         "kind": "literal",
         "value": false
       },
+      "description": "Checkbox 标签是否允许用户交互。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -5427,6 +5611,7 @@
         "kind": "literal",
         "value": "blobcat"
       },
+      "description": "Emoji 标签默认使用的图片源。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -5459,6 +5644,7 @@
           "blobcat": "https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif"
         }
       },
+      "description": "Emoji 图片源名称到 URL 模板的映射。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -5550,6 +5736,7 @@
         "kind": "literal",
         "value": "square"
       },
+      "description": "Gallery 标签默认图片比例。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -5581,6 +5768,7 @@
         "kind": "literal",
         "value": "mix"
       },
+      "description": "Gallery 标签默认图片尺寸。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -5646,6 +5834,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "Hashtag 标签默认颜色；null 不注入颜色。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -5704,6 +5893,7 @@
         "kind": "literal",
         "value": "accent"
       },
+      "description": "Icon 标签默认颜色；null 不注入颜色。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -5761,6 +5951,7 @@
         "kind": "literal",
         "value": "yellow"
       },
+      "description": "Mark 标签默认颜色。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -5820,6 +6011,7 @@
         "kind": "literal",
         "value": true
       },
+      "description": "Note 标签是否显示边框。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -5846,6 +6038,7 @@
         "kind": "literal",
         "value": ""
       },
+      "description": "Note 标签的默认颜色；空字符串使用组件默认色。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -5885,6 +6078,7 @@
           }
         }
       },
+      "description": "Quot 标签各变体的前后图标映射。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6005,6 +6199,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "可信原文注入入口。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6034,6 +6229,7 @@
         "kind": "literal",
         "value": ""
       },
+      "description": "插入 </body> 前的可信 HTML 或脚本；空字符串不注入。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6044,7 +6240,7 @@
       "consumers": [
         "head renderer",
         "script renderer",
-        "PageViewModel"
+        "Reference generator"
       ],
       "example": "<script>console.log('stellar')</script>",
       "migration": "configuration/inject"
@@ -6059,6 +6255,7 @@
         "kind": "literal",
         "value": ""
       },
+      "description": "插入 </head> 前的可信 HTML；空字符串不注入。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6069,7 +6266,7 @@
       "consumers": [
         "head renderer",
         "script renderer",
-        "PageViewModel"
+        "Reference generator"
       ],
       "example": "<meta name=\"example\" content=\"stellar\">",
       "migration": "configuration/inject"
@@ -6084,6 +6281,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "页面 Profile 的路由、导航与侧边栏默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6119,6 +6317,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "各页面类型的路径、导航和侧栏默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6152,6 +6351,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "作者页的布局默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6213,6 +6413,7 @@
         "kind": "literal",
         "value": "post"
       },
+      "description": "作者页高亮的主菜单项；null 表示不高亮。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6241,13 +6442,14 @@
         "kind": "literal",
         "value": "/author/"
       },
+      "description": "作者页的自动生成路径。",
       "scope": "theme",
       "cascade": [
         "schema default",
         "_config.stellar.yml"
       ],
       "normalizer": "root_relative_path",
-      "normalization": "normalize to a root-relative path; directory paths end with a slash",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
         "CollectionModel",
         "PageViewModel",
@@ -6307,6 +6509,7 @@
           "recent"
         ]
       },
+      "description": "作者页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6337,6 +6540,7 @@
         "kind": "literal",
         "value": []
       },
+      "description": "作者页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6367,6 +6571,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "博客列表页的布局默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6428,6 +6633,7 @@
         "kind": "literal",
         "value": "post"
       },
+      "description": "博客列表页高亮的主菜单项；null 表示不高亮。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6456,6 +6662,7 @@
         "kind": "literal",
         "value": []
       },
+      "description": "博客列表页顶部附加导航标签；空数组不添加。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6545,13 +6752,14 @@
         "kind": "literal",
         "value": "/blog/"
       },
+      "description": "博客列表页的自动生成路径。",
       "scope": "theme",
       "cascade": [
         "schema default",
         "_config.stellar.yml"
       ],
       "normalizer": "root_relative_path",
-      "normalization": "normalize to a root-relative path; directory paths end with a slash",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
         "CollectionModel",
         "PageViewModel",
@@ -6612,6 +6820,7 @@
           "recent"
         ]
       },
+      "description": "博客列表页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6642,6 +6851,7 @@
         "kind": "literal",
         "value": []
       },
+      "description": "博客列表页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6672,6 +6882,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "错误页的布局默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6733,6 +6944,7 @@
         "kind": "literal",
         "value": "post"
       },
+      "description": "错误页高亮的主菜单项；null 表示不高亮。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6761,13 +6973,14 @@
         "kind": "literal",
         "value": "/404.html"
       },
+      "description": "错误页的自动生成路径。",
       "scope": "theme",
       "cascade": [
         "schema default",
         "_config.stellar.yml"
       ],
       "normalizer": "root_relative_path",
-      "normalization": "normalize to a root-relative path; directory paths end with a slash",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
         "CollectionModel",
         "PageViewModel",
@@ -6827,6 +7040,7 @@
           "recent"
         ]
       },
+      "description": "错误页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6857,6 +7071,7 @@
         "kind": "literal",
         "value": []
       },
+      "description": "错误页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6887,6 +7102,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "主页的布局默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6955,6 +7171,7 @@
         "kind": "literal",
         "value": false
       },
+      "description": "是否显示主页评论区。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -6984,6 +7201,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "主页评论线程的稳定标识；null 由页面上下文决定。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7012,6 +7230,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "主页专用评论 Provider 参数。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7043,6 +7262,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "主页专用评论 Provider；null 使用全局评论 Provider。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7081,6 +7301,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "主页评论区标题；null 使用默认评论标题。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7141,6 +7362,7 @@
         "kind": "literal",
         "value": "post"
       },
+      "description": "主页高亮的主菜单项；null 表示不高亮。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7208,6 +7430,7 @@
           "recent"
         ]
       },
+      "description": "主页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7238,6 +7461,7 @@
         "kind": "literal",
         "value": []
       },
+      "description": "主页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7268,6 +7492,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "Note 内容页的布局默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7329,6 +7554,7 @@
         "kind": "literal",
         "value": "notebooks"
       },
+      "description": "Note 内容页高亮的主菜单项；null 表示不高亮。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7396,6 +7622,7 @@
           "recent"
         ]
       },
+      "description": "Note 内容页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7428,6 +7655,7 @@
           "toc"
         ]
       },
+      "description": "Note 内容页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7458,6 +7686,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "Notebook 列表页的布局默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7519,6 +7748,7 @@
         "kind": "literal",
         "value": "notebooks"
       },
+      "description": "Notebook 列表页高亮的主菜单项；null 表示不高亮。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7586,6 +7816,7 @@
           "recent"
         ]
       },
+      "description": "Notebook 列表页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7616,6 +7847,7 @@
         "kind": "literal",
         "value": []
       },
+      "description": "Notebook 列表页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7646,6 +7878,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "Notebook 总索引的布局默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7707,6 +7940,7 @@
         "kind": "literal",
         "value": "notebooks"
       },
+      "description": "Notebook 总索引高亮的主菜单项；null 表示不高亮。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7735,13 +7969,14 @@
         "kind": "literal",
         "value": "/notebooks/"
       },
+      "description": "Notebook 总索引的自动生成路径。",
       "scope": "theme",
       "cascade": [
         "schema default",
         "_config.stellar.yml"
       ],
       "normalizer": "root_relative_path",
-      "normalization": "normalize to a root-relative path; directory paths end with a slash",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
         "CollectionModel",
         "PageViewModel",
@@ -7801,6 +8036,7 @@
           "recent"
         ]
       },
+      "description": "Notebook 总索引左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7831,6 +8067,7 @@
         "kind": "literal",
         "value": []
       },
+      "description": "Notebook 总索引右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7861,6 +8098,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "独立页面的布局默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7922,6 +8160,7 @@
         "kind": "literal",
         "value": "post"
       },
+      "description": "独立页面高亮的主菜单项；null 表示不高亮。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -7988,6 +8227,7 @@
           "recent"
         ]
       },
+      "description": "独立页面左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8020,6 +8260,7 @@
           "toc"
         ]
       },
+      "description": "独立页面右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8050,6 +8291,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "博客文章页的布局默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8111,6 +8353,7 @@
         "kind": "literal",
         "value": "post"
       },
+      "description": "博客文章页高亮的主菜单项；null 表示不高亮。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8178,6 +8421,7 @@
           "recent"
         ]
       },
+      "description": "博客文章页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8211,6 +8455,7 @@
           "toc"
         ]
       },
+      "description": "博客文章页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8241,6 +8486,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "专栏文章页的布局默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8302,6 +8548,7 @@
         "kind": "literal",
         "value": "post"
       },
+      "description": "专栏文章页高亮的主菜单项；null 表示不高亮。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8369,6 +8616,7 @@
           "recent"
         ]
       },
+      "description": "专栏文章页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8402,6 +8650,7 @@
           "toc"
         ]
       },
+      "description": "专栏文章页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8432,6 +8681,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "专栏列表页的布局默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8493,6 +8743,7 @@
         "kind": "literal",
         "value": "post"
       },
+      "description": "专栏列表页高亮的主菜单项；null 表示不高亮。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8521,13 +8772,14 @@
         "kind": "literal",
         "value": "/topic/"
       },
+      "description": "专栏列表页的自动生成路径。",
       "scope": "theme",
       "cascade": [
         "schema default",
         "_config.stellar.yml"
       ],
       "normalizer": "root_relative_path",
-      "normalization": "normalize to a root-relative path; directory paths end with a slash",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
         "CollectionModel",
         "PageViewModel",
@@ -8588,6 +8840,7 @@
           "recent"
         ]
       },
+      "description": "专栏列表页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8618,6 +8871,7 @@
         "kind": "literal",
         "value": []
       },
+      "description": "专栏列表页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8648,6 +8902,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "Wiki 内容页的布局默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8709,6 +8964,7 @@
         "kind": "literal",
         "value": "wiki"
       },
+      "description": "Wiki 内容页高亮的主菜单项；null 表示不高亮。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8777,6 +9033,7 @@
           "recent"
         ]
       },
+      "description": "Wiki 内容页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8810,6 +9067,7 @@
           "toc"
         ]
       },
+      "description": "Wiki 内容页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8840,6 +9098,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "Wiki 列表页的布局默认值。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8901,6 +9160,7 @@
         "kind": "literal",
         "value": "wiki"
       },
+      "description": "Wiki 列表页高亮的主菜单项；null 表示不高亮。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -8929,6 +9189,7 @@
         "kind": "literal",
         "value": []
       },
+      "description": "Wiki 列表页顶部附加导航标签；空数组不添加。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9018,13 +9279,14 @@
         "kind": "literal",
         "value": "/wiki/"
       },
+      "description": "Wiki 列表页的自动生成路径。",
       "scope": "theme",
       "cascade": [
         "schema default",
         "_config.stellar.yml"
       ],
       "normalizer": "root_relative_path",
-      "normalization": "normalize to a root-relative path; directory paths end with a slash",
+      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
         "CollectionModel",
         "PageViewModel",
@@ -9085,6 +9347,7 @@
           "recent"
         ]
       },
+      "description": "Wiki 列表页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9115,6 +9378,7 @@
         "kind": "literal",
         "value": []
       },
+      "description": "Wiki 列表页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9145,6 +9409,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "预连接、资源兜底与错误页资源。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9185,6 +9450,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "错误页资源。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9216,6 +9482,7 @@
         "kind": "literal",
         "value": "https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg"
       },
+      "description": "错误页插图；null 不显示插图。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9224,10 +9491,11 @@
       "normalizer": "identity",
       "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
-        "head renderer",
         "PageViewModel",
         "tag renderers",
-        "image fallback filters"
+        "image fallback filters",
+        "error renderer",
+        "Reference generator"
       ],
       "example": "/404.svg",
       "migration": "configuration/resources"
@@ -9242,6 +9510,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "内容缺少图片时使用的兜底资源。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9274,6 +9543,7 @@
         "kind": "literal",
         "value": "https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg"
       },
+      "description": "用户或作者缺少头像时使用的兜底图。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9282,10 +9552,11 @@
       "normalizer": "identity",
       "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
-        "head renderer",
         "PageViewModel",
         "tag renderers",
-        "image fallback filters"
+        "image fallback filters",
+        "error renderer",
+        "Reference generator"
       ],
       "example": "/avatar.svg",
       "migration": "configuration/resources"
@@ -9300,6 +9571,7 @@
         "kind": "literal",
         "value": "https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg"
       },
+      "description": "封面与 Open Graph 缺少图片时使用的兜底图。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9308,10 +9580,11 @@
       "normalizer": "identity",
       "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
-        "head renderer",
         "PageViewModel",
         "tag renderers",
-        "image fallback filters"
+        "image fallback filters",
+        "error renderer",
+        "Reference generator"
       ],
       "example": "/cover.svg",
       "migration": "configuration/resources"
@@ -9326,6 +9599,7 @@
         "kind": "literal",
         "value": "https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/link/8f277b4ee0ecd.svg"
       },
+      "description": "链接卡片缺少图片时使用的兜底图。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9334,10 +9608,11 @@
       "normalizer": "identity",
       "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
-        "head renderer",
         "PageViewModel",
         "tag renderers",
-        "image fallback filters"
+        "image fallback filters",
+        "error renderer",
+        "Reference generator"
       ],
       "example": "/link.svg",
       "migration": "configuration/resources"
@@ -9352,6 +9627,7 @@
         "kind": "literal",
         "value": []
       },
+      "description": "需要预连接的绝对 HTTP(S) origin；站点配置完整替换默认数组。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9360,10 +9636,11 @@
       "normalizer": "origin_list",
       "normalization": "normalize origins; stable-deduplicate; replace on site override",
       "consumers": [
-        "head renderer",
         "PageViewModel",
         "tag renderers",
-        "image fallback filters"
+        "image fallback filters",
+        "error renderer",
+        "Reference generator"
       ],
       "example": [
         "https://cdn.jsdelivr.net"
@@ -9380,6 +9657,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "Canonical、Open Graph 与结构化数据。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9424,6 +9702,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "Canonical 主机与合法镜像主机。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9459,6 +9738,7 @@
           "localhost"
         ]
       },
+      "description": "允许访问但不作为 canonical 的镜像主机；站点配置完整替换默认数组。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9467,10 +9747,11 @@
       "normalizer": "host_list",
       "normalization": "trim hosts; remove empty values; stable-deduplicate; replace on site override",
       "consumers": [
-        "PageViewModel",
+        "Post PageViewModel",
         "head renderer",
         "JSON-LD helper",
-        "browser canonical check"
+        "browser canonical check",
+        "Reference generator"
       ],
       "example": [
         "mirror.example.com",
@@ -9489,6 +9770,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "生成 canonical URL 的主机名；null 关闭 canonical 输出。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9497,10 +9779,11 @@
       "normalizer": "nullable_host",
       "normalization": "trim; remove scheme and trailing slash; null disables canonical output",
       "consumers": [
-        "PageViewModel",
+        "Post PageViewModel",
         "head renderer",
         "JSON-LD helper",
-        "browser canonical check"
+        "browser canonical check",
+        "Reference generator"
       ],
       "example": "example.com",
       "migration": "configuration/seo"
@@ -9515,6 +9798,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "Open Graph 与 Twitter Card 元数据。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9546,6 +9830,7 @@
         "kind": "literal",
         "value": true
       },
+      "description": "是否生成 Open Graph 与 Twitter Card 标签。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9554,10 +9839,11 @@
       "normalizer": "identity",
       "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
-        "PageViewModel",
+        "Post PageViewModel",
         "head renderer",
         "JSON-LD helper",
-        "browser canonical check"
+        "browser canonical check",
+        "Reference generator"
       ],
       "example": true,
       "migration": "configuration/seo"
@@ -9573,6 +9859,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "Twitter/X 用户名，不含 @；null 不输出账号标签。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9581,10 +9868,11 @@
       "normalizer": "identity",
       "normalization": "validate the declared type; preserve the value; deep-freeze the result",
       "consumers": [
-        "PageViewModel",
+        "Post PageViewModel",
         "head renderer",
         "JSON-LD helper",
-        "browser canonical check"
+        "browser canonical check",
+        "Reference generator"
       ],
       "example": "stellar",
       "migration": "configuration/seo"
@@ -9599,6 +9887,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "JSON-LD 结构化数据。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9631,6 +9920,7 @@
         "kind": "literal",
         "value": []
       },
+      "description": "作者或组织的公开身份页面；空数组不输出 sameAs。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9639,10 +9929,11 @@
       "normalizer": "trimmed_string_list",
       "normalization": "trim URLs; remove empty values; stable-deduplicate; replace on site override",
       "consumers": [
-        "PageViewModel",
+        "Post PageViewModel",
         "head renderer",
         "JSON-LD helper",
-        "browser canonical check"
+        "browser canonical check",
+        "Reference generator"
       ],
       "example": [
         "https://github.com/xaoxuu"
@@ -9659,6 +9950,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "站点身份、菜单与 Footer。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9712,6 +10004,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "左侧栏顶部的站点品牌。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9754,6 +10047,7 @@
         "kind": "literal",
         "value": "/"
       },
+      "description": "点击 Brand 名称或字标后的地址；null 表示不可点击。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9765,7 +10059,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "/",
       "migration": "configuration/site"
@@ -9813,6 +10108,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "点击 Brand 图片后的地址；null 表示不可点击。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9824,7 +10120,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "/about/",
       "migration": "configuration/site"
@@ -9837,11 +10134,10 @@
         "null"
       ],
       "default": {
-        "kind": "derived",
-        "sources": [
-          "hexo.config.avatar"
-        ]
+        "kind": "literal",
+        "value": null
       },
+      "description": "Brand 图片来源；null 隐藏图片且不会继承 Hexo avatar。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9853,7 +10149,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "/avatar.webp",
       "migration": "configuration/site"
@@ -9868,6 +10165,7 @@
         "kind": "literal",
         "value": "avatar"
       },
+      "description": "Brand 图片呈现方式。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9879,7 +10177,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "avatar",
       "migration": "configuration/site",
@@ -9897,11 +10196,10 @@
         "null"
       ],
       "default": {
-        "kind": "derived",
-        "sources": [
-          "hexo.config.title"
-        ]
+        "kind": "literal",
+        "value": null
       },
+      "description": "Brand 纯文本名称；null 隐藏名称且不会继承 Hexo title。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9913,7 +10211,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "Stellar",
       "migration": "configuration/site"
@@ -9960,6 +10259,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "鼠标悬停 Brand 时显示的替代标语；null 不切换。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -9971,7 +10271,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "example.com",
       "migration": "configuration/site"
@@ -9984,11 +10285,10 @@
         "null"
       ],
       "default": {
-        "kind": "derived",
-        "sources": [
-          "hexo.config.subtitle"
-        ]
+        "kind": "literal",
+        "value": null
       },
+      "description": "Brand 标语正文；null 隐藏标语且不会继承 Hexo subtitle。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -10000,7 +10300,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "每个人的独立博客",
       "migration": "configuration/site"
@@ -10016,6 +10317,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "替代纯文本名称的图片字标；null 不显示字标。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -10027,7 +10329,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "/wordmark.svg",
       "migration": "configuration/site"
@@ -10042,6 +10345,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "左侧栏操作与主内容区页脚。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -10074,6 +10378,7 @@
         "kind": "literal",
         "value": []
       },
+      "description": "左侧栏底部操作；空数组不显示操作区。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -10085,7 +10390,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": [
         {
@@ -10119,7 +10425,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "default:github",
       "migration": "configuration/site"
@@ -10145,7 +10452,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": [
         {
@@ -10179,7 +10487,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "default:github",
       "migration": "configuration/site"
@@ -10206,7 +10515,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "window.setColorScheme?.('light')",
       "migration": "configuration/site"
@@ -10232,7 +10542,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "GitHub",
       "migration": "configuration/site"
@@ -10244,10 +10555,8 @@
         "string"
       ],
       "default": {
-        "kind": "derived",
-        "sources": [
-          "footer dropdown action"
-        ]
+        "kind": "literal",
+        "value": "link"
       },
       "scope": "theme",
       "cascade": [
@@ -10260,7 +10569,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "link",
       "migration": "configuration/site",
@@ -10291,7 +10601,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "https://github.com/",
       "migration": "configuration/site"
@@ -10318,7 +10629,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "window.setColorScheme?.('light')",
       "migration": "configuration/site"
@@ -10344,7 +10656,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "GitHub",
       "migration": "configuration/site"
@@ -10356,10 +10669,8 @@
         "string"
       ],
       "default": {
-        "kind": "derived",
-        "sources": [
-          "footer action"
-        ]
+        "kind": "literal",
+        "value": "link"
       },
       "scope": "theme",
       "cascade": [
@@ -10372,7 +10683,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "link",
       "migration": "configuration/site",
@@ -10405,7 +10717,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "https://github.com/",
       "migration": "configuration/site"
@@ -10420,6 +10733,7 @@
         "kind": "literal",
         "value": "本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。"
       },
+      "description": "页脚正文；支持 Markdown 与主题模板变量，空字符串不显示。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -10431,7 +10745,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。",
       "migration": "configuration/site"
@@ -10446,6 +10761,7 @@
         "kind": "literal",
         "value": []
       },
+      "description": "主内容区页脚导航分栏；空数组不显示分栏。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -10457,7 +10773,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": [
         {
@@ -10493,7 +10810,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": [
         {
@@ -10524,7 +10842,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "归档",
       "migration": "configuration/site"
@@ -10550,7 +10869,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "/blog/archives/",
       "migration": "configuration/site"
@@ -10576,7 +10896,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "博客",
       "migration": "configuration/site"
@@ -10591,6 +10912,7 @@
         "kind": "literal",
         "value": {}
       },
+      "description": "站点主导航菜单。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -10629,6 +10951,7 @@
         "kind": "literal",
         "value": []
       },
+      "description": "主导航菜单项；空数组不显示主菜单。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -10640,7 +10963,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": [
         {
@@ -10675,7 +10999,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "#1BCDFC",
       "migration": "configuration/site"
@@ -10702,7 +11027,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "default:documents",
       "migration": "configuration/site"
@@ -10714,10 +11040,8 @@
         "string"
       ],
       "default": {
-        "kind": "derived",
-        "sources": [
-          "site menu item"
-        ]
+        "kind": "literal",
+        "value": ""
       },
       "scope": "theme",
       "cascade": [
@@ -10730,7 +11054,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "post",
       "migration": "configuration/site"
@@ -10756,7 +11081,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "博客",
       "migration": "configuration/site"
@@ -10782,7 +11108,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "/",
       "migration": "configuration/site"
@@ -12884,6 +13211,7 @@
         "kind": "literal",
         "value": "/"
       },
+      "description": "点击 Brand 名称或字标后的地址；null 表示不可点击。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -12895,7 +13223,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "/",
       "migration": "configuration/site"
@@ -12943,6 +13272,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "点击 Brand 图片后的地址；null 表示不可点击。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -12954,7 +13284,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "/about/",
       "migration": "configuration/site"
@@ -12967,11 +13298,10 @@
         "null"
       ],
       "default": {
-        "kind": "derived",
-        "sources": [
-          "hexo.config.avatar"
-        ]
+        "kind": "literal",
+        "value": null
       },
+      "description": "Brand 图片来源；null 隐藏图片且不会继承 Hexo avatar。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -12983,7 +13313,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "/avatar.webp",
       "migration": "configuration/site"
@@ -12998,6 +13329,7 @@
         "kind": "literal",
         "value": "avatar"
       },
+      "description": "Brand 图片呈现方式。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -13009,7 +13341,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "avatar",
       "migration": "configuration/site",
@@ -13027,11 +13360,10 @@
         "null"
       ],
       "default": {
-        "kind": "derived",
-        "sources": [
-          "hexo.config.title"
-        ]
+        "kind": "literal",
+        "value": null
       },
+      "description": "Brand 纯文本名称；null 隐藏名称且不会继承 Hexo title。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -13043,7 +13375,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "Stellar",
       "migration": "configuration/site"
@@ -13090,6 +13423,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "鼠标悬停 Brand 时显示的替代标语；null 不切换。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -13101,7 +13435,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "example.com",
       "migration": "configuration/site"
@@ -13114,11 +13449,10 @@
         "null"
       ],
       "default": {
-        "kind": "derived",
-        "sources": [
-          "hexo.config.subtitle"
-        ]
+        "kind": "literal",
+        "value": null
       },
+      "description": "Brand 标语正文；null 隐藏标语且不会继承 Hexo subtitle。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -13130,7 +13464,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "每个人的独立博客",
       "migration": "configuration/site"
@@ -13146,6 +13481,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "替代纯文本名称的图片字标；null 不显示字标。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -13157,7 +13493,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "/wordmark.svg",
       "migration": "configuration/site"
@@ -14895,6 +15232,7 @@
         "kind": "literal",
         "value": "/"
       },
+      "description": "点击 Brand 名称或字标后的地址；null 表示不可点击。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -14906,7 +15244,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "/",
       "migration": "configuration/site"
@@ -14954,6 +15293,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "点击 Brand 图片后的地址；null 表示不可点击。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -14965,7 +15305,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "/about/",
       "migration": "configuration/site"
@@ -14978,11 +15319,10 @@
         "null"
       ],
       "default": {
-        "kind": "derived",
-        "sources": [
-          "hexo.config.avatar"
-        ]
+        "kind": "literal",
+        "value": null
       },
+      "description": "Brand 图片来源；null 隐藏图片且不会继承 Hexo avatar。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -14994,7 +15334,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "/avatar.webp",
       "migration": "configuration/site"
@@ -15009,6 +15350,7 @@
         "kind": "literal",
         "value": "avatar"
       },
+      "description": "Brand 图片呈现方式。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -15020,7 +15362,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "avatar",
       "migration": "configuration/site",
@@ -15038,11 +15381,10 @@
         "null"
       ],
       "default": {
-        "kind": "derived",
-        "sources": [
-          "hexo.config.title"
-        ]
+        "kind": "literal",
+        "value": null
       },
+      "description": "Brand 纯文本名称；null 隐藏名称且不会继承 Hexo title。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -15054,7 +15396,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "Stellar",
       "migration": "configuration/site"
@@ -15101,6 +15444,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "鼠标悬停 Brand 时显示的替代标语；null 不切换。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -15112,7 +15456,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "example.com",
       "migration": "configuration/site"
@@ -15125,11 +15470,10 @@
         "null"
       ],
       "default": {
-        "kind": "derived",
-        "sources": [
-          "hexo.config.subtitle"
-        ]
+        "kind": "literal",
+        "value": null
       },
+      "description": "Brand 标语正文；null 隐藏标语且不会继承 Hexo subtitle。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -15141,7 +15485,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "每个人的独立博客",
       "migration": "configuration/site"
@@ -15157,6 +15502,7 @@
         "kind": "literal",
         "value": null
       },
+      "description": "替代纯文本名称的图片字标；null 不显示字标。",
       "scope": "theme",
       "cascade": [
         "schema default",
@@ -15168,7 +15514,8 @@
         "PageViewModel",
         "Shell renderer",
         "menu renderer",
-        "footer renderer"
+        "footer renderer",
+        "Reference generator"
       ],
       "example": "/wordmark.svg",
       "migration": "configuration/site"

@@ -5,6 +5,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
+const yaml = require("js-yaml");
 
 const { parseStellarConfig } = require("../scripts/lib/config-schema");
 const { runDoctor } = require("../scripts/lib/doctor");
@@ -56,13 +57,15 @@ test("Appearance 严格拒绝非法 CSS、Resource、selector 与 motion 值", (
 
 test("Resources、Background、Highlight、404 与 Inject 只消费最终结构", () => {
   const config = read("_config.yml");
+  const parsedConfig = yaml.load(config);
   const internal = read("scripts/lib/internal-constants.js");
   const css = [read("source/css/_components/main.styl"), read("source/css/_components/sidebar/sidebar.styl")].join("\n");
   const head = read("layout/_partial/head.ejs");
   const scripts = read("layout/_partial/scripts.ejs");
   const errorPage = read("layout/404.ejs");
 
-  assert.match(config, /fallbacks:\n[ ]{4}avatar:[^\n]+\n[ ]{4}link_card:[^\n]+\n[ ]{4}cover:[^\n]+\n[ ]{2}error_page:\n[ ]{4}image:/);
+  assert.deepEqual(Object.keys(parsedConfig.resources.fallbacks), ["avatar", "link_card", "cover"]);
+  assert.equal(typeof parsedConfig.resources.error_page.image, "string");
   assert.doesNotMatch(config, /fallbacks:[\s\S]*?(?:project_icon|topic_cover|tag_plugin):/);
   assert.match(internal, /resources: \{[\s\S]*projectIcon:[\s\S]*banner:[\s\S]*topicCover:[\s\S]*contentImage:/);
   assert.match(config, /image: https:\/\//);

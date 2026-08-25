@@ -12,7 +12,7 @@ issue: 726
 
 ## 接缝
 
-- Brand 使用结构化图片、wordmark、名称、tagline 与链接；Hexo title/subtitle/avatar 只在缺省时派生。
+- Brand 使用结构化图片、wordmark、名称、tagline 与链接；本切片当时保留的 Hexo title/subtitle/avatar 缺省派生已由 `2026-08-25-v2-theme-schema-single-source` 取消。
 - Menu 是有序、唯一 ID 的严格数组，active menu 在存在菜单时必须可解析。
 - Footer action 是 `link|dropdown|spacer` 判别联合，section item 是 `{title,url}`。
 - 13 个 Profile 保持固定；sidebar 直接承载左右 Widget 数组，tabs 使用对象数组，home comments 固定对象。

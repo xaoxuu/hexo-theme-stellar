@@ -27,6 +27,7 @@ const {
 const ROOT = path.resolve(__dirname, "..");
 const THEME_CONFIG = path.join(ROOT, "_config.yml");
 const TARGET_ROOT_IDS = ["site", "seo", "layout", "content", "appearance", "resources", "extensions", "inject"];
+const THEME_FIELDS = flattenConfigFields(CONFIG_SCHEMA);
 
 function activeYamlLeaves(source) {
   const lines = source.split(/\r?\n/).map((raw, index) => ({ raw, index }))
@@ -72,16 +73,15 @@ function isSnakeSegment(segment) {
 }
 
 function themeTargetForPath(pathValue) {
-  const exact = CONFIG_TARGET_FIELDS.find(field => {
-    if (!field.scopes.includes("theme")) return false;
+  const exact = THEME_FIELDS.find(field => {
     const pattern = field.path
       .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
       .replace(/<[^>]+>/g, "[^.]*");
     return new RegExp(`^${pattern}$`).test(pathValue);
   });
   if (exact) return exact;
-  return CONFIG_TARGET_FIELDS.find(field => {
-    if (!field.scopes.includes("theme") || !["registered_schema", "parameter_bag"].includes(field.boundary)) return false;
+  return THEME_FIELDS.find(field => {
+    if (!field.path.includes("<")) return false;
     const pattern = field.path
       .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
       .replace(/<[^>]+>/g, "[^.]*");
@@ -147,7 +147,7 @@ test("Stellar 目标 YAML 使用 snake_case，第三方参数袋只豁免子字�
       assert.equal(field.mergeStrategy, field.type.length === 1 ? "merge_keys" : "by_value_type", `${field.path} 参数袋合并策略错误`);
     }
   }
-  assert.ok(CONFIG_TARGET_FIELDS.some(field => field.path === "extensions.comments.providers.<provider>" && field.boundary === "parameter_bag"));
+  assert.ok(THEME_FIELDS.some(field => field.path === "extensions.comments.providers.<provider>"));
   assert.ok(CONFIG_TARGET_FIELDS.some(field => field.path === "comments.options" && field.boundary === "parameter_bag"));
 });
 
@@ -200,7 +200,7 @@ test("主题默认配置的活动叶子与注释示例字段族都有迁移证�
     if (Object.prototype.hasOwnProperty.call(CONFIG_SCHEMA.properties, domainId)) {
       const targetPath = leaf.replace(/\[\]$/, "");
       const target = themeTargetForPath(targetPath);
-      assert.equal(target?.status, "delivered", `${leaf} 未登记为已交付目标字段`);
+      assert.ok(target, `${leaf} 未登记为 Theme Schema 字段`);
     } else {
       assert.ok(resolveConfigMigration(domainId, leaf), `${leaf} 没有迁移结果`);
     }
@@ -228,7 +228,7 @@ test("主题默认配置的活动叶子与注释示例字段族都有迁移证�
     "site.footer.sections[].items",
     "site.footer.sections[].items[].title",
     "site.footer.sections[].items[].url"
-  ]) assert.ok(CONFIG_TARGET_FIELDS.some(field => field.path === targetPath), `${targetPath} 未冻结目标结构`);
+  ]) assert.ok(THEME_FIELDS.some(field => field.path === targetPath), `${targetPath} 未冻结目标结构`);
 });
 
 test("旧顶层域各自指向唯一目标根或明确排除", () => {
@@ -256,94 +256,16 @@ test("官方脚本样式与内部集成有显式内部化清单", () => {
 test("运行时只投影已交付配置节点且根配置已经封闭", () => {
   assert.equal(CONFIG_SCHEMA.sealed, true);
   assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "layout", "content", "appearance", "seo", "resources", "extensions", "inject"]);
-  const deliveredPaths = CONFIG_TARGET_FIELDS
-    .filter(field => field.status === "delivered" && field.scopes.includes("theme"))
-    .map(field => field.path);
-  assert.deepEqual(
-    deliveredPaths.filter(pathValue => !pathValue.startsWith("layout.") && !pathValue.startsWith("content.") && !pathValue.startsWith("appearance.") && !pathValue.startsWith("resources.fallbacks.") && !pathValue.startsWith("extensions.")),
-    [
-      "site.brand.image.src",
-      "site.brand.image.variant",
-      "site.brand.image.href",
-      "site.brand.name",
-      "site.brand.wordmark",
-      "site.brand.tagline.text",
-      "site.brand.tagline.hover",
-      "site.brand.href",
-      "site.menu.items",
-      "site.menu.items[].id",
-      "site.menu.items[].title",
-      "site.menu.items[].icon",
-      "site.menu.items[].url",
-      "site.menu.items[].accent",
-      "site.footer.actions",
-      "site.footer.actions[].type",
-      "site.footer.actions[].icon",
-      "site.footer.actions[].title",
-      "site.footer.actions[].url",
-      "site.footer.actions[].onclick",
-      "site.footer.actions[].items",
-      "site.footer.actions[].items[].type",
-      "site.footer.actions[].items[].icon",
-      "site.footer.actions[].items[].title",
-      "site.footer.actions[].items[].url",
-      "site.footer.actions[].items[].onclick",
-      "site.footer.sections",
-      "site.footer.sections[].title",
-      "site.footer.sections[].items",
-      "site.footer.sections[].items[].title",
-      "site.footer.sections[].items[].url",
-      "site.footer.content",
-      "seo.canonical.host",
-      "seo.canonical.allowed_hosts",
-      "seo.open_graph.enabled",
-      "seo.open_graph.twitter_id",
-      "seo.structured_data.same_as",
-      "resources.preconnect",
-      "resources.error_page.image",
-      "inject.head_end",
-      "inject.body_end"
-    ]
-  );
-  assert.ok(deliveredPaths.includes("appearance.typography.font_family.code"));
-  assert.ok(deliveredPaths.includes("appearance.backgrounds.page.backdrop.saturation"));
-  assert.ok(deliveredPaths.includes("resources.error_page.image"));
-  const deliveredExtensionPaths = deliveredPaths.filter(pathValue => pathValue.startsWith("extensions."));
-  assert.ok(deliveredExtensionPaths.includes("extensions.search.provider"));
-  assert.ok(deliveredExtensionPaths.includes("extensions.comments.providers.<provider>"));
-  assert.equal(deliveredExtensionPaths.includes("extensions.features.ai_summary.provider"), false);
-  assert.ok(deliveredExtensionPaths.includes("extensions.services.github.raw_url"));
-  assert.equal(deliveredExtensionPaths.some(pathValue => pathValue.startsWith("extensions.cache")), false);
-  const deliveredContentPaths = deliveredPaths.filter(pathValue => pathValue.startsWith("content."));
-  assert.equal(deliveredContentPaths.length, 23);
+  const deliveredPaths = THEME_FIELDS.map(field => field.path);
   for (const pathValue of [
-    "content.article.listing.card_layout",
-    "content.article.category_colors.<category>",
-    "content.article.related_posts_limit",
-    "content.article.footer.show_tags",
-    "content.notebook.listing.sort.field",
-    "content.notebook.listing.sort.direction",
-    "content.notebook.tag_icons.<tag>"
-  ]) assert.ok(deliveredContentPaths.includes(pathValue));
-  const deliveredLayoutPaths = deliveredPaths.filter(pathValue => pathValue.startsWith("layout."));
-  assert.equal(deliveredLayoutPaths.length, 58);
-  assert.ok(deliveredLayoutPaths.includes("layout.profiles"));
-  for (const profile of PROFILE_IDS) {
-    for (const suffix of ["navigation.active_menu", "sidebar.left", "sidebar.right"]) {
-      assert.ok(deliveredLayoutPaths.includes(`layout.profiles.${profile}.${suffix}`));
-    }
-  }
-  for (const profile of ["blog_index", "topic_index", "wiki_index", "notebook_index", "author", "error"]) {
-    assert.ok(deliveredLayoutPaths.includes(`layout.profiles.${profile}.path`));
-  }
-  for (const profile of ["blog_index", "wiki_index"]) {
-    for (const suffix of ["navigation.tabs", "navigation.tabs[].title", "navigation.tabs[].url"]) {
-      assert.ok(deliveredLayoutPaths.includes(`layout.profiles.${profile}.${suffix}`));
-    }
-  }
-  for (const suffix of ["comments", "comments.enabled", "comments.title", "comments.id", "comments.provider", "comments.options"]) {
-    assert.ok(deliveredLayoutPaths.includes(`layout.profiles.home.${suffix}`));
-  }
+    "site.brand.image.src", "site.brand.name", "site.brand.tagline.text",
+    "layout.profiles.blog_index.path", "content.article.listing.card_layout",
+    "appearance.typography.font_family.code", "resources.error_page.image",
+    "extensions.search.provider", "extensions.comments.providers.<provider>",
+    "extensions.services.github.raw_url", "inject.head_end"
+  ]) assert.ok(deliveredPaths.includes(pathValue), pathValue);
+  assert.equal(deliveredPaths.some(pathValue => pathValue.startsWith("extensions.cache")), false);
+  assert.equal(deliveredPaths.includes("extensions.features.ai_summary.provider"), false);
   assert.equal(CONFIG_TARGET_ROOTS.every(root => root.status === "delivered"), true);
   assert.ok(CONFIG_TARGET_FIELDS.some(field => field.status === "delivered" && field.scopes.includes("collection")));
   assert.ok(CONFIG_TARGET_FIELDS.some(field => field.status === "delivered" && field.scopes.includes("front_matter")));

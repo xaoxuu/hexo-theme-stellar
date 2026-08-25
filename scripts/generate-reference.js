@@ -8,6 +8,7 @@ const { stringifyReferenceMetadata } = require("./lib/reference-metadata");
 const { stringifyConfigReferenceMetadata } = require("./lib/config-reference-metadata");
 const { stringifyBlueprintReferenceMetadata } = require("./lib/blueprint-reference-metadata");
 const { stringifyConfigFieldAudit } = require("./lib/config-field-audit");
+const { stringifyDefaultConfig } = require("./lib/default-config");
 const {
   blueprintReferenceMarkdown,
   configAuditMarkdown,
@@ -18,6 +19,7 @@ const {
 } = require("./lib/public-reference");
 
 const ROOT = path.resolve(__dirname, "..");
+const DEFAULT_CONFIG_OUTPUT = path.join(ROOT, "_config.yml");
 const MODEL_OUTPUT = path.join(ROOT, "reference/v2-models.json");
 const CONFIG_OUTPUT = path.join(ROOT, "reference/v2-config.json");
 const BLUEPRINT_OUTPUT = path.join(ROOT, "reference/v2-blueprints.json");
@@ -51,6 +53,14 @@ function generateReference(options = {}) {
         [CONFIG_MARKDOWN_OUTPUT, configReferenceMarkdown(), "reference/v2-config.md 与配置 Schema 不一致"],
         [BLUEPRINT_MARKDOWN_OUTPUT, blueprintReferenceMarkdown(), "reference/v2-blueprints.md 与 Blueprint Schema/manifest 不一致"]
       ];
+  if (!options.output) {
+    writeOrCheck(
+      DEFAULT_CONFIG_OUTPUT,
+      stringifyDefaultConfig(),
+      "_config.yml 与 Theme Schema 不一致，请运行 npm run schema:generate",
+      options.check
+    );
+  }
   writeOrCheck(
     modelOutput,
     stringifyReferenceMetadata(),
@@ -99,6 +109,7 @@ if (require.main === module) {
   generateReference({ check });
   const state = check ? "is current" : "generated";
   process.stdout.write(`${path.relative(ROOT, MODEL_OUTPUT)} ${state}\n`);
+  process.stdout.write(`${path.relative(ROOT, DEFAULT_CONFIG_OUTPUT)} ${state}\n`);
   process.stdout.write(`${path.relative(ROOT, CONFIG_OUTPUT)} ${state}\n`);
   process.stdout.write(`${path.relative(ROOT, BLUEPRINT_OUTPUT)} ${state}\n`);
   process.stdout.write(`${path.relative(ROOT, CONFIG_AUDIT_OUTPUT)} ${state}\n`);

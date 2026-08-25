@@ -41,5 +41,6 @@ test("Shell 消费链只读取冻结的 site 配置", () => {
 test("Brand 渲染只消费规范化后的 variant", () => {
   const template = read("layout/_partial/sidebar/brand.ejs");
   assert.match(template, /image\.variant/);
+  assert.match(template, /if \(!brand\.image\?\.src && !brand\.name && !brand\.wordmark\) return ''/);
   assert.doesNotMatch(template, /image\.style/);
 });

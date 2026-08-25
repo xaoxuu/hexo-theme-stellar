@@ -1,793 +1,591 @@
 # Stellar v2 主题默认配置。
-# 注释格式：含义。[YAML 类型；可选值、范围或特殊行为]
-# 站点可在根目录 _config.stellar.yml 中覆盖这些默认值；未知字段会被严格 Schema 拒绝。
+# 由 scripts/schema/config-schema.js 自动生成，请勿手工编辑。
+# 注释格式：用途与空值行为。[类型；枚举、范围或元素类型]
+# 修改 CONFIG_SCHEMA 后运行 `npm run schema:generate`。
 
-######## Head / SEO / Resources ########
-# 搜索引擎与社交分享元数据。[对象]
-seo:
-  # 规范域名及合法镜像域名；非法域名会被标记为克隆站并阻止收录。[对象]
-  canonical:
-    # 生成 canonical URL 的主机名。[字符串或 null；不含协议和尾斜杠，例如 xaoxuu.com；null 关闭 canonical 输出]
-    host:
-    # 允许访问但不作为 canonical 的镜像主机。[字符串数组；不含协议，自动去空和稳定去重]
-    allowed_hosts:
-      - localhost # 本地预览主机。[字符串]
-  # Open Graph 与 Twitter Card 元数据。[对象]
-  open_graph:
-    # 是否生成 Open Graph / Twitter Card 标签。[布尔值：true / false]
-    enabled: true
-    # Twitter/X 用户名。[字符串或 null；不含 @，null 不输出 twitter:creator/site]
-    twitter_id:
-  # JSON-LD 结构化数据。[对象]
-  structured_data:
-    # 作者或组织的公开身份页面。[URL 字符串数组；例如 GitHub、微博；空数组不输出 sameAs]
-    same_as: []
-
-# 网络性能提示和图片兜底资源。[对象]
-resources:
-  # 需要预连接的外部源。[绝对 HTTP(S) origin 字符串数组；站点配置完整替换默认数组，自动去空和去重]
-  preconnect: []
-  # 内容缺少对应图片时使用的兜底资源。[对象]
-  fallbacks:
-    avatar: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg # 用户、作者头像兜底图。[非空资源字符串；站内路径或绝对 HTTP(S) URL]
-    link_card: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/link/8f277b4ee0ecd.svg # 链接卡片兜底图。[非空资源字符串；站内路径或绝对 HTTP(S) URL]
-    cover: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg # 封面与 Open Graph 兜底图。[非空资源字符串；站内路径或绝对 HTTP(S) URL]
-  error_page:
-    image: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg # 404 等错误页插图。[资源字符串或 null；null 表示不显示插图]
-
-# 原样注入页面的可信代码逃生口；不要放入不可信内容。[对象]
-inject:
-  # 插入 </head> 前的 HTML。[字符串；站点值与页面值以一个换行拼接；空字符串不注入]
-  head_end: ''
-  # 插入 </body> 前的 HTML/JS。[字符串；站点值与页面值以一个换行拼接；空字符串不注入]
-  body_end: ''
-
-
-######## Site Shell / Sidebar ########
-# 站点外壳：品牌、主菜单和页脚。[对象]
+# 站点身份、菜单与 Footer。 [对象]
 site:
-  # 左侧栏顶部品牌；省略 image.src / name / tagline.text 时分别派生自 Hexo avatar / title / subtitle。[对象]
+  # 左侧栏顶部的站点品牌。 [对象]
   brand:
-    # 品牌图片。[对象]
     image:
-      # 图片来源；省略时继承 Hexo avatar。[字符串或 null；站内路径或绝对 HTTP(S) URL；null 隐藏图片]
-      src: # /avatar.webp
-      # 图片呈现方式。[字符串枚举：avatar = 圆形裁剪；icon = 圆角矩形；plain = 保留透明原图]
+      # Brand 图片来源；null 隐藏图片且不会继承 Hexo avatar。 [字符串或null]
+      # Example:
+      #   /avatar.webp
+      src: null
+      # Brand 图片呈现方式。 [字符串；可选值：avatar / icon / plain]
       variant: avatar
-      # 点击品牌图片后的地址。[字符串或 null；站内路径、锚点或安全 HTTP(S) URL；null 表示不可点击]
-      href: # /about/
-    # 品牌纯文本名称；省略时继承 Hexo title。[字符串或 null；null 隐藏文字名称]
-    name: # Stellar
-    # 品牌字标图片；设置后替代纯文本名称。[非空资源字符串或 null；null 不显示字标]
-    wordmark: # /images/wordmark.svg
-    # 品牌标语；整个对象省略时从 Hexo subtitle 派生 text。[对象]
+      # 点击 Brand 图片后的地址；null 表示不可点击。 [字符串或null]
+      # Example:
+      #   /about/
+      href: null
+    # Brand 纯文本名称；null 隐藏名称且不会继承 Hexo title。 [字符串或null]
+    name: null
+    # 替代纯文本名称的图片字标；null 不显示字标。 [字符串或null]
+    # Example:
+    #   /wordmark.svg
+    wordmark: null
     tagline:
-      # 标语正文。[字符串或 null；省略时继承 Hexo subtitle，null 隐藏]
-      text: # 每个人的独立博客
-      # 鼠标悬停时显示的替代文本。[字符串或 null；null 不切换]
-      hover: # example.com
-    # 点击品牌后的地址。[字符串或 null；站内路径、锚点或安全 HTTP(S) URL；null 表示不可点击]
+      # Brand 标语正文；null 隐藏标语且不会继承 Hexo subtitle。 [字符串或null]
+      text: null
+      # 鼠标悬停 Brand 时显示的替代标语；null 不切换。 [字符串或null]
+      hover: null
+    # 点击 Brand 名称或字标后的地址；null 表示不可点击。 [字符串或null]
     href: /
-
-  # 主导航菜单。[对象]
+  # 站点主导航菜单。 [对象]
   menu:
-    # 菜单项，按数组顺序显示。[对象数组；空数组不显示主菜单]
-    # 每项：id 为唯一 kebab-case 标识；url 必填；title 为文字；icon 为图标 ID 或 null；accent 为 CSS 颜色或 null。
+    # 主导航菜单项；空数组不显示主菜单。 [数组；元素：对象]
+    # Example:
+    #   - {id: post, title: 博客, icon: default:documents, url: /, accent: '#1BCDFC'}
     items: []
-    # - id: post
-    #   accent: '#1BCDFC'
-    #   icon: default:documents
-    #   title: 博客
-    #   url: /
-
-  # 页脚：actions 位于左栏底部，sections/content 位于主内容区底部。[对象]
+  # 左侧栏操作与主内容区页脚。 [对象]
   footer:
-    # 左栏底部操作。[对象数组；type 取 link / button / dropdown / spacer；空数组不显示]
+    # 左侧栏底部操作；空数组不显示操作区。 [数组；元素：对象]
+    # Example:
+    #   - {type: link, icon: default:github, title: GitHub, url: https://github.com/}
     actions: []
-    # - type: link
-    #   icon: default:github
-    #   title: GitHub
-    #   url: https://github.com/
-    # - type: dropdown
-    #   icon: default:theme
-    #   title: 配色方案
-    #   items:
-    #     - type: button
-    #       title: 浅色
-    #       onclick: window.setColorScheme?.('light')
-    #     - type: button
-    #       title: 深色
-    #       onclick: window.setColorScheme?.('dark')
-    #     - type: button
-    #       title: 跟随系统
-    #       onclick: window.setColorScheme?.('auto')
-    # - type: spacer
-    # 页脚导航分栏。[对象数组；每组含非空 title 和 items 链接数组；空数组不显示分栏]
+    # 主内容区页脚导航分栏；空数组不显示分栏。 [数组；元素：对象]
+    # Example:
+    #   - {title: 博客, items: [{title: 归档, url: /blog/archives/}]}
     sections: []
-    # - title: 博客
-    #   items:
-    #     - title: 近期发布
-    #       url: /
-    #     - title: 归档
-    #       url: /blog/archives/
-    # 页脚正文。[字符串；支持 Markdown 及 {author.*}/{theme.*} 模板变量；空字符串不显示]
-    content: |
-      本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。
+    # 页脚正文；支持 Markdown 与主题模板变量，空字符串不显示。 [字符串]
+    content: 本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。
 
-
-######## Layout Profiles ########
-# 各页面类型的默认路径、导航、侧栏和首页评论。[对象]
+# 页面 Profile 的路由、导航与侧边栏默认值。 [对象]
 layout:
-  profiles: # 页面 Profile 映射。[对象；名称是封闭枚举，不能增加自定义键]
-  # 通用字段：path 为根相对路径；active_menu 匹配 site.menu.items[].id；tabs 为 {title,url} 数组；
-  # sidebar.left/right 为已注册 Widget ID 数组，按顺序渲染，空数组表示不显示该侧栏。
-    # -- 列表类页面 -- #
-    # 主页配置
+  # 各页面类型的路径、导航和侧栏默认值。 [对象]
+  profiles:
+    # 主页的布局默认值。 [对象]
     home:
-      # 主导航状态。[对象]
       navigation:
-        # 高亮的主菜单项。[字符串或 null；应匹配菜单 id，null 表示不高亮]
+        # 主页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: post
-      # 左右侧栏 Widget。[对象]
       sidebar:
-        # 左栏 Widget。[字符串数组；值须为已注册 Widget ID]
+        # 主页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
         left: [welcome, recent]
-        # 右栏 Widget。[字符串数组；空数组隐藏右栏]
+        # 主页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
         right: []
-      # 主页底部评论区。[对象]
       comments:
-        # 是否显示主页评论。[布尔值：true / false]
+        # 是否显示主页评论区。 [布尔值]
         enabled: false
-        # 评论区标题。[字符串或 null；null 使用评论扩展的标题]
-        title:
-        # 主页评论线程的稳定标识。[非空字符串或 null；null 由页面上下文决定]
-        id:
-        # 主页专用评论提供方。[字符串枚举或 null：beaudar / utterances / giscus / twikoo / waline / artalk；null 使用全局值]
-        provider:
-        # 主页专用提供方参数。[对象；开放参数袋，字段透传给所选评论系统]
+        # 主页评论区标题；null 使用默认评论标题。 [字符串或null]
+        title: null
+        # 主页评论线程的稳定标识；null 由页面上下文决定。 [字符串或null]
+        id: null
+        # 主页专用评论 Provider；null 使用全局评论 Provider。 [字符串或null；可选值：null / beaudar / utterances / giscus / twikoo / waline / artalk]
+        provider: null
+        # 主页专用评论 Provider 参数。 [对象；允许自定义键]
         options: {}
-    # 博客列表页配置
+    # 博客列表页的布局默认值。 [对象]
     blog_index:
-      # 自动生成的博客列表页路径。[根相对路径字符串；目录路径自动补尾斜杠]
+      navigation:
+        # 博客列表页高亮的主菜单项；null 表示不高亮。 [字符串或null]
+        active_menu: post
+        # 博客列表页顶部附加导航标签；空数组不添加。 [数组；元素：对象]
+        tabs: []
+      sidebar:
+        # 博客列表页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
+        left: [welcome, recent]
+        # 博客列表页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
+        right: []
+      # 博客列表页的自动生成路径。 [字符串]
       path: /blog/
-      # 主导航及页面标签。[对象]
-      navigation:
-        # 高亮的主菜单项。[字符串或 null；应匹配菜单 id]
-        active_menu: post
-        # 页面顶部附加导航标签。[{title,url} 对象数组；空数组不添加；url 支持站内路径或安全 HTTP(S) URL]
-        tabs: []
-          # - title: 朋友文章
-          #   url: /friends/rss/
-      # 左右侧栏 Widget。[对象]
-      sidebar:
-        # 左栏 Widget。[字符串数组；值须为已注册 Widget ID]
-        left: [welcome, recent]
-        # 右栏 Widget。[字符串数组；空数组隐藏右栏]
-        right: []
-    # 博客专栏列表页配置
+    # 专栏列表页的布局默认值。 [对象]
     topic_index:
-      # 自动生成的专栏列表页路径。[根相对路径字符串；目录路径自动补尾斜杠]
-      path: /topic/
-      # 主导航状态。[对象]
       navigation:
-        # 高亮的主菜单项。[字符串或 null；应匹配菜单 id]
+        # 专栏列表页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: post
-      # 左右侧栏 Widget。[对象]
       sidebar:
-        # 左栏 Widget。[字符串数组；值须为已注册 Widget ID]
+        # 专栏列表页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
         left: [welcome, recent]
-        # 右栏 Widget。[字符串数组；空数组隐藏右栏]
+        # 专栏列表页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
         right: []
-    # 文档列表页配置
+      # 专栏列表页的自动生成路径。 [字符串]
+      path: /topic/
+    # Wiki 列表页的布局默认值。 [对象]
     wiki_index:
-      # 自动生成的 Wiki 列表页路径。[根相对路径字符串；目录路径自动补尾斜杠]
-      path: /wiki/
-      # 主导航及页面标签。[对象]
       navigation:
-        # 高亮的主菜单项。[字符串或 null；应匹配菜单 id]
+        # Wiki 列表页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: wiki
-        # 页面顶部附加导航标签。[{title,url} 对象数组；空数组不添加]
+        # Wiki 列表页顶部附加导航标签；空数组不添加。 [数组；元素：对象]
         tabs: []
-          # - title: more
-          #   url: https://github.com/xaoxuu
-      # 左右侧栏 Widget。[对象]
       sidebar:
-        # 左栏 Widget。[字符串数组；值须为已注册 Widget ID]
+        # Wiki 列表页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
         left: [related, recent]
-        # 右栏 Widget。[字符串数组；空数组隐藏右栏]
+        # Wiki 列表页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
         right: []
-    # -- 内容类页面 -- #
-    # 博客文章内页配置
+      # Wiki 列表页的自动生成路径。 [字符串]
+      path: /wiki/
+    # 博客文章页的布局默认值。 [对象]
     post:
-      # 主导航状态。[对象]
       navigation:
-        # 高亮的主菜单项。[字符串或 null；应匹配菜单 id]
+        # 博客文章页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: post
-      # 左右侧栏 Widget。[对象]
       sidebar:
-        # 左栏 Widget。[字符串数组；值须为已注册 Widget ID]
+        # 博客文章页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
         left: [related, recent]
-        # 右栏 Widget。[字符串数组；值须为已注册 Widget ID]
+        # 博客文章页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
         right: [ghrepo, toc]
-    # 博客专栏文章内页配置
+    # 专栏文章页的布局默认值。 [对象]
     topic:
-      # 主导航状态。[对象]
       navigation:
-        # 高亮的主菜单项。[字符串或 null；应匹配菜单 id]
+        # 专栏文章页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: post
-      # 左右侧栏 Widget。[对象]
       sidebar:
-        # 左栏 Widget。[字符串数组；值须为已注册 Widget ID]
+        # 专栏文章页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
         left: [related, recent]
-        # 右栏 Widget。[字符串数组；值须为已注册 Widget ID]
+        # 专栏文章页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
         right: [ghrepo, toc]
-    # 文档内页配置
+    # Wiki 内容页的布局默认值。 [对象]
     wiki:
-      # 主导航状态。[对象]
       navigation:
-        # 高亮的主菜单项。[字符串或 null；应匹配菜单 id]
+        # Wiki 内容页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: wiki
-      # 左右侧栏 Widget。[对象]
       sidebar:
-        # 左栏 Widget。[字符串数组；值须为已注册 Widget ID]
+        # Wiki 内容页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
         left: [tree, related, recent]
-        # 右栏 Widget。[字符串数组；值须为已注册 Widget ID]
+        # Wiki 内容页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
         right: [ghrepo, toc]
-    # 笔记本列表页配置
+    # Notebook 总索引的布局默认值。 [对象]
     notebook_index:
-      # 笔记本总索引路径，也是未显式配置路径的笔记本前缀。[根相对路径字符串；目录路径自动补尾斜杠]
+      navigation:
+        # Notebook 总索引高亮的主菜单项；null 表示不高亮。 [字符串或null]
+        active_menu: notebooks
+      sidebar:
+        # Notebook 总索引左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
+        left: [recent]
+        # Notebook 总索引右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
+        right: []
+      # Notebook 总索引的自动生成路径。 [字符串]
       path: /notebooks/
-      # 主导航状态。[对象]
-      navigation:
-        # 高亮的主菜单项。[字符串或 null；应匹配菜单 id]
-        active_menu: notebooks
-      # 左右侧栏 Widget。[对象]
-      sidebar:
-        # 左栏 Widget。[字符串数组；值须为已注册 Widget ID]
-        left: [recent]
-        # 右栏 Widget。[字符串数组；空数组隐藏右栏]
-        right: []
-    # 笔记列表页配置
+    # Notebook 列表页的布局默认值。 [对象]
     note_index:
-      # 主导航状态。[对象]
       navigation:
-        # 笔记列表页高亮的主菜单项。[字符串或 null；可被笔记本/笔记覆盖，应匹配菜单 id]
+        # Notebook 列表页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: notebooks
-      # 左右侧栏 Widget。[对象]
       sidebar:
-        # 左栏 Widget。[字符串数组；值须为已注册 Widget ID]
+        # Notebook 列表页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
         left: [tagtree, recent]
-        # 右栏 Widget。[字符串数组；空数组隐藏右栏]
+        # Notebook 列表页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
         right: []
-    # 笔记页配置
+    # Note 内容页的布局默认值。 [对象]
     note:
-      # 主导航状态。[对象]
       navigation:
-        # 笔记页高亮的主菜单项。[字符串或 null；可被笔记本/笔记覆盖，应匹配菜单 id]
+        # Note 内容页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: notebooks
-      # 左右侧栏 Widget。[对象]
       sidebar:
-        # 左栏 Widget。[字符串数组；可被笔记本 note.sidebar 或笔记 sidebar 覆盖]
+        # Note 内容页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
         left: [tagtree, recent]
-        # 右栏 Widget。[字符串数组；可被笔记本 note.sidebar 或笔记 sidebar 覆盖]
+        # Note 内容页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
         right: [toc]
-    # 作者信息配置
+    # 作者页的布局默认值。 [对象]
     author:
-      # 自动生成的作者页路径前缀。[根相对路径字符串；目录路径自动补尾斜杠]
+      navigation:
+        # 作者页高亮的主菜单项；null 表示不高亮。 [字符串或null]
+        active_menu: post
+      sidebar:
+        # 作者页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
+        left: [recent]
+        # 作者页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
+        right: []
+      # 作者页的自动生成路径。 [字符串]
       path: /author/
-      # 主导航状态。[对象]
-      navigation:
-        # 高亮的主菜单项。[字符串或 null；应匹配菜单 id]
-        active_menu: post
-      # 左右侧栏 Widget。[对象]
-      sidebar:
-        # 左栏 Widget。[字符串数组；值须为已注册 Widget ID]
-        left: [recent]
-        # 右栏 Widget。[字符串数组；空数组隐藏右栏]
-        right: []
-    # 错误页配置
+    # 错误页的布局默认值。 [对象]
     error:
-      # 自动生成的错误页文件路径。[根相对路径字符串；通常为 /404.html]
-      path: /404.html
-      # 主导航状态。[对象]
       navigation:
-        # 高亮的主菜单项。[字符串或 null；应匹配菜单 id]
+        # 错误页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: post
-      # 左右侧栏 Widget。[对象]
       sidebar:
-        # 左栏 Widget。[字符串数组；值须为已注册 Widget ID]
+        # 错误页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
         left: [recent]
-        # 右栏 Widget。[字符串数组；空数组隐藏右栏]
+        # 错误页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
         right: []
-    # 其它自定义页面配置 layout: page
+      # 错误页的自动生成路径。 [字符串]
+      path: /404.html
+    # 独立页面的布局默认值。 [对象]
     page:
-      # 主导航状态。[对象]
       navigation:
-        # 高亮的主菜单项。[字符串或 null；应匹配菜单 id]
+        # 独立页面高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: post
-      # 左右侧栏 Widget。[对象]
       sidebar:
-        # 左栏 Widget。[字符串数组；值须为已注册 Widget ID]
+        # 独立页面左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
         left: [recent]
-        # 右栏 Widget。[字符串数组；值须为已注册 Widget ID]
+        # 独立页面右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
         right: [toc]
 
-
-######## Content ########
-# 文章和笔记本的全局内容默认值；允许的字段可被 Collection 或 Front Matter 覆盖。[对象]
+# 文章与 Notebook 的内容展示默认值。 [对象]
 content:
-  article: # 博客文章、专栏文章及其聚合卡片。[对象]
-    # 文章呈现风格。[字符串枚举：tech = 紧凑技术文章；story = 图文叙事、段落间距更大；可被页面或集合覆盖]
+  # 博客文章及文章列表的展示默认值。 [对象]
+  article:
+    # 文章默认排版风格。 [字符串；可选值：tech / story]
     style: tech
-    # 段落首行缩进策略。[字符串枚举：auto = story 缩进、tech 不缩进；always = 始终缩进；never = 从不缩进]
+    # 正文段落首行缩进策略。 [字符串；可选值：auto / always / never]
     paragraph_indent: auto
-    # 文章聚合页与卡片。[对象]
     listing:
-      # 置顶文章布局。[字符串枚举：carousel = 轮播；flat = 平铺]
+      # 置顶文章列表布局。 [字符串；可选值：carousel / flat]
       pinned_layout: carousel
-      # 普通文章卡片布局。[字符串枚举：hero = 全图文字封面；classic = 普通卡片]
+      # 普通文章卡片布局。 [字符串；可选值：hero / classic]
       card_layout: hero
-      # 卡片封面宽高比。[正数，必须 > 0；例如 2 表示 2:1]
+      # 文章列表封面的宽高比。 [数字；必须大于 0]
       cover_ratio: 2
-      # 未提供 excerpt / description 时自动摘要的最大字符数。[非负整数；0 表示不生成自动摘要]
+      # 自动摘要的最大字符数；0 不生成自动摘要。 [数字；最小值：0]
       excerpt_length: 128
-      # 卡片是否显示文章标签，最多展示 5 个。[布尔值：true / false]
+      # 是否在文章卡片中显示标签。 [布尔值]
       show_tags: false
-    # 文章顶部 Banner。[对象]
     banner:
-      # Banner 宽高比。[正数，必须 > 0；例如 2.5 表示 2.5:1]
+      # 文章 Banner 的宽高比。 [数字；必须大于 0]
       ratio: 2.5
-    # 分类名到强调色的映射。[对象；键为非空分类名，值为合法 CSS 颜色；允许自定义键]
-    category_colors:
-      '探索号': '#f44336' # 示例：分类“探索号”使用红色。
-    # 文章末尾区域。[对象]
+    # 分类名称到 CSS 颜色的映射。 [对象；允许自定义键]
+    category_colors: {探索号: '#f44336'}
     footer:
-      # 许可声明。[布尔值或字符串；false 关闭；true 使用主题默认文案；字符串作为自定义 Markdown]
-      license: '本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。'
-      # 分享按钮及顺序。[字符串数组；常用 wechat / weibo / email / link；空数组关闭；自动去重]
+      # 文章许可声明；false 隐藏，字符串作为自定义声明。 [布尔值或字符串]
+      license: 本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。
+      # 文章分享入口；空数组不显示。 [数组；元素：字符串]
       share: []
-      # 是否在文章末尾显示标签。[布尔值：true / false]
+      # 是否在文章页脚显示标签。 [布尔值]
       show_tags: true
-    # 相关文章最大数量。[非负整数；0 关闭；正数需安装 hexo-related-popular-posts]
+    # 相关文章数量上限；0 关闭相关文章。 [数字；最小值：0]
     related_posts_limit: 0
-    # 是否显示预计阅读时长。[布尔值：true / false]
+    # 是否显示预计阅读时间。 [布尔值]
     show_reading_time: false
-
-  # 笔记本索引、笔记列表和笔记页默认值。[对象]
+  # Notebook 列表与页脚默认值。 [对象]
   notebook:
-    # 笔记列表。[对象]
     listing:
-      # 未提供 excerpt / description 时自动摘要的最大字符数。[非负整数；0 表示不生成自动摘要]
+      # Notebook 列表摘要的最大字符数；0 不生成自动摘要。 [数字；最小值：0]
       excerpt_length: 128
-      # 每页笔记数。[非负整数或 null；0 不分页；null 使用 Hexo per_page]
+      # Notebook 每页条目数；null 使用站点分页设置。 [数字或null；最小值：0]
       per_page: null
-      # 笔记排序。[对象]
       sort:
-        # 排序字段。[字符串枚举：date / updated / title]
+        # Notebook 条目的默认排序字段。 [字符串；可选值：date / updated / title]
         field: updated
-        # 排序方向。[字符串枚举：asc = 升序；desc = 降序]
+        # Notebook 条目的默认排序方向。 [字符串；可选值：asc / desc]
         direction: desc
-    # 笔记标签到图标 ID 的映射。[对象；键为非空标签名，值为非空图标字符串；空对象不覆盖]
+    # Notebook 标签名称到图标 ID 的映射。 [对象；允许自定义键]
     tag_icons: {}
-    # tools: default:tools
-    # 笔记页末尾区域；null 表示继承 content.article.footer 对应值。[对象]
     footer:
-      # 许可声明覆盖。[字符串、布尔值或 null；false 关闭；字符串自定义；null 继承文章默认]
+      # Notebook 页脚许可声明；null 继承文章默认值，false 隐藏。 [字符串或布尔值或null]
       license: null
-      # 分享按钮覆盖。[字符串数组或 null；空数组关闭；null 继承文章默认]
+      # Notebook 分享入口；null 继承文章默认值，空数组不显示。 [数组或null；元素：字符串]
       share: null
 
-# 可按页面需求加载的搜索、评论、标签插件、视觉功能和业务服务。[对象]
+# 颜色、排版、形状、动效与背景。 [对象]
+appearance:
+  # 站点默认配色方案。 [字符串；可选值：auto / light / dark]
+  color_scheme: auto
+  # 正文、代码与标题的排版令牌。 [对象]
+  typography:
+    font_size:
+      # 页面根字号。 [字符串]
+      root: 16px
+      # 行内代码字号。 [字符串]
+      inline_code: 85%
+      # 代码块字号。 [字符串]
+      code_block: 0.8125rem
+    font_family:
+      # 正文与界面字体栈。 [字符串]
+      body: system-ui, "Microsoft Yahei", "Segoe UI", Arial, sans-serif
+      # 代码字体栈。 [字符串]
+      code: Menlo, Monaco, Consolas, system-ui, monospace, sans-serif
+    # 文章正文对齐方式。 [字符串；可选值：left / center / right / justify]
+    content_align: left
+    heading_prefixes:
+      # 二级标题前缀字符。 [字符串]
+      h2: '#'
+      # 三级标题前缀字符。 [字符串]
+      h3: '='
+      # 四级标题前缀字符。 [字符串]
+      h4: '|'
+      # 五级标题前缀字符。 [字符串]
+      h5: ':'
+  # 卡片、图片和栏目的形状令牌。 [对象]
+  shape:
+    # 支持的 CSS corner-shape 值。 [字符串]
+    corner: superellipse(1.25)
+    radius:
+      # 大型卡片圆角。 [字符串]
+      card_large: 24px
+      # 普通卡片圆角。 [字符串]
+      card: 16px
+      # 小型卡片圆角。 [字符串]
+      card_small: 12px
+      # 栏、按钮和输入框圆角。 [字符串]
+      bar: 12px
+      # 大型图片圆角。 [字符串]
+      image_large: 24px
+      # 普通图片圆角。 [字符串]
+      image: 16px
+      # 小型图片圆角。 [字符串]
+      image_small: 8px
+  # 主题主色、强调色和链接色。 [对象]
+  colors:
+    # 主题主色。 [字符串]
+    primary: hsl(192 98% 55%)
+    # 强调色。 [字符串]
+    accent: hsl(14 100% 57%)
+    # 正文链接颜色。 [字符串]
+    link: hsl(207 90% 54%)
+  # 主要交互、搜索栏和头像环渐变。 [对象]
+  gradients:
+    # 主要操作按钮渐变。 [字符串]
+    primary_action: linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))
+    # 搜索栏边框渐变。 [字符串]
+    search_bar: 'linear-gradient(to right, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)'
+    # 头像装饰环渐变。 [字符串]
+    avatar_ring: 'conic-gradient(from 0deg, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)'
+  # 页面与头像动效策略。 [对象]
+  motion:
+    # 是否启用页面进入动效。 [布尔值]
+    page_transition: true
+    # 头像动效策略。 [字符串；可选值：auto / always / never]
+    avatar: auto
+  # 代码块滚动条与高亮样式。 [对象]
+  code_block:
+    # 代码块滚动条宽度。 [字符串]
+    scrollbar_width: 4px
+    # 代码高亮样式表资源；null 不加载额外样式。 [字符串或null]
+    highlight_stylesheet: https://gcore.jsdelivr.net/gh/highlightjs/cdn-release@11.9/build/styles/atom-one-dark.min.css
+  # 侧栏和页面背景。 [对象]
+  backgrounds:
+    sidebar:
+      # 侧栏背景表面样式。 [字符串；可选值：glass / card]
+      surface: card
+      color:
+        # 浅色模式侧栏背景色。 [字符串]
+        light: var(--card)
+        # 深色模式侧栏背景色。 [字符串]
+        dark: var(--card)
+      # 侧栏背景图片；null 不显示背景图。 [字符串或null]
+      image: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg
+      # 侧栏背景不透明度。 [数字；范围：0–1]
+      opacity: 0.8
+      backdrop:
+        # 侧栏背景模糊半径。 [字符串]
+        radius: 100px
+        # 侧栏背景遮罩颜色。 [字符串]
+        overlay: var(--bg-a60)
+    page:
+      # 页面背景图片；null 不显示背景图。 [字符串或null]
+      image: null
+      backdrop:
+        # 页面背景模糊半径。 [字符串]
+        radius: 100px
+        # 页面背景遮罩颜色。 [字符串]
+        overlay: var(--bg-a75)
+        # 页面背景饱和度。 [字符串]
+        saturation: 300%
+
+# Canonical、Open Graph 与结构化数据。 [对象]
+seo:
+  # Canonical 主机与合法镜像主机。 [对象]
+  canonical:
+    # 生成 canonical URL 的主机名；null 关闭 canonical 输出。 [字符串或null]
+    # Example:
+    #   example.com
+    host: null
+    # 允许访问但不作为 canonical 的镜像主机；站点配置完整替换默认数组。 [数组；元素：字符串]
+    allowed_hosts: [localhost]
+  # Open Graph 与 Twitter Card 元数据。 [对象]
+  open_graph:
+    # 是否生成 Open Graph 与 Twitter Card 标签。 [布尔值]
+    enabled: true
+    # Twitter/X 用户名，不含 @；null 不输出账号标签。 [字符串或null]
+    twitter_id: null
+  # JSON-LD 结构化数据。 [对象]
+  structured_data:
+    # 作者或组织的公开身份页面；空数组不输出 sameAs。 [数组；元素：字符串]
+    # Example:
+    #   - https://github.com/xaoxuu
+    same_as: []
+
+# 预连接、资源兜底与错误页资源。 [对象]
+resources:
+  # 需要预连接的绝对 HTTP(S) origin；站点配置完整替换默认数组。 [数组；元素：字符串]
+  # Example:
+  #   - https://cdn.jsdelivr.net
+  preconnect: []
+  # 内容缺少图片时使用的兜底资源。 [对象]
+  fallbacks:
+    # 用户或作者缺少头像时使用的兜底图。 [字符串]
+    avatar: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg
+    # 链接卡片缺少图片时使用的兜底图。 [字符串]
+    link_card: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/link/8f277b4ee0ecd.svg
+    # 封面与 Open Graph 缺少图片时使用的兜底图。 [字符串]
+    cover: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg
+  # 错误页资源。 [对象]
+  error_page:
+    # 错误页插图；null 不显示插图。 [字符串或null]
+    image: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg
+
+# 搜索、评论、标签、特性与数据服务扩展。 [对象]
 extensions:
-  # 站内搜索。[对象]
+  # 站内搜索及其 Provider。 [对象]
   search:
-    # 搜索提供方。[字符串枚举或 null：local / algolia；null 关闭搜索]
+    # 站内搜索 Provider；null 关闭搜索。 [字符串或null；可选值：null / local / algolia]
     provider: local
-    # 各提供方参数；只读取 provider 选中的一组。[对象]
     providers:
-      # 构建期生成索引、浏览器端查询的本地搜索。[对象]
       local:
-        # 索引范围。[字符串枚举：post = 仅文章；page = 仅页面；all = 两者]
+        # 本地搜索索引范围。 [字符串]
         scope: all
-        # 索引中是否包含正文内容。[布尔值：true / false；false 仅索引标题等元数据]
+        # 本地搜索索引是否包含正文。 [布尔值]
         include_content: true
-        # 浏览器缓存搜索索引的时间。[非负整数，单位秒；0 表示不复用缓存]
+        # 本地搜索索引缓存有效期，单位为秒。 [数字；最小值：0]
         cache_ttl_seconds: 86400
-      # Algolia 客户端参数；字段透传给 Algolia。[开放对象]
-      algolia:
-        # Algolia Application ID。[字符串或 null]
-        appId:
-        # Algolia Search-Only API Key；不要填写 Admin Key。[字符串或 null]
-        apiKey:
-        # Algolia 索引名称。[字符串或 null]
-        indexName:
-
-  # 评论系统。[对象]
+      # Algolia Provider 参数。 [对象；允许自定义键]
+      algolia: {appId: null, apiKey: null, indexName: null}
+  # 评论系统及其 Provider。 [对象]
   comments:
-    # 全局评论提供方。[字符串枚举或 null：beaudar / utterances / giscus / twikoo / waline / artalk；null 关闭]
-    provider:
-    # 评论区标题。[字符串或 null；null 使用语言文件默认文案]
-    title:
-    # 提供方参数袋；只读取 provider 选中的一组，字段按各上游 SDK 透传。[对象]
+    # 默认评论 Provider；null 关闭评论。 [字符串或null；可选值：null / beaudar / utterances / giscus / twikoo / waline / artalk]
+    provider: null
+    # 默认评论区标题；null 使用语言文件文案。 [字符串或null]
+    title: null
     providers:
-      # Beaudar（GitHub Issues）参数。[开放对象]
-      beaudar:
-        # 存放评论 Issue 的仓库。[字符串；owner/repository]
-        repo: xxx/xxx
-        # 页面与 Issue 的映射方式。[字符串；常用 pathname / url / title / og:title]
-        issue-term: pathname
-        # 固定 Issue 编号。[整数或 null；设置后优先于 issue-term]
-        issue-number:
-        # Beaudar 主题。[字符串；例如 preferred-color-scheme]
-        theme: preferred-color-scheme
-        # 自动创建 Issue 时附加的标签。[字符串或 null]
-        label:
-        # 评论输入框位置。[字符串枚举：top / bottom]
-        input-position: top
-        # 评论排序。[字符串枚举：asc / desc]
-        comment-order: desc
-        # 页面切换时是否保持当前主题。[布尔值或 null；null 使用上游默认]
-        keep-theme:
-        # 是否显示加载状态。[布尔值：true / false]
-        loading: false
-        # 仓库分支。[非空字符串]
-        branch: main
-      # Utterances（GitHub Issues）参数。[开放对象]
-      utterances:
-        # 存放评论 Issue 的仓库。[字符串；owner/repository]
-        repo: xxx/xxx
-        # 页面与 Issue 的映射方式。[字符串；常用 pathname / url / title / og:title]
-        issue-term: pathname
-        # 固定 Issue 编号。[整数或 null；设置后优先于 issue-term]
-        issue-number:
-        # Utterances 主题。[字符串；例如 preferred-color-scheme]
-        theme: preferred-color-scheme
-        # 自动创建 Issue 时附加的标签。[字符串或 null]
-        label:
-      # Giscus（GitHub Discussions）参数；字段名与 giscus-script 的 data-* 属性一致。[开放对象]
-      giscus:
-        # 存放 Discussions 的仓库。[字符串；owner/repository]
-        data-repo: xxx/xxx
-        # Giscus 生成的仓库 ID。[字符串或 null]
-        data-repo-id:
-        # Discussions 分类名。[字符串或 null]
-        data-category:
-        # Giscus 生成的分类 ID。[字符串或 null]
-        data-category-id:
-        # 页面到 Discussion 的映射方式。[字符串；常用 pathname / url / title / og:title / specific / number]
-        data-mapping: pathname
-        # 是否严格匹配标题。[整数枚举：0 / 1]
-        data-strict: 0
-        # 是否启用主帖反应。[整数枚举：0 / 1]
-        data-reactions-enabled: 1
-        # 是否向父页面发送 Discussion 元数据。[整数枚举：0 / 1]
-        data-emit-metadata: 0
-        # 评论输入框位置。[字符串枚举：top / bottom]
-        data-input-position: top
-        # Giscus 主题名或自定义主题 CSS URL。[字符串]
-        data-theme: preferred_color_scheme
-        # Giscus 界面语言。[BCP 47 语言代码字符串；例如 zh-CN / en]
-        data-lang: zh-CN
-        # iframe 加载策略。[字符串或 null；lazy 表示延迟加载，null 使用上游默认]
-        data-loading:
-        # iframe 跨域凭据策略。[字符串；通常固定为 anonymous]
-        crossorigin: anonymous
-      # Twikoo 参数。[开放对象]
-      twikoo:
-        # Twikoo 云函数环境 ID 或服务 URL。[非空字符串]
-        envId: https://xxx
-      # Waline 参数。[开放对象]
-      waline:
-        # Waline 服务端地址。[绝对 HTTP(S) URL]
-        serverURL: https://waline.vercel.app
-        # 是否获取并显示评论数。[布尔值：true / false]
-        commentCount: true
-        # 是否启用页面浏览量统计。[布尔值：true / false]
-        pageview: false
-      # Artalk 参数。[开放对象]
-      artalk:
-        # Artalk 服务端地址。[字符串或 null；通常为绝对 HTTP(S) URL]
-        server:
-        # Artalk 中登记的站点名。[字符串]
-        site: ''
-        # 深色模式策略。[字符串或布尔值；auto 跟随页面，亦可使用 true / false]
-        darkMode: auto
-        # Artalk 图片上传器参数。[对象或 null；字段按 Artalk 上游接口透传]
-        imageUploader:
-
-  # Stellar 自定义标签的全局默认值。[对象]
+      # Beaudar Provider 参数。 [对象；允许自定义键]
+      beaudar: {repo: xxx/xxx, issue-term: pathname, issue-number: null, theme: preferred-color-scheme, label: null, input-position: top, comment-order: desc, keep-theme: null, loading: false, branch: main}
+      # Utterances Provider 参数。 [对象；允许自定义键]
+      utterances: {repo: xxx/xxx, issue-term: pathname, issue-number: null, theme: preferred-color-scheme, label: null}
+      # Giscus Provider 参数。 [对象；允许自定义键]
+      giscus: {data-repo: xxx/xxx, data-repo-id: null, data-category: null, data-category-id: null, data-mapping: pathname, data-strict: 0, data-reactions-enabled: 1, data-emit-metadata: 0, data-input-position: top, data-theme: preferred_color_scheme, data-lang: zh-CN, data-loading: null, crossorigin: anonymous}
+      # Twikoo Provider 参数。 [对象；允许自定义键]
+      twikoo: {envId: https://xxx}
+      # Waline Provider 参数。 [对象；允许自定义键]
+      waline: {serverURL: https://waline.vercel.app, commentCount: true, pageview: false}
+      # Artalk Provider 参数。 [对象；允许自定义键]
+      artalk: {server: null, site: '', darkMode: auto, imageUploader: null}
+  # 标签插件默认行为。 [对象]
   tags:
-    # note 提示块。[对象]
     note:
-      # 未显式指定时的颜色名。[字符串；空字符串使用标签/主题默认色]
+      # Note 标签的默认颜色；空字符串使用组件默认色。 [字符串]
       default_color: ''
-      # 是否显示提示块边框。[布尔值：true / false]
+      # Note 标签是否显示边框。 [布尔值]
       border: true
-    # checkbox 标签。[对象]
     checkbox:
-      # 是否允许用户在浏览器中切换勾选状态。[布尔值：true / false；不写回源文件]
+      # Checkbox 标签是否允许用户交互。 [布尔值]
       interactive: false
-    # quot 引用标签的图标组合；允许增加自定义 variant。[对象]
-    # 每个 variant 的 prefix/suffix 均为图标 ID 字符串或 null，null 表示该侧不显示图标。
-    quot:
-      # 普通引用样式。[对象]
-      default:
-        # 前置图标。[图标 ID 字符串或 null]
-        prefix: quot:quote-left
-        # 后置图标。[图标 ID 字符串或 null]
-        suffix: quot:quote-right
-      # Hashtag 引用样式。[对象]
-      hashtag:
-        # 前置图标。[图标 ID 字符串或 null]
-        prefix: quot:hashtag
-      # 问题引用样式。[对象]
-      question:
-        # 前置图标。[图标 ID 字符串或 null]
-        prefix: quot:question
-    # emoji 标签的表情源。[对象]
+    # Quot 标签各变体的前后图标映射。 [对象；允许自定义键]
+    quot: {default: {prefix: quot:quote-left, suffix: quot:quote-right}, hashtag: {prefix: quot:hashtag, suffix: null}, question: {prefix: quot:question, suffix: null}}
     emoji:
-      # 默认表情源 ID。[非空字符串；必须匹配 sources 中已声明的键]
+      # Emoji 标签默认使用的图片源。 [字符串]
       default_source: blobcat
-      # 表情源 ID 到资源模板的映射。[开放对象；值必须是包含 {name} 的字符串模板]
-      sources:
-        twemoji: https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg # Twitter Emoji，SVG。
-        qq: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif # QQ 表情，GIF。
-        aru: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif # 阿鲁表情，GIF。
-        tieba: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png # 贴吧表情，PNG。
-        blobcat: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif # Blobcat 表情，GIF。
-    # icon 标签。[对象]
+      # Emoji 图片源名称到 URL 模板的映射。 [对象；允许自定义键]
+      sources: {twemoji: 'https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg', qq: 'https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif', aru: 'https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif', tieba: 'https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png', blobcat: 'https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif'}
     icon:
-      # 未指定时的图标颜色。[字符串或 null；颜色名、主题语义色或 CSS 颜色；null 不强制]
+      # Icon 标签默认颜色；null 不注入颜色。 [字符串或null]
       default_color: accent
-    # button 标签。[对象]
     button:
-      # 未指定时的按钮颜色。[字符串或 null；颜色名、主题语义色或 CSS 颜色；null 不强制]
+      # Button 标签默认颜色；null 不注入颜色。 [字符串或null]
       default_color: theme
-    # mark 高亮标签。[对象]
     mark:
-      # 未指定时的高亮颜色。[非空字符串；颜色名、主题语义色或 CSS 颜色]
+      # Mark 标签默认颜色。 [字符串]
       default_color: yellow
-    # hashtag 标签。[对象]
     hashtag:
-      # 未指定时的标签颜色。[字符串或 null；null 由上下文决定]
-      default_color:
-    # gallery 图片画廊标签。[对象]
+      # Hashtag 标签默认颜色；null 不注入颜色。 [字符串或null]
+      default_color: null
     gallery:
-      # 图片尺寸分布。[字符串枚举：s / m / l / xl / mix]
+      # Gallery 标签默认图片尺寸。 [字符串；可选值：s / m / l / xl / mix]
       size: mix
-      # 图片容器宽高比。[字符串枚举：original = 原图比例；square = 方形；portrait = 竖向]
+      # Gallery 标签默认图片比例。 [字符串；可选值：original / square / portrait]
       aspect_ratio: square
-
-  # 浏览器端按需加载的视觉与排版功能。[对象]
+  # 浏览器 Feature 的启用与实现选择。 [对象]
   features:
-    # 图片懒加载。[对象]
     lazy_loading:
-      # 图片出现时的过渡效果。[字符串枚举：blur / fade]
+      # 图片懒加载完成时的过渡效果。 [字符串；可选值：blur / fade]
       transition: fade
-      # 是否根据图片固有尺寸自动预留宽高比，减少布局跳动。[布尔值：true / false]
+      # 懒加载是否自动保留图片宽高比。 [布尔值]
       auto_aspect_ratio: true
-    # 链接悬停预取。[对象]
     link_prefetch:
-      # 是否预取即将访问的站内页面。[布尔值：true / false]
+      # 是否在用户可能导航前预取站内页面。 [布尔值]
       enabled: true
-    # 配色方案选择接口；启用后按需提供 window.setColorScheme(mode)。[对象]
     color_scheme_switch:
-      # 是否启用。[布尔值：true / false]
+      # 是否启用浏览器配色切换功能。 [布尔值]
       enabled: false
-    # 正文图片灯箱。[对象]
     lightbox:
-      # 是否启用。[布尔值：true / false]
+      # 是否启用图片灯箱。 [布尔值]
       enabled: true
-      # 自动挂载灯箱的图片选择器。[非空字符串；必须是合法 CSS selector]
+      # 进入灯箱的图片 CSS 选择器。 [字符串]
       selector: .timenode p>img
-    # 元素进入视口时的 Reveal 动画。[对象]
     reveal:
-      # 是否启用。[布尔值：true / false]
+      # 是否启用滚动进入动效。 [布尔值]
       enabled: true
-      # 元素初始位移。[CSS 长度字符串；例如 0px / 8px]
+      # 滚动进入动效的位移距离。 [字符串]
       distance: 8px
-      # 单个元素动画时长。[非负数，单位毫秒]
+      # 滚动进入动效持续时间，单位为毫秒。 [数字；最小值：0]
       duration_ms: 1000
-      # 连续元素之间的动画间隔。[非负数，单位毫秒]
+      # 同组元素进入动效的间隔，单位为毫秒。 [数字；最小值：0]
       interval_ms: 100
-      # 元素初始缩放比例。[数字；0 到 1，1 表示不缩放]
+      # 滚动进入动效的初始缩放比例。 [数字；范围：0–1]
       scale: 1
-    # 数学公式渲染。[对象]
     math:
-      # 数学引擎。[字符串枚举或 null：katex / mathjax；null 默认不加载，可由页面 render.math 覆盖]
-      provider:
-      # 引擎参数；字段透传给对应引擎适配器。[对象]
+      # 数学公式 Provider；null 关闭公式渲染。 [字符串或null；可选值：null / katex / mathjax]
+      provider: null
       providers:
-        # KaTeX 参数袋。[开放对象]
+        # KaTeX Provider 参数。 [对象；允许自定义键]
         katex: {}
-        # MathJax 参数袋。[开放对象]
+        # MathJax Provider 参数。 [对象；允许自定义键]
         mathjax: {}
-    # 图表渲染。[对象]
     diagrams:
-      # 图表引擎。[字符串枚举或 null：mermaid；null 默认不加载，可由页面 render.diagrams 覆盖]
-      provider:
-      # 引擎参数。[对象]
+      # 图表 Provider；null 关闭图表渲染。 [字符串或null；可选值：null / mermaid]
+      provider: null
       providers:
-        # Mermaid 参数。[对象]
         mermaid:
-          # Mermaid 主题。[字符串枚举：default / dark / forest / neutral]
+          # Mermaid 图表主题。 [字符串；可选值：default / dark / forest / neutral]
           theme: neutral
-    # 卡片鼠标悬停效果。[对象]
     card_hover:
-      # 是否启用。[布尔值：true / false]
+      # 是否启用卡片悬停聚光与倾斜效果。 [布尔值]
       enabled: false
-    # Heti 中文排版增强。[对象]
     heti:
-      # 是否启用。[布尔值：true / false]
+      # 是否启用 Heti 中文排版增强。 [布尔值]
       enabled: false
-
-  # 站点信息、评分、投票、贡献者和 GitHub 业务端点。[对象]
+  # 数据服务及其 Provider。 [对象]
   services:
-    # 网站信息查询服务，用于补全站点标题、图标等。[对象]
     site_info:
-      # 服务提供方。[字符串枚举或 null：site_info_api；null 关闭]
+      # 站点信息服务 Provider；null 关闭自动补全。 [字符串或null；可选值：null / site_info_api]
       provider: site_info_api
-      # 各提供方参数；只读取 provider 选中的一组。[对象]
       providers:
         site_info_api:
-          # 查询接口模板。[绝对 HTTP(S) URL；可包含 {href} 目标网址占位符]
+          # Site Info API 请求模板，使用 {href} 代入目标地址。 [字符串]
           endpoint: https://api.xaox.cc/site_info/v1?url={href}
-    # 内容评分查询服务。[对象]
     rating:
-      # 服务提供方。[字符串枚举或 null：star_vote；null 关闭]
+      # 评分服务 Provider；null 关闭评分服务。 [字符串或null；可选值：null / star_vote]
       provider: star_vote
       providers:
         star_vote:
-          # 评分接口。[绝对 HTTP(S) URL]
+          # Star Vote 评分接口地址。 [字符串]
           endpoint: https://star-vote.xaox.cc/api/rating
-    # 内容投票提交服务。[对象]
     vote:
-      # 服务提供方。[字符串枚举或 null：star_vote；null 关闭]
+      # 投票服务 Provider；null 关闭投票服务。 [字符串或null；可选值：null / star_vote]
       provider: star_vote
       providers:
         star_vote:
-          # 投票接口。[绝对 HTTP(S) URL]
+          # Star Vote 投票接口地址。 [字符串]
           endpoint: https://star-vote.xaox.cc/api/vote
-    # 按源文件路径关联 GitHub 仓库贡献者。[对象]
     contributors:
-      # 贡献者提供方。[字符串枚举：github]
+      # 贡献者数据 Provider。 [字符串；可选值：github]
       provider: github
       providers:
         github:
-          # 映射列表。[对象数组；每项含 source_prefix、repository，branch 默认为 main；空数组关闭]
-          # source_prefix 为 source/ 下安全相对路径；repository 格式为 owner/repository；branch 为非空字符串。
+          # 源码目录到 GitHub 仓库的映射；空数组不加载贡献者。 [数组；元素：对象]
+          # Example:
+          #   - {source_prefix: wiki/stellar/, repository: xaoxuu/hexo-theme-stellar-docs, branch: main}
           repositories: []
-          # - source_prefix: wiki/stellar/
-          #   repository: xaoxuu/hexo-theme-stellar
-          #   branch: main
-    # GitHub 官方地址或代理基地址。[对象]
     github:
-      # GitHub REST API 基地址。[绝对 HTTP(S) URL]
+      # GitHub REST API 基础地址。 [字符串]
       api_url: https://api.github.com
-      # GitHub Raw 文件服务基地址。[绝对 HTTP(S) URL]
+      # GitHub Raw 内容基础地址。 [字符串]
       raw_url: https://raw.githubusercontent.com
-      # GitHub Gist 服务基地址。[绝对 HTTP(S) URL]
+      # GitHub Gist 基础地址。 [字符串]
       gist_url: https://gist.github.com
-    # GitHub 仓库统计卡片服务。[对象]
     github_card:
-      # 卡片服务提供方。[字符串枚举：github_readme_stats]
+      # GitHub 卡片 Provider。 [字符串；可选值：github_readme_stats]
       provider: github_readme_stats
       providers:
         github_readme_stats:
-          # 卡片服务基地址。[绝对 HTTP(S) URL]
+          # GitHub Readme Stats 服务地址。 [字符串]
           endpoint: https://github-readme-stats.vercel.app
 
-# 全站视觉语义；值会进入 Stylus、PageViewModel 和浏览器主题状态。[对象]
-appearance:
-  # 默认配色模式。[字符串枚举：auto = 跟随系统；light = 浅色；dark = 深色]
-  color_scheme: auto
-  # 排版。[对象]
-  typography:
-    # 字号。[对象]
-    font_size:
-      # 桌面端根字号，移动端自动增加 2px。[非负 CSS 长度字符串；例如 16px / 1rem]
-      root: 16px
-      # 行内代码字号。[非负 CSS 长度字符串；建议百分比，例如 85%]
-      inline_code: 85%
-      # 代码块字号。[非负 CSS 长度字符串；例如 0.8125rem = 13px]
-      code_block: 0.8125rem
-    # 字体栈，按 CSS font-family 语法从左到右回退。[对象]
-    font_family:
-      # 正文与界面字体。[非空字符串；安全的 CSS font-family 列表]
-      body: 'system-ui, "Microsoft Yahei", "Segoe UI", Arial, sans-serif'
-      # 行内代码和代码块字体。[非空字符串；安全的 CSS font-family 列表]
-      code: 'Menlo, Monaco, Consolas, system-ui, monospace, sans-serif'
-    # 正文水平对齐。[字符串枚举：left / center / right / justify]
-    content_align: left
-    # 二至五级标题前的装饰字符。[对象；每项为字符串，空字符串可隐藏对应前缀]
-    heading_prefixes:
-      # 二级标题前缀。[字符串]
-      h2: '#'
-      # 三级标题前缀。[字符串]
-      h3: '='
-      # 四级标题前缀。[字符串]
-      h4: '|'
-      # 五级标题前缀。[字符串]
-      h5: ':'
-  # 圆角形状与尺寸。[对象]
-  shape:
-    # CSS corner-shape。[字符串：round / scoop / bevel / notch / square / superellipse(非负数)]
-    corner: superellipse(1.25)
-    # 不同组件角色的圆角半径。[对象；所有值均为非负 CSS 长度字符串]
-    radius:
-      # 大卡片圆角。[CSS 长度字符串]
-      card_large: 24px
-      # 标准卡片圆角。[CSS 长度字符串]
-      card: 16px
-      # 小卡片圆角。[CSS 长度字符串]
-      card_small: 12px
-      # 导航栏、工具栏等条形组件圆角。[CSS 长度字符串]
-      bar: 12px
-      # 大图圆角。[CSS 长度字符串]
-      image_large: 24px
-      # 标准图片圆角。[CSS 长度字符串]
-      image: 16px
-      # 小图圆角。[CSS 长度字符串]
-      image_small: 8px
-  # 主题语义颜色。[对象；值均为合法 CSS 颜色，支持 CSS 变量]
-  colors:
-    # 主品牌色。[CSS 颜色字符串]
-    primary: 'hsl(192 98% 55%)'
-    # 强调色。[CSS 颜色字符串]
-    accent: 'hsl(14 100% 57%)'
-    # 正文链接色。[CSS 颜色字符串]
-    link: 'hsl(207 90% 54%)'
-  # 主题语义渐变。[对象；值必须是合法 CSS linear/radial/conic-gradient()]
-  gradients:
-    # 主操作按钮等高强调交互的渐变。[CSS gradient 字符串]
-    primary_action: 'linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))'
-    # 搜索栏强调边框/背景渐变。[CSS gradient 字符串]
-    search_bar: 'linear-gradient(to right, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)'
-    # 头像外环渐变。[CSS gradient 字符串]
-    avatar_ring: 'conic-gradient(from 0deg, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)'
-  # 页面和品牌动画。[对象]
-  motion:
-    # 是否启用页面进入/切换动画。[布尔值：true / false]
-    page_transition: true
-    # 头像动画策略。[字符串枚举：auto = 按上下文；always = 始终；never = 从不]
-    avatar: auto
-  # 代码块外观。[对象]
-  code_block:
-    # 横向滚动条宽度。[非负 CSS 长度字符串；0px 隐藏可见宽度]
-    scrollbar_width: 4px
-    # Highlight.js 高亮样式表。[资源字符串或 null；站内路径/绝对 URL；null 不加载额外样式]
-    highlight_stylesheet: https://gcore.jsdelivr.net/gh/highlightjs/cdn-release@11.9/build/styles/atom-one-dark.min.css
-  # 页面和左侧栏背景。[对象]
-  backgrounds:
-    # 左侧栏背景。[对象]
-    sidebar:
-      # 左栏表面类型。[字符串枚举：glass = 背景图与磨砂层；card = 纯色卡片]
-      surface: card
-      # 浅色/深色模式下的左栏底色。[对象；值均为合法 CSS 颜色]
-      color:
-        # 浅色模式底色。[CSS 颜色字符串]
-        light: var(--card)
-        # 深色模式底色。[CSS 颜色字符串]
-        dark: var(--card)
-      # glass 模式的背景图片。[资源字符串或 null；站内路径/绝对 URL；null 表示无背景图]
-      image: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg
-      # 背景图片不透明度。[数字；0 到 1]
-      opacity: 0.8
-      # 左栏背景图上方的模糊与遮罩层。[对象]
-      backdrop:
-        # 模糊扩散半径。[非负 CSS 长度字符串]
-        radius: 100px
-        # 覆盖层颜色。[合法 CSS 颜色；支持 CSS 变量]
-        overlay: var(--bg-a60)
-    # 全页背景。[对象]
-    page:
-      # 全页背景图。[资源字符串或 null；站内路径/绝对 URL；null 表示无背景图]
-      image:
-      # 全页背景图上方的模糊、遮罩和饱和度。[对象]
-      backdrop:
-        # 模糊扩散半径。[非负 CSS 长度字符串]
-        radius: 100px
-        # 覆盖层颜色。[合法 CSS 颜色；支持 CSS 变量]
-        overlay: var(--bg-a75)
-        # 背景图饱和度。[非负 CSS 百分比字符串；100% 为原始饱和度]
-        saturation: 300%
+# 可信原文注入入口。 [对象]
+inject:
+  # 插入 </head> 前的可信 HTML；空字符串不注入。 [字符串]
+  # Example:
+  #   <meta name="example" content="stellar">
+  head_end: ''
+  # 插入 </body> 前的可信 HTML 或脚本；空字符串不注入。 [字符串]
+  body_end: ''

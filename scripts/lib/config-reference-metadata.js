@@ -28,6 +28,7 @@ function flattenConfigFields(schema) {
       runtimePath,
       type: clone(node.type),
       default: clone(node.default),
+      ...(node.description ? { description: node.description } : {}),
       scope: node.scope,
       cascade: clone(node.cascade),
       normalizer: node.normalizer,

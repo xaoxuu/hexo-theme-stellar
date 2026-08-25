@@ -26,14 +26,16 @@ tags:
 
 ## Brand 配置
 
-站点默认 Brand 位于 `site.brand`，省略的 `image.src/name/tagline.text` 分别从 Hexo `avatar/title/subtitle` 派生：
+站点默认 Brand 位于 `site.brand`。`image.src/name/tagline.text` 只读取主题配置，默认均为 `null`，不会继承 Hexo 的 `avatar/title/subtitle`：
 
 ```yaml
 site:
   brand:
     image:
+      src: /avatar.webp
       variant: avatar
       href: /about/
+    name: Stellar
     wordmark: /images/wordmark.svg
     tagline:
       text: 每个人的独立博客
@@ -48,12 +50,13 @@ site:
 | `image.src` | 图片资源 |
 | `image.variant` | `avatar`、`icon` 或 `plain` |
 | `image.href` | 点击图片后的链接 |
-| `name` | 纯文本品牌名称；省略时使用 Hexo title |
+| `name` | 纯文本品牌名称；省略时为 `null` |
 | `wordmark` | 字标图片资源；用于替代 HTML Logo |
 | `tagline.text/hover` | 普通与悬停辅助文案 |
 | `href` | 点击名称或字标后的链接 |
 
 `name` 不接受 HTML 或 Markdown 链接；链接必须写入对应的 `href`。
+普通页面没有显式配置图片、名称或字标时不渲染 Brand Header。Wiki 与 Notebook 仍可由 Collection identity 自动生成 Brand，页面或 Collection 的显式 Brand 覆盖规则不变。
 
 ## 图片样式
 

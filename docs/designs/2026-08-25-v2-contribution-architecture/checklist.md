@@ -21,6 +21,9 @@ issue: 725
 - [x] 未登记、重复所有或不存在的 asset 可定位拒绝。
 - [x] 缺失入口、文档、测试文件或 ID 行为断言可定位拒绝。
 - [x] contribution gate 已接入 `npm test` 与 GitHub Actions。
+- [x] `CONFIG_SCHEMA` 单独拥有 Theme 类型、字面量默认值、约束和 YAML 展示元数据。
+- [x] `schema:generate/schema:check` 统一生成或校验默认 YAML、Reference 与字段审计；Contribution 门禁不重复执行 Reference 检查。
+- [x] Brand 三字段只读取 Theme 配置并以字面量 `null` 为默认值，不再跨边界读取 Hexo 配置。
 
 ## 文档与验证
 

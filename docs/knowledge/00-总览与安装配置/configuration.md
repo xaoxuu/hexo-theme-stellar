@@ -114,9 +114,9 @@ Pre-alpha M9 允许 `_config.stellar.yml` 缺失或为空：Schema 默认值仍�
 
 ### 默认配置的可发现性契约
 
-主题 `_config.yml` 同时是默认值镜像和用户可阅读的配置入口。每个封闭的主题级公开字段都必须以活动 YAML 键出现；未设置的值保持为空，并把示例值写在同一行的注释中。对象数组和动态映射必须给出完整结构示例或明确的键值契约；新增 Schema 字段但未同步默认配置会由配置可发现性测试阻断。
+主题 `_config.yml` 是 `CONFIG_SCHEMA` 的生成产物和用户可阅读的配置入口。每个封闭的主题级公开字段都以活动 YAML 键出现；每个活动叶子必须具有说明用途与空值行为的语义描述，类型、枚举、范围和数组元素提示由 Schema 约束自动生成。结构节点只在承担分组语义时显示注释，YAML 示例也必须显式登记，不会用字段路径复述用途或把一个 Profile 的示例复用到其它上下文。修改 Schema 后运行 `npm run schema:generate` 同步默认 YAML、Reference 与字段审计，`npm run schema:check` 会阻断描述缺失和产物漂移。
 
-`site.brand.image.src`、`site.brand.name`、`site.brand.tagline.text` 等字段在默认配置中显示为空，运行时没有站点覆盖时仍由 Schema 从 Hexo 配置派生；在站点 `_config.stellar.yml` 中显式填写空值则表示用 `null` 覆盖。第三方 provider 参数袋只声明“透传给上游”并展示常用参数，不复制外部 SDK 的全部字段；主题内部常量不是公开配置。Collection YAML 与 Front Matter 属于独立配置边界，由相应 Reference 和内容文档说明，不混入主题 `_config.yml`。
+`site.brand.image.src`、`site.brand.name`、`site.brand.tagline.text` 的默认值均为字面量 `null`，不会读取 Hexo 的 `avatar/title/subtitle`；需要全局 Brand 时必须在站点 `_config.stellar.yml` 中显式填写。第三方 provider 参数袋只声明“透传给上游”并展示常用参数，不复制外部 SDK 的全部字段；主题内部常量不是公开配置。Collection YAML 与 Front Matter 属于独立配置边界，由相应 Reference 和内容文档说明，不混入主题 `_config.yml`。
 
 **参考源码**：[_config.yml](../../../_config.yml)、[test/config-discoverability.test.js](../../../test/config-discoverability.test.js)
 
@@ -241,14 +241,16 @@ seo:
 
 ### 站点 Shell：Brand、菜单与 Footer
 
-`site` 小节统一承载站点外壳。Brand 的 `image.src/name/tagline.text` 省略时直接从 Hexo `avatar/title/subtitle` 派生：
+`site` 小节统一承载站点外壳。Brand 的 `image.src/name/tagline.text` 只读取主题配置，省略时均为 `null`：
 
 ```yaml
 site:
   brand:
     image:
+      src: /avatar.webp
       variant: avatar
       href: /about/
+    name: Stellar
     wordmark: /images/wordmark.svg
     tagline:
       text: 每个人的独立博客

@@ -49,7 +49,9 @@ M6 已收敛公开配置、资源与 Extension 语义，M7 已建立 Collection 
 4. `schema` 在生成的 `reference/v2-config.json` 中恰好出现一次，`defaultsOwner` 与 Schema 一致。
 5. `i18n.keys` 在 `en` / `zh-CN` / `zh-TW` 中都存在；全量语言键对等继续由既有测试保证。
 
-`npm test` 与 CI 增加显式 contribution gate；`npm run reference:check` 仍负责产物字节级稳定性。单测用局部 fixture 注入重复 ID/默认值、缺失翻译、漂移 Schema、未登记资源和缺失测试，确认门禁不是只在当前正例上通过。
+`npm test` 与 CI 增加显式 contribution gate；`npm run schema:check` 统一负责默认 `_config.yml`、Reference 与字段审计的字节级稳定性，Contribution 门禁不再重复执行 Reference 检查。单测用局部 fixture 注入重复 ID/默认值、缺失翻译、漂移 Schema、未登记资源和缺失测试，确认门禁不是只在当前正例上通过。
+
+Theme 配置的类型、字面量默认值、级联、约束、描述与 YAML 展示元数据统一由 `CONFIG_SCHEMA` 所有；主题 `_config.yml`、配置 Reference 和字段审计由 `npm run schema:generate` 一次生成。`config-target.js` 只保留 v1→v2 迁移关系及 Collection/Front Matter 阶段契约，不再复制 Theme 类型和默认值。
 
 ## 4. 代表性贡献演练
 

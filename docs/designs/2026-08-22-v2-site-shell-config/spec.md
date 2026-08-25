@@ -22,7 +22,7 @@ issue: 706
 - `brand` → `site.brand`，`brand.image.style` → `site.brand.image.variant`。
 - `menubar.items` → `site.menu.items`，菜单项 `theme` → `accent`。
 - `footer.social/sitemap/content` → `site.footer.actions/sections/content`；动态 action ID 的父级记录开放，每个 action 和 dropdown item 内部封闭。
-- `site.brand.image.src/name/tagline` 的派生默认分别来自 Hexo `avatar/title/subtitle`；字面默认仍只在 Schema 目标契约定义。
+- 本切片当时让 `site.brand.image.src/name/tagline` 从 Hexo `avatar/title/subtitle` 派生；该过渡行为已由 `2026-08-25-v2-theme-schema-single-source` 取消，当前默认均为字面量 `null` 且只读取 Theme 配置。
 - 数组由站点层完整替换；封闭对象按声明字段合并；动态 action 记录按 key 接受，不做类型转换。
 - YAML 使用 snake_case，规范化后 JavaScript 使用 `variant/accent/actions/sections`。
 

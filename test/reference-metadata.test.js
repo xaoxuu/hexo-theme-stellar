@@ -49,15 +49,17 @@ test("配置 Reference 只公开已交付 Theme、Collection 与 Front Matter �
       runtimePath: "seo.canonical.host",
       type: ["string", "null"],
       default: { kind: "literal", value: null },
+      description: "生成 canonical URL 的主机名；null 关闭 canonical 输出。",
       scope: "theme",
       cascade: ["schema default", "_config.stellar.yml"],
       normalizer: "nullable_host",
       normalization: "trim; remove scheme and trailing slash; null disables canonical output",
       consumers: [
-        "PageViewModel",
+        "Post PageViewModel",
         "head renderer",
         "JSON-LD helper",
-        "browser canonical check"
+        "browser canonical check",
+        "Reference generator"
       ],
       example: "example.com",
       migration: "configuration/seo"

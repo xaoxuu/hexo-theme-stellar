@@ -2,16 +2,20 @@
 "use strict";
 
 const { deepFreeze } = require("./schema-utils");
+const { CONFIG_SCHEMA } = require("./config-schema");
 const {
   CONFIG_DOMAIN_MIGRATIONS,
-  CONFIG_DOMAIN_TARGETS,
-  CONFIG_TARGET_FIELDS
+  CONFIG_DOMAIN_TARGETS
 } = require("./config-target");
 
 function deliveredTargetStatus(targetPath) {
   if (targetPath === null) return "excluded";
-  const targets = CONFIG_TARGET_FIELDS.filter(field => field.scopes.includes("theme") && (field.path === targetPath || field.path.startsWith(`${targetPath}.`)));
-  return targets.length > 0 && targets.every(field => field.status === "delivered") ? "delivered" : "planned";
+  let node = CONFIG_SCHEMA;
+  for (const segment of targetPath.split(".")) {
+    node = node.properties?.[segment];
+    if (!node) return "planned";
+  }
+  return "delivered";
 }
 
 function domain(id, options) {

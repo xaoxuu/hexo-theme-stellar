@@ -24,16 +24,17 @@ test("site/layout/content/appearance/resources/head Schema 提供默认值并拒
   const config = parseStellarConfig({
     source: "themes/stellar/_config.yml",
     themeConfig: {},
+    // Hexo 站点配置不再参与 Theme 默认值解析。
     siteConfig: { avatar: "/avatar.webp", title: "Stellar", subtitle: "每个人的独立博客" }
   });
 
   assert.deepEqual(withoutLayoutAndContent(config), {
     site: {
       brand: {
-        image: { src: "/avatar.webp", variant: "avatar", href: null },
-        name: "Stellar",
+        image: { src: null, variant: "avatar", href: null },
+        name: null,
         wordmark: null,
-        tagline: { text: "每个人的独立博客", hover: null },
+        tagline: { text: null, hover: null },
         href: "/"
       },
       menu: { items: [] },
@@ -368,10 +369,14 @@ test("Layout Profile 拒绝旧根、旧 ID、旧子字段、未知字段和错�
 
 test("site Shell 解析封闭对象数组、动态 action 记录并完整替换数组", () => {
   const config = parseStellarConfig({
-    siteConfig: { avatar: "/avatar.webp", title: "Site", subtitle: "Subtitle" },
     themeConfig: {
       site: {
-        brand: { image: { variant: "icon", href: "/about/" }, href: "/home/" },
+        brand: {
+          image: { src: "/avatar.webp", variant: "icon", href: "/about/" },
+          name: "Site",
+          tagline: { text: "Subtitle" },
+          href: "/home/"
+        },
         menu: {
           items: [
             { id: "post", title: "Blog", icon: "documents", url: "/", accent: "#abc" },
@@ -671,8 +676,9 @@ test("构建事件把最终路径冻结挂载到 hexo.stellar.config", () => {
   attachConfig(ctx);
 
   assert.equal(ctx.stellar.config.seo.canonical.host, "example.com");
-  assert.equal(ctx.stellar.config.site.brand.image.src, "/avatar.webp");
-  assert.equal(ctx.stellar.config.site.brand.name, "Example");
+  assert.equal(ctx.stellar.config.site.brand.image.src, null);
+  assert.equal(ctx.stellar.config.site.brand.name, null);
+  assert.equal(ctx.stellar.config.site.brand.tagline.text, null);
   assert.equal(ctx.stellar.config.site.menu.items[0].id, "post");
   assert.deepEqual(ctx.stellar.config.seo.canonical.allowedHosts, ["mirror.example.com"]);
   assert.deepEqual(ctx.stellar.config.seo.structuredData.sameAs, ["https://github.com/example"]);
