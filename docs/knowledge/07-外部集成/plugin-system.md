@@ -107,6 +107,8 @@ flowchart LR
 
 非首屏 SVG 占位符替换和 dropdown 浮层也使用内部 selector Extension：只有页面出现 `svg.icon[data-icon]` 或 `details.dropdown` 时，runtime 才加载 `/js/icons.js` 或 `/js/plugins/dropdown.js`。脚本通过内部 `stellar:legacy-feature-ready` 事件向 runtime 交付 `mount(root)` 适配器，不暴露新的全局 API；Extension 卸载时会中止图标请求，或断开 dropdown observer、全局监听与待执行动画帧。它们不新增公开配置，并保持原 DOM 与交互。
 
+Contribution 的 `kind` 描述产品归类，`entry.adapter` 描述运行时调用约定，两者不能互相替代。凡声明 `entry.adapter: feature` 的 descriptor（包括内部 component）在投影 Runtime Manifest 时都必须携带 `config.feature=<id>`，供共享 `feature.mjs` 分派；独立 Feature 继续保留同名字段以维持既有 Manifest 形状。注册表测试统一枚举共享 adapter 条目，阻止 component 再次遗漏分派 ID。
+
 核心防闪烁样式在构建期按 `extensions.features.*.enabled` 条件导入；Swiper、Fancybox、Mermaid 与评论样式在 DOM 命中时按需注入。
 
 Card Hover 使用独立 `card-hover.mjs` adapter 加载内置脚本并对当前 root 执行 `mountAll/unmountAll`。它的 ID、入口、asset、`.card-hover` 激活、Schema 与测试只在 descriptor 关联，不再出现于通用 Feature dispatch。

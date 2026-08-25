@@ -83,6 +83,16 @@ test("Runtime Manifest 顺序直接来自 descriptor 注册表", () => {
   assert.deepEqual(cardHover.when, { selector: ".card-hover" });
   assert.equal(cardHover.config.feature, "card-hover");
   assert.equal(cardHover.config.assets.js, "/js/plugins/card-hover.js");
+
+  const sharedFeatureEntries = entries.filter(item => item.module === "/js/runtime/extensions/feature.mjs");
+  assert.deepEqual(sharedFeatureEntries.map(item => [item.id, item.config.feature]), [
+    ["lazy-loading", "lazy-loading"],
+    ["deferred-icons", "deferred-icons"],
+    ["dropdown", "dropdown"],
+    ["code-copy", "code-copy"],
+    ["adaptive-text", "adaptive-text"],
+    ["swiper", "swiper"]
+  ]);
 });
 
 test("负向门禁拒绝重复注册与冲突的 Schema 默认值所有者", () => {

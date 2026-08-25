@@ -12,6 +12,8 @@ M1–M9 已分别交付配置、内容、Runtime、Blueprint、CLI 与默认体�
 
 修复后的真实预览还暴露出版本检查把“版本不相等”误当成“远端更新”：本地 `2.0.0-alpha.1` 会被提示安装 npm `latest` 的 `1.44.0`。版本提示必须使用 SemVer 顺序，只在 registry `latest` 严格较新时出现；非法版本应静默跳过，不能给出反向升级建议。
 
+第二轮人工验收发现文章列表底部 meta 的日历图标为空，空 `<svg>` 在 flex 容器中被拉伸并挤压时间。浏览器控制台同时报告 `deferred-icons` 以 `feature: undefined` 进入共享 Feature adapter。根因是 Runtime Manifest 只按 contribution 的产品类型 `kind=feature` 注入分派 ID，却遗漏了 `kind=component`、`entry.adapter=feature` 的 `deferred-icons`、`dropdown` 与 `swiper`。Manifest 投影必须按 adapter 契约补齐共享分派 ID，同时保留独立 Feature 现有配置形状。
+
 # 用户结果
 
 站长可以从当前 `v2` 源码一次生成可复现的本地候选验收包。自动门禁使用真实 npm tarball，在隔离 Hexo 8 工程验证默认空配置、三套 Blueprint、三种语言、四类 Collection、CLI、Reference、Runtime Manifest、搜索索引、主要路由和两条迁移旅程；生成模式另外保留站点与报告，供桌面端和移动端人工检查。
@@ -38,6 +40,7 @@ M1–M9 已分别交付配置、内容、Runtime、Blueprint、CLI 与默认体�
 - 不发布 npm，不创建 tag、GitHub Release 或 dist-tag。
 - 不把内置 Blueprint manifest 扩展为第三方格式，不增加运行时兼容读取或自动迁移器。
 - 不修改公开 URL、DOM、CSS、语言文案、Schema 或 Runtime Manifest 契约。
+- 修复只补全既有 Runtime Manifest 内部 `config.feature` 分派字段，不引入公开配置、资源或布局规则。
 - 主仓库只更新三份 v2 蓝图状态文档；不提交主仓库，不更新子模块指针，也不触碰既存内容改动。
 - 自动门禁通过后状态只能是“等待站长人工验收”；#720 与 Alpha 内部里程碑仍由站长明确结论决定。
 

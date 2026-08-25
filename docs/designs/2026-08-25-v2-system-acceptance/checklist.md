@@ -12,6 +12,8 @@ status: 等待站长重新验收
 - [x] 内置 Blueprint manifest 仍只服务主题资产、Reference 与初始化。
 - [x] 隔离站点安装固定 `hexo-server`，六个站点逐一启动并由本机 HTTP 请求验证首页 200 与 Stellar Shell。
 - [x] npm `latest` 仅在 SemVer 严格较新时提示升级，v2 候选不再反向提示安装 v1。
+- [x] 共享 Feature adapter 的 `deferred-icons`、`dropdown` 与 `swiper` 均携带自身分派 ID；文章列表日历 SVG 被替换且不再拉伸 meta。
+- [x] 本地预览控制台不再报告 `unknown built-in feature undefined`。
 
 ## 固定人工验收包
 
