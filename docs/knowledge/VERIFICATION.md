@@ -366,6 +366,7 @@ python3 tools/verify.py        # 复查中文版硬事实（配置键/文件路�
 
 | 短 SHA | 提交标题 | 覆盖说明 |
 |--------|----------|----------|
+| `bb919cd` | refactor(v2): 建立贡献架构与一致性门禁 (#725) | 设计文档 `2026-08-25-v2-contribution-architecture/`；18 个内建 Extension / Feature / Component 统一描述符、Runtime Manifest 投影与 Card Hover 独立 adapter；新增贡献审计与专属 CI，覆盖重复注册/默认值、翻译缺失、Schema/Reference 漂移、资源未注册和行为测试缺失；Node.js 22 下 400 项测试、三套 tarball 集成、首屏 gzip 降幅 46.5581% 与主工程 262 文件构建通过 |
 | `b474beb` | refactor(v2): 统一 Collection Pipeline 并复核 Notebook (#723) | 设计文档 `2026-08-25-v2-collection-pipeline/`；四类内容单一 Pipeline、封闭 profile adapter 注册表、线性发现/分组、共享 two-stage 与列表原语；`stellar new note` 安全计划、最小 Front Matter、Notebook 路径归属推断及三套 tarball/主工程回归 |
 | `5048c62` | docs(config): 补全主题配置项说明 | `_config.yml` 公开配置注释补全：为八个职责根域补充用途、类型、枚举、默认与参数袋边界说明；不改变活动配置值或运行时行为 |
 | `80a33fe` | refactor(v2): 统一第三方服务 Provider 契约 (#732) | 设计文档 `2026-08-25-v2-service-providers/`；第三方服务统一为显式 provider 配置、单一解析 helper 与冻结运行时投影，标签、Footer、Runtime Manifest 和模型消费同一契约；Schema、Reference、知识库与回归测试同步，Issue #732 已闭环 |
