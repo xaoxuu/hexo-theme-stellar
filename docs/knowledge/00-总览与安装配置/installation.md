@@ -351,6 +351,8 @@ graph TD
    ```
    在 `http://localhost:4000` 启动本地服务。
 
+   `server` 是 Hexo 命令，不是 Stellar 子命令；请勿写成 `hexo stellar server`。如果环境限制监听所有网卡，可使用 `hexo server --ip 127.0.0.1`。站点工程需要安装 `hexo-server`，缺失时 Hexo 只会显示通用命令帮助。
+
 3. **浏览器访问**：
    打开 `http://localhost:4000`，检查：
    - 页面是否带 Stellar 样式渲染
@@ -364,10 +366,14 @@ graph TD
 | `Cannot find module 'hexo-theme-stellar'` | 主题未安装 | 执行 `npm i hexo-theme-stellar` |
 | `hexo-renderer-ejs not found` | 缺少渲染器 | 应自动安装；可手动 `npm i hexo-renderer-ejs` |
 | `hexo-renderer-stylus not found` | 缺少渲染器 | 应自动安装；可手动 `npm i hexo-renderer-stylus` |
+| `Usage: hexo <command>` 且没有 `server` | 站点未安装 Hexo 预览服务器 | 执行 `npm i hexo-server`，再运行 `hexo server --ip 127.0.0.1` |
+| `Usage: hexo stellar <init\|doctor\|new note>` | 把 Hexo 的 `server` 误写成 Stellar 子命令 | 使用 `hexo server`；`stellar` 只提供 `init`、`doctor` 与 `new note` |
 | 页面显示 Hexo 默认主题 | 主题未启用 | 修改 `_config.yml`，设置 `theme: stellar` |
 | CSS 未加载 | 资源路径错误 | 主题资源应自动从 `node_modules/` 加载 |
 
 **参考源码**：[README.md](../../../README.md)、[package.json](../../../package.json)
+
+主题启动时只在 npm `latest` 按 SemVer 严格新于本地版本时显示升级提示。内部 v2 候选版本高于当前 v1 `latest` 时不会提示反向安装 v1；无法解析的版本号静默跳过检查结果。
 
 ---
 

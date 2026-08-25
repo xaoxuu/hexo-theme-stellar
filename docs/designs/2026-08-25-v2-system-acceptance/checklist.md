@@ -1,6 +1,6 @@
 ---
 title: Stellar v2 M10 全系统回归检查清单
-status: 等待站长人工验收
+status: 等待站长重新验收
 ---
 
 ## 自动矩阵
@@ -10,6 +10,8 @@ status: 等待站长人工验收
 - [x] doctor text/json、new note、generate、Reference、Runtime Manifest、搜索索引和主要路由通过。
 - [x] 旁路迁移与原地迁移 fixture 通过，正文哈希保持不变。
 - [x] 内置 Blueprint manifest 仍只服务主题资产、Reference 与初始化。
+- [x] 隔离站点安装固定 `hexo-server`，六个站点逐一启动并由本机 HTTP 请求验证首页 200 与 Stellar Shell。
+- [x] npm `latest` 仅在 SemVer 严格较新时提示升级，v2 候选不再反向提示安装 v1。
 
 ## 固定人工验收包
 

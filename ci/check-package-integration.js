@@ -4,11 +4,15 @@
 
 const fs = require("node:fs");
 const crypto = require("node:crypto");
+const http = require("node:http");
+const net = require("node:net");
 const os = require("node:os");
 const path = require("node:path");
-const { spawnSync } = require("node:child_process");
+const { once } = require("node:events");
+const { spawn, spawnSync } = require("node:child_process");
 
 const THEME_ROOT = path.resolve(__dirname, "..");
+const PREVIEW_COMMAND = "npx hexo server --ip 127.0.0.1";
 const BLUEPRINT_MATRIX = Object.freeze([
   Object.freeze({ id: "classic-blog", language: "en", style: "stellar" }),
   Object.freeze({ id: "minimal-reading", language: "zh-CN", style: "minimal" }),
@@ -18,7 +22,8 @@ const MIGRATION_FIXTURE_ROOT = path.join(THEME_ROOT, "test/fixtures/v2-system-ac
 const INSTALL_PACKAGES = [
   "hexo@8.1.2",
   "hexo-generator-index@4.0.0",
-  "hexo-renderer-marked@7.0.1"
+  "hexo-renderer-marked@7.0.1",
+  "hexo-server@3.0.0"
 ];
 
 function execute(command, args, options = {}) {
@@ -83,6 +88,94 @@ function installSite(root, tarball) {
     tarball
   ], { cwd: root, env: { npm_config_cache: path.join(path.dirname(root), "npm-cache") } });
   return path.join(root, "node_modules", ".bin", "hexo");
+}
+
+function reservePreviewPort() {
+  return new Promise((resolve, reject) => {
+    const server = net.createServer();
+    server.once("error", reject);
+    server.listen(0, "127.0.0.1", () => {
+      const address = server.address();
+      server.close(error => {
+        if (error) reject(error);
+        else resolve(address.port);
+      });
+    });
+  });
+}
+
+function requestPreview(port) {
+  return new Promise((resolve, reject) => {
+    const request = http.get({ hostname: "127.0.0.1", port, path: "/", timeout: 1000 }, response => {
+      let body = "";
+      response.setEncoding("utf8");
+      response.on("data", chunk => {
+        if (body.length < 1024 * 1024) body += chunk;
+      });
+      response.on("end", () => resolve({ status: response.statusCode, body }));
+    });
+    request.once("timeout", () => request.destroy(new Error("preview request timed out")));
+    request.once("error", reject);
+  });
+}
+
+function delay(milliseconds) {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
+
+async function stopPreview(child) {
+  if (child.pid == null) return;
+  if (child.exitCode !== null || child.signalCode !== null) return;
+  const exited = once(child, "exit");
+  child.kill("SIGTERM");
+  await Promise.race([exited, delay(2000)]);
+  if (child.exitCode === null && child.signalCode === null) {
+    const killed = once(child, "exit");
+    child.kill("SIGKILL");
+    await killed;
+  }
+}
+
+async function assertPreviewServer(root, hexo, label) {
+  const port = await reservePreviewPort();
+  const runtimePath = `${path.dirname(process.execPath)}${path.delimiter}${process.env.PATH || ""}`;
+  const child = spawn(hexo, ["server", "--ip", "127.0.0.1", "--port", String(port)], {
+    cwd: root,
+    env: { ...process.env, PATH: runtimePath, HEXO_READY: "" },
+    stdio: ["ignore", "pipe", "pipe"]
+  });
+  let logs = "";
+  let spawnError = null;
+  const capture = chunk => {
+    logs = `${logs}${chunk}`.slice(-4000);
+  };
+  child.stdout.on("data", capture);
+  child.stderr.on("data", capture);
+  child.once("error", error => {
+    spawnError = error;
+  });
+  try {
+    const deadline = Date.now() + 15000;
+    while (Date.now() < deadline) {
+      if (spawnError) throw spawnError;
+      if (child.exitCode !== null || child.signalCode !== null) {
+        throw new Error(`${label}: hexo server exited before serving HTTP\n${logs}`);
+      }
+      try {
+        const response = await requestPreview(port);
+        if (response.status !== 200) throw new Error(`${label}: preview returned HTTP ${response.status}`);
+        if (!response.body.includes('id="start"')) throw new Error(`${label}: preview response missing Stellar Shell`);
+        process.stdout.write(`${label}: hexo server → HTTP 200 passed\n`);
+        return;
+      } catch (error) {
+        if (/preview returned HTTP|preview response missing Stellar Shell/.test(error.message)) throw error;
+      }
+      await delay(100);
+    }
+    throw new Error(`${label}: hexo server did not become ready\n${logs}`);
+  } finally {
+    await stopPreview(child);
+  }
 }
 
 function copyTree(source, target) {
@@ -412,7 +505,7 @@ function packTheme(root) {
   return path.join(root, result[0].filename);
 }
 
-function checkSite(root, matrix, tarball) {
+async function checkSite(root, matrix, tarball) {
   const { id: blueprint, language, style } = matrix;
   createSite(root, { language });
   process.stdout.write(`${blueprint}/${language}: installing Hexo 8 and ${path.basename(tarball)}\n`);
@@ -436,11 +529,12 @@ function checkSite(root, matrix, tarball) {
     assertLanguage(html, language, `${blueprint}/${relative}`);
   }
   assertSearchIndex(root, expectedPages(blueprint).map(item => item.marker), `${blueprint}/${language}`);
+  await assertPreviewServer(root, hexo, `${blueprint}/${language}`);
   process.stdout.write(`${blueprint}/${language}: init transaction → doctor → generate → routes/search passed\n`);
   return { id: blueprint, language, style, routes: expectedRoutes(blueprint) };
 }
 
-function checkDefaultSite(root, tarball) {
+async function checkDefaultSite(root, tarball) {
   createSite(root);
   write(root, "source/_posts/default-markdown.md", [
     "---",
@@ -495,6 +589,7 @@ function checkDefaultSite(root, tarball) {
   run(hexo, ["clean"], { cwd: root });
   run(hexo, ["generate"], { cwd: root });
   assertRoutes(root, ["/", "/about/"], "default-content/empty-config");
+  await assertPreviewServer(root, hexo, "default-content/empty-config");
   process.stdout.write("default-content: missing/empty config → doctor → generate passed\n");
   return { id: "default-content", language: "zh-CN", style: "schema-defaults", routes: ["/", "/about/"] };
 }
@@ -537,7 +632,7 @@ function migrationRoutes() {
   ];
 }
 
-function checkSideBySideMigration(root, tarball) {
+async function checkSideBySideMigration(root, tarball) {
   createSite(root, { language: "zh-CN" });
   process.stdout.write(`side-by-side-migration: installing Hexo 8 and ${path.basename(tarball)}\n`);
   const hexo = installSite(root, tarball);
@@ -554,6 +649,7 @@ function checkSideBySideMigration(root, tarball) {
   assertDoctorParity(root, hexo, "side-by-side-migration");
   run(hexo, ["generate"], { cwd: root });
   assertMigrationPages(root, "side-by-side-migration");
+  await assertPreviewServer(root, hexo, "side-by-side-migration");
   process.stdout.write("side-by-side-migration: clean v2 skeleton → explicit config rebuild → generate passed\n");
   return {
     id: "side-by-side-migration",
@@ -563,7 +659,7 @@ function checkSideBySideMigration(root, tarball) {
   };
 }
 
-function checkInPlaceMigration(root, tarball) {
+async function checkInPlaceMigration(root, tarball) {
   createSite(root, { language: "zh-CN" });
   installMigrationContent(root);
   installMigrationConfig(root, "legacy");
@@ -589,6 +685,7 @@ function checkInPlaceMigration(root, tarball) {
   assertDoctorParity(root, hexo, "in-place-migration/v2");
   run(hexo, ["generate"], { cwd: root });
   assertMigrationPages(root, "in-place-migration");
+  await assertPreviewServer(root, hexo, "in-place-migration");
   process.stdout.write("in-place-migration: legacy diagnosis → explicit config rebuild → generate passed\n");
   return {
     id: "in-place-migration",
@@ -640,7 +737,11 @@ function writeAcceptanceArtifacts(root, tarball, sites) {
     sites: sites.map(site => ({
       ...site,
       directory: path.join(root, site.id),
-      expected: "Run npx hexo server in this directory, then inspect the listed routes on desktop and mobile."
+      preview: {
+        command: PREVIEW_COMMAND,
+        automatedEvidence: "HTTP 200 response containing the Stellar Shell"
+      },
+      expected: `Run ${PREVIEW_COMMAND} in this directory, then inspect the listed routes on desktop and mobile.`
     })),
     manualScenarios: [
       "desktop and mobile layout",
@@ -671,7 +772,7 @@ function writeAcceptanceArtifacts(root, tarball, sites) {
   ].join("\n"));
 }
 
-function main() {
+async function main() {
   if (process.versions.node.split(".")[0] !== "22") {
     throw new Error(`Package integration requires Node.js 22, got ${process.versions.node}`);
   }
@@ -688,12 +789,12 @@ function main() {
     if (selected.length === 0) throw new Error(`Unknown integration Blueprint: ${selectedId}`);
     const sites = [];
     for (const matrix of selected) {
-      sites.push(checkSite(path.join(root, matrix.id), matrix, tarball));
+      sites.push(await checkSite(path.join(root, matrix.id), matrix, tarball));
     }
-    sites.push(checkDefaultSite(path.join(root, "default-content"), tarball));
+    sites.push(await checkDefaultSite(path.join(root, "default-content"), tarball));
     if (!selectedId) {
-      sites.push(checkSideBySideMigration(path.join(root, "side-by-side-migration"), tarball));
-      sites.push(checkInPlaceMigration(path.join(root, "in-place-migration"), tarball));
+      sites.push(await checkSideBySideMigration(path.join(root, "side-by-side-migration"), tarball));
+      sites.push(await checkInPlaceMigration(path.join(root, "in-place-migration"), tarball));
     }
     fs.rmSync(path.join(root, "npm-cache"), { recursive: true, force: true });
     if (prepared.keep || args.includes("--keep")) writeAcceptanceArtifacts(root, tarball, sites);
@@ -707,10 +808,18 @@ function main() {
   }
 }
 
-if (require.main === module) main();
+if (require.main === module) {
+  main().catch(error => {
+    process.stderr.write(`${error.stack || error.message}\n`);
+    process.exitCode = 1;
+  });
+}
 
 module.exports = {
   BLUEPRINT_MATRIX,
+  INSTALL_PACKAGES,
+  PREVIEW_COMMAND,
+  assertPreviewServer,
   assertPackageFiles,
   assertRuntime,
   contentHashes,

@@ -1,12 +1,16 @@
 ---
 title: Stellar v2 M10 全系统回归与人工验收候选
-status: 等待站长人工验收
+status: 等待站长重新验收
 issue: 720
 ---
 
 # 问题
 
 M1–M9 已分别交付配置、内容、Runtime、Blueprint、CLI 与默认体验，但现有 `ci/check-package-integration.js` 仍只是 M5/M9 基线：它没有固定验证三种语言、搜索索引、主要路由、init 的完整事务边界，以及旁路/原地两条迁移旅程。现有 `m10-acceptance.md` 也只有说明文字，不能生成带候选包哈希、站点目录、待测 URL 和问题记录表的固定人工验收包。
+
+首轮人工验收反馈进一步证明，仅通过 `generate` 不足以交付可启动的固定验收站点：隔离工程没有安装 `hexo-server`，所以正确的 `hexo server` 只显示 Hexo 通用帮助；`hexo stellar server` 则会按设计被 Stellar CLI 拒绝。验收矩阵必须安装固定版本的预览服务器，并以真实 HTTP 200 响应证明报告中的 `npx hexo server --ip 127.0.0.1` 可用。
+
+修复后的真实预览还暴露出版本检查把“版本不相等”误当成“远端更新”：本地 `2.0.0-alpha.1` 会被提示安装 npm `latest` 的 `1.44.0`。版本提示必须使用 SemVer 顺序，只在 registry `latest` 严格较新时出现；非法版本应静默跳过，不能给出反向升级建议。
 
 # 用户结果
 
@@ -26,6 +30,7 @@ M1–M9 已分别交付配置、内容、Runtime、Blueprint、CLI 与默认体�
 - Collection：Post、Wiki、Topic、Notebook 的真实 ViewModel、主要详情/聚合路由、Runtime Manifest 与唯一 ESM 入口。
 - CLI：init dry-run 与真实计划一致；已有目标整体拒绝；写入中途失败回滚本次文件且保留用户文件；new note dry-run/写入/冲突拒绝；doctor text/json 结果一致。
 - 产物：Reference 与 Blueprint manifest 打包边界、`search.json` 内容、语言输出与主要 URL。
+- 预览：每个隔离站点安装固定 `hexo-server`；六个站点逐一启动 `hexo server`，并通过本机 HTTP 请求验证首页返回 200 与 Stellar Shell。
 - 迁移：旁路 fixture 先 init 干净骨架，再用显式 v2 输入替换 starter；原地 fixture 不运行 init，先证明 doctor 定位 v1 字段及迁移章节，再替换为显式 v2 输入。两者均证明正文哈希不变并通过 doctor/generate。
 
 # 边界
