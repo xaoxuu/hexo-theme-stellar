@@ -1,7 +1,7 @@
 # 发版流程
 
 > 创建日期: 2026-08-08
-> 更新日期: 2026-08-20（版本文件自动同步 + 最终态质量检查）
+> 更新日期: 2026-08-25（原子交付 + 最终态质量检查）
 
 ## 概述
 
@@ -15,7 +15,7 @@ npm run release → push main + npm → CI 自动触发 → npm publish + git ta
 
 CHANGELOG.md 的历史数据已于 2026-08-09 一次性从 GitHub Releases API 同步入库（统一格式：二级标题为版本号，三级标题为分类）；此后每次发版的更新日志由 AI/人工提前写入 CHANGELOG.md，脚本只做非空校验。
 
-发版前还需完成**提交登记**：自上一 tag 起涉及主题代码/配置/行为变化的非合并提交（7 位短 SHA）登记到 `docs/knowledge/VERIFICATION.md`「提交登记（发版前核对）」表（`ci/check-release-docs.js` 校验，`npm run check` 内含该项，缺失会中止发版；纯文档 / CI / 工具改动无需登记）。
+功能变更在进入历史前已经完成文档同步核验，并将实现、测试、知识库、公开文档、方案状态与验证记录纳入同一个交付提交。发版直接从 Git 历史汇总提交、从 CHANGELOG 读取发布摘要，不维护重复的 SHA 台账。
 
 ## 更新日志准备
 
@@ -51,7 +51,7 @@ npm run release:dry -- 1.34.1
 2. 校验当前分支为 `main`、工作区无无关改动
 3. 校验 CHANGELOG.md 已包含 `## <version>` 非空章节（内容由 AI/人工提前准备），缺失或为空则终止发版
 4. 读取 `package.json` 的当前版本，在内存中同时准备 `package.json` 与安装知识库的目标版本内容；任一文件无法安全更新时不写入任何文件
-5. 写入全部版本文件后执行 `npm run check`，让 lint、单测、提交登记与知识库核查基于最终待提交状态运行
+5. 写入全部版本文件后执行 `npm run check`，让 lint、单测、Schema、性能与知识库核查基于最终待提交状态运行
 6. 输出变更摘要（自上一个 tag 以来的提交）与 diff，供人工确认
 7. 二次确认后将 CHANGELOG 与两个版本文件一并执行 `git add` / `commit` / `push`（main + npm 分支）
 8. dry-run、取消或最终态质量检查失败时从内存恢复全部受管文件，不依赖 `git checkout --`
@@ -73,7 +73,6 @@ npm run release:dry -- 1.34.1
 - CHANGELOG 章节缺失或为空：脚本校验拦截并终止，提示先由 AI/人工补充该版本章节
 - 安装知识库找不到当前包版本：写入前终止，不产生部分更新
 - 最终态 `npm run check` 失败：恢复包版本、CHANGELOG 与安装知识库，修复后重新预演
-- 提交登记缺失：`npm run check` 的提交登记完整性检查列出缺失短 SHA，补登记到 `docs/knowledge/VERIFICATION.md`「提交登记（发版前核对）」后重跑
 - 版本已发布：CI 自动跳过 publish 与 tag，可安全重跑
 - Release 已存在：CI 跳过创建，可安全重跑
 - 推送失败（如 `npm` 分支漂移）：git 会报错并终止，已提交但未推送的改动可手动处理
@@ -81,7 +80,7 @@ npm run release:dry -- 1.34.1
 ## 发版 Checklist
 
 - [ ] 所有功能变更已合并到 main，且通过构建验证
-- [ ] 提交登记完整性：自上一 tag 起涉及主题代码/配置/行为变化的非合并提交已在 `docs/knowledge/VERIFICATION.md` 提交登记表登记短 SHA（`npm run check` 校验）
+- [ ] 所有功能变更均以交付提交包含对应文档与验证记录，发布摘要可由 Git 历史与 CHANGELOG 完整还原
 - [ ] 由 AI/人工在 CHANGELOG.md 中写入 `## <version>` 非空章节
 - [ ] 执行 `npm run release:dry -- <version>` 检查变更与恢复
 - [ ] 执行 `npm run release -- <version>`（或交互式 `npm run release`）推送

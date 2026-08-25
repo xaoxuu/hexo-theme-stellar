@@ -14,7 +14,7 @@
     "integration:check": "node ci/check-package-integration.js",
     "acceptance:prepare": "node ci/check-package-integration.js --prepare",
     "performance:check": "node ci/check-performance.js --check",
-    "check": "npm run lint && npm test && npm run schema:check && npm run performance:check && python3 docs/knowledge/tools/verify.py && node ci/check-release-docs.js",
+    "check": "npm run lint && npm test && npm run schema:check && npm run performance:check && python3 docs/knowledge/tools/verify.py",
     "release": "node release.js",
     "release:dry": "node release.js --dry-run"
   },

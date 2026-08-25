@@ -15,7 +15,7 @@ issue: 725
 5. [ ] 增加六类负向 fixture，将 contribution gate 接入 npm 和 GitHub Actions。
 6. [ ] 编写七类贡献维护面、Card Hover 演练，同步知识库与验证台账。
 7. [ ] 执行主题检查、Alpha tarball、主工程生成与 Standards / Spec 复审。
-8. [ ] 只更新主工程三份总蓝图的 M8 状态；主题提交推送到 `origin/v2` 并闭环 #725。
+8. [ ] 只更新主工程三份总蓝图的 M8 状态。
 
 ## 风险与回退
 

@@ -11,7 +11,7 @@ date: 2026-08-25
 - [x] 公共 Reference 只包含配置、模型与 Blueprint/CLI 契约。
 - [x] 配置审计和性能基线仍由 CI 检查，但不进入 npm tarball。
 - [x] Alpha/Beta 目标版本无法通过正式发版入口或 npm workflow 门禁。
-- [x] M10、主题 v2 自动交付授权与其它设计档案保持未完成/保留状态。
+- [x] M10 保持未完成状态。
 
 ## 验证
 

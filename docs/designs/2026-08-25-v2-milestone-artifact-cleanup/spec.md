@@ -36,6 +36,5 @@ npm pack --dry-run --json
 ## 边界
 
 - 不删除已完成的其它 `docs/designs/` 档案。
-- M10 尚未完成，继续保留 `origin/v2` 自动交付授权及其设计记录。
 - 不发布 npm、不创建 tag、不创建 GitHub Release，不更新主仓库子模块指针。
 - `source/wiki/stellar/`、迁移/SEO、公开 URL、CSS、语言文案和浏览器 API 变更均为 N/A。

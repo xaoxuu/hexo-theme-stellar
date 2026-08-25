@@ -1,6 +1,6 @@
 ---
 name: stellar-theme-dev
-description: 主题仓库（hexo-theme-stellar）开发全流程：方案 → 开发 → 验证 → 提交 → 发版。当任务涉及本仓库主题文件、构建验证、知识库更新或主题发版时使用。
+description: 主题仓库（hexo-theme-stellar）开发全流程：方案 → 开发 → 验证 → 文档同步核验 → 提交 → 发版。当任务涉及本仓库主题文件、构建验证、知识库更新或主题发版时使用。
 ---
 
 # Stellar Theme Dev
@@ -34,19 +34,25 @@ description: 主题仓库（hexo-theme-stellar）开发全流程：方案 → �
 - 检查所有受影响页面类型（首页、文章页、Wiki 页等），验证结果记录在方案目录 `checklist.md`。
 - 完成条件：应执行的命令全部通过；新增 `require` 均已声明或为 Node 内置模块（test/ 禁止幽灵依赖）；首页、文章页、Wiki 页等受影响页面类型均检查通过。
 
-### 4. 提交
+### 4. 文档同步核验
+
+- 阅读最终功能 diff，逐项列出行为、配置、API、UI 与兼容性变化，并为每项确认 `docs/knowledge/`、仓库 Wiki 或其它文档落点。
+- 对照最终实现核验说明、示例、字段名、默认值、边界与失败行为；在 `VERIFICATION.md` 的现有事实或功能记录中登记，并把实际验证结果写入方案 `checklist.md`。
+- 运行 `python3 docs/knowledge/tools/verify.py` 与适用测试。存在遗漏、过时描述或未完成项时继续修改，不进入提交。
+- 完成条件：每项功能变化都有与最终实现一致的文档落点，`VERIFICATION.md` 与方案状态已更新，适用检查全部通过。
+
+### 5. 提交
 
 - 任务完成后**不自动提交**：改动保留在工作区供用户审查。
-- 仅在用户明确要求提交时执行；提交前须通过第 3 步中应执行的验证。
-- 例外：`$stellar-v2-program` 已将当前切片绑定到主题实施 issue 且目标为 `v2` 分支时，执行 `docs/agents/issue-tracker.md` 的「v2 实施 issue 自动闭环」；该流程已获持续授权，无需再次询问提交、推送或 issue 评论权限。
+- 仅在用户明确要求提交时执行；提交前须通过第 3、4 步的验证与文档同步核验。
+- 同一需求的实现、测试、知识库、公开文档、方案状态与验证记录一次性暂存，形成一个交付提交；提交产生的 SHA 只用于 issue 评论与发布输出。
 - 使用 Conventional Commits，一次提交对应一个需求点；如果几个需求任务逻辑相似，可以合并为一次提交；类型与格式见 `AGENTS.md`「Git 规范」（§7）。
 - 合并代码时，把合并提交 / PR 标题改为 Conventional Commits 格式（见 `AGENTS.md`「Git 规范」§7），不保留默认的 `Merge branch ...` / `Merge pull request ...` 标题。
 - 改动只提交在本仓库（stellar）；仅当用户明确要求时 push。
-- 完成条件：普通任务的改动已通过应执行的验证并保留在工作区；如用户要求提交，提交符合规范；如用户要求 push，已推送且远端为最新。v2 实施 issue 仅在主题提交到达 `origin/v2`、交付评论已发布且 CI 已关闭 issue 后完成。
+- 完成条件：改动已通过应执行的验证并保留在工作区；如用户要求提交，提交符合规范；如用户要求 push，已推送且远端为最新；如用户明确要求回复 issue 或标记为已解决，对应评论或标签操作已按 `docs/agents/issue-tracker.md` 完成。分别汇报代码就绪、已提交、已推送和 issue 状态。
 
-### 5. 发版
+### 6. 发版
 
 - 由用户触发时执行：分析自上一 tag 起的 commit 确定版本号 → 在 `CHANGELOG.md` 写入对应非空章节（H2 版本号 + H3 分类）→ 向用户确认版本号与变更摘要 → `npm run release:dry -- <version>` 预演 → 正式发版。
-- 发版前核对：`npm run check` 内含提交登记完整性检查，自上一 tag 起涉及主题代码/配置/行为变化的非合并提交须在 `docs/knowledge/VERIFICATION.md`「提交登记（发版前核对）」表登记短 SHA（纯文档 / CI 改动无需登记）；缺失先补登记再发版。
 - 详见 `docs/guides/release-process.md` 与 `AGENTS.md`「发版规范」（§8）。
 - 完成条件：版本号与变更摘要已获用户确认；dry-run 通过后完成正式发版。

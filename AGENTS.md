@@ -127,7 +127,7 @@ module.exports = function(hexo) {
 
 ## 5. 工作流程
 
-流程总览：**方案 → 开发 → 验证 → 提交 → 发版**。Codex 与 Claude Code 涉及主题开发、验证或发版时，先调用 `$stellar-theme-dev` skill，按其中的执行顺序与完成条件推进；其他环境（Cursor、Copilot、Trae 等）按下述门禁执行；skill 与本节冲突时，以本节为准。
+流程总览：**方案 → 开发 → 验证 → 文档同步核验 → 提交 → 发版**。Codex 与 Claude Code 涉及主题开发、验证或发版时，先调用 `$stellar-theme-dev` skill，按其中的执行顺序与完成条件推进；其他环境（Cursor、Copilot、Trae 等）按下述门禁执行；skill 与本节冲突时，以本节为准。
 
 **方案门禁**：涉及行为、结构或多文件改动的任务，先在 `docs/designs/{YYYY-MM-DD}-{功能简称}/` 写方案文档（模板 `docs/designs/_template/`），写明：要解决的问题或新增的能力、技术方案和实现思路、影响范围（涉及哪些文件/模块）、需要同步的知识库页面与文档。方案中必须先列出可复用的配置、设计令牌、mixin、partial、helper、`utils.js` 或公共服务入口，再说明新增定义；新增常量或变量必须记录语义、作用域、消费方、默认值来源和配置边界；跨页面能力优先设计可复用接口（例如批量挂载入口），并写明初始化、失败降级、暂停和销毁行为。
 
@@ -141,15 +141,19 @@ module.exports = function(hexo) {
 - CI（`.github/workflows/ci.yml`）会在 PR 上强制 lint、单测、Conventional Commits、demo 全量构建 + minify 与知识库核查；等价流程为 demo 工程 `npx hexo generate` + `npx gulp minify`
 - 完成条件：应执行的命令全部通过；新增 `require` 均已声明或为 Node 内置模块（`test/` 禁止幽灵依赖）
 
+**文档同步核验（提交前）**：
+
+1. 阅读最终功能 diff，逐项列出行为、配置、API、UI 与兼容性变化，并为每项变化确认文档落点。
+2. 涉及主题代码、配置或行为变化时，同步更新 `docs/knowledge/` 并在 `VERIFICATION.md` 的现有事实或功能记录中登记；涉及用户行为、配置项或公开功能时同步仓库 Wiki。
+3. 对照最终实现核验说明、示例、字段名、默认值、边界与失败行为；文档文件发生过修改不等于内容已经同步。
+4. 运行 `python3 docs/knowledge/tools/verify.py` 与适用测试，把结果写入方案 `checklist.md`。存在遗漏、过时描述或未完成项时继续修改，不进入提交。
+
+完成条件：每项功能变化都有与最终实现一致的文档落点，`VERIFICATION.md` 与方案状态已在提交前更新，适用检查全部通过。
+
 **提交门禁**：
 
-- 遵循 §7 Git 规范：一次提交对应一个需求点，逻辑相似的需求可合并；不自动提交，改动保留在工作区供审查，仅在用户明确要求时提交（发版流程除外）与 push
-- `$stellar-v2-program` 接管且目标为本仓库 `v2` 分支的实施 issue，按 `docs/agents/issue-tracker.md`「v2 实施 issue 自动闭环」执行已授权的提交、推送与 issue 收尾
-
-**文档同步门禁**：
-
-- 涉及主题代码、配置或行为变化时，必须同步更新 `docs/knowledge/` 并在 `VERIFICATION.md` 登记；涉及逻辑变更（API、配置项、行为变化）时同步更新仓库 Wiki
-- 发版前 `npm run check` 内含提交登记完整性检查：自上一 tag 起涉及主题代码、配置或行为变化的非合并提交须在 `docs/knowledge/VERIFICATION.md`「提交登记（发版前核对）」表登记短 SHA（纯文档 / CI / 工具改动无需登记），缺失即失败（`ci/check-release-docs.js`）
+- **交付提交**：同一需求的实现、测试、知识库、公开文档、方案状态与验证记录属于一个交付单位；文档同步核验完成后一次性暂存并提交。提交产生的 SHA 只用于 issue 评论与发布输出，不回写仓库台账
+- 遵循 §7 Git 规范：一次提交对应一个需求点，逻辑相似的需求可合并；改动默认保留在工作区供审查，仅在用户明确要求提交时 commit，仅在明确要求推送时 push
 
 **新增功能 Checklist**（必须覆盖全部相关维度）：
 
@@ -192,7 +196,6 @@ module.exports = function(hexo) {
 - 与 issue 相关的提交，在提交标题末尾带上 issue 号（用户已提供 issue 号或链接时），如 `fix(scope): 修复 xxx (#123)`
 - 每个需求完成后不自动提交，改动保留在工作区供用户审查（见 §5 提交门禁）
 - 只有用户明确要求时才 push；发版前须与用户确认版本号
-- v2 实施 issue 的自动提交与推送是 §5 提交门禁中的限定例外，交付目标固定为 `origin/v2`
 
 ## 8. 发版规范
 
@@ -206,7 +209,6 @@ npm run release → push main + npm → CI 自动触发 → npm publish + git ta
 
 - **版本号推导**（自上一个 tag 起分析 commit）：仅含 fix / perf / style → `x.y.(z+1)`；含 feat / refactor / breaking change → `x.(y+1).0`；大型重构、用户可感知的设计调整 → `(x+1).0.0`；测试版本 → `x.y.z-rc.N`
 - **CHANGELOG**：AI/人工先写入 `## <version>` 非空章节（H2 版本号 + H3 分类，格式见 `docs/guides/release-process.md`）
-- **提交登记**：自上一 tag 起涉及主题代码、配置或行为变化的非合并提交须在 `docs/knowledge/VERIFICATION.md`「提交登记（发版前核对）」表登记短 SHA（纯文档 / CI / 工具改动除外）；`npm run check` 内含完整性检查，缺失即中止发版
 - **确认**：向用户列出版本号和变更摘要，等待确认
 - **执行**：`npm run release:dry -- <version>` 预演通过后，`npm run release -- <version>`（非交互环境加 `--yes`）
 
@@ -222,6 +224,5 @@ npm run release → push main + npm → CI 自动触发 → npm publish + git ta
 ## 10. Issue 处理
 
 - 普通 issue 调查后，先询问用户是否进行回复，得到确认后再发出回复或处理
-- `$stellar-v2-program` 接管的 v2 实施 issue 按 `docs/agents/issue-tracker.md` 自动评论交付证据并添加 `resolved` 标签
 - 回复已修复的 issue 时，**不要手动关闭 issue**，只需添加 `resolved` 标签
 - 关闭由 label-commenter CI（`.github/workflows/label-commenter.yml`）处理：检测到 `resolved` 标签后自动关闭并附上回复；`fixed`、`duplicate`、`wontfix` 等标签同样由 CI 处理，agent 不直接调用 close

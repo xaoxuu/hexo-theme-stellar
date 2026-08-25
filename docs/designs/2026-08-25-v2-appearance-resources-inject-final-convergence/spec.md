@@ -21,7 +21,6 @@ Appearance 仍公开重复字体、主题色旧命名、渐变角度和带 CSS �
 
 - `seo` 完全不改。
 - `resources.preconnect` 的 Schema、默认值、覆盖与生成输出完全不改。
-- 主题 issue 自动闭环只提交并推送主题 `v2` 分支；主仓库与公开 Wiki 子模块保持未提交，等待站长审查。
 
 # 验收
 

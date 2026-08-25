@@ -16,6 +16,9 @@ date: YYYY-MM-DD
 
 ## 文档同步
 
+- [ ] 最终功能 diff 中的行为、配置、API、UI 与兼容性变化均有文档落点
+- [ ] 说明、示例、字段名、默认值、边界与失败行为和最终实现一致
 - [ ] `docs/knowledge/` 对应领域已更新
 - [ ] `docs/knowledge/VERIFICATION.md` 已登记偏差修正
 - [ ] `languages/` 文案（如需）
+- [ ] 功能、测试、文档、方案状态与验证记录已准备作为同一个交付提交

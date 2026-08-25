@@ -15,7 +15,7 @@ issue: 723
 5. [ ] 实现 `stellar new note` 文件计划、CLI 编排与端到端测试，删除旧 `new-note` 命令。
 6. [ ] 同步内容系统知识库、Reference/漂移检查与 `VERIFICATION.md`。
 7. [ ] 执行主题检查、Alpha tarball、主工程生成、产物抽查和 Standards / Spec 复审。
-8. [ ] 更新主工程三份总蓝图状态；主题提交推送到 `origin/v2` 并闭环 #723。
+8. [ ] 更新主工程三份总蓝图状态。
 
 ## 风险与回退
 

@@ -41,7 +41,6 @@ M1–M9 已分别交付配置、内容、Runtime、Blueprint、CLI 与默认体�
 - 不把内置 Blueprint manifest 扩展为第三方格式，不增加运行时兼容读取或自动迁移器。
 - 不修改公开 URL、DOM、CSS、语言文案、Schema 或 Runtime Manifest 契约。
 - 修复只补全既有 Runtime Manifest 内部 `config.feature` 分派字段，不引入公开配置、资源或布局规则。
-- 主仓库只更新三份 v2 蓝图状态文档；不提交主仓库，不更新子模块指针，也不触碰既存内容改动。
 - 自动门禁通过后状态只能是“等待站长人工验收”；#720 与 Alpha 内部里程碑仍由站长明确结论决定。
 
 # 验收标准
@@ -49,4 +48,4 @@ M1–M9 已分别交付配置、内容、Runtime、Blueprint、CLI 与默认体�
 - Node.js 22 / Hexo 8 / npm 10+ 下自动矩阵通过。
 - `npm run check`、`npm run performance:check`、Reference 漂移检查和主工程 `npm run g` 通过。
 - 生成模式的报告包含候选 tarball SHA-256、环境、矩阵结果、站点路径、待测 URL、预期结果与问题记录入口。
-- Standards / Spec 复审无剩余 finding；主题提交到达 `origin/v2` 后向 #720 评论自动证据，但不添加 `resolved`。
+- Standards / Spec 复审无剩余 finding。
