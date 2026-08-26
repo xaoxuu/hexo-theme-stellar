@@ -33,6 +33,8 @@ Wiki、Topic 和 Notebook 共用：
 
 `identity.icon`、`card.cover`、`hero.background.image` 不互相充当回退。即使使用同一资源，也要在对应作用域显式配置。
 
+Topic 集合的 `card` 仅描述专栏索引卡片，不级联到成员文章的 `ContentItemModel.presentation.card`。成员文章的列表封面和显式小字只来自文章 Front Matter 的 `card.cover` / `card.tagline`。
+
 ## 页面字段
 
 | 对象 | 子字段 |

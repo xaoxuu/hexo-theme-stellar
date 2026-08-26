@@ -157,11 +157,11 @@ graph LR
 
 ### 数据结构初始化
 
-普通 Post 卡片直接读取 `PageViewModel.render.listing`：
+普通 Post 与 Topic Post 卡片直接读取 `PageViewModel.render.listing`：
 
 | 属性 | 来源 | 用途 |
 |------|------|------|
-| `cover` | 已级联的 `card.cover` | 封面图 URL |
+| `cover` | 当前文章 Front Matter 的 `card.cover` | 封面图 URL |
 | `title` | 文章标题 | hero 卡片的大号展示文本（无标题回退日期） |
 | `caption` | `card.tagline` → description → excerpt | hero 卡片与置顶轮播共用的单行小字 |
 | `excerpt` | excerpt → description → 正文自动截断 | classic 卡片摘要 |
@@ -406,9 +406,11 @@ flowchart TD
 仅当同时满足以下条件时使用 **hero 卡片**：
 
 1. `content.article.listing.card_layout` 为 `hero`（默认）
-2. `obj.image` 已定义且长度非零（文章有封面）
+2. `render.listing.cover` 已定义且长度非零（文章有封面）
 
 否则回退到 **classic 卡片**。也就是说文章可以有封面图但仍用普通卡片（`content.article.listing.card_layout` 为 `classic` 或文章没有封面时）。
+
+Topic 集合的 `card.cover` / `card.tagline` 只用于专栏索引卡片，不级联到成员文章。Topic 文章继承全局 `card_layout`，但列表封面和显式小字必须分别由当前文章的 `card.cover` / `card.tagline` 提供；未配置时不使用 Topic 封面、Banner 或其它文章图片回退。
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
 
@@ -622,8 +624,10 @@ description: SEO description  # 可选兜底
 ### Hero 卡片配置
 
 ```yaml blog/_config.stellar.yml
-article:
-  card_style: hero # hero = 全图文字封面卡片 / classic = 普通卡片
+content:
+  article:
+    listing:
+      card_layout: hero # hero = 全图文字封面卡片 / classic = 普通卡片
 ```
 
 ```yaml

@@ -3348,6 +3348,26 @@
           "example": {}
         },
         {
+          "path": "listing.cardStyle",
+          "type": [
+            "string",
+            "null"
+          ],
+          "required": true,
+          "default": {
+            "kind": "inherited",
+            "from": [
+              "hexo.stellar.config.content.article.listing.cardLayout"
+            ]
+          },
+          "scope": "CollectionModel:topic",
+          "consumers": [
+            "PageViewModel",
+            "Reference generator"
+          ],
+          "example": "hero"
+        },
+        {
           "path": "listing.excerptLength",
           "type": [
             "number",
@@ -3785,7 +3805,6 @@
           },
           "scope": "CollectionModel:topic",
           "consumers": [
-            "ContentItemModel",
             "PageViewModel",
             "Reference generator"
           ],
@@ -3804,7 +3823,6 @@
           },
           "scope": "CollectionModel:topic",
           "consumers": [
-            "ContentItemModel",
             "PageViewModel",
             "Reference generator"
           ],
@@ -3821,7 +3839,6 @@
           },
           "scope": "CollectionModel:topic",
           "consumers": [
-            "ContentItemModel",
             "PageViewModel",
             "Reference generator"
           ],

@@ -302,8 +302,9 @@ function commentsSchema(factory) {
 
 function presentationSchema(factory, options = {}) {
   const cascadeFactory = options.cascadeFactory || factory;
+  const cardFactory = options.cardFactory || cascadeFactory;
   const properties = {
-    ...(options.includeCard ? { card: cardSchema(cascadeFactory) } : {}),
+    ...(options.includeCard ? { card: cardSchema(cardFactory) } : {}),
     ...(options.includeHero ? { hero: heroSchema(factory, { pathConsumers: options.heroConsumers }) } : {}),
     ...(options.includeBanner ? { banner: bannerSchema(factory) } : {}),
     sidebar: sidebarSchema(cascadeFactory),
@@ -394,6 +395,9 @@ function collectionSchema(profile) {
     : {
         priority: field("number", { default: literal(0), example: 0, required: true }),
         order: field(["number", "null"], { default: profile === "topic" ? literal(null) : literal(0), example: 0, required: true }),
+        ...(profile === "topic" ? {
+          cardStyle: field(["string", "null"], { default: inherited("hexo.stellar.config.content.article.listing.cardLayout"), example: "hero", required: true })
+        } : {}),
         excerptLength: field(["number", "null"], {
           default: profile === "notebook" ? inherited("hexo.stellar.config.content.notebook.listing.excerptLength") : literal(null),
           example: 128,
@@ -425,6 +429,7 @@ function collectionSchema(profile) {
     presentation: presentationSchema(factory, {
       includeCard: profile !== "post",
       includeHero: profile !== "post",
+      cardFactory: profile === "topic" ? factory : cascadeFactory,
       cascadeFactory,
       heroConsumers: profile === "wiki" ? wikiHeroConsumers : undefined
     }),

@@ -792,6 +792,9 @@ function buildContentItemModel(page, frontMatter, collection, source, options = 
   const pageFooter = pick(frontMatter.footer, CONTENT_MODEL_FIELDS.footer);
   const pageComments = pick(frontMatter.comments, CONTENT_MODEL_FIELDS.comments);
   const pageVisibility = pick(frontMatter.visibility, CONTENT_MODEL_FIELDS.visibility);
+  const collectionCard = options.inheritCollectionCard === false
+    ? {}
+    : collection.presentation.card;
 
   return {
     id: String(page._id || page.source || page.path || ""),
@@ -820,7 +823,7 @@ function buildContentItemModel(page, frontMatter, collection, source, options = 
       priority: frontMatter.listing?.priority ?? 0
     },
     presentation: {
-      card: mergeConfig(collection.presentation.card, pick(frontMatter.card, CONTENT_MODEL_FIELDS.card)),
+      card: mergeConfig(collectionCard, pick(frontMatter.card, CONTENT_MODEL_FIELDS.card)),
       banner: pick(frontMatter.banner, CONTENT_MODEL_FIELDS.banner),
       sidebar: normalizeSidebarBrand(mergeConfig(collection.presentation.sidebar, pageSidebar, "sidebar")),
       article: mergeConfig(collection.presentation.article, pageArticle),
@@ -1006,6 +1009,7 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
     listing: {
       priority: collectionListing.priority ?? 0,
       order: collectionListing.order ?? null,
+      cardStyle: content.article.listing.cardLayout,
       excerptLength: collectionListing.excerptLength ?? null,
       perPage: collectionListing.perPage ?? null,
       sort
@@ -1417,6 +1421,7 @@ function completeTopicPageViewModel(input, base) {
   const collection = base.collection;
   const item = buildContentItemModel(input.page || {}, frontMatter, collection, source, {
     source: collection.source,
+    inheritCollectionCard: false,
     visibility: { listed: true, searchable: true }
   });
   const heroImage = collection.presentation.hero?.background?.image;

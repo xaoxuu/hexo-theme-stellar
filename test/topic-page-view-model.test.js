@@ -7,6 +7,7 @@ const os = require("node:os");
 const path = require("node:path");
 
 const {
+  buildTopicIndexRender,
   buildTopicPageViewModel: buildTopicPageViewModelRaw,
   buildTopicPageViewModelBase: buildTopicPageViewModelBaseRaw,
   completeTopicPageViewModel
@@ -212,16 +213,22 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
   assert.deepEqual(viewModel.collection.listing, {
     priority: 3,
     order: null,
+    cardStyle: "hero",
     excerptLength: 96,
     perPage: 10,
     sort: { field: "date", direction: "desc" }
   });
   assert.deepEqual(viewModel.collection.visibility, { listed: false, searchable: true });
+  assert.deepEqual(viewModel.collection.presentation.card, {
+    cover: "/cover.webp",
+    tagline: "Collection card"
+  });
   assert.deepEqual(viewModel.item.source, {
     file: "_posts/current.md",
     repository: "xaoxuu/hexo-theme-stellar",
     branch: "page-branch"
   });
+  assert.deepEqual(viewModel.item.presentation.card, {});
   assert.deepEqual(viewModel.item.presentation.sidebar.left.widgets, []);
   assert.equal(viewModel.item.presentation.sidebar.left.brand.name, "Site Brand");
   assert.equal(viewModel.item.presentation.article.style, "story");
@@ -249,6 +256,9 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
   assert.equal(viewModel.render.article.next.path, "blog/older");
   assert.equal(viewModel.render.article.related.items[0].title, "Related");
   assert.equal(viewModel.render.article.comments.enabled, false);
+  assert.equal(viewModel.render.listing.cardStyle, "hero");
+  assert.equal(viewModel.render.listing.cover, "");
+  assert.equal(viewModel.render.listing.caption, "");
   assert.equal(viewModel.render.listing.listed, true);
   assert.equal(viewModel.render.listing.priority, 0);
   assertDeepFrozenPlain(viewModel);
@@ -257,6 +267,39 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
   latest.page.title = "Changed";
   assert.equal(viewModel.collection.identity.name, "Stellar v2");
   assert.equal(viewModel.collection.navigation.series[0].title, "Latest");
+
+  const topicIndex = buildTopicIndexRender({
+    ...normalizedInput,
+    collectionId: "stellar-v2"
+  });
+  assert.equal(topicIndex.cover, "/cover.webp");
+
+  for (const cardLayout of ["hero", "classic"]) {
+    const pageCardInput = normalizeTopicInput({
+      ...input,
+      themeConfig: {
+        ...input.themeConfig,
+        content: {
+          article: {
+            ...input.themeConfig.content.article,
+            listing: { card_layout: cardLayout }
+          }
+        }
+      },
+      frontMatter: {
+        ...input.frontMatter,
+        card: { cover: "/page-cover.webp", tagline: "Page card" }
+      }
+    });
+    const pageCardViewModel = buildTopicPageViewModelRaw(pageCardInput);
+    assert.deepEqual(pageCardViewModel.item.presentation.card, {
+      cover: "/page-cover.webp",
+      tagline: "Page card"
+    });
+    assert.equal(pageCardViewModel.render.listing.cardStyle, cardLayout);
+    assert.equal(pageCardViewModel.render.listing.cover, "/page-cover.webp");
+    assert.equal(pageCardViewModel.render.listing.caption, "Page card");
+  }
 });
 
 test("Topic profile 只接受匹配的严格 v2 collection 归属", () => {
