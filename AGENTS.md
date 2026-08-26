@@ -1,7 +1,7 @@
 # AGENTS.md — Stellar 主题仓库 AI 规范
 
 > 本文件是 hexo-theme-stellar 主题仓库的 **AI 协作唯一权威规范**，供所有 AI 编码工具（Codex、Claude Code、Cursor、Copilot、Trae 等）与开发者共同遵守；`CLAUDE.md` 与 `.github/copilot-instructions.md` 是兼容入口，冲突以本文件为准。
-> `$stellar-theme-dev` skill（Codex：`.agents/skills/`；Claude Code：`.claude/skills/`，逐字一致，CI 强制同步）是本流程的执行清单；Codex 与 Claude Code 涉及主题开发、验证或发版时先调用它，其他环境直接按本文件 §5 门禁执行。
+> `$stellar-theme-dev` skill（Codex：`.agents/skills/`；Claude Code：`.claude/skills/`，逐字一致，CI 强制同步）负责执行顺序；验证范围以本文件 §5 的风险分级为唯一事实来源。
 
 ## Agent skills
 
@@ -61,9 +61,9 @@
 
 使用约定：
 
-- 涉及主题代码、配置或行为问题时，先查阅 `docs/knowledge/` 对应领域，再读源码确认
-- 知识库以本仓库代码为唯一事实来源；发现不一致时修正知识库，并登记到 `VERIFICATION.md`
-- 主题升级或行为变更后，运行 `python3 docs/knowledge/tools/verify.py` 复查硬事实；核查门禁：版本不一致或行号引用越界即失败（退出码非 0），未解析文件与配置键异常仅报告不阻断
+- 涉及主题代码、配置或行为问题时，按需查阅 `docs/knowledge/` 对应领域，再读源码确认；局部改动无需加载总览或无关领域
+- 知识库以本仓库代码为唯一事实来源；公开契约、架构事实或关键阈值变化时更新对应页面，发现既有事实错误时登记到 `VERIFICATION.md`
+- 修改知识库后运行 `python3 docs/knowledge/tools/verify.py`；版本不一致或行号引用越界为失败，未解析文件与配置键异常仅报告
 
 知识库写作遵循“设计语义、行为契约、修改依据”分层：公共设计令牌集中记录在 `01-样式系统/design-tokens.md`，各领域页面只保留本领域的行为、布局契约、公开配置和关键阈值，具体 CSS/模板/JS 实现以源码为最终事实来源，历史取舍放在 `docs/designs/`。新增数值必须说明语义和作用范围；普通实现值仅在影响决策、兼容性或验收时记录；同一事实只维护一个权威位置，其他页面通过链接引用。
 
@@ -127,47 +127,52 @@ module.exports = function(hexo) {
 
 ## 5. 工作流程
 
-流程总览：**方案 → 开发 → 验证 → 文档同步核验 → 提交 → 发版**。Codex 与 Claude Code 涉及主题开发、验证或发版时，先调用 `$stellar-theme-dev` skill，按其中的执行顺序与完成条件推进；其他环境（Cursor、Copilot、Trae 等）按下述门禁执行；skill 与本节冲突时，以本节为准。
+流程总览：**定界 → 开发 → 按风险验证 → 按需文档同步 → 提交 / 发版**。Codex 与 Claude Code 涉及主题开发、验证或发版时，先调用 `$stellar-theme-dev` skill，按其中的执行顺序与完成条件推进；其他环境（Cursor、Copilot、Trae 等）按下述门禁执行；skill 与本节冲突时，以本节为准。
 
-**方案门禁**：涉及行为、结构或多文件改动的任务，先在 `docs/designs/{YYYY-MM-DD}-{功能简称}/` 写方案文档（模板 `docs/designs/_template/`），写明：要解决的问题或新增的能力、技术方案和实现思路、影响范围（涉及哪些文件/模块）、需要同步的知识库页面与文档。方案中必须先列出可复用的配置、设计令牌、mixin、partial、helper、`utils.js` 或公共服务入口，再说明新增定义；新增常量或变量必须记录语义、作用域、消费方、默认值来源和配置边界；跨页面能力优先设计可复用接口（例如批量挂载入口），并写明初始化、失败降级、暂停和销毁行为。
+**方案门禁**：跨域架构、迁移或兼容取舍、分发/发布工作、需长期保留的产品决策，以及用户明确要求方案的任务，先在 `docs/designs/{YYYY-MM-DD}-{功能简称}/` 写方案。局部修复、样式微调、单字段配置和文档维护直接实现；已有方案时更新原方案，不新建重复记录。方案只记录环境无法自证的决策、边界与验收标准。
 
-**验证门禁**：
+**验证门禁：最小充分验证**
 
-- `scripts/` 有改动 → 必须在主工程（xaoxuu.com）执行 `npm run g` 全量验证（已含 `hexo clean && hexo generate && npx gulp minify`，可发现模板渲染错误与 HTML 结构错误）；`npm run s` 是按需渲染，不能替代
-- 新增/修改纯函数 → 补充单测并跑 `npm run check`（lint + 单测 + 依赖声明检查 + 知识库硬事实核查）
-- 知识库有改动 → `python3 docs/knowledge/tools/verify.py` 硬事实核查
-- UI 方面（样式、模板、前端交互等）改动量不大时无需自检流程，除非用户明确要求
-- 检查所有受影响页面类型（首页、文章页、Wiki 页等），验证结果记录在方案目录 `checklist.md`
-- CI（`.github/workflows/ci.yml`）会在 PR 上强制 lint、单测、Conventional Commits、demo 全量构建 + minify 与知识库核查；等价流程为 demo 工程 `npx hexo generate` + `npx gulp minify`
-- 完成条件：应执行的命令全部通过；新增 `require` 均已声明或为 Node 内置模块（`test/` 禁止幽灵依赖）
+先选择能覆盖实际影响的最低级别；路径、文件数量、v2 标签或“公开字段”不单独升级风险。若定向检查暴露更大影响，或无法界定影响范围，再升级一级。
+
+| 级别 | 适用范围 | 必要证据 |
+| --- | --- | --- |
+| **F0 文档** | 说明、流程、skill、方案或注释，不改变运行行为 | 相关格式、链接、引用或事实检查；知识库改动运行 `python3 docs/knowledge/tools/verify.py` |
+| **F1 定向**（默认） | 局部 CSS/EJS/浏览器 JS/helper、单个配置字段或可界定行为 | 直接相关的单测、lint、CSS 编译或渲染检查；Schema 改动执行 `npm run schema:generate` 与 `npm run schema:check`；只有跨过 Hexo 渲染/资源编译边界且定向检查不能证明时才在主工程运行 `npm run g` |
+| **F2 全仓** | 跨域公共运行时、共享模型/Collection 管线、构建链、依赖、广泛重构，或影响范围仍不确定 | `npm run check`；影响真实站点渲染时再加主工程 `npm run g` |
+| **F3 分发** | npm 包安装、CLI/init、Blueprint、迁移流程、发布，或明确的阶段/人工验收任务 | F2 + `npm run integration:check`；仅在准备人工验收制品时运行 `npm run acceptance:prepare` |
+
+UI 视觉判断只在用户要求或自动检查无法证明目标时进行；需要时用 `npm run s` 提供人工预览。已经通过的高层门禁，在后续仅修改文档、Reference 元数据或记录时，只重跑覆盖新增 diff 的检查；F3 制品任务则以最终制品内容为准。
+
+完成条件：每个受影响契约都有一项可复查证据，所选级别的检查通过；新增 `require` 均已声明或为 Node 内置模块（`test/` 禁止幽灵依赖）。CI 的全量检查继续作为 PR 合并门禁，不要求每个本地微调重复执行。
 
 **文档同步核验（提交前）**：
 
 1. 阅读最终功能 diff，逐项列出行为、配置、API、UI 与兼容性变化，并为每项变化确认文档落点。
-2. 涉及主题代码、配置或行为变化时，同步更新 `docs/knowledge/` 并在 `VERIFICATION.md` 的现有事实或功能记录中登记；涉及用户行为、配置项或公开功能时同步仓库 Wiki。
+2. 公开行为、配置契约、架构事实或关键阈值变化时更新对应 `docs/knowledge/`；修正既有事实偏差时登记 `VERIFICATION.md`；用户可配置或公开功能变化时同步仓库 Wiki。内部重构和不改变契约的视觉参数微调无需新增知识库记录。
 3. 对照最终实现核验说明、示例、字段名、默认值、边界与失败行为；文档文件发生过修改不等于内容已经同步。
-4. 运行 `python3 docs/knowledge/tools/verify.py` 与适用测试，把结果写入方案 `checklist.md`。存在遗漏、过时描述或未完成项时继续修改，不进入提交。
+4. 运行风险级别要求的适用检查；存在方案时把结果写入 `checklist.md`。存在遗漏、过时描述或未完成项时继续修改，不进入提交。
 
-完成条件：每项功能变化都有与最终实现一致的文档落点，`VERIFICATION.md` 与方案状态已在提交前更新，适用检查全部通过。
+完成条件：每项需要公开或长期维护的变化都有与最终实现一致的文档落点；适用检查全部通过。
 
 **提交门禁**：
 
 - **交付提交**：同一需求的实现、测试、知识库、公开文档、方案状态与验证记录属于一个交付单位；文档同步核验完成后一次性暂存并提交。提交产生的 SHA 只用于 issue 评论与发布输出，不回写仓库台账
 - 遵循 §7 Git 规范：一次提交对应一个需求点，逻辑相似的需求可合并；改动默认保留在工作区供审查，仅在用户明确要求提交时 commit，仅在明确要求推送时 push
 
-**新增功能 Checklist**（必须覆盖全部相关维度）：
+**新增功能检查面**（只覆盖实际相关维度）：
 
 1. `layout/` — EJS 模板
 2. `scripts/` — Hexo 标签 / 辅助函数 / 过滤器
 3. `source/css/` — Stylus 样式
 4. `source/js/` — 浏览器脚本（如需）
-5. `docs/` — 方案 + 执行计划 + 测试记录
+5. `docs/` — 触发方案门禁时记录方案与验证结果
 6. `languages/` — 国际化文案（如需新增文本）
-7. `docs/knowledge/` — 涉及主题代码、配置或行为变化时同步更新
+7. `docs/knowledge/` — 公开契约、架构事实或关键阈值变化时同步更新
 
 ## 6. 架构总览
 
-动手改代码前，先阅读 `docs/knowledge/00-总览与安装配置/overview.md` 建立整体认知，它覆盖：五层架构（配置 / 数据处理 / 服务端渲染 / 客户端 / 样式）、四阶段渲染流水线、配置级联（页面级 > 项目级 > 主题默认）、四套并行内容系统（博客 `post`、文档 `wiki`、专栏 `topic`、笔记本 `note`）。细节以知识库为准，冲突以代码为准。
+跨域架构或无法定位影响范围时，阅读 `docs/knowledge/00-总览与安装配置/overview.md` 建立整体认知。局部任务读取对应领域页面即可；细节以知识库为索引、代码为最终事实来源。
 
 ## 7. Git 规范
 
