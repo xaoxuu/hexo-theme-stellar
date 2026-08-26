@@ -82,7 +82,16 @@ test("site/layout/content/appearance/resources/head Schema 提供默认值并拒
   assert.deepEqual(config.content.notebook.tagIcons, {});
   assert.equal(config.appearance.colorScheme, "auto");
   assert.equal(config.appearance.shape.radius.cardLarge, "24px");
-  assert.equal(config.appearance.backgrounds.sidebar.opacity, 0.8);
+  assert.equal(config.appearance.backgrounds.sidebar.surface, "glass");
+  assert.equal(config.appearance.backgrounds.sidebar.type, "gradient");
+  assert.equal(config.appearance.backgrounds.sidebar.image, null);
+  assert.deepEqual(config.appearance.backgrounds.sidebar.gradient, {
+    light: ["hsl(210 32% 84%)", "hsl(188 44% 84%)", "hsl(12 64% 73%)", "hsl(35 100% 82%)"],
+    dark: ["hsl(210 16% 48%)", "hsl(188 18% 50%)", "hsl(12 30% 42%)", "hsl(35 36% 49%)"]
+  });
+  assert.equal(config.appearance.backgrounds.sidebar.opacity, 1);
+  assert.equal(config.appearance.backgrounds.sidebar.backdrop.radius, "100px");
+  assert.equal(config.appearance.backgrounds.sidebar.backdrop.overlay, "var(--bg-a50)");
   assert.match(config.resources.fallbacks.cover, /\/cover\/76b86c0226ffd\.svg$/);
   assert.match(config.resources.errorPage.image, /\/404\/1c830bfcd517d\.svg$/);
   assert.equal(config.extensions.search.provider, "local");
@@ -148,7 +157,19 @@ test("Appearance 与资源兜底解析最终路径并投影 camelCase 运行时"
         motion: { page_transition: false, avatar: "never" },
         colors: { primary: "#123456" },
         code_block: { scrollbar_width: "0px", highlight_stylesheet: null },
-        backgrounds: { sidebar: { surface: "glass", image: "/sidebar.webp", opacity: 0, backdrop: { radius: "0px" } } }
+        backgrounds: {
+          sidebar: {
+            surface: "glass",
+            type: "image",
+            image: "/sidebar.webp",
+            gradient: {
+              light: ["#ddeeff", "hsl(188 44% 84%)", "rgb(220 160 140)", "gold"],
+              dark: ["#223344", "hsl(188 18% 50%)", "rgb(100 70 60)", "darkgoldenrod"]
+            },
+            opacity: 0,
+            backdrop: { radius: "0px" }
+          }
+        }
       },
       resources: {
         fallbacks: {
@@ -168,10 +189,84 @@ test("Appearance 与资源兜底解析最终路径并投影 camelCase 运行时"
   assert.equal(config.appearance.codeBlock.scrollbarWidth, "0px");
   assert.equal(config.appearance.codeBlock.highlightStylesheet, null);
   assert.equal(config.appearance.backgrounds.sidebar.surface, "glass");
+  assert.equal(config.appearance.backgrounds.sidebar.type, "image");
   assert.equal(config.appearance.backgrounds.sidebar.opacity, 0);
+  assert.deepEqual(config.appearance.backgrounds.sidebar.gradient, {
+    light: ["#ddeeff", "hsl(188 44% 84%)", "rgb(220 160 140)", "gold"],
+    dark: ["#223344", "hsl(188 18% 50%)", "rgb(100 70 60)", "darkgoldenrod"]
+  });
+  assert.equal(Object.isFrozen(config.appearance.backgrounds.sidebar.gradient), true);
+  assert.equal(Object.isFrozen(config.appearance.backgrounds.sidebar.gradient.light), true);
+  assert.equal(Object.isFrozen(config.appearance.backgrounds.sidebar.gradient.dark), true);
   assert.equal(config.resources.fallbacks.linkCard, "/link.svg");
   assert.equal(config.appearance.backgrounds.sidebar.image, "/sidebar.webp");
   assert.equal(config.resources.errorPage.image, null);
+});
+
+test("侧栏背景类型与艺术渐变调色板拒绝非法枚举、错误数量、非法颜色、非法类型和旧数组结构", () => {
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { appearance: { backgrounds: { sidebar: { type: "auto" } } } }
+  }), error => {
+    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.sidebar.type" && issue.expected === "gradient | image | color"), true);
+    return true;
+  });
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: {
+      appearance: {
+        backgrounds: {
+          sidebar: {
+            gradient: { light: ["#def", "cyan", "coral"] }
+          }
+        }
+      }
+    }
+  }), error => {
+    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.sidebar.gradient.light" && issue.expected === "exactly 4 CSS colors"), true);
+    return true;
+  });
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { appearance: { backgrounds: { sidebar: { gradient: { dark: [] } } } } }
+  }), error => {
+    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.sidebar.gradient.dark" && issue.expected === "exactly 4 CSS colors"), true);
+    return true;
+  });
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { appearance: { backgrounds: { sidebar: { gradient: { light: ["#def", "cyan", "url(x)", "gold"] } } } } }
+  }), error => {
+    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.sidebar.gradient.light[2]" && issue.expected === "valid CSS color"), true);
+    return true;
+  });
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { appearance: { backgrounds: { sidebar: { gradient: { dark: ["#123", 188, "coral", "gold"] } } } } }
+  }), error => {
+    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.sidebar.gradient.dark[1]" && issue.code === "invalid_type"), true);
+    return true;
+  });
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { appearance: { backgrounds: { sidebar: { gradient: [210, 188, 12, 35] } } } }
+  }), error => {
+    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.sidebar.gradient" && issue.code === "invalid_type"), true);
+    return true;
+  });
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { appearance: { backgrounds: { sidebar: { gradient: { auto: ["#123", "#234", "#345", "#456"] } } } } }
+  }), error => {
+    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.sidebar.gradient.auto" && issue.code === "unknown_field"), true);
+    return true;
+  });
 });
 
 test("Appearance 与资源兜底拒绝旧根、旧字段、未知字段和非法范围", () => {

@@ -65,6 +65,15 @@ test("Brand 空值保持活动字段并明确不继承 Hexo 配置", () => {
   assert.match(CONFIG_SOURCE, /Brand 标语正文；null 隐藏标语且不会继承 Hexo subtitle。/);
 });
 
+test("侧栏与页面默认图片使用 YAML 留空写法且运行时保持 null", () => {
+  assert.equal(CONFIG.appearance.backgrounds.sidebar.image, null);
+  assert.equal(CONFIG.appearance.backgrounds.page.image, null);
+  assert.match(CONFIG_SOURCE, /侧栏背景图片；留空不显示背景图。[\s\S]*?\n      image:\n      gradient:/);
+  assert.match(CONFIG_SOURCE, /页面背景图片；留空不显示背景图。[\s\S]*?\n      image:\n      backdrop:/);
+  assert.doesNotMatch(CONFIG_SOURCE, /\n      image: null\n      gradient:/);
+  assert.doesNotMatch(CONFIG_SOURCE, /\n      image: null\n      backdrop:/);
+});
+
 test("所有活动叶子都有语义描述且约束提示来自 Schema", () => {
   const leaves = collectYamlLeaves(CONFIG_SCHEMA);
   assert.ok(leaves.length > 0);

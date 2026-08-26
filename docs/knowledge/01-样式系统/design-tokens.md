@@ -63,7 +63,9 @@ tags:
 | `$c-link` | `appearance.colors.link` | 链接色 |
 | `$c-base-hue` | 主题固定值 | 背景和文字色生成的基础色相 |
 | `$site-background-image` | `appearance.backgrounds.page.image` | 全站背景图 |
+| `$leftbar-background-type` | `appearance.backgrounds.sidebar.type` | 左栏装饰背景类型：渐变、图片或纯色 |
 | `$leftbar-background-image` | `appearance.backgrounds.sidebar.image` | 左栏背景图 |
+| `$leftbar-gradient-light-*` / `$leftbar-gradient-dark-*` | `appearance.backgrounds.sidebar.gradient.light/dark` | 浅色、深色艺术渐变的基础、左上、右中、左下颜色 |
 
 组件优先使用语义颜色变量，例如 `var(--text-p1)`、`var(--card)`、`var(--block-border)` 和 `var(--theme)`；组件文档不应复制整套颜色值。
 

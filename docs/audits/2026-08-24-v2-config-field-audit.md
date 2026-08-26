@@ -2,7 +2,7 @@
 
 > 本页由当前配置 Schema 与 M6 退出字段清单自动生成。请勿手工编辑。
 
-结论计数：`public=505`、`localize=5`、`derive=0`、`internalize=9`、`remove=1`。
+结论计数：`public=509`、`localize=5`、`derive=0`、`internalize=9`、`remove=1`。
 
 | Scope | Path | Accepted | Disposition | Default source | Consumers | Rationale |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -163,9 +163,13 @@
 | theme | appearance.backgrounds.sidebar.color | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.backgrounds.sidebar.color.dark | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.backgrounds.sidebar.color.light | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | appearance.backgrounds.sidebar.gradient | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | appearance.backgrounds.sidebar.gradient.dark | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | appearance.backgrounds.sidebar.gradient.light | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.backgrounds.sidebar.image | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.backgrounds.sidebar.opacity | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.backgrounds.sidebar.surface | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | appearance.backgrounds.sidebar.type | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.code_block | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.code_block.highlight_stylesheet | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.code_block.scrollbar_width | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |

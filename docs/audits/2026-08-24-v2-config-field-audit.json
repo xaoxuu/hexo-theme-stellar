@@ -13,7 +13,7 @@
     "remove"
   ],
   "counts": {
-    "public": 505,
+    "public": 509,
     "localize": 5,
     "derive": 0,
     "internalize": 9,
@@ -2223,6 +2223,51 @@
     },
     {
       "scope": "theme",
+      "path": "appearance.backgrounds.sidebar.gradient",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "PageViewModel",
+        "layout renderer",
+        "Stylus compiler",
+        "browser theme state",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "appearance.backgrounds.sidebar.gradient.dark",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "PageViewModel",
+        "layout renderer",
+        "Stylus compiler",
+        "browser theme state",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "appearance.backgrounds.sidebar.gradient.light",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "PageViewModel",
+        "layout renderer",
+        "Stylus compiler",
+        "browser theme state",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
       "path": "appearance.backgrounds.sidebar.image",
       "disposition": "public",
       "defaultSource": "declarative schema",
@@ -2254,6 +2299,21 @@
     {
       "scope": "theme",
       "path": "appearance.backgrounds.sidebar.surface",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "PageViewModel",
+        "layout renderer",
+        "Stylus compiler",
+        "browser theme state",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "appearance.backgrounds.sidebar.type",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",

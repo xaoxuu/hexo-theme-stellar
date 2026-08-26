@@ -75,7 +75,9 @@ function renderLeaf(key, node, indent, path) {
   if (!node.description) throw new Error(`Theme Schema 活动叶子缺少语义描述：${path}`);
   const prefix = " ".repeat(indent);
   const value = defaultValue(node);
-  const rendered = yamlLines({ [key]: value }).map(line => `${prefix}${line}`);
+  const rendered = value === null && node.yaml?.nullStyle === "empty"
+    ? [`${prefix}${key}:`]
+    : yamlLines({ [key]: value }).map(line => `${prefix}${line}`);
   const shouldShowExample = node.yaml?.example !== undefined
     && JSON.stringify(node.yaml.example) !== JSON.stringify(value);
   return [

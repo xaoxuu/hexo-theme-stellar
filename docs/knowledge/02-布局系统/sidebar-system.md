@@ -304,8 +304,8 @@ site:
 
 左栏使用三层背景系统（`sidebar.styl`）：
 
-1. **`.sidebg`**——绝对定位在 `.leftbar-container` 之后。渲染背景图（带模糊与透明度滤镜）或纯色（`$leftbar-background-color-light` / `$leftbar-background-color-dark`）。
-2. **`.leftbar-container:before`**——伪元素应用 `backdrop-filter: saturate(300%)` 与半透明白色叠加（`rgba(white, 0.05)`），在图片上方形成磨砂玻璃效果。移动端隐藏。
+1. **`.sidebg`**——绝对定位在 `.leftbar-container` 之后。渲染艺术渐变或背景图（带模糊、饱和度与透明度滤镜），没有装饰背景时回退到纯色。
+2. **`.leftbar-container:before`**——伪元素应用 `backdrop-filter: saturate(300%)` 与半透明白色叠加（`rgba(white, 0.05)`），在渐变或图片上方形成磨砂玻璃效果。移动端隐藏。
 3. **`.leftbar-container .widgets`**——小部件列表本身用 `mask: linear-gradient(white, 90%, transparent)` 底部淡出。
 
 **`.l_left` 背景层堆叠**
@@ -315,7 +315,7 @@ graph BT
     widgets_mask[".widgets mask: linear-gradient fade-out"]
     before_pseudo[".leftbar-container:before\nbackdrop-filter saturate(300%)\nrgba white 0.05 overlay"]
     leftbar_container[".leftbar-container content"]
-    sidebg[".sidebg\nbackground-image + filter saturate blur opacity\nOR background-color-light/dark"]
+    sidebg[".sidebg\nart gradient + blur opacity\nOR image + saturate blur opacity\nOR light/dark color"]
     base["DOM stacking order (bottom to top)"]
 
     base --> sidebg
@@ -330,6 +330,8 @@ graph BT
 
 | Stylus 变量 / 配置键 | CSS 效果 | 位置 |
 |----------------------|----------|------|
+| `$leftbar-background-type` / `appearance.backgrounds.sidebar.type` | 显式选择渐变、图片或纯色分支 | _custom.styl / sidebar.styl |
+| `$leftbar-gradient-light-*` / `$leftbar-gradient-dark-*` / `appearance.backgrounds.sidebar.gradient.light/dark` | 两套四颜色调色板；基础色 + 两层径向渐变 + 一层锥形渐变 | _custom.styl / sidebar.styl |
 | `$leftbar-background-image` / `appearance.backgrounds.sidebar.image` | `.sidebg` 上的 `background-image` | sidebar.styl |
 | `appearance.backgrounds.sidebar.opacity` | `.sidebg` 上的 `--background-opacity` CSS 变量 | sidebar.styl |
 | `appearance.backgrounds.sidebar.backdrop.radius` | `--blur-px` CSS 变量 → `.sidebg` 的 `filter: blur(...)` | sidebar.styl |
@@ -338,15 +340,17 @@ graph BT
 | `$leftbar-background-color-dark` | `.sidebg` 的 `background-color`（深色模式经 `prefers-color-scheme`） | sidebar.styl |
 | `appearance.backgrounds.sidebar.surface` | `glass` / `card` 风格开关；同时为 `.l_left` 声明对应 `data-ui-surface` | layout.ejs / sidebar.styl / collection.styl |
 
-设置 `$leftbar-background-image` 时，`.sidebg` 还扩展内缩进（`--inset: 32px`），让模糊略微溢出容器边缘，再由父元素 `border-radius` 裁剪。
+`type` 默认为 `gradient`，可选 `gradient`、`image` 或 `color`。主题只消费被选中的分支：启用图片需显式设置 `type: image`，不会再被默认渐变覆盖。`gradient.light` 与 `gradient.dark` 必须分别按“基础色、左上、右中、左下”提供四个合法 CSS 颜色，首色同时作为不支持 CSS gradient 时的回退；两套调色板可独立覆盖。暗色渐变直接使用 `opacity`，图片暗色分支继续乘以 0.75。
+
+设置艺术渐变或背景图时，`.sidebg` 扩展内缩进（`--inset: 32px`），让模糊略微溢出容器边缘，再由父元素 `border-radius` 裁剪。二者共用 `backdrop.radius`、`opacity` 和玻璃高光；图片继续使用桌面 `400%` / 移动端 `300%` 饱和度，渐变不叠加饱和度滤镜，纯色不应用滤镜。艺术渐变的三层色块分别使用独立 `background-size` 与定位，在保留重度模糊的同时限制单个光晕覆盖范围。
 
 `.sidebg`、`.leftbar-container` 与其 `:before/:after` 覆盖层共享 `$border-card-l`。普通元素由全局规则应用 `appearance.shape.corner`；伪元素显式继承容器的 `corner-shape`，保证背景、玻璃高光和遮罩在有图、无图以及深浅色模式下使用同一连续曲率，避免圆角抗锯齿区域露出下层底色。
 
-移动端（`max-width: $device-mobile-max`）`.l_left` 直接使用 `background: var(--bg-a100)`，`.sidebg` 饱和度降到 `300%`。
+移动端（`max-width: $device-mobile-max`）`.l_left` 直接使用 `background: var(--bg-a100)`，图片饱和度降到 `300%`，艺术渐变与图片沿用相同裁剪和遮罩。
 
 ### 纯色卡片表面（surface: card）
 
-`appearance.backgrounds.sidebar.surface` 控制左栏外观：`glass` 为历史默认行为，保留上面的三层背景系统；`card` 时 `layout.ejs` 为 `.l_left` 追加 `leftbar-card` 类，容器改为 `background: var(--card)`（浅色纯白 / 深色主题深灰黑）与 `box-shadow: $boxshadow-float`（`0 4px 8px 0 rgba(0,0,0,0.05)`），并隐藏 `.sidebg` 与 `.leftbar-container:before/:after`。因类选择器特异性更高，桌面与移动端均生效。该配置项默认值为 `card`。
+`appearance.backgrounds.sidebar.surface` 控制左栏外观：`glass` 为默认行为，保留上面的三层背景系统；`card` 时 `layout.ejs` 为 `.l_left` 追加 `leftbar-card` 类，容器改为 `background: var(--card)`（浅色纯白 / 深色主题深灰黑）与 `box-shadow: $boxshadow-float`（`0 4px 8px 0 rgba(0,0,0,0.05)`），并隐藏 `.sidebg` 与 `.leftbar-container:before/:after`。因类选择器特异性更高，桌面与移动端均生效。
 
 紧凑列表、摘要条目和链接网格不再通过 `.l_left` / `.l_right` 高特异性选择器适配。`layout.ejs` 为左栏声明 `data-ui-surface="glass|card"`，为右栏声明 `sidebar`，为主内容声明 `content`；`.ui-collection` 只消费 `--ui-item-*` 等 surface 语义变量。list/grid/summary 的条目默认背景均透明，hover/active 时 glass 使用与菜单一致的半透明顶部高光，card/sidebar/content 使用 `var(--block)`，且背景、文字和 leading 图标不做过渡动画。markdown widget 内嵌 collection 的默认背景是上述透明规则的组件级例外，具体契约见[通用集合组件](../06-数据服务与组件/widget-architecture.md#通用集合组件)。Widget Header 的 cap action hover 与 Footer Actions 均复用 collection surface 的背景与阴影令牌；glass 左栏因此共享相同的顶部光照和高光边，两类按钮仍保留自身几何。surface 不改变条目尺寸和网格几何。
 

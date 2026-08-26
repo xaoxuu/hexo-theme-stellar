@@ -367,6 +367,11 @@ function validateCssGradient(node, input, source, path, issues) {
   issues.push(issue("invalid_value", source, path, valueType(input), "valid CSS gradient", node.migration));
 }
 
+function validateSidebarGradientColors(node, input, source, path, issues) {
+  if (input.length === 4) return;
+  issues.push(issue("invalid_value", source, path, valueType(input), "exactly 4 CSS colors", node.migration));
+}
+
 function validateCssSelector(node, input, source, path, issues) {
   if (typeof input === "string" && input.trim() === input && input.length > 0 && !/[;{}<\n\r]/.test(input) && !/url\s*\(/i.test(input)) return;
   issues.push(issue("invalid_value", source, path, valueType(input), "safe CSS selector", node.migration));
@@ -620,6 +625,7 @@ function validateCustom(node, input, source, path, issues) {
   else if (node.validator === "css_percentage") validateCssPercentage(node, input, source, path, issues);
   else if (node.validator === "css_font_family") validateCssFontFamily(node, input, source, path, issues);
   else if (node.validator === "css_gradient") validateCssGradient(node, input, source, path, issues);
+  else if (node.validator === "sidebar_gradient_colors") validateSidebarGradientColors(node, input, source, path, issues);
   else if (node.validator === "css_selector") validateCssSelector(node, input, source, path, issues);
   else if (node.validator === "corner_shape") validateCornerShape(node, input, source, path, issues);
   else if (node.validator === "resource") validateResource(node, input, source, path, issues, false);
@@ -639,7 +645,7 @@ function validateCustom(node, input, source, path, issues) {
   else if (node.validator === "unique_blueprint_targets") validateUniqueBlueprintTargets(node, input, source, path, issues);
   else if (node.validator === "topic_route_start" && input != null && !/[\\/]topic[\\/]/.test(source)) {
     issues.push(issue("invalid_scope", source, path, valueType(input), "Topic Collection only", node.migration));
-  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "nullable_absolute_http_url", "emoji_template", "emoji_sources", "github_repository", "contributor_repositories", "diagrams_override", "safe_navigation_url", "nullable_safe_navigation_url", "css_color", "nullable_css_color", "css_length", "css_percentage", "css_font_family", "css_gradient", "css_selector", "corner_shape", "resource", "nullable_resource", "non_negative_integer", "nullable_non_negative_integer", "non_empty_record_keys", "license_value", "license_override", "share_override", "kebab_id", "nullable_kebab_id", "menu_items", "footer_actions", "navigation_tabs", "safe_relative_path", "unique_blueprint_targets", "topic_route_start"].includes(node.validator)) {
+  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "nullable_absolute_http_url", "emoji_template", "emoji_sources", "github_repository", "contributor_repositories", "diagrams_override", "safe_navigation_url", "nullable_safe_navigation_url", "css_color", "nullable_css_color", "css_length", "css_percentage", "css_font_family", "css_gradient", "sidebar_gradient_colors", "css_selector", "corner_shape", "resource", "nullable_resource", "non_negative_integer", "nullable_non_negative_integer", "non_empty_record_keys", "license_value", "license_override", "share_override", "kebab_id", "nullable_kebab_id", "menu_items", "footer_actions", "navigation_tabs", "safe_relative_path", "unique_blueprint_targets", "topic_route_start"].includes(node.validator)) {
     throw new TypeError(`未知配置校验器：${node.validator}`);
   }
 }

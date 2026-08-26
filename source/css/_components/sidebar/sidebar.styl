@@ -1,3 +1,34 @@
+sidebar-background-filter($opacity)
+  --background-opacity: $opacity
+  filter: saturate(var(--saturate)) blur(var(--blur-px)) opacity(var(--background-opacity))
+
+sidebar-background-image($opacity)
+  sidebar-background-filter($opacity)
+  background-color: transparent
+  background-image: url($leftbar-background-image)
+  background-position: center
+  background-size: cover
+  background-repeat: no-repeat
+
+sidebar-background-gradient($base, $top, $right, $bottom, $opacity)
+  --background-opacity: $opacity
+  filter: blur(var(--blur-px)) opacity(var(--background-opacity))
+  background-color: $base
+  background-image: radial-gradient(ellipse at 28% 24%, $top 0%, $top 65%, transparent 100%), radial-gradient(ellipse at 60% 50%, $right 0%, $right 60%, transparent 100%), conic-gradient(from 210deg at 32% 72%, $bottom 0deg, $bottom 110deg, transparent 190deg, $top 270deg, transparent 360deg)
+  background-position: left top, right 42%, left bottom
+  background-size: 56% 34%, 52% 30%, 60% 38%
+  background-repeat: no-repeat
+
+sidebar-background-color($color)
+  --inset: 0
+  --background-opacity: 1
+  background-color: convert($color)
+  background-image: none
+  background-position: initial
+  background-size: auto
+  background-repeat: no-repeat
+  filter: none
+
 .l_left
   margin: var(--gap-page)
   max-height: calc(100vh - var(--gap-page) * 2)
@@ -52,24 +83,29 @@
     --saturate: 400%
     --blur-px: convert(hexo-config('appearance.backgrounds.sidebar.backdrop.radius'))
     --background-opacity: 1
-    if $leftbar-background-image
-      background-position: center
-      background-size: cover
-      if hexo-config('appearance.backgrounds.sidebar.backdrop.radius')
-        --inset: 32px
-      --background-opacity: hexo-config('appearance.backgrounds.sidebar.opacity')
-      background-image: url($leftbar-background-image)
-      filter: saturate(var(--saturate)) blur(var(--blur-px)) opacity(var(--background-opacity))
-      :root[data-theme="dark"] &
-        --background-opacity: hexo-config('appearance.backgrounds.sidebar.opacity') * 0.75
-      :root:not([data-theme]) &
-        @media screen and (prefers-color-scheme: dark)
-          --background-opacity: hexo-config('appearance.backgrounds.sidebar.opacity') * 0.75
-    else if $leftbar-background-color-light || $leftbar-background-color-dark
-      background-color: convert($leftbar-background-color-light)
-      :root:not([data-theme]) &
-        @media screen and (prefers-color-scheme: dark)
-          background-color: convert($leftbar-background-color-dark)
+    if hexo-config('appearance.backgrounds.sidebar.backdrop.radius')
+      --inset: 32px
+    if $leftbar-background-type == 'gradient' && length($leftbar-gradient-light) == 4
+      sidebar-background-gradient($leftbar-gradient-light-base, $leftbar-gradient-light-top, $leftbar-gradient-light-right, $leftbar-gradient-light-bottom, hexo-config('appearance.backgrounds.sidebar.opacity'))
+    else if $leftbar-background-type == 'image' && $leftbar-background-image
+      sidebar-background-image(hexo-config('appearance.backgrounds.sidebar.opacity'))
+    else if $leftbar-background-type == 'color' && ($leftbar-background-color-light || $leftbar-background-color-dark)
+      sidebar-background-color($leftbar-background-color-light)
+    :root[data-theme="dark"] &
+      if $leftbar-background-type == 'gradient' && length($leftbar-gradient-dark) == 4
+        sidebar-background-gradient($leftbar-gradient-dark-base, $leftbar-gradient-dark-top, $leftbar-gradient-dark-right, $leftbar-gradient-dark-bottom, hexo-config('appearance.backgrounds.sidebar.opacity'))
+      else if $leftbar-background-type == 'image' && $leftbar-background-image
+        sidebar-background-image(hexo-config('appearance.backgrounds.sidebar.opacity') * 0.75)
+      else if $leftbar-background-type == 'color' && $leftbar-background-color-dark
+        sidebar-background-color($leftbar-background-color-dark)
+    :root:not([data-theme]) &
+      @media screen and (prefers-color-scheme: dark)
+        if $leftbar-background-type == 'gradient' && length($leftbar-gradient-dark) == 4
+          sidebar-background-gradient($leftbar-gradient-dark-base, $leftbar-gradient-dark-top, $leftbar-gradient-dark-right, $leftbar-gradient-dark-bottom, hexo-config('appearance.backgrounds.sidebar.opacity'))
+        else if $leftbar-background-type == 'image' && $leftbar-background-image
+          sidebar-background-image(hexo-config('appearance.backgrounds.sidebar.opacity') * 0.75)
+        else if $leftbar-background-type == 'color' && $leftbar-background-color-dark
+          sidebar-background-color($leftbar-background-color-dark)
 
   .leftbar-container
     height: calc(100vh - var(--gap-page) * 2)
@@ -100,7 +136,7 @@
       border-radius: $border-card-l
       corner-shape: inherit
     &:before
-      if $leftbar-background-image
+      if $leftbar-has-decorative-background
         @media screen and (min-width: $device-mobile-max)
           background: rgba(white, 0.05)
           box-shadow: inset 0 0 32px 1px rgba(white, 0.5)

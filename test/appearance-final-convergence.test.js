@@ -118,6 +118,7 @@ test("Resources、Background、Highlight、404 与 Inject 只消费最终结构"
 
 test("原始 Background URL 编译为有效 CSS url()", async () => {
   const config = yaml.load(read("_config.yml"));
+  config.appearance.backgrounds.sidebar.type = "image";
   config.appearance.backgrounds.sidebar.image = "https://example.test/sidebar.webp?variant=glass&size=small";
   config.appearance.backgrounds.page.image = "https://example.test/page.webp?variant=cover&size=large";
 
@@ -138,6 +139,69 @@ test("Glass 侧栏覆盖层继承容器连续曲率", async () => {
 
   assert.ok(overlayRule, "应生成侧栏 before/after 共用规则");
   assert.match(overlayRule[0], /corner-shape:\s*inherit;/);
+});
+
+test("侧栏艺术渐变按深浅模式输出多层色块", async () => {
+  const config = yaml.load(read("_config.yml"));
+  config.appearance.backgrounds.sidebar.surface = "glass";
+  config.appearance.backgrounds.sidebar.type = "gradient";
+  config.appearance.backgrounds.sidebar.image = "https://example.test/sidebar-default.webp";
+  config.appearance.backgrounds.sidebar.gradient = {
+    light: ["hsl(0 32% 84%)", "hsl(188 44% 84%)", "hsl(12 64% 73%)", "hsl(35 100% 82%)"],
+    dark: ["hsl(0 16% 48%)", "hsl(188 18% 50%)", "hsl(12 30% 42%)", "hsl(35 36% 49%)"]
+  };
+
+  const css = await renderMainCss(config);
+
+  const lightRule = css.match(/(?:^|\n)\.l_left \.sidebg\s*\{[^}]*\}/)?.[0];
+  assert.ok(lightRule, "应生成浅色侧栏规则");
+  assert.match(lightRule, /--blur-px:\s*100px;/);
+  assert.match(lightRule, /--background-opacity:\s*1;/);
+  assert.match(lightRule, /background-color:\s*hsl\(0 32% 84%\);/);
+  assert.match(lightRule, /radial-gradient\(ellipse at 28% 24%, hsl\(188 44% 84%\) 0%, hsl\(188 44% 84%\) 65%, transparent 100%\)/);
+  assert.match(lightRule, /radial-gradient\(ellipse at 60% 50%, hsl\(12 64% 73%\) 0%, hsl\(12 64% 73%\) 60%, transparent 100%\)/);
+  assert.match(lightRule, /conic-gradient\(from 210deg at 32% 72%, hsl\(35 100% 82%\) 0deg, hsl\(35 100% 82%\) 110deg, transparent 190deg, hsl\(188 44% 84%\) 270deg, transparent 360deg\)/);
+  assert.doesNotMatch(lightRule, /saturate\(/);
+  assert.match(css, /background-position:\s*left top, right 42%, left bottom;/);
+  assert.match(css, /background-size:\s*56% 34%, 52% 30%, 60% 38%;/);
+  const darkRule = css.match(/:root\[data-theme="dark"\] \.l_left \.sidebg\s*\{[^}]*\}/)?.[0];
+  assert.ok(darkRule, "应生成显式暗色侧栏规则");
+  assert.match(darkRule, /--background-opacity:\s*1;/);
+  assert.match(darkRule, /background-color:\s*hsl\(0 16% 48%\);/);
+  assert.match(darkRule, /hsl\(188 18% 50%\)/);
+  assert.match(darkRule, /hsl\(12 30% 42%\)/);
+  assert.match(darkRule, /hsl\(35 36% 49%\)/);
+  assert.doesNotMatch(darkRule, /saturate\(/);
+  assert.doesNotMatch(darkRule, /--inset:/);
+  assert.doesNotMatch(css, /sidebar-default\.webp/);
+  assert.match(css, /background:\s*var\(--bg-a50\);/);
+  assert.match(css, /\.l_left\.leftbar-card \.sidebg\s*\{[^}]*display:\s*none;/);
+  assert.match(css, /@media screen and \(max-width:\s*667px\)[\s\S]*\.l_left \.sidebg\s*\{[^}]*--inset:\s*0;/);
+});
+
+test("侧栏背景类型显式选择图片或纯色，不受默认渐变影响", async () => {
+  const imageConfig = yaml.load(read("_config.yml"));
+  imageConfig.appearance.backgrounds.sidebar.type = "image";
+  imageConfig.appearance.backgrounds.sidebar.image = "https://example.test/sidebar-fallback.webp";
+  const imageCss = await renderMainCss(imageConfig);
+  assert.match(imageCss, /background-image:\s*url\((['"]?)https:\/\/example\.test\/sidebar-fallback\.webp\1\);/);
+  const imageLightRule = imageCss.match(/(?:^|\n)\.l_left \.sidebg\s*\{[^}]*\}/)?.[0];
+  const imageDarkRule = imageCss.match(/:root\[data-theme="dark"\] \.l_left \.sidebg\s*\{[^}]*\}/)?.[0];
+  assert.match(imageLightRule, /--blur-px:\s*100px;/);
+  assert.match(imageLightRule, /--background-opacity:\s*1;/);
+  assert.match(imageDarkRule, /--background-opacity:\s*0\.75;/);
+  assert.match(imageCss, /background:\s*var\(--bg-a50\);/);
+  assert.doesNotMatch(imageCss, /radial-gradient\(ellipse at 28% 24%|conic-gradient\(from 210deg at 32% 72%/);
+
+  const colorConfig = yaml.load(read("_config.yml"));
+  colorConfig.appearance.backgrounds.sidebar.type = "color";
+  colorConfig.appearance.backgrounds.sidebar.image = null;
+  colorConfig.appearance.backgrounds.sidebar.color = { light: "#fafafa", dark: "#111111" };
+  const colorCss = await renderMainCss(colorConfig);
+  const colorRules = colorCss.match(/(?:^|[^}])(?:[^\n{]* )?\.l_left \.sidebg\s*\{[^}]*\}/gm)?.join("\n") || "";
+  assert.match(colorRules, /\.l_left \.sidebg\s*\{[^}]*background-color:\s*#fafafa;/);
+  assert.match(colorRules, /:root\[data-theme="dark"\] \.l_left \.sidebg\s*\{[^}]*background-color:\s*#111(?:111)?;/);
+  assert.doesNotMatch(colorRules, /radial-gradient|conic-gradient|url\(|sidebar-fallback\.webp/);
 });
 
 test("搜索生成器按稳定页面键消费 visibility.searchable", () => {

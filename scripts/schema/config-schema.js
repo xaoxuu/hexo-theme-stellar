@@ -130,13 +130,16 @@ const LEAF_DESCRIPTIONS = Object.freeze({
   "appearance.code_block.scrollbar_width": "代码块滚动条宽度。",
   "appearance.code_block.highlight_stylesheet": "代码高亮样式表资源；null 不加载额外样式。",
   "appearance.backgrounds.sidebar.surface": "侧栏背景表面样式。",
+  "appearance.backgrounds.sidebar.type": "侧栏装饰背景类型；分别使用艺术渐变、图片或纯色。",
   "appearance.backgrounds.sidebar.color.light": "浅色模式侧栏背景色。",
   "appearance.backgrounds.sidebar.color.dark": "深色模式侧栏背景色。",
-  "appearance.backgrounds.sidebar.image": "侧栏背景图片；null 不显示背景图。",
+  "appearance.backgrounds.sidebar.image": "侧栏背景图片；留空不显示背景图。",
+  "appearance.backgrounds.sidebar.gradient.light": "浅色模式侧栏艺术渐变调色板；按基础色、左上、右中、左下提供四个 CSS 颜色。",
+  "appearance.backgrounds.sidebar.gradient.dark": "深色模式侧栏艺术渐变调色板；按基础色、左上、右中、左下提供四个 CSS 颜色。",
   "appearance.backgrounds.sidebar.opacity": "侧栏背景不透明度。",
   "appearance.backgrounds.sidebar.backdrop.radius": "侧栏背景模糊半径。",
   "appearance.backgrounds.sidebar.backdrop.overlay": "侧栏背景遮罩颜色。",
-  "appearance.backgrounds.page.image": "页面背景图片；null 不显示背景图。",
+  "appearance.backgrounds.page.image": "页面背景图片；留空不显示背景图。",
   "appearance.backgrounds.page.backdrop.radius": "页面背景模糊半径。",
   "appearance.backgrounds.page.backdrop.overlay": "页面背景遮罩颜色。",
   "appearance.backgrounds.page.backdrop.saturation": "页面背景饱和度。",
@@ -1345,14 +1348,14 @@ const CONFIG_SCHEMA = deepFreeze(annotateSchema({
         }),
         backgrounds: object({
           consumers: APPEARANCE_CONSUMERS,
-          example: { sidebar: { surface: "card", opacity: 0.8 }, page: { image: null } },
+          example: { sidebar: { surface: "glass", type: "gradient", opacity: 1 }, page: { image: null } },
           migration: "configuration/appearance#backgrounds",
           runtimeKey: "backgrounds",
           removedProperties: { leftbar: "sidebar", site: "page" },
           properties: {
             sidebar: object({
               consumers: APPEARANCE_CONSUMERS,
-              example: { surface: "card", color: { light: "var(--card)", dark: "var(--card)" }, opacity: 0.8 },
+              example: { surface: "glass", type: "gradient", opacity: 1 },
               migration: "configuration/appearance#backgrounds",
               runtimeKey: "sidebar",
               removedProperties: {
@@ -1366,7 +1369,8 @@ const CONFIG_SCHEMA = deepFreeze(annotateSchema({
                 blur: "backdrop"
               },
               properties: {
-                surface: deliveredField("appearance.backgrounds.sidebar.surface", { values: ["glass","card"], type: ["string"], default: literal("card"), normalizer: "identity", example: "card" }),
+                surface: deliveredField("appearance.backgrounds.sidebar.surface", { values: ["glass","card"], type: ["string"], default: literal("glass"), normalizer: "identity", example: "glass" }),
+                type: deliveredField("appearance.backgrounds.sidebar.type", { values: ["gradient","image","color"], type: ["string"], default: literal("gradient"), normalizer: "identity", example: "gradient" }),
                 color: object({
                   consumers: APPEARANCE_CONSUMERS,
                   example: { light: "var(--card)", dark: "var(--card)" },
@@ -1377,16 +1381,45 @@ const CONFIG_SCHEMA = deepFreeze(annotateSchema({
                     dark: deliveredField("appearance.backgrounds.sidebar.color.dark", { type: ["string"], default: literal("var(--card)"), normalizer: "identity", validator: "css_color", example: "var(--card)" })
                   }
                 }),
-                image: deliveredField("appearance.backgrounds.sidebar.image", { type: ["string","null"], default: literal("https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg"), normalizer: "identity", validator: "nullable_resource", example: "/sidebar.webp" }),
-                opacity: deliveredField("appearance.backgrounds.sidebar.opacity", { minimum: 0, maximum: 1, type: ["number"], default: literal(0.8), normalizer: "identity", example: 0.8 }),
+                image: deliveredField("appearance.backgrounds.sidebar.image", { type: ["string","null"], default: literal(null), normalizer: "identity", validator: "nullable_resource", example: "/sidebar.webp", yaml: { nullStyle: "empty" } }),
+                gradient: object({
+                  consumers: APPEARANCE_CONSUMERS,
+                  example: {
+                    light: ["hsl(210 32% 84%)", "hsl(188 44% 84%)", "hsl(12 64% 73%)", "hsl(35 100% 82%)"],
+                    dark: ["hsl(210 16% 48%)", "hsl(188 18% 50%)", "hsl(12 30% 42%)", "hsl(35 36% 49%)"]
+                  },
+                  migration: "configuration/appearance#backgrounds",
+                  runtimeKey: "gradient",
+                  properties: {
+                    light: deliveredField("appearance.backgrounds.sidebar.gradient.light", {
+                      type: ["array"],
+                      default: literal(["hsl(210 32% 84%)", "hsl(188 44% 84%)", "hsl(12 64% 73%)", "hsl(35 100% 82%)"]),
+                      items: { type: ["string"], normalizer: "identity", validator: "css_color" },
+                      normalizer: "array",
+                      normalization: "require exactly four CSS colors in base, top-left, middle-right, bottom-left order; preserve values; deep-freeze the result",
+                      validator: "sidebar_gradient_colors",
+                      example: ["hsl(210 32% 84%)", "hsl(188 44% 84%)", "hsl(12 64% 73%)", "hsl(35 100% 82%)"]
+                    }),
+                    dark: deliveredField("appearance.backgrounds.sidebar.gradient.dark", {
+                      type: ["array"],
+                      default: literal(["hsl(210 16% 48%)", "hsl(188 18% 50%)", "hsl(12 30% 42%)", "hsl(35 36% 49%)"]),
+                      items: { type: ["string"], normalizer: "identity", validator: "css_color" },
+                      normalizer: "array",
+                      normalization: "require exactly four CSS colors in base, top-left, middle-right, bottom-left order; preserve values; deep-freeze the result",
+                      validator: "sidebar_gradient_colors",
+                      example: ["hsl(210 16% 48%)", "hsl(188 18% 50%)", "hsl(12 30% 42%)", "hsl(35 36% 49%)"]
+                    })
+                  }
+                }),
+                opacity: deliveredField("appearance.backgrounds.sidebar.opacity", { minimum: 0, maximum: 1, type: ["number"], default: literal(1), normalizer: "identity", example: 1 }),
                 backdrop: object({
                   consumers: APPEARANCE_CONSUMERS,
-                  example: { radius: "100px", overlay: "var(--bg-a60)" },
+                  example: { radius: "100px", overlay: "var(--bg-a50)" },
                   migration: "configuration/appearance#backgrounds",
                   runtimeKey: "backdrop",
                   properties: {
                     radius: deliveredField("appearance.backgrounds.sidebar.backdrop.radius", { type: ["string"], default: literal("100px"), normalizer: "identity", validator: "css_length", example: "100px" }),
-                    overlay: deliveredField("appearance.backgrounds.sidebar.backdrop.overlay", { type: ["string"], default: literal("var(--bg-a60)"), normalizer: "identity", validator: "css_color", example: "var(--bg-a60)" })
+                    overlay: deliveredField("appearance.backgrounds.sidebar.backdrop.overlay", { type: ["string"], default: literal("var(--bg-a50)"), normalizer: "identity", validator: "css_color", example: "var(--bg-a50)" })
                   }
                 })
               }
@@ -1398,7 +1431,7 @@ const CONFIG_SCHEMA = deepFreeze(annotateSchema({
               runtimeKey: "page",
               removedProperties: { "background-image": "image", "blur-px": "backdrop.radius", "blur-bg": "backdrop.overlay", "blur-sat": "backdrop.saturation", blur: "backdrop" },
               properties: {
-                image: deliveredField("appearance.backgrounds.page.image", { type: ["string","null"], default: literal(null), normalizer: "identity", validator: "nullable_resource", example: null }),
+                image: deliveredField("appearance.backgrounds.page.image", { type: ["string","null"], default: literal(null), normalizer: "identity", validator: "nullable_resource", example: null, yaml: { nullStyle: "empty" } }),
                 backdrop: object({
                   consumers: APPEARANCE_CONSUMERS,
                   example: { radius: "100px", overlay: "var(--bg-a75)", saturation: "300%" },

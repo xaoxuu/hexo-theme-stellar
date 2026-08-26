@@ -45,7 +45,8 @@ test("主题默认、模板、模型与 Stylus 只消费最终 Appearance 路径
   assert.match(consumers, /appearance\.motion\.page_transition/);
   assert.doesNotMatch(consumers, /theme\.style|themeConfig\.style|hexo-config\('style\./);
   assert.doesNotMatch(consumers, /appearance\.gradients\.angle|highlightTheme|backgrounds\.(?:sidebar|page)\.blur/);
-  assert.match(sidebar, /--background-opacity: hexo-config\('appearance\.backgrounds\.sidebar\.opacity'\)/);
+  assert.match(sidebar, /sidebar-background-filter\(\$opacity\)[\s\S]*--background-opacity: \$opacity/);
+  assert.match(sidebar, /sidebar-background-(?:gradient|image)\([^\n]*hexo-config\('appearance\.backgrounds\.sidebar\.opacity'\)/);
   assert.doesNotMatch(sidebar, /if hexo-config\('appearance\.backgrounds\.sidebar\.opacity'\)/);
 });
 

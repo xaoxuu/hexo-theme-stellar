@@ -29,9 +29,21 @@ $fs-content-3 = 'calc(%s - 3px)' % var(--fs-content-base)
 
 // site main
 $site-background-image = hexo-config('appearance.backgrounds.page.image')
+$leftbar-background-type = hexo-config('appearance.backgrounds.sidebar.type')
 $leftbar-background-image = hexo-config('appearance.backgrounds.sidebar.image')
 $leftbar-background-color-light = hexo-config('appearance.backgrounds.sidebar.color.light')
 $leftbar-background-color-dark = hexo-config('appearance.backgrounds.sidebar.color.dark')
+$leftbar-gradient-light = hexo-config('appearance.backgrounds.sidebar.gradient.light')
+$leftbar-gradient-dark = hexo-config('appearance.backgrounds.sidebar.gradient.dark')
+$leftbar-gradient-light-base = unquote(hexo-config('appearance.backgrounds.sidebar.gradient.light.0'))
+$leftbar-gradient-light-top = unquote(hexo-config('appearance.backgrounds.sidebar.gradient.light.1'))
+$leftbar-gradient-light-right = unquote(hexo-config('appearance.backgrounds.sidebar.gradient.light.2'))
+$leftbar-gradient-light-bottom = unquote(hexo-config('appearance.backgrounds.sidebar.gradient.light.3'))
+$leftbar-gradient-dark-base = unquote(hexo-config('appearance.backgrounds.sidebar.gradient.dark.0'))
+$leftbar-gradient-dark-top = unquote(hexo-config('appearance.backgrounds.sidebar.gradient.dark.1'))
+$leftbar-gradient-dark-right = unquote(hexo-config('appearance.backgrounds.sidebar.gradient.dark.2'))
+$leftbar-gradient-dark-bottom = unquote(hexo-config('appearance.backgrounds.sidebar.gradient.dark.3'))
+$leftbar-has-decorative-background = ($leftbar-background-type == 'gradient' && length($leftbar-gradient-light) == 4 && length($leftbar-gradient-dark) == 4) || ($leftbar-background-type == 'image' && $leftbar-background-image)
 
 
 // colors

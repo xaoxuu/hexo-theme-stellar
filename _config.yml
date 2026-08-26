@@ -347,24 +347,31 @@ appearance:
   backgrounds:
     sidebar:
       # 侧栏背景表面样式。 [字符串；可选值：glass / card]
-      surface: card
+      surface: glass
+      # 侧栏装饰背景类型；分别使用艺术渐变、图片或纯色。 [字符串；可选值：gradient / image / color]
+      type: gradient
       color:
         # 浅色模式侧栏背景色。 [字符串]
         light: var(--card)
         # 深色模式侧栏背景色。 [字符串]
         dark: var(--card)
-      # 侧栏背景图片；null 不显示背景图。 [字符串或null]
-      image: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg
+      # 侧栏背景图片；留空不显示背景图。 [字符串或null]
+      image:
+      gradient:
+        # 浅色模式侧栏艺术渐变调色板；按基础色、左上、右中、左下提供四个 CSS 颜色。 [数组；元素：字符串]
+        light: [hsl(210 32% 84%), hsl(188 44% 84%), hsl(12 64% 73%), hsl(35 100% 82%)]
+        # 深色模式侧栏艺术渐变调色板；按基础色、左上、右中、左下提供四个 CSS 颜色。 [数组；元素：字符串]
+        dark: [hsl(210 16% 48%), hsl(188 18% 50%), hsl(12 30% 42%), hsl(35 36% 49%)]
       # 侧栏背景不透明度。 [数字；范围：0–1]
-      opacity: 0.8
+      opacity: 1
       backdrop:
         # 侧栏背景模糊半径。 [字符串]
         radius: 100px
         # 侧栏背景遮罩颜色。 [字符串]
-        overlay: var(--bg-a60)
+        overlay: var(--bg-a50)
     page:
-      # 页面背景图片；null 不显示背景图。 [字符串或null]
-      image: null
+      # 页面背景图片；留空不显示背景图。 [字符串或null]
+      image:
       backdrop:
         # 页面背景模糊半径。 [字符串]
         radius: 100px
