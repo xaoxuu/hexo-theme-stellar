@@ -73,4 +73,4 @@ flowchart LR
 - [source/js/runtime/extensions/services.mjs](../../../source/js/runtime/extensions/services.mjs)
 - [source/css/_components/tag-plugins/](../../../source/css/_components/tag-plugins/)
 
-具体语法见本目录各专题页面与 [README](README.md)。
+具体语法见本目录各专题页面与[标签插件索引](index.md)。

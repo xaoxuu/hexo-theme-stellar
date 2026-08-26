@@ -8,6 +8,7 @@ const { generateReferenceMetadata } = require("./reference-metadata");
 const { generateConfigReferenceMetadata } = require("./config-reference-metadata");
 const { generateBlueprintReferenceMetadata } = require("./blueprint-reference-metadata");
 const { generateConfigFieldAudit } = require("./config-field-audit");
+const { headingAnchor, markdownAnchors } = require("./markdown-links");
 
 function compareText(left, right) {
   if (left < right) return -1;
@@ -42,14 +43,6 @@ function list(values) {
 
 function markdown(lines) {
   return `${lines.join("\n").replace(/\n+$/, "")}\n`;
-}
-
-function headingAnchor(value) {
-  return String(value)
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9\u4e00-\u9fff -]/g, "")
-    .replace(/\s+/g, "-");
 }
 
 function configReferenceMarkdown(metadata = generateConfigReferenceMetadata()) {
@@ -183,13 +176,6 @@ function referenceIndexMarkdown() {
     "- [Blueprint 与 CLI Reference](v2-blueprints.md) · [JSON](v2-blueprints.json)",
     ""
   ]);
-}
-
-function markdownAnchors(markdown) {
-  return markdown
-    .split("\n")
-    .filter(line => /^#{1,6} /.test(line))
-    .map(line => headingAnchor(line.replace(/^#{1,6} /, "")));
 }
 
 function validatePublicReferenceLinks(root) {

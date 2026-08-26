@@ -315,7 +315,7 @@ links:
 
 ### URL 构造
 
-卡片服务基址读取自冻结的 `extensions.services.github.cardUrl`。
+卡片服务基址由冻结的 `extensions.services.githubCard` 解析当前 provider 的 `endpoint`。
 
 - `repo` 参数含 `/` 时视为仓库：
   `https://{ghcard_host}/api/pin/?username={owner}&repo={name}`
@@ -349,7 +349,7 @@ flowchart LR
     subgraph "ghcard"
         GC["ghcard"]
         GC --> IMG["static img tag\n(URL built at build time)"]
-        IMG --> GHAPI["github-readme-stats API\n(extensions.services.github.cardUrl)"]
+        IMG --> GHAPI["github-readme-stats API\n(extensions.services.githubCard provider endpoint)"]
     end
 ```
 

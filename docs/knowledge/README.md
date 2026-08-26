@@ -7,7 +7,7 @@
 - `00-总览与安装配置/` ~ `09-高级主题/`——按主题域组织的中文知识库
 - `_glossary.md`——术语对照表
 - `VERIFICATION.md`——核查与修正记录
-- `tools/verify.py`——硬事实核查脚本（用法：`python3 tools/verify.py`）
+- `npm run knowledge:check`——仓库内链接、公开主题配置引用与当前版本引用的严格门禁
 
 ## 使用方式
 
@@ -33,7 +33,7 @@
 
 - 合并版 `知识库全量.md` 已于 2026-08-16 移除：仓库无生成脚本、手工双写易漂移，知识库以领域页面为唯一事实源（RAG 可直接索引领域页面）
 - 知识库与代码不一致时**以代码为准**，修正后登记到 `VERIFICATION.md`
-- 主题升级或行为变更后，运行 `python3 tools/verify.py` 复查硬事实
+- 主题升级或行为变更后，运行 `npm run knowledge:check` 复查硬事实；所有发现必须修正或由权威契约明确分类
 - 页面内文件路径均已对照 `themes/stellar/` 核实；旧文档行号引用已移除（行号易过期）
 - 已移除功能（如 PJAX、jQuery、`welcome` 组件、`npm-publish.sh`）在对应页面已改写为当前实现
 - 每个页面 front matter 含 `title`、`domain`、`tags` 元数据，便于检索与引用
@@ -81,4 +81,4 @@
 - `gap-base: 16px`：组件内部基础间距，供多数组件复用。
 ```
 
-可能变化的值标记为当前默认值，并链接源码定义；修改公共令牌时只更新权威页面和受影响的行为契约。知识库改动后运行 `python3 docs/knowledge/tools/verify.py`。
+可能变化的值标记为当前默认值，并链接源码定义；修改公共令牌时只更新权威页面和受影响的行为契约。知识库改动后运行 `npm run knowledge:check`。

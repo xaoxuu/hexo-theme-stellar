@@ -19,7 +19,7 @@ extensions:
 
 ## 图标来源
 
-- `source/_data/icons.yml` 登记图标键与 SVG/URL。
+- `_data/icons.yml` 登记图标键与 SVG/URL。
 - `iconData()` 返回原始图标值。
 - `icon()` 默认将本地图标输出为异步占位符，`inline:true` 时直接输出 SVG，URL 输出 `<img>`。
 - `stellar_icon_sets` 生成器按命名空间输出 `/js/icons/{namespace}.json`。
@@ -30,5 +30,5 @@ extensions:
 
 - [scripts/tags/lib/icon.js](../../../scripts/tags/lib/icon.js)
 - [scripts/helpers/icon.js](../../../scripts/helpers/icon.js)
-- [source/_data/icons.yml](../../../source/_data/icons.yml)
-- [test/icon-helper.test.js](../../../test/icon-helper.test.js)
+- [_data/icons.yml](../../../_data/icons.yml)
+- [test/icons.test.js](../../../test/icons.test.js)

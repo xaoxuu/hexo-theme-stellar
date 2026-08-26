@@ -24,7 +24,7 @@ tags:
 - [layout/_partial/sidebar/index_leftbar.ejs](../../../layout/_partial/sidebar/index_leftbar.ejs)
 - [layout/_partial/sidebar/index_rightbar.ejs](../../../layout/_partial/sidebar/index_rightbar.ejs)
 - [layout/_partial/menubtn.ejs](../../../layout/_partial/menubtn.ejs)
-- [layout/_partial/scripts/utils.ejs](../../../layout/_partial/scripts/utils.ejs)
+- [layout/_partial/scripts.ejs](../../../layout/_partial/scripts.ejs)
 - [scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
 
 </details>

@@ -9,8 +9,8 @@
  *   .agents/skills/stellar-theme-dev/SKILL.md（canonical）、CONTRIBUTING.md
  *
  * 1. 章节引用：`§N` 必须指向 AGENTS.md 中存在的章节号（防章节重排后引用失效）
- * 2. 门禁措辞同步：关键门禁短语必须同时出现在 AGENTS.md 与 skill canonical 中
- *    （防止只改一处导致不同环境的执行门禁漂移）
+ * 2. 门禁权威与指针：具体命令只在 AGENTS.md 维护，skill canonical 必须明确指向
+ *    AGENTS.md §5 的 F0–F3 风险矩阵（防止重复规则漂移）
  * 3. 路径存在性：反引号路径命中仓库根前缀时必须真实存在。
  *    注意：存在性只能防拼写漂移，防不了「目录存在但语义错误」类问题
  *    （如小部件真实位置为 layout/_partial/widgets/），后者依赖知识库人工复核。
@@ -35,14 +35,15 @@ const FILES = [
 const AGENTS = 'AGENTS.md';
 const SKILL = '.agents/skills/stellar-theme-dev/SKILL.md';
 
-// 必须同时出现在 AGENTS.md 与 skill 中的门禁短语
-const GATE_PHRASES = [
+// AGENTS.md 独占具体门禁；Skill 只保留足以触发权威规则的上下文指针。
+const AGENTS_GATE_PHRASES = [
   'npm run g',
   'npm run check',
-  'docs/knowledge/tools/verify.py',
+  'npm run knowledge:check',
   '不自动提交',
   'docs/guides/tag-plugins-style-guide.md',
 ];
+const SKILL_GATE_POINTERS = ['AGENTS.md', '§5', 'F0–F3'];
 
 // 路径存在性检查的根前缀；其余反引号片段（目录碎片、主工程/demo 路径等）不检查
 const PATH_ROOTS = [
@@ -91,15 +92,15 @@ function checkSections(contents) {
   }
 }
 
-function checkGateParity(contents) {
-  for (const phrase of GATE_PHRASES) {
-    const inAgents = contents[AGENTS].includes(phrase);
-    const inSkill = contents[SKILL].includes(phrase);
-    if (!inAgents || !inSkill) {
-      const missing = [inAgents ? '' : 'AGENTS.md', inSkill ? '' : 'skill']
-        .filter(Boolean)
-        .join(' / ');
-      errors.push(`门禁短语缺失（${missing}）: ${phrase}`);
+function checkGateAuthority(contents) {
+  for (const phrase of AGENTS_GATE_PHRASES) {
+    if (!contents[AGENTS].includes(phrase)) {
+      errors.push(`AGENTS.md 门禁短语缺失: ${phrase}`);
+    }
+  }
+  for (const pointer of SKILL_GATE_POINTERS) {
+    if (!contents[SKILL].includes(pointer)) {
+      errors.push(`skill 权威指针缺失: ${pointer}`);
     }
   }
 }
@@ -130,7 +131,7 @@ function main() {
     contents[rel] = read(rel);
   }
   checkSections(contents);
-  checkGateParity(contents);
+  checkGateAuthority(contents);
   checkPaths(contents);
   if (errors.length > 0) {
     console.error('AI 规范引用检查失败:');
@@ -139,7 +140,7 @@ function main() {
     }
     process.exit(1);
   }
-  console.log('AI 规范引用检查通过（章节引用 / 门禁措辞 / 路径存在性）。');
+  console.log('AI 规范引用检查通过（章节引用 / 门禁权威与指针 / 路径存在性）。');
 }
 
 main();

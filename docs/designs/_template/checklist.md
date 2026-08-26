@@ -11,7 +11,7 @@ date: YYYY-MM-DD
 - [ ] `npm test` 通过（新增/修改纯函数的单测）
 - [ ] 在主工程执行 `npm run g` 全量构建通过（涉及 `scripts/` 必做）
 - [ ] 页面类型覆盖：首页 / 文章页 / Wiki 页 / 错误页等
-- [ ] `python3 docs/knowledge/tools/verify.py` 知识库硬事实核查通过
+- [ ] `npm run knowledge:check` 知识库硬事实门禁通过
 - [ ] 浏览器兼容性检查
 
 ## 文档同步

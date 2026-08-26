@@ -57,13 +57,13 @@
 主题仓库内置面向 AI 贡献者的中文知识库 `docs/knowledge/`：
 
 - `00-总览与安装配置/` ~ `09-高级主题/`：按主题域组织，入口为 `docs/knowledge/README.md` 及各领域 `index.md`
-- `VERIFICATION.md`：核查与修正记录；`tools/verify.py`：硬事实核查脚本
+- `VERIFICATION.md`：核查与修正记录；`npm run knowledge:check`：知识库硬事实门禁
 
 使用约定：
 
 - 涉及主题代码、配置或行为问题时，按需查阅 `docs/knowledge/` 对应领域，再读源码确认；局部改动无需加载总览或无关领域
 - 知识库以本仓库代码为唯一事实来源；公开契约、架构事实或关键阈值变化时更新对应页面，发现既有事实错误时登记到 `VERIFICATION.md`
-- 修改知识库后运行 `python3 docs/knowledge/tools/verify.py`；版本不一致或行号引用越界为失败，未解析文件与配置键异常仅报告
+- 修改知识库后运行 `npm run knowledge:check`；仓库内链接、公开主题配置引用和当前版本引用必须零错误，语义正确性按 §5 的文档同步核验确认
 
 知识库写作遵循“设计语义、行为契约、修改依据”分层：公共设计令牌集中记录在 `01-样式系统/design-tokens.md`，各领域页面只保留本领域的行为、布局契约、公开配置和关键阈值，具体 CSS/模板/JS 实现以源码为最终事实来源，历史取舍放在 `docs/designs/`。新增数值必须说明语义和作用范围；普通实现值仅在影响决策、兼容性或验收时记录；同一事实只维护一个权威位置，其他页面通过链接引用。
 
@@ -137,7 +137,7 @@ module.exports = function(hexo) {
 
 | 级别 | 适用范围 | 必要证据 |
 | --- | --- | --- |
-| **F0 文档** | 说明、流程、skill、方案或注释，不改变运行行为 | 相关格式、链接、引用或事实检查；知识库改动运行 `python3 docs/knowledge/tools/verify.py` |
+| **F0 文档** | 说明、流程、skill、方案或注释，不改变运行行为 | 相关格式、链接、引用或事实检查；知识库改动运行 `npm run knowledge:check` |
 | **F1 定向**（默认） | 局部 CSS/EJS/浏览器 JS/helper、单个配置字段或可界定行为 | 直接相关的单测、lint、CSS 编译或渲染检查；Schema 改动执行 `npm run schema:generate` 与 `npm run schema:check`；只有跨过 Hexo 渲染/资源编译边界且定向检查不能证明时才在主工程运行 `npm run g` |
 | **F2 全仓** | 跨域公共运行时、共享模型/Collection 管线、构建链、依赖、广泛重构，或影响范围仍不确定 | `npm run check`；影响真实站点渲染时再加主工程 `npm run g` |
 | **F3 分发** | npm 包安装、CLI/init、Blueprint、迁移流程、发布，或明确的阶段/人工验收任务 | F2 + `npm run integration:check`；仅在准备人工验收制品时运行 `npm run acceptance:prepare` |

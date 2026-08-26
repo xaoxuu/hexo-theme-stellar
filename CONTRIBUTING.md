@@ -86,7 +86,7 @@ git submodule add https://github.com/<your-name>/hexo-theme-stellar.git themes/s
 npm run lint       # ESLint
 npm run contributions:check # 贡献注册表与 Schema/assets/i18n/docs/tests 一致性
 npm test           # node:test 单测
-python3 docs/knowledge/tools/verify.py   # 知识库硬事实核查
+npm run knowledge:check # 知识库硬事实门禁
 npm run check      # 一键执行 lint + 单测 + 知识库核查
 ```
 
@@ -133,7 +133,7 @@ CI 会在 PR 上强制执行以下检查，全部通过后才可合并：
 | Skill mirror sync | `.agents/` 与 `.claude/` 技能镜像一致 |
 | Spec refs | AGENTS.md 章节引用与关键措辞一致性 |
 | Integration build | 官方 demo 全量构建（hexo generate）+ Gulp minify |
-| Knowledge base verify | `docs/knowledge/tools/verify.py` 硬事实核查 |
+| Knowledge base verify | `npm run knowledge:check` 严格核查仓库内链接、公开主题配置引用与当前版本引用 |
 
 ## 发版
 

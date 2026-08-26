@@ -514,7 +514,7 @@ Topic 索引生成器从构建期 `topicIndex.items` 复制上架专栏投影，
 
 | 属性 | 兜底 | 用途 |
 |------|------|------|
-| `topic.cover` | 构建期已解析 `card.cover` → `resources.fallbacks.topicCover` | 最新文章卡片背景图（2:1 裁剪） |
+| `topic.cover` | 构建期已解析 `card.cover` → `INTERNAL.resources.topicCover` | 最新文章卡片背景图（2:1 裁剪） |
 | `topic.headline` | `topic.name` | 容器顶部 `h2.topic-title` 专栏标题（置于卡片外） |
 | `topic.description` | — | 标题下方的 `p.topic-desc` 一句话描述 |
 | `topic.latest` | — | 最新文章，整卡跳转目标 |
