@@ -56,7 +56,8 @@ Card Hover 的迁移展示了一个简单浏览器 Feature 的最小维护面：
 npm run contributions:check
 npm test
 npm run reference:check
-npm run knowledge:check
 ```
 
 `contributions:check` 检查重复注册/默认值所有者、缺失翻译、Schema/Reference 漂移、未登记资源、缺失入口/文档/行为测试。它检查维护面是否连通，不替代功能本身的正反例和真实 Hexo 构建。
+
+知识库正文在发版准备或明确文档任务中同步，并在修改后运行 `npm run knowledge:check`；正式发版由 `npm run release:check` 组合实现门禁与知识库核查。

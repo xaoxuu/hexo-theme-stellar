@@ -244,9 +244,9 @@ function askConfirm(question) {
 }
 
 function runPreflightCheck() {
-  console.log('\n>>> 执行发版前质量检查: npm run check（lint + 单测 + 知识库核查）');
+  console.log('\n>>> 执行发版前质量检查: npm run release:check（实现门禁 + 知识库核查）');
   try {
-    execFileSync('npm', ['run', 'check'], { cwd: ROOT, stdio: 'inherit' });
+    execFileSync('npm', ['run', 'release:check'], { cwd: ROOT, stdio: 'inherit' });
   } catch (_) {
     throw new Error('质量检查未通过（lint / 单测 / 知识库核查），已终止发版，请修复后再试');
   }

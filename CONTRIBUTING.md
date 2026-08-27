@@ -120,7 +120,7 @@ npm run g          # hexo clean && hexo generate && npx gulp minify
 
 - **变更说明**：描述解决的问题或新增能力，附相关 issue 编号（如有）
 - **改动范围**：勾选涉及维度（`layout/`、`scripts/`、`source/css/`、`source/js/`、`languages/`、`docs/`）
-- **验证清单**：确认 lint / 单测 / 全量构建 / 知识库同步等已通过
+- **验证清单**：确认本次风险级别要求的 lint、单测、生成或构建证据已通过
 
 CI 会在 PR 上强制执行以下检查，全部通过后才可合并：
 
@@ -133,7 +133,7 @@ CI 会在 PR 上强制执行以下检查，全部通过后才可合并：
 | Skill mirror sync | `.agents/` 与 `.claude/` 技能镜像一致 |
 | Spec refs | AGENTS.md 章节引用与关键措辞一致性 |
 | Integration build | 官方 demo 全量构建（hexo generate）+ Gulp minify |
-| Knowledge base verify | `npm run knowledge:check` 严格核查仓库内链接、公开主题配置引用与当前版本引用 |
+| Knowledge base verify | 仅在 `docs/knowledge/` 变化时运行 `npm run knowledge:check`；发版由 `release:check` 再核查最终快照 |
 
 ## 发版
 
@@ -143,7 +143,7 @@ CI 会在 PR 上强制执行以下检查，全部通过后才可合并：
 npm run release -- <version> --yes
 ```
 
-发版前需在 `CHANGELOG.md` 准备好对应版本的非空章节（H2 版本号 + H3 分类），脚本校验通过后自动更新版本号、推送并触发 CI 完成 npm 发布、tag 与 GitHub Release。完整流程见 [docs/guides/release-process.md](docs/guides/release-process.md)。
+发版前按发布基线与最终候选的净变化集中同步知识库、公开 Wiki 和 CHANGELOG；`release:check` 在最终状态组合实现门禁与知识库核查。脚本校验通过后自动更新版本号、推送并触发 CI 完成 npm 发布、tag 与 GitHub Release。完整流程见 [docs/guides/release-process.md](docs/guides/release-process.md)。
 
 ## 社区与支持
 

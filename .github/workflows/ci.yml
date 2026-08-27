@@ -130,7 +130,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v6
         with:
           node-version: 22
-      - run: npm run knowledge:check
+      - name: Verify changed knowledge base
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          if git diff --quiet "$BASE_SHA" "$HEAD_SHA" -- docs/knowledge; then
+            echo "Knowledge base unchanged; deferred release snapshot remains valid."
+          else
+            npm run knowledge:check
+          fi

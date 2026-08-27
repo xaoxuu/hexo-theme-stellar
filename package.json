@@ -15,7 +15,8 @@
     "integration:check": "node ci/check-package-integration.js",
     "acceptance:prepare": "node ci/check-package-integration.js --prepare",
     "performance:check": "node ci/check-performance.js --check",
-    "check": "npm run lint && npm test && npm run schema:check && npm run performance:check && npm run knowledge:check",
+    "check": "npm run lint && npm test && npm run schema:check && npm run performance:check",
+    "release:check": "npm run check && npm run knowledge:check",
     "release": "node release.js",
     "release:dry": "node release.js --dry-run"
   },
