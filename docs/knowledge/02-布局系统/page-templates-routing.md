@@ -220,12 +220,12 @@ v2 配置在 `layout.profiles` 中为各页面 Profile 声明 `path` 和 `naviga
 
 ---
 
-## Heti 与 Scrollreveal 的文章类
+## Heti 与 Reveal 的文章类
 
 `articleClass()` 生成 `<article>` 元素的 `class` 属性：
 
 - 基础：`md-text content`
-- `scrollreveal(...)`——插件启用时注入滚动显现触发属性
+- `scrollreveal(...)`——Reveal 启用时注入滚动显现触发类
 - `heti`——冻结运行时 `extensions.features.heti.enabled` 为 true 时追加
 
 **参考源码**：[layout/page.ejs](../../../layout/page.ejs)

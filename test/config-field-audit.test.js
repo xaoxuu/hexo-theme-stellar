@@ -85,6 +85,7 @@ test("M6 配置审计覆盖当前与退出字段且每项只有一个结论", ()
   assert.ok(retired.some(field => field.path === "extensions.cache" && field.disposition === "internalize"));
   assert.ok(retired.some(field => field.path === "extensions.tags.copy" && field.disposition === "remove"));
   assert.ok(retired.some(field => field.path === "extensions.tags.copy.toast" && field.disposition === "localize"));
+  assert.ok(retired.some(field => field.path === "appearance.motion.page_transition" && field.disposition === "remove"));
   assert.ok(accepted.some(field => field.path === "extensions.comments.title" && field.disposition === "localize"));
 });
 

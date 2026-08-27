@@ -13,11 +13,11 @@
     "remove"
   ],
   "counts": {
-    "public": 509,
+    "public": 504,
     "localize": 5,
     "derive": 0,
-    "internalize": 9,
-    "remove": 1
+    "internalize": 13,
+    "remove": 2
   },
   "fields": [
     {
@@ -2539,17 +2539,14 @@
     {
       "scope": "theme",
       "path": "appearance.motion.page_transition",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
+      "disposition": "remove",
+      "accepted": false,
+      "defaultSource": "removed",
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ]
+        "configuration diagnostics",
+        "migration guidance"
+      ],
+      "rationale": "跨文档 View Transition 已移除，站点统一使用普通整页导航"
     },
     {
       "scope": "theme",
@@ -4058,30 +4055,26 @@
     {
       "scope": "theme",
       "path": "extensions.features.reveal.distance",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
+      "disposition": "internalize",
+      "accepted": false,
+      "defaultSource": "source/js/runtime/extensions/reveal.mjs",
       "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
+        "configuration diagnostics",
+        "migration guidance"
+      ],
+      "rationale": "Reveal 动画参数由主题原生实现统一维护"
     },
     {
       "scope": "theme",
       "path": "extensions.features.reveal.duration_ms",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
+      "disposition": "internalize",
+      "accepted": false,
+      "defaultSource": "source/js/runtime/extensions/reveal.mjs",
       "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
+        "configuration diagnostics",
+        "migration guidance"
+      ],
+      "rationale": "Reveal 动画参数由主题原生实现统一维护"
     },
     {
       "scope": "theme",
@@ -4100,42 +4093,38 @@
     {
       "scope": "theme",
       "path": "extensions.features.reveal.interval_ms",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
+      "disposition": "internalize",
+      "accepted": false,
+      "defaultSource": "source/js/runtime/extensions/reveal.mjs",
       "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
+        "configuration diagnostics",
+        "migration guidance"
+      ],
+      "rationale": "Reveal 动画参数由主题原生实现统一维护"
     },
     {
       "scope": "theme",
       "path": "extensions.features.reveal.provider",
       "disposition": "internalize",
       "accepted": false,
-      "defaultSource": "scripts/lib/internal-constants.js",
+      "defaultSource": "source/js/runtime/extensions/reveal.mjs",
       "consumers": [
         "configuration diagnostics",
         "migration guidance"
       ],
-      "rationale": "reveal 只有 scrollreveal 一个内置实现，不构成用户选择"
+      "rationale": "reveal 使用主题内置原生实现，不构成用户选择"
     },
     {
       "scope": "theme",
       "path": "extensions.features.reveal.scale",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
+      "disposition": "internalize",
+      "accepted": false,
+      "defaultSource": "source/js/runtime/extensions/reveal.mjs",
       "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ]
+        "configuration diagnostics",
+        "migration guidance"
+      ],
+      "rationale": "Reveal 动画参数由主题原生实现统一维护"
     },
     {
       "scope": "theme",

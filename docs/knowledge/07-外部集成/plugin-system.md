@@ -37,7 +37,7 @@ Runtime Manifest 内置 Extension、Feature 和 selector 组件由 [contribution
 | `lazy_loading` | 始终启用 | 图片懒加载的 `transition/auto_aspect_ratio` 行为 |
 | `link_prefetch` | enabled | Flying Pages 链接预取 |
 | `lightbox` | enabled | Fancybox 图片灯箱 |
-| `reveal` | enabled | ScrollReveal 入场动画 |
+| `reveal` | enabled | 原生滚动入场动画 |
 | `math` | provider=null | KaTeX / MathJax provider |
 | `diagrams` | provider=null | Mermaid 图表 |
 | `card_hover` | disabled | 卡片光斑与倾斜 |
@@ -51,15 +51,11 @@ extensions:
       selector: .timenode p>img
     reveal:
       enabled: true
-      distance: 8px
-      duration_ms: 1000
-      interval_ms: 100
-      scale: 1
     card_hover:
       enabled: true
 ```
 
-Fancybox 与 ScrollReveal 的实现固定；MathJax 只使用 v3。Mermaid 通过 `diagrams.provider: mermaid` 选择并使用官方样式。代码复制与自适应文字固定开启，不公开配置；AI Summary 已整体删除。
+Reveal 由主题内置的 `IntersectionObserver` 与 Web Animations API 实现，不请求第三方资源；只公开启用开关，动画距离、时长、错峰和缩放由主题统一维护。Fancybox 的实现固定，MathJax 只使用 v3。Mermaid 通过 `diagrams.provider: mermaid` 选择并使用官方样式。代码复制与自适应文字固定开启，不公开配置；AI Summary 已整体删除。
 
 页面 Front Matter 通过 `render.math` 与 `render.diagrams` 选择内容渲染能力，不直接配置官方资源 URL。
 
@@ -101,7 +97,7 @@ flowchart LR
   G --> I[mount root context]
 ```
 
-`layout/_partial/scripts/runtime.ejs` 只输出 `#stellar-runtime-config` JSON 和 `/js/runtime/index.mjs`。manifest 条目含 `id/module/config/when`；`when.selector` 未命中时不会 import adapter。`ExtensionRegistry.mount(root, context)` 顺序挂载，重复 mount 先释放旧实例，`unmount(root)` 逆序清理；import、mount、unmount 失败只派发 `stellar:extension-error`，不会阻断其它 Extension。Runtime 启动失败时立即添加 `sr-fallback`，正文保持可见。
+`layout/_partial/scripts/runtime.ejs` 只输出 `#stellar-runtime-config` JSON 和 `/js/runtime/index.mjs`。manifest 条目含 `id/module/config/when`；`when.selector` 未命中时不会 import adapter。`ExtensionRegistry.mount(root, context)` 顺序挂载，重复 mount 先释放旧实例，`unmount(root)` 逆序清理；import、mount、unmount 失败只派发 `stellar:extension-error`，不会阻断其它 Extension。Reveal 不预先隐藏 `.slide-up`，首次观察已处于视口内的元素也不播放动画，因此页面切换、Runtime 启动或 Extension 加载失败时正文都按默认样式直接显示。
 
 旧 `document.write`、同步 utils 补载、`_pluginQueue`、`stellar.initPlugin` 与插件恢复看门狗已删除。`utils.js` 只保留迁移期 DOM/经典资源工具，不再拥有 Extension 注册或网络缓存算法。
 
@@ -109,7 +105,7 @@ flowchart LR
 
 Contribution 的 `kind` 描述产品归类，`entry.adapter` 描述运行时调用约定，两者不能互相替代。凡声明 `entry.adapter: feature` 的 descriptor（包括内部 component）在投影 Runtime Manifest 时都必须携带 `config.feature=<id>`，供共享 `feature.mjs` 分派；独立 Feature 继续保留同名字段以维持既有 Manifest 形状。注册表测试统一枚举共享 adapter 条目，阻止 component 再次遗漏分派 ID。
 
-核心防闪烁样式在构建期按 `extensions.features.*.enabled` 条件导入；Swiper、Fancybox、Mermaid 与评论样式在 DOM 命中时按需注入。
+核心防闪烁样式只服务确有加载占位需求的功能；Reveal 只对首次观察时位于视口外、之后滚入视口的元素临时施加 Web Animations API 动画，不需要隐藏态 CSS。Swiper、Fancybox、Mermaid 与评论样式在 DOM 命中时按需注入。
 
 Card Hover 使用独立 `card-hover.mjs` adapter 加载内置脚本并对当前 root 执行 `mountAll/unmountAll`。它的 ID、入口、asset、`.card-hover` 激活、Schema 与测试只在 descriptor 关联，不再出现于通用 Feature dispatch。
 

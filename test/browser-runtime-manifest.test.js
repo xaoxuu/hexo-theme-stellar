@@ -42,7 +42,7 @@ function fixture(overrides = {}) {
       dependencies: { marked: "https://cdn.example/marked.js", lazyLoading: "https://cdn.example/lazy.js" },
       search: Object.assign({}, INTERNAL_CONSTANTS.assets.search, { algolia: "https://cdn.example/algolia.js" }),
       comments: { giscus: { js: "https://giscus.app/client.js" } },
-      features: { linkPrefetch: "https://cdn.example/prefetch.js", lightbox: {}, reveal: "https://cdn.example/reveal.js", codeCopy: {}, adaptiveText: {}, swiper: {} },
+      features: { linkPrefetch: "https://cdn.example/prefetch.js", lightbox: {}, codeCopy: {}, adaptiveText: {}, swiper: {} },
       services: { siteinfo: { js: "/js/services/siteinfo.js" } }
     }
   }, overrides);
@@ -69,6 +69,10 @@ test("Runtime Manifest 投影页面需要的 Extension 并深度冻结", () => {
   assert.equal(manifest.policy.request.timeoutMs, 5000);
   assert.equal(manifest.extensions.find(item => item.id === "lightbox").when.selector.includes(".with-fancybox"), true);
   assert.equal(manifest.extensions.find(item => item.id === "lightbox").when.selector.includes(".custom"), true);
+  const reveal = manifest.extensions.find(item => item.id === "reveal");
+  assert.equal(reveal.module, "/js/runtime/extensions/reveal.mjs");
+  assert.equal("asset" in reveal.config, false);
+  assert.deepEqual(reveal.config, { feature: "reveal", enabled: true });
   assert.equal(Object.isFrozen(manifest), true);
   assert.equal(Object.isFrozen(manifest.extensions[0].config), true);
   assert.equal(Object.isFrozen(manifest.policy), true);

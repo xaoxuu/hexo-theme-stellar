@@ -121,9 +121,9 @@ graph TB
 
 `layout/_partial/scripts/runtime.ejs` 在页尾输出不可执行的 `#stellar-runtime-config` JSON，再由 `/js/runtime/index.mjs` 解析。构建期 builder 已校验 manifest 版本、根路径、重复 ID、本地 module 路径、`when` 条件与配置对象，并深度冻结结果；序列化会转义 HTML 敏感字符。
 
-浏览器 `ExtensionRegistry` 根据 `when.selector/always` 决定是否 dynamic import adapter，随后调用 `mount(root, context)`。重复 mount 先 unmount，释放顺序与挂载相反；任一 Extension 的 import/mount/unmount 失败都被隔离并派发 `stellar:extension-error`。bootstrap 自身失败会立即添加 `sr-fallback`，不等待看门狗。
+浏览器 `ExtensionRegistry` 根据 `when.selector/always` 决定是否 dynamic import adapter，随后调用 `mount(root, context)`。重复 mount 先 unmount，释放顺序与挂载相反；任一 Extension 的 import/mount/unmount 失败都被隔离并派发 `stellar:extension-error`。Reveal 默认不隐藏内容，因此 bootstrap 或 adapter 失败时无需额外可见性兜底。
 
-旧 `document.write`、同步 utils 补载、`_pluginQueue`、`initPlugin` 和 ScrollReveal 恢复看门狗已经删除。`utils.js` 仍同步提供迁移期经典 DOM/资源工具，但不再注册插件或实现 request/cache。
+旧 `document.write`、同步 utils 补载、`_pluginQueue`、`initPlugin` 和 Reveal 恢复看门狗已经删除。`utils.js` 仍同步提供迁移期经典 DOM/资源工具，但不再注册插件或实现 request/cache。
 
 **参考源码**：[layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/index.mjs](../../../source/js/runtime/index.mjs)、[source/js/runtime/extension-registry.mjs](../../../source/js/runtime/extension-registry.mjs)
 
@@ -384,7 +384,7 @@ sequenceDiagram
 - 页面隐藏时复位；`destroy()` 移除卡片与媒体查询监听、注入光斑层和根级配置变量。
 - 粗指针、触屏或减少动态效果时不挂载；脚本加载失败时组合类保持无行为，不阻塞链接与原组件 hover。
 
-Spotlight 是卡片末尾注入的独立 `span.card-hover__spotlight[aria-hidden=true]`，不接收指针事件；纯键盘进入或指针离开时仍保持 `focus-within`，都会立即使用居中光斑。快速重新移入后，旧的淡出结束事件不会覆盖新指针坐标。Tilt 作用于卡片本体，不占用 ScrollReveal 的 `.post-card-wrap` transform。
+Spotlight 是卡片末尾注入的独立 `span.card-hover__spotlight[aria-hidden=true]`，不接收指针事件；纯键盘进入或指针离开时仍保持 `focus-within`，都会立即使用居中光斑。快速重新移入后，旧的淡出结束事件不会覆盖新指针坐标。Tilt 作用于卡片本体，不占用 Reveal 动画期间的 `.post-card-wrap` transform。
 
 置顶轮播外层和专栏列表的最新文章封面卡片复用完整 Spotlight + Tilt；轮播轨道与专栏标题、描述、归档式文章条目不参与 Tilt。Wiki Hero 的源码、文档和自定义 action 按钮、搜索结果链接与标准 `.ui-collection__item` 复用 Spotlight-only 生命周期，因此保留原有 surface 背景且不会产生位移或 3D transform。搜索的 `.ui-collection-adapter` 列表本身不挂载，只有内部可点击链接动态挂载，页面标题留在链接外；TOC adapter 仍不接入。
 

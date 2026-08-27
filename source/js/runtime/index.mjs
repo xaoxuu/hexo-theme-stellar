@@ -71,6 +71,5 @@ async function start() {
 
 start().catch(error => {
   console.error('[stellar runtime] bootstrap failed', error);
-  document.documentElement.classList.add('sr-fallback');
   dispatch('stellar:runtime-error', { error });
 });

@@ -191,6 +191,11 @@ test("Collection 与 Front Matter 的完整目标节点保持严格作用域", (
   assert.equal(resolveConfigMigration("front_matter", "collection.type").to, "collection.profile");
   assert.equal(resolveConfigMigration("front_matter", "comments.giscus.data-theme").to, "comments.options.*");
   assert.equal(resolveConfigMigration("front_matter", "inject.head[]").to, "inject.head_end");
+  assert.deepEqual(resolveConfigMigration("style", "style.page_transition.enable"), {
+    from: "style.page_transition.enable",
+    action: "remove",
+    reason: "跨文档 View Transition 已移除，统一使用普通整页导航"
+  });
 });
 
 test("主题默认配置的活动叶子与注释示例字段族都有迁移证据", () => {

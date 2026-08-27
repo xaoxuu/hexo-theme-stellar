@@ -1087,7 +1087,6 @@
         "Reference generator"
       ],
       "example": {
-        "page_transition": true,
         "avatar": "auto"
       },
       "migration": "configuration/appearance#motion",
@@ -1125,34 +1124,6 @@
         "always",
         "never"
       ]
-    },
-    {
-      "path": "appearance.motion.page_transition",
-      "runtimePath": "appearance.motion.pageTransition",
-      "type": [
-        "boolean"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": true
-      },
-      "description": "是否启用页面进入动效。",
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ],
-      "example": true,
-      "migration": "configuration/appearance"
     },
     {
       "path": "appearance.shape",
@@ -4074,11 +4045,7 @@
       "default": {
         "kind": "literal",
         "value": {
-          "enabled": true,
-          "distance": "8px",
-          "duration_ms": 1000,
-          "interval_ms": 100,
-          "scale": 1
+          "enabled": true
         }
       },
       "scope": "theme",
@@ -4095,69 +4062,10 @@
         "Reference generator"
       ],
       "example": {
-        "enabled": true,
-        "distance": "8px",
-        "duration_ms": 1000,
-        "interval_ms": 100,
-        "scale": 1
+        "enabled": true
       },
       "migration": "configuration/extensions",
       "sealed": true
-    },
-    {
-      "path": "extensions.features.reveal.distance",
-      "runtimePath": "extensions.features.reveal.distance",
-      "type": [
-        "string"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": "8px"
-      },
-      "description": "滚动进入动效的位移距离。",
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": "8px",
-      "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.reveal.duration_ms",
-      "runtimePath": "extensions.features.reveal.durationMs",
-      "type": [
-        "number"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": 1000
-      },
-      "description": "滚动进入动效持续时间，单位为毫秒。",
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": 1000,
-      "migration": "configuration/extensions",
-      "minimum": 0
     },
     {
       "path": "extensions.features.reveal.enabled",
@@ -4185,63 +4093,6 @@
       ],
       "example": true,
       "migration": "configuration/extensions"
-    },
-    {
-      "path": "extensions.features.reveal.interval_ms",
-      "runtimePath": "extensions.features.reveal.intervalMs",
-      "type": [
-        "number"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": 100
-      },
-      "description": "同组元素进入动效的间隔，单位为毫秒。",
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": 100,
-      "migration": "configuration/extensions",
-      "minimum": 0
-    },
-    {
-      "path": "extensions.features.reveal.scale",
-      "runtimePath": "extensions.features.reveal.scale",
-      "type": [
-        "number"
-      ],
-      "default": {
-        "kind": "literal",
-        "value": 1
-      },
-      "description": "滚动进入动效的初始缩放比例。",
-      "scope": "theme",
-      "cascade": [
-        "schema default",
-        "_config.stellar.yml"
-      ],
-      "normalizer": "identity",
-      "normalization": "validate the declared type; preserve the value; deep-freeze the result",
-      "consumers": [
-        "Extension registry",
-        "Extension renderer",
-        "browser Extension runtime",
-        "Reference generator"
-      ],
-      "example": 1,
-      "migration": "configuration/extensions",
-      "minimum": 0,
-      "maximum": 1
     },
     {
       "path": "extensions.search",

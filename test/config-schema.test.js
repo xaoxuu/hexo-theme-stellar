@@ -154,7 +154,7 @@ test("Appearance 与资源兜底解析最终路径并投影 camelCase 运行时"
         color_scheme: "dark",
         typography: { font_size: { root: "18px" }, font_family: { code: "Menlo, monospace" }, content_align: "justify" },
         shape: { radius: { card_large: "28px" } },
-        motion: { page_transition: false, avatar: "never" },
+        motion: { avatar: "never" },
         colors: { primary: "#123456" },
         code_block: { scrollbar_width: "0px", highlight_stylesheet: null },
         backgrounds: {
@@ -185,7 +185,7 @@ test("Appearance 与资源兜底解析最终路径并投影 camelCase 运行时"
   assert.equal(config.appearance.typography.fontFamily.code, "Menlo, monospace");
   assert.equal(config.appearance.typography.contentAlign, "justify");
   assert.equal(config.appearance.shape.radius.cardLarge, "28px");
-  assert.deepEqual(config.appearance.motion, { pageTransition: false, avatar: "never" });
+  assert.deepEqual(config.appearance.motion, { avatar: "never" });
   assert.equal(config.appearance.codeBlock.scrollbarWidth, "0px");
   assert.equal(config.appearance.codeBlock.highlightStylesheet, null);
   assert.equal(config.appearance.backgrounds.sidebar.surface, "glass");
@@ -277,7 +277,7 @@ test("Appearance 与资源兜底拒绝旧根、旧字段、未知字段和非法
       default: { cover: "/cover.svg" },
       appearance: {
         color_scheme: "sepia",
-        motion: { enable: true },
+        motion: { enable: true, page_transition: true },
         backgrounds: { sidebar: { opacity: 1.2, unknown: true } }
       },
       resources: { fallbacks: { link: "/link.svg", image: { unknown: "/image.svg" } } }
@@ -287,6 +287,7 @@ test("Appearance 与资源兜底拒绝旧根、旧字段、未知字段和非法
     assert.match(error.message, /default 已移除，期望 resources\.fallbacks/);
     assert.match(error.message, /appearance\.color_scheme 的值不在 auto \| light \| dark/);
     assert.match(error.message, /未知字段 appearance\.motion\.enable/);
+    assert.match(error.message, /appearance\.motion\.page_transition 已移除/);
     assert.match(error.message, /appearance\.backgrounds\.sidebar\.opacity 的值不在 number <= 1/);
     assert.match(error.message, /未知字段 appearance\.backgrounds\.sidebar\.unknown/);
     assert.match(error.message, /resources\.fallbacks\.link 已移除/);

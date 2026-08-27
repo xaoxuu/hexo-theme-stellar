@@ -266,7 +266,7 @@ resources:
 
 主题把「每页都可能用到」与「少数页面才用到」的资源分开：
 
-- **核心样式 `main.css`** 只保留基础与防闪烁规则（`.lazy` 显隐、`.slide-up` 显隐、aplayer、copycode 等）；swiper/fancybox/mermaid 与五种评论系统样式移入 `source/css/plugins/`、`source/css/comments/` 独立编译，前端在 DOM 检测命中时经 `utils.css()` 按需注入。
+- **核心样式 `main.css`** 只保留基础与必要的加载反馈规则（`.lazy` 显隐、aplayer、copycode 等）；Reveal 不再预设隐藏态样式。swiper/fancybox/mermaid 与五种评论系统样式移入 `source/css/plugins/`、`source/css/comments/` 独立编译，前端在 DOM 检测命中时经 `utils.css()` 按需注入。
 - **重复脚本外置**：`utils` 保持同步基础能力，页面级功能由单一 ESM runtime 按 Runtime Manifest 启动；图标白名单由构建期生成器 `scripts/generators/stellar-icons.js` 输出为 `/js/stellar-icons.js`，约 6KB 的 SVG 数据不再随每个页面重复传输。
 - **图标异步加载**：除首屏关键图标（搜索、菜单、leftbar/rightbar、arrow-left）与 TOC 底部操作按钮（回到顶部/参与讨论，由模板调用处 `inline=true` 内联）外，`icon()` 输出的其余 SVG 改为 `<svg data-icon>` 占位符；构建期生成器按命名空间输出 `js/icons/{ns}.json`，Runtime Manifest 仅在 `svg.icon[data-icon]` selector 命中时加载 `/js/icons.js`，再按页拉取实际用到的命名空间并原位替换为内联 SVG。页面 HTML 不再重复携带全量图标（全站由约 3MB 内联 SVG 降至仅首屏关键图标），图标数据跨页与回访命中缓存。
 - **按页裁剪**：`tagtree.js` 仅在与 tagtree 小部件渲染相同的条件下输出；评论脚本本就按页输出。

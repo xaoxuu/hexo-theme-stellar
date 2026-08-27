@@ -29,7 +29,6 @@ test("主题默认、模板、模型与 Stylus 只消费最终 Appearance 路径
     "source/css/_common/button.styl",
     "source/css/_common/highlight.styl",
     "source/css/_components/main.styl",
-    "source/css/_components/page-transition.styl",
     "source/css/_components/sidebar/brand.styl",
     "source/css/_components/sidebar/search.styl",
     "source/css/_components/sidebar/sidebar.styl"
@@ -42,7 +41,9 @@ test("主题默认、模板、模型与 Stylus 只消费最终 Appearance 路径
   assert.match(consumers, /appearance\.typography\.content_align/);
   assert.match(consumers, /appearance\.colors\.primary/);
   assert.match(consumers, /appearance\.backgrounds\.sidebar/);
-  assert.match(consumers, /appearance\.motion\.page_transition/);
+  assert.equal(fs.existsSync(path.join(ROOT, "source/css/_components/page-transition.styl")), false);
+  assert.doesNotMatch(config, /page_transition/);
+  assert.doesNotMatch(consumers, /page_transition|view-transition/);
   assert.doesNotMatch(consumers, /theme\.style|themeConfig\.style|hexo-config\('style\./);
   assert.doesNotMatch(consumers, /appearance\.gradients\.angle|highlightTheme|backgrounds\.(?:sidebar|page)\.blur/);
   assert.match(sidebar, /sidebar-background-filter\(\$opacity\)[\s\S]*--background-opacity: \$opacity/);

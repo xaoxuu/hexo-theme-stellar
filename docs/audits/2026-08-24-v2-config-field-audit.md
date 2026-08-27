@@ -2,7 +2,7 @@
 
 > 本页由当前配置 Schema 与 M6 退出字段清单自动生成。请勿手工编辑。
 
-结论计数：`public=509`、`localize=5`、`derive=0`、`internalize=9`、`remove=1`。
+结论计数：`public=504`、`localize=5`、`derive=0`、`internalize=13`、`remove=2`。
 
 | Scope | Path | Accepted | Disposition | Default source | Consumers | Rationale |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -184,7 +184,7 @@
 | theme | appearance.gradients.search_bar | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.motion | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.motion.avatar | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | appearance.motion.page_transition | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | appearance.motion.page_transition | no | remove | removed | configuration diagnostics<br>migration guidance | 跨文档 View Transition 已移除，站点统一使用普通整页导航 |
 | theme | appearance.shape | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.shape.corner | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | appearance.shape.radius | yes | public | declarative schema | PageViewModel<br>layout renderer<br>Stylus compiler<br>browser theme state<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
@@ -290,12 +290,12 @@
 | theme | extensions.features.math.providers.katex | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.features.math.providers.mathjax | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.features.reveal | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | extensions.features.reveal.distance | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | extensions.features.reveal.duration_ms | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.features.reveal.distance | no | internalize | source/js/runtime/extensions/reveal.mjs | configuration diagnostics<br>migration guidance | Reveal 动画参数由主题原生实现统一维护 |
+| theme | extensions.features.reveal.duration_ms | no | internalize | source/js/runtime/extensions/reveal.mjs | configuration diagnostics<br>migration guidance | Reveal 动画参数由主题原生实现统一维护 |
 | theme | extensions.features.reveal.enabled | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | extensions.features.reveal.interval_ms | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
-| theme | extensions.features.reveal.provider | no | internalize | scripts/lib/internal-constants.js | configuration diagnostics<br>migration guidance | reveal 只有 scrollreveal 一个内置实现，不构成用户选择 |
-| theme | extensions.features.reveal.scale | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
+| theme | extensions.features.reveal.interval_ms | no | internalize | source/js/runtime/extensions/reveal.mjs | configuration diagnostics<br>migration guidance | Reveal 动画参数由主题原生实现统一维护 |
+| theme | extensions.features.reveal.provider | no | internalize | source/js/runtime/extensions/reveal.mjs | configuration diagnostics<br>migration guidance | reveal 使用主题内置原生实现，不构成用户选择 |
+| theme | extensions.features.reveal.scale | no | internalize | source/js/runtime/extensions/reveal.mjs | configuration diagnostics<br>migration guidance | Reveal 动画参数由主题原生实现统一维护 |
 | theme | extensions.search | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.search.provider | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |
 | theme | extensions.search.providers | yes | public | declarative schema | Extension registry<br>Extension renderer<br>browser Extension runtime<br>Reference generator | 当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容 |

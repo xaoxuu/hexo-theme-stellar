@@ -19,7 +19,6 @@ appearance:
     accent: 'hsl(18 55% 46%)'
     link: 'hsl(215 45% 42%)'
   motion:
-    page_transition: false
     avatar: never
   backgrounds:
     sidebar:

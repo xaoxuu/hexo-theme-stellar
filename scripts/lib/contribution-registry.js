@@ -209,17 +209,17 @@ const CONTRIBUTIONS = defineContributions([
   {
     id: "reveal",
     kind: "feature",
-    entry: featureEntry(),
-    resources: ["features.reveal"],
+    entry: runtimeEntry("/js/runtime/extensions/reveal.mjs"),
+    resources: ["runtime.reveal"],
     activation: selector(".slide-up"),
     schema: "extensions.features.reveal",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
-    tests: [RUNTIME_TEST],
+    tests: ["test/reveal.test.js", RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: CONFIG_OWNER("extensions.features.reveal"),
     project(context) {
       if (context.features.reveal?.enabled !== true) return null;
-      return configResult(Object.assign({}, context.features.reveal, { asset: context.assets.features?.reveal || null }));
+      return configResult(Object.assign({}, context.features.reveal));
     }
   },
   {

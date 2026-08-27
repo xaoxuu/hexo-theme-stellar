@@ -302,7 +302,7 @@ flowchart TD
 
 ## CSS 样式
 
-懒加载系统始终导入其样式，不同于条件插件导入。
+懒加载系统始终导入其样式。
 
 ### 插件导入策略
 
@@ -310,12 +310,9 @@ flowchart TD
 // 始终导入（非条件）
 @import 'lazyload'
 
-// 其他插件条件导入
-if hexo-config('extensions.features.reveal.enabled')
-  @import 'scrollreveal'
 ```
 
-`lazyload.styl` 无条件导入，因为懒加载被视为核心性能特性而非可选插件。
+`lazyload.styl` 无条件导入，因为懒加载被视为核心性能特性。Reveal 由原生 Web Animations API 直接驱动，不再导入隐藏态 CSS。
 
 **参考源码**：[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)
 

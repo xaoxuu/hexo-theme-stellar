@@ -11,6 +11,7 @@ const LOCALIZED_PATHS = new Set([
 ]);
 
 const RETIRED_FIELDS = Object.freeze([
+  ["appearance.motion.page_transition", "remove", "removed", "跨文档 View Transition 已移除，站点统一使用普通整页导航"],
   ["extensions.tags.copy", "remove", "removed", "copy 标签没有站点级行为选择，空配置节点退出公开契约"],
   ["extensions.tags.copy.toast", "localize", "languages/*.yml", "复制成功提示属于主题 UI 文案"],
   ["extensions.features.code_copy.idle_text", "localize", "languages/*.yml", "代码复制按钮默认文案属于主题 UI 文案"],
@@ -18,7 +19,11 @@ const RETIRED_FIELDS = Object.freeze([
   ["extensions.features.code_copy.toast", "localize", "languages/*.yml", "代码复制 toast 属于主题 UI 文案"],
   ["extensions.features.link_prefetch.provider", "internalize", "scripts/lib/internal-constants.js", "link prefetch 只有 flying_pages 一个内置实现，不构成用户选择"],
   ["extensions.features.lightbox.provider", "internalize", "scripts/lib/internal-constants.js", "lightbox 只有 fancybox 一个内置实现，不构成用户选择"],
-  ["extensions.features.reveal.provider", "internalize", "scripts/lib/internal-constants.js", "reveal 只有 scrollreveal 一个内置实现，不构成用户选择"],
+  ["extensions.features.reveal.distance", "internalize", "source/js/runtime/extensions/reveal.mjs", "Reveal 动画参数由主题原生实现统一维护"],
+  ["extensions.features.reveal.duration_ms", "internalize", "source/js/runtime/extensions/reveal.mjs", "Reveal 动画参数由主题原生实现统一维护"],
+  ["extensions.features.reveal.interval_ms", "internalize", "source/js/runtime/extensions/reveal.mjs", "Reveal 动画参数由主题原生实现统一维护"],
+  ["extensions.features.reveal.provider", "internalize", "source/js/runtime/extensions/reveal.mjs", "reveal 使用主题内置原生实现，不构成用户选择"],
+  ["extensions.features.reveal.scale", "internalize", "source/js/runtime/extensions/reveal.mjs", "Reveal 动画参数由主题原生实现统一维护"],
   ["extensions.cache", "internalize", "scripts/lib/internal-constants.js", "request/cache 是主题运行策略，不是内容或视觉选择"],
   ["extensions.cache.enabled", "internalize", "scripts/lib/internal-constants.js", "缓存启用策略由 Runtime 统一拥有"],
   ["extensions.cache.default_ttl", "internalize", "scripts/lib/internal-constants.js", "默认 TTL 是内部请求策略"],

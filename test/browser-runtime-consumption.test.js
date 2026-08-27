@@ -119,10 +119,16 @@ test("动态数据服务在执行前由 Lazy Extension 提供图片包装工具"
   assert.match(feature, /catch \(error\) \{\s*cleanup\(\);\s*throw error;/);
 });
 
-test("Runtime 启动失败启用正文显示兜底，Extension 失败以事件隔离", () => {
+test("Runtime 启动失败保持正文默认可见，Extension 失败以事件隔离", () => {
   const runtime = read("source/js/runtime/index.mjs");
   const registry = read("source/js/runtime/extension-registry.mjs");
-  assert.match(runtime, /classList\.add\('sr-fallback'\)/);
+  const reveal = read("source/js/runtime/extensions/reveal.mjs");
+  const revealCss = read("source/css/_plugins/index.styl");
+  assert.doesNotMatch(runtime, /sr-fallback/);
+  assert.doesNotMatch(revealCss, /slide-up|scrollreveal/);
+  assert.match(reveal, /IntersectionObserver/);
+  assert.match(reveal, /fill: 'backwards'/);
+  assert.doesNotMatch(reveal, /context\.assets|ScrollReveal/);
   assert.match(runtime, /stellar:extension-error/);
   assert.match(registry, /continue;/);
   assert.match(registry, /await unmount\(root\)/);

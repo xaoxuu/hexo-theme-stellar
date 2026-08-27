@@ -12,7 +12,6 @@ module.exports = deepFreeze({
   providers: {
     linkPrefetch: "flying_pages",
     lightbox: "fancybox",
-    reveal: "scrollreveal",
     diagrams: "mermaid"
   },
   runtime: {
@@ -39,7 +38,6 @@ module.exports = deepFreeze({
       maxCacheEntryBytes: 200 * 1024
     },
     features: {
-      revealWatchdogMs: 3000,
       codeCopyFeedbackMs: 3000,
       codeCopyToastMs: 2500
     }
@@ -56,7 +54,8 @@ module.exports = deepFreeze({
   assets: {
     runtime: {
       bootstrap: "/js/runtime/index.mjs",
-      colorSchemeSwitch: "/js/runtime/extensions/color-scheme-switch.mjs"
+      colorSchemeSwitch: "/js/runtime/extensions/color-scheme-switch.mjs",
+      reveal: "/js/runtime/extensions/reveal.mjs"
     },
     dependencies: {
       marked: "https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js",
@@ -108,7 +107,6 @@ module.exports = deepFreeze({
         css: "https://unpkg.com/swiper@10.3/swiper-bundle.min.css",
         localCss: "/css/plugins/swiper.css"
       },
-      reveal: "https://gcore.jsdelivr.net/npm/scrollreveal@4.0/dist/scrollreveal.min.js",
       katexCss: "https://cdn.jsdelivr.net/npm/katex@0.16.23/dist/katex.min.css",
       mathjax: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js",
       diagrams: {

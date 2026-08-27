@@ -125,7 +125,6 @@ const LEAF_DESCRIPTIONS = Object.freeze({
   "appearance.gradients.primary_action": "主要操作按钮渐变。",
   "appearance.gradients.search_bar": "搜索栏边框渐变。",
   "appearance.gradients.avatar_ring": "头像装饰环渐变。",
-  "appearance.motion.page_transition": "是否启用页面进入动效。",
   "appearance.motion.avatar": "头像动效策略。",
   "appearance.code_block.scrollbar_width": "代码块滚动条宽度。",
   "appearance.code_block.highlight_stylesheet": "代码高亮样式表资源；null 不加载额外样式。",
@@ -187,10 +186,6 @@ const LEAF_DESCRIPTIONS = Object.freeze({
   "extensions.features.lightbox.enabled": "是否启用图片灯箱。",
   "extensions.features.lightbox.selector": "进入灯箱的图片 CSS 选择器。",
   "extensions.features.reveal.enabled": "是否启用滚动进入动效。",
-  "extensions.features.reveal.distance": "滚动进入动效的位移距离。",
-  "extensions.features.reveal.duration_ms": "滚动进入动效持续时间，单位为毫秒。",
-  "extensions.features.reveal.interval_ms": "同组元素进入动效的间隔，单位为毫秒。",
-  "extensions.features.reveal.scale": "滚动进入动效的初始缩放比例。",
   "extensions.features.math.provider": "数学公式 Provider；null 关闭公式渲染。",
   "extensions.features.math.providers.katex": "KaTeX Provider 参数。",
   "extensions.features.math.providers.mathjax": "MathJax Provider 参数。",
@@ -545,12 +540,18 @@ function featureExtensionSchemas() {
       selector: extensionValue("string", ".timenode p>img", { validator: "css_selector" })
     }, { enabled: true, selector: ".timenode p>img" }, { removedProperties: { enable: "enabled", mode: null, provider: "internalized", js: "internalized", css: "internalized" } }),
     reveal: extensionObject({
-      enabled: extensionValue("boolean", true),
-      distance: extensionValue("string", "8px", { validator: "css_length" }),
-      duration_ms: extensionValue("number", 1000, { minimum: 0 }),
-      interval_ms: extensionValue("number", 100, { minimum: 0 }),
-      scale: extensionValue("number", 1, { minimum: 0, maximum: 1 })
-    }, { enabled: true, distance: "8px", duration_ms: 1000, interval_ms: 100, scale: 1 }, { removedProperties: { enable: "enabled", duration: "duration_ms", interval: "interval_ms", provider: "internalized", js: "internalized" } }),
+      enabled: extensionValue("boolean", true)
+    }, { enabled: true }, { removedProperties: {
+      enable: "enabled",
+      distance: "internalized",
+      duration: "internalized",
+      duration_ms: "internalized",
+      interval: "internalized",
+      interval_ms: "internalized",
+      scale: "internalized",
+      provider: "internalized",
+      js: "internalized"
+    } }),
     math: extensionObject({
       provider: deliveredField("extensions.features.math.provider", { values: [null,"katex","mathjax"], type: ["string","null"], default: literal(null), normalizer: "identity", example: null }),
       providers: extensionObject({
@@ -1326,12 +1327,11 @@ const CONFIG_SCHEMA = deepFreeze(annotateSchema({
         }),
         motion: object({
           consumers: APPEARANCE_CONSUMERS,
-          example: { page_transition: true, avatar: "auto" },
+          example: { avatar: "auto" },
           migration: "configuration/appearance#motion",
           runtimeKey: "motion",
-          removedProperties: { animated_avatar: "avatar" },
+          removedProperties: { animated_avatar: "avatar", page_transition: null },
           properties: {
-            page_transition: deliveredField("appearance.motion.page_transition", { type: ["boolean"], default: literal(true), normalizer: "identity", example: true }),
             avatar: deliveredField("appearance.motion.avatar", { values: ["auto","always","never"], type: ["string"], default: literal("auto"), normalizer: "identity", example: "auto" })
           }
         }),

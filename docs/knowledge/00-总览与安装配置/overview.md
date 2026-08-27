@@ -263,7 +263,7 @@ Extension 采用 Runtime Manifest 条件加载模式（[scripts/lib/contribution
 - 代码功能（copycode、语法高亮）
 - 数学渲染（katex、mathjax）
 - 图表（mermaid）
-- 性能（scrollreveal、preload/flying_pages）
+- 性能（原生 reveal、preload/flying_pages）
 
 详见[插件系统](../07-外部集成/plugin-system.md)。
 

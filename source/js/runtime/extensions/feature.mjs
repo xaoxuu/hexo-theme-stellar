@@ -127,71 +127,6 @@ async function mountLightbox(root, context, config) {
   };
 }
 
-async function mountReveal(root, context, config) {
-  const elements = queryAll(root, '.slide-up');
-  let fallbackApplied = false;
-  const revealFallback = () => {
-    if (fallbackApplied) return;
-    fallbackApplied = true;
-    document.documentElement.classList.add('sr-fallback');
-  };
-  const watchdog = setTimeout(revealFallback, context.manifest.policy.features.revealWatchdogMs);
-  try {
-    await context.assets.script(config.asset);
-    if (typeof window.ScrollReveal !== 'function') throw new TypeError('ScrollReveal is unavailable');
-
-    const findPinnedContainer = element => {
-      let node = element;
-      while (node?.nodeType === 1) {
-        const position = window.getComputedStyle(node).position;
-        if (position === 'sticky' || position === 'fixed') return node;
-        node = node.parentElement;
-      }
-      return null;
-    };
-    const findScrollContainer = element => {
-      let node = element.parentElement;
-      while (node?.nodeType === 1) {
-        const overflowY = window.getComputedStyle(node).overflowY;
-        if (overflowY === 'auto' || overflowY === 'scroll') return node;
-        node = node.parentElement;
-      }
-      return null;
-    };
-    const pinnedGroups = new Map();
-    const targets = [];
-    elements.forEach(element => {
-      const pinned = findPinnedContainer(element);
-      if (!pinned) {
-        targets.push(element);
-        return;
-      }
-      const container = findScrollContainer(element) || pinned;
-      const group = pinnedGroups.get(container) || [];
-      group.push(element);
-      pinnedGroups.set(container, group);
-    });
-
-    const instance = window.ScrollReveal();
-    const options = {
-      distance: config.distance,
-      duration: config.durationMs,
-      interval: config.intervalMs,
-      scale: config.scale,
-      opacity: 0,
-      easing: 'ease-out'
-    };
-    if (targets.length > 0) instance.reveal(targets, options);
-    pinnedGroups.forEach((group, container) => instance.reveal(group, Object.assign({}, options, { container })));
-    clearTimeout(watchdog);
-    return () => instance.clean?.(elements);
-  } catch (error) {
-    clearTimeout(watchdog);
-    revealFallback();
-    throw error;
-  }
-}
-
 async function mountMathJax(root, context, config) {
   window.MathJax = {
     tex: {
@@ -291,7 +226,6 @@ export async function mount(root, context) {
       await context.assets.script(config.asset);
       return () => {};
     case 'lightbox': return mountLightbox(root, context, config);
-    case 'reveal': return mountReveal(root, context, config);
     case 'mathjax': return mountMathJax(root, context, config);
     case 'diagrams': return mountDiagrams(root, context, config);
     case 'code-copy': return mountCodeCopy(root, context, config);

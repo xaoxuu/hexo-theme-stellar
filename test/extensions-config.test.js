@@ -26,7 +26,7 @@ test("Extension 配置使用最终路径并投影 camelCase 运行时", () => {
           gallery: { aspect_ratio: "portrait" }
         },
         features: {
-          reveal: { enabled: false, distance: "12px", duration_ms: 800 },
+          reveal: { enabled: false },
           link_prefetch: { enabled: false },
           diagrams: { provider: "mermaid", providers: { mermaid: { theme: "dark" } } },
           card_hover: { enabled: true },
@@ -50,7 +50,6 @@ test("Extension 配置使用最终路径并投影 camelCase 运行时", () => {
   assert.equal(config.extensions.tags.emoji.sources.qq, "https://example.com/{name}.gif");
   assert.equal(config.extensions.tags.gallery.aspectRatio, "portrait");
   assert.equal(config.extensions.features.reveal.enabled, false);
-  assert.equal(config.extensions.features.reveal.durationMs, 800);
   assert.equal(config.extensions.features.linkPrefetch.enabled, false);
   assert.equal(config.extensions.features.diagrams.provider, "mermaid");
   assert.equal(config.extensions.features.cardHover.enabled, true);
@@ -128,7 +127,7 @@ test("Extension Schema 拒绝旧根、旧命名、未知能力和官方资源覆
         },
         features: {
           lightbox: { provider: "unknown_lightbox", js: "https://example.com/lightbox.js" },
-          reveal: { provider: "unknown_reveal" },
+          reveal: { provider: "unknown_reveal", distance: "12px", duration_ms: 800, interval_ms: 50, scale: 0.9 },
           ai_summary: { provider: "unknown_ai" },
           math: { providers: { katex: { inject: "<script></script>" } } },
           diagrams: { provider: "unknown_diagrams" },
@@ -155,6 +154,10 @@ test("Extension Schema 拒绝旧根、旧命名、未知能力和官方资源覆
     assert.match(error.message, /extensions\.features\.lightbox\.js 已移除/);
     assert.match(error.message, /extensions\.features\.lightbox\.provider 已移除/);
     assert.match(error.message, /extensions\.features\.reveal\.provider 已移除/);
+    assert.match(error.message, /extensions\.features\.reveal\.distance 已移除/);
+    assert.match(error.message, /extensions\.features\.reveal\.duration_ms 已移除/);
+    assert.match(error.message, /extensions\.features\.reveal\.interval_ms 已移除/);
+    assert.match(error.message, /extensions\.features\.reveal\.scale 已移除/);
     assert.match(error.message, /extensions\.features\.ai_summary 已移除/);
     assert.match(error.message, /extensions\.features\.math\.providers\.katex\.inject 已移除/);
     assert.match(error.message, /extensions\.features\.diagrams\.provider 的值不在/);
@@ -186,7 +189,8 @@ test("官方 Extension 资源由内部冻结注册表提供", () => {
   assert.match(assets.dependencies.marked, /marked/);
   assert.match(assets.comments.giscus.js, /giscus\.app/);
   assert.match(assets.features.lightbox.js, /fancybox/);
-  assert.match(assets.features.reveal, /scrollreveal/);
+  assert.equal(assets.features.reveal, undefined);
+  assert.equal(assets.runtime.reveal, "/js/runtime/extensions/reveal.mjs");
   assert.equal(assets.services.siteinfo.js, "/js/services/siteinfo.js");
 });
 

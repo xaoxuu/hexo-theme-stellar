@@ -333,8 +333,6 @@ appearance:
     avatar_ring: 'conic-gradient(from 0deg, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)'
   # 页面与头像动效策略。 [对象]
   motion:
-    # 是否启用页面进入动效。 [布尔值]
-    page_transition: true
     # 头像动效策略。 [字符串；可选值：auto / always / never]
     avatar: auto
   # 代码块滚动条与高亮样式。 [对象]
@@ -512,14 +510,6 @@ extensions:
     reveal:
       # 是否启用滚动进入动效。 [布尔值]
       enabled: true
-      # 滚动进入动效的位移距离。 [字符串]
-      distance: 8px
-      # 滚动进入动效持续时间，单位为毫秒。 [数字；最小值：0]
-      duration_ms: 1000
-      # 同组元素进入动效的间隔，单位为毫秒。 [数字；最小值：0]
-      interval_ms: 100
-      # 滚动进入动效的初始缩放比例。 [数字；范围：0–1]
-      scale: 1
     math:
       # 数学公式 Provider；null 关闭公式渲染。 [字符串或null；可选值：null / katex / mathjax]
       provider: null

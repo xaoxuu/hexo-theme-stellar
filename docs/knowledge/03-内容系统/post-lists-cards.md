@@ -500,7 +500,7 @@ Wiki 卡片用 `list.styl` 中的封面布局，内容固定在卡片底部：
 <a class="... card-hover card-hover--spotlight card-hover--tilt">...</a>
 ```
 
-启用 `extensions.features.card_hover.enabled` 后，光斑跟随指针，倾斜角采用主题内部固定策略并上浮 2px；离开时 Tilt 立即回正，Spotlight 在最后指针位置淡出后再回中。文章/Wiki 的 Tilt 只变换内层 `.post-card` / `.wiki-card`，避免覆盖外层 `.post-card-wrap` 的 ScrollReveal transform；置顶轮播只变换 `.pin-slider` 外层，不占用 `.pin-slider-track` 的横向切换 transform。Feature 样式把列表阴影从等尺寸包装器移到卡片本体，使阴影随倾斜移动，同时保留文章、轮播和专栏封面缩放/变暗及 Wiki hover 边框等子元素动效。
+启用 `extensions.features.card_hover.enabled` 后，光斑跟随指针，倾斜角采用主题内部固定策略并上浮 2px；离开时 Tilt 立即回正，Spotlight 在最后指针位置淡出后再回中。文章/Wiki 的 Tilt 只变换内层 `.post-card` / `.wiki-card`，避免覆盖外层 `.post-card-wrap` 的 Reveal 动画 transform；置顶轮播只变换 `.pin-slider` 外层，不占用 `.pin-slider-track` 的横向切换 transform。Feature 样式把列表阴影从等尺寸包装器移到卡片本体，使阴影随倾斜移动，同时保留文章、轮播和专栏封面缩放/变暗及 Wiki hover 边框等子元素动效。
 
 专栏最新文章卡片与置顶轮播外层输出完整组合类；专栏标题、描述和下方归档式文章条目仍保持静态，不随卡片倾斜。插件关闭、触屏、粗指针或减少动态效果时，组合类不产生动态行为。
 
@@ -564,15 +564,15 @@ graph TD
 
 ## 集成点
 
-### ScrollReveal 动画
+### Reveal 动画
 
-文章卡片通过 `scrollreveal()` 辅助函数支持基于滚动的显现动画：
+文章卡片通过 `scrollreveal()` 辅助函数输出 `.slide-up` 触发类：
 
 ```
 <div class="post-card-wrap{scrollreveal(' ')}">
 ```
 
-辅助函数注入 ScrollReveal 插件集成所需的数据属性。
+Reveal Extension 使用原生 `IntersectionObserver` 独立观察每个元素。首次观察已位于视口内的元素直接显示，不播放入场动画；首次观察位于视口外的元素继续等待，后续滚入视口时通过 Web Animations API 播放主题固定的透明度、位移和缩放动画，同批元素自动错峰。内容不预先隐藏，因此页面切换不会先显示再消失，快速滚动跨过中间元素、浏览器缺少相关 API、启用“减少动态效果”或运行时失败时也均保持可见。
 
 **参考源码**：[layout/index.ejs](../../../layout/index.ejs)
 
