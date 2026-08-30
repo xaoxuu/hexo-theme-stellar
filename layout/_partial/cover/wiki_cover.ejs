@@ -69,7 +69,10 @@ function layoutWikiCover() {
   }
   el += '<a class="' + ui_classes('button', 'spotlight') + '" href="#start">' + icon('default:documents') + '<span>' + escape_html(__('btn.docs')) + '</span></a>';
   actions.forEach(function (item) {
-    el += '<a class="' + ui_classes('button', 'spotlight') + '" href="' + escape_html(item.url) + '" target="_blank" rel="external nofollow noopener noreferrer">';
+    var linkAttrs = item.url.includes('://')
+      ? ' target="_blank" rel="external nofollow noopener noreferrer"'
+      : ' rel="noopener noreferrer"';
+    el += '<a class="' + ui_classes('button', 'spotlight') + '" href="' + escape_html(item.url) + '"' + linkAttrs + '>';
     if (item.icon) {
       el += icon(item.icon);
     }
