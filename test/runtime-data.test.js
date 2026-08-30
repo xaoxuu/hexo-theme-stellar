@@ -40,13 +40,13 @@ test("主题数据与构建派生对象只写入 hexo.stellar.data", () => {
 });
 
 test("runtime data helper 按 camelCase 内部路径读取且不创建公开配置字段", () => {
-  const ctx = { stellar: { config: { site: {} } } };
+  const ctx = { stellar: { config: {} } };
   const data = ensureRuntimeData(ctx);
   data.defaultAuthor = { id: "xaoxuu" };
 
   assert.equal(runtimeDataAt(ctx, "defaultAuthor.id"), "xaoxuu");
   assert.equal(runtimeDataAt(ctx, "missing"), undefined);
-  assert.deepEqual(ctx.stellar.config, { site: {} });
+  assert.deepEqual(ctx.stellar.config, {});
 });
 
 test("运行时消费者不再读取 theme.config 派生数据", () => {

@@ -7,7 +7,6 @@ const path = require("node:path");
 const { generateReferenceMetadata } = require("./reference-metadata");
 const { generateConfigReferenceMetadata } = require("./config-reference-metadata");
 const { generateBlueprintReferenceMetadata } = require("./blueprint-reference-metadata");
-const { generateConfigFieldAudit } = require("./config-field-audit");
 const { headingAnchor, markdownAnchors } = require("./markdown-links");
 
 function compareText(left, right) {
@@ -48,52 +47,32 @@ function markdown(lines) {
 function configReferenceMarkdown(metadata = generateConfigReferenceMetadata()) {
   const groups = new Map();
   for (const field of metadata.fields) {
-    if (!groups.has(field.scope)) groups.set(field.scope, []);
-    groups.get(field.scope).push(field);
+    if (!groups.has(field.surface)) groups.set(field.surface, []);
+    groups.get(field.surface).push(field);
   }
   const lines = [
     "# Stellar v2 配置 Reference",
     "",
-    "> 本页由已交付配置 Schema 自动生成。请勿手工编辑；运行 `npm run reference:generate` 更新。",
+    "> 主题字段树与普通默认类型来自手写 `_config.yml`；例外约束来自轻量规则表。本页自动生成，请勿手工编辑。",
     "",
-    "YAML 使用 `path`，主题 JavaScript 消费规范化后的 `runtimePath`。主题配置中的空键会解析为 `null`：字段类型不包含 `null` 时等同于未配置并使用 Schema 默认值，类型包含 `null` 时保留该字段的明确空值语义。第三方 provider 参数袋只封闭父级容器，内部字段由相应 provider 定义。",
+    "YAML 使用 `path`，主题 JavaScript 仅将 snake_case 键转换为 `runtimePath` 的 camelCase。数组覆盖时整体替换；第三方 provider 参数袋保持开放。",
     ""
   ];
-  for (const scope of [...groups.keys()].sort(compareText)) {
-    lines.push(`## ${scope}`, "", "| Path | Runtime path | Type | Default | Cascade / normalize | Consumers | Example |", "| --- | --- | --- | --- | --- | --- | --- |");
-    for (const field of groups.get(scope).sort((a, b) => compareText(a.path, b.path))) {
+  for (const surface of groups.keys()) {
+    lines.push(`## ${surface}`, "", "| Path | Runtime path | Type | Default | Exception constraints |", "| --- | --- | --- | --- | --- |");
+    for (const field of groups.get(surface)) {
       const rules = [
-        field.cascade ? `cascade=${JSON.stringify(field.cascade)}` : "",
-        field.normalizer ? `normalizer=${field.normalizer}` : "",
-        field.normalization || "",
         field.values ? `values=${JSON.stringify(field.values)}` : "",
         field.minimum !== undefined ? `min=${field.minimum}` : "",
         field.maximum !== undefined ? `max=${field.maximum}` : "",
         field.exclusiveMinimum !== undefined ? `min>${field.exclusiveMinimum}` : "",
-        field.sealed ? "sealed" : ""
+        field.validator ? `validator=${field.validator}` : "",
+        field.open ? "open parameter bag" : ""
       ].filter(Boolean).join("; ");
-      lines.push(`| ${text(field.path)} | ${text(field.runtimePath)} | ${json(field.type)} | ${json(field.default)} | ${text(rules)} | ${list(field.consumers)} | ${json(field.example)} |`);
+      lines.push(`| ${text(field.path)} | ${text(field.runtimePath)} | ${json(field.type)} | ${json(field.default)} | ${text(rules)} |`);
     }
     lines.push("");
   }
-  return markdown(lines);
-}
-
-function configAuditMarkdown(metadata = generateConfigFieldAudit()) {
-  const lines = [
-    "# Stellar v2 配置字段审计",
-    "",
-    "> 本页由当前配置 Schema 与 M6 退出字段清单自动生成。请勿手工编辑。",
-    "",
-    `结论计数：${metadata.dispositions.map(id => `\`${id}=${metadata.counts[id]}\``).join("、")}。`,
-    "",
-    "| Scope | Path | Accepted | Disposition | Default source | Consumers | Rationale |",
-    "| --- | --- | --- | --- | --- | --- | --- |"
-  ];
-  for (const field of metadata.fields) {
-    lines.push(`| ${text(field.scope)} | ${text(field.path)} | ${field.accepted ? "yes" : "no"} | ${text(field.disposition)} | ${text(field.defaultSource)} | ${list(field.consumers)} | ${text(field.rationale)} |`);
-  }
-  lines.push("");
   return markdown(lines);
 }
 
@@ -221,7 +200,6 @@ function validatePublicReferenceLinks(root) {
 
 module.exports = {
   blueprintReferenceMarkdown,
-  configAuditMarkdown,
   configReferenceMarkdown,
   headingAnchor,
   markdownAnchors,

@@ -97,7 +97,7 @@ module.exports = ctx => function(args, content) {
 
   function loadIcon(url) {
     var el = ''
-    el += '<div class="lazy img" data-bg="' + ctx.stellar.config.resources.fallbacks.linkCard + '"></div>'
+    el += '<div class="lazy img" data-bg="' + ctx.stellar.config.fallbacks.linkCard + '"></div>'
     return el
   }
 
@@ -328,7 +328,7 @@ module.exports = ctx => function(args, content) {
           el += `<img lazy fancybox="true" src="${cell['image']}">`
       } else if (cell['emoji']) {
           el += ' emoji">'
-          const { defaultSource, sources } = ctx.stellar.config.extensions.tags.emoji
+          const { defaultSource, sources } = ctx.stellar.config.tags.emoji
           if (cell['source'] === undefined) {
             cell['source'] = defaultSource
           }

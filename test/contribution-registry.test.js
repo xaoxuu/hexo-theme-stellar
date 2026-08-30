@@ -47,7 +47,7 @@ test("统一 descriptor 契约登记 runtime-bootstrap、Extension、Feature 与
   assert.equal(CONTRIBUTIONS.some(item => item.id === "runtime-bootstrap"), true);
   assert.equal(CONTRIBUTIONS.some(item => item.id === "color-scheme-switch"), true);
   assert.equal(CONTRIBUTIONS.some(item => item.id === "katex-stylesheet"), true);
-  assert.deepEqual(contributionSchemaIds("extensions.features"), [
+  assert.deepEqual(contributionSchemaIds("features"), [
     "color_scheme_switch", "lazy_loading", "link_prefetch", "lightbox", "reveal", "math", "diagrams", "card_hover", "heti"
   ]);
   assert.deepEqual(audit(), []);
@@ -103,7 +103,7 @@ test("负向门禁拒绝重复注册与冲突的 Schema 默认值所有者", () 
   assert.throws(() => validateContributionDefinitions(duplicate), /duplicate contribution id search/);
 
   const conflicting = CONTRIBUTIONS.map(item => item.id === "katex-stylesheet"
-    ? { ...item, defaultsOwner: "scripts/schema/other.js#extensions.features.math" }
+    ? { ...item, defaultsOwner: "scripts/schema/other.js#features.math.provider" }
     : item);
   assert.throws(() => validateContributionDefinitions(conflicting), /conflicting defaults owners/);
 });
@@ -114,8 +114,8 @@ test("负向门禁拒绝缺失翻译与 Schema/Reference 漂移", () => {
   assert.ok(audit({ languages: missingLanguage }).some(issue => issue.includes("language en is missing message.copy_denied")));
 
   const driftedReference = reference();
-  driftedReference.fields = driftedReference.fields.filter(field => field.path !== "extensions.features.card_hover");
-  assert.ok(audit({ reference: driftedReference }).some(issue => issue.includes("card-hover: schema extensions.features.card_hover appears 0 times")));
+  driftedReference.fields = driftedReference.fields.filter(field => field.path !== "features.card_hover.enabled");
+  assert.ok(audit({ reference: driftedReference }).some(issue => issue.includes("card-hover: schema features.card_hover.enabled appears 0 times")));
 });
 
 test("负向门禁拒绝未登记资源、重复资源所有权与缺失行为测试", () => {

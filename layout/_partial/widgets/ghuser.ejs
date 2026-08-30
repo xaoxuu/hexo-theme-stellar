@@ -36,7 +36,7 @@ function layoutDiv() {
     el += `</div>`
   }
   // body
-  el += '<div class="widget-body data-service ds-ghinfo" data-api="' + stellar_config('extensions.services.github.apiUrl') + '/users/' + item.username + '">';
+  el += '<div class="widget-body data-service ds-ghinfo" data-api="' + stellar_config('services.github.apiUrl') + '/users/' + item.username + '">';
     if (item.avatar) {
       el += '<div class="avatar" ><img no-lazy type="img" id="avatar_url" src="' + config.avatar + '"></div>';
     }

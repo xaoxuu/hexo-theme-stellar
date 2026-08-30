@@ -9,7 +9,7 @@
 
 module.exports = ctx => function(args) {
   var args = ctx.args.map(args, ['repo', 'api', 'size'], ['group'])
-  const rawUrl = ctx.stellar.config.extensions.services.github.rawUrl.replace(/\/+$/, '')
+  const rawUrl = ctx.stellar.config.services.github.rawUrl.replace(/\/+$/, '')
   if (args.size == null) {
     args.size = 's'
   }
@@ -31,7 +31,7 @@ module.exports = ctx => function(args) {
       if (item?.url) {
         el += `<div class="grid-cell album-card">`
         el += `<a class="card-link lazy-box" target="_blank" rel="external nofollow noopener noreferrer" href="${item.url}">`
-        el += `<img class="lazy" data-src="${item.cover || item.icon || item.avatar || ctx.stellar.config.resources.fallbacks.cover}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${ctx.stellar.config.resources.fallbacks.cover}&quot;;"/>`
+        el += `<img class="lazy" data-src="${item.cover || item.icon || item.avatar || ctx.stellar.config.fallbacks.cover}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${ctx.stellar.config.fallbacks.cover}&quot;;"/>`
         el += `<div class="lazy-icon"></div>`
         el += `<div class="image-meta">`
         if (item.title) {

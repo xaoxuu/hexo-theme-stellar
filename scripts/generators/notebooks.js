@@ -77,7 +77,7 @@ hexo.extend.generator.register("notebooks", function (locals) {
         layout: ["notes"],
         data: {
           layout: "notes",
-          navigation: { menu: notebook.navigation.menu ?? profiles.noteIndex.navigation.activeMenu },
+          navigation: { menu: notebook.navigation.menu ?? profiles.noteIndex.activeMenu },
           stellarConfig: { collection: { profile: "notebook", id: notebook.id } },
         }
       });

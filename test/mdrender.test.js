@@ -25,7 +25,7 @@ function createMdTag() {
   const fakeHexo = {};
   applyThemeUtils(fakeHexo);
   const ctx = {
-    stellar: { config: { extensions: { services: { github: { rawUrl: 'https://raw.github.xaox.cc' } } } } },
+    stellar: { config: { services: { github: { rawUrl: 'https://raw.github.xaox.cc' } } } },
     args: fakeHexo.args
   };
   return require('../scripts/tags/lib/md.js')(ctx);

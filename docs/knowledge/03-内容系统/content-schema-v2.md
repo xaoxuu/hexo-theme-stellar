@@ -62,7 +62,7 @@ Hexo 自有 Front Matter（如 `title/date/layout/tags/categories/permalink`）�
 
 ## Widget 与业务数据边界
 
-Region 数组只保存 Widget 引用。Brand、Menu、Search 与 Actions 的业务配置分别仍归 `site.brand`、`site.menu`、`extensions.search` 与 `site.footer.actions` 所有。Collection Identity 可以为 Wiki/Notebook 投影 Brand，但内容层不再使用位置绑定的 `sidebar.left.brand`。
+Region 数组只保存 Widget 引用。Brand、Menu、Search 与 Actions 的业务配置分别仍归 `brand`、`menu`、`search` 与 `footer.actions` 所有。Collection Identity 可以为 Wiki/Notebook 投影 Brand，但内容层不再使用位置绑定的 `sidebar.left.brand`。
 
 Widget 的位置能力由类型 descriptor 声明，不允许实例扩大能力。能力不匹配只产生 warning 并跳过实例；Schema 错误、未知字段和旧字段则是构建错误。
 
@@ -80,7 +80,7 @@ Doctor 会输出来源文件、字段路径和迁移目标。最终字段、类�
 
 ## 实现接缝
 
-- 目标字段：`scripts/schema/config-target.js`
+- 轻量规则：`scripts/schema/content-config-rules.js`
 - Schema 投影：`scripts/schema/content-config-schema.js`
 - 解析与冻结：`scripts/lib/content-config.js`
 - Region 级联：`scripts/lib/regions.js`

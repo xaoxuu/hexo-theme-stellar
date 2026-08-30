@@ -132,10 +132,8 @@ test("Notebook 生成页可按来源读取独立 Brand", () => {
     },
     stellar: {
       config: {
-        site: {
-          brand: { name: "Site" }
-        },
-        resources: { fallbacks: { projectIcon: "/default.svg" } }
+        brand: { name: "Site" },
+        fallbacks: { projectIcon: "/default.svg" }
       },
       data: {
         widgets: { ghuser: { username: " xaoxuu " } },

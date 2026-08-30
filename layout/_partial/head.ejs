@@ -4,8 +4,16 @@ var pageViewModel = typeof viewModel !== 'undefined' && ['post', 'wiki', 'topic'
   : null
 var pageRender = pageViewModel?.render
 var pageConfig = content_config(page)
-var stellarSeo = stellar_config('seo')
-var stellarResources = stellar_config('resources')
+var stellarSeo = {
+  canonical: stellar_config('canonical'),
+  openGraph: stellar_config('openGraph'),
+  structuredData: stellar_config('structuredData')
+}
+var stellarResources = {
+  preconnect: stellar_config('preconnect'),
+  fallbacks: stellar_config('fallbacks'),
+  errorPage: stellar_config('errorPage')
+}
 
 function strip_wiki_title(title, wiki) {
   if (!wiki) { return title; }
@@ -197,7 +205,7 @@ function generate_canonical() {
       : ''
   }
   var host = stellarSeo.canonical.host;
-  if (host.length > 0) {
+  if (typeof host === 'string' && host.length > 0) {
     var path = pretty_url(page.path) || '/';
     if (path.startsWith('/404') || path.startsWith('404')) {
       return '';
@@ -229,7 +237,7 @@ function generate_canonical() {
   <script>
     (function () {
       var key = 'stellar:v2:leftbar-state';
-      var fallback = <%- JSON.stringify(stellar_config('layout.regions.leftbar.defaultState')) %>;
+      var fallback = <%- JSON.stringify(stellar_config('regions.leftbar.defaultState')) %>;
       try {
         var value = localStorage.getItem(key);
         document.documentElement.dataset.leftbarState = value === 'collapsed' || value === 'expanded' ? value : fallback;

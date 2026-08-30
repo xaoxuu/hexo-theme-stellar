@@ -1,6 +1,6 @@
 <%
 function layoutDiv() {
-  var relatedPostsLimit = stellar_config('content.article.relatedPostsLimit')
+  var relatedPostsLimit = stellar_config('article.relatedPostsLimit')
   if (relatedPostsLimit > 0) {
     var el = '';
     el += `<div class="related-wrap${scrollreveal(' ')}" id="related-posts">`

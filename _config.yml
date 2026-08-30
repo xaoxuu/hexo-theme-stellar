@@ -1,807 +1,384 @@
-# Stellar v2 主题默认配置。
-# 由 scripts/schema/config-schema.js 自动生成，请勿手工编辑。
-# 注释格式：用途与空值行为。[类型；枚举、范围或元素类型]
-# 修改 CONFIG_SCHEMA 后运行 `npm run schema:generate`。
+# Stellar v2 theme defaults.
+#
+# This file is the single source of truth for the public configuration tree,
+# default values, ordering and user-facing examples. Site overrides use the
+# same shape in `_config.stellar.yml`; arrays replace defaults as a whole.
 
-# 站点身份、菜单与 Footer。 [对象]
-site:
-  # Brand 系统 Widget 使用的站点品牌业务数据。 [对象]
-  brand:
-    image:
-      # Brand 图片来源；null 隐藏图片且不会继承 Hexo avatar。 [字符串或null]
-      # Example:
-      #   /avatar.webp
-      src: null
-      # Brand 图片呈现方式。 [字符串；可选值：avatar / icon / plain]
-      variant: avatar
-    # Brand 纯文本名称；null 隐藏名称且不会继承 Hexo title。 [字符串或null]
-    name: null
-    # Brand 标语；null 隐藏标语且不会继承 Hexo subtitle。 [字符串或null]
-    tagline: null
-  # 站点主导航菜单。 [对象]
-  menu:
-    # 主导航菜单项；type: search 与链接共用 title、icon、accent 视觉字段并提供共享搜索入口，空数组不显示主菜单。 [数组；元素：对象]
-    # Example:
-    #   - {type: search, title: 搜索, icon: default:search}
-    #   - {id: post, title: 博客, icon: default:documents, url: /, accent: '#1BCDFC'}
-    items: [{type: search}]
-  # 设置页的站点信息配置。 [对象]
-  settings:
-    # 设置页 About 区的 KV 列表。 [对象]
-    about:
-      # About KV 项；默认包含博客框架和主题版本，显式数组整体覆盖，空数组显示空状态。 [数组；元素：对象]
-      items: [{key: 博客框架, value: 'Hexo {hexo.version}', url: https://hexo.io/}, {key: 主题版本, value: 'Stellar {theme.version}', url: '{theme.tree}'}]
-  # Actions 系统 Widget 与主内容区页脚使用的站点数据。 [对象]
-  footer:
-    # Actions 系统 Widget 的操作项；空数组不显示操作区。 [数组；元素：对象]
-    # Example:
-    #   - {type: link, icon: default:github, title: GitHub, url: https://github.com/}
-    actions: []
-    # 主内容区页脚导航分栏；空数组不显示分栏。 [数组；元素：对象]
-    # Example:
-    #   - {title: 博客, items: [{title: 归档, url: /blog/archives/}]}
-    sections: []
-    # 页脚正文；支持 Markdown 与主题模板变量，空字符串不显示。 [字符串]
-    content: 本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。
+# -----------------------------------------------------------------------------
+# Site
+# -----------------------------------------------------------------------------
 
-# 页面 Profile 的路由、导航与侧边栏默认值。 [对象]
-layout:
-  # 站点级 Topbar、Leftbar 与 Rightbar Region。 [对象]
-  regions:
-    topbar:
-      # 站点级 Topbar Widget；按声明顺序显示。 [数组；元素：字符串或对象]
-      widgets: []
+brand:
+  image:
+    # Set to null to hide the image.
+    src: null
+    variant: avatar # avatar | icon | plain
+  # null does not inherit Hexo title/subtitle.
+  name: null
+  tagline: null
+
+menu:
+  items:
+    - type: search
+
+settings:
+  about:
+    items:
+      - key: 博客框架
+        value: Hexo {hexo.version}
+        url: https://hexo.io/
+      - key: 主题版本
+        value: Stellar {theme.version}
+        url: '{theme.tree}'
+
+footer:
+  actions: []
+  sections: []
+  # Empty string hides the footer content.
+  content: 本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。
+
+# -----------------------------------------------------------------------------
+# Layout
+# -----------------------------------------------------------------------------
+
+regions:
+  topbar: []
+  leftbar:
+    default_state: expanded # expanded | collapsed
+    enabled: true
+    brand: site_brand # site_brand | collection_brand | false
+    menu: true
+    footer_actions: true
+    widgets: []
+  rightbar: []
+
+# Profile fields omitted below inherit the site Regions. Empty arrays explicitly
+# hide a Topbar/Rightbar or clear a Leftbar widget list.
+profiles:
+  home:
+    active_menu: post
     leftbar:
-      # 桌面 Leftbar 首次访问时的默认状态。 [字符串；可选值：expanded / collapsed]
-      default_state: expanded
-      # 是否生成站点级 Leftbar。 [布尔值]
+      widgets: [recent]
+    rightbar: []
+    comments:
+      enabled: false
+      title: null
+      id: null
+      provider: null
+      options: {}
+
+  blog_index:
+    path: /blog/
+    active_menu: post
+    leftbar:
+      widgets: [recent]
+    rightbar: []
+    listing_nav:
       enabled: true
-      # Leftbar 固定 Brand 来源；false 隐藏 Brand。 [字符串或布尔值；可选值：false / site_brand / collection_brand]
-      brand: site_brand
-      # 是否显示 Leftbar 固定 Menu。 [布尔值]
-      menu: true
-      footer:
-        # 是否显示 Leftbar Footer 固定 Actions。 [布尔值]
-        actions: true
-      # 站点级 Leftbar 内容 Widget；显式数组整体覆盖上层值。 [数组；元素：字符串或对象]
-      widgets: []
-    rightbar:
-      # 站点级正文旁 Rightbar Widget；按声明顺序显示。 [数组；元素：字符串或对象]
-      widgets: []
-  # 各页面类型的路径、导航与 Region 默认值。 [对象]
-  profiles:
-    # 主页的布局默认值。 [对象]
-    home:
-      navigation:
-        # 主页高亮的主菜单项；null 表示不高亮。 [字符串或null]
-        active_menu: post
-      regions:
-        topbar:
-          # 主页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: null
-        leftbar:
-          # 主页是否生成 Leftbar；null 继承上层。 [布尔值或null]
-          enabled: null
-          # 主页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
-          brand: null
-          # 主页是否显示固定 Menu；null 继承上层。 [布尔值或null]
-          menu: null
-          footer:
-            # 主页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
-            actions: null
-          # 主页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [recent]
-        rightbar:
-          # 主页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: []
-      comments:
-        # 是否显示主页评论区。 [布尔值]
-        enabled: false
-        # 主页评论区标题；null 使用默认评论标题。 [字符串或null]
-        title: null
-        # 主页评论线程的稳定标识；null 由页面上下文决定。 [字符串或null]
-        id: null
-        # 主页专用评论 Provider；null 使用全局评论 Provider。 [字符串或null；可选值：null / beaudar / utterances / giscus / twikoo / waline / artalk]
-        provider: null
-        # 主页专用评论 Provider 参数。 [对象；允许自定义键]
-        options: {}
-    # 博客列表页的布局默认值。 [对象]
-    blog_index:
-      navigation:
-        # 博客列表页高亮的主菜单项；null 表示不高亮。 [字符串或null]
-        active_menu: post
-      regions:
-        topbar:
-          # 博客列表页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: null
-        leftbar:
-          # 博客列表页是否生成 Leftbar；null 继承上层。 [布尔值或null]
-          enabled: null
-          # 博客列表页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
-          brand: null
-          # 博客列表页是否显示固定 Menu；null 继承上层。 [布尔值或null]
-          menu: null
-          footer:
-            # 博客列表页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
-            actions: null
-          # 博客列表页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [recent]
-        rightbar:
-          # 博客列表页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: []
-      # 博客列表页的自动生成路径。 [字符串]
-      path: /blog/
-      # 博客列表页 Listing Nav 配置。 [对象]
-      listing_nav:
-        # 博客列表页是否显示 Listing Nav。 [布尔值]
-        enabled: true
-        # 博客列表页的 Listing Nav 附加导航项；空数组不添加。 [数组；元素：对象]
-        tabs: []
-    # 专栏列表页的布局默认值。 [对象]
-    topic_index:
-      navigation:
-        # 专栏列表页高亮的主菜单项；null 表示不高亮。 [字符串或null]
-        active_menu: post
-      regions:
-        topbar:
-          # 专栏列表页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: null
-        leftbar:
-          # 专栏列表页是否生成 Leftbar；null 继承上层。 [布尔值或null]
-          enabled: null
-          # 专栏列表页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
-          brand: null
-          # 专栏列表页是否显示固定 Menu；null 继承上层。 [布尔值或null]
-          menu: null
-          footer:
-            # 专栏列表页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
-            actions: null
-          # 专栏列表页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [recent]
-        rightbar:
-          # 专栏列表页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: []
-      # 专栏列表页的自动生成路径。 [字符串]
-      path: /topic/
-    # Wiki 列表页的布局默认值。 [对象]
-    wiki_index:
-      navigation:
-        # Wiki 列表页高亮的主菜单项；null 表示不高亮。 [字符串或null]
-        active_menu: wiki
-      regions:
-        topbar:
-          # Wiki 列表页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: null
-        leftbar:
-          # Wiki 列表页是否生成 Leftbar；null 继承上层。 [布尔值或null]
-          enabled: null
-          # Wiki 列表页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
-          brand: null
-          # Wiki 列表页是否显示固定 Menu；null 继承上层。 [布尔值或null]
-          menu: null
-          footer:
-            # Wiki 列表页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
-            actions: null
-          # Wiki 列表页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [related, recent]
-        rightbar:
-          # Wiki 列表页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: []
-      # Wiki 列表页的自动生成路径。 [字符串]
-      path: /wiki/
-      # Wiki 列表页 Listing Nav 配置。 [对象]
-      listing_nav:
-        # Wiki 列表页是否显示 Listing Nav。 [布尔值]
-        enabled: true
-        # Wiki 列表页的 Listing Nav 附加导航项；空数组不添加。 [数组；元素：对象]
-        tabs: []
-    # 博客文章页的布局默认值。 [对象]
-    post:
-      navigation:
-        # 博客文章页高亮的主菜单项；null 表示不高亮。 [字符串或null]
-        active_menu: post
-      regions:
-        topbar:
-          # 博客文章页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: null
-        leftbar:
-          # 博客文章页是否生成 Leftbar；null 继承上层。 [布尔值或null]
-          enabled: null
-          # 博客文章页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
-          brand: null
-          # 博客文章页是否显示固定 Menu；null 继承上层。 [布尔值或null]
-          menu: null
-          footer:
-            # 博客文章页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
-            actions: null
-          # 博客文章页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [related, recent]
-        rightbar:
-          # 博客文章页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [ghrepo, toc]
-    # 专栏文章页的布局默认值。 [对象]
-    topic:
-      navigation:
-        # 专栏文章页高亮的主菜单项；null 表示不高亮。 [字符串或null]
-        active_menu: post
-      regions:
-        topbar:
-          # 专栏文章页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: null
-        leftbar:
-          # 专栏文章页是否生成 Leftbar；null 继承上层。 [布尔值或null]
-          enabled: null
-          # 专栏文章页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
-          brand: null
-          # 专栏文章页是否显示固定 Menu；null 继承上层。 [布尔值或null]
-          menu: null
-          footer:
-            # 专栏文章页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
-            actions: null
-          # 专栏文章页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [related, recent]
-        rightbar:
-          # 专栏文章页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [ghrepo, toc]
-    # Wiki 内容页的布局默认值。 [对象]
-    wiki:
-      navigation:
-        # Wiki 内容页高亮的主菜单项；null 表示不高亮。 [字符串或null]
-        active_menu: wiki
-      regions:
-        topbar:
-          # Wiki 内容页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: []
-        leftbar:
-          # Wiki 内容页是否生成 Leftbar；null 继承上层。 [布尔值或null]
-          enabled: null
-          # Wiki 内容页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
-          brand: collection_brand
-          # Wiki 内容页是否显示固定 Menu；null 继承上层。 [布尔值或null]
-          menu: false
-          footer:
-            # Wiki 内容页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
-            actions: false
-          # Wiki 内容页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [tree]
-        rightbar:
-          # Wiki 内容页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [ghrepo, toc]
-    # Notebook 总索引的布局默认值。 [对象]
-    notebook_index:
-      navigation:
-        # Notebook 总索引高亮的主菜单项；null 表示不高亮。 [字符串或null]
-        active_menu: notebooks
-      regions:
-        topbar:
-          # Notebook 总索引显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: null
-        leftbar:
-          # Notebook 总索引是否生成 Leftbar；null 继承上层。 [布尔值或null]
-          enabled: null
-          # Notebook 总索引固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
-          brand: null
-          # Notebook 总索引是否显示固定 Menu；null 继承上层。 [布尔值或null]
-          menu: null
-          footer:
-            # Notebook 总索引是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
-            actions: null
-          # Notebook 总索引显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [recent]
-        rightbar:
-          # Notebook 总索引显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: []
-      # Notebook 总索引的自动生成路径。 [字符串]
-      path: /notebooks/
-    # Notebook 列表页的布局默认值。 [对象]
-    note_index:
-      navigation:
-        # Notebook 列表页高亮的主菜单项；null 表示不高亮。 [字符串或null]
-        active_menu: notebooks
-      regions:
-        topbar:
-          # Notebook 列表页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: null
-        leftbar:
-          # Notebook 列表页是否生成 Leftbar；null 继承上层。 [布尔值或null]
-          enabled: null
-          # Notebook 列表页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
-          brand: collection_brand
-          # Notebook 列表页是否显示固定 Menu；null 继承上层。 [布尔值或null]
-          menu: null
-          footer:
-            # Notebook 列表页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
-            actions: null
-          # Notebook 列表页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [tagtree, recent]
-        rightbar:
-          # Notebook 列表页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: []
-    # Note 内容页的布局默认值。 [对象]
-    note:
-      navigation:
-        # Note 内容页高亮的主菜单项；null 表示不高亮。 [字符串或null]
-        active_menu: notebooks
-      regions:
-        topbar:
-          # Note 内容页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: null
-        leftbar:
-          # Note 内容页是否生成 Leftbar；null 继承上层。 [布尔值或null]
-          enabled: null
-          # Note 内容页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
-          brand: collection_brand
-          # Note 内容页是否显示固定 Menu；null 继承上层。 [布尔值或null]
-          menu: null
-          footer:
-            # Note 内容页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
-            actions: null
-          # Note 内容页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [tagtree, recent]
-        rightbar:
-          # Note 内容页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [toc]
-    # 作者页的布局默认值。 [对象]
-    author:
-      navigation:
-        # 作者页高亮的主菜单项；null 表示不高亮。 [字符串或null]
-        active_menu: post
-      regions:
-        topbar:
-          # 作者页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: null
-        leftbar:
-          # 作者页是否生成 Leftbar；null 继承上层。 [布尔值或null]
-          enabled: null
-          # 作者页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
-          brand: null
-          # 作者页是否显示固定 Menu；null 继承上层。 [布尔值或null]
-          menu: null
-          footer:
-            # 作者页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
-            actions: null
-          # 作者页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [recent]
-        rightbar:
-          # 作者页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: []
-      # 作者页的自动生成路径。 [字符串]
-      path: /author/
-    # 错误页的布局默认值。 [对象]
-    error:
-      navigation:
-        # 错误页高亮的主菜单项；null 表示不高亮。 [字符串或null]
-        active_menu: post
-      regions:
-        topbar:
-          # 错误页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: null
-        leftbar:
-          # 错误页是否生成 Leftbar；null 继承上层。 [布尔值或null]
-          enabled: null
-          # 错误页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
-          brand: null
-          # 错误页是否显示固定 Menu；null 继承上层。 [布尔值或null]
-          menu: null
-          footer:
-            # 错误页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
-            actions: null
-          # 错误页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [recent]
-        rightbar:
-          # 错误页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: []
-      # 错误页的自动生成路径。 [字符串]
-      path: /404.html
-    # 独立页面的布局默认值。 [对象]
-    page:
-      navigation:
-        # 独立页面高亮的主菜单项；null 表示不高亮。 [字符串或null]
-        active_menu: post
-      regions:
-        topbar:
-          # 独立页面显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: null
-        leftbar:
-          # 独立页面是否生成 Leftbar；null 继承上层。 [布尔值或null]
-          enabled: null
-          # 独立页面固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
-          brand: null
-          # 独立页面是否显示固定 Menu；null 继承上层。 [布尔值或null]
-          menu: null
-          footer:
-            # 独立页面是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
-            actions: null
-          # 独立页面显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [recent]
-        rightbar:
-          # 独立页面显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: [toc]
-    # 设置页的布局默认值。 [对象]
-    settings:
-      navigation:
-        # 设置页高亮的主菜单项；null 表示不高亮。 [字符串或null]
-        active_menu: null
-      regions:
-        topbar:
-          # 设置页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: null
-        leftbar:
-          # 设置页是否生成 Leftbar；null 继承上层。 [布尔值或null]
-          enabled: null
-          # 设置页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
-          brand: null
-          # 设置页是否显示固定 Menu；null 继承上层。 [布尔值或null]
-          menu: null
-          footer:
-            # 设置页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
-            actions: null
-          # 设置页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
-          widgets: []
-        rightbar:
-          # 设置页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
-          widgets: []
-      # 设置页的自动生成路径。 [字符串]
-      path: /settings/
+      tabs: []
 
-# 文章与 Notebook 的内容展示默认值。 [对象]
-content:
-  # 博客文章及文章列表的展示默认值。 [对象]
-  article:
-    # 文章默认排版风格。 [字符串；可选值：tech / story]
-    style: tech
-    # 正文段落首行缩进策略。 [字符串；可选值：auto / always / never]
-    paragraph_indent: auto
-    listing:
-      # 置顶文章列表布局。 [字符串；可选值：carousel / flat]
-      pinned_layout: carousel
-      # 普通文章卡片布局。 [字符串；可选值：hero / classic]
-      card_layout: hero
-      # 文章列表封面的宽高比。 [数字；必须大于 0]
-      cover_ratio: 2
-      # 自动摘要的最大字符数；0 不生成自动摘要。 [数字；最小值：0]
-      excerpt_length: 128
-      # 是否在文章卡片中显示标签。 [布尔值]
-      show_tags: false
-    banner:
-      # 文章 Banner 的宽高比。 [数字；必须大于 0]
-      ratio: 2.5
-    # 分类名称到 CSS 颜色的映射。 [对象；允许自定义键]
-    category_colors: {探索号: '#f44336'}
-    footer:
-      # 文章许可声明；false 隐藏，字符串作为自定义声明。 [布尔值或字符串]
-      license: 本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。
-      # 文章分享入口；空数组不显示。 [数组；元素：字符串]
-      share: []
-      # 是否在文章页脚显示标签。 [布尔值]
-      show_tags: true
-    # 相关文章数量上限；0 关闭相关文章。 [数字；最小值：0]
-    related_posts_limit: 0
-    # 是否显示预计阅读时间。 [布尔值]
-    show_reading_time: false
-  # Notebook 列表与页脚默认值。 [对象]
-  notebook:
-    listing:
-      # Notebook 列表摘要的最大字符数；0 不生成自动摘要。 [数字；最小值：0]
-      excerpt_length: 128
-      # Notebook 每页条目数；null 使用站点分页设置。 [数字或null；最小值：0]
-      per_page: null
-      sort:
-        # Notebook 条目的默认排序字段。 [字符串；可选值：date / updated / title]
-        field: updated
-        # Notebook 条目的默认排序方向。 [字符串；可选值：asc / desc]
-        direction: desc
-    # Notebook 标签名称到图标 ID 的映射。 [对象；允许自定义键]
-    tag_icons: {}
-    footer:
-      # Notebook 页脚许可声明；null 继承文章默认值，false 隐藏。 [字符串或布尔值或null]
-      license: null
-      # Notebook 分享入口；null 继承文章默认值，空数组不显示。 [数组或null；元素：字符串]
-      share: null
+  topic_index:
+    path: /topic/
+    active_menu: post
+    leftbar:
+      widgets: [recent]
+    rightbar: []
 
-# 颜色、排版、形状、动效与背景。 [对象]
+  wiki_index:
+    path: /wiki/
+    active_menu: wiki
+    leftbar:
+      widgets: [related, recent]
+    rightbar: []
+    listing_nav:
+      enabled: true
+      tabs: []
+
+  post:
+    active_menu: post
+    leftbar:
+      widgets: [related, recent]
+    rightbar: [ghrepo, toc]
+
+  topic:
+    active_menu: post
+    leftbar:
+      widgets: [related, recent]
+    rightbar: [ghrepo, toc]
+
+  wiki:
+    active_menu: wiki
+    topbar: []
+    leftbar:
+      brand: collection_brand
+      menu: false
+      footer_actions: false
+      widgets: [tree]
+    rightbar: [ghrepo, toc]
+
+  notebook_index:
+    path: /notebooks/
+    active_menu: notebooks
+    leftbar:
+      widgets: [recent]
+    rightbar: []
+
+  note_index:
+    active_menu: notebooks
+    leftbar:
+      brand: collection_brand
+      widgets: [tagtree, recent]
+    rightbar: []
+
+  note:
+    active_menu: notebooks
+    leftbar:
+      brand: collection_brand
+      widgets: [tagtree, recent]
+    rightbar: [toc]
+
+  author:
+    path: /author/
+    active_menu: post
+    leftbar:
+      widgets: [recent]
+    rightbar: []
+
+  error:
+    path: /404.html
+    active_menu: post
+    leftbar:
+      widgets: [recent]
+    rightbar: []
+
+  page:
+    active_menu: post
+    leftbar:
+      widgets: [recent]
+    rightbar: [toc]
+
+  settings:
+    path: /settings/
+    active_menu: null
+    leftbar:
+      widgets: []
+    rightbar: []
+
+# -----------------------------------------------------------------------------
+# Content
+# -----------------------------------------------------------------------------
+
+article:
+  style: tech # tech | story
+  paragraph_indent: auto # auto | always | never
+  listing:
+    pinned_layout: carousel # carousel | flat
+    card_layout: hero # hero | classic
+    cover_ratio: 2
+    excerpt_length: 128
+    show_tags: false
+  banner:
+    ratio: 2.5
+  category_colors:
+    探索号: '#f44336'
+  footer:
+    license: 本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。
+    share: []
+    show_tags: true
+  related_posts_limit: 0
+  show_reading_time: false
+
+notebook:
+  listing:
+    excerpt_length: 128
+    per_page: null
+    sort:
+      field: updated # date | updated | title
+      direction: desc # asc | desc
+  tag_icons: {}
+  footer:
+    # null inherits the corresponding article footer value.
+    license: null
+    share: null
+
+# -----------------------------------------------------------------------------
+# Appearance
+# -----------------------------------------------------------------------------
+
 appearance:
-  # 构建期整站视觉预设；只编译一套语义视觉类实现，不写入 DOM 或 PageViewModel。 [字符串；可选值：card / glass / minimal / flat]
-  preset: card
-  # 站点默认配色方案。 [字符串；可选值：auto / light / dark]
-  color_scheme: auto
-  # 正文、代码与标题的排版令牌。 [对象]
+  preset: card # card | glass | minimal | flat
+  color_scheme: auto # auto | light | dark
+
   typography:
     font_size:
-      # 页面根字号。 [字符串]
       root: 16px
-      # 行内代码字号。 [字符串]
       inline_code: 85%
-      # 代码块字号。 [字符串]
       code_block: 0.8125rem
     font_family:
-      # 正文与界面字体栈。 [字符串]
       body: system-ui, "Microsoft Yahei", "Segoe UI", Arial, sans-serif
-      # 代码字体栈。 [字符串]
       code: Menlo, Monaco, Consolas, system-ui, monospace, sans-serif
-    # 文章正文对齐方式。 [字符串；可选值：left / center / right / justify]
     content_align: left
-    heading_prefixes:
-      # 二级标题前缀字符。 [字符串]
-      h2: '#'
-      # 三级标题前缀字符。 [字符串]
-      h3: '='
-      # 四级标题前缀字符。 [字符串]
-      h4: '|'
-      # 五级标题前缀字符。 [字符串]
-      h5: ':'
-  # 卡片、图片和栏目的形状令牌。 [对象]
+    heading_prefixes: {h2: '#', h3: '=', h4: '|', h5: ':'}
+
   shape:
-    # 支持的 CSS corner-shape 值。 [字符串]
     corner: superellipse(1.25)
     radius:
-      # 大型卡片圆角。 [字符串]
       card_large: 24px
-      # 普通卡片圆角。 [字符串]
       card: 16px
-      # 小型卡片圆角。 [字符串]
       card_small: 12px
-      # 栏、按钮和输入框圆角。 [字符串]
       bar: 12px
-      # 大型图片圆角。 [字符串]
       image_large: 24px
-      # 普通图片圆角。 [字符串]
       image: 16px
-      # 小型图片圆角。 [字符串]
       image_small: 8px
-  # 主题主色、强调色和链接色。 [对象]
+
   colors:
-    # 主题主色。 [字符串]
     primary: hsl(192 98% 55%)
-    # 强调色。 [字符串]
     accent: hsl(14 100% 57%)
-    # 正文链接颜色。 [字符串]
     link: hsl(207 90% 54%)
-  # 主要交互、搜索栏和头像环渐变。 [对象]
+
   gradients:
-    # 主要操作按钮渐变。 [字符串]
     primary_action: linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))
-    # 搜索栏边框渐变。 [字符串]
     search_bar: 'linear-gradient(to right, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)'
-  # 代码块滚动条与高亮样式。 [对象]
+
   code_block:
-    # 代码块滚动条宽度。 [字符串]
     scrollbar_width: 4px
-    # 代码高亮样式表资源；null 不加载额外样式。 [字符串或null]
     highlight_stylesheet: https://gcore.jsdelivr.net/gh/highlightjs/cdn-release@11.9/build/styles/atom-one-dark.min.css
-  # 侧栏和页面背景。 [对象]
+
   backgrounds:
     leftbar:
-      # Glass 侧栏装饰背景类型；none 仅保留与 Topbar 相同的玻璃材质，无效字符串或缺少图片时回退艺术渐变，其他 Appearance 不消费。 [字符串；可选值：none / gradient / image]
-      type: gradient
-      # 侧栏背景图片；留空不显示背景图。 [字符串或null]
-      image:
+      type: gradient # none | gradient | image
+      image: null
       gradient:
-        # 浅色模式侧栏艺术渐变调色板；按基础色、左上、右中、左下提供四个 CSS 颜色。 [数组；元素：字符串]
         light: [hsl(210 32% 84%), hsl(188 44% 84%), hsl(12 64% 73%), hsl(35 100% 82%)]
-        # 深色模式侧栏艺术渐变调色板；按基础色、左上、右中、左下提供四个 CSS 颜色。 [数组；元素：字符串]
         dark: [hsl(210 16% 48%), hsl(188 18% 50%), hsl(12 30% 42%), hsl(35 36% 49%)]
-      # 侧栏背景不透明度。 [数字；范围：0–1]
       opacity: 1
       backdrop:
-        # 侧栏背景模糊半径。 [字符串]
         radius: 100px
     page:
-      # 页面背景图片；留空不显示背景图。 [字符串或null]
-      image:
+      image: null
       backdrop:
-        # 页面背景模糊半径。 [字符串]
         radius: 100px
-        # 页面背景遮罩颜色。 [字符串]
         overlay: var(--bg-a75)
-        # 页面背景饱和度。 [字符串]
         saturation: 300%
 
-# Canonical、Open Graph 与结构化数据。 [对象]
-seo:
-  # Canonical 主机与合法镜像主机。 [对象]
-  canonical:
-    # 生成 canonical URL 的主机名；null 关闭 canonical 输出。 [字符串或null]
-    # Example:
-    #   example.com
-    host: null
-    # 允许访问但不作为 canonical 的镜像主机；站点配置完整替换默认数组。 [数组；元素：字符串]
-    allowed_hosts: [localhost]
-  # Open Graph 与 Twitter Card 元数据。 [对象]
-  open_graph:
-    # 是否生成 Open Graph 与 Twitter Card 标签。 [布尔值]
-    enabled: true
-    # Twitter/X 用户名，不含 @；null 不输出账号标签。 [字符串或null]
-    twitter_id: null
-  # JSON-LD 结构化数据。 [对象]
-  structured_data:
-    # 作者或组织的公开身份页面；空数组不输出 sameAs。 [数组；元素：字符串]
-    # Example:
-    #   - https://github.com/xaoxuu
-    same_as: []
+# -----------------------------------------------------------------------------
+# SEO
+# -----------------------------------------------------------------------------
 
-# 预连接、资源兜底与错误页资源。 [对象]
-resources:
-  # 需要预连接的绝对 HTTP(S) origin；站点配置完整替换默认数组。 [数组；元素：字符串]
-  # Example:
-  #   - https://cdn.jsdelivr.net
-  preconnect: []
-  # 内容缺少图片时使用的兜底资源。 [对象]
-  fallbacks:
-    # 用户或作者缺少头像时使用的兜底图。 [字符串]
-    avatar: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg
-    # 链接卡片缺少图片时使用的兜底图。 [字符串]
-    link_card: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/link/8f277b4ee0ecd.svg
-    # 封面与 Open Graph 缺少图片时使用的兜底图。 [字符串]
-    cover: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg
-  # 错误页资源。 [对象]
-  error_page:
-    # 错误页插图；null 不显示插图。 [字符串或null]
-    image: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg
+canonical:
+  host: null
+  allowed_hosts: [localhost]
 
-# 搜索、评论、标签、特性与数据服务扩展。 [对象]
-extensions:
-  # 站内搜索及其 Provider。 [对象]
-  search:
-    # 站内搜索 Provider；null 关闭搜索。 [字符串或null；可选值：null / local / algolia]
-    provider: local
-    providers:
-      local:
-        # 本地搜索索引范围。 [字符串]
-        scope: all
-        # 本地搜索索引是否包含正文。 [布尔值]
-        include_content: true
-        # 本地搜索索引缓存有效期，单位为秒。 [数字；最小值：0]
-        cache_ttl_seconds: 86400
-      # Algolia Provider 参数。 [对象；允许自定义键]
-      algolia: {appId: null, apiKey: null, indexName: null}
-  # 评论系统及其 Provider。 [对象]
-  comments:
-    # 默认评论 Provider；null 关闭评论。 [字符串或null；可选值：null / beaudar / utterances / giscus / twikoo / waline / artalk]
+open_graph:
+  enabled: true
+  twitter_id: null
+
+structured_data:
+  same_as: []
+
+# -----------------------------------------------------------------------------
+# Resources
+# -----------------------------------------------------------------------------
+
+preconnect: []
+
+fallbacks:
+  avatar: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg
+  link_card: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/link/8f277b4ee0ecd.svg
+  cover: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg
+
+error_page:
+  image: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg
+
+# -----------------------------------------------------------------------------
+# Extensions
+# -----------------------------------------------------------------------------
+
+search:
+  provider: local # local | algolia | null
+  local:
+    scope: all
+    include_content: true
+    cache_ttl_seconds: 86400
+  algolia: {appId: null, apiKey: null, indexName: null}
+
+comments:
+  provider: null # beaudar | utterances | giscus | twikoo | waline | artalk | null
+  title: null
+  beaudar: {repo: xxx/xxx, issue-term: pathname, issue-number: null, theme: preferred-color-scheme, label: null, input-position: top, comment-order: desc, keep-theme: null, loading: false, branch: main}
+  utterances: {repo: xxx/xxx, issue-term: pathname, issue-number: null, theme: preferred-color-scheme, label: null}
+  giscus: {data-repo: xxx/xxx, data-repo-id: null, data-category: null, data-category-id: null, data-mapping: pathname, data-strict: 0, data-reactions-enabled: 1, data-emit-metadata: 0, data-input-position: top, data-theme: preferred_color_scheme, data-lang: zh-CN, data-loading: null, crossorigin: anonymous}
+  twikoo: {envId: https://xxx}
+  waline: {serverURL: https://waline.vercel.app, commentCount: true, pageview: false}
+  artalk: {server: null, site: '', darkMode: auto, imageUploader: null}
+
+tags:
+  note: {default_color: '', border: true}
+  checkbox: {interactive: false}
+  quot:
+    default: {prefix: 'quot:quote-left', suffix: 'quot:quote-right'}
+    hashtag: {prefix: 'quot:hashtag', suffix: null}
+    question: {prefix: 'quot:question', suffix: null}
+  emoji:
+    default_source: blobcat
+    sources:
+      twemoji: https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg
+      qq: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif
+      aru: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif
+      tieba: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png
+      blobcat: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif
+  icon: {default_color: accent}
+  button: {default_color: theme}
+  mark: {default_color: yellow}
+  hashtag: {default_color: null}
+  gallery: {size: mix, aspect_ratio: square}
+
+features:
+  lazy_loading: {transition: fade, auto_aspect_ratio: true}
+  link_prefetch: {enabled: true}
+  color_scheme_switch: {enabled: false}
+  lightbox: {enabled: true, selector: '.timenode p>img'}
+  reveal: {enabled: true}
+  math:
     provider: null
-    # 默认评论区标题；null 使用语言文件文案。 [字符串或null]
-    title: null
-    providers:
-      # Beaudar Provider 参数。 [对象；允许自定义键]
-      beaudar: {repo: xxx/xxx, issue-term: pathname, issue-number: null, theme: preferred-color-scheme, label: null, input-position: top, comment-order: desc, keep-theme: null, loading: false, branch: main}
-      # Utterances Provider 参数。 [对象；允许自定义键]
-      utterances: {repo: xxx/xxx, issue-term: pathname, issue-number: null, theme: preferred-color-scheme, label: null}
-      # Giscus Provider 参数。 [对象；允许自定义键]
-      giscus: {data-repo: xxx/xxx, data-repo-id: null, data-category: null, data-category-id: null, data-mapping: pathname, data-strict: 0, data-reactions-enabled: 1, data-emit-metadata: 0, data-input-position: top, data-theme: preferred_color_scheme, data-lang: zh-CN, data-loading: null, crossorigin: anonymous}
-      # Twikoo Provider 参数。 [对象；允许自定义键]
-      twikoo: {envId: https://xxx}
-      # Waline Provider 参数。 [对象；允许自定义键]
-      waline: {serverURL: https://waline.vercel.app, commentCount: true, pageview: false}
-      # Artalk Provider 参数。 [对象；允许自定义键]
-      artalk: {server: null, site: '', darkMode: auto, imageUploader: null}
-  # 标签插件默认行为。 [对象]
-  tags:
-    note:
-      # Note 标签的默认颜色；空字符串使用组件默认色。 [字符串]
-      default_color: ''
-      # Note 标签是否显示边框。 [布尔值]
-      border: true
-    checkbox:
-      # Checkbox 标签是否允许用户交互。 [布尔值]
-      interactive: false
-    # Quot 标签各变体的前后图标映射。 [对象；允许自定义键]
-    quot: {default: {prefix: quot:quote-left, suffix: quot:quote-right}, hashtag: {prefix: quot:hashtag, suffix: null}, question: {prefix: quot:question, suffix: null}}
-    emoji:
-      # Emoji 标签默认使用的图片源。 [字符串]
-      default_source: blobcat
-      # Emoji 图片源名称到 URL 模板的映射。 [对象；允许自定义键]
-      sources: {twemoji: 'https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg', qq: 'https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif', aru: 'https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif', tieba: 'https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png', blobcat: 'https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif'}
-    icon:
-      # Icon 标签默认颜色；null 不注入颜色。 [字符串或null]
-      default_color: accent
-    button:
-      # Button 标签默认颜色；null 不注入颜色。 [字符串或null]
-      default_color: theme
-    mark:
-      # Mark 标签默认颜色。 [字符串]
-      default_color: yellow
-    hashtag:
-      # Hashtag 标签默认颜色；null 不注入颜色。 [字符串或null]
-      default_color: null
-    gallery:
-      # Gallery 标签默认图片尺寸。 [字符串；可选值：s / m / l / xl / mix]
-      size: mix
-      # Gallery 标签默认图片比例。 [字符串；可选值：original / square / portrait]
-      aspect_ratio: square
-  # 浏览器 Feature 的启用与实现选择。 [对象]
-  features:
-    lazy_loading:
-      # 图片懒加载完成时的过渡效果。 [字符串；可选值：blur / fade]
-      transition: fade
-      # 懒加载是否自动保留图片宽高比。 [布尔值]
-      auto_aspect_ratio: true
-    link_prefetch:
-      # 是否在用户可能导航前预取站内页面。 [布尔值]
-      enabled: true
-    color_scheme_switch:
-      # 是否启用浏览器配色切换功能。 [布尔值]
-      enabled: false
-    lightbox:
-      # 是否启用图片灯箱。 [布尔值]
-      enabled: true
-      # 进入灯箱的图片 CSS 选择器。 [字符串]
-      selector: .timenode p>img
-    reveal:
-      # 是否启用滚动进入动效。 [布尔值]
-      enabled: true
-    math:
-      # 数学公式 Provider；null 关闭公式渲染。 [字符串或null；可选值：null / katex / mathjax]
-      provider: null
-      providers:
-        # KaTeX Provider 参数。 [对象；允许自定义键]
-        katex: {}
-        # MathJax Provider 参数。 [对象；允许自定义键]
-        mathjax: {}
-    diagrams:
-      # 图表 Provider；null 关闭图表渲染。 [字符串或null；可选值：null / mermaid]
-      provider: null
-      providers:
-        mermaid:
-          # Mermaid 图表主题。 [字符串；可选值：default / dark / forest / neutral]
-          theme: neutral
-    card_hover:
-      # 是否启用卡片悬停聚光与倾斜效果。 [布尔值]
-      enabled: false
-    heti:
-      # 是否启用 Heti 中文排版增强。 [布尔值]
-      enabled: false
-  # 数据服务及其 Provider。 [对象]
-  services:
-    site_info:
-      # 站点信息服务 Provider；null 关闭自动补全。 [字符串或null；可选值：null / site_info_api]
-      provider: site_info_api
-      providers:
-        site_info_api:
-          # Site Info API 请求模板，使用 {href} 代入目标地址。 [字符串]
-          endpoint: https://api.xaox.cc/site_info/v1?url={href}
-    rating:
-      # 评分服务 Provider；null 关闭评分服务。 [字符串或null；可选值：null / star_vote]
-      provider: star_vote
-      providers:
-        star_vote:
-          # Star Vote 评分接口地址。 [字符串]
-          endpoint: https://star-vote.xaox.cc/api/rating
-    vote:
-      # 投票服务 Provider；null 关闭投票服务。 [字符串或null；可选值：null / star_vote]
-      provider: star_vote
-      providers:
-        star_vote:
-          # Star Vote 投票接口地址。 [字符串]
-          endpoint: https://star-vote.xaox.cc/api/vote
-    contributors:
-      # 贡献者数据 Provider。 [字符串；可选值：github]
-      provider: github
-      providers:
-        github:
-          # 源码目录到 GitHub 仓库的映射；空数组不加载贡献者。 [数组；元素：对象]
-          # Example:
-          #   - {source_prefix: wiki/stellar/, repository: xaoxuu/hexo-theme-stellar-docs, branch: main}
-          repositories: []
-    github:
-      # GitHub REST API 基础地址。 [字符串]
-      api_url: https://api.github.com
-      # GitHub Raw 内容基础地址。 [字符串]
-      raw_url: https://raw.githubusercontent.com
-      # GitHub Gist 基础地址。 [字符串]
-      gist_url: https://gist.github.com
-    github_card:
-      # GitHub 卡片 Provider。 [字符串；可选值：github_readme_stats]
-      provider: github_readme_stats
-      providers:
-        github_readme_stats:
-          # GitHub Readme Stats 服务地址。 [字符串]
-          endpoint: https://github-readme-stats.vercel.app
+    katex: {}
+    mathjax: {}
+  diagrams:
+    provider: null
+    mermaid: {theme: neutral}
+  card_hover: {enabled: false}
+  heti: {enabled: false}
 
-# 可信原文注入入口。 [对象]
+services:
+  site_info:
+    provider: site_info_api
+    site_info_api:
+      endpoint: https://api.xaox.cc/site_info/v1?url={href}
+  rating:
+    provider: star_vote
+    star_vote:
+      endpoint: https://star-vote.xaox.cc/api/rating
+  vote:
+    provider: star_vote
+    star_vote:
+      endpoint: https://star-vote.xaox.cc/api/vote
+  contributors:
+    provider: github
+    github:
+      repositories: []
+  github:
+    api_url: https://api.github.com
+    raw_url: https://raw.githubusercontent.com
+    gist_url: https://gist.github.com
+  github_card:
+    provider: github_readme_stats
+    github_readme_stats:
+      endpoint: https://github-readme-stats.vercel.app
+
+# -----------------------------------------------------------------------------
+# Trusted injection
+# -----------------------------------------------------------------------------
+
 inject:
-  # 插入 </head> 前的可信 HTML；空字符串不注入。 [字符串]
-  # Example:
-  #   <meta name="example" content="stellar">
   head_end: ''
-  # 插入 </body> 前的可信 HTML 或脚本；空字符串不注入。 [字符串]
   body_end: ''

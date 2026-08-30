@@ -54,7 +54,7 @@ function layoutTop() {
   // 2.2 右：字数和预计阅读时长 + AI 成分标签（仅在有内容时渲染）
   var rightHtml = ''
   // 字数和预计阅读时长，置于第一行右侧（#302）
-  if ((renderViewModel ? renderViewModel.item.layout : page.layout) == 'post' && stellar_config('content.article.showReadingTime')) {
+  if ((renderViewModel ? renderViewModel.item.layout : page.layout) == 'post' && stellar_config('article.showReadingTime')) {
     var _wc = word_count(page)
     if (_wc > 0) {
       rightHtml += `<span class="cap reading">${__("meta.word_count", _wc)} · ${__("meta.reading_time", reading_time(page))}</span>`

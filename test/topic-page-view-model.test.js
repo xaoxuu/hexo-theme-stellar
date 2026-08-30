@@ -12,7 +12,9 @@ const {
   buildTopicPageViewModelBase: buildTopicPageViewModelBaseRaw,
   completeTopicPageViewModel
 } = require("../scripts/lib/models");
-const { parseStellarConfig } = require("../scripts/lib/config-schema");
+const { parseStellarConfig: parseRawStellarConfig } = require("../scripts/lib/config-schema");
+const { flattenThemeFixture } = require("./support/theme-config");
+const parseStellarConfig = input => parseRawStellarConfig({ ...input, themeConfig: flattenThemeFixture(input.themeConfig) });
 const { parseCollectionConfig, parsePageConfig } = require("../scripts/lib/content-config");
 const processContentConfig = require("../scripts/events/lib/content-config");
 const { attachPageViewModel } = require("../scripts/filters/lib/page-view-model");
@@ -352,10 +354,10 @@ test("Topic profile 只接受匹配的严格 v2 collection 归属", () => {
     ...base,
     themeSource: "_config.stellar.yml",
     themeConfig: {
-      layout: { profiles: {
+      profiles: {
         topic_index: { path: 42 },
-        topic: { navigation: "post" }
-      } }
+        topic: { active_menu: [] }
+      }
     },
     frontMatter: {
       title: "Topic",
@@ -363,8 +365,8 @@ test("Topic profile 只接受匹配的严格 v2 collection 归属", () => {
       collection: { profile: "topic", id: "stellar-v2" }
     }
   }), error => {
-    assert.match(error.message, /_config\.stellar\.yml: layout\.profiles\.topic_index\.path 应为 string/);
-    assert.match(error.message, /_config\.stellar\.yml: layout\.profiles\.topic\.navigation 应为 object/);
+    assert.match(error.message, /_config\.stellar\.yml: profiles\.topic_index\.path 应为 string/);
+    assert.match(error.message, /_config\.stellar\.yml: profiles\.topic\.active_menu 应为 string \| null/);
     return true;
   });
 });

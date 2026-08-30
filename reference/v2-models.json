@@ -190,7 +190,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.notebook.listing.excerptLength"
+              "hexo.stellar.config.notebook.listing.excerptLength"
             ]
           },
           "scope": "CollectionModel:notebook",
@@ -228,7 +228,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.notebook.listing.perPage",
+              "hexo.stellar.config.notebook.listing.perPage",
               "site.per_page"
             ]
           },
@@ -514,7 +514,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article",
+              "hexo.stellar.config.article",
               "collection.article",
               "page.article"
             ]
@@ -578,7 +578,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.paragraphIndent"
+              "hexo.stellar.config.article.paragraphIndent"
             ]
           },
           "scope": "CollectionModel:notebook",
@@ -598,7 +598,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.style"
+              "hexo.stellar.config.article.style"
             ]
           },
           "scope": "CollectionModel:notebook",
@@ -671,7 +671,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.extensions.comments",
+              "hexo.stellar.config.comments",
               "collection.comments",
               "page.comments"
             ]
@@ -755,7 +755,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.extensions.comments.provider"
+              "hexo.stellar.config.comments.provider"
             ]
           },
           "scope": "CollectionModel:notebook",
@@ -776,7 +776,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.extensions.comments.title"
+              "hexo.stellar.config.comments.title"
             ]
           },
           "scope": "CollectionModel:notebook",
@@ -796,7 +796,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer",
+              "hexo.stellar.config.article.footer",
               "collection.footer",
               "page.footer"
             ]
@@ -823,7 +823,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer.license"
+              "hexo.stellar.config.article.footer.license"
             ]
           },
           "scope": "CollectionModel:notebook",
@@ -863,7 +863,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer.share"
+              "hexo.stellar.config.article.footer.share"
             ]
           },
           "scope": "CollectionModel:notebook",
@@ -884,7 +884,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer.showTags"
+              "hexo.stellar.config.article.footer.showTags"
             ]
           },
           "scope": "CollectionModel:notebook",
@@ -1716,7 +1716,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.site.brand"
+              "hexo.stellar.config.brand"
             ]
           },
           "scope": "CollectionModel:post",
@@ -1868,7 +1868,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.listing.cardLayout"
+              "hexo.stellar.config.article.listing.cardLayout"
             ]
           },
           "scope": "CollectionModel:post",
@@ -1888,7 +1888,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.listing.excerptLength"
+              "hexo.stellar.config.article.listing.excerptLength"
             ]
           },
           "scope": "CollectionModel:post",
@@ -1908,7 +1908,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.listing.pinnedLayout"
+              "hexo.stellar.config.article.listing.pinnedLayout"
             ]
           },
           "scope": "CollectionModel:post",
@@ -2016,7 +2016,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article",
+              "hexo.stellar.config.article",
               "collection.article",
               "page.article"
             ]
@@ -2080,7 +2080,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.paragraphIndent"
+              "hexo.stellar.config.article.paragraphIndent"
             ]
           },
           "scope": "CollectionModel:post",
@@ -2100,7 +2100,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.style"
+              "hexo.stellar.config.article.style"
             ]
           },
           "scope": "CollectionModel:post",
@@ -2120,7 +2120,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.extensions.comments",
+              "hexo.stellar.config.comments",
               "collection.comments",
               "page.comments"
             ]
@@ -2204,7 +2204,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.extensions.comments.provider"
+              "hexo.stellar.config.comments.provider"
             ]
           },
           "scope": "CollectionModel:post",
@@ -2225,7 +2225,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.extensions.comments.title"
+              "hexo.stellar.config.comments.title"
             ]
           },
           "scope": "CollectionModel:post",
@@ -2245,7 +2245,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer",
+              "hexo.stellar.config.article.footer",
               "collection.footer",
               "page.footer"
             ]
@@ -2272,7 +2272,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer.license"
+              "hexo.stellar.config.article.footer.license"
             ]
           },
           "scope": "CollectionModel:post",
@@ -2312,7 +2312,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer.share"
+              "hexo.stellar.config.article.footer.share"
             ]
           },
           "scope": "CollectionModel:post",
@@ -2333,7 +2333,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer.showTags"
+              "hexo.stellar.config.article.footer.showTags"
             ]
           },
           "scope": "CollectionModel:post",
@@ -2953,7 +2953,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.listing.cardLayout"
+              "hexo.stellar.config.article.listing.cardLayout"
             ]
           },
           "scope": "CollectionModel:topic",
@@ -3295,7 +3295,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article",
+              "hexo.stellar.config.article",
               "collection.article",
               "page.article"
             ]
@@ -3359,7 +3359,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.paragraphIndent"
+              "hexo.stellar.config.article.paragraphIndent"
             ]
           },
           "scope": "CollectionModel:topic",
@@ -3379,7 +3379,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.style"
+              "hexo.stellar.config.article.style"
             ]
           },
           "scope": "CollectionModel:topic",
@@ -3449,7 +3449,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.extensions.comments",
+              "hexo.stellar.config.comments",
               "collection.comments",
               "page.comments"
             ]
@@ -3533,7 +3533,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.extensions.comments.provider"
+              "hexo.stellar.config.comments.provider"
             ]
           },
           "scope": "CollectionModel:topic",
@@ -3554,7 +3554,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.extensions.comments.title"
+              "hexo.stellar.config.comments.title"
             ]
           },
           "scope": "CollectionModel:topic",
@@ -3574,7 +3574,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer",
+              "hexo.stellar.config.article.footer",
               "collection.footer",
               "page.footer"
             ]
@@ -3601,7 +3601,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer.license"
+              "hexo.stellar.config.article.footer.license"
             ]
           },
           "scope": "CollectionModel:topic",
@@ -3641,7 +3641,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer.share"
+              "hexo.stellar.config.article.footer.share"
             ]
           },
           "scope": "CollectionModel:topic",
@@ -3662,7 +3662,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer.showTags"
+              "hexo.stellar.config.article.footer.showTags"
             ]
           },
           "scope": "CollectionModel:topic",
@@ -4996,7 +4996,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article",
+              "hexo.stellar.config.article",
               "collection.article",
               "page.article"
             ]
@@ -5060,7 +5060,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.paragraphIndent"
+              "hexo.stellar.config.article.paragraphIndent"
             ]
           },
           "scope": "CollectionModel:wiki",
@@ -5080,7 +5080,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.style"
+              "hexo.stellar.config.article.style"
             ]
           },
           "scope": "CollectionModel:wiki",
@@ -5153,7 +5153,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.extensions.comments",
+              "hexo.stellar.config.comments",
               "collection.comments",
               "page.comments"
             ]
@@ -5237,7 +5237,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.extensions.comments.provider"
+              "hexo.stellar.config.comments.provider"
             ]
           },
           "scope": "CollectionModel:wiki",
@@ -5258,7 +5258,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.extensions.comments.title"
+              "hexo.stellar.config.comments.title"
             ]
           },
           "scope": "CollectionModel:wiki",
@@ -5278,7 +5278,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer",
+              "hexo.stellar.config.article.footer",
               "collection.footer",
               "page.footer"
             ]
@@ -5305,7 +5305,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer.license"
+              "hexo.stellar.config.article.footer.license"
             ]
           },
           "scope": "CollectionModel:wiki",
@@ -5345,7 +5345,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer.share"
+              "hexo.stellar.config.article.footer.share"
             ]
           },
           "scope": "CollectionModel:wiki",
@@ -5366,7 +5366,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer.showTags"
+              "hexo.stellar.config.article.footer.showTags"
             ]
           },
           "scope": "CollectionModel:wiki",
@@ -6440,7 +6440,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article",
+              "hexo.stellar.config.article",
               "collection.article",
               "page.article"
             ]
@@ -6501,7 +6501,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.paragraphIndent"
+              "hexo.stellar.config.article.paragraphIndent"
             ]
           },
           "scope": "ContentItemModel",
@@ -6520,7 +6520,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.style"
+              "hexo.stellar.config.article.style"
             ]
           },
           "scope": "ContentItemModel",
@@ -6688,7 +6688,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.extensions.comments",
+              "hexo.stellar.config.comments",
               "collection.comments",
               "page.comments"
             ]
@@ -6768,7 +6768,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.extensions.comments.provider"
+              "hexo.stellar.config.comments.provider"
             ]
           },
           "scope": "ContentItemModel",
@@ -6788,7 +6788,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.extensions.comments.title"
+              "hexo.stellar.config.comments.title"
             ]
           },
           "scope": "ContentItemModel",
@@ -6807,7 +6807,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer",
+              "hexo.stellar.config.article.footer",
               "collection.footer",
               "page.footer"
             ]
@@ -6833,7 +6833,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer.license"
+              "hexo.stellar.config.article.footer.license"
             ]
           },
           "scope": "ContentItemModel",
@@ -6871,7 +6871,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer.share"
+              "hexo.stellar.config.article.footer.share"
             ]
           },
           "scope": "ContentItemModel",
@@ -6891,7 +6891,7 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "hexo.stellar.config.content.article.footer.showTags"
+              "hexo.stellar.config.article.footer.showTags"
             ]
           },
           "scope": "ContentItemModel",
@@ -7777,7 +7777,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "extensions.features.heti.enabled"
+              "features.heti.enabled"
             ]
           },
           "scope": "PageViewModel:notebook",
@@ -8277,7 +8277,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.site.brand.name"
+              "hexo.stellar.config.brand.name"
             ]
           },
           "scope": "PageViewModel:notebook",
@@ -8297,7 +8297,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.site.brand.tagline"
+              "hexo.stellar.config.brand.tagline"
             ]
           },
           "scope": "PageViewModel:notebook",
@@ -9337,7 +9337,7 @@
           "required": true,
           "default": {
             "kind": "computed",
-            "description": "由选中的 extensions.services.contributors provider 按最长 source_prefix 匹配与源文件生成"
+            "description": "由选中的 services.contributors provider 按最长 source_prefix 匹配与源文件生成"
           },
           "scope": "PageViewModel:post",
           "consumers": [
@@ -9544,7 +9544,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.extensions.features.heti.enabled"
+              "hexo.stellar.config.features.heti.enabled"
             ]
           },
           "scope": "PageViewModel:post",
@@ -9733,7 +9733,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.content.article.relatedPostsLimit > 0"
+              "hexo.stellar.config.article.relatedPostsLimit > 0"
             ]
           },
           "scope": "PageViewModel:post",
@@ -10316,7 +10316,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.site.brand.name"
+              "hexo.stellar.config.brand.name"
             ]
           },
           "scope": "PageViewModel:post",
@@ -10336,7 +10336,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.site.brand.tagline"
+              "hexo.stellar.config.brand.tagline"
             ]
           },
           "scope": "PageViewModel:post",
@@ -10616,7 +10616,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.content.article.categoryColors"
+              "hexo.stellar.config.article.categoryColors"
             ]
           },
           "scope": "PageViewModel:post",
@@ -10836,7 +10836,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.seo.canonical.host",
+              "hexo.stellar.config.canonical.host",
               "item.route.path"
             ]
           },
@@ -10921,7 +10921,7 @@
           "required": true,
           "default": {
             "kind": "computed",
-            "description": "由 hexo.stellar.config.seo.openGraph 与页面 Open Graph 覆盖生成；禁用时为 null"
+            "description": "由 hexo.stellar.config.openGraph 与页面 Open Graph 覆盖生成；禁用时为 null"
           },
           "scope": "PageViewModel:post",
           "consumers": [
@@ -11397,7 +11397,7 @@
           "required": true,
           "default": {
             "kind": "computed",
-            "description": "由选中的 extensions.services.contributors provider 按最长 source_prefix 匹配与源文件生成"
+            "description": "由选中的 services.contributors provider 按最长 source_prefix 匹配与源文件生成"
           },
           "scope": "PageViewModel:topic",
           "consumers": [
@@ -11604,7 +11604,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.extensions.features.heti.enabled"
+              "hexo.stellar.config.features.heti.enabled"
             ]
           },
           "scope": "PageViewModel:topic",
@@ -11793,7 +11793,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.content.article.relatedPostsLimit > 0"
+              "hexo.stellar.config.article.relatedPostsLimit > 0"
             ]
           },
           "scope": "PageViewModel:topic",
@@ -12376,7 +12376,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.site.brand.name"
+              "hexo.stellar.config.brand.name"
             ]
           },
           "scope": "PageViewModel:topic",
@@ -12396,7 +12396,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.site.brand.tagline"
+              "hexo.stellar.config.brand.tagline"
             ]
           },
           "scope": "PageViewModel:topic",
@@ -12676,7 +12676,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.content.article.categoryColors"
+              "hexo.stellar.config.article.categoryColors"
             ]
           },
           "scope": "PageViewModel:topic",
@@ -12896,7 +12896,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.seo.canonical.host",
+              "hexo.stellar.config.canonical.host",
               "item.route.path"
             ]
           },
@@ -12981,7 +12981,7 @@
           "required": true,
           "default": {
             "kind": "computed",
-            "description": "由 hexo.stellar.config.seo.openGraph 与页面 Open Graph 覆盖生成；禁用时为 null"
+            "description": "由 hexo.stellar.config.openGraph 与页面 Open Graph 覆盖生成；禁用时为 null"
           },
           "scope": "PageViewModel:topic",
           "consumers": [
@@ -13663,7 +13663,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "extensions.features.heti.enabled"
+              "features.heti.enabled"
             ]
           },
           "scope": "PageViewModel:wiki",
@@ -14614,7 +14614,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.site.brand.name"
+              "hexo.stellar.config.brand.name"
             ]
           },
           "scope": "PageViewModel:wiki",
@@ -14634,7 +14634,7 @@
           "default": {
             "kind": "derived",
             "from": [
-              "hexo.stellar.config.site.brand.tagline"
+              "hexo.stellar.config.brand.tagline"
             ]
           },
           "scope": "PageViewModel:wiki",

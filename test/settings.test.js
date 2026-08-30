@@ -12,7 +12,7 @@ function loadGenerator(profilePath = "/settings/", extraProfiles = {}) {
   let generator;
   const previous = global.hexo;
   const mock = {
-    stellar: { config: { layout: { profiles: Object.assign({ settings: { path: profilePath, navigation: { activeMenu: null } } }, extraProfiles) } } },
+    stellar: { config: { profiles: Object.assign({ settings: { path: profilePath, activeMenu: null } }, extraProfiles) } },
     config: { language: "zh-CN" },
     theme: { i18n: { __() { return key => key === "settings.title" ? "设置" : key; } } },
     extend: { generator: { register(name, callback) { if (name === "settings") generator = callback; } } }
@@ -130,7 +130,7 @@ test("设置页生成默认与自定义路由，并输出私有索引标记", ()
 
 test("设置页路径与已有页面冲突时构建失败", () => {
   assert.throws(() => loadGenerator()(locals([{ path: "settings/index.html", source: "settings.md" }])), /路径.*冲突/);
-  assert.throws(() => loadGenerator("/settings/", { blogIndex: { path: "/settings/" } })(locals()), /layout\.profiles\.blogIndex/);
+  assert.throws(() => loadGenerator("/settings/", { blogIndex: { path: "/settings/" } })(locals()), /profiles\.blogIndex/);
 });
 
 test("About 只替换公开变量，未知变量保留原文", () => {
@@ -140,29 +140,29 @@ test("About 只替换公开变量，未知变量保留原文", () => {
 });
 
 test("About Schema 接受可选模板链接并拒绝危险协议", () => {
-  const config = parseStellarConfig({ themeConfig: { site: { settings: { about: { items: [
+  const config = parseStellarConfig({ themeConfig: { settings: { about: { items: [
     { key: "Theme", value: "{theme.version}", url: "{theme.tree}" },
     { key: "Unknown", value: "{custom.value}", url: "{custom.url}" },
     { key: "Plain", value: "Text" }
-  ] } } } } });
-  assert.equal(config.site.settings.about.items[0].url, "{theme.tree}");
-  assert.equal(config.site.settings.about.items[2].url, null);
-  assert.throws(() => parseStellarConfig({ themeConfig: { site: { settings: { about: { items: [
+  ] } } } });
+  assert.equal(config.settings.about.items[0].url, "{theme.tree}");
+  assert.equal(config.settings.about.items[2].url, null);
+  assert.throws(() => parseStellarConfig({ themeConfig: { settings: { about: { items: [
     { key: "Bad", value: "Bad", url: "javascript:{theme.tree}" }
-  ] } } } } }), /safe navigable URL/);
+  ] } } } }), /safe navigable URL/);
 });
 
 test("About 默认内置框架与主题版本，博主配置整体覆盖默认列表", () => {
-  const defaults = parseStellarConfig({ themeConfig: {} }).site.settings.about.items;
+  const defaults = parseStellarConfig({ themeConfig: {} }).settings.about.items;
   assert.deepEqual(defaults, [
     { key: "博客框架", value: "Hexo {hexo.version}", url: "https://hexo.io/" },
     { key: "主题版本", value: "Stellar {theme.version}", url: "{theme.tree}" }
   ]);
-  const custom = parseStellarConfig({ themeConfig: { site: { settings: { about: { items: [
+  const custom = parseStellarConfig({ themeConfig: { settings: { about: { items: [
     { key: "Custom", value: "Only this item" }
-  ] } } } } }).site.settings.about.items;
+  ] } } } }).settings.about.items;
   assert.deepEqual(custom, [{ key: "Custom", value: "Only this item", url: null }]);
-  assert.deepEqual(parseStellarConfig({ themeConfig: { site: { settings: { about: { items: [] } } } } }).site.settings.about.items, []);
+  assert.deepEqual(parseStellarConfig({ themeConfig: { settings: { about: { items: [] } } } }).settings.about.items, []);
 });
 
 test("About 模板仅把指定 Solar 图标作为链接，并保留 4px 间距", () => {
@@ -293,10 +293,10 @@ test("设置页身份事件会刷新头像，并忽略更早的异步 Gravatar �
 test("侧边栏 Settings Widget 整体链接到设置页", () => {
   const template = fs.readFileSync(path.resolve(__dirname, "../layout/_partial/widgets/settings.ejs"), "utf8");
   assert.match(template, /<a class="<%- ui_classes\('settings-widget', 'collectionItem'\) %>" href="<%- escape_html\(url_for\(settingsUrl\)\) %>"/);
-  assert.match(template, /layout\.profiles\.settings/);
+  assert.match(template, /profiles\.settings/);
   assert.match(template, /data-profile-identity-enabled/);
   assert.match(template, /data-profile-fallback-avatar/);
-  assert.match(template, /resources\.fallbacks\.avatar/);
+  assert.match(template, /fallbacks\.avatar/);
   assert.match(template, /default:settings/);
   assert.match(template, /settings\.label/);
   assert.match(template, /settings-widget__name ui-collection__title/);
@@ -305,7 +305,7 @@ test("侧边栏 Settings Widget 整体链接到设置页", () => {
 
 test("Settings Widget 身份只取决于站点默认评论 Provider，不随页面评论状态变化", () => {
   const template = fs.readFileSync(path.resolve(__dirname, "../layout/_partial/widgets/settings.ejs"), "utf8");
-  assert.match(template, /var provider = stellar_config\('extensions\.comments\.provider'\) \|\| ''/);
+  assert.match(template, /var provider = stellar_config\('comments\.provider'\) \|\| ''/);
   assert.match(template, /var identityEnabled = supportedProvider/);
   assert.doesNotMatch(template, /viewModel|content_config\(page\)|commentState|commentsEnabled|page\.cmt_rendered/);
 });

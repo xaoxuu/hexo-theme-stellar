@@ -19,7 +19,7 @@ module.exports = ctx => function(args) {
   }
   const url = full_url_for(args.url)
   const safeTitle = escapeHTML(args.title || '')
-  args.api = resolveServiceProvider(ctx.stellar.config.extensions.services.siteInfo)?.endpoint;
+  args.api = resolveServiceProvider(ctx.stellar.config.services.siteInfo)?.endpoint;
   if (args.api) {
     args.api = args.api.replace('{href}', url)
   }
@@ -50,7 +50,7 @@ module.exports = ctx => function(args) {
 
   function loadIcon() {
     var el = ''
-    el += '<div class="lazy img" data-bg="' + (args.icon || ctx.stellar.config.resources.fallbacks.linkCard) + '"></div>'
+    el += '<div class="lazy img" data-bg="' + (args.icon || ctx.stellar.config.fallbacks.linkCard) + '"></div>'
     return el
   }
   function loadTitle() {

@@ -11,7 +11,7 @@ function read(file) {
   return fs.readFileSync(path.join(ROOT, file), "utf8");
 }
 
-test("Layout Profile 消费链只读取冻结的 layout.profiles 配置", () => {
+test("Layout Profile 消费链只读取冻结的顶层 profiles 配置", () => {
   const consumers = [
     "scripts/generators/404.js",
     "scripts/generators/author.js",
@@ -37,30 +37,29 @@ test("Layout Profile 消费链只读取冻结的 layout.profiles 配置", () => 
     "layout/_partial/main/navbar/breadcrumb/wiki.ejs"
   ].map(read).join("\n");
 
-  assert.match(consumers, /layout\.profiles/);
+  assert.match(consumers, /stellarConfig\?\.profiles|stellar_config\(['"]profiles\./);
   assert.doesNotMatch(consumers, /(?:theme|config)\.site_tree|site_tree\s*\[/);
-  assert.match(read("layout/index.ejs"), /profiles\.home\.navigation\.activeMenu/);
-  assert.match(read("layout/archive.ejs"), /profiles\.blogIndex\.navigation\.activeMenu/);
-  assert.match(read("layout/categories.ejs"), /profiles\.blogIndex\.navigation\.activeMenu/);
-  assert.match(read("layout/tags.ejs"), /profiles\.blogIndex\.navigation\.activeMenu/);
-  assert.match(read("layout/page.ejs"), /profiles\.(?:page|note)\.navigation\.activeMenu/);
-  assert.match(read("scripts/generators/notebooks.js"), /notebook\.navigation\.menu \?\? profiles\.noteIndex\.navigation\.activeMenu/);
+  assert.match(read("layout/index.ejs"), /profiles\.home\.activeMenu/);
+  assert.match(read("layout/archive.ejs"), /profiles\.blogIndex\.activeMenu/);
+  assert.match(read("layout/categories.ejs"), /profiles\.blogIndex\.activeMenu/);
+  assert.match(read("layout/tags.ejs"), /profiles\.blogIndex\.activeMenu/);
+  assert.match(read("layout/page.ejs"), /profiles\.(?:page|note)\.activeMenu/);
+  assert.match(read("scripts/generators/notebooks.js"), /notebook\.navigation\.menu \?\? profiles\.noteIndex\.activeMenu/);
   assert.doesNotMatch(read("scripts/lib/notebooks.js"), /navigation\.menu \?\?=/);
 });
 
 test("主题默认配置只声明最终 Profile ID 与字段名", () => {
   const config = read("_config.yml");
 
-  assert.match(config, /^layout:\n(?: {2}#.*\n)* {2}regions:/m);
-  assert.match(config, /^ {2}profiles:/m);
-  assert.match(config, /^ {4}blog_index:/m);
-  assert.match(config, /^ {6}path: \/blog\//m);
-  assert.match(config, /^ {8}active_menu: post/m);
-  assert.match(config, /^ {6}listing_nav:\n {8}#.*\n {8}enabled: true/m);
-  assert.match(config, /^ {8}tabs: \[\]/m);
+  assert.match(config, /^regions:/m);
+  assert.match(config, /^profiles:/m);
+  assert.match(config, /^ {2}blog_index:/m);
+  assert.match(config, /^ {4}path: \/blog\//m);
+  assert.match(config, /^ {4}active_menu: post/m);
+  assert.match(config, /^ {4}listing_nav:/m);
+  assert.match(config, /^ {6}tabs: \[\]/m);
   assert.doesNotMatch(config, /^site_tree:/m);
-  assert.doesNotMatch(config, /^ {4}(?:index_blog|index_topic|index_wiki|notebooks|notes):/m);
-  assert.doesNotMatch(config, /^ {6}(?:base_dir|404):/m);
-  assert.doesNotMatch(config, /^ {8}menu:/m);
-  assert.doesNotMatch(config, /^ {8}navigation:\n(?: {10}#.*\n)* {10}tabs:/m);
+  assert.doesNotMatch(config, /^ {2}(?:index_blog|index_topic|index_wiki|notebooks|notes):/m);
+  assert.doesNotMatch(config, /^ {4}(?:base_dir|404):/m);
+  assert.doesNotMatch(config, /^ {6}navigation:/m);
 });

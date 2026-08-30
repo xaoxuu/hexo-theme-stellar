@@ -4,7 +4,9 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 
 const { getNotebooksObject, groupPagesByNotebook, NotePage } = require("../scripts/lib/notebooks");
-const { parseStellarConfig } = require("../scripts/lib/config-schema");
+const { parseStellarConfig: parseRawStellarConfig } = require("../scripts/lib/config-schema");
+const { flattenThemeFixture } = require("./support/theme-config");
+const parseStellarConfig = input => parseRawStellarConfig({ ...input, themeConfig: flattenThemeFixture(input.themeConfig) });
 const { parseCollectionConfig } = require("../scripts/lib/content-config");
 
 test('groupPagesByNotebook 按 notebook 分组且保持顺序、跳过无 notebook 页面', () => {

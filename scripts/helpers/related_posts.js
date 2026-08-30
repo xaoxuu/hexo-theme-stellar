@@ -17,7 +17,7 @@ hexo.extend.helper.register('popular_posts_wrapper', function(args){
   if (json == undefined || json.length == 0) {
     return '';
   }
-  const limit = hexo.stellar.config.content.article.relatedPostsLimit;
+  const limit = hexo.stellar.config.article.relatedPostsLimit;
   if (limit <= 0) return;
   var returnHTML = "";
   var div = `

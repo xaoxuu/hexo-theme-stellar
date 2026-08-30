@@ -314,7 +314,7 @@ test("Search 由唯一 Menu Item 复用页面范围与共享 Dialog", () => {
   const menu = fs.readFileSync(path.resolve(__dirname, "../layout/_partial/sidebar/menu.ejs"), "utf8");
   const layout = fs.readFileSync(path.resolve(__dirname, "../layout/layout.ejs"), "utf8");
   assert.match(menu, /menuItem\?\.type === 'search'/);
-  assert.match(menu, /extensions\.search\.provider/);
+  assert.match(menu, /search\.provider/);
   assert.match(menu, /data-shell-action': 'open-search'/);
   assert.match(menu, /render\.layout\.algoliaFilterPath/);
   assert.match(layout, /partial\('_partial\/search\/dialog'\)/);

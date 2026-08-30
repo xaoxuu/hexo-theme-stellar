@@ -213,10 +213,10 @@ Post/Topic/Wiki/Notebook 的模型先解析 `extensions.services.contributors` �
 
 | 参数 | 来源 |
 |------|------|
-| `url` | `footer.share.permalink` |
-| `title` | `footer.share.title` |
-| `pics` | `footer.share.image` |
-| `summary` | `footer.share.summary` |
+| `url` | `PageViewModel.footer.share.permalink` |
+| `title` | `PageViewModel.footer.share.title` |
+| `pics` | `PageViewModel.footer.share.image` |
+| `summary` | `PageViewModel.footer.share.summary` |
 
 所有分享参数（URL、标题、图片、摘要）均经 `encodeURIComponent` 编码后拼入 `href`；`copy-link` 输入框的 `value` 与复制提示文案经 HTML 转义输出，标题/摘要含引号、`&`、`<` 等字符时不会破坏 HTML 结构。
 

@@ -127,7 +127,7 @@ test('Search Menu Item 不输出内联事件或独立表单', () => {
 });
 
 test('搜索扩展关闭时安全跳过 Search Menu Item', () => {
-  assert.match(MENU_TEMPLATE_SOURCE, /if \(!stellar_config\('extensions\.search\.provider'\)\) continue/);
+  assert.match(MENU_TEMPLATE_SOURCE, /if \(!stellar_config\('search\.provider'\)\) continue/);
 });
 
 test('本地搜索与 Algolia 从公共入口加载同一份快捷键脚本', () => {
@@ -146,7 +146,7 @@ test('搜索浮层保持固定高度且搜索图标与输入框不换行', () =>
 });
 
 test('仅 Local Search 渲染真实单选搜索域并支持动态 Collection 名称', () => {
-  assert.match(SEARCH_DIALOG_TEMPLATE_SOURCE, /var localSearch = stellar_config\('extensions\.search\.provider'\) === 'local'/);
+  assert.match(SEARCH_DIALOG_TEMPLATE_SOURCE, /var localSearch = stellar_config\('search\.provider'\) === 'local'/);
   assert.match(SEARCH_DIALOG_TEMPLATE_SOURCE, /if \(localSearch\)[\s\S]*role="radiogroup"/);
   assert.match(SEARCH_DIALOG_TEMPLATE_SOURCE, /type="radio" name="site-search-scope" value="all"/);
   assert.match(SEARCH_DIALOG_TEMPLATE_SOURCE, /type="radio" name="site-search-scope" value="blog"/);

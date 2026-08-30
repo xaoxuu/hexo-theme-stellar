@@ -9,7 +9,7 @@
 
 module.exports = ctx => function(args) {
   args = ctx.args.map(args, ['repo', 'api', 'posts'], ['group'])
-  const rawUrl = ctx.stellar.config.extensions.services.github.rawUrl.replace(/\/+$/, '')
+  const rawUrl = ctx.stellar.config.services.github.rawUrl.replace(/\/+$/, '')
   var api
   if (args.api) {
     api = args.api
@@ -28,7 +28,7 @@ module.exports = ctx => function(args) {
         el += `<div class="grid-cell user-card">`
         el += `<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="${item.url}">`
         el += `<div class="lazy-box icon">`
-        el += `<img class="lazy" data-src="${item.icon || item.avatar || ctx.stellar.config.resources.fallbacks.avatar}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${ctx.stellar.config.resources.fallbacks.avatar}&quot;;"/>`
+        el += `<img class="lazy" data-src="${item.icon || item.avatar || ctx.stellar.config.fallbacks.avatar}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${ctx.stellar.config.fallbacks.avatar}&quot;;"/>`
         el += `<div class="lazy-icon"></div>`
         el += `</div>`
         el += `<div class="name">`

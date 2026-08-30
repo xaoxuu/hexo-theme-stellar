@@ -7,7 +7,9 @@ const os = require("node:os");
 const path = require("node:path");
 const yaml = require("js-yaml");
 
-const { parseStellarConfig } = require("../scripts/lib/config-schema");
+const { parseStellarConfig: parseRawStellarConfig } = require("../scripts/lib/config-schema");
+const { flattenThemeFixture } = require("./support/theme-config");
+const parseStellarConfig = input => parseRawStellarConfig({ ...input, themeConfig: flattenThemeFixture(input.themeConfig) });
 const { runDoctor } = require("../scripts/lib/doctor");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -109,7 +111,7 @@ test("Appearance 严格拒绝非法 CSS、Resource、selector 与 motion 值", (
       "appearance.backgrounds.leftbar.image",
       "appearance.backgrounds.leftbar.opacity",
       "appearance.backgrounds.page.backdrop.saturation",
-      "extensions.features.lightbox.selector"
+      "features.lightbox.selector"
     ]) assert.equal(error.issues.some(issue => issue.path === pathValue), true, pathValue);
     return true;
   });
@@ -123,14 +125,14 @@ test("Resources、Background、Highlight、404 与 Inject 只消费最终结构"
   const scripts = read("layout/_partial/scripts.ejs");
   const errorPage = read("layout/404.ejs");
 
-  assert.deepEqual(Object.keys(parsedConfig.resources.fallbacks), ["avatar", "link_card", "cover"]);
-  assert.equal(typeof parsedConfig.resources.error_page.image, "string");
+  assert.deepEqual(Object.keys(parsedConfig.fallbacks), ["avatar", "link_card", "cover"]);
+  assert.equal(typeof parsedConfig.error_page.image, "string");
   assert.doesNotMatch(config, /fallbacks:[\s\S]*?(?:project_icon|topic_cover|tag_plugin):/);
   assert.match(internal, /resources: \{[\s\S]*projectIcon:[\s\S]*banner:[\s\S]*topicCover:[\s\S]*contentImage:/);
   assert.match(config, /image: https:\/\//);
   assert.doesNotMatch(config, /image: url\(/);
   assert.match(head, /highlightStylesheet/);
-  assert.match(errorPage, /resources\.errorPage\.image/);
+  assert.match(errorPage, /errorPage\.image/);
   assert.match(errorPage, /if \(errorImage\)/);
   assert.match(head, /stellar_inject\('headEnd'/);
   assert.match(scripts, /stellar_inject\('bodyEnd'/);
@@ -669,7 +671,7 @@ test("搜索生成器按稳定页面键消费 visibility.searchable", () => {
   assert.doesNotMatch(search, /pageConfigs\.get\(/);
 });
 
-test("doctor 为本轮退出字段给出最终目标或明确删除", () => {
+test("doctor 接受 Appearance 与 Inject 分组并拒绝其旧字段", () => {
   const baseDir = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-final-config-"));
   fs.writeFileSync(path.join(baseDir, "_config.yml"), "title: Test\ntheme: stellar\n");
   fs.writeFileSync(path.join(baseDir, "_config.stellar.yml"), [
@@ -701,14 +703,18 @@ test("doctor 为本轮退出字段给出最终目标或明确删除", () => {
   const result = runDoctor({ baseDir, nodeVersion: "22.0.0", hexoVersion: "8.1.0" });
   assert.equal(result.ok, false);
   const issue = pathValue => result.issues.find(item => item.path === pathValue);
-  assert.equal(issue("appearance.typography.text_align").expected, "appearance.typography.content_align");
-  assert.equal(issue("appearance.typography.font_family.inline_code").expected, "appearance.typography.font_family.code");
-  assert.equal(issue("appearance.colors.theme").expected, "appearance.colors.primary");
-  assert.match(issue("appearance.gradients.angle").expected, /remove field/);
-  assert.equal(issue("appearance.code_block.highlight_theme").expected, "appearance.code_block.highlight_stylesheet");
-  assert.equal(issue("appearance.backgrounds.leftbar.blur").expected, "appearance.backgrounds.leftbar.backdrop");
-  assert.match(issue("resources.fallbacks.project_icon").expected, /remove field/);
-  assert.equal(issue("resources.fallbacks.error_page").expected, "resources.error_page.image");
-  assert.equal(issue("inject.head").expected, "inject.head_end");
-  assert.equal(issue("inject.script").expected, "inject.body_end");
+  for (const field of [
+    "appearance.typography.text_align",
+    "appearance.colors.theme",
+    "appearance.gradients.angle",
+    "appearance.code_block.highlight_theme",
+    "appearance.backgrounds.leftbar.blur",
+    "resources",
+    "inject.head",
+    "inject.script"
+  ]) {
+    assert.equal(issue(field).code, "unknown_field");
+    assert.equal(issue(field).expected, "known field");
+    assert.equal(issue(field).migration, undefined);
+  }
 });

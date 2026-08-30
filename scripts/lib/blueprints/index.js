@@ -112,8 +112,13 @@ function loadCatalog(options = {}) {
     const roots = parsed != null && typeof parsed === "object" && !Array.isArray(parsed)
       ? Object.keys(parsed)
       : [];
-    if (parsed == null || typeof parsed !== "object" || Array.isArray(parsed) || (roots.length > 0 && roots.join(",") !== "appearance")) {
-      throw new BlueprintError(`${fragment.absolute}: Visual Style 必须为空覆盖或只包含 appearance 根`);
+    const appearanceKeys = parsed?.appearance != null && typeof parsed.appearance === "object" && !Array.isArray(parsed.appearance)
+      ? Object.keys(parsed.appearance)
+      : [];
+    if (parsed == null || typeof parsed !== "object" || Array.isArray(parsed)
+      || roots.some(root => root !== "appearance")
+      || appearanceKeys.some(key => key !== "preset")) {
+      throw new BlueprintError(`${fragment.absolute}: Visual Style 必须为空覆盖或只包含 appearance.preset`);
     }
     parseStellarConfig({ source: fragment.absolute, themeConfig: parsed });
     styles[id] = deepFreeze({ ...manifest, directory, content });

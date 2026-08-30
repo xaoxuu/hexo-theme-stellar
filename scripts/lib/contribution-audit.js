@@ -78,7 +78,9 @@ function auditContributionRegistry(options) {
     if (!assetOwners.has(asset)) issues.push(`${asset}: internal asset has no contribution owner`);
   }
 
-  const referencePaths = (reference.fields || []).map(field => field.path);
+  const referencePaths = (reference.fields || [])
+    .filter(field => field.surface === "Theme")
+    .map(field => field.path);
   for (const definition of definitions) {
     const entry = entryFile(definition.entry);
     if (!fs.existsSync(path.join(root, entry))) issues.push(`${definition.id}: entry file ${entry} does not exist`);

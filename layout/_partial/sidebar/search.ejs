@@ -65,7 +65,7 @@ function layoutDiv() {
     'data-search-instance': rawInstanceId,
     'data-search-placeholder': placeholder
   }
-  if (stellar_config('extensions.search.provider') === 'algolia' && algoliaFilterPath.length > 0) {
+  if (stellar_config('search.provider') === 'algolia' && algoliaFilterPath.length > 0) {
     searchAttrs['data-algolia-filter-path'] = algoliaFilterPath
   }
   if (searchScope) {

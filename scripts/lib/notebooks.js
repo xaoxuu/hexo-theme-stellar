@@ -61,7 +61,7 @@ function groupPagesByNotebook(pages, pageConfigs) {
 function prepareNotebook(id, info, ctx, pages) {
   const notebook = info;
   const profiles = requireLayoutProfiles(ctx.stellar?.config);
-  const notebookDefaults = ctx.stellar.config.content.notebook;
+  const notebookDefaults = ctx.stellar.config.notebook;
   notebook.id = id;
 
   notebook.route ||= {};
@@ -88,8 +88,8 @@ function prepareNotebook(id, info, ctx, pages) {
   notebook.listing.excerpt_length ??= notebookDefaults.listing.excerptLength;
   notebook.listing.per_page ??= notebookDefaults.listing.perPage ?? ctx.config.per_page ?? 10;
   notebook.listing.sort ??= structuredClone(notebookDefaults.listing.sort);
-  notebook.footer.license ??= notebookDefaults.footer.license ?? ctx.stellar.config.content.article.footer.license;
-  notebook.footer.share ??= notebookDefaults.footer.share ?? ctx.stellar.config.content.article.footer.share;
+  notebook.footer.license ??= notebookDefaults.footer.license ?? ctx.stellar.config.article.footer.license;
+  notebook.footer.share ??= notebookDefaults.footer.share ?? ctx.stellar.config.article.footer.share;
 
   notebook.regions = structuredClone(notebook.regions);
   notebook.noteDefaults.regions = structuredClone(notebook.noteDefaults.regions);

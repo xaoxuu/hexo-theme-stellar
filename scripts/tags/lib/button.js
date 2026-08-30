@@ -22,7 +22,7 @@ module.exports = ctx => function(args) {
     args.text = `${args.text} ${arr.join(' ')}`
   }
   if (args.color == null) {
-    args.color = ctx.stellar.config.extensions.tags.button.defaultColor
+    args.color = ctx.stellar.config.tags.button.defaultColor
   }
   var el = ''
   el += '<a class="tag-plugin colorful button"'

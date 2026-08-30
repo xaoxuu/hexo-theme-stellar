@@ -11,7 +11,7 @@
 module.exports = ctx => function(args) {
   args = ctx.args.map(args, ['color'], ['text'])
   if (args.color == null) {
-    args.color = ctx.stellar.config.extensions.tags.mark.defaultColor
+    args.color = ctx.stellar.config.tags.mark.defaultColor
   }
   var el = ''
   el += '<mark class="tag-plugin colorful mark"'

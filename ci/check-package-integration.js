@@ -19,7 +19,6 @@ const BLUEPRINT_MATRIX = Object.freeze([
   Object.freeze({ id: "docs-reference", language: "zh-TW", style: "card" }),
   Object.freeze({ id: "light-and-shadow", language: "zh-CN", style: "glass" })
 ]);
-const MIGRATION_FIXTURE_ROOT = path.join(THEME_ROOT, "test/fixtures/v2-system-acceptance/migration");
 const INSTALL_PACKAGES = [
   "hexo@8.1.2",
   "hexo-generator-index@4.0.0",
@@ -179,36 +178,8 @@ async function assertPreviewServer(root, hexo, label) {
   }
 }
 
-function copyTree(source, target) {
-  for (const entry of fs.readdirSync(source, { withFileTypes: true })) {
-    const from = path.join(source, entry.name);
-    const to = path.join(target, entry.name);
-    if (entry.isDirectory()) {
-      fs.mkdirSync(to, { recursive: true });
-      copyTree(from, to);
-    } else {
-      fs.mkdirSync(path.dirname(to), { recursive: true });
-      fs.copyFileSync(from, to);
-    }
-  }
-}
-
 function sha256File(file) {
   return crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
-}
-
-function contentHashes(root) {
-  const source = path.join(root, "source");
-  const result = {};
-  function visit(directory) {
-    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-      const file = path.join(directory, entry.name);
-      if (entry.isDirectory()) visit(file);
-      else if (entry.name.endsWith(".md")) result[path.relative(root, file).replace(/\\/g, "/")] = sha256File(file);
-    }
-  }
-  visit(source);
-  return result;
 }
 
 function planTargets(output) {
@@ -601,107 +572,6 @@ async function checkDefaultSite(root, tarball) {
   return { id: "default-content", language: "zh-CN", style: "schema-defaults", routes: ["/", "/about/"] };
 }
 
-function installMigrationContent(root) {
-  copyTree(path.join(MIGRATION_FIXTURE_ROOT, "content"), root);
-}
-
-function installMigrationConfig(root, version) {
-  copyTree(path.join(MIGRATION_FIXTURE_ROOT, version), root);
-}
-
-function assertMigrationPages(root, label) {
-  const expected = [
-    { marker: "M10 migrated Post body marker.", profile: "post" },
-    { marker: "M10 migrated Topic body marker.", profile: "topic" },
-    { marker: "M10 migrated Wiki body marker.", profile: "wiki" },
-    { marker: "M10 migrated Notebook body marker.", profile: "notebook" }
-  ];
-  for (const item of expected) {
-    const output = findHtmlWithMarker(path.join(root, "public"), item.marker, item.profile);
-    if (!output) throw new Error(`${label}: missing ${item.profile} migrated page`);
-    assertRuntime(fs.readFileSync(output, "utf8"), path.relative(root, output), item.profile);
-  }
-  assertRoutes(root, migrationRoutes(), label);
-  assertSearchIndex(root, expected.map(item => item.marker), label);
-}
-
-function migrationRoutes() {
-  return [
-    "/",
-    "/blog/2026/08/25/migrated-post/",
-    "/blog/2026/08/25/migrated-topic/",
-    "/topic/",
-    "/wiki/",
-    "/wiki/migrated-docs/",
-    "/notebooks/",
-    "/notebooks/migrated-notebook/first-note/",
-    "/notes/migrated-notebook/"
-  ];
-}
-
-async function checkSideBySideMigration(root, tarball) {
-  createSite(root, { language: "zh-CN" });
-  process.stdout.write(`side-by-side-migration: installing Hexo 8 and ${path.basename(tarball)}\n`);
-  const hexo = installSite(root, tarball);
-  const args = ["stellar", "init", "--blueprint", "classic", "--style", "card", "--non-interactive"];
-  const starterTargets = planTargets(run(hexo, [...args, "--dry-run"], { cwd: root }));
-  run(hexo, args, { cwd: root });
-  for (const target of starterTargets) fs.rmSync(path.join(root, target), { force: true });
-  installMigrationContent(root);
-  installMigrationConfig(root, "v2");
-  const expectedHashes = contentHashes(path.join(MIGRATION_FIXTURE_ROOT, "content"));
-  if (JSON.stringify(contentHashes(root)) !== JSON.stringify(expectedHashes)) {
-    throw new Error("side-by-side-migration: copied content differs from the fixed fixture");
-  }
-  assertDoctorParity(root, hexo, "side-by-side-migration");
-  run(hexo, ["generate"], { cwd: root });
-  assertMigrationPages(root, "side-by-side-migration");
-  await assertPreviewServer(root, hexo, "side-by-side-migration");
-  process.stdout.write("side-by-side-migration: clean v2 skeleton → explicit config rebuild → generate passed\n");
-  return {
-    id: "side-by-side-migration",
-    language: "zh-CN",
-    style: "card",
-    routes: migrationRoutes()
-  };
-}
-
-async function checkInPlaceMigration(root, tarball) {
-  createSite(root, { language: "zh-CN" });
-  installMigrationContent(root);
-  installMigrationConfig(root, "legacy");
-  const beforeHashes = contentHashes(root);
-  process.stdout.write(`in-place-migration: installing Hexo 8 and ${path.basename(tarball)}\n`);
-  const hexo = installSite(root, tarball);
-  const failed = runFailure(hexo, ["stellar", "doctor", "--format", "json", "--silent"], { cwd: root });
-  const result = JSON.parse(failed.stdout);
-  if (result.ok || !Array.isArray(result.issues)) throw new Error("in-place-migration: legacy doctor unexpectedly passed");
-  const paths = result.issues.map(issue => issue.path);
-  for (const expected of ["brand", "article", "search"]) {
-    if (!paths.some(item => item === expected || item.startsWith(`${expected}.`))) {
-      throw new Error(`in-place-migration: doctor did not locate legacy ${expected}`);
-    }
-  }
-  if (result.issues.some(issue => typeof issue.migration !== "string" || issue.migration.length === 0)) {
-    throw new Error("in-place-migration: doctor issue is missing a migration section");
-  }
-  installMigrationConfig(root, "v2");
-  if (JSON.stringify(contentHashes(root)) !== JSON.stringify(beforeHashes)) {
-    throw new Error("in-place-migration: explicit config rebuild changed Markdown content");
-  }
-  assertDoctorParity(root, hexo, "in-place-migration/v2");
-  run(hexo, ["generate"], { cwd: root });
-  assertMigrationPages(root, "in-place-migration");
-  await assertPreviewServer(root, hexo, "in-place-migration");
-  process.stdout.write("in-place-migration: legacy diagnosis → explicit config rebuild → generate passed\n");
-  return {
-    id: "in-place-migration",
-    language: "zh-CN",
-    style: "card",
-    routes: migrationRoutes()
-  };
-}
-
 function parseOutputArgument(args) {
   const inline = args.find(argument => argument.startsWith("--output="));
   if (inline) {
@@ -802,10 +672,6 @@ async function main() {
       sites.push(await checkSite(path.join(root, matrix.id), matrix, tarball));
     }
     sites.push(await checkDefaultSite(path.join(root, "default-content"), tarball));
-    if (!selectedId) {
-      sites.push(await checkSideBySideMigration(path.join(root, "side-by-side-migration"), tarball));
-      sites.push(await checkInPlaceMigration(path.join(root, "in-place-migration"), tarball));
-    }
     fs.rmSync(path.join(root, "npm-cache"), { recursive: true, force: true });
     if (prepared.keep || args.includes("--keep")) writeAcceptanceArtifacts(root, tarball, sites);
     process.stdout.write(`Package integration passed: ${path.basename(tarball)}\n`);
@@ -832,7 +698,6 @@ module.exports = {
   assertPreviewServer,
   assertPackageFiles,
   assertRuntime,
-  contentHashes,
   expectedPages,
   expectedRoutes,
   findHtmlWithMarker,

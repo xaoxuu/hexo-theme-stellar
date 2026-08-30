@@ -8,10 +8,8 @@ const path = require("node:path");
 const { generateReferenceMetadata } = require("../scripts/lib/reference-metadata");
 const { generateConfigReferenceMetadata } = require("../scripts/lib/config-reference-metadata");
 const { generateBlueprintReferenceMetadata } = require("../scripts/lib/blueprint-reference-metadata");
-const { generateConfigFieldAudit } = require("../scripts/lib/config-field-audit");
 const {
   blueprintReferenceMarkdown,
-  configAuditMarkdown,
   configReferenceMarkdown,
   modelReferenceMarkdown,
   referenceIndexMarkdown,
@@ -20,26 +18,21 @@ const {
 
 const ROOT = path.resolve(__dirname, "..");
 
-test("公开配置 Reference 覆盖每个 Schema 字段的完整注解", () => {
+test("公开配置 Reference 只包含路径、类型、默认值与例外约束", () => {
   const metadata = generateConfigReferenceMetadata();
   const markdown = configReferenceMarkdown(metadata);
   for (const field of metadata.fields) {
     assert.ok(Array.isArray(field.type) && field.type.length > 0, `${field.path}: type`);
     assert.ok(Object.prototype.hasOwnProperty.call(field, "default"), `${field.path}: default`);
-    assert.equal(typeof field.scope, "string", `${field.path}: scope`);
-    assert.ok(Array.isArray(field.consumers) && field.consumers.length > 0, `${field.path}: consumers`);
-    assert.ok(Object.prototype.hasOwnProperty.call(field, "example"), `${field.path}: example`);
+    assert.equal(typeof field.surface, "string", `${field.path}: surface`);
+    assert.equal(typeof field.runtimePath, "string", `${field.path}: runtimePath`);
+    assert.equal(Object.prototype.hasOwnProperty.call(field, "consumers"), false, `${field.path}: consumers`);
+    assert.equal(Object.prototype.hasOwnProperty.call(field, "cascade"), false, `${field.path}: cascade`);
+    assert.equal(Object.prototype.hasOwnProperty.call(field, "normalization"), false, `${field.path}: normalization`);
   }
-  assert.equal(markdown.split("\n").filter(line => / \| <code>\[/.test(line)).length, metadata.fields.length);
+  assert.equal(markdown.split("\n").filter(line => line.startsWith("| ") && !line.startsWith("| Path") && !line.startsWith("| ---")).length, metadata.fields.length);
   assert.equal(fs.readFileSync(path.join(ROOT, "reference/v2-config.md"), "utf8"), markdown);
-});
-
-test("配置字段审计稳定覆盖当前与退出字段", () => {
-  const audit = configAuditMarkdown(generateConfigFieldAudit());
-  assert.equal(fs.readFileSync(path.join(ROOT, "docs/audits/2026-08-24-v2-config-field-audit.md"), "utf8"), audit);
-  assert.match(audit, /extensions\.cache/);
-  assert.match(audit, /internalize/);
-  assert.match(audit, /localize/);
+  assert.doesNotMatch(markdown, /Consumers|Cascade \/ normalize/);
 });
 
 test("公开模型与 Blueprint Reference 稳定来自机器契约", () => {

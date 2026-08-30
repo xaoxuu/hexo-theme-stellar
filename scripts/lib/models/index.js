@@ -45,7 +45,7 @@ function cloneValue(value) {
 function renderBrands(stellarConfig, collection) {
   const collectionType = collection?.profile;
   return resolveBrands({
-    siteBrand: stellarConfig.site.brand,
+    siteBrand: stellarConfig.brand,
     collection: collectionType === "post" ? null : collection,
     collectionType,
     defaultIcon: INTERNAL.resources.projectIcon
@@ -91,7 +91,7 @@ function articleIndentEnabled(article) {
 function finalizedRegions(input, collection, item) {
   return resolveRegions({
     profile: collection.profile,
-    defaultState: input.stellarConfig.layout.regions.leftbar.defaultState,
+    defaultState: input.stellarConfig.regions.leftbar.defaultState,
     catalog: input.runtimeData?.widgets || {},
     layers: [item.presentation.regions]
   });
@@ -116,10 +116,10 @@ function assertNormalizedConfig(stellarConfig, source, requirements) {
 
 function layoutConfigRequirement() {
   return {
-    path: "stellarConfig.layout.profiles",
-    read: config => config?.layout?.profiles,
+    path: "stellarConfig.profiles",
+    read: config => config?.profiles,
     expected: "normalized Layout Profile object",
-    migration: "configuration/layout"
+    migration: null
   };
 }
 
@@ -234,7 +234,7 @@ function resolveLicense(license, item, runtimeData) {
 }
 
 function buildContributor(item, stellarConfig) {
-  const repositories = resolveServiceProvider(stellarConfig.extensions.services.contributors)?.repositories;
+  const repositories = resolveServiceProvider(stellarConfig.services.contributors)?.repositories;
   if (!Array.isArray(repositories)) return null;
   const source = item.source.file || "";
   const matched = repositories
@@ -243,7 +243,7 @@ function buildContributor(item, stellarConfig) {
   if (!matched) return null;
   const relativePath = source.slice(matched.sourcePrefix.length).replace(/^\/+/, "");
   const branch = matched.branch || "main";
-  const apiUrl = stellarConfig.extensions.services.github.apiUrl.replace(/\/+$/, "");
+  const apiUrl = stellarConfig.services.github.apiUrl.replace(/\/+$/, "");
   return {
     editUrl: `https://github.com/${matched.repository}/blob/${branch}/${relativePath}`,
     commitsUrl: `${apiUrl}/repos/${matched.repository}/commits?path=${encodeURIComponent(relativePath)}`
@@ -255,7 +255,7 @@ function buildPostArticleRender(input, item) {
   const articleConfig = requireContentConfig(input.stellarConfig, input.themeSource).article;
   const frontMatter = input.frontMatter;
   const footer = item.presentation.footer || {};
-  const extensionConfig = input.stellarConfig.extensions;
+  const extensionConfig = input.stellarConfig;
   const configuredShare = footer.share === true
     ? articleConfig.footer.share
     : Array.isArray(footer.share) ? footer.share : [];
@@ -349,9 +349,9 @@ function canonicalUrl(host, path) {
 
 function buildPostRenderModel(input, collection, item) {
   const siteConfig = input.siteConfig;
-  const seoConfig = input.stellarConfig.seo;
+  const seoConfig = input.stellarConfig;
   const appearance = input.stellarConfig.appearance;
-  const fallbacks = input.stellarConfig.resources.fallbacks;
+  const fallbacks = input.stellarConfig.fallbacks;
   const canonicalConfig = seoConfig.canonical;
   const frontMatter = input.frontMatter;
   const page = input.page;
@@ -498,10 +498,10 @@ function wikiTitle(itemTitle, collectionName, siteTitle, language) {
 function buildCommentsRender(stellarConfig, item) {
   const comments = item.presentation.comments || {};
   const service = typeof comments.provider === "string" ? comments.provider : "";
-  const extensionConfig = stellarConfig.extensions;
+  const extensionConfig = stellarConfig;
   const options = mergeConfig(
-    service && isPlainObject(extensionConfig.comments.providers?.[service])
-      ? extensionConfig.comments.providers[service]
+    service && isPlainObject(extensionConfig.comments?.[service])
+      ? extensionConfig.comments[service]
       : {},
     isPlainObject(comments.options) ? comments.options : {}
   );
@@ -560,7 +560,7 @@ function buildWikiRelated(input) {
 
 function buildWikiListingRender(input, collection) {
   const repository = typeof collection.source.repository === "string" ? collection.source.repository : "";
-  const githubApi = input.stellarConfig.extensions.services.github.apiUrl;
+  const githubApi = input.stellarConfig.services.github.apiUrl;
   return {
     id: collection.id,
     href: collection.route.homepage,
@@ -585,7 +585,7 @@ function buildWikiRenderModel(input, collection, item) {
   const stellarConfig = input.stellarConfig;
   const frontMatter = input.frontMatter;
   const appearance = stellarConfig.appearance;
-  const seoConfig = stellarConfig.seo;
+  const seoConfig = stellarConfig;
   const language = normalizeLanguage(
     input.page.lang,
     input.page.language,
@@ -648,8 +648,8 @@ function buildWikiRenderModel(input, collection, item) {
   const isHomepage = collection.route.homepage.length > 0 && collection.route.homepage === item.route.path;
   const hero = collection.presentation.hero || {};
   const repository = typeof collection.source.repository === "string" ? collection.source.repository : "";
-  const githubApi = stellarConfig.extensions.services.github.apiUrl;
-  const rawUrl = stellarConfig.extensions.services.github.rawUrl;
+  const githubApi = stellarConfig.services.github.apiUrl;
+  const rawUrl = stellarConfig.services.github.rawUrl;
   const banner = mergeConfig({}, item.presentation.banner || {});
   if (banner.headline == null) banner.headline = item.title;
   const readmeHtml = isHomepage ? wikiReadmeHtml(
@@ -721,7 +721,7 @@ function buildWikiRenderModel(input, collection, item) {
       siteName: String(siteConfig.title || "")
     },
     article: {
-      heti: stellarConfig.extensions.features.heti.enabled === true,
+      heti: stellarConfig.features.heti.enabled === true,
       banner,
       updated: item.updated,
       readmeHtml,
@@ -754,14 +754,14 @@ function buildCollectionModel(stellarConfig) {
   const blogIndex = profiles.blogIndex;
   const content = requireContentConfig(stellarConfig);
   const article = content.article;
-  const comments = normalizeThemeComments(stellarConfig.extensions.comments);
+  const comments = normalizeThemeComments(stellarConfig.comments);
   const navigation = toRenderNavigation(postProfile);
-  const regions = toRenderRegions(stellarConfig.layout.regions, postProfile);
+  const regions = toRenderRegions(stellarConfig.regions, postProfile);
 
   return {
     id: "post",
     profile: "post",
-    identity: normalizeBrand(stellarConfig.site.brand),
+    identity: normalizeBrand(stellarConfig.brand),
     source: {},
     route: {
       baseDir: profilePath(blogIndex.path)
@@ -884,7 +884,7 @@ function buildWikiCollectionModel(input, collectionId) {
 
   const profileNavigation = toRenderNavigation(wikiProfile);
   const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
-  const profileRegions = toRenderRegions(input.stellarConfig.layout.regions, wikiProfile);
+  const profileRegions = toRenderRegions(input.stellarConfig.regions, wikiProfile);
   const collectionRegions = pick(collectionConfig.regions, CONTENT_MODEL_FIELDS.regions);
   const globalArticle = articlePresentationDefaults(content);
 
@@ -916,7 +916,7 @@ function buildWikiCollectionModel(input, collectionId) {
       article: mergeConfig(globalArticle, pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)),
       footer: pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer),
       comments: mergeConfig(
-        normalizeThemeComments(input.stellarConfig.extensions.comments),
+        normalizeThemeComments(input.stellarConfig.comments),
         pick(collectionConfig.comments, CONTENT_MODEL_FIELDS.comments)
       )
     },
@@ -970,7 +970,7 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
 
   const profileNavigation = toRenderNavigation(topicProfile);
   const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
-  const profileRegions = toRenderRegions(input.stellarConfig.layout.regions, topicProfile);
+  const profileRegions = toRenderRegions(input.stellarConfig.regions, topicProfile);
   const collectionRegions = pick(collectionConfig.regions, CONTENT_MODEL_FIELDS.regions);
   const globalArticle = articlePresentationDefaults(content);
   const globalFooter = articleFooterDefaults(content);
@@ -1009,7 +1009,7 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
       ),
       footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),
       comments: mergeConfig(
-        normalizeThemeComments(input.stellarConfig.extensions.comments),
+        normalizeThemeComments(input.stellarConfig.comments),
         pick(collectionConfig.comments, CONTENT_MODEL_FIELDS.comments)
       )
     },
@@ -1064,7 +1064,7 @@ function buildNotebookCollectionModel(input, collectionId) {
   const baseDir = notebookBaseDir(collectionId, collectionConfig, input.stellarConfig);
   const profileNavigation = toRenderNavigation(profiles.noteIndex);
   const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
-  const profileRegions = toRenderRegions(input.stellarConfig.layout.regions, profiles.note);
+  const profileRegions = toRenderRegions(input.stellarConfig.regions, profiles.note);
   const collectionRegions = pick(collectionConfig.noteDefaults?.regions, CONTENT_MODEL_FIELDS.regions);
   const globalArticle = articlePresentationDefaults(content);
   const globalFooter = {
@@ -1098,7 +1098,7 @@ function buildNotebookCollectionModel(input, collectionId) {
       article: mergeConfig(globalArticle, pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)),
       footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),
       comments: mergeConfig(
-        normalizeThemeComments(input.stellarConfig.extensions.comments),
+        normalizeThemeComments(input.stellarConfig.comments),
         pick(collectionConfig.comments, CONTENT_MODEL_FIELDS.comments)
       )
     },
@@ -1247,16 +1247,16 @@ function buildPostPageViewModel(input) {
 
   assertNormalizedConfig(input.stellarConfig, themeSource, [
     {
-      path: "stellarConfig.site.brand",
-      read: config => config?.site?.brand,
+      path: "stellarConfig.brand",
+      read: config => config?.brand,
       expected: "normalized site brand object",
-      migration: "configuration/site"
+      migration: null
     },
     {
-      path: "stellarConfig.seo",
-      read: config => config?.seo,
-      expected: "normalized SEO object",
-      migration: "configuration/seo"
+      path: "stellarConfig.canonical",
+      read: config => config?.canonical,
+      expected: "normalized canonical object",
+      migration: null
     },
     layoutConfigRequirement()
   ]);
@@ -1276,16 +1276,16 @@ function buildWikiPageViewModelBase(input) {
 
   assertNormalizedConfig(input.stellarConfig, themeSource, [
     {
-      path: "stellarConfig.site.brand",
-      read: config => config?.site?.brand,
+      path: "stellarConfig.brand",
+      read: config => config?.brand,
       expected: "normalized site brand object",
-      migration: "configuration/site"
+      migration: null
     },
     {
-      path: "stellarConfig.seo",
-      read: config => config?.seo,
-      expected: "normalized SEO object",
-      migration: "configuration/seo"
+      path: "stellarConfig.canonical",
+      read: config => config?.canonical,
+      expected: "normalized canonical object",
+      migration: null
     },
     layoutConfigRequirement()
   ]);
@@ -1351,16 +1351,16 @@ function buildTopicPageViewModelBase(input) {
 
   assertNormalizedConfig(input.stellarConfig, themeSource, [
     {
-      path: "stellarConfig.site.brand",
-      read: config => config?.site?.brand,
+      path: "stellarConfig.brand",
+      read: config => config?.brand,
       expected: "normalized site brand object",
-      migration: "configuration/site"
+      migration: null
     },
     {
-      path: "stellarConfig.seo",
-      read: config => config?.seo,
-      expected: "normalized SEO object",
-      migration: "configuration/seo"
+      path: "stellarConfig.canonical",
+      read: config => config?.canonical,
+      expected: "normalized canonical object",
+      migration: null
     },
     layoutConfigRequirement()
   ]);

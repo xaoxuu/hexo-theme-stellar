@@ -4,7 +4,9 @@ const { test } = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
-const { parseStellarConfig } = require("../scripts/lib/config-schema");
+const { parseStellarConfig: parseRawStellarConfig } = require("../scripts/lib/config-schema");
+const { flattenThemeFixture } = require("./support/theme-config");
+const parseStellarConfig = input => parseRawStellarConfig({ ...input, themeConfig: flattenThemeFixture(input.themeConfig) });
 
 const ROOT = path.resolve(__dirname, "..");
 

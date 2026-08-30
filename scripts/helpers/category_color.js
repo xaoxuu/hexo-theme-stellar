@@ -2,7 +2,7 @@
 "use strict";
 
 hexo.extend.helper.register("category_color", function(cat) {
-  const color = hexo.stellar.config.content.article.categoryColors[cat];
+  const color = hexo.stellar.config.article.categoryColors[cat];
   if (color) {
     var textColor = color;
     if (color.startsWith("#")) {

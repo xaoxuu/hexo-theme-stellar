@@ -10,7 +10,7 @@
 'use strict'
 
 module.exports = ctx => function(args) {
-  const { defaultSource, sources } = ctx.stellar.config.extensions.tags.emoji
+  const { defaultSource, sources } = ctx.stellar.config.tags.emoji
   args = ctx.args.map(args, ['url', 'height', 'name'], ['source', 'name'])
   var el = ''
   el += '<span class="tag-plugin emoji">'

@@ -3,8 +3,8 @@
 
 // 根据主题配置加载
 @import 'copycode'
-if hexo-config('extensions.features.math.provider') == 'katex'
+if hexo-config('features.math.provider') == 'katex'
   @import 'katex'
-if hexo-config('extensions.features.card_hover.enabled')
+if hexo-config('features.card_hover.enabled')
   // 最后加载，组合并覆盖 link/grid 既有 hover transform
   @import 'card-hover'

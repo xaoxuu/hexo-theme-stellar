@@ -7,7 +7,9 @@ const os = require("node:os");
 const path = require("node:path");
 
 const { buildNotebookPageViewModel: buildNotebookPageViewModelRaw } = require("../scripts/lib/models");
-const { parseStellarConfig } = require("../scripts/lib/config-schema");
+const { parseStellarConfig: parseRawStellarConfig } = require("../scripts/lib/config-schema");
+const { flattenThemeFixture } = require("./support/theme-config");
+const parseStellarConfig = input => parseRawStellarConfig({ ...input, themeConfig: flattenThemeFixture(input.themeConfig) });
 const { parseCollectionConfig, parsePageConfig } = require("../scripts/lib/content-config");
 const processContentConfig = require("../scripts/events/lib/content-config");
 const processNotebooks = require("../scripts/events/lib/notebooks");

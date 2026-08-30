@@ -11,9 +11,9 @@ const { isSearchable } = require("../lib/content-config");
 const { getPageConfig } = require("../lib/page-view-model-registry");
 
 hexo.extend.generator.register("search_json_generator", function(locals) {
-  if (this.stellar.config.extensions.search.provider !== "local") return {};
+  if (this.stellar.config.search.provider !== "local") return {};
   const { root } = this.config;
-  const cfg = this.stellar.config.extensions.search.providers.local;
+  const cfg = this.stellar.config.search.local;
   const sort = "-date";
   const scope = cfg.scope.trim();
 

@@ -110,7 +110,7 @@ function brandSchema(factory, options = {}) {
   };
   return object(properties, {
     default: options.default || (options.requiredName
-      ? derived("hexo.stellar.config.site.brand")
+      ? derived("hexo.stellar.config.brand")
       : omitted()),
     example: {
       name: "Stellar",
@@ -123,8 +123,8 @@ function brandSchema(factory, options = {}) {
 function renderBrandsSchema(factory) {
   const { object } = factory;
   const site = brandSchema(factory, {
-    nameDefault: derived("hexo.stellar.config.site.brand.name"),
-    taglineDefault: derived("hexo.stellar.config.site.brand.tagline"),
+    nameDefault: derived("hexo.stellar.config.brand.name"),
+    taglineDefault: derived("hexo.stellar.config.brand.tagline"),
     hrefDefault: literal("/"),
     requiredHref: true
   });
@@ -287,11 +287,11 @@ function heroSchema(factory, options = {}) {
 function articleSchema(factory) {
   const { field, object } = factory;
   return object({
-    style: field("string", { default: inherited("hexo.stellar.config.content.article.style"), example: "tech" }),
-    paragraphIndent: field("string", { default: inherited("hexo.stellar.config.content.article.paragraphIndent"), example: "auto" }),
+    style: field("string", { default: inherited("hexo.stellar.config.article.style"), example: "tech" }),
+    paragraphIndent: field("string", { default: inherited("hexo.stellar.config.article.paragraphIndent"), example: "auto" }),
     author: field("string", { example: "xaoxuu" }),
     aiLabel: field(["string", "null"], { default: inherited("collection.article.aiLabel", "page.article.aiLabel"), example: "reviewed" })
-  }, { default: inherited("hexo.stellar.config.content.article", "collection.article", "page.article"), example: { style: "tech", paragraphIndent: "auto" } });
+  }, { default: inherited("hexo.stellar.config.article", "collection.article", "page.article"), example: { style: "tech", paragraphIndent: "auto" } });
 }
 
 function footerSchema(factory, options = {}) {
@@ -303,28 +303,28 @@ function footerSchema(factory, options = {}) {
       additionalProperties: true
     }), { default: literal([]), example: [] }),
     license: field(["boolean", "string", "null"], {
-      default: options.licenseDefault || inherited("hexo.stellar.config.content.article.footer.license"),
+      default: options.licenseDefault || inherited("hexo.stellar.config.article.footer.license"),
       example: "CC BY-NC-SA 4.0"
     }),
     share: field(["boolean", "array", "null"], {
-      default: options.shareDefault || inherited("hexo.stellar.config.content.article.footer.share"),
+      default: options.shareDefault || inherited("hexo.stellar.config.article.footer.share"),
       example: true
     }),
-    showTags: field(["boolean", "null"], { default: inherited("hexo.stellar.config.content.article.footer.showTags"), example: true })
-  }, { default: inherited("hexo.stellar.config.content.article.footer", "collection.footer", "page.footer"), example: { references: [], share: true } });
+    showTags: field(["boolean", "null"], { default: inherited("hexo.stellar.config.article.footer.showTags"), example: true })
+  }, { default: inherited("hexo.stellar.config.article.footer", "collection.footer", "page.footer"), example: { references: [], share: true } });
 }
 
 function commentsSchema(factory) {
   const { field, object } = factory;
   const properties = {
     enabled: field("boolean", { default: computed("provider 非空时默认启用，可由 collection/page comments.enabled 覆盖"), example: true }),
-    title: field(["string", "null"], { default: inherited("hexo.stellar.config.extensions.comments.title"), example: "参与讨论" }),
+    title: field(["string", "null"], { default: inherited("hexo.stellar.config.comments.title"), example: "参与讨论" }),
     id: field("string", { example: "post-hello" }),
-    provider: field(["string", "null"], { default: inherited("hexo.stellar.config.extensions.comments.provider"), example: "giscus" }),
+    provider: field(["string", "null"], { default: inherited("hexo.stellar.config.comments.provider"), example: "giscus" }),
     options: field("object", { example: { "data-repo": "owner/site" }, additionalProperties: true })
   };
   return object(properties, {
-    default: inherited("hexo.stellar.config.extensions.comments", "collection.comments", "page.comments"),
+    default: inherited("hexo.stellar.config.comments", "collection.comments", "page.comments"),
     example: { enabled: true, provider: "giscus", options: { "data-repo": "owner/site" } }
   });
 }
@@ -434,23 +434,23 @@ function collectionSchema(profile) {
 
   const listingProperties = profile === "post"
     ? {
-        pinStyle: field(["string", "null"], { default: inherited("hexo.stellar.config.content.article.listing.pinnedLayout"), example: "carousel", required: true }),
-        cardStyle: field(["string", "null"], { default: inherited("hexo.stellar.config.content.article.listing.cardLayout"), example: "hero", required: true }),
-        excerptLength: field(["number", "null"], { default: inherited("hexo.stellar.config.content.article.listing.excerptLength"), example: 128, required: true })
+        pinStyle: field(["string", "null"], { default: inherited("hexo.stellar.config.article.listing.pinnedLayout"), example: "carousel", required: true }),
+        cardStyle: field(["string", "null"], { default: inherited("hexo.stellar.config.article.listing.cardLayout"), example: "hero", required: true }),
+        excerptLength: field(["number", "null"], { default: inherited("hexo.stellar.config.article.listing.excerptLength"), example: 128, required: true })
       }
     : {
         priority: field("number", { default: literal(0), example: 0, required: true }),
         order: field(["number", "null"], { default: profile === "topic" ? literal(null) : literal(0), example: 0, required: true }),
         ...(profile === "topic" ? {
-          cardStyle: field(["string", "null"], { default: inherited("hexo.stellar.config.content.article.listing.cardLayout"), example: "hero", required: true })
+          cardStyle: field(["string", "null"], { default: inherited("hexo.stellar.config.article.listing.cardLayout"), example: "hero", required: true })
         } : {}),
         excerptLength: field(["number", "null"], {
-          default: profile === "notebook" ? inherited("hexo.stellar.config.content.notebook.listing.excerptLength") : literal(null),
+          default: profile === "notebook" ? inherited("hexo.stellar.config.notebook.listing.excerptLength") : literal(null),
           example: 128,
           required: true
         }),
         perPage: field(["number", "null"], {
-          default: profile === "notebook" ? inherited("hexo.stellar.config.content.notebook.listing.perPage", "site.per_page") : literal(null),
+          default: profile === "notebook" ? inherited("hexo.stellar.config.notebook.listing.perPage", "site.per_page") : literal(null),
           example: 10,
           required: true
         }),
@@ -546,7 +546,7 @@ function pageViewModelSchema(profile) {
       path: field("string", { default: literal(""), example: "blog/categories/thinking", required: true })
     }, { example: { name: "思考", path: "blog/categories/thinking" } });
     const openGraph = field(["object", "null"], {
-      default: computed("由 hexo.stellar.config.seo.openGraph 与页面 Open Graph 覆盖生成；禁用时为 null"),
+      default: computed("由 hexo.stellar.config.openGraph 与页面 Open Graph 覆盖生成；禁用时为 null"),
       example: {
         args: { image: "/cover.webp", twitter_card: "summary_large_image" },
         title: "Hello Stellar",
@@ -597,7 +597,7 @@ function pageViewModelSchema(profile) {
       }
     });
     const contributor = field(["object", "null"], {
-      default: computed("由选中的 extensions.services.contributors provider 按最长 source_prefix 匹配与源文件生成"),
+      default: computed("由选中的 services.contributors provider 按最长 source_prefix 匹配与源文件生成"),
       example: { editUrl: "https://github.com/example/repo/blob/main/post.md", commitsUrl: "https://api.github.com/repos/example/repo/commits?path=post.md" },
       required: true,
       properties: {
@@ -627,12 +627,12 @@ function pageViewModelSchema(profile) {
         description: field("string", { default: derived("page.description", "item.excerpt", "item.content"), example: "文章摘要", required: true }),
         keywords: array(stringItem, { default: derived("page.keywords", "item.tags", "site.keywords"), example: ["Hexo", "Stellar"], required: true }),
         robots: field(["string", "null"], { default: derived("IS_BACKUP", "page.robots"), example: "noindex, nofollow", required: true }),
-        canonical: field(["string", "null"], { default: derived("hexo.stellar.config.seo.canonical.host", "item.route.path"), example: "https://example.com/blog/hello/", required: true }),
+        canonical: field(["string", "null"], { default: derived("hexo.stellar.config.canonical.host", "item.route.path"), example: "https://example.com/blog/hello/", required: true }),
         openGraph,
         jsonLd: field("object", { default: computed("由 BlogPosting 结构化数据规则生成"), example: { "@type": "BlogPosting" }, required: true, additionalProperties: true })
       }, { required: true, example: { title: "Hello Stellar - Stellar", description: "文章摘要", keywords: ["Hexo"], robots: null, canonical: null, openGraph: null, jsonLd: { "@type": "BlogPosting" } } }),
       article: object({
-        heti: field("boolean", { default: derived("hexo.stellar.config.extensions.features.heti.enabled"), example: false, required: true }),
+        heti: field("boolean", { default: derived("hexo.stellar.config.features.heti.enabled"), example: false, required: true }),
         ...(profile === "topic" ? {
           banner: field("object", {
             default: inherited("item.presentation.banner"),
@@ -651,7 +651,7 @@ function pageViewModelSchema(profile) {
         previous: postLink,
         next: postLink,
         related: object({
-          enabled: field("boolean", { default: derived("hexo.stellar.config.content.article.relatedPostsLimit > 0"), example: false, required: true }),
+          enabled: field("boolean", { default: derived("hexo.stellar.config.article.relatedPostsLimit > 0"), example: false, required: true }),
           title: field("string", { default: literal(""), example: "Related Posts", required: true }),
           maxCount: field("number", { default: literal(5), example: 5, required: true }),
           items: array(relatedItem, { default: literal([]), example: [], required: true })
@@ -674,7 +674,7 @@ function pageViewModelSchema(profile) {
         caption: field("string", { default: computed("由 card.tagline/description/excerpt/content 生成"), example: "文章说明", required: true }),
         excerpt: field("string", { default: computed("由 excerpt/description/content 和列表长度生成"), example: "文章摘要", required: true }),
         categories: array(stringItem, { default: inherited("item.categories"), example: ["开发"], required: true }),
-        categoryStyle: field("string", { default: derived("hexo.stellar.config.content.article.categoryColors"), example: "--text-p2:#f44336;--theme-block:#f4433620", required: true }),
+        categoryStyle: field("string", { default: derived("hexo.stellar.config.article.categoryColors"), example: "--text-p2:#f44336;--theme-block:#f4433620", required: true }),
         tags: array(stringItem, { default: computed("content.article.listing.showTags 启用时最多五项"), example: ["Hexo"], required: true }),
         authorId: field("string", { default: derived("item.presentation.article.author", "stellar.data.defaultAuthor.id"), example: "xaoxuu", required: true }),
         priority: field("number", { default: inherited("item.listing.priority"), example: 1, required: true }),
@@ -791,7 +791,7 @@ function pageViewModelSchema(profile) {
         siteName: field("string", { default: derived("site.title"), example: "Example", required: true })
       }, { required: true, example: { enabled: true, background: {}, preview: {}, actions: [], title: "Stellar", description: "", repository: "", sourceUrl: "", releaseApi: "", projectName: "Stellar", siteName: "Example" } }),
       article: object({
-        heti: field("boolean", { default: derived("extensions.features.heti.enabled"), example: false, required: true }),
+        heti: field("boolean", { default: derived("features.heti.enabled"), example: false, required: true }),
         banner: field("object", { default: inherited("item.presentation.banner"), example: { headline: "开始" }, required: true, additionalProperties: true }),
         updated: field(["string", "null"], { default: inherited("item.updated"), example: "2026-08-23T00:00:00.000Z", required: true }),
         readmeHtml: field("string", { default: computed("Wiki 首页正文为空且配置 repository 时生成远程 README 占位"), example: "", required: true }),
@@ -895,7 +895,7 @@ function pageViewModelSchema(profile) {
         jsonLd: field("object", { default: computed("由 WebPage 结构化数据规则生成"), example: { "@type": "WebPage" }, required: true, additionalProperties: true })
       }, { required: true, example: { title: "Node.js - Example", description: "Note 摘要", keywords: [], robots: null, canonical: null, openGraph: null, jsonLd: { "@type": "WebPage" } } }),
       article: object({
-        heti: field("boolean", { default: derived("extensions.features.heti.enabled"), example: false, required: true }),
+        heti: field("boolean", { default: derived("features.heti.enabled"), example: false, required: true }),
         banner: field("object", { default: inherited("item.presentation.banner"), example: {}, required: true, additionalProperties: true }),
         created: field(["string", "null"], { default: inherited("item.date"), example: "2026-08-23T00:00:00.000Z", required: true }),
         updated: field(["string", "null"], { default: inherited("item.updated"), example: "2026-08-23T00:00:00.000Z", required: true }),

@@ -42,8 +42,8 @@ function renderMenu(provider) {
     activeMenu: null,
     content_config() { return { navigation: {} }; },
     stellar_config(key) {
-      if (key === "extensions.search.provider") return provider;
-      if (key === "site.menu.items") return [{ type: "search" }];
+      if (key === "search.provider") return provider;
+      if (key === "menu.items") return [{ type: "search" }];
       return null;
     },
     stellar_data() { return { tree: {} }; },
@@ -70,7 +70,7 @@ function renderMenu(provider) {
 function renderDialog(provider) {
   return renderer({ path: DIALOG_PATH, text: DIALOG_SOURCE }, {
     stellar_config(key) {
-      return key === "extensions.search.provider" ? provider : null;
+      return key === "search.provider" ? provider : null;
     },
     __: translate,
     ui_classes: composeUiClasses,

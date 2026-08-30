@@ -150,13 +150,13 @@ function runDoctor(options = {}) {
   }
 
   if (stellarConfig) {
-    for (const [profile, profileConfig] of Object.entries(stellarConfig.layout.profiles)) {
+    for (const [profile, profileConfig] of Object.entries(stellarConfig.profiles)) {
       warnings.push(...placementWarnings({
         profile,
         source: fs.existsSync(stellarConfigPath) ? "_config.stellar.yml" : "Stellar Schema defaults",
         catalog,
-        defaultState: stellarConfig.layout.regions.leftbar.defaultState,
-        layers: [stellarConfig.layout.regions, profileConfig.regions]
+        defaultState: stellarConfig.regions.leftbar.defaultState,
+        layers: [stellarConfig.regions, profileConfig]
       }));
     }
   }
@@ -177,10 +177,10 @@ function runDoctor(options = {}) {
             profile,
             source,
             catalog,
-            defaultState: stellarConfig.layout.regions.leftbar.defaultState,
+            defaultState: stellarConfig.regions.leftbar.defaultState,
             layers: [
-              stellarConfig.layout.regions,
-              stellarConfig.layout.profiles[profile]?.regions,
+              stellarConfig.regions,
+              stellarConfig.profiles[profile],
               parsed.regions,
               parsed.noteDefaults?.regions
             ]
@@ -217,10 +217,10 @@ function runDoctor(options = {}) {
         profile,
         source,
         catalog,
-        defaultState: stellarConfig.layout.regions.leftbar.defaultState,
+        defaultState: stellarConfig.regions.leftbar.defaultState,
         layers: [
-          stellarConfig.layout.regions,
-          stellarConfig.layout.profiles[profile]?.regions,
+          stellarConfig.regions,
+          stellarConfig.profiles[profile]?.regions,
           collection?.regions,
           profile === "notebook" ? collection?.noteDefaults?.regions : null,
           finalConfig.regions

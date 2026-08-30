@@ -20,7 +20,7 @@ hexo.extend.helper.register('json_ld', function(args) {
   const page = this.page;
   const pageConfig = getPageConfig(page) || page.stellarConfig || {};
   const config = this.config;
-  const structuredData = this.stellar_config("seo.structuredData");
+  const structuredData = this.stellar_config("structuredData");
   const authorEmail = config.email;
   let authorImage = config.avatar || (authorEmail ? this.gravatar(authorEmail) : null);
   const isPage = page.layout == 'page';
@@ -52,7 +52,7 @@ hexo.extend.helper.register('json_ld', function(args) {
       bannerImage: pageConfig.banner?.image,
       photos: page.photos,
       content: page.content,
-      defaultCover: this.stellar_config("resources.fallbacks.cover")
+      defaultCover: this.stellar_config("fallbacks.cover")
     });
     schema = {
       '@context': 'https://schema.org',

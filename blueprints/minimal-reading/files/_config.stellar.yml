@@ -1,65 +1,49 @@
-site:
-  brand:
-    name: Reading Notes
-    tagline: A quiet place to think and write
-  menu:
-    items:
-      - type: search
-      - id: post
-        title: Reading
-        icon: default:bookmark
-        url: /
-        accent: '#73584A'
-layout:
-  regions:
-    topbar: [site_brand, spacer, menu, settings, actions]
-    leftbar:
-      enabled: false
-  profiles:
-    post:
-      regions:
-        topbar:
-          widgets: [site_brand, spacer, menu, settings, actions, toc]
-        rightbar:
-          widgets: []
-    wiki_index:
-      navigation:
-        active_menu: post
-    wiki:
-      navigation:
-        active_menu: post
-      regions:
-        topbar:
-          widgets: [site_brand, spacer, menu, settings, actions, toc]
-        rightbar:
-          widgets: []
-    notebook_index:
-      navigation:
-        active_menu: post
-    note_index:
-      navigation:
-        active_menu: post
-    note:
-      navigation:
-        active_menu: post
-      regions:
-        rightbar:
-          widgets: []
+brand:
+  name: Reading Notes
+  tagline: A quiet place to think and write
+menu:
+  items:
+    - type: search
+    - id: post
+      title: Reading
+      icon: default:bookmark
+      url: /
+      accent: '#73584A'
 
-content:
-  article:
-    style: story
-    paragraph_indent: always
-    listing:
-      pinned_layout: flat
-      card_layout: classic
-    show_reading_time: true
-    footer:
-      show_tags: false
+regions:
+  topbar: [site_brand, spacer, menu, settings, actions]
+  leftbar:
+    enabled: false
+profiles:
+  post:
+    topbar: [site_brand, spacer, menu, settings, actions, toc]
+    rightbar: []
+  wiki_index:
+    active_menu: post
+  wiki:
+    active_menu: post
+    topbar: [site_brand, spacer, menu, settings, actions, toc]
+    rightbar: []
+  notebook_index:
+    active_menu: post
+  note_index:
+    active_menu: post
+  note:
+    active_menu: post
+    rightbar: []
 
-extensions:
-  features:
-    reveal:
-      enabled: false
+article:
+  style: story
+  paragraph_indent: always
+  listing:
+    pinned_layout: flat
+    card_layout: classic
+  show_reading_time: true
+  footer:
+    show_tags: false
+
+features:
+  reveal:
+    enabled: false
 
 {{visual_style}}

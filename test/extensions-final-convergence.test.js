@@ -43,19 +43,19 @@ function context(config = {}) {
 }
 
 test("Emoji 使用 default_source 与 sources，并允许显式 provider", () => {
-  const ctx = context({ extensions: { tags: { emoji: {
+  const ctx = context({ tags: { emoji: {
     defaultSource: "blobcat",
     sources: {
       blobcat: "https://cdn.example/blobcat/{name}.gif",
       qq: "https://cdn.example/qq/{name}.gif"
     }
-  } } } });
+  } } });
   assert.match(createEmoji(ctx)(["party"]), /blobcat\/party\.gif/);
   assert.match(createEmoji(ctx)(["qq", "aini"]), /qq\/aini\.gif/);
 });
 
 test("Gallery 输出最终 aspect_ratio 属性与原图枚举", () => {
-  const ctx = context({ extensions: { tags: { gallery: { size: "mix", aspectRatio: "square" } } } });
+  const ctx = context({ tags: { gallery: { size: "mix", aspectRatio: "square" } } });
   const html = createGallery(ctx)(["layout:grid", "aspect_ratio:original", "size:xl"], "![A](/a.jpg)");
   assert.match(html, /aspect_ratio="original"/);
   assert.match(html, /size="xl"/);
@@ -63,7 +63,7 @@ test("Gallery 输出最终 aspect_ratio 属性与原图枚举", () => {
 });
 
 test("Gist 标签消费 github.gist_url 并支持 file 参数", () => {
-  const ctx = context({ extensions: { services: { github: { gistUrl: "https://gist.example.com/" } } } });
+  const ctx = context({ services: { github: { gistUrl: "https://gist.example.com/" } } });
   assert.equal(
     createGist(ctx)(["owner/abc123", "file:index.js"]),
     '<script src="https://gist.example.com/owner/abc123.js?file=index.js"></script>'
@@ -72,19 +72,19 @@ test("Gist 标签消费 github.gist_url 并支持 file 参数", () => {
 });
 
 test("GitHub Card 只使用选中 provider 的 endpoint 构造原有图片 URL", () => {
-  const ctx = context({ extensions: { services: { githubCard: {
+  const ctx = context({ services: { githubCard: {
     provider: "github_readme_stats",
-    providers: { github_readme_stats: { endpoint: "https://cards.example.com/" } }
-  } } } });
+    github_readme_stats: { endpoint: "https://cards.example.com/" }
+  } } });
   const html = createGhcard(ctx)(["owner/repo"]);
   assert.match(html, /src="https:\/\/cards\.example\.com\/api\/pin\/\?username=owner&repo=repo&&show_owner=true"/);
 });
 
 test("Rating 与 Vote 使用 endpoint，并在显式关闭时输出静态禁用态", () => {
-  const enabled = context({ extensions: { services: {
-    rating: { provider: "star_vote", providers: { star_vote: { endpoint: "https://star-vote.xaox.cc/api/rating" } } },
-    vote: { provider: "star_vote", providers: { star_vote: { endpoint: "https://star-vote.xaox.cc/api/vote" } } }
-  } } });
+  const enabled = context({ services: {
+    rating: { provider: "star_vote", star_vote: { endpoint: "https://star-vote.xaox.cc/api/rating" } },
+    vote: { provider: "star_vote", star_vote: { endpoint: "https://star-vote.xaox.cc/api/vote" } }
+  } });
   const rating = createRating(enabled)(["post"]);
   const vote = createVote(enabled)(["post"]);
   assert.match(rating, /data-api="https:\/\/star-vote\.xaox\.cc\/api\/rating"/);
@@ -92,10 +92,10 @@ test("Rating 与 Vote 使用 endpoint，并在显式关闭时输出静态禁用�
   assert.doesNotMatch(rating, /is-disabled| disabled/);
   assert.doesNotMatch(vote, /is-disabled| disabled/);
 
-  const ctx = context({ extensions: { services: {
-    rating: { provider: null, providers: { star_vote: { endpoint: "https://star-vote.xaox.cc/api/rating" } } },
-    vote: { provider: null, providers: { star_vote: { endpoint: "https://star-vote.xaox.cc/api/vote" } } }
-  } } });
+  const ctx = context({ services: {
+    rating: { provider: null, star_vote: { endpoint: "https://star-vote.xaox.cc/api/rating" } },
+    vote: { provider: null, star_vote: { endpoint: "https://star-vote.xaox.cc/api/vote" } }
+  } });
   const disabledRating = createRating(ctx)(["post"]);
   const disabledVote = createVote(ctx)(["post"]);
   assert.match(disabledRating, /class="tag-plugin ds-rating is-disabled"/);

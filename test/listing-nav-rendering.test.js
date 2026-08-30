@@ -28,9 +28,9 @@ function sharedLocals(profile, listingNav) {
     escape_html: value => String(value),
     __: key => key,
     stellar_config(key) {
-      if (key === `layout.profiles.${profile}.listingNav`) return listingNav;
-      if (key === "content.article.listing.pinnedLayout") return "carousel";
-      if (key === "layout.profiles.topicIndex.path") return "/topic/";
+      if (key === `profiles.${profile}.listingNav`) return listingNav;
+      if (key === "article.listing.pinnedLayout") return "carousel";
+      if (key === "profiles.topicIndex.path") return "/topic/";
       throw new Error(`unexpected config: ${key}`);
     },
     partial(name) {

@@ -1,7 +1,13 @@
 <%
 var runtimeViewModel = typeof viewModel !== 'undefined' ? viewModel : null
 var runtimeRender = content_config(page).render || {}
-var runtimeExtensions = stellar_config('extensions')
+var runtimeExtensions = {
+  search: stellar_config('search'),
+  comments: stellar_config('comments'),
+  tags: stellar_config('tags'),
+  features: stellar_config('features'),
+  services: stellar_config('services')
+}
 var runtimeAssets = extension_assets()
 var runtimeMathProvider = runtimeRender.math || runtimeExtensions.features.math.provider
 var runtimeCommentModel = runtimeViewModel?.render?.article?.comments || null
@@ -9,7 +15,7 @@ var runtimeCommentService = runtimeCommentModel ? runtimeCommentModel.service : 
 var runtimeComments = runtimeCommentModel || {
   service: runtimeCommentService || '',
   options: runtimeCommentService
-    ? Object.assign({}, runtimeExtensions.comments.providers[runtimeCommentService], page.cmt?.[runtimeCommentService])
+    ? Object.assign({}, runtimeExtensions.comments[runtimeCommentService], page.cmt?.[runtimeCommentService])
     : {},
   pageTitle: page.title || ''
 }

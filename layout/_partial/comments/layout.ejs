@@ -9,7 +9,7 @@ if (explicitComments) {
   var projectComments = proj?.comments || {}
   var pageComments = content_config(page).comments || page.comments || {}
   var settings = Object.assign({}, projectComments, pageComments)
-  var commentConfig = stellar_config('extensions.comments')
+  var commentConfig = stellar_config('comments')
   var service = settings.provider || commentConfig.provider || ''
   commentModel = {
     enabled: settings.enabled !== false && service.length > 0,
@@ -17,7 +17,7 @@ if (explicitComments) {
     id: settings.id || '',
     service: service,
     options: service
-      ? Object.assign({}, commentConfig.providers[service], projectComments.options, pageComments.options)
+      ? Object.assign({}, commentConfig[service], projectComments.options, pageComments.options)
       : {},
     pageTitle: page.title || ''
   }

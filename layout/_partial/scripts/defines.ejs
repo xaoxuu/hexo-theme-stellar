@@ -1,17 +1,23 @@
 <%
-  var canonical = stellar_config('seo.canonical')
+  var canonical = stellar_config('canonical')
   var encoded = Buffer.from(canonical.host || '').toString('base64');
   var canonicalWithEncoded = Object.assign({}, canonical, {
     encoded: encoded
   });
   var permalink = page.permalink || canonical.host;
-  var extensions = stellar_config('extensions')
+  var extensions = {
+    search: stellar_config('search'),
+    comments: stellar_config('comments'),
+    tags: stellar_config('tags'),
+    features: stellar_config('features'),
+    services: stellar_config('services')
+  }
   var assets = extension_assets()
   var checklink = assets.services.video.js
   var clientServices = JSON.parse(JSON.stringify(assets.services))
   var siteInfoService = service_provider(extensions.services.siteInfo)
   clientServices.siteinfo.api = siteInfoService ? siteInfoService.endpoint : null
-  var localSearch = extensions.search.providers.local
+  var localSearch = extensions.search.local
   var searchProvider = extensions.search.provider === 'local' ? 'local_search' : extensions.search.provider
 %>
 
@@ -141,8 +147,8 @@
     }
   }
   const def = {
-    avatar: `<%- stellar_config('resources.fallbacks.avatar') %>`,
-    cover: `<%- stellar_config('resources.fallbacks.cover') %>`,
+    avatar: `<%- stellar_config('fallbacks.avatar') %>`,
+    cover: `<%- stellar_config('fallbacks.cover') %>`,
   };
   const deps = {
     marked: `<%- url_for(assets.dependencies.marked) %>`,

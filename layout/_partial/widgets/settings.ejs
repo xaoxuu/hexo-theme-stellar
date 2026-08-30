@@ -1,12 +1,12 @@
 <%
 var settingsPlacement = typeof placement === 'string' ? placement : 'leftbar'
-var provider = stellar_config('extensions.comments.provider') || ''
+var provider = stellar_config('comments.provider') || ''
 var supportedProvider = ['artalk', 'waline', 'twikoo'].includes(provider.toLowerCase())
 var identityEnabled = supportedProvider
 var settingsName = __('settings.label')
-var settingsProfile = stellar_config('layout.profiles.settings')
+var settingsProfile = stellar_config('profiles.settings')
 var settingsUrl = settingsProfile?.path || '/settings/'
-var fallbackAvatar = stellar_config('resources.fallbacks.avatar') || ''
+var fallbackAvatar = stellar_config('fallbacks.avatar') || ''
 var fallbackAvatarUrl = fallbackAvatar ? url_for(fallbackAvatar) : ''
 %>
 <a class="<%- ui_classes('settings-widget', 'collectionItem') %>" href="<%- escape_html(url_for(settingsUrl)) %>" data-profile-provider="<%- escape_html(provider) %>" data-profile-identity-enabled="<%- identityEnabled ? 'true' : 'false' %>" data-profile-fallback-avatar="<%- escape_html(fallbackAvatarUrl) %>" data-settings-placement="<%- escape_html(settingsPlacement) %>" data-settings-label="<%- escape_html(settingsName) %>" aria-label="<%- escape_html(settingsName) %>" title="<%- escape_html(settingsName) %>">

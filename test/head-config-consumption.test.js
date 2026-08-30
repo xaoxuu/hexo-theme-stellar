@@ -18,22 +18,27 @@ test("head 与 SEO 消费链只读取冻结配置，不再读取旧主题路径�
   const jsonLd = read("scripts/helpers/json_ld.js");
   const models = read("scripts/lib/models/index.js");
 
-  assert.match(head, /stellar_config\('seo'\)/);
-  assert.match(head, /stellar_config\('resources'\)/);
+  assert.match(head, /stellar_config\('canonical'\)/);
+  assert.match(head, /stellar_config\('openGraph'\)/);
+  assert.match(head, /stellar_config\('structuredData'\)/);
+  assert.match(head, /stellar_config\('preconnect'\)/);
+  assert.match(head, /stellar_config\('fallbacks'\)/);
   assert.match(head, /stellar_inject\('headEnd'/);
   assert.doesNotMatch(head, /theme\.open_graph|theme\.preconnect|config\.inject|theme\.inject/);
 
   assert.match(scripts, /stellar_inject\('bodyEnd'/);
   assert.doesNotMatch(scripts, /config\.inject|theme\.inject/);
 
-  assert.match(defines, /stellar_config\('seo\.canonical'\)/);
-  assert.doesNotMatch(defines, /originalHost|stellar_config\('canonical'\)/);
+  assert.match(defines, /stellar_config\('canonical'\)/);
+  assert.doesNotMatch(defines, /originalHost|stellar_config\('seo\.canonical'\)/);
 
-  assert.match(jsonLd, /stellar_config\("seo\.structuredData"\)/);
+  assert.match(jsonLd, /stellar_config\("structuredData"\)/);
   assert.doesNotMatch(jsonLd, /theme\.structured_data/);
 
-  assert.match(models, /input\.stellarConfig\.seo/);
-  assert.doesNotMatch(models, /themeConfig\.open_graph|themeConfig\.structured_data|stellarConfig\.canonical/);
+  assert.match(models, /const seoConfig = input\.stellarConfig/);
+  assert.match(models, /seoConfig\.canonical/);
+  assert.match(models, /seoConfig\.openGraph/);
+  assert.doesNotMatch(models, /themeConfig\.open_graph|themeConfig\.structured_data|stellarConfig\.seo/);
 });
 
 test("浏览器 canonical 上下文使用冻结 camelCase 字段", () => {

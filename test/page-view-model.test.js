@@ -12,7 +12,9 @@ const {
   buildWikiPageViewModelBase: buildWikiPageViewModelBaseRaw,
   completeWikiPageViewModel
 } = require("../scripts/lib/models");
-const { parseStellarConfig } = require("../scripts/lib/config-schema");
+const { parseStellarConfig: parseRawStellarConfig } = require("../scripts/lib/config-schema");
+const { flattenThemeFixture } = require("./support/theme-config");
+const parseStellarConfig = input => parseRawStellarConfig({ ...input, themeConfig: flattenThemeFixture(input.themeConfig) });
 const { parseCollectionConfig, parsePageConfig } = require("../scripts/lib/content-config");
 const processContentConfig = require("../scripts/events/lib/content-config");
 const { attachPageViewModel } = require("../scripts/filters/lib/page-view-model");
@@ -839,11 +841,11 @@ test("Post profile 错误包含配置来源和字段路径", () => {
     source: "source/_posts/error.md",
     themeSource: "_config.stellar.yml",
     themeConfig: {
-      layout: { profiles: { post: { navigation: "post" } } }
+      profiles: { post: { active_menu: [] } }
     },
     frontMatter: { title: "Error", layout: "post" },
     page: { title: "Error", layout: "post" }
-  }), /_config\.stellar\.yml: layout\.profiles\.post\.navigation 应为 object，实际为 string/);
+  }), /_config\.stellar\.yml: profiles\.post\.active_menu 应为 string \| null，实际为 array/);
 });
 
 test("Post 模型规范化 Hexo 值且不保留输入引用", () => {
@@ -1026,8 +1028,8 @@ test("Post profile 严格拒绝已迁移内容默认值的未知键与错误类�
     frontMatter: { title: "Strict", layout: "post" },
     page: { title: "Strict", layout: "post" }
   }), error => {
-    assert.match(error.message, /未知字段 content\.article\.author/);
-    assert.match(error.message, /content\.article\.footer\.share 应为 array/);
+    assert.match(error.message, /未知字段 article\.author/);
+    assert.match(error.message, /article\.footer\.share 应为 array/);
     return true;
   });
 });
@@ -1047,11 +1049,11 @@ test("Post profile 严格校验全部已迁移内容配置袋", () => {
     frontMatter: { title: "Strict bags", layout: "post" },
     page: { title: "Strict bags", layout: "post" }
   }), error => {
-    assert.match(error.message, /content\.article\.listing\.cover_ratio 应为 number，实际为 string/);
-    assert.match(error.message, /content\.article\.style 的值不在 tech \| story/);
-    assert.match(error.message, /content\.article\.category_colors 应为 object，实际为 array/);
-    assert.match(error.message, /content\.article\.related_posts_limit 应为 number，实际为 boolean/);
-    assert.match(error.message, /content\.article\.show_reading_time 应为 boolean，实际为 string/);
+    assert.match(error.message, /article\.listing\.cover_ratio 应为 number，实际为 string/);
+    assert.match(error.message, /article\.style 的值不在 tech \| story/);
+    assert.match(error.message, /article\.category_colors 应为 object，实际为 array/);
+    assert.match(error.message, /article\.related_posts_limit 应为 number，实际为 boolean/);
+    assert.match(error.message, /article\.show_reading_time 应为 boolean，实际为 string/);
     return true;
   });
 });

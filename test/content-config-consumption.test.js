@@ -11,8 +11,9 @@ function read(file) {
   return fs.readFileSync(path.join(ROOT, file), "utf8");
 }
 
-test("Article 与 Notebook 消费链只读取冻结的 content 配置", () => {
+test("Article 与 Notebook 消费链只读取冻结的顶层配置", () => {
   const consumers = [
+    "scripts/lib/content-defaults.js",
     "scripts/lib/models/index.js",
     "scripts/lib/notebooks.js",
     "scripts/filters/lib/page-view-model.js",
@@ -30,8 +31,8 @@ test("Article 与 Notebook 消费链只读取冻结的 content 配置", () => {
     "layout/_partial/widgets/tagtree.ejs"
   ].map(read).join("\n");
 
-  assert.match(consumers, /content\.article/);
-  assert.match(consumers, /content\.notebook/);
+  assert.match(consumers, /stellarConfig\?\.article|stellarConfig\.article/);
+  assert.match(consumers, /stellarConfig\?\.notebook|stellarConfig\.notebook/);
   assert.doesNotMatch(consumers, /themeConfig\.(?:article|notebook)/);
   assert.doesNotMatch(consumers, /theme\.config\.(?:article|notebook)/);
   assert.doesNotMatch(consumers, /theme\.(?:article|notebook)(?:\.|\?)/);
@@ -119,12 +120,12 @@ test("主题默认与 Stylus 只声明最终内容路径", () => {
     "source/css/_components/partial/article-banner.styl"
   ].map(read).join("\n");
 
-  assert.match(config, /^content:\n(?: {2}#.*\n)* {2}article:/m);
-  assert.match(config, /^ {4}listing:/m);
-  assert.match(config, /^ {6}pinned_layout: carousel/m);
-  assert.match(config, /^ {2}notebook:/m);
-  assert.doesNotMatch(config, /^(?:article|notebook):/m);
-  assert.match(styles, /content\.article\.listing\.cover_ratio/);
-  assert.match(styles, /content\.article\.banner\.ratio/);
-  assert.doesNotMatch(styles, /hexo-config\('article\./);
+  assert.match(config, /^article:/m);
+  assert.match(config, /^ {2}listing:/m);
+  assert.match(config, /^ {4}pinned_layout: carousel/m);
+  assert.match(config, /^notebook:/m);
+  assert.doesNotMatch(config, /^content:/m);
+  assert.match(styles, /article\.listing\.cover_ratio/);
+  assert.match(styles, /article\.banner\.ratio/);
+  assert.doesNotMatch(styles, /hexo-config\('content\./);
 });

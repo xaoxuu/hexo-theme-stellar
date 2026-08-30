@@ -16,7 +16,7 @@ function layoutDiv() {
   if (repo == undefined) {
     return el;
   }
-  item.api = `${stellar_config('extensions.services.github.apiUrl')}/repos/${repo}/issues?per_page=${item.limit}`;
+  item.api = `${stellar_config('services.github.apiUrl')}/repos/${repo}/issues?per_page=${item.limit}`;
   if (item.labels) {
     item.api += '&labels=' + item.labels;
   }

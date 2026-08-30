@@ -63,11 +63,9 @@ test("doctor text/json 输出稳定表达同一结果", () => {
 test("doctor 对不支持的位置只警告并跳过，ok 保持 true", () => {
   const baseDir = initializedSite("classic");
   fs.writeFileSync(path.join(baseDir, "_config.stellar.yml"), [
-    "layout:",
-    "  regions:",
-    "    topbar:",
-    "      widgets:",
-    "        - layout: timeline",
+    "regions:",
+    "  topbar:",
+    "    - layout: timeline",
     ""
   ].join("\n"));
 
@@ -83,84 +81,24 @@ test("doctor 对不支持的位置只警告并跳过，ok 保持 true", () => {
   assert.match(formatDoctorText(result), /Widget timeline .*does not support topbar.*skipped/);
 });
 
-test("doctor 为预发布 Region 与背景旧名称给出精确迁移目标", () => {
+test("doctor 将已删除的六个分组根直接报告为未知字段且不提供迁移目标", () => {
   const baseDir = initializedSite("classic");
   fs.writeFileSync(path.join(baseDir, "_config.stellar.yml"), [
-    "layout:",
-    "  regions:",
-    "    sidebar: [brand, menu]",
-    "    context: [toc]",
-    "appearance:",
-    "  backgrounds:",
-    "    sidebar:",
-    "      image: /legacy.webp",
+    "site: {}",
+    "layout: {}",
+    "content: {}",
+    "seo: {}",
+    "resources: {}",
+    "extensions: {}",
     ""
   ].join("\n"));
 
   const result = runDoctor({ baseDir, nodeVersion: "22.0.0", hexoVersion: "8.1.0" });
   assert.equal(result.ok, false);
-  assert.deepEqual(result.issues.map(item => [item.path, item.expected]), [
-    ["layout.regions.sidebar", "layout.regions.leftbar"],
-    ["layout.regions.context", "layout.regions.rightbar"],
-    ["appearance.backgrounds.sidebar", "appearance.backgrounds.leftbar"]
+  assert.deepEqual(result.issues.map(item => item.path), [
+    "site", "layout", "content", "seo", "resources", "extensions"
   ]);
-});
-
-test("doctor 为 Content、Collection 与 Front Matter 旧路径给出最终迁移目标", () => {
-  const baseDir = initializedSite("classic");
-  fs.mkdirSync(path.join(baseDir, "source/_data/topic"), { recursive: true });
-  fs.mkdirSync(path.join(baseDir, "source/_posts"), { recursive: true });
-  fs.writeFileSync(path.join(baseDir, "_config.stellar.yml"), "content:\n  article:\n    type: story\n    indent: true\n    related_posts:\n      enabled: true\n");
-  fs.writeFileSync(path.join(baseDir, "source/_data/topic/legacy.yml"), "name: Legacy\nlisting:\n  order_by: -date\n");
-  fs.writeFileSync(path.join(baseDir, "source/_posts/legacy.md"), "---\ntitle: Legacy\narticle:\n  type: story\n  indent: true\n---\n");
-
-  const result = runDoctor({ baseDir, nodeVersion: "22.0.0", hexoVersion: "8.1.0" });
-  assert.equal(result.ok, false);
-  assert.equal(result.issues.some(item => item.path === "content.article.type" && item.expected === "content.article.style"), true);
-  assert.equal(result.issues.some(item => item.path === "content.article.indent" && item.expected === "content.article.paragraph_indent"), true);
-  assert.equal(result.issues.some(item => item.path === "content.article.related_posts" && item.expected === "content.article.related_posts_limit"), true);
-  assert.equal(result.issues.some(item => item.path === "listing.order_by" && item.expected === "listing.sort"), true);
-  assert.equal(result.issues.some(item => item.path === "article.type" && item.expected === "article.style"), true);
-  assert.equal(result.issues.some(item => item.path === "article.indent" && item.expected === "article.paragraph_indent"), true);
-});
-
-test("doctor 为 Extensions 旧路径给出最终迁移目标或明确删除", () => {
-  const baseDir = initializedSite("classic");
-  fs.writeFileSync(path.join(baseDir, "_config.stellar.yml"), [
-    "extensions:",
-    "  search:",
-    "    providers:",
-    "      local:",
-    "        index_path: /custom.json",
-    "        cache_ttl: 10",
-    "  tags:",
-    "    image:",
-    "      parse_markdown: true",
-    "  features:",
-    "    ai_summary:",
-    "      enabled: true",
-    "    preload:",
-    "      enabled: true",
-    "  services:",
-    "    site_info:",
-    "      endpoint: null",
-    "    rating:",
-    "      endpoint: https://rating.example.com",
-    "    github:",
-    "      card_url: https://cards.example.com",
-    ""
-  ].join("\n"));
-
-  const result = runDoctor({ baseDir, nodeVersion: "22.0.0", hexoVersion: "8.1.0" });
-  assert.equal(result.ok, false);
-  assert.equal(result.issues.some(item => item.path.endsWith("index_path") && item.expected.includes("remove field")), true);
-  assert.equal(result.issues.some(item => item.path.endsWith("cache_ttl") && item.expected.endsWith("cache_ttl_seconds")), true);
-  assert.equal(result.issues.some(item => item.path.endsWith("tags.image") && item.expected.includes("remove field")), true);
-  assert.equal(result.issues.some(item => item.path.endsWith("features.ai_summary") && item.expected.includes("remove field")), true);
-  assert.equal(result.issues.some(item => item.path.endsWith("features.preload") && item.expected.endsWith("link_prefetch")), true);
-  assert.equal(result.issues.some(item => item.path.endsWith("site_info.endpoint") && item.expected.endsWith("site_info.provider")), true);
-  assert.equal(result.issues.some(item => item.path.endsWith("rating.endpoint") && item.expected.endsWith("rating.providers.star_vote.endpoint")), true);
-  assert.equal(result.issues.some(item => item.path.endsWith("github.card_url") && item.expected.endsWith("extensions.services.github_card.providers.github_readme_stats.endpoint")), true);
+  assert.equal(result.issues.every(item => item.code === "unknown_field" && item.migration == null), true);
 });
 
 test("doctor 接受 BOM 与 CRLF Front Matter", () => {

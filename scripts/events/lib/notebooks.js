@@ -71,7 +71,7 @@ module.exports = (ctx, pipeline = null) => {
   const notebooks = getNotebooksObject(ctx, {
     pagesByNotebook: groupPagesByNotebook(pages, pageConfigs)
   });
-  validateTagIcons(notebooks, ctx.stellar.config.content.notebook.tagIcons);
+  validateTagIcons(notebooks, ctx.stellar.config.notebook.tagIcons);
   const runtimeData = ensureRuntimeData(ctx);
   runtimeData.notebooks = notebooks;
   const entries = [];
@@ -122,7 +122,7 @@ module.exports = (ctx, pipeline = null) => {
           icon: String(notebook.identity?.icon || "")
         };
         const brands = resolveBrands({
-          siteBrand: ctx.stellar.config.site.brand,
+          siteBrand: ctx.stellar.config.brand,
           collection: notebook,
           collectionType: "notebook",
           defaultIcon: INTERNAL.resources.projectIcon

@@ -12,7 +12,7 @@
 const { mdrenderHtml, rawOrigin } = require("./mdrender_html");
 
 /**
- * README 地址。rawUrl 由调用方从 extensions.services.github.raw_url 传入；
+ * README 地址。rawUrl 由调用方从 services.github.raw_url 传入；
  * branch 缺省用 GitHub HEAD（自动指向默认分支）。
  */
 function readmeUrl(repo, branch, rawUrl) {

@@ -16,12 +16,12 @@ function report(warnings) {
 
 hexo.extend.helper.register("region_layout", function(profile, collectionRegions, pageRegions) {
   const config = hexo.stellar.config;
-  const profileConfig = config.layout.profiles[profile] || {};
+  const profileConfig = config.profiles[profile] || {};
   const result = resolveRegions({
     profile,
-    defaultState: config.layout.regions.leftbar.defaultState,
+    defaultState: config.regions.leftbar.defaultState,
     catalog: hexo.stellar.data.widgets || {},
-    layers: [config.layout.regions, profileConfig.regions, collectionRegions, pageRegions]
+    layers: [config.regions, profileConfig, collectionRegions, pageRegions]
   });
   report(result.warnings);
   return result.regions;

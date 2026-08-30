@@ -20,7 +20,7 @@ hexo.extend.helper.register("search_scope", function(page, viewModel) {
       profile: "notebook",
       name: notebookCollection.name
     } : null,
-    indexScope: hexo.stellar.config.extensions.search.providers.local.scope,
+    indexScope: hexo.stellar.config.search.local.scope,
     viewModel
   });
   if (!scope) return null;

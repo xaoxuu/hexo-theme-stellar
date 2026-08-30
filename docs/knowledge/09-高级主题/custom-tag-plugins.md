@@ -29,9 +29,9 @@ module.exports = function(ctx) {
 
 ## 配置边界
 
-官方标签的跨页面默认位于 `extensions.tags.<tag_id>`，运行时从 `ctx.stellar.config.extensions.tags.<tagId>` 读取。新增官方 ID 必须同时登记在 `config-target.js` 和声明式 Schema，使用 snake_case YAML、camelCase JavaScript，并明确父级是封闭对象还是受约束动态记录。
+官方标签的跨页面默认位于 `tags.<tag_id>`，运行时从 `ctx.stellar.config.tags.<tagId>` 读取。新增官方 ID 时先把字段与默认值写入手写 `_config.yml`；只有联合类型、枚举、动态记录或特殊校验等无法由 YAML 推导的约束，才登记到 `config-rules.js`。YAML 使用 snake_case，JavaScript 使用 camelCase。
 
-不要从 `ctx.theme.config` 读取配置，不要在参数袋中开放 `js/css/inject`，也不要为旧字段添加兼容分支。若标签需要主题自带客户端模块，把资源登记到内部 Extension 资源表；若需要站点业务端点，将其放入明确的 `extensions.tags` 或 `extensions.services` 字段。
+不要从 `ctx.theme.config` 读取配置，不要在参数袋中开放 `js/css/inject`，也不要为旧字段添加兼容分支。若标签需要主题自带客户端模块，把资源登记到内部 Extension 资源表；若需要站点业务端点，将其放入明确的 `tags` 或 `services` 字段。
 
 ## 安全与降级
 
@@ -46,3 +46,4 @@ module.exports = function(ctx) {
 - [标签插件总览](../04-标签插件/tag-plugins-overview.md)
 - [插件系统](../07-外部集成/plugin-system.md)
 - [scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)
+- [scripts/schema/config-rules.js](../../../scripts/schema/config-rules.js)

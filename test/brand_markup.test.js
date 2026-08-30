@@ -57,8 +57,8 @@ function renderBrand({ brandModel, brandSource = 'site', placement = 'leftbar', 
     brandText: value => value == null ? '' : String(value),
     brandGithubUsername: () => username,
     stellar_config: key => {
-      if (key === 'extensions.services.github.apiUrl') return 'https://api.github.com';
-      if (key === 'extensions.search.provider') return searchProvider;
+      if (key === 'services.github.apiUrl') return 'https://api.github.com';
+      if (key === 'search.provider') return searchProvider;
       return 'never';
     },
     escape_html: escapeHtml,

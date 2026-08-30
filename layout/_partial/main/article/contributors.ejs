@@ -8,7 +8,7 @@ function parseURL() {
   const file = source.slice(matched.sourcePrefix.length).replace(/^\/+/, '')
   return {
     edit: `https://github.com/${matched.repository}/blob/${matched.branch || 'main'}/${file}`,
-    commits: `${stellar_config('extensions.services.github.apiUrl').replace(/\/+$/, '')}/repos/${matched.repository}/commits?path=${encodeURIComponent(file)}`
+    commits: `${stellar_config('services.github.apiUrl').replace(/\/+$/, '')}/repos/${matched.repository}/commits?path=${encodeURIComponent(file)}`
   }
 }
 function layoutDiv() {

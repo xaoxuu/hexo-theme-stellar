@@ -42,7 +42,7 @@ test("Schema 默认值为无可选元数据 Post 提供完整确定性降级", (
   assert.equal(viewModel.render.seo.title, "Minimal - Example");
   assert.equal(viewModel.render.seo.description, "Plain paragraph.");
   assert.deepEqual(viewModel.render.seo.keywords, []);
-  assert.equal(viewModel.render.seo.jsonLd.image[0], stellarConfig.resources.fallbacks.cover);
+  assert.equal(viewModel.render.seo.jsonLd.image[0], stellarConfig.fallbacks.cover);
   assert.equal(viewModel.render.article.footer.license, viewModel.item.presentation.footer.license);
   assert.equal(viewModel.render.article.comments.enabled, false);
   assert.equal(viewModel.item.navigation.menu, "post");
@@ -53,7 +53,13 @@ test("空配置 Runtime Manifest 保持冻结、版本化且 Extension 激活条
   const config = parseStellarConfig({ themeConfig: {} });
   const manifest = buildBrowserRuntimeManifest({
     root: "/",
-    extensions: config.extensions,
+    extensions: {
+      search: config.search,
+      comments: config.comments,
+      tags: config.tags,
+      features: config.features,
+      services: config.services
+    },
     assets: INTERNAL.assets,
     render: {},
     messages: {},

@@ -2,7 +2,7 @@
 "use strict";
 
 const { literal } = require("./config-schema");
-const { CONFIG_TARGET_FIELDS } = require("./config-target");
+const { CONFIG_TARGET_FIELDS } = require("./content-config-rules");
 const { deepFreeze } = require("./schema-utils");
 
 const HEXO_FRONT_MATTER_FIELDS = Object.freeze([

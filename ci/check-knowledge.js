@@ -9,8 +9,6 @@ const { markdownAnchors } = require("../scripts/lib/markdown-links");
 const ROOT = path.resolve(__dirname, "..");
 const DEFAULT_KNOWLEDGE_DIR = "docs/knowledge";
 const DEFAULT_CONFIG_REFERENCE = "reference/v2-config.json";
-const DEFAULT_CONFIG_AUDIT = "docs/audits/2026-08-24-v2-config-field-audit.json";
-// Hexo 宿主集合与 Theme `site` 根同名，但不属于主题配置契约。
 const HOST_OBJECT_PATHS = new Set(["site.posts"]);
 const FILE_LIKE_SUFFIX = /\.(?:js|mjs|cjs|ejs|css|styl|json|ya?ml|md)$/i;
 const CONFIG_TOKEN = /^[A-Za-z_$][\w$]*(?:\[\])?(?:\.[A-Za-z_$][\w$]*(?:\[\])?)+$/;
@@ -103,18 +101,22 @@ function checkLinks(root, file, markdown) {
   return { checked, errors };
 }
 
-function configContract(root, configReferencePath, configAuditPath) {
+function configContract(root, configReferencePath) {
   const reference = readJson(root, configReferencePath);
-  const audit = readJson(root, configAuditPath);
   const accepted = new Set();
   const themeRoots = new Set();
+  const addPath = value => {
+    if (!value) return;
+    const normalized = value.replace(/\[\]/g, "");
+    const segments = normalized.split(".");
+    for (let index = 1; index <= segments.length; index += 1) {
+      accepted.add(segments.slice(0, index).join("."));
+    }
+  };
   for (const field of reference.fields || []) {
-    if (field.path) accepted.add(field.path);
-    if (field.runtimePath) accepted.add(field.runtimePath);
-    if (field.scope === "theme" && field.path) themeRoots.add(field.path.split(".")[0]);
-  }
-  for (const field of audit.fields || []) {
-    if (field.accepted === false && field.path) accepted.add(field.path);
+    addPath(field.path);
+    addPath(field.runtimePath);
+    if (field.surface === "Theme" && field.path) themeRoots.add(field.path.split(".")[0]);
   }
   return { accepted, themeRoots };
 }
@@ -132,13 +134,17 @@ function checkConfigReferences(root, file, markdown, contract) {
       checked += 1;
       continue;
     }
+    // Flat roots such as `search`, `comments`, `footer` and `regions` also name
+    // language keys and PageViewModel fields. A two-segment bare token has no
+    // reliable surface marker, so only diagnose deeper unqualified paths.
+    if (token.split(".").length < 3) continue;
     errors.push(error(
       "unknown-config",
       root,
       file,
       lineNumber(prose, match.index),
       token,
-      `主题配置或已登记退出字段中不存在: ${token}`
+      `主题配置中不存在: ${token}`
     ));
   }
   return { checked, errors };
@@ -168,9 +174,8 @@ function checkKnowledge(options = {}) {
   const root = path.resolve(options.root || ROOT);
   const knowledgeDir = path.join(root, options.knowledgeDir || DEFAULT_KNOWLEDGE_DIR);
   const configReferencePath = options.configReferencePath || DEFAULT_CONFIG_REFERENCE;
-  const configAuditPath = options.configAuditPath || DEFAULT_CONFIG_AUDIT;
   const currentVersion = readJson(root, "package.json").version;
-  const contract = configContract(root, configReferencePath, configAuditPath);
+  const contract = configContract(root, configReferencePath);
   const files = walkMarkdown(knowledgeDir);
   const result = {
     filesChecked: files.length,

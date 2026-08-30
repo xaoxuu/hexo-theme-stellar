@@ -5,10 +5,10 @@ function layoutDiv() {
     ? activeMenu
     : content_config(page).navigation?.menu ?? page.navigation?.menu
   var entries = []
-  for (var menuItem of stellar_config('site.menu.items')) {
+  for (var menuItem of stellar_config('menu.items')) {
     if (menuItem?.type === 'search') {
-      if (!stellar_config('extensions.search.provider')) continue
-      var searchProvider = stellar_config('extensions.search.provider')
+      if (!stellar_config('search.provider')) continue
+      var searchProvider = stellar_config('search.provider')
       var algoliaFilterPath = ''
       var searchPlaceholder = __('search.search')
       var wikiViewModel = menuViewModel?.collection?.profile === 'wiki' ? menuViewModel : null

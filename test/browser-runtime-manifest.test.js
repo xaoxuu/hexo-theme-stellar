@@ -22,17 +22,17 @@ function fixture(overrides = {}) {
       colorScheme: { light: "Light", dark: "Dark", auto: "Auto" }
     },
     extensions: {
-      search: { provider: "local", providers: { local: { indexPath: "/search.json", lazy: true } } },
+      search: { provider: "local", local: { indexPath: "/search.json", lazy: true } },
       comments: {},
-      services: { siteInfo: { provider: "site_info_api", providers: { site_info_api: { endpoint: "https://example.com/?url={href}" } } } },
+      services: { siteInfo: { provider: "site_info_api", site_info_api: { endpoint: "https://example.com/?url={href}" } } },
       cache: { enabled: true, defaultTtl: 60, ttl: { siteinfo: 30 }, maxEntries: 20 },
       features: {
         colorSchemeSwitch: { enabled: false },
         linkPrefetch: { enabled: true },
         lightbox: { enabled: true, selector: ".custom" },
         reveal: { enabled: true },
-        math: { provider: null, providers: {} },
-        diagrams: { provider: null, providers: { mermaid: { theme: "neutral" } } },
+        math: { provider: null, katex: {}, mathjax: {} },
+        diagrams: { provider: null, mermaid: { theme: "neutral" } },
         cardHover: { enabled: false },
         heti: { enabled: false }
       }
@@ -80,7 +80,7 @@ test("Runtime Manifest 投影页面需要的 Extension 并深度冻结", () => {
 
 test("Runtime Manifest 按 render 选择 Math 与 diagrams", () => {
   const input = fixture({ profile: "post", render: { math: "mathjax", diagrams: { theme: "dark" } } });
-  input.extensions.features.math = { provider: null, providers: { mathjax: {} } };
+  input.extensions.features.math = { provider: null, mathjax: {} };
   const manifest = buildBrowserRuntimeManifest(input);
   const ids = manifest.extensions.map(item => item.id);
   assert.equal(ids.includes("mathjax"), true);
@@ -104,7 +104,7 @@ test("Color Scheme Switch 仅在显式启用时进入 Runtime Manifest", () => {
 test("Runtime Manifest 不投影未选中的 Site Info provider 参数袋", () => {
   const input = fixture();
   input.extensions.services.siteInfo.provider = null;
-  input.extensions.services.siteInfo.providers.site_info_api.endpoint = "https://unselected.example/?url={href}";
+  input.extensions.services.siteInfo.site_info_api.endpoint = "https://unselected.example/?url={href}";
   const manifest = buildBrowserRuntimeManifest(input);
   const services = manifest.extensions.find(item => item.id === "services");
   assert.equal(services.config.siteInfoEndpoint, null);

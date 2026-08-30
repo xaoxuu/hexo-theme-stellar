@@ -45,7 +45,7 @@ function plainPostLink(value) {
 }
 
 function relatedItems(ctx, data, input) {
-  const limit = input.stellarConfig.content.article.relatedPostsLimit;
+  const limit = input.stellarConfig.article.relatedPostsLimit;
   if (limit === 0) return [];
   const helper = ctx?.extend?.helper?.get?.("popular_posts_json");
   if (typeof helper !== "function") {

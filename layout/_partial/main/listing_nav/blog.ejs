@@ -2,11 +2,11 @@
 function layoutDiv() {
   var el = '';
   // 置顶文章样式为平铺时不渲染轮播，置顶文章改由首页文章列表靠前展示
-  if (stellar_config('content.article.listing.pinnedLayout') !== 'flat') {
+  if (stellar_config('article.listing.pinnedLayout') !== 'flat') {
     el += partial('_partial/main/pin_slider', {type: 'post'});
   }
 
-  const listingNav = stellar_config('layout.profiles.blogIndex.listingNav');
+  const listingNav = stellar_config('profiles.blogIndex.listingNav');
   if (!listingNav.enabled) {
     return el;
   }
@@ -43,9 +43,9 @@ function layoutDiv() {
 
   if (stellar_data('topic')?.publish_list?.length > 0) {
     if (page.layout == 'index_topic') {
-      el += '<a class="active" href="' + pretty_url(stellar_config('layout.profiles.topicIndex.path')) + '">' + __("btn.topic") + '</a>';
+      el += '<a class="active" href="' + pretty_url(stellar_config('profiles.topicIndex.path')) + '">' + __("btn.topic") + '</a>';
     } else {
-      el += '<a href="' + pretty_url(stellar_config('layout.profiles.topicIndex.path')) + '">' + __("btn.topic") + '</a>';
+      el += '<a href="' + pretty_url(stellar_config('profiles.topicIndex.path')) + '">' + __("btn.topic") + '</a>';
     }
   }
 

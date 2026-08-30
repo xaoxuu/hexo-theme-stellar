@@ -19,7 +19,7 @@ function layoutDiv() {
   var el = ''
   // 文档列表页
   el += `<span class="sep"></span>`
-  var wikiIndexPageURL = pretty_url(stellar_config('layout.profiles.wikiIndex.path'))
+  var wikiIndexPageURL = pretty_url(stellar_config('profiles.wikiIndex.path'))
   el += `<a class="cap breadcrumb" id="menu" href="${wikiIndexPageURL}">${__("btn.wiki")}</a>`
   if (wikiObject) {
     // 文档项目名

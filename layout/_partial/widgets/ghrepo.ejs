@@ -22,7 +22,7 @@ function layoutDiv() {
     return el;
   }
   if (!wikiViewModel) {
-    repoApi = stellar_config('extensions.services.github.apiUrl') + '/repos/' + repo
+    repoApi = stellar_config('services.github.apiUrl') + '/repos/' + repo
     tagsApi = repoApi + '/tags'
   }
   // 布局

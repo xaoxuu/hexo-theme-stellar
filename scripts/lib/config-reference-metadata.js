@@ -13,54 +13,52 @@ function clone(value) {
   return Object.fromEntries(Object.entries(value).map(([key, child]) => [key, clone(child)]));
 }
 
-function compareText(left, right) {
-  if (left < right) return -1;
-  if (left > right) return 1;
-  return 0;
+function defaultValue(node) {
+  if (node.default?.kind === "literal") return clone(node.default.value);
+  return clone(node.default);
 }
 
-function flattenConfigFields(schema) {
+function flattenConfigFields(schema, surface = "Theme") {
   const fields = [];
 
   function addField(node, path, runtimePath) {
     fields.push({
+      surface,
       path,
       runtimePath,
       type: clone(node.type),
-      default: clone(node.default),
-      ...(node.description ? { description: node.description } : {}),
-      scope: node.scope,
-      cascade: clone(node.cascade),
-      normalizer: node.normalizer,
-      normalization: node.normalization,
-      consumers: clone(node.consumers),
-      example: clone(node.example),
-      migration: node.migration,
-      ...(node.sealed ? { sealed: true } : {}),
+      default: defaultValue(node),
       ...(node.values ? { values: clone(node.values) } : {}),
       ...(node.minimum !== undefined ? { minimum: node.minimum } : {}),
       ...(node.maximum !== undefined ? { maximum: node.maximum } : {}),
-      ...(node.exclusiveMinimum !== undefined ? { exclusiveMinimum: node.exclusiveMinimum } : {})
+      ...(node.exclusiveMinimum !== undefined ? { exclusiveMinimum: node.exclusiveMinimum } : {}),
+      ...(node.validator ? { validator: node.validator } : {}),
+      ...(node.additionalProperties ? { open: node.sealed !== true } : {})
     });
   }
 
-  function visit(node, yamlPrefix, runtimePrefix) {
-    for (const key of Object.keys(node.properties || {}).sort(compareText)) {
+  function visit(node, yamlPrefix, runtimePrefix, includeSelf = false) {
+    const properties = Object.keys(node.properties || {});
+    const itemProperties = Object.keys(node.items?.properties || {});
+    if (includeSelf && properties.length === 0 && itemProperties.length === 0 && !node.additionalProperties) {
+      addField(node, yamlPrefix, runtimePrefix);
+      return;
+    }
+    for (const key of properties) {
       const child = node.properties[key];
       const path = yamlPrefix ? `${yamlPrefix}.${key}` : key;
       const runtimeKey = child.runtimeKey || key;
       const runtimePath = runtimePrefix ? `${runtimePrefix}.${runtimeKey}` : runtimeKey;
-      addField(child, path, runtimePath);
-      visit(child, path, runtimePath);
       if (child.items?.properties || child.items?.additionalProperties) {
-        visit(child.items, `${path}[]`, `${runtimePath}[]`);
+        visit(child.items, `${path}[]`, `${runtimePath}[]`, true);
+      } else {
+        visit(child, path, runtimePath, true);
       }
       if (child.additionalProperties) {
         const recordKey = child.additionalPropertyKey || "<key>";
         const recordPath = `${path}.${recordKey}`;
         const recordRuntimePath = `${runtimePath}.${recordKey}`;
-        addField(child.additionalProperties, recordPath, recordRuntimePath);
-        visit(child.additionalProperties, recordPath, recordRuntimePath);
+        visit(child.additionalProperties, recordPath, recordRuntimePath, true);
       }
     }
   }
@@ -73,14 +71,14 @@ function generateConfigReferenceMetadata() {
   return {
     schemaVersion: 1,
     source: [
-      "scripts/schema/config-schema.js",
+      "_config.yml",
+      "scripts/schema/config-rules.js",
       "scripts/schema/content-config-schema.js"
     ],
-    status: "delivered",
     fields: [
-      ...flattenConfigFields(CONFIG_SCHEMA),
-      ...flattenConfigFields(COLLECTION_CONFIG_SCHEMA),
-      ...flattenConfigFields(FRONT_MATTER_CONFIG_SCHEMA)
+      ...flattenConfigFields(CONFIG_SCHEMA, "Theme"),
+      ...flattenConfigFields(COLLECTION_CONFIG_SCHEMA, "Collection"),
+      ...flattenConfigFields(FRONT_MATTER_CONFIG_SCHEMA, "Front Matter")
     ]
   };
 }

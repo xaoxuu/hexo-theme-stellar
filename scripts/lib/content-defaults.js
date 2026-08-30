@@ -8,15 +8,16 @@ const {
 } = require("./config-schema");
 
 function requireContentConfig(stellarConfig, source = "_config.stellar.yml") {
-  const content = stellarConfig?.content;
-  if (isPlainObject(content?.article) && isPlainObject(content?.notebook)) return content;
+  if (isPlainObject(stellarConfig?.article) && isPlainObject(stellarConfig?.notebook)) {
+    return { article: stellarConfig.article, notebook: stellarConfig.notebook };
+  }
   throw new ConfigSchemaError([Object.freeze({
     code: "invalid_type",
     source,
-    path: "stellarConfig.content",
-    actualType: valueType(content),
+    path: "stellarConfig.article",
+    actualType: valueType(stellarConfig?.article),
     expected: "normalized content defaults object",
-    migration: "configuration/content"
+    migration: null
   })]);
 }
 

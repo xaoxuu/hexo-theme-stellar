@@ -19,7 +19,7 @@ function fixture(options = {}) {
   let generated = 0;
   const hexo = {
     base_dir: "/tmp/stellar-config-watch/",
-    config: { theme_config: { site: { brand: { name: "Before" } } } },
+    config: { theme_config: { brand: { name: "Before" } } },
     env: { cmd: "server" },
     log: {
       info() {},
@@ -28,9 +28,9 @@ function fixture(options = {}) {
     on(event, callback) { handlers[event] = callback; },
     render: {
       async render() {
-        if (options.invalid) return { layout: { regions: { topbar: 42 } } };
-        if (options.emptyRegion) return { layout: { regions: { topbar: null } } };
-        return { layout: { regions: { topbar: { widgets: ["site_brand", "menu"] } } } };
+        if (options.invalid) return { regions: { topbar: 42 } };
+        if (options.emptyRegion) return { regions: { topbar: null } };
+        return { regions: { topbar: ["site_brand", "menu"] } };
       }
     },
     _watchBox() { generated += 1; }
@@ -61,7 +61,7 @@ test("Hexo server 保存 _config.stellar.yml 后重读并触发生成", async ()
   const current = fixture();
   current.trigger("_config.stellar.yml");
   await waitForReload();
-  assert.deepEqual(current.hexo.config.theme_config.layout.regions.topbar.widgets, ["site_brand", "menu"]);
+  assert.deepEqual(current.hexo.config.theme_config.regions.topbar, ["site_brand", "menu"]);
   assert.equal(current.generated(), 1);
   assert.equal(current.warnings.length, 0);
 });
@@ -77,7 +77,7 @@ test("Region 空键按默认值热重载而不保留旧配置", async () => {
   const current = fixture({ emptyRegion: true });
   current.trigger("_config.stellar.yml");
   await waitForReload();
-  assert.equal(current.hexo.config.theme_config.layout.regions.topbar, null);
+  assert.equal(current.hexo.config.theme_config.regions.topbar, null);
   assert.equal(current.generated(), 1);
   assert.equal(current.warnings.length, 0);
 });

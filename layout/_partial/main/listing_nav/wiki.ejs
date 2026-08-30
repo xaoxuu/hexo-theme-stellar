@@ -6,7 +6,7 @@ function layoutDiv() {
   var el = '';
   el += partial('_partial/main/pin_slider', {type: 'wiki', wikiItems: wikiIndex.allItems});
 
-  const listingNav = stellar_config('layout.profiles.wikiIndex.listingNav');
+  const listingNav = stellar_config('profiles.wikiIndex.listingNav');
   if (!listingNav.enabled) {
     return el;
   }

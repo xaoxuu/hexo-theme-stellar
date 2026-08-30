@@ -5,36 +5,6 @@ const nodePath = require("node:path");
 
 const { CONFIG_SCHEMA } = require("../schema/config-schema");
 
-const APPEARANCE_PRESETS = Object.freeze({
-  card: Object.freeze({
-    appearance: Object.freeze({
-      preset: "card"
-    })
-  }),
-  glass: Object.freeze({
-    appearance: Object.freeze({
-      preset: "glass",
-      shape: Object.freeze({ radius: Object.freeze({ card_large: "24px", card: "16px", card_small: "12px", bar: "12px" }) })
-    })
-  }),
-  minimal: Object.freeze({
-    appearance: Object.freeze({
-      preset: "minimal",
-      typography: Object.freeze({ font_size: Object.freeze({ root: "17px" }), font_family: Object.freeze({ body: "Charter, Georgia, Times New Roman, serif" }) }),
-      shape: Object.freeze({
-        corner: "round",
-        radius: Object.freeze({ card_large: "8px", card: "6px", card_small: "4px", bar: "4px", image_large: "8px", image: "6px", image_small: "4px" })
-      }),
-      backgrounds: Object.freeze({ leftbar: Object.freeze({ type: "color" }) })
-    })
-  }),
-  flat: Object.freeze({
-    appearance: Object.freeze({
-      preset: "flat"
-    })
-  })
-});
-
 class ConfigSchemaError extends Error {
   constructor(issues) {
     super(`Stellar v2 配置 Schema 校验失败：\n${issues.map(issue => `- ${formatIssue(issue)}`).join("\n")}`);
@@ -94,19 +64,20 @@ function expectedType(node) {
 }
 
 function formatIssue(issue) {
+  const migration = issue.migration ? `（迁移：${issue.migration}）` : "";
   if (issue.code === "missing_field") {
-    return `${issue.source}: 缺少必填字段 ${issue.path}，期望 ${issue.expected}（迁移：${issue.migration}）`;
+    return `${issue.source}: 缺少必填字段 ${issue.path}，期望 ${issue.expected}${migration}`;
   }
   if (issue.code === "removed_field") {
-    return `${issue.source}: ${issue.path} 已移除，期望 ${issue.expected}（迁移：${issue.migration}）`;
+    return `${issue.source}: ${issue.path} 已移除，期望 ${issue.expected}${migration}`;
   }
   if (issue.code === "unknown_field") {
-    return `${issue.source}: 未知字段 ${issue.path}，期望 ${issue.expected}（迁移：${issue.migration}）`;
+    return `${issue.source}: 未知字段 ${issue.path}，期望 ${issue.expected}${migration}`;
   }
   if (issue.code === "invalid_value") {
-    return `${issue.source}: ${issue.path} 的值不在 ${issue.expected} 中，实际类型为 ${issue.actualType}（迁移：${issue.migration}）`;
+    return `${issue.source}: ${issue.path} 的值不在 ${issue.expected} 中，实际类型为 ${issue.actualType}${migration}`;
   }
-  return `${issue.source}: ${issue.path} 应为 ${issue.expected}，实际为 ${issue.actualType}（迁移：${issue.migration}）`;
+  return `${issue.source}: ${issue.path} 应为 ${issue.expected}，实际为 ${issue.actualType}${migration}`;
 }
 
 function issue(code, source, path, actualType, expected, migration) {
@@ -115,7 +86,7 @@ function issue(code, source, path, actualType, expected, migration) {
 
 function normalizeValue(node, value) {
   if (node.normalizer === "nullable_host") {
-    return value == null ? "" : normalizeHost(value);
+    return value == null ? null : normalizeHost(value);
   }
   if (node.normalizer === "host_list") {
     return normalizeStringList(value, item => item.trim());
@@ -898,21 +869,21 @@ function parseNode(node, input, source, path, issues, context) {
 }
 
 function validateStellarSemantics(config, source) {
-  const menuItems = config.site?.menu?.items || [];
+  const menuItems = config.menu?.items || [];
   if (menuItems.length === 0) return;
   const ids = new Set(menuItems.map(item => item.id).filter(id => typeof id === "string"));
   if (ids.size === 0) return;
   const issues = [];
-  for (const [profile, definition] of Object.entries(config.layout?.profiles || {})) {
-    const activeMenu = definition?.navigation?.activeMenu;
+  for (const [profile, definition] of Object.entries(config.profiles || {})) {
+    const activeMenu = definition?.activeMenu;
     if (activeMenu != null && !ids.has(activeMenu)) {
       issues.push(issue(
         "invalid_value",
         source,
-        `layout.profiles.${profile}.navigation.active_menu`,
+        `profiles.${profile}.active_menu`,
         "string",
-        "id present in site.menu.items",
-        "configuration/layout"
+        "id present in menu.items",
+        null
       ));
     }
   }
@@ -932,18 +903,13 @@ function parseConfigSchema(schema, input = {}, options = {}) {
 function parseStellarConfig(input = {}) {
   const source = input.source || "_config.stellar.yml";
   const themeConfig = input.themeConfig === undefined ? {} : input.themeConfig;
-  const presetId = isPlainObject(themeConfig) ? themeConfig.appearance?.preset || "card" : null;
-  const effectiveConfig = presetId && APPEARANCE_PRESETS[presetId]
-    ? mergeObjects(APPEARANCE_PRESETS[presetId], themeConfig)
-    : themeConfig;
-  const config = parseConfigSchema(CONFIG_SCHEMA, effectiveConfig, { source, applyDefaults: true });
+  const config = parseConfigSchema(CONFIG_SCHEMA, themeConfig, { source, applyDefaults: true });
   validateStellarSemantics(config, source);
   return config;
 }
 
 module.exports = {
   ConfigSchemaError,
-  APPEARANCE_PRESETS,
   deepFreeze,
   formatIssue,
   isPlainObject,

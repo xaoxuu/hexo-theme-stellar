@@ -53,11 +53,9 @@ test("search.json 输出 Blog、Topic 双归属及 Collection domains", () => {
     config: { root: "/" },
     stellar: {
       config: {
-        extensions: {
-          search: {
-            provider: "local",
-            providers: { local: { scope: "all", includeContent: true } }
-          }
+        search: {
+          provider: "local",
+          local: { scope: "all", includeContent: true }
         }
       }
     }

@@ -19,7 +19,7 @@ function layoutBrandNavigation() {
 
 function layoutCollectionSearch() {
   if (brandPlacement !== 'leftbar' || activeBrandSource !== 'collection') return ''
-  if (!stellar_config('extensions.search.provider')) return ''
+  if (!stellar_config('search.provider')) return ''
   var body = partial('_partial/sidebar/search', {
     item: {algoliaFilterPath: 'auto'},
     instanceId: 'collection-brand-search',
@@ -61,7 +61,7 @@ function layoutBrandImage() {
 function layoutBrandGithub() {
   if (brandAppearance !== 'site') return ''
   const username = typeof brandGithubUsername === 'function' ? brandGithubUsername() : ''
-  const apiBase = brandText(stellar_config('extensions.services.github.apiUrl')).replace(/\/+$/, '')
+  const apiBase = brandText(stellar_config('services.github.apiUrl')).replace(/\/+$/, '')
   if (!username || !apiBase) return ''
   const encodedUsername = encodeURIComponent(username)
   const githubHref = `https://github.com/${encodedUsername}`

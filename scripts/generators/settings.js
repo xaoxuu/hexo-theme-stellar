@@ -20,7 +20,7 @@ hexo.extend.generator.register("settings", function (locals) {
     return id !== "settings" && typeof candidate?.path === "string" && routeIdentity(generatorPath(candidate.path)) === targetRoute;
   });
   if (profileConflict) {
-    throw new Error(`Stellar v2: 设置页路径 ${profile.path} 与 layout.profiles.${profileConflict[0]} 冲突`);
+    throw new Error(`Stellar v2: 设置页路径 ${profile.path} 与 profiles.${profileConflict[0]} 冲突`);
   }
   const conflict = pagesArray(locals).find(page => routeIdentity(page.path || page.permalink) === targetRoute);
   if (conflict) {

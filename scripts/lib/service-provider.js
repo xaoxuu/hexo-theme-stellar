@@ -5,9 +5,8 @@
 function resolveServiceProvider(service) {
   const provider = service?.provider;
   if (provider == null) return null;
-  const providers = service?.providers;
-  if (providers == null || typeof providers !== "object" || Array.isArray(providers)) return null;
-  return Object.prototype.hasOwnProperty.call(providers, provider) ? providers[provider] : null;
+  if (typeof service !== "object" || Array.isArray(service)) return null;
+  return Object.prototype.hasOwnProperty.call(service, provider) ? service[provider] : null;
 }
 
 module.exports = { resolveServiceProvider };

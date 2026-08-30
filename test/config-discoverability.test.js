@@ -3,104 +3,80 @@
 const { test } = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
-const path = require("node:path");
 const yaml = require("js-yaml");
 
-const { stringifyDefaultConfig } = require("../scripts/lib/default-config");
-const { CONFIG_SCHEMA } = require("../scripts/schema/config-schema");
+const { CONFIG_RULES } = require("../scripts/schema/config-rules");
+const {
+  CONFIG_DEFAULTS,
+  CONFIG_SCHEMA,
+  DEFAULT_CONFIG_PATH,
+  loadDefaultConfig,
+  patternMatches
+} = require("../scripts/schema/config-schema");
 
-const ROOT = path.resolve(__dirname, "..");
-const CONFIG_SOURCE = fs.readFileSync(path.join(ROOT, "_config.yml"), "utf8");
+const CONFIG_SOURCE = fs.readFileSync(DEFAULT_CONFIG_PATH, "utf8");
 const CONFIG = yaml.load(CONFIG_SOURCE);
+const ROOT_KEYS = [
+  "brand", "menu", "settings", "footer",
+  "regions", "profiles",
+  "article", "notebook",
+  "appearance",
+  "canonical", "open_graph", "structured_data",
+  "preconnect", "fallbacks", "error_page",
+  "search", "comments", "tags", "features", "services",
+  "inject"
+];
 
-function closedLeafPaths(definition, parents = [], result = []) {
-  const properties = definition.properties || {};
-  if (Object.keys(properties).length === 0) {
-    result.push(parents.join("."));
-    return result;
-  }
-  for (const [key, child] of Object.entries(properties)) {
-    closedLeafPaths(child, [...parents, key], result);
-  }
-  return result;
-}
-
-function hasConfigPath(config, configPath) {
-  let current = config;
-  for (const key of configPath.split(".")) {
-    if (current == null || typeof current !== "object" || !Object.prototype.hasOwnProperty.call(current, key)) return false;
-    current = current[key];
-  }
-  return true;
-}
-
-function collectYamlLeaves(definition, parents = [], result = []) {
-  for (const [key, child] of Object.entries(definition.properties || {})) {
-    const childPath = [...parents, key];
-    if (Object.keys(child.properties || {}).length === 0) {
-      result.push({ path: childPath.join("."), node: child });
-    } else {
-      collectYamlLeaves(child, childPath, result);
-    }
+function schemaPaths(node, parents = [], result = []) {
+  if (parents.length > 0) result.push(parents.join("."));
+  for (const [key, child] of Object.entries(node.properties || {})) {
+    schemaPaths(child, [...parents, key], result);
   }
   return result;
 }
 
-test("主题默认配置由 CONFIG_SCHEMA 稳定生成并公开全部封闭字段", () => {
-  assert.equal(CONFIG_SOURCE, stringifyDefaultConfig());
-  assert.deepEqual(Object.keys(CONFIG), ["site", "layout", "content", "appearance", "seo", "resources", "extensions", "inject"]);
+test("手写 _config.yml 是公开字段树、默认值与顺序的唯一来源", () => {
+  assert.deepEqual(Object.keys(CONFIG), ROOT_KEYS);
+  assert.deepEqual(CONFIG, CONFIG_DEFAULTS);
+  assert.deepEqual(loadDefaultConfig(CONFIG_SOURCE), CONFIG);
+  assert.equal(Object.isFrozen(CONFIG_SCHEMA), true);
+  assert.deepEqual(
+    ["site", "layout", "content", "seo", "resources", "extensions"]
+      .filter(key => Object.hasOwn(CONFIG, key)),
+    []
+  );
+  assert.match(CONFIG_SOURCE, /single source of truth for the public configuration tree/);
+  assert.match(CONFIG_SOURCE, /# Site[\s\S]*# Layout[\s\S]*# Content[\s\S]*# Appearance/);
+});
 
-  const missing = closedLeafPaths(CONFIG_SCHEMA)
-    .filter(configPath => !hasConfigPath(CONFIG, configPath))
-    .sort();
+test("轻量规则表中的每个路径都对应手写默认配置中的现存节点", () => {
+  const paths = schemaPaths(CONFIG_SCHEMA);
+  const missing = CONFIG_RULES
+    .map(([pattern]) => pattern)
+    .filter(pattern => !paths.some(configPath => patternMatches(pattern, configPath)));
   assert.deepEqual(missing, []);
 });
 
-test("Brand 空值保持活动字段并明确不继承 Hexo 配置", () => {
-  assert.equal(CONFIG.site.brand.image.src, null);
-  assert.equal(CONFIG.site.brand.name, null);
-  assert.equal(CONFIG.site.brand.tagline, null);
-  assert.match(CONFIG_SOURCE, /Brand 图片来源；null 隐藏图片且不会继承 Hexo avatar。/);
-  assert.match(CONFIG_SOURCE, /Brand 纯文本名称；null 隐藏名称且不会继承 Hexo title。/);
-  assert.match(CONFIG_SOURCE, /Brand 标语；null 隐藏标语且不会继承 Hexo subtitle。/);
-});
-
-test("侧栏与页面默认图片使用 YAML 留空写法且运行时保持 null", () => {
+test("Brand 与背景空值保持显式 null 语义", () => {
+  assert.equal(CONFIG.brand.image.src, null);
+  assert.equal(CONFIG.brand.name, null);
+  assert.equal(CONFIG.brand.tagline, null);
   assert.equal(CONFIG.appearance.backgrounds.leftbar.image, null);
   assert.equal(CONFIG.appearance.backgrounds.page.image, null);
-  assert.match(CONFIG_SOURCE, /侧栏背景图片；留空不显示背景图。[\s\S]*?\n {6}image:\n {6}gradient:/);
-  assert.match(CONFIG_SOURCE, /页面背景图片；留空不显示背景图。[\s\S]*?\n {6}image:\n {6}backdrop:/);
-  assert.doesNotMatch(CONFIG_SOURCE, /\n {6}image: null\n {6}gradient:/);
-  assert.doesNotMatch(CONFIG_SOURCE, /\n {6}image: null\n {6}backdrop:/);
+  assert.match(CONFIG_SOURCE, /Set to null to hide the image/);
+  assert.match(CONFIG_SOURCE, /null does not inherit Hexo title\/subtitle/);
 });
 
-test("所有活动叶子都有语义描述且约束提示来自 Schema", () => {
-  const leaves = collectYamlLeaves(CONFIG_SCHEMA);
-  assert.ok(leaves.length > 0);
-  for (const { path: configPath, node } of leaves) {
-    assert.ok(node.description, `${configPath} 缺少语义描述`);
-    assert.ok(node.yaml, `${configPath} 缺少 YAML 展示元数据`);
-    assert.doesNotMatch(node.description, new RegExp(`^${configPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")} 配置。$`));
-  }
-  assert.doesNotMatch(CONFIG_SOURCE, /^\s*# [a-z0-9_.<>\[\]-]+ 配置。$/mu);
-  assert.match(CONFIG_SOURCE, /文章默认排版风格。 \[字符串；可选值：tech \/ story\]/);
-  assert.match(CONFIG_SOURCE, /文章列表封面的宽高比。 \[数字；必须大于 0\]/);
-  assert.match(CONFIG_SOURCE, /侧栏背景不透明度。 \[数字；范围：0–1\]/);
-  assert.match(CONFIG_SOURCE, /主导航菜单项；type: search 与链接共用 title、icon、accent 视觉字段并提供共享搜索入口，空数组不显示主菜单。 \[数组；元素：对象\]/);
-
-  const incompleteSchema = structuredClone(CONFIG_SCHEMA);
-  delete incompleteSchema.properties.site.properties.brand.properties.image.properties.src.description;
-  assert.throws(
-    () => stringifyDefaultConfig(incompleteSchema),
-    /Theme Schema 活动叶子缺少语义描述：site\.brand\.image\.src/
-  );
-});
-
-test("YAML 示例必须显式选择且不复用错误上下文", () => {
-  assert.match(CONFIG_SOURCE, /# Example:/);
-  assert.match(CONFIG_SOURCE, /# {3}- \{id: post, title: 博客/);
-  assert.match(CONFIG_SOURCE, /# {3}- \{source_prefix: wiki\/stellar\//);
-  assert.doesNotMatch(CONFIG_SOURCE, /wiki_index[\s\S]{0,500}# Example:[\s\S]{0,80}\/blog\//);
-  assert.match(CONFIG_SOURCE, /items: \[\{key: 博客框架,[^\n]+\{key: 主题版本,/);
-  assert.match(CONFIG_SOURCE, /tag_icons: \{\}/);
+test("主干保持扁平，低频 Appearance 与 Inject 保留业务分组", () => {
+  assert.equal(Array.isArray(CONFIG.regions.topbar), true);
+  assert.equal(Array.isArray(CONFIG.regions.rightbar), true);
+  assert.equal(CONFIG.profiles.blog_index.active_menu, "post");
+  assert.equal(Array.isArray(CONFIG.profiles.wiki.topbar), true);
+  assert.equal(CONFIG.profiles.wiki.leftbar.footer_actions, false);
+  assert.equal(Object.hasOwn(CONFIG.comments, "providers"), false);
+  assert.equal(Object.hasOwn(CONFIG.search, "providers"), false);
+  assert.equal(Object.hasOwn(CONFIG.features.math, "providers"), false);
+  assert.equal(Object.hasOwn(CONFIG.services.site_info, "providers"), false);
+  assert.equal(CONFIG.appearance.preset, "card");
+  assert.equal(CONFIG.inject.head_end, "");
 });

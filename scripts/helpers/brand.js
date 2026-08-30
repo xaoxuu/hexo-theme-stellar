@@ -29,7 +29,7 @@ hexo.extend.helper.register("brandConfig", function(page, source = "site") {
   const config = getPageConfig(page) || page?.stellarConfig || {};
   const active = activeCollection(config);
   const brands = resolveBrands({
-    siteBrand: hexo.stellar.config.site.brand,
+    siteBrand: hexo.stellar.config.brand,
     collection: active.collection,
     collectionType: active.type,
     defaultIcon: INTERNAL.resources.projectIcon

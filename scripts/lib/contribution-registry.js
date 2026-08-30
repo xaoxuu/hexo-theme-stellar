@@ -9,7 +9,7 @@ const FEATURE_ENTRY = "/js/runtime/extensions/feature.mjs";
 const PLUGIN_SYSTEM_DOC = "docs/knowledge/07-外部集成/plugin-system.md";
 const RUNTIME_TEST = "test/browser-runtime-manifest.test.js";
 const RUNTIME_CONSUMPTION_TEST = "test/browser-runtime-consumption.test.js";
-const CONFIG_OWNER = path => `scripts/schema/config-schema.js#${path}`;
+const CONFIG_OWNER = path => `_config.yml#${path}`;
 
 function featureEntry() {
   return { type: "browser-module", path: FEATURE_ENTRY, adapter: "feature" };
@@ -47,7 +47,7 @@ const CONTRIBUTIONS = defineContributions([
     entry: runtimeEntry(INTERNAL.assets.runtime.colorSchemeSwitch),
     resources: ["runtime.colorSchemeSwitch"],
     activation: { type: "always" },
-    schema: "extensions.features.color_scheme_switch",
+    schema: "features.color_scheme_switch.enabled",
     i18n: {
       namespace: "color-scheme-switch",
       keys: [
@@ -58,7 +58,7 @@ const CONTRIBUTIONS = defineContributions([
     },
     docs: { category: "Extensions", path: "docs/knowledge/05-前端交互/client-side-overview.md" },
     tests: ["test/color-scheme-switch.test.js", RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
-    defaultsOwner: CONFIG_OWNER("extensions.features.color_scheme_switch"),
+    defaultsOwner: CONFIG_OWNER("features.color_scheme_switch.enabled"),
     project(context) {
       if (context.features.colorSchemeSwitch?.enabled !== true) return null;
       return configResult({
@@ -72,15 +72,15 @@ const CONTRIBUTIONS = defineContributions([
     entry: runtimeEntry("/js/runtime/extensions/search.mjs"),
     resources: ["search"],
     activation: selector(".search-input"),
-    schema: "extensions.search",
+    schema: "search.provider",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
     tests: [RUNTIME_TEST],
-    defaultsOwner: CONFIG_OWNER("extensions.search"),
+    defaultsOwner: CONFIG_OWNER("search.provider"),
     project(context) {
       const search = context.plainObject(context.extensions.search, "extensions.search");
       if (typeof search.provider !== "string" || search.provider.length === 0) return null;
-      const provider = context.plainObject(search.providers?.[search.provider], `extensions.search.providers.${search.provider}`);
+      const provider = context.plainObject(search[search.provider], `search.${search.provider}`);
       return configResult({
         provider: search.provider,
         options: provider,
@@ -98,11 +98,11 @@ const CONTRIBUTIONS = defineContributions([
     entry: featureEntry(),
     resources: ["dependencies.lazyLoading"],
     activation: selector(".lazy, .data-service, [class*='ds-']"),
-    schema: "extensions.features.lazy_loading",
+    schema: "features.lazy_loading.transition",
     i18n: null,
     docs: { category: "Extensions", path: "docs/knowledge/07-外部集成/lazy-loading-images.md" },
     tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
-    defaultsOwner: CONFIG_OWNER("extensions.features.lazy_loading"),
+    defaultsOwner: CONFIG_OWNER("features.lazy_loading.transition"),
     project: context => configResult({ asset: context.assets.dependencies?.lazyLoading || null })
   },
   {
@@ -137,11 +137,11 @@ const CONTRIBUTIONS = defineContributions([
     entry: runtimeEntry("/js/runtime/extensions/services.mjs"),
     resources: ["services", "dependencies.marked"],
     activation: selector(".data-service, [class*='ds-'], a[cardlink], .site-card [data-siteinfo-api], .voice>audio, .video>video, .chat-file"),
-    schema: "extensions.services",
+    schema: "services.site_info.provider",
     i18n: null,
     docs: { category: "Extensions", path: "docs/knowledge/06-数据服务与组件/data-service-apis.md" },
     tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
-    defaultsOwner: CONFIG_OWNER("extensions.services"),
+    defaultsOwner: CONFIG_OWNER("services.site_info.provider"),
     project(context) {
       const siteInfo = context.resolveServiceProvider(context.extensions.services?.siteInfo);
       return configResult({
@@ -157,11 +157,11 @@ const CONTRIBUTIONS = defineContributions([
     entry: runtimeEntry("/js/runtime/extensions/comments.mjs"),
     resources: ["comments"],
     activation: selector("#comments"),
-    schema: "extensions.comments",
+    schema: "comments.provider",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
     tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
-    defaultsOwner: CONFIG_OWNER("extensions.comments"),
+    defaultsOwner: CONFIG_OWNER("comments.provider"),
     project(context) {
       if (typeof context.comments.service !== "string" || context.comments.service.length === 0) return null;
       return configResult({
@@ -191,11 +191,11 @@ const CONTRIBUTIONS = defineContributions([
     entry: featureEntry(),
     resources: ["features.linkPrefetch"],
     activation: { type: "always" },
-    schema: "extensions.features.link_prefetch",
+    schema: "features.link_prefetch.enabled",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
     tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
-    defaultsOwner: CONFIG_OWNER("extensions.features.link_prefetch"),
+    defaultsOwner: CONFIG_OWNER("features.link_prefetch.enabled"),
     project(context) {
       if (context.features.linkPrefetch?.enabled !== true) return null;
       return configResult({ asset: context.assets.features?.linkPrefetch || null });
@@ -207,11 +207,11 @@ const CONTRIBUTIONS = defineContributions([
     entry: featureEntry(),
     resources: ["features.lightbox"],
     activation: selector("[data-fancybox]:not(.error), .with-fancybox, .ds-memos"),
-    schema: "extensions.features.lightbox",
+    schema: "features.lightbox.enabled",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
     tests: [RUNTIME_TEST],
-    defaultsOwner: CONFIG_OWNER("extensions.features.lightbox"),
+    defaultsOwner: CONFIG_OWNER("features.lightbox.enabled"),
     project(context) {
       if (context.features.lightbox?.enabled !== true) return null;
       const dynamicSelector = [this.activation.value, context.features.lightbox?.selector].filter(Boolean).join(", ");
@@ -226,11 +226,11 @@ const CONTRIBUTIONS = defineContributions([
     entry: runtimeEntry(INTERNAL.assets.runtime.reveal),
     resources: ["runtime.reveal"],
     activation: selector(".slide-up"),
-    schema: "extensions.features.reveal",
+    schema: "features.reveal.enabled",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
     tests: ["test/reveal.test.js", RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
-    defaultsOwner: CONFIG_OWNER("extensions.features.reveal"),
+    defaultsOwner: CONFIG_OWNER("features.reveal.enabled"),
     project(context) {
       if (context.features.reveal?.enabled !== true) return null;
       return configResult(Object.assign({}, context.features.reveal));
@@ -242,16 +242,16 @@ const CONTRIBUTIONS = defineContributions([
     entry: featureEntry(),
     resources: ["features.mathjax"],
     activation: selector(".has-jax, script[type^='math/tex']"),
-    schema: "extensions.features.math",
+    schema: "features.math.provider",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
     tests: [RUNTIME_TEST],
-    defaultsOwner: CONFIG_OWNER("extensions.features.math"),
+    defaultsOwner: CONFIG_OWNER("features.math.provider"),
     project(context) {
       const provider = context.render.math || context.features.math?.provider;
       if (provider !== "mathjax") return null;
       return configResult({
-        options: context.features.math?.providers?.mathjax || {},
+        options: context.features.math?.mathjax || {},
         asset: context.assets.features?.mathjax || null
       });
     }
@@ -261,12 +261,12 @@ const CONTRIBUTIONS = defineContributions([
     kind: "component",
     entry: { type: "template", path: "layout/_partial/scripts/runtime.ejs" },
     resources: ["features.katexCss"],
-    activation: { type: "server", value: "render.math or extensions.features.math.provider is katex" },
-    schema: "extensions.features.math",
+    activation: { type: "server", value: "render.math or features.math.provider is katex" },
+    schema: "features.math.provider",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
     tests: [RUNTIME_CONSUMPTION_TEST],
-    defaultsOwner: CONFIG_OWNER("extensions.features.math"),
+    defaultsOwner: CONFIG_OWNER("features.math.provider"),
     project: null
   },
   {
@@ -275,11 +275,11 @@ const CONTRIBUTIONS = defineContributions([
     entry: featureEntry(),
     resources: ["features.diagrams"],
     activation: selector(".mermaid"),
-    schema: "extensions.features.diagrams",
+    schema: "features.diagrams.provider",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
     tests: [RUNTIME_TEST],
-    defaultsOwner: CONFIG_OWNER("extensions.features.diagrams"),
+    defaultsOwner: CONFIG_OWNER("features.diagrams.provider"),
     project(context) {
       const override = context.render.diagrams;
       const provider = override === false
@@ -289,7 +289,7 @@ const CONTRIBUTIONS = defineContributions([
           : (override && typeof override === "object" ? "mermaid" : context.features.diagrams?.provider);
       if (provider !== "mermaid") return null;
       const options = override && typeof override === "object" ? override : {};
-      return configResult(Object.assign({}, context.features.diagrams?.providers?.mermaid, options, {
+      return configResult(Object.assign({}, context.features.diagrams?.mermaid, options, {
         provider,
         assets: context.assets.features?.diagrams || {},
         colorScheme: context.colorScheme || "auto"
@@ -334,11 +334,11 @@ const CONTRIBUTIONS = defineContributions([
     entry: runtimeEntry("/js/runtime/extensions/card-hover.mjs"),
     resources: ["features.cardHover"],
     activation: selector(".card-hover"),
-    schema: "extensions.features.card_hover",
+    schema: "features.card_hover.enabled",
     i18n: null,
     docs: { category: "Components", path: PLUGIN_SYSTEM_DOC },
     tests: ["test/card_hover_client.test.js", RUNTIME_TEST],
-    defaultsOwner: CONFIG_OWNER("extensions.features.card_hover"),
+    defaultsOwner: CONFIG_OWNER("features.card_hover.enabled"),
     project(context) {
       if (context.features.cardHover?.enabled !== true) return null;
       return configResult({ assets: context.assets.features?.cardHover || {} });
@@ -350,11 +350,11 @@ const CONTRIBUTIONS = defineContributions([
     entry: featureEntry(),
     resources: ["features.heti"],
     activation: selector(".heti"),
-    schema: "extensions.features.heti",
+    schema: "features.heti.enabled",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
     tests: [RUNTIME_CONSUMPTION_TEST],
-    defaultsOwner: CONFIG_OWNER("extensions.features.heti"),
+    defaultsOwner: CONFIG_OWNER("features.heti.enabled"),
     project(context) {
       if (context.features.heti?.enabled !== true) return null;
       return configResult({ assets: context.assets.features?.heti || {} });

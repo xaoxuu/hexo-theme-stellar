@@ -22,7 +22,7 @@ module.exports = ctx => function(args) {
   const md_id = "md_" + ++md_index
   return mdrenderHtml(args.src, {
     id: md_id,
-    rawUrl: ctx.stellar.config.extensions.services.github.rawUrl,
+    rawUrl: ctx.stellar.config.services.github.rawUrl,
     replace: args.wrap === 'false'
   })
 }

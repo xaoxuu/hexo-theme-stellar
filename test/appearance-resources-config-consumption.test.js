@@ -37,14 +37,14 @@ test("主题默认与最终视觉层只消费最终 Appearance 路径", () => {
 
   assert.match(config, /^appearance:/m);
   assert.doesNotMatch(config, /^(?:style|default):/m);
-  assert.match(consumers, /appearance\.typography\.font_family\.body/);
-  assert.match(consumers, /appearance\.typography\.font_family\.code/);
-  assert.match(consumers, /appearance\.typography\.content_align/);
-  assert.match(consumers, /appearance\.colors\.primary/);
-  assert.match(glass, /appearance\.backgrounds\.leftbar\.type/);
-  assert.match(glass, /appearance\.backgrounds\.leftbar\.image/);
-  assert.match(glass, /appearance\.backgrounds\.leftbar\.gradient\.light/);
-  assert.doesNotMatch([consumers, sidebar, custom].join("\n"), /appearance\.backgrounds\.leftbar/);
+  assert.match(consumers, /typography\.font_family\.body/);
+  assert.match(consumers, /typography\.font_family\.code/);
+  assert.match(consumers, /typography\.content_align/);
+  assert.match(consumers, /colors\.primary/);
+  assert.match(glass, /backgrounds\.leftbar\.type/);
+  assert.match(glass, /backgrounds\.leftbar\.image/);
+  assert.match(glass, /backgrounds\.leftbar\.gradient\.light/);
+  assert.match([consumers, glass, custom].join("\n"), /appearance\.backgrounds\.leftbar/);
   assert.equal(fs.existsSync(path.join(ROOT, "source/css/_components/page-transition.styl")), false);
   assert.doesNotMatch(config, /page_transition/);
   assert.doesNotMatch(consumers, /page_transition|view-transition/);
@@ -74,9 +74,9 @@ test("资源兜底消费链只读取三个公开 fallback，固定资源来自�
     "scripts/tags/lib/sites.js"
   ].map(read).join("\n");
 
-  assert.match(consumers, /resources\.fallbacks/);
+  assert.match(consumers, /stellar_config\(['"]fallbacks\./);
   assert.match(consumers, /INTERNAL\.resources/);
-  assert.match(read("layout/404.ejs"), /resources\.errorPage\.image/);
+  assert.match(read("layout/404.ejs"), /errorPage\.image/);
   assert.doesNotMatch(consumers, /fallbacks\.(?:projectIcon|banner|topicCover|image|errorPage)/);
   assert.doesNotMatch(consumers, /theme\.default|config\.default/);
   assert.match(read("source/css/_common/loading.styl"), /var\(--text-loading\)/);

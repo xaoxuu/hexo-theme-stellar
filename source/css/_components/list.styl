@@ -156,7 +156,7 @@
     object-fit: cover
     width: 100%
     border-radius: 0
-    aspect-ratio: hexo-config('content.article.listing.cover_ratio')
+    aspect-ratio: hexo-config('article.listing.cover_ratio')
     
 // 封面渐变模糊卡片：文章 photo 卡片与专栏最新文章卡片共用（接入 cover-overlay 统一覆盖层）
 .post-list .post-card .cover
@@ -206,7 +206,7 @@
 
 .post-list .post-card.post.photo
   .cover img
-    aspect-ratio: hexo-config('content.article.listing.cover_ratio')
+    aspect-ratio: hexo-config('article.listing.cover_ratio')
   // hover 放大覆盖：基规则的 `transform: translateZ(0)` 特异性高于上方 `.post-card:hover` 的 scale，
   // 需用更高特异性选择器在基规则之后覆盖，保持 hover 缩放动画（叠加恒等变换）
   &:hover

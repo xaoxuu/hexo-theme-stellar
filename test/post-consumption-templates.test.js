@@ -56,6 +56,6 @@ test("评论 Post 分支从 ViewModel 向 Runtime Manifest 传递参数袋", () 
   assert.match(layout, /\{comments: commentModel\}/);
   assert.match(script, /runtimeViewModel\?\.render\?\.article\?\.comments/);
   assert.match(script, /runtimeCommentModel \|\|/);
-  assert.match(script, /runtimeExtensions\.comments\.providers\[runtimeCommentService\]/);
+  assert.match(script, /runtimeExtensions\.comments\[runtimeCommentService\]/);
   assert.match(script, /comments: runtimeComments/);
 });

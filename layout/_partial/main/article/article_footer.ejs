@@ -3,7 +3,7 @@ function layoutDiv() {
   var el = '';
   var item = [];
   var pageConfig = content_config(page)
-  var articleFooter = stellar_config('content.article.footer')
+  var articleFooter = stellar_config('article.footer')
   if (pageConfig.footer?.references?.length > 0) {
     item.push('references');
   }
@@ -13,7 +13,7 @@ function layoutDiv() {
   if (Array.isArray(articleFooter.share) && articleFooter.share.length > 0) {
     item.push('share');
   }
-  var contributorService = service_provider(stellar_config('extensions.services.contributors'))
+  var contributorService = service_provider(stellar_config('services.contributors'))
   var contributors = partial('contributors', {repositories: contributorService ? contributorService.repositories : []})
   if (contributors?.trim().length > 0) {
     item.push('contributors')

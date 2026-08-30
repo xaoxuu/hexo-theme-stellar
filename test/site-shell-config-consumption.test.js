@@ -11,7 +11,7 @@ function read(file) {
   return fs.readFileSync(path.join(ROOT, file), "utf8");
 }
 
-test("Shell 消费链只读取冻结的 site 配置", () => {
+test("Shell 消费链只读取冻结的顶层配置", () => {
   const brandHelper = read("scripts/helpers/brand.js");
   const models = read("scripts/lib/models/index.js");
   const menu = read("layout/_partial/sidebar/menu.ejs");
@@ -19,23 +19,23 @@ test("Shell 消费链只读取冻结的 site 配置", () => {
   const regions = read("layout/_partial/regions/widgets.ejs");
   const mainFooter = read("layout/_partial/main/footer.ejs");
 
-  assert.match(brandHelper, /hexo\.stellar\.config\.site\.brand/);
+  assert.match(brandHelper, /hexo\.stellar\.config\.brand/);
   assert.doesNotMatch(brandHelper, /hexo\.theme\.config\.brand/);
-  assert.match(models, /stellarConfig\.site\.brand/);
+  assert.match(models, /stellarConfig\.brand/);
   assert.doesNotMatch(models, /themeConfig\.brand/);
 
-  assert.match(menu, /stellar_config\('site\.menu\.items'\)/);
+  assert.match(menu, /stellar_config\('menu\.items'\)/);
   assert.match(menu, /menuItem\.accent/);
   assert.doesNotMatch(menu, /theme\.menubar|menuItem\.theme/);
 
-  assert.match(actions, /stellar_config\('site\.footer\.actions'\)/);
+  assert.match(actions, /stellar_config\('footer\.actions'\)/);
   assert.match(actions, /action\.type === 'link'|action\.type === 'dropdown'/);
   assert.match(actions, /action\.type === 'button'/);
   assert.match(actions, /escape_html\(action\.onclick\)/);
   assert.match(regions, /widget\.layout === 'actions'/);
   assert.doesNotMatch(actions, /theme\.footer|action\.variant|action\.action/);
 
-  assert.match(mainFooter, /stellar_config\('site\.footer'\)/);
+  assert.match(mainFooter, /stellar_config\('footer'\)/);
   assert.match(mainFooter, /siteFooter\.sections|siteFooter\.content/);
   assert.doesNotMatch(mainFooter, /theme\.footer|\.sitemap/);
 });

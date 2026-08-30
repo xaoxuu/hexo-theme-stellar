@@ -16,53 +16,34 @@ const {
 } = require("../scripts/lib/config-reference-metadata");
 const { assertPageViewModel } = require("../scripts/lib/model-schema");
 const { MODEL_SCHEMAS } = require("../scripts/schema/model-schema");
-const { CONFIG_TARGET_FIELDS } = require("../scripts/schema/config-target");
 const generateReference = require("../scripts/generate-reference");
 
 const ROOT = path.resolve(__dirname, "..");
 const OUTPUT = path.join(ROOT, "reference/v2-models.json");
 const CONFIG_OUTPUT = path.join(ROOT, "reference/v2-config.json");
 
-test("配置 Reference 只公开已交付 Theme、Collection 与 Front Matter 契约", () => {
+test("配置 Reference 只公开 Theme、Collection 与 Front Matter 叶子契约", () => {
   const metadata = generateConfigReferenceMetadata();
 
-  assert.equal(metadata.status, "delivered");
   const paths = metadata.fields.map(field => field.path);
-  const deliveredTargetPaths = CONFIG_TARGET_FIELDS
-    .filter(field => field.status === "delivered")
-    .map(field => field.path);
-  for (const targetPath of deliveredTargetPaths) {
-    assert.equal(paths.includes(targetPath), true, `${targetPath} 未进入配置 Reference`);
-  }
-  assert.deepEqual([...new Set(metadata.fields.map(field => field.scope))].sort(), ["collection", "front_matter", "theme"]);
-  assert.equal(metadata.fields.some(field => field.path === "layout.profiles.blog_index.path"), true);
-  assert.equal(metadata.fields.some(field => field.path === "content.article.listing.card_layout"), true);
-  assert.equal(metadata.fields.some(field => field.path === "content.notebook.tag_icons.<tag>"), true);
-  assert.equal(metadata.fields.some(field => field.scope === "collection" && field.path === "route.path"), true);
-  assert.equal(metadata.fields.some(field => field.scope === "front_matter" && field.path === "collection.profile"), true);
-  assert.equal(metadata.fields.some(field => field.scope === "front_matter" && field.path === "title"), false);
-  assert.equal(metadata.fields[0].sealed, true);
+  assert.deepEqual([...new Set(metadata.fields.map(field => field.surface))].sort(), ["Collection", "Front Matter", "Theme"]);
+  assert.equal(paths.includes("profiles.blog_index.path"), true);
+  assert.equal(paths.includes("article.listing.card_layout"), true);
+  assert.equal(paths.includes("notebook.tag_icons.<key>"), true);
+  assert.equal(metadata.fields.some(field => field.surface === "Collection" && field.path === "route.path"), true);
+  assert.equal(metadata.fields.some(field => field.surface === "Front Matter" && field.path === "collection.profile"), true);
+  assert.equal(metadata.fields.some(field => field.surface === "Front Matter" && field.path === "title"), false);
+  assert.equal(metadata.fields.every(field => !Object.hasOwn(field, "consumers")), true);
+  assert.equal(metadata.fields.every(field => !Object.hasOwn(field, "cascade")), true);
+  assert.equal(metadata.fields.every(field => !Object.hasOwn(field, "normalization")), true);
   assert.deepEqual(
-    metadata.fields.find(field => field.path === "seo.canonical.host"),
+    metadata.fields.find(field => field.path === "canonical.host"),
     {
-      path: "seo.canonical.host",
-      runtimePath: "seo.canonical.host",
+      surface: "Theme",
+      path: "canonical.host",
+      runtimePath: "canonical.host",
       type: ["string", "null"],
-      default: { kind: "literal", value: null },
-      description: "生成 canonical URL 的主机名；null 关闭 canonical 输出。",
-      scope: "theme",
-      cascade: ["schema default", "_config.stellar.yml"],
-      normalizer: "nullable_host",
-      normalization: "trim; remove scheme and trailing slash; null disables canonical output",
-      consumers: [
-        "Post PageViewModel",
-        "head renderer",
-        "JSON-LD helper",
-        "browser canonical check",
-        "Reference generator"
-      ],
-      example: "example.com",
-      migration: "configuration/seo"
+      default: null
     }
   );
 });

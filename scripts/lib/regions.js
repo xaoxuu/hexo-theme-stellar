@@ -50,6 +50,7 @@ function resolveLeftbar(layers) {
       result.brand = current.brand;
     }
     if (typeof current.menu === "boolean") result.menu = current.menu;
+    if (typeof current.footerActions === "boolean") result.footer.actions = current.footerActions;
     if (typeof current.footer?.actions === "boolean") result.footer.actions = current.footer.actions;
     if (Array.isArray(current.widgets)) result.widgets = current.widgets.map(clone);
   }

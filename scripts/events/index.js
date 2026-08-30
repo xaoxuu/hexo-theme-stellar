@@ -64,7 +64,7 @@ hexo.extend.filter.register('before_generate', async () => {
   hasRun = true;
   
   // 读取主题配置开关
-  const enabled = hexo.stellar.config.extensions.features.lazyLoading.autoAspectRatio === true;
+  const enabled = hexo.stellar.config.features.lazyLoading.autoAspectRatio === true;
 
   const generateImageRatios = require('./lib/get_image_ratios');
   const fixMarkdownImages = require('./lib/fix_image_tags');

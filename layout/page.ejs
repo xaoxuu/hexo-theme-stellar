@@ -8,20 +8,20 @@ var wikiViewModel = page.viewModel?.collection?.profile === 'wiki' ? page.viewMo
 var notebookViewModel = page.viewModel?.collection?.profile === 'notebook' ? page.viewModel : null
 var pageConfig = content_config(page)
 // 是否使用 Heti 布局插件
-const isUsingHeti = stellar_config('extensions.features.heti.enabled')
+const isUsingHeti = stellar_config('features.heti.enabled')
 
 // 默认主导航菜单
 if (!postViewModel && !wikiViewModel && !notebookViewModel) page.navigation = Object.assign({}, pageConfig.navigation)
 if (!postViewModel && !wikiViewModel && !notebookViewModel && page.navigation.menu == null) {
-  var profiles = stellar_config('layout.profiles')
+  var profiles = stellar_config('profiles')
   if (collection_id(page, "wiki")?.length > 0) {
-    page.navigation.menu = profiles.wiki.navigation.activeMenu
+    page.navigation.menu = profiles.wiki.activeMenu
   } else if (collection_id(page, "topic")?.length > 0) {
-    page.navigation.menu = profiles.topic.navigation.activeMenu
+    page.navigation.menu = profiles.topic.activeMenu
   } else if (page.layout === 'page' || page.layout == null) {
-    page.navigation.menu = profiles.page.navigation.activeMenu
+    page.navigation.menu = profiles.page.activeMenu
   } else {
-    page.navigation.menu = profiles.post.navigation.activeMenu
+    page.navigation.menu = profiles.post.activeMenu
   }
 }
 // 默认的 title
@@ -126,7 +126,7 @@ function layoutDiv() {
   }
   el += `</article>`
   if (layout === 'post' || collection_id(page, "wiki")) {
-    if (layout === 'post' && stellar_config('content.article.footer.showTags')) {
+    if (layout === 'post' && stellar_config('article.footer.showTags')) {
       el += partial('_partial/main/article/article_tags')
     }
     el += partial('_partial/main/article/article_footer')

@@ -15,18 +15,18 @@ function generatorPath(path) {
 }
 
 function toRenderNavigation(profile) {
-  const activeMenu = profile?.navigation?.activeMenu;
+  const activeMenu = profile?.activeMenu;
   return activeMenu == null ? {} : { menu: activeMenu };
 }
 
 function toRenderRegions(globalRegions, profile) {
-  return cascadeRegions([globalRegions, profile?.regions]);
+  return cascadeRegions([globalRegions, profile]);
 }
 
 function requireLayoutProfiles(stellarConfig) {
-  const profiles = stellarConfig?.layout?.profiles;
+  const profiles = stellarConfig?.profiles;
   if (profiles == null || typeof profiles !== "object" || Array.isArray(profiles)) {
-    throw new TypeError("Stellar v2: 缺少冻结的 layout.profiles 配置");
+    throw new TypeError("Stellar v2: 缺少冻结的 profiles 配置");
   }
   return profiles;
 }

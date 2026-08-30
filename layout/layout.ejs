@@ -64,8 +64,8 @@ function shellDocument(options) {
 }
 
 function regionsContainSearch(regions) {
-  if (!stellar_config('extensions.search.provider')) return false
-  var menuHasSearch = stellar_config('site.menu.items').some(function(item) {
+  if (!stellar_config('search.provider')) return false
+  var menuHasSearch = stellar_config('menu.items').some(function(item) {
     return item?.type === 'search'
   })
   return Object.entries(regions || {}).some(function(entry) {
@@ -111,7 +111,7 @@ if (renderViewModel) {
   var topic = stellar_data('topic').tree[collection_id(page, 'topic')]
   var notebookIndex = page.notebookIndex?.mode === 'notes' ? page.notebookIndex.collection : null
   var pageType = ['post', 'page', 'wiki', 'settings', null].includes(page.layout) ? 'content' : 'index'
-  var articleDefaults = stellar_config('content.article')
+  var articleDefaults = stellar_config('article')
   var articleStyle = articleDefaults.style
   if (pageType === 'index') {
     articleStyle = undefined

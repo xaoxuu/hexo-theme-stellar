@@ -14,7 +14,7 @@ const { resolveServiceProvider } = require("../../lib/service-provider");
 module.exports = ctx => function (args) {
   args = ctx.args.map(args, ['id', 'yes', 'no'], ['title'])
 
-  const api = resolveServiceProvider(ctx.stellar.config.extensions.services.vote)?.endpoint;
+  const api = resolveServiceProvider(ctx.stellar.config.services.vote)?.endpoint;
   const disabled = api == null
   const id = args.id || 'default'
 

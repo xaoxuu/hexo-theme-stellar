@@ -1,15 +1,15 @@
 <%
 page.robots = 'noindex,nofollow'
-var provider = stellar_config('extensions.comments.provider') || ''
+var provider = stellar_config('comments.provider') || ''
 var providerSupported = ['artalk', 'waline', 'twikoo'].includes(String(provider).toLowerCase())
-var settingsConfig = stellar_config('site.settings') || {}
+var settingsConfig = stellar_config('settings') || {}
 var aboutItems = settingsConfig.about?.items || []
 var cacheItems = [
   { id: 'search', label: __('settings.cache.search') },
   { id: 'dynamic', label: __('settings.cache.dynamic') },
   { id: 'all', label: __('settings.cache.all') }
 ]
-var fallbackAvatar = stellar_config('resources.fallbacks.avatar')
+var fallbackAvatar = stellar_config('fallbacks.avatar')
 function linkAttributes(url) {
   return url.includes('://')
     ? ' target="_blank" rel="external nofollow noopener noreferrer"'

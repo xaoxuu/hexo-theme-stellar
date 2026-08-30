@@ -3,7 +3,7 @@ page.comments = {enabled: false, title: ''};
 page.robots = 'none';
 %>
 <article class='md-text error-page'>
-  <% var errorImage = stellar_config('resources.errorPage.image') %>
+  <% var errorImage = stellar_config('errorPage.image') %>
   <% if (errorImage) { %>
     <h1><img id='error' src='<%- errorImage %>' alt='404'></h1>
   <% } %>
