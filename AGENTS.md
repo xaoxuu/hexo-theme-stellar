@@ -57,14 +57,14 @@
 
 ### 验证门禁
 
-先选能覆盖实际影响的最低级别；路径、文件数量、v2 标签或“公开字段”不单独升级风险。证据不足或影响无法界定时才升级。
+计划和实施都按实际影响选择最低级别；执行验证前按最终 diff 复核，影响收窄时同步降级。路径、文件数量、v2 标签或“公开字段”不单独升级风险；只有证据不足或影响无法界定时才升级。
 
 | 级别 | 适用范围 | 必要证据 |
 | --- | --- | --- |
-| **F0 文档** | 说明、流程、skill、issue 方案或注释 | 相关格式、链接、引用或事实检查；知识库改动加 `npm run knowledge:check` |
+| **F0 文档/收录** | 说明、流程、skill、issue 方案、注释，或许可证/NOTICE/README 等非运行时分发材料及其 npm 收录规则 | 相关格式、链接、引用或事实检查；收录变更用 `npm pack --dry-run` 核对实际清单；知识库改动加 `npm run knowledge:check` |
 | **F1 定向**（默认） | 局部 CSS/EJS/浏览器 JS/helper、单个配置字段或可界定行为 | 最近的单测、lint、CSS 编译或渲染检查；Schema 改动执行对应的解析、校验与消费测试 |
 | **F2 全仓** | 跨域公共运行时、共享模型/Collection 管线、构建链、依赖、广泛重构，或影响仍不确定 | `npm run check` |
-| **F3 分发** | npm 包安装、CLI/init、Blueprint、迁移、发布或明确阶段验收 | F2 + `npm run integration:check`；仅在准备人工验收制品时运行 `npm run acceptance:prepare` |
+| **F3 分发** | npm 包安装后行为、CLI/init、Blueprint、迁移、发布或明确阶段验收 | F2 + `npm run integration:check`；仅在准备人工验收制品时运行 `npm run acceptance:prepare` |
 
 - 性能契约相关任务显式运行 `npm run performance:check`；普通 F2 不承担性能基线。发版由 `npm run release:check` 组合性能与知识库门禁。
 - 宿主集成属于任务目标且主题证据不足时补充消费方验证；UI 视觉判断仅在用户要求或自动检查无法证明时进行。

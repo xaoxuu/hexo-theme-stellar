@@ -111,3 +111,5 @@ Full documentation: https://xaoxuu.com/wiki/stellar/ (currently available in Chi
 ## License
 
 This project is licensed under the [MIT License](LICENSE), Copyright (c) 2021 xaoxuu. Permanently open source and completely free.
+
+See [Third-Party Notices](legal/THIRD-PARTY-NOTICES.md) for third-party components and their licenses.

@@ -1,12 +1,16 @@
 # Third-Party Notices
 
+This project includes or adapts portions of the following third-party software.
+
 ## React Bits
 
-The Wiki Galaxy WebGL background and Card Hover spotlight layer are adapted
-from the Galaxy and Spotlight Card components in
-[React Bits](https://github.com/DavidHDev/react-bits).
+- Project: [React Bits](https://github.com/DavidHDev/react-bits)
+- Components: Galaxy and Spotlight Card
+- License: MIT
+- Copyright: Copyright (c) 2026 David Haz
+- Usage: Adapted for the Wiki Galaxy WebGL background and Card Hover spotlight layer.
 
-MIT License
+### MIT License
 
 Copyright (c) 2026 David Haz
 

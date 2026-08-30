@@ -113,3 +113,5 @@ theme: stellar
 ## 开源许可
 
 本项目采用 [MIT License](LICENSE)，Copyright (c) 2021 xaoxuu，永久开源、完全免费。
+
+第三方组件及其许可证见 [第三方授权声明](legal/THIRD-PARTY-NOTICES.md)。

@@ -421,6 +421,7 @@ function assertRuntime(html, relative, profile) {
 function assertPackageFiles(pack) {
   const files = new Set(pack.files.map(item => item.path));
   const required = [
+    "legal/THIRD-PARTY-NOTICES.md",
     "blueprints/classic/manifest.json",
     "blueprints/minimal-reading/manifest.json",
     "blueprints/docs-reference/manifest.json",
