@@ -81,7 +81,7 @@ test("doctor 对不支持的位置只警告并跳过，ok 保持 true", () => {
   assert.match(formatDoctorText(result), /Widget timeline .*does not support topbar.*skipped/);
 });
 
-test("doctor 将已删除的六个分组根直接报告为未知字段且不提供迁移目标", () => {
+test("doctor 将已删除的分组根与旧 Appearance、Inject 字段报告为未知字段", () => {
   const baseDir = initializedSite("classic");
   fs.writeFileSync(path.join(baseDir, "_config.stellar.yml"), [
     "site: {}",
@@ -90,15 +90,38 @@ test("doctor 将已删除的六个分组根直接报告为未知字段且不提�
     "seo: {}",
     "resources: {}",
     "extensions: {}",
+    "appearance:",
+    "  typography:",
+    "    text_align: left",
+    "  colors:",
+    "    theme: white",
+    "  gradients:",
+    "    angle: 200deg",
+    "  code_block:",
+    "    highlight_theme: /highlight.css",
+    "  backgrounds:",
+    "    leftbar:",
+    "      blur:",
+    "        radius: 10px",
+    "inject:",
+    "  head: legacy",
+    "  script: legacy",
     ""
   ].join("\n"));
 
   const result = runDoctor({ baseDir, nodeVersion: "22.0.0", hexoVersion: "8.1.0" });
   assert.equal(result.ok, false);
-  assert.deepEqual(result.issues.map(item => item.path), [
-    "site", "layout", "content", "seo", "resources", "extensions"
-  ]);
-  assert.equal(result.issues.every(item => item.code === "unknown_field" && item.migration == null), true);
+  for (const path of [
+    "site", "layout", "content", "seo", "resources", "extensions",
+    "appearance.typography.text_align", "appearance.colors.theme", "appearance.gradients.angle",
+    "appearance.code_block.highlight_theme", "appearance.backgrounds.leftbar.blur",
+    "inject.head", "inject.script"
+  ]) {
+    const issue = result.issues.find(item => item.path === path);
+    assert.ok(issue, path);
+    assert.equal(issue.code, "unknown_field");
+    assert.equal(issue.migration, undefined);
+  }
 });
 
 test("doctor 接受 BOM 与 CRLF Front Matter", () => {

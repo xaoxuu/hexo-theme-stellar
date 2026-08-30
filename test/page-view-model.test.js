@@ -12,9 +12,7 @@ const {
   buildWikiPageViewModelBase: buildWikiPageViewModelBaseRaw,
   completeWikiPageViewModel
 } = require("../scripts/lib/models");
-const { parseStellarConfig: parseRawStellarConfig } = require("../scripts/lib/config-schema");
-const { flattenThemeFixture } = require("./support/theme-config");
-const parseStellarConfig = input => parseRawStellarConfig({ ...input, themeConfig: flattenThemeFixture(input.themeConfig) });
+const { parseStellarConfig } = require("../scripts/lib/config-schema");
 const { parseCollectionConfig, parsePageConfig } = require("../scripts/lib/content-config");
 const processContentConfig = require("../scripts/events/lib/content-config");
 const { attachPageViewModel } = require("../scripts/filters/lib/page-view-model");
@@ -77,20 +75,24 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
       author: "Example Author"
     },
     themeConfig: {
-      layout: { profiles: {
+      menu: { items: [
+        { id: "post", title: "Blog", url: "/" },
+        { id: "wiki", title: "Wiki", url: "/wiki/" }
+      ] },
+      profiles: {
         wiki_index: { path: "/wiki/" },
         wiki: {
-          navigation: { active_menu: "wiki" },
+          active_menu: "wiki",
           leftbar: { widgets: ["tree", "related"] },
           rightbar: { widgets: ["toc"] }
         }
-      } },
-      content: { article: {
+      },
+      article: {
         style: "tech",
         paragraph_indent: "never",
         footer: { license: "Global license", share: ["link"] }
-      } },
-      extensions: { comments: { provider: "giscus" } }
+      },
+      comments: { provider: "giscus" }
     },
     collectionConfig: {
       name: "Stellar",
@@ -300,12 +302,12 @@ test("Wiki 树构建事件只为严格 v2 Wiki 页面挂载 PageViewModel", t =>
     }
   };
   const themeConfig = {
-    layout: { profiles: {
+    profiles: {
       wiki_index: { path: "/wiki/" },
-      wiki: { navigation: { active_menu: "wiki" } }
-    } },
-    content: { article: { paragraph_indent: "always" } },
-    extensions: { comments: { provider: "giscus" } }
+      wiki: {}
+    },
+    article: { paragraph_indent: "always" },
+    comments: { provider: "giscus" }
   };
   const pages = [wikiPage, ordinaryPage];
   pages.each = callback => [wikiPage, ordinaryPage].forEach(callback);
@@ -444,22 +446,20 @@ test("合法 Post profile 生成固定结构的冻结 PageViewModel", () => {
       subtitle: "独立博客"
     },
     themeConfig: {
-      site: {
-        brand: {
-          image: { src: "/avatar.webp", variant: "avatar" },
-          name: "Stellar",
-          tagline: "独立博客"
-        }
+      brand: {
+        image: { src: "/avatar.webp", variant: "avatar" },
+        name: "Stellar",
+        tagline: "独立博客"
       },
-      layout: { profiles: {
+      profiles: {
         blog_index: { path: "/blog/" },
         post: {
-          navigation: { active_menu: "post" },
+          active_menu: "post",
           leftbar: { widgets: ["recent"] },
           rightbar: { widgets: ["toc"] }
         }
-      } },
-      content: { article: {
+      },
+      article: {
         listing: {
           pinned_layout: "carousel",
           card_layout: "hero",
@@ -468,8 +468,8 @@ test("合法 Post profile 生成固定结构的冻结 PageViewModel", () => {
         style: "tech",
         paragraph_indent: "never",
         footer: { license: "CC BY-NC-SA 4.0", share: [] }
-      } },
-      extensions: { comments: { provider: "giscus" } }
+      },
+      comments: { provider: "giscus" }
     },
     frontMatter: {
       title: "Hello",
@@ -522,13 +522,13 @@ test("Wiki 未显式配置 Footer 时不继承 Post 的全局许可与分享", (
     collectionSource: "source/_data/wiki/plain.yml",
     siteConfig: { title: "Example", url: "https://example.com" },
     themeConfig: {
-      layout: { profiles: {
+      profiles: {
         wiki_index: { path: "/wiki/" },
-        wiki: { navigation: { active_menu: "wiki" } }
-      } },
-      content: { article: {
+        wiki: {}
+      },
+      article: {
         footer: { license: "Global license", share: ["wechat", "link"] }
-      } }
+      }
     },
     collectionConfig: {
       name: "Plain",
@@ -576,13 +576,11 @@ test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD �
       index_generator: { path: "blog" }
     },
     themeConfig: {
-      site: { brand: { name: "Stellar" } },
-      seo: {
-        canonical: { host: "canonical.example.com" },
-        open_graph: { enabled: true, twitter_id: "xaoxuu" },
-        structured_data: { same_as: ["https://github.com/xaoxuu"] }
-      },
-      resources: { fallbacks: { cover: "/default.webp" } },
+      brand: { name: "Stellar" },
+      canonical: { host: "canonical.example.com" },
+      open_graph: { enabled: true, twitter_id: "xaoxuu" },
+      structured_data: { same_as: ["https://github.com/xaoxuu"] },
+      fallbacks: { cover: "/default.webp" },
       appearance: {
         color_scheme: "auto",
         preset: "card",
@@ -590,7 +588,7 @@ test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD �
           page: { image: "/background.webp" }
         }
       },
-      layout: { profiles: { post: { navigation: { active_menu: "post" } } } }
+      profiles: { post: { active_menu: "post" } }
     },
     frontMatter: {
       title: "Render",
@@ -649,26 +647,24 @@ test("Post render 投影详情关系、Footer、评论和列表条目", () => {
     source: "source/_posts/article.md",
     siteConfig: { title: "Stellar" },
     themeConfig: {
-      content: { article: {
+      article: {
         footer: { license: "By {author.name} ({author.url})", share: ["wechat", "link"], show_tags: true },
         listing: { show_tags: true, card_layout: "hero", excerpt_length: 80 },
         category_colors: { "开发": "#f44336" },
         related_posts_limit: 2
-      } },
-      extensions: {
-        comments: {
-          provider: "giscus",
-          title: "参与讨论",
-          providers: { giscus: { "data-repo": "owner/repo", "data-theme": "preferred_color_scheme" } }
+      },
+      comments: {
+        provider: "giscus",
+        title: "参与讨论",
+        giscus: { "data-repo": "owner/repo", "data-theme": "preferred_color_scheme" }
+      },
+      features: { heti: { enabled: true } },
+      services: {
+        contributors: {
+          provider: "github",
+          github: { repositories: [{ source_prefix: "_posts/", repository: "owner/repo", branch: "main" }] }
         },
-        features: { heti: { enabled: true } },
-        services: {
-          contributors: {
-            provider: "github",
-            providers: { github: { repositories: [{ source_prefix: "_posts/", repository: "owner/repo", branch: "main" }] } }
-          },
-          github: { api_url: "https://api.github.com" }
-        }
+        github: { api_url: "https://api.github.com" }
       },
       appearance: { color_scheme: "dark" },
     },
@@ -733,17 +729,15 @@ test("Post 列表与评论投影保留覆盖、摘要优先级、五标签和隐
     source: "source/_posts/overrides.md",
     siteConfig: { title: "Stellar" },
     themeConfig: {
-      content: { article: {
+      article: {
         listing: { card_layout: "classic", excerpt_length: 6, show_tags: true },
         footer: { share: ["email", "link"] }
-      } },
-      extensions: { comments: {
+      },
+      comments: {
         provider: "giscus",
-        providers: {
-          giscus: { "data-repo": "owner/repo" },
-          waline: { serverURL: "https://global.example.com", lang: "zh-CN" }
-        }
-      } }
+        giscus: { "data-repo": "owner/repo" },
+        waline: { serverURL: "https://global.example.com", lang: "zh-CN" }
+      }
     },
     frontMatter: {
       title: "Overrides",
@@ -790,20 +784,20 @@ test("Post 配置级联保留 false、0、空字符串和 Region 覆盖", () => 
     source: "source/_posts/cascade.md",
     siteConfig: {},
     themeConfig: {
-      site: { brand: { name: "Global" } },
-      layout: { profiles: {
+      brand: { name: "Global" },
+      profiles: {
         post: {
-          navigation: { active_menu: "post" },
+          active_menu: "post",
           leftbar: { widgets: ["recent"] },
           rightbar: { widgets: ["toc"] }
         }
-      } },
-      content: { article: {
+      },
+      article: {
         style: "tech",
         paragraph_indent: "always",
         footer: { license: "Global license", share: ["link"] }
-      } },
-      extensions: { comments: { title: "Global title", provider: "giscus" } }
+      },
+      comments: { title: "Global title", provider: "giscus" }
     },
     frontMatter: {
       title: "Cascade",
@@ -861,7 +855,7 @@ test("Post 模型规范化 Hexo 值且不保留输入引用", () => {
   };
   const viewModel = buildPostPageViewModel({
     source: "source/_posts/plain.md",
-    themeConfig: { site: { brand } },
+    themeConfig: { brand },
     frontMatter: {
       title: "Plain",
       layout: "post",
@@ -923,9 +917,9 @@ test("相关文章构建边界复用插件结果，并在插件缺失时报告�
   const input = {
     source: "source/_posts/related.md",
     siteConfig: { title: "Stellar" },
-    themeConfig: { content: { article: { related_posts_limit: 2 } } },
+    themeConfig: { article: { related_posts_limit: 2 } },
     stellarConfig: parseStellarConfig({
-      themeConfig: { content: { article: { related_posts_limit: 2 } } }
+      themeConfig: { article: { related_posts_limit: 2 } }
     }),
     frontMatter: { title: "Related", layout: "post" },
     page
@@ -987,8 +981,8 @@ test("生成前事件为普通 Post 与严格 Topic 挂载各自的 PageViewMode
     data: { "topic/v2": { name: "V2" } }
   };
   const themeConfig = {
-    site: { brand: { name: "Stellar" } },
-    layout: { profiles: { post: { navigation: { active_menu: "post" } } } }
+    brand: { name: "Stellar" },
+    profiles: { post: { active_menu: "post" } }
   };
 
   processContentConfig({
@@ -1018,13 +1012,11 @@ test("Post profile 严格拒绝已迁移内容默认值的未知键与错误类�
   assert.throws(() => buildPostPageViewModel({
     themeSource: "_config.stellar.yml",
     themeConfig: {
-      content: {
-        article: {
-          author: 42,
-          footer: { share: {} }
-        }
+      article: {
+        author: 42,
+        footer: { share: {} }
       },
-      extensions: { comments: { provider: "giscus" } }
+      comments: { provider: "giscus" }
     },
     frontMatter: { title: "Strict", layout: "post" },
     page: { title: "Strict", layout: "post" }
@@ -1039,13 +1031,13 @@ test("Post profile 严格校验全部已迁移内容配置袋", () => {
   assert.throws(() => buildPostPageViewModel({
     themeSource: "_config.stellar.yml",
     themeConfig: {
-      content: { article: {
+      article: {
         listing: { cover_ratio: "wide" },
         style: "essay",
         category_colors: [],
         related_posts_limit: false,
         show_reading_time: "yes"
-      } }
+      }
     },
     frontMatter: { title: "Strict bags", layout: "post" },
     page: { title: "Strict bags", layout: "post" }

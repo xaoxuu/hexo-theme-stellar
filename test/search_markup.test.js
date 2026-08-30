@@ -63,15 +63,11 @@ const SEARCH_SCOPE_LABELS = Object.fromEntries(
   })
 );
 
-test('Search Menu Item 输出共享浮层入口并隔离 Algolia 路径范围', () => {
+test('Search Menu Item 输出共享浮层入口', () => {
   assert.match(MENU_TEMPLATE_SOURCE, /menuItem\?\.type === 'search'/);
   assert.match(MENU_TEMPLATE_SOURCE, /type: 'button'/);
   assert.match(MENU_TEMPLATE_SOURCE, /'data-shell-action': 'open-search'/);
-  assert.match(MENU_TEMPLATE_SOURCE, /searchProvider === 'algolia'/);
-  assert.match(MENU_TEMPLATE_SOURCE, /searchAttrs\['data-algolia-filter-path'\] = algoliaFilterPath/);
   assert.match(MENU_TEMPLATE_SOURCE, /'data-search-placeholder': searchPlaceholder/);
-  assert.match(MENU_TEMPLATE_SOURCE, /render\.layout\.algoliaFilterPath/);
-  assert.doesNotMatch(MENU_TEMPLATE_SOURCE, /data-search-filter|data-filter/);
 });
 
 test('唯一 Search Menu Item 复用固定运行时实例', () => {

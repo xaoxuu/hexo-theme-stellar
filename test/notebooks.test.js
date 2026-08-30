@@ -4,9 +4,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 
 const { getNotebooksObject, groupPagesByNotebook, NotePage } = require("../scripts/lib/notebooks");
-const { parseStellarConfig: parseRawStellarConfig } = require("../scripts/lib/config-schema");
-const { flattenThemeFixture } = require("./support/theme-config");
-const parseStellarConfig = input => parseRawStellarConfig({ ...input, themeConfig: flattenThemeFixture(input.themeConfig) });
+const { parseStellarConfig } = require("../scripts/lib/config-schema");
 const { parseCollectionConfig } = require("../scripts/lib/content-config");
 
 test('groupPagesByNotebook 按 notebook 分组且保持顺序、跳过无 notebook 页面', () => {
@@ -48,12 +46,17 @@ test('NotePage 使用 listing.priority 与 updated 回退', () => {
 
 test("Notebook 集合只保留显式菜单覆盖，不用 note_index 默认遮蔽 note Profile", () => {
   const themeConfig = {
-    content: { notebook: { listing: {}, footer: {} } },
-    layout: { profiles: {
+    menu: { items: [
+      { id: "post", title: "Blog", url: "/" },
+      { id: "notebooks", title: "Notebooks", url: "/notebooks/" },
+      { id: "notes", title: "Notes", url: "/notes/" }
+    ] },
+    notebook: { listing: {}, footer: {} },
+    profiles: {
       notebook_index: { path: "/notebooks/" },
-      note_index: { navigation: { active_menu: "notebooks" } },
-      note: { navigation: { active_menu: "notes" } }
-    } }
+      note_index: { active_menu: "notebooks" },
+      note: { active_menu: "notes" }
+    }
   };
   const data = {
     "notebooks/default": { name: "默认笔记本" },

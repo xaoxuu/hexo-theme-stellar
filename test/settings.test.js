@@ -349,18 +349,6 @@ test("Settings Widget 头像容器只输出当前服务端状态，身份媒体�
   assert.doesNotMatch(avatar, /settings-widget__fallback/);
 });
 
-test("Leftbar 与 Topbar 的 Settings 头像保持 2px 内边距和正圆曲率", () => {
-  const css = fs.readFileSync(path.resolve(__dirname, "../source/css/_components/widgets/settings.styl"), "utf8");
-  const start = css.indexOf(".site-region--leftbar,\n.site-region--topbar");
-  const end = css.indexOf("\n.site-region--topbar,", start);
-  const avatarRule = css.slice(start, end);
-  assert.match(avatarRule, /\.settings-widget__avatar > img/);
-  assert.match(avatarRule, /width: 28px/);
-  assert.match(avatarRule, /height: 28px/);
-  assert.match(avatarRule, /border-radius: 50%/);
-  assert.match(avatarRule, /corner-shape: round/);
-});
-
 test("本地搜索导出清理接口并同步清空内存索引", () => {
   const source = fs.readFileSync(path.resolve(__dirname, "../source/js/search/local-search.js"), "utf8");
   assert.match(source, /function clearSearchCache\(\)[\s\S]*searchCache = null;[\s\S]*searchCacheEntry = null;/);

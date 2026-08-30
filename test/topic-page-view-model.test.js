@@ -12,9 +12,7 @@ const {
   buildTopicPageViewModelBase: buildTopicPageViewModelBaseRaw,
   completeTopicPageViewModel
 } = require("../scripts/lib/models");
-const { parseStellarConfig: parseRawStellarConfig } = require("../scripts/lib/config-schema");
-const { flattenThemeFixture } = require("./support/theme-config");
-const parseStellarConfig = input => parseRawStellarConfig({ ...input, themeConfig: flattenThemeFixture(input.themeConfig) });
+const { parseStellarConfig } = require("../scripts/lib/config-schema");
 const { parseCollectionConfig, parsePageConfig } = require("../scripts/lib/content-config");
 const processContentConfig = require("../scripts/events/lib/content-config");
 const { attachPageViewModel } = require("../scripts/filters/lib/page-view-model");
@@ -110,29 +108,27 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
     collectionListed: false,
     siteConfig: { title: "Site", subtitle: "Subtitle" },
     themeConfig: {
-      site: {
-        brand: {
-          image: { src: "/avatar.webp", variant: "avatar" },
-          name: "Site Brand",
-          tagline: "Site tagline"
-        }
+      brand: {
+        image: { src: "/avatar.webp", variant: "avatar" },
+        name: "Site Brand",
+        tagline: "Site tagline"
       },
-      layout: { profiles: {
+      profiles: {
         topic_index: { path: "/topic/" },
         post: {
-          navigation: { active_menu: "post" },
+          active_menu: "post",
           leftbar: { widgets: ["global-left"] },
           rightbar: { widgets: ["toc"] }
         },
-        topic: { navigation: { active_menu: "post" } }
-      } },
-      content: { article: {
+        topic: { active_menu: "post" }
+      },
+      article: {
         style: "tech",
         paragraph_indent: "never",
         footer: { license: "Global", share: ["link"] },
         related_posts_limit: 2
-      } },
-      extensions: { comments: { title: "Global", provider: "artalk" } }
+      },
+      comments: { title: "Global", provider: "artalk" }
     },
     collectionConfig,
     members: [current, latest, hidden, other],
@@ -293,11 +289,9 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
       ...input,
       themeConfig: {
         ...input.themeConfig,
-        content: {
-          article: {
-            ...input.themeConfig.content.article,
-            listing: { card_layout: cardLayout }
-          }
+        article: {
+          ...input.themeConfig.article,
+          listing: { card_layout: cardLayout }
         }
       },
       frontMatter: {
@@ -424,12 +418,12 @@ test("生成前事件为严格 Topic 成员挂载模型并拒绝缺失集合", t
     }
   };
   const themeConfig = {
-    site: { brand: { name: "Stellar" } },
-    layout: { profiles: {
+    brand: { name: "Stellar" },
+    profiles: {
       topic_index: { path: "/topic/" },
-      post: { navigation: { active_menu: "post" } },
-      topic: { navigation: { active_menu: "post" } }
-    } }
+      post: { active_menu: "post" },
+      topic: { active_menu: "post" }
+    }
   };
   const ctx = {
     source_dir: sourceDir,

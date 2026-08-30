@@ -116,6 +116,30 @@ test("类型、枚举和特殊 validator 由轻量规则表约束", () => {
     () => parseStellarConfig({ themeConfig: { preconnect: "https://example.com" } }),
     error => issueFor(error, "preconnect", "invalid_type")
   );
+  assert.throws(() => parseStellarConfig({
+    themeConfig: {
+      appearance: {
+        typography: { font_size: { root: "-1px" }, font_family: { body: "Arial; display:none" } },
+        shape: { corner: "expression(alert(1))" },
+        colors: { primary: "red; color: blue" },
+        gradients: { primary_action: "url(javascript:alert(1))" },
+        backgrounds: { leftbar: { opacity: 1.1 }, page: { backdrop: { saturation: "-1%" } } }
+      },
+      features: { lightbox: { selector: "img { display:none }" } }
+    }
+  }), error => {
+    for (const path of [
+      "appearance.typography.font_size.root",
+      "appearance.typography.font_family.body",
+      "appearance.shape.corner",
+      "appearance.colors.primary",
+      "appearance.gradients.primary_action",
+      "appearance.backgrounds.leftbar.opacity",
+      "appearance.backgrounds.page.backdrop.saturation",
+      "features.lightbox.selector"
+    ]) assert.equal(error.issues.some(issue => issue.path === path && issue.code === "invalid_value"), true, path);
+    return true;
+  });
 });
 
 test("动态记录受约束，第三方参数袋原样保留", () => {

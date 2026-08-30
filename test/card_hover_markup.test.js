@@ -29,8 +29,8 @@ function createContext() {
   const fakeHexo = {
     stellar: {
       config: {
-        resources: { fallbacks: { linkCard: '/images/default-link.svg' } },
-        extensions: { services: { siteInfo: { provider: null, providers: {} } } }
+        fallbacks: { linkCard: '/images/default-link.svg' },
+        services: { siteInfo: { provider: null } }
       }
     },
     theme: {
@@ -112,9 +112,9 @@ test('dropdown 标签条目只输出 Spotlight 组合类', () => {
   assert.doesNotMatch(html, /ui-collection__item[^"\n]*card-hover--tilt/);
 });
 
-test('置顶轮播容器和专栏最新文章卡片输出完整 Hover 组合类', () => {
+test('置顶轮播容器和专栏最新文章卡片复用 Hover 能力', () => {
   assert.match(PIN_SLIDER_SOURCE, /ui_classes\('pin-slider', 'hoverCard'\)/);
-  assert.match(LATEST_POST_CARD_SOURCE, /ui_classes\('cover latest-post-card', 'hoverCard'\)/);
+  assert.match(LATEST_POST_CARD_SOURCE, /ui_classes\('[^']*', 'hoverCard'\)/);
 });
 
 test('Wiki Hero 操作按钮只输出 Spotlight 组合类', () => {

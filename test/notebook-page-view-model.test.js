@@ -7,9 +7,7 @@ const os = require("node:os");
 const path = require("node:path");
 
 const { buildNotebookPageViewModel: buildNotebookPageViewModelRaw } = require("../scripts/lib/models");
-const { parseStellarConfig: parseRawStellarConfig } = require("../scripts/lib/config-schema");
-const { flattenThemeFixture } = require("./support/theme-config");
-const parseStellarConfig = input => parseRawStellarConfig({ ...input, themeConfig: flattenThemeFixture(input.themeConfig) });
+const { parseStellarConfig } = require("../scripts/lib/config-schema");
 const { parseCollectionConfig, parsePageConfig } = require("../scripts/lib/content-config");
 const processContentConfig = require("../scripts/events/lib/content-config");
 const processNotebooks = require("../scripts/events/lib/notebooks");
@@ -106,29 +104,25 @@ function notebookInput(overrides = {}) {
       author: "Tester"
     },
     themeConfig: {
-      layout: { profiles: {
+      profiles: {
         notebook_index: { path: "/notebooks/" },
         note_index: {
-          navigation: { active_menu: "notebooks" },
           leftbar: { widgets: ["recent"] }
         },
         note: {
-          navigation: { active_menu: "notebooks" },
           leftbar: { widgets: ["tagtree"] },
           rightbar: { widgets: ["toc"] }
         }
-      } },
-      content: {
-        notebook: {
-          listing: { excerpt_length: 128, per_page: null, sort: { field: "updated", direction: "desc" } },
-          footer: { license: false, share: [] }
-        },
-        article: { style: "story", paragraph_indent: "never" }
       },
-      extensions: { comments: {
+      notebook: {
+        listing: { excerpt_length: 128, per_page: null, sort: { field: "updated", direction: "desc" } },
+        footer: { license: false, share: [] }
+      },
+      article: { style: "story", paragraph_indent: "never" },
+      comments: {
         provider: "giscus",
-        providers: { giscus: { "data-theme": "light" } }
-      } }
+        giscus: { "data-theme": "light" }
+      }
     },
     collectionConfig,
     runtimeData: {
@@ -296,7 +290,7 @@ test("Notebook profile 使用既有主题默认值完成列表和展示级联", 
 
 test("Notebook footer.license null 继承 Collection 许可", () => {
   const input = notebookInput();
-  input.themeConfig.content.article.footer = { license: "Global license", share: [] };
+  input.themeConfig.article.footer = { license: "Global license", share: [] };
   input.frontMatter.footer = { license: null, share: false };
 
   const viewModel = buildNotebookPageViewModel(input);
@@ -379,12 +373,12 @@ test("生成前事件只为可解析的严格 Notebook Note 挂载 PageViewModel
     data
   };
   const themeConfig = {
-    layout: { profiles: {
+    profiles: {
       notebook_index: { path: "/notebooks/" },
-      note_index: { navigation: { active_menu: "notebooks" } },
+      note_index: {},
       note: {}
-    } },
-    content: { notebook: { listing: {}, footer: {} } }
+    },
+    notebook: { listing: {}, footer: {} }
   };
 
   const context = {
@@ -441,7 +435,7 @@ test("生成前事件拒绝引用不存在 Notebook 的 Note", t => {
     pages: { each: callback => callback(missing), data: [missing] },
     data: {}
   };
-  const themeConfig = { layout: { profiles: {} }, content: { notebook: {} } };
+  const themeConfig = { profiles: {}, notebook: {} };
 
   assert.throws(() => processContentConfig({
     source_dir: sourceDir,
@@ -478,12 +472,12 @@ test("stellar new note 路径可唯一推断 Notebook 且不要求重复归属�
     data
   };
   const themeConfig = {
-    layout: { profiles: {
+    profiles: {
       notebook_index: { path: "/notebooks/" },
       note_index: {},
       note: {}
-    } },
-    content: { notebook: { listing: {}, footer: {} } }
+    },
+    notebook: { listing: {}, footer: {} }
   };
   const context = {
     source_dir: sourceDir,

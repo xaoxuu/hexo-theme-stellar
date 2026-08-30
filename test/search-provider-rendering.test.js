@@ -40,6 +40,7 @@ function renderMenu(provider) {
     },
     where: "leftbar",
     activeMenu: null,
+    menu_active_by_path() { return null; },
     content_config() { return { navigation: {} }; },
     stellar_config(key) {
       if (key === "search.provider") return provider;

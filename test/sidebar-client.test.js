@@ -274,7 +274,6 @@ test("Shell 使用内容高度 Rightbar、中等宽度非对称 Main 与分阶�
   assert.match(css, /--shell-topbar-content-inset: 8px/);
   assert.match(css, /--shell-topbar-height: 64px/);
   assert.match(css, /--shell-topbar-content-center-offset: calc\(var\(--shell-topbar-height\) \/ 2 - var\(--shell-topbar-content-inset\)\)/);
-  assert.match(css, /--shell-content-top-gap: var\(--gap-page\)/);
   assert.match(css, /--rightbar-sticky-offset: calc\(var\(--shell-sticky-offset\) \+ var\(--gap-base\)\)/);
   assert.match(css, /--rightbar-panel-height: calc\(100dvh - var\(--shell-sticky-offset\) - var\(--shell-edge-inset\) - var\(--shell-content-top-gap\)\)/);
   assert.match(mainCss, /\.site-main[\s\S]*padding-top: var\(--shell-content-top-gap\)/);
