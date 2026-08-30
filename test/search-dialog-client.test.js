@@ -17,6 +17,7 @@ function node() {
     checked: false,
     textContent: "",
     value: "",
+    blurCount: 0,
     focusCount: 0,
     dispatchCount: 0,
     classList: {
@@ -27,6 +28,7 @@ function node() {
     setAttribute(name, value) { this.attributes[name] = String(value); },
     removeAttribute(name) { delete this.attributes[name]; },
     getAttribute(name) { return this.attributes[name] ?? null; },
+    blur() { this.blurCount += 1; },
     focus() { this.focusCount += 1; },
     dispatchEvent() { this.dispatchCount += 1; return true; },
     querySelector() { return null; }
@@ -116,6 +118,7 @@ function runtime({ local = true } = {}) {
     controller: context.__search,
     dialog,
     dialogListeners,
+    documentListeners,
     group,
     input,
     options: { all: allOption, blog: blogOption, current: currentOption },
@@ -123,6 +126,38 @@ function runtime({ local = true } = {}) {
     currentLabel
   };
 }
+
+function dispatchShellClick(state, trigger) {
+  trigger.closest = selector => selector === '[data-shell-action]' ? trigger : null;
+  state.documentListeners.click({
+    target: trigger,
+    preventDefault() {}
+  });
+}
+
+test("搜索浮层仅在键盘打开后恢复触发按钮焦点", () => {
+  const pointerState = runtime();
+  const pointerTrigger = node();
+  pointerTrigger.dataset.shellAction = "open-search";
+  pointerState.documentListeners.pointerdown();
+  dispatchShellClick(pointerState, pointerTrigger);
+  const pointerClose = node();
+  pointerClose.dataset.shellAction = "close-search";
+  dispatchShellClick(pointerState, pointerClose);
+  assert.equal(pointerTrigger.focusCount, 0);
+  assert.equal(pointerTrigger.blurCount, 1);
+
+  const keyboardState = runtime();
+  const keyboardTrigger = node();
+  keyboardTrigger.dataset.shellAction = "open-search";
+  keyboardState.documentListeners.keydown({ key: "Enter" });
+  dispatchShellClick(keyboardState, keyboardTrigger);
+  const keyboardClose = node();
+  keyboardClose.dataset.shellAction = "close-search";
+  dispatchShellClick(keyboardState, keyboardClose);
+  assert.equal(keyboardTrigger.focusCount, 1);
+  assert.equal(keyboardTrigger.blurCount, 0);
+});
 
 test("Topic 打开时显示三选项并默认当前专栏", () => {
   const state = runtime();

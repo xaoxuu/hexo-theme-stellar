@@ -102,6 +102,8 @@ const leftbarHiddenQuery = '(max-width: 768px)';
 const rightbarDrawerQuery = '(max-width: 1180px)';
 let shellDrawerTrigger = null;
 let searchDialogTrigger = null;
+let searchDialogRestoreFocus = true;
+let shellInputModality = 'pointer';
 
 function regionElement(region) {
   return document.getElementById(region + '-region');
@@ -261,17 +263,20 @@ function closeSearch() {
   if (!dialog?.open) return;
   dialog.close();
   document.documentElement.removeAttribute('data-search-open');
-  if (searchDialogTrigger?.focus) searchDialogTrigger.focus();
+  if (searchDialogRestoreFocus && searchDialogTrigger?.focus) searchDialogTrigger.focus();
+  else if (searchDialogTrigger?.blur) searchDialogTrigger.blur();
   searchDialogTrigger = null;
+  searchDialogRestoreFocus = true;
 }
 
-function openSearch(trigger) {
+function openSearch(trigger, restoreFocus = true) {
   const dialog = searchDialogElement();
   const input = dialog?.querySelector('.search-input');
   const wrapper = dialog?.querySelector('.search-wrapper');
   const result = dialog?.querySelector('.search-result');
   if (!dialog || !input) return;
   searchDialogTrigger = trigger || document.activeElement;
+  searchDialogRestoreFocus = restoreFocus;
   input.value = '';
   if (!configureSearchScope(dialog, trigger)) {
     input.dataset.algoliaFilterPath = trigger?.dataset?.algoliaFilterPath || '';
@@ -300,13 +305,16 @@ const shellActions = {
   'toggle-rightbar-drawer': function (trigger) { toggleDrawer('rightbar', trigger); },
   'dismiss-drawer': function () { dismissDrawer(); },
   'toggle-leftbar': function (trigger) { toggleLeftbar(trigger); },
-  'open-search': function (trigger) { openSearch(trigger); },
+  'open-search': function (trigger) { openSearch(trigger, shellInputModality !== 'pointer'); },
   'close-search': function () { closeSearch(); },
   'toggle-toc': function (trigger) { toggleToc(trigger); }
 };
 
 syncLeftbarControls();
 syncDrawerControls();
+document.addEventListener('pointerdown', function () {
+  shellInputModality = 'pointer';
+});
 document.addEventListener('click', function (event) {
   const trigger = event.target?.closest?.('[data-shell-action]');
   const action = trigger?.dataset?.shellAction;
@@ -315,6 +323,7 @@ document.addEventListener('click', function (event) {
   shellActions[action](trigger);
 });
 document.addEventListener('keydown', function (event) {
+  shellInputModality = 'keyboard';
   if (event.key === 'Escape') {
     if (searchDialogElement()?.open) closeSearch();
     else dismissDrawer();
