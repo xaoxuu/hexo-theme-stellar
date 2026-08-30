@@ -133,11 +133,6 @@ if (renderViewModel) {
     || articleDefaults.paragraphIndent
     || 'auto'
   var indent = paragraphIndent === 'always' || (paragraphIndent === 'auto' && articleStyle === 'story')
-  var mobileBrandVisible = showMobileBrand(page, {
-    isHome: is_home(),
-    isCategory: is_category(),
-    isTag: is_tag()
-  })
   var profileKey = 'page'
   var collectionRegions = null
   if (is_home()) {
@@ -166,9 +161,11 @@ if (renderViewModel) {
   } else if (page.layout === 'post') {
     profileKey = 'post'
   }
+  var mobileBrandVisible = showMobileBrand(page, {profileKey: profileKey})
   var legacyRegions = region_layout(profileKey, collectionRegions, pageConfig)
+  var topbarRegion = regionSlot('topbar', legacyRegions.topbar)
   var mainBody = ''
-  if (mobileBrandVisible && !legacyRegions.topbar && !legacyRegions.leftbar) {
+  if (mobileBrandVisible && !topbarRegion) {
     mainBody += partial('_partial/sidebar/brand', {placement: 'main'})
   }
   mainBody += body
@@ -188,7 +185,7 @@ if (renderViewModel) {
     siteBackground: siteBackground(appearance.backgrounds.page.image),
     cover: coverSlot(),
     regions: {
-      topbar: regionSlot('topbar', legacyRegions.topbar),
+      topbar: topbarRegion,
       leftbar: regionSlot('leftbar', legacyRegions.leftbar),
       rightbar: regionSlot('rightbar', legacyRegions.rightbar)
     },

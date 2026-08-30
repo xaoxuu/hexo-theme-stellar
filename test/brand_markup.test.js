@@ -286,8 +286,12 @@ test('tagline 只输出单一静态节点', () => {
   assert.doesNotMatch(BRAND_STYLE, /\.brand-tagline[\s\S]*&\[href\]:hover/);
 });
 
-test('手机端 Brand 只通过页面类型 helper 决定，不读取页面开关', () => {
-  assert.match(LAYOUT_TEMPLATE, /showMobileBrand\(page/);
-  assert.match(LAYOUT_TEMPLATE, /if \(mobileBrandVisible && !legacyRegions\.topbar && !legacyRegions\.leftbar\)/);
+test('手机端 Main Site Brand 按最终 Profile 决定，Leftbar Drawer 不抑制渲染', () => {
+  assert.match(LAYOUT_TEMPLATE, /showMobileBrand\(page, \{\s*profileKey: profileKey\s*\}\)/);
+  assert.match(LAYOUT_TEMPLATE, /var topbarRegion = regionSlot\('topbar', legacyRegions\.topbar\)/);
+  assert.match(LAYOUT_TEMPLATE, /if \(mobileBrandVisible && !topbarRegion\)/);
+  assert.match(LAYOUT_TEMPLATE, /topbar: topbarRegion/);
+  assert.doesNotMatch(LAYOUT_TEMPLATE, /mobileBrandVisible && !legacyRegions\.(?:topbar|leftbar)/);
+  assert.match(BRAND_STYLE, /\.brand-header--site\.mobile-only\s*\n\s+@media screen and \(max-width: \$device-tablet\)\s*\n\s+display: block !important/);
   assert.doesNotMatch(LAYOUT_TEMPLATE, /mobile_header/);
 });

@@ -92,22 +92,26 @@ test('Topic 同时提供独立站点 Brand 与 Collection Brand', () => {
   });
 });
 
-test('手机端 Brand 只在指定列表和聚合页面显示', () => {
-  for (const state of [
-    { isHome: true },
-    { isCategory: true },
-    { isTag: true },
-    { layout: 'categories' },
-    { layout: 'tags' },
-    { layout: 'index_topic' },
-    { layout: 'index_wiki' },
-    { layout: 'notebooks' },
-    { layout: 'notes' }
+test('手机端 Main Site Brand 在博客和全部 Collection 列表 Profile 显示', () => {
+  for (const profileKey of [
+    'home',
+    'blogIndex',
+    'topicIndex',
+    'wikiIndex',
+    'notebookIndex',
+    'noteIndex'
   ]) {
-    assert.equal(shouldShowMobileBrand(state), true);
+    assert.equal(shouldShowMobileBrand({ profileKey }), true);
   }
-  for (const layout of ['post', 'page', 'wiki', 'topic', 'note', 'archive', 'author', '404']) {
-    assert.equal(shouldShowMobileBrand({ layout }), false);
+  for (const profileKey of [
+    'page',
+    'post',
+    'topic',
+    'wiki',
+    'error',
+    'settings'
+  ]) {
+    assert.equal(shouldShowMobileBrand({ profileKey }), false);
   }
 });
 

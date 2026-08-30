@@ -1,15 +1,6 @@
 /* global hexo */
 "use strict";
 
-const MOBILE_BRAND_LAYOUTS = Object.freeze([
-  "categories",
-  "tags",
-  "index_topic",
-  "index_wiki",
-  "notebooks",
-  "notes"
-]);
-
 const COLLECTION_BRAND_TYPES = Object.freeze(["wiki", "notebook", "topic"]);
 
 function normalizeBrand(brand) {
@@ -55,8 +46,15 @@ function resolveBrands({ siteBrand, collection, collectionType, defaultIcon }) {
   };
 }
 
-function shouldShowMobileBrand({ layout, isHome, isCategory, isTag }) {
-  return Boolean(isHome || isCategory || isTag || MOBILE_BRAND_LAYOUTS.includes(layout));
+function shouldShowMobileBrand({ profileKey }) {
+  return [
+    "home",
+    "blogIndex",
+    "topicIndex",
+    "wikiIndex",
+    "notebookIndex",
+    "noteIndex"
+  ].includes(profileKey);
 }
 
 function replaceConfigTokens(value, config) {
@@ -69,7 +67,6 @@ function replaceConfigTokens(value, config) {
 
 module.exports = {
   COLLECTION_BRAND_TYPES,
-  MOBILE_BRAND_LAYOUTS,
   collectionBrand,
   collectionBrandUrl,
   normalizeBrand,
