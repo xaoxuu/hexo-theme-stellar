@@ -4,6 +4,7 @@ const { test } = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
+const yaml = require("js-yaml");
 
 let renderer;
 global.hexo = {
@@ -14,6 +15,7 @@ delete global.hexo;
 
 const BLOG_PATH = path.resolve(__dirname, "../layout/_partial/main/listing_nav/blog.ejs");
 const WIKI_PATH = path.resolve(__dirname, "../layout/_partial/main/listing_nav/wiki.ejs");
+const DEFAULT_CONFIG = yaml.load(fs.readFileSync(path.resolve(__dirname, "../_config.yml"), "utf8"));
 
 function render(templatePath, locals) {
   return renderer({ path: templatePath, text: fs.readFileSync(templatePath, "utf8") }, locals);
@@ -86,6 +88,15 @@ test("关闭 Listing Nav 时保留 Pin Slider 并忽略已配置 Tabs", () => {
     assert.doesNotMatch(html, /class="listing-nav"/);
     assert.doesNotMatch(html, /不应出现/);
   }
+});
+
+test("默认关闭博客 Listing Nav 并保留 Wiki Listing Nav", () => {
+  const blog = renderBlog(DEFAULT_CONFIG.profiles.blog_index.listing_nav);
+  const wiki = renderWiki(DEFAULT_CONFIG.profiles.wiki_index.listing_nav);
+
+  assert.match(blog, /class="pin-slider"/);
+  assert.doesNotMatch(blog, /class="listing-nav"/);
+  assert.match(wiki, /class="listing-nav"/);
 });
 
 test("Listing Nav 运行源码只消费新选择器与初始化入口", () => {

@@ -65,7 +65,7 @@ YAML 使用 `path`，主题 JavaScript 仅将 snake_case 键转换为 `runtimePa
 | profiles.blog_index.leftbar.menu | profiles.blogIndex.leftbar.menu | <code>["boolean","null"]</code> | <code>null</code> | — |
 | profiles.blog_index.leftbar.footer_actions | profiles.blogIndex.leftbar.footerActions | <code>["boolean","null"]</code> | <code>null</code> | — |
 | profiles.blog_index.rightbar.widgets | profiles.blogIndex.rightbar.widgets | <code>["array","null"]</code> | <code>null</code> | validator=region_widgets |
-| profiles.blog_index.listing_nav.enabled | profiles.blogIndex.listingNav.enabled | <code>["boolean"]</code> | <code>true</code> | — |
+| profiles.blog_index.listing_nav.enabled | profiles.blogIndex.listingNav.enabled | <code>["boolean"]</code> | <code>false</code> | — |
 | profiles.blog_index.listing_nav.tabs[].title | profiles.blogIndex.listingNav.tabs[].title | <code>["string"]</code> | <code>""</code> | validator=non_empty_string |
 | profiles.blog_index.listing_nav.tabs[].url | profiles.blogIndex.listingNav.tabs[].url | <code>["string"]</code> | <code>""</code> | validator=safe_navigation_url |
 | profiles.blog_index.topbar.widgets | profiles.blogIndex.topbar.widgets | <code>["array","null"]</code> | <code>null</code> | validator=region_widgets |

@@ -645,7 +645,7 @@
       "type": [
         "boolean"
       ],
-      "default": true
+      "default": false
     },
     {
       "surface": "Theme",

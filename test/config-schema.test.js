@@ -34,8 +34,17 @@ test("手写 _config.yml 提供适度扁平的完整默认对象并深度冻结"
   assert.equal(config.appearance.colorScheme, "auto");
   assert.deepEqual(config.topbar.widgets, []);
   assert.deepEqual(config.rightbar.widgets, []);
+  assert.deepEqual(config.menu.items.map(item => item.id || item.type), [
+    "post", "categories", "tags", "topic", "archives", "friends", "about", "search"
+  ]);
+  assert.equal(config.profiles.blogIndex.listingNav.enabled, false);
+  assert.equal(config.profiles.wikiIndex.listingNav.enabled, true);
   assert.deepEqual(config.profiles.wiki.topbar.widgets, []);
-  assert.equal(config.profiles.wiki.activeMenu, "wiki");
+  assert.equal(config.profiles.wikiIndex.activeMenu, null);
+  assert.equal(config.profiles.wiki.activeMenu, null);
+  assert.equal(config.profiles.notebookIndex.activeMenu, null);
+  assert.equal(config.profiles.noteIndex.activeMenu, null);
+  assert.equal(config.profiles.note.activeMenu, null);
   assert.equal(config.profiles.wiki.leftbar.footerActions, false);
   assert.equal("site" in config, false);
   assert.equal("layout" in config, false);

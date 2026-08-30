@@ -106,7 +106,19 @@ test("Brand 与背景空值保持显式 null 语义", () => {
 test("主干保持扁平，Region 统一为对象，低频 Appearance 与 Inject 保留业务分组", () => {
   assert.equal(Array.isArray(CONFIG.topbar.widgets), true);
   assert.equal(Array.isArray(CONFIG.rightbar.widgets), true);
+  assert.deepEqual(CONFIG.menu.items, [
+    { id: "post", title: "menu.blog", icon: "default:documents", url: "/" },
+    { id: "categories", title: "menu.categories", icon: "default:category", url: "/blog/categories/" },
+    { id: "tags", title: "menu.tags", icon: "default:hashtag", url: "/blog/tags/" },
+    { id: "topic", title: "menu.topic", icon: "default:pin", url: "/topic/" },
+    { id: "archives", title: "menu.archives", icon: "default:calendar", url: "/blog/archives/" },
+    { id: "friends", title: "menu.friends", icon: "default:link", url: "/friends/" },
+    { id: "about", title: "menu.about", icon: "default:profile", url: "/about/" },
+    { type: "search" }
+  ]);
   assert.equal(CONFIG.profiles.blog_index.active_menu, "post");
+  assert.equal(CONFIG.profiles.blog_index.listing_nav.enabled, false);
+  assert.equal(CONFIG.profiles.wiki_index.listing_nav.enabled, true);
   assert.equal(Array.isArray(CONFIG.profiles.wiki.topbar.widgets), true);
   assert.equal(CONFIG.profiles.wiki.leftbar.footer_actions, false);
   assert.equal(Object.hasOwn(CONFIG.comments, "providers"), false);

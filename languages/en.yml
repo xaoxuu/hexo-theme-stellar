@@ -23,6 +23,15 @@ btn:
   collapse_posts: Collapse
   search: Search
 
+menu:
+  blog: Blog
+  categories: Categories
+  tags: Tags
+  topic: Topic
+  archives: Archives
+  friends: Friends
+  about: About
+
 meta:
   recent_update: Recent Update
   tag_tree: Tags

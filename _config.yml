@@ -24,6 +24,62 @@ brand:
 menu:
   # 设置主导航菜单项；数组会整体替换，空数组表示不显示菜单项。
   items:
+    # 声明默认的博客入口。
+    - id: post
+      # 设置菜单标题，支持主题 i18n 键。
+      title: menu.blog
+      # 设置菜单图标。
+      icon: default:documents
+      # 设置菜单链接。
+      url: /
+    # 声明默认的分类入口。
+    - id: categories
+      # 设置菜单标题，支持主题 i18n 键。
+      title: menu.categories
+      # 设置菜单图标。
+      icon: default:category
+      # 设置菜单链接。
+      url: /blog/categories/
+    # 声明默认的标签入口。
+    - id: tags
+      # 设置菜单标题，支持主题 i18n 键。
+      title: menu.tags
+      # 设置菜单图标。
+      icon: default:hashtag
+      # 设置菜单链接。
+      url: /blog/tags/
+    # 声明默认的专栏入口。
+    - id: topic
+      # 设置菜单标题，支持主题 i18n 键。
+      title: menu.topic
+      # 设置菜单图标。
+      icon: default:pin
+      # 设置菜单链接。
+      url: /topic/
+    # 声明默认的归档入口。
+    - id: archives
+      # 设置菜单标题，支持主题 i18n 键。
+      title: menu.archives
+      # 设置菜单图标。
+      icon: default:calendar
+      # 设置菜单链接。
+      url: /blog/archives/
+    # 声明默认的友链入口。
+    - id: friends
+      # 设置菜单标题，支持主题 i18n 键。
+      title: menu.friends
+      # 设置菜单图标。
+      icon: default:link
+      # 设置菜单链接。
+      url: /friends/
+    # 声明默认的关于入口。
+    - id: about
+      # 设置菜单标题，支持主题 i18n 键。
+      title: menu.about
+      # 设置菜单图标。
+      icon: default:profile
+      # 设置菜单链接。
+      url: /about/
     # 声明默认的搜索入口。
     - type: search
 
@@ -130,7 +186,7 @@ profiles:
     # 配置博客列表页的附加导航。
     listing_nav:
       # 控制是否显示附加导航。
-      enabled: true
+      enabled: false
       # 设置附加导航标签；空数组表示不添加标签。
       tabs: []
 
@@ -155,7 +211,7 @@ profiles:
     # 设置 Wiki 列表页的自动生成路径。
     path: /wiki/
     # 设置 Wiki 列表页高亮的主菜单项；null 表示不高亮。
-    active_menu: wiki
+    active_menu: null
     # 配置 Wiki 列表页 Leftbar 覆盖项。
     leftbar:
       # 设置 Wiki 列表页 Leftbar 内容 Widget；数组会整体替换站点级列表。
@@ -210,7 +266,7 @@ profiles:
   # 配置 Wiki 内容页默认布局。
   wiki:
     # 设置 Wiki 内容页高亮的主菜单项；null 表示不高亮。
-    active_menu: wiki
+    active_menu: null
     # 配置 Wiki 内容页 Topbar 覆盖项。
     topbar:
       # 设置 Wiki 内容页 Topbar Widget；空数组表示显式隐藏。
@@ -238,7 +294,7 @@ profiles:
     # 设置 Notebook 总索引页的自动生成路径。
     path: /notebooks/
     # 设置 Notebook 总索引页高亮的主菜单项；null 表示不高亮。
-    active_menu: notebooks
+    active_menu: null
     # 配置 Notebook 总索引页 Leftbar 覆盖项。
     leftbar:
       # 设置 Notebook 总索引页 Leftbar 内容 Widget；数组会整体替换站点级列表。
@@ -252,7 +308,7 @@ profiles:
   # 配置 Notebook 列表页默认布局。
   note_index:
     # 设置 Notebook 列表页高亮的主菜单项；null 表示不高亮。
-    active_menu: notebooks
+    active_menu: null
     # 配置 Notebook 列表页 Leftbar 覆盖项。
     leftbar:
       # 设置 Notebook 列表页使用 Collection Brand。
@@ -269,7 +325,7 @@ profiles:
   # 配置 Notebook 内容页默认布局。
   note:
     # 设置 Notebook 内容页高亮的主菜单项；null 表示不高亮。
-    active_menu: notebooks
+    active_menu: null
     # 配置 Notebook 内容页 Leftbar 覆盖项。
     leftbar:
       # 设置 Notebook 内容页使用 Collection Brand。

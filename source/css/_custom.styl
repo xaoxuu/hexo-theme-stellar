@@ -55,9 +55,9 @@ $corner-shape = convert(hexo-config('appearance.shape.corner'))
   --fs-root: $fs-root
   --fs-content-base: var(--fs-root)
   --fs-content: var(--fs-content-base)
-  --width-main-article: 720px
-  --width-main-default: 900px
-  --width-main: var(--width-main-default)
+  --width-main-article: 800px
+  --width-main-wiki-list: 1000px
+  --width-main: var(--width-main-article)
   --fsh2: 'calc(%s + 11px)' % var(--fs-content)
   --fsh3: 'calc(%s + 7px)' % var(--fs-content)
   --fsh4: 'calc(%s + 4px)' % var(--fs-content)
@@ -80,9 +80,8 @@ $corner-shape = convert(hexo-config('appearance.shape.corner'))
     --fs-root: 'calc(%s + 2px)' % $fs-root
     --side-content-width: 224px
 
-body[data-page-layout='post'],
-body[data-page-layout='page']
-  --width-main: var(--width-main-article)
+body[data-page-layout='index_wiki']
+  --width-main: var(--width-main-wiki-list)
 
 // shadow
 $boxshadow-card = 0 1px 2px 0px rgba(0, 0, 0, 0.1)

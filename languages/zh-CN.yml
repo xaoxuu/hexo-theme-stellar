@@ -23,6 +23,15 @@ btn:
   collapse_posts: 收起
   search: 搜索
 
+menu:
+  blog: 博客
+  categories: 分类
+  tags: 标签
+  topic: 专栏
+  archives: 归档
+  friends: 友链
+  about: 关于
+
 meta:
   recent_update: 最近更新
   tag_tree: 标签

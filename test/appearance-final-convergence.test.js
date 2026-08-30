@@ -59,22 +59,23 @@ function renderMainCss(themeConfig) {
   });
 }
 
-test("Main 按 post/page 与其他页面使用独立的固定最大宽度", async () => {
+test("Main 仅为 Wiki 列表页使用 1000px，其余页面统一使用 800px", async () => {
   const customStyles = read("source/css/_custom.styl");
   const config = yaml.load(read("_config.yml"));
   const css = await renderMainCss(config);
 
-  assert.match(customStyles, /--width-main-article: 720px/);
-  assert.match(customStyles, /--width-main-default: 900px/);
-  assert.match(customStyles, /--width-main: var\(--width-main-default\)/);
-  assert.equal((customStyles.match(/--width-main:/g) || []).length, 2, "--width-main 只应包含默认值与 post\/page 覆盖");
-  assert.doesNotMatch(customStyles, /--width-main: (?:780|860)px/);
+  assert.match(customStyles, /--width-main-article: 800px/);
+  assert.match(customStyles, /--width-main-wiki-list: 1000px/);
+  assert.match(customStyles, /--width-main: var\(--width-main-article\)/);
+  assert.equal((customStyles.match(/--width-main:/g) || []).length, 2, "--width-main 只应包含全局值与 Wiki 列表覆盖");
+  assert.doesNotMatch(customStyles, /--width-main-default|--width-main: (?:720|780|860|900)px/);
   assert.match(
     customStyles,
-    /body\[data-page-layout='post'\],\s*\nbody\[data-page-layout='page'\]\s*\n\s+--width-main: var\(--width-main-article\)/
+    /body\[data-page-layout='index_wiki'\]\s*\n\s+--width-main: var\(--width-main-wiki-list\)/
   );
-  assert.match(css, /:root\s*\{[^}]*--width-main-article:\s*720px;[^}]*--width-main-default:\s*900px;[^}]*--width-main:\s*var\(--width-main-default\);/);
-  assert.match(css, /body\[data-page-layout=['"]?post['"]?\],\s*body\[data-page-layout=['"]?page['"]?\]\s*\{[^}]*--width-main:\s*var\(--width-main-article\);/);
+  assert.match(css, /:root\s*\{[^}]*--width-main-article:\s*800px;[^}]*--width-main-wiki-list:\s*1000px;[^}]*--width-main:\s*var\(--width-main-article\);/);
+  assert.match(css, /body\[data-page-layout=['"]?index_wiki['"]?\]\s*\{[^}]*--width-main:\s*var\(--width-main-wiki-list\);/);
+  assert.doesNotMatch(css, /body\[data-page-layout=['"]?(?:post|page|index_topic|notebooks|notes)['"]?\][^{]*\{[^}]*--width-main:/);
 });
 
 test("Appearance 严格拒绝非法 CSS、Resource、selector 与 motion 值", () => {

@@ -23,6 +23,15 @@ btn:
   collapse_posts: 收起
   search: 搜尋
 
+menu:
+  blog: 網誌
+  categories: 分類
+  tags: 標籤
+  topic: 專欄
+  archives: 封存
+  friends: 友鏈
+  about: 關於
+
 meta:
   recent_update: 最近更新
   tag_tree: 標籤
