@@ -16,7 +16,7 @@ function linkAttributes(url) {
     : ' rel="noopener noreferrer"'
 }
 %>
-<main class="settings-page"
+<article class="md-text content settings-page"
   data-provider="<%- escape_html(provider) %>"
   data-fallback-avatar="<%- escape_html(url_for(fallbackAvatar)) %>"
   data-message-success="<%- escape_html(__('settings.result.success')) %>"
@@ -106,4 +106,4 @@ function linkAttributes(url) {
       <% } %>
     </div>
   </section>
-</main>
+</article>

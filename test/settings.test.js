@@ -139,6 +139,19 @@ test("About 只替换公开变量，未知变量保留原文", () => {
   }), "Hexo 8.0.0 / {unknown.value}");
 });
 
+test("设置页复用文章页正文容器，不维护独立的容器布局", () => {
+  const template = fs.readFileSync(path.resolve(__dirname, "../layout/settings.ejs"), "utf8");
+  const css = fs.readFileSync(path.resolve(__dirname, "../source/css/_components/pages/settings.styl"), "utf8");
+  const pageRule = css.slice(css.indexOf(".settings-page\n"), css.indexOf("\n.settings-page__header"));
+  const mobileStart = css.indexOf("@media screen and (max-width: $device-mobile-max)");
+  const mobilePageRule = css.slice(css.indexOf("  .settings-page\n", mobileStart), css.indexOf("  .settings-section\n", mobileStart));
+
+  assert.match(template, /<article class="md-text content settings-page"/);
+  assert.match(template, /<\/article>\s*$/);
+  assert.doesNotMatch(pageRule, /\n\s+(?:width|margin|padding|box-sizing|color):/);
+  assert.doesNotMatch(mobilePageRule, /\n\s+(?:width|margin|padding|box-sizing|color):/);
+});
+
 test("About Schema 接受可选模板链接并拒绝危险协议", () => {
   const config = parseStellarConfig({ themeConfig: { settings: { about: { items: [
     { key: "Theme", value: "{theme.version}", url: "{theme.tree}" },
