@@ -686,7 +686,7 @@
             "enabled": true,
             "provider": "giscus",
             "options": {
-              "data-repo": "xaoxuu/xaoxuu.com"
+              "data-repo": "owner/site"
             }
           }
         },
@@ -741,7 +741,7 @@
             "Reference generator"
           ],
           "example": {
-            "data-repo": "xaoxuu/xaoxuu.com"
+            "data-repo": "owner/site"
           },
           "open": true
         },
@@ -2135,7 +2135,7 @@
             "enabled": true,
             "provider": "giscus",
             "options": {
-              "data-repo": "xaoxuu/xaoxuu.com"
+              "data-repo": "owner/site"
             }
           }
         },
@@ -2190,7 +2190,7 @@
             "Reference generator"
           ],
           "example": {
-            "data-repo": "xaoxuu/xaoxuu.com"
+            "data-repo": "owner/site"
           },
           "open": true
         },
@@ -3464,7 +3464,7 @@
             "enabled": true,
             "provider": "giscus",
             "options": {
-              "data-repo": "xaoxuu/xaoxuu.com"
+              "data-repo": "owner/site"
             }
           }
         },
@@ -3519,7 +3519,7 @@
             "Reference generator"
           ],
           "example": {
-            "data-repo": "xaoxuu/xaoxuu.com"
+            "data-repo": "owner/site"
           },
           "open": true
         },
@@ -5168,7 +5168,7 @@
             "enabled": true,
             "provider": "giscus",
             "options": {
-              "data-repo": "xaoxuu/xaoxuu.com"
+              "data-repo": "owner/site"
             }
           }
         },
@@ -5223,7 +5223,7 @@
             "Reference generator"
           ],
           "example": {
-            "data-repo": "xaoxuu/xaoxuu.com"
+            "data-repo": "owner/site"
           },
           "open": true
         },
@@ -6702,7 +6702,7 @@
             "enabled": true,
             "provider": "giscus",
             "options": {
-              "data-repo": "xaoxuu/xaoxuu.com"
+              "data-repo": "owner/site"
             }
           }
         },
@@ -6754,7 +6754,7 @@
             "Reference generator"
           ],
           "example": {
-            "data-repo": "xaoxuu/xaoxuu.com"
+            "data-repo": "owner/site"
           },
           "open": true
         },

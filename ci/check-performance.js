@@ -7,9 +7,9 @@ const os = require("node:os");
 const path = require("node:path");
 const zlib = require("node:zlib");
 const { spawnSync } = require("node:child_process");
+const { INSTALL_PACKAGES } = require("./check-package-integration");
 
 const THEME_ROOT = path.resolve(__dirname, "..");
-const HOST_ROOT = path.resolve(process.argv.find(arg => arg.startsWith("--host="))?.slice(7) || path.join(THEME_ROOT, "../.."));
 const BASELINE_TAG = "1.44.0";
 const MIN_REDUCTION = 0.3;
 
@@ -29,16 +29,32 @@ function write(root, relative, content) {
   fs.writeFileSync(output, content, "utf8");
 }
 
-function createSite(root, themeRoot) {
-  const hostPackage = require(path.join(HOST_ROOT, "package.json"));
-  const hostHexoVersion = require(path.join(HOST_ROOT, "node_modules", "hexo", "package.json")).version;
+function installRuntime(root, currentArchive) {
+  const runtimeRoot = path.join(root, "runtime");
+  write(runtimeRoot, "package.json", `${JSON.stringify({ private: true }, null, 2)}\n`);
+  run("npm", [
+    "install",
+    "--no-audit",
+    "--no-fund",
+    "--prefer-offline",
+    "--package-lock=false",
+    ...INSTALL_PACKAGES,
+    currentArchive
+  ], runtimeRoot, { npm_config_cache: path.join(root, "npm-cache") });
+  return runtimeRoot;
+}
+
+function createSite(root, themeRoot, runtimeRoot) {
+  const hostHexoVersion = require(path.join(runtimeRoot, "node_modules", "hexo", "package.json")).version;
+  const generatorVersion = require(path.join(runtimeRoot, "node_modules", "hexo-generator-index", "package.json")).version;
+  const rendererVersion = require(path.join(runtimeRoot, "node_modules", "hexo-renderer-marked", "package.json")).version;
   write(root, "package.json", `${JSON.stringify({
     private: true,
     hexo: { version: hostHexoVersion },
     dependencies: {
       hexo: hostHexoVersion,
-      "hexo-generator-index": hostPackage.dependencies["hexo-generator-index"],
-      "hexo-renderer-marked": hostPackage.dependencies["hexo-renderer-marked"]
+      "hexo-generator-index": generatorVersion,
+      "hexo-renderer-marked": rendererVersion
     }
   }, null, 2)}\n`);
   write(root, "_config.yml", [
@@ -62,11 +78,14 @@ function createSite(root, themeRoot) {
     ""
   ].join("\n"));
   fs.mkdirSync(path.join(root, "themes"), { recursive: true });
-  fs.symlinkSync(path.join(HOST_ROOT, "node_modules"), path.join(root, "node_modules"), "dir");
+  fs.symlinkSync(path.join(runtimeRoot, "node_modules"), path.join(root, "node_modules"), "dir");
   fs.symlinkSync(themeRoot, path.join(root, "themes", "stellar"), "dir");
-  run(path.join(HOST_ROOT, "node_modules", ".bin", "hexo"), ["generate"], root, {
-    NODE_PATH: path.join(HOST_ROOT, "node_modules")
+  const output = run(path.join(runtimeRoot, "node_modules", ".bin", "hexo"), ["--cwd", root, "generate"], runtimeRoot, {
+    NODE_PATH: path.join(runtimeRoot, "node_modules")
   });
+  if (!fs.existsSync(path.join(root, "public", "index.html"))) {
+    throw new Error(`hexo generate 未生成首页:\n${output}`);
+  }
 }
 
 function gzipBytes(content) {
@@ -148,25 +167,26 @@ function extractCurrentTarball(root) {
   const theme = path.join(root, "theme-v2");
   fs.mkdirSync(theme, { recursive: true });
   run("tar", ["-xf", archive, "-C", theme, "--strip-components=1"], THEME_ROOT);
-  return theme;
+  return { archive, theme };
 }
 
 function buildReport() {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-performance-"));
   try {
     const baselineTheme = extractBaseline(root);
-    const currentTheme = extractCurrentTarball(root);
+    const current = extractCurrentTarball(root);
+    const runtimeRoot = installRuntime(root, current.archive);
     const baselineSite = path.join(root, "site-v1");
     const currentSite = path.join(root, "site-v2");
-    createSite(baselineSite, baselineTheme);
-    createSite(currentSite, currentTheme);
+    createSite(baselineSite, baselineTheme, runtimeRoot);
+    createSite(currentSite, current.theme, runtimeRoot);
     const baseline = collectCoreScripts(path.join(baselineSite, "public"), path.join(baselineSite, "public", "index.html"));
-    const current = collectCoreScripts(path.join(currentSite, "public"), path.join(currentSite, "public", "index.html"));
-    const reduction = (baseline.gzipBytes - current.gzipBytes) / baseline.gzipBytes;
+    const currentScripts = collectCoreScripts(path.join(currentSite, "public"), path.join(currentSite, "public", "index.html"));
+    const reduction = (baseline.gzipBytes - currentScripts.gzipBytes) / baseline.gzipBytes;
     return {
       schemaVersion: 1,
       baseline: { tag: BASELINE_TAG, ...baseline },
-      current: { branch: "v2", ...current },
+      current: { branch: "v2", ...currentScripts },
       metric: "sum of gzip-9 bytes for unconditional local first-screen scripts, inline executable scripts, and unconditional module imports",
       minimumReduction: MIN_REDUCTION,
       reduction: Number(reduction.toFixed(6)),

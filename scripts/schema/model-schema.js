@@ -321,11 +321,11 @@ function commentsSchema(factory) {
     title: field(["string", "null"], { default: inherited("hexo.stellar.config.extensions.comments.title"), example: "参与讨论" }),
     id: field("string", { example: "post-hello" }),
     provider: field(["string", "null"], { default: inherited("hexo.stellar.config.extensions.comments.provider"), example: "giscus" }),
-    options: field("object", { example: { "data-repo": "xaoxuu/xaoxuu.com" }, additionalProperties: true })
+    options: field("object", { example: { "data-repo": "owner/site" }, additionalProperties: true })
   };
   return object(properties, {
     default: inherited("hexo.stellar.config.extensions.comments", "collection.comments", "page.comments"),
-    example: { enabled: true, provider: "giscus", options: { "data-repo": "xaoxuu/xaoxuu.com" } }
+    example: { enabled: true, provider: "giscus", options: { "data-repo": "owner/site" } }
   });
 }
 

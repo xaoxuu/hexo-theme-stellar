@@ -8,7 +8,7 @@ Stellar v2 遵循“一项语义事实、一个权威所有者”。贡献者仍
 | --- | --- | --- | --- | --- |
 | 公开配置 | `scripts/schema/config-schema.js` | `config-target.js`、`_config.yml` 可发现示例、Reference、配置知识库 | Schema 正/反例、`npm run reference:check` | 在消费方另写 fallback，或只改 YAML 没改 Schema |
 | 内容 profile | `scripts/lib/collection-pipeline/registry.js` adapter | Collection/Front Matter Schema、索引与 ViewModel、CLI（如果创建内容） | Pipeline 行为矩阵、路由/ViewModel 契约、真实 generate | 新增第二个 `before_generate` 入口，或重扫全量内容 |
-| 服务端功能 | 对应 `scripts/lib/` 纯模型 | helper/filter/event 薄适配器、错误来源、知识库 | 纯函数单测、Hexo 注册/消费测试、主工程 generate | 把业务默认值写进 EJS 或 event 回调 |
+| 服务端功能 | 对应 `scripts/lib/` 纯模型 | helper/filter/event 薄适配器、错误来源、知识库 | 纯函数单测、Hexo 注册/消费测试；任务包含宿主集成时补充消费方 generate | 把业务默认值写进 EJS 或 event 回调 |
 | UI 组件 | `layout/_partial/components/` 或 `layout/_partial/widgets/` | `_data/widgets.yml`、Stylus、必要的浏览器增强、组件知识库 | 模板输出契约；有状态时加 mount/unmount 测试 | 为一个页面复制组件 DOM/CSS，或忽略移动端/右栏上下文 |
 | 浏览器 Extension / Feature | `scripts/lib/contribution-registry.js` descriptor | ESM adapter、`internal-constants.js` asset 真值、可选 Schema/i18n、Extension 知识库 | Manifest 投影、mount/unmount/失败隔离、`npm run contributions:check` | 手工修改 Manifest ID 白名单，或添加 asset 却未登记所有者 |
 | 标签插件 | `scripts/tags/index.js` 与 `scripts/tags/lib/<id>.js` | `extensions.tags/services` Schema（如需）、tag Stylus、service Extension、语法文档 | 输入语法→安全 HTML 测试；远程数据增加失败降级测试 | 恢复 `tag_plugins/data_services` 旧根，或把可选远程失败当程序错误 |

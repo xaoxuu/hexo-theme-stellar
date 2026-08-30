@@ -1,7 +1,7 @@
 # 发版流程
 
 > 创建日期: 2026-08-08
-> 更新日期: 2026-08-27（发布基线 + 净变化文档同步）
+> 更新日期: 2026-08-30（发布材料单一来源）
 
 ## 概述
 
@@ -15,11 +15,11 @@ npm run release → push main + npm → CI 自动触发 → npm publish + git ta
 
 CHANGELOG.md 的历史数据已于 2026-08-09 一次性从 GitHub Releases API 同步入库（统一格式：二级标题为版本号，三级标题为分类）；此后每次发版的更新日志由 AI/人工提前写入 CHANGELOG.md，脚本只做非空校验。
 
-开发提交维护实现、测试、生成 Reference 与必要方案；知识库、公开 Wiki、CHANGELOG 和 `VERIFICATION.md` 在发版准备时集中同步。发版审计比较两个最终文件树，不恢复已经被最终候选抵消的中间方案。
+开发提交维护实现、测试、生成 Reference 与必要方案；知识库、CHANGELOG 和 `VERIFICATION.md` 在发版准备时集中同步。发版审计比较两个最终文件树，不恢复已经被最终候选抵消的中间方案。
 
 ## 发布基线与净变化
 
-使用 `AGENTS.md` §5 定义的**发布基线**与候选替换边界。
+使用 `AGENTS.md`「发布基线」定义的兼容范围与候选替换边界。
 
 发版准备以发布基线和最终候选的树差异为输入：
 
@@ -34,14 +34,12 @@ CHANGELOG.md 的历史数据已于 2026-08-09 一次性从 GitHub Releases API �
 净变化确认后一次性完成：
 
 1. 更新 `docs/knowledge/` 中受影响的发布事实，并在 `VERIFICATION.md` 增加一条版本级汇总；不为同一版本的每个开发任务分别登记。
-2. 更新 `hexo-theme-stellar-docs` 公开 Wiki。正文遵守主工程 `$content-main`，核对字段名、默认值、示例、导航、目录与搜索。
-3. 在 Wiki 仓库提交并推送文档 commit，但暂不更新 xaoxuu.com 的子模块指针，避免未发布功能提前上线。
-4. 按最终净变化编写 CHANGELOG；升级注意只描述发布基线到目标版本的实际迁移。
-5. 运行 `npm run knowledge:check` 及公开 Wiki 的适用检查，将主题知识库与 CHANGELOG 提交到主题仓库。
+2. 按最终净变化编写 CHANGELOG；用户可见的配置、API、迁移、兼容性和行为变化写入相应分类或升级注意，供后续外部文档流程直接消费。
+3. 运行 `npm run knowledge:check`，将主题知识库与 CHANGELOG 提交到主题仓库。
 
 纯文档任务和事实纠错即时交付，不等待发版。Schema 生成 Reference、Contribution descriptor 的文档路径等机器契约继续随实现保持一致，不属于延迟同步范围。
 
-完成条件：每项最终净变化均落到知识库、Wiki、CHANGELOG，或有明确的 N/A 结论；主题与 Wiki 工作树均只保留发版脚本允许的文件。
+完成条件：每项最终净变化均落到知识库、CHANGELOG 或有明确的 N/A 结论；主题工作树只保留发版脚本允许的文件。
 
 ## 更新日志准备
 
@@ -50,7 +48,7 @@ CHANGELOG.md 的历史数据已于 2026-08-09 一次性从 GitHub Releases API �
 ## 前置条件
 
 - 当前在 `main` 分支，且已同步最新代码
-- 发布基线、最终净变化、知识库、公开 Wiki 与 CHANGELOG 已按上文核验；Wiki commit 已推送
+- 发布基线、最终净变化、知识库与 CHANGELOG 已按上文核验
 - 工作区无无关改动（仅允许 `package.json`、`CHANGELOG.md` 有未提交变更，已暂存与未暂存都会检查）
 - 本机 Node.js 可用（仓库要求 Node >= 22）
 
@@ -109,15 +107,13 @@ npm run release:dry -- 1.34.1
 - [ ] 所有功能变更已合并到 main，且通过构建验证
 - [ ] 已确认发布基线及明确外部接缝，并完成发布基线树到最终候选树的净变化审计
 - [ ] 知识库与版本级 `VERIFICATION.md` 已集中同步并通过 `npm run knowledge:check`
-- [ ] 公开 Wiki 已按最终净变化同步，文档 commit 已推送但主站指针尚未更新
-- [ ] 由 AI/人工在 CHANGELOG.md 中写入 `## <version>` 非空章节
+- [ ] 由 AI/人工在 CHANGELOG.md 中写入 `## <version>` 非空章节，并覆盖用户可见变化与必要升级注意
 - [ ] 执行 `npm run release:dry -- <version>` 检查变更与恢复
 - [ ] 执行 `npm run release -- <version>`（或交互式 `npm run release`）推送
 - [ ] 在 Actions 页确认 workflow 自动运行成功（npm publish + tag + GitHub Release）
 - [ ] 验证 tag 已创建（无 `v` 前缀）
-- [ ] 验证 GitHub Release 与正文（wiki「更新日志」页会自动展示）
+- [ ] 验证 GitHub Release 与正文
 - [ ] 验证 [npm 页面](https://www.npmjs.com/package/hexo-theme-stellar) 版本已更新
-- [ ] 在 xaoxuu.com 更新并验证 `themes/stellar` 与 `source/wiki/stellar` 子模块指针，使主题与文档同时上线
 
 ## 版本号规范
 
