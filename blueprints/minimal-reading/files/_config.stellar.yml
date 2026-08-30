@@ -10,27 +10,49 @@ menu:
       url: /
       accent: '#73584A'
 
-regions:
-  topbar: [site_brand, spacer, menu, settings, actions]
-  leftbar:
-    enabled: false
+topbar:
+  widgets:
+    - site_brand
+    - spacer
+    - menu
+    - settings
+    - actions
+leftbar:
+  enabled: false
 profiles:
   post:
-    topbar: [site_brand, spacer, menu, settings, actions, toc]
-    rightbar: []
+    topbar:
+      widgets:
+        - site_brand
+        - spacer
+        - menu
+        - settings
+        - actions
+        - toc
+    rightbar:
+      widgets: []
   wiki_index:
     active_menu: post
   wiki:
     active_menu: post
-    topbar: [site_brand, spacer, menu, settings, actions, toc]
-    rightbar: []
+    topbar:
+      widgets:
+        - site_brand
+        - spacer
+        - menu
+        - settings
+        - actions
+        - toc
+    rightbar:
+      widgets: []
   notebook_index:
     active_menu: post
   note_index:
     active_menu: post
   note:
     active_menu: post
-    rightbar: []
+    rightbar:
+      widgets: []
 
 article:
   style: story

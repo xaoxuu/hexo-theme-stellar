@@ -210,7 +210,7 @@ test("首屏恢复脚本使用版本化键并在非法缓存时回退站点默�
   const head = fs.readFileSync(path.resolve(__dirname, "../layout/_partial/head.ejs"), "utf8");
   assert.match(head, /stellar:v2:leftbar-state/);
   assert.match(head, /value === 'collapsed' \|\| value === 'expanded'/);
-  assert.match(head, /regions\.leftbar\.defaultState/);
+  assert.match(head, /leftbar\.defaultState/);
   assert.doesNotMatch(head, /stellar:v2:sidebar-state/);
 });
 

@@ -188,16 +188,16 @@ wiki 系统采用三层配置：全局主题配置、项目数据文件、页面
 | `path` | `/wiki/` | wiki 索引页的根相对 URL 路径 |
 | `navigation.active_menu` | `wiki` | wiki 页面高亮的菜单项 |
 | `navigation.tabs` | （自定义） | 索引页显示的导航标签 |
-| `regions.leftbar.widgets` | `[related, recent]` | Leftbar Widget 配置 |
-| `regions.rightbar.widgets` | `[]` | Rightbar Widget 配置 |
+| `leftbar.widgets` | `[related, recent]` | Leftbar Widget 配置 |
+| `rightbar.widgets` | `[]` | Rightbar Widget 配置 |
 
 **layout.profiles.wiki**——单个 wiki 页面配置：
 
 | 字段 | 默认 | 用途 |
 |---|---|---|
 | `navigation.active_menu` | `wiki` | 高亮的菜单项 |
-| `regions.leftbar.widgets` | `[tree, related, recent]` | Leftbar 含导航树 |
-| `regions.rightbar.widgets` | `[ghrepo, toc]` | Rightbar 显示 TOC 与 GitHub 仓库 |
+| `leftbar.widgets` | `[tree, related, recent]` | Leftbar 含导航树 |
+| `rightbar.widgets` | `[ghrepo, toc]` | Rightbar 显示 TOC 与 GitHub 仓库 |
 
 ### 项目数据文件
 

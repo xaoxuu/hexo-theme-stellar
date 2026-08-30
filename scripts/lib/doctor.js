@@ -155,8 +155,8 @@ function runDoctor(options = {}) {
         profile,
         source: fs.existsSync(stellarConfigPath) ? "_config.stellar.yml" : "Stellar Schema defaults",
         catalog,
-        defaultState: stellarConfig.regions.leftbar.defaultState,
-        layers: [stellarConfig.regions, profileConfig]
+        defaultState: stellarConfig.leftbar.defaultState,
+        layers: [stellarConfig, profileConfig]
       }));
     }
   }
@@ -177,12 +177,12 @@ function runDoctor(options = {}) {
             profile,
             source,
             catalog,
-            defaultState: stellarConfig.regions.leftbar.defaultState,
+            defaultState: stellarConfig.leftbar.defaultState,
             layers: [
-              stellarConfig.regions,
+              stellarConfig,
               stellarConfig.profiles[profile],
-              parsed.regions,
-              parsed.noteDefaults?.regions
+              parsed,
+              parsed.noteDefaults
             ]
           }));
         }
@@ -217,13 +217,13 @@ function runDoctor(options = {}) {
         profile,
         source,
         catalog,
-        defaultState: stellarConfig.regions.leftbar.defaultState,
+        defaultState: stellarConfig.leftbar.defaultState,
         layers: [
-          stellarConfig.regions,
-          stellarConfig.profiles[profile]?.regions,
-          collection?.regions,
-          profile === "notebook" ? collection?.noteDefaults?.regions : null,
-          finalConfig.regions
+          stellarConfig,
+          stellarConfig.profiles[profile],
+          collection,
+          profile === "notebook" ? collection?.noteDefaults : null,
+          finalConfig
         ]
       }));
     }

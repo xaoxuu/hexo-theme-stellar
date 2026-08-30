@@ -34,7 +34,7 @@ function coverSlot(viewModel) {
 }
 
 function regionSlot(slot, state, viewModel) {
-  if (!state) return ''
+  if (!state || state.enabled === false) return ''
   var widgetBody = partial('_partial/regions/widgets', {
     region: slot,
     state: state,
@@ -71,6 +71,7 @@ function regionsContainSearch(regions) {
   return Object.entries(regions || {}).some(function(entry) {
     var slot = entry[0]
     var region = entry[1]
+    if (region?.enabled === false) return false
     if (slot === 'leftbar' && region?.brand === 'collection_brand') return true
     if (menuHasSearch && slot === 'leftbar' && region?.menu !== false) return true
     return menuHasSearch && Array.isArray(region?.widgets) && region.widgets.some(function(widget) {
@@ -82,7 +83,11 @@ function regionsContainSearch(regions) {
 if (renderViewModel) {
   var render = renderViewModel.render
   report_region_warnings(render.layout.regionWarnings)
-  var regionState = render.layout.regions || {}
+  var regionState = {
+    topbar: render.layout.topbar,
+    leftbar: render.layout.leftbar,
+    rightbar: render.layout.rightbar
+  }
   html = shellDocument({
     documentModel: {
       language: render.document.language,
@@ -141,19 +146,19 @@ if (renderViewModel) {
     profileKey = 'notebookIndex'
   } else if (page.layout === 'notes') {
     profileKey = 'noteIndex'
-    collectionRegions = notebookIndex?.layout.regions
+    collectionRegions = notebookIndex?.layout
   } else if (is_category() || is_tag() || is_archive() || ['categories', 'tags', 'archives'].includes(page.layout)) {
     profileKey = 'blogIndex'
   } else if (page.layout === 'index_topic') {
     profileKey = 'topicIndex'
   } else if (collection_id(page, 'topic')) {
     profileKey = 'topic'
-    collectionRegions = topic?.regions
+    collectionRegions = topic
   } else if (page.layout === 'index_wiki') {
     profileKey = 'wikiIndex'
   } else if (collection_id(page, 'wiki')) {
     profileKey = 'wiki'
-    collectionRegions = wiki?.regions
+    collectionRegions = wiki
   } else if (page.layout === '404') {
     profileKey = 'error'
   } else if (page.layout === 'settings') {
@@ -161,7 +166,7 @@ if (renderViewModel) {
   } else if (page.layout === 'post') {
     profileKey = 'post'
   }
-  var legacyRegions = region_layout(profileKey, collectionRegions, pageConfig.regions)
+  var legacyRegions = region_layout(profileKey, collectionRegions, pageConfig)
   var mainBody = ''
   if (mobileBrandVisible && !legacyRegions.topbar && !legacyRegions.leftbar) {
     mainBody += partial('_partial/sidebar/brand', {placement: 'main'})

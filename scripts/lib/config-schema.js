@@ -159,7 +159,7 @@ function normalizeValue(node, value) {
   if (node.normalizer === "identity" || node.normalizer === "trusted_text" || node.normalizer === "array" || node.normalizer === "leftbar_background_type") {
     return value;
   }
-  if (node.normalizer !== "object" && node.normalizer !== "region") {
+  if (node.normalizer !== "object") {
     throw new TypeError(`未知配置归一化器：${node.normalizer || "<missing>"}`);
   }
   return clone(value);
@@ -726,16 +726,8 @@ function validateCustom(node, input, source, path, issues) {
 }
 
 function parseNode(node, input, source, path, issues, context) {
-  if (node.normalizer === "region" && input === null && !context.applyDefaults) {
-    return undefined;
-  }
   if (input === null && !node.type.includes("null") && context.applyDefaults) {
     input = resolveDefault(node);
-  }
-  if (node.normalizer === "region" && Array.isArray(input)) {
-    input = { widgets: input };
-  } else if (node.normalizer === "region" && isPlainObject(input)) {
-    input = Object.fromEntries(Object.entries(input).filter(([, value]) => value !== null));
   }
   if (node.normalizer === "leftbar_background_type" && typeof input === "string" && !node.values.includes(input)) {
     input = resolveDefault(node);

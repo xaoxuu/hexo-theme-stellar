@@ -54,37 +54,29 @@ site:
 Topbar-only：
 
 ```yaml
-layout:
-  regions:
-    topbar:
-      widgets: [brand, spacer, menu, search, actions]
+topbar:
+  widgets: [site_brand, spacer, menu, settings, actions]
+leftbar:
+  widgets: []
+profiles:
+  home:
     leftbar:
       widgets: []
-  profiles:
-    home:
-      regions:
-        leftbar:
-          inherit: false
-          widgets: []
-    blog_index:
-      regions:
-        leftbar:
-          inherit: false
-          widgets: []
+  blog_index:
+    leftbar:
+      widgets: []
 ```
 
-全局空数组只能清除全局 Widget；由于 Region 默认继承并追加，Profile 自己声明的 Leftbar Widget 需要在对应 Profile 中用 `inherit: false` 清空。
+Profile 省略 `widgets` 时继承上层数组，显式 `widgets: []` 时清空。
 
 经典 Leftbar：
 
 ```yaml
-layout:
-  regions:
-    leftbar:
-      widgets: [brand, search, menu, actions]
+leftbar:
+  widgets: [recent]
 ```
 
-文档站可同时保留 Topbar 和 Leftbar；二者不再互斥。Topbar 内部不再为 Brand 隐式添加自动外边距，Widget 的顺序和多个 Spacer 会直接决定真实布局。Wiki Home 也作为 `wiki_home` Widget 放置，不属于 Brand partial。
+文档站可同时保留 Topbar 和 Leftbar；二者不再互斥。Topbar 内部不再为 Brand 隐式添加自动外边距，Widget 的顺序和多个 Spacer 会直接决定真实布局。Wiki 返回入口由 Collection Brand partial 承载。
 
 位置能力、折叠 Rail 和 Drawer 行为见 [Region 与 Leftbar 系统](sidebar-system.md)。
 
@@ -95,7 +87,7 @@ layout:
 ## 实现边界
 
 - Brand 解析：`scripts/lib/brand.js`、`scripts/helpers/brand.js`
-- 菜单数据：`site.menu` Schema 与 `layout/_partial/sidebar/menu.ejs`
+- 菜单数据：根级 `menu` Schema 与 `layout/_partial/sidebar/menu.ejs`
 - 系统 Widget：`scripts/lib/widget-registry.js`
 - Region 渲染：`layout/_partial/regions/widgets.ejs`
 - 页面模型：`scripts/lib/models/index.js`

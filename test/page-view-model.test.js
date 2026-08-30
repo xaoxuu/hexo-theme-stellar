@@ -81,10 +81,8 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
         wiki_index: { path: "/wiki/" },
         wiki: {
           navigation: { active_menu: "wiki" },
-          regions: {
-            leftbar: { widgets: ["tree", "related"] },
-            rightbar: { widgets: ["toc"] }
-          }
+          leftbar: { widgets: ["tree", "related"] },
+          rightbar: { widgets: ["toc"] }
         }
       } },
       content: { article: {
@@ -108,7 +106,7 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
       navigation: { breadcrumb: true, tree: { "快速开始": ["index", "install"] } },
       card: { cover: "/cover.webp" },
       hero: { enabled: true, background: { image: "/hero.webp" } },
-      regions: { leftbar: { widgets: ["tree"] } },
+      leftbar: { widgets: ["tree"] },
       article: { paragraph_indent: "always" },
       footer: { share: false },
       comments: { enabled: true, title: "Wiki comments" }
@@ -208,6 +206,13 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
   assert.equal(viewModel.item.presentation.banner.image, "/hero.webp");
   assert.equal(viewModel.item.presentation.footer.share, false);
   assert.equal(viewModel.item.presentation.comments.title, "Wiki comments");
+  assert.equal(Object.hasOwn(viewModel.collection.presentation, "regions"), false);
+  assert.equal(Object.hasOwn(viewModel.item.presentation, "regions"), false);
+  assert.equal(Object.hasOwn(viewModel.render.layout, "regions"), false);
+  assert.deepEqual(viewModel.collection.presentation.topbar, { widgets: [] });
+  assert.deepEqual(viewModel.item.presentation.rightbar, { widgets: ["toc"] });
+  assert.equal(Array.isArray(viewModel.render.layout.topbar.widgets), true);
+  assert.equal(Array.isArray(viewModel.render.layout.rightbar.widgets), true);
   assert.equal(viewModel.render.document.language, "zh-CN");
   assert.equal(viewModel.render.layout.pageType, "content");
   assert.equal(viewModel.render.layout.brands.site.name, null);
@@ -385,7 +390,7 @@ test("Wiki 模型隔离输入引用并区分项目与页面可见性", () => {
     name: "Private Wiki",
     source: { repository: "owner/wiki", branch: "main" },
     hero: { background: { image: "/collection-hero.webp" } },
-    regions: { leftbar: { widgets: ["tree"] } },
+    leftbar: { widgets: ["tree"] },
     navigation: { tree: ["index"] }
   };
   const collectionState = {
@@ -412,7 +417,7 @@ test("Wiki 模型隔离输入引用并区分项目与页面可见性", () => {
   });
 
   collectionConfig.name = "Changed";
-  collectionConfig.regions.leftbar.widgets.push("changed");
+  collectionConfig.leftbar.widgets.push("changed");
   collectionState.sections[0].pages[0].title = "Changed";
 
   assert.deepEqual(viewModel.collection.visibility, { listed: false, searchable: true });
@@ -423,7 +428,7 @@ test("Wiki 模型隔离输入引用并区分项目与页面可见性", () => {
     branch: "page"
   });
   assert.equal(viewModel.collection.identity.name, "Private Wiki");
-  assert.deepEqual(viewModel.collection.presentation.regions.leftbar.widgets, ["tree"]);
+  assert.deepEqual(viewModel.collection.presentation.leftbar.widgets, ["tree"]);
   assert.equal(viewModel.item.presentation.banner.image, "/page-banner.webp");
   assert.equal(viewModel.collection.navigation.tree[0].items[0].title, "Home");
   assert.equal(viewModel.collection.navigation.tree[0].items[0].path, "wiki/private");
@@ -450,10 +455,8 @@ test("合法 Post profile 生成固定结构的冻结 PageViewModel", () => {
         blog_index: { path: "/blog/" },
         post: {
           navigation: { active_menu: "post" },
-          regions: {
-            leftbar: { widgets: ["recent"] },
-            rightbar: { widgets: ["toc"] }
-          }
+          leftbar: { widgets: ["recent"] },
+          rightbar: { widgets: ["toc"] }
         }
       } },
       content: { article: {
@@ -791,10 +794,8 @@ test("Post 配置级联保留 false、0、空字符串和 Region 覆盖", () => 
       layout: { profiles: {
         post: {
           navigation: { active_menu: "post" },
-          regions: {
-            leftbar: { widgets: ["recent"] },
-            rightbar: { widgets: ["toc"] }
-          }
+          leftbar: { widgets: ["recent"] },
+          rightbar: { widgets: ["toc"] }
         }
       } },
       content: { article: {
@@ -807,7 +808,7 @@ test("Post 配置级联保留 false、0、空字符串和 Region 覆盖", () => 
     frontMatter: {
       title: "Cascade",
       navigation: { menu: "", breadcrumb: false },
-      regions: { leftbar: { widgets: [] } },
+      leftbar: { widgets: [] },
       article: { paragraph_indent: "never" },
       footer: { license: false, share: false },
       comments: { enabled: false, title: "" },
@@ -818,9 +819,9 @@ test("Post 配置级联保留 false、0、空字符串和 Region 覆盖", () => 
   });
 
   assert.deepEqual(viewModel.item.navigation, { menu: "", breadcrumb: false });
-  assert.deepEqual(viewModel.item.presentation.regions.leftbar.widgets, []);
-  assert.deepEqual(viewModel.render.layout.regions.leftbar.widgets, []);
-  assert.equal(viewModel.render.layout.regions.leftbar.brand, "site_brand");
+  assert.deepEqual(viewModel.item.presentation.leftbar.widgets, []);
+  assert.deepEqual(viewModel.render.layout.leftbar.widgets, []);
+  assert.equal(viewModel.render.layout.leftbar.brand, "site_brand");
   assert.equal(viewModel.render.layout.brands.site.name, "Global");
   assert.equal(viewModel.render.layout.brands.collection, null);
   assert.equal(viewModel.item.presentation.article.paragraphIndent, "never");

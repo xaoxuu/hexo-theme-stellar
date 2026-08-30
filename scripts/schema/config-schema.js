@@ -127,7 +127,17 @@ function loadDefaultConfig(source = fs.readFileSync(DEFAULT_CONFIG_PATH, "utf8")
 function buildConfigSchema(defaultConfig = loadDefaultConfig()) {
   const schema = inferNode(defaultConfig, "");
   schema.sealed = true;
+  schema.removedProperties = { regions: "topbar | leftbar | rightbar" };
   for (const [pattern, rule] of CONFIG_RULES) ensureRulePath(schema, pattern, rule);
+  for (const region of ["topbar", "leftbar", "rightbar"]) {
+    schema.properties[region].migration = `${region}.widgets`;
+  }
+  for (const profile of Object.values(schema.properties.profiles.properties)) {
+    profile.removedProperties = { ...(profile.removedProperties || {}), regions: "topbar | leftbar | rightbar" };
+    for (const region of ["topbar", "leftbar", "rightbar"]) {
+      profile.properties[region].migration = `profiles.*.${region}.widgets`;
+    }
+  }
   normalizeRuleDefaults(schema);
   return deepFreeze(schema);
 }

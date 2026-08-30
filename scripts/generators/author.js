@@ -22,7 +22,7 @@ hexo.extend.generator.register("author", function () {
       layout: ["archive"],
       data: {
         author: author,
-        regions: toRenderRegions(hexo.stellar.config.regions, profile),
+        ...toRenderRegions(hexo.stellar.config, profile),
         navigation: { ...toRenderNavigation(profile), breadcrumb: false }
       }
     });

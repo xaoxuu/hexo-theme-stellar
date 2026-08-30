@@ -59,26 +59,30 @@ footer:
 # 布局
 # -----------------------------------------------------------------------------
 
-# 配置站点级 Topbar、Leftbar 和 Rightbar Region。
-regions:
-  # 设置站点级 Topbar Widget；空数组表示不显示 Topbar 内容。
-  topbar: []
-  # 配置站点级 Leftbar。
-  leftbar:
-    # 设置桌面端 Leftbar 的初始状态；可选值为 expanded 或 collapsed。
-    default_state: expanded
-    # 控制是否生成站点级 Leftbar。
-    enabled: true
-    # 设置 Leftbar 固定 Brand 来源；可选值为 site_brand、collection_brand 或 false。
-    brand: site_brand
-    # 控制是否显示 Leftbar 固定菜单。
-    menu: true
-    # 控制是否显示 Leftbar 固定操作区。
-    footer_actions: true
-    # 设置 Leftbar 内容 Widget；空数组表示清空内容区。
-    widgets: []
-  # 设置站点级 Rightbar Widget；空数组表示不显示 Rightbar 内容。
-  rightbar: []
+# 配置站点级 Topbar。
+topbar:
+  # 设置 Topbar Widget；空数组表示不显示 Topbar 内容。
+  widgets: []
+
+# 配置站点级 Leftbar。
+leftbar:
+  # 设置桌面端 Leftbar 的初始状态；可选值为 expanded 或 collapsed。
+  default_state: expanded
+  # 控制是否生成站点级 Leftbar。
+  enabled: true
+  # 设置 Leftbar 固定 Brand 来源；可选值为 site_brand、collection_brand 或 false。
+  brand: site_brand
+  # 控制是否显示 Leftbar 固定菜单。
+  menu: true
+  # 控制是否显示 Leftbar 固定操作区。
+  footer_actions: true
+  # 设置 Leftbar 内容 Widget；空数组表示清空内容区。
+  widgets: []
+
+# 配置站点级 Rightbar。
+rightbar:
+  # 设置 Rightbar Widget；空数组表示不显示 Rightbar 内容。
+  widgets: []
 
 # 配置各页面类型的路由、导航和 Region 默认值；省略字段时继承站点级 Region。
 profiles:
@@ -91,8 +95,10 @@ profiles:
       # 设置主页 Leftbar 内容 Widget；数组会整体替换站点级列表。
       widgets:
         - recent
-    # 设置主页 Rightbar Widget；空数组表示显式隐藏。
-    rightbar: []
+    # 配置主页 Rightbar 覆盖项。
+    rightbar:
+      # 设置主页 Rightbar Widget；空数组表示显式隐藏。
+      widgets: []
     # 配置主页评论区。
     comments:
       # 控制是否显示主页评论区。
@@ -117,8 +123,10 @@ profiles:
       # 设置博客列表页 Leftbar 内容 Widget；数组会整体替换站点级列表。
       widgets:
         - recent
-    # 设置博客列表页 Rightbar Widget；空数组表示显式隐藏。
-    rightbar: []
+    # 配置博客列表页 Rightbar 覆盖项。
+    rightbar:
+      # 设置博客列表页 Rightbar Widget；空数组表示显式隐藏。
+      widgets: []
     # 配置博客列表页的附加导航。
     listing_nav:
       # 控制是否显示附加导航。
@@ -137,8 +145,10 @@ profiles:
       # 设置专栏列表页 Leftbar 内容 Widget；数组会整体替换站点级列表。
       widgets:
         - recent
-    # 设置专栏列表页 Rightbar Widget；空数组表示显式隐藏。
-    rightbar: []
+    # 配置专栏列表页 Rightbar 覆盖项。
+    rightbar:
+      # 设置专栏列表页 Rightbar Widget；空数组表示显式隐藏。
+      widgets: []
 
   # 配置 Wiki 列表页默认布局。
   wiki_index:
@@ -152,8 +162,10 @@ profiles:
       widgets:
         - related
         - recent
-    # 设置 Wiki 列表页 Rightbar Widget；空数组表示显式隐藏。
-    rightbar: []
+    # 配置 Wiki 列表页 Rightbar 覆盖项。
+    rightbar:
+      # 设置 Wiki 列表页 Rightbar Widget；空数组表示显式隐藏。
+      widgets: []
     # 配置 Wiki 列表页的附加导航。
     listing_nav:
       # 控制是否显示附加导航。
@@ -171,10 +183,12 @@ profiles:
       widgets:
         - related
         - recent
-    # 设置博客文章页 Rightbar Widget；数组会整体替换站点级列表。
+    # 配置博客文章页 Rightbar 覆盖项。
     rightbar:
-      - ghrepo
-      - toc
+      # 设置博客文章页 Rightbar Widget；数组会整体替换站点级列表。
+      widgets:
+        - ghrepo
+        - toc
 
   # 配置专栏文章页默认布局。
   topic:
@@ -186,17 +200,21 @@ profiles:
       widgets:
         - related
         - recent
-    # 设置专栏文章页 Rightbar Widget；数组会整体替换站点级列表。
+    # 配置专栏文章页 Rightbar 覆盖项。
     rightbar:
-      - ghrepo
-      - toc
+      # 设置专栏文章页 Rightbar Widget；数组会整体替换站点级列表。
+      widgets:
+        - ghrepo
+        - toc
 
   # 配置 Wiki 内容页默认布局。
   wiki:
     # 设置 Wiki 内容页高亮的主菜单项；null 表示不高亮。
     active_menu: wiki
-    # 设置 Wiki 内容页 Topbar Widget；空数组表示显式隐藏。
-    topbar: []
+    # 配置 Wiki 内容页 Topbar 覆盖项。
+    topbar:
+      # 设置 Wiki 内容页 Topbar Widget；空数组表示显式隐藏。
+      widgets: []
     # 配置 Wiki 内容页 Leftbar 覆盖项。
     leftbar:
       # 设置 Wiki 内容页使用 Collection Brand。
@@ -208,10 +226,12 @@ profiles:
       # 设置 Wiki 内容页 Leftbar 内容 Widget；数组会整体替换站点级列表。
       widgets:
         - tree
-    # 设置 Wiki 内容页 Rightbar Widget；数组会整体替换站点级列表。
+    # 配置 Wiki 内容页 Rightbar 覆盖项。
     rightbar:
-      - ghrepo
-      - toc
+      # 设置 Wiki 内容页 Rightbar Widget；数组会整体替换站点级列表。
+      widgets:
+        - ghrepo
+        - toc
 
   # 配置 Notebook 总索引页默认布局。
   notebook_index:
@@ -224,8 +244,10 @@ profiles:
       # 设置 Notebook 总索引页 Leftbar 内容 Widget；数组会整体替换站点级列表。
       widgets:
         - recent
-    # 设置 Notebook 总索引页 Rightbar Widget；空数组表示显式隐藏。
-    rightbar: []
+    # 配置 Notebook 总索引页 Rightbar 覆盖项。
+    rightbar:
+      # 设置 Notebook 总索引页 Rightbar Widget；空数组表示显式隐藏。
+      widgets: []
 
   # 配置 Notebook 列表页默认布局。
   note_index:
@@ -239,8 +261,10 @@ profiles:
       widgets:
         - tagtree
         - recent
-    # 设置 Notebook 列表页 Rightbar Widget；空数组表示显式隐藏。
-    rightbar: []
+    # 配置 Notebook 列表页 Rightbar 覆盖项。
+    rightbar:
+      # 设置 Notebook 列表页 Rightbar Widget；空数组表示显式隐藏。
+      widgets: []
 
   # 配置 Notebook 内容页默认布局。
   note:
@@ -254,9 +278,11 @@ profiles:
       widgets:
         - tagtree
         - recent
-    # 设置 Notebook 内容页 Rightbar Widget；数组会整体替换站点级列表。
+    # 配置 Notebook 内容页 Rightbar 覆盖项。
     rightbar:
-      - toc
+      # 设置 Notebook 内容页 Rightbar Widget；数组会整体替换站点级列表。
+      widgets:
+        - toc
 
   # 配置作者页默认布局。
   author:
@@ -269,8 +295,10 @@ profiles:
       # 设置作者页 Leftbar 内容 Widget；数组会整体替换站点级列表。
       widgets:
         - recent
-    # 设置作者页 Rightbar Widget；空数组表示显式隐藏。
-    rightbar: []
+    # 配置作者页 Rightbar 覆盖项。
+    rightbar:
+      # 设置作者页 Rightbar Widget；空数组表示显式隐藏。
+      widgets: []
 
   # 配置错误页默认布局。
   error:
@@ -283,8 +311,10 @@ profiles:
       # 设置错误页 Leftbar 内容 Widget；数组会整体替换站点级列表。
       widgets:
         - recent
-    # 设置错误页 Rightbar Widget；空数组表示显式隐藏。
-    rightbar: []
+    # 配置错误页 Rightbar 覆盖项。
+    rightbar:
+      # 设置错误页 Rightbar Widget；空数组表示显式隐藏。
+      widgets: []
 
   # 配置普通独立页面默认布局。
   page:
@@ -295,9 +325,11 @@ profiles:
       # 设置普通页面 Leftbar 内容 Widget；数组会整体替换站点级列表。
       widgets:
         - recent
-    # 设置普通页面 Rightbar Widget；数组会整体替换站点级列表。
+    # 配置普通页面 Rightbar 覆盖项。
     rightbar:
-      - toc
+      # 设置普通页面 Rightbar Widget；数组会整体替换站点级列表。
+      widgets:
+        - toc
 
   # 配置设置页默认布局。
   settings:
@@ -309,8 +341,10 @@ profiles:
     leftbar:
       # 设置设置页 Leftbar 内容 Widget；空数组表示显式清空。
       widgets: []
-    # 设置设置页 Rightbar Widget；空数组表示显式隐藏。
-    rightbar: []
+    # 配置设置页 Rightbar 覆盖项。
+    rightbar:
+      # 设置设置页 Rightbar Widget；空数组表示显式隐藏。
+      widgets: []
 
 # -----------------------------------------------------------------------------
 # 内容

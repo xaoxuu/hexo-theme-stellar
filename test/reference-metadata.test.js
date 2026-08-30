@@ -171,7 +171,7 @@ test("Reference 只来自模型 Schema 且不提前公开后续契约", () => {
     { kind: "omitted" }
   );
   assert.deepEqual(
-    wikiCollection.fields.find(field => field.path === "presentation.regions.leftbar.widgets").default,
+    wikiCollection.fields.find(field => field.path === "presentation.leftbar.widgets").default,
     { kind: "omitted" }
   );
   assert.deepEqual(

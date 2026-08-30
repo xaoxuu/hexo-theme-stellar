@@ -13,23 +13,20 @@ Collection YAML 与 Page Front Matter 经过声明式 Schema 规范化后，作�
 
 ## Region 字段
 
-Collection 和 Page 共享同形的 `regions`：
+Collection 和 Page 直接声明同形的三个 Region：
 
 ```yaml
-regions:
-  topbar:
-    inherit: true
-    widgets: [brand, spacer, menu, search, actions]
-  leftbar:
-    inherit: false
-    widgets: [tree]
-  rightbar:
-    widgets: [ghrepo, toc]
+topbar:
+  widgets: [site_brand, spacer, menu, settings, actions]
+leftbar:
+  widgets: [tree]
+rightbar:
+  widgets: [ghrepo, toc]
 ```
 
-每个 Region 只包含 `inherit` 与 `widgets`。`leftbar.default_state` 是站点级 Shell 策略，不能在内容层配置。Notebook 的 Note 默认布局使用 `note_defaults.regions`。
+三个 Region 都以 `widgets` 保存 Widget 数组；Leftbar 还可覆盖 `enabled/brand/menu/footer`。`leftbar.default_state` 是站点级 Shell 策略，不能在内容层配置。Notebook 的 Note 默认布局使用 `note_defaults.topbar/leftbar/rightbar`。
 
-级联顺序固定为主题全局、Profile、Collection、Page；默认追加，`inherit: false` 重置，不去重、不排序。完整规则见 [Region 与 Leftbar 系统](../02-布局系统/sidebar-system.md)。
+级联顺序固定为主题全局、Profile、Collection、Page；最后一个显式 `widgets` 数组整体替换，空数组清空，省略继承，不去重、不排序。完整规则见 [Region 与 Leftbar 系统](../02-布局系统/sidebar-system.md)。
 
 ## Collection 主要字段
 
@@ -40,8 +37,8 @@ regions:
 | `route.path` | Collection 路由 |
 | `hero` | Collection 首页 Hero |
 | `card` / `listing` | 列表卡片与排序分页 |
-| `regions` | Collection 页面 Region 覆盖 |
-| `note_defaults.regions` | Notebook 内 Note 的 Region 覆盖 |
+| `topbar/leftbar/rightbar` | Collection 页面 Region 覆盖 |
+| `note_defaults.topbar/leftbar/rightbar` | Notebook 内 Note 的 Region 覆盖 |
 | `navigation` | 菜单、面包屑和树 |
 | `article/footer/comments/source` | 内容与服务配置 |
 
@@ -51,7 +48,7 @@ regions:
 | --- | --- |
 | `collection.profile/id` | 归属的 Wiki、Topic 或 Notebook |
 | `card/banner` | 列表与内容头图 |
-| `regions` | Page 级 Region 覆盖 |
+| `topbar/leftbar/rightbar` | Page 级 Region 覆盖 |
 | `navigation` | 菜单激活和面包屑 |
 | `article/footer/comments` | 内容展示与页脚评论 |
 | `visibility/listing` | 可见性与列表优先级 |
@@ -62,7 +59,7 @@ Hexo 自有 Front Matter（如 `title/date/layout/tags/categories/permalink`）�
 
 ## Widget 与业务数据边界
 
-Region 数组只保存 Widget 引用。Brand、Menu、Search 与 Actions 的业务配置分别仍归 `brand`、`menu`、`search` 与 `footer.actions` 所有。Collection Identity 可以为 Wiki/Notebook 投影 Brand，但内容层不再使用位置绑定的 `sidebar.left.brand`。
+Region 对象的 `widgets` 数组只保存 Widget 引用。Brand、Menu、Search 与 Actions 的业务配置分别仍归 `brand`、`menu`、`search` 与 `footer.actions` 所有。Collection Identity 可以为 Wiki/Notebook 投影 Brand，但内容层不再使用位置绑定的 `sidebar.left.brand`。
 
 Widget 的位置能力由类型 descriptor 声明，不允许实例扩大能力。能力不匹配只产生 warning 并跳过实例；Schema 错误、未知字段和旧字段则是构建错误。
 
@@ -70,9 +67,9 @@ Widget 的位置能力由类型 descriptor 声明，不允许实例扩大能力�
 
 | 旧字段 | 新字段 |
 | --- | --- |
-| `sidebar.left.widgets` | `regions.leftbar.widgets` |
-| `sidebar.right.widgets` | `regions.rightbar.widgets` |
-| `note_defaults.sidebar` | `note_defaults.regions` |
+| `regions.leftbar.widgets` | `leftbar.widgets` |
+| `regions.rightbar.widgets` | `rightbar.widgets` |
+| `note_defaults.regions.*` | `note_defaults.*` |
 | `sidebar.left.search/menu/wiki_home` | 对应系统 Widget |
 | `sidebar.left.brand` | `site.brand` + `brand` Widget |
 

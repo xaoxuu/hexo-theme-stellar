@@ -9,10 +9,15 @@ menu:
       icon: default:documents
       url: /
 
-regions:
-  topbar: [site_brand, spacer, menu, settings, actions]
-  leftbar:
-    enabled: false
+topbar:
+  widgets:
+    - site_brand
+    - spacer
+    - menu
+    - settings
+    - actions
+leftbar:
+  enabled: false
 profiles:
   wiki_index:
     active_menu: post

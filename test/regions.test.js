@@ -58,7 +58,7 @@ test("Region 使用最后一个显式 widgets 整体覆盖，省略字段继续�
   ];
   assert.deepEqual(cascadeRegion(layers, "leftbar"), ["tree"]);
   assert.deepEqual(cascadeRegion([...layers, { leftbar: { widgets: [] } }], "leftbar"), []);
-  assert.deepEqual(cascadeRegion([{ topbar: ["site_brand", "menu"] }], "topbar"), ["site_brand", "menu"]);
+  assert.deepEqual(cascadeRegion([{ topbar: { widgets: ["site_brand", "menu"] } }], "topbar"), ["site_brand", "menu"]);
 });
 
 test("Leftbar 固定字段逐层覆盖，widgets 不重置外壳且 enabled:false 关闭整栏", () => {
@@ -82,7 +82,8 @@ test("Leftbar 固定字段逐层覆盖，widgets 不重置外壳且 enabled:fals
       { leftbar: { enabled: false } }
     ]
   });
-  assert.equal(disabled.regions.leftbar, undefined);
+  assert.equal(disabled.leftbar.enabled, false);
+  assert.deepEqual(disabled.leftbar.widgets, []);
 });
 
 test("/about/ 同类页面覆盖内容 Widgets 后仍保留固定设置入口外壳", () => {
@@ -95,10 +96,10 @@ test("/about/ 同类页面覆盖内容 Widgets 后仍保留固定设置入口外
       { leftbar: { widgets: ["recent"] } }
     ]
   });
-  assert.deepEqual(result.regions.leftbar.widgets.map(widget => widget.id), ["recent"]);
-  assert.equal(result.regions.leftbar.brand, "site_brand");
-  assert.equal(result.regions.leftbar.menu, true);
-  assert.equal(result.regions.leftbar.footer.actions, true);
+  assert.deepEqual(result.leftbar.widgets.map(widget => widget.id), ["recent"]);
+  assert.equal(result.leftbar.brand, "site_brand");
+  assert.equal(result.leftbar.menu, true);
+  assert.equal(result.leftbar.footer.actions, true);
   const template = fs.readFileSync(path.resolve(__dirname, "../layout/_partial/regions/widgets.ejs"), "utf8");
   assert.match(template, /site-region__settings[\s\S]*partial\('\.\.\/widgets\/settings'/);
   assert.match(template, /leftbar:fixed:settings/);
@@ -112,21 +113,23 @@ test("Region 不去重、不排序并冻结最终实例", () => {
     catalog: { recent: { layout: "recent" } },
     layers: [{ leftbar: { widgets: ["recent", "recent"] } }]
   });
-  assert.deepEqual(result.regions.leftbar.widgets.map(widget => widget.id), ["recent", "recent"]);
-  assert.equal(result.regions.leftbar.defaultState, "collapsed");
-  assert.equal(result.regions.leftbar.brand, "site_brand");
-  assert.equal(result.regions.leftbar.menu, true);
-  assert.deepEqual(result.regions.leftbar.footer, { actions: true });
-  assert.notEqual(result.regions.leftbar.widgets[0].instanceId, result.regions.leftbar.widgets[1].instanceId);
-  assert.equal(Object.isFrozen(result.regions.leftbar.widgets), true);
+  assert.deepEqual(result.leftbar.widgets.map(widget => widget.id), ["recent", "recent"]);
+  assert.equal(result.leftbar.defaultState, "collapsed");
+  assert.equal(result.leftbar.brand, "site_brand");
+  assert.equal(result.leftbar.menu, true);
+  assert.deepEqual(result.leftbar.footer, { actions: true });
+  assert.notEqual(result.leftbar.widgets[0].instanceId, result.leftbar.widgets[1].instanceId);
+  assert.equal(Object.isFrozen(result.leftbar.widgets), true);
 });
 
-test("Widget 能力不支持目标 Region 时警告并跳过，空 Region 不生成", () => {
+test("Widget 能力不支持目标 Region 时警告并跳过，空 Region 仍保留对象", () => {
   const result = resolveRegions({
     profile: "blog_index",
     layers: [{ topbar: { widgets: [{ layout: "timeline" }] } }]
   });
-  assert.deepEqual(result.regions, {});
+  assert.deepEqual(result.topbar, { widgets: [] });
+  assert.deepEqual(result.leftbar, { widgets: [] });
+  assert.deepEqual(result.rightbar, { widgets: [] });
   assert.equal(result.warnings.length, 1);
   assert.deepEqual(result.warnings[0], {
     code: "unsupported_widget_presentation",

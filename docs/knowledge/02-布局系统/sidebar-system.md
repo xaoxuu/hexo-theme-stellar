@@ -14,38 +14,41 @@ Stellar v2 的公开 Region 是 `topbar`、`leftbar`、`rightbar`。名称直接
 
 ## 配置形态
 
-Region 接受三种输入：
+三个 Region 只接受对象；Widget 数组统一位于 `widgets`：
 
 ```yaml
-layout:
-  regions:
-    topbar: [brand, spacer, menu, search, visitor, actions] # 数组简写
-    leftbar:                              # 空键等同未配置
-    rightbar:
-      widgets: [toc]                     # 完整对象
+topbar:
+  widgets: [site_brand, spacer, menu, settings, actions]
+leftbar:
+  default_state: expanded
+  enabled: true
+  brand: site_brand
+  menu: true
+  footer_actions: true
+  widgets: []
+rightbar:
+  widgets: [toc]
 ```
 
-对象中的空子字段也等同未配置。需要显式清空上层 Widget 时，使用 `inherit: false` 和空数组：
+省略 Region 或 `widgets` 表示继续继承；需要显式清空上层 Widget 时使用空数组：
 
 ```yaml
-regions:
-  leftbar:
-    inherit: false
-    widgets: []
+leftbar:
+  widgets: []
 ```
 
-`leftbar.default_state: expanded | collapsed` 只允许站点级 `layout.regions.leftbar` 使用。
+`leftbar.default_state: expanded | collapsed` 只允许站点级 `leftbar` 使用。
 
 ## 四层级联
 
 最终 Widget 按以下顺序解析：
 
-1. 站点全局 `layout.regions`
-2. `layout.profiles.<profile>.regions`
-3. Collection YAML 的 `regions`
-4. Page Front Matter 的 `regions`
+1. 站点全局 `topbar/leftbar/rightbar`
+2. `profiles.<profile>.topbar/leftbar/rightbar`
+3. Collection YAML 的 `topbar/leftbar/rightbar`
+4. Page Front Matter 的 `topbar/leftbar/rightbar`
 
-每层默认 `inherit: true`，按声明顺序追加；`inherit: false` 先清空此前结果。解析器不去重、不排序，也不把不支持的 Widget 自动搬到其它 Region。Notebook 的 `note_defaults.regions` 使用同一规则。
+每个 Region 的最后一个显式 `widgets` 数组整体替换上层数组；空数组清空，省略字段继承。解析器不去重、不排序，也不把不支持的 Widget 自动搬到其它 Region。Notebook 的 `note_defaults.topbar/leftbar/rightbar` 使用同一规则。
 
 ## 系统 Widget
 
@@ -53,15 +56,13 @@ regions:
 
 | Widget | 业务数据来源 |
 | --- | --- |
-| `brand` | `site.brand` 与 Collection Identity 投影 |
-| `menu` | `site.menu` 与最终导航状态 |
-| `search` | `extensions.search` 与页面搜索范围 |
-| `actions` | `site.footer.actions` |
-| `visitor` | 当前页面评论 Provider 的本地身份缓存；只投影昵称和合法头像 |
-| `wiki_home` | Wiki 索引路径 |
+| `site_brand` / `collection_brand` | 根级 `brand` 与 Collection Identity 投影 |
+| `menu` | 根级 `menu` 与最终导航状态；搜索入口复用 Menu search item |
+| `actions` | 根级 `footer.actions` |
+| `settings` | 外观设置入口 |
 | `spacer` | Topbar 弹性占位；多个实例平分剩余空间 |
 
-移动 Widget 只改变位置，不复制业务配置。Topbar-only 站点可以直接把系统 Widget 放入 Topbar，并在会追加 Leftbar Widget 的 Profile 中用 `inherit: false` 清空。
+移动 Widget 只改变位置，不复制业务配置。Topbar-only 站点可以直接把系统 Widget 放入 Topbar，并在需要覆盖 Leftbar Widget 的 Profile 中使用 `widgets: []` 清空。
 
 ## Presentation 能力
 
@@ -69,7 +70,7 @@ Widget 类型声明 `topbar`、`leftbar`、`leftbarRail`、`rightbar`、`drawer`
 
 | 类型 | Topbar | Leftbar | Rail | Rightbar | Drawer |
 | --- | :---: | :---: | :---: | :---: | :---: |
-| Brand / Menu / Search / Actions / Visitor | ✓ | ✓ | ✓ |  | ✓ |
+| Brand / Menu / Actions / Settings | ✓ | ✓ | ✓ |  | ✓ |
 | Spacer | ✓ |  |  |  |  |
 | TOC | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Tree / Tagtree |  | ✓ | ✓ | ✓ | ✓ |
@@ -82,7 +83,7 @@ Widget 类型声明 `topbar`、`leftbar`、`leftbarRail`、`rightbar`、`drawer`
 
 ## Leftbar 内部分区与 Rail
 
-Leftbar 不公开第二套槽位配置。Catalog 自动把 Brand/Search 放入固定顶部，其他 Widget 按原数组顺序进入中间独立滚动区；单一语义 Footer 的第一行放 Actions，第二行放 Visitor 与折叠按钮。主体顶部不渐隐，底部使用透明渐隐，64px 留白只属于主体 Widget Stack。系统控制栏始终存在，Visitor 未配置时只显示右侧折叠按钮；Leftbar 不存在时不生成控制栏。
+Leftbar 不公开第二套槽位配置。Brand、Menu、Footer Actions 与 Settings 由 Leftbar 固定槽位承载，`widgets` 中的普通内容 Widget 按原数组顺序进入中间独立滚动区。系统控制栏始终存在；Leftbar 不存在时不生成控制栏。
 
 桌面 Leftbar 支持 `expanded` 与 `collapsed`。折叠态只显示支持 `leftbarRail` 的 Widget；Timeline、Markdown 等 Panel-only Widget 隐藏到重新展开。
 
@@ -94,7 +95,7 @@ Leftbar 不公开第二套槽位配置。Catalog 自动把 Brand/Search 放入�
 
 Rightbar 在 `>1180px` 是 Shell 约束的固定高度 Sticky 面板，内部独立滚动；桌面 Viewport 透明，背景、边框与模糊由内部 Widget 自己消费 Appearance Token，TOC 不再创建第二层 Sticky。`769–1180px` 时 Rightbar 先转为带完整 Appearance 表面的 Drawer、Leftbar 自动转为 Rail；`≤768px` 时两个侧栏都进入互斥 Drawer。
 
-Wiki 默认使用 `topbar: [spacer, menu, actions]` 与 `leftbar: [wiki_home, search, brand, tree]`。Wiki Home 和已配置的 Search 组成项目工具栏，Brand 继续读取 Wiki Collection Identity，不会自动搬到 Topbar；只要最终 Wiki Leftbar 非空，Footer 至少包含一个 Visitor。
+Wiki Profile 的 Topbar、Leftbar、Rightbar 同样使用 Region 对象；Collection Brand 由 Leftbar 固定 `brand` 槽位读取，内容 Widget 顺序仍由 `widgets` 数组决定。
 
 Drawer 复用原 Region 节点并遵守 ARIA、焦点转移、Escape、焦点恢复、`inert` 与 reduced-motion 契约。
 
@@ -111,14 +112,14 @@ Drawer 复用原 Region 节点并遵守 ARIA、焦点转移、Escape、焦点恢
 
 | 旧字段/能力 | 新字段/能力 |
 | --- | --- |
-| `layout.regions` 下的旧键 `sidebar` | `leftbar` |
-| `layout.regions` 下的旧键 `context` | `rightbar` |
-| Profile/Collection/Page 的 `regions.sidebar` | `regions.leftbar` |
-| Profile/Collection/Page 的 `regions.context` | `regions.rightbar` |
+| `regions.topbar/leftbar/rightbar` | 顶层 `topbar/leftbar/rightbar` |
+| `note_defaults.regions.*` | `note_defaults.topbar/leftbar/rightbar` |
+| `topbar: [a, b]` | `topbar.widgets: [a, b]` |
+| `rightbar: [a, b]` | `rightbar.widgets: [a, b]` |
 | `sidebarRail` | `leftbarRail` |
 | `appearance.backgrounds` 下的旧键 `sidebar` | `leftbar` |
-| v1 `sidebar.left.widgets` | `regions.leftbar.widgets` |
-| v1 `sidebar.right.widgets` | `regions.rightbar.widgets` |
+| v1 `sidebar.left.widgets` | `leftbar.widgets` |
+| v1 `sidebar.right.widgets` | `rightbar.widgets` |
 | `sidebar.left.brand` | 业务数据放入 `site.brand`，Region 放置 `brand` |
 | `sidebar.left.search/menu/wiki_home` | 在目标 Region 的 `widgets` 中放置系统 Widget |
 | 旧 Sidebar 的独立 `surface` | `appearance.preset` |

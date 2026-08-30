@@ -1263,7 +1263,7 @@
           "example": "terminal"
         },
         {
-          "path": "presentation.regions",
+          "path": "presentation.leftbar",
           "type": [
             "object"
           ],
@@ -1271,39 +1271,10 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "profile.regions",
-              "collection.regions",
-              "page.regions"
+              "profile.leftbar",
+              "collection.leftbar",
+              "page.leftbar"
             ]
-          },
-          "scope": "CollectionModel:notebook",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {
-            "leftbar": {
-              "enabled": true,
-              "widgets": [
-                "recent"
-              ]
-            },
-            "rightbar": {
-              "widgets": [
-                "toc"
-              ]
-            }
-          }
-        },
-        {
-          "path": "presentation.regions.leftbar",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
           },
           "scope": "CollectionModel:notebook",
           "consumers": [
@@ -1319,7 +1290,7 @@
           }
         },
         {
-          "path": "presentation.regions.leftbar.brand",
+          "path": "presentation.leftbar.brand",
           "type": [
             "string",
             "boolean",
@@ -1338,7 +1309,7 @@
           "example": "site_brand"
         },
         {
-          "path": "presentation.regions.leftbar.enabled",
+          "path": "presentation.leftbar.enabled",
           "type": [
             "boolean",
             "null"
@@ -1356,7 +1327,7 @@
           "example": true
         },
         {
-          "path": "presentation.regions.leftbar.footer",
+          "path": "presentation.leftbar.footer",
           "type": [
             "object"
           ],
@@ -1375,7 +1346,7 @@
           }
         },
         {
-          "path": "presentation.regions.leftbar.footer.actions",
+          "path": "presentation.leftbar.footer.actions",
           "type": [
             "boolean",
             "null"
@@ -1393,7 +1364,7 @@
           "example": true
         },
         {
-          "path": "presentation.regions.leftbar.menu",
+          "path": "presentation.leftbar.menu",
           "type": [
             "boolean",
             "null"
@@ -1411,7 +1382,7 @@
           "example": true
         },
         {
-          "path": "presentation.regions.leftbar.widgets",
+          "path": "presentation.leftbar.widgets",
           "type": [
             "array"
           ],
@@ -1430,13 +1401,18 @@
           ]
         },
         {
-          "path": "presentation.regions.rightbar",
+          "path": "presentation.rightbar",
           "type": [
             "object"
           ],
-          "required": false,
+          "required": true,
           "default": {
-            "kind": "omitted"
+            "kind": "inherited",
+            "from": [
+              "profile.rightbar",
+              "collection.rightbar",
+              "page.rightbar"
+            ]
           },
           "scope": "CollectionModel:notebook",
           "consumers": [
@@ -1451,7 +1427,7 @@
           }
         },
         {
-          "path": "presentation.regions.rightbar.widgets",
+          "path": "presentation.rightbar.widgets",
           "type": [
             "array"
           ],
@@ -1470,13 +1446,18 @@
           ]
         },
         {
-          "path": "presentation.regions.topbar",
+          "path": "presentation.topbar",
           "type": [
             "object"
           ],
-          "required": false,
+          "required": true,
           "default": {
-            "kind": "omitted"
+            "kind": "inherited",
+            "from": [
+              "profile.topbar",
+              "collection.topbar",
+              "page.topbar"
+            ]
           },
           "scope": "CollectionModel:notebook",
           "consumers": [
@@ -1493,7 +1474,7 @@
           }
         },
         {
-          "path": "presentation.regions.topbar.widgets",
+          "path": "presentation.topbar.widgets",
           "type": [
             "array"
           ],
@@ -2345,7 +2326,7 @@
           "example": true
         },
         {
-          "path": "presentation.regions",
+          "path": "presentation.leftbar",
           "type": [
             "object"
           ],
@@ -2353,39 +2334,10 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "profile.regions",
-              "collection.regions",
-              "page.regions"
+              "profile.leftbar",
+              "collection.leftbar",
+              "page.leftbar"
             ]
-          },
-          "scope": "CollectionModel:post",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {
-            "leftbar": {
-              "enabled": true,
-              "widgets": [
-                "recent"
-              ]
-            },
-            "rightbar": {
-              "widgets": [
-                "toc"
-              ]
-            }
-          }
-        },
-        {
-          "path": "presentation.regions.leftbar",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
           },
           "scope": "CollectionModel:post",
           "consumers": [
@@ -2401,7 +2353,7 @@
           }
         },
         {
-          "path": "presentation.regions.leftbar.brand",
+          "path": "presentation.leftbar.brand",
           "type": [
             "string",
             "boolean",
@@ -2420,7 +2372,7 @@
           "example": "site_brand"
         },
         {
-          "path": "presentation.regions.leftbar.enabled",
+          "path": "presentation.leftbar.enabled",
           "type": [
             "boolean",
             "null"
@@ -2438,7 +2390,7 @@
           "example": true
         },
         {
-          "path": "presentation.regions.leftbar.footer",
+          "path": "presentation.leftbar.footer",
           "type": [
             "object"
           ],
@@ -2457,7 +2409,7 @@
           }
         },
         {
-          "path": "presentation.regions.leftbar.footer.actions",
+          "path": "presentation.leftbar.footer.actions",
           "type": [
             "boolean",
             "null"
@@ -2475,7 +2427,7 @@
           "example": true
         },
         {
-          "path": "presentation.regions.leftbar.menu",
+          "path": "presentation.leftbar.menu",
           "type": [
             "boolean",
             "null"
@@ -2493,7 +2445,7 @@
           "example": true
         },
         {
-          "path": "presentation.regions.leftbar.widgets",
+          "path": "presentation.leftbar.widgets",
           "type": [
             "array"
           ],
@@ -2512,13 +2464,18 @@
           ]
         },
         {
-          "path": "presentation.regions.rightbar",
+          "path": "presentation.rightbar",
           "type": [
             "object"
           ],
-          "required": false,
+          "required": true,
           "default": {
-            "kind": "omitted"
+            "kind": "inherited",
+            "from": [
+              "profile.rightbar",
+              "collection.rightbar",
+              "page.rightbar"
+            ]
           },
           "scope": "CollectionModel:post",
           "consumers": [
@@ -2533,7 +2490,7 @@
           }
         },
         {
-          "path": "presentation.regions.rightbar.widgets",
+          "path": "presentation.rightbar.widgets",
           "type": [
             "array"
           ],
@@ -2552,13 +2509,18 @@
           ]
         },
         {
-          "path": "presentation.regions.topbar",
+          "path": "presentation.topbar",
           "type": [
             "object"
           ],
-          "required": false,
+          "required": true,
           "default": {
-            "kind": "omitted"
+            "kind": "inherited",
+            "from": [
+              "profile.topbar",
+              "collection.topbar",
+              "page.topbar"
+            ]
           },
           "scope": "CollectionModel:post",
           "consumers": [
@@ -2575,7 +2537,7 @@
           }
         },
         {
-          "path": "presentation.regions.topbar.widgets",
+          "path": "presentation.topbar.widgets",
           "type": [
             "array"
           ],
@@ -4041,7 +4003,7 @@
           "example": "terminal"
         },
         {
-          "path": "presentation.regions",
+          "path": "presentation.leftbar",
           "type": [
             "object"
           ],
@@ -4049,39 +4011,10 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "profile.regions",
-              "collection.regions",
-              "page.regions"
+              "profile.leftbar",
+              "collection.leftbar",
+              "page.leftbar"
             ]
-          },
-          "scope": "CollectionModel:topic",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {
-            "leftbar": {
-              "enabled": true,
-              "widgets": [
-                "recent"
-              ]
-            },
-            "rightbar": {
-              "widgets": [
-                "toc"
-              ]
-            }
-          }
-        },
-        {
-          "path": "presentation.regions.leftbar",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
           },
           "scope": "CollectionModel:topic",
           "consumers": [
@@ -4097,7 +4030,7 @@
           }
         },
         {
-          "path": "presentation.regions.leftbar.brand",
+          "path": "presentation.leftbar.brand",
           "type": [
             "string",
             "boolean",
@@ -4116,7 +4049,7 @@
           "example": "site_brand"
         },
         {
-          "path": "presentation.regions.leftbar.enabled",
+          "path": "presentation.leftbar.enabled",
           "type": [
             "boolean",
             "null"
@@ -4134,7 +4067,7 @@
           "example": true
         },
         {
-          "path": "presentation.regions.leftbar.footer",
+          "path": "presentation.leftbar.footer",
           "type": [
             "object"
           ],
@@ -4153,7 +4086,7 @@
           }
         },
         {
-          "path": "presentation.regions.leftbar.footer.actions",
+          "path": "presentation.leftbar.footer.actions",
           "type": [
             "boolean",
             "null"
@@ -4171,7 +4104,7 @@
           "example": true
         },
         {
-          "path": "presentation.regions.leftbar.menu",
+          "path": "presentation.leftbar.menu",
           "type": [
             "boolean",
             "null"
@@ -4189,7 +4122,7 @@
           "example": true
         },
         {
-          "path": "presentation.regions.leftbar.widgets",
+          "path": "presentation.leftbar.widgets",
           "type": [
             "array"
           ],
@@ -4208,13 +4141,18 @@
           ]
         },
         {
-          "path": "presentation.regions.rightbar",
+          "path": "presentation.rightbar",
           "type": [
             "object"
           ],
-          "required": false,
+          "required": true,
           "default": {
-            "kind": "omitted"
+            "kind": "inherited",
+            "from": [
+              "profile.rightbar",
+              "collection.rightbar",
+              "page.rightbar"
+            ]
           },
           "scope": "CollectionModel:topic",
           "consumers": [
@@ -4229,7 +4167,7 @@
           }
         },
         {
-          "path": "presentation.regions.rightbar.widgets",
+          "path": "presentation.rightbar.widgets",
           "type": [
             "array"
           ],
@@ -4248,13 +4186,18 @@
           ]
         },
         {
-          "path": "presentation.regions.topbar",
+          "path": "presentation.topbar",
           "type": [
             "object"
           ],
-          "required": false,
+          "required": true,
           "default": {
-            "kind": "omitted"
+            "kind": "inherited",
+            "from": [
+              "profile.topbar",
+              "collection.topbar",
+              "page.topbar"
+            ]
           },
           "scope": "CollectionModel:topic",
           "consumers": [
@@ -4271,7 +4214,7 @@
           }
         },
         {
-          "path": "presentation.regions.topbar.widgets",
+          "path": "presentation.topbar.widgets",
           "type": [
             "array"
           ],
@@ -5748,7 +5691,7 @@
           "example": "terminal"
         },
         {
-          "path": "presentation.regions",
+          "path": "presentation.leftbar",
           "type": [
             "object"
           ],
@@ -5756,39 +5699,10 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "profile.regions",
-              "collection.regions",
-              "page.regions"
+              "profile.leftbar",
+              "collection.leftbar",
+              "page.leftbar"
             ]
-          },
-          "scope": "CollectionModel:wiki",
-          "consumers": [
-            "ContentItemModel",
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {
-            "leftbar": {
-              "enabled": true,
-              "widgets": [
-                "recent"
-              ]
-            },
-            "rightbar": {
-              "widgets": [
-                "toc"
-              ]
-            }
-          }
-        },
-        {
-          "path": "presentation.regions.leftbar",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
           },
           "scope": "CollectionModel:wiki",
           "consumers": [
@@ -5804,7 +5718,7 @@
           }
         },
         {
-          "path": "presentation.regions.leftbar.brand",
+          "path": "presentation.leftbar.brand",
           "type": [
             "string",
             "boolean",
@@ -5823,7 +5737,7 @@
           "example": "site_brand"
         },
         {
-          "path": "presentation.regions.leftbar.enabled",
+          "path": "presentation.leftbar.enabled",
           "type": [
             "boolean",
             "null"
@@ -5841,7 +5755,7 @@
           "example": true
         },
         {
-          "path": "presentation.regions.leftbar.footer",
+          "path": "presentation.leftbar.footer",
           "type": [
             "object"
           ],
@@ -5860,7 +5774,7 @@
           }
         },
         {
-          "path": "presentation.regions.leftbar.footer.actions",
+          "path": "presentation.leftbar.footer.actions",
           "type": [
             "boolean",
             "null"
@@ -5878,7 +5792,7 @@
           "example": true
         },
         {
-          "path": "presentation.regions.leftbar.menu",
+          "path": "presentation.leftbar.menu",
           "type": [
             "boolean",
             "null"
@@ -5896,7 +5810,7 @@
           "example": true
         },
         {
-          "path": "presentation.regions.leftbar.widgets",
+          "path": "presentation.leftbar.widgets",
           "type": [
             "array"
           ],
@@ -5915,13 +5829,18 @@
           ]
         },
         {
-          "path": "presentation.regions.rightbar",
+          "path": "presentation.rightbar",
           "type": [
             "object"
           ],
-          "required": false,
+          "required": true,
           "default": {
-            "kind": "omitted"
+            "kind": "inherited",
+            "from": [
+              "profile.rightbar",
+              "collection.rightbar",
+              "page.rightbar"
+            ]
           },
           "scope": "CollectionModel:wiki",
           "consumers": [
@@ -5936,7 +5855,7 @@
           }
         },
         {
-          "path": "presentation.regions.rightbar.widgets",
+          "path": "presentation.rightbar.widgets",
           "type": [
             "array"
           ],
@@ -5955,13 +5874,18 @@
           ]
         },
         {
-          "path": "presentation.regions.topbar",
+          "path": "presentation.topbar",
           "type": [
             "object"
           ],
-          "required": false,
+          "required": true,
           "default": {
-            "kind": "omitted"
+            "kind": "inherited",
+            "from": [
+              "profile.topbar",
+              "collection.topbar",
+              "page.topbar"
+            ]
           },
           "scope": "CollectionModel:wiki",
           "consumers": [
@@ -5978,7 +5902,7 @@
           }
         },
         {
-          "path": "presentation.regions.topbar.widgets",
+          "path": "presentation.topbar.widgets",
           "type": [
             "array"
           ],
@@ -6902,7 +6826,7 @@
           "example": true
         },
         {
-          "path": "presentation.regions",
+          "path": "presentation.leftbar",
           "type": [
             "object"
           ],
@@ -6910,38 +6834,10 @@
           "default": {
             "kind": "inherited",
             "from": [
-              "profile.regions",
-              "collection.regions",
-              "page.regions"
+              "profile.leftbar",
+              "collection.leftbar",
+              "page.leftbar"
             ]
-          },
-          "scope": "ContentItemModel",
-          "consumers": [
-            "PageViewModel",
-            "Reference generator"
-          ],
-          "example": {
-            "leftbar": {
-              "enabled": true,
-              "widgets": [
-                "recent"
-              ]
-            },
-            "rightbar": {
-              "widgets": [
-                "toc"
-              ]
-            }
-          }
-        },
-        {
-          "path": "presentation.regions.leftbar",
-          "type": [
-            "object"
-          ],
-          "required": false,
-          "default": {
-            "kind": "omitted"
           },
           "scope": "ContentItemModel",
           "consumers": [
@@ -6956,7 +6852,7 @@
           }
         },
         {
-          "path": "presentation.regions.leftbar.brand",
+          "path": "presentation.leftbar.brand",
           "type": [
             "string",
             "boolean",
@@ -6974,7 +6870,7 @@
           "example": "site_brand"
         },
         {
-          "path": "presentation.regions.leftbar.enabled",
+          "path": "presentation.leftbar.enabled",
           "type": [
             "boolean",
             "null"
@@ -6991,7 +6887,7 @@
           "example": true
         },
         {
-          "path": "presentation.regions.leftbar.footer",
+          "path": "presentation.leftbar.footer",
           "type": [
             "object"
           ],
@@ -7009,7 +6905,7 @@
           }
         },
         {
-          "path": "presentation.regions.leftbar.footer.actions",
+          "path": "presentation.leftbar.footer.actions",
           "type": [
             "boolean",
             "null"
@@ -7026,7 +6922,7 @@
           "example": true
         },
         {
-          "path": "presentation.regions.leftbar.menu",
+          "path": "presentation.leftbar.menu",
           "type": [
             "boolean",
             "null"
@@ -7043,7 +6939,7 @@
           "example": true
         },
         {
-          "path": "presentation.regions.leftbar.widgets",
+          "path": "presentation.leftbar.widgets",
           "type": [
             "array"
           ],
@@ -7061,13 +6957,18 @@
           ]
         },
         {
-          "path": "presentation.regions.rightbar",
+          "path": "presentation.rightbar",
           "type": [
             "object"
           ],
-          "required": false,
+          "required": true,
           "default": {
-            "kind": "omitted"
+            "kind": "inherited",
+            "from": [
+              "profile.rightbar",
+              "collection.rightbar",
+              "page.rightbar"
+            ]
           },
           "scope": "ContentItemModel",
           "consumers": [
@@ -7081,7 +6982,7 @@
           }
         },
         {
-          "path": "presentation.regions.rightbar.widgets",
+          "path": "presentation.rightbar.widgets",
           "type": [
             "array"
           ],
@@ -7099,13 +7000,18 @@
           ]
         },
         {
-          "path": "presentation.regions.topbar",
+          "path": "presentation.topbar",
           "type": [
             "object"
           ],
-          "required": false,
+          "required": true,
           "default": {
-            "kind": "omitted"
+            "kind": "inherited",
+            "from": [
+              "profile.topbar",
+              "collection.topbar",
+              "page.topbar"
+            ]
           },
           "scope": "ContentItemModel",
           "consumers": [
@@ -7121,7 +7027,7 @@
           }
         },
         {
-          "path": "presentation.regions.topbar.widgets",
+          "path": "presentation.topbar.widgets",
           "type": [
             "array"
           ],
@@ -8380,6 +8286,28 @@
           "example": false
         },
         {
+          "path": "render.layout.leftbar",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 Region 四层级联与 Widget presentation 能力解析"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "enabled": true,
+            "defaultState": "expanded",
+            "widgets": []
+          },
+          "open": true
+        },
+        {
           "path": "render.layout.notebookIndexPath",
           "type": [
             "string"
@@ -8469,7 +8397,7 @@
           "example": []
         },
         {
-          "path": "render.layout.regions",
+          "path": "render.layout.rightbar",
           "type": [
             "object"
           ],
@@ -8484,13 +8412,7 @@
             "Reference generator"
           ],
           "example": {
-            "leftbar": {
-              "defaultState": "expanded",
-              "widgets": []
-            },
-            "rightbar": {
-              "widgets": []
-            }
+            "widgets": []
           },
           "open": true
         },
@@ -8634,6 +8556,26 @@
             "Reference generator"
           ],
           "example": "notes/dev/tags/tools/cli"
+        },
+        {
+          "path": "render.layout.topbar",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 Region 四层级联与 Widget presentation 能力解析"
+          },
+          "scope": "PageViewModel:notebook",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "widgets": []
+          },
+          "open": true
         },
         {
           "path": "render.listing",
@@ -10420,6 +10362,28 @@
           "example": false
         },
         {
+          "path": "render.layout.leftbar",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 Region 四层级联与 Widget presentation 能力解析"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "enabled": true,
+            "defaultState": "expanded",
+            "widgets": []
+          },
+          "open": true
+        },
+        {
           "path": "render.layout.pageType",
           "type": [
             "string"
@@ -10454,7 +10418,7 @@
           "example": []
         },
         {
-          "path": "render.layout.regions",
+          "path": "render.layout.rightbar",
           "type": [
             "object"
           ],
@@ -10469,13 +10433,7 @@
             "Reference generator"
           ],
           "example": {
-            "leftbar": {
-              "defaultState": "expanded",
-              "widgets": []
-            },
-            "rightbar": {
-              "widgets": []
-            }
+            "widgets": []
           },
           "open": true
         },
@@ -10497,6 +10455,26 @@
             "Reference generator"
           ],
           "example": false
+        },
+        {
+          "path": "render.layout.topbar",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 Region 四层级联与 Widget presentation 能力解析"
+          },
+          "scope": "PageViewModel:post",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "widgets": []
+          },
+          "open": true
         },
         {
           "path": "render.listing",
@@ -12480,6 +12458,28 @@
           "example": false
         },
         {
+          "path": "render.layout.leftbar",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 Region 四层级联与 Widget presentation 能力解析"
+          },
+          "scope": "PageViewModel:topic",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "enabled": true,
+            "defaultState": "expanded",
+            "widgets": []
+          },
+          "open": true
+        },
+        {
           "path": "render.layout.pageType",
           "type": [
             "string"
@@ -12514,7 +12514,7 @@
           "example": []
         },
         {
-          "path": "render.layout.regions",
+          "path": "render.layout.rightbar",
           "type": [
             "object"
           ],
@@ -12529,13 +12529,7 @@
             "Reference generator"
           ],
           "example": {
-            "leftbar": {
-              "defaultState": "expanded",
-              "widgets": []
-            },
-            "rightbar": {
-              "widgets": []
-            }
+            "widgets": []
           },
           "open": true
         },
@@ -12557,6 +12551,26 @@
             "Reference generator"
           ],
           "example": false
+        },
+        {
+          "path": "render.layout.topbar",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 Region 四层级联与 Widget presentation 能力解析"
+          },
+          "scope": "PageViewModel:topic",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "widgets": []
+          },
+          "open": true
         },
         {
           "path": "render.listing",
@@ -14722,6 +14736,28 @@
           "example": false
         },
         {
+          "path": "render.layout.leftbar",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 Region 四层级联与 Widget presentation 能力解析"
+          },
+          "scope": "PageViewModel:wiki",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "enabled": true,
+            "defaultState": "expanded",
+            "widgets": []
+          },
+          "open": true
+        },
+        {
           "path": "render.layout.pageType",
           "type": [
             "string"
@@ -14756,7 +14792,7 @@
           "example": []
         },
         {
-          "path": "render.layout.regions",
+          "path": "render.layout.rightbar",
           "type": [
             "object"
           ],
@@ -14771,13 +14807,7 @@
             "Reference generator"
           ],
           "example": {
-            "leftbar": {
-              "defaultState": "expanded",
-              "widgets": []
-            },
-            "rightbar": {
-              "widgets": []
-            }
+            "widgets": []
           },
           "open": true
         },
@@ -14799,6 +14829,26 @@
             "Reference generator"
           ],
           "example": false
+        },
+        {
+          "path": "render.layout.topbar",
+          "type": [
+            "object"
+          ],
+          "required": true,
+          "default": {
+            "kind": "computed",
+            "description": "由 Region 四层级联与 Widget presentation 能力解析"
+          },
+          "scope": "PageViewModel:wiki",
+          "consumers": [
+            "page.viewModel",
+            "Reference generator"
+          ],
+          "example": {
+            "widgets": []
+          },
+          "open": true
         },
         {
           "path": "render.layout.wikiIndexPath",

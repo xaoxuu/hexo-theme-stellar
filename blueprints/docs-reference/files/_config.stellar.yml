@@ -18,15 +18,24 @@ footer:
         - title: Getting started
           url: /wiki/docs-reference/getting-started/
 
-regions:
-  topbar: [site_brand, spacer, menu, actions]
+topbar:
+  widgets:
+    - site_brand
+    - spacer
+    - menu
+    - actions
 profiles:
   home:
     active_menu: wiki
     leftbar:
       enabled: false
   wiki:
-    topbar: [site_brand, spacer, menu, actions]
+    topbar:
+      widgets:
+        - site_brand
+        - spacer
+        - menu
+        - actions
   blog_index:
     active_menu: wiki
   topic_index:

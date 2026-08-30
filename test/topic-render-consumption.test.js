@@ -90,7 +90,9 @@ test("Topic 导航、Region 和辅助 partial 优先消费显式 ViewModel", () 
   assert.match(source("layout/_partial/main/navbar/article_banner.ejs"), /\['post', 'wiki', 'topic', 'notebook'\]/);
   assert.match(source("layout/_partial/main/navbar/breadcrumb/blog.ejs"), /postViewModel\.collection\.profile === 'topic'/);
   assert.match(source("layout/_partial/widgets/related.ejs"), /topicViewModel\.collection\.navigation\.series/);
-  assert.match(source("layout/layout.ejs"), /var regionState = render\.layout\.regions \|\| \{\}/);
+  assert.match(source("layout/layout.ejs"), /topbar: render\.layout\.topbar/);
+  assert.match(source("layout/layout.ejs"), /leftbar: render\.layout\.leftbar/);
+  assert.match(source("layout/layout.ejs"), /rightbar: render\.layout\.rightbar/);
   assert.match(source("layout/_partial/regions/widgets.ejs"), /activeViewModel/);
   assert.doesNotMatch(source("layout/_partial/regions/widgets.ejs"), /presentation\.sidebar|sidebar\?\.left|sidebar\?\.right/);
   const dateInfo = source("layout/_partial/main/navbar/dateinfo.ejs");

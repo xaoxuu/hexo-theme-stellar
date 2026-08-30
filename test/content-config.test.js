@@ -16,7 +16,7 @@ test("Collection Schema 解析最终路径、第三方参数和 camelCase 运行
   const parsed = parseCollectionConfig({
     name: "Stellar",
     route: { path: "/wiki/stellar/" },
-    regions: { leftbar: { widgets: ["tree"] } },
+    leftbar: { widgets: ["tree"] },
     article: { ai_label: "generated" },
     comments: {
       provider: "giscus",
@@ -26,7 +26,7 @@ test("Collection Schema 解析最终路径、第三方参数和 camelCase 运行
   }, "source/_data/wiki/hexo-stellar.yml");
 
   assert.equal(parsed.route.path, "wiki/stellar/");
-  assert.deepEqual(parsed.regions.leftbar.widgets, ["tree"]);
+  assert.deepEqual(parsed.leftbar.widgets, ["tree"]);
   assert.equal(parsed.article.aiLabel, "generated");
   assert.equal(parsed.comments.provider, "giscus");
   assert.equal(parsed.comments.options["data-repo"], "xaoxuu/hexo-theme-stellar");
@@ -38,40 +38,42 @@ test("Collection Schema 拒绝已移除的 wiki_home Widget", () => {
   assert.throws(() => parseCollectionConfig({
     name: "Stellar",
     route: { path: "/wiki/stellar/" },
-    regions: { leftbar: { widgets: ["wiki_home"] } }
-  }, "source/_data/wiki/hexo-stellar.yml"), /regions\.leftbar\.widgets\[0\].*removed wiki_home/);
+    leftbar: { widgets: ["wiki_home"] }
+  }, "source/_data/wiki/hexo-stellar.yml"), /leftbar\.widgets\[0\].*removed wiki_home/);
 });
 
 test("Collection Region widget 项允许字符串 ID 和受约束的内联参数袋", () => {
   const parsed = parseCollectionConfig({
     name: "Resume",
     route: { path: "/resume/" },
-    regions: {
-      leftbar: {
-        widgets: ["toc", { layout: "ghuser", username: "xaoxuu", header: true }]
-      }
+    leftbar: {
+      widgets: ["toc", { layout: "ghuser", username: "xaoxuu", header: true }]
     }
   }, "source/_data/wiki/resume.yml");
 
-  assert.deepEqual(parsed.regions.leftbar.widgets, [
+  assert.deepEqual(parsed.leftbar.widgets, [
     "toc",
     { layout: "ghuser", username: "xaoxuu", header: true }
   ]);
-  assert.equal(Object.isFrozen(parsed.regions.leftbar.widgets[1]), true);
+  assert.equal(Object.isFrozen(parsed.leftbar.widgets[1]), true);
 });
 
-test("Collection 与 Front Matter Region 接受数组简写和空键", () => {
+test("Collection 与 Front Matter Region 只接受对象并支持空数组与省略继承", () => {
   const collection = parseCollectionConfig({
     name: "Docs",
-    regions: { topbar: ["site_brand", "menu"], leftbar: null, rightbar: ["toc"] }
+    topbar: { widgets: ["site_brand", "menu"] },
+    rightbar: { widgets: ["toc"] }
   });
-  assert.deepEqual(collection.regions.topbar.widgets, ["site_brand", "menu"]);
-  assert.equal(collection.regions.leftbar, undefined);
-  assert.deepEqual(collection.regions.rightbar.widgets, ["toc"]);
+  assert.deepEqual(collection.topbar.widgets, ["site_brand", "menu"]);
+  assert.equal(collection.leftbar, undefined);
+  assert.deepEqual(collection.rightbar.widgets, ["toc"]);
 
-  const page = parsePageConfig({ regions: { leftbar: [], rightbar: null } });
-  assert.deepEqual(page.regions.leftbar.widgets, []);
-  assert.equal(page.regions.rightbar, undefined);
+  const page = parsePageConfig({ leftbar: { widgets: [] } });
+  assert.deepEqual(page.leftbar.widgets, []);
+  assert.equal(page.rightbar, undefined);
+
+  assert.throws(() => parseCollectionConfig({ name: "Docs", topbar: ["menu"] }), /topbar 应为 object/);
+  assert.throws(() => parsePageConfig({ rightbar: ["toc"] }), /rightbar 应为 object/);
 });
 
 test("Front Matter Schema 保留 Hexo 字段并解析最终 Stellar 字段", () => {
@@ -171,11 +173,11 @@ test("封闭对象、类型、枚举、数值和必填字段提供聚合诊断",
   assert.throws(() => parseCollectionConfig({
     name: "Stellar",
     mystery: true,
-    regions: { leftbar: { widgets: "tree, toc" } },
+    leftbar: { widgets: "tree, toc" },
     listing: { priority: -1 }
   }), error => {
     assert.match(error.message, /未知字段 mystery/);
-    assert.match(error.message, /regions\.leftbar\.widgets 应为 array/);
+    assert.match(error.message, /leftbar\.widgets 应为 array/);
     assert.match(error.message, /number >= 0/);
     return true;
   });
@@ -216,12 +218,40 @@ test("route.start 只允许 Topic Collection", () => {
 
 test("双 Brand 作为系统 Widget 摆放，页面不再复制 Brand 业务配置", () => {
   const parsed = parsePageConfig({
-    regions: { topbar: { widgets: ["collection_brand"] } }
+    topbar: { widgets: ["collection_brand"] }
   });
-  assert.deepEqual(parsed.regions.topbar.widgets, ["collection_brand"]);
+  assert.deepEqual(parsed.topbar.widgets, ["collection_brand"]);
   assert.throws(() => parsePageConfig({
     sidebar: { left: { brand: { image: { src: "/brand.svg", variant: "icon" } } } }
-  }), /sidebar 已移除，期望 regions/);
+  }), /sidebar 已移除，期望 leftbar \| rightbar/);
+});
+
+test("旧 Region 包装与 note_defaults.regions 提供明确迁移诊断", () => {
+  assert.throws(() => parseCollectionConfig({
+    name: "Docs",
+    regions: { topbar: { widgets: ["menu"] } }
+  }), /regions 已移除，期望 topbar \| leftbar \| rightbar/);
+
+  assert.throws(() => parseCollectionConfig({
+    name: "Notes",
+    note_defaults: { regions: { rightbar: { widgets: ["toc"] } } }
+  }), /note_defaults\.regions 已移除，期望 note_defaults\.topbar \| leftbar \| rightbar/);
+
+  assert.throws(() => parseCollectionConfig({
+    name: "Notes",
+    note_defaults: { rightbar: ["toc"] }
+  }), /note_defaults\.rightbar 应为 object/);
+});
+
+test("内容层 Region 拒绝站点专属 default_state 与未知字段", () => {
+  assert.throws(() => parseCollectionConfig({
+    name: "Docs",
+    leftbar: { default_state: "collapsed" }
+  }), /未知字段 leftbar\.default_state/);
+
+  assert.throws(() => parsePageConfig({
+    topbar: { enabled: true }
+  }), /未知字段 topbar\.enabled/);
 });
 
 test("getCollectionId 使用 profile，visibility 两个维度彼此独立", () => {

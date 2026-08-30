@@ -37,11 +37,9 @@ const LEGACY_COLLECTION_ROOTS = Object.freeze({
   background: "hero.background",
   animation: "hero.background.effect",
   banner: "hero",
-  leftbar: "regions.leftbar.widgets",
-  rightbar: "regions.rightbar.widgets",
   menu_id: "navigation.menu",
   header: "navigation",
-  search: "regions.leftbar.widgets",
+  search: "leftbar.widgets",
   menu: "navigation.menu",
   type: "article.style",
   indent: "article.paragraph_indent",
@@ -71,13 +69,11 @@ const LEGACY_FRONT_MATTER_ROOTS = Object.freeze({
   h1: "banner.headline",
   subtitle: "banner.tagline",
   banner_info: "banner",
-  leftbar: "regions.leftbar.widgets",
-  rightbar: "regions.rightbar.widgets",
   menu_id: "navigation.menu",
   header: "navigation",
-  search: "regions.leftbar.widgets",
+  search: "leftbar.widgets",
   menu: "navigation.menu",
-  logo: "regions.leftbar.widgets",
+  logo: "leftbar.widgets",
   type: "article.style",
   indent: "article.paragraph_indent",
   author: "article.author",
@@ -252,27 +248,28 @@ function schemaForScope(scope) {
 }
 
 function decorateSharedSchemas(schema) {
-  const regions = clone(schema.properties.regions);
-  regions.removedProperties = { sidebar: "leftbar", context: "rightbar" };
+  schema.removedProperties ||= {};
+  schema.removedProperties.regions = "topbar | leftbar | rightbar";
   for (const region of ["topbar", "leftbar", "rightbar"]) {
-    regions.properties[region].normalizer = "region";
-    regions.properties[region].normalization = "accept a widget array shorthand or a full region object; validate children and deep-freeze the normalized object";
+    schema.properties[region].normalizer = "object";
+    schema.properties[region].normalization = "accept a Region object; validate children and deep-freeze the normalized object";
+    schema.properties[region].migration = `${region}.widgets`;
+    schema.properties[region].removedProperties = { inherit: null };
   }
-  regions.properties.topbar.properties.widgets.validator = "region_widgets";
-  regions.properties.leftbar.properties.widgets.validator = "leftbar_content_widgets";
-  regions.properties.rightbar.properties.widgets.validator = "region_widgets";
-  regions.properties.topbar.removedProperties = { inherit: null };
-  regions.properties.leftbar.removedProperties = { inherit: null };
-  regions.properties.rightbar.removedProperties = { inherit: null };
-  schema.properties.regions = regions;
+  schema.properties.topbar.properties.widgets.validator = "region_widgets";
+  schema.properties.leftbar.properties.widgets.validator = "leftbar_content_widgets";
+  schema.properties.rightbar.properties.widgets.validator = "region_widgets";
   if (schema.runtimeKey === "collection") {
-    schema.properties.note_defaults ||= syntheticObject("collection", "note_defaults");
-    schema.properties.note_defaults.properties ||= {};
-    schema.properties.note_defaults.properties.regions = {
-      ...schema.properties.note_defaults.properties.regions,
-      properties: regions.properties,
-      sealed: true
-    };
+    schema.properties.note_defaults.removedProperties = { regions: "topbar | leftbar | rightbar" };
+    for (const region of ["topbar", "leftbar", "rightbar"]) {
+      schema.properties.note_defaults.properties[region].normalizer = "object";
+      schema.properties.note_defaults.properties[region].normalization = "accept a Region object; validate children and deep-freeze the normalized object";
+      schema.properties.note_defaults.properties[region].migration = `note_defaults.${region}.widgets`;
+      schema.properties.note_defaults.properties[region].removedProperties = { inherit: null };
+    }
+    schema.properties.note_defaults.properties.topbar.properties.widgets.validator = "region_widgets";
+    schema.properties.note_defaults.properties.leftbar.properties.widgets.validator = "leftbar_content_widgets";
+    schema.properties.note_defaults.properties.rightbar.properties.widgets.validator = "region_widgets";
   }
 
   const effect = schema.properties.hero?.properties.background?.properties.effect;
@@ -286,7 +283,7 @@ function decorateSharedSchemas(schema) {
 }
 
 function decorateCommon(schema) {
-  schema.removedProperties.sidebar = "regions";
+  schema.removedProperties.sidebar = "leftbar | rightbar";
   schema.properties.navigation.removedProperties = { mobile_header: "navigation" };
   schema.properties.comments.removedProperties = Object.fromEntries(
     COMMENT_PROVIDER_FIELDS.map(field => [field, field === "service" ? "provider" : "options"])

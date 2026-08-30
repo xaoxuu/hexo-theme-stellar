@@ -63,24 +63,23 @@ function fields(consumers, definitions, options = {}) {
 
 
 const CONTENT_CONSUMERS = Object.freeze(["CollectionModel", "PageViewModel", "article renderer", "listing renderer"]);
-const REGION_NORMALIZATION = "accept a widget array shorthand or a full region object; validate children and deep-freeze the normalized object";
+const REGION_NORMALIZATION = "accept a Region object; validate children and deep-freeze the normalized object";
 
 const CONTENT_OVERRIDE_DEFINITIONS = [
   ["card", "object", derived("theme profile card"), { boundary: "sealed" }],
   ["card.cover", ["string", "null"], derived("theme or collection card.cover")],
   ["card.tagline", ["string", "null"], derived("theme or collection card.tagline")],
-  ["regions", "object", derived("theme profile regions"), { boundary: "sealed" }],
-  ["regions.topbar", "object", derived("theme or collection topbar"), { boundary: "sealed", normalization: REGION_NORMALIZATION }],
-  ["regions.topbar.widgets", "array", literal([]), { items: { type: ["string", "object"], boundary: "parameter_bag" } }],
-  ["regions.leftbar", "object", derived("theme or collection leftbar"), { boundary: "sealed", normalization: REGION_NORMALIZATION }],
-  ["regions.leftbar.enabled", ["boolean", "null"], literal(null)],
-  ["regions.leftbar.brand", ["string", "boolean", "null"], literal(null), { values: [null, false, "site_brand", "collection_brand"] }],
-  ["regions.leftbar.menu", ["boolean", "null"], literal(null)],
-  ["regions.leftbar.footer", "object", literal({}), { boundary: "sealed" }],
-  ["regions.leftbar.footer.actions", ["boolean", "null"], literal(null)],
-  ["regions.leftbar.widgets", "array", literal([]), { items: { type: ["string", "object"], boundary: "parameter_bag" } }],
-  ["regions.rightbar", "object", derived("theme or collection rightbar"), { boundary: "sealed", normalization: REGION_NORMALIZATION }],
-  ["regions.rightbar.widgets", "array", literal([]), { items: { type: ["string", "object"], boundary: "parameter_bag" } }],
+  ["topbar", "object", derived("theme or collection topbar"), { boundary: "sealed", normalization: REGION_NORMALIZATION }],
+  ["topbar.widgets", "array", literal([]), { items: { type: ["string", "object"], boundary: "parameter_bag" } }],
+  ["leftbar", "object", derived("theme or collection leftbar"), { boundary: "sealed", normalization: REGION_NORMALIZATION }],
+  ["leftbar.enabled", ["boolean", "null"], literal(null)],
+  ["leftbar.brand", ["string", "boolean", "null"], literal(null), { values: [null, false, "site_brand", "collection_brand"] }],
+  ["leftbar.menu", ["boolean", "null"], literal(null)],
+  ["leftbar.footer", "object", literal({}), { boundary: "sealed" }],
+  ["leftbar.footer.actions", ["boolean", "null"], literal(null)],
+  ["leftbar.widgets", "array", literal([]), { items: { type: ["string", "object"], boundary: "parameter_bag" } }],
+  ["rightbar", "object", derived("theme or collection rightbar"), { boundary: "sealed", normalization: REGION_NORMALIZATION }],
+  ["rightbar.widgets", "array", literal([]), { items: { type: ["string", "object"], boundary: "parameter_bag" } }],
   ["navigation", "object", derived("theme profile navigation"), { boundary: "sealed" }],
   ["navigation.menu", ["string", "null"], literal(null)],
   ["navigation.breadcrumb", ["boolean", "null"], literal(null)],
@@ -142,7 +141,17 @@ const COLLECTION_TARGET_DEFINITIONS = [
   ["listing.sort.field", ["string", "null"], literal(null), { values: ["date", "updated", "title"] }],
   ["listing.sort.direction", ["string", "null"], literal(null), { values: ["asc", "desc"] }],
   ["note_defaults", "object", literal({}), { boundary: "sealed" }],
-  ["note_defaults.regions", "object", literal({}), { boundary: "registered_schema" }],
+  ["note_defaults.topbar", "object", literal({}), { boundary: "sealed", normalization: REGION_NORMALIZATION }],
+  ["note_defaults.topbar.widgets", "array", literal([]), { items: { type: ["string", "object"], boundary: "parameter_bag" } }],
+  ["note_defaults.leftbar", "object", literal({}), { boundary: "sealed", normalization: REGION_NORMALIZATION }],
+  ["note_defaults.leftbar.enabled", ["boolean", "null"], literal(null)],
+  ["note_defaults.leftbar.brand", ["string", "boolean", "null"], literal(null), { values: [null, false, "site_brand", "collection_brand"] }],
+  ["note_defaults.leftbar.menu", ["boolean", "null"], literal(null)],
+  ["note_defaults.leftbar.footer", "object", literal({}), { boundary: "sealed" }],
+  ["note_defaults.leftbar.footer.actions", ["boolean", "null"], literal(null)],
+  ["note_defaults.leftbar.widgets", "array", literal([]), { items: { type: ["string", "object"], boundary: "parameter_bag" } }],
+  ["note_defaults.rightbar", "object", literal({}), { boundary: "sealed", normalization: REGION_NORMALIZATION }],
+  ["note_defaults.rightbar.widgets", "array", literal([]), { items: { type: ["string", "object"], boundary: "parameter_bag" } }],
   ["navigation.tree", ["array", "object"], literal([]), { boundary: "record" }]
 ];
 

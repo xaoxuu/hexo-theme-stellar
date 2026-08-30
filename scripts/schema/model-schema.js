@@ -192,16 +192,19 @@ function navigationSchema(factory, extension = {}) {
   });
 }
 
-function regionsConfigSchema(factory) {
+function regionConfigSchemas(factory) {
   const { array, field, object } = factory;
   const widget = field(["string", "object"], {
     default: computed("由 widgets 数组逐项提供"),
     example: "toc",
     additionalProperties: true
   });
-  const region = example => object({
+  const region = (name, example) => object({
     widgets: array(widget, { example })
-  }, { example: { widgets: example } });
+  }, {
+    default: inherited(`profile.${name}`, `collection.${name}`, `page.${name}`),
+    example: { widgets: example }
+  });
   const leftbar = example => object({
     enabled: field(["boolean", "null"], { example: true }),
     brand: field(["string", "boolean", "null"], { example: "site_brand" }),
@@ -210,15 +213,15 @@ function regionsConfigSchema(factory) {
       actions: field(["boolean", "null"], { example: true })
     }, { example: { actions: true } }),
     widgets: array(widget, { example })
-  }, { example: { enabled: true, widgets: example } });
-  return object({
-    topbar: region(["site_brand", "spacer", "menu"]),
-    leftbar: leftbar(["recent"]),
-    rightbar: region(["toc"])
   }, {
-    default: inherited("profile.regions", "collection.regions", "page.regions"),
-    example: { leftbar: { enabled: true, widgets: ["recent"] }, rightbar: { widgets: ["toc"] } }
+    default: inherited("profile.leftbar", "collection.leftbar", "page.leftbar"),
+    example: { enabled: true, widgets: example }
   });
+  return {
+    topbar: region("topbar", ["site_brand", "spacer", "menu"]),
+    leftbar: leftbar(["recent"]),
+    rightbar: region("rightbar", ["toc"])
+  };
 }
 
 function cardSchema(factory) {
@@ -332,9 +335,21 @@ function commentsSchema(factory) {
 function renderRegionsSchema(factory) {
   const { array, field } = factory;
   return {
-    regions: field("object", {
+    topbar: field("object", {
       default: computed("由 Region 四层级联与 Widget presentation 能力解析"),
-      example: { leftbar: { defaultState: "expanded", widgets: [] }, rightbar: { widgets: [] } },
+      example: { widgets: [] },
+      required: true,
+      additionalProperties: true
+    }),
+    leftbar: field("object", {
+      default: computed("由 Region 四层级联与 Widget presentation 能力解析"),
+      example: { enabled: true, defaultState: "expanded", widgets: [] },
+      required: true,
+      additionalProperties: true
+    }),
+    rightbar: field("object", {
+      default: computed("由 Region 四层级联与 Widget presentation 能力解析"),
+      example: { widgets: [] },
       required: true,
       additionalProperties: true
     }),
@@ -353,7 +368,7 @@ function presentationSchema(factory, options = {}) {
     ...(options.includeCard ? { card: cardSchema(cardFactory) } : {}),
     ...(options.includeHero ? { hero: heroSchema(factory, { pathConsumers: options.heroConsumers }) } : {}),
     ...(options.includeBanner ? { banner: bannerSchema(factory) } : {}),
-    regions: regionsConfigSchema(cascadeFactory),
+    ...regionConfigSchemas(cascadeFactory),
     article: articleSchema(cascadeFactory),
     footer: footerSchema(cascadeFactory),
     comments: commentsSchema(cascadeFactory)

@@ -17,8 +17,7 @@ function freeze(value) {
 }
 
 function regionLayer(value) {
-  if (Array.isArray(value)) return { widgets: value };
-  if (value == null || typeof value !== "object") return null;
+  if (value == null || typeof value !== "object" || Array.isArray(value)) return null;
   return value;
 }
 
@@ -72,31 +71,30 @@ function cascadeRegions(layers) {
 
 function resolveRegions(options = {}) {
   const layers = Array.isArray(options.layers) ? options.layers : [];
-  const regions = {};
+  const resolvedRegions = {};
   const warnings = [];
   for (const region of REGION_IDS) {
     const leftbar = region === "leftbar" ? resolveLeftbar(layers) : null;
-    if (leftbar && !leftbar.enabled) continue;
-    const widgets = leftbar ? leftbar.widgets : cascadeRegion(layers, region);
+    const disabled = leftbar && !leftbar.enabled;
+    const widgets = disabled ? [] : (leftbar ? leftbar.widgets : cascadeRegion(layers, region));
     const resolved = resolveRegionWidgets(widgets, options.catalog || {}, {
       region,
       profile: options.profile,
       contentOnly: region === "leftbar"
     });
-    if (resolved.instances.length > 0 || leftbar) {
-      regions[region] = {
-        widgets: resolved.instances,
-        ...(leftbar ? {
-          defaultState: options.defaultState || "expanded",
-          brand: leftbar.brand,
-          menu: leftbar.menu,
-          footer: clone(leftbar.footer)
-        } : {})
-      };
-    }
+    resolvedRegions[region] = {
+      widgets: resolved.instances,
+      ...(leftbar ? {
+        enabled: leftbar.enabled,
+        defaultState: options.defaultState || "expanded",
+        brand: leftbar.brand,
+        menu: leftbar.menu,
+        footer: clone(leftbar.footer)
+      } : {})
+    };
     warnings.push(...resolved.warnings);
   }
-  return freeze({ regions, warnings });
+  return freeze({ ...resolvedRegions, warnings });
 }
 
 module.exports = {

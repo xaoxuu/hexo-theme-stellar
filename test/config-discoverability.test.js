@@ -18,7 +18,7 @@ const CONFIG_SOURCE = fs.readFileSync(DEFAULT_CONFIG_PATH, "utf8");
 const CONFIG = yaml.load(CONFIG_SOURCE);
 const ROOT_KEYS = [
   "brand", "menu", "settings", "footer",
-  "regions", "profiles",
+  "topbar", "leftbar", "rightbar", "profiles",
   "article", "notebook",
   "appearance",
   "canonical", "open_graph", "structured_data",
@@ -103,11 +103,11 @@ test("Brand 与背景空值保持显式 null 语义", () => {
   assert.match(CONFIG_SOURCE, /品牌名称；null 表示隐藏名称且不继承 Hexo title/);
 });
 
-test("主干保持扁平，低频 Appearance 与 Inject 保留业务分组", () => {
-  assert.equal(Array.isArray(CONFIG.regions.topbar), true);
-  assert.equal(Array.isArray(CONFIG.regions.rightbar), true);
+test("主干保持扁平，Region 统一为对象，低频 Appearance 与 Inject 保留业务分组", () => {
+  assert.equal(Array.isArray(CONFIG.topbar.widgets), true);
+  assert.equal(Array.isArray(CONFIG.rightbar.widgets), true);
   assert.equal(CONFIG.profiles.blog_index.active_menu, "post");
-  assert.equal(Array.isArray(CONFIG.profiles.wiki.topbar), true);
+  assert.equal(Array.isArray(CONFIG.profiles.wiki.topbar.widgets), true);
   assert.equal(CONFIG.profiles.wiki.leftbar.footer_actions, false);
   assert.equal(Object.hasOwn(CONFIG.comments, "providers"), false);
   assert.equal(Object.hasOwn(CONFIG.search, "providers"), false);

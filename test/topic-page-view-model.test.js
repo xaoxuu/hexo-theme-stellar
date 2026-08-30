@@ -99,7 +99,7 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
     listing: { priority: 3, excerpt_length: 96, per_page: 10, sort: { field: "date", direction: "desc" } },
     card: { cover: "/cover.webp", tagline: "Collection card" },
     hero: { enabled: true, background: { image: "/hero.webp" } },
-    regions: { leftbar: { widgets: ["recent"] } },
+    leftbar: { widgets: ["recent"] },
     article: { style: "story", paragraph_indent: "always" },
     footer: { license: "Topic license", share: false },
     comments: { enabled: true, title: "Topic comments", provider: "giscus", options: {} }
@@ -121,10 +121,8 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
         topic_index: { path: "/topic/" },
         post: {
           navigation: { active_menu: "post" },
-          regions: {
-            leftbar: { widgets: ["global-left"] },
-            rightbar: { widgets: ["toc"] }
-          }
+          leftbar: { widgets: ["global-left"] },
+          rightbar: { widgets: ["toc"] }
         },
         topic: { navigation: { active_menu: "post" } }
       } },
@@ -141,7 +139,7 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
     frontMatter: {
       ...current.frontMatter,
       navigation: { menu: "", breadcrumb: false },
-      regions: { leftbar: { widgets: [] } },
+      leftbar: { widgets: [] },
       article: { paragraph_indent: "never" },
       footer: { license: false, share: false },
       comments: { enabled: false, title: "" },
@@ -239,7 +237,7 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
     branch: "page-branch"
   });
   assert.deepEqual(viewModel.item.presentation.card, {});
-  assert.deepEqual(viewModel.item.presentation.regions.leftbar.widgets, []);
+  assert.deepEqual(viewModel.item.presentation.leftbar.widgets, []);
   assert.equal(viewModel.item.presentation.article.style, "story");
   assert.equal(viewModel.item.presentation.article.paragraphIndent, "never");
   assert.equal(viewModel.item.presentation.footer.license, false);
@@ -255,10 +253,10 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
   assert.equal(viewModel.render.layout.brands.collection.href, "columns/stellar-v2");
   assert.equal(Object.hasOwn(viewModel.render.layout.brands.site, "github"), false);
   assert.equal(Object.hasOwn(viewModel.render.layout.brands.collection, "github"), false);
-  assert.equal(viewModel.render.layout.regions.leftbar.brand, "site_brand");
-  assert.deepEqual(viewModel.render.layout.regions.leftbar.widgets, []);
-  assert.equal(viewModel.render.layout.regions.leftbar.footer.actions, true);
-  assert.deepEqual(viewModel.render.layout.regions.rightbar.widgets.map(widget => widget.id), ["ghrepo", "toc"]);
+  assert.equal(viewModel.render.layout.leftbar.brand, "site_brand");
+  assert.deepEqual(viewModel.render.layout.leftbar.widgets, []);
+  assert.equal(viewModel.render.layout.leftbar.footer.actions, true);
+  assert.deepEqual(viewModel.render.layout.rightbar.widgets.map(widget => widget.id), ["ghrepo", "toc"]);
   assert.deepEqual(viewModel.render.layout.breadcrumbs, [{
     name: "Build the future",
     path: "topic/latest"

@@ -237,7 +237,7 @@ function generate_canonical() {
   <script>
     (function () {
       var key = 'stellar:v2:leftbar-state';
-      var fallback = <%- JSON.stringify(stellar_config('regions.leftbar.defaultState')) %>;
+      var fallback = <%- JSON.stringify(stellar_config('leftbar.defaultState')) %>;
       try {
         var value = localStorage.getItem(key);
         document.documentElement.dataset.leftbarState = value === 'collapsed' || value === 'expanded' ? value : fallback;

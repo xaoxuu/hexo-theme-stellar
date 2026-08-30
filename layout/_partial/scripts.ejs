@@ -7,10 +7,11 @@ function custom_inject() {
 
 // tagtree 脚本仅在最终 Region 实例包含 tagtree 时加载。
 function tagtreeWidgetOnPage() {
-  var regions = renderViewModel?.render.layout.regions
-    || page.notebookIndex?.collection?.layout.regions
+  var layout = renderViewModel?.render.layout
+    || page.notebookIndex?.collection?.layout
     || {};
-  var widgets = Object.values(regions).flatMap(function (region) {
+  var regions = [layout.topbar, layout.leftbar, layout.rightbar];
+  var widgets = regions.flatMap(function (region) {
     return Array.isArray(region?.widgets) ? region.widgets : []
   })
   if (!Array.isArray(widgets)) {

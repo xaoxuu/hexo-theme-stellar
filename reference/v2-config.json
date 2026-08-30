@@ -304,8 +304,8 @@
     },
     {
       "surface": "Theme",
-      "path": "regions.topbar",
-      "runtimePath": "regions.topbar",
+      "path": "topbar.widgets",
+      "runtimePath": "topbar.widgets",
       "type": [
         "array"
       ],
@@ -314,8 +314,8 @@
     },
     {
       "surface": "Theme",
-      "path": "regions.leftbar.default_state",
-      "runtimePath": "regions.leftbar.defaultState",
+      "path": "leftbar.default_state",
+      "runtimePath": "leftbar.defaultState",
       "type": [
         "string"
       ],
@@ -327,8 +327,8 @@
     },
     {
       "surface": "Theme",
-      "path": "regions.leftbar.enabled",
-      "runtimePath": "regions.leftbar.enabled",
+      "path": "leftbar.enabled",
+      "runtimePath": "leftbar.enabled",
       "type": [
         "boolean"
       ],
@@ -336,8 +336,8 @@
     },
     {
       "surface": "Theme",
-      "path": "regions.leftbar.brand",
-      "runtimePath": "regions.leftbar.brand",
+      "path": "leftbar.brand",
+      "runtimePath": "leftbar.brand",
       "type": [
         "string",
         "boolean"
@@ -351,8 +351,8 @@
     },
     {
       "surface": "Theme",
-      "path": "regions.leftbar.menu",
-      "runtimePath": "regions.leftbar.menu",
+      "path": "leftbar.menu",
+      "runtimePath": "leftbar.menu",
       "type": [
         "boolean"
       ],
@@ -360,8 +360,8 @@
     },
     {
       "surface": "Theme",
-      "path": "regions.leftbar.footer_actions",
-      "runtimePath": "regions.leftbar.footerActions",
+      "path": "leftbar.footer_actions",
+      "runtimePath": "leftbar.footerActions",
       "type": [
         "boolean"
       ],
@@ -369,8 +369,8 @@
     },
     {
       "surface": "Theme",
-      "path": "regions.leftbar.widgets",
-      "runtimePath": "regions.leftbar.widgets",
+      "path": "leftbar.widgets",
+      "runtimePath": "leftbar.widgets",
       "type": [
         "array"
       ],
@@ -379,8 +379,8 @@
     },
     {
       "surface": "Theme",
-      "path": "regions.rightbar",
-      "runtimePath": "regions.rightbar",
+      "path": "rightbar.widgets",
+      "runtimePath": "rightbar.widgets",
       "type": [
         "array"
       ],
@@ -458,8 +458,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.home.rightbar",
-      "runtimePath": "profiles.home.rightbar",
+      "path": "profiles.home.rightbar.widgets",
+      "runtimePath": "profiles.home.rightbar.widgets",
       "type": [
         "array",
         "null"
@@ -538,8 +538,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.home.topbar",
-      "runtimePath": "profiles.home.topbar",
+      "path": "profiles.home.topbar.widgets",
+      "runtimePath": "profiles.home.topbar.widgets",
       "type": [
         "array",
         "null"
@@ -629,8 +629,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.blog_index.rightbar",
-      "runtimePath": "profiles.blogIndex.rightbar",
+      "path": "profiles.blog_index.rightbar.widgets",
+      "runtimePath": "profiles.blogIndex.rightbar.widgets",
       "type": [
         "array",
         "null"
@@ -669,8 +669,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.blog_index.topbar",
-      "runtimePath": "profiles.blogIndex.topbar",
+      "path": "profiles.blog_index.topbar.widgets",
+      "runtimePath": "profiles.blogIndex.topbar.widgets",
       "type": [
         "array",
         "null"
@@ -760,8 +760,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.topic_index.rightbar",
-      "runtimePath": "profiles.topicIndex.rightbar",
+      "path": "profiles.topic_index.rightbar.widgets",
+      "runtimePath": "profiles.topicIndex.rightbar.widgets",
       "type": [
         "array",
         "null"
@@ -771,8 +771,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.topic_index.topbar",
-      "runtimePath": "profiles.topicIndex.topbar",
+      "path": "profiles.topic_index.topbar.widgets",
+      "runtimePath": "profiles.topicIndex.topbar.widgets",
       "type": [
         "array",
         "null"
@@ -862,8 +862,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.wiki_index.rightbar",
-      "runtimePath": "profiles.wikiIndex.rightbar",
+      "path": "profiles.wiki_index.rightbar.widgets",
+      "runtimePath": "profiles.wikiIndex.rightbar.widgets",
       "type": [
         "array",
         "null"
@@ -902,8 +902,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.wiki_index.topbar",
-      "runtimePath": "profiles.wikiIndex.topbar",
+      "path": "profiles.wiki_index.topbar.widgets",
+      "runtimePath": "profiles.wikiIndex.topbar.widgets",
       "type": [
         "array",
         "null"
@@ -982,8 +982,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.post.rightbar",
-      "runtimePath": "profiles.post.rightbar",
+      "path": "profiles.post.rightbar.widgets",
+      "runtimePath": "profiles.post.rightbar.widgets",
       "type": [
         "array",
         "null"
@@ -1004,8 +1004,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.post.topbar",
-      "runtimePath": "profiles.post.topbar",
+      "path": "profiles.post.topbar.widgets",
+      "runtimePath": "profiles.post.topbar.widgets",
       "type": [
         "array",
         "null"
@@ -1084,8 +1084,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.topic.rightbar",
-      "runtimePath": "profiles.topic.rightbar",
+      "path": "profiles.topic.rightbar.widgets",
+      "runtimePath": "profiles.topic.rightbar.widgets",
       "type": [
         "array",
         "null"
@@ -1106,8 +1106,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.topic.topbar",
-      "runtimePath": "profiles.topic.topbar",
+      "path": "profiles.topic.topbar.widgets",
+      "runtimePath": "profiles.topic.topbar.widgets",
       "type": [
         "array",
         "null"
@@ -1128,8 +1128,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.wiki.topbar",
-      "runtimePath": "profiles.wiki.topbar",
+      "path": "profiles.wiki.topbar.widgets",
+      "runtimePath": "profiles.wiki.topbar.widgets",
       "type": [
         "array",
         "null"
@@ -1197,8 +1197,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.wiki.rightbar",
-      "runtimePath": "profiles.wiki.rightbar",
+      "path": "profiles.wiki.rightbar.widgets",
+      "runtimePath": "profiles.wiki.rightbar.widgets",
       "type": [
         "array",
         "null"
@@ -1299,8 +1299,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.notebook_index.rightbar",
-      "runtimePath": "profiles.notebookIndex.rightbar",
+      "path": "profiles.notebook_index.rightbar.widgets",
+      "runtimePath": "profiles.notebookIndex.rightbar.widgets",
       "type": [
         "array",
         "null"
@@ -1310,8 +1310,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.notebook_index.topbar",
-      "runtimePath": "profiles.notebookIndex.topbar",
+      "path": "profiles.notebook_index.topbar.widgets",
+      "runtimePath": "profiles.notebookIndex.topbar.widgets",
       "type": [
         "array",
         "null"
@@ -1390,8 +1390,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.note_index.rightbar",
-      "runtimePath": "profiles.noteIndex.rightbar",
+      "path": "profiles.note_index.rightbar.widgets",
+      "runtimePath": "profiles.noteIndex.rightbar.widgets",
       "type": [
         "array",
         "null"
@@ -1412,8 +1412,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.note_index.topbar",
-      "runtimePath": "profiles.noteIndex.topbar",
+      "path": "profiles.note_index.topbar.widgets",
+      "runtimePath": "profiles.noteIndex.topbar.widgets",
       "type": [
         "array",
         "null"
@@ -1492,8 +1492,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.note.rightbar",
-      "runtimePath": "profiles.note.rightbar",
+      "path": "profiles.note.rightbar.widgets",
+      "runtimePath": "profiles.note.rightbar.widgets",
       "type": [
         "array",
         "null"
@@ -1514,8 +1514,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.note.topbar",
-      "runtimePath": "profiles.note.topbar",
+      "path": "profiles.note.topbar.widgets",
+      "runtimePath": "profiles.note.topbar.widgets",
       "type": [
         "array",
         "null"
@@ -1605,8 +1605,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.author.rightbar",
-      "runtimePath": "profiles.author.rightbar",
+      "path": "profiles.author.rightbar.widgets",
+      "runtimePath": "profiles.author.rightbar.widgets",
       "type": [
         "array",
         "null"
@@ -1616,8 +1616,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.author.topbar",
-      "runtimePath": "profiles.author.topbar",
+      "path": "profiles.author.topbar.widgets",
+      "runtimePath": "profiles.author.topbar.widgets",
       "type": [
         "array",
         "null"
@@ -1707,8 +1707,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.error.rightbar",
-      "runtimePath": "profiles.error.rightbar",
+      "path": "profiles.error.rightbar.widgets",
+      "runtimePath": "profiles.error.rightbar.widgets",
       "type": [
         "array",
         "null"
@@ -1718,8 +1718,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.error.topbar",
-      "runtimePath": "profiles.error.topbar",
+      "path": "profiles.error.topbar.widgets",
+      "runtimePath": "profiles.error.topbar.widgets",
       "type": [
         "array",
         "null"
@@ -1798,8 +1798,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.page.rightbar",
-      "runtimePath": "profiles.page.rightbar",
+      "path": "profiles.page.rightbar.widgets",
+      "runtimePath": "profiles.page.rightbar.widgets",
       "type": [
         "array",
         "null"
@@ -1820,8 +1820,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.page.topbar",
-      "runtimePath": "profiles.page.topbar",
+      "path": "profiles.page.topbar.widgets",
+      "runtimePath": "profiles.page.topbar.widgets",
       "type": [
         "array",
         "null"
@@ -1911,8 +1911,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.settings.rightbar",
-      "runtimePath": "profiles.settings.rightbar",
+      "path": "profiles.settings.rightbar.widgets",
+      "runtimePath": "profiles.settings.rightbar.widgets",
       "type": [
         "array",
         "null"
@@ -1922,8 +1922,8 @@
     },
     {
       "surface": "Theme",
-      "path": "profiles.settings.topbar",
-      "runtimePath": "profiles.settings.topbar",
+      "path": "profiles.settings.topbar.widgets",
+      "runtimePath": "profiles.settings.topbar.widgets",
       "type": [
         "array",
         "null"
@@ -3639,8 +3639,8 @@
     },
     {
       "surface": "Collection",
-      "path": "regions.topbar.widgets",
-      "runtimePath": "regions.topbar.widgets",
+      "path": "topbar.widgets",
+      "runtimePath": "topbar.widgets",
       "type": [
         "array"
       ],
@@ -3649,8 +3649,8 @@
     },
     {
       "surface": "Collection",
-      "path": "regions.leftbar.enabled",
-      "runtimePath": "regions.leftbar.enabled",
+      "path": "leftbar.enabled",
+      "runtimePath": "leftbar.enabled",
       "type": [
         "boolean",
         "null"
@@ -3659,8 +3659,8 @@
     },
     {
       "surface": "Collection",
-      "path": "regions.leftbar.brand",
-      "runtimePath": "regions.leftbar.brand",
+      "path": "leftbar.brand",
+      "runtimePath": "leftbar.brand",
       "type": [
         "string",
         "boolean",
@@ -3676,8 +3676,8 @@
     },
     {
       "surface": "Collection",
-      "path": "regions.leftbar.menu",
-      "runtimePath": "regions.leftbar.menu",
+      "path": "leftbar.menu",
+      "runtimePath": "leftbar.menu",
       "type": [
         "boolean",
         "null"
@@ -3686,8 +3686,8 @@
     },
     {
       "surface": "Collection",
-      "path": "regions.leftbar.footer.actions",
-      "runtimePath": "regions.leftbar.footer.actions",
+      "path": "leftbar.footer.actions",
+      "runtimePath": "leftbar.footer.actions",
       "type": [
         "boolean",
         "null"
@@ -3696,8 +3696,8 @@
     },
     {
       "surface": "Collection",
-      "path": "regions.leftbar.widgets",
-      "runtimePath": "regions.leftbar.widgets",
+      "path": "leftbar.widgets",
+      "runtimePath": "leftbar.widgets",
       "type": [
         "array"
       ],
@@ -3706,8 +3706,8 @@
     },
     {
       "surface": "Collection",
-      "path": "regions.rightbar.widgets",
-      "runtimePath": "regions.rightbar.widgets",
+      "path": "rightbar.widgets",
+      "runtimePath": "rightbar.widgets",
       "type": [
         "array"
       ],
@@ -4208,8 +4208,8 @@
     },
     {
       "surface": "Collection",
-      "path": "note_defaults.regions.topbar.widgets",
-      "runtimePath": "noteDefaults.regions.topbar.widgets",
+      "path": "note_defaults.topbar.widgets",
+      "runtimePath": "noteDefaults.topbar.widgets",
       "type": [
         "array"
       ],
@@ -4218,8 +4218,8 @@
     },
     {
       "surface": "Collection",
-      "path": "note_defaults.regions.leftbar.enabled",
-      "runtimePath": "noteDefaults.regions.leftbar.enabled",
+      "path": "note_defaults.leftbar.enabled",
+      "runtimePath": "noteDefaults.leftbar.enabled",
       "type": [
         "boolean",
         "null"
@@ -4228,8 +4228,8 @@
     },
     {
       "surface": "Collection",
-      "path": "note_defaults.regions.leftbar.brand",
-      "runtimePath": "noteDefaults.regions.leftbar.brand",
+      "path": "note_defaults.leftbar.brand",
+      "runtimePath": "noteDefaults.leftbar.brand",
       "type": [
         "string",
         "boolean",
@@ -4245,8 +4245,8 @@
     },
     {
       "surface": "Collection",
-      "path": "note_defaults.regions.leftbar.menu",
-      "runtimePath": "noteDefaults.regions.leftbar.menu",
+      "path": "note_defaults.leftbar.menu",
+      "runtimePath": "noteDefaults.leftbar.menu",
       "type": [
         "boolean",
         "null"
@@ -4255,8 +4255,8 @@
     },
     {
       "surface": "Collection",
-      "path": "note_defaults.regions.leftbar.footer.actions",
-      "runtimePath": "noteDefaults.regions.leftbar.footer.actions",
+      "path": "note_defaults.leftbar.footer.actions",
+      "runtimePath": "noteDefaults.leftbar.footer.actions",
       "type": [
         "boolean",
         "null"
@@ -4265,8 +4265,8 @@
     },
     {
       "surface": "Collection",
-      "path": "note_defaults.regions.leftbar.widgets",
-      "runtimePath": "noteDefaults.regions.leftbar.widgets",
+      "path": "note_defaults.leftbar.widgets",
+      "runtimePath": "noteDefaults.leftbar.widgets",
       "type": [
         "array"
       ],
@@ -4275,8 +4275,8 @@
     },
     {
       "surface": "Collection",
-      "path": "note_defaults.regions.rightbar.widgets",
-      "runtimePath": "noteDefaults.regions.rightbar.widgets",
+      "path": "note_defaults.rightbar.widgets",
+      "runtimePath": "noteDefaults.rightbar.widgets",
       "type": [
         "array"
       ],
@@ -4315,8 +4315,8 @@
     },
     {
       "surface": "Front Matter",
-      "path": "regions.topbar.widgets",
-      "runtimePath": "regions.topbar.widgets",
+      "path": "topbar.widgets",
+      "runtimePath": "topbar.widgets",
       "type": [
         "array"
       ],
@@ -4325,8 +4325,8 @@
     },
     {
       "surface": "Front Matter",
-      "path": "regions.leftbar.enabled",
-      "runtimePath": "regions.leftbar.enabled",
+      "path": "leftbar.enabled",
+      "runtimePath": "leftbar.enabled",
       "type": [
         "boolean",
         "null"
@@ -4335,8 +4335,8 @@
     },
     {
       "surface": "Front Matter",
-      "path": "regions.leftbar.brand",
-      "runtimePath": "regions.leftbar.brand",
+      "path": "leftbar.brand",
+      "runtimePath": "leftbar.brand",
       "type": [
         "string",
         "boolean",
@@ -4352,8 +4352,8 @@
     },
     {
       "surface": "Front Matter",
-      "path": "regions.leftbar.menu",
-      "runtimePath": "regions.leftbar.menu",
+      "path": "leftbar.menu",
+      "runtimePath": "leftbar.menu",
       "type": [
         "boolean",
         "null"
@@ -4362,8 +4362,8 @@
     },
     {
       "surface": "Front Matter",
-      "path": "regions.leftbar.footer.actions",
-      "runtimePath": "regions.leftbar.footer.actions",
+      "path": "leftbar.footer.actions",
+      "runtimePath": "leftbar.footer.actions",
       "type": [
         "boolean",
         "null"
@@ -4372,8 +4372,8 @@
     },
     {
       "surface": "Front Matter",
-      "path": "regions.leftbar.widgets",
-      "runtimePath": "regions.leftbar.widgets",
+      "path": "leftbar.widgets",
+      "runtimePath": "leftbar.widgets",
       "type": [
         "array"
       ],
@@ -4382,8 +4382,8 @@
     },
     {
       "surface": "Front Matter",
-      "path": "regions.rightbar.widgets",
-      "runtimePath": "regions.rightbar.widgets",
+      "path": "rightbar.widgets",
+      "runtimePath": "rightbar.widgets",
       "type": [
         "array"
       ],

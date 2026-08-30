@@ -87,11 +87,10 @@ listing:
     field: updated
     direction: desc
 note_defaults:
-  regions:
-    leftbar:
-      widgets: [tagtree, recent]
-    rightbar:
-      widgets: [toc]
+  leftbar:
+    widgets: [tagtree, recent]
+  rightbar:
+    widgets: [toc]
 footer:
   license: null
   share: null

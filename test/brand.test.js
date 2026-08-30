@@ -159,7 +159,7 @@ test("Notebook 生成页可按来源读取独立 Brand", () => {
     layout: "notes",
     stellarConfig: {
       collection: { profile: "notebook", id: "dev" },
-      regions: { leftbar: { brand: "collection_brand" } }
+      leftbar: { brand: "collection_brand" }
     }
   };
 

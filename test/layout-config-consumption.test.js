@@ -51,7 +51,10 @@ test("Layout Profile 消费链只读取冻结的顶层 profiles 配置", () => {
 test("主题默认配置只声明最终 Profile ID 与字段名", () => {
   const config = read("_config.yml");
 
-  assert.match(config, /^regions:/m);
+  assert.match(config, /^topbar:/m);
+  assert.match(config, /^leftbar:/m);
+  assert.match(config, /^rightbar:/m);
+  assert.doesNotMatch(config, /^regions:/m);
   assert.match(config, /^profiles:/m);
   assert.match(config, /^ {2}blog_index:/m);
   assert.match(config, /^ {4}path: \/blog\//m);

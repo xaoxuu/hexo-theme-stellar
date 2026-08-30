@@ -66,10 +66,8 @@ function notebookInput(overrides = {}) {
     footer: { license: "CC BY 4.0", share: true },
     comments: { enabled: true, provider: "giscus", options: { "data-repo": "xaoxuu/notes" } },
     note_defaults: {
-      regions: {
-        leftbar: { widgets: ["tagtree", "recent"] },
-        rightbar: { widgets: ["toc"] }
-      }
+      leftbar: { widgets: ["tagtree", "recent"] },
+      rightbar: { widgets: ["toc"] }
     }
   };
   const frontMatter = {
@@ -112,14 +110,12 @@ function notebookInput(overrides = {}) {
         notebook_index: { path: "/notebooks/" },
         note_index: {
           navigation: { active_menu: "notebooks" },
-          regions: { leftbar: { widgets: ["recent"] } }
+          leftbar: { widgets: ["recent"] }
         },
         note: {
           navigation: { active_menu: "notebooks" },
-          regions: {
-            leftbar: { widgets: ["tagtree"] },
-            rightbar: { widgets: ["toc"] }
-          }
+          leftbar: { widgets: ["tagtree"] },
+          rightbar: { widgets: ["toc"] }
         }
       } },
       content: {
@@ -203,7 +199,7 @@ test("Notebook profile 生成包含最终详情与列表消费状态的冻结 Pa
   assert.equal(viewModel.item.listing.priority, 7);
   assert.deepEqual(viewModel.item.visibility, { listed: false, searchable: true });
   assert.equal(viewModel.item.route.path, "notes/dev/nodejs");
-  assert.deepEqual(viewModel.item.presentation.regions.leftbar.widgets, ["tagtree", "recent"]);
+  assert.deepEqual(viewModel.item.presentation.leftbar.widgets, ["tagtree", "recent"]);
   assert.equal(viewModel.item.presentation.article.style, "tech");
   assert.equal(viewModel.item.presentation.article.paragraphIndent, "always");
   assert.equal(viewModel.item.presentation.footer.license, "CC BY 4.0");
@@ -260,10 +256,10 @@ test("Notebook profile 生成包含最终详情与列表消费状态的冻结 Pa
   assertDeepFrozenPlain(viewModel);
 
   input.collectionConfig.name = "Changed";
-  input.collectionConfig.note_defaults.regions.leftbar.widgets.push("changed");
+  input.collectionConfig.note_defaults.leftbar.widgets.push("changed");
   input.collectionItems[0].tags.push("changed");
   assert.equal(viewModel.collection.identity.name, "开发笔记");
-  assert.deepEqual(viewModel.item.presentation.regions.leftbar.widgets, ["tagtree", "recent"]);
+  assert.deepEqual(viewModel.item.presentation.leftbar.widgets, ["tagtree", "recent"]);
   assert.equal(viewModel.collection.navigation.tags.some(tag => tag.id === "changed"), false);
 });
 
@@ -291,9 +287,9 @@ test("Notebook profile 使用既有主题默认值完成列表和展示级联", 
     perPage: 10,
     sort: { field: "updated", direction: "desc" }
   });
-  assert.deepEqual(viewModel.item.presentation.regions.leftbar.widgets, ["tagtree"]);
-  assert.equal(viewModel.render.layout.regions.leftbar.menu, true);
-  assert.deepEqual(viewModel.item.presentation.regions.rightbar.widgets, ["toc"]);
+  assert.deepEqual(viewModel.item.presentation.leftbar.widgets, ["tagtree"]);
+  assert.equal(viewModel.render.layout.leftbar.menu, true);
+  assert.deepEqual(viewModel.item.presentation.rightbar.widgets, ["toc"]);
   assert.equal(viewModel.item.presentation.article.style, "story");
   assert.equal(viewModel.item.presentation.footer.license, false);
 });

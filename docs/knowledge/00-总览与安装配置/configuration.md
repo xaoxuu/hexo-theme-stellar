@@ -26,7 +26,8 @@ profiles:
     active_menu: post
     leftbar:
       widgets: [related, recent]
-    rightbar: [ghrepo, toc]
+    rightbar:
+      widgets: [ghrepo, toc]
 
 appearance:
   color_scheme: auto
@@ -38,7 +39,7 @@ inject:
   head_end: ''
 ```
 
-配置加载器先读取主题 `_config.yml`，再应用站点覆盖。对象按字段合并，数组整体替换，因此 `rightbar: []`、`topbar: []` 和 `leftbar.widgets: []` 都能显式关闭默认项。解析结果会深度冻结到 `hexo.stellar.config`。
+配置加载器先读取主题 `_config.yml`，再应用站点覆盖。对象按字段合并，数组整体替换，因此 `rightbar.widgets: []`、`topbar.widgets: []` 和 `leftbar.widgets: []` 都能显式关闭默认项。解析结果会深度冻结到 `hexo.stellar.config`。
 
 YAML 使用 `snake_case`，运行时只进行 `snake_case` → `camelCase` 转换：
 
@@ -79,7 +80,7 @@ npm run schema:check
 | 注释分组 | 顶层键 |
 | --- | --- |
 | Site | `brand/menu/settings/footer` |
-| Layout | `regions/profiles` |
+| Layout | `topbar/leftbar/rightbar/profiles` |
 | Content | `article/notebook` |
 | Appearance | `appearance` |
 | SEO | `canonical/open_graph/structured_data` |
@@ -91,33 +92,36 @@ npm run schema:check
 
 ## Layout 与 Region
 
-`regions` 定义站点级 Region；`profiles` 只写页面类型相对全局的差异。Topbar 和 Rightbar 直接使用 Widget 数组，Leftbar 保留自己的状态与固定区域设置：
+`topbar`、`leftbar`、`rightbar` 直接定义站点级 Region；`profiles` 只写页面类型相对全局的差异。三个 Region 都是对象，Widget 数组统一放在 `widgets`；Leftbar 额外保留状态与固定区域设置：
 
 ```yaml
-regions:
-  topbar: []
-  leftbar:
-    default_state: expanded
-    enabled: true
-    brand: site_brand
-    menu: true
-    footer_actions: true
-    widgets: []
-  rightbar: []
+topbar:
+  widgets: []
+leftbar:
+  default_state: expanded
+  enabled: true
+  brand: site_brand
+  menu: true
+  footer_actions: true
+  widgets: []
+rightbar:
+  widgets: []
 
 profiles:
   wiki:
     active_menu: wiki
-    topbar: []
+    topbar:
+      widgets: []
     leftbar:
       brand: collection_brand
       menu: false
       footer_actions: false
       widgets: [tree]
-    rightbar: [ghrepo, toc]
+    rightbar:
+      widgets: [ghrepo, toc]
 ```
 
-Profile 省略某个 Region 时继承全局值；显式空数组表示关闭。Collection 与 Front Matter 的 Region 覆盖由内容解析器继续处理，最终统一进入冻结 PageViewModel。
+Profile 省略某个 Region 或 `widgets` 时继承上层值；显式 `widgets: []` 表示清空。Collection 与 Front Matter 的 Region 覆盖由内容解析器继续处理，最终统一进入冻结 PageViewModel。
 
 ## Provider 配置
 

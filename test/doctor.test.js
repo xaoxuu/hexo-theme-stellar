@@ -63,8 +63,8 @@ test("doctor text/json 输出稳定表达同一结果", () => {
 test("doctor 对不支持的位置只警告并跳过，ok 保持 true", () => {
   const baseDir = initializedSite("classic");
   fs.writeFileSync(path.join(baseDir, "_config.stellar.yml"), [
-    "regions:",
-    "  topbar:",
+    "topbar:",
+    "  widgets:",
     "    - layout: timeline",
     ""
   ].join("\n"));

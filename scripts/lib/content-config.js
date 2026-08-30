@@ -21,7 +21,7 @@ const CONTENT_MODEL_FIELDS = Object.freeze({
   comments: Object.freeze(["enabled", "title", "id", "provider", "options"]),
   footer: Object.freeze(["references", "license", "share", "showTags"]),
   navigation: Object.freeze(["menu", "breadcrumb"]),
-  regions: Object.freeze(["topbar", "leftbar", "rightbar"]),
+  regionIds: Object.freeze(["topbar", "leftbar", "rightbar"]),
   region: Object.freeze(["enabled", "brand", "menu", "footer", "widgets"]),
   source: Object.freeze(["repository", "branch"]),
   visibility: Object.freeze(["listed", "searchable"])

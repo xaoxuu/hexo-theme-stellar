@@ -111,7 +111,7 @@ test("Wiki 详情页要求合法 render，并与 Topic、Notebook 新链隔离",
   const page = source("layout/page.ejs");
   assert.match(root, /Wiki 页面 .*缺少合法 PageViewModel\.render/);
   assert.match(root, /renderViewModel = \['post', 'wiki', 'topic', 'notebook'\]\.includes\(activeProfile\) \? activeViewModel : null/);
-  assert.match(root, /coverSlot\(renderViewModel, renderedRegions\)/);
+  assert.match(root, /coverSlot\(renderViewModel\)/);
   assert.match(root, /partial\('_partial\/primitives\/shell'/);
   assert.match(page, /wikiViewModel\.render\.article/);
   assert.doesNotMatch(source("layout/_partial/main/navbar/article_banner.ejs"), /page\.viewModel/);

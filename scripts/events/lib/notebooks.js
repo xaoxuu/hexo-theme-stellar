@@ -141,7 +141,9 @@ module.exports = (ctx, pipeline = null) => {
           },
           layout: {
             brands,
-            regions: structuredClone(notebook.regions || {}),
+            topbar: structuredClone(notebook.topbar || {}),
+            leftbar: structuredClone(notebook.leftbar || {}),
+            rightbar: structuredClone(notebook.rightbar || {}),
             algoliaFilterPath: baseDir
           },
           tags,

@@ -39,7 +39,9 @@ test("Notebook Brand、搜索、标签树、面包屑与日期只消费显式 Vi
   ]) {
     assert.doesNotMatch(source(relative), /stellar_data\(['"]notebooks['"]\)/, relative);
   }
-  assert.match(source("layout/layout.ejs"), /var regionState = render\.layout\.regions \|\| \{\}/);
+  assert.match(source("layout/layout.ejs"), /topbar: render\.layout\.topbar/);
+  assert.match(source("layout/layout.ejs"), /leftbar: render\.layout\.leftbar/);
+  assert.match(source("layout/layout.ejs"), /rightbar: render\.layout\.rightbar/);
   assert.match(source("layout/_partial/regions/widgets.ejs"), /activeViewModel\?\.render\?\.layout\?\.brands/);
   assert.match(source("layout/_partial/sidebar/search.ejs"), /notebookViewModel\.render\.layout\.algoliaFilterPath/);
   assert.match(source("layout/_partial/widgets/tagtree.ejs"), /notebookViewModel\.render\.layout\.tagTree/);
@@ -54,8 +56,8 @@ test("Notebook head、Banner、标签、Footer、评论和脚本只消费显式 
   assert.doesNotMatch(source("layout/_partial/main/notebook/note_tags.ejs"), /page\.tags|notebook\.tagTree/);
   assert.match(source("layout/page.ejs"), /post_footer'.*footer: article\.footer/);
   assert.match(source("layout/page.ejs"), /comments\/layout'.*comments: article\.comments/);
-  assert.match(source("layout/_partial/scripts.ejs"), /renderViewModel\?\.render\.layout\.regions/);
-  assert.match(source("layout/_partial/scripts.ejs"), /page\.notebookIndex\?\.collection\?\.layout\.regions/);
+  assert.match(source("layout/_partial/scripts.ejs"), /\[layout\.topbar, layout\.leftbar, layout\.rightbar\]/);
+  assert.doesNotMatch(source("layout/_partial/scripts.ejs"), /layout\.regions/);
 });
 
 test("Post、Wiki 与 Topic 的 profile 判定不会误入 Notebook 分支", () => {

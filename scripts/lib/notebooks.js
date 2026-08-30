@@ -68,9 +68,13 @@ function prepareNotebook(id, info, ctx, pages) {
   notebook.listing ||= {};
   notebook.navigation ||= {};
   notebook.footer ||= {};
-  notebook.regions ||= {};
+  notebook.topbar ||= {};
+  notebook.leftbar ||= {};
+  notebook.rightbar ||= {};
   notebook.noteDefaults ||= {};
-  notebook.noteDefaults.regions ||= {};
+  notebook.noteDefaults.topbar ||= {};
+  notebook.noteDefaults.leftbar ||= {};
+  notebook.noteDefaults.rightbar ||= {};
 
   if (notebook.route.path) {
     if (notebook.route.path.startsWith("/")) {
@@ -91,8 +95,12 @@ function prepareNotebook(id, info, ctx, pages) {
   notebook.footer.license ??= notebookDefaults.footer.license ?? ctx.stellar.config.article.footer.license;
   notebook.footer.share ??= notebookDefaults.footer.share ?? ctx.stellar.config.article.footer.share;
 
-  notebook.regions = structuredClone(notebook.regions);
-  notebook.noteDefaults.regions = structuredClone(notebook.noteDefaults.regions);
+  notebook.topbar = structuredClone(notebook.topbar);
+  notebook.leftbar = structuredClone(notebook.leftbar);
+  notebook.rightbar = structuredClone(notebook.rightbar);
+  notebook.noteDefaults.topbar = structuredClone(notebook.noteDefaults.topbar);
+  notebook.noteDefaults.leftbar = structuredClone(notebook.noteDefaults.leftbar);
+  notebook.noteDefaults.rightbar = structuredClone(notebook.noteDefaults.rightbar);
 
   const tagMap = new Map(); // tagId: tagInfo
   notebook.tagTree = tagMap;

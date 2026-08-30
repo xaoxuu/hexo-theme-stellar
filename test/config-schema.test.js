@@ -9,7 +9,7 @@ const { toRenderRegions } = require("../scripts/lib/layout-config");
 const { resolveServiceProvider } = require("../scripts/lib/service-provider");
 
 const ROOT_KEYS = [
-  "brand", "menu", "settings", "footer", "regions", "profiles", "article", "notebook",
+  "brand", "menu", "settings", "footer", "topbar", "leftbar", "rightbar", "profiles", "article", "notebook",
   "appearance", "canonical", "openGraph", "structuredData", "preconnect", "fallbacks",
   "errorPage", "search", "comments", "tags", "features", "services", "inject"
 ];
@@ -32,9 +32,9 @@ test("手写 _config.yml 提供适度扁平的完整默认对象并深度冻结"
   assert.equal(config.brand.name, null);
   assert.equal(config.appearance.preset, "card");
   assert.equal(config.appearance.colorScheme, "auto");
-  assert.deepEqual(config.regions.topbar, []);
-  assert.deepEqual(config.regions.rightbar, []);
-  assert.deepEqual(config.profiles.wiki.topbar, []);
+  assert.deepEqual(config.topbar.widgets, []);
+  assert.deepEqual(config.rightbar.widgets, []);
+  assert.deepEqual(config.profiles.wiki.topbar.widgets, []);
   assert.equal(config.profiles.wiki.activeMenu, "wiki");
   assert.equal(config.profiles.wiki.leftbar.footerActions, false);
   assert.equal("site" in config, false);
@@ -50,7 +50,7 @@ test("用户覆盖只做 snake_case 到 camelCase，数组整体替换", () => {
     themeConfig: {
       preconnect: ["https://cdn.example.com"],
       article: { listing: { excerpt_length: 42 } },
-      profiles: { post: { rightbar: [] } },
+      profiles: { post: { rightbar: { widgets: [] } } },
       services: {
         site_info: {
           provider: "site_info_api",
@@ -61,7 +61,7 @@ test("用户覆盖只做 snake_case 到 camelCase，数组整体替换", () => {
   });
   assert.deepEqual(config.preconnect, ["https://cdn.example.com"]);
   assert.equal(config.article.listing.excerptLength, 42);
-  assert.deepEqual(config.profiles.post.rightbar, []);
+  assert.deepEqual(config.profiles.post.rightbar.widgets, []);
   assert.equal(config.services.siteInfo.provider, "site_info_api");
   assert.equal(config.services.siteInfo.site_info_api.endpoint, "https://example.com/site?url={href}");
 });
@@ -71,13 +71,13 @@ test("合法 null 保留语义，非 nullable 空键回退默认值", () => {
     themeConfig: {
       canonical: { host: null },
       search: { provider: null },
-      profiles: { post: { topbar: null } },
+      profiles: { post: { topbar: { widgets: null } } },
       appearance: { shape: { corner: null } }
     }
   });
   assert.equal(config.canonical.host, null);
   assert.equal(config.search.provider, null);
-  assert.equal(config.profiles.post.topbar, null);
+  assert.equal(config.profiles.post.topbar.widgets, null);
   assert.equal(config.appearance.shape.corner, "superellipse(1.25)");
 });
 
@@ -127,21 +127,19 @@ test("动态记录受约束，第三方参数袋原样保留", () => {
   );
 });
 
-test("Region 数组简写、Profile 继承与显式关闭保持一致", () => {
+test("Region 对象、Profile 继承与显式清空保持一致", () => {
   const config = parseStellarConfig({
     themeConfig: {
-      regions: {
-        topbar: ["site_brand", "menu"],
-        leftbar: { footer_actions: true, widgets: ["recent"] },
-        rightbar: ["toc"]
-      },
+      topbar: { widgets: ["site_brand", "menu"] },
+      leftbar: { footer_actions: true, widgets: ["recent"] },
+      rightbar: { widgets: ["toc"] },
       profiles: {
-        post: { rightbar: [] },
+        post: { rightbar: { widgets: [] } },
         page: { leftbar: { footer_actions: false } }
       }
     }
   });
-  assert.deepEqual(toRenderRegions(config.regions, config.profiles.post), {
+  assert.deepEqual(toRenderRegions(config, config.profiles.post), {
     topbar: { widgets: ["site_brand", "menu"] },
     leftbar: {
       enabled: true,
@@ -152,10 +150,25 @@ test("Region 数组简写、Profile 继承与显式关闭保持一致", () => {
     },
     rightbar: { widgets: [] }
   });
-  assert.equal(toRenderRegions(config.regions, config.profiles.page).leftbar.footer.actions, false);
+  assert.equal(toRenderRegions(config, config.profiles.page).leftbar.footer.actions, false);
+});
+
+test("旧 regions 包装和 Region 数组简写提供明确迁移诊断", () => {
   assert.throws(
-    () => parseStellarConfig({ themeConfig: { regions: { topbar: { widgets: ["menu"] } } } }),
-    error => issueFor(error, "regions.topbar", "invalid_type")
+    () => parseStellarConfig({ themeConfig: { regions: { topbar: ["menu"] } } }),
+    error => issueFor(error, "regions", "removed_field")
+  );
+  assert.throws(
+    () => parseStellarConfig({ themeConfig: { topbar: ["menu"] } }),
+    error => issueFor(error, "topbar", "invalid_type")
+  );
+  assert.throws(
+    () => parseStellarConfig({ themeConfig: { profiles: { post: { rightbar: ["toc"] } } } }),
+    error => issueFor(error, "profiles.post.rightbar", "invalid_type")
+  );
+  assert.throws(
+    () => parseStellarConfig({ themeConfig: { profiles: { post: { regions: { rightbar: { widgets: ["toc"] } } } } } }),
+    error => issueFor(error, "profiles.post.regions", "removed_field")
   );
 });
 
