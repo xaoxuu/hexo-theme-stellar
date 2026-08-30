@@ -35,6 +35,29 @@ function schemaPaths(node, parents = [], result = []) {
   return result;
 }
 
+function configKeyLines(source) {
+  return source.split(/\r?\n/).flatMap((line, index) => {
+    if (line.trimStart().startsWith("#")) return [];
+    if (!/^(\s*)(?:-\s+)?(?:[\w-]+|[^\s:#][^:]*):(?:\s|$)/.test(line)) return [];
+    return [{ index, line }];
+  });
+}
+
+function precedingNonEmptyLine(lines, index) {
+  let previous = index - 1;
+  while (previous >= 0 && lines[previous].trim() === "") previous -= 1;
+  return previous >= 0 ? lines[previous] : "";
+}
+
+function nonEmptyFlowCollectionLines(source) {
+  return source.split(/\r?\n/).flatMap((line, index) => {
+    const code = line.replace(/\s+#.*$/, "");
+    const flowValue = /:\s*(?:\[(?!\])|\{(?!\}))/.test(code);
+    const flowItem = /^\s*-\s*(?:\[(?!\])|\{(?!\}))/.test(code);
+    return flowValue || flowItem ? [`${index + 1}: ${line.trim()}`] : [];
+  });
+}
+
 test("手写 _config.yml 是公开字段树、默认值与顺序的唯一来源", () => {
   assert.deepEqual(Object.keys(CONFIG), ROOT_KEYS);
   assert.deepEqual(CONFIG, CONFIG_DEFAULTS);
@@ -45,8 +68,21 @@ test("手写 _config.yml 是公开字段树、默认值与顺序的唯一来源"
       .filter(key => Object.hasOwn(CONFIG, key)),
     []
   );
-  assert.match(CONFIG_SOURCE, /single source of truth for the public configuration tree/);
-  assert.match(CONFIG_SOURCE, /# Site[\s\S]*# Layout[\s\S]*# Content[\s\S]*# Appearance/);
+  assert.match(CONFIG_SOURCE, /公开配置树、默认值、字段顺序和用户示例的唯一事实来源/);
+  assert.match(CONFIG_SOURCE, /# 站点[\s\S]*# 布局[\s\S]*# 内容[\s\S]*# 外观/);
+});
+
+test("手写 _config.yml 的每个配置键都有独立前置注释", () => {
+  const lines = CONFIG_SOURCE.split(/\r?\n/);
+  const missing = configKeyLines(CONFIG_SOURCE).flatMap(({ index, line }) => {
+    const previous = precedingNonEmptyLine(lines, index);
+    return previous.trimStart().startsWith("#") ? [] : [`${index + 1}: ${line.trim()}`];
+  });
+  assert.deepEqual(missing, []);
+});
+
+test("手写 _config.yml 仅允许空集合使用单行 flow style", () => {
+  assert.deepEqual(nonEmptyFlowCollectionLines(CONFIG_SOURCE), []);
 });
 
 test("轻量规则表中的每个路径都对应手写默认配置中的现存节点", () => {
@@ -63,8 +99,8 @@ test("Brand 与背景空值保持显式 null 语义", () => {
   assert.equal(CONFIG.brand.tagline, null);
   assert.equal(CONFIG.appearance.backgrounds.leftbar.image, null);
   assert.equal(CONFIG.appearance.backgrounds.page.image, null);
-  assert.match(CONFIG_SOURCE, /Set to null to hide the image/);
-  assert.match(CONFIG_SOURCE, /null does not inherit Hexo title\/subtitle/);
+  assert.match(CONFIG_SOURCE, /品牌图片地址；null 表示隐藏图片/);
+  assert.match(CONFIG_SOURCE, /品牌名称；null 表示隐藏名称且不继承 Hexo title/);
 });
 
 test("主干保持扁平，低频 Appearance 与 Inject 保留业务分组", () => {
