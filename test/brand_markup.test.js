@@ -160,7 +160,7 @@ test('Leftbar Collection Brand 保持横向 icon、标题和副标题，不输�
   assert.doesNotMatch(html, /brand-stats|ds-ghinfo/);
 });
 
-test('Leftbar Collection Brand 底部复用菜单同款 Search Item', () => {
+test('Leftbar Collection Brand 统一 16px 内部间距并在底部复用菜单同款 Search Item', () => {
   const html = renderBrand({
     brandSource: 'collection',
     brandModel: {
@@ -174,7 +174,8 @@ test('Leftbar Collection Brand 底部复用菜单同款 Search Item', () => {
   assert.match(html, /data-instance="collection-brand-search"/);
   assert.match(BRAND_TEMPLATE, /partial\('_partial\/sidebar\/search'/);
   assert.match(BRAND_TEMPLATE, /hoverSurface: true/);
-  assert.match(BRAND_STYLE, /\.brand-header--collection \.brand-search[\s\S]*margin-top: \.5rem/);
+  assert.match(BRAND_STYLE, /\.brand-header--collection\s*\n\s+display: flex\s*\n\s+flex-direction: column\s*\n\s+gap: 16px/);
+  assert.doesNotMatch(BRAND_STYLE, /\.brand-navigation\s*\n\s+margin-bottom|\.brand-header--collection \.brand-search\s*\n\s+margin-top/);
   assert.match(LAYOUT_STYLE, /\.widget-instance--brand[\s\S]*\.brand-search \.search-trigger[\s\S]*width: 40px[\s\S]*height: 40px[\s\S]*padding: 8px/);
 
   const siteBrand = renderBrand({brandModel: {name: 'XAOXUU'}});

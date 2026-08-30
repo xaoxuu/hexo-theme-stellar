@@ -152,6 +152,21 @@ test("设置页复用文章页正文容器，不维护独立的容器布局", ()
   assert.doesNotMatch(mobilePageRule, /\n\s+(?:width|margin|padding|box-sizing|color):/);
 });
 
+test("设置页头像在所有视口保持 96px 正圆", () => {
+  const css = fs.readFileSync(path.resolve(__dirname, "../source/css/_components/pages/settings.styl"), "utf8");
+  const avatarStart = css.indexOf(".settings-profile__avatar\n");
+  const avatarEnd = css.indexOf("\n.settings-profile__content", avatarStart);
+  const avatarRule = css.slice(avatarStart, avatarEnd);
+  const mobileStart = css.indexOf("@media screen and (max-width: $device-mobile-max)");
+  const mobileRule = css.slice(mobileStart);
+
+  assert.match(avatarRule, /width: 96px/);
+  assert.match(avatarRule, /height: 96px/);
+  assert.match(avatarRule, /border-radius: 50%/);
+  assert.match(avatarRule, /corner-shape: round/);
+  assert.doesNotMatch(mobileRule, /\.settings-profile__avatar/);
+});
+
 test("About Schema 接受可选模板链接并拒绝危险协议", () => {
   const config = parseStellarConfig({ themeConfig: { settings: { about: { items: [
     { key: "Theme", value: "{theme.version}", url: "{theme.tree}" },
