@@ -2,8 +2,8 @@
   "schema_version": 1,
   "id": "docs-reference",
   "name": "Docs Reference",
-  "description": "适合产品文档、项目手册与结构化知识库的 Wiki 站点。",
-  "default_style": "stellar",
+  "description": "使用 Topbar 导航与 Leftbar 设置入口的结构化 Wiki 文档站。",
+  "default_style": "card",
   "files": [
     {
       "source": "_config.stellar.yml",

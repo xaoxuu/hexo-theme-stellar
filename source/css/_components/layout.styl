@@ -1,100 +1,527 @@
-.l_body
-  display: grid
-  grid-template-columns: 1fr minmax(200px,var(--width-main)) 1fr
-  grid-gap: calc(var(--gap-page) * 1)
-  margin: auto
+.site-shell
+  --leftbar-width: calc(var(--gap-base) * 4 + var(--side-content-width))
+  --leftbar-rail-width: 64px
+  --leftbar-gap: 1rem
+  --rightbar-width: calc(var(--leftbar-width) + var(--rightbar-width-extra))
+  --shell-gap: 0px
+  --shell-edge-inset: 0px
+  --shell-topbar-top: var(--shell-edge-inset)
+  --shell-topbar-content-inset: 8px
+  --shell-topbar-height: 64px
+  --shell-topbar-content-height: calc(var(--shell-topbar-height) - var(--shell-topbar-content-inset) - var(--shell-topbar-content-inset))
+  --shell-topbar-content-center-offset: calc(var(--shell-topbar-height) / 2 - var(--shell-topbar-content-inset))
+  --shell-topbar-bottom: 0px
+  --leftbar-sticky-offset: calc(var(--shell-topbar-bottom) + var(--leftbar-gap))
+  --leftbar-panel-height: calc(100vh - var(--leftbar-sticky-offset) - var(--leftbar-gap))
+  --leftbar-panel-height: calc(100dvh - var(--leftbar-sticky-offset) - var(--leftbar-gap))
+  --shell-left-gap: 0px
+  --shell-left-reserve: 0px
+  --shell-right-reserve: 0px
+  --shell-side-reserve: unquote('max(var(--shell-left-reserve), var(--shell-right-reserve))')
+  --shell-side-gap: 0px
+  --shell-content-top-gap: var(--gap-base)
+  --shell-sticky-offset: var(--shell-edge-inset)
+  --rightbar-sticky-offset: calc(var(--shell-sticky-offset) + var(--gap-base))
+  --shell-panel-height: calc(100vh - var(--shell-sticky-offset) - var(--shell-edge-inset))
+  --shell-panel-height: calc(100dvh - var(--shell-sticky-offset) - var(--shell-edge-inset))
+  --rightbar-panel-height: calc(100vh - var(--shell-sticky-offset) - var(--shell-edge-inset) - var(--shell-content-top-gap))
+  --rightbar-panel-height: calc(100dvh - var(--shell-sticky-offset) - var(--shell-edge-inset) - var(--shell-content-top-gap))
+  position: relative
+  margin: 0 auto
   font-size: var(--fs-content)
 
-.l_body aside
+.site-shell[data-regions~='topbar']
+  --shell-sticky-offset: calc(var(--shell-edge-inset) + var(--shell-topbar-height))
+  --shell-topbar-bottom: calc(var(--shell-edge-inset) + var(--shell-topbar-height))
+  padding-top: var(--shell-topbar-top)
+
+.site-shell[data-regions~='leftbar']
+  --shell-left-gap: var(--leftbar-gap)
+  --shell-left-reserve: calc(var(--leftbar-width) + var(--shell-left-gap))
+  --shell-side-gap: unquote('max(var(--gap-page), var(--shell-gap), var(--shell-left-gap))')
+
+.site-shell[data-regions~='rightbar']
+  --shell-right-reserve: var(--rightbar-width)
+  --shell-side-gap: unquote('max(var(--gap-page), var(--shell-gap), var(--shell-left-gap))')
+
+html[data-leftbar-state='collapsed'] .site-shell[data-regions~='leftbar']
+  --shell-left-reserve: calc(var(--leftbar-rail-width) + var(--shell-left-gap))
+
+.site-workspace
+  box-sizing: border-box
+  position: relative
+  width: 100%
+  min-height: calc(100vh - var(--shell-sticky-offset))
+  min-height: calc(100dvh - var(--shell-sticky-offset))
+  margin: 0 auto
+
+.site-region,
+.site-main
+  box-sizing: border-box
+  min-width: 0
+
+.site-main
+  width: unquote('min(var(--width-main), max(0px, calc(100% - var(--shell-edge-inset) - var(--shell-edge-inset) - var(--shell-side-reserve) - var(--shell-side-reserve) - var(--shell-side-gap) - var(--shell-side-gap))))')
+  max-width: var(--width-main)
+  margin-inline: auto
+
+.site-region--leftbar,
+.site-region--rightbar
+  position: absolute
+  top: 0
+  bottom: 0
   z-index: 8
-  flex-shrink: 0
+
+.site-region__surface
+  box-sizing: border-box
   position: sticky
-  position: -webkit-sticky
-  // 侧边栏容器宽度
-  --width-sidebar: calc(var(--gap-base) * 4 + var(--side-content-width))
-  width: var(--width-sidebar)
+  top: var(--shell-sticky-offset)
+  width: 100%
+  height: var(--shell-panel-height)
+  overflow: visible
 
-.l_body .l_left
-  justify-self: right
-  top: var(--gap-page)
-.l_body .l_right
-  justify-self: left
-  width: calc(var(--width-sidebar) + var(--rightbar-width-extra))
-  max-height: calc(100% - var(--gap-page) * 2)
-  .widgets
+.site-region__surface > .site-region__viewport
+  box-sizing: border-box
+  height: 100%
+  max-height: 100%
+  overflow-x: hidden
+  overflow-y: auto
+  overscroll-behavior: contain
+  scrollbar(0, 0)
+  border-radius: inherit
+
+.site-region--leftbar
+  top: var(--leftbar-gap)
+  inset-inline-start: var(--leftbar-gap)
+  width: var(--leftbar-width)
+  .site-region__surface
+    top: var(--leftbar-sticky-offset)
+    height: var(--leftbar-panel-height)
+
+.site-region--rightbar
+  top: var(--shell-content-top-gap)
+  inset-inline-end: var(--shell-edge-inset)
+  width: var(--rightbar-width)
+  .site-region__surface
+    top: var(--rightbar-sticky-offset)
+    height: auto
+    max-height: var(--rightbar-panel-height)
+  .site-region__viewport
+    height: auto
+    max-height: var(--rightbar-panel-height)
+  .widget-stack--rightbar
+    height: auto
+    min-height: 0
+    overflow: visible
+
+.site-region--topbar
+  position: sticky
+  top: var(--shell-edge-inset)
+  z-index: 12
+  box-sizing: border-box
+  width: calc(100% - var(--shell-edge-inset) - var(--shell-edge-inset))
+  height: var(--shell-topbar-height)
+  min-height: var(--shell-topbar-height)
+  max-height: var(--shell-topbar-height)
+  margin: 0 auto
+  padding: var(--shell-topbar-content-inset) var(--gap-page)
+  .widget-stack
     height: 100%
-    overflow visible
-
-// 平板布局
-@media screen and (max-width: $device-laptop)
-  .laptop-only
-    display: block !important
-  .l_body
-    .l_right
-      position: fixed
-      transform: translateX(calc(100% + var(--inset) * 2))
-      transition: transform .38s ease-out
-      margin: 0
-      --inset: 8px
-      right: var(--inset)
-      top: var(--gap-page)
-      max-height: calc(100vh - var(--gap-page) * 2)
-      box-shadow: $boxshadow-card-float
-      z-index: 10
-      background: var(--background)
-      overflow: auto
-      scrollbar(0, 0)
-      --blur-bg: var(--bg-a60)
-      --blur-px: 50px
-  .l_body[rightbar]
-    .l_right
-      transform: translateX(0px)
-    .main-mask
-      // opacity 1
-      pointer-events: inherit
-
-// 手机布局
-@media screen and (max-width: $device-mobile-max)
-  .mobile-only
-    display: block !important
-  .l_body
+    min-height: 0
+    display: flex
+    flex-direction: row
+    align-items: center
+    gap: 8px
+    flex-wrap: nowrap
+    margin: 0
     padding: 0
-    display: block
-    .l_left
-      position: fixed
-      transform: translateX(calc(-100% - var(--inset) * 2))
-      transition: transform .38s ease-out
+  .widget-instance--brand
+    flex: 0 0 auto
+  .widget-instance--spacer
+    flex: 1 1 0
+    min-width: 0
+    .topbar-spacer
+      display: block
+      width: 100%
+      height: 1px
+  .brand-header, .brand-wrap, .nav-area, .menu
+    margin: 0
+  .brand-tagline
+    display: none
+  .widget-instance--menu
+    min-width: 0
+    .menu .ui-collection
+      display: flex
+      align-items: center
+      gap: 4px
+      .ui-collection__item
+        flex: 0 0 auto
+        width: auto
+        min-width: 40px
+        min-height: 40px
+        padding: 4px 10px
+  .widget-instance--search
+    flex: 0 0 auto
+    .ui-collection__item
+      width: 40px
+      min-width: 40px
+      height: 40px
+      min-height: 40px
+      padding: 8px
+  .topbar-toc
+    position: relative
+    > summary
+      list-style: none
+      &::-webkit-details-marker
+        display: none
+  .region-compact-action
+    box-sizing: border-box
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 40px
+    min-width: 40px
+    height: 40px
+    min-height: 40px
+    padding: 8px
+    border: 0
+    border-radius: $border-bar
+    color: var(--text-p2)
+    cursor: pointer
+  .topbar-toc-popover
+    position: absolute
+    top: calc(100% + 8px)
+    right: 0
+    width: min(22rem, 80vw)
+    max-height: min(70vh, 36rem)
+    overflow: auto
+    padding: 12px
+    border-radius: 12px
+    background: var(--card)
+    box-shadow: $boxshadow-card-float
+
+.site-region,
+.site-region__surface
+  box-sizing: border-box
+
+.site-region--topbar > .site-region__viewport
+  height: var(--shell-topbar-content-height)
+  border: 0
+  border-radius: 0
+  background: transparent
+  box-shadow: none
+  backdrop-filter: none
+  -webkit-backdrop-filter: none
+
+// 桌面 Rightbar 不绘制整块表面；Drawer 视觉由语义能力类在断点内启用。
+.site-region--rightbar .site-region__viewport
+  border: 0
+  background: transparent
+  box-shadow: none
+  backdrop-filter: none
+  -webkit-backdrop-filter: none
+
+// Region 外层只负责 Shell 定位，视觉表面由 Topbar 自身或 Side Surface 承载。
+.site-region--leftbar,
+.site-region--rightbar
+  border: 0
+  background: transparent
+  box-shadow: none
+
+.leftbar-state-toggle
+  position: static
+  flex: 0 0 32px
+  width: 32px
+  height: 32px
+  min-height: 32px
+  padding: 4px
+  display: flex
+  align-items: center
+  justify-content: center
+  border: 0
+  border-radius: 999px
+  font-size: 24px
+  line-height: 0
+  cursor: pointer
+
+leftbar-rail()
+  width: var(--leftbar-rail-width)
+  .site-region__zone,
+  .site-region__footer,
+  .site-region__system
+    width: 48px
+    margin-inline: auto
+  .widget-stack--leftbar
+    width: 48px
+    margin: 0
+    padding: 0
+    overflow: hidden
+  .widget-instance
+    width: 48px
+  .widget-instance:not([data-leftbar-rail])
+    display: none
+  .widget-instance[data-leftbar-rail]
+    .brand-title, .menu .text, .search-trigger .ui-collection__content, .region-actions .social-spacer
+      display: none
+  .widget-instance--brand
+    .brand-header
       margin: 0
-      --inset: 8px
-      left: var(--inset)
-      top: 8pt
-      max-height: 'calc(%s - 8pt - %s)' % (100vh $leftbar-bottom-margin-mobile)
-      .leftbar-container
-        --inset: 8px
-        height: 'calc(%s - 8pt - %s)' % (100vh $leftbar-bottom-margin-mobile)
-      box-shadow: $boxshadow-card-float
-      z-index: 10
-    .l_right
-      top: 8pt
-      max-height: 'calc(%s - 8pt - %s)' % (100vh $rightbar-bottom-margin-mobile)
-    .l_main
-      max-width: 100%
-  .l_body[leftbar]
-    .l_left
-      transform: translateX(0px)
-    .main-mask
-      // opacity 1
-      pointer-events: inherit
+    .brand-navigation
+      display: none
+      margin: 0 0 4px
+    .brand-navigation__back
+      width: 40px
+      height: 40px
+      margin: 0 auto
+      padding: 8px
+      justify-content: center
+      box-sizing: border-box
+      > span:not(.ui-icon)
+        display: none
+      .ui-icon
+        margin: 0
+    .brand-search .search-trigger
+      width: 40px
+      min-width: 40px
+      height: 40px
+      min-height: 40px
+      margin: 4px auto
+      padding: 8px
+      justify-content: center
+    .brand-wrap
+      justify-content: center
+    .brand-image
+      width: 40px
+      height: 40px
+      margin: 0
+    .brand-stats
+      display: none
+  .widget-instance--menu
+    .menu .ui-collection
+      display: block
+    .menu .ui-collection__item
+      width: 40px
+      min-width: 40px
+      height: 40px
+      min-height: 40px
+      margin: 4px auto
+      padding: 8px
+    .ui-collection__content, .ui-collection__indicator
+      display: none
+  .widget-instance--search
+    .search-trigger
+      width: 40px
+      min-width: 40px
+      height: 40px
+      margin: 4px auto
+      padding: 8px
+      justify-content: center
+  .region-actions
+    width: 40px
+    margin: 4px auto
+    justify-content: center
+  .site-region__viewport
+    padding-left: 8px
+    padding-right: 8px
+  .site-region__system
+    flex-direction: column
+    align-items: center
+    gap: 4px
+    padding: 4px 0 8px
+  .site-region__settings
+    flex: 0 0 32px
+    width: 32px
+    margin-inline: auto
+    .widget-instance--settings
+      width: 32px
+  .leftbar-state-toggle
+    margin-inline: auto
+  .site-region__project-toolbar
+    flex-direction: column
+    align-items: center
+    .site-region__project-home,
+    .site-region__project-search
+      width: 40px
+  .settings-widget__name
+    display: none
 
+html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .site-region--leftbar
+  leftbar-rail()
 
-.main-mask
+@media screen and (max-width: $device-laptop)
+  .site-shell
+    --shell-right-reserve: 0px
+    --rightbar-drawer-top: var(--leftbar-gap)
+    --rightbar-drawer-bottom: var(--leftbar-gap)
+    --rightbar-drawer-max-height: calc(100vh - var(--rightbar-drawer-top) - var(--rightbar-drawer-bottom))
+    --rightbar-drawer-max-height: calc(100dvh - var(--rightbar-drawer-top) - var(--rightbar-drawer-bottom))
+  .site-shell[data-regions~='leftbar']
+    --shell-side-reserve: var(--shell-left-reserve)
+    --shell-side-gap: unquote('max(var(--gap-page), var(--shell-gap), var(--shell-left-gap))')
+  .site-shell:not([data-regions~='leftbar'])
+    --shell-left-reserve: 0px
+    --shell-side-reserve: 0px
+    --shell-side-gap: 0px
+  .site-region--rightbar
+    position: fixed
+    transform: translateX(calc(100% + 16px))
+    transition: transform .38s ease-out
+    inset-inline-end: 8px
+    top: var(--rightbar-drawer-top)
+    width: var(--rightbar-width)
+    height: auto
+    max-height: var(--rightbar-drawer-max-height)
+    bottom: auto
+    z-index: 10
+    .site-region__surface
+      position: relative
+      top: auto
+      height: auto
+      max-height: var(--rightbar-drawer-max-height)
+    .site-region__viewport
+      position: relative
+      z-index: 0
+      height: auto
+      max-height: var(--rightbar-drawer-max-height)
+    .site-region__surface.ui-drawer-surface
+      isolation: isolate
+      border: 0
+      border-radius: $border-card-l
+      corner-shape: $corner-shape
+      background: transparent
+      box-shadow: none
+      backdrop-filter: none
+      -webkit-backdrop-filter: none
+      &:before
+        content: ''
+        position: absolute
+        pointer-events: none
+        z-index: -1
+        inset: 0
+        border-radius: inherit
+        corner-shape: inherit
+        background: var(--bg-a50)
+        backdrop-filter: saturate(300%) blur(16px)
+        -webkit-backdrop-filter: saturate(300%) blur(16px)
+        mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent), linear-gradient(to bottom, transparent, black 16px, black calc(100% - 16px), transparent)
+        mask-composite: intersect
+        -webkit-mask-image: linear-gradient(to right, transparent, black 16px, black calc(100% - 16px), transparent), linear-gradient(to bottom, transparent, black 16px, black calc(100% - 16px), transparent)
+        -webkit-mask-composite: source-in
+  .site-shell[data-drawer='rightbar'] .site-region--rightbar
+    transform: translateX(0)
+  .site-shell[data-drawer='leftbar'] .site-region--leftbar
+    position: fixed
+    transform: translateX(0)
+    transition: transform .38s ease-out
+    inset-inline-start: 8px
+    top: var(--gap-page)
+    bottom: auto
+    height: calc(100vh - var(--gap-page) * 2)
+    height: calc(100dvh - var(--gap-page) * 2)
+    z-index: 10
+    .site-region__surface
+      position: static
+      height: 100%
+
+@media screen and (min-width: ($device-tablet + 1px)) and (max-width: $device-laptop)
+  .site-shell[data-regions~='leftbar'] .site-main
+    width: unquote('min(var(--width-main), max(0px, calc(100% - var(--shell-left-reserve) - var(--shell-side-gap) - var(--shell-side-gap))))')
+    margin-inline: 0
+    margin-inline-start: unquote('calc(var(--shell-left-reserve) + max(var(--shell-side-gap), (100% - var(--shell-left-reserve) - var(--width-main)) / 2))')
+
+@media screen and (max-width: $device-tablet)
+  .site-shell,
+  .site-shell[data-regions~='leftbar'],
+  .site-shell:not([data-regions~='leftbar'])
+    --shell-left-reserve: 0px
+    --shell-right-reserve: 0px
+    --shell-side-reserve: 0px
+    --shell-side-gap: 0px
+    --rightbar-drawer-top: 8px
+    --rightbar-drawer-bottom: 64px
+    --rightbar-drawer-max-height: calc(100vh - var(--rightbar-drawer-top) - var(--rightbar-drawer-bottom))
+    --rightbar-drawer-max-height: calc(100dvh - var(--rightbar-drawer-top) - var(--rightbar-drawer-bottom))
+  .site-main
+    width: 100%
+    max-width: none
+    margin-inline: 0
+  .site-region--leftbar
+    position: fixed
+    transform: translateX(calc(-100% - 16px))
+    transition: transform .38s ease-out
+    inset-inline-start: 8px
+    top: 8px
+    bottom: 64px
+    height: auto
+    z-index: 10
+    overflow: hidden
+    .site-region__surface
+      position: static
+      height: 100%
+  .site-shell[data-drawer='leftbar'] .site-region--leftbar
+    top: 8px
+    bottom: 64px
+    height: auto
+    transform: translateX(0)
+  .site-shell[data-regions~='topbar'] .site-region--leftbar
+    top: calc(var(--shell-topbar-height) + 8px)
+  .site-shell[data-regions~='topbar']
+    --rightbar-drawer-top: calc(var(--shell-topbar-height) + 8px)
+  .site-region--topbar
+    box-sizing: border-box
+    padding: var(--shell-topbar-content-inset)
+    .widget-stack
+      width: 100%
+      gap: 4px
+      margin: 0
+      overflow: hidden
+    .widget-instance--brand
+      margin-right: 0
+      .brand-image
+        width: 32px
+        height: 32px
+        margin: 0
+    .widget-instance--menu
+      flex: 1 1 auto
+      overflow-x: auto
+      scrollbar-width: none
+      .menu .ui-collection
+        gap: 0
+      .ui-collection__content, .ui-collection__indicator
+        display: none
+    .widget-instance--search
+      flex: 0 0 40px
+      .search-trigger
+        width: 40px
+        min-width: 40px
+        height: 40px
+        padding: 8px
+        justify-content: center
+        box-sizing: border-box
+      .ui-collection__content
+        display: none
+    .widget-instance--actions
+      flex-shrink: 0
+      .region-actions
+        flex-wrap: nowrap
+
+@media (prefers-reduced-motion: reduce)
+  .site-region--leftbar,
+  .site-region--rightbar
+    transition: none
+
+.site-scrim
   position: fixed
   pointer-events: none
-  top: 0
-  left: 0
+  inset: 0
   width: 100%
   height: 100%
+  border: 0
   background: rgba(black, 0.1)
   z-index: 9
-  opacity 0
+  opacity: 0
   trans1 opacity
+
+.site-shell[data-drawer] .site-scrim
+  pointer-events: auto
+  opacity: 1

@@ -2,6 +2,8 @@
 
 'use strict';
 
+require('./lib/config-hot-reload').registerConfigHotReload(hexo);
+
 hexo.on('generateBefore', () => {
   // 页面路径归一化：xxx.html → xxx/，必须先于所有读取 page.path 的逻辑
   require('./lib/path_normalize')(hexo);

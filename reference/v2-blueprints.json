@@ -10,12 +10,15 @@
     "schemaVersion": 1,
     "sealed": true,
     "blueprintIds": [
-      "classic-blog",
+      "classic",
       "minimal-reading",
-      "docs-reference"
+      "docs-reference",
+      "light-and-shadow"
     ],
     "visualStyleIds": [
-      "stellar",
+      "card",
+      "flat",
+      "glass",
       "minimal"
     ],
     "paths": "safe non-empty relative path",
@@ -24,10 +27,10 @@
   },
   "blueprints": [
     {
-      "id": "classic-blog",
-      "name": "Classic Blog",
-      "description": "适合持续发布文章、分类与标签内容的经典个人博客。",
-      "defaultStyle": "stellar",
+      "id": "classic",
+      "name": "Classic",
+      "description": "使用 Leftbar 设置入口的经典个人博客，适合持续发布文章、分类与标签内容。",
+      "defaultStyle": "card",
       "files": [
         "_config.stellar.yml",
         "source/_posts/welcome-to-stellar.md"
@@ -36,7 +39,7 @@
     {
       "id": "minimal-reading",
       "name": "Minimal Reading",
-      "description": "适合长文、随笔与低干扰阅读体验的内容站点。",
+      "description": "在 Topbar 展示设置入口的低干扰长文与随笔站点。",
       "defaultStyle": "minimal",
       "files": [
         "_config.stellar.yml",
@@ -46,8 +49,8 @@
     {
       "id": "docs-reference",
       "name": "Docs Reference",
-      "description": "适合产品文档、项目手册与结构化知识库的 Wiki 站点。",
-      "defaultStyle": "stellar",
+      "description": "使用 Topbar 导航与 Leftbar 设置入口的结构化 Wiki 文档站。",
+      "defaultStyle": "card",
       "files": [
         "_config.stellar.yml",
         "source/_data/wiki.yml",
@@ -55,13 +58,33 @@
         "source/wiki/docs-reference/index.md",
         "source/wiki/docs-reference/getting-started.md"
       ]
+    },
+    {
+      "id": "light-and-shadow",
+      "name": "Light and Shadow",
+      "description": "以 Glass 与 Topbar 设置入口营造沉浸式作品站。",
+      "defaultStyle": "glass",
+      "files": [
+        "_config.stellar.yml",
+        "source/_posts/welcome-to-light-and-shadow.md"
+      ]
     }
   ],
   "visualStyles": [
     {
-      "id": "stellar",
-      "name": "Stellar",
-      "description": "Stellar 的明快色彩、柔和表面与动态反馈。"
+      "id": "card",
+      "name": "Card",
+      "description": "清晰的实体卡片、边界与层级。"
+    },
+    {
+      "id": "flat",
+      "name": "Flat",
+      "description": "半透明平面、轻量模糊与清晰分隔线。"
+    },
+    {
+      "id": "glass",
+      "name": "Glass",
+      "description": "半透明表面、柔和模糊与光影层次。"
     },
     {
       "id": "minimal",

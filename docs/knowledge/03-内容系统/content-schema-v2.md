@@ -1,179 +1,88 @@
-# v2 内容配置契约
+---
+title: 内容配置 Schema v2
+domain: 内容系统
+tags:
+  - schema
+  - collection
+  - front-matter
+---
 
-> 本页是 v2 公开 YAML / Front Matter 的权威边界。其它章节中与本页冲突的 v1 字段名仅属历史记录，v2 运行时不会读取。
+# 内容配置 Schema v2
 
-## 命名边界
+Collection YAML 与 Page Front Matter 经过声明式 Schema 规范化后，作为冻结对象进入 CollectionModel 与 PageViewModel。模板不读取原始配置，也不兼容 v1 或 v2 预发布别名。
 
-- Stellar 自有 YAML / Front Matter 字段：`snake_case`。
-- JavaScript 变量、函数与对象 API：`camelCase`；类：`PascalCase`。
-- CSS class、HTML 自有扩展属性与文件名：`kebab-case`。
-- 第三方参数袋保持上游字段：Galaxy options 使用 `starSpeed` 等 React Bits props，Giscus 使用 `data-repo` 等 HTML 属性。
+## Region 字段
 
-## 集合字段
-
-Wiki、Topic 和 Notebook 共用：
-
-| 字段 | 语义 |
-| --- | --- |
-| `name` | 面包屑等紧凑位置的短名称，必填 |
-| `headline` | 集合卡片和 Hero 主标题，缺失时取 `name` |
-| `tagline` | 一行辅助文案 |
-| `description` | 完整描述与 SEO 回退 |
-| `identity.icon` | 项目身份图标 |
-| `card.cover` | 集合列表卡片封面 |
-| `hero` | 集合首页 Hero |
-| `sidebar.left/right` | 集合页面的左右栏 |
-| `navigation` | 菜单与导航 |
-| `article` | 集合内容默认排版 |
-| `footer` | 许可、分享与参考资料 |
-| `comments` | 集合评论默认值 |
-| `source` | 源码仓库与分支 |
-| `route` | 内容路径：Wiki / Notebook 使用 `path`，Topic 可额外使用 `start` |
-| `listing` | 集合排序、分页和摘要 |
-
-`identity.icon`、`card.cover`、`hero.background.image` 不互相充当回退。即使使用同一资源，也要在对应作用域显式配置。
-
-Topic 集合的 `card` 仅描述专栏索引卡片，不级联到成员文章的 `ContentItemModel.presentation.card`。成员文章的列表封面和显式小字只来自文章 Front Matter 的 `card.cover` / `card.tagline`。
-
-## 页面字段
-
-| 对象 | 子字段 |
-| --- | --- |
-| `collection` | `profile`, `id` |
-| `card` | `cover`, `tagline` |
-| `banner` | `enabled`, `image`, `avatar`, `headline`, `tagline` |
-| `sidebar.left` | `widgets`, `search`, `menu`, `brand`, `wiki_home` |
-| `sidebar.right` | `widgets` |
-| `navigation` | `menu`, `breadcrumb` |
-| `article` | `type`, `indent`, `author`, `ai_label` |
-| `footer` | `references`, `license`, `share` |
-| `comments` | `enabled`, `title`, `id`, `provider`, `options` |
-| `visibility` | `listed`, `searchable` |
-| `listing` | `priority` |
-| `source` | `repository`, `branch` |
-| `render` | `math`, `diagrams` |
-| `seo` | `open_graph` |
-| `inject` | `head`, `script` |
-
-`visibility.listed: false` 从博客、专栏、笔记本与 Wiki 目录/最近列表中排除页面，不影响路由生成。`visibility.searchable: false` 仅从站内搜索索引排除。
-
-`listing.priority` 必须是不小于 `0` 的有限数字；只有大于 `0` 时置顶。
-
-## Brand
-
-全局 `site.brand` 与页面/集合的 `sidebar.left.brand` 最终投影为相同 ViewModel 结构：
+Collection 和 Page 共享同形的 `regions`：
 
 ```yaml
-site:
-  brand:
-    image:
-      src: /images/avatar.webp
-      variant: avatar
-      href: /about/
-    name: Stellar
-    wordmark: /images/wordmark.svg
-    tagline:
-      text: 每个人的独立博客
-      hover: example.com
-    href: /
+regions:
+  topbar:
+    inherit: true
+    widgets: [brand, spacer, menu, search, actions]
+  leftbar:
+    inherit: false
+    widgets: [tree]
+  rightbar:
+    widgets: [ghrepo, toc]
 ```
 
-ViewModel 的 `image.variant` 只能是：
+每个 Region 只包含 `inherit` 与 `widgets`。`leftbar.default_state` 是站点级 Shell 策略，不能在内容层配置。Notebook 的 Note 默认布局使用 `note_defaults.regions`。
 
-- `avatar`：正圆裁剪、`object-fit: cover`，保留头像旋转背景效果。
-- `icon`：`$border-card-s` 圆角矩形裁剪、`object-fit: contain`。
-- `plain`：`object-fit: contain`，不裁剪、不设置圆角。
+级联顺序固定为主题全局、Profile、Collection、Page；默认追加，`inherit: false` 重置，不去重、不排序。完整规则见 [Region 与 Leftbar 系统](../02-布局系统/sidebar-system.md)。
 
-`image` 是原子对象：内容作用域覆盖不会继承上级图片的部分字段。`image.href` 控制图片链接，Brand 根级 `href` 控制名称或字标链接。`name` 只接受纯文本；字标图片使用 `wordmark`，普通与悬停标语分别使用 `tagline.text/hover`。
+## Collection 主要字段
 
-解析顺序是页面 `sidebar.left.brand`、集合 `sidebar.left.brand`、类型默认和全局 `site.brand`。Wiki / Notebook 的类型默认会从 `identity.icon`自动生成 Brand，缺失时使用 `hexo.stellar.config.resources.fallbacks.projectIcon`，不从 `card.cover` 等其它角色回退。Topic 的类型默认是直接继承全局 Brand，只有显式的 `sidebar.left.brand` 才覆盖。
+| 字段 | 作用 |
+| --- | --- |
+| `name/headline/tagline/description` | Collection 身份文案 |
+| `identity.icon` | Wiki / Notebook 项目图标 |
+| `route.path` | Collection 路由 |
+| `hero` | Collection 首页 Hero |
+| `card` / `listing` | 列表卡片与排序分页 |
+| `regions` | Collection 页面 Region 覆盖 |
+| `note_defaults.regions` | Notebook 内 Note 的 Region 覆盖 |
+| `navigation` | 菜单、面包屑和树 |
+| `article/footer/comments/source` | 内容与服务配置 |
 
-手机端 Brand 自动显示于主页、分类/标签页面及索引、专栏索引、Wiki 索引、笔记本索引和笔记列表；文章、普通页面、Wiki/Topic/Notebook 内容页、归档、作者页和 404 隐藏。v2 不提供显示开关。
+## Page 主要字段
 
-## 第三方边界
+| 字段 | 作用 |
+| --- | --- |
+| `collection.profile/id` | 归属的 Wiki、Topic 或 Notebook |
+| `card/banner` | 列表与内容头图 |
+| `regions` | Page 级 Region 覆盖 |
+| `navigation` | 菜单激活和面包屑 |
+| `article/footer/comments` | 内容展示与页脚评论 |
+| `visibility/listing` | 可见性与列表优先级 |
+| `render/seo/inject` | 渲染、分享元数据与可信注入 |
+| `source` | 源码仓库 |
 
-Galaxy 的路径为 `hero.background.effect.options`，其 React Bits props 保持上游 camelCase；评论系统的上游字段统一放入 `comments.options`。两类参数袋的父级容器严格封闭，不在根级放行第三方字段。
+Hexo 自有 Front Matter（如 `title/date/layout/tags/categories/permalink`）保持上游名称，不进入 Stellar 字段重命名。
 
-## 构建期内容模型
+## Widget 与业务数据边界
 
-普通 Post 在 `before_generate` 完成严格配置校验，并在 `after_post_render` 取得最终正文后生成 `page.viewModel`。该对象提供冻结的 `collection`、`item` 与 Post 专属 `render` 投影，不暴露可变的 Hexo Document、Query、Moment 或配置来源：
+Region 数组只保存 Widget 引用。Brand、Menu、Search 与 Actions 的业务配置分别仍归 `site.brand`、`site.menu`、`extensions.search` 与 `site.footer.actions` 所有。Collection Identity 可以为 Wiki/Notebook 投影 Brand，但内容层不再使用位置绑定的 `sidebar.left.brand`。
 
-- `collection` 是 Post profile 的 `CollectionModel`，顶层固定为 `id`、`profile`、`identity`、`source`、`route`、`navigation`、`listing`、`presentation`、`visibility`。
-- `item` 是 `ContentItemModel`，日期转为 ISO 字符串，标签与分类转为字符串数组，路径完成规范化；导航、列表、展示和可见性已经完成级联。
-- `render.document` 固化最终语言、页面级 head 注入与根文档主题状态；`render.layout` 固化 `pageType`、`articleStyle`、由 `paragraphIndent` 解析出的缩进、侧栏表面、Brand、博客路径与面包屑；`render.seo` 固化 title、description、keywords、robots、canonical、Open Graph 与 JSON-LD。
-- `render.article` 固化正文排版开关、带路径的标签、已解析 Footer、上下篇、相关文章结果，以及评论服务、线程 id 与服务参数袋。
-- `render.listing` 固化博客卡片、置顶轮播、平铺列表与归档需要的路由、封面、摘要、日期、分类、最多五个标签、作者、优先级和可见性。
-- Post 的 Schema 校验、模型构建、Reference 与 EJS 消费同一 `render` 事实来源；缺少或非法 `render` 时按源文件构建失败，不回退到 `page` 或主题字段。
-- 级联顺序为页面 Front Matter、Post profile、主题全局配置；`false`、`0` 与空字符串是有效覆盖值。Brand 图片继续按原子对象替换，不继承上级图片子字段。
-- 普通 Post、Topic、Wiki 与 Notebook 的根 Shell、左右侧栏、Brand、菜单、面包屑、SEO、正文辅助区、Footer、导航、评论和聚合条目均已消费 ViewModel。Hexo 仍只为聚合页提供分页及当前筛选状态；生成器把最终列表投影作为显式 local 交给模板。
+Widget 的位置能力由类型 descriptor 声明，不允许实例扩大能力。能力不匹配只产生 warning 并跳过实例；Schema 错误、未知字段和旧字段则是构建错误。
 
-唯一编排入口位于 `scripts/lib/collection-pipeline/`，模型事实来源位于 `scripts/lib/models/index.js`。Pipeline 单遍发现 Post/Page 并按 profile/collection 分组；四类 profile 都在 `before_generate` 登记冻结输入，再由 `after_post_render` 把 Hexo 最终 HTML 正文写入新的冻结 ViewModel。Post/Topic 同时补全 Hexo 关系与相关文章；Wiki 保留 tree barrier 后的 related/listing 投影并以最终正文重建 item；Notebook 保留 two-stage 产生的 tag tree/recent items 并以最终正文完成 item。因此模板仍只消费 ViewModel，不需要回退读取可变 `page.content`；列表条目由 `post_view_model` helper 或生成器显式投影提供。
+## 迁移定位
 
-### Topic 与文章
+| 旧字段 | 新字段 |
+| --- | --- |
+| `sidebar.left.widgets` | `regions.leftbar.widgets` |
+| `sidebar.right.widgets` | `regions.rightbar.widgets` |
+| `note_defaults.sidebar` | `note_defaults.regions` |
+| `sidebar.left.search/menu/wiki_home` | 对应系统 Widget |
+| `sidebar.left.brand` | `site.brand` + `brand` Widget |
 
-严格 `collection.profile: topic` 的文章在生成前登记基础输入，并在 `after_post_render` 取得最终正文、上下篇与相关文章后生成同构、深度冻结的 `page.viewModel`：
+Doctor 会输出来源文件、字段路径和迁移目标。最终字段、类型、默认值与 consumer 以 `reference/v2-config.md` 和 `reference/v2-models.md` 为准。
 
-- `collection` 保留 Topic 名称、标题、说明、受众、身份图标、源码仓库、规范化路由、集合列表设置和展示配置；顶层字段与 Post profile 一致。
-- `navigation.series` 只包含解析后归属同一 Topic id 且 `visibility.listed !== false` 的文章，默认按日期降序稳定排列；每项只投影普通 id、标题、规范化路径、ISO 日期和当前项标记。
-- Topic 是否位于 `topic.publish_list` 只进入 `collection.visibility.listed`；单篇文章从独立的默认可见性开始，再接受页面 `visibility` 覆盖，不把集合下架隐式传播为文章隐藏。
-- Topic 默认沿用站点 Brand 和普通 Post 侧栏，之后依次接受 Topic profile、集合与页面展示覆盖；文章、页脚和评论同样在构建期完成级联。
-- Topic 文章可由已注册 Topic 的 `route.start`、成员关系或约定源码目录唯一推断；显式 `collection.profile/id` 用于消歧且必须指向已注册 Topic。零候选的普通 Post 继续作为 Post；Topic 命名空间零候选、多候选或显式声明与候选冲突时构建失败。layout、旧 `topic` 字段和运行时 Topic tree 不参与兼容推断。
-- `render.document/layout/seo/article/listing` 复用 Post 的文章语义；Topic Hero 背景只作为成员 Banner 回退，`navigation.series` 只服务侧栏专栏导航，不替换正文的 Hexo 全站上下篇。
-- Topic 详情、博客列表/置顶/归档与 Topic 索引均消费显式 ViewModel 或生成器投影，不再由 EJS 读取 Topic tree 推断最终状态。
+## 实现接缝
 
-### Wiki 与 Wiki 页面
-
-严格 `collection.profile: wiki` 页面在 Wiki 树构建完成后生成同构 `page.viewModel`：
-
-- `collection` 保留 Wiki 的名称、主标题、副标题、长描述、受众与身份图标，以及项目源码仓库、规范化 `route.path/homepage`、列表与 shelf 可见性。
-- `navigation.tree` 从 `doc_tree.sections` 投影为冻结的普通分组与页面节点，包含 id、标题、规范化路径、页码和首页标记，不保留 `WikiPage` 实例。
-- `item` 在构建期完成页面导航、列表、展示、源码与可见性级联；页面源码可以逐字段覆盖 Wiki 源码，项目 `hero.background.image` 作为页面 Banner 图片默认值并可被页面显式覆盖。
-- shelf 只表示 Wiki collection 的聚合可见性，不会隐式隐藏项目内页面；页面继续由自身 `visibility.listed/searchable` 决定。
-- Wiki 页面可由已注册项目、`source/wiki/<id>/` 命名空间、`route.path` 与 `navigation.tree` 唯一推断；显式 `collection.profile/id` 用于消歧且必须与注册项目及 route/tree 成员关系一致。Wiki 物理目录允许作为历史别名被合法显式 id 覆盖；无显式声明时的命名空间零候选、多候选及显式成员冲突仍会构建失败。layout 与 v1 `wiki` 字段不参与兼容推断。
-- `render.document/layout/seo` 固化文档、布局、最终 Brand、导航和完整 SEO；`render.cover` 只允许集合首页启用 Hero；`render.article` 固化 Banner、README、Footer、上下篇、评论和 related；`render.listing` 固化 Wiki 卡片、排序、置顶与可见性。
-- Wiki 详情页复用公共 Shell/Region/Section/Item/Navigation 并向 partial 传递显式 ViewModel locals；缺少合法 `render` 时构建失败。Wiki 索引生成器只传递 `wikiIndex.items/allItems/tags`，卡片、筛选、置顶和 tabs 不读取原始 Wiki tree。
-
-### Notebook 与 Note
-
-严格 `collection.profile: notebook` 的 Note 在生成前先登记冻结输入和 collection base，Notebook 树完成后再生成同构 `page.viewModel`：
-
-- `collection` 保留 Notebook 的名称/标题/说明/身份图标、源码仓库、规范化 `route.path`、标签导航、列表分页/排序/摘要设置和 Note 展示默认值。
-- `navigation.tags` 只从同一严格 Notebook id 下的 Note 标签构造；层级标签拆为冻结的普通对象，包含规范化 id、名称、末段标签、父级和标签页路径。
-- `item` 在构建期完成页面导航、`listing.priority`、`visibility.listed/searchable`、侧栏、文章、页脚和评论级联；页面源码可以覆盖 Notebook 源码字段。
-- `source/notebooks/<id>/*.md` 在同名 `_data/notebooks/<id>.yml` 存在时可唯一推断 Notebook，`stellar new note` 因此只写最小 Front Matter；其它路径可用显式 `collection.profile/id` 消歧。Notebook 命名空间零候选、多候选或显式冲突时失败；不会从 layout、v1 `notebook` 字段或未知目录兼容推断。
-- `render.document/layout/seo/article/listing` 固化文档状态、布局、最终 Brand、完整 WebPage SEO、Banner、日期、标签、Footer、评论与卡片字段；缺少合法 `render` 时按来源终止构建。
-- Notebook Open Graph 保持 WebPage 的 `website` 类型，并保留既有发布时间、更新时间与标签 meta；`footer.license: true` 在模型层映射到全局 Article 许可文本，保留既有启用语义。
-- 第一阶段用已完成的临时 ViewModel 投影所有 Notebook、标签与 Note 列表，形成深度冻结的 `notebookIndex`；第二阶段把显式 `tagTree` 与 `recentItems` 写入每个详情 ViewModel 后再次校验和冻结。
-- Notebook 总索引、集合首页和标签分页只消费生成器传入的 `page.notebookIndex`；卡片、筛选、置顶、标签树、最近笔记和详情 partial 不读取原始 Notebook tree。`visibility.listed: false` 的 Note 不进入列表与 recent 投影；原始 tree 仅保留给尚未迁移的非模板兼容接口。
-
-## Reference 元数据
-
-Pre-alpha M1 建立机器元数据接缝，M5 再把同一份数据接入公开 Reference 与本地候选包验收：
-
-- 模型事实来源是 `scripts/schema/model-schema.js`；Collection / Front Matter 输入事实来源是 `scripts/schema/config-target.js` 与由它投影的 `scripts/schema/content-config-schema.js`。
-- 每个已交付字段均带类型、默认值语义、作用域、当前消费方和最小示例。动态默认值用 `derived`、`inherited` 或 `computed` 描述，不伪造固定字面量。
-- `scripts/lib/models/` 在冻结模型前使用同一 Schema 拒绝缺失字段、未声明字段和错误类型，避免实现与 Reference 漂移。
-- `npm run reference:generate` 稳定生成 `reference/v2-models.json`、`reference/v2-config.json`、`reference/v2-blueprints.json` 及对应 Markdown 字段页；配置 Reference 已包含 delivered 的 Theme、Collection 与 Front Matter 作用域并排除 Hexo 自有字段，Blueprint Reference 登记三套 Blueprint、两套 Visual Style、封闭 manifest、安全相对路径/唯一目标/物理根包含约束与 CLI 选项。
-- `reference/README.md` 是 npm tarball 与 GitHub 中的公开契约入口；环境、安装、init、doctor 与人工验收步骤保留在 M10 内部验收资料，不随 npm 包发布。Markdown、JSON、相对链接与锚点由 `npm run reference:check` 一起阻止漂移，不存在手写的第二套字段表。
-- 第三方评论参数袋、widget 对象和 effect options 保持开放对象边界；元数据不复制上游字段表。
-
-模型 Reference 仍不混入 Blueprint、CLI、布局原语或 Extension Schema；Blueprint/CLI 使用独立的 `v2-blueprints.json` / `v2-blueprints.md`，五类原语是内部 EJS 契约。`ContentItemModel.layout` 是 #695–#698 已交付的模型字段。
-
-## 校验与消费链
-
-Collection 与 Front Matter 不再由手写字段表定义：`scripts/schema/content-config-schema.js` 直接从目标契约投影两个作用域 Schema，`scripts/lib/config-schema.js` 统一执行类型、封闭边界、迁移错误、规范化、camelCase 投影与深冻结。`scripts/lib/collection-pipeline/` 对每个输入只解析一次，并登记冻结的 `collectionConfigs` / `pageConfigs`、profile 成员与 Collection 分组。
-
-- `scripts/lib/content-membership.js` 从已注册 Wiki/Topic/Notebook、成员关系和源码路径建立共享候选索引。唯一候选自动归属；普通 Post/Page 的零候选合法；集合命名空间零候选、多候选及显式冲突统一拒绝猜测。构建与 doctor 复用同一解析器，诊断固定给出来源、候选集合和最小修复方式。
-- 四类详情模型都在 `after_post_render` 使用最终 HTML 重建冻结 item/render；Post/Topic 额外纳入标签关系、prev/next 与可选相关文章，Wiki/Notebook 继承构建期已稳定的集合导航和聚合投影；博客聚合消费同一登记输入。
-- `scripts/lib/content-config.js` 保留作用域包装、来源化错误和 `isListed` / `isSearchable` 等内容语义，不再维护第二套手写字段表。
-- 路由、导航、侧栏和页面字段由声明式 Schema 严格校验；错误继续包含配置来源、字段路径与迁移目标。
-- `scripts/helpers/collection.js` 向 EJS 提供 `collection_id(page, type)`，不再读取 `page.wiki/topic/notebook`。
-- `scripts/lib/brand.js` 与 `scripts/helpers/brand.js` 解析 Brand 优先级、集合自动值和手机端显示矩阵。
-- Wiki 与 Notebook 数据树都在两阶段建模后投影冻结的索引、导航和列表数据；Topic 索引也只消费显式投影。搜索生成器继续消费共享可见性语义。
-- Wiki / Notebook 标签页共用 listed/tag membership 过滤原语，Topic / Notebook 共用 two-stage 生命周期；四类 adapter 只保留归属、导航、默认排序、首页与路由差异。
-
-旧字段、未知字段和错误类型都会汇总为 `ContentConfigError`，消息包含源文件与字段路径；运行时没有 v1 别名或错误类型自动转换。
-
-### doctor 的 Schema 消费
-
-`stellar doctor` 读取站点 `_config.yml`；`_config.stellar.yml` 缺失或为空时直接使用 Schema 默认值，存在覆盖时再读取它。随后扫描 `source/_data/{wiki,topic,notebooks}/` 和 `source/` 下带 Front Matter 的 Markdown，分别调用 `parseStellarConfig()`、`parseCollectionConfig()`、`parsePageConfig()` 与共享归属解析器。doctor 只聚合问题，不触发生成器、不写回文件，也不提供旧字段别名或自动迁移。text/json 输出中的问题统一保留 `source/path/actualType/expected/migration`，因此命令行诊断和构建期失败指向同一字段事实；机器读取 JSON 时使用 `hexo stellar doctor --format json --silent`，屏蔽 Hexo 在命令加载前输出的框架日志。
+- 目标字段：`scripts/schema/config-target.js`
+- Schema 投影：`scripts/schema/content-config-schema.js`
+- 解析与冻结：`scripts/lib/content-config.js`
+- Region 级联：`scripts/lib/regions.js`
+- ViewModel：`scripts/lib/models/index.js`
+- Doctor：`scripts/lib/doctor.js`

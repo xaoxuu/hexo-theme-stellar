@@ -1,5 +1,5 @@
 <%
-var allowedKinds = ['cover', 'brand', 'search', 'navigation', 'widget', 'content', 'footer', 'mask', 'menu-button', 'scripts']
+var allowedKinds = ['cover', 'brand', 'search', 'navigation', 'widget', 'content', 'footer', 'menu-button', 'scripts']
 if (!allowedKinds.includes(kind)) {
   throw new Error('Stellar Layout Item: 未知 kind ' + kind)
 }

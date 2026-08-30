@@ -11,11 +11,8 @@ const dropdownRootClass = typeof rootClass === 'string' ? rootClass : ''
 if (dropdownRootClass) {
   classes.push(dropdownRootClass)
 }
-const triggerClasses = ['dropdown-trigger']
 const dropdownTriggerClass = typeof triggerClass === 'string' ? triggerClass : ''
-if (dropdownTriggerClass) {
-  triggerClasses.push(dropdownTriggerClass)
-}
+const triggerClasses = ui_classes('dropdown-trigger', 'interactive', dropdownTriggerClass)
 const dropdownDirection = typeof direction === 'string' ? direction : ''
 const dropdownShowTitle = typeof showTitle === 'undefined' || showTitle !== false
 
@@ -33,7 +30,7 @@ function linkAttrs(child) {
 function itemContent(child) {
   var body = ''
   if (child.icon) {
-    body += '<span class="ui-collection__leading">' + icon(child.icon, 'no-lazy', true) + '</span>'
+    body += '<span class="ui-icon">' + icon(child.icon, 'no-lazy', true) + '</span>'
   }
   body += '<span class="ui-collection__content"><span class="ui-collection__title">' + escape_html(child.title) + '</span></span>'
   return body
@@ -49,24 +46,24 @@ function layoutDiv() {
     el += ' direction="' + escape_html(dropdownDirection) + '"'
   }
   el += '>'
-  el += '<summary class="' + triggerClasses.join(' ') + '"'
+  el += '<summary class="' + triggerClasses + '"'
   if (title) {
     el += ' title="' + title + '" aria-label="' + title + '"'
   }
   el += '>'
   // dropdown 首次展开时需要立即显示图标，使用内联 SVG 避免 /js/icons.js 异步替换造成闪烁。
-  el += icon(dropdownItem.icon, 'no-lazy', true)
+  el += '<span class="ui-icon">' + icon(dropdownItem.icon, 'no-lazy', true) + '</span>'
   if (dropdownShowTitle && dropdownItem.title) {
     el += '<span>' + title + '</span>'
   }
   el += '</summary>'
-  el += '<div class="dropdown-menu ui-collection" data-ui-surface="glass" data-layout="list" data-variant="nav" data-density="compact">'
+  el += '<div class="dropdown-menu ui-collection" data-layout="list" data-variant="nav" data-density="compact">'
   for (let child of items) {
     if (child.type === 'button') {
-      el += '<button type="button" class="dropdown-item ui-collection__item card-hover card-hover--spotlight" onclick="' + escape_html(child.onclick) + '">'
+      el += '<button type="button" class="' + ui_classes('dropdown-item', 'collectionItem') + '" onclick="' + escape_html(child.onclick) + '">'
       el += itemContent(child) + '</button>'
     } else {
-      el += '<a class="dropdown-item ui-collection__item card-hover card-hover--spotlight"' + linkAttrs(child) + '>'
+      el += '<a class="' + ui_classes('dropdown-item', 'collectionItem') + '"' + linkAttrs(child) + '>'
       el += itemContent(child) + '</a>'
     }
   }

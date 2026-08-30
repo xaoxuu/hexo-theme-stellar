@@ -1,33 +1,38 @@
 site:
   brand:
     name: Reading Notes
-    tagline:
-      text: A quiet place to think and write
+    tagline: A quiet place to think and write
   menu:
     items:
+      - type: search
       - id: post
         title: Reading
         icon: default:bookmark
         url: /
         accent: '#73584A'
 layout:
+  regions:
+    topbar: [site_brand, spacer, menu, settings, actions]
+    leftbar:
+      enabled: false
   profiles:
-    home:
-      sidebar:
-        left: []
-    blog_index:
-      sidebar:
-        left: []
     post:
-      sidebar:
-        left: []
-        right: [toc]
+      regions:
+        topbar:
+          widgets: [site_brand, spacer, menu, settings, actions, toc]
+        rightbar:
+          widgets: []
     wiki_index:
       navigation:
         active_menu: post
     wiki:
       navigation:
         active_menu: post
+      regions:
+        topbar:
+          widgets: [site_brand, spacer, menu, settings, actions, toc]
+        rightbar:
+          widgets: []
     notebook_index:
       navigation:
         active_menu: post
@@ -37,6 +42,9 @@ layout:
     note:
       navigation:
         active_menu: post
+      regions:
+        rightbar:
+          widgets: []
 
 content:
   article:

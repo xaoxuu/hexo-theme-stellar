@@ -37,7 +37,7 @@ function layoutWikiCover() {
     adaptiveTextAttr = ' data-text-adaptive="split" style="--adaptive-background:#000000"';
   }
 
-  el += '<div class="l_cover wiki wiki-hero' + (hasPreview ? '' : ' without-preview') + '">';
+  el += '<div class="cover-content wiki wiki-hero' + (hasPreview ? '' : ' without-preview') + '">';
   el += '<div class="wiki-cover-background' + (isGalaxy ? ' galaxy' : '') + (isImageBackground ? ' image' : '') + '" aria-hidden="true">';
   if (isImageBackground) {
     el += '<img class="wiki-cover-background-image" src="' + escape_html(background) + '" alt="" />';
@@ -65,11 +65,11 @@ function layoutWikiCover() {
   }
   el += '<div class="wiki-cover-actions">';
   if (repo) {
-    el += '<a class="button wiki-cover-source card-hover card-hover--spotlight" href="' + escape_html(cover.sourceUrl) + '" target="_blank" rel="external nofollow noopener noreferrer">' + icon('default:github') + '<span>' + escape_html(__('btn.source')) + '</span></a>';
+    el += '<a class="' + ui_classes('button wiki-cover-source', 'spotlight') + '" href="' + escape_html(cover.sourceUrl) + '" target="_blank" rel="external nofollow noopener noreferrer">' + icon('default:github') + '<span>' + escape_html(__('btn.source')) + '</span></a>';
   }
-  el += '<a class="button card-hover card-hover--spotlight" href="#start">' + icon('default:documents') + '<span>' + escape_html(__('btn.docs')) + '</span></a>';
+  el += '<a class="' + ui_classes('button', 'spotlight') + '" href="#start">' + icon('default:documents') + '<span>' + escape_html(__('btn.docs')) + '</span></a>';
   actions.forEach(function (item) {
-    el += '<a class="button card-hover card-hover--spotlight" href="' + escape_html(item.url) + '" target="_blank" rel="external nofollow noopener noreferrer">';
+    el += '<a class="' + ui_classes('button', 'spotlight') + '" href="' + escape_html(item.url) + '" target="_blank" rel="external nofollow noopener noreferrer">';
     if (item.icon) {
       el += icon(item.icon);
     }

@@ -1,26 +1,2 @@
 appearance:
-  typography:
-    font_size:
-      root: 17px
-    font_family:
-      body: 'Charter, Georgia, "Times New Roman", serif'
-  shape:
-    corner: superellipse(1.1)
-    radius:
-      card_large: 12px
-      card: 8px
-      card_small: 6px
-      bar: 8px
-      image_large: 12px
-      image: 8px
-      image_small: 4px
-  colors:
-    primary: 'hsl(220 12% 36%)'
-    accent: 'hsl(18 55% 46%)'
-    link: 'hsl(215 45% 42%)'
-  motion:
-    avatar: never
-  backgrounds:
-    sidebar:
-      image:
-      opacity: 1
+  preset: minimal

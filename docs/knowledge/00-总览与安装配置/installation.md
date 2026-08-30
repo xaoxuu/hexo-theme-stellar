@@ -22,6 +22,7 @@ tags:
 - [blueprints/](../../../blueprints/)
 - [package.json](../../../package.json)
 - [scripts/commands/stellar.js](../../../scripts/commands/stellar.js)
+- [scripts/events/lib/config-hot-reload.js](../../../scripts/events/lib/config-hot-reload.js)
 
 </details>
 
@@ -217,13 +218,13 @@ theme: stellar
 
 ## v2 Blueprint 初始化与检查
 
-Pre-alpha M3 提供三套一次性 Blueprint：`classic-blog`、`minimal-reading`、`docs-reference`，以及 `stellar`、`minimal` 两套 Visual Style。主题启用后可以先预览写入计划：
+当前提供四套一次性 Blueprint：`classic`、`minimal-reading`、`docs-reference`、`light-and-shadow`，以及 `card`、`flat`、`glass`、`minimal` 四套 Visual Style。主题启用后可以先预览写入计划：
 
 ```bash
-npx hexo stellar init --blueprint classic-blog --style stellar --dry-run --non-interactive
+npx hexo stellar init --blueprint classic --style card --dry-run --non-interactive
 ```
 
-确认目标文件均可创建后，移除 `--dry-run` 执行写入。init 会整体拒绝任何已有目标，不覆盖或合并用户文件。生成结果是普通 `_config.stellar.yml`、Collection 数据与 Markdown 内容；其中没有 Blueprint ID、锁文件或运行时继承关系，也不重复 Schema 默认值。默认 `stellar` Visual Style 是空覆盖，starter 只保留对应产品差异与最小 Markdown。
+确认目标文件均可创建后，移除 `--dry-run` 执行写入。init 会整体拒绝任何已有目标，不覆盖或合并用户文件。生成结果是普通 `_config.stellar.yml`、Collection 数据与 Markdown 内容；其中没有 Blueprint ID、锁文件或运行时继承关系，也不重复 Schema 默认值。Visual Style 只写 Appearance 差异，starter 只保留对应产品差异与最小 Markdown。
 
 `init` 不是构建前置条件。只有普通 Post/Page 的站点可以不创建 `_config.stellar.yml`，直接使用 Schema 默认值运行 doctor 和 generate；空文件与缺失文件语义相同。Wiki/Topic/Notebook 内容在已注册数据与源码关系唯一时也不必重复写 `collection`，冲突时按 doctor 给出的候选与最小修复处理。
 
@@ -352,6 +353,8 @@ graph TD
    在 `http://localhost:4000` 启动本地服务。
 
    `server` 是 Hexo 命令，不是 Stellar 子命令；请勿写成 `hexo stellar server`。如果环境限制监听所有网卡，可使用 `hexo server --ip 127.0.0.1`。站点工程需要安装 `hexo-server`，缺失时 Hexo 只会显示通用命令帮助。
+
+   开发服务器运行期间，Stellar 会监听站点根目录的 `_config.stellar.yml`。保存后会先执行与启动时相同的 Schema 校验，通过后重读配置并触发重新生成，无需重启 `hexo server`。配置非法时保留上一次有效输出并在终端警告。站点 `_config.yml` 属于 Hexo 核心配置，修改它仍可能需要重启。
 
 3. **浏览器访问**：
    打开 `http://localhost:4000`，检查：

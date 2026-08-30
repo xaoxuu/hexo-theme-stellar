@@ -31,13 +31,15 @@ test("site/layout/content/appearance/resources/head Schema 提供默认值并拒
   assert.deepEqual(withoutLayoutAndContent(config), {
     site: {
       brand: {
-        image: { src: null, variant: "avatar", href: null },
+        image: { src: null, variant: "avatar" },
         name: null,
-        wordmark: null,
-        tagline: { text: null, hover: null },
-        href: "/"
+        tagline: null
       },
-      menu: { items: [] },
+      menu: { items: [{ type: "search" }] },
+      settings: { about: { items: [
+        { key: "博客框架", value: "Hexo {hexo.version}", url: "https://hexo.io/" },
+        { key: "主题版本", value: "Stellar {theme.version}", url: "{theme.tree}" }
+      ] } },
       footer: {
         actions: [],
         sections: [],
@@ -54,19 +56,33 @@ test("site/layout/content/appearance/resources/head Schema 提供默认值并拒
   });
   assert.deepEqual(Object.keys(config.layout.profiles), [
     "home", "blogIndex", "topicIndex", "wikiIndex", "post", "topic", "wiki",
-    "notebookIndex", "noteIndex", "note", "author", "error", "page"
+    "notebookIndex", "noteIndex", "note", "author", "error", "page", "settings"
   ]);
   assert.deepEqual(config.layout.profiles.blogIndex, {
     path: "/blog/",
-    navigation: { activeMenu: "post", tabs: [] },
-    sidebar: { left: ["welcome", "recent"], right: [] }
+    navigation: { activeMenu: "post" },
+    listingNav: { enabled: true, tabs: [] },
+    regions: {
+      topbar: { widgets: null },
+      leftbar: { enabled: null, brand: null, menu: null, footer: { actions: null }, widgets: ["recent"] },
+      rightbar: { widgets: [] }
+    }
+  });
+  assert.deepEqual(config.layout.profiles.wiki.regions, {
+    topbar: { widgets: [] },
+    leftbar: { enabled: null, brand: "collection_brand", menu: false, footer: { actions: false }, widgets: ["tree"] },
+    rightbar: { widgets: ["ghrepo", "toc"] }
   });
   assert.equal(config.layout.profiles.home.navigation.activeMenu, "post");
   assert.equal(config.layout.profiles.page.navigation.activeMenu, "post");
   assert.deepEqual(config.layout.profiles.error, {
     path: "/404.html",
     navigation: { activeMenu: "post" },
-    sidebar: { left: ["recent"], right: [] }
+    regions: {
+      topbar: { widgets: null },
+      leftbar: { enabled: null, brand: null, menu: null, footer: { actions: null }, widgets: ["recent"] },
+      rightbar: { widgets: [] }
+    }
   });
   assert.deepEqual(config.content.article.listing, {
     pinnedLayout: "carousel",
@@ -81,17 +97,18 @@ test("site/layout/content/appearance/resources/head Schema 提供默认值并拒
   assert.equal(config.content.article.relatedPostsLimit, 0);
   assert.deepEqual(config.content.notebook.tagIcons, {});
   assert.equal(config.appearance.colorScheme, "auto");
+  assert.equal(config.appearance.preset, "card");
   assert.equal(config.appearance.shape.radius.cardLarge, "24px");
-  assert.equal(config.appearance.backgrounds.sidebar.surface, "glass");
-  assert.equal(config.appearance.backgrounds.sidebar.type, "gradient");
-  assert.equal(config.appearance.backgrounds.sidebar.image, null);
-  assert.deepEqual(config.appearance.backgrounds.sidebar.gradient, {
+  assert.equal("surface" in config.appearance.backgrounds.leftbar, false);
+  assert.equal(config.appearance.backgrounds.leftbar.type, "gradient");
+  assert.equal(config.appearance.backgrounds.leftbar.image, null);
+  assert.deepEqual(config.appearance.backgrounds.leftbar.gradient, {
     light: ["hsl(210 32% 84%)", "hsl(188 44% 84%)", "hsl(12 64% 73%)", "hsl(35 100% 82%)"],
     dark: ["hsl(210 16% 48%)", "hsl(188 18% 50%)", "hsl(12 30% 42%)", "hsl(35 36% 49%)"]
   });
-  assert.equal(config.appearance.backgrounds.sidebar.opacity, 1);
-  assert.equal(config.appearance.backgrounds.sidebar.backdrop.radius, "100px");
-  assert.equal(config.appearance.backgrounds.sidebar.backdrop.overlay, "var(--bg-a50)");
+  assert.equal(config.appearance.backgrounds.leftbar.opacity, 1);
+  assert.equal(config.appearance.backgrounds.leftbar.backdrop.radius, "100px");
+  assert.equal("overlay" in config.appearance.backgrounds.leftbar.backdrop, false);
   assert.match(config.resources.fallbacks.cover, /\/cover\/76b86c0226ffd\.svg$/);
   assert.match(config.resources.errorPage.image, /\/404\/1c830bfcd517d\.svg$/);
   assert.equal(config.extensions.search.provider, "local");
@@ -101,6 +118,122 @@ test("site/layout/content/appearance/resources/head Schema 提供默认值并拒
   assert.equal(config.extensions.services.github.rawUrl, "https://raw.githubusercontent.com");
   assert.equal("cache" in config.extensions, false);
   assertDeepFrozen(config);
+});
+
+test("Leftbar 艺术背景不再接受独立 overlay 遮罩", () => {
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: {
+      appearance: {
+        backgrounds: {
+          leftbar: { backdrop: { overlay: "rgba(255,255,255,.2)" } }
+        }
+      }
+    }
+  }), error => {
+    assert.ok(error instanceof ConfigSchemaError);
+    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.leftbar.backdrop.overlay" && issue.code === "unknown_field"), true);
+    return true;
+  });
+});
+
+test("YAML 空键在没有 null 业务语义时等同于未配置", () => {
+  const config = parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: {
+      site: null,
+      layout: {
+        regions: {
+          topbar: null,
+          leftbar: { default_state: null, widgets: null },
+          rightbar: null
+        },
+        profiles: { home: null }
+      },
+      appearance: { shape: { corner: null } },
+      extensions: { search: { provider: null } }
+    }
+  });
+
+  assert.deepEqual(config.layout.regions.topbar, { widgets: [] });
+  assert.deepEqual(config.layout.regions.leftbar, {
+    defaultState: "expanded",
+    enabled: true,
+    brand: "site_brand",
+    menu: true,
+    footer: { actions: true },
+    widgets: []
+  });
+  assert.deepEqual(config.layout.regions.rightbar, { widgets: [] });
+  assert.deepEqual(config.layout.profiles.home.regions.leftbar.widgets, ["recent"]);
+  assert.equal(config.appearance.shape.corner, "superellipse(1.25)");
+  assert.deepEqual(config.site.menu.items, [{ type: "search" }]);
+  assert.equal(config.extensions.search.provider, null);
+  assertDeepFrozen(config);
+});
+
+test("Region 接受数组简写，并精确拒绝预发布旧名称", () => {
+  const config = parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: {
+      layout: {
+        regions: {
+          topbar: ["site_brand", "menu", "actions"],
+          leftbar: [],
+          rightbar: { widgets: ["toc"] }
+        }
+      }
+    }
+  });
+  assert.deepEqual(config.layout.regions.topbar.widgets, ["site_brand", "menu", "actions"]);
+  assert.deepEqual(config.layout.regions.leftbar.widgets, []);
+  assert.deepEqual(config.layout.regions.rightbar.widgets, ["toc"]);
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { layout: { regions: { leftbar: { inherit: false, widgets: [] } } } }
+  }), /layout\.regions\.leftbar\.inherit 已移除/);
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { layout: { regions: { leftbar: { widgets: ["site_brand", "menu", "search", "actions", "settings"] } } } }
+  }), /layout\.regions\.leftbar\.widgets\[0\].*Leftbar content widget/);
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { layout: { regions: { topbar: { widgets: ["brand"] } } } }
+  }), /layout\.regions\.topbar\.widgets\[0\].*site_brand \| collection_brand/);
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { layout: { regions: { leftbar: { widgets: ["wiki_home"] } } } }
+  }), /layout\.regions\.leftbar\.widgets\[0\].*removed wiki_home/);
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { layout: { regions: { leftbar: { brand: true } } } }
+  }), /layout\.regions\.leftbar\.brand 的值不在 false \| site_brand \| collection_brand/);
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { layout: { regions: { topbar: { widgets: ["search"] } } } }
+  }), /retired search.*site\.menu\.items\[\]\.type=search/);
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: {
+      layout: { regions: { sidebar: ["menu"], context: ["toc"] } },
+      appearance: { backgrounds: { sidebar: { image: "/legacy.webp" } } }
+    }
+  }), error => {
+    assert.ok(error instanceof ConfigSchemaError);
+    assert.deepEqual(error.issues.map(issue => [issue.path, issue.expected]), [
+      ["layout.regions.sidebar", "layout.regions.leftbar"],
+      ["layout.regions.context", "layout.regions.rightbar"],
+      ["appearance.backgrounds.sidebar", "appearance.backgrounds.leftbar"]
+    ]);
+    return true;
+  });
 });
 
 test("站点覆盖完成规范化、数组替换、稳定去重并保留注入原文", () => {
@@ -127,13 +260,15 @@ test("站点覆盖完成规范化、数组替换、稳定去重并保留注入�
   assert.deepEqual(withoutLayoutAndContent(config), {
     site: {
       brand: {
-        image: { src: null, variant: "avatar", href: null },
+        image: { src: null, variant: "avatar" },
         name: null,
-        wordmark: null,
-        tagline: { text: null, hover: null },
-        href: "/"
+        tagline: null
       },
-      menu: { items: [] },
+      menu: { items: [{ type: "search" }] },
+      settings: { about: { items: [
+        { key: "博客框架", value: "Hexo {hexo.version}", url: "https://hexo.io/" },
+        { key: "主题版本", value: "Stellar {theme.version}", url: "{theme.tree}" }
+      ] } },
       footer: { actions: [], sections: [], content: "" }
     },
     seo: {
@@ -151,15 +286,14 @@ test("Appearance 与资源兜底解析最终路径并投影 camelCase 运行时"
     source: "_config.stellar.yml",
     themeConfig: {
       appearance: {
+        preset: "glass",
         color_scheme: "dark",
         typography: { font_size: { root: "18px" }, font_family: { code: "Menlo, monospace" }, content_align: "justify" },
         shape: { radius: { card_large: "28px" } },
-        motion: { avatar: "never" },
         colors: { primary: "#123456" },
         code_block: { scrollbar_width: "0px", highlight_stylesheet: null },
         backgrounds: {
-          sidebar: {
-            surface: "glass",
+          leftbar: {
             type: "image",
             image: "/sidebar.webp",
             gradient: {
@@ -185,86 +319,123 @@ test("Appearance 与资源兜底解析最终路径并投影 camelCase 运行时"
   assert.equal(config.appearance.typography.fontFamily.code, "Menlo, monospace");
   assert.equal(config.appearance.typography.contentAlign, "justify");
   assert.equal(config.appearance.shape.radius.cardLarge, "28px");
-  assert.deepEqual(config.appearance.motion, { avatar: "never" });
+  assert.equal(Object.hasOwn(config.appearance, "motion"), false);
   assert.equal(config.appearance.codeBlock.scrollbarWidth, "0px");
   assert.equal(config.appearance.codeBlock.highlightStylesheet, null);
-  assert.equal(config.appearance.backgrounds.sidebar.surface, "glass");
-  assert.equal(config.appearance.backgrounds.sidebar.type, "image");
-  assert.equal(config.appearance.backgrounds.sidebar.opacity, 0);
-  assert.deepEqual(config.appearance.backgrounds.sidebar.gradient, {
+  assert.equal(config.appearance.preset, "glass");
+  assert.equal(config.appearance.backgrounds.leftbar.type, "image");
+  assert.equal(config.appearance.backgrounds.leftbar.opacity, 0);
+  assert.deepEqual(config.appearance.backgrounds.leftbar.gradient, {
     light: ["#ddeeff", "hsl(188 44% 84%)", "rgb(220 160 140)", "gold"],
     dark: ["#223344", "hsl(188 18% 50%)", "rgb(100 70 60)", "darkgoldenrod"]
   });
-  assert.equal(Object.isFrozen(config.appearance.backgrounds.sidebar.gradient), true);
-  assert.equal(Object.isFrozen(config.appearance.backgrounds.sidebar.gradient.light), true);
-  assert.equal(Object.isFrozen(config.appearance.backgrounds.sidebar.gradient.dark), true);
+  assert.equal(Object.isFrozen(config.appearance.backgrounds.leftbar.gradient), true);
+  assert.equal(Object.isFrozen(config.appearance.backgrounds.leftbar.gradient.light), true);
+  assert.equal(Object.isFrozen(config.appearance.backgrounds.leftbar.gradient.dark), true);
   assert.equal(config.resources.fallbacks.linkCard, "/link.svg");
-  assert.equal(config.appearance.backgrounds.sidebar.image, "/sidebar.webp");
+  assert.equal(config.appearance.backgrounds.leftbar.image, "/sidebar.webp");
   assert.equal(config.resources.errorPage.image, null);
 });
 
-test("侧栏背景类型与艺术渐变调色板拒绝非法枚举、错误数量、非法颜色、非法类型和旧数组结构", () => {
+test("Glass 侧栏背景类型保留 none，对无效字符串回退渐变，并继续拒绝错误类型", () => {
+  const noneConfig = parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { appearance: { preset: "glass", backgrounds: { leftbar: { type: "none" } } } }
+  });
+  assert.equal(noneConfig.appearance.backgrounds.leftbar.type, "none");
+
+  const config = parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { appearance: { preset: "glass", backgrounds: { leftbar: { type: "auto" } } } }
+  });
+  assert.equal(config.appearance.backgrounds.leftbar.type, "gradient");
+
+  const emptyTypeConfig = parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { appearance: { preset: "glass", backgrounds: { leftbar: { type: null } } } }
+  });
+  assert.equal(emptyTypeConfig.appearance.backgrounds.leftbar.type, "gradient");
+
   assert.throws(() => parseStellarConfig({
     source: "_config.stellar.yml",
-    themeConfig: { appearance: { backgrounds: { sidebar: { type: "auto" } } } }
+    themeConfig: { appearance: { preset: "glass", backgrounds: { leftbar: { type: [] } } } }
   }), error => {
-    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.sidebar.type" && issue.expected === "gradient | image | color"), true);
+    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.leftbar.type" && issue.code === "invalid_type"), true);
     return true;
   });
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { appearance: { preset: "glass", backgrounds: { leftbar: { type: "image", image: "javascript:alert(1)" } } } }
+  }), error => {
+    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.leftbar.image"), true);
+    return true;
+  });
+});
+
+test("侧栏艺术渐变调色板拒绝错误数量、非法颜色、非法类型和旧数组结构", () => {
 
   assert.throws(() => parseStellarConfig({
     source: "_config.stellar.yml",
     themeConfig: {
       appearance: {
         backgrounds: {
-          sidebar: {
+          leftbar: {
             gradient: { light: ["#def", "cyan", "coral"] }
           }
         }
       }
     }
   }), error => {
-    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.sidebar.gradient.light" && issue.expected === "exactly 4 CSS colors"), true);
+    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.leftbar.gradient.light" && issue.expected === "exactly 4 CSS colors"), true);
     return true;
   });
 
   assert.throws(() => parseStellarConfig({
     source: "_config.stellar.yml",
-    themeConfig: { appearance: { backgrounds: { sidebar: { gradient: { dark: [] } } } } }
+    themeConfig: { appearance: { backgrounds: { leftbar: { gradient: { dark: [] } } } } }
   }), error => {
-    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.sidebar.gradient.dark" && issue.expected === "exactly 4 CSS colors"), true);
+    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.leftbar.gradient.dark" && issue.expected === "exactly 4 CSS colors"), true);
     return true;
   });
 
   assert.throws(() => parseStellarConfig({
     source: "_config.stellar.yml",
-    themeConfig: { appearance: { backgrounds: { sidebar: { gradient: { light: ["#def", "cyan", "url(x)", "gold"] } } } } }
+    themeConfig: { appearance: { backgrounds: { leftbar: { gradient: { light: ["#def", "cyan", "url(x)", "gold"] } } } } }
   }), error => {
-    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.sidebar.gradient.light[2]" && issue.expected === "valid CSS color"), true);
+    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.leftbar.gradient.light[2]" && issue.expected === "valid CSS color"), true);
     return true;
   });
 
   assert.throws(() => parseStellarConfig({
     source: "_config.stellar.yml",
-    themeConfig: { appearance: { backgrounds: { sidebar: { gradient: { dark: ["#123", 188, "coral", "gold"] } } } } }
+    themeConfig: { appearance: { backgrounds: { leftbar: { gradient: { dark: ["#123", 188, "coral", "gold"] } } } } }
   }), error => {
-    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.sidebar.gradient.dark[1]" && issue.code === "invalid_type"), true);
+    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.leftbar.gradient.dark[1]" && issue.code === "invalid_type"), true);
     return true;
   });
 
   assert.throws(() => parseStellarConfig({
     source: "_config.stellar.yml",
-    themeConfig: { appearance: { backgrounds: { sidebar: { gradient: [210, 188, 12, 35] } } } }
+    themeConfig: { appearance: { backgrounds: { leftbar: { gradient: [210, 188, 12, 35] } } } }
   }), error => {
-    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.sidebar.gradient" && issue.code === "invalid_type"), true);
+    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.leftbar.gradient" && issue.code === "invalid_type"), true);
     return true;
   });
 
   assert.throws(() => parseStellarConfig({
     source: "_config.stellar.yml",
-    themeConfig: { appearance: { backgrounds: { sidebar: { gradient: { auto: ["#123", "#234", "#345", "#456"] } } } } }
+    themeConfig: { appearance: { backgrounds: { leftbar: { gradient: { auto: ["#123", "#234", "#345", "#456"] } } } } }
   }), error => {
-    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.sidebar.gradient.auto" && issue.code === "unknown_field"), true);
+    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.leftbar.gradient.auto" && issue.code === "unknown_field"), true);
+    return true;
+  });
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { appearance: { backgrounds: { leftbar: { color: { light: "#fff", dark: "#000" } } } } }
+  }), error => {
+    assert.equal(error.issues.some(issue => issue.path === "appearance.backgrounds.leftbar.color" && issue.code === "unknown_field"), true);
     return true;
   });
 });
@@ -277,8 +448,9 @@ test("Appearance 与资源兜底拒绝旧根、旧字段、未知字段和非法
       default: { cover: "/cover.svg" },
       appearance: {
         color_scheme: "sepia",
-        motion: { enable: true, page_transition: true },
-        backgrounds: { sidebar: { opacity: 1.2, unknown: true } }
+        motion: { avatar: "always" },
+        gradients: { avatar_ring: "conic-gradient(red, blue)" },
+        backgrounds: { leftbar: { surface: "glass", opacity: 1.2, unknown: true } }
       },
       resources: { fallbacks: { link: "/link.svg", image: { unknown: "/image.svg" } } }
     }
@@ -286,10 +458,11 @@ test("Appearance 与资源兜底拒绝旧根、旧字段、未知字段和非法
     assert.match(error.message, /style 已移除，期望 appearance/);
     assert.match(error.message, /default 已移除，期望 resources\.fallbacks/);
     assert.match(error.message, /appearance\.color_scheme 的值不在 auto \| light \| dark/);
-    assert.match(error.message, /未知字段 appearance\.motion\.enable/);
-    assert.match(error.message, /appearance\.motion\.page_transition 已移除/);
-    assert.match(error.message, /appearance\.backgrounds\.sidebar\.opacity 的值不在 number <= 1/);
-    assert.match(error.message, /未知字段 appearance\.backgrounds\.sidebar\.unknown/);
+    assert.match(error.message, /未知字段 appearance\.motion/);
+    assert.match(error.message, /未知字段 appearance\.gradients\.avatar_ring/);
+    assert.match(error.message, /appearance\.backgrounds\.leftbar\.surface 已移除，期望 appearance\.preset/);
+    assert.match(error.message, /appearance\.backgrounds\.leftbar\.opacity 的值不在 number <= 1/);
+    assert.match(error.message, /未知字段 appearance\.backgrounds\.leftbar\.unknown/);
     assert.match(error.message, /resources\.fallbacks\.link 已移除/);
     assert.match(error.message, /resources\.fallbacks\.image 已移除/);
     return true;
@@ -376,7 +549,7 @@ test("Content Schema 拒绝旧根、旧子字段、未知等级、错误类型�
   });
 });
 
-test("Layout Profile 解析最终 ID、路径、动态 tabs、Widget 数组和首页评论参数袋", () => {
+test("Layout Profile 解析最终 ID、路径、Listing Nav、Widget 数组和首页评论参数袋", () => {
   const config = parseStellarConfig({
     source: "_config.stellar.yml",
     themeConfig: {
@@ -392,13 +565,15 @@ test("Layout Profile 解析最终 ID、路径、动态 tabs、Widget 数组和�
           },
           blog_index: {
             path: " custom/blog ",
-            navigation: {
-              active_menu: "notes",
+            navigation: { active_menu: "notes" },
+            listing_nav: {
+              enabled: false,
               tabs: [{ title: "朋友文章", url: "/friends/rss/" }]
             },
-            sidebar: {
-              left: ["recent", { layout: "markdown", content: "hello" }],
-              right: ["toc"]
+            regions: {
+              topbar: { widgets: ["collection_brand"] },
+              leftbar: { brand: false, widgets: ["recent", { layout: "markdown", content: "hello" }] },
+              rightbar: { widgets: ["toc"] }
             }
           },
           error: { path: "errors/404.html" }
@@ -416,12 +591,17 @@ test("Layout Profile 解析最终 ID、路径、动态 tabs、Widget 数组和�
   });
   assert.deepEqual(config.layout.profiles.blogIndex, {
     path: "/custom/blog/",
-    navigation: { activeMenu: "notes", tabs: [{ title: "朋友文章", url: "/friends/rss/" }] },
-    sidebar: {
-      left: ["recent", { layout: "markdown", content: "hello" }],
-      right: ["toc"]
+    navigation: { activeMenu: "notes" },
+    listingNav: { enabled: false, tabs: [{ title: "朋友文章", url: "/friends/rss/" }] },
+    regions: {
+      topbar: { widgets: ["collection_brand"] },
+      leftbar: { enabled: null, brand: false, menu: null, footer: { actions: null }, widgets: ["recent", { layout: "markdown", content: "hello" }] },
+      rightbar: { widgets: ["toc"] }
     }
   });
+  assert.deepEqual(config.layout.profiles.wikiIndex.listingNav, { enabled: true, tabs: [] });
+  assert.equal(Object.isFrozen(config.layout.profiles.blogIndex.listingNav), true);
+  assert.equal(Object.isFrozen(config.layout.profiles.blogIndex.listingNav.tabs), true);
   assert.equal(config.layout.profiles.error.path, "/errors/404.html");
   assertDeepFrozen(config.layout);
 });
@@ -436,14 +616,16 @@ test("Layout Profile 拒绝旧根、旧 ID、旧子字段、未知字段和错�
           index_blog: {},
           unknown_profile: {},
           blog_index: {
+            view: "feed",
             base_dir: "blog",
             unknown: true,
             path: 42,
             navigation: { menu: "post", tabs: [] },
-            sidebar: { left: { widgets: [true] } }
+            listing_nav: { enabled: "true", tabs: {} },
+            regions: { leftbar: { widgets: { invalid: true } } }
           },
           error: { "404": "/404.html" },
-          home: { comments: "true" }
+          home: { view: "feed", hero: { headline: 42 }, comments: "true" }
         }
       }
     }
@@ -456,9 +638,15 @@ test("Layout Profile 拒绝旧根、旧 ID、旧子字段、未知字段和错�
     assert.match(error.message, /未知字段 layout\.profiles\.blog_index\.unknown/);
     assert.match(error.message, /layout\.profiles\.blog_index\.path 应为 string/);
     assert.match(error.message, /layout\.profiles\.blog_index\.navigation\.menu 已移除/);
-    assert.match(error.message, /layout\.profiles\.blog_index\.sidebar\.left 应为 array/);
+    assert.match(error.message, /layout\.profiles\.blog_index\.navigation\.tabs 已移除，期望 layout\.profiles\.blog_index\.listing_nav\.tabs/);
+    assert.match(error.message, /layout\.profiles\.blog_index\.listing_nav\.enabled 应为 boolean/);
+    assert.match(error.message, /layout\.profiles\.blog_index\.listing_nav\.tabs 应为 array/);
+    assert.match(error.message, /layout\.profiles\.blog_index\.regions\.leftbar\.widgets 应为 array/);
+    assert.match(error.message, /未知字段 layout\.profiles\.blog_index\.view/);
     assert.match(error.message, /layout\.profiles\.error\.404 已移除/);
     assert.match(error.message, /layout\.profiles\.home\.comments 应为 object/);
+    assert.match(error.message, /未知字段 layout\.profiles\.home\.view/);
+    assert.match(error.message, /未知字段 layout\.profiles\.home\.hero/);
     return true;
   });
 });
@@ -468,13 +656,13 @@ test("site Shell 解析封闭对象数组、动态 action 记录并完整替换�
     themeConfig: {
       site: {
         brand: {
-          image: { src: "/avatar.webp", variant: "icon", href: "/about/" },
+          image: { src: "/avatar.webp", variant: "icon" },
           name: "Site",
-          tagline: { text: "Subtitle" },
-          href: "/home/"
+          tagline: "Subtitle"
         },
         menu: {
           items: [
+            { type: "search", title: "Search", icon: "default:search", accent: "#456" },
             { id: "post", title: "Blog", icon: "documents", url: "/", accent: "#abc" },
             { id: "wiki", title: "Wiki", icon: "box", url: "/wiki/", accent: null },
             { id: "notebooks", title: "Notes", icon: "note", url: "/notebooks/", accent: null }
@@ -500,19 +688,22 @@ test("site Shell 解析封闭对象数组、动态 action 记录并完整替换�
 
   assert.deepEqual(config.site, {
     brand: {
-      image: { src: "/avatar.webp", variant: "icon", href: "/about/" },
+      image: { src: "/avatar.webp", variant: "icon" },
       name: "Site",
-      wordmark: null,
-      tagline: { text: "Subtitle", hover: null },
-      href: "/home/"
+      tagline: "Subtitle"
     },
     menu: {
       items: [
+        { type: "search", title: "Search", icon: "default:search", accent: "#456" },
         { id: "post", title: "Blog", icon: "documents", url: "/", accent: "#abc" },
         { id: "wiki", title: "Wiki", icon: "box", url: "/wiki/", accent: null },
         { id: "notebooks", title: "Notes", icon: "note", url: "/notebooks/", accent: null }
       ]
     },
+    settings: { about: { items: [
+      { key: "博客框架", value: "Hexo {hexo.version}", url: "https://hexo.io/" },
+      { key: "主题版本", value: "Stellar {theme.version}", url: "{theme.tree}" }
+    ] } },
     footer: {
       actions: [
         {
@@ -536,7 +727,12 @@ test("site Shell 拒绝旧子字段、未知字段、错误类型和非法枚举
     source: "_config.stellar.yml",
     themeConfig: {
       site: {
-        brand: { image: { style: "avatar", variant: "round" } },
+        brand: {
+          wordmark: "/wordmark.svg",
+          href: "/home/",
+          image: { style: "avatar", variant: "round", href: "/about/" },
+          tagline: { text: "Subtitle", hover: "example.com" }
+        },
         menu: { items: [{ id: "post", theme: "#abc", unknown: true }] },
         footer: {
           social: {},
@@ -547,8 +743,12 @@ test("site Shell 拒绝旧子字段、未知字段、错误类型和非法枚举
     }
   }), error => {
     assert.ok(error instanceof ConfigSchemaError);
+    assert.match(error.message, /未知字段 site\.brand\.wordmark/);
+    assert.match(error.message, /未知字段 site\.brand\.href/);
     assert.match(error.message, /site\.brand\.image\.style 已移除/);
+    assert.match(error.message, /未知字段 site\.brand\.image\.href/);
     assert.match(error.message, /site\.brand\.image\.variant 的值不在 avatar \| icon \| plain 中/);
+    assert.match(error.message, /site\.brand\.tagline 应为 string \| null/);
     assert.match(error.message, /site\.menu\.items\[0\]\.theme 已移除/);
     assert.match(error.message, /未知字段 site\.menu\.items\[0\]\.unknown/);
     assert.match(error.message, /site\.footer\.social 已移除/);
@@ -577,7 +777,7 @@ test("site Shell 与 Layout 拒绝不安全链接、重复菜单、无效引用�
       },
       layout: { profiles: {
         home: { comments: { id: "   ", provider: "unknown" } },
-        post: { path: "/post/", navigation: { active_menu: "missing", tabs: [] } }
+        post: { path: "/post/", navigation: { active_menu: "missing", tabs: [] }, listing_nav: { enabled: false } }
       } }
     }
   }), error => {
@@ -594,6 +794,7 @@ test("site Shell 与 Layout 拒绝不安全链接、重复菜单、无效引用�
     assert.match(error.message, /layout\.profiles\.home\.comments\.provider 的值不在 .*giscus/);
     assert.match(error.message, /layout\.profiles\.post\.path 已移除/);
     assert.match(error.message, /layout\.profiles\.post\.navigation\.tabs 已移除/);
+    assert.match(error.message, /未知字段 layout\.profiles\.post\.listing_nav/);
     return true;
   });
 
@@ -608,6 +809,21 @@ test("site Shell 与 Layout 拒绝不安全链接、重复菜单、无效引用�
       layout: { profiles: { home: { navigation: { active_menu: "missing" } } } }
     }
   }), /layout\.profiles\.home\.navigation\.active_menu.*id present in site\.menu\.items/);
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { site: { menu: { items: [
+      { type: "search" },
+      { type: "search" }
+    ] } } }
+  }), /at most one search menu item/);
+
+  assert.throws(() => parseStellarConfig({
+    source: "_config.stellar.yml",
+    themeConfig: { site: { menu: { items: [
+      { type: "search", title: "Search", url: "/search/" }
+    ] } } }
+  }), /site\.menu\.items\[0\]\.url.*no id or url for search item/);
 });
 
 test("Footer Actions 严格区分 link、button 与 dropdown 子项", () => {
@@ -774,7 +990,7 @@ test("构建事件把最终路径冻结挂载到 hexo.stellar.config", () => {
   assert.equal(ctx.stellar.config.seo.canonical.host, "example.com");
   assert.equal(ctx.stellar.config.site.brand.image.src, null);
   assert.equal(ctx.stellar.config.site.brand.name, null);
-  assert.equal(ctx.stellar.config.site.brand.tagline.text, null);
+  assert.equal(ctx.stellar.config.site.brand.tagline, null);
   assert.equal(ctx.stellar.config.site.menu.items[0].id, "post");
   assert.deepEqual(ctx.stellar.config.seo.canonical.allowedHosts, ["mirror.example.com"]);
   assert.deepEqual(ctx.stellar.config.seo.structuredData.sameAs, ["https://github.com/example"]);

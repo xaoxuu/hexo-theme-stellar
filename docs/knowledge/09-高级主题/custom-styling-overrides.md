@@ -44,7 +44,7 @@ tags:
 | `appearance.typography.font_family.body` / `code` | 正文与代码字体栈 |
 | `appearance.colors.primary` / `accent` / `link` | 主色、强调色和链接色 |
 | `appearance.shape.radius.*` | 卡片、图片和横条圆角 |
-| `appearance.backgrounds.sidebar.*` | 左栏背景和背景图 |
+| `appearance.backgrounds.leftbar.*` | Leftbar 装饰背景和背景图 |
 
 实际可用配置以主题 `_config.yml` 为准；已移除的配置不会因为文档示例仍然存在而恢复。
 

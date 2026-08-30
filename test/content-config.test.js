@@ -16,7 +16,7 @@ test("Collection Schema 解析最终路径、第三方参数和 camelCase 运行
   const parsed = parseCollectionConfig({
     name: "Stellar",
     route: { path: "/wiki/stellar/" },
-    sidebar: { left: { wiki_home: true } },
+    regions: { leftbar: { widgets: ["tree"] } },
     article: { ai_label: "generated" },
     comments: {
       provider: "giscus",
@@ -26,7 +26,7 @@ test("Collection Schema 解析最终路径、第三方参数和 camelCase 运行
   }, "source/_data/wiki/hexo-stellar.yml");
 
   assert.equal(parsed.route.path, "wiki/stellar/");
-  assert.equal(parsed.sidebar.left.wikiHome, true);
+  assert.deepEqual(parsed.regions.leftbar.widgets, ["tree"]);
   assert.equal(parsed.article.aiLabel, "generated");
   assert.equal(parsed.comments.provider, "giscus");
   assert.equal(parsed.comments.options["data-repo"], "xaoxuu/hexo-theme-stellar");
@@ -34,22 +34,44 @@ test("Collection Schema 解析最终路径、第三方参数和 camelCase 运行
   assert.ok(Object.isFrozen(parsed.comments.options));
 });
 
-test("Collection 侧栏 widget 项允许字符串 ID 和受约束的内联参数袋", () => {
+test("Collection Schema 拒绝已移除的 wiki_home Widget", () => {
+  assert.throws(() => parseCollectionConfig({
+    name: "Stellar",
+    route: { path: "/wiki/stellar/" },
+    regions: { leftbar: { widgets: ["wiki_home"] } }
+  }, "source/_data/wiki/hexo-stellar.yml"), /regions\.leftbar\.widgets\[0\].*removed wiki_home/);
+});
+
+test("Collection Region widget 项允许字符串 ID 和受约束的内联参数袋", () => {
   const parsed = parseCollectionConfig({
     name: "Resume",
     route: { path: "/resume/" },
-    sidebar: {
-      left: {
+    regions: {
+      leftbar: {
         widgets: ["toc", { layout: "ghuser", username: "xaoxuu", header: true }]
       }
     }
   }, "source/_data/wiki/resume.yml");
 
-  assert.deepEqual(parsed.sidebar.left.widgets, [
+  assert.deepEqual(parsed.regions.leftbar.widgets, [
     "toc",
     { layout: "ghuser", username: "xaoxuu", header: true }
   ]);
-  assert.equal(Object.isFrozen(parsed.sidebar.left.widgets[1]), true);
+  assert.equal(Object.isFrozen(parsed.regions.leftbar.widgets[1]), true);
+});
+
+test("Collection 与 Front Matter Region 接受数组简写和空键", () => {
+  const collection = parseCollectionConfig({
+    name: "Docs",
+    regions: { topbar: ["site_brand", "menu"], leftbar: null, rightbar: ["toc"] }
+  });
+  assert.deepEqual(collection.regions.topbar.widgets, ["site_brand", "menu"]);
+  assert.equal(collection.regions.leftbar, undefined);
+  assert.deepEqual(collection.regions.rightbar.widgets, ["toc"]);
+
+  const page = parsePageConfig({ regions: { leftbar: [], rightbar: null } });
+  assert.deepEqual(page.regions.leftbar.widgets, []);
+  assert.equal(page.regions.rightbar, undefined);
 });
 
 test("Front Matter Schema 保留 Hexo 字段并解析最终 Stellar 字段", () => {
@@ -149,11 +171,11 @@ test("封闭对象、类型、枚举、数值和必填字段提供聚合诊断",
   assert.throws(() => parseCollectionConfig({
     name: "Stellar",
     mystery: true,
-    sidebar: { left: { widgets: "tree, toc" } },
+    regions: { leftbar: { widgets: "tree, toc" } },
     listing: { priority: -1 }
   }), error => {
     assert.match(error.message, /未知字段 mystery/);
-    assert.match(error.message, /sidebar\.left\.widgets 应为 array/);
+    assert.match(error.message, /regions\.leftbar\.widgets 应为 array/);
     assert.match(error.message, /number >= 0/);
     return true;
   });
@@ -192,16 +214,14 @@ test("route.start 只允许 Topic Collection", () => {
   }
 });
 
-test("Brand 注册 Schema 使用 variant 并保持跨字段约束", () => {
-  assert.doesNotThrow(() => parsePageConfig({
+test("双 Brand 作为系统 Widget 摆放，页面不再复制 Brand 业务配置", () => {
+  const parsed = parsePageConfig({
+    regions: { topbar: { widgets: ["collection_brand"] } }
+  });
+  assert.deepEqual(parsed.regions.topbar.widgets, ["collection_brand"]);
+  assert.throws(() => parsePageConfig({
     sidebar: { left: { brand: { image: { src: "/brand.svg", variant: "icon" } } } }
-  }));
-  assert.throws(() => parsePageConfig({
-    sidebar: { left: { brand: { image: { src: "/brand.svg", style: "icon" } } } }
-  }), /image\.style 已移除，期望 .*variant/);
-  assert.throws(() => parsePageConfig({
-    sidebar: { left: { brand: { image: { src: "/brand.svg", variant: "plain", background: "#fff" } } } }
-  }), /image\.background 已移除/);
+  }), /sidebar 已移除，期望 regions/);
 });
 
 test("getCollectionId 使用 profile，visibility 两个维度彼此独立", () => {

@@ -120,6 +120,7 @@
     },
     // 图标由构建期生成的 /js/stellar-icons.js 填充（defer，早于 DOMContentLoaded 就绪）
     icons: {},
+    ui: { classes: <%- JSON.stringify(ui_capabilities()) %> },
     services: <%- JSON.stringify(clientServices) %>,
   };
 

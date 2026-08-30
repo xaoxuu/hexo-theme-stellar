@@ -25,8 +25,7 @@ function layoutDocTree(pages) {
       title: docPage.title,
       active: wikiViewModel
         ? docPage.path === wikiViewModel.item.route.path
-        : docPage.path === page.path,
-      gradientRef: 'leftbar-active-icon-grad'
+        : docPage.path === page.path
     })
   }
   return partial('_partial/components/collection', {options: {

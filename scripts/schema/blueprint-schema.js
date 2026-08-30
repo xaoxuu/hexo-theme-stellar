@@ -3,8 +3,8 @@
 
 const { deepFreeze } = require("./schema-utils");
 
-const BLUEPRINT_IDS = Object.freeze(["classic-blog", "minimal-reading", "docs-reference"]);
-const VISUAL_STYLE_IDS = Object.freeze(["stellar", "minimal"]);
+const BLUEPRINT_IDS = Object.freeze(["classic", "minimal-reading", "docs-reference", "light-and-shadow"]);
+const VISUAL_STYLE_IDS = Object.freeze(["card", "flat", "glass", "minimal"]);
 
 function literal(value) {
   return { kind: "literal", value };
@@ -54,10 +54,10 @@ const BLUEPRINT_FILE_SCHEMA = object({
 const BLUEPRINT_MANIFEST_SCHEMA = deepFreeze({
   ...object({
     schema_version: scalar("number", { default: 1, example: 1, values: [1], runtimeKey: "schemaVersion" }),
-    id: scalar("string", { default: "", example: "classic-blog", values: BLUEPRINT_IDS }),
+    id: scalar("string", { default: "", example: "classic", values: BLUEPRINT_IDS }),
     name: scalar("string", { default: "", example: "Classic Blog" }),
     description: scalar("string", { default: "", example: "A classic personal blog." }),
-    default_style: scalar("string", { default: "stellar", example: "stellar", values: VISUAL_STYLE_IDS, runtimeKey: "defaultStyle" }),
+    default_style: scalar("string", { default: "card", example: "card", values: VISUAL_STYLE_IDS, runtimeKey: "defaultStyle" }),
     files: {
       ...scalar("array", { default: [], example: [] }),
       normalizer: "array",
@@ -71,7 +71,7 @@ const BLUEPRINT_MANIFEST_SCHEMA = deepFreeze({
 const VISUAL_STYLE_MANIFEST_SCHEMA = deepFreeze({
   ...object({
     schema_version: scalar("number", { default: 1, example: 1, values: [1], runtimeKey: "schemaVersion" }),
-    id: scalar("string", { default: "", example: "stellar", values: VISUAL_STYLE_IDS }),
+    id: scalar("string", { default: "", example: "card", values: VISUAL_STYLE_IDS }),
     name: scalar("string", { default: "", example: "Stellar" }),
     description: scalar("string", { default: "", example: "The expressive Stellar visual language." }),
     fragment: scalar("string", { default: "appearance.yml", example: "appearance.yml", validator: "safe_relative_path" })

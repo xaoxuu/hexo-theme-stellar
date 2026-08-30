@@ -11,7 +11,8 @@ const LOCALIZED_PATHS = new Set([
 ]);
 
 const RETIRED_FIELDS = Object.freeze([
-  ["appearance.motion.page_transition", "remove", "removed", "跨文档 View Transition 已移除，站点统一使用普通整页导航"],
+  ["appearance.backgrounds.sidebar.surface", "remove", "appearance.preset", "预发布旧 Sidebar 表面风格改由整站 Appearance Preset 统一控制"],
+  ["appearance.backgrounds.leftbar.surface", "remove", "appearance.preset", "Region 表面风格改由整站 Appearance Preset 统一控制"],
   ["extensions.tags.copy", "remove", "removed", "copy 标签没有站点级行为选择，空配置节点退出公开契约"],
   ["extensions.tags.copy.toast", "localize", "languages/*.yml", "复制成功提示属于主题 UI 文案"],
   ["extensions.features.code_copy.idle_text", "localize", "languages/*.yml", "代码复制按钮默认文案属于主题 UI 文案"],

@@ -1,22 +1,16 @@
 <%
-var allowedSlots = ['cover', 'left', 'main', 'right']
+var allowedSlots = ['topbar', 'leftbar', 'rightbar']
 if (!allowedSlots.includes(slot)) {
   throw new Error('Stellar Layout Region: 未知 slot ' + slot)
 }
 var regionBody = typeof body === 'string' ? body : ''
 var html = ''
-if (slot === 'cover') {
-  html = `<div id="l_cover">${regionBody}</div>`
-} else if (slot === 'left') {
-  var leftSurface = surface === 'card' ? 'card' : 'glass'
-  html += `<aside class="l_left${leftSurface === 'card' ? ' leftbar-card' : ''}" data-ui-surface="${leftSurface}">`
-  html += `<div class="sidebg"></div>`
-  html += `<div class="leftbar-container${blur === true ? ' leftbar-blur' : ''}">${regionBody}</div>`
-  html += `</aside>`
-} else if (slot === 'main') {
-  html = `<div class="l_main" id="main" data-ui-surface="content">${regionBody}</div>`
-} else if (slot === 'right') {
-  html = `<aside class="l_right" data-ui-surface="sidebar">${regionBody}</aside>`
+if (slot === 'topbar') {
+  html = `<header id="topbar-region" class="site-region site-region--topbar ui-surface" data-region="topbar"><div class="site-region__viewport">${regionBody}</div></header>`
+} else if (slot === 'leftbar') {
+  html = `<aside id="leftbar-region" class="site-region site-region--leftbar" data-region="leftbar" aria-label="Leftbar"><div class="site-region__surface ui-surface"><div class="site-region__decoration" aria-hidden="true"></div><div class="site-region__viewport">${regionBody}</div></div></aside>`
+} else if (slot === 'rightbar') {
+  html = `<aside id="rightbar-region" class="site-region site-region--rightbar" data-region="rightbar" aria-label="Rightbar"><div class="site-region__surface ui-drawer-surface"><div class="site-region__viewport">${regionBody}</div></div></aside>`
 }
 %>
 <%- html %>

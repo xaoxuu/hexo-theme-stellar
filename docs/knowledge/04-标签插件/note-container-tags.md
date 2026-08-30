@@ -326,7 +326,7 @@ note 标签通过 `.md-text` 中的父选择器与更广泛的 markdown 内容�
 story 类型布局中 note 标题有特殊处理：
 
 ```stylus
-.l_body[type=story] .tag-plugin.note .title p:not([class])
+body[data-article-style='story'] .tag-plugin.note .title p:not([class])
   text-indent: 0
 ```
 

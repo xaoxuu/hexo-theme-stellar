@@ -74,20 +74,24 @@ const CONFIG_TARGET_ROOTS = deepFreeze([
 ]);
 
 const CONTENT_CONSUMERS = Object.freeze(["CollectionModel", "PageViewModel", "article renderer", "listing renderer"]);
+const REGION_NORMALIZATION = "accept a widget array shorthand or a full region object; validate children and deep-freeze the normalized object";
 
 const CONTENT_OVERRIDE_DEFINITIONS = [
   ["card", "object", derived("theme profile card"), { boundary: "sealed" }],
   ["card.cover", ["string", "null"], derived("theme or collection card.cover")],
   ["card.tagline", ["string", "null"], derived("theme or collection card.tagline")],
-  ["sidebar", "object", derived("theme profile sidebar"), { boundary: "sealed" }],
-  ["sidebar.left.widgets", "array", derived("theme or collection left widgets"), { items: { type: ["string", "object"], boundary: "parameter_bag" } }],
-  ["sidebar.right.widgets", "array", derived("theme or collection right widgets"), { items: { type: ["string", "object"], boundary: "parameter_bag" } }],
-  ["sidebar.left.search", ["boolean", "object"], derived("theme or collection search"), { boundary: "sealed" }],
-  ["sidebar.left.search.filter", ["string", "null"], literal(null)],
-  ["sidebar.left.search.placeholder", ["string", "null"], literal(null)],
-  ["sidebar.left.menu", ["boolean", "null"], literal(null)],
-  ["sidebar.left.brand", ["object", "null"], literal(null), { boundary: "registered_schema" }],
-  ["sidebar.left.wiki_home", ["boolean", "null"], literal(null)],
+  ["regions", "object", derived("theme profile regions"), { boundary: "sealed" }],
+  ["regions.topbar", "object", derived("theme or collection topbar"), { boundary: "sealed", normalization: REGION_NORMALIZATION }],
+  ["regions.topbar.widgets", "array", literal([]), { items: { type: ["string", "object"], boundary: "parameter_bag" } }],
+  ["regions.leftbar", "object", derived("theme or collection leftbar"), { boundary: "sealed", normalization: REGION_NORMALIZATION }],
+  ["regions.leftbar.enabled", ["boolean", "null"], literal(null)],
+  ["regions.leftbar.brand", ["string", "boolean", "null"], literal(null), { values: [null, false, "site_brand", "collection_brand"] }],
+  ["regions.leftbar.menu", ["boolean", "null"], literal(null)],
+  ["regions.leftbar.footer", "object", literal({}), { boundary: "sealed" }],
+  ["regions.leftbar.footer.actions", ["boolean", "null"], literal(null)],
+  ["regions.leftbar.widgets", "array", literal([]), { items: { type: ["string", "object"], boundary: "parameter_bag" } }],
+  ["regions.rightbar", "object", derived("theme or collection rightbar"), { boundary: "sealed", normalization: REGION_NORMALIZATION }],
+  ["regions.rightbar.widgets", "array", literal([]), { items: { type: ["string", "object"], boundary: "parameter_bag" } }],
   ["navigation", "object", derived("theme profile navigation"), { boundary: "sealed" }],
   ["navigation.menu", ["string", "null"], literal(null)],
   ["navigation.breadcrumb", ["boolean", "null"], literal(null)],
@@ -149,7 +153,7 @@ const COLLECTION_TARGET_DEFINITIONS = [
   ["listing.sort.field", ["string", "null"], literal(null), { values: ["date", "updated", "title"] }],
   ["listing.sort.direction", ["string", "null"], literal(null), { values: ["asc", "desc"] }],
   ["note_defaults", "object", literal({}), { boundary: "sealed" }],
-  ["note_defaults.sidebar", "object", literal({}), { boundary: "registered_schema" }],
+  ["note_defaults.regions", "object", literal({}), { boundary: "registered_schema" }],
   ["navigation.tree", ["array", "object"], literal([]), { boundary: "record" }]
 ];
 
@@ -180,7 +184,8 @@ const FRONT_MATTER_TARGET_DEFINITIONS = [
 
 const PROFILE_IDS = deepFreeze([
   "home", "blog_index", "topic_index", "wiki_index", "post", "topic", "wiki",
-  "notebook_index", "note_index", "note", "author", "error", "page"
+  "notebook_index", "note_index", "note", "author", "error", "page",
+  "settings"
 ]);
 
 const PROFILE_ID_MIGRATIONS = deepFreeze({
@@ -196,7 +201,8 @@ const PROFILE_ID_MIGRATIONS = deepFreeze({
   note: "note",
   author: "author",
   error_page: "error",
-  page: "page"
+  page: "page",
+  settings: "settings"
 });
 
 const TAG_EXTENSION_IDS = deepFreeze([
@@ -337,11 +343,8 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
   brand: [
     migration("brand.image.src", "move", "site.brand.image.src", "站点身份归 site 所有"),
     migration("brand.image.style", "rename", "site.brand.image.variant", "值表示展示变体而非任意样式"),
-    migration("brand.image.url", "rename", "site.brand.image.href", "链接字段统一使用 href"),
     migration("brand.image.background", "remove", null, "图片背景不再属于公开 Brand 契约"),
-    migration("brand.name", "move", "site.brand.name", "站点身份归 site 所有"),
-    migration("brand.tagline", "rename", "site.brand.tagline.text", "标语改为显式文本，悬停文本按需单独配置"),
-    migration("brand.url", "rename", "site.brand.href", "链接字段统一使用 href")
+    migration("brand.name", "move", "site.brand.name", "站点身份归 site 所有")
   ],
   menubar: [
     migration("menubar.items", "move", "site.menu.items", "空菜单与菜单记录统一归 site shell 所有"),
@@ -354,9 +357,9 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
   site_tree: [
     migration("site_tree.<profile>.base_dir", "rename", "layout.profiles.<profile>.path", "Profile 公开最终路由路径"),
     migration("site_tree.<profile>.navigation.menu", "rename", "layout.profiles.<profile>.navigation.active_menu", "字段选择高亮菜单项"),
-    migration("site_tree.<profile>.navigation.tabs.<title>", "rename", "layout.profiles.<profile>.navigation.tabs[]", "动态记录改为有序 title/url 对象数组"),
-    migration("site_tree.<profile>.sidebar.left.widgets[]", "rename", "layout.profiles.<profile>.sidebar.left[]", "Profile 侧栏直接使用 Widget 数组"),
-    migration("site_tree.<profile>.sidebar.right.widgets[]", "rename", "layout.profiles.<profile>.sidebar.right[]", "Profile 侧栏直接使用 Widget 数组"),
+    migration("site_tree.<profile>.navigation.tabs.<title>", "rename", "layout.profiles.<profile>.listing_nav.tabs[]", "动态记录改为 Listing Nav 的有序 title/url 对象数组"),
+    migration("site_tree.<profile>.sidebar.left.widgets[]", "rename", "layout.profiles.<profile>.regions.leftbar.widgets[]", "Profile 左栏迁移到 Leftbar Region"),
+    migration("site_tree.<profile>.sidebar.right.widgets[]", "rename", "layout.profiles.<profile>.regions.rightbar.widgets[]", "Profile 右栏迁移到 Rightbar Region"),
     migration("site_tree.home.comments", "move", "layout.profiles.home.comments", "首页评论是 Profile 默认行为"),
     migration("site_tree.error_page.404", "rename", "layout.profiles.error.path", "错误页路径使用统一 Profile path")
   ],
@@ -492,21 +495,19 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
     migration("style.color.theme", "rename", "appearance.colors.primary", "主题主色使用准确命名"),
     migration("style.color.accent", "rename", "appearance.colors.accent", "颜色集合使用复数域名"),
     migration("style.color.link", "rename", "appearance.colors.link", "颜色集合使用复数域名"),
-    migration("style.animated_avatar.animate", "rename", "appearance.motion.avatar", "头像动画归 motion"),
     migration("style.codeblock.scrollbar", "rename", "appearance.code_block.scrollbar_width", "字段明确控制滚动条宽度"),
     migration("style.codeblock.highlightjs_theme", "rename", "appearance.code_block.highlight_stylesheet", "字段明确接受样式表资源"),
     migration("style.loading.*", "internalize", null, "用户界面文本由语言文件提供"),
     migration("style.gradient.start", "rename", "appearance.gradients.primary_action", "使用实际用途命名渐变"),
     migration("style.gradient.searchbar", "rename", "appearance.gradients.search_bar", "使用 snake_case 和组件语义"),
-    migration("style.gradient.avatar", "rename", "appearance.gradients.avatar_ring", "字段明确控制头像光环"),
     migration("style.gradient.angle", "internalize", null, "主题渐变角度固定为 210deg"),
-    migration("style.leftbar.ui-style", "rename", "appearance.backgrounds.sidebar.surface", "使用语义 surface 取代 UI style"),
-    migration("style.leftbar.background-color-light", "rename", "appearance.backgrounds.sidebar.color.light", "背景颜色按色彩方案分组"),
-    migration("style.leftbar.background-color-dark", "rename", "appearance.backgrounds.sidebar.color.dark", "背景颜色按色彩方案分组"),
-    migration("style.leftbar.background-image", "rename", "appearance.backgrounds.sidebar.image", "视觉背景不依赖物理 leftbar 名称"),
-    migration("style.leftbar.blur-px", "rename", "appearance.backgrounds.sidebar.backdrop.radius", "字段名不携带物理单位"),
-    migration("style.leftbar.blur-bg", "rename", "appearance.backgrounds.sidebar.backdrop.overlay", "字段描述背景滤镜层"),
-    migration("style.leftbar.background-opacity", "rename", "appearance.backgrounds.sidebar.opacity", "父级已表达背景语义"),
+    migration("style.leftbar.ui-style", "rename", "appearance.preset", "Region 表面风格由整站 Appearance Preset 统一控制"),
+    migration("style.leftbar.background-color-light", "remove", null, "纯色 Leftbar 背景由 Card Appearance 统一实现"),
+    migration("style.leftbar.background-color-dark", "remove", null, "纯色 Leftbar 背景由 Card Appearance 统一实现"),
+    migration("style.leftbar.background-image", "rename", "appearance.backgrounds.leftbar.image", "视觉背景不依赖物理 leftbar 名称"),
+    migration("style.leftbar.blur-px", "rename", "appearance.backgrounds.leftbar.backdrop.radius", "字段名不携带物理单位"),
+    migration("style.leftbar.blur-bg", "remove", null, "Leftbar 艺术背景不再叠加独立遮罩"),
+    migration("style.leftbar.background-opacity", "rename", "appearance.backgrounds.leftbar.opacity", "父级已表达背景语义"),
     migration("style.error_page", "move", "resources.error_page.image", "错误页插图是可空页面资源"),
     migration("style.site.background-image", "rename", "appearance.backgrounds.page.image", "站点背景归 page background"),
     migration("style.site.blur-px", "rename", "appearance.backgrounds.page.backdrop.radius", "字段名不携带物理单位"),
@@ -550,7 +551,10 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
     migration("identity.icon", "move", "identity.icon", "Collection 身份字段保持不变"),
     migration("card.*", "move", "card.*", "Presentation 子域保持不变"),
     migration("hero.*", "move", "hero.*", "Presentation 子域保持不变"),
-    migration("sidebar.*", "move", "sidebar.*", "布局覆盖保持不变"),
+    migration("sidebar.left.widgets[]", "rename", "regions.leftbar.widgets[]", "左栏 Widget 迁移到 Leftbar Region"),
+    migration("sidebar.right.widgets[]", "rename", "regions.rightbar.widgets[]", "右栏 Widget 迁移到 Rightbar Region"),
+    migration("sidebar.left.brand", "move", "site.brand", "站点 Brand 业务数据移到 site.brand，Collection 只选择 site_brand 或 collection_brand"),
+    migration("sidebar.left.search", "move", "site.menu.items[].type=search", "搜索入口统一进入站点菜单"),
     migration("navigation.*", "move", "navigation.*", "导航覆盖保持不变"),
     migration("article.*", "move", "article.*", "文章覆盖保持不变"),
     migration("footer.*", "move", "footer.*", "Footer 覆盖保持不变"),
@@ -564,7 +568,8 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
     migration("routing.path", "move", "route.path", "与 CollectionModel.route 术语对齐"),
     migration("routing.start", "move", "route.start", "Topic 起始文章保持 route 子域"),
     migration("listing.*", "move", "listing.*", "列表覆盖保持不变"),
-    migration("note.sidebar", "rename", "note_defaults.sidebar", "字段表达 Note 默认值"),
+    migration("note.sidebar", "rename", "note_defaults.regions", "字段表达 Note 默认 Region"),
+    migration("note_defaults.sidebar", "rename", "note_defaults.regions", "Note 默认左右栏迁移到 Region"),
     migration("tree[]", "move", "navigation.tree", "Wiki 扁平 tree 属于导航"),
     migration("tree.<section>[]", "move", "navigation.tree.<section>[]", "Wiki 分组 tree 属于导航")
   ],
@@ -573,7 +578,10 @@ const CONFIG_DOMAIN_MIGRATIONS = deepFreeze({
     migration("collection.id", "move", "collection.id", "Collection ID 保持显式"),
     migration("card.*", "move", "card.*", "Presentation 覆盖保持不变"),
     migration("banner.*", "move", "banner.*", "Presentation 覆盖保持不变"),
-    migration("sidebar.*", "move", "sidebar.*", "布局覆盖保持不变"),
+    migration("sidebar.left.widgets[]", "rename", "regions.leftbar.widgets[]", "左栏 Widget 迁移到 Leftbar Region"),
+    migration("sidebar.right.widgets[]", "rename", "regions.rightbar.widgets[]", "右栏 Widget 迁移到 Rightbar Region"),
+    migration("sidebar.left.brand", "move", "site.brand", "站点 Brand 业务数据移到 site.brand，Page 只选择 site_brand 或 collection_brand"),
+    migration("sidebar.left.search", "move", "site.menu.items[].type=search", "搜索入口统一进入站点菜单"),
     migration("navigation.*", "move", "navigation.*", "导航覆盖保持不变"),
     migration("article.*", "move", "article.*", "文章覆盖保持不变"),
     migration("footer.*", "move", "footer.*", "Footer 覆盖保持不变"),

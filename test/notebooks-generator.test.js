@@ -49,9 +49,12 @@ test("Notebook 生成器只向总索引和标签分页提供显式冻结投影",
     listed: true,
     navigation: Object.freeze({ menu: "notes" }),
     layout: Object.freeze({
-      brand: Object.freeze({ name: "Dev Notes", url: "notes/dev" }),
-      sidebar: Object.freeze({ left: Object.freeze({ widgets: Object.freeze(["tagtree"]) }), right: Object.freeze({ widgets: Object.freeze([]) }) }),
-      searchFilter: "notes/dev"
+      brands: Object.freeze({
+        site: Object.freeze({ name: "Site", href: "/" }),
+        collection: Object.freeze({ name: "Dev Notes", href: "notes/dev" })
+      }),
+      leftbar: Object.freeze({ left: Object.freeze({ widgets: Object.freeze(["tagtree"]) }), right: Object.freeze({ widgets: Object.freeze([]) }) }),
+      algoliaFilterPath: "notes/dev"
     }),
     tags: Object.freeze([Object.freeze({
       id: "",

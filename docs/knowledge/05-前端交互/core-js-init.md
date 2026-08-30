@@ -59,7 +59,7 @@ graph TB
         init["init object"]
         
         init_toc["toc()"]
-        init_sidebar["sidebar()"]
+        init_toc_links["tocLinks()"]
         init_wiki_start["wikiStart()"]
         init_leftbar_scroll["leftbarScroll()"]
         init_date["relativeDate()"]
@@ -67,7 +67,7 @@ graph TB
         init_canon["canonicalCheck()"]
         
         init --> init_toc
-        init --> init_sidebar
+        init --> init_toc_links
         init --> init_wiki_start
         init --> init_leftbar_scroll
         init --> init_date
@@ -227,7 +227,7 @@ toast 样式由 CSS 类处理，保证主题一致外观。该模式用于剪贴
 graph TB
     subgraph "init object"
         toc["toc()"]
-        sidebar["sidebar()"]
+        tocLinks["tocLinks()"]
         wikiStart["wikiStart()"]
         leftbarScroll["leftbarScroll()"]
         relativeDate["relativeDate(selector)"]
@@ -252,7 +252,7 @@ graph TB
     
     toc --> data_toc
     toc --> toc_links
-    sidebar --> toc_links
+    tocLinks --> toc_links
     relativeDate --> post_meta
     registerTabsTag --> nav_tabs
     canonicalCheck --> window_canonical
@@ -276,9 +276,9 @@ graph TB
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)
 
-### 侧边栏点击处理
+### TOC 与 Drawer 点击处理
 
-`init.sidebar()` 为目录链接附加点击事件。点击目录链接时调用 `sidebar.dismiss()`，在移动端收起侧边栏。
+`init.tocLinks()` 为目录链接附加点击事件。点击目录链接时调用 `dismissDrawer()`；在平板或手机上收起承载 TOC 的 Drawer，桌面 Region 不受影响。
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)
 
@@ -290,7 +290,7 @@ graph TB
 
 ### 左栏滚动状态
 
-`init.leftbarScroll()` 记录并恢复左栏滚动位置，使用 `localStorage`（`Stellar.leftbarScroll.` 前缀）跨页面保持左栏滚动状态。
+`init.leftbarScroll()` 记录并恢复 Leftbar 滚动位置，使用 `sessionStorage`（`Stellar.leftbarScroll.` 前缀）在当前标签页的页面跳转间保持位置。
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)
 
@@ -353,7 +353,7 @@ flowchart TD
     entry["stellar.initPage() called"]
     
     toc["init.toc()<br/>Setup TOC tracking"]
-    sidebar["init.sidebar()<br/>Attach sidebar handlers"]
+    tocLinks["init.tocLinks()<br/>Attach TOC and Drawer handlers"]
     wikistart["init.wikiStart()<br/>Wiki cover anchor handling"]
     leftbar["init.leftbarScroll()<br/>Leftbar scroll state"]
     reldate["init.relativeDate()<br/>Convert time elements"]
@@ -362,8 +362,8 @@ flowchart TD
     complete["Initialization complete"]
     
     entry --> toc
-    toc --> sidebar
-    sidebar --> wikistart
+    toc --> tocLinks
+    tocLinks --> wikistart
     wikistart --> leftbar
     leftbar --> reldate
     reldate --> tabs
@@ -414,11 +414,13 @@ canonical 检查只在初始加载运行一次（涉及网络请求并创建持�
 
 ## DOM 选择器与常量
 
-脚本定义全局 DOM 选择器：
+Shell 交互使用下列稳定入口：
 
 | 常量 | 选择器 | 用途 |
 |------|--------|------|
-| `l_body` | `.l_body` | 布局操作的主内容容器 |
+| `siteShell` | `.site-shell` | 保存当前 Drawer 状态并委托 Shell 操作 |
+| `regionElement(region)` | `#leftbar-region` / `#rightbar-region` | 设置 `inert`、ARIA 与焦点 |
+| `data-shell-action` | `[data-shell-action]` | Rail、Drawer、Scrim 与 TOC 的统一事件代理 |
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)
 

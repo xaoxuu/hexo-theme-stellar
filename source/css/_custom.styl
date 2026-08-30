@@ -29,21 +29,6 @@ $fs-content-3 = 'calc(%s - 3px)' % var(--fs-content-base)
 
 // site main
 $site-background-image = hexo-config('appearance.backgrounds.page.image')
-$leftbar-background-type = hexo-config('appearance.backgrounds.sidebar.type')
-$leftbar-background-image = hexo-config('appearance.backgrounds.sidebar.image')
-$leftbar-background-color-light = hexo-config('appearance.backgrounds.sidebar.color.light')
-$leftbar-background-color-dark = hexo-config('appearance.backgrounds.sidebar.color.dark')
-$leftbar-gradient-light = hexo-config('appearance.backgrounds.sidebar.gradient.light')
-$leftbar-gradient-dark = hexo-config('appearance.backgrounds.sidebar.gradient.dark')
-$leftbar-gradient-light-base = unquote(hexo-config('appearance.backgrounds.sidebar.gradient.light.0'))
-$leftbar-gradient-light-top = unquote(hexo-config('appearance.backgrounds.sidebar.gradient.light.1'))
-$leftbar-gradient-light-right = unquote(hexo-config('appearance.backgrounds.sidebar.gradient.light.2'))
-$leftbar-gradient-light-bottom = unquote(hexo-config('appearance.backgrounds.sidebar.gradient.light.3'))
-$leftbar-gradient-dark-base = unquote(hexo-config('appearance.backgrounds.sidebar.gradient.dark.0'))
-$leftbar-gradient-dark-top = unquote(hexo-config('appearance.backgrounds.sidebar.gradient.dark.1'))
-$leftbar-gradient-dark-right = unquote(hexo-config('appearance.backgrounds.sidebar.gradient.dark.2'))
-$leftbar-gradient-dark-bottom = unquote(hexo-config('appearance.backgrounds.sidebar.gradient.dark.3'))
-$leftbar-has-decorative-background = ($leftbar-background-type == 'gradient' && length($leftbar-gradient-light) == 4 && length($leftbar-gradient-dark) == 4) || ($leftbar-background-type == 'image' && $leftbar-background-image)
 
 
 // colors
@@ -70,36 +55,34 @@ $corner-shape = convert(hexo-config('appearance.shape.corner'))
   --fs-root: $fs-root
   --fs-content-base: var(--fs-root)
   --fs-content: var(--fs-content-base)
-  --width-main: 720px
+  --width-main-article: 720px
+  --width-main-default: 900px
+  --width-main: var(--width-main-default)
   --fsh2: 'calc(%s + 11px)' % var(--fs-content)
   --fsh3: 'calc(%s + 7px)' % var(--fs-content)
   --fsh4: 'calc(%s + 4px)' % var(--fs-content)
   
   // 侧边栏文字内容宽度
-  --side-content-width: 224px
+  --side-content-width: 200px
   // 组件内部基础间距（margin/padding 统一）
   --gap-base: 16px
-  // 页面级留白（侧边栏/内容区/列间距），笔记本及以上放宽
+  // 页面级留白（侧边栏/内容区/列间距）
   --gap-page: 16px
-  @media screen and (min-width: $device-laptop)
-    --gap-page: 32px
   // 右栏宽度增量（在 --width-sidebar 基础上加宽）
   --rightbar-width-extra: calc(var(--gap-base) * 2)
   
   --gap-p: 'calc(%s + 4px)' % var(--fs-content-base) // gap for paragraph
   --gap-p-compact: 'calc(%s * 0.75)' % var(--fs-content-base)
-  // desktop 2k or larger
-  @media screen and (min-width: $device-2k)
-    --width-main: 780px
-  // desktop 4k or larger
-  @media screen and (min-width: $device-4k)
-    --width-main: 860px
   // iPad 竖屏
   @media screen and (max-width: $device-tablet)
     --side-content-width: 188px
   @media screen and (max-width: $device-mobile-max)
     --fs-root: 'calc(%s + 2px)' % $fs-root
     --side-content-width: 224px
+
+body[data-page-layout='post'],
+body[data-page-layout='page']
+  --width-main: var(--width-main-article)
 
 // shadow
 $boxshadow-card = 0 1px 2px 0px rgba(0, 0, 0, 0.1)

@@ -11,14 +11,15 @@ function read(file) {
   return fs.readFileSync(path.join(ROOT, file), "utf8");
 }
 
-test("主题默认、模板、模型与 Stylus 只消费最终 Appearance 路径", () => {
+test("主题默认与最终视觉层只消费最终 Appearance 路径", () => {
   const config = read("_config.yml");
   const sidebar = read("source/css/_components/sidebar/sidebar.styl");
+  const custom = read("source/css/_custom.styl");
+  const glass = read("source/css/_appearances/glass.styl");
   const consumers = [
     "layout/layout.ejs",
     "layout/_partial/head.ejs",
     "layout/_partial/sidebar/brand.ejs",
-    "layout/_partial/sidebar/grad-def.ejs",
     "layout/_partial/scripts/runtime.ejs",
     "scripts/lib/browser-runtime.js",
     "source/js/runtime/extensions/feature.mjs",
@@ -40,15 +41,17 @@ test("主题默认、模板、模型与 Stylus 只消费最终 Appearance 路径
   assert.match(consumers, /appearance\.typography\.font_family\.code/);
   assert.match(consumers, /appearance\.typography\.content_align/);
   assert.match(consumers, /appearance\.colors\.primary/);
-  assert.match(consumers, /appearance\.backgrounds\.sidebar/);
+  assert.match(glass, /appearance\.backgrounds\.leftbar\.type/);
+  assert.match(glass, /appearance\.backgrounds\.leftbar\.image/);
+  assert.match(glass, /appearance\.backgrounds\.leftbar\.gradient\.light/);
+  assert.doesNotMatch([consumers, sidebar, custom].join("\n"), /appearance\.backgrounds\.leftbar/);
   assert.equal(fs.existsSync(path.join(ROOT, "source/css/_components/page-transition.styl")), false);
   assert.doesNotMatch(config, /page_transition/);
   assert.doesNotMatch(consumers, /page_transition|view-transition/);
   assert.doesNotMatch(consumers, /theme\.style|themeConfig\.style|hexo-config\('style\./);
-  assert.doesNotMatch(consumers, /appearance\.gradients\.angle|highlightTheme|backgrounds\.(?:sidebar|page)\.blur/);
-  assert.match(sidebar, /sidebar-background-filter\(\$opacity\)[\s\S]*--background-opacity: \$opacity/);
-  assert.match(sidebar, /sidebar-background-(?:gradient|image)\([^\n]*hexo-config\('appearance\.backgrounds\.sidebar\.opacity'\)/);
-  assert.doesNotMatch(sidebar, /if hexo-config\('appearance\.backgrounds\.sidebar\.opacity'\)/);
+  assert.doesNotMatch(consumers, /appearance\.gradients\.angle|highlightTheme|backgrounds\.(?:leftbar|page)\.blur/);
+  assert.match(glass, /glass-leftbar-background-filter\(\$opacity\)[\s\S]*--background-opacity: \$opacity/);
+  assert.match(glass, /glass-leftbar-background-(?:gradient|image)\(/);
 });
 
 test("资源兜底消费链只读取三个公开 fallback，固定资源来自内部常量", () => {

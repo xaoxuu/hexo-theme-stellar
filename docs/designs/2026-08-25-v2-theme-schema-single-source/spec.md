@@ -15,8 +15,9 @@ Theme 字段的类型、默认值和说明分散在目标契约、运行时 Sche
 - Theme Schema 直接拥有字段类型、字面量默认值、级联、约束、说明和示例；目标契约只保留迁移与内容域阶段信息。
 - 默认配置生成器按固定根域顺序遍历 Schema，输出稳定、可校验的 `_config.yml`；Reference、字段审计和 doctor 继续消费同一 Schema。
 - 默认配置中的每个活动叶子必须具有语义描述，缺少描述时 Schema 构造直接失败；生成器从类型、枚举、范围和数组元素 Schema 追加约束提示。结构节点只在承担分组语义时显示注释，YAML 示例必须显式登记，禁止以字段路径复述用途或跨 Profile 复用误导示例。
-- `site.brand.image.src/name/tagline.text` 使用字面量 `null`；主题解析不接收 Hexo site config。显式 `{config.*}` 模板替换、Collection 自动 Brand 与页面/Collection 覆盖不变。
+- `site.brand.image.src/name/tagline` 使用字面量 `null`；主题解析不接收 Hexo site config。显式 `{config.*}` 模板替换、Collection 自动 Brand 与页面/Collection 覆盖不变。
 - 提供 `schema:generate` / `schema:check`，统一默认 YAML、Reference 与审计产物生成，并移除 Contribution 门禁中的重复 Reference 检查。
+- Alpha 人工反馈后统一收敛空键语义：主题配置中不接受 `null` 的字段在留空时等同于未配置并回落字面量默认值；显式声明 `null` 的字段继续保留关闭、继承或不输出等业务语义。非空错误类型仍严格拒绝。
 
 ## 3. 影响范围
 
@@ -27,6 +28,7 @@ Theme 字段的类型、默认值和说明分散在目标契约、运行时 Sche
 ## 4. 验证方式
 
 - 单测覆盖空配置、显式 Brand、构建事件隔离、Collection 自动 Brand、生成确定性与产物漂移。
+- 空键回归覆盖对象、数组、标量、Region 热重载与显式 nullable 保留。
 - 运行 `npm run check`、`npm run integration:check`、知识库核查及主工程 `npm run g`。
 
 ## 5. 验证结果

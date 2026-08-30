@@ -3,7 +3,7 @@
 
 const {
   replaceConfigTokens,
-  resolveBrand,
+  resolveBrands,
   shouldShowMobileBrand
 } = require("../lib/brand");
 const { getCollectionId } = require("../lib/content-config");
@@ -25,16 +25,21 @@ function activeCollection(config) {
   return { collection: null, type: null };
 }
 
-hexo.extend.helper.register("brandConfig", function(page) {
+hexo.extend.helper.register("brandConfig", function(page, source = "site") {
   const config = getPageConfig(page) || page?.stellarConfig || {};
   const active = activeCollection(config);
-  return resolveBrand({
+  const brands = resolveBrands({
     siteBrand: hexo.stellar.config.site.brand,
-    pageBrand: config.sidebar?.left?.brand,
     collection: active.collection,
     collectionType: active.type,
     defaultIcon: INTERNAL.resources.projectIcon
   });
+  return brands[source] || null;
+});
+
+hexo.extend.helper.register("brandGithubUsername", function() {
+  const username = hexo.stellar.data?.widgets?.ghuser?.username;
+  return typeof username === "string" ? username.trim() : "";
 });
 
 hexo.extend.helper.register("brandText", function(value) {

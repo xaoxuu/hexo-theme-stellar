@@ -13,6 +13,7 @@ const {
   sourcePagePath
 } = require("./content-membership");
 const { FrontMatterParseError, parseFrontMatterYaml } = require("./front-matter");
+const { resolveRegions } = require("./regions");
 
 function issue(code, source, fieldPath, actualType, expected, migration) {
   return Object.freeze({ code, source, path: fieldPath, actualType, expected, migration });
@@ -72,11 +73,46 @@ function collectSchemaIssues(callback, issues) {
   }
 }
 
+function widgetCatalog(baseDir) {
+  const themeFile = path.resolve(__dirname, "../../_data/widgets.yml");
+  const siteFile = path.join(baseDir, "source/_data/widgets.yml");
+  const theme = yaml.load(fs.readFileSync(themeFile, "utf8"), { filename: themeFile }) || {};
+  if (!fs.existsSync(siteFile)) return theme;
+  const site = yaml.load(fs.readFileSync(siteFile, "utf8"), { filename: siteFile }) || {};
+  const result = { ...theme };
+  for (const [id, descriptor] of Object.entries(site)) {
+    if (descriptor == null || descriptor.length === 0) delete result[id];
+    else result[id] = { ...(result[id] || {}), ...descriptor };
+  }
+  return result;
+}
+
+function placementWarnings(options) {
+  const resolved = resolveRegions({
+    profile: options.profile,
+    defaultState: options.defaultState,
+    catalog: options.catalog,
+    layers: options.layers
+  });
+  return resolved.warnings.map(warning => Object.freeze({
+    code: warning.code,
+    severity: "warning",
+    source: options.source,
+    path: `layout=${options.profile}; region=${warning.region}`,
+    widget: warning.widget,
+    layout: warning.layout,
+    region: warning.region,
+    supported: warning.supported
+  }));
+}
+
 function runDoctor(options = {}) {
   const baseDir = path.resolve(options.baseDir || process.cwd());
   const nodeVersion = String(options.nodeVersion || process.versions.node);
   const hexoVersion = String(options.hexoVersion || "");
   const issues = [];
+  const warnings = [];
+  const catalog = widgetCatalog(baseDir);
 
   if (major(nodeVersion) == null || major(nodeVersion) < 22) {
     issues.push(issue("unsupported_version", "environment", "node", `string:${nodeVersion || "unknown"}`, "Node.js >= 22", "start/requirements"));
@@ -97,19 +133,32 @@ function runDoctor(options = {}) {
   }
 
   const stellarConfigPath = path.join(baseDir, "_config.stellar.yml");
+  let stellarConfig = null;
   if (fs.existsSync(stellarConfigPath)) {
     const value = yamlValue(stellarConfigPath, "_config.stellar.yml", issues);
-    if (value != null) collectSchemaIssues(() => parseStellarConfig({
+    if (value != null) stellarConfig = collectSchemaIssues(() => parseStellarConfig({
       source: "_config.stellar.yml",
       themeConfig: value,
       siteConfig
     }), issues);
   } else {
-    collectSchemaIssues(() => parseStellarConfig({
+    stellarConfig = collectSchemaIssues(() => parseStellarConfig({
       source: "Stellar Schema defaults",
       themeConfig: {},
       siteConfig
     }), issues);
+  }
+
+  if (stellarConfig) {
+    for (const [profile, profileConfig] of Object.entries(stellarConfig.layout.profiles)) {
+      warnings.push(...placementWarnings({
+        profile,
+        source: fs.existsSync(stellarConfigPath) ? "_config.stellar.yml" : "Stellar Schema defaults",
+        catalog,
+        defaultState: stellarConfig.layout.regions.leftbar.defaultState,
+        layers: [stellarConfig.layout.regions, profileConfig.regions]
+      }));
+    }
   }
 
   const collectionConfigs = new Map();
@@ -123,6 +172,19 @@ function runDoctor(options = {}) {
         if (parsed != null) {
           const key = relative(path.join(baseDir, "source", "_data"), file).replace(/\.ya?ml$/i, "");
           collectionConfigs.set(key, parsed);
+          const profile = collectionRoot === "notebooks" ? "note" : collectionRoot;
+          if (stellarConfig) warnings.push(...placementWarnings({
+            profile,
+            source,
+            catalog,
+            defaultState: stellarConfig.layout.regions.leftbar.defaultState,
+            layers: [
+              stellarConfig.layout.regions,
+              stellarConfig.layout.profiles[profile]?.regions,
+              parsed.regions,
+              parsed.noteDefaults?.regions
+            ]
+          }));
         }
       }
     }
@@ -144,6 +206,26 @@ function runDoctor(options = {}) {
         registry: membershipRegistry
       });
       issues.push(...resolved.issues);
+      const finalConfig = resolved.config || parsed;
+      const profile = finalConfig.collection?.profile
+        || (source.startsWith("source/_posts/") ? "post" : (parsed.layout || "page"));
+      const collectionKey = finalConfig.collection
+        ? `${finalConfig.collection.profile === "notebook" ? "notebooks" : finalConfig.collection.profile}/${finalConfig.collection.id}`
+        : null;
+      const collection = collectionKey ? collectionConfigs.get(collectionKey) : null;
+      if (stellarConfig) warnings.push(...placementWarnings({
+        profile,
+        source,
+        catalog,
+        defaultState: stellarConfig.layout.regions.leftbar.defaultState,
+        layers: [
+          stellarConfig.layout.regions,
+          stellarConfig.layout.profiles[profile]?.regions,
+          collection?.regions,
+          profile === "notebook" ? collection?.noteDefaults?.regions : null,
+          finalConfig.regions
+        ]
+      }));
     }
   }
 
@@ -159,7 +241,8 @@ function runDoctor(options = {}) {
       collections: filesBelow(path.join(baseDir, "source", "_data"), item => /\/(wiki|topic|notebooks)\/.*\.ya?ml$/i.test(item)).length,
       pages: filesBelow(sourceRoot, item => item.endsWith(".md")).length
     },
-    issues: issues.map(item => Object.freeze({ ...item }))
+    issues: issues.map(item => Object.freeze({ ...item })),
+    warnings
   });
 }
 
@@ -174,6 +257,12 @@ function formatDoctorText(result) {
     lines.push(`Issues (${result.issues.length}):`);
     for (const item of result.issues) {
       lines.push(`- ${item.source}: ${item.path}; actual=${item.actualType}; expected=${item.expected}; migration=${item.migration}`);
+    }
+  }
+  if (result.warnings.length > 0) {
+    lines.push(`Warnings (${result.warnings.length}):`);
+    for (const item of result.warnings) {
+      lines.push(`- ${item.source}: Widget ${item.widget} (layout=${item.layout}) does not support ${item.region}; supported=${item.supported.join(",") || "none"}; skipped`);
     }
   }
   return lines.join("\n");

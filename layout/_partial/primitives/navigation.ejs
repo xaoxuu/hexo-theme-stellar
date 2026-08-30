@@ -1,5 +1,5 @@
 <%
-var allowedPlacements = ['main', 'sidebar']
+var allowedPlacements = ['main', 'leftbar', 'topbar', 'rightbar']
 if (!allowedPlacements.includes(placement)) {
   throw new Error('Stellar Layout Navigation: 未知 placement ' + placement)
 }

@@ -59,19 +59,19 @@ test("主题默认配置由 CONFIG_SCHEMA 稳定生成并公开全部封闭字�
 test("Brand 空值保持活动字段并明确不继承 Hexo 配置", () => {
   assert.equal(CONFIG.site.brand.image.src, null);
   assert.equal(CONFIG.site.brand.name, null);
-  assert.equal(CONFIG.site.brand.tagline.text, null);
+  assert.equal(CONFIG.site.brand.tagline, null);
   assert.match(CONFIG_SOURCE, /Brand 图片来源；null 隐藏图片且不会继承 Hexo avatar。/);
   assert.match(CONFIG_SOURCE, /Brand 纯文本名称；null 隐藏名称且不会继承 Hexo title。/);
-  assert.match(CONFIG_SOURCE, /Brand 标语正文；null 隐藏标语且不会继承 Hexo subtitle。/);
+  assert.match(CONFIG_SOURCE, /Brand 标语；null 隐藏标语且不会继承 Hexo subtitle。/);
 });
 
 test("侧栏与页面默认图片使用 YAML 留空写法且运行时保持 null", () => {
-  assert.equal(CONFIG.appearance.backgrounds.sidebar.image, null);
+  assert.equal(CONFIG.appearance.backgrounds.leftbar.image, null);
   assert.equal(CONFIG.appearance.backgrounds.page.image, null);
-  assert.match(CONFIG_SOURCE, /侧栏背景图片；留空不显示背景图。[\s\S]*?\n      image:\n      gradient:/);
-  assert.match(CONFIG_SOURCE, /页面背景图片；留空不显示背景图。[\s\S]*?\n      image:\n      backdrop:/);
-  assert.doesNotMatch(CONFIG_SOURCE, /\n      image: null\n      gradient:/);
-  assert.doesNotMatch(CONFIG_SOURCE, /\n      image: null\n      backdrop:/);
+  assert.match(CONFIG_SOURCE, /侧栏背景图片；留空不显示背景图。[\s\S]*?\n {6}image:\n {6}gradient:/);
+  assert.match(CONFIG_SOURCE, /页面背景图片；留空不显示背景图。[\s\S]*?\n {6}image:\n {6}backdrop:/);
+  assert.doesNotMatch(CONFIG_SOURCE, /\n {6}image: null\n {6}gradient:/);
+  assert.doesNotMatch(CONFIG_SOURCE, /\n {6}image: null\n {6}backdrop:/);
 });
 
 test("所有活动叶子都有语义描述且约束提示来自 Schema", () => {
@@ -86,7 +86,7 @@ test("所有活动叶子都有语义描述且约束提示来自 Schema", () => {
   assert.match(CONFIG_SOURCE, /文章默认排版风格。 \[字符串；可选值：tech \/ story\]/);
   assert.match(CONFIG_SOURCE, /文章列表封面的宽高比。 \[数字；必须大于 0\]/);
   assert.match(CONFIG_SOURCE, /侧栏背景不透明度。 \[数字；范围：0–1\]/);
-  assert.match(CONFIG_SOURCE, /主导航菜单项；空数组不显示主菜单。 \[数组；元素：对象\]/);
+  assert.match(CONFIG_SOURCE, /主导航菜单项；type: search 与链接共用 title、icon、accent 视觉字段并提供共享搜索入口，空数组不显示主菜单。 \[数组；元素：对象\]/);
 
   const incompleteSchema = structuredClone(CONFIG_SCHEMA);
   delete incompleteSchema.properties.site.properties.brand.properties.image.properties.src.description;
@@ -101,6 +101,6 @@ test("YAML 示例必须显式选择且不复用错误上下文", () => {
   assert.match(CONFIG_SOURCE, /# {3}- \{id: post, title: 博客/);
   assert.match(CONFIG_SOURCE, /# {3}- \{source_prefix: wiki\/stellar\//);
   assert.doesNotMatch(CONFIG_SOURCE, /wiki_index[\s\S]{0,500}# Example:[\s\S]{0,80}\/blog\//);
-  assert.match(CONFIG_SOURCE, /items: \[\]/);
+  assert.match(CONFIG_SOURCE, /items: \[\{key: 博客框架,[^\n]+\{key: 主题版本,/);
   assert.match(CONFIG_SOURCE, /tag_icons: \{\}/);
 });

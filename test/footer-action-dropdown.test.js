@@ -5,6 +5,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const { escapeHTML } = require("hexo-util");
+const { composeUiClasses } = require("../scripts/lib/ui-capabilities");
 
 let renderer;
 global.hexo = {
@@ -19,6 +20,7 @@ const file = path.join(ROOT, "layout/_partial/dropdown.ejs");
 function render(item) {
   return renderer({ path: file, text: fs.readFileSync(file, "utf8") }, {
     item,
+    ui_classes: composeUiClasses,
     escape_html: escapeHTML,
     url_for: value => value,
     icon: value => `<svg data-icon="${value}"></svg>`

@@ -63,9 +63,9 @@ tags:
 | `$c-link` | `appearance.colors.link` | 链接色 |
 | `$c-base-hue` | 主题固定值 | 背景和文字色生成的基础色相 |
 | `$site-background-image` | `appearance.backgrounds.page.image` | 全站背景图 |
-| `$leftbar-background-type` | `appearance.backgrounds.sidebar.type` | 左栏装饰背景类型：渐变、图片或纯色 |
-| `$leftbar-background-image` | `appearance.backgrounds.sidebar.image` | 左栏背景图 |
-| `$leftbar-gradient-light-*` / `$leftbar-gradient-dark-*` | `appearance.backgrounds.sidebar.gradient.light/dark` | 浅色、深色艺术渐变的基础、左上、右中、左下颜色 |
+| `$leftbar-background-type` | `appearance.backgrounds.leftbar.type` | 左栏装饰背景类型：渐变、图片或纯色 |
+| `$leftbar-background-image` | `appearance.backgrounds.leftbar.image` | 左栏背景图 |
+| `$leftbar-gradient-light-*` / `$leftbar-gradient-dark-*` | `appearance.backgrounds.leftbar.gradient.light/dark` | 浅色、深色艺术渐变的基础、左上、右中、左下颜色 |
 
 组件优先使用语义颜色变量，例如 `var(--text-p1)`、`var(--card)`、`var(--block-border)` 和 `var(--theme)`；组件文档不应复制整套颜色值。
 
@@ -107,7 +107,7 @@ tags:
 
 ## 集合组件 Surface 令牌
 
-`layout.ejs` 为页面区域声明 `data-ui-surface`：左栏按 `appearance.backgrounds.sidebar.surface` 取 `glass` 或 `card`，右栏取 `sidebar`，主内容区取 `content`。通用集合组件不读取页面位置，而由以下组件级语义变量适配表面：
+`appearance.preset` 是整站唯一表面风格入口，支持 `card`、`flat`、`glass`、`minimal`。Shell 把最终 preset 投影为根元素的 `data-appearance`，并让 Topbar、Leftbar、Main、Rightbar 的表面使用同一组 Token；Region 不再维护位置专属风格。`flat` 保留调整前 Topbar 的半透明、轻模糊与分隔线表面。通用集合组件不读取页面位置，而由以下组件级语义变量适配表面：
 
 | 令牌组 | 语义 |
 | --- | --- |

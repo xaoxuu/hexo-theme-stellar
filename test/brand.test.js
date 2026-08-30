@@ -4,92 +4,71 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 
 const {
-  automaticCollectionBrand,
+  collectionBrand,
   replaceConfigTokens,
-  resolveBrand,
+  resolveBrands,
   shouldShowMobileBrand
 } = require('../scripts/lib/brand');
 
-test('Wiki 与 Notebook 自动 Brand 使用 identity、文案和集合首页', () => {
+test('Wiki、Notebook 与 Topic Collection Brand 使用 identity 和各自入口', () => {
   const base = {
     name: 'Project',
     tagline: 'Tagline',
     identity: { icon: '/project.svg' }
   };
-  assert.deepStrictEqual(automaticCollectionBrand({ ...base, homepage: { path: '/wiki/project/' } }, 'wiki', '/default.svg'), {
+  assert.deepStrictEqual(collectionBrand({ ...base, homepage: { path: '/wiki/project/' } }, 'wiki', '/default.svg'), {
     image: { src: '/project.svg', variant: 'icon' },
     name: 'Project',
-    wordmark: null,
-    tagline: { text: 'Tagline', hover: null },
+    tagline: 'Tagline',
     href: '/wiki/project/'
   });
-  assert.deepStrictEqual(automaticCollectionBrand({ ...base, route: { path: '/topic/project/' } }, 'topic'), {});
-  assert.equal(automaticCollectionBrand({ ...base, route: { path: 'notes/project' } }, 'notebook').href, 'notes/project');
-  assert.equal(automaticCollectionBrand({
+  assert.equal(collectionBrand({ ...base, route: { path: '/topic/project/' } }, 'topic').href, '/topic/project/');
+  assert.equal(collectionBrand({ ...base, route: { path: 'notes/project' } }, 'notebook').href, 'notes/project');
+  assert.equal(collectionBrand({
     name: 'Project',
     card: { cover: '/cover.webp' }
   }, 'wiki', '/default.svg').image.src, '/default.svg');
+  assert.equal(collectionBrand(base, 'post', '/default.svg'), null);
 });
 
-test('Brand 按页面、集合、自动值和全局值解析，image 整体替换', () => {
+test('站点与 Collection Brand 独立解析且不互相继承', () => {
   const collection = {
     name: 'Collection',
-    tagline: 'Auto',
     identity: { icon: '/auto.svg' },
-    route: { path: '/topic/collection/' },
-    sidebar: {
-      left: {
-        brand: {
-          image: { src: '/collection.svg', variant: 'plain' },
-          tagline: { text: 'Collection override', hover: null }
-        }
-      }
-    }
+    route: { path: '/topic/collection/' }
   };
-  assert.deepStrictEqual(resolveBrand({
+  assert.deepStrictEqual(resolveBrands({
     siteBrand: {
-      image: { src: '/site.svg', variant: 'avatar' },
+      image: { src: '/site.svg', variant: 'avatar', href: '/must-not-leak/' },
       name: 'Site',
-      tagline: { text: 'Site tagline', hover: null },
-      href: '/'
+      wordmark: '/removed.svg',
+      github: { id: 'must-not-leak' },
+      tagline: 'Site tagline',
+      href: '/must-not-leak/'
     },
     collection,
     collectionType: 'topic',
-    defaultIcon: '/default.svg',
-    pageBrand: { name: 'Page' }
+    defaultIcon: '/default.svg'
   }), {
-    image: { src: '/collection.svg', variant: 'plain' },
-    name: 'Page',
-    tagline: { text: 'Collection override', hover: null },
-    href: '/'
-  });
-  assert.deepStrictEqual(resolveBrand({
-    siteBrand: { image: { src: '/site.svg', variant: 'avatar' }, name: 'Site' },
-    pageBrand: { tagline: { text: 'Page', hover: null } }
-  }), {
-    image: { src: '/site.svg', variant: 'avatar' },
-    name: 'Site',
-    tagline: { text: 'Page', hover: null }
-  });
-  assert.deepStrictEqual(resolveBrand({
-    siteBrand: { tagline: { text: 'Site fallback', hover: null }, href: '/' },
-    collection: { name: 'Collection', identity: { icon: '/auto.svg' } },
-    collectionType: 'wiki'
-  }), {
-    image: { src: '/auto.svg', variant: 'icon' },
-    name: 'Collection',
-    wordmark: null,
-    tagline: { text: 'Site fallback', hover: null },
-    href: '/'
+    site: {
+      image: { src: '/site.svg', variant: 'avatar' },
+      name: 'Site',
+      tagline: 'Site tagline',
+      href: '/'
+    },
+    collection: {
+      image: { src: '/auto.svg', variant: 'icon' },
+      name: 'Collection',
+      href: '/topic/collection/'
+    }
   });
 });
 
-test('Topic 默认完整继承全局 Brand，只有显式 Brand 才覆盖', () => {
+test('Topic 同时提供独立站点 Brand 与 Collection Brand', () => {
   const siteBrand = {
     image: { src: '/site.svg', variant: 'avatar' },
     name: 'Site',
-    tagline: { text: 'Site tagline', hover: null },
-    href: '/'
+    tagline: 'Site tagline'
   };
   const topic = {
     name: 'Topic',
@@ -97,22 +76,19 @@ test('Topic 默认完整继承全局 Brand，只有显式 Brand 才覆盖', () =
     identity: { icon: '/topic.svg' },
     route: { path: '/topic/example/' }
   };
-  assert.deepStrictEqual(resolveBrand({
-    siteBrand,
-    collection: topic,
-    collectionType: 'topic',
-    defaultIcon: '/default.svg'
-  }), siteBrand);
-
-  topic.sidebar = { left: { brand: { name: 'Custom Topic' } } };
-  assert.deepStrictEqual(resolveBrand({
+  assert.deepStrictEqual(resolveBrands({
     siteBrand,
     collection: topic,
     collectionType: 'topic',
     defaultIcon: '/default.svg'
   }), {
-    ...siteBrand,
-    name: 'Custom Topic'
+    site: { ...siteBrand, href: '/' },
+    collection: {
+      image: { src: '/topic.svg', variant: 'icon' },
+      name: 'Topic',
+      tagline: 'Topic tagline',
+      href: '/topic/example/'
+    }
   });
 });
 
@@ -143,7 +119,7 @@ test('Brand 文本只替换 Hexo 配置占位符，不解析 Markdown', () => {
   assert.equal(replaceConfigTokens('[Stellar](/)', { title: 'Ignored' }), '[Stellar](/)');
 });
 
-test("Notebook 生成页 Brand 消费 stellarConfig 而非原始页面字段", () => {
+test("Notebook 生成页可按来源读取独立 Brand", () => {
   const helpers = {};
   const previousHexo = global.hexo;
   global.hexo = {
@@ -157,11 +133,12 @@ test("Notebook 生成页 Brand 消费 stellarConfig 而非原始页面字段", (
     stellar: {
       config: {
         site: {
-          brand: { name: "Site", href: "/" }
+          brand: { name: "Site" }
         },
         resources: { fallbacks: { projectIcon: "/default.svg" } }
       },
       data: {
+        widgets: { ghuser: { username: " xaoxuu " } },
         wiki: { tree: {} },
         topic: { tree: {} },
         notebooks: {
@@ -180,21 +157,21 @@ test("Notebook 生成页 Brand 消费 stellarConfig 而非原始页面字段", (
   const helperPath = require.resolve("../scripts/helpers/brand");
   delete require.cache[helperPath];
   require(helperPath);
-  const brand = helpers.brandConfig({
+  const page = {
     layout: "notes",
     stellarConfig: {
       collection: { profile: "notebook", id: "dev" },
-      sidebar: { left: { brand: { tagline: { text: "Generated page", hover: null } } } }
+      regions: { leftbar: { brand: "collection_brand" } }
     }
-  });
+  };
 
-  assert.deepStrictEqual(brand, {
+  assert.deepStrictEqual(helpers.brandConfig(page, "site"), { name: "Site", href: "/" });
+  assert.deepStrictEqual(helpers.brandConfig(page, "collection"), {
     image: { src: "/dev.svg", variant: "icon" },
     name: "Dev Notes",
-    wordmark: null,
-    tagline: { text: "Generated page", hover: null },
     href: "notes/dev"
   });
+  assert.equal(helpers.brandGithubUsername(), "xaoxuu");
   delete require.cache[helperPath];
   global.hexo = previousHexo;
 });

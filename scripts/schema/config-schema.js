@@ -35,21 +35,25 @@ const PROFILE_LABELS = Object.freeze({
   note: "Note 内容页",
   author: "作者页",
   error: "错误页",
-  page: "独立页面"
+  page: "独立页面",
+  settings: "设置页"
 });
 
 const STRUCTURE_DESCRIPTIONS = Object.freeze({
-  "site.brand": "左侧栏顶部的站点品牌。",
+  "site.brand": "Brand 系统 Widget 使用的站点品牌业务数据。",
   "site.menu": "站点主导航菜单。",
-  "site.footer": "左侧栏操作与主内容区页脚。",
-  "layout.profiles": "各页面类型的路径、导航和侧栏默认值。",
+  "site.footer": "Actions 系统 Widget 与主内容区页脚使用的站点数据。",
+  "site.settings": "设置页的站点信息配置。",
+  "site.settings.about": "设置页 About 区的 KV 列表。",
+  "layout.regions": "站点级 Topbar、Leftbar 与 Rightbar Region。",
+  "layout.profiles": "各页面类型的路径、导航与 Region 默认值。",
   "content.article": "博客文章及文章列表的展示默认值。",
   "content.notebook": "Notebook 列表与页脚默认值。",
+  "appearance.preset": "独立于布局结构的视觉预设。",
   "appearance.typography": "正文、代码与标题的排版令牌。",
   "appearance.shape": "卡片、图片和栏目的形状令牌。",
   "appearance.colors": "主题主色、强调色和链接色。",
   "appearance.gradients": "主要交互、搜索栏和头像环渐变。",
-  "appearance.motion": "页面与头像动效策略。",
   "appearance.code_block": "代码块滚动条与高亮样式。",
   "appearance.backgrounds": "侧栏和页面背景。",
   "seo.canonical": "Canonical 主机与合法镜像主机。",
@@ -67,16 +71,25 @@ const STRUCTURE_DESCRIPTIONS = Object.freeze({
 const LEAF_DESCRIPTIONS = Object.freeze({
   "site.brand.image.src": "Brand 图片来源；null 隐藏图片且不会继承 Hexo avatar。",
   "site.brand.image.variant": "Brand 图片呈现方式。",
-  "site.brand.image.href": "点击 Brand 图片后的地址；null 表示不可点击。",
   "site.brand.name": "Brand 纯文本名称；null 隐藏名称且不会继承 Hexo title。",
-  "site.brand.wordmark": "替代纯文本名称的图片字标；null 不显示字标。",
-  "site.brand.tagline.text": "Brand 标语正文；null 隐藏标语且不会继承 Hexo subtitle。",
-  "site.brand.tagline.hover": "鼠标悬停 Brand 时显示的替代标语；null 不切换。",
-  "site.brand.href": "点击 Brand 名称或字标后的地址；null 表示不可点击。",
-  "site.menu.items": "主导航菜单项；空数组不显示主菜单。",
-  "site.footer.actions": "左侧栏底部操作；空数组不显示操作区。",
+  "site.brand.tagline": "Brand 标语；null 隐藏标语且不会继承 Hexo subtitle。",
+  "site.menu.items": "主导航菜单项；type: search 与链接共用 title、icon、accent 视觉字段并提供共享搜索入口，空数组不显示主菜单。",
+  "site.footer.actions": "Actions 系统 Widget 的操作项；空数组不显示操作区。",
   "site.footer.sections": "主内容区页脚导航分栏；空数组不显示分栏。",
   "site.footer.content": "页脚正文；支持 Markdown 与主题模板变量，空字符串不显示。",
+  "site.settings.about.items": "About KV 项；默认包含博客框架和主题版本，显式数组整体覆盖，空数组显示空状态。",
+  "site.settings.about.items[].key": "About 项左侧的普通文本名称。",
+  "site.settings.about.items[].value": "About 项右侧的普通文本值；支持 Hexo 与 Theme 模板变量。",
+  "site.settings.about.items[].url": "值后的独立图标链接；null 不渲染链接。",
+
+  "layout.regions.topbar.widgets": "站点级 Topbar Widget；按声明顺序显示。",
+  "layout.regions.leftbar.default_state": "桌面 Leftbar 首次访问时的默认状态。",
+  "layout.regions.leftbar.enabled": "是否生成站点级 Leftbar。",
+  "layout.regions.leftbar.brand": "Leftbar 固定 Brand 来源；false 隐藏 Brand。",
+  "layout.regions.leftbar.menu": "是否显示 Leftbar 固定 Menu。",
+  "layout.regions.leftbar.footer.actions": "是否显示 Leftbar Footer 固定 Actions。",
+  "layout.regions.leftbar.widgets": "站点级 Leftbar 内容 Widget；显式数组整体覆盖上层值。",
+  "layout.regions.rightbar.widgets": "站点级正文旁 Rightbar Widget；按声明顺序显示。",
 
   "content.article.style": "文章默认排版风格。",
   "content.article.paragraph_indent": "正文段落首行缩进策略。",
@@ -100,6 +113,7 @@ const LEAF_DESCRIPTIONS = Object.freeze({
   "content.notebook.footer.license": "Notebook 页脚许可声明；null 继承文章默认值，false 隐藏。",
   "content.notebook.footer.share": "Notebook 分享入口；null 继承文章默认值，空数组不显示。",
 
+  "appearance.preset": "构建期整站视觉预设；只编译一套语义视觉类实现，不写入 DOM 或 PageViewModel。",
   "appearance.color_scheme": "站点默认配色方案。",
   "appearance.typography.font_size.root": "页面根字号。",
   "appearance.typography.font_size.inline_code": "行内代码字号。",
@@ -124,20 +138,14 @@ const LEAF_DESCRIPTIONS = Object.freeze({
   "appearance.colors.link": "正文链接颜色。",
   "appearance.gradients.primary_action": "主要操作按钮渐变。",
   "appearance.gradients.search_bar": "搜索栏边框渐变。",
-  "appearance.gradients.avatar_ring": "头像装饰环渐变。",
-  "appearance.motion.avatar": "头像动效策略。",
   "appearance.code_block.scrollbar_width": "代码块滚动条宽度。",
   "appearance.code_block.highlight_stylesheet": "代码高亮样式表资源；null 不加载额外样式。",
-  "appearance.backgrounds.sidebar.surface": "侧栏背景表面样式。",
-  "appearance.backgrounds.sidebar.type": "侧栏装饰背景类型；分别使用艺术渐变、图片或纯色。",
-  "appearance.backgrounds.sidebar.color.light": "浅色模式侧栏背景色。",
-  "appearance.backgrounds.sidebar.color.dark": "深色模式侧栏背景色。",
-  "appearance.backgrounds.sidebar.image": "侧栏背景图片；留空不显示背景图。",
-  "appearance.backgrounds.sidebar.gradient.light": "浅色模式侧栏艺术渐变调色板；按基础色、左上、右中、左下提供四个 CSS 颜色。",
-  "appearance.backgrounds.sidebar.gradient.dark": "深色模式侧栏艺术渐变调色板；按基础色、左上、右中、左下提供四个 CSS 颜色。",
-  "appearance.backgrounds.sidebar.opacity": "侧栏背景不透明度。",
-  "appearance.backgrounds.sidebar.backdrop.radius": "侧栏背景模糊半径。",
-  "appearance.backgrounds.sidebar.backdrop.overlay": "侧栏背景遮罩颜色。",
+  "appearance.backgrounds.leftbar.type": "Glass 侧栏装饰背景类型；none 仅保留与 Topbar 相同的玻璃材质，无效字符串或缺少图片时回退艺术渐变，其他 Appearance 不消费。",
+  "appearance.backgrounds.leftbar.image": "侧栏背景图片；留空不显示背景图。",
+  "appearance.backgrounds.leftbar.gradient.light": "浅色模式侧栏艺术渐变调色板；按基础色、左上、右中、左下提供四个 CSS 颜色。",
+  "appearance.backgrounds.leftbar.gradient.dark": "深色模式侧栏艺术渐变调色板；按基础色、左上、右中、左下提供四个 CSS 颜色。",
+  "appearance.backgrounds.leftbar.opacity": "侧栏背景不透明度。",
+  "appearance.backgrounds.leftbar.backdrop.radius": "侧栏背景模糊半径。",
   "appearance.backgrounds.page.image": "页面背景图片；留空不显示背景图。",
   "appearance.backgrounds.page.backdrop.radius": "页面背景模糊半径。",
   "appearance.backgrounds.page.backdrop.overlay": "页面背景遮罩颜色。",
@@ -212,9 +220,7 @@ const LEAF_DESCRIPTIONS = Object.freeze({
 
 const YAML_EXAMPLES = Object.freeze({
   "site.brand.image.src": "/avatar.webp",
-  "site.brand.image.href": "/about/",
-  "site.brand.wordmark": "/wordmark.svg",
-  "site.menu.items": [{ id: "post", title: "博客", icon: "default:documents", url: "/", accent: "#1BCDFC" }],
+  "site.menu.items": [{ type: "search", title: "搜索", icon: "default:search" }, { id: "post", title: "博客", icon: "default:documents", url: "/", accent: "#1BCDFC" }],
   "site.footer.actions": [{ type: "link", icon: "default:github", title: "GitHub", url: "https://github.com/" }],
   "site.footer.sections": [{ title: "博客", items: [{ title: "归档", url: "/blog/archives/" }] }],
   "content.article.category_colors": { "探索号": "#f44336" },
@@ -232,9 +238,15 @@ function profileDescription(path) {
   if (!label) return null;
   const descriptions = {
     "navigation.active_menu": `${label}高亮的主菜单项；null 表示不高亮。`,
-    "navigation.tabs": `${label}顶部附加导航标签；空数组不添加。`,
-    "sidebar.left": `${label}左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。`,
-    "sidebar.right": `${label}右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。`,
+    "listing_nav.enabled": `${label}是否显示 Listing Nav。`,
+    "listing_nav.tabs": `${label}的 Listing Nav 附加导航项；空数组不添加。`,
+    "regions.topbar.widgets": `${label}显式覆盖的 Topbar Widgets。`,
+    "regions.leftbar.enabled": `${label}是否生成 Leftbar；null 继承上层。`,
+    "regions.leftbar.brand": `${label}固定 Brand 来源；false 隐藏，null 继承上层。`,
+    "regions.leftbar.menu": `${label}是否显示固定 Menu；null 继承上层。`,
+    "regions.leftbar.footer.actions": `${label}是否显示固定 Footer Actions；null 继承上层。`,
+    "regions.leftbar.widgets": `${label}显式覆盖的 Leftbar 内容 Widgets。`,
+    "regions.rightbar.widgets": `${label}显式覆盖的 Rightbar Widgets。`,
     path: `${label}的自动生成路径。`,
     "comments.enabled": "是否显示主页评论区。",
     "comments.title": "主页评论区标题；null 使用默认评论标题。",
@@ -371,12 +383,17 @@ const SITE_CONSUMERS = Object.freeze([
   "footer renderer",
   "Reference generator"
 ]);
+
+const DEFAULT_SETTINGS_ABOUT_ITEMS = deepFreeze([
+  { key: "博客框架", value: "Hexo {hexo.version}", url: "https://hexo.io/" },
+  { key: "主题版本", value: "Stellar {theme.version}", url: "{theme.tree}" }
+]);
 const LAYOUT_CONSUMERS = Object.freeze([
   "CollectionModel",
   "PageViewModel",
   "page generators",
   "navigation renderer",
-  "sidebar renderer",
+  "leftbar renderer",
   "Reference generator"
 ]);
 const PRECONNECT_CONSUMERS = Object.freeze(["head renderer", "Reference generator"]);
@@ -389,10 +406,12 @@ const CONTENT_CONSUMERS = Object.freeze([
   "Reference generator"
 ]);
 const APPEARANCE_CONSUMERS = Object.freeze([
-  "PageViewModel",
-  "layout renderer",
   "Stylus compiler",
   "browser theme state",
+  "Reference generator"
+]);
+const APPEARANCE_PRESET_CONSUMERS = Object.freeze([
+  "Stylus compiler",
   "Reference generator"
 ]);
 const RESOURCE_CONSUMERS = Object.freeze([
@@ -410,19 +429,20 @@ const EXTENSION_CONSUMERS = Object.freeze([
 ]);
 
 const LAYOUT_PROFILE_DEFAULTS = deepFreeze({
-  home: { path: null, activeMenu: "post", tabs: [], leftWidgets: ["welcome", "recent"], rightWidgets: [] },
-  blog_index: { path: "/blog/", activeMenu: "post", tabs: [], leftWidgets: ["welcome", "recent"], rightWidgets: [] },
-  topic_index: { path: "/topic/", activeMenu: "post", tabs: [], leftWidgets: ["welcome", "recent"], rightWidgets: [] },
-  wiki_index: { path: "/wiki/", activeMenu: "wiki", tabs: [], leftWidgets: ["related", "recent"], rightWidgets: [] },
-  post: { path: null, activeMenu: "post", tabs: [], leftWidgets: ["related", "recent"], rightWidgets: ["ghrepo", "toc"] },
-  topic: { path: null, activeMenu: "post", tabs: [], leftWidgets: ["related", "recent"], rightWidgets: ["ghrepo", "toc"] },
-  wiki: { path: null, activeMenu: "wiki", tabs: [], leftWidgets: ["tree", "related", "recent"], rightWidgets: ["ghrepo", "toc"] },
-  notebook_index: { path: "/notebooks/", activeMenu: "notebooks", tabs: [], leftWidgets: ["recent"], rightWidgets: [] },
-  note_index: { path: null, activeMenu: "notebooks", tabs: [], leftWidgets: ["tagtree", "recent"], rightWidgets: [] },
-  note: { path: null, activeMenu: "notebooks", tabs: [], leftWidgets: ["tagtree", "recent"], rightWidgets: ["toc"] },
-  author: { path: "/author/", activeMenu: "post", tabs: [], leftWidgets: ["recent"], rightWidgets: [] },
-  error: { path: "/404.html", activeMenu: "post", tabs: [], leftWidgets: ["recent"], rightWidgets: [] },
-  page: { path: null, activeMenu: "post", tabs: [], leftWidgets: ["recent"], rightWidgets: ["toc"] }
+  home: { path: null, activeMenu: "post", leftbar: ["recent"], rightbar: [] },
+  blog_index: { path: "/blog/", activeMenu: "post", listingNavEnabled: true, listingNavTabs: [], leftbar: ["recent"], rightbar: [] },
+  topic_index: { path: "/topic/", activeMenu: "post", leftbar: ["recent"], rightbar: [] },
+  wiki_index: { path: "/wiki/", activeMenu: "wiki", listingNavEnabled: true, listingNavTabs: [], leftbar: ["related", "recent"], rightbar: [] },
+  post: { path: null, activeMenu: "post", leftbar: ["related", "recent"], rightbar: ["ghrepo", "toc"] },
+  topic: { path: null, activeMenu: "post", leftbar: ["related", "recent"], rightbar: ["ghrepo", "toc"] },
+  wiki: { path: null, activeMenu: "wiki", topbar: [], leftbar: ["tree"], leftbarBrand: "collection_brand", leftbarMenu: false, leftbarActions: false, rightbar: ["ghrepo", "toc"] },
+  notebook_index: { path: "/notebooks/", activeMenu: "notebooks", leftbar: ["recent"], rightbar: [] },
+  note_index: { path: null, activeMenu: "notebooks", leftbar: ["tagtree", "recent"], leftbarBrand: "collection_brand", rightbar: [] },
+  note: { path: null, activeMenu: "notebooks", leftbar: ["tagtree", "recent"], leftbarBrand: "collection_brand", rightbar: ["toc"] },
+  author: { path: "/author/", activeMenu: "post", leftbar: ["recent"], rightbar: [] },
+  error: { path: "/404.html", activeMenu: "post", leftbar: ["recent"], rightbar: [] },
+  page: { path: null, activeMenu: "post", leftbar: ["recent"], rightbar: ["toc"] },
+  settings: { path: "/settings/", activeMenu: null, leftbar: [], rightbar: [] }
 });
 
 function extensionValue(type, defaultValue, options = {}) {
@@ -707,12 +727,97 @@ function runtimeProfileKey(profile) {
   return profile.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
 }
 
+function regionSchema(path, defaults = {}, options = {}) {
+  const properties = {};
+  if (options.allowDefaultState === true) {
+    properties.default_state = deliveredField(`${path}.default_state`, {
+      type: ["string"],
+      values: ["expanded", "collapsed"],
+      default: literal(defaults.defaultState || "expanded"),
+      normalizer: "identity",
+      example: "expanded"
+    });
+  }
+  if (options.leftbar === true) {
+    const shellDefault = (key, fallback) => options.siteLevel === true
+      ? (defaults[key] ?? fallback)
+      : (defaults[key] ?? null);
+    for (const [key, fallback] of [["enabled", true], ["brand", "site_brand"], ["menu", true]]) {
+      const brand = key === "brand";
+      properties[key] = deliveredField(`${path}.${key}`, {
+        type: brand
+          ? (options.siteLevel === true ? ["string", "boolean"] : ["string", "boolean", "null"])
+          : (options.siteLevel === true ? ["boolean"] : ["boolean", "null"]),
+        ...(brand ? { values: options.siteLevel === true
+          ? [false, "site_brand", "collection_brand"]
+          : [null, false, "site_brand", "collection_brand"] } : {}),
+        default: literal(shellDefault(key, fallback)),
+        normalizer: "identity",
+        example: fallback
+      });
+    }
+    properties.footer = object({
+      consumers: LAYOUT_CONSUMERS,
+      example: { actions: true },
+      migration: "configuration/layout-regions",
+      runtimeKey: "footer",
+      properties: {
+        actions: deliveredField(`${path}.footer.actions`, {
+          type: options.siteLevel === true ? ["boolean"] : ["boolean", "null"],
+          default: literal(options.siteLevel === true ? (defaults.actions ?? true) : (defaults.actions ?? null)),
+          normalizer: "identity",
+          example: true
+        })
+      }
+    });
+  }
+  properties.widgets = deliveredField(`${path}.widgets`, {
+    type: options.siteLevel === true ? ["array"] : ["array", "null"],
+    default: literal(options.siteLevel === true ? (defaults.widgets || []) : (defaults.widgets ?? null)),
+    items: { type: ["string", "object"] },
+    normalizer: options.siteLevel === true ? "array" : "identity",
+    validator: options.leftbar === true ? "leftbar_content_widgets" : "region_widgets",
+    example: defaults.widgets || []
+  });
+  return object({
+    consumers: LAYOUT_CONSUMERS,
+    example: { widgets: defaults.widgets || [] },
+    migration: "configuration/layout-regions",
+    normalizer: "region",
+    runtimeKey: path.split(".").at(-1),
+    removedProperties: { inherit: null },
+    properties
+  });
+}
+
+function regionsSchema(path, defaults = {}, options = {}) {
+  return object({
+    consumers: LAYOUT_CONSUMERS,
+    example: { leftbar: { widgets: ["site_brand", "menu"] } },
+    migration: "configuration/layout-regions",
+    runtimeKey: "regions",
+    removedProperties: { sidebar: "leftbar", context: "rightbar" },
+    properties: {
+      topbar: regionSchema(`${path}.topbar`, { widgets: defaults.topbar }, { siteLevel: options.siteLevel }),
+      leftbar: regionSchema(`${path}.leftbar`, {
+        widgets: defaults.leftbar || [],
+        enabled: defaults.leftbarEnabled,
+        brand: defaults.leftbarBrand,
+        menu: defaults.leftbarMenu,
+        actions: defaults.leftbarActions,
+        defaultState: defaults.defaultState
+      }, { leftbar: true, siteLevel: options.siteLevel, allowDefaultState: options.allowDefaultState }),
+      rightbar: regionSchema(`${path}.rightbar`, { widgets: defaults.rightbar }, { siteLevel: options.siteLevel })
+    }
+  });
+}
+
 function layoutProfileSchema(profile) {
   const base = `layout.profiles.${profile}`;
   const removedProperties = { base_dir: "path" };
   if (profile === "error") removedProperties["404"] = "path";
-  const hasPath = ["blog_index", "topic_index", "wiki_index", "notebook_index", "author", "error"].includes(profile);
-  const hasTabs = ["blog_index", "wiki_index"].includes(profile);
+  const hasPath = ["blog_index", "topic_index", "wiki_index", "notebook_index", "author", "error", "settings"].includes(profile);
+  const hasListingNav = ["blog_index", "wiki_index"].includes(profile);
 
   const properties = {
     navigation: object({
@@ -731,32 +836,10 @@ function layoutProfileSchema(profile) {
         })
       }
     }),
-    sidebar: object({
-      consumers: LAYOUT_CONSUMERS,
-      example: { left: ["recent"], right: ["toc"] },
-      migration: "configuration/layout",
-      runtimeKey: "sidebar",
-      removedProperties: { leftbar: "left", rightbar: "right" },
-      properties: {
-        left: deliveredField(`${base}.sidebar.left`, {
-          type: ["array"],
-          default: literal(LAYOUT_PROFILE_DEFAULTS[profile].leftWidgets),
-          items: { type: ["string", "object"] },
-          normalizer: "array",
-          example: ["recent"],
-          removedProperties: { widgets: "left" }
-        }),
-        right: deliveredField(`${base}.sidebar.right`, {
-          type: ["array"],
-          default: literal(LAYOUT_PROFILE_DEFAULTS[profile].rightWidgets),
-          items: { type: ["string", "object"] },
-          normalizer: "array",
-          example: ["toc"],
-          removedProperties: { widgets: "right" }
-        })
-      }
-    })
+    regions: regionsSchema(`${base}.regions`, LAYOUT_PROFILE_DEFAULTS[profile])
   };
+
+  removedProperties.sidebar = "regions";
 
   if (hasPath) {
     properties.path = deliveredField(`${base}.path`, {
@@ -764,41 +847,57 @@ function layoutProfileSchema(profile) {
       default: literal(LAYOUT_PROFILE_DEFAULTS[profile].path),
       normalizer: "root_relative_path",
       validator: "non_empty_string",
-      example: profile === "error" ? "/404.html" : "/blog/"
+      example: profile === "error" ? "/404.html" : (profile === "settings" ? "/settings/" : "/blog/")
     });
   } else {
     removedProperties.path = null;
   }
 
-  if (hasTabs) {
-    properties.navigation.properties.tabs = deliveredField(`${base}.navigation.tabs`, {
-      type: ["array"],
-      default: literal(LAYOUT_PROFILE_DEFAULTS[profile].tabs),
-      normalizer: "array",
-      validator: "navigation_tabs",
-      example: [{ title: "朋友文章", url: "/friends/rss/" }],
-      items: object({
-        consumers: LAYOUT_CONSUMERS,
-        example: { title: "朋友文章", url: "/friends/rss/" },
-        migration: "configuration/layout",
-        requiredProperties: ["title", "url"],
-        properties: {
-          title: deliveredField(`${base}.navigation.tabs[].title`, {
-            type: ["string"],
-            default: literal(""),
-            normalizer: "identity",
-            validator: "non_empty_string",
-            example: "朋友文章"
-          }),
-          url: deliveredField(`${base}.navigation.tabs[].url`, {
-            type: ["string"],
-            default: literal(""),
-            normalizer: "identity",
-            validator: "safe_navigation_url",
-            example: "/friends/rss/"
+  if (hasListingNav) {
+    properties.navigation.removedProperties.tabs = `${base}.listing_nav.tabs`;
+    properties.listing_nav = object({
+      description: `${PROFILE_LABELS[profile]} Listing Nav 配置。`,
+      consumers: LAYOUT_CONSUMERS,
+      example: { enabled: true, tabs: [{ title: "朋友文章", url: "/friends/rss/" }] },
+      migration: "configuration/layout",
+      runtimeKey: "listingNav",
+      properties: {
+        enabled: deliveredField(`${base}.listing_nav.enabled`, {
+          type: ["boolean"],
+          default: literal(LAYOUT_PROFILE_DEFAULTS[profile].listingNavEnabled),
+          normalizer: "identity",
+          example: true
+        }),
+        tabs: deliveredField(`${base}.listing_nav.tabs`, {
+          type: ["array"],
+          default: literal(LAYOUT_PROFILE_DEFAULTS[profile].listingNavTabs),
+          normalizer: "array",
+          validator: "navigation_tabs",
+          example: [{ title: "朋友文章", url: "/friends/rss/" }],
+          items: object({
+            consumers: LAYOUT_CONSUMERS,
+            example: { title: "朋友文章", url: "/friends/rss/" },
+            migration: "configuration/layout",
+            requiredProperties: ["title", "url"],
+            properties: {
+              title: deliveredField(`${base}.listing_nav.tabs[].title`, {
+                type: ["string"],
+                default: literal(""),
+                normalizer: "identity",
+                validator: "non_empty_string",
+                example: "朋友文章"
+              }),
+              url: deliveredField(`${base}.listing_nav.tabs[].url`, {
+                type: ["string"],
+                default: literal(""),
+                normalizer: "identity",
+                validator: "safe_navigation_url",
+                example: "/friends/rss/"
+              })
+            }
           })
-        }
-      })
+        })
+      }
     });
   } else {
     properties.navigation.removedProperties.tabs = null;
@@ -893,8 +992,9 @@ const CONFIG_SCHEMA = deepFreeze(annotateSchema({
     site: object({
       consumers: SITE_CONSUMERS,
       example: {
-        brand: { name: "Stellar", tagline: { text: "每个人的独立博客", hover: null }, href: "/" },
+        brand: { name: "Stellar", tagline: "每个人的独立博客" },
         menu: { items: [{ id: "post", title: "博客", icon: "default:documents", url: "/", accent: "#1BCDFC" }] },
+        settings: { about: { items: DEFAULT_SETTINGS_ABOUT_ITEMS } },
         footer: {
           actions: [],
           sections: [],
@@ -907,78 +1007,97 @@ const CONFIG_SCHEMA = deepFreeze(annotateSchema({
         brand: object({
           consumers: SITE_CONSUMERS,
           example: {
-            image: { src: "/avatar.webp", variant: "avatar", href: "/about/" },
+            image: { src: "/avatar.webp", variant: "avatar" },
             name: "Stellar",
-            wordmark: null,
-            tagline: { text: "每个人的独立博客", hover: null },
-            href: "/"
+            tagline: "每个人的独立博客"
           },
           migration: "configuration/site",
           runtimeKey: "brand",
           validator: "brand",
-          removedProperties: { url: "href" },
           properties: {
             image: object({
               consumers: SITE_CONSUMERS,
-              example: { src: "/avatar.webp", variant: "avatar", href: "/about/" },
+              example: { src: "/avatar.webp", variant: "avatar" },
               migration: "configuration/site",
               runtimeKey: "image",
-              removedProperties: { style: "variant", url: "href", background: null },
+              removedProperties: { style: "variant", background: null },
               properties: {
                 src: deliveredField("site.brand.image.src", { type: ["string","null"], default: literal(null),
                   normalizer: "identity",
                   validator: "nullable_non_empty_string",
                   example: "/avatar.webp"
                 }),
-                variant: deliveredField("site.brand.image.variant", { values: ["avatar","icon","plain"], type: ["string"], default: literal("avatar"), normalizer: "identity", example: "avatar" }),
-                href: deliveredField("site.brand.image.href", { type: ["string","null"], default: literal(null), normalizer: "identity", validator: "nullable_safe_navigation_url", example: "/about/" })
+                variant: deliveredField("site.brand.image.variant", { values: ["avatar","icon","plain"], type: ["string"], default: literal("avatar"), normalizer: "identity", example: "avatar" })
               }
             }),
             name: deliveredField("site.brand.name", { type: ["string","null"], default: literal(null),
               normalizer: "identity",
               example: "Stellar"
             }),
-            wordmark: deliveredField("site.brand.wordmark", { type: ["string","null"], default: literal(null), normalizer: "identity", validator: "nullable_non_empty_string", example: "/wordmark.svg" }),
-            tagline: object({
-              consumers: SITE_CONSUMERS,
-              example: { text: "每个人的独立博客", hover: "example.com" },
-              migration: "configuration/site",
-              runtimeKey: "tagline",
-              properties: {
-                text: deliveredField("site.brand.tagline.text", { type: ["string","null"], default: literal(null),
-                  normalizer: "identity",
-                  example: "每个人的独立博客"
-                }),
-                hover: deliveredField("site.brand.tagline.hover", { type: ["string","null"], default: literal(null), normalizer: "identity", example: "example.com" })
-              }
-            }),
-            href: deliveredField("site.brand.href", { type: ["string","null"], default: literal("/"), normalizer: "identity", validator: "nullable_safe_navigation_url", example: "/" })
+            tagline: deliveredField("site.brand.tagline", { type: ["string","null"], default: literal(null),
+              normalizer: "identity",
+              example: "每个人的独立博客"
+            })
           }
         }),
         menu: object({
           consumers: SITE_CONSUMERS,
-          example: { items: [{ id: "post", title: "博客", icon: "default:documents", url: "/", accent: "#1BCDFC" }] },
+          example: { items: [{ type: "search", title: "搜索", icon: "default:search" }, { id: "post", title: "博客", icon: "default:documents", url: "/", accent: "#1BCDFC" }] },
           migration: "configuration/site",
           runtimeKey: "menu",
           properties: {
-            items: deliveredField("site.menu.items", { type: ["array"], default: literal([]),
+            items: deliveredField("site.menu.items", { type: ["array"], default: literal([{ type: "search" }]),
               normalizer: "array",
               validator: "menu_items",
-              example: [{ id: "post", title: "博客", icon: "default:documents", url: "/", accent: "#1BCDFC" }],
+              example: [{ type: "search", title: "搜索", icon: "default:search" }, { id: "post", title: "博客", icon: "default:documents", url: "/", accent: "#1BCDFC" }],
               items: object({
                 consumers: SITE_CONSUMERS,
                 example: { id: "post", title: "博客", icon: "default:documents", url: "/", accent: "#1BCDFC" },
                 migration: "configuration/site",
                 removedProperties: { theme: "accent" },
-                requiredProperties: ["id", "url"],
+                normalizer: "menu_item",
                 properties: {
-                  id: deliveredField("site.menu.items[].id", { type: ["string"], default: literal(""), normalizer: "identity", validator: "kebab_id", example: "post" }),
-                  title: deliveredField("site.menu.items[].title", { type: ["string"], default: literal(""), normalizer: "identity", example: "博客" }),
+                  type: deliveredField("site.menu.items[].type", { type: ["string"], values: ["link", "search"], default: literal("link"), normalizer: "identity", example: "search" }),
+                  id: deliveredField("site.menu.items[].id", { type: ["string", "null"], default: literal(null), normalizer: "identity", validator: "nullable_kebab_id", example: "post" }),
+                  title: deliveredField("site.menu.items[].title", { type: ["string", "null"], default: literal(null), normalizer: "identity", example: "博客" }),
                   icon: deliveredField("site.menu.items[].icon", { type: ["string","null"], default: literal(null), normalizer: "identity", validator: "nullable_non_empty_string", example: "default:documents" }),
-                  url: deliveredField("site.menu.items[].url", { type: ["string"], default: literal(""), normalizer: "identity", validator: "safe_navigation_url", example: "/" }),
+                  url: deliveredField("site.menu.items[].url", { type: ["string", "null"], default: literal(null), normalizer: "identity", validator: "nullable_safe_navigation_url", example: "/" }),
                   accent: deliveredField("site.menu.items[].accent", { type: ["string","null"], default: literal(null), normalizer: "identity", validator: "nullable_css_color", example: "#1BCDFC" })
                 }
               })
+            })
+          }
+        }),
+        settings: object({
+          consumers: SITE_CONSUMERS,
+          example: { about: { items: DEFAULT_SETTINGS_ABOUT_ITEMS } },
+          migration: "configuration/site",
+          runtimeKey: "settings",
+          properties: {
+            about: object({
+              consumers: SITE_CONSUMERS,
+              example: { items: DEFAULT_SETTINGS_ABOUT_ITEMS },
+              migration: "configuration/site",
+              runtimeKey: "about",
+              properties: {
+                items: deliveredField("site.settings.about.items", {
+                  type: ["array"],
+                  default: literal(DEFAULT_SETTINGS_ABOUT_ITEMS),
+                  normalizer: "array",
+                  example: DEFAULT_SETTINGS_ABOUT_ITEMS,
+                  items: object({
+                    consumers: SITE_CONSUMERS,
+                    example: { key: "博客框架", value: "Hexo {hexo.version}", url: "https://hexo.io/" },
+                    migration: "configuration/site",
+                    requiredProperties: ["key", "value"],
+                    properties: {
+                      key: deliveredField("site.settings.about.items[].key", { type: ["string"], default: literal(""), normalizer: "identity", validator: "non_empty_string", example: "博客框架" }),
+                      value: deliveredField("site.settings.about.items[].value", { type: ["string"], default: literal(""), normalizer: "identity", validator: "non_empty_string", example: "Hexo {hexo.version}" }),
+                      url: deliveredField("site.settings.about.items[].url", { type: ["string", "null"], default: literal(null), normalizer: "identity", validator: "nullable_template_navigation_url", example: "https://hexo.io/" })
+                    }
+                  })
+                })
+              }
             })
           }
         }),
@@ -1065,10 +1184,17 @@ const CONFIG_SCHEMA = deepFreeze(annotateSchema({
     }),
     layout: object({
       consumers: LAYOUT_CONSUMERS,
-      example: { profiles: { blog_index: { path: "/blog/" } } },
+      example: { regions: { leftbar: { enabled: true, brand: "site_brand", menu: true, footer: { actions: true }, widgets: ["recent"] } }, profiles: { blog_index: { path: "/blog/" } } },
       migration: "configuration/layout",
       runtimeKey: "layout",
+      removedProperties: { sidebar: "regions" },
       properties: {
+        regions: regionsSchema("layout.regions", {
+          topbar: [],
+          leftbar: [],
+          rightbar: [],
+          defaultState: "expanded"
+        }, { siteLevel: true, allowDefaultState: true }),
         profiles: layoutProfilesSchema()
       }
     }),
@@ -1220,16 +1346,16 @@ const CONFIG_SCHEMA = deepFreeze(annotateSchema({
         "border-radius": "shape.radius",
         "corner-shape": "shape.corner",
         color: "colors",
-        animated_avatar: "motion.avatar",
         codeblock: "code_block",
         loading: "language files",
         gradient: "gradients",
-        leftbar: "backgrounds.sidebar",
+        leftbar: "backgrounds.leftbar",
         site: "backgrounds.page",
         header_prefix: "typography.heading_prefixes",
         error_page: "resources.error_page.image"
       },
       properties: {
+        preset: deliveredField("appearance.preset", { consumers: APPEARANCE_PRESET_CONSUMERS, values: ["card","glass","minimal","flat"], type: ["string"], default: literal("card"), normalizer: "identity", example: "glass" }),
         color_scheme: deliveredField("appearance.color_scheme", { values: ["auto","light","dark"], type: ["string"], default: literal("auto"), normalizer: "identity", example: "auto" }),
         typography: object({
           consumers: APPEARANCE_CONSUMERS,
@@ -1318,21 +1444,10 @@ const CONFIG_SCHEMA = deepFreeze(annotateSchema({
           example: { primary_action: "linear-gradient(to right, #00f, #0ff)" },
           migration: "configuration/appearance#gradients",
           runtimeKey: "gradients",
-          removedProperties: { start: "primary_action", searchbar: "search_bar", avatar: "avatar_ring", angle: null },
+          removedProperties: { start: "primary_action", searchbar: "search_bar", angle: null },
           properties: {
             primary_action: deliveredField("appearance.gradients.primary_action", { type: ["string"], default: literal("linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))"), normalizer: "identity", validator: "css_gradient", example: "linear-gradient(to right, #00f, #0ff)" }),
-            search_bar: deliveredField("appearance.gradients.search_bar", { type: ["string"], default: literal("linear-gradient(to right, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)"), normalizer: "identity", validator: "css_gradient", example: "linear-gradient(to right, #0ff, #f0f)" }),
-            avatar_ring: deliveredField("appearance.gradients.avatar_ring", { type: ["string"], default: literal("conic-gradient(from 0deg, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)"), normalizer: "identity", validator: "css_gradient", example: "conic-gradient(from 0deg, #0ff, #f0f, #0ff)" })
-          }
-        }),
-        motion: object({
-          consumers: APPEARANCE_CONSUMERS,
-          example: { avatar: "auto" },
-          migration: "configuration/appearance#motion",
-          runtimeKey: "motion",
-          removedProperties: { animated_avatar: "avatar", page_transition: null },
-          properties: {
-            avatar: deliveredField("appearance.motion.avatar", { values: ["auto","always","never"], type: ["string"], default: literal("auto"), normalizer: "identity", example: "auto" })
+            search_bar: deliveredField("appearance.gradients.search_bar", { type: ["string"], default: literal("linear-gradient(to right, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)"), normalizer: "identity", validator: "css_gradient", example: "linear-gradient(to right, #0ff, #f0f)" })
           }
         }),
         code_block: object({
@@ -1348,40 +1463,35 @@ const CONFIG_SCHEMA = deepFreeze(annotateSchema({
         }),
         backgrounds: object({
           consumers: APPEARANCE_CONSUMERS,
-          example: { sidebar: { surface: "glass", type: "gradient", opacity: 1 }, page: { image: null } },
+          example: { leftbar: { type: "gradient", opacity: 1 }, page: { image: null } },
           migration: "configuration/appearance#backgrounds",
           runtimeKey: "backgrounds",
-          removedProperties: { leftbar: "sidebar", site: "page" },
+          removedProperties: { sidebar: "leftbar", site: "page" },
           properties: {
-            sidebar: object({
+            leftbar: object({
               consumers: APPEARANCE_CONSUMERS,
-              example: { surface: "glass", type: "gradient", opacity: 1 },
+              example: { type: "gradient", opacity: 1 },
               migration: "configuration/appearance#backgrounds",
-              runtimeKey: "sidebar",
+              runtimeKey: "leftbar",
               removedProperties: {
-                "ui-style": "surface",
-                "background-color-light": "color.light",
-                "background-color-dark": "color.dark",
+                "ui-style": "appearance.preset",
+                surface: "appearance.preset",
                 "background-image": "image",
                 "background-opacity": "opacity",
                 "blur-px": "backdrop.radius",
-                "blur-bg": "backdrop.overlay",
+                "blur-bg": null,
                 blur: "backdrop"
               },
               properties: {
-                surface: deliveredField("appearance.backgrounds.sidebar.surface", { values: ["glass","card"], type: ["string"], default: literal("glass"), normalizer: "identity", example: "glass" }),
-                type: deliveredField("appearance.backgrounds.sidebar.type", { values: ["gradient","image","color"], type: ["string"], default: literal("gradient"), normalizer: "identity", example: "gradient" }),
-                color: object({
-                  consumers: APPEARANCE_CONSUMERS,
-                  example: { light: "var(--card)", dark: "var(--card)" },
-                  migration: "configuration/appearance#backgrounds",
-                  runtimeKey: "color",
-                  properties: {
-                    light: deliveredField("appearance.backgrounds.sidebar.color.light", { type: ["string"], default: literal("var(--card)"), normalizer: "identity", validator: "css_color", example: "var(--card)" }),
-                    dark: deliveredField("appearance.backgrounds.sidebar.color.dark", { type: ["string"], default: literal("var(--card)"), normalizer: "identity", validator: "css_color", example: "var(--card)" })
-                  }
+                type: deliveredField("appearance.backgrounds.leftbar.type", {
+                  values: ["none","gradient","image"],
+                  type: ["string"],
+                  default: literal("gradient"),
+                  normalizer: "leftbar_background_type",
+                  normalization: "preserve none, gradient, or image; fall back to gradient for unsupported strings; reject non-string values; deep-freeze the result",
+                  example: "gradient"
                 }),
-                image: deliveredField("appearance.backgrounds.sidebar.image", { type: ["string","null"], default: literal(null), normalizer: "identity", validator: "nullable_resource", example: "/sidebar.webp", yaml: { nullStyle: "empty" } }),
+                image: deliveredField("appearance.backgrounds.leftbar.image", { type: ["string","null"], default: literal(null), normalizer: "identity", validator: "nullable_resource", example: "/leftbar.webp", yaml: { nullStyle: "empty" } }),
                 gradient: object({
                   consumers: APPEARANCE_CONSUMERS,
                   example: {
@@ -1391,7 +1501,7 @@ const CONFIG_SCHEMA = deepFreeze(annotateSchema({
                   migration: "configuration/appearance#backgrounds",
                   runtimeKey: "gradient",
                   properties: {
-                    light: deliveredField("appearance.backgrounds.sidebar.gradient.light", {
+                    light: deliveredField("appearance.backgrounds.leftbar.gradient.light", {
                       type: ["array"],
                       default: literal(["hsl(210 32% 84%)", "hsl(188 44% 84%)", "hsl(12 64% 73%)", "hsl(35 100% 82%)"]),
                       items: { type: ["string"], normalizer: "identity", validator: "css_color" },
@@ -1400,7 +1510,7 @@ const CONFIG_SCHEMA = deepFreeze(annotateSchema({
                       validator: "sidebar_gradient_colors",
                       example: ["hsl(210 32% 84%)", "hsl(188 44% 84%)", "hsl(12 64% 73%)", "hsl(35 100% 82%)"]
                     }),
-                    dark: deliveredField("appearance.backgrounds.sidebar.gradient.dark", {
+                    dark: deliveredField("appearance.backgrounds.leftbar.gradient.dark", {
                       type: ["array"],
                       default: literal(["hsl(210 16% 48%)", "hsl(188 18% 50%)", "hsl(12 30% 42%)", "hsl(35 36% 49%)"]),
                       items: { type: ["string"], normalizer: "identity", validator: "css_color" },
@@ -1411,15 +1521,14 @@ const CONFIG_SCHEMA = deepFreeze(annotateSchema({
                     })
                   }
                 }),
-                opacity: deliveredField("appearance.backgrounds.sidebar.opacity", { minimum: 0, maximum: 1, type: ["number"], default: literal(1), normalizer: "identity", example: 1 }),
+                opacity: deliveredField("appearance.backgrounds.leftbar.opacity", { minimum: 0, maximum: 1, type: ["number"], default: literal(1), normalizer: "identity", example: 1 }),
                 backdrop: object({
                   consumers: APPEARANCE_CONSUMERS,
-                  example: { radius: "100px", overlay: "var(--bg-a50)" },
+                  example: { radius: "100px" },
                   migration: "configuration/appearance#backgrounds",
                   runtimeKey: "backdrop",
                   properties: {
-                    radius: deliveredField("appearance.backgrounds.sidebar.backdrop.radius", { type: ["string"], default: literal("100px"), normalizer: "identity", validator: "css_length", example: "100px" }),
-                    overlay: deliveredField("appearance.backgrounds.sidebar.backdrop.overlay", { type: ["string"], default: literal("var(--bg-a50)"), normalizer: "identity", validator: "css_color", example: "var(--bg-a50)" })
+                    radius: deliveredField("appearance.backgrounds.leftbar.backdrop.radius", { type: ["string"], default: literal("100px"), normalizer: "identity", validator: "css_length", example: "100px" })
                   }
                 })
               }

@@ -1,11 +1,10 @@
 site:
   brand:
     name: Product Docs
-    tagline:
-      text: Guides and reference in one place
-    href: /wiki/
+    tagline: Guides and reference in one place
   menu:
     items:
+      - type: search
       - id: wiki
         title: Docs
         icon: default:book
@@ -21,16 +20,19 @@ site:
             url: /wiki/docs-reference/getting-started/
 
 layout:
+  regions:
+    topbar: [site_brand, spacer, menu, actions]
   profiles:
     home:
       navigation:
         active_menu: wiki
-      sidebar:
-        left: [related, recent]
+      regions:
+        leftbar:
+          enabled: false
     wiki:
-      sidebar:
-        left: [tree, related]
-        right: [toc]
+      regions:
+        topbar:
+          widgets: [site_brand, spacer, menu, actions]
     blog_index:
       navigation:
         active_menu: wiki

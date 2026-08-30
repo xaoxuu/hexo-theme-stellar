@@ -86,9 +86,15 @@ head/SEO、site Shell、Layout Profile、内容默认值、Collection / Front Ma
 
 已交付的主题字段从 Schema 与 `_config.stellar.yml` 解析到冻结的 `hexo.stellar.config`；Collection YAML 与 Front Matter 分别解析为冻结的 camelCase 对象，由生成器、数据树、ViewModel 与按需插件消费。Hexo 自有 Front Matter 保持原名，不进入 Stellar Reference。
 
-Pre-alpha M3 的 Blueprint 只在 init 时把选择结果展开为上述显式配置，不增加 `blueprint` 或 `style` 配置根，也不参与运行时级联。`stellar doctor` 直接复用同一 Theme、Collection 与 Front Matter Schema 做只读检查；不存在 CLI 专用的第二套字段白名单。三套 Blueprint、两套 Visual Style 和命令契约的机器可读登记位于 `reference/v2-blueprints.json`。
+Blueprint 只在 init 时把选择结果展开为上述显式配置，不增加 `blueprint` 或 `style` 配置根，也不参与运行时级联。`stellar doctor` 直接复用同一 Theme、Collection 与 Front Matter Schema 做只读检查；不存在 CLI 专用的第二套字段白名单。四套 Blueprint、四套 Visual Style 和命令契约的机器可读登记位于 `reference/v2-blueprints.json`。
 
-Pre-alpha M9 允许 `_config.stellar.yml` 缺失或为空：Schema 默认值仍生成完整站点，doctor 会明确显示正在检查 `Schema defaults`。Blueprint 输出不得重复 Schema 默认值；默认 `stellar` Visual Style 是空覆盖，只有真实产品差异才写入站点配置。普通 Post/Page 只需 Hexo 自有最小 Front Matter，Collection 内容的唯一候选归属与冲突诊断由构建和 doctor 共用同一解析器。
+Pre-alpha M9 允许 `_config.stellar.yml` 缺失或为空：Schema 默认值仍生成完整站点，doctor 会明确显示正在检查 `Schema defaults`。Blueprint 输出不得重复 Schema 默认值，Visual Style 只写真实 Appearance 差异。普通 Post/Page 只需 Hexo 自有最小 Front Matter，Collection 内容的唯一候选归属与冲突诊断由构建和 doctor 共用同一解析器。
+
+### 空键语义
+
+YAML 允许先写字段名、暂不填值，此时该键会解析为 `null`。在主题 `_config.stellar.yml` 中，如果字段声明的类型不包含 `null`，这种空键等同于未配置，解析器使用 Schema 默认值。对象、数组、布尔、数字和字符串都遵循同一规则，因此 `topbar:`、`widgets:` 或 `default_state:` 留空不会中断构建或热重载。
+
+如果字段类型明确包含 `null`，空值仍保留其业务语义，例如 `extensions.search.provider: null` 表示关闭搜索。非空的错误类型、未知字段和非法枚举仍会由 Schema 拒绝。
 
 ## 配置文件结构
 
@@ -116,7 +122,7 @@ Pre-alpha M9 允许 `_config.stellar.yml` 缺失或为空：Schema 默认值仍�
 
 主题 `_config.yml` 是 `CONFIG_SCHEMA` 的生成产物和用户可阅读的配置入口。每个封闭的主题级公开字段都以活动 YAML 键出现；每个活动叶子必须具有说明用途与空值行为的语义描述，类型、枚举、范围和数组元素提示由 Schema 约束自动生成。结构节点只在承担分组语义时显示注释，YAML 示例也必须显式登记，不会用字段路径复述用途或把一个 Profile 的示例复用到其它上下文。修改 Schema 后运行 `npm run schema:generate` 同步默认 YAML、Reference 与字段审计，`npm run schema:check` 会阻断描述缺失和产物漂移。
 
-`site.brand.image.src`、`site.brand.name`、`site.brand.tagline.text` 的默认值均为字面量 `null`，不会读取 Hexo 的 `avatar/title/subtitle`；需要全局 Brand 时必须在站点 `_config.stellar.yml` 中显式填写。第三方 provider 参数袋只声明“透传给上游”并展示常用参数，不复制外部 SDK 的全部字段；主题内部常量不是公开配置。Collection YAML 与 Front Matter 属于独立配置边界，由相应 Reference 和内容文档说明，不混入主题 `_config.yml`。
+`site.brand.image.src`、`site.brand.name`、`site.brand.tagline` 的默认值均为字面量 `null`，不会读取 Hexo 的 `avatar/title/subtitle`；需要全局 Brand 时必须在站点 `_config.stellar.yml` 中显式填写。第三方 provider 参数袋只声明“透传给上游”并展示常用参数，不复制外部 SDK 的全部字段；主题内部常量不是公开配置。Collection YAML 与 Front Matter 属于独立配置边界，由相应 Reference 和内容文档说明，不混入主题 `_config.yml`。
 
 **参考源码**：[_config.yml](../../../_config.yml)、[test/config-discoverability.test.js](../../../test/config-discoverability.test.js)
 
@@ -148,7 +154,7 @@ extensions:
       enabled: false
 ```
 
-启用后提供 `window.setColorScheme('light' | 'dark' | 'auto')`。Footer Dropdown 的三项确定选择示例见[侧栏系统](../02-布局系统/sidebar-system.md#左栏footer-actions)。模块契约、存储键与事件见[前端交互概览](../05-前端交互/client-side-overview.md#可选配色选择器)。
+启用后提供 `window.setColorScheme('light' | 'dark' | 'auto')`。Footer Dropdown 的三项确定选择示例见[页脚配置](#页脚配置)。模块契约、存储键与事件见[前端交互概览](../05-前端交互/client-side-overview.md#可选配色选择器)。
 
 **参考源码**：[_config.yml](../../../_config.yml)、[source/js/runtime/extensions/color-scheme-switch.mjs](../../../source/js/runtime/extensions/color-scheme-switch.mjs)
 
@@ -192,14 +198,16 @@ graph LR
 3. **布局级**：`hexo.stellar.config.layout.profiles.wiki.navigation.activeMenu`
 4. **全局兜底**：`undefined`
 
-### 示例：侧边栏小部件分配
+### 示例：Region Widget 分配
 
-侧边栏小部件遵循同样模式：
+Region Widget 遵循统一级联：
 
-1. **页面级**：`page.sidebar.left.widgets` / `page.sidebar.right.widgets`（front-matter）
-2. **笔记本级**：笔记页使用笔记本 YAML 中的 `note_defaults.sidebar.left/right.widgets`
-3. **布局级**：`hexo.stellar.config.layout.profiles[profile].sidebar.left/right.widgets`
-4. **默认**：空侧边栏
+1. **站点级**：`layout.regions.<region>.widgets`
+2. **布局级**：`layout.profiles[profile].regions.<region>.widgets`
+3. **集合级**：Collection YAML 的 `regions.<region>.widgets`
+4. **页面级**：Front Matter 的 `regions.<region>.widgets`
+
+每层默认追加；`inherit: false` 先清空已有数组。Notebook 的具体 Note 使用 `note_defaults.regions` 插入集合层。
 
 **参考源码**：[_config.yml](../../../_config.yml)（`layout.profiles` 小节）
 
@@ -272,7 +280,7 @@ site:
 
 Brand 图片展示变体使用 `image.variant`（`avatar/icon/plain`），图片和标题链接分别写入 `image.href` 与根级 `href`；`name` 只接受纯文本，HTML 字标使用 `wordmark`。菜单是有序对象数组，`id` 必须唯一且为 kebab-case，`url` 必须是安全导航地址，空标题必须配图标，`accent` 必须是 CSS Color。Footer `actions` 是 `link/dropdown/spacer` 判别联合数组，不接受 JavaScript；`sections.items` 使用 `{title,url}` 对象。`content` 保留可信 Markdown 原文。
 
-解析后 JavaScript 只消费冻结的 `hexo.stellar.config.site`；菜单与 Footer 不再直接读取 `theme.menubar/footer`，Post 与 Topic 的全局 Brand 也不再从 `theme.brand` 推断。Collection 与 Front Matter 的 Brand 覆盖仍在内容边界适配，最终字段收敛留给后续切片。
+解析后 JavaScript 只消费冻结的 `hexo.stellar.config.site`；菜单与 Footer 不再直接读取旧配置。Brand、Menu 与 Actions 的业务数据和显示位置分离，由系统 Widget 放入 Region；Collection/Page 不再维护位置绑定的 Brand 覆盖。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
@@ -286,8 +294,9 @@ Brand 图片展示变体使用 `image.variant`（`avatar/icon/plain`），图片
 |------|------|------|
 | `path` | String | 仅六个真实生成器 Profile 可用：`blog_index/topic_index/wiki_index/notebook_index/author/error` |
 | `navigation.active_menu` | String / null | 要高亮的 `site.menu.items[].id` |
-| `sidebar.left` | Array | 左栏小部件列表 |
-| `sidebar.right` | Array | 右栏小部件列表 |
+| `regions.topbar` | Object | 顶部横向 Widget Region |
+| `regions.leftbar` | Object / Array / null | 可折叠 Leftbar Widget Region；数组为简写，空值等同未配置 |
+| `regions.rightbar` | Object / Array / null | 正文旁 Rightbar Widget Region；仅其中的 TOC Sticky |
 | `navigation.tabs` | Array | 仅 `blog_index/wiki_index` 可用的 `{title,url}` 次级导航数组 |
 
 #### 示例：博客文章布局
@@ -298,16 +307,18 @@ layout:
     post:
       navigation:
         active_menu: post
-      sidebar:
-        left: [related, recent]
-        right: [ghrepo, toc]
+      regions:
+        leftbar:
+          widgets: [related, recent]
+        rightbar:
+          widgets: [ghrepo, toc]
 ```
 
 所有博客文章（`layout: post`）将：
 
 - 高亮 `post` 菜单栏项
-- 左栏显示 `related`、`recent` 小部件
-- 右栏显示 `ghrepo`、`toc` 小部件
+- Leftbar 显示 `related`、`recent` Widget
+- Rightbar 显示 `ghrepo`、`toc` Widget
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
@@ -321,19 +332,22 @@ layout:
       navigation:
         active_menu: wiki
         tabs: []
-      sidebar:
-        left: [related, recent]
-        right: []
+      regions:
+        leftbar: [related, recent]
+        rightbar: []
 
     wiki:
       navigation:
         active_menu: wiki
-      sidebar:
-        left: [tree, related, recent]
-        right: [ghrepo, toc]
+      regions:
+        topbar: [spacer, menu, actions]
+        leftbar:
+          inherit: false
+          widgets: [wiki_home, search, brand, tree]
+        rightbar: [ghrepo, toc]
 ```
 
-`wiki_index` 定义 wiki 列表页，`wiki` 定义单个 wiki 页面。所有数组在站点层完整替换；`active_menu` 在菜单非空时必须引用真实菜单 ID。旧 `site_tree`、`base_dir`、`navigation.menu` 与旧 Profile ID 不保留兼容读取。
+`wiki_index` 定义 Wiki 列表页，`wiki` 定义单个 Wiki 页面。Region 默认按层追加，只有 `inherit: false` 会先清空此前结果；`active_menu` 在菜单非空时必须引用真实菜单 ID。旧 `site_tree`、`base_dir`、`navigation.menu` 与旧 Profile ID 不保留兼容读取。
 
 **参考源码**：[_config.yml](../../../_config.yml)
 
@@ -452,7 +466,7 @@ site:
 
 dropdown 子项图标可省略。菜单不关联语言或其它业务场景，也不支持嵌套；打开后挂载到 `body` 下的全局浮层，并根据触发按钮周围的可用空间自动调整上下和左右位置。菜单自身声明 glass surface，条目复用通用 collection list 的结构与交互样式。
 
-**参考源码**：[_config.yml](../../../_config.yml)、[layout/_partial/sidebar/index_leftbar.ejs](../../../layout/_partial/sidebar/index_leftbar.ejs)、[layout/_partial/dropdown.ejs](../../../layout/_partial/dropdown.ejs)、[layout/_partial/main/footer.ejs](../../../layout/_partial/main/footer.ejs)
+**参考源码**：[_config.yml](../../../_config.yml)、[layout/_partial/regions/widgets.ejs](../../../layout/_partial/regions/widgets.ejs)、[layout/_partial/widgets/actions.ejs](../../../layout/_partial/widgets/actions.ejs)、[layout/_partial/dropdown.ejs](../../../layout/_partial/dropdown.ejs)、[layout/_partial/main/footer.ejs](../../../layout/_partial/main/footer.ejs)
 
 ### Appearance 与资源兜底
 
@@ -468,7 +482,7 @@ graph TB
         FONTFAMILY["typography.font_family"]
         BORDER["shape.radius"]
         COLOR["colors: theme, accent, link"]
-        LEFTBAR["backgrounds.sidebar/page"]
+        LEFTBAR["backgrounds.leftbar/page"]
         GRADIENT["gradients"]
     end
     
@@ -480,7 +494,7 @@ graph TB
     subgraph "Component Consumption"
         LAYOUT["Layout styles"]
         MDTEXT["Markdown content styles"]
-        SIDEBAR["Sidebar styles"]
+        SIDEBAR["Leftbar styles"]
         CODEBLOCK["Code block styles"]
     end
     
@@ -614,38 +628,18 @@ hexo.stellar.data.wiki.tree
 
 ## 配置解析示例
 
-下面是系统为 wiki 页面解析配置的过程：
+下面是系统为 Wiki 页面解析 Region 的过程：
 
 ```mermaid
 flowchart TD
-    START["Wiki page requested<br/>layout: wiki<br/>wiki_name: stellar"]
-    
-    CHECK_MENU["Resolve active menu"]
-    PAGE_MENU{"page navigation<br/>override exists?"}
-    PROJ_MENU{"wiki collection<br/>navigation exists?"}
-    LAYOUT_MENU["Use layout.profiles.wiki<br/>.navigation.active_menu"]
-    
-    CHECK_SIDEBAR["Resolve leftbar widgets"]
-    PAGE_LB{"page.leftbar<br/>exists?"}
-    PROJ_LB{"wiki.tree[stellar]<br/>.leftbar exists?"}
-    LAYOUT_LB["Use layout.profiles.wiki<br/>.sidebar.left.widgets"]
-    
-    RENDER["Render page with<br/>menu_id + leftbar"]
-    
-    START --> CHECK_MENU
-    CHECK_MENU --> PAGE_MENU
-    PAGE_MENU -->|"Yes"| CHECK_SIDEBAR
-    PAGE_MENU -->|"No"| PROJ_MENU
-    PROJ_MENU -->|"Yes"| CHECK_SIDEBAR
-    PROJ_MENU -->|"No"| LAYOUT_MENU
-    LAYOUT_MENU --> CHECK_SIDEBAR
-    
-    CHECK_SIDEBAR --> PAGE_LB
-    PAGE_LB -->|"Yes"| RENDER
-    PAGE_LB -->|"No"| PROJ_LB
-    PROJ_LB -->|"Yes"| RENDER
-    PROJ_LB -->|"No"| LAYOUT_LB
-    LAYOUT_LB --> RENDER
+    START["Wiki Page"] --> GLOBAL["layout.regions"]
+    GLOBAL --> PROFILE["layout.profiles.wiki.regions"]
+    PROFILE --> COLLECTION["Collection regions"]
+    COLLECTION --> PAGE["Page regions"]
+    PAGE --> CAPABILITY["Widget presentation capability"]
+    CAPABILITY -->|"supported"| MODEL["Frozen PageViewModel regions"]
+    CAPABILITY -->|"unsupported"| WARNING["warning + skip instance"]
+    MODEL --> RENDER["Topbar / Leftbar / Rightbar"]
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)

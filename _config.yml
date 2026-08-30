@@ -5,7 +5,7 @@
 
 # 站点身份、菜单与 Footer。 [对象]
 site:
-  # 左侧栏顶部的站点品牌。 [对象]
+  # Brand 系统 Widget 使用的站点品牌业务数据。 [对象]
   brand:
     image:
       # Brand 图片来源；null 隐藏图片且不会继承 Hexo avatar。 [字符串或null]
@@ -14,32 +14,26 @@ site:
       src: null
       # Brand 图片呈现方式。 [字符串；可选值：avatar / icon / plain]
       variant: avatar
-      # 点击 Brand 图片后的地址；null 表示不可点击。 [字符串或null]
-      # Example:
-      #   /about/
-      href: null
     # Brand 纯文本名称；null 隐藏名称且不会继承 Hexo title。 [字符串或null]
     name: null
-    # 替代纯文本名称的图片字标；null 不显示字标。 [字符串或null]
-    # Example:
-    #   /wordmark.svg
-    wordmark: null
-    tagline:
-      # Brand 标语正文；null 隐藏标语且不会继承 Hexo subtitle。 [字符串或null]
-      text: null
-      # 鼠标悬停 Brand 时显示的替代标语；null 不切换。 [字符串或null]
-      hover: null
-    # 点击 Brand 名称或字标后的地址；null 表示不可点击。 [字符串或null]
-    href: /
+    # Brand 标语；null 隐藏标语且不会继承 Hexo subtitle。 [字符串或null]
+    tagline: null
   # 站点主导航菜单。 [对象]
   menu:
-    # 主导航菜单项；空数组不显示主菜单。 [数组；元素：对象]
+    # 主导航菜单项；type: search 与链接共用 title、icon、accent 视觉字段并提供共享搜索入口，空数组不显示主菜单。 [数组；元素：对象]
     # Example:
+    #   - {type: search, title: 搜索, icon: default:search}
     #   - {id: post, title: 博客, icon: default:documents, url: /, accent: '#1BCDFC'}
-    items: []
-  # 左侧栏操作与主内容区页脚。 [对象]
+    items: [{type: search}]
+  # 设置页的站点信息配置。 [对象]
+  settings:
+    # 设置页 About 区的 KV 列表。 [对象]
+    about:
+      # About KV 项；默认包含博客框架和主题版本，显式数组整体覆盖，空数组显示空状态。 [数组；元素：对象]
+      items: [{key: 博客框架, value: 'Hexo {hexo.version}', url: https://hexo.io/}, {key: 主题版本, value: 'Stellar {theme.version}', url: '{theme.tree}'}]
+  # Actions 系统 Widget 与主内容区页脚使用的站点数据。 [对象]
   footer:
-    # 左侧栏底部操作；空数组不显示操作区。 [数组；元素：对象]
+    # Actions 系统 Widget 的操作项；空数组不显示操作区。 [数组；元素：对象]
     # Example:
     #   - {type: link, icon: default:github, title: GitHub, url: https://github.com/}
     actions: []
@@ -52,18 +46,54 @@ site:
 
 # 页面 Profile 的路由、导航与侧边栏默认值。 [对象]
 layout:
-  # 各页面类型的路径、导航和侧栏默认值。 [对象]
+  # 站点级 Topbar、Leftbar 与 Rightbar Region。 [对象]
+  regions:
+    topbar:
+      # 站点级 Topbar Widget；按声明顺序显示。 [数组；元素：字符串或对象]
+      widgets: []
+    leftbar:
+      # 桌面 Leftbar 首次访问时的默认状态。 [字符串；可选值：expanded / collapsed]
+      default_state: expanded
+      # 是否生成站点级 Leftbar。 [布尔值]
+      enabled: true
+      # Leftbar 固定 Brand 来源；false 隐藏 Brand。 [字符串或布尔值；可选值：false / site_brand / collection_brand]
+      brand: site_brand
+      # 是否显示 Leftbar 固定 Menu。 [布尔值]
+      menu: true
+      footer:
+        # 是否显示 Leftbar Footer 固定 Actions。 [布尔值]
+        actions: true
+      # 站点级 Leftbar 内容 Widget；显式数组整体覆盖上层值。 [数组；元素：字符串或对象]
+      widgets: []
+    rightbar:
+      # 站点级正文旁 Rightbar Widget；按声明顺序显示。 [数组；元素：字符串或对象]
+      widgets: []
+  # 各页面类型的路径、导航与 Region 默认值。 [对象]
   profiles:
     # 主页的布局默认值。 [对象]
     home:
       navigation:
         # 主页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: post
-      sidebar:
-        # 主页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
-        left: [welcome, recent]
-        # 主页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
-        right: []
+      regions:
+        topbar:
+          # 主页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: null
+        leftbar:
+          # 主页是否生成 Leftbar；null 继承上层。 [布尔值或null]
+          enabled: null
+          # 主页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
+          brand: null
+          # 主页是否显示固定 Menu；null 继承上层。 [布尔值或null]
+          menu: null
+          footer:
+            # 主页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
+            actions: null
+          # 主页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [recent]
+        rightbar:
+          # 主页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: []
       comments:
         # 是否显示主页评论区。 [布尔值]
         enabled: false
@@ -80,25 +110,57 @@ layout:
       navigation:
         # 博客列表页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: post
-        # 博客列表页顶部附加导航标签；空数组不添加。 [数组；元素：对象]
-        tabs: []
-      sidebar:
-        # 博客列表页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
-        left: [welcome, recent]
-        # 博客列表页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
-        right: []
+      regions:
+        topbar:
+          # 博客列表页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: null
+        leftbar:
+          # 博客列表页是否生成 Leftbar；null 继承上层。 [布尔值或null]
+          enabled: null
+          # 博客列表页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
+          brand: null
+          # 博客列表页是否显示固定 Menu；null 继承上层。 [布尔值或null]
+          menu: null
+          footer:
+            # 博客列表页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
+            actions: null
+          # 博客列表页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [recent]
+        rightbar:
+          # 博客列表页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: []
       # 博客列表页的自动生成路径。 [字符串]
       path: /blog/
+      # 博客列表页 Listing Nav 配置。 [对象]
+      listing_nav:
+        # 博客列表页是否显示 Listing Nav。 [布尔值]
+        enabled: true
+        # 博客列表页的 Listing Nav 附加导航项；空数组不添加。 [数组；元素：对象]
+        tabs: []
     # 专栏列表页的布局默认值。 [对象]
     topic_index:
       navigation:
         # 专栏列表页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: post
-      sidebar:
-        # 专栏列表页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
-        left: [welcome, recent]
-        # 专栏列表页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
-        right: []
+      regions:
+        topbar:
+          # 专栏列表页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: null
+        leftbar:
+          # 专栏列表页是否生成 Leftbar；null 继承上层。 [布尔值或null]
+          enabled: null
+          # 专栏列表页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
+          brand: null
+          # 专栏列表页是否显示固定 Menu；null 继承上层。 [布尔值或null]
+          menu: null
+          footer:
+            # 专栏列表页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
+            actions: null
+          # 专栏列表页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [recent]
+        rightbar:
+          # 专栏列表页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: []
       # 专栏列表页的自动生成路径。 [字符串]
       path: /topic/
     # Wiki 列表页的布局默认值。 [对象]
@@ -106,55 +168,129 @@ layout:
       navigation:
         # Wiki 列表页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: wiki
-        # Wiki 列表页顶部附加导航标签；空数组不添加。 [数组；元素：对象]
-        tabs: []
-      sidebar:
-        # Wiki 列表页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
-        left: [related, recent]
-        # Wiki 列表页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
-        right: []
+      regions:
+        topbar:
+          # Wiki 列表页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: null
+        leftbar:
+          # Wiki 列表页是否生成 Leftbar；null 继承上层。 [布尔值或null]
+          enabled: null
+          # Wiki 列表页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
+          brand: null
+          # Wiki 列表页是否显示固定 Menu；null 继承上层。 [布尔值或null]
+          menu: null
+          footer:
+            # Wiki 列表页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
+            actions: null
+          # Wiki 列表页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [related, recent]
+        rightbar:
+          # Wiki 列表页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: []
       # Wiki 列表页的自动生成路径。 [字符串]
       path: /wiki/
+      # Wiki 列表页 Listing Nav 配置。 [对象]
+      listing_nav:
+        # Wiki 列表页是否显示 Listing Nav。 [布尔值]
+        enabled: true
+        # Wiki 列表页的 Listing Nav 附加导航项；空数组不添加。 [数组；元素：对象]
+        tabs: []
     # 博客文章页的布局默认值。 [对象]
     post:
       navigation:
         # 博客文章页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: post
-      sidebar:
-        # 博客文章页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
-        left: [related, recent]
-        # 博客文章页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
-        right: [ghrepo, toc]
+      regions:
+        topbar:
+          # 博客文章页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: null
+        leftbar:
+          # 博客文章页是否生成 Leftbar；null 继承上层。 [布尔值或null]
+          enabled: null
+          # 博客文章页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
+          brand: null
+          # 博客文章页是否显示固定 Menu；null 继承上层。 [布尔值或null]
+          menu: null
+          footer:
+            # 博客文章页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
+            actions: null
+          # 博客文章页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [related, recent]
+        rightbar:
+          # 博客文章页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [ghrepo, toc]
     # 专栏文章页的布局默认值。 [对象]
     topic:
       navigation:
         # 专栏文章页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: post
-      sidebar:
-        # 专栏文章页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
-        left: [related, recent]
-        # 专栏文章页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
-        right: [ghrepo, toc]
+      regions:
+        topbar:
+          # 专栏文章页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: null
+        leftbar:
+          # 专栏文章页是否生成 Leftbar；null 继承上层。 [布尔值或null]
+          enabled: null
+          # 专栏文章页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
+          brand: null
+          # 专栏文章页是否显示固定 Menu；null 继承上层。 [布尔值或null]
+          menu: null
+          footer:
+            # 专栏文章页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
+            actions: null
+          # 专栏文章页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [related, recent]
+        rightbar:
+          # 专栏文章页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [ghrepo, toc]
     # Wiki 内容页的布局默认值。 [对象]
     wiki:
       navigation:
         # Wiki 内容页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: wiki
-      sidebar:
-        # Wiki 内容页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
-        left: [tree, related, recent]
-        # Wiki 内容页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
-        right: [ghrepo, toc]
+      regions:
+        topbar:
+          # Wiki 内容页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: []
+        leftbar:
+          # Wiki 内容页是否生成 Leftbar；null 继承上层。 [布尔值或null]
+          enabled: null
+          # Wiki 内容页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
+          brand: collection_brand
+          # Wiki 内容页是否显示固定 Menu；null 继承上层。 [布尔值或null]
+          menu: false
+          footer:
+            # Wiki 内容页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
+            actions: false
+          # Wiki 内容页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [tree]
+        rightbar:
+          # Wiki 内容页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [ghrepo, toc]
     # Notebook 总索引的布局默认值。 [对象]
     notebook_index:
       navigation:
         # Notebook 总索引高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: notebooks
-      sidebar:
-        # Notebook 总索引左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
-        left: [recent]
-        # Notebook 总索引右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
-        right: []
+      regions:
+        topbar:
+          # Notebook 总索引显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: null
+        leftbar:
+          # Notebook 总索引是否生成 Leftbar；null 继承上层。 [布尔值或null]
+          enabled: null
+          # Notebook 总索引固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
+          brand: null
+          # Notebook 总索引是否显示固定 Menu；null 继承上层。 [布尔值或null]
+          menu: null
+          footer:
+            # Notebook 总索引是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
+            actions: null
+          # Notebook 总索引显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [recent]
+        rightbar:
+          # Notebook 总索引显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: []
       # Notebook 总索引的自动生成路径。 [字符串]
       path: /notebooks/
     # Notebook 列表页的布局默认值。 [对象]
@@ -162,31 +298,73 @@ layout:
       navigation:
         # Notebook 列表页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: notebooks
-      sidebar:
-        # Notebook 列表页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
-        left: [tagtree, recent]
-        # Notebook 列表页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
-        right: []
+      regions:
+        topbar:
+          # Notebook 列表页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: null
+        leftbar:
+          # Notebook 列表页是否生成 Leftbar；null 继承上层。 [布尔值或null]
+          enabled: null
+          # Notebook 列表页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
+          brand: collection_brand
+          # Notebook 列表页是否显示固定 Menu；null 继承上层。 [布尔值或null]
+          menu: null
+          footer:
+            # Notebook 列表页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
+            actions: null
+          # Notebook 列表页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [tagtree, recent]
+        rightbar:
+          # Notebook 列表页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: []
     # Note 内容页的布局默认值。 [对象]
     note:
       navigation:
         # Note 内容页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: notebooks
-      sidebar:
-        # Note 内容页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
-        left: [tagtree, recent]
-        # Note 内容页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
-        right: [toc]
+      regions:
+        topbar:
+          # Note 内容页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: null
+        leftbar:
+          # Note 内容页是否生成 Leftbar；null 继承上层。 [布尔值或null]
+          enabled: null
+          # Note 内容页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
+          brand: collection_brand
+          # Note 内容页是否显示固定 Menu；null 继承上层。 [布尔值或null]
+          menu: null
+          footer:
+            # Note 内容页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
+            actions: null
+          # Note 内容页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [tagtree, recent]
+        rightbar:
+          # Note 内容页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [toc]
     # 作者页的布局默认值。 [对象]
     author:
       navigation:
         # 作者页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: post
-      sidebar:
-        # 作者页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
-        left: [recent]
-        # 作者页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
-        right: []
+      regions:
+        topbar:
+          # 作者页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: null
+        leftbar:
+          # 作者页是否生成 Leftbar；null 继承上层。 [布尔值或null]
+          enabled: null
+          # 作者页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
+          brand: null
+          # 作者页是否显示固定 Menu；null 继承上层。 [布尔值或null]
+          menu: null
+          footer:
+            # 作者页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
+            actions: null
+          # 作者页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [recent]
+        rightbar:
+          # 作者页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: []
       # 作者页的自动生成路径。 [字符串]
       path: /author/
     # 错误页的布局默认值。 [对象]
@@ -194,11 +372,25 @@ layout:
       navigation:
         # 错误页高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: post
-      sidebar:
-        # 错误页左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
-        left: [recent]
-        # 错误页右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
-        right: []
+      regions:
+        topbar:
+          # 错误页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: null
+        leftbar:
+          # 错误页是否生成 Leftbar；null 继承上层。 [布尔值或null]
+          enabled: null
+          # 错误页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
+          brand: null
+          # 错误页是否显示固定 Menu；null 继承上层。 [布尔值或null]
+          menu: null
+          footer:
+            # 错误页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
+            actions: null
+          # 错误页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [recent]
+        rightbar:
+          # 错误页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: []
       # 错误页的自动生成路径。 [字符串]
       path: /404.html
     # 独立页面的布局默认值。 [对象]
@@ -206,11 +398,51 @@ layout:
       navigation:
         # 独立页面高亮的主菜单项；null 表示不高亮。 [字符串或null]
         active_menu: post
-      sidebar:
-        # 独立页面左侧栏 Widget，按数组顺序显示；空数组隐藏左侧栏。 [数组；元素：字符串或对象]
-        left: [recent]
-        # 独立页面右侧栏 Widget，按数组顺序显示；空数组隐藏右侧栏。 [数组；元素：字符串或对象]
-        right: [toc]
+      regions:
+        topbar:
+          # 独立页面显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: null
+        leftbar:
+          # 独立页面是否生成 Leftbar；null 继承上层。 [布尔值或null]
+          enabled: null
+          # 独立页面固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
+          brand: null
+          # 独立页面是否显示固定 Menu；null 继承上层。 [布尔值或null]
+          menu: null
+          footer:
+            # 独立页面是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
+            actions: null
+          # 独立页面显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [recent]
+        rightbar:
+          # 独立页面显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: [toc]
+    # 设置页的布局默认值。 [对象]
+    settings:
+      navigation:
+        # 设置页高亮的主菜单项；null 表示不高亮。 [字符串或null]
+        active_menu: null
+      regions:
+        topbar:
+          # 设置页显式覆盖的 Topbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: null
+        leftbar:
+          # 设置页是否生成 Leftbar；null 继承上层。 [布尔值或null]
+          enabled: null
+          # 设置页固定 Brand 来源；false 隐藏，null 继承上层。 [字符串或布尔值或null；可选值：null / false / site_brand / collection_brand]
+          brand: null
+          # 设置页是否显示固定 Menu；null 继承上层。 [布尔值或null]
+          menu: null
+          footer:
+            # 设置页是否显示固定 Footer Actions；null 继承上层。 [布尔值或null]
+            actions: null
+          # 设置页显式覆盖的 Leftbar 内容 Widgets。 [数组或null；元素：字符串或对象]
+          widgets: []
+        rightbar:
+          # 设置页显式覆盖的 Rightbar Widgets。 [数组或null；元素：字符串或对象]
+          widgets: []
+      # 设置页的自动生成路径。 [字符串]
+      path: /settings/
 
 # 文章与 Notebook 的内容展示默认值。 [对象]
 content:
@@ -269,6 +501,8 @@ content:
 
 # 颜色、排版、形状、动效与背景。 [对象]
 appearance:
+  # 构建期整站视觉预设；只编译一套语义视觉类实现，不写入 DOM 或 PageViewModel。 [字符串；可选值：card / glass / minimal / flat]
+  preset: card
   # 站点默认配色方案。 [字符串；可选值：auto / light / dark]
   color_scheme: auto
   # 正文、代码与标题的排版令牌。 [对象]
@@ -329,12 +563,6 @@ appearance:
     primary_action: linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))
     # 搜索栏边框渐变。 [字符串]
     search_bar: 'linear-gradient(to right, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)'
-    # 头像装饰环渐变。 [字符串]
-    avatar_ring: 'conic-gradient(from 0deg, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)'
-  # 页面与头像动效策略。 [对象]
-  motion:
-    # 头像动效策略。 [字符串；可选值：auto / always / never]
-    avatar: auto
   # 代码块滚动条与高亮样式。 [对象]
   code_block:
     # 代码块滚动条宽度。 [字符串]
@@ -343,16 +571,9 @@ appearance:
     highlight_stylesheet: https://gcore.jsdelivr.net/gh/highlightjs/cdn-release@11.9/build/styles/atom-one-dark.min.css
   # 侧栏和页面背景。 [对象]
   backgrounds:
-    sidebar:
-      # 侧栏背景表面样式。 [字符串；可选值：glass / card]
-      surface: glass
-      # 侧栏装饰背景类型；分别使用艺术渐变、图片或纯色。 [字符串；可选值：gradient / image / color]
+    leftbar:
+      # Glass 侧栏装饰背景类型；none 仅保留与 Topbar 相同的玻璃材质，无效字符串或缺少图片时回退艺术渐变，其他 Appearance 不消费。 [字符串；可选值：none / gradient / image]
       type: gradient
-      color:
-        # 浅色模式侧栏背景色。 [字符串]
-        light: var(--card)
-        # 深色模式侧栏背景色。 [字符串]
-        dark: var(--card)
       # 侧栏背景图片；留空不显示背景图。 [字符串或null]
       image:
       gradient:
@@ -365,8 +586,6 @@ appearance:
       backdrop:
         # 侧栏背景模糊半径。 [字符串]
         radius: 100px
-        # 侧栏背景遮罩颜色。 [字符串]
-        overlay: var(--bg-a50)
     page:
       # 页面背景图片；留空不显示背景图。 [字符串或null]
       image:

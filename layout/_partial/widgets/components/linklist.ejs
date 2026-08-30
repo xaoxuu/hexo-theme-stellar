@@ -14,8 +14,7 @@ function layoutDiv(linklist) {
       title: link.title,
       icon: link.icon,
       active: pretty_url(link.url) == pretty_url(page.path),
-      showTitle: showTitle,
-      gradientRef: 'leftbar-active-icon-grad'
+      showTitle: showTitle
     })
   }
   return partial('_partial/components/collection', {options: {

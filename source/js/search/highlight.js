@@ -15,7 +15,7 @@
 
   function highlightKeyword() {
     // 优先主栏正文（避免命中 wiki 封面等其它 md-text 容器）
-    var root = document.querySelector('.l_main .md-text') || document.querySelector('.md-text');
+    var root = document.querySelector('.site-main .md-text') || document.querySelector('.md-text');
     if (!root) return;
 
     var re = new RegExp(escapeRegExp(keyword), 'gi');

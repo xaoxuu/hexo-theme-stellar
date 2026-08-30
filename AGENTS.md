@@ -125,6 +125,15 @@ module.exports = function(hexo) {
 - 避免直接操作 DOM，使用主题工具函数
 - 注释: `//` 单行，`/* */` 多行
 
+### 复用审计
+
+修改 Shell、Region、Sidebar、Widget、公共组件、标签插件或浏览器动态控件前，先完成以下检查：
+
+1. 用源码搜索确认最近的 `ui_classes` capability、partial/helper/mixin、设计令牌和 `scripts/lib/internal-constants.js` 字段；找到现有语义时直接消费该入口。
+2. 新增或修改 `<a>`、`<button>`、`<summary>` 时，通过 `ui_classes` 或 `ctx.ui.classes` 明确选择能力；只有不具有控件表面的普通链接可以在 `ci/reuse-rules.js` 按“文件 + 稳定选择器 + 理由”登记 `plain-link`。
+3. 共享语义值使用既有令牌或内部常量。新增设计令牌或非地址内部策略字段时，同时在 `PROTECTED_LITERALS` 登记规范值和消费边界；组件局部尺寸、描边或光学修正仅在受保护值发生冲突时登记带理由例外。
+4. 运行 `npm run reuse:check`。完成条件是受管控件全部已分类、消费方没有原始 capability 组合类、受保护语义值没有未登记副本。
+
 ## 5. 工作流程
 
 流程总览：**定界 → 开发 → 按风险验证 → 提交**；发版时再执行**净变化文档同步 → 分发**。Codex 与 Claude Code 涉及主题开发、验证或发版时，先调用 `$stellar-theme-dev` skill，按其中的执行顺序与完成条件推进；其他环境（Cursor、Copilot、Trae 等）按下述门禁执行；skill 与本节冲突时，以本节为准。

@@ -76,22 +76,21 @@ test("Topic 详情页要求合法 render，并与 Notebook 新链隔离", () => 
   const root = source("layout/layout.ejs");
   const page = source("layout/page.ejs");
   assert.match(root, /Topic 页面 .*缺少合法 PageViewModel\.render/);
-  assert.match(root, /renderViewModel = postViewModel \|\| wikiViewModel \|\| topicViewModel \|\| notebookViewModel/);
-  assert.match(source("layout/_partial/primitives/shell.ejs"), /\['post', 'wiki', 'topic', 'notebook'\]/);
+  assert.match(root, /renderViewModel = \['post', 'wiki', 'topic', 'notebook'\]\.includes\(activeProfile\) \? activeViewModel : null/);
+  assert.match(root, /partial\('_partial\/primitives\/shell'/);
   assert.match(page, /registeredProfile === 'topic'/);
   assert.match(page, /post_view_model\(page\)/);
   assert.match(page, /notebookViewModel = page\.viewModel\?\.collection\?\.profile === 'notebook'/);
   assert.match(source("layout/_partial/head.ejs"), /\['post', 'wiki', 'topic', 'notebook'\]/);
 });
 
-test("Topic 导航、侧栏和辅助 partial 优先消费显式 ViewModel", () => {
+test("Topic 导航、Region 和辅助 partial 优先消费显式 ViewModel", () => {
   assert.match(source("layout/_partial/main/navbar/article_banner.ejs"), /\['post', 'wiki', 'topic', 'notebook'\]/);
   assert.match(source("layout/_partial/main/navbar/breadcrumb/blog.ejs"), /postViewModel\.collection\.profile === 'topic'/);
   assert.match(source("layout/_partial/widgets/related.ejs"), /topicViewModel\.collection\.navigation\.series/);
-  assert.match(source("layout/_partial/sidebar/index_leftbar.ejs"), /\['post', 'topic'\]\.includes/);
-  assert.match(source("layout/_partial/sidebar/index_rightbar.ejs"), /\['post', 'topic'\]\.includes/);
-  assert.match(source("layout/_partial/sidebar/index_leftbar.ejs"), /postViewModel\.render\.layout\.sidebar\?\.left/);
-  assert.match(source("layout/_partial/sidebar/index_rightbar.ejs"), /postViewModel\.render\.layout\.sidebar\?\.right/);
+  assert.match(source("layout/layout.ejs"), /var regionState = render\.layout\.regions \|\| \{\}/);
+  assert.match(source("layout/_partial/regions/widgets.ejs"), /activeViewModel/);
+  assert.doesNotMatch(source("layout/_partial/regions/widgets.ejs"), /presentation\.sidebar|sidebar\?\.left|sidebar\?\.right/);
   const dateInfo = source("layout/_partial/main/navbar/dateinfo.ejs");
   assert.match(dateInfo, /postViewModel\.render\.listing\.authorId/);
   assert.match(dateInfo, /: content_config\(page\)\.article\?\.author/);

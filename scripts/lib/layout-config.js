@@ -1,6 +1,8 @@
 /* global hexo */
 "use strict";
 
+const { cascadeRegions } = require("./regions");
+
 function profilePath(path) {
   if (typeof path !== "string") return "";
   return path.replace(/^\/+|\/+$/g, "");
@@ -17,11 +19,8 @@ function toRenderNavigation(profile) {
   return activeMenu == null ? {} : { menu: activeMenu };
 }
 
-function toRenderSidebar(profile) {
-  return {
-    left: { widgets: Array.isArray(profile?.sidebar?.left) ? profile.sidebar.left.slice() : [] },
-    right: { widgets: Array.isArray(profile?.sidebar?.right) ? profile.sidebar.right.slice() : [] }
-  };
+function toRenderRegions(globalRegions, profile) {
+  return cascadeRegions([globalRegions, profile?.regions]);
 }
 
 function requireLayoutProfiles(stellarConfig) {
@@ -37,5 +36,5 @@ module.exports = {
   profilePath,
   requireLayoutProfiles,
   toRenderNavigation,
-  toRenderSidebar
+  toRenderRegions
 };

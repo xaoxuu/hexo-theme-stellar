@@ -26,12 +26,6 @@
       left: 1rem
       right: 1rem
       border-radius: $border-bar
-      background: var(--leftbar-search-line, var(--bg-a100))
-      :root[data-theme="dark"] &
-        background: var(--leftbar-search-line, var(--bg-a20))
-      :root:not([data-theme]) &
-        @media screen and (prefers-color-scheme: dark)
-          background: var(--leftbar-search-line, var(--bg-a20))
       z-index 0
       trans1 all
     &:after
@@ -85,17 +79,6 @@
       width: 1rem
       color: var(--text-p2)
       fill: currentColor
-      path[p-id="1562"]
-        color: var(--theme)
-    
-  &[searching='true']
-    .search-button
-      path[p-id="1562"]
-        color: $c-green
-  &.noresult[searching='true']
-    .search-button
-      path[p-id="1562"]
-        color: $c-red
 
   .search-no-result
     display: none
@@ -108,7 +91,7 @@
     border-radius: $border-card-s
 
 
-  #search-result
+  .search-result
     max-height: 60vh
     overflow: auto
     scrollbar-width: none
@@ -124,11 +107,11 @@
       list-style-type: none
     li a
       display: block
-      background: var(--ui-adapter-bg-hover)
-      box-shadow: var(--ui-adapter-shadow-hover)
       line-height: 1.2
       padding: 0.75rem 1rem
       border-radius: $border-card-s
+      background: var(--block)
+      box-shadow: none
       &:focus-visible
         outline: 2px solid var(--theme)
         outline-offset: 2px
@@ -183,17 +166,17 @@
     display: block
     margin-bottom: 8px
 
-.leftbar-container > .search-wrapper
+.site-region__viewport > .search-wrapper
   width: auto
   margin: 1.5rem var(--gap-base) 0
   padding-bottom: 0
 
-.leftbar-container > .search-wrapper[searching='true']
+.site-region__viewport > .search-wrapper[searching='true']
   flex-grow: 1
   min-height: 0
   display: flex
   flex-direction: column
-  #search-result
+  .search-result
     flex-grow: 1
     max-height: none
 
@@ -202,3 +185,147 @@
     background-position: 0%
   to
     background-position: 1000%
+
+.search-trigger
+  appearance: none
+  width: 100%
+  border: 0
+  font: inherit
+  text-align: start
+  cursor: pointer
+
+.search-dialog
+  box-sizing: border-box
+  width: unquote('min(600px, calc(100dvw - 64px))')
+  height: unquote('min(80dvh, 720px)')
+  max-width: none
+  max-height: unquote('min(80dvh, 720px)')
+  margin: auto
+  padding: 0
+  border: 1px solid var(--block-border)
+  border-radius: $border-card-l
+  color: var(--text)
+  background: var(--card)
+  box-shadow: $boxshadow-card-float
+  overflow: hidden
+  &::backdrop
+    background: rgba(black, .38)
+    backdrop-filter: blur(8px)
+    -webkit-backdrop-filter: blur(8px)
+
+.search-dialog__panel
+  box-sizing: border-box
+  width: 100%
+  height: 100%
+  display: flex
+  flex-direction: column
+  padding: 12px
+
+.search-dialog__header
+  display: flex
+  flex-wrap: nowrap
+  align-items: center
+  gap: 8px
+  .search-form
+    flex: 1 1 auto
+    box-sizing: border-box
+    min-width: 0
+    height: 40px
+    display: flex
+    flex-flow: row nowrap
+    align-items: center
+    gap: 16px
+    padding: 0 16px
+    position: static
+    border-radius: $border-card-s
+    color: var(--text)
+    background: var(--block)
+    .search-input
+      flex: 1 1 auto
+      min-width: 0
+      width: auto
+      height: 100%
+      padding: 0
+    &:before
+      display: none
+
+.search-dialog__scope
+  display: flex
+  flex: 0 0 auto
+  align-items: center
+  gap: 1rem
+  padding: 1rem
+  overflow: hidden
+  color: var(--text-p2)
+  font-size: $fs-13
+  &[hidden]
+    display: none
+
+.search-dialog__scope-title
+  flex: 0 0 auto
+  color: var(--text-p3)
+
+.search-dialog__scope-option
+  display: flex
+  flex: 0 0 auto
+  align-items: center
+  min-width: 0
+  gap: 5px
+  cursor: pointer
+  &[hidden]
+    display: none
+  &[data-search-scope-option='current']
+    flex: 0 1 auto
+    overflow: hidden
+    > span:last-child
+      overflow: hidden
+      white-space: nowrap
+      text-overflow: ellipsis
+.search-dialog__close
+  flex: 0 0 40px
+  width: 40px
+  height: 40px
+  border: 0
+  border-radius: $border-bar
+  color: var(--text-p2)
+  background: var(--block)
+  font-size: 24px
+  cursor: pointer
+
+.search-dialog__title
+  position: absolute
+  width: 1px
+  height: 1px
+  padding: 0
+  margin: -1px
+  overflow: hidden
+  clip: rect(0, 0, 0, 0)
+  white-space: nowrap
+  border: 0
+
+.search-dialog .search-result
+  flex: 1 1 auto
+  min-height: 0
+  max-height: none
+
+html[data-search-open]
+  overflow: hidden
+
+@media screen and (max-width: $device-tablet)
+  .search-dialog
+    width: 100dvw
+    height: 100dvh
+    max-height: none
+    border: 0
+    border-radius: 0
+  .search-dialog__panel
+    height: 100%
+    padding: unquote('max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left))')
+  .search-dialog .search-result
+    max-height: none
+
+@media (prefers-reduced-motion: reduce)
+  .search-dialog,
+  .search-dialog::backdrop
+    animation: none
+    transition: none

@@ -104,8 +104,7 @@ appearance:
       image: 16px
       image_small: 8px
   colors: { theme: null, accent: null, link: null }
-  gradients: { primary_action: null, search_bar: null, avatar_ring: null, angle: 210deg }
-  motion: { page_transition: true, avatar: auto }
+  gradients: { primary_action: null, search_bar: null, angle: 210deg }
   code_block: { scrollbar_width: 4px, highlight_theme: null }
   backgrounds:
     sidebar:

@@ -43,7 +43,7 @@ extensions:
 
 客户端使用 `localStorage` 键 `search_cache_v4`：
 
-- 首次聚焦搜索框时加载；新鲜缓存直接使用，过期缓存先展示后后台刷新。
+- 首次打开搜索浮层并聚焦输入框时加载；新鲜缓存直接使用，过期缓存先展示后后台刷新。
 - `cache_ttl_seconds: 0` 时不复用缓存。
 - 请求失败时优先回退已有缓存；没有缓存则恢复可重试状态。
 
@@ -55,7 +55,9 @@ Algolia provider 把 `appId/apiKey/indexName` 原样交给上游客户端。Algo
 
 ## 公共交互
 
-两种 provider 共用 `source/js/search/shortcut.js`。桌面端 `Command+K` 或 `Ctrl+K` 聚焦 `#search-input`；输入法组合、窄屏、无搜索框或其它编辑区域保持浏览器原生行为。结果卡片复用公共 collection surface 与 Card Hover 静态契约。
+两种 provider 共用页面级唯一 `<dialog>`。Search Widget 只是普通按钮，每个入口保留自己的过滤范围和 Placeholder，打开时注入共享输入框；旧查询和结果会清理，Provider 索引缓存继续复用。同页可以在多个 Region 放置 Search，不会重复输入框、结果区或监听器。
+
+桌面浮层宽度为 `min(600px, calc(100dvw - 64px))`，结果区独立滚动；`≤768px` 使用安全区适配的全屏模式。所有断点均可用 `Command+K` 或 `Ctrl+K` 打开；关闭按钮、背景点击、Escape、焦点恢复和页面滚动锁定由统一控制器处理。输入法组合、缺少 Search 入口或其它编辑区域保持浏览器原生行为。
 
 ## 消费链
 

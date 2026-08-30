@@ -112,18 +112,23 @@
     "files": [
       {
         "path": "/js/main.js",
-        "bytes": 23664,
-        "gzipBytes": 7444
+        "bytes": 30423,
+        "gzipBytes": 9015
+      },
+      {
+        "path": "/js/profile.js",
+        "bytes": 9852,
+        "gzipBytes": 2452
       },
       {
         "path": "/js/runtime/index.mjs",
-        "bytes": 2735,
-        "gzipBytes": 1058
+        "bytes": 2678,
+        "gzipBytes": 1031
       },
       {
         "path": "/js/stellar-icons.js",
-        "bytes": 6354,
-        "gzipBytes": 2591
+        "bytes": 7855,
+        "gzipBytes": 3038
       },
       {
         "path": "/js/utils.js",
@@ -132,15 +137,20 @@
       },
       {
         "path": "inline:1",
+        "bytes": 388,
+        "gzipBytes": 214
+      },
+      {
+        "path": "inline:2",
         "bytes": 7320,
         "gzipBytes": 2962
       }
     ],
-    "bytes": 50800,
-    "gzipBytes": 17292
+    "bytes": 69243,
+    "gzipBytes": 21949
   },
   "metric": "sum of gzip-9 bytes for unconditional local first-screen scripts, inline executable scripts, and unconditional module imports",
   "minimumReduction": 0.3,
-  "reduction": 0.505052,
+  "reduction": 0.371755,
   "passed": true
 }

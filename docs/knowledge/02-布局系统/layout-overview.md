@@ -3,308 +3,124 @@ title: 布局系统
 domain: 布局系统
 tags:
   - 布局
-  - layout.ejs
-  - 三栏
+  - shell
+  - region
 ---
 
 # 布局系统
 
-> [!IMPORTANT]
-> v2 的页面归属、排版与侧栏字段已重构；本页涉及内容字段时，以[内容配置 Schema v2](../03-内容系统/content-schema-v2.md)为准。
+Stellar v2 使用一个统一 Shell 渲染所有页面。普通 Post、Wiki、Topic、Notebook 的严格 PageViewModel 路径与其它过渡页面虽然数据来源不同，但最终都把命名槽交给同一个 `_partial/primitives/shell.ejs`，不再维护两套外层 DOM。
 
-<details>
-<summary>相关源码文件</summary>
-
-生成此页面时参考的主题源码文件：
+相关实现：
 
 - [layout/layout.ejs](../../../layout/layout.ejs)
-- [source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
-- [layout/_partial/sidebar/brand.ejs](../../../layout/_partial/sidebar/brand.ejs)
-- [layout/_partial/cover/index.ejs](../../../layout/_partial/cover/index.ejs)
-- [layout/_partial/sidebar/index_leftbar.ejs](../../../layout/_partial/sidebar/index_leftbar.ejs)
-- [layout/_partial/sidebar/index_rightbar.ejs](../../../layout/_partial/sidebar/index_rightbar.ejs)
-- [layout/_partial/menubtn.ejs](../../../layout/_partial/menubtn.ejs)
-- [layout/_partial/scripts.ejs](../../../layout/_partial/scripts.ejs)
-- [scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
+- [layout/_partial/primitives/shell.ejs](../../../layout/_partial/primitives/shell.ejs)
+- [layout/_partial/primitives/region.ejs](../../../layout/_partial/primitives/region.ejs)
+- [layout/_partial/regions/widgets.ejs](../../../layout/_partial/regions/widgets.ejs)
+- [source/css/_components/layout.styl](../../../source/css/_components/layout.styl)
+- [source/js/main.js](../../../source/js/main.js)
 
-</details>
+## Shell 职责
 
-本页说明 `layout.ejs` 如何作为根模板，如何从 partial 组装页面骨架，以及三栏 `l_body` 网格如何组织左栏、主内容区与右栏。
+Shell 接受 `topbar`、`leftbar`、`main`、`rightbar`、`cover`、`controls` 和 `scripts` 等显式命名槽。Cover 和 Main 是页面骨架，不是用户可配置 Region；公开 Region 只有 `topbar`、`leftbar`、`rightbar`。
 
-布局选择逻辑与各页面类型模板见[页面模板与路由](page-templates-routing.md)；侧边栏小部件配置与渲染见[侧边栏系统](sidebar-system.md)；Brand、导航栏与页头渲染见[Brand、导航与页头](logo-navigation-headers.md)；`<head>` 与 SEO 元数据见[HTML Head 与 SEO 元数据](head-seo.md)。
+```text
+body[data-page-*]
+├── .site-background
+├── #site-cover.site-cover
+├── #start.site-shell[data-regions][data-drawer?]
+│   ├── #topbar-region.site-region--topbar
+│   ├── .site-workspace
+│   │   ├── #leftbar-region.site-region--leftbar
+│   │   ├── #main.site-main
+│   │   └── #rightbar-region.site-region--rightbar
+│   ├── .site-scrim
+│   └── .site-dock
+└── .site-scripts
+```
 
-## v2 内容渲染内核
+Topbar 位于内容工作区之外，因此不会参与正文三列宽度计算。Scrim 和 Dock 也位于 Grid 外，不占据任何轨道。
 
-Pre-alpha M2 已接管普通 Post、Wiki、Topic 与 Notebook。`layout.ejs` 按 `page.viewModel.collection.profile` 要求这四类内容存在合法 `render`；缺失时报告 `page.source` 并终止构建，不读取旧页面字段兜底。普通 Page 和其它通用索引继续走下文记录的既有分支。
+Shell 根据最终有效 Widget 计算 `data-regions`。某个 Region 为空或其中实例都因能力不支持而被跳过时，该 Region 不生成 DOM。
 
-普通 Post、Wiki、Topic 与 Notebook 通过五类内部 EJS 原语保持原有 DOM、class 与视觉行为：
+## 内容工作区
 
-| 原语 | 责任 |
+`.site-workspace` 只负责 Leftbar、Main、Rightbar 三列。列组合随实际 Region 自动变化：
+
+| 实际 Region | 桌面轨道 |
 | --- | --- |
-| Shell | `html`、`body`、`l_body` 根骨架与文档属性 |
-| Region | `l_cover`、`l_left`、`l_main`、`l_right` 固定区域 |
-| Section | 封闭 slot 内的 Item 序列 |
-| Item | 封闭 kind 的受信任 HTML body |
-| Navigation | 显式条目与激活状态的菜单适配 |
+| 无左右栏 | `main` |
+| 仅 Leftbar | `leftbar main` |
+| 仅 Rightbar | `main rightbar` |
+| Leftbar + Rightbar | `leftbar main rightbar` |
 
-原语只接受显式 locals，不读取或修改 `page`、`theme`、`site`；slot/kind 不在白名单时立即失败。由主题内部 partial 生成的 body 按受信任 HTML 透传，所有原语生成的属性值仍进行转义。
+Main 使用 `minmax(200px, var(--width-main))`，会先从 720px 上限向内收缩。Leftbar 与 Rightbar 保持独立轨道，不会覆盖正文，也不会把正文推到另一侧栏下面；不得通过隐藏全局横向溢出来掩盖尺寸错误。
 
-## 模板架构概览
+Leftbar 折叠为 Rail 时仍保留展开态的 Grid 轨道，只把 Region 自身缩成 64px 图标栏，因此 Main 和 Rightbar 不发生横向跳动。
 
-所有渲染出的 HTML 页面都经过 `layout.ejs`。Hexo 的模板继承机制把匹配到的页面布局输出放入 `body` 变量，`layout.ejs` 再把它嵌入 `l_main` 内容区。
+## 响应式优先级
 
-**layout.ejs 中的页面组装流程：**
+公开断点不允许用户配置：
 
-```mermaid
-graph TD
-    HexoRouter["Hexo Router"]
-    PageTemplate["页面布局模板（page.ejs / index.ejs / archive.ejs 等）"]
-    LayoutEJS["layout/layout.ejs"]
-    HeadPartial["_partial/head"]
-    CoverPartial["_partial/cover/index"]
-    LeftbarPartial["_partial/sidebar/index_leftbar"]
-    BrandPartial["_partial/sidebar/brand (placement=main)"]
-    BodyVar["body 变量（渲染出的页面内容）"]
-    FooterPartial["_partial/main/footer"]
-    RightbarPartial["_partial/sidebar/index_rightbar"]
-    ScriptsPartial["_partial/scripts"]
-    MenubtnPartial["_partial/menubtn"]
+| 视口 | Topbar | Leftbar | Main | Rightbar |
+| --- | --- | --- | --- | --- |
+| `> 1180px` | 已启用则显示 | 展开或 Rail | 可收缩 | 普通 Grid Item |
+| `769–1180px` | 已启用则显示 | 保持同行 | 可收缩 | Drawer |
+| `≤ 768px` | 已启用则显示 | Drawer | 使用完整可用宽度 | Drawer |
 
-    HexoRouter --> PageTemplate
-    PageTemplate -->|"sets body"| LayoutEJS
-    LayoutEJS --> HeadPartial
-    LayoutEJS --> CoverPartial
-    LayoutEJS --> LeftbarPartial
-    LayoutEJS --> BrandPartial
-    LayoutEJS --> BodyVar
-    LayoutEJS --> FooterPartial
-    LayoutEJS --> RightbarPartial
-    LayoutEJS --> MenubtnPartial
-    LayoutEJS --> ScriptsPartial
-```
+Drawer 复用原 Region 节点，只切换 presentation，不复制 Widget DOM。`data-drawer="leftbar|rightbar"` 记录当前临时打开的抽屉；两个 Drawer 互斥。
 
-**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
+## 滚动与 Sticky
 
-## 页面类型布局
+Rightbar 本身是普通文档流 Grid Item，会随正文一起滚动。只有 `.widget-instance--toc` 在桌面 Rightbar 中使用 Sticky；Recent、Related、Markdown 等普通 Widget 会自然离开视口。Rightbar 进入 Drawer 后，TOC 也取消 Sticky，整个 Drawer 统一滚动。
 
-`layout.ejs` 包裹所有页面类型。Hexo 匹配到的页面布局模板（如 `page.ejs`、`index.ejs`、`archive.ejs` 等）生成 `body` 内容，注入 `l_main`：
+Topbar 使用 Sticky Header。Leftbar 桌面态可以 Sticky，但其高度和内部滚动被约束在可用视口内。
 
-| 布局 | `page.layout` 值 | 主要用途 |
-|---|---|---|
-| `layout/page.ejs` | `page` 或 `null` | 通用页面、自定义布局 |
-| `layout/index.ejs` | （首页） | 文章卡片列表 |
-| `layout/archive.ejs`、`tags.ejs`、`categories.ejs` 等 | 归档/标签/分类 | 列表页 |
+## 页面元数据
 
-注意：主题**没有** `post.ejs` / `wiki.ejs` 独立文件；post、wiki、topic、note 等内容页面由 `layout.ejs` 根据 `page.layout` 值内联区分，并结合 `_partial` 组件与冻结的 `layout.profiles` 配置。
+页面状态写入标准 `data-page-*` 属性：
 
-**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
-
-## layout.ejs 中的计算变量
-
-构建 HTML 前，`layout.ejs` 计算三个控制页面结构与 CSS 类的变量。
-
-### `page_type`
-
-决定页面是列表/索引页还是单内容页。
-
-```
-page_type = 'content'
-  如果 page.layout 属于 ['post', 'page', 'wiki', null]
-    且未设置 page.nav_tabs
-
-page_type = 'index'
-  否则
-```
-
-该值作为 CSS 类写在 `l_body` 上，如 `<div class="l_body content">` 或 `<div class="l_body index">`。
-
-**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
-
-### `article_style`
-
-控制正文排版，驱动 `l_body` 的 `type` HTML 属性。
-
-解析顺序（先命中者优先）：
-
-| 优先级 | 来源 |
-|--------|------|
-| 1 | Front Matter `article.style` |
-| 2 | Topic / Wiki / Notebook Collection 的 `article.style` |
-| 3 | `hexo.stellar.config.content.article.style`（全局默认） |
-| — | 列表页为 `undefined` |
-
-最终值写为 `.l_body` 上的 `type="{article_style}"`。`tech` 与 `story` 是仅有的公开取值；HTML 属性名保留为内部 DOM 契约。
-
-**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
-
-### `indent`
-
-最终布尔投影，为 `.l_body` 添加 `text-indent` 属性。公开配置使用 `article.paragraph_indent: auto|always|never`。
+| 属性 | 含义 |
+| --- | --- |
+| `data-page-type` | `content` 或 `index` |
+| `data-page-layout` | Hexo 页面布局 ID |
+| `data-article-style` | `tech` 或 `story` |
+| `data-text-indent` | 存在时启用正文首行缩进 |
 
-解析顺序（先命中者优先）：
-
-| 优先级 | 来源 |
-|--------|------|
-| 1 | Front Matter `article.paragraph_indent` |
-| 2 | Topic / Wiki / Notebook Collection 的 `article.paragraph_indent` |
-| 3 | `content.article.paragraph_indent` |
-| 4 | `auto` 时由 `article.style === 'story'` 推导 |
-
-**变量解析总结：**
-
-```mermaid
-flowchart TD
-    A["page.layout in post/page/wiki/null
-AND no page.nav_tabs?"]
-    A -->|"yes"| B["page_type = 'content'"]
-    A -->|"no"| C["page_type = 'index'"]
-
-    D["page_type == 'index'?"]
-    D -->|"yes"| E["article_style = undefined"]
-    D -->|"no"| F["resolve article.style cascade"]
-    F --> G["article_style = tech | story"]
-
-    M["resolve article.paragraph_indent cascade"]
-    M --> N{"mode"}
-    N -->|"always"| O["indent = true"]
-    N -->|"never"| P["indent = false"]
-    N -->|"auto"| Q["indent = (article_style === 'story')"]
-```
-
-**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
-
-## 三栏网格：`l_body`
-
-外层容器 `<div class="l_body">` 是 CSS 三栏网格，其子元素映射到样式表使用的 CSS 选择器。
+`#start`、`#main` 和三个 Region 的 ARIA 控制 ID保持稳定。旧的裸 `layout`、`type`、`text-indent` 属性不再输出。
 
-**layout.ejs 生成的 HTML 骨架：**
+## 视觉职责
 
-```mermaid
-graph TD
-    HTML["html[lang][data-theme]"]
-    HTML --> HEAD["head (via _partial/head)"]
-    HTML --> BODY["body"]
-    BODY --> SITEBG["div.sitebg + div.siteblur
-(if hexo.stellar.config.appearance.backgrounds.page.image)"]
-    BODY --> LCOVER["div#l_cover
-(_partial/cover/index)"]
-    BODY --> LBODY["div.l_body.{page_type}#start
-[layout=...][type=...][text-indent?]"]
-    LBODY --> LLEFT["aside.l_left"]
-    LBODY --> LMAIN["div.l_main#main"]
-    LBODY --> LRIGHT["aside.l_right"]
-    LBODY --> MENUBTN["_partial/menubtn"]
-    LLEFT --> SIDEBG["div.sidebg"]
-    LLEFT --> LEFTBAR["div.leftbar-container
-(_partial/sidebar/index_leftbar)"]
-    LMAIN --> BRAND["_partial/sidebar/brand (eligible mobile pages)"]
-    LMAIN --> PAGEBODY["body（页面布局输出）"]
-    LMAIN --> FOOTER["_partial/main/footer"]
-    LMAIN --> MAINMASK["div.main-mask"]
-    LRIGHT --> RIGHTBAR["_partial/sidebar/index_rightbar"]
-    BODY --> SCRIPTS["div.scripts (_partial/scripts)"]
-```
-
-**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
-
-### 网格列元素
-
-| CSS 选择器 | HTML 元素 | 角色 |
-|---|---|---|
-| `.l_body` | `<div class="l_body {page_type}" id="start">` | 三栏网格容器；接收计算出的类与属性 |
-| `.l_left` | `<aside class="l_left[.leftbar-card?]">` | 左栏；`appearance.backgrounds.sidebar.surface: card` 时追加 `leftbar-card` 类 |
-| `.l_main` | `<div class="l_main" id="main">` | 中央内容列 |
-| `.l_right` | `<aside class="l_right">` | 右栏 |
-| `#l_cover` | `<div id="l_cover">` | 网格上方的全宽封面区 |
-| `.leftbar-container` | `.l_left` 内 | 包裹侧边栏小部件 |
-| `.sidebg` | `.l_left` 首个子元素 | 背景装饰元素 |
-| `.main-mask` | `.l_main` 内 | 移动端点击关闭侧边栏的遮罩（`onclick="sidebar.dismiss()"`） |
-
-**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
-
-### `l_body` HTML 属性
-
-`l_body` 元素携带供 CSS 规则与 JavaScript 消费的数据属性：
-
-| 属性 | 值 | 用途 |
-|---|---|---|
-| `class` | `"l_body index"` 或 `"l_body content"` | 控制布局专属 CSS 规则 |
-| `id` | `"start"` | 滚动定位目标 |
-| `layout` | `page.layout` 的值 | 供 CSS/JS 做布局专属样式 |
-| `type` | 解析后的 `article_type` | 触发正文专属 CSS（如 story 模式） |
-| `text-indent` | `indent === true` 时存在 | 为故事类内容启用首行缩进 CSS |
-
-**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
-
-### 左栏表面
-
-`appearance.backgrounds.sidebar.surface` 控制左栏外观：`glass`（默认历史行为，背景图 + 磨砂玻璃效果）不追加额外类；`card` 时 `.l_left` 追加 `leftbar-card` 类，配合 `sidebar.styl` 呈现纯色卡片 + 中间阴影。配置默认值为 `card`。
-
-**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)、[source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)
-
-## layout.ejs 引入的 Partials
-
-以下是 `layout.ejs` 直接调用的 partial，各自在后续页面有专属章节：
-
-| Partial 路径 | 渲染位置 | 说明 |
-|---|---|---|
-| `_partial/head` | `<html>` 内、`<body>` 前 | `<head>` 标签：meta、CSS、SEO——见[HTML Head 与 SEO 元数据](head-seo.md) |
-| `_partial/cover/index` | `#l_cover` 内 | 网格上方的封面/横幅组件 |
-| `_partial/sidebar/index_leftbar` | `.l_left > .leftbar-container` 内 | 左栏小部件——见[侧边栏系统](sidebar-system.md) |
-| `_partial/sidebar/brand` | 符合页面矩阵时作为 `.l_main` 第一项 | 移动端 Brand 栏——见[Brand、导航与页头](logo-navigation-headers.md) |
-| `_partial/main/footer` | `.l_main` 中 `body` 之后 | 页面页脚 |
-| `_partial/sidebar/index_rightbar` | `.l_right` 内 | 右栏小部件——见[侧边栏系统](sidebar-system.md) |
-| `_partial/menubtn` | `.l_body` 内、侧栏之后 | 移动端浮动侧边栏开关按钮 |
-| `_partial/scripts` | `div.scripts` 内 | JS 引入与内联初始化脚本 |
-
-**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
-
-## 深色模式与 `data-theme`
-
-`hexo.stellar.config.appearance.colorScheme` 不是 `'auto'` 时，`<html>` 元素接收 `data-theme` 属性：
-
-- `colorScheme === 'auto'`：`<html lang="...">`——由浏览器 `prefers-color-scheme` 媒体查询控制深浅
-- 其他值：`<html lang="..." data-theme="{colorScheme}">`——强制指定主题
-
-**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
-
-## 页面导航机制
-
-主题使用普通整页导航（PJAX 已于 v1.35.0 移除，旧的 `page-loading-bar` 元素与 `pjax.js` 一并删除，见 `docs/designs/2026-08-08-pjax-removal.md`）。可选的 `extensions.features.link_prefetch`（flying_pages）在鼠标悬停时预加载站内链接以提升导航体验。
-
-**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)、[_config.yml](../../../_config.yml)（`extensions.features.link_prefetch`）
-
-## 模板上下文变量
-
-布局系统中的 EJS 模板可访问以下上下文变量：
-
-| 变量 | 类型 | 说明 |
-|---|---|---|
-| `page` | Object | 当前页面 front matter 与渲染内容 |
-| `theme` | Object | Hexo 提供的主题模板上下文；v2 不在此挂载派生数据 |
-| `hexo.stellar.config` | Object | 已交付的冻结 v2 配置（如 `content.article`、`layout.profiles`） |
-| `stellar_data(path)` | Function | 读取 `hexo.stellar.data` 中的构建期主题数据与派生对象 |
-| `config` | Object | Hexo 站点配置（`config.title`、`config.url` 等） |
-| `body` | String | 页面布局模板输出的 HTML 字符串；注入 `.l_main` |
-| `is_home()` | Function | 首页返回 true |
-| `is_post()` | Function | 文章页返回 true |
-| `partial(path, data?)` | Function | 引入 partial 模板，可带数据 |
-| `__('key')` | Function | 本地化查询——见[本地化](../08-本地化/localization.md) |
-| `url_for(path)` | Function | 生成站点根相对 URL |
-
-**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
-
-## 与其他系统的集成
-
-布局系统与以下主题子系统集成：
-
-- **配置系统**（[配置系统](../00-总览与安装配置/configuration.md)）：读取 `layout.profiles` 与其它已交付根域，决定组件包含
-- **侧边栏系统**（[侧边栏系统](sidebar-system.md)）：按页面类型配置渲染左右栏
-- **导航与页头**（[Brand、导航与页头](logo-navigation-headers.md)）：引入 Brand、导航栏与面包屑 partial
-- **标签插件**（[标签插件](../04-标签插件/tag-plugins-overview.md)）：处理页面内容中的自定义标签语法
-- **前端交互**（[前端交互](../05-前端交互/client-side-overview.md)）：为 JavaScript 初始化提供数据属性与结构
-- **样式系统**（[样式系统](../01-样式系统/styling-overview.md)）：应用引用 Stylus 生成样式的 CSS 类
-
-布局系统是组装层，把内容、配置与表现整合起来生成最终 HTML 页面。
-
-**参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)、[_config.yml](../../../_config.yml)（`layout.profiles` 小节）
+`appearance.preset: card | glass | minimal | flat` 统一控制所有 Region 表面与整站视觉 Token，不改变 Shell DOM、Region 组合或首页内容。`flat` 保留原 Topbar 的半透明、轻模糊和分隔线风格。`appearance.backgrounds.leftbar` 只负责 Leftbar 的装饰背景，不再承担独立表面风格。
+
+首页固定使用标准文章 Feed，不额外引入首页视图模式。
+
+## 交互与无障碍
+
+客户端通过 `data-shell-action` 事件代理处理 Drawer、Rail 和 TOC，不使用内联 `sidebar.*()`：
+
+- 关闭的 Drawer 设置 `inert` 与 `aria-hidden`。
+- 按钮同步 `aria-controls` 和 `aria-expanded`。
+- 打开 Drawer 后焦点进入第一个可操作元素。
+- Escape 或 Scrim 关闭 Drawer并恢复触发按钮焦点。
+- Resize 会清理过期 Drawer 状态。
+- `prefers-reduced-motion: reduce` 禁用 Rail 和 Drawer 过渡。
+
+## 自定义 CSS 迁移
+
+| 旧选择器/属性 | 新契约 |
+| --- | --- |
+| `.l_body` | `#start.site-shell` 与 `.site-workspace` |
+| `.l_topbar` | `.site-region--topbar` |
+| `.l_left` / `.l_sidebar` | `.site-region--leftbar` |
+| `.l_main` | `.site-main` |
+| `.l_right` / `.l_context` | `.site-region--rightbar` |
+| `#l_cover` | `#site-cover.site-cover` |
+| `.leftbar-container` / `.context-sticky` | `.site-region__viewport` |
+| `.sidebg` | `.site-region__decoration` |
+| `.main-mask` | `.site-scrim` |
+| `.float-panel` | `.site-dock` |
+| `[leftbar]` / `[rightbar]` | `[data-drawer="leftbar|rightbar"]` |
+| `[layout]` / `[type]` / `[text-indent]` | `[data-page-layout]` / `[data-article-style]` / `[data-text-indent]` |
+
+Region 配置、级联与 Widget presentation 见[Region 与 Leftbar 系统](sidebar-system.md)。

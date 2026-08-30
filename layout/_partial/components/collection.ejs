@@ -1,10 +1,10 @@
 <%
 var collectionOptions = typeof options === 'object' && options ? options : {}
 var collectionItems = Array.isArray(collectionOptions.items) ? collectionOptions.items.filter(function(entry) {
-  return entry && entry.href != null
+  return entry && (entry.href != null || entry.type === 'button')
 }) : []
 if (collectionItems.length > 0) {
-var collectionLayout = collectionOptions.layout === 'grid' ? 'grid' : 'list'
+var collectionLayout = ['grid', 'inline'].includes(collectionOptions.layout) ? collectionOptions.layout : 'list'
 var collectionVariant = ['nav', 'summary', 'icon'].includes(collectionOptions.variant) ? collectionOptions.variant : 'nav'
 var collectionDensity = collectionOptions.density === 'compact' ? 'compact' : 'auto'
 var collectionColumns = parseInt(collectionOptions.columns, 10)

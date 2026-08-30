@@ -1,7 +1,7 @@
 ---
 title: Topic Brand 继承站点品牌
 date: 2026-08-22
-status: 已完成
+status: 已被双 Brand 契约取代
 ---
 
 # Topic Brand 继承站点品牌
@@ -12,11 +12,9 @@ Topic 是博客文章的组织方式，不是像 Wiki 或 Notebook 那样拥有�
 
 ## 方案
 
-- 复用现有 `resolveBrand()`、根字段合并和图片原子替换规则。
-- 自动 Brand 只适用于 Wiki 与 Notebook。
-- Topic 默认直接使用全局 `brand`，忽略 Topic 的 `identity`、文案和路由。
-- Topic 显式配置 `sidebar.left.brand` 时，仍按集合覆盖层合并；页面 `sidebar.left.brand` 保持最高优先级。
-- `identity.icon`、`card.cover` 等 Topic 内容字段继续服务各自组件，不参与 Brand 默认解析。
+本方案关于“合并 Brand”的实现已被 Region/Widget 双 Brand 契约取代：站点与 Collection 分别产出 `site_brand`、`collection_brand`，不再互相继承或合并。Topic 仍默认选择 `site_brand`，但可通过 `leftbar.brand: collection_brand` 或 Region Widget 显式展示由 Topic `identity` 派生的 Collection Brand。
+
+`identity.icon`、`card.cover` 等 Topic 内容字段继续服务各自组件；其中只有 `identity` 会参与 `collection_brand` 建模。
 
 ## 影响范围
 

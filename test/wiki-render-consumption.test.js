@@ -91,11 +91,11 @@ test("Wiki 生成器只向索引模板提供显式 listing 与标签导航", () 
   assert.equal(filtered.data.tagName, undefined);
 });
 
-test("Wiki 索引、卡片和 tabs 不再读取原始 Wiki tree", () => {
+test("Wiki 索引、卡片和 Listing Nav 不再读取原始 Wiki tree", () => {
   for (const relative of [
     "layout/index_wiki.ejs",
     "layout/_partial/main/post_list/wiki_card.ejs",
-    "layout/_partial/main/navbar/nav_tabs_wiki.ejs"
+    "layout/_partial/main/listing_nav/wiki.ejs"
   ]) {
     assert.doesNotMatch(source(relative), /stellar_data\(['\"]wiki['\"]\)/, relative);
   }
@@ -108,9 +108,9 @@ test("Wiki 详情页要求合法 render，并与 Topic、Notebook 新链隔离",
   const root = source("layout/layout.ejs");
   const page = source("layout/page.ejs");
   assert.match(root, /Wiki 页面 .*缺少合法 PageViewModel\.render/);
-  assert.match(root, /renderViewModel = postViewModel \|\| wikiViewModel \|\| topicViewModel \|\| notebookViewModel/);
-  assert.match(root, /partial\('_partial\/cover\/index', \{viewModel: renderViewModel\}\)/);
-  assert.match(source("layout/_partial/primitives/shell.ejs"), /\['post', 'wiki', 'topic', 'notebook'\]/);
+  assert.match(root, /renderViewModel = \['post', 'wiki', 'topic', 'notebook'\]\.includes\(activeProfile\) \? activeViewModel : null/);
+  assert.match(root, /coverSlot\(renderViewModel, renderedRegions\)/);
+  assert.match(root, /partial\('_partial\/primitives\/shell'/);
   assert.match(page, /wikiViewModel\.render\.article/);
   assert.doesNotMatch(source("layout/_partial/main/navbar/article_banner.ejs"), /page\.viewModel/);
   assert.match(page, /post_footer'.*footer: article\.footer/);
@@ -127,7 +127,7 @@ test("Wiki Hero 与详情辅助 partial 优先消费显式 Wiki ViewModel", () =
   assert.match(source("layout/_partial/widgets/related.ejs"), /wikiViewModel\.render\.article\.related/);
   assert.match(source("layout/_partial/widgets/ghrepo.ejs"), /wikiViewModel\.render\.listing\.repositoryApi/);
   assert.match(source("layout/_partial/widgets/ghrepo.ejs"), /tagsApi = repoApi \? repoApi \+ '\/tags'/);
-  assert.match(source("layout/_partial/sidebar/search.ejs"), /wikiViewModel\.render\.layout\.searchFilter/);
+  assert.match(source("layout/_partial/sidebar/search.ejs"), /wikiViewModel\.render\.layout\.algoliaFilterPath/);
   assert.match(source("layout/_partial/widgets/toc.ejs"), /wikiViewModel\.render\.article\.readmeHtml/);
   assert.match(source("layout/_partial/head.ejs"), /\['post', 'wiki', 'topic', 'notebook'\]/);
 });

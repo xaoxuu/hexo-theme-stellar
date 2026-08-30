@@ -21,6 +21,7 @@ btn:
   comments: 參與討論
   expand_posts: 展開其餘 %s 篇
   collapse_posts: 收起
+  search: 搜尋
 
 meta:
   recent_update: 最近更新
@@ -70,7 +71,43 @@ page:
 search:
   search: 站內搜尋
   search_in: 在 %s 中搜尋
+  scope: 搜尋範圍
+  scope_all: 全站
+  scope_blog: 部落格
   no_results: 沒有找到內容！
+  close: 關閉搜尋
+
+settings:
+  label: 設定
+  title: 設定
+  profile:
+    title: 個人資料
+    avatar: 頭像
+    nickname: 暱稱
+    email: Email
+    url: URL
+    save: 儲存
+    logout: 登出
+    provider_managed: '%s 的留言身分不由主題管理，無法在此編輯或登出。'
+    provider_unknown: 目前留言服務
+  cache:
+    title: 快取
+    search: 搜尋快取
+    dynamic: 資料快取
+    all: 全部快取
+    clear: '清除「%s」'
+  about:
+    title: 關於
+    empty: 尚未設定相關資訊。
+    open_link: '開啟「%s」連結'
+  result:
+    success: 操作成功。
+    partial: 操作部分完成，部分瀏覽器儲存空間無法修改。
+    failure: 操作失敗，瀏覽器儲存空間無法使用。
+  validation:
+    name: 請輸入不超過 80 個字元的暱稱。
+    email: 請輸入有效的 Email，或留空。
+    url: 請輸入 HTTP(S) URL，或留空。
 
 message:
   copied: 複製成功

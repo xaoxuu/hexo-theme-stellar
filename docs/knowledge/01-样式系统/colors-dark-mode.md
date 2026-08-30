@@ -14,7 +14,7 @@ tags:
 
 生成此页面时参考的主题源码文件：
 
-- [source/css/_components/partial/navbar.styl](../../../source/css/_components/partial/navbar.styl)
+- [source/css/_components/partial/listing-nav.styl](../../../source/css/_components/partial/listing-nav.styl)
 - [source/css/_components/sidebar/search.styl](../../../source/css/_components/sidebar/search.styl)
 - [source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)
 - [source/css/_custom.styl](../../../source/css/_custom.styl)
@@ -259,13 +259,13 @@ flowchart TD
 
 ### 侧边栏背景色
 
-左栏（`.l_left .sidebg`）支持艺术渐变、图片和纯色背景。`type` 显式选择唯一背景分支，浅色/深色调色板、图片与纯色变量从 `_config.yml` 经 `_custom.styl` 读取。
+左栏（`.site-region--leftbar .site-region__decoration`）支持艺术渐变、图片和纯色背景。`type` 显式选择唯一背景分支，浅色/深色调色板、图片与纯色变量从 `_config.yml` 经 `_custom.styl` 读取。
 
-**`.l_left .sidebg` 背景解析逻辑**
+**`.site-region--leftbar .site-region__decoration` 背景解析逻辑**
 
 ```mermaid
 flowchart TD
-    START[""Sidebar background type""]
+    START[""Leftbar background type""]
     GRADIENT[""Art gradient:
  base color + 2 radial + 1 conic layer
  role-specific light and dark HSL
@@ -433,4 +433,4 @@ background: white  // 深色模式下不会变
 - **交互：** `--link`、`--accent`、`--theme`
 - **透明度混合：** `--bg-a20`、`--bg-a50` 等（数字表示近似不透明度）
 
-**参考源码**：[source/css/_common/base.styl](../../../source/css/_common/base.styl)、[source/css/_components/partial/navbar.styl](../../../source/css/_components/partial/navbar.styl)
+**参考源码**：[source/css/_common/base.styl](../../../source/css/_common/base.styl)、[source/css/_components/partial/listing-nav.styl](../../../source/css/_components/partial/listing-nav.styl)

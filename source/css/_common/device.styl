@@ -7,32 +7,22 @@
   @media screen and (max-width: $device-mobile-max)
     display: none !important
 
-.float-panel
-  position: sticky
-  grid-column-end: span 3
-  --inset: 2rem
-  right: 0
-  bottom: calc(var(--inset) * 1)
-  margin-left: auto
-  margin-right: var(--inset)
-  float: right
-  z-index: 999999
-  display: flex
+.site-dock
+  position: fixed
+  inset-inline-end: 2rem
+  bottom: 2rem
+  z-index: 20
+  display: none
   align-items: center
   justify-content: center
   flex-direction: column
   gap: $bar-item-gap
   padding: $bar-item-gap
-  @media screen and (min-width: $device-mobile-max)
-    margin-right: 3rem
   overflow: hidden
   trans1: all
-
   bar-glass()
 
-
-// 侧边栏弹出按钮
-.float-panel button
+.site-dock__button
   bar-item()
   cursor: pointer
   color: var(--text)
@@ -45,36 +35,28 @@
   padding: 4px
   line-height: 0
   font-size: 28px
-  display: flex
+  display: none
   justify-content: center
   align-items: center
-  >*
-    path#sep
-      trans1 transform
+  > *
     width: auto
     height: 28px
+    path#sep
+      trans1 transform
 
-// 侧边栏弹出后
-.l_body[leftbar] .float-panel button.leftbar-toggle, .l_body[rightbar] .float-panel button.rightbar-toggle
+.site-shell[data-drawer='leftbar'] .site-dock__button--leftbar,
+.site-shell[data-drawer='rightbar'] .site-dock__button--rightbar
   bar-item-active()
-
-.l_body[leftbar] .float-panel button.leftbar-toggle
   color: var(--theme)
-  svg g
-    fill: currentColor
-    fill-opacity: 0.3
-    path#sep
-      transform: translateX(2px)
 
+@media screen and (max-width: $device-laptop)
+  .site-shell[data-regions~='rightbar'] .site-dock
+    display: flex
+  .site-shell[data-regions~='rightbar'] .site-dock__button--rightbar
+    display: flex
 
-// 侧边栏有内容时才显示弹出按钮
-.l_body .l_right:empty+.float-panel button.rightbar-toggle
-  display: none !important
-
-.l_body[rightbar] .float-panel button.rightbar-toggle
-  color: var(--theme)
-  svg g
-    fill: currentColor
-    fill-opacity: 0.3
-    path#sep
-      transform: translateX(2px)
+@media screen and (max-width: $device-tablet)
+  .site-shell[data-regions~='leftbar'] .site-dock
+    display: flex
+  .site-shell[data-regions~='leftbar'] .site-dock__button--leftbar
+    display: flex

@@ -1,4 +1,4 @@
-.l_cover
+.cover-content
   height: 100vh
   text-align: center
   display: flex
@@ -10,7 +10,7 @@
     height: inherit
 
 
-.l_cover .cover-wrap
+.cover-content .cover-wrap
   margin-bottom: 0
   display: flex
   flex-direction: column
@@ -31,7 +31,7 @@
     a.start
       display: inline-block
 
-.l_cover.post
+.cover-content.post
   .cover
     z-index: -1
     width: 100%
@@ -49,7 +49,7 @@
         border-radius: 2rem
 
 
-.l_cover.wiki .cover-wrap
+.cover-content.wiki .cover-wrap
   max-width: $device-mobile
   .preview
     margin-bottom: 2rem
@@ -66,7 +66,7 @@
       font-size: 3rem
 
 
-.l_cover.wiki-hero
+.cover-content.wiki-hero
   min-height: 640px
   overflow: hidden
   isolation: isolate
@@ -262,7 +262,7 @@
       gap: .5rem
       button
         padding: .5rem .75rem
-        border-radius: 8px
+        border-radius: $border-button
         color: inherit
         opacity 0.5
         font-family: inherit
@@ -290,7 +290,7 @@
       align-items: center
       gap: .5rem
       padding: .5rem .75rem .5rem .5rem
-      border-radius: 8px
+      border-radius: $border-button
       color: var(--text-banner, var(--text))
       font-family: inherit
       font-size: $fs-13
@@ -304,7 +304,7 @@
     justify-content: center
 
 @media screen and (max-width: $device-tablet)
-  .l_cover.wiki-hero
+  .cover-content.wiki-hero
     height: auto
     min-height: 100vh
     padding: 7rem 0 4rem
@@ -332,7 +332,7 @@
       max-width: 620px
 
 @media screen and (max-width: $device-mobile)
-  .l_cover.wiki-hero
+  .cover-content.wiki-hero
     .wiki-cover-layout
       width: calc(100% - 2rem)
     .wiki-navbar
@@ -345,5 +345,5 @@
         padding: .25rem .75rem .25rem .5rem
 
 @media (prefers-reduced-motion: reduce)
-  .l_cover.wiki-hero .wiki-cover-background.galaxy canvas
+  .cover-content.wiki-hero .wiki-cover-background.galaxy canvas
     display: none

@@ -23,35 +23,9 @@
     corner-shape: round
     overflow: hidden
     img
-      position: absolute
-      inset: 2px
-      z-index: 1
-      width: calc(100% - 4px)
-      height: calc(100% - 4px)
       border-radius: 50%
       corner-shape: round
       object-fit: cover
-    .brand-image-bg
-      position: absolute
-      inset: 0
-      background: convert(hexo-config('appearance.gradients.avatar_ring'))
-    if hexo-config('appearance.motion.avatar')
-      .brand-image-bg
-        trans1: opacity
-        opacity: 0 !important
-      @keyframes spin
-        from
-          transform: rotate(0deg)
-        to
-          transform: rotate(360deg)
-    if hexo-config('appearance.motion.avatar') == 'always'
-      .brand-image-bg
-        opacity: 1 !important
-        animation: spin infinite 4s linear
-    if hexo-config('appearance.motion.avatar') == 'auto'
-      &:hover .brand-image-bg
-        opacity: 1 !important
-        animation: spin infinite 4s linear
 
   .brand-image--icon
     border-radius: $border-card-s
@@ -73,49 +47,83 @@
     position: relative
     .brand-name
       color: var(--text)
-    .brand-wordmark
-      display: block
-      width: auto
-      max-width: 100%
-      height: 20px
-      object-fit: contain
     .brand-tagline
       color: var(--text-p1)
-      trans2 opacity transform
       white-space: nowrap
-    .hover
-      position: absolute
-      bottom: 0
-      transform: translateY(8px)
-      overflow: visible
-    &[href]:hover
-      .normal
-        opacity: 0
-        transform: translateY(-8px)
-      .hover
-        transform: translateY(0)
-        opacity: 1 !important
 
-.wiki-home-wrap
-  margin: 1rem var(--gap-base) .5rem
+.brand-header--site
+  margin: var(--gap-base) 0
+  .brand-wrap
+    flex-direction: column
+    align-items: center
+    text-align: center
+    overflow: visible
+  .brand-image
+    width: 80px
+    height: 80px
+    margin: 0 0 1rem
+  .brand-title
+    width: 100%
+    .brand-tagline
+      margin-top: 4px
+  .brand-stats
+    width: 100%
+    margin-top: 1rem
+    display: grid
+    grid-template-columns: repeat(3, minmax(0, 1fr))
+    gap: 2px
+  .brand-stat
+    min-width: 0
+    padding: 8px 4px
+    display: flex
+    flex-direction: column
+    align-items: center
+    border-radius: $border-button
+    color: inherit
+  .brand-stat__value
+    min-height: 1.2em
+    line-height: 1.2
+    max-width: 100%
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+    font-size: 1rem
+    font-weight: 700
+    color: var(--text-p1)
+  .brand-stat__label
+    font-size: $fs-12
+    font-weight: 500
+    color: var(--text-p3)
 
-.wiki-home
+.brand-header--topbar
+  .brand-wrap
+    min-height: 32px
+  .brand-image
+    width: 32px
+    height: 32px
+    margin-right: 8px
+  .brand-title
+    flex: 0 0 auto
+    font-size: 1rem
+    white-space: nowrap
+
+.brand-navigation
+  margin-bottom: .5rem
+
+.brand-navigation__back
   display: flex
   width: fit-content
   align-items: center
   padding: 6px 16px 6px 12px
   border-radius: 32px
-  sidebar-light()
   color: var(--text-p2)
   font-size: $fs-13
   trans2 color background
-  svg
-    height: 1em
-    width: auto
+  .ui-icon
+    --ui-icon-size: 1em
     margin-right: 0.25rem
   &:hover
     color: var(--text-p1)
-    sidebar-light()
 
-.l_left .wiki-home-wrap + .brand-header
-  margin-top: 0.5rem
+.brand-header--collection .brand-search
+  margin-top: .5rem

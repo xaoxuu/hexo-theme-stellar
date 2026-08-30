@@ -1,0 +1,40 @@
+site:
+  brand:
+    name: Light & Shadow
+    tagline: Stories shaped by atmosphere
+  menu:
+    items:
+      - type: search
+      - id: post
+        title: Stories
+        icon: default:documents
+        url: /
+
+layout:
+  regions:
+    topbar: [site_brand, spacer, menu, settings, actions]
+    leftbar:
+      enabled: false
+  profiles:
+    wiki_index:
+      navigation:
+        active_menu: post
+    wiki:
+      navigation:
+        active_menu: post
+    notebook_index:
+      navigation:
+        active_menu: post
+    note_index:
+      navigation:
+        active_menu: post
+    note:
+      navigation:
+        active_menu: post
+
+extensions:
+  features:
+    card_hover:
+      enabled: true
+
+{{visual_style}}

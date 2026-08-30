@@ -9,7 +9,7 @@ const { spawnSync } = require("node:child_process");
 const THEME_ROOT = path.resolve(__dirname, "..");
 const HOST_ROOT = path.resolve(process.argv[2] || path.join(THEME_ROOT, "../.."));
 const HEXO = path.join(HOST_ROOT, "node_modules", ".bin", "hexo");
-const BLUEPRINTS = ["classic-blog", "minimal-reading", "docs-reference"];
+const BLUEPRINTS = ["classic", "minimal-reading", "docs-reference", "light-and-shadow"];
 
 function run(cwd, args) {
   const result = spawnSync(HEXO, args, {
@@ -62,6 +62,26 @@ function expectedOutputs(blueprint) {
   return ["public/index.html"];
 }
 
+function assertBlueprintShell(directory, blueprint) {
+  const relative = blueprint === "docs-reference"
+    ? "public/wiki/docs-reference/index.html"
+    : "public/index.html";
+  const html = fs.readFileSync(path.join(directory, relative), "utf8");
+  const has = marker => html.includes(marker);
+  if (blueprint === "classic" && (!has('data-region="leftbar"') || has('data-region="topbar"'))) {
+    throw new Error("classic: expected Sidebar-only navigation shell");
+  }
+  if (blueprint === "minimal-reading" && (!has('data-region="topbar"') || has('data-region="leftbar"'))) {
+    throw new Error("minimal-reading: expected Topbar-only navigation shell");
+  }
+  if (blueprint === "docs-reference" && ["topbar", "sidebar", "context"].some(region => !has(`data-region="${region}"`))) {
+    throw new Error("docs-reference: expected Topbar + Sidebar + Context shell");
+  }
+  if (blueprint === "light-and-shadow" && (!has('data-region="topbar"') || !has('class="post-list post"') || has('data-region="leftbar"'))) {
+    throw new Error("light-and-shadow: expected Topbar + standard Feed without Sidebar");
+  }
+}
+
 function main() {
   if (!fs.existsSync(HEXO)) throw new Error(`Hexo executable not found: ${HEXO}`);
   for (const blueprint of BLUEPRINTS) {
@@ -76,6 +96,7 @@ function main() {
       for (const output of expectedOutputs(blueprint)) {
         if (!fs.existsSync(path.join(directory, output))) throw new Error(`${blueprint}: missing ${output}`);
       }
+      assertBlueprintShell(directory, blueprint);
       process.stdout.write(`${blueprint}: init → doctor → generate passed\n`);
     } finally {
       fs.rmSync(directory, { recursive: true, force: true });

@@ -63,7 +63,7 @@ test("空配置 Runtime Manifest 保持冻结、版本化且 Extension 激活条
   assert.equal(manifest.version, 1);
   assert.equal(manifest.root, "/");
   assert.deepEqual(manifest.extensions.map(item => item.id), [
-    "search", "lazy-loading", "deferred-icons", "dropdown", "services",
+    "search", "lazy-loading", "deferred-icons", "dropdown", "services", "settings",
     "link-prefetch", "lightbox", "reveal", "code-copy", "adaptive-text", "swiper"
   ]);
   assert.equal(manifest.extensions.every(item => (

@@ -1,0 +1,93 @@
+<%
+var regionId = typeof region !== 'undefined' ? region : 'leftbar'
+var regionState = typeof state === 'object' && state ? state : {}
+var regionWidgets = Array.isArray(widgets) ? widgets : []
+var activeViewModel = typeof viewModel !== 'undefined' ? viewModel : null
+
+function brandModel(source) {
+  if (activeViewModel?.render?.layout?.brands) {
+    return activeViewModel.render.layout.brands[source]
+  }
+  return brandConfig(page, source)
+}
+
+function renderWidget(widget, options) {
+  options = options || {}
+  var item = widget.item || {}
+  var body = ''
+  if (widget.system) {
+    if (widget.layout === 'brand') {
+      body = partial('../sidebar/brand', {
+        placement: regionId,
+        brandModel: brandModel(item.brandSource),
+        brandSource: item.brandSource,
+        viewModel: activeViewModel
+      })
+    } else if (widget.layout === 'menu') {
+      body = partial('../sidebar/menu', {
+        where: regionId,
+        activeMenu: activeViewModel?.item.navigation.menu,
+        viewModel: activeViewModel
+      })
+    } else if (widget.layout === 'actions') {
+      body = partial('../widgets/actions', {item: item, viewModel: activeViewModel})
+    } else if (widget.layout === 'settings') {
+      body = partial('../widgets/settings', {item: item, viewModel: activeViewModel, placement: regionId})
+    } else if (widget.layout === 'spacer') {
+      body = '<span class="topbar-spacer" aria-hidden="true"></span>'
+    }
+  } else if (regionId === 'topbar' && widget.layout === 'toc') {
+    var tocContent = activeViewModel?.collection?.profile === 'wiki'
+      ? activeViewModel.item.content
+      : page.content
+    var tocBody = toc(tocContent || '', {
+      list_number: item.list_number,
+      min_depth: item.min_depth,
+      max_depth: item.max_depth
+    })
+    if (tocBody.trim().length > 0) {
+      tocBody = tocBody.replace('class="toc"', 'class="toc ui-collection-adapter"')
+      tocBody = tocBody.replace(/class="toc-link/g, 'class="' + ui_classes('toc-link', 'interactive'))
+      body = `<details class="topbar-toc"><summary class="${ui_classes('region-compact-action')}" aria-label="${escape_html(__('btn.toc'))}"><span class="ui-icon">${icon('default:rightbar', '', true)}</span></summary><div class="topbar-toc-popover">${tocBody}</div></details>`
+    }
+  } else {
+    body = partial('../widgets/' + widget.layout, {item: item, viewModel: activeViewModel})
+  }
+  if (!body || body.trim().length === 0) return ''
+  var rail = widget.presentations?.includes('leftbarRail') ? ' data-leftbar-rail' : ''
+  return `<div class="widget-instance widget-instance--${widget.layout}" data-widget-id="${escape_html(widget.instanceId)}" data-presentation="${widget.presentation}"${rail}>${body}</div>`
+}
+function stack(items, zone, options) {
+  if (!items.length) return ''
+  return `<div class="widgets widget-stack widget-stack--${regionId} widget-stack--${zone}">${items.map(function(widget) { return renderWidget(widget, options) }).join('')}</div>`
+}
+%>
+<% if (regionId === 'leftbar') {
+  var leftbarBrandId = regionState.brand === 'collection_brand' ? 'collection_brand' : 'site_brand'
+  var leftbarBrandSource = leftbarBrandId === 'collection_brand' ? 'collection' : 'site'
+  var leftbarBrandBody = regionState.brand === false ? '' : partial('../sidebar/brand', {
+    placement: 'leftbar',
+    brandModel: brandModel(leftbarBrandSource),
+    brandSource: leftbarBrandSource,
+    viewModel: activeViewModel
+  })
+  var menuEnabled = regionState.menu !== false
+  var actionsEnabled = regionState.footer?.actions !== false
+%>
+  <header class="site-region__header site-region__zone site-region__zone--top">
+    <% if (leftbarBrandBody.trim().length > 0) { %><div class="widget-instance widget-instance--brand" data-widget-id="leftbar:fixed:<%- leftbarBrandId %>" data-presentation="leftbar" data-leftbar-rail><%- leftbarBrandBody %></div><% } %>
+  </header>
+  <div class="site-region__body site-region__zone site-region__zone--body">
+    <% if (menuEnabled) { %><div class="widget-instance widget-instance--menu" data-widget-id="leftbar:fixed:menu" data-presentation="leftbar" data-leftbar-rail><%- partial('../sidebar/menu', {where: 'leftbar', activeMenu: activeViewModel?.item.navigation.menu, viewModel: activeViewModel}) %></div><% } %>
+    <%- stack(regionWidgets, 'body') %>
+  </div>
+  <footer class="site-region__footer">
+    <% if (actionsEnabled) { %><div class="site-region__footer-actions"><div class="widget-instance widget-instance--actions" data-widget-id="leftbar:fixed:actions" data-presentation="leftbar"><%- partial('../widgets/actions', {viewModel: activeViewModel}) %></div></div><% } %>
+    <div class="site-region__system ui-collection" data-layout="inline" data-variant="nav" data-density="compact">
+      <div class="site-region__settings"><div class="widget-instance widget-instance--settings" data-widget-id="leftbar:fixed:settings" data-presentation="leftbar" data-leftbar-rail><%- partial('../widgets/settings', {viewModel: activeViewModel, placement: 'leftbar'}) %></div></div>
+      <button type="button" class="<%- ui_classes('leftbar-state-toggle', 'collectionItem', 'is-icon-only') %>" aria-label="Collapse leftbar" aria-expanded="true" data-shell-action="toggle-leftbar"><span class="ui-icon"><%- icon('default:leftbar-toggle', '', true) %></span></button>
+    </div>
+  </footer>
+<% } else { %>
+  <%- stack(regionWidgets, regionId) %>
+<% } %>

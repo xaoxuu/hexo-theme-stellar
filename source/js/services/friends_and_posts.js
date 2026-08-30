@@ -10,7 +10,12 @@
       // layout
       utils.request(el, api, async resp => {
         const data = await resp.json();
-        for (let item of (data.content || data)) {
+        const requestedLimit = Number.parseInt(el.dataset.limit || '', 10);
+        const items = data.content || data;
+        const visibleItems = Number.isInteger(requestedLimit) && requestedLimit > 0
+          ? items.slice(0, requestedLimit)
+          : items;
+        for (let item of visibleItems) {
           var cell = `<div class="grid-cell user-post-card">`;
           cell += `<div class="avatar-box">`;
           cell += `<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="${item.html_url || item.url}">`;;

@@ -68,9 +68,9 @@ function prepareNotebook(id, info, ctx, pages) {
   notebook.listing ||= {};
   notebook.navigation ||= {};
   notebook.footer ||= {};
-  notebook.sidebar ||= {};
+  notebook.regions ||= {};
   notebook.noteDefaults ||= {};
-  notebook.noteDefaults.sidebar ||= {};
+  notebook.noteDefaults.regions ||= {};
 
   if (notebook.route.path) {
     if (notebook.route.path.startsWith("/")) {
@@ -91,10 +91,8 @@ function prepareNotebook(id, info, ctx, pages) {
   notebook.footer.license ??= notebookDefaults.footer.license ?? ctx.stellar.config.content.article.footer.license;
   notebook.footer.share ??= notebookDefaults.footer.share ?? ctx.stellar.config.content.article.footer.share;
 
-  notebook.sidebar.left ??= { widgets: profiles.noteIndex.sidebar.left.slice() };
-  notebook.sidebar.right ??= { widgets: profiles.noteIndex.sidebar.right.slice() };
-  notebook.noteDefaults.sidebar.left ??= { widgets: profiles.note.sidebar.left.slice() };
-  notebook.noteDefaults.sidebar.right ??= { widgets: profiles.note.sidebar.right.slice() };
+  notebook.regions = structuredClone(notebook.regions);
+  notebook.noteDefaults.regions = structuredClone(notebook.noteDefaults.regions);
 
   const tagMap = new Map(); // tagId: tagInfo
   notebook.tagTree = tagMap;

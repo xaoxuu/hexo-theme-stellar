@@ -138,13 +138,14 @@ graph LR
 
 1. **确定页面特征**（[layout/layout.ejs](../../../layout/layout.ejs)）：
    - `page_type`："index" 或 "content"
-   - `article_type`："tech" 或 "story"（影响排版与间距）
+   - `article_style`："tech" 或 "story"（影响排版与间距）
    - `indent`：是否段落首行缩进
 
 2. **组装 HTML 结构**（[layout/layout.ejs](../../../layout/layout.ejs)）：
    - `<head>` 元数据、SEO 标签与样式
-   - `#l_cover` 页面封面/横幅
-   - `.l_body` 包含 `.l_left`（左栏）、`.l_main`（内容区）、`.l_right`（右栏）
+   - `#site-cover` 页面封面/横幅
+   - `#start.site-shell` 按最终 ViewModel 组合 Topbar 与 `.site-workspace`
+   - `.site-workspace` 只包含 Leftbar、`#main.site-main` 与 Rightbar；Scrim、Dock 位于 Grid 外
    - 脚本与初始化代码
 
 ```mermaid
@@ -154,15 +155,15 @@ flowchart TD
     
     HEXODATA --> LAYOUT
     
-    LAYOUT --> DETERMINE["Determine characteristics:<br/>page_type, article_type, indent"]
+    LAYOUT --> DETERMINE["Determine characteristics:<br/>page_type, article_style, indent"]
     DETERMINE --> HEAD["Generate head.ejs:<br/>title, meta, canonical, JSON-LD"]
     DETERMINE --> COVER["Generate cover/index.ejs:<br/>Banner or wiki cover"]
-    DETERMINE --> SIDEBAR["Generate sidebar partials:<br/>index_leftbar, index_rightbar"]
+    DETERMINE --> REGIONS["Generate final Regions:<br/>topbar, leftbar, rightbar"]
     DETERMINE --> CONTENT["Generate main content:<br/>Article or list layout"]
     
     HEAD --> HTML["HTML output"]
     COVER --> HTML
-    SIDEBAR --> HTML
+    REGIONS --> HTML
     CONTENT --> HTML
     
     HTML --> BROWSER["Browser receives HTML"]
@@ -359,9 +360,9 @@ flowchart TD
 
 Stellar 通过 npm 以 `hexo-theme-stellar` 分发，采用 MIT 协议开源。
 
-Pre-alpha M3 还提供 `stellar init` 与 `stellar doctor`：前者从三套 Blueprint 和两套 Visual Style 生成一次性的显式站点文件，后者复用 v2 Schema 只读检查环境与配置。Blueprint 不进入页面运行时，也不会成为新的配置根；机器可读契约位于 `reference/v2-blueprints.json`。
+`stellar init` 与 `stellar doctor`：前者从 `classic`、`minimal-reading`、`docs-reference`、`light-and-shadow` 四套 Blueprint 和 `card`、`flat`、`glass`、`minimal` 四套 Visual Style 生成一次性的显式站点文件，后者复用 v2 Schema 只读检查环境与配置。Blueprint 不进入页面运行时，也不会成为新的配置根；机器可读契约位于 `reference/v2-blueprints.json`。
 
-Pre-alpha M9 完成默认内容体验：空配置或缺少 `_config.stellar.yml` 的普通 Post/Page 可直接生成，Wiki/Topic/Notebook 只在唯一候选时推断归属；三套 Blueprint 只保留产品差异，默认 Visual Style 是空覆盖，starter Markdown 不要求可选 Stellar 元数据。本地候选 tarball 门禁在三个 Blueprint 站点和一个无 init 默认站点验证 doctor → generate。Alpha、Beta 只是内部成熟度里程碑，不会发布 npm 版本、tag 或 GitHub Release；完整产品首页、学习路径、v1 归档和迁移/SEO 跳转仍由后续里程碑交付。
+Pre-alpha M9 完成默认内容体验：空配置或缺少 `_config.stellar.yml` 的普通 Post/Page 可直接生成，Wiki/Topic/Notebook 只在唯一候选时推断归属；Blueprint 只保留产品差异，starter Markdown 不要求可选 Stellar 元数据。当前本地候选 tarball 门禁覆盖四套 Blueprint 和一个无 init 默认站点的 doctor → generate。Alpha、Beta 只是内部成熟度里程碑，不会发布 npm 版本、tag 或 GitHub Release；M10/Alpha 必须等待站长对 Region/Widget 新契约生成的候选重新人工验收。
 
 **参考源码**：[package.json](../../../package.json)、[reference/](../../../reference/)、[blueprints/](../../../blueprints/)、[ci/check-package-integration.js](../../../ci/check-package-integration.js)、[scripts/commands/stellar.js](../../../scripts/commands/stellar.js)、[scripts/lib/theme-metadata.js](../../../scripts/lib/theme-metadata.js)、[README.md](../../../README.md)
 

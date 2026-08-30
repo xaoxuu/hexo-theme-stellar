@@ -1,19 +1,13 @@
-.l_main
+.site-main
   position: relative
   padding-bottom: var(--gap-page)
-  @media screen and (min-width: $device-mobile-max)
-    padding-top: var(--gap-page)
+  padding-top: var(--shell-content-top-gap)
   .brand-header
     margin: 2rem 1rem 1rem
     .brand-wrap
       margin: 0
 
-.l_body.index
-  .l_main
-    @media screen and (max-width: $device-mobile-max)
-      padding-top: 0
-
-body>.sitebg
+body > .site-background
   position fixed
   top: 0
   left: 0
@@ -22,7 +16,7 @@ body>.sitebg
   background-size: cover
   if $site-background-image
     background-image: url($site-background-image)
-  .siteblur
+  .site-background__blur
     width: 100%
     height: 100%
     --blur-px: 0

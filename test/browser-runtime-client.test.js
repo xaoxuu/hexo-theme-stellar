@@ -36,6 +36,25 @@ function memoryStorage() {
   };
 }
 
+test("RequestClient 只清除 Stellar 数据缓存", async () => {
+  const { createRequestClient, REQUEST_CACHE_PREFIX } = await import(moduleUrl("source/js/runtime/request-cache.mjs"));
+  const storage = memoryStorage();
+  storage.setItem(REQUEST_CACHE_PREFIX + "one", "{}");
+  storage.setItem(REQUEST_CACHE_PREFIX + "two", "{}");
+  storage.setItem("search_cache_v4", "keep");
+  storage.setItem("ArtalkUser", "keep");
+  const client = createRequestClient({
+    cache: cachePolicy(),
+    policy: REQUEST_POLICY,
+    storage,
+    fetch: async () => new Response("ok")
+  });
+  assert.deepEqual(client.clearCache(), { ok: true, partial: false, removed: 2, failed: 0 });
+  assert.equal(storage.getItem(REQUEST_CACHE_PREFIX + "one"), null);
+  assert.equal(storage.getItem("search_cache_v4"), "keep");
+  assert.equal(storage.getItem("ArtalkUser"), "keep");
+});
+
 test("ExtensionRegistry 按需 import、挂载、逆序卸载并复用 module Promise", async () => {
   const { createExtensionRegistry } = await import(moduleUrl("source/js/runtime/extension-registry.mjs"));
   const calls = [];

@@ -12,7 +12,7 @@ function layout_wiki_list(partial) {
     if (cover) {
       coverStyle = ` style="--cover-url:url('${escape_html(cover.replace(/'/g, '%27'))}')"`
     }
-    el += `<a class="wiki-card card-hover card-hover--spotlight card-hover--tilt${cover ? '' : ' no-cover'}"${coverStyle} href="${pretty_url(listing.href || '/')}">`
+    el += `<a class="${ui_classes('wiki-card', 'hoverCard', cover ? '' : 'no-cover')}"${coverStyle} href="${pretty_url(listing.href || '/')}">`
     el += partial(listing)
     el += `</a>`
     el += `</div>`
@@ -22,7 +22,7 @@ function layout_wiki_list(partial) {
 
 function layoutDiv() {
   var el = ''
-  el += partial('_partial/main/navbar/nav_tabs_wiki', {wikiIndex: page.wikiIndex})
+  el += partial('_partial/main/listing_nav/wiki', {wikiIndex: page.wikiIndex})
   el += `<div class="post-list wiki">`;
   el += layout_wiki_list(function(listing) {
     return partial('_partial/main/post_list/wiki_card', {listing: listing})

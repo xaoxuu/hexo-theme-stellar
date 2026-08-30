@@ -1,0 +1,25 @@
+<%
+var actions = stellar_config('site.footer.actions')
+function renderActions() {
+  if (!Array.isArray(actions) || actions.length === 0) return ''
+  var el = '<div class="region-actions social-wrap ui-collection" data-layout="inline" data-variant="nav" data-density="compact">'
+  for (var action of actions) {
+    if (action.type === 'spacer') {
+      el += '<span class="social-spacer" aria-hidden="true"></span>'
+    } else if (action.type === 'dropdown') {
+      el += partial('../dropdown', {item: action, rootClass: 'social-dropdown', triggerClass: ui_classes('social', 'collectionItem', 'is-icon-only'), showTitle: false})
+    } else if (action.type === 'link') {
+      el += `<a class="${ui_classes('social', 'collectionItem', 'is-icon-only')}"${action.title ? ` title="${escape_html(action.title)}"` : ''}`
+      if (action.url) {
+        el += ` href="${escape_html(url_for(action.url))}"`
+        el += action.url.includes('://') ? ' target="_blank" rel="external nofollow noopener noreferrer"' : ' rel="noopener noreferrer"'
+      }
+      el += `><span class="ui-icon">${icon(action.icon, 'no-lazy')}</span></a>`
+    } else if (action.type === 'button') {
+      el += `<button type="button" class="${ui_classes('social', 'collectionItem', 'is-icon-only')}" title="${escape_html(action.title)}" aria-label="${escape_html(action.title)}" onclick="${escape_html(action.onclick)}"><span class="ui-icon">${icon(action.icon, 'no-lazy')}</span></button>`
+    }
+  }
+  return el + '</div>'
+}
+%>
+<%- renderActions() %>

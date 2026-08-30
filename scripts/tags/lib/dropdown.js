@@ -8,6 +8,8 @@
 
 'use strict'
 
+const { composeUiClasses } = require('../../lib/ui-capabilities')
+
 function parseItem(line) {
   const matches = line.match(/^\s*(?:[-*]\s+)?(?:icon:([^\s]+)\s+)?\[([^\]]+)\]\(([^)\s]+)\)(?:\s+icon:([^\s]+))?\s*$/)
   if (!matches) {
@@ -41,21 +43,21 @@ module.exports = ctx => function(args, content = '') {
     el += ' open'
   }
   el += '>'
-  el += `<summary class="dropdown-trigger" title="${title}" aria-label="${title}">`
+  el += `<summary class="${composeUiClasses('dropdown-trigger', 'interactive')}" title="${title}" aria-label="${title}">`
   el += `<span>${title}</span>`
   el += '<svg class="dropdown-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
   el += '</summary>'
-  el += '<div class="dropdown-menu ui-collection" data-ui-surface="glass" data-layout="list" data-variant="nav" data-density="compact">'
+  el += '<div class="dropdown-menu ui-collection" data-layout="list" data-variant="nav" data-density="compact">'
   for (const item of items) {
     const url = String(item.url)
-    el += `<a class="dropdown-item ui-collection__item card-hover card-hover--spotlight" href="${escapeHTML(toUrl(url))}`
+    el += `<a class="${composeUiClasses('dropdown-item', 'collectionItem')}" href="${escapeHTML(toUrl(url))}`
     if (url.includes('://')) {
       el += '" target="_blank" rel="external nofollow noopener noreferrer">'
     } else {
       el += '" rel="noopener noreferrer">'
     }
     if (item.icon) {
-      el += `<span class="ui-collection__leading">${ctx.utils.icon(item.icon, 'no-lazy', true)}</span>`
+      el += `<span class="ui-icon">${ctx.utils.icon(item.icon, 'no-lazy', true)}</span>`
     }
     el += `<span class="ui-collection__content"><span class="ui-collection__title">${escapeHTML(item.title)}</span></span></a>`
   }

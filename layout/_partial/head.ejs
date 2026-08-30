@@ -226,6 +226,18 @@ function generate_canonical() {
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   <title><%- generate_title() %></title>
+  <script>
+    (function () {
+      var key = 'stellar:v2:leftbar-state';
+      var fallback = <%- JSON.stringify(stellar_config('layout.regions.leftbar.defaultState')) %>;
+      try {
+        var value = localStorage.getItem(key);
+        document.documentElement.dataset.leftbarState = value === 'collapsed' || value === 'expanded' ? value : fallback;
+      } catch (error) {
+        document.documentElement.dataset.leftbarState = fallback;
+      }
+    })();
+  </script>
 
   <%- render_open_graph() %>
   <%- generate_description() %>

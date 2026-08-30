@@ -62,7 +62,7 @@ graph TB
     
     subgraph "Initialization Routines"
         initTOC["init.toc()<br/>TOC scroll sync"]
-        initSidebar["init.sidebar()<br/>Sidebar interactions"]
+        initTocLinks["init.tocLinks()<br/>TOC and Drawer interactions"]
         initWikiStart["init.wikiStart()<br/>Wiki cover anchor scroll"]
         initLeftbarScroll["init.leftbarScroll()<br/>Leftbar scroll restoration"]
         initRelativeDate["init.relativeDate()<br/>Time formatting"]
@@ -79,7 +79,7 @@ graph TB
     hud --> init
     
     init --> initTOC
-    init --> initSidebar
+    init --> initTocLinks
     init --> initWikiStart
     init --> initLeftbarScroll
     init --> initRelativeDate
@@ -90,7 +90,7 @@ graph TB
     DOMLoad --> initCanonical
     
     stellarInit --> initTOC
-    stellarInit --> initSidebar
+    stellarInit --> initTocLinks
     stellarInit --> initWikiStart
     stellarInit --> initLeftbarScroll
     stellarInit --> initRelativeDate
@@ -133,7 +133,7 @@ graph TB
 
 `mode` 只接受 `light`、`dark`、`auto`。固定模式写入 `<html data-theme>`，`auto` 移除该属性；所选状态保存到 `Stellar.colorScheme`。每次确定选择都会派发 `stellar:color-scheme-change`，事件详情包含选择状态与解析后的实际明暗；自动模式还会跟随 `prefers-color-scheme`。非法参数抛出 `TypeError`，卸载 Extension 时会移除系统监听并恢复挂载前的同名全局属性。
 
-主题不自动输出切换入口，也不提供循环切换函数。站点可在 Footer Dropdown 中用三个明确的 `type: button` 调用 setter，具体结构见[侧栏系统：Footer Actions](../02-布局系统/sidebar-system.md#左栏footer-actions)。
+主题不自动输出切换入口，也不提供循环切换函数。站点可在 Footer Dropdown 中用三个明确的 `type: button` 调用 setter，具体结构见[配置说明：页脚配置](../00-总览与安装配置/configuration.md#页脚配置)。Actions 作为系统 Widget 可放入支持的 Region，位置规则见[Region 与 Leftbar 系统](../02-布局系统/sidebar-system.md#系统-widget)。
 
 **参考源码**：[scripts/lib/contribution-registry.js](../../../scripts/lib/contribution-registry.js)、[source/js/runtime/extensions/color-scheme-switch.mjs](../../../source/js/runtime/extensions/color-scheme-switch.mjs)、[layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)
 
@@ -151,7 +151,7 @@ graph TB
 
 列表页 navbar top 的背景条（`.navbar-blur`）未滚动/未吸顶时为卡片样式（`var(--card)` 底色 + `$boxshadow-card` 阴影，与文章卡片一致），吸顶且页面滚动达到阈值后恢复玻璃效果（`bar-glass()` 模糊/高光）。实现为 `init.navbarPin()`：直接测量 navbar 的实际视口位置，`getBoundingClientRect().top` 不高于 sticky 顶部（`getComputedStyle(el).top`，自动兼容桌面 `var(--gap-page)` 与移动端 `8pt`）加 2px 容差、且 `window.scrollY >= 2` 时切换 `.navbar-blur.pinned` 类——无轮播区页面（如 wiki）的 navbar 在页面顶部即已吸顶，需额外要求实际滚动，否则默认保持卡片样式，回到顶部（滚动小于 2px）恢复卡片；移动端浏览器顶栏伸缩会改变 `scrollY`（展开顶栏时 `scrollY` 减小），用 `scrollY` 推算吸顶状态会导致仍吸顶时玻璃误消失，因此吸顶判定仍以实际位置为准，`scrollY` 仅作为滚动阈值；rAF 节流监听 scroll，resize/pageshow 重算，`visualViewport` 存在时其 resize 也触发一次判定，初始化立即执行一次（兼容恢复滚动位置）；无 JS 时保持未吸顶的卡片样式。
 
-**参考源码**：[source/js/main.js](../../../source/js/main.js)、[source/css/_components/partial/navbar.styl](../../../source/css/_components/partial/navbar.styl)
+**参考源码**：[source/js/main.js](../../../source/js/main.js)、[source/css/_components/partial/listing-nav.styl](../../../source/css/_components/partial/listing-nav.styl)
 
 ---
 
@@ -168,7 +168,7 @@ flowchart TD
     initPage["stellar.initPage()"]
     
     initPage --> tocInit["init.toc()<br/>Set up TOC scroll sync"]
-    initPage --> sidebarInit["init.sidebar()<br/>Configure sidebar clicks"]
+    initPage --> tocLinksInit["init.tocLinks()<br/>Configure TOC and Drawer clicks"]
     initPage --> wikiStart["init.wikiStart()<br/>Wiki cover anchor handling"]
     initPage --> leftbarScroll["init.leftbarScroll()<br/>Leftbar scroll state"]
     initPage --> navbarPin["init.navbarPin()<br/>Navbar card/glass switch on pin"]
@@ -176,7 +176,7 @@ flowchart TD
     initPage --> tabsInit["init.registerTabsTag()<br/>Set up tab components"]
     
     tocInit --> complete["Initialization complete"]
-    sidebarInit --> complete
+    tocLinksInit --> complete
     wikiStart --> complete
     leftbarScroll --> complete
     navbarPin --> complete
@@ -261,7 +261,7 @@ toast 通知系统创建带 `.toast` 与 `.show` 类的临时覆盖元素，追�
 graph LR
     subgraph "init Object Methods"
         toc["init.toc()"]
-        sidebar["init.sidebar()"]
+        tocLinks["init.tocLinks()"]
         wikiStart["init.wikiStart()"]
         leftbarScroll["init.leftbarScroll()"]
         navbarPin["init.navbarPin()"]
@@ -283,7 +283,7 @@ graph LR
     subgraph "Registered Behaviors"
         scrollSync["Scroll synchronization"]
         activeState["Active state tracking"]
-        dismiss["Sidebar dismiss on click"]
+        dismiss["Drawer dismiss on click"]
         cardGlass["Navbar card/glass switch on pin"]
         timeFormat["Relative time display"]
         tabSwitch["Tab content switching"]
@@ -295,8 +295,8 @@ graph LR
     toc --> scrollSync
     toc --> activeState
     
-    sidebar --> sidebarLinks
-    sidebar --> dismiss
+    tocLinks --> sidebarLinks
+    tocLinks --> dismiss
     
     navbarPin --> navbarElements
     navbarPin --> cardGlass
@@ -338,7 +338,7 @@ sequenceDiagram
     Browser->>Document: 页面加载完成
     Document->>stellar: stellar.initPage()
     stellar->>init: init.toc()
-    stellar->>init: init.sidebar()
+    stellar->>init: init.tocLinks()
     stellar->>init: init.wikiStart()
     stellar->>init: init.leftbarScroll()
     stellar->>init: init.relativeDate()

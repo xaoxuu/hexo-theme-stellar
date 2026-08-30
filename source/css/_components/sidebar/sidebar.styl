@@ -1,119 +1,16 @@
-sidebar-background-filter($opacity)
-  --background-opacity: $opacity
-  filter: saturate(var(--saturate)) blur(var(--blur-px)) opacity(var(--background-opacity))
+.site-region--leftbar .site-region__surface
+  overflow: visible
 
-sidebar-background-image($opacity)
-  sidebar-background-filter($opacity)
-  background-color: transparent
-  background-image: url($leftbar-background-image)
-  background-position: center
-  background-size: cover
-  background-repeat: no-repeat
-
-sidebar-background-gradient($base, $top, $right, $bottom, $opacity)
-  --background-opacity: $opacity
-  filter: blur(var(--blur-px)) opacity(var(--background-opacity))
-  background-color: $base
-  background-image: radial-gradient(ellipse at 28% 24%, $top 0%, $top 65%, transparent 100%), radial-gradient(ellipse at 60% 50%, $right 0%, $right 60%, transparent 100%), conic-gradient(from 210deg at 32% 72%, $bottom 0deg, $bottom 110deg, transparent 190deg, $top 270deg, transparent 360deg)
-  background-position: left top, right 42%, left bottom
-  background-size: 56% 34%, 52% 30%, 60% 38%
-  background-repeat: no-repeat
-
-sidebar-background-color($color)
-  --inset: 0
-  --background-opacity: 1
-  background-color: convert($color)
-  background-image: none
-  background-position: initial
-  background-size: auto
-  background-repeat: no-repeat
-  filter: none
-
-.l_left
-  margin: var(--gap-page)
-  max-height: calc(100vh - var(--gap-page) * 2)
-  border-radius: $border-card-l
-  .brand-header
-    margin: var(--gap-base) var(--gap-base) 0
-
-.l_right
-  margin: var(--gap-page) 0
-  border-radius: $border-card-l
-@media screen and (min-width: $device-2k)
-  .l_left
-    margin-left: auto
-    margin-right: calc(2 * var(--gap-page))
-  .l_right
-    margin-left: var(--gap-page)
-    margin-right: auto
-
-// 纯色卡片风格（appearance.backgrounds.sidebar.surface: card）：
-// 实色 var(--card) 背景 + 中间档阴影，隐藏图片背景与磨砂叠加层
-.l_left.leftbar-card
-  background: var(--card)
-  box-shadow: $boxshadow-float
-  // 卡片风格交互变量：列表项 hover/active 用 var(--block-border)，搜索条底部条默认用 var(--text-meta)
-  --leftbar-item-bg: var(--block-border)
-  --leftbar-item-shadow: none
-  --leftbar-search-line: var(--text-meta)
-  // 卡片风格组件背景：白色半透明填充（--bg-a20/a50/a60/a75）统一改为 var(--block)，
-  // --bg-a100（不透明白）改为 var(--block-border) 保留 hover 反馈，与右栏观感一致
-  --bg-a20: var(--block)
-  --bg-a50: var(--block)
-  --bg-a60: var(--block)
-  --bg-a75: var(--block)
-  --bg-a100: var(--block-border)
-  .sidebg
-    display: none
-  .leftbar-container
-    &:before
-    &:after
-      display: none
-
-.l_left
-  .sidebg
-    pointer-events: none
-    position: absolute
-    --inset: 0
-    top: var(--inset)
-    bottom: var(--inset)
-    left: var(--inset)
-    right: var(--inset)
-    border-radius: $border-card-l
-    --saturate: 400%
-    --blur-px: convert(hexo-config('appearance.backgrounds.sidebar.backdrop.radius'))
-    --background-opacity: 1
-    if hexo-config('appearance.backgrounds.sidebar.backdrop.radius')
-      --inset: 32px
-    if $leftbar-background-type == 'gradient' && length($leftbar-gradient-light) == 4
-      sidebar-background-gradient($leftbar-gradient-light-base, $leftbar-gradient-light-top, $leftbar-gradient-light-right, $leftbar-gradient-light-bottom, hexo-config('appearance.backgrounds.sidebar.opacity'))
-    else if $leftbar-background-type == 'image' && $leftbar-background-image
-      sidebar-background-image(hexo-config('appearance.backgrounds.sidebar.opacity'))
-    else if $leftbar-background-type == 'color' && ($leftbar-background-color-light || $leftbar-background-color-dark)
-      sidebar-background-color($leftbar-background-color-light)
-    :root[data-theme="dark"] &
-      if $leftbar-background-type == 'gradient' && length($leftbar-gradient-dark) == 4
-        sidebar-background-gradient($leftbar-gradient-dark-base, $leftbar-gradient-dark-top, $leftbar-gradient-dark-right, $leftbar-gradient-dark-bottom, hexo-config('appearance.backgrounds.sidebar.opacity'))
-      else if $leftbar-background-type == 'image' && $leftbar-background-image
-        sidebar-background-image(hexo-config('appearance.backgrounds.sidebar.opacity') * 0.75)
-      else if $leftbar-background-type == 'color' && $leftbar-background-color-dark
-        sidebar-background-color($leftbar-background-color-dark)
-    :root:not([data-theme]) &
-      @media screen and (prefers-color-scheme: dark)
-        if $leftbar-background-type == 'gradient' && length($leftbar-gradient-dark) == 4
-          sidebar-background-gradient($leftbar-gradient-dark-base, $leftbar-gradient-dark-top, $leftbar-gradient-dark-right, $leftbar-gradient-dark-bottom, hexo-config('appearance.backgrounds.sidebar.opacity'))
-        else if $leftbar-background-type == 'image' && $leftbar-background-image
-          sidebar-background-image(hexo-config('appearance.backgrounds.sidebar.opacity') * 0.75)
-        else if $leftbar-background-type == 'color' && $leftbar-background-color-dark
-          sidebar-background-color($leftbar-background-color-dark)
-
-  .leftbar-container
-    height: calc(100vh - var(--gap-page) * 2)
+.site-region--leftbar
+  .site-region__viewport
+    height: 100%
+    max-height: inherit
     display: flex
     flex-direction: column
     word-break: break-all
     text-align: justify
-    border-radius: $border-card-l
+    border-radius: inherit
+    background: transparent
     overflow: hidden
     // 搜索条激活（有输入内容）时隐藏导航区与组件区，给搜索结果腾出空间
     > .search-wrapper[searching='true']
@@ -125,42 +22,72 @@ sidebar-background-color($color)
       -webkit-mask: linear-gradient(white, 90%, transparent)
     >*
       z-index 1
-    &:before,&:after
-      position: absolute
-      pointer-events: none
-      content: ''
-      top: 0
-      bottom: 0
-      left: 0
-      right: 0
-      border-radius: $border-card-l
-      corner-shape: inherit
-    &:before
-      if $leftbar-has-decorative-background
-        @media screen and (min-width: $device-mobile-max)
-          background: rgba(white, 0.05)
-          box-shadow: inset 0 0 32px 1px rgba(white, 0.5)
-          backdrop-filter: saturate(300%)
-          -webkit-backdrop-filter: saturate(300%)
-          mask: linear-gradient(black, rgba(black, 0.5), 70%, transparent, 90%, transparent)
-          -webkit-mask: linear-gradient(black, rgba(black, 0.5), 70%, transparent, 90%, transparent)
-        :root[data-theme="dark"] &
-          background: rgba(white, 0.05)
-          box-shadow: inset 0 0 32px 1px rgba(white, 0.1)
-        :root:not([data-theme]) &
-          @media screen and (prefers-color-scheme: dark)
-            background: rgba(white, 0.05)
-            box-shadow: inset 0 0 32px 1px rgba(white, 0.1)
-    &:after
-      if hexo-config('appearance.backgrounds.sidebar.backdrop.overlay')
-        background: convert(hexo-config('appearance.backgrounds.sidebar.backdrop.overlay'))
 
-@media screen and (max-width: $device-mobile-max)
-  .l_left
-    overflow: hidden
-    background: var(--bg-a100)
-    .sidebg
-      --inset: 0
-      --saturate: 300%
-    .leftbar-container:after
-      background: var(--bg-a20)
+// Leftbar 的公开 widgets 数组在内部投影为固定顶部、滚动主体与统一 Footer。
+.site-region--leftbar
+  .site-region__viewport
+    padding: var(--gap-base)
+    gap: var(--gap-base)
+  .site-region__zone
+    position: relative
+    z-index: 1
+    min-width: 0
+  .site-region__zone--top
+    flex: 0 0 auto
+  .site-region__project-toolbar
+    min-height: 40px
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 8px
+    .site-region__project-home,
+    .site-region__project-search
+      min-width: 0
+      display: flex
+      align-items: center
+    .site-region__project-search
+      margin-inline-start: auto
+      .ui-collection__item
+        width: 32px
+        min-width: 32px
+        height: 32px
+        min-height: 32px
+        padding: 4px
+        justify-content: center
+  .site-region__zone--body
+    flex: 1 1 auto
+    min-height: 0
+    overflow-x: hidden
+    overflow-y: auto
+    overscroll-behavior: contain
+    scrollbar(0, 0)
+    mask: linear-gradient(white, 90%, transparent)
+    -webkit-mask: linear-gradient(white, 90%, transparent)
+    > .widgets
+      padding-bottom: 64px
+  .site-region__footer
+    position: relative
+    z-index: 2
+    flex: 0 0 auto
+    display: flex
+    flex-direction: column
+    gap: 8px
+    min-width: 0
+  .site-region__footer-actions
+    flex: 0 0 auto
+    min-width: 0
+    .widget-stack
+      padding: 0
+  .site-region__system
+    flex: 0 0 auto
+    min-height: 32px
+    display: flex
+    align-items: center
+    gap: 8px
+  .site-region__settings
+    flex: 1 1 auto
+    min-width: 0
+    .widget-instance--settings
+      width: 100%
+  .widget-stack
+    margin: 0

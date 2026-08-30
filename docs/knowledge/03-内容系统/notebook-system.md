@@ -87,10 +87,10 @@ listing:
     field: updated
     direction: desc
 note_defaults:
-  sidebar:
-    left:
+  regions:
+    leftbar:
       widgets: [tagtree, recent]
-    right:
+    rightbar:
       widgets: [toc]
 footer:
   license: null
@@ -101,7 +101,7 @@ footer:
 - `listing.per_page: null` 继承 Hexo；`0` 表示不分页。
 - `listing.sort.field` 为 `date` 或 `updated`，`direction` 为 `asc` 或 `desc`。
 - `footer.license/share: null` 继承 Article 默认；`false` / `[]` 显式关闭。
-- `navigation.menu`、Sidebar、Article、Footer、Comments 继续按页面 → Collection → Profile → 全局的模型边界级联。
+- `navigation.menu`、Region、Article、Footer、Comments 继续按页面 → Collection → Profile → 全局的模型边界级联。
 
 ## Note Front Matter
 

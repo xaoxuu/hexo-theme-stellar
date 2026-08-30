@@ -79,9 +79,9 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
         wiki_index: { path: "/wiki/" },
         wiki: {
           navigation: { active_menu: "wiki" },
-          sidebar: {
-            left: ["tree", "related"],
-            right: ["toc"]
+          regions: {
+            leftbar: { widgets: ["tree", "related"] },
+            rightbar: { widgets: ["toc"] }
           }
         }
       } },
@@ -106,7 +106,7 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
       navigation: { breadcrumb: true, tree: { "快速开始": ["index", "install"] } },
       card: { cover: "/cover.webp" },
       hero: { enabled: true, background: { image: "/hero.webp" } },
-      sidebar: { left: { search: true } },
+      regions: { leftbar: { widgets: ["tree"] } },
       article: { paragraph_indent: "always" },
       footer: { share: false },
       comments: { enabled: true, title: "Wiki comments" }
@@ -208,9 +208,16 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
   assert.equal(viewModel.item.presentation.comments.title, "Wiki comments");
   assert.equal(viewModel.render.document.language, "zh-CN");
   assert.equal(viewModel.render.layout.pageType, "content");
-  assert.equal(viewModel.render.layout.brand.name, "Stellar");
+  assert.equal(viewModel.render.layout.brands.site.name, null);
+  assert.equal(viewModel.render.layout.brands.site.href, "/");
+  assert.equal(viewModel.render.layout.brands.collection.name, "Stellar");
+  assert.equal(viewModel.render.layout.brands.collection.href, "wiki/stellar");
+  assert.equal(Object.hasOwn(viewModel.render.layout.brands.site, "github"), false);
+  assert.equal(Object.hasOwn(viewModel.render.layout.brands.collection, "github"), false);
+  assert.equal(Object.hasOwn(viewModel.render.layout.brands.site, "wordmark"), false);
   assert.equal(viewModel.render.layout.wikiIndexPath, "wiki");
-  assert.equal(viewModel.render.layout.searchFilter, "wiki/stellar/");
+  assert.equal(viewModel.render.layout.algoliaFilterPath, "wiki/stellar/");
+  assert.equal(Object.hasOwn(viewModel.render.layout, "searchFilter"), false);
   assert.equal(viewModel.render.seo.title, "Stellar：开始 - Example");
   assert.equal(viewModel.render.seo.canonical, null);
   assert.equal(viewModel.render.seo.jsonLd["@type"], "WebPage");
@@ -241,7 +248,7 @@ test("合法 Wiki profile 生成与 Post 同构的冻结 PageViewModel", () => {
   innerInput.page.content = "";
   const innerViewModel = buildWikiPageViewModel(innerInput);
   assert.equal(innerViewModel.render.cover.enabled, false);
-  assert.equal(innerViewModel.render.layout.searchFilter, "wiki/stellar/");
+  assert.equal(innerViewModel.render.layout.algoliaFilterPath, "wiki/stellar/");
   assert.equal(innerViewModel.render.article.readmeHtml, "");
   assert.equal(innerViewModel.render.article.previous.title, "开始");
   assert.equal(innerViewModel.render.article.next, null);
@@ -376,7 +383,7 @@ test("Wiki 模型隔离输入引用并区分项目与页面可见性", () => {
     name: "Private Wiki",
     source: { repository: "owner/wiki", branch: "main" },
     hero: { background: { image: "/collection-hero.webp" } },
-    sidebar: { left: { widgets: ["tree"] } },
+    regions: { leftbar: { widgets: ["tree"] } },
     navigation: { tree: ["index"] }
   };
   const collectionState = {
@@ -403,7 +410,7 @@ test("Wiki 模型隔离输入引用并区分项目与页面可见性", () => {
   });
 
   collectionConfig.name = "Changed";
-  collectionConfig.sidebar.left.widgets.push("changed");
+  collectionConfig.regions.leftbar.widgets.push("changed");
   collectionState.sections[0].pages[0].title = "Changed";
 
   assert.deepEqual(viewModel.collection.visibility, { listed: false, searchable: true });
@@ -414,7 +421,7 @@ test("Wiki 模型隔离输入引用并区分项目与页面可见性", () => {
     branch: "page"
   });
   assert.equal(viewModel.collection.identity.name, "Private Wiki");
-  assert.deepEqual(viewModel.collection.presentation.sidebar.left.widgets, ["tree"]);
+  assert.deepEqual(viewModel.collection.presentation.regions.leftbar.widgets, ["tree"]);
   assert.equal(viewModel.item.presentation.banner.image, "/page-banner.webp");
   assert.equal(viewModel.collection.navigation.tree[0].items[0].title, "Home");
   assert.equal(viewModel.collection.navigation.tree[0].items[0].path, "wiki/private");
@@ -434,17 +441,16 @@ test("合法 Post profile 生成固定结构的冻结 PageViewModel", () => {
         brand: {
           image: { src: "/avatar.webp", variant: "avatar" },
           name: "Stellar",
-          tagline: { text: "独立博客", hover: null },
-          href: "/"
+          tagline: "独立博客"
         }
       },
       layout: { profiles: {
         blog_index: { path: "/blog/" },
         post: {
           navigation: { active_menu: "post" },
-          sidebar: {
-            left: ["recent"],
-            right: ["toc"]
+          regions: {
+            leftbar: { widgets: ["recent"] },
+            rightbar: { widgets: ["toc"] }
           }
         }
       } },
@@ -574,9 +580,9 @@ test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD �
       resources: { fallbacks: { cover: "/default.webp" } },
       appearance: {
         color_scheme: "auto",
+        preset: "card",
         backgrounds: {
-          page: { image: "/background.webp" },
-          sidebar: { surface: "card" }
+          page: { image: "/background.webp" }
         }
       },
       layout: { profiles: { post: { navigation: { active_menu: "post" } } } }
@@ -617,8 +623,7 @@ test("Post render 在渲染期完成 SEO、语言、canonical、OG 与 JSON-LD �
   });
   assert.equal(viewModel.render.layout.indent, true);
   assert.equal(viewModel.render.layout.siteBackground, true);
-  assert.equal(viewModel.render.layout.leftbarSurface, "card");
-  assert.equal(viewModel.render.layout.leftbarBlur, false);
+  assert.equal(Object.hasOwn(viewModel.render.layout, "appearancePreset"), false);
   assert.deepEqual(viewModel.render.layout.breadcrumbs, [{ name: "开发", path: "blog/categories/dev" }]);
   assert.equal(viewModel.render.seo.description, "Rendered intro");
   assert.deepEqual(viewModel.render.seo.keywords, ["Stellar", "Hexo"]);
@@ -775,7 +780,7 @@ test("Post 列表与评论投影保留覆盖、摘要优先级、五标签和隐
   assertDeepFrozen(viewModel);
 });
 
-test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆盖", () => {
+test("Post 配置级联保留 false、0、空字符串和 Region 覆盖", () => {
   const viewModel = buildPostPageViewModel({
     source: "source/_posts/cascade.md",
     siteConfig: {},
@@ -784,9 +789,9 @@ test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆�
       layout: { profiles: {
         post: {
           navigation: { active_menu: "post" },
-          sidebar: {
-            left: ["recent"],
-            right: ["toc"]
+          regions: {
+            leftbar: { widgets: ["recent"] },
+            rightbar: { widgets: ["toc"] }
           }
         }
       } },
@@ -800,12 +805,7 @@ test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆�
     frontMatter: {
       title: "Cascade",
       navigation: { menu: "", breadcrumb: false },
-      sidebar: {
-        left: {
-          widgets: [],
-          brand: { image: { src: "/page.svg", variant: "plain" } }
-        }
-      },
+      regions: { leftbar: { widgets: [] } },
       article: { paragraph_indent: "never" },
       footer: { license: false, share: false },
       comments: { enabled: false, title: "" },
@@ -816,13 +816,11 @@ test("Post 配置级联保留 false、0、空字符串和 Brand 图片原子覆�
   });
 
   assert.deepEqual(viewModel.item.navigation, { menu: "", breadcrumb: false });
-  assert.deepEqual(viewModel.item.presentation.sidebar.left.widgets, []);
-  assert.deepEqual(viewModel.item.presentation.sidebar.left.brand.image, {
-    src: "/page.svg",
-    variant: "plain"
-  });
-  assert.equal(viewModel.item.presentation.sidebar.left.brand.name, undefined);
-  assert.equal(viewModel.render.layout.brand.name, "Global");
+  assert.deepEqual(viewModel.item.presentation.regions.leftbar.widgets, []);
+  assert.deepEqual(viewModel.render.layout.regions.leftbar.widgets, []);
+  assert.equal(viewModel.render.layout.regions.leftbar.brand, "site_brand");
+  assert.equal(viewModel.render.layout.brands.site.name, "Global");
+  assert.equal(viewModel.render.layout.brands.collection, null);
   assert.equal(viewModel.item.presentation.article.paragraphIndent, "never");
   assert.equal(viewModel.item.presentation.footer.license, false);
   assert.equal(viewModel.item.presentation.footer.share, false);

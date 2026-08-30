@@ -34,21 +34,22 @@
         color: inherit
         opacity 0.3
         trans1 opacity
-        border-radius: 8px
+        border-radius: $border-button
         padding: 6px
         margin-right: -6px
-        svg
-          height: 1em
-          width: auto
+        .ui-icon
+          --ui-icon-size: 1em
           transform: scale(1.2)
-          fill: var(--text-p2)
-        &:hover
+        &:hover,
+        &:focus-visible
           color: var(--accent)
-          background: var(--ui-item-bg-hover)
-          box-shadow: var(--ui-item-shadow-hover)
           opacity 1
-          svg
-            fill: var(--accent)
+        &:focus-visible
+          outline: 2px solid var(--theme)
+          outline-offset: 2px
+        &:active
+          color: var(--accent)
+          opacity 1
 
     .widget-body
       color: var(--text-p1)
@@ -67,20 +68,14 @@
   .widget-section+.widget-section
     margin-top: 24px
 
-.widget-wrapper.markdown
-  --ui-item-bg: var(--block)
-
-[data-ui-surface='glass'] .widget-wrapper.markdown
-  --ui-item-bg: var(--bg-a10)
-
-.l_left .widgets
-  padding-bottom: 64px
-.l_right .widgets
+.site-region--rightbar .widgets
   padding: 0
   &:empty 
     display: none
   .widget-wrapper:first-child
     margin-top: 0
+  .widget-instance + .widget-instance > .widget-wrapper
+    margin-top: var(--gap-base)
   .widget-wrapper
     .widget-header
       padding-left: var(--gap-base)

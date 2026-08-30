@@ -87,32 +87,62 @@ function createFieldFactory(scope, consumers) {
 
 function brandSchema(factory, options = {}) {
   const { field, object } = factory;
-  return object({
+  const properties = {
     image: object({
       src: field(["string", "null"], { example: "/images/avatar.webp" }),
-      variant: field("string", { example: "avatar" }),
-      href: field(["string", "null"], { example: "/about/" })
+      variant: field("string", { example: "avatar" })
     }, { example: { src: "/images/avatar.webp", variant: "avatar" } }),
     name: field(["string", "null"], {
       default: options.nameDefault || derived("site.title"),
       example: "Stellar",
       required: options.requiredName === true
     }),
-    wordmark: field(["string", "null"], { example: "/wordmark.svg" }),
-    tagline: object({
-      text: field(["string", "null"], { example: "每个人的独立博客" }),
-      hover: field(["string", "null"], { example: "example.com" })
-    }, {
+    tagline: field(["string", "null"], {
       default: options.taglineDefault || derived("site.subtitle"),
-      example: { text: "每个人的独立博客", hover: null },
+      example: "每个人的独立博客",
       required: options.requiredTagline === true
     }),
-    href: field(["string", "null"], { example: "/" })
-  }, {
+    href: field("string", {
+      default: options.hrefDefault || omitted(),
+      example: "/",
+      required: options.requiredHref === true
+    })
+  };
+  return object(properties, {
     default: options.default || (options.requiredName
       ? derived("hexo.stellar.config.site.brand")
       : omitted()),
-    example: { name: "Stellar", tagline: { text: "每个人的独立博客", hover: null }, href: "/" }
+    example: {
+      name: "Stellar",
+      tagline: "每个人的独立博客",
+      href: "/"
+    }
+  });
+}
+
+function renderBrandsSchema(factory) {
+  const { object } = factory;
+  const site = brandSchema(factory, {
+    nameDefault: derived("hexo.stellar.config.site.brand.name"),
+    taglineDefault: derived("hexo.stellar.config.site.brand.tagline"),
+    hrefDefault: literal("/"),
+    requiredHref: true
+  });
+  site.required = true;
+  const collection = brandSchema(factory, {
+    nameDefault: derived("collection.identity.name"),
+    taglineDefault: derived("collection.identity.tagline"),
+    hrefDefault: derived("collection.route.homepage", "collection.route.baseDir", "collection.route.path"),
+    requiredHref: true
+  });
+  collection.type = ["object", "null"];
+  collection.default = computed("由活动 Wiki、Notebook 或 Topic Collection identity 派生；无活动 Collection 时为 null");
+  collection.example = null;
+  collection.required = true;
+  return object({ site, collection }, {
+    default: computed("分别投影 site.brand 与活动 Collection identity，不互相继承"),
+    example: { site: { name: "Stellar", href: "/" }, collection: null },
+    required: true
   });
 }
 
@@ -162,33 +192,32 @@ function navigationSchema(factory, extension = {}) {
   });
 }
 
-function sidebarSchema(factory) {
+function regionsConfigSchema(factory) {
   const { array, field, object } = factory;
   const widget = field(["string", "object"], {
     default: computed("由 widgets 数组逐项提供"),
     example: "toc",
     additionalProperties: true
   });
+  const region = example => object({
+    widgets: array(widget, { example })
+  }, { example: { widgets: example } });
+  const leftbar = example => object({
+    enabled: field(["boolean", "null"], { example: true }),
+    brand: field(["string", "boolean", "null"], { example: "site_brand" }),
+    menu: field(["boolean", "null"], { example: true }),
+    footer: object({
+      actions: field(["boolean", "null"], { example: true })
+    }, { example: { actions: true } }),
+    widgets: array(widget, { example })
+  }, { example: { enabled: true, widgets: example } });
   return object({
-    left: object({
-      widgets: array(widget, { example: ["recent", "toc"] }),
-      search: field(["boolean", "object"], {
-        example: { filter: "wiki", placeholder: "搜索文档" },
-        properties: {
-          filter: field("string", { example: "wiki" }),
-          placeholder: field("string", { example: "搜索文档" })
-        }
-      }),
-      menu: field("boolean", { example: true }),
-      brand: brandSchema(factory),
-      wikiHome: field("boolean", { example: true })
-    }, { example: { widgets: ["recent"] } }),
-    right: object({
-      widgets: array(widget, { example: ["toc"] })
-    }, { example: { widgets: ["toc"] } })
+    topbar: region(["site_brand", "spacer", "menu"]),
+    leftbar: leftbar(["recent"]),
+    rightbar: region(["toc"])
   }, {
-    default: inherited("profile.sidebar", "collection.sidebar", "page.sidebar"),
-    example: { left: { widgets: ["recent"] }, right: { widgets: ["toc"] } }
+    default: inherited("profile.regions", "collection.regions", "page.regions"),
+    example: { leftbar: { enabled: true, widgets: ["recent"] }, rightbar: { widgets: ["toc"] } }
   });
 }
 
@@ -300,6 +329,23 @@ function commentsSchema(factory) {
   });
 }
 
+function renderRegionsSchema(factory) {
+  const { array, field } = factory;
+  return {
+    regions: field("object", {
+      default: computed("由 Region 四层级联与 Widget presentation 能力解析"),
+      example: { leftbar: { defaultState: "expanded", widgets: [] }, rightbar: { widgets: [] } },
+      required: true,
+      additionalProperties: true
+    }),
+    regionWarnings: array(field("object", { additionalProperties: true }), {
+      default: literal([]),
+      example: [],
+      required: true
+    })
+  };
+}
+
 function presentationSchema(factory, options = {}) {
   const cascadeFactory = options.cascadeFactory || factory;
   const cardFactory = options.cardFactory || cascadeFactory;
@@ -307,7 +353,7 @@ function presentationSchema(factory, options = {}) {
     ...(options.includeCard ? { card: cardSchema(cardFactory) } : {}),
     ...(options.includeHero ? { hero: heroSchema(factory, { pathConsumers: options.heroConsumers }) } : {}),
     ...(options.includeBanner ? { banner: bannerSchema(factory) } : {}),
-    sidebar: sidebarSchema(cascadeFactory),
+    regions: regionsConfigSchema(cascadeFactory),
     article: articleSchema(cascadeFactory),
     footer: footerSchema(cascadeFactory),
     comments: commentsSchema(cascadeFactory)
@@ -518,8 +564,7 @@ function pageViewModelSchema(profile) {
         tags: array(stringItem, { default: literal([]), example: ["Hexo"], required: true })
       }
     });
-    const renderBrand = brandSchema(factory);
-    renderBrand.required = true;
+    const renderBrands = renderBrandsSchema(factory);
     const postLink = field(["object", "null"], {
       default: computed("由 Hexo prev/next 关系规范化；不存在时为 null"),
       example: { title: "上一篇", path: "blog/previous", date: "2026-08-21T00:00:00.000Z" },
@@ -572,20 +617,11 @@ function pageViewModelSchema(profile) {
         articleStyle: field(["string", "null"], { default: inherited("item.presentation.article.style"), example: "tech", required: true }),
         indent: field("boolean", { default: computed("由 article.paragraphIndent 与 style 解析"), example: false, required: true }),
         siteBackground: field("boolean", { default: derived("hexo.stellar.config.appearance.backgrounds.page.image"), example: false, required: true }),
-        leftbarSurface: field("string", { default: derived("hexo.stellar.config.appearance.backgrounds.sidebar.surface"), example: "glass", required: true }),
-        leftbarBlur: field("boolean", { default: computed("v2 appearance 不再公开 sidebar blur 开关"), example: false, required: true }),
         blogPath: field("string", { default: derived("site.index_generator.path"), example: "blog", required: true }),
-        brand: renderBrand,
-        ...(profile === "topic" ? {
-          sidebar: field("object", {
-            default: inherited("item.presentation.sidebar"),
-            example: { left: { widgets: ["related"] }, right: { widgets: ["toc"] } },
-            required: true,
-            additionalProperties: true
-          })
-        } : {}),
+        brands: renderBrands,
+        ...renderRegionsSchema(factory),
         breadcrumbs: array(breadcrumbItem, { default: literal([]), example: [{ name: "思考", path: "blog/categories/thinking" }], required: true })
-      }, { required: true, example: { pageType: "content", articleStyle: "tech", indent: false, blogPath: "blog", brand: {}, breadcrumbs: [] } }),
+      }, { required: true, example: { pageType: "content", articleStyle: "tech", indent: false, blogPath: "blog", brands: { site: {}, collection: null }, breadcrumbs: [] } }),
       seo: object({
         title: field("string", { default: computed("由文章标题与站点标题组合"), example: "Hello Stellar - Stellar", required: true }),
         description: field("string", { default: derived("page.description", "item.excerpt", "item.content"), example: "文章摘要", required: true }),
@@ -654,8 +690,7 @@ function pageViewModelSchema(profile) {
 
   if (profile === "wiki") {
     const stringItem = field("string", { default: computed("由构建期数组逐项归一化"), example: "Stellar" });
-    const renderBrand = brandSchema(factory);
-    renderBrand.required = true;
+    const renderBrands = renderBrandsSchema(factory);
     const wikiLink = field(["object", "null"], {
       default: computed("由 Wiki navigation.tree 当前页码计算；不存在时为 null"),
       example: { title: "安装", path: "wiki/stellar/install", date: null },
@@ -727,15 +762,12 @@ function pageViewModelSchema(profile) {
         articleStyle: field(["string", "null"], { default: inherited("item.presentation.article.style"), example: "tech", required: true }),
         indent: field("boolean", { default: computed("由 article.paragraphIndent 与 style 解析"), example: false, required: true }),
         siteBackground: field("boolean", { default: derived("hexo.stellar.config.appearance.backgrounds.page.image"), example: false, required: true }),
-        leftbarSurface: field("string", { default: derived("hexo.stellar.config.appearance.backgrounds.sidebar.surface"), example: "glass", required: true }),
-        leftbarBlur: field("boolean", { default: literal(false), example: false, required: true }),
-        brand: renderBrand,
+        brands: renderBrands,
         wikiIndexPath: field("string", { default: derived("layout.profiles.wiki_index.path"), example: "wiki", required: true }),
-        showWikiHome: field("boolean", { default: inherited("item.presentation.sidebar.left.wikiHome"), example: true, required: true }),
-        searchFilter: field("string", { default: computed("由页面路径保留 Wiki 搜索的既有两段目录范围"), example: "wiki/stellar/", required: true }),
-        sidebar: field("object", { default: inherited("item.presentation.sidebar"), example: { left: { widgets: ["tree"] }, right: { widgets: ["toc"] } }, required: true, additionalProperties: true }),
+        algoliaFilterPath: field("string", { default: computed("由页面路径生成 Algolia 搜索的两段目录范围"), example: "wiki/stellar/", required: true }),
+        ...renderRegionsSchema(factory),
         breadcrumbs: array(breadcrumb, { default: literal([]), example: [{ name: "Stellar", path: "wiki/stellar" }], required: true })
-      }, { required: true, example: { pageType: "content", articleStyle: "tech", indent: false, brand: {}, wikiIndexPath: "wiki", showWikiHome: true, searchFilter: "wiki/stellar/", sidebar: {}, breadcrumbs: [] } }),
+      }, { required: true, example: { pageType: "content", articleStyle: "tech", indent: false, brands: { site: {}, collection: {} }, wikiIndexPath: "wiki", showWikiHome: true, algoliaFilterPath: "wiki/stellar/", leftbar: {}, breadcrumbs: [] } }),
       seo: object({
         title: field("string", { default: computed("由 Wiki 名、页面标题和站点标题组合"), example: "Stellar：开始 - Example", required: true }),
         description: field("string", { default: derived("page.description", "collection.identity.description", "item.excerpt", "item.content"), example: "Wiki 摘要", required: true }),
@@ -800,8 +832,7 @@ function pageViewModelSchema(profile) {
 
   if (profile === "notebook") {
     const stringItem = field("string", { default: computed("由构建期数组逐项归一化"), example: "tools" });
-    const renderBrand = brandSchema(factory);
-    renderBrand.required = true;
+    const renderBrands = renderBrandsSchema(factory);
     const breadcrumb = object({
       name: field("string", { default: inherited("collection.identity.headline"), example: "Development Notes", required: true }),
       path: field("string", { default: inherited("collection.route.baseDir"), example: "notes/dev", required: true })
@@ -845,17 +876,15 @@ function pageViewModelSchema(profile) {
         articleStyle: field(["string", "null"], { default: inherited("item.presentation.article.style"), example: "tech", required: true }),
         indent: field("boolean", { default: computed("由 article.paragraphIndent 与 style 解析"), example: false, required: true }),
         siteBackground: field("boolean", { default: derived("appearance.backgrounds.page.image"), example: false, required: true }),
-        leftbarSurface: field("string", { default: derived("appearance.backgrounds.sidebar.surface"), example: "glass", required: true }),
-        leftbarBlur: field("boolean", { default: literal(false), example: false, required: true }),
-        brand: renderBrand,
+        brands: renderBrands,
         notebookIndexPath: field("string", { default: derived("layout.profiles.notebook_index.path"), example: "notebooks", required: true }),
         notebookPath: field("string", { default: inherited("collection.route.baseDir"), example: "notes/dev", required: true }),
-        searchFilter: field("string", { default: inherited("collection.route.baseDir"), example: "notes/dev", required: true }),
-        sidebar: field("object", { default: inherited("item.presentation.sidebar"), example: {}, required: true, additionalProperties: true }),
+        algoliaFilterPath: field("string", { default: inherited("collection.route.baseDir"), example: "notes/dev", required: true }),
+        ...renderRegionsSchema(factory),
         breadcrumbs: array(breadcrumb, { default: literal([]), example: [], required: true }),
         tagTree: array(tagTreeItem, { default: literal([]), example: [], required: true }),
         recentItems: array(field("object", { additionalProperties: true }), { default: literal([]), example: [], required: true })
-      }, { required: true, example: { pageType: "content", articleStyle: "tech", indent: false, brand: {}, notebookIndexPath: "notebooks", notebookPath: "notes/dev", searchFilter: "notes/dev", sidebar: {}, breadcrumbs: [], tagTree: [] } }),
+      }, { required: true, example: { pageType: "content", articleStyle: "tech", indent: false, brands: { site: {}, collection: {} }, notebookIndexPath: "notebooks", notebookPath: "notes/dev", algoliaFilterPath: "notes/dev", leftbar: {}, breadcrumbs: [], tagTree: [] } }),
       seo: object({
         title: field("string", { default: computed("由 Note 标题与站点标题组合"), example: "Node.js - Example", required: true }),
         description: field("string", { default: derived("page.description", "item.excerpt", "item.content"), example: "Note 摘要", required: true }),

@@ -33,10 +33,23 @@ function assertDeepFrozen(value) {
   Object.values(value).forEach(assertDeepFrozen);
 }
 
-test("三套 Blueprint 与两套 Visual Style 生成合法且深冻结的显式计划", () => {
+function collectTopbars(value, output = []) {
+  if (Array.isArray(value)) {
+    value.forEach(child => collectTopbars(child, output));
+    return output;
+  }
+  if (value == null || typeof value !== "object") return output;
+  for (const [key, child] of Object.entries(value)) {
+    if (key === "topbar") output.push(child);
+    collectTopbars(child, output);
+  }
+  return output;
+}
+
+test("已注册 Blueprint 与 Visual Style 生成合法且深冻结的显式计划", () => {
   const catalog = loadCatalog();
-  assert.deepEqual(Object.keys(catalog.blueprints), ["classic-blog", "minimal-reading", "docs-reference"]);
-  assert.deepEqual(Object.keys(catalog.styles), ["stellar", "minimal"]);
+  assert.deepEqual(Object.keys(catalog.blueprints), ["classic", "minimal-reading", "docs-reference", "light-and-shadow"]);
+  assert.deepEqual(Object.keys(catalog.styles), ["card", "flat", "glass", "minimal"]);
   assertDeepFrozen(catalog);
 
   for (const blueprint of Object.keys(catalog.blueprints)) {
@@ -50,15 +63,21 @@ test("三套 Blueprint 与两套 Visual Style 生成合法且深冻结的显式�
       const rawConfig = yaml.load(config.content);
       parseStellarConfig({ source: config.target, themeConfig: rawConfig });
       assert.deepEqual(redundantThemeConfigPaths(rawConfig), []);
+      for (const topbar of collectTopbars(rawConfig)) {
+        const widgets = Array.isArray(topbar) ? topbar : topbar?.widgets;
+        if (!Array.isArray(widgets) || !widgets.includes("site_brand")) continue;
+        const brandIndex = widgets.indexOf("site_brand");
+        assert.equal(widgets[brandIndex + 1], "spacer", `${blueprint} 的 Topbar Brand 后必须显式声明 Spacer`);
+      }
       assertDeepFrozen(plan);
     }
   }
 });
 
-test("默认 Visual Style 是空覆盖，starter 只保留必要 Front Matter 与场景差异", () => {
+test("Card Visual Style 是空覆盖，starter 只保留必要 Front Matter 与场景差异", () => {
   const catalog = loadCatalog();
-  assert.equal(catalog.styles.stellar.content, "");
-  const classic = fs.readFileSync(path.join(catalog.themeRoot, "blueprints/classic-blog/files/source/_posts/welcome-to-stellar.md"), "utf8");
+  assert.equal(catalog.styles.card.content, "");
+  const classic = fs.readFileSync(path.join(catalog.themeRoot, "blueprints/classic/files/source/_posts/welcome-to-stellar.md"), "utf8");
   assert.match(classic, /^---\ntitle: Welcome to Stellar\ndate: \{\{generated_date\}\}\n---/);
   assert.doesNotMatch(classic, /\n(?:description|tags|collection|article):/);
   for (const syntax of [/^# /m, /^- /m, /^> /m, /^```js$/m, /^!\[/m, /\[[^\]]+\]\(https:\/\//, /^\| Content \| Result \|$/m]) {
@@ -90,7 +109,7 @@ test("真实写入严格复用计划且生成结果不包含 Blueprint 锁或运
 test("任一目标冲突会在写入前拒绝整份计划", () => {
   const baseDir = tempDir();
   fs.writeFileSync(path.join(baseDir, "_config.stellar.yml"), "existing\n");
-  assert.throws(() => buildBlueprintPlan({ baseDir, blueprint: "classic-blog" }), error => {
+  assert.throws(() => buildBlueprintPlan({ baseDir, blueprint: "classic" }), error => {
     assert.equal(error instanceof BlueprintConflictError, true);
     assert.deepEqual(error.conflicts, ["_config.stellar.yml"]);
     return true;
@@ -115,7 +134,7 @@ test("写入中途失败会回滚本次已经创建的文件", () => {
 
 test("未知 ID、绝对路径与路径穿越均被来源化拒绝", () => {
   assert.throws(() => buildBlueprintPlan({ baseDir: tempDir(), blueprint: "unknown" }), BlueprintError);
-  assert.throws(() => buildBlueprintPlan({ baseDir: tempDir(), blueprint: "classic-blog", style: "unknown" }), BlueprintError);
+  assert.throws(() => buildBlueprintPlan({ baseDir: tempDir(), blueprint: "classic", style: "unknown" }), BlueprintError);
   assert.throws(() => safeRelativePath("../secret", "manifest"), /不能逃逸根目录/);
   assert.throws(() => safeRelativePath("/tmp/secret", "manifest"), /不能逃逸根目录/);
   assert.throws(() => safeRelativePath("./", "manifest"), /不能逃逸根目录/);
@@ -125,10 +144,10 @@ test("未知 ID、绝对路径与路径穿越均被来源化拒绝", () => {
 test("Manifest Schema 声明式拒绝不安全路径与重复目标", () => {
   const manifest = {
     schema_version: 1,
-    id: "classic-blog",
+    id: "classic",
     name: "Classic Blog",
     description: "Test",
-    default_style: "stellar",
+    default_style: "card",
     files: [
       { source: "../escape", target: "same/path.yml", template: false },
       { source: "valid.yml", target: "same//path.yml", template: false }
@@ -141,14 +160,14 @@ test("Manifest Schema 声明式拒绝不安全路径与重复目标", () => {
   });
   assert.throws(() => parseConfigSchema(VISUAL_STYLE_MANIFEST_SCHEMA, {
     schema_version: 1,
-    id: "stellar",
+    id: "card",
     name: "Stellar",
     description: "Test",
     fragment: "/tmp/escape.yml"
   }, { source: "style.json", applyDefaults: false }), /safe non-empty relative path/);
   assert.throws(() => parseConfigSchema(VISUAL_STYLE_MANIFEST_SCHEMA, {
     schema_version: 1,
-    id: "stellar",
+    id: "card",
     name: "Stellar",
     description: "Test",
     fragment: ".//"
@@ -159,13 +178,13 @@ test("输出路径不能借助站点内符号链接写到根目录之外", () =>
   const baseDir = tempDir();
   const outside = tempDir();
   fs.symlinkSync(outside, path.join(baseDir, "source"), "dir");
-  assert.throws(() => buildBlueprintPlan({ baseDir, blueprint: "classic-blog" }), /符号链接/);
+  assert.throws(() => buildBlueprintPlan({ baseDir, blueprint: "classic" }), /符号链接/);
 });
 
-test("Blueprint Reference 稳定登记三套 Blueprint、两套 Style 与 CLI 契约", () => {
+test("Blueprint Reference 稳定登记已注册 Blueprint、Style 与 CLI 契约", () => {
   const reference = generateBlueprintReferenceMetadata();
-  assert.deepEqual(reference.blueprints.map(item => item.id), ["classic-blog", "minimal-reading", "docs-reference"]);
-  assert.deepEqual(reference.visualStyles.map(item => item.id), ["stellar", "minimal"]);
+  assert.deepEqual(reference.blueprints.map(item => item.id), ["classic", "minimal-reading", "docs-reference", "light-and-shadow"]);
+  assert.deepEqual(reference.visualStyles.map(item => item.id), ["card", "flat", "glass", "minimal"]);
   assert.equal(reference.manifestContract.paths, "safe non-empty relative path");
   assert.equal(reference.manifestContract.uniqueBlueprintTargets, true);
   assert.deepEqual(reference.cli.subcommands.init.options, ["blueprint", "style", "dry-run", "non-interactive"]);

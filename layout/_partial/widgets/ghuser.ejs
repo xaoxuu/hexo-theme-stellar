@@ -30,7 +30,7 @@ function layoutDiv() {
   if (item.header) {
     el += `<div class="widget-header">`
       el += `<a class="gh-url" href="https://github.com/${item.username}">
-        ${icon('github:logo-alt')}
+        <span class="ui-icon">${icon('github:logo-alt')}</span>
         <span>github/${item.username}</span>
         </a>`
     el += `</div>`
@@ -55,7 +55,7 @@ function layoutDiv() {
     // follow
     if (item.follow) {
       el += '<a class="follow" href="https://github.com/' + item.username + '">';
-      el += icon('github:logo')
+      el += '<span class="ui-icon">' + icon('github:logo') + '</span>'
       el += 'Follow';
       el += '</a>';
     }

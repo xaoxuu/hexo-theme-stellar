@@ -9,6 +9,11 @@ const registerUtils = require('../scripts/events/lib/utils');
 
 const ROOT = path.join(__dirname, '..');
 
+test('主题基础图标键使用语义化命名空间，不暴露上游图标集原名', () => {
+  const ymlSrc = fs.readFileSync(path.join(ROOT, '_data/icons.yml'), 'utf8');
+  assert.doesNotMatch(ymlSrc, /^(?:solar|ph|bxs):/m);
+});
+
 test('iconData 返回 icons.yml 原始值（不包 <img>，缺失返回空串）', () => {
   const hexo = {
     stellar: { data: { icons: {
@@ -52,6 +57,14 @@ test('stellar_icon_sets 生成器：按命名空间输出 JSON、去注释、跳
     global.hexo = prevHexo;
   }
   assert.equal(typeof registrations.stellar_icons, 'function');
+  const firstScreen = registrations.stellar_icons.call({
+    stellar: { data: { icons: {
+      'default:profile': '<svg data-test="profile"></svg>',
+      'default:settings': '<svg data-test="settings"></svg>'
+    } } }
+  });
+  assert.match(firstScreen.data, /default:profile/);
+  assert.match(firstScreen.data, /default:settings/);
   const files = registrations.stellar_icon_sets.call({
     stellar: { data: { icons: {
       'a:one': '<svg><!-- c --><path/></svg>',

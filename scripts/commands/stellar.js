@@ -69,8 +69,8 @@ hexo.extend.console.register("stellar", "Initialize, diagnose, and author a Stel
     { name: "new note", desc: "Create a Note in a known Notebook." }
   ],
   options: [
-    { name: "--blueprint <id>", desc: "classic-blog | minimal-reading | docs-reference" },
-    { name: "--style <id>", desc: "stellar | minimal" },
+    { name: "--blueprint <id>", desc: "classic | minimal-reading | docs-reference | light-and-shadow" },
+    { name: "--style <id>", desc: "card | flat | glass | minimal" },
     { name: "--dry-run", desc: "Print the init plan without writing files." },
     { name: "--non-interactive", desc: "Never prompt for input." },
     { name: "--format <text|json>", desc: "Doctor output format; use Hexo global --silent with JSON." },

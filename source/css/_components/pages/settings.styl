@@ -1,0 +1,193 @@
+.settings-page
+  --settings-label-width: 8rem
+  --settings-content-gap: 2rem
+  width: unquote('min(calc(100% - 2 * var(--gap-page)), 46rem)')
+  margin: 0 auto
+  padding: var(--gap-page) 0
+  box-sizing: border-box
+  color: var(--text-p1)
+
+.settings-page__header
+  margin: 0 0 1rem
+  h1
+    margin: 0
+    font-size: 1.75rem
+
+.settings-section
+  margin: 0
+  padding: 1.5rem 0
+  h2
+    margin: 0 0 1.5rem
+    font-size: 1.125rem
+
+.settings-section__body
+  display: grid
+  grid-template-columns: var(--settings-label-width) minmax(0, 1fr)
+  column-gap: var(--settings-content-gap)
+  min-width: 0
+  > .settings-profile,
+  > .settings-kv,
+  > .settings-empty
+    grid-column: 1 / -1
+  > .settings-result
+    grid-column: 2
+
+.settings-profile
+  display: grid
+  grid-template-columns: var(--settings-label-width) minmax(0, 1fr)
+  column-gap: var(--settings-content-gap)
+
+.settings-profile__avatar
+  grid-column: 1
+  width: 5rem
+  height: 5rem
+  margin-bottom: 1.5rem
+  border-radius: 50%
+  overflow: hidden
+  display: grid
+  place-items: center
+  background: var(--block)
+  color: var(--text-p3)
+  img, span, svg
+    width: 100%
+    height: 100%
+  img
+    object-fit: cover
+
+.settings-profile__content
+  grid-column: 1 / -1
+  min-width: 0
+
+.settings-provider-note,
+.settings-empty
+  margin: 0
+  color: var(--text-p2)
+
+.settings-form
+  display: grid
+  gap: .875rem
+  label
+    display: grid
+    grid-template-columns: var(--settings-label-width) minmax(0, 1fr)
+    align-items: center
+    column-gap: var(--settings-content-gap)
+    min-width: 0
+    > span
+      color: var(--text-p2)
+      font-size: .875rem
+  > .settings-actions
+    margin-left: calc(var(--settings-label-width) + var(--settings-content-gap))
+  input
+    width: 100%
+    min-width: 0
+    box-sizing: border-box
+    padding: .625rem .75rem
+    border: 1px solid var(--block-border)
+    border-radius: .625rem
+    color: var(--text-p1)
+    background: var(--block)
+    outline: none
+    &:focus-visible
+      border-color: var(--theme)
+      box-shadow: 0 0 0 2px var(--theme-a20)
+
+.settings-actions
+  display: flex
+  flex-wrap: wrap
+  gap: .625rem
+
+.settings-button
+  padding: .5rem .875rem
+  border: 0
+  border-radius: .625rem
+  color: var(--text-p1)
+  background: var(--block)
+  cursor: pointer
+  transition: background .2s ease, color .2s ease, box-shadow .2s ease
+  &:hover
+    background: var(--block-border)
+  &:focus-visible
+    outline: 2px solid var(--theme)
+    outline-offset: 2px
+
+.settings-button--primary
+  color: var(--text-reverse)
+  background: var(--theme)
+  &:hover
+    background: var(--theme)
+    filter: brightness(1.08)
+
+.settings-button--danger
+  color: var(--theme)
+
+.settings-result
+  min-height: 1.5em
+  margin: .75rem 0 0
+  color: var(--text-p2)
+  &[data-state='success']
+    color: var(--theme)
+  &[data-state='failure']
+    color: $color-md-red
+
+.settings-kv
+  margin: 0
+
+.settings-kv__row
+  display: grid
+  grid-template-columns: var(--settings-label-width) minmax(0, 1fr)
+  column-gap: var(--settings-content-gap)
+  align-items: center
+  dt, dd
+    margin: 0
+    min-width: 0
+  dt
+    display: flex
+    align-items: center
+    color: var(--text-p3)
+  dd
+    display: flex
+    align-items: center
+    overflow-wrap: anywhere
+
+.settings-kv__value
+  min-width: 0
+
+.settings-kv__link,
+.settings-kv__action
+  flex: 0 0 auto
+  display: inline-grid
+  place-items: center
+  width: 2rem
+  height: 2rem
+  margin-left: 4px
+  border-radius: 50%
+  color: var(--text-p2)
+  background: transparent
+  &:hover
+    color: var(--theme)
+    background: var(--theme-a10)
+  &:focus-visible
+    color: var(--theme)
+    outline: 2px solid var(--theme)
+    outline-offset: 1px
+  .ui-icon,
+  svg
+    width: 1rem
+    height: 1rem
+
+.settings-kv__action
+  padding: 0
+  border: 0
+  cursor: pointer
+
+@media screen and (max-width: $device-mobile-max)
+  .settings-page
+    --settings-label-width: 5rem
+    --settings-content-gap: .75rem
+    width: 100%
+    padding: .75rem
+  .settings-section
+    padding: 1.25rem 0
+  .settings-profile__avatar
+    width: 4rem
+    height: 4rem

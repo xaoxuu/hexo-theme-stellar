@@ -1,0 +1,56 @@
+<%
+function layoutDiv() {
+  if (!wikiIndex || !Array.isArray(wikiIndex.items) || !Array.isArray(wikiIndex.allItems) || !Array.isArray(wikiIndex.tags)) {
+    throw new Error('Stellar v2: Wiki Listing Nav 缺少显式索引投影')
+  }
+  var el = '';
+  el += partial('_partial/main/pin_slider', {type: 'wiki', wikiItems: wikiIndex.allItems});
+
+  const listingNav = stellar_config('layout.profiles.wikiIndex.listingNav');
+  if (!listingNav.enabled) {
+    return el;
+  }
+
+  el += '<div class="listing-nav">';
+  el += '<div class="listing-nav__surface">';
+  el += '<div class="listing-nav__viewport">';
+  el += '<nav class="wiki">';
+  // 所有项目
+  el += '<a';
+  if (wikiIndex.filter === false) {
+    el += ' class="active"';
+  }
+  el += ' href="' + pretty_url(wikiIndex.path) + '">' + __("btn.all_wiki") + '</a>';
+  el += '</a>';
+  // 项目分类
+  for (var tag of wikiIndex.tags) {
+    var projects = tag.itemIds.filter(id => wikiIndex.allItems.some(item => item.id === id))
+    if (projects.length > 0) {
+      el += '<a';
+      if (tag.name && tag.name.length > 0 && wikiIndex.tagName === tag.name) {
+        el += ' class="active"';
+      }
+      el += ' href="' + escape_html(pretty_url(tag.path)) + '">' + escape_html(tag.name) + '</a>';
+      el += '</a>';
+    }
+  }
+
+  if (Array.isArray(listingNav.tabs)) {
+    for (const item of listingNav.tabs) {
+      if (full_url_for(page.path).startsWith(full_url_for(item.url))){
+        el += '<a class="active" href="' + escape_html(url_for(item.url)) + '">' + escape_html(item.title) + '</a>';
+      } else {
+        el += '<a href="' + escape_html(url_for(item.url)) + '">' + escape_html(item.title) + '</a>';
+      }
+    }
+  }
+
+  el += '</nav>';
+  el += '</div>';
+  el += '</div>';
+  el += '</div>';
+  return el;
+}
+%>
+
+<%- layoutDiv() %>

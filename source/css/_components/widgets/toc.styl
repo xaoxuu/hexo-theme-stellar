@@ -16,8 +16,7 @@
     @media screen and (min-width: $device-laptop)
       background: var(--background)
 
-[data-ui-surface='glass'] .widget-wrapper.toc,
-[data-ui-surface='card'] .widget-wrapper.toc
+.site-region__surface .widget-wrapper.toc
   @media screen and (min-width: $device-laptop)
     background: none
 
@@ -51,28 +50,18 @@
       background: var(--theme)
       border-radius: 4px
     &:hover
-      background: var(--ui-adapter-bg-hover)
-      box-shadow: var(--ui-adapter-shadow-hover)
       color: var(--ui-item-title)
     
-// 固定位置
-[data-ui-surface='sidebar'] .widgets .widget-wrapper.toc
+// Region Surface 统一负责固定高度与滚动，TOC 不再创建独立 Sticky/Scroll 容器。
+:is([data-region='leftbar'], [data-region='rightbar']) .widgets .widget-wrapper.toc
   margin-top: 1rem
-  position: sticky
-  position: -webkit-sticky
-  top: 0
+  position: static
   padding: 1rem 0
   &:first-child
-    top: var(--gap-page)
     padding-top: 1rem
   .widget-body .toc
-    max-height: 70vh
-    @media screen and (max-width: $device-desktop)
-      max-height: 60vh
-    @media screen and (max-width: $device-laptop)
-      max-height: unset
-    overflow: auto
-    scrollbar(0, 0)
+    max-height: none
+    overflow: visible
 
 
 
@@ -135,11 +124,10 @@
     grid-template-rows: 1fr
     trans1 all
     overflow hidden
-[data-ui-surface='sidebar'] .widgets .widget-wrapper.toc .widget-header .cap-action:hover
-  sidebar-light(var(--bg-a50))
-[data-ui-surface='sidebar'] .widgets .widget-wrapper.toc.collapse
+:is([data-region='leftbar'], [data-region='rightbar']) .widgets .widget-wrapper.toc.collapse
   .widget-header .cap-action
-    sidebar-light(var(--bg-a50))
+    color: var(--accent)
+    opacity: 1
   .widget-body
     grid-template-rows: 0fr
 
@@ -165,26 +153,17 @@
     padding: 8px var(--gap-base)
     border-radius: $border-bar
     trans1 all
-    svg
-      width: 16px
-      height: 16px
-      flex-shrink: 0
-      margin-right: 8px
-    img
-      height: 16px
-      width: auto
-      flex-shrink: 0
+    .ui-icon
+      --ui-icon-size: 16px
       margin-right: 8px
   a:hover
-    background: var(--block-border)
     color: var(--text)
 
 .widget-wrapper.toc+.widget-wrapper
   padding-top: 32px
 
 @media screen and (max-width: $device-laptop)
-  [data-ui-surface='sidebar']
-    blur-effect()
+  :is([data-region='leftbar'], [data-region='rightbar'])
     .widgets
       .widget-wrapper.toc
         position: static

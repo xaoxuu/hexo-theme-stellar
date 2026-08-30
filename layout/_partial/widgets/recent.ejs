@@ -2,8 +2,8 @@
 function layoutDiv() {
   var action = ''
   if (item.rss) {
-    action += '<a class="cap-action" id="rss" title="Subscribe" href="' + escape_html(item.rss) + '">'
-    action += icon('default:rss')
+    action += '<a class="' + ui_classes('cap-action') + '" id="rss" title="Subscribe" href="' + escape_html(item.rss) + '">'
+    action += '<span class="ui-icon">' + icon('default:rss') + '</span>'
     action += '</a>'
   }
   var arr = []

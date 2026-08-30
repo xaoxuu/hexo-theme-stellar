@@ -16,7 +16,7 @@ function layout_topic_list(partial) {
 }
 function layoutDiv() {
   var el = ''
-  el += partial('_partial/main/navbar/nav_tabs_blog')
+  el += partial('_partial/main/listing_nav/blog')
   el += `<div class="post-list topic">`;
   el += layout_topic_list(function(topic) {
     return partial('_partial/main/post_list/topic_card', {viewModel: {render: {listing: topic}}})

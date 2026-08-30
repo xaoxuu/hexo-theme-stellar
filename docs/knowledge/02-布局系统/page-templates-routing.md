@@ -65,10 +65,10 @@ flowchart TD
 
 `layout.ejs` 对每个页面运行，负责：
 
-1. 计算 `page_type`、`article_type`、`indent` 控制变量
+1. 计算 `page_type`、`article_style`、`indent` 控制变量
 2. 构建 `<html>`、`<head>`、`<body>` 结构
-3. 组装三栏网格（`l_left`、`l_main`、`l_right`）
-4. 注入 `body` 变量（具体页面模板的输出）
+3. 按 PageViewModel 或过渡页面配置组装 Topbar、Leftbar、Main、Rightbar 命名槽
+4. 统一交给 `_partial/primitives/shell.ejs` 输出唯一 Shell DOM
 
 **`layout.ejs` DOM 结构**
 
@@ -76,29 +76,33 @@ flowchart TD
 flowchart TD
     HTML["html[lang][data-theme]"] --> HEAD["partial: _partial/head"]
     HTML --> BODY["body"]
-    BODY --> SITEBG["div.sitebg\n(conditional: appearance.backgrounds.page.image)"]
-    BODY --> LCOVER["div#l_cover\npartial: _partial/cover/index"]
-    BODY --> LBODY["div.l_body#start\n[layout][type][text-indent]"]
-    BODY --> SCRIPTS["div.scripts\npartial: _partial/scripts"]
-    LBODY --> LLEFT["aside.l_left\npartial: _partial/sidebar/index_leftbar"]
-    LBODY --> LMAIN["div.l_main#main"]
-    LBODY --> LRIGHT["aside.l_right\npartial: _partial/sidebar/index_rightbar"]
-    LBODY --> MENUBTN["partial: _partial/menubtn"]
-    LMAIN --> LOGO["partial: _partial/sidebar/logo"]
-    LMAIN --> BODYCONTENT["body 变量\n(来自页面模板)"]
-    LMAIN --> FOOTER["partial: _partial/main/footer"]
-    LMAIN --> MASK["div.main-mask"]
+    BODY --> SITEBG["div.site-background\n(conditional: appearance.backgrounds.page.image)"]
+    BODY --> COVER["div#site-cover\npartial: _partial/cover/index"]
+    BODY --> SHELL["div.site-shell#start\ndata-regions"]
+    BODY --> SCRIPTS["div.site-scripts\npartial: _partial/scripts"]
+    SHELL --> TOPBAR["header.site-region--topbar\ndata-region=topbar"]
+    SHELL --> WORKSPACE["div.site-workspace"]
+    WORKSPACE --> LEFTBAR["aside.site-region--leftbar\ndata-region=leftbar"]
+    WORKSPACE --> MAIN["main.site-main#main"]
+    WORKSPACE --> RIGHTBAR["aside.site-region--rightbar\ndata-region=rightbar"]
+    SHELL --> SCRIM["button.site-scrim"]
+    SHELL --> DOCK["nav.site-dock\npartial: _partial/menubtn"]
+    TOPBAR --> TOPWIDGETS["partial: _partial/regions/widgets"]
+    LEFTBAR --> LEFTWIDGETS["partial: _partial/regions/widgets"]
+    RIGHTBAR --> RIGHTWIDGETS["partial: _partial/regions/widgets"]
+    MAIN --> BODYCONTENT["body 变量\n(来自页面模板)"]
+    MAIN --> FOOTER["partial: _partial/main/footer"]
 ```
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
 
-关键一行：
+页面元数据写入标准 `data-page-*` 属性：
 
 ```
-div.l_body.${page_type}  layout="${page.layout}"  type="${article_type}"  [text-indent]
+body[data-page-type][data-page-layout][data-article-style][data-text-indent]
 ```
 
-三个计算变量都作为该元素的 DOM 属性/类出现，CSS 与 JavaScript 可以精确针对特定页面配置。
+`#start.site-shell` 只承担 Shell 状态，`data-regions` 记录实际生成的 Region；页面类型不再通过裸 `layout/type/text-indent` 属性表达。
 
 ---
 
@@ -115,7 +119,7 @@ div.l_body.${page_type}  layout="${page.layout}"  type="${article_type}"  [text-
 | `page.layout` 属于 `post`、`page`、`wiki`、`null` 且无 `page.nav_tabs` | `'content'` |
 | 其他情况（首页、归档、标签、分类，或存在 `nav_tabs`） | `'index'` |
 
-`page_type` 作为 CSS 类加到 `div.l_body`，驱动单内容视图与列表视图的布局差异。
+`page_type` 写入 `<body data-page-type>`，驱动单内容视图与列表视图的布局差异。
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
 
@@ -130,7 +134,7 @@ flowchart TD
     C --> D["article_style = tech | story"]
 ```
 
-常见取值 `'tech'`（技术文章）与 `'story'`（文学/散文文章）。解析结果写入 `div.l_body` 的 `type` 属性。
+常见取值 `'tech'`（技术文章）与 `'story'`（文学/散文文章）。解析结果写入 `<body data-article-style>`。
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
 
@@ -146,7 +150,7 @@ flowchart TD
     B -->|auto| E["indent = (article_style === 'story')"]
 ```
 
-`indent` 为 `true` 时给 `div.l_body` 添加 `text-indent` 属性；为 `false` 时不添加。
+`indent` 为 `true` 时给 `<body>` 添加 `data-text-indent`；为 `false` 时不添加。
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
 

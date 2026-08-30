@@ -1,0 +1,38 @@
+.ui-icon
+  --ui-icon-opacity: .5
+  width: var(--ui-icon-size, 1.5rem)
+  height: var(--ui-icon-size, 1.5rem)
+  flex: 0 0 var(--ui-icon-size, 1.5rem)
+  display: inline-flex
+  align-items: center
+  justify-content: center
+  color: var(--ui-icon-color, inherit)
+  > img, > svg
+    width: 100%
+    height: 100%
+    max-width: 100%
+    max-height: 100%
+    object-fit: contain
+    opacity: var(--ui-icon-opacity)
+
+a:hover .ui-icon,
+button:hover .ui-icon,
+summary:hover .ui-icon,
+a:focus-visible .ui-icon,
+button:focus-visible .ui-icon,
+summary:focus-visible .ui-icon,
+a:active .ui-icon,
+button:active .ui-icon,
+summary:active .ui-icon,
+a.active .ui-icon,
+button.active .ui-icon,
+summary.active .ui-icon,
+a.is-active .ui-icon,
+button.is-active .ui-icon,
+summary.is-active .ui-icon,
+a[aria-current] .ui-icon,
+button[aria-current] .ui-icon,
+summary[aria-current] .ui-icon,
+details[open] > summary .ui-icon
+  --ui-icon-color: var(--item-theme, var(--theme))
+  --ui-icon-opacity: 1

@@ -64,7 +64,7 @@ graph TB
     Root[":root CSS Variables"]
     
     Root --> WidthMain["--width-main<br/>Main content column width"]
-    Root --> SideWidth["--side-content-width<br/>Sidebar text width"]
+    Root --> SideWidth["--side-content-width<br/>Side Region text width"]
     Root --> GapBase["--gap-base<br/>Internal spacing: 16px"]
     Root --> GapPage["--gap-page<br/>Page-level spacing: 16px → 32px"]
     Root --> GapP["--gap-p<br/>Paragraph spacing"]
@@ -165,11 +165,11 @@ graph TB
 
 ### 响应式粘性定位
 
-`.float-panel` 类实现响应式浮动 UI 面板（用于侧边栏开关按钮）：
+`.site-dock` 类实现响应式浮动 UI 面板（用于侧边栏开关按钮）：
 
 ```mermaid
 graph TB
-    FloatPanel[".float-panel<br/>Sticky floating panel"]
+    FloatPanel[".site-dock<br/>Sticky floating panel"]
     
     FloatPanel --> Position["position: sticky<br/>bottom: calc(var(--inset) * 1)"]
     FloatPanel --> Responsive["Responsive margin"]
@@ -195,28 +195,26 @@ graph TB
 
 2. **灵活定位**：
    ```stylus
-   .float-panel
-     position: sticky
-     grid-column-end: span 3
-     --inset: 2rem
-     right: 0
-     bottom: calc(var(--inset) * 1)
+   .site-dock
+     position: fixed
+     inset-inline-end: 2rem
+     bottom: 2rem
    ```
-   面板在滚动时保持视口角落位置，同时适配网格布局变化。
+   Dock 位于内容 Grid 之外并固定在视口角落，不占据 Leftbar、Main 或 Rightbar 轨道。
 
 3. **激活状态视觉反馈**：
    ```stylus
-   .l_body[leftbar] .float-panel button.leftbar-toggle, .l_body[rightbar] .float-panel button.rightbar-toggle
+   .site-shell[data-drawer='leftbar'] .site-dock .site-dock__button--leftbar, .site-shell[data-drawer='rightbar'] .site-dock .site-dock__button--rightbar
      bar-item-active()
    ```
-   侧边栏打开时，对应的切换按钮完整复用 navbar item 激活样式（`var(--bg-a60)` 背景 + 多层阴影 + `saturate(300%)`），观感与 navbar item 一致；面板本身保持 `bar-glass()` 玻璃效果，按钮图标仍用主题色提示当前打开的侧栏。
+ Drawer 打开时，对应的切换按钮完整复用 navbar item 激活样式（`var(--bg-a60)` 背景 + 多层阴影 + `saturate(300%)`），观感与 navbar item 一致；Dock 本身保持 `bar-glass()` 玻璃效果。
 
 ### 按钮图标变换
 
 按钮状态实现：
 
 ```stylus
-.float-panel button
+.site-dock button
   bar-item() // 与 navbar item 共用基础 UI（圆角 $border-bar、连续曲率）
   box-sizing: border-box
   width: 40px
@@ -230,7 +228,7 @@ graph TB
       trans1 transform
     height: 28px
 
-.l_body[leftbar] .float-panel button.leftbar-toggle
+.site-shell[data-drawer='leftbar'] .site-dock .site-dock__button--leftbar
   color: var(--theme)
   path#sep
     transform: translateX(2px)
@@ -250,31 +248,31 @@ graph TB
 
 ```mermaid
 graph TB
-    subgraph "Desktop ≥1024px"
-        D1["Left Sidebar<br/>--side-content-width"] 
-        D2["Main Content<br/>--width-main<br/>720-860px"]
-        D3["Right Sidebar<br/>--side-content-width"]
+    subgraph "Desktop >1180px"
+        D1["Leftbar<br/>288px"]
+        D2["Main Content<br/>minmax(200px, 720px)"]
+        D3["Rightbar<br/>320px"]
         D1 -.-> D2
         D2 -.-> D3
     end
     
-    subgraph "Tablet 768-1024px"
-        T1["Left Sidebar<br/>188px"]
-        T2["Main Content<br/>720px"]
-        T3["Right Sidebar<br/>Collapsed"]
+    subgraph "Tablet 769-1180px"
+        T1["Leftbar<br/>288px"]
+        T2["Main Content<br/>shrinks to available width"]
+        T3["Rightbar<br/>Drawer"]
         T1 -.-> T2
     end
     
     subgraph "Mobile ≤768px"
         M1["Main Content<br/>Full width"]
-        M2["Sidebars as overlays<br/>Triggered by .float-panel buttons"]
+        M2["Leftbar and Rightbar Drawers<br/>Triggered by .site-dock buttons"]
         M1 --> M2
     end
 ```
 
-- **桌面**：三栏布局，固定侧栏宽度
-- **平板**：左栏变窄（188px），右栏可能折叠
-- **移动**：侧边栏变为全宽遮罩，由 `.float-panel` 按钮控制
+- **桌面**：全部已启用 Region 同行，先缩窄 Main，Leftbar 与 Rightbar 不重叠正文
+- **平板**：Leftbar 保持可见，Rightbar 切换为 Drawer
+- **移动**：Leftbar 与 Rightbar 都切换为 Drawer，由 `.site-dock` 按钮互斥打开
 
 ### 排版缩放
 
@@ -336,7 +334,7 @@ graph LR
 ### 移动优先原则
 
 1. **渐进增强**：基础样式面向移动端，媒体查询为桌面增强
-2. **触控友好**：`.float-panel button` 为 40×40（1:1，触控面积更大），按钮圆角直接用 `$border-bar`（12px），容器圆角 `$border-bar-container`（16px）与其同心；条内按钮与按钮之间、按钮距条边均为 `$bar-item-gap`（4px，容器 `gap`/`padding` 统一引用），navbar 导航项与 float-panel 按钮共用 `bar-item()`（连续曲率），一处修改两处生效
+2. **触控友好**：`.site-dock button` 为 40×40（1:1，触控面积更大），按钮圆角直接用 `$border-bar`（12px），容器圆角 `$border-bar-container`（16px）与其同心；条内按钮与按钮之间、按钮距条边均为 `$bar-item-gap`（4px，容器 `gap`/`padding` 统一引用），navbar 导航项与 Dock 按钮共用 `bar-item()`（连续曲率），一处修改两处生效
 3. **内容优先**：主内容始终可访问，移动端侧边栏为可选遮罩
 4. **性能**：移动端工具（`.mobile-only`）用 `display: none` 避免渲染开销
 
@@ -393,14 +391,14 @@ graph LR
 
 ### 浮动面板集成
 
-`.float-panel` 自动处理：
+`.site-dock` 自动处理：
 
 - 带可配置 inset 的粘性定位
 - 响应式边距
 - 经 `newblur()` 混入的玻璃拟态模糊
-- `.l_body` 带 `[leftbar]` / `[rightbar]` 属性时，对应的切换按钮复用 navbar item 激活样式（`bar-item-active()`），面板保持玻璃效果
+- `.site-shell` 使用 `data-drawer="leftbar|rightbar"` 时，对应的切换按钮复用 navbar item 激活样式（`bar-item-active()`），Dock 保持玻璃效果
 - 圆角（容器 `$border-bar-container`、按钮 `$border-bar`，均由 `appearance.shape.radius.bar` 派生）随全局 `superellipse(1.25)` 连续曲率渲染（`bar-glass()` / `bar-item()` 显式应用 `corner-shape: $corner-shape`），不再使用 `corner-shape: round` 覆盖
 
-`.float-panel` 内的按钮继承响应式尺寸与悬停状态。
+`.site-dock` 内的按钮继承响应式尺寸与悬停状态。
 
 **参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)、[source/css/_common/device.styl](../../../source/css/_common/device.styl)

@@ -1,6 +1,6 @@
 var searchCache = null;          // 当前可用的搜索数据（数组）
 var searchCacheEntry = null;     // 最近读取/写入的缓存条目 { ts, ttl, data }
-var searchCacheKey = 'search_cache_v4';
+var searchCacheKey = 'search_cache_v5';
 var searchFetchPromise = null;   // 单飞：同一时刻只允许一个请求
 
 var searchLazyLoad = true;
@@ -65,6 +65,18 @@ function loadCacheIntoMemory() {
   return searchCacheEntry;
 }
 
+function clearSearchCache() {
+  searchCache = null;
+  searchCacheEntry = null;
+  searchFetchPromise = null;
+  try {
+    localStorage.removeItem(searchCacheKey);
+    return { ok: true, partial: false, removed: 1, failed: 0 };
+  } catch (e) {
+    return { ok: false, partial: false, removed: 0, failed: 1 };
+  }
+}
+
 // 是否需要发起请求：不缓存 / 无缓存 / 缓存过期
 function needsFetch() {
   if (searchCacheTtl <= 0) return true;
@@ -96,7 +108,7 @@ function fetchSearchData(path) {
   return searchFetchPromise;
 }
 
-var searchFunc = function(path, filter, wrapperId, searchId, contentId, root) {
+var searchFunc = function(path, wrapperId, searchId, contentId, root) {
   root = root || document;
   var $input = root.querySelector('#' + searchId);
   if (!$input || $input._searchInitialized === true) return;
@@ -161,7 +173,7 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId, root) {
     li.appendChild(titleSpan);
 
     const a = ownerDocument.createElement('a');
-    a.className = 'card-hover card-hover--spotlight';
+    a.className = ctx.ui.classes.interactiveSpotlight;
     a.href = href;
 
     if (sectionName) {
@@ -213,10 +225,11 @@ var searchFunc = function(path, filter, wrapperId, searchId, contentId, root) {
       var pairs = buildKeywordPairs(this.value);
       var resultList = [];
 
-      // 读取模块级 searchCache：后台刷新后即时生效
+      // 读取模块级 searchCache：后台刷新后即时生效；搜索域由每次打开浮层的入口更新。
+      var activeDomain = this.getAttribute('data-domain') || '';
       (searchCache || []).forEach(function(data) {
         if (!data.content?.trim().length) return;
-        if (filter && !data.path.includes(filter)) return;
+        if (activeDomain && !data.domains?.includes(activeDomain)) return;
 
         var dataTitle = data.title?.trim() || 'Untitled';
         var dataTitleLowerCase = dataTitle.toLowerCase();
@@ -374,51 +387,54 @@ var localSearchRoots = new WeakMap();
 function mountLocalSearch(root) {
   root = root || document;
   if (localSearchRoots.has(root)) return localSearchRoots.get(root);
-  var resultArea = root.querySelector("div#search-result");
-  var observer = null;
+  var wrappers = Array.from(root.querySelectorAll('.search-wrapper'));
+  var observers = [];
   var onFocus = function(e) {
     var input = e.target;
-    if (!input || input.id !== 'search-input') return;
+    if (!input || !input.classList?.contains('search-input')) return;
+    var wrapper = input.closest('.search-wrapper');
+    if (!wrapper) return;
+    var resultArea = wrapper.querySelector('.search-result');
+    if (!resultArea) return;
     var path = getSearchPath();
-    var filter = input.getAttribute('data-filter') || '';
     if (input._searchInitialized === true) {
       if (needsFetch()) fetchSearchData(path).catch(function() {});
       return;
     }
     if (searchLazyLoad && !searchCache && !loadCacheIntoMemory()) {
-      var wrapper = root.querySelector('#search-wrapper');
-      if (wrapper) wrapper.setAttribute('searching', 'true');
+      wrapper.setAttribute('searching', 'true');
     }
-    searchFunc(path, filter, 'search-wrapper', 'search-input', 'search-result', root);
+    searchFunc(path, wrapper.id, input.id, resultArea.id, root);
     if (searchCache && needsFetch()) fetchSearchData(path).catch(function() {});
   };
   root.addEventListener("focusin", onFocus);
-  if (resultArea) {
-    observer = new MutationObserver(function() {
+  wrappers.forEach(function(wrapper) {
+    var resultArea = wrapper.querySelector('.search-result');
+    var input = wrapper.querySelector('.search-input');
+    if (!resultArea || !input) return;
+    var observer = new MutationObserver(function() {
       var hasResults = resultArea.querySelector(".search-result-list li");
-      var wrapper = root.querySelector('.search-wrapper');
-      if (wrapper) wrapper.classList.toggle('noresult', !hasResults);
+      wrapper.classList.toggle('noresult', !hasResults);
     });
     observer.observe(resultArea, { childList: true, subtree: true });
-  }
-  if (!searchLazyLoad) {
-    var input = root.querySelector('#search-input');
-    if (input && input._searchInitialized !== true) {
-      searchFunc(getSearchPath(), input.getAttribute('data-filter') || '', 'search-wrapper', 'search-input', 'search-result', root);
+    observers.push(observer);
+    if (!searchLazyLoad && input._searchInitialized !== true) {
+      searchFunc(getSearchPath(), wrapper.id, input.id, resultArea.id, root);
     }
-  }
+  });
   var cleanup = function() {
     root.removeEventListener("focusin", onFocus);
-    observer?.disconnect();
-    var input = root.querySelector('#search-input');
-    if (input) {
+    observers.forEach(function(observer) { observer.disconnect(); });
+    wrappers.forEach(function(wrapper) {
+      var input = wrapper.querySelector('.search-input');
+      if (!input) return;
       input._searchCleanup?.();
       input._searchInitialized = undefined;
-    }
+    });
     localSearchRoots.delete(root);
   };
   localSearchRoots.set(root, cleanup);
   return cleanup;
 }
 
-window.stellarLocalSearch = { mount: mountLocalSearch };
+window.stellarLocalSearch = { mount: mountLocalSearch, clearCache: clearSearchCache };

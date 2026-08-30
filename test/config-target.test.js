@@ -171,18 +171,18 @@ test("Extension 与服务旧 ID 映射到注册表 ID", () => {
 test("Collection 与 Front Matter 的完整目标节点保持严格作用域", () => {
   const hasField = (scope, pathValue) => CONFIG_TARGET_FIELDS.some(field => field.path === pathValue && field.scopes.includes(scope));
   for (const pathValue of [
-    "name", "identity.icon", "card.cover", "hero.background.effect", "sidebar.left.widgets",
+    "name", "identity.icon", "card.cover", "hero.background.effect", "regions.leftbar.widgets",
     "navigation.menu", "article.style", "footer.license", "comments.options", "source.repository",
-    "route.path", "listing.order", "listing.sort.field", "note_defaults.sidebar", "navigation.tree"
+    "route.path", "listing.order", "listing.sort.field", "note_defaults.regions", "navigation.tree"
   ]) assert.equal(hasField("collection", pathValue), true, `Collection 缺少 ${pathValue}`);
 
   for (const pathValue of [
-    "collection.profile", "collection.id", "card.cover", "banner.image", "sidebar.left.widgets",
+    "collection.profile", "collection.id", "card.cover", "banner.image", "regions.leftbar.widgets",
     "navigation.menu", "article.style", "footer.license", "comments.options", "visibility.listed",
     "listing.priority", "source.repository", "render.math", "render.diagrams", "seo.open_graph", "inject.head_end"
   ]) assert.equal(hasField("front_matter", pathValue), true, `Front Matter 缺少 ${pathValue}`);
 
-  for (const pathValue of ["route.path", "route.start", "navigation.tree", "note_defaults.sidebar"]) {
+  for (const pathValue of ["route.path", "route.start", "navigation.tree", "note_defaults.regions"]) {
     assert.equal(hasField("front_matter", pathValue), false, `${pathValue} 不应放宽到 Front Matter`);
   }
 
@@ -195,6 +195,21 @@ test("Collection 与 Front Matter 的完整目标节点保持严格作用域", (
     from: "style.page_transition.enable",
     action: "remove",
     reason: "跨文档 View Transition 已移除，统一使用普通整页导航"
+  });
+  assert.deepEqual(resolveConfigMigration("style", "style.leftbar.background-color-light"), {
+    from: "style.leftbar.background-color-light",
+    action: "remove",
+    reason: "纯色 Leftbar 背景由 Card Appearance 统一实现"
+  });
+  assert.deepEqual(resolveConfigMigration("style", "style.leftbar.background-color-dark"), {
+    from: "style.leftbar.background-color-dark",
+    action: "remove",
+    reason: "纯色 Leftbar 背景由 Card Appearance 统一实现"
+  });
+  assert.deepEqual(resolveConfigMigration("style", "style.leftbar.blur-bg"), {
+    from: "style.leftbar.blur-bg",
+    action: "remove",
+    reason: "Leftbar 艺术背景不再叠加独立遮罩"
   });
 });
 
@@ -263,7 +278,7 @@ test("运行时只投影已交付配置节点且根配置已经封闭", () => {
   assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), ["site", "layout", "content", "appearance", "seo", "resources", "extensions", "inject"]);
   const deliveredPaths = THEME_FIELDS.map(field => field.path);
   for (const pathValue of [
-    "site.brand.image.src", "site.brand.name", "site.brand.tagline.text",
+    "site.brand.image.src", "site.brand.name", "site.brand.tagline",
     "layout.profiles.blog_index.path", "content.article.listing.card_layout",
     "appearance.typography.font_family.code", "resources.error_page.image",
     "extensions.search.provider", "extensions.comments.providers.<provider>",

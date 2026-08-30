@@ -13,11 +13,11 @@
     "remove"
   ],
   "counts": {
-    "public": 504,
+    "public": 642,
     "localize": 5,
     "derive": 0,
     "internalize": 13,
-    "remove": 2
+    "remove": 3
   },
   "fields": [
     {
@@ -778,7 +778,7 @@
     },
     {
       "scope": "collection",
-      "path": "note_defaults.sidebar",
+      "path": "note_defaults.regions",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -792,21 +792,9 @@
     },
     {
       "scope": "collection",
-      "path": "note_defaults.sidebar.left",
+      "path": "note_defaults.regions.leftbar",
       "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel"
-      ]
-    },
-    {
-      "scope": "collection",
-      "path": "note_defaults.sidebar.left.brand",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
+      "defaultSource": "derived:theme or collection leftbar",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
@@ -818,7 +806,7 @@
     },
     {
       "scope": "collection",
-      "path": "note_defaults.sidebar.left.menu",
+      "path": "note_defaults.regions.leftbar.brand",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -832,21 +820,7 @@
     },
     {
       "scope": "collection",
-      "path": "note_defaults.sidebar.left.search",
-      "disposition": "public",
-      "defaultSource": "derived:theme or collection search",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "collection",
-      "path": "note_defaults.sidebar.left.search.filter",
+      "path": "note_defaults.regions.leftbar.enabled",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -860,7 +834,7 @@
     },
     {
       "scope": "collection",
-      "path": "note_defaults.sidebar.left.search.placeholder",
+      "path": "note_defaults.regions.leftbar.footer",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -874,21 +848,7 @@
     },
     {
       "scope": "collection",
-      "path": "note_defaults.sidebar.left.widgets",
-      "disposition": "public",
-      "defaultSource": "derived:theme or collection left widgets",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "collection",
-      "path": "note_defaults.sidebar.left.wiki_home",
+      "path": "note_defaults.regions.leftbar.footer.actions",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -902,21 +862,247 @@
     },
     {
       "scope": "collection",
-      "path": "note_defaults.sidebar.right",
+      "path": "note_defaults.regions.leftbar.menu",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
         "CollectionModel",
-        "PageViewModel"
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
       ]
     },
     {
       "scope": "collection",
-      "path": "note_defaults.sidebar.right.widgets",
+      "path": "note_defaults.regions.leftbar.widgets",
       "disposition": "public",
-      "defaultSource": "derived:theme or collection right widgets",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "note_defaults.regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "derived:theme or collection rightbar",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "note_defaults.regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "note_defaults.regions.topbar",
+      "disposition": "public",
+      "defaultSource": "derived:theme or collection topbar",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "note_defaults.regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "regions",
+      "disposition": "public",
+      "defaultSource": "derived:theme profile regions",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "regions.leftbar",
+      "disposition": "public",
+      "defaultSource": "derived:theme or collection leftbar",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "regions.leftbar.brand",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "regions.leftbar.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "regions.leftbar.footer",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "regions.leftbar.footer.actions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "regions.leftbar.menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "regions.leftbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "derived:theme or collection rightbar",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "regions.topbar",
+      "disposition": "public",
+      "defaultSource": "derived:theme or collection topbar",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "collection",
+      "path": "regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
@@ -959,156 +1145,6 @@
       "path": "route.start",
       "disposition": "public",
       "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "collection",
-      "path": "sidebar",
-      "disposition": "public",
-      "defaultSource": "derived:theme profile sidebar",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "collection",
-      "path": "sidebar.left",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel"
-      ]
-    },
-    {
-      "scope": "collection",
-      "path": "sidebar.left.brand",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "collection",
-      "path": "sidebar.left.menu",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "collection",
-      "path": "sidebar.left.search",
-      "disposition": "public",
-      "defaultSource": "derived:theme or collection search",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "collection",
-      "path": "sidebar.left.search.filter",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "collection",
-      "path": "sidebar.left.search.placeholder",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "collection",
-      "path": "sidebar.left.widgets",
-      "disposition": "public",
-      "defaultSource": "derived:theme or collection left widgets",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "collection",
-      "path": "sidebar.left.wiki_home",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "collection",
-      "path": "sidebar.right",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel"
-      ]
-    },
-    {
-      "scope": "collection",
-      "path": "sidebar.right.widgets",
-      "disposition": "public",
-      "defaultSource": "derived:theme or collection right widgets",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
@@ -1694,6 +1730,174 @@
     },
     {
       "scope": "front_matter",
+      "path": "regions",
+      "disposition": "public",
+      "defaultSource": "derived:theme profile regions",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "front_matter",
+      "path": "regions.leftbar",
+      "disposition": "public",
+      "defaultSource": "derived:theme or collection leftbar",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "front_matter",
+      "path": "regions.leftbar.brand",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "front_matter",
+      "path": "regions.leftbar.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "front_matter",
+      "path": "regions.leftbar.footer",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "front_matter",
+      "path": "regions.leftbar.footer.actions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "front_matter",
+      "path": "regions.leftbar.menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "front_matter",
+      "path": "regions.leftbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "front_matter",
+      "path": "regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "derived:theme or collection rightbar",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "front_matter",
+      "path": "regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "front_matter",
+      "path": "regions.topbar",
+      "disposition": "public",
+      "defaultSource": "derived:theme or collection topbar",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "front_matter",
+      "path": "regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "article renderer",
+        "listing renderer"
+      ]
+    },
+    {
+      "scope": "front_matter",
       "path": "render",
       "disposition": "public",
       "defaultSource": "declarative schema",
@@ -1753,156 +1957,6 @@
       "path": "seo.open_graph",
       "disposition": "public",
       "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "front_matter",
-      "path": "sidebar",
-      "disposition": "public",
-      "defaultSource": "derived:theme profile sidebar",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "front_matter",
-      "path": "sidebar.left",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel"
-      ]
-    },
-    {
-      "scope": "front_matter",
-      "path": "sidebar.left.brand",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "front_matter",
-      "path": "sidebar.left.menu",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "front_matter",
-      "path": "sidebar.left.search",
-      "disposition": "public",
-      "defaultSource": "derived:theme or collection search",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "front_matter",
-      "path": "sidebar.left.search.filter",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "front_matter",
-      "path": "sidebar.left.search.placeholder",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "front_matter",
-      "path": "sidebar.left.widgets",
-      "disposition": "public",
-      "defaultSource": "derived:theme or collection left widgets",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "front_matter",
-      "path": "sidebar.left.wiki_home",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "article renderer",
-        "listing renderer"
-      ]
-    },
-    {
-      "scope": "front_matter",
-      "path": "sidebar.right",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel"
-      ]
-    },
-    {
-      "scope": "front_matter",
-      "path": "sidebar.right.widgets",
-      "disposition": "public",
-      "defaultSource": "derived:theme or collection right widgets",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
@@ -2004,8 +2058,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2019,8 +2071,135 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
+        "Stylus compiler",
+        "browser theme state",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "appearance.backgrounds.leftbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Stylus compiler",
+        "browser theme state",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "appearance.backgrounds.leftbar.backdrop",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Stylus compiler",
+        "browser theme state",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "appearance.backgrounds.leftbar.backdrop.radius",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Stylus compiler",
+        "browser theme state",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "appearance.backgrounds.leftbar.gradient",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Stylus compiler",
+        "browser theme state",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "appearance.backgrounds.leftbar.gradient.dark",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Stylus compiler",
+        "browser theme state",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "appearance.backgrounds.leftbar.gradient.light",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Stylus compiler",
+        "browser theme state",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "appearance.backgrounds.leftbar.image",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Stylus compiler",
+        "browser theme state",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "appearance.backgrounds.leftbar.opacity",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "Stylus compiler",
+        "browser theme state",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "appearance.backgrounds.leftbar.surface",
+      "disposition": "remove",
+      "accepted": false,
+      "defaultSource": "appearance.preset",
+      "consumers": [
+        "configuration diagnostics",
+        "migration guidance"
+      ],
+      "rationale": "Region 表面风格改由整站 Appearance Preset 统一控制"
+    },
+    {
+      "scope": "theme",
+      "path": "appearance.backgrounds.leftbar.type",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2034,8 +2213,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2049,8 +2226,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2064,8 +2239,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2079,8 +2252,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2094,8 +2265,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2109,188 +2278,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.backgrounds.sidebar",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.backgrounds.sidebar.backdrop",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.backgrounds.sidebar.backdrop.overlay",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.backgrounds.sidebar.backdrop.radius",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.backgrounds.sidebar.color",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.backgrounds.sidebar.color.dark",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.backgrounds.sidebar.color.light",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.backgrounds.sidebar.gradient",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.backgrounds.sidebar.gradient.dark",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.backgrounds.sidebar.gradient.light",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.backgrounds.sidebar.image",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.backgrounds.sidebar.opacity",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2299,32 +2286,14 @@
     {
       "scope": "theme",
       "path": "appearance.backgrounds.sidebar.surface",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
+      "disposition": "remove",
+      "accepted": false,
+      "defaultSource": "appearance.preset",
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.backgrounds.sidebar.type",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ]
+        "configuration diagnostics",
+        "migration guidance"
+      ],
+      "rationale": "预发布旧 Sidebar 表面风格改由整站 Appearance Preset 统一控制"
     },
     {
       "scope": "theme",
@@ -2334,8 +2303,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2349,8 +2316,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2364,8 +2329,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2379,8 +2342,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2394,8 +2355,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2409,8 +2368,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2424,8 +2381,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2439,8 +2394,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2454,23 +2407,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.gradients.avatar_ring",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2484,8 +2420,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2499,8 +2433,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2508,45 +2440,15 @@
     },
     {
       "scope": "theme",
-      "path": "appearance.motion",
+      "path": "appearance.preset",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
-        "browser theme state",
         "Reference generator"
       ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.motion.avatar",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "layout renderer",
-        "Stylus compiler",
-        "browser theme state",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "appearance.motion.page_transition",
-      "disposition": "remove",
-      "accepted": false,
-      "defaultSource": "removed",
-      "consumers": [
-        "configuration diagnostics",
-        "migration guidance"
-      ],
-      "rationale": "跨文档 View Transition 已移除，站点统一使用普通整页导航"
     },
     {
       "scope": "theme",
@@ -2556,8 +2458,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2571,8 +2471,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2586,8 +2484,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2601,8 +2497,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2616,8 +2510,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2631,8 +2523,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2646,8 +2536,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2661,8 +2549,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2676,8 +2562,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2691,8 +2575,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2706,8 +2588,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2721,8 +2601,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2736,8 +2614,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2751,8 +2627,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2766,8 +2640,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2781,8 +2653,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2796,8 +2666,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2811,8 +2679,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2826,8 +2692,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2841,8 +2705,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2856,8 +2718,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2871,8 +2731,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2886,8 +2744,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -2901,8 +2757,6 @@
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
       "accepted": true,
       "consumers": [
-        "PageViewModel",
-        "layout renderer",
         "Stylus compiler",
         "browser theme state",
         "Reference generator"
@@ -5125,7 +4979,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5141,7 +4995,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5157,7 +5011,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5173,7 +5027,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5189,7 +5043,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5205,13 +5059,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.author.sidebar",
+      "path": "layout.profiles.author.regions",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5221,13 +5075,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.author.sidebar.left",
+      "path": "layout.profiles.author.regions.leftbar",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5237,13 +5091,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.author.sidebar.right",
+      "path": "layout.profiles.author.regions.leftbar.brand",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5253,7 +5107,151 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.author.regions.leftbar.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.author.regions.leftbar.footer",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.author.regions.leftbar.footer.actions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.author.regions.leftbar.menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.author.regions.leftbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.author.regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.author.regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.author.regions.topbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.author.regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5269,7 +5267,87 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.blog_index.listing_nav",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.blog_index.listing_nav.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.blog_index.listing_nav.tabs",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.blog_index.listing_nav.tabs[].title",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.blog_index.listing_nav.tabs[].url",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5285,7 +5363,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5301,55 +5379,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "layout.profiles.blog_index.navigation.tabs",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "layout.profiles.blog_index.navigation.tabs[].title",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "layout.profiles.blog_index.navigation.tabs[].url",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5365,13 +5395,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.blog_index.sidebar",
+      "path": "layout.profiles.blog_index.regions",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5381,13 +5411,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.blog_index.sidebar.left",
+      "path": "layout.profiles.blog_index.regions.leftbar",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5397,13 +5427,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.blog_index.sidebar.right",
+      "path": "layout.profiles.blog_index.regions.leftbar.brand",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5413,7 +5443,151 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.blog_index.regions.leftbar.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.blog_index.regions.leftbar.footer",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.blog_index.regions.leftbar.footer.actions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.blog_index.regions.leftbar.menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.blog_index.regions.leftbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.blog_index.regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.blog_index.regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.blog_index.regions.topbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.blog_index.regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5429,7 +5603,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5445,7 +5619,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5461,7 +5635,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5477,13 +5651,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.error.sidebar",
+      "path": "layout.profiles.error.regions",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5493,13 +5667,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.error.sidebar.left",
+      "path": "layout.profiles.error.regions.leftbar",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5509,13 +5683,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.error.sidebar.right",
+      "path": "layout.profiles.error.regions.leftbar.brand",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5525,7 +5699,151 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.error.regions.leftbar.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.error.regions.leftbar.footer",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.error.regions.leftbar.footer.actions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.error.regions.leftbar.menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.error.regions.leftbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.error.regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.error.regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.error.regions.topbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.error.regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5541,7 +5859,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5557,7 +5875,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5573,7 +5891,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5589,7 +5907,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5605,7 +5923,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5621,7 +5939,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5637,7 +5955,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5653,7 +5971,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5669,13 +5987,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.home.sidebar",
+      "path": "layout.profiles.home.regions",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5685,13 +6003,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.home.sidebar.left",
+      "path": "layout.profiles.home.regions.leftbar",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5701,13 +6019,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.home.sidebar.right",
+      "path": "layout.profiles.home.regions.leftbar.brand",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5717,7 +6035,151 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.home.regions.leftbar.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.home.regions.leftbar.footer",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.home.regions.leftbar.footer.actions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.home.regions.leftbar.menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.home.regions.leftbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.home.regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.home.regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.home.regions.topbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.home.regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5733,7 +6195,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5749,7 +6211,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5765,7 +6227,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5781,13 +6243,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.note_index.sidebar",
+      "path": "layout.profiles.note_index.regions",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5797,13 +6259,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.note_index.sidebar.left",
+      "path": "layout.profiles.note_index.regions.leftbar",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5813,13 +6275,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.note_index.sidebar.right",
+      "path": "layout.profiles.note_index.regions.leftbar.brand",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5829,7 +6291,151 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note_index.regions.leftbar.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note_index.regions.leftbar.footer",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note_index.regions.leftbar.footer.actions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note_index.regions.leftbar.menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note_index.regions.leftbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note_index.regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note_index.regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note_index.regions.topbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note_index.regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5845,7 +6451,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5861,13 +6467,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.note.sidebar",
+      "path": "layout.profiles.note.regions",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5877,13 +6483,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.note.sidebar.left",
+      "path": "layout.profiles.note.regions.leftbar",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5893,13 +6499,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.note.sidebar.right",
+      "path": "layout.profiles.note.regions.leftbar.brand",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5909,7 +6515,151 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note.regions.leftbar.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note.regions.leftbar.footer",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note.regions.leftbar.footer.actions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note.regions.leftbar.menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note.regions.leftbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note.regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note.regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note.regions.topbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.note.regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5925,7 +6675,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5941,7 +6691,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5957,7 +6707,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -5973,13 +6723,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.notebook_index.sidebar",
+      "path": "layout.profiles.notebook_index.regions",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -5989,13 +6739,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.notebook_index.sidebar.left",
+      "path": "layout.profiles.notebook_index.regions.leftbar",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6005,13 +6755,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.notebook_index.sidebar.right",
+      "path": "layout.profiles.notebook_index.regions.leftbar.brand",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6021,7 +6771,151 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.notebook_index.regions.leftbar.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.notebook_index.regions.leftbar.footer",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.notebook_index.regions.leftbar.footer.actions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.notebook_index.regions.leftbar.menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.notebook_index.regions.leftbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.notebook_index.regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.notebook_index.regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.notebook_index.regions.topbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.notebook_index.regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6037,7 +6931,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6053,7 +6947,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6069,13 +6963,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.page.sidebar",
+      "path": "layout.profiles.page.regions",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6085,13 +6979,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.page.sidebar.left",
+      "path": "layout.profiles.page.regions.leftbar",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6101,13 +6995,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.page.sidebar.right",
+      "path": "layout.profiles.page.regions.leftbar.brand",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6117,7 +7011,151 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.page.regions.leftbar.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.page.regions.leftbar.footer",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.page.regions.leftbar.footer.actions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.page.regions.leftbar.menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.page.regions.leftbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.page.regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.page.regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.page.regions.topbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.page.regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6133,7 +7171,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6149,7 +7187,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6165,13 +7203,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.post.sidebar",
+      "path": "layout.profiles.post.regions",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6181,13 +7219,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.post.sidebar.left",
+      "path": "layout.profiles.post.regions.leftbar",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6197,13 +7235,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.post.sidebar.right",
+      "path": "layout.profiles.post.regions.leftbar.brand",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6213,7 +7251,407 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.post.regions.leftbar.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.post.regions.leftbar.footer",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.post.regions.leftbar.footer.actions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.post.regions.leftbar.menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.post.regions.leftbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.post.regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.post.regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.post.regions.topbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.post.regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.settings",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.settings.navigation",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.settings.navigation.active_menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.settings.path",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.settings.regions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.settings.regions.leftbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.settings.regions.leftbar.brand",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.settings.regions.leftbar.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.settings.regions.leftbar.footer",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.settings.regions.leftbar.footer.actions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.settings.regions.leftbar.menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.settings.regions.leftbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.settings.regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.settings.regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.settings.regions.topbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.settings.regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6229,7 +7667,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6245,7 +7683,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6261,7 +7699,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6277,7 +7715,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6293,13 +7731,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.topic_index.sidebar",
+      "path": "layout.profiles.topic_index.regions",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6309,13 +7747,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.topic_index.sidebar.left",
+      "path": "layout.profiles.topic_index.regions.leftbar",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6325,13 +7763,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.topic_index.sidebar.right",
+      "path": "layout.profiles.topic_index.regions.leftbar.brand",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6341,7 +7779,151 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic_index.regions.leftbar.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic_index.regions.leftbar.footer",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic_index.regions.leftbar.footer.actions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic_index.regions.leftbar.menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic_index.regions.leftbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic_index.regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic_index.regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic_index.regions.topbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic_index.regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6357,7 +7939,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6373,13 +7955,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.topic.sidebar",
+      "path": "layout.profiles.topic.regions",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6389,13 +7971,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.topic.sidebar.left",
+      "path": "layout.profiles.topic.regions.leftbar",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6405,13 +7987,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.topic.sidebar.right",
+      "path": "layout.profiles.topic.regions.leftbar.brand",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6421,7 +8003,151 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic.regions.leftbar.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic.regions.leftbar.footer",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic.regions.leftbar.footer.actions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic.regions.leftbar.menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic.regions.leftbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic.regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic.regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic.regions.topbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.topic.regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6437,7 +8163,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6453,7 +8179,87 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki_index.listing_nav",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki_index.listing_nav.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki_index.listing_nav.tabs",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki_index.listing_nav.tabs[].title",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki_index.listing_nav.tabs[].url",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6469,7 +8275,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6485,55 +8291,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "layout.profiles.wiki_index.navigation.tabs",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "layout.profiles.wiki_index.navigation.tabs[].title",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "layout.profiles.wiki_index.navigation.tabs[].url",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "CollectionModel",
-        "PageViewModel",
-        "page generators",
-        "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6549,13 +8307,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.wiki_index.sidebar",
+      "path": "layout.profiles.wiki_index.regions",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6565,13 +8323,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.wiki_index.sidebar.left",
+      "path": "layout.profiles.wiki_index.regions.leftbar",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6581,13 +8339,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.wiki_index.sidebar.right",
+      "path": "layout.profiles.wiki_index.regions.leftbar.brand",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6597,7 +8355,151 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki_index.regions.leftbar.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki_index.regions.leftbar.footer",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki_index.regions.leftbar.footer.actions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki_index.regions.leftbar.menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki_index.regions.leftbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki_index.regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki_index.regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki_index.regions.topbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki_index.regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6613,7 +8515,7 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6629,13 +8531,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.wiki.sidebar",
+      "path": "layout.profiles.wiki.regions",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6645,13 +8547,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.wiki.sidebar.left",
+      "path": "layout.profiles.wiki.regions.leftbar",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6661,13 +8563,13 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
     {
       "scope": "theme",
-      "path": "layout.profiles.wiki.sidebar.right",
+      "path": "layout.profiles.wiki.regions.leftbar.brand",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -6677,7 +8579,359 @@
         "PageViewModel",
         "page generators",
         "navigation renderer",
-        "sidebar renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki.regions.leftbar.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki.regions.leftbar.footer",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki.regions.leftbar.footer.actions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki.regions.leftbar.menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki.regions.leftbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki.regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki.regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki.regions.topbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.profiles.wiki.regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.regions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.regions.leftbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.regions.leftbar.brand",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.regions.leftbar.default_state",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.regions.leftbar.enabled",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.regions.leftbar.footer",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.regions.leftbar.footer.actions",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.regions.leftbar.menu",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.regions.leftbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.regions.rightbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.regions.rightbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.regions.topbar",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "layout.regions.topbar.widgets",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "CollectionModel",
+        "PageViewModel",
+        "page generators",
+        "navigation renderer",
+        "leftbar renderer",
         "Reference generator"
       ]
     },
@@ -6939,156 +9193,6 @@
     },
     {
       "scope": "theme",
-      "path": "sidebar.left.brand.href",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "sidebar.left.brand.image",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "sidebar.left.brand.image.href",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "sidebar.left.brand.image.src",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "sidebar.left.brand.image.variant",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "sidebar.left.brand.name",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "sidebar.left.brand.tagline",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "sidebar.left.brand.tagline.hover",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "sidebar.left.brand.tagline.text",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "sidebar.left.brand.wordmark",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
       "path": "site",
       "disposition": "public",
       "defaultSource": "declarative schema",
@@ -7119,37 +9223,7 @@
     },
     {
       "scope": "theme",
-      "path": "site.brand.href",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
       "path": "site.brand.image",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "site.brand.image.href",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -7210,51 +9284,6 @@
     {
       "scope": "theme",
       "path": "site.brand.tagline",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "site.brand.tagline.hover",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "site.brand.tagline.text",
-      "disposition": "public",
-      "defaultSource": "declarative schema",
-      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
-      "accepted": true,
-      "consumers": [
-        "PageViewModel",
-        "Shell renderer",
-        "menu renderer",
-        "footer renderer",
-        "Reference generator"
-      ]
-    },
-    {
-      "scope": "theme",
-      "path": "site.brand.wordmark",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
@@ -7644,7 +9673,112 @@
     },
     {
       "scope": "theme",
+      "path": "site.menu.items[].type",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
       "path": "site.menu.items[].url",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "site.settings",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "site.settings.about",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "site.settings.about.items",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "site.settings.about.items[].key",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "site.settings.about.items[].url",
+      "disposition": "public",
+      "defaultSource": "declarative schema",
+      "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",
+      "accepted": true,
+      "consumers": [
+        "PageViewModel",
+        "Shell renderer",
+        "menu renderer",
+        "footer renderer",
+        "Reference generator"
+      ]
+    },
+    {
+      "scope": "theme",
+      "path": "site.settings.about.items[].value",
       "disposition": "public",
       "defaultSource": "declarative schema",
       "rationale": "当前声明式 Schema 接受该字段，用户可显式选择或覆盖其行为/内容",

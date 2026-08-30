@@ -5,20 +5,20 @@ function custom_inject() {
   return stellar_inject('bodyEnd', renderViewModel ? renderViewModel.render.document.bodyEndInject : content_config(page).inject?.bodyEnd)
 }
 
-// tagtree 脚本仅在与 tagtree 小部件渲染相同的条件下加载（见 _partial/sidebar/index_leftbar.ejs）
+// tagtree 脚本仅在最终 Region 实例包含 tagtree 时加载。
 function tagtreeWidgetOnPage() {
-  var widgets = renderViewModel?.render.layout.sidebar?.left?.widgets
-    || page.notebookIndex?.collection?.layout.sidebar?.left?.widgets
-    || page?.sidebar?.left?.widgets;
+  var regions = renderViewModel?.render.layout.regions
+    || page.notebookIndex?.collection?.layout.regions
+    || {};
+  var widgets = Object.values(regions).flatMap(function (region) {
+    return Array.isArray(region?.widgets) ? region.widgets : []
+  })
   if (!Array.isArray(widgets)) {
     return false;
   }
   return widgets.some(function (w) {
-    if (typeof w === 'string') {
-      return w === 'tagtree';
-    }
     if (w && typeof w === 'object') {
-      return w.override === 'tagtree' || w.layout === 'tagtree';
+      return w.id === 'tagtree' || w.layout === 'tagtree' || w.override === 'tagtree';
     }
     return false;
   });
@@ -31,6 +31,7 @@ function tagtreeWidgetOnPage() {
 <script src="<%- url_for('/js/utils.js') %>?v=<%- stellar_info('version') %>"></script>
 <script defer src="<%- url_for('/js/stellar-icons.js') %>?v=<%- stellar_info('version') %>"></script>
 <script src="<%- url_for(`${stellar_info('main_js')}?v=${stellar_info('version')}`) %>" defer></script>
+<script defer src="<%- url_for('/js/profile.js') %>?v=<%- stellar_info('version') %>"></script>
 
 <% if (tagtreeWidgetOnPage()) { %>
   <script>window.__STELLAR_TAGTREE__ = { expand_active: <%- JSON.stringify(!!(stellar_data('widgets').tagtree && stellar_data('widgets').tagtree.expand_active)) %> };</script>

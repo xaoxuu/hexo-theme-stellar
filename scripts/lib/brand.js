@@ -10,58 +10,49 @@ const MOBILE_BRAND_LAYOUTS = Object.freeze([
   "notes"
 ]);
 
-const AUTO_BRAND_COLLECTION_TYPES = Object.freeze(["wiki", "notebook"]);
+const COLLECTION_BRAND_TYPES = Object.freeze(["wiki", "notebook", "topic"]);
 
 function normalizeBrand(brand) {
   const result = {};
-  for (const [key, value] of Object.entries(brand || {})) {
-    if (key !== "image" && value !== undefined) result[key] = value;
+  for (const key of ["name", "tagline", "href"]) {
+    if (brand?.[key] !== undefined) result[key] = brand[key];
   }
   if (brand?.image && typeof brand.image === "object") {
     const image = {};
-    for (const [key, value] of Object.entries(brand.image)) {
-      if (value !== undefined) image[key] = value;
+    for (const key of ["src", "variant"]) {
+      if (brand.image[key] !== undefined) image[key] = brand.image[key];
     }
     if (Object.keys(image).length > 0) result.image = image;
   }
   return result;
 }
 
-function mergeBrand(base, override) {
-  const result = normalizeBrand(base);
-  if (override == null) return result;
-  for (const [key, value] of Object.entries(normalizeBrand(override))) {
-    if (value !== undefined) result[key] = value;
-  }
-  return result;
-}
-
 function collectionBrandUrl(collection, type) {
-  if (type === "wiki") return collection?.homepage?.path;
-  if (type === "notebook") return collection?.route?.path;
+  if (type === "wiki") return collection?.route?.homepage || collection?.homepage?.path;
+  if (type === "notebook") return collection?.route?.baseDir || collection?.route?.path;
+  if (type === "topic") return collection?.route?.path;
   return undefined;
 }
 
-function automaticCollectionBrand(collection, type, defaultIcon) {
-  if (collection == null || !AUTO_BRAND_COLLECTION_TYPES.includes(type)) return {};
-  const imageSrc = collection.identity?.icon || defaultIcon;
-  return {
+function collectionBrand(collection, type, defaultIcon) {
+  if (collection == null || !COLLECTION_BRAND_TYPES.includes(type)) return null;
+  const identity = collection.identity || {};
+  const name = identity.name ?? collection.name;
+  const tagline = identity.tagline ?? collection.tagline;
+  const imageSrc = identity.icon || defaultIcon;
+  return normalizeBrand({
     image: imageSrc ? { src: imageSrc, variant: "icon" } : undefined,
-    name: collection.name,
-    wordmark: null,
-    tagline: collection.tagline == null ? undefined : { text: collection.tagline || null, hover: null },
+    name: name == null ? null : name,
+    tagline: tagline == null ? undefined : tagline || null,
     href: collectionBrandUrl(collection, type)
-  };
+  });
 }
 
-function resolveBrand({ siteBrand, pageBrand, collection, collectionType, defaultIcon }) {
-  let brand = mergeBrand({}, siteBrand);
-  if (collection != null) {
-    brand = mergeBrand(brand, automaticCollectionBrand(collection, collectionType, defaultIcon));
-  }
-  brand = mergeBrand(brand, collection?.sidebar?.left?.brand);
-  brand = mergeBrand(brand, pageBrand);
-  return brand;
+function resolveBrands({ siteBrand, collection, collectionType, defaultIcon }) {
+  return {
+    site: normalizeBrand({ ...siteBrand, href: "/" }),
+    collection: collectionBrand(collection, collectionType, defaultIcon)
+  };
 }
 
 function shouldShowMobileBrand({ layout, isHome, isCategory, isTag }) {
@@ -77,12 +68,12 @@ function replaceConfigTokens(value, config) {
 }
 
 module.exports = {
+  COLLECTION_BRAND_TYPES,
   MOBILE_BRAND_LAYOUTS,
-  automaticCollectionBrand,
+  collectionBrand,
   collectionBrandUrl,
-  mergeBrand,
   normalizeBrand,
   replaceConfigTokens,
-  resolveBrand,
+  resolveBrands,
   shouldShowMobileBrand
 };

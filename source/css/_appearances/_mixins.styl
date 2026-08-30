@@ -1,0 +1,168 @@
+appearance-card-surface()
+  border: 0
+  border-radius: $border-card-l
+  background: var(--card)
+  box-shadow: $boxshadow-float
+
+appearance-flat-surface()
+  border: 1px solid var(--block-border)
+  border-radius: 0
+  background: var(--bg-a50)
+  box-shadow: none
+  backdrop-filter: saturate(140%) blur(24px)
+  -webkit-backdrop-filter: saturate(140%) blur(24px)
+
+appearance-glass-surface()
+  border: 0
+  border-radius: $border-card-l
+  corner-shape: $corner-shape
+  isolation: isolate
+  background: transparent
+  backdrop-filter: none
+  -webkit-backdrop-filter: none
+  glass-material($border-card-l)
+  > *
+    position: relative
+    z-index: 0
+  > .site-region__decoration
+    z-index: -2
+
+appearance-transparent-leftbar()
+  .site-region--leftbar .ui-surface
+    border: 0
+    background: transparent
+    box-shadow: none
+    backdrop-filter: none
+    -webkit-backdrop-filter: none
+  :root[data-theme='dark'] .site-region--leftbar .ui-surface
+    background: transparent
+  :root:not([data-theme])
+    @media screen and (prefers-color-scheme: dark)
+      .site-region--leftbar .ui-surface
+        background: transparent
+
+// ui-interactive 是组件无关的交互能力；Collection、Widget、Dropdown
+// 只负责组合此类，不参与 Appearance 选择器。
+appearance-standard-interactions()
+  .ui-interactive
+    background: transparent
+    box-shadow: none
+    &:focus-visible
+      outline: 2px solid var(--theme)
+      outline-offset: 2px
+    &:hover,
+    &:focus-visible
+      background: var(--block)
+      box-shadow: none
+
+  .ui-interactive.has-hover-surface,
+  .ui-interactive:active,
+  .ui-interactive.active,
+  .ui-interactive.is-active,
+  details[open] > .ui-interactive
+    background: var(--block)
+    box-shadow: none
+
+  .widget-wrapper.markdown .ui-interactive
+    background: var(--block)
+
+appearance-glass-interactions-light()
+  .ui-interactive
+    background: transparent
+    box-shadow: none
+    &:focus-visible
+      outline: 2px solid var(--theme)
+      outline-offset: 2px
+
+  .ui-interactive.has-hover-surface,
+  .ui-interactive:hover,
+  .ui-interactive:focus-visible,
+  .ui-interactive:active,
+  .ui-interactive.active,
+  .ui-interactive.is-active,
+  details[open] > .ui-interactive
+    background: linear-gradient(180deg, rgba(white, .38), rgba(white, 0) 50%), var(--bg-a50)
+    box-shadow: inset 0 1px 0 rgba(white, .45)
+
+appearance-glass-interactions-dark()
+  .ui-interactive.has-hover-surface,
+  .ui-interactive:hover,
+  .ui-interactive:focus-visible,
+  .ui-interactive:active,
+  .ui-interactive.active,
+  .ui-interactive.is-active,
+  details[open] > .ui-interactive
+    background: linear-gradient(180deg, rgba(white, .08), rgba(white, 0) 50%), var(--bg-a20)
+    box-shadow: inset 0 1px 0 rgba(white, .08)
+
+// 当前注册的 Appearance 复用正文基础视觉。选择器由当前编译的 Appearance
+// 主动输出；未来某套需要分化时，在对应文件中实现自己的正文选择器。
+appearance-standard-prose()
+  table:not([class])
+    th
+      background: var(--block)
+      border-top: 1px solid var(--block-border)
+      border-bottom: 1px solid var(--block-border)
+    tr
+      border-bottom: 1px dashed var(--block-border)
+      &:hover
+        background: var(--block)
+
+  blockquote:before
+    background: var(--text-meta)
+
+  p > code:not([class]),
+  li > code:not([class]),
+  .md-text .highlight,
+  pre:not([class]):has(> code),
+  .md-text .highlight figcaption span,
+  .md-text .gist .highlight,
+  .md-text .gist .gist-meta
+    background: var(--block)
+
+  .md-text .gist
+    .gist-file
+      border-color: var(--block-border)
+    .gist-data
+      --bgColor-default: var(--block)
+      border-bottom-color: var(--block-border)
+
+  .md-text .link-card
+    background: var(--card)
+
+appearance-card-listing-nav()
+  .listing-nav__surface
+    background: var(--card)
+    box-shadow: $boxshadow-card
+
+appearance-translucent-leftbar-light()
+  .brand-navigation__back
+    background: linear-gradient(180deg, rgba(white, .38), rgba(white, 0) 50%), rgba(white, .5)
+    box-shadow: inset 0 1px 0 rgba(white, .45)
+  .search-wrapper > .search-form:before
+    background: white
+  .widgets .loading-wrap,
+  .widget-wrapper.markdown .widget-body,
+  .widget-wrapper.tagcloud .widget-body,
+  .widget-wrapper.timeline .tag-plugin.timeline .timenode .body .highlight,
+  .widget-wrapper.timeline .tag-plugin.timeline .timenode .body pre:not([class]):has(> code),
+  .widget-wrapper.timeline .body
+    background: rgba(white, .5)
+  .search-no-result
+    background: rgba(white, .2)
+
+appearance-translucent-leftbar-dark()
+  .brand-navigation__back
+    background: linear-gradient(180deg, rgba(white, .08), rgba(white, 0) 50%), rgba(black, .2)
+    box-shadow: inset 0 1px 0 rgba(white, .08)
+  .search-wrapper > .search-form:before
+    background: rgba(black, .2)
+  .widgets .loading-wrap,
+  .widget-wrapper.markdown .widget-body,
+  .widget-wrapper.tagcloud .widget-body,
+  .widget-wrapper.timeline .tag-plugin.timeline .timenode .body .highlight,
+  .widget-wrapper.timeline .tag-plugin.timeline .timenode .body pre:not([class]):has(> code),
+  .widget-wrapper.timeline .body
+    background: rgba(black, .5)
+  .search-no-result
+    background: rgba(black, .2)

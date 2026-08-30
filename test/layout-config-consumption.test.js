@@ -29,10 +29,9 @@ test("Layout Profile 消费链只读取冻结的 layout.profiles 配置", () => 
     "layout/tags.ejs",
     "layout/page.ejs",
     "layout/_partial/sidebar/brand.ejs",
-    "layout/_partial/sidebar/index_leftbar.ejs",
-    "layout/_partial/sidebar/index_rightbar.ejs",
-    "layout/_partial/main/navbar/nav_tabs_blog.ejs",
-    "layout/_partial/main/navbar/nav_tabs_wiki.ejs",
+    "layout/_partial/regions/widgets.ejs",
+    "layout/_partial/main/listing_nav/blog.ejs",
+    "layout/_partial/main/listing_nav/wiki.ejs",
     "layout/_partial/main/navbar/breadcrumb/blog.ejs",
     "layout/_partial/main/navbar/breadcrumb/note.ejs",
     "layout/_partial/main/navbar/breadcrumb/wiki.ejs"
@@ -52,12 +51,16 @@ test("Layout Profile 消费链只读取冻结的 layout.profiles 配置", () => 
 test("主题默认配置只声明最终 Profile ID 与字段名", () => {
   const config = read("_config.yml");
 
-  assert.match(config, /^layout:\n(?: {2}#.*\n)* {2}profiles:/m);
+  assert.match(config, /^layout:\n(?: {2}#.*\n)* {2}regions:/m);
+  assert.match(config, /^ {2}profiles:/m);
   assert.match(config, /^ {4}blog_index:/m);
   assert.match(config, /^ {6}path: \/blog\//m);
   assert.match(config, /^ {8}active_menu: post/m);
+  assert.match(config, /^ {6}listing_nav:\n {8}#.*\n {8}enabled: true/m);
+  assert.match(config, /^ {8}tabs: \[\]/m);
   assert.doesNotMatch(config, /^site_tree:/m);
   assert.doesNotMatch(config, /^ {4}(?:index_blog|index_topic|index_wiki|notebooks|notes):/m);
   assert.doesNotMatch(config, /^ {6}(?:base_dir|404):/m);
   assert.doesNotMatch(config, /^ {8}menu:/m);
+  assert.doesNotMatch(config, /^ {8}navigation:\n(?: {10}#.*\n)* {10}tabs:/m);
 });

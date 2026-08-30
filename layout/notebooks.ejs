@@ -2,7 +2,7 @@
 <% for (var notebook of page.notebookIndex.items) { %>
   <div class="post-list wiki">
     <div class="post-card-wrap<%= scrollreveal(' ') %>">
-    <a class="post-card wiki card-hover card-hover--spotlight card-hover--tilt" href="<%= pretty_url(notebook.href) %>">
+    <a class="<%- ui_classes('post-card wiki', 'hoverCard') %>" href="<%= pretty_url(notebook.href) %>">
       <%- include('_partial/main/notebook/notebook_card', { render: {listing: notebook} }) %>
     </a>
     </div>

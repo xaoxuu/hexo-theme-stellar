@@ -21,6 +21,7 @@ btn:
   comments: 参与讨论
   expand_posts: 展开其余 %s 篇
   collapse_posts: 收起
+  search: 搜索
 
 meta:
   recent_update: 最近更新
@@ -70,7 +71,43 @@ page:
 search:
   search: 站内搜索
   search_in: 在 %s 中搜索
+  scope: 搜索域
+  scope_all: 全站
+  scope_blog: 博客
   no_results: 没有找到内容！
+  close: 关闭搜索
+
+settings:
+  label: 设置
+  title: 设置
+  profile:
+    title: 个人资料
+    avatar: 头像
+    nickname: 昵称
+    email: Email
+    url: URL
+    save: 保存
+    logout: 退出登录
+    provider_managed: '%s 的评论身份不由主题管理，无法在此编辑或退出。'
+    provider_unknown: 当前评论服务
+  cache:
+    title: 缓存
+    search: 搜索缓存
+    dynamic: 数据缓存
+    all: 全部缓存
+    clear: '清除「%s」'
+  about:
+    title: 关于
+    empty: 暂未配置相关信息。
+    open_link: '打开「%s」链接'
+  result:
+    success: 操作成功。
+    partial: 操作部分完成，部分浏览器存储无法修改。
+    failure: 操作失败，浏览器存储不可用。
+  validation:
+    name: 请输入不超过 80 个字符的昵称。
+    email: 请输入有效的 Email，或留空。
+    url: 请输入 HTTP(S) URL，或留空。
 
 message:
   copied: 复制成功

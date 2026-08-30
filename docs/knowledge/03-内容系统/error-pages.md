@@ -16,10 +16,10 @@ layout:
       path: /404.html
       navigation:
         active_menu: post
-      sidebar:
-        left:
+      regions:
+        leftbar:
           widgets: [recent]
-        right:
+        rightbar:
           widgets: []
 
 resources:
@@ -28,7 +28,7 @@ resources:
 ```
 
 - `layout.profiles.error.path` 决定生成路径。
-- `navigation.active_menu` 与 `sidebar` 决定 Shell 布局。
+- `navigation.active_menu` 与 `regions` 决定 Shell 布局。
 - `resources.error_page.image` 提供可空插图，冻结运行时键为 `resources.errorPage.image`；设为 `null` 时不渲染图片。
 
 错误页不读取全局评论 provider，也不通过空标题间接隐藏评论。404 canonical 由 head 层明确跳过，`robots: none` 保持 Hexo 页面字段语义。

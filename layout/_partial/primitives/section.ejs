@@ -1,5 +1,5 @@
 <%
-var allowedSlots = ['cover', 'sidebar', 'navigation', 'content', 'footer', 'scripts']
+var allowedSlots = ['cover', 'topbar', 'leftbar', 'rightbar', 'navigation', 'content', 'footer', 'scripts']
 if (!allowedSlots.includes(slot)) {
   throw new Error('Stellar Layout Section: 未知 slot ' + slot)
 }

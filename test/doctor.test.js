@@ -24,8 +24,8 @@ function initializedSite(blueprint) {
   return baseDir;
 }
 
-test("doctor 通过三套 Blueprint 的环境、主题、Collection 与 Front Matter 检查", () => {
-  for (const blueprint of ["classic-blog", "minimal-reading", "docs-reference"]) {
+test("doctor 通过四套 Blueprint 的环境、主题、Collection 与 Front Matter 检查", () => {
+  for (const blueprint of ["classic", "minimal-reading", "docs-reference", "light-and-shadow"]) {
     const result = runDoctor({ baseDir: initializedSite(blueprint), nodeVersion: "22.18.0", hexoVersion: "8.0.0" });
     assert.equal(result.ok, true, `${blueprint}: ${formatDoctorText(result)}`);
     assert.equal(Object.isFrozen(result), true);
@@ -55,13 +55,59 @@ test("doctor 聚合环境、主题配置、Collection 与 Front Matter 的来源
 });
 
 test("doctor text/json 输出稳定表达同一结果", () => {
-  const result = runDoctor({ baseDir: initializedSite("classic-blog"), nodeVersion: "22.0.0", hexoVersion: "8.1.0" });
+  const result = runDoctor({ baseDir: initializedSite("classic"), nodeVersion: "22.0.0", hexoVersion: "8.1.0" });
   assert.match(formatDoctorText(result), /^Stellar doctor: PASS/);
   assert.deepEqual(JSON.parse(formatDoctorJson(result)), result);
 });
 
+test("doctor 对不支持的位置只警告并跳过，ok 保持 true", () => {
+  const baseDir = initializedSite("classic");
+  fs.writeFileSync(path.join(baseDir, "_config.stellar.yml"), [
+    "layout:",
+    "  regions:",
+    "    topbar:",
+    "      widgets:",
+    "        - layout: timeline",
+    ""
+  ].join("\n"));
+
+  const result = runDoctor({ baseDir, nodeVersion: "22.0.0", hexoVersion: "8.1.0" });
+  assert.equal(result.ok, true, formatDoctorText(result));
+  assert.equal(result.issues.length, 0);
+  assert.ok(result.warnings.length > 0);
+  const warning = result.warnings.find(item => item.widget === "timeline" && item.region === "topbar");
+  assert.ok(warning);
+  assert.equal(warning.severity, "warning");
+  assert.match(warning.path, /layout=.*region=topbar/);
+  assert.deepEqual(warning.supported, ["leftbar", "rightbar", "drawer"]);
+  assert.match(formatDoctorText(result), /Widget timeline .*does not support topbar.*skipped/);
+});
+
+test("doctor 为预发布 Region 与背景旧名称给出精确迁移目标", () => {
+  const baseDir = initializedSite("classic");
+  fs.writeFileSync(path.join(baseDir, "_config.stellar.yml"), [
+    "layout:",
+    "  regions:",
+    "    sidebar: [brand, menu]",
+    "    context: [toc]",
+    "appearance:",
+    "  backgrounds:",
+    "    sidebar:",
+    "      image: /legacy.webp",
+    ""
+  ].join("\n"));
+
+  const result = runDoctor({ baseDir, nodeVersion: "22.0.0", hexoVersion: "8.1.0" });
+  assert.equal(result.ok, false);
+  assert.deepEqual(result.issues.map(item => [item.path, item.expected]), [
+    ["layout.regions.sidebar", "layout.regions.leftbar"],
+    ["layout.regions.context", "layout.regions.rightbar"],
+    ["appearance.backgrounds.sidebar", "appearance.backgrounds.leftbar"]
+  ]);
+});
+
 test("doctor 为 Content、Collection 与 Front Matter 旧路径给出最终迁移目标", () => {
-  const baseDir = initializedSite("classic-blog");
+  const baseDir = initializedSite("classic");
   fs.mkdirSync(path.join(baseDir, "source/_data/topic"), { recursive: true });
   fs.mkdirSync(path.join(baseDir, "source/_posts"), { recursive: true });
   fs.writeFileSync(path.join(baseDir, "_config.stellar.yml"), "content:\n  article:\n    type: story\n    indent: true\n    related_posts:\n      enabled: true\n");
@@ -79,7 +125,7 @@ test("doctor 为 Content、Collection 与 Front Matter 旧路径给出最终迁�
 });
 
 test("doctor 为 Extensions 旧路径给出最终迁移目标或明确删除", () => {
-  const baseDir = initializedSite("classic-blog");
+  const baseDir = initializedSite("classic");
   fs.writeFileSync(path.join(baseDir, "_config.stellar.yml"), [
     "extensions:",
     "  search:",
@@ -118,7 +164,7 @@ test("doctor 为 Extensions 旧路径给出最终迁移目标或明确删除", (
 });
 
 test("doctor 接受 BOM 与 CRLF Front Matter", () => {
-  const baseDir = initializedSite("classic-blog");
+  const baseDir = initializedSite("classic");
   const page = path.join(baseDir, "source/_posts/crlf.md");
   fs.writeFileSync(page, "\uFEFF---\r\ntitle: CRLF\r\n---\r\nBody\r\n");
   const result = runDoctor({ baseDir, nodeVersion: "22.0.0", hexoVersion: "8.1.0" });

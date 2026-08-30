@@ -1,7 +1,7 @@
 /* global hexo */
 "use strict";
 
-const { CONFIG_SCHEMA, literal } = require("./config-schema");
+const { literal } = require("./config-schema");
 const { CONFIG_TARGET_FIELDS } = require("./config-target");
 const { deepFreeze } = require("./schema-utils");
 
@@ -37,12 +37,11 @@ const LEGACY_COLLECTION_ROOTS = Object.freeze({
   background: "hero.background",
   animation: "hero.background.effect",
   banner: "hero",
-  leftbar: "sidebar.left.widgets",
-  rightbar: "sidebar.right.widgets",
+  leftbar: "regions.leftbar.widgets",
+  rightbar: "regions.rightbar.widgets",
   menu_id: "navigation.menu",
   header: "navigation",
-  wiki_home: "sidebar.left.wiki_home",
-  search: "sidebar.left.search",
+  search: "regions.leftbar.widgets",
   menu: "navigation.menu",
   type: "article.style",
   indent: "article.paragraph_indent",
@@ -72,14 +71,13 @@ const LEGACY_FRONT_MATTER_ROOTS = Object.freeze({
   h1: "banner.headline",
   subtitle: "banner.tagline",
   banner_info: "banner",
-  leftbar: "sidebar.left.widgets",
-  rightbar: "sidebar.right.widgets",
+  leftbar: "regions.leftbar.widgets",
+  rightbar: "regions.rightbar.widgets",
   menu_id: "navigation.menu",
   header: "navigation",
-  wiki_home: "sidebar.left.wiki_home",
-  search: "sidebar.left.search",
+  search: "regions.leftbar.widgets",
   menu: "navigation.menu",
-  logo: "sidebar.left.brand",
+  logo: "regions.leftbar.widgets",
   type: "article.style",
   indent: "article.paragraph_indent",
   author: "article.author",
@@ -254,14 +252,28 @@ function schemaForScope(scope) {
 }
 
 function decorateSharedSchemas(schema) {
-  const sidebar = clone(schema.properties.sidebar);
-  schema.properties.note_defaults ||= syntheticObject("collection", "note_defaults");
-  schema.properties.note_defaults.properties ||= {};
-  schema.properties.note_defaults.properties.sidebar = {
-    ...schema.properties.note_defaults.properties.sidebar,
-    properties: sidebar.properties,
-    sealed: true
-  };
+  const regions = clone(schema.properties.regions);
+  regions.removedProperties = { sidebar: "leftbar", context: "rightbar" };
+  for (const region of ["topbar", "leftbar", "rightbar"]) {
+    regions.properties[region].normalizer = "region";
+    regions.properties[region].normalization = "accept a widget array shorthand or a full region object; validate children and deep-freeze the normalized object";
+  }
+  regions.properties.topbar.properties.widgets.validator = "region_widgets";
+  regions.properties.leftbar.properties.widgets.validator = "leftbar_content_widgets";
+  regions.properties.rightbar.properties.widgets.validator = "region_widgets";
+  regions.properties.topbar.removedProperties = { inherit: null };
+  regions.properties.leftbar.removedProperties = { inherit: null };
+  regions.properties.rightbar.removedProperties = { inherit: null };
+  schema.properties.regions = regions;
+  if (schema.runtimeKey === "collection") {
+    schema.properties.note_defaults ||= syntheticObject("collection", "note_defaults");
+    schema.properties.note_defaults.properties ||= {};
+    schema.properties.note_defaults.properties.regions = {
+      ...schema.properties.note_defaults.properties.regions,
+      properties: regions.properties,
+      sealed: true
+    };
+  }
 
   const effect = schema.properties.hero?.properties.background?.properties.effect;
   if (effect) {
@@ -274,11 +286,7 @@ function decorateSharedSchemas(schema) {
 }
 
 function decorateCommon(schema) {
-  const brand = clone(CONFIG_SCHEMA.properties.site.properties.brand);
-  schema.properties.sidebar.properties.left.properties.brand.properties = brand.properties;
-  schema.properties.sidebar.properties.left.properties.brand.sealed = true;
-  schema.properties.sidebar.properties.left.properties.brand.validator = "brand";
-  schema.properties.sidebar.properties.left.removedProperties = { logo: "brand" };
+  schema.removedProperties.sidebar = "regions";
   schema.properties.navigation.removedProperties = { mobile_header: "navigation" };
   schema.properties.comments.removedProperties = Object.fromEntries(
     COMMENT_PROVIDER_FIELDS.map(field => [field, field === "service" ? "provider" : "options"])
@@ -315,6 +323,7 @@ FRONT_MATTER_CONFIG_SCHEMA.removedProperties = clone(LEGACY_FRONT_MATTER_ROOTS);
 FRONT_MATTER_CONFIG_SCHEMA.properties.collection.requiredProperties = ["profile", "id"];
 FRONT_MATTER_CONFIG_SCHEMA.properties.collection.removedProperties = { type: "profile" };
 FRONT_MATTER_CONFIG_SCHEMA.properties.collection.properties.id.validator = "non_empty_string";
+decorateSharedSchemas(FRONT_MATTER_CONFIG_SCHEMA);
 decorateCommon(FRONT_MATTER_CONFIG_SCHEMA);
 
 module.exports = {

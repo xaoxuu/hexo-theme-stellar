@@ -56,7 +56,7 @@ function configReferenceMarkdown(metadata = generateConfigReferenceMetadata()) {
     "",
     "> 本页由已交付配置 Schema 自动生成。请勿手工编辑；运行 `npm run reference:generate` 更新。",
     "",
-    "YAML 使用 `path`，主题 JavaScript 消费规范化后的 `runtimePath`。第三方 provider 参数袋只封闭父级容器，内部字段由相应 provider 定义。",
+    "YAML 使用 `path`，主题 JavaScript 消费规范化后的 `runtimePath`。主题配置中的空键会解析为 `null`：字段类型不包含 `null` 时等同于未配置并使用 Schema 默认值，类型包含 `null` 时保留该字段的明确空值语义。第三方 provider 参数袋只封闭父级容器，内部字段由相应 provider 定义。",
     ""
   ];
   for (const scope of [...groups.keys()].sort(compareText)) {
@@ -126,7 +126,7 @@ function blueprintReferenceMarkdown(metadata = generateBlueprintReferenceMetadat
     "## 最小命令",
     "",
     "```bash",
-    "npx hexo stellar init --blueprint classic-blog --style stellar --non-interactive",
+    "npx hexo stellar init --blueprint classic --style card --non-interactive",
     "npx hexo stellar doctor --format text",
     "npx hexo generate",
     "```",

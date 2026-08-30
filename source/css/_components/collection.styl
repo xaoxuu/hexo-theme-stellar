@@ -1,35 +1,11 @@
-// 可移植的紧凑列表/网格只读取 surface 语义变量，不感知所在页面区域。
-[data-ui-surface]
-  --ui-item-bg: transparent
-  --ui-item-bg-hover: var(--block)
-  --ui-item-bg-active: var(--block)
-  --ui-item-shadow-hover: none
-  --ui-item-shadow-active: none
+// 可移植的紧凑列表/网格只负责布局和状态；视觉反馈由当前 Appearance 实现。
+.ui-collection
   --ui-item-title: var(--text-p1)
   --ui-item-muted: var(--text-p3)
   --ui-item-padding-x: var(--gap-base)
   --ui-item-padding-y: 8px
   --ui-item-min-height: 32px
   --ui-collection-gap: 4px
-
-[data-ui-surface='glass']
-  --ui-item-bg-hover: linear-gradient(180deg, rgba(white, .38), rgba(white, 0) 50%), var(--bg-a50)
-  --ui-item-bg-active: linear-gradient(180deg, rgba(white, .38), rgba(white, 0) 50%), var(--bg-a50)
-  --ui-item-shadow-hover: inset 0 1px 0 rgba(white, .45)
-  --ui-item-shadow-active: inset 0 1px 0 rgba(white, .45)
-  :root[data-theme='dark'] &
-    --ui-item-bg-hover: linear-gradient(180deg, rgba(white, .08), rgba(white, 0) 50%), var(--bg-a20)
-    --ui-item-bg-active: linear-gradient(180deg, rgba(white, .08), rgba(white, 0) 50%), var(--bg-a20)
-    --ui-item-shadow-hover: inset 0 1px 0 rgba(white, .08)
-    --ui-item-shadow-active: inset 0 1px 0 rgba(white, .08)
-  :root:not([data-theme]) &
-    @media screen and (prefers-color-scheme: dark)
-      --ui-item-bg-hover: linear-gradient(180deg, rgba(white, .08), rgba(white, 0) 50%), var(--bg-a20)
-      --ui-item-bg-active: linear-gradient(180deg, rgba(white, .08), rgba(white, 0) 50%), var(--bg-a20)
-      --ui-item-shadow-hover: inset 0 1px 0 rgba(white, .08)
-      --ui-item-shadow-active: inset 0 1px 0 rgba(white, .08)
-
-.ui-collection
   --ui-columns: 1
   --ui-grid-min: 7rem
   --ui-item-depth: 0
@@ -43,13 +19,15 @@
 .ui-collection[data-layout='grid']
   grid-template-columns: unquote('repeat(auto-fit, minmax(min(100%, max(var(--ui-grid-min), calc((100% - (var(--ui-columns) - 1) * var(--ui-collection-gap)) / var(--ui-columns)))), 1fr))')
 
+.ui-collection[data-layout='inline']
+  display: flex
+
 .ui-collection[data-density='compact']
   --ui-item-padding-y: 4px
   --ui-item-min-height: 30px
   --ui-collection-gap: 2px
 
 .ui-collection__item
-  --item-theme-light: x-theme-light()
   box-sizing: border-box
   min-width: 0
   min-height: var(--ui-item-min-height)
@@ -57,8 +35,6 @@
   padding-left: calc(var(--ui-item-padding-x) + var(--ui-item-depth) * var(--gap-base))
   border-radius: $border-bar
   color: var(--text-p2)
-  background: var(--ui-item-bg)
-  box-shadow: none
   display: flex
   align-items: center
   gap: 12px
@@ -66,29 +42,27 @@
   position: relative
   &:hover
     color: var(--ui-item-title)
-    background: var(--ui-item-bg-hover)
-    box-shadow: var(--ui-item-shadow-hover)
-  &.is-active
-    color: var(--ui-item-title)
-    background: var(--ui-item-bg-active)
-    box-shadow: var(--ui-item-shadow-active)
   &:focus-visible
     outline: 2px solid var(--theme)
     outline-offset: 2px
 
-.ui-collection__leading
-  width: 1.5rem
-  height: 1.5rem
-  flex-shrink: 0
-  display: flex
-  align-items: center
+.ui-collection__item:active,
+.ui-collection__item.is-active,
+details[open] > .ui-collection__item
+  color: var(--ui-item-title)
+
+button.ui-collection__item
+  border: 0
+  appearance: none
+  font: inherit
+  text-align: start
+  cursor: pointer
+
+button.ui-collection__item:not(.is-icon-only)
+  width: 100%
+
+.ui-collection__item.is-icon-only
   justify-content: center
-  color: var(--text-p2)
-  img,svg
-    max-width: 100%
-    max-height: 100%
-    object-fit: contain
-    opacity: .5
 
 .ui-collection__content
   min-width: 0
@@ -147,17 +121,6 @@
   corner-shape: round
   background: x-theme-gradient()
 
-.ui-collection__item:hover,
-.ui-collection__item.is-active
-  .ui-collection__leading
-    color: var(--item-theme, var(--theme))
-    img,svg
-      opacity: 1
-    svg [fill='currentColor']
-      fill: var(--item-grad, currentColor)
-    svg [stroke='currentColor']
-      stroke: var(--item-grad, currentColor)
-
 .ui-collection[data-layout='grid']
   .ui-collection__indicator
     display: none
@@ -180,9 +143,3 @@
     font-weight: 700
   .ui-collection__content
     display: flex
-
-.ui-collection-adapter
-  --ui-adapter-bg-hover: var(--ui-item-bg-hover)
-  --ui-adapter-bg-active: var(--ui-item-bg-active)
-  --ui-adapter-shadow-hover: var(--ui-item-shadow-hover)
-  --ui-adapter-shadow-active: var(--ui-item-shadow-active)

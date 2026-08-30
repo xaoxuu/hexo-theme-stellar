@@ -3,6 +3,7 @@
 "use strict";
 
 const { defineContributions } = require("./contribution-contract");
+const INTERNAL = require("./internal-constants");
 
 const FEATURE_ENTRY = "/js/runtime/extensions/feature.mjs";
 const PLUGIN_SYSTEM_DOC = "docs/knowledge/07-外部集成/plugin-system.md";
@@ -43,7 +44,7 @@ const CONTRIBUTIONS = defineContributions([
   {
     id: "color-scheme-switch",
     kind: "feature",
-    entry: runtimeEntry("/js/runtime/extensions/color-scheme-switch.mjs"),
+    entry: runtimeEntry(INTERNAL.assets.runtime.colorSchemeSwitch),
     resources: ["runtime.colorSchemeSwitch"],
     activation: { type: "always" },
     schema: "extensions.features.color_scheme_switch",
@@ -70,7 +71,7 @@ const CONTRIBUTIONS = defineContributions([
     kind: "extension",
     entry: runtimeEntry("/js/runtime/extensions/search.mjs"),
     resources: ["search"],
-    activation: selector("#search-input"),
+    activation: selector(".search-input"),
     schema: "extensions.search",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
@@ -172,6 +173,19 @@ const CONTRIBUTIONS = defineContributions([
     }
   },
   {
+    id: "settings",
+    kind: "component",
+    entry: runtimeEntry(INTERNAL.assets.runtime.settings),
+    resources: ["runtime.settings"],
+    activation: selector(".settings-page"),
+    schema: null,
+    i18n: null,
+    docs: { category: "Components", path: "docs/designs/2026-08-28-settings/spec.md" },
+    tests: ["test/settings.test.js", RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
+    defaultsOwner: null,
+    project: context => configResult({})
+  },
+  {
     id: "link-prefetch",
     kind: "feature",
     entry: featureEntry(),
@@ -209,7 +223,7 @@ const CONTRIBUTIONS = defineContributions([
   {
     id: "reveal",
     kind: "feature",
-    entry: runtimeEntry("/js/runtime/extensions/reveal.mjs"),
+    entry: runtimeEntry(INTERNAL.assets.runtime.reveal),
     resources: ["runtime.reveal"],
     activation: selector(".slide-up"),
     schema: "extensions.features.reveal",

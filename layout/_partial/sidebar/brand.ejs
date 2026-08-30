@@ -1,25 +1,45 @@
 <%
-var brand = typeof brandModel !== 'undefined' ? brandModel : brandConfig(page)
+var brand = (typeof brandModel !== 'undefined'
+  ? brandModel
+  : brandConfig(page, typeof brandSource !== 'undefined' ? brandSource : 'site')) || {}
+var activeBrandSource = typeof brandSource !== 'undefined' ? brandSource : 'site'
+var brandPlacement = typeof placement !== 'undefined' ? placement : 'leftbar'
+var activeViewModel = typeof viewModel !== 'undefined' ? viewModel : null
+var brandAppearance = brandPlacement === 'topbar'
+  ? 'topbar'
+  : activeBrandSource === 'collection' ? 'collection' : 'site'
+
+function layoutBrandNavigation() {
+  if (brandPlacement !== 'leftbar' || activeBrandSource !== 'collection') return ''
+  if (activeViewModel?.collection?.profile !== 'wiki') return ''
+  const href = activeViewModel?.render?.layout?.wikiIndexPath
+  if (!href) return ''
+  return `<div class="brand-navigation"><a class="brand-navigation__back cap" href="${pretty_url(href)}"><span class="ui-icon">${icon('default:arrow-left', '', true)}</span><span>${__('btn.all_wiki')}</span></a></div>`
+}
+
+function layoutCollectionSearch() {
+  if (brandPlacement !== 'leftbar' || activeBrandSource !== 'collection') return ''
+  if (!stellar_config('extensions.search.provider')) return ''
+  var body = partial('_partial/sidebar/search', {
+    item: {algoliaFilterPath: 'auto'},
+    instanceId: 'collection-brand-search',
+    presentation: 'leftbar',
+    hoverSurface: true,
+    viewModel: activeViewModel
+  })
+  return body.trim().length > 0 ? `<div class="brand-search">${body}</div>` : ''
+}
 
 function layoutBrandTitle() {
   const name = brandText(brand.name)
-  const wordmark = brandText(brand.wordmark)
-  if (!name && !wordmark) return ''
-  const tagline = brandText(brand.tagline?.text)
-  const taglineHover = brandText(brand.tagline?.hover)
+  if (!name) return ''
+  const tagline = brandText(brand.tagline)
   const href = brandText(brand.href)
   const tag = href ? 'a' : 'div'
   var el = `<${tag} class="brand-title"${href ? ` href="${escape_html(url_for(href))}"` : ''}>`
-  if (wordmark) {
-    el += `<img class="brand-wordmark" no-lazy src="${escape_html(wordmark)}" alt="${escape_html(name)}">`
-  } else {
-    el += `<div class="brand-name">${escape_html(name)}</div>`
-  }
-  if (tagline) {
-    el += `<div class="brand-tagline${taglineHover ? ' normal' : ''} cap">${escape_html(tagline)}</div>`
-    if (taglineHover) {
-      el += `<div class="brand-tagline hover cap" style="opacity:0">${escape_html(taglineHover)}</div>`
-    }
+  el += `<div class="brand-name">${escape_html(name)}</div>`
+  if (brandAppearance !== 'topbar' && tagline) {
+    el += `<div class="brand-tagline cap">${escape_html(tagline)}</div>`
   }
   el += `</${tag}>`
   return el
@@ -29,52 +49,49 @@ function layoutBrandImage() {
   const image = brand.image
   if (!image?.src) return ''
   const src = brandText(image.src)
-  const href = brandText(image.href)
+  const href = brandText(brand.href)
   const tag = href ? 'a' : 'div'
   var variant = image.variant
   var el = `<${tag} class="brand-image brand-image--${variant}"${href ? ` href="${escape_html(url_for(href))}"` : ''}>`
-  if (variant === 'avatar' && stellar_config('appearance.motion.avatar') !== 'never') {
-    el += `<div class="brand-image-bg"></div>`
-  }
   el += `<img no-lazy src="${escape_html(src)}" alt="">`
   el += `</${tag}>`
   return el
 }
 
-function layoutWikiHome() {
-  var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
-    ? viewModel
-    : null
-  if (wikiViewModel) {
-    if (placement !== 'sidebar' || wikiViewModel.render.layout.showWikiHome === false) return ''
-    var el = `<div class="wiki-home-wrap">`
-    el += `<a class="wiki-home cap" href="${pretty_url(wikiViewModel.render.layout.wikiIndexPath)}">`
-    el += icon('default:arrow-left', '', true)
-    el += `<span>${__('btn.all_wiki')}</span>`
-    el += `</a></div>`
-    return el
-  }
-  if (placement !== 'sidebar' || !collection_id(page, 'wiki')) return ''
-  var wiki = stellar_data('wiki').tree[collection_id(page, 'wiki')]
-  const enabled = content_config(page).sidebar?.left?.wikiHome ?? wiki?.sidebar?.left?.wikiHome ?? true
-  if (enabled === false) return ''
-  var el = `<div class="wiki-home-wrap">`
-  el += `<a class="wiki-home cap" href="${pretty_url(stellar_config('layout.profiles.wikiIndex.path'))}">`
-  el += icon('default:arrow-left', '', true)
-  el += `<span>${__('btn.all_wiki')}</span>`
-  el += `</a></div>`
+function layoutBrandGithub() {
+  if (brandAppearance !== 'site') return ''
+  const username = typeof brandGithubUsername === 'function' ? brandGithubUsername() : ''
+  const apiBase = brandText(stellar_config('extensions.services.github.apiUrl')).replace(/\/+$/, '')
+  if (!username || !apiBase) return ''
+  const encodedUsername = encodeURIComponent(username)
+  const githubHref = `https://github.com/${encodedUsername}`
+  const items = [
+    {key: 'followers', label: 'followers', href: githubHref + '?tab=followers'},
+    {key: 'following', label: 'following', href: githubHref + '?tab=following'},
+    {key: 'public_repos', label: 'repos', href: githubHref + '?tab=repositories'}
+  ]
+  var el = `<div class="brand-stats data-service ds-ghinfo" data-api="${escape_html(apiBase + '/users/' + encodedUsername)}">`
+  items.forEach(item => {
+    el += `<a class="${ui_classes('brand-stat')}" href="${escape_html(item.href)}">`
+    el += `<span class="brand-stat__value" type="text" id="${item.key}"></span>`
+    el += `<span class="brand-stat__label">${item.label}</span></a>`
+  })
+  el += `</div>`
   return el
 }
 
 function layoutBrand() {
-  if (!brand.image?.src && !brand.name && !brand.wordmark) return ''
-  var el = `<header class="brand-header${placement === 'main' ? ' mobile-only' : ''}">`
+  if (!brand.image?.src && !brand.name) return ''
+  var el = `<header class="brand-header brand-header--${brandAppearance}${brandPlacement === 'main' ? ' mobile-only' : ''}">`
+  el += layoutBrandNavigation()
   el += `<div class="brand-wrap">`
   el += layoutBrandImage()
   el += layoutBrandTitle()
-  el += `</div></header>`
+  el += layoutBrandGithub()
+  el += `</div>`
+  el += layoutCollectionSearch()
+  el += `</header>`
   return el
 }
 %>
-<%- layoutWikiHome() %>
 <%- layoutBrand() %>

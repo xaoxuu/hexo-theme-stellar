@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "minimal-reading",
   "name": "Minimal Reading",
-  "description": "适合长文、随笔与低干扰阅读体验的内容站点。",
+  "description": "在 Topbar 展示设置入口的低干扰长文与随笔站点。",
   "default_style": "minimal",
   "files": [
     {

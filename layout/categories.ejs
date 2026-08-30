@@ -8,7 +8,7 @@ if (page.navigation.menu == undefined) {
 <% if (site.categories.length) { %>
   <% page.title = __('btn.categories'); %>
   <% page.layout = 'categories'; %>
-  <%- partial('_partial/main/navbar/nav_tabs_blog') %>
+  <%- partial('_partial/main/listing_nav/blog') %>
   <div class='post-list'>
     <article class='<%- scrollreveal("") %>' id='cats'>
       <%

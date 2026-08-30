@@ -1,0 +1,19 @@
+.site-shell
+  --leftbar-gap: 0px
+
+appearance-transparent-leftbar()
+
+.site-region--leftbar
+  appearance-translucent-leftbar-light()
+
+:root[data-theme='dark'] .site-region--leftbar
+  appearance-translucent-leftbar-dark()
+
+:root:not([data-theme])
+  @media screen and (prefers-color-scheme: dark)
+    .site-region--leftbar
+      appearance-translucent-leftbar-dark()
+
+appearance-standard-interactions()
+appearance-standard-prose()
+appearance-card-listing-nav()

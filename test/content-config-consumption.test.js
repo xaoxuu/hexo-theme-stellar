@@ -25,7 +25,7 @@ test("Article 与 Notebook 消费链只读取冻结的 content 配置", () => {
     "layout/_partial/main/article/article_footer.ejs",
     "layout/_partial/main/article/related_posts.ejs",
     "layout/_partial/main/navbar/article_banner.ejs",
-    "layout/_partial/main/navbar/nav_tabs_blog.ejs",
+    "layout/_partial/main/listing_nav/blog.ejs",
     "layout/_partial/main/post_list/post_card_legacy.ejs",
     "layout/_partial/widgets/tagtree.ejs"
   ].map(read).join("\n");

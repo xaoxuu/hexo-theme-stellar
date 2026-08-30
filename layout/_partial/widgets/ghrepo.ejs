@@ -32,21 +32,21 @@ function layoutDiv() {
   el += '<div class="items data-service ds-ghinfo" data-api="' + escape_html(repoApi) + '">';
   el += '<a class="repo" href="https://github.com/' + repo + '" target="_blank" rel="external nofollow noopener noreferrer">';
     el += '<div class="repo-name flex-row">';
-      el += icon('github:repo')
+      el += '<span class="ui-icon">' + icon('github:repo') + '</span>'
       el += repo;
     el += '</div>';
     el += '<div class="repo-desc"><span type="text" id="description">&nbsp;</span></div>';
     el += '<div class="grid">';
       el += '<div class="flex-row">';
-        el += icon('github:star')
+        el += '<span class="ui-icon">' + icon('github:star') + '</span>'
         el += '<span type="text" id="stargazers_count"></span>';
       el += '</div>';
       el += '<div class="flex-row">';
-        el += icon('github:fork')
+        el += '<span class="ui-icon">' + icon('github:fork') + '</span>'
         el += '<span type="text" id="forks_count"></span>';
       el += '</div>';
       el += '<div class="flex-row data-service ds-ghinfo" index="0" data-api="' + escape_html(tagsApi) + '">';
-        el += icon('github:tag')
+        el += '<span class="ui-icon">' + icon('github:tag') + '</span>'
         el += '<span type="text" id="latest-tag-name">0</span>';
       el += '</div>';
     el += '</div>';

@@ -1,0 +1,30 @@
+.site-shell
+  --shell-gap: var(--gap-page)
+  --shell-edge-inset: 16px
+  --shell-topbar-top: 0px
+
+.site-shell[data-regions~='topbar']
+  --shell-sticky-offset: var(--shell-topbar-height)
+  --shell-topbar-bottom: var(--shell-topbar-height)
+
+.ui-surface
+  appearance-card-surface()
+
+.site-region--topbar.ui-surface
+  top: 0
+  width: 100%
+  border-radius: 0
+
+.site-region--leftbar .ui-surface
+  background: var(--card)
+
+.site-region--leftbar
+  .brand-navigation__back
+    background: var(--block-border)
+    box-shadow: none
+  .search-wrapper > .search-form:before
+    background: var(--text-meta)
+
+appearance-standard-interactions()
+appearance-standard-prose()
+appearance-card-listing-nav()

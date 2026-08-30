@@ -97,7 +97,7 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
     listing: { priority: 3, excerpt_length: 96, per_page: 10, sort: { field: "date", direction: "desc" } },
     card: { cover: "/cover.webp", tagline: "Collection card" },
     hero: { enabled: true, background: { image: "/hero.webp" } },
-    sidebar: { left: { widgets: ["recent"] } },
+    regions: { leftbar: { widgets: ["recent"] } },
     article: { style: "story", paragraph_indent: "always" },
     footer: { license: "Topic license", share: false },
     comments: { enabled: true, title: "Topic comments", provider: "giscus", options: {} }
@@ -112,17 +112,16 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
         brand: {
           image: { src: "/avatar.webp", variant: "avatar" },
           name: "Site Brand",
-          tagline: { text: "Site tagline", hover: null },
-          href: "/"
+          tagline: "Site tagline"
         }
       },
       layout: { profiles: {
         topic_index: { path: "/topic/" },
         post: {
           navigation: { active_menu: "post" },
-          sidebar: {
-            left: ["global-left"],
-            right: ["toc"]
+          regions: {
+            leftbar: { widgets: ["global-left"] },
+            rightbar: { widgets: ["toc"] }
           }
         },
         topic: { navigation: { active_menu: "post" } }
@@ -140,7 +139,7 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
     frontMatter: {
       ...current.frontMatter,
       navigation: { menu: "", breadcrumb: false },
-      sidebar: { left: { widgets: [] } },
+      regions: { leftbar: { widgets: [] } },
       article: { paragraph_indent: "never" },
       footer: { license: false, share: false },
       comments: { enabled: false, title: "" },
@@ -153,7 +152,16 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
       previous: { title: "Newer", path: "blog/newer/", date: "2026-08-21T00:00:00.000Z" },
       next: { title: "Older", path: "blog/older/", date: "2026-08-19T00:00:00.000Z" }
     },
-    relatedItems: [{ title: "Related", path: "/blog/related/", excerpt: "<p>Related excerpt</p>" }]
+    relatedItems: [{ title: "Related", path: "/blog/related/", excerpt: "<p>Related excerpt</p>" }],
+    runtimeData: {
+      widgets: {
+        "global-left": { layout: "recent" },
+        recent: { layout: "recent" },
+        related: { layout: "related" },
+        ghrepo: { layout: "ghrepo" },
+        toc: { layout: "toc" }
+      }
+    }
   };
   const normalizedInput = normalizeTopicInput(input);
   const base = buildTopicPageViewModelBaseRaw(normalizedInput);
@@ -229,8 +237,7 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
     branch: "page-branch"
   });
   assert.deepEqual(viewModel.item.presentation.card, {});
-  assert.deepEqual(viewModel.item.presentation.sidebar.left.widgets, []);
-  assert.equal(viewModel.item.presentation.sidebar.left.brand.name, "Site Brand");
+  assert.deepEqual(viewModel.item.presentation.regions.leftbar.widgets, []);
   assert.equal(viewModel.item.presentation.article.style, "story");
   assert.equal(viewModel.item.presentation.article.paragraphIndent, "never");
   assert.equal(viewModel.item.presentation.footer.license, false);
@@ -240,9 +247,16 @@ test("Topic profile 生成同构且深度冻结的 PageViewModel", () => {
   assert.deepEqual(viewModel.item.visibility, { listed: true, searchable: false });
   assert.equal(viewModel.render.document.preferredTheme, "auto");
   assert.equal(viewModel.render.layout.blogPath, "topic");
-  assert.equal(viewModel.render.layout.brand.name, "Site Brand");
-  assert.deepEqual(viewModel.render.layout.sidebar.left.widgets, []);
-  assert.deepEqual(viewModel.render.layout.sidebar.right.widgets, ["ghrepo", "toc"]);
+  assert.equal(viewModel.render.layout.brands.site.name, "Site Brand");
+  assert.equal(viewModel.render.layout.brands.site.href, "/");
+  assert.equal(viewModel.render.layout.brands.collection.name, "Stellar v2");
+  assert.equal(viewModel.render.layout.brands.collection.href, "columns/stellar-v2");
+  assert.equal(Object.hasOwn(viewModel.render.layout.brands.site, "github"), false);
+  assert.equal(Object.hasOwn(viewModel.render.layout.brands.collection, "github"), false);
+  assert.equal(viewModel.render.layout.regions.leftbar.brand, "site_brand");
+  assert.deepEqual(viewModel.render.layout.regions.leftbar.widgets, []);
+  assert.equal(viewModel.render.layout.regions.leftbar.footer.actions, true);
+  assert.deepEqual(viewModel.render.layout.regions.rightbar.widgets.map(widget => widget.id), ["ghrepo", "toc"]);
   assert.deepEqual(viewModel.render.layout.breadcrumbs, [{
     name: "Build the future",
     path: "topic/latest"

@@ -76,7 +76,7 @@ test("Runtime Manifest 顺序直接来自 descriptor 注册表", () => {
     resolveServiceProvider: () => null
   });
   assert.deepEqual(entries.map(item => item.id), [
-    "lazy-loading", "deferred-icons", "dropdown", "services", "code-copy", "adaptive-text", "card-hover", "swiper"
+    "lazy-loading", "deferred-icons", "dropdown", "services", "settings", "code-copy", "adaptive-text", "card-hover", "swiper"
   ]);
   const cardHover = entries.find(item => item.id === "card-hover");
   assert.equal(cardHover.module, "/js/runtime/extensions/card-hover.mjs");

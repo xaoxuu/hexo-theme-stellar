@@ -14,9 +14,10 @@ const { spawn, spawnSync } = require("node:child_process");
 const THEME_ROOT = path.resolve(__dirname, "..");
 const PREVIEW_COMMAND = "npx hexo server --ip 127.0.0.1";
 const BLUEPRINT_MATRIX = Object.freeze([
-  Object.freeze({ id: "classic-blog", language: "en", style: "stellar" }),
+  Object.freeze({ id: "classic", language: "en", style: "card" }),
   Object.freeze({ id: "minimal-reading", language: "zh-CN", style: "minimal" }),
-  Object.freeze({ id: "docs-reference", language: "zh-TW", style: "stellar" })
+  Object.freeze({ id: "docs-reference", language: "zh-TW", style: "card" }),
+  Object.freeze({ id: "light-and-shadow", language: "zh-CN", style: "glass" })
 ]);
 const MIGRATION_FIXTURE_ROOT = path.join(THEME_ROOT, "test/fixtures/v2-system-acceptance/migration");
 const INSTALL_PACKAGES = [
@@ -362,7 +363,7 @@ function assertLanguage(html, language, label) {
 }
 
 function expectedPages(blueprint) {
-  if (blueprint === "classic-blog") {
+  if (blueprint === "classic") {
     return [
       { path: "public/blog/2026/08/23/integration-topic/index.html", marker: "Topic profile integration marker.", profile: "topic" },
       { marker: "Your first Stellar page", profile: "post" }
@@ -374,6 +375,9 @@ function expectedPages(blueprint) {
       { marker: "Minimal Reading", profile: "post" }
     ];
   }
+  if (blueprint === "light-and-shadow") {
+    return [{ marker: "This featured story introduces the Light and Shadow homepage.", profile: "post" }];
+  }
   return [
     { path: "public/wiki/docs-reference/index.html", marker: "Product Documentation", profile: "wiki" },
     { path: "public/wiki/docs-reference/getting-started/index.html", marker: "Getting Started", profile: "wiki" }
@@ -381,36 +385,38 @@ function expectedPages(blueprint) {
 }
 
 function expectedRoutes(blueprint) {
-  if (blueprint === "classic-blog") {
+  if (blueprint === "classic") {
     return ["/", "/topic/", "/blog/2026/08/23/integration-topic/"];
   }
   if (blueprint === "minimal-reading") {
     return ["/", "/notebooks/", "/notes/integration/", "/notebooks/integration/Integration Notebook Note/"];
   }
+  if (blueprint === "light-and-shadow") return ["/"];
   return ["/wiki/", "/wiki/docs-reference/", "/wiki/docs-reference/getting-started/"];
 }
 
 function hasProfileOutput(html, profile) {
-  const shell = /<div class="l_body content" id="start" layout="(?:post|page)"/.test(html);
+  const shell = /<body\b[^>]*\bdata-page-layout="(?:post|page)"[^>]*>/.test(html)
+    && /<div class="site-shell" id="start"(?:\s|>)/.test(html);
   if (!shell) return false;
   if (profile === "post") {
-    return /<div class="l_body content" id="start" layout="post"/.test(html)
+    return /<body\b[^>]*\bdata-page-layout="post"[^>]*>/.test(html)
       && /<meta property="og:type" content="article">/.test(html);
   }
   if (profile === "topic") {
-    return /<div class="l_body content" id="start" layout="post"/.test(html)
+    return /<body\b[^>]*\bdata-page-layout="post"[^>]*>/.test(html)
       && /<a class="cap breadcrumb" id="proj"[^>]*>[^<]+<\/a>/.test(html);
   }
   if (profile === "wiki") {
-    return /<div class="l_body content" id="start" layout="page"/.test(html)
+    return /<body\b[^>]*\bdata-page-layout="page"[^>]*>/.test(html)
       && /<a class="cap breadcrumb" id="proj"[^>]*>[^<]+<\/a>/.test(html);
   }
   if (profile === "notebook") {
-    return /<div class="l_body content" id="start" layout="page"/.test(html)
+    return /<body\b[^>]*\bdata-page-layout="page"[^>]*>/.test(html)
       && /<a class="cap breadcrumb"[^>]*>[^<]+<\/a>/.test(html);
   }
   if (profile === "page") {
-    return /<div class="l_body content" id="start" layout="page"/.test(html);
+    return /<body\b[^>]*\bdata-page-layout="page"[^>]*>/.test(html);
   }
   return false;
 }
@@ -451,9 +457,10 @@ function assertPackageFiles(pack) {
     "reference/v2-models.md",
     "reference/v2-blueprints.json",
     "reference/v2-blueprints.md",
-    "blueprints/classic-blog/manifest.json",
+    "blueprints/classic/manifest.json",
     "blueprints/minimal-reading/manifest.json",
     "blueprints/docs-reference/manifest.json",
+    "blueprints/light-and-shadow/manifest.json",
     "layout/_partial/primitives/shell.ejs",
     "scripts/schema/config-schema.js",
     "source/js/runtime/index.mjs"
@@ -512,7 +519,7 @@ async function checkSite(root, matrix, tarball) {
   const hexo = installSite(root, tarball);
   assertInstalledBlueprintReference(root);
   assertInitTransactions(root, hexo, blueprint, style);
-  if (blueprint === "classic-blog") addTopicFixture(root);
+  if (blueprint === "classic") addTopicFixture(root);
   if (blueprint === "minimal-reading") addNotebookFixture(root, hexo);
   assertDoctorParity(root, hexo, `${blueprint}/${language}`);
   run(hexo, ["generate"], { cwd: root });
@@ -636,7 +643,7 @@ async function checkSideBySideMigration(root, tarball) {
   createSite(root, { language: "zh-CN" });
   process.stdout.write(`side-by-side-migration: installing Hexo 8 and ${path.basename(tarball)}\n`);
   const hexo = installSite(root, tarball);
-  const args = ["stellar", "init", "--blueprint", "classic-blog", "--style", "stellar", "--non-interactive"];
+  const args = ["stellar", "init", "--blueprint", "classic", "--style", "card", "--non-interactive"];
   const starterTargets = planTargets(run(hexo, [...args, "--dry-run"], { cwd: root }));
   run(hexo, args, { cwd: root });
   for (const target of starterTargets) fs.rmSync(path.join(root, target), { force: true });
@@ -654,7 +661,7 @@ async function checkSideBySideMigration(root, tarball) {
   return {
     id: "side-by-side-migration",
     language: "zh-CN",
-    style: "stellar",
+    style: "card",
     routes: migrationRoutes()
   };
 }
@@ -690,7 +697,7 @@ async function checkInPlaceMigration(root, tarball) {
   return {
     id: "in-place-migration",
     language: "zh-CN",
-    style: "stellar",
+    style: "card",
     routes: migrationRoutes()
   };
 }
@@ -744,9 +751,12 @@ function writeAcceptanceArtifacts(root, tarball, sites) {
       expected: `Run ${PREVIEW_COMMAND} in this directory, then inspect the listed routes on desktop and mobile.`
     })),
     manualScenarios: [
-      "desktop and mobile layout",
+      "desktop, tablet and mobile Region layout",
+      "Topbar-only, classic Leftbar and Topbar + Leftbar + Rightbar",
+      "expanded Leftbar, icon Rail, persisted state and mobile Drawer",
+      "standard Feed homepage pagination",
       "primary navigation and Collection navigation",
-      "local search and empty/error state",
+      "multi-instance local search and empty/error state",
       "comments remote-failure fallback without console errors",
       "canonical, Open Graph and JSON-LD output",
       "language-specific built-in UI",

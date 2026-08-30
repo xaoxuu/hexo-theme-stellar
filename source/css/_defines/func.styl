@@ -158,37 +158,23 @@ hoverable-card()
     @media (prefers-color-scheme: dark)
       ondark()
 
-// 侧栏高亮项的顶部光照效果（无过渡动画）：
-// 在 hover/active 背景上叠加顶部白色光照渐变与高光边，深浅色模式分别调优透明度
-sidebar-light($bg = unquote('var(--bg-a50)'), $light = 0.38, $edge = 0.45, $dark-light = 0.08, $dark-edge = 0.08)
-  // 左栏风格通过容器级变量定制：--leftbar-item-bg / --leftbar-item-shadow
-  // （如 card 风格设为 var(--block) / none），未定义时回退到玻璃质感默认值
-  background: var(--leftbar-item-bg, linear-gradient(180deg, rgba(white, $light), rgba(white, 0) 50%), $bg)
-  box-shadow: var(--leftbar-item-shadow, inset 0 1px 0 rgba(white, $edge))
-  :root[data-theme="dark"] &
-    background: var(--leftbar-item-bg, linear-gradient(180deg, rgba(white, $dark-light), rgba(white, 0) 50%), $bg)
-    box-shadow: var(--leftbar-item-shadow, inset 0 1px 0 rgba(white, $dark-edge))
+// 与整站 Appearance 无关的半透明浮层能力；Dropdown、上下文菜单等组件按需调用。
+frosted-surface($background-light = rgba(white, .3), $background-dark = rgba(white, .2), $saturation = 300%, $blur = 16px, $border = 1px solid var(--block-border), $shadow = 0 0 2px rgba(black, .04)\, 0 2px 8px rgba(black, .04)\, 0 4px 16px rgba(black, .04))
+  border: $border
+  background: $background-light
+  box-shadow: $shadow
+  backdrop-filter: saturate($saturation) blur($blur)
+  -webkit-backdrop-filter: saturate($saturation) blur($blur)
+  :root[data-theme='dark'] &
+    background: $background-dark
   :root:not([data-theme]) &
     @media (prefers-color-scheme: dark)
-      background: var(--leftbar-item-bg, linear-gradient(180deg, rgba(white, $dark-light), rgba(white, 0) 50%), $bg)
-      box-shadow: var(--leftbar-item-shadow, inset 0 1px 0 rgba(white, $dark-edge))
+      background: $background-dark
 
-newblur($radius = 64px)
+// Glass 容器材质：Listing Nav 与 Glass ui-surface 共享同一组阴影、
+// 双层高斯模糊、饱和边缘、遮罩与明暗色高光。
+glass-material($radius = 64px)
   box-shadow: 0 0 2px rgba(black, .04), 0 2px 8px rgba(black, .04), 0 4px 16px rgba(black, .04)
-  trans1: all
-  text-shadow: 0 0 4px rgba(white, 1), 0 0 8px rgba(white, 0.8), 0 0 16px rgba(white, 0.6)
-  :root[data-theme="dark"] &
-    text-shadow: 0 0 2px rgba(black, 0.2), 0 0 4px rgba(black, 0.4)
-  :root:not([data-theme]) &
-    @media (prefers-color-scheme: dark)
-      text-shadow: 0 0 2px rgba(black, 0.2), 0 0 4px rgba(black, 0.4)
-  nav a:not(.active,:hover)
-    filter: drop-shadow(0 0 0 white) drop-shadow(0 0 4px white)
-    :root[data-theme="dark"] &
-      filter: none
-    :root:not([data-theme]) &
-      @media (prefers-color-scheme: dark)
-        filter: none
   &:before,&:after
     z-index -1
     position: absolute
@@ -203,29 +189,41 @@ newblur($radius = 64px)
   &:before
     backdrop-filter: blur(8px)
     -webkit-backdrop-filter: blur(8px)
-    background: rgba(white, 0.3)
+    background: var(--bg-a50)
     margin: 1px
-    :root[data-theme="dark"] &
-      background: rgba(white, 0.2)
-    :root:not([data-theme]) &
-      @media (prefers-color-scheme: dark)
-        background: rgba(white, 0.2)
   &:after
-    --blur-px: 16px
     --blur-sat: 300%
-    backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
-    -webkit-backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
-    mask: linear-gradient(white, 20%, transparent, 80%, white), linear-gradient(90deg, white, 20%, transparent, 80%, white)
-    -webkit-mask-image: linear-gradient(white, 20%, transparent, 80%, white), linear-gradient(90deg, white, 20%, transparent, 80%, white)
-    box-shadow: inset 0 0 4px 1px rgba(white, 0.5)
+    background: rgba(white, 0.05)
+    backdrop-filter: saturate(var(--blur-sat))
+    -webkit-backdrop-filter: saturate(var(--blur-sat))
+    mask: linear-gradient(black, rgba(black, 0.5), 70%, transparent, 90%, transparent)
+    -webkit-mask: linear-gradient(black, rgba(black, 0.5), 70%, transparent, 90%, transparent)
+    box-shadow: inset 0 0 32px 1px rgba(white, 0.5)
     trans1 all
     :root[data-theme="dark"] &
-      box-shadow: inset 0 0 2px 1px rgba(white, 0.2)
+      box-shadow: inset 0 0 32px 1px rgba(white, 0.1)
     :root:not([data-theme]) &
       @media (prefers-color-scheme: dark)
-        box-shadow: inset 0 0 2px 1px rgba(white, 0.2)
+        box-shadow: inset 0 0 32px 1px rgba(white, 0.1)
 
-// 长条圆角玻璃 UI（navbar top 与 float-panel 共用）
+newblur($radius = 64px)
+  glass-material($radius)
+  trans1: all
+  text-shadow: 0 0 4px rgba(white, 1), 0 0 8px rgba(white, 0.8), 0 0 16px rgba(white, 0.6)
+  :root[data-theme="dark"] &
+    text-shadow: 0 0 2px rgba(black, 0.2), 0 0 4px rgba(black, 0.4)
+  :root:not([data-theme]) &
+    @media (prefers-color-scheme: dark)
+      text-shadow: 0 0 2px rgba(black, 0.2), 0 0 4px rgba(black, 0.4)
+  nav a:not(.active,:hover)
+    filter: drop-shadow(0 0 0 white) drop-shadow(0 0 4px white)
+    :root[data-theme="dark"] &
+      filter: none
+    :root:not([data-theme]) &
+      @media (prefers-color-scheme: dark)
+        filter: none
+
+// 长条圆角玻璃 UI（Listing Nav 与 float-panel 共用）
 bar-glass($radius = $border-bar-container)
   border-radius: $radius
   corner-shape: $corner-shape

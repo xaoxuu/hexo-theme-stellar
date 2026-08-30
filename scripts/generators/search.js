@@ -6,6 +6,7 @@
 
 const { normalize_path } = require("../lib/path_utils");
 const { buildSearchIndex } = require("../lib/search_index");
+const { indexDomains } = require("../lib/search-domain");
 const { isSearchable } = require("../lib/content-config");
 const { getPageConfig } = require("../lib/page-view-model-registry");
 
@@ -28,7 +29,7 @@ hexo.extend.generator.register("search_json_generator", function(locals) {
 
   var res = [];
 
-  function generateJson(post) {
+  function generateJson(post, config) {
     var temp_post = {};
     if (post.title) {
       temp_post.title = post.title.trim();
@@ -58,6 +59,8 @@ hexo.extend.generator.register("search_json_generator", function(locals) {
       });
       temp_post.categories = categories;
     }
+    const domains = indexDomains(post, config);
+    if (domains.length > 0) temp_post.domains = domains;
     return temp_post;
   }
 
@@ -67,7 +70,7 @@ hexo.extend.generator.register("search_json_generator", function(locals) {
       if (!layouts.includes(post.layout)) return;
       const config = getPageConfig(post);
       if (!config || !isSearchable(config)) return;
-      const item = generateJson(post);
+      const item = generateJson(post, config);
       res.push(item);
     });
   }
@@ -77,7 +80,7 @@ hexo.extend.generator.register("search_json_generator", function(locals) {
       if (!layouts.includes(page.layout)) return;
       const config = getPageConfig(page);
       if (!config || !isSearchable(config)) return;
-      const item = generateJson(page);
+      const item = generateJson(page, config);
       res.push(item);
     });
   }

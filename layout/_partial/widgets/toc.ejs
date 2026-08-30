@@ -12,21 +12,23 @@ function layoutTocBody() {
   if (tocBody.length === 0) {
     return ''
   }
-  return tocBody.replace('class="toc"', 'class="toc ui-collection-adapter"')
+  return tocBody
+    .replace('class="toc"', 'class="toc ui-collection-adapter"')
+    .replace(/class="toc-link/g, 'class="' + ui_classes('toc-link', 'interactive'))
 }
 
 function layoutTocAction() {
-  return '<a class="cap-action" onclick="sidebar.toggleTOC()">' + icon('default:rightbar', '', true) + '</a>'
+  return '<button type="button" class="' + ui_classes('cap-action') + '" data-shell-action="toggle-toc" aria-label="Toggle table of contents" aria-pressed="false"><span class="ui-icon">' + icon('default:rightbar', '', true) + '</span></button>'
 }
 
 function layoutFooter(hasComments) {
   var footer = '<div class="widget-footer">'
-  footer += '<a class="top" onclick="util.scrollTop()">'
-  footer += icon('default:upup', '', true)
+  footer += '<a class="' + ui_classes('top', 'interactive') + '" onclick="util.scrollTop()">'
+  footer += '<span class="ui-icon">' + icon('default:upup', '', true) + '</span>'
   footer += '<span>' + __('btn.top') + '</span></a>'
   if (hasComments) {
-    footer += '<a class="buttom" onclick="util.scrollComment()">'
-    footer += icon('default:tocomment', '', true)
+    footer += '<a class="' + ui_classes('buttom', 'interactive') + '" onclick="util.scrollComment()">'
+    footer += '<span class="ui-icon">' + icon('default:tocomment', '', true) + '</span>'
     footer += '<span>' + __('btn.comments') + '</span></a>'
   }
   footer += '</div>'

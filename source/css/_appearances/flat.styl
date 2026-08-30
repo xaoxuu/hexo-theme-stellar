@@ -1,0 +1,30 @@
+.site-shell
+  --leftbar-gap: 0px
+
+.ui-surface
+  appearance-flat-surface()
+
+.site-region--topbar.ui-surface,
+.site-region--leftbar .site-region__surface.ui-surface
+  border-width: 0
+
+.site-region--topbar.ui-surface
+  box-shadow: inset 0 -1px 0 var(--block-border)
+
+.site-region--leftbar .site-region__surface.ui-surface
+  box-shadow: inset -1px 0 0 var(--block-border)
+
+.site-region--leftbar
+  appearance-translucent-leftbar-light()
+
+:root[data-theme='dark'] .site-region--leftbar
+  appearance-translucent-leftbar-dark()
+
+:root:not([data-theme])
+  @media screen and (prefers-color-scheme: dark)
+    .site-region--leftbar
+      appearance-translucent-leftbar-dark()
+
+appearance-standard-interactions()
+appearance-standard-prose()
+appearance-card-listing-nav()

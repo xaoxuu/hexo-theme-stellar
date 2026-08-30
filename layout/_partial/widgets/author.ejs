@@ -27,7 +27,7 @@ function layoutDiv() {
 
     // homepage
     el += `<a class="follow" href="${url_for(author.path)}">`
-    el += icon('default:documents')
+    el += '<span class="ui-icon">' + icon('default:documents') + '</span>'
     el += __('btn.all_posts')
     el += `</a>`
   el += `</div>`

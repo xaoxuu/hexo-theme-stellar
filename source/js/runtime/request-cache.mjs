@@ -23,7 +23,10 @@ export function createRequestClient(options = {}) {
     throw new TypeError('[stellar runtime] request policy is required');
   }
   const fetchImpl = options.fetch || globalThis.fetch?.bind(globalThis);
-  const storage = options.storage || globalThis.localStorage;
+  let storage = options.storage;
+  if (!storage) {
+    try { storage = globalThis.localStorage; } catch (error) { void error; storage = null; }
+  }
   const now = options.clock || Date.now;
   const schedule = options.scheduler || (fn => {
     if (typeof globalThis.requestIdleCallback === 'function') {
@@ -69,11 +72,34 @@ export function createRequestClient(options = {}) {
   function keys() {
     const result = [];
     if (!storage) return result;
-    for (let index = 0; index < storage.length; index++) {
-      const key = storage.key(index);
-      if (key?.startsWith(REQUEST_CACHE_PREFIX)) result.push(key);
-    }
+    try {
+      for (let index = 0; index < storage.length; index++) {
+        const key = storage.key(index);
+        if (key?.startsWith(REQUEST_CACHE_PREFIX)) result.push(key);
+      }
+    } catch (error) { void error; }
     return result;
+  }
+
+  function clearCache() {
+    if (!storage) return Object.freeze({ ok: false, partial: false, removed: 0, failed: 1 });
+    try { void storage.length; } catch (error) {
+      void error;
+      return Object.freeze({ ok: false, partial: false, removed: 0, failed: 1 });
+    }
+    const targets = keys();
+    let removed = 0;
+    let failed = 0;
+    targets.forEach(key => {
+      try {
+        storage.removeItem(key);
+        removed++;
+      } catch (error) {
+        void error;
+        failed++;
+      }
+    });
+    return Object.freeze({ ok: failed === 0, partial: removed > 0 && failed > 0, removed, failed });
   }
 
   function evictOldest(exceptKey = '') {
@@ -189,5 +215,5 @@ export function createRequestClient(options = {}) {
     throw error;
   }
 
-  return Object.freeze({ request });
+  return Object.freeze({ request, clearCache });
 }

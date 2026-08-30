@@ -50,7 +50,7 @@ graph TB
     
     subgraph "Init Functions"
         registerTabs["registerTabsTag()<br/>Tab event binding"]
-        sidebar["sidebar()<br/>TOC click handling"]
+        tocLinks["tocLinks()<br/>TOC and Drawer handling"]
         relativeDate["relativeDate()<br/>Date formatting"]
     end
     
@@ -68,11 +68,11 @@ graph TB
     hud --> toast
     
     init --> registerTabs
-    init --> sidebar
+    init --> tocLinks
     init --> relativeDate
     
     stellar --> registerTabs
-    stellar --> sidebar
+    stellar --> tocLinks
     stellar --> relativeDate
     
     diffDate -.used by.-> relativeDate
@@ -330,9 +330,9 @@ flowchart LR
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)
 
-## 侧边栏交互辅助
+## TOC 与 Drawer 交互辅助
 
-`init.sidebar()` 配置侧边栏行为，处理 TOC 链接交互（原生 JavaScript）。
+`init.tocLinks()` 配置 TOC 链接行为；Shell 的文档级事件代理统一处理 Drawer 状态。
 
 **侧边栏收起流程：**
 
@@ -340,16 +340,16 @@ flowchart LR
 sequenceDiagram
     participant User
     participant TOCLink as "#data-toc a.toc-link"
-    participant SidebarModule as "sidebar.dismiss()"
-    participant MobileSidebar as "Mobile sidebar panel"
+    participant Shell as "dismissDrawer()"
+    participant Drawer as "Leftbar / Rightbar Drawer"
     
     User->>TOCLink: Click TOC link
-    TOCLink->>SidebarModule: Call sidebar.dismiss()
-    SidebarModule->>MobileSidebar: Close sidebar
-    MobileSidebar-->>User: Sidebar hidden
+    TOCLink->>Shell: Call dismissDrawer()
+    Shell->>Drawer: Clear data-drawer and restore focus
+    Drawer-->>User: Drawer hidden
 ```
 
-用户点击 `#data-toc` 内任何 `.toc-link` 时调用 `sidebar.dismiss()`，关闭移动端侧边栏面板，改善小屏导航体验。
+用户点击 `#data-toc` 内任何 `.toc-link` 时调用 `dismissDrawer()`；TOC 不在 Drawer 时该操作为空，不改变桌面 Region。
 
 移动端点击 TOC 链接后侧边栏自动收起，用户可直接阅读目标小节，无需手动关闭导航面板。
 
@@ -364,7 +364,7 @@ sequenceDiagram
 | 顺序 | 调用函数 | 用途 |
 |------|----------|------|
 | 1 | `init.toc()` | TOC 激活状态跟踪 |
-| 2 | `init.sidebar()` | 侧边栏点击处理 |
+| 2 | `init.tocLinks()` | TOC 点击与 Drawer 收起 |
 | 3 | `init.wikiStart()` | wiki 封面锚点处理 |
 | 4 | `init.leftbarScroll()` | 左栏滚动状态 |
 | 5 | `init.relativeDate(...)` | 转换文章日期 |

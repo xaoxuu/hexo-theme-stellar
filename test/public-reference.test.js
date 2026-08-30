@@ -50,7 +50,8 @@ test("公开模型与 Blueprint Reference 稳定来自机器契约", () => {
   assert.equal(fs.readFileSync(path.join(ROOT, "reference/README.md"), "utf8"), referenceIndexMarkdown());
   assert.match(models, /## PageViewModel:post/);
   assert.match(models, /render\.article\.comments\.options/);
-  assert.match(blueprints, /classic-blog/);
+  assert.match(blueprints, /light-and-shadow/);
+  assert.doesNotMatch(blueprints, /classic-blog|--style stellar/);
   assert.match(blueprints, /--non-interactive/);
 });
 

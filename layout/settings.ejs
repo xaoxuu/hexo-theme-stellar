@@ -1,0 +1,109 @@
+<%
+page.robots = 'noindex,nofollow'
+var provider = stellar_config('extensions.comments.provider') || ''
+var providerSupported = ['artalk', 'waline', 'twikoo'].includes(String(provider).toLowerCase())
+var settingsConfig = stellar_config('site.settings') || {}
+var aboutItems = settingsConfig.about?.items || []
+var cacheItems = [
+  { id: 'search', label: __('settings.cache.search') },
+  { id: 'dynamic', label: __('settings.cache.dynamic') },
+  { id: 'all', label: __('settings.cache.all') }
+]
+var fallbackAvatar = stellar_config('resources.fallbacks.avatar')
+function linkAttributes(url) {
+  return url.includes('://')
+    ? ' target="_blank" rel="external nofollow noopener noreferrer"'
+    : ' rel="noopener noreferrer"'
+}
+%>
+<main class="settings-page"
+  data-provider="<%- escape_html(provider) %>"
+  data-fallback-avatar="<%- escape_html(url_for(fallbackAvatar)) %>"
+  data-message-success="<%- escape_html(__('settings.result.success')) %>"
+  data-message-partial="<%- escape_html(__('settings.result.partial')) %>"
+  data-message-failure="<%- escape_html(__('settings.result.failure')) %>"
+  data-validation-name="<%- escape_html(__('settings.validation.name')) %>"
+  data-validation-email="<%- escape_html(__('settings.validation.email')) %>"
+  data-validation-url="<%- escape_html(__('settings.validation.url')) %>">
+  <header class="settings-page__header">
+    <h1><%- escape_html(__('settings.title')) %></h1>
+  </header>
+
+  <section class="settings-section" aria-labelledby="settings-profile">
+    <h2 id="settings-profile"><%- escape_html(__('settings.profile.title')) %></h2>
+    <div class="settings-section__body">
+      <div class="settings-profile">
+        <div class="settings-profile__avatar" aria-label="<%- escape_html(__('settings.profile.avatar')) %>">
+          <img data-profile-avatar src="<%- escape_html(url_for(fallbackAvatar)) %>" alt="">
+          <span data-profile-avatar-fallback hidden><%- icon('default:profile', '', true) %></span>
+        </div>
+        <div class="settings-profile__content">
+          <% if (!providerSupported) { %>
+          <p data-provider-note class="settings-provider-note"><%- escape_html(__('settings.profile.provider_managed', provider || __('settings.profile.provider_unknown'))) %></p>
+          <% } else { %>
+          <form data-profile-form class="settings-form" novalidate>
+            <label>
+              <span><%- escape_html(__('settings.profile.nickname')) %></span>
+              <input name="name" type="text" maxlength="80" required autocomplete="nickname">
+            </label>
+            <label>
+              <span><%- escape_html(__('settings.profile.email')) %></span>
+              <input name="email" type="email" maxlength="254" autocomplete="email">
+            </label>
+            <label>
+              <span><%- escape_html(__('settings.profile.url')) %></span>
+              <input name="url" type="url" inputmode="url" autocomplete="url" placeholder="https://">
+            </label>
+            <div class="settings-actions">
+              <button type="submit" class="settings-button settings-button--primary"><%- escape_html(__('settings.profile.save')) %></button>
+              <button type="button" class="settings-button" data-profile-logout><%- escape_html(__('settings.profile.logout')) %></button>
+            </div>
+          </form>
+          <p class="settings-result" data-profile-status role="status" aria-live="polite"></p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="settings-section" aria-labelledby="settings-cache">
+    <h2 id="settings-cache"><%- escape_html(__('settings.cache.title')) %></h2>
+    <div class="settings-section__body">
+      <dl class="settings-kv settings-cache-list">
+        <% cacheItems.forEach(function(item) { %>
+          <div class="settings-kv__row">
+            <dt><%- escape_html(item.label) %></dt>
+            <dd>
+              <span class="settings-kv__value" data-cache-size="<%- item.id %>">0 B</span><button type="button" class="settings-kv__action" data-cache-action="<%- item.id %>" aria-label="<%- escape_html(__('settings.cache.clear', item.label)) %>"><span class="ui-icon"><%- icon('default:trash', '', true) %></span></button>
+            </dd>
+          </div>
+        <% }) %>
+      </dl>
+      <p class="settings-result" data-cache-status role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <section class="settings-section" aria-labelledby="settings-about">
+    <h2 id="settings-about"><%- escape_html(__('settings.about.title')) %></h2>
+    <div class="settings-section__body">
+      <% if (aboutItems.length > 0) { %>
+        <dl class="settings-kv">
+          <% aboutItems.forEach(function(item) {
+            var value = settings_value(item.value)
+            var target = item.url ? settings_value(item.url) : ''
+            var href = target ? url_for(target) : ''
+          %>
+            <div class="settings-kv__row">
+              <dt><%- escape_html(item.key) %></dt>
+              <dd>
+                <span class="settings-kv__value"><%- escape_html(value) %></span><% if (href) { %><a class="settings-kv__link" href="<%- escape_html(href) %>"<%- linkAttributes(target) %> aria-label="<%- escape_html(__('settings.about.open_link', item.key)) %>"><span class="ui-icon"><%- icon('default:link', '', true) %></span></a><% } %>
+              </dd>
+            </div>
+          <% }) %>
+        </dl>
+      <% } else { %>
+        <p class="settings-empty"><%- escape_html(__('settings.about.empty')) %></p>
+      <% } %>
+    </div>
+  </section>
+</main>

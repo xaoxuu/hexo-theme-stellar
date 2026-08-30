@@ -16,3 +16,15 @@
 
 // 可选插件
 @import '_plugins/index'
+
+// 每次构建只编译当前整站 Appearance，作为最终视觉实现层。
+@require '_appearances/_mixins'
+$appearance-preset = hexo-config('appearance.preset')
+if $appearance-preset == 'card'
+  @import '_appearances/card'
+else if $appearance-preset == 'glass'
+  @import '_appearances/glass'
+else if $appearance-preset == 'minimal'
+  @import '_appearances/minimal'
+else if $appearance-preset == 'flat'
+  @import '_appearances/flat'

@@ -5,6 +5,36 @@ const nodePath = require("node:path");
 
 const { CONFIG_SCHEMA } = require("../schema/config-schema");
 
+const APPEARANCE_PRESETS = Object.freeze({
+  card: Object.freeze({
+    appearance: Object.freeze({
+      preset: "card"
+    })
+  }),
+  glass: Object.freeze({
+    appearance: Object.freeze({
+      preset: "glass",
+      shape: Object.freeze({ radius: Object.freeze({ card_large: "24px", card: "16px", card_small: "12px", bar: "12px" }) })
+    })
+  }),
+  minimal: Object.freeze({
+    appearance: Object.freeze({
+      preset: "minimal",
+      typography: Object.freeze({ font_size: Object.freeze({ root: "17px" }), font_family: Object.freeze({ body: "Charter, Georgia, Times New Roman, serif" }) }),
+      shape: Object.freeze({
+        corner: "round",
+        radius: Object.freeze({ card_large: "8px", card: "6px", card_small: "4px", bar: "4px", image_large: "8px", image: "6px", image_small: "4px" })
+      }),
+      backgrounds: Object.freeze({ leftbar: Object.freeze({ type: "color" }) })
+    })
+  }),
+  flat: Object.freeze({
+    appearance: Object.freeze({
+      preset: "flat"
+    })
+  })
+});
+
 class ConfigSchemaError extends Error {
   constructor(issues) {
     super(`Stellar v2 配置 Schema 校验失败：\n${issues.map(issue => `- ${formatIssue(issue)}`).join("\n")}`);
@@ -111,6 +141,16 @@ function normalizeValue(node, value) {
   if (node.normalizer === "nullable_trimmed_string") {
     return value == null ? null : value.trim();
   }
+  if (node.normalizer === "menu_item") {
+    if (value.type === "search") {
+      const result = { type: "search" };
+      for (const key of ["title", "icon", "accent"]) {
+        if (value[key] != null) result[key] = value[key];
+      }
+      return result;
+    }
+    return { id: value.id, title: value.title, icon: value.icon, url: value.url, accent: value.accent };
+  }
   if (node.normalizer === "footer_action") {
     if (value.type === "spacer") return { type: "spacer" };
     if (value.type === "link") {
@@ -145,10 +185,10 @@ function normalizeValue(node, value) {
     }
     return result;
   }
-  if (node.normalizer === "identity" || node.normalizer === "trusted_text" || node.normalizer === "array") {
+  if (node.normalizer === "identity" || node.normalizer === "trusted_text" || node.normalizer === "array" || node.normalizer === "leftbar_background_type") {
     return value;
   }
-  if (node.normalizer !== "object") {
+  if (node.normalizer !== "object" && node.normalizer !== "region") {
     throw new TypeError(`未知配置归一化器：${node.normalizer || "<missing>"}`);
   }
   return clone(value);
@@ -297,14 +337,14 @@ function validateBrand(node, input, source, path, issues) {
   if (input == null) return;
   const image = input.image;
   if (typeof input.name === "string" && /^\[[\s\S]*\]\([\s\S]*\)$/.test(input.name.trim())) {
-    issues.push(issue("invalid_value", source, `${path}.name`, "string", `${path}.href`, node.migration));
+    issues.push(issue("invalid_value", source, `${path}.name`, "string", "plain text without Markdown links", node.migration));
   }
   if (typeof input.name === "string" && /[<>]/.test(input.name)) {
     issues.push(issue("invalid_value", source, `${path}.name`, "string", "plain text without HTML", node.migration));
   }
   if (!isPlainObject(image)) return;
   if (typeof image.src === "string" && /^\[[\s\S]*\]\([\s\S]*\)$/.test(image.src.trim())) {
-    issues.push(issue("invalid_value", source, `${path}.image.src`, "string", `${path}.image.href`, node.migration));
+    issues.push(issue("invalid_value", source, `${path}.image.src`, "string", "plain image URL", node.migration));
   }
 }
 
@@ -324,6 +364,15 @@ function validateSafeNavigationUrl(node, input, source, path, issues, nullable) 
   if (nullable && input == null) return;
   if (isSafeNavigationUrl(input)) return;
   issues.push(issue("invalid_value", source, path, valueType(input), "safe navigable URL or root-relative path", node.migration));
+}
+
+function validateTemplateNavigationUrl(node, input, source, path, issues, nullable) {
+  if (nullable && input == null) return;
+  if (typeof input === "string") {
+    const candidate = input.replace(/\{[a-z][a-z0-9_-]*\.[a-z][a-z0-9_-]*\}/gi, "token");
+    if (candidate === "token" || isSafeNavigationUrl(candidate)) return;
+  }
+  issues.push(issue("invalid_value", source, path, valueType(input), "safe navigable URL, root-relative path, or supported template URL", node.migration));
 }
 
 function isCssColor(input) {
@@ -437,9 +486,19 @@ function validateNullableKebabId(node, input, source, path, issues) {
 
 function validateMenuItems(node, input, source, path, issues) {
   const ids = new Set();
+  let searchCount = 0;
   input.forEach((item, index) => {
     if (!isPlainObject(item)) return;
     const itemPath = `${path}[${index}]`;
+    if (item.type === "search") {
+      searchCount += 1;
+      const extra = ["id", "url"].find(key => item[key] != null);
+      if (extra) issues.push(issue("invalid_value", source, `${itemPath}.${extra}`, valueType(item[extra]), "no id or url for search item", node.migration));
+      return;
+    }
+    if (item.type != null && item.type !== "link") {
+      issues.push(issue("invalid_value", source, `${itemPath}.type`, valueType(item.type), "link | search", node.migration));
+    }
     if (typeof item.id === "string") {
       if (ids.has(item.id)) {
         issues.push(issue("invalid_value", source, `${itemPath}.id`, "string", "unique menu id", node.migration));
@@ -451,6 +510,48 @@ function validateMenuItems(node, input, source, path, issues) {
     if (title.length === 0 && icon.length === 0) {
       issues.push(issue("invalid_value", source, itemPath, "object", "non-empty title or icon", node.migration));
     }
+    if (typeof item.id !== "string" || item.id.length === 0) {
+      issues.push(issue("invalid_value", source, `${itemPath}.id`, valueType(item.id), "non-empty kebab-case id", node.migration));
+    }
+    if (typeof item.url !== "string" || item.url.length === 0) {
+      issues.push(issue("invalid_value", source, `${itemPath}.url`, valueType(item.url), "safe navigable URL", node.migration));
+    }
+  });
+  if (searchCount > 1) issues.push(issue("invalid_value", source, path, "array", "at most one search menu item", node.migration));
+}
+
+function validateRegionWidgets(node, input, source, path, issues) {
+  if (!Array.isArray(input)) return;
+  input.forEach((item, index) => {
+    const id = typeof item === "string"
+      ? item
+      : isPlainObject(item)
+        ? (typeof item.override === "string" ? item.override : item.layout)
+        : null;
+    if (id === "search") {
+      issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "Region widget excluding retired search; use site.menu.items[].type=search", node.migration));
+    }
+    if (id === "wiki_home") {
+      issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "Region widget excluding removed wiki_home; Wiki navigation belongs to the Brand", node.migration));
+    }
+    if (id === "brand") {
+      issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "site_brand | collection_brand", node.migration));
+    }
+  });
+}
+
+function validateLeftbarContentWidgets(node, input, source, path, issues) {
+  if (!Array.isArray(input)) return;
+  validateRegionWidgets(node, input, source, path, issues);
+  const fixed = new Set(["site_brand", "collection_brand", "menu", "actions", "profile", "spacer"]);
+  input.forEach((item, index) => {
+    const id = typeof item === "string"
+      ? item
+      : isPlainObject(item)
+        ? (typeof item.override === "string" ? item.override : item.layout)
+        : null;
+    if (!fixed.has(id)) return;
+    issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "Leftbar content widget excluding fixed shell controls", node.migration));
   });
 }
 
@@ -619,6 +720,7 @@ function validateCustom(node, input, source, path, issues) {
   else if (node.validator === "diagrams_override") validateDiagramsOverride(node, input, source, path, issues);
   else if (node.validator === "safe_navigation_url") validateSafeNavigationUrl(node, input, source, path, issues, false);
   else if (node.validator === "nullable_safe_navigation_url") validateSafeNavigationUrl(node, input, source, path, issues, true);
+  else if (node.validator === "nullable_template_navigation_url") validateTemplateNavigationUrl(node, input, source, path, issues, true);
   else if (node.validator === "css_color") validateCssColor(node, input, source, path, issues, false);
   else if (node.validator === "nullable_css_color") validateCssColor(node, input, source, path, issues, true);
   else if (node.validator === "css_length") validateCssLength(node, input, source, path, issues);
@@ -639,18 +741,34 @@ function validateCustom(node, input, source, path, issues) {
   else if (node.validator === "kebab_id") validateKebabId(node, input, source, path, issues);
   else if (node.validator === "nullable_kebab_id") validateNullableKebabId(node, input, source, path, issues);
   else if (node.validator === "menu_items") validateMenuItems(node, input, source, path, issues);
+  else if (node.validator === "region_widgets") validateRegionWidgets(node, input, source, path, issues);
+  else if (node.validator === "leftbar_content_widgets") validateLeftbarContentWidgets(node, input, source, path, issues);
   else if (node.validator === "footer_actions") validateFooterActions(node, input, source, path, issues);
   else if (node.validator === "navigation_tabs") validateNavigationTabs(node, input, source, path, issues);
   else if (node.validator === "safe_relative_path") validateSafeRelativePath(node, input, source, path, issues);
   else if (node.validator === "unique_blueprint_targets") validateUniqueBlueprintTargets(node, input, source, path, issues);
   else if (node.validator === "topic_route_start" && input != null && !/[\\/]topic[\\/]/.test(source)) {
     issues.push(issue("invalid_scope", source, path, valueType(input), "Topic Collection only", node.migration));
-  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "nullable_absolute_http_url", "emoji_template", "emoji_sources", "github_repository", "contributor_repositories", "diagrams_override", "safe_navigation_url", "nullable_safe_navigation_url", "css_color", "nullable_css_color", "css_length", "css_percentage", "css_font_family", "css_gradient", "sidebar_gradient_colors", "css_selector", "corner_shape", "resource", "nullable_resource", "non_negative_integer", "nullable_non_negative_integer", "non_empty_record_keys", "license_value", "license_override", "share_override", "kebab_id", "nullable_kebab_id", "menu_items", "footer_actions", "navigation_tabs", "safe_relative_path", "unique_blueprint_targets", "topic_route_start"].includes(node.validator)) {
+  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "nullable_absolute_http_url", "emoji_template", "emoji_sources", "github_repository", "contributor_repositories", "diagrams_override", "safe_navigation_url", "nullable_safe_navigation_url", "nullable_template_navigation_url", "css_color", "nullable_css_color", "css_length", "css_percentage", "css_font_family", "css_gradient", "sidebar_gradient_colors", "css_selector", "corner_shape", "resource", "nullable_resource", "non_negative_integer", "nullable_non_negative_integer", "non_empty_record_keys", "license_value", "license_override", "share_override", "kebab_id", "nullable_kebab_id", "menu_items", "region_widgets", "leftbar_content_widgets", "footer_actions", "navigation_tabs", "safe_relative_path", "unique_blueprint_targets", "topic_route_start"].includes(node.validator)) {
     throw new TypeError(`未知配置校验器：${node.validator}`);
   }
 }
 
 function parseNode(node, input, source, path, issues, context) {
+  if (node.normalizer === "region" && input === null && !context.applyDefaults) {
+    return undefined;
+  }
+  if (input === null && !node.type.includes("null") && context.applyDefaults) {
+    input = resolveDefault(node);
+  }
+  if (node.normalizer === "region" && Array.isArray(input)) {
+    input = { widgets: input };
+  } else if (node.normalizer === "region" && isPlainObject(input)) {
+    input = Object.fromEntries(Object.entries(input).filter(([, value]) => value !== null));
+  }
+  if (node.normalizer === "leftbar_background_type" && typeof input === "string" && !node.values.includes(input)) {
+    input = resolveDefault(node);
+  }
   if (!matchesType(input, node.type)) {
     issues.push(issue("invalid_type", source, path || "root", valueType(input), expectedType(node), node.migration));
     return undefined;
@@ -774,7 +892,7 @@ function parseNode(node, input, source, path, issues, context) {
       if (parsed !== undefined) result[key] = parsed;
     }
   }
-  return ["footer_action", "footer_action_item"].includes(node.normalizer)
+  return ["menu_item", "footer_action", "footer_action_item"].includes(node.normalizer)
     ? normalizeValue(node, result)
     : result;
 }
@@ -782,7 +900,8 @@ function parseNode(node, input, source, path, issues, context) {
 function validateStellarSemantics(config, source) {
   const menuItems = config.site?.menu?.items || [];
   if (menuItems.length === 0) return;
-  const ids = new Set(menuItems.map(item => item.id));
+  const ids = new Set(menuItems.map(item => item.id).filter(id => typeof id === "string"));
+  if (ids.size === 0) return;
   const issues = [];
   for (const [profile, definition] of Object.entries(config.layout?.profiles || {})) {
     const activeMenu = definition?.navigation?.activeMenu;
@@ -813,13 +932,18 @@ function parseConfigSchema(schema, input = {}, options = {}) {
 function parseStellarConfig(input = {}) {
   const source = input.source || "_config.stellar.yml";
   const themeConfig = input.themeConfig === undefined ? {} : input.themeConfig;
-  const config = parseConfigSchema(CONFIG_SCHEMA, themeConfig, { source, applyDefaults: true });
+  const presetId = isPlainObject(themeConfig) ? themeConfig.appearance?.preset || "card" : null;
+  const effectiveConfig = presetId && APPEARANCE_PRESETS[presetId]
+    ? mergeObjects(APPEARANCE_PRESETS[presetId], themeConfig)
+    : themeConfig;
+  const config = parseConfigSchema(CONFIG_SCHEMA, effectiveConfig, { source, applyDefaults: true });
   validateStellarSemantics(config, source);
   return config;
 }
 
 module.exports = {
   ConfigSchemaError,
+  APPEARANCE_PRESETS,
   deepFreeze,
   formatIssue,
   isPlainObject,

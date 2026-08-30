@@ -2,6 +2,8 @@
 
 本文件承接原 Alpha 用户指南中仍有价值的环境、安装、初始化和人工验收步骤，只供 v2 M10 工程验收使用。它不是 npm 用户指南，也不表示 `2.0.0-alpha.1` 会被发布；Alpha、Beta 均只记录内部成熟度。
 
+> 2026-08-27：#734 调整了布局、Widget、首页、Visual Style 与 Blueprint 公开契约，#720 原候选因此过期。以下步骤只适用于 Region / Widget 最终契约重新生成的候选；自动证据通过后仍不得自动标记 M10 或 Alpha 完成。
+
 ## 环境与候选包
 
 - Node.js 22
@@ -23,7 +25,7 @@ npm pack --dry-run --json
 
 ```bash
 npm install /absolute/path/to/hexo-theme-stellar-2.0.0-alpha.1.tgz
-npx hexo stellar init --blueprint classic-blog --style stellar --non-interactive
+npx hexo stellar init --blueprint classic --style card --non-interactive
 npx hexo stellar doctor --format text
 npx hexo generate
 ```
@@ -44,12 +46,15 @@ npx hexo stellar doctor --format json --silent
 
 ## 验收矩阵
 
-- Blueprint：`classic-blog`、`minimal-reading`、`docs-reference`，分别覆盖 `stellar` 与 `minimal` Visual Style。
+- Blueprint：`classic`、`minimal-reading`、`docs-reference`、`light-and-shadow`，分别覆盖 `card`、`minimal`、`card`、`glass` Visual Style；另验证 `flat` 可作为任一 Blueprint 的全局样式覆盖，并保留旧 Topbar 表面。
 - 默认输入：缺失 `_config.stellar.yml`、空配置、三种语言以及 Post/Page 最小 Front Matter。
 - Collection：Wiki、Topic、Notebook 的唯一归属、零匹配、多重匹配和显式冲突。
 - 命令：init 的 dry-run/真实计划一致；doctor 文本/JSON 诊断一致；new note 不覆盖文件；generate、Reference、Runtime Manifest 与搜索索引有效。
 - 迁移：旁路 fixture 与原地 fixture 均由人工按 v1→v2 字段对照重建配置，不运行自动迁移器，不保留旧字段兼容读取。
-- 页面：记录待测 URL，并在桌面端与移动端检查首页、文章、Wiki、Topic、Notebook、导航、搜索、评论降级与 SEO 输出。
+- Region：检查 Topbar-only、经典 Sidebar、Topbar + Sidebar + Context 文档页、Context Sticky，以及不支持位置时 warning-only、实例跳过、空 Region 不输出。
+- Sidebar：检查展开、图标 Rail、首屏持久化、键盘/ARIA/焦点、减少动画与移动 Drawer；平板和手机不得保留永久 Rail。
+- 首页：检查标准文章 Feed、置顶文章与首页分页，并覆盖 Topbar-only 和 Leftbar Rail 布局。
+- 页面：在桌面、平板与手机检查文章、Wiki、Topic、Notebook、导航、多位置 Search、评论降级与 SEO 输出。
 
 每项人工验收记录环境、候选包哈希、执行命令、实际结果、预期差异、截图或日志位置和处理结论。自动门禁完成后状态只能进入“等待站长人工验收”；M10 与 Alpha 内部里程碑仍由站长明确确认。
 

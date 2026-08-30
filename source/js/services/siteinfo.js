@@ -8,7 +8,7 @@ function setCardLink(nodes) {
     el.removeAttribute('cardlink');
     const api = el.dataset.api;
     if (api == null) return;
-    // 走统一请求入口，动态数据缓存对 siteinfo 同样生效
+    // 走统一请求入口，数据缓存对 siteinfo 同样生效
     utils.request(null, api, function(response) {
       return response.json().then(function(data) {
         var autofill = [];

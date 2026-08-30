@@ -11,22 +11,17 @@
     return target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])') !== null;
   }
 
-  function isNarrowLayout(root) {
-    var leftbarToggle = root.querySelector('.mobile-only.leftbar-toggle');
-    return !!(leftbarToggle && window.getComputedStyle(leftbarToggle).display !== 'none');
-  }
-
   var roots = new WeakMap();
   function mount(root) {
     root = root || document;
     if (roots.has(root)) return roots.get(root);
     var handleShortcut = function(event) {
       if (!isSearchShortcut(event)) return;
-      var input = root.querySelector('#search-input');
-      if (!input || isNarrowLayout(root)) return;
-      if (event.target !== input && isEditableTarget(event.target)) return;
+      var trigger = root.querySelector('[data-shell-action="open-search"]');
+      if (!trigger) return;
+      if (isEditableTarget(event.target)) return;
       event.preventDefault();
-      input.focus();
+      trigger.click();
     };
     root.addEventListener('keydown', handleShortcut);
     var cleanup = function() {
