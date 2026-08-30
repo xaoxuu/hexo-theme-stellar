@@ -96,14 +96,14 @@ test('prepareVersionFiles 接受稳定版与 rc，拒绝 Alpha/Beta 里程碑版
   }
 });
 
-test('prepareVersionFiles 允许内部候选字符直接更新为正式 2.0.0', (t) => {
+test('prepareVersionFiles 可将内部 prerelease 直接更新为对应稳定版', (t) => {
   const { root, files } = createVersionFixture(t, {
-    package: '{\n  "name": "hexo-theme-stellar",\n  "version": "2.0.0-alpha.1"\n}\n',
-    knowledge: 'Version: 2.0.0-alpha.1\nnpm install /local/hexo-theme-stellar-2.0.0-alpha.1.tgz\n',
+    package: '{\n  "name": "hexo-theme-stellar",\n  "version": "1.9.0-rc.1"\n}\n',
+    knowledge: 'Version: 1.9.0-rc.1\nnpm install /local/hexo-theme-stellar-1.9.0-rc.1.tgz\n',
   });
-  prepareVersionFiles(root, '2.0.0');
-  assert.equal(JSON.parse(fs.readFileSync(files.package, 'utf8')).version, '2.0.0');
-  assert.equal(fs.readFileSync(files.knowledge, 'utf8').includes('2.0.0-alpha.1'), false);
+  prepareVersionFiles(root, '1.9.0');
+  assert.equal(JSON.parse(fs.readFileSync(files.package, 'utf8')).version, '1.9.0');
+  assert.equal(fs.readFileSync(files.knowledge, 'utf8').includes('1.9.0-rc.1'), false);
 });
 
 test('prepareVersionFiles 缺失预期旧版本时拒绝且不产生部分写入', (t) => {

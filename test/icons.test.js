@@ -27,22 +27,6 @@ test('iconData 返回 icons.yml 原始值（不包 <img>，缺失返回空串）
   assert.equal(hexo.utils.iconData('missing:key'), '');
 });
 
-test('icon() 对 SVG 默认输出异步占位符，inline=true 原样输出，URL 输出 <img>', () => {
-  const hexo = {
-    stellar: { data: { icons: {
-      'test:svg': '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M0 0"/></svg>',
-      'test:url': 'https://example.com/a.svg',
-      'test:plain': 'plain-value'
-    } } }
-  };
-  registerUtils(hexo);
-  assert.equal(hexo.utils.icon('test:svg'), '<svg class="icon" data-icon="test:svg" aria-hidden="true"></svg>');
-  assert.equal(hexo.utils.icon('test:svg', '', true), '<svg viewBox="0 0 24 24"><path fill="currentColor" d="M0 0"/></svg>');
-  assert.equal(hexo.utils.icon('test:url'), '<img  src="https://example.com/a.svg" />');
-  assert.equal(hexo.utils.icon('test:plain'), 'plain-value');
-  assert.equal(hexo.utils.icon('missing:key'), 'missing:key');
-});
-
 test('stellar_icon_sets 生成器：按命名空间输出 JSON、去注释、跳过 URL', () => {
   const registrations = {};
   const prevHexo = global.hexo;

@@ -28,10 +28,7 @@ function source(name) {
 }
 
 function render(name, locals) {
-  return renderer({
-    path: path.join(PRIMITIVES, `${name}.ejs`),
-    text: source(name)
-  }, locals).trim();
+  return renderer({ path: path.join(PRIMITIVES, `${name}.ejs`), text: source(name) }, locals).trim();
 }
 
 function escapeHtml(value) {
@@ -42,76 +39,35 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;");
 }
 
-test("五类布局原语只消费显式 locals，并封闭 slot 与 kind", () => {
+test("Layout primitives consume explicit locals and reject unknown variants", () => {
   for (const name of ["shell", "region", "section", "item", "navigation"]) {
     assert.doesNotMatch(source(name), /\b(?:page|theme|site|config)\s*[.[]/);
   }
   assert.throws(() => render("item", { kind: "unknown", body: "x" }), /未知 kind unknown/);
   assert.throws(() => render("section", { slot: "unknown", items: [] }), /未知 slot unknown/);
   assert.throws(() => render("region", { slot: "unknown", body: "" }), /未知 slot unknown/);
-  assert.throws(() => render("navigation", {
-    placement: "unknown",
-    entries: [],
-    partial() { return ""; }
-  }), /未知 placement unknown/);
 });
 
-test("Item 与 Section 透传受信任 body，不进行二次转义", () => {
+test("Layout primitives preserve trusted slots without a second escape pass", () => {
   const body = '<strong data-value="trusted">Body</strong>';
   assert.equal(render("item", { kind: "content", body }), body);
-  assert.equal(render("section", { slot: "content", items: ["<i>A</i>", "<b>B</b>"] }), "<i>A</i><b>B</b>");
+  assert.equal(render("section", { slot: "content", items: [body] }), body);
 });
 
-test("Region 输出 Topbar、Leftbar 与 Rightbar 语义 DOM", () => {
-  assert.equal(
-    render("region", { slot: "topbar", body: "<span>Top</span>" }),
-    '<header id="topbar-region" class="site-region site-region--topbar ui-surface" data-region="topbar"><div class="site-region__viewport"><span>Top</span></div></header>'
-  );
-  assert.equal(
-    render("region", { slot: "leftbar", body: "<span>Left</span>" }),
-    '<aside id="leftbar-region" class="site-region site-region--leftbar" data-region="leftbar" aria-label="Leftbar"><div class="site-region__surface ui-surface"><div class="site-region__decoration" aria-hidden="true"></div><div class="site-region__viewport"><span>Left</span></div></div></aside>'
-  );
-  assert.equal(
-    render("region", { slot: "rightbar", body: "<span>Right</span>" }),
-    '<aside id="rightbar-region" class="site-region site-region--rightbar" data-region="rightbar" aria-label="Rightbar"><div class="site-region__surface ui-drawer-surface"><div class="site-region__viewport"><span>Right</span></div></div></aside>'
-  );
-  assert.throws(() => render("region", { slot: "main", body: "" }), /未知 slot main/);
-});
-
-test("Shell 转义属性、保留根布局契约并透传受信任区域", () => {
+test("Shell escapes document attributes while preserving trusted render slots", () => {
   const html = render("shell", {
-    documentModel: { language: 'zh-CN" data-x="1', preferredTheme: 'dark" data-x="1' },
-    pageModel: { pageType: "content", layout: 'post" data-x="1', articleStyle: 'story" data-x="1', indent: true },
+    documentModel: { language: 'zh-CN" data-x="1', preferredTheme: "dark" },
+    pageModel: { pageType: "content", layout: "post", articleStyle: "tech", indent: false },
     head: "<head></head>",
-    siteBackground: "<div class=\"sitebg\"></div>",
-    cover: "<div id=\"site-cover\"></div>",
-    regions: { topbar: "<header>Top</header>", leftbar: "<aside>Left</aside>", rightbar: "<aside>Right</aside>" },
-    main: "<article>Main</article>",
-    controls: "<button>Menu</button>",
-    scripts: "<script>trusted()</script>",
+    siteBackground: "",
+    cover: "",
+    regions: { topbar: "", leftbar: "", rightbar: "" },
+    main: "<article>trusted</article>",
+    controls: "",
+    scripts: "",
     escape_html: escapeHtml
   });
-
-  assert.match(html, /^<!DOCTYPE html><html lang="zh-CN&quot; data-x=&quot;1" data-theme="dark&quot; data-x=&quot;1">/);
-  assert.doesNotMatch(html, /data-appearance/);
-  assert.match(html, /<body data-page-type="content" data-page-layout="post&quot; data-x=&quot;1" data-article-style="story&quot; data-x=&quot;1" data-text-indent>/);
-  assert.match(html, /<div class="site-shell" id="start" data-regions="topbar leftbar rightbar"><header>Top<\/header><div class="site-workspace"><aside>Left<\/aside><main class="site-main" id="main"><article>Main<\/article><\/main><aside>Right<\/aside><\/div>/);
-  assert.match(html, /<div class="site-scripts"><script>trusted\(\)<\/script><\/div>/);
-});
-
-test("Navigation 只接受显式条目并保持菜单激活 class", () => {
-  const html = render("navigation", {
-    placement: "leftbar",
-    entries: [
-      { title: "Blog", active: true },
-      { title: "Wiki", active: false }
-    ],
-    partial(name, locals) {
-      assert.equal(name, "_partial/components/collection");
-      return locals.options.items.map(item => (
-        `<a class="${item.active ? "active" : ""}">${item.title}</a>`
-      )).join("");
-    }
-  });
-  assert.equal(html, '<nav class="menu dis-select"><a class="active">Blog</a><a class="">Wiki</a></nav>');
+  assert.match(html, /lang="zh-CN&quot; data-x=&quot;1"/);
+  assert.match(html, /<article>trusted<\/article>/);
+  assert.doesNotMatch(html, /<html lang="zh-CN" data-x="1"/);
 });

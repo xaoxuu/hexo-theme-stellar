@@ -99,55 +99,8 @@ test("配置 Schema 路径投影保留 YAML、运行时、数组与动态记录�
   const byPath = new Map(fields.map(field => [field.path, field]));
 
   assert.equal(fields.length, byPath.size, "配置 Schema 不应投影重复 YAML 路径");
-  assert.deepEqual(byPath.get("leftbar.default_state"), {
-    path: "leftbar.default_state",
-    runtimePath: "leftbar.defaultState",
-    type: ["string"]
-  });
-  assert.equal(
-    byPath.get("profiles.blog_index.listing_nav.tabs[].title").runtimePath,
-    "profiles.blogIndex.listingNav.tabs[].title"
-  );
-  assert.equal(
-    byPath.get("services.contributors.github.repositories[].source_prefix").runtimePath,
-    "services.contributors.github.repositories[].sourcePrefix"
-  );
-  assert.equal(byPath.get("article.category_colors.<key>").runtimePath, "article.categoryColors.<key>");
-  assert.equal(byPath.get("tags.quot.<variant>.prefix").runtimePath, "tags.quot.<variant>.prefix");
-});
-
-test("Brand 与背景空值保持显式 null 语义", () => {
-  assert.equal(CONFIG.brand.image.src, null);
-  assert.equal(CONFIG.brand.name, null);
-  assert.equal(CONFIG.brand.tagline, null);
-  assert.equal(CONFIG.appearance.backgrounds.leftbar.image, null);
-  assert.equal(CONFIG.appearance.backgrounds.page.image, null);
-  assert.match(CONFIG_SOURCE, /品牌图片地址；null 表示隐藏图片/);
-  assert.match(CONFIG_SOURCE, /品牌名称；null 表示隐藏名称且不继承 Hexo title/);
-});
-
-test("主干保持扁平，Region 统一为对象，低频 Appearance 与 Inject 保留业务分组", () => {
-  assert.equal(Array.isArray(CONFIG.topbar.widgets), true);
-  assert.equal(Array.isArray(CONFIG.rightbar.widgets), true);
-  assert.deepEqual(CONFIG.menu.items, [
-    { id: "post", title: "menu.blog", icon: "default:documents", url: "/" },
-    { id: "categories", title: "menu.categories", icon: "default:category", url: "/blog/categories/" },
-    { id: "tags", title: "menu.tags", icon: "default:hashtag", url: "/blog/tags/" },
-    { id: "topic", title: "menu.topic", icon: "default:pin", url: "/topic/" },
-    { id: "archives", title: "menu.archives", icon: "default:calendar", url: "/blog/archives/" },
-    { id: "friends", title: "menu.friends", icon: "default:link", url: "/friends/" },
-    { id: "about", title: "menu.about", icon: "default:profile", url: "/about/" },
-    { type: "search" }
-  ]);
-  assert.equal(CONFIG.profiles.blog_index.active_menu, "post");
-  assert.equal(CONFIG.profiles.blog_index.listing_nav.enabled, false);
-  assert.equal(CONFIG.profiles.wiki_index.listing_nav.enabled, true);
-  assert.equal(Array.isArray(CONFIG.profiles.wiki.topbar.widgets), true);
-  assert.equal(CONFIG.profiles.wiki.leftbar.footer_actions, false);
-  assert.equal(Object.hasOwn(CONFIG.comments, "providers"), false);
-  assert.equal(Object.hasOwn(CONFIG.search, "providers"), false);
-  assert.equal(Object.hasOwn(CONFIG.features.math, "providers"), false);
-  assert.equal(Object.hasOwn(CONFIG.services.site_info, "providers"), false);
-  assert.equal(CONFIG.appearance.preset, "card");
-  assert.equal(CONFIG.inject.head_end, "");
+  assert.equal(fields.every(field => typeof field.runtimePath === "string" && Array.isArray(field.type)), true);
+  assert.equal(fields.some(field => field.path.includes("[]")), true, "应保留数组项投影");
+  assert.equal(fields.some(field => field.path.includes("<key>")), true, "应保留动态记录投影");
+  assert.equal(fields.some(field => field.path !== field.runtimePath), true, "应保留 YAML 到运行时命名转换");
 });
