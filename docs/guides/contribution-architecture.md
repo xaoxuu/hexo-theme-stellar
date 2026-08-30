@@ -6,7 +6,7 @@ Stellar v2 遵循“一项语义事实、一个权威所有者”。贡献者仍
 
 | 贡献类型 | 权威所有者 | 合理维护面 | 必需测试接缝 | 常见失败 |
 | --- | --- | --- | --- | --- |
-| 公开配置 | `scripts/schema/config-schema.js` | `config-target.js`、`_config.yml` 可发现示例、Reference、配置知识库 | Schema 正/反例、`npm run reference:check` | 在消费方另写 fallback，或只改 YAML 没改 Schema |
+| 公开配置 | `_config.yml` 与 `scripts/schema/config-rules.js` | 运行时 Schema、配置知识库 | 默认配置可发现性、Schema 正/反例、`npm test` | 在消费方另写 fallback，或规则与 YAML 脱节 |
 | 内容 profile | `scripts/lib/collection-pipeline/registry.js` adapter | Collection/Front Matter Schema、索引与 ViewModel、CLI（如果创建内容） | Pipeline 行为矩阵、路由/ViewModel 契约、真实 generate | 新增第二个 `before_generate` 入口，或重扫全量内容 |
 | 服务端功能 | 对应 `scripts/lib/` 纯模型 | helper/filter/event 薄适配器、错误来源、知识库 | 纯函数单测、Hexo 注册/消费测试；任务包含宿主集成时补充消费方 generate | 把业务默认值写进 EJS 或 event 回调 |
 | UI 组件 | `layout/_partial/components/` 或 `layout/_partial/widgets/` | `_data/widgets.yml`、Stylus、必要的浏览器增强、组件知识库 | 模板输出契约；有状态时加 mount/unmount 测试 | 为一个页面复制组件 DOM/CSS，或忽略移动端/右栏上下文 |
@@ -25,11 +25,11 @@ Extension、Feature 和 Runtime 可注册组件均由 `scripts/lib/contribution-
   entry: { type: "browser-module", path: "/js/runtime/extensions/card-hover.mjs" },
   resources: ["features.cardHover"],
   activation: { type: "selector", value: ".card-hover" },
-  schema: "extensions.features.card_hover",
+  schema: "features.card_hover.enabled",
   i18n: null,
   docs: { category: "Components", path: "docs/knowledge/07-外部集成/plugin-system.md" },
   tests: ["test/card_hover_client.test.js", "test/browser-runtime-manifest.test.js"],
-  defaultsOwner: "scripts/schema/config-schema.js#extensions.features.card_hover",
+  defaultsOwner: "_config.yml#features.card_hover.enabled",
   project(context) { /* 从规范化页面上下文投影 config，不复制默认值 */ }
 }
 ```
@@ -44,7 +44,7 @@ Card Hover 的迁移展示了一个简单浏览器 Feature 的最小维护面：
 
 1. `source/js/plugins/card-hover.js` 保留可测的业务实现，`source/js/runtime/extensions/card-hover.mjs` 只做 asset load 与 mount/unmount 适配。
 2. `internal-constants.js` 只所有 `features.cardHover.js` 的具体路径；descriptor 只登记该资源键。
-3. descriptor 单点登记 `card-hover` ID、ESM 入口、`.card-hover` 激活、Schema、文档和行为测试；`config-target.js` 也从 descriptor 派生 Feature Schema ID，不再维护第二份列表。
+3. descriptor 单点登记 `card-hover` ID、ESM 入口、`.card-hover` 激活、Schema、文档和行为测试；Contribution 门禁直接读取 Theme Schema，不维护第二份字段列表。
 4. `browser-runtime.js` 通用投影注册表；`feature.mjs` 不再增加 `card-hover` case，也不再有第二份 Manifest ID 列表。
 5. `test/card_hover_client.test.js` 验证交互与清理，Manifest 测试验证投影，contribution 门禁验证所有维护面已连通。
 
@@ -55,9 +55,10 @@ Card Hover 的迁移展示了一个简单浏览器 Feature 的最小维护面：
 ```bash
 npm run contributions:check
 npm test
-npm run reference:check
 ```
 
-`contributions:check` 检查重复注册/默认值所有者、缺失翻译、Schema/Reference 漂移、未登记资源、缺失入口/文档/行为测试。它检查维护面是否连通，不替代功能本身的正反例和真实 Hexo 构建。
+`contributions:check` 检查重复注册/默认值所有者、缺失翻译、Schema 所有权漂移、未登记资源、缺失入口/文档/行为测试。它检查维护面是否连通，不替代功能本身的正反例和真实 Hexo 构建。
 
 知识库正文在发版准备或明确文档任务中同步，并在修改后运行 `npm run knowledge:check`；正式发版由 `npm run release:check` 组合实现门禁与知识库核查。
+
+需要持久化的架构、迁移、兼容或验收方案统一记录在相关 GitHub issue；仓库内只维护当前实现、长期规范、知识库与测试证据。

@@ -18,7 +18,6 @@ tags:
 - [_config.yml](../../../_config.yml)（`extensions.features.link_prefetch`）
 - [source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 - [layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs)
-- [docs/designs/2026-08-08-pjax-removal.md](../../../docs/designs/2026-08-08-pjax-removal.md)
 
 </details>
 
@@ -47,8 +46,6 @@ Stellar 使用**普通整页导航**。早期版本曾内置自定义 PJAX 实�
 | `layout/layout.ejs` 的 `.page-loading-bar` | 仅 PJAX 使用的页面加载条 |
 
 同时从 `source/css/_plugins/index.styl` 移除 PJAX 条件引入块，从 `layout/_partial/scripts/utils.ejs` 清理 `_pjaxListeners`、`jq()` 的 pjax 参数逻辑、`cleanupPjaxListeners()`、`pjax:before`/`pjax:complete` 监听器等。
-
-**参考源码**：[docs/designs/2026-08-08-pjax-removal.md](../../../docs/designs/2026-08-08-pjax-removal.md)
 
 ## 当前导航机制
 

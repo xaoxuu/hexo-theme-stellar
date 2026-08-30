@@ -6,6 +6,8 @@ const fs = require("node:fs");
 const path = require("node:path");
 const yaml = require("js-yaml");
 const { validateContributionDefinitions } = require("./contribution-contract");
+const { flattenSchemaFields } = require("../schema/schema-utils");
+const { CONFIG_SCHEMA } = require("../schema/config-schema");
 
 function leafPaths(value, parents = [], result = []) {
   if (value == null || typeof value !== "object" || Array.isArray(value)) {
@@ -37,16 +39,12 @@ function loadLanguages(root, ids) {
   ]));
 }
 
-function loadReference(root) {
-  return JSON.parse(fs.readFileSync(path.join(root, "reference/v2-config.json"), "utf8"));
-}
-
 function auditContributionRegistry(options) {
   const root = path.resolve(options.root);
   const definitions = options.definitions;
   const assets = options.assets;
   const languages = options.languages || loadLanguages(root, ["en", "zh-CN", "zh-TW"]);
-  const reference = options.reference || loadReference(root);
+  const schemaFields = options.schemaFields || flattenSchemaFields(CONFIG_SCHEMA);
   const issues = [];
 
   try {
@@ -78,9 +76,7 @@ function auditContributionRegistry(options) {
     if (!assetOwners.has(asset)) issues.push(`${asset}: internal asset has no contribution owner`);
   }
 
-  const referencePaths = (reference.fields || [])
-    .filter(field => field.surface === "Theme")
-    .map(field => field.path);
+  const schemaPaths = schemaFields.map(field => field.path);
   for (const definition of definitions) {
     const entry = entryFile(definition.entry);
     if (!fs.existsSync(path.join(root, entry))) issues.push(`${definition.id}: entry file ${entry} does not exist`);
@@ -98,8 +94,8 @@ function auditContributionRegistry(options) {
     if (behaviorMentions.length === 0) issues.push(`${definition.id}: no behavior test mentions the contribution id`);
 
     if (definition.schema !== null) {
-      const count = referencePaths.filter(item => item === definition.schema).length;
-      if (count !== 1) issues.push(`${definition.id}: schema ${definition.schema} appears ${count} times in Reference`);
+      const count = schemaPaths.filter(item => item === definition.schema).length;
+      if (count !== 1) issues.push(`${definition.id}: schema ${definition.schema} appears ${count} times in Theme Schema`);
       const [ownerFile, ownerPath] = definition.defaultsOwner.split("#");
       if (ownerPath !== definition.schema) {
         issues.push(`${definition.id}: defaults owner path ${ownerPath || "<missing>"} differs from schema ${definition.schema}`);

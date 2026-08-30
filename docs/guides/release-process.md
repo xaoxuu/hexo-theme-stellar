@@ -15,7 +15,7 @@ npm run release → push main + npm → CI 自动触发 → npm publish + git ta
 
 CHANGELOG.md 的历史数据已于 2026-08-09 一次性从 GitHub Releases API 同步入库（统一格式：二级标题为版本号，三级标题为分类）；此后每次发版的更新日志由 AI/人工提前写入 CHANGELOG.md，脚本只做非空校验。
 
-开发提交维护实现、测试、生成 Reference 与必要方案；知识库、CHANGELOG 和 `VERIFICATION.md` 在发版准备时集中同步。发版审计比较两个最终文件树，不恢复已经被最终候选抵消的中间方案。
+开发提交维护实现、Schema 与直接测试；设计决策和发布计划记录在相关 GitHub issue。知识库、CHANGELOG 和 `VERIFICATION.md` 在发版准备时集中同步。发版审计比较两个最终文件树，不恢复已经被最终候选抵消的中间方案。
 
 ## 发布基线与净变化
 
@@ -24,7 +24,7 @@ CHANGELOG.md 的历史数据已于 2026-08-09 一次性从 GitHub Releases API �
 发版准备以发布基线和最终候选的树差异为输入：
 
 1. 确认目标版本升级自哪个公开 tag；RC 延续已有 RC 时使用维护者确认的上一公开候选。
-2. 比较发布基线树与最终候选树，核对最终 Schema、Reference、默认配置、CLI、生成输出、模板、样式、浏览器行为、语言和失败语义。
+2. 比较发布基线树与最终候选树，核对最终 Schema、默认配置、CLI、生成输出、模板、样式、浏览器行为、语言和失败语义。
 3. 逐项归纳用户可见行为、配置、API、迁移和兼容性的净变化。只存在于中间提交、在最终树中已经消失的行为不进入文档、CHANGELOG 或版本号判断。
 
 完成条件：每项最终净变化均能指向当前实现与验证证据；兼容和迁移范围只覆盖发布基线及明确外部接缝。
@@ -37,7 +37,7 @@ CHANGELOG.md 的历史数据已于 2026-08-09 一次性从 GitHub Releases API �
 2. 按最终净变化编写 CHANGELOG；用户可见的配置、API、迁移、兼容性和行为变化写入相应分类或升级注意，供后续外部文档流程直接消费。
 3. 运行 `npm run knowledge:check`，将主题知识库与 CHANGELOG 提交到主题仓库。
 
-纯文档任务和事实纠错即时交付，不等待发版。Schema 生成 Reference、Contribution descriptor 的文档路径等机器契约继续随实现保持一致，不属于延迟同步范围。
+纯文档任务和事实纠错即时交付，不等待发版。Schema、Contribution descriptor 与对应直接测试继续随实现保持一致，不属于延迟同步范围。
 
 完成条件：每项最终净变化均落到知识库、CHANGELOG 或有明确的 N/A 结论；主题工作树只保留发版脚本允许的文件。
 

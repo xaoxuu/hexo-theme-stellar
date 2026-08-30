@@ -6,6 +6,7 @@ const fs = require("node:fs");
 const yaml = require("js-yaml");
 
 const { CONFIG_RULES } = require("../scripts/schema/config-rules");
+const { flattenSchemaFields } = require("../scripts/schema/schema-utils");
 const {
   CONFIG_DEFAULTS,
   CONFIG_SCHEMA,
@@ -91,6 +92,28 @@ test("轻量规则表中的每个路径都对应手写默认配置中的现存�
     .map(([pattern]) => pattern)
     .filter(pattern => !paths.some(configPath => patternMatches(pattern, configPath)));
   assert.deepEqual(missing, []);
+});
+
+test("配置 Schema 路径投影保留 YAML、运行时、数组与动态记录语义", () => {
+  const fields = flattenSchemaFields(CONFIG_SCHEMA);
+  const byPath = new Map(fields.map(field => [field.path, field]));
+
+  assert.equal(fields.length, byPath.size, "配置 Schema 不应投影重复 YAML 路径");
+  assert.deepEqual(byPath.get("leftbar.default_state"), {
+    path: "leftbar.default_state",
+    runtimePath: "leftbar.defaultState",
+    type: ["string"]
+  });
+  assert.equal(
+    byPath.get("profiles.blog_index.listing_nav.tabs[].title").runtimePath,
+    "profiles.blogIndex.listingNav.tabs[].title"
+  );
+  assert.equal(
+    byPath.get("services.contributors.github.repositories[].source_prefix").runtimePath,
+    "services.contributors.github.repositories[].sourcePrefix"
+  );
+  assert.equal(byPath.get("article.category_colors.<key>").runtimePath, "article.categoryColors.<key>");
+  assert.equal(byPath.get("tags.quot.<variant>.prefix").runtimePath, "tags.quot.<variant>.prefix");
 });
 
 test("Brand 与背景空值保持显式 null 语义", () => {

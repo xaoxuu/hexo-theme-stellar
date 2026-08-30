@@ -2,7 +2,7 @@
 
 [简体中文](README.md) · [English](README_EN.md)
 
-> Stellar v2 仍在开发中，尚未发布；Alpha、Beta 只作为内部里程碑。生产环境请继续使用 1.x 稳定版，v2 开发契约见 [Reference](reference/README.md)。
+> Stellar v2 仍在开发中，尚未发布；Alpha、Beta 只作为内部里程碑。生产环境请继续使用 1.x 稳定版。
 
 [![npm](https://img.shields.io/npm/v/hexo-theme-stellar)](https://www.npmjs.com/package/hexo-theme-stellar)
 [![license](https://img.shields.io/github/license/xaoxuu/hexo-theme-stellar)](https://github.com/xaoxuu/hexo-theme-stellar/blob/main/LICENSE)

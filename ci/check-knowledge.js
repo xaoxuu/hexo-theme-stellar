@@ -5,10 +5,11 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const { markdownAnchors } = require("../scripts/lib/markdown-links");
+const { flattenSchemaFields } = require("../scripts/schema/schema-utils");
+const { CONFIG_SCHEMA } = require("../scripts/schema/config-schema");
 
 const ROOT = path.resolve(__dirname, "..");
 const DEFAULT_KNOWLEDGE_DIR = "docs/knowledge";
-const DEFAULT_CONFIG_REFERENCE = "reference/v2-config.json";
 const HOST_OBJECT_PATHS = new Set(["site.posts"]);
 const FILE_LIKE_SUFFIX = /\.(?:js|mjs|cjs|ejs|css|styl|json|ya?ml|md)$/i;
 const CONFIG_TOKEN = /^[A-Za-z_$][\w$]*(?:\[\])?(?:\.[A-Za-z_$][\w$]*(?:\[\])?)+$/;
@@ -101,8 +102,8 @@ function checkLinks(root, file, markdown) {
   return { checked, errors };
 }
 
-function configContract(root, configReferencePath) {
-  const reference = readJson(root, configReferencePath);
+function configContract(schema = CONFIG_SCHEMA) {
+  const fields = flattenSchemaFields(schema);
   const accepted = new Set();
   const themeRoots = new Set();
   const addPath = value => {
@@ -113,10 +114,10 @@ function configContract(root, configReferencePath) {
       accepted.add(segments.slice(0, index).join("."));
     }
   };
-  for (const field of reference.fields || []) {
+  for (const field of fields) {
     addPath(field.path);
     addPath(field.runtimePath);
-    if (field.surface === "Theme" && field.path) themeRoots.add(field.path.split(".")[0]);
+    if (field.path) themeRoots.add(field.path.split(".")[0]);
   }
   return { accepted, themeRoots };
 }
@@ -173,9 +174,8 @@ function checkVersionReferences(root, file, markdown, currentVersion) {
 function checkKnowledge(options = {}) {
   const root = path.resolve(options.root || ROOT);
   const knowledgeDir = path.join(root, options.knowledgeDir || DEFAULT_KNOWLEDGE_DIR);
-  const configReferencePath = options.configReferencePath || DEFAULT_CONFIG_REFERENCE;
   const currentVersion = readJson(root, "package.json").version;
-  const contract = configContract(root, configReferencePath);
+  const contract = configContract(options.configSchema || CONFIG_SCHEMA);
   const files = walkMarkdown(knowledgeDir);
   const result = {
     filesChecked: files.length,
@@ -222,5 +222,6 @@ if (require.main === module) main();
 
 module.exports = {
   checkKnowledge,
+  configContract,
   stripFencedCode
 };

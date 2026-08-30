@@ -66,14 +66,7 @@ Provider ID 属于业务值，不会被改写，例如 `provider: site_info_api`
 
 `null` 只有在规则明确允许时才保留业务语义，例如 `search.provider: null` 表示关闭搜索。其它空键视为没有覆盖，继续使用默认值。
 
-完整叶子路径、运行时路径、推导类型与例外约束见[配置 Reference](../../../reference/v2-config.md)。修改 `_config.yml` 或规则后运行：
-
-```sh
-npm run schema:generate
-npm run schema:check
-```
-
-`schema:generate` 只更新 Reference，不会重写 `_config.yml`。
+完整公开字段、默认值与注释以 `_config.yml` 为准；运行时路径、推导类型和例外约束由 `config-schema.js` 与 `config-rules.js` 共同定义。修改 YAML 或规则时，运行对应的配置解析、Schema 正反例与消费测试。
 
 ## 顶层结构
 
@@ -182,5 +175,5 @@ const service = hexo.stellar.config.services.siteInfo;
 - [`scripts/schema/config-schema.js`](../../../scripts/schema/config-schema.js)：从 YAML 与轻量规则构建运行时 Schema
 - [`scripts/schema/config-rules.js`](../../../scripts/schema/config-rules.js)：例外约束
 - [`scripts/lib/config-schema.js`](../../../scripts/lib/config-schema.js)：加载、合并、验证、投影与冻结
+- [`scripts/schema/schema-utils.js`](../../../scripts/schema/schema-utils.js)：Schema 共享的深度冻结与字段路径投影
 - [`scripts/schema/content-config-rules.js`](../../../scripts/schema/content-config-rules.js)：Collection / Front Matter 独立规则
-- [`reference/v2-config.md`](../../../reference/v2-config.md)：生成的公开叶子 Reference

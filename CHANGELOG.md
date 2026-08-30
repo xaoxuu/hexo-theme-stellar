@@ -108,7 +108,7 @@ Full Changelog: [1.42.0...1.42.1](https://github.com/xaoxuu/hexo-theme-stellar/c
 
 ### 其他
 - 移除知识库合并版 `知识库全量.md`，知识库以领域页面为唯一事实源
-- 新增 AI 规范引用一致性检查（check-spec-refs）与发版前提交登记完整性检查（随 `npm run check` 执行）
+- 新增 AI 规范引用一致性检查与发版前提交登记完整性检查（随 `npm run check` 执行）
 
 ### 升级注意（配置变更与破坏性改动）
 - 移除 `article.auto_banner`（Unsplash 自动横幅已失效）与文章 front-matter `poster`（`headline` / `topic` / `caption`）；`poster.color` / `banner_info.color` 显式文字颜色不再生效，由自适应文字颜色接管
@@ -290,7 +290,7 @@ Full Changelog: [1.37.0...1.38.0](https://github.com/xaoxuu/hexo-theme-stellar/c
 
 ### 其他
 - CHANGELOG.md 历史数据一次性从 GitHub Releases API 同步入库（76 个版本，统一格式）
-- 新增发版流程文档（docs/guides/release-process.md）与设计记录（docs/designs/2026-08-09-release-automation.md）
+- 新增发版流程文档（docs/guides/release-process.md）并完善发布自动化记录
 
 Full Changelog: [1.36.0...1.37.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.36.0...1.37.0)
 
@@ -336,7 +336,7 @@ Full Changelog: [1.35.0...1.36.0](https://github.com/xaoxuu/hexo-theme-stellar/c
 - 统一 URL 路径规范化逻辑，修复 canonical 标签路径不一致的问题
 - 修复 wiki 文档树中索引页（index）的路径匹配错误
 - 发版脚本迁移为 Node CLI（release.js），支持版本校验、dry-run 预览与二次确认
-- 完善仓库 AI 协作规范（AGENTS.md、issue 处理规则），重组 docs 目录（designs/、guides/、audits/）
+- 完善仓库 AI 协作规范（AGENTS.md、issue 处理规则），重组 docs 中的长期指南与审计记录
 - 优化 npm 发布忽略规则（.npmignore）
 
 Full Changelog: [1.34.0...1.35.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.34.0...1.35.0)

@@ -391,9 +391,9 @@ function visibilitySchema(factory, options = {}) {
 
 function collectionSchema(profile) {
   const scope = `CollectionModel:${profile}`;
-  const factory = createFieldFactory(scope, ["PageViewModel", "Reference generator"]);
-  const cascadeFactory = createFieldFactory(scope, ["ContentItemModel", "PageViewModel", "Reference generator"]);
-  const wikiHeroConsumers = ["buildWikiPageViewModel", "PageViewModel", "Reference generator"];
+  const factory = createFieldFactory(scope, ["PageViewModel"]);
+  const cascadeFactory = createFieldFactory(scope, ["ContentItemModel", "PageViewModel"]);
+  const wikiHeroConsumers = ["buildWikiPageViewModel", "PageViewModel"];
   const { array, field, object } = factory;
   const required = value => {
     value.required = true;
@@ -502,7 +502,7 @@ function collectionSchema(profile) {
 }
 
 function contentItemSchema() {
-  const factory = createFieldFactory("ContentItemModel", ["PageViewModel", "Reference generator"]);
+  const factory = createFieldFactory("ContentItemModel", ["PageViewModel"]);
   const { array, field, object } = factory;
   const stringItem = field("string", { default: computed("由数组逐项归一化"), example: "Hexo" });
   const properties = {
@@ -534,7 +534,7 @@ function contentItemSchema() {
 }
 
 function pageViewModelSchema(profile) {
-  const factory = createFieldFactory(`PageViewModel:${profile}`, ["page.viewModel", "Reference generator"]);
+  const factory = createFieldFactory(`PageViewModel:${profile}`, ["page.viewModel"]);
   const { array, field, object } = factory;
   const properties = {
     collection: object({}, {

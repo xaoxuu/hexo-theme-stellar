@@ -180,7 +180,7 @@ const CONTRIBUTIONS = defineContributions([
     activation: selector(".settings-page"),
     schema: null,
     i18n: null,
-    docs: { category: "Components", path: "docs/designs/2026-08-28-settings/spec.md" },
+    docs: { category: "Components", path: "docs/knowledge/02-布局系统/sidebar-system.md" },
     tests: ["test/settings.test.js", RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: null,
     project: context => configResult({})

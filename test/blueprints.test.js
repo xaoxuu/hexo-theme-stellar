@@ -18,8 +18,13 @@ const {
   writeBlueprintPlan
 } = require("../scripts/lib/blueprints");
 const { parseConfigSchema, parseStellarConfig } = require("../scripts/lib/config-schema");
-const { BLUEPRINT_MANIFEST_SCHEMA, VISUAL_STYLE_MANIFEST_SCHEMA } = require("../scripts/schema/blueprint-schema");
-const { generateBlueprintReferenceMetadata } = require("../scripts/lib/blueprint-reference-metadata");
+const {
+  BLUEPRINT_IDS,
+  BLUEPRINT_MANIFEST_SCHEMA,
+  CLI_CONTRACT,
+  VISUAL_STYLE_IDS,
+  VISUAL_STYLE_MANIFEST_SCHEMA
+} = require("../scripts/schema/blueprint-schema");
 
 const GENERATED_AT = new Date("2026-08-23T12:34:00+08:00");
 
@@ -181,13 +186,16 @@ test("输出路径不能借助站点内符号链接写到根目录之外", () =>
   assert.throws(() => buildBlueprintPlan({ baseDir, blueprint: "classic" }), /符号链接/);
 });
 
-test("Blueprint Reference 稳定登记已注册 Blueprint、Style 与 CLI 契约", () => {
-  const reference = generateBlueprintReferenceMetadata();
-  assert.deepEqual(reference.blueprints.map(item => item.id), ["classic", "minimal-reading", "docs-reference", "light-and-shadow"]);
-  assert.deepEqual(reference.visualStyles.map(item => item.id), ["card", "flat", "glass", "minimal"]);
-  assert.equal(reference.manifestContract.paths, "safe non-empty relative path");
-  assert.equal(reference.manifestContract.uniqueBlueprintTargets, true);
-  assert.deepEqual(reference.cli.subcommands.init.options, ["blueprint", "style", "dry-run", "non-interactive"]);
-  assert.deepEqual(reference.cli.subcommands.doctor.formats, ["text", "json"]);
-  assert.deepEqual(reference.cli.subcommands.doctor.jsonGlobalOptions, ["silent"]);
+test("Schema 与目录稳定登记 Blueprint、Style 与 CLI 契约", () => {
+  const catalog = loadCatalog();
+  assert.deepEqual(BLUEPRINT_IDS, ["classic", "minimal-reading", "docs-reference", "light-and-shadow"]);
+  assert.deepEqual(VISUAL_STYLE_IDS, ["card", "flat", "glass", "minimal"]);
+  assert.deepEqual(Object.keys(catalog.blueprints), BLUEPRINT_IDS);
+  assert.deepEqual(Object.keys(catalog.styles), VISUAL_STYLE_IDS);
+  assert.equal(BLUEPRINT_MANIFEST_SCHEMA.sealed, true);
+  assert.equal(BLUEPRINT_MANIFEST_SCHEMA.properties.files.validator, "unique_blueprint_targets");
+  assert.equal(BLUEPRINT_MANIFEST_SCHEMA.properties.files.items.properties.source.validator, "safe_relative_path");
+  assert.deepEqual(CLI_CONTRACT.subcommands.init.options, ["blueprint", "style", "dry-run", "non-interactive"]);
+  assert.deepEqual(CLI_CONTRACT.subcommands.doctor.formats, ["text", "json"]);
+  assert.deepEqual(CLI_CONTRACT.subcommands.doctor.jsonGlobalOptions, ["silent"]);
 });

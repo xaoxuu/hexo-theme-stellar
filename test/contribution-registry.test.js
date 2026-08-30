@@ -7,6 +7,8 @@ const path = require("node:path");
 const yaml = require("js-yaml");
 const { validateContributionDefinitions } = require("../scripts/lib/contribution-contract");
 const { auditContributionRegistry } = require("../scripts/lib/contribution-audit");
+const { flattenSchemaFields } = require("../scripts/schema/schema-utils");
+const { CONFIG_SCHEMA } = require("../scripts/schema/config-schema");
 const {
   CONTRIBUTIONS,
   buildContributionEntries,
@@ -27,8 +29,8 @@ function languages() {
   ]));
 }
 
-function reference() {
-  return JSON.parse(fs.readFileSync(path.join(ROOT, "reference/v2-config.json"), "utf8"));
+function schemaFields() {
+  return flattenSchemaFields(CONFIG_SCHEMA);
 }
 
 function audit(overrides = {}) {
@@ -37,7 +39,7 @@ function audit(overrides = {}) {
     definitions: overrides.definitions || CONTRIBUTIONS,
     assets: overrides.assets || cloneAssets(),
     languages: overrides.languages || languages(),
-    reference: overrides.reference || reference()
+    schemaFields: overrides.schemaFields || schemaFields()
   });
 }
 
@@ -108,14 +110,13 @@ test("负向门禁拒绝重复注册与冲突的 Schema 默认值所有者", () 
   assert.throws(() => validateContributionDefinitions(conflicting), /conflicting defaults owners/);
 });
 
-test("负向门禁拒绝缺失翻译与 Schema/Reference 漂移", () => {
+test("负向门禁拒绝缺失翻译与 Schema 所有权漂移", () => {
   const missingLanguage = languages();
   delete missingLanguage.en.message.copy_denied;
   assert.ok(audit({ languages: missingLanguage }).some(issue => issue.includes("language en is missing message.copy_denied")));
 
-  const driftedReference = reference();
-  driftedReference.fields = driftedReference.fields.filter(field => field.path !== "features.card_hover.enabled");
-  assert.ok(audit({ reference: driftedReference }).some(issue => issue.includes("card-hover: schema features.card_hover.enabled appears 0 times")));
+  const driftedSchemaFields = schemaFields().filter(field => field.path !== "features.card_hover.enabled");
+  assert.ok(audit({ schemaFields: driftedSchemaFields }).some(issue => issue.includes("card-hover: schema features.card_hover.enabled appears 0 times")));
 });
 
 test("负向门禁拒绝未登记资源、重复资源所有权与缺失行为测试", () => {

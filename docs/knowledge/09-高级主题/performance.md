@@ -288,7 +288,7 @@ resources:
 | hexo 内核 | ~8% | EJS partial / 渲染框架 |
 | highlight.js / marked | ~6.5% | 内容代码高亮与 Markdown 分词 |
 
-主题构建期脚本已做以下优化（见 `docs/designs/2026-08-15-build-performance/`），全部保持输出逐字节一致：
+主题构建期脚本已做以下优化，全部保持输出逐字节一致：
 
 - **wiki 文档树**（`scripts/lib/doc_tree.js`）：页面按 `wiki` / `path_key` 单遍 `Map` 分组，替代旧实现的 O(W·P) `filter`/`some` 与 O(S·K·P) sections 组装；`all_tags`/`relatedItems` 用 `Set`/`Map` 去重，输出语义不变。
 - **笔记本系统**（`scripts/lib/notebooks.js`）：单遍 `groupPagesByNotebook` 分组，替代每个笔记本全量 `filter` 全部页面。

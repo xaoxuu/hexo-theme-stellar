@@ -421,13 +421,6 @@ function assertRuntime(html, relative, profile) {
 function assertPackageFiles(pack) {
   const files = new Set(pack.files.map(item => item.path));
   const required = [
-    "reference/README.md",
-    "reference/v2-config.json",
-    "reference/v2-config.md",
-    "reference/v2-models.json",
-    "reference/v2-models.md",
-    "reference/v2-blueprints.json",
-    "reference/v2-blueprints.md",
     "blueprints/classic/manifest.json",
     "blueprints/minimal-reading/manifest.json",
     "blueprints/docs-reference/manifest.json",
@@ -446,30 +439,14 @@ function assertPackageFiles(pack) {
     ".agents/",
     ".claude/",
     "scripts/.cache/",
+    "reference/",
     "package-lock.json",
-    "ALPHA.md",
-    "reference/v2-config-audit",
-    "reference/v2-alpha-performance"
+    "ALPHA.md"
   ];
   for (const file of files) {
     if (forbidden.some(prefix => file === prefix || file.startsWith(prefix))) {
       throw new Error(`npm tarball includes development file ${file}`);
     }
-  }
-}
-
-function assertInstalledBlueprintReference(root) {
-  const file = path.join(root, "node_modules/hexo-theme-stellar/reference/v2-blueprints.json");
-  const reference = JSON.parse(fs.readFileSync(file, "utf8"));
-  const expectedIds = BLUEPRINT_MATRIX.map(item => item.id);
-  if (reference.manifestContract?.sealed !== true) {
-    throw new Error("installed Blueprint Reference must declare a sealed manifest contract");
-  }
-  if (JSON.stringify(reference.manifestContract.blueprintIds) !== JSON.stringify(expectedIds)) {
-    throw new Error("installed Blueprint Reference exposes unexpected manifest Blueprint ids");
-  }
-  if (JSON.stringify(reference.blueprints?.map(item => item.id)) !== JSON.stringify(expectedIds)) {
-    throw new Error("installed Blueprint Reference exposes unexpected Blueprint definitions");
   }
 }
 
@@ -488,7 +465,6 @@ async function checkSite(root, matrix, tarball) {
   createSite(root, { language });
   process.stdout.write(`${blueprint}/${language}: installing Hexo 8 and ${path.basename(tarball)}\n`);
   const hexo = installSite(root, tarball);
-  assertInstalledBlueprintReference(root);
   assertInitTransactions(root, hexo, blueprint, style);
   if (blueprint === "classic") addTopicFixture(root);
   if (blueprint === "minimal-reading") addNotebookFixture(root, hexo);

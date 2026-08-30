@@ -30,7 +30,9 @@ git submodule add https://github.com/<your-name>/hexo-theme-stellar.git themes/s
 
 先运行最接近改动的检查；需要全仓证据时运行 `npm run check`。所有可用脚本及其当前组合以 `package.json` 为准。宿主构建、视觉检查和分发验收只在任务影响这些契约时补充。
 
-机器契约与生成 Reference 随实现更新；知识库、CHANGELOG 和版本级 `VERIFICATION.md` 在发版准备时按最终净变化集中同步。
+机器契约与直接测试随实现更新；知识库、CHANGELOG 和版本级 `VERIFICATION.md` 在发版准备时按最终净变化集中同步。
+
+跨域架构、迁移、兼容、发布计划或其它需要持久化的设计方案统一使用 GitHub issue，正文应包含问题、决策、影响范围和验收标准；具体约定见 [Issue tracker](docs/agents/issue-tracker.md)。仓库不接收单次设计方案或其本地归档。
 
 ## 提交 Pull Request
 

@@ -183,7 +183,7 @@ flowchart TD
 
 ### 阶段 4：页面导航与预加载
 
-主题使用普通整页导航；可选的 `extensions.features.link_prefetch`（flying_pages）会在鼠标悬停时预加载站内链接，提升导航体验。PJAX 已于 v1.35.0 移除，详见主题仓库 `docs/designs/2026-08-08-pjax-removal.md`。
+主题使用普通整页导航；可选的 `extensions.features.link_prefetch`（flying_pages）会在鼠标悬停时预加载站内链接，提升导航体验。PJAX 已于 v1.35.0 移除。
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)、[_config.yml](../../../_config.yml)（`extensions.features.link_prefetch`）
 
@@ -360,11 +360,11 @@ flowchart TD
 
 Stellar 通过 npm 以 `hexo-theme-stellar` 分发，采用 MIT 协议开源。
 
-`stellar init` 与 `stellar doctor`：前者从 `classic`、`minimal-reading`、`docs-reference`、`light-and-shadow` 四套 Blueprint 和 `card`、`flat`、`glass`、`minimal` 四套 Visual Style 生成一次性的显式站点文件，后者复用 v2 Schema 只读检查环境与配置。Blueprint 不进入页面运行时，也不会成为新的配置根；机器可读契约位于 `reference/v2-blueprints.json`。
+`stellar init` 与 `stellar doctor`：前者从 `classic`、`minimal-reading`、`docs-reference`、`light-and-shadow` 四套 Blueprint 和 `card`、`flat`、`glass`、`minimal` 四套 Visual Style 生成一次性的显式站点文件，后者复用 v2 Schema 只读检查环境与配置。Blueprint 不进入页面运行时，也不会成为新的配置根；其清单契约由 Schema、manifest 与真实 init/doctor 集成测试共同维护。
 
 Pre-alpha M9 完成默认内容体验：空配置或缺少 `_config.stellar.yml` 的普通 Post/Page 可直接生成，Wiki/Topic/Notebook 只在唯一候选时推断归属；Blueprint 只保留产品差异，starter Markdown 不要求可选 Stellar 元数据。当前本地候选 tarball 门禁覆盖四套 Blueprint 和一个无 init 默认站点的 doctor → generate。Alpha、Beta 只是内部成熟度里程碑，不会发布 npm 版本、tag 或 GitHub Release；M10/Alpha 必须等待站长对 Region/Widget 新契约生成的候选重新人工验收。
 
-**参考源码**：[package.json](../../../package.json)、[reference/](../../../reference/)、[blueprints/](../../../blueprints/)、[ci/check-package-integration.js](../../../ci/check-package-integration.js)、[scripts/commands/stellar.js](../../../scripts/commands/stellar.js)、[scripts/lib/theme-metadata.js](../../../scripts/lib/theme-metadata.js)、[README.md](../../../README.md)
+**参考源码**：[package.json](../../../package.json)、[blueprints/](../../../blueprints/)、[ci/check-package-integration.js](../../../ci/check-package-integration.js)、[scripts/schema/blueprint-schema.js](../../../scripts/schema/blueprint-schema.js)、[scripts/commands/stellar.js](../../../scripts/commands/stellar.js)、[scripts/lib/theme-metadata.js](../../../scripts/lib/theme-metadata.js)、[README.md](../../../README.md)
 
 ---
 

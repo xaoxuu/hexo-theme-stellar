@@ -73,7 +73,7 @@ Widget 的位置能力由类型 descriptor 声明，不允许实例扩大能力�
 | `sidebar.left.search/menu/wiki_home` | 对应系统 Widget |
 | `sidebar.left.brand` | `site.brand` + `brand` Widget |
 
-Doctor 会输出来源文件、字段路径和迁移目标。最终字段、类型、默认值与 consumer 以 `reference/v2-config.md` 和 `reference/v2-models.md` 为准。
+Doctor 会输出来源文件、字段路径和迁移目标。最终字段、类型与约束以内容/模型 Schema、解析器和对应测试为准。
 
 ## 实现接缝
 
