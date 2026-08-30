@@ -165,21 +165,32 @@ test("移动端 Leftbar Drawer 保留底部间距与可见圆角", () => {
   );
 });
 
-test("移动端 Leftbar 始终在自身边界裁剪光效", () => {
+test("移动端 Leftbar Surface 始终按自身圆角裁剪光效", () => {
   const css = fs.readFileSync(path.resolve(__dirname, "../source/css/_components/layout.styl"), "utf8");
+  const laptopStart = css.indexOf("@media screen and (max-width: $device-laptop)");
+  const laptopEnd = css.indexOf("@media screen and (min-width:", laptopStart);
+  const laptopLayout = css.slice(laptopStart, laptopEnd);
   const mobileStart = css.indexOf("@media screen and (max-width: $device-tablet)");
   const mobileEnd = css.indexOf("@media (prefers-reduced-motion: reduce)", mobileStart);
   const mobileLayout = css.slice(mobileStart, mobileEnd);
+  const leftbarStart = mobileLayout.indexOf("  .site-region--leftbar\n");
+  const drawerOpenStart = mobileLayout.indexOf("  .site-shell[data-drawer='leftbar'] .site-region--leftbar", leftbarStart);
+  const leftbarLayout = mobileLayout.slice(leftbarStart, drawerOpenStart);
 
   assert.match(
-    mobileLayout,
-    /\.site-region--leftbar\s*\n\s+position: fixed[\s\S]*?\n\s+overflow: hidden[\s\S]*?\n\s+\.site-region__surface/,
-    "Leftbar 应始终在 Region 边界裁剪装饰光效"
+    laptopLayout,
+    /\.site-shell\[data-drawer='leftbar'\] \.site-region--leftbar[\s\S]*?\n {4}\.site-region__surface\s*\n {6}position: relative\s*\n {6}top: auto/,
+    "Drawer 打开态的高特异性规则不应把 Surface 重置为 static"
+  );
+  assert.match(
+    leftbarLayout,
+    /\n {4}\.site-region__surface\s*\n {6}position: relative\s*\n {6}top: auto\s*\n {6}height: 100%\s*\n {6}overflow: hidden/,
+    "Leftbar Surface 应成为装饰层的定位与圆角裁剪容器"
   );
   assert.doesNotMatch(
-    mobileLayout,
-    /\.site-shell(?::not)?\(?(?:\[data-drawer='leftbar'\])?\)? \.site-region--leftbar\s*\n\s+overflow:/,
-    "光效裁剪不应跟随 Drawer 状态切换"
+    leftbarLayout,
+    /^ {4}overflow: hidden$/m,
+    "方形 Region 外层不应裁剪带圆角的 Surface"
   );
 });
 

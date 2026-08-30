@@ -420,7 +420,8 @@ html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .s
     height: calc(100dvh - var(--gap-page) * 2)
     z-index: 10
     .site-region__surface
-      position: static
+      position: relative
+      top: auto
       height: 100%
 
 @media screen and (min-width: ($device-tablet + 1px)) and (max-width: $device-laptop)
@@ -454,10 +455,11 @@ html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .s
     bottom: 64px
     height: auto
     z-index: 10
-    overflow: hidden
     .site-region__surface
-      position: static
+      position: relative
+      top: auto
       height: 100%
+      overflow: hidden
   .site-shell[data-drawer='leftbar'] .site-region--leftbar
     top: 8px
     bottom: 64px
