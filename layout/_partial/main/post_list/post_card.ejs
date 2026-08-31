@@ -29,6 +29,9 @@ function divDefault() {
     })
     el += '</span>'
   }
+  if (listing.priority > 0) {
+    el += `<span class="pin">${icon('default:pin')}</span>`
+  }
   return el + '</div></article>'
 }
 

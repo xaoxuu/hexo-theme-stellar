@@ -13,9 +13,6 @@
     </p>
   </div>
   <div class="meta cap">
-    <% if (listing.priority > 0) { %>
-      <span class="pin"><%- icon('default:pin') %></span>
-    <% } %>
     <span class="cap" id="post-meta">
       <%- icon('default:calendar') %>
       <time datetime="<%= date_xml(listing.updated || listing.date) %>"><%= date(listing.updated || listing.date, config.date_format) %></time>
@@ -26,6 +23,9 @@
           <span class="tag"><%= tag %></span>
         </span>
       <% }) %>
+    <% } %>
+    <% if (listing.priority > 0) { %>
+      <span class="pin"><%- icon('default:pin') %></span>
     <% } %>
   </div>
 </article>

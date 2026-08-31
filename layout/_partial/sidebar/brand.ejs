@@ -14,7 +14,7 @@ function layoutBrandNavigation() {
   if (activeViewModel?.collection?.profile !== 'wiki') return ''
   const href = activeViewModel?.render?.layout?.wikiIndexPath
   if (!href) return ''
-  return `<div class="brand-navigation"><a class="brand-navigation__back cap" href="${pretty_url(href)}"><span class="ui-icon">${icon('default:arrow-left', '', true)}</span><span>${__('btn.all_wiki')}</span></a></div>`
+  return `<div class="brand-navigation"><a class="brand-navigation__back cap" href="${pretty_url(href)}"><span class="ui-icon">${icon('default:back', '', true)}</span><span>${__('btn.all_wiki')}</span></a></div>`
 }
 
 function layoutCollectionSearch() {
