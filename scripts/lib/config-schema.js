@@ -500,7 +500,7 @@ function validateRegionWidgets(node, input, source, path, issues) {
         ? (typeof item.override === "string" ? item.override : item.layout)
         : null;
     if (id === "search") {
-      issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "Region widget excluding retired search; use site.menu.items[].type=search", node.migration));
+      issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "Region widget excluding retired search; use menu.items[].type=search", node.migration));
     }
     if (id === "wiki_home") {
       issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "Region widget excluding removed wiki_home; Wiki navigation belongs to the Brand", node.migration));

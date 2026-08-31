@@ -203,16 +203,16 @@ flowchart TD
 
 ### Layout Profile 路径与菜单默认值
 
-v2 配置在 `layout.profiles` 中为各页面 Profile 声明 `path` 和 `navigation.active_menu`。YAML 路径在 Schema 中规范化为根相对路径，目录以 `/` 结尾。Topic、Wiki、Notebook、Author 与 Error Profile 的路径由主题生成器投影为 Hexo route path；`blog_index.path` 只进入 Post `CollectionModel.route.baseDir`，近期文章首页仍由 Hexo 自有 `index_generator.path` 生成，主题配置不会反写该字段。配置运行时使用 camelCase，进入现有页面 ViewModel 或渲染上下文时仍投影为内部 `navigation.menu`：
+v2 配置在 `profiles` 中为各页面 Profile 声明 `path` 和 `active_menu`。YAML 路径在 Schema 中规范化为根相对路径，目录以 `/` 结尾。Topic、Wiki、Notebook、Author 与 Error Profile 的路径由主题生成器投影为 Hexo route path；`blog_index.path` 只进入 Post `CollectionModel.route.baseDir`，近期文章首页仍由 Hexo 自有 `index_generator.path` 生成，主题配置不会反写该字段。配置运行时使用 camelCase，进入现有页面 ViewModel 或渲染上下文时仍投影为内部 `navigation.menu`：
 
 | 条件 | 冻结配置来源 |
 |---|---|
-| 首页 | `layout.profiles.home.navigation.activeMenu` |
-| 分类 / 标签 / 归档 | `layout.profiles.blogIndex.navigation.activeMenu` |
-| Wiki 内容页 | `layout.profiles.wiki.navigation.activeMenu` |
-| Topic 内容页 | `layout.profiles.topic.navigation.activeMenu` |
-| 普通 Post | `layout.profiles.post.navigation.activeMenu` |
-| Notebook Note | `layout.profiles.note.navigation.activeMenu` |
+| 首页 | `profiles.home.activeMenu` |
+| 分类 / 标签 / 归档 | `profiles.blogIndex.activeMenu` |
+| Wiki 内容页 | `profiles.wiki.activeMenu` |
+| Topic 内容页 | `profiles.topic.activeMenu` |
+| 普通 Post | `profiles.post.activeMenu` |
+| Notebook Note | `profiles.note.activeMenu` |
 | Wiki / Topic / Notebook 索引 | 对应 `wikiIndex` / `topicIndex` / `notebookIndex` Profile |
 | 404 与普通页 | `error` / `page` Profile |
 
@@ -220,7 +220,7 @@ v2 配置在 `layout.profiles` 中为各页面 Profile 声明 `path` 和 `naviga
 
 ### Heti 插件集成
 
-`extensions.features.heti.enabled` 为 `true` 时，`articleClass()` 给 `<article>` 元素添加 `heti` CSS 类，启用赫蹏中文排版能力。
+`features.heti.enabled` 为 `true` 时，`articleClass()` 给 `<article>` 元素添加 `heti` CSS 类，启用赫蹏中文排版能力。
 
 ---
 
@@ -230,7 +230,7 @@ v2 配置在 `layout.profiles` 中为各页面 Profile 声明 `path` 和 `naviga
 
 - 基础：`md-text content`
 - `scrollreveal(...)`——Reveal 启用时注入滚动显现触发类
-- `heti`——冻结运行时 `extensions.features.heti.enabled` 为 true 时追加
+- `heti`——冻结运行时 `features.heti.enabled` 为 true 时追加
 
 **参考源码**：[layout/page.ejs](../../../layout/page.ejs)
 
@@ -238,9 +238,9 @@ v2 配置在 `layout.profiles` 中为各页面 Profile 声明 `path` 和 `naviga
 
 ## 页面导航机制
 
-主题使用普通整页导航（PJAX 已于 v1.35.0 移除，`source/js/plugins/pjax.js` 与 `layout/_plugins/pjax.ejs` 均已删除）。可选的 `extensions.features.link_prefetch`（flying_pages）在鼠标悬停时预加载站内链接，提升导航体验。
+主题使用普通整页导航（PJAX 已于 v1.35.0 移除，`source/js/plugins/pjax.js` 与 `layout/_plugins/pjax.ejs` 均已删除）。可选的 `features.link_prefetch`（flying_pages）在鼠标悬停时预加载站内链接，提升导航体验。
 
-**参考源码**：[source/js/main.js](../../../source/js/main.js)、[_config.yml](../../../_config.yml)（`extensions.features.link_prefetch`）
+**参考源码**：[source/js/main.js](../../../source/js/main.js)、[_config.yml](../../../_config.yml)（`features.link_prefetch`）
 
 ---
 

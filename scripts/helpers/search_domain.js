@@ -9,7 +9,7 @@ function isBlogAggregate(helper, page) {
 }
 
 hexo.extend.helper.register("search_scope", function(page, viewModel) {
-  if (hexo.stellar?.config?.extensions?.search?.provider !== "local") return null;
+  if (hexo.stellar?.config?.search?.provider !== "local") return null;
   const notebookCollection = page?.notebookIndex?.mode === "notes"
     ? page.notebookIndex.collection
     : null;

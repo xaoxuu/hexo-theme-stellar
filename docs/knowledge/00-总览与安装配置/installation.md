@@ -254,13 +254,13 @@ node_modules/hexo-theme-stellar/_config.yml
 
 | 小节 | 用途 |
 |------|------|
-| `site` | Brand、菜单与 Footer 站点外壳 |
-| `seo` | canonical、Open Graph 与结构化数据 |
-| `layout` | 页面 Profile：路径、导航与左右侧栏 |
-| `content` | Article 与 Notebook 内容默认值 |
+| `brand/menu/settings/footer` | Brand、菜单与 Footer 站点外壳 |
+| `topbar/leftbar/rightbar/profiles` | 页面 Profile：路径、导航与左右侧栏 |
+| `article/notebook` | Article 与 Notebook 内容默认值 |
 | `appearance` | 排版、颜色、形状、动效和背景 |
-| `resources` | preconnect 与按角色命名的资源兜底 |
-| `extensions` | 搜索、评论、标签、Feature、服务与缓存 |
+| `canonical/open_graph/structured_data` | canonical、Open Graph 与结构化数据 |
+| `preconnect/fallbacks/error_page` | preconnect 与按角色命名的资源兜底 |
+| `search/comments/tags/features/services` | 搜索、评论、标签、Feature 与服务 |
 | `inject` | 站点 `_config.stellar.yml` 与页面 Front Matter 的受信任原文注入 |
 
 ### 主题元数据

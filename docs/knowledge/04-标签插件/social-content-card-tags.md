@@ -46,7 +46,7 @@ tags:
 2. 提供 `repo:` 参数 → 构造 URL `https://{ghraw_host}/{owner/repo}/output/v2/data.json`
 3. 提供位置参数 `group` → 从 `ctx.stellar.data.links[group]` 同步读取
 
-GitHub raw 基址来自冻结的 `extensions.services.github.rawUrl`，值是完整 HTTP(S) URL。
+GitHub raw 基址来自冻结的 `services.github.rawUrl`，值是完整 HTTP(S) URL。
 
 **数据源解析图**
 
@@ -315,7 +315,7 @@ links:
 
 ### URL 构造
 
-卡片服务基址由冻结的 `extensions.services.githubCard` 解析当前 provider 的 `endpoint`。
+卡片服务基址由冻结的 `services.githubCard` 解析当前 provider 的 `endpoint`。
 
 - `repo` 参数含 `/` 时视为仓库：
   `https://{ghcard_host}/api/pin/?username={owner}&repo={name}`
@@ -349,7 +349,7 @@ flowchart LR
     subgraph "ghcard"
         GC["ghcard"]
         GC --> IMG["static img tag\n(URL built at build time)"]
-        IMG --> GHAPI["github-readme-stats API\n(extensions.services.githubCard provider endpoint)"]
+        IMG --> GHAPI["github-readme-stats API\n(services.githubCard provider endpoint)"]
     end
 ```
 

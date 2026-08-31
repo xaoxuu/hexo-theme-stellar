@@ -329,7 +329,7 @@ sequenceDiagram
 
 该按钮仅在两条件同时满足时渲染：
 
-1. `extensions.comments.provider` 或页面 `comments.provider` 已选择已注册实现
+1. `comments.provider` 或页面 `comments.provider` 已选择已注册实现
 2. `page.comments !== false`（页面未禁用评论）
 
 模板中的条件检查防止在未启用评论的页面出现按钮。

@@ -9,22 +9,21 @@ tags:
 
 # Extension 系统
 
-Stellar v2 把搜索、评论、标签能力、可选功能、数据服务与缓存统一归入 `extensions`。构建期生成严格的页面 Runtime Manifest，浏览器由单一 ESM bootstrap 建立 Extension 生命周期与 request/cache 客户端。
+Stellar v2 将搜索、评论、标签能力、可选功能和数据服务分别收敛到 `search/comments/tags/features/services` 根配置。构建期再将它们投影为严格的页面 Runtime Manifest，浏览器由单一 ESM bootstrap 建立 Extension 生命周期与 request/cache 客户端。
 
 ## 配置结构
 
 ```yaml
-extensions:
-  search: {}
-  comments: {}
-  tags: {}
-  features: {}
-  services: {}
+search: {}
+comments: {}
+tags: {}
+features: {}
+services: {}
 ```
 
 YAML 中 Stellar 自有字段统一使用 snake_case，解析后的 JavaScript 使用 camelCase。已声明对象按键合并，数组完整替换，不做类型强转；第三方 provider 参数袋保留上游字段名。
 
-旧根 `search/comments/tag_plugins/dependencies/data_services/data_cache/plugins/api_host` 已退出运行时并由 Schema 直接拒绝。
+旧根 `tag_plugins/dependencies/data_services/data_cache/plugins/api_host` 已退出运行时；`search/comments` 保留为根配置，但旧版子字段会由 Schema 直接拒绝。
 
 ## 贡献注册表与 Feature
 
@@ -44,15 +43,14 @@ Runtime Manifest 内置 Extension、Feature 和 selector 组件由 [contribution
 | `heti` | disabled | Heti 中文排版 |
 
 ```yaml
-extensions:
-  features:
-    lightbox:
-      enabled: true
-      selector: .timenode p>img
-    reveal:
-      enabled: true
-    card_hover:
-      enabled: true
+features:
+  lightbox:
+    enabled: true
+    selector: .timenode p>img
+  reveal:
+    enabled: true
+  card_hover:
+    enabled: true
 ```
 
 Reveal 由主题内置的 `IntersectionObserver` 与 Web Animations API 实现，不请求第三方资源；只公开启用开关，动画距离、时长、错峰和缩放由主题统一维护。Fancybox 的实现固定，MathJax 只使用 v3。Mermaid 通过 `diagrams.provider: mermaid` 选择并使用官方样式。代码复制与自适应文字固定开启，不公开配置；AI Summary 已整体删除。
@@ -61,21 +59,20 @@ Reveal 由主题内置的 `IntersectionObserver` 与 Web Animations API 实现�
 
 ## Tag Extension
 
-标签插件行为位于 `extensions.tags.<tag_id>`。公开配置只注册 `note/checkbox/quot/emoji/icon/button/mark/hashtag/gallery`；Image、Timeline、OKR 与 Chat 的固定策略不再公开配置。
+标签插件行为位于 `tags.<tag_id>`。公开配置只注册 `note/checkbox/quot/emoji/icon/button/mark/hashtag/gallery`；Image、Timeline、OKR 与 Chat 的固定策略不再公开配置。
 
 ```yaml
-extensions:
-  tags:
-    emoji:
-      default_source: blobcat
-      sources:
-        blobcat: https://cdn.example/{name}.gif
-    gallery:
-      size: mix
-      aspect_ratio: square
+tags:
+  emoji:
+    default_source: blobcat
+    sources:
+      blobcat: https://cdn.example/{name}.gif
+  gallery:
+    size: mix
+    aspect_ratio: square
 ```
 
-标签渲染器只读取冻结的 `hexo.stellar.config.extensions.tags`，不再访问 `theme.tag_plugins`。
+标签渲染器只读取冻结的 `hexo.stellar.config.tags`，不再访问 `theme.tag_plugins`。
 
 ## 内部资源所有权
 
@@ -87,7 +84,7 @@ extensions:
 
 ```mermaid
 flowchart LR
-  A[extensions.features] --> B[声明式 Schema]
+  A[features] --> B[声明式 Schema]
   B --> C[冻结 camelCase runtime]
   C --> D[Contribution descriptors]
   D --> E[Runtime Manifest]
@@ -112,32 +109,27 @@ Card Hover 使用独立 `card-hover.mjs` adapter 加载内置脚本并对当前 
 ## 服务与内部缓存
 
 ```yaml
-extensions:
-  services:
-    site_info:
-      provider: site_info_api
-      providers:
-        site_info_api:
-          endpoint: https://api.xaox.cc/site_info/v1?url={href}
-    rating:
-      provider: star_vote
-      providers:
-        star_vote:
-          endpoint: https://star-vote.xaox.cc/api/rating
-    vote:
-      provider: star_vote
-      providers:
-        star_vote:
-          endpoint: https://star-vote.xaox.cc/api/vote
-    github:
-      api_url: https://api.github.com
-      raw_url: https://raw.githubusercontent.com
-      gist_url: https://gist.github.com
-    github_card:
-      provider: github_readme_stats
-      providers:
-        github_readme_stats:
-          endpoint: https://github-readme-stats.vercel.app
+services:
+  site_info:
+    provider: site_info_api
+    site_info_api:
+      endpoint: https://api.xaox.cc/site_info/v1?url={href}
+  rating:
+    provider: star_vote
+    star_vote:
+      endpoint: https://star-vote.xaox.cc/api/rating
+  vote:
+    provider: star_vote
+    star_vote:
+      endpoint: https://star-vote.xaox.cc/api/vote
+  github:
+    api_url: https://api.github.com
+    raw_url: https://raw.githubusercontent.com
+    gist_url: https://gist.github.com
+  github_card:
+    provider: github_readme_stats
+    github_readme_stats:
+      endpoint: https://github-readme-stats.vercel.app
 ```
 
 Site Info、Rating 与 Vote 默认选择 xaox.cc 公共实例对应的 provider，可覆盖选中参数袋内的自部署地址或以 `provider: null` 关闭；三者的预期远程失败完全静默并保留静态兜底。统一解析接缝只向消费方提供选中的参数袋。GitHub 地址统一为完整 URL。Runtime Manifest 携带主题内部注入且冻结的 cache/request policy；`createRequestClient()` 提供同 method+URL 并发去重、按 service TTL、超时重试、fresh 命中、stale 失败回退、200 KiB 单条限制和最旧条目淘汰。站点不再调节这些实现常量。客户端调用原生 `fetch` 而不替换 `window.fetch` 或 XHR 原型，并以 `stellar:request-start/end` 通知锚点稳定器。

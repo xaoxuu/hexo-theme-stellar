@@ -82,7 +82,7 @@ flowchart LR
     TAG --> HTML["HTML Generation"]
     HTML --> ATTR["Attribute Application"]
     
-    CONFIG["_config.yml<br/>extensions.tags.note"] --> ATTR
+    CONFIG["_config.yml<br/>tags.note"] --> ATTR
     
     ATTR --> BASIC["Basic Structure"]
     ATTR --> COLOR["Color Variant"]
@@ -114,13 +114,13 @@ flowchart LR
 note 标签支持由主题配置控制的可选边框：
 
 ```stylus
-if hexo-config('extensions.tags.note.border') == true
+if hexo-config('tags.note.border') == true
   border: 1px solid var(--theme-border)
 ```
 
 启用时添加 1px 边框，用 `--theme-border` CSS 变量（随深浅模式适配）。
 
-**配置路径**：`_config.yml` → `extensions.tags.note.border`
+**配置路径**：`_config.yml` → `tags.note.border`
 
 **参考源码**：[source/css/_components/tag-plugins/note.styl](../../../source/css/_components/tag-plugins/note.styl)
 
@@ -338,7 +338,7 @@ body[data-article-style='story'] .tag-plugin.note .title p:not([class])
 
 ```mermaid
 graph TB
-    CONFIG["_config.yml<br/>extensions.tags.note.border"]
+    CONFIG["_config.yml<br/>tags.note.border"]
     TOKENS["Design Tokens<br/>_custom.styl"]
     
     CONFIG --> STYLUS["note.styl<br/>Conditional compilation"]

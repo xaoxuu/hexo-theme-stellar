@@ -4,20 +4,19 @@ title: 时间线与媒体标签
 
 # 时间线与媒体标签
 
-本页汇总 timeline、gallery、chat、emoji、voice、video、download-file、copy 与 OKR 等标签的配置边界。标签语法仍由各自处理器定义；跨页面默认统一进入 `extensions.tags`。
+本页汇总 timeline、gallery、chat、emoji、voice、video、download-file、copy 与 OKR 等标签的配置边界。标签语法仍由各自处理器定义；跨页面默认统一进入 `tags`。
 
 ## 主题默认
 
 ```yaml
-extensions:
-  tags:
-    emoji:
-      default_source: blobcat
-      sources:
-        blobcat: https://cdn.example/{name}.gif
-    gallery:
-      size: mix
-      aspect_ratio: square
+tags:
+  emoji:
+    default_source: blobcat
+    sources:
+      blobcat: https://cdn.example/{name}.gif
+  gallery:
+    size: mix
+    aspect_ratio: square
 ```
 
 Emoji 使用 `default_source + sources`，每个模板必须含 `{name}`；`quot.<variant>` 是受约束的动态记录。Timeline、Chat 与 OKR 使用主题内部固定策略。

@@ -55,7 +55,7 @@ function validateTagIcons(notebooks, tagIcons) {
   const issues = Object.keys(tagIcons || {}).filter(key => !known.has(key)).map(key => Object.freeze({
     code: "invalid_value",
     source: "_config.stellar.yml",
-    path: `content.notebook.tag_icons.${key}`,
+    path: `notebook.tag_icons.${key}`,
     actualType: "string",
     expected: "tag key present in a Notebook",
     migration: "configuration/content"

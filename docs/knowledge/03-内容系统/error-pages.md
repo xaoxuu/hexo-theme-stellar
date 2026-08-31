@@ -23,7 +23,7 @@ error_page:
   image: https://example.com/404.svg
 ```
 
-- `layout.profiles.error.path` 决定生成路径。
+- `profiles.error.path` 决定生成路径。
 - `active_menu` 与三个 Region 对象决定 Shell 布局。
 - `error_page.image` 提供可空插图，冻结运行时键为 `errorPage.image`；设为 `null` 时不渲染图片。
 
@@ -36,5 +36,5 @@ error_page:
 ## 参考源码
 
 - [layout/404.ejs](../../../layout/404.ejs)
-- [_config.yml](../../../_config.yml)（`layout.profiles.error`、`resources.error_page.image`）
+- [_config.yml](../../../_config.yml)（`profiles.error`、`error_page.image`）
 - [评论系统](../07-外部集成/comment-systems.md)

@@ -129,7 +129,7 @@ graph TB
 
 #### 可选配色选择器
 
-配色切换不是核心资源。`extensions.features.color_scheme_switch.enabled` 默认为 `false`；关闭时 Runtime Manifest 不包含 `color-scheme-switch`，页面不输出其三条文案，也不会请求对应模块。启用后，Contribution Registry 把 `/js/runtime/extensions/color-scheme-switch.mjs` 作为 `always` Extension 安排在 Services 与 Voice 之前挂载，并暴露 `window.setColorScheme(mode)`。
+配色切换不是核心资源。`features.color_scheme_switch.enabled` 默认为 `false`；关闭时 Runtime Manifest 不包含 `color-scheme-switch`，页面不输出其三条文案，也不会请求对应模块。启用后，Contribution Registry 把 `/js/runtime/extensions/color-scheme-switch.mjs` 作为 `always` Extension 安排在 Services 与 Voice 之前挂载，并暴露 `window.setColorScheme(mode)`。
 
 `mode` 只接受 `light`、`dark`、`auto`。固定模式写入 `<html data-theme>`，`auto` 移除该属性；所选状态保存到 `Stellar.colorScheme`。每次确定选择都会派发 `stellar:color-scheme-change`，事件详情包含选择状态与解析后的实际明暗；自动模式还会跟随 `prefers-color-scheme`。非法参数抛出 `TypeError`，卸载 Extension 时会移除系统监听并恢复挂载前的同名全局属性。
 
@@ -141,7 +141,7 @@ graph TB
 
 ### 置顶内容轮播（pin-slider）
 
-列表页 navbar top 上方可渲染置顶内容轮播（`layout/_partial/main/pin_slider.ejs`，无需开关配置，有置顶内容即渲染，自动轮播间隔固定 5000ms）：纯原生实现（无第三方依赖），在 DOM 就绪后直接挂载并于 `pagehide` 执行清理函数，支持自动播放（hover/focus/页面隐藏时暂停）、圆点点击切换、悬停显示左右翻页按钮（solar 双箭头图标 + navbar 玻璃效果容器）、触摸松手滑动与 `prefers-reduced-motion` 降级。分页圆点按钮无文本、不设 `aria-label`（避免用户内容注入 HTML 属性导致解析失败），激活态由 `aria-current` 标识。幻灯片中的标题、小字、封面 URL、wiki 标题/摘要/标签等用户内容均经 `escape_html` 转义后输出（属性与文本统一转义）。轮播进度按内容类型分组（`post`/`wiki`）缓存到 localStorage（键 `stellar.pin-slider.<group>`），内容或张数变化后自动失效。文章幻灯片为固定「标题 + 一行小字」结构：标题取 `title`，小字由 `subtitle()` helper 统一取值（`subtitle` > `description` > excerpt 前 50 字）；post 封面幻灯片与 wiki/项目幻灯片共用通用覆盖层 `cover-overlay()`（同文章列表封面，见[文章列表卡片](../03-内容系统/post-lists-cards.md#渐变模糊层与黑色蒙版)）：常驻底部同图渐变模糊层 + 黑色渐变蒙版（边缘不透明度约 0.25 → 垂直中线 0），hover 时背景图与模糊层同步放大至 `scale(1.05)`（图片 1.5s、模糊层 0.5s 缓动）并变暗（亮度 75%、饱和度 120%）；文字区与 hero 卡片 cover-info 观感一致，文字容器带 `data-text-adaptive="split"`（大字 headline/title 用低饱和 theme（接近黑白）、小字 caption/chip/excerpt 用完整 theme，见[文字自适应颜色插件](#文字自适应颜色插件)）；左右箭头图标颜色随当前幻灯片封面自适应（contrast：深色封面白箭头、浅色封面深箭头，随切换实时更新）；有封面时封面铺满整卡，无封面时为纯白卡片（文字按普通文章颜色）；轮播区宽高比与非置顶文章一致，由 `content.article.listing.cover_ratio` 控制。启用 `extensions.features.card_hover.enabled` 时，外层 `.pin-slider` 组合 Spotlight + Tilt，内部 `.pin-slider-track` 仍独立维护横向切换 transform，圆点、箭头和暂停逻辑不变。
+列表页 navbar top 上方可渲染置顶内容轮播（`layout/_partial/main/pin_slider.ejs`，无需开关配置，有置顶内容即渲染，自动轮播间隔固定 5000ms）：纯原生实现（无第三方依赖），在 DOM 就绪后直接挂载并于 `pagehide` 执行清理函数，支持自动播放（hover/focus/页面隐藏时暂停）、圆点点击切换、悬停显示左右翻页按钮（solar 双箭头图标 + navbar 玻璃效果容器）、触摸松手滑动与 `prefers-reduced-motion` 降级。分页圆点按钮无文本、不设 `aria-label`（避免用户内容注入 HTML 属性导致解析失败），激活态由 `aria-current` 标识。幻灯片中的标题、小字、封面 URL、wiki 标题/摘要/标签等用户内容均经 `escape_html` 转义后输出（属性与文本统一转义）。轮播进度按内容类型分组（`post`/`wiki`）缓存到 localStorage（键 `stellar.pin-slider.<group>`），内容或张数变化后自动失效。文章幻灯片为固定「标题 + 一行小字」结构：标题取 `title`，小字由 `subtitle()` helper 统一取值（`subtitle` > `description` > excerpt 前 50 字）；post 封面幻灯片与 wiki/项目幻灯片共用通用覆盖层 `cover-overlay()`（同文章列表封面，见[文章列表卡片](../03-内容系统/post-lists-cards.md#渐变模糊层与黑色蒙版)）：常驻底部同图渐变模糊层 + 黑色渐变蒙版（边缘不透明度约 0.25 → 垂直中线 0），hover 时背景图与模糊层同步放大至 `scale(1.05)`（图片 1.5s、模糊层 0.5s 缓动）并变暗（亮度 75%、饱和度 120%）；文字区与 hero 卡片 cover-info 观感一致，文字容器带 `data-text-adaptive="split"`（大字 headline/title 用低饱和 theme（接近黑白）、小字 caption/chip/excerpt 用完整 theme，见[文字自适应颜色插件](#文字自适应颜色插件)）；左右箭头图标颜色随当前幻灯片封面自适应（contrast：深色封面白箭头、浅色封面深箭头，随切换实时更新）；有封面时封面铺满整卡，无封面时为纯白卡片（文字按普通文章颜色）；轮播区宽高比与非置顶文章一致，由 `article.listing.cover_ratio` 控制。启用 `features.card_hover.enabled` 时，外层 `.pin-slider` 组合 Spotlight + Tilt，内部 `.pin-slider-track` 仍独立维护横向切换 transform，圆点、箭头和暂停逻辑不变。
 
 **参考源码**：[layout/_partial/main/pin_slider.ejs](../../../layout/_partial/main/pin_slider.ejs)、[source/css/_components/pin-slider.styl](../../../source/css/_components/pin-slider.styl)
 
@@ -375,7 +375,7 @@ sequenceDiagram
 
 ### 卡片 Hover 生命周期
 
-启用 `extensions.features.card_hover.enabled` 后，Runtime Manifest 在页面命中 `.card-hover` 时 import Feature adapter，并把已校验的光斑颜色和最大倾角写入 `ctx.card_hover`。`source/js/plugins/card-hover.js` 只扫描 `.card-hover`，再按 `.card-hover--spotlight` 与 `.card-hover--tilt` 挂载对应能力：
+启用 `features.card_hover.enabled` 后，Runtime Manifest 在页面命中 `.card-hover` 时 import Feature adapter，并把已校验的光斑颜色和最大倾角写入 `ctx.card_hover`。`source/js/plugins/card-hover.js` 只扫描 `.card-hover`，再按 `.card-hover--spotlight` 与 `.card-hover--tilt` 挂载对应能力：
 
 - `stellar.cardHover.mountAll(root)` 幂等扫描 Document、容器或单个卡片，供动态组件复用。
 - `stellar.cardHover.unmountAll(root)` 清理指定容器自身及后代的已挂载卡片；省略 `root` 时清理全部，供动态搜索替换结果和插件销毁复用。

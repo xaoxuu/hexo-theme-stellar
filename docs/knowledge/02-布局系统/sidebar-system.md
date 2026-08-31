@@ -120,7 +120,7 @@ Drawer 复用原 Region 节点并遵守 ARIA、焦点转移、Escape、焦点恢
 | `appearance.backgrounds` 下的旧键 `sidebar` | `leftbar` |
 | v1 `sidebar.left.widgets` | `leftbar.widgets` |
 | v1 `sidebar.right.widgets` | `rightbar.widgets` |
-| `sidebar.left.brand` | 业务数据放入 `site.brand`，Region 放置 `brand` |
+| `sidebar.left.brand` | 业务数据放入 `brand`，Region 放置 `brand` |
 | `sidebar.left.search/menu/wiki_home` | 在目标 Region 的 `widgets` 中放置系统 Widget |
 | 旧 Sidebar 的独立 `surface` | `appearance.preset` |
 

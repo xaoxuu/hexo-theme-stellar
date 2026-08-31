@@ -45,8 +45,8 @@ wiki 系统有两个阶段：**构建期数据处理阶段**（Node.js 服务端
 
 wiki 系统由 `_config.yml` 的两个 Layout Profile 配置：
 
-- `layout.profiles.wiki_index`——wiki 列表/索引页
-- `layout.profiles.wiki`——单个 wiki 文档页
+- `profiles.wiki_index`——wiki 列表/索引页
+- `profiles.wiki`——单个 wiki 文档页
 
 **Wiki 系统架构**
 
@@ -70,8 +70,8 @@ flowchart TD
     Y --> Z["index_wiki / wiki_card"]
     
     subgraph "_config.yml"
-        N["layout.profiles.wiki_index\npath, navigation, sidebar"]
-        O["layout.profiles.wiki\nnavigation, sidebar"]
+        N["profiles.wiki_index\npath, navigation, sidebar"]
+        O["profiles.wiki\nnavigation, sidebar"]
     end
     
     N -.configures.-> M
@@ -181,21 +181,21 @@ wiki 系统采用三层配置：全局主题配置、项目数据文件、页面
 
 ### 全局配置（_config.yml）
 
-**layout.profiles.wiki_index**——wiki 列表/索引页配置：
+**profiles.wiki_index**——wiki 列表/索引页配置：
 
 | 字段 | 默认 | 用途 |
 |---|---|---|
 | `path` | `/wiki/` | wiki 索引页的根相对 URL 路径 |
-| `navigation.active_menu` | `wiki` | wiki 页面高亮的菜单项 |
-| `navigation.tabs` | （自定义） | 索引页显示的导航标签 |
+| `active_menu` | `null` | wiki 索引页高亮的菜单项 |
+| `listing_nav.tabs` | `[]` | 索引页显示的附加导航标签 |
 | `leftbar.widgets` | `[related, recent]` | Leftbar Widget 配置 |
 | `rightbar.widgets` | `[]` | Rightbar Widget 配置 |
 
-**layout.profiles.wiki**——单个 wiki 页面配置：
+**profiles.wiki**——单个 wiki 页面配置：
 
 | 字段 | 默认 | 用途 |
 |---|---|---|
-| `navigation.active_menu` | `wiki` | 高亮的菜单项 |
+| `active_menu` | `null` | 高亮的菜单项 |
 | `leftbar.widgets` | `[tree, related, recent]` | Leftbar 含导航树 |
 | `rightbar.widgets` | `[ghrepo, toc]` | Rightbar 显示 TOC 与 GitHub 仓库 |
 
@@ -259,7 +259,7 @@ tree:
 
 Galaxy 默认以透明 Canvas 渲染。与 `hero.background.image` 同时配置时，图片位于动态层下方，文字仍按图片平均色自适应；WebGL、着色器或脚本失败时图片保持可用。显式设置 `transparent: false` 会让不透明 Canvas 覆盖图片。仅配置 Galaxy 时使用纯黑 `#000000` 作为静态底色与文字取色基准。Hero 离开视口或页面进入后台时暂停，返回后恢复；用户启用 `prefers-reduced-motion` 时不加载动画。Canvas 不接收指针事件，不影响 Hero 中的链接、按钮和终端操作。
 
-Wiki Hero 的左侧导航是无背景的站点标题按钮：文字取 Hexo `config.title`，颜色为 `--text-banner`，点击返回站点首页。项目配置 `source.repository` 时，最新版本标签作为外链按钮显示在项目标题上方，与站点导航分离；其边框沿用该主题色并以 50% 透明度显示。加载期间标签保留高度但不显示占位文字、边框或交互；成功取得 tag 后淡入。数据服务优先使用 tag 响应已提供的 `html_url`（如 Release 页面），否则按仓库地址与 tag 拼接引用页；新标签页打开；无 tag 或请求失败时移除标签。主标题独立以 `data-text-adaptive="contrast"` 按封面明暗在黑白之间切换，不使用主题色填充；其轮廓以 `--text-banner-theme` 的半透明色呈现柔和外发光。说明与按钮等辅助文字继续使用该主题色变体。“源码”按钮的背景与边框使用 `--text-banner`，其文字和图标单独反转相同变量，因此深浅封面下始终与背景相反。启用 `extensions.features.card_hover.enabled` 后，源码、文档和 `hero.actions` 按钮均显示鼠标跟随 Spotlight，但不启用 Tilt 或上浮；源码按钮的文字与图标反色不会作用于 Spotlight 层。`hero.preview.type: terminal` 时，终端以封面平均色派生的 `--text-banner-theme` 与透明色 50% 混合填充、再以背景模糊呈现；变量不可用时回退到 `--background`。未配置 `hero.background.image` 和 `hero.background.effect` 时不会运行自适应取色：`--text-banner-theme` 回退为 `--text-p2`，版本标签与普通操作按钮的边框单独回退为 `--block-border`。工具栏文字使用 `--text-banner`，命令与 `$` 提示符使用 `--text-banner-theme`。内置按钮、终端标签与辅助标签均通过 `__()` 读取 `languages/`；它们随站点语言切换。`hero.actions[].title` 是项目自定义内容，保持原值，不由主题翻译。
+Wiki Hero 的左侧导航是无背景的站点标题按钮：文字取 Hexo `config.title`，颜色为 `--text-banner`，点击返回站点首页。项目配置 `source.repository` 时，最新版本标签作为外链按钮显示在项目标题上方，与站点导航分离；其边框沿用该主题色并以 50% 透明度显示。加载期间标签保留高度但不显示占位文字、边框或交互；成功取得 tag 后淡入。数据服务优先使用 tag 响应已提供的 `html_url`（如 Release 页面），否则按仓库地址与 tag 拼接引用页；新标签页打开；无 tag 或请求失败时移除标签。主标题独立以 `data-text-adaptive="contrast"` 按封面明暗在黑白之间切换，不使用主题色填充；其轮廓以 `--text-banner-theme` 的半透明色呈现柔和外发光。说明与按钮等辅助文字继续使用该主题色变体。“源码”按钮的背景与边框使用 `--text-banner`，其文字和图标单独反转相同变量，因此深浅封面下始终与背景相反。启用 `features.card_hover.enabled` 后，源码、文档和 `hero.actions` 按钮均显示鼠标跟随 Spotlight，但不启用 Tilt 或上浮；源码按钮的文字与图标反色不会作用于 Spotlight 层。`hero.preview.type: terminal` 时，终端以封面平均色派生的 `--text-banner-theme` 与透明色 50% 混合填充、再以背景模糊呈现；变量不可用时回退到 `--background`。未配置 `hero.background.image` 和 `hero.background.effect` 时不会运行自适应取色：`--text-banner-theme` 回退为 `--text-p2`，版本标签与普通操作按钮的边框单独回退为 `--block-border`。工具栏文字使用 `--text-banner`，命令与 `$` 提示符使用 `--text-banner-theme`。内置按钮、终端标签与辅助标签均通过 `__()` 读取 `languages/`；它们随站点语言切换。`hero.actions[].title` 是项目自定义内容，保持原值，不由主题翻译。
 
 Wiki Hero 完成后直接进入正文布局，不额外输出分隔线；正文或页脚自己的分隔线保持各自组件负责。
 
@@ -342,7 +342,7 @@ flowchart TD
 wiki 项目数据文件配置 `repo`（必填）与可选 `branch` 后，若项目首页（如 `source/wiki/{id}/index.md`）正文为空——剪裁多余空行、空格后为空——该页正文自动渲染为该 GitHub 仓库的 README.md：
 
 - 渲染复用底层远程 md 组件（`scripts/lib/mdrender_html.js` 通用占位生成器 + `scripts/lib/wiki_readme.js` wiki 应用判定 + `source/js/services/mdrender.js` 客户端服务），占位元素被原地替换，最终 DOM 无外部容器；
-- README 地址由 `scripts/lib/wiki_readme.js` 的 `readmeUrl` 按 `extensions.services.github.raw_url` 完整 URL 构造（Schema 默认值是唯一来源，代码不兼容裸 host），相对图片/链接解析到同一镜像基址；
+- README 地址由 `scripts/lib/wiki_readme.js` 的 `readmeUrl` 按 `services.github.raw_url` 完整 URL 构造（Schema 默认值是唯一来源，代码不兼容裸 host），相对图片/链接解析到同一镜像基址；
 - 标题默认适配本地文章格式：补齐标题 id、追加 `headerlink` 锚点（与 hexo-renderer-marked 输出一致），h1 视为页面标题直接隐藏（页面标题已由 banner 展示，不降级）；
 - 首页正文非空时以本地内容为准（本地内容优先）；`branch` 缺省用 GitHub `HEAD`（自动指向默认分支）。
 
@@ -390,10 +390,10 @@ graph LR
     C --> D["Filter:\n1. homepage != null\n2. item.id in wiki.shelf"]
     D --> E["TagEntry.items[]\n(shelf project IDs)"]
     E --> F["relatedItems per project\n(shared-tag neighbors)"]
-    C --> G["TagEntry.path\n= layout.profiles.wikiIndex.path\n  + /tags/:name/index.html"]
+    C --> G["TagEntry.path\n= profiles.wikiIndex.path\n  + /tags/:name/index.html"]
 ```
 
-- 标签路径用冻结的 `layout.profiles.wikiIndex.path` 构造
+- 标签路径用冻结的 `profiles.wikiIndex.path` 构造
 - 项目只有同时满足「在 `wiki.shelf` 中」且「已解析 homepage」才出现在标签的 `items`
 - 项目的 `relatedItems` 由所有共享至少一个标签的其他项目构建，按标签名分组
 
@@ -451,7 +451,7 @@ wiki 索引页（`index_wiki` 布局）保留通用 index Shell，但生成器�
 - 底栏中的 `listing.icon`、`name` 和已解析 `caption`
 - 指向 `listing.href` 的链接
 
-索引页使用 `layout.profiles.wiki_index` 配置其侧边栏与导航。
+索引页使用 `profiles.wiki_index` 配置其侧边栏与导航。
 
 **参考源码**：[_config.yml](../../../_config.yml)、[scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)
 

@@ -37,7 +37,7 @@ Stellar 是一个功能全面的 Hexo 主题，内置四套并行内容管理系
 
 Stellar 采用**五层架构**，把配置、数据处理、渲染、客户端行为与样式分离，使主题可以支持多种内容类型并保持一致性，同时允许深度定制。
 
-主题是**配置驱动**的：[_config.yml](../../../_config.yml) 镜像 Schema 默认值，站点可通过 `_config.stellar.yml` 覆盖；该文件缺失或为空时仍可直接构建。v2 声明式 Schema 已交付并封闭 `site`、`seo`、`layout`、`content`、`appearance`、`resources`、`extensions` 和 `inject` 八个根域。
+主题是**配置驱动**的：[_config.yml](../../../_config.yml) 镜像 Schema 默认值，站点可通过 `_config.stellar.yml` 覆盖；该文件缺失或为空时仍可直接构建。v2 声明式 Schema 已交付并封闭 `brand`、`menu`、`profiles`、`article`、`notebook`、`appearance`、`canonical`、`preconnect`、`search`、`comments`、`tags`、`features`、`services` 和 `inject` 等根配置。
 
 ### 核心架构分层
 
@@ -94,10 +94,10 @@ graph TB
 ```mermaid
 graph LR
     subgraph Global["Global Configuration"]
-        SITE["site:<br/>Shell identity"]
-        PROFILES["layout.profiles:<br/>Page defaults"]
-        CONTENT["content:<br/>Content settings"]
-        EXTENSIONS["extensions:<br/>Feature registry"]
+        SITE["brand / menu / footer:<br/>Shell identity"]
+        PROFILES["profiles:<br/>Page defaults"]
+        CONTENT["article / notebook:<br/>Content settings"]
+        EXTENSIONS["search / comments / tags / features / services"]
     end
     
     subgraph Project["Project-Level"]
@@ -122,7 +122,7 @@ graph LR
 
 **参考源码**：[_config.yml](../../../_config.yml)、[layout/layout.ejs](../../../layout/layout.ejs)
 
-`layout.profiles` 为不同类型的页面（博客文章、Wiki、笔记本页面等）定义路径、导航和侧边栏默认值，单个页面与 Collection 覆盖继续由模型层级联。`content` 根域提供 Article 与 Notebook 默认值，所有公开主题配置均通过已封闭的声明式 Schema 进入运行时。
+`profiles` 为不同类型的页面（博客文章、Wiki、笔记本页面等）定义路径、导航和侧边栏默认值，单个页面与 Collection 覆盖继续由模型层级联。`article` 与 `notebook` 根配置提供内容默认值，所有公开主题配置均通过已封闭的声明式 Schema 进入运行时。
 
 ## 页面渲染流水线
 
@@ -183,9 +183,9 @@ flowchart TD
 
 ### 阶段 4：页面导航与预加载
 
-主题使用普通整页导航；可选的 `extensions.features.link_prefetch`（flying_pages）会在鼠标悬停时预加载站内链接，提升导航体验。PJAX 已于 v1.35.0 移除。
+主题使用普通整页导航；可选的 `features.link_prefetch`（flying_pages）会在鼠标悬停时预加载站内链接，提升导航体验。PJAX 已于 v1.35.0 移除。
 
-**参考源码**：[source/js/main.js](../../../source/js/main.js)、[_config.yml](../../../_config.yml)（`extensions.features.link_prefetch`）
+**参考源码**：[source/js/main.js](../../../source/js/main.js)、[_config.yml](../../../_config.yml)（`features.link_prefetch`）
 
 ## 内容类型系统
 
@@ -240,9 +240,9 @@ graph TB
     NOTELIST --> NOTEPAGE
 ```
 
-**参考源码**：[_config.yml](../../../_config.yml)（`layout.profiles` 小节）、[README.md](../../../README.md)
+**参考源码**：[_config.yml](../../../_config.yml)（`profiles` 小节）、[README.md](../../../README.md)
 
-每个系统通过对应的 `layout.profiles.*.sidebar` 决定左右侧边栏显示哪些小部件。例如 Wiki 页面左侧显示 tree（页面树）小部件，博客文章显示相关文章小部件。表格与图中的 `index_blog`、`index_wiki` 等仍是 Hexo 内部模板 / layout 名，公开配置 Profile ID 分别为 `blog_index`、`wiki_index`。
+每个系统通过对应的 `profiles.*.leftbar.widgets` 和 `profiles.*.rightbar.widgets` 决定侧边栏显示哪些小部件。例如 Wiki 页面左侧显示 tree（页面树）小部件，博客文章显示相关文章小部件。表格与图中的 `index_blog`、`index_wiki` 等仍是 Hexo 内部模板 / layout 名，公开配置 Profile ID 分别为 `blog_index`、`wiki_index`。
 
 ## 关键子系统
 
@@ -258,7 +258,7 @@ graph TB
 
 ### 插件系统
 
-Extension 采用 Runtime Manifest 条件加载模式（[scripts/lib/contribution-registry.js](../../../scripts/lib/contribution-registry.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/](../../../source/js/runtime/)）。主题读取冻结的 `extensions.features.*.enabled` 与页面 `render.math/render.diagrams`，从内置 descriptor 注册表投影页面声明，再由 ESM Registry 按 DOM 条件加载对应 CSS 与 JavaScript，包括：
+Extension 采用 Runtime Manifest 条件加载模式（[scripts/lib/contribution-registry.js](../../../scripts/lib/contribution-registry.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/](../../../source/js/runtime/)）。主题读取冻结的 `features.*.enabled` 与页面 `render.math/render.diagrams`，从内置 descriptor 注册表投影页面声明，再由 ESM Registry 按 DOM 条件加载对应 CSS 与 JavaScript，包括：
 
 - 图片增强（fancybox、swiper）
 - 代码功能（copycode、语法高亮）
@@ -270,7 +270,7 @@ Extension 采用 Runtime Manifest 条件加载模式（[scripts/lib/contribution
 
 ### 评论集成
 
-评论系统根据 `extensions.comments.provider` 与页面 `comments.provider/options` 选择实现。Beaudar、Utterances、Giscus、Twikoo、Waline、Artalk 的 markup 由评论 partial 输出，初始化统一交给 [source/js/runtime/extensions/comments.mjs](../../../source/js/runtime/extensions/comments.mjs)；官方脚本和样式来自主题内部资源注册表。
+评论系统根据 `comments.provider` 与页面 `comments.provider/options` 选择实现。Beaudar、Utterances、Giscus、Twikoo、Waline、Artalk 的 markup 由评论 partial 输出，初始化统一交给 [source/js/runtime/extensions/comments.mjs](../../../source/js/runtime/extensions/comments.mjs)；官方脚本和样式来自主题内部资源注册表。
 
 详见[评论系统](../07-外部集成/comment-systems.md)。
 
@@ -331,7 +331,7 @@ flowchart TD
 - **原生 JavaScript**：客户端代码无框架依赖
 - **外部库（CDN）**：marked.js（运行时 Markdown 渲染）、vanilla-lazyload（图片懒加载）
 
-**依赖** 定义在 [package.json](../../../package.json)；Extension 的可配置行为位于 `_config.yml` 的 `extensions` 根域，官方资源路径由内部注册表管理。
+**依赖** 定义在 [package.json](../../../package.json)；Extension 的可配置行为位于 `_config.yml` 的 `search/comments/tags/features/services` 根配置，官方资源路径由内部注册表管理。
 
 ## 目录结构概览
 

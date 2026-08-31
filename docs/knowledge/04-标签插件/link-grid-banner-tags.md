@@ -135,10 +135,10 @@ target="_blank" rel="external nofollow noopener noreferrer"
 图标始终渲染为懒加载背景图：
 
 ```html
-<div class="lazy img" data-bg="<icon-url or resources.fallbacks.link_card>"></div>
+<div class="lazy img" data-bg="<icon-url or fallbacks.link_card>"></div>
 ```
 
-兜底图标 URL 来自冻结运行时配置 `ctx.stellar.config.resources.fallbacks.linkCard`，对应 YAML 路径 `resources.fallbacks.link_card`。
+兜底图标 URL 来自冻结运行时配置 `ctx.stellar.config.fallbacks.linkCard`，对应 YAML 路径 `fallbacks.link_card`。
 
 **参考源码**：[scripts/tags/lib/link.js](../../../scripts/tags/lib/link.js)
 
@@ -216,7 +216,7 @@ graph TD
 
 ### Card Hover 行为
 
-`{% link %}` 始终为链接卡片输出 Hover 组合类；`{% grid %}` 只有 `bg:card` 为每个单元格输出，`bg:box` 与无背景网格不输出。启用 `extensions.features.card_hover.enabled` 时，它们获得鼠标光斑和 3D 倾斜，Feature 最后加载的样式会统一组合 `hoverable-card()` 原有的上浮 transform；链接可点击区域、自动填充属性和单元格 Markdown 结构不变。Feature 关闭或运行环境不支持动态效果时仍使用既有 link/grid 样式。
+`{% link %}` 始终为链接卡片输出 Hover 组合类；`{% grid %}` 只有 `bg:card` 为每个单元格输出，`bg:box` 与无背景网格不输出。启用 `features.card_hover.enabled` 时，它们获得鼠标光斑和 3D 倾斜，Feature 最后加载的样式会统一组合 `hoverable-card()` 原有的上浮 transform；链接可点击区域、自动填充属性和单元格 Markdown 结构不变。Feature 关闭或运行环境不支持动态效果时仍使用既有 link/grid 样式。
 
 **参考源码**：[scripts/tags/lib/link.js](../../../scripts/tags/lib/link.js)、[scripts/tags/lib/grid.js](../../../scripts/tags/lib/grid.js)、[source/css/_plugins/card-hover.styl](../../../source/css/_plugins/card-hover.styl)
 

@@ -38,9 +38,9 @@ Region 的 `widgets` 接受字符串 ID，也接受带 `override` 的实例对�
 | ID | layout | 数据契约 |
 | --- | --- | --- |
 | `brand` | `brand` | PageViewModel `render.layout.brand` |
-| `menu` | `menu` | `site.menu` 与当前导航投影 |
+| `menu` | `menu` | `menu` 与当前导航投影 |
 | `search` | `search` | Search Extension 与搜索范围投影 |
-| `actions` | `actions` | `site.footer.actions` |
+| `actions` | `actions` | `footer.actions` |
 | `visitor` | `visitor` | 当前评论 Provider 的本地缓存；仅昵称与合法头像 |
 | `wiki_home` | `wiki_home` | Wiki 索引地址 |
 

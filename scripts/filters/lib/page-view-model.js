@@ -50,7 +50,7 @@ function relatedItems(ctx, data, input) {
   const helper = ctx?.extend?.helper?.get?.("popular_posts_json");
   if (typeof helper !== "function") {
     throw new Error(
-      `Stellar v2: ${input.frontMatter?.collection?.profile === "topic" ? "Topic" : "普通 Post"} ${input.source || data.source || "<unknown>"} 已启用 content.article.related_posts_limit，` +
+      `Stellar v2: ${input.frontMatter?.collection?.profile === "topic" ? "Topic" : "普通 Post"} ${input.source || data.source || "<unknown>"} 已启用 article.related_posts_limit，` +
       "但未安装提供 popular_posts_json 的 hexo-related-popular-posts"
     );
   }

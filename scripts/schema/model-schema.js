@@ -140,7 +140,7 @@ function renderBrandsSchema(factory) {
   collection.example = null;
   collection.required = true;
   return object({ site, collection }, {
-    default: computed("分别投影 site.brand 与活动 Collection identity，不互相继承"),
+    default: computed("分别投影 hexo.stellar.config.brand 与活动 Collection identity，不互相继承"),
     example: { site: { name: "Stellar", href: "/" }, collection: null },
     required: true
   });
@@ -473,7 +473,7 @@ function collectionSchema(profile) {
           sort: object({
             field: field("string", { default: profile === "topic" ? literal("date") : literal("updated"), example: "updated", required: true }),
             direction: field("string", { default: literal("desc"), example: "desc", required: true })
-          }, { default: derived("collection.listing.sort", "content.notebook.listing.sort"), example: { field: "updated", direction: "desc" }, required: true })
+          }, { default: derived("collection.listing.sort", "hexo.stellar.config.notebook.listing.sort"), example: { field: "updated", direction: "desc" }, required: true })
         })
       };
 
@@ -656,7 +656,7 @@ function pageViewModelSchema(profile) {
             additionalProperties: true
           })
         } : {}),
-        tags: array(tagLink, { default: computed("由 Hexo 标签关系规范化；content.article.footer.showTags 禁用时为空"), example: [{ name: "Hexo", path: "tags/hexo" }], required: true }),
+        tags: array(tagLink, { default: computed("由 Hexo 标签关系规范化；hexo.stellar.config.article.footer.showTags 禁用时为空"), example: [{ name: "Hexo", path: "tags/hexo" }], required: true }),
         footer: object({
           references: array(field("any", { additionalProperties: true }), { default: inherited("item.presentation.footer.references"), example: [], required: true }),
           license: field("string", { default: computed("由最终许可协议与作者信息生成"), example: "CC BY 4.0", required: true }),
@@ -690,7 +690,7 @@ function pageViewModelSchema(profile) {
         excerpt: field("string", { default: computed("由 excerpt/description/content 和列表长度生成"), example: "文章摘要", required: true }),
         categories: array(stringItem, { default: inherited("item.categories"), example: ["开发"], required: true }),
         categoryStyle: field("string", { default: derived("hexo.stellar.config.article.categoryColors"), example: "--text-p2:#f44336;--theme-block:#f4433620", required: true }),
-        tags: array(stringItem, { default: computed("content.article.listing.showTags 启用时最多五项"), example: ["Hexo"], required: true }),
+        tags: array(stringItem, { default: computed("hexo.stellar.config.article.listing.showTags 启用时最多五项"), example: ["Hexo"], required: true }),
         authorId: field("string", { default: derived("item.presentation.article.author", "stellar.data.defaultAuthor.id"), example: "xaoxuu", required: true }),
         priority: field("number", { default: inherited("item.listing.priority"), example: 1, required: true }),
         listed: field("boolean", { default: inherited("item.visibility.listed"), example: true, required: true }),
@@ -778,7 +778,7 @@ function pageViewModelSchema(profile) {
         indent: field("boolean", { default: computed("由 article.paragraphIndent 与 style 解析"), example: false, required: true }),
         siteBackground: field("boolean", { default: derived("hexo.stellar.config.appearance.backgrounds.page.image"), example: false, required: true }),
         brands: renderBrands,
-        wikiIndexPath: field("string", { default: derived("layout.profiles.wiki_index.path"), example: "wiki", required: true }),
+        wikiIndexPath: field("string", { default: derived("hexo.stellar.config.profiles.wikiIndex.path"), example: "wiki", required: true }),
         algoliaFilterPath: field("string", { default: computed("由页面路径生成 Algolia 搜索的两段目录范围"), example: "wiki/stellar/", required: true }),
         ...renderRegionsSchema(factory),
         breadcrumbs: array(breadcrumb, { default: literal([]), example: [{ name: "Stellar", path: "wiki/stellar" }], required: true })
@@ -788,7 +788,7 @@ function pageViewModelSchema(profile) {
         description: field("string", { default: derived("page.description", "collection.identity.description", "item.excerpt", "item.content"), example: "Wiki 摘要", required: true }),
         keywords: array(stringItem, { default: derived("page.keywords", "item.tags", "site.keywords"), example: ["Stellar"], required: true }),
         robots: field(["string", "null"], { default: derived("IS_BACKUP", "page.robots"), example: null, required: true }),
-        canonical: field(["string", "null"], { default: derived("seo.canonical.host", "item.route.path"), example: "https://example.com/wiki/stellar/", required: true }),
+        canonical: field(["string", "null"], { default: derived("hexo.stellar.config.canonical.host", "item.route.path"), example: "https://example.com/wiki/stellar/", required: true }),
         openGraph,
         jsonLd: field("object", { default: computed("由 WebPage 结构化数据规则生成"), example: { "@type": "WebPage" }, required: true, additionalProperties: true })
       }, { required: true, example: { title: "Stellar：开始 - Example", description: "Wiki 摘要", keywords: ["Stellar"], robots: null, canonical: null, openGraph: null, jsonLd: { "@type": "WebPage" } } }),
@@ -892,7 +892,7 @@ function pageViewModelSchema(profile) {
         indent: field("boolean", { default: computed("由 article.paragraphIndent 与 style 解析"), example: false, required: true }),
         siteBackground: field("boolean", { default: derived("appearance.backgrounds.page.image"), example: false, required: true }),
         brands: renderBrands,
-        notebookIndexPath: field("string", { default: derived("layout.profiles.notebook_index.path"), example: "notebooks", required: true }),
+        notebookIndexPath: field("string", { default: derived("hexo.stellar.config.profiles.notebookIndex.path"), example: "notebooks", required: true }),
         notebookPath: field("string", { default: inherited("collection.route.baseDir"), example: "notes/dev", required: true }),
         algoliaFilterPath: field("string", { default: inherited("collection.route.baseDir"), example: "notes/dev", required: true }),
         ...renderRegionsSchema(factory),
@@ -905,7 +905,7 @@ function pageViewModelSchema(profile) {
         description: field("string", { default: derived("page.description", "item.excerpt", "item.content"), example: "Note 摘要", required: true }),
         keywords: array(stringItem, { default: derived("page.keywords", "item.tags", "site.keywords"), example: ["Node.js"], required: true }),
         robots: field(["string", "null"], { default: derived("IS_BACKUP", "page.robots"), example: null, required: true }),
-        canonical: field(["string", "null"], { default: derived("seo.canonical.host", "item.route.path"), example: "https://example.com/notes/dev/node/", required: true }),
+        canonical: field(["string", "null"], { default: derived("hexo.stellar.config.canonical.host", "item.route.path"), example: "https://example.com/notes/dev/node/", required: true }),
         openGraph: field(["object", "null"], { default: computed("由 SEO 与页面 Open Graph 配置生成"), example: null, required: true, additionalProperties: true }),
         jsonLd: field("object", { default: computed("由 WebPage 结构化数据规则生成"), example: { "@type": "WebPage" }, required: true, additionalProperties: true })
       }, { required: true, example: { title: "Node.js - Example", description: "Note 摘要", keywords: [], robots: null, canonical: null, openGraph: null, jsonLd: { "@type": "WebPage" } } }),

@@ -71,7 +71,7 @@ Widget 的位置能力由类型 descriptor 声明，不允许实例扩大能力�
 | `regions.rightbar.widgets` | `rightbar.widgets` |
 | `note_defaults.regions.*` | `note_defaults.*` |
 | `sidebar.left.search/menu/wiki_home` | 对应系统 Widget |
-| `sidebar.left.brand` | `site.brand` + `brand` Widget |
+| `sidebar.left.brand` | `brand` + `brand` Widget |
 
 Doctor 会输出来源文件、字段路径和迁移目标。最终字段、类型与约束以内容/模型 Schema、解析器和对应测试为准。
 

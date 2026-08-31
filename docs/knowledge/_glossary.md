@@ -4,7 +4,7 @@
 
 | 英文 / 原文 | 中文 |
 |------------|------|
-| Layout Profile | 页面默认布局契约（`layout.profiles`） |
+| Layout Profile | 页面默认布局契约（`profiles`） |
 | front matter | 前置元数据（front-matter） |
 | widget | 小部件 |
 | sidebar / leftbar / rightbar | 侧边栏 / 左栏 / 右栏 |

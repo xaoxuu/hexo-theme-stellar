@@ -239,7 +239,7 @@ graph TD
 **摘要**
 
 - 优先级：`post.excerpt` → `post.description` → 由 `post.content` 自动生成
-- 自动摘要长度由 `content.article.listing.excerpt_length` 控制
+- 自动摘要长度由 `article.listing.excerpt_length` 控制
 - 排版插件启用时应用 `heti` 类
 - 用 `strip_html()` 辅助函数去 HTML
 
@@ -375,7 +375,7 @@ graph LR
 
 **卡片标签**
 
-- 由 `content.article.listing.show_tags` 控制（默认关闭），最多显示 5 个
+- 由 `article.listing.show_tags` 控制（默认关闭），最多显示 5 个
 - 标签为纯文字（`cap` 小字样式，无胶囊底色），前缀为内联 `default:hashtag` 图标（`.card-tags svg`：1em、`margin-right: .25em`、`opacity: .4`），与标签页图标一致
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
@@ -405,10 +405,10 @@ flowchart TD
 
 仅当同时满足以下条件时使用 **hero 卡片**：
 
-1. `content.article.listing.card_layout` 为 `hero`（默认）
+1. `article.listing.card_layout` 为 `hero`（默认）
 2. `render.listing.cover` 已定义且长度非零（文章有封面）
 
-否则回退到 **classic 卡片**。也就是说文章可以有封面图但仍用普通卡片（`content.article.listing.card_layout` 为 `classic` 或文章没有封面时）。
+否则回退到 **classic 卡片**。也就是说文章可以有封面图但仍用普通卡片（`article.listing.card_layout` 为 `classic` 或文章没有封面时）。
 
 Topic 集合的 `card.cover` / `card.tagline` 只用于专栏索引卡片，不级联到成员文章。Topic 文章继承全局 `card_layout`，但列表封面和显式小字必须分别由当前文章的 `card.cover` / `card.tagline` 提供；未配置时不使用 Topic 封面、Banner 或其它文章图片回退。
 
@@ -500,7 +500,7 @@ Wiki 卡片用 `list.styl` 中的封面布局，内容固定在卡片底部：
 <a class="... card-hover card-hover--spotlight card-hover--tilt">...</a>
 ```
 
-启用 `extensions.features.card_hover.enabled` 后，光斑跟随指针，倾斜角采用主题内部固定策略并上浮 2px；离开时 Tilt 立即回正，Spotlight 在最后指针位置淡出后再回中。文章/Wiki 的 Tilt 只变换内层 `.post-card` / `.wiki-card`，避免覆盖外层 `.post-card-wrap` 的 Reveal 动画 transform；置顶轮播只变换 `.pin-slider` 外层，不占用 `.pin-slider-track` 的横向切换 transform。Feature 样式把列表阴影从等尺寸包装器移到卡片本体，使阴影随倾斜移动，同时保留文章、轮播和专栏封面缩放/变暗及 Wiki hover 边框等子元素动效。
+启用 `features.card_hover.enabled` 后，光斑跟随指针，倾斜角采用主题内部固定策略并上浮 2px；离开时 Tilt 立即回正，Spotlight 在最后指针位置淡出后再回中。文章/Wiki 的 Tilt 只变换内层 `.post-card` / `.wiki-card`，避免覆盖外层 `.post-card-wrap` 的 Reveal 动画 transform；置顶轮播只变换 `.pin-slider` 外层，不占用 `.pin-slider-track` 的横向切换 transform。Feature 样式把列表阴影从等尺寸包装器移到卡片本体，使阴影随倾斜移动，同时保留文章、轮播和专栏封面缩放/变暗及 Wiki hover 边框等子元素动效。
 
 专栏最新文章卡片与置顶轮播外层输出完整组合类；专栏标题、描述和下方归档式文章条目仍保持静态，不随卡片倾斜。插件关闭、触屏、粗指针或减少动态效果时，组合类不产生动态行为。
 
@@ -624,10 +624,9 @@ description: SEO description  # 可选兜底
 ### Hero 卡片配置
 
 ```yaml blog/_config.stellar.yml
-content:
-  article:
-    listing:
-      card_layout: hero # hero = 全图文字封面卡片 / classic = 普通卡片
+article:
+  listing:
+    card_layout: hero # hero = 全图文字封面卡片 / classic = 普通卡片
 ```
 
 ```yaml

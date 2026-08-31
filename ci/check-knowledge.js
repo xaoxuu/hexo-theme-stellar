@@ -11,6 +11,14 @@ const { CONFIG_SCHEMA } = require("../scripts/schema/config-schema");
 const ROOT = path.resolve(__dirname, "..");
 const DEFAULT_KNOWLEDGE_DIR = "docs/knowledge";
 const HOST_OBJECT_PATHS = new Set(["site.posts"]);
+const RETIRED_THEME_PREFIXES = [
+  "site.brand", "site.menu", "site.settings", "site.footer",
+  "layout.profiles", "layout.regions",
+  "content.article", "content.notebook",
+  "seo.canonical", "seo.structured_data",
+  "resources.preconnect", "resources.fallbacks", "resources.error_page",
+  "extensions.search", "extensions.comments", "extensions.tags", "extensions.features", "extensions.services"
+];
 const FILE_LIKE_SUFFIX = /\.(?:js|mjs|cjs|ejs|css|styl|json|ya?ml|md)$/i;
 const CONFIG_TOKEN = /^[A-Za-z_$][\w$]*(?:\[\])?(?:\.[A-Za-z_$][\w$]*(?:\[\])?)+$/;
 const VERSION_REFERENCE = /\bversion\s*:?\s*v?(\d+\.\d+\.\d+(?:-(?:alpha|beta|rc)\.\d+)?)/gi;
@@ -129,8 +137,20 @@ function checkConfigReferences(root, file, markdown, contract) {
   for (const match of prose.matchAll(/`([^`\n]+)`/g)) {
     const token = match[1].trim();
     if (!CONFIG_TOKEN.test(token) || FILE_LIKE_SUFFIX.test(token)) continue;
-    if (!contract.themeRoots.has(token.split(".")[0])) continue;
     if (HOST_OBJECT_PATHS.has(token)) continue;
+    const retiredPrefix = RETIRED_THEME_PREFIXES.find(prefix => token === prefix || token.startsWith(`${prefix}.`));
+    if (retiredPrefix) {
+      errors.push(error(
+        "retired-config",
+        root,
+        file,
+        lineNumber(prose, match.index),
+        token,
+        `主题配置路径已退出: ${token}`
+      ));
+      continue;
+    }
+    if (!contract.themeRoots.has(token.split(".")[0])) continue;
     if (contract.accepted.has(token)) {
       checked += 1;
       continue;

@@ -50,7 +50,7 @@ tags:
 
 ## 配置
 
-YAML 使用 `seo.canonical.host` 与 `seo.canonical.allowed_hosts`。构建期 Schema 完成严格校验、站点覆盖、scheme/尾斜杠清理、空值删除和备用主机稳定去重，冻结结果位于 `hexo.stellar.config.seo.canonical`。旧根字段与旧子字段不会兼容读取。
+YAML 使用 `canonical.host` 与 `canonical.allowed_hosts`。构建期 Schema 完成严格校验、站点覆盖、scheme/尾斜杠清理、空值删除和备用主机稳定去重，冻结结果位于 `hexo.stellar.config.canonical`。旧根字段与旧子字段不会兼容读取。
 
 浏览器仍从 `window.canonical` 读取 camelCase 运行时对象。`init.canonicalCheck()` 使用的字段：
 
@@ -74,7 +74,7 @@ YAML 使用 `seo.canonical.host` 与 `seo.canonical.allowed_hosts`。构建期 S
 
 **逻辑：**
 
-1. 读取 `stellar_config('seo.canonical').host`
+1. 读取 `stellar_config('canonical').host`
 2. 为空则返回 `''`（不输出标签）
 3. 跳过 404 页面（路径以 `/404` 或 `404` 开头）
 4. 去掉路径的 `.html` 后缀
@@ -211,8 +211,8 @@ flowchart TD
 ```mermaid
 flowchart LR
     subgraph "Build Time"
-        yaml["seo.canonical.*\n(_config.yml / site override)"] --> schema["Config Schema parser"]
-        schema --> cfg["hexo.stellar.config.seo.canonical\n(frozen normalized result)"]
+        yaml["canonical.*\n(_config.yml / site override)"] --> schema["Config Schema parser"]
+        schema --> cfg["hexo.stellar.config.canonical\n(frozen normalized result)"]
         cfg --> postSeo["Post PageViewModel SEO"]
         cfg --> genCanon["legacy generate_canonical()\nhead.ejs"]
         postSeo --> canonTag["<link rel=canonical>\nin <head>"]

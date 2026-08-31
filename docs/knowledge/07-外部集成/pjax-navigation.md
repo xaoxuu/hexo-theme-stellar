@@ -15,7 +15,7 @@ tags:
 
 生成此页面时参考的主题源码文件：
 
-- [_config.yml](../../../_config.yml)（`extensions.features.link_prefetch`）
+- [_config.yml](../../../_config.yml)（`features.link_prefetch`）
 - [source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
 - [layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs)
 
@@ -23,7 +23,7 @@ tags:
 
 ## 概览
 
-Stellar 使用**普通整页导航**。早期版本曾内置自定义 PJAX 实现（约 640 行，涉及 DOM diff、小部件合并、评论脚本重执行、滚动恢复等复杂逻辑），因维护成本极高且边缘情况层出不穷，已于 **v1.35.0（2026-08-08）移除**。主题也不再为整页导航叠加跨文档 View Transition；页面由浏览器直接切换，并通过 `extensions.features.link_prefetch`（flying_pages）在鼠标悬停时预加载站内链接，不改变页面脚本的单次初始化模型。
+Stellar 使用**普通整页导航**。早期版本曾内置自定义 PJAX 实现（约 640 行，涉及 DOM diff、小部件合并、评论脚本重执行、滚动恢复等复杂逻辑），因维护成本极高且边缘情况层出不穷，已于 **v1.35.0（2026-08-08）移除**。主题也不再为整页导航叠加跨文档 View Transition；页面由浏览器直接切换，并通过 `features.link_prefetch`（flying_pages）在鼠标悬停时预加载站内链接，不改变页面脚本的单次初始化模型。
 
 ## PJAX 移除背景
 
@@ -76,10 +76,9 @@ Stellar 使用**普通整页导航**。早期版本曾内置自定义 PJAX 实�
 ### 配置
 
 ```yaml
-extensions:
-  features:
-    link_prefetch:
-      enabled: true
+features:
+  link_prefetch:
+    enabled: true
 ```
 
 | 字段 | 说明 |

@@ -4,17 +4,17 @@ title: 外部集成总览
 
 # 外部集成总览
 
-Stellar v2 把用户可配置的外部能力统一放在 `extensions`。构建期先用声明式 Schema 校验主题默认与站点 `_config.stellar.yml` 覆盖，再把冻结的 camelCase 对象挂到 `hexo.stellar.config.extensions`；模板、生成器、标签插件与 Stylus 不直接读取原始主题配置。
+Stellar v2 将搜索、评论、标签能力、可选功能和数据服务分别放在根级 `search`、`comments`、`tags`、`features` 与 `services`。构建期先用声明式 Schema 校验主题默认与站点 `_config.stellar.yml` 覆盖，再把冻结的 camelCase 对象挂到 `hexo.stellar.config`；模板、生成器和标签插件不直接读取原始主题配置。
 
 ## 配置分区
 
 | 路径 | 职责 | 运行时键 |
 | --- | --- | --- |
-| `extensions.search` | 本地搜索或 Algolia provider | `extensions.search` |
-| `extensions.comments` | 全局评论 provider、标题和第三方参数袋 | `extensions.comments` |
-| `extensions.tags` | Stellar 官方标签插件行为参数 | `extensions.tags` |
-| `extensions.features` | 懒加载、预加载、灯箱、动效、数学、图表等页面能力 | `extensions.features` |
-| `extensions.services` | 站点信息、评分、投票、贡献者与 GitHub 端点 | `extensions.services` |
+| `search` | 本地搜索或 Algolia provider | `search` |
+| `comments` | 全局评论 provider、标题和第三方参数袋 | `comments` |
+| `tags` | Stellar 官方标签插件行为参数 | `tags` |
+| `features` | 懒加载、预加载、灯箱、动效、数学、图表等页面能力 | `features` |
+| `services` | 站点信息、评分、投票、贡献者与 GitHub 端点 | `services` |
 
 公开 YAML 使用 snake_case，冻结 JavaScript 使用 camelCase。Stellar 所有父级对象严格封闭；只有明确声明的第三方 provider 参数袋保留上游键名。数组完整替换，对象和参数袋按已声明边界逐键合并，不做类型强转。
 
@@ -22,8 +22,8 @@ Stellar v2 把用户可配置的外部能力统一放在 `extensions`。构建�
 
 ```mermaid
 flowchart LR
-  YAML["_config.stellar.yml\nextensions"] --> SCHEMA["声明式 Schema"]
-  SCHEMA --> CONFIG["hexo.stellar.config.extensions"]
+  YAML["_config.stellar.yml\nsearch / comments / tags / features / services"] --> SCHEMA["声明式 Schema"]
+  SCHEMA --> CONFIG["hexo.stellar.config"]
   CONFIG --> SERVER["生成器 / helper / tag plugin"]
   CONFIG --> EJS["Runtime Manifest"]
   CONFIG --> STYLUS["编译期条件"]
@@ -46,27 +46,27 @@ flowchart LR
 
 ## 搜索、评论与页面渲染
 
-- 搜索：`extensions.search.provider` 为 `local` 或 `algolia`；provider 参数位于 `providers.<provider>`。
-- 评论：`extensions.comments.provider/title/providers` 定义站点默认；Collection / Front Matter 通过 `comments.provider/options` 覆盖。
-- 数学：全局 `extensions.features.math.provider` 可选择默认实现，页面 `render.math` 可覆盖。
-- 图表：`extensions.features.diagrams` 定义 Mermaid 默认，页面 `render.diagrams` 决定单页启用或覆盖选项。
+- 搜索：`search.provider` 为 `local` 或 `algolia`；provider 参数位于同级 `search.local` 或 `search.algolia`。
+- 评论：`comments.provider/title` 与同级 `comments.<provider>` 参数袋定义站点默认；Collection / Front Matter 通过 `comments.provider/options` 覆盖。
+- 数学：全局 `features.math.provider` 可选择默认实现，页面 `render.math` 可覆盖。
+- 图表：`features.diagrams` 定义 Mermaid 默认，页面 `render.diagrams` 决定单页启用或覆盖选项。
 - 其它 Feature：统一使用 `enabled`，由 Runtime Manifest adapter 按页面声明与 DOM 条件加载内部资源。
 
 Swiper 是主题内置容器能力，依据页面 DOM 按需加载，不提供公开配置。图片懒加载是主题基础行为，公开配置只保留过渡与比例修正参数。
 
 ## 服务与内部缓存
 
-`extensions.services` 中可替换的第三方能力使用 `provider + providers`，Site Info、Rating、Vote、Contributors 与 GitHub Card 只消费选中的封闭参数袋。明确代表 GitHub 平台的 `github` 保留 `api_url/raw_url/gist_url` 完整 URL，不使用 provider 结构；所有 endpoint 都必须是绝对 HTTP(S) URL。
+`services` 中可替换的第三方能力使用 `provider` 加同级 provider 参数袋，Site Info、Rating、Vote、Contributors 与 GitHub Card 只消费选中的封闭参数袋。明确代表 GitHub 平台的 `github` 保留 `api_url/raw_url/gist_url` 完整 URL，不使用 provider 结构；所有 endpoint 都必须是绝对 HTTP(S) URL。
 
 request/cache 的 TTL、重试、超时、容量与淘汰规则是主题内部实现策略。ESM 客户端消费 Runtime Manifest 中的冻结 policy，不替换浏览器原生网络 API。
 
 ## 已移除入口
 
-`search/comments/tag_plugins/dependencies/data_services/data_cache/plugins/api_host` 八个旧根以及 `enable`、`comment_title`、`custom_css` 等旧字段均由 Schema 拒绝。v2 不提供别名、兼容读取或自动迁移。
+`tag_plugins/dependencies/data_services/data_cache/plugins/api_host` 等旧根以及旧版 `search/comments` 中的 `enable`、`service`、`comment_title`、`custom_css` 等字段均由 Schema 拒绝。v2 不提供别名、兼容读取或自动迁移。
 
 ## 参考源码
 
-- [_config.yml](../../../_config.yml)（`extensions`）
+- [_config.yml](../../../_config.yml)（`search`、`comments`、`tags`、`features`、`services`）
 - [scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)
 - [scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)
 - [scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)

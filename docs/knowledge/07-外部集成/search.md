@@ -9,26 +9,24 @@ tags:
 
 # 搜索功能
 
-Stellar v2 的搜索配置属于 `extensions.search`。公开 YAML 使用注册式 provider ID，当前内置 `local` 与 `algolia`；解析后由冻结的 `hexo.stellar.config.extensions.search` 提供 camelCase ViewModel。
+Stellar v2 的搜索配置属于 `search`。公开 YAML 使用注册式 provider ID，当前内置 `local` 与 `algolia`；解析后由冻结的 `hexo.stellar.config.search` 提供 camelCase ViewModel。
 
 ## 配置契约
 
 ```yaml
-extensions:
-  search:
-    provider: local # local / algolia / null
-    providers:
-      local:
-        scope: all # post / page / all
-        include_content: true
-        cache_ttl_seconds: 86400
-      algolia:
-        appId:
-        apiKey:
-        indexName:
+search:
+  provider: local # local / algolia / null
+  local:
+    scope: all # post / page / all
+    include_content: true
+    cache_ttl_seconds: 86400
+  algolia:
+    appId:
+    apiKey:
+    indexName:
 ```
 
-`providers.local` 是 Stellar 封闭 Schema；`providers.algolia` 是第三方参数袋，保留 Algolia 上游字段名。索引固定输出 `/search.json`，客户端固定按首次需要懒加载；旧路径不兼容读取。
+`search.local` 是 Stellar 封闭 Schema；`search.algolia` 是第三方参数袋，保留 Algolia 上游字段名。索引固定输出 `/search.json`，客户端固定按首次需要懒加载；旧路径不兼容读取。
 
 | 字段 | 说明 |
 |------|------|
@@ -63,8 +61,8 @@ Algolia provider 把 `appId/apiKey/indexName` 原样交给上游客户端。Algo
 
 ```mermaid
 flowchart LR
-  A[extensions.search] --> B[声明式 Schema]
-  B --> C[hexo.stellar.config.extensions.search]
+  A[search] --> B[声明式 Schema]
+  B --> C[hexo.stellar.config.search]
   C --> D[搜索索引生成器]
   C --> E[Runtime Manifest]
   E --> F[local / algolia browser runtime]

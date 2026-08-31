@@ -50,11 +50,11 @@ tags:
 
 ```mermaid
 flowchart TD
-  A["_config.yml"] --> B["extensions.features.lazy_loading"]
-  A --> D["extensions.features.link_prefetch"]
-  A --> E["resources.preconnect"]
-  A --> F["extensions.services.github"]
-  A --> G["extensions.search.providers.local"]
+  A["_config.yml"] --> B["features.lazy_loading"]
+  A --> D["features.link_prefetch"]
+  A --> E["preconnect"]
+  A --> F["services.github"]
+  A --> G["search.local"]
 
   B --> B1["scripts/filters/lib/img_lazyload.js"]
   B --> B2["source/js/runtime/extensions/feature.mjs"]
@@ -112,11 +112,10 @@ sequenceDiagram
 ### 配置
 
 ```yaml
-extensions:
-  features:
-    lazy_loading:
-      transition: fade   # blur | fade
-      auto_aspect_ratio: true
+features:
+  lazy_loading:
+    transition: fade   # blur | fade
+    auto_aspect_ratio: true
 ```
 
 - `transition: blur`——未加载图片应用 `filter: blur(20px)`，加载时过渡为清晰
@@ -149,10 +148,9 @@ extensions:
 `link_prefetch` 在用户点击前预取页面资源，降低可感知的导航延迟。
 
 ```yaml
-extensions:
-  features:
-    link_prefetch:
-      enabled: true
+features:
+  link_prefetch:
+    enabled: true
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)
@@ -211,7 +209,7 @@ flowchart LR
 
 ## 搜索数据缓存
 
-本地搜索系统在构建期把可搜索内容序列化为固定的 `/search.json`。客户端缓存带 TTL（`extensions.search.providers.local.cache_ttl_seconds`，默认 `86400` 秒 = 1 天），以 `search_cache_v4` 键写入 `localStorage`；`0` 表示不缓存。
+本地搜索系统在构建期把可搜索内容序列化为固定的 `/search.json`。客户端缓存带 TTL（`search.local.cache_ttl_seconds`，默认 `86400` 秒 = 1 天），以 `search_cache_v4` 键写入 `localStorage`；`0` 表示不缓存。
 
 搜索索引固定按需懒加载；页面和 Collection 是否进入索引由 `visibility.searchable` 唯一控制。
 
@@ -223,20 +221,18 @@ flowchart LR
 
 ## GitHub 服务 URL
 
-`extensions.services.github` 使用完整 URL 配置明确的 GitHub API、Raw 与 Gist 地址；可替换的卡片能力单独使用 provider 结构，适合经代理镜像或本地缓存层路由。
+`services.github` 使用完整 URL 配置明确的 GitHub API、Raw 与 Gist 地址；可替换的卡片能力单独使用 provider 结构，适合经代理镜像或本地缓存层路由。
 
 ```yaml
-extensions:
-  services:
-    github:
-      api_url: https://api.github.com
-      raw_url: https://raw.githubusercontent.com
-      gist_url: https://gist.github.com
-    github_card:
-      provider: github_readme_stats
-      providers:
-        github_readme_stats:
-          endpoint: https://github-readme-stats.vercel.app
+services:
+  github:
+    api_url: https://api.github.com
+    raw_url: https://raw.githubusercontent.com
+    gist_url: https://gist.github.com
+  github_card:
+    provider: github_readme_stats
+    github_readme_stats:
+      endpoint: https://github-readme-stats.vercel.app
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)
@@ -247,13 +243,12 @@ extensions:
 
 ## DNS Preconnect 提示
 
-v2 的 `resources.preconnect` 列表在 HTML `<head>` 输出 `<link rel="preconnect">` 标签，提示浏览器在资源请求前与 CDN 源建立 TCP+TLS 连接。默认值由 Schema 唯一提供，主题 `_config.yml` 镜像展示该值；站点在 `_config.stellar.yml` 中完整替换该数组。
+v2 的 `preconnect` 列表在 HTML `<head>` 输出 `<link rel="preconnect">` 标签，提示浏览器在资源请求前与 CDN 源建立 TCP+TLS 连接。默认值由 Schema 唯一提供，主题 `_config.yml` 镜像展示该值；站点在 `_config.stellar.yml` 中完整替换该数组。
 
 ```yaml
-resources:
-  preconnect:
-    - https://gcore.jsdelivr.net
-    - https://unpkg.com
+preconnect:
+  - https://gcore.jsdelivr.net
+  - https://unpkg.com
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)、[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
@@ -314,13 +309,13 @@ M5 用固定 Classic Blog 输入分别构建 tag `1.44.0` 与当前 v2 npm tarba
 | 特性 | 配置键 | 默认 | 主要文件 |
 |------|--------|------|----------|
 | 图片懒加载 | 内置 Feature | 启用 | `img_lazyload.js`、`feature.mjs`、`lazyload.styl` |
-| 懒加载过渡 | `extensions.features.lazy_loading.transition` | `fade` | `lazyload.styl` |
-| 链接预加载 | `extensions.features.link_prefetch.enabled` | `true`（flying_pages） | 内部资源注册表 |
-| 配色选择器 | `extensions.features.color_scheme_switch.enabled` | `false` | `color-scheme-switch.mjs`（按需） |
+| 懒加载过渡 | `features.lazy_loading.transition` | `fade` | `lazyload.styl` |
+| 链接预加载 | `features.link_prefetch.enabled` | `true`（flying_pages） | 内部资源注册表 |
+| 配色选择器 | `features.color_scheme_switch.enabled` | `false` | `color-scheme-switch.mjs`（按需） |
 | 图片比例缓存 | Hexo 事件 | 自动 | `get_image_ratios.js`、`fix_image_tags.js` |
-| 搜索缓存 | `extensions.search.providers.local.cache_ttl_seconds` | `localStorage`（TTL 默认 1 天） | `local-search.js`（客户端） |
-| GitHub URL | `extensions.services.github` | GitHub 默认 | 数据服务脚本 |
-| DNS preconnect | `resources.preconnect` | 空 | `head.ejs` |
+| 搜索缓存 | `search.local.cache_ttl_seconds` | `localStorage`（TTL 默认 1 天） | `local-search.js`（客户端） |
+| GitHub URL | `services.github` | GitHub 默认 | 数据服务脚本 |
+| DNS preconnect | `preconnect` | 空 | `head.ejs` |
 | 按需样式 | 插件/评论 CSS 独立文件 | 运行时注入 | `plugins/*.css`、`comments/*.css` |
 | 脚本外置 | 构建期生成 icons + 外部 JS | 每页内联减少约 20KB | `utils.js`、`stellar-icons.js` |
 | 图标异步加载 | 按命名空间生成 `js/icons/*.json`，selector 命中后替换占位符 | 非首屏图标不再进入 HTML | `stellar-icons.js`、`icons.js` |

@@ -430,7 +430,7 @@ Shell 交互使用下列稳定入口：
 
 ### 规范链接配置
 
-`head.ejs` 模板用 `generate_canonical()` 生成 canonical link 标签，从冻结的 `stellar_config('seo.canonical').host` 构造规范 URL。其 YAML 来源为 `seo.canonical.host`，该值与 `allowed_hosts` 规范化后同时供 `init.canonicalCheck()` 校验当前主机名使用。
+`head.ejs` 模板用 `generate_canonical()` 生成 canonical link 标签，从冻结的 `stellar_config('canonical').host` 构造规范 URL。其 YAML 来源为 `canonical.host`，该值与 `allowed_hosts` 规范化后同时供 `init.canonicalCheck()` 校验当前主机名使用。
 
 `window.canonical` 对象（含 `encoded` 与 `param`）在 [layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs) 中注入。
 

@@ -155,7 +155,7 @@ flowchart TD
 
 Post、Topic、Wiki 与 Notebook 新链直接读取 `render.seo.description`；Open Graph 启用时由 `render.seo.openGraph.args` 输出同一模型已解析的说明。legacy 页面由 `generate_description()` 按以下优先级级联：
 
-1. **Open Graph 启用时跳过**：`stellar_config('seo.openGraph').enabled` 为 true 时返回空（由 OG 标签处理描述）
+1. **Open Graph 启用时跳过**：`stellar_config('openGraph').enabled` 为 true 时返回空（由 OG 标签处理描述）
 2. **页面级描述**：`page.description`（截断至 150 字符）
 3. **页面摘要**：`page.excerpt`、截断的 `page.content`（150 字符）
 4. **兜底**：`config.description`
@@ -164,7 +164,7 @@ Post、Topic、Wiki 与 Notebook 新链直接读取 `render.seo.description`；O
 
 **参考源码**：[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 
-> 说明：站点启用 Open Graph（`seo.open_graph.enabled: true`，默认配置）时，Post/Topic/Wiki/Notebook 的 `<meta name="description">` 与 `og:description` 均来自 `render.seo.openGraph.args.description`；其它页面由 `og_args()` 传入 Hexo 内置 `open_graph()` helper。Front Matter 由声明式 Schema 投影为 `pageConfig.seo.openGraph`。
+> 说明：站点启用 Open Graph（`open_graph.enabled: true`，默认配置）时，Post/Topic/Wiki/Notebook 的 `<meta name="description">` 与 `og:description` 均来自 `render.seo.openGraph.args.description`；其它页面由 `og_args()` 传入 Hexo 内置 `open_graph()` helper。Front Matter 由声明式 Schema 投影为 `pageConfig.seo.openGraph`。
 
 ### 关键词生成
 
@@ -207,16 +207,16 @@ graph LR
 
 ```javascript
 {
-  twitter_id: stellar_config('seo.openGraph').twitterId,
+  twitter_id: stellar_config('openGraph').twitterId,
   twitter_card: 'summary_large_image',  // 仅 post 且有 cover 时
   image: pageConfig.card?.cover || pageConfig.banner?.image || first_content_image(page.content) || config.avatar || (config.email ? gravatar(config.email) : null),
-  ...pageConfig.seo?.openGraph  // Front Matter seo.open_graph 覆盖
+  ...pageConfig.seo?.openGraph  // Front Matter open_graph 覆盖
 }
 ```
 
-`stellar_config('seo.openGraph').enabled` 为 true 时生成 OG 标签，并对 `og:title`、`og:site_name`、`twitter:title` 做主题定制替换（经 `generate_og_title()` / `generate_og_site_name()` 转义处理）。`og:site_name` 始终输出站点名 `config.title`，`og:image` 按 封面 → 横幅 → 正文首图 → 头像 回退。
+`stellar_config('openGraph').enabled` 为 true 时生成 OG 标签，并对 `og:title`、`og:site_name`、`twitter:title` 做主题定制替换（经 `generate_og_title()` / `generate_og_site_name()` 转义处理）。`og:site_name` 始终输出站点名 `config.title`，`og:image` 按 封面 → 横幅 → 正文首图 → 头像 回退。
 
-Post/Topic/Wiki/Notebook 的 `og_args()` 直接复制 `render.seo.openGraph.args`；Collection description、页面 description 与 Front Matter `seo.open_graph` 的优先级已在模型层完成。legacy 页面仍在 helper 调用前从 `pageConfig` 组装参数。
+Post/Topic/Wiki/Notebook 的 `og_args()` 直接复制 `render.seo.openGraph.args`；Collection description、页面 description 与 Front Matter `open_graph` 的优先级已在模型层完成。legacy 页面仍在 helper 调用前从 `pageConfig` 组装参数。
 
 **参考源码**：[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 
@@ -228,7 +228,7 @@ Post/Topic/Wiki/Notebook 的 `og_args()` 直接复制 `render.seo.openGraph.args
 
 ```mermaid
 flowchart TD
-    START["generate_canonical()"] --> CHECK{"stellar_config('seo.canonical').host<br/>configured?"}
+    START["generate_canonical()"] --> CHECK{"stellar_config('canonical').host<br/>configured?"}
     CHECK -->|No| EMPTY["Return empty string"]
     CHECK -->|Yes| GETPATH["path = pretty_url(page.path)"]
     GETPATH --> IS404{"path starts with /404?"}
@@ -282,14 +282,13 @@ graph TB
 
 ### 克隆检测配置
 
-`_config.yml` 中的 `seo.canonical` 小节：
+`_config.yml` 中的 `canonical` 小节：
 
 ```yaml
-seo:
-  canonical:
-    host: example.com
-    allowed_hosts:
-      - backup.example.com
+canonical:
+  host: example.com
+  allowed_hosts:
+    - backup.example.com
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)
@@ -320,7 +319,7 @@ seo:
 
 **条件**：`this.is_post()` 为 true
 
-**图片来源优先级**：封面（cover）→ 横幅（banner）→ 相册（photos）→ 正文首图（`data-src`/`src`）→ 默认封面（`hexo.stellar.config.resources.fallbacks.cover`）
+**图片来源优先级**：封面（cover）→ 横幅（banner）→ 相册（photos）→ 正文首图（`data-src`/`src`）→ 默认封面（`hexo.stellar.config.fallbacks.cover`）
 
 **描述来源**：摘要（`page.excerpt`）优先，缺失时回退正文前 200 字符（去除 HTML）。
 
@@ -356,7 +355,7 @@ graph LR
     CONFIG["config.author<br/>config.email<br/>config.avatar"] --> AUTHOR["author object<br/>@type: Person"]
     CONFIG --> PUBLISHER["publisher object<br/>@type: Organization"]
     
-    STRUCTDATA["stellar_config('seo.structuredData').sameAs"] --> AUTHOR
+    STRUCTDATA["stellar_config('structuredData').sameAs"] --> AUTHOR
     
     AUTHOR --> SCHEMA["JSON-LD schema"]
     PUBLISHER --> SCHEMA
@@ -376,7 +375,7 @@ graph LR
 <link rel="preconnect" href="https://cdn.example.com" crossorigin>
 ```
 
-**配置**：`resources.preconnect` 数组；站点数组完整替换 Schema 默认列表，trim、去空与稳定去重在构建期完成。
+**配置**：`preconnect` 数组；站点数组完整替换 Schema 默认列表，trim、去空与稳定去重在构建期完成。
 
 **参考源码**：[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 
@@ -483,22 +482,20 @@ sequenceDiagram
 ### 主题默认配置（_config.yml）
 
 ```yaml
-seo:
-  canonical:
-    host: example.com
-    allowed_hosts:
-      - backup.example.com
-  open_graph:
-    enabled: true
-    twitter_id: username
-  structured_data:
-    same_as:
-      - https://github.com/username
+canonical:
+  host: example.com
+  allowed_hosts:
+    - backup.example.com
+open_graph:
+  enabled: true
+  twitter_id: username
+structured_data:
+  same_as:
+    - https://github.com/username
 
-resources:
-  preconnect:
-    - https://cdn.jsdelivr.net
-    - https://fonts.googleapis.com
+preconnect:
+  - https://cdn.jsdelivr.net
+  - https://fonts.googleapis.com
 
 ```
 

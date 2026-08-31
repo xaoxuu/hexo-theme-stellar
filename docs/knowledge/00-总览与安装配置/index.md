@@ -1,6 +1,6 @@
 # 总览与安装配置
 
-> Stellar 主题的入门领域：整体架构、安装方式与配置系统。涉及 `_config.yml` 已交付的 `site`、`seo`、`layout.profiles`、`resources.preconnect`、`inject` 以及仍在迁移的插件、内容与外观配置。
+> Stellar 主题的入门领域：整体架构、安装方式与配置系统。涉及 `_config.yml` 已交付的 `brand`、`menu`、`profiles`、`article`、`canonical`、`preconnect`、`search`、`services` 和 `inject` 等根配置。
 
 ## 页面
 

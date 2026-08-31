@@ -9,13 +9,12 @@ title: 图标标签
 ## 默认颜色
 
 ```yaml
-extensions:
-  tags:
-    icon:
-      default_color: accent
+tags:
+  icon:
+    default_color: accent
 ```
 
-处理器从冻结的 `ctx.stellar.config.extensions.tags.icon.defaultColor` 读取默认颜色。显式参数优先；`null` 表示继承文本颜色。旧标签配置根不兼容读取。
+处理器从冻结的 `ctx.stellar.config.tags.icon.defaultColor` 读取默认颜色。显式参数优先；`null` 表示继承文本颜色。旧标签配置根不兼容读取。
 
 ## 图标来源
 

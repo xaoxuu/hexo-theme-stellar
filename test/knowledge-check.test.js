@@ -100,3 +100,18 @@ test("失效链接、锚点、配置字段与版本全部阻断", (t) => {
   assert.ok(result.errors.some(error => error.kind === "unknown-config"));
   assert.ok(result.errors.some(error => error.kind === "version-mismatch"));
 });
+
+test("退出的主题配置根不会逃过知识库检查", (t) => {
+  const { root, configSchema } = fixture(t);
+  write(root, "docs/knowledge/index.md", [
+    "# 索引",
+    "",
+    "`extensions.services.github.raw_url`",
+    "`content.article.footer.show_tags`",
+    "`layout.profiles.post`"
+  ].join("\n"));
+
+  const result = checkKnowledge({ root, configSchema });
+  assert.equal(result.errors.length, 3);
+  assert.equal(result.errors.every(error => error.kind === "retired-config"), true);
+});
