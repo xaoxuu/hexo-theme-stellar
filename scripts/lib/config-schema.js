@@ -663,18 +663,6 @@ function validateSafeRelativePath(node, input, source, path, issues) {
   }
 }
 
-function validateUniqueBlueprintTargets(node, input, source, path, issues) {
-  const targets = new Set();
-  input.forEach((item, index) => {
-    if (!isPlainObject(item) || typeof item.target !== "string") return;
-    const target = nodePath.posix.normalize(item.target.replace(/\\/g, "/"));
-    if (targets.has(target)) {
-      issues.push(issue("invalid_value", source, `${path}[${index}].target`, "string", "unique Blueprint target path", node.migration));
-    }
-    targets.add(target);
-  });
-}
-
 function validateCustom(node, input, source, path, issues) {
   if (!node.validator) return;
   if (node.validator === "non_empty_string") validateNonEmptyString(node, input, source, path, issues, false);
@@ -717,10 +705,9 @@ function validateCustom(node, input, source, path, issues) {
   else if (node.validator === "footer_actions") validateFooterActions(node, input, source, path, issues);
   else if (node.validator === "navigation_tabs") validateNavigationTabs(node, input, source, path, issues);
   else if (node.validator === "safe_relative_path") validateSafeRelativePath(node, input, source, path, issues);
-  else if (node.validator === "unique_blueprint_targets") validateUniqueBlueprintTargets(node, input, source, path, issues);
   else if (node.validator === "topic_route_start" && input != null && !/[\\/]topic[\\/]/.test(source)) {
     issues.push(issue("invalid_scope", source, path, valueType(input), "Topic Collection only", node.migration));
-  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "nullable_absolute_http_url", "emoji_template", "emoji_sources", "github_repository", "contributor_repositories", "diagrams_override", "safe_navigation_url", "nullable_safe_navigation_url", "nullable_template_navigation_url", "css_color", "nullable_css_color", "css_length", "css_percentage", "css_font_family", "css_gradient", "sidebar_gradient_colors", "css_selector", "corner_shape", "resource", "nullable_resource", "non_negative_integer", "nullable_non_negative_integer", "non_empty_record_keys", "license_value", "license_override", "share_override", "kebab_id", "nullable_kebab_id", "menu_items", "region_widgets", "leftbar_content_widgets", "footer_actions", "navigation_tabs", "safe_relative_path", "unique_blueprint_targets", "topic_route_start"].includes(node.validator)) {
+  } else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "nullable_absolute_http_url", "emoji_template", "emoji_sources", "github_repository", "contributor_repositories", "diagrams_override", "safe_navigation_url", "nullable_safe_navigation_url", "nullable_template_navigation_url", "css_color", "nullable_css_color", "css_length", "css_percentage", "css_font_family", "css_gradient", "sidebar_gradient_colors", "css_selector", "corner_shape", "resource", "nullable_resource", "non_negative_integer", "nullable_non_negative_integer", "non_empty_record_keys", "license_value", "license_override", "share_override", "kebab_id", "nullable_kebab_id", "menu_items", "region_widgets", "leftbar_content_widgets", "footer_actions", "navigation_tabs", "safe_relative_path", "topic_route_start"].includes(node.validator)) {
     throw new TypeError(`未知配置校验器：${node.validator}`);
   }
 }

@@ -21,26 +21,23 @@ delete require.cache[commandPath];
 require(commandPath);
 delete global.hexo;
 
-test("stellar command registers a functional dry-run dispatcher", async t => {
+test("stellar command registers doctor and new note without Blueprint init", async t => {
   assert.equal(registration.name, "stellar");
   assert.equal(typeof registration.handler, "function");
-  assert.deepEqual(registration.contract.commands.map(item => item.name), ["init", "doctor", "new note"]);
+  assert.deepEqual(registration.contract.commands.map(item => item.name), ["doctor", "new note"]);
 
   const baseDir = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-command-test-"));
   t.after(() => fs.rmSync(baseDir, { recursive: true, force: true }));
+  fs.writeFileSync(path.join(baseDir, "_config.yml"), "theme: stellar\n");
   t.mock.method(console, "log", () => {});
-  const plan = await registration.handler.call({
+  const result = await registration.handler.call({
     base_dir: baseDir,
-    theme_dir: path.resolve(__dirname, "..")
+    version: "8.1.2"
   }, {
-    _: ["init"],
-    blueprint: "classic",
-    nonInteractive: true,
-    dryRun: true
+    _: ["doctor"],
+    format: "json"
   });
-  assert.equal(plan.blueprint.id, "classic");
-  assert.equal(plan.files.length > 0, true);
-  assert.equal(fs.existsSync(path.join(baseDir, "_config.stellar.yml")), false);
+  assert.equal(result.ok, true);
 
   await assert.rejects(
     registration.handler.call({}, { _: ["unknown"] }),

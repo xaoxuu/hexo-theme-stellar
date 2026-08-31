@@ -6,31 +6,25 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 
-const { buildBlueprintPlan, writeBlueprintPlan } = require("../scripts/lib/blueprints");
 const { formatDoctorJson, formatDoctorText, runDoctor } = require("../scripts/lib/doctor");
 
 function tempDir() {
   return fs.mkdtempSync(path.join(os.tmpdir(), "stellar-doctor-test-"));
 }
 
-function initializedSite(blueprint) {
+function initializedSite() {
   const baseDir = tempDir();
   fs.writeFileSync(path.join(baseDir, "_config.yml"), "title: Test\ntheme: stellar\n");
-  writeBlueprintPlan(buildBlueprintPlan({
-    baseDir,
-    blueprint,
-    generatedAt: new Date("2026-08-23T12:34:00+08:00")
-  }));
+  fs.mkdirSync(path.join(baseDir, "source/_posts"), { recursive: true });
+  fs.writeFileSync(path.join(baseDir, "source/_posts/hello.md"), "---\ntitle: Hello\ndate: 2026-08-23 12:34\n---\n\nHello.\n");
   return baseDir;
 }
 
-test("doctor 通过四套 Blueprint 的环境、主题、Collection 与 Front Matter 检查", () => {
-  for (const blueprint of ["classic", "minimal-reading", "docs-reference", "light-and-shadow"]) {
-    const result = runDoctor({ baseDir: initializedSite(blueprint), nodeVersion: "22.18.0", hexoVersion: "8.0.0" });
-    assert.equal(result.ok, true, `${blueprint}: ${formatDoctorText(result)}`);
-    assert.equal(Object.isFrozen(result), true);
-    assert.equal(result.issues.length, 0);
-  }
+test("doctor 通过最小 Hexo 站点的环境、配置与 Front Matter 检查", () => {
+  const result = runDoctor({ baseDir: initializedSite(), nodeVersion: "22.18.0", hexoVersion: "8.0.0" });
+  assert.equal(result.ok, true, formatDoctorText(result));
+  assert.equal(Object.isFrozen(result), true);
+  assert.equal(result.issues.length, 0);
 });
 
 test("doctor 聚合环境、主题配置、Collection 与 Front Matter 的来源化问题", () => {
@@ -55,13 +49,13 @@ test("doctor 聚合环境、主题配置、Collection 与 Front Matter 的来源
 });
 
 test("doctor text/json 输出稳定表达同一结果", () => {
-  const result = runDoctor({ baseDir: initializedSite("classic"), nodeVersion: "22.0.0", hexoVersion: "8.1.0" });
+  const result = runDoctor({ baseDir: initializedSite(), nodeVersion: "22.0.0", hexoVersion: "8.1.0" });
   assert.match(formatDoctorText(result), /^Stellar doctor: PASS/);
   assert.deepEqual(JSON.parse(formatDoctorJson(result)), result);
 });
 
 test("doctor 接受 BOM 与 CRLF Front Matter", () => {
-  const baseDir = initializedSite("classic");
+  const baseDir = initializedSite();
   const page = path.join(baseDir, "source/_posts/crlf.md");
   fs.writeFileSync(page, "\uFEFF---\r\ntitle: CRLF\r\n---\r\nBody\r\n");
   const result = runDoctor({ baseDir, nodeVersion: "22.0.0", hexoVersion: "8.1.0" });

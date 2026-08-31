@@ -13,11 +13,10 @@ const { spawn, spawnSync } = require("node:child_process");
 
 const THEME_ROOT = path.resolve(__dirname, "..");
 const PREVIEW_COMMAND = "npx hexo server --ip 127.0.0.1";
-const BLUEPRINT_MATRIX = Object.freeze([
-  Object.freeze({ id: "classic", language: "en", style: "card" }),
-  Object.freeze({ id: "minimal-reading", language: "zh-CN", style: "minimal" }),
-  Object.freeze({ id: "docs-reference", language: "zh-TW", style: "card" }),
-  Object.freeze({ id: "light-and-shadow", language: "zh-CN", style: "glass" })
+const SCENARIO_MATRIX = Object.freeze([
+  Object.freeze({ id: "post-topic", language: "en" }),
+  Object.freeze({ id: "notebook", language: "zh-CN" }),
+  Object.freeze({ id: "wiki", language: "zh-TW" })
 ]);
 const INSTALL_PACKAGES = [
   "hexo@8.1.2",
@@ -104,9 +103,9 @@ function reservePreviewPort() {
   });
 }
 
-function requestPreview(port) {
+function requestPreview(port, requestPath = "/") {
   return new Promise((resolve, reject) => {
-    const request = http.get({ hostname: "127.0.0.1", port, path: "/", timeout: 1000 }, response => {
+    const request = http.get({ hostname: "127.0.0.1", port, path: requestPath, timeout: 1000 }, response => {
       let body = "";
       response.setEncoding("utf8");
       response.on("data", chunk => {
@@ -136,7 +135,7 @@ async function stopPreview(child) {
   }
 }
 
-async function assertPreviewServer(root, hexo, label) {
+async function assertPreviewServer(root, hexo, label, requestPath = "/") {
   const port = await reservePreviewPort();
   const runtimePath = `${path.dirname(process.execPath)}${path.delimiter}${process.env.PATH || ""}`;
   const child = spawn(hexo, ["server", "--ip", "127.0.0.1", "--port", String(port)], {
@@ -162,7 +161,7 @@ async function assertPreviewServer(root, hexo, label) {
         throw new Error(`${label}: hexo server exited before serving HTTP\n${logs}`);
       }
       try {
-        const response = await requestPreview(port);
+        const response = await requestPreview(port, requestPath);
         if (response.status !== 200) throw new Error(`${label}: preview returned HTTP ${response.status}`);
         if (!response.body.includes('id="start"')) throw new Error(`${label}: preview response missing Stellar Shell`);
         process.stdout.write(`${label}: hexo server → HTTP 200 passed\n`);
@@ -182,10 +181,16 @@ function sha256File(file) {
   return crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
 }
 
-function planTargets(output) {
-  return output.split(/\r?\n/)
-    .filter(line => line.startsWith("  create "))
-    .map(line => line.slice("  create ".length));
+function addPostFixture(root) {
+  write(root, "source/_posts/integration-post.md", [
+    "---",
+    "title: Integration Post",
+    "date: 2026-08-23 08:00",
+    "---",
+    "",
+    "Ordinary Post integration marker.",
+    ""
+  ].join("\n"));
 }
 
 function addTopicFixture(root) {
@@ -228,80 +233,42 @@ function addNotebookFixture(root, hexo) {
   ];
   const dryRun = run(hexo, [...args, "--dry-run"], { cwd: root });
   if (!dryRun.includes("source/notebooks/integration/Integration Notebook Note.md")) {
-    throw new Error("minimal-reading: stellar new note dry-run missing planned target");
+    throw new Error("notebook: stellar new note dry-run missing planned target");
   }
   const file = path.join(root, "source/notebooks/integration/Integration Notebook Note.md");
-  if (fs.existsSync(file)) throw new Error("minimal-reading: stellar new note dry-run wrote a file");
+  if (fs.existsSync(file)) throw new Error("notebook: stellar new note dry-run wrote a file");
   run(hexo, args, { cwd: root });
   const generated = fs.readFileSync(file, "utf8");
   if (/collection:|profile: notebook|\nid: integration/.test(generated)) {
-    throw new Error("minimal-reading: stellar new note wrote redundant Collection ownership");
+    throw new Error("notebook: stellar new note wrote redundant Collection ownership");
   }
   fs.appendFileSync(file, "Notebook profile integration marker.\n", "utf8");
   const beforeConflict = sha256File(file);
   const conflict = runFailure(hexo, args, { cwd: root });
   if (!/拒绝覆盖|already exists|EEXIST/.test(`${conflict.stdout}\n${conflict.stderr}`)) {
-    throw new Error("minimal-reading: stellar new note conflict did not explain refusal");
+    throw new Error("notebook: stellar new note conflict did not explain refusal");
   }
   if (sha256File(file) !== beforeConflict) {
-    throw new Error("minimal-reading: stellar new note conflict changed the existing Note");
+    throw new Error("notebook: stellar new note conflict changed the existing Note");
   }
 }
 
-function assertInitTransactions(root, hexo, blueprint, style) {
-  const args = [
-    "stellar", "init",
-    "--blueprint", blueprint,
-    "--style", style,
-    "--non-interactive"
-  ];
-  write(root, "source/_posts/user-owned.md", "---\ntitle: User owned\n---\n\nUser-owned body marker.\n");
-  const userFile = path.join(root, "source/_posts/user-owned.md");
-  const userHash = sha256File(userFile);
-  const dryRunTargets = planTargets(run(hexo, [...args, "--dry-run"], { cwd: root }));
-  if (dryRunTargets.length === 0) throw new Error(`${blueprint}: init dry-run returned an empty plan`);
-  for (const target of dryRunTargets) {
-    if (fs.existsSync(path.join(root, target))) throw new Error(`${blueprint}: init dry-run wrote ${target}`);
-  }
-  const actualTargets = planTargets(run(hexo, args, { cwd: root }));
-  if (JSON.stringify(actualTargets) !== JSON.stringify(dryRunTargets)) {
-    throw new Error(`${blueprint}: init dry-run and write plans differ`);
-  }
-  if (sha256File(userFile) !== userHash) throw new Error(`${blueprint}: init changed user-owned content`);
-
-  const targetHashes = Object.fromEntries(actualTargets.map(target => [target, sha256File(path.join(root, target))]));
-  const conflict = runFailure(hexo, args, { cwd: root });
-  if (!/拒绝覆盖/.test(`${conflict.stdout}\n${conflict.stderr}`)) {
-    throw new Error(`${blueprint}: repeated init did not reject the complete plan`);
-  }
-  for (const [target, hash] of Object.entries(targetHashes)) {
-    if (sha256File(path.join(root, target)) !== hash) throw new Error(`${blueprint}: conflict changed ${target}`);
-  }
-
-  const transactionRoot = path.join(root, ".m10-init-rollback");
-  fs.mkdirSync(transactionRoot, { recursive: true });
-  const installedTheme = path.join(root, "node_modules/hexo-theme-stellar");
-  const { buildBlueprintPlan, writeBlueprintPlan } = require(path.join(installedTheme, "scripts/lib/blueprints"));
-  const plan = buildBlueprintPlan({ themeRoot: installedTheme, baseDir: transactionRoot, blueprint, style });
-  if (plan.files.length < 2) throw new Error(`${blueprint}: rollback fixture requires at least two planned files`);
-  const blocker = path.dirname(plan.files[1].target);
-  write(transactionRoot, blocker, "user-owned parent blocker\n");
-  let rolledBack = false;
-  try {
-    writeBlueprintPlan(plan);
-  } catch (error) {
-    rolledBack = /已回滚/.test(error.message);
-  }
-  if (!rolledBack) throw new Error(`${blueprint}: interrupted init did not report rollback`);
-  for (const target of plan.files.map(file => file.target)) {
-    if (fs.existsSync(path.join(transactionRoot, target))) {
-      throw new Error(`${blueprint}: interrupted init left ${target}`);
-    }
-  }
-  if (fs.readFileSync(path.join(transactionRoot, blocker), "utf8") !== "user-owned parent blocker\n") {
-    throw new Error(`${blueprint}: interrupted init changed the user-owned blocker`);
-  }
-  fs.rmSync(transactionRoot, { recursive: true, force: true });
+function addWikiFixture(root) {
+  write(root, "source/_data/wiki.yml", "- integration\n");
+  write(root, "source/_data/wiki/integration.yml", [
+    "name: Integration Docs",
+    "description: Wiki ViewModel integration fixture.",
+    "route:",
+    "  path: /wiki/integration/",
+    "navigation:",
+    "  tree:",
+    "    Start:",
+    "      - index",
+    "      - getting-started",
+    ""
+  ].join("\n"));
+  write(root, "source/wiki/integration/index.md", "---\ntitle: Integration Documentation\n---\n\nWiki profile integration marker.\n");
+  write(root, "source/wiki/integration/getting-started.md", "---\ntitle: Getting Started\n---\n\nWiki getting-started marker.\n");
 }
 
 function assertDoctorParity(root, hexo, label) {
@@ -333,37 +300,32 @@ function assertLanguage(html, language, label) {
   if (!html.includes(`<html lang="${language}"`)) throw new Error(`${label}: expected html language ${language}`);
 }
 
-function expectedPages(blueprint) {
-  if (blueprint === "classic") {
+function expectedPages(scenario) {
+  if (scenario === "post-topic") {
     return [
       { path: "public/blog/2026/08/23/integration-topic/index.html", marker: "Topic profile integration marker.", profile: "topic" },
-      { marker: "Your first Stellar page", profile: "post" }
+      { marker: "Ordinary Post integration marker.", profile: "post" }
     ];
   }
-  if (blueprint === "minimal-reading") {
+  if (scenario === "notebook") {
     return [
-      { marker: "Notebook profile integration marker.", profile: "notebook" },
-      { marker: "Minimal Reading", profile: "post" }
+      { marker: "Notebook profile integration marker.", profile: "notebook" }
     ];
-  }
-  if (blueprint === "light-and-shadow") {
-    return [{ marker: "This featured story introduces the Light and Shadow homepage.", profile: "post" }];
   }
   return [
-    { path: "public/wiki/docs-reference/index.html", marker: "Product Documentation", profile: "wiki" },
-    { path: "public/wiki/docs-reference/getting-started/index.html", marker: "Getting Started", profile: "wiki" }
+    { path: "public/wiki/integration/index.html", marker: "Wiki profile integration marker.", profile: "wiki" },
+    { path: "public/wiki/integration/getting-started/index.html", marker: "Wiki getting-started marker.", profile: "wiki" }
   ];
 }
 
-function expectedRoutes(blueprint) {
-  if (blueprint === "classic") {
+function expectedRoutes(scenario) {
+  if (scenario === "post-topic") {
     return ["/", "/topic/", "/blog/2026/08/23/integration-topic/"];
   }
-  if (blueprint === "minimal-reading") {
-    return ["/", "/notebooks/", "/notes/integration/", "/notebooks/integration/Integration Notebook Note/"];
+  if (scenario === "notebook") {
+    return ["/notebooks/", "/notes/integration/", "/notebooks/integration/Integration Notebook Note/"];
   }
-  if (blueprint === "light-and-shadow") return ["/"];
-  return ["/wiki/", "/wiki/docs-reference/", "/wiki/docs-reference/getting-started/"];
+  return ["/wiki/", "/wiki/integration/", "/wiki/integration/getting-started/"];
 }
 
 function hasProfileOutput(html, profile) {
@@ -422,11 +384,9 @@ function assertPackageFiles(pack) {
   const files = new Set(pack.files.map(item => item.path));
   const required = [
     "legal/THIRD-PARTY-NOTICES.md",
-    "blueprints/classic/manifest.json",
-    "blueprints/minimal-reading/manifest.json",
-    "blueprints/docs-reference/manifest.json",
-    "blueprints/light-and-shadow/manifest.json",
     "layout/_partial/primitives/shell.ejs",
+    "scripts/commands/stellar.js",
+    "scripts/lib/safe-path.js",
     "scripts/schema/config-schema.js",
     "source/js/runtime/index.mjs"
   ];
@@ -441,6 +401,9 @@ function assertPackageFiles(pack) {
     ".claude/",
     "scripts/.cache/",
     "reference/",
+    "blueprints/",
+    "scripts/lib/blueprints/",
+    "scripts/schema/blueprint-schema.js",
     "package-lock.json",
     "ALPHA.md"
   ];
@@ -462,31 +425,33 @@ function packTheme(root) {
 }
 
 async function checkSite(root, matrix, tarball) {
-  const { id: blueprint, language, style } = matrix;
+  const { id: scenario, language } = matrix;
   createSite(root, { language });
-  process.stdout.write(`${blueprint}/${language}: installing Hexo 8 and ${path.basename(tarball)}\n`);
+  process.stdout.write(`${scenario}/${language}: installing Hexo 8 and ${path.basename(tarball)}\n`);
   const hexo = installSite(root, tarball);
-  assertInitTransactions(root, hexo, blueprint, style);
-  if (blueprint === "classic") addTopicFixture(root);
-  if (blueprint === "minimal-reading") addNotebookFixture(root, hexo);
-  assertDoctorParity(root, hexo, `${blueprint}/${language}`);
+  if (scenario === "post-topic") {
+    addPostFixture(root);
+    addTopicFixture(root);
+  } else if (scenario === "notebook") addNotebookFixture(root, hexo);
+  else addWikiFixture(root);
+  assertDoctorParity(root, hexo, `${scenario}/${language}`);
   run(hexo, ["generate"], { cwd: root });
-  assertRoutes(root, expectedRoutes(blueprint), `${blueprint}/${language}`);
-  for (const expected of expectedPages(blueprint)) {
+  assertRoutes(root, expectedRoutes(scenario), `${scenario}/${language}`);
+  for (const expected of expectedPages(scenario)) {
     const output = expected.path
       ? path.join(root, expected.path)
       : findHtmlWithMarker(path.join(root, "public"), expected.marker, expected.profile);
     const relative = output ? path.relative(root, output) : `<page containing ${expected.marker}>`;
-    if (!output || !fs.existsSync(output)) throw new Error(`${blueprint}: missing ${relative}`);
+    if (!output || !fs.existsSync(output)) throw new Error(`${scenario}: missing ${relative}`);
     const html = fs.readFileSync(output, "utf8");
     if (!html.includes(expected.marker)) throw new Error(`${relative}: missing content marker ${expected.marker}`);
     assertRuntime(html, relative, expected.profile);
-    assertLanguage(html, language, `${blueprint}/${relative}`);
+    assertLanguage(html, language, `${scenario}/${relative}`);
   }
-  assertSearchIndex(root, expectedPages(blueprint).map(item => item.marker), `${blueprint}/${language}`);
-  await assertPreviewServer(root, hexo, `${blueprint}/${language}`);
-  process.stdout.write(`${blueprint}/${language}: init transaction → doctor → generate → routes/search passed\n`);
-  return { id: blueprint, language, style, routes: expectedRoutes(blueprint) };
+  assertSearchIndex(root, expectedPages(scenario).map(item => item.marker), `${scenario}/${language}`);
+  await assertPreviewServer(root, hexo, `${scenario}/${language}`, expectedRoutes(scenario)[0]);
+  process.stdout.write(`${scenario}/${language}: doctor → generate → routes/search passed\n`);
+  return { id: scenario, language, routes: expectedRoutes(scenario) };
 }
 
 async function checkDefaultSite(root, tarball) {
@@ -638,12 +603,12 @@ async function main() {
   const { root } = prepared;
   try {
     const tarball = packTheme(root);
-    const selectedId = args.find(argument => argument.startsWith("--blueprint="))?.slice(12)
-      || process.env.STELLAR_INTEGRATION_BLUEPRINT;
+    const selectedId = args.find(argument => argument.startsWith("--scenario="))?.slice(11)
+      || process.env.STELLAR_INTEGRATION_SCENARIO;
     const selected = selectedId
-      ? BLUEPRINT_MATRIX.filter(matrix => matrix.id === selectedId)
-      : BLUEPRINT_MATRIX;
-    if (selected.length === 0) throw new Error(`Unknown integration Blueprint: ${selectedId}`);
+      ? SCENARIO_MATRIX.filter(matrix => matrix.id === selectedId)
+      : SCENARIO_MATRIX;
+    if (selected.length === 0) throw new Error(`Unknown integration scenario: ${selectedId}`);
     const sites = [];
     for (const matrix of selected) {
       sites.push(await checkSite(path.join(root, matrix.id), matrix, tarball));
@@ -669,7 +634,7 @@ if (require.main === module) {
 }
 
 module.exports = {
-  BLUEPRINT_MATRIX,
+  SCENARIO_MATRIX,
   INSTALL_PACKAGES,
   PREVIEW_COMMAND,
   assertPreviewServer,
@@ -678,6 +643,5 @@ module.exports = {
   expectedPages,
   expectedRoutes,
   findHtmlWithMarker,
-  hasProfileOutput,
-  planTargets
+  hasProfileOutput
 };

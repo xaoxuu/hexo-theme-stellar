@@ -1,7 +1,0 @@
-{
-  "schema_version": 1,
-  "id": "flat",
-  "name": "Flat",
-  "description": "半透明平面、轻量模糊与清晰分隔线。",
-  "fragment": "appearance.yml"
-}

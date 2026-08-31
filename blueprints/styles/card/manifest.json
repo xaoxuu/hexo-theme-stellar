@@ -1,7 +1,0 @@
-{
-  "schema_version": 1,
-  "id": "card",
-  "name": "Card",
-  "description": "清晰的实体卡片、边界与层级。",
-  "fragment": "appearance.yml"
-}

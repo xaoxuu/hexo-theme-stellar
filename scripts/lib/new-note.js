@@ -4,7 +4,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const yaml = require("js-yaml");
 
-const { resolveInside } = require("./blueprints");
+const { resolveInside } = require("./safe-path");
 const { parseCollectionConfig, parsePageConfig } = require("./content-config");
 const { parseFrontMatterYaml } = require("./front-matter");
 const { deepFreeze } = require("../schema/schema-utils");

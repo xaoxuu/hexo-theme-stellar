@@ -360,11 +360,11 @@ flowchart TD
 
 Stellar 通过 npm 以 `hexo-theme-stellar` 分发，采用 MIT 协议开源。
 
-`stellar init` 与 `stellar doctor`：前者从 `classic`、`minimal-reading`、`docs-reference`、`light-and-shadow` 四套 Blueprint 和 `card`、`flat`、`glass`、`minimal` 四套 Visual Style 生成一次性的显式站点文件，后者复用 v2 Schema 只读检查环境与配置。Blueprint 不进入页面运行时，也不会成为新的配置根；其清单契约由 Schema、manifest 与真实 init/doctor 集成测试共同维护。
+完整 Blueprint 已迁移到独立的 [Stellar Examples](https://github.com/xaoxuu/hexo-theme-stellar-examples) 仓库。四套示例分别作为可下载、可预览和可独立运行的新站方案；主题包只保留 `stellar doctor` 与 `stellar new note`，不再携带示例内容或注册 init。Blueprint 不进入页面运行时，也不会成为新的配置根。
 
-Pre-alpha M9 完成默认内容体验：空配置或缺少 `_config.stellar.yml` 的普通 Post/Page 可直接生成，Wiki/Topic/Notebook 只在唯一候选时推断归属；Blueprint 只保留产品差异，starter Markdown 不要求可选 Stellar 元数据。当前本地候选 tarball 门禁覆盖四套 Blueprint 和一个无 init 默认站点的 doctor → generate。Alpha、Beta 只是内部成熟度里程碑，不会发布 npm 版本、tag 或 GitHub Release；M10/Alpha 必须等待站长对 Region/Widget 新契约生成的候选重新人工验收。
+Pre-alpha M9 完成默认内容体验：空配置或缺少 `_config.stellar.yml` 的普通 Post/Page 可直接生成，Wiki/Topic/Notebook 只在唯一候选时推断归属。主题候选 tarball 门禁直接覆盖 Post、Topic、Wiki、Notebook 与无主题覆盖站点的 doctor → generate；完整产品旅程由 examples 仓库验证。Alpha、Beta 只是内部成熟度里程碑，不会发布 npm 版本、tag 或 GitHub Release；M10/Alpha 必须等待站长对 Region/Widget 新契约生成的候选重新人工验收。
 
-**参考源码**：[package.json](../../../package.json)、[blueprints/](../../../blueprints/)、[ci/check-package-integration.js](../../../ci/check-package-integration.js)、[scripts/schema/blueprint-schema.js](../../../scripts/schema/blueprint-schema.js)、[scripts/commands/stellar.js](../../../scripts/commands/stellar.js)、[scripts/lib/theme-metadata.js](../../../scripts/lib/theme-metadata.js)、[README.md](../../../README.md)
+**参考源码**：[package.json](../../../package.json)、[ci/check-package-integration.js](../../../ci/check-package-integration.js)、[scripts/commands/stellar.js](../../../scripts/commands/stellar.js)、[scripts/lib/theme-metadata.js](../../../scripts/lib/theme-metadata.js)、[README.md](../../../README.md)、[Stellar Examples](https://github.com/xaoxuu/hexo-theme-stellar-examples)
 
 ---
 

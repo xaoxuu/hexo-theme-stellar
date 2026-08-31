@@ -19,7 +19,6 @@ tags:
 - [LICENSE](../../../LICENSE)
 - [README.md](../../../README.md)
 - [_config.yml](../../../_config.yml)
-- [blueprints/](../../../blueprints/)
 - [package.json](../../../package.json)
 - [scripts/commands/stellar.js](../../../scripts/commands/stellar.js)
 - [scripts/events/lib/config-hot-reload.js](../../../scripts/events/lib/config-hot-reload.js)
@@ -160,7 +159,7 @@ graph LR
 | **glob** | ^10.4.0 | 文件通配匹配 |
 | **hexo-renderer-ejs** | ^2.0.0 | EJS 模板渲染引擎（渲染布局文件） |
 | **hexo-renderer-stylus** | ^3.0.1 | Stylus CSS 预处理器（编译主题样式） |
-| **js-yaml** | ^4.1.0 | Blueprint manifest、生成配置与 doctor 的 YAML 读取 |
+| **js-yaml** | ^4.1.0 | doctor、站点配置与内容数据的 YAML 读取 |
 | **probe-image-size** | ^7.2.3 | 图片尺寸探测（懒加载占位） |
 
 这些依赖分别负责：
@@ -169,7 +168,7 @@ graph LR
 - **glob**：脚本中的文件批量匹配
 - **hexo-renderer-ejs**：渲染 `.ejs` 布局模板
 - **hexo-renderer-stylus**：把 `.styl` 编译为 CSS
-- **js-yaml**：读取 Blueprint 资产和 doctor 检查的站点配置，不负责自动改写
+- **js-yaml**：读取 doctor 检查所需的站点配置与内容数据，不负责自动改写
 - **probe-image-size**：无需下载完整图片即可获取图片尺寸
 
 **参考源码**：[package.json](../../../package.json)
@@ -216,17 +215,17 @@ theme: stellar
 
 ---
 
-## v2 Blueprint 初始化与检查
+## Blueprint 创建与站点检查
 
-当前提供四套一次性 Blueprint：`classic`、`minimal-reading`、`docs-reference`、`light-and-shadow`，以及 `card`、`flat`、`glass`、`minimal` 四套 Visual Style。主题启用后可以先预览写入计划：
+完整 Blueprint 由独立的 [Stellar Examples](https://github.com/xaoxuu/hexo-theme-stellar-examples) 仓库维护与分发。`lightblog`、`blog`、`knowledge`、`stellar` 分别是一套可以独立运行的完整示例站点；创建器只写入新目录，不覆盖、合并或迁移已有站点。
 
 ```bash
-npx hexo stellar init --blueprint classic --style card --dry-run --non-interactive
+curl -fsSL https://github.com/xaoxuu/hexo-theme-stellar-examples/releases/latest/download/install.sh | sh
 ```
 
-确认目标文件均可创建后，移除 `--dry-run` 执行写入。init 会整体拒绝任何已有目标，不覆盖或合并用户文件。生成结果是普通 `_config.stellar.yml`、Collection 数据与 Markdown 内容；其中没有 Blueprint ID、锁文件或运行时继承关系，也不重复 Schema 默认值。Visual Style 只写 Appearance 差异，starter 只保留对应产品差异与最小 Markdown。
+创建器会交互选择 Blueprint、目标目录、版本和依赖安装方式，再下载与该版本绑定的单站归档并校验 SHA-256。主题 npm 包不再包含示例内容，也不再注册 `hexo stellar init`。
 
-`init` 不是构建前置条件。只有普通 Post/Page 的站点可以不创建 `_config.stellar.yml`，直接使用 Schema 默认值运行 doctor 和 generate；空文件与缺失文件语义相同。Wiki/Topic/Notebook 内容在已注册数据与源码关系唯一时也不必重复写 `collection`，冲突时按 doctor 给出的候选与最小修复处理。
+Blueprint 不是构建前置条件。只有普通 Post/Page 的站点可以不创建 `_config.stellar.yml`，直接使用 Schema 默认值运行 doctor 和 generate；空文件与缺失文件语义相同。Wiki/Topic/Notebook 内容在已注册数据与源码关系唯一时也不必重复写 `collection`，冲突时按 doctor 给出的候选与最小修复处理。
 
 生成后运行只读检查：
 
@@ -237,7 +236,7 @@ npx hexo stellar doctor --format json --silent
 
 JSON 模式必须使用 Hexo 全局 `--silent`，避免命令加载前的 Hexo 启动日志混入标准输出，保证 stdout 是可直接解析的单一 JSON 文档。doctor 检查 Node.js、Hexo、`theme: stellar`、Schema 默认值或主题覆盖、Collection YAML、Markdown Front Matter 与成员归属；失败问题包含来源、字段路径、实际类型、期望结构、候选集合和迁移章节，但不会修改文件。
 
-**参考源码**：[blueprints/](../../../blueprints/)、[scripts/commands/stellar.js](../../../scripts/commands/stellar.js)、[scripts/lib/blueprints/](../../../scripts/lib/blueprints/)、[scripts/lib/doctor.js](../../../scripts/lib/doctor.js)
+**参考源码**：[scripts/commands/stellar.js](../../../scripts/commands/stellar.js)、[scripts/lib/doctor.js](../../../scripts/lib/doctor.js)、[Stellar Examples](https://github.com/xaoxuu/hexo-theme-stellar-examples)
 
 ---
 

@@ -1,7 +1,0 @@
-{
-  "schema_version": 1,
-  "id": "minimal",
-  "name": "Minimal",
-  "description": "以正文为中心的克制色彩、紧凑圆角与低动效。",
-  "fragment": "appearance.yml"
-}

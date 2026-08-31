@@ -102,9 +102,9 @@ Drawer 复用原 Region 节点并遵守 ARIA、焦点转移、Escape、焦点恢
 ## 与其它维度正交
 
 - `appearance.preset: card | glass | minimal | flat` 只决定视觉 Token。
-- Blueprint 只做一次性文件生成，不参与运行时继承。
+- Examples Blueprint 是完整站点起点，不参与主题运行时继承。
 
-首页固定使用标准文章 Feed；切换 Appearance 或 Blueprint 不会改变 Region DOM。
+首页固定使用标准文章 Feed；切换 Appearance 不会改变 Region DOM。
 
 ## 迁移
 

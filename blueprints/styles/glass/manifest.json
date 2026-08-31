@@ -1,7 +1,0 @@
-{
-  "schema_version": 1,
-  "id": "glass",
-  "name": "Glass",
-  "description": "半透明表面、柔和模糊与光影层次。",
-  "fragment": "appearance.yml"
-}
