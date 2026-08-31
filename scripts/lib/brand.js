@@ -19,7 +19,10 @@ function normalizeBrand(brand) {
 }
 
 function collectionBrandUrl(collection, type) {
-  if (type === "wiki") return collection?.route?.homepage || collection?.homepage?.path;
+  if (type === "wiki") {
+    const homepage = collection?.route?.homepage ?? collection?.homepage?.path;
+    return homepage === "" ? "/" : homepage;
+  }
   if (type === "notebook") return collection?.route?.baseDir || collection?.route?.path;
   if (type === "topic") return collection?.route?.path;
   return undefined;

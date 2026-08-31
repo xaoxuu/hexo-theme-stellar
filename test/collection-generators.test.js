@@ -21,10 +21,10 @@ function loadGenerator(modulePath, registeredName) {
   return callback;
 }
 
-function context(data) {
+function context(data, themeConfig = {}) {
   return Object.assign(global.hexo, {
     stellar: {
-      config: parseStellarConfig({ themeConfig: {} }),
+      config: parseStellarConfig({ themeConfig }),
       data
     }
   });
@@ -59,6 +59,15 @@ test("Collection generators project sorted and filtered indexes into routes", ()
   }));
   assert.deepEqual(wikiRoutes[1].data.wikiIndex.items.map(item => item.id), ["tagged"]);
   assert.deepEqual(wikiRoutes[1].data.wikiIndex.allItems.map(item => item.id), ["visible", "tagged"]);
+
+  const disabledWikiRoutes = wikiGenerator.call(context({
+    wiki: {
+      tree: { docs: {} },
+      index: { items: [], tags: [] },
+      all_tags: {}
+    }
+  }, { profiles: { wiki_index: { path: null } } }));
+  assert.deepEqual(disabledWikiRoutes, []);
 });
 
 test("Notebook generator preserves collection ownership in paginated routes", () => {

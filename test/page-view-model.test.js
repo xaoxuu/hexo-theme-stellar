@@ -138,3 +138,38 @@ test("Collection PageViewModel builders reject mismatched ownership", () => {
     assert.throws(() => build(input), /不匹配/);
   }
 });
+
+test("root Wiki project keeps root navigation without a Wiki index", () => {
+  const source = "source/wiki/docs/index.md";
+  const input = {
+    source,
+    collectionSource: "source/_data/wiki/docs.yml",
+    collectionId: "docs",
+    collectionConfig: parseCollectionConfig({
+      name: "Docs",
+      route: { path: "/" },
+      hero: { enabled: true }
+    }, "source/_data/wiki/docs.yml"),
+    collectionState: {
+      homepage: { path: "", title: "Docs" },
+      sections: []
+    },
+    relatedCollections: [],
+    stellarConfig: parseStellarConfig({
+      themeConfig: { profiles: { wiki_index: { path: null } } },
+      siteConfig: {}
+    }),
+    siteConfig,
+    frontMatter: frontMatter(source, "wiki", "docs"),
+    page: {
+      ...page("wiki/docs", "wiki"),
+      path: "",
+      permalink: "https://example.com/"
+    }
+  };
+
+  const viewModel = buildWikiPageViewModel(input);
+  assert.equal(viewModel.render.layout.brands.collection.href, "/");
+  assert.equal(viewModel.render.layout.wikiIndexPath, "");
+  assert.equal(viewModel.render.cover.enabled, true);
+});

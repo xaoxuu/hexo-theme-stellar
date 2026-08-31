@@ -11,6 +11,7 @@ const { selectListingItems } = require("../lib/collection-pipeline/shared");
 hexo.extend.generator.register("wiki", function () {
   const { wiki } = hexo.stellar.data;
   const profile = requireLayoutProfiles(hexo.stellar?.config).wikiIndex;
+  if (profile.path == null) return [];
   const index = wiki.index;
   if (!index || !Array.isArray(index.items) || !Array.isArray(index.tags)) {
     throw new Error("Stellar v2: Wiki 索引缺少显式 render.listing 投影");

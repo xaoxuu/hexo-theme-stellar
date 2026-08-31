@@ -653,7 +653,7 @@ function buildWikiRenderModel(input, collection, item) {
     : Array.isArray(footer.share) ? footer.share : [];
   const shareServices = configuredShare.filter(name => ["wechat", "weibo", "email", "link"].includes(name));
   const readNext = wikiReadNext(collection, item);
-  const isHomepage = collection.route.homepage.length > 0 && collection.route.homepage === item.route.path;
+  const isHomepage = collection.route.homepage === item.route.path;
   const hero = collection.presentation.hero || {};
   const repository = typeof collection.source.repository === "string" ? collection.source.repository : "";
   const githubApi = stellarConfig.services.github.apiUrl;

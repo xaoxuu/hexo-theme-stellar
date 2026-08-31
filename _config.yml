@@ -208,7 +208,7 @@ profiles:
 
   # 配置 Wiki 列表页默认布局。
   wiki_index:
-    # 设置 Wiki 列表页的自动生成路径。
+    # 设置 Wiki 列表页的自动生成路径；null 表示不生成列表页。
     path: /wiki/
     # 设置 Wiki 列表页高亮的主菜单项；null 表示不高亮。
     active_menu: null

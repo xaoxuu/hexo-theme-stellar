@@ -5,8 +5,11 @@ function layoutDiv() {
     : null
   if (wikiViewModel) {
     var render = wikiViewModel.render.layout
-    var el = `<span class="sep"></span>`
-    el += `<a class="cap breadcrumb" id="menu" href="${pretty_url(render.wikiIndexPath)}">${__("btn.wiki")}</a>`
+    var el = ''
+    if (render.wikiIndexPath) {
+      el += `<span class="sep"></span>`
+      el += `<a class="cap breadcrumb" id="menu" href="${pretty_url(render.wikiIndexPath)}">${__("btn.wiki")}</a>`
+    }
     for (var breadcrumb of render.breadcrumbs) {
       if (pretty_url(breadcrumb.path) != pretty_url(render.wikiIndexPath)) {
         el += `<span class="sep"></span>`
