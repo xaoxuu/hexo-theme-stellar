@@ -282,6 +282,7 @@ profiles:
       # 设置 Wiki 内容页 Leftbar 内容 Widget；数组会整体替换站点级列表。
       widgets:
         - tree
+        - related
     # 配置 Wiki 内容页 Rightbar 覆盖项。
     rightbar:
       # 设置 Wiki 内容页 Rightbar Widget；数组会整体替换站点级列表。
