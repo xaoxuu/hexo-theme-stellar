@@ -66,6 +66,133 @@ appearance-standard-interactions()
   .widget-wrapper.markdown .ui-interactive
     background: var(--block)
 
+// Editorial Minimal 的交互反馈只使用排版和当前文字颜色，不创建填充表面。
+// 文字交互复用文章卡片标题的普通主题色下划线；复合能力使用同色内描边。
+appearance-editorial-underline-mark()
+  position: relative
+  z-index: 0
+  &::after
+    content: ''
+    pointer-events: none
+    position: absolute
+    left: 0
+    bottom: 0
+    z-index: -1
+    width: 100%
+    height: 0
+    opacity: 0
+    background: var(--theme)
+    transition: height .25s ease, opacity .25s ease
+
+appearance-editorial-underline()
+  padding: 0
+  background-color: transparent
+  background-image: none
+  box-shadow: none
+  appearance-editorial-underline-mark()
+  &:focus-visible
+    outline: 2px solid var(--theme)
+    outline-offset: 2px
+
+appearance-editorial-underline-active()
+  background-color: transparent
+  box-shadow: none
+  color: var(--text-p0)
+  &::after
+    height: 8px
+    opacity: .5
+
+appearance-editorial-outline()
+  background: transparent
+  box-shadow: none
+  transition: box-shadow .2s ease-out, color .2s ease-out
+
+appearance-editorial-outline-active()
+  background: transparent
+  box-shadow: inset 0 0 0 1px var(--text-p3)
+
+appearance-editorial-interactions()
+  .ui-interactive
+    appearance-editorial-outline()
+    &:focus-visible
+      outline: 2px solid var(--theme)
+      outline-offset: 2px
+
+  .ui-interactive:hover,
+  .ui-interactive:focus-visible,
+  .ui-interactive:active,
+  .ui-interactive.active,
+  .ui-interactive.is-active,
+  details[open] > .ui-interactive
+    appearance-editorial-outline-active()
+
+  // 单行文字导航使用标题下划线；摘要、网格和纯图标条目继续使用内描边。
+  .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only)
+    appearance-editorial-underline()
+
+  // 移除的内边距等值迁移为外边距，保持布局节奏而不扩大下划线范围。
+  .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only)
+    margin: var(--ui-item-padding-y) var(--ui-item-padding-x)
+    margin-left: calc(var(--ui-item-padding-x) + var(--ui-item-depth) * var(--gap-base))
+
+  .brand-navigation__back
+    padding: 0
+    &:hover
+      color: var(--text-p2)
+      background: transparent
+      box-shadow: none
+
+  // Leftbar 的下划线已经收敛到标题文字，交互容器恢复组件原有 padding，不再等值迁移为 margin。
+  .site-region--leftbar .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only)
+    margin: 0
+    padding: var(--ui-item-padding-y) var(--ui-item-padding-x)
+    padding-left: calc(var(--ui-item-padding-x) + var(--ui-item-depth) * var(--gap-base))
+
+  .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only):hover,
+  .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only):focus-visible,
+  .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only):active,
+  .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only).active,
+  .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only).is-active,
+  details[open] > .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only)
+    appearance-editorial-underline-active()
+
+  // Side Region 的点击容器可以包含图标与留白；下划线只跟随内部标题文字。
+  .site-region--leftbar .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only)::after,
+  .site-region--rightbar .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only)::after
+    display: none
+
+  .site-region--leftbar .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__title,
+  .site-region--rightbar .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__title
+    display: inline-block
+    max-width: 100%
+    appearance-editorial-underline-mark()
+
+  // Menu 条目优先使用自身主题色；未声明时回退到全局主题色。
+  .widget-instance--menu .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only)::after,
+  .widget-instance--menu .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__title::after
+    background: var(--item-theme, var(--theme))
+
+  // Collection Item 只要声明了通用交互能力，hover 就统一显示 Editorial 内描边。
+  .ui-collection__item.ui-interactive:hover,
+  .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item.ui-interactive:not(.is-icon-only):hover
+    appearance-editorial-outline-active()
+
+  .site-region--leftbar .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only):hover .ui-collection__title,
+  .site-region--leftbar .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only):focus-visible .ui-collection__title,
+  .site-region--leftbar .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only).is-active .ui-collection__title,
+  .site-region--rightbar .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only):hover .ui-collection__title,
+  .site-region--rightbar .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only):focus-visible .ui-collection__title,
+  .site-region--rightbar .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only).is-active .ui-collection__title
+    appearance-editorial-underline-active()
+
+  @media (prefers-reduced-motion: reduce)
+    .ui-interactive
+      transition: none
+    .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only)::after,
+    .site-region--leftbar .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__title::after,
+    .site-region--rightbar .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__title::after
+      transition: none
+
 appearance-glass-interactions-light()
   .ui-interactive
     background: transparent

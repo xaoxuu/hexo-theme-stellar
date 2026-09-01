@@ -10,6 +10,7 @@ hexo.extend.generator.register('stellar_icons', function () {
     'default:profile',
     'default:warning',
     'default:settings',
+    'copy:copy',
     'weibo:repeat',
     'weibo:like'
   ];

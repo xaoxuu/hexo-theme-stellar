@@ -25,11 +25,10 @@ if (collection_id(page, 'topic')) runtimeProfile = 'topic'
 if (collection_id(page, 'notebook')) runtimeProfile = 'notebook'
 var runtimeMessages = {
   copy: {
-    idle: __('btn.copy'),
-    success: __('message.copied'),
+    label: __('btn.copy'),
+    copied: __('message.copied'),
     denied: __('message.copy_denied'),
-    unsupported: __('message.copy_unsupported'),
-    toast: __('message.copied')
+    unsupported: __('message.copy_unsupported')
   }
 }
 if (runtimeExtensions.features.colorSchemeSwitch.enabled) {

@@ -67,7 +67,7 @@ tags:
 | `$leftbar-background-image` | `appearance.backgrounds.leftbar.image` | 左栏背景图 |
 | `$leftbar-gradient-light-*` / `$leftbar-gradient-dark-*` | `appearance.backgrounds.leftbar.gradient.light/dark` | 浅色、深色艺术渐变的基础、左上、右中、左下颜色 |
 
-组件优先使用语义颜色变量，例如 `var(--text-p1)`、`var(--card)`、`var(--block-border)` 和 `var(--theme)`；组件文档不应复制整套颜色值。
+组件优先使用语义颜色变量，例如最高强调文字 `var(--text-p0)`、正文层级 `var(--text-p1)`、`var(--card)`、`var(--block-border)` 和 `var(--theme)`；`var(--text)` 是 `var(--text-p0)` 的兼容别名。组件文档不应复制整套颜色值。
 
 ### 圆角
 
@@ -117,7 +117,7 @@ tags:
 | `--ui-item-padding-x` / `--ui-item-padding-y` / `--ui-item-min-height` | 条目自身几何尺寸 |
 | `--ui-collection-gap` / `--ui-columns` / `--ui-grid-min` | 集合间距、最大列数和自适应最小列宽 |
 
-surface 只改变背景、阴影与文字层级；list/grid、variant、density 负责几何。条目默认背景透明：glass 表面的 hover/active 使用顶部光照与高光边，其它表面使用 `var(--block)`；这些状态不使用过渡动画。`columns` 是 grid 的最大列数，实际列数由 `auto-fit/minmax` 按容器宽度自动降低，不能用于控制标题可见性。
+surface 只改变背景、阴影与文字层级；list/grid、variant、density 负责几何。条目默认背景透明：glass 表面的 hover/active 使用顶部光照与高光边，card/flat 使用 `var(--block)`，minimal 按 [Editorial Minimal](editorial-minimal.md) 使用文章标题式下划线或 `var(--text-p3)` 内描边。`columns` 是 grid 的最大列数，实际列数由 `auto-fit/minmax` 按容器宽度自动降低，不能用于控制标题可见性。
 
 这些变量定义在 `collection.styl` 的组件作用域中，不属于站点配置 API；其它通用紧凑集合可以消费，但专用展示组件不应借用它们改变自身布局。
 

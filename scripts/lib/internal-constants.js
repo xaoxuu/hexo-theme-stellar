@@ -38,7 +38,6 @@ module.exports = deepFreeze({
       maxCacheEntryBytes: 200 * 1024
     },
     features: {
-      codeCopyFeedbackMs: 3000,
       codeCopyToastMs: 2500
     }
   },

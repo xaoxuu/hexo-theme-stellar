@@ -2,9 +2,13 @@ function createCopyButtons(codeElements) {
   codeElements.forEach((codeElement) => {
     if (codeElement.querySelector('.copy-btn')) return;
     // 创建复制按钮
-    const codeCopyBtn = document.createElement('div');
+    const codeCopyBtn = document.createElement('button');
+    const copyIcon = ctx.icons['copy:copy'] || '';
     codeCopyBtn.className = 'copy-btn';
-    codeCopyBtn.textContent = ctx.copycode.default_text;
+    codeCopyBtn.type = 'button';
+    codeCopyBtn.innerHTML = copyIcon;
+    codeCopyBtn.setAttribute('aria-label', ctx.copycode.label);
+    codeCopyBtn.setAttribute('title', ctx.copycode.label);
     codeElement.appendChild(codeCopyBtn);
 
     // 添加点击事件监听
@@ -13,23 +17,13 @@ function createCopyButtons(codeElements) {
       if (navigator.clipboard) {
         try {
           await navigator.clipboard.writeText(codeToCopy);
-          codeCopyBtn.textContent = ctx.copycode.success_text;
-          codeCopyBtn.classList.add('success');
-          hud.toast(ctx.copycode.toast, ctx.copycode.toast_ms);
+          hud.toast(ctx.copycode.copied, ctx.copycode.toast_ms);
         } catch (error) {
-          codeCopyBtn.textContent = ctx.copycode.denied_text;
-          codeCopyBtn.classList.add('warning');
+          hud.toast(ctx.copycode.denied, ctx.copycode.toast_ms);
         }
       } else {
-        codeCopyBtn.textContent = ctx.copycode.unsupported_text;
-        codeCopyBtn.classList.add('warning');
+        hud.toast(ctx.copycode.unsupported, ctx.copycode.toast_ms);
       }
-
-      // 固定反馈时序由内部 Runtime policy 提供。
-      setTimeout(() => {
-        codeCopyBtn.textContent = ctx.copycode.default_text;
-        codeCopyBtn.classList.remove('success', 'warning');
-      }, ctx.copycode.feedback_ms);
     });
   });
 }

@@ -168,12 +168,10 @@ async function mountCodeCopy(root, context, config) {
   const messages = config.messages || {};
   const policy = context.manifest.policy.features;
   context.legacy.ctx.copycode = {
-    default_text: messages.idle || '',
-    success_text: messages.success || '',
-    denied_text: messages.denied || '',
-    unsupported_text: messages.unsupported || '',
-    toast: messages.toast || '',
-    feedback_ms: policy.codeCopyFeedbackMs,
+    label: messages.label || '',
+    copied: messages.copied || '',
+    denied: messages.denied || '',
+    unsupported: messages.unsupported || '',
     toast_ms: policy.codeCopyToastMs
   };
   await context.assets.script(config.assets.js);

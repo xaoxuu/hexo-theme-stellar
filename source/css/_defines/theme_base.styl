@@ -42,7 +42,8 @@ x-set-text-colors($scheme, $p0 = 1, $p1 = 0.8, $p2 = 0.7, $p3 = 0.5, $p4 = 0.4)
   $sat = 0%
   $light = $scheme == 'dark' ? 100% : 0%
   
-  --text: x-hsla($hue, $sat, $light, $p0)
+  --text-p0: x-hsla($hue, $sat, $light, $p0)
+  --text: var(--text-p0)
   --text-reverse: x-hsla($hue, $sat, $scheme == 'dark' ? 0% : 100%, $p0)
   --text-p1: x-hsla($hue, $sat, $light, $p1)
   --text-p2: x-hsla($hue, $sat, $light, $p2)
