@@ -40,6 +40,8 @@ glass-leftbar-background-gradient($base, $top, $right, $bottom, $opacity)
 .site-shell
   --shell-gap: var(--gap-page)
   --shell-edge-inset: 16px
+  --hoverable-card-hover-shadow: $boxshadow-card
+  --hoverable-card-hover-transform: none
 
 .ui-surface
   appearance-glass-surface()
@@ -47,6 +49,11 @@ glass-leftbar-background-gradient($base, $top, $right, $bottom, $opacity)
 appearance-glass-interactions-light()
 appearance-standard-prose()
 appearance-card-listing-nav()
+
+// Rightbar TOC 的当前位置仅由文字与左侧标记表达；指针、键盘与按压反馈仍复用 Glass 交互材质。
+.site-region--rightbar .widget-wrapper.toc .toc-link.active:not(:hover):not(:focus-visible):not(:active)
+  background: transparent
+  box-shadow: none
 
 .widget-wrapper.markdown .ui-interactive
   background: var(--bg-a10)
@@ -61,6 +68,16 @@ appearance-card-listing-nav()
 
 .site-region--leftbar .site-region__surface.ui-surface
   box-shadow: none
+
+@media screen and (max-width: $device-laptop)
+  .site-region--rightbar .site-region__surface.ui-drawer-surface
+    appearance-glass-surface()
+    background: var(--bg-a50)
+    box-shadow: none
+
+@media screen and (max-width: $device-tablet)
+  .site-region--leftbar .site-region__surface.ui-surface
+    background: var(--bg-a50)
 
 .site-region--topbar > .site-region__viewport
   border-radius: inherit

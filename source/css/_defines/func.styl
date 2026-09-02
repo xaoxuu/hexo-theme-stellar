@@ -137,8 +137,8 @@ tag-chip()
 floatable-trans()
   trans2 transform box-shadow
 floatable-float()
-  box-shadow: 0 12px 20px -4px rgba(0, 0, 0, 0.15)
-  transform: translate3d(0, -2px, 0)
+  box-shadow: var(--hoverable-card-hover-shadow, 0 12px 20px -4px rgba(0, 0, 0, 0.15))
+  transform: var(--hoverable-card-hover-transform, translate3d(0, -2px, 0))
 
 hoverable-card()
   trans1 all
@@ -148,7 +148,7 @@ hoverable-card()
       floatable-float()
   ondark()
     &:hover
-      box-shadow: 0 0 4px -2px var(--theme), 0 0 24px -8px var(--theme)
+      box-shadow: var(--hoverable-card-hover-shadow, 0 0 4px -2px var(--theme)\, 0 0 24px -8px var(--theme))
   :root[data-theme="light"] &
     onlight()
   :root[data-theme="dark"] &
@@ -171,8 +171,8 @@ frosted-surface($background-light = rgba(white, .3), $background-dark = rgba(whi
     @media (prefers-color-scheme: dark)
       background: $background-dark
 
-// Glass 容器材质：Listing Nav 与 Glass ui-surface 共享同一组阴影、
-// 双层高斯模糊、饱和边缘、遮罩与明暗色高光。
+// Glass 容器材质：全表面保留轻度模糊，四周叠加更强的模糊层并向中心渐隐。
+// Listing Nav 与 Glass ui-surface 共享同一组阴影与饱和边缘。
 glass-material($radius = 64px)
   box-shadow: 0 0 2px rgba(black, .04), 0 2px 8px rgba(black, .04), 0 4px 16px rgba(black, .04)
   &:before,&:after
@@ -189,22 +189,26 @@ glass-material($radius = 64px)
   &:before
     backdrop-filter: blur(8px)
     -webkit-backdrop-filter: blur(8px)
-    background: var(--bg-a50)
-    margin: 1px
-  &:after
-    --blur-sat: 300%
-    background: rgba(white, 0.05)
-    backdrop-filter: saturate(var(--blur-sat))
-    -webkit-backdrop-filter: saturate(var(--blur-sat))
-    mask: linear-gradient(black, rgba(black, 0.5), 70%, transparent, 90%, transparent)
-    -webkit-mask: linear-gradient(black, rgba(black, 0.5), 70%, transparent, 90%, transparent)
-    box-shadow: inset 0 0 32px 1px rgba(white, 0.5)
-    trans1 all
+    background: rgba(white, 0.3)
     :root[data-theme="dark"] &
-      box-shadow: inset 0 0 32px 1px rgba(white, 0.1)
+      background: rgba(white, 0.15)
     :root:not([data-theme]) &
       @media (prefers-color-scheme: dark)
-        box-shadow: inset 0 0 32px 1px rgba(white, 0.1)
+        background: rgba(white, 0.15)
+  &:after
+    --blur-px: 16px
+    --blur-sat: 300%
+    backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
+    -webkit-backdrop-filter: saturate(var(--blur-sat)) blur(var(--blur-px))
+    mask: linear-gradient(white, 20%, transparent, 80%, white), linear-gradient(90deg, white, 20%, transparent, 80%, white)
+    -webkit-mask-image: linear-gradient(white, 20%, transparent, 80%, white), linear-gradient(90deg, white, 20%, transparent, 80%, white)
+    box-shadow: inset 0 0 32px 4px rgba(white, 0.5)
+    trans1 all
+    :root[data-theme="dark"] &
+      box-shadow: inset 0 0 16px 4px rgba(white, 0.1)
+    :root:not([data-theme]) &
+      @media (prefers-color-scheme: dark)
+        box-shadow: inset 0 0 16px 4px rgba(white, 0.1)
 
 newblur($radius = 64px)
   glass-material($radius)
