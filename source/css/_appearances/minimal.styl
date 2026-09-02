@@ -85,26 +85,32 @@ appearance-standard-prose()
 
 // Listing Nav 只保留文字导航；当前项持续显示下划线，但不保留旧按钮背景。
 .listing-nav
-  margin-top: 2rem
+  margin: 1rem
 .listing-nav__surface,
 .listing-nav__surface.is-pinned
   margin: 0
   border: 0
+  border-radius: 0
   border-bottom: 1px dashed var(--block-border)
-  padding-bottom: 1rem
+  padding: 1rem 0
   background: transparent
   box-shadow: none
   backdrop-filter: none
   -webkit-backdrop-filter: none
-
+.listing-nav__viewport
+  border-radius: 0
+.listing-nav nav
+  padding: 0
 .listing-nav nav a
   appearance-editorial-underline()
   width: fit-content
   font-size: var(--fsh4)
   line-height: 1.2
-  margin: .25rem .75rem
+  margin: .25rem .0
   backdrop-filter: none
   -webkit-backdrop-filter: none
+  &+a
+    margin-left: 1rem
   &:hover,
   &:focus-visible
     appearance-editorial-underline-active()
@@ -158,7 +164,7 @@ appearance-standard-prose()
 // 文本列表使用文章标题式下划线；Tag 等复合短控件使用同色内描边。
 .post-list .archive-list a.post,
 .post-list #cats a.cat,
-.page-footer a
+.page-footer .sitemap .sitemap-group > a,
   appearance-editorial-underline()
   border: 0
   background-color: transparent
@@ -173,21 +179,18 @@ appearance-standard-prose()
 .post-list .archive-list a.post:focus-visible,
 .post-list #cats a.cat:hover,
 .post-list #cats a.cat:focus-visible,
-.page-footer a:hover,
-.page-footer a:focus-visible
+.page-footer .sitemap .sitemap-group > a:hover,
+.page-footer .sitemap .sitemap-group > a:focus-visible,
+.page-footer.footnote .text a:hover,
+.page-footer.footnote .text a:focus-visible
   appearance-editorial-underline-active()
   border: 0
   background-color: transparent
 
-// 页脚正文由 Markdown 渲染，清除普通正文链接的渐变背景，避免与 Editorial 下划线叠加。
-.page-footer.footnote .text a,
-.page-footer.footnote .text a:hover,
-.page-footer.footnote .text a:focus-visible
-  background: transparent
-
 .post-list #tags a.tag,
 .article-tags a.tag
   appearance-editorial-outline()
+  // box-shadow: inset 0 0 0 1px var(--block)
 
 .post-list #tags a.tag:hover,
 .post-list #tags a.tag:focus-visible,
@@ -195,7 +198,12 @@ appearance-standard-prose()
 .article-tags a.tag:focus-visible
   appearance-editorial-outline-active()
 
-// 文章标题直接复用组件层既有的普通主题色下划线。
+// 文章标题改用逐行文字装饰，避免换行时伪元素按整个容器绘制。
+.post-list .post-card .post-title
+  appearance-editorial-underline-mark()
+  &::after
+    display: none
+
 .post-list .post-card:hover .post-title,
 .post-list .post-card:focus-visible .post-title,
 .post-list .post-card:focus-within .post-title
@@ -218,9 +226,9 @@ appearance-standard-prose()
 
 .post-list.post .post-card-wrap
   margin: 1rem 0
-  padding-top: 1rem
+  padding-bottom: 1rem
   border-radius: 0
-  border-top: 1px dashed var(--block-border)
+  border-bottom: 1px dashed var(--block-border)
 
 .post-list .post-card .excerpt
   margin: .5rem 0
@@ -270,6 +278,7 @@ appearance-standard-prose()
   .tag-plugin.grid[bg='card'] > .cell
     appearance-editorial-outline()
     transform: none
+    box-shadow: inset 0 0 0 1px var(--block-border)
 
   .md-text .link-card:hover,
   .md-text .link-card:focus-visible,
@@ -287,7 +296,6 @@ appearance-standard-prose()
 
 // 页脚是文章元信息而不是独立卡片，内部语义分隔线继续保留。
 .article-footer
-  border: 0
   background: transparent
   box-shadow: none
 
@@ -323,14 +331,6 @@ appearance-standard-prose()
   .md-text .link-card,
   .widget-wrapper.ghrepo .repo,
   .tag-plugin.grid[bg='card'] > .cell
-    transition: none
-  .post-list .post-card .post-title::after,
-  .listing-nav nav a::after,
-  .paginator-wrap a.page-number::after,
-  .paginator-wrap .current::after,
-  .post-list .archive-list a.post::after,
-  .post-list #cats a.cat::after,
-  .page-footer a::after
     transition: none
 
 .page-footer .sitemap .sitemap-group > a
