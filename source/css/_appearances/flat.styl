@@ -14,6 +14,20 @@
 .site-region--leftbar .site-region__surface.ui-surface
   box-shadow: inset -1px 0 0 var(--block-border)
 
+.site-shell[data-drawer='leftbar'] .site-region--leftbar .site-region__surface.ui-surface
+  border-radius: $border-card-l
+  corner-shape: $corner-shape
+  background: var(--bg-a20)
+
+.post-list.post .post-card-wrap,
+.post-list.post .post-card.card-hover
+  box-shadow: none
+
+.post-list.post .post-card
+  background-color: var(--block)
+  &:hover
+    background-color: var(--block-border)
+
 .site-region--leftbar
   appearance-translucent-leftbar-light()
 

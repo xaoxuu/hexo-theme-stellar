@@ -198,17 +198,6 @@ appearance-standard-prose()
 .article-tags a.tag:focus-visible
   appearance-editorial-outline-active()
 
-// 文章标题改用逐行文字装饰，避免换行时伪元素按整个容器绘制。
-.post-list .post-card .post-title
-  appearance-editorial-underline-mark()
-  &::after
-    display: none
-
-.post-list .post-card:hover .post-title,
-.post-list .post-card:focus-visible .post-title,
-.post-list .post-card:focus-within .post-title
-  appearance-editorial-underline-active()
-
 // 普通文章卡片与包装器透明；封面仍作为内容媒体存在。
 .site-main .post-list .post-title
   font-size: var(--fsh3)
@@ -327,7 +316,6 @@ appearance-standard-prose()
   .post-list #tags a.tag,
   .article-tags a.tag,
   .page-footer a,
-  .post-list .post-card .post-title,
   .md-text .link-card,
   .widget-wrapper.ghrepo .repo,
   .tag-plugin.grid[bg='card'] > .cell
