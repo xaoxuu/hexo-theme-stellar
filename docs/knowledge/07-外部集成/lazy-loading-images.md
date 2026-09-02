@@ -14,7 +14,7 @@ tags:
 
 生成此页面时参考的主题源码文件：
 
-- [source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+- [source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 - [layout/layout.ejs](../../../layout/layout.ejs)
 - [source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)
 - [source/css/_plugins/lazyload.styl](../../../source/css/_plugins/lazyload.styl)
@@ -43,7 +43,7 @@ tags:
 | `wrapLazyloadImages()` | 把普通图片转换为可懒加载格式的工具函数 |
 | `.lazy-box` 包装 | 带加载指示的懒加载图片容器结构 |
 
-**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 
 ---
 
@@ -54,7 +54,7 @@ graph TB
     subgraph "Initialization Phase"
         MANIFEST["Runtime Manifest<br/>lazy-loading declaration"]
         REGISTRY["ExtensionRegistry<br/>selector match"]
-        MOUNT["feature.mjs<br/>mount(root, context)"]
+        MOUNT["feature.js<br/>mount(root, context)"]
         SCRIPT["Asset Loader"]
         CDN["Vanilla LazyLoad Library<br/>internal Extension asset"]
         OPTIONS["window.lazyLoadOptions<br/>{elements_selector, callback_loaded}"]
@@ -107,7 +107,7 @@ graph TB
     style OPTIONS fill:#f9f9f9
 ```
 
-**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 
 ---
 
@@ -118,13 +118,13 @@ graph TB
 ### 库加载
 
 ```javascript
-// feature.mjs 在 mount 中通过共享 asset loader 加载内部注册资源
+// feature.js 在 mount 中通过共享 asset loader 加载内部注册资源
 await context.assets.script(config.asset)
 ```
 
 `window.lazyLoadOptions` 在脚本加载前定义时库自动初始化，就绪时派发自定义 `LazyLoad::Initialized` 事件。
 
-**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 
 ---
 
@@ -144,7 +144,7 @@ await context.assets.script(config.asset)
 1. 给图片元素添加 `loaded` 类
 2. 从包装中移除加载指示（`.lazy-icon`）
 
-**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 
 ### 实例引用
 
@@ -162,7 +162,7 @@ window.addEventListener("LazyLoad::Initialized", function (event) {
 - 强制加载特定图片
 - 整页导航后的重新扫描
 
-**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 
 ### 初始更新触发
 
@@ -173,7 +173,7 @@ await context.assets.script(config.asset)
 window.lazyLoadInstance?.update()
 ```
 
-**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 
 ---
 
@@ -216,7 +216,7 @@ graph TD
 | N/A | `data-src` 属性（LazyLoad 目标） |
 | N/A | `.lazy` 类（选择器匹配） |
 
-**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 
 ---
 
@@ -285,7 +285,7 @@ flowchart TD
 3. **加载指示**：追加 `.lazy-icon`，由主题 CSS 变量提供图形
 4. **更新通知**：调用 `lazyLoadInstance.update()` 注册新的懒图片
 
-**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 
 ---
 
@@ -293,10 +293,10 @@ flowchart TD
 
 主题为普通整页导航，每次 `lazy-loading` Extension mount 在资源加载完成后执行一次初始化扫描。
 
-- **动态插入的 `.lazy` 元素**：`feature.mjs` 内置 MutationObserver，检测到新增 `.lazy` 元素后自动调用 `lazyLoadInstance.update()` 重新注册，第三方自定义脚本无需手动触发。
+- **动态插入的 `.lazy` 元素**：`feature.js` 内置 MutationObserver，检测到新增 `.lazy` 元素后自动调用 `lazyLoadInstance.update()` 重新注册，第三方自定义脚本无需手动触发。
 - **普通 `<img src>` 转换**：数据服务动态插入的普通图片仍经 `wrapLazyloadImages()` 包装为懒加载标记，该函数末尾同样调用 update 注册。
 
-**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 
 ---
 
@@ -376,7 +376,7 @@ callback_loaded: (el) => {
 2. 向上查找 `.lazy-box` 包装
 3. 查找并移除 `.lazy-icon` 加载指示
 
-**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 
 ---
 
@@ -393,4 +393,4 @@ callback_loaded: (el) => {
 | 加载指示 | `.lazy-icon` | 随包装创建 |
 | 已加载状态 | `.loaded` 类 | 回调时添加 |
 
-**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)、[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)
+**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)、[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)

@@ -58,7 +58,7 @@ flowchart LR
   MD["Markdown tag"] --> HANDLER["scripts/tags/lib/*"]
   CONFIG["tags / services"] --> HANDLER
   HANDLER --> HTML["静态 HTML / data-service 占位"]
-  ASSETS["内部服务模块"] --> CLIENT["source/js/runtime/extensions/services.mjs"]
+  ASSETS["内部服务模块"] --> CLIENT["source/js/runtime/extensions/services.js"]
   HTML --> CLIENT
 ```
 
@@ -69,7 +69,7 @@ flowchart LR
 - [_config.yml](../../../_config.yml)（`tags`）
 - [scripts/tags/](../../../scripts/tags/)
 - [scripts/lib/extension-assets.js](../../../scripts/lib/extension-assets.js)
-- [source/js/runtime/extensions/services.mjs](../../../source/js/runtime/extensions/services.mjs)
+- [source/js/runtime/extensions/services.js](../../../source/js/runtime/extensions/services.js)
 - [source/css/_components/tag-plugins/](../../../source/css/_components/tag-plugins/)
 
 具体语法见本目录各专题页面与[标签插件索引](index.md)。

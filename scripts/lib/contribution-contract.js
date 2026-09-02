@@ -57,8 +57,8 @@ function validateEntry(entry, label) {
   if (unknown) throw new TypeError(`[stellar contributions] ${label} has unknown field ${unknown}`);
   if (!ENTRY_TYPES.has(entry.type)) throw new TypeError(`[stellar contributions] ${label}.type is invalid`);
   nonEmptyString(entry.path, `${label}.path`);
-  if (entry.type === "browser-module" && (!entry.path.startsWith("/js/runtime/") || !entry.path.endsWith(".mjs"))) {
-    throw new TypeError(`[stellar contributions] ${label}.path must be a local runtime .mjs path`);
+  if (entry.type === "browser-module" && (!entry.path.startsWith("/js/runtime/") || !entry.path.endsWith(".js"))) {
+    throw new TypeError(`[stellar contributions] ${label}.path must be a local runtime .js path`);
   }
   if (entry.type === "template" && !entry.path.startsWith("layout/")) {
     throw new TypeError(`[stellar contributions] ${label}.path must be a layout path`);

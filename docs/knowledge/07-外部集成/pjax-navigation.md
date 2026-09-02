@@ -16,7 +16,7 @@ tags:
 生成此页面时参考的主题源码文件：
 
 - [_config.yml](../../../_config.yml)（`features.link_prefetch`）
-- [source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+- [source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 - [layout/_partial/scripts/defines.ejs](../../../layout/_partial/scripts/defines.ejs)
 
 </details>
@@ -89,7 +89,7 @@ features:
 
 flying-pages 在**鼠标悬停**到站内链接时预取目标页面（延迟 65ms 防误触、视口内优先、避开非链接资源），用户点击时页面已缓存，导航几乎瞬时完成。这是对整页导航的有效补充，兼顾简单可靠与体感速度。
 
-**参考源码**：[_config.yml](../../../_config.yml)、[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+**参考源码**：[_config.yml](../../../_config.yml)、[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 
 ## 与其他系统的关系
 
@@ -109,4 +109,4 @@ flying-pages 在**鼠标悬停**到站内链接时预取目标页面（延迟 65
 - preload 在保留导航体感速度的同时避免 PJAX 的 DOM 合并开销
 - 脚本与样式按页面实际需要加载，无 PJAX 相关的额外缓存与更新逻辑
 
-**参考源码**：[_config.yml](../../../_config.yml)、[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+**参考源码**：[_config.yml](../../../_config.yml)、[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)

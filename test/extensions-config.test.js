@@ -109,6 +109,7 @@ test("官方 Extension 资源由内部冻结注册表提供", () => {
   assert.match(assets.comments.giscus.js, /giscus\.app/);
   assert.match(assets.features.lightbox.js, /fancybox/);
   assert.equal(assets.features.reveal, undefined);
-  assert.equal(assets.runtime.reveal, "/js/runtime/extensions/reveal.mjs");
+  assert.equal(assets.runtime.bootstrap, "/js/runtime/index.js");
+  assert.equal(assets.runtime.reveal, "/js/runtime/extensions/reveal.js");
   assert.equal(assets.services.siteinfo.js, "/js/services/siteinfo.js");
 });

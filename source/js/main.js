@@ -658,7 +658,7 @@ const init = {
     }).catch(function () {});
   },
   leftbarScroll: () => {
-    const container = document.querySelector('.site-region--leftbar .widget-stack');
+    const container = document.querySelector('.site-region--leftbar .site-region__body');
     if (container == null) {
       return;
     }

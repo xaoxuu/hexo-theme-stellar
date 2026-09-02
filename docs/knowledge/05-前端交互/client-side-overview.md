@@ -16,9 +16,9 @@ tags:
 
 - [source/js/main.js](../../../source/js/main.js)
 - [source/js/utils.js](../../../source/js/utils.js)
-- [source/js/runtime/index.mjs](../../../source/js/runtime/index.mjs)
-- [source/js/runtime/extensions/color-scheme-switch.mjs](../../../source/js/runtime/extensions/color-scheme-switch.mjs)
-- [source/js/runtime/extensions/services.mjs](../../../source/js/runtime/extensions/services.mjs)
+- [source/js/runtime/index.js](../../../source/js/runtime/index.js)
+- [source/js/runtime/extensions/color-scheme-switch.js](../../../source/js/runtime/extensions/color-scheme-switch.js)
+- [source/js/runtime/extensions/services.js](../../../source/js/runtime/extensions/services.js)
 - [source/js/tagtree.js](../../../source/js/tagtree.js)
 - [layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 - [layout/_partial/scripts/](../../../layout/_partial/scripts/)
@@ -119,23 +119,23 @@ graph TB
 
 #### ESM Runtime Manifest 与 Extension 生命周期
 
-`layout/_partial/scripts/runtime.ejs` 在页尾输出不可执行的 `#stellar-runtime-config` JSON，再由 `/js/runtime/index.mjs` 解析。构建期 builder 已校验 manifest 版本、根路径、重复 ID、本地 module 路径、`when` 条件与配置对象，并深度冻结结果；序列化会转义 HTML 敏感字符。
+`layout/_partial/scripts/runtime.ejs` 在页尾输出不可执行的 `#stellar-runtime-config` JSON，再由 `/js/runtime/index.js` 解析。构建期 builder 已校验 manifest 版本、根路径、重复 ID、本地 module 路径、`when` 条件与配置对象，并深度冻结结果；序列化会转义 HTML 敏感字符。
 
 浏览器 `ExtensionRegistry` 根据 `when.selector/always` 决定是否 dynamic import adapter，随后调用 `mount(root, context)`。重复 mount 先 unmount，释放顺序与挂载相反；任一 Extension 的 import/mount/unmount 失败都被隔离并派发 `stellar:extension-error`。Reveal 默认不隐藏内容，因此 bootstrap 或 adapter 失败时无需额外可见性兜底。
 
 旧 `document.write`、同步 utils 补载、`_pluginQueue`、`initPlugin` 和 Reveal 恢复看门狗已经删除。`utils.js` 仍同步提供迁移期经典 DOM/资源工具，但不再注册插件或实现 request/cache。
 
-**参考源码**：[layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/index.mjs](../../../source/js/runtime/index.mjs)、[source/js/runtime/extension-registry.mjs](../../../source/js/runtime/extension-registry.mjs)
+**参考源码**：[layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/index.js](../../../source/js/runtime/index.js)、[source/js/runtime/extension-registry.js](../../../source/js/runtime/extension-registry.js)
 
 #### 可选配色选择器
 
-配色切换不是核心资源。`features.color_scheme_switch.enabled` 默认为 `false`；关闭时 Runtime Manifest 不包含 `color-scheme-switch`，页面不输出其三条文案，也不会请求对应模块。启用后，Contribution Registry 把 `/js/runtime/extensions/color-scheme-switch.mjs` 作为 `always` Extension 安排在 Services 与 Voice 之前挂载，并暴露 `window.setColorScheme(mode)`。
+配色切换不是核心资源。`features.color_scheme_switch.enabled` 默认为 `false`；关闭时 Runtime Manifest 不包含 `color-scheme-switch`，页面不输出其三条文案，也不会请求对应模块。启用后，Contribution Registry 把 `/js/runtime/extensions/color-scheme-switch.js` 作为 `always` Extension 安排在 Services 与 Voice 之前挂载，并暴露 `window.setColorScheme(mode)`。
 
 `mode` 只接受 `light`、`dark`、`auto`。固定模式写入 `<html data-theme>`，`auto` 移除该属性；所选状态保存到 `Stellar.colorScheme`。每次确定选择都会派发 `stellar:color-scheme-change`，事件详情包含选择状态与解析后的实际明暗；自动模式还会跟随 `prefers-color-scheme`。非法参数抛出 `TypeError`，卸载 Extension 时会移除系统监听并恢复挂载前的同名全局属性。
 
 主题不自动输出切换入口，也不提供循环切换函数。站点可在 Footer Dropdown 中用三个明确的 `type: button` 调用 setter，具体结构见[配置说明：页脚配置](../00-总览与安装配置/configuration.md#页脚配置)。Actions 作为系统 Widget 可放入支持的 Region，位置规则见[Region 与 Leftbar 系统](../02-布局系统/sidebar-system.md#系统-widget)。
 
-**参考源码**：[scripts/lib/contribution-registry.js](../../../scripts/lib/contribution-registry.js)、[source/js/runtime/extensions/color-scheme-switch.mjs](../../../source/js/runtime/extensions/color-scheme-switch.mjs)、[layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)
+**参考源码**：[scripts/lib/contribution-registry.js](../../../scripts/lib/contribution-registry.js)、[source/js/runtime/extensions/color-scheme-switch.js](../../../source/js/runtime/extensions/color-scheme-switch.js)、[layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)
 
 ---
 
@@ -371,7 +371,7 @@ sequenceDiagram
 
 背景图/背景色上方的文字颜色自适应是固定开启的内置 Feature。Runtime Manifest 仅在页面存在 `[data-text-adaptive]` 元素时 import Feature adapter，再按需加载 `source/js/color.js` 与 `source/js/plugins/adaptive-text.js`：插件按 `--cover-url` → `--pin-cover-url` → `--bg-url` → `background-image` → `background-color` 解析背景来源，调用 `stellar.color.getAverageColor()`（canvas 等比缩至最长边 ≤64px 取平均色与平均透明度，按 URL 缓存原始均值；透明图按元素/祖先/`body` 的实际背景色做 alpha 合成后再平均，避免透明像素把平均色拉偏；CORS/解码失败返回 `null`）或直接解析背景色，再用 `stellar.color.adaptiveTextColor()` 计算文字颜色并写入内联变量。属性值：`theme`（默认，背景图平均色为基色，背景偏暗时 lighten 到明度 0.85、偏亮时 darken 到明度 0.3，低饱和彩色平均色先经 `enhanceSaturation` 抬升饱和度再取色，`saturationScale` 可调小饱和度使其接近黑白）、`contrast`（黑白对比：深色背景白字、浅色背景深字）、`split`（封面/banner/轮播容器：大字用低饱和 theme（接近黑白）、小字用完整 theme）。明暗判定默认阈值 0.6、彩色背景（饱和度 > 0.2）上浮至 0.65，偏向采纳浅色文字。`split` 模式写入 `--text-banner`（大字，`saturationScale: 0.05`）与 `--text-banner-theme`（小字，完整 theme）两个变量，其余模式两个变量同色。元素已有内联 `--text-banner` 或内联 `color` 时 Feature 跳过，用户显式覆盖优先。
 
-**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)、[source/js/color.js](../../../source/js/color.js)、[source/js/plugins/adaptive-text.js](../../../source/js/plugins/adaptive-text.js)
+**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)、[source/js/color.js](../../../source/js/color.js)、[source/js/plugins/adaptive-text.js](../../../source/js/plugins/adaptive-text.js)
 
 ### 卡片 Hover 生命周期
 
@@ -388,7 +388,7 @@ Spotlight 是卡片末尾注入的独立 `span.card-hover__spotlight[aria-hidden
 
 置顶轮播外层和专栏列表的最新文章封面卡片复用完整 Spotlight + Tilt；轮播轨道与专栏标题、描述、归档式文章条目不参与 Tilt。Wiki Hero 的源码、文档和自定义 action 按钮、搜索结果链接与标准 `.ui-collection__item` 复用 Spotlight-only 生命周期，因此保留原有 surface 背景且不会产生位移或 3D transform。搜索的 `.ui-collection-adapter` 列表本身不挂载，只有内部可点击链接动态挂载，页面标题留在链接外；TOC adapter 仍不接入。
 
-**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)、[source/js/plugins/card-hover.js](../../../source/js/plugins/card-hover.js)、[source/css/_plugins/card-hover.styl](../../../source/css/_plugins/card-hover.styl)
+**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)、[source/js/plugins/card-hover.js](../../../source/js/plugins/card-hover.js)、[source/css/_plugins/card-hover.styl](../../../source/css/_plugins/card-hover.styl)
 
 ### 与 Head 配置的集成
 

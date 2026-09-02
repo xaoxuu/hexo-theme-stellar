@@ -9,7 +9,7 @@ Stellar 的数据组件采用“服务端生成占位、浏览器进入视口后
 ## 两类组件
 
 - 静态组件：由 EJS、helper 或 tag handler 直接生成完整 HTML，不需要浏览器请求。
-- 动态组件：生成 `.data-service` 占位，并由 Runtime Manifest 按 DOM 条件 import `source/js/runtime/extensions/services.mjs`，再按服务 ID 加载内部模块。
+- 动态组件：生成 `.data-service` 占位，并由 Runtime Manifest 按 DOM 条件 import `source/js/runtime/extensions/services.js`，再按服务 ID 加载内部模块。
 
 ```mermaid
 flowchart LR
@@ -66,8 +66,8 @@ request/cache policy 由 `scripts/lib/internal-constants.js` 所有，构建期�
 
 - [scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)
 - [layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)
-- [source/js/runtime/extensions/services.mjs](../../../source/js/runtime/extensions/services.mjs)
-- [source/js/runtime/request-cache.mjs](../../../source/js/runtime/request-cache.mjs)
+- [source/js/runtime/extensions/services.js](../../../source/js/runtime/extensions/services.js)
+- [source/js/runtime/request-cache.js](../../../source/js/runtime/request-cache.js)
 - [source/js/services/](../../../source/js/services/)
 - [数据服务 API](data-service-apis.md)
 - [小部件系统架构](widget-architecture.md)

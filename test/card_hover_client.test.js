@@ -6,7 +6,7 @@ const path = require("node:path");
 const { pathToFileURL } = require("node:url");
 
 test("card-hover contribution loads, mounts, and unmounts through the runtime adapter", async () => {
-  const file = pathToFileURL(path.resolve(__dirname, "../source/js/runtime/extensions/card-hover.mjs"));
+  const file = pathToFileURL(path.resolve(__dirname, "../source/js/runtime/extensions/card-hover.js"));
   const module = await import(`${file.href}?test=${Date.now()}`);
   const calls = [];
   const previousWindow = globalThis.window;

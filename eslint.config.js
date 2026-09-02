@@ -108,7 +108,7 @@ module.exports = [
     rules: CORRECTNESS_RULES,
   },
   {
-    files: ['source/js/**/*.mjs'],
+    files: ['source/js/runtime/**/*.js'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',

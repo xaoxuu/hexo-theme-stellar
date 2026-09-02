@@ -37,7 +37,7 @@ function memoryStorage() {
 }
 
 test("RequestClient 只清除 Stellar 数据缓存", async () => {
-  const { createRequestClient, REQUEST_CACHE_PREFIX } = await import(moduleUrl("source/js/runtime/request-cache.mjs"));
+  const { createRequestClient, REQUEST_CACHE_PREFIX } = await import(moduleUrl("source/js/runtime/request-cache.js"));
   const storage = memoryStorage();
   storage.setItem(REQUEST_CACHE_PREFIX + "one", "{}");
   storage.setItem(REQUEST_CACHE_PREFIX + "two", "{}");
@@ -56,7 +56,7 @@ test("RequestClient 只清除 Stellar 数据缓存", async () => {
 });
 
 test("ExtensionRegistry 按需 import、挂载、逆序卸载并复用 module Promise", async () => {
-  const { createExtensionRegistry } = await import(moduleUrl("source/js/runtime/extension-registry.mjs"));
+  const { createExtensionRegistry } = await import(moduleUrl("source/js/runtime/extension-registry.js"));
   const calls = [];
   let imports = 0;
   const registry = createExtensionRegistry({
@@ -70,9 +70,9 @@ test("ExtensionRegistry 按需 import、挂载、逆序卸载并复用 module Pr
       };
     }
   });
-  registry.register({ id: "one", module: "/one.mjs", when: { selector: ".one" }, config: {} });
-  registry.register({ id: "two", module: "/one.mjs", when: { always: true }, config: {} });
-  registry.register({ id: "skip", module: "/skip.mjs", when: { selector: ".skip" }, config: {} });
+  registry.register({ id: "one", module: "/one.js", when: { selector: ".one" }, config: {} });
+  registry.register({ id: "two", module: "/one.js", when: { always: true }, config: {} });
+  registry.register({ id: "skip", module: "/skip.js", when: { selector: ".skip" }, config: {} });
 
   const mounted = await registry.mount(root([".one"]), {});
   assert.deepEqual(mounted.map(item => item.status), ["mounted", "mounted", "skipped"]);
@@ -86,19 +86,19 @@ test("ExtensionRegistry 按需 import、挂载、逆序卸载并复用 module Pr
 });
 
 test("ExtensionRegistry 隔离 import、mount 与 unmount 失败", async () => {
-  const { createExtensionRegistry } = await import(moduleUrl("source/js/runtime/extension-registry.mjs"));
+  const { createExtensionRegistry } = await import(moduleUrl("source/js/runtime/extension-registry.js"));
   const errors = [];
   const registry = createExtensionRegistry({
     onError: detail => errors.push(`${detail.id}:${detail.phase}`),
     importer: async specifier => {
-      if (specifier === "/import.mjs") throw new Error("import");
-      if (specifier === "/mount.mjs") return { mount() { throw new Error("mount"); } };
+      if (specifier === "/import.js") throw new Error("import");
+      if (specifier === "/mount.js") return { mount() { throw new Error("mount"); } };
       return { mount() { return () => { throw new Error("cleanup"); }; } };
     }
   });
-  registry.register({ id: "bad-import", module: "/import.mjs", when: { always: true }, config: {} });
-  registry.register({ id: "bad-mount", module: "/mount.mjs", when: { always: true }, config: {} });
-  registry.register({ id: "bad-cleanup", module: "/cleanup.mjs", when: { always: true }, config: {} });
+  registry.register({ id: "bad-import", module: "/import.js", when: { always: true }, config: {} });
+  registry.register({ id: "bad-mount", module: "/mount.js", when: { always: true }, config: {} });
+  registry.register({ id: "bad-cleanup", module: "/cleanup.js", when: { always: true }, config: {} });
   const result = await registry.mount(root(), {});
   assert.deepEqual(result.map(item => item.status), ["failed", "failed", "mounted"]);
   await registry.unmount(root());
@@ -109,14 +109,14 @@ test("ExtensionRegistry 隔离 import、mount 与 unmount 失败", async () => {
 });
 
 test("ExtensionRegistry 隔离非法 selector，不阻断后续 Extension", async () => {
-  const { createExtensionRegistry } = await import(moduleUrl("source/js/runtime/extension-registry.mjs"));
+  const { createExtensionRegistry } = await import(moduleUrl("source/js/runtime/extension-registry.js"));
   const errors = [];
   const registry = createExtensionRegistry({
     onError: detail => errors.push(`${detail.id}:${detail.phase}`),
     importer: async () => ({ mount() {} })
   });
-  registry.register({ id: "invalid", module: "/invalid.mjs", when: { selector: "[" }, config: {} });
-  registry.register({ id: "valid", module: "/valid.mjs", when: { always: true }, config: {} });
+  registry.register({ id: "invalid", module: "/invalid.js", when: { selector: "[" }, config: {} });
+  registry.register({ id: "valid", module: "/valid.js", when: { always: true }, config: {} });
   const target = {
     querySelector(selector) {
       if (selector === "[") throw new DOMException("invalid selector", "SyntaxError");
@@ -129,27 +129,27 @@ test("ExtensionRegistry 隔离非法 selector，不阻断后续 Extension", asyn
 });
 
 test("ExtensionRegistry register 拒绝未知字段和非法 when/config", async () => {
-  const { createExtensionRegistry } = await import(moduleUrl("source/js/runtime/extension-registry.mjs"));
+  const { createExtensionRegistry } = await import(moduleUrl("source/js/runtime/extension-registry.js"));
   const registry = createExtensionRegistry();
-  assert.throws(() => registry.register({ id: "unknown", module: "/x.mjs", when: { always: true }, config: {}, extra: true }), /unknown field extra/);
-  assert.throws(() => registry.register({ id: "condition", module: "/x.mjs", when: { always: true, selector: ".x" }, config: {} }), /exactly one/);
-  assert.throws(() => registry.register({ id: "config", module: "/x.mjs", when: { always: true }, config: [] }), /config is invalid/);
+  assert.throws(() => registry.register({ id: "unknown", module: "/x.js", when: { always: true }, config: {}, extra: true }), /unknown field extra/);
+  assert.throws(() => registry.register({ id: "condition", module: "/x.js", when: { always: true, selector: ".x" }, config: {} }), /exactly one/);
+  assert.throws(() => registry.register({ id: "config", module: "/x.js", when: { always: true }, config: [] }), /config is invalid/);
 });
 
 test("ExtensionRegistry 允许延迟任务通过 extension context 上报隔离错误", async () => {
-  const { createExtensionRegistry } = await import(moduleUrl("source/js/runtime/extension-registry.mjs"));
+  const { createExtensionRegistry } = await import(moduleUrl("source/js/runtime/extension-registry.js"));
   const errors = [];
   const registry = createExtensionRegistry({
     onError: detail => errors.push(`${detail.id}:${detail.phase}:${detail.error.message}`),
     importer: async () => ({ mount(_root, context) { context.reportError(new Error("delayed")); } })
   });
-  registry.register({ id: "delayed", module: "/delayed.mjs", when: { always: true }, config: {} });
+  registry.register({ id: "delayed", module: "/delayed.js", when: { always: true }, config: {} });
   assert.deepEqual((await registry.mount(root(), {})).map(item => item.status), ["mounted"]);
   assert.deepEqual(errors, ["delayed:mount:delayed"]);
 });
 
 test("request/cache 对 GET 去重、写入 TTL 并在 fresh 命中时不联网", async () => {
-  const { createRequestClient } = await import(moduleUrl("source/js/runtime/request-cache.mjs"));
+  const { createRequestClient } = await import(moduleUrl("source/js/runtime/request-cache.js"));
   const storage = memoryStorage();
   const events = [];
   let calls = 0;
@@ -180,7 +180,7 @@ test("request/cache 对 GET 去重、写入 TTL 并在 fresh 命中时不联网"
 });
 
 test("request/cache 最终失败回退 stale，且非 GET 不缓存", async () => {
-  const { createRequestClient, REQUEST_CACHE_PREFIX } = await import(moduleUrl("source/js/runtime/request-cache.mjs"));
+  const { createRequestClient, REQUEST_CACHE_PREFIX } = await import(moduleUrl("source/js/runtime/request-cache.js"));
   const storage = memoryStorage();
   storage.setItem(REQUEST_CACHE_PREFIX + "https://example.com/stale", JSON.stringify({
     text: "stale", contentType: "text/plain", ts: 0, ttl: 1
@@ -200,7 +200,7 @@ test("request/cache 最终失败回退 stale，且非 GET 不缓存", async () =
 });
 
 test("request/cache 在调用方已有 signal 时仍执行超时与有限重试", async () => {
-  const { createRequestClient } = await import(moduleUrl("source/js/runtime/request-cache.mjs"));
+  const { createRequestClient } = await import(moduleUrl("source/js/runtime/request-cache.js"));
   const caller = new AbortController();
   let attempts = 0;
   const client = createRequestClient({
@@ -221,7 +221,7 @@ test("request/cache 在调用方已有 signal 时仍执行超时与有限重试"
 });
 
 test("request/cache 的 cache=false 只禁用 Stellar 缓存，不透传非法 RequestInit", async () => {
-  const { createRequestClient } = await import(moduleUrl("source/js/runtime/request-cache.mjs"));
+  const { createRequestClient } = await import(moduleUrl("source/js/runtime/request-cache.js"));
   let received;
   const client = createRequestClient({
     policy: REQUEST_POLICY,
@@ -236,7 +236,7 @@ test("request/cache 的 cache=false 只禁用 Stellar 缓存，不透传非法 R
 });
 
 test("request/cache 按 maxEntries 淘汰最旧条目，并以 UTF-8 字节限制单条缓存", async () => {
-  const { createRequestClient, REQUEST_CACHE_PREFIX } = await import(moduleUrl("source/js/runtime/request-cache.mjs"));
+  const { createRequestClient, REQUEST_CACHE_PREFIX } = await import(moduleUrl("source/js/runtime/request-cache.js"));
   const storage = memoryStorage();
   let clock = 0;
   const bodies = new Map([
@@ -262,7 +262,7 @@ test("request/cache 按 maxEntries 淘汰最旧条目，并以 UTF-8 字节限�
 });
 
 test("旧 request adapter 从 ds-* 推导 service，fresh 命中不显示 loading", async () => {
-  const { installLegacyRequestAdapter } = await import(moduleUrl("source/js/runtime/legacy-request-adapter.mjs"));
+  const { installLegacyRequestAdapter } = await import(moduleUrl("source/js/runtime/legacy-request-adapter.js"));
   const calls = [];
   const utils = {
     onLoading: () => calls.push("loading"),
@@ -282,7 +282,7 @@ test("旧 request adapter 从 ds-* 推导 service，fresh 命中不显示 loadin
 });
 
 test("旧 request bridge 将 runtime 启动前的调用排队到真实 adapter", async () => {
-  const { installLegacyRequestAdapter } = await import(moduleUrl("source/js/runtime/legacy-request-adapter.mjs"));
+  const { installLegacyRequestAdapter } = await import(moduleUrl("source/js/runtime/legacy-request-adapter.js"));
   let resolveAdapter;
   const ready = new Promise(resolve => { resolveAdapter = resolve; });
   globalThis.__stellarRequestBridge = { resolve: resolveAdapter };

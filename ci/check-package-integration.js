@@ -375,7 +375,7 @@ function assertRuntime(html, relative, profile) {
   if (manifest.version !== 1 || !Array.isArray(manifest.extensions)) {
     throw new Error(`${relative}: invalid Runtime Manifest`);
   }
-  const entries = html.match(/<script type="module" src="[^"]*\/js\/runtime\/index\.mjs[^"]*"><\/script>/g) || [];
+  const entries = html.match(/<script type="module" src="[^"]*\/js\/runtime\/index\.js[^"]*"><\/script>/g) || [];
   if (entries.length !== 1) throw new Error(`${relative}: expected one ESM runtime entry, got ${entries.length}`);
   if (!hasProfileOutput(html, profile)) throw new Error(`${relative}: missing ${profile} PageViewModel output marker`);
 }
@@ -388,7 +388,7 @@ function assertPackageFiles(pack) {
     "scripts/commands/stellar.js",
     "scripts/lib/safe-path.js",
     "scripts/schema/config-schema.js",
-    "source/js/runtime/index.mjs"
+    "source/js/runtime/index.js"
   ];
   for (const file of required) {
     if (!files.has(file)) throw new Error(`npm tarball missing ${file}`);

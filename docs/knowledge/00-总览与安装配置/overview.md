@@ -19,7 +19,7 @@ tags:
 - [README.md](../../../README.md)
 - [_config.yml](../../../_config.yml)
 - [layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
-- [source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+- [source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 - [layout/layout.ejs](../../../layout/layout.ejs)
 - [package.json](../../../package.json)
 - [scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
@@ -270,7 +270,7 @@ Extension 采用 Runtime Manifest 条件加载模式（[scripts/lib/contribution
 
 ### 评论集成
 
-评论系统根据 `comments.provider` 与页面 `comments.provider/options` 选择实现。Beaudar、Utterances、Giscus、Twikoo、Waline、Artalk 的 markup 由评论 partial 输出，初始化统一交给 [source/js/runtime/extensions/comments.mjs](../../../source/js/runtime/extensions/comments.mjs)；官方脚本和样式来自主题内部资源注册表。
+评论系统根据 `comments.provider` 与页面 `comments.provider/options` 选择实现。Beaudar、Utterances、Giscus、Twikoo、Waline、Artalk 的 markup 由评论 partial 输出，初始化统一交给 [source/js/runtime/extensions/comments.js](../../../source/js/runtime/extensions/comments.js)；官方脚本和样式来自主题内部资源注册表。
 
 详见[评论系统](../07-外部集成/comment-systems.md)。
 
@@ -314,7 +314,7 @@ flowchart TD
     STATICHTML --> BROWSER["Browser loads page"]
     
     BROWSER --> MAINJS["main.js: stellar.initPage()<br/>Core interactions"]
-    BROWSER --> RUNTIME["runtime/index.mjs<br/>Read Runtime Manifest"]
+    BROWSER --> RUNTIME["runtime/index.js<br/>Read Runtime Manifest"]
     RUNTIME --> REGISTRY["ExtensionRegistry<br/>selector / always conditions"]
     REGISTRY --> ADAPTERS["ESM adapters<br/>search, comments, services, features"]
 ```

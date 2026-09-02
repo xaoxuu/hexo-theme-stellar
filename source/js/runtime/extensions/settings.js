@@ -1,4 +1,4 @@
-import { REQUEST_CACHE_PREFIX } from '../request-cache.mjs';
+import { REQUEST_CACHE_PREFIX } from '../request-cache.js';
 
 export const SEARCH_CACHE_KEY = 'search_cache_v5';
 

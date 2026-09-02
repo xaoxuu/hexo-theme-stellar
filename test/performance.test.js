@@ -8,10 +8,10 @@ const { moduleImports } = require("../ci/check-performance");
 
 test("性能口径只递归静态 import，不把 dynamic import 计入核心集合", () => {
   const source = [
-    "import './side-effect.mjs';",
-    "import { value } from './static.mjs';",
-    "const lazy = import('./selector-only.mjs');",
-    "const versioned = import(`./runtime.mjs${query}`);"
+    "import './side-effect.js';",
+    "import { value } from './static.js';",
+    "const lazy = import('./selector-only.js');",
+    "const versioned = import(`./runtime.js${query}`);"
   ].join("\n");
-  assert.deepEqual(moduleImports(source), ["./side-effect.mjs", "./static.mjs"]);
+  assert.deepEqual(moduleImports(source), ["./side-effect.js", "./static.js"]);
 });

@@ -81,15 +81,15 @@ test("Runtime Manifest 顺序直接来自 descriptor 注册表", () => {
     "lazy-loading", "deferred-icons", "dropdown", "services", "settings", "code-copy", "adaptive-text", "card-hover", "swiper"
   ]);
   const cardHover = entries.find(item => item.id === "card-hover");
-  assert.equal(cardHover.module, "/js/runtime/extensions/card-hover.mjs");
+  assert.equal(cardHover.module, "/js/runtime/extensions/card-hover.js");
   assert.deepEqual(cardHover.when, { selector: ".card-hover" });
   assert.equal(cardHover.config.feature, "card-hover");
   assert.equal(cardHover.config.assets.js, "/js/plugins/card-hover.js");
   const reveal = CONTRIBUTIONS.find(item => item.id === "reveal");
-  assert.equal(reveal.entry.path, "/js/runtime/extensions/reveal.mjs");
+  assert.equal(reveal.entry.path, "/js/runtime/extensions/reveal.js");
   assert.deepEqual(reveal.resources, ["runtime.reveal"]);
 
-  const sharedFeatureEntries = entries.filter(item => item.module === "/js/runtime/extensions/feature.mjs");
+  const sharedFeatureEntries = entries.filter(item => item.module === "/js/runtime/extensions/feature.js");
   assert.deepEqual(sharedFeatureEntries.map(item => [item.id, item.config.feature]), [
     ["lazy-loading", "lazy-loading"],
     ["deferred-icons", "deferred-icons"],

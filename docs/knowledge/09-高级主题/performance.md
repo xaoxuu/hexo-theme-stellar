@@ -20,7 +20,7 @@ tags:
 - [LICENSE](../../../LICENSE)
 - [README.md](../../../README.md)
 - [_config.yml](../../../_config.yml)
-- [source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+- [source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 - [layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 - [layout/layout.ejs](../../../layout/layout.ejs)
 - [package.json](../../../package.json)
@@ -57,7 +57,7 @@ flowchart TD
   A --> G["search.local"]
 
   B --> B1["scripts/filters/lib/img_lazyload.js"]
-  B --> B2["source/js/runtime/extensions/feature.mjs"]
+  B --> B2["source/js/runtime/extensions/feature.js"]
   B --> B3["source/css/_plugins/lazyload.styl"]
 
   D --> D1["flying-pages CDN script"]
@@ -82,7 +82,7 @@ flowchart TD
 | 层 | 文件 | 职责 |
 |----|------|------|
 | 构建过滤器 | `scripts/filters/lib/img_lazyload.js` | 在渲染 HTML 中把 `src` 重写为 `data-src` |
-| 运行时脚本 | `source/js/runtime/extensions/feature.mjs` | 加载 `vanilla-lazyload` 并配置回调 |
+| 运行时脚本 | `source/js/runtime/extensions/feature.js` | 加载 `vanilla-lazyload` 并配置回调 |
 | CSS 过渡 | `source/css/_plugins/lazyload.styl` | 定义占位与淡入/模糊进入动画 |
 
 **懒加载流水线**
@@ -92,7 +92,7 @@ sequenceDiagram
   participant "Hexo Build" as build
   participant "img_lazyload.js filter" as filter
   participant "Browser" as browser
-  participant "feature.mjs script" as script
+  participant "feature.js script" as script
   participant "vanilla-lazyload" as lib
 
   build->>filter: "HTML post-render"
@@ -107,7 +107,7 @@ sequenceDiagram
   lib->>browser: "callback_loaded: add class loaded"
 ```
 
-**参考源码**：[scripts/filters/lib/img_lazyload.js](../../../scripts/filters/lib/img_lazyload.js)、[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+**参考源码**：[scripts/filters/lib/img_lazyload.js](../../../scripts/filters/lib/img_lazyload.js)、[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 
 ### 配置
 
@@ -137,9 +137,9 @@ features:
 
 `window.wrapLazyloadImages(container)` 辅助函数供动态生成的内容（如数据服务小部件）使用，把普通 `<img src>` 即时转换为懒加载兼容标记，并调用 `lazyLoadInstance.update()` 重新扫描。
 
-`feature.mjs` 同时内置 MutationObserver 兜底：检测到新增 `.lazy` 元素后自动调用 `lazyLoadInstance.update()` 重新注册，因此直接插入懒加载标记（`<img class="lazy" data-src="…">`）的第三方脚本无需手动触发更新。
+`feature.js` 同时内置 MutationObserver 兜底：检测到新增 `.lazy` 元素后自动调用 `lazyLoadInstance.update()` 重新注册，因此直接插入懒加载标记（`<img class="lazy" data-src="…">`）的第三方脚本无需手动触发更新。
 
-**参考源码**：[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 
 ---
 
@@ -302,16 +302,16 @@ M5 用固定 Classic Blog 输入分别构建 tag `1.44.0` 与当前 v2 npm tarba
 
 `/js/icons.js` 与 `/js/plugins/dropdown.js` 从全页无条件 script 改为 Runtime Manifest 中的 `svg.icon[data-icon]` / `details.dropdown` selector Extension；命中页面仍加载原脚本，未命中页面不再支付首屏核心成本。含糊的 `/js/theme.js` 也已退出核心集合：配色选择能力更名为 Color Scheme Extension，默认关闭，只有显式启用时才作为 dynamic import 请求，因此默认基线不再包含该资源。
 
-**参考源码**：[ci/check-performance.js](../../../ci/check-performance.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[layout/_partial/scripts.ejs](../../../layout/_partial/scripts.ejs)、[source/js/runtime/extensions/feature.mjs](../../../source/js/runtime/extensions/feature.mjs)
+**参考源码**：[ci/check-performance.js](../../../ci/check-performance.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[layout/_partial/scripts.ejs](../../../layout/_partial/scripts.ejs)、[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 
 ## 汇总表
 
 | 特性 | 配置键 | 默认 | 主要文件 |
 |------|--------|------|----------|
-| 图片懒加载 | 内置 Feature | 启用 | `img_lazyload.js`、`feature.mjs`、`lazyload.styl` |
+| 图片懒加载 | 内置 Feature | 启用 | `img_lazyload.js`、`feature.js`、`lazyload.styl` |
 | 懒加载过渡 | `features.lazy_loading.transition` | `fade` | `lazyload.styl` |
 | 链接预加载 | `features.link_prefetch.enabled` | `true`（flying_pages） | 内部资源注册表 |
-| 配色选择器 | `features.color_scheme_switch.enabled` | `false` | `color-scheme-switch.mjs`（按需） |
+| 配色选择器 | `features.color_scheme_switch.enabled` | `false` | `color-scheme-switch.js`（按需） |
 | 图片比例缓存 | Hexo 事件 | 自动 | `get_image_ratios.js`、`fix_image_tags.js` |
 | 搜索缓存 | `search.local.cache_ttl_seconds` | `localStorage`（TTL 默认 1 天） | `local-search.js`（客户端） |
 | GitHub URL | `services.github` | GitHub 默认 | 数据服务脚本 |

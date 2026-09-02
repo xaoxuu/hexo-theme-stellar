@@ -53,8 +53,8 @@ function validateEntry(entry, index, ids) {
     throw new TypeError(`[stellar runtime] duplicate extension id ${entry.id}`);
   }
   ids.add(entry.id);
-  if (typeof entry.module !== "string" || !entry.module.startsWith(LOCAL_MODULE_PREFIX) || !entry.module.endsWith(".mjs")) {
-    throw new TypeError(`[stellar runtime] extensions[${index}].module must be a local runtime .mjs path`);
+  if (typeof entry.module !== "string" || !entry.module.startsWith(LOCAL_MODULE_PREFIX) || !entry.module.endsWith(".js")) {
+    throw new TypeError(`[stellar runtime] extensions[${index}].module must be a local runtime .js path`);
   }
   validateWhen(entry.when, `extensions[${index}].when`);
   plainObject(entry.config, `extensions[${index}].config`);

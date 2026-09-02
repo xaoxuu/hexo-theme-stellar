@@ -6,7 +6,7 @@ const path = require("node:path");
 const { pathToFileURL } = require("node:url");
 
 test("color-scheme-switch contribution installs and removes its runtime entry", async () => {
-  const file = pathToFileURL(path.resolve(__dirname, "../source/js/runtime/extensions/color-scheme-switch.mjs"));
+  const file = pathToFileURL(path.resolve(__dirname, "../source/js/runtime/extensions/color-scheme-switch.js"));
   const module = await import(`${file.href}?test=${Date.now()}`);
   const attributes = new Map();
   const listeners = new Set();

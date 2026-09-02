@@ -23,10 +23,10 @@ function dispatch(name, detail) {
 
 async function start() {
   const [assetModule, registryModule, adapterModule, requestModule] = await Promise.all([
-    import(`./asset-loader.mjs${RUNTIME_QUERY}`),
-    import(`./extension-registry.mjs${RUNTIME_QUERY}`),
-    import(`./legacy-request-adapter.mjs${RUNTIME_QUERY}`),
-    import(`./request-cache.mjs${RUNTIME_QUERY}`)
+    import(`./asset-loader.js${RUNTIME_QUERY}`),
+    import(`./extension-registry.js${RUNTIME_QUERY}`),
+    import(`./legacy-request-adapter.js${RUNTIME_QUERY}`),
+    import(`./request-cache.js${RUNTIME_QUERY}`)
   ]);
   const { createAssetLoader } = assetModule;
   const { createExtensionRegistry } = registryModule;

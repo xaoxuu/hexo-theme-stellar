@@ -5,7 +5,7 @@
 const { defineContributions } = require("./contribution-contract");
 const INTERNAL = require("./internal-constants");
 
-const FEATURE_ENTRY = "/js/runtime/extensions/feature.mjs";
+const FEATURE_ENTRY = "/js/runtime/extensions/feature.js";
 const PLUGIN_SYSTEM_DOC = "docs/knowledge/07-外部集成/plugin-system.md";
 const RUNTIME_TEST = "test/browser-runtime-manifest.test.js";
 const RUNTIME_CONSUMPTION_TEST = "test/browser-runtime-consumption.test.js";
@@ -69,7 +69,7 @@ const CONTRIBUTIONS = defineContributions([
   {
     id: "search",
     kind: "extension",
-    entry: runtimeEntry("/js/runtime/extensions/search.mjs"),
+    entry: runtimeEntry("/js/runtime/extensions/search.js"),
     resources: ["search"],
     activation: selector(".search-input"),
     schema: "search.provider",
@@ -134,7 +134,7 @@ const CONTRIBUTIONS = defineContributions([
   {
     id: "services",
     kind: "extension",
-    entry: runtimeEntry("/js/runtime/extensions/services.mjs"),
+    entry: runtimeEntry("/js/runtime/extensions/services.js"),
     resources: ["services", "dependencies.marked"],
     activation: selector(".data-service, [class*='ds-'], a[cardlink], .site-card [data-siteinfo-api], .voice>audio, .video>video, .chat-file"),
     schema: "services.site_info.provider",
@@ -154,7 +154,7 @@ const CONTRIBUTIONS = defineContributions([
   {
     id: "comments",
     kind: "extension",
-    entry: runtimeEntry("/js/runtime/extensions/comments.mjs"),
+    entry: runtimeEntry("/js/runtime/extensions/comments.js"),
     resources: ["comments"],
     activation: selector("#comments"),
     schema: "comments.provider",
@@ -331,7 +331,7 @@ const CONTRIBUTIONS = defineContributions([
   {
     id: "card-hover",
     kind: "feature",
-    entry: runtimeEntry("/js/runtime/extensions/card-hover.mjs"),
+    entry: runtimeEntry("/js/runtime/extensions/card-hover.js"),
     resources: ["features.cardHover"],
     activation: selector(".card-hover"),
     schema: "features.card_hover.enabled",

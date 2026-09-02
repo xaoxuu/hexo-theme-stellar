@@ -102,7 +102,7 @@ function localScriptSource(attributes) {
 
 function moduleImports(content) {
   const imports = new Set();
-  const staticPattern = /(?:from\s+|import\s*)["'](\.\.?\/[^"']+\.mjs)["']/g;
+  const staticPattern = /(?:from\s+|import\s*)["'](\.\.?\/[^"']+\.js)["']/g;
   for (const match of content.matchAll(staticPattern)) imports.add(match[1]);
   return [...imports];
 }
@@ -117,7 +117,7 @@ function collectCoreScripts(publicRoot, htmlFile) {
     if (resources.has(key)) return;
     const content = fs.readFileSync(file);
     resources.set(key, { path: key, bytes: content.length, gzipBytes: gzipBytes(content) });
-    if (file.endsWith(".mjs")) {
+    if (key.startsWith("/js/runtime/") && file.endsWith(".js")) {
       for (const child of moduleImports(content.toString("utf8"))) {
         const childFile = path.resolve(path.dirname(file), child);
         const childUrl = path.posix.resolve(path.posix.dirname(key), child);

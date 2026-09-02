@@ -22,7 +22,7 @@ Extension、Feature 和 Runtime 可注册组件均由 `scripts/lib/contribution-
 {
   id: "card-hover",
   kind: "feature",
-  entry: { type: "browser-module", path: "/js/runtime/extensions/card-hover.mjs" },
+  entry: { type: "browser-module", path: "/js/runtime/extensions/card-hover.js" },
   resources: ["features.cardHover"],
   activation: { type: "selector", value: ".card-hover" },
   schema: "features.card_hover.enabled",
@@ -42,13 +42,13 @@ Extension、Feature 和 Runtime 可注册组件均由 `scripts/lib/contribution-
 
 Card Hover 的迁移展示了一个简单浏览器 Feature 的最小维护面：
 
-1. `source/js/plugins/card-hover.js` 保留可测的业务实现，`source/js/runtime/extensions/card-hover.mjs` 只做 asset load 与 mount/unmount 适配。
+1. `source/js/plugins/card-hover.js` 保留可测的业务实现，`source/js/runtime/extensions/card-hover.js` 只做 asset load 与 mount/unmount 适配。Runtime 使用 `.js` URL，并由 `<script type="module">` 声明 ESM 语义，避免部署服务器缺少 `.mjs` MIME 映射时拒绝加载。
 2. `internal-constants.js` 只所有 `features.cardHover.js` 的具体路径；descriptor 只登记该资源键。
 3. descriptor 单点登记 `card-hover` ID、ESM 入口、`.card-hover` 激活、Schema、文档和行为测试；Contribution 门禁直接读取 Theme Schema，不维护第二份字段列表。
-4. `browser-runtime.js` 通用投影注册表；`feature.mjs` 不再增加 `card-hover` case，也不再有第二份 Manifest ID 列表。
+4. `browser-runtime.js` 通用投影注册表；`feature.js` 不再增加 `card-hover` case，也不再有第二份 Manifest ID 列表。
 5. `test/card_hover_client.test.js` 验证交互与清理，Manifest 测试验证投影，contribution 门禁验证所有维护面已连通。
 
-新功能不得为了绕过 descriptor 而直接在 `browser-runtime.js` 插入条件分支。如果一个功能有独立生命周期，优先使用独立 ESM adapter；通用 `feature.mjs` 仅保留已有兼容 adapter。
+新功能不得为了绕过 descriptor 而直接在 `browser-runtime.js` 插入条件分支。如果一个功能有独立生命周期，优先使用独立 ESM adapter；通用 `feature.js` 仅保留已有兼容 adapter。
 
 ## 执行门禁
 

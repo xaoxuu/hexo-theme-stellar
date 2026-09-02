@@ -2,6 +2,8 @@
 
 const { test } = require("node:test");
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
 const {
   RUNTIME_CONFIG_ID,
   RUNTIME_VERSION,
@@ -11,6 +13,14 @@ const {
 const { CONTRIBUTIONS } = require("../scripts/lib/contribution-registry");
 
 const MANIFEST_OWNED_IDS = ["search", "lightbox", "mathjax", "diagrams", "code-copy", "swiper"];
+const RUNTIME_SOURCE = path.resolve(__dirname, "../source/js/runtime");
+
+function runtimeFiles(root) {
+  return fs.readdirSync(root, { withFileTypes: true }).flatMap(entry => {
+    const file = path.join(root, entry.name);
+    return entry.isDirectory() ? runtimeFiles(file) : [file];
+  });
+}
 
 function fixture(overrides = {}) {
   return Object.assign({
@@ -37,7 +47,7 @@ test("Runtime Manifest validates and freezes the extension protocol", () => {
   const ids = new Set();
   for (const extension of manifest.extensions) {
     assert.match(extension.id, /^[a-z][a-z0-9-]*$/);
-    assert.match(extension.module, /^\/js\/runtime\/.*\.mjs$/);
+    assert.match(extension.module, /^\/js\/runtime\/.*\.js$/);
     assert.equal(Object.keys(extension.when).length, 1);
     assert.equal(Object.isFrozen(extension.config), true);
     assert.equal(ids.has(extension.id), false);
@@ -52,6 +62,15 @@ test("Runtime Manifest serialization is safe for inline script data", () => {
   const json = serializeBrowserRuntimeManifest(manifest);
   assert.doesNotMatch(json, /<\/script>|&/);
   assert.match(json, /\\u003c\/script\\u003e/);
+});
+
+test("Runtime browser assets use conventional .js module URLs end to end", () => {
+  const files = runtimeFiles(RUNTIME_SOURCE);
+  assert.ok(files.length > 0);
+  for (const file of files) {
+    assert.equal(path.extname(file), ".js", path.relative(RUNTIME_SOURCE, file));
+    assert.doesNotMatch(fs.readFileSync(file, "utf8"), /\.mjs\b/, path.relative(RUNTIME_SOURCE, file));
+  }
 });
 
 test("Runtime Manifest rejects malformed top-level inputs", () => {

@@ -68,4 +68,4 @@ flowchart LR
   E --> F[local / algolia browser runtime]
 ```
 
-相关源码：[_config.yml](../../../_config.yml)、[scripts/generators/search.js](../../../scripts/generators/search.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/extensions/search.mjs](../../../source/js/runtime/extensions/search.mjs)、[source/js/search/local-search.js](../../../source/js/search/local-search.js)、[source/js/search/algolia-search.js](../../../source/js/search/algolia-search.js)。
+相关源码：[_config.yml](../../../_config.yml)、[scripts/generators/search.js](../../../scripts/generators/search.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/extensions/search.js](../../../source/js/runtime/extensions/search.js)、[source/js/search/local-search.js](../../../source/js/search/local-search.js)、[source/js/search/algolia-search.js](../../../source/js/search/algolia-search.js)。
