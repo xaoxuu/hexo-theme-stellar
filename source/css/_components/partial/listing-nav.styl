@@ -9,6 +9,12 @@
   top: calc(var(--shell-topbar-top) + var(--shell-topbar-content-inset))
   z-index: 13
 
+// 吸顶后仅导航内容接收事件，空白区域穿透到下层 Topbar。
+.site-shell[data-regions~='topbar'] .listing-nav:has(> .listing-nav__surface.is-pinned)
+  pointer-events: none
+  nav
+    pointer-events: auto
+
 .site-shell[data-regions~='topbar'] .listing-nav .listing-nav__surface.is-pinned
   transform: translateY(var(--shell-topbar-content-center-offset)) translateY(-50%)
   border: 0
