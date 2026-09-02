@@ -1,19 +1,25 @@
 $editorial-paper-light = x-hsla(44, 50%, 96%, 1)
 $editorial-paper-dark = x-hsla(44, 10%, 10%, 1)
+$editorial-card-light = x-hsla(44, 50%, 98%, 1)
+$editorial-card-dark = x-hsla(44, 10%, 14%, 1)
 
-// Minimal 使用暖纸色承载透明表面，并覆盖全局冷白与移动端纯黑背景。
+// Minimal 使用同一暖纸色系承载背景与卡片，并覆盖全局冷白、冷灰与移动端纯黑背景。
 :root
   --background: $editorial-paper-light
+  --card: $editorial-card-light
 
 :root:not([data-theme])
   @media (prefers-color-scheme: dark)
     --background: $editorial-paper-dark
+    --card: $editorial-card-dark
 
 :root[data-theme='light']
   --background: $editorial-paper-light
+  --card: $editorial-card-light
 
 :root[data-theme='dark']
   --background: $editorial-paper-dark
+  --card: $editorial-card-dark
 
 .site-shell
   --leftbar-gap: 0px
