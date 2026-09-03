@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
-      RELEASE_NOTES_FILE: ${{ runner.temp }}/stellar-release-notes.md
+      RELEASE_NOTES_FILE: /tmp/stellar-release-notes.md
     steps:
       - name: Gate on release commit
         id: gate
