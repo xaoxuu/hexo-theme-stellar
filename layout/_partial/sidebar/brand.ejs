@@ -46,14 +46,18 @@ function layoutBrandTitle() {
 }
 
 function layoutBrandImage() {
-  const image = brand.image
-  if (!image?.src) return ''
-  const src = brandText(image.src)
-  const href = brandText(brand.href)
-  const tag = href ? 'a' : 'div'
-  var variant = image.variant
+  var image = brand.image
+  var src = brandText(image?.src)
+  if (!src && activeBrandSource !== 'collection') return ''
+  var href = brandText(brand.href)
+  var tag = href ? 'a' : 'div'
+  var variant = image?.variant || 'icon'
   var el = `<${tag} class="brand-image brand-image--${variant}"${href ? ` href="${escape_html(url_for(href))}"` : ''}>`
-  el += `<img no-lazy src="${escape_html(src)}" alt="">`
+  if (src) {
+    el += `<img no-lazy src="${escape_html(src)}" alt="">`
+  } else {
+    el += icon('default:documents', '', true)
+  }
   el += `</${tag}>`
   return el
 }

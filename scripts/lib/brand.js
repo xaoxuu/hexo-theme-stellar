@@ -28,12 +28,12 @@ function collectionBrandUrl(collection, type) {
   return undefined;
 }
 
-function collectionBrand(collection, type, defaultIcon) {
+function collectionBrand(collection, type) {
   if (collection == null || !COLLECTION_BRAND_TYPES.includes(type)) return null;
   const identity = collection.identity || {};
   const name = identity.name ?? collection.name;
   const tagline = identity.tagline ?? collection.tagline;
-  const imageSrc = identity.icon || defaultIcon;
+  const imageSrc = identity.icon;
   return normalizeBrand({
     image: imageSrc ? { src: imageSrc, variant: "icon" } : undefined,
     name: name == null ? null : name,
@@ -42,10 +42,10 @@ function collectionBrand(collection, type, defaultIcon) {
   });
 }
 
-function resolveBrands({ siteBrand, collection, collectionType, defaultIcon }) {
+function resolveBrands({ siteBrand, collection, collectionType }) {
   return {
     site: normalizeBrand({ ...siteBrand, href: "/" }),
-    collection: collectionBrand(collection, collectionType, defaultIcon)
+    collection: collectionBrand(collection, collectionType)
   };
 }
 

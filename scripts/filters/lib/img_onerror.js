@@ -1,28 +1,23 @@
-/**
- * img_onerror.js v1 | https://github.com/xaoxuu/hexo-theme-stellar/
- * 发现这个和 img_lazyload 有点冲突，会被 img_lazyload 覆盖
- */
-
 'use strict';
 
-const INTERNAL = require('../../lib/internal-constants');
+const { escapeHTML } = require('hexo-util');
+const { mapImageTags, parseImageAttributes } = require('../../lib/html-images');
 
 module.exports.processSite = function(htmlContent) {
   // 短路：无 <img 的页面（如 404）无需正则扫描
   if (typeof htmlContent !== 'string' || !/<img/i.test(htmlContent)) {
     return htmlContent;
   }
-  const default_image = INTERNAL.resources.contentImage;
-  return htmlContent.replace(/<img(.*?)src="(.*?)"(.*?)>/gi, function(imgTag) {
-    if (/="data:image(.*?)/gi.test(imgTag)) {
-      return imgTag;
-    }
-    if (/onerror/gi.test(imgTag)) {
-      return imgTag;
-    }
-    if (imgTag.includes(' no-lazy ') == false) {
-      return imgTag;
-    }
-    return imgTag.slice(0,imgTag.length-1) + ' onerror="javascript:this.classList.add(\'error\');this.src=\'' + default_image + '\';"' + imgTag.slice(imgTag.length-1);
+  const fallback = this.utils.iconData('image:onerror');
+  const handler = escapeHTML(`this.src=${JSON.stringify(fallback)}`);
+  return mapImageTags(htmlContent, imgTag => {
+    const closing = /\s*\/?\s*>$/.exec(imgTag)[0];
+    const attrs = parseImageAttributes(imgTag.slice(4, -closing.length));
+    if (attrs.some(attr => attr.name === 'onerror')) return imgTag;
+    // data-src 是真实图片；懒加载的 data:image 占位符也需要失败兜底。
+    const source = attrs.find(attr => attr.name === 'data-src')
+      || attrs.find(attr => attr.name === 'src');
+    if (!source?.value || /^data:image/i.test(source.value)) return imgTag;
+    return imgTag.slice(0, -closing.length) + ` onerror="${handler}"` + closing;
   });
 };

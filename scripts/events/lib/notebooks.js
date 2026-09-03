@@ -19,7 +19,6 @@ const {
 const { ensureRuntimeData } = require("../../lib/runtime-data");
 const { ConfigSchemaError } = require("../../lib/config-schema");
 const { deepFreeze } = require("../../schema/schema-utils");
-const INTERNAL = require("../../lib/internal-constants");
 const { runTwoStage, stableSort } = require("../../lib/collection-pipeline/shared");
 
 function plainTagTree(notebook) {
@@ -124,8 +123,7 @@ module.exports = (ctx, pipeline = null) => {
         const brands = resolveBrands({
           siteBrand: ctx.stellar.config.brand,
           collection: notebook,
-          collectionType: "notebook",
-          defaultIcon: INTERNAL.resources.projectIcon
+          collectionType: "notebook"
         });
         const projection = {
           id: notebook.id,
@@ -133,7 +131,7 @@ module.exports = (ctx, pipeline = null) => {
           name: identity.name,
           headline: identity.headline,
           description: identity.description,
-          icon: identity.icon || INTERNAL.resources.projectIcon,
+          icon: identity.icon || "",
           order: collection?.listing.order ?? notebook.listing.order ?? 0,
           listed: collection?.visibility.listed !== false && notebook.visibility?.listed !== false,
           navigation: {

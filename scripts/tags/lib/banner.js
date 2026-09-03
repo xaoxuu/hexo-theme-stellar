@@ -9,17 +9,21 @@
 
 'use strict';
 
-const INTERNAL = require('../../lib/internal-constants');
-
 module.exports = ctx => function(args, content) {
   args = ctx.args.map(args, ['bg', 'avatar', 'link'], ['title', 'subtitle'])
-  var bg = args.bg ? args.bg : INTERNAL.resources.banner
+  var bg = args.bg || ''
   var el = ''
-  el += `<div class="tag-plugin banner" style="--bg-url:url('${bg.replace(/'/g, '%27')}')">`
+  el += `<div class="tag-plugin banner${bg ? '' : ' no-bg'}"`
+  if (bg) {
+    el += ` style="--bg-url:url('${bg.replace(/'/g, '%27')}')"`
+  }
+  el += '>'
   // bg
-  el += `<img class="lazy bg" data-src="${bg}">`
+  if (bg) {
+    el += `<img class="lazy bg" data-src="${bg}">`
+  }
   // content
-  el += `<div class="content" data-text-adaptive="split">`
+  el += `<div class="content"${bg ? ' data-text-adaptive="split"' : ''}>`
   // content.top
   el += `<div class="top">`
   // content.top.back

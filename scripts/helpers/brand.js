@@ -8,7 +8,6 @@ const {
 } = require("../lib/brand");
 const { getCollectionId } = require("../lib/content-config");
 const { getPageConfig } = require("../lib/page-view-model-registry");
-const INTERNAL = require("../lib/internal-constants");
 
 function activeCollection(config) {
   const { wiki, topic, notebooks } = hexo.stellar.data;
@@ -31,8 +30,7 @@ hexo.extend.helper.register("brandConfig", function(page, source = "site") {
   const brands = resolveBrands({
     siteBrand: hexo.stellar.config.brand,
     collection: active.collection,
-    collectionType: active.type,
-    defaultIcon: INTERNAL.resources.projectIcon
+    collectionType: active.type
   });
   return brands[source] || null;
 });

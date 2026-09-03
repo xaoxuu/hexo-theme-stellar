@@ -21,7 +21,6 @@ function protectedAddresses(value, prefix = "INTERNAL") {
 }
 
 const INTERNAL_ADDRESS_RULES = [
-  ...protectedAddresses(INTERNAL.resources, "INTERNAL.resources"),
   ...protectedAddresses(INTERNAL.assets, "INTERNAL.assets")
 ];
 

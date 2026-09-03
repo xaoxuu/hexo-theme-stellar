@@ -202,6 +202,19 @@
         font-size: $fsh4
       .caption
         font-size: $fs-13
+  &.no-cover
+    background: var(--card)
+    &:before
+      display: none
+    &:after
+      background-image: none
+    .cover-info
+      position: relative
+      color: var(--text)
+      .text
+        text-shadow: none
+      .topic, .caption
+        color: var(--text-p2)
 
 .post-list .post-card.post.photo
   .cover img
@@ -253,6 +266,8 @@
       flex: none
       width: 100%
       aspect-ratio: 2 / 1
+      &.no-cover
+        aspect-ratio: auto
       border-radius: $border-card-l
       overflow: hidden
       // 背景图由 .cover 自身背景承载（跟随 corner-shape），子图保留用于 hover 滤镜

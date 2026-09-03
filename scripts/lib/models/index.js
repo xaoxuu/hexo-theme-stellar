@@ -24,7 +24,6 @@ const { normalizeBrand, resolveBrands } = require("../brand");
 const { firstContentImage, postDescription, postImages } = require("../seo");
 const { caption } = require("../caption");
 const { wikiReadmeHtml } = require("../wiki_readme");
-const INTERNAL = require("../internal-constants");
 const { resolveServiceProvider } = require("../service-provider");
 const {
   articleFooterDefaults,
@@ -47,8 +46,7 @@ function renderBrands(stellarConfig, collection) {
   return resolveBrands({
     siteBrand: stellarConfig.brand,
     collection: collectionType === "post" ? null : collection,
-    collectionType,
-    defaultIcon: INTERNAL.resources.projectIcon
+    collectionType
   });
 }
 
@@ -1437,7 +1435,7 @@ function buildTopicIndexRender(input) {
     date: item.date
   }));
   const latest = pages[0] || null;
-  const cover = collection.presentation.card?.cover || INTERNAL.resources.topicCover;
+  const cover = collection.presentation.card?.cover || "";
   return deepFreeze({
     id: collection.id,
     name: collection.identity.name,
