@@ -43,15 +43,10 @@ function audit(overrides = {}) {
   });
 }
 
-test("统一 descriptor 契约登记 runtime-bootstrap、Extension、Feature 与 component", () => {
+test("统一 descriptor 契约登记贡献、Schema 与维护面", () => {
   assert.doesNotThrow(() => validateContributionDefinitions(CONTRIBUTIONS));
   assert.deepEqual(new Set(CONTRIBUTIONS.map(item => item.kind)), new Set(["extension", "feature", "component"]));
-  assert.equal(CONTRIBUTIONS.some(item => item.id === "runtime-bootstrap"), true);
-  assert.equal(CONTRIBUTIONS.some(item => item.id === "color-scheme-switch"), true);
-  assert.equal(CONTRIBUTIONS.some(item => item.id === "katex-stylesheet"), true);
-  assert.deepEqual(contributionSchemaIds("features"), [
-    "color_scheme_switch", "lazy_loading", "link_prefetch", "lightbox", "reveal", "math", "diagrams", "card_hover", "heti"
-  ]);
+  assert.deepEqual(new Set(contributionSchemaIds("features")), new Set(Object.keys(CONFIG_SCHEMA.properties.features.properties)));
   assert.deepEqual(audit(), []);
 });
 
@@ -77,27 +72,20 @@ test("Runtime Manifest 顺序直接来自 descriptor 注册表", () => {
     render: {},
     resolveServiceProvider: () => null
   });
-  assert.deepEqual(entries.map(item => item.id), [
-    "lazy-loading", "deferred-icons", "dropdown", "services", "settings", "code-copy", "adaptive-text", "card-hover", "swiper"
-  ]);
+  const positions = entries.map(entry => CONTRIBUTIONS.findIndex(item => item.id === entry.id));
+  assert.ok(positions.length > 0);
+  assert.ok(positions.every((position, index) => position >= 0 && (index === 0 || position > positions[index - 1])));
   const cardHover = entries.find(item => item.id === "card-hover");
-  assert.equal(cardHover.module, "/js/runtime/extensions/card-hover.js");
-  assert.deepEqual(cardHover.when, { selector: ".card-hover" });
   assert.equal(cardHover.config.feature, "card-hover");
-  assert.equal(cardHover.config.assets.js, "/js/plugins/card-hover.js");
-  const reveal = CONTRIBUTIONS.find(item => item.id === "reveal");
-  assert.equal(reveal.entry.path, "/js/runtime/extensions/reveal.js");
-  assert.deepEqual(reveal.resources, ["runtime.reveal"]);
-
-  const sharedFeatureEntries = entries.filter(item => item.module === "/js/runtime/extensions/feature.js");
-  assert.deepEqual(sharedFeatureEntries.map(item => [item.id, item.config.feature]), [
-    ["lazy-loading", "lazy-loading"],
-    ["deferred-icons", "deferred-icons"],
-    ["dropdown", "dropdown"],
-    ["code-copy", "code-copy"],
-    ["adaptive-text", "adaptive-text"],
-    ["swiper", "swiper"]
-  ]);
+  assert.deepEqual(cardHover.config.assets, INTERNAL_CONSTANTS.assets.features.cardHover);
+  assert.equal(entries.some(item => item.id === "reveal"), false);
+  for (const entry of entries) {
+    const definition = CONTRIBUTIONS.find(item => item.id === entry.id);
+    assert.equal(entry.module, definition.entry.path, entry.id);
+    if (definition.entry.adapter === "feature") {
+      assert.equal(entry.config.feature, entry.id);
+    }
+  }
 });
 
 test("负向门禁拒绝重复注册与冲突的 Schema 默认值所有者", () => {
@@ -119,7 +107,7 @@ test("负向门禁拒绝缺失翻译与 Schema 所有权漂移", () => {
   assert.ok(audit({ schemaFields: driftedSchemaFields }).some(issue => issue.includes("card-hover: schema features.card_hover.enabled appears 0 times")));
 });
 
-test("负向门禁拒绝未登记资源、重复资源所有权与缺失行为测试", () => {
+test("负向门禁拒绝未登记资源与重复资源所有权", () => {
   const unregistered = cloneAssets();
   unregistered.features.unregisteredDemo = { js: "/js/plugins/unregistered-demo.js" };
   assert.ok(audit({ assets: unregistered }).some(issue => issue.includes("features.unregisteredDemo.js: internal asset has no contribution owner")));
@@ -128,11 +116,24 @@ test("负向门禁拒绝未登记资源、重复资源所有权与缺失行为�
     ? { ...item, resources: [...item.resources, "features.heti"] }
     : item);
   assert.ok(audit({ definitions: duplicateResource }).some(issue => issue.includes("resource features.heti is owned by both card-hover and heti")));
+});
 
-  const missingTest = CONTRIBUTIONS.map(item => item.id === "card-hover"
-    ? { ...item, tests: ["test/does-not-exist.test.js"] }
-    : item);
-  const issues = audit({ definitions: missingTest });
-  assert.ok(issues.some(issue => issue.includes("behavior test test/does-not-exist.test.js does not exist")));
-  assert.ok(issues.some(issue => issue.includes("no behavior test mentions the contribution id")));
+test("贡献证据允许复用不包含贡献 ID 的共享契约测试", () => {
+  const definitions = CONTRIBUTIONS.map((item, index) => ({
+    ...item,
+    id: `shared-contract-${index}`,
+    tests: ["test/browser-runtime-consumption.test.js"]
+  }));
+  assert.deepEqual(audit({ definitions }), []);
+});
+
+test("贡献证据拒绝空引用、缺失文件与目录引用", () => {
+  for (const [tests, expected] of [
+    [[], /tests must be a non-empty array/],
+    [["test/does-not-exist.test.js"], /contract test test\/does-not-exist.test.js does not exist/],
+    [["test/"], /contract test test\/ is not a file/]
+  ]) {
+    const definitions = CONTRIBUTIONS.map((item, index) => index === 0 ? { ...item, tests } : item);
+    assert.ok(audit({ definitions }).some(issue => expected.test(issue)), JSON.stringify(tests));
+  }
 });

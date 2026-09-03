@@ -85,7 +85,7 @@ jobs:
           should_run=false
           while IFS= read -r file; do
             case "$file" in
-              layout/*|scripts/*|source/css/*|source/js/*|languages/*|blueprints/*|_data/*|_config.yml|package.json|package-lock.json|ci/gulpfile.js|.github/workflows/ci.yml)
+              layout/*|scripts/*|source/css/*|source/js/*|languages/*|_data/*|_config.yml|package.json|package-lock.json|ci/gulpfile.js|.github/workflows/ci.yml)
                 should_run=true
                 break
                 ;;

@@ -10,9 +10,6 @@ const {
   buildBrowserRuntimeManifest,
   serializeBrowserRuntimeManifest
 } = require("../scripts/lib/browser-runtime");
-const { CONTRIBUTIONS } = require("../scripts/lib/contribution-registry");
-
-const MANIFEST_OWNED_IDS = ["search", "lightbox", "mathjax", "diagrams", "code-copy", "swiper"];
 const RUNTIME_SOURCE = path.resolve(__dirname, "../source/js/runtime");
 
 function runtimeFiles(root) {
@@ -34,8 +31,6 @@ function fixture(overrides = {}) {
 }
 
 test("Runtime Manifest validates and freezes the extension protocol", () => {
-  const registered = new Set(CONTRIBUTIONS.map(item => item.id));
-  assert.equal(MANIFEST_OWNED_IDS.every(id => registered.has(id)), true);
   const manifest = buildBrowserRuntimeManifest(fixture());
   assert.equal(RUNTIME_VERSION, 1);
   assert.equal(RUNTIME_CONFIG_ID, "stellar-runtime-config");

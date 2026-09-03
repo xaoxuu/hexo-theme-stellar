@@ -37,7 +37,7 @@ const CONTRIBUTIONS = defineContributions([
     schema: null,
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
-    tests: [RUNTIME_CONSUMPTION_TEST],
+    tests: [RUNTIME_TEST],
     defaultsOwner: null,
     project: null
   },
@@ -57,7 +57,7 @@ const CONTRIBUTIONS = defineContributions([
       ]
     },
     docs: { category: "Extensions", path: "docs/knowledge/05-前端交互/client-side-overview.md" },
-    tests: ["test/color-scheme-switch.test.js", RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
+    tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: CONFIG_OWNER("features.color_scheme_switch.enabled"),
     project(context) {
       if (context.features.colorSchemeSwitch?.enabled !== true) return null;
@@ -75,7 +75,7 @@ const CONTRIBUTIONS = defineContributions([
     schema: "search.provider",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
-    tests: [RUNTIME_TEST],
+    tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: CONFIG_OWNER("search.provider"),
     project(context) {
       const search = context.plainObject(context.extensions.search, "extensions.search");
@@ -181,7 +181,7 @@ const CONTRIBUTIONS = defineContributions([
     schema: null,
     i18n: null,
     docs: { category: "Components", path: "docs/knowledge/02-布局系统/sidebar-system.md" },
-    tests: ["test/settings.test.js", RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
+    tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: null,
     project: context => configResult({})
   },
@@ -210,7 +210,7 @@ const CONTRIBUTIONS = defineContributions([
     schema: "features.lightbox.enabled",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
-    tests: [RUNTIME_TEST],
+    tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: CONFIG_OWNER("features.lightbox.enabled"),
     project(context) {
       if (context.features.lightbox?.enabled !== true) return null;
@@ -229,7 +229,7 @@ const CONTRIBUTIONS = defineContributions([
     schema: "features.reveal.enabled",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
-    tests: ["test/reveal.test.js", RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
+    tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: CONFIG_OWNER("features.reveal.enabled"),
     project(context) {
       if (context.features.reveal?.enabled !== true) return null;
@@ -245,7 +245,7 @@ const CONTRIBUTIONS = defineContributions([
     schema: "features.math.provider",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
-    tests: [RUNTIME_TEST],
+    tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: CONFIG_OWNER("features.math.provider"),
     project(context) {
       const provider = context.render.math || context.features.math?.provider;
@@ -265,7 +265,7 @@ const CONTRIBUTIONS = defineContributions([
     schema: "features.math.provider",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
-    tests: [RUNTIME_CONSUMPTION_TEST],
+    tests: [RUNTIME_TEST],
     defaultsOwner: CONFIG_OWNER("features.math.provider"),
     project: null
   },
@@ -278,7 +278,7 @@ const CONTRIBUTIONS = defineContributions([
     schema: "features.diagrams.provider",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
-    tests: [RUNTIME_TEST],
+    tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: CONFIG_OWNER("features.diagrams.provider"),
     project(context) {
       const override = context.render.diagrams;
@@ -308,7 +308,7 @@ const CONTRIBUTIONS = defineContributions([
       keys: ["btn.copy", "message.copied", "message.copy_denied", "message.copy_unsupported"]
     },
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
-    tests: [RUNTIME_TEST],
+    tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: null,
     project: context => configResult({
       assets: context.assets.features?.codeCopy || {},
@@ -337,7 +337,7 @@ const CONTRIBUTIONS = defineContributions([
     schema: "features.card_hover.enabled",
     i18n: null,
     docs: { category: "Components", path: PLUGIN_SYSTEM_DOC },
-    tests: ["test/card_hover_client.test.js", RUNTIME_TEST],
+    tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: CONFIG_OWNER("features.card_hover.enabled"),
     project(context) {
       if (context.features.cardHover?.enabled !== true) return null;
@@ -353,7 +353,7 @@ const CONTRIBUTIONS = defineContributions([
     schema: "features.heti.enabled",
     i18n: null,
     docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
-    tests: [RUNTIME_CONSUMPTION_TEST],
+    tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: CONFIG_OWNER("features.heti.enabled"),
     project(context) {
       if (context.features.heti?.enabled !== true) return null;
@@ -369,7 +369,7 @@ const CONTRIBUTIONS = defineContributions([
     schema: null,
     i18n: null,
     docs: { category: "Components", path: "docs/knowledge/04-标签插件/timeline-media-tags.md" },
-    tests: [RUNTIME_TEST],
+    tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: null,
     project: context => configResult({ assets: context.assets.features?.swiper || {} })
   }

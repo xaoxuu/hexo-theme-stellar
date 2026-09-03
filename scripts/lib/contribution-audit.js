@@ -83,15 +83,14 @@ function auditContributionRegistry(options) {
     if (!fs.existsSync(path.join(root, definition.docs.path))) {
       issues.push(`${definition.id}: docs file ${definition.docs.path} does not exist`);
     }
-    const behaviorMentions = definition.tests.filter(testFile => {
+    for (const testFile of definition.tests) {
       const absolute = path.join(root, testFile);
       if (!fs.existsSync(absolute)) {
-        issues.push(`${definition.id}: behavior test ${testFile} does not exist`);
-        return false;
+        issues.push(`${definition.id}: contract test ${testFile} does not exist`);
+      } else if (!fs.statSync(absolute).isFile()) {
+        issues.push(`${definition.id}: contract test ${testFile} is not a file`);
       }
-      return fs.readFileSync(absolute, "utf8").includes(definition.id);
-    });
-    if (behaviorMentions.length === 0) issues.push(`${definition.id}: no behavior test mentions the contribution id`);
+    }
 
     if (definition.schema !== null) {
       const count = schemaPaths.filter(item => item === definition.schema).length;

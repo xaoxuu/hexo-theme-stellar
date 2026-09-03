@@ -561,23 +561,11 @@ function writeAcceptanceArtifacts(root, tarball, sites) {
         automatedEvidence: "HTTP 200 response containing the Stellar Shell"
       },
       expected: `Run ${PREVIEW_COMMAND} in this directory, then inspect the listed routes on desktop and mobile.`
-    })),
-    manualScenarios: [
-      "desktop, tablet and mobile Region layout",
-      "Topbar-only, classic Leftbar and Topbar + Leftbar + Rightbar",
-      "expanded Leftbar, icon Rail, persisted state and mobile Drawer",
-      "standard Feed homepage pagination",
-      "primary navigation and Collection navigation",
-      "multi-instance local search and empty/error state",
-      "comments remote-failure fallback without console errors",
-      "canonical, Open Graph and JSON-LD output",
-      "language-specific built-in UI",
-      "default Markdown rendering"
-    ]
+    }))
   };
   write(root, "acceptance-report.json", `${JSON.stringify(report, null, 2)}\n`);
   write(root, "issues.md", [
-    "# Stellar v2 M10 人工验收问题记录",
+    "# Stellar 人工验收问题记录",
     "",
     "状态：等待站长人工验收",
     "",

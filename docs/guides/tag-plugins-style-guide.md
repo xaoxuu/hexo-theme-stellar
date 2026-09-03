@@ -37,8 +37,8 @@
 - 标签实现文件优先落在 `scripts/tags/lib/<name>.js`
 - 样式文件优先落在 `source/css/_components/tag-plugins/<name>.styl`
 - 需要前端增强时再补充 `source/js/services/<name>.js`
-- 展示配置优先放在 `_config.yml` 的 `extensions.tags.<name>`
-- 远程数据相关配置优先放在 `_config.yml` 的 `extensions.services.<name>`
+- 展示配置优先放在 `_config.yml` 的 `tags.<name>`
+- 远程数据相关配置优先放在 `_config.yml` 的 `services.<name>`
 - 有新增展示文案时同步更新 `languages/`
 
 ### 2.3 命名与结构共性
@@ -105,8 +105,8 @@
 
 ### 3.6 配置与国际化规则
 
-- 纯展示行为、默认配色、边框开关等，优先放在 `extensions.tags.<name>`
-- 远程接口、数据源、请求行为等，优先放在 `extensions.services.<name>`
+- 纯展示行为、默认配色、边框开关等，优先放在 `tags.<name>`
+- 远程接口、数据源、请求行为等，优先放在 `services.<name>`
 - 涉及新增可见文案时，必须同步补齐 `languages/`，避免只在某个语言下可用
 - 不要把具体站点的私有数据直接写入主题仓库；主题只定义接口与默认行为
 
@@ -128,7 +128,7 @@
 
 处理例外时，应优先满足以下原则：
 
-1. 保持兼容旧语法
+1. 按根 AGENTS.md“发布基线”保留已发布语法与明确维护的外部接缝
 2. 不扩大历史包袱
 3. 对新实现仍给出清晰入口与文档说明
 4. 让后续维护者能快速判断“这是刻意复用”还是“无意耦合”
@@ -143,7 +143,7 @@
 - 是否优先采用 `ctx.args.map`、配置兜底与服务端渲染，而不是自定义解析规则
 - 是否把样式限制在正文与组件作用域内，避免全局污染
 - 是否只有在确有必要时才新增前端服务，并通过 `data-*` + `ds-*` 联动
-- 是否补齐 `_config.yml`、`languages/`、`docs/` 等配套文件
+- 是否同步受影响的配置与国际化；验证范围、测试保留位置和文档同步时机按根 AGENTS.md 对应门禁执行
 - 需要持久化方案时，相关 GitHub issue 是否记录行为变化、影响范围与验收标准
 - 宿主集成属于任务目标且定向证据不足时，是否补充了消费方验证
 
@@ -153,7 +153,7 @@
 
 | 标签/家族 | 服务端实现 | 样式文件 | 前端服务 | 常见配置/说明 |
 | --- | --- | --- | --- | --- |
-| `note` / `box` | `scripts/tags/lib/note.js`、`scripts/tags/lib/box.js` | `tag-plugins/note.styl` | 无 | 展示类卡片，优先走 `extensions.tags.note` |
+| `note` / `box` | `scripts/tags/lib/note.js`、`scripts/tags/lib/box.js` | `tag-plugins/note.styl` | 无 | 展示类卡片，优先走 `tags.note` |
 | `tabs` / `folding` / `folders` | `scripts/tags/lib/*.js` | `tag-plugins/tabs.styl`、`folding.styl`、`folders.styl` | 无 | 容器类，关注嵌套结构与 Markdown 渲染 |
 | `friends` / `users` / `albums` / `sites` | `scripts/tags/lib/*.js` | `friends.styl`、`sites.styl` 等 | `source/js/services/sites.js` 等 | 数据类，常联动本地配置或远程接口 |
 | `rating` / `vote` / `timeline` | `scripts/tags/lib/*.js` | `rating.styl`、`vote.styl`、`timeline.styl` | `source/js/services/rating.js` 等 | 运行时增强类，优先占位后补全 |
@@ -169,7 +169,7 @@
 - 长期维护的流程、规范与操作手册放入 `docs/guides/`
 - 风格一致性审计、问题盘点与改进建议放入 `docs/audits/`
 
-当某次标签变更涉及语法、配置项或行为变化时，文档中至少要说明：
+文档同步时机按根 AGENTS.md“文档”执行；需要记录语法、配置项或行为变化时，说明：
 
 - 问题与目标
 - 标签接口或配置接口
