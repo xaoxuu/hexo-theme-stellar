@@ -1,13 +1,11 @@
-/* global hexo */
-
 "use strict";
 
 const fs = require("node:fs");
 const path = require("node:path");
 const yaml = require("js-yaml");
-const { validateContributionDefinitions } = require("./contribution-contract");
-const { flattenSchemaFields } = require("../schema/schema-utils");
-const { CONFIG_SCHEMA } = require("../schema/config-schema");
+const { validateContributionDefinitions } = require("../../scripts/lib/contribution-contract");
+const { flattenSchemaFields } = require("../../scripts/schema/schema-utils");
+const { CONFIG_SCHEMA } = require("../../scripts/schema/config-schema");
 
 function leafPaths(value, parents = [], result = []) {
   if (value == null || typeof value !== "object" || Array.isArray(value)) {

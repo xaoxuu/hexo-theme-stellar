@@ -6,7 +6,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const yaml = require("js-yaml");
 const { validateContributionDefinitions } = require("../scripts/lib/contribution-contract");
-const { auditContributionRegistry } = require("../scripts/lib/contribution-audit");
+const { auditContributionRegistry } = require("../ci/lib/contribution-audit");
 const { flattenSchemaFields } = require("../scripts/schema/schema-utils");
 const { CONFIG_SCHEMA } = require("../scripts/schema/config-schema");
 const {

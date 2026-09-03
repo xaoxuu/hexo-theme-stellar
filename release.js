@@ -152,9 +152,7 @@ function updatedInstallation(raw, previousVersion, version) {
 }
 
 function prepareVersionFiles(root, version) {
-  if (!RELEASE_VERSION_RE.test(version)) {
-    throw new Error(`版本号格式不正确: ${version}`);
-  }
+  assertReleaseVersion(version);
   const packagePath = path.join(root, "package.json");
   const installationPath = path.join(root, INSTALLATION_FILE);
   const packageRaw = fs.readFileSync(packagePath, "utf8");
@@ -193,14 +191,21 @@ function extractVersionSection(text, version) {
 }
 
 function hasNonEmptyChangelogSection(text, version) {
-  const section = extractVersionSection(text, version);
-  if (section === null || section === '') {
-    return false;
-  }
-  return section
+  return releaseNotes(text, version).length > 0;
+}
+
+function releaseNotes(text, version) {
+  return (extractVersionSection(text, version) || '')
     .split('\n')
-    .map((line) => line.trim())
-    .some((line) => line !== '' && !line.startsWith('> 发布日期：'));
+    .filter((line) => !line.trim().startsWith('> 发布日期：'))
+    .join('\n')
+    .trim();
+}
+
+function assertReleaseVersion(version) {
+  if (typeof version !== 'string' || !RELEASE_VERSION_RE.test(version)) {
+    throw new Error(`版本号格式不正确: ${version}（应为 x.y.z 或 x.y.z-rc.n；Alpha/Beta 仅为内部里程碑）`);
+  }
 }
 
 function backupFiles(root = ROOT) {
@@ -248,7 +253,7 @@ function runPreflightCheck() {
   try {
     execFileSync('npm', ['run', 'release:check'], { cwd: ROOT, stdio: 'inherit' });
   } catch (_) {
-    throw new Error('质量检查未通过（lint / 单测 / 知识库核查），已终止发版，请修复后再试');
+    throw new Error('release:check 未通过，已终止发版，请修复后再试');
   }
 }
 
@@ -295,9 +300,7 @@ async function main() {
     }
   }
 
-  if (!RELEASE_VERSION_RE.test(version)) {
-    fail(`版本号格式不正确: ${version}（应为 x.y.z 或 x.y.z-rc.n；Alpha/Beta 仅为内部里程碑）`);
-  }
+  assertReleaseVersion(version);
 
   const branch = currentBranch();
   if (branch !== 'main') {
@@ -390,7 +393,9 @@ if (require.main === module) {
 }
 
 module.exports = {
+  assertReleaseVersion,
   extractVersionSection,
   hasNonEmptyChangelogSection,
+  releaseNotes,
   prepareVersionFiles,
 };

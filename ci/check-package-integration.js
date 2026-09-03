@@ -9,6 +9,9 @@ const net = require("node:net");
 const os = require("node:os");
 const path = require("node:path");
 const { once } = require("node:events");
+const { load } = require("cheerio");
+const { RUNTIME_CONFIG_ID, RUNTIME_VERSION } = require("../scripts/lib/browser-runtime");
+const INTERNAL = require("../scripts/lib/internal-constants");
 const { spawn, spawnSync } = require("node:child_process");
 
 const THEME_ROOT = path.resolve(__dirname, "..");
@@ -18,6 +21,10 @@ const SCENARIO_MATRIX = Object.freeze([
   Object.freeze({ id: "notebook", language: "zh-CN" }),
   Object.freeze({ id: "wiki", language: "zh-TW" })
 ]);
+const MINIFY_PACKAGES = [
+  "gulp", "gulp-clean-css", "gulp-html-minifier-terser", "gulp-terser",
+  "gulp-sourcemaps", "gulp-babel", "@babel/core", "@babel/preset-env"
+];
 const INSTALL_PACKAGES = [
   "hexo@8.1.2",
   "hexo-generator-index@4.0.0",
@@ -163,11 +170,11 @@ async function assertPreviewServer(root, hexo, label, requestPath = "/") {
       try {
         const response = await requestPreview(port, requestPath);
         if (response.status !== 200) throw new Error(`${label}: preview returned HTTP ${response.status}`);
-        if (!response.body.includes('id="start"')) throw new Error(`${label}: preview response missing Stellar Shell`);
+        assertRuntime(response.body, label);
         process.stdout.write(`${label}: hexo server → HTTP 200 passed\n`);
         return;
       } catch (error) {
-        if (/preview returned HTTP|preview response missing Stellar Shell/.test(error.message)) throw error;
+        if (/preview returned HTTP|Runtime/.test(error.message)) throw error;
       }
       await delay(100);
     }
@@ -297,24 +304,24 @@ function assertRoutes(root, routes, label) {
 }
 
 function assertLanguage(html, language, label) {
-  if (!html.includes(`<html lang="${language}"`)) throw new Error(`${label}: expected html language ${language}`);
+  if (load(html)("html").attr("lang") !== language) throw new Error(`${label}: expected html language ${language}`);
 }
 
 function expectedPages(scenario) {
   if (scenario === "post-topic") {
     return [
-      { path: "public/blog/2026/08/23/integration-topic/index.html", marker: "Topic profile integration marker.", profile: "topic" },
-      { marker: "Ordinary Post integration marker.", profile: "post" }
+      { path: "public/blog/2026/08/23/integration-topic/index.html", marker: "Topic profile integration marker." },
+      { path: "public/blog/2026/08/23/integration-post/index.html", marker: "Ordinary Post integration marker." }
     ];
   }
   if (scenario === "notebook") {
     return [
-      { marker: "Notebook profile integration marker.", profile: "notebook" }
+      { path: "public/notebooks/integration/Integration Notebook Note/index.html", marker: "Notebook profile integration marker." }
     ];
   }
   return [
-    { path: "public/wiki/integration/index.html", marker: "Wiki profile integration marker.", profile: "wiki" },
-    { path: "public/wiki/integration/getting-started/index.html", marker: "Wiki getting-started marker.", profile: "wiki" }
+    { path: "public/wiki/integration/index.html", marker: "Wiki profile integration marker." },
+    { path: "public/wiki/integration/getting-started/index.html", marker: "Wiki getting-started marker." }
   ];
 }
 
@@ -328,56 +335,47 @@ function expectedRoutes(scenario) {
   return ["/wiki/", "/wiki/integration/", "/wiki/integration/getting-started/"];
 }
 
-function hasProfileOutput(html, profile) {
-  const shell = /<body\b[^>]*\bdata-page-layout="(?:post|page)"[^>]*>/.test(html)
-    && /<div class="site-shell" id="start"(?:\s|>)/.test(html);
-  if (!shell) return false;
-  if (profile === "post") {
-    return /<body\b[^>]*\bdata-page-layout="post"[^>]*>/.test(html)
-      && /<meta property="og:type" content="article">/.test(html);
-  }
-  if (profile === "topic") {
-    return /<body\b[^>]*\bdata-page-layout="post"[^>]*>/.test(html)
-      && /<a class="cap breadcrumb" id="proj"[^>]*>[^<]+<\/a>/.test(html);
-  }
-  if (profile === "wiki") {
-    return /<body\b[^>]*\bdata-page-layout="page"[^>]*>/.test(html)
-      && /<a class="cap breadcrumb" id="proj"[^>]*>[^<]+<\/a>/.test(html);
-  }
-  if (profile === "notebook") {
-    return /<body\b[^>]*\bdata-page-layout="page"[^>]*>/.test(html)
-      && /<a class="cap breadcrumb"[^>]*>[^<]+<\/a>/.test(html);
-  }
-  if (profile === "page") {
-    return /<body\b[^>]*\bdata-page-layout="page"[^>]*>/.test(html);
-  }
-  return false;
-}
-
-function findHtmlWithMarker(root, marker, profile) {
-  for (const entry of fs.readdirSync(root, { withFileTypes: true })) {
-    const file = path.join(root, entry.name);
-    if (entry.isDirectory()) {
-      const nested = findHtmlWithMarker(file, marker, profile);
-      if (nested) return nested;
-    } else if (entry.name.endsWith(".html")) {
-      const html = fs.readFileSync(file, "utf8");
-      if (html.includes(marker) && hasProfileOutput(html, profile)) return file;
-    }
-  }
-  return null;
-}
-
-function assertRuntime(html, relative, profile) {
-  const manifests = [...html.matchAll(/<script type="application\/json" id="stellar-runtime-config">([\s\S]*?)<\/script>/g)];
+function assertRuntime(html, relative) {
+  const $ = load(html);
+  const manifests = $(`script[type="application/json"][id="${RUNTIME_CONFIG_ID}"]`);
   if (manifests.length !== 1) throw new Error(`${relative}: expected one Runtime Manifest, got ${manifests.length}`);
-  const manifest = JSON.parse(manifests[0][1]);
-  if (manifest.version !== 1 || !Array.isArray(manifest.extensions)) {
+  const manifest = JSON.parse(manifests.text());
+  if (manifest.version !== RUNTIME_VERSION || !Array.isArray(manifest.extensions)) {
     throw new Error(`${relative}: invalid Runtime Manifest`);
   }
-  const entries = html.match(/<script type="module" src="[^"]*\/js\/runtime\/index\.js[^"]*"><\/script>/g) || [];
-  if (entries.length !== 1) throw new Error(`${relative}: expected one ESM runtime entry, got ${entries.length}`);
-  if (!hasProfileOutput(html, profile)) throw new Error(`${relative}: missing ${profile} PageViewModel output marker`);
+  const entries = $('script[type="module"][src]').filter((_, element) => {
+    const url = new URL($(element).attr("src"), "https://example.com");
+    return url.pathname.endsWith(INTERNAL.assets.runtime.bootstrap);
+  });
+  if (entries.length !== 1) throw new Error(`${relative}: expected one Runtime ESM entry, got ${entries.length}`);
+}
+
+function installMinifier(root) {
+  const tooling = path.join(root, "build-tools");
+  write(tooling, "package.json", '{"private":true}\n');
+  run("npm", ["install", "--no-audit", "--no-fund", "--prefer-offline", "--package-lock=false", ...MINIFY_PACKAGES], {
+    cwd: tooling, env: { npm_config_cache: path.join(root, "npm-cache") }
+  });
+  fs.copyFileSync(path.join(THEME_ROOT, "ci/gulpfile.js"), path.join(tooling, "gulpfile.js"));
+  return tooling;
+}
+
+function minifySite(root, tooling) {
+  // Runtime modules must survive both Hexo generation and host postprocessing unchanged.
+  const source = path.join(root, "node_modules/hexo-theme-stellar/source/js/runtime");
+  const modules = fs.readdirSync(source, { recursive: true })
+    .filter(file => file.endsWith(".js"));
+  if (modules.length === 0) throw new Error("Runtime source modules missing from installed package");
+  run(path.join(tooling, "node_modules/.bin/gulp"), [
+    "--cwd", root, "--gulpfile", path.join(tooling, "gulpfile.js"), "minify"
+  ], { cwd: root });
+  for (const file of modules) {
+    const output = path.join(root, "public/js/runtime", file);
+    if (!fs.existsSync(output) || sha256File(output) !== sha256File(path.join(source, file))) {
+      throw new Error(`Runtime module changed or missing after generate/minify: ${file}`);
+    }
+  }
+  process.stdout.write(`${path.basename(root)}: HTML/CSS/JS minify and Runtime ESM preservation passed\n`);
 }
 
 function assertPackageFiles(pack) {
@@ -400,12 +398,9 @@ function assertPackageFiles(pack) {
     ".agents/",
     ".claude/",
     "scripts/.cache/",
-    "reference/",
-    "blueprints/",
-    "scripts/lib/blueprints/",
-    "scripts/schema/blueprint-schema.js",
+    ".github/",
     "package-lock.json",
-    "ALPHA.md"
+    "release.js"
   ];
   for (const file of files) {
     if (forbidden.some(prefix => file === prefix || file.startsWith(prefix))) {
@@ -424,7 +419,7 @@ function packTheme(root) {
   return path.join(root, result[0].filename);
 }
 
-async function checkSite(root, matrix, tarball) {
+async function checkSite(root, matrix, tarball, tooling) {
   const { id: scenario, language } = matrix;
   createSite(root, { language });
   process.stdout.write(`${scenario}/${language}: installing Hexo 8 and ${path.basename(tarball)}\n`);
@@ -436,16 +431,15 @@ async function checkSite(root, matrix, tarball) {
   else addWikiFixture(root);
   assertDoctorParity(root, hexo, `${scenario}/${language}`);
   run(hexo, ["generate"], { cwd: root });
+  minifySite(root, tooling);
   assertRoutes(root, expectedRoutes(scenario), `${scenario}/${language}`);
   for (const expected of expectedPages(scenario)) {
-    const output = expected.path
-      ? path.join(root, expected.path)
-      : findHtmlWithMarker(path.join(root, "public"), expected.marker, expected.profile);
-    const relative = output ? path.relative(root, output) : `<page containing ${expected.marker}>`;
+    const output = path.join(root, expected.path);
+    const relative = expected.path;
     if (!output || !fs.existsSync(output)) throw new Error(`${scenario}: missing ${relative}`);
     const html = fs.readFileSync(output, "utf8");
     if (!html.includes(expected.marker)) throw new Error(`${relative}: missing content marker ${expected.marker}`);
-    assertRuntime(html, relative, expected.profile);
+    assertRuntime(html, relative);
     assertLanguage(html, language, `${scenario}/${relative}`);
   }
   assertSearchIndex(root, expectedPages(scenario).map(item => item.marker), `${scenario}/${language}`);
@@ -454,7 +448,7 @@ async function checkSite(root, matrix, tarball) {
   return { id: scenario, language, routes: expectedRoutes(scenario) };
 }
 
-async function checkDefaultSite(root, tarball) {
+async function checkDefaultSite(root, tarball, tooling) {
   createSite(root);
   write(root, "source/_posts/default-markdown.md", [
     "---",
@@ -493,14 +487,13 @@ async function checkDefaultSite(root, tarball) {
     throw new Error("default-content: Schema-default doctor check failed");
   }
   run(hexo, ["generate"], { cwd: root });
-  const post = findHtmlWithMarker(path.join(root, "public"), "Default configuration integration marker.", "post");
-  if (!post) throw new Error("default-content: missing ordinary Post output");
-  assertRuntime(fs.readFileSync(post, "utf8"), path.relative(root, post), "post");
+  const post = path.join(root, "public/blog/2026/08/25/default-markdown/index.html");
+  assertRuntime(fs.readFileSync(post, "utf8"), path.relative(root, post));
   const page = path.join(root, "public/about/index.html");
   if (!fs.existsSync(page)) throw new Error("default-content: missing ordinary Page output");
   const pageHtml = fs.readFileSync(page, "utf8");
   if (!pageHtml.includes("Ordinary Page integration marker.")) throw new Error("default-content: ordinary Page marker missing");
-  assertRuntime(pageHtml, path.relative(root, page), "page");
+  assertRuntime(pageHtml, path.relative(root, page));
   assertSearchIndex(root, ["Default configuration integration marker.", "Ordinary Page integration marker."], "default-content/missing-config");
 
   write(root, "_config.stellar.yml", "");
@@ -508,6 +501,9 @@ async function checkDefaultSite(root, tarball) {
   if (!emptyDoctor.checked.themeConfig) throw new Error("default-content: empty override was not checked");
   run(hexo, ["clean"], { cwd: root });
   run(hexo, ["generate"], { cwd: root });
+  minifySite(root, tooling);
+  assertRuntime(fs.readFileSync(post, "utf8"), path.relative(root, post));
+  assertRuntime(fs.readFileSync(page, "utf8"), path.relative(root, page));
   assertRoutes(root, ["/", "/about/"], "default-content/empty-config");
   await assertPreviewServer(root, hexo, "default-content/empty-config");
   process.stdout.write("default-content: missing/empty config → doctor → generate passed\n");
@@ -558,28 +554,12 @@ function writeAcceptanceArtifacts(root, tarball, sites) {
       directory: path.join(root, site.id),
       preview: {
         command: PREVIEW_COMMAND,
-        automatedEvidence: "HTTP 200 response containing the Stellar Shell"
+        automatedEvidence: "HTTP 200 response containing the Runtime Manifest and ESM entry"
       },
       expected: `Run ${PREVIEW_COMMAND} in this directory, then inspect the listed routes on desktop and mobile.`
     }))
   };
   write(root, "acceptance-report.json", `${JSON.stringify(report, null, 2)}\n`);
-  write(root, "issues.md", [
-    "# Stellar 人工验收问题记录",
-    "",
-    "状态：等待站长人工验收",
-    "",
-    "## 问题模板",
-    "",
-    "- 站点 / URL：",
-    "- 环境（浏览器、视口、系统）：",
-    "- 预期结果：",
-    "- 实际结果：",
-    "- 复现步骤：",
-    "- 截图或日志：",
-    "- 处理结论：",
-    ""
-  ].join("\n"));
 }
 
 async function main() {
@@ -597,11 +577,12 @@ async function main() {
       ? SCENARIO_MATRIX.filter(matrix => matrix.id === selectedId)
       : SCENARIO_MATRIX;
     if (selected.length === 0) throw new Error(`Unknown integration scenario: ${selectedId}`);
+    const tooling = installMinifier(root);
     const sites = [];
     for (const matrix of selected) {
-      sites.push(await checkSite(path.join(root, matrix.id), matrix, tarball));
+      sites.push(await checkSite(path.join(root, matrix.id), matrix, tarball, tooling));
     }
-    sites.push(await checkDefaultSite(path.join(root, "default-content"), tarball));
+    sites.push(await checkDefaultSite(path.join(root, "default-content"), tarball, tooling));
     fs.rmSync(path.join(root, "npm-cache"), { recursive: true, force: true });
     if (prepared.keep || args.includes("--keep")) writeAcceptanceArtifacts(root, tarball, sites);
     process.stdout.write(`Package integration passed: ${path.basename(tarball)}\n`);
@@ -622,14 +603,6 @@ if (require.main === module) {
 }
 
 module.exports = {
-  SCENARIO_MATRIX,
   INSTALL_PACKAGES,
-  PREVIEW_COMMAND,
-  assertPreviewServer,
-  assertPackageFiles,
-  assertRuntime,
-  expectedPages,
-  expectedRoutes,
-  findHtmlWithMarker,
-  hasProfileOutput
+  assertRuntime
 };

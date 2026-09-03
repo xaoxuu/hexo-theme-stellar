@@ -3,7 +3,7 @@
 "use strict";
 
 const path = require("node:path");
-const { assertContributionRegistry } = require("../scripts/lib/contribution-audit");
+const { assertContributionRegistry } = require("./lib/contribution-audit");
 const { CONTRIBUTIONS } = require("../scripts/lib/contribution-registry");
 const INTERNAL_CONSTANTS = require("../scripts/lib/internal-constants");
 

@@ -4,7 +4,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const { markdownAnchors } = require("../scripts/lib/markdown-links");
+const { markdownAnchors } = require("./lib/markdown-links");
 const { flattenSchemaFields } = require("../scripts/schema/schema-utils");
 const { CONFIG_SCHEMA } = require("../scripts/schema/config-schema");
 

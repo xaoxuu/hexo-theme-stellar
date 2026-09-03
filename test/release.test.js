@@ -11,6 +11,7 @@ const {
   hasNonEmptyChangelogSection,
   prepareVersionFiles,
 } = require('../release.js');
+const { prepareReleaseMetadata } = require('../ci/prepare-release');
 
 function createVersionFixture(t, options = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'stellar-release-'));
@@ -121,4 +122,15 @@ test('prepareVersionFiles 缺失预期旧版本时拒绝且不产生部分写入
   for (const [name, file] of Object.entries(files)) {
     assert.deepEqual(fs.readFileSync(file), before[name]);
   }
+});
+
+test('发布工作流复用本地版本校验与 CHANGELOG 解析，拒绝缺失的发布正文', (t) => {
+  const { root, files } = createVersionFixture(t);
+  const changelog = path.join(root, 'CHANGELOG.md');
+  fs.writeFileSync(changelog, '  ## 1.42.1  \n> 发布日期：2026-09-03\n\n### 修复\n- 内容\n\n## 1.42.0\n- 旧内容\n');
+  assert.deepEqual(prepareReleaseMetadata(root), { version: '1.42.1', notes: '### 修复\n- 内容' });
+  fs.writeFileSync(changelog, '## 1.42.1\n> 发布日期：2026-09-03\n');
+  assert.throws(() => prepareReleaseMetadata(root), /非空章节/);
+  fs.writeFileSync(files.package, '{"version":"2.0.0-alpha.1"}');
+  assert.throws(() => prepareReleaseMetadata(root), /版本号格式不正确/);
 });

@@ -76,21 +76,21 @@ npm run release:dry -- 1.34.1
 2. 校验当前分支为 `main`、工作区无无关改动
 3. 校验 CHANGELOG.md 已包含 `## <version>` 非空章节（内容由 AI/人工提前准备），缺失或为空则终止发版
 4. 读取 `package.json` 的当前版本，在内存中同时准备 `package.json` 与安装知识库的目标版本内容；任一文件无法安全更新时不写入任何文件
-5. 写入全部版本文件后执行 `npm run release:check`，让实现门禁与知识库核查基于最终待提交状态运行
+5. 写入全部版本文件后执行 `npm run release:check`，让实现、npm 包集成与压缩、性能阈值及知识库核查基于最终待提交状态运行
 6. 输出提交摘要与 diff，供人工确认；版本号与文档范围以发版前已经确认的树级净变化为准
 7. 二次确认后将 CHANGELOG 与两个版本文件一并执行 `git add` / `commit` / `push`（main + npm 分支）
 8. dry-run、取消或最终态质量检查失败时从内存恢复全部受管文件，不依赖 `git checkout --`
 
 ## CI 自动化
 
-[npm-publish.yml](../.github/workflows/npm-publish.yml) 由 npm 分支推送自动触发（`push: branches: [npm]`），并保留手动触发（`workflow_dispatch`，默认 ref 为 npm）作为兜底：
+[npm-publish.yml](../../.github/workflows/npm-publish.yml) 由 npm 分支推送自动触发（`push: branches: [npm]`），并保留手动触发（`workflow_dispatch`，默认 ref 为 npm）作为兜底：
 
 - push 事件仅当 head commit message 以 `release: ` 开头时执行发布，否则跳过（防止误发布）
-- 版本号来源为检出分支的 `package.json`
+- `ci/prepare-release.js` 读取检出分支的 `package.json` 与 CHANGELOG，复用 `release.js` 的版本校验和章节解析；版本或日志无效时在发布前失败
 - 已发布版本自动跳过
 - npm publish 使用 Trusted Publishing（OIDC + provenance）
 - 发布成功后创建纯版本号 tag（如 `1.34.1`，无 `v` 前缀）
-- 随后创建 GitHub Release：正文从 `CHANGELOG.md` 提取对应版本段落；版本含 `-rc.` 时标记 prerelease；release 已存在则跳过；提取为空时兜底使用 GitHub 自动生成 notes
+- 随后创建 GitHub Release：正文从 `CHANGELOG.md` 提取对应版本段落；版本含 `-rc.` 时标记 prerelease；release 已存在则跳过；正文只使用已校验的 CHANGELOG 章节
 
 ## 失败处理
 

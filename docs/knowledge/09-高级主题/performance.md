@@ -296,9 +296,9 @@ preconnect:
 
 ## 候选包首屏核心 JS 门禁
 
-M5 用固定 Classic Blog 输入分别构建 tag `1.44.0` 与当前 v2 npm tarball。统计口径是首页无条件输出的本地 script、可执行 inline script 以及 ESM 入口的静态 import；dynamic import、selector 未命中的 Extension 和第三方资源不计入核心集合。每个唯一资源使用 Node.js 22 的 gzip level 9 后求和，避免不同 Node/zlib 版本造成基线漂移。
+性能检查用固定博客输入分别构建公开基线 tag 与当前 npm tarball；基线和降幅阈值由 [ci/check-performance.js](../../../ci/check-performance.js) 维护。统计口径是首页无条件输出的本地 script、可执行 inline script 以及 ESM 入口的静态 import；dynamic import、selector 未命中的 Extension 和第三方资源不计入核心集合。每个唯一资源使用 Node.js 22 的 gzip level 9 后求和，避免不同 Node/zlib 版本造成测量漂移。
 
-结果记录在 [test/fixtures/performance-baseline.json](../../../test/fixtures/performance-baseline.json)：v1 为 34,937 bytes，当前 v2 本地候选 tarball 为 17,292 bytes，降低 50.5052%，通过至少 30% 的门禁。`npm run performance:check` 会重新构建两边并逐字节检查记录，已纳入 `npm run check`；该基线是开发测试资料，不进入 npm 包。
+`npm run performance:check` 重新构建两边，向标准输出提供资源清单、体积和降幅，未达到阈值时失败。仓库不保存当前候选的生成报告快照，也不要求实现变化后重写测量结果。该检查属于性能专项与 `release:check`，普通 `npm run check` 不运行性能构建；命令组合以 [package.json](../../../package.json) 为准。
 
 `/js/icons.js` 与 `/js/plugins/dropdown.js` 从全页无条件 script 改为 Runtime Manifest 中的 `svg.icon[data-icon]` / `details.dropdown` selector Extension；命中页面仍加载原脚本，未命中页面不再支付首屏核心成本。含糊的 `/js/theme.js` 也已退出核心集合：配色选择能力更名为 Color Scheme Extension，默认关闭，只有显式启用时才作为 dynamic import 请求，因此默认基线不再包含该资源。
 

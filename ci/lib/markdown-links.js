@@ -16,6 +16,5 @@ function markdownAnchors(markdown) {
 }
 
 module.exports = {
-  headingAnchor,
   markdownAnchors
 };

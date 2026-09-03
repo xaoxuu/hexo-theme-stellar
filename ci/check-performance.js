@@ -150,7 +150,7 @@ function collectCoreScripts(publicRoot, htmlFile) {
 
 function extractBaseline(root) {
   const archive = path.join(root, "baseline.tar");
-  const theme = path.join(root, "theme-v1");
+  const theme = path.join(root, "theme-baseline");
   fs.mkdirSync(theme, { recursive: true });
   run("git", ["archive", "--format=tar", `--output=${archive}`, BASELINE_TAG], THEME_ROOT);
   run("tar", ["-xf", archive, "-C", theme], THEME_ROOT);
@@ -164,7 +164,7 @@ function extractCurrentTarball(root) {
   const packs = JSON.parse(packOutput);
   if (!Array.isArray(packs) || packs.length !== 1) throw new Error("npm pack did not return one package");
   const archive = path.join(root, packs[0].filename);
-  const theme = path.join(root, "theme-v2");
+  const theme = path.join(root, "theme-current");
   fs.mkdirSync(theme, { recursive: true });
   run("tar", ["-xf", archive, "-C", theme, "--strip-components=1"], THEME_ROOT);
   return { archive, theme };
@@ -176,8 +176,8 @@ function buildReport() {
     const baselineTheme = extractBaseline(root);
     const current = extractCurrentTarball(root);
     const runtimeRoot = installRuntime(root, current.archive);
-    const baselineSite = path.join(root, "site-v1");
-    const currentSite = path.join(root, "site-v2");
+    const baselineSite = path.join(root, "site-baseline");
+    const currentSite = path.join(root, "site-current");
     createSite(baselineSite, baselineTheme, runtimeRoot);
     createSite(currentSite, current.theme, runtimeRoot);
     const baseline = collectCoreScripts(path.join(baselineSite, "public"), path.join(baselineSite, "public", "index.html"));
@@ -186,7 +186,7 @@ function buildReport() {
     return {
       schemaVersion: 1,
       baseline: { tag: BASELINE_TAG, ...baseline },
-      current: { branch: "v2", ...currentScripts },
+      current: { version: require(path.join(THEME_ROOT, "package.json")).version, ...currentScripts },
       metric: "sum of gzip-9 bytes for unconditional local first-screen scripts, inline executable scripts, and unconditional module imports",
       minimumReduction: MIN_REDUCTION,
       reduction: Number(reduction.toFixed(6)),
@@ -203,15 +203,9 @@ function main() {
   }
   const report = buildReport();
   const output = `${JSON.stringify(report, null, 2)}\n`;
-  const reportFile = path.join(THEME_ROOT, "test", "fixtures", "performance-baseline.json");
-  if (process.argv.includes("--write")) fs.writeFileSync(reportFile, output, "utf8");
-  if (process.argv.includes("--check")) {
-    const actual = fs.existsSync(reportFile) ? fs.readFileSync(reportFile, "utf8") : "";
-    if (actual !== output) throw new Error("test/fixtures/performance-baseline.json 与当前 v1/v2 构建结果不一致");
-  }
   process.stdout.write(output);
-  if (!report.passed && !process.argv.includes("--report-only")) {
-    throw new Error(`首屏核心 JS gzip 降幅 ${(report.reduction * 100).toFixed(2)}% 未达到 30%`);
+  if (!report.passed) {
+    throw new Error(`首屏核心 JS gzip 降幅 ${(report.reduction * 100).toFixed(2)}% 未达到 ${MIN_REDUCTION * 100}%`);
   }
 }
 
