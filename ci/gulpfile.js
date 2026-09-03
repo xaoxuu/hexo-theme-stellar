@@ -36,7 +36,7 @@ const minify_html = () => (
 );
 
 const minify_js = () => (
-  gulp.src(['./public/**/*.js', '!./public/**/*.min.js', '!./public/{lib,lib/**}', '!./public/{libs,libs/**}', '!./public/{media,media/**}'])
+  gulp.src(['./public/**/*.js', '!./public/**/*.min.js', '!./public/js/runtime/**/*.js', '!./public/{lib,lib/**}', '!./public/{libs,libs/**}', '!./public/{media,media/**}'])
     .pipe(sourcemaps.init())
     .pipe(babel({
       presets: ['@babel/preset-env'],

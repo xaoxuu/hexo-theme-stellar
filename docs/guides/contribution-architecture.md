@@ -1,64 +1,35 @@
 # 贡献架构与维护面
 
-Stellar v2 遵循“一项语义事实、一个权威所有者”。贡献者仍需同步实现、测试和文档，但不应在多个白名单重复登记同一 ID、资源或默认值。
+一项语义事实由一个所有者维护。本指南定位贡献的实现与证据；验证级别、测试保留位置和文档同步时机分别按 [AGENTS.md](../../AGENTS.md) 的“验证门禁”“测试保留门禁”和“文档”，不因进入本指南而升级检查范围。
 
-## 七类贡献的权威所有者
+## 贡献所有者与证据
 
-| 贡献类型 | 权威所有者 | 合理维护面 | 必需测试接缝 | 常见失败 |
-| --- | --- | --- | --- | --- |
-| 公开配置 | `_config.yml` 与 `scripts/schema/config-rules.js` | 运行时 Schema、配置知识库 | 默认配置可发现性、Schema 正/反例、`npm test` | 在消费方另写 fallback，或规则与 YAML 脱节 |
-| 内容 profile | `scripts/lib/collection-pipeline/registry.js` adapter | Collection/Front Matter Schema、索引与 ViewModel、CLI（如果创建内容） | Pipeline 行为矩阵、路由/ViewModel 契约、真实 generate | 新增第二个 `before_generate` 入口，或重扫全量内容 |
-| 服务端功能 | 对应 `scripts/lib/` 纯模型 | helper/filter/event 薄适配器、错误来源、知识库 | 纯函数单测、Hexo 注册/消费测试；任务包含宿主集成时补充消费方 generate | 把业务默认值写进 EJS 或 event 回调 |
-| UI 组件 | `layout/_partial/components/` 或 `layout/_partial/widgets/` | `_data/widgets.yml`、Stylus、必要的浏览器增强、组件知识库 | 模板输出契约；有状态时加 mount/unmount 测试 | 为一个页面复制组件 DOM/CSS，或忽略移动端/右栏上下文 |
-| 浏览器 Extension / Feature | `scripts/lib/contribution-registry.js` descriptor | ESM adapter、`internal-constants.js` asset 真值、可选 Schema/i18n、Extension 知识库 | Manifest 投影、mount/unmount/失败隔离、`npm run contributions:check` | 手工修改 Manifest ID 白名单，或添加 asset 却未登记所有者 |
-| 标签插件 | `scripts/tags/index.js` 与 `scripts/tags/lib/<id>.js` | `extensions.tags/services` Schema（如需）、tag Stylus、service Extension、语法文档 | 输入语法→安全 HTML 测试；远程数据增加失败降级测试 | 恢复 `tag_plugins/data_services` 旧根，或把可选远程失败当程序错误 |
-| 语言文案 | `languages/en.yml`、`zh-CN.yml`、`zh-TW.yml` 同构键 | 消费方只使用 `__()`；descriptor 需声明的键登记在 `i18n` | 全量键对等测试、contribution 缺键负例 | 在 Node/EJS/浏览器中再写一份系统文案 fallback |
+按本次实际改动选择适用项；表中的证据不代表都要新增永久测试。
 
-## Runtime 贡献 descriptor
+| 贡献类型 | 权威所有者 | 相关维护面 | 直接证据 |
+| --- | --- | --- | --- |
+| 公开配置 | `_config.yml` 与 `scripts/schema/config-rules.js` | 运行时 Schema、配置知识库 | 受影响字段的可发现性、解析与消费正反例 |
+| 内容 profile | `scripts/lib/collection-pipeline/registry.js` adapter | Front Matter Schema、索引/ViewModel、需要时的 CLI | 受影响路由与模型；生成契约变化时检查 generate |
+| 服务端功能 | 对应 `scripts/lib/` 纯模型 | helper/filter/event 适配器、错误来源、知识库 | 模型与 Hexo 消费接缝 |
+| UI 组件 | `layout/_partial/components/` 或 `layout/_partial/widgets/` | Widget 数据、Stylus、浏览器增强、知识库 | 本次渲染与交互用任务级验收；共享生命周期等长期契约才保留仓库测试 |
+| 浏览器 Extension / Feature | `scripts/lib/contribution-registry.js` descriptor | ESM adapter、内部资源、可选 Schema/i18n、知识库 | Manifest 投影、资源加载与生命周期/失败隔离接缝；具体视觉与交互用任务级验收 |
+| 标签插件 | `scripts/tags/index.js` 与 `scripts/tags/lib/` | 配置 Schema、Stylus、service Extension、语法文档 | 输入与安全 HTML、远程失败降级；具体结构与样式用任务级验收 |
+| 语言文案 | `languages/en.yml`、`zh-CN.yml`、`zh-TW.yml` 同构键 | `__()` 消费、descriptor 的 i18n 声明 | 键对等与缺键负例；实际文案用任务级检查 |
 
-Extension、Feature 和 Runtime 可注册组件均由 `scripts/lib/contribution-registry.js` 登记：
+## Runtime descriptor
 
-```js
-{
-  id: "card-hover",
-  kind: "feature",
-  entry: { type: "browser-module", path: "/js/runtime/extensions/card-hover.js" },
-  resources: ["features.cardHover"],
-  activation: { type: "selector", value: ".card-hover" },
-  schema: "features.card_hover.enabled",
-  i18n: null,
-  docs: { category: "Components", path: "docs/knowledge/07-外部集成/plugin-system.md" },
-  tests: ["test/card_hover_client.test.js", "test/browser-runtime-manifest.test.js"],
-  defaultsOwner: "_config.yml#features.card_hover.enabled",
-  project(context) { /* 从规范化页面上下文投影 config，不复制默认值 */ }
-}
-```
+新增或修改 Runtime 贡献时，先读取 `scripts/lib/contribution-registry.js` 中同类声明及其消费者，沿用现有字段：
 
-`resources` 登记 `internal-constants.js` assets 树的键路径，不复制 URL。`schema` 与 `defaultsOwner` 成对出现；纯内部组件两者均为 `null`。`project()` 只决定本页是否出现该声明以及如何投影已规范化配置，具体 DOM 行为属于 ESM adapter。
+- ID、入口、激活条件与投影由 descriptor 单点登记；消费者读取注册表，不另增 ID 白名单或专用分派分支。
+- `resources` 引用 `scripts/lib/internal-constants.js` 的 assets 键，资源 URL 只由 assets 所有者维护。
+- `schema` 与 `defaultsOwner` 成对出现；纯内部组件两者均为 `null`。`project()` 投影已经规范化的页面配置，具体 DOM 行为归 ESM adapter。
+- `tests` 引用覆盖该贡献的长期架构接缝证据，可以复用共享测试；不要求每个组件新建测试文件，也不登记临时视觉验收脚本。
+- 浏览器产物与宿主后处理遵循 AGENTS.md“浏览器产物”契约。
 
-这是主题内部构建契约，不是第三方 manifest 或稳定公开 API。
+descriptor 是内部构建契约，其当前结构从源码读取；不作为第三方稳定公开 API。
 
-## Card Hover 贡献演练
+## 核查与记录
 
-Card Hover 的迁移展示了一个简单浏览器 Feature 的最小维护面：
+改变 descriptor、其资源或 Schema/i18n 关联时，运行 `npm run contributions:check` 检查维护面连通性。该检查不替代本次受影响行为的直接证据；其余验证按根门禁选择最低充分级别。
 
-1. `source/js/plugins/card-hover.js` 保留可测的业务实现，`source/js/runtime/extensions/card-hover.js` 只做 asset load 与 mount/unmount 适配。Runtime 使用 `.js` URL，并由 `<script type="module">` 声明 ESM 语义，避免部署服务器缺少 `.mjs` MIME 映射时拒绝加载。
-2. `internal-constants.js` 只所有 `features.cardHover.js` 的具体路径；descriptor 只登记该资源键。
-3. descriptor 单点登记 `card-hover` ID、ESM 入口、`.card-hover` 激活、Schema、文档和行为测试；Contribution 门禁直接读取 Theme Schema，不维护第二份字段列表。
-4. `browser-runtime.js` 通用投影注册表；`feature.js` 不再增加 `card-hover` case，也不再有第二份 Manifest ID 列表。
-5. `test/card_hover_client.test.js` 验证交互与清理，Manifest 测试验证投影，contribution 门禁验证所有维护面已连通。
-
-新功能不得为了绕过 descriptor 而直接在 `browser-runtime.js` 插入条件分支。如果一个功能有独立生命周期，优先使用独立 ESM adapter；通用 `feature.js` 仅保留已有兼容 adapter。
-
-## 执行门禁
-
-```bash
-npm run contributions:check
-npm test
-```
-
-`contributions:check` 检查重复注册/默认值所有者、缺失翻译、Schema 所有权漂移、未登记资源、缺失入口/文档/行为测试。它检查维护面是否连通，不替代功能本身的正反例和真实 Hexo 构建。
-
-知识库正文在发版准备或明确文档任务中同步，并在修改后运行 `npm run knowledge:check`；正式发版由 `npm run release:check` 组合实现门禁与知识库核查。
-
-需要持久化的架构、迁移、兼容或验收方案统一记录在相关 GitHub issue；仓库内只维护当前实现、长期规范、知识库与测试证据。
+长期文档和发布快照按 AGENTS.md“文档”同步；获准持久化的设计、迁移或验收记录按 [Issue 操作约定](../agents/issue-tracker.md) 保存。
