@@ -61,6 +61,37 @@ test("Theme config rejects unknown, mistyped, and unsafe values with sourced iss
   );
 });
 
+test("Theme config recovery warns, keeps valid list items, and replaces unsafe overrides", () => {
+  const issues = [];
+  const config = parseStellarConfig({
+    source: "_config.stellar.yml",
+    mode: "recover",
+    onIssues: current => issues.push(...current),
+    themeConfig: {
+      unknown: true,
+      appearance: { preset: "unsupported", colors: { primary: "red; display:none" } },
+      article: { category_colors: { "release.v2": "red; display:none", stable: "blue" } },
+      menu: {
+        items: [
+          { id: "home", title: "Home", url: "/" },
+          { id: "unsafe", title: "Unsafe", url: "javascript:alert(1)" },
+          { type: "search" },
+          { type: "search" }
+        ]
+      }
+    }
+  });
+  assert.equal(config.appearance.preset, "card");
+  assert.equal(config.appearance.colors.primary, "hsl(192 98% 55%)");
+  assert.equal(config.article.categoryColors.stable, "blue");
+  assert.equal(config.article.categoryColors["release.v2"], undefined);
+  assert.deepEqual(config.menu.items.map(item => item.type || item.id), ["home", "search"]);
+  assert.equal(config.profiles.home.activeMenu, null);
+  assert.equal(issues.some(item => item.path === "unknown" && item.action === "忽略字段"), true);
+  assert.equal(issues.some(item => item.path === "menu.items[1].url" && item.action === "忽略无效列表项"), true);
+  assert.equal(issues.some(item => item.path === "appearance.colors.primary" && item.action === "使用默认值或上一层有效配置"), true);
+});
+
 test("Region inheritance preserves explicit overrides and empty lists", () => {
   const config = parseStellarConfig({
     themeConfig: {
@@ -79,4 +110,18 @@ test("Build config event exposes one frozen runtime config", () => {
   attachConfig(ctx);
   assert.equal(ctx.stellar.config.appearance.preset, "minimal");
   assert.equal(Object.isFrozen(ctx.stellar.config), true);
+});
+
+test("Build config event logs one grouped warning and exposes recovered config", () => {
+  const warnings = [];
+  const ctx = {
+    config: { theme_config: { mystery: true, appearance: { preset: "unsupported" } } },
+    log: { warn(message) { warnings.push(message); } }
+  };
+  attachConfig(ctx);
+  assert.equal(ctx.stellar.config.appearance.preset, "card");
+  assert.equal(warnings.length, 1);
+  assert.match(warnings[0], /已忽略 2 项不支持的配置/);
+  assert.match(warnings[0], /mystery/);
+  assert.match(warnings[0], /appearance\.preset/);
 });

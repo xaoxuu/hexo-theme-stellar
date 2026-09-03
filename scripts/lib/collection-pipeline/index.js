@@ -6,6 +6,7 @@ const {
   parsePageConfig,
   validateThemeConfig
 } = require("../../lib/content-config");
+const { formatConfigWarnings } = require("../../lib/config-schema");
 const { resetPageViewModels, setPageConfig } = require("../page-view-model-registry");
 const { ensureRuntimeData } = require("../runtime-data");
 const { readFrontMatter, sourcePathForData, sourcePathForPage } = require("../source-config");
@@ -19,6 +20,7 @@ const { profileAdapters } = require("./registry");
 function prepareCollectionPipeline(ctx) {
   resetPageViewModels();
   const issues = [];
+  const configWarnings = [];
   const data = ctx.locals.get("data") || {};
   const collectionConfigs = new Map();
   const pageConfigs = new Map();
@@ -43,7 +45,10 @@ function prepareCollectionPipeline(ctx) {
   capture(() => validateThemeConfig(themeConfig, themeSource));
   for (const [key, value] of Object.entries(data)) {
     if (!key.startsWith("wiki/") && !key.startsWith("topic/") && !key.startsWith("notebooks/")) continue;
-    capture(() => collectionConfigs.set(key, parseCollectionConfig(value, sourcePathForData(key))));
+    capture(() => collectionConfigs.set(key, parseCollectionConfig(value, sourcePathForData(key), {
+      mode: "recover",
+      onIssues: current => configWarnings.push(...current)
+    })));
   }
   const membershipRegistry = createCollectionRegistry(collectionConfigs);
 
@@ -54,7 +59,10 @@ function prepareCollectionPipeline(ctx) {
       pageConfigs.set(page, null);
       return null;
     }
-    let parsed = capture(() => parsePageConfig(raw, sourcePathForPage(page)));
+    let parsed = capture(() => parsePageConfig(raw, sourcePathForPage(page), {
+      mode: "recover",
+      onIssues: current => configWarnings.push(...current)
+    }));
     if (parsed != null) {
       const resolved = resolveContentMembership({
         kind,
@@ -131,6 +139,8 @@ function prepareCollectionPipeline(ctx) {
   const adapters = profileAdapters();
   for (const adapter of adapters) adapter.prepare?.(pipeline);
 
+  const warning = formatConfigWarnings(configWarnings);
+  if (warning) ctx.log.warn(warning);
   if (issues.length > 0) throw new ContentConfigError(issues);
   pipeline.summary = Object.freeze({
     profiles: Object.freeze(adapters.map(adapter => adapter.id)),

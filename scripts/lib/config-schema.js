@@ -457,12 +457,15 @@ function validateNullableKebabId(node, input, source, path, issues) {
 
 function validateMenuItems(node, input, source, path, issues) {
   const ids = new Set();
-  let searchCount = 0;
+  let searchSeen = false;
   input.forEach((item, index) => {
     if (!isPlainObject(item)) return;
     const itemPath = `${path}[${index}]`;
     if (item.type === "search") {
-      searchCount += 1;
+      if (searchSeen) {
+        issues.push(issue("invalid_value", source, itemPath, "object", "at most one search menu item", node.migration));
+      }
+      searchSeen = true;
       const extra = ["id", "url"].find(key => item[key] != null);
       if (extra) issues.push(issue("invalid_value", source, `${itemPath}.${extra}`, valueType(item[extra]), "no id or url for search item", node.migration));
       return;
@@ -488,7 +491,6 @@ function validateMenuItems(node, input, source, path, issues) {
       issues.push(issue("invalid_value", source, `${itemPath}.url`, valueType(item.url), "safe navigable URL", node.migration));
     }
   });
-  if (searchCount > 1) issues.push(issue("invalid_value", source, path, "array", "at most one search menu item", node.migration));
 }
 
 function validateRegionWidgets(node, input, source, path, issues) {
@@ -869,27 +871,220 @@ function validateStellarSemantics(config, source) {
   if (issues.length > 0) throw new ConfigSchemaError(issues);
 }
 
-function parseConfigSchema(schema, input = {}, options = {}) {
+function parseConfigSchemaStrict(schema, input = {}, options = {}) {
   const source = options.source || "<config>";
   const issues = [];
   const parsed = parseNode(schema, isPlainObject(input) ? input : input, source, "", issues, {
     applyDefaults: options.applyDefaults ?? schema.applyDefaults ?? false
   });
   if (issues.length > 0) throw new ConfigSchemaError(issues);
-  return deepFreeze(parsed);
+  const frozen = deepFreeze(parsed);
+  options.validate?.(frozen, source);
+  return frozen;
+}
+
+function pathTokens(value) {
+  const tokens = [];
+  for (const match of String(value).matchAll(/(?:^|\.)([^.\[]+)|\[(\d+)\]/g)) {
+    tokens.push(match[1] === undefined ? Number(match[2]) : match[1]);
+  }
+  return tokens;
+}
+
+function valueAt(root, tokens) {
+  let value = root;
+  for (const token of tokens) {
+    if (value == null || !Object.prototype.hasOwnProperty.call(value, token)) return undefined;
+    value = value[token];
+  }
+  return value;
+}
+
+function inputPathTokens(root, tokens) {
+  const resolved = [];
+  let current = root;
+  for (let index = 0; index < tokens.length; index += 1) {
+    const token = tokens[index];
+    if (current != null && Object.prototype.hasOwnProperty.call(current, token)) {
+      resolved.push(token);
+      current = current[token];
+      continue;
+    }
+    if (typeof token === "string" && isPlainObject(current)) {
+      let matched = false;
+      for (let end = tokens.length; end > index + 1; end -= 1) {
+        const parts = tokens.slice(index, end);
+        if (parts.some(part => typeof part !== "string")) continue;
+        const joined = parts.join(".");
+        if (!Object.prototype.hasOwnProperty.call(current, joined)) continue;
+        resolved.push(joined);
+        current = current[joined];
+        index = end - 1;
+        matched = true;
+        break;
+      }
+      if (matched) continue;
+    }
+    resolved.push(...tokens.slice(index));
+    break;
+  }
+  return resolved;
+}
+
+function deleteAt(root, tokens) {
+  if (tokens.length === 0) return false;
+  const parent = valueAt(root, tokens.slice(0, -1));
+  const key = tokens.at(-1);
+  if (parent == null || !Object.prototype.hasOwnProperty.call(parent, key)) return false;
+  if (Array.isArray(parent) && Number.isInteger(key)) parent.splice(key, 1);
+  else delete parent[key];
+  return true;
+}
+
+function snakeCase(value) {
+  return typeof value === "string" ? value.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`) : value;
+}
+
+function setAt(root, tokens, value) {
+  if (tokens.length === 0) return false;
+  let parent = root;
+  for (const rawToken of tokens.slice(0, -1)) {
+    const token = snakeCase(rawToken);
+    if (!isPlainObject(parent[token])) parent[token] = {};
+    parent = parent[token];
+  }
+  parent[snakeCase(tokens.at(-1))] = value;
+  return true;
+}
+
+function recoveryTarget(root, currentIssue) {
+  const tokens = inputPathTokens(root, pathTokens(currentIssue.path));
+  const arrayIndex = tokens.findLastIndex(Number.isInteger);
+  if (arrayIndex >= 0) return tokens.slice(0, arrayIndex + 1);
+  if (currentIssue.code !== "missing_field") return tokens;
+  if (valueAt(root, tokens) !== undefined) return tokens;
+  return tokens.slice(0, -1);
+}
+
+function recoveryAction(currentIssue, target) {
+  if (target.some(Number.isInteger)) return "忽略无效列表项";
+  if (["unknown_field", "removed_field"].includes(currentIssue.code)) return "忽略字段";
+  return "使用默认值或上一层有效配置";
+}
+
+function recoverConfigInput(input, issues) {
+  const recovered = clone(input);
+  const targets = issues.map(currentIssue => ({
+    issue: currentIssue,
+    tokens: recoveryTarget(recovered, currentIssue)
+  }));
+  const deleteTargets = [...new Map(targets.map(target => [JSON.stringify(target.tokens), target])).values()];
+  deleteTargets.sort((left, right) => {
+    const leftIndex = left.tokens.findLast(token => Number.isInteger(token));
+    const rightIndex = right.tokens.findLast(token => Number.isInteger(token));
+    return right.tokens.length - left.tokens.length || (rightIndex || 0) - (leftIndex || 0);
+  });
+  const originalArrays = new Map();
+  let changed = false;
+  for (const target of deleteTargets) {
+    const numberIndex = target.tokens.findLastIndex(Number.isInteger);
+    if (numberIndex >= 0) {
+      const arrayTokens = target.tokens.slice(0, numberIndex);
+      const key = JSON.stringify(arrayTokens);
+      if (!originalArrays.has(key)) {
+        const original = valueAt(input, arrayTokens);
+        originalArrays.set(key, { tokens: arrayTokens, nonEmpty: Array.isArray(original) && original.length > 0 });
+      }
+    }
+    const deleted = deleteAt(recovered, target.tokens);
+    if (!deleted && target.issue.expected === "id present in menu.items") {
+      changed = setAt(recovered, target.tokens, null) || changed;
+    } else {
+      changed = deleted || changed;
+    }
+  }
+  for (const { tokens, nonEmpty } of originalArrays.values()) {
+    if (nonEmpty && Array.isArray(valueAt(recovered, tokens)) && valueAt(recovered, tokens).length === 0) {
+      changed = deleteAt(recovered, tokens) || changed;
+    }
+  }
+  return {
+    changed,
+    input: recovered,
+    diagnostics: targets.map(target => Object.freeze({
+      ...target.issue,
+      action: recoveryAction(target.issue, target.tokens)
+    }))
+  };
+}
+
+function uniqueDiagnostics(diagnostics) {
+  const seen = new Set();
+  return diagnostics.filter(item => {
+    const key = [item.code, item.source, item.path, item.expected, item.action].join("\u0000");
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function parseConfigSchema(schema, input = {}, options = {}) {
+  if (options.mode !== "recover") return parseConfigSchemaStrict(schema, input, options);
+  let candidate = clone(input);
+  let diagnostics = [];
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    try {
+      const parsed = parseConfigSchemaStrict(schema, candidate, options);
+      options.onIssues?.(Object.freeze(uniqueDiagnostics(diagnostics)));
+      return parsed;
+    } catch (error) {
+      if (!(error instanceof ConfigSchemaError)) throw error;
+      const fatal = error.issues.filter(currentIssue => currentIssue.path === "root" || options.isFatalIssue?.(currentIssue));
+      const recoverable = error.issues.filter(currentIssue => !fatal.includes(currentIssue));
+      if (recoverable.length > 0) {
+        const recovery = recoverConfigInput(candidate, recoverable);
+        diagnostics.push(...recovery.diagnostics);
+        if (recovery.changed) {
+          candidate = recovery.input;
+          continue;
+        }
+      }
+      if (fatal.length > 0) {
+        options.onIssues?.(Object.freeze(uniqueDiagnostics(diagnostics)));
+        throw new ConfigSchemaError(fatal);
+      }
+      options.onIssues?.(Object.freeze(uniqueDiagnostics(diagnostics)));
+      throw error;
+    }
+  }
+  throw new ConfigSchemaError([issue("invalid_value", options.source || "<config>", "root", "object", "recoverable configuration", null)]);
 }
 
 function parseStellarConfig(input = {}) {
   const source = input.source || "_config.stellar.yml";
   const themeConfig = input.themeConfig === undefined ? {} : input.themeConfig;
-  const config = parseConfigSchema(CONFIG_SCHEMA, themeConfig, { source, applyDefaults: true });
-  validateStellarSemantics(config, source);
-  return config;
+  return parseConfigSchema(CONFIG_SCHEMA, themeConfig, {
+    source,
+    applyDefaults: true,
+    mode: input.mode,
+    onIssues: input.onIssues,
+    isFatalIssue: input.isFatalIssue,
+    validate: validateStellarSemantics
+  });
+}
+
+function formatConfigWarnings(issues) {
+  if (!Array.isArray(issues) || issues.length === 0) return "";
+  return [
+    `Stellar: 已忽略 ${issues.length} 项不支持的配置：`,
+    ...issues.map(currentIssue => `- ${formatIssue(currentIssue)}；处理：${currentIssue.action}`)
+  ].join("\n");
 }
 
 module.exports = {
   ConfigSchemaError,
   deepFreeze,
+  formatConfigWarnings,
   formatIssue,
   isPlainObject,
   parseConfigSchema,

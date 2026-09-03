@@ -40,17 +40,29 @@ function contentError(error) {
   throw new ContentConfigError(error.issues);
 }
 
-function parseCollectionConfig(config, source = "<collection>") {
+function parseCollectionConfig(config, source = "<collection>", options = {}) {
   try {
-    return parseConfigSchema(COLLECTION_CONFIG_SCHEMA, config, { source });
+    return parseConfigSchema(COLLECTION_CONFIG_SCHEMA, config, {
+      ...options,
+      source,
+      isFatalIssue(currentIssue) {
+        return currentIssue.path === "name" || options.isFatalIssue?.(currentIssue);
+      }
+    });
   } catch (error) {
     return contentError(error);
   }
 }
 
-function parsePageConfig(config, source = "<page>") {
+function parsePageConfig(config, source = "<page>", options = {}) {
   try {
-    return parseConfigSchema(FRONT_MATTER_CONFIG_SCHEMA, config, { source });
+    return parseConfigSchema(FRONT_MATTER_CONFIG_SCHEMA, config, {
+      ...options,
+      source,
+      isFatalIssue(currentIssue) {
+        return /^collection\.(?:profile|id)$/.test(currentIssue.path) || options.isFatalIssue?.(currentIssue);
+      }
+    });
   } catch (error) {
     return contentError(error);
   }

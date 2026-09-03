@@ -25,7 +25,7 @@ function registerConfigHotReload(ctx, options = {}) {
       const themeConfig = existsSync(configPath)
         ? await ctx.render.render({ path: configPath }) || {}
         : {};
-      parseStellarConfig({ source: CONFIG_FILENAME, themeConfig });
+      parseStellarConfig({ source: CONFIG_FILENAME, themeConfig, mode: "recover" });
       if (expectedRevision !== revision) return;
       ctx.config.theme_config = themeConfig;
       if (typeof ctx._watchBox !== "function") {

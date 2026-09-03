@@ -69,6 +69,46 @@ test("Content schemas aggregate unknown, type, enum, and range diagnostics", () 
   );
 });
 
+test("Content config recovery omits invalid overrides and filters invalid list items", () => {
+  const issues = [];
+  const collection = parseCollectionConfig({
+    name: "Docs",
+    mystery: true,
+    article: { style: "unsupported" },
+    leftbar: { widgets: ["tree", "search"] },
+    listing: { priority: -1 }
+  }, "collection.yml", {
+    mode: "recover",
+    onIssues: current => issues.push(...current)
+  });
+  assert.equal(collection.mystery, undefined);
+  assert.deepEqual(collection.article, {});
+  assert.deepEqual(collection.leftbar.widgets, ["tree"]);
+  assert.deepEqual(collection.listing, {});
+  assert.equal(issues.some(item => item.path === "leftbar.widgets[1]"), true);
+
+  const allInvalid = parsePageConfig({ leftbar: { widgets: ["search"] } }, "page.md", { mode: "recover" });
+  const explicitEmpty = parsePageConfig({ leftbar: { widgets: [] } }, "page.md", { mode: "recover" });
+  assert.deepEqual(allInvalid.leftbar, {});
+  assert.deepEqual(explicitEmpty.leftbar.widgets, []);
+});
+
+test("Content config recovery keeps structural identity failures fatal", () => {
+  const issues = [];
+  assert.throws(
+    () => parsePageConfig({ collection: { profile: "wiki" }, article: { style: "unsupported" } }, "page.md", {
+      mode: "recover",
+      onIssues: current => issues.push(...current)
+    }),
+    error => error instanceof ContentConfigError && error.issues.length === 1 && error.issues[0].path === "collection.id"
+  );
+  assert.equal(issues.some(item => item.path === "article.style"), true);
+  assert.throws(
+    () => parseCollectionConfig({ route: { path: "docs" } }, "collection.yml", { mode: "recover" }),
+    /缺少必填字段 name/
+  );
+});
+
 test("Content visibility and ownership helpers keep independent semantics", () => {
   const page = { collection: { profile: "wiki", id: "docs" } };
   assert.equal(getCollectionId(page, "wiki"), "docs");

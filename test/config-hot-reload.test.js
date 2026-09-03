@@ -28,6 +28,7 @@ function fixture(options = {}) {
     on(event, callback) { handlers[event] = callback; },
     render: {
       async render() {
+        if (options.fatal) return [];
         if (options.invalid) return { topbar: 42 };
         if (options.emptyRegion) return { topbar: null };
         return { topbar: { widgets: ["site_brand", "menu"] } };
@@ -82,12 +83,22 @@ test("Region 空键按默认值热重载而不保留旧配置", async () => {
   assert.equal(current.warnings.length, 0);
 });
 
-test("非法热更新保留上一次可用配置且不触发生成", async () => {
+test("可恢复的非法热更新交给生成阶段警告并继续生成", async () => {
   const current = fixture({ invalid: true });
+  current.trigger("_config.stellar.yml");
+  await waitForReload();
+  assert.equal(current.hexo.config.theme_config.topbar, 42);
+  assert.equal(current.generated(), 1);
+  assert.equal(current.warnings.length, 0);
+});
+
+test("无法恢复的配置根仍保留上一次有效热更新", async () => {
+  const current = fixture({ fatal: true });
   const previous = current.hexo.config.theme_config;
   current.trigger("_config.stellar.yml");
   await waitForReload();
   assert.equal(current.hexo.config.theme_config, previous);
   assert.equal(current.generated(), 0);
   assert.equal(current.warnings.length, 1);
+  assert.match(current.warnings[0], /root 应为 object/);
 });
