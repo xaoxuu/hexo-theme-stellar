@@ -143,4 +143,4 @@ visibility:
 4. 把集合 `tagTree` 与 `recentItems` 写入最终 Note ViewModel，再执行模型 Schema 校验和冻结。
 5. 生成器用同一 listed/tag 原语产生集合首页、标签页与分页 locals。
 
-该流程保持线性发现与分组；不会为每个 Notebook 重扫全部页面。DOM、视觉、既有显式 Note URL 与客户端 API 不因 M7 改变。
+该流程保持线性发现与分组；不会为每个 Notebook 重扫全部页面，也不改变 DOM、视觉、既有显式 Note URL 与客户端 API。
