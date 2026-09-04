@@ -19,8 +19,29 @@ function toRenderNavigation(profile) {
   return activeMenu == null ? {} : { menu: activeMenu };
 }
 
-function toRenderRegions(globalConfig, profile, defaults = null) {
-  return cascadeRegions([globalConfig, defaults, profile]);
+function siteBrandModel(globalConfig) {
+  const configured = globalConfig?.leftbar?.brand;
+  if (configured === false) return false;
+  return {
+    ...(configured && typeof configured === "object" ? configured : {}),
+    source: "site",
+    style: configured?.style || "regular"
+  };
+}
+
+function toRenderRegions(globalConfig, profile, defaults = null, options = {}) {
+  const siteBrand = siteBrandModel(globalConfig);
+  const normalizedGlobal = {
+    ...globalConfig,
+    leftbar: {
+      ...(globalConfig?.leftbar || {}),
+      brand: siteBrand
+    }
+  };
+  return cascadeRegions(
+    [normalizedGlobal, defaults, profile, ...(options.layers || [])],
+    { brandSources: { site: siteBrand, ...(options.brandSources || {}) } }
+  );
 }
 
 function requireLayoutProfiles(stellarConfig) {
@@ -35,6 +56,7 @@ module.exports = {
   generatorPath,
   profilePath,
   requireLayoutProfiles,
+  siteBrandModel,
   toRenderNavigation,
   toRenderRegions
 };

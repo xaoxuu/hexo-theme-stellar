@@ -116,6 +116,7 @@ const CONTENT_OVERRIDE_DEFINITIONS = [
   ["leftbar", "object", derived("theme or collection leftbar"), { boundary: "sealed", normalization: REGION_NORMALIZATION }],
   ["leftbar.enabled", ["boolean", "null"], literal(null)],
   ["leftbar.brand", ["object", "boolean", "null"], literal(null), { boundary: "sealed" }],
+  ["leftbar.brand.style", ["string", "null"], literal(null), { values: ["regular", "compact", null] }],
   ["leftbar.brand.image", "object", literal({}), { boundary: "sealed" }],
   ["leftbar.brand.image.src", ["string", "null"], literal(null)],
   ["leftbar.brand.image.variant", ["string", "null"], literal(null), { values: ["avatar", "icon", "plain", null] }],
@@ -153,6 +154,9 @@ const CONTENT_OVERRIDE_DEFINITIONS = [
 ];
 
 const COLLECTION_TARGET_DEFINITIONS = [
+  ["leftbar.brand.source", ["string", "null"], literal(null), { values: ["site", "collection", null] }],
+  ["leftbar.brand.back_button", ["boolean", "null"], literal(null)],
+  ["leftbar.brand.search", ["boolean", "null"], literal(null)],
   ["name", "string", derived("required collection identity")],
   ["headline", ["string", "null"], literal(null)],
   ["tagline", ["string", "null"], literal(null)],

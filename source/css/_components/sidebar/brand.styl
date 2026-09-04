@@ -1,3 +1,8 @@
+.brand-header
+  display: flex
+  flex-direction: column
+  gap: 16px
+
 .brand-wrap
   display: flex
   align-items: center
@@ -51,8 +56,9 @@
       color: var(--text-p1)
       white-space: nowrap
 
-.brand-header--site
-  margin: var(--gap-base) 0
+.brand-header--regular
+  &:not(:has(> .brand-navigation)):not(:has(> .brand-search))
+    margin: var(--gap-base) 0
   .brand-wrap
     flex-direction: column
     align-items: center
@@ -95,7 +101,7 @@
     font-weight: 500
     color: var(--text-p3)
 
-.brand-header--site.mobile-only
+.brand-header--regular.mobile-only
   @media screen and (max-width: $device-tablet)
     display: block !important
 
@@ -110,11 +116,6 @@
     flex: 0 0 auto
     font-size: 1rem
     white-space: nowrap
-
-.brand-header--collection
-  display: flex
-  flex-direction: column
-  gap: 16px
 
 .brand-navigation__back
   display: flex

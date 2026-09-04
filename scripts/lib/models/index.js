@@ -78,15 +78,39 @@ function toContentNavigation(config) {
   return navigation;
 }
 
-function collectionBrand(identity, href) {
+function collectionIndexHref(path) {
+  if (typeof path !== "string") return null;
+  const normalized = profilePath(path);
+  return normalized ? `/${normalized}/` : "/";
+}
+
+function collectionBrand(identity, href, options = {}) {
   const normalizedHref = normalizeCollectionPath(href);
   const brand = {
+    source: "collection",
+    style: "regular",
+    backButton: true,
+    search: true,
+    backHref: collectionIndexHref(options.indexPath),
+    backLabel: options.backLabel || "",
     image: { src: identity.icon || null, variant: "icon" },
     name: identity.name,
     tagline: identity.tagline,
     href: normalizedHref ? `/${normalizedHref}/` : "/"
   };
   return brand;
+}
+
+function assertCollectionBrandConfig(config, defaultSource, source) {
+  const brand = config?.leftbar?.brand;
+  if (!isPlainObject(brand)) return;
+  const resolvedSource = brand.source || defaultSource;
+  if (resolvedSource === "collection") return;
+  const unsupported = ["backButton", "search"].filter(key => brand[key] != null);
+  if (unsupported.length === 0) return;
+  throw new ContentConfigError(unsupported.map(key => (
+    `${source}: leftbar.brand.${key === "backButton" ? "back_button" : key} 仅支持 source: collection`
+  )));
 }
 
 function articleIndentEnabled(article) {
@@ -898,10 +922,18 @@ function buildWikiCollectionModel(input, collectionId) {
 
   const profileNavigation = toRenderNavigation(wikiProfile);
   const collectionNavigation = toContentNavigation(collectionConfig);
-  const profileRegions = toRenderRegions(input.stellarConfig, wikiProfile, {
-    leftbar: { brand: collectionBrand(identity, baseDir) }
-  });
   const collectionRegions = pick(collectionConfig, CONTENT_MODEL_FIELDS.regionIds);
+  const defaultBrand = collectionBrand(identity, baseDir, {
+    indexPath: indexWiki.path,
+    backLabel: "btn.all_wiki"
+  });
+  assertCollectionBrandConfig(collectionConfig, "collection", input.collectionSource || "<collection>");
+  const regions = toRenderRegions(input.stellarConfig, wikiProfile, {
+    leftbar: { brand: defaultBrand }
+  }, {
+    brandSources: { collection: defaultBrand },
+    layers: [collectionRegions]
+  });
   const globalArticle = articlePresentationDefaults(content);
   const globalFooter = articleFooterDefaults(content);
 
@@ -930,7 +962,7 @@ function buildWikiCollectionModel(input, collectionId) {
     presentation: {
       hero: cloneValue(collectionConfig.hero || {}),
       banner: pick(collectionConfig.banner, CONTENT_MODEL_FIELDS.banner),
-      ...cascadeRegions([profileRegions, collectionRegions]),
+      ...regions,
       article: mergeConfig(globalArticle, pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)),
       footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),
       comments: mergeConfig(
@@ -988,8 +1020,16 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
 
   const profileNavigation = toRenderNavigation(topicProfile);
   const collectionNavigation = toContentNavigation(collectionConfig);
-  const profileRegions = toRenderRegions(input.stellarConfig, topicProfile);
   const collectionRegions = pick(collectionConfig, CONTENT_MODEL_FIELDS.regionIds);
+  const availableBrand = collectionBrand(normalizeCollectionIdentity(collectionConfig), routePath, {
+    indexPath: indexTopic.path,
+    backLabel: "btn.all_topic"
+  });
+  assertCollectionBrandConfig(collectionConfig, "site", input.collectionSource || "<collection>");
+  const regions = toRenderRegions(input.stellarConfig, topicProfile, null, {
+    brandSources: { collection: availableBrand },
+    layers: [collectionRegions]
+  });
   const globalArticle = articlePresentationDefaults(content);
   const globalFooter = articleFooterDefaults(content);
 
@@ -1020,7 +1060,7 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
     },
     presentation: {
       banner: pick(collectionConfig.banner, CONTENT_MODEL_FIELDS.banner),
-      ...cascadeRegions([profileRegions, collectionRegions]),
+      ...regions,
       article: mergeConfig(
         globalArticle,
         pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)
@@ -1083,10 +1123,18 @@ function buildNotebookCollectionModel(input, collectionId) {
   const identity = normalizeCollectionIdentity(collectionConfig);
   const profileNavigation = toRenderNavigation(profiles.noteIndex);
   const collectionNavigation = toContentNavigation(collectionConfig);
-  const profileRegions = toRenderRegions(input.stellarConfig, profiles.note, {
-    leftbar: { brand: collectionBrand(identity, baseDir) }
-  });
   const collectionRegions = pick(collectionConfig, CONTENT_MODEL_FIELDS.regionIds);
+  const defaultBrand = collectionBrand(identity, baseDir, {
+    indexPath: profiles.notebookIndex.path,
+    backLabel: "btn.all_notebook"
+  });
+  assertCollectionBrandConfig(collectionConfig, "collection", input.collectionSource || "<collection>");
+  const regions = toRenderRegions(input.stellarConfig, profiles.note, {
+    leftbar: { brand: defaultBrand }
+  }, {
+    brandSources: { collection: defaultBrand },
+    layers: [collectionRegions]
+  });
   const globalArticle = articlePresentationDefaults(content);
   const globalFooter = {
     references: [],
@@ -1115,7 +1163,7 @@ function buildNotebookCollectionModel(input, collectionId) {
     },
     presentation: {
       banner: pick(collectionConfig.banner, CONTENT_MODEL_FIELDS.banner),
-      ...cascadeRegions([profileRegions, collectionRegions]),
+      ...regions,
       article: mergeConfig(globalArticle, pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)),
       footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),
       comments: mergeConfig(

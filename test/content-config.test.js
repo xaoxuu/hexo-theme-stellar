@@ -22,7 +22,11 @@ test("Collection config normalizes public fields and freezes open parameter bags
     cover: "/docs.webp",
     route: { path: "/wiki/docs/" },
     topbar: { enabled: true, brand: { name: "Docs", href: "/wiki/docs/" }, menu: [] },
-    leftbar: { footer: { actions: [] }, widgets: ["tree", { layout: "custom", option: true }] },
+    leftbar: {
+      brand: { source: "collection", style: "compact", back_button: false, search: true },
+      footer: { actions: [] },
+      widgets: ["tree", { layout: "custom", option: true }]
+    },
     rightbar: { enabled: false },
     comments: { provider: "custom", options: { nested_value: { enabled: true } } }
   }, "source/_data/wiki/docs.yml");
@@ -30,6 +34,12 @@ test("Collection config normalizes public fields and freezes open parameter bags
   assert.equal(parsed.icon, "/docs.svg");
   assert.equal(parsed.cover, "/docs.webp");
   assert.equal(parsed.topbar.brand.name, "Docs");
+  assert.deepEqual(parsed.leftbar.brand, {
+    source: "collection",
+    style: "compact",
+    backButton: false,
+    search: true
+  });
   assert.equal(parsed.rightbar.enabled, false);
   assert.equal(parsed.comments.options.nested_value.enabled, true);
   assert.equal(Object.isFrozen(parsed), true);
@@ -135,6 +145,27 @@ test("Content Region schemas reject removed Brand sources and Notebook wrapper",
     () => parsePageConfig({ card: { cover: "/page.webp" } }, "page.md"),
     /未知字段 card/
   );
+  for (const field of ["source", "back_button", "search"]) {
+    assert.throws(
+      () => parsePageConfig({ leftbar: { brand: { [field]: field === "source" ? "site" : true } } }, "page.md"),
+      new RegExp(`leftbar\\.brand\\.${field}`)
+    );
+  }
+  assert.throws(
+    () => parseCollectionConfig({ name: "Docs", topbar: { brand: { style: "compact" } } }, "collection.yml"),
+    /topbar\.brand\.style/
+  );
+  for (const [field, value] of [
+    ["source", "profile"],
+    ["style", "dense"],
+    ["back_button", "yes"],
+    ["search", "yes"]
+  ]) {
+    assert.throws(
+      () => parseCollectionConfig({ name: "Docs", leftbar: { brand: { [field]: value } } }, "collection.yml"),
+      new RegExp(`leftbar\\.brand\\.${field}`)
+    );
+  }
 });
 
 test("Content schemas aggregate unknown, type, enum, and range diagnostics", () => {

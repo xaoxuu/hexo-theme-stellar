@@ -68,6 +68,8 @@ leftbar:
   enabled: true
   # 配置 Leftbar 固定 Brand 内容。
   brand:
+    # 设置 Leftbar Brand 的视觉样式；可选值为 regular 或 compact。
+    style: regular
     # 配置品牌图片。
     image:
       # 设置品牌图片地址；null 表示隐藏图片。

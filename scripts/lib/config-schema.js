@@ -311,7 +311,7 @@ function validateBrand(node, input, source, path, issues) {
     issues.push(issue("invalid_value", source, path, valueType(input), "false or Brand object", node.migration));
     return;
   }
-  const allowed = ["image", "name", "tagline", "href"];
+  const allowed = Object.keys(node.properties || {});
   for (const key of Object.keys(input)) {
     if (!allowed.includes(key)) {
       issues.push(issue("unknown_field", source, `${path}.${key}`, valueType(input[key]), allowed.join(" | "), node.migration));
@@ -321,6 +321,14 @@ function validateBrand(node, input, source, path, issues) {
   for (const key of ["name", "tagline"]) {
     if (input[key] != null && typeof input[key] !== "string") {
       issues.push(issue("invalid_type", source, `${path}.${key}`, valueType(input[key]), "string | null", node.migration));
+    }
+  }
+  const styleRule = node.properties?.style;
+  if (styleRule && input.style != null) {
+    if (typeof input.style !== "string") {
+      issues.push(issue("invalid_type", source, `${path}.style`, valueType(input.style), "string", node.migration));
+    } else if (styleRule.values && !styleRule.values.includes(input.style)) {
+      issues.push(issue("invalid_value", source, `${path}.style`, valueType(input.style), styleRule.values.join(" | "), node.migration));
     }
   }
   if (input.href != null && !isSafeNavigationUrl(input.href)) {

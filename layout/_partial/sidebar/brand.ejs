@@ -2,23 +2,19 @@
 var brand = (typeof brandModel !== 'undefined' ? brandModel : null) || {}
 var brandPlacement = typeof placement !== 'undefined' ? placement : 'leftbar'
 var activeViewModel = typeof viewModel !== 'undefined' ? viewModel : null
-var collectionProfile = activeViewModel?.collection?.profile
-  || content_config(page).collection?.profile
-  || (page.notebookIndex?.mode === 'notes' ? 'notebook' : null)
-var collectionContext = ['wiki', 'notebook', 'topic'].includes(collectionProfile)
-var brandAppearance = brandPlacement === 'topbar'
+var brandStyle = brandPlacement === 'topbar'
   ? 'topbar'
-  : collectionContext ? 'collection' : 'site'
+  : brand.style === 'compact' ? 'compact' : 'regular'
 
 function layoutBrandNavigation() {
-  if (brandPlacement !== 'leftbar' || collectionProfile !== 'wiki') return ''
-  const href = activeViewModel?.render?.layout?.wikiIndexPath
+  if (brandPlacement !== 'leftbar' || brand.source !== 'collection' || brand.backButton !== true) return ''
+  const href = brand.backHref
   if (!href) return ''
-  return `<div class="brand-navigation"><a class="brand-navigation__back cap" href="${pretty_url(href)}"><span class="ui-icon">${icon('default:back', '', true)}</span><span>${__('btn.all_wiki')}</span></a></div>`
+  return `<div class="brand-navigation"><a class="brand-navigation__back cap" href="${pretty_url(href)}"><span class="ui-icon">${icon('default:back', '', true)}</span><span>${__(brand.backLabel)}</span></a></div>`
 }
 
-function layoutCollectionSearch() {
-  if (brandPlacement !== 'leftbar' || !collectionContext) return ''
+function layoutBrandSearch() {
+  if (brandPlacement !== 'leftbar' || brand.source !== 'collection' || brand.search !== true) return ''
   if (!stellar_config('search.provider')) return ''
   var body = partial('_partial/sidebar/search', {
     item: {algoliaFilterPath: 'auto'},
@@ -38,7 +34,7 @@ function layoutBrandTitle() {
   const tag = href ? 'a' : 'div'
   var el = `<${tag} class="brand-title"${href ? ` href="${escape_html(url_for(href))}"` : ''}>`
   el += `<div class="brand-name">${escape_html(name)}</div>`
-  if (brandAppearance !== 'topbar' && tagline) {
+  if (brandStyle !== 'topbar' && tagline) {
     el += `<div class="brand-tagline cap">${escape_html(tagline)}</div>`
   }
   el += `</${tag}>`
@@ -63,7 +59,7 @@ function layoutBrandImage() {
 }
 
 function layoutBrandGithub() {
-  if (brandPlacement !== 'leftbar' || collectionContext) return ''
+  if (brandPlacement !== 'leftbar' || brandStyle !== 'regular') return ''
   const username = typeof brandGithubUsername === 'function' ? brandGithubUsername() : ''
   const apiBase = brandText(stellar_config('services.github.apiUrl')).replace(/\/+$/, '')
   if (!username || !apiBase) return ''
@@ -86,14 +82,14 @@ function layoutBrandGithub() {
 
 function layoutBrand() {
   if (!brand.image?.src && !brand.name) return ''
-  var el = `<header class="brand-header brand-header--${brandAppearance}${brandPlacement === 'main' ? ' mobile-only' : ''}">`
+  var el = `<header class="brand-header brand-header--${brandStyle}${brandPlacement === 'main' ? ' mobile-only' : ''}">`
   el += layoutBrandNavigation()
   el += `<div class="brand-wrap">`
   el += layoutBrandImage()
   el += layoutBrandTitle()
   el += layoutBrandGithub()
   el += `</div>`
-  el += layoutCollectionSearch()
+  el += layoutBrandSearch()
   el += `</header>`
   return el
 }

@@ -26,7 +26,8 @@ test("Theme config loads complete frozen defaults", () => {
   }
   assert.equal(config.topbar.enabled, false);
   assert.equal(config.rightbar.enabled, true);
-  assert.deepEqual(config.topbar.brand, config.leftbar.brand);
+  assert.equal(config.topbar.brand.style, undefined);
+  assert.equal(config.leftbar.brand.style, "regular");
   assertDeepFrozen(config);
 });
 
@@ -127,6 +128,43 @@ test("Removed shell roots and movable Brand or Actions widgets are rejected", ()
     assert.throws(() => parseStellarConfig({ themeConfig }), error => (
       error instanceof ConfigSchemaError && error.issues.some(issue => issue.path === path)
     ));
+  }
+});
+
+test("Only Leftbar Brand accepts regular or compact style", () => {
+  const config = parseStellarConfig({
+    themeConfig: {
+      leftbar: { brand: { style: "compact" } },
+      profiles: { wiki: { leftbar: { brand: { style: "regular" } } } }
+    }
+  });
+  assert.equal(config.leftbar.brand.style, "compact");
+  assert.equal(config.profiles.wiki.leftbar.brand.style, "regular");
+  assert.throws(
+    () => parseStellarConfig({ themeConfig: { topbar: { brand: { style: "compact" } } } }),
+    error => hasIssue(error, "topbar.brand.style", "unknown_field")
+  );
+  assert.throws(
+    () => parseStellarConfig({ themeConfig: { leftbar: { brand: { style: "dense" } } } }),
+    error => hasIssue(error, "leftbar.brand.style", "invalid_value")
+  );
+  assert.throws(
+    () => parseStellarConfig({ themeConfig: { leftbar: { brand: { style: true } } } }),
+    error => hasIssue(error, "leftbar.brand.style", "invalid_type")
+  );
+});
+
+test("Brand source and Collection controls are not theme or Profile options", () => {
+  for (const [themeConfig, path] of [
+    [{ leftbar: { brand: { source: "site" } } }, "leftbar.brand.source"],
+    [{ leftbar: { brand: { back_button: true } } }, "leftbar.brand.back_button"],
+    [{ leftbar: { brand: { search: true } } }, "leftbar.brand.search"],
+    [{ profiles: { wiki: { leftbar: { brand: { source: "collection" } } } } }, "profiles.wiki.leftbar.brand.source"]
+  ]) {
+    assert.throws(
+      () => parseStellarConfig({ themeConfig }),
+      error => hasIssue(error, path, "unknown_field")
+    );
   }
 });
 

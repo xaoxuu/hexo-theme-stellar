@@ -31,11 +31,17 @@ function cascadeRegion(layers, region) {
   return widgets;
 }
 
-function mergeBrand(base, override) {
+function mergeBrand(base, override, sources = null) {
   if (override == null) return clone(base);
   if (override === false) return false;
   if (regionLayer(override) == null) return clone(base);
-  const result = regionLayer(base) == null ? {} : clone(base);
+  const requestedSource = typeof override.source === "string" ? override.source : null;
+  const sourceBrand = requestedSource && sources && Object.prototype.hasOwnProperty.call(sources, requestedSource)
+    ? sources[requestedSource]
+    : undefined;
+  const result = sourceBrand !== undefined
+    ? (regionLayer(sourceBrand) == null ? {} : clone(sourceBrand))
+    : (regionLayer(base) == null ? {} : clone(base));
   for (const [key, value] of Object.entries(override)) {
     if (key === "image" && regionLayer(value)) {
       result.image = { ...(regionLayer(result.image) ? result.image : {}), ...clone(value) };
@@ -46,7 +52,7 @@ function mergeBrand(base, override) {
   return result;
 }
 
-function resolveRegion(layers, region) {
+function resolveRegion(layers, region, options = {}) {
   const result = {
     enabled: region !== "topbar",
     widgets: []
@@ -61,7 +67,7 @@ function resolveRegion(layers, region) {
     if (!current) continue;
     if (typeof current.enabled === "boolean") result.enabled = current.enabled;
     if (["topbar", "leftbar"].includes(region) && current.brand !== undefined) {
-      result.brand = mergeBrand(result.brand, current.brand);
+      result.brand = mergeBrand(result.brand, current.brand, region === "leftbar" ? options.brandSources : null);
     }
     if (["topbar", "leftbar"].includes(region) && Array.isArray(current.menu)) {
       result.menu = current.menu.map(clone);
@@ -74,14 +80,14 @@ function resolveRegion(layers, region) {
   return result;
 }
 
-function resolveLeftbar(layers) {
-  return resolveRegion(layers, "leftbar");
+function resolveLeftbar(layers, options = {}) {
+  return resolveRegion(layers, "leftbar", options);
 }
 
-function cascadeRegions(layers) {
+function cascadeRegions(layers, options = {}) {
   const regions = {};
   for (const region of REGION_IDS) {
-    regions[region] = resolveRegion(layers, region);
+    regions[region] = resolveRegion(layers, region, options);
   }
   return freeze(regions);
 }
@@ -91,7 +97,7 @@ function resolveRegions(options = {}) {
   const resolvedRegions = {};
   const warnings = [];
   for (const region of REGION_IDS) {
-    const state = resolveRegion(layers, region);
+    const state = resolveRegion(layers, region, options);
     const widgets = state.enabled ? state.widgets : [];
     const resolved = resolveRegionWidgets(widgets, options.catalog || {}, {
       region,

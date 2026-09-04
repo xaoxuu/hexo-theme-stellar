@@ -172,6 +172,7 @@ test("root Wiki project keeps root navigation without a Wiki index", () => {
 
   const viewModel = buildWikiPageViewModel(input);
   assert.equal(viewModel.render.layout.leftbar.brand.href, "/");
+  assert.equal(viewModel.render.layout.leftbar.brand.backHref, null);
   assert.equal(viewModel.collection.cover, "/collection.webp");
   assert.equal(viewModel.item.cover, "");
   assert.equal(viewModel.item.tagline, "");
@@ -190,6 +191,12 @@ test("Wiki and Notebook derive Collection Brand while Topic keeps Site Brand", (
   });
   const topic = buildTopicPageViewModel(topicSource);
   assert.deepEqual(wiki.render.layout.leftbar.brand, {
+    source: "collection",
+    style: "regular",
+    backButton: true,
+    search: true,
+    backHref: "/wiki/",
+    backLabel: "btn.all_wiki",
     image: { src: null, variant: "icon" },
     name: "docs",
     tagline: "",
@@ -197,7 +204,79 @@ test("Wiki and Notebook derive Collection Brand while Topic keeps Site Brand", (
   });
   assert.equal(notebook.render.layout.leftbar.brand.name, "dev");
   assert.equal(notebook.render.layout.leftbar.brand.href, "/notebook/dev/");
+  assert.equal(notebook.render.layout.leftbar.brand.style, "regular");
+  assert.equal(notebook.render.layout.leftbar.brand.backHref, "/notebooks/");
+  assert.equal(notebook.render.layout.leftbar.brand.backLabel, "btn.all_notebook");
   assert.equal(topic.render.layout.leftbar.brand.name, "Site");
+  assert.equal(topic.render.layout.leftbar.brand.source, "site");
+  assert.equal(topic.render.layout.leftbar.brand.style, "regular");
+  assert.equal(topic.render.layout.leftbar.brand.backButton, undefined);
+});
+
+test("Collection Brand source, style, back button, and search resolve independently", () => {
+  const siteInput = wikiInput();
+  siteInput.stellarConfig = parseStellarConfig({
+    themeConfig: {
+      leftbar: {
+        brand: {
+          image: { src: "/site.webp", variant: "avatar" },
+          name: "Site",
+          tagline: "Site tagline",
+          href: "/"
+        }
+      }
+    }
+  });
+  siteInput.collectionConfig = parseCollectionConfig({
+    name: "Docs",
+    route: { path: "/wiki/docs/" },
+    leftbar: { brand: { source: "site", style: "regular" } }
+  }, siteInput.collectionSource);
+  assert.deepEqual(buildWikiPageViewModel(siteInput).render.layout.leftbar.brand, {
+    source: "site",
+    style: "regular",
+    image: { src: "/site.webp", variant: "avatar" },
+    name: "Site",
+    tagline: "Site tagline",
+    href: "/"
+  });
+
+  const compactInput = wikiInput();
+  compactInput.collectionConfig = parseCollectionConfig({
+    name: "Docs",
+    route: { path: "/wiki/docs/" },
+    leftbar: { brand: { style: "compact", back_button: false, search: true } }
+  }, compactInput.collectionSource);
+  const compact = buildWikiPageViewModel(compactInput).render.layout.leftbar.brand;
+  assert.equal(compact.source, "collection");
+  assert.equal(compact.style, "compact");
+  assert.equal(compact.backButton, false);
+  assert.equal(compact.search, true);
+
+  const topicCollectionInput = topicInput();
+  topicCollectionInput.collectionConfig = parseCollectionConfig({
+    name: "Topic",
+    route: { path: "/topic/topic/" },
+    leftbar: { brand: { source: "collection" } }
+  }, topicCollectionInput.collectionSource);
+  const topicCollection = buildTopicPageViewModel(topicCollectionInput).render.layout.leftbar.brand;
+  assert.equal(topicCollection.source, "collection");
+  assert.equal(topicCollection.backHref, "/topic/");
+  assert.equal(topicCollection.backLabel, "btn.all_topic");
+  assert.equal(topicCollection.backButton, true);
+  assert.equal(topicCollection.search, true);
+
+  const invalid = topicInput();
+  invalid.collectionConfig = parseCollectionConfig({
+    name: "Topic",
+    route: { path: "/topic/topic/" },
+    leftbar: { brand: { back_button: false, search: false } }
+  }, invalid.collectionSource);
+  assert.throws(() => buildTopicPageViewModel(invalid), error => {
+    assert.match(error.message, /leftbar\.brand\.back_button 仅支持 source: collection/);
+    assert.match(error.message, /leftbar\.brand\.search 仅支持 source: collection/);
+    return true;
+  });
 });
 
 test("Region Brand and Banner preserve profile, collection, and page override precedence", () => {

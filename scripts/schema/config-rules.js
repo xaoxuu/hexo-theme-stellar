@@ -132,18 +132,22 @@ const brandProperties = {
   tagline: item(["string", "null"], { defaultValue: null }),
   href: item(["string", "null"], { defaultValue: "/", validator: "nullable_safe_navigation_url" })
 };
-const regionBrand = {
+const leftbarBrandProperties = {
+  style: item("string", { defaultValue: "regular", values: ["regular", "compact"] }),
+  ...brandProperties
+};
+const regionBrand = properties => ({
   type: ["object", "boolean"],
   normalizer: "parameter_bag",
   sealed: true,
   validator: "brand",
-  properties: brandProperties
-};
-const inheritedRegionBrand = {
-  ...regionBrand,
+  properties
+});
+const inheritedRegionBrand = properties => ({
+  ...regionBrand(properties),
   type: ["object", "boolean", "null"],
   defaultValue: null
-};
+});
 
 const CONFIG_RULES = Object.freeze([
   ["settings.about.items", { items: aboutItem }],
@@ -151,12 +155,12 @@ const CONFIG_RULES = Object.freeze([
   ["footer.content", { normalizer: "trusted_text" }],
 
   ["topbar.enabled", { type: ["boolean"] }],
-  ["topbar.brand", regionBrand],
+  ["topbar.brand", regionBrand(brandProperties)],
   ["topbar.menu", { validator: "menu_items", items: menuItem }],
   ["topbar.widgets", { validator: "region_widgets", items: widgetItems }],
   ["leftbar.default_state", { values: ["expanded", "collapsed"] }],
   ["leftbar.enabled", { type: ["boolean"] }],
-  ["leftbar.brand", regionBrand],
+  ["leftbar.brand", regionBrand(leftbarBrandProperties)],
   ["leftbar.menu", { validator: "menu_items", items: menuItem }],
   ["leftbar.footer.actions", { validator: "footer_actions", items: footerAction }],
   ["leftbar.widgets", { validator: "leftbar_content_widgets", items: widgetItems }],
@@ -165,11 +169,11 @@ const CONFIG_RULES = Object.freeze([
   ["profiles.*.path", { type: ["string", "null"], defaultValue: null, normalizer: "root_relative_path", validator: "nullable_non_empty_string" }],
   ["profiles.*.active_menu", { type: ["string", "null"], defaultValue: null, validator: "nullable_kebab_id" }],
   ["profiles.*.topbar.enabled", { type: ["boolean", "null"], defaultValue: null }],
-  ["profiles.*.topbar.brand", inheritedRegionBrand],
+  ["profiles.*.topbar.brand", inheritedRegionBrand(brandProperties)],
   ["profiles.*.topbar.menu", { type: ["array", "null"], defaultValue: null, validator: "menu_items", items: menuItem }],
   ["profiles.*.topbar.widgets", { type: ["array", "null"], defaultValue: null, validator: "region_widgets", items: widgetItems }],
   ["profiles.*.leftbar.enabled", { type: ["boolean", "null"], defaultValue: null }],
-  ["profiles.*.leftbar.brand", inheritedRegionBrand],
+  ["profiles.*.leftbar.brand", inheritedRegionBrand(leftbarBrandProperties)],
   ["profiles.*.leftbar.menu", { type: ["array", "null"], defaultValue: null, validator: "menu_items", items: menuItem }],
   ["profiles.*.leftbar.footer.actions", { type: ["array", "null"], defaultValue: null, validator: "footer_actions", items: footerAction }],
   ["profiles.*.leftbar.widgets", { type: ["array", "null"], defaultValue: null, validator: "leftbar_content_widgets", items: widgetItems }],

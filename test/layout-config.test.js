@@ -33,7 +33,7 @@ test("Layout Profile 最后显式覆盖 Widget，并按字段继承 Leftbar 外�
     { leftbar: { brand: { tagline: null }, menu: [], widgets: ["recent"] }, rightbar: { enabled: false, widgets: ["toc"] } }
   ), {
     topbar: { enabled: false, brand: { name: "Top" }, menu: [], widgets: [] },
-    leftbar: { enabled: true, brand: { name: "Site", tagline: null }, menu: [], footer: { actions: [{ type: "link" }] }, widgets: ["recent"] },
+    leftbar: { enabled: true, brand: { name: "Site", tagline: null, source: "site", style: "regular" }, menu: [], footer: { actions: [{ type: "link" }] }, widgets: ["recent"] },
     rightbar: { enabled: false, widgets: ["toc"] }
   });
 });

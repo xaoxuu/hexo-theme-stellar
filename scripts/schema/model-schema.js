@@ -88,6 +88,14 @@ function createFieldFactory(scope, consumers) {
 function brandSchema(factory, options = {}) {
   const { field, object } = factory;
   const properties = {
+    ...(options.leftbar ? {
+      source: field("string", { default: computed("由 Site 或 Collection Brand 来源解析"), example: "site" }),
+      style: field("string", { default: literal("regular"), example: "regular" }),
+      backButton: field("boolean", { default: literal(true), example: true }),
+      search: field("boolean", { default: literal(true), example: true }),
+      backHref: field(["string", "null"], { default: computed("由 Collection 类型的索引路径生成"), example: "/wiki/" }),
+      backLabel: field("string", { default: computed("由 Collection 类型生成"), example: "btn.all_wiki" })
+    } : {}),
     image: object({
       src: field(["string", "null"], { example: "/images/avatar.webp" }),
       variant: field("string", { example: "avatar" })
@@ -192,7 +200,7 @@ function regionConfigSchemas(factory) {
   const leftbar = example => object({
     enabled: field(["boolean", "null"], { example: true }),
     brand: (() => {
-      const schema = brandSchema(factory);
+      const schema = brandSchema(factory, { leftbar: true });
       schema.type = ["object", "boolean", "null"];
       return schema;
     })(),
