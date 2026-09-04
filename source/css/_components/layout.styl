@@ -50,6 +50,9 @@ html[data-leftbar-state='collapsed'] .site-shell[data-regions~='leftbar']
 .site-workspace
   box-sizing: border-box
   position: relative
+  display: grid
+  grid-template-columns: minmax(var(--rightbar-width), 1fr) minmax(0, max(var(--width-main-article), var(--width-main-wiki-list))) minmax(var(--rightbar-width), 1fr)
+  column-gap: var(--shell-side-gap)
   width: 100%
   min-height: calc(100vh - var(--shell-sticky-offset))
   min-height: calc(100dvh - var(--shell-sticky-offset))
@@ -61,15 +64,15 @@ html[data-leftbar-state='collapsed'] .site-shell[data-regions~='leftbar']
   min-width: 0
 
 .site-main
-  width: unquote('min(var(--width-main), max(0px, calc(100% - var(--shell-edge-inset) - var(--shell-edge-inset) - var(--shell-side-reserve) - var(--shell-side-reserve) - var(--shell-side-gap) - var(--shell-side-gap))))')
+  grid-column: 2
+  width: 100%
   max-width: var(--width-main)
   margin-inline: auto
 
 .site-region--leftbar,
 .site-region--rightbar
-  position: absolute
+  position: relative
   top: 0
-  bottom: 0
   z-index: 8
 
 .site-region__surface
@@ -91,16 +94,18 @@ html[data-leftbar-state='collapsed'] .site-shell[data-regions~='leftbar']
   border-radius: inherit
 
 .site-region--leftbar
+  grid-column: 1
+  justify-self: end
   top: var(--leftbar-gap)
-  inset-inline-start: var(--leftbar-gap)
   width: var(--leftbar-width)
   .site-region__surface
     top: var(--leftbar-sticky-offset)
     height: var(--leftbar-panel-height)
 
 .site-region--rightbar
+  grid-column: 3
+  justify-self: start
   top: var(--shell-content-top-gap)
-  inset-inline-end: var(--shell-edge-inset)
   width: var(--rightbar-width)
   .site-region__surface
     top: var(--rightbar-sticky-offset)
@@ -351,6 +356,8 @@ html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .s
   leftbar-rail()
 
 @media screen and (max-width: $device-laptop)
+  .site-workspace
+    display: block
   .site-shell
     --shell-right-reserve: 0px
     --rightbar-drawer-top: var(--leftbar-gap)
@@ -364,6 +371,9 @@ html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .s
     --shell-left-reserve: 0px
     --shell-side-reserve: 0px
     --shell-side-gap: 0px
+  .site-region--leftbar
+    position: absolute
+    inset-inline-start: var(--leftbar-gap)
   .site-region--rightbar
     position: fixed
     transform: translateX(calc(100% + 16px))
