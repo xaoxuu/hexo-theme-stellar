@@ -19,7 +19,7 @@ function layoutDiv() {
         : null
   if (notebookItems) {
     arr = notebookItems.slice()
-  } else if (content_config(page).navigation?.menu == 'wiki') {
+  } else if (content_config(page).activeMenu == 'wiki') {
     arr = stellar_data('wiki').all_pages.filter(function(p) {
       if (p.collectionId) {
         var proj = stellar_data('wiki').tree[p.collectionId]

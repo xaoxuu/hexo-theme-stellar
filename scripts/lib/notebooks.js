@@ -66,7 +66,6 @@ function prepareNotebook(id, info, ctx, pages) {
 
   notebook.route ||= {};
   notebook.listing ||= {};
-  notebook.navigation ||= {};
   notebook.footer ||= {};
   notebook.topbar ||= {};
   notebook.leftbar ||= {};

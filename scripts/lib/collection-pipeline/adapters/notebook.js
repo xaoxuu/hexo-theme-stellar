@@ -10,6 +10,15 @@ const { plainTerms } = require("../shared");
 
 module.exports = {
   id: "notebook",
+  config: Object.freeze({
+    collection: Object.freeze({
+      hero: false,
+      routeStart: false,
+      navigationTree: false,
+      listing: Object.freeze(["order", "excerptLength", "perPage", "sort"])
+    }),
+    page: Object.freeze({ listingPriority: true })
+  }),
   contentKind: "pages",
   twoStage: true,
   prepare(pipeline) {

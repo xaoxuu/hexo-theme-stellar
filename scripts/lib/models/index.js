@@ -71,6 +71,24 @@ function mergeConfig(base, override, path = "") {
   return result;
 }
 
+function toContentNavigation(config) {
+  const navigation = {};
+  if (config?.activeMenu != null) navigation.menu = config.activeMenu;
+  if (config?.breadcrumb != null) navigation.breadcrumb = config.breadcrumb;
+  return navigation;
+}
+
+function collectionBrand(identity, href) {
+  const normalizedHref = normalizeCollectionPath(href);
+  const brand = {
+    image: { src: identity.icon || null, variant: "icon" },
+    name: identity.name,
+    tagline: identity.tagline,
+    href: normalizedHref ? `/${normalizedHref}/` : "/"
+  };
+  return brand;
+}
+
 function articleIndentEnabled(article) {
   const style = article?.style;
   const mode = article?.paragraphIndent || "auto";
@@ -767,6 +785,7 @@ function buildCollectionModel(stellarConfig) {
       excerptLength: article.listing.excerptLength
     },
     presentation: {
+      banner: {},
       ...regions,
       article: articlePresentationDefaults(content),
       footer: articleFooterDefaults(content),
@@ -780,7 +799,7 @@ function buildCollectionModel(stellarConfig) {
 }
 
 function buildContentItemModel(page, frontMatter, collection, source, options = {}) {
-  const pageNavigation = pick(frontMatter.navigation, CONTENT_MODEL_FIELDS.navigation);
+  const pageNavigation = toContentNavigation(frontMatter);
   const pageRegions = pick(frontMatter, CONTENT_MODEL_FIELDS.regionIds);
   const pageArticle = pick(frontMatter.article, CONTENT_MODEL_FIELDS.article);
   const pageFooter = pick(frontMatter.footer, CONTENT_MODEL_FIELDS.footer);
@@ -815,7 +834,10 @@ function buildContentItemModel(page, frontMatter, collection, source, options = 
       priority: frontMatter.listing?.priority ?? 0
     },
     presentation: {
-      banner: pick(frontMatter.banner, CONTENT_MODEL_FIELDS.banner),
+      banner: mergeConfig(
+        collection.presentation.banner,
+        pick(frontMatter.banner, CONTENT_MODEL_FIELDS.banner)
+      ),
       ...cascadeRegions([collection.presentation, pageRegions]),
       article: mergeConfig(collection.presentation.article, pageArticle),
       footer: mergeConfig(collection.presentation.footer, pageFooter),
@@ -872,17 +894,21 @@ function buildWikiCollectionModel(input, collectionId) {
   const collectionRoute = isPlainObject(collectionConfig.route) ? collectionConfig.route : {};
   const collectionListing = isPlainObject(collectionConfig.listing) ? collectionConfig.listing : {};
   const baseDir = collectionRoute.path || `${profilePath(indexWiki.path) || "wiki"}/${collectionId}`;
+  const identity = normalizeCollectionIdentity(collectionConfig);
 
   const profileNavigation = toRenderNavigation(wikiProfile);
-  const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
-  const profileRegions = toRenderRegions(input.stellarConfig, wikiProfile);
+  const collectionNavigation = toContentNavigation(collectionConfig);
+  const profileRegions = toRenderRegions(input.stellarConfig, wikiProfile, {
+    leftbar: { brand: collectionBrand(identity, baseDir) }
+  });
   const collectionRegions = pick(collectionConfig, CONTENT_MODEL_FIELDS.regionIds);
   const globalArticle = articlePresentationDefaults(content);
+  const globalFooter = articleFooterDefaults(content);
 
   return {
     id: collectionId,
     profile: "wiki",
-    identity: normalizeCollectionIdentity(collectionConfig),
+    identity,
     cover: typeof collectionConfig.cover === "string" ? collectionConfig.cover : "",
     source: pick(collectionConfig.source, CONTENT_MODEL_FIELDS.source),
     route: {
@@ -903,9 +929,10 @@ function buildWikiCollectionModel(input, collectionId) {
     },
     presentation: {
       hero: cloneValue(collectionConfig.hero || {}),
+      banner: pick(collectionConfig.banner, CONTENT_MODEL_FIELDS.banner),
       ...cascadeRegions([profileRegions, collectionRegions]),
       article: mergeConfig(globalArticle, pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)),
-      footer: pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer),
+      footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),
       comments: mergeConfig(
         normalizeThemeComments(input.stellarConfig.comments),
         pick(collectionConfig.comments, CONTENT_MODEL_FIELDS.comments)
@@ -960,7 +987,7 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
   const sort = collectionListing.sort ?? { field: "date", direction: "desc" };
 
   const profileNavigation = toRenderNavigation(topicProfile);
-  const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
+  const collectionNavigation = toContentNavigation(collectionConfig);
   const profileRegions = toRenderRegions(input.stellarConfig, topicProfile);
   const collectionRegions = pick(collectionConfig, CONTENT_MODEL_FIELDS.regionIds);
   const globalArticle = articlePresentationDefaults(content);
@@ -992,7 +1019,7 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
       sort
     },
     presentation: {
-      hero: cloneValue(collectionConfig.hero || {}),
+      banner: pick(collectionConfig.banner, CONTENT_MODEL_FIELDS.banner),
       ...cascadeRegions([profileRegions, collectionRegions]),
       article: mergeConfig(
         globalArticle,
@@ -1053,9 +1080,12 @@ function buildNotebookCollectionModel(input, collectionId) {
   const collectionListing = isPlainObject(collectionConfig.listing) ? collectionConfig.listing : {};
   const defaultListing = notebookDefaults.listing;
   const baseDir = notebookBaseDir(collectionId, collectionConfig, input.stellarConfig);
+  const identity = normalizeCollectionIdentity(collectionConfig);
   const profileNavigation = toRenderNavigation(profiles.noteIndex);
-  const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
-  const profileRegions = toRenderRegions(input.stellarConfig, profiles.note);
+  const collectionNavigation = toContentNavigation(collectionConfig);
+  const profileRegions = toRenderRegions(input.stellarConfig, profiles.note, {
+    leftbar: { brand: collectionBrand(identity, baseDir) }
+  });
   const collectionRegions = pick(collectionConfig, CONTENT_MODEL_FIELDS.regionIds);
   const globalArticle = articlePresentationDefaults(content);
   const globalFooter = {
@@ -1068,7 +1098,7 @@ function buildNotebookCollectionModel(input, collectionId) {
   return {
     id: collectionId,
     profile: "notebook",
-    identity: normalizeCollectionIdentity(collectionConfig),
+    identity,
     cover: typeof collectionConfig.cover === "string" ? collectionConfig.cover : "",
     source: pick(collectionConfig.source, CONTENT_MODEL_FIELDS.source),
     route: { baseDir },
@@ -1084,7 +1114,7 @@ function buildNotebookCollectionModel(input, collectionId) {
       sort: collectionListing.sort ?? defaultListing.sort
     },
     presentation: {
-      hero: cloneValue(collectionConfig.hero || {}),
+      banner: pick(collectionConfig.banner, CONTENT_MODEL_FIELDS.banner),
       ...cascadeRegions([profileRegions, collectionRegions]),
       article: mergeConfig(globalArticle, pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)),
       footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),

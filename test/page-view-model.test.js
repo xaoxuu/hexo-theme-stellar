@@ -179,3 +179,52 @@ test("root Wiki project keeps root navigation without a Wiki index", () => {
   assert.equal(viewModel.render.layout.wikiIndexPath, "");
   assert.equal(viewModel.render.cover.enabled, true);
 });
+
+test("Wiki and Notebook derive Collection Brand while Topic keeps Site Brand", () => {
+  const wiki = buildWikiPageViewModel(wikiInput());
+  const notebook = buildNotebookPageViewModel(notebookInput());
+  const topicSource = topicInput();
+  topicSource.stellarConfig = parseStellarConfig({
+    themeConfig: { leftbar: { brand: { name: "Site", href: "/" } } },
+    siteConfig: {}
+  });
+  const topic = buildTopicPageViewModel(topicSource);
+  assert.deepEqual(wiki.render.layout.leftbar.brand, {
+    image: { src: null, variant: "icon" },
+    name: "docs",
+    tagline: "",
+    href: "/wiki/docs/"
+  });
+  assert.equal(notebook.render.layout.leftbar.brand.name, "dev");
+  assert.equal(notebook.render.layout.leftbar.brand.href, "/notebook/dev/");
+  assert.equal(topic.render.layout.leftbar.brand.name, "Site");
+});
+
+test("Region Brand and Banner preserve profile, collection, and page override precedence", () => {
+  const input = wikiInput();
+  input.stellarConfig = parseStellarConfig({
+    themeConfig: {
+      profiles: { wiki: { leftbar: { brand: { tagline: "Profile" } } } }
+    },
+    siteConfig: {}
+  });
+  input.collectionConfig = parseCollectionConfig({
+    name: "Docs",
+    icon: "/docs.svg",
+    route: { path: "/wiki/docs/" },
+    banner: { image: "/collection.webp", headline: "Collection" },
+    leftbar: { brand: false, widgets: ["tree"] }
+  }, input.collectionSource);
+  input.frontMatter = parsePageConfig({
+    collection: { profile: "wiki", id: "docs" },
+    banner: { headline: "Page" },
+    leftbar: { brand: { name: "Page" }, widgets: [] }
+  }, input.source);
+  const viewModel = buildWikiPageViewModel(input);
+  assert.deepEqual(viewModel.render.layout.leftbar.brand, { name: "Page" });
+  assert.deepEqual(viewModel.render.layout.leftbar.widgets, []);
+  assert.deepEqual(viewModel.item.presentation.banner, {
+    image: "/collection.webp",
+    headline: "Page"
+  });
+});

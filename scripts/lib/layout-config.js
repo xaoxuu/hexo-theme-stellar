@@ -19,8 +19,8 @@ function toRenderNavigation(profile) {
   return activeMenu == null ? {} : { menu: activeMenu };
 }
 
-function toRenderRegions(globalConfig, profile) {
-  return cascadeRegions([globalConfig, profile]);
+function toRenderRegions(globalConfig, profile, defaults = null) {
+  return cascadeRegions([globalConfig, defaults, profile]);
 }
 
 function requireLayoutProfiles(stellarConfig) {

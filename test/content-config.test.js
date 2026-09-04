@@ -9,8 +9,11 @@ const {
   isListed,
   isSearchable,
   parseCollectionConfig,
-  parsePageConfig
+  parsePageConfig,
+  validateCollectionProfileConfig,
+  validatePageProfileConfig
 } = require("../scripts/lib/content-config");
+const { getProfileAdapter } = require("../scripts/lib/collection-pipeline/registry");
 
 test("Collection config normalizes public fields and freezes open parameter bags", () => {
   const parsed = parseCollectionConfig({
@@ -51,6 +54,61 @@ test("Front Matter parser preserves Hexo fields and normalizes Stellar fields", 
   assert.equal(parsed.seo.openGraph.image, "/cover.webp");
   assert.equal(parsed.inject.headEnd, "<meta name=\"example\">");
   assert.equal(Object.isFrozen(parsed), true);
+});
+
+test("Content override navigation is flat and Collection banner cascades through the public schema", () => {
+  const collection = parseCollectionConfig({
+    name: "Docs",
+    active_menu: "wiki",
+    breadcrumb: false,
+    banner: { image: "/collection.webp", headline: "Collection" }
+  }, "collection.yml");
+  const page = parsePageConfig({
+    active_menu: "post",
+    breadcrumb: true,
+    banner: { headline: "Page" }
+  }, "page.md");
+  assert.equal(collection.activeMenu, "wiki");
+  assert.equal(collection.breadcrumb, false);
+  assert.equal(collection.banner.image, "/collection.webp");
+  assert.equal(page.activeMenu, "post");
+  assert.equal(page.breadcrumb, true);
+  assert.throws(
+    () => parseCollectionConfig({ name: "Docs", navigation: { menu: "wiki" } }, "collection.yml"),
+    /navigation\.menu 已移除/
+  );
+  assert.throws(
+    () => parsePageConfig({ navigation: { breadcrumb: false } }, "page.md"),
+    /navigation 已移除/
+  );
+});
+
+test("Collection registry capabilities reject profile fields without runtime consumers", () => {
+  const validateCollection = (profile, config) => validateCollectionProfileConfig(
+    parseCollectionConfig({ name: "Collection", ...config }, `${profile}.yml`),
+    `${profile}.yml`,
+    profile,
+    getProfileAdapter(profile).config
+  );
+  validateCollection("wiki", { hero: { enabled: true }, listing: { priority: 1, order: 2 }, navigation: { tree: [] } });
+  validateCollection("topic", { route: { path: "topic/example", start: "topic/example/start" }, listing: { excerpt_length: 80, sort: { field: "date", direction: "desc" } } });
+  validateCollection("notebook", { listing: { order: 1, excerpt_length: 80, per_page: 10, sort: { field: "updated", direction: "desc" } } });
+  assert.throws(() => validateCollection("topic", { hero: { enabled: true } }), /hero/);
+  assert.throws(() => validateCollection("wiki", { route: { path: "wiki/example", start: "start" } }), /route\.start/);
+  assert.throws(() => validateCollection("notebook", { navigation: { tree: [] } }), /navigation\.tree/);
+  assert.throws(() => validateCollection("wiki", { listing: { excerpt_length: 80 } }), /listing\.excerpt_length/);
+
+  for (const profile of ["post", "topic", "notebook"]) {
+    validatePageProfileConfig({ listing: { priority: 1 } }, "page.md", profile, getProfileAdapter(profile).config);
+  }
+  assert.throws(
+    () => validatePageProfileConfig({ listing: { priority: 1 } }, "page.md", "wiki", getProfileAdapter("wiki").config),
+    /listing\.priority/
+  );
+  assert.throws(
+    () => validatePageProfileConfig({ listing: { priority: 1 } }, "page.md", "page", null),
+    /listing\.priority/
+  );
 });
 
 test("Content regions distinguish inheritance from explicit empty lists", () => {

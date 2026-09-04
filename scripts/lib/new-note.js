@@ -5,7 +5,13 @@ const path = require("node:path");
 const yaml = require("js-yaml");
 
 const { resolveInside } = require("./safe-path");
-const { parseCollectionConfig, parsePageConfig } = require("./content-config");
+const {
+  parseCollectionConfig,
+  parsePageConfig,
+  validateCollectionProfileConfig,
+  validatePageProfileConfig
+} = require("./content-config");
+const { getProfileAdapter } = require("./collection-pipeline/registry");
 const { parseFrontMatterYaml } = require("./front-matter");
 const { deepFreeze } = require("../schema/schema-utils");
 
@@ -93,12 +99,23 @@ function buildNewNotePlan(options = {}) {
   } catch (error) {
     throw new NewNoteError(`${configFile}: Notebook YAML 无效（${error.message}）`);
   }
-  parseCollectionConfig(rawCollection, path.relative(baseDir, configFile).replace(/\\/g, "/"));
+  const collectionSource = path.relative(baseDir, configFile).replace(/\\/g, "/");
+  validateCollectionProfileConfig(
+    parseCollectionConfig(rawCollection, collectionSource),
+    collectionSource,
+    "notebook",
+    getProfileAdapter("notebook").config
+  );
 
   const target = path.posix.join("source", "notebooks", notebook, `${title}.md`);
   const output = resolveInside(baseDir, target, `stellar new note: ${target}`);
   const content = renderFrontMatter({ title, tags, generatedAt: options.generatedAt ?? new Date() });
-  parsePageConfig(parseFrontMatterYaml(content, target) || {}, target);
+  validatePageProfileConfig(
+    parsePageConfig(parseFrontMatterYaml(content, target) || {}, target),
+    target,
+    "notebook",
+    getProfileAdapter("notebook").config
+  );
   if (fs.existsSync(output.absolute)) throw new NewNoteConflictError(target);
   return deepFreeze({
     notebook,

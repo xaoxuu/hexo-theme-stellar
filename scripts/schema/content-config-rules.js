@@ -52,13 +52,19 @@ function targetField(path, options) {
 }
 
 function fields(consumers, definitions, options = {}) {
-  return definitions.map(definition => targetField(definition[0], {
-    type: definition[1],
-    default: definition[2],
-    consumers,
-    ...options,
-    ...(definition[3] || {})
-  }));
+  return definitions.map(definition => {
+    const resolvedOptions = {
+      ...options,
+      cascade: typeof options.cascade === "function" ? options.cascade(definition[0]) : options.cascade
+    };
+    return targetField(definition[0], {
+      type: definition[1],
+      default: definition[2],
+      consumers,
+      ...resolvedOptions,
+      ...(definition[3] || {})
+    });
+  });
 }
 
 
@@ -66,6 +72,34 @@ const CONTENT_CONSUMERS = Object.freeze(["CollectionModel", "PageViewModel", "ar
 const REGION_NORMALIZATION = "accept a Region object; validate children and deep-freeze the normalized object";
 const MENU_ITEMS = { type: ["object"], boundary: "parameter_bag" };
 const ACTION_ITEMS = { type: ["object"], boundary: "parameter_bag" };
+
+function contentOverrideCascade(scope, path) {
+  const page = scope === "front_matter";
+  if (/^(?:topbar|leftbar|rightbar)(?:\.|$)/.test(path)) {
+    return page
+      ? ["theme global", "theme profile", "collection", "front matter"]
+      : ["theme global", "theme profile", "collection"];
+  }
+  if (path === "active_menu") {
+    return page ? ["theme profile", "collection", "front matter"] : ["theme profile", "collection"];
+  }
+  if (path === "breadcrumb") {
+    return page ? ["collection", "front matter"] : ["collection"];
+  }
+  if (/^article(?:\.|$)/.test(path)) {
+    return page ? ["theme article defaults", "collection", "front matter"] : ["theme article defaults", "collection"];
+  }
+  if (/^footer(?:\.|$)/.test(path)) {
+    return page ? ["theme article footer defaults", "collection", "front matter"] : ["theme article footer defaults", "collection"];
+  }
+  if (/^comments(?:\.|$)/.test(path)) {
+    return page ? ["theme comments defaults", "collection", "front matter"] : ["theme comments defaults", "collection"];
+  }
+  if (/^source(?:\.|$)/.test(path)) {
+    return page ? ["collection", "front matter"] : ["collection"];
+  }
+  return page ? FRONT_MATTER_CASCADE : COLLECTION_CASCADE;
+}
 
 const CONTENT_OVERRIDE_DEFINITIONS = [
   ["topbar", "object", derived("theme or collection topbar"), { boundary: "sealed", normalization: REGION_NORMALIZATION }],
@@ -95,9 +129,8 @@ const CONTENT_OVERRIDE_DEFINITIONS = [
   ["rightbar", "object", derived("theme or collection rightbar"), { boundary: "sealed", normalization: REGION_NORMALIZATION }],
   ["rightbar.enabled", ["boolean", "null"], literal(null)],
   ["rightbar.widgets", "array", literal([]), { items: { type: ["string", "object"], boundary: "parameter_bag" } }],
-  ["navigation", "object", derived("theme profile navigation"), { boundary: "sealed" }],
-  ["navigation.menu", ["string", "null"], literal(null)],
-  ["navigation.breadcrumb", ["boolean", "null"], literal(null)],
+  ["active_menu", ["string", "null"], literal(null)],
+  ["breadcrumb", ["boolean", "null"], literal(null)],
   ["article", "object", derived("theme article defaults"), { boundary: "sealed" }],
   ["article.style", ["string", "null"], literal(null), { values: ["tech", "story"] }],
   ["article.paragraph_indent", ["string", "null"], literal(null), { values: ["auto", "always", "never"] }],
@@ -128,6 +161,12 @@ const COLLECTION_TARGET_DEFINITIONS = [
   ["audience", ["string", "null"], literal(null)],
   ["icon", ["string", "null"], literal(null)],
   ["cover", ["string", "null"], literal(null)],
+  ["banner", "object", derived("collection banner"), { boundary: "sealed" }],
+  ["banner.enabled", ["boolean", "null"], literal(null)],
+  ["banner.image", ["string", "null"], literal(null)],
+  ["banner.avatar", ["string", "null"], literal(null)],
+  ["banner.headline", ["string", "null"], literal(null)],
+  ["banner.tagline", ["string", "null"], literal(null)],
   ["hero", "object", literal({}), { boundary: "sealed" }],
   ["hero.enabled", ["boolean", "null"], literal(null)],
   ["hero.background", "object", literal({}), { boundary: "sealed" }],
@@ -188,13 +227,13 @@ const FRONT_MATTER_TARGET_DEFINITIONS = [
 const CONFIG_TARGET_FIELDS = deepFreeze([
   ...fields(CONTENT_CONSUMERS, CONTENT_OVERRIDE_DEFINITIONS, {
     scopes: COLLECTION_SCOPE,
-    cascade: COLLECTION_CASCADE,
+    cascade: path => contentOverrideCascade("collection", path),
     migration: "content-schema/collection",
     status: "delivered"
   }),
   ...fields(CONTENT_CONSUMERS, CONTENT_OVERRIDE_DEFINITIONS, {
     scopes: FRONT_MATTER_SCOPE,
-    cascade: FRONT_MATTER_CASCADE,
+    cascade: path => contentOverrideCascade("front_matter", path),
     migration: "content-schema/front-matter",
     status: "delivered"
   }),

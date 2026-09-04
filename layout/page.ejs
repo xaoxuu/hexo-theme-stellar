@@ -11,7 +11,10 @@ var pageConfig = content_config(page)
 const isUsingHeti = stellar_config('features.heti.enabled')
 
 // 默认主导航菜单
-if (!postViewModel && !wikiViewModel && !notebookViewModel) page.navigation = Object.assign({}, pageConfig.navigation)
+if (!postViewModel && !wikiViewModel && !notebookViewModel) page.navigation = {
+  menu: pageConfig.activeMenu,
+  breadcrumb: pageConfig.breadcrumb
+}
 if (!postViewModel && !wikiViewModel && !notebookViewModel && page.navigation.menu == null) {
   var profiles = stellar_config('profiles')
   if (collection_id(page, "wiki")?.length > 0) {

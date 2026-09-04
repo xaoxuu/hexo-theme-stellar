@@ -77,8 +77,7 @@ icon: /images/dev.svg
 cover: /images/dev-cover.webp
 route:
   path: notebooks/dev
-navigation:
-  menu: notebooks
+active_menu: notebooks
 listing:
   order: 10
   excerpt_length: 128
@@ -99,7 +98,8 @@ footer:
 - `listing.per_page: null` 继承 Hexo；`0` 表示不分页。
 - `listing.sort.field` 为 `date` 或 `updated`，`direction` 为 `asc` 或 `desc`。
 - `footer.license/share: null` 继承 Article 默认；`false` / `[]` 显式关闭。
-- `navigation.menu`、Region、Article、Footer、Comments 继续按页面 → Collection → Profile → 全局的模型边界级联。
+- `active_menu` 按 Page → Collection → Profile 级联；Region 按 Page → Collection → Profile → 全局级联。Article、Footer、Comments 分别从对应主题默认值进入 Collection → Page。
+- 未声明 `leftbar.brand` 时，主题从 Notebook 的 `name/tagline/icon/route` 生成 Leftbar Brand；显式 Profile、Collection 或 Page Brand 仍可局部覆盖或设为 `false`。
 
 ## Note Front Matter
 
@@ -122,7 +122,7 @@ visibility:
 - `listing.priority` 越大越靠前；相同 priority 再按 Notebook `listing.sort` 稳定排序。
 - `visibility.listed: false` 从单本列表、标签页和 recent 排除，不删除详情路由。
 - `visibility.searchable: false` 只排除站内搜索。
-- 页面还可覆盖 `card`、`banner`、`sidebar`、`navigation`、`article`、`footer`、`comments`、`render` 与 `seo`；不存在 `pin`、`sticky`、`order_by`、`tagcons`、`menu_id`、`leftbar` 等 v1 兼容读取。
+- 页面还可覆盖 `cover`、`banner`、三个 Region、`active_menu`、`breadcrumb`、`article`、`footer`、`comments`、`render` 与 `seo`；不存在 `pin`、`sticky`、`order_by`、`tagcons`、`menu_id` 等 v1 兼容读取。
 
 ## 三层路由与投影
 

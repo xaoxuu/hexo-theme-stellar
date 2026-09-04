@@ -129,7 +129,7 @@ module.exports = (ctx, pipeline = null) => {
           order: collection?.listing.order ?? notebook.listing.order ?? 0,
           listed: collection?.visibility.listed !== false && notebook.visibility?.listed !== false,
           navigation: {
-            menu: notebook.navigation.menu ?? collection?.navigation.menu ?? null
+            menu: notebook.activeMenu ?? collection?.navigation.menu ?? null
           },
           layout: {
             topbar: structuredClone(notebook.topbar || {}),

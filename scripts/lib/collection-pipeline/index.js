@@ -4,6 +4,8 @@ const {
   ContentConfigError,
   parseCollectionConfig,
   parsePageConfig,
+  validateCollectionProfileConfig,
+  validatePageProfileConfig,
   validateThemeConfig
 } = require("../../lib/content-config");
 const { formatConfigWarnings } = require("../../lib/config-schema");
@@ -15,7 +17,7 @@ const {
   resolveContentMembership
 } = require("../content-membership");
 const { discoverContent, memberKey } = require("./shared");
-const { profileAdapters } = require("./registry");
+const { getProfileAdapter, profileAdapters } = require("./registry");
 
 function prepareCollectionPipeline(ctx) {
   resetPageViewModels();
@@ -45,10 +47,16 @@ function prepareCollectionPipeline(ctx) {
   capture(() => validateThemeConfig(themeConfig, themeSource));
   for (const [key, value] of Object.entries(data)) {
     if (!key.startsWith("wiki/") && !key.startsWith("topic/") && !key.startsWith("notebooks/")) continue;
-    capture(() => collectionConfigs.set(key, parseCollectionConfig(value, sourcePathForData(key), {
-      mode: "recover",
-      onIssues: current => configWarnings.push(...current)
-    })));
+    capture(() => {
+      const profile = key.startsWith("notebooks/") ? "notebook" : key.split("/", 1)[0];
+      const source = sourcePathForData(key);
+      const parsed = parseCollectionConfig(value, source, {
+        mode: "recover",
+        onIssues: current => configWarnings.push(...current)
+      });
+      validateCollectionProfileConfig(parsed, source, profile, getProfileAdapter(profile).config);
+      collectionConfigs.set(key, parsed);
+    });
   }
   const membershipRegistry = createCollectionRegistry(collectionConfigs);
 
@@ -76,6 +84,9 @@ function prepareCollectionPipeline(ctx) {
         parsed = null;
       } else {
         parsed = resolved.config;
+        const profile = parsed.collection?.profile || (kind === "posts" ? "post" : "page");
+        const adapter = profile === "page" ? null : getProfileAdapter(profile);
+        validatePageProfileConfig(parsed, sourcePathForPage(page), profile, adapter?.config);
       }
     }
     pageConfigs.set(page, parsed);

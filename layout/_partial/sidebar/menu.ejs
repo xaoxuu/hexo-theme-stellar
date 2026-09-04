@@ -5,8 +5,8 @@ function layoutDiv() {
   var pageConfig = content_config(page)
   var currentMenu = typeof activeMenu !== 'undefined'
     ? activeMenu
-    : pageConfig.navigation?.menu ?? page.navigation?.menu
-  if (pageConfig.navigation?.menu == null) {
+    : pageConfig.activeMenu ?? page.navigation?.menu
+  if (pageConfig.activeMenu == null) {
     var pathMenu = menu_active_by_path(page.path, menuItems)
     if (pathMenu != null) currentMenu = pathMenu
   }

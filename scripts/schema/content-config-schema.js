@@ -34,11 +34,10 @@ const LEGACY_COLLECTION_ROOTS = Object.freeze({
   coverpage: "hero",
   background: "hero.background",
   animation: "hero.background.effect",
-  banner: "hero",
-  menu_id: "navigation.menu",
-  header: "navigation",
+  menu_id: "active_menu",
+  header: "active_menu | breadcrumb",
   search: "leftbar.widgets",
-  menu: "navigation.menu",
+  menu: "active_menu",
   type: "article.style",
   indent: "article.paragraph_indent",
   author: "article.author",
@@ -66,10 +65,10 @@ const LEGACY_FRONT_MATTER_ROOTS = Object.freeze({
   h1: "banner.headline",
   subtitle: "banner.tagline",
   banner_info: "banner",
-  menu_id: "navigation.menu",
-  header: "navigation",
+  menu_id: "active_menu",
+  header: "active_menu | breadcrumb",
   search: "leftbar.widgets",
-  menu: "navigation.menu",
+  menu: "active_menu",
   logo: "leftbar.widgets",
   type: "article.style",
   indent: "article.paragraph_indent",
@@ -86,8 +85,7 @@ const LEGACY_FRONT_MATTER_ROOTS = Object.freeze({
   sticky: "listing.priority",
   repo: "source.repository",
   branch: "source.branch",
-  breadcrumb: "navigation.breadcrumb",
-  nav_tabs: "navigation",
+  nav_tabs: "active_menu | breadcrumb",
   poster: "banner",
   open_graph: "seo.open_graph",
   katex: "render.math",
@@ -275,7 +273,13 @@ function decorateSharedSchemas(schema) {
 
 function decorateCommon(schema) {
   schema.removedProperties.sidebar = "leftbar | rightbar";
-  schema.properties.navigation.removedProperties = { mobile_header: "navigation" };
+  if (schema.properties.navigation) {
+    schema.properties.navigation.removedProperties = {
+      mobile_header: "active_menu | breadcrumb",
+      menu: "active_menu",
+      breadcrumb: "breadcrumb"
+    };
+  }
   schema.properties.comments.removedProperties = Object.fromEntries(
     COMMENT_PROVIDER_FIELDS.map(field => [field, field === "service" ? "provider" : "options"])
   );
@@ -286,7 +290,9 @@ function decorateCommon(schema) {
   schema.properties.article.properties.ai_label.values = ["manual", "reviewed", "polished", "generated", null];
   schema.properties.footer.properties.license.validator = "license_override";
   schema.properties.footer.properties.share.validator = "share_override";
-  schema.properties.listing.properties.priority.validator = "non_negative_integer";
+  if (schema.properties.listing?.properties?.priority) {
+    schema.properties.listing.properties.priority.validator = "non_negative_integer";
+  }
   if (schema.properties.render?.properties?.diagrams) {
     schema.properties.render.properties.diagrams.validator = "diagrams_override";
   }
@@ -296,10 +302,10 @@ const COLLECTION_CONFIG_SCHEMA = schemaForScope("collection");
 COLLECTION_CONFIG_SCHEMA.requiredProperties = ["name"];
 COLLECTION_CONFIG_SCHEMA.removedProperties = clone(LEGACY_COLLECTION_ROOTS);
 COLLECTION_CONFIG_SCHEMA.removedProperties.identity = "icon";
+COLLECTION_CONFIG_SCHEMA.removedProperties.banner_info = "banner";
 COLLECTION_CONFIG_SCHEMA.removedProperties.note_defaults = null;
 COLLECTION_CONFIG_SCHEMA.properties.name.validator = "non_empty_string";
 COLLECTION_CONFIG_SCHEMA.properties.route.removedProperties = { base_dir: "path" };
-COLLECTION_CONFIG_SCHEMA.properties.route.properties.start.validator = "topic_route_start";
 COLLECTION_CONFIG_SCHEMA.properties.listing.properties.order.validator = "nullable_non_negative_integer";
 COLLECTION_CONFIG_SCHEMA.properties.listing.properties.excerpt_length.validator = "nullable_non_negative_integer";
 COLLECTION_CONFIG_SCHEMA.properties.listing.properties.per_page.validator = "nullable_non_negative_integer";
@@ -310,6 +316,7 @@ decorateCommon(COLLECTION_CONFIG_SCHEMA);
 const FRONT_MATTER_CONFIG_SCHEMA = schemaForScope("front_matter");
 FRONT_MATTER_CONFIG_SCHEMA.externalProperties = HEXO_FRONT_MATTER_FIELDS;
 FRONT_MATTER_CONFIG_SCHEMA.removedProperties = clone(LEGACY_FRONT_MATTER_ROOTS);
+FRONT_MATTER_CONFIG_SCHEMA.removedProperties.navigation = "active_menu | breadcrumb";
 FRONT_MATTER_CONFIG_SCHEMA.properties.collection.requiredProperties = ["profile", "id"];
 FRONT_MATTER_CONFIG_SCHEMA.properties.collection.removedProperties = { type: "profile" };
 FRONT_MATTER_CONFIG_SCHEMA.properties.collection.properties.id.validator = "non_empty_string";

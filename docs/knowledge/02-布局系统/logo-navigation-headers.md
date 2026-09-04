@@ -37,7 +37,7 @@ topbar:
     href: /wiki/stellar/
 ```
 
-`image` 支持 `src` 与 `variant`，`variant` 区分正圆裁剪的头像、完整容纳的图标和不裁剪的透明字标。Brand 可以为 `false` 整体隐藏；对象内字段按层合并，`null` 显式隐藏对应内容。Collection 若要使用项目 Brand，必须在 `topbar.brand` 或 `leftbar.brand` 显式填写；不会从 `name/tagline/icon/cover` 自动生成。
+`image` 支持 `src` 与 `variant`，`variant` 区分正圆裁剪的头像、完整容纳的图标和不裁剪的透明字标。Brand 可以为 `false` 整体隐藏；对象内字段按层合并，`null` 显式隐藏对应内容。Wiki 与 Notebook 默认从 Collection 的 `name/tagline/icon/route` 生成 Leftbar Brand；显式 Profile、Collection 或 Page Brand 仍按层覆盖。Topic 不生成 Collection Brand，继续继承站点 Brand。
 
 ## Menu 数据与激活
 
@@ -51,7 +51,7 @@ leftbar:
       accent: '#1BCDFC'
 ```
 
-页面 Profile 的 `active_menu` 提供默认激活 ID，Collection/Page 的 `navigation.menu` 可覆盖。该 ID 会分别匹配 Topbar 与 Leftbar Menu；Profile 校验使用两份菜单 ID 的并集。
+页面 Profile 的 `active_menu` 提供默认激活 ID，Collection/Page 使用同名根字段 `active_menu` 覆盖。该 ID 会分别匹配 Topbar 与 Leftbar Menu；Profile 校验使用两份菜单 ID 的并集。
 
 ## 显示位置
 

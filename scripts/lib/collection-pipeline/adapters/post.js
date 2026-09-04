@@ -4,6 +4,10 @@ const { setProfileViewModelInput } = require("../../page-view-model-registry");
 
 module.exports = {
   id: "post",
+  config: Object.freeze({
+    collection: null,
+    page: Object.freeze({ listingPriority: true })
+  }),
   contentKind: "posts",
   twoStage: false,
   prepare(pipeline) {

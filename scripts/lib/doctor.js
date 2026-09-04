@@ -6,7 +6,14 @@ const path = require("node:path");
 const yaml = require("js-yaml");
 
 const { ConfigSchemaError, deepFreeze, parseStellarConfig } = require("./config-schema");
-const { ContentConfigError, parseCollectionConfig, parsePageConfig } = require("./content-config");
+const {
+  ContentConfigError,
+  parseCollectionConfig,
+  parsePageConfig,
+  validateCollectionProfileConfig,
+  validatePageProfileConfig
+} = require("./content-config");
+const { getProfileAdapter } = require("./collection-pipeline/registry");
 const {
   createCollectionRegistry,
   resolveContentMembership,
@@ -168,7 +175,11 @@ function runDoctor(options = {}) {
       const source = relative(baseDir, file);
       const value = yamlValue(file, source, issues);
       if (value != null) {
-        const parsed = collectSchemaIssues(() => parseCollectionConfig(value, source), issues);
+        const contentProfile = collectionRoot === "notebooks" ? "notebook" : collectionRoot;
+        const parsed = collectSchemaIssues(() => {
+          const config = parseCollectionConfig(value, source);
+          return validateCollectionProfileConfig(config, source, contentProfile, getProfileAdapter(contentProfile).config);
+        }, issues);
         if (parsed != null) {
           const key = relative(path.join(baseDir, "source", "_data"), file).replace(/\.ya?ml$/i, "");
           collectionConfigs.set(key, parsed);
@@ -208,6 +219,14 @@ function runDoctor(options = {}) {
       const finalConfig = resolved.config || parsed;
       const profile = finalConfig.collection?.profile
         || (source.startsWith("source/_posts/") ? "post" : (parsed.layout || "page"));
+      const contentProfile = finalConfig.collection?.profile
+        || (source.startsWith("source/_posts/") ? "post" : "page");
+      collectSchemaIssues(() => validatePageProfileConfig(
+        finalConfig,
+        source,
+        contentProfile,
+        contentProfile === "page" ? null : getProfileAdapter(contentProfile).config
+      ), issues);
       const collectionKey = finalConfig.collection
         ? `${finalConfig.collection.profile === "notebook" ? "notebooks" : finalConfig.collection.profile}/${finalConfig.collection.id}`
         : null;

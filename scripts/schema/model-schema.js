@@ -475,7 +475,8 @@ function collectionSchema(profile) {
     navigation: navigationSchema(cascadeFactory, navigationExtension),
     listing: object(listingProperties, { default: inherited("profile.listing", "collection.listing"), example: {}, required: true }),
     presentation: presentationSchema(factory, {
-      includeHero: profile !== "post",
+      includeHero: profile === "wiki",
+      includeBanner: true,
       cascadeFactory,
       heroConsumers: profile === "wiki" ? wikiHeroConsumers : undefined
     }),

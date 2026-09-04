@@ -84,6 +84,51 @@ function validateThemeConfig(config, source = "<theme>") {
   return validateObjectInput(config, source);
 }
 
+function hasOwn(value, key) {
+  return value != null && Object.prototype.hasOwnProperty.call(value, key);
+}
+
+function unsupportedProfileField(source, path, profile) {
+  return Object.freeze({
+    code: "invalid_value",
+    source,
+    path,
+    actualType: "declared field",
+    expected: `field supported by the ${profile} profile`,
+    migration: "content-schema/profile-capabilities"
+  });
+}
+
+function validateCollectionProfileConfig(config, source, profile, capabilities) {
+  const policy = capabilities?.collection;
+  if (!policy) throw new ContentConfigError([unsupportedProfileField(source, "root", profile)]);
+  const issues = [];
+  if (hasOwn(config, "hero") && policy.hero !== true) {
+    issues.push(unsupportedProfileField(source, "hero", profile));
+  }
+  if (hasOwn(config?.route, "start") && policy.routeStart !== true) {
+    issues.push(unsupportedProfileField(source, "route.start", profile));
+  }
+  if (hasOwn(config?.navigation, "tree") && policy.navigationTree !== true) {
+    issues.push(unsupportedProfileField(source, "navigation.tree", profile));
+  }
+  const listingFields = new Set(policy.listing || []);
+  for (const field of Object.keys(config?.listing || {})) {
+    if (!listingFields.has(field)) {
+      issues.push(unsupportedProfileField(source, `listing.${field.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)}`, profile));
+    }
+  }
+  if (issues.length > 0) throw new ContentConfigError(issues);
+  return config;
+}
+
+function validatePageProfileConfig(config, source, profile, capabilities) {
+  if (hasOwn(config?.listing, "priority") && capabilities?.page?.listingPriority !== true) {
+    throw new ContentConfigError([unsupportedProfileField(source, "listing.priority", profile)]);
+  }
+  return config;
+}
+
 function getCollectionId(page, profile) {
   if (page?.collection?.profile !== profile) return null;
   return page.collection.id;
@@ -106,5 +151,7 @@ module.exports = {
   isSearchable,
   parseCollectionConfig,
   parsePageConfig,
+  validateCollectionProfileConfig,
+  validatePageProfileConfig,
   validateThemeConfig
 };

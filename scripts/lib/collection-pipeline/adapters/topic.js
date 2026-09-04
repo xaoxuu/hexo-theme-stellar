@@ -14,6 +14,15 @@ const { runTwoStage } = require("../shared");
 
 module.exports = {
   id: "topic",
+  config: Object.freeze({
+    collection: Object.freeze({
+      hero: false,
+      routeStart: true,
+      navigationTree: false,
+      listing: Object.freeze(["excerptLength", "sort"])
+    }),
+    page: Object.freeze({ listingPriority: true })
+  }),
   contentKind: "posts",
   twoStage: true,
   prepare(pipeline) {

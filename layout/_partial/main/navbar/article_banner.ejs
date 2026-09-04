@@ -15,11 +15,6 @@ var banner = Object.assign({}, wikiViewModel
     ? postViewModel.render.article.banner
     : postViewModel ? postViewModel.item.presentation.banner : pageConfig.banner || {})
 
-if (!renderViewModel && banner.image == null && stellar_data('topic').tree[collection_id(page, "topic")]?.hero?.background?.image != null) {
-  banner.image = stellar_data('topic').tree[collection_id(page, "topic")].hero.background.image
-} else if (!renderViewModel && banner.image == null && stellar_data('wiki').tree[collection_id(page, "wiki")]?.hero?.background?.image != null) {
-  banner.image = stellar_data('wiki').tree[collection_id(page, "wiki")].hero.background.image
-}
 // 标题
 if (banner.headline == null) {
   banner.headline = renderViewModel ? renderViewModel.item.title : page.title
@@ -27,7 +22,7 @@ if (banner.headline == null) {
 
 // 上块：第一行（左侧面包屑 + 右侧阅读时长 / AI 标签）+ 第二行（日期信息，靠左）
 function layoutTop() {
-  if ((renderViewModel ? renderViewModel.item.navigation.breadcrumb : pageConfig.navigation?.breadcrumb) === false) {
+  if ((renderViewModel ? renderViewModel.item.navigation.breadcrumb : pageConfig.breadcrumb) === false) {
     return ''
   }
   var el = ''

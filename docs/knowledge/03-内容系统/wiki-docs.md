@@ -70,8 +70,8 @@ flowchart TD
     Y --> Z["index_wiki / wiki_card"]
     
     subgraph "_config.yml"
-        N["profiles.wiki_index\npath, navigation, sidebar"]
-        O["profiles.wiki\nnavigation, sidebar"]
+        N["profiles.wiki_index\npath, active_menu, Regions"]
+        O["profiles.wiki\nactive_menu, Regions"]
     end
     
     N -.configures.-> M
@@ -112,7 +112,7 @@ flowchart TD
 | `tags` | 数据文件 | 标签名字符串或数组；规范化为数组 |
 | `tree` | 数据文件 | 导航树（见下文） |
 | `route.path` | 数据文件 | 页面键匹配的路径前缀 |
-| `listing.sort` | 数据文件 | 普通项目排序，默认 `0` |
+| `listing.order` | 数据文件 | 普通项目排序，默认 `0` |
 | `listing.priority` | 数据文件 | 置顶优先级 |
 | `homepage` | 数据文件或流水线 | 指定首页 `WikiPage` |
 | `sections` | 流水线 | 由 `tree` 构建的有序 `Section[]` |
@@ -163,7 +163,7 @@ flowchart TD
 
 - `collection` 固定包含 `id`、`profile`、`identity`、`source`、`route`、`navigation`、`listing`、`presentation`、`visibility`。
 - `navigation.tree` 是 `sections` 的普通对象投影，不保留 `WikiPage` 实例；路径、页码与首页标记已规范化。
-- `item` 已完成项目源码继承以及页面级导航、列表、展示和可见性覆盖；项目 `hero.background.image` 已解析为页面 Banner 图片默认值。
+- `item` 已完成项目源码继承以及页面级导航、列表、展示和可见性覆盖；Collection `banner` 与页面 `banner` 按字段合并，Page 优先。
 - collection 的 `visibility.listed` 反映 shelf 状态；页面 `item.visibility` 独立从默认可列出、可搜索起算。
 - `render.document/layout/seo` 固化语言、head 注入、主题状态、布局状态、最终 Brand、Wiki 返回入口、面包屑，以及 title、description、keywords、robots、canonical、Open Graph 和 WebPage JSON-LD。
 - `render.cover` 固化 Hero 背景、预览、操作、源码和 release 数据；只有集合首页可以启用 Hero，普通内页始终为禁用状态。
@@ -209,9 +209,10 @@ wiki 项目配置位于**用户站点**的 `source/_data/wiki/`。`getWikiObject
 name: My Project
 headline: Build something remarkable
 tagline: Project tagline
-identity:
-  icon: /images/project.svg
+icon: /images/project.svg
 cover: /images/project-card.webp
+banner:
+  image: /images/article-banner.webp
 hero:
   enabled: true
   background:
@@ -220,36 +221,38 @@ hero:
       type: galaxy
       options:
         starSpeed: 0.5
-routing:
-  base_dir: docs/
+route:
+  path: docs/
 listing:
   priority: 1
-  sort: 10
+  order: 10
 tags:
   - javascript
   - tutorial
-tree:
-  Getting Started:
-    - docs/intro
-    - docs/install
-  Advanced:
-    - docs/config
-    - docs/api
+navigation:
+  tree:
+    Getting Started:
+      - docs/intro
+      - docs/install
+    Advanced:
+      - docs/config
+      - docs/api
 ```
 
 **字段契约：**
 
 | 字段 | 行为 | 位置 |
 |---|---|---|
-| `tree` | 数组包装为 `{ '': array }` | doc_tree.js |
-| `routing.base_dir` | 去掉开头 `/`，补结尾 `/` | doc_tree.js |
+| `navigation.tree` | 数组包装为 `{ '': array }` | doc_tree.js |
+| `route.path` | 去掉开头 `/`，补结尾 `/` | doc_tree.js |
 | `tags` | 必须是字符串数组 | content-config.js |
 | `headline` | 缺失时回退 `name` | wiki_card.ejs、wiki_cover.ejs |
+| `banner` | 作为 Wiki 内容页默认 Banner，并与 Page `banner` 按字段合并 | models/index.js |
 | `hero.background.image` | 静态 Hero 背景，并让 Hero 文字按图片平均色自适应 | wiki_cover.ejs、adaptive-text.js |
 | `hero.background.effect` | `type: galaxy` 启用内置 WebGL 星场；`options` 保持 React Bits props 原名 | wiki_cover.ejs、galaxy.js |
 | `hero.preview` | `terminal` 使用 `commands[].codes`；`image` 使用 `src` / `alt` | wiki_cover.ejs |
 | `hero.actions` | 自定义 Hero 按钮数组（`title`、`url`、可选 `icon`） | wiki_cover.ejs |
-| `listing.sort` | 缺失时按 `0` 处理 | doc_tree.js |
+| `listing.order` | 缺失时按 `0` 处理 | doc_tree.js |
 | `listing.priority` | 大于 `0` 时进入置顶轮播，按数值降序 | pin_slider.ejs |
 
 **wiki.shelf**——根文件 `_data/wiki.yml`（非子目录）定义哪些项目 ID 视为「已发布」。只有 shelf 中的项目出现在标签索引与相关项目列表中。
