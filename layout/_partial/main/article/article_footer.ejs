@@ -117,10 +117,10 @@ function layoutDiv() {
           } else if (item == 'weibo') {
             el += ' href="https://service.weibo.com/share/share.php?url=' + urlenc(page.permalink);
             el += '&title=' + urlenc(page.title + ' - ' + config.title);
-            if (pageConfig.card?.cover) {
-              el += '&pics=' + urlenc(pageConfig.card.cover);
+            if (pageConfig.cover) {
+              el += '&pics=' + urlenc(pageConfig.cover);
             } else if (collection_id(page, "wiki")) {
-              var projectCover = stellar_data('wiki').tree[collection_id(page, "wiki")]?.card?.cover
+              var projectCover = stellar_data('wiki').tree[collection_id(page, "wiki")]?.cover
               if (projectCover) el += '&pics=' + urlenc(projectCover)
             }
             el += '&summary=' + urlenc(truncate(page.description || strip_html(page.excerpt || page.content), {length: 120}));

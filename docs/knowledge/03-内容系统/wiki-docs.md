@@ -211,8 +211,7 @@ headline: Build something remarkable
 tagline: Project tagline
 identity:
   icon: /images/project.svg
-card:
-  cover: /images/project-card.webp
+cover: /images/project-card.webp
 hero:
   enabled: true
   background:

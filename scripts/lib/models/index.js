@@ -20,7 +20,7 @@ const {
   toRenderRegions
 } = require("../layout-config");
 const { cascadeRegions, resolveRegions } = require("../regions");
-const { normalizeBrand, resolveBrands } = require("../brand");
+const { normalizeBrand } = require("../brand");
 const { firstContentImage, postDescription, postImages } = require("../seo");
 const { caption } = require("../caption");
 const { wikiReadmeHtml } = require("../wiki_readme");
@@ -39,15 +39,6 @@ function cloneValue(value) {
     result[key] = cloneValue(child);
   }
   return result;
-}
-
-function renderBrands(stellarConfig, collection) {
-  const collectionType = collection?.profile;
-  return resolveBrands({
-    siteBrand: stellarConfig.brand,
-    collection: collectionType === "post" ? null : collection,
-    collectionType
-  });
 }
 
 function deepFreeze(value) {
@@ -282,7 +273,7 @@ function buildPostArticleRender(input, item) {
         services: shareServices,
         permalink: item.route.permalink,
         title: `${item.title} - ${String(input.siteConfig.title || "")}`,
-        image: item.presentation.card?.cover || "",
+        image: item.cover || "",
         summary: truncate(stripHTML(summarySource), { length: 120 })
       } : null,
       contributor: buildContributor(item, input.stellarConfig)
@@ -317,9 +308,9 @@ function buildPostListingRender(input, collection, item) {
     title: item.title,
     layout: item.layout,
     date: item.date,
-    cover: item.presentation.card?.cover || "",
+    cover: item.cover || "",
     caption: caption({
-      card: item.presentation.card,
+      tagline: item.tagline,
       description,
       excerpt: item.excerpt,
       content: item.content
@@ -379,7 +370,7 @@ function buildPostRenderModel(input, collection, item) {
   const keywords = explicitKeywords.length > 0
     ? explicitKeywords
     : item.tags.length > 0 ? item.tags.slice() : siteKeywords;
-  const cardCover = item.presentation.card?.cover || "";
+  const cardCover = item.cover || "";
   const bannerImage = item.presentation.banner?.image || "";
   const defaultOgImage = siteConfig.avatar || (siteConfig.email ? gravatar(siteConfig.email) : "");
   const openGraphConfig = seoConfig.openGraph;
@@ -465,7 +456,6 @@ function buildPostRenderModel(input, collection, item) {
       indent: articleIndentEnabled(item.presentation.article),
       siteBackground: Boolean(appearance.backgrounds.page.image),
       blogPath: typeof siteConfig.index_generator?.path === "string" ? normalizeCollectionPath(siteConfig.index_generator.path) : "",
-      brands: renderBrands(input.stellarConfig, collection),
       ...renderRegionLayout(regionLayout),
       breadcrumbs: normalizeCategoryLinks(page.categoryLinks)
     },
@@ -577,7 +567,7 @@ function buildWikiListingRender(input, collection) {
     tags: normalizeTerms(input.collectionConfig.tags),
     audience: collection.identity.audience,
     icon: collection.identity.icon,
-    cover: collection.presentation.card?.cover || "",
+    cover: collection.cover || "",
     repository,
     repositoryApi: repository ? `${githubApi}/repos/${repository}` : "",
     priority: collection.listing.priority,
@@ -609,7 +599,7 @@ function buildWikiRenderModel(input, collection, item) {
   const description = truncate(stripHTML(descriptionSource), { length: 150 });
   const keywords = normalizeStringList(frontMatter.keywords);
   if (keywords.length === 0) keywords.push(...(item.tags.length > 0 ? item.tags : normalizeStringList(siteConfig.keywords)));
-  const cardCover = item.presentation.card?.cover || collection.presentation.card?.cover || "";
+  const cardCover = item.cover || "";
   const bannerImage = item.presentation.banner?.image || "";
   const openGraphConfig = seoConfig.openGraph;
   let openGraph = null;
@@ -677,7 +667,6 @@ function buildWikiRenderModel(input, collection, item) {
       articleStyle,
       indent: articleIndentEnabled(item.presentation.article),
       siteBackground: Boolean(appearance.backgrounds.page.image),
-      brands: renderBrands(stellarConfig, collection),
       wikiIndexPath: profilePath(requireLayoutProfiles(stellarConfig).wikiIndex.path),
       algoliaFilterPath: (() => {
         const matched = `${item.route.path}/`.match(/(.*?)\/(.*?)\//i);
@@ -766,7 +755,7 @@ function buildCollectionModel(stellarConfig) {
   return {
     id: "post",
     profile: "post",
-    identity: normalizeBrand(stellarConfig.brand),
+    identity: normalizeBrand(stellarConfig.leftbar.brand),
     source: {},
     route: {
       baseDir: profilePath(blogIndex.path)
@@ -797,10 +786,6 @@ function buildContentItemModel(page, frontMatter, collection, source, options = 
   const pageFooter = pick(frontMatter.footer, CONTENT_MODEL_FIELDS.footer);
   const pageComments = pick(frontMatter.comments, CONTENT_MODEL_FIELDS.comments);
   const pageVisibility = pick(frontMatter.visibility, CONTENT_MODEL_FIELDS.visibility);
-  const collectionCard = options.inheritCollectionCard === false
-    ? {}
-    : collection.presentation.card;
-
   return {
     id: String(page._id || page.source || page.path || ""),
     title: String(page.title || frontMatter.title || ""),
@@ -811,6 +796,8 @@ function buildContentItemModel(page, frontMatter, collection, source, options = 
     updated: normalizeDate(page.updated ?? frontMatter.updated ?? page.date ?? frontMatter.date),
     tags: normalizeTerms(page.tags ?? frontMatter.tags),
     categories: normalizeTerms(page.categories ?? frontMatter.categories),
+    cover: typeof frontMatter.cover === "string" ? frontMatter.cover : "",
+    tagline: typeof frontMatter.tagline === "string" ? frontMatter.tagline : "",
     source: {
       file: String(page.source || source || ""),
       ...cloneValue(options.source || collection.source || {}),
@@ -828,7 +815,6 @@ function buildContentItemModel(page, frontMatter, collection, source, options = 
       priority: frontMatter.listing?.priority ?? 0
     },
     presentation: {
-      card: mergeConfig(collectionCard, pick(frontMatter.card, CONTENT_MODEL_FIELDS.card)),
       banner: pick(frontMatter.banner, CONTENT_MODEL_FIELDS.banner),
       ...cascadeRegions([collection.presentation, pageRegions]),
       article: mergeConfig(collection.presentation.article, pageArticle),
@@ -846,7 +832,7 @@ function normalizeCollectionIdentity(config) {
     tagline: String(config.tagline || ""),
     description: String(config.description || ""),
     audience: String(config.audience || ""),
-    icon: typeof config.identity?.icon === "string" ? config.identity.icon : ""
+    icon: typeof config.icon === "string" ? config.icon : ""
   };
 }
 
@@ -897,6 +883,7 @@ function buildWikiCollectionModel(input, collectionId) {
     id: collectionId,
     profile: "wiki",
     identity: normalizeCollectionIdentity(collectionConfig),
+    cover: typeof collectionConfig.cover === "string" ? collectionConfig.cover : "",
     source: pick(collectionConfig.source, CONTENT_MODEL_FIELDS.source),
     route: {
       baseDir: normalizeCollectionPath(baseDir),
@@ -915,7 +902,6 @@ function buildWikiCollectionModel(input, collectionId) {
       perPage: collectionListing.perPage ?? null
     },
     presentation: {
-      card: pick(collectionConfig.card, CONTENT_MODEL_FIELDS.card),
       hero: cloneValue(collectionConfig.hero || {}),
       ...cascadeRegions([profileRegions, collectionRegions]),
       article: mergeConfig(globalArticle, pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)),
@@ -984,6 +970,7 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
     id: collectionId,
     profile: "topic",
     identity: normalizeCollectionIdentity(collectionConfig),
+    cover: typeof collectionConfig.cover === "string" ? collectionConfig.cover : "",
     source: pick(collectionConfig.source, CONTENT_MODEL_FIELDS.source),
     route: {
       baseDir: normalizeCollectionPath(baseDir),
@@ -1005,7 +992,6 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
       sort
     },
     presentation: {
-      card: pick(collectionConfig.card, CONTENT_MODEL_FIELDS.card),
       hero: cloneValue(collectionConfig.hero || {}),
       ...cascadeRegions([profileRegions, collectionRegions]),
       article: mergeConfig(
@@ -1070,7 +1056,7 @@ function buildNotebookCollectionModel(input, collectionId) {
   const profileNavigation = toRenderNavigation(profiles.noteIndex);
   const collectionNavigation = pick(collectionConfig.navigation, CONTENT_MODEL_FIELDS.navigation);
   const profileRegions = toRenderRegions(input.stellarConfig, profiles.note);
-  const collectionRegions = pick(collectionConfig.noteDefaults, CONTENT_MODEL_FIELDS.regionIds);
+  const collectionRegions = pick(collectionConfig, CONTENT_MODEL_FIELDS.regionIds);
   const globalArticle = articlePresentationDefaults(content);
   const globalFooter = {
     references: [],
@@ -1083,6 +1069,7 @@ function buildNotebookCollectionModel(input, collectionId) {
     id: collectionId,
     profile: "notebook",
     identity: normalizeCollectionIdentity(collectionConfig),
+    cover: typeof collectionConfig.cover === "string" ? collectionConfig.cover : "",
     source: pick(collectionConfig.source, CONTENT_MODEL_FIELDS.source),
     route: { baseDir },
     navigation: {
@@ -1097,7 +1084,6 @@ function buildNotebookCollectionModel(input, collectionId) {
       sort: collectionListing.sort ?? defaultListing.sort
     },
     presentation: {
-      card: pick(collectionConfig.card, CONTENT_MODEL_FIELDS.card),
       hero: cloneValue(collectionConfig.hero || {}),
       ...cascadeRegions([profileRegions, collectionRegions]),
       article: mergeConfig(globalArticle, pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)),
@@ -1184,7 +1170,6 @@ function buildNotebookRenderModel(input, collection, item) {
       articleStyle: core.layout.articleStyle,
       indent: core.layout.indent,
       siteBackground: core.layout.siteBackground,
-      brands: core.layout.brands,
       notebookIndexPath: profilePath(requireLayoutProfiles(input.stellarConfig).notebookIndex.path),
       notebookPath: collection.route.baseDir,
       algoliaFilterPath: collection.route.baseDir,
@@ -1233,7 +1218,7 @@ function buildNotebookRenderModel(input, collection, item) {
         ? input.page.link
         : item.route.path,
       title: item.title,
-      cover: item.presentation.card?.cover || "",
+      cover: item.cover || "",
       excerpt,
       tags: item.tags.slice(),
       date: item.date,
@@ -1253,12 +1238,6 @@ function buildPostPageViewModel(input) {
   const page = input.page || {};
 
   assertNormalizedConfig(input.stellarConfig, themeSource, [
-    {
-      path: "stellarConfig.brand",
-      read: config => config?.brand,
-      expected: "normalized site brand object",
-      migration: null
-    },
     {
       path: "stellarConfig.canonical",
       read: config => config?.canonical,
@@ -1282,12 +1261,6 @@ function buildWikiPageViewModelBase(input) {
   const page = input.page || {};
 
   assertNormalizedConfig(input.stellarConfig, themeSource, [
-    {
-      path: "stellarConfig.brand",
-      read: config => config?.brand,
-      expected: "normalized site brand object",
-      migration: null
-    },
     {
       path: "stellarConfig.canonical",
       read: config => config?.canonical,
@@ -1320,11 +1293,6 @@ function buildWikiPageViewModelBase(input) {
     source: collection.source,
     visibility: { listed: true, searchable: true }
   });
-  const heroImage = collection.presentation.hero?.background?.image;
-  item.presentation.banner = mergeConfig(
-    typeof heroImage === "string" ? { image: heroImage } : {},
-    item.presentation.banner
-  );
   return { collection, item };
 }
 
@@ -1357,12 +1325,6 @@ function buildTopicPageViewModelBase(input) {
   const collectionId = input.collectionId || frontMatter.collection?.id;
 
   assertNormalizedConfig(input.stellarConfig, themeSource, [
-    {
-      path: "stellarConfig.brand",
-      read: config => config?.brand,
-      expected: "normalized site brand object",
-      migration: null
-    },
     {
       path: "stellarConfig.canonical",
       read: config => config?.canonical,
@@ -1398,14 +1360,8 @@ function completeTopicPageViewModel(input, base) {
   const collection = base.collection;
   const item = buildContentItemModel(input.page || {}, frontMatter, collection, source, {
     source: collection.source,
-    inheritCollectionCard: false,
     visibility: { listed: true, searchable: true }
   });
-  const heroImage = collection.presentation.hero?.background?.image;
-  item.presentation.banner = mergeConfig(
-    typeof heroImage === "string" ? { image: heroImage } : {},
-    item.presentation.banner
-  );
   const render = buildPostRenderModel({
     ...input,
     siteConfig: isPlainObject(input.siteConfig) ? input.siteConfig : {},
@@ -1435,7 +1391,7 @@ function buildTopicIndexRender(input) {
     date: item.date
   }));
   const latest = pages[0] || null;
-  const cover = collection.presentation.card?.cover || "";
+  const cover = collection.cover || "";
   return deepFreeze({
     id: collection.id,
     name: collection.identity.name,

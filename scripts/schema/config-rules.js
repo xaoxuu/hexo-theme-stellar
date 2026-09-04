@@ -116,32 +116,64 @@ const stringRecord = validator => ({
 
 const parameterBag = { normalizer: "parameter_bag", sealed: false };
 const widgetItems = item(["string", "object"], { defaultValue: null, normalizer: "parameter_bag", sealed: false });
+const brandImage = {
+  type: ["object"],
+  default: literal({ src: null, variant: "avatar" }),
+  normalizer: "object",
+  sealed: true,
+  properties: {
+    src: item(["string", "null"], { defaultValue: null, validator: "nullable_non_empty_string" }),
+    variant: item("string", { defaultValue: "avatar", values: ["avatar", "icon", "plain"] })
+  }
+};
+const brandProperties = {
+  image: brandImage,
+  name: item(["string", "null"], { defaultValue: null }),
+  tagline: item(["string", "null"], { defaultValue: null }),
+  href: item(["string", "null"], { defaultValue: "/", validator: "nullable_safe_navigation_url" })
+};
+const regionBrand = {
+  type: ["object", "boolean"],
+  normalizer: "parameter_bag",
+  sealed: true,
+  validator: "brand",
+  properties: brandProperties
+};
+const inheritedRegionBrand = {
+  ...regionBrand,
+  type: ["object", "boolean", "null"],
+  defaultValue: null
+};
 
 const CONFIG_RULES = Object.freeze([
-  ["brand", { validator: "brand" }],
-  ["brand.image.src", { type: ["string", "null"], validator: "nullable_non_empty_string" }],
-  ["brand.image.variant", { values: ["avatar", "icon", "plain"] }],
-  ["brand.name", { type: ["string", "null"] }],
-  ["brand.tagline", { type: ["string", "null"] }],
-  ["menu.items", { validator: "menu_items", items: menuItem }],
   ["settings.about.items", { items: aboutItem }],
-  ["footer.actions", { validator: "footer_actions", items: footerAction }],
   ["footer.sections", { items: footerSection }],
   ["footer.content", { normalizer: "trusted_text" }],
 
+  ["topbar.enabled", { type: ["boolean"] }],
+  ["topbar.brand", regionBrand],
+  ["topbar.menu", { validator: "menu_items", items: menuItem }],
   ["topbar.widgets", { validator: "region_widgets", items: widgetItems }],
   ["leftbar.default_state", { values: ["expanded", "collapsed"] }],
-  ["leftbar.brand", { type: ["string", "boolean"], values: [false, "site_brand", "collection_brand"] }],
+  ["leftbar.enabled", { type: ["boolean"] }],
+  ["leftbar.brand", regionBrand],
+  ["leftbar.menu", { validator: "menu_items", items: menuItem }],
+  ["leftbar.footer.actions", { validator: "footer_actions", items: footerAction }],
   ["leftbar.widgets", { validator: "leftbar_content_widgets", items: widgetItems }],
+  ["rightbar.enabled", { type: ["boolean"] }],
   ["rightbar.widgets", { validator: "region_widgets", items: widgetItems }],
   ["profiles.*.path", { type: ["string", "null"], defaultValue: null, normalizer: "root_relative_path", validator: "nullable_non_empty_string" }],
   ["profiles.*.active_menu", { type: ["string", "null"], defaultValue: null, validator: "nullable_kebab_id" }],
+  ["profiles.*.topbar.enabled", { type: ["boolean", "null"], defaultValue: null }],
+  ["profiles.*.topbar.brand", inheritedRegionBrand],
+  ["profiles.*.topbar.menu", { type: ["array", "null"], defaultValue: null, validator: "menu_items", items: menuItem }],
   ["profiles.*.topbar.widgets", { type: ["array", "null"], defaultValue: null, validator: "region_widgets", items: widgetItems }],
   ["profiles.*.leftbar.enabled", { type: ["boolean", "null"], defaultValue: null }],
-  ["profiles.*.leftbar.brand", { type: ["string", "boolean", "null"], defaultValue: null, values: [null, false, "site_brand", "collection_brand"] }],
-  ["profiles.*.leftbar.menu", { type: ["boolean", "null"], defaultValue: null }],
-  ["profiles.*.leftbar.footer_actions", { type: ["boolean", "null"], defaultValue: null }],
+  ["profiles.*.leftbar.brand", inheritedRegionBrand],
+  ["profiles.*.leftbar.menu", { type: ["array", "null"], defaultValue: null, validator: "menu_items", items: menuItem }],
+  ["profiles.*.leftbar.footer.actions", { type: ["array", "null"], defaultValue: null, validator: "footer_actions", items: footerAction }],
   ["profiles.*.leftbar.widgets", { type: ["array", "null"], defaultValue: null, validator: "leftbar_content_widgets", items: widgetItems }],
+  ["profiles.*.rightbar.enabled", { type: ["boolean", "null"], defaultValue: null }],
   ["profiles.*.rightbar.widgets", { type: ["array", "null"], defaultValue: null, validator: "region_widgets", items: widgetItems }],
   ["profiles.*.listing_nav.tabs", { validator: "navigation_tabs", items: navigationTab }],
   ["profiles.home.comments.title", { type: ["string", "null"] }],

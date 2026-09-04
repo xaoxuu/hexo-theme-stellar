@@ -7,23 +7,81 @@
 # 站点
 # -----------------------------------------------------------------------------
 
-# 配置全站使用的品牌信息。
-brand:
-  # 配置品牌图片。
-  image:
-    # 设置品牌图片地址；null 表示隐藏图片。
-    src: null
-    # 设置品牌图片形态；可选值为 avatar、icon 或 plain。
-    variant: avatar
-  # 设置品牌名称；null 表示隐藏名称且不继承 Hexo title。
-  name: null
-  # 设置品牌标语；null 表示隐藏标语且不继承 Hexo subtitle。
-  tagline: null
+# 配置设置页内容。
+settings:
+  # 配置设置页的关于信息。
+  about:
+    # 设置关于信息条目；数组会整体替换。
+    items:
+      # 设置条目名称。
+      - key: 博客框架
+        # 设置条目内容，支持主题模板变量。
+        value: Hexo {hexo.version}
+        # 设置条目链接。
+        url: https://hexo.io/
+      # 设置条目名称。
+      - key: 主题版本
+        # 设置条目内容，支持主题模板变量。
+        value: Stellar {theme.version}
+        # 设置条目链接，支持主题模板变量。
+        url: '{theme.tree}'
 
-# 配置站点主导航菜单。
-menu:
-  # 设置主导航菜单项；数组会整体替换，空数组表示不显示菜单项。
-  items:
+# 配置主内容区页脚。
+footer:
+  # 设置主内容区页脚导航分栏；空数组表示不显示分栏。
+  sections: []
+  # 设置页脚正文，支持 Markdown 与主题模板变量；空字符串表示隐藏正文。
+  content: 本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。
+
+# -----------------------------------------------------------------------------
+# 布局
+# -----------------------------------------------------------------------------
+
+# 配置站点级 Topbar。
+topbar:
+  # 控制是否生成 Topbar；默认不启用。
+  enabled: false
+  # 配置 Topbar 固定 Brand 内容。
+  brand:
+    # 配置品牌图片。
+    image:
+      # 设置品牌图片地址；null 表示隐藏图片。
+      src: null
+      # 设置品牌图片形态；可选值为 avatar、icon 或 plain。
+      variant: avatar
+    # 设置品牌名称；null 表示隐藏名称且不继承 Hexo title。
+    name: null
+    # 设置品牌标语；null 表示隐藏标语且不继承 Hexo subtitle。
+    tagline: null
+    # 设置品牌链接。
+    href: /
+  # 设置 Topbar 菜单项；数组会整体替换，空数组表示不显示菜单项。
+  menu: []
+  # 设置 Topbar Widget；空数组表示不显示 Topbar 内容。
+  widgets: []
+
+# 配置站点级 Leftbar。
+leftbar:
+  # 设置桌面端 Leftbar 的初始状态；可选值为 expanded 或 collapsed。
+  default_state: expanded
+  # 控制是否生成站点级 Leftbar。
+  enabled: true
+  # 配置 Leftbar 固定 Brand 内容。
+  brand:
+    # 配置品牌图片。
+    image:
+      # 设置品牌图片地址；null 表示隐藏图片。
+      src: null
+      # 设置品牌图片形态；可选值为 avatar、icon 或 plain。
+      variant: avatar
+    # 设置品牌名称；null 表示隐藏名称且不继承 Hexo title。
+    name: null
+    # 设置品牌标语；null 表示隐藏标语且不继承 Hexo subtitle。
+    tagline: null
+    # 设置品牌链接。
+    href: /
+  # 设置 Leftbar 菜单项；数组会整体替换，空数组表示不显示菜单项。
+  menu:
     # 声明默认的博客入口。
     - id: post
       # 设置菜单标题，支持主题 i18n 键。
@@ -82,61 +140,17 @@ menu:
       url: /about/
     # 声明默认的搜索入口。
     - type: search
-
-# 配置设置页内容。
-settings:
-  # 配置设置页的关于信息。
-  about:
-    # 设置关于信息条目；数组会整体替换。
-    items:
-      # 设置条目名称。
-      - key: 博客框架
-        # 设置条目内容，支持主题模板变量。
-        value: Hexo {hexo.version}
-        # 设置条目链接。
-        url: https://hexo.io/
-      # 设置条目名称。
-      - key: 主题版本
-        # 设置条目内容，支持主题模板变量。
-        value: Stellar {theme.version}
-        # 设置条目链接，支持主题模板变量。
-        url: '{theme.tree}'
-
-# 配置主内容区页脚和 Leftbar 操作区。
-footer:
-  # 设置 Leftbar 操作项；空数组表示不显示操作区。
-  actions: []
-  # 设置主内容区页脚导航分栏；空数组表示不显示分栏。
-  sections: []
-  # 设置页脚正文，支持 Markdown 与主题模板变量；空字符串表示隐藏正文。
-  content: 本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。
-
-# -----------------------------------------------------------------------------
-# 布局
-# -----------------------------------------------------------------------------
-
-# 配置站点级 Topbar。
-topbar:
-  # 设置 Topbar Widget；空数组表示不显示 Topbar 内容。
-  widgets: []
-
-# 配置站点级 Leftbar。
-leftbar:
-  # 设置桌面端 Leftbar 的初始状态；可选值为 expanded 或 collapsed。
-  default_state: expanded
-  # 控制是否生成站点级 Leftbar。
-  enabled: true
-  # 设置 Leftbar 固定 Brand 来源；可选值为 site_brand、collection_brand 或 false。
-  brand: site_brand
-  # 控制是否显示 Leftbar 固定菜单。
-  menu: true
-  # 控制是否显示 Leftbar 固定操作区。
-  footer_actions: true
+  # 配置 Leftbar 固定底部区域。
+  footer:
+    # 设置操作项；空数组表示不显示操作区。
+    actions: []
   # 设置 Leftbar 内容 Widget；空数组表示清空内容区。
   widgets: []
 
 # 配置站点级 Rightbar。
 rightbar:
+  # 控制是否生成 Rightbar。
+  enabled: true
   # 设置 Rightbar Widget；空数组表示不显示 Rightbar 内容。
   widgets: []
 
@@ -267,18 +281,14 @@ profiles:
   wiki:
     # 设置 Wiki 内容页高亮的主菜单项；null 表示不高亮。
     active_menu: null
-    # 配置 Wiki 内容页 Topbar 覆盖项。
-    topbar:
-      # 设置 Wiki 内容页 Topbar Widget；空数组表示显式隐藏。
-      widgets: []
     # 配置 Wiki 内容页 Leftbar 覆盖项。
     leftbar:
-      # 设置 Wiki 内容页使用 Collection Brand。
-      brand: collection_brand
-      # 控制 Wiki 内容页是否显示固定菜单。
-      menu: false
-      # 控制 Wiki 内容页是否显示固定操作区。
-      footer_actions: false
+      # 设置 Wiki 内容页不显示固定菜单。
+      menu: []
+      # 设置 Wiki 内容页不显示固定操作区。
+      footer:
+        # 设置操作项；空数组表示不显示操作区。
+        actions: []
       # 设置 Wiki 内容页 Leftbar 内容 Widget；数组会整体替换站点级列表。
       widgets:
         - tree
@@ -312,8 +322,6 @@ profiles:
     active_menu: null
     # 配置 Notebook 列表页 Leftbar 覆盖项。
     leftbar:
-      # 设置 Notebook 列表页使用 Collection Brand。
-      brand: collection_brand
       # 设置 Notebook 列表页 Leftbar 内容 Widget；数组会整体替换站点级列表。
       widgets:
         - tagtree
@@ -329,8 +337,6 @@ profiles:
     active_menu: null
     # 配置 Notebook 内容页 Leftbar 覆盖项。
     leftbar:
-      # 设置 Notebook 内容页使用 Collection Brand。
-      brand: collection_brand
       # 设置 Notebook 内容页 Leftbar 内容 Widget；数组会整体替换站点级列表。
       widgets:
         - tagtree

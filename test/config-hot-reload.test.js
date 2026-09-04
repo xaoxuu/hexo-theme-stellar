@@ -19,7 +19,7 @@ function fixture(options = {}) {
   let generated = 0;
   const hexo = {
     base_dir: "/tmp/stellar-config-watch/",
-    config: { theme_config: { brand: { name: "Before" } } },
+    config: { theme_config: { leftbar: { brand: { name: "Before" } } } },
     env: { cmd: "server" },
     log: {
       info() {},
@@ -31,7 +31,7 @@ function fixture(options = {}) {
         if (options.fatal) return [];
         if (options.invalid) return { topbar: 42 };
         if (options.emptyRegion) return { topbar: null };
-        return { topbar: { widgets: ["site_brand", "menu"] } };
+        return { topbar: { enabled: true, widgets: ["menu"] } };
       }
     },
     _watchBox() { generated += 1; }
@@ -62,7 +62,7 @@ test("Hexo server 保存 _config.stellar.yml 后重读并触发生成", async ()
   const current = fixture();
   current.trigger("_config.stellar.yml");
   await waitForReload();
-  assert.deepEqual(current.hexo.config.theme_config.topbar.widgets, ["site_brand", "menu"]);
+  assert.deepEqual(current.hexo.config.theme_config.topbar.widgets, ["menu"]);
   assert.equal(current.generated(), 1);
   assert.equal(current.warnings.length, 0);
 });

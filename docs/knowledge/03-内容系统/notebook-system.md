@@ -73,8 +73,8 @@ name: Dev Notes
 headline: Development Notes
 tagline: 持续整理
 description: Node.js 与工具链笔记
-identity:
-  icon: /images/dev.svg
+icon: /images/dev.svg
+cover: /images/dev-cover.webp
 route:
   path: notebooks/dev
 navigation:
@@ -86,11 +86,10 @@ listing:
   sort:
     field: updated
     direction: desc
-note_defaults:
-  leftbar:
-    widgets: [tagtree, recent]
-  rightbar:
-    widgets: [toc]
+leftbar:
+  widgets: [tagtree, recent]
+rightbar:
+  widgets: [toc]
 footer:
   license: null
   share: null

@@ -31,8 +31,6 @@ const HEXO_FRONT_MATTER_FIELDS = Object.freeze([
 const LEGACY_COLLECTION_ROOTS = Object.freeze({
   title: "name",
   subtitle: "tagline",
-  icon: "identity.icon",
-  cover: "card.cover",
   coverpage: "hero",
   background: "hero.background",
   animation: "hero.background.effect",
@@ -57,7 +55,7 @@ const LEGACY_COLLECTION_ROOTS = Object.freeze({
   preview: "hero.preview",
   actions: "hero.actions",
   routing: "route",
-  note: "note_defaults",
+  note: null,
   tree: "navigation.tree"
 });
 
@@ -65,7 +63,6 @@ const LEGACY_FRONT_MATTER_ROOTS = Object.freeze({
   wiki: "collection.id",
   topic: "collection.id",
   notebook: "collection.id",
-  cover: "card.cover",
   h1: "banner.headline",
   subtitle: "banner.tagline",
   banner_info: "banner",
@@ -259,18 +256,12 @@ function decorateSharedSchemas(schema) {
   schema.properties.topbar.properties.widgets.validator = "region_widgets";
   schema.properties.leftbar.properties.widgets.validator = "leftbar_content_widgets";
   schema.properties.rightbar.properties.widgets.validator = "region_widgets";
-  if (schema.runtimeKey === "collection") {
-    schema.properties.note_defaults.removedProperties = { regions: "topbar | leftbar | rightbar" };
-    for (const region of ["topbar", "leftbar", "rightbar"]) {
-      schema.properties.note_defaults.properties[region].normalizer = "object";
-      schema.properties.note_defaults.properties[region].normalization = "accept a Region object; validate children and deep-freeze the normalized object";
-      schema.properties.note_defaults.properties[region].migration = `note_defaults.${region}.widgets`;
-      schema.properties.note_defaults.properties[region].removedProperties = { inherit: null };
-    }
-    schema.properties.note_defaults.properties.topbar.properties.widgets.validator = "region_widgets";
-    schema.properties.note_defaults.properties.leftbar.properties.widgets.validator = "leftbar_content_widgets";
-    schema.properties.note_defaults.properties.rightbar.properties.widgets.validator = "region_widgets";
+  for (const region of ["topbar", "leftbar"]) {
+    schema.properties[region].properties.brand.validator = "brand";
+    schema.properties[region].properties.brand.properties.href.validator = "nullable_safe_navigation_url";
+    schema.properties[region].properties.menu.validator = "menu_items";
   }
+  schema.properties.leftbar.properties.footer.properties.actions.validator = "footer_actions";
 
   const effect = schema.properties.hero?.properties.background?.properties.effect;
   if (effect) {
@@ -304,6 +295,8 @@ function decorateCommon(schema) {
 const COLLECTION_CONFIG_SCHEMA = schemaForScope("collection");
 COLLECTION_CONFIG_SCHEMA.requiredProperties = ["name"];
 COLLECTION_CONFIG_SCHEMA.removedProperties = clone(LEGACY_COLLECTION_ROOTS);
+COLLECTION_CONFIG_SCHEMA.removedProperties.identity = "icon";
+COLLECTION_CONFIG_SCHEMA.removedProperties.note_defaults = null;
 COLLECTION_CONFIG_SCHEMA.properties.name.validator = "non_empty_string";
 COLLECTION_CONFIG_SCHEMA.properties.route.removedProperties = { base_dir: "path" };
 COLLECTION_CONFIG_SCHEMA.properties.route.properties.start.validator = "topic_route_start";

@@ -31,40 +31,57 @@ function cascadeRegion(layers, region) {
   return widgets;
 }
 
-function resolveLeftbar(layers) {
-  let declared = false;
+function mergeBrand(base, override) {
+  if (override == null) return clone(base);
+  if (override === false) return false;
+  if (regionLayer(override) == null) return clone(base);
+  const result = regionLayer(base) == null ? {} : clone(base);
+  for (const [key, value] of Object.entries(override)) {
+    if (key === "image" && regionLayer(value)) {
+      result.image = { ...(regionLayer(result.image) ? result.image : {}), ...clone(value) };
+    } else {
+      result[key] = clone(value);
+    }
+  }
+  return result;
+}
+
+function resolveRegion(layers, region) {
   const result = {
-    enabled: true,
-    brand: "site_brand",
-    menu: true,
-    footer: { actions: true },
+    enabled: region !== "topbar",
     widgets: []
   };
+  if (["topbar", "leftbar"].includes(region)) {
+    result.brand = false;
+    result.menu = [];
+  }
+  if (region === "leftbar") result.footer = { actions: [] };
   for (const layer of layers) {
-    const current = regionLayer(layer?.leftbar);
+    const current = regionLayer(layer?.[region]);
     if (!current) continue;
-    declared = true;
     if (typeof current.enabled === "boolean") result.enabled = current.enabled;
-    if (current.brand === false || ["site_brand", "collection_brand"].includes(current.brand)) {
-      result.brand = current.brand;
+    if (["topbar", "leftbar"].includes(region) && current.brand !== undefined) {
+      result.brand = mergeBrand(result.brand, current.brand);
     }
-    if (typeof current.menu === "boolean") result.menu = current.menu;
-    if (typeof current.footerActions === "boolean") result.footer.actions = current.footerActions;
-    if (typeof current.footer?.actions === "boolean") result.footer.actions = current.footer.actions;
+    if (["topbar", "leftbar"].includes(region) && Array.isArray(current.menu)) {
+      result.menu = current.menu.map(clone);
+    }
+    if (region === "leftbar" && Array.isArray(current.footer?.actions)) {
+      result.footer.actions = current.footer.actions.map(clone);
+    }
     if (Array.isArray(current.widgets)) result.widgets = current.widgets.map(clone);
   }
-  return declared ? result : null;
+  return result;
+}
+
+function resolveLeftbar(layers) {
+  return resolveRegion(layers, "leftbar");
 }
 
 function cascadeRegions(layers) {
   const regions = {};
   for (const region of REGION_IDS) {
-    if (region === "leftbar") {
-      const leftbar = resolveLeftbar(layers);
-      regions[region] = leftbar || { widgets: [] };
-      continue;
-    }
-    regions[region] = { widgets: cascadeRegion(layers, region) };
+    regions[region] = resolveRegion(layers, region);
   }
   return freeze(regions);
 }
@@ -74,9 +91,8 @@ function resolveRegions(options = {}) {
   const resolvedRegions = {};
   const warnings = [];
   for (const region of REGION_IDS) {
-    const leftbar = region === "leftbar" ? resolveLeftbar(layers) : null;
-    const disabled = leftbar && !leftbar.enabled;
-    const widgets = disabled ? [] : (leftbar ? leftbar.widgets : cascadeRegion(layers, region));
+    const state = resolveRegion(layers, region);
+    const widgets = state.enabled ? state.widgets : [];
     const resolved = resolveRegionWidgets(widgets, options.catalog || {}, {
       region,
       profile: options.profile,
@@ -84,12 +100,14 @@ function resolveRegions(options = {}) {
     });
     resolvedRegions[region] = {
       widgets: resolved.instances,
-      ...(leftbar ? {
-        enabled: leftbar.enabled,
+      enabled: state.enabled,
+      ...(["topbar", "leftbar"].includes(region) ? {
+        brand: clone(state.brand),
+        menu: clone(state.menu)
+      } : {}),
+      ...(region === "leftbar" ? {
         defaultState: options.defaultState || "expanded",
-        brand: leftbar.brand,
-        menu: leftbar.menu,
-        footer: clone(leftbar.footer)
+        footer: clone(state.footer)
       } : {})
     };
     warnings.push(...resolved.warnings);
@@ -101,6 +119,8 @@ module.exports = {
   REGION_IDS,
   cascadeRegion,
   cascadeRegions,
+  mergeBrand,
   resolveLeftbar,
+  resolveRegion,
   resolveRegions
 };

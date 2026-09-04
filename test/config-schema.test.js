@@ -21,9 +21,12 @@ function hasIssue(error, path, code) {
 
 test("Theme config loads complete frozen defaults", () => {
   const config = parseStellarConfig({ source: "themes/stellar/_config.yml", themeConfig: {} });
-  for (const key of ["brand", "profiles", "article", "appearance", "features", "services"]) {
+  for (const key of ["topbar", "leftbar", "rightbar", "profiles", "article", "appearance", "features", "services"]) {
     assert.equal(Object.hasOwn(config, key), true, key);
   }
+  assert.equal(config.topbar.enabled, false);
+  assert.equal(config.rightbar.enabled, true);
+  assert.deepEqual(config.topbar.brand, config.leftbar.brand);
   assertDeepFrozen(config);
 });
 
@@ -71,8 +74,8 @@ test("Theme config recovery warns, keeps valid list items, and replaces unsafe o
       unknown: true,
       appearance: { preset: "unsupported", colors: { primary: "red; display:none" } },
       article: { category_colors: { "release.v2": "red; display:none", stable: "blue" } },
-      menu: {
-        items: [
+      leftbar: {
+        menu: [
           { id: "home", title: "Home", url: "/" },
           { id: "unsafe", title: "Unsafe", url: "javascript:alert(1)" },
           { type: "search" },
@@ -85,24 +88,46 @@ test("Theme config recovery warns, keeps valid list items, and replaces unsafe o
   assert.equal(config.appearance.colors.primary, "hsl(192 98% 55%)");
   assert.equal(config.article.categoryColors.stable, "blue");
   assert.equal(config.article.categoryColors["release.v2"], undefined);
-  assert.deepEqual(config.menu.items.map(item => item.type || item.id), ["home", "search"]);
+  assert.deepEqual(config.leftbar.menu.map(item => item.type || item.id), ["home", "search"]);
   assert.equal(config.profiles.home.activeMenu, null);
   assert.equal(issues.some(item => item.path === "unknown" && item.action === "忽略字段"), true);
-  assert.equal(issues.some(item => item.path === "menu.items[1].url" && item.action === "忽略无效列表项"), true);
+  assert.equal(issues.some(item => item.path === "leftbar.menu[1].url" && item.action === "忽略无效列表项"), true);
   assert.equal(issues.some(item => item.path === "appearance.colors.primary" && item.action === "使用默认值或上一层有效配置"), true);
 });
 
 test("Region inheritance preserves explicit overrides and empty lists", () => {
   const config = parseStellarConfig({
     themeConfig: {
-      topbar: { widgets: ["site_brand", "menu"] },
-      rightbar: { widgets: ["toc"] },
-      profiles: { post: { rightbar: { widgets: [] } } }
+      topbar: { enabled: true, brand: { name: "Top" }, menu: [{ id: "post", title: "Post", url: "/" }], widgets: ["menu"] },
+      rightbar: { enabled: false, widgets: ["toc"] },
+      profiles: { post: { topbar: { brand: { tagline: "Profile" } }, rightbar: { enabled: true, widgets: [] } } }
     }
   });
   const regions = toRenderRegions(config, config.profiles.post);
-  assert.deepEqual(regions.topbar.widgets, ["site_brand", "menu"]);
+  assert.equal(regions.topbar.enabled, true);
+  assert.deepEqual(regions.topbar.brand, {
+    image: { src: null, variant: "avatar" },
+    name: "Top",
+    tagline: "Profile",
+    href: "/"
+  });
+  assert.deepEqual(regions.topbar.widgets, ["menu"]);
+  assert.equal(regions.rightbar.enabled, true);
   assert.deepEqual(regions.rightbar.widgets, []);
+});
+
+test("Removed shell roots and movable Brand or Actions widgets are rejected", () => {
+  for (const [themeConfig, path] of [
+    [{ brand: { name: "Legacy" } }, "brand"],
+    [{ menu: { items: [] } }, "menu"],
+    [{ footer: { actions: [] } }, "footer.actions"],
+    [{ topbar: { widgets: ["site_brand"] } }, "topbar.widgets[0]"],
+    [{ topbar: { widgets: ["actions"] } }, "topbar.widgets[0]"]
+  ]) {
+    assert.throws(() => parseStellarConfig({ themeConfig }), error => (
+      error instanceof ConfigSchemaError && error.issues.some(issue => issue.path === path)
+    ));
+  }
 });
 
 test("Build config event exposes one frozen runtime config", () => {

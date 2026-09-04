@@ -23,7 +23,7 @@ function firstContentImage(content) {
 }
 
 /**
- * 构建文章图片数组（顺序：card.cover → banner.image → photos → 正文首图 → 默认封面）。
+ * 构建文章图片数组（顺序：cover → banner.image → photos → 正文首图 → 默认封面）。
  * @param {Object} opts
  * @param {string} opts.cardCover
  * @param {string} opts.bannerImage

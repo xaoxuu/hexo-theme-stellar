@@ -7,7 +7,6 @@
 "use strict";
 
 const { getNotebooksObject, groupPagesByNotebook } = require("../../lib/notebooks");
-const { resolveBrands } = require("../../lib/brand");
 const { normalize_path: normalizePath } = require("../../lib/path_utils");
 const { completeNotebookPageViewModel } = require("../../lib/models");
 const {
@@ -118,13 +117,8 @@ module.exports = (ctx, pipeline = null) => {
           name: String(notebook.name || ""),
           headline: String(notebook.headline ?? notebook.name ?? ""),
           description: String(notebook.description || ""),
-          icon: String(notebook.identity?.icon || "")
+          icon: String(notebook.icon || "")
         };
-        const brands = resolveBrands({
-          siteBrand: ctx.stellar.config.brand,
-          collection: notebook,
-          collectionType: "notebook"
-        });
         const projection = {
           id: notebook.id,
           href: baseDir,
@@ -138,7 +132,6 @@ module.exports = (ctx, pipeline = null) => {
             menu: notebook.navigation.menu ?? collection?.navigation.menu ?? null
           },
           layout: {
-            brands,
             topbar: structuredClone(notebook.topbar || {}),
             leftbar: structuredClone(notebook.leftbar || {}),
             rightbar: structuredClone(notebook.rightbar || {}),

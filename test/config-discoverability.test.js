@@ -18,8 +18,7 @@ const {
 const CONFIG_SOURCE = fs.readFileSync(DEFAULT_CONFIG_PATH, "utf8");
 const CONFIG = yaml.load(CONFIG_SOURCE);
 const ROOT_KEYS = [
-  "brand", "menu", "settings", "footer",
-  "topbar", "leftbar", "rightbar", "profiles",
+  "settings", "footer", "topbar", "leftbar", "rightbar", "profiles",
   "article", "notebook",
   "appearance",
   "canonical", "open_graph", "structured_data",

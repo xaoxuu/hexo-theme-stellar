@@ -1,9 +1,9 @@
 <%
-var actions = stellar_config('footer.actions')
+var actionItems = Array.isArray(actions) ? actions : []
 function renderActions() {
-  if (!Array.isArray(actions) || actions.length === 0) return ''
+  if (actionItems.length === 0) return ''
   var el = '<div class="region-actions social-wrap ui-collection" data-layout="inline" data-variant="nav" data-density="compact">'
-  for (var action of actions) {
+  for (var action of actionItems) {
     if (action.type === 'spacer') {
       el += '<span class="social-spacer" aria-hidden="true"></span>'
     } else if (action.type === 'dropdown') {

@@ -209,7 +209,7 @@ graph LR
 {
   twitter_id: stellar_config('openGraph').twitterId,
   twitter_card: 'summary_large_image',  // 仅 post 且有 cover 时
-  image: pageConfig.card?.cover || pageConfig.banner?.image || first_content_image(page.content) || config.avatar || (config.email ? gravatar(config.email) : null),
+  image: pageConfig.cover || pageConfig.banner?.image || first_content_image(page.content) || config.avatar || (config.email ? gravatar(config.email) : null),
   ...pageConfig.seo?.openGraph  // Front Matter open_graph 覆盖
 }
 ```

@@ -8,7 +8,7 @@ const { resolveWidget } = require("../scripts/lib/widget-registry");
 
 test("Region uses the last explicit widget list while omitted fields inherit", () => {
   const layers = [
-    { leftbar: { widgets: ["first"], brand: "site_brand" } },
+    { leftbar: { widgets: ["first"], brand: { name: "Site", image: { variant: "avatar" } } } },
     { leftbar: { brand: false } },
     { leftbar: { widgets: ["second"] } }
   ];
@@ -17,16 +17,16 @@ test("Region uses the last explicit widget list while omitted fields inherit", (
   assert.deepEqual(cascadeRegion([...layers, { leftbar: { widgets: [] } }], "leftbar"), []);
 });
 
-test("Leftbar fixed fields cascade independently and enabled false closes the region", () => {
+test("Region fixed fields cascade independently and enabled false closes rendering", () => {
   const resolved = resolveLeftbar([
-    { leftbar: { enabled: true, brand: "site_brand", menu: true, footer: { actions: true }, widgets: ["first"] } },
-    { leftbar: { brand: false, widgets: ["second"], footer: { actions: false } } }
+    { leftbar: { enabled: true, brand: { name: "Site", image: { src: "/site.png", variant: "avatar" } }, menu: [{ id: "home" }], footer: { actions: [{ type: "link" }] }, widgets: ["first"] } },
+    { leftbar: { brand: { name: null, image: { variant: "icon" } }, menu: [], widgets: ["second"], footer: { actions: [] } } }
   ]);
   assert.deepEqual(resolved, {
     enabled: true,
-    brand: false,
-    menu: true,
-    footer: { actions: false },
+    brand: { name: null, image: { src: "/site.png", variant: "icon" } },
+    menu: [],
+    footer: { actions: [] },
     widgets: ["second"]
   });
 
@@ -38,6 +38,7 @@ test("Leftbar fixed fields cascade independently and enabled false closes the re
   });
   assert.equal(disabled.leftbar.enabled, false);
   assert.deepEqual(disabled.leftbar.widgets, []);
+  assert.deepEqual(disabled.leftbar.menu, []);
 });
 
 test("Resolved Region instances preserve order, duplicates, and immutability", () => {
@@ -55,10 +56,10 @@ test("Resolved Region instances preserve order, duplicates, and immutability", (
 test("Unsupported Widget presentations are rejected with a sourced warning", () => {
   const result = resolveRegions({
     profile: "blog_index",
-    layers: [{ topbar: { widgets: [{ layout: "timeline" }] } }]
+    layers: [{ topbar: { enabled: true, widgets: [{ layout: "timeline" }] } }]
   });
 
-  assert.deepEqual(result.topbar, { widgets: [] });
+  assert.deepEqual(result.topbar, { enabled: true, brand: false, menu: [], widgets: [] });
   assert.equal(result.warnings.length, 1);
   assert.equal(result.warnings[0].code, "unsupported_widget_presentation");
   assert.equal(result.warnings[0].region, "topbar");

@@ -15,11 +15,19 @@ const {
 test("Collection config normalizes public fields and freezes open parameter bags", () => {
   const parsed = parseCollectionConfig({
     name: "Docs",
+    icon: "/docs.svg",
+    cover: "/docs.webp",
     route: { path: "/wiki/docs/" },
-    leftbar: { widgets: ["tree", { layout: "custom", option: true }] },
+    topbar: { enabled: true, brand: { name: "Docs", href: "/wiki/docs/" }, menu: [] },
+    leftbar: { footer: { actions: [] }, widgets: ["tree", { layout: "custom", option: true }] },
+    rightbar: { enabled: false },
     comments: { provider: "custom", options: { nested_value: { enabled: true } } }
   }, "source/_data/wiki/docs.yml");
   assert.equal(parsed.route.path, "wiki/docs/");
+  assert.equal(parsed.icon, "/docs.svg");
+  assert.equal(parsed.cover, "/docs.webp");
+  assert.equal(parsed.topbar.brand.name, "Docs");
+  assert.equal(parsed.rightbar.enabled, false);
   assert.equal(parsed.comments.options.nested_value.enabled, true);
   assert.equal(Object.isFrozen(parsed), true);
   assert.equal(Object.isFrozen(parsed.comments.options), true);
@@ -30,12 +38,16 @@ test("Front Matter parser preserves Hexo fields and normalizes Stellar fields", 
     title: "Page",
     date: "2026-08-23 00:00",
     collection: { profile: "wiki", id: "docs" },
+    cover: "/page.webp",
+    tagline: "Page tagline",
     render: { math: "katex" },
     seo: { open_graph: { image: "/cover.webp" } },
     inject: { head_end: "<meta name=\"example\">" }
   }, "source/wiki/docs/index.md");
   assert.equal(parsed.title, "Page");
   assert.deepEqual(parsed.collection, { profile: "wiki", id: "docs" });
+  assert.equal(parsed.cover, "/page.webp");
+  assert.equal(parsed.tagline, "Page tagline");
   assert.equal(parsed.seo.openGraph.image, "/cover.webp");
   assert.equal(parsed.inject.headEnd, "<meta name=\"example\">");
   assert.equal(Object.isFrozen(parsed), true);
@@ -48,6 +60,23 @@ test("Content regions distinguish inheritance from explicit empty lists", () => 
   assert.deepEqual(collection.rightbar.widgets, ["toc"]);
   assert.deepEqual(page.leftbar.widgets, []);
   assert.equal(page.rightbar, undefined);
+});
+
+test("Content Region schemas reject removed Brand sources and Notebook wrapper", () => {
+  for (const [config, pattern] of [
+    [{ name: "Docs", identity: { icon: "/docs.svg" } }, /identity 已移除/],
+    [{ name: "Docs", card: { cover: "/docs.webp" } }, /未知字段 card/],
+    [{ name: "Docs", note_defaults: { leftbar: { widgets: [] } } }, /note_defaults 已移除/],
+    [{ name: "Docs", leftbar: { brand: "collection_brand" } }, /leftbar\.brand 应为 object \| boolean \| null/],
+    [{ name: "Docs", topbar: { widgets: ["site_brand"] } }, /topbar\.widgets\[0\]/],
+    [{ name: "Docs", leftbar: { footer: { actions: true } } }, /leftbar\.footer\.actions 应为 array \| null/]
+  ]) {
+    assert.throws(() => parseCollectionConfig(config, "collection.yml"), pattern);
+  }
+  assert.throws(
+    () => parsePageConfig({ card: { cover: "/page.webp" } }, "page.md"),
+    /未知字段 card/
+  );
 });
 
 test("Content schemas aggregate unknown, type, enum, and range diagnostics", () => {

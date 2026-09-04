@@ -18,8 +18,9 @@ Collection YAML 与页面 Front Matter 是独立的内容配置边界，见[内�
 `_config.yml` 的主干按注释标题分区并直接使用顶层字段。低频且不参与内容级覆盖的 Appearance 与 Inject 保留各自命名空间，例如：
 
 ```yaml
-brand:
-  name: Stellar
+leftbar:
+  brand:
+    name: Stellar
 
 profiles:
   post:
@@ -72,7 +73,7 @@ Provider ID 属于业务值，不会被改写，例如 `provider: site_info_api`
 
 | 注释分组 | 顶层键 |
 | --- | --- |
-| Site | `brand/menu/settings/footer` |
+| Site | `settings/footer` |
 | Layout | `topbar/leftbar/rightbar/profiles` |
 | Content | `article/notebook` |
 | Appearance | `appearance` |
@@ -85,30 +86,37 @@ Provider ID 属于业务值，不会被改写，例如 `provider: site_info_api`
 
 ## Layout 与 Region
 
-`topbar`、`leftbar`、`rightbar` 直接定义站点级 Region；`profiles` 只写页面类型相对全局的差异。三个 Region 都是对象，Widget 数组统一放在 `widgets`；Leftbar 额外保留状态与固定区域设置：
+`topbar`、`leftbar`、`rightbar` 直接定义站点级 Region；`profiles` 只写页面类型相对全局的差异。三个 Region 都有 `enabled` 与 `widgets`，Topbar / Leftbar 各自拥有独立 Brand 和 Menu，Leftbar 还拥有固定 Footer Actions：
 
 ```yaml
 topbar:
-  widgets: []
+  enabled: false
+  brand:
+    name: Stellar
+  menu: []
+  widgets: [spacer, menu, settings]
 leftbar:
   default_state: expanded
   enabled: true
-  brand: site_brand
-  menu: true
-  footer_actions: true
+  brand:
+    name: Stellar
+  menu: []
+  footer:
+    actions: []
   widgets: []
 rightbar:
+  enabled: true
   widgets: []
 
 profiles:
   wiki:
     active_menu: wiki
     topbar:
-      widgets: []
+      enabled: true
     leftbar:
-      brand: collection_brand
-      menu: false
-      footer_actions: false
+      brand:
+        name: Wiki
+      menu: []
       widgets: [tree]
     rightbar:
       widgets: [ghrepo, toc]
@@ -153,7 +161,7 @@ $theme-color = hexo-config('appearance.colors.primary')
 
 ## 页脚配置
 
-`footer.actions`、`footer.sections` 与 `footer.content` 分别控制 Leftbar 操作、主内容页脚分栏和 Markdown 文本。显式空数组或空字符串可以关闭对应区域。
+`leftbar.footer.actions` 控制 Leftbar 操作；根级 `footer.sections` 与 `footer.content` 控制主内容页脚分栏和 Markdown 文本。显式空数组或空字符串可以关闭对应区域。
 
 ## 消费边界
 

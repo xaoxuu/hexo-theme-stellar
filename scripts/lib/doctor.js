@@ -181,8 +181,7 @@ function runDoctor(options = {}) {
             layers: [
               stellarConfig,
               stellarConfig.profiles[profile],
-              parsed,
-              parsed.noteDefaults
+              parsed
             ]
           }));
         }
@@ -222,7 +221,6 @@ function runDoctor(options = {}) {
           stellarConfig,
           stellarConfig.profiles[profile],
           collection,
-          profile === "notebook" ? collection?.noteDefaults : null,
           finalConfig
         ]
       }));

@@ -148,7 +148,9 @@ test("root Wiki project keeps root navigation without a Wiki index", () => {
     collectionConfig: parseCollectionConfig({
       name: "Docs",
       route: { path: "/" },
-      hero: { enabled: true }
+      hero: { enabled: true, background: { image: "/hero.webp" } },
+      cover: "/collection.webp",
+      leftbar: { brand: { name: "Docs", href: "/" } }
     }, "source/_data/wiki/docs.yml"),
     collectionState: {
       homepage: { path: "", title: "Docs" },
@@ -169,7 +171,11 @@ test("root Wiki project keeps root navigation without a Wiki index", () => {
   };
 
   const viewModel = buildWikiPageViewModel(input);
-  assert.equal(viewModel.render.layout.brands.collection.href, "/");
+  assert.equal(viewModel.render.layout.leftbar.brand.href, "/");
+  assert.equal(viewModel.collection.cover, "/collection.webp");
+  assert.equal(viewModel.item.cover, "");
+  assert.equal(viewModel.item.tagline, "");
+  assert.deepEqual(viewModel.item.presentation.banner, {});
   assert.equal(viewModel.render.layout.wikiIndexPath, "");
   assert.equal(viewModel.render.cover.enabled, true);
 });

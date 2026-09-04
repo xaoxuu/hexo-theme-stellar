@@ -9,9 +9,7 @@ const REGION_PRESENTATIONS = Object.freeze({
 const DEFAULT_PRESENTATIONS = Object.freeze(["leftbar", "rightbar", "drawer"]);
 
 const PRESENTATIONS_BY_LAYOUT = Object.freeze({
-  brand: Object.freeze(["topbar", "leftbar", "leftbarRail", "drawer"]),
   menu: Object.freeze(["topbar", "leftbar", "leftbarRail", "drawer"]),
-  actions: Object.freeze(["topbar", "leftbar", "leftbarRail", "drawer"]),
   settings: Object.freeze(["topbar", "leftbar", "leftbarRail", "drawer"]),
   spacer: Object.freeze(["topbar"]),
   toc: Object.freeze(["topbar", "leftbar", "rightbar", "drawer"]),
@@ -28,10 +26,7 @@ const PRESENTATIONS_BY_LAYOUT = Object.freeze({
 });
 
 const SYSTEM_WIDGETS = Object.freeze({
-  site_brand: Object.freeze({ layout: "brand", system: true, brandSource: "site" }),
-  collection_brand: Object.freeze({ layout: "brand", system: true, brandSource: "collection" }),
   menu: Object.freeze({ layout: "menu", system: true }),
-  actions: Object.freeze({ layout: "actions", system: true }),
   settings: Object.freeze({ layout: "settings", system: true }),
   spacer: Object.freeze({ layout: "spacer", system: true })
 });
@@ -54,8 +49,7 @@ function normalizedPresentations(descriptor, layout) {
 }
 
 function leftbarZone(layout) {
-  if (layout === "brand" || layout === "search") return "top";
-  if (layout === "actions") return "bottom";
+  if (layout === "search") return "top";
   if (layout === "settings") return "system";
   return "body";
 }
@@ -80,9 +74,9 @@ function resolveWidget(specification, catalog, context = {}) {
     : (SYSTEM_WIDGETS[source.id] || catalog?.[source.id] || null);
   const descriptor = Object.assign({}, registered || {}, source.override || {});
   const layout = typeof descriptor.layout === "string" ? descriptor.layout : source.id;
-  if (layout === "brand" && !["site", "collection"].includes(descriptor.brandSource)) {
+  if (["brand", "actions"].includes(layout)) {
     return freeze({ instance: null, warning: {
-      code: "unknown_widget",
+      code: "fixed_region_content",
       widget: source.id || layout,
       layout,
       region,
@@ -107,7 +101,7 @@ function resolveWidget(specification, catalog, context = {}) {
       supported: []
     } });
   }
-  if (context.region === "leftbar" && context.contentOnly === true && ["brand", "menu", "actions", "settings"].includes(layout)) {
+  if (context.region === "leftbar" && context.contentOnly === true && ["menu", "settings"].includes(layout)) {
     return freeze({ instance: null, warning: {
       code: "fixed_leftbar_widget",
       widget: source.id || layout,

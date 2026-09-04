@@ -18,15 +18,22 @@ Stellar v2 的公开 Region 是 `topbar`、`leftbar`、`rightbar`。名称直接
 
 ```yaml
 topbar:
-  widgets: [site_brand, spacer, menu, settings, actions]
+  enabled: false
+  brand:
+    name: Stellar
+  menu: []
+  widgets: [spacer, menu, settings]
 leftbar:
   default_state: expanded
   enabled: true
-  brand: site_brand
-  menu: true
-  footer_actions: true
+  brand:
+    name: Stellar
+  menu: []
+  footer:
+    actions: []
   widgets: []
 rightbar:
+  enabled: true
   widgets: [toc]
 ```
 
@@ -48,7 +55,7 @@ leftbar:
 3. Collection YAML 的 `topbar/leftbar/rightbar`
 4. Page Front Matter 的 `topbar/leftbar/rightbar`
 
-每个 Region 的最后一个显式 `widgets` 数组整体替换上层数组；空数组清空，省略字段继承。解析器不去重、不排序，也不把不支持的 Widget 自动搬到其它 Region。Notebook 的 `note_defaults.topbar/leftbar/rightbar` 使用同一规则。
+每个 Region 的字段按全局 → Profile → Collection → Front Matter 合并；最后一个显式数组整体替换上层数组，空数组清空，省略字段继承。`enabled: false` 关闭当前层的 Region 渲染，但不清空已继承内容，后续层可重新开启。Notebook 不再有 `note_defaults`，Note 与其它内容使用同一级联。
 
 ## 系统 Widget
 
@@ -56,13 +63,11 @@ leftbar:
 
 | Widget | 业务数据来源 |
 | --- | --- |
-| `site_brand` / `collection_brand` | 根级 `brand` 与 Collection Identity 投影 |
-| `menu` | 根级 `menu` 与最终导航状态；搜索入口复用 Menu search item |
-| `actions` | 根级 `footer.actions` |
+| `menu` | Topbar `menu` 与最终导航状态；搜索入口复用 Menu search item |
 | `settings` | 外观设置入口 |
 | `spacer` | Topbar 弹性占位；多个实例平分剩余空间 |
 
-移动 Widget 只改变位置，不复制业务配置。Topbar-only 站点可以直接把系统 Widget 放入 Topbar，并在需要覆盖 Leftbar Widget 的 Profile 中使用 `widgets: []` 清空。
+Brand 不再是 Widget：Topbar / Leftbar 分别从自己的 `brand` 字段渲染固定槽位。Leftbar Menu 也是固定槽位，Footer Actions 由 `leftbar.footer.actions` 直接渲染。Topbar Menu 保留 `menu` Widget 作为位置标记。
 
 ## Presentation 能力
 
@@ -70,7 +75,7 @@ Widget 类型声明 `topbar`、`leftbar`、`leftbarRail`、`rightbar`、`drawer`
 
 | 类型 | Topbar | Leftbar | Rail | Rightbar | Drawer |
 | --- | :---: | :---: | :---: | :---: | :---: |
-| Brand / Menu / Actions / Settings | ✓ | ✓ | ✓ |  | ✓ |
+| Menu / Settings | ✓ | ✓ | ✓ |  | ✓ |
 | Spacer | ✓ |  |  |  |  |
 | TOC | ✓ | ✓ | ✓ | ✓ | ✓ |
 | Tree / Tagtree |  | ✓ | ✓ | ✓ | ✓ |
@@ -113,15 +118,17 @@ Drawer 复用原 Region 节点并遵守 ARIA、焦点转移、Escape、焦点恢
 | 旧字段/能力 | 新字段/能力 |
 | --- | --- |
 | `regions.topbar/leftbar/rightbar` | 顶层 `topbar/leftbar/rightbar` |
-| `note_defaults.regions.*` | `note_defaults.topbar/leftbar/rightbar` |
+| `note_defaults` | 删除；使用 Collection 根级 Region |
 | `topbar: [a, b]` | `topbar.widgets: [a, b]` |
 | `rightbar: [a, b]` | `rightbar.widgets: [a, b]` |
 | `sidebarRail` | `leftbarRail` |
 | `appearance.backgrounds` 下的旧键 `sidebar` | `leftbar` |
 | v1 `sidebar.left.widgets` | `leftbar.widgets` |
 | v1 `sidebar.right.widgets` | `rightbar.widgets` |
-| `sidebar.left.brand` | 业务数据放入 `brand`，Region 放置 `brand` |
-| `sidebar.left.search/menu/wiki_home` | 在目标 Region 的 `widgets` 中放置系统 Widget |
+| 根级 `brand` | 分别迁入 `topbar.brand` / `leftbar.brand` |
+| 根级 `menu.items` | 分别迁入 `topbar.menu` / `leftbar.menu` |
+| 根级 `footer.actions` | `leftbar.footer.actions` |
+| `site_brand` / `collection_brand` / `actions` Widget | 删除，使用 Region 固定配置 |
 | 旧 Sidebar 的独立 `surface` | `appearance.preset` |
 
 Doctor 会直接拒绝旧字段并给出精确迁移目标。

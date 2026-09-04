@@ -71,10 +71,6 @@ function prepareNotebook(id, info, ctx, pages) {
   notebook.topbar ||= {};
   notebook.leftbar ||= {};
   notebook.rightbar ||= {};
-  notebook.noteDefaults ||= {};
-  notebook.noteDefaults.topbar ||= {};
-  notebook.noteDefaults.leftbar ||= {};
-  notebook.noteDefaults.rightbar ||= {};
 
   if (notebook.route.path) {
     if (notebook.route.path.startsWith("/")) {
@@ -98,9 +94,6 @@ function prepareNotebook(id, info, ctx, pages) {
   notebook.topbar = structuredClone(notebook.topbar);
   notebook.leftbar = structuredClone(notebook.leftbar);
   notebook.rightbar = structuredClone(notebook.rightbar);
-  notebook.noteDefaults.topbar = structuredClone(notebook.noteDefaults.topbar);
-  notebook.noteDefaults.leftbar = structuredClone(notebook.noteDefaults.leftbar);
-  notebook.noteDefaults.rightbar = structuredClone(notebook.noteDefaults.rightbar);
 
   const tagMap = new Map(); // tagId: tagInfo
   notebook.tagTree = tagMap;

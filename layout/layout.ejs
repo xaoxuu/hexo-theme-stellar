@@ -65,16 +65,25 @@ function shellDocument(options) {
 
 function regionsContainSearch(regions) {
   if (!stellar_config('search.provider')) return false
-  var menuHasSearch = stellar_config('menu.items').some(function(item) {
-    return item?.type === 'search'
-  })
+  function menuHasSearch(menu) {
+    return Array.isArray(menu) && menu.some(function(item) {
+      return item?.type === 'search'
+    })
+  }
+  function brandHasContent(brand) {
+    return brand && brand !== false && (brand.name || brand.image?.src)
+  }
+  var collectionProfile = renderViewModel?.collection?.profile
+    || pageConfig.collection?.profile
+    || (page.notebookIndex?.mode === 'notes' ? 'notebook' : null)
   return Object.entries(regions || {}).some(function(entry) {
     var slot = entry[0]
     var region = entry[1]
     if (region?.enabled === false) return false
-    if (slot === 'leftbar' && region?.brand === 'collection_brand') return true
-    if (menuHasSearch && slot === 'leftbar' && region?.menu !== false) return true
-    return menuHasSearch && Array.isArray(region?.widgets) && region.widgets.some(function(widget) {
+    if (slot === 'leftbar' && ['wiki', 'notebook', 'topic'].includes(collectionProfile) && brandHasContent(region.brand)) return true
+    if (slot === 'leftbar') return menuHasSearch(region?.menu)
+    if (slot !== 'topbar' || !menuHasSearch(region?.menu)) return false
+    return Array.isArray(region?.widgets) && region.widgets.some(function(widget) {
       return widget?.id === 'menu' || widget?.layout === 'menu'
     })
   })
@@ -88,6 +97,16 @@ if (renderViewModel) {
     leftbar: render.layout.leftbar,
     rightbar: render.layout.rightbar
   }
+  var topbarRegion = regionSlot('topbar', regionState.topbar, renderViewModel)
+  var mainBody = ''
+  if (showMobileBrand(page, {profileKey: activeProfile}) && !topbarRegion) {
+    mainBody += partial('_partial/sidebar/brand', {
+      placement: 'main',
+      brandModel: regionState.topbar?.brand,
+      viewModel: renderViewModel
+    })
+  }
+  mainBody += body + partial('_partial/main/footer')
   html = shellDocument({
     documentModel: {
       language: render.document.language,
@@ -103,12 +122,12 @@ if (renderViewModel) {
     siteBackground: siteBackground(render.layout.siteBackground),
     cover: coverSlot(renderViewModel),
     regions: {
-      topbar: regionSlot('topbar', regionState.topbar, renderViewModel),
+      topbar: topbarRegion,
       leftbar: regionSlot('leftbar', regionState.leftbar, renderViewModel),
       rightbar: regionSlot('rightbar', regionState.rightbar, renderViewModel)
     },
     searchEnabled: regionsContainSearch(regionState),
-    main: body + partial('_partial/main/footer'),
+    main: mainBody,
     scripts: partial('_partial/scripts', {viewModel: renderViewModel})
   })
 } else {
@@ -166,7 +185,10 @@ if (renderViewModel) {
   var topbarRegion = regionSlot('topbar', legacyRegions.topbar)
   var mainBody = ''
   if (mobileBrandVisible && !topbarRegion) {
-    mainBody += partial('_partial/sidebar/brand', {placement: 'main'})
+    mainBody += partial('_partial/sidebar/brand', {
+      placement: 'main',
+      brandModel: legacyRegions.topbar?.brand
+    })
   }
   mainBody += body
   mainBody += partial('_partial/main/footer')

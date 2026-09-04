@@ -306,14 +306,48 @@ function validateEffect(node, input, source, path, issues) {
 
 function validateBrand(node, input, source, path, issues) {
   if (input == null) return;
+  if (input === false) return;
+  if (!isPlainObject(input)) {
+    issues.push(issue("invalid_value", source, path, valueType(input), "false or Brand object", node.migration));
+    return;
+  }
+  const allowed = ["image", "name", "tagline", "href"];
+  for (const key of Object.keys(input)) {
+    if (!allowed.includes(key)) {
+      issues.push(issue("unknown_field", source, `${path}.${key}`, valueType(input[key]), allowed.join(" | "), node.migration));
+    }
+  }
   const image = input.image;
+  for (const key of ["name", "tagline"]) {
+    if (input[key] != null && typeof input[key] !== "string") {
+      issues.push(issue("invalid_type", source, `${path}.${key}`, valueType(input[key]), "string | null", node.migration));
+    }
+  }
+  if (input.href != null && !isSafeNavigationUrl(input.href)) {
+    issues.push(issue("invalid_value", source, `${path}.href`, valueType(input.href), "safe navigable URL or root-relative path", node.migration));
+  }
   if (typeof input.name === "string" && /^\[[\s\S]*\]\([\s\S]*\)$/.test(input.name.trim())) {
     issues.push(issue("invalid_value", source, `${path}.name`, "string", "plain text without Markdown links", node.migration));
   }
   if (typeof input.name === "string" && /[<>]/.test(input.name)) {
     issues.push(issue("invalid_value", source, `${path}.name`, "string", "plain text without HTML", node.migration));
   }
-  if (!isPlainObject(image)) return;
+  if (image == null) return;
+  if (!isPlainObject(image)) {
+    issues.push(issue("invalid_type", source, `${path}.image`, valueType(image), "object", node.migration));
+    return;
+  }
+  for (const key of Object.keys(image)) {
+    if (!["src", "variant"].includes(key)) {
+      issues.push(issue("unknown_field", source, `${path}.image.${key}`, valueType(image[key]), "src | variant", node.migration));
+    }
+  }
+  if (image.src != null && (typeof image.src !== "string" || image.src.length === 0)) {
+    issues.push(issue("invalid_value", source, `${path}.image.src`, valueType(image.src), "null or non-empty string", node.migration));
+  }
+  if (image.variant != null && !["avatar", "icon", "plain"].includes(image.variant)) {
+    issues.push(issue("invalid_value", source, `${path}.image.variant`, valueType(image.variant), "avatar | icon | plain", node.migration));
+  }
   if (typeof image.src === "string" && /^\[[\s\S]*\]\([\s\S]*\)$/.test(image.src.trim())) {
     issues.push(issue("invalid_value", source, `${path}.image.src`, "string", "plain image URL", node.migration));
   }
@@ -456,6 +490,7 @@ function validateNullableKebabId(node, input, source, path, issues) {
 }
 
 function validateMenuItems(node, input, source, path, issues) {
+  if (!Array.isArray(input)) return;
   const ids = new Set();
   let searchSeen = false;
   input.forEach((item, index) => {
@@ -502,13 +537,16 @@ function validateRegionWidgets(node, input, source, path, issues) {
         ? (typeof item.override === "string" ? item.override : item.layout)
         : null;
     if (id === "search") {
-      issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "Region widget excluding retired search; use menu.items[].type=search", node.migration));
+      issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "Region widget excluding retired search; use topbar.menu or leftbar.menu", node.migration));
     }
     if (id === "wiki_home") {
       issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "Region widget excluding removed wiki_home; Wiki navigation belongs to the Brand", node.migration));
     }
-    if (id === "brand") {
-      issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "site_brand | collection_brand", node.migration));
+    if (["brand", "site_brand", "collection_brand"].includes(id)) {
+      issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "fixed topbar.brand or leftbar.brand", node.migration));
+    }
+    if (id === "actions") {
+      issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "leftbar.footer.actions", node.migration));
     }
   });
 }
@@ -516,7 +554,7 @@ function validateRegionWidgets(node, input, source, path, issues) {
 function validateLeftbarContentWidgets(node, input, source, path, issues) {
   if (!Array.isArray(input)) return;
   validateRegionWidgets(node, input, source, path, issues);
-  const fixed = new Set(["site_brand", "collection_brand", "menu", "actions", "profile", "spacer"]);
+  const fixed = new Set(["site_brand", "collection_brand", "brand", "menu", "actions", "profile", "spacer"]);
   input.forEach((item, index) => {
     const id = typeof item === "string"
       ? item
@@ -529,6 +567,7 @@ function validateLeftbarContentWidgets(node, input, source, path, issues) {
 }
 
 function validateFooterActions(node, input, source, path, issues) {
+  if (!Array.isArray(input)) return;
   const actionTypes = new Set(["link", "button", "dropdown", "spacer"]);
   function validateAction(item, itemPath, nested) {
     if (!actionTypes.has(item.type)) {
@@ -850,12 +889,11 @@ function parseNode(node, input, source, path, issues, context) {
 }
 
 function validateStellarSemantics(config, source) {
-  const menuItems = config.menu?.items || [];
-  if (menuItems.length === 0) return;
-  const ids = new Set(menuItems.map(item => item.id).filter(id => typeof id === "string"));
-  if (ids.size === 0) return;
   const issues = [];
   for (const [profile, definition] of Object.entries(config.profiles || {})) {
+    const topbarMenu = Array.isArray(definition?.topbar?.menu) ? definition.topbar.menu : config.topbar?.menu || [];
+    const leftbarMenu = Array.isArray(definition?.leftbar?.menu) ? definition.leftbar.menu : config.leftbar?.menu || [];
+    const ids = new Set([...topbarMenu, ...leftbarMenu].map(item => item.id).filter(id => typeof id === "string"));
     const activeMenu = definition?.activeMenu;
     if (activeMenu != null && !ids.has(activeMenu)) {
       issues.push(issue(
@@ -863,7 +901,7 @@ function validateStellarSemantics(config, source) {
         source,
         `profiles.${profile}.active_menu`,
         "string",
-        "id present in menu.items",
+        "id present in topbar.menu or leftbar.menu",
         null
       ));
     }
@@ -997,7 +1035,7 @@ function recoverConfigInput(input, issues) {
       }
     }
     const deleted = deleteAt(recovered, target.tokens);
-    if (!deleted && target.issue.expected === "id present in menu.items") {
+    if (!deleted && target.issue.expected === "id present in topbar.menu or leftbar.menu") {
       changed = setAt(recovered, target.tokens, null) || changed;
     } else {
       changed = deleted || changed;

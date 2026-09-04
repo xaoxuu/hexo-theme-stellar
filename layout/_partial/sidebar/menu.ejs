@@ -1,16 +1,17 @@
 <%
 function layoutDiv() {
   var menuViewModel = typeof viewModel !== 'undefined' ? viewModel : null
+  var menuItems = Array.isArray(menu) ? menu : []
   var pageConfig = content_config(page)
   var currentMenu = typeof activeMenu !== 'undefined'
     ? activeMenu
     : pageConfig.navigation?.menu ?? page.navigation?.menu
   if (pageConfig.navigation?.menu == null) {
-    var pathMenu = menu_active_by_path(page.path)
+    var pathMenu = menu_active_by_path(page.path, menuItems)
     if (pathMenu != null) currentMenu = pathMenu
   }
   var entries = []
-  for (var menuItem of stellar_config('menu.items')) {
+  for (var menuItem of menuItems) {
     if (menuItem?.type === 'search') {
       if (!stellar_config('search.provider')) continue
       var searchProvider = stellar_config('search.provider')

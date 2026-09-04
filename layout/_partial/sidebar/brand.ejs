@@ -1,24 +1,24 @@
 <%
-var brand = (typeof brandModel !== 'undefined'
-  ? brandModel
-  : brandConfig(page, typeof brandSource !== 'undefined' ? brandSource : 'site')) || {}
-var activeBrandSource = typeof brandSource !== 'undefined' ? brandSource : 'site'
+var brand = (typeof brandModel !== 'undefined' ? brandModel : null) || {}
 var brandPlacement = typeof placement !== 'undefined' ? placement : 'leftbar'
 var activeViewModel = typeof viewModel !== 'undefined' ? viewModel : null
+var collectionProfile = activeViewModel?.collection?.profile
+  || content_config(page).collection?.profile
+  || (page.notebookIndex?.mode === 'notes' ? 'notebook' : null)
+var collectionContext = ['wiki', 'notebook', 'topic'].includes(collectionProfile)
 var brandAppearance = brandPlacement === 'topbar'
   ? 'topbar'
-  : activeBrandSource === 'collection' ? 'collection' : 'site'
+  : collectionContext ? 'collection' : 'site'
 
 function layoutBrandNavigation() {
-  if (brandPlacement !== 'leftbar' || activeBrandSource !== 'collection') return ''
-  if (activeViewModel?.collection?.profile !== 'wiki') return ''
+  if (brandPlacement !== 'leftbar' || collectionProfile !== 'wiki') return ''
   const href = activeViewModel?.render?.layout?.wikiIndexPath
   if (!href) return ''
   return `<div class="brand-navigation"><a class="brand-navigation__back cap" href="${pretty_url(href)}"><span class="ui-icon">${icon('default:back', '', true)}</span><span>${__('btn.all_wiki')}</span></a></div>`
 }
 
 function layoutCollectionSearch() {
-  if (brandPlacement !== 'leftbar' || activeBrandSource !== 'collection') return ''
+  if (brandPlacement !== 'leftbar' || !collectionContext) return ''
   if (!stellar_config('search.provider')) return ''
   var body = partial('_partial/sidebar/search', {
     item: {algoliaFilterPath: 'auto'},
@@ -48,7 +48,7 @@ function layoutBrandTitle() {
 function layoutBrandImage() {
   var image = brand.image
   var src = brandText(image?.src)
-  if (!src && activeBrandSource !== 'collection') return ''
+  if (!src) return ''
   var href = brandText(brand.href)
   var tag = href ? 'a' : 'div'
   var variant = image?.variant || 'icon'
@@ -63,7 +63,7 @@ function layoutBrandImage() {
 }
 
 function layoutBrandGithub() {
-  if (brandAppearance !== 'site') return ''
+  if (brandPlacement !== 'leftbar' || collectionContext) return ''
   const username = typeof brandGithubUsername === 'function' ? brandGithubUsername() : ''
   const apiBase = brandText(stellar_config('services.github.apiUrl')).replace(/\/+$/, '')
   if (!username || !apiBase) return ''

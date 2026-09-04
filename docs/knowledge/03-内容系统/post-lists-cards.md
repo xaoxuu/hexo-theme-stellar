@@ -161,9 +161,9 @@ graph LR
 
 | 属性 | 来源 | 用途 |
 |------|------|------|
-| `cover` | 当前文章 Front Matter 的 `card.cover` | 封面图 URL |
+| `cover` | 当前文章 Front Matter 的根级 `cover` | 封面图 URL |
 | `title` | 文章标题 | hero 卡片的大号展示文本（无标题回退日期） |
-| `caption` | `card.tagline` → description → excerpt | hero 卡片与置顶轮播共用的单行小字 |
+| `caption` | 根级 `tagline` → description → excerpt | hero 卡片与置顶轮播共用的单行小字 |
 | `excerpt` | excerpt → description → 正文自动截断 | classic 卡片摘要 |
 | `categories` / `tags` | Hexo 关系投影 | 分类面包屑与最多五个标签 |
 | `priority` / `listed` | 已解析列表设置与可见性 | 置顶排序、去重和隐藏过滤 |
@@ -286,7 +286,7 @@ graph TB
 
 ### 定位逻辑
 
-hero 卡片文字区固定 `bottom`：标题（headline）与单行小字（caption）始终叠加在封面底部；不再支持 top 布局，也不再渲染主题小字（原 `poster.topic` 已移除）。小字取值统一由 `caption()` helper（`scripts/lib/caption.js`）提供：优先取当前角色的显式 tagline（文章卡片为 `post.card.tagline`，Banner 为 `post.banner.tagline`，集合为 `proj.tagline`），之后依次回退 `description`、`excerpt || content` 去 HTML、压缩空白后截断 50 字；都没有则不渲染，置顶轮播复用同一取值。
+hero 卡片文字区固定 `bottom`：标题（headline）与单行小字（caption）始终叠加在封面底部；不再支持 top 布局，也不再渲染主题小字（原 `poster.topic` 已移除）。小字取值统一由 `caption()` helper（`scripts/lib/caption.js`）提供：优先取当前角色的根级 `tagline`，之后依次回退 `description`、`excerpt || content` 去 HTML、压缩空白后截断 50 字；都没有则不渲染，置顶轮播复用同一取值。Banner 的 `banner.tagline` 仅服务页内横幅。
 
 ### 渐变模糊层与黑色蒙版
 
@@ -410,7 +410,7 @@ flowchart TD
 
 否则回退到 **classic 卡片**。也就是说文章可以有封面图但仍用普通卡片（`article.listing.card_layout` 为 `classic` 或文章没有封面时）。
 
-Topic 集合的 `card.cover` / `card.tagline` 只用于专栏索引卡片，不级联到成员文章。Topic 文章继承全局 `card_layout`，但列表封面和显式小字必须分别由当前文章的 `card.cover` / `card.tagline` 提供；未配置时不使用 Topic 封面、Banner 或其它文章图片回退。
+Topic 集合的根级 `cover` / `tagline` 只用于专栏索引卡片，不级联到成员文章。Topic 文章继承全局 `card_layout`，但列表封面和显式小字必须分别由当前文章的根级 `cover` / `tagline` 提供；未配置时不使用 Topic 封面、Banner 或其它文章图片回退。
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
 
@@ -451,7 +451,7 @@ graph TD
     Meta["div.wiki-meta: available + heat"]
     Platform["default:platforms + 适用于 + available"]
     Star["default:fire + stargazers_count（热度）"]
-    Project["div.wiki-project: identity.icon or default:documents + name + caption(proj)"]
+    Project["div.wiki-project: icon or default:documents + name + caption(proj)"]
 
     Article --> Cover
     Cover --> Info
@@ -516,7 +516,7 @@ Topic 索引生成器从构建期 `topicIndex.items` 复制上架专栏投影，
 
 | 属性 | 兜底 | 用途 |
 |------|------|------|
-| `topic.cover` | 构建期已解析 `card.cover` → `INTERNAL.resources.topicCover` | 最新文章卡片背景图（2:1 裁剪） |
+| `topic.cover` | 构建期已解析集合根级 `cover` → `INTERNAL.resources.topicCover` | 最新文章卡片背景图（2:1 裁剪） |
 | `topic.headline` | `topic.name` | 容器顶部 `h2.topic-title` 专栏标题（置于卡片外） |
 | `topic.description` | — | 标题下方的 `p.topic-desc` 一句话描述 |
 | `topic.latest` | — | 最新文章，整卡跳转目标 |
@@ -604,8 +604,7 @@ Reveal Extension 使用原生 `IntersectionObserver` 独立观察每个元素。
 ---
 title: My Post Title
 date: 2024-01-01
-card:
-  cover: /images/cover.jpg
+cover: /images/cover.jpg
 categories:
   - Category A
   - Category B
@@ -633,9 +632,8 @@ article:
 ---
 title: My Photo Post
 date: 2024-01-01
-card:
-  cover: /images/hero.jpg
-  tagline: Caption text
+cover: /images/hero.jpg
+tagline: Caption text
 ---
 ```
 

@@ -9,7 +9,7 @@ tags:
 
 # Widget Catalog 架构
 
-Widget Catalog 是 Stellar v2 所有页面外壳组件的统一注册与解析入口。Brand、Menu、Search、Actions、Visitor、Wiki Home 等系统元素与 `_data/widgets.yml` 中的内容 Widget 使用同一条实例化、能力校验和 Region 渲染管线。
+Widget Catalog 是 Stellar v2 可移动页面外壳组件的统一注册与解析入口。Menu、Settings、Spacer 等系统 Widget 与 `_data/widgets.yml` 中的内容 Widget 使用同一条实例化、能力校验和 Region 渲染管线。Brand、Leftbar Menu 与 Footer Actions 是 Region 固定槽位，不属于 Catalog。
 
 Region 组合、级联、Leftbar Rail 与迁移规则见 [Region 与 Leftbar 系统](../02-布局系统/sidebar-system.md)。
 
@@ -37,12 +37,9 @@ Region 的 `widgets` 接受字符串 ID，也接受带 `override` 的实例对�
 
 | ID | layout | 数据契约 |
 | --- | --- | --- |
-| `brand` | `brand` | PageViewModel `render.layout.brand` |
 | `menu` | `menu` | `menu` 与当前导航投影 |
-| `search` | `search` | Search Extension 与搜索范围投影 |
-| `actions` | `actions` | `footer.actions` |
-| `visitor` | `visitor` | 当前评论 Provider 的本地缓存；仅昵称与合法头像 |
-| `wiki_home` | `wiki_home` | Wiki 索引地址 |
+| `settings` | `settings` | 外观设置入口 |
+| `spacer` | `spacer` | Topbar 弹性占位 |
 
 这些 ID 不需要写入 `_data/widgets.yml`。Region 负责摆放，原业务配置仍由各自 domain 所有。
 
@@ -50,7 +47,7 @@ Region 的 `widgets` 接受字符串 ID，也接受带 `override` 的实例对�
 
 目标 Region 映射到 `topbar`、`leftbar` 或 `rightbar` presentation；Leftbar 折叠时进一步读取 `leftbarRail`，移动端读取 `drawer`。当前代表性规则：
 
-- Brand、Menu、Search、Actions、Visitor：Topbar、Leftbar、Rail、Drawer。
+- Menu、Settings：Topbar、Leftbar、Rail、Drawer。
 - TOC：Topbar、Leftbar、Rail、Rightbar、Drawer。
 - Tree、Tagtree：Leftbar、Rail、Rightbar、Drawer。
 - Recent、Related、GitHub、Author：Leftbar、Rightbar、Drawer。
@@ -70,9 +67,7 @@ flowchart LR
   S --> P[Topbar/Leftbar/Rightbar presentation]
 ```
 
-`layout/_partial/regions/widgets.ejs` 是唯一 Region Widget 渲染入口。模板只消费冻结实例，不读取原始配置。普通内容 Widget 继续复用 `layout/_partial/widgets/*.ejs`；系统 Widget 转发到各自已有 partial，以保留搜索、菜单激活、Collection Brand 和 Actions 契约。
-
-Leftbar descriptor 还携带私有 `leftbarZone`：Brand/Search 为 `top`，Actions 为 `bottom`，Visitor 为 `system`，其余为 `body`。该字段不进入公开 Schema，也不改变用户数组和重复实例顺序。Visitor 禁止把邮箱、Token、Access Token 或管理员状态写入 DOM；不支持或不可读取的 Provider 统一匿名回退。
+`layout/_partial/regions/widgets.ejs` 是唯一 Region Widget 渲染入口。模板只消费冻结实例，不读取原始配置。Topbar Brand 在 Widget 栈之前渲染；Leftbar Brand、Menu 与 Footer Actions 由对应固定 partial 直接消费解析后的 Region 配置。
 
 ## 通用内容组件
 

@@ -118,7 +118,7 @@ function og_args() {
   if (stellarSeo.openGraph.twitterId) {
     args.twitter_id = stellarSeo.openGraph.twitterId;
   }
-  if (page.layout == 'post' && pageConfig.card?.cover) {
+  if (page.layout == 'post' && pageConfig.cover) {
     args.twitter_card = 'summary_large_image';
   }
   if (collection_id(page, "wiki") && !page.description) {
@@ -127,7 +127,7 @@ function og_args() {
       args.description = proj.description;
     }
   }
-  args.image = pageConfig.card?.cover || pageConfig.banner?.image || first_content_image(page.content) || config.avatar || (config.email ? gravatar(config.email) : null);
+  args.image = pageConfig.cover || pageConfig.banner?.image || first_content_image(page.content) || config.avatar || (config.email ? gravatar(config.email) : null);
   return Object.assign(args, pageConfig.seo?.openGraph || {});
 }
 

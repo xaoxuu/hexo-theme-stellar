@@ -25,12 +25,16 @@ test("Layout Profile 导航只投影内部 menu 字段", () => {
 
 test("Layout Profile 最后显式覆盖 Widget，并按字段继承 Leftbar 外壳", () => {
   assert.deepEqual(toRenderRegions(
-    { leftbar: { enabled: true, brand: "site_brand", menu: true, footerActions: true, widgets: ["global"] } },
-    { leftbar: { brand: false, widgets: ["recent"] }, rightbar: { widgets: ["toc"] } }
+    {
+      topbar: { enabled: false, brand: { name: "Top" }, menu: [], widgets: [] },
+      leftbar: { enabled: true, brand: { name: "Site", tagline: "Global" }, menu: [{ id: "post" }], footer: { actions: [{ type: "link" }] }, widgets: ["global"] },
+      rightbar: { enabled: true, widgets: [] }
+    },
+    { leftbar: { brand: { tagline: null }, menu: [], widgets: ["recent"] }, rightbar: { enabled: false, widgets: ["toc"] } }
   ), {
-    topbar: { widgets: [] },
-    leftbar: { enabled: true, brand: false, menu: true, footer: { actions: true }, widgets: ["recent"] },
-    rightbar: { widgets: ["toc"] }
+    topbar: { enabled: false, brand: { name: "Top" }, menu: [], widgets: [] },
+    leftbar: { enabled: true, brand: { name: "Site", tagline: null }, menu: [], footer: { actions: [{ type: "link" }] }, widgets: ["recent"] },
+    rightbar: { enabled: false, widgets: ["toc"] }
   });
 });
 
