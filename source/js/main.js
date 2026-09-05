@@ -45,6 +45,26 @@ const util = {
     }
   },
 
+  share: async (button) => {
+    if (!button) return;
+    const data = {
+      title: button.dataset.shareTitle || '',
+      text: button.dataset.shareText || button.dataset.shareTitle || '',
+      url: button.dataset.shareUrl || ''
+    };
+    try {
+      const supported = typeof navigator.share === 'function'
+        && (typeof navigator.canShare !== 'function' || navigator.canShare(data));
+      if (supported) {
+        await navigator.share(data);
+        return;
+      }
+    } catch (error) {
+      if (error?.name === 'AbortError') return;
+    }
+    util.copy(button.dataset.copyTarget, button.dataset.copyMessage);
+  },
+
   toggle: (id) => {
     const el = document.getElementById(id);
     if (el) {

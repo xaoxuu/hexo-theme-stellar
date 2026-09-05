@@ -1,5 +1,7 @@
 "use strict";
 
+const { SHARE_SERVICE_IDS } = require("../lib/share-services");
+
 function literal(value) {
   return { kind: "literal", value };
 }
@@ -194,7 +196,7 @@ const CONFIG_RULES = Object.freeze([
   ["article.banner.ratio", { exclusiveMinimum: 0 }],
   ["article.category_colors", stringRecord("css_color")],
   ["article.footer.license", { type: ["boolean", "string"], validator: "license_value" }],
-  ["article.footer.share", { items: item("string", { defaultValue: "" }), normalizer: "trimmed_string_list" }],
+  ["article.footer.share", { items: item("string", { defaultValue: "", values: SHARE_SERVICE_IDS }), normalizer: "trimmed_string_list" }],
   ["article.related_posts_limit", { minimum: 0, validator: "non_negative_integer" }],
   ["notebook.listing.excerpt_length", { minimum: 0, validator: "non_negative_integer" }],
   ["notebook.listing.per_page", { type: ["number", "null"], minimum: 0, validator: "nullable_non_negative_integer" }],
@@ -202,7 +204,7 @@ const CONFIG_RULES = Object.freeze([
   ["notebook.listing.sort.direction", { values: ["asc", "desc"] }],
   ["notebook.tag_icons", { ...stringRecord(), validator: "non_empty_record_keys" }],
   ["notebook.footer.license", { type: ["string", "boolean", "null"], validator: "license_override" }],
-  ["notebook.footer.share", { type: ["array", "null"], items: item("string", { defaultValue: "" }), normalizer: "nullable_trimmed_string_list" }],
+  ["notebook.footer.share", { type: ["array", "null"], items: item("string", { defaultValue: "", values: SHARE_SERVICE_IDS }), normalizer: "nullable_trimmed_string_list" }],
 
   ["appearance.preset", { values: ["card", "glass", "minimal", "flat"] }],
   ["appearance.color_scheme", { values: ["auto", "light", "dark"] }],

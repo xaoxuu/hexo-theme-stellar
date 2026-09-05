@@ -2,6 +2,7 @@
 "use strict";
 
 const { deepFreeze } = require("./schema-utils");
+const { SHARE_SERVICE_IDS } = require("../lib/share-services");
 
 const COLLECTION_SCOPE = Object.freeze(["collection"]);
 const FRONT_MATTER_SCOPE = Object.freeze(["front_matter"]);
@@ -140,7 +141,7 @@ const CONTENT_OVERRIDE_DEFINITIONS = [
   ["footer", "object", derived("content defaults footer"), { boundary: "sealed" }],
   ["footer.references", "array", literal([]), { items: { type: ["object", "string"] } }],
   ["footer.license", ["boolean", "string", "null"], literal(null)],
-  ["footer.share", ["boolean", "array", "null"], literal(null), { items: { type: ["string"], values: ["wechat", "weibo", "email", "link"] } }],
+  ["footer.share", ["boolean", "array", "null"], literal(null), { items: { type: ["string"], values: SHARE_SERVICE_IDS } }],
   ["footer.show_tags", ["boolean", "null"], literal(null)],
   ["comments", "object", derived("theme comments and broader content scope"), { boundary: "sealed" }],
   ["comments.enabled", ["boolean", "null"], literal(null)],

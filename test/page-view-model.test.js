@@ -11,6 +11,7 @@ const {
 } = require("../scripts/lib/models");
 const { parseStellarConfig } = require("../scripts/lib/config-schema");
 const { parseCollectionConfig, parsePageConfig } = require("../scripts/lib/content-config");
+const { SHARE_SERVICE_IDS } = require("../scripts/lib/share-services");
 
 const stellarConfig = parseStellarConfig({ themeConfig: {}, siteConfig: {} });
 const siteConfig = {
@@ -126,6 +127,60 @@ test("all PageViewModel profiles use the shared validated and frozen pipeline", 
     assert.deepEqual(Object.keys(viewModel), ["collection", "item", "render"]);
     assert.equal(viewModel.collection.profile, profile);
     assertDeepFrozen(viewModel);
+  }
+});
+
+test("Article PageViewModels preserve registered share service order", () => {
+  const cases = [
+    [buildPostPageViewModel, postInput(), "post", "post"],
+    [buildWikiPageViewModel, wikiInput(), "wiki", "docs"],
+    [buildNotebookPageViewModel, notebookInput(), "notebook", "dev"]
+  ];
+  for (const [build, input, profile, id] of cases) {
+    input.frontMatter = parsePageConfig({
+      title: id,
+      ...(profile === "post" ? {} : { collection: { profile, id } }),
+      footer: { share: SHARE_SERVICE_IDS }
+    }, input.source);
+    assert.deepEqual(build(input).render.article.footer.share.services, SHARE_SERVICE_IDS);
+  }
+});
+
+test("Article PageViewModels enable all registered share services by default", () => {
+  for (const [build, input] of [
+    [buildPostPageViewModel, postInput()],
+    [buildWikiPageViewModel, wikiInput()],
+    [buildNotebookPageViewModel, notebookInput()]
+  ]) {
+    assert.deepEqual(build(input).render.article.footer.share.services, SHARE_SERVICE_IDS);
+  }
+});
+
+test("Article PageViewModels defensively filter unknown share services", () => {
+  for (const [build, input] of [
+    [buildPostPageViewModel, postInput()],
+    [buildWikiPageViewModel, wikiInput()],
+    [buildNotebookPageViewModel, notebookInput()]
+  ]) {
+    input.frontMatter = {
+      ...input.frontMatter,
+      footer: { share: ["telegram", "unknown", "x"] }
+    };
+    assert.deepEqual(build(input).render.article.footer.share.services, ["telegram", "x"]);
+  }
+});
+
+test("Article PageViewModels keep an explicit empty share list disabled", () => {
+  for (const [build, input] of [
+    [buildPostPageViewModel, postInput()],
+    [buildWikiPageViewModel, wikiInput()],
+    [buildNotebookPageViewModel, notebookInput()]
+  ]) {
+    input.frontMatter = {
+      ...input.frontMatter,
+      footer: { share: [] }
+    };
+    assert.equal(build(input).render.article.footer.share, null);
   }
 });
 

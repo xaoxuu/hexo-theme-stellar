@@ -10,17 +10,42 @@ function layoutDiv() {
   if (typeof articleFooter.license === 'string' && articleFooter.license.length > 0) {
     item.push('license');
   }
-  if (Array.isArray(articleFooter.share) && articleFooter.share.length > 0) {
-    item.push('share');
-  }
   var contributorService = service_provider(stellar_config('services.contributors'))
   var contributors = partial('contributors', {repositories: contributorService ? contributorService.repositories : []})
   if (contributors?.trim().length > 0) {
     item.push('contributors')
   }
-  if (item.length === 0) {
-    return el;
+  var shareEl = ''
+  var showSharePlugin = false
+  if (collection_id(page, "wiki")) {
+    var proj = stellar_data('wiki').tree[collection_id(page, "wiki")]
+    if (pageConfig.footer?.share != null) {
+      showSharePlugin = pageConfig.footer.share == true
+    } else if (proj != null) {
+      showSharePlugin = proj.footer?.share == true
+    }
+  } else if (page.layout == 'post') {
+    showSharePlugin = pageConfig.footer?.share != false
+  } else if (pageConfig.footer?.share) {
+    showSharePlugin = true
   }
+  if (Array.isArray(articleFooter.share) && showSharePlugin) {
+    var shareImage = pageConfig.cover || ''
+    if (!shareImage && collection_id(page, "wiki")) {
+      shareImage = stellar_data('wiki').tree[collection_id(page, "wiki")]?.cover || ''
+    }
+    shareEl = partial('_partial/main/article/share', {share: {
+      services: articleFooter.share,
+      permalink: page.permalink,
+      title: page.title + ' - ' + config.title,
+      image: shareImage,
+      summary: truncate(page.description || strip_html(page.excerpt || page.content), {length: 120})
+    }})
+  }
+  if (item.length === 0) {
+    return shareEl;
+  }
+  el += shareEl
   el += `<div class="article-footer${scrollreveal(' ')}">`
   if (pageConfig.footer?.references?.length > 0) {
     function refList() {
@@ -85,80 +110,6 @@ function layoutDiv() {
 
   if (contributors) {
     el += contributors
-  }
-
-  var showSharePlugin = false
-  if (collection_id(page, "wiki")) {
-    var proj = stellar_data('wiki').tree[collection_id(page, "wiki")]
-    if (pageConfig.footer?.share != null) {
-      showSharePlugin = pageConfig.footer.share == true
-    } else if (proj != null) {
-      showSharePlugin = proj.footer?.share == true
-    }
-  } else if (page.layout == 'post') {
-    showSharePlugin = pageConfig.footer?.share != false
-  } else if (pageConfig.footer?.share) {
-    showSharePlugin = true
-  }
-  if (Array.isArray(articleFooter.share) && showSharePlugin) {
-    function urlenc(v) {
-      return encodeURIComponent(v == null ? '' : String(v))
-    }
-    function socialButtons() {
-      var el = ''
-      articleFooter.share.forEach((item, i) => {
-        if (['wechat', 'weibo', 'email', 'link'].includes(item)) {
-          el += '<a class="social share-item ' + item + '"';
-          if (item == 'weibo') {
-            el += ' target="_blank" rel="external nofollow noopener noreferrer"';
-          }
-          if (item == 'wechat') {
-            el += ' onclick="util.toggle(&quot;qrcode-wechat&quot;)"';
-          } else if (item == 'weibo') {
-            el += ' href="https://service.weibo.com/share/share.php?url=' + urlenc(page.permalink);
-            el += '&title=' + urlenc(page.title + ' - ' + config.title);
-            if (pageConfig.cover) {
-              el += '&pics=' + urlenc(pageConfig.cover);
-            } else if (collection_id(page, "wiki")) {
-              var projectCover = stellar_data('wiki').tree[collection_id(page, "wiki")]?.cover
-              if (projectCover) el += '&pics=' + urlenc(projectCover)
-            }
-            el += '&summary=' + urlenc(truncate(page.description || strip_html(page.excerpt || page.content), {length: 120}));
-            el += '"';
-          } else if (item == 'email') {
-            el += ' href="mailto:?subject=' + urlenc(page.title + ' - ' + config.title) + '&amp;'
-            el += 'body=' + urlenc(page.permalink) + '"';
-          } else if (item == 'link') {
-            el += ' onclick="util.copy(&quot;copy-link&quot;, &quot;' + escape_html(__('message.copied')) + '&quot;)"';
-          }
-          el += '>';
-          el += icon(`share:${item}`)
-          el += '</a>';
-        }
-      });
-      return el;
-    }
-    function qrcode() {
-      if (articleFooter.share.includes('wechat')) {
-        return `
-        <div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${urlenc(page.permalink)}"/>
-        </div>
-        `
-      } else {
-        return ''
-      }
-    }
-    el += `
-    <section id="share">
-      <div class="header"><span>${__('meta.share')}</span></div>
-      <div class="body">
-        <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="${escape_html(page.permalink)}" /></div>
-        <div class="social-wrap dis-select">${socialButtons()}</div>
-        ${qrcode()}
-      </div>
-    </section>
-    `
   }
 
   el += '</div>';

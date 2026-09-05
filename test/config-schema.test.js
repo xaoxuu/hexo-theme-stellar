@@ -6,6 +6,7 @@ const assert = require("node:assert/strict");
 const attachConfig = require("../scripts/events/lib/config-schema");
 const { ConfigSchemaError, parseStellarConfig } = require("../scripts/lib/config-schema");
 const { toRenderRegions } = require("../scripts/lib/layout-config");
+const { SHARE_SERVICE_IDS } = require("../scripts/lib/share-services");
 
 function assertDeepFrozen(value) {
   if (value == null || typeof value !== "object") return;
@@ -28,6 +29,8 @@ test("Theme config loads complete frozen defaults", () => {
   assert.equal(config.rightbar.enabled, true);
   assert.equal(config.topbar.brand.style, undefined);
   assert.equal(config.leftbar.brand.style, "regular");
+  assert.deepEqual(config.article.footer.share, SHARE_SERVICE_IDS);
+  assert.equal(config.notebook.footer.share, null);
   assertDeepFrozen(config);
 });
 
@@ -62,6 +65,22 @@ test("Theme config rejects unknown, mistyped, and unsafe values with sourced iss
   assert.throws(
     () => parseStellarConfig({ themeConfig: { appearance: { colors: { primary: "red; display:none" } } } }),
     error => hasIssue(error, "appearance.colors.primary", "invalid_value")
+  );
+});
+
+test("Theme share defaults accept only registered service IDs", () => {
+  const config = parseStellarConfig({
+    themeConfig: {
+      article: { footer: { share: SHARE_SERVICE_IDS } },
+      notebook: { footer: { share: SHARE_SERVICE_IDS } }
+    }
+  });
+  assert.deepEqual(config.article.footer.share, SHARE_SERVICE_IDS);
+  assert.deepEqual(config.notebook.footer.share, SHARE_SERVICE_IDS);
+  assert.deepEqual(parseStellarConfig({ themeConfig: { article: { footer: { share: [] } } } }).article.footer.share, []);
+  assert.throws(
+    () => parseStellarConfig({ themeConfig: { article: { footer: { share: ["twitter"] } } } }),
+    error => hasIssue(error, "article.footer.share[0]", "invalid_value")
   );
 });
 

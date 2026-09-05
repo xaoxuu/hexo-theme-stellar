@@ -445,8 +445,16 @@ article:
   footer:
     # 设置文章许可协议；false 表示不显示许可信息。
     license: 本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。
-    # 设置文章分享服务；空数组表示不显示分享入口。
-    share: []
+    # 设置文章分享服务；默认全部启用，支持 wechat、weibo、x、telegram、whatsapp、email、link、system；空数组表示不显示分享入口。
+    share:
+      - wechat
+      - weibo
+      - x
+      - telegram
+      - whatsapp
+      - email
+      - link
+      - system
     # 控制文章页页脚是否显示标签。
     show_tags: true
   # 设置相关文章最大数量，0 表示不显示相关文章。

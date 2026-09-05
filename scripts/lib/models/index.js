@@ -25,6 +25,7 @@ const { firstContentImage, postDescription, postImages } = require("../seo");
 const { caption } = require("../caption");
 const { wikiReadmeHtml } = require("../wiki_readme");
 const { resolveServiceProvider } = require("../service-provider");
+const { filterShareServices } = require("../share-services");
 const {
   articleFooterDefaults,
   articlePresentationDefaults,
@@ -299,7 +300,7 @@ function buildPostArticleRender(input, item) {
   const configuredShare = footer.share === true
     ? articleConfig.footer.share
     : Array.isArray(footer.share) ? footer.share : [];
-  const shareServices = configuredShare.filter(name => ["wechat", "weibo", "email", "link"].includes(name));
+  const shareServices = filterShareServices(configuredShare);
   const summarySource = typeof frontMatter.description === "string" && frontMatter.description.length > 0
     ? frontMatter.description
     : item.excerpt || item.content;
@@ -681,7 +682,7 @@ function buildWikiRenderModel(input, collection, item) {
   const configuredShare = footer.share === true
     ? articleDefaults.share
     : Array.isArray(footer.share) ? footer.share : [];
-  const shareServices = configuredShare.filter(name => ["wechat", "weibo", "email", "link"].includes(name));
+  const shareServices = filterShareServices(configuredShare);
   const readNext = wikiReadNext(collection, item);
   const isHomepage = collection.route.homepage === item.route.path;
   const hero = collection.presentation.hero || {};

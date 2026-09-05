@@ -14,6 +14,7 @@ const {
   validatePageProfileConfig
 } = require("../scripts/lib/content-config");
 const { getProfileAdapter } = require("../scripts/lib/collection-pipeline/registry");
+const { SHARE_SERVICE_IDS } = require("../scripts/lib/share-services");
 
 test("Collection config normalizes public fields and freezes open parameter bags", () => {
   const parsed = parseCollectionConfig({
@@ -90,6 +91,17 @@ test("Content override navigation is flat and Collection banner cascades through
   assert.throws(
     () => parsePageConfig({ navigation: { breadcrumb: false } }, "page.md"),
     /navigation 已移除/
+  );
+});
+
+test("Content footer share accepts only registered service IDs", () => {
+  const collection = parseCollectionConfig({ name: "Docs", footer: { share: SHARE_SERVICE_IDS } }, "collection.yml");
+  const page = parsePageConfig({ footer: { share: SHARE_SERVICE_IDS } }, "page.md");
+  assert.deepEqual(collection.footer.share, SHARE_SERVICE_IDS);
+  assert.deepEqual(page.footer.share, SHARE_SERVICE_IDS);
+  assert.throws(
+    () => parsePageConfig({ footer: { share: ["twitter"] } }, "page.md"),
+    /footer\.share\[0\].*wechat \| weibo \| x \| telegram \| whatsapp \| email \| link \| system/
   );
 });
 

@@ -59,6 +59,7 @@ function postLayoutDiv() {
   el += item.content
   el += '</article>'
   el += partial('_partial/main/article/post_tags', {tags: article.tags})
+  el += partial('_partial/main/article/share', {share: article.footer.share})
   el += partial('_partial/main/article/post_footer', {footer: article.footer})
   el += partial('_partial/main/article/post_read_next', {
     previous: article.previous,
@@ -82,6 +83,7 @@ function wikiLayoutDiv() {
   el += `<article class="${cls}">`
   el += item.content.trim().length > 0 ? item.content : article.readmeHtml
   el += '</article>'
+  el += partial('_partial/main/article/share', {share: article.footer.share})
   el += partial('_partial/main/article/post_footer', {footer: article.footer})
   el += partial('_partial/main/article/post_read_next', {
     previous: article.previous,
@@ -105,6 +107,7 @@ function notebookLayoutDiv() {
   el += item.content
   el += partial('_partial/main/notebook/note_tags', {tags: article.tags})
   el += '</article>'
+  el += partial('_partial/main/article/share', {share: article.footer.share})
   el += partial('_partial/main/article/post_footer', {footer: article.footer})
   page.cmt_rendered = article.comments.enabled
   el += partial('_partial/comments/layout', {comments: article.comments})

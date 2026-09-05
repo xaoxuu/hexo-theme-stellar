@@ -1,8 +1,4 @@
 <%
-function urlenc(value) {
-  return encodeURIComponent(value == null ? '' : String(value))
-}
-
 function referenceList(items) {
   return items.map(function(ref) {
     return `<li class="post-title">${markdown(ref)}</li>`
@@ -27,39 +23,6 @@ function contributorSection(contributor) {
   </section>`
 }
 
-function shareSection(share) {
-  if (!share) return ''
-  var buttons = ''
-  share.services.forEach(function(service) {
-    buttons += `<a class="social share-item ${service}"`
-    if (service === 'weibo') buttons += ' target="_blank" rel="external nofollow noopener noreferrer"'
-    if (service === 'wechat') {
-      buttons += ' onclick="util.toggle(&quot;qrcode-wechat&quot;)"'
-    } else if (service === 'weibo') {
-      buttons += ` href="https://service.weibo.com/share/share.php?url=${urlenc(share.permalink)}&title=${urlenc(share.title)}`
-      if (share.image) buttons += `&pics=${urlenc(share.image)}`
-      buttons += `&summary=${urlenc(share.summary)}"`
-    } else if (service === 'email') {
-      buttons += ` href="mailto:?subject=${urlenc(share.title)}&amp;body=${urlenc(share.permalink)}"`
-    } else if (service === 'link') {
-      buttons += ` onclick="util.copy(&quot;copy-link&quot;, &quot;${escape_html(__('message.copied'))}&quot;)"`
-    }
-    buttons += `>${icon(`share:${service}`)}</a>`
-  })
-  var qrcode = share.services.includes('wechat')
-    ? `<div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0"><img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data=${urlenc(share.permalink)}"/></div>`
-    : ''
-  return `
-  <section id="share">
-    <div class="header"><span>${__('meta.share')}</span></div>
-    <div class="body">
-      <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="${escape_html(share.permalink)}" /></div>
-      <div class="social-wrap dis-select">${buttons}</div>
-      ${qrcode}
-    </div>
-  </section>`
-}
-
 function layoutDiv() {
   var sections = ''
   if (footer.references.length > 0) {
@@ -77,7 +40,6 @@ function layoutDiv() {
     </section>`
   }
   sections += contributorSection(footer.contributor)
-  sections += shareSection(footer.share)
   if (sections.length === 0) return ''
   return `<div class="article-footer${scrollreveal(' ')}">${sections}</div>`
 }
