@@ -978,11 +978,10 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
   const collectionConfig = input.collectionConfig;
   const profiles = requireLayoutProfiles(input.stellarConfig);
   const topicProfile = profiles.topic;
-  const indexTopic = profiles.topicIndex;
   const collectionRoute = isPlainObject(collectionConfig.route) ? collectionConfig.route : {};
   const collectionListing = isPlainObject(collectionConfig.listing) ? collectionConfig.listing : {};
   const content = requireContentConfig(input.stellarConfig, input.themeSource);
-  const baseDir = profilePath(indexTopic.path) || "topic";
+  const baseDir = profilePath(topicProfile.path) || "topic";
   const routePath = collectionRoute.path || `${baseDir}/${collectionId}`;
   const sort = collectionListing.sort ?? { field: "date", direction: "desc" };
 
@@ -990,7 +989,7 @@ function buildTopicCollectionModel(input, collectionId, currentId) {
   const collectionNavigation = toContentNavigation(collectionConfig);
   const collectionRegions = pick(collectionConfig, CONTENT_MODEL_FIELDS.regionIds);
   const availableBrand = collectionBrand(normalizeCollectionIdentity(collectionConfig), routePath, {
-    indexPath: indexTopic.path,
+    indexPath: topicProfile.path,
     backLabel: "btn.all_topic"
   });
   assertCollectionBrandConfig(collectionConfig, "site", input.collectionSource || "<collection>");

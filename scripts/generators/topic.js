@@ -10,7 +10,7 @@ const { stableSort } = require("../lib/collection-pipeline/shared");
 
 hexo.extend.generator.register("index_topic", function () {
   const { topicIndex } = hexo.stellar.data;
-  const profile = requireLayoutProfiles(hexo.stellar?.config).topicIndex;
+  const profiles = requireLayoutProfiles(hexo.stellar?.config);
   if (!Array.isArray(topicIndex?.items) || topicIndex.items.length === 0) {
     return {};
   }
@@ -20,11 +20,11 @@ hexo.extend.generator.register("index_topic", function () {
   );
   var ret = [];
   ret.push({
-    path: generatorPath(profile.path),
+    path: generatorPath(profiles.topic.path),
     layout: ["index_topic"],
     data: {
       layout: "index_topic",
-      navigation: toRenderNavigation(profile),
+      navigation: toRenderNavigation(profiles.blogIndex),
       topicIndex: { items }
     }
   });

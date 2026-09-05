@@ -182,6 +182,24 @@ test("Region inheritance preserves explicit overrides and empty lists", () => {
   assert.deepEqual(regions.rightbar.widgets, []);
 });
 
+test("Topic index reuses blogIndex while Topic owns its route prefix", () => {
+  const config = parseStellarConfig({
+    themeConfig: {
+      profiles: {
+        blog_index: { listing_nav: { enabled: true } },
+        topic: { path: "/series/" }
+      }
+    }
+  });
+  assert.equal(config.profiles.blogIndex.listingNav.enabled, true);
+  assert.equal(config.profiles.topic.path, "/series/");
+  assert.equal(config.profiles.topicIndex, undefined);
+  assert.throws(
+    () => parseStellarConfig({ themeConfig: { profiles: { topic_index: {} } } }),
+    error => hasIssue(error, "profiles.topic_index", "unknown_field")
+  );
+});
+
 test("Removed shell roots and movable Brand or Actions widgets are rejected", () => {
   for (const [themeConfig, path] of [
     [{ brand: { name: "Legacy" } }, "brand"],

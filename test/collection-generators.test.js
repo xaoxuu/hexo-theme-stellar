@@ -40,7 +40,14 @@ test("Collection generators project sorted and filtered indexes into routes", ()
         { id: "newer", listed: true, sortDate: "2026-02-01" }
       ]
     }
+  }, {
+    profiles: {
+      blog_index: { active_menu: "topic" },
+      topic: { path: "/series/" }
+    }
   }));
+  assert.equal(topicRoutes[0].path, "series/index.html");
+  assert.deepEqual(topicRoutes[0].data.navigation, { menu: "topic" });
   assert.deepEqual(topicRoutes[0].data.topicIndex.items.map(item => item.id), ["newer", "older"]);
 
   const wikiGenerator = loadGenerator("../scripts/generators/wiki", "wiki");

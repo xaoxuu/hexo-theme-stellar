@@ -43,9 +43,9 @@ function layoutDiv() {
 
   if (stellar_data('topic')?.publish_list?.length > 0) {
     if (page.layout == 'index_topic') {
-      el += '<a class="active" href="' + pretty_url(stellar_config('profiles.topicIndex.path')) + '">' + __("btn.topic") + '</a>';
+      el += '<a class="active" href="' + pretty_url(stellar_config('profiles.topic.path')) + '">' + __("btn.topic") + '</a>';
     } else {
-      el += '<a href="' + pretty_url(stellar_config('profiles.topicIndex.path')) + '">' + __("btn.topic") + '</a>';
+      el += '<a href="' + pretty_url(stellar_config('profiles.topic.path')) + '">' + __("btn.topic") + '</a>';
     }
   }
 

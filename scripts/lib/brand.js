@@ -20,7 +20,6 @@ function shouldShowMobileBrand({ profileKey }) {
   return [
     "home",
     "blogIndex",
-    "topicIndex",
     "wikiIndex",
     "notebookIndex",
     "noteIndex"

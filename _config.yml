@@ -200,24 +200,10 @@ profiles:
         - ghrepo
         - toc
 
-  # 配置专栏列表页默认布局。
-  topic_index:
-    # 设置专栏列表页的自动生成路径。
-    path: /topic/
-    # 设置专栏列表页高亮的主菜单项；null 表示不高亮。
-    active_menu: post
-    # 配置专栏列表页 Leftbar 覆盖项。
-    leftbar:
-      # 设置专栏列表页 Leftbar 内容 Widget；数组会整体替换站点级列表。
-      widgets:
-        - recent
-    # 配置专栏列表页 Rightbar 覆盖项。
-    rightbar:
-      # 设置专栏列表页 Rightbar Widget；空数组表示显式隐藏。
-      widgets: []
-
   # 配置专栏文章页默认布局。
   topic:
+    # 设置专栏索引与未显式配置路径的专栏所使用的路径前缀。
+    path: /topic/
     # 设置专栏文章页高亮的主菜单项；null 表示不高亮。
     active_menu: post
     # 配置专栏文章页 Leftbar 覆盖项。
