@@ -50,7 +50,7 @@ CHANGELOG.md 的历史数据已于 2026-08-09 一次性从 GitHub Releases API �
 - 当前在 `main` 分支，且已同步最新代码
 - 发布基线、最终净变化、知识库与 CHANGELOG 已按上文核验
 - 工作区无无关改动（仅允许 `package.json`、`CHANGELOG.md` 有未提交变更，已暂存与未暂存都会检查）
-- 本机 Node.js 可用（仓库要求 Node >= 22）
+- 本机 Node.js 满足 `package.json` 的 `engines`
 
 ## 使用方式
 

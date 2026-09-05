@@ -198,9 +198,6 @@ function buildReport() {
 }
 
 function main() {
-  if (process.versions.node.split(".")[0] !== "22") {
-    throw new Error(`Performance check requires Node.js 22 for stable gzip output, got ${process.versions.node}`);
-  }
   const report = buildReport();
   const output = `${JSON.stringify(report, null, 2)}\n`;
   process.stdout.write(output);

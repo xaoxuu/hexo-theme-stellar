@@ -562,9 +562,6 @@ function writeAcceptanceArtifacts(root, tarball, sites) {
 }
 
 async function main() {
-  if (process.versions.node.split(".")[0] !== "22") {
-    throw new Error(`Package integration requires Node.js 22, got ${process.versions.node}`);
-  }
   const args = process.argv.slice(2);
   const prepared = acceptanceRoot(args);
   const { root } = prepared;

@@ -29,6 +29,9 @@
   ],
   "author": "[@xaoxuu](https://github.com/xaoxuu/)",
   "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
   "bugs": {
     "url": "https://github.com/xaoxuu/hexo-theme-stellar/issues/"
   },

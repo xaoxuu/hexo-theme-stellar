@@ -296,7 +296,7 @@ preconnect:
 
 ## 候选包首屏核心 JS 门禁
 
-性能检查用固定博客输入分别构建公开基线 tag 与当前 npm tarball；基线和降幅阈值由 [ci/check-performance.js](../../../ci/check-performance.js) 维护。统计口径是首页无条件输出的本地 script、可执行 inline script 以及 ESM 入口的静态 import；dynamic import、selector 未命中的 Extension 和第三方资源不计入核心集合。每个唯一资源使用 Node.js 22 的 gzip level 9 后求和，避免不同 Node/zlib 版本造成测量漂移。
+性能检查用固定博客输入分别构建公开基线 tag 与当前 npm tarball；基线和降幅阈值由 [ci/check-performance.js](../../../ci/check-performance.js) 维护。统计口径是首页无条件输出的本地 script、可执行 inline script 以及 ESM 入口的静态 import；dynamic import、selector 未命中的 Extension 和第三方资源不计入核心集合。基线与候选包在同一 Node/zlib 运行时中使用 gzip level 9 压缩，比较相对降幅而不跨运行时比较绝对字节数。
 
 `npm run performance:check` 重新构建两边，向标准输出提供资源清单、体积和降幅，未达到阈值时失败。仓库不保存当前候选的生成报告快照，也不要求实现变化后重写测量结果。该检查属于性能专项与 `release:check`，普通 `npm run check` 不运行性能构建；命令组合以 [package.json](../../../package.json) 为准。
 
