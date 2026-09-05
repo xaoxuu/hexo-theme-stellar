@@ -72,7 +72,6 @@
 | **F3 分发** | npm 包安装后行为、CLI/init、Blueprint、迁移、发布或明确阶段验收 | F2 + `npm run integration:check`；仅在准备人工验收制品时运行 `npm run acceptance:prepare` |
 
 - 性能契约相关任务显式运行 `npm run performance:check`；普通 F2 不承担性能基线。发版由 `npm run release:check` 组合性能与知识库门禁。
-- Node 兼容范围以 `package.json` 的 `engines` 为单一来源；本地门禁使用当前满足该范围的版本，CI 固定版本只证明对应版本，跨版本兼容由矩阵证明。
 - 宿主集成属于任务目标且主题证据不足时补充消费方验证；UI 视觉判断仅在用户要求或自动检查无法证明时进行。
 - 已通过的高层门禁在后续只修改说明或验收记录时不重复运行；F3 制品以最终内容为准。
 
