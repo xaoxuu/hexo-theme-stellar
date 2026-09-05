@@ -53,6 +53,14 @@ txt-ellipsis()
   overflow: hidden
   text-overflow: ellipsis
 
+// App icon 圆角剪裁：支持 superellipse 时使用系统风格曲率，否则回退到普通圆角。
+app-icon()
+  overflow: hidden
+  border-radius: 25%
+  @supports (corner-shape: superellipse(2))
+    border-radius: 50%
+    corner-shape: superellipse(2)
+
 placeholder(rules)
   &::-webkit-input-placeholder
     rules()

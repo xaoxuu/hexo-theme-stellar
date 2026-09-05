@@ -33,8 +33,7 @@
       object-fit: cover
 
   .brand-image--icon
-    border-radius: $border-card-s
-    overflow: hidden
+    app-icon()
     img
       object-fit: contain
 
@@ -55,6 +54,13 @@
     .brand-tagline
       color: var(--text-p1)
       white-space: nowrap
+
+.site-region--leftbar .brand-title
+  min-width: 0
+  max-width: 100%
+  .brand-tagline
+    overflow: hidden
+    text-overflow: ellipsis
 
 .brand-header--regular
   &:not(:has(> .brand-navigation)):not(:has(> .brand-search))
