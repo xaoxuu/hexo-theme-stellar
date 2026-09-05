@@ -66,6 +66,10 @@ test("Theme config rejects unknown, mistyped, and unsafe values with sourced iss
     () => parseStellarConfig({ themeConfig: { appearance: { colors: { primary: "red; display:none" } } } }),
     error => hasIssue(error, "appearance.colors.primary", "invalid_value")
   );
+  assert.throws(
+    () => parseStellarConfig({ themeConfig: { leftbar: { menu: [{ type: "search", title: "Find" }] } } }),
+    error => hasIssue(error, "leftbar.menu[0].title", "invalid_value")
+  );
 });
 
 test("Theme config rejects 1.44 roots with current migration targets", () => {

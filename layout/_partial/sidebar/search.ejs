@@ -10,17 +10,6 @@ item = item && typeof item === 'object' ? Object.assign({}, item) : {}
 if (item.algoliaFilterPath == null) {
   item.algoliaFilterPath = 'auto'
 }
-if (item.placeholder == null && item.algoliaFilterPath == 'auto') {
-  if (wikiViewModel) {
-    item.placeholder = __('search.search_in', wikiViewModel.collection.identity.name)
-  } else if (notebookViewModel) {
-    item.placeholder = __('search.search_in', notebookViewModel.collection.identity.name || __('btn.notebook'))
-    item.algoliaFilterPath = notebookViewModel.render.layout.algoliaFilterPath
-  } else if (notebookIndex) {
-    item.placeholder = __('search.search_in', notebookIndex.name || __('btn.notebook'))
-    item.algoliaFilterPath = notebookIndex.layout.algoliaFilterPath
-  }
-}
 function layoutDiv() {
   if (typeof disabled !== 'undefined' && disabled === true) {
     return ''
@@ -43,20 +32,18 @@ function layoutDiv() {
   if (algoliaFilterPath.length > 0 && !algoliaFilterPath.startsWith('/')) {
     algoliaFilterPath = '/' + algoliaFilterPath
   }
-  var placeholder = item.placeholder || (algoliaFilterPath.length > 0 ? __('search.search_in', algoliaFilterPath) : __('search.search'))
+  var searchTitle = __('btn.search')
   var searchScope = search_scope(page, typeof viewModel !== 'undefined' ? viewModel : null)
-  if (searchScope) placeholder = searchScope.currentPlaceholder
   var searchPresentation = typeof presentation === 'string' ? presentation : 'leftbar'
   var iconOnly = searchPresentation === 'topbar' || searchPresentation === 'wiki-toolbar'
   var searchClassName = typeof hoverSurface !== 'undefined' && hoverSurface === true
     ? 'search-trigger has-hover-surface'
     : 'search-trigger'
   var searchAttrs = {
-    title: placeholder,
-    'aria-label': placeholder,
+    title: searchTitle,
+    'aria-label': searchTitle,
     'data-shell-action': 'open-search',
-    'data-search-instance': rawInstanceId,
-    'data-search-placeholder': placeholder
+    'data-search-instance': rawInstanceId
   }
   if (stellar_config('search.provider') === 'algolia' && algoliaFilterPath.length > 0) {
     searchAttrs['data-algolia-filter-path'] = algoliaFilterPath
@@ -71,10 +58,11 @@ function layoutDiv() {
     variant: 'nav',
     items: [{
       type: 'button',
-      title: placeholder,
+      title: searchTitle,
       icon: 'default:search',
       iconOnly: iconOnly,
       className: searchClassName,
+      after: iconOnly ? '' : partial('_partial/search/shortcut'),
       attrs: searchAttrs
     }]
   }})

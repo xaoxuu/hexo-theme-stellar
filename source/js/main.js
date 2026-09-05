@@ -242,13 +242,10 @@ function applySearchScope(dialog, value, refresh = true) {
 
   if (selected === 'current') {
     input.dataset.domain = group.dataset.currentDomain || '';
-    input.placeholder = group.dataset.currentPlaceholder || input.dataset.searchAllPlaceholder || 'Search';
   } else if (selected === 'blog') {
     input.dataset.domain = 'blog';
-    input.placeholder = input.dataset.searchBlogPlaceholder || input.dataset.searchAllPlaceholder || 'Search';
   } else {
     input.dataset.domain = '';
-    input.placeholder = input.dataset.searchAllPlaceholder || input.getAttribute('aria-label') || 'Search';
   }
   radio.checked = true;
   if (refresh && input.value.trim().length > 0) {
@@ -270,7 +267,6 @@ function configureSearchScope(dialog, trigger) {
   currentOption.hidden = !hasCurrent;
   if (currentLabel) currentLabel.textContent = trigger?.dataset?.searchDomainLabel || '';
   group.dataset.currentDomain = currentDomain;
-  group.dataset.currentPlaceholder = trigger?.dataset?.searchPlaceholder || '';
   group.hidden = 1 + Number(hasBlog) + Number(hasCurrent) < 2;
 
   const selected = hasCurrent ? 'current' : (hasBlog ? 'blog' : 'all');
@@ -300,7 +296,6 @@ function openSearch(trigger, restoreFocus = true) {
   input.value = '';
   if (!configureSearchScope(dialog, trigger)) {
     input.dataset.algoliaFilterPath = trigger?.dataset?.algoliaFilterPath || '';
-    input.placeholder = trigger?.dataset?.searchPlaceholder || input.getAttribute('aria-label') || 'Search';
   }
   if (wrapper) {
     wrapper.setAttribute('searching', 'false');

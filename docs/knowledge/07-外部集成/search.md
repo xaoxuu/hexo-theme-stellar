@@ -53,7 +53,7 @@ Algolia provider 把 `appId/apiKey/indexName` 原样交给上游客户端。Algo
 
 ## 公共交互
 
-两种 provider 共用页面级唯一 `<dialog>`。Search Widget 只是普通按钮，每个入口保留自己的过滤范围和 Placeholder，打开时注入共享输入框；旧查询和结果会清理，Provider 索引缓存继续复用。同页可以在多个 Region 放置 Search，不会重复输入框、结果区或监听器。
+两种 provider 共用页面级唯一 `<dialog>`。Search 入口是普通按钮，按钮文字与共享输入框 Placeholder 均固定读取 `btn.search`（中文为“搜索”）；每个入口只保留自己的过滤范围，切换“全站 / 博客 / 当前域”不会改写文字。旧查询和结果会清理，Provider 索引缓存继续复用。同页可以在多个 Region 放置 Search，不会重复输入框、结果区或监听器。
 
 桌面浮层宽度为 `min(600px, calc(100dvw - 64px))`，结果区独立滚动；`≤768px` 使用安全区适配的全屏模式。所有断点均可用 `Command+K` 或 `Ctrl+K` 打开；关闭按钮、背景点击、Escape、焦点恢复和页面滚动锁定由统一控制器处理。输入法组合、缺少 Search 入口或其它编辑区域保持浏览器原生行为。
 

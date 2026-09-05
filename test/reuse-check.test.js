@@ -18,6 +18,7 @@ function inspect(name, options = {}) {
     files: { [`fixtures/${name}`]: fixture(name) },
     controlFiles: name.endsWith(".ejs") ? [`fixtures/${name}`] : [],
     plainLinkExceptions: [],
+    plainControlExceptions: [],
     protectedLiterals: [],
     ...options
   });
@@ -74,6 +75,17 @@ test("复用检查器允许带稳定选择器和理由的 plain-link", () => {
       file: "fixtures/plain-link.ejs",
       selector: "fixture-reference",
       reason: "正文引用链接不具有控件表面"
+    }]
+  });
+  assert.deepEqual(errors, []);
+});
+
+test("复用检查器允许带稳定选择器和理由的 plain control", () => {
+  const errors = inspect("missing-control.ejs", {
+    plainControlExceptions: [{
+      file: "fixtures/missing-control.ejs",
+      selector: "fixture-action",
+      reason: "局部组件按钮不消费通用控件表面"
     }]
   });
   assert.deepEqual(errors, []);

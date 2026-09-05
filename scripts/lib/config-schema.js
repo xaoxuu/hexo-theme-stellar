@@ -115,7 +115,7 @@ function normalizeValue(node, value) {
   if (node.normalizer === "menu_item") {
     if (value.type === "search") {
       const result = { type: "search" };
-      for (const key of ["title", "icon", "accent"]) {
+      for (const key of ["icon", "accent"]) {
         if (value[key] != null) result[key] = value[key];
       }
       return result;
@@ -509,8 +509,8 @@ function validateMenuItems(node, input, source, path, issues) {
         issues.push(issue("invalid_value", source, itemPath, "object", "at most one search menu item", node.migration));
       }
       searchSeen = true;
-      const extra = ["id", "url"].find(key => item[key] != null);
-      if (extra) issues.push(issue("invalid_value", source, `${itemPath}.${extra}`, valueType(item[extra]), "no id or url for search item", node.migration));
+      const extra = ["id", "title", "url"].find(key => item[key] != null);
+      if (extra) issues.push(issue("invalid_value", source, `${itemPath}.${extra}`, valueType(item[extra]), "no id, title, or url for search item", node.migration));
       return;
     }
     if (item.type != null && item.type !== "link") {

@@ -81,8 +81,6 @@ page:
 
 search:
   search: 站內搜尋
-  search_in: 在 %s 中搜尋
-  scope: 搜尋範圍
   scope_all: 全站
   scope_blog: 部落格
   no_results: 沒有找到內容！

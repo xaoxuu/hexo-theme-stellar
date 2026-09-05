@@ -29,7 +29,6 @@ hexo.extend.helper.register("search_scope", function(page, viewModel) {
   return {
     current: scope.current,
     currentLabel,
-    currentPlaceholder: this.__("search.search_in", currentLabel),
     hasBlog: scope.options.includes("blog")
   };
 });

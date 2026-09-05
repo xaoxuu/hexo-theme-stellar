@@ -75,8 +75,7 @@
     height: 1.5rem
     cursor: pointer
     svg
-      height: 1rem
-      width: 1rem
+      max-height: 1.5rem
       color: var(--text-p2)
       fill: currentColor
 
@@ -194,6 +193,25 @@
   text-align: start
   cursor: pointer
 
+.search-shortcut
+  display: none
+  flex-shrink: 0
+  min-width: 0
+  border-radius: 4px
+  color: var(--text-p3)
+  opacity: 0.5
+  font-family: $ff-body
+  font-size: $fs-12
+  font-weight: 600
+  line-height: 1
+
+@media screen and (min-width: ($device-tablet + 1px))
+  .search-shortcut:not(:empty)
+    display: inline-flex
+
+html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .site-region--leftbar .search-shortcut
+  display: none
+
 .search-dialog
   box-sizing: border-box
   width: unquote('min(600px, calc(100dvw - 64px))')
@@ -234,12 +252,14 @@
     display: flex
     flex-flow: row nowrap
     align-items: center
-    gap: 16px
+    gap: 8px
     padding: 0 16px
     position: static
     border-radius: $border-card-s
     color: var(--text)
     background: var(--block)
+    &:hover
+      background: var(--block-border)
     .search-input
       flex: 1 1 auto
       min-width: 0
@@ -253,17 +273,13 @@
   display: flex
   flex: 0 0 auto
   align-items: center
-  gap: 1rem
-  padding: 1rem
+  gap: .5rem
+  padding: .5rem 0
   overflow: hidden
   color: var(--text-p2)
   font-size: $fs-13
   &[hidden]
     display: none
-
-.search-dialog__scope-title
-  flex: 0 0 auto
-  color: var(--text-p3)
 
 .search-dialog__scope-option
   display: flex
@@ -272,6 +288,11 @@
   min-width: 0
   gap: 5px
   cursor: pointer
+  background: var(--block)
+  padding: .5rem 1rem
+  border-radius: $border-button
+  &:hover
+    background: var(--block-border)
   &[hidden]
     display: none
   &[data-search-scope-option='current']
@@ -289,6 +310,8 @@
   border-radius: $border-bar
   color: var(--text-p2)
   background: var(--block)
+  &:hover
+    background: var(--block-border)
   font-size: 24px
   cursor: pointer
 

@@ -81,8 +81,6 @@ page:
 
 search:
   search: Search
-  search_in: Search in %s
-  scope: Search scope
   scope_all: All
   scope_blog: Blog
   no_results: No Results!

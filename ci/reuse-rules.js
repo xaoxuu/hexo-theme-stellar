@@ -75,6 +75,13 @@ module.exports = Object.freeze({
       reason: "GitHub 关注入口保留第三方资料卡专属交互"
     }
   ],
+  PLAIN_CONTROL_EXCEPTIONS: [
+    {
+      file: "layout/_partial/search/dialog.ejs",
+      selector: "search-dialog__close",
+      reason: "Search Dialog 关闭按钮由组件自身定义紧凑表面，不消费通用交互表面"
+    }
+  ],
   DYNAMIC_CONTROL_RULES: [
     {
       file: "source/js/main.js",

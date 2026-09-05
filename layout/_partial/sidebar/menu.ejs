@@ -16,29 +16,23 @@ function layoutDiv() {
       if (!stellar_config('search.provider')) continue
       var searchProvider = stellar_config('search.provider')
       var algoliaFilterPath = ''
-      var searchPlaceholder = __('search.search')
       var wikiViewModel = menuViewModel?.collection?.profile === 'wiki' ? menuViewModel : null
       var notebookViewModel = menuViewModel?.collection?.profile === 'notebook' ? menuViewModel : null
       var notebookIndex = page.notebookIndex?.mode === 'notes' ? page.notebookIndex.collection : null
       if (wikiViewModel) {
         algoliaFilterPath = wikiViewModel.render.layout.algoliaFilterPath || ''
-        searchPlaceholder = __('search.search_in', wikiViewModel.collection.identity.name)
       } else if (notebookViewModel) {
         algoliaFilterPath = notebookViewModel.render.layout.algoliaFilterPath || ''
-        searchPlaceholder = __('search.search_in', notebookViewModel.collection.identity.name || __('btn.notebook'))
       } else if (notebookIndex) {
         algoliaFilterPath = notebookIndex.layout.algoliaFilterPath || ''
-        searchPlaceholder = __('search.search_in', notebookIndex.name || __('btn.notebook'))
       }
       if (algoliaFilterPath.length > 0 && !algoliaFilterPath.startsWith('/')) algoliaFilterPath = '/' + algoliaFilterPath
       var searchScope = search_scope(page, menuViewModel)
-      if (searchScope) searchPlaceholder = searchScope.currentPlaceholder
-      var searchTitle = menuItem.title == null ? __('btn.search') : __(menuItem.title)
+      var searchTitle = __('btn.search')
       var searchAttrs = {
         'aria-label': searchTitle,
         'data-shell-action': 'open-search',
-        'data-search-instance': 'menu-search',
-        'data-search-placeholder': searchPlaceholder
+        'data-search-instance': 'menu-search'
       }
       if (searchProvider === 'algolia' && algoliaFilterPath.length > 0) {
         searchAttrs['data-algolia-filter-path'] = algoliaFilterPath
@@ -54,6 +48,7 @@ function layoutDiv() {
         icon: menuItem.icon || 'default:search',
         theme: menuItem.accent,
         className: menuItem.accent?.length > 0 ? 'search-trigger is-themed' : 'search-trigger',
+        after: partial('_partial/search/shortcut'),
         attrs: searchAttrs
       })
       continue

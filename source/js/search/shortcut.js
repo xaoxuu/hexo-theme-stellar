@@ -11,10 +11,25 @@
     return target.closest('input, textarea, select, [contenteditable]:not([contenteditable="false"])') !== null;
   }
 
+  function searchShortcutLabel() {
+    var platform = navigator.userAgentData && navigator.userAgentData.platform
+      ? navigator.userAgentData.platform
+      : navigator.platform;
+    return /Mac|iPhone|iPad|iPod/i.test(platform || '') ? '⌘K' : 'Ctrl+K';
+  }
+
+  function updateShortcutHints(root) {
+    var label = searchShortcutLabel();
+    root.querySelectorAll('[data-search-shortcut]').forEach(function(hint) {
+      hint.textContent = label;
+    });
+  }
+
   var roots = new WeakMap();
   function mount(root) {
     root = root || document;
     if (roots.has(root)) return roots.get(root);
+    updateShortcutHints(root);
     var handleShortcut = function(event) {
       if (!isSearchShortcut(event)) return;
       var trigger = root.querySelector('[data-shell-action="open-search"]');

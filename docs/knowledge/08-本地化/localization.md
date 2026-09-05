@@ -91,6 +91,7 @@ graph TD
 | `btn.docs` | `Documentation` | Wiki Hero 内置文档按钮 |
 | `btn.source` | `Source` | Wiki Hero 仓库按钮 |
 | `btn.copy` | `Copy` | Wiki Hero 终端复制按钮及其辅助标签 |
+| `btn.search` | `Search` | 搜索入口按钮与输入框占位符 |
 | `btn.edit` | `Edit This Page` | |
 | `btn.top` | `Scroll to Top` | 用于 TOC 组件页脚 |
 | `btn.comments` | `Join Discussion` | 用于 TOC 组件页脚 |
@@ -157,9 +158,11 @@ graph TD
 
 | 键 | `en.yml` 值 | 说明 |
 |----|-------------|------|
-| `search.search` | `Search` | 输入框占位符 |
-| `search.search_in` | `Search in %s` | `%s` = 站点/区块名 |
+| `search.search` | `Search` | 搜索 Dialog 标题 |
+| `search.scope_all` | `All` | 全站搜索域 |
+| `search.scope_blog` | `Blog` | 博客搜索域 |
 | `search.no_results` | `No Results!` | 空状态消息 |
+| `search.close` | `Close search` | 关闭按钮辅助标签 |
 
 **参考源码**：[languages/en.yml](../../../languages/en.yml)
 
@@ -256,7 +259,6 @@ flowchart LR
 | 键 | 模板 | 示例输出 |
 |----|------|----------|
 | `meta.created_author` | `'%s posted on'` | `xaoxuu posted on` |
-| `search.search_in` | `'Search in %s'` | `Search in My Blog` |
 
 `%s` 令牌由 Hexo i18n 的 sprintf 实现替换（调用方传额外参数给 `__()`）。
 
@@ -303,7 +305,7 @@ sequenceDiagram
 1. 创建 `languages/ja.yml`
 2. 以 `languages/en.yml` 的完整结构为模板复制，保持所有键路齐全
 3. 翻译每个值，特别注意：
-   - `meta.created_author` 与 `search.search_in` 中的 `%s` 占位符——翻译字符串中必须保留
+   - `meta.created_author` 中的 `%s` 占位符——翻译字符串中必须保留
    - `symbol.*` 键——使用适合语言环境的标点
 4. 在站点 `_config.yml` 设置 `language: ja`
 
@@ -326,6 +328,7 @@ flowchart TD
   subgraph "btn group"
     btntop["btn.top"]
     btncomments["btn.comments"]
+    btnsearch["btn.search"]
   end
 
   subgraph "meta group"
@@ -339,7 +342,6 @@ flowchart TD
 
   subgraph "search group"
     searchsearch["search.search"]
-    searchin["search.search_in\n(%s = site name)"]
     searchnoresults["search.no_results"]
   end
 
@@ -354,6 +356,7 @@ flowchart TD
 
   en --> btntop
   en --> btncomments
+  en --> btnsearch
   en --> metatoc
   en --> metacreated
   en --> metaupdated
@@ -361,7 +364,6 @@ flowchart TD
   en --> metareadnext
   en --> metacreatedauthor
   en --> searchsearch
-  en --> searchin
   en --> searchnoresults
   en --> pageerror
   en --> msgcopied
@@ -369,14 +371,14 @@ flowchart TD
 
   btntop --> toc["layout/_partial/widgets/toc.ejs"]
   btncomments --> toc
+  btnsearch --> search_ui["search widget"]
   metatoc --> toc
   metacreated --> article_footer["layout/_partial/main/article/post_footer.ejs"]
   metaupdated --> article_footer
   metalicense --> article_footer
   metacreatedauthor --> article_footer
   metareadnext --> read_next["layout/_partial/main/article/post_read_next.ejs"]
-  searchsearch --> search_ui["search widget"]
-  searchin --> search_ui
+  searchsearch --> search_ui
   searchnoresults --> search_ui
   pageerror --> error_page["layout/404.ejs"]
   msgcopied --> copycode["client-side copycode JS"]

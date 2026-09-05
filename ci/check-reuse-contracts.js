@@ -67,6 +67,7 @@ function checkReuseSources(options) {
     files,
     controlFiles = [],
     plainLinkExceptions = [],
+    plainControlExceptions = [],
     protectedLiterals = [],
     rawCapabilityExclusions = []
   } = options;
@@ -88,6 +89,7 @@ function checkReuseSources(options) {
         const usesHelper = /ui_classes\(/.test(openingTag);
         const usesCapabilityVariable = Array.from(capabilityVariables).some(name => new RegExp(`\\b${name}\\b`).test(openingTag));
         if (usesHelper || usesCapabilityVariable) continue;
+        if (matchesException(plainControlExceptions, file, selector)) continue;
         if (match[1].toLowerCase() === "a" && matchesException(plainLinkExceptions, file, selector)) continue;
         errors.push(`${file}:${lineNumber(source, match.index)} unclassified control <${match[1].toLowerCase()}> ${selector}`);
       }
@@ -119,6 +121,7 @@ function runProjectCheck(root = path.resolve(__dirname, "..")) {
     files,
     controlFiles,
     plainLinkExceptions: rules.PLAIN_LINK_EXCEPTIONS,
+    plainControlExceptions: rules.PLAIN_CONTROL_EXCEPTIONS,
     protectedLiterals: rules.PROTECTED_LITERALS,
     rawCapabilityExclusions: rules.RAW_CAPABILITY_EXCLUSIONS
   });
