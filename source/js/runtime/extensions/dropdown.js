@@ -1,5 +1,4 @@
 // 通用 dropdown 浮层：把打开的菜单挂到 body 下，避免被任意祖先容器裁剪。
-(() => {
   const selector = 'details.dropdown'
   const gap = 8
   const viewportPadding = 8
@@ -382,7 +381,7 @@
     root.querySelectorAll(selector).forEach(dropdown => bind(dropdown, state))
   }
 
-  function mount(root) {
+  export function mount(root) {
     const scope = root && root.nodeType === 9 ? root.body : root
     if (!scope || scope.nodeType !== 1 || !window.MutationObserver) {
       return () => {}
@@ -473,8 +472,3 @@
       }
     }
   }
-
-  window.dispatchEvent(new CustomEvent('stellar:legacy-feature-ready', {
-    detail: Object.freeze({ feature: 'dropdown', mount })
-  }))
-})()

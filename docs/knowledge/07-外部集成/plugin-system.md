@@ -98,7 +98,7 @@ flowchart LR
 
 旧 `document.write`、同步 utils 补载、`_pluginQueue`、`stellar.initPlugin` 与插件恢复看门狗已删除。`utils.js` 只保留迁移期 DOM/经典资源工具，不再拥有 Extension 注册或网络缓存算法。
 
-非首屏 SVG 占位符替换和 dropdown 浮层也使用内部 selector Extension：只有页面出现 `svg.icon[data-icon]` 或 `details.dropdown` 时，runtime 才加载 `/js/icons.js` 或 `/js/plugins/dropdown.js`。脚本通过内部 `stellar:legacy-feature-ready` 事件向 runtime 交付 `mount(root)` 适配器，不暴露新的全局 API；Extension 卸载时会中止图标请求，或断开 dropdown observer、全局监听与待执行动画帧。它们不新增公开配置，并保持原 DOM 与交互。
+非首屏 SVG 占位符替换和 dropdown 浮层也使用原生 selector Extension：只有页面出现 `svg.icon[data-icon]` 或 `details.dropdown` 时，runtime 才动态导入对应模块并调用 `mount(root, context)`。Extension 卸载时会中止图标请求，或断开 dropdown observer、全局监听与待执行动画帧；两者不经过经典脚本或全局事件桥接，不新增公开配置，并保持原 DOM 与交互。
 
 Contribution 的 `kind` 描述产品归类，`entry.adapter` 描述运行时调用约定，两者不能互相替代。凡声明 `entry.adapter: feature` 的 descriptor（包括内部 component）在投影 Runtime Manifest 时都必须携带 `config.feature=<id>`，供共享 `feature.js` 分派；独立 adapter 不携带该分派字段。注册表测试统一枚举共享 adapter 条目，阻止 component 再次遗漏分派 ID。
 

@@ -29,11 +29,6 @@ function layoutDiv() {
       } else if (notebookIndex) {
         algoliaFilterPath = notebookIndex.layout.algoliaFilterPath || ''
         searchPlaceholder = __('search.search_in', notebookIndex.name || __('btn.notebook'))
-      } else if (stellar_data('wiki').tree[collection_id(page, 'wiki')]?.name) {
-        var currentWiki = stellar_data('wiki').tree[collection_id(page, 'wiki')]
-        var matches = page.path.match(/(.*?)\/(.*?)\//i)
-        algoliaFilterPath = matches?.[0] || ''
-        searchPlaceholder = __('search.search_in', currentWiki.name)
       }
       if (algoliaFilterPath.length > 0 && !algoliaFilterPath.startsWith('/')) algoliaFilterPath = '/' + algoliaFilterPath
       var searchScope = search_scope(page, menuViewModel)

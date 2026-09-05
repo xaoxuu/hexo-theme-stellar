@@ -29,50 +29,17 @@ function relatedWiki() {
   var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
     ? viewModel
     : null
-  if (wikiViewModel) {
-    var el = ''
-    for (var relatedItem of wikiViewModel.render.article.related) {
-      var entries = relatedItem.items.map(function(project) {
-        return {
-          href: pretty_url(project.href),
-          title: project.title,
-          description: project.description,
-          indicator: false
-        }
-      })
-      var body = partial('_partial/components/collection', {options: {
-        layout: 'list',
-        variant: 'summary',
-        density: 'compact',
-        items: entries
-      }})
-      el += partial('_partial/components/widget-frame', {
-        className: 'related-summary-widget',
-        title: __('meta.more') + __('symbol.colon') + relatedItem.name,
-        body: body
-      })
-    }
-    return el
-  }
-  var thisItemObject = stellar_data('wiki').tree[collection_id(page, "wiki")]
-  if (thisItemObject == null) {
-    return ''
-  }
-  var relatedItems = thisItemObject.relatedItems || []
+  if (!wikiViewModel) return ''
   var el = ''
-  for (var relatedItem of relatedItems) {
-    var entries = []
-    for (var id of relatedItem.items) {
-      var relatedProject = stellar_data('wiki').tree[id]
-      if (relatedProject) {
-        entries.push({
-          href: pretty_url(relatedProject.homepage?.path),
-          title: relatedProject.name,
-          description: relatedProject.description,
-          indicator: false
-        })
+  for (var relatedItem of wikiViewModel.render.article.related) {
+    var entries = relatedItem.items.map(function(project) {
+      return {
+        href: pretty_url(project.href),
+        title: project.title,
+        description: project.description,
+        indicator: false
       }
-    }
+    })
     var body = partial('_partial/components/collection', {options: {
       layout: 'list',
       variant: 'summary',
@@ -92,8 +59,6 @@ function layoutDiv() {
   if (typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'topic') {
     return relatedPostsInTopic()
   } else if (typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki') {
-    return relatedWiki()
-  } else if (collection_id(page, "wiki")?.length > 0) {
     return relatedWiki()
   }
   return ''

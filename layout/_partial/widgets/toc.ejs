@@ -1,9 +1,7 @@
 <%
 function layoutTocBody() {
-  var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
-    ? viewModel
-    : null
-  var content = wikiViewModel ? wikiViewModel.item.content : page.content
+  var activeViewModel = typeof viewModel !== 'undefined' ? viewModel : null
+  var content = activeViewModel ? activeViewModel.item.content : page.content
   var tocBody = toc(content, {
     list_number: item.list_number,
     min_depth: item.min_depth,
@@ -36,13 +34,14 @@ function layoutFooter(hasComments) {
 }
 
 function layoutDiv() {
-  var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
-    ? viewModel
-    : null
+  var activeViewModel = typeof viewModel !== 'undefined' ? viewModel : null
+  var wikiViewModel = activeViewModel?.collection?.profile === 'wiki' ? activeViewModel : null
   var tocBody = layoutTocBody()
   var hasToc = tocBody.trim().length > 0
   var hasRemoteMd = wikiViewModel ? wikiViewModel.render.article.readmeHtml.length > 0 : has_remote_md(page)
-  var hasComments = wikiViewModel ? wikiViewModel.render.article.comments.enabled : page.cmt_rendered === true
+  var hasComments = activeViewModel
+    ? activeViewModel.render.article.comments.enabled
+    : comments_model(page).enabled
   if (!hasToc && !hasRemoteMd && !hasComments) {
     return ''
   }

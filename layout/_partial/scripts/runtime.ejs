@@ -10,19 +10,14 @@ var runtimeExtensions = {
 }
 var runtimeAssets = extension_assets()
 var runtimeMathProvider = runtimeRender.math || runtimeExtensions.features.math.provider
-var runtimeCommentModel = runtimeViewModel?.render?.article?.comments || null
-var runtimeCommentService = runtimeCommentModel ? runtimeCommentModel.service : page.cmt?.service
-var runtimeComments = runtimeCommentModel || {
-  service: runtimeCommentService || '',
-  options: runtimeCommentService
-    ? Object.assign({}, runtimeExtensions.comments[runtimeCommentService], page.cmt?.[runtimeCommentService])
-    : {},
-  pageTitle: page.title || ''
+var runtimeCommentOverrides = null
+var runtimeHomeComments = stellar_config('profiles.home.comments')
+if (!runtimeViewModel && runtimeHomeComments && runtimeHomeComments !== false && is_home_first_page()) {
+  runtimeCommentOverrides = typeof runtimeHomeComments === 'object' ? runtimeHomeComments : {enabled: true}
 }
-var runtimeProfile = page.layout || ''
-if (collection_id(page, 'wiki')) runtimeProfile = 'wiki'
-if (collection_id(page, 'topic')) runtimeProfile = 'topic'
-if (collection_id(page, 'notebook')) runtimeProfile = 'notebook'
+var runtimeComments = runtimeViewModel?.render?.article?.comments || comments_model(page, runtimeCommentOverrides)
+var runtimeProfile = runtimeViewModel?.collection?.profile
+  || (page.notebookIndex?.mode === 'notes' ? 'notebook' : page.layout || '')
 var runtimeMessages = {
   copy: {
     label: __('btn.copy'),

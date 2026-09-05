@@ -19,10 +19,6 @@ function layoutDiv() {
       el += `<time datetime="${date_xml(updated)}">${date(updated, config.date_format)}</time>`
       el += `</span>`
     }
-  } else if (collection_id(page, "wiki")) {
-    el += `<span class="text created">${__("meta.updated") + __("symbol.colon")}`
-    el += `<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time>`
-    el += `</span>`
   } else if (notebookViewModel) {
     var notebookArticle = notebookViewModel.render.article
     el += `<span class="text created">${__("meta.updated") + __("symbol.colon")}`

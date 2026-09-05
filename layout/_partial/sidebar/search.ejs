@@ -13,8 +13,6 @@ if (item.algoliaFilterPath == null) {
 if (item.placeholder == null && item.algoliaFilterPath == 'auto') {
   if (wikiViewModel) {
     item.placeholder = __('search.search_in', wikiViewModel.collection.identity.name)
-  } else if (stellar_data('wiki').tree[collection_id(page, "wiki")]?.name) {
-    item.placeholder = __('search.search_in', stellar_data('wiki').tree[collection_id(page, "wiki")]?.name)
   } else if (notebookViewModel) {
     item.placeholder = __('search.search_in', notebookViewModel.collection.identity.name || __('btn.notebook'))
     item.algoliaFilterPath = notebookViewModel.render.layout.algoliaFilterPath
@@ -36,11 +34,6 @@ function layoutDiv() {
       algoliaFilterPath = notebookViewModel.render.layout.algoliaFilterPath
     } else if (notebookIndex) {
       algoliaFilterPath = notebookIndex.layout.algoliaFilterPath
-    } else if (collection_id(page, "wiki")) {
-      let matches = page.path.match(/(.*?)\/(.*?)\//i)
-      if (matches?.length > 0) {
-        algoliaFilterPath = matches[0]
-      }
     }
   } else {
     if (item.algoliaFilterPath?.length > 0) {

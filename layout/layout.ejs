@@ -29,7 +29,7 @@ function siteBackground(enabled) {
 }
 
 function coverSlot(viewModel) {
-  var coverBody = partial('_partial/cover/index', viewModel ? {viewModel: viewModel} : {}).trim()
+  var coverBody = viewModel ? partial('_partial/cover/index', {viewModel: viewModel}).trim() : ''
   return `<div id="site-cover" class="site-cover">${coverBody}</div>`
 }
 
@@ -74,7 +74,6 @@ function regionsContainSearch(regions) {
     return brand && brand !== false && (brand.name || brand.image?.src)
   }
   var collectionProfile = renderViewModel?.collection?.profile
-    || pageConfig.collection?.profile
     || (page.notebookIndex?.mode === 'notes' ? 'notebook' : null)
   return Object.entries(regions || {}).some(function(entry) {
     var slot = entry[0]
@@ -131,8 +130,6 @@ if (renderViewModel) {
     scripts: partial('_partial/scripts', {viewModel: renderViewModel})
   })
 } else {
-  var wiki = stellar_data('wiki').tree[collection_id(page, 'wiki')]
-  var topic = stellar_data('topic').tree[collection_id(page, 'topic')]
   var notebookIndex = page.notebookIndex?.mode === 'notes' ? page.notebookIndex.collection : null
   var pageType = ['post', 'page', 'wiki', 'settings', null].includes(page.layout) ? 'content' : 'index'
   var articleDefaults = stellar_config('article')
@@ -141,14 +138,8 @@ if (renderViewModel) {
     articleStyle = undefined
   } else if (pageConfig.article?.style?.length > 0) {
     articleStyle = pageConfig.article.style
-  } else if (topic?.article?.style != null) {
-    articleStyle = topic.article.style
-  } else if (wiki?.article?.style != null) {
-    articleStyle = wiki.article.style
   }
   var paragraphIndent = pageConfig.article?.paragraphIndent
-    || topic?.article?.paragraphIndent
-    || wiki?.article?.paragraphIndent
     || articleDefaults.paragraphIndent
     || 'auto'
   var indent = paragraphIndent === 'always' || (paragraphIndent === 'auto' && articleStyle === 'story')
@@ -165,29 +156,21 @@ if (renderViewModel) {
     profileKey = 'blogIndex'
   } else if (page.layout === 'index_topic') {
     profileKey = 'topicIndex'
-  } else if (collection_id(page, 'topic')) {
-    profileKey = 'topic'
-    collectionRegions = topic
   } else if (page.layout === 'index_wiki') {
     profileKey = 'wikiIndex'
-  } else if (collection_id(page, 'wiki')) {
-    profileKey = 'wiki'
-    collectionRegions = wiki
   } else if (page.layout === '404') {
     profileKey = 'error'
   } else if (page.layout === 'settings') {
     profileKey = 'settings'
-  } else if (page.layout === 'post') {
-    profileKey = 'post'
   }
   var mobileBrandVisible = showMobileBrand(page, {profileKey: profileKey})
-  var legacyRegions = region_layout(profileKey, collectionRegions, pageConfig)
-  var topbarRegion = regionSlot('topbar', legacyRegions.topbar)
+  var pageRegions = region_layout(profileKey, collectionRegions, pageConfig)
+  var topbarRegion = regionSlot('topbar', pageRegions.topbar)
   var mainBody = ''
   if (mobileBrandVisible && !topbarRegion) {
     mainBody += partial('_partial/sidebar/brand', {
       placement: 'main',
-      brandModel: legacyRegions.topbar?.brand
+      brandModel: pageRegions.topbar?.brand
     })
   }
   mainBody += body
@@ -208,10 +191,10 @@ if (renderViewModel) {
     cover: coverSlot(),
     regions: {
       topbar: topbarRegion,
-      leftbar: regionSlot('leftbar', legacyRegions.leftbar),
-      rightbar: regionSlot('rightbar', legacyRegions.rightbar)
+      leftbar: regionSlot('leftbar', pageRegions.leftbar),
+      rightbar: regionSlot('rightbar', pageRegions.rightbar)
     },
-    searchEnabled: regionsContainSearch(legacyRegions),
+    searchEnabled: regionsContainSearch(pageRegions),
     main: mainBody,
     scripts: partial('_partial/scripts')
   })

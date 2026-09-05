@@ -1,4 +1,4 @@
-<%# 笔记的所属标签（容器与胶囊样式复用 article/article_tags.ejs 的 article-tags） %>
+<%# 笔记的所属标签（容器与胶囊样式复用 post_tags.ejs 的 article-tags） %>
 <% if (typeof tags !== 'undefined' && tags.length > 0) { %>
   <div class="article-tags<%= scrollreveal(' ') %>">
     <% for (var tag of tags) { %>

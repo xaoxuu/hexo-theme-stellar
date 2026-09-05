@@ -370,11 +370,11 @@ flowchart TD
   btntop --> toc["layout/_partial/widgets/toc.ejs"]
   btncomments --> toc
   metatoc --> toc
-  metacreated --> article_footer["layout/_partial/main/article/article_footer.ejs"]
+  metacreated --> article_footer["layout/_partial/main/article/post_footer.ejs"]
   metaupdated --> article_footer
   metalicense --> article_footer
   metacreatedauthor --> article_footer
-  metareadnext --> read_next["layout/_partial/main/article/read_next.ejs"]
+  metareadnext --> read_next["layout/_partial/main/article/post_read_next.ejs"]
   searchsearch --> search_ui["search widget"]
   searchin --> search_ui
   searchnoresults --> search_ui

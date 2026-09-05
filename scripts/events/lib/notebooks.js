@@ -12,7 +12,6 @@ const { completeNotebookPageViewModel } = require("../../lib/models");
 const {
   getNotebookViewModelBase,
   getNotebookViewModelInput,
-  setPageViewModel,
   setProfileViewModelInput
 } = require("../../lib/page-view-model-registry");
 const { ensureRuntimeData } = require("../../lib/runtime-data");
@@ -61,12 +60,13 @@ function validateTagIcons(notebooks, tagIcons) {
   if (issues.length > 0) throw new ConfigSchemaError(issues);
 }
 
-module.exports = (ctx, pipeline = null) => {
-  const pages = pipeline == null
-    ? ctx.locals.get("pages").data
-    : pipeline.members("notebook").map(record => record.page);
-  const pageConfigs = ctx.stellar?.contentConfig?.pageConfigs || new Map();
+module.exports = (ctx, pipeline) => {
+  if (!pipeline) throw new TypeError("Stellar v2: Notebook 构建必须由 Collection Pipeline 驱动");
+  const records = pipeline.members("notebook");
+  const pages = records.map(record => record.page);
+  const pageConfigs = new Map(records.map(record => [record.page, record.config]));
   const notebooks = getNotebooksObject(ctx, {
+    collections: pipeline.collections("notebook"),
     pagesByNotebook: groupPagesByNotebook(pages, pageConfigs)
   });
   validateTagIcons(notebooks, ctx.stellar.config.notebook.tagIcons);
@@ -174,6 +174,5 @@ module.exports = (ctx, pipeline = null) => {
   for (let index = 0; index < entries.length; index += 1) {
     entries[index].page.viewModel = finalViewModels[index];
     setProfileViewModelInput("notebook", entries[index].page, entries[index].completeInput);
-    setPageViewModel(entries[index].page, finalViewModels[index]);
   }
 };

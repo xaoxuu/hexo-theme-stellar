@@ -2,16 +2,12 @@
 function layoutDiv() {
   var el = '';
   var repo;
-  var branch = 'main';
   var pageConfig = content_config(page);
-  if (pageConfig.source?.repository) {
+  var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki' ? viewModel : null
+  if (wikiViewModel?.render?.listing?.repository) {
+    repo = wikiViewModel.render.listing.repository
+  } else if (pageConfig.source?.repository) {
     repo = pageConfig.source.repository
-  } else if (stellar_data('wiki').tree[collection_id(page, "wiki")]?.source?.repository) {
-    var proj = stellar_data('wiki').tree[collection_id(page, "wiki")]
-    repo = proj.source?.repository
-    if (proj.source?.branch != undefined) {
-      branch = proj.source.branch
-    }
   }
   if (repo == undefined) {
     return el;

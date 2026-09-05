@@ -22,10 +22,6 @@ hexo.extend.filter.register("before_generate", () => {
   require("../lib/collection-pipeline").runCollectionPipeline(hexo);
 }, 1);
 
-hexo.on('generateAfter', () => {
-  require('./lib/merge_posts')(hexo);
-});
-
 hexo.on('ready', () => {
   if (process.env.HEXO_READY === '1') return;
   process.env.HEXO_READY = '1';

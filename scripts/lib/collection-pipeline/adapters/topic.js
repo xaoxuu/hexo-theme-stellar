@@ -78,8 +78,5 @@ module.exports = {
         return record.page.viewModel;
       }
     });
-  },
-  build(pipeline) {
-    require("../../../events/lib/topic_tree")(pipeline.ctx);
   }
 };

@@ -76,8 +76,14 @@ test("Runtime Manifest 顺序直接来自 descriptor 注册表", () => {
   assert.ok(positions.length > 0);
   assert.ok(positions.every((position, index) => position >= 0 && (index === 0 || position > positions[index - 1])));
   const cardHover = entries.find(item => item.id === "card-hover");
+  const deferredIcons = entries.find(item => item.id === "deferred-icons");
+  const dropdown = entries.find(item => item.id === "dropdown");
   assert.equal("feature" in cardHover.config, false);
   assert.deepEqual(cardHover.config.assets, INTERNAL_CONSTANTS.assets.features.cardHover);
+  assert.equal(deferredIcons.module, "/js/runtime/extensions/deferred-icons.js");
+  assert.equal(dropdown.module, "/js/runtime/extensions/dropdown.js");
+  assert.deepEqual(deferredIcons.config, {});
+  assert.deepEqual(dropdown.config, {});
   assert.equal(entries.some(item => item.id === "reveal"), false);
   for (const entry of entries) {
     const definition = CONTRIBUTIONS.find(item => item.id === entry.id);

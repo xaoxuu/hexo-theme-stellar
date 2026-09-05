@@ -84,7 +84,7 @@ module.exports = hexo => {
       } else if (inline === true) {
         return result
       } else if (result.startsWith('<svg')) {
-        // 非首屏图标：输出占位符，由 /js/icons.js 异步拉取 js/icons/{ns}.json 后原位替换
+        // 非首屏图标：输出占位符，由 deferred-icons Runtime Extension 异步替换
         return `<svg class="icon" viewBox="0 0 1 1" data-icon="${key}" aria-hidden="true"></svg>`
       } else {
         return result

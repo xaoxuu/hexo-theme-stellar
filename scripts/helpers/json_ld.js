@@ -18,7 +18,7 @@ hexo.extend.helper.register('json_ld', function(args) {
     return `<script type="application/ld+json">${JSON.stringify(args.render.seo.jsonLd)}</script>`;
   }
   const page = this.page;
-  const pageConfig = getPageConfig(page) || page.stellarConfig || {};
+  const pageConfig = getPageConfig(page) || {};
   const config = this.config;
   const structuredData = this.stellar_config("structuredData");
   const authorEmail = config.email;

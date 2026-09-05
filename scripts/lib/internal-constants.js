@@ -48,6 +48,8 @@ module.exports = deepFreeze({
     runtime: {
       bootstrap: "/js/runtime/index.js",
       colorSchemeSwitch: "/js/runtime/extensions/color-scheme-switch.js",
+      deferredIcons: "/js/runtime/extensions/deferred-icons.js",
+      dropdown: "/js/runtime/extensions/dropdown.js",
       reveal: "/js/runtime/extensions/reveal.js",
       settings: "/js/runtime/extensions/settings.js"
     },
@@ -112,8 +114,6 @@ module.exports = deepFreeze({
         js: "/js/plugins/adaptive-text.js"
       },
       cardHover: { js: "/js/plugins/card-hover.js" },
-      deferredIcons: { js: "/js/icons.js" },
-      dropdown: { js: "/js/plugins/dropdown.js" },
       heti: {
         css: "https://unpkg.com/heti@0.9/umd/heti.min.css",
         js: "https://unpkg.com/heti@0.9/umd/heti-addon.min.js"

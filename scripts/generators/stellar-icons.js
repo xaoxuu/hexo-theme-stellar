@@ -27,7 +27,7 @@ hexo.extend.generator.register('stellar_icons', function () {
 });
 
 // 构建期生成按命名空间拆分的图标数据文件（js/icons/{ns}.json）：
-// 供客户端加载器 /js/icons.js 对非首屏图标占位符（svg.icon[data-icon]）做异步原位替换。
+// 供 deferred-icons Runtime Extension 对非首屏图标占位符做异步原位替换。
 // 数据源为合并后的 stellar.data.icons（主题 _data/icons.yml + 站点 source/_data/icons.yml 覆盖），
 // 仅收集内联 SVG 值（URL 值由服务端直接输出 <img>，无需下发）。
 hexo.extend.generator.register('stellar_icon_sets', function () {

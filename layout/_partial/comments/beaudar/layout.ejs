@@ -1,11 +1,10 @@
 <%
 function layoutDiv() {
   var el = '';
-  const explicit = typeof comments !== 'undefined' ? comments : null
-  const cmt = explicit || page.cmt;
+  const cmt = comments;
   if (cmt && cmt.service && (cmt.service.length > 0)) {
     const name = cmt.service;
-    const body = explicit ? cmt.options : cmt[name];
+    const body = cmt.options;
     el += '<div id="' + name + '"';
     for (let key of Object.keys(body)) {
       if (body[key] !== null) {

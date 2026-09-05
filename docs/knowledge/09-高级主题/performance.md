@@ -263,7 +263,7 @@ preconnect:
 
 - **核心样式 `main.css`** 只保留基础与必要的加载反馈规则（`.lazy` 显隐、aplayer、copycode 等）；Reveal 不再预设隐藏态样式。swiper/fancybox/mermaid 与五种评论系统样式移入 `source/css/plugins/`、`source/css/comments/` 独立编译，前端在 DOM 检测命中时经 `utils.css()` 按需注入。
 - **重复脚本外置**：`utils` 保持同步基础能力，页面级功能由单一 ESM runtime 按 Runtime Manifest 启动；图标白名单由构建期生成器 `scripts/generators/stellar-icons.js` 输出为 `/js/stellar-icons.js`，约 6KB 的 SVG 数据不再随每个页面重复传输。
-- **图标异步加载**：除首屏关键图标（搜索、菜单、leftbar/rightbar、arrow-left）与 TOC 底部操作按钮（回到顶部/参与讨论，由模板调用处 `inline=true` 内联）外，`icon()` 输出的其余 SVG 改为 `<svg data-icon>` 占位符；构建期生成器按命名空间输出 `js/icons/{ns}.json`，Runtime Manifest 仅在 `svg.icon[data-icon]` selector 命中时加载 `/js/icons.js`，再按页拉取实际用到的命名空间并原位替换为内联 SVG。页面 HTML 不再重复携带全量图标（全站由约 3MB 内联 SVG 降至仅首屏关键图标），图标数据跨页与回访命中缓存。
+- **图标异步加载**：除首屏关键图标（搜索、菜单、leftbar/rightbar、arrow-left）与 TOC 底部操作按钮（回到顶部/参与讨论，由模板调用处 `inline=true` 内联）外，`icon()` 输出的其余 SVG 改为 `<svg data-icon>` 占位符；构建期生成器按命名空间输出 `js/icons/{ns}.json`，Runtime Manifest 仅在 selector 命中时动态导入 deferred-icons 模块，再按页拉取实际用到的命名空间并原位替换为内联 SVG。页面 HTML 不再重复携带全量图标（全站由约 3MB 内联 SVG 降至仅首屏关键图标），图标数据跨页与回访命中缓存。
 - **按页裁剪**：`tagtree.js` 仅在与 tagtree 小部件渲染相同的条件下输出；评论脚本本就按页输出。
 
 收益：每页内联脚本由约 31~34KB 降至约 10~13KB；无插件/评论页面不再下载对应 CSS；外置文件跨页与回访命中缓存。
@@ -300,7 +300,7 @@ preconnect:
 
 `npm run performance:check` 重新构建两边，向标准输出提供资源清单、体积和降幅，未达到阈值时失败。仓库不保存当前候选的生成报告快照，也不要求实现变化后重写测量结果。该检查属于性能专项与 `release:check`，普通 `npm run check` 不运行性能构建；命令组合以 [package.json](../../../package.json) 为准。
 
-`/js/icons.js` 与 `/js/plugins/dropdown.js` 从全页无条件 script 改为 Runtime Manifest 中的 `svg.icon[data-icon]` / `details.dropdown` selector Extension；命中页面仍加载原脚本，未命中页面不再支付首屏核心成本。含糊的 `/js/theme.js` 也已退出核心集合：配色选择能力更名为 Color Scheme Extension，默认关闭，只有显式启用时才作为 dynamic import 请求，因此默认基线不再包含该资源。
+Deferred Icons 与 Dropdown 是 Runtime Manifest 中的 `svg.icon[data-icon]` / `details.dropdown` selector Extension；命中页面直接动态导入原生 ESM 模块，未命中页面不支付下载与执行成本。含糊的 `/js/theme.js` 也已退出核心集合：配色选择能力更名为 Color Scheme Extension，默认关闭，只有显式启用时才作为 dynamic import 请求，因此默认基线不再包含该资源。
 
 **参考源码**：[ci/check-performance.js](../../../ci/check-performance.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[layout/_partial/scripts.ejs](../../../layout/_partial/scripts.ejs)、[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 

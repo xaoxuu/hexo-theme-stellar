@@ -70,7 +70,7 @@ test("Collection generators project sorted and filtered indexes into routes", ()
   assert.deepEqual(disabledWikiRoutes, []);
 });
 
-test("Notebook generator preserves collection ownership in paginated routes", () => {
+test("Notebook generator projects collection ownership through notebookIndex", () => {
   const generator = loadGenerator("../scripts/generators/notebooks", "notebooks");
   const note = Object.freeze({ id: "note", listed: true });
   const notebook = Object.freeze({
@@ -91,7 +91,8 @@ test("Notebook generator preserves collection ownership in paginated routes", ()
     })
   }), {});
   const noteRoute = routes.find(route => route.layout?.includes("notes"));
-  assert.deepEqual(noteRoute.data.stellarConfig.collection, { profile: "notebook", id: "dev" });
+  assert.equal(noteRoute.data.stellarConfig, undefined);
+  assert.equal(noteRoute.data.notebookIndex.collection.id, "dev");
   assert.deepEqual(noteRoute.data.notebookIndex.items.map(item => item.id), ["note"]);
   assert.equal(Object.isFrozen(noteRoute.data.notebookIndex), true);
 });

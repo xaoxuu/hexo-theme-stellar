@@ -153,7 +153,7 @@ flowchart TD
 
 ### 描述生成
 
-Post、Topic、Wiki 与 Notebook 新链直接读取 `render.seo.description`；Open Graph 启用时由 `render.seo.openGraph.args` 输出同一模型已解析的说明。legacy 页面由 `generate_description()` 按以下优先级级联：
+Post、Topic、Wiki 与 Notebook 直接读取 `render.seo.description`；Open Graph 启用时由 `render.seo.openGraph.args` 输出同一模型已解析的说明。普通索引与独立页面由 `generate_description()` 按以下优先级级联：
 
 1. **Open Graph 启用时跳过**：`stellar_config('openGraph').enabled` 为 true 时返回空（由 OG 标签处理描述）
 2. **页面级描述**：`page.description`（截断至 150 字符）
@@ -216,7 +216,7 @@ graph LR
 
 `stellar_config('openGraph').enabled` 为 true 时生成 OG 标签，并对 `og:title`、`og:site_name`、`twitter:title` 做主题定制替换（经 `generate_og_title()` / `generate_og_site_name()` 转义处理）。`og:site_name` 始终输出站点名 `config.title`，`og:image` 按 封面 → 横幅 → 正文首图 → 头像 回退。
 
-Post/Topic/Wiki/Notebook 的 `og_args()` 直接复制 `render.seo.openGraph.args`；Collection description、页面 description 与 Front Matter `open_graph` 的优先级已在模型层完成。legacy 页面仍在 helper 调用前从 `pageConfig` 组装参数。
+Post/Topic/Wiki/Notebook 的 `og_args()` 直接复制 `render.seo.openGraph.args`；Collection description、页面 description 与 Front Matter `open_graph` 的优先级已在模型层完成。普通索引与独立页面在 helper 调用前从 `pageConfig` 组装参数。
 
 **参考源码**：[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 

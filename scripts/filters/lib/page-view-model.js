@@ -9,11 +9,9 @@ const {
 } = require("../../lib/models");
 const {
   getProfileViewModelInput,
-  getPageViewModel,
   getPostViewModelInput,
   getTopicViewModelBase,
   getTopicViewModelInput,
-  setPageViewModel,
   setRelatedItems
 } = require("../../lib/page-view-model-registry");
 
@@ -138,13 +136,8 @@ function attachPageViewModel(data) {
     const notebookInput = getProfileViewModelInput("notebook", data);
     if (wikiInput) {
       data.viewModel = buildWikiViewModelFromData(data, wikiInput);
-      setPageViewModel(data, data.viewModel);
     } else if (notebookInput) {
       data.viewModel = buildNotebookViewModelFromData(data, notebookInput);
-      setPageViewModel(data, data.viewModel);
-    } else {
-      const viewModel = getPageViewModel(data);
-      if (viewModel) data.viewModel = viewModel;
     }
   }
   return data;

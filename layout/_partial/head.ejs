@@ -15,32 +15,9 @@ var stellarResources = {
   errorPage: stellar_config('errorPage')
 }
 
-function strip_wiki_title(title, wiki) {
-  if (!wiki) { return title; }
-  var t = String(title || '');
-  if (t.toLowerCase() === String(wiki).toLowerCase()) { return ''; }
-  // wiki 名中的空格/连字符在标题中可能写为另一种形态（如 cloud shell / cloud-shell）
-  var flex = String(wiki).replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/[\s-]+/g, '[\\s-]*');
-  var m = t.match(new RegExp('^' + flex + '[\\s-]*[：:\\-](.*)$', 'i'));
-  if (m && m[1]) {
-    return m[1].trim();
-  }
-  return t;
-}
-
 function generate_title() {
   if (pageRender) {
     return pageRender.seo.title
-  } else if (collection_id(page, "wiki")) {
-    var proj = stellar_data('wiki').tree[collection_id(page, "wiki")]
-    const wiki = proj?.name || collection_id(page, "wiki")
-    if (page.title) {
-      var stripped = strip_wiki_title(page.title, wiki)
-      if (stripped) {
-        return wiki + __('symbol.colon') + stripped + ' - ' + config.title;
-      }
-    }
-    return wiki + ' - ' + config.title;
   } else {
     if (page.title) {
       return page.title + ' - ' + config.title;
@@ -65,12 +42,6 @@ function generate_description() {
   }
   if (page.description) {
     return '<meta name="description" content="' + truncate(strip_html(page.description), {length: 150}) + '">';
-  }
-  if (collection_id(page, "wiki")) {
-    var proj = stellar_data('wiki').tree[collection_id(page, "wiki")]
-    if (proj?.description) {
-      return '<meta name="description" content="' + proj.description + '">'
-    }
   }
   if (page.excerpt || page.content) {
     return '<meta name="description" content="' + truncate(strip_html(page.excerpt || page.content), {length: 150}) + '">';
@@ -120,12 +91,6 @@ function og_args() {
   }
   if (page.layout == 'post' && pageConfig.cover) {
     args.twitter_card = 'summary_large_image';
-  }
-  if (collection_id(page, "wiki") && !page.description) {
-    var proj = stellar_data('wiki').tree[collection_id(page, "wiki")];
-    if (proj && proj.description) {
-      args.description = proj.description;
-    }
   }
   args.image = pageConfig.cover || pageConfig.banner?.image || first_content_image(page.content) || config.avatar || (config.email ? gravatar(config.email) : null);
   return Object.assign(args, pageConfig.seo?.openGraph || {});

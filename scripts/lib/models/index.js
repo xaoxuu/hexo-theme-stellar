@@ -26,6 +26,7 @@ const { caption } = require("../caption");
 const { wikiReadmeHtml } = require("../wiki_readme");
 const { resolveServiceProvider } = require("../service-provider");
 const { filterShareServices } = require("../share-services");
+const { normalizeThemeComments, resolveCommentsModel } = require("../comments");
 const {
   articleFooterDefaults,
   articlePresentationDefaults,
@@ -535,29 +536,7 @@ function wikiTitle(itemTitle, collectionName, siteTitle, language) {
 }
 
 function buildCommentsRender(stellarConfig, item) {
-  const comments = item.presentation.comments || {};
-  const service = typeof comments.provider === "string" ? comments.provider : "";
-  const extensionConfig = stellarConfig;
-  const options = mergeConfig(
-    service && isPlainObject(extensionConfig.comments?.[service])
-      ? extensionConfig.comments[service]
-      : {},
-    isPlainObject(comments.options) ? comments.options : {}
-  );
-  const preferredTheme = stellarConfig.appearance.colorScheme;
-  if (service === "giscus" && preferredTheme !== "auto" && options["data-theme"] === "preferred_color_scheme") {
-    options["data-theme"] = preferredTheme;
-  }
-  return {
-    enabled: comments.enabled !== false && service.length > 0,
-    title: typeof comments.title === "string"
-      ? comments.title
-      : extensionConfig.comments.title,
-    id: typeof comments.id === "string" ? comments.id : "",
-    service,
-    options,
-    pageTitle: item.title
-  };
+  return resolveCommentsModel(stellarConfig, item.presentation.comments, item.title);
 }
 
 function wikiPageLink(value) {
@@ -895,18 +874,6 @@ function normalizeWikiTree(sections) {
       isHomepage: page?.is_homepage === true
     })) : []
   }));
-}
-
-function normalizeThemeComments(comments) {
-  const source = isPlainObject(comments) ? comments : {};
-  const provider = typeof source.provider === "string" ? source.provider : null;
-  return {
-    enabled: source.enabled !== false,
-    title: typeof source.title === "string" ? source.title : "",
-    id: typeof source.id === "string" ? source.id : "",
-    provider,
-    options: {}
-  };
 }
 
 function buildWikiCollectionModel(input, collectionId) {

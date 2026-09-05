@@ -162,15 +162,10 @@ function getNotebooksObject(ctx, options = {}) {
     tree: {},
   };
 
-  const data = ctx.stellar?.contentConfig?.collectionConfigs || new Map();
-  const pageConfigs = ctx.stellar?.contentConfig?.pageConfigs || new Map();
-  const pagesByNotebook = options.pagesByNotebook || groupPagesByNotebook(ctx.locals.get("pages").data, pageConfigs);
+  const collections = Array.isArray(options.collections) ? options.collections : [];
+  const pagesByNotebook = options.pagesByNotebook || new Map();
   const list = [];
-  for (const [key, value] of data) {
-    if (!key.startsWith('notebooks/') || key.endsWith('.DS_Store')) {
-      continue;
-    }
-    const id = key.substring(10);
+  for (const [id, value] of collections) {
     const info = structuredClone(value);
     list.push(prepareNotebook(id, info, ctx, pagesByNotebook.get(id) || []));
   }

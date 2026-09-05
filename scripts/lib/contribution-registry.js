@@ -108,28 +108,28 @@ const CONTRIBUTIONS = defineContributions([
   {
     id: "deferred-icons",
     kind: "component",
-    entry: featureEntry(),
-    resources: ["features.deferredIcons"],
+    entry: runtimeEntry(INTERNAL.assets.runtime.deferredIcons),
+    resources: ["runtime.deferredIcons"],
     activation: selector("svg.icon[data-icon]"),
     schema: null,
     i18n: null,
     docs: { category: "Components", path: PLUGIN_SYSTEM_DOC },
     tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: null,
-    project: context => configResult({ asset: context.assets.features?.deferredIcons?.js || null })
+    project: () => configResult({})
   },
   {
     id: "dropdown",
     kind: "component",
-    entry: featureEntry(),
-    resources: ["features.dropdown"],
+    entry: runtimeEntry(INTERNAL.assets.runtime.dropdown),
+    resources: ["runtime.dropdown"],
     activation: selector("details.dropdown"),
     schema: null,
     i18n: null,
     docs: { category: "Components", path: "docs/knowledge/04-标签插件/note-container-tags.md" },
     tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: null,
-    project: context => configResult({ asset: context.assets.features?.dropdown?.js || null })
+    project: () => configResult({})
   },
   {
     id: "services",

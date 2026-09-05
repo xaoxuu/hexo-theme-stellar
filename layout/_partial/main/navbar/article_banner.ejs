@@ -36,8 +36,6 @@ function layoutTop() {
     el += `<a class="cap breadcrumb" href="${pretty_url(config.root)}">${__("btn.home")}</a>`
     if (wikiViewModel) {
       el += partial('breadcrumb/wiki', {viewModel: wikiViewModel})
-    } else if (stellar_data('wiki').tree[collection_id(page, "wiki")]) {
-      el += partial('breadcrumb/wiki')
     } else if (notebookViewModel) {
       el += partial('breadcrumb/note', {viewModel: notebookViewModel})
     } else if (page.layout == 'post') {

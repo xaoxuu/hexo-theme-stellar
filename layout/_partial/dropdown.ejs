@@ -51,7 +51,7 @@ function layoutDiv() {
     el += ' title="' + title + '" aria-label="' + title + '"'
   }
   el += '>'
-  // dropdown 首次展开时需要立即显示图标，使用内联 SVG 避免 /js/icons.js 异步替换造成闪烁。
+  // dropdown 首次展开时需要立即显示图标，使用内联 SVG 避免异步替换造成闪烁。
   el += '<span class="ui-icon">' + icon(dropdownItem.icon, 'no-lazy', true) + '</span>'
   if (dropdownShowTitle && dropdownItem.title) {
     el += '<span>' + title + '</span>'

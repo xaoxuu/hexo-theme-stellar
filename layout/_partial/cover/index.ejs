@@ -6,9 +6,6 @@ function layoutCover() {
   if (wikiViewModel) {
     return partial('wiki_cover', {viewModel: wikiViewModel})
   }
-  if (collection_id(page, "wiki")) {
-    return partial('wiki_cover')
-  }
   return ''
 }
 %>

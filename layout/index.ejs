@@ -3,23 +3,11 @@ page.navigation ||= {}
 if (page.navigation.menu == undefined) {
   page.navigation.menu = stellar_config('profiles.home.activeMenu');
 }
-if (page.title && collection_id(page, "wiki")) {
-  page.robots = 'noindex,follow';
-}
 // 首页评论区：仅首页第一页，默认不显示，可通过 layout.profiles.home.comments 开启/覆盖
 var homeCmt = stellar_config('profiles.home.comments')
+var homeComments = null
 if (homeCmt && homeCmt !== false && is_home_first_page()) {
-  if (typeof homeCmt === 'object') {
-    page.comments = {
-      enabled: homeCmt.enabled !== false,
-      title: homeCmt.title,
-      id: homeCmt.id,
-      service: homeCmt.provider
-    }
-    if (homeCmt.provider) page.comments[homeCmt.provider] = homeCmt.options
-  } else {
-    page.comments = {enabled: true}
-  }
+  homeComments = comments_model(page, typeof homeCmt === 'object' ? homeCmt : {enabled: true})
 }
 
 // 置顶文章样式：carousel = 轮播（默认），flat = 平铺（首页列表靠前展示）
@@ -137,5 +125,5 @@ function layout_post_list(partial) {
 }) %>
 <%- partial('_partial/main/post_list/paginator') %>
 <% if (homeCmt && homeCmt !== false && is_home_first_page()) { %>
-  <%- partial('_partial/comments/layout') %>
+  <%- partial('_partial/comments/layout', {comments: homeComments}) %>
 <% } %>

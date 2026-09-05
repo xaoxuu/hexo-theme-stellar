@@ -4,6 +4,7 @@ const { test } = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('fs');
 const path = require('path');
+const { pathToFileURL } = require('url');
 
 const registerUtils = require('../scripts/events/lib/utils');
 
@@ -61,6 +62,32 @@ test('stellar_icon_sets 生成器：按命名空间输出 JSON、去注释、跳
     { path: 'js/icons/a.json', data: '{"a":{"a:one":"<svg><path/></svg>","a:two":"<svg><path/></svg>"}}' },
     { path: 'js/icons/b.json', data: '{"b":{"b:svg":"<svg></svg>"}}' }
   ]);
+});
+
+test('deferred-icons Runtime Extension 直接加载命名空间并支持卸载', async () => {
+  const modulePath = pathToFileURL(path.join(ROOT, 'source/js/runtime/extensions/deferred-icons.js')).href;
+  const { mount } = await import(modulePath);
+  const node = {
+    isConnected: true,
+    outerHTML: '',
+    getAttribute: () => 'demo:one'
+  };
+  const root = { querySelectorAll: () => [node] };
+  const previousFetch = global.fetch;
+  let requestedUrl = '';
+  global.fetch = async url => {
+    requestedUrl = url;
+    return { ok: true, json: async () => ({ demo: { 'demo:one': '<svg id="loaded"></svg>' } }) };
+  };
+  try {
+    const cleanup = mount(root, { assets: { resolve: value => `/root${value}` } });
+    await new Promise(resolve => setImmediate(resolve));
+    assert.match(requestedUrl, /^\/root\/js\/icons\/demo\.json/);
+    assert.equal(node.outerHTML, '<svg id="loaded"></svg>');
+    cleanup();
+  } finally {
+    global.fetch = previousFetch;
+  }
 });
 
 test('icons.yml 键完整：所有静态 icon()/iconData()/ctx.icons 引用均存在', () => {

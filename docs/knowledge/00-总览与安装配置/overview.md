@@ -50,7 +50,7 @@ graph TB
     
     subgraph DataProcessing["Data Processing Layer"]
         DOCTREE["doc_tree.js<br/>Wiki structure builder"]
-        HELPERS["Hexo helpers<br/>json_ld, related_posts"]
+        HELPERS["Hexo helpers<br/>json_ld, comments_model"]
     end
     
     subgraph ServerRender["Server-Side Rendering"]

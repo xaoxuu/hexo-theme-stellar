@@ -1,10 +1,13 @@
 <%
 
 var author = null
-var article = content_config(page).article || {}
+var activeViewModel = typeof viewModel !== 'undefined' ? viewModel : null
+var authorId = ['post', 'topic'].includes(activeViewModel?.collection?.profile)
+  ? activeViewModel.render.listing.authorId
+  : content_config(page).article?.author
 if (stellar_data('authors')) {
-  if (article.author?.length > 0 && stellar_data('authors')[article.author] != null) {
-    author = stellar_data('authors')[article.author]
+  if (authorId?.length > 0 && stellar_data('authors')[authorId] != null) {
+    author = stellar_data('authors')[authorId]
   } else {
     author = stellar_data('defaultAuthor')
   }

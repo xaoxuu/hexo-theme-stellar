@@ -1,15 +1,10 @@
 <%
 function layoutDiv() {
   var el = '';
-  const explicit = typeof comments !== 'undefined' ? comments : null
-  const cmt = explicit || page.cmt;
+  const cmt = comments;
   if (cmt?.service?.length > 0) {
     const name = cmt.service;
-    var body = Object.assign({}, explicit ? cmt.options : cmt[name]);
-    var preferredTheme = stellar_config('appearance.colorScheme')
-    if (!explicit && preferredTheme != 'auto' && body['data-theme'] == 'preferred_color_scheme') {
-      body['data-theme'] = preferredTheme
-    }
+    var body = Object.assign({}, cmt.options);
     el += '<div id="' + name + '"';
     for (let key of Object.keys(body)) {
       if (body[key] !== null) {

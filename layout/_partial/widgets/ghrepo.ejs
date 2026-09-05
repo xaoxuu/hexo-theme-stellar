@@ -14,9 +14,6 @@ function layoutDiv() {
     tagsApi = repoApi ? repoApi + '/tags' : ''
   } else if (pageConfig.source?.repository) {
     repo = pageConfig.source.repository
-  } else if (stellar_data('wiki').tree[collection_id(page, "wiki")]?.source?.repository) {
-    var proj = stellar_data('wiki').tree[collection_id(page, "wiki")]
-    repo = proj.source?.repository
   }
   if (!repo) {
     return el;

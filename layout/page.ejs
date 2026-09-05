@@ -1,12 +1,16 @@
 <%
-const { layout } = page
-var registeredProfile = content_config(page).collection?.profile
+var pageConfig = content_config(page)
+var registeredProfile = pageConfig.collection?.profile
 var postViewModel = page.layout === 'post' && (registeredProfile == null || registeredProfile === 'topic')
   ? post_view_model(page)
   : null
 var wikiViewModel = page.viewModel?.collection?.profile === 'wiki' ? page.viewModel : null
 var notebookViewModel = page.viewModel?.collection?.profile === 'notebook' ? page.viewModel : null
-var pageConfig = content_config(page)
+var requiredProfile = page.layout === 'post' ? (registeredProfile === 'topic' ? 'topic' : 'post') : registeredProfile
+var activeViewModel = postViewModel || wikiViewModel || notebookViewModel
+if (['post', 'wiki', 'topic', 'notebook'].includes(requiredProfile) && activeViewModel?.collection?.profile !== requiredProfile) {
+  throw new Error(`Stellar v2: ${requiredProfile} 页面 ${page.source || page.path || '<unknown>'} 缺少 PageViewModel`)
+}
 // 是否使用 Heti 布局插件
 const isUsingHeti = stellar_config('features.heti.enabled')
 
@@ -17,21 +21,7 @@ if (!postViewModel && !wikiViewModel && !notebookViewModel) page.navigation = {
 }
 if (!postViewModel && !wikiViewModel && !notebookViewModel && page.navigation.menu == null) {
   var profiles = stellar_config('profiles')
-  if (collection_id(page, "wiki")?.length > 0) {
-    page.navigation.menu = profiles.wiki.activeMenu
-  } else if (collection_id(page, "topic")?.length > 0) {
-    page.navigation.menu = profiles.topic.activeMenu
-  } else if (page.layout === 'page' || page.layout == null) {
-    page.navigation.menu = profiles.page.activeMenu
-  } else {
-    page.navigation.menu = profiles.post.activeMenu
-  }
-}
-// 默认的 title
-if (!wikiViewModel && page.title == null) {
-  if (collection_id(page, "wiki")) {
-    page.title = __('btn.wiki')
-  }
+  page.navigation.menu = profiles.page.activeMenu
 }
 
 function articleClass() {
@@ -66,7 +56,6 @@ function postLayoutDiv() {
     next: article.next
   })
   el += partial('_partial/main/article/post_related', {related: article.related})
-  page.cmt_rendered = article.comments.enabled
   el += partial('_partial/comments/layout', {comments: article.comments})
   return el
 }
@@ -91,7 +80,6 @@ function wikiLayoutDiv() {
     previousLabel: __('meta.prev'),
     nextLabel: __('meta.next')
   })
-  page.cmt_rendered = article.comments.enabled
   el += partial('_partial/comments/layout', {comments: article.comments})
   return el
 }
@@ -109,7 +97,6 @@ function notebookLayoutDiv() {
   el += '</article>'
   el += partial('_partial/main/article/share', {share: article.footer.share})
   el += partial('_partial/main/article/post_footer', {footer: article.footer})
-  page.cmt_rendered = article.comments.enabled
   el += partial('_partial/comments/layout', {comments: article.comments})
   return el
 }
@@ -123,27 +110,9 @@ function layoutDiv() {
     el += partial('_partial/main/navbar/article_banner')
   }
   el += `<article class="${articleClass()}">`
-  if (page.content && String(page.content).trim().length > 0) {
-    el += page.content
-  } else {
-    // wiki 项目首页正文为空（剪裁空白后）且配置了 repo 时，
-    // 以该仓库 README.md 作为主页正文（应用层 helper，复用底层远程 md 渲染组件）
-    el += wiki_readme_html(stellar_data('wiki').tree[collection_id(page, "wiki")], page)
-  }
+  if (page.content && String(page.content).trim().length > 0) el += page.content
   el += `</article>`
-  if (layout === 'post' || collection_id(page, "wiki")) {
-    if (layout === 'post' && stellar_config('article.footer.showTags')) {
-      el += partial('_partial/main/article/article_tags')
-    }
-    el += partial('_partial/main/article/article_footer')
-  }
-  if (layout === 'post' || collection_id(page, "wiki")) {
-    el += partial('_partial/main/article/read_next')
-  }
-  if (layout === 'post') {
-    el += partial('_partial/main/article/related_posts')
-  }
-  el += partial('_partial/comments/layout')
+  el += partial('_partial/comments/layout', {comments: comments_model(page)})
   return el
 }
 %>

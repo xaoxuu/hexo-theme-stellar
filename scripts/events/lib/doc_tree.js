@@ -18,35 +18,25 @@ const {
 } = require("../../lib/models");
 const { ensureRuntimeData } = require("../../lib/runtime-data");
 const {
-  setPageViewModel,
   setProfileViewModelBase,
   setProfileViewModelInput
 } = require("../../lib/page-view-model-registry");
-const {
-  sourcePathForData,
-  sourcePathForPage
-} = require("../../lib/source-config");
+const { sourcePathForData } = require("../../lib/source-config");
 
 function cloneConfig(value) {
   return value == null ? value : structuredClone(value);
 }
 
-module.exports = (ctx, pipeline = null) => {
+module.exports = (ctx, pipeline) => {
+  if (!pipeline) throw new TypeError("Stellar v2: Wiki 构建必须由 Collection Pipeline 驱动");
   const data = ctx.locals.get("data");
-  const pages = pipeline == null
-    ? ctx.locals.get("pages")
-    : pipeline.members("wiki").map(record => record.page);
-  const parsedCollections = ctx.stellar?.contentConfig?.collectionConfigs || new Map();
-  const parsedPages = ctx.stellar?.contentConfig?.pageConfigs || new Map();
-  const collectionConfigs = new Map();
+  const records = pipeline.members("wiki");
+  const pages = records.map(record => record.page);
+  const parsedPages = new Map(records.map(record => [record.page, record.config]));
+  const collectionConfigs = new Map(pipeline.collections("wiki").map(([id, config]) => [id, cloneConfig(config)]));
   const normalizedData = { ...data };
-  for (const [key, value] of parsedCollections) {
-    normalizedData[key] = cloneConfig(value);
-  }
-  for (const [key, value] of Object.entries(normalizedData)) {
-    if (key.startsWith("wiki/") && key.length > 5) {
-      collectionConfigs.set(key.slice(5), cloneConfig(value));
-    }
+  for (const [id, value] of collectionConfigs) {
+    normalizedData[`wiki/${id}`] = cloneConfig(value);
   }
 
   const wiki = buildWikiTree({
@@ -59,32 +49,16 @@ module.exports = (ctx, pipeline = null) => {
   const runtimeData = ensureRuntimeData(ctx);
   runtimeData.wiki = wiki;
 
-  const themeSource = ctx.config.theme_config
-    ? "_config.stellar.yml"
-    : "themes/stellar/_config.yml";
   const entries = [];
   const homepageEntries = new Map();
-  const recordsByPage = pipeline == null
-    ? new Map()
-    : new Map(pipeline.members("wiki").map(record => [record.page, record]));
-  for (const page of pages) {
-    const config = parsedPages.get(page);
+  for (const record of records) {
+    const page = record.page;
+    const config = record.config;
     if (config == null) continue;
     const collectionId = getCollectionId(config, "wiki");
     if (collectionId == null) continue;
-    const sharedInput = pipeline == null
-      ? {
-          source: sourcePathForPage(page),
-          themeSource,
-          siteConfig: ctx.config,
-          runtimeData,
-          stellarConfig: ctx.stellar?.config,
-          frontMatter: config,
-          page
-        }
-      : pipeline.modelInput(recordsByPage.get(page));
     const input = {
-      ...sharedInput,
+      ...pipeline.modelInput(record),
       collectionSource: sourcePathForData(`wiki/${collectionId}`),
       collectionId,
       collectionConfig: collectionConfigs.get(collectionId),
@@ -121,7 +95,6 @@ module.exports = (ctx, pipeline = null) => {
     entry.page.viewModel = completeWikiPageViewModel(completeInput, entry.base);
     setProfileViewModelInput("wiki", entry.page, completeInput);
     setProfileViewModelBase("wiki", entry.page, entry.base);
-    setPageViewModel(entry.page, entry.page.viewModel);
   }
 
   wiki.index = {

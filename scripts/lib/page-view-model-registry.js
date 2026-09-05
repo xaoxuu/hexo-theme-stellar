@@ -4,19 +4,17 @@ const profileInputs = new Map();
 const profileBases = new Map();
 const relatedItems = new Map();
 const pageConfigs = new Map();
-const pageViewModels = new Map();
 
 function keysForPage(page) {
   return [page?.source, page?.path, page?._id]
     .filter(value => typeof value === "string" && value.length > 0);
 }
 
-function resetPageViewModels() {
+function resetPageViewModelRegistry() {
   profileInputs.clear();
   profileBases.clear();
   relatedItems.clear();
   pageConfigs.clear();
-  pageViewModels.clear();
 }
 
 function setValue(store, page, value) {
@@ -107,28 +105,18 @@ function getRelatedItems(page) {
   return getValue(relatedItems, page) || [];
 }
 
-function setPageViewModel(page, viewModel) {
-  setValue(pageViewModels, page, viewModel);
-}
-
-function getPageViewModel(page) {
-  return getValue(pageViewModels, page);
-}
-
 module.exports = {
   getProfileViewModelBase,
   getProfileViewModelInput,
   getPageConfig,
-  getPageViewModel,
   getNotebookViewModelBase,
   getNotebookViewModelInput,
   getPostViewModelInput,
   getRelatedItems,
   getTopicViewModelBase,
   getTopicViewModelInput,
-  resetPageViewModels,
+  resetPageViewModelRegistry,
   setPageConfig,
-  setPageViewModel,
   setProfileViewModelBase,
   setProfileViewModelInput,
   setNotebookViewModelBase,

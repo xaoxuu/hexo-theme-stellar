@@ -18,22 +18,21 @@ tags:
 
 生成此页面时参考的主题源码文件：
 
-- [layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)
 - [layout/_partial/main/article/post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs)
 - [layout/_partial/main/article/post_tags.ejs](../../../layout/_partial/main/article/post_tags.ejs)
 - [layout/_partial/main/article/contributors.ejs](../../../layout/_partial/main/article/contributors.ejs)
 - [source/css/_components/partial/article-footer.styl](../../../source/css/_components/partial/article-footer.styl)
-- [scripts/helpers/related_posts.js](../../../scripts/helpers/related_posts.js)
+- [scripts/filters/lib/page-view-model.js](../../../scripts/filters/lib/page-view-model.js)
 
 </details>
 
-本页介绍文章正文下方的标签行与页脚组件——文章、wiki 页面与自定义页面内容下方渲染的块。普通 Post、Topic、Wiki 与 Notebook 都由 `post_footer.ejs` 消费已解析的 `PageViewModel.render.article.footer`；Post 与 Topic 由 `post_tags.ejs` 消费标签投影，Notebook 的 `note_tags.ejs` 消费 `render.article.tags`。其它页面继续使用迁移期入口。各分支保持相同 DOM、class 与可见行为。文章之间的导航元素见[相关内容与导航](related-content.md)。
+本页介绍严格内容页面正文下方的标签行与页脚组件。普通 Post、Topic、Wiki 与 Notebook 都由 `post_footer.ejs` 消费已解析的 `PageViewModel.render.article.footer`；Post 与 Topic 由 `post_tags.ejs` 消费标签投影，Notebook 的 `note_tags.ejs` 消费 `render.article.tags`。普通独立页面不经过文章页脚链。文章之间的导航元素见[相关内容与导航](related-content.md)。
 
 ---
 
 ## 组件概览
 
-普通 Post、Topic、Wiki 与 Notebook 页脚由 [post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs) 接收显式 `footer` local，迁移期页面由 [article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs) 的 `layoutDiv()` 渲染。两者条件组装相同的最多四个区块；四类严格内容的许可、分享、贡献者与引用级联都只在各自 ViewModel 构建时执行一次：
+普通 Post、Topic、Wiki 与 Notebook 页脚由 [post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs) 接收显式 `footer` local。许可、分享、贡献者与引用级联都只在各自 ViewModel 构建时执行一次：
 
 | 区块 ID | 显示条件 | 本地化键 |
 |---------|----------|----------|
@@ -73,7 +72,7 @@ flowchart TD
   secRef & secLic & secCon & secShr --> out
 ```
 
-**参考源码**：[layout/_partial/main/article/post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs)、[layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)
+**参考源码**：[layout/_partial/main/article/post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs)
 
 ---
 
@@ -81,17 +80,17 @@ flowchart TD
 
 普通 Post 与 Topic 的 `render.article.tags` 已在构建边界合并 Hexo 标签名称和路径；数组非空时，正文结束后、`article-footer` 之前渲染一行本文标签：
 
-- 模板 [post_tags.ejs](../../../layout/_partial/main/article/post_tags.ejs) 只接收显式 `tags` local；每个标签仍渲染为 `<a class="tag" href="${pretty_url(tag.path)}">`，链接内先输出 `default:hashtag` 图标再输出标签名。迁移期 `article_tags.ejs` 保持旧入口。
+- 模板 [post_tags.ejs](../../../layout/_partial/main/article/post_tags.ejs) 只接收显式 `tags` local；每个标签渲染为 `<a class="tag" href="${pretty_url(tag.path)}">`，链接内先输出 `default:hashtag` 图标再输出标签名。
 - 样式 [source/css/_components/partial/article-tags.styl](../../../source/css/_components/partial/article-tags.styl)：复用 [source/css/_defines/func.styl](../../../source/css/_defines/func.styl) 的 `tag-chip()` mixin——胶囊圆角（`border-radius: 999px`）、`var(--block)` 底色、`$fs-13`，前缀为内联 hashtag 图标（`.tag svg`：`1em`、`opacity: .4`）；hover 时文字变 `var(--text)`、背景变 `var(--block-border)`、图标变主题色且不透明；容器 `justify-content: center` 居中，`margin: 2rem -0.5rem 0` 抵消标签外边距并保留与正文的 2rem 间距。与标签页（`/blog/tags/`）标签胶囊为同一套样式。
 - 博客文章标签行由 `article.footer.show_tags` 控制，页面可用 `footer.show_tags` 覆盖；wiki 页不渲染标签行。笔记页由 [layout/_partial/main/notebook/note_tags.ejs](../../../layout/_partial/main/notebook/note_tags.ejs) 消费 `render.article.tags`，在正文末尾渲染笔记标签（标签名与链接已在模型层按笔记本标签树解析），复用同一 `article-tags` 容器与 `tag-chip()` 胶囊样式。
 
-**参考源码**：[layout/_partial/main/article/article_tags.ejs](../../../layout/_partial/main/article/article_tags.ejs)、[layout/page.ejs](../../../layout/page.ejs)、[source/css/_components/partial/article-tags.styl](../../../source/css/_components/partial/article-tags.styl)、[source/css/_defines/func.styl](../../../source/css/_defines/func.styl)
+**参考源码**：[layout/_partial/main/article/post_tags.ejs](../../../layout/_partial/main/article/post_tags.ejs)、[layout/page.ejs](../../../layout/page.ejs)、[source/css/_components/partial/article-tags.styl](../../../source/css/_components/partial/article-tags.styl)、[source/css/_defines/func.styl](../../../source/css/_defines/func.styl)
 
 ---
 
 ## 引用区块
 
-Post/Topic/Wiki/Notebook 的 `render.article.footer.references` 为非空数组时渲染；legacy 页面继续从页面配置读取。每个条目经 Hexo 的 `markdown()` 辅助函数处理，包装在 `<ul>` 内的 `<li class="post-title">` 元素中。
+Post/Topic/Wiki/Notebook 的 `render.article.footer.references` 为非空数组时渲染。每个条目经 Hexo 的 `markdown()` 辅助函数处理，包装在 `<ul>` 内的 `<li class="post-title">` 元素中。
 
 ```
 render.article.footer.references: [
@@ -108,7 +107,7 @@ render.article.footer.references: [
 
 ## 许可解析
 
-Post/Topic/Wiki/Notebook 的许可文本在 ViewModel 构建期按页面、Collection/Profile 与主题默认级联；模板只接收最终字符串。解析出的字符串可能包含 `{author.name}` 与 `{author.url}` 占位符，由模型使用已登记作者数据插值。legacy 页面仍在 `article_footer.ejs` 中解析。
+Post/Topic/Wiki/Notebook 的许可文本在 ViewModel 构建期按页面、Collection/Profile 与主题默认级联；模板只接收最终字符串。解析出的字符串可能包含 `{author.name}` 与 `{author.url}` 占位符，由模型使用已登记作者数据插值。
 
 ### 解析逻辑
 
@@ -134,7 +133,6 @@ flowchart TD
 |----------|----------|----------|----------|
 | `post` | `page.footer.license: false` | `page.footer.license: <string>` | `article.footer.license` |
 | wiki 页面 | `footer.license: false` | `footer.license: true` 或 `<string>` | Wiki Collection → `article.footer.license` |
-| 其他布局 | （默认不显示） | `page.footer.license: true` 或 `<string>` | `article.footer.license` |
 
 - Collection `footer.license: true` 表示使用全局 `article.footer.license`
 - 页面级 `footer.license` 覆盖 Collection；`false` 生成空许可字符串

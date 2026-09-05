@@ -9,7 +9,7 @@ const {
   validateThemeConfig
 } = require("../../lib/content-config");
 const { formatConfigWarnings } = require("../../lib/config-schema");
-const { resetPageViewModels, setPageConfig } = require("../page-view-model-registry");
+const { resetPageViewModelRegistry, setPageConfig } = require("../page-view-model-registry");
 const { ensureRuntimeData } = require("../runtime-data");
 const { readFrontMatter, sourcePathForData, sourcePathForPage } = require("../source-config");
 const {
@@ -20,14 +20,13 @@ const { discoverContent, memberKey } = require("./shared");
 const { getProfileAdapter, profileAdapters } = require("./registry");
 
 function prepareCollectionPipeline(ctx) {
-  resetPageViewModels();
+  resetPageViewModelRegistry();
   const issues = [];
   const configWarnings = [];
   const data = ctx.locals.get("data") || {};
   const collectionConfigs = new Map();
   const pageConfigs = new Map();
   ctx.stellar ||= {};
-  ctx.stellar.contentConfig = { collectionConfigs, pageConfigs };
   const themeConfig = ctx.config.theme_config ?? ctx.theme.config;
   const themeSource = ctx.config.theme_config !== undefined
     ? "_config.stellar.yml"
@@ -92,7 +91,6 @@ function prepareCollectionPipeline(ctx) {
     pageConfigs.set(page, parsed);
     if (parsed != null) {
       setPageConfig(page, parsed);
-      page.stellarConfig = parsed;
     }
     return parsed;
   };
