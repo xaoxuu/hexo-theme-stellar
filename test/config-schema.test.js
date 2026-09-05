@@ -193,25 +193,6 @@ test("Topic index reuses blogIndex while Topic owns its route prefix", () => {
   });
   assert.equal(config.profiles.blogIndex.listingNav.enabled, true);
   assert.equal(config.profiles.topic.path, "/series/");
-  assert.equal(config.profiles.topicIndex, undefined);
-  assert.throws(
-    () => parseStellarConfig({ themeConfig: { profiles: { topic_index: {} } } }),
-    error => hasIssue(error, "profiles.topic_index", "unknown_field")
-  );
-});
-
-test("Removed shell roots and movable Brand or Actions widgets are rejected", () => {
-  for (const [themeConfig, path] of [
-    [{ brand: { name: "Legacy" } }, "brand"],
-    [{ menu: { items: [] } }, "menu"],
-    [{ footer: { actions: [] } }, "footer.actions"],
-    [{ topbar: { widgets: ["site_brand"] } }, "topbar.widgets[0]"],
-    [{ topbar: { widgets: ["actions"] } }, "topbar.widgets[0]"]
-  ]) {
-    assert.throws(() => parseStellarConfig({ themeConfig }), error => (
-      error instanceof ConfigSchemaError && error.issues.some(issue => issue.path === path)
-    ));
-  }
 });
 
 test("Only Leftbar Brand accepts regular or compact style", () => {

@@ -111,26 +111,8 @@ Drawer 复用原 Region 节点并遵守 ARIA、焦点转移、Escape、焦点恢
 
 首页固定使用标准文章 Feed；切换 Appearance 不会改变 Region DOM。
 
-## 迁移
+## 升级边界
 
-预发布旧名不保留运行时别名：
-
-| 旧字段/能力 | 新字段/能力 |
-| --- | --- |
-| `regions.topbar/leftbar/rightbar` | 顶层 `topbar/leftbar/rightbar` |
-| `note_defaults` | 删除；使用 Collection 根级 Region |
-| `topbar: [a, b]` | `topbar.widgets: [a, b]` |
-| `rightbar: [a, b]` | `rightbar.widgets: [a, b]` |
-| `sidebarRail` | `leftbarRail` |
-| `appearance.backgrounds` 下的旧键 `sidebar` | `leftbar` |
-| v1 `sidebar.left.widgets` | `leftbar.widgets` |
-| v1 `sidebar.right.widgets` | `rightbar.widgets` |
-| 根级 `brand` | 分别迁入 `topbar.brand` / `leftbar.brand` |
-| 根级 `menu.items` | 分别迁入 `topbar.menu` / `leftbar.menu` |
-| 根级 `footer.actions` | `leftbar.footer.actions` |
-| `site_brand` / `collection_brand` / `actions` Widget | 删除，使用 Region 固定配置 |
-| 旧 Sidebar 的独立 `surface` | `appearance.preset` |
-
-Doctor 会直接拒绝旧字段并给出精确迁移目标。
+Doctor 只为 1.44.0 已发布的主题根字段提供迁移定位，例如 `logo`、`menubar`、`site_tree` 分别指向当前 Brand、Menu 与 Profile 配置。v2 预发布候选中出现过的 Region 包装、固定内容 Widget 名称和其它中间结构不保留别名或专用墓碑；字段作为未知字段拒绝，Widget 则由 Registry 按未知类型或位置能力不匹配警告并跳过。
 
 实现入口：`scripts/lib/regions.js`、`scripts/lib/widget-registry.js`、`scripts/lib/doctor.js`、`layout/_partial/regions/widgets.ejs`、`source/js/main.js`。

@@ -536,44 +536,6 @@ function validateMenuItems(node, input, source, path, issues) {
   });
 }
 
-function validateRegionWidgets(node, input, source, path, issues) {
-  if (!Array.isArray(input)) return;
-  input.forEach((item, index) => {
-    const id = typeof item === "string"
-      ? item
-      : isPlainObject(item)
-        ? (typeof item.override === "string" ? item.override : item.layout)
-        : null;
-    if (id === "search") {
-      issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "Region widget excluding retired search; use topbar.menu or leftbar.menu", node.migration));
-    }
-    if (id === "wiki_home") {
-      issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "Region widget excluding removed wiki_home; Wiki navigation belongs to the Brand", node.migration));
-    }
-    if (["brand", "site_brand", "collection_brand"].includes(id)) {
-      issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "fixed topbar.brand or leftbar.brand", node.migration));
-    }
-    if (id === "actions") {
-      issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "leftbar.footer.actions", node.migration));
-    }
-  });
-}
-
-function validateLeftbarContentWidgets(node, input, source, path, issues) {
-  if (!Array.isArray(input)) return;
-  validateRegionWidgets(node, input, source, path, issues);
-  const fixed = new Set(["site_brand", "collection_brand", "brand", "menu", "actions", "profile", "spacer"]);
-  input.forEach((item, index) => {
-    const id = typeof item === "string"
-      ? item
-      : isPlainObject(item)
-        ? (typeof item.override === "string" ? item.override : item.layout)
-        : null;
-    if (!fixed.has(id)) return;
-    issues.push(issue("invalid_value", source, `${path}[${index}]`, valueType(item), "Leftbar content widget excluding fixed shell controls", node.migration));
-  });
-}
-
 function validateFooterActions(node, input, source, path, issues) {
   if (!Array.isArray(input)) return;
   const actionTypes = new Set(["link", "button", "dropdown", "spacer"]);
@@ -749,12 +711,10 @@ function validateCustom(node, input, source, path, issues) {
   else if (node.validator === "kebab_id") validateKebabId(node, input, source, path, issues);
   else if (node.validator === "nullable_kebab_id") validateNullableKebabId(node, input, source, path, issues);
   else if (node.validator === "menu_items") validateMenuItems(node, input, source, path, issues);
-  else if (node.validator === "region_widgets") validateRegionWidgets(node, input, source, path, issues);
-  else if (node.validator === "leftbar_content_widgets") validateLeftbarContentWidgets(node, input, source, path, issues);
   else if (node.validator === "footer_actions") validateFooterActions(node, input, source, path, issues);
   else if (node.validator === "navigation_tabs") validateNavigationTabs(node, input, source, path, issues);
   else if (node.validator === "safe_relative_path") validateSafeRelativePath(node, input, source, path, issues);
-  else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "nullable_absolute_http_url", "emoji_template", "emoji_sources", "github_repository", "contributor_repositories", "diagrams_override", "safe_navigation_url", "nullable_safe_navigation_url", "nullable_template_navigation_url", "css_color", "nullable_css_color", "css_length", "css_percentage", "css_font_family", "css_gradient", "sidebar_gradient_colors", "css_selector", "corner_shape", "resource", "nullable_resource", "non_negative_integer", "nullable_non_negative_integer", "non_empty_record_keys", "license_value", "license_override", "share_override", "kebab_id", "nullable_kebab_id", "menu_items", "region_widgets", "leftbar_content_widgets", "footer_actions", "navigation_tabs", "safe_relative_path"].includes(node.validator)) {
+  else if (!["non_empty_string", "nullable_non_empty_string", "string_tree", "effect", "brand", "absolute_http_url", "nullable_absolute_http_url", "emoji_template", "emoji_sources", "github_repository", "contributor_repositories", "diagrams_override", "safe_navigation_url", "nullable_safe_navigation_url", "nullable_template_navigation_url", "css_color", "nullable_css_color", "css_length", "css_percentage", "css_font_family", "css_gradient", "sidebar_gradient_colors", "css_selector", "corner_shape", "resource", "nullable_resource", "non_negative_integer", "nullable_non_negative_integer", "non_empty_record_keys", "license_value", "license_override", "share_override", "kebab_id", "nullable_kebab_id", "menu_items", "footer_actions", "navigation_tabs", "safe_relative_path"].includes(node.validator)) {
     throw new TypeError(`未知配置校验器：${node.validator}`);
   }
 }

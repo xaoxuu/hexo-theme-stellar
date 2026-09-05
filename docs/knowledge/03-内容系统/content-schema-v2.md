@@ -78,19 +78,9 @@ Widget 的位置能力由类型 descriptor 声明，不允许实例扩大能力�
 
 ## 迁移定位
 
-| 旧字段 | 新字段 |
-| --- | --- |
-| `regions.leftbar.widgets` | `leftbar.widgets` |
-| `regions.rightbar.widgets` | `rightbar.widgets` |
-| `note_defaults` | 删除；使用 Collection 根级 Region |
-| `sidebar.left.brand` / 根级 `brand` | `leftbar.brand` 或 `topbar.brand` |
-| 根级 `menu.items` | `leftbar.menu` 或 `topbar.menu` |
-| 根级 `footer.actions` | `leftbar.footer.actions` |
-| `navigation.menu` | 根级 `active_menu` |
-| `navigation.breadcrumb` | 根级 `breadcrumb` |
-| Topic `hero.background.image` | Collection `banner.image` |
+Doctor 只为 1.44.0 已发布的 Collection 与 Front Matter 字段输出来源文件、字段路径和人工迁移目标，例如 Collection `title` 指向 `name`、Front Matter `wiki` 指向 `collection.id`。v2 预发布候选中出现过的分组路径和中间字段作为普通未知字段处理，不保留专用墓碑或迁移表。
 
-Doctor 会输出来源文件、字段路径和迁移目标。最终字段、类型与约束以内容/模型 Schema、解析器和对应测试为准。
+最终字段、类型与约束以内容/模型 Schema、解析器和对应测试为准。
 
 ## 实现接缝
 

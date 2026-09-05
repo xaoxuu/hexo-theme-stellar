@@ -59,9 +59,6 @@ async function start() {
     request,
     legacy: Object.freeze({
       ctx: globalThis.ctx,
-      def: globalThis.def,
-      deps: globalThis.deps,
-      utils: globalThis.utils,
       stellar: globalThis.stellar
     })
   });

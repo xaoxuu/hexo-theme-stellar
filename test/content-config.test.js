@@ -145,10 +145,9 @@ test("Content regions distinguish inheritance from explicit empty lists", () => 
   assert.equal(page.rightbar, undefined);
 });
 
-test("Content Region schemas enforce Brand ownership and value boundaries", () => {
+test("Content Region schemas enforce fixed field value boundaries", () => {
   for (const [config, pattern] of [
-    [{ name: "Docs", leftbar: { brand: "collection_brand" } }, /leftbar\.brand 应为 object \| boolean \| null/],
-    [{ name: "Docs", topbar: { widgets: ["site_brand"] } }, /topbar\.widgets\[0\]/],
+    [{ name: "Docs", leftbar: { brand: "invalid" } }, /leftbar\.brand 应为 object \| boolean \| null/],
     [{ name: "Docs", leftbar: { footer: { actions: true } } }, /leftbar\.footer\.actions 应为 array \| null/]
   ]) {
     assert.throws(() => parseCollectionConfig(config, "collection.yml"), pattern);

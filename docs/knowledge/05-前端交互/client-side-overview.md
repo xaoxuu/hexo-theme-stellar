@@ -375,13 +375,13 @@ sequenceDiagram
 
 ### 卡片 Hover 生命周期
 
-启用 `features.card_hover.enabled` 后，Runtime Manifest 在页面命中 `.card-hover` 时 import Feature adapter，并把已校验的光斑颜色和最大倾角写入 `ctx.card_hover`。`source/js/plugins/card-hover.js` 只扫描 `.card-hover`，再按 `.card-hover--spotlight` 与 `.card-hover--tilt` 挂载对应能力：
+启用 `features.card_hover.enabled` 后，Runtime Manifest 在页面命中 `.card-hover` 时 import Feature adapter 并加载本地插件。光斑颜色由 CSS 固定为 `rgba(255, 255, 255, .25)`，最大倾角由脚本固定为 `3deg`，二者都不属于公开配置。`source/js/plugins/card-hover.js` 只扫描 `.card-hover`，再按 `.card-hover--spotlight` 与 `.card-hover--tilt` 挂载对应能力：
 
 - `stellar.cardHover.mountAll(root)` 幂等扫描 Document、容器或单个卡片，供动态组件复用。
 - `stellar.cardHover.unmountAll(root)` 清理指定容器自身及后代的已挂载卡片；省略 `root` 时清理全部，供动态搜索替换结果和插件销毁复用。
 - `stellar:mdrender` 完成后自动对 `event.detail.target` 增量挂载。
 - 指针移动经 `requestAnimationFrame` 合并；离开时取消待执行帧、移除激活类并立即复位倾角，Spotlight 则停在最后指针位置淡出，`opacity` 过渡完成且卡片未重新激活、未持有焦点后才回到中心。
-- 页面隐藏时复位；`destroy()` 移除卡片与媒体查询监听、注入光斑层和根级配置变量。
+- 页面隐藏时复位；`destroy()` 移除卡片与媒体查询监听及注入的光斑层。
 - 粗指针、触屏或减少动态效果时不挂载；脚本加载失败时组合类保持无行为，不阻塞链接与原组件 hover。
 
 Spotlight 是卡片末尾注入的独立 `span.card-hover__spotlight[aria-hidden=true]`，不接收指针事件；纯键盘进入或指针离开时仍保持 `focus-within`，都会立即使用居中光斑。快速重新移入后，旧的淡出结束事件不会覆盖新指针坐标。Tilt 作用于卡片本体，不占用 Reveal 动画期间的 `.post-card-wrap` transform。

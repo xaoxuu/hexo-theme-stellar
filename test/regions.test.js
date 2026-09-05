@@ -66,6 +66,20 @@ test("Unsupported Widget presentations are rejected with a sourced warning", () 
   assert.equal(result.warnings[0].profile, "blog_index");
 });
 
+test("Widget registry reports generic warnings for unknown and fixed content", () => {
+  const unknown = resolveWidget("missing", {}, { region: "rightbar" });
+  assert.equal(unknown.instance, null);
+  assert.equal(unknown.warning.code, "unknown_widget");
+
+  const fixed = resolveWidget({ layout: "brand" }, {}, { region: "topbar" });
+  assert.equal(fixed.instance, null);
+  assert.equal(fixed.warning.code, "fixed_region_content");
+
+  const fixedLeftbar = resolveWidget("menu", {}, { region: "leftbar", contentOnly: true });
+  assert.equal(fixedLeftbar.instance, null);
+  assert.equal(fixedLeftbar.warning.code, "fixed_leftbar_widget");
+});
+
 test("Custom Widgets default to content regions and cannot elevate inline capabilities", () => {
   const catalog = { custom: { layout: "custom" } };
   assert.equal(resolveWidget("custom", catalog, { region: "leftbar" }).instance.presentation, "leftbar");

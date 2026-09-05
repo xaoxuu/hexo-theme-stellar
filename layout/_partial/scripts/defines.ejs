@@ -150,14 +150,9 @@
     avatar: `<%- stellar_config('fallbacks.avatar') %>`,
     cover: `<%- stellar_config('fallbacks.cover') %>`,
   };
-  const deps = {
-    marked: `<%- url_for(assets.dependencies.marked) %>`,
-    lazyload: `<%- url_for(assets.dependencies.lazyLoading) %>`
-  }
-  // 迁移期经典脚本仍消费这些只读投影；ESM runtime 只通过该兼容表面读取。
+  // 经典脚本仍消费这些只读投影。
   window.ctx = ctx;
   window.def = def;
-  window.deps = deps;
 
   // 搜索跳转高亮：URL 带 ?kw= 时按需加载，定位正文中的匹配词
   (function () {

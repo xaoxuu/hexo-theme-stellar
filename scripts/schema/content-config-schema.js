@@ -53,8 +53,6 @@ const LEGACY_COLLECTION_ROOTS = Object.freeze({
   base_dir: "route.path",
   preview: "hero.preview",
   actions: "hero.actions",
-  routing: "route",
-  note: null,
   tree: "navigation.tree"
 });
 
@@ -247,9 +245,6 @@ function decorateSharedSchemas(schema) {
     schema.properties[region].normalizer = "object";
     schema.properties[region].normalization = "accept a Region object; validate children and deep-freeze the normalized object";
   }
-  schema.properties.topbar.properties.widgets.validator = "region_widgets";
-  schema.properties.leftbar.properties.widgets.validator = "leftbar_content_widgets";
-  schema.properties.rightbar.properties.widgets.validator = "region_widgets";
   for (const region of ["topbar", "leftbar"]) {
     schema.properties[region].properties.brand.validator = "brand";
     schema.properties[region].properties.brand.properties.href.validator = "nullable_safe_navigation_url";
@@ -268,9 +263,6 @@ function decorateSharedSchemas(schema) {
 }
 
 function decorateCommon(schema) {
-  schema.properties.comments.removedProperties = Object.fromEntries(
-    COMMENT_PROVIDER_FIELDS.map(field => [field, field === "service" ? "provider" : "options"])
-  );
   schema.properties.comments.properties.provider.validator = "nullable_non_empty_string";
   schema.properties.article.properties.style.values = ["tech", "story"];
   schema.properties.article.properties.paragraph_indent.values = ["auto", "always", "never"];
@@ -293,6 +285,9 @@ COLLECTION_CONFIG_SCHEMA.properties.listing.properties.order.validator = "nullab
 COLLECTION_CONFIG_SCHEMA.properties.listing.properties.excerpt_length.validator = "nullable_non_negative_integer";
 COLLECTION_CONFIG_SCHEMA.properties.listing.properties.per_page.validator = "nullable_non_negative_integer";
 decorateSharedSchemas(COLLECTION_CONFIG_SCHEMA);
+COLLECTION_CONFIG_SCHEMA.properties.comments.removedProperties = Object.fromEntries(
+  COMMENT_PROVIDER_FIELDS.map(field => [field, field === "service" ? "provider" : "options"])
+);
 decorateCommon(COLLECTION_CONFIG_SCHEMA);
 
 const FRONT_MATTER_CONFIG_SCHEMA = schemaForScope("front_matter");

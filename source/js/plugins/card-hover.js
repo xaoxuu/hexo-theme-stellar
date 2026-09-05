@@ -8,30 +8,11 @@
 
   window.stellar = window.stellar || {};
 
-  const DEFAULT_SPOTLIGHT_COLOR = 'rgba(255, 255, 255, 0.25)';
-  const DEFAULT_MAX_TILT = 3;
-  const MAX_TILT_LIMIT = 8;
+  const MAX_TILT = 3;
   const mounted = new Map();
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
   let lifecycleBound = false;
-
-  function normalizeConfig() {
-    const raw = typeof ctx !== 'undefined' && ctx.card_hover ? ctx.card_hover : {};
-    let maxTilt = Number(raw.maxTilt);
-    if (raw.maxTilt === null || raw.maxTilt === '' || !Number.isFinite(maxTilt)) {
-      maxTilt = DEFAULT_MAX_TILT;
-    }
-    maxTilt = Math.max(0, Math.min(MAX_TILT_LIMIT, maxTilt));
-
-    let spotlightColor = typeof raw.spotlightColor === 'string' && raw.spotlightColor.trim()
-      ? raw.spotlightColor.trim()
-      : DEFAULT_SPOTLIGHT_COLOR;
-    if (window.CSS && typeof window.CSS.supports === 'function' && !window.CSS.supports('color', spotlightColor)) {
-      spotlightColor = DEFAULT_SPOTLIGHT_COLOR;
-    }
-    return { maxTilt: maxTilt, spotlightColor: spotlightColor };
-  }
 
   function canAnimate() {
     return !reduceMotion.matches && finePointer.matches;
@@ -117,8 +98,6 @@
     const hasTilt = element.classList.contains('card-hover--tilt');
     if (!hasSpotlight && !hasTilt) return;
 
-    const config = normalizeConfig();
-    document.documentElement.style.setProperty('--card-hover-spotlight-color', config.spotlightColor);
     let spotlight = null;
     if (hasSpotlight) {
       spotlight = document.createElement('span');
@@ -131,7 +110,7 @@
       element: element,
       spotlight: spotlight,
       hasTilt: hasTilt,
-      maxTilt: config.maxTilt,
+      maxTilt: MAX_TILT,
       frame: null,
       pointer: null,
       onPointerEnter: null,
@@ -243,7 +222,6 @@
     document.removeEventListener('stellar:mdrender', handleRenderedMarkdown);
     document.removeEventListener('visibilitychange', handleVisibility);
     window.removeEventListener('pagehide', resetAll);
-    document.documentElement.style.removeProperty('--card-hover-spotlight-color');
   }
 
   stellar.cardHover = {
