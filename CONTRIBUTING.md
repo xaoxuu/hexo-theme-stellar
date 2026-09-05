@@ -28,6 +28,8 @@ git submodule add https://github.com/<your-name>/hexo-theme-stellar.git themes/s
 - 新增或重构标签插件：[标签插件开发规范](docs/guides/tag-plugins-style-guide.md)
 - 修改配置、内容 profile、组件、Extension 或语言文案：[贡献架构指南](docs/guides/contribution-architecture.md)
 
+公开 v2 文档按[入门](https://xaoxuu.com/wiki/stellar/start/install/)、[配置参考](https://xaoxuu.com/wiki/stellar/reference/theme/)和[行为参考](https://xaoxuu.com/wiki/stellar/reference/behavior/)组织。维护使用方迁移说明时核对 [AI 迁移契约](https://xaoxuu.com/wiki/stellar/migration/ai/)；旧公开入口由文档仓库的映射表和消费站点跳转实现承接。
+
 先运行最接近改动的检查；需要全仓证据时运行 `npm run check`。所有可用脚本及其当前组合以 `package.json` 为准。宿主构建、视觉检查和分发验收只在任务影响这些契约时补充。
 
 机器契约与直接测试随实现更新；知识库、CHANGELOG 和版本级 `VERIFICATION.md` 在发版准备时按最终净变化集中同步。
@@ -53,8 +55,8 @@ git submodule add https://github.com/<your-name>/hexo-theme-stellar.git themes/s
 
 - [Issues](https://github.com/xaoxuu/hexo-theme-stellar/issues)：BUG 反馈与技术问题
 - [Discussions](https://github.com/xaoxuu/hexo-theme-stellar/discussions)：社区讨论
-- [探索号](https://xaoxuu.com/wiki/stellar/articles/)：文章收录
-- [社区支持页面](https://xaoxuu.com/wiki/stellar/contributors/)：贡献者与交流渠道
+- [探索号](https://xaoxuu.com/wiki/stellar/support/articles/)：文章收录
+- [社区支持页面](https://xaoxuu.com/wiki/stellar/support/contributors/)：贡献者与交流渠道
 
 提问时请说明现象、复现步骤、尝试过程与报错信息。
 

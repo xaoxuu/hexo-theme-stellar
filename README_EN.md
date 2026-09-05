@@ -1,115 +1,85 @@
-# Stellar - Your Own Independent Blog
+# Stellar — a blog that can grow with your work
 
 [English](README_EN.md) · [简体中文](README.md)
+
+Stellar can begin as a quiet personal blog and grow into a home for your articles, project documentation, series, and notes.
+
+![Four real Stellar sites: a light blog, a classic blog, a personal knowledge base, and project documentation](https://xaoxuu.com/wiki/stellar/assets/screenshots/v2/stellar-four-sites.webp)
+
+[See the examples](https://xaoxuu.com/wiki/stellar/support/examples/) · [Getting started](https://xaoxuu.com/wiki/stellar/start/install/) · [Chinese documentation](https://xaoxuu.com/wiki/stellar/)
+
+> Stellar v2 is currently in Beta development and has not been released. “Beta” describes the development milestone, not the version available from npm.
 
 [![npm](https://img.shields.io/npm/v/hexo-theme-stellar)](https://www.npmjs.com/package/hexo-theme-stellar)
 [![license](https://img.shields.io/github/license/xaoxuu/hexo-theme-stellar)](https://github.com/xaoxuu/hexo-theme-stellar/blob/main/LICENSE)
 [![stars](https://img.shields.io/github/stars/xaoxuu/hexo-theme-stellar)](https://github.com/xaoxuu/hexo-theme-stellar)
 [![npm downloads](https://img.shields.io/npm/dm/hexo-theme-stellar)](https://www.npmjs.com/package/hexo-theme-stellar)
-[![release](https://img.shields.io/github/v/release/xaoxuu/hexo-theme-stellar)](https://github.com/xaoxuu/hexo-theme-stellar/releases)
 
-Stellar is a Hexo theme that unifies blogging and knowledge base in one place. Beneath its clean, business-style aesthetics lie four built-in content systems — Blog, Wiki, Topic, and Notebook — plus a rich collection of tag plugins and dynamic data widgets, ready to use out of the box for every kind of expression.
+## Four kinds of content, one site
 
-You can also use it as a lightweight blog theme from day one: install, enable, and start writing. Wiki, Topic, Notebook, and dynamic data widgets are all enabled on demand, growing naturally with your content needs.
+Publish regular blog posts as usual. Give a project its own Wiki when it needs stable navigation. Keep a series of posts together as a Topic, or collect smaller pieces of knowledge in a Notebook.
 
-## Why Stellar
+They share the same navigation, search, sidebars, and reading experience. If all you need is a blog, the other systems stay out of the way.
 
-### Four Content Systems, Integrated in One
+## A static site with room for live data
 
-- **Blog**: Two article layouts (tech / story) offer different reading experiences, with categories, tags, pagination, and related posts — use it as a lightweight blog right away if that's all you need.
-- **Wiki**: Showcase multiple project documentations or use it as your personal knowledge base, with project trees, sections, and hierarchical navigation.
-- **Topic**: Manage series of articles with an immersive, continuous reading experience.
-- **Notebook**: A three-layer architecture with a tag tree to organize, archive, and retrieve notes with ease.
+Timelines, link status, remote README files, GitHub repositories and contributors, ratings, and polls can load when they are needed. Your site remains static, while frequently changing data does not require a full rebuild.
 
-All four systems and dynamic widgets are integrated out of the box — no need to assemble multiple plugins.
+The article remains readable when a remote service is unavailable.
 
-### Expressive Tag Plugins
+## Writing, finding, and reading belong together
 
-A large set of flexible and powerful tag plugins — notes, folding, tabs, timelines, galleries, icons, emoji, highlights, OKR, chat, tables, and more — that can be freely mixed and nested, freeing your content from the limits of plain Markdown. See the [tag plugins documentation](https://xaoxuu.com/wiki/stellar/tag-plugins/).
+Stellar includes content components for notes, folding sections, tabs, galleries, timelines, chat, tables, and more. Built-in local search can take a reader straight to a matching section. On smaller screens, navigation moves into drawers and leaves the page to the article.
 
-### Dynamic Data Widgets
+## Choose a starting point
 
-Static blogs with dynamic capabilities — update content without redeploying:
+| Example | A good fit for | Preview |
+| --- | --- | --- |
+| Light Blog | Essays, personal notes, and distraction-free reading | [Open](https://xaoxuu.github.io/hexo-theme-stellar-examples/lightblog/) |
+| Blog | A classic sidebar blog with categories and series | [Open](https://xaoxuu.github.io/hexo-theme-stellar-examples/blog/) |
+| Knowledge | A personal site combining articles and long-lived knowledge | [Open](https://xaoxuu.github.io/hexo-theme-stellar-examples/knowledge/) |
+| Docs | Documentation for a single project | [Open](https://xaoxuu.github.io/hexo-theme-stellar-examples/docs/) |
 
-- **Dynamic timeline**: Post short updates like a social feed, or subscribe to others' timelines.
-- **Automated friend links**: Automatically detect link status, tag links, and subscribe to friends' posts.
-- **Remote Markdown rendering**: Render a project repository's README directly, avoiding duplicate maintenance.
-- **GitHub repository / contributor cards, ratings, votes, latest comments**, and other data widgets — loaded on demand without slowing down the first screen.
-- **Community culture**: Subscribe to the "Explorer" timeline data source to learn from the community.
+The source for all four sites lives in [hexo-theme-stellar-examples](https://github.com/xaoxuu/hexo-theme-stellar-examples/).
 
-### Experience & Performance
+## Try the v2 Beta
 
-- **Modular design**: Highly reusable widgets with freely configurable left/right sidebars.
-- **Design-token-driven styling**: A unified design language, dark mode, and responsive mobile adaptation.
-- **Lazy-loaded images** reserve space by original aspect ratio, preventing layout jumps.
-- Optional plugins enabled on demand: code highlighting & copy, KaTeX / MathJax, Mermaid diagrams, Fancybox lightbox, Swiper carousel, and more.
-- **Local search**: A built-in index generator, with results grouped by section, jumping to anchors and highlighting keywords.
-- **Complete SEO**: JSON-LD structured data, Open Graph, canonical URLs, and clone-site detection to protect original content.
-- **Multi-author support**: Assign different authors to different posts, each with their own dedicated homepage.
-
-Detailed usage for all of the above can be found in the [documentation](https://xaoxuu.com/wiki/stellar/).
-
-## Examples & Showcase
-
-- Example source: [hexo-theme-stellar-examples](https://github.com/xaoxuu/hexo-theme-stellar-examples/) (`blog` blog scenario, `docs` documentation scenario) — ready to fork and start
-- Showcase: [Blogs using Stellar](https://xaoxuu.com/wiki/stellar/examples/)
-
-[![Star History Chart](https://star-history.dera.page/svg?repos=xaoxuu/hexo-theme-stellar&type=date&legend=top-left)](https://star-history.dera.page/#xaoxuu/hexo-theme-stellar&type=date&legend=top-left)
-
-## Quick Start
-
-### Requirements
-
-```yaml
-Hexo: 6.3.0 ~ latest (verified up to 8.1.2)
-hexo-cli: 4.3.0 ~ latest
-node: >= 22 # LTS recommended
-npm: >= 10
-```
-
-### Install
-
-In the root directory of your blog:
+You need Node.js 22 or newer and Hexo 8 or newer. In the root of an existing Hexo site:
 
 ```bash
-npm install hexo-theme-stellar
+git submodule add https://github.com/xaoxuu/hexo-theme-stellar.git themes/stellar
+npm install --prefix themes/stellar
 ```
 
-### Configure
-
-Edit `_config.yml` and enable the theme:
+Enable the theme in `_config.yml`:
 
 ```yaml
 theme: stellar
 ```
 
-### Start Light
+Then check and build the site:
 
-Once configured, you can publish posts immediately. Wiki, Topic, Notebook, and dynamic widgets can be enabled on demand and are documented in detail; alternatively, start from the `blog` scenario in the example repository for a quick setup.
+```bash
+npx hexo stellar doctor
+npx hexo generate
+```
 
-## Documentation
+The full v2 documentation is currently maintained in Chinese. The example repository provides an English quick start and four complete sites that can be explored without reading the whole reference.
 
-Full documentation: https://xaoxuu.com/wiki/stellar/ (currently available in Chinese)
+## Stable npm release
 
-> AI documentation: https://deepwiki.com/xaoxuu/hexo-theme-stellar/
+```bash
+npm install hexo-theme-stellar
+```
 
-- Changelog: [CHANGELOG.md](https://github.com/xaoxuu/hexo-theme-stellar/blob/main/CHANGELOG.md) · [Releases](https://github.com/xaoxuu/hexo-theme-stellar/releases)
+This command may still install v1. Run `npm ls hexo-theme-stellar` before using any v2 configuration.
 
-### Common Topics
+## Community
 
-- [Tag Plugins](https://xaoxuu.com/wiki/stellar/tag-plugins/)
-- [Theme Settings](https://xaoxuu.com/wiki/stellar/theme-settings/)
-- [Wiki System](https://xaoxuu.com/wiki/stellar/wiki-settings/)
-- [Topic & Notebook](https://xaoxuu.com/wiki/stellar/topic/)
-
-## Feedback
-
-- Issues: https://github.com/xaoxuu/hexo-theme-stellar/issues/
-- Discussions: https://github.com/xaoxuu/hexo-theme-stellar/discussions/
-- Contributing: [CONTRIBUTING.md](CONTRIBUTING.md) · [Wiki contributors page](https://xaoxuu.com/wiki/stellar/contributors/)
+- [Issues](https://github.com/xaoxuu/hexo-theme-stellar/issues/) for reproducible problems
+- [Discussions](https://github.com/xaoxuu/hexo-theme-stellar/discussions/) for ideas and usage questions
+- [Contributing](CONTRIBUTING.md) for code and documentation work
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE), Copyright (c) 2021 xaoxuu. Permanently open source and completely free.
-
-See [Third-Party Notices](legal/THIRD-PARTY-NOTICES.md) for third-party components and their licenses.
+Stellar is free and open source under the [MIT License](LICENSE). Third-party licenses are listed in [THIRD-PARTY-NOTICES.md](legal/THIRD-PARTY-NOTICES.md).
