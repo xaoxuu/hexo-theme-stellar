@@ -565,10 +565,9 @@ function buildWikiRelated(input) {
   return input.relatedCollections.map(group => ({
     name: String(group?.name || ""),
     items: Array.isArray(group?.items) ? group.items.map(project => {
-      const identity = isPlainObject(project?.identity) ? project.identity : project;
-      const route = isPlainObject(project?.route) ? project.route : {};
+      const { identity, route } = project;
       return {
-        href: normalizeCollectionPath(route.homepage || project?.homepage?.path || route.path || ""),
+        href: normalizeCollectionPath(route.homepage || route.path || ""),
         title: String(identity?.name || project?.id || ""),
         description: String(identity?.description || "")
       };

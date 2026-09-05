@@ -795,15 +795,10 @@ function parseNode(node, input, source, path, issues, context) {
   for (const key of Object.keys(input)) {
     const childPath = path ? `${path}.${key}` : key;
     if (Object.prototype.hasOwnProperty.call(node.removedProperties || {}, key)) {
-      const replacement = input[key] === null && Object.prototype.hasOwnProperty.call(node.removedNullProperties || {}, key)
-        ? node.removedNullProperties[key]
-        : node.removedProperties[key];
-      const absoluteRoots = new Set(["site", "seo", "layout", "content", "appearance", "resources", "extensions", "inject"]);
+      const replacement = node.removedProperties[key];
       const replacementPath = replacement == null
         ? null
-        : absoluteRoots.has(replacement.split(".")[0])
-          ? replacement
-          : (path ? `${path}.${replacement}` : replacement);
+        : (path ? `${path}.${replacement}` : replacement);
       issues.push(issue(
         "removed_field",
         source,

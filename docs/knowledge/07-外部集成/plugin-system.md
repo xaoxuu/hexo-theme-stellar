@@ -115,31 +115,22 @@ Card Hover 使用独立 `card-hover.js` adapter 加载内置脚本并对当前 r
 1. 在浏览器开发者工具的 Console 和 Network 中找到 `/js/runtime/index.js`。
 2. 当前页面应输出 `<script type="module" src=".../js/runtime/index.js">`，响应状态应为 200。
 3. `Content-Type` 应为 `text/javascript` 或 `application/javascript`，不能是 `application/octet-stream`。
-4. 如果页面仍请求 `index.mjs`，说明线上仍是旧产物或 CDN 缓存。执行 `hexo clean && hexo generate`，重新部署整个 `public/`，并清理 CDN/浏览器缓存。
+4. 如果线上页面的入口或模块内容与本地生成结果不同，执行 `hexo clean && hexo generate`，重新部署整个 `public/`，并清理 CDN/浏览器缓存。
 
 可用以下命令快速核对生成结果和线上响应：
 
 ```sh
-rg '/js/runtime/index\.(mjs|js)' public/index.html
-find public/js/runtime -type f -name '*.mjs'
+rg -F '/js/runtime/index.js' public/index.html
 curl -I https://example.com/js/runtime/index.js
 ```
 
 如果桌面端正常而手机异常，应比较两端命中的远端 IP、`Server` 与 `Content-Type`。不同网络可能被 DNS/CDN 调度到不同源站，例如桌面端命中 Vercel、手机命中 OpenResty；需要让所有源站和缓存节点部署同一份产物，而不是只修复其中一个节点。
 
-### 旧版本在 1Panel/OpenResty 上报 MIME 错误
+### 1Panel/OpenResty 上报 MIME 错误
 
-旧版本使用 `.mjs` 时，未登记该扩展名的 OpenResty/Nginx 可能返回 `application/octet-stream`，Safari 会报告“不是有效的 JavaScript MIME 类型”并拒绝执行模块。优先升级主题并重新生成，使入口改用标准 `.js` URL。
+如果 `/js/runtime/index.js` 或其导入模块返回 `application/octet-stream`，浏览器会拒绝执行模块。检查实际响应节点的 OpenResty/Nginx 配置，确保加载了 MIME 类型映射，且 `.js` 映射到 `application/javascript` 或 `text/javascript`。
 
-暂时无法升级时，可以在 1Panel 的“网站 → 网站 → 目标站点 → 配置文件”中，为旧 `.mjs` 文件增加专用规则；如果已有通用静态资源正则，应把更具体的规则放在它之前：
-
-```nginx
-location ~* \.mjs$ {
-  default_type application/javascript;
-}
-```
-
-也可以在 OpenResty/Nginx 的全局 `mime.types` 中把现有 JavaScript 映射改为 `application/javascript js mjs;`。保存后重载 OpenResty，并再次通过 Network 或 `curl -I` 确认响应头。不要仅通过桌面端页面是否正常来判断配置已经覆盖所有节点。
+在 1Panel 中可从“网站 → 网站 → 目标站点 → 配置文件”检查相关设置；同时确认静态资源规则没有覆盖 MIME 映射。保存后重载 OpenResty，并再次通过 Network 或 `curl -I` 确认入口和导入模块的响应头。
 
 ### Gulp/Babel 破坏 ESM
 

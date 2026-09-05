@@ -57,40 +57,20 @@ function getProfileViewModelBase(profile, page) {
   return getValue(profileStore(profileBases, profile), page);
 }
 
-function setPostViewModelInput(page, input) {
-  setProfileViewModelInput("post", page, input);
-}
-
 function getPostViewModelInput(page) {
   return getProfileViewModelInput("post", page);
-}
-
-function setTopicViewModelInput(page, input) {
-  setProfileViewModelInput("topic", page, input);
 }
 
 function getTopicViewModelInput(page) {
   return getProfileViewModelInput("topic", page);
 }
 
-function setTopicViewModelBase(page, base) {
-  setProfileViewModelBase("topic", page, base);
-}
-
 function getTopicViewModelBase(page) {
   return getProfileViewModelBase("topic", page);
 }
 
-function setNotebookViewModelInput(page, input) {
-  setProfileViewModelInput("notebook", page, input);
-}
-
 function getNotebookViewModelInput(page) {
   return getProfileViewModelInput("notebook", page);
-}
-
-function setNotebookViewModelBase(page, base) {
-  setProfileViewModelBase("notebook", page, base);
 }
 
 function getNotebookViewModelBase(page) {
@@ -119,10 +99,5 @@ module.exports = {
   setPageConfig,
   setProfileViewModelBase,
   setProfileViewModelInput,
-  setNotebookViewModelBase,
-  setNotebookViewModelInput,
-  setPostViewModelInput,
-  setRelatedItems,
-  setTopicViewModelBase,
-  setTopicViewModelInput
+  setRelatedItems
 };

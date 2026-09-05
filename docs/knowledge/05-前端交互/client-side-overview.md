@@ -121,7 +121,7 @@ graph TB
 
 `layout/_partial/scripts/runtime.ejs` 在页尾输出不可执行的 `#stellar-runtime-config` JSON，再由 `/js/runtime/index.js` 解析。构建期 builder 已校验 manifest 版本、根路径、重复 ID、本地 module 路径、`when` 条件与配置对象，并深度冻结结果；序列化会转义 HTML 敏感字符。
 
-浏览器 `ExtensionRegistry` 根据 `when.selector/always` 决定是否 dynamic import adapter，随后调用 `mount(root, context)`。重复 mount 先 unmount，释放顺序与挂载相反；任一 Extension 的 import/mount/unmount 失败都被隔离并派发 `stellar:extension-error`。Reveal 默认不隐藏内容，因此 bootstrap 或 adapter 失败时无需额外可见性兜底。
+浏览器 `ExtensionRegistry` 根据 `when.selector/always` 决定是否 dynamic import adapter，随后调用 `mount(root, context)`。需要释放资源的 adapter 从 `mount` 返回清理函数，Registry 在卸载时调用该函数。重复 mount 先 unmount，释放顺序与挂载相反；任一 Extension 的 import/mount/unmount 失败都被隔离并派发 `stellar:extension-error`。Reveal 默认不隐藏内容，因此 bootstrap 或 adapter 失败时无需额外可见性兜底。
 
 旧 `document.write`、同步 utils 补载、`_pluginQueue`、`initPlugin` 和 Reveal 恢复看门狗已经删除。`utils.js` 仍同步提供迁移期经典 DOM/资源工具，但不再注册插件或实现 request/cache。
 

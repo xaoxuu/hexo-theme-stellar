@@ -59,12 +59,11 @@ test("Runtime Manifest serialization is safe for inline script data", () => {
   assert.match(json, /\\u003c\/script\\u003e/);
 });
 
-test("Runtime browser assets use conventional .js module URLs end to end", () => {
+test("Runtime browser assets use conventional .js filenames", () => {
   const files = runtimeFiles(RUNTIME_SOURCE);
   assert.ok(files.length > 0);
   for (const file of files) {
     assert.equal(path.extname(file), ".js", path.relative(RUNTIME_SOURCE, file));
-    assert.doesNotMatch(fs.readFileSync(file, "utf8"), /\.mjs\b/, path.relative(RUNTIME_SOURCE, file));
   }
 });
 

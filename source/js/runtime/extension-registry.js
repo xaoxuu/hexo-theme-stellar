@@ -39,15 +39,6 @@ function shouldMount(root, when) {
   return typeof root?.querySelector === 'function' && root.querySelector(when.selector) !== null;
 }
 
-function cleanupFrom(result, module, root, context) {
-  if (typeof result === 'function') return result;
-  if (typeof result?.cleanup === 'function') return result.cleanup;
-  if (typeof module.unmount === 'function') {
-    return () => module.unmount(root, context, result);
-  }
-  return null;
-}
-
 export function createExtensionRegistry(options = {}) {
   const importer = options.importer || (specifier => import(specifier));
   const onError = typeof options.onError === 'function' ? options.onError : () => {};
@@ -144,7 +135,7 @@ export function createExtensionRegistry(options = {}) {
         const result = await module.mount(root, extensionContext);
         instances.push({
           id: declaration.id,
-          cleanup: cleanupFrom(result, module, root, extensionContext)
+          cleanup: typeof result === 'function' ? result : null
         });
         results.push({ id: declaration.id, status: 'mounted' });
       } catch (error) {
