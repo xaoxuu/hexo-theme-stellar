@@ -1,76 +1,36 @@
-/**
- * 部分代码借鉴自 NexT:
- * https://github.com/next-theme/hexo-theme-next/blob/master/scripts/events/lib/config.js
- * Volantis:
- * https://github.com/volantis-x/hexo-theme-volantis/blob/master/scripts/events/lib/cdn.js
- */
+/* global hexo */
+"use strict";
 
-'use strict';
-
-const path = require('path')
+const path = require("path");
+const { ensureRuntimeData } = require("../../lib/runtime-data");
 
 module.exports = ctx => {
+  // v2 内部 URL 策略：只支持无 index.html 与无 .html 尾缀的规范路径。
+  ctx.config.pretty_urls ||= {};
+  ctx.config.pretty_urls.trailing_index = false;
+  ctx.config.pretty_urls.trailing_html = false;
 
-  const { cache, language_switcher, system } = ctx.theme.config
-  const warning = function(...args) {
-    ctx.log.warn(`Since ${args[0]} is turned on, the ${args[1]} is disabled to avoid potential hazards.`)
-  }
+  const data = ctx.locals.get("data") || {};
+  const runtimeData = ensureRuntimeData(ctx);
 
-  if (system.override_pretty_urls !== false) {
-    // 强制修改 pretty_urls 配置项
-    ctx.config.pretty_urls.trailing_index = false
-    ctx.config.pretty_urls.trailing_html = false
-  }
-
-  if (cache && cache.enable && language_switcher) {
-    warning('language_switcher', 'caching')
-    cache.enable = false
-  }
-
-  if (cache && cache.enable && ctx.config.relative_link) {
-    warning('caching', '`relative_link` option in Hexo `_config.yml`')
-    ctx.config.relative_link = false
-  }
-  // ctx.config.meta_generator = false;
-
-  // merge data
-  const data = ctx.locals.get('data')
   // merge widgets: 可覆盖删除的合并
-  var widgets = ctx.render.renderSync({ path: path.join(ctx.theme_dir, '_data/widgets.yml'), engine: 'yaml' })
+  const widgets = ctx.render.renderSync({ path: path.join(ctx.theme_dir, "_data/widgets.yml"), engine: "yaml" });
   if (data.widgets) {
-    for (let i of Object.keys(data.widgets)) {
-      let widget = data.widgets[i]
-      if (widget == null || widget.length == 0) {
-        // delete
-        delete widgets[i]
+    for (const id of Object.keys(data.widgets)) {
+      const widget = data.widgets[id];
+      if (widget == null || widget.length === 0) {
+        delete widgets[id];
+      } else if (widgets[id] == null) {
+        widgets[id] = widget;
       } else {
-        // create
-        if (widgets[i] == null) {
-          widgets[i] = widget
-        } else {
-          // merge
-          for (let j of Object.keys(widget)) {
-            widgets[i][j] = widget[j]
-          }
-        }
+        Object.assign(widgets[id], widget);
       }
     }
   }
-  ctx.theme.config.widgets = widgets
+  runtimeData.widgets = widgets;
 
   // merge icons: 简单覆盖合并
-  var icons = ctx.render.renderSync({ path: path.join(ctx.theme_dir, '_data/icons.yml'), engine: 'yaml' })
-  if (data.icons) {
-    icons = Object.assign({}, icons, data.icons)
-  }
-  ctx.theme.config.icons = icons
-
-  // default menu
-  if (ctx.theme.config.menubar == undefined) {
-    ctx.theme.config.menubar = {}
-  }
-
-  // chat users
-  ctx.theme.config.chat_users = data.chat_users;
-
-}
+  const themeIcons = ctx.render.renderSync({ path: path.join(ctx.theme_dir, "_data/icons.yml"), engine: "yaml" });
+  runtimeData.icons = Object.assign({}, themeIcons, data.icons || {});
+  runtimeData.chatUsers = data.chat_users;
+};

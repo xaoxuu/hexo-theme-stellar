@@ -45,12 +45,12 @@ tags:
 
 | 令牌 | 配置来源 | 语义 |
 | --- | --- | --- |
-| `$ff-body` | `style.font-family.body` | 正文字体栈 |
-| `$ff-code` | `style.font-family.code` | 行内代码字体栈 |
-| `$ff-codeblock` | `style.font-family.codeblock` | 代码块字体栈 |
-| `$fs-root` / `--fs-root` | `style.font-size.root` | 页面字号基准；移动端按响应式规则调整 |
-| `$fs-code` | `style.font-size.code` | 行内代码字号 |
-| `$fs-codeblock` | `style.font-size.codeblock` | 代码块字号 |
+| `$ff-body` | `appearance.typography.font_family.body` | 正文字体栈 |
+| `$ff-code` | `appearance.typography.font_family.code` | 行内代码字体栈 |
+| `$ff-codeblock` | `appearance.typography.font_family.code` | 代码块字体栈 |
+| `$fs-root` / `--fs-root` | `appearance.typography.font_size.root` | 页面字号基准；移动端按响应式规则调整 |
+| `$fs-code` | `appearance.typography.font_size.inline_code` | 行内代码字号 |
+| `$fs-codeblock` | `appearance.typography.font_size.code_block` | 代码块字号 |
 
 标题令牌从当前内容字号派生：`--fsh2`、`--fsh3`、`--fsh4` 分别用于 H2、H3、H4。组件需要局部调整排版时优先覆盖 `--fs-content`，让标题和段落继续沿用同一比例尺。
 
@@ -58,14 +58,16 @@ tags:
 
 | 令牌 | 配置来源 | 语义 |
 | --- | --- | --- |
-| `$c-theme` | `style.color.theme` | 主题主色 |
-| `$c-accent` | `style.color.accent` | 强调色 |
-| `$c-link` | `style.color.link` | 链接色 |
+| `$c-theme` | `appearance.colors.primary` | 主题主色 |
+| `$c-accent` | `appearance.colors.accent` | 强调色 |
+| `$c-link` | `appearance.colors.link` | 链接色 |
 | `$c-base-hue` | 主题固定值 | 背景和文字色生成的基础色相 |
-| `$site-background-image` | `style.site.background-image` | 全站背景图 |
-| `$leftbar-background-image` | `style.leftbar.background-image` | 左栏背景图 |
+| `$site-background-image` | `appearance.backgrounds.page.image` | 全站背景图 |
+| `$leftbar-background-type` | `appearance.backgrounds.leftbar.type` | 左栏装饰背景类型：渐变、图片或纯色 |
+| `$leftbar-background-image` | `appearance.backgrounds.leftbar.image` | 左栏背景图 |
+| `$leftbar-gradient-light-*` / `$leftbar-gradient-dark-*` | `appearance.backgrounds.leftbar.gradient.light/dark` | 浅色、深色艺术渐变的基础、左上、右中、左下颜色 |
 
-组件优先使用语义颜色变量，例如 `var(--text-p1)`、`var(--card)`、`var(--block-border)` 和 `var(--theme)`；组件文档不应复制整套颜色值。
+组件优先使用语义颜色变量，例如最高强调文字 `var(--text-p0)`、正文层级 `var(--text-p1)`、`var(--card)`、`var(--block-border)` 和 `var(--theme)`；`var(--text)` 是 `var(--text-p0)` 的兼容别名。组件文档不应复制整套颜色值。
 
 ### 圆角
 
@@ -105,7 +107,7 @@ tags:
 
 ## 集合组件 Surface 令牌
 
-`layout.ejs` 为页面区域声明 `data-ui-surface`：左栏按 `style.leftbar.ui-style` 取 `glass` 或 `card`，右栏取 `sidebar`，主内容区取 `content`。通用集合组件不读取页面位置，而由以下组件级语义变量适配表面：
+`appearance.preset` 是整站唯一表面风格入口，支持 `card`、`flat`、`glass`、`minimal`。Shell 把最终 preset 投影为根元素的 `data-appearance`，并让 Topbar、Leftbar、Main、Rightbar 的表面使用同一组 Token；Region 不再维护位置专属风格。`flat` 保留调整前 Topbar 的半透明、轻模糊与分隔线表面。通用集合组件不读取页面位置，而由以下组件级语义变量适配表面：
 
 | 令牌组 | 语义 |
 | --- | --- |
@@ -115,7 +117,7 @@ tags:
 | `--ui-item-padding-x` / `--ui-item-padding-y` / `--ui-item-min-height` | 条目自身几何尺寸 |
 | `--ui-collection-gap` / `--ui-columns` / `--ui-grid-min` | 集合间距、最大列数和自适应最小列宽 |
 
-surface 只改变背景、阴影与文字层级；list/grid、variant、density 负责几何。条目默认背景透明：glass 表面的 hover/active 使用顶部光照与高光边，其它表面使用 `var(--block)`；这些状态不使用过渡动画。`columns` 是 grid 的最大列数，实际列数由 `auto-fit/minmax` 按容器宽度自动降低，不能用于控制标题可见性。
+surface 只改变背景、阴影与文字层级；list/grid、variant、density 负责几何。条目默认背景透明：glass 表面的 hover/active 使用顶部光照与高光边，card/flat 使用 `var(--block)`，minimal 按 [Editorial Minimal](editorial-minimal.md) 使用文章标题式下划线或 `var(--text-p3)` 内描边。`columns` 是 grid 的最大列数，实际列数由 `auto-fit/minmax` 按容器宽度自动降低，不能用于控制标题可见性。
 
 这些变量定义在 `collection.styl` 的组件作用域中，不属于站点配置 API；其它通用紧凑集合可以消费，但专用展示组件不应借用它们改变自身布局。
 

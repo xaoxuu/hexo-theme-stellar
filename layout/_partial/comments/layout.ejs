@@ -1,48 +1,19 @@
 <%
-var cmt = {
-  service: page.comments_service || theme.comments.service
-};
-if (cmt.service) {
-  cmt[cmt.service] = Object.assign({}, theme.comments[cmt.service]);
+if (typeof comments === 'undefined') {
+  throw new Error('Stellar v2: comments/layout 必须接收显式 comments 模型')
 }
-var loadComment = false;
-if (cmt.service && cmt.service.length > 0) {
-  if (page.comments == undefined || page.comments != false) {
-    loadComment = true;
-  }
-}
-// 合并项目评论
-const proj = theme.wiki.tree[page.wiki]
-if (loadComment && (proj != null)) {
-  if (proj.comments === false) {
-    loadComment = false;
-    page.comments = false;
-  } else {
-    if (proj.comment_title != undefined && page.comment_title == undefined) {
-      if (['utterances', 'beaudar', 'giscus'].includes(theme.comments.service)) {
-        page.comment_title = proj.comment_title;
-      }
-    }
-    if (proj.comments && proj.comments.service) {
-      cmt = proj.comments;
-      let s = proj.comments.service;
-      cmt[s] = Object.assign({}, theme.comments[s], proj.comments[s]);
-    }
-  }
-}
-if (cmt.service && page[cmt.service]) {
-  Object.assign(cmt[cmt.service], page[cmt.service]);
-}
-page.cmt = cmt;
-page.cmt_rendered = loadComment;
+var commentModel = comments
 %>
-<% if (loadComment) { %>
+<% if (commentModel.enabled) { %>
   <div class="related-wrap md-text<%- scrollreveal(' ') %>" id="comments">
-    <section class='header cmt-title cap theme'>
-      <%- markdown(page.comment_title || theme.comments.comment_title) %>
+    <% var resolvedCommentTitle = commentModel.title == null ? __('btn.comments') : commentModel.title %>
+    <% if (resolvedCommentTitle !== '') { %>
+    <section class="header cmt-title cap theme">
+      <%- markdown(resolvedCommentTitle) %>
     </section>
-    <section class='body cmt-body <%- cmt.service %>'>
-      <%- partial(cmt.service + '/layout') %>
+    <% } %>
+    <section class="body cmt-body <%- commentModel.service %>">
+      <%- partial(commentModel.service + '/layout', {comments: commentModel}) %>
     </section>
   </div>
 <% } %>

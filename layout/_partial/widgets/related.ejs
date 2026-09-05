@@ -1,20 +1,16 @@
 <%
 function relatedPostsInTopic() {
-  if (page.topic?.length == 0) {
-    return ''
-  }
-  var topic = theme.topic.tree[page.topic]
-  if (topic == null) {
-    return ''
-  }
-  var entries = []
-  for (var post of topic.pages) {
-    entries.push({
+  var topicViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'topic'
+    ? viewModel
+    : null
+  if (!topicViewModel) return ''
+  var entries = topicViewModel.collection.navigation.series.map(function(post) {
+    return {
       href: pretty_url(post.path),
       title: post.title,
-      active: post.path == page.path
-    })
-  }
+      active: post.current
+    }
+  })
   var body = partial('_partial/components/collection', {options: {
     layout: 'list',
     variant: 'nav',
@@ -23,32 +19,27 @@ function relatedPostsInTopic() {
   }})
   return partial('_partial/components/widget-frame', {
     className: 'related-widget',
-    title: __('btn.topic') + __('symbol.colon') + (topic.name || topic.title),
+    title: __('btn.topic') + __('symbol.colon') + (topicViewModel.collection.identity.headline || topicViewModel.collection.identity.name),
     body: body,
     reveal: false
   })
 }
 
 function relatedWiki() {
-  var thisItemObject = theme.wiki.tree[page.wiki]
-  if (thisItemObject == null) {
-    return ''
-  }
-  var relatedItems = thisItemObject.relatedItems || []
+  var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
+    ? viewModel
+    : null
+  if (!wikiViewModel) return ''
   var el = ''
-  for (var relatedItem of relatedItems) {
-    var entries = []
-    for (var id of relatedItem.items) {
-      var relatedProject = theme.wiki.tree[id]
-      if (relatedProject) {
-        entries.push({
-          href: pretty_url(relatedProject.homepage?.path),
-          title: relatedProject.title,
-          description: relatedProject.description,
-          indicator: false
-        })
+  for (var relatedItem of wikiViewModel.render.article.related) {
+    var entries = relatedItem.items.map(function(project) {
+      return {
+        href: pretty_url(project.href),
+        title: project.title,
+        description: project.description,
+        indicator: false
       }
-    }
+    })
     var body = partial('_partial/components/collection', {options: {
       layout: 'list',
       variant: 'summary',
@@ -65,10 +56,10 @@ function relatedWiki() {
 }
 
 function layoutDiv() {
-  if (page.wiki?.length > 0) {
-    return relatedWiki()
-  } else if (page.topic?.length > 0) {
+  if (typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'topic') {
     return relatedPostsInTopic()
+  } else if (typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki') {
+    return relatedWiki()
   }
   return ''
 }

@@ -1,28 +1,23 @@
 <%
-function strip_wiki_title(title, wiki) {
-  if (!wiki) { return title; }
-  var t = String(title || '');
-  if (t.toLowerCase() === String(wiki).toLowerCase()) { return ''; }
-  // wiki 名中的空格/连字符在标题中可能写为另一种形态（如 cloud shell / cloud-shell）
-  var flex = String(wiki).replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/[\s-]+/g, '[\\s-]*');
-  var m = t.match(new RegExp('^' + flex + '[\\s-]*[：:\\-](.*)$', 'i'));
-  if (m && m[1]) {
-    return m[1].trim();
-  }
-  return t;
+var pageViewModel = typeof viewModel !== 'undefined' && ['post', 'wiki', 'topic', 'notebook'].includes(viewModel?.collection?.profile)
+  ? viewModel
+  : null
+var pageRender = pageViewModel?.render
+var pageConfig = content_config(page)
+var stellarSeo = {
+  canonical: stellar_config('canonical'),
+  openGraph: stellar_config('openGraph'),
+  structuredData: stellar_config('structuredData')
+}
+var stellarResources = {
+  preconnect: stellar_config('preconnect'),
+  fallbacks: stellar_config('fallbacks'),
+  errorPage: stellar_config('errorPage')
 }
 
 function generate_title() {
-  if (page.wiki) {
-    const proj = theme.wiki.tree[page.wiki]
-    const wiki = proj?.name || page.wiki
-    if (page.title) {
-      var stripped = strip_wiki_title(page.title, wiki)
-      if (stripped) {
-        return wiki + __('symbol.colon') + stripped + ' - ' + config.title;
-      }
-    }
-    return wiki + ' - ' + config.title;
+  if (pageRender) {
+    return pageRender.seo.title
   } else {
     if (page.title) {
       return page.title + ' - ' + config.title;
@@ -38,17 +33,15 @@ function generate_title() {
   return config.title;
 }
 function generate_description() {
-  if (theme.open_graph && theme.open_graph.enable) {
+  if (pageRender) {
+    if (pageRender.seo.openGraph) return ''
+    return '<meta name="description" content="' + escape_meta_content(pageRender.seo.description) + '">'
+  }
+  if (stellarSeo.openGraph.enabled) {
     return '';
   }
   if (page.description) {
     return '<meta name="description" content="' + truncate(strip_html(page.description), {length: 150}) + '">';
-  }
-  if (page.wiki) {
-    const proj = theme.wiki.tree[page.wiki]
-    if (proj?.description) {
-      return '<meta name="description" content="' + proj.description + '">'
-    }
   }
   if (page.excerpt || page.content) {
     return '<meta name="description" content="' + truncate(strip_html(page.excerpt || page.content), {length: 150}) + '">';
@@ -56,7 +49,11 @@ function generate_description() {
   return '<meta name="description" content="' + config.description + '">';
 }
 function generate_keywords() {
-  if (page.keywords && page.keywords.length > 0) {
+  if (pageRender) {
+    return pageRender.seo.keywords.length > 0
+      ? '<meta name="keywords" content="' + escape_meta_content(pageRender.seo.keywords.join(',')) + '">'
+      : ''
+  } else if (page.keywords && page.keywords.length > 0) {
     return '<meta name="keywords" content="' + page.keywords + '">';
   } else if (page.tags && page.tags.length > 0) {
     return '<meta name="keywords" content="' + page.tags.map(tag => tag.name).join(',') + '">';
@@ -68,6 +65,11 @@ function generate_keywords() {
 }
 
 function generate_robots() {
+  if (pageRender) {
+    return pageRender.seo.robots
+      ? '<meta name="robots" content="' + escape_meta_content(pageRender.seo.robots) + '">'
+      : ''
+  }
   const IS_BACKUP = process.env.IS_BACKUP === 'true';
   if (IS_BACKUP) {
     return '<meta name="robots" content="noindex, nofollow">';
@@ -80,21 +82,18 @@ function generate_robots() {
   }
 }
 function og_args() {
-  var args = {};
-  if (theme.open_graph.twitter_id) {
-    args.twitter_id = theme.open_graph.twitter_id;
+  if (pageRender) {
+    return Object.assign({}, pageRender.seo.openGraph?.args || {})
   }
-  if (page.layout == 'post' && page.cover) {
+  var args = {};
+  if (stellarSeo.openGraph.twitterId) {
+    args.twitter_id = stellarSeo.openGraph.twitterId;
+  }
+  if (page.layout == 'post' && pageConfig.cover) {
     args.twitter_card = 'summary_large_image';
   }
-  if (page.wiki && !page.description) {
-    const proj = theme.wiki.tree[page.wiki];
-    if (proj && proj.description) {
-      args.description = proj.description;
-    }
-  }
-  args.image = page.cover || page.banner || first_content_image(page.content) || config.avatar || (config.email ? gravatar(config.email) : null);
-  return Object.assign(args, page.open_graph);
+  args.image = pageConfig.cover || pageConfig.banner?.image || first_content_image(page.content) || config.avatar || (config.email ? gravatar(config.email) : null);
+  return Object.assign(args, pageConfig.seo?.openGraph || {});
 }
 
 function escape_meta_content(content) {
@@ -106,29 +105,47 @@ function escape_meta_content(content) {
 }
 
 function generate_og_title() {
-  return escape_meta_content(strip_html(page.title || config.title));
+  return escape_meta_content(strip_html(pageRender ? pageRender.seo.openGraph.title : page.title || config.title));
 }
 
 function generate_og_site_name() {
-  return escape_meta_content(strip_html(config.title));
+  return escape_meta_content(strip_html(pageRender ? pageRender.seo.openGraph.siteName : config.title));
+}
+
+function generate_twitter_title() {
+  return escape_meta_content(strip_html(pageRender ? pageRender.seo.openGraph.twitterTitle : page.title || config.title));
 }
 
 function render_open_graph() {
-  if (!(theme.open_graph && theme.open_graph.enable)) {
+  if (pageRender ? !pageRender.seo.openGraph : !stellarSeo.openGraph.enabled) {
     return '';
   }
   let meta = open_graph(og_args());
+  if (pageRender) {
+    meta = meta.replace(/<meta property="article:tag" content="[^"]*">\n?/g, '');
+    var articleMeta = ''
+    if (pageRender.seo.openGraph.publishedTime) {
+      articleMeta += `<meta property="article:published_time" content="${escape_meta_content(pageRender.seo.openGraph.publishedTime)}">\n`
+    }
+    if (pageRender.seo.openGraph.modifiedTime) {
+      articleMeta += `<meta property="article:modified_time" content="${escape_meta_content(pageRender.seo.openGraph.modifiedTime)}">\n`
+    }
+    for (var tag of pageRender.seo.openGraph.tags) {
+      articleMeta += `<meta property="article:tag" content="${escape_meta_content(tag)}">\n`
+    }
+    meta = meta.replace(/<meta name="twitter:card"/, `${articleMeta}<meta name="twitter:card"`)
+  }
   meta = meta.replace(/<meta property="og:title" content="[^"]*">/, `<meta property="og:title" content="${generate_og_title()}">`);
   if (meta.match(/<meta property="og:site_name" content="[^"]*">/)) {
     meta = meta.replace(/<meta property="og:site_name" content="[^"]*">/, `<meta property="og:site_name" content="${generate_og_site_name()}">`);
   } else {
     meta += `<meta property="og:site_name" content="${generate_og_site_name()}">`;
   }
-  if (page.title) {
+  if (pageRender || page.title) {
     if (meta.match(/<meta name="twitter:title" content="[^"]*">/)) {
-      meta = meta.replace(/<meta name="twitter:title" content="[^"]*">/, `<meta name="twitter:title" content="${generate_og_title()}">`);
+      meta = meta.replace(/<meta name="twitter:title" content="[^"]*">/, `<meta name="twitter:title" content="${generate_twitter_title()}">`);
     } else {
-      meta += `<meta name="twitter:title" content="${generate_og_title()}">`;
+      meta += `<meta name="twitter:title" content="${generate_twitter_title()}">`;
     }
   }
   return meta;
@@ -136,34 +153,29 @@ function render_open_graph() {
 
 function preconnect() {
   var el = '';
-  for (let href of (theme.preconnect || [])) {
+  for (var href of stellarResources.preconnect) {
     el += `<link rel="preconnect" href="${href}" crossorigin>`;
   }
   return el;
 }
 
 function custom_inject() {
-  var el = '';
-  for (let item of (config.inject?.head || [])) {
-    el += item;
-  }
-  for (let item of (theme.inject?.head || [])) {
-    el += item;
-  }
-  for (let item of (page.inject?.head || [])) {
-    el += item;
-  }
-  return el;
+  return stellar_inject('headEnd', pageRender ? pageRender.document.headEndInject : pageConfig.inject?.headEnd)
 }
 
 function generate_canonical() {
-  const originalHost = theme.canonical.originalHost || '';
-  if (originalHost.length > 0) {
+  if (pageRender) {
+    return pageRender.seo.canonical
+      ? `<link rel="canonical" href="${escape_meta_content(pageRender.seo.canonical)}">`
+      : ''
+  }
+  var host = stellarSeo.canonical.host;
+  if (typeof host === 'string' && host.length > 0) {
     var path = pretty_url(page.path) || '/';
     if (path.startsWith('/404') || path.startsWith('404')) {
       return '';
     }
-    return `<link rel="canonical" href="https://${originalHost}${path}">`;
+    return `<link rel="canonical" href="https://${host}${path}">`;
   }
   return '';
 }
@@ -187,6 +199,18 @@ function generate_canonical() {
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
   <title><%- generate_title() %></title>
+  <script>
+    (function () {
+      var key = 'stellar:v2:leftbar-state';
+      var fallback = <%- JSON.stringify(stellar_config('leftbar.defaultState')) %>;
+      try {
+        var value = localStorage.getItem(key);
+        document.documentElement.dataset.leftbarState = value === 'collapsed' || value === 'expanded' ? value : fallback;
+      } catch (error) {
+        document.documentElement.dataset.leftbarState = fallback;
+      }
+    })();
+  </script>
 
   <%- render_open_graph() %>
   <%- generate_description() %>
@@ -208,8 +232,9 @@ function generate_canonical() {
     <% }) %>
   <% } %>
 
-  <link rel="preload" href="<%- url_for(`${theme.stellar.main_css}?v=${stellar_info('version')}`) %>" as="style">
-  <link rel="stylesheet" href="<%- url_for(`${theme.stellar.main_css}?v=${stellar_info('version')}`) %>">
+  <link rel="preload" href="<%- url_for(`${stellar_info('main_css')}?v=${stellar_info('version')}`) %>" as="style">
+  <link rel="stylesheet" href="<%- url_for(`${stellar_info('main_css')}?v=${stellar_info('version')}`) %>">
+  <style>:root{--text-loading:<%- JSON.stringify(__('message.loading')) %>;--text-loading-error:<%- JSON.stringify(__('message.loading_failed')) %>}</style>
 
 
   <% if (config.favicon) { %>
@@ -217,10 +242,12 @@ function generate_canonical() {
   <% } %>
 
   <% if (config.highlight && config.highlight.enable == true && config.highlight.hljs == true) { %>
-    <%- css(theme.style.codeblock.highlightjs_theme) %>
+    <% if (stellar_config('appearance.codeBlock.highlightStylesheet')) { %>
+      <%- css(stellar_config('appearance.codeBlock.highlightStylesheet')) %>
+    <% } %>
   <% } %>
 
-  <%- json_ld() %>
+  <%- json_ld(pageViewModel || undefined) %>
   <%- custom_inject() %>
 
   <!-- icons.yml 驱动的 CSS 装饰图标 -->
@@ -234,11 +261,11 @@ function generate_canonical() {
       };
       let vars = [];
       for (const [name, key] of Object.entries(map)) {
-        const raw = theme.icons && theme.icons[key];
+        var raw = stellar_data('icons') && stellar_data('icons')[key];
         if (raw) vars.push(`  ${name}: url("data:image/svg+xml,${encodeURIComponent(raw)}");`);
       }
       // 加载占位：由 icons.yml 的 default:loading 提供（内联 SVG 编码为 data URI，URL 直用）
-      const loadingRaw = theme.icons && theme.icons['default:loading'];
+      var loadingRaw = stellar_data('icons') && stellar_data('icons')['default:loading'];
       if (loadingRaw) {
         if (loadingRaw.trim().startsWith('<svg')) {
           vars.push(`  --icon-loading: url("data:image/svg+xml,${encodeURIComponent(loadingRaw)}");`);

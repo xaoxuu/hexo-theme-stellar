@@ -1,30 +1,27 @@
 <%
-const { layout } = page
+var pageConfig = content_config(page)
+var registeredProfile = pageConfig.collection?.profile
+var postViewModel = page.layout === 'post' && (registeredProfile == null || registeredProfile === 'topic')
+  ? post_view_model(page)
+  : null
+var wikiViewModel = page.viewModel?.collection?.profile === 'wiki' ? page.viewModel : null
+var notebookViewModel = page.viewModel?.collection?.profile === 'notebook' ? page.viewModel : null
+var requiredProfile = page.layout === 'post' ? (registeredProfile === 'topic' ? 'topic' : 'post') : registeredProfile
+var activeViewModel = postViewModel || wikiViewModel || notebookViewModel
+if (['post', 'wiki', 'topic', 'notebook'].includes(requiredProfile) && activeViewModel?.collection?.profile !== requiredProfile) {
+  throw new Error(`Stellar v2: ${requiredProfile} 页面 ${page.source || page.path || '<unknown>'} 缺少 PageViewModel`)
+}
 // 是否使用 Heti 布局插件
-const isUsingHeti = theme.plugins.heti?.enable
+const isUsingHeti = stellar_config('features.heti.enabled')
 
-const notebook = theme.notebooks.tree[page.notebook]
-if (notebook) {
-    page.menu_id ??= notebook.menu_id
-    page.license ??= notebook.license
-    page.share ??= notebook.share
+// 默认主导航菜单
+if (!postViewModel && !wikiViewModel && !notebookViewModel) page.navigation = {
+  menu: pageConfig.activeMenu,
+  breadcrumb: pageConfig.breadcrumb
 }
-
-// 默认的 menu_id
-if (page.menu_id == null) {
-  if (page.wiki?.length > 0) {
-    page.menu_id = theme.site_tree.wiki.menu_id
-  } else if (page.topic?.length > 0) {
-    page.menu_id = theme.site_tree.topic.menu_id
-  } else {
-    page.menu_id = theme.site_tree.post.menu_id
-  }
-}
-// 默认的 title
-if (page.title == null) {
-  if (page.wiki) {
-    page.title = __('btn.wiki')
-  }
+if (!postViewModel && !wikiViewModel && !notebookViewModel && page.navigation.menu == null) {
+  var profiles = stellar_config('profiles')
+  page.navigation.menu = profiles.page.activeMenu
 }
 
 function articleClass() {
@@ -35,39 +32,87 @@ function articleClass() {
   return str
 }
 
-function layoutDiv() {
+function postArticleClass(article) {
+  var str = `md-text content${scrollreveal(' ')}`
+  if (article.heti) str += ' heti'
+  return str
+}
+
+function postLayoutDiv() {
+  var item = postViewModel.item
+  var article = postViewModel.render.article
   var el = ''
-  if (page.nav_tabs) {
-    el += partial('_partial/main/navbar/nav_tabs_blog')
+  if (item.presentation.banner?.headline || item.title || item.content.length > 0) {
+    el += partial('_partial/main/navbar/article_banner', {viewModel: postViewModel})
   }
-  if (page.h1 || page.title || (page.content && page.content.length > 0)) {
+  el += `<article class="${postArticleClass(article)}">`
+  el += item.content
+  el += '</article>'
+  el += partial('_partial/main/article/post_tags', {tags: article.tags})
+  el += partial('_partial/main/article/share', {share: article.footer.share})
+  el += partial('_partial/main/article/post_footer', {footer: article.footer})
+  el += partial('_partial/main/article/post_read_next', {
+    previous: article.previous,
+    next: article.next
+  })
+  el += partial('_partial/main/article/post_related', {related: article.related})
+  el += partial('_partial/comments/layout', {comments: article.comments})
+  return el
+}
+
+function wikiLayoutDiv() {
+  var item = wikiViewModel.item
+  var article = wikiViewModel.render.article
+  var el = ''
+  if (article.banner?.headline || item.title || item.content.length > 0 || article.readmeHtml.length > 0) {
+    el += partial('_partial/main/navbar/article_banner', {viewModel: wikiViewModel})
+  }
+  var cls = `md-text content${scrollreveal(' ')}`
+  if (article.heti) cls += ' heti'
+  el += `<article class="${cls}">`
+  el += item.content.trim().length > 0 ? item.content : article.readmeHtml
+  el += '</article>'
+  el += partial('_partial/main/article/share', {share: article.footer.share})
+  el += partial('_partial/main/article/post_footer', {footer: article.footer})
+  el += partial('_partial/main/article/post_read_next', {
+    previous: article.previous,
+    next: article.next,
+    previousLabel: __('meta.prev'),
+    nextLabel: __('meta.next')
+  })
+  el += partial('_partial/comments/layout', {comments: article.comments})
+  return el
+}
+
+function notebookLayoutDiv() {
+  var item = notebookViewModel.item
+  var article = notebookViewModel.render.article
+  var el = ''
+  if (article.banner?.headline || item.title || item.content.length > 0) {
+    el += partial('_partial/main/navbar/article_banner', {viewModel: notebookViewModel})
+  }
+  el += `<article class="${postArticleClass(article)}">`
+  el += item.content
+  el += partial('_partial/main/notebook/note_tags', {tags: article.tags})
+  el += '</article>'
+  el += partial('_partial/main/article/share', {share: article.footer.share})
+  el += partial('_partial/main/article/post_footer', {footer: article.footer})
+  el += partial('_partial/comments/layout', {comments: article.comments})
+  return el
+}
+
+function layoutDiv() {
+  if (postViewModel) return postLayoutDiv()
+  if (wikiViewModel) return wikiLayoutDiv()
+  if (notebookViewModel) return notebookLayoutDiv()
+  var el = ''
+  if (pageConfig.banner?.headline || page.title || (page.content && page.content.length > 0)) {
     el += partial('_partial/main/navbar/article_banner')
   }
   el += `<article class="${articleClass()}">`
-  if (page.content && String(page.content).trim().length > 0) {
-    el += page.content
-  } else {
-    // wiki 项目首页正文为空（剪裁空白后）且配置了 repo 时，
-    // 以该仓库 README.md 作为主页正文（应用层 helper，复用底层远程 md 渲染组件）
-    el += wiki_readme_html(theme.wiki.tree[page.wiki], page)
-  }
-  if (notebook) {
-    el += partial('_partial/main/notebook/note_tags', { notebook: notebook })
-  }
+  if (page.content && String(page.content).trim().length > 0) el += page.content
   el += `</article>`
-  if (layout === 'post' || page.wiki || notebook) {
-    if (layout === 'post' && theme.article.tags) {
-      el += partial('_partial/main/article/article_tags')
-    }
-    el += partial('_partial/main/article/article_footer')
-  }
-  if (layout === 'post' || page.wiki) {
-    el += partial('_partial/main/article/read_next')
-  }
-  if (layout === 'post') {
-    el += partial('_partial/main/article/related_posts')
-  }
-  el += partial('_partial/comments/layout')
+  el += partial('_partial/comments/layout', {comments: comments_model(page)})
   return el
 }
 %>

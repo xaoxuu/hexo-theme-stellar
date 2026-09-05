@@ -1,11 +1,15 @@
 <%
 
 var author = null
-if (theme.authors) {
-  if (page.author?.length > 0 && theme.authors[page.author] != null) {
-    author = theme.authors[page.author]
+var activeViewModel = typeof viewModel !== 'undefined' ? viewModel : null
+var authorId = ['post', 'topic'].includes(activeViewModel?.collection?.profile)
+  ? activeViewModel.render.listing.authorId
+  : content_config(page).article?.author
+if (stellar_data('authors')) {
+  if (authorId?.length > 0 && stellar_data('authors')[authorId] != null) {
+    author = stellar_data('authors')[authorId]
   } else {
-    author = theme.default_author
+    author = stellar_data('defaultAuthor')
   }
 }
 
@@ -26,7 +30,7 @@ function layoutDiv() {
 
     // homepage
     el += `<a class="follow" href="${url_for(author.path)}">`
-    el += icon('default:documents')
+    el += '<span class="ui-icon">' + icon('default:documents') + '</span>'
     el += __('btn.all_posts')
     el += `</a>`
   el += `</div>`

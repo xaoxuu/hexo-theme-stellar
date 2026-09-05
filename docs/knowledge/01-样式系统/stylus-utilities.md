@@ -14,7 +14,7 @@ tags:
 
 生成此页面时参考的主题源码文件：
 
-- [source/css/_components/partial/navbar.styl](../../../source/css/_components/partial/navbar.styl)
+- [source/css/_components/partial/listing-nav.styl](../../../source/css/_components/partial/listing-nav.styl)
 - [source/css/_components/sidebar/search.styl](../../../source/css/_components/sidebar/search.styl)
 - [source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)
 - [source/css/_defines/func.styl](../../../source/css/_defines/func.styl)
@@ -48,7 +48,7 @@ graph TB
     end
 
     subgraph "consumers"
-        NAVBAR["_components/partial/navbar.styl"]
+        NAVBAR["_components/partial/listing-nav.styl"]
         SIDEBAR["_components/sidebar/sidebar.styl"]
         DEVICE["_common/device.styl"]
         SEARCH["_components/sidebar/search.styl"]
@@ -69,7 +69,7 @@ graph TB
     HOVER --> NAVBAR
 ```
 
-**参考源码**：[source/css/_defines/func.styl](../../../source/css/_defines/func.styl)、[source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)、[source/css/_components/partial/navbar.styl](../../../source/css/_components/partial/navbar.styl)、[source/css/_common/device.styl](../../../source/css/_common/device.styl)
+**参考源码**：[source/css/_defines/func.styl](../../../source/css/_defines/func.styl)、[source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)、[source/css/_components/partial/listing-nav.styl](../../../source/css/_components/partial/listing-nav.styl)、[source/css/_common/device.styl](../../../source/css/_common/device.styl)
 
 ---
 
@@ -99,7 +99,7 @@ graph TB
 - `trans1 all`——搜索表单边框动画
 - `trans1 background`——搜索结果列表项
 
-**参考源码**：[source/css/_defines/func.styl](../../../source/css/_defines/func.styl)、[source/css/_components/partial/navbar.styl](../../../source/css/_components/partial/navbar.styl)、[source/css/_components/sidebar/search.styl](../../../source/css/_components/sidebar/search.styl)
+**参考源码**：[source/css/_defines/func.styl](../../../source/css/_defines/func.styl)、[source/css/_components/partial/listing-nav.styl](../../../source/css/_components/partial/listing-nav.styl)、[source/css/_components/sidebar/search.styl](../../../source/css/_components/sidebar/search.styl)
 
 ---
 
@@ -138,11 +138,11 @@ graph TB
 **组件中的应用：**
 
 - `.navbar nav a` 与 `.float-panel button` 通过 `bar-item()` 共用基础 UI（尺寸、间距、与容器同心的圆角），一处修改两处生效
-- `.navbar-blur` 与 `.float-panel` 通过 `bar-glass()`（默认圆角 `$border-bar-container`，由 `style.border-radius.bar` 派生）复用 `newblur()` 玻璃层，共用「长条圆角矩形 + 玻璃」UI
+- `.navbar-blur` 与 `.float-panel` 通过 `bar-glass()`（默认圆角 `$border-bar-container`，由 `appearance.shape.radius.bar` 派生）复用 `newblur()` 玻璃层，共用「长条圆角矩形 + 玻璃」UI
 - 侧边栏打开时，`.float-panel` 中对应的按钮（`leftbar-toggle` / `rightbar-toggle`）调用 `bar-item-active()` 复用 navbar item 激活样式（背景 + 阴影 + saturate），面板保持玻璃效果
 - 左栏在 `sidebar.styl` 中手写 backdrop-filter 规则，不直接调用该混入（便于精细控制饱和度、模糊半径与透明度）
 
-**参考源码**：[source/css/_defines/func.styl](../../../source/css/_defines/func.styl)、[source/css/_components/partial/navbar.styl](../../../source/css/_components/partial/navbar.styl)、[source/css/_common/device.styl](../../../source/css/_common/device.styl)
+**参考源码**：[source/css/_defines/func.styl](../../../source/css/_defines/func.styl)、[source/css/_components/partial/listing-nav.styl](../../../source/css/_components/partial/listing-nav.styl)、[source/css/_common/device.styl](../../../source/css/_common/device.styl)
 
 ### 浮动效果
 
@@ -243,7 +243,7 @@ scrollbar($w = 4px, $b = 2px, $c = var(--text-meta), $h = var(--text-p3))
 - `.navbar-container` 用 `scrollbar(0, 0)` 隐藏滚动条，同时保留元素可滚动（横向溢出的导航项）
 - `#search-result` 用 `scrollbar(0, 0)` 配合 `scrollbar-width: none` 完全隐藏滚动条
 
-**参考源码**：[source/css/_defines/func.styl](../../../source/css/_defines/func.styl)、[source/css/_components/partial/navbar.styl](../../../source/css/_components/partial/navbar.styl)、[source/css/_components/sidebar/search.styl](../../../source/css/_components/sidebar/search.styl)
+**参考源码**：[source/css/_defines/func.styl](../../../source/css/_defines/func.styl)、[source/css/_components/partial/listing-nav.styl](../../../source/css/_components/partial/listing-nav.styl)、[source/css/_components/sidebar/search.styl](../../../source/css/_components/sidebar/search.styl)
 
 ### 代码块滚动条
 
@@ -338,7 +338,7 @@ graph LR
 
 左栏 `.leftbar-container:before` 在 `sidebar.styl` 中自行实现内联 `backdrop-filter` 与 `mask` 规则，不直接调用 `newblur()`，以便对侧边栏背景图变体的饱和度、模糊半径与透明度做更精细控制。
 
-**参考源码**：[source/css/_components/partial/navbar.styl](../../../source/css/_components/partial/navbar.styl)、[source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)、[source/css/_common/device.styl](../../../source/css/_common/device.styl)
+**参考源码**：[source/css/_components/partial/listing-nav.styl](../../../source/css/_components/partial/listing-nav.styl)、[source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)、[source/css/_common/device.styl](../../../source/css/_common/device.styl)
 
 ---
 

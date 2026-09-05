@@ -11,17 +11,16 @@ const {
   hasNonEmptyChangelogSection,
   prepareVersionFiles,
 } = require('../release.js');
+const { prepareReleaseMetadata } = require('../ci/prepare-release');
 
 function createVersionFixture(t, options = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'stellar-release-'));
   const knowledgeDir = path.join(root, 'docs/knowledge/00-总览与安装配置');
   fs.mkdirSync(knowledgeDir, { recursive: true });
   const files = {
-    config: path.join(root, '_config.yml'),
     package: path.join(root, 'package.json'),
     knowledge: path.join(knowledgeDir, 'installation.md'),
   };
-  fs.writeFileSync(files.config, options.config || "stellar:\n  version: '1.42.1'\n  homepage: https://example.com/\n");
   fs.writeFileSync(files.package, options.package || '{\n  "name": "hexo-theme-stellar",\n  "version": "1.42.1"\n}\n');
   fs.writeFileSync(
     files.knowledge,
@@ -72,19 +71,40 @@ test('hasNonEmptyChangelogSection 仅含发布日期视为空章节', () => {
   assert.equal(hasNonEmptyChangelogSection(text, '1.38.0'), false);
 });
 
-test('prepareVersionFiles 同步全部主题版本引用并保留无关版本', (t) => {
+test('prepareVersionFiles 同步 package 与知识库版本并保留无关版本', (t) => {
   const { root, files } = createVersionFixture(t);
 
   const result = prepareVersionFiles(root, '1.43.0');
 
   assert.equal(result.previousVersion, '1.42.1');
   assert.equal(result.knowledgeReplacements, 2);
-  assert.match(fs.readFileSync(files.config, 'utf8'), /version: '1\.43\.0'/);
   assert.equal(JSON.parse(fs.readFileSync(files.package, 'utf8')).version, '1.43.0');
   const knowledge = fs.readFileSync(files.knowledge, 'utf8');
   assert.equal(knowledge.includes('1.42.1'), false);
   assert.equal(knowledge.match(/1\.43\.0/g).length, 2);
   assert.match(knowledge, /Hexo: 8\.1\.2/);
+});
+
+test('prepareVersionFiles 接受稳定版与 rc，拒绝 Alpha/Beta 里程碑版本', (t) => {
+  for (const version of ['2.0.0', '2.0.0-rc.3']) {
+    const { root, files } = createVersionFixture(t);
+    prepareVersionFiles(root, version);
+    assert.equal(JSON.parse(fs.readFileSync(files.package, 'utf8')).version, version);
+  }
+  for (const version of ['2.0.0-alpha.1', '2.0.0-beta.2']) {
+    const { root } = createVersionFixture(t);
+    assert.throws(() => prepareVersionFiles(root, version), /版本号格式不正确/);
+  }
+});
+
+test('prepareVersionFiles 可将内部 prerelease 直接更新为对应稳定版', (t) => {
+  const { root, files } = createVersionFixture(t, {
+    package: '{\n  "name": "hexo-theme-stellar",\n  "version": "1.9.0-rc.1"\n}\n',
+    knowledge: 'Version: 1.9.0-rc.1\nnpm install /local/hexo-theme-stellar-1.9.0-rc.1.tgz\n',
+  });
+  prepareVersionFiles(root, '1.9.0');
+  assert.equal(JSON.parse(fs.readFileSync(files.package, 'utf8')).version, '1.9.0');
+  assert.equal(fs.readFileSync(files.knowledge, 'utf8').includes('1.9.0-rc.1'), false);
 });
 
 test('prepareVersionFiles 缺失预期旧版本时拒绝且不产生部分写入', (t) => {
@@ -102,4 +122,15 @@ test('prepareVersionFiles 缺失预期旧版本时拒绝且不产生部分写入
   for (const [name, file] of Object.entries(files)) {
     assert.deepEqual(fs.readFileSync(file), before[name]);
   }
+});
+
+test('发布工作流复用本地版本校验与 CHANGELOG 解析，拒绝缺失的发布正文', (t) => {
+  const { root, files } = createVersionFixture(t);
+  const changelog = path.join(root, 'CHANGELOG.md');
+  fs.writeFileSync(changelog, '  ## 1.42.1  \n> 发布日期：2026-09-03\n\n### 修复\n- 内容\n\n## 1.42.0\n- 旧内容\n');
+  assert.deepEqual(prepareReleaseMetadata(root), { version: '1.42.1', notes: '### 修复\n- 内容' });
+  fs.writeFileSync(changelog, '## 1.42.1\n> 发布日期：2026-09-03\n');
+  assert.throws(() => prepareReleaseMetadata(root), /非空章节/);
+  fs.writeFileSync(files.package, '{"version":"2.0.0-alpha.1"}');
+  assert.throws(() => prepareReleaseMetadata(root), /版本号格式不正确/);
 });

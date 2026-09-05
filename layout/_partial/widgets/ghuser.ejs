@@ -30,13 +30,13 @@ function layoutDiv() {
   if (item.header) {
     el += `<div class="widget-header">`
       el += `<a class="gh-url" href="https://github.com/${item.username}">
-        ${icon('github:logo-alt')}
+        <span class="ui-icon">${icon('github:logo-alt')}</span>
         <span>github/${item.username}</span>
         </a>`
     el += `</div>`
   }
   // body
-  el += '<div class="widget-body data-service ds-ghinfo" data-api="https://' + theme.api_host.ghapi + '/users/' + item.username + '">';
+  el += '<div class="widget-body data-service ds-ghinfo" data-api="' + stellar_config('services.github.apiUrl') + '/users/' + item.username + '">';
     if (item.avatar) {
       el += '<div class="avatar" ><img no-lazy type="img" id="avatar_url" src="' + config.avatar + '"></div>';
     }
@@ -55,7 +55,7 @@ function layoutDiv() {
     // follow
     if (item.follow) {
       el += '<a class="follow" href="https://github.com/' + item.username + '">';
-      el += icon('github:logo')
+      el += '<span class="ui-icon">' + icon('github:logo') + '</span>'
       el += 'Follow';
       el += '</a>';
     }

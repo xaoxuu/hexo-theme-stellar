@@ -23,7 +23,25 @@ jobs:
       - run: npm run lint
 
   unit:
-    name: Unit tests (node:test)
+    name: Unit tests (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          - 22
+          - 24
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: npm run test:unit
+
+  contributions:
+    name: Contribution registry consistency
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -32,7 +50,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - run: npm test
+      - run: npm run contributions:check
 
   commit-gate:
     name: Conventional Commits
@@ -55,69 +73,67 @@ jobs:
       - run: node ci/check-skill-sync.js --check
 
   integration:
-    name: Integration build (demo + minify)
+    name: Integration build (package + minify)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Detect runtime changes
+        id: scope
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          if [[ -z "$BASE_SHA" || "$BASE_SHA" =~ ^0+$ ]]; then
+            BASE_SHA="$(git hash-object -t tree /dev/null)"
+          fi
+          should_run=false
+          while IFS= read -r file; do
+            case "$file" in
+              layout/*|scripts/*|source/css/*|source/js/*|languages/*|_data/*|_config.yml|package.json|package-lock.json|ci/check-package-integration.js|ci/gulpfile.js|test/package-integration.test.js|.npmignore|.github/workflows/ci.yml)
+                should_run=true
+                break
+                ;;
+            esac
+          done < <(git diff --name-only "$BASE_SHA" "$HEAD_SHA")
+          echo "run=$should_run" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-node@v6
+        if: steps.scope.outputs.run == 'true'
         with:
           node-version: 22
+      - name: Skip unchanged runtime
+        if: steps.scope.outputs.run != 'true'
+        run: echo "Runtime inputs unchanged; integration build skipped."
 
-      # 官方 demo 固定 commit，demo 有实质更新时手动提升该 pin
-      - name: Checkout demo project
-        uses: actions/checkout@v5
-        with:
-          repository: xaoxuu/hexo-theme-stellar-examples
-          ref: cc25ca381cf230ee0164723b2e95a9219265fb73
-          path: demo
-
-      # checkout 不允许把仓库检出到 $GITHUB_WORKSPACE 之外，先检出到 workspace 再移入临时目录
-      - name: Move demo to temp directory
-        run: mv "$GITHUB_WORKSPACE/demo" "${{ runner.temp }}/demo"
-
-      - name: Use PR theme checkout in demo
-        run: |
-          mkdir -p "${{ runner.temp }}/demo/blog/themes"
-          cp -R "$GITHUB_WORKSPACE" "${{ runner.temp }}/demo/blog/themes/stellar"
-          rm -rf "${{ runner.temp }}/demo/blog/themes/stellar/.git" \
-                 "${{ runner.temp }}/demo/blog/themes/stellar/node_modules"
-
-      - name: Install demo dependencies
-        working-directory: ${{ runner.temp }}/demo/blog
-        run: npm install --no-audit --no-fund
-
-      # demo 工程仍固定 Hexo 7，这里显式安装 Hexo 8 及配套插件版本，保证 CI 与适配目标一致
-      - name: Install Hexo 8 for integration build
-        working-directory: ${{ runner.temp }}/demo/blog
-        run: npm install --no-save --no-audit --no-fund hexo@^8.1.2 hexo-renderer-marked@^7.0.1 hexo-generator-index@^4.0.0
-
-      # 主题目录优先于 node_modules（Hexo 解析顺序），此处再显式移除 npm 版以防歧义
-      - name: Remove npm-published theme
-        working-directory: ${{ runner.temp }}/demo/blog
-        run: rm -rf node_modules/hexo-theme-stellar
-
-      - name: Full render (hexo generate)
-        working-directory: ${{ runner.temp }}/demo/blog
-        run: npx hexo generate
-
-      - name: Install minify toolchain
-        working-directory: ${{ runner.temp }}/demo/blog
-        run: >-
-          npm install --no-save --no-audit --no-fund
-          gulp gulp-clean-css gulp-html-minifier-terser gulp-terser
-          gulp-sourcemaps gulp-babel @babel/core @babel/preset-env
-
-      - name: Minify (HTML/CSS/JS)
-        working-directory: ${{ runner.temp }}/demo/blog
-        run: |
-          cp "$GITHUB_WORKSPACE/ci/gulpfile.js" gulpfile.js
-          npx gulp minify
+      - name: Install theme dependencies
+        if: steps.scope.outputs.run == 'true'
+        run: npm ci
+      - name: Verify installed package and host postprocessing
+        if: steps.scope.outputs.run == 'true'
+        run: npm run integration:check
 
   knowledge:
     name: Knowledge base verify
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Ensure ripgrep
-        run: command -v rg || (sudo apt-get update && sudo apt-get install -y ripgrep)
-      - run: python3 docs/knowledge/tools/verify.py
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Verify changed knowledge base
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          if [[ -z "$BASE_SHA" || "$BASE_SHA" =~ ^0+$ ]]; then
+            BASE_SHA="$(git hash-object -t tree /dev/null)"
+          fi
+          if git diff --quiet "$BASE_SHA" "$HEAD_SHA" -- docs/knowledge; then
+            echo "Knowledge base unchanged; deferred release snapshot remains valid."
+          else
+            npm ci
+            npm run knowledge:check
+          fi

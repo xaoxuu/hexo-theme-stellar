@@ -4,12 +4,12 @@
     font-weight: 500
     color: var(--text)
 
-.l_body[text-indent] article.content .ds-mdrender
+body[data-text-indent] article.content .ds-mdrender
   p:not([class])
     text-indent: 0
 
 
-.l_body[type=story] .md-text.content 
+body[data-article-style='story'] .md-text.content
   .ds-mdrender
     ol,ul
       margin-left: .5rem

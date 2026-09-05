@@ -17,7 +17,12 @@ module.exports = (ctx, type) => function(args) {
   el += ' ' + ctx.args.joinTags(args, ['color', 'symbol']).join(' ')
   el += '>'
   // input
-  el += '<input type="' + (type || 'checkbox') + '"'
+  var inputClass = type === 'radio' ? 'ui-radio' : ''
+  el += '<input'
+  if (inputClass) {
+    el += ' class="' + inputClass + '"'
+  }
+  el += ' type="' + (type || 'checkbox') + '"'
   if (args.checked == 'true') {
     el += ' checked="true"'
   }

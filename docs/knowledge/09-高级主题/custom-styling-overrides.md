@@ -39,12 +39,12 @@ tags:
 
 | 配置键 | 用途 |
 | --- | --- |
-| `style.prefers_theme` | 初始主题模式：`auto`、`light` 或 `dark` |
-| `style.font-size.root` | 页面字号基准 |
-| `style.font-family.*` | 正文、代码和代码块字体栈 |
-| `style.color.theme` / `accent` / `link` | 主题色、强调色和链接色 |
-| `style.border-radius.*` | 卡片、图片和横条圆角 |
-| `style.leftbar.*` | 左栏背景和背景图 |
+| `appearance.color_scheme` | 初始主题模式：`auto`、`light` 或 `dark` |
+| `appearance.typography.font_size.root` | 页面字号基准 |
+| `appearance.typography.font_family.body` / `code` | 正文与代码字体栈 |
+| `appearance.colors.primary` / `accent` / `link` | 主色、强调色和链接色 |
+| `appearance.shape.radius.*` | 卡片、图片和横条圆角 |
+| `appearance.backgrounds.leftbar.*` | Leftbar 装饰背景和背景图 |
 
 实际可用配置以主题 `_config.yml` 为准；已移除的配置不会因为文档示例仍然存在而恢复。
 
@@ -65,7 +65,7 @@ tags:
 
 ## 注入和站点自定义 CSS
 
-使用方可以通过主题支持的 `plugins.*.inject` 入口加载站点 CSS，也可以在站点工程维护自己的 CSS 文件。自定义样式应：
+官方 Extension 不提供资源覆盖入口。使用方可以在站点工程维护自己的 CSS 文件，或在受信任的 `inject.head_end` 中显式加入 `<link>` / `<style>`。自定义样式应：
 
 - 放在使用方工程，不修改主题发布包；
 - 使用 `var(--theme)`、`var(--card)`、`var(--text-p1)` 等语义变量；
@@ -92,4 +92,4 @@ tags:
 
 ## 维护边界
 
-本文是覆盖入口和升级边界的说明，不是 CSS 参考手册。新增公共变量应先更新[设计令牌与 CSS 变量](../01-样式系统/design-tokens.md)，新增组件契约应更新对应领域页面，历史取舍放在 `docs/designs/`。
+本文是覆盖入口和升级边界的说明，不是 CSS 参考手册。新增公共变量应先更新[设计令牌与 CSS 变量](../01-样式系统/design-tokens.md)，新增组件契约应更新对应领域页面，方案与取舍通过 GitHub issue 记录。

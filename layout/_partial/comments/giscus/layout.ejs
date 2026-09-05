@@ -1,13 +1,10 @@
 <%
 function layoutDiv() {
   var el = '';
-  const cmt = page.cmt;
+  const cmt = comments;
   if (cmt?.service?.length > 0) {
     const name = cmt.service;
-    var body = cmt[name];
-    if (theme.style.prefers_theme != 'auto' && body['data-theme'] == 'preferred_color_scheme') {
-      body['data-theme'] = theme.style.prefers_theme
-    }
+    var body = Object.assign({}, cmt.options);
     el += '<div id="' + name + '"';
     for (let key of Object.keys(body)) {
       if (body[key] !== null) {

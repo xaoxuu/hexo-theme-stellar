@@ -1,0 +1,33 @@
+<%
+var localSearch = stellar_config('search.provider') === 'local'
+%>
+<dialog class="search-dialog" id="site-search-dialog" aria-labelledby="site-search-title">
+  <div class="search-dialog__panel search-wrapper" id="site-search-wrapper" searching="false">
+    <div class="search-dialog__header">
+      <div class="search-form" role="search">
+        <span class="search-button" aria-hidden="true"><%- icon('default:search', '', true) %></span>
+        <input type="search" class="search-input" id="site-search-input" aria-labelledby="site-search-title" placeholder="<%- escape_html(__('btn.search')) %>">
+      </div>
+      <button type="button" class="search-dialog__close" data-shell-action="close-search" aria-label="<%- escape_html(__('search.close')) %>">×</button>
+    </div>
+    <% if (localSearch) { %>
+      <div class="search-dialog__scope" role="radiogroup" aria-labelledby="site-search-title" hidden>
+        <label class="search-dialog__scope-option" data-search-scope-option="all">
+          <input class="ui-radio" type="radio" name="site-search-scope" value="all">
+          <span><%- __('search.scope_all') %></span>
+        </label>
+        <label class="search-dialog__scope-option" data-search-scope-option="blog" hidden>
+          <input class="ui-radio" type="radio" name="site-search-scope" value="blog">
+          <span><%- __('search.scope_blog') %></span>
+        </label>
+        <label class="search-dialog__scope-option" data-search-scope-option="current" hidden>
+          <input class="ui-radio" type="radio" name="site-search-scope" value="current">
+          <span data-search-scope-current-label></span>
+        </label>
+      </div>
+    <% } %>
+    <h2 class="search-dialog__title" id="site-search-title"><%- __('search.search') %></h2>
+    <div class="search-result" id="site-search-result"></div>
+    <div class="search-no-result"><%- __('search.no_results') %></div>
+  </div>
+</dialog>

@@ -6,6 +6,8 @@ btn:
   notebook: 筆記本
   recent_publish: 近期發布
   all_wiki: 所有文檔
+  all_topic: 所有專欄
+  all_notebook: 所有筆記本
   category: 分類
   categories: 分類
   tag: 標籤
@@ -21,6 +23,16 @@ btn:
   comments: 參與討論
   expand_posts: 展開其餘 %s 篇
   collapse_posts: 收起
+  search: 搜尋
+
+menu:
+  blog: 網誌
+  categories: 分類
+  tags: 標籤
+  topic: 專欄
+  archives: 封存
+  friends: 友鏈
+  about: 關於
 
 meta:
   recent_update: 最近更新
@@ -69,13 +81,51 @@ page:
 
 search:
   search: 站內搜尋
-  search_in: 在 %s 中搜尋
+  scope_all: 全站
+  scope_blog: 部落格
   no_results: 沒有找到內容！
+  close: 關閉搜尋
+
+settings:
+  label: 設定
+  title: 設定
+  profile:
+    title: 個人資料
+    avatar: 頭像
+    nickname: 暱稱
+    email: Email
+    url: URL
+    save: 儲存
+    logout: 登出
+    provider_managed: '%s 的留言身分不由主題管理，無法在此編輯或登出。'
+    provider_unknown: 目前留言服務
+  cache:
+    title: 快取
+    search: 搜尋快取
+    dynamic: 資料快取
+    all: 全部快取
+    clear: '清除「%s」'
+  about:
+    title: 關於
+    empty: 尚未設定相關資訊。
+    open_link: '開啟「%s」連結'
+  result:
+    success: 操作成功。
+    partial: 操作部分完成，部分瀏覽器儲存空間無法修改。
+    failure: 操作失敗，瀏覽器儲存空間無法使用。
+  validation:
+    name: 請輸入不超過 80 個字元的暱稱。
+    email: 請輸入有效的 Email，或留空。
+    url: 請輸入 HTTP(S) URL，或留空。
 
 message:
   copied: 複製成功
+  copy_denied: 未取得剪貼簿權限
+  copy_unsupported: 目前瀏覽器不支援剪貼簿或頁面不是 HTTPS
   fetching_latest_release: '%s 正在取得最新版本…'
-  theme_switched:
+  loading: 正在載入
+  loading_failed: 載入失敗，請稍後再試。
+  color_scheme_switched:
     light: 切換到淺色模式
     dark: 切換到深色模式
     auto: 切換到跟隨系統配色
@@ -89,6 +139,13 @@ symbol:
   page: "第 %s 頁"
 
 tag_plugins:
+  okr:
+    status:
+      in_track: 正常
+      at_risk: 風險
+      off_track: 延期
+      finished: 已完成
+      unfinished: 未完成
   mbti:
     title: 我的 MBTI 人格：%s（%s）
     types:

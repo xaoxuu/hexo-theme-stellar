@@ -112,7 +112,7 @@ graph TD
 
 ### 自动填充与数据 API
 
-`title`、`icon` 或 `desc` 缺失时，对应字段名追加到锚元素的 `autofill` 属性。`cardlink` 属性同时标记元素。配置了 `ctx.theme.config.data_services.siteinfo.api` 时，URL 以 `args.api.replace('{href}', url)` 插值并作为 `data-api` 存储到锚上，启用客户端自动填充。
+`title`、`icon` 或 `desc` 缺失时，对应字段名追加到锚元素的 `autofill` 属性。`cardlink` 属性同时标记元素。`site_info` 选中的 provider 参数袋含有效 `endpoint` 时，URL 以 `endpoint.replace('{href}', url)` 插值并作为 `data-api` 存储到锚上，启用客户端自动填充；`provider: null` 时不输出 `data-api`。
 
 ```
 <a class="link-card plain card-hover card-hover--spotlight card-hover--tilt" cardlink autofill="title,icon,desc" data-api="...">
@@ -135,10 +135,10 @@ target="_blank" rel="external nofollow noopener noreferrer"
 图标始终渲染为懒加载背景图：
 
 ```html
-<div class="lazy img" data-bg="<icon-url or default.link>"></div>
+<div class="lazy img" data-bg="<icon-url or fallbacks.link_card>"></div>
 ```
 
-兜底图标 URL 来自 `ctx.theme.config.default.link`。
+兜底图标 URL 来自冻结运行时配置 `ctx.stellar.config.fallbacks.linkCard`，对应 YAML 路径 `fallbacks.link_card`。
 
 **参考源码**：[scripts/tags/lib/link.js](../../../scripts/tags/lib/link.js)
 
@@ -216,7 +216,7 @@ graph TD
 
 ### Card Hover 行为
 
-`{% link %}` 始终为链接卡片输出 Hover 组合类；`{% grid %}` 只有 `bg:card` 为每个单元格输出，`bg:box` 与无背景网格不输出。启用 `plugins.card_hover` 时，它们获得鼠标光斑和 3D 倾斜，插件最后加载的样式会统一组合 `hoverable-card()` 原有的上浮 transform；链接可点击区域、自动填充属性和单元格 Markdown 结构不变。插件关闭或运行环境不支持动态效果时仍使用既有 link/grid 样式。
+`{% link %}` 始终为链接卡片输出 Hover 组合类；`{% grid %}` 只有 `bg:card` 为每个单元格输出，`bg:box` 与无背景网格不输出。启用 `features.card_hover.enabled` 时，它们获得鼠标光斑和 3D 倾斜，Feature 最后加载的样式会统一组合 `hoverable-card()` 原有的上浮 transform；链接可点击区域、自动填充属性和单元格 Markdown 结构不变。Feature 关闭或运行环境不支持动态效果时仍使用既有 link/grid 样式。
 
 **参考源码**：[scripts/tags/lib/link.js](../../../scripts/tags/lib/link.js)、[scripts/tags/lib/grid.js](../../../scripts/tags/lib/grid.js)、[source/css/_plugins/card-hover.styl](../../../source/css/_plugins/card-hover.styl)
 
@@ -280,7 +280,7 @@ graph TD
 |------|------|------|
 | `title` | 位置参数 | 横幅标题文本 |
 | `subtitle` | 位置参数 | 横幅副标题文本 |
-| `bg` | 命名参数 | 背景图 URL（回退 `ctx.theme.config.default.banner`） |
+| `bg` | 命名参数 | 背景图 URL；省略时使用主题内部固定横幅资源 |
 | `avatar` | 命名参数 | 头像图片 URL |
 | `link` | 命名参数 | 设置后把横幅包装为 `<a class="banner-link">` 并隐藏返回按钮 |
 

@@ -8,7 +8,7 @@ function setCardLink(nodes) {
     el.removeAttribute('cardlink');
     const api = el.dataset.api;
     if (api == null) return;
-    // 走统一请求入口，动态数据缓存对 siteinfo 同样生效
+    // 走统一请求入口，数据缓存对 siteinfo 同样生效
     utils.request(null, api, function(response) {
       return response.json().then(function(data) {
         var autofill = [];
@@ -28,10 +28,8 @@ function setCardLink(nodes) {
         if (desc && data.desc && data.desc.length > 0 && autofill.includes('desc')) {
           desc.innerHTML = data.desc;
         }
-      }).catch(function(error) {
-        console.error(error);
       });
-    }, undefined, { service: 'siteinfo' });
+    }, undefined, { service: 'siteinfo' }).catch(function() {});
   })
 }
 
@@ -50,10 +48,8 @@ function setSiteCardIcon(nodes) {
             icon.setAttribute('data-src', data.icon);
           }
         }
-      }).catch(function(error) {
-        console.error(error);
       });
-    }, undefined, { service: 'siteinfo' });
+    }, undefined, { service: 'siteinfo' }).catch(function() {});
   })
 }
 

@@ -1,214 +1,100 @@
 # AGENTS.md — Stellar 主题仓库 AI 规范
 
-> 本文件是 hexo-theme-stellar 主题仓库的 **AI 协作唯一权威规范**，供所有 AI 编码工具（Codex、Claude Code、Cursor、Copilot、Trae 等）与开发者共同遵守；`CLAUDE.md` 与 `.github/copilot-instructions.md` 是兼容入口，冲突以本文件为准。
-> `$stellar-theme-dev` skill（Codex：`.agents/skills/`；Claude Code：`.claude/skills/`，逐字一致，CI 强制同步）是本流程的执行清单；Codex 与 Claude Code 涉及主题开发、验证或发版时先调用它，其他环境直接按本文件 §5 门禁执行。
+> 本文件是 hexo-theme-stellar 的 AI 协作唯一权威规范；`CLAUDE.md` 与 `.github/copilot-instructions.md` 只作兼容入口。
+> 开发、验证或发布主题时调用 `$stellar-theme-dev`；不可调用时直接读取 `.agents/skills/stellar-theme-dev/SKILL.md`。本文件拥有工程门禁，skill 只编排执行顺序。
 
-## 1. 仓库职责与协作边界
+## Agent pointers
 
-这是 Hexo 主题 **Stellar** 的独立仓库，主题以 npm 包形式发布，被 [xaoxuu.com](https://xaoxuu.com) 等站点通过 git submodule 引用。
+- 创建、读取或更新 issue 时按 `docs/agents/issue-tracker.md`。
+- 新增或重构标签插件时读取 `docs/guides/tag-plugins-style-guide.md`；修改配置、内容 profile、组件、Extension 或语言文案时读取 `docs/guides/contribution-architecture.md`。
 
-**本仓库负责：**
+## 1. 仓库边界
 
-- 主题代码：EJS 模板（`layout/`）、Hexo 服务端脚本（`scripts/`）、Stylus 样式（`source/css/`）、浏览器 JS（`source/js/`）
-- 国际化文案（`languages/`）与主题文档（`docs/`）
-- 版本发布：版本号更新、npm publish、git tag（遵循发版规范）
+本仓库以 npm 包形式提供 Stellar 的模板、样式、脚本、默认配置、国际化、主题工程文档和发布产物。
 
-**本仓库不负责：**
+- 本文件只约束主题仓库文件；使用方拥有内容、站点配置、版本引用与部署设施，公开 Wiki 由独立文档仓库维护。修改其它仓库文件时读取其 AGENTS.md，分别执行该仓库流程。
+- 仓库内证据优先证明主题契约。只有任务明确包含某个消费站点且仓库内证据不足时，才补充该站点自己的集成验证。
+- 当前事实以 `_config.yml`、源码、Schema、测试和 `package.json` 为准；知识库只作发布快照与探索索引。
 
-- 博客内容：文章、草稿、Wiki、笔记、友链等（归 xaoxuu.com 主工程）
-- 站点配置：站点根 `_config.yml`、`_config.stellar.yml`、部署配置（归使用方站点；本仓库自带 `_config.yml` 为主题默认配置）
-- 站点私有数据：不把具体站点的内容、图片、数据打包进主题
+## 2. 工程约束
 
-**协作边界：**
+- EJS 使用 `<% %>` 控制、`<%- %>` 输出 HTML，变量保持 `var`；复用结构放入 partial，复杂逻辑放入 helper。
+- Node.js 脚本使用 CommonJS；`test/` 只引用已声明依赖或 Node 内置模块，主题运行时可使用 Hexo 宿主提供的模块。
+- Stylus 的共享变量归 `source/css/_defines/`，通用样式归 `_common/`，组件样式归 `_components/`。
+- 主题通过 Hexo + EJS + Stylus 生成产物；宿主拥有构建后处理与部署设施。新增依赖、抽象、配置、兼容层或扩展点必须对应当前验收标准。
 
-- 主题无法单独运行，开发调试以主工程为项目；在主工程的 `themes/stellar/` 内直接修改主题代码是正常场景
-- 改动必须在本仓库独立提交、发布；主工程的提交只允许更新子模块指针，不得包含主题源码
-- 主题行为变更（渲染、样式、交互、配置项）由本仓库发版，主工程负责升级子模块指针
+### 浏览器产物
 
-## 2. 技术栈与代码定位
+- `source/js/runtime/` 以 `.js` URL 提供原生 ESM，由模块入口加载；生成与宿主后处理须保留模块语义及相对导入，排除该目录的传统 Babel/CommonJS 转译。
+- 其它浏览器源码使用 ES2015+；宿主需要转译或压缩时对普通脚本执行，并验证最终输出。主题 CI 的 `ci/gulpfile.js` 是消费方后处理的验证入口，应遵守同一产物契约。
 
-- 模板引擎 EJS；样式 Stylus；服务端 JS CommonJS（Node 22+，现代语法）；浏览器 JS ES2015+（源码，Babel 转译输出）；文案 YAML；文档 Markdown
+### 测试保留门禁
 
-| 想做什么 | 去哪里改 |
-|---------|---------|
-| 改样式 / 设计令牌 | `source/css/_defines/`、`source/css/_components/` |
-| 新增自定义标签 | `scripts/tags/lib/` + `scripts/tags/index.js` 注册 + `source/css/_components/tag-plugins/` 样式 |
-| 页面结构 / 模板 | `layout/`（`layout.ejs` 编排、`_partial/` 组件） |
-| 前端交互 | `source/js/plugins/`（源码 ES2015+，Babel 转译输出） |
-| 数据服务 / 小部件 | `source/js/services/`、`layout/_partial/widgets/` |
-| 评论系统 | `layout/_partial/comments/` |
-| 构建期逻辑 | `scripts/`（helpers / filters / generators / events / commands） |
-| 文案 | `languages/` |
+- 仓库测试只保护长期架构、工程规范与核心流程：配置与 Schema、安全与兼容边界、共享模型与运行时基础设施、构建、生成、迁移、分发和工程门禁。
+- 仅当断言对应长期规范、不依赖当前产品方案，且失败意味着架构或核心流程损坏时，才留在 `test/` 或 CI；具体组件的视觉、文案、尺寸、图标、DOM/CSS 结构和交互细节不属于仓库契约。
+- 当前契约不存在的具名负向断言按“兼容来源门禁”审查；没有发布来源时使用通用未知字段、未知值或能力边界测试，不在长期测试中枚举未发布候选。
+- 具体需求在 `/private/tmp/stellar-acceptance-<task>/` 编写任务级测试或浏览器脚本；交付时报告命令、场景与结果，然后删除该目录。只有暴露长期架构或核心流程漏洞时，才提炼为组件无关的仓库测试。
+- 新需求使旧断言失效时，替换任务级验收并删除过期断言；不为具体需求增加仓库 fixture、测试文件或 `package.json` 命令。
 
-完整目录结构以仓库实际布局为准（`layout/`、`scripts/`、`source/`、`languages/`、`docs/`）。
+完成条件：本次新增或修改的仓库断言满足长期规范、方案无关和核心损坏三项条件；本次产生的临时验收材料已清理。
 
-## 3. 主题知识库与文档归档
+### 复用门禁
 
-主题仓库内置面向 AI 贡献者的中文知识库 `docs/knowledge/`：
+修改 Shell、Region、Sidebar、Widget、公共组件、标签插件或动态控件时：
 
-- `00-总览与安装配置/` ~ `09-高级主题/`：按主题域组织，入口为 `docs/knowledge/README.md` 及各领域 `index.md`
-- `VERIFICATION.md`：核查与修正记录；`tools/verify.py`：硬事实核查脚本
+1. 先搜索已有 capability、partial/helper/mixin、设计令牌和 `scripts/lib/internal-constants.js`。
+2. 控件通过 `ui_classes` 或 `ctx.ui.classes` 选择能力；普通链接和局部受保护值例外登记在 `ci/reuse-rules.js` 并写明稳定边界与理由。
+3. 新增共享令牌或内部策略字段时同步保护规则；运行 `npm run reuse:check`。
 
-使用约定：
+完成条件：本次修改涉及的受管控件均已分类，没有新增原始 capability 组合类或未登记的受保护值副本。
 
-- 涉及主题代码、配置或行为问题时，先查阅 `docs/knowledge/` 对应领域，再读源码确认
-- 知识库以本仓库代码为唯一事实来源；发现不一致时修正知识库，并登记到 `VERIFICATION.md`
-- 主题升级或行为变更后，运行 `python3 docs/knowledge/tools/verify.py` 复查硬事实；核查门禁：版本不一致或行号引用越界即失败（退出码非 0），未解析文件与配置键异常仅报告不阻断
+## 3. 文档
 
-知识库写作遵循“设计语义、行为契约、修改依据”分层：公共设计令牌集中记录在 `01-样式系统/design-tokens.md`，各领域页面只保留本领域的行为、布局契约、公开配置和关键阈值，具体 CSS/模板/JS 实现以源码为最终事实来源，历史取舍放在 `docs/designs/`。新增数值必须说明语义和作用范围；普通实现值仅在影响决策、兼容性或验收时记录；同一事实只维护一个权威位置，其他页面通过链接引用。
+- 设计方案、架构决策、迁移或兼容取舍、发布计划和验收记录统一存放在 GitHub Issues，格式与操作权限按 `docs/agents/issue-tracker.md`；仓库不保存单次方案文档，已删除文档的历史由 Git 保存。
+- `docs/guides/` 只保存长期维护规范，`docs/audits/` 保存阶段性审计，`docs/knowledge/` 保存当前行为与修改依据。局部修复、样式微调、单字段配置和普通文档维护直接实现。
+- 迁移表按“兼容来源门禁”只描述发布基线与明确外部接缝；预发布候选的取舍留在 Git 历史或相关 Issue，当前知识库只说明最终行为与通用失败语义。
+- 机器契约与直接测试随实现保持当前；知识库、CHANGELOG 和版本级 `VERIFICATION.md` 在发版准备时按最终净变化集中同步。纯文档任务和事实纠错即时处理。
+- 修改知识库后运行 `npm run knowledge:check`；具体发布步骤见 `docs/guides/release-process.md`。
 
-文档统一归档在 `docs/`：`audits/` 代码审计；`designs/` 设计方案；`guides/` 流程指南；命名 `{YYYY-MM-DD}-{功能简称}.md`（流程性文档可不带日期），多步骤任务用 `docs/designs/{YYYY-MM-DD}-{功能简称}/` 目录（模板 `docs/designs/_template/`，含 `spec.md` / `plan.md` / `checklist.md`）。
+## 4. 工作流程
 
-## 4. 编码规范
+### 发布基线
 
-### EJS 模板
+兼容、迁移、公开文档和回归面向最近公开发布版本及明确承诺维护的外部接缝。未发布方案、预览、tarball 和中间提交属于可替换候选，不为被替换候选增加别名、双读、迁移或兼容测试。
 
-- `<% %>` 逻辑控制，`<%- %>` 输出非转义 HTML
-- 变量声明用 `var`（IE8 兼容）
-- 2 空格缩进，HTML 属性双引号
-- 可复用片段提取到 `_partial/`；复杂逻辑提取到 `helpers/` 辅助函数
+### 兼容来源门禁
 
-```ejs
-<%
-var items = site.posts.sort('date', -1).limit(10)
-items.forEach(function(post) {
-%>
-  <article>
-    <%- partial('_partial/main/post_list/post_card', {post: post}) %>
-  </article>
-<%
-})
-%>
-```
+- 方案及受影响调用链中，为旧输入增加或保留的别名、双读、fallback、legacy adapter、专用拒绝/迁移诊断，以及测试、文档中当前契约不存在的具名规则，均按兼容处理；检查范围包括未出现在 diff 中的关联声明与接口。
+- 每项专用兼容必须以发布基线树中的实际输入，或有 Issue/文档与当前消费者佐证的明确外部接缝为来源；未发布候选使用当前通用解析、拒绝和验证路径。
+- 删除、替换或合并配置声明、数据形状、接口或协议时，沿生产者与消费者全树追查默认配置、Schema、模型投影、模板与客户端消费者、测试和知识库；同时核对因此失去用途的包装、解析分支和扩展协议，检查从旧标识符扩展到其支撑机制。
+- 对受影响的适配分支和扩展协议逐项给出保留依据或清理结果。失去最后一个声明或消费者、且无外部维护承诺的机制随本次变更清理；预发布部署经历本身不构成维护承诺。
 
-### Node.js 脚本
+完成条件：受影响范围内，每项保留的内部适配或扩展协议均能从当前配置声明或生产者追到实际消费路径；每项外部兼容均有发布来源或明确维护承诺的证据。失去用途的接口、支撑机制和未发布候选的专用语义残留已清理；测试通过与全树搜索结果分别作为行为证据和定位线索，保留依据以逐项核对为准。
 
-- CommonJS: `require()` / `module.exports`
-- 文件头: `/* global hexo */` + `'use strict';`
-- 2 空格缩进，双引号，分号结尾（新增代码遵循；存量代码风格不一，暂未由 lint 强制）
-- 标签注册: `hexo.extend.tag.register(name, handler, options)`；辅助函数注册: `hexo.extend.helper.register(name, handler)`
-- 新增 `require()` 先确认归属：`test/` 只引用 `package.json` 已声明依赖或 Node 内置模块（防幽灵依赖，`npm test` 自动检查）；`scripts/` 可依赖 hexo 宿主提供的模块（如 `hexo-util`），因为主题只在 hexo 项目内运行
+### 验证门禁
 
-```js
-/* global hexo */
-'use strict';
+计划和实施都按实际影响选择最低级别；执行验证前按本次最终 diff 复核，影响收窄时同步降级。路径、文件数量、v2 标签或“公开字段”不单独升级风险；只有证据不足或影响无法界定时才升级。
 
-module.exports = function(hexo) {
-  return function(args, content) {
-    var result = '';
-    // ...
-    return result;
-  };
-};
-```
+| 级别 | 适用范围 | 必要证据 |
+| --- | --- | --- |
+| **F0 文档/收录** | 说明、流程、skill、issue 方案、注释，或许可证/NOTICE/README 等非运行时分发材料及其 npm 收录规则 | 相关格式、链接、引用或事实检查；收录变更用 `npm pack --dry-run` 核对实际清单；知识库改动加 `npm run knowledge:check` |
+| **F1 定向**（默认） | 局部 CSS/EJS/浏览器 JS/helper、单个配置字段或可界定行为 | 最近的单测、lint、CSS 编译或渲染检查；Schema 改动执行对应的解析、校验与消费测试 |
+| **F2 全仓** | 跨域公共运行时、共享模型/Collection 管线、构建链、依赖、广泛重构，或影响仍不确定 | `npm run check` |
+| **F3 分发** | npm 包安装后行为、CLI/init、Blueprint、迁移、发布或明确阶段验收 | F2 + `npm run integration:check`；仅在准备人工验收制品时运行 `npm run acceptance:prepare` |
 
-### Stylus 样式
+- 性能契约相关任务显式运行 `npm run performance:check`；普通 F2 不承担性能基线。发版由 `npm run release:check` 组合性能与知识库门禁。
+- 宿主集成属于任务目标且主题证据不足时补充消费方验证；UI 视觉判断仅在用户要求或自动检查无法证明时进行。
+- 已通过的高层门禁在后续只修改说明或验收记录时不重复运行；F3 制品以最终内容为准。
 
-- 文件引入顺序: `const` → `custom` → `theme_base` → `theme_colorful` → `func`
-- 类名和文件名: `kebab-case`
-- 变量在 `_defines/`，通用样式在 `_common/`，组件在 `_components/`
-- 2 空格缩进，属性后空格
+完成条件：每个受影响契约都有一项通过的直接证据，验证停在最低充分级别。
 
-### 浏览器 JS
+### 交付门禁
 
-- 源码使用 ES2015+ 语法（Gulp Babel 转译输出）
-- 避免直接操作 DOM，使用主题工具函数
-- 注释: `//` 单行，`/* */` 多行
+- 交付本次实现、适用验证和获准的 Issue 更新；未获外部写入授权时在对话中报告证据，按 `docs/agents/issue-tracker.md` 处理。普通开发不提前刷新发布快照。
+- 一次提交对应一个需求点；提交格式以 `ci/check-commit-msg.js` 为准。
+- 默认把改动保留在工作区；用户明确要求 commit 时才提交，明确要求 push 时才推送。已有授权在本任务范围内持续有效；对照起始状态只提交获准改动，保留无关工作区修改。
+- 用户要求发布时，按 `docs/guides/release-process.md` 准备 CHANGELOG、确认版本并执行发布流程。
 
-## 5. 工作流程
+## 5. Issue 处理
 
-流程总览：**方案 → 开发 → 验证 → 提交 → 发版**。Codex 与 Claude Code 涉及主题开发、验证或发版时，先调用 `$stellar-theme-dev` skill，按其中的执行顺序与完成条件推进；其他环境（Cursor、Copilot、Trae 等）按下述门禁执行；skill 与本节冲突时，以本节为准。
-
-**方案门禁**：涉及行为、结构或多文件改动的任务，先在 `docs/designs/{YYYY-MM-DD}-{功能简称}/` 写方案文档（模板 `docs/designs/_template/`），写明：要解决的问题或新增的能力、技术方案和实现思路、影响范围（涉及哪些文件/模块）、需要同步的知识库页面与文档。方案中必须先列出可复用的配置、设计令牌、mixin、partial、helper、`utils.js` 或公共服务入口，再说明新增定义；新增常量或变量必须记录语义、作用域、消费方、默认值来源和配置边界；跨页面能力优先设计可复用接口（例如批量挂载入口），并写明初始化、失败降级、暂停和销毁行为。
-
-**验证门禁**：
-
-- `scripts/` 有改动 → 必须在主工程（xaoxuu.com）执行 `npm run g` 全量验证（已含 `hexo clean && hexo generate && npx gulp minify`，可发现模板渲染错误与 HTML 结构错误）；`npm run s` 是按需渲染，不能替代
-- 新增/修改纯函数 → 补充单测并跑 `npm run check`（lint + 单测 + 依赖声明检查 + 知识库硬事实核查）
-- 知识库有改动 → `python3 docs/knowledge/tools/verify.py` 硬事实核查
-- UI 方面（样式、模板、前端交互等）改动量不大时无需自检流程，除非用户明确要求
-- 检查所有受影响页面类型（首页、文章页、Wiki 页等），验证结果记录在方案目录 `checklist.md`
-- CI（`.github/workflows/ci.yml`）会在 PR 上强制 lint、单测、Conventional Commits、demo 全量构建 + minify 与知识库核查；等价流程为 demo 工程 `npx hexo generate` + `npx gulp minify`
-- 完成条件：应执行的命令全部通过；新增 `require` 均已声明或为 Node 内置模块（`test/` 禁止幽灵依赖）
-
-**提交门禁**：
-
-- 遵循 §7 Git 规范：一次提交对应一个需求点，逻辑相似的需求可合并；不自动提交，改动保留在工作区供审查，仅在用户明确要求时提交（发版流程除外）与 push
-
-**文档同步门禁**：
-
-- 涉及主题代码、配置或行为变化时，必须同步更新 `docs/knowledge/` 并在 `VERIFICATION.md` 登记；涉及逻辑变更（API、配置项、行为变化）时同步更新仓库 Wiki
-- 发版前 `npm run check` 内含提交登记完整性检查：自上一 tag 起涉及主题代码、配置或行为变化的非合并提交须在 `docs/knowledge/VERIFICATION.md`「提交登记（发版前核对）」表登记短 SHA（纯文档 / CI / 工具改动无需登记），缺失即失败（`ci/check-release-docs.js`）
-
-**新增功能 Checklist**（必须覆盖全部相关维度）：
-
-1. `layout/` — EJS 模板
-2. `scripts/` — Hexo 标签 / 辅助函数 / 过滤器
-3. `source/css/` — Stylus 样式
-4. `source/js/` — 浏览器脚本（如需）
-5. `docs/` — 方案 + 执行计划 + 测试记录
-6. `languages/` — 国际化文案（如需新增文本）
-7. `docs/knowledge/` — 涉及主题代码、配置或行为变化时同步更新
-
-## 6. 架构总览
-
-动手改代码前，先阅读 `docs/knowledge/00-总览与安装配置/overview.md` 建立整体认知，它覆盖：五层架构（配置 / 数据处理 / 服务端渲染 / 客户端 / 样式）、四阶段渲染流水线、配置级联（页面级 > 项目级 > 主题默认）、四套并行内容系统（博客 `post`、文档 `wiki`、专栏 `topic`、笔记本 `note`）。细节以知识库为准，冲突以代码为准。
-
-## 7. Git 规范
-
-使用 Conventional Commits：
-
-```
-<type>(<scope>): <description>
-```
-
-| Type | 说明 |
-|------|------|
-| `feat` | 新功能 |
-| `fix` | Bug 修复 |
-| `refactor` | 重构 |
-| `perf` | 性能优化 |
-| `style` | CSS/样式修改 |
-| `docs` | 文档更新 |
-| `chore` | 构建/依赖等杂项 |
-| `content` | 内容维护 |
-| `release` | 发版提交 |
-
-> 完整白名单以 `ci/check-commit-msg.js` 为准（CI 强制执行）。
-
-- 一次提交对应一个需求点；逻辑相似的需求可以合并为一次提交
-- 合并代码时，把合并提交 / PR 标题改为 Conventional Commits 格式（`<type>(<scope>): <description>`，类型见上表），不保留默认的 `Merge branch ...` / `Merge pull request ...` 标题
-- 与 issue 相关的提交，在提交标题末尾带上 issue 号（用户已提供 issue 号或链接时），如 `fix(scope): 修复 xxx (#123)`
-- 每个需求完成后不自动提交，改动保留在工作区供用户审查（见 §5 提交门禁）
-- 只有用户明确要求时才 push；发版前须与用户确认版本号
-
-## 8. 发版规范
-
-发版一键全自动：AI/人工提前在 `CHANGELOG.md` 准备待发布版本的非空章节，Node 脚本校验非空并更新版本号后推送 → CI 自动完成 npm 发布、tag 创建与 GitHub Release。发版前脚本自动执行 `npm run check`，任一失败即中止。
-
-```
-npm run release → push main + npm → CI 自动触发 → npm publish + git tag + GitHub Release
-```
-
-门禁：
-
-- **版本号推导**（自上一个 tag 起分析 commit）：仅含 fix / perf / style → `x.y.(z+1)`；含 feat / refactor / breaking change → `x.(y+1).0`；大型重构、用户可感知的设计调整 → `(x+1).0.0`；测试版本 → `x.y.z-rc.N`
-- **CHANGELOG**：AI/人工先写入 `## <version>` 非空章节（H2 版本号 + H3 分类，格式见 `docs/guides/release-process.md`）
-- **提交登记**：自上一 tag 起涉及主题代码、配置或行为变化的非合并提交须在 `docs/knowledge/VERIFICATION.md`「提交登记（发版前核对）」表登记短 SHA（纯文档 / CI / 工具改动除外）；`npm run check` 内含完整性检查，缺失即中止发版
-- **确认**：向用户列出版本号和变更摘要，等待确认
-- **执行**：`npm run release:dry -- <version>` 预演通过后，`npm run release -- <version>`（非交互环境加 `--yes`）
-
-完整脚本职责、CI 自动化、失败处理与发版 Checklist 见 `docs/guides/release-process.md`。
-
-## 9. 关键约束
-
-- 不引入新构建系统，保持 Hexo 原生 + Gulp 后处理
-- 不混用 EJS 与前端框架语法
-- CSS 兼容 IE8，JS 兼容 ES2015+
-- 新增或重构标签插件时，先遵循 `docs/guides/tag-plugins-style-guide.md`
-
-## 10. Issue 处理
-
-- 调查 issue 问题后，先询问用户是否进行回复，得到确认后再发出回复或处理
-- 回复已修复的 issue 时，**不要手动关闭 issue**，只需添加 `resolved` 标签
-- 关闭由 label-commenter CI（`.github/workflows/label-commenter.yml`）处理：检测到 `resolved` 标签后自动关闭并附上回复；`fixed`、`duplicate`、`wontfix` 等标签同样由 CI 处理，agent 不直接调用 close
+读取、持久化、回复与已解决状态统一按 `docs/agents/issue-tracker.md` 执行，该指南拥有外部写入授权及标签自动化的操作规则。

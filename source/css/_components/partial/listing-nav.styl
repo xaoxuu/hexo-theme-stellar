@@ -1,0 +1,68 @@
+.listing-nav
+  z-index: 8
+  top: var(--gap-page)
+  position: sticky
+  position: -webkit-sticky
+
+// Topbar 已承载当前 Appearance 表面；Listing Nav pinned 后在其内容区垂直居中并只保留导航内容。
+.site-shell[data-regions~='topbar'] .listing-nav
+  top: calc(var(--shell-topbar-top) + var(--shell-topbar-content-inset))
+  z-index: 13
+
+// 吸顶后仅导航内容接收事件，空白区域穿透到下层 Topbar。
+.site-shell[data-regions~='topbar'] .listing-nav:has(> .listing-nav__surface.is-pinned)
+  pointer-events: none
+  nav
+    pointer-events: auto
+
+.site-shell[data-regions~='topbar'] .listing-nav .listing-nav__surface.is-pinned
+  transform: translateY(var(--shell-topbar-content-center-offset)) translateY(-50%)
+  border: 0
+  background: transparent
+  box-shadow: none
+  text-shadow: none
+  backdrop-filter: none
+  -webkit-backdrop-filter: none
+  &:before,
+  &:after
+    display: none
+  nav a
+    filter: none
+
+.listing-nav__surface
+  margin: 0 1rem
+  position: relative
+  border-radius: $border-bar-container
+  corner-shape: $corner-shape
+  trans1: all
+
+.listing-nav__viewport
+  max-width: 100%
+  border-radius: $border-bar-container
+  overflow: scroll visible
+  scrollbar(0, 0)
+
+.listing-nav nav
+  display: inline-flex
+  font-size: $fs-14
+  gap: $bar-item-gap
+  padding: $bar-item-gap
+  z-index: 1
+  >p
+    margin: 0
+  a
+    bar-item()
+    &:hover
+      background: var(--bg-a50)
+    &.active, &:hover
+      color: var(--text)
+    &.active
+      bar-item-active()
+      cursor default
+      pointer-events: none
+    &.active:after
+      content: ''
+
+@media screen and (max-width: $device-mobile-max)
+  .listing-nav
+    top: 8pt

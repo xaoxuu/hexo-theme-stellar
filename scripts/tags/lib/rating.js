@@ -9,20 +9,23 @@
 
 'use strict'
 
+const { resolveServiceProvider } = require("../../lib/service-provider");
+
 module.exports = ctx => function (args) {
   args = ctx.args.map(args, ['id', 'icon'], ['title'])
   
-  const api = ctx.theme.config.data_services.rating.api
+  const api = resolveServiceProvider(ctx.stellar.config.services.rating)?.endpoint;
+  const disabled = api == null
   const id = args.id || 'default'
 
   const star = ctx.utils.icon(args.icon || 'rating:star')
-  let el = `<div class="tag-plugin ds-rating" data-api="${api}" data-api="${api}" data-id="${id}">`
+  let el = `<div class="tag-plugin ds-rating${disabled ? ' is-disabled' : ''}"${disabled ? '' : ` data-api="${api}"`} data-id="${id}">`
   if (args.title) {
     el += `<div class="header"><span>${args.title}</span></div>`
   }
   el += `<div class="body">`
   for (let i = 1; i <= 5; i++) {
-    el += `<button class="star" data-value="${i}">${star}</button>`
+    el += `<button class="star" data-value="${i}"${disabled ? ' disabled' : ''}>${star}</button>`
   }
   el += `<span class="avg">(0.0)</span>`
   el += `</div>`

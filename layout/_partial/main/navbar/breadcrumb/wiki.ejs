@@ -1,17 +1,21 @@
 <%
 function layoutDiv() {
-  const wikiObject = theme.wiki.tree[page.wiki]
+  var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
+    ? viewModel
+    : null
+  if (!wikiViewModel) {
+    throw new Error('Stellar v2: Wiki 面包屑必须接收 Wiki ViewModel')
+  }
+  var render = wikiViewModel.render.layout
   var el = ''
-  // 文档列表页
-  el += `<span class="sep"></span>`
-  const wikiIndexPageURL = pretty_url(theme.site_tree.index_wiki.base_dir)
-  el += `<a class="cap breadcrumb" id="menu" href="${wikiIndexPageURL}">${__("btn.wiki")}</a>`
-  if (wikiObject) {
-    // 文档项目名
-    const wikiHomePageURL = pretty_url(wikiObject.homepage?.path);
-    if (wikiHomePageURL != wikiIndexPageURL) {
+  if (render.wikiIndexPath) {
+    el += `<span class="sep"></span>`
+    el += `<a class="cap breadcrumb" id="menu" href="${pretty_url(render.wikiIndexPath)}">${__("btn.wiki")}</a>`
+  }
+  for (var breadcrumb of render.breadcrumbs) {
+    if (pretty_url(breadcrumb.path) != pretty_url(render.wikiIndexPath)) {
       el += `<span class="sep"></span>`
-      el += `<a class="cap breadcrumb" id="proj" href="${wikiHomePageURL}">${wikiObject.name || wikiObject.title}</a>`
+      el += `<a class="cap breadcrumb" id="proj" href="${pretty_url(breadcrumb.path)}">${escape_html(breadcrumb.name)}</a>`
     }
   }
   return el

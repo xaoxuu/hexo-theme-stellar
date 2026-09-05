@@ -14,7 +14,7 @@ var tag_index = 0
 module.exports = ctx => function(args) {
   args = ctx.args.map(args, ['color'], ['text', 'href'])
   if (args.color == null) {
-    const default_color = ctx.theme.config.tag_plugins.hashtag?.default_color
+    const default_color = ctx.stellar.config.tags.hashtag.defaultColor
     if (default_color) {
       args.color = default_color
     } else {

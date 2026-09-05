@@ -2,19 +2,19 @@
 
 
 // font family
-$ff-body = convert(hexo-config('style.font-family.body'))
-$ff-code = convert(hexo-config('style.font-family.code'))
-$ff-codeblock = convert(hexo-config('style.font-family.codeblock'))
+$ff-body = convert(hexo-config('appearance.typography.font_family.body'))
+$ff-code = convert(hexo-config('appearance.typography.font_family.code'))
+$ff-codeblock = $ff-code
 
 // font size
-$fs-root = convert(hexo-config('style.font-size.root'))
+$fs-root = convert(hexo-config('appearance.typography.font_size.root'))
 $fs-15 = 'calc(%s - 1px)' % var(--fs-content-base)
 $fs-14 = 'calc(%s - 2px)' % var(--fs-content-base)
 $fs-13 = 'calc(%s - 3px)' % var(--fs-content-base)
 $fs-12 = 'calc(%s - 4px)' % var(--fs-content-base)
 
-$fs-code = convert(hexo-config('style.font-size.code'))
-$fs-codeblock = convert(hexo-config('style.font-size.codeblock'))
+$fs-code = convert(hexo-config('appearance.typography.font_size.inline_code'))
+$fs-codeblock = convert(hexo-config('appearance.typography.font_size.code_block'))
 
 $fsh1 = 'calc(%s + 9px)' % var(--fs-content-base)
 $fsh2 = 'calc(%s + 11px)' % var(--fs-content-base)
@@ -28,66 +28,60 @@ $fs-content-2 = 'calc(%s - 2px)' % var(--fs-content-base)
 $fs-content-3 = 'calc(%s - 3px)' % var(--fs-content-base)
 
 // site main
-$site-background-image = hexo-config('style.site.background-image')
-$leftbar-background-image = hexo-config('style.leftbar.background-image')
-$leftbar-background-color-light = hexo-config('style.leftbar.background-color-light')
-$leftbar-background-color-dark = hexo-config('style.leftbar.background-color-dark')
+$site-background-image = hexo-config('appearance.backgrounds.page.image')
 
 
 // colors
-$c-theme = convert(hexo-config('style.color.theme'))
-$c-accent = convert(hexo-config('style.color.accent'))
-$c-link = convert(hexo-config('style.color.link'))
+$c-theme = convert(hexo-config('appearance.colors.primary'))
+$c-accent = convert(hexo-config('appearance.colors.accent'))
+$c-link = convert(hexo-config('appearance.colors.link'))
 
 $c-base-hue = 210deg // 背景/文本颜色的主基调（一般看不出来不需要修改）
 
-$border-card-l = convert(hexo-config('style.border-radius.card-l'))
-$border-card = convert(hexo-config('style.border-radius.card'))
-$border-card-s = convert(hexo-config('style.border-radius.card-s'))
-$border-bar = convert(hexo-config('style.border-radius.bar'))
+$border-card-l = convert(hexo-config('appearance.shape.radius.card_large'))
+$border-card = convert(hexo-config('appearance.shape.radius.card'))
+$border-card-s = convert(hexo-config('appearance.shape.radius.card_small'))
+$border-bar = convert(hexo-config('appearance.shape.radius.bar'))
 $bar-item-gap = 4px // bar 容器内按钮/标签之间的间距与距边距离（gap + padding 共用）
 $border-bar-container = 'calc(%s + %s)' % ($border-bar $bar-item-gap) // bar 容器圆角 = 按钮圆角（$border-bar）+ 间距，保持同心
-$border-image-l = convert(hexo-config('style.border-radius.image-l'))
-$border-image = convert(hexo-config('style.border-radius.image'))
-$border-image-s = convert(hexo-config('style.border-radius.image-s'))
+$border-image-l = convert(hexo-config('appearance.shape.radius.image_large'))
+$border-image = convert(hexo-config('appearance.shape.radius.image'))
+$border-image-s = convert(hexo-config('appearance.shape.radius.image_small'))
 $border-button = 8px
-$corner-shape = convert(hexo-config('style.corner-shape'))
+$corner-shape = convert(hexo-config('appearance.shape.corner'))
 
 // 可以动态变化的属性
 :root
   --fs-root: $fs-root
   --fs-content-base: var(--fs-root)
   --fs-content: var(--fs-content-base)
-  --width-main: 720px
+  --width-main-article: 800px
+  --width-main-wiki-list: 1000px
+  --width-main: var(--width-main-article)
   --fsh2: 'calc(%s + 11px)' % var(--fs-content)
   --fsh3: 'calc(%s + 7px)' % var(--fs-content)
   --fsh4: 'calc(%s + 4px)' % var(--fs-content)
   
   // 侧边栏文字内容宽度
-  --side-content-width: 224px
+  --side-content-width: 200px
   // 组件内部基础间距（margin/padding 统一）
   --gap-base: 16px
-  // 页面级留白（侧边栏/内容区/列间距），笔记本及以上放宽
+  // 页面级留白（侧边栏/内容区/列间距）
   --gap-page: 16px
-  @media screen and (min-width: $device-laptop)
-    --gap-page: 32px
   // 右栏宽度增量（在 --width-sidebar 基础上加宽）
   --rightbar-width-extra: calc(var(--gap-base) * 2)
   
   --gap-p: 'calc(%s + 4px)' % var(--fs-content-base) // gap for paragraph
   --gap-p-compact: 'calc(%s * 0.75)' % var(--fs-content-base)
-  // desktop 2k or larger
-  @media screen and (min-width: $device-2k)
-    --width-main: 780px
-  // desktop 4k or larger
-  @media screen and (min-width: $device-4k)
-    --width-main: 860px
   // iPad 竖屏
   @media screen and (max-width: $device-tablet)
     --side-content-width: 188px
   @media screen and (max-width: $device-mobile-max)
     --fs-root: 'calc(%s + 2px)' % $fs-root
     --side-content-width: 224px
+
+body[data-page-layout='index_wiki']
+  --width-main: var(--width-main-wiki-list)
 
 // shadow
 $boxshadow-card = 0 1px 2px 0px rgba(0, 0, 0, 0.1)

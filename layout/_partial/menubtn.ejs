@@ -1,8 +1,8 @@
-<div class='float-panel'>
-  <button type='button' style='display:none' class='laptop-only rightbar-toggle mobile' onclick='sidebar.rightbar()'>
+<div class="site-dock" role="group" aria-label="Layout panels">
+  <button type="button" class="<%- ui_classes('site-dock__button site-dock__button--rightbar', 'interactive') %>" aria-label="Open rightbar" aria-controls="rightbar-region" aria-expanded="false" data-shell-action="toggle-rightbar-drawer">
     <%- icon('default:rightbar', '', true) %>
   </button>
-  <button type='button' style='display:none' class='mobile-only leftbar-toggle mobile' onclick='sidebar.leftbar()'>
+  <button type="button" class="<%- ui_classes('site-dock__button site-dock__button--leftbar', 'interactive') %>" aria-label="Open leftbar" aria-controls="leftbar-region" aria-expanded="false" data-shell-action="toggle-leftbar-drawer">
     <%- icon('default:leftbar', '', true) %>
   </button>
 </div>

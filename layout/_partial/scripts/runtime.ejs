@@ -1,0 +1,51 @@
+<%
+var runtimeViewModel = typeof viewModel !== 'undefined' ? viewModel : null
+var runtimeRender = content_config(page).render || {}
+var runtimeExtensions = {
+  search: stellar_config('search'),
+  comments: stellar_config('comments'),
+  tags: stellar_config('tags'),
+  features: stellar_config('features'),
+  services: stellar_config('services')
+}
+var runtimeAssets = extension_assets()
+var runtimeMathProvider = runtimeRender.math || runtimeExtensions.features.math.provider
+var runtimeCommentOverrides = null
+var runtimeHomeComments = stellar_config('profiles.home.comments')
+if (!runtimeViewModel && runtimeHomeComments && runtimeHomeComments !== false && is_home_first_page()) {
+  runtimeCommentOverrides = typeof runtimeHomeComments === 'object' ? runtimeHomeComments : {enabled: true}
+}
+var runtimeComments = runtimeViewModel?.render?.article?.comments || comments_model(page, runtimeCommentOverrides)
+var runtimeProfile = runtimeViewModel?.collection?.profile
+  || (page.notebookIndex?.mode === 'notes' ? 'notebook' : page.layout || '')
+var runtimeMessages = {
+  copy: {
+    label: __('btn.copy'),
+    copied: __('message.copied'),
+    denied: __('message.copy_denied'),
+    unsupported: __('message.copy_unsupported')
+  }
+}
+if (runtimeExtensions.features.colorSchemeSwitch.enabled) {
+  runtimeMessages.colorScheme = {
+    light: __('message.color_scheme_switched.light'),
+    dark: __('message.color_scheme_switched.dark'),
+    auto: __('message.color_scheme_switched.auto')
+  }
+}
+var runtimeJson = browser_runtime_manifest({
+  root: config.root,
+  extensions: runtimeExtensions,
+  assets: runtimeAssets,
+  render: runtimeRender,
+  comments: runtimeComments,
+  profile: runtimeProfile,
+  colorScheme: stellar_config('appearance.colorScheme'),
+  messages: runtimeMessages
+})
+%>
+<% if (runtimeMathProvider === 'katex') { %>
+<link rel="stylesheet" href="<%- url_for(runtimeAssets.features.katexCss) %>" integrity="sha384-//SZkxyB7axjCAopkAL1E1rve+ZSPKapD89Lo/lLhcsXR+zOYl5z6zJZEFXil+q0" crossorigin="anonymous">
+<% } %>
+<script type="application/json" id="stellar-runtime-config"><%- runtimeJson %></script>
+<script type="module" src="<%- url_for(runtimeAssets.runtime.bootstrap) %>?v=<%- stellar_info('version') %>&runtime=1"></script>

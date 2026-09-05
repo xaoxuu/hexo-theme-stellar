@@ -1,0 +1,22 @@
+<%
+function itemHtml(id, item, label) {
+  var el = `<div class="item" id="${id}">`
+  if (item) {
+    var title = item.title || (item.date ? date(item.date, config.date_format) : '')
+    el += `<div class="note">${label}</div>`
+    el += `<a href="${pretty_url(item.path)}">${escape_html(title)}</a>`
+  }
+  return el + '</div>'
+}
+
+function layoutDiv() {
+  if (!previous && !next) return ''
+  var prevLabel = typeof previousLabel !== 'undefined' ? previousLabel : __('meta.newer')
+  var nextLabelText = typeof nextLabel !== 'undefined' ? nextLabel : __('meta.older')
+  return `<div class="related-wrap${scrollreveal(' ')}" id="read-next"><section class="body">` +
+    itemHtml('prev', previous, prevLabel) +
+    itemHtml('next', next, nextLabelText) +
+    '</section></div>'
+}
+%>
+<%- layoutDiv() %>

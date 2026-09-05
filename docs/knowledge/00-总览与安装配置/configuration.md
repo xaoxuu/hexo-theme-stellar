@@ -4,716 +4,186 @@ domain: 总览与安装配置
 tags:
   - 配置
   - YAML
-  - site_tree
+  - layout profiles
 ---
 
 # 配置系统
 
-<details>
-<summary>相关源码文件</summary>
+Stellar v2 的公开主题配置只有一棵字段树。主题仓库的手写 [`_config.yml`](../../../_config.yml) 是字段、默认值、排列顺序、注释和示例的唯一来源；站点 `_config.stellar.yml` 使用完全相同的层级，只写需要覆盖的部分。
 
-生成此页面时参考的主题源码文件：
+Collection YAML 与页面 Front Matter 是独立的内容配置边界，见[内容配置 Schema v2](../03-内容系统/content-schema-v2.md)。它们不会扩展主题配置的顶层字段。
 
-- [.github/workflows/npm-publish.yml](../../../.github/workflows/npm-publish.yml)
-- [.npmignore](../../../.npmignore)
-- [LICENSE](../../../LICENSE)
-- [README.md](../../../README.md)
-- [_config.yml](../../../_config.yml)
-- [package.json](../../../package.json)
+## 单源配置
 
-</details>
-
-## 目的与范围
-
-配置系统是驱动 Stellar 主题行为、外观与功能启用的核心控制机制。本文介绍 `_config.yml` 的结构、层级覆盖模式、配置值在渲染流水线中的流向，以及各子系统如何消费配置。
-
-安装与初始化见[安装与启动](installation.md)，样式相关配置见[样式系统](../01-样式系统/styling-overview.md)，插件配置见[插件系统](../07-外部集成/plugin-system.md)。
-
-## 配置架构
-
-配置系统实现三级级联，值可以在越来越具体的范围内被覆盖：
-
-```mermaid
-graph TB
-    subgraph "Configuration Sources"
-        THEMECONFIG["_config.yml<br/>(Theme Root)"]
-        PROJMETA["Project Metadata<br/>(wiki.tree, notebook yaml)"]
-        PAGEMETA["Page Front-matter<br/>(post/wiki/note files)"]
-    end
-    
-    subgraph "Runtime Resolution"
-        HEXOCONFIG["hexo-config()<br/>Helper Function"]
-        PAGEVAR["page.* variables<br/>in templates"]
-        THEMEVAR["theme.* variables<br/>in templates"]
-    end
-    
-    subgraph "Consumption Points"
-        LAYOUT["layout.ejs<br/>Page orchestration"]
-        PARTIAL["Partial templates<br/>sidebar, navbar, etc"]
-        CSSGEN["_custom.styl<br/>CSS variable generation"]
-        JSLOAD["scripts/index.ejs<br/>Plugin loading"]
-        DOCTREE["doc_tree.js<br/>Wiki processing"]
-    end
-    
-    THEMECONFIG --> HEXOCONFIG
-    PROJMETA -.overrides.-> HEXOCONFIG
-    PAGEMETA -.overrides.-> PAGEVAR
-    
-    HEXOCONFIG --> THEMEVAR
-    THEMEVAR --> LAYOUT
-    THEMEVAR --> PARTIAL
-    THEMEVAR --> CSSGEN
-    THEMEVAR --> JSLOAD
-    PAGEVAR --> LAYOUT
-    PAGEVAR --> DOCTREE
-    
-    LAYOUT --> OUTPUT["Rendered HTML"]
-    CSSGEN --> OUTPUT
-    JSLOAD --> OUTPUT
-```
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-配置从 `_config.yml` 经由 Hexo 的主题变量系统（`theme.*`）流动，页面级覆盖通过 `page.*` 变量实现。`hexo-config()` 辅助函数让 Stylus 文件也能访问配置值。
-
-## 配置文件结构
-
-`_config.yml` 按逻辑小节组织，控制不同子系统：
-
-| 小节 | 用途 |
-|------|------|
-| `stellar` | 主题元数据与资源路径 |
-| `preconnect`、`canonical`、`open_graph`、`structured_data` | SEO 与 meta 标签 |
-| `logo`、`menubar` | 侧边栏品牌与导航 |
-| `site_tree` | 各页面类型布局定义与侧边栏小部件分配 |
-| `notebook` | 笔记本系统配置 |
-| `article` | 文章显示与元数据设置 |
-| `search` | 搜索服务配置 |
-| `comments` | 评论系统集成 |
-| `footer` | 页脚内容与社交链接 |
-| `tag_plugins` | 标签插件外观与行为 |
-| `dependencies` | 核心 JavaScript 依赖（CDN） |
-| `data_services` | 按需加载的数据服务 |
-| `plugins` | 功能插件启用与 CDN 地址 |
-| `style` | 设计令牌与主题变量 |
-| `default` | 默认资源兜底 |
-| `api_host` | API 端点主机 |
-| `data_cache` | 数据缓存 |
-| `system` | 内部 Hexo 覆盖 |
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-### 卡片 Hover 插件
-
-`plugins.card_hover` 提供可复用的鼠标跟随光斑与 3D 倾斜，默认关闭：
+`_config.yml` 的主干按注释标题分区并直接使用顶层字段。低频且不参与内容级覆盖的 Appearance 与 Inject 保留各自命名空间，例如：
 
 ```yaml
-plugins:
-  card_hover:
-    enable: false
-    spotlight_color: 'rgba(255, 255, 255, 0.25)'
-    max_tilt: 3
+leftbar:
+  brand:
+    name: Stellar
+
+profiles:
+  post:
+    active_menu: post
+    leftbar:
+      widgets: [related, recent]
+    rightbar:
+      widgets: [ghrepo, toc]
+
+appearance:
+  color_scheme: auto
+
+search:
+  provider: local
+
+inject:
+  head_end: ''
 ```
 
-`spotlight_color` 控制光斑颜色；单个组件可用 CSS 变量 `--card-hover-spotlight-color` 覆盖。`max_tilt` 单位为度，无效值回退为 `3`，运行时限制在 `0`～`8` 的安全范围。插件采用 `.card-hover` 基础类与 `.card-hover--spotlight`、`.card-hover--tilt` 修饰类组合，关闭时这些类不会改变静态样式。完整的运行时接口与接入范围见[插件系统](../07-外部集成/plugin-system.md#card-hover卡片光效与倾斜)。
+配置加载器先读取主题 `_config.yml`，再应用站点覆盖。对象按字段合并，数组整体替换，因此 `rightbar.widgets: []`、`topbar.widgets: []` 和 `leftbar.widgets: []` 都能显式关闭默认项。解析结果会深度冻结到 `hexo.stellar.config`。
 
-**参考源码**：[_config.yml](../../../_config.yml)、[layout/_plugins/card_hover.ejs](../../../layout/_plugins/card_hover.ejs)
+YAML 使用 `snake_case`，运行时只进行 `snake_case` → `camelCase` 转换：
 
-## 层级覆盖系统
+| YAML | JavaScript |
+| --- | --- |
+| `appearance.color_scheme` | `appearance.colorScheme` |
+| `profiles.blog_index.active_menu` | `profiles.blogIndex.activeMenu` |
+| `appearance.typography.font_size.root` | `appearance.typography.fontSize.root` |
+| `services.site_info.site_info_api.endpoint` | `services.siteInfo.site_info_api.endpoint` |
 
-配置值的解析遵循「越具体的范围覆盖越宽泛的范围」：
+Provider ID 属于业务值，不会被改写，例如 `provider: site_info_api` 仍是字符串 `site_info_api`。
 
-```mermaid
-graph LR
-    subgraph "Resolution Order"
-        direction LR
-        GLOBAL["Global Config<br/>theme.*"]
-        PROJECT["Project Config<br/>wiki.tree[proj].*, notebook yaml"]
-        PAGE["Page Config<br/>page.menu_id, page.leftbar"]
-    end
-    
-    subgraph "Example: menu_id Resolution"
-        direction TB
-        CHECK1["Check page.menu_id<br/>(front-matter)"]
-        CHECK2["Check project config<br/>(wiki.tree or notebook)"]
-        CHECK3["Check site_tree[layout].menu_id<br/>(layout default)"]
-        FALLBACK["Fallback: undefined"]
-    end
-    
-    GLOBAL --> PROJECT
-    PROJECT --> PAGE
-    
-    CHECK1 -->|"if undefined"| CHECK2
-    CHECK2 -->|"if undefined"| CHECK3
-    CHECK3 -->|"if undefined"| FALLBACK
-```
+## 字段与规则
 
-**参考源码**：[_config.yml](../../../_config.yml)（`site_tree` 小节）
+普通字段树、默认值和基础类型直接从 `_config.yml` 推导。[`config-rules.js`](../../../scripts/schema/config-rules.js) 只补充 YAML 本身无法表达的约束：
 
-### 示例：`menu_id` 解析
+- `null` 与联合类型；
+- 枚举、数值范围和数组元素；
+- 动态记录；
+- 第三方参数袋；
+- 特殊 validator 与少量运行时键名。
 
-对 wiki 页面，`menu_id`（控制菜单栏高亮）的解析顺序为：
+顶层和普通对象保持封闭，未知字段会在构建早期报告结构化错误。第三方参数袋按规则开放并原样保留参数。Appearance 与 Inject 只接受当前子字段。
 
-1. **页面级**：`page.menu_id`（front-matter）
-2. **项目级**：`wiki.tree[project_name].menu_id`
-3. **布局级**：`theme.site_tree.wiki.menu_id`
-4. **全局兜底**：`undefined`
+升级诊断只面向最近公开版本 1.44.0：`logo/menubar/site_tree` 分别指向 `leftbar.brand/leftbar.menu/profiles`，`tag_plugins/data_services/plugins/style` 分别指向 `tags/services/features/appearance`，`dependencies/default/api_host` 分别指向 `features.lazy_loading`、`fallbacks/error_page`、`services.github/services.github_card`。`stellar/data_cache/system` 三个内部策略根直接删除。这些字段仍会被拒绝，诊断只提供人工迁移目标，不别名、双读或自动改写。v2 预发布候选中出现过的分组路径、`regions` 包装和其它中间字段统一按未知字段处理，不保留专用墓碑。
 
-### 示例：侧边栏小部件分配
+`null` 只有在规则明确允许时才保留业务语义，例如 `search.provider: null` 表示关闭搜索。其它空键视为没有覆盖，继续使用默认值。
 
-侧边栏小部件遵循同样模式：
+完整公开字段、默认值与注释以 `_config.yml` 为准；运行时路径、推导类型和例外约束由 `config-schema.js` 与 `config-rules.js` 共同定义。修改 YAML 或规则时，运行对应的配置解析、Schema 正反例与消费测试。
 
-1. **页面级**：`page.leftbar` / `page.rightbar`（front-matter）
-2. **笔记本级**：笔记页使用笔记本 YAML 中的 `note_leftbar` / `note_rightbar`
-3. **布局级**：`theme.site_tree[layout].leftbar` / `rightbar`
-4. **默认**：空侧边栏
+## 顶层结构
 
-**参考源码**：[_config.yml](../../../_config.yml)（`site_tree` 小节）
+| 注释分组 | 顶层键 |
+| --- | --- |
+| Site | `settings/footer` |
+| Layout | `topbar/leftbar/rightbar/profiles` |
+| Content | `article/notebook` |
+| Appearance | `appearance` |
+| SEO | `canonical/open_graph/structured_data` |
+| Resources | `preconnect/fallbacks/error_page` |
+| Extensions | `search/comments/tags/features/services` |
+| Trusted injection | `inject` |
 
-## 核心配置小节
+主题名称、版本、仓库地址、核心资源、缓存和固定交互策略属于内部实现，不进入公开 YAML。模板通过 `stellar_info()` 读取主题元数据，通过 `stellar_data()` 读取构建派生数据。
 
-### Stellar 元数据
+## Layout 与 Region
 
-`stellar` 小节定义主题身份与核心资源路径：
+`topbar`、`leftbar`、`rightbar` 直接定义站点级 Region；`profiles` 只写页面类型相对全局的差异。三个 Region 都有 `enabled` 与 `widgets`，Topbar / Leftbar 各自拥有独立 Brand 和 Menu，Leftbar 还拥有固定 Footer Actions：
 
 ```yaml
-stellar:
-  version: '1.39.1'
-  homepage: 'https://xaoxuu.com/wiki/stellar/'
-  repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
-  main_css: /css/main.css
-  main_js: /js/main.js
+topbar:
+  enabled: false
+  brand:
+    name: Stellar
+  menu: []
+  widgets: [spacer, menu, settings]
+leftbar:
+  default_state: expanded
+  enabled: true
+  brand:
+    name: Stellar
+  menu: []
+  footer:
+    actions: []
+  widgets: []
+rightbar:
+  enabled: true
+  widgets: []
+
+profiles:
+  wiki:
+    active_menu: wiki
+    topbar:
+      enabled: true
+    leftbar:
+      brand:
+        name: Wiki
+      menu: []
+      widgets: [tree]
+    rightbar:
+      widgets: [ghrepo, toc]
 ```
 
-这些值用于模板中的版本展示、资源加载与文档链接。
+Profile 省略某个 Region 或 `widgets` 时继承上层值；显式 `widgets: []` 表示清空。Collection 与 Front Matter 的 Region 覆盖由内容解析器继续处理，最终统一进入冻结 PageViewModel。
 
-**参考源码**：[_config.yml](../../../_config.yml)
+## Provider 配置
 
-### SEO 与 meta 标签
-
-`canonical`、`open_graph`、`structured_data` 小节控制 SEO 行为：
-
-- **`canonical`**：通过 `originalHost` 与备用站主机列表校验域名，检测并警告克隆站
-- **`open_graph`**：启用 Open Graph meta 标签，用于社交分享
-- **`structured_data`**：为 JSON-LD 结构化数据生成提供数据
-
-这些由 head 模板消费并生成相应 meta 标签。实现细节见[HTML Head 与 SEO 元数据](../02-布局系统/head-seo.md)。
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-### Logo 与菜单栏配置
-
-`logo` 小节支持从 `_config.yml` 动态替换值：
-
-```yaml
-logo:
-  avatar: '[{config.avatar}](/about/)'
-  title: '[{config.title}](/)' 
-  subtitle: '{config.subtitle}'
-```
-
-`{config.*}` 占位符会被替换为 Hexo 主 `_config.yml` 中的值。`menubar` 定义导航按钮（`id`、`theme`、`icon`、`title`、`url` 等属性）。
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-### 站点树：布局定义
-
-`site_tree` 是最关键的配置块，为每种页面类型定义布局特征：
-
-```mermaid
-graph TB
-    subgraph "site_tree Structure"
-        SITETREE["site_tree"]
-        
-        subgraph "Index Layouts"
-            HOME["home<br/>Main homepage"]
-            INDEXBLOG["index_blog<br/>Post list"]
-            INDEXTOPIC["index_topic<br/>Topic list"]
-            INDEXWIKI["index_wiki<br/>Wiki list"]
-            NOTEBOOKS["notebooks<br/>Notebook list"]
-        end
-        
-        subgraph "Content Layouts"
-            POST["post<br/>Blog posts"]
-            TOPIC["topic<br/>Topic articles"]
-            WIKI["wiki<br/>Wiki pages"]
-            NOTES["notes<br/>Note list"]
-            NOTE["note<br/>Individual notes"]
-            AUTHOR["author<br/>Author pages"]
-        end
-        
-        subgraph "Special Layouts"
-            ERROR["error_page<br/>404 pages"]
-            PAGE["page<br/>Generic pages"]
-        end
-    end
-    
-    subgraph "Layout Properties"
-        BASEDIR["base_dir<br/>URL path prefix"]
-        MENUID["menu_id<br/>Menubar highlight"]
-        LEFTBAR["leftbar<br/>Widget list"]
-        RIGHTBAR["rightbar<br/>Widget list"]
-        NAVTABS["nav_tabs<br/>Secondary nav"]
-    end
-    
-    SITETREE --> HOME
-    SITETREE --> INDEXBLOG
-    SITETREE --> INDEXTOPIC
-    SITETREE --> INDEXWIKI
-    SITETREE --> NOTEBOOKS
-    SITETREE --> POST
-    SITETREE --> TOPIC
-    SITETREE --> WIKI
-    SITETREE --> NOTES
-    SITETREE --> NOTE
-    SITETREE --> AUTHOR
-    SITETREE --> ERROR
-    SITETREE --> PAGE
-    
-    INDEXBLOG -.uses.-> BASEDIR
-    INDEXBLOG -.uses.-> MENUID
-    INDEXBLOG -.uses.-> LEFTBAR
-    INDEXBLOG -.uses.-> RIGHTBAR
-    INDEXBLOG -.uses.-> NAVTABS
-```
-
-**参考源码**：[_config.yml](../../../_config.yml)（`site_tree` 小节）
-
-每种布局定义可包含：
-
-| 属性 | 类型 | 用途 |
-|------|------|------|
-| `base_dir` | String | 生成页面的 URL 路径前缀 |
-| `menu_id` | String | 要高亮的菜单栏项 ID |
-| `leftbar` | String/Array | 左栏小部件列表（逗号分隔） |
-| `rightbar` | String/Array | 右栏小部件列表（逗号分隔） |
-| `nav_tabs` | Object | 次级导航标签（标题-URL 对） |
-
-#### 示例：博客文章布局
-
-```yaml
-post:
-  menu_id: post
-  leftbar: related, recent
-  rightbar: ghrepo, toc
-```
-
-所有博客文章（`layout: post`）将：
-
-- 高亮 `post` 菜单栏项
-- 左栏显示 `related`、`recent` 小部件
-- 右栏显示 `ghrepo`、`toc` 小部件
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-#### 示例：Wiki 布局
-
-```yaml
-index_wiki:
-  base_dir: wiki
-  menu_id: wiki
-  leftbar: related, recent
-  rightbar: 
-  nav_tabs:
-    # 'more': https://github.com/xaoxuu
-
-wiki:
-  menu_id: wiki
-  leftbar: tree, related, recent
-  rightbar: ghrepo, toc
-```
-
-`index_wiki` 定义 wiki 列表页，`wiki` 定义单个 wiki 页面。注意 wiki 页面左栏的 `tree` 小部件用于展示项目结构。
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-### 置顶内容轮播
-
-置顶内容的展示样式由 `article.pin_style` 控制：`carousel`（默认）为轮播；`flat`（平铺）时文章不进入轮播区，改为在首页第一页文章列表靠前展示（排序规则与轮播一致）。
-
-`carousel`（默认）：所有带 navbar top 的博客类列表页（首页/归档/标签/分类/专栏等）上方自动展示置顶文章轮播，无需开关配置：只要有置顶内容即渲染，自动轮播间隔固定 5000ms；首页第一页列表不再重复展示置顶文章。
-
-`flat`（平铺）：博客类列表页不渲染文章轮播；首页第一页文章列表顶部按轮播同款规则展示全部置顶文章（含超出单页切片的老文章），同页不重复；归档/分类/标签/首页第二页起的列表中置顶文章按日期正常出现。
-
-- 置顶文章判定与排序（两种样式通用）：文章 front-matter `pin: true|number`，兼容 `sticky` 别名；只要设置即置顶，按数值降序排序，`true` 视作 1，0/负数同样参与，非数字视作 0，权重相同保持 `site.posts` 原顺序；
-- wiki 列表放置顶 wiki 项目（数据文件 `pin: true|number`，规则同上），始终以轮播展示，不受 `article.pin_style` 影响；
-- 轮播区宽高比与非置顶文章统一，由 `article.cover_ratio` 控制（修改该值即可整体调整）；
-- 无置顶内容时不渲染；轮播进度按内容类型分组缓存到 localStorage（切换 tab 不重置）。
-
-**参考源码**：[_config.yml](../../../_config.yml)、[layout/_partial/main/pin_slider.ejs](../../../layout/_partial/main/pin_slider.ejs)
-
-### 笔记本配置
-
-`notebook` 小节提供默认值，可被单个笔记本 YAML 覆盖：
-
-```yaml
-notebook:
-  auto_excerpt: 128
-  per_page: null  # null 继承 Hexo 配置
-  order_by: -updated
-  license: false
-  share: false
-```
-
-这些值会级联到笔记本 YAML（如 `source/_data/notebooks/mynotebook.yml`），后者可覆盖 `per_page`、`order_by`、`license`、`share`、`leftbar`、`rightbar`、`note_leftbar`、`note_rightbar` 等字段。
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-### 文章配置
-
-`article` 小节控制内容显示特征：
-
-| 字段 | 类型 | 默认 | 用途 |
-|------|------|------|------|
-| `type` | `tech` / `story` | `tech` | 布局风格（tech 紧凑、story 宽松） |
-| `indent` | Boolean | `false` | 段落首行两字缩进 |
-| `pin_style` | `carousel` / `flat` | `carousel` | 置顶文章展示样式：carousel 轮播；flat 平铺（不渲染轮播，置顶文章在首页列表靠前展示，排序规则与轮播一致） |
-| `cover_ratio` | Number | `2` | 文章卡片封面宽高比 |
-| `card_style` | `hero` / `classic` | `hero` | 文章卡片样式：hero 全图文字封面卡片（有 cover 时标题 + 单行小字，文字区固定底部）；classic 普通卡片（封面/标题/摘要/meta） |
-| `banner_ratio` | Number | `2.5` | 文章横幅宽高比 |
-| `auto_excerpt` | Number | `128` | 自动摘要提取字符数 |
-| `reading_time` | Boolean | `false` | 文章页显示字数与预计阅读时长 |
-| `card_tags` | Boolean | `false` | 文章卡片显示标签（最多 5 个） |
-| `tags` | Boolean | `true` | 文章页末尾（`article-footer` 之前）显示本文标签，链接到对应标签页 |
-| `ai_label` | Object | 四档默认 | 文章 AI 成分标签：`manual` / `polished` / `generated` / `reviewed` 的文字颜色（无底色）与可选 `icon`，front-matter 用 `ai_label` 字段选择；文案由多语言系统提供（`languages/*.yml` 的 `meta.ai_label.*`，缺失时不渲染）；`default` 为空时未标记文章不渲染，非空时未标记文章按默认档渲染；banner 含图片时文字用默认颜色 |
-| `license` | String/Boolean | 许可文本 | 文章默认许可声明 |
-| `share` | Array | `[]` | 分享按钮：`wechat`、`weibo`、`email`、`link` |
-
-这些可在专栏配置或页面 front-matter 中覆盖。
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-### 页脚配置
-
-`footer` 包含左栏底部的 social 按钮、主内容区页脚站点地图和 Markdown 文本：
-
-| 字段 | 类型 | 用途 |
-|------|------|------|
-| `social` | Object | 左栏底部的 social 按钮；按 YAML 字段顺序显示 |
-| `social.*.icon` | String | 普通按钮或 dropdown 主按钮图标 |
-| `social.*.title` | String | 普通按钮 tooltip 或 dropdown 无障碍标签 |
-| `social.*.url` | String | 普通按钮链接 |
-| `social.*.onclick` | String | 普通按钮点击脚本，与 `url` 二选一 |
-| `social.spacer` | Object / null | 弹性占位项；将其后的 social 按钮推至同一行右侧 |
-| `social.*.type` | `dropdown` | 将条目渲染为通用下拉菜单 |
-| `social.*.items` | Array | dropdown 子项列表；`title`、`url` 必填，`icon` 可选 |
-| `sitemap` | Array | 主内容区页脚的分组链接 |
-| `content` | String | 主内容区页脚的 Markdown 文本 |
-
-dropdown 示例：
-
-``@@BT@yaml
-footer:
-  social:
-    links:
-      type: dropdown
-      icon: default:documents
-      title: 更多链接
-      items:
-        - icon: default:documents
-          title: 文档
-          url: /wiki/
-        - title: GitHub
-          url: https://github.com/
-``@@BT@
-
-未设置 `type` 的 `social` 条目保持普通链接行为。若要在一组按钮中撑开中间空间，可在需要的位置加入 `spacer:`；其值会被忽略，只按配置位置输出弹性空白：
-
-``@@BT@yaml
-footer:
-  social:
-    github:
-      icon: default:github
-      url: https://github.com/
-    spacer:
-    links:
-      type: dropdown
-      icon: default:documents
-      title: 更多链接
-      items: []
-``@@BT@
-
-dropdown 子项图标可省略。菜单不关联语言或其它业务场景，也不支持嵌套；打开后挂载到 `body` 下的全局浮层，并根据触发按钮周围的可用空间自动调整上下和左右位置。菜单自身声明 glass surface，条目复用通用 collection list 的结构与交互样式。
-
-**参考源码**：[_config.yml](../../../_config.yml)、[layout/_partial/sidebar/index_leftbar.ejs](../../../layout/_partial/sidebar/index_leftbar.ejs)、[layout/_partial/dropdown.ejs](../../../layout/_partial/dropdown.ejs)、[layout/_partial/main/footer.ejs](../../../layout/_partial/main/footer.ejs)
-
-### 样式配置
-
-`style` 小节定义设计令牌，由 `source/css/_custom.styl` 消费：
-
-```mermaid
-graph TB
-    subgraph "style Configuration"
-        STYLE["style section<br/>in _config.yml"]
-        
-        THEME["prefers_theme: auto/light/dark"]
-        FONTSIZE["font-size: root, body, code, codeblock"]
-        FONTFAMILY["font-family: body, code, codeblock"]
-        BORDER["border-radius: card-l, card, card-s, bar, image-*"]
-        COLOR["color: theme, accent, link"]
-        LEFTBAR["leftbar: background, blur settings"]
-        GRADIENT["gradient: CSS gradient strings"]
-    end
-    
-    subgraph "CSS Variable Generation"
-        CUSTOMSTYL["_custom.styl<br/>Design token layer"]
-        CSSROOT[":root CSS variables<br/>--fs-root, --fs-content-base, --fs-content, --gap-*, --width-*"]
-    end
-    
-    subgraph "Component Consumption"
-        LAYOUT["Layout styles"]
-        MDTEXT["Markdown content styles"]
-        SIDEBAR["Sidebar styles"]
-        CODEBLOCK["Code block styles"]
-    end
-    
-    STYLE --> CUSTOMSTYL
-    CUSTOMSTYL --> CSSROOT
-    
-    CSSROOT --> LAYOUT
-    CSSROOT --> MDTEXT
-    CSSROOT --> SIDEBAR
-    CSSROOT --> CODEBLOCK
-```
-
-**参考源码**：[_config.yml](../../../_config.yml)（`style` 小节）
-
-关键样式配置：
-
-1. **字号**：`font-size.root` 设置桌面端根字号（影响所有 `rem` 单位）；移动端自动增加 2px。页面基准使用 `--fs-content-base`，组件字号使用 `--fs-content`。旧字段 `style.font-size.body` 已移除，不再生效。
-2. **圆角**：`border-radius` 从 `card-l`（24px，大卡片）到 `card-s`（12px，小卡片）渐进
-3. **颜色**：`color.theme` / `color.accent` / `color.link` 使用 HSL 值，便于精确调色
-4. **左栏外观**：支持纯色、渐变或带模糊效果的背景图
-
-完整样式细节见[设计令牌与 CSS 变量](../01-样式系统/design-tokens.md)。
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-### 插件配置
-
-`plugins` 小节采用条件加载模式：
-
-```yaml
-plugins:
-  fancybox:
-    enable: true
-    js: https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js
-    css: https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css
-    selector: .timenode p>img
-  adaptive_text:
-    enable: true
-```
-
-每个插件配置通常包含：
-
-- `enable`：布尔开关，控制是否加载
-- JavaScript / CSS 的 CDN 地址
-- 插件专属选项
-
-`adaptive_text` 为内置能力（默认 `enable: true`）：背景图/背景色上方的文字颜色随背景亮度自适应，页面存在 `[data-text-adaptive]` 元素时才懒加载 `source/js/color.js`（`window.stellar.color`）与 `source/js/plugins/adaptive-text.js`，计算并写入 `--text-banner` / `--text-banner-theme`。属性值：`theme`（默认，背景图平均色 lighten/darken）、`contrast`（黑白对比）、`split`（大字低饱和 theme（接近黑白）+ 小字完整 theme，用于封面/banner/轮播容器）；明暗判定默认阈值 0.6、彩色背景（饱和度 > 0.2）上浮至 0.65，偏向采纳浅色文字；透明背景图按实际渲染背景做 alpha 合成后再平均；低饱和彩色平均色（如大面积浅灰 + 彩色 logo）做饱和度增强，主题小字保留色相带出主色倾向。接入场景：文章 photo 封面、专栏最新文章卡片、置顶轮播（post/wiki 幻灯片）、页顶 banner、`{% banner %}` 标签。
-
-`inject` 字段允许直接注入内联脚本/样式，而无需单独创建 EJS 文件。
-
-插件加载机制见[插件系统](../07-外部集成/plugin-system.md)。
-
-**参考源码**：[_config.yml](../../../_config.yml)（`plugins` 小节）
-
-### 数据服务配置
-
-`data_services` 小节定义数据组件的按需加载：
-
-```yaml
-data_services:
-  mdrender:
-    js: /js/services/mdrender.js
-  siteinfo:
-    js: /js/services/siteinfo.js
-    api: https://api.xaox.cc/site_info/v1?url={href}
-  rating:
-    js: /js/services/rating.js
-    api: https://star-vote.xaox.cc/api/rating
-```
-
-每个服务指定：
-
-- `js`：客户端 JavaScript 实现路径
-- `api`：（可选）后端 API 端点，支持 `{href}` 等占位符
-
-服务仅在对应标签插件被使用时加载（如 `{% ghinfo %}` 触发 `ghinfo.js`）。
-
-**参考源码**：[_config.yml](../../../_config.yml)（`data_services` 小节）
-
-### 评论系统配置
-
-`comments` 小节支持多种第三方服务，采用单服务激活模型：
+Search、Comments、Feature 与 Service 不再使用 `providers` 中间层。选中的参数袋与 `provider` 同级：
 
 ```yaml
 comments:
-  service: beaudar  # beaudar, utterances, giscus, twikoo, waline, artalk
-  comment_title: 快来参与讨论吧~
+  provider: giscus
+  giscus:
+    data-repo: owner/repo
+    data-mapping: pathname
+
+services:
+  site_info:
+    provider: site_info_api
+    site_info_api:
+      endpoint: https://api.example.com/site_info?url={href}
 ```
 
-每个服务有专属子配置小节。只有 `comments.service` 指定的服务会被加载。
+参数袋由对应上游或适配器解释；切换 provider 不改变服务根结构。`provider: null` 仅在该能力允许关闭时有效。
 
-集成细节见[评论系统](../07-外部集成/comment-systems.md)。
+## Appearance
 
-**参考源码**：[_config.yml](../../../_config.yml)（`comments` 小节）
+公开 Appearance 默认值都写在 `_config.yml` 的 `appearance` 对象中。`appearance.preset` 只选择 `source/css/_appearances/` 下对应的 CSS 实现，不再触发 JavaScript 默认覆盖。Preset 专属、无需用户调整的视觉常量由各自 Stylus 文件拥有。
 
-## 配置访问方式
-
-### EJS 模板中
-
-通过 `theme` 对象访问配置：
-
-```ejs
-<% if (theme.stellar.version) { %>
-  Version: <%= theme.stellar.version %>
-<% } %>
-
-<% const menuId = page.menu_id || theme.site_tree[layout]?.menu_id %>
-```
-
-### Stylus 文件中
-
-`hexo-config()` 函数从 `_config.yml` 取值：
+Stylus 使用扁平路径读取公开值：
 
 ```stylus
-$root-font-size = hexo-config('style.font-size.root')
-$theme-color = hexo-config('style.color.theme')
-
-:root
-  font-size: $root-font-size
-  --theme-color: $theme-color
+$root-font-size = hexo-config('appearance.typography.font_size.root')
+$theme-color = hexo-config('appearance.colors.primary')
 ```
 
-**参考源码**：[source/css/_custom.styl](../../../source/css/_custom.styl)
+## 置顶内容轮播
 
-### 数据处理脚本中
+置顶文章的展示方式由 `article.listing.pinned_layout` 选择 `carousel` 或 `flat`；封面比例由 `article.listing.cover_ratio` 控制。文章仍通过 Front Matter 的 `pin` 标记置顶。
 
-Node.js 脚本通过 Hexo 的 `config` 对象访问配置：
+## 页脚配置
 
-```javascript
-// 在 scripts/events/lib/doc_tree.js 中
-hexo.theme.config.site_tree.index_wiki.base_dir
+`leftbar.footer.actions` 控制 Leftbar 操作；根级 `footer.sections` 与 `footer.content` 控制主内容页脚分栏和 Markdown 文本。显式空数组或空字符串可以关闭对应区域。
+
+## 消费边界
+
+EJS 与 Node.js 只读取冻结的 camelCase 配置：
+
+```ejs
+<% var menuId = stellar_config(`profiles.${profile}.activeMenu`) %>
 ```
 
-## 配置解析示例
-
-下面是系统为 wiki 页面解析配置的过程：
-
-```mermaid
-flowchart TD
-    START["Wiki page requested<br/>layout: wiki<br/>wiki_name: stellar"]
-    
-    CHECK_MENU["Resolve menu_id"]
-    PAGE_MENU{"page.menu_id<br/>exists?"}
-    PROJ_MENU{"wiki.tree[stellar]<br/>.menu_id exists?"}
-    LAYOUT_MENU["Use site_tree.wiki<br/>.menu_id = 'wiki'"]
-    
-    CHECK_SIDEBAR["Resolve leftbar widgets"]
-    PAGE_LB{"page.leftbar<br/>exists?"}
-    PROJ_LB{"wiki.tree[stellar]<br/>.leftbar exists?"}
-    LAYOUT_LB["Use site_tree.wiki<br/>.leftbar = 'tree, related, recent'"]
-    
-    RENDER["Render page with<br/>menu_id + leftbar"]
-    
-    START --> CHECK_MENU
-    CHECK_MENU --> PAGE_MENU
-    PAGE_MENU -->|"Yes"| CHECK_SIDEBAR
-    PAGE_MENU -->|"No"| PROJ_MENU
-    PROJ_MENU -->|"Yes"| CHECK_SIDEBAR
-    PROJ_MENU -->|"No"| LAYOUT_MENU
-    LAYOUT_MENU --> CHECK_SIDEBAR
-    
-    CHECK_SIDEBAR --> PAGE_LB
-    PAGE_LB -->|"Yes"| RENDER
-    PAGE_LB -->|"No"| PROJ_LB
-    PROJ_LB -->|"Yes"| RENDER
-    PROJ_LB -->|"No"| LAYOUT_LB
-    LAYOUT_LB --> RENDER
+```js
+const wikiPath = hexo.stellar.config.profiles.wikiIndex.path;
+const service = hexo.stellar.config.services.siteInfo;
 ```
 
-**参考源码**：[_config.yml](../../../_config.yml)
+不要从 `theme.config` 读取旧路径，也不要在消费者中再次做字段兼容、默认值补齐或 provider 归一化。热重载解析失败时继续使用上一次有效配置，并报告本次错误。
 
-## 默认资源配置
+## 相关实现
 
-`default` 小节为缺失资源提供兜底：
-
-| 资源类型 | 用途 | 示例 |
-|----------|------|------|
-| `avatar` | 用户头像 | 默认头像 |
-| `cover` | 文章封面 | 缺失封面的占位 |
-| `banner` | 文章横幅 | 默认头图 |
-| `loading` | 加载指示 | 由 `_data/icons.yml` 的 `default:loading`（内联 SVG，`currentColor`）经 `head.ejs` 生成 `--icon-loading`，`.lazy-icon` 以蒙版 + `background-color: var(--theme)` 显示主题色；无配置覆盖项 |
-| `image_onerror` | 图片加载失败兜底 | 图片加载失败时显示的图标（兼容回退，新值位于 `_data/icons.yml` 的 `image:onerror`） |
-
-这些默认值避免出现破图，保证资源缺失时的一致性体验。
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-## 系统配置
-
-`system` 小节包含内部覆盖：
-
-```yaml
-system:
-  override_pretty_urls: true
-```
-
-这确保 URL 格式化不受 Hexo `pretty_urls` 配置影响，减少边界情况、提升可靠性。
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-## 配置最佳实践
-
-### 1. 覆盖层级策略
-
-只在必要层级做覆盖：
-
-- 全局默认值保证全站一致
-- 项目级用于 wiki 或笔记本的专属行为
-- 页面级仅用于个别例外
-
-### 2. 菜单 ID 一致性
-
-保持相关布局的 `menu_id` 一致。例如所有博客相关页面都用 `menu_id: post`：
-
-```yaml
-site_tree:
-  index_blog:
-    menu_id: post
-  post:
-    menu_id: post
-  topic:
-    menu_id: post
-```
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-### 3. 小部件分配模式
-
-常见组合：
-
-| 页面类型 | 左栏 | 右栏 |
-|----------|------|------|
-| 博客文章 | `related, recent` | `ghrepo, toc` |
-| Wiki 页面 | `tree, related, recent` | `ghrepo, toc` |
-| 笔记页 | `tagtree, recent` | `toc` |
-
-### 4. 样式令牌使用
-
-优先使用设计令牌而非硬编码值：
-
-- 用 `style.color.theme`、`style.color.accent` 保持一致配色
-- 用 `style.border-radius.*` 保持统一圆角
-- 用 `style.font-size.*` 实现可伸缩排版
-
-### 5. 插件按需启用
-
-只启用需要的插件以优化性能。`enable: false` 的插件不会贡献任何代码。
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
----
-
-配置系统的强大之处在于层级覆盖模式与各子系统的紧密集成。理解解析顺序与可用配置点，即可在不改主题代码的前提下实现精确定制。
+- [`scripts/schema/config-schema.js`](../../../scripts/schema/config-schema.js)：从 YAML 与轻量规则构建运行时 Schema
+- [`scripts/schema/config-rules.js`](../../../scripts/schema/config-rules.js)：例外约束
+- [`scripts/lib/config-schema.js`](../../../scripts/lib/config-schema.js)：加载、合并、验证、投影与冻结
+- [`scripts/schema/schema-utils.js`](../../../scripts/schema/schema-utils.js)：Schema 共享的深度冻结与字段路径投影
+- [`scripts/schema/content-config-rules.js`](../../../scripts/schema/content-config-rules.js)：Collection / Front Matter 独立规则

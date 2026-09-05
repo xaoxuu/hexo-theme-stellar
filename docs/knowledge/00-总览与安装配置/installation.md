@@ -20,6 +20,8 @@ tags:
 - [README.md](../../../README.md)
 - [_config.yml](../../../_config.yml)
 - [package.json](../../../package.json)
+- [scripts/commands/stellar.js](../../../scripts/commands/stellar.js)
+- [scripts/events/lib/config-hot-reload.js](../../../scripts/events/lib/config-hot-reload.js)
 
 </details>
 
@@ -133,7 +135,7 @@ graph LR
     PKG --> REPO
     
     META --> NAME["name: hexo-theme-stellar"]
-    META --> VER["version: 1.44.0"]
+    META --> VER["version: 2.0.0-alpha.1"]
     META --> DESC["description: Elegant and powerful theme"]
     
     DEPS --> CHEERIO["cheerio: ^1.1.0"]
@@ -157,6 +159,7 @@ graph LR
 | **glob** | ^10.4.0 | 文件通配匹配 |
 | **hexo-renderer-ejs** | ^2.0.0 | EJS 模板渲染引擎（渲染布局文件） |
 | **hexo-renderer-stylus** | ^3.0.1 | Stylus CSS 预处理器（编译主题样式） |
+| **js-yaml** | ^4.1.0 | doctor、站点配置与内容数据的 YAML 读取 |
 | **probe-image-size** | ^7.2.3 | 图片尺寸探测（懒加载占位） |
 
 这些依赖分别负责：
@@ -165,6 +168,7 @@ graph LR
 - **glob**：脚本中的文件批量匹配
 - **hexo-renderer-ejs**：渲染 `.ejs` 布局模板
 - **hexo-renderer-stylus**：把 `.styl` 编译为 CSS
+- **js-yaml**：读取 doctor 检查所需的站点配置与内容数据，不负责自动改写
 - **probe-image-size**：无需下载完整图片即可获取图片尺寸
 
 **参考源码**：[package.json](../../../package.json)
@@ -211,6 +215,31 @@ theme: stellar
 
 ---
 
+## Blueprint 创建与站点检查
+
+完整 Blueprint 由独立的 [Stellar Examples](https://github.com/xaoxuu/hexo-theme-stellar-examples) 仓库维护与分发。`lightblog`、`blog`、`knowledge`、`stellar` 分别是一套可以独立运行的完整示例站点；创建器只写入新目录，不覆盖、合并或迁移已有站点。
+
+```bash
+curl -fsSL https://github.com/xaoxuu/hexo-theme-stellar-examples/releases/latest/download/install.sh | sh
+```
+
+创建器会交互选择 Blueprint、目标目录、版本和依赖安装方式，再下载与该版本绑定的单站归档并校验 SHA-256。主题 npm 包不再包含示例内容，也不再注册 `hexo stellar init`。
+
+Blueprint 不是构建前置条件。只有普通 Post/Page 的站点可以不创建 `_config.stellar.yml`，直接使用 Schema 默认值运行 doctor 和 generate；空文件与缺失文件语义相同。Wiki/Topic/Notebook 内容在已注册数据与源码关系唯一时也不必重复写 `collection`，冲突时按 doctor 给出的候选与最小修复处理。
+
+生成后运行只读检查：
+
+```bash
+npx hexo stellar doctor --format text
+npx hexo stellar doctor --format json --silent
+```
+
+JSON 模式必须使用 Hexo 全局 `--silent`，避免命令加载前的 Hexo 启动日志混入标准输出，保证 stdout 是可直接解析的单一 JSON 文档。doctor 检查 Node.js、Hexo、`theme: stellar`、Schema 默认值或主题覆盖、Collection YAML、Markdown Front Matter 与成员归属；失败问题包含来源、字段路径、实际类型、期望结构、候选集合和迁移章节，但不会修改文件。
+
+**参考源码**：[scripts/commands/stellar.js](../../../scripts/commands/stellar.js)、[scripts/lib/doctor.js](../../../scripts/lib/doctor.js)、[Stellar Examples](https://github.com/xaoxuu/hexo-theme-stellar-examples)
+
+---
+
 ## 主题配置文件
 
 Stellar 自带一份覆盖全部主题功能的配置文件，位于主题包内，是主题功能的集中控制点。
@@ -225,42 +254,20 @@ node_modules/hexo-theme-stellar/_config.yml
 
 | 小节 | 用途 |
 |------|------|
-| `stellar` | 主题版本、首页、仓库地址、资源路径 |
-| `preconnect` | 需要预连接的 CDN 域名 |
-| `canonical` | 源站域名、备用站与克隆站检测 |
-| `open_graph` / `structured_data` | SEO 元数据 |
-| `site_tree` | 站点结构树：各页面类型的菜单与左右侧栏 |
-| `notebook` | 笔记本系统配置 |
-| `article` | 文章显示、摘要、许可等 |
-| `comments` | 评论服务（beaudar / utterances / giscus / twikoo / waline / artalk） |
-| `search` | 搜索服务（local_search / algolia_search） |
-| `footer` | 页脚社交链接等 |
-| `tag_plugins` | 标签插件行为与样式 |
-| `dependencies` | marked、lazyload 等 CDN 依赖 |
-| `data_services` | 按需加载的数据服务 API |
-| `plugins` | 外部插件集成（fancybox、swiper、scrollreveal、mermaid、katex 等） |
-| `style` | 设计令牌、颜色、字体、间距 |
-| `default` | 默认占位图 |
-| `api_host` | GitHub API 端点 |
-| `data_cache` | 数据缓存 |
-| `system` | 内部系统覆盖 |
+| `brand/menu/settings/footer` | Brand、菜单与 Footer 站点外壳 |
+| `topbar/leftbar/rightbar/profiles` | 页面 Profile：路径、导航与左右侧栏 |
+| `article/notebook` | Article 与 Notebook 内容默认值 |
+| `appearance` | 排版、颜色、形状、动效和背景 |
+| `canonical/open_graph/structured_data` | canonical、Open Graph 与结构化数据 |
+| `preconnect/fallbacks/error_page` | preconnect 与按角色命名的资源兜底 |
+| `search/comments/tags/features/services` | 搜索、评论、标签、Feature 与服务 |
+| `inject` | 站点 `_config.stellar.yml` 与页面 Front Matter 的受信任原文注入 |
 
-### 关键配置字段
+### 主题元数据
 
-主题通过以下字段标识自身：
+主题版本、主页与仓库地址来自 `package.json`，核心 CSS/JS 路径来自内部资源清单。它们不是站点配置项，v2 不允许在 `_config.stellar.yml` 中覆盖。
 
-```yaml
-stellar:
-  version: '1.44.0'           # 主题版本号
-  homepage: 'https://xaoxuu.com/wiki/stellar/'  # 文档站
-  repo: 'https://github.com/xaoxuu/hexo-theme-stellar'  # 源码仓库
-  main_css: /css/main.css     # 主 CSS 包路径
-  main_js: /js/main.js        # 主 JS 包路径
-```
-
-这些值用于主题版本展示、文档链接与资源加载。
-
-**参考源码**：[_config.yml](../../../_config.yml)
+**参考源码**：[package.json](../../../package.json)、[scripts/lib/theme-metadata.js](../../../scripts/lib/theme-metadata.js)
 
 ---
 
@@ -344,6 +351,10 @@ graph TD
    ```
    在 `http://localhost:4000` 启动本地服务。
 
+   `server` 是 Hexo 命令，不是 Stellar 子命令；请勿写成 `hexo stellar server`。如果环境限制监听所有网卡，可使用 `hexo server --ip 127.0.0.1`。站点工程需要安装 `hexo-server`，缺失时 Hexo 只会显示通用命令帮助。
+
+   开发服务器运行期间，Stellar 会监听站点根目录的 `_config.stellar.yml`。保存后会先执行与启动时相同的 Schema 校验，通过后重读配置并触发重新生成，无需重启 `hexo server`。配置非法时保留上一次有效输出并在终端警告。站点 `_config.yml` 属于 Hexo 核心配置，修改它仍可能需要重启。
+
 3. **浏览器访问**：
    打开 `http://localhost:4000`，检查：
    - 页面是否带 Stellar 样式渲染
@@ -357,38 +368,37 @@ graph TD
 | `Cannot find module 'hexo-theme-stellar'` | 主题未安装 | 执行 `npm i hexo-theme-stellar` |
 | `hexo-renderer-ejs not found` | 缺少渲染器 | 应自动安装；可手动 `npm i hexo-renderer-ejs` |
 | `hexo-renderer-stylus not found` | 缺少渲染器 | 应自动安装；可手动 `npm i hexo-renderer-stylus` |
+| `Usage: hexo <command>` 且没有 `server` | 站点未安装 Hexo 预览服务器 | 执行 `npm i hexo-server`，再运行 `hexo server --ip 127.0.0.1` |
+| `Usage: hexo stellar <init\|doctor\|new note>` | 把 Hexo 的 `server` 误写成 Stellar 子命令 | 使用 `hexo server`；`stellar` 只提供 `init`、`doctor` 与 `new note` |
 | 页面显示 Hexo 默认主题 | 主题未启用 | 修改 `_config.yml`，设置 `theme: stellar` |
 | CSS 未加载 | 资源路径错误 | 主题资源应自动从 `node_modules/` 加载 |
 
 **参考源码**：[README.md](../../../README.md)、[package.json](../../../package.json)
 
+主题启动时只在 npm `latest` 按 SemVer 严格新于本地版本时显示升级提示。内部 v2 候选版本高于当前 v1 `latest` 时不会提示反向安装 v1；无法解析的版本号静默跳过检查结果。
+
 ---
 
 ## 版本管理
 
-主题采用语义化版本，版本信息维护在两处。
+主题采用语义化版本，版本信息由 `package.json` 唯一维护。
 
 ### 版本位置
 
 ```mermaid
 graph LR
-    VER["Version: 1.44.0"]
+    VER["Version: 2.0.0-alpha.1"]
     
     PKG["package.json"]
-    CONFIG["_config.yml<br/>stellar.version"]
-    
     VER --> PKG
-    VER --> CONFIG
-    
-    PKG --> NPM["npm registry"]
-    CONFIG --> FOOTER["Footer display"]
-    CONFIG --> DOCS["Documentation links"]
+    PKG --> CANDIDATE["本地候选 tarball"]
+    PKG --> FOOTER["stellar_info() / Footer"]
+    PKG --> DOCS["Documentation links"]
 ```
 
-- **package.json**：`"version": "1.44.0"`，供 npm 分发使用
-- **_config.yml**：`stellar.version: '1.44.0'`，用于展示与文档链接
+- **package.json**：`"version": "2.0.0-alpha.1"`，当前仅作为 v2 本地候选 tarball 的 SemVer 字符，不发布到 npm
 
-两处必须保持一致。版本号遵循 `MAJOR.MINOR.PATCH` 格式。
+版本号遵循 SemVer `MAJOR.MINOR.PATCH`。Alpha、Beta 只是 v2 项目的内部里程碑，不进入正式发版流程；发版脚本只接受稳定版或 `-rc.N`，并同步 package 版本到安装知识库。
 
 ### 更新主题
 
@@ -409,7 +419,7 @@ hexo clean
 hexo generate
 ```
 
-**参考源码**：[package.json](../../../package.json)、[_config.yml](../../../_config.yml)、[.github/workflows/npm-publish.yml](../../../.github/workflows/npm-publish.yml)
+**参考源码**：[package.json](../../../package.json)、[release.js](../../../release.js)、[.github/workflows/npm-publish.yml](../../../.github/workflows/npm-publish.yml)
 
 ---
 

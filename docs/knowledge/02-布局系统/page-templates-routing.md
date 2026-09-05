@@ -9,6 +9,9 @@ tags:
 
 # 页面模板与路由
 
+> [!IMPORTANT]
+> v2 已重构页面 Front Matter、导航和侧边栏字段；本页涉及字段名时，以[内容配置 Schema v2](../03-内容系统/content-schema-v2.md)为准。
+
 <details>
 <summary>相关源码文件</summary>
 
@@ -18,7 +21,7 @@ tags:
 - [layout/page.ejs](../../../layout/page.ejs)
 - [layout/index.ejs](../../../layout/index.ejs)
 - [layout/archive.ejs](../../../layout/archive.ejs)
-- [layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+- [source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 - [scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
 
 </details>
@@ -62,10 +65,10 @@ flowchart TD
 
 `layout.ejs` 对每个页面运行，负责：
 
-1. 计算 `page_type`、`article_type`、`indent` 控制变量
+1. 计算 `page_type`、`article_style`、`indent` 控制变量
 2. 构建 `<html>`、`<head>`、`<body>` 结构
-3. 组装三栏网格（`l_left`、`l_main`、`l_right`）
-4. 注入 `body` 变量（具体页面模板的输出）
+3. 按 PageViewModel 或过渡页面配置组装 Topbar、Leftbar、Main、Rightbar 命名槽
+4. 统一交给 `_partial/primitives/shell.ejs` 输出唯一 Shell DOM
 
 **`layout.ejs` DOM 结构**
 
@@ -73,29 +76,33 @@ flowchart TD
 flowchart TD
     HTML["html[lang][data-theme]"] --> HEAD["partial: _partial/head"]
     HTML --> BODY["body"]
-    BODY --> SITEBG["div.sitebg\n(conditional: style.site.background-image)"]
-    BODY --> LCOVER["div#l_cover\npartial: _partial/cover/index"]
-    BODY --> LBODY["div.l_body#start\n[layout][type][text-indent]"]
-    BODY --> SCRIPTS["div.scripts\npartial: _partial/scripts"]
-    LBODY --> LLEFT["aside.l_left\npartial: _partial/sidebar/index_leftbar"]
-    LBODY --> LMAIN["div.l_main#main"]
-    LBODY --> LRIGHT["aside.l_right\npartial: _partial/sidebar/index_rightbar"]
-    LBODY --> MENUBTN["partial: _partial/menubtn"]
-    LMAIN --> LOGO["partial: _partial/sidebar/logo"]
-    LMAIN --> BODYCONTENT["body 变量\n(来自页面模板)"]
-    LMAIN --> FOOTER["partial: _partial/main/footer"]
-    LMAIN --> MASK["div.main-mask"]
+    BODY --> SITEBG["div.site-background\n(conditional: appearance.backgrounds.page.image)"]
+    BODY --> COVER["div#site-cover\npartial: _partial/cover/index"]
+    BODY --> SHELL["div.site-shell#start\ndata-regions"]
+    BODY --> SCRIPTS["div.site-scripts\npartial: _partial/scripts"]
+    SHELL --> TOPBAR["header.site-region--topbar\ndata-region=topbar"]
+    SHELL --> WORKSPACE["div.site-workspace"]
+    WORKSPACE --> LEFTBAR["aside.site-region--leftbar\ndata-region=leftbar"]
+    WORKSPACE --> MAIN["main.site-main#main"]
+    WORKSPACE --> RIGHTBAR["aside.site-region--rightbar\ndata-region=rightbar"]
+    SHELL --> SCRIM["button.site-scrim"]
+    SHELL --> DOCK["nav.site-dock\npartial: _partial/menubtn"]
+    TOPBAR --> TOPWIDGETS["partial: _partial/regions/widgets"]
+    LEFTBAR --> LEFTWIDGETS["partial: _partial/regions/widgets"]
+    RIGHTBAR --> RIGHTWIDGETS["partial: _partial/regions/widgets"]
+    MAIN --> BODYCONTENT["body 变量\n(来自页面模板)"]
+    MAIN --> FOOTER["partial: _partial/main/footer"]
 ```
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
 
-关键一行：
+页面元数据写入标准 `data-page-*` 属性：
 
 ```
-div.l_body.${page_type}  layout="${page.layout}"  type="${article_type}"  [text-indent]
+body[data-page-type][data-page-layout][data-article-style][data-text-indent]
 ```
 
-三个计算变量都作为该元素的 DOM 属性/类出现，CSS 与 JavaScript 可以精确针对特定页面配置。
+`#start.site-shell` 只承担 Shell 状态，`data-regions` 记录实际生成的 Region；页面类型不再通过裸 `layout/type/text-indent` 属性表达。
 
 ---
 
@@ -112,47 +119,38 @@ div.l_body.${page_type}  layout="${page.layout}"  type="${article_type}"  [text-
 | `page.layout` 属于 `post`、`page`、`wiki`、`null` 且无 `page.nav_tabs` | `'content'` |
 | 其他情况（首页、归档、标签、分类，或存在 `nav_tabs`） | `'index'` |
 
-`page_type` 作为 CSS 类加到 `div.l_body`，驱动单内容视图与列表视图的布局差异。
+`page_type` 写入 `<body data-page-type>`，驱动单内容视图与列表视图的布局差异。
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
 
-### `article_type`
+### `article_style`
 
 控制文章呈现风格，按优先级链解析：
 
 ```mermaid
 flowchart TD
-    A["page_type == 'index'?"] -->|Yes| B["article_type = undefined"]
-    A -->|No| C["page.type set?"]
-    C -->|Yes| D["article_type = page.type"]
-    C -->|No| E["theme.topic.tree[page.topic].type set?"]
-    E -->|Yes| F["article_type = topic.type"]
-    E -->|No| G["theme.wiki.tree[page.wiki].type set?"]
-    G -->|Yes| H["article_type = wiki.type"]
-    G -->|No| I["article_type = theme.article.type"]
+    A["page_type == 'index'?"] -->|Yes| B["article_style = undefined"]
+    A -->|No| C["resolve article.style cascade"]
+    C --> D["article_style = tech | story"]
 ```
 
-常见取值 `'tech'`（技术文章）与 `'story'`（文学/散文文章）。解析结果写入 `div.l_body` 的 `type` 属性。
+常见取值 `'tech'`（技术文章）与 `'story'`（文学/散文文章）。解析结果写入 `<body data-article-style>`。
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
 
 ### `indent`
 
-控制是否应用文本缩进（通常用于 `story` 类型文章），按独立优先级链解析：
+控制是否应用文本缩进，公开配置为 `article.paragraph_indent: auto|always|never`：
 
 ```mermaid
 flowchart TD
-    A["page.indent != null?"] -->|Yes| B["indent = page.indent"]
-    A -->|No| C["theme.topic.tree[page.topic].indent set?"]
-    C -->|Yes| D["indent = topic.indent"]
-    C -->|No| E["theme.wiki.tree[page.wiki].indent set?"]
-    E -->|Yes| F["indent = wiki.indent"]
-    E -->|No| G["theme.article.indent set?"]
-    G -->|Yes| H["indent = theme.article.indent"]
-    G -->|No| I["indent = (article_type === 'story')"]
+    A["resolve article.paragraph_indent cascade"] --> B{"mode"}
+    B -->|always| C["indent = true"]
+    B -->|never| D["indent = false"]
+    B -->|auto| E["indent = (article_style === 'story')"]
 ```
 
-`indent` 为 `true` 时给 `div.l_body` 添加 `text-indent` 属性；为 `false` 时不添加。
+`indent` 为 `true` 时给 `<body>` 添加 `data-text-indent`；为 `false` 时不添加。
 
 **参考源码**：[layout/layout.ejs](../../../layout/layout.ejs)
 
@@ -170,61 +168,69 @@ flowchart TD
     NAVTABS --> BANNER["page.h1 OR page.title OR page.content?\n→ partial: navbar/article_banner"]
     BANNER --> ARTICLE["article.md-text.content[.heti]"]
     ARTICLE --> CONTENT["page.content"]
-    CONTENT --> NOTETAGS["notebook set?\n→ partial: notebook/note_tags"]
-    NOTETAGS --> TAGS["layout==='post' AND theme.article.tags?\n→ partial: article/article_tags"]
-    TAGS --> FOOTER["layout==='post' OR page.wiki OR notebook?\n→ partial: article/article_footer"]
-    FOOTER --> READNEXT["layout==='post' OR page.wiki?\n→ partial: article/read_next"]
-    READNEXT --> RELATED["layout==='post'?\n→ partial: article/related_posts"]
-    RELATED --> COMMENTS["partial: comments/layout"]
+    CONTENT --> STRICT{"Post / Topic / Wiki / Notebook ViewModel?"}
+    STRICT --> NOTETAGS["Notebook\n→ note_tags(tags local)"]
+    STRICT --> POSTTAGS["Post / Topic\n→ post_tags(tags local)"]
+    NOTETAGS --> FOOTER["post_footer(footer local)"]
+    POSTTAGS --> FOOTER
+    STRICT --> FOOTER
+    FOOTER --> READNEXT["Post / Topic / Wiki\n→ post_read_next"]
+    READNEXT --> RELATED["Post / Topic\n→ post_related"]
+    RELATED --> COMMENTS["comments/layout(comments local)"]
 ```
 
 **参考源码**：[layout/page.ejs](../../../layout/page.ejs)
 
 ### 组件渲染矩阵
 
-| 组件 | `layout === 'post'` | 设置了 `page.wiki` | 设置了 `notebook` | `layout === 'page'`（普通） |
+| 组件 | `layout === 'post'` | `collection_id(page, 'wiki')` 可解析 | 匹配 `notebook` | `layout === 'page'`（普通） |
 |---|---|---|---|---|
 | `nav_tabs_blog` | 有 `page.nav_tabs` 时 | 有 `page.nav_tabs` 时 | 有 `page.nav_tabs` 时 | 有 `page.nav_tabs` 时 |
 | `article_banner` | 有标题/内容时 | 有标题/内容时 | 有标题/内容时 | 有标题/内容时 |
-| `article_tags` | 有 `theme.article.tags` 时 | ✗ | ✗ | ✗ |
-| `article_footer` | ✓ | ✓ | ✓ | ✗ |
+| `article_tags` | `render.article.tags` 非空时 | ✗ | `render.article.tags` 非空时 | ✗ |
+| `article_footer` | `render.article.footer` | `render.article.footer` | `render.article.footer` | ✗ |
 | `read_next` | ✓ | ✓ | ✗ | ✗ |
-| `related_posts` | ✓ | ✗ | ✗ | ✗ |
+| `related_posts` | Post/Topic 投影决定 | ✗ | ✗ | ✗ |
 | `comments/layout` | ✓ | ✓ | ✓ | ✓ |
 
 **参考源码**：[layout/page.ejs](../../../layout/page.ejs)
 
 ### 笔记本集成
 
-`page.notebook` 匹配 `theme.notebooks.tree` 中的条目时，`page.ejs` 先把笔记本配置中的 `menu_id`、`license`、`share` 传播到页面对象，再开始渲染。
+页面的 `collection.profile: notebook` 必须带有合法、深度冻结的 `page.viewModel.render`。`page.ejs` 只消费 `render.article` 与 `item`，将显式的 Banner、正文排版、标签、Footer 和评论传给对应 partial；导航、侧栏、Brand 与 SEO 由根 Shell 消费 `render.document/layout/seo`。Notebook Collection、Profile 与主题默认值的级联已经在模型构建期完成，模板不读取 `stellar_data('notebooks').tree`，也不修改页面对象。
 
 **参考源码**：[layout/page.ejs](../../../layout/page.ejs)
 
-### `menu_id` 默认解析
+### Layout Profile 路径与菜单默认值
 
-`page.ejs` 按页面所属内容类型设置 `page.menu_id`：
+v2 配置在 `profiles` 中为各页面 Profile 声明 `path` 和 `active_menu`。YAML 路径在 Schema 中规范化为根相对路径，目录以 `/` 结尾。Topic、Wiki、Notebook、Author 与 Error Profile 的路径由主题生成器投影为 Hexo route path；`blog_index.path` 只进入 Post `CollectionModel.route.baseDir`，近期文章首页仍由 Hexo 自有 `index_generator.path` 生成，主题配置不会反写该字段。配置运行时使用 camelCase，进入现有页面 ViewModel 或渲染上下文时仍投影为内部 `navigation.menu`：
 
-| 条件 | `menu_id` 来源 |
+| 条件 | 冻结配置来源 |
 |---|---|
-| 设置了 `page.wiki` | `theme.site_tree.wiki.menu_id` |
-| 设置了 `page.topic` | `theme.site_tree.topic.menu_id` |
-| 其他 | `theme.site_tree.post.menu_id` |
+| 首页 | `profiles.home.activeMenu` |
+| 分类 / 标签 / 归档 | `profiles.blogIndex.activeMenu` |
+| Wiki 内容页 | `profiles.wiki.activeMenu` |
+| Topic 内容页 | `profiles.topic.activeMenu` |
+| 普通 Post | `profiles.post.activeMenu` |
+| Notebook Note | `profiles.note.activeMenu` |
+| Wiki / Topic / Notebook 索引 | 对应 `wikiIndex` / `topicIndex` / `notebookIndex` Profile |
+| 404 与普通页 | `error` / `page` Profile |
 
 **参考源码**：[layout/page.ejs](../../../layout/page.ejs)
 
 ### Heti 插件集成
 
-`theme.plugins.heti.enable` 为 `true` 时，`articleClass()` 给 `<article>` 元素添加 `heti` CSS 类，启用赫蹏（Heti）中文排版插件。
+`features.heti.enabled` 为 `true` 时，`articleClass()` 给 `<article>` 元素添加 `heti` CSS 类，启用赫蹏中文排版能力。
 
 ---
 
-## Heti 与 Scrollreveal 的文章类
+## Heti 与 Reveal 的文章类
 
 `articleClass()` 生成 `<article>` 元素的 `class` 属性：
 
 - 基础：`md-text content`
-- `scrollreveal(...)`——插件启用时注入滚动显现触发属性
-- `heti`——`theme.plugins.heti.enable` 为 true 时追加
+- `scrollreveal(...)`——Reveal 启用时注入滚动显现触发类
+- `heti`——冻结运行时 `features.heti.enabled` 为 true 时追加
 
 **参考源码**：[layout/page.ejs](../../../layout/page.ejs)
 
@@ -232,9 +238,9 @@ flowchart TD
 
 ## 页面导航机制
 
-主题使用普通整页导航（PJAX 已于 v1.35.0 移除，`source/js/plugins/pjax.js` 与 `layout/_plugins/pjax.ejs` 均已删除）。可选的 `plugins.preload`（flying_pages）在鼠标悬停时预加载站内链接，提升导航体验。
+主题使用普通整页导航（PJAX 已于 v1.35.0 移除，`source/js/plugins/pjax.js` 与 `layout/_plugins/pjax.ejs` 均已删除）。可选的 `features.link_prefetch`（flying_pages）在鼠标悬停时预加载站内链接，提升导航体验。
 
-**参考源码**：[source/js/main.js](../../../source/js/main.js)、[_config.yml](../../../_config.yml)（`plugins.preload` 小节）
+**参考源码**：[source/js/main.js](../../../source/js/main.js)、[_config.yml](../../../_config.yml)（`features.link_prefetch`）
 
 ---
 

@@ -1,76 +1,203 @@
 <%
-// 页面类型：索引页面还是内容页面
-var page_type = 'index'
-if (['post', 'page', 'wiki', null].includes(page.layout)) {
-  if (!page.nav_tabs) {
-    page_type = 'content'
+var pageConfig = content_config(page)
+var isOrdinaryPost = page.layout === 'post' && pageConfig.collection?.profile !== 'topic'
+var activeViewModel = (isOrdinaryPost || pageConfig.collection?.profile === 'topic')
+  ? post_view_model(page)
+  : page.viewModel
+var activeProfile = activeViewModel?.collection?.profile
+if (isOrdinaryPost && (activeProfile !== 'post' || activeViewModel?.render == null)) {
+  throw new Error(`Stellar v2: 普通 Post ${page.source || page.path || '<unknown>'} 缺少合法 PageViewModel.render`)
+}
+var isWikiPage = pageConfig.collection?.profile === 'wiki'
+if (isWikiPage && (activeProfile !== 'wiki' || activeViewModel?.render == null)) {
+  throw new Error(`Stellar v2: Wiki 页面 ${page.source || page.path || '<unknown>'} 缺少合法 PageViewModel.render`)
+}
+var isTopicPage = pageConfig.collection?.profile === 'topic'
+if (isTopicPage && (activeProfile !== 'topic' || activeViewModel?.render == null)) {
+  throw new Error(`Stellar v2: Topic 页面 ${page.source || page.path || '<unknown>'} 缺少合法 PageViewModel.render`)
+}
+var isNotebookPage = pageConfig.collection?.profile === 'notebook'
+if (isNotebookPage && (activeProfile !== 'notebook' || activeViewModel?.render == null)) {
+  throw new Error(`Stellar v2: Notebook 页面 ${page.source || page.path || '<unknown>'} 缺少合法 PageViewModel.render`)
+}
+var renderViewModel = ['post', 'wiki', 'topic', 'notebook'].includes(activeProfile) ? activeViewModel : null
+var appearance = stellar_config('appearance')
+var html = ''
+
+function siteBackground(enabled) {
+  return enabled ? '<div class="site-background"><div class="site-background__blur"></div></div>' : ''
+}
+
+function coverSlot(viewModel) {
+  var coverBody = viewModel ? partial('_partial/cover/index', {viewModel: viewModel}).trim() : ''
+  return `<div id="site-cover" class="site-cover">${coverBody}</div>`
+}
+
+function regionSlot(slot, state, viewModel) {
+  if (!state || state.enabled === false) return ''
+  var widgetBody = partial('_partial/regions/widgets', {
+    region: slot,
+    state: state,
+    widgets: state.widgets,
+    viewModel: viewModel || null
+  }).trim()
+  if (!widgetBody) return ''
+  return partial('_partial/primitives/region', {
+    slot: slot,
+    body: widgetBody
+  })
+}
+
+function shellDocument(options) {
+  return partial('_partial/primitives/shell', {
+    documentModel: options.documentModel,
+    pageModel: options.pageModel,
+    head: options.head,
+    siteBackground: options.siteBackground,
+    cover: options.cover,
+    regions: options.regions,
+    main: options.main,
+    controls: partial('_partial/menubtn'),
+    overlays: options.searchEnabled ? partial('_partial/search/dialog') : '',
+    scripts: options.scripts
+  })
+}
+
+function regionsContainSearch(regions) {
+  if (!stellar_config('search.provider')) return false
+  function menuHasSearch(menu) {
+    return Array.isArray(menu) && menu.some(function(item) {
+      return item?.type === 'search'
+    })
   }
-}
-// 文章类型：技术类文章/文学类文章
-var article_type = theme.article.type
-if (page_type == 'index') {
-  article_type = undefined
-} else if (page.type?.length > 0) {
-  article_type = page.type
-} else if (theme.topic.tree[page.topic]?.type != null) {
-  article_type = theme.topic.tree[page.topic]?.type
-} else if (theme.wiki.tree[page.wiki]?.type != null) {
-  article_type = theme.wiki.tree[page.wiki]?.type
-}
-// 是否缩进
-var indent = false
-if (page.indent != null) {
-  indent = page.indent
-} else if (theme.topic.tree[page.topic]?.indent != null) {
-  indent = theme.topic.tree[page.topic]?.indent
-} else if (theme.wiki.tree[page.wiki]?.indent != null) {
-  indent = theme.wiki.tree[page.wiki]?.indent
-} else if (theme.article.indent != null) {
-  indent = theme.article.indent
-} else {
-  indent = article_type === 'story'
+  function brandHasContent(brand) {
+    return brand && brand !== false && (brand.name || brand.image?.src)
+  }
+  var collectionProfile = renderViewModel?.collection?.profile
+    || (page.notebookIndex?.mode === 'notes' ? 'notebook' : null)
+  return Object.entries(regions || {}).some(function(entry) {
+    var slot = entry[0]
+    var region = entry[1]
+    if (region?.enabled === false) return false
+    if (slot === 'leftbar' && ['wiki', 'notebook', 'topic'].includes(collectionProfile) && brandHasContent(region.brand)) return true
+    if (slot === 'leftbar') return menuHasSearch(region?.menu)
+    if (slot !== 'topbar' || !menuHasSearch(region?.menu)) return false
+    return Array.isArray(region?.widgets) && region.widgets.some(function(widget) {
+      return widget?.id === 'menu' || widget?.layout === 'menu'
+    })
+  })
 }
 
-var site_background = ''
-if (theme.style.site && theme.style.site['background-image']) {
-  site_background += `<div class="sitebg">`
-  site_background += `<div class="siteblur"></div>`
-  site_background += `</div>`
-}
-
-var html = `<!DOCTYPE html>`
-if (theme.style.prefers_theme === 'auto') {
-    html += `<html lang="${page.lang}">`
+if (renderViewModel) {
+  var render = renderViewModel.render
+  report_region_warnings(render.layout.regionWarnings)
+  var regionState = {
+    topbar: render.layout.topbar,
+    leftbar: render.layout.leftbar,
+    rightbar: render.layout.rightbar
+  }
+  var topbarRegion = regionSlot('topbar', regionState.topbar, renderViewModel)
+  var mainBody = ''
+  if (showMobileBrand(page, {profileKey: activeProfile}) && !topbarRegion) {
+    mainBody += partial('_partial/sidebar/brand', {
+      placement: 'main',
+      brandModel: regionState.topbar?.brand,
+      viewModel: renderViewModel
+    })
+  }
+  mainBody += body + partial('_partial/main/footer')
+  html = shellDocument({
+    documentModel: {
+      language: render.document.language,
+      preferredTheme: render.document.preferredTheme
+    },
+    pageModel: {
+      pageType: render.layout.pageType,
+      layout: renderViewModel.item.layout,
+      articleStyle: render.layout.articleStyle,
+      indent: render.layout.indent
+    },
+    head: partial('_partial/head', {viewModel: renderViewModel}),
+    siteBackground: siteBackground(render.layout.siteBackground),
+    cover: coverSlot(renderViewModel),
+    regions: {
+      topbar: topbarRegion,
+      leftbar: regionSlot('leftbar', regionState.leftbar, renderViewModel),
+      rightbar: regionSlot('rightbar', regionState.rightbar, renderViewModel)
+    },
+    searchEnabled: regionsContainSearch(regionState),
+    main: mainBody,
+    scripts: partial('_partial/scripts', {viewModel: renderViewModel})
+  })
 } else {
-  html += `<html lang="${page.lang}" data-theme="${theme.style.prefers_theme}">`
+  var notebookIndex = page.notebookIndex?.mode === 'notes' ? page.notebookIndex.collection : null
+  var pageType = ['post', 'page', 'wiki', 'settings', null].includes(page.layout) ? 'content' : 'index'
+  var articleDefaults = stellar_config('article')
+  var articleStyle = articleDefaults.style
+  if (pageType === 'index') {
+    articleStyle = undefined
+  } else if (pageConfig.article?.style?.length > 0) {
+    articleStyle = pageConfig.article.style
+  }
+  var paragraphIndent = pageConfig.article?.paragraphIndent
+    || articleDefaults.paragraphIndent
+    || 'auto'
+  var indent = paragraphIndent === 'always' || (paragraphIndent === 'auto' && articleStyle === 'story')
+  var profileKey = 'page'
+  var collectionRegions = null
+  if (is_home()) {
+    profileKey = 'home'
+  } else if (page.layout === 'notebooks') {
+    profileKey = 'notebookIndex'
+  } else if (page.layout === 'notes') {
+    profileKey = 'noteIndex'
+    collectionRegions = notebookIndex?.layout
+  } else if (is_category() || is_tag() || is_archive() || ['categories', 'tags', 'archives'].includes(page.layout)) {
+    profileKey = 'blogIndex'
+  } else if (page.layout === 'index_topic') {
+    profileKey = 'blogIndex'
+  } else if (page.layout === 'index_wiki') {
+    profileKey = 'wikiIndex'
+  } else if (page.layout === '404') {
+    profileKey = 'error'
+  } else if (page.layout === 'settings') {
+    profileKey = 'settings'
+  }
+  var mobileBrandVisible = showMobileBrand(page, {profileKey: profileKey})
+  var pageRegions = region_layout(profileKey, collectionRegions, pageConfig)
+  var topbarRegion = regionSlot('topbar', pageRegions.topbar)
+  var mainBody = ''
+  if (mobileBrandVisible && !topbarRegion) {
+    mainBody += partial('_partial/sidebar/brand', {
+      placement: 'main',
+      brandModel: pageRegions.topbar?.brand
+    })
+  }
+  mainBody += body
+  mainBody += partial('_partial/main/footer')
+  html = shellDocument({
+    documentModel: {
+      language: page.lang,
+      preferredTheme: appearance.colorScheme
+    },
+    pageModel: {
+      pageType: pageType,
+      layout: page.layout,
+      articleStyle: articleStyle,
+      indent: indent
+    },
+    head: partial('_partial/head'),
+    siteBackground: siteBackground(appearance.backgrounds.page.image),
+    cover: coverSlot(),
+    regions: {
+      topbar: topbarRegion,
+      leftbar: regionSlot('leftbar', pageRegions.leftbar),
+      rightbar: regionSlot('rightbar', pageRegions.rightbar)
+    },
+    searchEnabled: regionsContainSearch(pageRegions),
+    main: mainBody,
+    scripts: partial('_partial/scripts')
+  })
 }
-  html += partial('_partial/head')
-  html += `<body>`
-    html += site_background
-    html += `<div id="l_cover">${partial('_partial/cover/index').trim()}</div>`
-    html += `<div class="l_body ${page_type}" id="start" layout="${page.layout}" type="${article_type}" ${indent ? 'text-indent' : ''}>`
-      var leftbarSurface = theme.style.leftbar?.['ui-style'] === 'card' ? 'card' : 'glass'
-      html += `<aside class="l_left${leftbarSurface === 'card' ? ' leftbar-card' : ''}" data-ui-surface="${leftbarSurface}">`
-        html += `<div class="sidebg"></div>`
-        html += `<div class="leftbar-container${theme.style.leftbar?.blur ? ' leftbar-blur' : ''}">`
-          html += partial('_partial/sidebar/index_leftbar')
-        html += `</div>`
-      html += `</aside>`
-      html += `<div class="l_main" id="main" data-ui-surface="content">`
-        html += partial('_partial/sidebar/logo', {where: 'main'})
-        html += body
-        html += partial('_partial/main/footer')
-        html += `<div class="main-mask" onclick="sidebar.dismiss()"></div>`
-      html += `</div>`
-      html += `<aside class="l_right" data-ui-surface="sidebar">`
-        html += partial('_partial/sidebar/index_rightbar').trim()
-      html += `</aside>`
-      html += partial('_partial/menubtn')
-    html += `</div>`
-    html += `<div class="scripts">`
-      html += partial('_partial/scripts')
-    html += `</div>`
-  html += `</body>`
-html += `</html>`
 %>
 <%- html %>

@@ -19,10 +19,11 @@ tags:
 - [README.md](../../../README.md)
 - [_config.yml](../../../_config.yml)
 - [layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
-- [layout/_partial/scripts/lazyload.ejs](../../../layout/_partial/scripts/lazyload.ejs)
+- [source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
 - [layout/layout.ejs](../../../layout/layout.ejs)
 - [package.json](../../../package.json)
 - [scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
+- [scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)
 - [source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)
 - [source/js/main.js](../../../source/js/main.js)
 
@@ -36,7 +37,7 @@ Stellar 是一个功能全面的 Hexo 主题，内置四套并行内容管理系
 
 Stellar 采用**五层架构**，把配置、数据处理、渲染、客户端行为与样式分离，使主题可以支持多种内容类型并保持一致性，同时允许深度定制。
 
-主题是**配置驱动**的：几乎所有行为都由 [_config.yml](../../../_config.yml) 控制，它是主题设置、内容布局、插件启用与样式参数的唯一事实来源。
+主题是**配置驱动**的：[_config.yml](../../../_config.yml) 镜像 Schema 默认值，站点可通过 `_config.stellar.yml` 覆盖；该文件缺失或为空时仍可直接构建。v2 声明式 Schema 已交付并封闭 `brand`、`menu`、`profiles`、`article`、`notebook`、`appearance`、`canonical`、`preconnect`、`search`、`comments`、`tags`、`features`、`services` 和 `inject` 等根配置。
 
 ### 核心架构分层
 
@@ -49,7 +50,7 @@ graph TB
     
     subgraph DataProcessing["Data Processing Layer"]
         DOCTREE["doc_tree.js<br/>Wiki structure builder"]
-        HELPERS["Hexo helpers<br/>json_ld, related_posts"]
+        HELPERS["Hexo helpers<br/>json_ld, comments_model"]
     end
     
     subgraph ServerRender["Server-Side Rendering"]
@@ -59,8 +60,9 @@ graph TB
     
     subgraph ClientSide["Client-Side Layer"]
         MAINJS["main.js<br/>Page initialization"]
-        PRELOAD["preload<br/>flying_pages 预加载"]
-        PLUGINS["Plugin scripts<br/>lazyload, comments"]
+        MANIFEST["Runtime Manifest<br/>Page Extension declarations"]
+        REGISTRY["ESM ExtensionRegistry<br/>mount / cleanup"]
+        EXTENSIONS["On-demand adapters<br/>search, comments, services, features"]
     end
     
     subgraph Styling["Styling Layer"]
@@ -77,12 +79,13 @@ graph TB
     HELPERS --> LAYOUT
     LAYOUT --> PARTIALS
     LAYOUT --> MAINJS
-    MAINJS --> PRELOAD
-    MAINJS --> PLUGINS
+    LAYOUT --> MANIFEST
+    MANIFEST --> REGISTRY
+    REGISTRY --> EXTENSIONS
     CUSTOM --> COMPONENTS
 ```
 
-**参考源码**：[_config.yml](../../../_config.yml)、[layout/layout.ejs](../../../layout/layout.ejs)、[source/js/main.js](../../../source/js/main.js)、[scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
+**参考源码**：[_config.yml](../../../_config.yml)、[scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)、[layout/layout.ejs](../../../layout/layout.ejs)、[source/js/main.js](../../../source/js/main.js)、[scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
 
 ## 配置级联
 
@@ -91,10 +94,10 @@ graph TB
 ```mermaid
 graph LR
     subgraph Global["Global Configuration"]
-        STELLAR["stellar:<br/>version, homepage"]
-        SITETREE["site_tree:<br/>Layout definitions"]
-        ARTICLE["article:<br/>Content settings"]
-        PLUGINS["plugins:<br/>Feature toggles"]
+        SITE["brand / menu / footer:<br/>Shell identity"]
+        PROFILES["profiles:<br/>Page defaults"]
+        CONTENT["article / notebook:<br/>Content settings"]
+        EXTENSIONS["search / comments / tags / features / services"]
     end
     
     subgraph Project["Project-Level"]
@@ -106,20 +109,20 @@ graph LR
         FRONTMATTER["Front-matter:<br/>page.* variables"]
     end
     
-    STELLAR --> SITETREE
-    SITETREE --> WIKITREE
-    SITETREE --> TOPICTREE
+    SITE --> PROFILES
+    PROFILES --> WIKITREE
+    PROFILES --> TOPICTREE
     WIKITREE --> FRONTMATTER
     TOPICTREE --> FRONTMATTER
-    ARTICLE --> FRONTMATTER
-    PLUGINS --> FRONTMATTER
+    CONTENT --> FRONTMATTER
+    EXTENSIONS --> FRONTMATTER
     
     FRONTMATTER --> OUTPUT["Rendered page<br/>with merged settings"]
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)、[layout/layout.ejs](../../../layout/layout.ejs)
 
-`site_tree` 配置为不同类型的页面（博客文章、wiki 页面、笔记本页面等）定义默认布局，单个页面可通过 front-matter 覆盖这些默认值。同样，`article.type`、`article.indent` 等样式选项也可以在 wiki/topic 项目级或页面级覆盖。
+`profiles` 为不同类型的页面（博客文章、Wiki、笔记本页面等）定义路径、导航和侧边栏默认值，单个页面与 Collection 覆盖继续由模型层级联。`article` 与 `notebook` 根配置提供内容默认值，所有公开主题配置均通过已封闭的声明式 Schema 进入运行时。
 
 ## 页面渲染流水线
 
@@ -135,13 +138,14 @@ graph LR
 
 1. **确定页面特征**（[layout/layout.ejs](../../../layout/layout.ejs)）：
    - `page_type`："index" 或 "content"
-   - `article_type`："tech" 或 "story"（影响排版与间距）
+   - `article_style`："tech" 或 "story"（影响排版与间距）
    - `indent`：是否段落首行缩进
 
 2. **组装 HTML 结构**（[layout/layout.ejs](../../../layout/layout.ejs)）：
    - `<head>` 元数据、SEO 标签与样式
-   - `#l_cover` 页面封面/横幅
-   - `.l_body` 包含 `.l_left`（左栏）、`.l_main`（内容区）、`.l_right`（右栏）
+   - `#site-cover` 页面封面/横幅
+   - `#start.site-shell` 按最终 ViewModel 组合 Topbar 与 `.site-workspace`
+   - `.site-workspace` 只包含 Leftbar、`#main.site-main` 与 Rightbar；Scrim、Dock 位于 Grid 外
    - 脚本与初始化代码
 
 ```mermaid
@@ -151,15 +155,15 @@ flowchart TD
     
     HEXODATA --> LAYOUT
     
-    LAYOUT --> DETERMINE["Determine characteristics:<br/>page_type, article_type, indent"]
+    LAYOUT --> DETERMINE["Determine characteristics:<br/>page_type, article_style, indent"]
     DETERMINE --> HEAD["Generate head.ejs:<br/>title, meta, canonical, JSON-LD"]
     DETERMINE --> COVER["Generate cover/index.ejs:<br/>Banner or wiki cover"]
-    DETERMINE --> SIDEBAR["Generate sidebar partials:<br/>index_leftbar, index_rightbar"]
+    DETERMINE --> REGIONS["Generate final Regions:<br/>topbar, leftbar, rightbar"]
     DETERMINE --> CONTENT["Generate main content:<br/>Article or list layout"]
     
     HEAD --> HTML["HTML output"]
     COVER --> HTML
-    SIDEBAR --> HTML
+    REGIONS --> HTML
     CONTENT --> HTML
     
     HTML --> BROWSER["Browser receives HTML"]
@@ -179,9 +183,9 @@ flowchart TD
 
 ### 阶段 4：页面导航与预加载
 
-主题使用普通整页导航；可选的 `plugins.preload`（flying_pages）会在鼠标悬停时预加载站内链接，提升导航体验。PJAX 已于 v1.35.0 移除，详见主题仓库 `docs/designs/2026-08-08-pjax-removal.md`。
+主题使用普通整页导航；可选的 `features.link_prefetch`（flying_pages）会在鼠标悬停时预加载站内链接，提升导航体验。PJAX 已于 v1.35.0 移除。
 
-**参考源码**：[source/js/main.js](../../../source/js/main.js)、[_config.yml](../../../_config.yml)（`plugins.preload` 小节）
+**参考源码**：[source/js/main.js](../../../source/js/main.js)、[_config.yml](../../../_config.yml)（`features.link_prefetch`）
 
 ## 内容类型系统
 
@@ -236,9 +240,9 @@ graph TB
     NOTELIST --> NOTEPAGE
 ```
 
-**参考源码**：[_config.yml](../../../_config.yml)（`site_tree` 小节）、[README.md](../../../README.md)
+**参考源码**：[_config.yml](../../../_config.yml)（`profiles` 小节）、[README.md](../../../README.md)
 
-每个系统通过 `site_tree` 配置决定左右侧边栏显示哪些小部件。例如 wiki 页面左侧显示 tree（页面树）小部件，博客文章显示相关文章小部件。
+每个系统通过对应的 `profiles.*.leftbar.widgets` 和 `profiles.*.rightbar.widgets` 决定侧边栏显示哪些小部件。例如 Wiki 页面左侧显示 tree（页面树）小部件，博客文章显示相关文章小部件。表格与图中的 `index_blog`、`index_wiki` 等仍是 Hexo 内部模板 / layout 名，公开配置 Profile ID 分别为 `blog_index`、`wiki_index`。
 
 ## 关键子系统
 
@@ -254,19 +258,19 @@ graph TB
 
 ### 插件系统
 
-插件采用条件加载模式（[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)）。主题检查配置中的 `plugins.*.enable` 标志，按需加载对应 CSS 与 JavaScript，包括：
+Extension 采用 Runtime Manifest 条件加载模式（[scripts/lib/contribution-registry.js](../../../scripts/lib/contribution-registry.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/](../../../source/js/runtime/)）。主题读取冻结的 `features.*.enabled` 与页面 `render.math/render.diagrams`，从内置 descriptor 注册表投影页面声明，再由 ESM Registry 按 DOM 条件加载对应 CSS 与 JavaScript，包括：
 
 - 图片增强（fancybox、swiper）
 - 代码功能（copycode、语法高亮）
 - 数学渲染（katex、mathjax）
 - 图表（mermaid）
-- 性能（scrollreveal、preload/flying_pages）
+- 性能（原生 reveal、preload/flying_pages）
 
 详见[插件系统](../07-外部集成/plugin-system.md)。
 
 ### 评论集成
 
-评论系统根据 `comments.service` 配置条件加载。每种评论服务（Beaudar、Twikoo、Waline、Artalk、Giscus）都在 `window.stellar.initComments` 注册自己的初始化函数，页面加载完成后调用。
+评论系统根据 `comments.provider` 与页面 `comments.provider/options` 选择实现。Beaudar、Utterances、Giscus、Twikoo、Waline、Artalk 的 markup 由评论 partial 输出，初始化统一交给 [source/js/runtime/extensions/comments.js](../../../source/js/runtime/extensions/comments.js)；官方脚本和样式来自主题内部资源注册表。
 
 详见[评论系统](../07-外部集成/comment-systems.md)。
 
@@ -309,10 +313,10 @@ flowchart TD
     
     STATICHTML --> BROWSER["Browser loads page"]
     
-    BROWSER --> MAINJS["main.js: stellar.initPage()<br/>Interactive features"]
-    BROWSER --> LAZYLOAD["lazyload.js<br/>Image loading"]
-    BROWSER --> COMMENTS["Comment system init"]
-    BROWSER --> PRELOAD["preload (flying_pages)<br/>Link prefetching"]
+    BROWSER --> MAINJS["main.js: stellar.initPage()<br/>Core interactions"]
+    BROWSER --> RUNTIME["runtime/index.js<br/>Read Runtime Manifest"]
+    RUNTIME --> REGISTRY["ExtensionRegistry<br/>selector / always conditions"]
+    REGISTRY --> ADAPTERS["ESM adapters<br/>search, comments, services, features"]
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)、[layout/layout.ejs](../../../layout/layout.ejs)、[source/js/main.js](../../../source/js/main.js)
@@ -327,7 +331,7 @@ flowchart TD
 - **原生 JavaScript**：客户端代码无框架依赖
 - **外部库（CDN）**：marked.js（运行时 Markdown 渲染）、vanilla-lazyload（图片懒加载）
 
-**依赖** 定义在 [package.json](../../../package.json) 与 [_config.yml](../../../_config.yml)（`dependencies` 小节）。
+**依赖** 定义在 [package.json](../../../package.json)；Extension 的可配置行为位于 `_config.yml` 的 `search/comments/tags/features/services` 根配置，官方资源路径由内部注册表管理。
 
 ## 目录结构概览
 
@@ -336,11 +340,12 @@ flowchart TD
 - `layout/` — EJS 模板
   - `layout.ejs` — 主布局编排
   - `_partial/` — 可复用模板组件
-  - `_plugins/` — 插件集成模板
+    - `layout/_partial/scripts/runtime.ejs` — Runtime Manifest 与单一 ESM 入口
 - `source/` — 客户端资源
   - `css/` — Stylus 样式
   - `js/` — JavaScript
     - `main.js` — 核心初始化
+    - `runtime/` — ESM Registry、request/cache、资源加载与 Extension adapters
     - `plugins/` — 可选功能
     - `services/` — 数据服务
 - `scripts/` — Hexo 构建期脚本
@@ -351,13 +356,13 @@ flowchart TD
 
 ## 版本与分发
 
-主题版本定义在两处：
-- [_config.yml](../../../_config.yml) — `stellar.version`
-- [package.json](../../../package.json) — `version` 字段
+主题版本只由 [package.json](../../../package.json) 的 `version` 字段定义，模板通过 `stellar_info('version')` 读取相同的 package metadata。
 
 Stellar 通过 npm 以 `hexo-theme-stellar` 分发，采用 MIT 协议开源。
 
-**参考源码**：[_config.yml](../../../_config.yml)、[package.json](../../../package.json)、[README.md](../../../README.md)
+完整 Blueprint 已迁移到独立的 [Stellar Examples](https://github.com/xaoxuu/hexo-theme-stellar-examples) 仓库。四套示例分别作为可下载、可预览和可独立运行的新站方案；主题包只保留 `stellar doctor` 与 `stellar new note`，不再携带示例内容或注册 init。Blueprint 不进入页面运行时，也不会成为新的配置根。
+
+**参考源码**：[package.json](../../../package.json)、[ci/check-package-integration.js](../../../ci/check-package-integration.js)、[scripts/commands/stellar.js](../../../scripts/commands/stellar.js)、[scripts/lib/theme-metadata.js](../../../scripts/lib/theme-metadata.js)、[README.md](../../../README.md)、[Stellar Examples](https://github.com/xaoxuu/hexo-theme-stellar-examples)
 
 ---
 

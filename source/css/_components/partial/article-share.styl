@@ -1,0 +1,48 @@
+.article-share
+  padding: 1rem
+  >.body>.link
+    margin: 0
+    height: 0
+    opacity: 0
+    overflow: hidden
+  .social-wrap
+    gap: 1rem
+    justify-content: center
+    .social
+      background: none
+      color: var(--text-p2)
+      border-radius: 50%
+      corner-shape: round
+      width: 40px
+      height: 40px
+      padding: 0
+      overflow: visible
+      .share-item__icon
+        --ui-icon-size: 40px
+        box-sizing: border-box
+        padding: 8px
+        border-radius: 50%
+        corner-shape: round
+        background: transparent
+        trans1 background
+      &:hover, &:focus-visible, &:active
+        .share-item__icon
+          background: var(--block-border)
+  .qrcode
+    width: 128px
+    padding: 4px
+    background: white
+    border-radius: 4px
+    box-shadow: 0 4px 8px 0px rgba(0, 0, 0, 0.1), 0 0 32px 0px rgba(0, 0, 0, 0.1)
+    overflow: hidden
+    trans1 all
+    height: 0
+    margin: 0 auto
+    transform: scale(0.01)
+    img
+      object-fit: contain
+  .qrcode.display
+    margin: 2rem auto 1rem
+    height: 128px !important
+    opacity: 1 !important
+    transform: scale(1)

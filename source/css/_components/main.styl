@@ -1,19 +1,16 @@
-.l_main
+.site-main
   position: relative
   padding-bottom: var(--gap-page)
-  @media screen and (min-width: $device-mobile-max)
-    padding-top: var(--gap-page)
-  header
+  padding-top: var(--shell-content-top-gap)
+  > .brand-header
+    display: none
     margin: 2rem 1rem 1rem
-    .logo-wrap
+    @media screen and (max-width: $device-tablet)
+      display: flex !important
+    .brand-wrap
       margin: 0
 
-.l_body.index
-  .l_main
-    @media screen and (max-width: $device-mobile-max)
-      padding-top: 0
-
-body>.sitebg
+body > .site-background
   position fixed
   top: 0
   left: 0
@@ -21,16 +18,16 @@ body>.sitebg
   bottom: 0
   background-size: cover
   if $site-background-image
-    background-image: convert($site-background-image)
-  .siteblur
+    background-image: url($site-background-image)
+  .site-background__blur
     width: 100%
     height: 100%
     --blur-px: 0
     --blur-sat: 200%
     blur-effect()
-    if hexo-config('style.site.blur-sat') 
-      --blur-sat: convert(hexo-config('style.site.blur-sat'))
-    if hexo-config('style.site.blur-px')
-      --blur-px: convert(hexo-config('style.site.blur-px'))
-    if hexo-config('style.site.blur-bg')
-      --blur-bg: convert(hexo-config('style.site.blur-bg'))
+    if hexo-config('appearance.backgrounds.page.backdrop.saturation')
+      --blur-sat: convert(hexo-config('appearance.backgrounds.page.backdrop.saturation'))
+    if hexo-config('appearance.backgrounds.page.backdrop.radius')
+      --blur-px: convert(hexo-config('appearance.backgrounds.page.backdrop.radius'))
+    if hexo-config('appearance.backgrounds.page.backdrop.overlay')
+      --blur-bg: convert(hexo-config('appearance.backgrounds.page.backdrop.overlay'))

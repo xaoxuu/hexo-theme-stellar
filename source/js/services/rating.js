@@ -14,6 +14,10 @@ function storeRating(id, value) {
   localStorage.setItem(getRatingKey(id), value);
 }
 
+function removeRating(id) {
+  localStorage.removeItem(getRatingKey(id));
+}
+
 function clearHover(el) {
   el.querySelectorAll('.star').forEach(s => s.classList.remove('hover'));
 }
@@ -64,6 +68,7 @@ async function loadRating(el) {
 
   try {
     const res = await fetch(`${api}/info?id=${encodeURIComponent(id)}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
     const rating = data.rating || {};
     const avg = calculateAverage(rating);
@@ -91,8 +96,8 @@ async function loadRating(el) {
     countEl.textContent = `${totalVotes}`;
 
     updatePreview(el, avg);
-  } catch (e) {
-    console.warn(`[rating] 加载失败: id=${id}`, e);
+  } catch (error) {
+    void error;
   }
 }
 
@@ -105,12 +110,15 @@ async function submitRating(el, value) {
   el.classList.add('rated');
 
   try {
-    await fetch(`${api}/update?id=${encodeURIComponent(id)}&value=${value}`, {
+    const res = await fetch(`${api}/update?id=${encodeURIComponent(id)}&value=${value}`, {
       method: 'POST'
     });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
     loadRating(el);
-  } catch (e) {
-    console.warn(`[rating] 提交失败: id=${id}`, e);
+  } catch (error) {
+    void error;
+    removeRating(id);
+    el.classList.remove('rated');
   }
 }
 

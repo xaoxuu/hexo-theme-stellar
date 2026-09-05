@@ -1,22 +1,22 @@
-'use strict';
+/* global hexo */
+"use strict";
 
-hexo.extend.helper.register('category_color', function(cat){
-  const { config } = hexo.theme
-  const color = config.article.category_color[cat]
+hexo.extend.helper.register("category_color", function(cat) {
+  const color = hexo.stellar.config.article.categoryColors[cat];
   if (color) {
-    var textColor = color
-    if (color.startsWith('#')) {
-      textColor = color
+    var textColor = color;
+    if (color.startsWith("#")) {
+      textColor = color;
     } else {
-      textColor = '#' + color
+      textColor = `#${color}`;
     }
-    var bgColor = textColor
+    var bgColor = textColor;
     if (textColor.length == (1+3)) { // #fff
-      bgColor += '2'
+      bgColor += "2";
     } else if (textColor.length == (1+6)) { // #ffffff
-      bgColor += '20'
+      bgColor += "20";
     }
     return ` style="--text-p2:${textColor};--theme-block:${bgColor}"`;
   }
-  return ''
-})
+  return "";
+});

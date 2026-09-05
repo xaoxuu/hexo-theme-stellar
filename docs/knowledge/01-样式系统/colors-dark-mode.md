@@ -14,7 +14,7 @@ tags:
 
 生成此页面时参考的主题源码文件：
 
-- [source/css/_components/partial/navbar.styl](../../../source/css/_components/partial/navbar.styl)
+- [source/css/_components/partial/listing-nav.styl](../../../source/css/_components/partial/listing-nav.styl)
 - [source/css/_components/sidebar/search.styl](../../../source/css/_components/sidebar/search.styl)
 - [source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)
 - [source/css/_custom.styl](../../../source/css/_custom.styl)
@@ -32,7 +32,7 @@ tags:
 
 ## 颜色配置系统
 
-主题颜色始于 `_config.yml` 的 `style.color` 小节，经 `_custom.styl`、`theme_base.styl` 与 `:root` CSS 块三阶段流水线转换为 Stylus 变量与 CSS 自定义属性。
+主题颜色始于 `_config.yml` 的 `appearance.colors` 小节，经 `_custom.styl`、`theme_base.styl` 与 `:root` CSS 块三阶段流水线转换为 Stylus 变量与 CSS 自定义属性。
 
 ### 配置到 CSS 的流程
 
@@ -41,7 +41,7 @@ tags:
 ```mermaid
 graph TD
     CONFIG[""_config.yml
- style.color.*""]
+ appearance.colors.*""]
     CUSTOM[""_custom.styl
  $c-theme, $c-accent, $c-link""]
     THEME_BASE[""theme_base.styl
@@ -69,9 +69,9 @@ graph TD
 
 | 配置键 | Stylus 变量 | 生成的 CSS 属性 |
 |--------|-------------|----------------|
-| `style.color.theme` | `$c-theme` | `--theme`、`--theme-a10/20/30`、`--hue`、`--sat`、`--light` |
-| `style.color.accent` | `$c-accent` | `--accent` |
-| `style.color.link` | `$c-link` | `--link`、`--link-a20` |
+| `appearance.colors.primary` | `$c-theme` | `--theme`、`--theme-a10/20/30`、`--hue`、`--sat`、`--light` |
+| `appearance.colors.accent` | `$c-accent` | `--accent` |
+| `appearance.colors.link` | `$c-link` | `--link`、`--link-a20` |
 
 配置转换使用 `hexo-config()` 与 `convert()`。
 
@@ -259,40 +259,43 @@ flowchart TD
 
 ### 侧边栏背景色
 
-左栏（`.l_left .sidebg`）支持图片背景与纯色背景，各有深色模式调整。`$leftbar-background-image`、`$leftbar-background-color-light`、`$leftbar-background-color-dark` 从 `_config.yml` 经 `_custom.styl` 读取。
+左栏（`.site-region--leftbar .site-region__decoration`）支持艺术渐变、图片和纯色背景。`type` 显式选择唯一背景分支，浅色/深色调色板、图片与纯色变量从 `_config.yml` 经 `_custom.styl` 读取。
 
-**`.l_left .sidebg` 背景解析逻辑**
+**`.site-region--leftbar .site-region__decoration` 背景解析逻辑**
 
 ```mermaid
 flowchart TD
-    START[""$leftbar-background-image set?""]
-    IMG[""Image mode:
- filter: saturate blur opacity(--background-opacity)""]
-    DARK_IMG[""Dark: --background-opacity *= 0.75"
-[:root[data-theme=dark] / prefers-color-scheme:dark]"]
-    COLOR_CHECK[""$leftbar-background-color-light/dark set?""]
-    COLOR[""Color mode:
- background-color: $leftbar-background-color-light""]
-    DARK_COLOR[""Dark: background-color: $leftbar-background-color-dark""]
+    START[""Leftbar background type""]
+    GRADIENT[""Art gradient:
+ base color + 2 radial + 1 conic layer
+ role-specific light and dark HSL
+ blur + configured opacity""]
+    IMG[""Image:
+ saturate + blur + opacity
+ dark image opacity *= 0.75""]
+    COLOR[""Solid color:
+ no filter""]
     NONE[""Default: transparent""]
 
-    START -->|"yes"| IMG
-    IMG --> DARK_IMG
-    START -->|"no"| COLOR_CHECK
-    COLOR_CHECK -->|"yes"| COLOR
-    COLOR --> DARK_COLOR
-    COLOR_CHECK -->|"no"| NONE
+    START -->|"gradient"| GRADIENT
+    START -->|"image"| IMG
+    START -->|"color"| COLOR
+    START -->|"missing selected value"| NONE
 ```
 
 **参考源码**：[source/css/_components/sidebar/sidebar.styl](../../../source/css/_components/sidebar/sidebar.styl)、[source/css/_custom.styl](../../../source/css/_custom.styl)
 
 | 变量 | 来源 | 用途 |
 |------|------|------|
+| `$leftbar-background-type` | `_custom.styl` | 显式选择渐变、图片或纯色分支 |
+| `$leftbar-gradient-light-*` / `$leftbar-gradient-dark-*` | `_custom.styl` | 两套调色板的基础、左上、右中、左下颜色 |
 | `$leftbar-background-image` | `_custom.styl` | 背景图 URL |
 | `$leftbar-background-color-light` | `_custom.styl` | 浅色模式纯色 |
 | `$leftbar-background-color-dark` | `_custom.styl` | 深色模式纯色 |
-| `--blur-px` | `sidebar.styl` CSS 变量 | 图片模糊半径 |
-| `--background-opacity` | `sidebar.styl` CSS 变量 | 图片透明度；深色模式乘以 0.75 |
+| `--blur-px` | `sidebar.styl` CSS 变量 | 渐变或图片模糊半径 |
+| `--background-opacity` | `sidebar.styl` CSS 变量 | 渐变或图片透明度；只有暗色图片分支乘以 0.75 |
+
+`type` 默认为 `gradient`，可选 `gradient` / `image` / `color`，不再根据其它字段是否为空推断分支。`gradient.light` 与 `gradient.dark` 分别接受四个合法 CSS 颜色，顺序均为“基础、左上、右中、左下”；任一模式可单独覆盖，未覆盖的模式保留主题默认值。默认 HSL 直接写在配置中，Stylus 只消费颜色并组合两层径向渐变与一层锥形渐变，不再推导饱和度或亮度。
 
 ### 导航栏激活状态颜色
 
@@ -430,4 +433,4 @@ background: white  // 深色模式下不会变
 - **交互：** `--link`、`--accent`、`--theme`
 - **透明度混合：** `--bg-a20`、`--bg-a50` 等（数字表示近似不透明度）
 
-**参考源码**：[source/css/_common/base.styl](../../../source/css/_common/base.styl)、[source/css/_components/partial/navbar.styl](../../../source/css/_components/partial/navbar.styl)
+**参考源码**：[source/css/_common/base.styl](../../../source/css/_common/base.styl)、[source/css/_components/partial/listing-nav.styl](../../../source/css/_components/partial/listing-nav.styl)

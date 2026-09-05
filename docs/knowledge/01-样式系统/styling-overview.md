@@ -26,7 +26,7 @@ tags:
 
 Stellar 的样式链路为：
 
-1. `_config.yml` 的 `style` 配置；
+1. `_config.yml` 的 `appearance` 配置；
 2. `source/css/_custom.styl` 生成 Stylus 和 CSS 令牌；
 3. `source/css/_defines/` 提供通用 mixin 和工具；
 4. `source/css/_components/` 实现页面和组件样式；
@@ -88,4 +88,4 @@ Stellar 的样式链路为：
 
 ## 知识库维护边界
 
-本文只维护架构、修改路径和判断规则。公共数值只链接到[设计令牌与 CSS 变量](design-tokens.md)；组件独有的行为契约放在对应内容或布局页面；历史方案放在 `docs/designs/`。修改后运行知识库硬事实核查。
+本文只维护架构、修改路径和判断规则。公共数值只链接到[设计令牌与 CSS 变量](design-tokens.md)；组件独有的行为契约放在对应内容或布局页面；方案与取舍通过 GitHub issue 记录。修改后运行知识库硬事实核查。

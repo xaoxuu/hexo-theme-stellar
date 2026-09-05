@@ -6,6 +6,8 @@ btn:
   notebook: Notebook
   recent_publish: Recent
   all_wiki: All Products
+  all_topic: All Topics
+  all_notebook: All Notebooks
   category: Category
   categories: Categories
   tag: Tag
@@ -21,6 +23,16 @@ btn:
   comments: Join Discussion
   expand_posts: Show %s more posts
   collapse_posts: Collapse
+  search: Search
+
+menu:
+  blog: Blog
+  categories: Categories
+  tags: Tags
+  topic: Topic
+  archives: Archives
+  friends: Friends
+  about: About
 
 meta:
   recent_update: Recent Update
@@ -69,13 +81,51 @@ page:
 
 search:
   search: Search
-  search_in: Search in %s
+  scope_all: All
+  scope_blog: Blog
   no_results: No Results!
+  close: Close search
+
+settings:
+  label: Settings
+  title: Settings
+  profile:
+    title: Profile
+    avatar: Avatar
+    nickname: Nickname
+    email: Email
+    url: URL
+    save: Save
+    logout: Log out
+    provider_managed: '%s manages comment identity outside the theme. Profile editing and logout are unavailable here.'
+    provider_unknown: The current comment provider
+  cache:
+    title: Cache
+    search: Search cache
+    dynamic: Data cache
+    all: All caches
+    clear: 'Clear %s'
+  about:
+    title: About
+    empty: No information configured.
+    open_link: 'Open link for %s'
+  result:
+    success: Done.
+    partial: Partially completed. Some browser storage could not be changed.
+    failure: Failed. Browser storage is unavailable.
+  validation:
+    name: Enter a nickname of up to 80 characters.
+    email: Enter a valid email address or leave it blank.
+    url: Enter an HTTP(S) URL or leave it blank.
 
 message:
   copied: Copied!
+  copy_denied: Clipboard permission was denied
+  copy_unsupported: Clipboard requires a supported browser and HTTPS
   fetching_latest_release: '%s is fetching the latest release…'
-  theme_switched:
+  loading: Loading
+  loading_failed: Failed to load. Please try again later.
+  color_scheme_switched:
     light: Switched to Light Mode
     dark: Switched to Dark Mode
     auto: Switched to Auto Mode
@@ -89,6 +139,13 @@ symbol:
   page: "Page %s"
 
 tag_plugins:
+  okr:
+    status:
+      in_track: On Track
+      at_risk: At Risk
+      off_track: Delayed
+      finished: Completed
+      unfinished: Incomplete
   mbti:
     title: 'My MBTI Type: %s (%s)'
     types:

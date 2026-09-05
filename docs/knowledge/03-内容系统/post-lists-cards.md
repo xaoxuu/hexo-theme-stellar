@@ -8,14 +8,20 @@ tags:
 
 # 文章列表与卡片组件
 
+> [!IMPORTANT]
+> v2 已统一卡片、横幅与集合标题的角色字段；本页涉及内容字段时，以[内容配置 Schema v2](content-schema-v2.md)为准。
+
 <details>
 <summary>相关源码文件</summary>
 
 生成此页面时参考的主题源码文件：
 
 - [layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
+- [layout/_partial/main/pin_slider.ejs](../../../layout/_partial/main/pin_slider.ejs)
 - [layout/_partial/main/post_list/wiki_card.ejs](../../../layout/_partial/main/post_list/wiki_card.ejs)
 - [layout/index.ejs](../../../layout/index.ejs)
+- [layout/archive.ejs](../../../layout/archive.ejs)
+- [scripts/helpers/post_view_model.js](../../../scripts/helpers/post_view_model.js)
 - [source/css/_components/list.styl](../../../source/css/_components/list.styl)
 
 </details>
@@ -30,7 +36,9 @@ tags:
 
 ## 架构概览
 
-文章列表系统采用两层架构：容器层（`index.ejs`）遍历文章并调用卡片渲染器（`post_card.ejs`）渲染每篇文章；独立的 `wiki_card.ejs` partial 用不同数据结构与布局渲染 wiki 项目卡片。
+文章列表系统采用两层架构：Hexo 提供 `page.posts`、分页和当前分类/标签查询状态；容器层为每个普通 Post 或 Topic Post 取得冻结的 `render.listing`，再调用只接收 ViewModel 的 `post_card.ejs`。首页平铺置顶、轮播与归档消费同一投影，不在 EJS 重做页面/Profile/主题级联；Wiki 使用独立的 `wiki_card.ejs`。Notebook 总索引与 Note 列表同样只消费生成器投影的 `page.notebookIndex`，两类卡片分别接收最终 listing，不读取原始 Notebook tree。
+
+Notebook 投影把集合链接、标题、说明、图标、排序和可见性，以及 Note 的链接、标题、摘要、标签、封面、日期、优先级与可见性固化为普通对象。总索引按 collection sort 稳定排列并过滤 `listed: false`；集合首页与标签分页在生成器内按同一 `listed` 语义筛选，再把分页切片深度冻结后交给模板。
 
 **文件与函数映射：**
 
@@ -38,6 +46,7 @@ tags:
 |------|----------|------|
 | `layout/index.ejs` | `layout_post_list()`、`layout_post_card()` | 遍历 `page.posts`，包装卡片 |
 | `layout/_partial/main/post_list/post_card.ejs` | `div()`、`div_default()`、`div_photo()` | 渲染单篇文章卡片 |
+| `scripts/helpers/post_view_model.js` | `post_view_model()` | 从构建登记输入生成普通 Post / Topic 列表 ViewModel，缺失时按源文件失败 |
 | `layout/_partial/main/post_list/wiki_card.ejs` | `layoutDiv()` | 渲染 wiki 项目卡片 |
 | `layout/_partial/main/post_list/topic_card.ejs`、`latest_post_card.ejs` | `layoutDiv()` | 渲染专栏容器（最新文章卡片 + 其他文章列表） |
 | `layout/_partial/main/navbar/nav_tabs_blog` | — | 文章列表上方的导航标签 |
@@ -88,7 +97,7 @@ graph TB
 |------|------|
 | **输入** | `partial`——渲染单篇文章卡片的回调函数 |
 | **数据源** | `page.posts`——Hexo 文章集合 |
-| **过滤条件** | `post.indexing != false`——排除显式禁用收录的文章 |
+| **过滤条件** | 普通 Post 与 Topic Post 都使用 `render.listing.listed` |
 | **输出** | 包装在 `<div class="post-list post">` 中的 HTML |
 
 ```mermaid
@@ -96,7 +105,7 @@ flowchart TD
     Start["layout_post_list(partial)"]
     OpenDiv["el += '<div class=\"post-list post\">'"]
     Iterate["page.posts.each(post)"]
-    CheckIndex{"post.indexing<br/>!= false?"}
+    CheckIndex{"render.listing.listed?"}
     CallWrapper["layout_post_card('post', post, partial(post))"]
     AppendCard["el += card_html"]
     CloseDiv["el += '</div>'"]
@@ -121,9 +130,9 @@ flowchart TD
 
 ```mermaid
 graph LR
-    PostObject["post object"]
-    CheckCover{"post.cover<br/>defined?"}
-    CheckCardStyle{"article.card_style<br/>== 'hero'?"}
+    PostObject["render.listing"]
+    CheckCover{"listing.cover<br/>defined?"}
+    CheckCardStyle{"listing.cardStyle<br/>== 'hero'?"}
     PhotoLayout["layout = 'post photo'"]
     DefaultLayout["layout = 'post'"]
     WrapHTML["Wrap in <a class='post-card {layout}'>"]
@@ -147,13 +156,16 @@ graph LR
 
 ### 数据结构初始化
 
-渲染先由文章 front-matter 构造 `obj` 对象：
+普通 Post 与 Topic Post 卡片直接读取 `PageViewModel.render.listing`：
 
 | 属性 | 来源 | 用途 |
 |------|------|------|
-| `obj.image` | `post.cover` | 封面图 URL |
-| headline | `post.title` | hero 卡片的大号展示文本（无标题回退日期） |
-| caption | `post.subtitle`（` | ` 前缀优先）→ `post.description` → excerpt 前 50 字 | hero 卡片与置顶轮播共用的单行小字（`subtitle()` helper，空则不渲染） |
+| `cover` | 当前文章 Front Matter 的根级 `cover` | 封面图 URL |
+| `title` | 文章标题 | hero 卡片的大号展示文本（无标题回退日期） |
+| `caption` | 根级 `tagline` → description → excerpt | hero 卡片与置顶轮播共用的单行小字 |
+| `excerpt` | excerpt → description → 正文自动截断 | classic 卡片摘要 |
+| `categories` / `tags` | Hexo 关系投影 | 分类面包屑与最多五个标签 |
+| `priority` / `listed` | 已解析列表设置与可见性 | 置顶排序、去重和隐藏过滤 |
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
 
@@ -226,7 +238,7 @@ graph TD
 **摘要**
 
 - 优先级：`post.excerpt` → `post.description` → 由 `post.content` 自动生成
-- 自动摘要长度由 `theme.article.auto_excerpt` 控制
+- 自动摘要长度由 `article.listing.excerpt_length` 控制
 - 排版插件启用时应用 `heti` 类
 - 用 `strip_html()` 辅助函数去 HTML
 
@@ -273,7 +285,7 @@ graph TB
 
 ### 定位逻辑
 
-hero 卡片文字区固定 `bottom`：标题（headline）与单行小字（caption）始终叠加在封面底部；不再支持 top 布局，也不再渲染主题小字（原 `poster.topic` 已移除）。小字取值统一由 `subtitle()` helper（`scripts/lib/subtitle.js`）提供：显式 `post.subtitle` 含 ` | ` 且左侧非空时只取左侧；其他 `subtitle` 原样保留，之后依次回退 `post.description`、`excerpt || content` 去 HTML、压缩空白后截断 50 字（省略号由 CSS 单行处理），都没有则不渲染；置顶轮播复用同一取值。
+hero 卡片文字区固定 `bottom`：标题（headline）与单行小字（caption）始终叠加在封面底部；不再支持 top 布局，也不再渲染主题小字（原 `poster.topic` 已移除）。小字取值统一由 `caption()` helper（`scripts/lib/caption.js`）提供：优先取当前角色的根级 `tagline`，之后依次回退 `description`、`excerpt || content` 去 HTML、压缩空白后截断 50 字；都没有则不渲染，置顶轮播复用同一取值。Banner 的 `banner.tagline` 仅服务页内横幅。
 
 ### 渐变模糊层与黑色蒙版
 
@@ -362,7 +374,7 @@ graph LR
 
 **卡片标签**
 
-- 由 `article.card_tags` 配置控制（默认关闭），最多显示 5 个
+- 由 `article.listing.show_tags` 控制（默认关闭），最多显示 5 个
 - 标签为纯文字（`cap` 小字样式，无胶囊底色），前缀为内联 `default:hashtag` 图标（`.card-tags svg`：1em、`margin-right: .25em`、`opacity: .4`），与标签页图标一致
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
@@ -392,10 +404,12 @@ flowchart TD
 
 仅当同时满足以下条件时使用 **hero 卡片**：
 
-1. `article.card_style` 为 `hero`（默认）
-2. `obj.image` 已定义且长度非零（文章有封面）
+1. `article.listing.card_layout` 为 `hero`（默认）
+2. `render.listing.cover` 已定义且长度非零（文章有封面）
 
-否则回退到 **classic 卡片**。也就是说文章可以有封面图但仍用普通卡片（`article.card_style` 为 `classic` 或文章没有封面时）。
+否则回退到 **classic 卡片**。也就是说文章可以有封面图但仍用普通卡片（`article.listing.card_layout` 为 `classic` 或文章没有封面时）。
+
+Topic 集合的根级 `cover` / `tagline` 只用于专栏索引卡片，不级联到成员文章。Topic 文章继承全局 `card_layout`，但列表封面和显式小字必须分别由当前文章的根级 `cover` / `tagline` 提供；未配置时不使用 Topic 封面、Banner 或其它文章图片回退。
 
 **参考源码**：[layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
 
@@ -403,21 +417,22 @@ flowchart TD
 
 ## Wiki 卡片变体
 
-`wiki_card.ejs` partial 渲染 wiki 项目条目卡片，使用 `proj` 数据对象而非 `post` 对象。模板使用独立的 `wiki-card` / `wiki-card-cover` / `wiki-card-info` 类，不复用文章 hero 的 `.cover` 或 `cover-overlay()`；底部内容区采用 Wiki 专属 Today 风格的同图渐变模糊层与封面主题色蒙版。
+`wiki_card.ejs` partial 渲染 Wiki 项目条目卡片，只接收生成器投影的 `render.listing` 普通对象，不读取原始 Wiki 项目配置。模板使用独立的 `wiki-card` / `wiki-card-cover` / `wiki-card-info` 类，不复用文章 hero 的 `.cover` 或 `cover-overlay()`；底部内容区采用 Wiki 专属 Today 风格的同图渐变模糊层与封面主题色蒙版。
 
-### 数据对象 `proj`
+### 数据对象 `render.listing`
 
 | 属性 | 兜底 | 用途 |
 |------|------|------|
-| `proj.cover` | — | 卡片背景图；未配置时保留纯色空背景 |
-| `proj.icon` | `theme.default.project` | 底栏项目图标 |
-| `proj.tags` | — | 顶部标签字符串数组 |
-| `proj.headline` | `proj.title` → `proj.name` | 可选营销标题 |
-| `proj.title` | `proj.name` | 既有项目标题与营销标题回退 |
-| `proj.available` | — | 可选适用范围字符串（标签由 `meta.available` 本地化输出） |
-| `proj.repo` | — | GitHub star 动态数据源 |
-| `proj.name` | `proj.title` | 底栏项目标题 |
-| `subtitle(proj)` | `subtitle`（` | ` 前缀优先）→ `description` → excerpt/content | 底栏项目副标题 |
+| `cover` | — | 卡片背景图；未配置时保留纯色空背景 |
+| `icon` | 资源 fallback 已在模型边界解析 | 底栏项目图标 |
+| `tags` | `[]` | 顶部标签字符串数组 |
+| `headline` | `name` | 营销标题 |
+| `audience` | `''` | 可选适用范围字符串（标签由 `meta.available` 本地化输出） |
+| `repositoryApi` | `''` | GitHub star 动态数据源 |
+| `name` | — | 底栏项目标题 |
+| `caption` | `tagline` → `description` | 已解析的底栏项目副标题 |
+| `href` | collection homepage | 卡片链接 |
+| `priority/sort/listed` | `0/0/true` | 置顶、排序与聚合可见性 |
 
 ### 渲染结构
 
@@ -435,7 +450,7 @@ graph TD
     Meta["div.wiki-meta: available + heat"]
     Platform["default:platforms + 适用于 + available"]
     Star["default:fire + stargazers_count（热度）"]
-    Project["div.wiki-project: proj.icon or default:documents + name + subtitle(proj)"]
+    Project["div.wiki-project: icon or default:documents + name + caption(proj)"]
 
     Article --> Cover
     Cover --> Info
@@ -484,7 +499,7 @@ Wiki 卡片用 `list.styl` 中的封面布局，内容固定在卡片底部：
 <a class="... card-hover card-hover--spotlight card-hover--tilt">...</a>
 ```
 
-启用 `plugins.card_hover` 后，光斑跟随指针，倾斜最多采用配置的 `max_tilt` 并上浮 2px；离开时 Tilt 立即回正，Spotlight 在最后指针位置淡出后再回中。文章/Wiki 的 Tilt 只变换内层 `.post-card` / `.wiki-card`，避免覆盖外层 `.post-card-wrap` 的 ScrollReveal transform；置顶轮播只变换 `.pin-slider` 外层，不占用 `.pin-slider-track` 的横向切换 transform。插件样式把列表阴影从等尺寸包装器移到卡片本体，使阴影随倾斜移动，同时保留文章、轮播和专栏封面缩放/变暗及 Wiki hover 边框等子元素动效。
+启用 `features.card_hover.enabled` 后，光斑跟随指针，倾斜角采用主题内部固定策略并上浮 2px；离开时 Tilt 立即回正，Spotlight 在最后指针位置淡出后再回中。文章/Wiki 的 Tilt 只变换内层 `.post-card` / `.wiki-card`，避免覆盖外层 `.post-card-wrap` 的 Reveal 动画 transform；置顶轮播只变换 `.pin-slider` 外层，不占用 `.pin-slider-track` 的横向切换 transform。Feature 样式把列表阴影从等尺寸包装器移到卡片本体，使阴影随倾斜移动，同时保留文章、轮播和专栏封面缩放/变暗及 Wiki hover 边框等子元素动效。
 
 专栏最新文章卡片与置顶轮播外层输出完整组合类；专栏标题、描述和下方归档式文章条目仍保持静态，不随卡片倾斜。插件关闭、触屏、粗指针或减少动态效果时，组合类不产生动态行为。
 
@@ -494,17 +509,17 @@ Wiki 卡片用 `list.styl` 中的封面布局，内容固定在卡片底部：
 
 ## Topic 卡片变体
 
-`index_topic.ejs` 读取 `theme.topic.publish_list` 作为上架专栏集合，并按各专栏最新文章 `homepage.date` 降序排列后，经 `topic_card.ejs` 渲染每个专栏容器；无文章的专栏排在末尾，同日期保持配置中的相对顺序。每个容器上下排布：顶部为 `h2.topic-title` 专栏标题（复用 story 文章 h2 样式，`story-title()` mixin）与其下 `p.topic-desc` 专栏描述，中间为**最新文章卡片**（`latest_post_card.ejs` 公共组件，整卡跳转最新文章），底部为该专栏其他文章的归档式列表。其他文章与归档页共同复用 `archive_item.ejs`，显示 `MM-DD + 标题`；默认显示 3 篇，超过后通过原生 `<details>` 展开全部剩余文章并可再次收起。专栏容器之间以加大内边距拉开间隔。
+Topic 索引生成器从构建期 `topicIndex.items` 复制上架专栏投影，并按各专栏 `sortDate`（最新文章日期）降序排列后，以 `page.topicIndex.items` 显式 local 交给 `index_topic.ejs` 和 `topic_card.ejs`；卡片不读取原始 Topic tree。无文章的专栏排在末尾，同日期保持配置中的相对顺序。每个容器上下排布：顶部为 `h2.topic-title` 专栏标题（复用 story 文章 h2 样式，`story-title()` mixin）与其下 `p.topic-desc` 专栏描述，中间为**最新文章卡片**（`latest_post_card.ejs` 公共组件，整卡跳转最新文章），底部为该专栏其他文章的归档式列表。其他文章与归档页共同复用 `archive_item.ejs`，显示 `MM-DD + 标题`；默认显示 3 篇，超过后通过原生 `<details>` 展开全部剩余文章并可再次收起。专栏容器之间以加大内边距拉开间隔。
 
 ### 数据对象 `topic`
 
 | 属性 | 兜底 | 用途 |
 |------|------|------|
-| `topic.cover` | `topic.icon` → `theme.default.topic` | 最新文章卡片背景图（2:1 裁剪） |
-| `topic.title` | `topic.name` | 容器顶部 `h2.topic-title` 专栏标题（置于卡片外） |
+| `topic.cover` | 构建期已解析集合根级 `cover` → `INTERNAL.resources.topicCover` | 最新文章卡片背景图（2:1 裁剪） |
+| `topic.headline` | `topic.name` | 容器顶部 `h2.topic-title` 专栏标题（置于卡片外） |
 | `topic.description` | — | 标题下方的 `p.topic-desc` 一句话描述 |
-| `topic.homepage` | — | 最新文章（`pages[0]`），整卡跳转目标 |
-| `topic.pages` | `[]` | 专栏文章列表；`slice(1)` 排除最新，前 3 篇默认显示，其余折叠 |
+| `topic.latest` | — | 最新文章，整卡跳转目标 |
+| `topic.items` | `[]` | 排除最新后的专栏文章列表；前 3 篇默认显示，其余折叠 |
 
 ### 最新文章卡片结构
 
@@ -548,15 +563,15 @@ graph TD
 
 ## 集成点
 
-### ScrollReveal 动画
+### Reveal 动画
 
-文章卡片通过 `scrollreveal()` 辅助函数支持基于滚动的显现动画：
+文章卡片通过 `scrollreveal()` 辅助函数输出 `.slide-up` 触发类：
 
 ```
 <div class="post-card-wrap{scrollreveal(' ')}">
 ```
 
-辅助函数注入 ScrollReveal 插件集成所需的数据属性。
+Reveal Extension 使用原生 `IntersectionObserver` 独立观察每个元素。首次观察已位于视口内的元素直接显示，不播放入场动画；首次观察位于视口外的元素继续等待，后续滚入视口时通过 Web Animations API 播放主题固定的透明度、位移和缩放动画，同批元素自动错峰。内容不预先隐藏，因此页面切换不会先显示再消失，快速滚动跨过中间元素、浏览器缺少相关 API、启用“减少动态效果”或运行时失败时也均保持可见。
 
 **参考源码**：[layout/index.ejs](../../../layout/index.ejs)
 
@@ -574,7 +589,7 @@ graph TD
 
 ### Wiki 收录标志
 
-`index.ejs` 用于 wiki 索引页（设置 `page.wiki`）时，自动设置 `robots` meta 为 `noindex,follow`，防止搜索引擎收录生成的 wiki 列表页。
+`index.ejs` 用于 wiki 索引页（`collection_id(page, 'wiki')` 可解析）时，自动设置 `robots` meta 为 `noindex,follow`，防止搜索引擎收录生成的 wiki 列表页。
 
 **参考源码**：[layout/index.ejs](../../../layout/index.ejs)
 
@@ -588,15 +603,17 @@ graph TD
 ---
 title: My Post Title
 date: 2024-01-01
-cover: /images/cover.jpg  # 仅显式完整 URL 时渲染封面
+cover: /images/cover.jpg
 categories:
   - Category A
   - Category B
 tags:
   - tag1
   - tag2
-sticky: true  # 可选：置顶
-indexing: true  # 可选：是否进入列表（默认 true）
+listing:
+  priority: 1  # 大于 0 时置顶
+visibility:
+  listed: true
 excerpt: Custom excerpt text  # 可选
 description: SEO description  # 可选兜底
 ---
@@ -606,7 +623,8 @@ description: SEO description  # 可选兜底
 
 ```yaml blog/_config.stellar.yml
 article:
-  card_style: hero # hero = 全图文字封面卡片 / classic = 普通卡片
+  listing:
+    card_layout: hero # hero = 全图文字封面卡片 / classic = 普通卡片
 ```
 
 ```yaml
@@ -614,7 +632,7 @@ article:
 title: My Photo Post
 date: 2024-01-01
 cover: /images/hero.jpg
-subtitle: Caption text  # 可选：一行小字（subtitle > description > excerpt 前 50 字）
+tagline: Caption text
 ---
 ```
 

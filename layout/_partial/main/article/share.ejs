@@ -1,0 +1,55 @@
+<%
+function actionLabel(action) {
+  return action.label ? `${__('meta.share')}: ${action.label}` : __('meta.share')
+}
+
+function actionClasses(action) {
+  return ui_classes(`social share-item ${action.service}`, 'interactive', 'is-icon-only')
+}
+
+function renderAction(service) {
+  var action = share_action(service, share)
+  if (!action) return ''
+  var label = actionLabel(action)
+  var classes = actionClasses(action)
+  var iconHtml = `<span class="share-item__icon ui-icon">${icon(`share:${action.service}`, '', true)}</span>`
+  if (action.kind === 'external') {
+    return `<a class="${classes}" href="${escape_html(action.href)}" target="_blank" rel="external nofollow noopener noreferrer" aria-label="${escape_html(label)}" title="${escape_html(label)}">${iconHtml}</a>`
+  }
+  if (action.kind === 'link') {
+    return `<a class="${classes}" href="${escape_html(action.href)}" aria-label="${escape_html(label)}" title="${escape_html(label)}">${iconHtml}</a>`
+  }
+  if (action.kind === 'toggle') {
+    return `<a class="${classes}" onclick="util.toggle(&quot;${escape_html(action.target)}&quot;)" aria-label="${escape_html(label)}" title="${escape_html(label)}">${iconHtml}</a>`
+  }
+  if (action.kind === 'copy') {
+    return `<a class="${classes}" data-copy-message="${escape_html(__('message.copied'))}" onclick="util.copy(&quot;${escape_html(action.target)}&quot;, this.dataset.copyMessage)" aria-label="${escape_html(label)}" title="${escape_html(label)}">${iconHtml}</a>`
+  }
+  if (action.kind === 'native') {
+    return `<button type="button" class="${classes}" data-share-title="${escape_html(action.data.title)}" data-share-text="${escape_html(action.data.text)}" data-share-url="${escape_html(action.data.url)}" data-copy-target="${escape_html(action.target)}" data-copy-message="${escape_html(__('message.copied'))}" onclick="util.share(this)" aria-label="${escape_html(label)}" title="${escape_html(label)}">${iconHtml}</button>`
+  }
+  return ''
+}
+
+function urlenc(value) {
+  return encodeURIComponent(value == null ? '' : String(value))
+}
+
+function layoutDiv() {
+  if (!share || !Array.isArray(share.services) || share.services.length === 0) return ''
+  var buttons = share.services.map(renderAction).join('')
+  if (buttons.length === 0) return ''
+  var qrcode = share.services.includes('wechat')
+    ? `<div class="qrcode" id="qrcode-wechat" style="opacity:0;height:0"><img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&amp;data=${urlenc(share.permalink)}"/></div>`
+    : ''
+  return `
+  <div class="article-share${scrollreveal(' ')}" id="share">
+    <div class="body">
+      <div class="link"><input class="copy-area" readonly="true" id="copy-link" value="${escape_html(share.permalink)}" /></div>
+      <div class="social-wrap dis-select">${buttons}</div>
+      ${qrcode}
+    </div>
+  </div>`
+}
+%>
+<%- layoutDiv() %>

@@ -9,11 +9,9 @@ pre
 a
   text-decoration: none
   color: var(--link)
-  &:hover
-    color: var(--accent)
 
 .md-text p:not([class]) 
-  text-align: convert(hexo-config('style.text-align'))
+  text-align: convert(hexo-config('appearance.typography.content_align'))
 
 hr
   color: var(--text-meta)
@@ -44,19 +42,17 @@ table:not([class])
   font-size: var(--fs-content)
   scrollbar(0,0)
   th
-    background: var(--block)
-    border-top: 1px solid var(--block-border)
-    border-bottom: 1px solid var(--block-border)
+    border-style: solid
+    border-width: 1px 0
   td,th
     padding: 4px 1em
     line-height: 1.5
   tr
     word-break: keep-all
     white-space: nowrap
-    border-bottom: 1px dashed var(--block-border)
+    border-bottom-style: dashed
+    border-bottom-width: 1px
     trans()
-    &:hover
-      background: var(--block)
 
   @media screen and (min-width: $device-mobile-max)
     width 100%

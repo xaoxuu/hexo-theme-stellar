@@ -1,54 +1,71 @@
 <%
-const notebook = theme.notebooks.tree[page.notebook]
-if (item.filter == null) {
-  item.filter = 'auto'
-}
-if (item.placeholder == null && item.filter == 'auto') {
-  if (theme.wiki.tree[page.wiki]?.name) {
-    item.placeholder = __('search.search_in', theme.wiki.tree[page.wiki]?.name) 
-  } else if (notebook) {
-    item.placeholder = __('search.search_in', notebook.name || __('btn.notebook'))
-    item.filter = notebook.base_dir
-  }
+var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
+  ? viewModel
+  : null
+var notebookViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'notebook'
+  ? viewModel
+  : null
+var notebookIndex = page.notebookIndex?.mode === 'notes' ? page.notebookIndex.collection : null
+item = item && typeof item === 'object' ? Object.assign({}, item) : {}
+if (item.algoliaFilterPath == null) {
+  item.algoliaFilterPath = 'auto'
 }
 function layoutDiv() {
-  var el = ''
-  if (page.search == false) {
-    return el
+  if (typeof disabled !== 'undefined' && disabled === true) {
+    return ''
   }
-  el += `<div class="search-wrapper" id="search-wrapper">`
-  el += `<div class="search-form" role="search">`
-  var filter = ''
-  if (item.filter == 'auto') {
-    if (page.wiki) {
-      let matches = page.path.match(/(.*?)\/(.*?)\//i)
-      if (matches?.length > 0) {
-        filter = matches[0]
-      }
+  var rawInstanceId = typeof instanceId === 'string' && instanceId.length > 0 ? instanceId : 'default'
+  var algoliaFilterPath = ''
+  if (item.algoliaFilterPath == 'auto') {
+    if (wikiViewModel) {
+      algoliaFilterPath = wikiViewModel.render.layout.algoliaFilterPath
+    } else if (notebookViewModel) {
+      algoliaFilterPath = notebookViewModel.render.layout.algoliaFilterPath
+    } else if (notebookIndex) {
+      algoliaFilterPath = notebookIndex.layout.algoliaFilterPath
     }
   } else {
-    if (item.filter?.length > 0) {
-      filter = item.filter
+    if (item.algoliaFilterPath?.length > 0) {
+      algoliaFilterPath = item.algoliaFilterPath
     }
   }
-  if (filter.length > 0 && !filter.startsWith('/')) {
-    filter = '/' + filter
+  if (algoliaFilterPath.length > 0 && !algoliaFilterPath.startsWith('/')) {
+    algoliaFilterPath = '/' + algoliaFilterPath
   }
-  var placeholder = item.placeholder || (filter.length > 0 ? __('search.search_in', filter) : __('search.search'))
-  var escapedPlaceholder = escape_html(placeholder)
-  el += `<label class="search-button" for="search-input" aria-hidden="true">`
-  el += icon('default:search', '', true)
-  el += `</label>`
-  el += `<input type="search" class="search-input" id="search-input" aria-label="${escapedPlaceholder}"`
-  if (filter.length > 0) {
-    el += ` data-filter="${escape_html(filter)}"`
+  var searchTitle = __('btn.search')
+  var searchScope = search_scope(page, typeof viewModel !== 'undefined' ? viewModel : null)
+  var searchPresentation = typeof presentation === 'string' ? presentation : 'leftbar'
+  var iconOnly = searchPresentation === 'topbar' || searchPresentation === 'wiki-toolbar'
+  var searchClassName = typeof hoverSurface !== 'undefined' && hoverSurface === true
+    ? 'search-trigger has-hover-surface'
+    : 'search-trigger'
+  var searchAttrs = {
+    title: searchTitle,
+    'aria-label': searchTitle,
+    'data-shell-action': 'open-search',
+    'data-search-instance': rawInstanceId
   }
-  el += ` placeholder="${escapedPlaceholder}">`
-  el += `</div>`
-  el += `<div id="search-result"></div>`
-  el += `<div class="search-no-result">${__('search.no_results')}</div>`
-  el += `</div>`
-  return el
+  if (stellar_config('search.provider') === 'algolia' && algoliaFilterPath.length > 0) {
+    searchAttrs['data-algolia-filter-path'] = algoliaFilterPath
+  }
+  if (searchScope) {
+    searchAttrs['data-search-domain'] = searchScope.current
+    searchAttrs['data-search-domain-label'] = searchScope.currentLabel
+    searchAttrs['data-search-domain-blog'] = searchScope.hasBlog ? 'true' : 'false'
+  }
+  return partial('_partial/components/collection', {options: {
+    layout: 'list',
+    variant: 'nav',
+    items: [{
+      type: 'button',
+      title: searchTitle,
+      icon: 'default:search',
+      iconOnly: iconOnly,
+      className: searchClassName,
+      after: iconOnly ? '' : partial('_partial/search/shortcut'),
+      attrs: searchAttrs
+    }]
+  }})
 }
 %>
 <%- layoutDiv() %>

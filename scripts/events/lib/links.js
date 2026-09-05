@@ -2,7 +2,10 @@
  * links.js v1 | https://github.com/xaoxuu/hexo-theme-stellar/
  */
 
-'use strict';
+/* global hexo */
+"use strict";
+
+const { ensureRuntimeData } = require("../../lib/runtime-data");
 
 module.exports = ctx => {
   var allLinks = {}
@@ -13,5 +16,5 @@ module.exports = ctx => {
       allLinks[newKey] = data[key]
     }
   }
-  ctx.theme.config.links = allLinks
-}
+  ensureRuntimeData(ctx).links = allLinks;
+};

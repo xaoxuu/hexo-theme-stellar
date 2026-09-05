@@ -1,25 +1,39 @@
 <%
 function layoutDiv() {
+  var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki'
+    ? viewModel
+    : null
+  var postViewModel = typeof viewModel !== 'undefined' && ['post', 'topic'].includes(viewModel?.collection?.profile)
+    ? viewModel
+    : null
+  var notebookViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'notebook'
+    ? viewModel
+    : null
   // 作者
   var el = ''
   el += `<div class="flex-row" id="post-meta">`
-  if (page.wiki) {
+  if (wikiViewModel) {
+    var updated = wikiViewModel.render.article.updated
+    if (updated) {
+      el += `<span class="text created">${__("meta.updated") + __("symbol.colon")}`
+      el += `<time datetime="${date_xml(updated)}">${date(updated, config.date_format)}</time>`
+      el += `</span>`
+    }
+  } else if (notebookViewModel) {
+    var notebookArticle = notebookViewModel.render.article
     el += `<span class="text created">${__("meta.updated") + __("symbol.colon")}`
-    el += `<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time>`
+    el += `<time datetime="${date_xml(notebookArticle.updated)}">${date(notebookArticle.updated, config.date_format)}</time>`
     el += `</span>`
-  } else if (page.notebook) {
-    // 更新日期
-    el += `<span class="text created">${__("meta.updated") + __("symbol.colon")}`
-    el += `<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time>`
-    el += `</span>`
-    // 发布日期
     el += `<span class="sep updated"></span>`
     el += `<span class="text updated">`
     el += `${__("meta.created") + __("symbol.colon")}`
-    el += `<time datetime="${date_xml(page.date)}">${date(page.date, config.date_format)}</time>`
+    el += `<time datetime="${date_xml(notebookArticle.created)}">${date(notebookArticle.created, config.date_format)}</time>`
     el += `</span>`
   } else {
-    const author = theme.authors ? (theme.authors[page.author] || theme.default_author) : null
+    var authorId = postViewModel
+      ? postViewModel.render.listing.authorId
+      : content_config(page).article?.author
+    var author = stellar_data('authors') ? (stellar_data('authors')[authorId] || stellar_data('defaultAuthor')) : null
     if (author) {
       el += `<a class="author" href="${pretty_url(author.path)}">${author.name}</a>`
       el += `<span class="sep"></span>`
@@ -29,13 +43,15 @@ function layoutDiv() {
     if (!author) {
       el += `${__("meta.created") + __("symbol.colon")}`
     }
-    el += `<time datetime="${date_xml(page.date)}">${date(page.date, config.date_format)}</time>`
+    var created = postViewModel ? postViewModel.item.date : page.date
+    var updated = postViewModel ? postViewModel.item.updated : page.updated
+    el += `<time datetime="${date_xml(created)}">${date(created, config.date_format)}</time>`
     el += `</span>`
     // 更新日期
     el += `<span class="sep updated"></span>`
     el += `<span class="text updated">`
     el += `${__("meta.updated") + __("symbol.colon")}`
-    el += `<time datetime="${date_xml(page.updated)}">${date(page.updated, config.date_format)}</time>`
+    el += `<time datetime="${date_xml(updated)}">${date(updated, config.date_format)}</time>`
     el += `</span>`
   }
   el += `</div>`

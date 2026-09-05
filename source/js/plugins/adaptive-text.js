@@ -7,7 +7,7 @@
 //   contrast       黑白对比（两种变量同色）
 //   split          大字（标题/headline）用 contrast，小字（caption/subtitle/面包屑等）用 theme
 // 用户显式覆盖优先：元素已有内联 --text-banner 或内联 color 时跳过。
-// 由 layout/_plugins/adaptive-text.ejs 在页面存在目标元素时懒加载。
+// 由 runtime feature adapter 在页面存在目标元素时按需加载并挂载。
 
 function parseCssUrl(value) {
   if (!value) {
@@ -114,15 +114,16 @@ function setWikiOverlayColor(el, rgb) {
 // Wiki 卡片主题色确定后（包括提取失败时的 CSS 回退）通知索引页。
 // 覆盖层会同时等待原图 load，避免先用默认主题色绘制、再切换为平均色。
 function notifyWikiOverlayReady(el) {
-  if (!el || !el.dispatchEvent || !document.createEvent) {
+  var ownerDocument = el && el.ownerDocument;
+  if (!el || !el.dispatchEvent || !ownerDocument || !ownerDocument.createEvent) {
     return;
   }
-  var event = document.createEvent('Event');
+  var event = ownerDocument.createEvent('Event');
   event.initEvent('wiki-overlay-ready', true, false);
   el.dispatchEvent(event);
 }
 
-function applyToElement(el) {
+function applyToElement(el, isActive) {
   // 用户显式覆盖优先：首次处理时元素已有内联 --text-banner 或内联 color 则跳过
   // （插件自身写入的变量不视为用户覆盖，主题切换重算时需重新应用）
   var isFirst = !appliedElements.has(el);
@@ -151,6 +152,7 @@ function applyToElement(el) {
   } else {
     var backdrop = resolveBackdrop(el);
     stellar.color.getAverageColor(bg.url, { background: backdrop }).then(function (rgb) {
+      if (!isActive()) return;
       if (rgb) {
         apply(rgb);
       } else if (styleName === 'split' && el.parentElement && (' ' + el.parentElement.className + ' ').indexOf(' wiki-card-cover ') !== -1) {
@@ -161,30 +163,45 @@ function applyToElement(el) {
   }
 }
 
-var adaptiveTextElements = [];
 var appliedElements = new WeakSet();
 
-function applyAdaptiveText(elements) {
+function applyAdaptiveText(elements, isActive) {
   if (!window.stellar || !window.stellar.color || !elements || elements.length === 0) {
     return;
   }
-  adaptiveTextElements = Array.prototype.slice.call(elements);
+  var active = typeof isActive === 'function' ? isActive : function () { return true; };
   for (var i = 0; i < elements.length; i++) {
-    applyToElement(elements[i]);
+    applyToElement(elements[i], active);
   }
 }
 
-// 主题明暗切换时重算：透明背景图的合成背景随 data-theme 变化，颜色需重新计算
-if (window.MutationObserver && document.documentElement) {
-  new MutationObserver(function () {
-    applyAdaptiveText(adaptiveTextElements);
-    if (typeof window.refreshPinNavColor === 'function') {
-      window.refreshPinNavColor();
-    }
-  }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+function mountAdaptiveText(elements) {
+  var active = true;
+  var mountedElements = Array.prototype.slice.call(elements || []);
+  var ownerDocument = mountedElements[0] && mountedElements[0].ownerDocument;
+  var observer = null;
+  var isActive = function () { return active; };
+  applyAdaptiveText(mountedElements, isActive);
+  // 主题明暗切换时重算：透明背景图的合成背景随 data-theme 变化，颜色需重新计算
+  if (window.MutationObserver && ownerDocument && ownerDocument.documentElement) {
+    observer = new MutationObserver(function () {
+      applyAdaptiveText(mountedElements, isActive);
+      if (typeof window.refreshPinNavColor === 'function') {
+        window.refreshPinNavColor();
+      }
+    });
+    observer.observe(ownerDocument.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  }
+  return function () {
+    active = false;
+    mountedElements = [];
+    observer?.disconnect();
+    observer = null;
+  };
 }
 
 // 供轮播箭头等场景复用：解析元素背后实际渲染背景色
 window.resolveAdaptiveBackdrop = resolveBackdrop;
 
 window.applyAdaptiveText = applyAdaptiveText;
+window.stellarAdaptiveText = { mount: mountAdaptiveText };

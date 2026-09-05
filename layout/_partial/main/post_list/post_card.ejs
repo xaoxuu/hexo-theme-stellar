@@ -1,103 +1,52 @@
 <%
-var obj = {
-  image: post.cover
-};
-function div_default() {
-  var el = '';
-  el += '<article class="md-text">';
+if (!viewModel || !['post', 'topic'].includes(viewModel.collection?.profile) || !viewModel.render?.listing) {
+  throw new Error('Stellar v2: Post 卡片缺少合法 PageViewModel.render.listing')
+}
+var listing = viewModel.render.listing
 
-  // 封面：仅当显式 cover 为完整 URL 时渲染（Unsplash 自动封面接口已失效，不再生成）
-  if (obj.image && obj.image.includes('/')) {
-    el += '<div class="post-cover">';
-    el += '<img src="' + escape_html(obj.image) + '"/>';
-    el += '</div>';
+function divDefault() {
+  var el = '<article class="md-text">'
+  if (listing.cover && listing.cover.includes('/')) {
+    el += `<div class="post-cover"><img src="${escape_html(listing.cover)}"/></div>`
   }
-
-  // 标题
-  el += '<h2 class="post-title">';
-  el += post.title ? escape_html(post.title) : date(post.date, config.date_format);
-  el += '</h2>';
-
-  // 摘要
-  el += '<div class="excerpt';
-  if (theme.plugins.heti?.enable) {
-    el += ' heti';
-  }
-  el += '">';
-  el += '<p>';
-  if (post.excerpt) {
-    el += escape_html(strip_html(post.excerpt));
-  } else if (post.description) {
-    el += escape_html(post.description);
-  } else if (post.content && theme.article.auto_excerpt > 0) {
-    el += escape_html(truncate(strip_html(post.content), {length: theme.article.auto_excerpt}));
-  }
-  el += '</p>';
-  el += '</div>';
-
-  // meta
-  el += '<div class="meta cap">';
-  el += '<span class="cap" id="post-meta">';
+  var title = listing.title || (listing.date ? date(listing.date, config.date_format) : '')
+  el += `<h2 class="post-title">${escape_html(title)}</h2>`
+  el += `<div class="excerpt${viewModel.render.article.heti ? ' heti' : ''}"><p>${escape_html(listing.excerpt)}</p></div>`
+  el += '<div class="meta cap"><span class="cap" id="post-meta">'
   el += icon('default:calendar')
-  // time
-  el += `<time datetime="${date_xml(post.date)}">${date(post.date, config.date_format)}</time>`
-  el += '</span>';
-  // cat
-  if (post.categories && post.categories.length > 0) {
-    if (post.layout === 'post' && post.categories && post.categories.length > 0) {
-      var cats = [];
-      if (post.categories) {
-        post.categories.forEach((cat, i) => {
-          cats.push(cat.name);
-        });
-      }
-      if (cats.length > 0) {
-        let str = cats.join(' / ');
-        let lastCat = cats.pop();
-        el += '<span class="cap breadcrumb"' + category_color(lastCat) + '>';
-        el += icon('default:category')
-        el += `<span>${escape_html(str)}</span>`
-        el += '</span>';
-      }
-    }
+  if (listing.date) {
+    el += `<time datetime="${date_xml(listing.date)}">${date(listing.date, config.date_format)}</time>`
   }
-  // 置顶文章由轮播（默认）或首页列表靠前展示（flat 平铺）承担，卡片内不显示 pin 图标。
-  // 文章标签（最多 5 个，#580）
-  if (theme.article.card_tags && post.tags && post.tags.length > 0) {
-    el += '<span class="card-tags">';
-    post.tags.forEach((tag, i) => {
-      if (i >= 5) {
-        return;
-      }
-      el += `<span class="cap tag-chip">${icon('default:hashtag')}${escape_html(tag.name)}</span>`;
-    });
-    el += '</span>';
+  el += '</span>'
+  if (listing.categories.length > 0) {
+    var categoryStyle = listing.categoryStyle ? ` style="${escape_html(listing.categoryStyle)}"` : ''
+    el += `<span class="cap breadcrumb"${categoryStyle}>${icon('default:category')}<span>${escape_html(listing.categories.join(' / '))}</span></span>`
   }
-  el += '</div>';
-  el += '</article>';
-  return el;
+  if (listing.tags.length > 0) {
+    el += '<span class="card-tags">'
+    listing.tags.forEach(function(tag) {
+      el += `<span class="cap tag-chip">${icon('default:hashtag')}${escape_html(tag)}</span>`
+    })
+    el += '</span>'
+  }
+  if (listing.priority > 0) {
+    el += `<span class="pin">${icon('default:pin')}</span>`
+  }
+  return el + '</div></article>'
 }
-function div_photo() {
-  var el = '';
-  // 小字取值统一由 subtitle() helper 提供：subtitle > description > excerpt 前 50 字
-  var caption = subtitle(post);
-  // hero 卡片文字区固定 bottom：标题 + 一行小字，不再有 top 布局
-  el += '<div class="cover" position="bottom" style="--cover-url:url(\'' + escape_html(obj.image.replace(/'/g, '%27')) + '\')">';
-  el += '<img src="' + escape_html(obj.image) + '"/>';
-  el += '<div class="cover-info" position="bottom" data-text-adaptive="split">';
-  el += '<div class="text headline">' + escape_html(post.title ? post.title : date(post.date, config.date_format)) + '</div>';
-  if (caption.length > 0) {
-    el += '<div class="text caption">' + escape_html(caption) + '</div>';
-  }
-  el += '</div>';
-  el += '</div>';
-  return el;
+
+function divPhoto() {
+  var title = listing.title || (listing.date ? date(listing.date, config.date_format) : '')
+  var el = `<div class="cover" position="bottom" style="--cover-url:url('${escape_html(listing.cover.replace(/'/g, '%27'))}')">`
+  el += `<img src="${escape_html(listing.cover)}"/>`
+  el += '<div class="cover-info" position="bottom" data-text-adaptive="split">'
+  el += `<div class="text headline">${escape_html(title)}</div>`
+  if (listing.caption) el += `<div class="text caption">${escape_html(listing.caption)}</div>`
+  return el + '</div></div>'
 }
+
 function div() {
-  if (theme.article.card_style == 'hero' && obj.image && obj.image.length > 0) {
-    return div_photo();
-  }
-  return div_default();
+  return listing.cardStyle === 'hero' && listing.cover ? divPhoto() : divDefault()
 }
 %>
 <%- div() %>

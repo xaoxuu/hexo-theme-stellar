@@ -1,4 +1,4 @@
-// 置顶内容轮播（navbar top 上方通用置顶位）
+// 置顶内容轮播（Listing Nav 上方通用置顶位）
 .pin-slider
   position: relative
   margin: 0 1rem var(--gap-base)
@@ -38,12 +38,12 @@
     .pin-slide-bg
       transform: scale(var(--cover-zoom))
 
-// 文章幻灯片：固定「标题 + 一行小字」结构，宽高比与非置顶文章一致（article.cover_ratio）；
+// 文章幻灯片：固定「标题 + 一行小字」结构，宽高比与非置顶文章一致；
 // 文字区与 hero 卡片 cover-info 一致（同款渐变模糊层 + 四周间距）；无封面时为纯白卡片
 .pin-slide.post-slide
   display: block
   height: auto
-  aspect-ratio: hexo-config('article.cover_ratio')
+  aspect-ratio: hexo-config('article.listing.cover_ratio')
   .pin-slide-bg
     z-index: 0
   .pin-slide-text

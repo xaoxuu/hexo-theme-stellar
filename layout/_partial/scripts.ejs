@@ -1,31 +1,25 @@
 <%
+var renderViewModel = typeof viewModel !== 'undefined' ? viewModel : null
 
 function custom_inject() {
-  var el = '';
-  for (let item of (config.inject?.script || [])) {
-    el += item;
-  }
-  for (let item of (theme.inject?.script || [])) {
-    el += item;
-  }
-  for (let item of (page.inject?.script || [])) {
-    el += item;
-  }
-  return el;
+  return stellar_inject('bodyEnd', renderViewModel ? renderViewModel.render.document.bodyEndInject : content_config(page).inject?.bodyEnd)
 }
 
-// tagtree 脚本仅在与 tagtree 小部件渲染相同的条件下加载（见 _partial/sidebar/index_leftbar.ejs）
+// tagtree 脚本仅在最终 Region 实例包含 tagtree 时加载。
 function tagtreeWidgetOnPage() {
-  const leftbar = page && page.leftbar;
-  if (!Array.isArray(leftbar)) {
+  var layout = renderViewModel?.render.layout
+    || page.notebookIndex?.collection?.layout
+    || {};
+  var regions = [layout.topbar, layout.leftbar, layout.rightbar];
+  var widgets = regions.flatMap(function (region) {
+    return Array.isArray(region?.widgets) ? region.widgets : []
+  })
+  if (!Array.isArray(widgets)) {
     return false;
   }
-  return leftbar.some(function (w) {
-    if (typeof w === 'string') {
-      return w === 'tagtree';
-    }
+  return widgets.some(function (w) {
     if (w && typeof w === 'object') {
-      return w.override === 'tagtree' || w.layout === 'tagtree';
+      return w.id === 'tagtree' || w.layout === 'tagtree' || w.override === 'tagtree';
     }
     return false;
   });
@@ -34,36 +28,18 @@ function tagtreeWidgetOnPage() {
 %>
 <%- partial('scripts/defines') %>
 
-<%- partial('scripts/bootstrap') %>
-
-<!-- core: utils 必须同步加载（页尾内联插件片段在解析期即调用 utils.initPlugin） -->
+<!-- core: 迁移期 DOM/资源兼容工具；Extension 注册与生命周期由 ESM runtime 所有 -->
 <script src="<%- url_for('/js/utils.js') %>?v=<%- stellar_info('version') %>"></script>
-<script>
-  // 解析期检测 utils 是否已就绪；未就绪时同步补载，
-  // 保证「utils 先于页尾插件片段定义」的不变量。
-  if (typeof utils === 'undefined') {
-    document.write('<script src="<%- url_for('/js/utils.js') %>?v=<%- stellar_info('version') %>"><\/script>');
-  }
-</script>
 <script defer src="<%- url_for('/js/stellar-icons.js') %>?v=<%- stellar_info('version') %>"></script>
-<!-- 非首屏图标异步加载：占位符替换依赖构建期生成的 js/icons/{ns}.json -->
-<script defer src="<%- url_for('/js/icons.js') %>?v=<%- stellar_info('version') %>" data-version="<%- stellar_info('version') %>"></script>
-<script defer src="<%- url_for('/js/plugins/dropdown.js') %>?v=<%- stellar_info('version') %>"></script>
-<script src="<%- url_for(`${theme.stellar.main_js}?v=${stellar_info('version')}`) %>" defer></script>
-<script defer src="<%- url_for('/js/theme.js') %>?v=<%- stellar_info('version') %>"></script>
+<script src="<%- url_for(`${stellar_info('main_js')}?v=${stellar_info('version')}`) %>" defer></script>
+<script defer src="<%- url_for('/js/profile.js') %>?v=<%- stellar_info('version') %>"></script>
 
 <% if (tagtreeWidgetOnPage()) { %>
-  <script>window.__STELLAR_TAGTREE__ = { expand_active: <%- JSON.stringify(!!(theme.widgets.tagtree && theme.widgets.tagtree.expand_active)) %> };</script>
+  <script>window.__STELLAR_TAGTREE__ = { expand_active: <%- JSON.stringify(!!(stellar_data('widgets').tagtree && stellar_data('widgets').tagtree.expand_active)) %> };</script>
   <script defer src="<%- url_for('/js/tagtree.js') %>?v=<%- stellar_info('version') %>"></script>
 <% } %>
 
-<%- partial('scripts/lazyload') %>
-
-<!-- optional -->
-<%- partial('comments/script') %>
-
-<script defer src="<%- url_for('/js/services.js') %>?v=<%- stellar_info('version') %>"></script>
-<%- partial('../_plugins/index') %>
+<%- partial('scripts/runtime', {viewModel: typeof viewModel !== 'undefined' ? viewModel : null}) %>
 
 <!-- inject -->
 <%- custom_inject() %>

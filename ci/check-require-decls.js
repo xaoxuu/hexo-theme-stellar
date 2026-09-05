@@ -8,7 +8,7 @@
  *   node ci/check-require-decls.js          # 检查 test/ 是否存在幽灵依赖
  *
  * 幽灵依赖：require 了未在 package.json 声明的包。本地开发时 Node 可能向上
- * 提升解析到主工程 node_modules，导致本地通过而 CI（npm ci 干净安装）失败。
+ * 提升解析到父级工作区 node_modules，导致本地通过而 CI（npm ci 干净安装）失败。
  * test/ 只允许引用 package.json 已声明的依赖或 Node 内置模块。
  */
 

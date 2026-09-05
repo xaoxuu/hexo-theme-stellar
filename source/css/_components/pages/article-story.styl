@@ -1,4 +1,4 @@
-.l_body[type=story] .md-text.content
+body[data-article-style='story'] .md-text.content
   --fs-content-base: 'calc(%s + 2px)' % var(--fs-root)
   --fs-content: var(--fs-content-base)
   --fsh2: 'calc(%s + 11px)' % var(--fs-content)
@@ -45,9 +45,10 @@
       trans1 all
       vertical-align: middle
     &:before
-      margin-left: -1em
+      margin-left: -1.2em
       svg-mask-icon(var(--icon-h3-left))
     &:after
+      margin-left: .2em
       svg-mask-icon(var(--icon-h3-right))
 
   h4:not([class])
@@ -82,7 +83,7 @@
   .poetry, .okr, .timeline, li, .article-footer
     p:not([class])
       text-indent: 0
-      text-align: convert(hexo-config('style.text-align'))
+      text-align: convert(hexo-config('appearance.typography.content_align'))
 
   p>img, .tag-plugin.image .image-bg
     border-radius: $border-image-l
@@ -90,7 +91,7 @@
       border-radius: $border-image-l
 
 
-.l_body[type=story] .md-text.content>blockquote, .md-text.content .tag-plugin.blockquote
+body[data-article-style='story'] .md-text.content>blockquote, .md-text.content .tag-plugin.blockquote
   text-align: center
   --inset: calc(var(--fs-content) * 2)
   margin-left: var(--inset)
@@ -123,11 +124,11 @@
       background-color: x-theme-alpha(0.5)
 
 
-.l_body[type=story] .article.banner .content .bottom.only-title
+body[data-article-style='story'] .article.banner .content .bottom.only-title
   justify-content: center
 
 
-.l_body[text-indent] .tag-plugin.tabs .tab-content .tab-pane>p:not([class])
+body[data-text-indent] .tag-plugin.tabs .tab-content .tab-pane>p:not([class])
   text-indent: 'calc(%s * 2)' % var(--fs-content)
   a
     text-indent: 0

@@ -19,6 +19,9 @@ tags:
 - [languages/zh-TW.yml](../../../languages/zh-TW.yml)
 - [layout/_partial/menubtn.ejs](../../../layout/_partial/menubtn.ejs)
 - [layout/_partial/widgets/toc.ejs](../../../layout/_partial/widgets/toc.ejs)
+- [layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)
+- [scripts/tags/lib/copy.js](../../../scripts/tags/lib/copy.js)
+- [scripts/tags/lib/okr.js](../../../scripts/tags/lib/okr.js)
 
 </details>
 
@@ -42,7 +45,7 @@ tags:
 
 ## 文件结构
 
-每个语言文件是扁平的 YAML 文档，组织为六个顶层分组。每个文件必须定义相同键；缺失键按 Hexo 默认行为回退到 `en.yml` 的值。
+每个语言文件是分组的 YAML 文档。每个文件必须定义相同键；缺失键按 Hexo 默认行为回退到 `en.yml` 的值。
 
 **语言文件分组映射：**
 
@@ -55,6 +58,8 @@ graph TD
   LangFile --> search["search\n(搜索 UI 字符串)"]
   LangFile --> message["message\n(toast/反馈消息)"]
   LangFile --> symbol["symbol\n(标点字符)"]
+  LangFile --> tagplugins["tag_plugins\n(标签插件内置文案)"]
+  LangFile --> feature["feature\n(可选功能内置文案)"]
 ```
 
 **参考源码**：[languages/en.yml](../../../languages/en.yml)、[languages/zh-CN.yml](../../../languages/zh-CN.yml)、[languages/zh-TW.yml](../../../languages/zh-TW.yml)
@@ -86,6 +91,7 @@ graph TD
 | `btn.docs` | `Documentation` | Wiki Hero 内置文档按钮 |
 | `btn.source` | `Source` | Wiki Hero 仓库按钮 |
 | `btn.copy` | `Copy` | Wiki Hero 终端复制按钮及其辅助标签 |
+| `btn.search` | `Search` | 搜索入口按钮与输入框占位符 |
 | `btn.edit` | `Edit This Page` | |
 | `btn.top` | `Scroll to Top` | 用于 TOC 组件页脚 |
 | `btn.comments` | `Join Discussion` | 用于 TOC 组件页脚 |
@@ -152,9 +158,11 @@ graph TD
 
 | 键 | `en.yml` 值 | 说明 |
 |----|-------------|------|
-| `search.search` | `Search` | 输入框占位符 |
-| `search.search_in` | `Search in %s` | `%s` = 站点/区块名 |
+| `search.search` | `Search` | 搜索 Dialog 标题 |
+| `search.scope_all` | `All` | 全站搜索域 |
+| `search.scope_blog` | `Blog` | 博客搜索域 |
 | `search.no_results` | `No Results!` | 空状态消息 |
+| `search.close` | `Close search` | 关闭按钮辅助标签 |
 
 **参考源码**：[languages/en.yml](../../../languages/en.yml)
 
@@ -165,12 +173,28 @@ graph TD
 | 键 | `en.yml` 值 | 说明 |
 |----|-------------|------|
 | `message.copied` | `Copied!` | 复制到剪贴板后 |
+| `message.copy_denied` | `Clipboard permission was denied` | 剪贴板授权被拒绝 |
+| `message.copy_unsupported` | `Clipboard requires a supported browser and HTTPS` | 当前环境不支持剪贴板 |
 | `message.fetching_latest_release` | `'%s is fetching the latest release…'` | 历史兼容键；Wiki Hero 已改为无文字加载态，当前不再使用 |
-| `message.theme_switched.light` | `Switched to Light Mode` | |
-| `message.theme_switched.dark` | `Switched to Dark Mode` | |
-| `message.theme_switched.auto` | `Switched to Auto Mode` | |
+| `message.color_scheme_switched.light` | `Switched to Light Mode` | 仅启用 Color Scheme Extension 时进入 Runtime Manifest |
+| `message.color_scheme_switched.dark` | `Switched to Dark Mode` | 仅启用 Color Scheme Extension 时进入 Runtime Manifest |
+| `message.color_scheme_switched.auto` | `Switched to Auto Mode` | 仅启用 Color Scheme Extension 时进入 Runtime Manifest |
 
 **参考源码**：[languages/en.yml](../../../languages/en.yml)
+
+---
+
+### `tag_plugins`——标签插件内置文案
+
+OKR 的五个内置状态标签位于 `tag_plugins.okr.status.*`，展示颜色与文案策略由主题内部固定。
+
+| 键 | `en.yml` 值 |
+|----|-------------|
+| `tag_plugins.okr.status.in_track` | `On Track` |
+| `tag_plugins.okr.status.at_risk` | `At Risk` |
+| `tag_plugins.okr.status.off_track` | `Delayed` |
+| `tag_plugins.okr.status.finished` | `Completed` |
+| `tag_plugins.okr.status.unfinished` | `Incomplete` |
 
 ---
 
@@ -235,7 +259,6 @@ flowchart LR
 | 键 | 模板 | 示例输出 |
 |----|------|----------|
 | `meta.created_author` | `'%s posted on'` | `xaoxuu posted on` |
-| `search.search_in` | `'Search in %s'` | `Search in My Blog` |
 
 `%s` 令牌由 Hexo i18n 的 sprintf 实现替换（调用方传额外参数给 `__()`）。
 
@@ -280,22 +303,17 @@ sequenceDiagram
 添加新语言（如日语 `ja`）的步骤：
 
 1. 创建 `languages/ja.yml`
-2. 以 `languages/en.yml` 完整结构为模板复制——六个键组必须齐全
+2. 以 `languages/en.yml` 的完整结构为模板复制，保持所有键路齐全
 3. 翻译每个值，特别注意：
-   - `meta.created_author` 与 `search.search_in` 中的 `%s` 占位符——翻译字符串中必须保留
+   - `meta.created_author` 中的 `%s` 占位符——翻译字符串中必须保留
    - `symbol.*` 键——使用适合语言环境的标点
 4. 在站点 `_config.yml` 设置 `language: ja`
 
 **新语言文件的最小清单：**
 
-| 组 | 要翻译的键 |
-|----|------------|
-| `btn` | 18 个键 |
-| `meta` | 19 个键 + 5 个 `date_suffix` 子键 |
-| `page` | `page.error` 下 3 个键 |
-| `search` | 3 个键 |
-| `message` | 4 个键 |
-| `symbol` | 5 个标点键 |
+- 复制 `en.yml` 的全部键路，不依赖容易过时的手工数量清单。
+- 特别检查 `message.copy_*` 与 `tag_plugins.okr.status.*`。
+- 运行配置字段审计测试，它会同时检查三个内置语言的键路一致性。
 
 **参考源码**：[languages/en.yml](../../../languages/en.yml)
 
@@ -310,6 +328,7 @@ flowchart TD
   subgraph "btn group"
     btntop["btn.top"]
     btncomments["btn.comments"]
+    btnsearch["btn.search"]
   end
 
   subgraph "meta group"
@@ -323,7 +342,6 @@ flowchart TD
 
   subgraph "search group"
     searchsearch["search.search"]
-    searchin["search.search_in\n(%s = site name)"]
     searchnoresults["search.no_results"]
   end
 
@@ -333,11 +351,12 @@ flowchart TD
 
   subgraph "message group"
     msgcopied["message.copied"]
-    msgtheme["message.theme_switched.*"]
+    msgtheme["message.color_scheme_switched.*"]
   end
 
   en --> btntop
   en --> btncomments
+  en --> btnsearch
   en --> metatoc
   en --> metacreated
   en --> metaupdated
@@ -345,7 +364,6 @@ flowchart TD
   en --> metareadnext
   en --> metacreatedauthor
   en --> searchsearch
-  en --> searchin
   en --> searchnoresults
   en --> pageerror
   en --> msgcopied
@@ -353,14 +371,14 @@ flowchart TD
 
   btntop --> toc["layout/_partial/widgets/toc.ejs"]
   btncomments --> toc
+  btnsearch --> search_ui["search widget"]
   metatoc --> toc
-  metacreated --> article_footer["layout/_partial/main/article/article_footer.ejs"]
+  metacreated --> article_footer["layout/_partial/main/article/post_footer.ejs"]
   metaupdated --> article_footer
   metalicense --> article_footer
   metacreatedauthor --> article_footer
-  metareadnext --> read_next["layout/_partial/main/article/read_next.ejs"]
-  searchsearch --> search_ui["search widget"]
-  searchin --> search_ui
+  metareadnext --> read_next["layout/_partial/main/article/post_read_next.ejs"]
+  searchsearch --> search_ui
   searchnoresults --> search_ui
   pageerror --> error_page["layout/404.ejs"]
   msgcopied --> copycode["client-side copycode JS"]

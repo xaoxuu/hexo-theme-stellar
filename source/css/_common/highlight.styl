@@ -5,7 +5,6 @@ code
 
 p>code:not([class]),li>code:not([class])
   font-size: $fs-code
-  background: var(--block)
   padding: .2em
   border-radius: 4px
   color: var(--text-code)
@@ -15,7 +14,6 @@ p>code:not([class]),li>code:not([class])
   margin: var(--gap-p) 0
   border-radius: $border-card
   overflow: hidden
-  background: var(--block)
   font-family: $ff-codeblock
   box-sizing: border-box
   @media screen and (min-width: $device-mobile)
@@ -36,7 +34,6 @@ p>code:not([class]),li>code:not([class])
       display: block
       border-bottom-left-radius: $border-button
       border-bottom-right-radius: $border-button
-      background: var(--block)
   >table
     overflow: auto
     display: block
@@ -47,7 +44,7 @@ p>code:not([class]),li>code:not([class])
     margin: 0 !important
     background: transparent
     border: none
-    scrollbar-codeblock(convert(hexo-config('style.codeblock.scrollbar')))
+    scrollbar-codeblock(convert(hexo-config('appearance.code_block.scrollbar_width')))
     tr
       background: transparent
       border: none
@@ -77,17 +74,17 @@ p>code:not([class]),li>code:not([class])
 
 .md-text .gist 
   .gist-file 
-    border: 1px solid var(--block-border)
+    border-style: solid
+    border-width: 1px
     border-radius: $border-card
     overflow: hidden
   .gist-data
-    --bgColor-default: var(--block)
-    border-bottom: 1px solid var(--block-border)
+    border-bottom-style: solid
+    border-bottom-width: 1px
   .highlight
     display: inherit
     border: none
     border-radius: 0
-    background: var(--block)
     margin: 0
     padding: 1em 0
     pre
@@ -95,10 +92,6 @@ p>code:not([class]),li>code:not([class])
   .blob-code-inner
     color: var(--text-p1)
     font-family: $ff-codeblock
-  .gist-meta
-    background: var(--block)
-
-
 table:not([class])
   border-collapse: collapse
 

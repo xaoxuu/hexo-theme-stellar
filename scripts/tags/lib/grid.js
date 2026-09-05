@@ -12,6 +12,8 @@
 
 'use strict'
 
+const { composeUiClasses } = require('../../lib/ui-capabilities')
+
 module.exports = ctx => function(args, content) {
   args = ctx.args.map(args, ['bg', 'w', 'c', 'gap', 'br'])
   if (args.w == null && args.c == null) {
@@ -19,7 +21,7 @@ module.exports = ctx => function(args, content) {
   }
   var el = ''
   var cellClass = args.bg === 'card'
-    ? 'cell card-hover card-hover--spotlight card-hover--tilt'
+    ? composeUiClasses('cell', 'hoverCard')
     : 'cell'
   el += '<div class="tag-plugin grid"'
   el += ' ' + ctx.args.joinTags(args, ['bg', 'columns']).join(' ')

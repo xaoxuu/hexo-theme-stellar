@@ -1,36 +1,31 @@
 <%# 笔记卡片 %>
+<% var listing = render.listing %>
 <article class="md-text">
-  <% if (note.cover) { %>
+  <% if (listing.cover) { %>
     <div class="post-cover">
-      <img src="<%= note.cover %>" alt="cover" />
+      <img src="<%= listing.cover %>" alt="cover" />
     </div>
   <% } %>
-  <h2 class="post-title"><%= note.title %></h2>
-  <div class="excerpt<% if (theme.plugins.heti?.enable) { %> heti<% } %>">
+  <h2 class="post-title"><%= listing.title %></h2>
+  <div class="excerpt<% if (stellar_config('features.heti.enabled')) { %> heti<% } %>">
     <p>
-      <% if (note.excerpt) { %>
-        <%= strip_html(note.excerpt) %>
-      <% } else if (note.description) { %>
-        <%= note.description %>
-      <% } else if (note.content && theme.notebook.auto_excerpt > 0) { %>
-        <%= truncate(strip_html(note.content), { length: theme.notebook.auto_excerpt }) %>
-      <% } %>
+      <%= listing.excerpt %>
     </p>
   </div>
   <div class="meta cap">
-    <% if (note.pin) { %>
-      <span class="pin"><%- icon('default:pin') %></span>
-    <% } %>
     <span class="cap" id="post-meta">
       <%- icon('default:calendar') %>
-      <time datetime="<%= date_xml(note.updated || note.date) %>"><%= date(note.updated || note.date, config.date_format) %></time>
+      <time datetime="<%= date_xml(listing.updated || listing.date) %>"><%= date(listing.updated || listing.date, config.date_format) %></time>
     </span>
-    <% if (note.tags) { %>
-      <% note.tags.forEach((tag, i) => { %>
+    <% if (listing.tags) { %>
+      <% listing.tags.forEach((tag, i) => { %>
         <span class="cap breadcrumb" %>>
           <span class="tag"><%= tag %></span>
         </span>
       <% }) %>
+    <% } %>
+    <% if (listing.priority > 0) { %>
+      <span class="pin"><%- icon('default:pin') %></span>
     <% } %>
   </div>
 </article>

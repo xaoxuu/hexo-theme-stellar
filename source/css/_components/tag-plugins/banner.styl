@@ -135,6 +135,15 @@
       text-shadow: 0 0 1px rgba(0,0,0,0.12)
 
 .tag-plugin.banner
+  background-color: var(--block)
+  &.no-bg
+    background-image: none
+    .content
+      --text-banner: var(--text-p1)
+      --text-banner-theme: var(--text-p2)
+      color: var(--text-banner)
+    .title
+      text-shadow: none
   // 内容区用绝对定位铺满整卡：避免 flex 百分比高度（height: 100%）在不同浏览器解析不一致，
   // 导致 .top/.bottom 无法贴顶/贴底（navbar 掉到中间）
   .content

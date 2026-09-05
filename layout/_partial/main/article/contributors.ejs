@@ -1,30 +1,33 @@
 <%
 function parseURL() {
   const source = page.source || ''
-  for (let id of Object.keys(map)) {
-    if (source.startsWith(id) && map[id]) {
-      return source.replace(id, map[id])
-    }
+  const matched = (repositories || [])
+    .filter(item => source.startsWith(item.sourcePrefix))
+    .sort((left, right) => right.sourcePrefix.length - left.sourcePrefix.length)[0]
+  if (!matched) return null
+  const file = source.slice(matched.sourcePrefix.length).replace(/^\/+/, '')
+  return {
+    edit: `https://github.com/${matched.repository}/blob/${matched.branch || 'main'}/${file}`,
+    commits: `${stellar_config('services.github.apiUrl').replace(/\/+$/, '')}/repos/${matched.repository}/commits?path=${encodeURIComponent(file)}`
   }
 }
 function layoutDiv() {
-  const url = parseURL()
-  if (url == null) {
+  const urls = parseURL()
+  if (urls == null) {
     return ''
   }
-  const commits = url.replace('/github.com/', `/${theme.api_host.ghapi}/repos/`).replace('/blob/main/', '/commits?path=');
   var el = `
   <section id="contributors">
     <div class="header">
       <span>${__('meta.contributors')}</span>
       <span class="spacer"></span>
-      <a class="edit" href="${url_for(url)}">
+      <a class="edit" href="${url_for(urls.edit)}">
         ${icon('default:edit')}
         <span>${__('btn.edit')}</span>
       </a>
     </div>
     <div class="body">
-      <div class="ds-contributors users-wrap" api-type="commits" data-api="${commits}"><div class="grid-box"></div></div>
+      <div class="ds-contributors users-wrap" api-type="commits" data-api="${urls.commits}"><div class="grid-box"></div></div>
     </div>
   </section>
   `

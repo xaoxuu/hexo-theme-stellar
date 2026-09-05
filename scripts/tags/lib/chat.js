@@ -29,34 +29,17 @@
 
 'use strict'
 
+const INTERNAL_CONSTANTS = require('../../lib/internal-constants')
+
 var chatIndex = 0;
 
 module.exports = ctx => function(args, content) {
-  function isObject(item) {
-    return item && typeof item === 'object' && !Array.isArray(item);
-  }
-
-  function merge(target, source) {
-    for (const key in source) {
-      if (isObject(target[key]) && isObject(source[key])) {
-        merge(target[key], source[key]);
-      } else {
-        target[key] = source[key];
-      }
-    }
-    return target;
-  }
-
   args = ctx.args.map(args, ['style', 'title', 'scene', 'me', 'labelColorStyle'], ['device'])
 
   // users
   var arr = content.split(/<!--\s*([\s\S]*?)\s*-->/g).filter(item => item.trim().length > 0)
   if (arr.length > 0) {
-    // 避免用户在没有配置chat_users.yaml时出错
-    if (ctx.theme.config.chat_users){
-      var users = merge(ctx.theme.config.chat_users, ctx.render.renderSync({ text: (arr[0] || ''), engine: 'yaml' }));
-    }
-    var users = ctx.render.renderSync({ text: (arr[0] || ''), engine: 'yaml' });
+    var users = ctx.render.renderSync({ text: (arr[0] || ""), engine: "yaml" });
   }
 
 
@@ -114,7 +97,7 @@ module.exports = ctx => function(args, content) {
 
   function loadIcon(url) {
     var el = ''
-    el += '<div class="lazy img" data-bg="' + ctx.theme.config.default.link + '"></div>'
+    el += '<div class="lazy img" data-bg="' + ctx.stellar.config.fallbacks.linkCard + '"></div>'
     return el
   }
 
@@ -345,17 +328,12 @@ module.exports = ctx => function(args, content) {
           el += `<img lazy fancybox="true" src="${cell['image']}">`
       } else if (cell['emoji']) {
           el += ' emoji">'
-          const config = ctx.theme.config.tag_plugins.emoji
+          const { defaultSource, sources } = ctx.stellar.config.tags.emoji
           if (cell['source'] === undefined) {
-            for (let id in config) {
-              if (config[id]) {
-                cell['source'] = id
-                break
-              }
-            }
+            cell['source'] = defaultSource
           }
-          if (cell['source'] && config[cell['source']]) {
-            let url = config[cell['source']].replace('{name}', cell['emoji'])
+          if (cell['source'] && sources[cell['source']]) {
+            let url = sources[cell['source']].replace('{name}', cell['emoji'])
             el += `<img lazy src="${url}">`
           } else {
             el += `<img lazy src="${cell['emoji']}">`
@@ -417,7 +395,7 @@ module.exports = ctx => function(args, content) {
           let urlTarget = cell['link'].includes('://') ? ' target="_blank" rel="external nofollow noopener noreferrer"' : ''
           let linkFrom = cell['from'] || 'QQ小程序'
           el += `
-            <a class="link-card rich" href="${cell['link']}"${urlTarget} data-api="${ctx.theme.config.tag_plugins.chat?.api + '?url=' + cell['link']}" cardlink autofill="title,icon,desc">
+            <a class="link-card rich" href="${cell['link']}"${urlTarget} data-api="${INTERNAL_CONSTANTS.assets.services.chat.endpoint + '?url=' + cell['link']}" cardlink autofill="title,icon,desc">
             <div class="top">
               <span class="title">${cell['link']}</span>
             </div>

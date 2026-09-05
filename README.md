@@ -2,6 +2,8 @@
 
 [简体中文](README.md) · [English](README_EN.md)
 
+> Stellar v2 仍在开发中，尚未发布；Alpha、Beta 只作为内部里程碑。生产环境请继续使用 1.x 稳定版。
+
 [![npm](https://img.shields.io/npm/v/hexo-theme-stellar)](https://www.npmjs.com/package/hexo-theme-stellar)
 [![license](https://img.shields.io/github/license/xaoxuu/hexo-theme-stellar)](https://github.com/xaoxuu/hexo-theme-stellar/blob/main/LICENSE)
 [![stars](https://img.shields.io/github/stars/xaoxuu/hexo-theme-stellar)](https://github.com/xaoxuu/hexo-theme-stellar)
@@ -111,3 +113,5 @@ theme: stellar
 ## 开源许可
 
 本项目采用 [MIT License](LICENSE)，Copyright (c) 2021 xaoxuu，永久开源、完全免费。
+
+第三方组件及其许可证见 [第三方授权声明](legal/THIRD-PARTY-NOTICES.md)。

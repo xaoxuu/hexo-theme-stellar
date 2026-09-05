@@ -13,7 +13,7 @@
 - 为标签补充配置项、国际化文案、远程数据能力或文档
 - 审查标签实现是否符合仓库既有风格
 
-本规范是长期维护文档，不是单次功能设计稿。涉及某个具体标签的行为变更时，仍需在 `docs/designs/` 记录单次方案。
+本规范是长期维护文档，不是单次功能设计稿。具体标签的行为变更需要持久化方案时，按 `docs/agents/issue-tracker.md` 记录到 GitHub issue。
 
 ## 2. 现有标签插件家族与模式
 
@@ -37,8 +37,8 @@
 - 标签实现文件优先落在 `scripts/tags/lib/<name>.js`
 - 样式文件优先落在 `source/css/_components/tag-plugins/<name>.styl`
 - 需要前端增强时再补充 `source/js/services/<name>.js`
-- 展示配置优先放在 `_config.yml` 的 `tag_plugins.<name>`
-- 远程数据相关配置优先放在 `_config.yml` 的 `data_services.<name>`
+- 展示配置优先放在 `_config.yml` 的 `tags.<name>`
+- 远程数据相关配置优先放在 `_config.yml` 的 `services.<name>`
 - 有新增展示文案时同步更新 `languages/`
 
 ### 2.3 命名与结构共性
@@ -105,17 +105,16 @@
 
 ### 3.6 配置与国际化规则
 
-- 纯展示行为、默认配色、边框开关等，优先放在 `tag_plugins.<name>`
-- 远程接口、数据源、请求行为等，优先放在 `data_services.<name>`
+- 纯展示行为、默认配色、边框开关等，优先放在 `tags.<name>`
+- 远程接口、数据源、请求行为等，优先放在 `services.<name>`
 - 涉及新增可见文案时，必须同步补齐 `languages/`，避免只在某个语言下可用
 - 不要把具体站点的私有数据直接写入主题仓库；主题只定义接口与默认行为
 
 ### 3.7 兼容与复用规则
 
-- 保持 Hexo 原生 + Gulp 后处理，不引入新构建系统
-- 保持现有技术边界：服务端 CommonJS、样式 Stylus、浏览器端遵循既有 ES2015+ 风格
+- 生成与浏览器后处理按根 AGENTS.md“工程约束”和“浏览器产物”执行；宿主拥有后处理设施
 - 优先复用现有标签结构与样式能力，只有在复用会显著降低可读性时才新建独立实现
-- 行为变更尽量通过配置开关、参数扩展或局部兼容实现，避免直接破坏既有语法
+- 语法兼容范围按根 AGENTS.md“发布基线”确定；仅为已发布契约或明确维护的外部接缝保留兼容处理
 
 ## 4. 例外与兼容策略
 
@@ -129,7 +128,7 @@
 
 处理例外时，应优先满足以下原则：
 
-1. 保持兼容旧语法
+1. 按根 AGENTS.md“发布基线”保留已发布语法与明确维护的外部接缝
 2. 不扩大历史包袱
 3. 对新实现仍给出清晰入口与文档说明
 4. 让后续维护者能快速判断“这是刻意复用”还是“无意耦合”
@@ -144,9 +143,9 @@
 - 是否优先采用 `ctx.args.map`、配置兜底与服务端渲染，而不是自定义解析规则
 - 是否把样式限制在正文与组件作用域内，避免全局污染
 - 是否只有在确有必要时才新增前端服务，并通过 `data-*` + `ds-*` 联动
-- 是否补齐 `_config.yml`、`languages/`、`docs/` 等配套文件
-- 是否在 `docs/designs/` 记录本次行为变化、影响范围与验收标准
-- 是否在修改 `scripts/` 后于主工程执行 `npm run g` 全量验证
+- 是否同步受影响的配置与国际化；验证范围、测试保留位置和文档同步时机按根 AGENTS.md 对应门禁执行
+- 需要持久化方案时，相关 GitHub issue 是否记录行为变化、影响范围与验收标准
+- 宿主集成属于任务目标且定向证据不足时，是否补充了消费方验证
 
 ## 6. 标签对照表
 
@@ -154,7 +153,7 @@
 
 | 标签/家族 | 服务端实现 | 样式文件 | 前端服务 | 常见配置/说明 |
 | --- | --- | --- | --- | --- |
-| `note` / `box` | `scripts/tags/lib/note.js`、`scripts/tags/lib/box.js` | `tag-plugins/note.styl` | 无 | 展示类卡片，优先走 `tag_plugins.note` |
+| `note` / `box` | `scripts/tags/lib/note.js`、`scripts/tags/lib/box.js` | `tag-plugins/note.styl` | 无 | 展示类卡片，优先走 `tags.note` |
 | `tabs` / `folding` / `folders` | `scripts/tags/lib/*.js` | `tag-plugins/tabs.styl`、`folding.styl`、`folders.styl` | 无 | 容器类，关注嵌套结构与 Markdown 渲染 |
 | `friends` / `users` / `albums` / `sites` | `scripts/tags/lib/*.js` | `friends.styl`、`sites.styl` 等 | `source/js/services/sites.js` 等 | 数据类，常联动本地配置或远程接口 |
 | `rating` / `vote` / `timeline` | `scripts/tags/lib/*.js` | `rating.styl`、`vote.styl`、`timeline.styl` | `source/js/services/rating.js` 等 | 运行时增强类，优先占位后补全 |
@@ -166,11 +165,11 @@
 
 标签插件相关文档按以下规则归档：
 
-- 单次设计或重构方案放入 `docs/designs/`
+- 单次设计或重构方案记录在 GitHub issue
 - 长期维护的流程、规范与操作手册放入 `docs/guides/`
 - 风格一致性审计、问题盘点与改进建议放入 `docs/audits/`
 
-当某次标签变更涉及语法、配置项或行为变化时，文档中至少要说明：
+文档同步时机按根 AGENTS.md“文档”执行；需要记录语法、配置项或行为变化时，说明：
 
 - 问题与目标
 - 标签接口或配置接口

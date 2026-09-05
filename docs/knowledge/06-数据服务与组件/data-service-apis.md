@@ -4,489 +4,109 @@ domain: 数据服务与组件
 tags:
   - 数据服务
   - API
-  - 按需加载
+  - Extension
 ---
 
 # 数据服务 API
 
-<details>
-<summary>相关源码文件</summary>
+数据服务为标签插件、小部件和页面组件提供按需请求能力。v2 把可替换的第三方实现收敛为 `provider` 与同级 Provider 参数袋，把官方客户端模块放入内部资源注册表；旧 `data_services` 与 `api_host` 不再是公开入口。
 
-生成此页面时参考的主题源码文件：
-
-- [.github/workflows/npm-publish.yml](../../../.github/workflows/npm-publish.yml)
-- [.npmignore](../../../.npmignore)
-- [LICENSE](../../../LICENSE)
-- [README.md](../../../README.md)
-- [_config.yml](../../../_config.yml)
-- [package.json](../../../package.json)
-- [source/js/services/](../../../source/js/services/)
-- [source/js/plugins/](../../../source/js/plugins/)
-
-</details>
-
-## 目的与范围
-
-本文介绍 Stellar 的**数据服务系统**：按需加载获取并渲染动态内容的 JavaScript 模块。数据服务在保持静态站点生成的同时支持 GitHub 仓库信息、站点预览、评分系统与远程 Markdown 渲染等动态功能。服务仅在内容中出现对应标签时加载，避免不必要的脚本执行以优化性能。
-
-数据服务通常填充的小部件渲染系统见[小部件系统架构](widget-architecture.md)；全局加载的插件化功能见[插件系统](../07-外部集成/plugin-system.md)。
-
----
-
-## 系统架构
-
-数据服务系统采用懒加载模型：服务在配置中注册，但仅在经标签插件或小部件使用显式请求时加载。
-
-### 服务加载流程
-
-```mermaid
-flowchart TD
-    CONFIG["data_services config"]
-    RENDER["Page Rendering"]
-    TAG["Tag Plugin Usage\n(e.g., {% ghinfo %})"]
-    DETECT["Service Detection"]
-    INJECT["Script Injection"]
-    LOAD["Service JS Loaded"]
-    INIT["Service Initialization"]
-    API["API Call (if configured)"]
-    DISPLAY["Data Rendering"]
-    
-    CONFIG --> RENDER
-    RENDER --> TAG
-    TAG --> DETECT
-    DETECT --> INJECT
-    INJECT --> LOAD
-    LOAD --> INIT
-    INIT --> API
-    API --> DISPLAY
-    
-    DETECT -.service not needed.-> RENDER
-```
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-### 配置结构
-
-数据服务定义在 `_config.yml` 的 `data_services` 小节。每个服务包含：
-
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `js` | String | 实现服务的 JavaScript 文件路径 |
-| `api` | String（可选） | 外部 API 端点 URL，可含 `{placeholder}` 占位符 |
-| 自定义字段 | 各种 | 服务专属配置（如 contributors 的 `edit_this_page`） |
-
-**配置模式：**
+## 公开服务配置
 
 ```yaml
-data_services:
-  service_name:
-    js: /js/services/service_name.js
-    api: https://api.example.com/endpoint  # 可选
-    custom_field: value  # 可选
-```
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
----
-
-## 服务分类
-
-Stellar 按用途把数据服务组织为功能分类：
-
-### 服务分类映射
-
-```mermaid
-graph TB
-    subgraph "External Content Rendering"
-        MDRENDER["mdrender<br/>/js/services/mdrender.js"]
-    end
-    
-    subgraph "Data Fetching Services"
-        SITEINFO["siteinfo<br/>/js/services/siteinfo.js<br/>API: site_info/v1?url={href}"]
-        GHINFO["ghinfo<br/>/js/services/ghinfo.js<br/>GitHub API integration"]
-        CONTRIBUTORS["contributors<br/>/js/services/contributors.js<br/>edit_this_page mapping"]
-    end
-    
-    subgraph "User Interaction Services"
-        RATING["rating<br/>/js/services/rating.js<br/>API: star-vote/rating"]
-        VOTE["vote<br/>/js/services/vote.js<br/>API: star-vote/vote"]
-    end
-    
-    subgraph "Grid Layout Services"
-        SITES["sites<br/>/js/services/sites.js"]
-        FRIENDS["friends<br/>/js/services/friends.js"]
-        FRIENDPOSTS["friends_and_posts<br/>/js/services/friends_and_posts.js"]
-    end
-    
-    subgraph "List Layout Services"
-        TIMELINE["timeline<br/>/js/services/timeline.js"]
-        FCIRCLE["fcircle<br/>/js/services/fcircle.js"]
-        WEIBO["weibo<br/>/js/services/weibo.js"]
-        MEMOS["memos<br/>/js/services/memos.js"]
-        RSS["rss<br/>/js/services/rss.js"]
-    end
-    
-    subgraph "Comment Services"
-        TWIKOO["twikoo<br/>/js/services/twikoo_latest_comment.js"]
-        WALINE["waline<br/>/js/services/waline_latest_comment.js"]
-        ARTALK["artalk<br/>/js/services/artalk_latest_comment.js"]
-        GISCUS["giscus<br/>/js/services/giscus_latest_comment.js"]
-    end
-    
-    subgraph "Media Services"
-        VOICE["voice<br/>/js/plugins/voice.js"]
-        VIDEO["video<br/>/js/plugins/video.js"]
-        DOWNLOAD["download-file<br/>/js/plugins/download-file.js"]
-    end
-```
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
----
-
-## 外部内容渲染服务
-
-### mdrender 服务
-
-把外部 Markdown 文件渲染进页面，常用于嵌入仓库 README。
-
-**配置：**
-
-```yaml
-data_services:
-  mdrender:
-    js: /js/services/mdrender.js
-```
-
-**用法示例：**
-
-```markdown
-{% mdrender https://raw.githubusercontent.com/username/repo/main/README.md %}
-```
-
-服务获取 Markdown 内容，用 `marked` 库处理（见 `_config.yml` 的 `dependencies`），把渲染后的 HTML 注入页面。
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
----
-
-## 数据获取服务
-
-### siteinfo 服务
-
-从外部 URL 自动提取网站元数据（标题、图标、描述），用于链接预览；网站卡片缺少自带图标时，也可复用该服务补充圆形图标。
-
-**配置：**
-
-```yaml
-data_services:
-  siteinfo:
-    js: /js/services/siteinfo.js
-    api: https://api.xaox.cc/site_info/v1?url={href}
-```
-
-**API 端点模式：**
-
-`api` 字段用 `{href}` 占位符，会被替换为实际 URL。未配置 `api` 时服务以受限模式运行，不自动提取元数据。
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-### ghinfo 服务
-
-用 GitHub API 获取仓库信息。
-
-Wiki 项目首页配置 `repo` 时，Hero 会用此服务请求 tags 的第一项。请求开始到数据可用期间，最新版本按钮只保留自身高度，不显示加载文案或边框；获取到 tag 后再淡入显示“项目名 + tag”。若 tag 响应提供 `html_url` 则按钮链接至该地址（例如 Release 页面），否则按 `repo` 与 tag 拼接 GitHub tag 引用页；仓库不存在、没有 tag 或请求失败时，该按钮会被移除。
-
-**配置：**
-
-```yaml
-data_services:
-  ghinfo:
-    js: /js/services/ghinfo.js
-```
-
-**API 主机：**
-
-服务使用 `api_host` 小节定义的 GitHub API 主机：
-
-```yaml
-api_host:
-  ghapi: api.github.com
-  ghraw: raw.githubusercontent.com
-  gist: gist.github.com
-  ghcard: github-readme-stats.vercel.app
-```
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-### contributors 服务
-
-把文件路径映射到 GitHub 仓库位置，显示内容文件贡献者信息。
-
-**配置：**
-
-```yaml
-data_services:
-  contributors:
-    edit_this_page:
-      '_posts/': # 映射到仓库路径
-      'wiki/stellar/': https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/
-    js: /js/services/contributors.js
-```
-
-**路径映射：**
-
-`edit_this_page` 对象把本地文件路径前缀映射到 GitHub 仓库 URL，启用「编辑本页」功能与贡献者跟踪。
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
----
-
-## 用户交互服务
-
-### API 通信模式
-
-```mermaid
-sequenceDiagram
-    participant USER as "User Browser"
-    participant SERVICE as "Service JS"
-    participant API as "External API"
-    participant DOM as "Page DOM"
-    
-    USER->>DOM: Page loads with tag
-    DOM->>SERVICE: Load service script
-    SERVICE->>API: GET/POST request
-    API-->>SERVICE: JSON response
-    SERVICE->>SERVICE: Process data
-    SERVICE->>DOM: Update element
-    DOM-->>USER: Display result
-    
-    USER->>DOM: User interaction (e.g., rate)
-    DOM->>SERVICE: Event handler
-    SERVICE->>API: POST updated data
-    API-->>SERVICE: Confirmation
-    SERVICE->>DOM: Update display
-    DOM-->>USER: Visual feedback
-```
-
-### rating 服务
-
-实现带外部 API 持久化的星级评分系统。
-
-**配置：**
-
-```yaml
-data_services:
+services:
+  site_info:
+    provider: site_info_api
+    site_info_api:
+      endpoint: https://api.xaox.cc/site_info/v1?url={href}
   rating:
-    js: /js/services/rating.js
-    api: https://star-vote.xaox.cc/api/rating
-```
-
-**API 集成：**
-
-- 获取内容当前评分
-- 提交用户评分
-- 用聚合分数更新显示
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-### vote 服务
-
-提供带外部 API 持久化的投票/民意功能。
-
-**配置：**
-
-```yaml
-data_services:
+    provider: star_vote
+    star_vote:
+      endpoint: https://star-vote.xaox.cc/api/rating
   vote:
-    js: /js/services/vote.js
-    api: https://star-vote.xaox.cc/api/vote
+    provider: star_vote
+    star_vote:
+      endpoint: https://star-vote.xaox.cc/api/vote
+  contributors:
+    provider: github
+    github:
+      repositories:
+        - source_prefix: wiki/stellar/
+          repository: xaoxuu/hexo-theme-stellar-docs
+          branch: main
+  github:
+    api_url: https://api.github.com
+    raw_url: https://raw.githubusercontent.com
+    gist_url: https://gist.github.com
+  github_card:
+    provider: github_readme_stats
+    github_readme_stats:
+      endpoint: https://github-readme-stats.vercel.app
 ```
 
-**参考源码**：[_config.yml](../../../_config.yml)
+YAML 解析后字段转为 camelCase。标签、PageViewModel、模板和 Runtime Manifest 先通过统一接缝解析选中的 provider，只消费该参数袋；未选中的 provider 配置不会投影给浏览器。每个 provider 参数袋使用封闭 Schema，未知字段会被拒绝。
 
----
+### Site Info
 
-## 布局与内容服务
-
-### 网格布局服务
-
-以卡片网格布局渲染内容的服务：
-
-| 服务 | 用途 | 配置 |
-|------|------|------|
-| `sites` | 通用网站卡片 | `js: /js/services/sites.js` |
-| `friends` | 友链卡片 | `js: /js/services/friends.js` |
-| `friends_and_posts` | 友链 + 文章流 | `js: /js/services/friends_and_posts.js` |
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-### 列表布局服务
-
-以时序或顺序列表渲染内容的服务：
-
-| 服务 | 用途 | 配置 |
-|------|------|------|
-| `timeline` | 基于时间的内容显示 | `js: /js/services/timeline.js` |
-| `fcircle` | 朋友圈聚合 | `js: /js/services/fcircle.js` |
-| `weibo` | 微博风格内容 | `js: /js/services/weibo.js` |
-| `memos` | memo/便签显示 | `js: /js/services/memos.js` |
-| `rss` | RSS 源渲染 | `js: /js/services/rss.js` |
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
-memos 服务内置多版本识别（`source/js/services/memos.js` 的 `versionHandlers`）：`22-`（数组格式）、`22+`、`25+` 与 `v1`（新版接口 `{ memos: [...] }`，creator 为 `users/xxx` 字符串形式）；识别失败时回退 `feature` 兜底，不阻断渲染。
-
----
-
-## 评论集成服务
-
----
-
-## 评论集成服务
-
-这些服务从各评论系统获取并显示最新评论：
-
-**配置模式：**
+`site_info` 默认选择 `site_info_api`，其 `endpoint` 支持 `{href}` 占位符并默认使用 `https://api.xaox.cc/site_info/v1?url={href}`。Link 与 Sites 标签在卡片缺少 icon/avatar 时可请求站点元信息；将 `provider` 显式设为 `null` 时不发请求，公共或自定义服务失败时保留原始标题、图标、描述等静态兜底。
 
 ```yaml
-data_services:
-  twikoo:
-    js: /js/services/twikoo_latest_comment.js
-  waline:
-    js: /js/services/waline_latest_comment.js
-  artalk:
-    js: /js/services/artalk_latest_comment.js
-  giscus:
-    js: /js/services/giscus_latest_comment.js
+services:
+  site_info:
+    provider: site_info_api
+    site_info_api:
+      endpoint: https://api.example.com/site?url={href}
 ```
 
-**集成：**
+### Rating 与 Vote
 
-这些服务连接到 `comments` 小节配置的评论系统 API（见[评论系统](../07-外部集成/comment-systems.md)），获取并显示近期评论活动。
+`rating` 与 `vote` 是两个独立能力，均默认选择 `star_vote`；各自参数袋内的 `endpoint` 分别默认使用 `https://star-vote.xaox.cc/api/rating` 和 `https://star-vote.xaox.cc/api/vote`。站点可覆盖为自己的 [star-vote](https://github.com/xaoxuu/star-vote) 部署地址；将对应 `provider` 设为 `null` 时标签仍可构建，但输出不可交互的静态状态。加载或提交失败时不显示错误、不输出控制台日志；加载保留初始值，失败的提交撤销本地乐观状态。
 
-Artalk 最新评论渲染时保留表情图（`atk-emoticon`，CSS 限高 1.5em），其余标签转纯文本并截断 50 字符，空评论跳过，避免大表情图与段落撑爆侧栏卡片布局。
+### Contributors
 
-waline 最新评论兼容数组与 `{ data: [...] }` 两种返回结构；Artalk 带定位目标（`?atk_comment=` / `#atk-comment-`）时跳过视口懒加载立即初始化，`list-loaded` 事件完成后清理 `?atk_*` 查询参数，避免其 hash 监听干扰目录定位（#598）。
+`contributors` 默认选择 `github`，`services.contributors.github.repositories` 是 `{source_prefix,repository,branch}` 数组。PageViewModel 只读取选中 provider 的仓库映射，并按最长 `source_prefix` 匹配生成“编辑本页”和提交记录 URL；空数组继续表示无贡献者映射。
 
-**参考源码**：[_config.yml](../../../_config.yml)
+### GitHub 服务
 
----
+| 字段 | 消费方 |
+|------|--------|
+| `api_url` | ghuser、ghrepo、ghissues、contributors、Wiki release 数据 |
+| `raw_url` | 远程 Markdown、Wiki README、仓库资源 |
+| `gist_url` | `{% gist owner/id [file:name] %}` 脚本地址 |
 
-## 媒体服务
+`github` 表示明确的 GitHub 平台与共享代理地址，不采用 provider 结构。GitHub Readme Stats 卡片是可替换能力，`github_card` 默认选择 `github_readme_stats`，其服务地址位于 `services.github_card.github_readme_stats.endpoint`。
 
-媒体服务处理音频、视频与文件下载：
+## 内部服务注册表
 
-```yaml
-data_services:
-  voice: 
-    js: /js/plugins/voice.js
-  video: 
-    js: /js/plugins/video.js
-  download-file: 
-    js: /js/plugins/download-file.js
-```
-
-**注意**：这些服务位于 `/js/plugins/` 而非 `/js/services/`，提供插件式功能而非纯数据获取。
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
----
-
-## 按需加载实现
-
-### 加载触发机制
+`mdrender/siteinfo/ghinfo/rating/vote/sites/friends/timeline/memos/comments latest` 等浏览器模块的脚本路径登记在 `scripts/lib/internal-constants.js`，不属于公开配置。构建期把冻结注册表投影到 Runtime Manifest；`services` ESM adapter 只在 DOM 命中 `.data-service` / `.ds-<id>` 等标记时 import，再加载对应内部模块。
 
 ```mermaid
 flowchart LR
-    TAGPLUGIN["Tag Plugin"]
-    DATAATTR["data-service attribute\nin rendered HTML"]
-    PAGEINIT["页面初始化"]
-    DETECT["Detect data-service"]
-    LOADJS["Load service JS"]
-    EXECUTE["Execute service"]
-    
-    TAGPLUGIN --> DATAATTR
-    DATAATTR --> PAGEINIT
-    PAGEINIT --> DETECT
-    DETECT --> LOADJS
-    LOADJS --> EXECUTE
+  A[services provider 配置] --> B[严格 Schema]
+  B --> C[冻结 runtime]
+  D[internal extension assets] --> E[Runtime Manifest]
+  C --> F[tag/helper/PageViewModel]
+  E --> G[services ESM adapter]
+  F --> H[data-api / data-service markup]
+  H --> G
 ```
 
-**加载特性：**
+## 缓存策略
 
-1. **条件加载**——服务仅在渲染页面中存在对应标签时加载
-2. **去重**——每个服务每页加载一次，即使多次使用
-3. **依赖管理**——服务可访问 `marked` 等共享工具
-4. **整页导航适配**——主题为普通整页导航，每次加载重新扫描初始化
+request/cache 是主题运行时实现策略，由 `scripts/lib/internal-constants.js` 集中所有，不再暴露 `extensions.cache` 站点配置。构建期把冻结 policy 写入 Runtime Manifest，ESM request/cache 客户端必须显式消费该 policy，提供 GET 并发去重、超时重试、fresh 命中、stale 失败回退、单条 200 KiB 限制和按最旧时间淘汰；非 GET、`no-store` 与时间戳破坏参数不缓存。
 
-**参考源码**：[_config.yml](../../../_config.yml)
+缓存前缀为 `Stellar.request-cache.v2.`。客户端不替换 `window.fetch` 或 `XMLHttpRequest`，只在自身请求开始/结束时派发 `stellar:request-start/end`。`utils.request` / `requestWithoutLoading` 是迁移期数据服务 callback/loading 适配，不再包含第二份缓存算法。
 
----
+## 远程 Markdown
 
-## 依赖集成
+`mdrender` 与 Wiki README 使用 `github.raw_url` 的完整 origin 替换标准 `raw.githubusercontent.com`，并输出同一目录的 `data-base` 供相对资源解析。非 GitHub Raw 地址保持原样。
 
-数据服务依赖 `dependencies` 小节定义的基础依赖：
+## 扩展边界
 
-```yaml
-dependencies:
-  marked: https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js
-  lazyload:
-    js: https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js
-    transition: fade
-    fix_ratio: true
-```
+- 站点只能配置已声明业务端点，不能覆盖官方 `js/css/inject`。
+- 可替换服务统一使用 `provider` 与同级 Provider 参数袋；新增实现只增加 provider ID、封闭配置袋和适配器，不改变服务根结构。
+- 服务 ID 使用 snake_case；浏览器内部旧 ID 仅是当前运行时桥接，不是公开 YAML。
+- 标签或小部件自带的单次 `api` 参数仍属于组件输入，不自动上升为全局服务配置。
+- 第三方响应与 CORS 由端点提供方负责；Site Info、Rating 与 Vote 在预期远程失败时完全静默并保持静态兜底或撤销失败交互，其它服务沿用各自的失败策略。
 
-**依赖用途：**
-
-- **marked**——`mdrender` 等服务的 Markdown 处理必需（主题无 jQuery 依赖，客户端为原生 JavaScript）
-- **lazyload**——渲染图片的服务集成
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
----
-
-## 配置最佳实践
-
-### API 安全考虑
-
-配置 API 端点时：
-
-1. **仅 HTTPS**——API 端点始终用 HTTPS URL
-2. **CORS 配置**——确保外部 API 支持浏览器请求的 CORS
-3. **速率限制**——注意 API 速率限制，尤其 GitHub API
-4. **令牌管理**——部分服务（如 GitHub 集成）可能需要认证令牌
-
-### 性能优化
-
-1. **选择性启用**——只配置实际使用的服务
-2. **API 端点测试**——部署前验证 API 端点响应
-3. **CDN 使用**——自托管时用 CDN URL 分发服务 JS
-4. **懒加载**——按需加载机制自动优化性能
-
-**参考源码**：[_config.yml](../../../_config.yml)
-
----
-
-## 服务扩展
-
-添加自定义数据服务的步骤：
-
-1. **创建服务 JavaScript**：放在 `/source/js/services/your_service.js`
-2. **在配置中注册**：
-   ```yaml
-   data_services:
-     your_service:
-       js: /js/services/your_service.js
-       api: https://your-api.com/endpoint
-   ```
-3. **实现标签插件**：创建引用该服务的标签插件
-4. **添加数据属性**：确保渲染 HTML 包含 `data-service="your_service"`
-
-**集成点：**
-
-- 服务脚本在 `stellar` 命名空间内执行
-- 使用 CDN 全局（如 `marked`）与主题工具函数
-- 用服务专属选择器更新 DOM 元素
-
-**参考源码**：[_config.yml](../../../_config.yml)
+相关源码：[scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)、[scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/extensions/services.js](../../../source/js/runtime/extensions/services.js)、[source/js/runtime/request-cache.js](../../../source/js/runtime/request-cache.js)、[source/js/runtime/legacy-request-adapter.js](../../../source/js/runtime/legacy-request-adapter.js)。

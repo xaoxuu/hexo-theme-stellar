@@ -1,0 +1,17 @@
+<%
+var settingsPlacement = typeof placement === 'string' ? placement : 'leftbar'
+var provider = stellar_config('comments.provider') || ''
+var supportedProvider = ['artalk', 'waline', 'twikoo'].includes(provider.toLowerCase())
+var identityEnabled = supportedProvider
+var settingsName = __('settings.label')
+var settingsProfile = stellar_config('profiles.settings')
+var settingsUrl = settingsProfile?.path || '/settings/'
+var fallbackAvatar = stellar_config('fallbacks.avatar') || ''
+var fallbackAvatarUrl = fallbackAvatar ? url_for(fallbackAvatar) : ''
+%>
+<a class="<%- ui_classes('settings-widget', 'collectionItem') %>" href="<%- escape_html(url_for(settingsUrl)) %>" data-profile-provider="<%- escape_html(provider) %>" data-profile-identity-enabled="<%- identityEnabled ? 'true' : 'false' %>" data-profile-fallback-avatar="<%- escape_html(fallbackAvatarUrl) %>" data-settings-placement="<%- escape_html(settingsPlacement) %>" data-settings-label="<%- escape_html(settingsName) %>" aria-label="<%- escape_html(settingsName) %>" title="<%- escape_html(settingsName) %>">
+  <span class="settings-widget__avatar" aria-hidden="true">
+    <span class="ui-icon"><%- icon('default:settings', '', true) %></span>
+  </span>
+  <span class="settings-widget__name ui-collection__title"><%- settingsName %></span>
+</a>

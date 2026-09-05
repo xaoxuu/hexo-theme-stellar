@@ -1,0 +1,325 @@
+$editorial-paper-light = x-hsla(44, 50%, 96%, 1)
+$editorial-paper-dark = x-hsla(44, 10%, 10%, 1)
+$editorial-card-light = x-hsla(44, 50%, 98%, 1)
+$editorial-card-dark = x-hsla(44, 10%, 14%, 1)
+
+// Minimal 使用同一暖纸色系承载背景与卡片，并覆盖全局冷白、冷灰与移动端纯黑背景。
+:root
+  --background: $editorial-paper-light
+  --card: $editorial-card-light
+
+:root:not([data-theme])
+  @media (prefers-color-scheme: dark)
+    --background: $editorial-paper-dark
+    --card: $editorial-card-dark
+
+:root[data-theme='light']
+  --background: $editorial-paper-light
+  --card: $editorial-card-light
+
+:root[data-theme='dark']
+  --background: $editorial-paper-dark
+  --card: $editorial-card-dark
+
+.site-shell
+  --leftbar-gap: 0px
+
+// Topbar 与 Listing Nav 参与自然文档流，不占用滚动中的固定视口空间。
+.site-shell[data-regions~='topbar']
+  --shell-sticky-offset: var(--shell-edge-inset)
+  --shell-topbar-bottom: 0px
+
+.site-region--topbar,
+.listing-nav
+  position: static
+  top: auto
+
+.site-shell[data-regions~='topbar'] .listing-nav .listing-nav__surface.is-pinned
+  transform: none
+
+// Editorial Minimal 让布局与排版承担层级，普通 Surface 不再制造卡片边界。
+.ui-surface,
+.site-region--topbar.ui-surface,
+.site-region--leftbar .site-region__surface.ui-surface
+  border: 0
+  background: transparent
+  box-shadow: none
+  backdrop-filter: none
+  -webkit-backdrop-filter: none
+
+appearance-transparent-leftbar()
+appearance-editorial-interactions()
+appearance-standard-prose()
+
+// Wiki Brand Search 静止态保留轻量虚线边界，交互态与其它复合控件统一。
+.brand-search .search-trigger
+  border: 1px dashed var(--block-border)
+  box-shadow: none
+
+// Region 内的普通 Widget 去掉填充表面；代码、状态和浮层仍由各自组件负责。
+.widget-wrapper.markdown .widget-body,
+.widget-wrapper.tagcloud .widget-body,
+.widget-wrapper.timeline .tag-plugin.timeline .timenode .body,
+.site-region--leftbar .widget-wrapper.timeline .body,
+.site-region--rightbar .widgets .widget-wrapper.toc
+  border: 0
+  background: transparent
+  box-shadow: none
+
+.widget-wrapper.toc .toc-link.active
+  background: transparent
+  box-shadow: none
+
+// Drawer 覆盖正文时必须提供不透明遮挡面，桌面常驻侧栏继续保持透明。
+.site-shell[data-drawer='leftbar'] .site-region--leftbar .site-region__surface,
+.site-shell[data-drawer='rightbar'] .site-region--rightbar .site-region__surface
+  background: var(--card)
+  backdrop-filter: none
+  -webkit-backdrop-filter: none
+  &::before
+    display: none
+
+.site-shell[data-drawer='leftbar'] .site-region--leftbar .site-region__surface
+  border-radius: $border-card-l
+  corner-shape: $corner-shape
+
+// Listing Nav 只保留文字导航；当前项持续显示下划线，但不保留旧按钮背景。
+.listing-nav
+  margin: 1rem
+.listing-nav__surface,
+.listing-nav__surface.is-pinned
+  margin: 0
+  border: 0
+  border-radius: 0
+  border-bottom: 1px dashed var(--block-border)
+  padding: 1rem 0
+  background: transparent
+  box-shadow: none
+  backdrop-filter: none
+  -webkit-backdrop-filter: none
+.listing-nav__viewport
+  border-radius: 0
+.listing-nav nav
+  padding: 0
+.listing-nav nav a
+  appearance-editorial-underline()
+  width: fit-content
+  font-size: var(--fsh4)
+  line-height: 1.2
+  margin: .25rem .0
+  backdrop-filter: none
+  -webkit-backdrop-filter: none
+  &+a
+    margin-left: 1rem
+  &:hover,
+  &:focus-visible
+    appearance-editorial-underline-active()
+  &.active
+    appearance-editorial-underline()
+    appearance-editorial-underline-active()
+    background: transparent
+    backdrop-filter: none
+    -webkit-backdrop-filter: none
+
+// bar-item-active() 的暗色分支特异性更高，Minimal 在相同主题范围内收口。
+:root[data-theme='dark'] .listing-nav nav a.active
+  appearance-editorial-underline()
+  appearance-editorial-underline-active()
+  background: transparent
+  backdrop-filter: none
+  -webkit-backdrop-filter: none
+
+:root:not([data-theme])
+  @media screen and (prefers-color-scheme: dark)
+    .listing-nav nav a.active
+      appearance-editorial-underline()
+      appearance-editorial-underline-active()
+      background: transparent
+      backdrop-filter: none
+      -webkit-backdrop-filter: none
+
+// 分页以排版表示位置，不再包裹成一条卡片。
+.paginator-wrap
+  border: 0
+  background: transparent
+  box-shadow: none
+  overflow: visible
+  .page-number
+    background: transparent
+  a.page-number,
+  .current
+    appearance-editorial-underline()
+    margin: 4px 8px
+  a.page-number:hover,
+  a.page-number:focus-visible,
+  .current
+    appearance-editorial-underline-active()
+  .extend
+    border: 0
+    appearance-editorial-outline()
+  a.extend:hover,
+  a.extend:focus-visible
+    appearance-editorial-outline-active()
+
+// 文本列表使用文章标题式下划线；Tag 等复合短控件使用同色内描边。
+.post-list .archive-list a.post,
+.post-list #cats a.cat,
+.page-footer .sitemap .sitemap-group > a,
+  appearance-editorial-underline()
+  border: 0
+  background-color: transparent
+
+.post-list #cats a.cat
+  margin: .5em 1rem
+
+.page-footer .sitemap .sitemap-group > a
+  margin: 4px
+
+.post-list .archive-list a.post:hover,
+.post-list .archive-list a.post:focus-visible,
+.post-list #cats a.cat:hover,
+.post-list #cats a.cat:focus-visible,
+.page-footer .sitemap .sitemap-group > a:hover,
+.page-footer .sitemap .sitemap-group > a:focus-visible,
+.page-footer.footnote .text a:hover,
+.page-footer.footnote .text a:focus-visible
+  appearance-editorial-underline-active()
+  border: 0
+  background-color: transparent
+
+.post-list #tags a.tag,
+.article-tags a.tag
+  appearance-editorial-outline()
+  // box-shadow: inset 0 0 0 1px var(--block)
+
+.post-list #tags a.tag:hover,
+.post-list #tags a.tag:focus-visible,
+.article-tags a.tag:hover,
+.article-tags a.tag:focus-visible
+  appearance-editorial-outline-active()
+
+// 普通文章卡片与包装器透明；封面仍作为内容媒体存在。
+.site-main .post-list .post-title
+  font-size: var(--fsh3)
+.post-list .post-card-wrap,
+.post-list:not(.topic) .post-card.card-hover
+  box-shadow: none
+
+.post-list.wiki .wiki-card.card-hover
+  box-shadow: none
+
+.post-list.post .post-card.post.photo
+  border-radius: $border-card-l
+.post-list.post .post-card
+  border-radius: 0
+
+.post-list.post .post-card-wrap
+  margin: 1rem 0
+  padding-bottom: 1rem
+  border-radius: 0
+  border-bottom: 1px dashed var(--block-border)
+
+.post-list .post-card .excerpt
+  margin: .5rem 0
+  > p
+    margin: 0
+
+.post-list:not(.topic) .post-card:not(.photo)
+  border: 0
+  background-color: transparent
+  background-image: none
+  box-shadow: none
+
+.post-list:not(.topic) .post-card:not(.photo) .md-text
+  padding: 0
+  margin: 0
+
+// 图片卡与复合卡保留内容裁切，只以同色内描边响应，不产生上浮阴影。
+.post-list .post-card.photo,
+.post-list .post-card.wiki,
+.pin-slider,
+.post-list.topic .post-card.topic .cover
+  appearance-editorial-outline()
+
+.post-list .post-card.photo:hover,
+.post-list .post-card.photo:focus-visible,
+.post-list .post-card.wiki:hover,
+.post-list .post-card.wiki:focus-visible,
+.pin-slider:hover,
+.pin-slider:focus-within,
+.post-list.topic .post-card.topic .cover:hover,
+.post-list.topic .post-card.topic .cover:focus-visible
+  appearance-editorial-outline-active()
+
+.post-list.wiki .wiki-card.no-cover,
+.wiki-card-cover.no-cover,
+.md-text .link-card,
+.widget-wrapper.ghrepo .repo
+  background: transparent
+  box-shadow: none
+
+// hoverable-card() 按明暗模式生成高优先级阴影；Minimal 在相同状态层级接管为内描边。
+:root[data-theme='light'],
+:root[data-theme='dark'],
+:root:not([data-theme])
+  .md-text .link-card,
+  .widget-wrapper.ghrepo .repo,
+  .tag-plugin.grid[bg='card'] > .cell
+    appearance-editorial-outline()
+    transform: none
+    box-shadow: inset 0 0 0 1px var(--block-border)
+
+  .md-text .link-card:hover,
+  .md-text .link-card:focus-visible,
+  .widget-wrapper.ghrepo .repo:hover,
+  .widget-wrapper.ghrepo .repo:focus-visible,
+  .tag-plugin.grid[bg='card'] > .cell:hover,
+  .tag-plugin.grid[bg='card'] > .cell:focus-within
+    appearance-editorial-outline-active()
+    transform: none
+
+// 搜索结果是复合导航条目；Dialog 与输入区域继续保留语义容器。
+.search-wrapper .search-result li a
+  background: transparent
+  box-shadow: none
+
+// 页脚是文章元信息而不是独立卡片，内部语义分隔线继续保留。
+.article-footer
+  background: transparent
+  box-shadow: none
+
+.article-footer #contributors .header a.edit,
+.article-footer #contributors .body .users-wrap .user-card .card-link
+  appearance-editorial-outline()
+  background: transparent
+
+.article-footer #contributors .header a.edit:hover,
+.article-footer #contributors .header a.edit:focus-visible,
+.article-footer #contributors .body .users-wrap .user-card .card-link:hover,
+.article-footer #contributors .body .users-wrap .user-card .card-link:focus-visible
+  appearance-editorial-outline-active()
+
+.paginator-wrap .extend
+  border-radius: $border-button
+
+.paginator-wrap .extend.prev
+  border-right: 0
+.paginator-wrap .extend.next
+  border-left: 0
+
+@media (prefers-reduced-motion: reduce)
+  .listing-nav nav a,
+  .paginator-wrap a,
+  .paginator-wrap .current,
+  .post-list .archive-list a.post,
+  .post-list #cats a.cat,
+  .post-list #tags a.tag,
+  .article-tags a.tag,
+  .page-footer a,
+  .md-text .link-card,
+  .widget-wrapper.ghrepo .repo,
+  .tag-plugin.grid[bg='card'] > .cell
+    transition: none
+
+.page-footer .sitemap .sitemap-group > a
+  padding: 0

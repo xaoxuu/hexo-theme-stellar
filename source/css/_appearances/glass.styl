@@ -1,0 +1,138 @@
+$glass-leftbar-background-type = hexo-config('appearance.backgrounds.leftbar.type')
+$glass-leftbar-background-image = hexo-config('appearance.backgrounds.leftbar.image')
+$glass-leftbar-has-extra-background = $glass-leftbar-background-type != 'none'
+$glass-leftbar-uses-image = $glass-leftbar-background-type == 'image' && $glass-leftbar-background-image
+$glass-leftbar-decoration-inset = 16px
+$glass-leftbar-decoration-blur = convert(hexo-config('appearance.backgrounds.leftbar.backdrop.radius'))
+$glass-leftbar-decoration-saturation = 350%
+$glass-leftbar-gradient-light = hexo-config('appearance.backgrounds.leftbar.gradient.light')
+$glass-leftbar-gradient-dark = hexo-config('appearance.backgrounds.leftbar.gradient.dark')
+$glass-leftbar-gradient-light-base = unquote(hexo-config('appearance.backgrounds.leftbar.gradient.light.0'))
+$glass-leftbar-gradient-light-top = unquote(hexo-config('appearance.backgrounds.leftbar.gradient.light.1'))
+$glass-leftbar-gradient-light-right = unquote(hexo-config('appearance.backgrounds.leftbar.gradient.light.2'))
+$glass-leftbar-gradient-light-bottom = unquote(hexo-config('appearance.backgrounds.leftbar.gradient.light.3'))
+$glass-leftbar-gradient-dark-base = unquote(hexo-config('appearance.backgrounds.leftbar.gradient.dark.0'))
+$glass-leftbar-gradient-dark-top = unquote(hexo-config('appearance.backgrounds.leftbar.gradient.dark.1'))
+$glass-leftbar-gradient-dark-right = unquote(hexo-config('appearance.backgrounds.leftbar.gradient.dark.2'))
+$glass-leftbar-gradient-dark-bottom = unquote(hexo-config('appearance.backgrounds.leftbar.gradient.dark.3'))
+
+glass-leftbar-background-filter($opacity)
+  --background-opacity: $opacity
+  filter: saturate(var(--saturate)) blur(var(--blur-px)) opacity(var(--background-opacity))
+
+glass-leftbar-background-image($opacity)
+  glass-leftbar-background-filter($opacity)
+  background-color: transparent
+  background-image: url($glass-leftbar-background-image)
+  background-position: center
+  background-size: cover
+  background-repeat: no-repeat
+
+glass-leftbar-background-gradient($base, $top, $right, $bottom, $opacity)
+  --background-opacity: $opacity
+  filter: blur(var(--blur-px)) opacity(var(--background-opacity))
+  background-color: $base
+  background-image: radial-gradient(ellipse at 28% 24%, $top 0%, $top 65%, transparent 100%), radial-gradient(ellipse at 60% 50%, $right 0%, $right 60%, transparent 100%), conic-gradient(from 210deg at 32% 72%, $bottom 0deg, $bottom 110deg, transparent 190deg, $top 270deg, transparent 360deg)
+  background-position: left top, right 42%, left bottom
+  background-size: 56% 34%, 52% 30%, 60% 38%
+  background-repeat: no-repeat
+
+.site-shell
+  --shell-gap: var(--gap-page)
+  --shell-edge-inset: 16px
+  --hoverable-card-hover-shadow: $boxshadow-card
+  --hoverable-card-hover-transform: none
+
+.ui-surface
+  appearance-glass-surface()
+
+appearance-glass-interactions-light()
+appearance-standard-prose()
+appearance-card-listing-nav()
+
+// Rightbar TOC 的当前位置仅由文字与左侧标记表达；指针、键盘与按压反馈仍复用 Glass 交互材质。
+.site-region--rightbar .widget-wrapper.toc .toc-link.active:not(:hover):not(:focus-visible):not(:active)
+  background: transparent
+  box-shadow: none
+
+.widget-wrapper.markdown .ui-interactive
+  background: var(--bg-a10)
+
+.site-region--topbar.ui-surface,
+.site-region--leftbar .ui-surface
+  border: 0
+  border-radius: $border-card-l
+  background: transparent
+  backdrop-filter: none
+  -webkit-backdrop-filter: none
+
+.site-region--leftbar .site-region__surface.ui-surface
+  box-shadow: none
+
+@media screen and (max-width: $device-laptop)
+  .site-region--rightbar .site-region__surface.ui-drawer-surface
+    appearance-glass-surface()
+    background: var(--bg-a50)
+    box-shadow: none
+
+@media screen and (max-width: $device-tablet)
+  .site-region--leftbar .site-region__surface.ui-surface
+    background: var(--bg-a50)
+
+.site-region--topbar > .site-region__viewport
+  border-radius: inherit
+  corner-shape: inherit
+
+.site-region--leftbar
+  appearance-translucent-leftbar-light()
+  .site-region__decoration
+    display: none
+    if $glass-leftbar-has-extra-background
+      display: block
+      pointer-events: none
+      position: absolute
+      --inset: $glass-leftbar-decoration-inset
+      top: var(--inset)
+      bottom: var(--inset)
+      left: var(--inset)
+      right: var(--inset)
+      border-radius: inherit
+      --saturate: $glass-leftbar-decoration-saturation
+      --blur-px: $glass-leftbar-decoration-blur
+      --background-opacity: 1
+      if $glass-leftbar-uses-image
+        glass-leftbar-background-image(hexo-config('appearance.backgrounds.leftbar.opacity'))
+      else if length($glass-leftbar-gradient-light) == 4
+        glass-leftbar-background-gradient($glass-leftbar-gradient-light-base, $glass-leftbar-gradient-light-top, $glass-leftbar-gradient-light-right, $glass-leftbar-gradient-light-bottom, hexo-config('appearance.backgrounds.leftbar.opacity'))
+      :root[data-theme='dark'] &
+        if $glass-leftbar-uses-image
+          glass-leftbar-background-image(hexo-config('appearance.backgrounds.leftbar.opacity') * 0.75)
+        else if length($glass-leftbar-gradient-dark) == 4
+          glass-leftbar-background-gradient($glass-leftbar-gradient-dark-base, $glass-leftbar-gradient-dark-top, $glass-leftbar-gradient-dark-right, $glass-leftbar-gradient-dark-bottom, hexo-config('appearance.backgrounds.leftbar.opacity'))
+      :root:not([data-theme]) &
+        @media screen and (prefers-color-scheme: dark)
+          if $glass-leftbar-uses-image
+            glass-leftbar-background-image(hexo-config('appearance.backgrounds.leftbar.opacity') * 0.75)
+          else if length($glass-leftbar-gradient-dark) == 4
+            glass-leftbar-background-gradient($glass-leftbar-gradient-dark-base, $glass-leftbar-gradient-dark-top, $glass-leftbar-gradient-dark-right, $glass-leftbar-gradient-dark-bottom, hexo-config('appearance.backgrounds.leftbar.opacity'))
+
+if $glass-leftbar-has-extra-background
+  @media screen and (min-width: ($device-tablet + 1px))
+    html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .site-region--leftbar .site-region__decoration
+      --inset: 0px
+      --blur-px: ($glass-leftbar-decoration-blur / 2)
+
+:root[data-theme='dark']
+  appearance-glass-interactions-dark()
+  .site-region--leftbar
+    appearance-translucent-leftbar-dark()
+
+:root:not([data-theme])
+  @media screen and (prefers-color-scheme: dark)
+    appearance-glass-interactions-dark()
+    .site-region--leftbar
+      appearance-translucent-leftbar-dark()
+
+.listing-nav__surface.is-pinned
+  bar-glass()
+  background: transparent

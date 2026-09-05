@@ -1,5 +1,5 @@
 /**
- * notebooks.js v1
+ * notebooks.js v2
  *
  * 笔记本系统构建（纯函数部分，供 events/lib/notebooks.js 调用与单测覆盖）。
  * 把「每个笔记本全量 filter 一遍全部页面」改为单遍分组（O(NB+P) 替代 O(NB*P)），
@@ -9,27 +9,23 @@
 'use strict';
 
 const { normalize_path } = require('./path_utils');
+const { getCollectionId } = require('./content-config');
+const { profilePath, requireLayoutProfiles } = require("./layout-config");
 
 class NotePage {
-  constructor(page) {
+  constructor(page, config) {
     this.id = page._id;
-    this.notebook = page.notebook;
+    this.collectionId = getCollectionId(config, "notebook");
     this.title = page.title;
-    this.tags = page.tags;
+    this.tags = config.tags;
     this.path = page.path;
     this.path_key = normalize_path(page.path);
     this.layout = page.layout;
     this.date = page.date;
     this.updated = page.updated || page.date;
 
-    const pin = page.pin ?? page.sticky ?? 0;
-    if (pin === true) {
-      this.pin = 1;
-    } else if (pin === false) {
-      this.pin = 0;
-    } else {
-      this.pin = pin;
-    }
+    this.priority = config.listing?.priority || 0;
+    this.listed = config.visibility?.listed !== false;
   }
 }
 
@@ -39,54 +35,64 @@ function splitTag(tag) {
 
 /**
  * 单遍按 notebook id 分组页面。
- * 等价的旧逻辑：对每个笔记本执行 allPages.filter(p => p.notebook === notebook.id)。
+ * 页面按 collection.profile/id 归属笔记本。
  * @param {Array} pages 页面数组（warehouse Query 的 .data）
+ * @param {Map} pageConfigs 页面对象到冻结 Front Matter 配置的映射
  * @returns {Map<string, Array>}
  */
-function groupPagesByNotebook(pages) {
+function groupPagesByNotebook(pages, pageConfigs) {
   const pagesByNotebook = new Map();
   for (const page of pages) {
-    if (page.notebook == null) {
+    const config = pageConfigs.get(page);
+    const notebookId = getCollectionId(config, "notebook");
+    if (notebookId == null) {
       continue;
     }
-    let arr = pagesByNotebook.get(page.notebook);
+    let arr = pagesByNotebook.get(notebookId);
     if (arr == null) {
       arr = [];
-      pagesByNotebook.set(page.notebook, arr);
+      pagesByNotebook.set(notebookId, arr);
     }
-    arr.push(page);
+    arr.push(new NotePage(page, config));
   }
   return pagesByNotebook;
 }
 
 function prepareNotebook(id, info, ctx, pages) {
   const notebook = info;
+  const profiles = requireLayoutProfiles(ctx.stellar?.config);
+  const notebookDefaults = ctx.stellar.config.notebook;
   notebook.id = id;
 
-  if (notebook.base_dir) {
-    if (notebook.base_dir.startsWith('/')) {
-      notebook.base_dir = notebook.base_dir.substring(1);
+  notebook.route ||= {};
+  notebook.listing ||= {};
+  notebook.footer ||= {};
+  notebook.topbar ||= {};
+  notebook.leftbar ||= {};
+  notebook.rightbar ||= {};
+
+  if (notebook.route.path) {
+    if (notebook.route.path.startsWith("/")) {
+      notebook.route.path = notebook.route.path.substring(1);
     }
-    if (notebook.base_dir.length > 1 && !notebook.base_dir.endsWith('/')) {
-      notebook.base_dir = notebook.base_dir + '/';
+    if (notebook.route.path.length > 1 && !notebook.route.path.endsWith("/")) {
+      notebook.route.path = notebook.route.path + "/";
     }
   } else {
-    const notebooksBaseDir = ctx.theme.config.site_tree.notebooks.base_dir;
-    notebook.base_dir = notebooksBaseDir ? `${notebooksBaseDir}/${id}` : id;
+    const notebooksBaseDir = profilePath(profiles.notebookIndex.path);
+    notebook.route.path = notebooksBaseDir ? `${notebooksBaseDir}/${id}` : id;
   }
 
-  notebook.sort ||= 0;
-  notebook.auto_excerpt ||= ctx.theme.config.notebook.auto_excerpt || 0;
-  notebook.per_page ??= ctx.theme.config.notebook.per_page ?? ctx.config.per_page ?? 10;
-  notebook.order_by ||= ctx.theme.config.notebook.order_by || '-updated';
-  notebook.menu_id ??= ctx.theme.config.site_tree.notes.menu_id;
-  notebook.license ??= ctx.theme.config.notebook.license;
-  notebook.share ??= ctx.theme.config.notebook.share;
+  notebook.listing.order ??= 0;
+  notebook.listing.excerpt_length ??= notebookDefaults.listing.excerptLength;
+  notebook.listing.per_page ??= notebookDefaults.listing.perPage ?? ctx.config.per_page ?? 10;
+  notebook.listing.sort ??= structuredClone(notebookDefaults.listing.sort);
+  notebook.footer.license ??= notebookDefaults.footer.license ?? ctx.stellar.config.article.footer.license;
+  notebook.footer.share ??= notebookDefaults.footer.share ?? ctx.stellar.config.article.footer.share;
 
-  notebook.leftbar ??= ctx.theme.config.site_tree.notes.leftbar;
-  notebook.rightbar ??= ctx.theme.config.site_tree.notes.rightbar;
-  notebook.note_leftbar ??= ctx.theme.config.site_tree.note.leftbar;
-  notebook.note_rightbar ??= ctx.theme.config.site_tree.note.rightbar;
+  notebook.topbar = structuredClone(notebook.topbar);
+  notebook.leftbar = structuredClone(notebook.leftbar);
+  notebook.rightbar = structuredClone(notebook.rightbar);
 
   const tagMap = new Map(); // tagId: tagInfo
   notebook.tagTree = tagMap;
@@ -95,7 +101,7 @@ function prepareNotebook(id, info, ctx, pages) {
     id: '',
     name: '',
     part: '',
-    path: notebook.base_dir,
+    path: notebook.route.path,
     parent: null, // parent tag id
     childSet: new Set(), // child tag ids
     noteSet: new Set(), // note ids
@@ -104,7 +110,7 @@ function prepareNotebook(id, info, ctx, pages) {
 
   // Iterate through all notes in the notebook, build the tag tree.
   for (const page of pages) {
-    rootTag.noteSet.add(page._id);
+    rootTag.noteSet.add(page.id);
 
     if (!page.tags) {
       continue;
@@ -122,7 +128,7 @@ function prepareNotebook(id, info, ctx, pages) {
             id: tagId,
             name: tagName,
             part: part,
-            path: `${notebook.base_dir}/tags/${tagId}`,
+            path: `${notebook.route.path}/tags/${tagId}`,
             parent: parent.id,
             childSet: new Set(),
             noteSet: new Set(),
@@ -131,13 +137,13 @@ function prepareNotebook(id, info, ctx, pages) {
           parent.childSet.add(tagId);
         }
 
-        tag.noteSet.add(page._id);
+        tag.noteSet.add(page.id);
         parent = tag;
       }
     }
   }
 
-  notebook.noteMap = pages.map(p => new NotePage(p)).reduce((map, note) => {
+  notebook.noteMap = pages.reduce((map, note) => {
     map.set(note.id, note);
     return map;
   }, new Map());
@@ -151,22 +157,19 @@ function prepareNotebook(id, info, ctx, pages) {
   return notebook;
 }
 
-function getNotebooksObject(ctx) {
+function getNotebooksObject(ctx, options = {}) {
   const notebooks = {
     tree: {},
   };
 
-  const data = ctx.locals.get('data');
-  const pagesByNotebook = groupPagesByNotebook(ctx.locals.get('pages').data);
+  const collections = Array.isArray(options.collections) ? options.collections : [];
+  const pagesByNotebook = options.pagesByNotebook || new Map();
   const list = [];
-  for (const [key, info] of Object.entries(data)) {
-    if (!key.startsWith('notebooks/') || key.endsWith('.DS_Store')) {
-      continue;
-    }
-    const id = key.substring(10);
+  for (const [id, value] of collections) {
+    const info = structuredClone(value);
     list.push(prepareNotebook(id, info, ctx, pagesByNotebook.get(id) || []));
   }
-  list.sort((a, b) => a.sort - b.sort);
+  list.sort((a, b) => a.listing.order - b.listing.order);
   for (const info of list) {
     notebooks.tree[info.id] = info;
   }

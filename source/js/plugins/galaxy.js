@@ -174,7 +174,9 @@ void main() {
     starSpeed: 2.0,
     density: 2.0,
     hueShift: 140.0,
+    disableAnimation: false,
     speed: 0.5,
+    mouseInteraction: true,
     glowIntensity: 0.2,
     saturation: 0.1,
     mouseRepulsion: true,
@@ -226,7 +228,9 @@ void main() {
       starSpeed: nonNegativeOrDefault(source.starSpeed, defaultParams.starSpeed),
       density: nonNegativeOrDefault(source.density, defaultParams.density),
       hueShift: normalizeHue(source.hueShift, defaultParams.hueShift),
+      disableAnimation: booleanOrDefault(source.disableAnimation, defaultParams.disableAnimation),
       speed: nonNegativeOrDefault(source.speed, defaultParams.speed),
+      mouseInteraction: booleanOrDefault(source.mouseInteraction, defaultParams.mouseInteraction),
       glowIntensity: nonNegativeOrDefault(source.glowIntensity, defaultParams.glowIntensity),
       saturation: nonNegativeOrDefault(source.saturation, defaultParams.saturation),
       mouseRepulsion: booleanOrDefault(source.mouseRepulsion, defaultParams.mouseRepulsion),
@@ -382,7 +386,7 @@ void main() {
       animationFrame = null;
       if (!shouldRender()) return;
 
-      const seconds = time * 0.001;
+      const seconds = params.disableAnimation ? 0 : time * 0.001;
       const lerpFactor = 0.05;
       smoothMouse.x += (targetMouse.x - smoothMouse.x) * lerpFactor;
       smoothMouse.y += (targetMouse.y - smoothMouse.y) * lerpFactor;
@@ -430,8 +434,10 @@ void main() {
       }
     }
 
-    interactionTarget.addEventListener('mousemove', handleMouseMove);
-    interactionTarget.addEventListener('mouseleave', handleMouseLeave);
+    if (params.mouseInteraction) {
+      interactionTarget.addEventListener('mousemove', handleMouseMove);
+      interactionTarget.addEventListener('mouseleave', handleMouseLeave);
+    }
     document.addEventListener('visibilitychange', handleVisibilityChange);
 
     let resizeObserver = null;
@@ -459,8 +465,10 @@ void main() {
       if (isDestroyed) return;
       isDestroyed = true;
       stop();
-      interactionTarget.removeEventListener('mousemove', handleMouseMove);
-      interactionTarget.removeEventListener('mouseleave', handleMouseLeave);
+      if (params.mouseInteraction) {
+        interactionTarget.removeEventListener('mousemove', handleMouseMove);
+        interactionTarget.removeEventListener('mouseleave', handleMouseLeave);
+      }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('resize', resize);
       window.removeEventListener('pagehide', destroy);

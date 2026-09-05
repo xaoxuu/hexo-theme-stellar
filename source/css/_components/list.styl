@@ -1,31 +1,26 @@
 // list
-.l_main .post-list
+.site-main .post-list
   margin: 1rem
   .post-title:first-child
     margin-top: .5rem
 
-// 白底文章卡片（含置顶轮播卡片）hover 时：标题底部主题色下划线高度从 0 生长到 12px 并淡入，层级在文字下层
+// 文章列表标题使用逐行主题色粗下划线，换行时按每行文字绘制。
 .post-list .post-card .post-title
-  position: relative
   width: fit-content
-  &::after
-    content: ''
-    position: absolute
-    left: 0
-    bottom: -2px
-    border-radius: 2px
-    z-index: -1
-    width: 100%
-    height: 0
-    opacity: 0
-    background: var(--theme)
-    transition: height .25s ease, opacity .25s ease
+  text-decoration-line: underline
+  text-decoration-style: solid
+  text-decoration-thickness: 8px
+  text-decoration-color: transparent
+  text-underline-offset: -2px
+  text-decoration-skip-ink: none
+  transition: text-decoration-color .25s ease
 
-.post-list .post-card:hover .post-title::after
-  height: 12px
-  opacity: 0.5
+.post-list .post-card:hover .post-title,
+.post-list .post-card:focus-visible .post-title,
+.post-list .post-card:focus-within .post-title
+  text-decoration-color: unquote('color-mix(in srgb, var(--theme) 50%, transparent)')
 
-.l_main .post-list
+.site-main .post-list
   .post-title
     font-weight: 500
     margin: 1.25rem auto .75rem 0
@@ -33,12 +28,16 @@
     font-size: $fsh4
     border-bottom: none
     color: var(--text)
-    trans1 color
+    trans2 color, text-decoration-color, .25s
     @media screen and (max-width: $device-mobile)
       font-size: $fsh5
       margin: 0.5rem 0
   .wiki .post-title
     margin-top: 0.5rem
+
+@media (prefers-reduced-motion: reduce)
+  .post-list .post-card .post-title
+    transition: none
 
 // card
 .post-list .post-card-wrap
@@ -156,7 +155,7 @@
     object-fit: cover
     width: 100%
     border-radius: 0
-    aspect-ratio: hexo-config('article.cover_ratio')
+    aspect-ratio: hexo-config('article.listing.cover_ratio')
     
 // 封面渐变模糊卡片：文章 photo 卡片与专栏最新文章卡片共用（接入 cover-overlay 统一覆盖层）
 .post-list .post-card .cover
@@ -203,10 +202,23 @@
         font-size: $fsh4
       .caption
         font-size: $fs-13
+  &.no-cover
+    background: var(--card)
+    &:before
+      display: none
+    &:after
+      background-image: none
+    .cover-info
+      position: relative
+      color: var(--text)
+      .text
+        text-shadow: none
+      .topic, .caption
+        color: var(--text-p2)
 
 .post-list .post-card.post.photo
   .cover img
-    aspect-ratio: hexo-config('article.cover_ratio')
+    aspect-ratio: hexo-config('article.listing.cover_ratio')
   // hover 放大覆盖：基规则的 `transform: translateZ(0)` 特异性高于上方 `.post-card:hover` 的 scale，
   // 需用更高特异性选择器在基规则之后覆盖，保持 hover 缩放动画（叠加恒等变换）
   &:hover
@@ -254,6 +266,8 @@
       flex: none
       width: 100%
       aspect-ratio: 2 / 1
+      &.no-cover
+        aspect-ratio: auto
       border-radius: $border-card-l
       overflow: hidden
       // 背景图由 .cover 自身背景承载（跟随 corner-shape），子图保留用于 hover 滤镜

@@ -1,0 +1,135 @@
+.brand-header
+  display: flex
+  flex-direction: column
+  gap: 16px
+
+.brand-wrap
+  display: flex
+  align-items: center
+  overflow: hidden
+  min-height: 48px
+
+  .brand-image
+    display: block
+    position: relative
+    width: 48px
+    height: 48px
+    margin-right: 1rem
+    flex-shrink: 0
+    background: transparent
+    color: inherit
+    img, svg
+      display: block
+      width: 100%
+      height: 100%
+
+  .brand-image--avatar
+    border-radius: 50%
+    corner-shape: round
+    overflow: hidden
+    img
+      border-radius: 50%
+      corner-shape: round
+      object-fit: cover
+
+  .brand-image--icon
+    app-icon()
+    img
+      object-fit: contain
+
+  .brand-image--plain
+    background: transparent
+    img
+      object-fit: contain
+
+  .brand-title
+    font-size: 1.5rem
+    font-weight: 900
+    color: inherit
+    line-height: 1.2
+    display: block
+    position: relative
+    .brand-name
+      color: var(--text)
+    .brand-tagline
+      color: var(--text-p1)
+      white-space: nowrap
+
+.site-region--leftbar .brand-title
+  min-width: 0
+  max-width: 100%
+  .brand-tagline
+    overflow: hidden
+    text-overflow: ellipsis
+
+.brand-header--regular
+  &:not(:has(> .brand-navigation)):not(:has(> .brand-search))
+    margin: var(--gap-base) 0
+  .brand-wrap
+    flex-direction: column
+    align-items: center
+    text-align: center
+    overflow: visible
+  .brand-image
+    width: 96px
+    height: 96px
+    margin: 0 0 1rem
+  .brand-title
+    width: 100%
+    .brand-tagline
+      margin-top: 4px
+  .brand-stats
+    width: 100%
+    margin-top: 1rem
+    display: grid
+    grid-template-columns: repeat(3, minmax(0, 1fr))
+    gap: 2px
+  .brand-stat
+    min-width: 0
+    padding: 8px 4px
+    display: flex
+    flex-direction: column
+    align-items: center
+    border-radius: $border-button
+    color: inherit
+  .brand-stat__value
+    min-height: 1.2em
+    line-height: 1.2
+    max-width: 100%
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+    font-size: 1rem
+    font-weight: 700
+    color: var(--text-p1)
+  .brand-stat__label
+    font-size: $fs-12
+    font-weight: 500
+    color: var(--text-p3)
+
+.brand-header--topbar
+  .brand-wrap
+    min-height: 32px
+  .brand-image
+    width: 32px
+    height: 32px
+    margin-right: 8px
+  .brand-title
+    flex: 0 0 auto
+    font-size: 1rem
+    white-space: nowrap
+
+.brand-navigation__back
+  display: flex
+  width: fit-content
+  align-items: center
+  padding: 6px 16px 6px 12px
+  border-radius: 32px
+  color: var(--text-p2)
+  font-size: $fs-13
+  trans2 color background
+  .ui-icon
+    --ui-icon-size: 1em
+    margin-right: 0.25rem
+  &:hover
+    color: var(--text-p1)

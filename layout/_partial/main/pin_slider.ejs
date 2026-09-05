@@ -1,34 +1,31 @@
 <%
-// 置顶内容轮播：所有带 navbar top 的列表页上方共用。
+// 置顶内容轮播：所有带 Listing Nav 的列表页上方共用，关闭导航时仍独立渲染。
 // type: post / wiki / topic
 var pinType = type || 'post'
 var pinItems = []
 
 function pinValue(item) {
-  return item.pin != null ? item.pin : item.sticky
+  if (['post', 'topic'].includes(item?.collection?.profile)) return item.render.listing.priority
+  if (pinType == 'wiki' && item?.id && item?.href) return item.priority
+  return item.listing?.priority
 }
 
-// 只要设置了 pin（含 0、负数）即视为置顶，未设置 / false 不置顶
 function isPinned(item) {
-  var v = pinValue(item)
-  return v !== false && v != null
+  return pinValue(item) > 0
 }
 
-// 排序仅比较数值大小，true 视作 1
 function pinWeight(item) {
-  var v = pinValue(item)
-  if (v === true) {
-    return 1
-  }
-  var n = Number(v)
+  var n = Number(pinValue(item))
   return isNaN(n) ? 0 : n
 }
 
 if (pinType == 'wiki') {
-  var shelf = theme.wiki?.shelf || []
-  for (var wi = 0; wi < shelf.length; wi++) {
-    var wproj = theme.wiki.tree[shelf[wi]]
-    if (wproj != null && isPinned(wproj)) {
+  if (!Array.isArray(wikiItems)) {
+    throw new Error('Stellar v2: Wiki 置顶列表缺少显式 render.listing')
+  }
+  for (var wi = 0; wi < wikiItems.length; wi++) {
+    var wproj = wikiItems[wi]
+    if (wproj.listed && isPinned(wproj)) {
       pinItems.push(wproj)
     }
   }
@@ -36,11 +33,13 @@ if (pinType == 'wiki') {
   var allPosts = site.posts.toArray() || []
   for (var pi = 0; pi < allPosts.length; pi++) {
     var post = allPosts[pi]
-    if (post.indexing === false) {
-      continue
+    var viewModel = post_view_model(post)
+    if (!['post', 'topic'].includes(viewModel?.collection?.profile) || !viewModel.render?.listing) {
+      throw new Error(`Stellar v2: Post ${post?.source || post?.path || '<unknown>'} 缺少置顶列表 ViewModel`)
     }
-    if (isPinned(post)) {
-      pinItems.push(post)
+    if (!viewModel.render.listing.listed) continue
+    if (isPinned(viewModel)) {
+      pinItems.push(viewModel)
     }
   }
 }
@@ -50,20 +49,22 @@ pinItems.sort(function(a, b) {
 })
 
 // 文章幻灯片：固定「标题 + 一行小字」结构。
-// 标题：post.title；小字由 subtitle() helper 统一取值（subtitle > description > excerpt 前 50 字）。
+// 标题：post.title；小字由 caption() helper 统一取值。
 // 样式与 hero 卡片 cover-info 一致；无封面时为纯白卡片（文字按普通文章颜色）。
-function postSlide(post) {
-  var noCover = !(post.cover != null && post.cover.length > 0)
+function postSlide(viewModel) {
+  var post = viewModel.render.listing
+  var cover = post.cover
+  var noCover = !(cover != null && cover.length > 0)
   var headline = post.title
-  var sub = subtitle(post)
+  var sub = post.caption
   var el = ''
-  el += '<a class="pin-slide post-slide' + (noCover ? ' no-cover' : '') + '" href="' + escape_html(pretty_url(post.link || post.path)) + '"'
+  el += '<a class="pin-slide post-slide' + (noCover ? ' no-cover' : '') + '" href="' + escape_html(pretty_url(post.href)) + '"'
   if (!noCover) {
-    el += ' style="--pin-cover-url:url(\'' + escape_html(post.cover.replace(/'/g, '%27')) + '\')"'
+    el += ' style="--pin-cover-url:url(\'' + escape_html(cover.replace(/'/g, '%27')) + '\')"'
   }
   el += '>'
   if (!noCover) {
-    el += '<img class="pin-slide-bg" src="' + escape_html(post.cover) + '" alt=""/>'
+    el += '<img class="pin-slide-bg" src="' + escape_html(cover) + '" alt=""/>'
   }
   // 有封面时文字颜色自适应（大字 contrast、小字 theme）；无封面保持普通文章文字颜色
   el += '<div class="pin-slide-text"' + (noCover ? '' : ' data-text-adaptive="split"') + '>'
@@ -85,13 +86,19 @@ function projectChips(tags) {
 }
 
 function wikiSlide(proj) {
-  var img = proj.cover || proj.icon || theme.default.project
-  var title = proj.title || proj.name || proj.id
+  var img = proj.cover
+  var title = proj.headline || proj.name || proj.id
   var excerpt = proj.description || ''
   var el = ''
-  el += '<a class="pin-slide" href="' + escape_html(pretty_url(proj.homepage?.path || '/')) + '" style="--pin-cover-url:url(\'' + escape_html(img.replace(/'/g, '%27')) + '\')">'
-  el += '<img class="pin-slide-bg" src="' + escape_html(img) + '" alt=""/>'
-  el += '<div class="pin-slide-info" data-text-adaptive="split">'
+  el += '<a class="pin-slide' + (img ? '' : ' no-cover') + '" href="' + escape_html(pretty_url(proj.href || '/')) + '"'
+  if (img) {
+    el += ' style="--pin-cover-url:url(\'' + escape_html(img.replace(/'/g, '%27')) + '\')"'
+  }
+  el += '>'
+  if (img) {
+    el += '<img class="pin-slide-bg" src="' + escape_html(img) + '" alt=""/>'
+  }
+  el += '<div class="pin-slide-info"' + (img ? ' data-text-adaptive="split"' : '') + '>'
   el += '<div class="pin-slide-caps">' + projectChips(proj.tags) + '</div>'
   el += '<div class="pin-slide-title">' + escape_html(title) + '</div>'
   if (excerpt.length > 0) {
@@ -119,7 +126,7 @@ if (pinItems.length > 0) {
   var groupKey = pinType == 'wiki' ? 'wiki' : 'post'
   var sliderInterval = 5000 // 自动轮播间隔固定 5000ms
   var el = ''
-  el += '<div class="pin-slider card-hover card-hover--spotlight card-hover--tilt" id="pin-slider" data-interval="' + sliderInterval + '" data-key="' + pinType + '" data-group="' + groupKey + '">'
+  el += '<div class="' + ui_classes('pin-slider', 'hoverCard') + '" id="pin-slider" data-interval="' + sliderInterval + '" data-key="' + pinType + '" data-group="' + groupKey + '">'
   el += '<div class="pin-slider-track">'
   el += slidesHtml
   el += '</div>'
@@ -132,19 +139,17 @@ if (pinItems.length > 0) {
 %>
 <%- el %>
 <script>
-function initWhenReady() {
-  if (typeof stellar === 'object' && typeof stellar.initPlugin === 'function') {
-    stellar.initPlugin(initPinSlider, 'pin-slider');
-  } else {
-    // pin_slider 内联脚本渲染在 scripts/bootstrap 之前，等待 DOMContentLoaded 后注册
-    document.addEventListener('DOMContentLoaded', function () {
-      if (typeof stellar === 'object' && typeof stellar.initPlugin === 'function') {
-        stellar.initPlugin(initPinSlider, 'pin-slider');
-      }
-    });
+function mountPinSliderWhenReady() {
+  var cleanup = initPinSlider();
+  if (typeof cleanup === 'function') {
+    window.addEventListener('pagehide', cleanup, { once: true });
   }
 }
-initWhenReady();
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', mountPinSliderWhenReady, { once: true });
+} else {
+  mountPinSliderWhenReady();
+}
 function initPinSlider() {
   var slider = document.getElementById('pin-slider');
   if (!slider) return;

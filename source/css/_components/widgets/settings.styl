@@ -1,0 +1,49 @@
+.settings-widget
+  min-width: 0
+  width: 100%
+  height: 32px
+  min-height: 32px
+  padding: 0
+  display: flex
+  align-items: center
+  gap: 10px
+  border-radius: 16px
+
+.settings-widget__avatar
+  flex: 0 0 32px
+  width: 32px
+  height: 32px
+  display: grid
+  place-items: center
+  border-radius: 50%
+  overflow: hidden
+  color: var(--text-p2)
+  background: transparent
+  > img
+    width: 100%
+    height: 100%
+    object-fit: cover
+
+.settings-widget__name
+  min-width: 0
+  font-size: $fs-14
+  font-weight: 500
+  txt-ellipsis()
+
+.site-region--leftbar,
+.site-region--topbar
+  .settings-widget__avatar > img
+    width: 24px
+    height: 24px
+    border-radius: 50%
+    corner-shape: round
+
+.site-region--topbar,
+html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .site-region--leftbar
+  .settings-widget__name
+    display: none
+
+.site-region--topbar .settings-widget,
+html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .site-region--leftbar .settings-widget
+  width: 32px
+  justify-content: center

@@ -1,0 +1,47 @@
+<%
+function referenceList(items) {
+  return items.map(function(ref) {
+    return `<li class="post-title">${markdown(ref)}</li>`
+  }).join('')
+}
+
+function contributorSection(contributor) {
+  if (!contributor) return ''
+  return `
+  <section id="contributors">
+    <div class="header">
+      <span>${__('meta.contributors')}</span>
+      <span class="spacer"></span>
+      <a class="edit" href="${url_for(contributor.editUrl)}">
+        ${icon('default:edit')}
+        <span>${__('btn.edit')}</span>
+      </a>
+    </div>
+    <div class="body">
+      <div class="ds-contributors users-wrap" api-type="commits" data-api="${escape_html(contributor.commitsUrl)}"><div class="grid-box"></div></div>
+    </div>
+  </section>`
+}
+
+function layoutDiv() {
+  var sections = ''
+  if (footer.references.length > 0) {
+    sections += `
+    <section id="references">
+      <div class="header"><span>${__('meta.references')}</span></div>
+      <div class="body"><ul>${referenceList(footer.references)}</ul></div>
+    </section>`
+  }
+  if (footer.license) {
+    sections += `
+    <section id="license">
+      <div class="header"><span>${__('meta.license')}</span></div>
+      <div class="body">${markdown(footer.license)}</div>
+    </section>`
+  }
+  sections += contributorSection(footer.contributor)
+  if (sections.length === 0) return ''
+  return `<div class="article-footer${scrollreveal(' ')}">${sections}</div>`
+}
+%>
+<%- layoutDiv() %>

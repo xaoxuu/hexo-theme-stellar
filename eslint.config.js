@@ -5,11 +5,11 @@
  *
  * 分层：
  *   - scripts/、ci/、release.js、test/：Node + CommonJS + 现代语法
- *   - source/js/：浏览器环境 + 现代语法（源码按 ES2015+ 编写，Gulp Babel 转译输出）
+ *   - source/js/：浏览器环境 + 现代语法（源码按 ES2015+ 编写；Runtime 保持原生 ESM，普通脚本由宿主按需转译）
  *
  * 风格类规则（引号、分号、缩进等）暂不强制，避免对既有代码大面积改写；
  * 优先启用正确性类规则（未定义变量、不可达代码、重复声明等），
- * 新增代码请遵循 CLAUDE.md 的编码规范。
+ * 新增代码请遵循 AGENTS.md 的编码规范。
  */
 
 const js = require('@eslint/js');
@@ -103,6 +103,22 @@ module.exports = [
         // 外部库全局（CDN 引入）
         marked: 'readonly',
         algoliasearch: 'readonly',
+      },
+    },
+    rules: CORRECTNESS_RULES,
+  },
+  {
+    files: ['source/js/runtime/**/*.js'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: {
+        ...globals.browser,
+        setCardLink: 'readonly',
+        createVoiceDom: 'readonly',
+        videoEvents: 'readonly',
+        downloadFileEvent: 'readonly',
+        searchFunc: 'readonly',
       },
     },
     rules: CORRECTNESS_RULES,

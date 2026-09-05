@@ -13,7 +13,7 @@ module.exports = ctx => function(args, content) {
   args = ctx.args.map(args, ['color', 'child'], ['title'])
   const { title } = args
   if (args.color == null) {
-    args.color = ctx.theme.config.tag_plugins.note.default_color
+    args.color = ctx.stellar.config.tags.note.defaultColor
   }
   var el = ''
   // header

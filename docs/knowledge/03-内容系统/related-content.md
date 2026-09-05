@@ -14,10 +14,13 @@ tags:
 
 生成此页面时参考的主题源码文件：
 
-- [layout/404.ejs](../../../layout/404.ejs)
-- [layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)
+- [layout/_partial/main/article/post_read_next.ejs](../../../layout/_partial/main/article/post_read_next.ejs)
+- [layout/_partial/main/article/post_related.ejs](../../../layout/_partial/main/article/post_related.ejs)
+- [layout/_partial/main/article/post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs)
+- [layout/_partial/widgets/related.ejs](../../../layout/_partial/widgets/related.ejs)
+- [layout/_partial/components/collection.ejs](../../../layout/_partial/components/collection.ejs)
 - [scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)
-- [scripts/helpers/related_posts.js](../../../scripts/helpers/related_posts.js)
+- [scripts/filters/lib/page-view-model.js](../../../scripts/filters/lib/page-view-model.js)
 
 </details>
 
@@ -35,17 +38,17 @@ tags:
 
 ### 配置与启用
 
-相关文章系统由 `article.related_posts.enable` 配置标志控制。辅助函数在该标志不是 `true` 时提前返回：
+相关文章系统由非负整数 `article.related_posts_limit` 控制：`0` 关闭，正整数表示结果上限。普通 Post 在 `after_post_render` 构建边界调用 `hexo-related-popular-posts` 提供的 `popular_posts_json`，把普通的 `path`、`title`、`excerpt` 数组冻结到 `render.article.related.items`，详情模板 `post_related.ejs` 只消费该投影。设为正数但 helper 不存在时，构建错误包含源文章路径。
 
 **配置检查流程**
 
 ```mermaid
 flowchart TD
-    CONFIG["hexo.theme.config.article.related_posts.enable"]
-    HELPER["popular_posts_wrapper helper"]
-    CHECK{"enable == true?"}
-    GENERATE["Generate HTML sections"]
-    RETURN["Return empty string"]
+    CONFIG["article.related_posts_limit"]
+    HELPER["after_post_render adapter"]
+    CHECK{"limit > 0?"}
+    GENERATE["popular_posts_json → render.article.related"]
+    RETURN["items = []"]
     
     CONFIG --> HELPER
     HELPER --> CHECK
@@ -59,55 +62,7 @@ flowchart TD
     ITEMS --> ITEM["Render each item with title + excerpt"]
 ```
 
-**参考源码**：[scripts/helpers/related_posts.js](../../../scripts/helpers/related_posts.js)
-
-### 辅助函数：`popular_posts_wrapper`
-
-该辅助函数注册在 Hexo 辅助系统，接收 `hexo-related-popular-posts` 插件数据：
-
-| 参数 | 类型 | 用途 |
-|------|------|------|
-| `args.title` | String | 区块标题（如 "Related Posts"） |
-| `args.json.json` | Array | 相关文章对象数组（`path`、`title`、`excerpt`） |
-| `args.json.class` | String | 容器样式类名 |
-
-辅助函数做校验，无相关文章时返回空字符串。
-
-**参考源码**：[scripts/helpers/related_posts.js](../../../scripts/helpers/related_posts.js)
-
-### HTML 生成
-
-辅助函数生成带标题与正文的两段结构：
-
-**相关文章 HTML 结构**
-
-```mermaid
-graph TB
-    WRAPPER["div with args.json.class"]
-    HEADER["section.header"]
-    BODY["section.body"]
-    TITLE["div.title.cap.theme"]
-    ITEMS["Multiple a.item elements"]
-    
-    WRAPPER --> HEADER
-    WRAPPER --> BODY
-    HEADER --> TITLE
-    BODY --> ITEMS
-    
-    ITEMS --> ITEMLINK["href, title attributes"]
-    ITEMS --> ITEMTITLE["span.title"]
-    ITEMS --> ITEMEXCERPT["span.excerpt (truncated to 120 chars)"]
-```
-
-每项的渲染逻辑包含文章查找与摘要处理：
-
-- `<a>` 标签链接到文章，带 `href` 与 `title` 属性
-- `span.title` 包含文章标题
-- `span.excerpt` 包含截断并去 HTML 的摘要（最多 120 字符）
-
-摘要用 `hexo-util` 库的 `util.truncate()` 与 `util.stripHTML()` 处理。
-
-**参考源码**：[scripts/helpers/related_posts.js](../../../scripts/helpers/related_posts.js)
+**参考源码**：[scripts/filters/lib/page-view-model.js](../../../scripts/filters/lib/page-view-model.js)、[layout/_partial/main/article/post_related.ejs](../../../layout/_partial/main/article/post_related.ejs)
 
 ---
 
@@ -206,7 +161,9 @@ wiki.tree['my-project'].relatedItems = [
 
 该结构让 wiki 布局按共享标签分组渲染相关项目。
 
-**参考源码**：[scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)
+左栏 `related` 小部件直接消费 Wiki ViewModel 中冻结的关联项目投影，并将项目名称、说明与首页链接传给公共 Collection 组件。因此“更多：…”下的每个条目同时显示项目名称和说明。
+
+**参考源码**：[scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)、[layout/_partial/widgets/related.ejs](../../../layout/_partial/widgets/related.ejs)、[layout/_partial/components/collection.ejs](../../../layout/_partial/components/collection.ejs)
 
 ---
 
@@ -224,7 +181,7 @@ references:
   - "[Another Source](https://example.com/page)"
 ```
 
-`article_footer.ejs` 模板检查引用的存在。
+ViewModel 构建期解析 `footer.references`，`post_footer.ejs` 只检查最终投影。
 
 ### HTML 渲染
 
@@ -256,7 +213,7 @@ graph TB
 2. 经 `markdown()` 辅助函数把 markdown 链接转为 HTML
 3. 用 `__('meta.references')` 本地化标题显示
 
-**参考源码**：[layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)
+**参考源码**：[layout/_partial/main/article/post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs)
 
 ---
 
@@ -293,9 +250,9 @@ flowchart TD
     CONTAINER --> OUTPUT["Rendered HTML"]
 ```
 
-`item` 数组跟踪存在的区块。所有检查都失败（`item.length === 0`）时函数返回空字符串，避免渲染空页脚。
+模板按最终 `footer` 投影组装区块；所有检查都失败时返回空字符串，避免渲染空页脚。
 
-**参考源码**：[layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)
+**参考源码**：[layout/_partial/main/article/post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs)
 
 ### 面包屑导航
 
@@ -375,7 +332,7 @@ flowchart LR
 
 这保证导航元素只在真正有用时出现。
 
-**参考源码**：[scripts/helpers/related_posts.js](../../../scripts/helpers/related_posts.js)、[scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)、[layout/_partial/main/article/article_footer.ejs](../../../layout/_partial/main/article/article_footer.ejs)
+**参考源码**：[scripts/filters/lib/page-view-model.js](../../../scripts/filters/lib/page-view-model.js)、[scripts/events/lib/doc_tree.js](../../../scripts/events/lib/doc_tree.js)、[layout/_partial/main/article/post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs)
 
 ---
 
@@ -383,7 +340,7 @@ flowchart LR
 
 Stellar 实现三套针对不同内容类型优化的相关内容系统：
 
-1. **相关文章**：用 `popular_posts_wrapper` 辅助函数为博客文章做算法推荐
+1. **相关文章**：在 ViewModel 构建边界取得算法推荐并投影给模板
 2. **Wiki 相关项目**：数据处理阶段（`doc_tree.js`）构建的基于标签的项目关系
 3. **引用**：front-matter 手动指定、文章页脚渲染的引用
 

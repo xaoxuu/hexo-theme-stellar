@@ -1,32 +1,39 @@
 <%
 page.robots = 'noindex,follow';
-if (page.menu_id == undefined) {
-  page.menu_id = 'post';
-}
-if (page.author) {
-  page.header = false;
+page.navigation ||= {}
+if (page.navigation.menu == undefined) {
+  page.navigation.menu = stellar_config('profiles.blogIndex.activeMenu');
 }
 function layoutArchiveList() {
   var el = ''
   var cls = ''
   if (page.author) {
     page.title = page.author.name
-    page.banner = page.author.banner
-    page.banner_info = {
+    page.banner = {
+      image: page.author.banner,
       avatar: page.author.avatar,
-      subtitle: page.author.description
+      tagline: page.author.description
     }
     el += partial('_partial/main/navbar/article_banner')
     cls += ' author'
   } else {
     page.title = __('btn.archives')
-    el += partial('_partial/main/navbar/nav_tabs_blog')
+    el += partial('_partial/main/listing_nav/blog')
   }
   el += `<div class="post-list${cls} archives">`
   var years = []
-  var posts = page.author != null ? site.posts.filter(function(post) {
-    return (post.author || theme.default_author.id) == page.author.id
-  }) : site.posts
+  function requirePostViewModel(post) {
+    var viewModel = post_view_model(post)
+    if (!['post', 'topic'].includes(viewModel?.collection?.profile) || !viewModel.render?.listing) {
+      throw new Error(`Stellar v2: Post ${post?.source || post?.path || '<unknown>'} 缺少归档列表 ViewModel`)
+    }
+    return viewModel
+  }
+  var posts = site.posts.filter(function(post) {
+    var listing = requirePostViewModel(post).render.listing
+    if (!listing.listed) return false
+    return page.author == null || listing.authorId == page.author.id
+  })
   posts.sort('date', -1).each(function(post) {
     post.year = date(post.date, 'YYYY')
     if (post.year && (years.includes(post.year) == false) && (post.title || post.date)) {
@@ -40,7 +47,7 @@ function layoutArchiveList() {
       post.year = date(post.date, 'YYYY')
       return post.year == year
     }).each(function(post) {
-      el += partial('_partial/main/post_list/archive_item', {post: post})
+      el += partial('_partial/main/post_list/archive_item', {viewModel: requirePostViewModel(post)})
     })
     el += `</article>`
   }

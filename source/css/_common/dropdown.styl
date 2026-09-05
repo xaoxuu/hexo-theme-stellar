@@ -17,7 +17,6 @@
     outline: none
     border-radius: $border-bar
     color: var(--text-p2)
-    background: var(--block)
     text-decoration: none
     white-space: nowrap
     &::-webkit-details-marker
@@ -26,8 +25,7 @@
       display: none
     &:hover, &:focus-visible
       color: var(--text-p1)
-      background: var(--block-border)
-    >svg, >img, >.icon
+    >.ui-icon, >.dropdown-arrow
       flex: 0 0 1.25rem
       width: 1.25rem
       height: 1.25rem
@@ -40,7 +38,6 @@
     z-index: 10
     >.dropdown-trigger
       color: var(--text-p1)
-      background: var(--block-border)
       >.dropdown-arrow
         transform: rotate(180deg)
 .dropdown-menu
@@ -54,24 +51,24 @@
   overflow-x: hidden
   overflow-y: auto
   font-size: $fs-14
-  border: 1px solid var(--block-border)
   border-radius: $border-card
   corner-shape: $corner-shape
-  background: rgba(white, 0.3)
-  box-shadow: 0 0 2px rgba(black, .04), 0 2px 8px rgba(black, .04), 0 4px 16px rgba(black, .04)
-  backdrop-filter: saturate(300%) blur(16px)
-  -webkit-backdrop-filter: saturate(300%) blur(16px)
-  :root[data-theme="dark"] &
-    background: rgba(white, 0.2)
-  :root:not([data-theme]) &
-    @media (prefers-color-scheme: dark)
-      background: rgba(white, 0.2)
+  frosted-surface()
   text-align: left
   line-height: 1
 
 .dropdown-menu.ui-collection[data-density='compact']
   min-width: 150px
   --ui-item-min-height: calc(1.5rem + 2 * var(--ui-item-padding-y))
+
+.dropdown-menu button.dropdown-item
+  width: 100%
+  border: 0
+  color: inherit
+  font: inherit
+  text-align: left
+  cursor: pointer
+  appearance: none
 
 .dropdown > .dropdown-menu
   position: absolute

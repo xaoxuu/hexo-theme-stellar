@@ -1,51 +1,39 @@
 <%
-if (page.menu_id == undefined) {
-  page.menu_id = 'post';
+page.navigation ||= {}
+if (page.navigation.menu == undefined) {
+  page.navigation.menu = stellar_config('profiles.home.activeMenu');
 }
-if (page.title && page.wiki) {
-  page.robots = 'noindex,follow';
-}
-// 首页评论区：仅首页第一页，默认不显示，可通过 site_tree.home.comments 开启/覆盖
-var homeCmt = theme.site_tree?.home?.comments
+// 首页评论区：仅首页第一页，默认不显示，可通过 layout.profiles.home.comments 开启/覆盖
+var homeCmt = stellar_config('profiles.home.comments')
+var homeComments = null
 if (homeCmt && homeCmt !== false && is_home_first_page()) {
-  page.comments = true;
-  if (typeof homeCmt === 'object') {
-    if (homeCmt.service) {
-      page.comments_service = homeCmt.service;
-    }
-    if (homeCmt.comment_title != null) {
-      page.comment_title = homeCmt.comment_title;
-    }
-    if (homeCmt.comment_id != null) {
-      page.comment_id = homeCmt.comment_id;
-    }
-    var homeCommentServices = ['beaudar', 'utterances', 'giscus', 'twikoo', 'waline', 'artalk'];
-    for (var i = 0; i < homeCommentServices.length; i++) {
-      var key = homeCommentServices[i];
-      if (homeCmt[key]) {
-        page[key] = homeCmt[key];
-      }
-    }
-  }
+  homeComments = comments_model(page, typeof homeCmt === 'object' ? homeCmt : {enabled: true})
 }
 
 // 置顶文章样式：carousel = 轮播（默认），flat = 平铺（首页列表靠前展示）
-var pinStyle = theme.article?.pin_style || 'carousel'
+var articleDefaults = stellar_config('article')
+var pinStyle = articleDefaults.listing.pinnedLayout
 var pinFlat = pinStyle === 'flat'
 
 // 与 pin_slider.ejs 保持一致的置顶判定与排序权重
 function pinValue(post) {
-  return post.pin != null ? post.pin : post.sticky
+  return postListing(post).priority
+}
+function requirePostViewModel(post) {
+  var viewModel = post_view_model(post)
+  if (!['post', 'topic'].includes(viewModel?.collection?.profile) || !viewModel.render?.listing) {
+    throw new Error(`Stellar v2: Post ${post?.source || post?.path || '<unknown>'} 缺少列表 ViewModel`)
+  }
+  return viewModel
+}
+function postListing(post) {
+  return requirePostViewModel(post).render.listing
 }
 function isPinned(post) {
-  var v = pinValue(post)
-  return v !== false && v != null
+  return pinValue(post) > 0
 }
 function pinWeight(post) {
   var v = pinValue(post)
-  if (v === true) {
-    return 1
-  }
   var n = Number(v)
   return isNaN(n) ? 0 : n
 }
@@ -59,7 +47,7 @@ if (pinFlat && is_home_first_page()) {
   var allPosts = site.posts.toArray() || []
   for (var fi = 0; fi < allPosts.length; fi++) {
     var fpost = allPosts[fi]
-    if (fpost.indexing === false) {
+    if (!postListing(fpost).listed) {
       continue
     }
     if (isPinned(fpost)) {
@@ -77,7 +65,8 @@ function layout_post_card(layout, post, content) {
   var el = '';
   var layout = layout;
   var hero = false;
-  if (layout == 'post' && post.cover != undefined && theme.article.card_style == 'hero') {
+  var listing = postListing(post)
+  if (layout == 'post' && listing.cover && listing.cardStyle == 'hero') {
     layout += ' photo';
     hero = true;
   }
@@ -85,9 +74,9 @@ function layout_post_card(layout, post, content) {
   if (hero) {
     // hero 封面卡片：背景图由 .post-card 自身背景承载（跟随 corner-shape 圆角裁剪），
     // 子图保留用于 hover 变暗/放大滤镜
-    el += `<a class="post-card ${layout} card-hover card-hover--spotlight card-hover--tilt" style="--cover-url:url('${escape_html(post.cover.replace(/'/g, '%27'))}')" href="${pretty_url(post.link || post.path)}">`
+    el += `<a class="${ui_classes('post-card ' + layout, 'hoverCard')}" style="--cover-url:url('${escape_html(listing.cover.replace(/'/g, '%27'))}')" href="${pretty_url(listing.href)}">`
   } else {
-    el += `<a class="post-card ${layout} card-hover card-hover--spotlight card-hover--tilt" href="${pretty_url(post.link || post.path)}">`
+    el += `<a class="${ui_classes('post-card ' + layout, 'hoverCard')}" href="${pretty_url(listing.href)}">`
   }
   el += content;
   el += '</a>';
@@ -107,16 +96,16 @@ function layout_post_list(partial) {
       el += layout_post_card('post', item.post, partial(item.post));
     })
     page.posts.each(function(post){
-      if (post.indexing != false && !pinnedPaths[post.path]) {
+      if (postListing(post).listed && !pinnedPaths[post.path]) {
         el += layout_post_card('post', post, partial(post));
       }
     })
   } else {
     page.posts.each(function(post){
-      if (post.indexing != false) {
+      if (postListing(post).listed) {
         if (pinSliderActive) {
           var pinVal = pinValue(post)
-          if (pinVal !== false && pinVal != null) {
+          if (pinVal > 0) {
             return
           }
         }
@@ -130,11 +119,11 @@ function layout_post_list(partial) {
 
 %>
 
-<%- partial('_partial/main/navbar/nav_tabs_blog') %>
+<%- partial('_partial/main/listing_nav/blog') %>
 <%- layout_post_list(function(post){
-  return partial('_partial/main/post_list/post_card', {post: post})
+  return partial('_partial/main/post_list/post_card', {viewModel: requirePostViewModel(post)})
 }) %>
 <%- partial('_partial/main/post_list/paginator') %>
 <% if (homeCmt && homeCmt !== false && is_home_first_page()) { %>
-  <%- partial('_partial/comments/layout') %>
+  <%- partial('_partial/comments/layout', {comments: homeComments}) %>
 <% } %>

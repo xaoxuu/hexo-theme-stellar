@@ -1,0 +1,34 @@
+<%
+var shellDocument = documentModel || {}
+var shellPage = pageModel || {}
+var shellRegions = regions || {}
+var language = escape_html(shellDocument.language || 'zh-CN')
+var htmlAttributes = shellDocument.preferredTheme === 'auto' ? '' : ` data-theme="${escape_html(shellDocument.preferredTheme)}"`
+var presentRegions = ['topbar', 'leftbar', 'rightbar'].filter(function(region) {
+  return typeof shellRegions[region] === 'string' && shellRegions[region].trim().length > 0
+})
+var pageAttributes = ` data-page-type="${escape_html(shellPage.pageType || 'content')}"`
+pageAttributes += ` data-page-layout="${escape_html(shellPage.layout || '')}"`
+if (shellPage.articleStyle) pageAttributes += ` data-article-style="${escape_html(shellPage.articleStyle)}"`
+if (shellPage.indent) pageAttributes += ' data-text-indent'
+var html = '<!DOCTYPE html>'
+html += `<html lang="${language}"${htmlAttributes}>`
+html += head
+html += `<body${pageAttributes}>`
+html += siteBackground || ''
+html += cover || ''
+html += `<div class="site-shell" id="start" data-regions="${presentRegions.join(' ')}">`
+html += shellRegions.topbar || ''
+html += '<div class="site-workspace">'
+html += shellRegions.leftbar || ''
+html += `<main class="site-main" id="main">${main || ''}</main>`
+html += shellRegions.rightbar || ''
+html += '</div>'
+html += '<button type="button" class="site-scrim" data-shell-action="dismiss-drawer" aria-label="Close navigation" tabindex="-1"></button>'
+html += controls || ''
+html += typeof overlays === 'string' ? overlays : ''
+html += '</div>'
+html += `<div class="site-scripts">${scripts || ''}</div>`
+html += '</body></html>'
+%>
+<%- html %>

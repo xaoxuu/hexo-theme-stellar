@@ -16,8 +16,9 @@ tags:
 
 - [source/js/main.js](../../../source/js/main.js)
 - [source/js/utils.js](../../../source/js/utils.js)
-- [source/js/theme.js](../../../source/js/theme.js)
-- [source/js/services.js](../../../source/js/services.js)
+- [source/js/runtime/index.js](../../../source/js/runtime/index.js)
+- [source/js/runtime/extensions/color-scheme-switch.js](../../../source/js/runtime/extensions/color-scheme-switch.js)
+- [source/js/runtime/extensions/services.js](../../../source/js/runtime/extensions/services.js)
 - [source/js/tagtree.js](../../../source/js/tagtree.js)
 - [layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 - [layout/_partial/scripts/](../../../layout/_partial/scripts/)
@@ -61,7 +62,7 @@ graph TB
     
     subgraph "Initialization Routines"
         initTOC["init.toc()<br/>TOC scroll sync"]
-        initSidebar["init.sidebar()<br/>Sidebar interactions"]
+        initTocLinks["init.tocLinks()<br/>TOC and Drawer interactions"]
         initWikiStart["init.wikiStart()<br/>Wiki cover anchor scroll"]
         initLeftbarScroll["init.leftbarScroll()<br/>Leftbar scroll restoration"]
         initRelativeDate["init.relativeDate()<br/>Time formatting"]
@@ -78,7 +79,7 @@ graph TB
     hud --> init
     
     init --> initTOC
-    init --> initSidebar
+    init --> initTocLinks
     init --> initWikiStart
     init --> initLeftbarScroll
     init --> initRelativeDate
@@ -89,7 +90,7 @@ graph TB
     DOMLoad --> initCanonical
     
     stellarInit --> initTOC
-    stellarInit --> initSidebar
+    stellarInit --> initTocLinks
     stellarInit --> initWikiStart
     stellarInit --> initLeftbarScroll
     stellarInit --> initRelativeDate
@@ -116,24 +117,31 @@ graph TB
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)
 
-#### 解析期脚本与插件注册队列（utils bootstrap）
+#### ESM Runtime Manifest 与 Extension 生命周期
 
-`utils.js` 是解析期依赖：页尾内联插件片段在解析时就调用 `utils.initPlugin(...)` 注册，因此主题要求其同步加载。为防御第三方优化器把 `utils.js` 改写为占位符/加 `defer`（曾导致首页文章列表空白、控制台大量 `utils is not defined`），`scripts.ejs` 在 `utils.js` 标签前输出 `layout/_partial/scripts/bootstrap.ejs`：
+`layout/_partial/scripts/runtime.ejs` 在页尾输出不可执行的 `#stellar-runtime-config` JSON，再由 `/js/runtime/index.js` 解析。构建期 builder 已校验 manifest 版本、根路径、重复 ID、本地 module 路径、`when` 条件与配置对象，并深度冻结结果；序列化会转义 HTML 敏感字符。
 
-- `window.stellar.initPlugin(fn, name, options)`：utils 就绪时直接委托 `utils.initPlugin`，未就绪时入队 `window.stellar._pluginQueue`；utils.js 加载完成后经 `_flushPlugins()` 统一补跑。
-- 紧随 `utils.js` 的解析期看门狗：`typeof utils === 'undefined'` 时用 `document.write` 同步补载，恢复「utils 先于插件片段定义」的不变量。
-- `utils.js` 整体包 IIFE（`window.__stellarUtilsLoaded` 防重复执行），末尾暴露 `window.utils`；DOMContentLoaded 时若仍缺失则动态补载，失败时给 `<html>` 加 `sr-fallback` 兜底显示内容。
-- scrollreveal 的 3 秒 `sr-fallback` 看门狗独立于 `utils`/ScrollReveal，即使插件初始化完全失败，`.slide-up` 内容也会在 3 秒后强制显示。
-- `layout/_plugins/index.ejs` 另有兜底 shim：bootstrap 被第三方优化器改写/移除导致 `stellar.initPlugin` 缺失时，补一个等价注册点（utils 就绪时直接委托、未就绪时入队），避免 `stellar is not defined` 连锁报错。
-- bootstrap 的动态补载脚本用 `s.setAttribute('src', ...)` 赋值：图片懒加载过滤器（`after_render:html`）与脚本延迟优化器都基于 `s.src = "..."` 做朴素正则，改为 `setAttribute` 后不再被误改写（曾因 `img_lazyload` 跨标签越界把补载 URL 改写成占位图 + `data-src` 导致整个 bootstrap 语法错误）。
+浏览器 `ExtensionRegistry` 根据 `when.selector/always` 决定是否 dynamic import adapter，随后调用 `mount(root, context)`。需要释放资源的 adapter 从 `mount` 返回清理函数，Registry 在卸载时调用该函数。重复 mount 先 unmount，释放顺序与挂载相反；任一 Extension 的 import/mount/unmount 失败都被隔离并派发 `stellar:extension-error`。Reveal 默认不隐藏内容，因此 bootstrap 或 adapter 失败时无需额外可见性兜底。
 
-**参考源码**：[layout/_partial/scripts/bootstrap.ejs](../../../layout/_partial/scripts/bootstrap.ejs)、[layout/_partial/scripts.ejs](../../../layout/_partial/scripts.ejs)、[source/js/utils.js](../../../source/js/utils.js)
+旧 `document.write`、同步 utils 补载、`_pluginQueue`、`initPlugin` 和 Reveal 恢复看门狗已经删除。`utils.js` 仍同步提供迁移期经典 DOM/资源工具，但不再注册插件或实现 request/cache。
+
+**参考源码**：[layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/index.js](../../../source/js/runtime/index.js)、[source/js/runtime/extension-registry.js](../../../source/js/runtime/extension-registry.js)
+
+#### 可选配色选择器
+
+配色切换不是核心资源。`features.color_scheme_switch.enabled` 默认为 `false`；关闭时 Runtime Manifest 不包含 `color-scheme-switch`，页面不输出其三条文案，也不会请求对应模块。启用后，Contribution Registry 把 `/js/runtime/extensions/color-scheme-switch.js` 作为 `always` Extension 安排在 Services 与 Voice 之前挂载，并暴露 `window.setColorScheme(mode)`。
+
+`mode` 只接受 `light`、`dark`、`auto`。固定模式写入 `<html data-theme>`，`auto` 移除该属性；所选状态保存到 `Stellar.colorScheme`。每次确定选择都会派发 `stellar:color-scheme-change`，事件详情包含选择状态与解析后的实际明暗；自动模式还会跟随 `prefers-color-scheme`。非法参数抛出 `TypeError`，卸载 Extension 时会移除系统监听并恢复挂载前的同名全局属性。
+
+主题不自动输出切换入口，也不提供循环切换函数。站点可在 Footer Dropdown 中用三个明确的 `type: button` 调用 setter，具体结构见[配置说明：页脚配置](../00-总览与安装配置/configuration.md#页脚配置)。Actions 作为系统 Widget 可放入支持的 Region，位置规则见[Region 与 Leftbar 系统](../02-布局系统/sidebar-system.md#系统-widget)。
+
+**参考源码**：[scripts/lib/contribution-registry.js](../../../scripts/lib/contribution-registry.js)、[source/js/runtime/extensions/color-scheme-switch.js](../../../source/js/runtime/extensions/color-scheme-switch.js)、[layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)
 
 ---
 
 ### 置顶内容轮播（pin-slider）
 
-列表页 navbar top 上方可渲染置顶内容轮播（`layout/_partial/main/pin_slider.ejs`，无需开关配置，有置顶内容即渲染，自动轮播间隔固定 5000ms）：纯原生实现（无第三方依赖），经 `utils.initPlugin` 注册并返回清理函数，支持自动播放（hover/focus/页面隐藏时暂停）、圆点点击切换、悬停显示左右翻页按钮（solar 双箭头图标 + navbar 玻璃效果容器）、触摸松手滑动与 `prefers-reduced-motion` 降级。分页圆点按钮无文本、不设 `aria-label`（避免用户内容注入 HTML 属性导致解析失败），激活态由 `aria-current` 标识。幻灯片中的标题、小字、封面 URL、wiki 标题/摘要/标签等用户内容均经 `escape_html` 转义后输出（属性与文本统一转义）。轮播进度按内容类型分组（`post`/`wiki`）缓存到 localStorage（键 `stellar.pin-slider.<group>`），内容或张数变化后自动失效。文章幻灯片为固定「标题 + 一行小字」结构：标题取 `title`，小字由 `subtitle()` helper 统一取值（`subtitle` > `description` > excerpt 前 50 字）；post 封面幻灯片与 wiki/项目幻灯片共用通用覆盖层 `cover-overlay()`（同文章列表封面，见[文章列表卡片](../03-内容系统/post-lists-cards.md#渐变模糊层与黑色蒙版)）：常驻底部同图渐变模糊层 + 黑色渐变蒙版（边缘不透明度约 0.25 → 垂直中线 0），hover 时背景图与模糊层同步放大至 `scale(1.05)`（图片 1.5s、模糊层 0.5s 缓动）并变暗（亮度 75%、饱和度 120%）；文字区与 hero 卡片 cover-info 观感一致，文字容器带 `data-text-adaptive="split"`（大字 headline/title 用低饱和 theme（接近黑白）、小字 caption/chip/excerpt 用完整 theme，见[文字自适应颜色插件](#文字自适应颜色插件)）；左右箭头图标颜色随当前幻灯片封面自适应（contrast：深色封面白箭头、浅色封面深箭头，随切换实时更新）；有封面时封面铺满整卡，无封面时为纯白卡片（文字按普通文章颜色）；轮播区宽高比与非置顶文章一致，由 `article.cover_ratio` 控制。启用 `plugins.card_hover` 时，外层 `.pin-slider` 组合 Spotlight + Tilt，内部 `.pin-slider-track` 仍独立维护横向切换 transform，圆点、箭头和暂停逻辑不变。
+列表页 navbar top 上方可渲染置顶内容轮播（`layout/_partial/main/pin_slider.ejs`，无需开关配置，有置顶内容即渲染，自动轮播间隔固定 5000ms）：纯原生实现（无第三方依赖），在 DOM 就绪后直接挂载并于 `pagehide` 执行清理函数，支持自动播放（hover/focus/页面隐藏时暂停）、圆点点击切换、悬停显示左右翻页按钮（solar 双箭头图标 + navbar 玻璃效果容器）、触摸松手滑动与 `prefers-reduced-motion` 降级。分页圆点按钮无文本、不设 `aria-label`（避免用户内容注入 HTML 属性导致解析失败），激活态由 `aria-current` 标识。幻灯片中的标题、小字、封面 URL、wiki 标题/摘要/标签等用户内容均经 `escape_html` 转义后输出（属性与文本统一转义）。轮播进度按内容类型分组（`post`/`wiki`）缓存到 localStorage（键 `stellar.pin-slider.<group>`），内容或张数变化后自动失效。文章幻灯片为固定「标题 + 一行小字」结构：标题取 `title`，小字由 `subtitle()` helper 统一取值（`subtitle` > `description` > excerpt 前 50 字）；post 封面幻灯片与 wiki/项目幻灯片共用通用覆盖层 `cover-overlay()`（同文章列表封面，见[文章列表卡片](../03-内容系统/post-lists-cards.md#渐变模糊层与黑色蒙版)）：常驻底部同图渐变模糊层 + 黑色渐变蒙版（边缘不透明度约 0.25 → 垂直中线 0），hover 时背景图与模糊层同步放大至 `scale(1.05)`（图片 1.5s、模糊层 0.5s 缓动）并变暗（亮度 75%、饱和度 120%）；文字区与 hero 卡片 cover-info 观感一致，文字容器带 `data-text-adaptive="split"`（大字 headline/title 用低饱和 theme（接近黑白）、小字 caption/chip/excerpt 用完整 theme，见[文字自适应颜色插件](#文字自适应颜色插件)）；左右箭头图标颜色随当前幻灯片封面自适应（contrast：深色封面白箭头、浅色封面深箭头，随切换实时更新）；有封面时封面铺满整卡，无封面时为纯白卡片（文字按普通文章颜色）；轮播区宽高比与非置顶文章一致，由 `article.listing.cover_ratio` 控制。启用 `features.card_hover.enabled` 时，外层 `.pin-slider` 组合 Spotlight + Tilt，内部 `.pin-slider-track` 仍独立维护横向切换 transform，圆点、箭头和暂停逻辑不变。
 
 **参考源码**：[layout/_partial/main/pin_slider.ejs](../../../layout/_partial/main/pin_slider.ejs)、[source/css/_components/pin-slider.styl](../../../source/css/_components/pin-slider.styl)
 
@@ -143,7 +151,7 @@ graph TB
 
 列表页 navbar top 的背景条（`.navbar-blur`）未滚动/未吸顶时为卡片样式（`var(--card)` 底色 + `$boxshadow-card` 阴影，与文章卡片一致），吸顶且页面滚动达到阈值后恢复玻璃效果（`bar-glass()` 模糊/高光）。实现为 `init.navbarPin()`：直接测量 navbar 的实际视口位置，`getBoundingClientRect().top` 不高于 sticky 顶部（`getComputedStyle(el).top`，自动兼容桌面 `var(--gap-page)` 与移动端 `8pt`）加 2px 容差、且 `window.scrollY >= 2` 时切换 `.navbar-blur.pinned` 类——无轮播区页面（如 wiki）的 navbar 在页面顶部即已吸顶，需额外要求实际滚动，否则默认保持卡片样式，回到顶部（滚动小于 2px）恢复卡片；移动端浏览器顶栏伸缩会改变 `scrollY`（展开顶栏时 `scrollY` 减小），用 `scrollY` 推算吸顶状态会导致仍吸顶时玻璃误消失，因此吸顶判定仍以实际位置为准，`scrollY` 仅作为滚动阈值；rAF 节流监听 scroll，resize/pageshow 重算，`visualViewport` 存在时其 resize 也触发一次判定，初始化立即执行一次（兼容恢复滚动位置）；无 JS 时保持未吸顶的卡片样式。
 
-**参考源码**：[source/js/main.js](../../../source/js/main.js)、[source/css/_components/partial/navbar.styl](../../../source/css/_components/partial/navbar.styl)
+**参考源码**：[source/js/main.js](../../../source/js/main.js)、[source/css/_components/partial/listing-nav.styl](../../../source/css/_components/partial/listing-nav.styl)
 
 ---
 
@@ -160,7 +168,7 @@ flowchart TD
     initPage["stellar.initPage()"]
     
     initPage --> tocInit["init.toc()<br/>Set up TOC scroll sync"]
-    initPage --> sidebarInit["init.sidebar()<br/>Configure sidebar clicks"]
+    initPage --> tocLinksInit["init.tocLinks()<br/>Configure TOC and Drawer clicks"]
     initPage --> wikiStart["init.wikiStart()<br/>Wiki cover anchor handling"]
     initPage --> leftbarScroll["init.leftbarScroll()<br/>Leftbar scroll state"]
     initPage --> navbarPin["init.navbarPin()<br/>Navbar card/glass switch on pin"]
@@ -168,7 +176,7 @@ flowchart TD
     initPage --> tabsInit["init.registerTabsTag()<br/>Set up tab components"]
     
     tocInit --> complete["Initialization complete"]
-    sidebarInit --> complete
+    tocLinksInit --> complete
     wikiStart --> complete
     leftbarScroll --> complete
     navbarPin --> complete
@@ -253,7 +261,7 @@ toast 通知系统创建带 `.toast` 与 `.show` 类的临时覆盖元素，追�
 graph LR
     subgraph "init Object Methods"
         toc["init.toc()"]
-        sidebar["init.sidebar()"]
+        tocLinks["init.tocLinks()"]
         wikiStart["init.wikiStart()"]
         leftbarScroll["init.leftbarScroll()"]
         navbarPin["init.navbarPin()"]
@@ -275,7 +283,7 @@ graph LR
     subgraph "Registered Behaviors"
         scrollSync["Scroll synchronization"]
         activeState["Active state tracking"]
-        dismiss["Sidebar dismiss on click"]
+        dismiss["Drawer dismiss on click"]
         cardGlass["Navbar card/glass switch on pin"]
         timeFormat["Relative time display"]
         tabSwitch["Tab content switching"]
@@ -287,8 +295,8 @@ graph LR
     toc --> scrollSync
     toc --> activeState
     
-    sidebar --> sidebarLinks
-    sidebar --> dismiss
+    tocLinks --> sidebarLinks
+    tocLinks --> dismiss
     
     navbarPin --> navbarElements
     navbarPin --> cardGlass
@@ -330,7 +338,7 @@ sequenceDiagram
     Browser->>Document: 页面加载完成
     Document->>stellar: stellar.initPage()
     stellar->>init: init.toc()
-    stellar->>init: init.sidebar()
+    stellar->>init: init.tocLinks()
     stellar->>init: init.wikiStart()
     stellar->>init: init.leftbarScroll()
     stellar->>init: init.relativeDate()
@@ -361,26 +369,26 @@ sequenceDiagram
 
 ### 文字自适应颜色插件
 
-背景图/背景色上方的文字颜色自适应由内置插件 `adaptive_text` 提供（`_config.yml` 的 `plugins.adaptive_text.enable`，默认开启）。`layout/_plugins/adaptive_text.ejs` 经 `utils.initPlugin` 注册，仅当页面存在 `[data-text-adaptive]` 元素时按需加载 `source/js/color.js` 与 `source/js/plugins/adaptive-text.js`：插件按 `--cover-url` → `--pin-cover-url` → `--bg-url` → `background-image` → `background-color` 解析背景来源，调用 `stellar.color.getAverageColor()`（canvas 等比缩至最长边 ≤64px 取平均色与平均透明度，按 URL 缓存原始均值；透明图按元素/祖先/`body` 的实际背景色做 alpha 合成后再平均，避免透明像素把平均色拉偏；CORS/解码失败返回 `null`）或直接解析背景色，再用 `stellar.color.adaptiveTextColor()` 计算文字颜色并写入内联变量。属性值：`theme`（默认，背景图平均色为基色，背景偏暗时 lighten 到明度 0.85、偏亮时 darken 到明度 0.3，低饱和彩色平均色先经 `enhanceSaturation` 抬升饱和度再取色，`saturationScale` 可调小饱和度使其接近黑白）、`contrast`（黑白对比：深色背景白字、浅色背景深字）、`split`（封面/banner/轮播容器：大字用低饱和 theme（接近黑白）、小字用完整 theme）。明暗判定默认阈值 0.6、彩色背景（饱和度 > 0.2）上浮至 0.65，偏向采纳浅色文字。`split` 模式写入 `--text-banner`（大字，`saturationScale: 0.05`）与 `--text-banner-theme`（小字，完整 theme）两个变量，其余模式两个变量同色。元素已有内联 `--text-banner` 或内联 `color` 时插件跳过，用户显式覆盖优先。
+背景图/背景色上方的文字颜色自适应是固定开启的内置 Feature。Runtime Manifest 仅在页面存在 `[data-text-adaptive]` 元素时 import Feature adapter，再按需加载 `source/js/color.js` 与 `source/js/plugins/adaptive-text.js`：插件按 `--cover-url` → `--pin-cover-url` → `--bg-url` → `background-image` → `background-color` 解析背景来源，调用 `stellar.color.getAverageColor()`（canvas 等比缩至最长边 ≤64px 取平均色与平均透明度，按 URL 缓存原始均值；透明图按元素/祖先/`body` 的实际背景色做 alpha 合成后再平均，避免透明像素把平均色拉偏；CORS/解码失败返回 `null`）或直接解析背景色，再用 `stellar.color.adaptiveTextColor()` 计算文字颜色并写入内联变量。属性值：`theme`（默认，背景图平均色为基色，背景偏暗时 lighten 到明度 0.85、偏亮时 darken 到明度 0.3，低饱和彩色平均色先经 `enhanceSaturation` 抬升饱和度再取色，`saturationScale` 可调小饱和度使其接近黑白）、`contrast`（黑白对比：深色背景白字、浅色背景深字）、`split`（封面/banner/轮播容器：大字用低饱和 theme（接近黑白）、小字用完整 theme）。明暗判定默认阈值 0.6、彩色背景（饱和度 > 0.2）上浮至 0.65，偏向采纳浅色文字。`split` 模式写入 `--text-banner`（大字，`saturationScale: 0.05`）与 `--text-banner-theme`（小字，完整 theme）两个变量，其余模式两个变量同色。元素已有内联 `--text-banner` 或内联 `color` 时 Feature 跳过，用户显式覆盖优先。
 
-**参考源码**：[layout/_plugins/adaptive_text.ejs](../../../layout/_plugins/adaptive_text.ejs)、[source/js/color.js](../../../source/js/color.js)、[source/js/plugins/adaptive-text.js](../../../source/js/plugins/adaptive-text.js)
+**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)、[source/js/color.js](../../../source/js/color.js)、[source/js/plugins/adaptive-text.js](../../../source/js/plugins/adaptive-text.js)
 
 ### 卡片 Hover 生命周期
 
-启用 `plugins.card_hover` 后，`layout/_plugins/card_hover.ejs` 经 `stellar.initPlugin` 条件加载本地脚本，并把已校验的光斑颜色和最大倾角写入 `ctx.card_hover`。`source/js/plugins/card-hover.js` 只扫描 `.card-hover`，再按 `.card-hover--spotlight` 与 `.card-hover--tilt` 挂载对应能力：
+启用 `features.card_hover.enabled` 后，Runtime Manifest 在页面命中 `.card-hover` 时 import Feature adapter 并加载本地插件。光斑颜色由 CSS 固定为 `rgba(255, 255, 255, .25)`，最大倾角由脚本固定为 `3deg`，二者都不属于公开配置。`source/js/plugins/card-hover.js` 只扫描 `.card-hover`，再按 `.card-hover--spotlight` 与 `.card-hover--tilt` 挂载对应能力：
 
 - `stellar.cardHover.mountAll(root)` 幂等扫描 Document、容器或单个卡片，供动态组件复用。
 - `stellar.cardHover.unmountAll(root)` 清理指定容器自身及后代的已挂载卡片；省略 `root` 时清理全部，供动态搜索替换结果和插件销毁复用。
 - `stellar:mdrender` 完成后自动对 `event.detail.target` 增量挂载。
 - 指针移动经 `requestAnimationFrame` 合并；离开时取消待执行帧、移除激活类并立即复位倾角，Spotlight 则停在最后指针位置淡出，`opacity` 过渡完成且卡片未重新激活、未持有焦点后才回到中心。
-- 页面隐藏时复位；`destroy()` 移除卡片与媒体查询监听、注入光斑层和根级配置变量。
+- 页面隐藏时复位；`destroy()` 移除卡片与媒体查询监听及注入的光斑层。
 - 粗指针、触屏或减少动态效果时不挂载；脚本加载失败时组合类保持无行为，不阻塞链接与原组件 hover。
 
-Spotlight 是卡片末尾注入的独立 `span.card-hover__spotlight[aria-hidden=true]`，不接收指针事件；纯键盘进入或指针离开时仍保持 `focus-within`，都会立即使用居中光斑。快速重新移入后，旧的淡出结束事件不会覆盖新指针坐标。Tilt 作用于卡片本体，不占用 ScrollReveal 的 `.post-card-wrap` transform。
+Spotlight 是卡片末尾注入的独立 `span.card-hover__spotlight[aria-hidden=true]`，不接收指针事件；纯键盘进入或指针离开时仍保持 `focus-within`，都会立即使用居中光斑。快速重新移入后，旧的淡出结束事件不会覆盖新指针坐标。Tilt 作用于卡片本体，不占用 Reveal 动画期间的 `.post-card-wrap` transform。
 
 置顶轮播外层和专栏列表的最新文章封面卡片复用完整 Spotlight + Tilt；轮播轨道与专栏标题、描述、归档式文章条目不参与 Tilt。Wiki Hero 的源码、文档和自定义 action 按钮、搜索结果链接与标准 `.ui-collection__item` 复用 Spotlight-only 生命周期，因此保留原有 surface 背景且不会产生位移或 3D transform。搜索的 `.ui-collection-adapter` 列表本身不挂载，只有内部可点击链接动态挂载，页面标题留在链接外；TOC adapter 仍不接入。
 
-**参考源码**：[layout/_plugins/card_hover.ejs](../../../layout/_plugins/card_hover.ejs)、[source/js/plugins/card-hover.js](../../../source/js/plugins/card-hover.js)、[source/css/_plugins/card-hover.styl](../../../source/css/_plugins/card-hover.styl)
+**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)、[source/js/plugins/card-hover.js](../../../source/js/plugins/card-hover.js)、[source/css/_plugins/card-hover.styl](../../../source/css/_plugins/card-hover.styl)
 
 ### 与 Head 配置的集成
 
@@ -388,9 +396,9 @@ Spotlight 是卡片末尾注入的独立 `span.card-hover__spotlight[aria-hidden
 
 ```javascript
 window.canonical = {
-  originalHost: '...',
+  host: '...',
+  allowedHosts: [...],
   encoded: '...',
-  officialHosts: [...],
   param: {
     permalink: '...',
     checklink: '...'

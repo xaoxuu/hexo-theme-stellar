@@ -87,17 +87,12 @@
 li:not([class]) a:not([class])
 p:not([class]) a:not([class])
 table a:not([class])
-  position: relative
-  text-decoration: none
-  trans1 all
-  border-radius: 0
-  background: linear-gradient(0deg,var(--block-border),var(--block-border)) no-repeat left 100%/100% 2px
-  &:hover
-    text-decoration: none
-    color: var(--link)
-    border-radius: 4px
-    background: linear-gradient(0deg,var(--link-a20),var(--link-a20)) no-repeat left 100%/100% 100%
+  text-decoration-line: underline
+  text-decoration-color: var(--block-border)
+  text-decoration-thickness: 1px
+  text-underline-offset: 2px
+  transition: text-decoration-color .2s ease-out
+  &:hover, &:focus-visible
+    text-decoration-color: var(--link)
   &:has(img)
-    background: none
-    &:hover
-      background: none
+    text-decoration: none

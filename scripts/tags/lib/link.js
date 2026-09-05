@@ -7,6 +7,9 @@
 
 'use strict'
 
+const { resolveServiceProvider } = require("../../lib/service-provider");
+const { composeUiClasses } = require("../../lib/ui-capabilities");
+
 module.exports = ctx => function(args) {
   const full_url_for = require('hexo-util').full_url_for.bind(ctx)
   const escapeHTML = require('hexo-util').escapeHTML
@@ -16,7 +19,7 @@ module.exports = ctx => function(args) {
   }
   const url = full_url_for(args.url)
   const safeTitle = escapeHTML(args.title || '')
-  args.api = ctx.theme.config.data_services.siteinfo?.api
+  args.api = resolveServiceProvider(ctx.stellar.config.services.siteInfo)?.endpoint;
   if (args.api) {
     args.api = args.api.replace('{href}', url)
   }
@@ -32,7 +35,7 @@ module.exports = ctx => function(args) {
   }
   var el = ''
   el += '<div class="tag-plugin link dis-select">'
-  el += '<a class="link-card' + (args.desc ? ' rich' : ' plain') + ' card-hover card-hover--spotlight card-hover--tilt" title="' + safeTitle + '" href="' + args.url + '"'
+  el += '<a class="' + composeUiClasses('link-card' + (args.desc ? ' rich' : ' plain'), 'hoverCard') + '" title="' + safeTitle + '" href="' + args.url + '"'
   if (args.url.includes('://')) {
     el += ' target="_blank" rel="external nofollow noopener noreferrer"'
   }
@@ -47,7 +50,7 @@ module.exports = ctx => function(args) {
 
   function loadIcon() {
     var el = ''
-    el += '<div class="lazy img" data-bg="' + (args.icon || ctx.theme.config.default.link) + '"></div>'
+    el += '<div class="lazy img" data-bg="' + (args.icon || ctx.stellar.config.fallbacks.linkCard) + '"></div>'
     return el
   }
   function loadTitle() {

@@ -1,0 +1,17 @@
+<%
+var allowedPlacements = ['main', 'leftbar', 'topbar', 'rightbar']
+if (!allowedPlacements.includes(placement)) {
+  throw new Error('Stellar Layout Navigation: 未知 placement ' + placement)
+}
+var navigationItems = Array.isArray(entries) ? entries : []
+var navigationBody = partial('_partial/components/collection', {options: {
+  layout: 'list',
+  variant: 'nav',
+  items: navigationItems
+}})
+var html = ''
+if ((navigationBody || '').trim().length > 0) {
+  html = `<nav class="menu dis-select${placement === 'main' ? ' mobile-hidden' : ''}">${navigationBody}</nav>`
+}
+%>
+<%- html %>

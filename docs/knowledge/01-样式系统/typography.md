@@ -36,9 +36,9 @@ tags:
 graph TB
     subgraph "Configuration"
         YML["_config.yml"]
-        FONT_FAM["style.font-family.*"]
-        FONT_SIZE["style.font-size.*"]
-        TEXT_ALIGN["style.text-align"]
+        FONT_FAM["appearance.typography.font_family.*"]
+        FONT_SIZE["appearance.typography.font_size.*"]
+        TEXT_ALIGN["appearance.typography.content_align"]
     end
     
     subgraph "Stylus Build-Time Processing"
@@ -50,7 +50,7 @@ graph TB
         FF_CODEBLOCK["$ff-codeblock"]
         
         FS_ROOT["$fs-root"]
-        FS_BASE["$fs-root<br/>(style.font-size.root)"]
+        FS_BASE["$fs-root<br/>(appearance.typography.font_size.root)"]
         FS_CODE["$fs-code"]
         FS_CODEBLOCK["$fs-codeblock"]
         
@@ -100,7 +100,7 @@ graph TB
 
 ### 构建期函数
 
-- **`hexo-config(path)`**：构建期从 `_config.yml` 取值，例如 `hexo-config('style.font-family.body')` 取正文字体族。
+- **`hexo-config(path)`**：构建期从 `_config.yml` 取值，例如 `hexo-config('appearance.typography.font_family.body')` 取正文字体族。
 - **`convert(value)`**：确保 YAML 字符串正确转换为 Stylus 值，处理单位与引号。
 
 字号令牌直接引用 `var(--fs-root)` 生成动态 `calc()` 表达式，移动端修改基准时无需重新生成各组件规则。
@@ -111,13 +111,13 @@ graph TB
 
 ## 字体族系统
 
-三个字体族变量定义不同内容类型的排版：
+两个公开字体族定义正文与代码排版；内部的行内代码、代码块变量都读取同一个 `code` 字段：
 
 | 变量 | 配置路径 | 应用目标 | 文件 |
 |------|----------|----------|------|
-| `$ff-body` | `style.font-family.body` | 全局正文、标题、段落 | 通过继承隐式应用 |
-| `$ff-code` | `style.font-family.code` | `code` 元素（行内代码） | [highlight.styl](../../../source/css/_common/highlight.styl) |
-| `$ff-codeblock` | `style.font-family.codeblock` | `pre` 元素、`.highlight` 块 | [base.styl](../../../source/css/_common/base.styl)、[highlight.styl](../../../source/css/_common/highlight.styl) |
+| `$ff-body` | `appearance.typography.font_family.body` | 全局正文、标题、段落 | 通过继承隐式应用 |
+| `$ff-code` | `appearance.typography.font_family.code` | `code` 元素（行内代码） | [highlight.styl](../../../source/css/_common/highlight.styl) |
+| `$ff-codeblock` | `appearance.typography.font_family.code` | `pre` 元素、`.highlight` 块 | [base.styl](../../../source/css/_common/base.styl)、[highlight.styl](../../../source/css/_common/highlight.styl) |
 
 ### 变量定义
 
@@ -125,9 +125,9 @@ graph TB
 
 ```stylus
 // source/css/_custom.styl
-$ff-body = convert(hexo-config('style.font-family.body'))
-$ff-code = convert(hexo-config('style.font-family.code'))
-$ff-codeblock = convert(hexo-config('style.font-family.codeblock'))
+$ff-body = convert(hexo-config('appearance.typography.font_family.body'))
+$ff-code = convert(hexo-config('appearance.typography.font_family.code'))
+$ff-codeblock = convert(hexo-config('appearance.typography.font_family.code'))
 ```
 
 ### 应用位置
@@ -172,10 +172,10 @@ pre
 ```mermaid
 graph TD
     subgraph "Configuration Sources"
-        CFG_ROOT["style.font-size.root"]
+        CFG_ROOT["appearance.typography.font_size.root"]
         CFG_BODY["style.font-size.body<br/>(已移除)"]
-        CFG_CODE["style.font-size.code"]
-        CFG_CB["style.font-size.codeblock"]
+        CFG_CODE["appearance.typography.font_size.inline_code"]
+        CFG_CB["appearance.typography.font_size.code_block"]
     end
     
     subgraph "Base Variables"
@@ -242,16 +242,16 @@ graph TD
 
 ```stylus
 // source/css/_custom.styl
-$fs-root = convert(hexo-config('style.font-size.root'))
-$fs-root = convert(hexo-config('style.font-size.root'))
-$fs-code = convert(hexo-config('style.font-size.code'))
-$fs-codeblock = convert(hexo-config('style.font-size.codeblock'))
+$fs-root = convert(hexo-config('appearance.typography.font_size.root'))
+$fs-root = convert(hexo-config('appearance.typography.font_size.root'))
+$fs-code = convert(hexo-config('appearance.typography.font_size.inline_code'))
+$fs-codeblock = convert(hexo-config('appearance.typography.font_size.code_block'))
 ```
 
 | 变量 | 用途 | 应用 |
 |------|------|------|
 | `$fs-root` | 构建期根字号配置 | 作为 `--fs-root` 的桌面端基准 |
-| `$fs-root` | `style.font-size.root` | HTML/rem 根字号；移动端自动增加 2px |
+| `$fs-root` | `appearance.typography.font_size.root` | HTML/rem 根字号；移动端自动增加 2px |
 | `$fs-code` | 行内代码字号 | 应用于 `p>code`、`li>code` |
 | `$fs-codeblock` | 代码块字号 | 应用于 `pre`、`.highlight` |
 
@@ -542,7 +542,7 @@ pre
 
 ### 排版缩放规则
 
-1. 桌面端 `--fs-root` 等于 `style.font-size.root`。
+1. 桌面端 `--fs-root` 等于 `appearance.typography.font_size.root`。
 2. 移动端 `--fs-root` 为 root + 2px。
 3. `--fs-content-base` 默认取 `--fs-root`，story 内容区使用 `calc(var(--fs-root) + 2px)`；`--fs-content` 默认取页面基准。
 4. 标题、段落变体、rem 令牌和相关间距自动级联更新。
@@ -644,14 +644,14 @@ ul, ol
 ```stylus
 // source/css/_common/base.styl
 .md-text p:not([class])
-  text-align: convert(hexo-config('style.text-align'))
+  text-align: convert(hexo-config('appearance.typography.content_align'))
 ```
 
 | 选择器部分 | 用途 |
 |-----------|------|
 | `.md-text` | 包裹 Markdown 生成的 HTML 内容 |
 | `p:not([class])` | 只作用于普通段落（排除标签插件段落） |
-| `convert(hexo-config(...))` | 从 `_config.yml` 提取 `style.text-align` |
+| `convert(hexo-config(...))` | 从 `_config.yml` 提取 `appearance.typography.content_align` |
 
 支持 `left`、`right`、`center`、`justify`。`:not([class])` 防止覆盖 note 块等专用组件中的对齐。
 
@@ -663,17 +663,17 @@ ul, ol
 
 | 方面 | 配置 | Stylus 变量 | CSS 属性 | 运行时可调 |
 |------|------|-------------|----------|-----------|
-| 正文字体 | `style.font-family.body` | `$ff-body` | `font-family` | 否 |
-| 代码字体 | `style.font-family.code` | `$ff-code` | `font-family` | 否 |
-| 代码块字体 | `style.font-family.codeblock` | `$ff-codeblock` | `font-family` | 否 |
-| 根字号 | `style.font-size.root` | `$fs-root` | `font-size` | 否 |
-| 全局字号基准 | `style.font-size.root` | `$fs-root` | `--fs-root` | 是（移动端 +2px） |
+| 正文字体 | `appearance.typography.font_family.body` | `$ff-body` | `font-family` | 否 |
+| 代码字体 | `appearance.typography.font_family.code` | `$ff-code` | `font-family` | 否 |
+| 代码块字体 | `appearance.typography.font_family.code` | `$ff-codeblock` | `font-family` | 否 |
+| 根字号 | `appearance.typography.font_size.root` | `$fs-root` | `font-size` | 否 |
+| 全局字号基准 | `appearance.typography.font_size.root` | `$fs-root` | `--fs-root` | 是（移动端 +2px） |
 | 当前页面字号基准 | 由 root 计算 | `--fs-root` | `--fs-content-base` | 是（媒体查询/story） |
 | 当前组件字号 | 由页面基准计算 | `$fs-content-0..3` | `--fs-content` | 是（组件局部覆盖） |
 | H2 字号 | 计算 | `$fsh2` | `--fsh2` | 是（经 `--fs-content`） |
 | H3 字号 | 计算 | `$fsh3` | `--fsh3` | 是（经 `--fs-content`） |
 | H4 字号 | 计算 | `$fsh4` | `--fsh4` | 是（经 `--fs-content`） |
-| 代码字号 | `style.font-size.code` | `$fs-code` | `font-size` | 否 |
-| 代码块字号 | `style.font-size.codeblock` | `$fs-codeblock` | `font-size` | 否 |
+| 代码字号 | `appearance.typography.font_size.inline_code` | `$fs-code` | `font-size` | 否 |
+| 代码块字号 | `appearance.typography.font_size.code_block` | `$fs-codeblock` | `font-size` | 否 |
 
 排版系统优先保证一致性与比例关系。标题与变体字号都从 `--fs-root` 派生，基础配置变化或移动端增加 2px 时整套字号体系协调缩放。story 内容区在当前基准上额外增加 2px。

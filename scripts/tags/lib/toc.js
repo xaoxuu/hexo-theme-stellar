@@ -43,7 +43,7 @@ module.exports = ctx => function(args) {
   el += '</summary>'
 
   if (args.wiki) {
-    const proj = ctx.theme.config.wiki.tree[args.wiki]
+    const proj = ctx.stellar.data.wiki.tree[args.wiki];
     if (proj == undefined) {
       return ''
     }
@@ -70,4 +70,4 @@ module.exports = ctx => function(args) {
   // end
   el += '</div>'
   return el
-}
+};

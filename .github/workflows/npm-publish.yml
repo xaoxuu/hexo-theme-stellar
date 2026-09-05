@@ -22,6 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
+      RELEASE_NOTES_FILE: /tmp/stellar-release-notes.md
     steps:
       - name: Gate on release commit
         id: gate
@@ -43,10 +44,10 @@ jobs:
           node-version: 24
           registry-url: https://registry.npmjs.org
 
-      - name: Extract version from package.json
+      - name: Validate version and prepare changelog notes
         id: version
         if: steps.gate.outputs.skip == 'false'
-        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+        run: node ci/prepare-release.js
 
       - name: Check if version already published
         id: check
@@ -79,33 +80,11 @@ jobs:
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Extract release notes from CHANGELOG.md
-        id: notes
-        if: steps.gate.outputs.skip == 'false' && steps.release_exists.outputs.exists == 'false'
-        run: |
-          VERSION="${{ steps.version.outputs.version }}"
-          awk -v ver="## $VERSION" '
-            $0 == ver { capture = 1; next }
-            capture && /^## / { exit }
-            capture && /^> 发布日期：/ { next }
-            capture { print }
-          ' CHANGELOG.md > /tmp/release-notes.md
-          if [ -s /tmp/release-notes.md ]; then
-            echo "found=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "found=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Create GitHub release
         if: steps.gate.outputs.skip == 'false' && steps.release_exists.outputs.exists == 'false'
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          ARGS=(--title "$VERSION")
-          if [ "${{ steps.notes.outputs.found }}" = "true" ]; then
-            ARGS+=(--notes-file /tmp/release-notes.md)
-          else
-            ARGS+=(--generate-notes)
-          fi
+          ARGS=(--title "$VERSION" --notes-file "$RELEASE_NOTES_FILE")
           if [[ "$VERSION" == *-rc.* ]]; then
             ARGS+=(--prerelease)
           fi

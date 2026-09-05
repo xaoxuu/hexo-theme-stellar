@@ -1,84 +1,16 @@
-.l_left
-  margin: var(--gap-page)
-  max-height: calc(100vh - var(--gap-page) * 2)
-  border-radius: $border-card-l
-  .header
-    margin: var(--gap-base) var(--gap-base) 0
+.site-region--leftbar .site-region__surface
+  overflow: visible
 
-.l_right
-  margin: var(--gap-page) 0
-  border-radius: $border-card-l
-@media screen and (min-width: $device-2k)
-  .l_left
-    margin-left: auto
-    margin-right: calc(2 * var(--gap-page))
-  .l_right
-    margin-left: var(--gap-page)
-    margin-right: auto
-
-// 纯色卡片风格（style.leftbar.ui-style: card）：
-// 实色 var(--card) 背景 + 中间档阴影，隐藏图片背景与磨砂叠加层
-.l_left.leftbar-card
-  background: var(--card)
-  box-shadow: $boxshadow-float
-  // 卡片风格交互变量：列表项 hover/active 用 var(--block-border)，搜索条底部条默认用 var(--text-meta)
-  --leftbar-item-bg: var(--block-border)
-  --leftbar-item-shadow: none
-  --leftbar-search-line: var(--text-meta)
-  // 卡片风格组件背景：白色半透明填充（--bg-a20/a50/a60/a75）统一改为 var(--block)，
-  // --bg-a100（不透明白）改为 var(--block-border) 保留 hover 反馈，与右栏观感一致
-  --bg-a20: var(--block)
-  --bg-a50: var(--block)
-  --bg-a60: var(--block)
-  --bg-a75: var(--block)
-  --bg-a100: var(--block-border)
-  .sidebg
-    display: none
-  .leftbar-container
-    &:before
-    &:after
-      display: none
-
-.l_left
-  .sidebg
-    pointer-events: none
-    position: absolute
-    --inset: 0
-    top: var(--inset)
-    bottom: var(--inset)
-    left: var(--inset)
-    right: var(--inset)
-    border-radius: $border-card-l
-    --saturate: 400%
-    --blur-px: convert(hexo-config('style.leftbar.blur-px'))
-    --background-opacity: 1
-    if $leftbar-background-image
-      background-position: center
-      background-size: cover
-      if hexo-config('style.leftbar.blur-px')
-        --inset: 32px
-      if hexo-config('style.leftbar.background-opacity')
-        --background-opacity: hexo-config('style.leftbar.background-opacity')
-      background-image: convert(hexo-config('style.leftbar.background-image'))
-      filter: saturate(var(--saturate)) blur(var(--blur-px)) opacity(var(--background-opacity))
-      :root[data-theme="dark"] &
-        --background-opacity: hexo-config('style.leftbar.background-opacity') * 0.75
-      :root:not([data-theme]) &
-        @media screen and (prefers-color-scheme: dark)
-          --background-opacity: hexo-config('style.leftbar.background-opacity') * 0.75
-    else if $leftbar-background-color-light || $leftbar-background-color-dark
-      background-color: convert($leftbar-background-color-light)
-      :root:not([data-theme]) &
-        @media screen and (prefers-color-scheme: dark)
-          background-color: convert($leftbar-background-color-dark)
-
-  .leftbar-container
-    height: calc(100vh - var(--gap-page) * 2)
+.site-region--leftbar
+  .site-region__viewport
+    height: 100%
+    max-height: inherit
     display: flex
     flex-direction: column
     word-break: break-all
     text-align: justify
-    border-radius: $border-card-l
+    border-radius: inherit
+    background: transparent
     overflow: hidden
     // 搜索条激活（有输入内容）时隐藏导航区与组件区，给搜索结果腾出空间
     > .search-wrapper[searching='true']
@@ -90,38 +22,72 @@
       -webkit-mask: linear-gradient(white, 90%, transparent)
     >*
       z-index 1
-    &:before,&:after
-      position: absolute
-      pointer-events: none
-      content: ''
-      top: 0
-      bottom: 0
-      left: 0
-      right: 0
-      border-radius: $border-card-l
-    &:before
-      if $leftbar-background-image
-        @media screen and (min-width: $device-mobile-max)
-          background: rgba(white, 0.05)
-          box-shadow: inset 0 0 32px 1px rgba(white, 0.5)
-          backdrop-filter: saturate(300%)
-          -webkit-backdrop-filter: saturate(300%)
-          mask: linear-gradient(black, rgba(black, 0.5), 70%, transparent, 90%, transparent)
-          -webkit-mask: linear-gradient(black, rgba(black, 0.5), 70%, transparent, 90%, transparent)
-        :root[data-theme="dark"] &
-          background: rgba(white, 0.05)
-          box-shadow: inset 0 0 32px 1px rgba(white, 0.1)
-        :root:not([data-theme]) &
-          @media screen and (prefers-color-scheme: dark)
-            background: rgba(white, 0.05)
-            box-shadow: inset 0 0 32px 1px rgba(white, 0.1)
 
-@media screen and (max-width: $device-mobile-max)
-  .l_left
-    overflow: hidden
-    background: var(--bg-a100)
-    .sidebg
-      --inset: 0
-      --saturate: 300%
-    .leftbar-container:after
-      background: var(--bg-a20)
+// Leftbar 的公开 widgets 数组在内部投影为固定顶部、滚动主体与统一 Footer。
+.site-region--leftbar
+  .site-region__viewport
+    padding: var(--gap-base)
+    gap: var(--gap-base)
+  .site-region__zone
+    position: relative
+    z-index: 1
+    min-width: 0
+  .site-region__zone--top
+    flex: 0 0 auto
+  .site-region__project-toolbar
+    min-height: 40px
+    display: flex
+    align-items: center
+    justify-content: space-between
+    gap: 8px
+    .site-region__project-home,
+    .site-region__project-search
+      min-width: 0
+      display: flex
+      align-items: center
+    .site-region__project-search
+      margin-inline-start: auto
+      .ui-collection__item
+        width: 32px
+        min-width: 32px
+        height: 32px
+        min-height: 32px
+        padding: 4px
+        justify-content: center
+  .site-region__zone--body
+    flex: 1 1 auto
+    min-height: 0
+    overflow-x: hidden
+    overflow-y: auto
+    overscroll-behavior: contain
+    scrollbar(0, 0)
+    mask: linear-gradient(white, 90%, transparent)
+    -webkit-mask: linear-gradient(white, 90%, transparent)
+    > .widgets
+      padding-bottom: 64px
+  .site-region__footer
+    position: relative
+    z-index: 2
+    flex: 0 0 auto
+    display: flex
+    flex-direction: column
+    gap: 8px
+    min-width: 0
+  .site-region__footer-actions
+    flex: 0 0 auto
+    min-width: 0
+    .widget-stack
+      padding: 0
+  .site-region__system
+    flex: 0 0 auto
+    min-height: 32px
+    display: flex
+    align-items: center
+    gap: 8px
+  .site-region__settings
+    flex: 1 1 auto
+    min-width: 0
+    .widget-instance--settings
+      width: 100%
+  .widget-stack
+    margin: 0

@@ -1,27 +1,28 @@
 <%
 
-var banner = {}
+var renderViewModel = typeof viewModel !== 'undefined' && ['post', 'wiki', 'topic', 'notebook'].includes(viewModel?.collection?.profile)
+  ? viewModel
+  : null
+var postViewModel = ['post', 'topic'].includes(renderViewModel?.collection?.profile) ? renderViewModel : null
+var wikiViewModel = renderViewModel?.collection?.profile === 'wiki' ? renderViewModel : null
+var notebookViewModel = renderViewModel?.collection?.profile === 'notebook' ? renderViewModel : null
+var pageConfig = content_config(page)
+var banner = Object.assign({}, wikiViewModel
+  ? wikiViewModel.render.article.banner
+  : notebookViewModel
+    ? notebookViewModel.render.article.banner
+  : postViewModel?.collection?.profile === 'topic'
+    ? postViewModel.render.article.banner
+    : postViewModel ? postViewModel.item.presentation.banner : pageConfig.banner || {})
 
-if (page.banner) {
-  banner.url = page.banner
-} else if (theme.topic.tree[page.topic]?.banner != null) {
-  banner.url = theme.topic.tree[page.topic]?.banner
-} else if (theme.wiki.tree[page.wiki]?.banner != null) {
-  banner.url = theme.wiki.tree[page.wiki]?.banner
-}
-banner = Object.assign(banner, page.banner_info)
 // 标题
-if (banner.title == null) {
-  banner.title = page.h1 != null ? page.h1 : page.title
-}
-// 副标题
-if (banner.subtitle == null) {
-  banner.subtitle = page.subtitle
+if (banner.headline == null) {
+  banner.headline = renderViewModel ? renderViewModel.item.title : page.title
 }
 
 // 上块：第一行（左侧面包屑 + 右侧阅读时长 / AI 标签）+ 第二行（日期信息，靠左）
 function layoutTop() {
-  if (page.breadcrumb === false) {
+  if ((renderViewModel ? renderViewModel.item.navigation.breadcrumb : pageConfig.breadcrumb) === false) {
     return ''
   }
   var el = ''
@@ -33,12 +34,12 @@ function layoutTop() {
   el += `<div class="left" id="breadcrumb">`
     // 首页
     el += `<a class="cap breadcrumb" href="${pretty_url(config.root)}">${__("btn.home")}</a>`
-    if (theme.wiki.tree[page.wiki]) {
-      el += partial('breadcrumb/wiki')
-    } else if (page.notebook) {
-      el += partial('breadcrumb/note')
+    if (wikiViewModel) {
+      el += partial('breadcrumb/wiki', {viewModel: wikiViewModel})
+    } else if (notebookViewModel) {
+      el += partial('breadcrumb/note', {viewModel: notebookViewModel})
     } else if (page.layout == 'post') {
-      el += partial('breadcrumb/blog')
+      el += partial('breadcrumb/blog', {viewModel: postViewModel})
     } else {
       el += partial('breadcrumb/page')
     }
@@ -46,7 +47,7 @@ function layoutTop() {
   // 2.2 右：字数和预计阅读时长 + AI 成分标签（仅在有内容时渲染）
   var rightHtml = ''
   // 字数和预计阅读时长，置于第一行右侧（#302）
-  if (page.layout == 'post' && theme.article.reading_time) {
+  if ((renderViewModel ? renderViewModel.item.layout : page.layout) == 'post' && stellar_config('article.showReadingTime')) {
     var _wc = word_count(page)
     if (_wc > 0) {
       rightHtml += `<span class="cap reading">${__("meta.word_count", _wc)} · ${__("meta.reading_time", reading_time(page))}</span>`
@@ -54,8 +55,8 @@ function layoutTop() {
   }
   // AI 成分标签：置于第一行最右（阅读时长右侧）；
   // banner 含图片时不用配置色，继承默认文字色（--text-banner）
-  const bannerHasImage = banner.url && banner.url.length > 0
-  rightHtml += ai_label(page.ai_label, 'cap', bannerHasImage)
+  const bannerHasImage = banner.image && banner.image.length > 0
+  rightHtml += ai_label(renderViewModel ? renderViewModel.item.presentation.article?.aiLabel : pageConfig.article?.aiLabel, 'cap', bannerHasImage)
   if (rightHtml.length > 0) {
     el += `<div class="right">${rightHtml}</div>`
   }
@@ -63,7 +64,7 @@ function layoutTop() {
   el += `</div>`
   // 3.第二行：日期信息，靠左
   el += `<div class="meta-row">`
-  el += partial('dateinfo')
+  el += partial('dateinfo', {viewModel: renderViewModel})
   el += `</div>`
   // end 1.上块
   el += `</div>`
@@ -71,24 +72,24 @@ function layoutTop() {
 }
 
 function layoutTitle() {
-  if (banner.title?.length > 0) {
-    return `<h1 class="text title"><span>${banner.title}</span></h1>`
+  if (banner.headline?.length > 0) {
+    return `<h1 class="text title"><span>${banner.headline}</span></h1>`
   } else {
     return ''
   }
 }
 
 function layoutSubtitle() {
-  if (banner.subtitle?.length > 0) {
-    return `<div class="text subtitle">${banner.subtitle}</div>`
+  if (banner.tagline?.length > 0) {
+    return `<div class="text subtitle">${banner.tagline}</div>`
   } else {
     return ''
   }
 }
 
 function layoutIcon() {
-  if (banner.avatar?.length > 0 || banner.icon?.length > 0) {
-    return `<img class="lazy avatar" data-src="${banner.avatar || banner.icon}">`
+  if (banner.avatar?.length > 0) {
+    return `<img class="lazy avatar" data-src="${banner.avatar}">`
   } else {
     return ''
   }
@@ -118,6 +119,9 @@ function layoutBottom() {
 }
 
 function layoutDiv() {
+  if (banner.enabled === false) {
+    return ``
+  }
   const bottom = layoutBottom()
   const top = layoutTop()
   if (top.length == 0 && bottom.length == 0) {
@@ -127,15 +131,15 @@ function layoutDiv() {
   var adaptiveAttr = ``
   var maskHtml = ``
   var el = ``
-  if (banner.url?.length > 0) {
-    bannerStyle += ` style="--bg-url:url('${banner.url.replace(/'/g, '%27')}')"`
+  if (banner.image?.length > 0) {
+    bannerStyle += ` style="--bg-url:url('${banner.image.replace(/'/g, '%27')}')"`
     // 背景图上方文字颜色自适应
     adaptiveAttr = ` data-text-adaptive="split"`
   }
   el += `<div class="article-banner-wrap${scrollreveal(' ')}">`
   el += `<div class="article banner top"${bannerStyle}>`
-  if (banner.url?.length > 0) {
-    el += `<img class="lazy bg" data-src="${banner.url}">`
+  if (banner.image?.length > 0) {
+    el += `<img class="lazy bg" data-src="${banner.image}">`
     maskHtml = `<div class="banner-mask banner-mask-top" aria-hidden="true"></div><div class="banner-mask banner-mask-bottom" aria-hidden="true"></div>`
   }
   el += `

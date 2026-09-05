@@ -1,21 +1,32 @@
+/* global hexo */
 /**
  * topic v1 | https://github.com/xaoxuu/hexo-theme-stellar/
  */
 
-hexo.extend.generator.register('index_topic', function (locals) {
-  const { site_tree, topic } = hexo.theme.config
-  const topicIdList = Object.keys(topic.tree)
-  if (topicIdList.length == 0) {
-    return {}
+"use strict";
+
+const { generatorPath, requireLayoutProfiles, toRenderNavigation } = require("../lib/layout-config");
+const { stableSort } = require("../lib/collection-pipeline/shared");
+
+hexo.extend.generator.register("index_topic", function () {
+  const { topicIndex } = hexo.stellar.data;
+  const profiles = requireLayoutProfiles(hexo.stellar?.config);
+  if (!Array.isArray(topicIndex?.items) || topicIndex.items.length === 0) {
+    return {};
   }
-  var ret = []
+  const items = stableSort(
+    topicIndex.items.filter(item => item.listed),
+    (left, right) => String(right.sortDate || "").localeCompare(String(left.sortDate || ""))
+  );
+  var ret = [];
   ret.push({
-    path: site_tree.index_topic.base_dir + '/index.html',
-    layout: ['index_topic'],
+    path: generatorPath(profiles.topic.path),
+    layout: ["index_topic"],
     data: {
-      layout: 'index_topic',
-      menu_id: site_tree.index_topic.menu_id
+      layout: "index_topic",
+      navigation: toRenderNavigation(profiles.blogIndex),
+      topicIndex: { items }
     }
-  })
-  return ret
-})
+  });
+  return ret;
+});

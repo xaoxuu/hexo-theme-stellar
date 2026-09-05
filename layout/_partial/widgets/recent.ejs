@@ -2,15 +2,27 @@
 function layoutDiv() {
   var action = ''
   if (item.rss) {
-    action += '<a class="cap-action" id="rss" title="Subscribe" href="' + escape_html(item.rss) + '">'
-    action += icon('default:rss')
+    action += '<a class="' + ui_classes('cap-action') + '" id="rss" title="Subscribe" href="' + escape_html(item.rss) + '">'
+    action += '<span class="ui-icon">' + icon('default:rss') + '</span>'
     action += '</a>'
   }
   var arr = []
-  if (page.menu_id == 'wiki') {
-    arr = theme.wiki.all_pages.filter(function(p) {
-      if (p.wiki) {
-        var proj = theme.wiki.tree[p.wiki]
+  var notebookViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'notebook'
+    ? viewModel
+    : null
+  var notebookItems = notebookViewModel
+    ? notebookViewModel.render.layout.recentItems
+    : page.notebookIndex?.mode === 'collections'
+      ? page.notebookIndex.recentItems
+      : page.notebookIndex?.mode === 'notes'
+        ? page.notebookIndex.collection.recentItems
+        : null
+  if (notebookItems) {
+    arr = notebookItems.slice()
+  } else if (content_config(page).activeMenu == 'wiki') {
+    arr = stellar_data('wiki').all_pages.filter(function(p) {
+      if (p.collectionId) {
+        var proj = stellar_data('wiki').tree[p.collectionId]
         return proj?.index != false
       }
       return false
@@ -18,14 +30,6 @@ function layoutDiv() {
     arr = arr.sort(function(p1, p2) {
       return p1.updated > p2.updated ? -1 : 1
     })
-  } else if (page.layout === 'notebooks') {
-    arr = site.pages.filter(function(p) {
-      return p.notebook
-    }).sort('-updated')
-  } else if (page.notebook) {
-    arr = site.pages.filter(function(p) {
-      return p.notebook === page.notebook
-    }).sort('-updated')
   } else {
     arr = site.posts.filter(function(p) {
       return p.title && p.title.length > 0
@@ -41,15 +45,15 @@ function layoutDiv() {
       return
     }
     var prefix = ''
-    if (post.wiki) {
-      var proj = theme.wiki.tree[post.wiki]
-      prefix = proj?.name || post.wiki || ''
-    } else if (page.layout === 'notebooks') {
-      var notebook = theme.notebooks.tree[post.notebook]
-      prefix = notebook?.name || post.notebook || ''
+    var wikiId = notebookItems ? null : collection_id(post, 'wiki') || post.collectionId
+    if (wikiId) {
+      var proj = stellar_data('wiki').tree[wikiId]
+      prefix = proj?.name || wikiId
+    } else if (notebookItems && page.notebookIndex?.mode === 'collections') {
+      prefix = post.collectionName || post.collectionId || ''
     }
     entries.push({
-      href: pretty_url(post.link || post.path),
+      href: pretty_url(notebookItems ? post.href : post.link || post.path),
       title: post.title,
       prefix: prefix,
       indicator: false

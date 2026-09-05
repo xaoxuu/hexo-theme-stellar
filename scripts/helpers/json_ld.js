@@ -7,11 +7,20 @@
 
 const util = require('hexo-util');
 const { postImages, postDescription } = require('../lib/seo');
+const { getCollectionId } = require('../lib/content-config');
+const { getPageConfig } = require("../lib/page-view-model-registry");
 
 hexo.extend.helper.register('json_ld', function(args) {
+  if (args?.render?.seo) {
+    if (!args.render?.seo?.jsonLd) {
+      throw new Error(`Stellar v2: ${args.collection?.profile || "页面"} ${args.item?.source?.file || "<unknown>"} 缺少 render.seo.jsonLd`);
+    }
+    return `<script type="application/ld+json">${JSON.stringify(args.render.seo.jsonLd)}</script>`;
+  }
   const page = this.page;
+  const pageConfig = getPageConfig(page) || {};
   const config = this.config;
-  const structured_data = this.theme.structured_data;
+  const structuredData = this.stellar_config("structuredData");
   const authorEmail = config.email;
   let authorImage = config.avatar || (authorEmail ? this.gravatar(authorEmail) : null);
   const isPage = page.layout == 'page';
@@ -22,7 +31,7 @@ hexo.extend.helper.register('json_ld', function(args) {
   const author = {
     '@type': 'Person',
     name: config.author,
-    sameAs: structured_data.links || []
+    sameAs: structuredData.sameAs
   };
   // Google does not accept `Person` as item type for the publisher property
   const publisher = Object.assign({}, author, {'@type': 'Organization'});
@@ -39,11 +48,11 @@ hexo.extend.helper.register('json_ld', function(args) {
 
   if (this.is_post()) {
     const images = postImages({
-      cover: page.cover,
-      banner: page.banner,
+      cardCover: pageConfig.cover,
+      bannerImage: pageConfig.banner?.image,
       photos: page.photos,
       content: page.content,
-      defaultCover: this.theme.default && this.theme.default.cover
+      defaultCover: this.stellar_config("fallbacks.cover")
     });
     schema = {
       '@context': 'https://schema.org',
@@ -95,8 +104,8 @@ hexo.extend.helper.register('json_ld', function(args) {
 
       if (page.excerpt || page.description) {
         schema.description = this.strip_html(page.description || page.excerpt);
-      } else if (page.wiki) {
-        const proj = this.theme.wiki.tree[page.wiki];
+      } else if (getCollectionId(pageConfig, "wiki")) {
+        const proj = this.stellar_data("wiki.tree")[getCollectionId(pageConfig, "wiki")];
         if (proj && proj.description) {
           schema.description = proj.description;
         }

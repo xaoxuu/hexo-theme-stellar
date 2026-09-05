@@ -8,3 +8,36 @@ input.copy-area
   font-size: $fs-13
   font-weight: 700
   color: var(--text-p3)
+
+input.ui-radio
+  -webkit-appearance: none
+  -moz-appearance: none
+  appearance: none
+  box-sizing: border-box
+  display: inline-block
+  flex: 0 0 auto
+  width: 16px
+  height: 16px
+  margin: 0
+  border: 2px solid var(--text-p3)
+  border-radius: 50%
+  corner-shape: round
+  background: none
+  cursor: pointer
+  &:before
+    content: ""
+    display: block
+    width: 8px
+    height: 8px
+    margin: 2px
+    border-radius: 50%
+    background: var(--theme)
+    transform: scale(0)
+  &:checked
+    border-color: var(--theme)
+  &:checked:before
+    background: var(--theme)
+    transform: scale(1)
+  &:focus-visible
+    outline: 2px solid var(--theme)
+    outline-offset: 2px

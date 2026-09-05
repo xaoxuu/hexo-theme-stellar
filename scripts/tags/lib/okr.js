@@ -13,6 +13,23 @@
 
 'use strict'
 
+const BUILTIN_STATUS_IDS = new Set(["in_track", "at_risk", "off_track", "finished", "unfinished"]);
+const BUILTIN_STATUSES = Object.freeze({
+  in_track: Object.freeze({ color: "blue" }),
+  at_risk: Object.freeze({ color: "yellow" }),
+  off_track: Object.freeze({ color: "orange" }),
+  finished: Object.freeze({ color: "green" }),
+  unfinished: Object.freeze({ color: "red" })
+});
+
+function localizeStatuses(ctx, statuses) {
+  const __ = ctx.theme.i18n.__(ctx.config.language);
+  return Object.fromEntries(Object.entries(statuses).map(([id, status]) => [id, {
+    ...status,
+    label: status.label || (BUILTIN_STATUS_IDS.has(id) ? __("tag_plugins.okr.status." + id) : "")
+  }]));
+}
+
 function splitContentAndNote(input) {
   var arr = input.trim().split('\n').filter(item => item.trim().length > 0)
   if (arr.length == 0) {
@@ -84,7 +101,7 @@ module.exports = ctx => function(args, content = '') {
     console.error('invalid okr tag:', contentArray);
     return ''
   }
-  const statusList = ctx.theme.config.tag_plugins.okr.status
+  const statusList = localizeStatuses(ctx, BUILTIN_STATUSES)
   const oMeta = args
   const oBody = splitContentAndNote(contentArray.shift())
   const krList = generateKRList(ctx, contentArray)

@@ -1,4 +1,4 @@
-.l_left footer.footer
+.site-region--leftbar footer.footer
   margin: 0.5rem var(--gap-base) 1rem
 
 .social-wrap
@@ -13,23 +13,20 @@
     align-items: center
     box-sizing: border-box
     flex: 0 0 auto
+    width: 32px
     height: 32px
     padding: 4px
-    border-radius: 8px
+    border-radius: $border-button
     filter: grayscale(100%)
     overflow: hidden
-    background: var(--ui-item-bg)
-    box-shadow: none
-    img
-      flex: initial
-      width: 24px
-      height: 24px
-      object-fit: contain
-      border-radius: 2px
-    svg
-      flex: initial
-      height: 24px
-      width: 24px
+    .ui-icon
+      --ui-icon-size: 24px
+  button.social
+    border: 0
+    color: inherit
+    font: inherit
+    cursor: pointer
+    appearance: none
 
   .social-spacer
     flex: 1 1 0
@@ -43,9 +40,6 @@
     flex: 0 0 auto
     height: 32px
     line-height: 0
-    >.dropdown-trigger.social
-      >img, >svg
-        opacity: .5
     // JS 未加载时保留向上展开的原生 details 兜底；正常情况下菜单会移入全局浮层。
     >.dropdown-menu
       top: auto
@@ -58,20 +52,9 @@
       left: auto
       transform: none
 
-  .social:hover
-    background: var(--ui-item-bg-hover)
-    box-shadow: var(--ui-item-shadow-hover)
-
+  .social:hover,
+  .social:active,
+  .social:focus-visible,
   .social-dropdown[open] > .dropdown-trigger.social
-    background: var(--ui-item-bg-active)
-    box-shadow: var(--ui-item-shadow-active)
-
-  .social:hover, .social-dropdown[open] > .dropdown-trigger.social
     z-index: 1
     filter: unset
-    >img, >svg
-      opacity: 1
-    svg [fill="currentColor"]
-      fill: var(--item-grad)
-    svg [stroke="currentColor"]
-      stroke: var(--item-grad)

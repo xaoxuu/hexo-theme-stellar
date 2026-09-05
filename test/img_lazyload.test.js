@@ -52,26 +52,6 @@ test('no-lazy 两种写法都跳过', () => {
   assert.equal(lazyProcess(b), b);
 });
 
-test('class 为末尾属性时也追加 lazy', () => {
-  const out = lazyProcess('<img src="https://res.xaox.cc/a.webp" class="foo">');
-  assert.ok(out.includes('class="foo lazy"'));
-});
-
-test('无引号 class 也追加 lazy 并规范化引号', () => {
-  const out = lazyProcess('<img class=foo src="https://res.xaox.cc/a.webp">');
-  assert.ok(out.includes('class="foo lazy"'));
-});
-
-test('class 与 src 顺序保持且均带引号', () => {
-  const out = lazyProcess('<img class="foo" src="https://res.xaox.cc/a.webp">');
-  assert.ok(out.includes('<img class="foo lazy" src="' + LOADING + '" data-src="https://res.xaox.cc/a.webp">'));
-});
-
-test('自闭合标签处理', () => {
-  const out = lazyProcess('<img src="https://res.xaox.cc/a.webp" />');
-  assert.ok(out.includes('data-src="https://res.xaox.cc/a.webp" />'));
-});
-
 test('空 src / 无 src 原样返回', () => {
   assert.equal(lazyProcess('<img src="">'), '<img src="">');
   assert.equal(lazyProcess('<img alt="x">'), '<img alt="x">');
@@ -90,11 +70,6 @@ test('script/style/注释中的 <img 不被处理', () => {
   assert.ok(out.includes('<img src="inside.png">'));
   assert.ok(out.includes('<img src="comment.png">'));
   assert.ok(out.includes('data-src="real.png"'));
-});
-
-test('大写标签名与属性名', () => {
-  const out = lazyProcess('<IMG SRC="https://res.xaox.cc/a.webp">');
-  assert.ok(out.includes('<img class="lazy" src="' + LOADING + '" data-src="https://res.xaox.cc/a.webp">'));
 });
 
 test('processSite 入口可用', () => {

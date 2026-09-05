@@ -6,6 +6,7 @@
 
 - [样式与主题定制](styling-overview.md)——四级样式级联、设计令牌与组件样式架构
 - [设计令牌与 CSS 变量](design-tokens.md)——Stylus 变量与 :root CSS 自定义属性的双层令牌体系
+- [Editorial Minimal 有机编辑式极简](editorial-minimal.md)——Minimal Appearance 的表面、交互、排版与语义例外
 - [排版系统](typography.md)——字体族、字号比例、标题层级与运行时缩放
 - [颜色与深色模式](colors-dark-mode.md)——HSLA 颜色生成、语义颜色变量与三态主题检测
 - [响应式设计](responsive-design.md)——断点层级、响应式 CSS 变量与移动端适配

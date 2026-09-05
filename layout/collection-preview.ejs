@@ -11,7 +11,7 @@ function renderWidget(title, options) {
   })
 }
 
-function renderSurface(name, surface, width) {
+function renderPreview(name, width) {
   var navItems = [
     {href: '#active', title: '当前页面', icon: 'default:documents', active: true},
     {href: '#long', title: '这是一个用于检查单行省略和容器适应性的很长标题', icon: 'default:rightbar'},
@@ -24,7 +24,7 @@ function renderSurface(name, surface, width) {
     {href: '#four', title: '项目四', icon: 'default:rss'}
   ]
   var summaryItems = [
-    {href: '#summary-one', title: '摘要条目', description: '两行说明用于检查文字层级、截断和不同 surface 下的卡片填充。'},
+    {href: '#summary-one', title: '摘要条目', description: '两行说明用于检查文字层级、截断和当前 Appearance 下的卡片填充。'},
     {href: '#summary-two', title: '第二个摘要条目', description: '正文宽度下仍复用同一 DOM 与状态变量。'}
   ]
   var treeItems = [
@@ -32,8 +32,8 @@ function renderSurface(name, surface, width) {
     {href: '#child', title: '二级节点', depth: 1, indicator: false},
     {href: '#leaf', title: '三级节点', depth: 2, indicator: false}
   ]
-  var html = '<section class="collection-preview__surface" data-ui-surface="' + surface + '" data-preview-width="' + width + '">'
-  html += '<header><strong>' + escape_html(name) + '</strong><code>' + escape_html(surface) + ' · ' + width + 'px</code></header>'
+  var html = '<section class="collection-preview__surface ui-surface" data-preview-width="' + width + '">'
+  html += '<header><strong>' + escape_html(name) + '</strong><code>' + width + 'px</code></header>'
   html += renderWidget('紧凑列表', {layout: 'list', variant: 'nav', density: 'compact', items: navItems})
   html += renderWidget('响应式网格', {layout: 'grid', variant: 'nav', columns: 2, items: gridItems})
   html += renderWidget('摘要列表', {layout: 'list', variant: 'summary', items: summaryItems})
@@ -44,7 +44,7 @@ function renderSurface(name, surface, width) {
 %>
 <article class="md-text collection-preview">
   <h1>侧边栏集合组件预览</h1>
-  <p>此开发页面用于同时检查列表、网格和摘要条目在四种 surface、不同容器宽度及明暗主题下的表现。</p>
+  <p>此开发页面用于检查列表、网格和摘要条目在当前构建 Appearance、不同容器宽度及明暗主题下的表现。</p>
   <div class="collection-preview__theme" aria-label="预览主题">
     <span>预览主题</span>
     <button type="button" onclick="document.documentElement.setAttribute('data-theme','light')">Light</button>
@@ -52,9 +52,8 @@ function renderSurface(name, surface, width) {
     <button type="button" onclick="document.documentElement.removeAttribute('data-theme')">Auto</button>
   </div>
   <div class="collection-preview__grid">
-    <%- renderSurface('左栏 Glass', 'glass', 240) %>
-    <%- renderSurface('左栏 Card', 'card', 240) %>
-    <%- renderSurface('右侧栏', 'sidebar', 320) %>
-    <%- renderSurface('正文区域', 'content', 720) %>
+    <%- renderPreview('窄栏', 240) %>
+    <%- renderPreview('侧栏', 320) %>
+    <%- renderPreview('正文区域', 720) %>
   </div>
 </article>

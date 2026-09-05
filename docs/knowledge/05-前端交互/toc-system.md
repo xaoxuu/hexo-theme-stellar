@@ -97,7 +97,7 @@ graph LR
 | 函数 | 角色 |
 |------|------|
 | `layoutTocBody()` | 调用 Hexo `toc()` 辅助函数，为结果追加 `.ui-collection-adapter`；无标题时返回 `''` |
-| `layoutTocAction()` | 构建保持原 `sidebar.toggleTOC()` 协议的切换按钮 |
+| `layoutTocAction()` | 构建带 `data-shell-action="toggle-toc"` 的原生按钮，由 Shell 事件代理切换 |
 | `layoutFooter(hasComments)` | 构建回到顶部与评论区操作 |
 | `layoutDiv()` | 组合内容、远程 Markdown 占位与页脚，再交给 `widget-frame.ejs` 输出 |
 
@@ -119,10 +119,10 @@ graph LR
 ### 生成的 HTML 结构
 
 ```
-widget.widget-wrapper.toc#data-toc[collapse="..."]
+div.widget-wrapper.toc#data-toc[collapse="..."]
   ├── div.widget-header.dis-select
   │   ├── span.name           （经 __("meta.toc") 本地化）
-  │   └── a.cap-action        （onclick="sidebar.toggleTOC()"）
+  │   └── button.cap-action   （data-shell-action="toggle-toc"）
   ├── div.widget-body
   │   └── nav.toc.ui-collection-adapter
   │       └── ol.toc-child
@@ -133,7 +133,7 @@ widget.widget-wrapper.toc#data-toc[collapse="..."]
       └── a.buttom            （onclick="util.scrollComment()"）[条件渲染]
 ```
 
-`a.buttom` 元素仅在 `theme.comments.service` 非空且 `page.comments !== false` 时渲染。
+`a.buttom` 元素仅在最终评论模型已启用且页面没有显式关闭评论时渲染。
 
 adapter 类只接入 collection 的 surface/state 令牌；TOC 非激活条目悬停时消费 hover 背景与阴影。激活条目静止时保持透明且无阴影，仅显示激活文字色和左侧主题色指示条；指示条宽 `4px`，距条目上下各 `4px`。鼠标悬停到激活条目时仍显示普通 hover 效果。TOC 的层级缩进、折叠属性、链接类名和滚动同步协议保持不变。远程 Markdown 在运行时生成的 `ol.toc` 同样由 `main.js` 追加 adapter 类。
 
@@ -329,7 +329,7 @@ sequenceDiagram
 
 该按钮仅在两条件同时满足时渲染：
 
-1. `theme.comments.service` 已配置（非空字符串）
+1. `comments.provider` 或页面 `comments.provider` 已选择已注册实现
 2. `page.comments !== false`（页面未禁用评论）
 
 模板中的条件检查防止在未启用评论的页面出现按钮。
@@ -351,23 +351,23 @@ sequenceDiagram
 
 ### TOC 折叠
 
-`div.widget-header` 中的 `a.cap-action` 调用 `sidebar.toggleTOC()`，展开或折叠 TOC 组件，与侧边栏折叠系统集成。
+`div.widget-header` 中的 `button.cap-action` 由文档级 `data-shell-action` 事件代理处理，切换 `#data-toc.collapse`。它不依赖物理侧栏对象，同一 TOC 可使用 Topbar、Leftbar、Rightbar 或 Drawer presentation。
 
 **参考源码**：[layout/_partial/widgets/toc.ejs](../../../layout/_partial/widgets/toc.ejs)
 
-### 移动端侧边栏收起
+### Drawer 中点击后收起
 
-`init.sidebar()` 为所有 TOC 链接附加点击处理：
+`init.tocLinks()` 为所有 TOC 链接附加点击处理：
 
 ```javascript
 utils.dom("#data-toc a.toc-link").click(function (e) {
-  sidebar.dismiss();
+  dismissDrawer();
 });
 ```
 
-**用途**：移动端点击 TOC 链接时：
+**用途**：TOC 位于平板或手机 Drawer 时，点击链接后：
 
-1. 关闭侧边栏覆盖层（`sidebar.dismiss()`）
+1. 清除 Shell 的 `data-drawer` 临时状态并恢复触发按钮焦点
 2. 允许默认浏览器导航到标题锚点
 
 这会在页面滚动到目标标题前自动收起覆盖层，改善移动端体验。

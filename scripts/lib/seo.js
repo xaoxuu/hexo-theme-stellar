@@ -23,25 +23,25 @@ function firstContentImage(content) {
 }
 
 /**
- * 构建文章图片数组（顺序：cover → banner → photos → 正文首图 → 默认封面）。
+ * 构建文章图片数组（顺序：cover → banner.image → photos → 正文首图 → 默认封面）。
  * @param {Object} opts
- * @param {string} opts.cover
- * @param {string} opts.banner
+ * @param {string} opts.cardCover
+ * @param {string} opts.bannerImage
  * @param {Array} opts.photos
  * @param {string} opts.content
- * @param {string} opts.defaultCover 主题默认封面（theme.default.cover）
+ * @param {string} opts.defaultCover 主题默认封面（fallbacks.cover）
  * @returns {Array<string>}
  */
 function postImages(opts) {
-  const cover = opts.cover || '';
-  const banner = opts.banner || '';
+  const cardCover = opts.cardCover || '';
+  const bannerImage = opts.bannerImage || '';
   const photos = Array.isArray(opts.photos) ? opts.photos.slice() : [];
   const defaultCover = opts.defaultCover || '';
   const images = photos;
-  if (cover) {
-    images.unshift(cover);
-  } else if (banner) {
-    images.unshift(banner);
+  if (cardCover) {
+    images.unshift(cardCover);
+  } else if (bannerImage) {
+    images.unshift(bannerImage);
   }
   if (images.length === 0) {
     const first = firstContentImage(opts.content);

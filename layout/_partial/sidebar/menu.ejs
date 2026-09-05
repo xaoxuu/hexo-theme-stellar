@@ -1,7 +1,58 @@
 <%
 function layoutDiv() {
+  var menuViewModel = typeof viewModel !== 'undefined' ? viewModel : null
+  var menuItems = Array.isArray(menu) ? menu : []
+  var pageConfig = content_config(page)
+  var currentMenu = typeof activeMenu !== 'undefined'
+    ? activeMenu
+    : pageConfig.activeMenu ?? page.navigation?.menu
+  if (pageConfig.activeMenu == null) {
+    var pathMenu = menu_active_by_path(page.path, menuItems)
+    if (pathMenu != null) currentMenu = pathMenu
+  }
   var entries = []
-  for (var menuItem of (theme.menubar.items || [])) {
+  for (var menuItem of menuItems) {
+    if (menuItem?.type === 'search') {
+      if (!stellar_config('search.provider')) continue
+      var searchProvider = stellar_config('search.provider')
+      var algoliaFilterPath = ''
+      var wikiViewModel = menuViewModel?.collection?.profile === 'wiki' ? menuViewModel : null
+      var notebookViewModel = menuViewModel?.collection?.profile === 'notebook' ? menuViewModel : null
+      var notebookIndex = page.notebookIndex?.mode === 'notes' ? page.notebookIndex.collection : null
+      if (wikiViewModel) {
+        algoliaFilterPath = wikiViewModel.render.layout.algoliaFilterPath || ''
+      } else if (notebookViewModel) {
+        algoliaFilterPath = notebookViewModel.render.layout.algoliaFilterPath || ''
+      } else if (notebookIndex) {
+        algoliaFilterPath = notebookIndex.layout.algoliaFilterPath || ''
+      }
+      if (algoliaFilterPath.length > 0 && !algoliaFilterPath.startsWith('/')) algoliaFilterPath = '/' + algoliaFilterPath
+      var searchScope = search_scope(page, menuViewModel)
+      var searchTitle = __('btn.search')
+      var searchAttrs = {
+        'aria-label': searchTitle,
+        'data-shell-action': 'open-search',
+        'data-search-instance': 'menu-search'
+      }
+      if (searchProvider === 'algolia' && algoliaFilterPath.length > 0) {
+        searchAttrs['data-algolia-filter-path'] = algoliaFilterPath
+      }
+      if (searchScope) {
+        searchAttrs['data-search-domain'] = searchScope.current
+        searchAttrs['data-search-domain-label'] = searchScope.currentLabel
+        searchAttrs['data-search-domain-blog'] = searchScope.hasBlog ? 'true' : 'false'
+      }
+      entries.push({
+        type: 'button',
+        title: searchTitle,
+        icon: menuItem.icon || 'default:search',
+        theme: menuItem.accent,
+        className: menuItem.accent?.length > 0 ? 'search-trigger is-themed' : 'search-trigger',
+        after: partial('_partial/search/shortcut'),
+        attrs: searchAttrs
+      })
+      continue
+    }
     if (menuItem == null || menuItem.id == null || menuItem.url == null || menuItem.title == null) {
       continue
     }
@@ -9,21 +60,15 @@ function layoutDiv() {
       href: pretty_url(menuItem.url),
       title: __(menuItem.title),
       icon: menuItem.icon,
-      theme: menuItem.theme,
-      active: menuItem.id == page.menu_id,
-      className: menuItem.theme?.length > 0 ? 'is-themed' : '',
-      gradientId: 'menu-grad-' + menuItem.id
+      theme: menuItem.accent,
+      active: menuItem.id == currentMenu,
+      className: menuItem.accent?.length > 0 ? 'is-themed' : ''
     })
   }
-  var body = partial('_partial/components/collection', {options: {
-    layout: 'list',
-    variant: 'nav',
-    items: entries
-  }})
-  if ((body || '').trim().length === 0) {
-    return ''
-  }
-  return `<nav class="menu dis-select${where == 'main' ? ' mobile-hidden' : ''}">${body}</nav>`
+  return partial('_partial/primitives/navigation', {
+    placement: ['main', 'topbar', 'rightbar'].includes(where) ? where : 'leftbar',
+    entries: entries
+  })
 }
 %>
 

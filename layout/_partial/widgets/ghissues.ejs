@@ -2,20 +2,17 @@
 function layoutDiv() {
   var el = '';
   var repo;
-  var branch = 'main';
-  if (page.repo) {
-    repo = page.repo
-  } else if (theme.wiki.tree[page.wiki]?.repo) {
-    const proj = theme.wiki.tree[page.wiki]
-    repo = proj.repo
-    if (proj.branch != undefined) {
-      branch = proj.branch
-    }
+  var pageConfig = content_config(page);
+  var wikiViewModel = typeof viewModel !== 'undefined' && viewModel?.collection?.profile === 'wiki' ? viewModel : null
+  if (wikiViewModel?.render?.listing?.repository) {
+    repo = wikiViewModel.render.listing.repository
+  } else if (pageConfig.source?.repository) {
+    repo = pageConfig.source.repository
   }
   if (repo == undefined) {
     return el;
   }
-  item.api = `https://${theme.api_host.ghapi}/repos/${repo}/issues?per_page=${item.limit}`;
+  item.api = `${stellar_config('services.github.apiUrl')}/repos/${repo}/issues?per_page=${item.limit}`;
   if (item.labels) {
     item.api += '&labels=' + item.labels;
   }

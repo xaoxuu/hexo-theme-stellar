@@ -2,7 +2,14 @@
 
 const { escapeHTML } = require('hexo-util');
 
-// 文章 AI 成分标签（ai_label）：颜色规范化 + 标签 HTML 生成。
+const AI_LABELS = Object.freeze({
+  manual: Object.freeze({ color: '#03a9f4', icon: 'default:shield-user' }),
+  reviewed: Object.freeze({ color: '#4caf50', icon: 'default:shield-check' }),
+  polished: Object.freeze({ color: '#4caf50', icon: 'default:shield-up' }),
+  generated: Object.freeze({ color: '#ff9800', icon: 'default:shield-warning' })
+});
+
+// 文章 AI 成分标签（ai_label）：展示样式由主题内部固定。
 // 文案由调用方传入（多语言系统提供），经 HTML 转义后输出；
 // 文字使用配置色（无背景），缺 # 自动补全；可选 iconHtml 渲染在文案前；
 // noColor 时输出不带内联样式（继承默认文字色，用于 banner 含图片场景）；
@@ -22,19 +29,15 @@ function normalizeColor(color) {
   return text;
 }
 
-// 解析实际生效的标签键：文章设置 ai_label 时优先使用，否则取配置 default（为空则不渲染）
-function resolveAiKey(value, labelConfig) {
-  if (value && typeof value === 'string') {
-    return value;
-  }
-  return (labelConfig && labelConfig.default) || '';
+function resolveAiKey(value) {
+  return typeof value === 'string' && Object.prototype.hasOwnProperty.call(AI_LABELS, value) ? value : '';
 }
 
-function buildAiLabel(value, labelConfig, text, extraClass, iconHtml, noColor) {
-  if (!value || typeof value !== 'string' || !labelConfig || typeof labelConfig !== 'object') {
+function buildAiLabel(value, text, extraClass, iconHtml, noColor) {
+  if (!value || typeof value !== 'string') {
     return '';
   }
-  const def = labelConfig[value];
+  const def = AI_LABELS[value];
   if (!def || typeof def !== 'object' || !text) {
     return '';
   }
@@ -52,4 +55,4 @@ function buildAiLabel(value, labelConfig, text, extraClass, iconHtml, noColor) {
   return `<span class="${className}">${icon}${safeText}</span>`;
 }
 
-module.exports = { buildAiLabel, normalizeColor, resolveAiKey };
+module.exports = { AI_LABELS, buildAiLabel, normalizeColor, resolveAiKey };

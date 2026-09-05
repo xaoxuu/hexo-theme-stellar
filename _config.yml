@@ -1,794 +1,939 @@
-######## Stellar info ########
-stellar:
-  version: '1.44.0'
-  homepage: 'https://xaoxuu.com/wiki/stellar/'
-  repo: 'https://github.com/xaoxuu/hexo-theme-stellar'
-  main_css: /css/main.css
-  main_js: /js/main.js
+# Stellar v2 主题默认配置。
+#
+# 本文件是公开配置树、默认值、字段顺序和用户示例的唯一事实来源。
+# 站点通过 `_config.stellar.yml` 使用相同结构覆盖默认值；数组会整体替换。
 
+# -----------------------------------------------------------------------------
+# 布局
+# -----------------------------------------------------------------------------
 
-######## head tags ########
-preconnect:
-  - https://gcore.jsdelivr.net
-  - https://unpkg.com
-  - https://cdn.jsdelivr.net
-  - https://cdnjs.cloudflare.com
+# 配置站点级 Topbar。
+topbar:
+  # 控制是否生成 Topbar；默认不启用。
+  enabled: false
+  # 配置 Topbar 固定 Brand 内容。
+  brand:
+    # 配置品牌图片。
+    image:
+      # 设置品牌图片地址；null 表示隐藏图片。
+      src: null
+      # 设置品牌图片形态；可选值为 avatar、icon 或 plain。
+      variant: avatar
+    # 设置品牌名称；null 表示隐藏名称且不继承 Hexo title。
+    name: null
+    # 设置品牌标语；null 表示隐藏标语且不继承 Hexo subtitle。
+    tagline: null
+    # 设置品牌链接。
+    href: /
+  # 设置 Topbar 菜单项；数组会整体替换，空数组表示不显示菜单项。
+  menu: []
+  # 设置 Topbar Widget；空数组表示不显示 Topbar 内容。
+  widgets: []
 
-# 一旦设置源站地址，非源站地址将不会被SEO收录，并且访问时弹出提示
-# 如果访问地址不在备用站主机列表，则警告信息为非法克隆
+# 配置站点级 Leftbar。
+leftbar:
+  # 控制是否生成站点级 Leftbar。
+  enabled: true
+  # 设置桌面端 Leftbar 的初始状态；可选值为 expanded 或 collapsed。
+  default_state: expanded
+  # 配置 Leftbar 固定 Brand 内容。
+  brand:
+    # 设置 Leftbar Brand 的视觉样式；可选值为 regular 或 compact。
+    style: regular
+    # 配置品牌图片。
+    image:
+      # 设置品牌图片地址；null 表示隐藏图片。
+      src: null
+      # 设置品牌图片形态；可选值为 avatar、icon 或 plain。
+      variant: avatar
+    # 设置品牌名称；null 表示隐藏名称且不继承 Hexo title。
+    name: null
+    # 设置品牌标语；null 表示隐藏标语且不继承 Hexo subtitle。
+    tagline: null
+    # 设置品牌链接。
+    href: /
+  # 设置 Leftbar 菜单项；数组会整体替换，空数组表示不显示菜单项。
+  menu:
+    # 声明默认的博客入口。
+    - id: post
+      # 设置菜单标题，支持主题 i18n 键。
+      title: menu.blog
+      # 设置菜单图标。
+      icon: default:documents
+      # 设置菜单链接。
+      url: /
+    # 声明默认的分类入口。
+    - id: categories
+      # 设置菜单标题，支持主题 i18n 键。
+      title: menu.categories
+      # 设置菜单图标。
+      icon: default:category
+      # 设置菜单链接。
+      url: /blog/categories/
+    # 声明默认的标签入口。
+    - id: tags
+      # 设置菜单标题，支持主题 i18n 键。
+      title: menu.tags
+      # 设置菜单图标。
+      icon: default:hashtag
+      # 设置菜单链接。
+      url: /blog/tags/
+    # 声明默认的专栏入口。
+    - id: topic
+      # 设置菜单标题，支持主题 i18n 键。
+      title: menu.topic
+      # 设置菜单图标。
+      icon: default:pin
+      # 设置菜单链接。
+      url: /topic/
+    # 声明默认的归档入口。
+    - id: archives
+      # 设置菜单标题，支持主题 i18n 键。
+      title: menu.archives
+      # 设置菜单图标。
+      icon: default:calendar
+      # 设置菜单链接。
+      url: /blog/archives/
+    # 声明默认的友链入口。
+    - id: friends
+      # 设置菜单标题，支持主题 i18n 键。
+      title: menu.friends
+      # 设置菜单图标。
+      icon: default:link
+      # 设置菜单链接。
+      url: /friends/
+    # 声明默认的关于入口。
+    - id: about
+      # 设置菜单标题，支持主题 i18n 键。
+      title: menu.about
+      # 设置菜单图标。
+      icon: default:profile
+      # 设置菜单链接。
+      url: /about/
+    # 声明默认的搜索入口。
+    - type: search
+  # 设置 Leftbar 内容 Widget；空数组表示清空内容区。
+  widgets: []
+  # 配置 Leftbar 固定底部区域。
+  footer:
+    # 设置操作项；空数组表示不显示操作区。
+    actions: []
+
+# 配置站点级 Rightbar。
+rightbar:
+  # 控制是否生成 Rightbar。
+  enabled: true
+  # 设置 Rightbar Widget；空数组表示不显示 Rightbar 内容。
+  widgets: []
+
+# 配置主内容区页脚。
+footer:
+  # 设置页脚正文，支持 Markdown 与主题模板变量；空字符串表示隐藏正文。
+  content: 本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。
+  # 设置主内容区页脚导航分栏；空数组表示不显示分栏。
+  sections: []
+
+# 配置各页面类型的路由、导航和 Region 默认值；省略字段时继承站点级 Region。
+profiles:
+  # 配置主页默认布局。
+  home:
+    # 设置主页高亮的主菜单项；null 表示不高亮。
+    active_menu: post
+    # 配置主页 Leftbar 覆盖项。
+    leftbar:
+      # 设置主页 Leftbar 内容 Widget；数组会整体替换站点级列表。
+      widgets:
+        - recent
+    # 配置主页 Rightbar 覆盖项。
+    rightbar:
+      # 设置主页 Rightbar Widget；空数组表示显式隐藏。
+      widgets: []
+    # 配置主页评论区。
+    comments:
+      # 控制是否显示主页评论区。
+      enabled: false
+      # 设置主页评论区标题；null 表示使用默认标题。
+      title: null
+      # 设置主页评论线程标识；null 表示由页面上下文决定。
+      id: null
+      # 设置主页专用评论 Provider；null 表示使用全局 Provider。
+      provider: null
+      # 设置主页专用评论 Provider 参数；空对象表示不覆盖参数。
+      options: {}
+
+  # 配置博客列表页默认布局。
+  blog_index:
+    # 设置博客列表页的自动生成路径。
+    path: /blog/
+    # 设置博客列表页高亮的主菜单项；null 表示不高亮。
+    active_menu: post
+    # 配置博客列表页 Leftbar 覆盖项。
+    leftbar:
+      # 设置博客列表页 Leftbar 内容 Widget；数组会整体替换站点级列表。
+      widgets:
+        - recent
+    # 配置博客列表页 Rightbar 覆盖项。
+    rightbar:
+      # 设置博客列表页 Rightbar Widget；空数组表示显式隐藏。
+      widgets: []
+    # 配置博客列表页的附加导航。
+    listing_nav:
+      # 控制是否显示附加导航。
+      enabled: false
+      # 设置附加导航标签；空数组表示不添加标签。
+      tabs: []
+
+  # 配置博客文章页默认布局。
+  post:
+    # 设置博客文章页高亮的主菜单项；null 表示不高亮。
+    active_menu: post
+    # 配置博客文章页 Leftbar 覆盖项。
+    leftbar:
+      # 设置博客文章页 Leftbar 内容 Widget；数组会整体替换站点级列表。
+      widgets:
+        - related
+        - recent
+    # 配置博客文章页 Rightbar 覆盖项。
+    rightbar:
+      # 设置博客文章页 Rightbar Widget；数组会整体替换站点级列表。
+      widgets:
+        - ghrepo
+        - toc
+
+  # 配置专栏文章页默认布局。
+  topic:
+    # 设置专栏索引与未显式配置路径的专栏所使用的路径前缀。
+    path: /topic/
+    # 设置专栏文章页高亮的主菜单项；null 表示不高亮。
+    active_menu: post
+    # 配置专栏文章页 Leftbar 覆盖项。
+    leftbar:
+      # 设置专栏文章页 Leftbar 内容 Widget；数组会整体替换站点级列表。
+      widgets:
+        - related
+        - recent
+    # 配置专栏文章页 Rightbar 覆盖项。
+    rightbar:
+      # 设置专栏文章页 Rightbar Widget；数组会整体替换站点级列表。
+      widgets:
+        - ghrepo
+        - toc
+
+  # 配置 Wiki 列表页默认布局。
+  wiki_index:
+    # 设置 Wiki 列表页的自动生成路径；null 表示不生成列表页。
+    path: /wiki/
+    # 设置 Wiki 列表页高亮的主菜单项；null 表示不高亮。
+    active_menu: null
+    # 配置 Wiki 列表页 Leftbar 覆盖项。
+    leftbar:
+      # 设置 Wiki 列表页 Leftbar 内容 Widget；数组会整体替换站点级列表。
+      widgets:
+        - related
+        - recent
+    # 配置 Wiki 列表页 Rightbar 覆盖项。
+    rightbar:
+      # 设置 Wiki 列表页 Rightbar Widget；空数组表示显式隐藏。
+      widgets: []
+    # 配置 Wiki 列表页的附加导航。
+    listing_nav:
+      # 控制是否显示附加导航。
+      enabled: true
+      # 设置附加导航标签；空数组表示不添加标签。
+      tabs: []
+
+  # 配置 Wiki 内容页默认布局。
+  wiki:
+    # 设置 Wiki 内容页高亮的主菜单项；null 表示不高亮。
+    active_menu: null
+    # 配置 Wiki 内容页 Leftbar 覆盖项。
+    leftbar:
+      # 设置 Wiki 内容页不显示固定菜单。
+      menu: []
+      # 设置 Wiki 内容页 Leftbar 内容 Widget；数组会整体替换站点级列表。
+      widgets:
+        - tree
+        - related
+      # 设置 Wiki 内容页不显示固定操作区。
+      footer:
+        # 设置操作项；空数组表示不显示操作区。
+        actions: []
+    # 配置 Wiki 内容页 Rightbar 覆盖项。
+    rightbar:
+      # 设置 Wiki 内容页 Rightbar Widget；数组会整体替换站点级列表。
+      widgets:
+        - ghrepo
+        - toc
+
+  # 配置 Notebook 总索引页默认布局。
+  notebook_index:
+    # 设置 Notebook 总索引页的自动生成路径。
+    path: /notebooks/
+    # 设置 Notebook 总索引页高亮的主菜单项；null 表示不高亮。
+    active_menu: null
+    # 配置 Notebook 总索引页 Leftbar 覆盖项。
+    leftbar:
+      # 设置 Notebook 总索引页 Leftbar 内容 Widget；数组会整体替换站点级列表。
+      widgets:
+        - recent
+    # 配置 Notebook 总索引页 Rightbar 覆盖项。
+    rightbar:
+      # 设置 Notebook 总索引页 Rightbar Widget；空数组表示显式隐藏。
+      widgets: []
+
+  # 配置 Notebook 列表页默认布局。
+  note_index:
+    # 设置 Notebook 列表页高亮的主菜单项；null 表示不高亮。
+    active_menu: null
+    # 配置 Notebook 列表页 Leftbar 覆盖项。
+    leftbar:
+      # 设置 Notebook 列表页 Leftbar 内容 Widget；数组会整体替换站点级列表。
+      widgets:
+        - tagtree
+        - recent
+    # 配置 Notebook 列表页 Rightbar 覆盖项。
+    rightbar:
+      # 设置 Notebook 列表页 Rightbar Widget；空数组表示显式隐藏。
+      widgets: []
+
+  # 配置 Notebook 内容页默认布局。
+  note:
+    # 设置 Notebook 内容页高亮的主菜单项；null 表示不高亮。
+    active_menu: null
+    # 配置 Notebook 内容页 Leftbar 覆盖项。
+    leftbar:
+      # 设置 Notebook 内容页 Leftbar 内容 Widget；数组会整体替换站点级列表。
+      widgets:
+        - tagtree
+        - recent
+    # 配置 Notebook 内容页 Rightbar 覆盖项。
+    rightbar:
+      # 设置 Notebook 内容页 Rightbar Widget；数组会整体替换站点级列表。
+      widgets:
+        - toc
+
+  # 配置作者页默认布局。
+  author:
+    # 设置作者页的自动生成路径。
+    path: /author/
+    # 设置作者页高亮的主菜单项；null 表示不高亮。
+    active_menu: post
+    # 配置作者页 Leftbar 覆盖项。
+    leftbar:
+      # 设置作者页 Leftbar 内容 Widget；数组会整体替换站点级列表。
+      widgets:
+        - recent
+    # 配置作者页 Rightbar 覆盖项。
+    rightbar:
+      # 设置作者页 Rightbar Widget；空数组表示显式隐藏。
+      widgets: []
+
+  # 配置普通独立页面默认布局。
+  page:
+    # 设置普通页面高亮的主菜单项；null 表示不高亮。
+    active_menu: post
+    # 配置普通页面 Leftbar 覆盖项。
+    leftbar:
+      # 设置普通页面 Leftbar 内容 Widget；数组会整体替换站点级列表。
+      widgets:
+        - recent
+    # 配置普通页面 Rightbar 覆盖项。
+    rightbar:
+      # 设置普通页面 Rightbar Widget；数组会整体替换站点级列表。
+      widgets:
+        - toc
+
+  # 配置设置页默认布局。
+  settings:
+    # 设置设置页的生成路径。
+    path: /settings/
+    # 设置设置页高亮的主菜单项；null 表示不高亮。
+    active_menu: null
+    # 配置设置页 Leftbar 覆盖项。
+    leftbar:
+      # 设置设置页 Leftbar 内容 Widget；空数组表示显式清空。
+      widgets:
+        - recent
+    # 配置设置页 Rightbar 覆盖项。
+    rightbar:
+      # 设置设置页 Rightbar Widget；空数组表示显式隐藏。
+      widgets: []
+
+  # 配置错误页默认布局。
+  error:
+    # 设置错误页的生成路径。
+    path: /404.html
+    # 设置错误页高亮的主菜单项；null 表示不高亮。
+    active_menu: post
+    # 配置错误页 Leftbar 覆盖项。
+    leftbar:
+      # 设置错误页 Leftbar 内容 Widget；数组会整体替换站点级列表。
+      widgets:
+        - recent
+    # 配置错误页 Rightbar 覆盖项。
+    rightbar:
+      # 设置错误页 Rightbar Widget；空数组表示显式隐藏。
+      widgets: []
+
+# -----------------------------------------------------------------------------
+# 内容
+# -----------------------------------------------------------------------------
+
+# 配置博客与专栏文章的展示行为。
+article:
+  # 设置文章排版风格；可选值为 tech 或 story。
+  style: tech
+  # 设置段落首行缩进策略；可选值为 auto、always 或 never。
+  paragraph_indent: auto
+  # 配置文章列表卡片。
+  listing:
+    # 设置置顶文章布局；可选值为 carousel 或 flat。
+    pinned_layout: carousel
+    # 设置普通文章卡片布局；可选值为 hero 或 classic。
+    card_layout: hero
+    # 设置列表封面宽高比，数值必须大于 0。
+    cover_ratio: 2
+    # 设置没有 excerpt 和 description 时的自动摘要最大字符数；0 表示不自动生成摘要。
+    excerpt_length: 128
+    # 控制文章列表卡片是否显示标签。
+    show_tags: false
+  # 配置分类名称对应的主题色。
+  category_colors:
+    # 设置“探索号”分类的颜色。
+    探索号: '#f44336'
+  # 配置文章页横幅。
+  banner:
+    # 设置文章页横幅宽高比，数值必须大于 0。
+    ratio: 2.5
+  # 控制是否显示预计阅读时间。
+  show_reading_time: false
+  # 设置相关文章最大数量，0 表示不显示相关文章。
+  related_posts_limit: 0
+  # 配置文章页页脚。
+  footer:
+    # 设置文章许可协议；false 表示不显示许可信息。
+    license: 本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。
+    # 设置文章分享服务；默认全部启用，支持 wechat、weibo、x、telegram、whatsapp、email、link、system；空数组表示不显示分享入口。
+    share:
+      - wechat
+      - weibo
+      - x
+      - telegram
+      - whatsapp
+      - email
+      - link
+      - system
+    # 控制文章页页脚是否显示标签。
+    show_tags: true
+
+# 配置 Notebook 列表与内容页的展示行为。
+notebook:
+  # 配置 Notebook 列表。
+  listing:
+    # 设置每页条目数；null 表示继承站点分页配置，0 表示禁用分页。
+    per_page: null
+    # 配置 Notebook 条目排序。
+    sort:
+      # 设置排序字段；可选值为 date、updated 或 title。
+      field: updated
+      # 设置排序方向；可选值为 asc 或 desc。
+      direction: desc
+    # 设置没有 excerpt 和 description 时的自动摘要最大字符数；0 表示不自动生成摘要。
+    excerpt_length: 128
+  # 配置 Notebook 标签对应的图标；空对象表示不指定图标。
+  tag_icons: {}
+  # 配置 Notebook 内容页页脚覆盖项。
+  footer:
+    # 设置许可协议；null 表示继承对应的文章页脚配置。
+    license: null
+    # 设置分享服务；null 表示继承对应的文章页脚配置。
+    share: null
+
+# 配置设置页内容。
+settings:
+  # 配置设置页的关于信息。
+  about:
+    # 设置关于信息条目；数组会整体替换。
+    items:
+      # 设置条目名称。
+      - key: 博客框架
+        # 设置条目内容，支持主题模板变量。
+        value: Hexo {hexo.version}
+        # 设置条目链接。
+        url: https://hexo.io/
+      # 设置条目名称。
+      - key: 主题版本
+        # 设置条目内容，支持主题模板变量。
+        value: Stellar {theme.version}
+        # 设置条目链接，支持主题模板变量。
+        url: '{theme.tree}'
+
+# -----------------------------------------------------------------------------
+# 外观
+# -----------------------------------------------------------------------------
+
+# 配置主题的视觉外观。
+appearance:
+  # 设置外观预设；可选值为 card、glass、minimal 或 flat。
+  preset: card
+  # 设置配色模式；可选值为 auto、light 或 dark。
+  color_scheme: auto
+
+  # 配置主题语义颜色。
+  colors:
+    # 设置主色。
+    primary: hsl(192 98% 55%)
+    # 设置强调色。
+    accent: hsl(14 100% 57%)
+    # 设置链接颜色。
+    link: hsl(207 90% 54%)
+
+  # 配置主题渐变。
+  gradients:
+    # 设置主要操作控件的渐变。
+    primary_action: linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))
+    # 设置搜索栏的渐变。
+    search_bar: 'linear-gradient(to right, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)'
+
+  # 配置全站排版。
+  typography:
+    # 配置字体族。
+    font_family:
+      # 设置正文的字体候选列表。
+      body: system-ui, "Microsoft Yahei", "Segoe UI", Arial, sans-serif
+      # 设置代码的字体候选列表。
+      code: Menlo, Monaco, Consolas, system-ui, monospace, sans-serif
+    # 配置字号。
+    font_size:
+      # 设置根字号。
+      root: 16px
+      # 设置行内代码相对字号。
+      inline_code: 85%
+      # 设置代码块字号。
+      code_block: 0.8125rem
+    # 设置正文对齐方式；可选值为 left、center、right 或 justify。
+    content_align: left
+    # 配置各级标题的前缀字符。
+    heading_prefixes:
+      # 设置二级标题前缀。
+      h2: '#'
+      # 设置三级标题前缀。
+      h3: '='
+      # 设置四级标题前缀。
+      h4: '|'
+      # 设置五级标题前缀。
+      h5: ':'
+
+  # 配置组件形状。
+  shape:
+    # 设置圆角曲线；可选值为 round、scoop、bevel、notch、square 或 superellipse(...)。
+    corner: superellipse(1.25)
+    # 配置不同组件尺寸的圆角半径。
+    radius:
+      # 设置大卡片圆角半径。
+      card_large: 24px
+      # 设置标准卡片圆角半径。
+      card: 16px
+      # 设置小卡片圆角半径。
+      card_small: 12px
+      # 设置栏控件圆角半径。
+      bar: 12px
+      # 设置大图片圆角半径。
+      image_large: 24px
+      # 设置标准图片圆角半径。
+      image: 16px
+      # 设置小图片圆角半径。
+      image_small: 8px
+
+  # 配置页面背景。
+  backgrounds:
+    # 配置 Leftbar 背景。
+    leftbar:
+      # 设置 Leftbar 背景类型；可选值为 none、gradient 或 image。
+      type: gradient
+      # 设置 Leftbar 背景图片；null 表示不使用图片。
+      image: null
+      # 配置浅色与深色模式的 Leftbar 渐变色组。
+      gradient:
+        # 设置浅色模式渐变色，按数组顺序生成渐变。
+        light:
+          - hsl(210 32% 84%)
+          - hsl(188 44% 84%)
+          - hsl(12 64% 73%)
+          - hsl(35 100% 82%)
+        # 设置深色模式渐变色，按数组顺序生成渐变。
+        dark:
+          - hsl(210 16% 48%)
+          - hsl(188 18% 50%)
+          - hsl(12 30% 42%)
+          - hsl(35 36% 49%)
+      # 设置 Leftbar 背景不透明度，取值范围为 0 至 1。
+      opacity: 1
+      # 配置 Leftbar 背景遮罩。
+      backdrop:
+        # 设置 Leftbar 背景遮罩的模糊半径。
+        radius: 100px
+    # 配置页面主背景。
+    page:
+      # 设置页面背景图片；null 表示不使用图片。
+      image: null
+      # 配置页面背景遮罩。
+      backdrop:
+        # 设置页面背景遮罩的模糊半径。
+        radius: 100px
+        # 设置页面背景遮罩颜色。
+        overlay: var(--bg-a75)
+        # 设置页面背景遮罩的饱和度。
+        saturation: 300%
+
+  # 配置代码块外观资源。
+  code_block:
+    # 设置代码块滚动条宽度。
+    scrollbar_width: 4px
+    # 设置代码高亮样式表地址；null 表示不加载外部样式表。
+    highlight_stylesheet: https://gcore.jsdelivr.net/gh/highlightjs/cdn-release@11.9/build/styles/atom-one-dark.min.css
+
+# -----------------------------------------------------------------------------
+# 功能
+# -----------------------------------------------------------------------------
+
+# 配置站内搜索。
+search:
+  # 设置搜索 Provider；可选值为 local、algolia 或 null。
+  provider: local
+  # 配置本地搜索。
+  local:
+    # 设置本地搜索范围。
+    scope: all
+    # 控制本地搜索索引是否包含正文内容。
+    include_content: true
+    # 设置本地搜索缓存有效期，单位为秒；0 表示不缓存。
+    cache_ttl_seconds: 86400
+  # 配置 Algolia 搜索参数。
+  algolia:
+    # 设置 Algolia Application ID。
+    appId: null
+    # 设置 Algolia Search API Key。
+    apiKey: null
+    # 设置 Algolia Index Name。
+    indexName: null
+
+# 配置评论扩展。
+comments:
+  # 设置评论 Provider；可选值为 beaudar、utterances、giscus、twikoo、waline、artalk 或 null。
+  provider: null
+  # 设置全局评论区标题；null 表示使用默认文案。
+  title: null
+  # 配置 Beaudar 参数，字段会传递给 Beaudar 客户端。
+  beaudar:
+    # 设置关联的 GitHub 仓库，格式为 owner/repo。
+    repo: xxx/xxx
+    # 设置 Issue 映射方式。
+    issue-term: pathname
+    # 设置固定 Issue 编号；null 表示不指定。
+    issue-number: null
+    # 设置 Beaudar 主题。
+    theme: preferred-color-scheme
+    # 设置自动添加的 Issue 标签；null 表示不添加。
+    label: null
+    # 设置评论输入框位置。
+    input-position: top
+    # 设置评论排序方向。
+    comment-order: desc
+    # 控制页面切换时是否保持用户选择的主题；null 表示使用 Provider 默认行为。
+    keep-theme: null
+    # 控制是否延迟加载评论组件。
+    loading: false
+    # 设置仓库分支。
+    branch: main
+  # 配置 Utterances 参数，字段会传递给 Utterances 客户端。
+  utterances:
+    # 设置关联的 GitHub 仓库，格式为 owner/repo。
+    repo: xxx/xxx
+    # 设置 Issue 映射方式。
+    issue-term: pathname
+    # 设置固定 Issue 编号；null 表示不指定。
+    issue-number: null
+    # 设置 Utterances 主题。
+    theme: preferred-color-scheme
+    # 设置自动添加的 Issue 标签；null 表示不添加。
+    label: null
+  # 配置 Giscus 参数，字段会作为 data 属性传递给 Giscus 客户端。
+  giscus:
+    # 设置关联的 GitHub 仓库，格式为 owner/repo。
+    data-repo: xxx/xxx
+    # 设置 Giscus 仓库 ID；null 表示未配置。
+    data-repo-id: null
+    # 设置 Discussion 分类名称；null 表示未配置。
+    data-category: null
+    # 设置 Discussion 分类 ID；null 表示未配置。
+    data-category-id: null
+    # 设置页面与 Discussion 的映射方式。
+    data-mapping: pathname
+    # 控制是否使用严格标题匹配。
+    data-strict: 0
+    # 控制是否启用 Discussion reactions。
+    data-reactions-enabled: 1
+    # 控制是否向父页面发送 Discussion 元数据。
+    data-emit-metadata: 0
+    # 设置评论输入框位置。
+    data-input-position: top
+    # 设置 Giscus 主题。
+    data-theme: preferred_color_scheme
+    # 设置 Giscus 界面语言。
+    data-lang: zh-CN
+    # 设置 Giscus 加载策略；null 表示使用默认策略。
+    data-loading: null
+    # 设置跨域资源请求模式。
+    crossorigin: anonymous
+  # 配置 Twikoo 参数，字段会传递给 Twikoo 客户端。
+  twikoo:
+    # 设置 Twikoo 环境 ID 或服务地址。
+    envId: https://xxx
+  # 配置 Waline 参数，字段会传递给 Waline 客户端。
+  waline:
+    # 设置 Waline 服务端地址。
+    serverURL: https://waline.vercel.app
+    # 控制是否启用评论计数。
+    commentCount: true
+    # 控制是否启用页面浏览量统计。
+    pageview: false
+  # 配置 Artalk 参数，字段会传递给 Artalk 客户端。
+  artalk:
+    # 设置 Artalk 服务端地址；null 表示未配置。
+    server: null
+    # 设置 Artalk 站点名称；空字符串表示未配置。
+    site: ''
+    # 设置 Artalk 深色模式策略。
+    darkMode: auto
+    # 设置 Artalk 图片上传器；null 表示使用默认行为。
+    imageUploader: null
+
+# 配置标签插件的默认表现。
+tags:
+  # 配置 note 标签插件。
+  note:
+    # 设置 note 默认颜色；空字符串表示使用主题默认色。
+    default_color: ''
+    # 控制 note 是否显示边框。
+    border: true
+  # 配置 checkbox 标签插件。
+  checkbox:
+    # 控制 checkbox 是否允许交互。
+    interactive: false
+  # 配置 quot 标签插件的图标。
+  quot:
+    # 配置默认 quot 变体。
+    default:
+      # 设置默认变体的前缀图标。
+      prefix: 'quot:quote-left'
+      # 设置默认变体的后缀图标。
+      suffix: 'quot:quote-right'
+    # 配置 hashtag quot 变体。
+    hashtag:
+      # 设置 hashtag 变体的前缀图标。
+      prefix: 'quot:hashtag'
+      # 设置 hashtag 变体的后缀图标；null 表示不显示。
+      suffix: null
+    # 配置 question quot 变体。
+    question:
+      # 设置 question 变体的前缀图标。
+      prefix: 'quot:question'
+      # 设置 question 变体的后缀图标；null 表示不显示。
+      suffix: null
+  # 配置 emoji 标签插件的资源来源。
+  emoji:
+    # 设置默认 emoji 来源 ID。
+    default_source: blobcat
+    # 配置可用的 emoji 来源模板。
+    sources:
+      # 设置 Twemoji SVG 地址模板。
+      twemoji: https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg
+      # 设置 QQ 表情地址模板。
+      qq: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif
+      # 设置阿鲁表情地址模板。
+      aru: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif
+      # 设置贴吧表情地址模板。
+      tieba: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png
+      # 设置 Blobcat 表情地址模板。
+      blobcat: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif
+  # 配置 icon 标签插件。
+  icon:
+    # 设置 icon 默认颜色。
+    default_color: accent
+  # 配置 button 标签插件。
+  button:
+    # 设置 button 默认颜色。
+    default_color: theme
+  # 配置 mark 标签插件。
+  mark:
+    # 设置 mark 默认颜色。
+    default_color: yellow
+  # 配置 hashtag 标签插件。
+  hashtag:
+    # 设置 hashtag 默认颜色；null 表示使用主题默认色。
+    default_color: null
+  # 配置 gallery 标签插件。
+  gallery:
+    # 设置 gallery 默认尺寸；可选值为 s、m、l、xl 或 mix。
+    size: mix
+    # 设置 gallery 默认宽高比；可选值为 original、square 或 portrait。
+    aspect_ratio: square
+
+# 配置可选的浏览器功能。
+features:
+  # 配置配色模式切换功能。
+  color_scheme_switch:
+    # 控制是否启用配色模式切换。
+    enabled: false
+  # 配置图片懒加载。
+  lazy_loading:
+    # 设置懒加载过渡效果；可选值为 blur 或 fade。
+    transition: fade
+    # 控制是否自动补全图片宽高比。
+    auto_aspect_ratio: true
+  # 配置图片灯箱。
+  lightbox:
+    # 控制是否启用图片灯箱。
+    enabled: true
+    # 设置灯箱匹配图片的 CSS 选择器。
+    selector: '.timenode p>img'
+  # 配置链接预取。
+  link_prefetch:
+    # 控制是否启用链接预取。
+    enabled: true
+  # 配置滚动揭示动画。
+  reveal:
+    # 控制是否启用滚动揭示动画。
+    enabled: true
+  # 配置卡片悬停效果。
+  card_hover:
+    # 控制是否启用卡片悬停效果。
+    enabled: false
+  # 配置 Heti 中文排版增强。
+  heti:
+    # 控制是否启用 Heti。
+    enabled: false
+  # 配置数学公式渲染。
+  math:
+    # 设置数学公式 Provider；可选值为 katex、mathjax 或 null。
+    provider: null
+    # 设置 KaTeX 参数；空对象表示使用 Provider 默认参数。
+    katex: {}
+    # 设置 MathJax 参数；空对象表示使用 Provider 默认参数。
+    mathjax: {}
+  # 配置图表渲染。
+  diagrams:
+    # 设置图表 Provider；可选值为 mermaid 或 null。
+    provider: null
+    # 配置 Mermaid 参数。
+    mermaid:
+      # 设置 Mermaid 主题；可选值为 default、dark、forest 或 neutral。
+      theme: neutral
+
+# -----------------------------------------------------------------------------
+# 服务与资源
+# -----------------------------------------------------------------------------
+
+# 配置主题使用的数据服务。
+services:
+  # 配置站点信息服务。
+  site_info:
+    # 设置站点信息 Provider；可选值为 site_info_api 或 null。
+    provider: site_info_api
+    # 配置 site_info_api Provider。
+    site_info_api:
+      # 设置站点信息查询接口，{href} 会替换为目标网址。
+      endpoint: https://api.xaox.cc/site_info/v1?url={href}
+  # 配置评分服务。
+  rating:
+    # 设置评分 Provider；可选值为 star_vote 或 null。
+    provider: star_vote
+    # 配置评分使用的 star_vote Provider。
+    star_vote:
+      # 设置评分接口地址。
+      endpoint: https://star-vote.xaox.cc/api/rating
+  # 配置投票服务。
+  vote:
+    # 设置投票 Provider；可选值为 star_vote 或 null。
+    provider: star_vote
+    # 配置投票使用的 star_vote Provider。
+    star_vote:
+      # 设置投票接口地址。
+      endpoint: https://star-vote.xaox.cc/api/vote
+  # 配置内容贡献者服务。
+  contributors:
+    # 设置贡献者 Provider。
+    provider: github
+    # 配置 GitHub 贡献者 Provider。
+    github:
+      # 设置额外的贡献者仓库映射；空数组表示不添加映射。
+      repositories: []
+  # 配置 GitHub 卡片服务。
+  github_card:
+    # 设置 GitHub 卡片 Provider。
+    provider: github_readme_stats
+    # 配置 github_readme_stats Provider。
+    github_readme_stats:
+      # 设置 GitHub 卡片接口地址。
+      endpoint: https://github-readme-stats.vercel.app
+  # 配置 GitHub 基础服务地址。
+  github:
+    # 设置 GitHub API 地址。
+    api_url: https://api.github.com
+    # 设置 GitHub Raw 内容地址。
+    raw_url: https://raw.githubusercontent.com
+    # 设置 GitHub Gist 地址。
+    gist_url: https://gist.github.com
+
+# 设置需要预连接的资源 Origin；空数组表示不生成预连接标签。
+preconnect: []
+
+# 配置内容资源缺失时使用的占位资源。
+fallbacks:
+  # 设置头像占位图地址。
+  avatar: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg
+  # 设置链接卡片占位图地址。
+  link_card: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/link/8f277b4ee0ecd.svg
+  # 设置封面占位图地址。
+  cover: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg
+
+# 配置错误页资源。
+error_page:
+  # 设置错误页插图地址；null 表示不显示插图。
+  image: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg
+
+# -----------------------------------------------------------------------------
+# SEO
+# -----------------------------------------------------------------------------
+
+# 配置 canonical URL 的主机名规则。
 canonical:
-  originalHost: # 主站点域名主机，例如 xaoxuu.com
-  officialHosts: # 官方主机列表，每行一个，例如 xaoxuu.vercel.app
+  # 设置 canonical 主机名；null 表示不生成 canonical URL 并停用主机名检查。
+  host: null
+  # 设置允许保留的备用主机名；数组会整体替换。
+  allowed_hosts:
     - localhost
 
+# 配置 Open Graph 元数据。
 open_graph:
-  enable: true
-  twitter_id: # for open_graph meta
+  # 控制是否生成 Open Graph 元数据。
+  enabled: true
+  # 设置 Twitter 用户标识；null 表示不输出对应字段。
+  twitter_id: null
 
+# 配置结构化数据。
 structured_data:
-  links: [] # your social links.
+  # 设置站点主体关联的外部身份 URL；空数组表示不输出 sameAs。
+  same_as: []
 
+# -----------------------------------------------------------------------------
+# 高级注入
+# -----------------------------------------------------------------------------
 
-######## Sidebar ########
-# 左上角显示的 logo 区域，包含图标、大标题、副标题
-logo:
-  avatar: '[{config.avatar}](/about/)' # you can set avatar link in _config.yml or '[https://xxx.png](/about/)'
-  title: '[{config.title}](/)' # you can set html tag like: '[<img no-lazy height="32px" src="xxx"/>](/)'
-  subtitle: '{config.subtitle}' # '文字1 | 文字2' (鼠标放上去会切换到文字2)
-
-# 侧边栏主功能导航菜单
-menubar:
-  items: # 可按照自己需求增加，符合以下格式即可
-    # id: 页面中高亮的 menu_id 
-    # theme: 高亮时的颜色，仅 svg 中 fill="currentColor" 时有效
-    # icon: 支持 svg/img 标签，可以定义在 icons.yml 文件中，也支持外部图片的 URL
-    # title: 标题
-    # url: 点击跳转到哪，支持相对路径和绝对路径
-    # - id: post
-    #   theme: '#1BCDFC'
-    #   icon: default:documents
-    #   title: 博客
-    #   url: /
-    # - id: wiki
-    #   theme: '#3DC550'
-    #   icon: example:notebook
-    #   title: 文档
-    #   url: /wiki/
-    # - id: explore
-    #   theme: '#FA6400'
-    #   icon: example:planet
-    #   title: 探索
-    #   url: /explore/
-    # - id: social
-    #   theme: '#F44336'
-    #   icon: example:chat
-    #   title: 社交
-    #   url: /friends/
-
-
-######## Main ########
-# 站点主结构树
-site_tree:
-  # -- 列表类页面 -- #
-  # 主页配置
-  home:
-    leftbar: welcome, recent
-    rightbar: 
-    # 首页评论区，默认不显示。可设为 true 使用全局评论服务，
-    # 或参考页面 front-matter 覆盖评论参数：
-    # service、comment_title、comment_id 及 beaudar/utterances/giscus/twikoo/waline/artalk 各服务参数。
-    comments:
-  # 博客列表页配置
-  index_blog:
-    base_dir: blog # 只影响自动生成的页面路径
-    menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 post 的页面默认使用这里配置的 menu_id
-    leftbar: welcome, recent # for categories/tags/archives
-    rightbar: 
-    nav_tabs:  # 近期发布 分类 标签 专栏 归档 and ...
-      # '朋友文章': /friends/rss/
-  # 博客专栏列表页配置
-  index_topic:
-    base_dir: topic # 只影响自动生成的页面路径
-    menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 topic 的页面默认使用这里配置的 menu_id
-  # 文档列表页配置
-  index_wiki:
-    base_dir: wiki # 只影响自动生成的页面路径
-    menu_id: wiki # 未在 front-matter 中指定 menu_id 时，layout 为 wiki 的页面默认使用这里配置的 menu_id
-    leftbar: related, recent # for wiki
-    rightbar: 
-    nav_tabs:
-      # 'more': https://github.com/xaoxuu
-  # -- 内容类页面 -- #
-  # 博客文章内页配置
-  post:
-    menu_id: post # 未在 front-matter 中指定 menu_id 时，layout 为 post 的页面默认使用这里配置的 menu_id
-    leftbar: related, recent # for pages using 'layout:post'
-    rightbar: ghrepo, toc
-  # 博客专栏文章内页配置
-  topic:
-    menu_id: post
-  # 文档内页配置
-  wiki:
-    menu_id: wiki # 未在 front-matter 中指定 menu_id 时，layout 为 wiki 的页面默认使用这里配置的 menu_id
-    leftbar: tree, related, recent # for wiki
-    rightbar: ghrepo, toc
-  # 笔记本列表页配置
-  notebooks:
-    base_dir: notebooks # 笔记本列表页的路径。以及未指定 base_dir 的笔记本的路径前缀。
-    menu_id: notebooks # 笔记本列表页高亮的主导航栏菜单按钮。
-    # 笔记本列表页的左侧栏和右侧栏。
-    leftbar: recent # recent within all notebooks
-    rightbar: null
-  # 笔记列表页配置
-  notes:
-    # 笔记列表页和笔记页高亮的主导航栏菜单按钮。
-    # 可以在笔记本 yaml 的 menu_id 字段中覆盖此参数。
-    # 可以在笔记的 front-matter/menu_id 中覆盖此参数。
-    menu_id: notebooks
-    # 笔记列表页的左侧栏和右侧栏。可以在笔记本 yaml 的 leftbar 和 rightbar 字段中覆盖此参数。
-    leftbar: tagtree, recent # recent of current notebook
-    rightbar: null
-  # 笔记页配置
-  note:
-    # 笔记页的左侧栏和右侧栏
-    # 可以在笔记本 yaml 的 note_leftbar 和 note_rightbar 字段中覆盖此参数。
-    # 可以在笔记的 front-matter/leftbar 和 rightbar 字段中覆盖此参数。
-    leftbar: tagtree, recent # recent of current notebook
-    rightbar: toc
-  # 作者信息配置
-  author: 
-    base_dir: author # 只影响自动生成的页面路径
-    menu_id: post
-    leftbar: recent
-    rightbar: 
-  # 错误页配置
-  error_page:
-    menu_id: post
-    '404': '/404.html'
-    leftbar: recent
-    rightbar: 
-  # 其它自定义页面配置 layout: page
-  page:
-    leftbar: recent
-    rightbar: toc
-
-
-######## Notebook ########
-notebook:
-  # 如果没有指定 excerpt 和 description，将自动取多长的内容作为文章摘要。
-  auto_excerpt: 128
-  # 可以为某个 tag 设定图标（显示在标签树中）。
-  tagcons:
-    '': quot:hashtag
-  # 每页显示多少篇笔记。0 表示不分页，null 则 fallback 到 hexo 的配置。
-  # 可以在笔记本 yaml 的 per_page 字段中覆盖此参数。
-  per_page: null
-  # 笔记的排序方式。默认按照 updated 降序排序。
-  # 可以在笔记本 yaml 的 order_by 字段中覆盖此参数。
-  # 注意：置顶的笔记会始终排在最前面。
-  # 在 front-matter 中设置 pin:true|number 或 sticky:true|number 来置顶。
-  order_by: -updated
-  # 是否在笔记页面显示许可协议。false 表示不显示。true 表示沿用主题许可协议内容。也可以给定具体的文本指定协议内容。
-  # 可以在笔记本 yaml 的 license 字段中覆盖此参数。
-  # 可以在笔记的 front-matter/license 中覆盖此参数。
-  license: false
-  # 是否在笔记页面显示分享按钮。
-  # 可以在笔记本 yaml 的 share 字段中覆盖此参数。
-  # 可以在笔记的 front-matter/share 中覆盖此参数。
-  share: false
-
-
-######## Article ########
-article:
-  # 置顶文章样式：carousel = 轮播（默认）， flat = 平铺（不渲染轮播，置顶文章在首页文章列表靠前展示，排序规则与轮播一致）
-  pin_style: carousel
-  # 文章类型，决定布局风格，可以在 front-matter/topic/wiki 中覆盖此参数
-  type: tech # tech: 默认技术类文章, story: 图文类文章，文字和段落间增距大
-  # 缩进两个文字宽度，适合文字类博客，可以在 front-matter/topic/wiki 中覆盖此参数
-  indent: # true / false
-  # 封面图宽高比
-  cover_ratio: 2
-  # 文章卡片样式：hero = 全图文字封面卡片（有 cover 时标题 + 一行小字，文字区固定底部），classic = 普通卡片（封面/标题/摘要/meta）
-  card_style: hero
-  # 文章内横幅宽高比
-  banner_ratio: 2.5
-  # 如果没有指定 excerpt 和 description，将自动取多长的内容作为文章摘要？
-  auto_excerpt: 128
-  # 分类颜色
-  category_color:
-    '探索号': '#f44336'
-  # 文章 AI 成分标签：front-matter 用 ai_label: manual / reviewed / polished / generated 标记，
-  # 未设置时取 default（为空则不显示）；文案由多语言系统提供（languages/*.yml 的 meta.ai_label.*），
-  # 此处配置各档文字颜色与可选 icon；文章页显示在顶部面包屑行最右（阅读时长右侧）
-  ai_label:
-    default:
-    manual:
-      color: '#03a9f4'
-      icon: default:shield-user
-    reviewed:
-      color: '#4caf50'
-      icon: default:shield-check
-    polished:
-      color: '#4caf50'
-      icon: default:shield-up
-    generated:
-      color: '#ff9800'
-      icon: default:shield-warning
-  # 文章许可协议
-  license: '本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。'
-  # 分享
-  share: # [wechat, weibo, email, link]
-  # 相关文章，需要安装插件 (for layout: post)
-  # npm i hexo-related-popular-posts
-  related_posts:
-    enable: false
-    max_count: 5
-  # 文章页是否显示字数和预计阅读时长（#302）
-  reading_time: false
-  # 文章卡片是否显示标签（最多 5 个，#580）
-  card_tags: false
-  # 文章末尾是否显示本文标签（位于 article-footer 之前）
-  tags: true
-
-search:
-  service: local_search # local_search, algolia_search, todo...
-  local_search: # 在 front-matter 中设置 indexing:false 来避免被搜索索引
-    field: all # post, page, all
-    path: /search.json # 搜索文件存放位置
-    content: true # 是否搜索内容
-    lazy_load: true # 懒加载：首次聚焦搜索框时才加载搜索数据（默认开启）；站点内容较多时建议关闭，防止首次搜索卡顿
-    cache_ttl: 86400 # 搜索数据缓存时长（秒），默认 1 天；设为 0 表示不缓存，建议按内容更新频率调整
-    skip_search:  # 指定 path 中的内容不被搜索。
-  algolia_search: # Docsearch https://docsearch.algolia.com/apply/ 申请
-    appId: 
-    apiKey: 
-    indexName: 
-    js: https://gcore.jsdelivr.net/algoliasearch/3/algoliasearch.min.js
-
-
-######## Comments ########
-comments:
-  service: # beaudar, utterances, giscus, twikoo, waline, artalk
-  comment_title: 快来参与讨论吧~
-  custom_css: # artalk,twikoo,... 可以为没有全局启用的评论加载自定义样式
-  # beaudar
-  # https://beaudar.lipk.org/
-  beaudar:
-    repo: xxx/xxx
-    issue-term: pathname
-    issue-number:
-    theme: preferred-color-scheme
-    label:
-    input-position: top # top/bottom 评论框位置
-    comment-order: desc # desc 排序
-    keep-theme: # true/false
-    loading: false
-    branch: main
-  # utterances
-  # https://utteranc.es/
-  utterances:
-    repo: xxx/xxx
-    issue-term: pathname
-    issue-number:
-    theme: preferred-color-scheme
-    label:
-  # giscus
-  # https://giscus.app/zh-CN
-  giscus:
-    src: https://giscus.app/client.js
-    data-repo: xxx/xxx # [在此输入仓库]
-    data-repo-id: # [在此输入仓库 ID]
-    data-category: # [在此输入分类名]
-    data-category-id:
-    data-mapping: pathname
-    data-strict: 0
-    data-reactions-enabled: 1
-    data-emit-metadata: 0
-    data-input-position: top # top, bottom
-    data-theme: preferred_color_scheme
-    data-lang: zh-CN
-    data-loading: # lazy
-    crossorigin: anonymous
-
-  # Twikoo
-  # https://twikoo.js.org/
-  twikoo:
-    js: https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js # 建议锁定版本
-    envId: https://xxx # vercel函数
-
-  # Waline
-  # https://waline.js.org/
-  waline:
-    js: https://gcore.jsdelivr.net/npm/@waline/client@3.15.2/dist/waline.js
-    css: https://gcore.jsdelivr.net/npm/@waline/client@3.15.2/dist/waline.css
-    meta_css: https://gcore.jsdelivr.net/npm/@waline/client@3.15.2/dist/waline-meta.css
-    # Waline server address url, you should set this to your own link
-    serverURL: https://waline.vercel.app
-    # If false, comment count will only be displayed in post page, not in home page
-    commentCount: true
-    # Pageviews count, Note: You should not enable both `waline.pageview` and `leancloud_visitors`.
-    pageview: false
-    # Custom emoji
-    # emoji:
-    #   - https://unpkg.com/@waline/emojis@1.1.0/weibo
-    #   - https://unpkg.com/@waline/emojis@1.1.0/alus
-    #   - https://unpkg.com/@waline/emojis@1.1.0/bilibili
-    #   - https://unpkg.com/@waline/emojis@1.1.0/qq
-    #   - https://unpkg.com/@waline/emojis@1.1.0/tieba
-    #   - https://unpkg.com/@waline/emojis@1.1.0/tw-emoji
-    #   - https://unpkg.com/@waline/emojis@1.1.0/bmoji
-    # 设置自己的图床服务，替换默认的 Base 64 编码嵌入（有体积大小限制），在评论中上传图片更加方便
-    # imageUploader:
-      # 适配了兰空图床V1、V2版本
-      # 以兰空图床V1为例，下列填写内容为：
-      # fileName: file
-      # tokenName: Authorization
-      # api: https://xxxxxx/api/v1/upload
-      # token: Bearer xxxxxxxxxxxxxx
-      # resp: data.links.url
-      # 以兰空图床V2为例，下列填写内容为：
-      # fileName: image
-      # tokenName: token
-      # api: https://xxxxxx/api/upload
-      # token: xxxxxxxxxxxxxx
-      # resp: data.url
-    #   fileName: # 根据版本二选一
-    #   tokenName: # 根据版本二选一
-    #   api: # 图床 api 地址
-    #   token: # 图床验证
-    #   resp: # 图片地址返回值的字段
-
-  # Artalk
-  # https://artalk.js.org/
-  artalk:
-    css: https://unpkg.com/artalk@2.9/dist/artalk.css
-    js: https://unpkg.com/artalk@2.9/dist/artalk.js
-    server: # 后端服务地址
-    site: '' # 站点名称
-    darkMode: auto # 其它模式都有问题，慎用，否则后果自负
-    # artalk 有三类图片：1.上传至服务端 2.上传至服务端后利用upgit上传至图床 3.前端上传至图床（本配置为此类）
-    # 配置此项时将覆盖服务端上传能力
-    imageUploader:
-      # 以兰空图床为例，下列填写内容为：
-      # api: 'https://xxxxxx/api/v1/upload' # 图床上传地址
-      # token: 'Bearer xxxxxxxxxxxxxx' # 图床验证
-      # resp: 'data.links.url' # 图片地址返回值的字段
-
-
-######## Footer ########
-footer:
-  social:
-    # github:
-    #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/08a41b181ce68.svg"/>'
-    #   url: /
-    # music:
-    #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/3845874.svg"/>'
-    #   url: /
-    # unsplash:
-    #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/3616429.svg"/>'
-    #   url: /
-    # comments:
-    #   icon: '<img src="https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/social/942ebbf1a4b91.svg"/>'
-    #   url: /about/#comments
-    # spacer: # 弹性占位项：将其后的 social 按钮推至右侧
-    # links:
-    #   type: dropdown
-    #   icon: default:documents
-    #   title: 更多链接
-    #   items:
-    #     - icon: default:documents
-    #       title: 文档
-    #       url: /wiki/
-    #     - icon: default:github
-    #       title: GitHub
-    #       url: https://github.com/
-  sitemap:
-    # - title: 博客
-    #   items:
-    #     - '[近期发布](/)'
-    #     - '[分类](/blog/categories/)'
-    #     - '[标签](/blog/tags/)'
-    #     - '[归档](/blog/archives/)'
-    # - title: 项目
-    #   items:
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-    # - title: 社交
-    #   items:
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-    # - title: 关于
-    #   items:
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-    #     - '[xxx](/)'
-  content: | # 支持 Markdown 格式
-    本站由 [{author.name}](/) 使用 [{theme.name} {theme.version}]({theme.tree}) 主题创建。
-    本博客所有文章除特别声明外，均采用 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。
-  # 主题用户越多，开发者维护和更新的积极性就越高，如果您喜欢本主题，请在适当的位置显示主题信息和仓库链接以表支持。
-
-
-######## Tag Plugins ########
-tag_plugins:
-  # {% box %} / {% note %}
-  note:
-    default_color: '' # light, dark, red, orange, yellow, green, cyan, blue, purple, warning, error
-    border: true # true / false
-  # {% checkbox %}
-  checkbox:
-    interactive: false # enable interactive for user
-  # {% quot %}
-  quot:
-    default: # 可以自行配置多种图标方案，支持icons.yml中配置的图片key，也支持直接设置svg/png等文件链接
-      prefix: quot:quote-left
-      suffix: quot:quote-right
-    hashtag:
-      prefix: quot:hashtag
-    question:
-      prefix: quot:question
-  # {% emoji %}
-  emoji:
-    default: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif
-    twemoji: https://gcore.jsdelivr.net/gh/twitter/twemoji/assets/svg/{name}.svg
-    qq: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/qq/{name}.gif
-    aru: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/aru/{name}.gif
-    tieba: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/tieba/{name}.png
-    blobcat: https://gcore.jsdelivr.net/gh/cdn-x/emoticons@3.1/blobcat/{name}.gif
-  icon:
-    # 留空时，图标和文字颜色相同
-    default_color: accent # theme, accent, red, orange, yellow, green, cyan, blue, purple
-  # {% button 标题 链接 %}
-  button:
-    default_color: theme # theme, accent, red, orange, yellow, green, cyan, blue, purple
-  # {% image %}
-  image:
-    parse_markdown: false # true / false（自动将 markdown 图片转为 {% image %} 标签）
-  # {% copy xxx %}
-  copy:
-    toast: 复制成功
-  # {% timeline %}
-  timeline:
-    max-height: 80vh
-  # {% mark %}
-  mark:
-    default_color: yellow # light, dark, red, orange, yellow, green, cyan, blue, purple, warning, error
-  # {% hashtag %}
-  hashtag:
-    default_color: # red, orange, yellow, green, cyan, blue, purple
-  # {% okr o1 percent:50 status:in_track/at_risk/off_track/finished/unfinished %}
-  okr:
-    border: true # 是否显示边框
-    status: # 可以自行增加
-      # 进行中状态
-      in_track:
-        color: blue # red, orange, yellow, green, cyan, blue, purple
-        label: 正常
-      at_risk: 
-        color: yellow
-        label: 风险
-      off_track:
-        color: orange
-        label: 延期
-      # 结果状态
-      finished:
-        color: green
-        label: 已完成
-      unfinished:
-        color: red
-        label: 未完成
-  # {% gallery %}
-  gallery:
-    layout: grid # grid / flow
-    size: mix # s / m / l / xl / mix
-    ratio: square # origin / square
-  chat:
-    api: https://siteinfo.listentothewind.cn/api/v1
-
-
-# 基础依赖
-dependencies:
-  marked: https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js
-  # 懒加载强制开启（无 enable 开关），图片默认懒加载，no-lazy 是唯一例外
-  lazyload:
-    js: https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js
-    transition: fade # blur, fade
-    fix_ratio: true # true / false
-
-# 内置服务，按需加载（页面内用到了就会加载，没有用到就不会加载）
-data_services:
-  # 外部 md 渲染
-  mdrender:
-    js: /js/services/mdrender.js
-  # 数据填充类
-  siteinfo:
-    js: /js/services/siteinfo.js
-    # 设置 api 可以自动提取网页标题、图标，服务部署方法：https://github.com/xaoxuu/site-info-api/
-    # 接口测试通过后，把按钮的 href 部分替换成 {href} 之后填写到下方，例如：https://api.xaox.cc/site_info/v1?url={href}
-    api: 
-  ghinfo:
-    js: /js/services/ghinfo.js
-  # 打分
-  rating:
-    js: /js/services/rating.js
-    api: https://star-vote.xaox.cc/api/rating
-  # 投票
-  vote:
-    js: /js/services/vote.js
-    api: https://star-vote.xaox.cc/api/vote
-  # 网格布局类
-  sites:
-    js: /js/services/sites.js
-  friends:
-    js: /js/services/friends.js
-  friends_and_posts:
-    js: /js/services/friends_and_posts.js
-  # 列表布局类
-  timeline:
-    js: /js/services/timeline.js
-  fcircle:
-    js: /js/services/fcircle.js
-  weibo:
-    js: /js/services/weibo.js
-  memos:
-    js: /js/services/memos.js
-  # chat
-  voice: 
-    js: /js/plugins/voice.js
-  video: 
-    js: /js/plugins/video.js
-  download-file: 
-    js: /js/plugins/download-file.js
-  # 最新评论获取类
-  twikoo:
-    js: /js/services/twikoo_latest_comment.js
-  waline:
-    js: /js/services/waline_latest_comment.js
-  artalk:
-    js: /js/services/artalk_latest_comment.js
-  giscus:
-    js: /js/services/giscus_latest_comment.js
-  contributors:
-    edit_this_page: # 从开头开始匹配替换
-      '_posts/': # https://github.com/xaoxuu/xaoxuu.com/blob/main/source/_posts/
-      'wiki/stellar/': https://github.com/xaoxuu/hexo-theme-stellar-docs/blob/main/
-    js: /js/services/contributors.js
-  rss:
-    js: /js/services/rss.js
-
-# 动态数据缓存
-# 将动态数据缓存到浏览器本地：TTL 未过期直接显示缓存，过期后先显示缓存再后台刷新
-data_cache:
-  enable: true # 总开关
-  default_ttl: 3600 # 默认缓存时长（秒）
-  ttl: # 按服务覆盖缓存时长（秒），未列出的服务使用 default_ttl；设为 0 表示该服务不缓存
-    giscus: 600
-    waline: 600
-    artalk: 600
-    memos: 600
-    memos-user: 86400
-    sites: 86400
-    friends: 86400
-    friends_and_posts: 86400
-    siteinfo: 86400
-  max_entries: 200 # 本地缓存条目上限，超出后按写入时间淘汰最旧的
-
-# 扩展插件接入方法：(插件名下面用 #plugin# 代替)
-# 1. 在这里增加 #plugin# 配置，至少应含有 enable 字段，默认为空（不启用）
-# 2. 新建文件 layout/_plugins/#plugin#.ejs 文件中设置编写加载代码。
-# 2.1. 在该文件中可以直接使用 conf 来读取用户在【步骤 1】填写的配置字段内容
-# 2.2. 如果需要引入 css 或 js，可以使用 utils.css(xxx)、utils.js(xxx)，具体可参考 layout/_plugins/fancybox.ejs
-# 2.3. 如果需要本地 js 文件，请放入 /source/js/plugins 文件夹中，引入方式为：utils.js('/js/plugins/xxx.js');
-# 3. 如果这个插件只需要引入外部文件，可以在【步骤 1】处增加 inject 字段，而无需进入【步骤 2】创建 ejs，参考 katex
-plugins:
-
-  # preload
-  preload:
-    enable: true
-    service: flying_pages # flying_pages
-    flying_pages: https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js
-
-  # https://fancyapps.com/docs/ui/fancybox/
-  # available for {% image xxx %}
-  # mode: auto=按需（页面有可弹窗图片才加载）/ global=全局（所有页面加载）
-  fancybox:
-    enable: true # 插件注册必需字段，恒为 true（不再支持关闭）
-    mode: auto # auto / global
-    js: https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js
-    css: https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css
-    # 让 md 语法图片支持放大可以这样写: .md-text img:not([class]), .md-text .image img
-    # 可以处理评论区的图片（不支持 iframe 类评论系统）例如：
-    # 使用 twikoo 评论可以写: .tk-content img:not([class*="emo"])
-    # 使用 waline 评论可以写: #waline_container .vcontent img
-    selector: .timenode p>img # 多个选择器用英文逗号隔开
-
-  # swiper
-  swiper:
-    enable: true
-    css: https://unpkg.com/swiper@10.3/swiper-bundle.min.css
-    js: https://unpkg.com/swiper@10.3/swiper-bundle.min.js
-
-  # https://scrollrevealjs.org/api/reveal.html
-  scrollreveal:
-    enable: true
-    js: https://gcore.jsdelivr.net/npm/scrollreveal@4.0/dist/scrollreveal.min.js
-    distance: 8px
-    duration: 1000 # ms
-    interval: 100 # ms
-    scale: 1 # 0.1~1
-  
-  # AI 摘要
-  # https://github.com/qxchuckle/Post-Summary-AI
-  tianli_gpt: 
-    enable: #true
-    js: https://jsd.onmicrosoft.cn/gh/qxchuckle/Post-Summary-AI@6.0/chuckle-post-ai.min.js
-    field: post # all, post, wiki
-    key: 5Q5mpqRK5DkwT1X9Gi5e # tianli_gpt key
-    total_length: 1000 # 设置提交的字数限制，默认为1000字，上限为5000，超过5000字符将被截断
-    typewriter: true # 打字机动画 
-    summary_directly: true # 是否直接显示摘要，否则显示 AI 简介
-    rec_method: all # all, web # 文章推荐方式，all：匹配数据库内所有文章进行推荐，web：仅当前站内的文章，默认all
-    hide_shuttle: true # 是否隐藏矩阵穿梭
-    summary_toggle: false
-    interface:
-      name: AI摘要
-      introduce: '我是文章辅助AI: QX-AI，点击下方的按钮，让我生成本文简介、推荐相关文章等。'
-      version: TianliGPT
-      button: ["介绍自己", "推荐文章", "生成摘要", "矩阵穿梭"]
-
-
-  # Katex - The fastest math typesetting library for the web
-  # https://katex.org/docs/autorender.html
-  # https://github.com/KaTeX/KaTeX
-  # 使用 hexo-renderer-markdown-it-plus 作为公式渲染器：npm uninstall hexo-renderer-marked --save npm install hexo-renderer-markdown-it-plus --save
-  katex:
-    enable: #true # hexo-renderer-markdown-it-plus 默认开启 katex，此选项仅用于引入样式
-    inject: |
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.23/dist/katex.min.css" integrity="sha384-//SZkxyB7axjCAopkAL1E1rve+ZSPKapD89Lo/lLhcsXR+zOYl5z6zJZEFXil+q0" crossorigin="anonymous">
-
-  # MathJax
-  # 需在Markdown文件开头加入mathjax: true
-  # 推荐使用Pandoc: npm uninstall hexo-renderer-marked --save & npm install hexo-renderer-pandoc --save
-  mathjax:
-    v3: false # 若使用 v3，需將 js 設置為 https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js
-    enable: # true # 可以在特定文章的 front-matter 中设置 mathjax: true 来开启，也可以在这里设置全局开启
-    js: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-AMS-MML_HTMLorMML
-
-  # Mermaid - markdwon to flow chart, seq chart, class chart ...
-  # 需要安装 npm install --save hexo-filter-mermaid-diagrams
-  # 使用时 需要在Markdown文件开头加入 mermaid: true
-  # 使用示例：
-  # ```mermaid
-  # graph LR
-  #   A(Section A) -->|option 1| B(Section A)
-  #   B -->|option 2| C(Section C)
-  # ```
-  mermaid:
-    enable: # true # 可以在特定文章的 front-matter 中设置 mermaid: true 来开启，也可以在这里设置全局开启
-    style_optimization: false # true: use custom style in Stellar; false: use Mermaid official theme
-    # js: https://unpkg.com/mermaid@11/dist/mermaid.min.js
-    js: https://gcore.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js
-    # Available themes: default | dark | forest | neutral
-    theme: neutral
-  
-  # 代码块复制按钮
-  copycode:
-    enable: true
-    default_text: 'Copy'
-    success_text: 'Copied'
-    toast: 复制成功
-
-  # 文字自适应颜色：背景图/背景色上方的文字随背景亮度自适应
-  # 页面存在 [data-text-adaptive] 元素时才按需加载（theme：背景图平均色 lighten/darken；contrast：黑白对比）
-  adaptive_text:
-    enable: true
-
-  # 卡片鼠标跟随光斑与 3D 倾斜：通过 card-hover 组合类按组件接入
-  card_hover:
-    enable: false
-    spotlight_color: 'rgba(255, 255, 255, 0.25)'
-    max_tilt: 3 # 最大倾斜角度（deg），运行时限制在 0~8
-  
-  # 赫蹏 (Heti) - 专为中文网页内容设计的排版样式增强
-  # https://github.com/sivan/heti
-  heti:
-    enable: false # 此插件会和代码块冲突，仅适用于纯中文博主。
-    css: https://unpkg.com/heti@0.9/umd/heti.min.css
-    js: https://unpkg.com/heti@0.9/umd/heti-addon.min.js
-
-
-
-style:
-  prefers_theme: auto # auto / light / dark
-  page_transition:
-    enable: true # 同源整页导航使用原生 View Transition；旧浏览器自动回退普通导航
-  font-size:
-    root: 16px # 桌面端全局字号基准；移动端自动增加 2px
-    code: 85% # 相较于其所在行的文本大小，建议用百分比
-    codeblock: 0.8125rem # 13px
-  font-family:
-    body: 'system-ui, "Microsoft Yahei", "Segoe UI", Arial, sans-serif'
-    code: 'Menlo, Monaco, Consolas, system-ui, monospace, sans-serif'
-    codeblock: 'Menlo, Monaco, Consolas, system-ui, monospace, sans-serif'
-  text-align: left
-  prefix:
-    h2: https://api.iconify.design/ci:heading-h2.svg
-  border-radius:
-    card-l: 24px # 侧边栏、文章横幅位置的圆角
-    card: 16px # 文章内大部分卡片的圆角
-    card-s: 12px # 文章内小型卡片的圆角
-    bar: 12px # 横条类元素的圆角
-    image-l: 24px # 非技术类文章插图圆角
-    image: 16px # 技术类文章插图圆角
-    image-s: 8px # 评论区图片圆角（部分评论支持）
-  corner-shape: superellipse(1.25) # 连续曲率圆角（仅 Chromium 139+ 支持，其余浏览器自动回退普通圆角）：superellipse(1.x) 开启，round 关闭
-  color:
-    # 主题色配置（不会根据明暗动态调整，请设置为通用的颜色）
-    theme: 'hsl(192 98% 55%)' # 主题色
-    accent: 'hsl(14 100% 57%)' # 强调色
-    link: 'hsl(207 90% 54%)' # 超链接颜色
-  animated_avatar:
-    animate: auto # auto, always
-  codeblock:
-    scrollbar: 4px
-    highlightjs_theme: https://gcore.jsdelivr.net/gh/highlightjs/cdn-release@11.9/build/styles/atom-one-dark.min.css
-  loading:
-    loading: 正在加载
-    error: 加载失败，请稍后重试。
-  gradient: # https://webgradients.com/
-    start: 'linear-gradient(to right, hsl(215, 95%, 64%), hsl(195, 95%, 60%), hsl(165, 95%, 56%), hsl(165, 95%, 56%), hsl(195 95% 60%), hsl(215, 95%, 64%))'
-    searchbar: 'linear-gradient(to right, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)' # 搜索条激活时底部横条的渐变色（彩虹，收尾经蓝色平滑过渡）
-    avatar: 'conic-gradient(from 0deg, #04f3ff, #08ffc6, #ddf730, #ffbd19, #ff1fe0, #c418ff, #3b5bff, #04f3ff)' # 头像 hover 时旋转光环的渐变色（彩虹，首尾同色保证旋转无缝）
-    angle: 210deg # 主题色渐变的角度（0=向上，顺时针；225deg = 右上角 → 左下角）
-  leftbar:
-    ui-style: card # glass（背景图+磨砂玻璃效果）/ card（纯色卡片：var(--card) 实色背景 + 中间阴影）
-    # 可以设置：纯色/渐变色/图片作为背景
-    # 设置为纯色时，可以分别设置浅色和深色模式背景色
-    background-color-light: var(--card) # var(--block) #'rgb(#C3C3C3)'
-    background-color-dark: var(--card) # var(--block) #'rgb(#3C3C3C)'
-    background-image: url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.13/image/sidebar-bg1@small.jpg)
-    blur-px: 100px
-    blur-bg: var(--bg-a60)
-    background-opacity: 0.8
-  error_page: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/404/1c830bfcd517d.svg
-  site: # 使用 background-image 后，blur 设置才有效
-    # background-image: url(https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.14/image/site-bg1@small.webp)
-    blur-px: 100px
-    blur-bg: var(--bg-a75)
-    blur-sat: 300%
-  # 技术文章内页各级标题前面的符号
-  header_prefix:
-    h2: '#'
-    h3: '='
-    h4: '|'
-    h5: ':'
-
-
-default:
-  avatar: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/avatar/round/3442075.svg
-  link: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/link/8f277b4ee0ecd.svg
-  cover: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/cover/76b86c0226ffd.svg
-  image: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2659360.svg
-  project: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/2779789.png
-  banner: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/banner/books.jpg
-  topic: https://gcore.jsdelivr.net/gh/cdn-x/placeholder@1.0.12/image/10433048.png
-  # image_onerror 兼容回退：新值位于 _data/icons.yml（image:onerror）
-  image_onerror: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2rem' height='2rem' viewBox='0 0 24 24'%3E%3C!-- Icon from Solar by 480 Design - https://creativecommons.org/licenses/by/4.0/ --%3E%3Cpath fill='%23F44336' d='M22 12.698c-.002 1.47-.013 2.718-.096 3.743c-.097 1.19-.296 2.184-.74 3.009a4.2 4.2 0 0 1-.73.983c-.833.833-1.893 1.21-3.237 1.39C15.884 22 14.2 22 12.053 22h-.106c-2.148 0-3.83 0-5.144-.177c-1.343-.18-2.404-.557-3.236-1.39c-.738-.738-1.12-1.656-1.322-2.795c-.2-1.12-.236-2.512-.243-4.241Q1.999 12.737 2 12v-.054c0-2.148 0-3.83.177-5.144c.18-1.343.557-2.404 1.39-3.236s1.893-1.21 3.236-1.39c1.168-.157 2.67-.175 4.499-.177a.697.697 0 1 1 0 1.396c-1.855.002-3.234.018-4.313.163c-1.189.16-1.906.464-2.436.994S3.72 5.8 3.56 6.99C3.397 8.2 3.395 9.788 3.395 12v.784l.932-.814a2.14 2.14 0 0 1 2.922.097l3.99 3.99a1.86 1.86 0 0 0 2.385.207l.278-.195a2.79 2.79 0 0 1 3.471.209l2.633 2.37c.265-.557.423-1.288.507-2.32c.079-.972.09-2.152.091-3.63a.698.698 0 0 1 1.396 0' opacity='.5'/%3E%3Cpath fill='%23F44336' fill-rule='evenodd' d='M17.5 11c-2.121 0-3.182 0-3.841-.659S13 8.621 13 6.5s0-3.182.659-3.841S15.379 2 17.5 2s3.182 0 3.841.659S22 4.379 22 6.5s0 3.182-.659 3.841S19.621 11 17.5 11m-1.47-7.03a.75.75 0 1 0-1.06 1.06l1.47 1.47l-1.47 1.47a.75.75 0 0 0 1.06 1.06l1.47-1.47l1.47 1.47a.75.75 0 1 0 1.06-1.06L18.56 6.5l1.47-1.47a.75.75 0 0 0-1.06-1.06L17.5 5.44z' clip-rule='evenodd'/%3E%3C/svg%3E"
-
-api_host:
-  ghapi: api.github.com
-  ghraw: raw.githubusercontent.com
-  gist: gist.github.com
-  # https://github.com/anuraghazra/github-readme-stats
-  ghcard: github-readme-stats.vercel.app
-
-
-
-# 非资深hexo开发者尽量不要动这块
-system:
-  # hexo 支持输出的链接格式众多，维护成本高，为了减少出错，统一成推荐的格式。
-  override_pretty_urls: true
+# 配置原样注入页面的可信内容。
+inject:
+  # 设置注入到 </head> 前的内容；空字符串表示不注入。
+  head_end: ''
+  # 设置注入到 </body> 前的内容；空字符串表示不注入。
+  body_end: ''
