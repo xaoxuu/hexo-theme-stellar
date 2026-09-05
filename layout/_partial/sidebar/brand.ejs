@@ -58,14 +58,35 @@ function layoutBrandImage() {
   return el
 }
 
-function layoutBrandGithub() {
-  if (brandPlacement !== 'leftbar' || brandStyle !== 'regular') return ''
-  const username = typeof brandGithubUsername === 'function' ? brandGithubUsername() : ''
-  const apiBase = brandText(stellar_config('services.github.apiUrl')).replace(/\/+$/, '')
-  if (!username || !apiBase) return ''
-  const encodedUsername = encodeURIComponent(username)
-  const githubHref = `https://github.com/${encodedUsername}`
-  const items = [
+function layoutCollectionStats(apiBase) {
+  var repository = brandText(activeViewModel?.collection?.source?.repository)
+  if (!repository) return ''
+  var encodedRepository = repository.split('/').map(encodeURIComponent).join('/')
+  var githubHref = `https://github.com/${encodedRepository}`
+  var repoApi = `${apiBase}/repos/${encodedRepository}`
+  var items = [
+    {key: 'stargazers_count', label: 'stars', href: githubHref + '/stargazers'},
+    {key: 'forks_count', label: 'forks', href: githubHref + '/forks'},
+    {key: 'latest-tag-name', label: 'tag', href: githubHref + '/tags', api: repoApi + '/tags'}
+  ]
+  var el = `<div class="brand-stats data-service ds-ghinfo" data-api="${escape_html(repoApi)}">`
+  items.forEach(item => {
+    var classes = ui_classes(item.api ? 'brand-stat data-service ds-ghinfo' : 'brand-stat')
+    var service = item.api ? ` data-api="${escape_html(item.api)}" index="0"` : ''
+    el += `<a class="${classes}"${service} href="${escape_html(item.href)}">`
+    el += `<span class="brand-stat__value" type="text" id="${item.key}"></span>`
+    el += `<span class="brand-stat__label">${item.label}</span></a>`
+  })
+  el += `</div>`
+  return el
+}
+
+function layoutSiteStats(apiBase) {
+  var username = typeof brandGithubUsername === 'function' ? brandGithubUsername() : ''
+  if (!username) return ''
+  var encodedUsername = encodeURIComponent(username)
+  var githubHref = `https://github.com/${encodedUsername}`
+  var items = [
     {key: 'followers', label: 'followers', href: githubHref + '?tab=followers'},
     {key: 'following', label: 'following', href: githubHref + '?tab=following'},
     {key: 'public_repos', label: 'repos', href: githubHref + '?tab=repositories'}
@@ -78,6 +99,15 @@ function layoutBrandGithub() {
   })
   el += `</div>`
   return el
+}
+
+function layoutBrandGithub() {
+  if (brandPlacement !== 'leftbar' || brandStyle !== 'regular') return ''
+  var apiBase = brandText(stellar_config('services.github.apiUrl')).replace(/\/+$/, '')
+  if (!apiBase) return ''
+  return brand.source === 'collection'
+    ? layoutCollectionStats(apiBase)
+    : layoutSiteStats(apiBase)
 }
 
 function layoutBrand() {
