@@ -5,7 +5,7 @@
 
 ## 2026-08-27：Appearance 全局表面契约
 
-`appearance.preset` 现统一投影 Topbar、Leftbar、Main 与 Rightbar；Leftbar 不再维护独立 `surface` 风格。Visual Style 增加 `flat`，保留调整前 Topbar 的半透明、轻模糊与分隔线表面并应用到所有 Region。Schema、PageViewModel、Shell、Blueprint Reference 与布局知识库已按这一事实对齐。
+`appearance.preset` 现统一投影 Topbar、Leftbar、Main 与 Rightbar；Leftbar 不再维护独立 `surface` 风格。Visual Style 增加 `flat`，保留调整前 Topbar 的半透明、轻模糊与分隔线表面并应用到所有 Region。Schema、PageViewModel、Shell 与布局知识库已按这一事实对齐。
 
 ## 一、已移除功能（整页改写为当前实现）
 

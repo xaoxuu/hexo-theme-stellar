@@ -21,7 +21,7 @@ delete require.cache[commandPath];
 require(commandPath);
 delete global.hexo;
 
-test("stellar command registers doctor and new note without Blueprint init", async t => {
+test("stellar command registers doctor and new note", async t => {
   assert.equal(registration.name, "stellar");
   assert.equal(typeof registration.handler, "function");
   assert.deepEqual(registration.contract.commands.map(item => item.name), ["doctor", "new note"]);

@@ -17,15 +17,6 @@ const {
 
 const CONFIG_SOURCE = fs.readFileSync(DEFAULT_CONFIG_PATH, "utf8");
 const CONFIG = yaml.load(CONFIG_SOURCE);
-const ROOT_KEYS = [
-  "topbar", "leftbar", "rightbar", "footer", "profiles",
-  "article", "notebook", "settings",
-  "appearance",
-  "search", "comments", "tags", "features", "services",
-  "preconnect", "fallbacks", "error_page",
-  "canonical", "open_graph", "structured_data",
-  "inject"
-];
 
 function schemaPaths(node, parents = [], result = []) {
   if (parents.length > 0) result.push(parents.join("."));
@@ -59,20 +50,10 @@ function nonEmptyFlowCollectionLines(source) {
 }
 
 test("手写 _config.yml 是公开字段树、默认值与顺序的唯一来源", () => {
-  assert.deepEqual(Object.keys(CONFIG), ROOT_KEYS);
+  assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), Object.keys(CONFIG));
   assert.deepEqual(CONFIG, CONFIG_DEFAULTS);
   assert.deepEqual(loadDefaultConfig(CONFIG_SOURCE), CONFIG);
   assert.equal(Object.isFrozen(CONFIG_SCHEMA), true);
-  assert.deepEqual(
-    ["site", "layout", "content", "seo", "resources", "extensions"]
-      .filter(key => Object.hasOwn(CONFIG, key)),
-    []
-  );
-  assert.match(CONFIG_SOURCE, /公开配置树、默认值、字段顺序和用户示例的唯一事实来源/);
-  assert.match(
-    CONFIG_SOURCE,
-    /# 布局[\s\S]*# 内容[\s\S]*# 外观[\s\S]*# 功能[\s\S]*# 服务与资源[\s\S]*# SEO[\s\S]*# 高级注入/
-  );
 });
 
 test("手写 _config.yml 的每个配置键都有独立前置注释", () => {

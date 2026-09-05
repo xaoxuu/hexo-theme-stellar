@@ -103,8 +103,12 @@ test("Content footer share accepts only registered service IDs", () => {
   assert.deepEqual(collection.footer.share, SHARE_SERVICE_IDS);
   assert.deepEqual(page.footer.share, SHARE_SERVICE_IDS);
   assert.throws(
-    () => parsePageConfig({ footer: { share: ["twitter"] } }, "page.md"),
-    /footer\.share\[0\].*wechat \| weibo \| x \| telegram \| whatsapp \| email \| link \| system/
+    () => parsePageConfig({ footer: { share: ["unknown"] } }, "page.md"),
+    error => {
+      assert.ok(error instanceof ContentConfigError);
+      assert.equal(error.issues.some(issue => issue.path === "footer.share[0]" && issue.code === "invalid_value"), true);
+      return true;
+    }
   );
 });
 

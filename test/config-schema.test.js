@@ -125,7 +125,7 @@ test("Theme share defaults accept only registered service IDs", () => {
   assert.deepEqual(config.notebook.footer.share, SHARE_SERVICE_IDS);
   assert.deepEqual(parseStellarConfig({ themeConfig: { article: { footer: { share: [] } } } }).article.footer.share, []);
   assert.throws(
-    () => parseStellarConfig({ themeConfig: { article: { footer: { share: ["twitter"] } } } }),
+    () => parseStellarConfig({ themeConfig: { article: { footer: { share: ["unknown"] } } } }),
     error => hasIssue(error, "article.footer.share[0]", "invalid_value")
   );
 });

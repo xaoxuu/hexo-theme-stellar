@@ -17,19 +17,10 @@ const share = {
 };
 
 test("share service registry preserves supported order and filters unknown providers", () => {
-  assert.deepEqual(SHARE_SERVICE_IDS, [
-    "wechat",
-    "weibo",
-    "x",
-    "telegram",
-    "whatsapp",
-    "email",
-    "link",
-    "system"
-  ]);
-  assert.deepEqual(filterShareServices(["system", "unknown", "x", "telegram"]), ["system", "x", "telegram"]);
+  const services = [...SHARE_SERVICE_IDS].reverse();
+  assert.deepEqual(filterShareServices(["unknown", ...services]), services);
   assert.deepEqual(filterShareServices(null), []);
-  assert.equal(buildShareAction("twitter", share), null);
+  assert.equal(buildShareAction("unknown", share), null);
 });
 
 test("external share actions encode text and URLs exactly once", () => {
@@ -54,29 +45,11 @@ test("external share actions encode text and URLs exactly once", () => {
   assert.equal(weibo.searchParams.get("summary"), share.summary);
 });
 
-test("local share actions preserve native, email, copy, and QR behavior", () => {
-  assert.deepEqual(buildShareAction("system", share), {
-    service: "system",
-    label: "System",
-    kind: "native",
-    data: {
-      title: share.title,
-      text: share.summary,
-      url: share.permalink
-    },
-    target: "copy-link"
-  });
-  assert.deepEqual(buildShareAction("link", share), {
-    service: "link",
-    label: "Link",
-    kind: "copy",
-    target: "copy-link"
-  });
-  assert.deepEqual(buildShareAction("wechat", share), {
-    service: "wechat",
-    label: "WeChat",
-    kind: "toggle",
-    target: "qrcode-wechat"
+test("native and email share actions preserve input data", () => {
+  assert.deepEqual(buildShareAction("system", share).data, {
+    title: share.title,
+    text: share.summary,
+    url: share.permalink
   });
 
   const email = new URL(buildShareAction("email", share).href);

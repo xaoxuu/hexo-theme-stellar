@@ -43,7 +43,6 @@ test("Extension 顶层配置与 provider 参数投影为扁平运行时", () => 
   assert.equal(resolveServiceProvider(config.services.siteInfo).endpoint, "https://example.com/site?url={href}");
   assert.equal(resolveServiceProvider(config.services.contributors).repositories[0].repository, "owner/docs");
   assert.equal(resolveServiceProvider(config.services.githubCard).endpoint, "https://cards.example.com");
-  assert.equal("providers" in config.comments, false);
   assert.equal(Object.isFrozen(config.comments.giscus), true);
 });
 

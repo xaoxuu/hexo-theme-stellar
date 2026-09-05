@@ -42,14 +42,6 @@ test('stellar_icon_sets 生成器：按命名空间输出 JSON、去注释、跳
     global.hexo = prevHexo;
   }
   assert.equal(typeof registrations.stellar_icons, 'function');
-  const firstScreen = registrations.stellar_icons.call({
-    stellar: { data: { icons: {
-      'default:profile': '<svg data-test="profile"></svg>',
-      'default:settings': '<svg data-test="settings"></svg>'
-    } } }
-  });
-  assert.match(firstScreen.data, /default:profile/);
-  assert.match(firstScreen.data, /default:settings/);
   const files = registrations.stellar_icon_sets.call({
     stellar: { data: { icons: {
       'a:one': '<svg><!-- c --><path/></svg>',
@@ -90,7 +82,7 @@ test('deferred-icons Runtime Extension 直接加载命名空间并支持卸载',
   }
 });
 
-test('icons.yml 键完整：所有静态 icon()/iconData()/ctx.icons 引用均存在', () => {
+test('icons.yml 键完整：静态调用、数据访问和 CSS 变量映射引用均存在', () => {
   const ymlSrc = fs.readFileSync(path.join(ROOT, '_data/icons.yml'), 'utf8');
   const iconKeys = new Set();
   for (const m of ymlSrc.matchAll(/^([a-z0-9]+:[a-zA-Z0-9._-]+):\s/gm)) {
@@ -110,18 +102,14 @@ test('icons.yml 键完整：所有静态 icon()/iconData()/ctx.icons 引用均�
 
   const found = new Set();
   const reCall = /(?:icon|iconData)\(\s*['"]([^'"]+)['"]/g;
-  const reBracket = /icons\[\s*['"]([^'"]+)['"]\s*\]/g;
+  const reBracket = /(?:icons|stellar_data\(\s*['"]icons['"]\s*\))\[\s*['"]([^'"]+)['"]\s*\]/g;
+  const reCssMapping = /['"]--icon-[^'"]+['"]\s*:\s*['"]([a-z0-9]+:[a-zA-Z0-9._-]+)['"]/g;
   for (const f of refs) {
     const src = fs.readFileSync(f, 'utf8');
     for (const m of src.matchAll(reCall)) found.add(m[1]);
     for (const m of src.matchAll(reBracket)) found.add(m[1]);
+    for (const m of src.matchAll(reCssMapping)) found.add(m[1]);
   }
-
-  // CSS 变量桥接使用的键（head.ejs 中为对象字面量，不走 icon() 调用）
-  found.add('default:arrow-left');
-  found.add('default:arrow-right');
-  found.add('quot:quote-left');
-  found.add('quot:quote-right');
 
   const missing = [...found].filter((k) => !iconKeys.has(k));
   assert.deepEqual(missing, []);

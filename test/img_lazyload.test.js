@@ -2,22 +2,28 @@
 
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
+const { load } = require('cheerio');
 
 const { lazyProcess, processSite } = require('../scripts/filters/lib/img_lazyload');
 
-const LOADING = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII=';
+function assertLazyImage(html, originalSrc) {
+  const image = load(html, null, false)('img');
+  assert.equal(image.length, 1);
+  assert.equal(image.hasClass('lazy'), true);
+  assert.equal(image.attr('data-src'), originalSrc);
+  assert.match(image.attr('src'), /^data:image\//);
+}
 
 test('带引号 src 的图片：加 lazy 类并替换为占位图 + data-src', () => {
   const html = '<p>文字</p><img src="https://res.xaox.cc/a.webp">';
   const out = lazyProcess(html);
-  assert.ok(out.includes('<img class="lazy" src="' + LOADING + '" data-src="https://res.xaox.cc/a.webp">'));
-  assert.ok(!out.includes('<img src="https://res.xaox.cc/a.webp">'));
+  assertLazyImage(out, 'https://res.xaox.cc/a.webp');
 });
 
 test('压缩后无引号 src 的图片：同样处理且不越界到后续内容', () => {
   const html = '<img src=https://res.xaox.cc/a.webp><span>ok</span>';
   const out = lazyProcess(html);
-  assert.ok(out.includes('<img class="lazy" src="' + LOADING + '" data-src="https://res.xaox.cc/a.webp">'));
+  assertLazyImage(out, 'https://res.xaox.cc/a.webp');
   assert.ok(out.includes('<span>ok</span>'));
 });
 

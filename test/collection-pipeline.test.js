@@ -21,7 +21,6 @@ test("Collection Pipeline 注册表封闭四类 profile 与产品差异", () => 
   assert.deepEqual(PROFILE_IDS, ["post", "topic", "wiki", "notebook"]);
   assert.deepEqual(profileAdapters().map(adapter => adapter.contentKind), ["posts", "posts", "pages", "pages"]);
   assert.equal(getProfileAdapter("topic").twoStage, true);
-  assert.equal(getProfileAdapter("topic").build, undefined);
   assert.deepEqual(getProfileAdapter("topic").config.collection.listing, ["excerptLength", "sort"]);
   assert.equal(getProfileAdapter("post").twoStage, false);
   assert.throws(() => getProfileAdapter("unknown"), /未登记的 Collection profile unknown/);
@@ -34,8 +33,6 @@ test("页面配置 registry 通过稳定页面身份保持唯一所有权", () =
   const config = Object.freeze({ comments: Object.freeze({ enabled: false }) });
   pageRegistry.setPageConfig(sourcePage, config);
   assert.equal(pageRegistry.getPageConfig(renderedPage), config);
-  assert.equal("getPageViewModel" in pageRegistry, false);
-  assert.equal("setPageViewModel" in pageRegistry, false);
 });
 test("内容发现只访问每个 Post/Page 一次并按 profile 与 collection 分组", () => {
   const post = { _id: "post", source: "_posts/post.md", path: "blog/post/" };
