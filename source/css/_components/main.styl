@@ -2,8 +2,11 @@
   position: relative
   padding-bottom: var(--gap-page)
   padding-top: var(--shell-content-top-gap)
-  .brand-header
+  > .brand-header
+    display: none
     margin: 2rem 1rem 1rem
+    @media screen and (max-width: $device-tablet)
+      display: flex !important
     .brand-wrap
       margin: 0
 
