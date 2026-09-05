@@ -18,12 +18,12 @@ const {
 const CONFIG_SOURCE = fs.readFileSync(DEFAULT_CONFIG_PATH, "utf8");
 const CONFIG = yaml.load(CONFIG_SOURCE);
 const ROOT_KEYS = [
-  "settings", "footer", "topbar", "leftbar", "rightbar", "profiles",
-  "article", "notebook",
+  "topbar", "leftbar", "rightbar", "footer", "profiles",
+  "article", "notebook", "settings",
   "appearance",
-  "canonical", "open_graph", "structured_data",
-  "preconnect", "fallbacks", "error_page",
   "search", "comments", "tags", "features", "services",
+  "preconnect", "fallbacks", "error_page",
+  "canonical", "open_graph", "structured_data",
   "inject"
 ];
 
@@ -69,7 +69,10 @@ test("手写 _config.yml 是公开字段树、默认值与顺序的唯一来源"
     []
   );
   assert.match(CONFIG_SOURCE, /公开配置树、默认值、字段顺序和用户示例的唯一事实来源/);
-  assert.match(CONFIG_SOURCE, /# 站点[\s\S]*# 布局[\s\S]*# 内容[\s\S]*# 外观/);
+  assert.match(
+    CONFIG_SOURCE,
+    /# 布局[\s\S]*# 内容[\s\S]*# 外观[\s\S]*# 功能[\s\S]*# 服务与资源[\s\S]*# SEO[\s\S]*# 高级注入/
+  );
 });
 
 test("手写 _config.yml 的每个配置键都有独立前置注释", () => {
