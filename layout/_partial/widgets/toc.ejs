@@ -24,11 +24,11 @@ function layoutTocAction() {
 function layoutFooter(hasComments) {
   var footer = '<div class="widget-footer">'
   footer += '<a class="' + ui_classes('top', 'interactive') + '" onclick="util.scrollTop()">'
-  footer += '<span class="ui-icon">' + icon('default:upup', '', true) + '</span>'
+  footer += '<span class="ui-icon">' + icon('default:to-top', '', true) + '</span>'
   footer += '<span>' + __('btn.top') + '</span></a>'
   if (hasComments) {
     footer += '<a class="' + ui_classes('buttom', 'interactive') + '" onclick="util.scrollComment()">'
-    footer += '<span class="ui-icon">' + icon('default:tocomment', '', true) + '</span>'
+    footer += '<span class="ui-icon">' + icon('default:to-comment', '', true) + '</span>'
     footer += '<span>' + __('btn.comments') + '</span></a>'
   }
   footer += '</div>'

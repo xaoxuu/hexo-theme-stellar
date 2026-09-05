@@ -104,7 +104,7 @@ Full Changelog: [1.42.0...1.42.1](https://github.com/xaoxuu/hexo-theme-stellar/c
 ### 重构
 - 移除已失效的 auto_banner（Unsplash 自动横幅）与 `poster` 配置
 - 页面横幅上块重构为显式两行结构（面包屑 + 阅读时长/AI 标签 + 日期行）
-- 评论数图标统一使用 `default:tocomment`，移除 `weibo:comment`
+- 评论数图标统一使用 `default:to-comment`，移除 `weibo:comment`
 
 ### 其他
 - 移除知识库合并版 `知识库全量.md`，知识库以领域页面为唯一事实源
@@ -115,7 +115,7 @@ Full Changelog: [1.42.0...1.42.1](https://github.com/xaoxuu/hexo-theme-stellar/c
 - 新增 `article.card_style`（`hero` 默认 / `classic`）：未显式设置的站点保持 hero 卡片样式
 - 新增 `plugins.adaptive_text`（默认 `enable: true`）：页面存在 `[data-text-adaptive]` 元素时才按需加载，文字颜色默认随背景自适应
 - 删除间距令牌 `--gap-margin` / `--gap-padding` / `--gap-max`，替换为 `--gap-base`（组件内部间距）与 `--gap-page`（页面级留白）；引用旧令牌的自定义 CSS 需迁移
-- `weibo:comment` 图标已移除，评论数图标统一使用 `default:tocomment`；自定义中引用了 `weibo:comment` 的站点请改用 `default:tocomment`
+- `weibo:comment` 图标已移除，评论数图标统一使用 `default:to-comment`；自定义中引用了 `weibo:comment` 的站点请改用 `default:to-comment`
 - 知识库合并版 `知识库全量.md` 移除（RAG 可直接索引领域页面）
 
 Full Changelog: [1.41.0...main](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.41.0...main)
