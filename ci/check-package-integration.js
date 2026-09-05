@@ -228,8 +228,7 @@ function addNotebookFixture(root, hexo) {
     "description: Notebook ViewModel integration fixture.",
     "route:",
     "  path: notes/integration",
-    "navigation:",
-    "  menu: post",
+    "active_menu: post",
     ""
   ].join("\n"));
   const args = [

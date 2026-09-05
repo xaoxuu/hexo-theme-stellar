@@ -68,7 +68,7 @@ flowchart LR
 
 - [_config.yml](../../../_config.yml)（`tags`）
 - [scripts/tags/](../../../scripts/tags/)
-- [scripts/lib/extension-assets.js](../../../scripts/lib/extension-assets.js)
+- [scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)
 - [source/js/runtime/extensions/services.js](../../../source/js/runtime/extensions/services.js)
 - [source/css/_components/tag-plugins/](../../../source/css/_components/tag-plugins/)
 

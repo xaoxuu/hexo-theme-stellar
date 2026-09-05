@@ -9,7 +9,7 @@ tags:
 
 # 内容配置 Schema v2
 
-Collection YAML 与 Page Front Matter 经过声明式 Schema 规范化后，作为冻结对象进入 CollectionModel 与 PageViewModel。模板不读取原始配置，也不兼容 v1 或 v2 预发布别名。
+Collection YAML 与 Page Front Matter 经过声明式 Schema 规范化后，作为冻结对象进入 CollectionModel 与 PageViewModel。模板不读取原始配置，也不兼容 v1 或 v2 预发布别名。确实存在于 1.44.0 的旧字段在拒绝时会给出人工迁移目标；v2 中间候选字段只按未知字段处理。
 
 ## Region 字段
 

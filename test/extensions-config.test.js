@@ -4,7 +4,7 @@ const { test } = require("node:test");
 const assert = require("node:assert/strict");
 
 const { parseStellarConfig } = require("../scripts/lib/config-schema");
-const assets = require("../scripts/lib/extension-assets");
+const assets = require("../scripts/lib/internal-constants").assets;
 const { resolveServiceProvider } = require("../scripts/lib/service-provider");
 
 test("Extension 顶层配置与 provider 参数投影为扁平运行时", () => {

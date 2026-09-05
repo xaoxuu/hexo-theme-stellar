@@ -84,13 +84,16 @@ test("Content override navigation is flat and Collection banner cascades through
   assert.equal(collection.banner.image, "/collection.webp");
   assert.equal(page.activeMenu, "post");
   assert.equal(page.breadcrumb, true);
+});
+
+test("Content config rejects 1.44 fields with current migration targets", () => {
   assert.throws(
-    () => parseCollectionConfig({ name: "Docs", navigation: { menu: "wiki" } }, "collection.yml"),
-    /navigation\.menu 已移除/
+    () => parseCollectionConfig({ name: "Docs", title: "Legacy" }, "collection.yml"),
+    /title 已移除，期望 name/
   );
   assert.throws(
-    () => parsePageConfig({ navigation: { breadcrumb: false } }, "page.md"),
-    /navigation 已移除/
+    () => parsePageConfig({ wiki: "docs" }, "page.md"),
+    /wiki 已移除，期望 collection\.id/
   );
 });
 
@@ -142,21 +145,14 @@ test("Content regions distinguish inheritance from explicit empty lists", () => 
   assert.equal(page.rightbar, undefined);
 });
 
-test("Content Region schemas reject removed Brand sources and Notebook wrapper", () => {
+test("Content Region schemas enforce Brand ownership and value boundaries", () => {
   for (const [config, pattern] of [
-    [{ name: "Docs", identity: { icon: "/docs.svg" } }, /identity 已移除/],
-    [{ name: "Docs", card: { cover: "/docs.webp" } }, /未知字段 card/],
-    [{ name: "Docs", note_defaults: { leftbar: { widgets: [] } } }, /note_defaults 已移除/],
     [{ name: "Docs", leftbar: { brand: "collection_brand" } }, /leftbar\.brand 应为 object \| boolean \| null/],
     [{ name: "Docs", topbar: { widgets: ["site_brand"] } }, /topbar\.widgets\[0\]/],
     [{ name: "Docs", leftbar: { footer: { actions: true } } }, /leftbar\.footer\.actions 应为 array \| null/]
   ]) {
     assert.throws(() => parseCollectionConfig(config, "collection.yml"), pattern);
   }
-  assert.throws(
-    () => parsePageConfig({ card: { cover: "/page.webp" } }, "page.md"),
-    /未知字段 card/
-  );
   for (const field of ["source", "back_button", "search"]) {
     assert.throws(
       () => parsePageConfig({ leftbar: { brand: { [field]: field === "source" ? "site" : true } } }, "page.md"),
@@ -205,7 +201,7 @@ test("Content config recovery omits invalid overrides and filters invalid list i
     name: "Docs",
     mystery: true,
     article: { style: "unsupported" },
-    leftbar: { widgets: ["tree", "search"] },
+    leftbar: { widgets: ["tree", 42] },
     listing: { priority: -1 }
   }, "collection.yml", {
     mode: "recover",
@@ -217,7 +213,7 @@ test("Content config recovery omits invalid overrides and filters invalid list i
   assert.deepEqual(collection.listing, {});
   assert.equal(issues.some(item => item.path === "leftbar.widgets[1]"), true);
 
-  const allInvalid = parsePageConfig({ leftbar: { widgets: ["search"] } }, "page.md", { mode: "recover" });
+  const allInvalid = parsePageConfig({ leftbar: { widgets: [42] } }, "page.md", { mode: "recover" });
   const explicitEmpty = parsePageConfig({ leftbar: { widgets: [] } }, "page.md", { mode: "recover" });
   assert.deepEqual(allInvalid.leftbar, {});
   assert.deepEqual(explicitEmpty.leftbar.widgets, []);

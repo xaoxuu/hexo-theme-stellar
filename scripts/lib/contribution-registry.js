@@ -387,7 +387,7 @@ function buildContributionEntries(context) {
     if (contribution.project === null) continue;
     const projected = contribution.project.call(contribution, context);
     if (projected === null) continue;
-    const config = contribution.kind === "feature" || contribution.entry.adapter === "feature"
+    const config = contribution.entry.adapter === "feature"
       ? Object.assign({ feature: contribution.id }, projected.config || {})
       : (projected.config || {});
     entries.push({

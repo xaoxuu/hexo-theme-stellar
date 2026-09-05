@@ -17,7 +17,6 @@ tags:
 生成此页面时参考的主题源码文件：
 
 - [layout/_partial/main/post_list/post_card.ejs](../../../layout/_partial/main/post_list/post_card.ejs)
-- [layout/_partial/main/post_list/post_card_legacy.ejs](../../../layout/_partial/main/post_list/post_card_legacy.ejs)
 - [layout/_partial/main/pin_slider.ejs](../../../layout/_partial/main/pin_slider.ejs)
 - [layout/_partial/main/post_list/wiki_card.ejs](../../../layout/_partial/main/post_list/wiki_card.ejs)
 - [layout/index.ejs](../../../layout/index.ejs)

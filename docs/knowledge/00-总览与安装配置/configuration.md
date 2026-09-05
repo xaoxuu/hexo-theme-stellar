@@ -63,7 +63,9 @@ Provider ID 属于业务值，不会被改写，例如 `provider: site_info_api`
 - 第三方参数袋；
 - 特殊 validator 与少量运行时键名。
 
-顶层和普通对象保持封闭，未知字段会在构建早期报告结构化错误。第三方参数袋按规则开放并原样保留参数。旧 `site/layout/content/seo/resources/extensions` 分组路径没有别名或双读兼容；Appearance 与 Inject 只接受当前子字段。
+顶层和普通对象保持封闭，未知字段会在构建早期报告结构化错误。第三方参数袋按规则开放并原样保留参数。Appearance 与 Inject 只接受当前子字段。
+
+升级诊断只面向最近公开版本 1.44.0：`logo/menubar/site_tree` 分别指向 `leftbar.brand/leftbar.menu/profiles`，`tag_plugins/data_services/plugins/style` 分别指向 `tags/services/features/appearance`，`dependencies/default/api_host` 分别指向 `features.lazy_loading`、`fallbacks/error_page`、`services.github/services.github_card`。`stellar/data_cache/system` 三个内部策略根直接删除。这些字段仍会被拒绝，诊断只提供人工迁移目标，不别名、双读或自动改写。v2 预发布候选中出现过的分组路径、`regions` 包装和其它中间字段统一按未知字段处理，不保留专用墓碑。
 
 `null` 只有在规则明确允许时才保留业务语义，例如 `search.provider: null` 表示关闭搜索。其它空键视为没有覆盖，继续使用默认值。
 

@@ -39,5 +39,5 @@ Voice 波形颜色不依赖全局暗色工具状态：显式 `<html data-theme="
 
 - [scripts/tags/lib/](../../../scripts/tags/lib/)
 - [source/css/_components/tag-plugins/](../../../source/css/_components/tag-plugins/)
-- [scripts/lib/extension-assets.js](../../../scripts/lib/extension-assets.js)
+- [scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)
 - [标签插件总览](tag-plugins-overview.md)

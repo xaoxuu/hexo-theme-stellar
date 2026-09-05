@@ -8,6 +8,21 @@ const { deepFreeze } = require("./schema-utils");
 const { CONFIG_RULES, literal } = require("./config-rules");
 
 const DEFAULT_CONFIG_PATH = path.resolve(__dirname, "../../_config.yml");
+const LEGACY_THEME_ROOTS = Object.freeze({
+  stellar: null,
+  logo: "leftbar.brand",
+  menubar: "leftbar.menu",
+  site_tree: "profiles",
+  tag_plugins: "tags",
+  dependencies: "features.lazy_loading",
+  data_services: "services",
+  data_cache: null,
+  plugins: "features",
+  style: "appearance",
+  default: "fallbacks | error_page",
+  api_host: "services.github | services.github_card",
+  system: null
+});
 
 function isPlainObject(value) {
   if (value == null || typeof value !== "object" || Array.isArray(value)) return false;
@@ -127,17 +142,8 @@ function loadDefaultConfig(source = fs.readFileSync(DEFAULT_CONFIG_PATH, "utf8")
 function buildConfigSchema(defaultConfig = loadDefaultConfig()) {
   const schema = inferNode(defaultConfig, "");
   schema.sealed = true;
-  schema.removedProperties = { regions: "topbar | leftbar | rightbar" };
+  schema.removedProperties = clone(LEGACY_THEME_ROOTS);
   for (const [pattern, rule] of CONFIG_RULES) ensureRulePath(schema, pattern, rule);
-  for (const region of ["topbar", "leftbar", "rightbar"]) {
-    schema.properties[region].migration = `${region}.widgets`;
-  }
-  for (const profile of Object.values(schema.properties.profiles.properties)) {
-    profile.removedProperties = { ...(profile.removedProperties || {}), regions: "topbar | leftbar | rightbar" };
-    for (const region of ["topbar", "leftbar", "rightbar"]) {
-      profile.properties[region].migration = `profiles.*.${region}.widgets`;
-    }
-  }
   normalizeRuleDefaults(schema);
   return deepFreeze(schema);
 }

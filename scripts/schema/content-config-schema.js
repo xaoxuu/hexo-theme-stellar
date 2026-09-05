@@ -243,13 +243,9 @@ function schemaForScope(scope) {
 }
 
 function decorateSharedSchemas(schema) {
-  schema.removedProperties ||= {};
-  schema.removedProperties.regions = "topbar | leftbar | rightbar";
   for (const region of ["topbar", "leftbar", "rightbar"]) {
     schema.properties[region].normalizer = "object";
     schema.properties[region].normalization = "accept a Region object; validate children and deep-freeze the normalized object";
-    schema.properties[region].migration = `${region}.widgets`;
-    schema.properties[region].removedProperties = { inherit: null };
   }
   schema.properties.topbar.properties.widgets.validator = "region_widgets";
   schema.properties.leftbar.properties.widgets.validator = "leftbar_content_widgets";
@@ -272,19 +268,10 @@ function decorateSharedSchemas(schema) {
 }
 
 function decorateCommon(schema) {
-  schema.removedProperties.sidebar = "leftbar | rightbar";
-  if (schema.properties.navigation) {
-    schema.properties.navigation.removedProperties = {
-      mobile_header: "active_menu | breadcrumb",
-      menu: "active_menu",
-      breadcrumb: "breadcrumb"
-    };
-  }
   schema.properties.comments.removedProperties = Object.fromEntries(
     COMMENT_PROVIDER_FIELDS.map(field => [field, field === "service" ? "provider" : "options"])
   );
   schema.properties.comments.properties.provider.validator = "nullable_non_empty_string";
-  schema.properties.article.removedProperties = { type: "style", indent: "paragraph_indent" };
   schema.properties.article.properties.style.values = ["tech", "story"];
   schema.properties.article.properties.paragraph_indent.values = ["auto", "always", "never"];
   schema.properties.article.properties.ai_label.values = ["manual", "reviewed", "polished", "generated", null];
@@ -301,24 +288,17 @@ function decorateCommon(schema) {
 const COLLECTION_CONFIG_SCHEMA = schemaForScope("collection");
 COLLECTION_CONFIG_SCHEMA.requiredProperties = ["name"];
 COLLECTION_CONFIG_SCHEMA.removedProperties = clone(LEGACY_COLLECTION_ROOTS);
-COLLECTION_CONFIG_SCHEMA.removedProperties.identity = "icon";
-COLLECTION_CONFIG_SCHEMA.removedProperties.banner_info = "banner";
-COLLECTION_CONFIG_SCHEMA.removedProperties.note_defaults = null;
 COLLECTION_CONFIG_SCHEMA.properties.name.validator = "non_empty_string";
-COLLECTION_CONFIG_SCHEMA.properties.route.removedProperties = { base_dir: "path" };
 COLLECTION_CONFIG_SCHEMA.properties.listing.properties.order.validator = "nullable_non_negative_integer";
 COLLECTION_CONFIG_SCHEMA.properties.listing.properties.excerpt_length.validator = "nullable_non_negative_integer";
 COLLECTION_CONFIG_SCHEMA.properties.listing.properties.per_page.validator = "nullable_non_negative_integer";
-COLLECTION_CONFIG_SCHEMA.properties.listing.removedProperties = { order_by: "sort" };
 decorateSharedSchemas(COLLECTION_CONFIG_SCHEMA);
 decorateCommon(COLLECTION_CONFIG_SCHEMA);
 
 const FRONT_MATTER_CONFIG_SCHEMA = schemaForScope("front_matter");
 FRONT_MATTER_CONFIG_SCHEMA.externalProperties = HEXO_FRONT_MATTER_FIELDS;
 FRONT_MATTER_CONFIG_SCHEMA.removedProperties = clone(LEGACY_FRONT_MATTER_ROOTS);
-FRONT_MATTER_CONFIG_SCHEMA.removedProperties.navigation = "active_menu | breadcrumb";
 FRONT_MATTER_CONFIG_SCHEMA.properties.collection.requiredProperties = ["profile", "id"];
-FRONT_MATTER_CONFIG_SCHEMA.properties.collection.removedProperties = { type: "profile" };
 FRONT_MATTER_CONFIG_SCHEMA.properties.collection.properties.id.validator = "non_empty_string";
 decorateSharedSchemas(FRONT_MATTER_CONFIG_SCHEMA);
 decorateCommon(FRONT_MATTER_CONFIG_SCHEMA);

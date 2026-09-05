@@ -68,6 +68,48 @@ test("Theme config rejects unknown, mistyped, and unsafe values with sourced iss
   );
 });
 
+test("Theme config rejects 1.44 roots with current migration targets", () => {
+  const legacyRoots = {
+    stellar: null,
+    logo: "leftbar.brand",
+    menubar: "leftbar.menu",
+    site_tree: "profiles",
+    tag_plugins: "tags",
+    dependencies: "features.lazy_loading",
+    data_services: "services",
+    data_cache: null,
+    plugins: "features",
+    style: "appearance",
+    default: "fallbacks | error_page",
+    api_host: "services.github | services.github_card",
+    system: null
+  };
+  for (const [path, replacement] of Object.entries(legacyRoots)) {
+    assert.throws(
+      () => parseStellarConfig({ source: "1.44.yml", themeConfig: { [path]: {} } }),
+      error => {
+        assert.ok(error instanceof ConfigSchemaError);
+        const current = error.issues.find(issue => issue.path === path);
+        assert.equal(current?.code, "removed_field", path);
+        assert.equal(current?.expected, replacement || "remove field without replacement", path);
+        return true;
+      }
+    );
+  }
+
+  const issues = [];
+  const recovered = parseStellarConfig({
+    source: "1.44.yml",
+    mode: "recover",
+    onIssues: current => issues.push(...current),
+    themeConfig: { logo: { title: "Legacy" } }
+  });
+  assert.equal(recovered.logo, undefined);
+  assert.equal(issues.some(issue => (
+    issue.path === "logo" && issue.code === "removed_field" && issue.expected === "leftbar.brand"
+  )), true);
+});
+
 test("Theme share defaults accept only registered service IDs", () => {
   const config = parseStellarConfig({
     themeConfig: {

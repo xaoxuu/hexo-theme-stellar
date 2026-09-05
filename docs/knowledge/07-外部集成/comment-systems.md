@@ -76,4 +76,4 @@ Twikoo、Waline 与 Artalk 的线程键优先取容器 `comment_id`，缺失时�
 
 Artalk、Waline 与 Twikoo 的 `imageUploader` 仍是上游业务参数，不是 Extension 资源地址。各评论系统的 Stellar 视觉覆盖位于 `source/css/comments/`，按 provider 初始化路径加载；`comments.custom_css` 已删除。
 
-相关源码：[scripts/lib/models/index.js](../../../scripts/lib/models/index.js)、[layout/_partial/comments/](../../../layout/_partial/comments/)、[source/js/runtime/extensions/comments.js](../../../source/js/runtime/extensions/comments.js)、[scripts/lib/extension-assets.js](../../../scripts/lib/extension-assets.js)、[source/css/comments/](../../../source/css/comments/)。
+相关源码：[scripts/lib/models/index.js](../../../scripts/lib/models/index.js)、[layout/_partial/comments/](../../../layout/_partial/comments/)、[source/js/runtime/extensions/comments.js](../../../source/js/runtime/extensions/comments.js)、[scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)、[source/css/comments/](../../../source/css/comments/)。

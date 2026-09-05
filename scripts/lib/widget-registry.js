@@ -49,7 +49,6 @@ function normalizedPresentations(descriptor, layout) {
 }
 
 function leftbarZone(layout) {
-  if (layout === "search") return "top";
   if (layout === "settings") return "system";
   return "body";
 }
@@ -77,15 +76,6 @@ function resolveWidget(specification, catalog, context = {}) {
   if (["brand", "actions"].includes(layout)) {
     return freeze({ instance: null, warning: {
       code: "fixed_region_content",
-      widget: source.id || layout,
-      layout,
-      region,
-      supported: []
-    } });
-  }
-  if (layout === "search") {
-    return freeze({ instance: null, warning: {
-      code: "retired_region_widget",
       widget: source.id || layout,
       layout,
       region,
