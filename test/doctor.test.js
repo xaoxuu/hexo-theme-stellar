@@ -43,8 +43,8 @@ test("doctor 聚合环境、主题配置、Collection 与 Front Matter 的来源
   }
   assert.equal(result.issues.some(item => item.source === "environment" && item.path === "node"), true);
   assert.equal(result.issues.some(item => item.source === "_config.yml" && item.path === "theme"), true);
-  assert.equal(result.issues.some(item => item.source === "_config.stellar.yml" && item.path === "legacy"), true);
-  assert.equal(result.issues.some(item => item.source.endsWith("example.yml") && item.path === "unknown"), true);
+  assert.equal(result.warnings.some(item => item.source === "_config.stellar.yml" && item.path === "legacy"), true);
+  assert.equal(result.warnings.some(item => item.source.endsWith("example.yml") && item.path === "unknown"), true);
   assert.equal(result.issues.some(item => item.source.endsWith("index.md") && item.path === "collection.id"), true);
 });
 
@@ -109,3 +109,11 @@ test("doctor 的归属诊断包含来源、候选 Collection 与最小修复", (
   assert.equal(result.issues.some(item => item.code === "collection_conflict" && item.source.endsWith("source/guide/only-a.md") && /candidates=wiki:a/.test(item.expected)), true);
   assert.equal(result.issues.some(item => item.code === "collection_not_found" && /create source\/_data\/notebooks\/missing\.yml/.test(item.expected)), true);
 });
+
+ test("doctor warns without failing for recoverable configuration", () => {
+  const baseDir = initializedSite();
+  fs.writeFileSync(path.join(baseDir, "_config.stellar.yml"), "unknown_field: true\n");
+  const result = runDoctor({ baseDir, nodeVersion: "22.0.0", hexoVersion: "8.1.0" });
+  assert.equal(result.ok, true, formatDoctorText(result));
+  assert.ok(result.warnings.some(issue => issue.path === "unknown_field"));
+ });

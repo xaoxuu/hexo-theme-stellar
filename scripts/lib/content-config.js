@@ -3,6 +3,7 @@
 
 const {
   ConfigSchemaError,
+  deepFreeze,
   formatIssue,
   isPlainObject,
   parseConfigSchema
@@ -12,18 +13,15 @@ const {
   FRONT_MATTER_CONFIG_SCHEMA
 } = require("../schema/content-config-schema");
 
+// Project the declared content fields; do not maintain a second field whitelist.
+const contentFields = node => Object.freeze(Object.entries(node?.properties || {})
+  .map(([key, child]) => child.runtimeKey || key));
 const CONTENT_MODEL_FIELDS = Object.freeze({
-  article: Object.freeze(["style", "paragraphIndent", "author", "aiLabel"]),
-  banner: Object.freeze(["enabled", "image", "avatar", "headline", "tagline"]),
-  brand: Object.freeze(["image", "name", "tagline", "href"]),
-  brandImage: Object.freeze(["src", "variant"]),
-  comments: Object.freeze(["enabled", "title", "id", "provider", "options"]),
-  footer: Object.freeze(["references", "license", "share", "showTags"]),
+  ...Object.fromEntries(Object.entries(FRONT_MATTER_CONFIG_SCHEMA.properties)
+    .filter(([, node]) => node.properties)
+    .map(([key, node]) => [node.runtimeKey || key, contentFields(node)])),
   navigation: Object.freeze(["menu", "breadcrumb"]),
-  regionIds: Object.freeze(["topbar", "leftbar", "rightbar"]),
-  region: Object.freeze(["enabled", "brand", "menu", "footer", "widgets"]),
-  source: Object.freeze(["repository", "branch"]),
-  visibility: Object.freeze(["listed", "searchable"])
+  regionIds: Object.freeze(Object.keys(require("./widget-registry").REGION_PRESENTATIONS))
 });
 
 class ContentConfigError extends Error {
@@ -41,13 +39,16 @@ function contentError(error) {
 
 function parseCollectionConfig(config, source = "<collection>", options = {}) {
   try {
-    return parseConfigSchema(COLLECTION_CONFIG_SCHEMA, config, {
-      ...options,
-      source,
-      isFatalIssue(currentIssue) {
-        return currentIssue.path === "name" || options.isFatalIssue?.(currentIssue);
-      }
+    const diagnostics = [];
+    const parsed = parseConfigSchema(COLLECTION_CONFIG_SCHEMA, config, {
+      ...options, source, onIssues: current => diagnostics.push(...current)
     });
+    const name = typeof parsed.name === "string" && parsed.name.trim() ? parsed.name : null;
+    const id = options.collectionId || source.replace(/\\/g, "/").split("/").at(-1).replace(/\.ya?ml$/i, "");
+    if (!name) diagnostics.push({ code: "invalid_value", source, path: "name", actualType: typeof parsed.name,
+      expected: "non-empty display name", severity: "warning", action: "使用 Collection ID" });
+    options.onIssues?.(diagnostics);
+    return name ? parsed : deepFreeze({ ...parsed, name: id });
   } catch (error) {
     return contentError(error);
   }
@@ -99,7 +100,7 @@ function unsupportedProfileField(source, path, profile) {
   });
 }
 
-function validateCollectionProfileConfig(config, source, profile, capabilities) {
+function validateCollectionProfileConfig(config, source, profile, capabilities, options = {}) {
   const policy = capabilities?.collection;
   if (!policy) throw new ContentConfigError([unsupportedProfileField(source, "root", profile)]);
   const issues = [];
@@ -118,15 +119,26 @@ function validateCollectionProfileConfig(config, source, profile, capabilities) 
       issues.push(unsupportedProfileField(source, `listing.${field.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`)}`, profile));
     }
   }
-  if (issues.length > 0) throw new ContentConfigError(issues);
-  return config;
+  return omitUnsupported(config, issues, options);
 }
 
-function validatePageProfileConfig(config, source, profile, capabilities) {
-  if (hasOwn(config?.listing, "priority") && capabilities?.page?.listingPriority !== true) {
-    throw new ContentConfigError([unsupportedProfileField(source, "listing.priority", profile)]);
+function omitUnsupported(config, issues, options) {
+  if (issues.length === 0) return config;
+  const result = structuredClone(config);
+  for (const issue of issues) {
+    const parts = issue.path.split(".").map(key => key.replace(/_([a-z])/g, (_, c) => c.toUpperCase()));
+    const key = parts.pop();
+    const parent = parts.reduce((value, part) => value?.[part], result);
+    if (parent) delete parent[key];
   }
-  return config;
+  options.onIssues?.(issues.map(issue => ({ ...issue, severity: "warning", action: "忽略不适用的表现参数" })));
+  return deepFreeze(result);
+}
+
+function validatePageProfileConfig(config, source, profile, capabilities, options = {}) {
+  const issues = hasOwn(config?.listing, "priority") && capabilities?.page?.listingPriority !== true
+    ? [unsupportedProfileField(source, "listing.priority", profile)] : [];
+  return omitUnsupported(config, issues, options);
 }
 
 function getCollectionId(page, profile) {

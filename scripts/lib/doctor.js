@@ -5,7 +5,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const yaml = require("js-yaml");
 
-const { ConfigSchemaError, deepFreeze, parseStellarConfig } = require("./config-schema");
+const { ConfigSchemaError, deepFreeze, formatIssue, parseStellarConfig } = require("./config-schema");
 const {
   ContentConfigError,
   parseCollectionConfig,
@@ -120,6 +120,7 @@ function runDoctor(options = {}) {
   const issues = [];
   const warnings = [];
   const catalog = widgetCatalog(baseDir);
+  const recovery = { mode: "recover", onIssues: current => warnings.push(...current.map(item => ({ ...item, severity: "warning" }))) };
 
   if (major(nodeVersion) == null || major(nodeVersion) < 22) {
     issues.push(issue("unsupported_version", "environment", "node", `string:${nodeVersion || "unknown"}`, "Node.js >= 22", "start/requirements"));
@@ -146,13 +147,15 @@ function runDoctor(options = {}) {
     if (value != null) stellarConfig = collectSchemaIssues(() => parseStellarConfig({
       source: "_config.stellar.yml",
       themeConfig: value,
-      siteConfig
+      siteConfig,
+      ...recovery
     }), issues);
   } else {
     stellarConfig = collectSchemaIssues(() => parseStellarConfig({
       source: "Stellar Schema defaults",
       themeConfig: {},
-      siteConfig
+      siteConfig,
+      ...recovery
     }), issues);
   }
 
@@ -177,8 +180,8 @@ function runDoctor(options = {}) {
       if (value != null) {
         const contentProfile = collectionRoot === "notebooks" ? "notebook" : collectionRoot;
         const parsed = collectSchemaIssues(() => {
-          const config = parseCollectionConfig(value, source);
-          return validateCollectionProfileConfig(config, source, contentProfile, getProfileAdapter(contentProfile).config);
+          const config = parseCollectionConfig(value, source, { ...recovery, collectionId: relative(directory, file).replace(/\.ya?ml$/i, "") });
+          return validateCollectionProfileConfig(config, source, contentProfile, getProfileAdapter(contentProfile).config, recovery);
         }, issues);
         if (parsed != null) {
           const key = relative(path.join(baseDir, "source", "_data"), file).replace(/\.ya?ml$/i, "");
@@ -206,7 +209,7 @@ function runDoctor(options = {}) {
     const source = relative(baseDir, file);
     const value = frontMatterValue(file, source, issues);
     if (value != null) {
-      const parsed = collectSchemaIssues(() => parsePageConfig(value, source), issues);
+      const parsed = collectSchemaIssues(() => parsePageConfig(value, source, recovery), issues);
       if (parsed == null) continue;
       const resolved = resolveContentMembership({
         kind: source.startsWith("source/_posts/") ? "posts" : "pages",
@@ -216,17 +219,17 @@ function runDoctor(options = {}) {
         registry: membershipRegistry
       });
       issues.push(...resolved.issues);
-      const finalConfig = resolved.config || parsed;
+      let finalConfig = resolved.config || parsed;
       const profile = finalConfig.collection?.profile
         || (source.startsWith("source/_posts/") ? "post" : (parsed.layout || "page"));
       const contentProfile = finalConfig.collection?.profile
         || (source.startsWith("source/_posts/") ? "post" : "page");
-      collectSchemaIssues(() => validatePageProfileConfig(
+      finalConfig = collectSchemaIssues(() => validatePageProfileConfig(
         finalConfig,
         source,
         contentProfile,
-        contentProfile === "page" ? null : getProfileAdapter(contentProfile).config
-      ), issues);
+        contentProfile === "page" ? null : getProfileAdapter(contentProfile).config, recovery
+      ), issues) || finalConfig;
       const collectionKey = finalConfig.collection
         ? `${finalConfig.collection.profile === "notebook" ? "notebooks" : finalConfig.collection.profile}/${finalConfig.collection.id}`
         : null;
@@ -279,6 +282,7 @@ function formatDoctorText(result) {
   if (result.warnings.length > 0) {
     lines.push(`Warnings (${result.warnings.length}):`);
     for (const item of result.warnings) {
+      if (!item.widget) { lines.push(`- ${formatIssue(item)}; ${item.action || "ignored"}`); continue; }
       lines.push(`- ${item.source}: Widget ${item.widget} (layout=${item.layout}) does not support ${item.region}; supported=${item.supported.join(",") || "none"}; skipped`);
     }
   }

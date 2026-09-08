@@ -11,16 +11,14 @@ const { getCollectionId } = require("../../lib/content-config");
 const { buildWikiTree } = require("../../lib/doc_tree");
 const { requireLayoutProfiles } = require("../../lib/layout-config");
 const {
+  buildWikiCollectionModel,
   buildWikiListingRender,
   buildWikiPageViewModelBase,
   buildWikiRelated,
   completeWikiPageViewModel
 } = require("../../lib/models");
 const { ensureRuntimeData } = require("../../lib/runtime-data");
-const {
-  setProfileViewModelBase,
-  setProfileViewModelInput
-} = require("../../lib/page-view-model-registry");
+const { pageViewModelsFor } = require("../../lib/page-view-model-registry");
 const { sourcePathForData } = require("../../lib/source-config");
 
 function cloneConfig(value) {
@@ -49,6 +47,7 @@ module.exports = (ctx, pipeline) => {
   const runtimeData = ensureRuntimeData(ctx);
   runtimeData.wiki = wiki;
 
+  const collectionModels = new Map();
   const entries = [];
   const homepageEntries = new Map();
   for (const record of records) {
@@ -66,6 +65,8 @@ module.exports = (ctx, pipeline) => {
       collectionListed: wiki.shelf.includes(collectionId),
       isBackup: process.env.IS_BACKUP === "true"
     };
+    if (!collectionModels.has(collectionId)) collectionModels.set(collectionId, buildWikiCollectionModel(input, collectionId));
+    input.collectionModel = collectionModels.get(collectionId);
     const base = buildWikiPageViewModelBase(input);
     const entry = { page, collectionId, input, base };
     entries.push(entry);
@@ -92,9 +93,9 @@ module.exports = (ctx, pipeline) => {
       related,
       listing: listings.get(entry.collectionId)
     });
-    entry.page.viewModel = completeWikiPageViewModel(completeInput, entry.base);
-    setProfileViewModelInput("wiki", entry.page, completeInput);
-    setProfileViewModelBase("wiki", entry.page, entry.base);
+    pageViewModelsFor(ctx).setPageViewModel(entry.page, completeWikiPageViewModel(completeInput, entry.base));
+    pageViewModelsFor(ctx).setProfileViewModelInput("wiki", entry.page, completeInput);
+    pageViewModelsFor(ctx).setProfileViewModelBase("wiki", entry.page, entry.base);
   }
 
   wiki.index = {

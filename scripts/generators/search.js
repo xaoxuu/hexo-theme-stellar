@@ -8,7 +8,7 @@ const { normalize_path } = require("../lib/path_utils");
 const { buildSearchIndex } = require("../lib/search_index");
 const { indexDomains } = require("../lib/search-domain");
 const { isSearchable } = require("../lib/content-config");
-const { getPageConfig } = require("../lib/page-view-model-registry");
+const { pageViewModelsFor } = require("../lib/page-view-model-registry");
 
 hexo.extend.generator.register("search_json_generator", function(locals) {
   if (this.stellar.config.search.provider !== "local") return {};
@@ -68,7 +68,7 @@ hexo.extend.generator.register("search_json_generator", function(locals) {
     posts.each(function(post) {
       var layouts = ["post"];
       if (!layouts.includes(post.layout)) return;
-      const config = getPageConfig(post);
+      const config = pageViewModelsFor(hexo).getPageConfig(post);
       if (!config || !isSearchable(post.viewModel?.item || config)) return;
       const item = generateJson(post, config);
       res.push(item);
@@ -78,7 +78,7 @@ hexo.extend.generator.register("search_json_generator", function(locals) {
     pages.each(function(page) {
       var layouts = ["page", "wiki"];
       if (!layouts.includes(page.layout)) return;
-      const config = getPageConfig(page);
+      const config = pageViewModelsFor(hexo).getPageConfig(page);
       if (!config || !isSearchable(page.viewModel?.item || config)) return;
       const item = generateJson(page, config);
       res.push(item);

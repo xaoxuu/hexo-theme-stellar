@@ -453,3 +453,22 @@ test("Region Brand and Banner preserve profile, collection, and page override pr
     headline: "Page"
   });
 });
+
+test("Wiki pages share the prepared Collection and navigation while retaining distinct page projections", () => {
+  const { buildWikiCollectionModel } = require('../scripts/lib/models');
+  const input = wikiInput();
+  input.collectionState.sections = [{ title: 'Docs', pages: [
+    { title: 'First', path: 'wiki/docs/first', page_number: 0 },
+    { title: 'Second', path: 'wiki/docs/second', page_number: 1 }
+  ] }];
+  input.collectionModel = buildWikiCollectionModel(input, input.collectionId);
+  const first = buildWikiPageViewModel({ ...input, page: page('wiki/docs/first', 'wiki') });
+  const second = buildWikiPageViewModel({ ...input, page: page('wiki/docs/second', 'wiki') });
+  assert.equal(first.collection, second.collection);
+  assert.equal(first.collection.navigation.tree, input.collectionModel.navigation.tree);
+  assert.equal(first.collection.navigation.tree[0].items.length, 2);
+  assert.notEqual(first.item, second.item);
+  assert.notEqual(first.item.route.path, second.item.route.path);
+  assertPageViewModel('wiki', first);
+  assertPageViewModel('wiki', second);
+});

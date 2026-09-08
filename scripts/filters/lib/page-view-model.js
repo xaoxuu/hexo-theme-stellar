@@ -7,14 +7,7 @@ const {
   buildTopicPageViewModel,
   completeTopicPageViewModel
 } = require("../../lib/models");
-const {
-  getProfileViewModelInput,
-  getPostViewModelInput,
-  getTopicViewModelBase,
-  getTopicViewModelInput,
-  setPageViewModel,
-  setRelatedItems
-} = require("../../lib/page-view-model-registry");
+const { pageViewModelsFor } = require("../../lib/page-view-model-registry");
 
 function plainTermLinks(value) {
   let items = value;
@@ -120,28 +113,29 @@ function buildNotebookViewModelFromData(data, input) {
 }
 
 function attachPageViewModel(data) {
-  const postInput = getPostViewModelInput(data);
-  const topicInput = getTopicViewModelInput(data);
+  let viewModel;
+  const postInput = pageViewModelsFor(this).getPostViewModelInput(data);
+  const topicInput = pageViewModelsFor(this).getTopicViewModelInput(data);
   const input = postInput || topicInput;
   if (input) {
     const items = relatedItems(this, data, input);
-    setRelatedItems(data, items);
-    data.viewModel = postInput
+    pageViewModelsFor(this).setRelatedItems(data, items);
+    viewModel = postInput
       ? buildPostViewModelFromData(data, input, { relatedItems: items })
       : buildTopicViewModelFromData(data, input, {
-        base: getTopicViewModelBase(data),
+        base: pageViewModelsFor(this).getTopicViewModelBase(data),
         relatedItems: items
       });
   } else {
-    const wikiInput = getProfileViewModelInput("wiki", data);
-    const notebookInput = getProfileViewModelInput("notebook", data);
+    const wikiInput = pageViewModelsFor(this).getProfileViewModelInput("wiki", data);
+    const notebookInput = pageViewModelsFor(this).getProfileViewModelInput("notebook", data);
     if (wikiInput) {
-      data.viewModel = buildWikiViewModelFromData(data, wikiInput);
+      viewModel = buildWikiViewModelFromData(data, wikiInput);
     } else if (notebookInput) {
-      data.viewModel = buildNotebookViewModelFromData(data, notebookInput);
+      viewModel = buildNotebookViewModelFromData(data, notebookInput);
     }
   }
-  if (data.viewModel) setPageViewModel(data, data.viewModel);
+  if (viewModel) pageViewModelsFor(this).setPageViewModel(data, viewModel);
   return data;
 }
 

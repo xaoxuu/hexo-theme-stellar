@@ -2,7 +2,7 @@
 
 const { test } = require("node:test");
 const assert = require("node:assert/strict");
-const pageRegistry = require("../scripts/lib/page-view-model-registry");
+const { pageViewModelsFor } = require("../scripts/lib/page-view-model-registry");
 const { parseStellarConfig } = require("../scripts/lib/config-schema");
 const { parsePageConfig } = require("../scripts/lib/content-config");
 
@@ -17,6 +17,7 @@ global.hexo = {
   }
 };
 require("../scripts/helpers/post_view_model");
+const pageRegistry = pageViewModelsFor(global.hexo);
 
 test("post_view_model returns the cached final model without rebuilding", () => {
   pageRegistry.resetPageViewModelRegistry();

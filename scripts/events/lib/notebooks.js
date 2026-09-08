@@ -10,11 +10,7 @@ const {
   buildNotebookCollectionModel,
   completeNotebookPageViewModel
 } = require("../../lib/models");
-const {
-  getNotebookViewModelBase,
-  getNotebookViewModelInput,
-  setProfileViewModelInput
-} = require("../../lib/page-view-model-registry");
+const { pageViewModelsFor } = require("../../lib/page-view-model-registry");
 const { ensureRuntimeData } = require("../../lib/runtime-data");
 const { sourcePathForData } = require("../../lib/source-config");
 const { deepFreeze } = require("../../schema/schema-utils");
@@ -91,26 +87,15 @@ module.exports = (ctx, pipeline) => {
   }
   const runtimeData = ensureRuntimeData(ctx);
   const entries = [];
-  const collections = new Map();
+  const collections = new Map(pipeline.notebookCollections);
 
   for (const record of records) {
     const page = record.page;
-    const input = getNotebookViewModelInput(page);
-    const base = getNotebookViewModelBase(page);
+    const input = pageViewModelsFor(ctx).getNotebookViewModelInput(page);
+    const base = pageViewModelsFor(ctx).getNotebookViewModelBase(page);
     if (!input || !base) continue;
     collections.set(base.collection.id, base.collection);
     entries.push({ page, input, base });
-  }
-  for (const [collectionId, collectionConfig] of collectionConfigs) {
-    if (collections.has(collectionId)) continue;
-    collections.set(collectionId, buildNotebookCollectionModel({
-      collectionSource: sourcePathForData(`notebooks/${collectionId}`),
-      themeSource: pipeline.themeSource,
-      siteConfig: ctx.config,
-      stellarConfig: ctx.stellar?.config,
-      collectionConfig,
-      collectionItems
-    }, collectionId));
   }
   const tagTrees = new Map(Array.from(collections, ([collectionId, collection]) => [
     collectionId,
@@ -201,7 +186,7 @@ module.exports = (ctx, pipeline) => {
   });
 
   for (let index = 0; index < entries.length; index += 1) {
-    entries[index].page.viewModel = finalViewModels[index];
-    setProfileViewModelInput("notebook", entries[index].page, entries[index].completeInput);
+    pageViewModelsFor(ctx).setPageViewModel(entries[index].page, finalViewModels[index]);
+    pageViewModelsFor(ctx).setProfileViewModelInput("notebook", entries[index].page, entries[index].completeInput);
   }
 };

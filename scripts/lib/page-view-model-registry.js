@@ -1,115 +1,132 @@
 "use strict";
 
-const profileInputs = new Map();
-const profileBases = new Map();
-const relatedItems = new Map();
-const pageConfigs = new Map();
-const pageViewModels = new Map();
+function createPageViewModelRegistry() {
 
-function keysForPage(page) {
-  return [page?.source, page?.path, page?._id]
-    .filter(value => typeof value === "string" && value.length > 0);
-}
+  const profileInputs = new Map();
+  const profileBases = new Map();
+  const relatedItems = new Map();
+  const pageConfigs = new Map();
+  const pageViewModels = new Map();
 
-function resetPageViewModelRegistry() {
-  profileInputs.clear();
-  profileBases.clear();
-  relatedItems.clear();
-  pageConfigs.clear();
-  pageViewModels.clear();
-}
-
-function setValue(store, page, value) {
-  for (const key of keysForPage(page)) store.set(key, value);
-}
-
-function getValue(store, page) {
-  for (const key of keysForPage(page)) {
-    if (store.has(key)) return store.get(key);
+  function keysForPage(page) {
+    return ["source", "path", "_id"].filter(key => typeof page?.[key] === "string" && page[key].length > 0)
+      .map(key => `${key}:${page[key]}`);
   }
-  return null;
-}
 
-function setPageConfig(page, config) {
-  setValue(pageConfigs, page, config);
-}
+  function resetPageViewModelRegistry() {
+    profileInputs.clear();
+    profileBases.clear();
+    relatedItems.clear();
+    pageConfigs.clear();
+    pageViewModels.clear();
+  }
 
-function getPageConfig(page) {
-  return getValue(pageConfigs, page);
-}
+  function setValue(store, page, value) {
+    for (const key of keysForPage(page)) store.set(key, value);
+  }
 
-function setPageViewModel(page, viewModel) {
-  setValue(pageViewModels, page, viewModel);
-}
+  function getValue(store, page) {
+    for (const key of keysForPage(page)) {
+      if (store.has(key)) return store.get(key);
+    }
+    return null;
+  }
 
-function getPageViewModel(page) {
-  return getValue(pageViewModels, page);
-}
+  function setPageConfig(page, config) {
+    setValue(pageConfigs, page, config);
+  }
 
-function profileStore(stores, profile) {
-  if (!stores.has(profile)) stores.set(profile, new Map());
-  return stores.get(profile);
-}
+  function getPageConfig(page) {
+    return getValue(pageConfigs, page);
+  }
 
-function setProfileViewModelInput(profile, page, input) {
-  setValue(profileStore(profileInputs, profile), page, input);
-}
+  function setPageViewModel(page, viewModel) {
+    setValue(pageViewModels, page, viewModel);
+    // Derived models belong to this build, not Warehouse's persisted content.
+    // A non-enumerable getter avoids deep-copying entire Collection trees on save.
+    Object.defineProperty(page, "viewModel", {
+      configurable: true,
+      enumerable: false,
+      get: () => getPageViewModel(page)
+    });
+  }
 
-function getProfileViewModelInput(profile, page) {
-  return getValue(profileStore(profileInputs, profile), page);
-}
+  function getPageViewModel(page) {
+    return getValue(pageViewModels, page);
+  }
 
-function setProfileViewModelBase(profile, page, base) {
-  setValue(profileStore(profileBases, profile), page, base);
-}
+  function profileStore(stores, profile) {
+    if (!stores.has(profile)) stores.set(profile, new Map());
+    return stores.get(profile);
+  }
 
-function getProfileViewModelBase(profile, page) {
-  return getValue(profileStore(profileBases, profile), page);
-}
+  function setProfileViewModelInput(profile, page, input) {
+    setValue(profileStore(profileInputs, profile), page, input);
+  }
 
-function getPostViewModelInput(page) {
-  return getProfileViewModelInput("post", page);
-}
+  function getProfileViewModelInput(profile, page) {
+    return getValue(profileStore(profileInputs, profile), page);
+  }
 
-function getTopicViewModelInput(page) {
-  return getProfileViewModelInput("topic", page);
-}
+  function setProfileViewModelBase(profile, page, base) {
+    setValue(profileStore(profileBases, profile), page, base);
+  }
 
-function getTopicViewModelBase(page) {
-  return getProfileViewModelBase("topic", page);
-}
+  function getProfileViewModelBase(profile, page) {
+    return getValue(profileStore(profileBases, profile), page);
+  }
 
-function getNotebookViewModelInput(page) {
-  return getProfileViewModelInput("notebook", page);
-}
+  function getPostViewModelInput(page) {
+    return getProfileViewModelInput("post", page);
+  }
 
-function getNotebookViewModelBase(page) {
-  return getProfileViewModelBase("notebook", page);
-}
+  function getTopicViewModelInput(page) {
+    return getProfileViewModelInput("topic", page);
+  }
 
-function setRelatedItems(page, items) {
-  setValue(relatedItems, page, Object.freeze(items.slice()));
-}
+  function getTopicViewModelBase(page) {
+    return getProfileViewModelBase("topic", page);
+  }
 
-function getRelatedItems(page) {
-  return getValue(relatedItems, page) || [];
-}
+  function getNotebookViewModelInput(page) {
+    return getProfileViewModelInput("notebook", page);
+  }
 
-module.exports = {
-  getProfileViewModelBase,
-  getProfileViewModelInput,
-  getPageConfig,
-  getPageViewModel,
-  getNotebookViewModelBase,
-  getNotebookViewModelInput,
-  getPostViewModelInput,
-  getRelatedItems,
-  getTopicViewModelBase,
-  getTopicViewModelInput,
-  resetPageViewModelRegistry,
-  setPageConfig,
-  setPageViewModel,
-  setProfileViewModelBase,
-  setProfileViewModelInput,
-  setRelatedItems
-};
+  function getNotebookViewModelBase(page) {
+    return getProfileViewModelBase("notebook", page);
+  }
+
+  function setRelatedItems(page, items) {
+    setValue(relatedItems, page, Object.freeze(items.slice()));
+  }
+
+  function getRelatedItems(page) {
+    return getValue(relatedItems, page) || [];
+  }
+
+  return Object.freeze({
+    getProfileViewModelBase,
+    getProfileViewModelInput,
+    getPageConfig,
+    getPageViewModel,
+    getNotebookViewModelBase,
+    getNotebookViewModelInput,
+    getPostViewModelInput,
+    getRelatedItems,
+    getTopicViewModelBase,
+    getTopicViewModelInput,
+    resetPageViewModelRegistry,
+    setPageConfig,
+    setPageViewModel,
+    setProfileViewModelBase,
+    setProfileViewModelInput,
+    setRelatedItems
+  });
+
+}
+const registries = new WeakMap();
+function pageViewModelsFor(ctx) {
+  if (!registries.has(ctx)) registries.set(ctx, createPageViewModelRegistry());
+  return registries.get(ctx);
+}
+module.exports = { createPageViewModelRegistry, pageViewModelsFor };

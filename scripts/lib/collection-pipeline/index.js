@@ -9,18 +9,18 @@ const {
   validateThemeConfig
 } = require("../../lib/content-config");
 const { formatConfigWarnings } = require("../../lib/config-schema");
-const { resetPageViewModelRegistry, setPageConfig } = require("../page-view-model-registry");
+const { pageViewModelsFor } = require("../page-view-model-registry");
 const { ensureRuntimeData } = require("../runtime-data");
-const { readFrontMatter, sourcePathForData, sourcePathForPage } = require("../source-config");
+const { readFrontMatter, pruneSourceCache, sourcePathForData, sourcePathForPage } = require("../source-config");
 const {
   createCollectionRegistry,
   resolveContentMembership
 } = require("../content-membership");
-const { discoverContent, memberKey } = require("./shared");
+const { discoverContent, memberKey, collectionItems } = require("./shared");
 const { getProfileAdapter, profileAdapters } = require("./registry");
 
 function prepareCollectionPipeline(ctx) {
-  resetPageViewModelRegistry();
+  pageViewModelsFor(ctx).resetPageViewModelRegistry();
   const issues = [];
   const configWarnings = [];
   const data = ctx.locals.get("data") || {};
@@ -49,16 +49,18 @@ function prepareCollectionPipeline(ctx) {
     capture(() => {
       const profile = key.startsWith("notebooks/") ? "notebook" : key.split("/", 1)[0];
       const source = sourcePathForData(key);
-      const parsed = parseCollectionConfig(value, source, {
+      let parsed = parseCollectionConfig(value, source, {
         mode: "recover",
+        collectionId: key.slice(key.indexOf("/") + 1),
         onIssues: current => configWarnings.push(...current)
       });
-      validateCollectionProfileConfig(parsed, source, profile, getProfileAdapter(profile).config);
+      parsed = validateCollectionProfileConfig(parsed, source, profile, getProfileAdapter(profile).config, { onIssues: current => configWarnings.push(...current) });
       collectionConfigs.set(key, parsed);
     });
   }
   const membershipRegistry = createCollectionRegistry(collectionConfigs);
 
+  pruneSourceCache(ctx, [...collectionItems(ctx.locals.get("posts")), ...collectionItems(ctx.locals.get("pages"))]);
   const configForPage = (page, kind) => {
     if (pageConfigs.has(page)) return pageConfigs.get(page);
     const raw = readFrontMatter(ctx, page);
@@ -85,12 +87,12 @@ function prepareCollectionPipeline(ctx) {
         parsed = resolved.config;
         const profile = parsed.collection?.profile || (kind === "posts" ? "post" : "page");
         const adapter = profile === "page" ? null : getProfileAdapter(profile);
-        validatePageProfileConfig(parsed, sourcePathForPage(page), profile, adapter?.config);
+        parsed = validatePageProfileConfig(parsed, sourcePathForPage(page), profile, adapter?.config, { onIssues: current => configWarnings.push(...current) });
       }
     }
     pageConfigs.set(page, parsed);
     if (parsed != null) {
-      setPageConfig(page, parsed);
+      pageViewModelsFor(ctx).setPageConfig(page, parsed);
     }
     return parsed;
   };

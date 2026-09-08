@@ -272,32 +272,19 @@ test("Content footer share accepts only registered service IDs", () => {
   );
 });
 
-test("Collection registry capabilities reject profile fields without runtime consumers", () => {
-  const validateCollection = (profile, config) => validateCollectionProfileConfig(
-    parseCollectionConfig({ name: "Collection", ...config }, `${profile}.yml`),
-    `${profile}.yml`,
-    profile,
-    getProfileAdapter(profile).config
-  );
-  validateCollection("wiki", { hero: { enabled: true }, listing: { priority: 1, order: 2 }, navigation: { tree: [] } });
-  validateCollection("topic", { route: { path: "topic/example", start: "topic/example/start" }, listing: { excerpt_length: 80, sort: { field: "date", direction: "desc" } } });
-  validateCollection("notebook", { listing: { order: 1, excerpt_length: 80, per_page: 10, sort: { field: "updated", direction: "desc" } } });
-  assert.throws(() => validateCollection("topic", { hero: { enabled: true } }), /hero/);
-  assert.throws(() => validateCollection("wiki", { route: { path: "wiki/example", start: "start" } }), /route\.start/);
-  assert.throws(() => validateCollection("notebook", { navigation: { tree: [] } }), /navigation\.tree/);
-  assert.throws(() => validateCollection("wiki", { listing: { excerpt_length: 80 } }), /listing\.excerpt_length/);
-
-  for (const profile of ["post", "topic", "notebook"]) {
-    validatePageProfileConfig({ listing: { priority: 1 } }, "page.md", profile, getProfileAdapter(profile).config);
-  }
-  assert.throws(
-    () => validatePageProfileConfig({ listing: { priority: 1 } }, "page.md", "wiki", getProfileAdapter("wiki").config),
-    /listing\.priority/
-  );
-  assert.throws(
-    () => validatePageProfileConfig({ listing: { priority: 1 } }, "page.md", "page", null),
-    /listing\.priority/
-  );
+test("Profile presentation without consumers is omitted with sourced warnings", () => {
+  const warnings = [];
+  const config = parseCollectionConfig({ name: "Collection", hero: { enabled: true } }, "collection.yml");
+  const normalized = validateCollectionProfileConfig(config, "collection.yml", "topic", getProfileAdapter("topic").config, {
+    onIssues: issues => warnings.push(...issues)
+  });
+  assert.equal(normalized.hero, undefined);
+  assert.equal(config.hero.enabled, true);
+  assert.equal(warnings[0].severity, "warning");
+  assert.equal(warnings[0].source, "collection.yml");
+  assert.equal(warnings[0].path, "hero");
+  const page = validatePageProfileConfig({ listing: { priority: 1 } }, "page.md", "page", null);
+  assert.equal(page.listing?.priority, undefined);
 });
 
 test("Collection visibility is a shared listed and searchable cascade", () => {
@@ -401,10 +388,14 @@ test("Content config recovery keeps structural identity failures fatal", () => {
     error => error instanceof ContentConfigError && error.issues.length === 1 && error.issues[0].path === "collection.id"
   );
   assert.equal(issues.some(item => item.path === "article.style"), true);
-  assert.throws(
-    () => parseCollectionConfig({ route: { path: "docs" } }, "collection.yml", { mode: "recover" }),
-    /缺少必填字段 name/
-  );
+  for (const name of [undefined, null, "", "   ", 42, {}]) {
+    const warnings = [];
+    const collection = parseCollectionConfig({ name }, "collection.yml", {
+      mode: "recover", collectionId: "docs", onIssues: issues => warnings.push(...issues)
+    });
+    assert.equal(collection.name, "docs");
+    assert.ok(warnings.some(issue => issue.path === "name"));
+  }
 });
 
 test("Content visibility and ownership helpers keep independent semantics", () => {

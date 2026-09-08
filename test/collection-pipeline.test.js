@@ -15,7 +15,7 @@ const {
   getProfileAdapter,
   profileAdapters
 } = require("../scripts/lib/collection-pipeline/registry");
-const pageRegistry = require("../scripts/lib/page-view-model-registry");
+const pageRegistry = require("../scripts/lib/page-view-model-registry").createPageViewModelRegistry();
 
 test("Collection Pipeline 注册表封闭四类 profile 与产品差异", () => {
   assert.deepEqual(PROFILE_IDS, ["post", "topic", "wiki", "notebook"]);
@@ -114,4 +114,21 @@ test("Topic/Notebook 可复用同一 two-stage 生命周期协议", () => {
   assert.deepEqual(calls, ["base:a", "base:b", "aggregate", "complete:a", "complete:b"]);
   assert.deepEqual(result, ["A:AB", "B:AB"]);
   assert.equal(Object.isFrozen(result), true);
+});
+
+test("Page registries isolate Hexo owners, identity namespaces and build generations", () => {
+  const { pageViewModelsFor } = require('../scripts/lib/page-view-model-registry');
+  const a = pageViewModelsFor({});
+  const b = pageViewModelsFor({});
+  const model = {};
+  const page = { source: 'shared' };
+  a.setPageViewModel(page, model);
+  assert.equal(page.viewModel, model);
+  assert.equal('viewModel' in JSON.parse(JSON.stringify(page)), false);
+  assert.equal(a.getPageViewModel({ source: 'shared' }), model);
+  assert.equal(a.getPageViewModel({ path: 'shared' }), null);
+  assert.equal(a.getPageViewModel({ _id: 'shared' }), null);
+  assert.equal(b.getPageViewModel({ source: 'shared' }), null);
+  a.resetPageViewModelRegistry();
+  assert.equal(a.getPageViewModel({ source: 'shared' }), null);
 });

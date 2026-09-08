@@ -424,8 +424,7 @@ function collectionSchema(profile) {
       title: field("string", { default: literal(""), example: "Chapter 1", required: true }),
       path: field("string", { default: literal(""), example: "posts/chapter-1", required: true }),
       date: field(["string", "null"], { default: literal(null), example: "2026-08-22T00:00:00.000Z", required: true }),
-      current: field("boolean", { default: literal(false), example: true, required: true })
-    }, { example: { id: "chapter-1", title: "Chapter 1", path: "posts/chapter-1", date: "2026-08-22T00:00:00.000Z", current: true } });
+    }, { example: { id: "chapter-1", title: "Chapter 1", path: "posts/chapter-1", date: "2026-08-22T00:00:00.000Z" } });
     navigationExtension.series = array(seriesItem, { example: [], required: true });
   }
   if (profile === "notebook") {

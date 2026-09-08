@@ -4,10 +4,7 @@ const {
   buildNotebookCollectionModel,
   buildNotebookPageViewModelBase
 } = require("../../models");
-const {
-  setProfileViewModelBase,
-  setProfileViewModelInput
-} = require("../../page-view-model-registry");
+const { pageViewModelsFor } = require("../../page-view-model-registry");
 const { sourcePathForData } = require("../../source-config");
 const { plainTerms } = require("../shared");
 
@@ -40,6 +37,7 @@ module.exports = {
         collectionItems
       }, collectionId));
     }
+    pipeline.notebookCollections = collectionModels;
     for (const record of pipeline.members("notebook")) {
       pipeline.capture(() => {
         const collectionId = record.collectionId;
@@ -51,8 +49,8 @@ module.exports = {
           collectionItems
         });
         const base = buildNotebookPageViewModelBase(input);
-        setProfileViewModelInput("notebook", record.page, input);
-        setProfileViewModelBase("notebook", record.page, base);
+        pageViewModelsFor(pipeline.ctx).setProfileViewModelInput("notebook", record.page, input);
+        pageViewModelsFor(pipeline.ctx).setProfileViewModelBase("notebook", record.page, base);
       });
     }
   },

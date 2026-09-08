@@ -285,9 +285,6 @@ function decorateSharedSchemas(schema) {
 
 function decorateCommon(schema) {
   schema.properties.comments.properties.provider.validator = "nullable_non_empty_string";
-  schema.properties.article.properties.style.values = ["tech", "story"];
-  schema.properties.article.properties.paragraph_indent.values = ["auto", "always", "never"];
-  schema.properties.article.properties.ai_label.values = ["manual", "reviewed", "polished", "generated", null];
   schema.properties.footer.properties.license.validator = "license_override";
   schema.properties.footer.properties.share.validator = "share_override";
   if (schema.properties.listing?.properties?.priority) {
@@ -299,7 +296,7 @@ function decorateCommon(schema) {
 }
 
 const COLLECTION_CONFIG_SCHEMA = schemaForScope("collection");
-COLLECTION_CONFIG_SCHEMA.requiredProperties = ["name"];
+
 COLLECTION_CONFIG_SCHEMA.removedProperties = clone(LEGACY_COLLECTION_ROOTS);
 COLLECTION_CONFIG_SCHEMA.properties.name.validator = "non_empty_string";
 COLLECTION_CONFIG_SCHEMA.properties.listing.properties.order.validator = "nullable_non_negative_integer";

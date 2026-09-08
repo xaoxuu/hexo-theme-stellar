@@ -137,7 +137,7 @@ const CONTENT_OVERRIDE_DEFINITIONS = [
   ["article.style", ["string", "null"], literal(null), { values: ["tech", "story"] }],
   ["article.paragraph_indent", ["string", "null"], literal(null), { values: ["auto", "always", "never"] }],
   ["article.author", ["string", "null"], literal(null)],
-  ["article.ai_label", ["string", "null"], literal(null), { values: ["manual", "reviewed", "polished", "generated"] }],
+  ["article.ai_label", ["string", "null"], literal(null), { values: ["manual", "reviewed", "polished", "generated", null] }],
   ["footer", "object", derived("content defaults footer"), { boundary: "sealed" }],
   ["footer.references", "array", literal([]), { items: { type: ["object", "string"] } }],
   ["footer.license", ["boolean", "string", "null"], literal(null)],

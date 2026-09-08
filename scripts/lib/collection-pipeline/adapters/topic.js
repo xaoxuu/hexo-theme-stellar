@@ -1,14 +1,12 @@
 "use strict";
 
 const {
+  buildTopicCollectionModel,
   buildTopicIndexRender,
   buildTopicPageViewModelBase,
   completeTopicPageViewModel
 } = require("../../models");
-const {
-  setProfileViewModelBase,
-  setProfileViewModelInput
-} = require("../../page-view-model-registry");
+const { pageViewModelsFor } = require("../../page-view-model-registry");
 const { sourcePathForData } = require("../../source-config");
 const { runTwoStage } = require("../shared");
 
@@ -36,8 +34,10 @@ module.exports = {
       ? pipeline.data.topic.publish_list
       : null;
     const topicIndexItems = [];
+    const collectionModels = new Map();
     for (const [collectionId, collectionConfig] of pipeline.collections("topic")) {
-      pipeline.capture(() => topicIndexItems.push(buildTopicIndexRender({
+      pipeline.capture(() => {
+        const input = {
         source: sourcePathForData(`topic/${collectionId}`),
         themeSource: pipeline.themeSource,
         collectionSource: sourcePathForData(`topic/${collectionId}`),
@@ -47,8 +47,12 @@ module.exports = {
         runtimeData: pipeline.runtimeData,
         stellarConfig: pipeline.ctx.stellar?.config,
         collectionConfig,
-        members: memberSnapshots
-      })));
+        members: memberSnapshots.filter(member => member.frontMatter.collection.id === collectionId)
+        };
+        input.collectionModel = buildTopicCollectionModel(input, collectionId);
+        collectionModels.set(collectionId, input.collectionModel);
+        topicIndexItems.push(buildTopicIndexRender(input));
+      });
     }
     pipeline.runtimeData.topicIndex = Object.freeze({ items: Object.freeze(topicIndexItems) });
 
@@ -61,11 +65,12 @@ module.exports = {
             collectionId,
             collectionListed: publishList == null || publishList.includes(collectionId),
             collectionConfig: pipeline.collection("topic", collectionId),
+            collectionModel: collectionModels.get(collectionId),
             members: memberSnapshots
           });
           const base = buildTopicPageViewModelBase(input);
-          setProfileViewModelInput("topic", record.page, input);
-          setProfileViewModelBase("topic", record.page, base);
+          pageViewModelsFor(pipeline.ctx).setProfileViewModelInput("topic", record.page, input);
+          pageViewModelsFor(pipeline.ctx).setProfileViewModelBase("topic", record.page, base);
           return { input, base };
         });
       },
@@ -74,7 +79,7 @@ module.exports = {
       },
       complete(record, prepared) {
         if (!prepared) return null;
-        record.page.viewModel = completeTopicPageViewModel(prepared.input, prepared.base);
+        pageViewModelsFor(pipeline.ctx).setPageViewModel(record.page, completeTopicPageViewModel(prepared.input, prepared.base));
         return record.page.viewModel;
       }
     });
