@@ -6,7 +6,7 @@
 ## Agent pointers
 
 - 创建、读取或更新 issue 时按 `docs/agents/issue-tracker.md`。
-- 新增或重构标签插件时读取 `docs/guides/tag-plugins-style-guide.md`；修改配置、内容 profile、组件、Extension 或语言文案时读取 `docs/guides/contribution-architecture.md`。
+- 新增或重构标签插件时读取 `docs/guides/tag-plugins-style-guide.md`；设计或修改配置、内容 profile、组件、Extension 或语言文案时读取 `docs/guides/contribution-architecture.md`。
 
 ## 1. 仓库边界
 
@@ -70,6 +70,16 @@
 - 修改知识库后运行 `npm run knowledge:check`；具体发布步骤见 `docs/guides/release-process.md`。
 
 ## 4. 工作流程
+
+### 方案选择
+
+新增或迁移配置声明、注册表、共享抽象或事实所有者时，在确定方案前：
+
+- 区分用户目标与实现手段，逐项定位现有事实来源、编辑者和消费者。优先沿用能承担职责的来源；集中解析或复用代码与人工事实存放位置分别决定。
+- 用本次相关的一项日常修改比较沿用现有结构与拟议方案：维护者从哪里找到入口、手工修改哪些事实、哪些结果自动派生。新增所有者、映射或跳转须有现有结构无法满足的具体需求作为依据。
+- 用户纠正目标或维护方式后，重新检查依赖原假设的所有者、默认值、接口和验证；按修正后的目标重写方案。功能验证与维护路径核查分别提供证据。
+
+完成条件：能指出每项人工事实的唯一编辑入口、日常修改的完整路径，以及新增维护面的必要性。依据留在本次对话或获准的 Issue；长期指南只保留可复用的决策规则，当前文件分工从源码查证。
 
 ### 发布基线
 
