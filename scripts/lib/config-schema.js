@@ -3,7 +3,7 @@
 
 const nodePath = require("node:path");
 
-const { CONFIG_SCHEMA } = require("../schema/config-schema");
+const { CONFIG_SCHEMA, CONFIG_DEFAULTS } = require("../schema/config-schema");
 const {
   HERO_EFFECT_IDS,
   getHeroEffectDefinition
@@ -818,7 +818,13 @@ function parseNode(node, input, source, path, issues, context) {
       issues.push(issue("unknown_field", source, childPath, valueType(input[key]), "known field", node.migration));
     }
   }
-  if (node.normalizer === "parameter_bag" || node.normalizer === "effect") return normalizeValue(node, input);
+  if (node.normalizer === "parameter_bag") {
+    for (const [key, child] of Object.entries(properties)) {
+      if (child.validateInParameterBag && Object.hasOwn(input, key)) parseNode(child, input[key], source, `${path}.${key}`, issues, context);
+    }
+    return normalizeValue(node, input);
+  }
+  if (node.normalizer === "effect") return normalizeValue(node, input);
 
   const result = {};
   for (const key of node.externalProperties || []) {
@@ -1064,7 +1070,11 @@ function parseConfigSchema(schema, input = {}, options = {}) {
 
 function parseStellarConfig(input = {}) {
   const source = input.source || "_config.stellar.yml";
-  const themeConfig = input.themeConfig === undefined ? {} : input.themeConfig;
+  const themeConfig = input.themeConfig === undefined ? {} : clone(input.themeConfig);
+  const katex = themeConfig?.features?.math?.katex;
+  if (isPlainObject(katex) && katex.css != null && katex.css !== CONFIG_DEFAULTS.features.math.katex.css && !Object.hasOwn(katex, "css_integrity")) {
+    katex.css_integrity = null;
+  }
   return parseConfigSchema(CONFIG_SCHEMA, themeConfig, {
     source,
     applyDefaults: true,

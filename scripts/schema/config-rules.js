@@ -116,6 +116,8 @@ const stringRecord = validator => ({
   additionalProperties: item("string", { defaultValue: "", ...(validator ? { validator } : {}) })
 });
 
+const resourceField = { type: ["string", "null"], validator: "nullable_resource", validateInParameterBag: true };
+
 const parameterBag = { normalizer: "parameter_bag", sealed: false };
 const widgetItems = item(["string", "object"], { defaultValue: null, normalizer: "parameter_bag", sealed: false });
 const brandImage = {
@@ -281,10 +283,22 @@ const CONFIG_RULES = Object.freeze([
   ["inject.head_begin", { normalizer: "trusted_text" }],
   ["inject.head_end", { normalizer: "trusted_text" }],
   ["inject.body_begin", { normalizer: "trusted_text" }],
-  ["inject.body_end", { normalizer: "trusted_text" }]
+  ["inject.body_end", { normalizer: "trusted_text" }],
+  ["search.algolia.js", resourceField],
+  ["comments.*.js", resourceField],
+  ["comments.*.css", resourceField],
+  ["comments.waline.meta_css", resourceField],
+  ["features.*.js", resourceField],
+  ["features.*.css", resourceField],
+  ["features.math.katex.css", resourceField],
+  ["features.math.katex.css_integrity", { type: ["string", "null"], validator: "nullable_non_empty_string", validateInParameterBag: true }],
+  ["features.math.mathjax.js", resourceField],
+  ["features.diagrams.mermaid.js", resourceField],
+  ["services.markdown.js", resourceField]
 ]);
 
 module.exports = {
   CONFIG_RULES,
+  resourceField,
   literal
 };

@@ -35,6 +35,7 @@ test("评论模型一次性解析 provider、页面覆盖与配色", () => {
       "data-theme": "dark",
       "data-category": "General"
     },
+    assets: { js: require("../scripts/schema/config-schema").CONFIG_DEFAULTS.comments.giscus.js },
     pageTitle: "Post"
   });
   assert.equal(Object.isFrozen(model), true);

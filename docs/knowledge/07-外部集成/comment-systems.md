@@ -30,7 +30,7 @@ comments:
     site: Example
 ```
 
-`provider` 选择全局实现，`title` 可显式覆盖评论区标题；省略时使用当前语言的 `btn.comments`。`comments.<provider>` 是第三方参数袋。参数袋保留上游字段名并按键合并；官方脚本、样式和注入资源由主题内部注册表提供，`js/css/src/inject` 不能作为资源覆盖入口。旧 `comments.service/comment_title/custom_css` 不兼容读取。
+`provider` 选择全局实现，`title` 可显式覆盖评论区标题；省略时使用当前语言的 `btn.comments`。`comments.<provider>` 是第三方参数袋。参数袋保留上游字段名并按键合并；主题提取对应 provider 的 `js/css`（Waline 另有 `meta_css`）用于资源加载，其余选项传给上游。省略或 `null` 使用默认资源；`src/inject` 不作为资源覆盖入口。旧 `comments.service/comment_title/custom_css` 不兼容读取。
 
 主题级配置没有全局 `enabled`；未配置 provider 即停用。页面/Profile/Collection 可用内容作用域的 `comments.enabled` 关闭或开启既有 provider：
 
@@ -77,3 +77,18 @@ Twikoo、Waline 与 Artalk 的线程键优先取容器 `comment_id`，缺失时�
 Artalk、Waline 与 Twikoo 的 `imageUploader` 仍是上游业务参数，不是 Extension 资源地址。各评论系统的 Stellar 视觉覆盖位于 `source/css/comments/`，按 provider 初始化路径加载；`comments.custom_css` 已删除。
 
 相关源码：[scripts/lib/models/index.js](../../../scripts/lib/models/index.js)、[layout/_partial/comments/](../../../layout/_partial/comments/)、[source/js/runtime/extensions/comments.js](../../../source/js/runtime/extensions/comments.js)、[scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)、[source/css/comments/](../../../source/css/comments/)。
+
+### 客户端资源
+
+资源配置位于 `comments.<provider>`，页面可通过 `comments.options` 覆盖。所有 provider 支持 `js`；Artalk、Waline 支持 `css`；Waline 另支持 `meta_css`。主题局部样式不受这些覆盖影响。
+
+Artalk 默认按最终 `server` 地址加载 `dist/Artalk.js` 和 `dist/Artalk.css`，保留部署子路径，使前端与服务端插件配套；显式地址优先，加载失败不回退旧版本。自定义 CDN 时由站点维护前后端版本兼容。
+
+```yaml
+comments:
+  provider: artalk
+  artalk:
+    server: https://comments.example.com/atk/
+    js: null
+    css: null
+```

@@ -3,6 +3,7 @@
 
 const { literal } = require("./config-schema");
 const { CONFIG_TARGET_FIELDS } = require("./content-config-rules");
+const { resourceField } = require("./config-rules");
 const { deepFreeze } = require("./schema-utils");
 
 const HEXO_FRONT_MATTER_FIELDS = Object.freeze([
@@ -213,6 +214,10 @@ function mergeTargetNode(existing, target) {
   const properties = existing?.properties;
   const items = existing?.items;
   const result = { ...targetNode(target) };
+  if (target.path === "comments.options") {
+    result.properties = Object.fromEntries(["js", "css", "meta_css"]
+      .map(field => [field, { ...resourceField, normalizer: "identity", default: literal(null) }]));
+  }
   if (properties) result.properties = properties;
   if (items) result.items = items;
   if (target.items && !result.items) result.items = itemNode(target.scopes[0], target.path, target.items);

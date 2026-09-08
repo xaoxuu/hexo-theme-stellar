@@ -90,7 +90,6 @@ function buildBrowserRuntimeManifest(input) {
     version: RUNTIME_VERSION,
     root,
     policy: Object.assign({}, INTERNAL_CONSTANTS.runtime, { providers: INTERNAL_CONSTANTS.providers }),
-    dependencies: assets.dependencies || {},
     extensions: entries
   };
   const ids = new Set();

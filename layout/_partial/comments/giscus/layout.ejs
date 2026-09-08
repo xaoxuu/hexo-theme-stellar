@@ -4,7 +4,7 @@ function layoutDiv() {
   const cmt = comments;
   if (cmt?.service?.length > 0) {
     const name = cmt.service;
-    var body = Object.assign({}, cmt.options);
+    var body = cmt.options;
     el += '<div id="' + name + '"';
     for (let key of Object.keys(body)) {
       if (body[key] !== null) {

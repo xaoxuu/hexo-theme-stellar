@@ -614,6 +614,8 @@ search:
     cache_ttl_seconds: 86400
   # 配置 Algolia 搜索参数。
   algolia:
+    # 自定义资源地址；null 使用主题默认资源。
+    js: https://gcore.jsdelivr.net/algoliasearch/3/algoliasearch.min.js
     # 设置 Algolia Application ID。
     appId: null
     # 设置 Algolia Search API Key。
@@ -629,6 +631,8 @@ comments:
   title: null
   # 配置 Beaudar 参数，字段会传递给 Beaudar 客户端。
   beaudar:
+    # 自定义资源地址；null 使用主题默认资源。
+    js: https://beaudar.lipk.org/client.js
     # 设置关联的 GitHub 仓库，格式为 owner/repo。
     repo: xxx/xxx
     # 设置 Issue 映射方式。
@@ -651,6 +655,8 @@ comments:
     branch: main
   # 配置 Utterances 参数，字段会传递给 Utterances 客户端。
   utterances:
+    # 自定义资源地址；null 使用主题默认资源。
+    js: https://utteranc.es/client.js
     # 设置关联的 GitHub 仓库，格式为 owner/repo。
     repo: xxx/xxx
     # 设置 Issue 映射方式。
@@ -663,6 +669,8 @@ comments:
     label: null
   # 配置 Giscus 参数，字段会作为 data 属性传递给 Giscus 客户端。
   giscus:
+    # 自定义资源地址；null 使用主题默认资源。
+    js: https://giscus.app/client.js
     # 设置关联的 GitHub 仓库，格式为 owner/repo。
     data-repo: xxx/xxx
     # 设置 Giscus 仓库 ID；null 表示未配置。
@@ -691,10 +699,18 @@ comments:
     crossorigin: anonymous
   # 配置 Twikoo 参数，字段会传递给 Twikoo 客户端。
   twikoo:
+    # 自定义资源地址；null 使用主题默认资源。
+    js: https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js
     # 设置 Twikoo 环境 ID 或服务地址。
     envId: https://xxx
   # 配置 Waline 参数，字段会传递给 Waline 客户端。
   waline:
+    # 自定义资源地址；null 使用主题默认资源。
+    js: https://gcore.jsdelivr.net/npm/@waline/client@3.15.2/dist/waline.js
+    # 自定义资源地址；null 使用主题默认资源。
+    css: https://gcore.jsdelivr.net/npm/@waline/client@3.15.2/dist/waline.css
+    # 自定义资源地址；null 使用主题默认资源。
+    meta_css: https://gcore.jsdelivr.net/npm/@waline/client@3.15.2/dist/waline-meta.css
     # 设置 Waline 服务端地址。
     serverURL: https://waline.vercel.app
     # 控制是否启用评论计数。
@@ -703,6 +719,10 @@ comments:
     pageview: false
   # 配置 Artalk 参数，字段会传递给 Artalk 客户端。
   artalk:
+    # 自定义资源地址；null 使用服务端内置的配套资源。
+    js: null
+    # 自定义资源地址；null 使用服务端内置的配套资源。
+    css: null
     # 设置 Artalk 服务端地址；null 表示未配置。
     server: null
     # 设置 Artalk 站点名称；空字符串表示未配置。
@@ -785,24 +805,38 @@ tags:
 
 # 配置可选的浏览器功能。
 features:
+  # 配置轮播使用的第三方资源；不改变按需加载条件。
+  swiper:
+    # 自定义脚本地址；null 使用默认资源。
+    js: https://unpkg.com/swiper@10.3/swiper-bundle.min.js
+    # 自定义样式地址；null 使用默认资源。
+    css: https://unpkg.com/swiper@10.3/swiper-bundle.min.css
   # 配置配色模式切换功能。
   color_scheme_switch:
     # 控制是否启用配色模式切换。
     enabled: false
   # 配置图片懒加载。
   lazy_loading:
+    # 自定义资源地址；null 使用主题默认资源。
+    js: https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js
     # 设置懒加载过渡效果；可选值为 blur 或 fade。
     transition: fade
     # 控制是否自动补全图片宽高比。
     auto_aspect_ratio: true
   # 配置图片灯箱。
   lightbox:
+    # 自定义资源地址；null 使用主题默认资源。
+    js: https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js
+    # 自定义资源地址；null 使用主题默认资源。
+    css: https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css
     # 控制是否启用图片灯箱。
     enabled: true
     # 设置灯箱匹配图片的 CSS 选择器。
     selector: '.timenode p>img'
   # 配置链接预取。
   link_prefetch:
+    # 自定义资源地址；null 使用主题默认资源。
+    js: https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js
     # 控制是否启用链接预取。
     enabled: true
   # 配置滚动揭示动画。
@@ -815,6 +849,10 @@ features:
     enabled: false
   # 配置 Heti 中文排版增强。
   heti:
+    # 自定义资源地址；null 使用主题默认资源。
+    js: https://unpkg.com/heti@0.9/umd/heti-addon.min.js
+    # 自定义资源地址；null 使用主题默认资源。
+    css: https://unpkg.com/heti@0.9/umd/heti.min.css
     # 控制是否启用 Heti。
     enabled: false
   # 配置数学公式渲染。
@@ -822,15 +860,23 @@ features:
     # 设置数学公式 Provider；可选值为 katex、mathjax 或 null。
     provider: null
     # 设置 KaTeX 参数；空对象表示使用 Provider 默认参数。
-    katex: {}
+    katex:
+      # 自定义资源地址；null 使用主题默认资源。
+      css: https://cdn.jsdelivr.net/npm/katex@0.16.23/dist/katex.min.css
+      # CSS 的配套完整性哈希；null 不附加 SRI，自定义 CSS 时请同时提供匹配哈希。
+      css_integrity: sha384-//SZkxyB7axjCAopkAL1E1rve+ZSPKapD89Lo/lLhcsXR+zOYl5z6zJZEFXil+q0
     # 设置 MathJax 参数；空对象表示使用 Provider 默认参数。
-    mathjax: {}
+    mathjax:
+      # 自定义资源地址；null 使用主题默认资源。
+      js: https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js
   # 配置图表渲染。
   diagrams:
     # 设置图表 Provider；可选值为 mermaid 或 null。
     provider: null
     # 配置 Mermaid 参数。
     mermaid:
+      # 自定义资源地址；null 使用主题默认资源。
+      js: https://gcore.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js
       # 设置 Mermaid 主题；可选值为 default、dark、forest 或 neutral。
       theme: neutral
 
@@ -840,6 +886,10 @@ features:
 
 # 配置主题使用的数据服务。
 services:
+  # 配置所有动态 Markdown 内容共享的 Marked 客户端。
+  markdown:
+    # 自定义脚本地址；null 使用默认资源。
+    js: https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js
   # 配置站点信息服务。
   site_info:
     # 设置站点信息 Provider；可选值为 site_info_api 或 null。

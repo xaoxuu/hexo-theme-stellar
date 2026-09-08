@@ -102,13 +102,48 @@ test("第三方参数袋开放，主题服务参数对象保持封闭", () => {
   );
 });
 
-test("官方 Extension 资源由内部冻结注册表提供", () => {
+test("内部资源冻结，资源提取保留上游选项且不修改输入", () => {
+  const { splitResources } = require("../scripts/lib/resource-assets");
   assert.equal(Object.isFrozen(assets), true);
-  assert.match(assets.dependencies.marked, /marked/);
-  assert.match(assets.comments.giscus.js, /giscus\.app/);
-  assert.match(assets.features.lightbox.js, /fancybox/);
-  assert.equal(assets.features.reveal, undefined);
-  assert.equal(assets.runtime.bootstrap, "/js/runtime/index.js");
-  assert.equal(assets.runtime.reveal, "/js/runtime/extensions/reveal.js");
-  assert.equal(assets.services.siteinfo.js, "/js/services/siteinfo.js");
+  const input = Object.freeze({ js: null, meta_css: "vendor/meta.css", upstream: true });
+  assert.deepEqual(splitResources(input, { js: "/default.js" }, ["js", "meta_css"]), {
+    options: { upstream: true }, assets: { js: "/default.js", metaCss: "/vendor/meta.css" }
+  });
+  assert.deepEqual(splitResources({ js: "/custom.js" }, { js: "/default.js" }, ["js"]).assets, { js: "/custom.js" });
+});
+
+test("资源字段复用安全校验，参数袋与配置实例保持隔离", () => {
+  const parse = themeConfig => parseStellarConfig({ themeConfig });
+  for (const js of ["", "javascript:alert(1)", 42]) {
+    assert.throws(() => parse({ comments: { waline: { js } } }));
+  }
+  const configured = parse({ comments: { waline: { js: "/custom.js", upstream_name: true } } });
+  assert.equal(configured.comments.waline.js, "/custom.js");
+  assert.equal(configured.comments.waline.upstream_name, true);
+  assert.notEqual(parse({}).comments.waline.js, "/custom.js");
+  assert.equal(Object.isFrozen(configured.comments.waline), true);
+});
+
+test("评论资源使用最终服务地址及页面覆盖，不泄漏到上游选项", () => {
+  const { resolveCommentsModel } = require("../scripts/lib/comments");
+  const config = parseStellarConfig({ themeConfig: { comments: {
+    provider: "artalk", artalk: { server: "https://example.com/old", js: "/old.js" }
+  } } });
+  for (const server of ["https://example.com/atk", "https://example.com/atk/"]) {
+    const model = resolveCommentsModel(config, { options: { server, js: null } });
+    assert.equal(model.assets.js, "https://example.com/atk/dist/Artalk.js");
+    assert.equal(model.assets.css, "https://example.com/atk/dist/Artalk.css");
+    assert.equal(model.options.js, undefined);
+  }
+  assert.equal(resolveCommentsModel(config, { options: { js: "/custom.js" } }).assets.js, "/custom.js");
+});
+
+test("样式地址与完整性配置成对合并", () => {
+  const parse = katex => parseStellarConfig({ themeConfig: { features: { math: { katex } } } }).features.math.katex;
+  const defaults = require("../scripts/schema/config-schema").CONFIG_DEFAULTS.features.math.katex;
+  assert.equal(parse({}).css_integrity, defaults.css_integrity);
+  assert.equal(parse({ css: null }).css_integrity, defaults.css_integrity);
+  assert.equal(parse({ css: "/custom.css" }).css_integrity, null);
+  assert.equal(parse({ css: "/custom.css", css_integrity: "sha384-custom" }).css_integrity, "sha384-custom");
+  assert.equal(parse({ css_integrity: null }).css_integrity, null);
 });

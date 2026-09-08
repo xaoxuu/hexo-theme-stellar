@@ -23,7 +23,7 @@ function fixture(overrides = {}) {
   return Object.assign({
     root: "/docs",
     extensions: { features: {} },
-    assets: { dependencies: {} },
+    assets: {},
     render: {},
     comments: {},
     messages: {}
@@ -52,7 +52,7 @@ test("Runtime Manifest validates and freezes the extension protocol", () => {
 
 test("Runtime Manifest serialization is safe for inline script data", () => {
   const manifest = buildBrowserRuntimeManifest(fixture({
-    assets: { dependencies: { unsafe: "</script><script>alert(1)</script>&" } }
+    comments: { enabled: true, service: "giscus", options: { unsafe: "</script><script>alert(1)</script>&" } }
   }));
   const json = serializeBrowserRuntimeManifest(manifest);
   assert.doesNotMatch(json, /<\/script>|&/);

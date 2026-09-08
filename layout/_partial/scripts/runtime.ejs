@@ -48,8 +48,10 @@ var runtimeJson = browser_runtime_manifest({
   messages: runtimeMessages
 })
 %>
-<% if (runtimeMathProvider === 'katex') { %>
-<link rel="stylesheet" href="<%- url_for(runtimeAssets.features.katexCss) %>" integrity="sha384-//SZkxyB7axjCAopkAL1E1rve+ZSPKapD89Lo/lLhcsXR+zOYl5z6zJZEFXil+q0" crossorigin="anonymous">
+<% if (runtimeMathProvider === 'katex') {
+var katexStyle = katex_stylesheet()
+%>
+<link rel="stylesheet" href="<%= url_for(katexStyle.css) %>"<% if (katexStyle.integrity) { %> integrity="<%= katexStyle.integrity %>" crossorigin="anonymous"<% } %>>
 <% } %>
 <script type="application/json" id="stellar-runtime-config"><%- runtimeJson %></script>
 <script type="module" src="<%- url_for(runtimeAssets.runtime.bootstrap) %>?v=<%- stellar_info('version') %>&runtime=1"></script>

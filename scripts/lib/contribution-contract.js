@@ -120,7 +120,7 @@ function validateContributionDefinitions(definitions) {
     ids.add(definition.id);
     if (!CONTRIBUTION_KINDS.has(definition.kind)) throw new TypeError(`[stellar contributions] ${label}.kind is invalid`);
     validateEntry(definition.entry, `${label}.entry`);
-    stringList(definition.resources, `${label}.resources`);
+    stringList(definition.resources, `${label}.resources`, { allowEmpty: true });
     validateActivation(definition.activation, `${label}.activation`);
     if (definition.schema !== null) nonEmptyString(definition.schema, `${label}.schema`);
     validateI18n(definition.i18n, `${label}.i18n`);

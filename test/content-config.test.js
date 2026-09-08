@@ -416,3 +416,11 @@ test("Content visibility and ownership helpers keep independent semantics", () =
   assert.equal(isListed({}), true);
   assert.equal(isSearchable({}), true);
 });
+
+test("评论参数袋校验资源字段并保留上游开放参数", () => {
+  const parsed = parsePageConfig({ comments: { options: { js: "/client.js", css: null, arbitrary: true } } });
+  assert.equal(parsed.comments.options.js, "/client.js");
+  assert.equal(parsed.comments.options.css, null);
+  assert.equal(parsed.comments.options.arbitrary, true);
+  assert.throws(() => parsePageConfig({ comments: { options: { js: "javascript:alert(1)" } } }), /safe Resource/);
+});

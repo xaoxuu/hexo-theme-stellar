@@ -77,9 +77,7 @@ tags:
 
 ## 内部资源所有权
 
-官方 Extension 的 JS/CSS/inject、Marked、LazyLoad、评论库、数据服务脚本，以及固定 provider 与 request/cache 策略由 [internal-constants.js](../../../scripts/lib/internal-constants.js) 深度冻结真值。每类 Runtime 资源的消费所有权由 contribution descriptor 登记，CI 拒绝未登记或重复所有的 asset。公开 Schema 不提供这些实现细节。
-
-这条边界把业务配置与主题实现资源分开：升级资源版本随主题代码评审和发布，不让站点配置形成第二套依赖锁。
+主题自身 Runtime、adapter、局部样式与请求策略由 [internal-constants.js](../../../scripts/lib/internal-constants.js) 维护。descriptor 的 `resources` 仅登记内部资源的消费所有权；第三方地址从对应服务配置读取。
 
 ## 加载链
 
@@ -176,3 +174,11 @@ services:
 Site Info、Rating 与 Vote 默认选择 xaox.cc 公共实例对应的 provider，可覆盖选中参数袋内的自部署地址或以 `provider: null` 关闭；三者的预期远程失败完全静默并保留静态兜底。统一解析接缝只向消费方提供选中的参数袋。GitHub 地址统一为完整 URL。Runtime Manifest 携带主题内部注入且冻结的 cache/request policy；`createRequestClient()` 提供同 method+URL 并发去重、按 service TTL、超时重试、fresh 命中、stale 失败回退、200 KiB 单条限制和最旧条目淘汰。站点不再调节这些实现常量。客户端调用原生 `fetch` 而不替换 `window.fetch` 或 XHR 原型，并以 `stellar:request-start/end` 通知锚点稳定器。
 
 相关源码：[_config.yml](../../../_config.yml)、[scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)、[scripts/lib/contribution-registry.js](../../../scripts/lib/contribution-registry.js)、[ci/lib/contribution-audit.js](../../../ci/lib/contribution-audit.js)、[scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)、[source/js/runtime/index.js](../../../source/js/runtime/index.js)、[source/js/runtime/extension-registry.js](../../../source/js/runtime/extension-registry.js)、[source/js/runtime/request-cache.js](../../../source/js/runtime/request-cache.js)、[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)。
+
+## 第三方资源覆盖
+
+第三方资源地址配置在对应服务中，省略或 `null` 使用主题默认值；显式值支持 HTTP(S) 或站点本地路径。资源字段由主题提取，不传给上游初始化参数，也不改变功能启用条件。覆盖资源不代表支持任意上游 API 版本。
+
+配置入口与默认地址以 [_config.yml](../../../_config.yml) 为准。功能的 `project()` 就近提取资源字段；评论由模型合并页面选项后输出独立的 `options` 与 `assets`，参见 [评论系统](comment-systems.md#客户端资源)。共享 Marked 由数据服务 Extension 从 `services.markdown.js` 加载，其他消费者复用加载结果。
+
+KaTeX 的 `css` 与 `css_integrity` 在配置中配对维护。仅覆盖 CSS 地址时清除继承哈希；显式提供哈希时使用新配对，`css_integrity: null` 不附加 SRI。升级库只需修改对应默认配置，无需同步资源登记表。

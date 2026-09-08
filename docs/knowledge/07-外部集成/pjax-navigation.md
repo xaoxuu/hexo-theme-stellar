@@ -83,7 +83,7 @@ features:
 
 | 字段 | 说明 |
 |------|------|
-| `enabled` | 是否启用链接预取；实现资源由主题内部固定 |
+| `enabled` | 是否启用链接预取；脚本可通过 `features.link_prefetch.js` 覆盖 |
 
 ### 工作方式
 

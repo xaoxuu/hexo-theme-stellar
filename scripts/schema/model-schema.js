@@ -673,8 +673,9 @@ function pageViewModelSchema(profile) {
           id: field("string", { default: inherited("item.presentation.comments.id"), example: "post-hello", required: true }),
           service: field("string", { default: inherited("item.presentation.comments.service"), example: "giscus", required: true }),
           options: field("object", { default: computed("由激活服务参数袋生成"), example: { "data-repo": "example/repo" }, required: true, additionalProperties: true }),
+          assets: field("object", { default: computed("由最终评论资源配置生成"), example: {}, required: true, additionalProperties: true }),
           pageTitle: field("string", { default: inherited("item.title"), example: "Hello Stellar", required: true })
-        }, { required: true, example: { enabled: true, title: "参与讨论", id: "", service: "giscus", options: {}, pageTitle: "Hello Stellar" } })
+        }, { required: true, example: { enabled: true, title: "参与讨论", id: "", service: "giscus", options: {}, assets: {}, pageTitle: "Hello Stellar" } })
       }, { required: true, example: { heti: false, tags: [], footer: {}, previous: null, next: null, related: {}, comments: {} } }),
       listing: object({
         href: field("string", { default: derived("page.link", "item.route.path"), example: "blog/hello", required: true }),
@@ -738,8 +739,9 @@ function pageViewModelSchema(profile) {
       id: field("string", { default: inherited("item.presentation.comments.id"), example: "wiki-stellar", required: true }),
       service: field("string", { default: inherited("item.presentation.comments.provider"), example: "giscus", required: true }),
       options: field("object", { default: computed("由激活服务参数袋生成"), example: { "data-repo": "example/repo" }, required: true, additionalProperties: true }),
+      assets: field("object", { default: computed("由最终评论资源配置生成"), example: {}, required: true, additionalProperties: true }),
       pageTitle: field("string", { default: inherited("item.title"), example: "开始", required: true })
-    }, { required: true, example: { enabled: true, title: "参与讨论", id: "", service: "giscus", options: {}, pageTitle: "开始" } });
+    }, { required: true, example: { enabled: true, title: "参与讨论", id: "", service: "giscus", options: {}, assets: {}, pageTitle: "开始" } });
     const relatedItem = object({
       href: field("string", { default: literal(""), example: "wiki/example", required: true }),
       title: field("string", { default: literal(""), example: "Example", required: true }),
@@ -865,8 +867,9 @@ function pageViewModelSchema(profile) {
       id: field("string", { default: inherited("item.presentation.comments.id"), example: "note-node", required: true }),
       service: field("string", { default: inherited("item.presentation.comments.provider"), example: "giscus", required: true }),
       options: field("object", { default: computed("由激活服务参数袋生成"), example: {}, required: true, additionalProperties: true }),
+      assets: field("object", { default: computed("由最终评论资源配置生成"), example: {}, required: true, additionalProperties: true }),
       pageTitle: field("string", { default: inherited("item.title"), example: "Node.js", required: true })
-    }, { required: true, example: { enabled: true, title: "参与讨论", id: "", service: "giscus", options: {}, pageTitle: "Node.js" } });
+    }, { required: true, example: { enabled: true, title: "参与讨论", id: "", service: "giscus", options: {}, assets: {}, pageTitle: "Node.js" } });
     const share = field(["object", "null"], {
       default: computed("由 Notebook Footer 分享配置生成；禁用时为 null"),
       example: null,

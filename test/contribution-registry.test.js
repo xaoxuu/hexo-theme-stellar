@@ -122,10 +122,12 @@ test("负向门禁拒绝未登记资源与重复资源所有权", () => {
   unregistered.features.unregisteredDemo = { js: "/js/plugins/unregistered-demo.js" };
   assert.ok(audit({ assets: unregistered }).some(issue => issue.includes("features.unregisteredDemo.js: internal asset has no contribution owner")));
 
-  const duplicateResource = CONTRIBUTIONS.map(item => item.id === "card-hover"
-    ? { ...item, resources: [...item.resources, "features.heti"] }
+  const [owner, other] = CONTRIBUTIONS.filter(item => item.resources.length > 0);
+  const resource = owner.resources[0];
+  const duplicateResource = CONTRIBUTIONS.map(item => item.id === other.id
+    ? { ...item, resources: [...item.resources, resource] }
     : item);
-  assert.ok(audit({ definitions: duplicateResource }).some(issue => issue.includes("resource features.heti is owned by both card-hover and heti")));
+  assert.ok(audit({ definitions: duplicateResource }).some(issue => issue.includes(`resource ${resource} is owned by both ${owner.id} and ${other.id}`)));
 });
 
 test("贡献证据允许复用不包含贡献 ID 的共享契约测试", () => {

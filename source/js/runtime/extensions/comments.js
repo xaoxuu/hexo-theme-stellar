@@ -160,7 +160,7 @@ function mountWaline(root, context, config) {
       context.assets.style(config.assets.css),
       context.assets.style(config.assets.metaCss)
     ]);
-    const module = await import(config.assets.js);
+    const module = await import(context.assets.resolve(config.assets.js));
     if (!isActive()) return;
     const options = Object.assign({}, config.options, {
       el: '#waline_container',

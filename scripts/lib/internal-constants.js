@@ -59,12 +59,7 @@ module.exports = deepFreeze({
       galaxy: "/js/runtime/hero-effects/galaxy.js",
       lightRays: "/js/runtime/hero-effects/light-rays.js"
     },
-    dependencies: {
-      marked: "https://gcore.jsdelivr.net/npm/marked@13.0/lib/marked.umd.min.js",
-      lazyLoading: "https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js"
-    },
     search: {
-      algolia: "https://gcore.jsdelivr.net/algoliasearch/3/algoliasearch.min.js",
       providers: {
         algolia: "/js/search/algolia-search.js",
         local: "/js/search/local-search.js"
@@ -73,57 +68,34 @@ module.exports = deepFreeze({
     },
     comments: {
       beaudar: {
-        js: "https://beaudar.lipk.org/client.js",
         localCss: "/css/comments/beaudar.css"
       },
       utterances: {
-        js: "https://utteranc.es/client.js",
         localCss: "/css/comments/utterances.css"
       },
-      giscus: { js: "https://giscus.app/client.js" },
       twikoo: {
-        js: "https://gcore.jsdelivr.net/npm/twikoo@1.6/dist/twikoo.all.min.js",
         localCss: "/css/comments/twikoo.css"
       },
       waline: {
-        js: "https://gcore.jsdelivr.net/npm/@waline/client@3.15.2/dist/waline.js",
-        css: "https://gcore.jsdelivr.net/npm/@waline/client@3.15.2/dist/waline.css",
-        metaCss: "https://gcore.jsdelivr.net/npm/@waline/client@3.15.2/dist/waline-meta.css",
         localCss: "/css/comments/waline.css"
       },
       artalk: {
-        js: "https://unpkg.com/artalk@2.9/dist/artalk.js",
-        css: "https://unpkg.com/artalk@2.9/dist/artalk.css",
         localCss: "/css/comments/artalk.css"
       }
     },
     features: {
-      linkPrefetch: "https://gcore.jsdelivr.net/npm/flying-pages@2/flying-pages.min.js",
       lightbox: {
-        js: "https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js",
-        css: "https://gcore.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css",
         localCss: "/css/plugins/fancybox.css"
       },
       swiper: {
-        js: "https://unpkg.com/swiper@10.3/swiper-bundle.min.js",
-        css: "https://unpkg.com/swiper@10.3/swiper-bundle.min.css",
         localCss: "/css/plugins/swiper.css"
-      },
-      katexCss: "https://cdn.jsdelivr.net/npm/katex@0.16.23/dist/katex.min.css",
-      mathjax: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js",
-      diagrams: {
-        js: "https://gcore.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"
       },
       codeCopy: { js: "/js/plugins/copycode.js" },
       adaptiveText: {
         colorJs: "/js/color.js",
         js: "/js/plugins/adaptive-text.js"
       },
-      cardHover: { js: "/js/plugins/card-hover.js" },
-      heti: {
-        css: "https://unpkg.com/heti@0.9/umd/heti.min.css",
-        js: "https://unpkg.com/heti@0.9/umd/heti-addon.min.js"
-      }
+      cardHover: { js: "/js/plugins/card-hover.js" }
     },
     services: {
       chat: { endpoint: "https://siteinfo.listentothewind.cn/api/v1" },

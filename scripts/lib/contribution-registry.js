@@ -3,6 +3,8 @@
 "use strict";
 
 const { defineContributions } = require("./contribution-contract");
+const { splitResources } = require("./resource-assets");
+const { CONFIG_DEFAULTS } = require("../schema/config-schema");
 const INTERNAL = require("./internal-constants");
 const { heroEffectRuntimeConfig } = require("./hero-effect-registry");
 
@@ -82,11 +84,12 @@ const CONTRIBUTIONS = defineContributions([
       const search = context.plainObject(context.extensions.search, "extensions.search");
       if (typeof search.provider !== "string" || search.provider.length === 0) return null;
       const provider = context.plainObject(search[search.provider], `search.${search.provider}`);
+      const resolved = splitResources(provider, CONFIG_DEFAULTS.search[search.provider], ["js"]);
       return configResult({
         provider: search.provider,
-        options: provider,
+        options: resolved.options,
         assets: {
-          client: search.provider === "algolia" ? context.assets.search?.algolia || null : null,
+          client: search.provider === "algolia" ? resolved.assets.js : null,
           provider: context.assets.search?.providers?.[search.provider] || null,
           shortcut: context.assets.search?.shortcut || null
         }
@@ -110,14 +113,14 @@ const CONTRIBUTIONS = defineContributions([
     id: "lazy-loading",
     kind: "feature",
     entry: featureEntry(),
-    resources: ["dependencies.lazyLoading"],
+    resources: [],
     activation: selector(".lazy, .data-service, [class*='ds-']"),
     schema: "features.lazy_loading.transition",
     i18n: null,
     docs: { category: "Extensions", path: "docs/knowledge/07-外部集成/lazy-loading-images.md" },
     tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: CONFIG_OWNER("features.lazy_loading.transition"),
-    project: context => configResult({ asset: context.assets.dependencies?.lazyLoading || null })
+    project: context => configResult({ asset: splitResources(context.features.lazyLoading, CONFIG_DEFAULTS.features.lazy_loading, ["js"]).assets.js })
   },
   {
     id: "deferred-icons",
@@ -149,7 +152,7 @@ const CONTRIBUTIONS = defineContributions([
     id: "services",
     kind: "extension",
     entry: runtimeEntry("/js/runtime/extensions/services.js"),
-    resources: ["services", "dependencies.marked"],
+    resources: ["services"],
     activation: selector(".data-service, [class*='ds-'], a[cardlink], .site-card [data-siteinfo-api], .voice>audio, .video>video, .chat-file"),
     schema: "services.site_info.provider",
     i18n: null,
@@ -161,7 +164,7 @@ const CONTRIBUTIONS = defineContributions([
       return configResult({
         services: context.assets.services || {},
         siteInfoEndpoint: siteInfo?.endpoint || null,
-        marked: context.assets.dependencies?.marked || null
+        marked: splitResources(context.extensions.services?.markdown, CONFIG_DEFAULTS.services.markdown, ["js"]).assets.js
       });
     }
   },
@@ -182,7 +185,7 @@ const CONTRIBUTIONS = defineContributions([
         provider: context.comments.service,
         options: context.comments.options || {},
         pageTitle: context.comments.pageTitle || "",
-        assets: context.assets.comments?.[context.comments.service] || {}
+        assets: context.comments.assets || {}
       });
     }
   },
@@ -203,7 +206,7 @@ const CONTRIBUTIONS = defineContributions([
     id: "link-prefetch",
     kind: "feature",
     entry: featureEntry(),
-    resources: ["features.linkPrefetch"],
+    resources: [],
     activation: { type: "always" },
     schema: "features.link_prefetch.enabled",
     i18n: null,
@@ -212,7 +215,7 @@ const CONTRIBUTIONS = defineContributions([
     defaultsOwner: CONFIG_OWNER("features.link_prefetch.enabled"),
     project(context) {
       if (context.features.linkPrefetch?.enabled !== true) return null;
-      return configResult({ asset: context.assets.features?.linkPrefetch || null });
+      return configResult({ asset: splitResources(context.features.linkPrefetch, CONFIG_DEFAULTS.features.link_prefetch, ["js"]).assets.js });
     }
   },
   {
@@ -229,8 +232,9 @@ const CONTRIBUTIONS = defineContributions([
     project(context) {
       if (context.features.lightbox?.enabled !== true) return null;
       const dynamicSelector = [this.activation.value, context.features.lightbox?.selector].filter(Boolean).join(", ");
-      return configResult(Object.assign({}, context.features.lightbox, {
-        assets: context.assets.features?.lightbox || {}
+      const resolved = splitResources(context.features.lightbox, CONFIG_DEFAULTS.features.lightbox, ["js", "css"]);
+      return configResult(Object.assign({}, resolved.options, {
+        assets: { ...context.assets.features?.lightbox, ...resolved.assets }
       }), { selector: dynamicSelector });
     }
   },
@@ -254,7 +258,7 @@ const CONTRIBUTIONS = defineContributions([
     id: "mathjax",
     kind: "feature",
     entry: featureEntry(),
-    resources: ["features.mathjax"],
+    resources: [],
     activation: selector(".has-jax, script[type^='math/tex']"),
     schema: "features.math.provider",
     i18n: null,
@@ -264,9 +268,10 @@ const CONTRIBUTIONS = defineContributions([
     project(context) {
       const provider = context.render.math || context.features.math?.provider;
       if (provider !== "mathjax") return null;
+      const resolved = splitResources(context.features.math?.mathjax, CONFIG_DEFAULTS.features.math.mathjax, ["js"]);
       return configResult({
-        options: context.features.math?.mathjax || {},
-        asset: context.assets.features?.mathjax || null
+        options: resolved.options,
+        asset: resolved.assets.js
       });
     }
   },
@@ -274,7 +279,7 @@ const CONTRIBUTIONS = defineContributions([
     id: "katex-stylesheet",
     kind: "component",
     entry: { type: "template", path: "layout/_partial/scripts/runtime.ejs" },
-    resources: ["features.katexCss"],
+    resources: [],
     activation: { type: "server", value: "render.math or features.math.provider is katex" },
     schema: "features.math.provider",
     i18n: null,
@@ -287,7 +292,7 @@ const CONTRIBUTIONS = defineContributions([
     id: "diagrams",
     kind: "feature",
     entry: featureEntry(),
-    resources: ["features.diagrams"],
+    resources: [],
     activation: selector(".mermaid"),
     schema: "features.diagrams.provider",
     i18n: null,
@@ -303,9 +308,11 @@ const CONTRIBUTIONS = defineContributions([
           : (override && typeof override === "object" ? "mermaid" : context.features.diagrams?.provider);
       if (provider !== "mermaid") return null;
       const options = override && typeof override === "object" ? override : {};
-      return configResult(Object.assign({}, context.features.diagrams?.mermaid, options, {
+      const resolved = splitResources(context.features.diagrams?.mermaid, CONFIG_DEFAULTS.features.diagrams.mermaid, ["js"]);
+      const content = splitResources(options, {}, ["js"]).options;
+      return configResult(Object.assign({}, resolved.options, content, {
         provider,
-        assets: context.assets.features?.diagrams || {},
+        assets: resolved.assets,
         colorScheme: context.colorScheme || "auto"
       }));
     }
@@ -362,7 +369,7 @@ const CONTRIBUTIONS = defineContributions([
     id: "heti",
     kind: "feature",
     entry: featureEntry(),
-    resources: ["features.heti"],
+    resources: [],
     activation: selector(".heti"),
     schema: "features.heti.enabled",
     i18n: null,
@@ -371,7 +378,7 @@ const CONTRIBUTIONS = defineContributions([
     defaultsOwner: CONFIG_OWNER("features.heti.enabled"),
     project(context) {
       if (context.features.heti?.enabled !== true) return null;
-      return configResult({ assets: context.assets.features?.heti || {} });
+      return configResult({ assets: splitResources(context.features.heti, CONFIG_DEFAULTS.features.heti, ["js", "css"]).assets });
     }
   },
   {
@@ -380,12 +387,12 @@ const CONTRIBUTIONS = defineContributions([
     entry: featureEntry(),
     resources: ["features.swiper"],
     activation: selector("#swiper-api"),
-    schema: null,
+    schema: "features.swiper.js",
     i18n: null,
     docs: { category: "Components", path: "docs/knowledge/04-标签插件/timeline-media-tags.md" },
     tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
-    defaultsOwner: null,
-    project: context => configResult({ assets: context.assets.features?.swiper || {} })
+    defaultsOwner: CONFIG_OWNER("features.swiper.js"),
+    project: context => configResult({ assets: { ...context.assets.features?.swiper, ...splitResources(context.features.swiper, CONFIG_DEFAULTS.features.swiper, ["js", "css"]).assets } })
   }
 ]);
 
