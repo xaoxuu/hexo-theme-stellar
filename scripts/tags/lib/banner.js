@@ -20,7 +20,7 @@ module.exports = ctx => function(args, content) {
   el += '>'
   // bg
   if (bg) {
-    el += `<img class="lazy bg" data-src="${bg}">`
+    el += `<img class="lazy bg" loading="lazy" src="${bg}">`
   }
   // content
   el += `<div class="content"${bg ? ' data-text-adaptive="split"' : ''}>`

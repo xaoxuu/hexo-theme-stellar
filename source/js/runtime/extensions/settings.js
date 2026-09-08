@@ -1,6 +1,4 @@
-import { REQUEST_CACHE_PREFIX } from '../request-cache.js';
-
-export const SEARCH_CACHE_KEY = 'search_cache_v5';
+const { REQUEST_CACHE_PREFIX, isSearchCacheKey, clearSearchStorage } = await import(`../request-cache.js${new URL(import.meta.url).search}`);
 
 function utf8Bytes(value) {
   const text = String(value || '');
@@ -26,13 +24,15 @@ export function measureCacheSizes(storage) {
   let search = 0;
   let dynamic = 0;
   try {
-    const searchValue = target.getItem(SEARCH_CACHE_KEY);
-    if (searchValue !== null) search = entryBytes(SEARCH_CACHE_KEY, searchValue);
     for (let index = 0; index < target.length; index++) {
       const key = target.key(index);
-      if (!key?.startsWith(REQUEST_CACHE_PREFIX)) continue;
+      const isSearch = isSearchCacheKey(key);
+      if (!isSearch && !key?.startsWith(REQUEST_CACHE_PREFIX)) continue;
       const value = target.getItem(key);
-      if (value !== null) dynamic += entryBytes(key, value);
+      if (value !== null) {
+        if (isSearch) search += entryBytes(key, value);
+        else dynamic += entryBytes(key, value);
+      }
     }
   } catch (error) {
     void error;
@@ -68,8 +68,7 @@ function setStatus(element, message, state) {
 
 function fallbackSearchClear() {
   try {
-    globalThis.localStorage?.removeItem(SEARCH_CACHE_KEY);
-    return { ok: true, partial: false, removed: 1, failed: 0 };
+    return clearSearchStorage(globalThis.localStorage);
   } catch (error) {
     return { ok: false, partial: false, removed: 0, failed: 1 };
   }

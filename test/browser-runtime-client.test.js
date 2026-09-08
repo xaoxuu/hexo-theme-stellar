@@ -105,7 +105,7 @@ test("ExtensionRegistry 隔离 import、mount 与 unmount 失败", async () => {
   const target = root();
   await registry.mount(target, {});
   await registry.unmount(target);
-  assert.deepEqual(errors, ["bad-import:import", "bad-mount:mount", "bad-import:import", "bad-mount:mount", "bad-cleanup:unmount"]);
+  assert.deepEqual(errors.slice().sort(), ["bad-import:import", "bad-mount:mount", "bad-import:import", "bad-mount:mount", "bad-cleanup:unmount"].sort());
 });
 
 test("ExtensionRegistry 隔离非法 selector，不阻断后续 Extension", async () => {
@@ -299,4 +299,100 @@ test("旧 request bridge 将 runtime 启动前的调用排队到真实 adapter",
   assert.deepEqual(calls, ["/queued"]);
   assert.equal(globalThis.__stellarRequestBridge.resolve, undefined);
   delete globalThis.__stellarRequestBridge;
+});
+
+test("ExtensionRegistry cancels pending mounts, cleans late results once and isolates independent loads", async () => {
+  const { createExtensionRegistry } = await import(moduleUrl("source/js/runtime/extension-registry.js"));
+  let release;
+  const pending = new Promise(resolve => { release = resolve; });
+  let signal;
+  let destroyed = 0;
+  let fastMounted = false;
+  let notifications = 0;
+  const events = new EventTarget();
+  const listener = () => { notifications++; };
+  const cleanup = () => { destroyed++; events.removeEventListener('change', listener); };
+  const registry = createExtensionRegistry({ importer: async id => ({
+    async mount(_root, context) {
+      if (id === '/slow.js') {
+        signal = context.signal;
+        events.addEventListener('change', listener);
+        context.onCleanup(cleanup);
+        await pending;
+        return cleanup;
+      }
+      fastMounted = true;
+    }
+  }) });
+  registry.register({ id: 'slow', module: '/slow.js', when: { always: true }, config: {} });
+  registry.register({ id: 'fast', module: '/fast.js', when: { always: true }, config: {} });
+  const target = root();
+  const mounted = registry.mount(target, {});
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(fastMounted, true);
+  await registry.unmount(target);
+  assert.equal(signal.aborted, true);
+  assert.equal(destroyed, 1);
+  release();
+  await mounted;
+  assert.equal(destroyed, 1);
+  await registry.mount(target, {});
+  await registry.unmount(target);
+  assert.equal(destroyed, 2);
+  events.dispatchEvent(new Event('change'));
+  assert.equal(notifications, 0);
+});
+
+test("AssetLoader bounds failures, retries and cancels a consumer without cancelling shared resources", async () => {
+  const { createAssetLoader } = await import(moduleUrl('source/js/runtime/asset-loader.js'));
+  const nodes = [];
+  const document = { createElement() { return Object.assign(new EventTarget(), { remove() { this.removed = true; } }); }, head: { appendChild(node) { nodes.push(node); } } };
+  const assets = createAssetLoader({ document, timeoutMs: 10 });
+  await assert.rejects(assets.script('/unavailable.js'), /timed out/);
+  assert.equal(nodes[0].removed, true);
+  const controller = new AbortController();
+  const cancelled = assets.scoped(controller.signal).script('/unavailable.js');
+  const shared = assets.script('/unavailable.js');
+  controller.abort();
+  await assert.rejects(cancelled, { name: 'AbortError' });
+  nodes[1].dispatchEvent(new Event('load'));
+  await shared;
+  assert.equal(nodes.length, 2);
+});
+
+test('An immediate remount waits for an externally started teardown', async () => {
+  const { createExtensionRegistry } = await import(moduleUrl('source/js/runtime/extension-registry.js'));
+  let release;
+  const pending = new Promise(resolve => { release = resolve; });
+  const calls = [];
+  const registry = createExtensionRegistry({ importer: async () => ({
+    mount() { calls.push('mount'); return async () => { await pending; calls.push('cleanup'); }; }
+  }) });
+  registry.register({ id: 'lifecycle', module: '/lifecycle.js', when: { always: true }, config: {} });
+  const target = root();
+  await registry.mount(target);
+  const leaving = registry.unmount(target);
+  const returning = registry.mount(target);
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(calls, ['mount']);
+  release();
+  await Promise.all([leaving, returning]);
+  assert.deepEqual(calls, ['mount', 'cleanup', 'mount']);
+  await registry.unmount(target);
+});
+
+test("搜索缓存按索引 URL 隔离，识别与清理共用键所有者", async () => {
+  const { searchCacheKey, isSearchCacheKey, clearSearchStorage } = await import(moduleUrl("source/js/runtime/request-cache.js"));
+  const storage = memoryStorage();
+  const first = searchCacheKey("search.json", "https://example.com/one/");
+  const second = searchCacheKey("search.json", "https://example.com/two/");
+  assert.notEqual(first, second);
+  for (const key of [first, second]) {
+    assert.equal(isSearchCacheKey(key), true);
+    storage.setItem(key, "{}");
+  }
+  storage.setItem("unrelated", "keep");
+  assert.deepEqual(clearSearchStorage(storage), { ok: true, partial: false, removed: 2, failed: 0 });
+  assert.equal(storage.getItem("unrelated"), "keep");
+  assert.equal(clearSearchStorage(null).ok, false);
 });

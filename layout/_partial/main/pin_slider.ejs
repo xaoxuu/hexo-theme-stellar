@@ -51,7 +51,7 @@ pinItems.sort(function(a, b) {
 // 文章幻灯片：固定「标题 + 一行小字」结构。
 // 标题：post.title；小字由 caption() helper 统一取值。
 // 样式与 hero 卡片 cover-info 一致；无封面时为纯白卡片（文字按普通文章颜色）。
-function postSlide(viewModel) {
+function postSlide(viewModel, eager) {
   var post = viewModel.render.listing
   var cover = post.cover
   var noCover = !(cover != null && cover.length > 0)
@@ -64,7 +64,7 @@ function postSlide(viewModel) {
   }
   el += '>'
   if (!noCover) {
-    el += '<img class="pin-slide-bg" src="' + escape_html(cover) + '" alt=""/>'
+    el += '<img class="pin-slide-bg" loading="' + (eager ? 'eager' : 'lazy') + '" src="' + escape_html(cover) + '" alt=""/>'
   }
   // 有封面时文字颜色自适应（大字 contrast、小字 theme）；无封面保持普通文章文字颜色
   el += '<div class="pin-slide-text"' + (noCover ? '' : ' data-text-adaptive="split"') + '>'
@@ -85,7 +85,7 @@ function projectChips(tags) {
   return caps
 }
 
-function wikiSlide(proj) {
+function wikiSlide(proj, eager) {
   var img = proj.cover
   var title = proj.headline || proj.name || proj.id
   var excerpt = proj.description || ''
@@ -96,7 +96,7 @@ function wikiSlide(proj) {
   }
   el += '>'
   if (img) {
-    el += '<img class="pin-slide-bg" src="' + escape_html(img) + '" alt=""/>'
+    el += '<img class="pin-slide-bg" loading="' + (eager ? 'eager' : 'lazy') + '" src="' + escape_html(img) + '" alt=""/>'
   }
   el += '<div class="pin-slide-info"' + (img ? ' data-text-adaptive="split"' : '') + '>'
   el += '<div class="pin-slide-caps">' + projectChips(proj.tags) + '</div>'
@@ -115,9 +115,9 @@ if (pinItems.length > 0) {
   for (var si = 0; si < pinItems.length; si++) {
     var item = pinItems[si]
     if (pinType == 'wiki') {
-      slidesHtml += wikiSlide(item)
+      slidesHtml += wikiSlide(item, si === 0)
     } else {
-      slidesHtml += postSlide(item)
+      slidesHtml += postSlide(item, si === 0)
     }
     if (pinItems.length > 1) {
       dotsHtml += '<button type="button" class="pin-slider-dot' + (si == 0 ? ' active' : '') + '" data-index="' + si + '"></button>'
@@ -137,20 +137,22 @@ if (pinItems.length > 0) {
   }
   el += '</div>'
 %>
+<script>document.documentElement.classList.add('stellar-pin-pending');</script>
 <%- el %>
 <script>
+let pinSliderCleanup;
+let pinSliderHidden = false;
 function mountPinSliderWhenReady() {
-  var cleanup = initPinSlider();
-  if (typeof cleanup === 'function') {
-    window.addEventListener('pagehide', cleanup, { once: true });
-  }
+  pinSliderCleanup?.();
+  try { pinSliderCleanup = pinSliderHidden ? null : initPinSlider(); }
+  finally { document.documentElement.classList.remove('stellar-pin-pending'); }
 }
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', mountPinSliderWhenReady, { once: true });
-} else {
-  mountPinSliderWhenReady();
-}
+window.addEventListener('pagehide', () => { pinSliderHidden = true; pinSliderCleanup?.(); pinSliderCleanup = null; });
+window.addEventListener('pageshow', event => { pinSliderHidden = false; if (event.persisted) mountPinSliderWhenReady(); });
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountPinSliderWhenReady, { once: true });
+else mountPinSliderWhenReady();
 function initPinSlider() {
+  let colorTimer;
   var slider = document.getElementById('pin-slider');
   if (!slider) return;
   var track = slider.querySelector('.pin-slider-track');
@@ -215,7 +217,8 @@ function initPinSlider() {
       // 懒加载的 color.js / 插件尚未就绪时重试
       if (navColorRetries < 25) {
         navColorRetries++;
-        setTimeout(updateNavColor, 200);
+        clearTimeout(colorTimer);
+        colorTimer = setTimeout(updateNavColor, 200);
       }
       return;
     }
@@ -278,13 +281,14 @@ function initPinSlider() {
       next();
     }
   }
-  if (dotsEl) {
-    dotsEl.addEventListener('click', function(e) {
+  const onDotClick = function(e) {
       var btn = e.target.closest ? e.target.closest('.pin-slider-dot') : null;
       if (btn) {
         goTo(parseInt(btn.getAttribute('data-index'), 10) || 0);
       }
-    });
+    };
+  if (dotsEl) {
+    dotsEl.addEventListener('click', onDotClick);
     dotsEl.addEventListener('animationend', onProgressEnd);
   }
   var navPrev = slider.querySelector('.pin-slider-nav.prev');
@@ -310,6 +314,7 @@ function initPinSlider() {
   slider.style.visibility = 'visible';
   start();
   return function() {
+    clearTimeout(colorTimer);
     stop();
     slider.removeEventListener('mouseenter', stop);
     slider.removeEventListener('mouseleave', start);
@@ -318,6 +323,7 @@ function initPinSlider() {
     slider.removeEventListener('touchstart', onTouchStart);
     slider.removeEventListener('touchend', onTouchEnd);
     if (dotsEl) {
+      dotsEl.removeEventListener('click', onDotClick);
       dotsEl.removeEventListener('animationend', onProgressEnd);
     }
     if (navPrev) {

@@ -6,20 +6,18 @@ const { defineContributions } = require("./contribution-contract");
 const { splitResources } = require("./resource-assets");
 const { CONFIG_DEFAULTS } = require("../schema/config-schema");
 const INTERNAL = require("./internal-constants");
-const { heroEffectRuntimeConfig } = require("./hero-effect-registry");
 
-const FEATURE_ENTRY = "/js/runtime/extensions/feature.js";
 const PLUGIN_SYSTEM_DOC = "docs/knowledge/07-外部集成/plugin-system.md";
 const RUNTIME_TEST = "test/browser-runtime-manifest.test.js";
 const RUNTIME_CONSUMPTION_TEST = "test/browser-runtime-consumption.test.js";
 const CONFIG_OWNER = path => `_config.yml#${path}`;
 
-function featureEntry() {
-  return { type: "browser-module", path: FEATURE_ENTRY, adapter: "feature" };
+function featureEntry(id) {
+  return runtimeEntry(`/js/runtime/extensions/${id}.js`);
 }
 
-function runtimeEntry(path, adapter) {
-  return { type: "browser-module", path, ...(adapter ? { adapter } : {}) };
+function runtimeEntry(path) {
+  return { type: "browser-module", path };
 }
 
 function selector(value) {
@@ -107,14 +105,14 @@ const CONTRIBUTIONS = defineContributions([
     docs: { category: "Components", path: "docs/knowledge/03-内容系统/wiki-docs.md" },
     tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: null,
-    project: () => configResult({ effects: heroEffectRuntimeConfig() })
+    project: () => configResult({})
   },
   {
     id: "lazy-loading",
     kind: "feature",
-    entry: featureEntry(),
+    entry: featureEntry("lazy-loading"),
     resources: [],
-    activation: selector(".lazy, .data-service, [class*='ds-']"),
+    activation: selector("img, .data-service, [class*='ds-']"),
     schema: "features.lazy_loading.transition",
     i18n: null,
     docs: { category: "Extensions", path: "docs/knowledge/07-外部集成/lazy-loading-images.md" },
@@ -160,10 +158,7 @@ const CONTRIBUTIONS = defineContributions([
     tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
     defaultsOwner: CONFIG_OWNER("services.site_info.provider"),
     project(context) {
-      const siteInfo = context.resolveServiceProvider(context.extensions.services?.siteInfo);
       return configResult({
-        services: context.assets.services || {},
-        siteInfoEndpoint: siteInfo?.endpoint || null,
         marked: splitResources(context.extensions.services?.markdown, CONFIG_DEFAULTS.services.markdown, ["js"]).assets.js
       });
     }
@@ -205,7 +200,7 @@ const CONTRIBUTIONS = defineContributions([
   {
     id: "link-prefetch",
     kind: "feature",
-    entry: featureEntry(),
+    entry: featureEntry("link-prefetch"),
     resources: [],
     activation: { type: "always" },
     schema: "features.link_prefetch.enabled",
@@ -221,7 +216,7 @@ const CONTRIBUTIONS = defineContributions([
   {
     id: "lightbox",
     kind: "feature",
-    entry: featureEntry(),
+    entry: featureEntry("lightbox"),
     resources: ["features.lightbox"],
     activation: selector("[data-fancybox]:not(.error), .with-fancybox, .ds-memos"),
     schema: "features.lightbox.enabled",
@@ -257,7 +252,7 @@ const CONTRIBUTIONS = defineContributions([
   {
     id: "mathjax",
     kind: "feature",
-    entry: featureEntry(),
+    entry: featureEntry("mathjax"),
     resources: [],
     activation: selector(".has-jax, script[type^='math/tex']"),
     schema: "features.math.provider",
@@ -291,7 +286,7 @@ const CONTRIBUTIONS = defineContributions([
   {
     id: "diagrams",
     kind: "feature",
-    entry: featureEntry(),
+    entry: featureEntry("diagrams"),
     resources: [],
     activation: selector(".mermaid"),
     schema: "features.diagrams.provider",
@@ -320,7 +315,7 @@ const CONTRIBUTIONS = defineContributions([
   {
     id: "code-copy",
     kind: "feature",
-    entry: featureEntry(),
+    entry: featureEntry("code-copy"),
     resources: ["features.codeCopy"],
     activation: selector(".code"),
     schema: null,
@@ -339,7 +334,7 @@ const CONTRIBUTIONS = defineContributions([
   {
     id: "adaptive-text",
     kind: "feature",
-    entry: featureEntry(),
+    entry: featureEntry("adaptive-text"),
     resources: ["features.adaptiveText"],
     activation: selector("[data-text-adaptive]"),
     schema: null,
@@ -368,7 +363,7 @@ const CONTRIBUTIONS = defineContributions([
   {
     id: "heti",
     kind: "feature",
-    entry: featureEntry(),
+    entry: featureEntry("heti"),
     resources: [],
     activation: selector(".heti"),
     schema: "features.heti.enabled",
@@ -384,7 +379,7 @@ const CONTRIBUTIONS = defineContributions([
   {
     id: "swiper",
     kind: "component",
-    entry: featureEntry(),
+    entry: featureEntry("swiper"),
     resources: ["features.swiper"],
     activation: selector("#swiper-api"),
     schema: "features.swiper.js",
@@ -408,9 +403,7 @@ function buildContributionEntries(context) {
     if (contribution.project === null) continue;
     const projected = contribution.project.call(contribution, context);
     if (projected === null) continue;
-    const config = contribution.entry.adapter === "feature"
-      ? Object.assign({ feature: contribution.id }, projected.config || {})
-      : (projected.config || {});
+    const config = projected.config || {};
     entries.push({
       id: contribution.id,
       module: contribution.entry.path,

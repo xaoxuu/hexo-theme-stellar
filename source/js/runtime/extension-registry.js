@@ -45,6 +45,7 @@ export function createExtensionRegistry(options = {}) {
   const declarations = new Map();
   const modulePromises = new Map();
   const roots = new WeakMap();
+  const teardowns = new WeakMap();
 
   function report(id, phase, error) {
     const detail = { id, phase: PHASES.has(phase) ? phase : 'mount', error };
@@ -71,78 +72,97 @@ export function createExtensionRegistry(options = {}) {
 
   async function load(declaration) {
     if (!modulePromises.has(declaration.module)) {
-      modulePromises.set(declaration.module, Promise.resolve().then(() => importer(declaration.module)));
+      const promise = new Promise((resolve, reject) => {
+        const timer = setTimeout(() => reject(new Error(`module import timed out: ${declaration.module}`)), options.timeoutMs || 15000);
+        Promise.resolve().then(() => importer(declaration.module)).then(
+          module => { clearTimeout(timer); resolve(module); },
+          error => { clearTimeout(timer); reject(error); }
+        );
+      });
+      modulePromises.set(declaration.module, promise);
+      promise.catch(() => modulePromises.delete(declaration.module));
     }
     return modulePromises.get(declaration.module);
   }
 
-  async function unmount(root) {
-    const instances = roots.get(root) || [];
-    const results = [];
-    for (let index = instances.length - 1; index >= 0; index--) {
-      const instance = instances[index];
-      if (typeof instance.cleanup !== 'function') continue;
-      try {
-        await instance.cleanup();
-        results.push({ id: instance.id, status: 'unmounted' });
-      } catch (error) {
-        results.push(report(instance.id, 'unmount', error));
-      }
-    }
+  async function dispose(instance) {
+    const cleanup = instance.cleanup;
+    instance.cleanup = null;
+    if (typeof cleanup !== 'function') return;
+    try { await cleanup(); } catch (error) { report(instance.id, 'unmount', error); }
+  }
+
+  function unmount(root) {
+    const state = roots.get(root);
+    if (!state) return teardowns.get(root) || Promise.resolve([]);
     roots.delete(root);
-    return results;
+    state.controller.abort();
+    const previous = teardowns.get(root);
+    const pending = Promise.resolve(previous).then(async () => {
+      const results = [];
+      for (const instance of state.instances.slice().reverse()) {
+        await dispose(instance);
+        results.push({ id: instance.id, status: 'unmounted' });
+      }
+      return results;
+    });
+    teardowns.set(root, pending);
+    pending.finally(() => { if (teardowns.get(root) === pending) teardowns.delete(root); });
+    return pending;
   }
 
   async function mount(root, context = {}) {
-    if (!root || typeof root !== 'object') {
-      throw new TypeError('[stellar runtime] mount root must be an object');
-    }
-    await unmount(root);
-    const instances = [];
-    const results = [];
-    roots.set(root, instances);
-
-    for (const declaration of declarations.values()) {
-      let eligible;
-      try {
-        eligible = shouldMount(root, declaration.when);
-      } catch (error) {
-        results.push(report(declaration.id, 'mount', error));
-        continue;
-      }
-      if (!eligible) {
-        results.push({ id: declaration.id, status: 'skipped' });
-        continue;
-      }
+    if (!root || typeof root !== 'object') throw new TypeError('[stellar runtime] mount root must be an object');
+    // Invalidate synchronously before yielding, so overlapping mounts cannot both own a root.
+    const previous = unmount(root);
+    const state = { controller: new AbortController(), instances: [] };
+    roots.set(root, state);
+    await previous;
+    const signal = state.controller.signal;
+    const active = () => !signal.aborted && roots.get(root) === state;
+    return Promise.all([...declarations.values()].map(async declaration => {
+      const skipped = { id: declaration.id, status: 'skipped' };
+      if (!active()) return skipped;
+      try { if (!shouldMount(root, declaration.when)) return skipped; }
+      catch (error) { return report(declaration.id, 'mount', error); }
       let module;
-      try {
-        module = await load(declaration);
-      } catch (error) {
-        results.push(report(declaration.id, 'import', error));
-        continue;
-      }
-      if (typeof module?.mount !== 'function') {
-        results.push(report(declaration.id, 'mount', new TypeError('module must export mount(root, context)')));
-        continue;
-      }
+      try { module = await load(declaration); }
+      catch (error) { return active() ? report(declaration.id, 'import', error) : skipped; }
+      if (!active()) return skipped;
+      if (typeof module?.mount !== 'function') return report(declaration.id, 'mount', new TypeError('module must export mount(root, context)'));
+      const instance = { id: declaration.id, cleanup: null };
+      state.instances.push(instance);
+      const registered = new Set();
+      const completed = new Set();
+      const cleanup = async () => {
+        for (const fn of [...registered].reverse()) {
+          registered.delete(fn);
+          completed.add(fn);
+          try { await fn(); } catch (error) { report(declaration.id, 'unmount', error); }
+        }
+      };
+      instance.cleanup = cleanup;
       const extensionContext = Object.freeze(Object.assign({}, context, {
         extension: declaration,
-        reportError(error, phase = 'mount') {
-          return report(declaration.id, phase, error);
-        }
+        signal,
+        assets: context.assets?.scoped ? context.assets.scoped(signal) : context.assets,
+        onCleanup(fn) {
+          if (typeof fn !== 'function' || completed.has(fn)) return;
+          registered.add(fn);
+          if (!active()) void cleanup();
+        },
+        reportError(error, phase = 'mount') { if (active()) return report(declaration.id, phase, error); }
       }));
       try {
         const result = await module.mount(root, extensionContext);
-        instances.push({
-          id: declaration.id,
-          cleanup: typeof result === 'function' ? result : null
-        });
-        results.push({ id: declaration.id, status: 'mounted' });
+        if (typeof result === 'function' && !completed.has(result)) registered.add(result);
+        if (!active()) { await cleanup(); return skipped; }
+        return { id: declaration.id, status: 'mounted' };
       } catch (error) {
-        results.push(report(declaration.id, 'mount', error));
+        await dispose(instance);
+        return active() ? report(declaration.id, 'mount', error) : skipped;
       }
-    }
-    return results;
+    }));
   }
 
   return Object.freeze({ register, mount, unmount });

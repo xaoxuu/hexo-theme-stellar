@@ -8,7 +8,7 @@ function relatedPostsInTopic() {
     return {
       href: pretty_url(post.path),
       title: post.title,
-      active: post.current
+      active: post.id === topicViewModel.item.id
     }
   })
   var body = partial('_partial/components/collection', {options: {

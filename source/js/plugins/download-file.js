@@ -155,6 +155,7 @@ function extToMimes(ext) {
   
   function downloadFile(url) {
     let file = file_contents[url];
+    if (!file) return;
     let a = document.createElement('a')
     // 指定生成的文件名
     a.download = file.name;
@@ -162,37 +163,34 @@ function extToMimes(ext) {
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
+    URL.revokeObjectURL(a.href)
   }
   
   function downloadFileEvent(fileDoms) {
-    for (let i = 0; i < fileDoms.length; ++i) {
-      let fileDom = fileDoms[i];
-      const api = ctx.tag_plugins.chat.api + '?type=file&url=';
-      const obverser = new IntersectionObserver((entries, observer) => {
-        utils.requestAnimationFrame(()=>{
-          entries.filter((entry)=>{return entry.isIntersecting}).sort((a,b)=>a.intersectionRect.y !== b.intersectionRect.y ? a.intersectionRect.y - b.intersectionRect.y : a.intersectionRect.x - b.intersectionRect.x).forEach((entry, index) => {
-            observer.unobserve(entry.target);
-            setTimeout(() => {
-              let url = entry.target.getAttribute('url');
-              fetch(api + url).then(function(response) {
-                if (response.ok) {
-                  return response.json();
-                }
-                throw new Error('Network response was not ok.');
-              }).then(function(data) {
-                cacheDatas(url, data);
-                renderFileDom(fileDom, url);
-              }).catch(function(error) {
-                console.log(error);
-              });
-              fileDom.addEventListener('click', ()=>{
-                  downloadFile(url);
-              });
-            }, Math.max(100, 16)*(index+1));
-          });
-        });
+    const controller = new AbortController();
+    const cleanups = [];
+    const api = ctx.tag_plugins.chat.api + '?type=file&url=';
+    for (const element of fileDoms) {
+      const load = async () => {
+        const url = element.getAttribute('url');
+        try {
+          const response = await fetch(api + encodeURIComponent(url), { signal: controller.signal });
+          if (!response.ok) throw new Error('File response: ' + response.status);
+          const data = await response.json();
+          if (controller.signal.aborted) return;
+          cacheDatas(url, data);
+          renderFileDom(element, url);
+          const download = () => downloadFile(url);
+          element.addEventListener('click', download);
+          cleanups.push(() => element.removeEventListener('click', download));
+        } catch (error) { if (!controller.signal.aborted) console.warn(error); }
+      };
+      if (typeof IntersectionObserver !== 'function') { void load(); continue; }
+      const observer = new IntersectionObserver(entries => {
+        if (entries.some(entry => entry.isIntersecting)) { observer.disconnect(); void load(); }
       });
-      obverser.observe(fileDom);
+      observer.observe(element);
+      cleanups.push(() => observer.disconnect());
     }
+    return () => { controller.abort(); cleanups.forEach(cleanup => cleanup()); };
   }
-  

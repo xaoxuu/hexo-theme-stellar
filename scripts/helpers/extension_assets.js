@@ -15,3 +15,8 @@ hexo.extend.helper.register("katex_stylesheet", function() {
     integrity: config.css_integrity
   };
 });
+
+hexo.extend.helper.register("hero_effect_resource", function(id) {
+  const definition = require("../lib/hero-effect-registry").getHeroEffectDefinition(id);
+  return definition ? { module: definition.module, defaults: definition.defaults } : {};
+});

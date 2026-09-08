@@ -32,6 +32,7 @@ function layoutWikiCover() {
   var effectPresentation = effect.presentation && typeof effect.presentation === 'object' && !Array.isArray(effect.presentation) ? effect.presentation : {};
   var effectBackground = typeof effectPresentation.background === 'string' ? effectPresentation.background : '#000000';
   var respectsReducedMotion = effectRuntime.respectReducedMotion !== false;
+  var effectResourceJson = escape_html(JSON.stringify(hero_effect_resource(effect.type)));
   var effectOptionsJson = escape_html(JSON.stringify(effectOptions));
   var effectRuntimeJson = escape_html(JSON.stringify(effectRuntime));
   var projectName = cover.projectName;
@@ -45,11 +46,11 @@ function layoutWikiCover() {
   el += '<div class="cover-content wiki wiki-hero' + (hasPreview ? '' : ' without-preview') + '">';
   el += '<div class="wiki-cover-background' + (hasEffect ? ' has-effect' : '') + (respectsReducedMotion ? ' respect-reduced-motion' : '') + (isImageBackground ? ' image' : '') + '"' + (hasEffect ? ' style="--hero-effect-background:' + escape_html(effectBackground) + '"' : '') + ' aria-hidden="true">';
   if (isImageBackground) {
-    el += '<img class="wiki-cover-background-image" src="' + escape_html(background) + '" alt="" />';
-    el += '<img class="wiki-cover-background-blur" src="' + escape_html(background) + '" alt="" />';
+    el += '<img loading="eager" fetchpriority="high" class="wiki-cover-background-image" src="' + escape_html(background) + '" alt="" />';
+    el += '<img loading="eager" fetchpriority="high" class="wiki-cover-background-blur" src="' + escape_html(background) + '" alt="" />';
   }
   if (hasEffect) {
-    el += '<canvas data-hero-effect="' + escape_html(effect.type) + '" data-effect-options="' + effectOptionsJson + '" data-effect-runtime="' + effectRuntimeJson + '"></canvas>';
+    el += '<canvas data-hero-effect="' + escape_html(effect.type) + '" data-effect-resource="' + effectResourceJson + '" data-effect-options="' + effectOptionsJson + '" data-effect-runtime="' + effectRuntimeJson + '"></canvas>';
   }
   el += '<div class="wiki-cover-background-overlay"></div></div>';
   el += '<div class="wiki-cover-layout"' + adaptiveTextAttr + '>';
@@ -87,7 +88,7 @@ function layoutWikiCover() {
   if (hasPreview) {
     el += '<section class="wiki-cover-preview" aria-label="' + escape_html(__('meta.project_preview')) + '">';
     if (preview.type === 'image' && preview.src) {
-      el += '<img src="' + escape_html(preview.src) + '" alt="' + escape_html(preview.alt || '') + '" />';
+      el += '<img loading="eager" fetchpriority="high" src="' + escape_html(preview.src) + '" alt="' + escape_html(preview.alt || '') + '" />';
     } else if (commands.length > 0) {
       el += '<div class="wiki-cover-terminal">';
       el += '<div class="wiki-cover-terminal-toolbar"><div class="wiki-cover-terminal-tabs" role="tablist" aria-label="' + escape_html(__('meta.install_method')) + '">';

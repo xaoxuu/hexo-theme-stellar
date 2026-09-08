@@ -4,9 +4,7 @@ export async function mount(root, context) {
   }
   const assets = context.assets;
   const config = context.extension.config;
-  const services = Object.assign({}, config.services, {
-    siteinfo: Object.assign({}, config.services.siteinfo, { api: config.siteInfoEndpoint })
-  });
+  const services = context.legacy.ctx.services;
   const deps = { marked: config.marked };
   const loads = [];
   const voiceCleanups = [];
@@ -21,6 +19,7 @@ export async function mount(root, context) {
       const siteCards = root.querySelectorAll('.ds-sites, .site-card .card-link[data-siteinfo-api]');
       if (cardlinks?.length > 0 || siteCards?.length > 0) {
         loads.push(assets.script(js).then(function () {
+          context.signal?.throwIfAborted();
           if (cardlinks?.length > 0) {
             setCardLink(cardlinks);
           }
@@ -35,6 +34,7 @@ export async function mount(root, context) {
       const voiceAudios = root.querySelectorAll('.voice>audio');
       if (voiceAudios?.length > 0) {
         loads.push(assets.script(js).then(function () {
+          context.signal?.throwIfAborted();
           const voiceCleanup = createVoiceDom(voiceAudios);
           if (typeof voiceCleanup === 'function') voiceCleanups.push(voiceCleanup);
         }));
@@ -43,14 +43,16 @@ export async function mount(root, context) {
       const videos = root.querySelectorAll('.video>video');
       if (videos?.length > 0) {
         loads.push(assets.script(js).then(function () {
-          videoEvents(videos);
+          context.signal?.throwIfAborted();
+          voiceCleanups.push(videoEvents(videos));
         }));
       }
     } else if (id == 'download-file') {
       const files = root.querySelectorAll('.chat-file');
       if (files?.length > 0) {
         loads.push(assets.script(js).then(function () {
-          downloadFileEvent(files);
+          context.signal?.throwIfAborted();
+          voiceCleanups.push(downloadFileEvent(files));
         }));
       }
     } else {
@@ -58,6 +60,7 @@ export async function mount(root, context) {
       if (els?.length > 0) {
         if (id == 'timeline' || id == 'memos' || id == 'marked' || id == 'mdrender') {
           loads.push(assets.script(deps.marked).then(function () {
+          context.signal?.throwIfAborted();
             return assets.script(js);
           }));
         } else {
@@ -185,8 +188,9 @@ export async function mount(root, context) {
     }
     voiceCleanups.length = 0;
   };
+  context.onCleanup?.(cleanup);
   try {
-    await Promise.all(loads);
+    await Promise.allSettled(loads.map(promise => promise.catch(error => { context.reportError(error); })));
   } catch (error) {
     cleanup();
     throw error;

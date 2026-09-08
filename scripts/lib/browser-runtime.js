@@ -4,7 +4,6 @@
 
 const INTERNAL_CONSTANTS = require("./internal-constants");
 const { buildContributionEntries } = require("./contribution-registry");
-const { resolveServiceProvider } = require("./service-provider");
 
 const RUNTIME_VERSION = 1;
 const RUNTIME_CONFIG_ID = "stellar-runtime-config";
@@ -82,8 +81,7 @@ function buildBrowserRuntimeManifest(input) {
     features,
     messages,
     plainObject,
-    render,
-    resolveServiceProvider
+    render
   });
 
   const manifest = {
@@ -98,12 +96,7 @@ function buildBrowserRuntimeManifest(input) {
 }
 
 function serializeBrowserRuntimeManifest(manifest) {
-  return JSON.stringify(manifest)
-    .replace(/&/g, "\\u0026")
-    .replace(/</g, "\\u003c")
-    .replace(/>/g, "\\u003e")
-    .replace(/\u2028/g, "\\u2028")
-    .replace(/\u2029/g, "\\u2029");
+  return require("./script-json").scriptJson(manifest);
 }
 
 module.exports = {

@@ -28,11 +28,16 @@ img:not([src])
   background-color: var(--theme)
   svg-mask-icon(var(--icon-loading, url("https://api.iconify.design/eos-icons:three-dots-loading.svg?color=%231cd0fd")))
 
-img.lazy.loading + .lazy-icon
+img.lazy + .lazy-icon
   position: absolute
   top: 50%
   left: 50%
   transform: translateX(-50%) translateY(-50%)
+
+// Native loading exceptions do not use the theme placeholder.
+.image-bg > img:not(.lazy) + .lazy-icon,
+.lazy-box > img:not(.lazy) + .lazy-icon
+  display: none
 
 // 加载完成
 img.lazy.loaded + .lazy-icon,

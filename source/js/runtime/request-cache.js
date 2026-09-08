@@ -1,5 +1,31 @@
 export const REQUEST_CACHE_PREFIX = 'Stellar.request-cache.v2.';
 
+const SEARCH_CACHE_PREFIX = 'search_cache_v6:';
+
+export function searchCacheKey(url, base) {
+  return SEARCH_CACHE_PREFIX + new URL(url, base).href;
+}
+
+export function isSearchCacheKey(key) {
+  return typeof key === 'string' && key.startsWith(SEARCH_CACHE_PREFIX);
+}
+
+export function clearSearchStorage(storage) {
+  let removed = 0;
+  let failed = 0;
+  try {
+    const keys = [];
+    for (let index = 0; index < storage.length; index++) {
+      const key = storage.key(index);
+      if (isSearchCacheKey(key)) keys.push(key);
+    }
+    for (const key of keys) {
+      try { storage.removeItem(key); removed++; } catch (error) { void error; failed++; }
+    }
+  } catch (error) { void error; failed++; }
+  return { ok: failed === 0, partial: removed > 0 && failed > 0, removed, failed };
+}
+
 function responseFrom(entry) {
   return new Response(entry.text, {
     status: 200,

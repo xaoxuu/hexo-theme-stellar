@@ -143,7 +143,7 @@ function createLifecycle(canvas, renderer, runtime) {
 
 async function mountCanvas(canvas, context) {
   const type = canvas.getAttribute('data-hero-effect') || '';
-  const definition = objectValue(context.extension.config.effects)[type];
+  const definition = readObject(canvas, 'data-effect-resource');
   if (!definition || typeof definition.module !== 'string') {
     throw new TypeError(`[stellar hero effect] unregistered effect ${type || '<missing>'}`);
   }
@@ -154,6 +154,7 @@ async function mountCanvas(canvas, context) {
   if (typeof module.createRenderer !== 'function') {
     throw new TypeError(`[stellar hero effect] ${type} must export createRenderer(canvas, options, defaults)`);
   }
+  context.signal?.throwIfAborted();
   const renderer = module.createRenderer(canvas, readObject(canvas, 'data-effect-options'), objectValue(definition.defaults));
   if (!renderer) return null;
   if (typeof renderer.resize !== 'function' || typeof renderer.render !== 'function' || typeof renderer.destroy !== 'function') {
@@ -168,12 +169,15 @@ export async function mount(root, context) {
   await Promise.all(effectCanvases(root).map(async canvas => {
     try {
       const cleanup = await mountCanvas(canvas, context);
-      if (typeof cleanup === 'function') cleanups.push(cleanup);
+      if (typeof cleanup === 'function') {
+        cleanups.push(cleanup);
+        context.onCleanup?.(cleanup);
+      }
     } catch (error) {
       context.reportError(error);
     }
   }));
-  return () => {
+  if (!context.onCleanup) return () => {
     for (let index = cleanups.length - 1; index >= 0; index--) cleanups[index]();
   };
 }

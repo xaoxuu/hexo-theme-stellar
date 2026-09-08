@@ -21,6 +21,15 @@ function dispatch(name, detail) {
   document.dispatchEvent(new CustomEvent(name, { detail }));
 }
 
+let registry;
+let context;
+let hidden = false;
+window.addEventListener('pagehide', () => { hidden = true; void registry?.unmount(document); });
+window.addEventListener('pageshow', event => {
+  hidden = false;
+  if (event.persisted && registry && context) void registry.mount(document, context);
+});
+
 async function start() {
   const [assetModule, registryModule, adapterModule, requestModule] = await Promise.all([
     import(`./asset-loader.js${RUNTIME_QUERY}`),
@@ -41,7 +50,7 @@ async function start() {
   });
   installLegacyRequestAdapter(globalThis.utils, request, manifest.policy.request);
 
-  const registry = createExtensionRegistry({
+  registry = createExtensionRegistry({
     onError(detail) {
       console.error(`[stellar extension:${detail.id}] ${detail.phase} failed`, detail.error);
       dispatch('stellar:extension-error', detail);
@@ -53,7 +62,7 @@ async function start() {
     }));
   });
 
-  const context = Object.freeze({
+  context = Object.freeze({
     manifest,
     assets,
     request,
@@ -62,11 +71,7 @@ async function start() {
       stellar: globalThis.stellar
     })
   });
-  await registry.mount(document, context);
-  window.addEventListener('pagehide', () => registry.unmount(document));
-  window.addEventListener('pageshow', event => {
-    if (event.persisted) registry.mount(document, context);
-  });
+  if (!hidden) await registry.mount(document, context);
 }
 
 start().catch(error => {

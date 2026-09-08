@@ -10,8 +10,8 @@
   background-image: var(--pin-cover-url)
   background-size: cover
   background-position: center
-  // 初始化前隐藏，避免先闪出第一张；定位到缓存序号后再显示
-  visibility: hidden
+  // 无脚本时显示基础内容；内联启动先恢复缓存位置再显示。
+  visibility: visible
 
 .pin-slider-track
   display: flex
@@ -235,3 +235,6 @@
 .pin-slider:hover .pin-slider-nav,
 .pin-slider:focus-within .pin-slider-nav
   opacity: 1
+
+.stellar-pin-pending .pin-slider
+  visibility: hidden

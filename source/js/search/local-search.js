@@ -1,6 +1,27 @@
 var searchCache = null;          // 当前可用的搜索数据（数组）
 var searchCacheEntry = null;     // 最近读取/写入的缓存条目 { ts, ttl, data }
-var searchCacheKey = 'search_cache_v5';
+var searchCacheKey;
+var searchStorage;
+var preparedSearchSource = null;
+var preparedSearchIndex = [];
+
+function searchIndex() {
+  if (preparedSearchSource === searchCache) return preparedSearchIndex;
+  preparedSearchSource = searchCache;
+  preparedSearchIndex = (searchCache || []).filter(data => typeof data.content === 'string' && data.content.trim() && typeof data.path === 'string').map(data => {
+    var title = data.title?.trim() || 'Untitled';
+    var lower = data.content.toLowerCase();
+    var anchors = Array.isArray(data.anchors) ? data.anchors : [];
+    var sections = [];
+    for (var i = 0; i <= anchors.length; i++) {
+      var offset = i ? anchors[i - 1].offset : 0;
+      var end = i === anchors.length ? data.content.length : anchors[i].offset;
+      sections.push({ anchor: i ? anchors[i - 1] : null, offset, text: data.content.slice(offset, end), lower: lower.slice(offset, end) });
+    }
+    return { title, titleLower: title.toLowerCase(), domains: data.domains, url: (data.path.startsWith('//') ? data.path.slice(1) : data.path).replace(/\/?index\.html$/, '/').replace(/\.html$/, '/'), sections };
+  });
+  return preparedSearchIndex;
+}
 var searchFetchPromise = null;   // 单飞：同一时刻只允许一个请求
 
 var searchLazyLoad = true;
@@ -61,17 +82,19 @@ function loadCacheIntoMemory() {
   }
   if (searchCacheEntry && Array.isArray(searchCacheEntry.data)) {
     searchCache = searchCacheEntry.data;
+    searchIndex();
   }
   return searchCacheEntry;
 }
 
 function clearSearchCache() {
   searchCache = null;
+  preparedSearchSource = null;
+  preparedSearchIndex = [];
   searchCacheEntry = null;
   searchFetchPromise = null;
   try {
-    localStorage.removeItem(searchCacheKey);
-    return { ok: true, partial: false, removed: 1, failed: 0 };
+    return searchStorage?.clear(localStorage);
   } catch (e) {
     return { ok: false, partial: false, removed: 0, failed: 1 };
   }
@@ -95,6 +118,7 @@ function fetchSearchData(path) {
     .then(function(json) {
       if (!Array.isArray(json)) throw new Error('search data is not an array');
       searchCache = json;
+      searchIndex();
       writeSearchCache(json);
       return json;
     })
@@ -132,7 +156,7 @@ var searchFunc = function(path, wrapperId, searchId, contentId, root) {
 
   // 关键词组合（含原始大小写）：按组合长度降序，用于匹配与跳转高亮
   function buildKeywordPairs(value) {
-    const tokens = value.trim().split(" ");
+    const tokens = value.trim().split(/\s+/);
     const combos = getAllCombinations(tokens.map(function(t) { return t.toLowerCase(); }));
     const originalCombos = getAllCombinations(tokens);
     const pairs = combos.map(function(kw, i) {
@@ -190,13 +214,18 @@ var searchFunc = function(path, wrapperId, searchId, contentId, root) {
       var matchContent = secText.substring(start, end);
 
       var regS = new RegExp(pairs.map(function(p) { return escapeRegExp(p.kw); }).join("|"), "gi");
-      matchContent = matchContent.replace(regS, function(keyword) {
-        return "<span class=\"search-keyword\">" + keyword + "</span>";
-      });
-
       const para = ownerDocument.createElement('p');
       para.className = 'search-result-content';
-      para.innerHTML = matchContent + '...';
+      var cursor = 0;
+      for (var match of matchContent.matchAll(regS)) {
+        para.appendChild(ownerDocument.createTextNode(matchContent.slice(cursor, match.index)));
+        var highlight = ownerDocument.createElement('span');
+        highlight.className = 'search-keyword';
+        highlight.textContent = match[0];
+        para.appendChild(highlight);
+        cursor = match.index + match[0].length;
+      }
+      para.appendChild(ownerDocument.createTextNode(matchContent.slice(cursor) + '...'));
       a.appendChild(para);
     }
 
@@ -212,53 +241,40 @@ var searchFunc = function(path, wrapperId, searchId, contentId, root) {
     var $resultContent = root.querySelector('#' + contentId);
     var $wrapper = root.querySelector('#' + wrapperId);
 
+    var revision = 0;
+    var timer;
+    var composing = false;
+    var disposed = false;
     var onInput = function() {
-      var rawValue = this.value.trim();
+      var query = ++revision;
+      clearTimeout(timer);
+      if (composing || disposed) return;
+      timer = setTimeout(() => runSearch(query), 120);
+    };
+    var runSearch = function(query) {
+      var rawValue = $input.value.trim();
       unmountResultCards($resultContent);
-      $resultContent.innerHTML = "";
-      if (rawValue.length <= 0) {
-        $wrapper.setAttribute('searching', 'false');
-        return;
-      }
-      $wrapper.setAttribute('searching', 'true');
-
-      var pairs = buildKeywordPairs(this.value);
+      $resultContent.innerHTML = '';
+      $wrapper.setAttribute('searching', rawValue ? 'true' : 'false');
+      if (!rawValue) return;
+      var pairs = buildKeywordPairs(rawValue);
       var resultList = [];
-
-      // 读取模块级 searchCache：后台刷新后即时生效；搜索域由每次打开浮层的入口更新。
-      var activeDomain = this.getAttribute('data-domain') || '';
-      (searchCache || []).forEach(function(data) {
-        if (!data.content?.trim().length) return;
-        if (activeDomain && !data.domains?.includes(activeDomain)) return;
-
-        var dataTitle = data.title?.trim() || 'Untitled';
-        var dataTitleLowerCase = dataTitle.toLowerCase();
-        var dataContent = data.content;
-        var dataContentLowerCase = dataContent.toLowerCase();
-        var dataUrl = data.path.startsWith('//') ? data.path.slice(1) : data.path;
-        dataUrl = dataUrl.replace(/\/?index\.html$/, '/'); // index.html → /
-        dataUrl = dataUrl.replace(/\.html$/, '/'); // xxx.html → xxx/
-
-        // 章节划分：anchors 缺失/为空 → 整页一段（回退页面级行为）
-        var anchors = Array.isArray(data.anchors) ? data.anchors : [];
-        var sections = [];
-        if (anchors.length === 0) {
-          sections.push({ anchor: null, offset: 0, end: dataContent.length });
-        } else {
-          for (var s = 0; s <= anchors.length; s++) {
-            sections.push({
-              anchor: s === 0 ? null : anchors[s - 1],
-              offset: s === 0 ? 0 : anchors[s - 1].offset,
-              end: s === anchors.length ? dataContent.length : anchors[s].offset
-            });
-          }
-        }
-
+      var activeDomain = $input.getAttribute('data-domain') || '';
+      var index = searchIndex();
+      var cursor = 0;
+      var active = () => !disposed && query === revision;
+      var batch = function() {
+        if (!active()) return;
+        var deadline = performance.now() + 8;
+        do {
+          var data = index[cursor++];
+          if (!data) break;
+          if (activeDomain && !data.domains?.includes(activeDomain)) continue;
         // 标题命中（仅当无任何章节命中时兜底为页面级结果）
         var titleMatches = 0;
         var titleBestKw = null;
         pairs.forEach(function(p) {
-          if (dataTitleLowerCase.indexOf(p.kw) >= 0) {
+          if (data.titleLower.indexOf(p.kw) >= 0) {
             titleMatches += 1;
             if (titleBestKw == null) titleBestKw = p.original;
           }
@@ -267,10 +283,10 @@ var searchFunc = function(path, wrapperId, searchId, contentId, root) {
         var hasSectionResult = false;
 
         // 逐章节匹配
-        sections.forEach(function(section) {
-          var secText = dataContent.slice(section.offset, section.end);
+        data.sections.forEach(function(section) {
+          var secText = section.text;
           if (!secText.trim().length) return;
-          var secLower = dataContentLowerCase.slice(section.offset, section.end);
+          var secLower = section.lower;
           var secMatches = 0;
           var secFirst = -1;
           var secBestKw = null;
@@ -283,7 +299,7 @@ var searchFunc = function(path, wrapperId, searchId, contentId, root) {
           });
           if (secMatches === 0) return;
 
-          var href = dataUrl;
+          var href = data.url;
           if (section.anchor) {
             href += '?kw=' + encodeURIComponent(secBestKw) + '#' + encodeURIComponent(section.anchor.id);
           } else {
@@ -292,7 +308,7 @@ var searchFunc = function(path, wrapperId, searchId, contentId, root) {
           resultList.push({
             rank: secMatches,
             offset: section.offset,
-            element: buildResultElement(dataTitle, section.anchor ? section.anchor.text : null, secText, secFirst, pairs, href)
+            args: [data.title, section.anchor ? section.anchor.text : null, secText, secFirst, pairs, href]
           });
           hasSectionResult = true;
         });
@@ -301,36 +317,63 @@ var searchFunc = function(path, wrapperId, searchId, contentId, root) {
           resultList.push({
             rank: titleMatches,
             offset: Number.MAX_SAFE_INTEGER,
-            element: buildResultElement(dataTitle, null, null, -1, pairs, dataUrl + '?kw=' + encodeURIComponent(titleBestKw))
+            args: [data.title, null, null, -1, pairs, data.url + '?kw=' + encodeURIComponent(titleBestKw)]
           });
         }
-      });
 
-      if (resultList.length) {
-        resultList.sort(function(a, b) {
-          return b.rank - a.rank || a.offset - b.offset;
-        });
-
-        const ul = ownerDocument.createElement('ul');
+        } while (cursor < index.length && performance.now() < deadline);
+        if (cursor < index.length) { timer = setTimeout(batch, 0); return; }
+        resultList.sort((a, b) => b.rank - a.rank || a.offset - b.offset);
+        if (!resultList.length) return;
+        var ul = ownerDocument.createElement('ul');
         ul.className = 'search-result-list ui-collection-adapter';
-        resultList.forEach(function(item) {
-          ul.appendChild(item.element);
-        });
-
-        $resultContent.innerHTML = '';
         $resultContent.appendChild(ul);
-        mountResultCards(ul);
-      }
+        var shown = 0;
+        var more = ownerDocument.createElement('button');
+        more.type = 'button';
+        more.className = ctx.ui.classes.interactive;
+        more.textContent = ctx.search.more;
+        var append = function() {
+          if (!active()) return;
+          more.disabled = true;
+          var limit = Math.min(shown + 50, resultList.length);
+          var renderBatch = function() {
+            if (!active()) return;
+            var deadline = performance.now() + 8;
+            var fragment = ownerDocument.createDocumentFragment();
+            do { fragment.appendChild(buildResultElement(...resultList[shown++].args)); }
+            while (shown < limit && performance.now() < deadline);
+            ul.appendChild(fragment);
+            mountResultCards(ul);
+            if (shown < limit) { timer = setTimeout(renderBatch, 0); return; }
+            more.disabled = false;
+            if (shown >= resultList.length) more.remove();
+          };
+          renderBatch();
+        };
+        more.addEventListener('click', append);
+        $resultContent.appendChild(more);
+        append();
+      };
+      batch();
     };
+    var compositionStart = function() { composing = true; ++revision; clearTimeout(timer); };
+    var compositionEnd = function() { composing = false; onInput(); };
 
     var onKeydown = function(e) {
       if (e.key == 'Enter') {
         e.preventDefault();
       }
     };
+    $input.addEventListener("compositionstart", compositionStart);
+    $input.addEventListener("compositionend", compositionEnd);
     $input.addEventListener("input", onInput);
     $input.addEventListener("keydown", onKeydown);
     $input._searchCleanup = function() {
+      disposed = true; ++revision; clearTimeout(timer);
+      unmountResultCards($resultContent);
+      $input.removeEventListener("compositionstart", compositionStart);
+      $input.removeEventListener("compositionend", compositionEnd);
       $input.removeEventListener("input", onInput);
       $input.removeEventListener("keydown", onKeydown);
       $input._searchInitialized = undefined;
@@ -373,19 +416,14 @@ var searchFunc = function(path, wrapperId, searchId, contentId, root) {
     });
 };
 
-// 页面加载预取：仅非懒加载模式（缓存新鲜时不重复请求）
-(function preloadSearchData() {
-  if (searchLazyLoad) return;
-  if (needsFetch()) {
-    fetchSearchData(getSearchPath()).catch(function() {});
-  }
-})();
-
 // 聚焦触发：懒加载模式下首次聚焦搜索框才加载数据
 var localSearchRoots = new WeakMap();
 
-function mountLocalSearch(root) {
+function mountLocalSearch(root, storage) {
   root = root || document;
+  searchStorage = storage;
+  searchCacheKey = storage.key(getSearchPath(), document.baseURI);
+  if (!searchLazyLoad && needsFetch()) fetchSearchData(getSearchPath()).catch(function() {});
   if (localSearchRoots.has(root)) return localSearchRoots.get(root);
   var wrappers = Array.from(root.querySelectorAll('.search-wrapper'));
   var observers = [];
@@ -418,7 +456,7 @@ function mountLocalSearch(root) {
     });
     observer.observe(resultArea, { childList: true, subtree: true });
     observers.push(observer);
-    if (!searchLazyLoad && input._searchInitialized !== true) {
+    if ((!searchLazyLoad || input === document.activeElement || input.value.trim()) && input._searchInitialized !== true) {
       searchFunc(getSearchPath(), wrapper.id, input.id, resultArea.id, root);
     }
   });

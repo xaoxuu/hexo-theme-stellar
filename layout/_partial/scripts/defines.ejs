@@ -22,120 +22,31 @@
 %>
 
 <script type="text/javascript">
-  window.canonical = <%- JSON.stringify(canonicalWithEncoded) %>;
-  window.canonical["param"] = <%- JSON.stringify({permalink, checklink}) %>;
-  // Fix: Ensure page is at the correct top position on data load
-  if (history.scrollRestoration) {
-    history.scrollRestoration = 'auto';
-  }
-  (function() {
-    const scrollHandler = () => {
-      // 存在有效锚点时，等待布局稳定后滚动到目标
-      // （浏览器原生锚点滚动发生在布局完成前，长文章的懒加载图片/异步组件会把目标顶偏）
-      const hash = window.location.hash;
-      if (hash.length > 1) {
-        let anchorId = hash.slice(1);
-        try {
-          anchorId = decodeURIComponent(anchorId);
-        } catch (e) {
-          // 片段含非法编码时按原样查找
-        }
-        const anchor = document.getElementById(anchorId);
-        if (anchor) {
-          // #start 锚点贴顶，不预留 offset；其余锚点与 TOC 点击滚动保持一致
-          const offset = anchorId === 'start' ? 0 : 32;
-          const targetY = () => anchor.getBoundingClientRect().top + window.scrollY - offset;
-          let timer = null;
-          let lastY = null;
-          let quiet = 0;
-          let attempts = 0;
-          // 记录最近一次资源加载完成时间，判断异步数据/图片是否仍在改变布局
-          let lastResourceTime = performance.now();
-          let observer = null;
-          try {
-            observer = new PerformanceObserver(function (list) {
-              lastResourceTime = performance.now();
-            });
-            observer.observe({ entryTypes: ['resource'] });
-          } catch (e) {}
-          // 只跟踪主题 request/cache 客户端，不替换浏览器原生 fetch/XHR。
-          const pendingRequests = new Set();
-          const onRequestStart = event => pendingRequests.add(event.detail.key);
-          const onRequestEnd = event => pendingRequests.delete(event.detail.key);
-          document.addEventListener('stellar:request-start', onRequestStart);
-          document.addEventListener('stellar:request-end', onRequestEnd);
-          const cancel = () => {
-            if (timer !== null) {
-              clearInterval(timer);
-              timer = null;
-            }
-            if (observer !== null) {
-              try {
-                observer.disconnect();
-              } catch (e) {}
-            }
-            document.removeEventListener('stellar:request-start', onRequestStart);
-            document.removeEventListener('stellar:request-end', onRequestEnd);
-          };
-          const adjust = () => {
-            const y = targetY();
-            const atTarget = Math.abs(window.scrollY - y) <= 2;
-            if (!atTarget || lastY === null || Math.abs(y - lastY) > 2) {
-              window.scrollTo({ top: y, behavior: 'instant' });
-              lastY = y;
-              quiet = 0;
-            } else {
-              quiet++;
-            }
-            attempts++;
-            const resourceQuiet = performance.now() - lastResourceTime > 3000;
-            // 位置连续 1.8 秒无变化、无进行中的请求且最近 3 秒无资源加载才视为稳定；最长等待 30 秒
-            if ((quiet >= 3 && pendingRequests.size === 0 && resourceQuiet) || attempts >= 50) {
-              cancel();
-            }
-          };
-          requestAnimationFrame(() => {
-            // 锚点链接打开时直接定位，不做动画；用户主动点击（如 TOC）仍走平滑滚动
-            window.scrollTo({ top: targetY(), behavior: 'instant' });
-            timer = setInterval(adjust, 600);
-          });
-          // 用户主动滚动时停止自动校正
-          window.addEventListener('wheel', cancel, { passive: true });
-          window.addEventListener('touchstart', cancel, { passive: true });
-          window.addEventListener('mousedown', cancel, { passive: true });
-          window.addEventListener('keydown', cancel, { passive: true });
-          return;
-        }
-      }
-      // 没有锚点时始终保持页面顶部；Wiki Hero 只在用户显式访问 #start 时定位正文。
-      window.scrollTo(0, 0);
-    };
-    if (document.readyState !== 'loading') scrollHandler();
-    else document.addEventListener('DOMContentLoaded', scrollHandler);
-  })();
+  window.canonical = <%- script_json(canonicalWithEncoded) %>;
+  window.canonical["param"] = <%- script_json({permalink, checklink}) %>;
   const ctx = {
     date_suffix: {
-      just: `<%- __('meta.date_suffix.just') %>`,
-      min: `<%- __('meta.date_suffix.min') %>`,
-      hour: `<%- __('meta.date_suffix.hour') %>`,
-      day: `<%- __('meta.date_suffix.day') %>`,
+      just: <%- script_json(__('meta.date_suffix.just')) %>,
+      min: <%- script_json(__('meta.date_suffix.min')) %>,
+      hour: <%- script_json(__('meta.date_suffix.hour')) %>,
+      day: <%- script_json(__('meta.date_suffix.day')) %>,
     },
-    root : `<%- config.root %>`,
+    root : <%- script_json(config.root) %>,
     tag_plugins: {
-      chat: {api: <%- JSON.stringify(assets.services.chat.endpoint) %>},
+      chat: {api: <%- script_json(assets.services.chat.endpoint) %>},
     },
     // 图标由构建期生成的 /js/stellar-icons.js 填充（defer，早于 DOMContentLoaded 就绪）
     icons: {},
-    ui: { classes: <%- JSON.stringify(ui_capabilities()) %> },
-    services: <%- JSON.stringify(clientServices) %>,
+    ui: { classes: <%- script_json(ui_capabilities()) %> },
+    services: <%- script_json(clientServices) %>,
   };
 
   // required plugins (only load if needs)
-  if (`<%- searchProvider || '' %>`) {
-    ctx.search = {};
-    ctx.search.service = `<%- searchProvider || '' %>`;
+  if (<%- script_json(searchProvider || '') %>) {
+    ctx.search = { more: <%- script_json(__('btn.more')) %> };
+    ctx.search.service = <%- script_json(searchProvider || '') %>;
     if (ctx.search.service == 'local_search') {
-      let service_obj = <%- JSON.stringify({
+      let service_obj = <%- script_json({
         field: localSearch.scope,
         path: '/search.json',
         content: localSearch.includeContent,
@@ -147,24 +58,11 @@
     }
   }
   const def = {
-    avatar: `<%- stellar_config('fallbacks.avatar') %>`,
-    cover: `<%- stellar_config('fallbacks.cover') %>`,
+    avatar: <%- script_json(stellar_config('fallbacks.avatar')) %>,
+    cover: <%- script_json(stellar_config('fallbacks.cover')) %>,
   };
   // 经典脚本仍消费这些只读投影。
   window.ctx = ctx;
   window.def = def;
 
-  // 搜索跳转高亮：URL 带 ?kw= 时按需加载，定位正文中的匹配词
-  (function () {
-    try {
-      if (!window.location.search) return;
-      if (!new URLSearchParams(window.location.search).has('kw')) return;
-      document.addEventListener('DOMContentLoaded', function () {
-        // utils 由前置 /js/utils.js 同步定义（同时暴露 window.utils）。
-        if (typeof utils === 'object' && typeof utils.js === 'function') {
-          utils.js('<%- url_for('/js/search/highlight.js') %>', { defer: true }).catch(function () {});
-        }
-      });
-    } catch (e) {}
-  })();
 </script>

@@ -14,6 +14,12 @@ var stellarResources = {
   fallbacks: stellar_config('fallbacks')
 }
 
+function cssString(value) {
+  return '"' + String(value).replace(/["\\<\u0000-\u001f]/g, function(character) {
+    return '\\' + character.codePointAt(0).toString(16) + ' ';
+  }) + '"';
+}
+
 function generate_title() {
   if (pageRender) {
     return pageRender.seo.title
@@ -202,7 +208,7 @@ function generate_canonical() {
   <script>
     (function () {
       var key = 'stellar:v2:leftbar-state';
-      var fallback = <%- JSON.stringify(stellar_config('leftbar.defaultState')) %>;
+      var fallback = <%- script_json(stellar_config('leftbar.defaultState')) %>;
       try {
         var value = localStorage.getItem(key);
         document.documentElement.dataset.leftbarState = value === 'collapsed' || value === 'expanded' ? value : fallback;
@@ -234,7 +240,7 @@ function generate_canonical() {
 
   <link rel="preload" href="<%- url_for(`${stellar_info('main_css')}?v=${stellar_info('version')}`) %>" as="style">
   <link rel="stylesheet" href="<%- url_for(`${stellar_info('main_css')}?v=${stellar_info('version')}`) %>">
-  <style>:root{--text-loading:<%- JSON.stringify(__('message.loading')) %>;--text-loading-error:<%- JSON.stringify(__('message.loading_failed')) %>}</style>
+  <style>:root{--text-loading:<%- cssString(__('message.loading')) %>;--text-loading-error:<%- cssString(__('message.loading_failed')) %>}</style>
 
 
   <% if (config.favicon) { %>
@@ -248,6 +254,7 @@ function generate_canonical() {
   <% } %>
 
   <%- json_ld(pageViewModel || undefined) %>
+  <noscript><style>img.lazy[data-src],img.lazy[data-src]+.lazy-icon{display:none!important}</style></noscript>
   <%- custom_inject('headEnd') %>
 
   <!-- icons.yml 驱动的 CSS 装饰图标 -->

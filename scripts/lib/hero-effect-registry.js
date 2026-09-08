@@ -237,13 +237,6 @@ function heroEffectDefinitions() {
   return DEFINITIONS.slice();
 }
 
-function heroEffectRuntimeConfig() {
-  return Object.fromEntries(DEFINITIONS.map(definition => [definition.id, {
-    module: definition.module,
-    defaults: definition.defaults
-  }]));
-}
-
 function projectHeroEffect(effect) {
   const definition = getHeroEffectDefinition(effect?.type);
   if (!definition) return effect;
@@ -257,6 +250,5 @@ module.exports = {
   HERO_EFFECT_IDS,
   getHeroEffectDefinition,
   heroEffectDefinitions,
-  heroEffectRuntimeConfig,
   projectHeroEffect
 };

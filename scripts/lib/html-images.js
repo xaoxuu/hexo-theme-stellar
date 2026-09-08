@@ -50,6 +50,7 @@ function mapImageTags(html, transform) {
   if (typeof html !== "string" || !/<img/i.test(html)) return html;
   const parts = [];
   let i = 0;
+  let picture = false;
   const n = html.length;
   const lower = html.toLowerCase();
   while (i < n) {
@@ -70,53 +71,26 @@ function mapImageTags(html, transform) {
       i = end + 3;
       continue;
     }
-    // <script>…</script>：整段跳过，避免误处理模板字符串/字符串里的 <img
-    if (lower.startsWith("<script", i) && isTagBoundary(html, i + 7)) {
-      const end = findTagEnd(html, i);
-      if (end === -1) {
-        break;
-      }
+    // Raw text and noscript fallbacks must never pass through the image filter.
+    const opaque = ['script', 'style', 'noscript'].find(name =>
+      lower.startsWith('<' + name, i) && isTagBoundary(html, i + name.length + 1));
+    if (opaque) {
+      const close = lower.indexOf('</' + opaque, findTagEnd(html, i) + 1);
+      const end = close < 0 ? -1 : findTagEnd(html, close);
+      if (end < 0) { parts.push(html.slice(i)); break; }
       parts.push(html.slice(i, end + 1));
       i = end + 1;
-      const close = lower.indexOf("</script", i);
-      if (close === -1) {
-        break;
-      }
-      const closeEnd = html.indexOf(">", close);
-      if (closeEnd === -1) {
-        break;
-      }
-      parts.push(html.slice(i, closeEnd + 1));
-      i = closeEnd + 1;
       continue;
     }
-    // <style>…</style>：整段跳过
-    if (lower.startsWith("<style", i) && isTagBoundary(html, i + 6)) {
-      const end = findTagEnd(html, i);
-      if (end === -1) {
-        break;
-      }
-      parts.push(html.slice(i, end + 1));
-      i = end + 1;
-      const close = lower.indexOf("</style", i);
-      if (close === -1) {
-        break;
-      }
-      const closeEnd = html.indexOf(">", close);
-      if (closeEnd === -1) {
-        break;
-      }
-      parts.push(html.slice(i, closeEnd + 1));
-      i = closeEnd + 1;
-      continue;
-    }
+    if (lower.startsWith('<picture', i) && isTagBoundary(html, i + 8)) picture = true;
+    if (lower.startsWith('</picture', i) && isTagBoundary(html, i + 9)) picture = false;
     // <img …>
     if (lower.startsWith("<img", i) && isTagBoundary(html, i + 4)) {
       const end = findTagEnd(html, i);
       if (end === -1) {
         break;
       }
-      parts.push(transform(html.slice(i, end + 1)));
+      parts.push(transform(html.slice(i, end + 1), { picture }));
       i = end + 1;
       continue;
     }
@@ -126,4 +100,6 @@ function mapImageTags(html, transform) {
   return parts.join("");
 }
 
-module.exports = { mapImageTags, parseImageAttributes };
+// Shared by generated static HTML and the cached browser image bootstrap.
+const IMAGE_PLACEHOLDER = 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=';
+module.exports = { mapImageTags, parseImageAttributes, IMAGE_PLACEHOLDER };

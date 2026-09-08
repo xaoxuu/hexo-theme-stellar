@@ -50,7 +50,7 @@ function layoutBrandImage() {
   var variant = image?.variant || 'icon'
   var el = `<${tag} class="brand-image brand-image--${variant}"${href ? ` href="${escape_html(url_for(href))}"` : ''}>`
   if (src) {
-    el += `<img no-lazy src="${escape_html(src)}" alt="">`
+    el += `<img loading="eager" no-lazy src="${escape_html(src)}" alt="">`
   } else {
     el += icon('default:documents', '', true)
   }

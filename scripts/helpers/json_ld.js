@@ -6,19 +6,20 @@
 'use strict';
 
 const util = require('hexo-util');
+const { scriptJson } = require('../lib/script-json');
 const { postImages, postDescription } = require('../lib/seo');
 const { getCollectionId } = require('../lib/content-config');
-const { getPageConfig } = require("../lib/page-view-model-registry");
+const { pageViewModelsFor } = require("../lib/page-view-model-registry");
 
 hexo.extend.helper.register('json_ld', function(args) {
   if (args?.render?.seo) {
     if (!args.render?.seo?.jsonLd) {
       throw new Error(`Stellar v2: ${args.collection?.profile || "页面"} ${args.item?.source?.file || "<unknown>"} 缺少 render.seo.jsonLd`);
     }
-    return `<script type="application/ld+json">${JSON.stringify(args.render.seo.jsonLd)}</script>`;
+    return `<script type="application/ld+json">${scriptJson(args.render.seo.jsonLd)}</script>`;
   }
   const page = this.page;
-  const pageConfig = getPageConfig(page) || {};
+  const pageConfig = pageViewModelsFor(hexo).getPageConfig(page) || {};
   const config = this.config;
   const structuredData = this.stellar_config("structuredData");
   const authorEmail = config.email;
@@ -130,5 +131,5 @@ hexo.extend.helper.register('json_ld', function(args) {
 
   }
 
-  return `<script type="application/ld+json">${JSON.stringify(schema)}</script>`;
+  return `<script type="application/ld+json">${scriptJson(schema)}</script>`;
 });

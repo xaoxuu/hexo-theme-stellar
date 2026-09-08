@@ -18,44 +18,48 @@ export function createAssetLoader(options = {}) {
   const scripts = new Map();
   const styles = new Map();
 
-  function script(src, attributes = {}) {
-    const url = versionAsset(src, resolveAsset(root, src), version);
-    if (!url) return Promise.reject(new TypeError('[stellar runtime] script URL is required'));
-    if (scripts.has(url)) return scripts.get(url);
+  function load(kind, value, attributes = {}) {
+    const url = versionAsset(value, resolveAsset(root, value), version);
+    if (!url) return Promise.reject(new TypeError('[stellar runtime] asset URL is required'));
+    const cache = kind === 'script' ? scripts : styles;
+    if (cache.has(url)) return cache.get(url);
     const promise = new Promise((resolve, reject) => {
-      const element = documentRef.createElement('script');
-      element.src = url;
-      element.async = attributes.async !== false;
-      Object.keys(attributes).forEach(key => {
-        if (key === 'async') return;
-        element[key] = attributes[key];
+      const element = documentRef.createElement(kind === 'script' ? 'script' : 'link');
+      if (kind === 'script') { element.src = url; element.async = attributes.async !== false; }
+      else { element.rel = 'stylesheet'; element.href = url; }
+      for (const [key, value] of Object.entries(attributes)) element[key] = value;
+      const done = error => {
+        clearTimeout(timer);
+        element.removeEventListener?.('load', onLoad);
+        element.removeEventListener?.('error', onError);
+        if (error) { element.remove?.(); reject(error); } else resolve(element);
+      };
+      const onLoad = () => done();
+      const onError = () => done(new Error(`failed to load ${url}`));
+      const timer = setTimeout(() => done(new Error(`asset load timed out: ${url}`)), options.timeoutMs || 15000);
+      element.addEventListener('load', onLoad, { once: true });
+      element.addEventListener('error', onError, { once: true });
+      documentRef.head.appendChild(element);
+    });
+    cache.set(url, promise);
+    promise.catch(() => cache.delete(url));
+    return promise;
+  }
+  const script = (src, attributes) => load('script', src, attributes);
+  const style = (href, attributes) => load('style', href, attributes);
+  const resolve = value => resolveAsset(root, value);
+  function scoped(signal) {
+    function wait(promise) {
+      if (signal.aborted) return Promise.reject(signal.reason);
+      return new Promise((resolve, reject) => {
+        const cancel = () => reject(signal.reason);
+        signal.addEventListener('abort', cancel, { once: true });
+        promise.then(value => { signal.removeEventListener('abort', cancel); signal.aborted ? reject(signal.reason) : resolve(value); },
+          error => { signal.removeEventListener('abort', cancel); reject(error); });
       });
-      element.addEventListener('load', () => resolve(element), { once: true });
-      element.addEventListener('error', () => reject(new Error(`failed to load ${url}`)), { once: true });
-      documentRef.head.appendChild(element);
-    });
-    scripts.set(url, promise);
-    promise.catch(() => scripts.delete(url));
-    return promise;
+    }
+    return Object.freeze({ resolve, script: (...args) => signal.aborted ? Promise.reject(signal.reason) : wait(script(...args)),
+      style: (...args) => signal.aborted ? Promise.reject(signal.reason) : wait(style(...args)) });
   }
-
-  function style(href, attributes = {}) {
-    const url = versionAsset(href, resolveAsset(root, href), version);
-    if (!url) return Promise.reject(new TypeError('[stellar runtime] style URL is required'));
-    if (styles.has(url)) return styles.get(url);
-    const promise = new Promise((resolve, reject) => {
-      const element = documentRef.createElement('link');
-      element.rel = 'stylesheet';
-      element.href = url;
-      Object.keys(attributes).forEach(key => element.setAttribute(key, attributes[key]));
-      element.addEventListener('load', () => resolve(element), { once: true });
-      element.addEventListener('error', () => reject(new Error(`failed to load ${url}`)), { once: true });
-      documentRef.head.appendChild(element);
-    });
-    styles.set(url, promise);
-    promise.catch(() => styles.delete(url));
-    return promise;
-  }
-
-  return Object.freeze({ script, style, resolve: value => resolveAsset(root, value) });
+  return Object.freeze({ script, style, resolve, scoped });
 }

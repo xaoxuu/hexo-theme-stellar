@@ -7,6 +7,8 @@
 
 'use strict'
 
+const { escapeHTML } = require('hexo-util');
+
 module.exports = ctx => function(args) {
   var args = ctx.args.map(args, ['repo', 'api', 'size'], ['group'])
   const rawUrl = ctx.stellar.config.services.github.rawUrl.replace(/\/+$/, '')
@@ -31,7 +33,7 @@ module.exports = ctx => function(args) {
       if (item?.url) {
         el += `<div class="grid-cell poster-card">`
         el += `<a class="card-link lazy-box" target="_blank" rel="external nofollow noopener noreferrer" href="${item.url}">`
-        el += `<img class="lazy" data-src="${item.cover || item.icon || item.avatar || ctx.stellar.config.fallbacks.cover}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${ctx.stellar.config.fallbacks.cover}&quot;;"/>`
+        el += `<img class="lazy" loading="lazy" src="${item.cover || item.icon || item.avatar || ctx.stellar.config.fallbacks.cover}" data-stellar-fallback="${escapeHTML(ctx.stellar.config.fallbacks.cover)}"/>`
         el += `<div class="lazy-icon"></div>`
         el += `<div class="image-meta">`
         if (item.title) {
