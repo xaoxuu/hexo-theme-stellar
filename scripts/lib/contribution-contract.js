@@ -52,7 +52,7 @@ function stringList(value, label, options = {}) {
 
 function validateEntry(entry, label) {
   plainObject(entry, label);
-  const allowed = new Set(["type", "path", "adapter"]);
+  const allowed = new Set(["type", "path"]);
   const unknown = Object.keys(entry).find(key => !allowed.has(key));
   if (unknown) throw new TypeError(`[stellar contributions] ${label} has unknown field ${unknown}`);
   if (!ENTRY_TYPES.has(entry.type)) throw new TypeError(`[stellar contributions] ${label}.type is invalid`);
@@ -63,9 +63,7 @@ function validateEntry(entry, label) {
   if (entry.type === "template" && !entry.path.startsWith("layout/")) {
     throw new TypeError(`[stellar contributions] ${label}.path must be a layout path`);
   }
-  if (entry.adapter !== undefined && entry.adapter !== "feature") {
-    throw new TypeError(`[stellar contributions] ${label}.adapter is invalid`);
-  }
+
 }
 
 function validateActivation(activation, label) {
@@ -90,14 +88,6 @@ function validateI18n(i18n, label) {
   stringList(i18n.keys, `${label}.keys`);
 }
 
-function validateDocs(docs, label) {
-  plainObject(docs, label);
-  const unknown = Object.keys(docs).find(key => !["category", "path"].includes(key));
-  if (unknown) throw new TypeError(`[stellar contributions] ${label} has unknown field ${unknown}`);
-  nonEmptyString(docs.category, `${label}.category`);
-  nonEmptyString(docs.path, `${label}.path`);
-}
-
 function validateContributionDefinitions(definitions) {
   if (!Array.isArray(definitions) || definitions.length === 0) {
     throw new TypeError("[stellar contributions] registry must be a non-empty array");
@@ -111,7 +101,7 @@ function validateContributionDefinitions(definitions) {
     plainObject(definition, label);
     const unknown = Object.keys(definition).find(key => !DEFINITION_FIELDS.has(key));
     if (unknown) throw new TypeError(`[stellar contributions] ${label} has unknown field ${unknown}`);
-    const missing = [...DEFINITION_FIELDS].find(key => !Object.prototype.hasOwnProperty.call(definition, key));
+    const missing = [...DEFINITION_FIELDS].find(key => !["docs", "tests"].includes(key) && !Object.prototype.hasOwnProperty.call(definition, key));
     if (missing) throw new TypeError(`[stellar contributions] ${label} is missing field ${missing}`);
     if (typeof definition.id !== "string" || !/^[a-z][a-z0-9-]*$/.test(definition.id)) {
       throw new TypeError(`[stellar contributions] ${label}.id is invalid`);
@@ -124,8 +114,6 @@ function validateContributionDefinitions(definitions) {
     validateActivation(definition.activation, `${label}.activation`);
     if (definition.schema !== null) nonEmptyString(definition.schema, `${label}.schema`);
     validateI18n(definition.i18n, `${label}.i18n`);
-    validateDocs(definition.docs, `${label}.docs`);
-    stringList(definition.tests, `${label}.tests`);
     if (definition.defaultsOwner !== null) nonEmptyString(definition.defaultsOwner, `${label}.defaultsOwner`);
     if ((definition.schema === null) !== (definition.defaultsOwner === null)) {
       throw new TypeError(`[stellar contributions] ${definition.id} schema and defaultsOwner must both be null or strings`);

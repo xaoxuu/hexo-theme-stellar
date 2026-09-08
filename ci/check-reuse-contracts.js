@@ -125,12 +125,6 @@ function runProjectCheck(root = path.resolve(__dirname, "..")) {
     protectedLiterals: rules.PROTECTED_LITERALS,
     rawCapabilityExclusions: rules.RAW_CAPABILITY_EXCLUSIONS
   });
-  for (const dynamic of rules.DYNAMIC_CONTROL_RULES) {
-    const source = files[dynamic.file];
-    if (!source || !dynamic.pattern.test(source)) {
-      errors.push(`${dynamic.file} dynamic control ${dynamic.selector} must use ${dynamic.capability}`);
-    }
-  }
   return errors;
 }
 

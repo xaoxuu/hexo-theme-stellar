@@ -6,7 +6,7 @@ const assert = require("node:assert/strict");
 
 const { moduleImports } = require("../ci/check-performance");
 
-test("性能口径只递归静态 import，不把 dynamic import 计入核心集合", () => {
+test("性能清单区分静态和可达动态导入，包括带版本的模板字符串", () => {
   const source = [
     "import './side-effect.js';",
     "import { value } from './static.js';",
@@ -14,4 +14,5 @@ test("性能口径只递归静态 import，不把 dynamic import 计入核心集
     "const versioned = import(`./runtime.js${query}`);"
   ].join("\n");
   assert.deepEqual(moduleImports(source), ["./side-effect.js", "./static.js"]);
+  assert.deepEqual(moduleImports(source, "dynamic"), ["./selector-only.js", "./runtime.js"]);
 });

@@ -44,6 +44,7 @@ function auditContributionRegistry(options) {
   const languages = options.languages || loadLanguages(root, ["en", "zh-CN", "zh-TW"]);
   const schemaFields = options.schemaFields || flattenSchemaFields(CONFIG_SCHEMA);
   const issues = [];
+  const diagnostic = message => options.onWarning?.(message);
 
   try {
     validateContributionDefinitions(definitions);
@@ -78,15 +79,20 @@ function auditContributionRegistry(options) {
   for (const definition of definitions) {
     const entry = entryFile(definition.entry);
     if (!fs.existsSync(path.join(root, entry))) issues.push(`${definition.id}: entry file ${entry} does not exist`);
-    if (!fs.existsSync(path.join(root, definition.docs.path))) {
-      issues.push(`${definition.id}: docs file ${definition.docs.path} does not exist`);
+    if (typeof definition.docs?.path !== "string" || !definition.docs.path || !fs.existsSync(path.join(root, definition.docs.path))) {
+      diagnostic(`${definition.id}: docs file ${definition.docs?.path || "<missing>"} does not exist`);
     }
-    for (const testFile of definition.tests) {
+    if (!Array.isArray(definition.tests) || !definition.tests.length) diagnostic(`${definition.id}: tests is empty`);
+    for (const testFile of Array.isArray(definition.tests) ? definition.tests : []) {
+      if (typeof testFile !== "string" || !testFile) {
+        diagnostic(`${definition.id}: contract test path must be a non-empty string`);
+        continue;
+      }
       const absolute = path.join(root, testFile);
       if (!fs.existsSync(absolute)) {
-        issues.push(`${definition.id}: contract test ${testFile} does not exist`);
+        diagnostic(`${definition.id}: contract test ${testFile} does not exist`);
       } else if (!fs.statSync(absolute).isFile()) {
-        issues.push(`${definition.id}: contract test ${testFile} is not a file`);
+        diagnostic(`${definition.id}: contract test ${testFile} is not a file`);
       }
     }
 

@@ -10,6 +10,7 @@ const INTERNAL_CONSTANTS = require("../scripts/lib/internal-constants");
 const root = path.resolve(__dirname, "..");
 assertContributionRegistry({
   root,
+  onWarning: message => console.warn(`Contribution warning: ${message}`),
   definitions: CONTRIBUTIONS,
   assets: INTERNAL_CONSTANTS.assets
 });

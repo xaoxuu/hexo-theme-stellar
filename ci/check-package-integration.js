@@ -92,7 +92,7 @@ function installSite(root, tarball) {
     "--package-lock=false",
     ...INSTALL_PACKAGES,
     tarball
-  ], { cwd: root, env: { npm_config_cache: path.join(path.dirname(root), "npm-cache") } });
+  ], { cwd: root, env: { npm_config_cache: process.env.npm_config_cache || path.join(path.dirname(root), "npm-cache") } });
   return path.join(root, "node_modules", ".bin", "hexo");
 }
 
@@ -353,7 +353,7 @@ function installMinifier(root) {
   const tooling = path.join(root, "build-tools");
   write(tooling, "package.json", '{"private":true}\n');
   run("npm", ["install", "--no-audit", "--no-fund", "--prefer-offline", "--package-lock=false", ...MINIFY_PACKAGES], {
-    cwd: tooling, env: { npm_config_cache: path.join(root, "npm-cache") }
+    cwd: tooling, env: { npm_config_cache: process.env.npm_config_cache || path.join(root, "npm-cache") }
   });
   fs.copyFileSync(path.join(THEME_ROOT, "ci/gulpfile.js"), path.join(tooling, "gulpfile.js"));
   return tooling;
@@ -373,6 +373,17 @@ function minifySite(root, tooling) {
     if (!fs.existsSync(output) || sha256File(output) !== sha256File(path.join(source, file))) {
       throw new Error(`Runtime module changed or missing after generate/minify: ${file}`);
     }
+  }
+  const publicRoot = path.join(root, "public");
+  for (const file of fs.readdirSync(publicRoot, { recursive: true }).filter(file => file.endsWith(".html"))) {
+    const $ = load(fs.readFileSync(path.join(publicRoot, file), "utf8"));
+    $("script[src], link[rel='stylesheet'][href]").each((_, element) => {
+      const resource = $(element).attr("src") || $(element).attr("href");
+      const url = new URL(resource, `https://example.com/${file}`);
+      if (url.origin !== "https://example.com") return;
+      const target = path.join(publicRoot, decodeURIComponent(url.pathname).replace(/^\/+/, ""));
+      if (!fs.existsSync(target) || !fs.statSync(target).isFile()) throw new Error(`${file}: missing local resource ${resource}`);
+    });
   }
   process.stdout.write(`${path.basename(root)}: HTML/CSS/JS minify and Runtime ESM preservation passed\n`);
 }
@@ -410,7 +421,7 @@ function assertPackageFiles(pack) {
 
 function packTheme(root) {
   const output = run("npm", ["pack", "--json", "--pack-destination", root], {
-    env: { npm_config_cache: path.join(root, "npm-cache") }
+    env: { npm_config_cache: process.env.npm_config_cache || path.join(root, "npm-cache") }
   });
   const result = JSON.parse(output);
   if (!Array.isArray(result) || result.length !== 1) throw new Error("npm pack did not return one package");

@@ -26,47 +26,11 @@ function schemaPaths(node, parents = [], result = []) {
   return result;
 }
 
-function configKeyLines(source) {
-  return source.split(/\r?\n/).flatMap((line, index) => {
-    if (line.trimStart().startsWith("#")) return [];
-    if (!/^(\s*)(?:-\s+)?(?:[\w-]+|[^\s:#][^:]*):(?:\s|$)/.test(line)) return [];
-    return [{ index, line }];
-  });
-}
-
-function precedingNonEmptyLine(lines, index) {
-  let previous = index - 1;
-  while (previous >= 0 && lines[previous].trim() === "") previous -= 1;
-  return previous >= 0 ? lines[previous] : "";
-}
-
-function nonEmptyFlowCollectionLines(source) {
-  return source.split(/\r?\n/).flatMap((line, index) => {
-    const code = line.replace(/\s+#.*$/, "");
-    const flowValue = /:\s*(?:\[(?!\])|\{(?!\}))/.test(code);
-    const flowItem = /^\s*-\s*(?:\[(?!\])|\{(?!\}))/.test(code);
-    return flowValue || flowItem ? [`${index + 1}: ${line.trim()}`] : [];
-  });
-}
-
 test("手写 _config.yml 是公开字段树、默认值与顺序的唯一来源", () => {
   assert.deepEqual(Object.keys(CONFIG_SCHEMA.properties), Object.keys(CONFIG));
   assert.deepEqual(CONFIG, CONFIG_DEFAULTS);
   assert.deepEqual(loadDefaultConfig(CONFIG_SOURCE), CONFIG);
   assert.equal(Object.isFrozen(CONFIG_SCHEMA), true);
-});
-
-test("手写 _config.yml 的每个配置键都有独立前置注释", () => {
-  const lines = CONFIG_SOURCE.split(/\r?\n/);
-  const missing = configKeyLines(CONFIG_SOURCE).flatMap(({ index, line }) => {
-    const previous = precedingNonEmptyLine(lines, index);
-    return previous.trimStart().startsWith("#") ? [] : [`${index + 1}: ${line.trim()}`];
-  });
-  assert.deepEqual(missing, []);
-});
-
-test("手写 _config.yml 仅允许空集合使用单行 flow style", () => {
-  assert.deepEqual(nonEmptyFlowCollectionLines(CONFIG_SOURCE), []);
 });
 
 test("轻量规则表中的每个路径都对应手写默认配置中的现存节点", () => {

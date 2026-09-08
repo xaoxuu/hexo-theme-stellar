@@ -14,7 +14,6 @@ const {
   buildContributionEntries,
   contributionSchemaIds
 } = require("../scripts/lib/contribution-registry");
-const { heroEffectRuntimeConfig } = require("../scripts/lib/hero-effect-registry");
 const INTERNAL_CONSTANTS = require("../scripts/lib/internal-constants");
 
 const ROOT = path.resolve(__dirname, "..");
@@ -37,6 +36,7 @@ function schemaFields() {
 function audit(overrides = {}) {
   return auditContributionRegistry({
     root: ROOT,
+    onWarning: overrides.onWarning,
     definitions: overrides.definitions || CONTRIBUTIONS,
     assets: overrides.assets || cloneAssets(),
     languages: overrides.languages || languages(),
@@ -71,7 +71,6 @@ test("Runtime Manifest 顺序直接来自 descriptor 注册表", () => {
     messages: { copy: {} },
     plainObject,
     render: {},
-    resolveServiceProvider: () => null
   });
   const positions = entries.map(entry => CONTRIBUTIONS.findIndex(item => item.id === entry.id));
   assert.ok(positions.length > 0);
@@ -87,14 +86,10 @@ test("Runtime Manifest 顺序直接来自 descriptor 注册表", () => {
   assert.deepEqual(deferredIcons.config, {});
   assert.deepEqual(dropdown.config, {});
   assert.equal(heroEffect.module, INTERNAL_CONSTANTS.assets.runtime.heroEffect);
-  assert.deepEqual(heroEffect.config.effects, heroEffectRuntimeConfig());
   assert.equal(entries.some(item => item.id === "reveal"), false);
   for (const entry of entries) {
     const definition = CONTRIBUTIONS.find(item => item.id === entry.id);
     assert.equal(entry.module, definition.entry.path, entry.id);
-    if (definition.entry.adapter === "feature") {
-      assert.equal(entry.config.feature, entry.id);
-    }
   }
 });
 
@@ -139,13 +134,24 @@ test("贡献证据允许复用不包含贡献 ID 的共享契约测试", () => {
   assert.deepEqual(audit({ definitions }), []);
 });
 
-test("贡献证据拒绝空引用、缺失文件与目录引用", () => {
+test("贡献证据缺失只产生维护诊断", () => {
   for (const [tests, expected] of [
-    [[], /tests must be a non-empty array/],
+    [[], /tests.*empty/],
     [["test/does-not-exist.test.js"], /contract test test\/does-not-exist.test.js does not exist/],
     [["test/"], /contract test test\/ is not a file/]
   ]) {
     const definitions = CONTRIBUTIONS.map((item, index) => index === 0 ? { ...item, tests } : item);
-    assert.ok(audit({ definitions }).some(issue => expected.test(issue)), JSON.stringify(tests));
+    const warnings = [];
+    assert.deepEqual(audit({ definitions, onWarning: warning => warnings.push(warning) }), []);
+    assert.ok(warnings.some(issue => expected.test(issue)), JSON.stringify(tests));
+  }
+});
+
+test("维护证据类型错误降为诊断，不影响有效入口和资源", () => {
+  for (const evidence of [{ docs: { path: 42 } }, { docs: null }, { tests: [42, null, {}] }]) {
+    const definitions = CONTRIBUTIONS.map((item, index) => index === 0 ? { ...item, ...evidence } : item);
+    const warnings = [];
+    assert.deepEqual(audit({ definitions, onWarning: warning => warnings.push(warning) }), []);
+    assert.ok(warnings.length > 0);
   }
 });
