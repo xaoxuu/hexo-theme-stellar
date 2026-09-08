@@ -2,7 +2,7 @@
 var pageConfig = content_config(page)
 var isOrdinaryPost = page.layout === 'post' && pageConfig.collection?.profile !== 'topic'
 var activeViewModel = (isOrdinaryPost || pageConfig.collection?.profile === 'topic')
-  ? post_view_model(page)
+  ? (page.viewModel || post_view_model(page))
   : page.viewModel
 var activeProfile = activeViewModel?.collection?.profile
 if (isOrdinaryPost && (activeProfile !== 'post' || activeViewModel?.render == null)) {

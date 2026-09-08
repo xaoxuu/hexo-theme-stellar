@@ -5,11 +5,13 @@ const assert = require("node:assert/strict");
 
 const {
   buildNotebookPageViewModel,
+  buildPostCollectionModel,
   buildPostPageViewModel,
   buildTopicPageViewModel,
   buildWikiPageViewModel
 } = require("../scripts/lib/models");
 const { parseStellarConfig } = require("../scripts/lib/config-schema");
+const { assertPageViewModel } = require("../scripts/lib/model-schema");
 const { parseCollectionConfig, parsePageConfig } = require("../scripts/lib/content-config");
 const { heroEffectDefinitions } = require("../scripts/lib/hero-effect-registry");
 const { SHARE_SERVICE_IDS } = require("../scripts/lib/share-services");
@@ -115,7 +117,7 @@ function assertDeepFrozen(value) {
   Object.values(value).forEach(assertDeepFrozen);
 }
 
-test("all PageViewModel profiles use the shared validated and frozen pipeline", () => {
+test("all PageViewModel profiles conform to Schema and use the shared frozen pipeline", () => {
   const cases = [
     ["post", buildPostPageViewModel, postInput()],
     ["wiki", buildWikiPageViewModel, wikiInput()],
@@ -127,8 +129,22 @@ test("all PageViewModel profiles use the shared validated and frozen pipeline", 
     const viewModel = build(input);
     assert.deepEqual(Object.keys(viewModel), ["collection", "item", "render"]);
     assert.equal(viewModel.collection.profile, profile);
+    assert.equal(assertPageViewModel(profile, viewModel), viewModel);
     assertDeepFrozen(viewModel);
   }
+});
+
+test("Post PageViewModels reuse a prebuilt frozen CollectionModel", () => {
+  const collectionModel = buildPostCollectionModel(stellarConfig);
+  const first = buildPostPageViewModel({ ...postInput(), collectionModel });
+  const secondInput = postInput();
+  secondInput.page = page("second");
+  secondInput.source = "source/_posts/second.md";
+  const second = buildPostPageViewModel({ ...secondInput, collectionModel });
+
+  assert.equal(first.collection, collectionModel);
+  assert.equal(second.collection, collectionModel);
+  assertDeepFrozen(collectionModel);
 });
 
 test("all PageViewModel profiles project the four document injection positions", () => {

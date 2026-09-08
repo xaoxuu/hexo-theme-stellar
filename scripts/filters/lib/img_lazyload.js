@@ -76,3 +76,4 @@ module.exports.processSite = function (htmlContent) {
 };
 
 module.exports.lazyProcess = lazyProcess;
+module.exports.processImgTag = processImgTag;

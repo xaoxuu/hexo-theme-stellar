@@ -12,6 +12,7 @@ const {
   getPostViewModelInput,
   getTopicViewModelBase,
   getTopicViewModelInput,
+  setPageViewModel,
   setRelatedItems
 } = require("../../lib/page-view-model-registry");
 
@@ -140,6 +141,7 @@ function attachPageViewModel(data) {
       data.viewModel = buildNotebookViewModelFromData(data, notebookInput);
     }
   }
+  if (data.viewModel) setPageViewModel(data, data.viewModel);
   return data;
 }
 

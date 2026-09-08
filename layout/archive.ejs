@@ -21,7 +21,7 @@ function layoutArchiveList() {
     el += partial('_partial/main/listing_nav/blog')
   }
   el += `<div class="post-list${cls} archives">`
-  var years = []
+  var groups = new Map()
   function requirePostViewModel(post) {
     var viewModel = post_view_model(post)
     if (!['post', 'topic'].includes(viewModel?.collection?.profile) || !viewModel.render?.listing) {
@@ -29,26 +29,22 @@ function layoutArchiveList() {
     }
     return viewModel
   }
-  var posts = site.posts.filter(function(post) {
-    var listing = requirePostViewModel(post).render.listing
-    if (!listing.listed) return false
-    return page.author == null || listing.authorId == page.author.id
+  site.posts.sort('date', -1).each(function(post) {
+    var viewModel = requirePostViewModel(post)
+    var listing = viewModel.render.listing
+    if (!listing.listed) return
+    if (page.author != null && listing.authorId != page.author.id) return
+    var year = date(post.date, 'YYYY')
+    if (!year || !(post.title || post.date)) return
+    if (!groups.has(year)) groups.set(year, [])
+    groups.get(year).push({viewModel: viewModel})
   })
-  posts.sort('date', -1).each(function(post) {
-    post.year = date(post.date, 'YYYY')
-    if (post.year && (years.includes(post.year) == false) && (post.title || post.date)) {
-      years.push(post.year)
-    }
-  })
-  for (var year of years) {
+  for (var [year, records] of groups) {
     el += `<article class="${scrollreveal('')}" id="archive">`
     el += `<div class='archive-header h4'>${year}</div>`
-    posts.sort('date', -1).filter(function (post) {
-      post.year = date(post.date, 'YYYY')
-      return post.year == year
-    }).each(function(post) {
-      el += partial('_partial/main/post_list/archive_item', {viewModel: requirePostViewModel(post)})
-    })
+    for (var record of records) {
+      el += partial('_partial/main/post_list/archive_item', record)
+    }
     el += `</article>`
   }
   el += `</div>`

@@ -53,12 +53,13 @@ function mapImageTags(html, transform) {
   const n = html.length;
   const lower = html.toLowerCase();
   while (i < n) {
-    const ch = html[i];
-    if (ch !== "<") {
-      parts.push(ch);
-      i++;
-      continue;
+    const nextTag = html.indexOf("<", i);
+    if (nextTag === -1) {
+      parts.push(html.slice(i));
+      break;
     }
+    if (nextTag > i) parts.push(html.slice(i, nextTag));
+    i = nextTag;
     // HTML 注释
     if (html.startsWith("<!--", i)) {
       const end = html.indexOf("-->", i);
@@ -119,7 +120,7 @@ function mapImageTags(html, transform) {
       i = end + 1;
       continue;
     }
-    parts.push(ch);
+    parts.push("<");
     i++;
   }
   return parts.join("");

@@ -6,7 +6,6 @@ const {
   ContentConfigError,
   isPlainObject
 } = require("../content-config");
-const { assertPageViewModel } = require("../model-schema");
 const {
   ConfigSchemaError,
   isPlainObject: isPlainConfigObject,
@@ -778,7 +777,7 @@ function buildWikiRenderModel(input, collection, item) {
   };
 }
 
-function buildCollectionModel(stellarConfig) {
+function buildPostCollectionModel(stellarConfig) {
   const profiles = requireLayoutProfiles(stellarConfig);
   const postProfile = profiles.post;
   const blogIndex = profiles.blogIndex;
@@ -788,7 +787,7 @@ function buildCollectionModel(stellarConfig) {
   const navigation = toRenderNavigation(postProfile);
   const regions = toRenderRegions(stellarConfig, postProfile);
 
-  return {
+  return deepFreeze({
     id: "post",
     profile: "post",
     identity: normalizeBrand(stellarConfig.leftbar.brand),
@@ -813,7 +812,7 @@ function buildCollectionModel(stellarConfig) {
       listed: true,
       searchable: true
     }
-  };
+  });
 }
 
 function buildContentItemModel(page, frontMatter, collection, source, options = {}) {
@@ -1300,10 +1299,10 @@ function buildPostPageViewModel(input) {
     layoutConfigRequirement()
   ]);
 
-  const collection = buildCollectionModel(input.stellarConfig);
+  const collection = input.collectionModel || buildPostCollectionModel(input.stellarConfig);
   const item = buildContentItemModel(page, frontMatter, collection, source);
   const render = buildPostRenderModel({ ...input, siteConfig, runtimeData, frontMatter, page }, collection, item);
-  return deepFreeze(assertPageViewModel("post", { collection, item, render }));
+  return deepFreeze({ collection, item, render });
 }
 
 function buildWikiPageViewModelBase(input) {
@@ -1364,7 +1363,7 @@ function completeWikiPageViewModel(input, base) {
     frontMatter,
     page
   }, collection, item);
-  return deepFreeze(assertPageViewModel("wiki", { collection, item, render }));
+  return deepFreeze({ collection, item, render });
 }
 
 function buildWikiPageViewModel(input) {
@@ -1434,7 +1433,7 @@ function completeTopicPageViewModel(input, base) {
     path: collection.navigation.series[0]?.path || collection.route.path
   }];
   render.article.banner = cloneValue(item.presentation.banner || {});
-  return deepFreeze(assertPageViewModel("topic", { collection, item, render }));
+  return deepFreeze({ collection, item, render });
 }
 
 function buildTopicPageViewModel(input) {
@@ -1517,7 +1516,7 @@ function completeNotebookPageViewModel(input, base) {
     frontMatter,
     page: input.page || {}
   }, collection, item);
-  return deepFreeze(assertPageViewModel("notebook", { collection, item, render }));
+  return deepFreeze({ collection, item, render });
 }
 
 function buildNotebookPageViewModel(input) {
@@ -1528,6 +1527,7 @@ module.exports = {
   buildNotebookCollectionModel,
   buildNotebookPageViewModelBase,
   buildNotebookPageViewModel,
+  buildPostCollectionModel,
   buildPostPageViewModel,
   buildTopicIndexRender,
   buildTopicPageViewModel,

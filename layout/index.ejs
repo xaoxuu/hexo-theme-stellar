@@ -14,16 +14,20 @@ if (homeCmt && homeCmt !== false && is_home_first_page()) {
 var articleDefaults = stellar_config('article')
 var pinStyle = articleDefaults.listing.pinnedLayout
 var pinFlat = pinStyle === 'flat'
+var postViewModels = new Map()
 
 // 与 pin_slider.ejs 保持一致的置顶判定与排序权重
 function pinValue(post) {
   return postListing(post).priority
 }
 function requirePostViewModel(post) {
+  var key = post.source || post.path || post._id || post
+  if (postViewModels.has(key)) return postViewModels.get(key)
   var viewModel = post_view_model(post)
   if (!['post', 'topic'].includes(viewModel?.collection?.profile) || !viewModel.render?.listing) {
     throw new Error(`Stellar v2: Post ${post?.source || post?.path || '<unknown>'} 缺少列表 ViewModel`)
   }
+  postViewModels.set(key, viewModel)
   return viewModel
 }
 function postListing(post) {

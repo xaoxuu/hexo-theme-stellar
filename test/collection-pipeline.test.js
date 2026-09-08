@@ -34,6 +34,22 @@ test("页面配置 registry 通过稳定页面身份保持唯一所有权", () =
   pageRegistry.setPageConfig(sourcePage, config);
   assert.equal(pageRegistry.getPageConfig(renderedPage), config);
 });
+
+test("最终 PageViewModel registry 跨 Warehouse 对象复用并随构建重置", () => {
+  pageRegistry.resetPageViewModelRegistry();
+  const sourcePage = { source: "_posts/post.md", path: "post/", _id: "source" };
+  const renderedPage = { source: "_posts/post.md", path: "post/", _id: "rendered" };
+  const viewModel = Object.freeze({
+    collection: Object.freeze({ profile: "post" }),
+    item: Object.freeze({ id: "post" }),
+    render: Object.freeze({ listing: Object.freeze({ listed: true }) })
+  });
+
+  pageRegistry.setPageViewModel(sourcePage, viewModel);
+  assert.equal(pageRegistry.getPageViewModel(renderedPage), viewModel);
+  pageRegistry.resetPageViewModelRegistry();
+  assert.equal(pageRegistry.getPageViewModel(renderedPage), null);
+});
 test("内容发现只访问每个 Post/Page 一次并按 profile 与 collection 分组", () => {
   const post = { _id: "post", source: "_posts/post.md", path: "blog/post/" };
   const topic = { _id: "topic", source: "_posts/topic.md", path: "blog/topic/" };

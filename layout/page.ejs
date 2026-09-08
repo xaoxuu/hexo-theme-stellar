@@ -2,7 +2,7 @@
 var pageConfig = content_config(page)
 var registeredProfile = pageConfig.collection?.profile
 var postViewModel = page.layout === 'post' && (registeredProfile == null || registeredProfile === 'topic')
-  ? post_view_model(page)
+  ? (page.viewModel || post_view_model(page))
   : null
 var wikiViewModel = page.viewModel?.collection?.profile === 'wiki' ? page.viewModel : null
 var notebookViewModel = page.viewModel?.collection?.profile === 'notebook' ? page.viewModel : null

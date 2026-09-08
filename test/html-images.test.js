@@ -5,6 +5,8 @@ const assert = require("node:assert/strict");
 const { load } = require("cheerio");
 const { mapImageTags } = require("../scripts/lib/html-images");
 const { processSite: imageErrors } = require("../scripts/filters/lib/img_onerror");
+const { lazyProcess } = require("../scripts/filters/lib/img_lazyload");
+const { processSite: processImages } = require("../scripts/filters/lib/img");
 
 test("共享图片扫描只变换真实标签并保留其他 HTML 原文", () => {
   const inert = '<script>const html = `<img src="script.png">`;</script>'
@@ -53,4 +55,17 @@ test("图片失败过滤器保留自定义处理器与内嵌资源", () => {
   ]) {
     assert.equal(imageErrors.call(ctx, html), html);
   }
+});
+
+test("单次图片扫描与原双过滤器顺序保持完全一致", () => {
+  const ctx = { utils: { iconData: () => "data:image/svg+xml,fallback" } };
+  const html = '<script>const x=`<img src="fake.png">`</script>'
+    + '<style>.x{content:\'<img src="fake.png">\'}</style>'
+    + '<!-- <img src="fake.png"> -->'
+    + '<img src="quoted.png" alt="a > b">'
+    + '<img no-lazy src=plain.png>'
+    + '<img class="custom" src="custom.png" onerror="custom()"/>'
+    + '<img src="data:image/png;base64,inline" data-src="deferred.png">';
+  const expected = imageErrors.call(ctx, lazyProcess(html));
+  assert.equal(processImages.call(ctx, html), expected);
 });
