@@ -7,7 +7,9 @@ var postViewModel = ['post', 'topic'].includes(renderViewModel?.collection?.prof
 var wikiViewModel = renderViewModel?.collection?.profile === 'wiki' ? renderViewModel : null
 var notebookViewModel = renderViewModel?.collection?.profile === 'notebook' ? renderViewModel : null
 var pageConfig = content_config(page)
-var banner = Object.assign({}, wikiViewModel
+var banner = Object.assign({}, page.author
+  ? { image: page.author.banner, avatar: page.author.avatar, tagline: page.author.description }
+  : wikiViewModel
   ? wikiViewModel.render.article.banner
   : notebookViewModel
     ? notebookViewModel.render.article.banner

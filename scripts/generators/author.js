@@ -16,7 +16,6 @@ hexo.extend.generator.register("author", function () {
     if (author.hidden) {
       continue
     }
-    author.id = key;
     pages.push({
       path: author.path,
       layout: ["archive"],

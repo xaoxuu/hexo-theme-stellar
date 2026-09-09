@@ -13,6 +13,7 @@ module.exports = ctx => {
   // url
   for (let key of Object.keys(authors)) {
     let author = authors[key]
+    author.id = key
     author.path = `${basePath}/${key}/index.html`
   }
   // default author

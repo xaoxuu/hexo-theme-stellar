@@ -9,11 +9,6 @@ function layoutArchiveList() {
   var cls = ''
   if (page.author) {
     page.title = page.author.name
-    page.banner = {
-      image: page.author.banner,
-      avatar: page.author.avatar,
-      tagline: page.author.description
-    }
     el += partial('_partial/main/navbar/article_banner')
     cls += ' author'
   } else {
