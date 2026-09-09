@@ -500,6 +500,8 @@ appearance:
 
   # 配置全站排版。
   typography:
+    # 设置全站 -webkit-font-smoothing；可选值为 auto、none 或 antialiased。
+    font_smoothing: antialiased
     # 配置字体族。
     font_family:
       # 设置正文的字体候选列表。
