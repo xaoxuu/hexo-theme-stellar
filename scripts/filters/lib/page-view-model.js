@@ -8,6 +8,29 @@ const {
   completeTopicPageViewModel
 } = require("../../lib/models");
 const { pageViewModelsFor } = require("../../lib/page-view-model-registry");
+const { deepFreeze, normalizePostLink } = require("../../lib/models/shared");
+
+function attachTemplateViewModel(locals) {
+  const registry = pageViewModelsFor(this);
+  let model = registry.getPageViewModel(locals.page);
+  if (!model) return locals;
+  if (model.collection.profile === "post" || model.collection.profile === "topic") {
+    // Hexo assigns post neighbors in its generator, after content rendering.
+    model = deepFreeze({
+      ...model,
+      render: {
+        ...model.render,
+        article: {
+          ...model.render.article,
+          previous: normalizePostLink(locals.page.prev),
+          next: normalizePostLink(locals.page.next)
+        }
+      }
+    });
+  }
+  registry.setPageViewModel(locals.page, model);
+  return locals;
+}
 
 function plainTermLinks(value) {
   let items = value;
@@ -141,6 +164,7 @@ function attachPageViewModel(data) {
 
 module.exports = {
   attachPageViewModel,
+  attachTemplateViewModel,
   buildNotebookViewModelFromData,
   buildPostViewModelFromData,
   buildTopicViewModelFromData,

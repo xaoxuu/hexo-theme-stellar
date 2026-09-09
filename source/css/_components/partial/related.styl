@@ -66,10 +66,18 @@ article.md-text.content+.related-wrap
       border-bottom: 1px dashed var(--block-border)
       padding: 1rem 0
     .note
+      display: flex
+      align-items: center
+      gap: 0.25rem
       margin-bottom: 0.75rem
       font-size: $fs-13
       color: var(--text-p4)
       font-weight: $fw-500
+      height: 1.5rem
+      svg
+        width: 1.5rem
+        height: 1.5rem
+        flex-shrink: 0
     a
       margin: 0
       line-height: 1.2
@@ -79,6 +87,8 @@ article.md-text.content+.related-wrap
         color: var(--accent) !important
     #next
       text-align: right
+      .note
+        justify-content: flex-end
 .wiki+.related-wrap#read-next
   .item
     a
