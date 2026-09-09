@@ -129,7 +129,7 @@ rightbar:
 # 配置主内容区页脚。
 footer:
   # 设置主内容区页脚导航分栏；空数组表示不显示分栏。
-  sitemap:
+  sitemap: []
     # - title: 博客
     #   items:
     #     - '[近期发布](/)'
