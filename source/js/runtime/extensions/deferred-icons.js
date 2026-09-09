@@ -1,6 +1,18 @@
 /** 非首屏图标异步加载。 */
 
 const RUNTIME_QUERY = new URL(import.meta.url).search;
+const namespaceLoads = new Map();
+function loadNamespace(url) {
+  if (!namespaceLoads.has(url)) {
+    const pending = fetch(url).then(response => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    });
+    namespaceLoads.set(url, pending);
+    pending.catch(() => namespaceLoads.delete(url));
+  }
+  return namespaceLoads.get(url);
+}
 
 function queryNodes(root) {
   const nodes = [];
@@ -11,7 +23,6 @@ function queryNodes(root) {
 
 export function mount(root, context) {
   const groups = {};
-  const controller = new AbortController();
   let active = true;
   queryNodes(root).forEach(node => {
     const key = node.getAttribute('data-icon');
@@ -25,11 +36,7 @@ export function mount(root, context) {
   Object.keys(groups).forEach(namespace => {
     const path = `/js/icons/${namespace}.json`;
     const url = `${context.assets.resolve(path)}${RUNTIME_QUERY}`;
-    fetch(url, { signal: controller.signal })
-      .then(response => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        return response.json();
-      })
+    loadNamespace(url)
       .then(data => {
         if (!active) return;
         const icons = data?.[namespace];
@@ -48,6 +55,5 @@ export function mount(root, context) {
 
   return () => {
     active = false;
-    controller.abort();
   };
 }

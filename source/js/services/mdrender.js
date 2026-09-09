@@ -75,7 +75,7 @@
     });
   }
 
-  function render(el) {
+  function render(el, utils) {
     const src = el.getAttribute('src');
     if (!src) {
       return;
@@ -114,8 +114,8 @@
     return;
   }
 
-  const els = document.getElementsByClassName('ds-mdrender');
-  for (var i = 0; i < els.length; i++) {
-    render(els[i]);
-  }
+  document.currentScript.stellarMount = function (root, context) {
+    const els = root.getElementsByClassName('ds-mdrender');
+    for (const el of Array.from(els)) render(el, context.serviceUtils);
+  };
 })();

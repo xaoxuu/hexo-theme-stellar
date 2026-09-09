@@ -7,6 +7,18 @@ function createPageViewModelRegistry() {
   const relatedItems = new Map();
   const pageConfigs = new Map();
   const pageViewModels = new Map();
+  const navigationMembers = new Map();
+
+  function setNavigationMembers(records) {
+    navigationMembers.clear();
+    for (const record of records) {
+      navigationMembers.set(record.page.path, JSON.stringify([record.profile, record.collectionId]));
+    }
+  }
+
+  function getNavigationCollection(path) {
+    return navigationMembers.get(path) || null;
+  }
 
   function keysForPage(page) {
     return ["source", "path", "_id"].filter(key => typeof page?.[key] === "string" && page[key].length > 0)
@@ -19,6 +31,7 @@ function createPageViewModelRegistry() {
     relatedItems.clear();
     pageConfigs.clear();
     pageViewModels.clear();
+    navigationMembers.clear();
   }
 
   function setValue(store, page, value) {
@@ -105,6 +118,8 @@ function createPageViewModelRegistry() {
   }
 
   return Object.freeze({
+    setNavigationMembers,
+    getNavigationCollection,
     getProfileViewModelBase,
     getProfileViewModelInput,
     getPageConfig,

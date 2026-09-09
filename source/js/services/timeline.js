@@ -1,4 +1,6 @@
-(function () {
+document.currentScript.stellarMount = function (root, context) {
+  const utils = context.serviceUtils;
+
   const reactions = {
       '+1': '👍',
       '-1': '👎', 
@@ -9,7 +11,7 @@
       'rocket': '🚀', 
       'eyes': '👀'
     }
-    const timelines = document.getElementsByClassName('ds-timeline');
+    const timelines = root.getElementsByClassName('ds-timeline');
     for (var i = 0; i < timelines.length; i++) {
       const el = timelines[i];
       const api = el.dataset.api;
@@ -103,4 +105,5 @@
         window.wrapLazyloadImages(el);
       });
     }
-})();
+
+};

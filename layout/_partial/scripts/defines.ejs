@@ -21,7 +21,7 @@
   var searchProvider = extensions.search.provider === 'local' ? 'local_search' : extensions.search.provider
 %>
 
-<script type="text/javascript">
+<script data-stellar-script="defines" type="text/javascript">
   window.canonical = <%- script_json(canonicalWithEncoded) %>;
   window.canonical["param"] = <%- script_json({permalink, checklink}) %>;
   const ctx = {

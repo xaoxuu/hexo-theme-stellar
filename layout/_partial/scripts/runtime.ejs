@@ -51,7 +51,7 @@ var runtimeJson = browser_runtime_manifest({
 <% if (runtimeMathProvider === 'katex') {
 var katexStyle = katex_stylesheet()
 %>
-<link rel="stylesheet" href="<%= url_for(katexStyle.css) %>"<% if (katexStyle.integrity) { %> integrity="<%= katexStyle.integrity %>" crossorigin="anonymous"<% } %>>
+<link data-stellar-page-style rel="stylesheet" href="<%= url_for(katexStyle.css) %>"<% if (katexStyle.integrity) { %> integrity="<%= katexStyle.integrity %>" crossorigin="anonymous"<% } %>>
 <% } %>
-<script type="application/json" id="stellar-runtime-config"><%- runtimeJson %></script>
-<script type="module" src="<%- url_for(runtimeAssets.runtime.bootstrap) %>?v=<%- stellar_info('version') %>&runtime=1"></script>
+<script data-stellar-script="core" type="application/json" id="stellar-runtime-config"><%- runtimeJson %></script>
+<script data-stellar-script="core" type="module" src="<%- url_for(runtimeAssets.runtime.bootstrap) %>?v=<%- stellar_info('version') %>&runtime=1"></script>

@@ -191,8 +191,8 @@ function generate_canonical() {
   <%- custom_inject('headBegin') %>
   <meta charset="utf-8">
   <meta name="hexo-theme" content="<%- stellar_info('tree') %>" theme-name="<%- stellar_info('name') %>" theme-version="<%- stellar_info('version') %>">
-  <%- generate_canonical() %>
-  <%- generate_robots() %>
+  <%- page_meta(generate_canonical()) %>
+  <%- page_meta(generate_robots()) %>
   <%- meta_generator() %>
   <meta http-equiv='x-dns-prefetch-control' content='on' />
   <%- preconnect() %>
@@ -204,8 +204,8 @@ function generate_canonical() {
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000">
   <meta name="theme-color" content="#f9fafb">
-  <title><%- generate_title() %></title>
-  <script>
+  <title data-stellar-page-meta><%- generate_title() %></title>
+  <script data-stellar-script="core">
     (function () {
       var key = 'stellar:v2:leftbar-state';
       var fallback = <%- script_json(stellar_config('leftbar.defaultState')) %>;
@@ -218,10 +218,10 @@ function generate_canonical() {
     })();
   </script>
 
-  <%- render_open_graph() %>
-  <%- generate_description() %>
+  <%- page_meta(render_open_graph()) %>
+  <%- page_meta(generate_description()) %>
   
-  <%- generate_keywords() %>
+  <%- page_meta(generate_keywords()) %>
 
   <!-- feed -->
   <% if (config.feed && config.feed.path) { %>
@@ -253,7 +253,7 @@ function generate_canonical() {
     <% } %>
   <% } %>
 
-  <%- json_ld(pageViewModel || undefined) %>
+  <%- page_meta(json_ld(pageViewModel || undefined)) %>
   <%- custom_inject('headEnd') %>
 
   <!-- icons.yml 驱动的 CSS 装饰图标 -->

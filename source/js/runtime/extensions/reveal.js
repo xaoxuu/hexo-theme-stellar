@@ -1,5 +1,5 @@
 function queryAll(root, selector) {
-  return Array.from(root.querySelectorAll(selector));
+  return [...(root.matches?.(selector) ? [root] : []), ...root.querySelectorAll(selector)];
 }
 
 const DISTANCE = '8px';

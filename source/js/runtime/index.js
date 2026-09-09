@@ -1,34 +1,21 @@
 const RUNTIME_CONFIG_ID = 'stellar-runtime-config';
 const RUNTIME_QUERY = new URL(import.meta.url).search;
-
-function deepFreeze(value) {
-  if (value == null || typeof value !== 'object' || Object.isFrozen(value)) return value;
-  Object.values(value).forEach(deepFreeze);
-  return Object.freeze(value);
-}
+let validateDeclaration;
 
 function readManifest(documentRef) {
   const element = documentRef.getElementById(RUNTIME_CONFIG_ID);
-  if (!element) throw new Error(`[stellar runtime] missing #${RUNTIME_CONFIG_ID}`);
-  const manifest = JSON.parse(element.textContent || 'null');
-  if (!manifest || manifest.version !== 1 || !Array.isArray(manifest.extensions)) {
+  const manifest = JSON.parse(element?.textContent || 'null');
+  if (!manifest || manifest.version !== 1 || !Array.isArray(manifest.extensions)
+    || manifest.extensions.some(entry => !['document', 'region'].includes(entry.scope))) {
     throw new TypeError('[stellar runtime] invalid manifest');
   }
-  return deepFreeze(manifest);
+  manifest.extensions.forEach(validateDeclaration);
+  return manifest;
 }
 
 function dispatch(name, detail) {
   document.dispatchEvent(new CustomEvent(name, { detail }));
 }
-
-let registry;
-let context;
-let hidden = false;
-window.addEventListener('pagehide', () => { hidden = true; void registry?.unmount(document); });
-window.addEventListener('pageshow', event => {
-  hidden = false;
-  if (event.persisted && registry && context) void registry.mount(document, context);
-});
 
 async function start() {
   const [assetModule, registryModule, adapterModule, requestModule] = await Promise.all([
@@ -37,41 +24,66 @@ async function start() {
     import(`./legacy-request-adapter.js${RUNTIME_QUERY}`),
     import(`./request-cache.js${RUNTIME_QUERY}`)
   ]);
-  const { createAssetLoader } = assetModule;
-  const { createExtensionRegistry } = registryModule;
-  const { installLegacyRequestAdapter } = adapterModule;
-  const { createRequestClient } = requestModule;
-  const manifest = readManifest(document);
-  const assets = createAssetLoader({ document, root: manifest.root, version: RUNTIME_QUERY });
-  const request = createRequestClient({
-    cache: manifest.policy.cache,
-    policy: manifest.policy.request,
-    dispatch
-  });
-  installLegacyRequestAdapter(globalThis.utils, request, manifest.policy.request);
-
-  registry = createExtensionRegistry({
-    onError(detail) {
+  validateDeclaration = registryModule.validateDeclaration;
+  let manifest = readManifest(document);
+  const assets = assetModule.createAssetLoader({ document, root: manifest.root, version: RUNTIME_QUERY });
+  const request = requestModule.createRequestClient({ cache: manifest.policy.cache, policy: manifest.policy.request, dispatch });
+  adapterModule.installLegacyRequestAdapter(globalThis.utils, request, manifest.policy.request);
+  const mounted = new Map();
+  const teardowns = new WeakMap();
+  let hidden = false;
+  const regionRoots = () => {
+    const regions = [...document.querySelectorAll('[data-stellar-runtime-region]')];
+    // Preserve enhancement of body injections without adding layout wrappers.
+    for (const element of document.body.children) {
+      if (!element.matches('script, style, link') && !regions.some(region => element === region || element.contains(region))) regions.push(element);
+    }
+    return regions;
+  };
+  const pageRoots = () => [document.getElementById('main'), document.getElementById('rightbar-region')].filter(Boolean);
+  const runtime = {
+    readManifest,
+    async unmountPage() { await Promise.all(pageRoots().map(unmount)); },
+    async mountPage(nextManifest) {
+      manifest = nextManifest;
+      await Promise.all(pageRoots().map(root => mount(root, 'region')));
+    }
+  };
+  function context() {
+    return Object.freeze({ manifest, assets, request, runtime,
+      legacy: Object.freeze({ ctx: globalThis.ctx, stellar: globalThis.stellar }) });
+  }
+  async function unmount(root) {
+    const instance = mounted.get(root);
+    mounted.delete(root);
+    if (!instance) return teardowns.get(root);
+    const pending = instance.unmount(root);
+    teardowns.set(root, pending);
+    await pending;
+    if (teardowns.get(root) === pending) teardowns.delete(root);
+  }
+  async function mount(root, scope) {
+    await teardowns.get(root);
+    if (hidden || mounted.has(root)) return;
+    const registry = registryModule.createExtensionRegistry({ onError(detail) {
       console.error(`[stellar extension:${detail.id}] ${detail.phase} failed`, detail.error);
       dispatch('stellar:extension-error', detail);
-    }
-  });
-  manifest.extensions.forEach(declaration => {
-    registry.register(Object.assign({}, declaration, {
-      module: `${assets.resolve(declaration.module)}${RUNTIME_QUERY}`
+    } });
+    manifest.extensions.filter(entry => entry.scope === scope).forEach(entry => registry.register({
+      ...entry, module: `${assets.resolve(entry.module)}${RUNTIME_QUERY}`
     }));
+    mounted.set(root, registry);
+    await registry.mount(root, context());
+  }
+  window.addEventListener('pagehide', () => {
+    hidden = true;
+    void Promise.all([...mounted.keys()].map(unmount));
   });
-
-  context = Object.freeze({
-    manifest,
-    assets,
-    request,
-    legacy: Object.freeze({
-      ctx: globalThis.ctx,
-      stellar: globalThis.stellar
-    })
+  window.addEventListener('pageshow', event => {
+    hidden = false;
+    if (event.persisted) void Promise.all([mount(document, 'document'), ...regionRoots().map(root => mount(root, 'region'))]);
   });
-  if (!hidden) await registry.mount(document, context);
+  await Promise.all([mount(document, 'document'), ...regionRoots().map(root => mount(root, 'region'))]);
 }
 
 start().catch(error => {

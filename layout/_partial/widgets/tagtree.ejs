@@ -75,7 +75,7 @@ function layoutDiv() {
     className: 'tag-tree-widget',
     title: __('meta.tag_tree'),
     body: body,
-    attrs: {'data-notebook': notebookId}
+    attrs: {'data-notebook': notebookId, 'data-expand-active': !!item.expand_active}
   })
 }
 %>

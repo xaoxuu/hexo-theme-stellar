@@ -105,6 +105,7 @@ function prepareCollectionPipeline(ctx) {
     configForPage
   });
   const collectionMap = new Map();
+  pageViewModelsFor(ctx).setNavigationMembers(discovery.records);
   for (const [key, config] of collectionConfigs) {
     const matched = key.match(/^(wiki|topic|notebooks)\/(.+)$/);
     if (!matched) continue;

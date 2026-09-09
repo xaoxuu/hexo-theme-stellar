@@ -396,3 +396,21 @@ test("搜索缓存按索引 URL 隔离，识别与清理共用键所有者", asy
   assert.equal(storage.getItem("unrelated"), "keep");
   assert.equal(clearSearchStorage(null).ok, false);
 });
+
+test("regional request cancellation prevents stale callbacks and loading-state writes", async () => {
+  const { installLegacyRequestAdapter } = await import(moduleUrl("source/js/runtime/legacy-request-adapter.js"));
+  const calls = [];
+  let resolveResponse;
+  const client = { request: () => new Promise(resolve => { resolveResponse = resolve; }) };
+  const utils = {
+    onLoadSuccess: () => calls.push('success'),
+    onLoadFailure: () => calls.push('failure')
+  };
+  installLegacyRequestAdapter(utils, client, REQUEST_POLICY);
+  const controller = new AbortController();
+  const pending = utils.request({}, '/data', () => calls.push('callback'), undefined, { signal: controller.signal });
+  controller.abort();
+  resolveResponse(new Response('ok'));
+  await assert.rejects(pending, { name: 'AbortError' });
+  assert.deepEqual(calls, []);
+});

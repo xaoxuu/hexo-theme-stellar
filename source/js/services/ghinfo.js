@@ -1,5 +1,7 @@
-(function () {
-  const els = document.getElementsByClassName('ds-ghinfo');
+document.currentScript.stellarMount = function (root, context) {
+  const utils = context.serviceUtils;
+
+  const els = root.getElementsByClassName('ds-ghinfo');
     for (var i = 0; i < els.length; i++) {
       const el = els[i];
       const api = el.dataset.api;
@@ -57,4 +59,5 @@
         }
       }).catch(() => {});
     }
-})();
+
+};

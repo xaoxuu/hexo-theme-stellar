@@ -1,5 +1,8 @@
-(function () {
-  const el = document.querySelector('.ds-twikoo');
+document.currentScript.stellarMount = function (root, context) {
+  const utils = context.serviceUtils;
+
+  const el = root.querySelector('.ds-twikoo');
+  if (!el) return;
       utils.onLoading(el); // 加载动画
   
       const api = el.dataset.api;
@@ -8,6 +11,7 @@
       if (!api) return;
   
       fetch(api, {
+        signal: context.signal,
         method: "POST",
         body: JSON.stringify({
           "event": "GET_RECENT_COMMENTS",
@@ -19,6 +23,7 @@
       })
       .then(res => res.json())
       .then(({ data }) => {
+        context.signal.throwIfAborted();
         utils.onLoadSuccess(el); // 移除动画
         data.forEach((comment, j) => {
           let commentText = comment.commentText;
@@ -40,6 +45,6 @@
           utils.dom(el).append(cell);
         });
       })
-      .catch(() => utils.onLoadFailure(el));
-})();
-  
+      .catch(() => { if (!context.signal.aborted) utils.onLoadFailure(el); });
+
+};

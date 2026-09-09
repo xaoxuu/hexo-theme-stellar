@@ -62,6 +62,9 @@ export async function mount(root, context) {
   };
   try {
     await context.assets.script(config.asset);
+    context.signal?.throwIfAborted();
+    if (!instance && typeof window.LazyLoad === 'function') instance = new window.LazyLoad(lazyLoadOptions);
+    window.lazyLoadInstance = instance;
     instance?.update?.();
     return cleanup;
   } catch (error) {

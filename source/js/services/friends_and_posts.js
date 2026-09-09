@@ -1,5 +1,7 @@
-(function () {
-  const els = document.getElementsByClassName('ds-friends_and_posts');
+document.currentScript.stellarMount = function (root, context) {
+  const utils = context.serviceUtils;
+
+  const els = root.getElementsByClassName('ds-friends_and_posts');
     for (var i = 0; i < els.length; i++) {
       const el = els[i];
       const api = el.dataset.api;
@@ -59,4 +61,5 @@
         window.wrapLazyloadImages(el);
       });
     }
-})();
+
+};

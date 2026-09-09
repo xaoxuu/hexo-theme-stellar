@@ -63,7 +63,7 @@ async function mountArtalk(root, context, config) {
       const params = new URLSearchParams(window.location.search);
       const notifyKey = params.get('atk_notify_key');
       const query = notifyKey ? `?atk_notify_key=${encodeURIComponent(notifyKey)}` : '';
-      history.replaceState(null, '', `${window.location.pathname}${query}#atk-comment-${match[1]}`);
+      history.replaceState(history.state, '', `${window.location.pathname}${query}#atk-comment-${match[1]}`);
     }
     const options = Object.assign({}, config.options, {
       el: '#artalk_container',
@@ -78,7 +78,7 @@ async function mountArtalk(root, context, config) {
         if (historyTimer !== null) clearTimeout(historyTimer);
         historyTimer = setTimeout(() => {
           historyTimer = null;
-          history.replaceState(null, '', window.location.pathname + window.location.hash);
+          history.replaceState(history.state, '', window.location.pathname + window.location.hash);
         }, 0);
       });
     }
@@ -99,6 +99,7 @@ function mountEmbed(root, provider, src, context) {
   const cleanupViewport = viewportLoad(element, isActive => new Promise((resolve, reject) => {
     element.replaceChildren();
     script = element.ownerDocument.createElement('script');
+    script.setAttribute('data-stellar-script', 'embed');
     script.src = src;
     script.async = true;
     copyAttributes(element, script);

@@ -20,11 +20,13 @@ export function installLegacyRequestAdapter(utils, client, policy) {
       onNetworkStart: () => utils.onLoading?.(element)
     });
     return client.request(url, requestOptions).then(async response => {
+      options.signal?.throwIfAborted();
       if (element) loaded.add(element);
       utils.onLoadSuccess?.(element);
       await callback(response);
       return response;
     }).catch(error => {
+      if (options.signal?.aborted) throw error;
       utils.onLoadFailure?.(element);
       onFailure?.(error);
       throw error;

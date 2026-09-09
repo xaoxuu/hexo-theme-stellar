@@ -22,7 +22,7 @@ html += `<div class="site-shell" id="start" data-regions="${presentRegions.join(
 html += shellRegions.topbar || ''
 html += '<div class="site-workspace">'
 html += shellRegions.leftbar || ''
-html += `<main class="site-main" id="main">${main || ''}</main>`
+html += `<main data-stellar-runtime-region class="site-main" id="main">${main || ''}</main>`
 html += shellRegions.rightbar || ''
 html += '</div>'
 html += '<button type="button" class="site-scrim" data-shell-action="dismiss-drawer" aria-label="Close navigation" tabindex="-1"></button>'

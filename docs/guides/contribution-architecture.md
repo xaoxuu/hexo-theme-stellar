@@ -24,6 +24,8 @@
 - 第三方默认地址放在 `_config.yml` 对应服务中，资源字段在既有 `config-rules.js` 校验，由功能的 `project()` 就近提取。升级库只更新配置；新增能力随配置、规则和功能实现维护。descriptor 的 `resources` 仅引用主题内部 assets 键，无内部资源时使用空数组。
 - `schema` 与 `defaultsOwner` 成对出现；纯内部组件两者均为 `null`。`project()` 投影已经规范化的页面配置，具体 DOM 行为归 导出 `mount` 的 ESM 模块。
 - 扩展独立加载；真实依赖由消费者等待。资源创建后立即通过 `context.onCleanup` 登记清理，异步操作使用 `context.signal`，避免卸载后提交结果。返回的同一清理函数不会重复执行。
+- `scope` 在 descriptor 中声明为 `document` 或 `region`：全局服务挂载一次，区域组件只查询所属根节点，并在区域替换时清理；不能通过全局重新初始化重置保留区域。资源加载和缓存由文档级运行时复用。
+- 由 services Extension 加载的主题经典数据脚本通过 `document.currentScript.stellarMount(root, context)` 提供区域入口，使用 `context.serviceUtils` 发起可取消的读取；脚本加载本身不扫描全页。用户已发起的写入不因切页自动取消。
 - `docs`、`tests` 关联缺失属于维护诊断；入口和资源引用缺失仍阻断产物检查。
 - `tests` 引用覆盖该贡献的长期架构接缝证据，可以复用共享测试；不要求每个组件新建测试文件，也不登记临时视觉验收脚本。
 - 浏览器产物与宿主后处理遵循 AGENTS.md“浏览器产物”契约。

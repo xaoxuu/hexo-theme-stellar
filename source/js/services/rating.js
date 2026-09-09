@@ -1,3 +1,7 @@
+document.currentScript.stellarMount = function (root, context) {
+  const utils = context.serviceUtils;
+  const listen = (node, type, handler) => node?.addEventListener(type, handler, { signal: context.signal });
+  const fetch = (url, options = {}) => window.fetch(url, { ...options, ...(options.method === 'POST' ? {} : { signal: context.signal }) });
 function getRatingKey(id) {
   return `rating-${id}`;
 }
@@ -37,7 +41,7 @@ function setupHoverEffect(el) {
   stars.forEach(star => {
     const value = parseInt(star.dataset.value);
 
-    star.addEventListener('mouseenter', () => {
+    listen(star, 'mouseenter', () => {
       stars.forEach(s => {
         s.classList.remove('preview');
         const v = parseInt(s.dataset.value);
@@ -45,7 +49,7 @@ function setupHoverEffect(el) {
       });
     });
 
-    star.addEventListener('mouseleave', () => {
+    listen(star, 'mouseleave', () => {
       clearHover(el);
       // 恢复平均分预览
       const avg = parseFloat(el.querySelector('.avg')?.textContent.replace(/[()]/g, '') || '0');
@@ -70,6 +74,7 @@ async function loadRating(el) {
     const res = await fetch(`${api}/info?id=${encodeURIComponent(id)}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
+    context.signal.throwIfAborted();
     const rating = data.rating || {};
     const avg = calculateAverage(rating);
 
@@ -114,7 +119,7 @@ async function submitRating(el, value) {
       method: 'POST'
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    loadRating(el);
+    if (!context.signal.aborted) loadRating(el);
   } catch (error) {
     void error;
     removeRating(id);
@@ -123,7 +128,7 @@ async function submitRating(el, value) {
 }
 
 function initRatings() {
-  document.querySelectorAll('.ds-rating').forEach(el => {
+  root.querySelectorAll('.ds-rating').forEach(el => {
     const { id, api } = el.dataset;
     if (!id || !api) return;
 
@@ -136,15 +141,13 @@ function initRatings() {
 
     el.querySelectorAll('.star').forEach(star => {
       const value = star.dataset.value;
-      star.addEventListener('click', () => {
+      listen(star, 'click', () => {
         if (!hasRated(id)) submitRating(el, value);
       });
     });
   });
 }
 
-if (document.readyState === 'loading') {
-  window.addEventListener('DOMContentLoaded', initRatings);
-} else {
-  initRatings();
-}
+initRatings();
+
+};

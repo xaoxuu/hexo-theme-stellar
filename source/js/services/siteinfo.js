@@ -1,5 +1,5 @@
 // 本插件由CardLink定制而成，原项目源码: https://github.com/Lete114/CardLink
-function setCardLink(nodes) {
+function setCardLink(nodes, signal) {
   // If the `nodes` do not contain a `forEach` method, then the default `a[cardlink]` is used
   nodes = 'forEach' in (nodes || {}) ? nodes : document.querySelectorAll('a[cardlink]')
   nodes.forEach((el) => {
@@ -11,6 +11,7 @@ function setCardLink(nodes) {
     // 走统一请求入口，数据缓存对 siteinfo 同样生效
     utils.request(null, api, function(response) {
       return response.json().then(function(data) {
+        if (signal?.aborted) return;
         var autofill = [];
         const autofillStr = el.getAttribute('autofill');
         if (autofillStr) {
@@ -29,7 +30,7 @@ function setCardLink(nodes) {
           desc.innerHTML = data.desc;
         }
       });
-    }, undefined, { service: 'siteinfo' }).catch(function() {});
+    }, undefined, { service: 'siteinfo', signal }).catch(function() {});
   })
 }
 
@@ -37,6 +38,7 @@ function setMdLinkIcon(nodes, signal) {
   nodes.forEach((el) => {
     utils.request(null, el.dataset.siteinfoApi, function(response) {
       return response.json().then(function(data) {
+        if (signal?.aborted) return;
         if (signal?.aborted || typeof data.icon !== 'string' || !data.icon) return;
         let url;
         try { url = new URL(data.icon, el.href); } catch { return; }
@@ -49,11 +51,11 @@ function setMdLinkIcon(nodes, signal) {
         };
         image.src = url.href;
       });
-    }, undefined, { service: 'siteinfo' }).catch(function() {});
+    }, undefined, { service: 'siteinfo', signal }).catch(function() {});
   });
 }
 
-function setSiteCardIcon(nodes) {
+function setSiteCardIcon(nodes, signal) {
   nodes = 'forEach' in (nodes || {}) ? nodes : document.querySelectorAll('.site-card .card-link[data-siteinfo-api]')
   nodes.forEach((el) => {
     if (el.nodeType !== 1) return;
@@ -61,6 +63,7 @@ function setSiteCardIcon(nodes) {
     if (api == null) return;
     utils.request(null, api, function(response) {
       return response.json().then(function(data) {
+        if (signal?.aborted) return;
         if (data.icon && data.icon.length > 0) {
           const icon = el.querySelector('.siteinfo-icon');
           if (icon) {
@@ -69,10 +72,6 @@ function setSiteCardIcon(nodes) {
           }
         }
       });
-    }, undefined, { service: 'siteinfo' }).catch(function() {});
+    }, undefined, { service: 'siteinfo', signal }).catch(function() {});
   })
 }
-
-window.addEventListener('stellar:sites-ready', function() {
-  setSiteCardIcon();
-});

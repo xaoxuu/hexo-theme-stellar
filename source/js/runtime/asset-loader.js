@@ -23,9 +23,14 @@ export function createAssetLoader(options = {}) {
     if (!url) return Promise.reject(new TypeError('[stellar runtime] asset URL is required'));
     const cache = kind === 'script' ? scripts : styles;
     if (cache.has(url)) return cache.get(url);
+    if (kind === 'style' && documentRef.querySelectorAll) {
+      const absolute = new URL(url, documentRef.baseURI).href;
+      const existing = [...documentRef.querySelectorAll('link[rel="stylesheet"]')].find(link => link.href === absolute && link.sheet);
+      if (existing) { const ready = Promise.resolve(existing); cache.set(url, ready); return ready; }
+    }
     const promise = new Promise((resolve, reject) => {
       const element = documentRef.createElement(kind === 'script' ? 'script' : 'link');
-      if (kind === 'script') { element.src = url; element.async = attributes.async !== false; }
+      if (kind === 'script') { element.setAttribute?.('data-stellar-script', 'asset'); element.src = url; element.async = attributes.async !== false; }
       else { element.rel = 'stylesheet'; element.href = url; }
       for (const [key, value] of Object.entries(attributes)) element[key] = value;
       const done = error => {

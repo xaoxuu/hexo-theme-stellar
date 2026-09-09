@@ -40,7 +40,7 @@ function validateWhen(value, path) {
 
 function validateEntry(entry, index, ids) {
   plainObject(entry, `extensions[${index}]`);
-  const allowed = new Set(["id", "module", "when", "config"]);
+  const allowed = new Set(["id", "module", "scope", "when", "config"]);
   const unknown = Object.keys(entry).filter(key => !allowed.has(key));
   if (unknown.length > 0) {
     throw new TypeError(`[stellar runtime] extensions[${index}] has unknown field ${unknown[0]}`);
@@ -55,6 +55,7 @@ function validateEntry(entry, index, ids) {
   if (typeof entry.module !== "string" || !entry.module.startsWith(LOCAL_MODULE_PREFIX) || !entry.module.endsWith(".js")) {
     throw new TypeError(`[stellar runtime] extensions[${index}].module must be a local runtime .js path`);
   }
+  if (!["document", "region"].includes(entry.scope)) throw new TypeError(`[stellar runtime] extensions[${index}].scope is invalid`);
   validateWhen(entry.when, `extensions[${index}].when`);
   plainObject(entry.config, `extensions[${index}].config`);
 }

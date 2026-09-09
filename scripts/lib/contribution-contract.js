@@ -7,6 +7,7 @@ const ENTRY_TYPES = new Set(["browser-module", "template"]);
 const ACTIVATION_TYPES = new Set(["always", "selector", "server"]);
 const DEFINITION_FIELDS = new Set([
   "id",
+  "scope",
   "kind",
   "entry",
   "resources",
@@ -109,6 +110,9 @@ function validateContributionDefinitions(definitions) {
     if (ids.has(definition.id)) throw new TypeError(`[stellar contributions] duplicate contribution id ${definition.id}`);
     ids.add(definition.id);
     if (!CONTRIBUTION_KINDS.has(definition.kind)) throw new TypeError(`[stellar contributions] ${label}.kind is invalid`);
+    if (!["document", "region"].includes(definition.scope)) {
+      throw new TypeError(`[stellar contributions] ${label}.scope is invalid`);
+    }
     validateEntry(definition.entry, `${label}.entry`);
     stringList(definition.resources, `${label}.resources`, { allowEmpty: true });
     validateActivation(definition.activation, `${label}.activation`);

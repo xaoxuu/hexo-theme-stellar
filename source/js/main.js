@@ -407,7 +407,7 @@ window.addEventListener('wheel', cancelSmoothScroll, { passive: true });
 window.addEventListener('touchstart', cancelSmoothScroll, { passive: true });
 
 // 远程 md（mdrender 服务）渲染完成后重建右栏 TOC：结构与服务端 toc() 输出一致
-let tocClickBound = false;
+const tocClickBound = new WeakMap();
 function rebuildToc(scope) {
   const widget = document.querySelector('#data-toc');
   if (!widget) {
@@ -467,11 +467,10 @@ function rebuildToc(scope) {
 }
 
 function bindTocClick(widget) {
-  if (tocClickBound) {
-    return;
+  if (tocClickBound.has(widget)) {
+    return tocClickBound.get(widget);
   }
-  tocClickBound = true;
-  widget.addEventListener('click', function (e) {
+  const handler = function (e) {
     const link = e.target.closest('a.toc-link');
     if (!link) {
       return;
@@ -484,11 +483,16 @@ function bindTocClick(widget) {
       const offset = 32;
       const targetY = target.getBoundingClientRect().top + window.scrollY - offset;
       smoothScrollTo(targetY);
+      dismissDrawer();
       if (window.history && window.history.pushState) {
-        window.history.pushState(null, '', href);
+        window.history.pushState(window.history.state, '', href);
       }
     }
-  });
+  };
+  widget.addEventListener('click', handler);
+  const cleanup = () => { widget.removeEventListener('click', handler); tocClickBound.delete(widget); };
+  tocClickBound.set(widget, cleanup);
+  return cleanup;
 }
 
 // 通用页内锚点平滑滚动（标题左侧 headerlink、{% navbar %} 页内导航、脚注回链等）
@@ -519,7 +523,7 @@ function bindAnchorClick() {
     const targetY = target.getBoundingClientRect().top + window.scrollY - offset;
     smoothScrollTo(targetY);
     if (window.history && window.history.pushState) {
-      window.history.pushState(null, '', href);
+      window.history.pushState(window.history.state, '', href);
     }
   });
 }
@@ -598,22 +602,9 @@ const init = {
       }, 50);
     });
   },
-  tocLinks: () => {
-    utils.dom("#data-toc a.toc-link").click(function (e) {
-      const href = this.getAttribute("href");
-      const id = href && href.indexOf("#") === 0 ? decodeURIComponent(href.slice(1)) : null;
-      const target = id && document.getElementById(id);
-      if (target) {
-        e.preventDefault();
-        const offset = 32; // 与 activeTOC 的 scrollOffset 保持一致
-        const targetY = target.getBoundingClientRect().top + window.scrollY - offset;
-        smoothScrollTo(targetY);
-        if (window.history && window.history.pushState) {
-          window.history.pushState(null, "", href);
-        }
-      }
-      dismissDrawer();
-    });
+  tocLinks: (root) => {
+    const widget = root.id === 'data-toc' ? root : root.querySelector('#data-toc');
+    if (widget) return bindTocClick(widget);
   },
   wikiStart: () => {
     utils.dom('#site-cover .cover-content.wiki .start-wrap a.button.start').click(function (e) {
@@ -626,7 +617,7 @@ const init = {
         const offset = 0;
         smoothScrollTo(target.getBoundingClientRect().top + window.scrollY - offset);
         if (window.history && window.history.pushState) {
-          window.history.pushState(null, "", href);
+          window.history.pushState(window.history.state, "", href);
         }
       }
     });
@@ -726,7 +717,7 @@ const init = {
       }
     } catch (e) {}
   },
-  listingNavPin: () => {
+  listingNavPin: (root, signal) => {
     // Listing Nav 在吸顶边界切换 .is-pinned 类，视觉由 CSS 控制。
     // 页面有 Topbar 时，pinned Listing Nav 进入 Topbar 内并复用其表面；无 Topbar 时保持独立容器外观。
     // 吸顶判定直接测 Listing Nav 的实际视口位置，而非用 scrollY 推算：
@@ -734,7 +725,7 @@ const init = {
     // 即使 Listing Nav 仍吸顶也可能跌破阈值，导致玻璃效果误消失。
     // 无轮播区页面（如 wiki）的 Listing Nav 在页面顶部即已吸顶，需额外要求页面实际滚动达到阈值，
     // 否则默认保持卡片样式；回到顶部（滚动小于阈值）恢复卡片。
-    const listingNavs = document.querySelectorAll('.listing-nav');
+    const listingNavs = root.querySelectorAll('.listing-nav');
     if (listingNavs.length === 0) {
       return;
     }
@@ -774,16 +765,16 @@ const init = {
       }
       ticking = true;
       utils.requestAnimationFrame(() => {
-        update();
+        if (!signal.aborted) update();
         ticking = false;
       });
-    }, { passive: true });
+    }, { passive: true, signal });
     // 顶栏伸缩不一定触发 scroll，兜底监听 visualViewport 尺寸变化
     if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', update);
+      window.visualViewport.addEventListener('resize', update, { signal });
     }
-    window.addEventListener('resize', measure);
-    window.addEventListener('pageshow', measure);
+    window.addEventListener('resize', measure, { signal });
+    window.addEventListener('pageshow', measure, { signal });
     measure();
   },
   relativeDate: (selector) => {
@@ -799,9 +790,11 @@ const init = {
   /**
    * Tabs tag listener (without twitter bootstrap).
    */
-  registerTabsTag: function () {
+  registerTabsTag: function (root, signal) {
     // Binding `nav-tabs` & `tab-content` by real time permalink changing.
-    document.querySelectorAll('.tabs .nav-tabs .tab').forEach(element => {
+    const tabs = root.querySelectorAll('.tabs .nav-tabs .tab');
+    if (!tabs.length) return;
+    tabs.forEach(element => {
       element.addEventListener('click', event => {
         event.preventDefault();
         // Prevent selected tab to select again.
@@ -819,7 +812,7 @@ const init = {
         tActive.dispatchEvent(new Event('tabs:click', {
           bubbles: true
         }));
-      });
+      }, { signal });
     });
 
     window.dispatchEvent(new Event('tabs:register'));
@@ -924,17 +917,22 @@ stellar.toast = hud.toast;
 /**
  * Initialize page components
  */
-stellar.initPage = function () {
-  init.toc();
-  init.tocLinks();
-  init.wikiStart();
-  init.wikiCover();
-  init.leftbarScroll();
-  init.listingNavPin();
-  init.relativeDate(document.querySelectorAll('#post-meta time'));
-  init.registerTabsTag();
+stellar.initPage = function (root = document) {
+  const controller = new AbortController();
+  const cleanupToc = init.tocLinks(root);
+  init.listingNavPin(root, controller.signal);
+  init.relativeDate(root.querySelectorAll('#post-meta time'));
+  init.registerTabsTag(root, controller.signal);
+  return () => { controller.abort(); cleanupToc?.(); };
+};
+stellar.syncPageShell = function () {
+  dismissDrawer();
+  syncDrawerControls();
 };
 
-// Initial page load
-stellar.initPage();
+// Document-owned controls survive regional navigation.
+init.toc();
+init.wikiStart();
+init.wikiCover();
+init.leftbarScroll();
 init.canonicalCheck();

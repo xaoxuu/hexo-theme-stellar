@@ -46,6 +46,8 @@ module.exports = deepFreeze({
   },
   assets: {
     runtime: {
+      searchHighlight: "/js/search/highlight.js",
+      tagtree: "/js/tagtree.js",
       bootstrap: "/js/runtime/index.js",
       colorSchemeSwitch: "/js/runtime/extensions/color-scheme-switch.js",
       deferredIcons: "/js/runtime/extensions/deferred-icons.js",

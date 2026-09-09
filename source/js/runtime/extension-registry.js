@@ -1,6 +1,6 @@
 const PHASES = new Set(['import', 'mount', 'unmount']);
 
-function validateDeclaration(declaration) {
+export function validateDeclaration(declaration) {
   if (!declaration || typeof declaration !== 'object' || Array.isArray(declaration)) {
     throw new TypeError('[stellar runtime] extension declaration must be an object');
   }
@@ -10,7 +10,7 @@ function validateDeclaration(declaration) {
   if (typeof declaration.module !== 'string' || declaration.module.length === 0) {
     throw new TypeError(`[stellar runtime] extension ${declaration.id} module is invalid`);
   }
-  const unknown = Object.keys(declaration).filter(key => !['id', 'module', 'when', 'config'].includes(key));
+  const unknown = Object.keys(declaration).filter(key => !['id', 'module', 'scope', 'when', 'config'].includes(key));
   if (unknown.length > 0) {
     throw new TypeError(`[stellar runtime] extension ${declaration.id} has unknown field ${unknown[0]}`);
   }
@@ -64,6 +64,7 @@ export function createExtensionRegistry(options = {}) {
     }
     declarations.set(declaration.id, Object.freeze({
       id: declaration.id,
+      scope: declaration.scope,
       module: declaration.module,
       when: declaration.when || {},
       config: declaration.config || {}

@@ -7,3 +7,5 @@ hexo.extend.filter.register('after_post_render', require('./lib/md_link').proces
 
 // Hexo copies content into template locals; restore the build-owned projection.
 hexo.extend.filter.register('template_locals', require('./lib/page-view-model').attachTemplateViewModel);
+
+hexo.extend.filter.register('after_render:html', require('../lib/partial-navigation').processNavigation, 1000);

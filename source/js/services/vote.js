@@ -1,3 +1,7 @@
+document.currentScript.stellarMount = function (root, context) {
+  const utils = context.serviceUtils;
+  const listen = (node, type, handler) => node?.addEventListener(type, handler, { signal: context.signal });
+  const fetch = (url, options = {}) => window.fetch(url, { ...options, ...(options.method === 'POST' ? {} : { signal: context.signal }) });
 function getVoteKey(id) {
   return `vote-${id}`;
 }
@@ -55,6 +59,7 @@ async function loadVote(el) {
     const res = await fetch(`${api}/info?id=${encodeURIComponent(id)}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
+    context.signal.throwIfAborted();
 
     el.querySelector('.up').textContent = data.votes?.up ?? 0;
     el.querySelector('.down').textContent = data.votes?.down ?? 0;
@@ -89,7 +94,7 @@ function submitVote(el, value) {
 }
 
 function initVotes() {
-  document.querySelectorAll('.ds-vote').forEach(el => {
+  root.querySelectorAll('.ds-vote').forEach(el => {
     const { id, api } = el.dataset;
     if (!id || !api) return;
 
@@ -98,18 +103,16 @@ function initVotes() {
     const votedValue = getVotedValue(id);
     if (votedValue) markVoted(el, votedValue);
 
-    el.querySelector('.vote-up')?.addEventListener('click', () => {
+    listen(el.querySelector('.vote-up'), 'click', () => {
       if (!el.classList.contains('active')) submitVote(el, 'up');
     });
 
-    el.querySelector('.vote-down')?.addEventListener('click', () => {
+    listen(el.querySelector('.vote-down'), 'click', () => {
       if (!el.classList.contains('active')) submitVote(el, 'down');
     });
   });
 }
 
-if (document.readyState === 'loading') {
-  window.addEventListener('DOMContentLoaded', initVotes);
-} else {
-  initVotes();
-}
+initVotes();
+
+};

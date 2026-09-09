@@ -1,4 +1,4 @@
-function queryAll(root, selector) { return Array.from(root.querySelectorAll(selector)); }
+function queryAll(root, selector) { return [...(root.matches?.(selector) ? [root] : []), ...root.querySelectorAll(selector)]; }
 
 export async function mount(root, context) {
   const config = context.extension.config;

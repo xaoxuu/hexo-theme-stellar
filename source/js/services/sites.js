@@ -1,5 +1,7 @@
-(function () {
-  const els = document.getElementsByClassName('ds-sites');
+document.currentScript.stellarMount = function (root, context) {
+  const utils = context.serviceUtils;
+
+  const els = root.getElementsByClassName('ds-sites');
     for (var i = 0; i < els.length; i++) {
       const el = els[i];
       const api = el.dataset.api;
@@ -39,7 +41,8 @@
           utils.dom(el).find('.grid-box').append(cell);
         }
         window.wrapLazyloadImages(el);
-        window.dispatchEvent(new Event('stellar:sites-ready'));
+        window.dispatchEvent(new CustomEvent('stellar:sites-ready', { detail: { target: el } }));
       });
     }
-})();
+
+};

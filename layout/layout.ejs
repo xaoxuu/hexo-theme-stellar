@@ -30,7 +30,7 @@ function siteBackground(enabled) {
 
 function coverSlot(viewModel) {
   var coverBody = viewModel ? partial('_partial/cover/index', {viewModel: viewModel}).trim() : ''
-  return `<div id="site-cover" class="site-cover">${coverBody}</div>`
+  return `<div data-stellar-runtime-region id="site-cover" class="site-cover">${coverBody}</div>`
 }
 
 function regionSlot(slot, state, viewModel) {

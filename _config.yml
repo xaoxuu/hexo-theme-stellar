@@ -819,6 +819,9 @@ tags:
 
 # 配置可选的浏览器功能。
 features:
+  # 同集合内容页面只更新正文和右栏；不兼容的页面自动整页跳转。
+  partial_navigation:
+    enabled: true
   # 配置轮播使用的第三方资源；不改变按需加载条件。
   swiper:
     # 自定义脚本地址；null 使用默认资源。

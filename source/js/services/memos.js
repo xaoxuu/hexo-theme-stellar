@@ -1,5 +1,7 @@
-(function () {
-  const els = Array.from(document.getElementsByClassName('ds-memos'));
+document.currentScript.stellarMount = function (root, context) {
+  const utils = context.serviceUtils;
+
+  const els = Array.from(root.getElementsByClassName('ds-memos'));
 
   els.forEach(el => {
     const api = el.dataset.api;
@@ -66,6 +68,7 @@
                   .finally(() => delete memos.requests[creatorId]);
             }
             await memos.requests[creatorId];
+            context.signal.throwIfAborted();
             user = memos.users.find(user => user.id === parseInt(creatorId));
           }
           const name = user ? user.nickname || user.username : 'memos';
@@ -101,6 +104,7 @@
                   .finally(() => delete memos.requests[creatorId]);
             }
             await memos.requests[creatorId];
+            context.signal.throwIfAborted();
             user = memos.users.find(user => user.name.split('/')[1] === creatorId);
           }
           const name = user ? user.displayName || user.username : 'memos';
@@ -134,6 +138,7 @@
           }
           if (memos.requests[creatorId]) {
             await memos.requests[creatorId];
+            context.signal.throwIfAborted();
             user = findUser();
           }
           const name = user ? user.displayName || user.username : 'memos';
@@ -191,4 +196,5 @@
       }
     };
   });
-})();
+
+};

@@ -1,6 +1,6 @@
 const { readImageColor } = await import(`../image-color.js${new URL(import.meta.url).search}`);
 
-function queryAll(root, selector) { return Array.from(root.querySelectorAll(selector)); }
+function queryAll(root, selector) { return [...(root.matches?.(selector) ? [root] : []), ...root.querySelectorAll(selector)]; }
 
 export async function mount(root, context) {
   const config = context.extension.config;

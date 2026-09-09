@@ -1,5 +1,7 @@
-(function () {
-  const els = document.getElementsByClassName('ds-giscus');
+document.currentScript.stellarMount = function (root, context) {
+  const utils = context.serviceUtils;
+
+  const els = root.getElementsByClassName('ds-giscus');
       for (var i = 0; i < els.length; i++) {
         const el = els[i];
         const api = el.dataset.api;
@@ -32,4 +34,5 @@
           });
         });
       }
-})();
+
+};

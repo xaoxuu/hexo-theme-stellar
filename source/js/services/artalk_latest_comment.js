@@ -1,5 +1,7 @@
-(function () {
-  const els = document.getElementsByClassName('ds-artalk');
+document.currentScript.stellarMount = function (root, context) {
+  const utils = context.serviceUtils;
+
+  const els = root.getElementsByClassName('ds-artalk');
       for (var i = 0; i < els.length; i++) {
         const el = els[i];
         const limit = parseInt(el.getAttribute('limit')) || 10;
@@ -70,5 +72,5 @@
           });
         });
       }
-})();
-  
+
+};

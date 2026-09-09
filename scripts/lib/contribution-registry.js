@@ -30,7 +30,36 @@ function configResult(config, when) {
 
 const CONTRIBUTIONS = defineContributions([
   {
+    id: "page-controls",
+    scope: "region",
+    kind: "component",
+    entry: featureEntry("page-controls"),
+    resources: ["runtime.searchHighlight", "runtime.tagtree"],
+    activation: { type: "always" },
+    schema: null,
+    i18n: null,
+    docs: { category: "Components", path: PLUGIN_SYSTEM_DOC },
+    tests: [RUNTIME_CONSUMPTION_TEST],
+    defaultsOwner: null,
+    project: context => configResult({ highlight: context.assets.runtime?.searchHighlight, tagtree: context.assets.runtime?.tagtree })
+  },
+  {
+    id: "partial-navigation",
+    scope: "document",
+    kind: "feature",
+    entry: featureEntry("partial-navigation"),
+    resources: [],
+    activation: { type: "always" },
+    schema: "features.partial_navigation.enabled",
+    i18n: null,
+    docs: { category: "Extensions", path: PLUGIN_SYSTEM_DOC },
+    tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
+    defaultsOwner: CONFIG_OWNER("features.partial_navigation.enabled"),
+    project: context => context.features.partialNavigation?.enabled === true ? configResult({}) : null
+  },
+  {
     id: "runtime-bootstrap",
+    scope: "document",
     kind: "component",
     entry: { type: "template", path: "layout/_partial/scripts/runtime.ejs" },
     resources: ["runtime.bootstrap"],
@@ -44,6 +73,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "color-scheme-switch",
+    scope: "document",
     kind: "feature",
     entry: runtimeEntry(INTERNAL.assets.runtime.colorSchemeSwitch),
     resources: ["runtime.colorSchemeSwitch"],
@@ -69,6 +99,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "search",
+    scope: "document",
     kind: "extension",
     entry: runtimeEntry("/js/runtime/extensions/search.js"),
     resources: ["search"],
@@ -96,6 +127,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "hero-effect",
+    scope: "region",
     kind: "feature",
     entry: runtimeEntry(INTERNAL.assets.runtime.heroEffect),
     resources: ["runtime.heroEffect", "heroEffects"],
@@ -109,10 +141,11 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "lazy-loading",
+    scope: "document",
     kind: "feature",
     entry: featureEntry("lazy-loading"),
     resources: [],
-    activation: selector("img, .data-service, [class*='ds-']"),
+    activation: { type: "always" },
     schema: "features.lazy_loading.transition",
     i18n: null,
     docs: { category: "Extensions", path: "docs/knowledge/07-外部集成/lazy-loading-images.md" },
@@ -122,6 +155,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "deferred-icons",
+    scope: "region",
     kind: "component",
     entry: runtimeEntry(INTERNAL.assets.runtime.deferredIcons),
     resources: ["runtime.deferredIcons"],
@@ -135,6 +169,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "dropdown",
+    scope: "region",
     kind: "component",
     entry: runtimeEntry(INTERNAL.assets.runtime.dropdown),
     resources: ["runtime.dropdown"],
@@ -148,6 +183,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "services",
+    scope: "region",
     kind: "extension",
     entry: runtimeEntry("/js/runtime/extensions/services.js"),
     resources: ["services"],
@@ -165,6 +201,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "comments",
+    scope: "region",
     kind: "extension",
     entry: runtimeEntry("/js/runtime/extensions/comments.js"),
     resources: ["comments"],
@@ -186,6 +223,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "settings",
+    scope: "region",
     kind: "component",
     entry: runtimeEntry(INTERNAL.assets.runtime.settings),
     resources: ["runtime.settings"],
@@ -199,6 +237,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "link-prefetch",
+    scope: "document",
     kind: "feature",
     entry: featureEntry("link-prefetch"),
     resources: [],
@@ -215,6 +254,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "lightbox",
+    scope: "region",
     kind: "feature",
     entry: featureEntry("lightbox"),
     resources: ["features.lightbox"],
@@ -235,6 +275,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "reveal",
+    scope: "region",
     kind: "feature",
     entry: runtimeEntry(INTERNAL.assets.runtime.reveal),
     resources: ["runtime.reveal"],
@@ -251,6 +292,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "mathjax",
+    scope: "region",
     kind: "feature",
     entry: featureEntry("mathjax"),
     resources: [],
@@ -272,6 +314,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "katex-stylesheet",
+    scope: "document",
     kind: "component",
     entry: { type: "template", path: "layout/_partial/scripts/runtime.ejs" },
     resources: [],
@@ -285,6 +328,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "diagrams",
+    scope: "region",
     kind: "feature",
     entry: featureEntry("diagrams"),
     resources: [],
@@ -314,6 +358,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "code-copy",
+    scope: "region",
     kind: "feature",
     entry: featureEntry("code-copy"),
     resources: ["features.codeCopy"],
@@ -333,6 +378,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "adaptive-text",
+    scope: "region",
     kind: "feature",
     entry: featureEntry("adaptive-text"),
     resources: ["features.adaptiveText"],
@@ -346,6 +392,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "card-hover",
+    scope: "region",
     kind: "feature",
     entry: runtimeEntry("/js/runtime/extensions/card-hover.js"),
     resources: ["features.cardHover"],
@@ -363,6 +410,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "heti",
+    scope: "region",
     kind: "feature",
     entry: featureEntry("heti"),
     resources: [],
@@ -379,6 +427,7 @@ const CONTRIBUTIONS = defineContributions([
   },
   {
     id: "swiper",
+    scope: "region",
     kind: "component",
     entry: featureEntry("swiper"),
     resources: ["features.swiper"],
@@ -408,6 +457,7 @@ function buildContributionEntries(context) {
     entries.push({
       id: contribution.id,
       module: contribution.entry.path,
+      scope: contribution.scope,
       when: projected.when || activationWhen(contribution.activation),
       config
     });

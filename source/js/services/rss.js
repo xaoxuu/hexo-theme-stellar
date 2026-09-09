@@ -1,5 +1,6 @@
-(function () {
-  const els = document.getElementsByClassName('ds-rss');
+document.currentScript.stellarMount = function (root, context) {
+  const utils = context.serviceUtils;
+  const els = root.getElementsByClassName('ds-rss');
 
     for (let i = 0; i < els.length; i++) {
       const el = els[i];
@@ -45,7 +46,7 @@
         }
       });
     }
-})();
+
 
 
 function handleAtom(el, doc, content_type, show_title, show_content, limit) {
@@ -196,3 +197,5 @@ function handleJsonFeed(el, data, content_type, show_title, show_content, limit)
 
   utils.dom(el).append(htmlBuffer);
 }
+
+};
