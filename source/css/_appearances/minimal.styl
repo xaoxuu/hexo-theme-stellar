@@ -1,5 +1,5 @@
 $editorial-paper-light = x-hsla(44, 50%, 96%, 1)
-$editorial-paper-dark = x-hsla(44, 10%, 10%, 1)
+$editorial-paper-dark = x-hsla(44, 12%, 12%, 1)
 $editorial-card-light = x-hsla(44, 50%, 98%, 1)
 $editorial-card-dark = x-hsla(44, 10%, 14%, 1)
 
@@ -121,6 +121,8 @@ table a:not([class])
 .listing-nav__surface,
 .listing-nav__surface.is-pinned
   margin: .5rem 1rem
+  @media screen and (max-width: $device-mobile)
+    margin: .5rem 0
   border: 0
   border-radius: 0
   border-bottom: 1px dashed var(--block-border)
