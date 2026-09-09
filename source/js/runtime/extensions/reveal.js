@@ -33,8 +33,24 @@ export function mount(root) {
   ) return () => {};
 
   const animations = new Set();
+  const hiddenElements = new Map();
   const pendingInitialObservation = new WeakSet(elements);
   let observer = null;
+
+  function restore(element) {
+    const original = hiddenElements.get(element);
+    if (!original) return;
+    if (original.value) element.style.setProperty('opacity', original.value, original.priority);
+    else element.style.removeProperty('opacity');
+    hiddenElements.delete(element);
+  }
+
+  function cleanup() {
+    observer?.disconnect();
+    hiddenElements.forEach((value, element) => restore(element));
+    animations.forEach(animation => animation.cancel());
+    animations.clear();
+  }
 
   try {
     observer = new windowRef.IntersectionObserver(entries => {
@@ -42,11 +58,20 @@ export function mount(root) {
       entries.forEach(entry => {
         if (pendingInitialObservation.has(entry.target)) {
           pendingInitialObservation.delete(entry.target);
-          if (entry.isIntersecting) observer.unobserve(entry.target);
+          if (entry.isIntersecting || typeof entry.target.animate !== 'function') {
+            observer.unobserve(entry.target);
+          } else {
+            hiddenElements.set(entry.target, {
+              value: entry.target.style.getPropertyValue('opacity'),
+              priority: entry.target.style.getPropertyPriority('opacity')
+            });
+            entry.target.style.setProperty('opacity', '0');
+          }
           return;
         }
         if (!entry.isIntersecting) return;
         observer.unobserve(entry.target);
+        restore(entry.target);
         if (typeof entry.target.animate !== 'function') return;
         try {
           const animation = entry.target.animate([
@@ -68,13 +93,9 @@ export function mount(root) {
     elements.forEach(element => observer.observe(element));
   } catch (error) {
     void error;
-    observer?.disconnect();
+    cleanup();
     return () => {};
   }
 
-  return () => {
-    observer.disconnect();
-    animations.forEach(animation => animation.cancel());
-    animations.clear();
-  };
+  return cleanup;
 }
