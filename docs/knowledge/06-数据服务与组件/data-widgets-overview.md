@@ -49,7 +49,7 @@ services:
   github_card:
     provider: github_readme_stats
     github_readme_stats:
-      endpoint: https://github-readme-stats.vercel.app
+      endpoint: https://github-stats-extended.vercel.app
 ```
 
 消费方通过统一解析接缝只取得选中的 provider 参数袋，未选中的实现不会进入 Runtime Manifest。所有 GitHub 地址都是完整 URL，消费方不再为裸 host 补协议或路径。主题自带的 mdrender、siteinfo、ghinfo、rating、vote、sites、friends、timeline、memos、评论统计等模块路径不可配置。

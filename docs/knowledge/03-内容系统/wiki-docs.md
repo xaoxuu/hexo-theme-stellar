@@ -49,7 +49,7 @@ flowchart LR
 
 执行顺序如下：
 
-1. `scripts/lib/collection-pipeline/index.js` 以 recover 模式解析普通字段；无法恢复的根结构、必填 `name`、归属冲突和 profile 能力错误仍会终止构建。
+1. `scripts/lib/collection-pipeline/index.js` 以 recover 模式解析普通字段；无法恢复的根结构与归属冲突仍会终止构建，不适用的表现参数警告并忽略，缺少显示名时使用 Collection ID。
 2. Wiki adapter 收集已归属的页面和 Collection，调用 `scripts/lib/doc_tree.js` 建立目录、首页、标签与相关项目。
 3. 每个页面先建立 Wiki CollectionModel 与内容 Item；所有首页 listing 可用后，再完成 related、Hero、SEO、Footer、Comments 与上下篇等渲染模型。
 4. 最终 PageViewModel 深度冻结，并按页面登记给 Hexo 渲染阶段恢复。

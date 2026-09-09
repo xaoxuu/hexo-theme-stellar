@@ -107,7 +107,7 @@ graph TB
 
 ### 初始化生命周期
 
-主题使用普通整页导航（PJAX 已于 v1.35.0 移除），因此初始化只在页面加载时运行一次：
+主题默认对同集合且外壳兼容的页面执行局部导航，其余情况整页跳转；页面级初始化与 Extension 随正文替换重新挂载，文档级能力保留。详见[页面导航](../07-外部集成/pjax-navigation.md)。
 
 | 阶段 | 触发 | 调用的函数 | 用途 |
 |------|------|------------|------|
@@ -141,7 +141,7 @@ graph TB
 
 ### 置顶内容轮播（pin-slider）
 
-列表页 navbar top 上方可渲染置顶内容轮播（`layout/_partial/main/pin_slider.ejs`，无需开关配置，有置顶内容即渲染，自动轮播间隔固定 5000ms）：纯原生实现（无第三方依赖），在 DOM 就绪后直接挂载并于 `pagehide` 执行清理函数，支持自动播放（hover/focus/页面隐藏时暂停）、圆点点击切换、悬停显示左右翻页按钮（solar 双箭头图标 + navbar 玻璃效果容器）、触摸松手滑动与 `prefers-reduced-motion` 降级。分页圆点按钮无文本、不设 `aria-label`（避免用户内容注入 HTML 属性导致解析失败），激活态由 `aria-current` 标识。幻灯片中的标题、小字、封面 URL、wiki 标题/摘要/标签等用户内容均经 `escape_html` 转义后输出（属性与文本统一转义）。轮播进度按内容类型分组（`post`/`wiki`）缓存到 localStorage（键 `stellar.pin-slider.<group>`），内容或张数变化后自动失效。文章幻灯片为固定「标题 + 一行小字」结构：标题取 `title`，小字由 `subtitle()` helper 统一取值（`subtitle` > `description` > excerpt 前 50 字）；post 封面幻灯片与 wiki/项目幻灯片共用通用覆盖层 `cover-overlay()`（同文章列表封面，见[文章列表卡片](../03-内容系统/post-lists-cards.md#渐变模糊层与黑色蒙版)）：常驻底部同图渐变模糊层 + 黑色渐变蒙版（边缘不透明度约 0.25 → 垂直中线 0），hover 时背景图与模糊层同步放大至 `scale(1.05)`（图片 1.5s、模糊层 0.5s 缓动）并变暗（亮度 75%、饱和度 120%）；文字区与 hero 卡片 cover-info 观感一致，文字容器带 `data-text-adaptive="split"`（大字 headline/title 用低饱和 theme（接近黑白）、小字 caption/chip/excerpt 用完整 theme，见[文字自适应颜色插件](#文字自适应颜色插件)）；左右箭头图标颜色随当前幻灯片封面自适应（contrast：深色封面白箭头、浅色封面深箭头，随切换实时更新）；有封面时封面铺满整卡，无封面时为纯白卡片（文字按普通文章颜色）；轮播区宽高比与非置顶文章一致，由 `article.listing.cover_ratio` 控制。启用 `features.card_hover.enabled` 时，外层 `.pin-slider` 组合 Spotlight + Tilt，内部 `.pin-slider-track` 仍独立维护横向切换 transform，圆点、箭头和暂停逻辑不变。
+列表页 navbar top 上方可渲染置顶内容轮播（`layout/_partial/main/pin_slider.ejs`，无需开关配置，有置顶内容即渲染，自动轮播间隔固定 5000ms）：纯原生实现（无第三方依赖），在 DOM 就绪后直接挂载并于 `pagehide` 执行清理函数，支持自动播放（hover/focus/页面隐藏时暂停）、圆点点击切换、悬停显示左右翻页按钮（solar 双箭头图标 + navbar 玻璃效果容器）、触摸松手滑动与 `prefers-reduced-motion` 降级。分页圆点按钮无文本、不设 `aria-label`（避免用户内容注入 HTML 属性导致解析失败），激活态由 `aria-current` 标识。幻灯片中的标题、小字、封面 URL、wiki 标题/摘要/标签等用户内容均经 `escape_html` 转义后输出（属性与文本统一转义）。轮播进度按内容类型分组（`post`/`wiki`）缓存到 localStorage（键 `stellar.pin-slider.<group>`），内容或张数变化后自动失效。文章幻灯片为固定「标题 + 一行小字」结构：标题取 `title`，小字由 `subtitle()` helper 统一取值（`subtitle` > `description` > excerpt 前 50 字）；post 封面幻灯片与 wiki/项目幻灯片共用通用覆盖层 `cover-overlay()`（同文章列表封面，见[文章列表卡片](../03-内容系统/post-lists-cards.md#渐变模糊层与黑色蒙版)）：常驻底部同图渐变模糊层 + 黑色渐变蒙版（边缘不透明度约 0.25 → 垂直中线 0），hover 时背景图与模糊层同步放大至 `scale(1.05)`（图片 1.5s、模糊层 0.5s 缓动）并变暗（亮度 75%、饱和度 120%）；文字区与 hero 卡片 cover-info 观感一致，文字容器带 `data-text-adaptive="split"`（大字 headline/title 用低饱和 theme（接近黑白）、小字 caption/chip/excerpt 用完整 theme，见[文字自适应颜色插件](#文字自适应颜色插件)）；左右箭头图标颜色随当前幻灯片封面自适应（contrast：深色封面白箭头、浅色封面深箭头，随切换实时更新）；有封面时封面铺满整卡，无封面时为纯白卡片（文字按普通文章颜色）；轮播区宽高比与非置顶文章一致，由 `article.listing.cover_ratio` 控制。启用 `features.card_hover.spotlight` / `features.card_hover.tilt` 时，外层 `.pin-slider` 组合 Spotlight + Tilt，内部 `.pin-slider-track` 仍独立维护横向切换 transform，圆点、箭头和暂停逻辑不变。
 
 **参考源码**：[layout/_partial/main/pin_slider.ejs](../../../layout/_partial/main/pin_slider.ejs)、[source/css/_components/pin-slider.styl](../../../source/css/_components/pin-slider.styl)
 
@@ -371,11 +371,11 @@ sequenceDiagram
 
 背景图/背景色上方的文字颜色自适应是固定开启的内置 Feature。Runtime Manifest 仅在页面存在 `[data-text-adaptive]` 元素时 import Feature adapter，再按需加载 `source/js/color.js` 与 `source/js/plugins/adaptive-text.js`：插件按 `--cover-url` → `--pin-cover-url` → `--bg-url` → `background-image` → `background-color` 解析背景来源，调用 `stellar.color.getAverageColor()`（canvas 等比缩至最长边 ≤64px 取平均色与平均透明度，按 URL 缓存原始均值；透明图按元素/祖先/`body` 的实际背景色做 alpha 合成后再平均，避免透明像素把平均色拉偏；CORS/解码失败返回 `null`）或直接解析背景色，再用 `stellar.color.adaptiveTextColor()` 计算文字颜色并写入内联变量。属性值：`theme`（默认，背景图平均色为基色，背景偏暗时 lighten 到明度 0.85、偏亮时 darken 到明度 0.3，低饱和彩色平均色先经 `enhanceSaturation` 抬升饱和度再取色，`saturationScale` 可调小饱和度使其接近黑白）、`contrast`（黑白对比：深色背景白字、浅色背景深字）、`split`（封面/banner/轮播容器：大字用低饱和 theme（接近黑白）、小字用完整 theme）。明暗判定默认阈值 0.6、彩色背景（饱和度 > 0.2）上浮至 0.65，偏向采纳浅色文字。`split` 模式写入 `--text-banner`（大字，`saturationScale: 0.05`）与 `--text-banner-theme`（小字，完整 theme）两个变量，其余模式两个变量同色。元素已有内联 `--text-banner` 或内联 `color` 时 Feature 跳过，用户显式覆盖优先。
 
-**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)、[source/js/color.js](../../../source/js/color.js)、[source/js/plugins/adaptive-text.js](../../../source/js/plugins/adaptive-text.js)
+**参考源码**：[source/js/runtime/extension-registry.js](../../../source/js/runtime/extension-registry.js)、[source/js/color.js](../../../source/js/color.js)、[source/js/plugins/adaptive-text.js](../../../source/js/plugins/adaptive-text.js)
 
 ### 卡片 Hover 生命周期
 
-启用 `features.card_hover.enabled` 后，Runtime Manifest 在页面命中 `.card-hover` 时 import Feature adapter 并加载本地插件。光斑颜色由 CSS 固定为 `rgba(255, 255, 255, .25)`，最大倾角由脚本固定为 `3deg`，二者都不属于公开配置。`source/js/plugins/card-hover.js` 只扫描 `.card-hover`，再按 `.card-hover--spotlight` 与 `.card-hover--tilt` 挂载对应能力：
+启用 `features.card_hover.spotlight` / `features.card_hover.tilt` 后，Runtime Manifest 在页面命中 `.card-hover` 时 import Feature adapter 并加载本地插件。光斑颜色由 CSS 固定为 `rgba(255, 255, 255, .25)`，最大倾角由脚本固定为 `3deg`，二者都不属于公开配置。`source/js/plugins/card-hover.js` 只扫描 `.card-hover`，再按 `.card-hover--spotlight` 与 `.card-hover--tilt` 挂载对应能力：
 
 - `stellar.cardHover.mountAll(root)` 幂等扫描 Document、容器或单个卡片，供动态组件复用。
 - `stellar.cardHover.unmountAll(root)` 清理指定容器自身及后代的已挂载卡片；省略 `root` 时清理全部，供动态搜索替换结果和插件销毁复用。
@@ -388,7 +388,7 @@ Spotlight 是卡片末尾注入的独立 `span.card-hover__spotlight[aria-hidden
 
 置顶轮播外层和专栏列表的最新文章封面卡片复用完整 Spotlight + Tilt；轮播轨道与专栏标题、描述、归档式文章条目不参与 Tilt。Wiki Hero 的源码、文档和自定义 action 按钮、搜索结果链接与标准 `.ui-collection__item` 复用 Spotlight-only 生命周期，因此保留原有 surface 背景且不会产生位移或 3D transform。搜索的 `.ui-collection-adapter` 列表本身不挂载，只有内部可点击链接动态挂载，页面标题留在链接外；TOC adapter 仍不接入。
 
-**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)、[source/js/plugins/card-hover.js](../../../source/js/plugins/card-hover.js)、[source/css/_plugins/card-hover.styl](../../../source/css/_plugins/card-hover.styl)
+**参考源码**：[source/js/runtime/extension-registry.js](../../../source/js/runtime/extension-registry.js)、[source/js/plugins/card-hover.js](../../../source/js/plugins/card-hover.js)、[source/css/_plugins/card-hover.styl](../../../source/css/_plugins/card-hover.styl)
 
 ### 与 Head 配置的集成
 

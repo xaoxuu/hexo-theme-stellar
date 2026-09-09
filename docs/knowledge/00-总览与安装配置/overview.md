@@ -19,7 +19,7 @@ tags:
 - [README.md](../../../README.md)
 - [_config.yml](../../../_config.yml)
 - [layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
-- [source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
+- [source/js/runtime/extension-registry.js](../../../source/js/runtime/extension-registry.js)
 - [layout/layout.ejs](../../../layout/layout.ejs)
 - [package.json](../../../package.json)
 - [scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
@@ -183,7 +183,7 @@ flowchart TD
 
 ### 阶段 4：页面导航与预加载
 
-主题使用普通整页导航；可选的 `features.link_prefetch`（flying_pages）会在鼠标悬停时预加载站内链接，提升导航体验。PJAX 已于 v1.35.0 移除。
+主题默认对同集合且外壳兼容的页面执行局部导航，其余情况整页跳转；页面级初始化与 Extension 随正文替换重新挂载，文档级能力保留。详见[页面导航](../07-外部集成/pjax-navigation.md)。
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)、[_config.yml](../../../_config.yml)（`features.link_prefetch`）
 

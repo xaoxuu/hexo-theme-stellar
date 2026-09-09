@@ -216,7 +216,7 @@ graph TD
 
 ### Card Hover 行为
 
-`{% link %}` 始终为链接卡片输出 Hover 组合类；`{% grid %}` 只有 `bg:card` 为每个单元格输出，`bg:box` 与无背景网格不输出。启用 `features.card_hover.enabled` 时，它们获得鼠标光斑和 3D 倾斜，Feature 最后加载的样式会统一组合 `hoverable-card()` 原有的上浮 transform；链接可点击区域、自动填充属性和单元格 Markdown 结构不变。Feature 关闭或运行环境不支持动态效果时仍使用既有 link/grid 样式。
+`{% link %}` 始终为链接卡片输出 Hover 组合类；`{% grid %}` 只有 `bg:card` 为每个单元格输出，`bg:box` 与无背景网格不输出。启用 `features.card_hover.spotlight` / `features.card_hover.tilt` 时，它们获得鼠标光斑和 3D 倾斜，Feature 最后加载的样式会统一组合 `hoverable-card()` 原有的上浮 transform；链接可点击区域、自动填充属性和单元格 Markdown 结构不变。Feature 关闭或运行环境不支持动态效果时仍使用既有 link/grid 样式。
 
 **参考源码**：[scripts/tags/lib/link.js](../../../scripts/tags/lib/link.js)、[scripts/tags/lib/grid.js](../../../scripts/tags/lib/grid.js)、[source/css/_plugins/card-hover.styl](../../../source/css/_plugins/card-hover.styl)
 

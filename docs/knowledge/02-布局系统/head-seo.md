@@ -445,7 +445,7 @@ graph TD
 
 ## 页面导航与元数据
 
-主题使用普通整页导航（PJAX 已于 v1.35.0 移除），每次导航整页刷新，head 元数据始终重新生成，无需 PJAX 式的部分更新逻辑。
+主题默认对同集合且外壳兼容的页面执行局部导航，其余情况整页跳转；页面级初始化与 Extension 随正文替换重新挂载，文档级能力保留。详见[页面导航](../07-外部集成/pjax-navigation.md)。
 
 **参考源码**：[layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 

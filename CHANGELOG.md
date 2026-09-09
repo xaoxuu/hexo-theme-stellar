@@ -1,5 +1,39 @@
 # Changelog
 
+## 2.0.0-rc.3
+
+> 发布日期：2026-09-10
+
+本节记录从公开候选 `2.0.0-rc.2` 到 `2.0.0-rc.3` 最终文件树的净变化。
+
+### 新功能
+
+- 默认启用同集合局部导航：外壳兼容时更新正文、右栏和页面元数据，保留导航区域；支持历史滚动恢复，不兼容页面或请求失败时整页跳转。
+- 图片尺寸与 HSLA 平均色在 server/generate 时自动增量提取并持久缓存，补全生成 HTML，不修改 Markdown 或原图；新增 `hexo stellar images` 及 `--dry-run/--page/--refresh` 选项。
+- Markdown 文本链接、文章参考链接、远程 Markdown 与评论链接支持站点图标增强；站点信息支持 `appicon/favicon`，保留 `icon` 回退，行内请求失败显示断链图标。
+- 新增字体平滑与设计字重映射；卡片 Spotlight 与 Tilt 可独立开关。
+- 第三方 JS/CSS 地址可在对应搜索、评论、Feature 或 Markdown 服务配置中覆盖；Artalk 默认使用服务端配套资源。
+
+### 修复与改进
+
+- 共享 Collection 模型并隔离构建缓存，复用 PageViewModel 和归档文章投影，减少重复解析与校验；忽略 Collection 目录中的 macOS `.DS_Store` 文件。
+- 完善 Extension 的页面／文档作用域、异步取消及卸载清理；修复 Flying Pages 初始化、图片懒加载与 Safari 错误占位时序，Reveal 待入场透明度在卸载时恢复。
+- 修复文章上下篇、作者页 Topic 文章与作者横幅；Topic 文章默认继承全局分享配置，Wiki 与 Notebook 仍默认关闭分享。
+- Doctor 与构建统一恢复可用的配置：普通字段问题和不适用的表现参数给出 warning，缺少集合显示名时使用 Collection ID；根结构与归属冲突仍阻止构建。
+- 本地搜索按章节组织结果并分批查询、渲染，改进摘要、高亮、加载更多和结束提示。
+- 调整 minimal 外观、暗色背景、移动导航、品牌、目录吸顶与当前条目滚动；修复 Markdown Widget 背景、稀疏 Wiki 网格宽度、画廊列数以及轮播、图片标签、头像、MBTI 卡片的比例与布局。
+- GitHub 卡片默认服务切换为 `https://github-stats-extended.vercel.app`；图片颜色处理新增 Sharp 直接依赖。
+
+### 升级注意（配置变更与破坏性改动）
+
+- 将 `footer.sections` 改为 `footer.sitemap`；分组保留 `title/items`，但 items 中的 `{title, url}` 对象需改写为 `'[标题](地址)'` Markdown 字符串。默认 sitemap 为空数组；默认页脚正文新增 CC BY-NC-SA 4.0 说明，可自行覆盖 `footer.content`。
+- 将 `features.card_hover.enabled` 替换为独立的 `spotlight` 与 `tilt` 布尔值；希望保持原先全部开启效果时两项均设为 `true`，默认均为 `false`。
+- `features.partial_navigation.enabled` 默认开启，含非主题管理可执行脚本的页面使用整页导航；需要全部整页跳转时将其关闭。
+- `features.image_optimization.enabled` 默认开启，首次处理远程图片可能增加构建时间；关闭后仍复用站点 `source/_data/caches/images_metadata.json`。`features.lazy_loading.auto_aspect_ratio` 继续控制尺寸／比例补全。
+- 第三方资源覆盖不保证任意上游 API 版本兼容；KaTeX 自定义 CSS 时需配套更新 `css_integrity`，或设为 `null` 不附加 SRI。仅覆盖 CSS 地址时会清除继承的旧哈希。
+
+Full Changelog: [2.0.0-rc.2...2.0.0-rc.3](https://github.com/xaoxuu/hexo-theme-stellar/compare/2.0.0-rc.2...2.0.0-rc.3)
+
 ## 2.0.0-rc.2
 
 > 发布日期：2026-09-07

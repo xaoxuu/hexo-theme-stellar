@@ -21,7 +21,7 @@ tags:
 - [layout/page.ejs](../../../layout/page.ejs)
 - [layout/index.ejs](../../../layout/index.ejs)
 - [layout/archive.ejs](../../../layout/archive.ejs)
-- [source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
+- [source/js/runtime/extension-registry.js](../../../source/js/runtime/extension-registry.js)
 - [scripts/helpers/json_ld.js](../../../scripts/helpers/json_ld.js)
 
 </details>
@@ -238,7 +238,7 @@ v2 配置在 `profiles` 中为各页面 Profile 声明 `path` 和 `active_menu`�
 
 ## 页面导航机制
 
-主题使用普通整页导航（PJAX 已于 v1.35.0 移除，`source/js/plugins/pjax.js` 与 `layout/_plugins/pjax.ejs` 均已删除）。可选的 `features.link_prefetch`（flying_pages）在鼠标悬停时预加载站内链接，提升导航体验。
+主题默认对同集合且外壳兼容的页面执行局部导航，其余情况整页跳转；页面级初始化与 Extension 随正文替换重新挂载，文档级能力保留。详见[页面导航](../07-外部集成/pjax-navigation.md)。
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)、[_config.yml](../../../_config.yml)（`features.link_prefetch`）
 

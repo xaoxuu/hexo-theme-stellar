@@ -185,7 +185,7 @@ Post/Topic/Wiki/Notebook 的模型先解析 `services.contributors` 选中的 pr
 
 | 页面类型 | 是否显示分享 |
 |----------|--------------|
-| Wiki / Topic / Notebook | `render.article.footer.share` 非 null；Collection 默认关闭 |
+| Wiki / Topic / Notebook | `render.article.footer.share` 非 null；Wiki、Notebook 默认关闭，Topic 继承全局分享 |
 | `post` | `render.article.footer.share` 非 null；默认继承 `article.footer.share` |
 | 其他布局 | `page.share == true` |
 

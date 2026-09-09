@@ -40,7 +40,9 @@ Runtime Manifest 内置 Extension、Feature 和 selector 组件由 [contribution
 | `reveal` | enabled | 原生滚动入场动画 |
 | `math` | provider=null | KaTeX / MathJax provider |
 | `diagrams` | provider=null | Mermaid 图表 |
-| `card_hover` | disabled | 卡片光斑与倾斜 |
+| `card_hover` | spotlight=false、tilt=false | 光斑与倾斜独立控制 |
+| `partial_navigation` | enabled | 同集合兼容页面局部导航 |
+| `image_optimization` | enabled | 构建期图片尺寸与颜色增量预处理 |
 | `heti` | disabled | Heti 中文排版 |
 
 ```yaml
@@ -51,7 +53,8 @@ features:
   reveal:
     enabled: true
   card_hover:
-    enabled: true
+    spotlight: true
+    tilt: true
 ```
 
 Reveal 由主题内置的 `IntersectionObserver` 与 Web Animations API 实现，不请求第三方资源；只公开启用开关，动画距离、时长、错峰和缩放由主题统一维护。Fancybox 的实现固定，MathJax 只使用 v3。Mermaid 通过 `diagrams.provider: mermaid` 选择并使用官方样式。代码复制与自适应文字固定开启，不公开配置；AI Summary 已整体删除。
@@ -93,15 +96,15 @@ flowchart LR
   G --> I[mount root context]
 ```
 
-`layout/_partial/scripts/runtime.ejs` 只输出 `#stellar-runtime-config` JSON 和 `/js/runtime/index.js`。manifest 条目含 `id/module/config/when`；`when.selector` 未命中时不会 import adapter。`ExtensionRegistry.mount(root, context)` 顺序挂载，重复 mount 先释放旧实例，`unmount(root)` 逆序清理；import、mount、unmount 失败只派发 `stellar:extension-error`，不会阻断其它 Extension。Reveal 不预先隐藏 `.slide-up`，首次观察已处于视口内的元素也不播放动画，因此页面切换、Runtime 启动或 Extension 加载失败时正文都按默认样式直接显示。
+`layout/_partial/scripts/runtime.ejs` 只输出 `#stellar-runtime-config` JSON 和 `/js/runtime/index.js`。manifest 条目含 `id/module/config/when`；`when.selector` 未命中时不会 import adapter。`ExtensionRegistry.mount(root, context)` 顺序挂载，重复 mount 先释放旧实例，`unmount(root)` 逆序清理；import、mount、unmount 失败只派发 `stellar:extension-error`，不会阻断其它 Extension。Reveal 不在静态 CSS 中预先隐藏正文；其挂载后的临时隐藏由对应 Extension 负责恢复。
 
 旧 `document.write`、同步 utils 补载、`_pluginQueue`、`stellar.initPlugin` 与插件恢复看门狗已删除。`utils.js` 只保留迁移期 DOM/经典资源工具，不再拥有 Extension 注册或网络缓存算法。
 
 非首屏 SVG 占位符替换和 dropdown 浮层也使用原生 selector Extension：只有页面出现 `svg.icon[data-icon]` 或 `details.dropdown` 时，runtime 才动态导入对应模块并调用 `mount(root, context)`。Extension 卸载时会中止图标请求，或断开 dropdown observer、全局监听与待执行动画帧；两者不经过经典脚本或全局事件桥接，不新增公开配置，并保持原 DOM 与交互。
 
-Contribution 的 `kind` 描述产品归类，`entry.adapter` 描述运行时调用约定，两者不能互相替代。凡声明 `entry.adapter: feature` 的 descriptor（包括内部 component）在投影 Runtime Manifest 时都必须携带 `config.feature=<id>`，供共享 `feature.js` 分派；独立 adapter 不携带该分派字段。注册表测试统一枚举共享 adapter 条目，阻止 component 再次遗漏分派 ID。
+每个功能使用独立 ESM adapter，由 descriptor 直接登记入口。Extension 生命周期区分 document 与 page 作用域，支持局部导航的卸载和重挂载；异步资源、请求和 observer 随作用域取消或释放。
 
-核心防闪烁样式只服务确有加载占位需求的功能；Reveal 只对首次观察时位于视口外、之后滚入视口的元素临时施加 Web Animations API 动画，不需要隐藏态 CSS。Swiper、Fancybox、Mermaid 与评论样式在 DOM 命中时按需注入。
+Reveal 首次观察时保留视口内元素的直接显示，对视口外待入场元素临时隐藏；进入视口时恢复透明度并播放动画，卸载或初始化异常时恢复原始透明度。减少动态效果偏好下不执行动画。Swiper、Fancybox、Mermaid 与评论样式按需加载。
 
 Card Hover 使用独立 `card-hover.js` adapter 加载内置脚本并对当前 root 执行 `mountAll/unmountAll`。它的 ID、入口、asset、`.card-hover` 激活、Schema 与测试只在 descriptor 关联，不再出现于通用 Feature dispatch。
 
@@ -168,7 +171,7 @@ services:
   github_card:
     provider: github_readme_stats
     github_readme_stats:
-      endpoint: https://github-readme-stats.vercel.app
+      endpoint: https://github-stats-extended.vercel.app
 ```
 
 Site Info、Rating 与 Vote 默认选择 xaox.cc 公共实例对应的 provider，可覆盖选中参数袋内的自部署地址或以 `provider: null` 关闭；三者的预期远程失败完全静默并保留静态兜底。统一解析接缝只向消费方提供选中的参数袋。GitHub 地址统一为完整 URL。Runtime Manifest 携带主题内部注入且冻结的 cache/request policy；`createRequestClient()` 提供同 method+URL 并发去重、按 service TTL、超时重试、fresh 命中、stale 失败回退、200 KiB 单条限制和最旧条目淘汰。站点不再调节这些实现常量。客户端调用原生 `fetch` 而不替换 `window.fetch` 或 XHR 原型，并以 `stellar:request-start/end` 通知锚点稳定器。

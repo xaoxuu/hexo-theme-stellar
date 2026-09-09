@@ -1,64 +1,31 @@
-# Stellar 2.0.0-rc.2 发布候选核查
+# Stellar 2.0.0-rc.3 发布候选核查
 
-> 核查日期：2026-09-07
-> 发布基线：`2.0.0-rc.1`
-> 候选版本：`2.0.0-rc.2`（`main` 最终工作树）
-
-本页记录上一个公开 RC 到当前候选树的版本级净变化、迁移边界、文档覆盖与分发验证。它不累积逐任务记录，也不把已被最终实现替换的中间方案写成发布契约。
+> 核查日期：2026-09-10
+> 发布基线：`2.0.0-rc.2`
+> 候选版本：`2.0.0-rc.3`
 
 ## 基线与审计方法
 
-- 以 `git diff 2.0.0-rc.1..HEAD` 确定 5 个提交、34 个文件的最终差异，再沿默认配置、Schema、模型、模板、浏览器 Runtime 和 npm 包消费链核对。
-- 配置迁移只面向公开 `2.0.0-rc.1` 树中存在的输入；不为未公开的中间候选保留别名、双读或自动转换。
-- `_config.yml`、声明式 Schema、模型投影、`package.json` 和直接测试是机器契约；知识库和 CHANGELOG 解释当前用法与升级边界。
+以公开 rc.2 tag 到 main 最终树的差异为准，沿默认配置、Schema、模型、模板、浏览器消费者和直接测试核对；不把已被最终树替换的中间方案写成兼容契约。开始发布准备时工作区干净，main 与 origin/main 一致。
 
-## 净变化覆盖
+## 净变化与文档覆盖
 
-| 领域 | RC1 → RC2 最终状态 | 主要事实源 | 文档出口 |
-| --- | --- | --- | --- |
-| Profile 配置 | Notebook 列表、设置页和错误页专属配置收敛到 `profiles`；顶层根由 21 个收敛为 18 个 | `_config.yml`、`config-schema.js`、Page/Collection Model | 配置、安装、布局、Notebook 与错误页知识库 |
-| 404 页 | 插图并入 `profiles.error.image`；新增默认关闭、可局部覆盖 Provider 的评论区 | `layout/404.ejs`、评论模型、Runtime Manifest | 错误页知识库、CHANGELOG |
-| 可信注入 | 站点主题配置与页面 Front Matter 同时支持 `head_begin/head_end/body_begin/body_end` | Inject Schema、PageViewModel、head/shell 模板 | 配置与 Head/SEO 知识库、CHANGELOG |
-| npm 依赖 | `hexo-front-matter` 成为直接依赖，源码配置与 `stellar new note` 不再依赖宿主传递依赖 | `package.json`、`package-lock.json`、`source-config.js` | CHANGELOG；行为由 tarball 集成门禁覆盖 |
-| 项目入口与包元数据 | 中英文 README 同步重构，区分 npm、源码、Blueprint 与站点示例；增加包内图标并更新描述、关键词和作者字段 | `README.md`、`README_EN.md`、`assets/icon-v2-x512.webp`、`package.json` | README 本身、CHANGELOG |
+| 领域 | 最终行为与事实源 | 文档出口 |
+| --- | --- | --- |
+| 配置与资源 | `_config.yml`、配置 Schema、资源投影：sitemap、独立悬停开关、字体设置、第三方地址覆盖与 Artalk 配套资源 | 配置、排版、Extension、评论知识库及 CHANGELOG |
+| 导航与生命周期 | `partial-navigation.js`、ExtensionRegistry：同集合签名匹配、页面卸载／挂载、历史恢复与整页回退 | 页面导航、Extension 知识库及 CHANGELOG |
+| 图片 | `image-metadata.js`、CLI、图片过滤器与 runtime：增量持久缓存、尺寸与颜色、懒加载及错误占位 | 图片处理、性能知识库及 CHANGELOG |
+| 内容与构建 | Collection Pipeline、models、PageViewModel registry：共享模型、构建隔离、Topic 分享、作者聚合、上下篇 | 内容 Schema、文章页脚、性能知识库及 CHANGELOG |
+| 链接与搜索 | md_link、siteinfo、mdrender、comments、local-search：图标增强与分批结果 | 数据服务、搜索知识库及 CHANGELOG |
+| 样式与媒体 | Stylus、模板、TOC、Reveal：外观、移动布局、图片比例及入场恢复 | CHANGELOG；具体视觉值不作为长期文档契约 |
+| 工程 | package.json、包集成与性能检查：Sharp 依赖、资源统计与维护门禁收敛 | 安装、性能知识库；工程规范以 AGENTS.md 与 CI 为准 |
 
-## 迁移覆盖
+## 升级边界
 
-`2.0.0-rc.1` 站点升级时需要进行以下直接移动或重命名：
+rc.2 的页脚 sections 迁移为 sitemap，条目对象转为 Markdown 字符串；卡片悬停 enabled 迁移为 spotlight/tilt 两个开关。旧输入不双读、不自动转换，升级方法在 CHANGELOG 给出。新增导航与图片预处理默认启用，可分别关闭。Topic 分享继承全局，Wiki 与 Notebook 保持关闭默认。
 
-| RC1 配置 | RC2 配置 |
-| --- | --- |
-| `notebook` | `profiles.notebook` |
-| `settings.about` | `profiles.settings.about` |
-| `error_page.image` | `profiles.error.image` |
-| `profiles.notebook_index` | `profiles.notebooks` |
-| `profiles.note_index` | `profiles.notebook` |
+## 验证
 
-`profiles.note` 仍表示 Note 内容页，与新的 Notebook 列表页 `profiles.notebook` 是两个不同 Profile。RC1 字段不别名、不双读、不自动转换；结构化 Schema 会拒绝已移除路径，CHANGELOG 与配置知识库给出人工迁移目标。
+发布预演执行 `npm run release:dry -- 2.0.0-rc.3`，在目标版本文件写入后运行完整 `release:check`：lint、单元测试、复用、贡献描述符、四场景 npm tarball 安装与 Doctor／生成／压缩／Runtime ESM 保真、同运行时性能比较及知识库核查。预演完成后恢复受管版本文件；正式发布再次基于最终文件运行同一门禁。
 
-## 文档覆盖
-
-- `CHANGELOG.md` 仅陈述 RC1 到 RC2 的用户可见净变化与升级注意。
-- 配置、安装、总览、页面路由、Notebook 和错误页知识库使用当前 18 个顶层根、13 个 Profile 及新路径。
-- Head/SEO 知识库记录四个注入位置、字符串类型、站点在前／页面在后的合并顺序以及可信 HTML 边界。
-- README 中英文内容保持同步，Blueprint 安装与站点示例保持独立信息架构。
-
-## 验证命令
-
-```sh
-npm run release:check
-npm run release:dry -- 2.0.0-rc.2
-```
-
-发布前以最终工作树和目标版本重跑同一 F3 门禁。本轮已取得的直接证据：
-
-- lint、207 项单元测试、21 项 Contribution descriptor 和 Agent 文档引用检查通过。
-- npm tarball 安装到 Post/Topic、Notebook、Wiki 和默认配置四个隔离站点；Doctor、生成、路由、搜索、HTTP 预览、HTML/CSS/JS 压缩与 Runtime ESM 保真通过。
-- 首屏必载脚本相对 `1.44.0` 基线从 gzip 34,937 字节降为 22,601 字节，降幅 35.3093%，通过 30% 性能门槛。
-- 知识库核查覆盖 62 页、936 个链接和 148 个配置引用。
-
-## 发布维护
-
-- `2.0.0-rc.2` 版本元数据由发布流程原子同步到 `package.json`、`package-lock.json` 与安装知识库；任一来源不一致或工作区存在无关改动时都在写入前失败。
-- RC 使用 npm `rc` dist-tag，不替换无版本安装的 `latest` 入口。tag 使用不带 `v` 的纯版本号。
-- 新增能力必须先进入对应 Schema／注册表的唯一事实源，再更新知识库与公开 Reference；不维护手写镜像清单。
+本轮发布预演已通过：236 项单元测试、23 项 Contribution descriptor、四场景 npm tarball 安装与 Doctor／生成／HTTP 200／压缩／ESM 保真，以及性能资源对比和知识库检查。首次预演因本地缺少已声明的 Sharp 依赖中断，执行 npm ci 后原 7 项图片测试及完整预演均通过，无源码修补。性能报告为 comparisonOnly，不使用百分比降幅硬阈值。正式发布由 `npm run release -- 2.0.0-rc.3 --yes` 推送 main 与 npm，再核对 Actions、npm rc dist-tag、tag 与 GitHub Release。

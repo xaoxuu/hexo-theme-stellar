@@ -41,7 +41,7 @@ services:
   github_card:
     provider: github_readme_stats
     github_readme_stats:
-      endpoint: https://github-readme-stats.vercel.app
+      endpoint: https://github-stats-extended.vercel.app
 ```
 
 YAML 解析后字段转为 camelCase。标签、PageViewModel、模板和 Runtime Manifest 先通过统一接缝解析选中的 provider，只消费该参数袋；未选中的 provider 配置不会投影给浏览器。每个 provider 参数袋使用封闭 Schema，未知字段会被拒绝。
@@ -110,3 +110,7 @@ request/cache 是主题运行时实现策略，由 `scripts/lib/internal-constan
 - 第三方响应与 CORS 由端点提供方负责；Site Info、Rating 与 Vote 在预期远程失败时完全静默并保持静态兜底或撤销失败交互，其它服务沿用各自的失败策略。
 
 相关源码：[scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)、[scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/extensions/services.js](../../../source/js/runtime/extensions/services.js)、[source/js/runtime/request-cache.js](../../../source/js/runtime/request-cache.js)、[source/js/runtime/legacy-request-adapter.js](../../../source/js/runtime/legacy-request-adapter.js)。
+
+## 行内链接与站点图标
+
+普通 Markdown 文本链接、文章参考链接、远程 Markdown 以及评论正文链接共享站点信息增强。行内链接优先使用响应的 `favicon`，普通链接卡片和站点卡片优先使用 `appicon`，缺失时复用 `icon`；rich 链接卡片优先 favicon。关闭服务时保留默认链接图标，行内请求失败显示断链图标，图标不强制圆形裁剪。相关源码：[md_link.js](../../../scripts/filters/lib/md_link.js)、[siteinfo.js](../../../source/js/services/siteinfo.js)。

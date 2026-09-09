@@ -20,13 +20,13 @@ tags:
 - [LICENSE](../../../LICENSE)
 - [README.md](../../../README.md)
 - [_config.yml](../../../_config.yml)
-- [source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
+- [source/js/runtime/extensions/lazy-loading.js](../../../source/js/runtime/extensions/lazy-loading.js)
 - [layout/_partial/head.ejs](../../../layout/_partial/head.ejs)
 - [layout/layout.ejs](../../../layout/layout.ejs)
 - [package.json](../../../package.json)
 - [scripts/filters/lib/img_lazyload.js](../../../scripts/filters/lib/img_lazyload.js)
-- [scripts/events/lib/get_image_ratios.js](../../../scripts/events/lib/get_image_ratios.js)
-- [scripts/events/lib/fix_image_tags.js](../../../scripts/events/lib/fix_image_tags.js)
+- [scripts/lib/image-metadata.js](../../../scripts/lib/image-metadata.js)
+- [scripts/lib/image-metadata.js](../../../scripts/lib/image-metadata.js)
 - [source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)
 - [source/css/plugins/](../../../source/css/plugins/)
 - [source/css/comments/](../../../source/css/comments/)
@@ -57,7 +57,7 @@ flowchart TD
   A --> G["search.local"]
 
   B --> B1["scripts/filters/lib/img_lazyload.js"]
-  B --> B2["source/js/runtime/extensions/feature.js"]
+  B --> B2["source/js/runtime/extensions/lazy-loading.js"]
   B --> B3["source/css/_plugins/lazyload.styl"]
 
   D --> D1["flying-pages CDN script"]
@@ -82,7 +82,7 @@ flowchart TD
 | 层 | 文件 | 职责 |
 |----|------|------|
 | 构建过滤器 | `scripts/filters/lib/img_lazyload.js` | 在渲染 HTML 中把 `src` 重写为 `data-src` |
-| 运行时脚本 | `source/js/runtime/extensions/feature.js` | 加载 `vanilla-lazyload` 并配置回调 |
+| 运行时脚本 | `source/js/runtime/extensions/lazy-loading.js` | 加载 `vanilla-lazyload` 并配置回调 |
 | CSS 过渡 | `source/css/_plugins/lazyload.styl` | 定义占位与淡入/模糊进入动画 |
 
 **懒加载流水线**
@@ -92,7 +92,7 @@ sequenceDiagram
   participant "Hexo Build" as build
   participant "img_lazyload.js filter" as filter
   participant "Browser" as browser
-  participant "feature.js script" as script
+  participant "lazy-loading.js script" as script
   participant "vanilla-lazyload" as lib
 
   build->>filter: "HTML post-render"
@@ -107,7 +107,7 @@ sequenceDiagram
   lib->>browser: "callback_loaded: add class loaded"
 ```
 
-**参考源码**：[scripts/filters/lib/img_lazyload.js](../../../scripts/filters/lib/img_lazyload.js)、[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
+**参考源码**：[scripts/filters/lib/img_lazyload.js](../../../scripts/filters/lib/img_lazyload.js)、[source/js/runtime/extensions/lazy-loading.js](../../../source/js/runtime/extensions/lazy-loading.js)
 
 ### 配置
 
@@ -137,9 +137,9 @@ features:
 
 `window.wrapLazyloadImages(container)` 辅助函数供动态生成的内容（如数据服务小部件）使用，把普通 `<img src>` 即时转换为懒加载兼容标记，并调用 `lazyLoadInstance.update()` 重新扫描。
 
-`feature.js` 同时内置 MutationObserver 兜底：检测到新增 `.lazy` 元素后自动调用 `lazyLoadInstance.update()` 重新注册，因此直接插入懒加载标记（`<img class="lazy" data-src="…">`）的第三方脚本无需手动触发更新。
+`lazy-loading.js` 同时内置 MutationObserver 兜底：检测到新增 `.lazy` 元素后自动调用 `lazyLoadInstance.update()` 重新注册，因此直接插入懒加载标记（`<img class="lazy" data-src="…">`）的第三方脚本无需手动触发更新。
 
-**参考源码**：[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
+**参考源码**：[source/js/runtime/extensions/lazy-loading.js](../../../source/js/runtime/extensions/lazy-loading.js)
 
 ---
 
@@ -161,51 +161,7 @@ features:
 
 ## 图片宽高比预缓存
 
-为防止懒加载图片出现时布局偏移（CLS），主题可在构建期预计算并把 `aspect-ratio` 值直接烘焙进 `{% image %}` 标签调用。
-
-### 两阶段流水线
-
-**图片比例预缓存流水线**
-
-```mermaid
-flowchart LR
-  A["source/**/*.md files"] --> B["get_image_ratios.js\n(Hexo event)"]
-  B --> C{".cache/image-ratios.json\nexists?"}
-  C -- "No" --> D["probe-image-size\nHTTP HEAD request per URL"]
-  C -- "Yes" --> E["incremental: probe only\nnew/changed URLs"]
-  D --> F[".cache/image-ratios.json\n{ file: { url: 'W/H' } }"]
-  E --> F
-  F --> G["fix_image_tags.js\n(Hexo event)"]
-  G --> H["Rewrites {% image url %}\nto {% image url ratio:W/H %}"]
-  H --> A
-```
-
-**参考源码**：[scripts/events/lib/get_image_ratios.js](../../../scripts/events/lib/get_image_ratios.js)、[scripts/events/lib/fix_image_tags.js](../../../scripts/events/lib/fix_image_tags.js)
-
-### 阶段 1——`get_image_ratios.js`
-
-- 用 `glob` 扫描全部 `source/**/*.md` 文件
-- 用正则解析 `{% image <url> %}` 标签
-- 标签已含 `ratio:` 时直接存入缓存，不做网络访问
-- 否则用 `probe-image-size` 经 HTTP 获取图片尺寸
-- 每次探测后增量写入被 gitignore 忽略的 scripts 缓存目录中的 image-ratios.json，避免中断丢数据
-- 每次运行清理不再被 Markdown 引用的陈旧缓存条目
-
-**参考源码**：[scripts/events/lib/get_image_ratios.js](../../../scripts/events/lib/get_image_ratios.js)
-
-### 阶段 2——`fix_image_tags.js`
-
-- 读取上述运行时生成的 image-ratios.json 缓存
-- 对每个无 `ratio:` 参数的 `{% image %}` 标签原位注入 `ratio:W/H`
-- 把修改后的 Markdown 文件写回磁盘
-
-**参考源码**：[scripts/events/lib/fix_image_tags.js](../../../scripts/events/lib/fix_image_tags.js)
-
-### 消费者
-
-渲染时 `image` 标签插件读取 `ratio` 参数，在包装的 `.image-bg` 元素上设置 `aspect-ratio: W/H`。这锁定图片加载前的容器高度，消除垂直布局偏移。
-
----
+图片尺寸与平均色由 [image-metadata.js](../../../scripts/lib/image-metadata.js) 在生成后增量提取，写入站点持久缓存并补全同一批 HTML。首次处理远程图片会增加构建时间，后续复用完整条目；失败采用延迟重试，不阻断页面生成。详见[图片处理](../07-外部集成/lazy-loading-images.md)。
 
 ## 搜索数据缓存
 
@@ -232,7 +188,7 @@ services:
   github_card:
     provider: github_readme_stats
     github_readme_stats:
-      endpoint: https://github-readme-stats.vercel.app
+      endpoint: https://github-stats-extended.vercel.app
 ```
 
 **参考源码**：[_config.yml](../../../_config.yml)
@@ -272,47 +228,25 @@ preconnect:
 
 ## 构建期性能（generate 阶段）
 
-以主工程 xaoxuu.com（120 篇 md / 8121 行，2026-08-15）实测：`hexo generate` 约 3.0s，按包归因如下。
+Collection Pipeline 复用每个集合的规范模型，PageViewModel registry 在单次构建内缓存页面投影，归档模板复用文章模型。缓存按 Hexo 实例与构建周期隔离，避免多站点和增量构建串用旧状态。源码配置校验保留在入口，避免每次模板访问重复执行完整校验。
 
-| 包 / 模块 | 占比 | 说明 |
-|-----------|------|------|
-| core/node | ~24% | 模块加载、YAML 等一次性开销 |
-| hexo-autonofollow | ~19% | 每页 cheerio 整页解析 + 序列化（站点依赖，非主题） |
-| stylus | ~18% | 主题 CSS 编译（一次性） |
-| themes/stellar | ~9% | 模板渲染 + 构建期脚本 |
-| hexo 内核 | ~8% | EJS partial / 渲染框架 |
-| highlight.js / marked | ~6.5% | 内容代码高亮与 Markdown 分词 |
-
-主题构建期脚本已做以下优化，全部保持输出逐字节一致：
-
-- **wiki 文档树**（`scripts/lib/doc_tree.js`）：页面按 `wiki` / `path_key` 单遍 `Map` 分组，替代旧实现的 O(W·P) `filter`/`some` 与 O(S·K·P) sections 组装；`all_tags`/`relatedItems` 用 `Set`/`Map` 去重，输出语义不变。
-- **笔记本系统**（`scripts/lib/collection-pipeline/adapters/notebook.js` 与 `scripts/events/lib/notebooks.js`）：Collection Pipeline 单遍归属分组，每个 Notebook 只建立一份规范 `CollectionModel`，再线性聚合标签与列表。
-- **内容过滤器短路**：`md_table` 在内容不含 `<table` 时跳过 cheerio 解析；`img_lazyload` / `img_onerror` 在无 `<img` 页面直接返回。
-- **搜索生成**：索引只读取 `visibility.searchable`，不再维护第二套路由排除规则；`related_posts` helper 移除未使用的全量 `posts.filter` 死代码。
-
-本站当前规模下 generate 耗时收益约 0.05–0.2s（主题脚本占比约 9%），主要价值是内容规模增大时复杂度由 O(N·M) 降为 O(N+M) 并减少 GC；更大单项收益（hexo-autonofollow ~0.5s、stylus ~0.55s、`gulp minify` ~5.5s）属站点构建配置或依赖层面，未纳入本次主题改动，作为后续可选方向。
-
----
+性能判断使用同一运行时、相同输入和后处理范围；图片冷缓存网络预处理应与已有元数据的重复构建分别统计，不以历史站点耗时代表当前版本。
 
 ## 候选包首屏核心 JS 门禁
 
-性能检查用固定博客输入分别构建公开基线 tag 与当前 npm tarball；基线和降幅阈值由 [ci/check-performance.js](../../../ci/check-performance.js) 维护。统计口径是首页无条件输出的本地 script、可执行 inline script 以及 ESM 入口的静态 import；dynamic import、selector 未命中的 Extension 和第三方资源不计入核心集合。基线与候选包在同一 Node/zlib 运行时中使用 gzip level 9 压缩，比较相对降幅而不跨运行时比较绝对字节数。
+`npm run performance:check` 在同一 Node/zlib 运行时，用固定博客输入构建公开基线与当前 npm tarball，报告本地资源清单。分别列出直接 JS、静态依赖、可达动态 import 与声明资源，以及 CSS、inline script 和 HTML。动态可达不等于延后加载；inline 已包含在 HTML 中，不能再次相加。gzip 使用每资源压缩估计，第三方网络资源不纳入本地清单。
 
-`npm run performance:check` 重新构建两边，向标准输出提供资源清单、体积和降幅，未达到阈值时失败。仓库不保存当前候选的生成报告快照，也不要求实现变化后重写测量结果。该检查属于性能专项与 `release:check`，普通 `npm run check` 不运行性能构建；命令组合以 [package.json](../../../package.json) 为准。
-
-Deferred Icons 与 Dropdown 是 Runtime Manifest 中的 `svg.icon[data-icon]` / `details.dropdown` selector Extension；命中页面直接动态导入原生 ESM 模块，未命中页面不支付下载与执行成本。含糊的 `/js/theme.js` 也已退出核心集合：配色选择能力更名为 Color Scheme Extension，默认关闭，只有显式启用时才作为 dynamic import 请求，因此默认基线不再包含该资源。
-
-**参考源码**：[ci/check-performance.js](../../../ci/check-performance.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[layout/_partial/scripts.ejs](../../../layout/_partial/scripts.ejs)、[source/js/runtime/extensions/feature.js](../../../source/js/runtime/extensions/feature.js)
+当前报告为 comparisonOnly，不以某个百分比降幅阻断正常修改；构建或资源收集失败仍使检查失败。检查属于性能专项和 `release:check`，普通 `npm run check` 不运行。权威实现见 [check-performance.js](../../../ci/check-performance.js)。
 
 ## 汇总表
 
 | 特性 | 配置键 | 默认 | 主要文件 |
 |------|--------|------|----------|
-| 图片懒加载 | 内置 Feature | 启用 | `img_lazyload.js`、`feature.js`、`lazyload.styl` |
+| 图片懒加载 | 内置 Feature | 启用 | `img_lazyload.js`、`lazy-loading.js`、`lazyload.styl` |
 | 懒加载过渡 | `features.lazy_loading.transition` | `fade` | `lazyload.styl` |
 | 链接预加载 | `features.link_prefetch.enabled` | `true`（flying_pages） | 内部资源注册表 |
 | 配色选择器 | `features.color_scheme_switch.enabled` | `false` | `color-scheme-switch.js`（按需） |
-| 图片比例缓存 | Hexo 事件 | 自动 | `get_image_ratios.js`、`fix_image_tags.js` |
+| 图片比例缓存 | Hexo 事件 | 自动 | `image-metadata.js`、`image-metadata.js` |
 | 搜索缓存 | `search.local.cache_ttl_seconds` | `localStorage`（TTL 默认 1 天） | `local-search.js`（客户端） |
 | GitHub URL | `services.github` | GitHub 默认 | 数据服务脚本 |
 | DNS preconnect | `preconnect` | 空 | `head.ejs` |

@@ -75,7 +75,7 @@ Region 对象的 `widgets` 数组只保存可移动 Widget 引用。Brand 与 Me
 
 Collection 字段按实际消费者收窄：Wiki 只接受 `listing.priority/order`、`navigation.tree` 与 `hero`；Topic 只接受 `listing.excerpt_length/sort` 和 `route.start`；Notebook 只接受 `listing.order/excerpt_length/per_page/sort`。`route.path` 和 `visibility` 对三类 Collection 都有效。Collection `visibility` 先作为成员 Page 默认，然后由 Page Front Matter 覆盖；它不删除详情路由。Page 的 `listing.priority` 只接受 Post、Topic 与 Notebook，归属可推导的页面会先解析归属再校验。
 
-Footer 也遵循共享 Collection 契约：许可协议默认继承 `article.footer.license`，分享在 Wiki、Topic、Notebook Collection 中默认关闭。Collection 或 Page 可用 `true` 显式恢复全局 Article 值，也可用具体值覆盖。
+Footer 也遵循共享 Collection 契约：许可协议默认继承 `article.footer.license`，分享在 Wiki、Notebook Collection 中默认关闭，Topic 继承全局 Article 分享配置。Collection 或 Page 可用 `true` 显式恢复全局 Article 值，也可用具体值覆盖。
 
 Widget 的位置能力由类型 descriptor 声明，不允许实例扩大能力。能力不匹配只产生 warning 并跳过实例；Schema 错误、未知字段和旧字段则是构建错误。
 
@@ -93,3 +93,7 @@ Doctor 只为 1.44.0 已发布的 Collection 与 Front Matter 字段输出来源
 - Region 级联：`scripts/lib/regions.js`
 - ViewModel：`scripts/lib/models/index.js`
 - Doctor：`scripts/lib/doctor.js`
+
+## 诊断与恢复
+
+Doctor 与构建对普通字段使用恢复解析，对不适用的表现参数警告并忽略；缺少有效集合显示名时警告并使用 Collection ID。根结构或归属冲突仍属于硬错误。解析与能力验证见 [content-config.js](../../../scripts/lib/content-config.js)，Doctor 把 warning 与 error 分开报告。

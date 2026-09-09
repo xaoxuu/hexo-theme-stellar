@@ -69,3 +69,7 @@ flowchart LR
 ```
 
 相关源码：[_config.yml](../../../_config.yml)、[scripts/generators/search.js](../../../scripts/generators/search.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[source/js/runtime/extensions/search.js](../../../source/js/runtime/extensions/search.js)、[source/js/search/local-search.js](../../../source/js/search/local-search.js)、[source/js/search/algolia-search.js](../../../source/js/search/algolia-search.js)。
+
+## 搜索结果展示
+
+本地搜索按章节匹配并跳转到对应锚点，标题命中且无章节结果时显示页面级结果。查询和渲染分批执行；每次追加最多 50 条，支持加载更多并在全部显示后提示没有更多结果。切换查询或卸载时取消旧任务，结果摘要与高亮使用当前搜索词。

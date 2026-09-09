@@ -677,3 +677,7 @@ ul, ol
 | 代码块字号 | `appearance.typography.font_size.code_block` | `$fs-codeblock` | `font-size` | 否 |
 
 排版系统优先保证一致性与比例关系。标题与变体字号都从 `--fs-root` 派生，基础配置变化或移动端增加 2px 时整套字号体系协调缩放。story 内容区在当前基准上额外增加 2px。
+
+## 字体平滑与字重映射
+
+`appearance.typography.font_smoothing` 支持 `auto/none/antialiased`，默认 `antialiased`。`appearance.typography.font_weight` 将 100–900 的设计字重映射到字体实际字重，目标范围 1–1000，映射只执行一次。例如 `font_weight: {500: 600}` 将设计中的 500 映射为 600，其余保留默认值。共享 Stylus 变量由 [typography.styl](../../../source/css/_defines/typography.styl) 消费。

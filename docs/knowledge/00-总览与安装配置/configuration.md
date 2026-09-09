@@ -168,7 +168,7 @@ $theme-color = hexo-config('appearance.colors.primary')
 
 ## 页脚配置
 
-`leftbar.footer.actions` 控制 Leftbar 操作；根级 `footer.sections` 与 `footer.content` 控制主内容页脚分栏和 Markdown 文本。显式空数组或空字符串可以关闭对应区域。
+`leftbar.footer.actions` 控制 Leftbar 操作；根级 `footer.sitemap` 与 `footer.content` 控制主内容页脚分栏和 Markdown 文本。显式空数组或空字符串可以关闭对应区域。
 
 ## 消费边界
 
@@ -192,3 +192,15 @@ const service = hexo.stellar.config.services.siteInfo;
 - [`scripts/lib/config-schema.js`](../../../scripts/lib/config-schema.js)：加载、合并、验证、投影与冻结
 - [`scripts/schema/schema-utils.js`](../../../scripts/schema/schema-utils.js)：Schema 共享的深度冻结与字段路径投影
 - [`scripts/schema/content-config-rules.js`](../../../scripts/schema/content-config-rules.js)：Collection / Front Matter 独立规则
+
+## RC3 页脚配置
+
+主内容页脚使用 `footer.sitemap`，每组包含 `title` 和 Markdown 字符串数组 `items`；默认空数组不显示分栏。RC2 的 sections 分栏须改名为 sitemap，并将每个 title/url 对象转换为 Markdown 链接字符串。默认页脚正文增加 CC BY-NC-SA 4.0 说明，可通过 `footer.content` 覆盖。
+
+```yaml
+footer:
+  sitemap:
+    - title: 博客
+      items:
+        - '[近期发布](/)'
+```

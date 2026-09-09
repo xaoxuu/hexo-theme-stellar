@@ -72,7 +72,7 @@ appearance:
 
 ## Card Hover 与媒体
 
-Minimal 本身不启用 Spotlight 或 Tilt。`features.card_hover.enabled` 是独立的显式 Feature：保持关闭时只使用 Editorial 交互；使用方主动启用后，Spotlight/Tilt 可以叠加到声明了 Card Hover 能力的组件上。
+Minimal 本身不启用 Spotlight 或 Tilt。`features.card_hover.spotlight` / `features.card_hover.tilt` 是独立的显式 Feature：保持关闭时只使用 Editorial 交互；使用方主动启用后，Spotlight/Tilt 可以叠加到声明了 Card Hover 能力的组件上。
 
 图片是内容而不是装饰表面，因此普通封面和 Pin Slider 保留各组件默认的圆角裁切、明暗处理和轻微二维缩放。卡片外层不得因此恢复阴影、上浮或背景填充。
 
