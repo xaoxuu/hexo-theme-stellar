@@ -111,11 +111,11 @@ table a:not([class])
   margin: 1rem
 .listing-nav__surface,
 .listing-nav__surface.is-pinned
-  margin: 0
+  margin: .5rem 1rem
   border: 0
   border-radius: 0
   border-bottom: 1px dashed var(--block-border)
-  padding: 1rem 0
+  padding: .5rem 0
   background: transparent
   box-shadow: none
   backdrop-filter: none
@@ -206,12 +206,17 @@ table a:not([class])
 .post-list #cats a.cat:hover,
 .post-list #cats a.cat:focus-visible,
 .page-footer .sitemap .sitemap-group > a:hover,
-.page-footer .sitemap .sitemap-group > a:focus-visible,
-.page-footer.footnote .text a:hover,
-.page-footer.footnote .text a:focus-visible
+.page-footer .sitemap .sitemap-group > a:focus-visible
   appearance-editorial-underline-active()
   border: 0
   background-color: transparent
+
+.page-footer.footnote .text a
+  text-decoration-color: var(--link)
+  &:hover,
+  &:focus-visible
+    color: var(--link)
+    background-color: transparent
 
 .post-list #tags a.tag,
 .article-tags a.tag
@@ -235,14 +240,6 @@ table a:not([class])
 
 .post-list.post .post-card.post.photo
   border-radius: $border-card-l
-.post-list.post .post-card
-  border-radius: 0
-
-.post-list.post .post-card-wrap
-  margin: 1rem 0
-  padding-bottom: 1rem
-  border-radius: 0
-  border-bottom: 1px dashed var(--block-border)
 
 .post-list .post-card .excerpt
   margin: .5rem 0
@@ -254,10 +251,6 @@ table a:not([class])
   background-color: transparent
   background-image: none
   box-shadow: none
-
-.post-list:not(.topic) .post-card:not(.photo) .md-text
-  padding: 0
-  margin: 0
 
 // 图片卡与复合卡保留内容裁切，只以同色边框响应，不产生上浮阴影。
 .post-list .post-card.photo,

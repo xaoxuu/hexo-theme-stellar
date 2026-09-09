@@ -63,25 +63,14 @@ const aboutItem = item("object", {
   }
 });
 
-const footerSectionItem = item("object", {
-  defaultValue: {},
-  normalizer: "object",
-  sealed: true,
-  requiredProperties: ["title", "url"],
-  properties: {
-    title: item("string", { defaultValue: "", validator: "non_empty_string" }),
-    url: item("string", { defaultValue: "", validator: "safe_navigation_url" })
-  }
-});
-
-const footerSection = item("object", {
+const footerSitemapGroup = item("object", {
   defaultValue: {},
   normalizer: "object",
   sealed: true,
   requiredProperties: ["title", "items"],
   properties: {
     title: item("string", { defaultValue: "", validator: "non_empty_string" }),
-    items: item("array", { defaultValue: [], normalizer: "array", items: footerSectionItem })
+    items: item("array", { defaultValue: [], normalizer: "array", items: item("string", { defaultValue: "" }) })
   }
 });
 
@@ -154,7 +143,7 @@ const inheritedRegionBrand = properties => ({
 });
 
 const CONFIG_RULES = Object.freeze([
-  ["footer.sections", { items: footerSection }],
+  ["footer.sitemap", { items: footerSitemapGroup }],
   ["footer.content", { normalizer: "trusted_text" }],
 
   ["topbar.enabled", { type: ["boolean"] }],

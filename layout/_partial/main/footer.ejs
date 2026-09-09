@@ -6,18 +6,18 @@ function layoutDiv() {
   el += `<footer class="page-footer${scrollreveal(' ')} footnote">`
   el += '<hr>'
   // sitemap
-  var sections = siteFooter.sections
-  if (sections.length > 0) {
-    var count = sections.length
+  var sitemap = siteFooter.sitemap
+  if (sitemap.length > 0) {
+    var count = sitemap.length
     if ([6].includes(count)) {
       count = 3
     } else if ([7,8].includes(count)) {
       count = 4
     } else {
-      count = Math.min(sections.length, 5)
+      count = Math.min(sitemap.length, 5)
     }
     el += `<div class="sitemap" style="column-count:${count};">`
-    for (var group of sections) {
+    for (var group of sitemap) {
       var title = escape_html(group.title)
       var items = group.items
       if (items == undefined || items.length == 0) {
@@ -25,9 +25,9 @@ function layoutDiv() {
       }
       el += '<div class="sitemap-group">'
       el += '<span class="fs15">' + title + '</span>'
-      items.forEach((item, i) => {
-        el += '<a href="' + escape_html(url_for(item.url)) + '">'
-        el += escape_html(__(item.title))
+      items.forEach((item) => {
+        el += '<a href="' + escape_html(url_for(md_link(item))) + '">'
+        el += __(md_text(item))
         el += '</a>'
       });
       el += '</div>'
