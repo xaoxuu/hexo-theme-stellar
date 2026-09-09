@@ -89,7 +89,7 @@ function layoutSubtitle() {
 
 function layoutIcon() {
   if (banner.avatar?.length > 0) {
-    return `<img class="lazy avatar" loading="eager" src="${banner.avatar}">`
+    return `<img class="lazy avatar" data-src="${banner.avatar}">`
   } else {
     return ''
   }
@@ -139,7 +139,7 @@ function layoutDiv() {
   el += `<div class="article-banner-wrap${scrollreveal(' ')}">`
   el += `<div class="article banner top"${bannerStyle}>`
   if (banner.image?.length > 0) {
-    el += `<img class="lazy bg" loading="eager" src="${banner.image}">`
+    el += `<img class="lazy bg" data-src="${banner.image}">`
     maskHtml = `<div class="banner-mask banner-mask-top" aria-hidden="true"></div><div class="banner-mask banner-mask-bottom" aria-hidden="true"></div>`
   }
   el += `

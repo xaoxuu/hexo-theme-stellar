@@ -17,7 +17,7 @@
             var cell = '<div class="timenode" index="' + i + '">';
             cell += '<div class="header">';
             cell += '<div class="user-info">';
-            cell += window.stellarImages.html(item.avatar || default_avatar, default_avatar);
+            cell += '<img src="' + (item.avatar || default_avatar) + '" onerror="javascript:this.src=\'' + default_avatar + '\';">';
             cell += '<span>' + item.nick + '</span>';
             cell += '</div>';
             cell += '<span>' + new Date(item.time).toLocaleString() + '</span>';

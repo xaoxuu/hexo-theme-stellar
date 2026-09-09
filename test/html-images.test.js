@@ -4,14 +4,14 @@ const { test } = require("node:test");
 const assert = require("node:assert/strict");
 const { load } = require("cheerio");
 const { mapImageTags } = require("../scripts/lib/html-images");
+const { processSite: imageErrors } = require("../scripts/filters/lib/img_onerror");
 const { lazyProcess } = require("../scripts/filters/lib/img_lazyload");
 const { processSite: processImages } = require("../scripts/filters/lib/img");
 
 test("共享图片扫描只变换真实标签并保留其他 HTML 原文", () => {
   const inert = '<script>const html = `<img src="script.png">`;</script>'
     + '<style>.x::after { content: \'<img src="style.png">\'; }</style>'
-    + '<!-- <img src="comment.png"> -->'
-    + '<noscript><img src="fallback.png"></noscript>';
+    + '<!-- <img src="comment.png"> -->';
   const tags = [];
   const html = inert + '<IMG\n src="real.png" alt="a > b"/><p>tail</p>';
   const output = mapImageTags(html, tag => {
@@ -22,7 +22,42 @@ test("共享图片扫描只变换真实标签并保留其他 HTML 原文", () =>
   assert.equal(output, inert + '<img src="replacement.png"><p>tail</p>');
 });
 
-test("图片处理入口保留自定义脚本且不插入可执行配置", () => {
+test("图片失败处理正确编码配置值且不损坏标签属性", () => {
+  const fallback = 'data:image/svg+xml,<svg data-value="quotes & symbols"/>\n';
+  const ctx = { utils: { iconData: () => fallback } };
+  for (const html of [
+    '<img src="real.png" alt="a &amp; b"/>',
+    "<IMG no-lazy='' SRC='real.png' >",
+    '<img src=real.png>',
+    '<img src="data:image/png;base64,placeholder" data-src="real.png">'
+  ]) {
+    const output = imageErrors.call(ctx, html);
+    const image = load(output)("img");
+    assert.equal(image.length, 1);
+    const handler = image.attr("onerror");
+    const target = {};
+    Function(handler).call(target);
+    assert.equal(target.src, fallback);
+    assert.equal(imageErrors.call(ctx, output), output);
+  }
+});
+
+test("图片失败过滤器保留自定义处理器与内嵌资源", () => {
+  const ctx = { utils: { iconData: () => "data:image/svg+xml,fallback" } };
+  for (const html of [
+    '<img src="real.png" onerror="custom()">',
+    '<img src="data:image/svg+xml,inline">',
+    '<img alt="no source">',
+    '<script>const image = \'<img src="real.png">\';</script>',
+    '<!-- <img src="real.png"> -->',
+    null,
+    undefined
+  ]) {
+    assert.equal(imageErrors.call(ctx, html), html);
+  }
+});
+
+test("单次图片扫描与原双过滤器顺序保持完全一致", () => {
   const ctx = { utils: { iconData: () => "data:image/svg+xml,fallback" } };
   const html = '<script>const x=`<img src="fake.png">`</script>'
     + '<style>.x{content:\'<img src="fake.png">\'}</style>'
@@ -31,17 +66,6 @@ test("图片处理入口保留自定义脚本且不插入可执行配置", () =>
     + '<img no-lazy src=plain.png>'
     + '<img class="custom" src="custom.png" onerror="custom()"/>'
     + '<img src="data:image/png;base64,inline" data-src="deferred.png">';
-  const expected = lazyProcess(html);
-  assert.equal(load(expected)('img[onerror]').length, 1);
-  assert.equal(load(expected)('img[onerror]').attr('onerror'), 'custom()');
+  const expected = imageErrors.call(ctx, lazyProcess(html));
   assert.equal(processImages.call(ctx, html), expected);
-});
-
-
-test('图片后备中的属性不能提前关闭 noscript 或注入可执行标签', () => {
-  const output = lazyProcess('<img src="a.png" alt="</noscript><script>alert(1)</script>">');
-  const html = load(output);
-  assert.equal(html('script').length, 0);
-  assert.equal(html('img').attr('alt'), '</noscript><script>alert(1)</script>');
-  assert.equal(load(output, { scriptingEnabled: false }, false)('noscript img').attr('alt'), '</noscript><script>alert(1)</script>');
 });

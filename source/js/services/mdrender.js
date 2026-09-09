@@ -83,9 +83,8 @@
     const url = src + '?t=' + new Date().getTime();
     utils.request(el, url, async resp => {
       const data = await resp.text();
-      const template = document.createElement('template');
-      template.innerHTML = marked.parse(data);
-      const tmp = template.content;
+      const tmp = document.createElement('div');
+      tmp.innerHTML = marked.parse(data);
       const base = el.getAttribute('data-base');
       if (base) {
         rewriteRelativeUrls(tmp, base);
@@ -98,11 +97,10 @@
         });
         normalizeHeadings(tmp, usedIds);
       }
-      window.stellarImages.defer(tmp);
       if (el.getAttribute('data-replace') === 'true') {
         el.replaceWith.apply(el, Array.from(tmp.childNodes));
       } else {
-        el.replaceChildren(tmp);
+        el.innerHTML = tmp.innerHTML;
       }
       document.dispatchEvent(new CustomEvent('stellar:mdrender', { detail: { target: el } }));
     });

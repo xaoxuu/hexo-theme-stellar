@@ -17,9 +17,9 @@
             : '';
           var cell = `<div class="grid-cell site-card">`;
           cell += `<a class="card-link"${siteinfoApi ? ` data-siteinfo-api="${siteinfoApi}"` : ''} target="_blank" rel="external nofollow noopener noreferrer" href="${item.url}">`;
-          cell += `${window.stellarImages.html(item.cover || item.snapshot || item.screenshot, default_cover, '')}`;
+          cell += `<img src="${item.cover || item.snapshot || item.screenshot}" onerror="javascript:this.removeAttribute(\'data-src\');this.src=\'${default_cover}\';"/>`;
           cell += `<div class="info">`;
-          cell += `${window.stellarImages.html(item.icon || item.avatar || default_avatar, default_avatar, 'siteinfo-icon')}`;
+          cell += `<img class="siteinfo-icon" src="${item.icon || item.avatar || default_avatar}" onerror="javascript:this.removeAttribute(\'data-src\');this.src=\'${default_avatar}\';"/>`;
           cell += `<span class="title">${item.title}</span>`;
           cell += `<span class="desc">${item.description || item.url}</span>`;
           cell += `</div>`;

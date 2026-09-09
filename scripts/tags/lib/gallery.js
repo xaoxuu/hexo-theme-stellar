@@ -19,7 +19,7 @@ var index = 0
 
 function img(src, alt) {
   let img = ''
-  img += `<img class="lazy" data-fancybox="gallery-${index}" loading="lazy" src="${src}"`
+  img += `<img class="lazy" data-fancybox="gallery-${index}" data-src="${src}"`
   if (alt?.length > 0) {
     img += ` alt="${alt}"`
   }

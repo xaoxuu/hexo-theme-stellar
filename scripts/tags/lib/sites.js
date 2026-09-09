@@ -7,8 +7,6 @@
 
 'use strict'
 
-const { escapeHTML } = require('hexo-util');
-
 const { resolveServiceProvider } = require("../../lib/service-provider");
 
 module.exports = ctx => function(args) {
@@ -40,12 +38,12 @@ module.exports = ctx => function(args) {
         el += `<div class="grid-cell site-card">`
         el += `<a class="card-link"${itemSiteinfoApi ? ` data-siteinfo-api="${itemSiteinfoApi}"` : ''} target="_blank" rel="external nofollow noopener noreferrer" href="${item.url}">`
         el += `<div class="lazy-box snapshot">`
-        el += `<img class="lazy" loading="lazy" src="${item.cover || item.snapshot || item.screenshot || ('https://image.thum.io/get/width/1280/crop/720/' + item.url)}" data-stellar-fallback="${escapeHTML(ctx.stellar.config.fallbacks.cover)}"/>`
+        el += `<img class="lazy" data-src="${item.cover || item.snapshot || item.screenshot || ('https://image.thum.io/get/width/1280/crop/720/' + item.url)}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${ctx.stellar.config.fallbacks.cover}&quot;;"/>`
         el += `<div class="lazy-icon"></div>`
         el += `</div>`
         el += `<div class="info">`
         el += `<div class="lazy-box icon">`
-        el += `<img class="lazy siteinfo-icon" loading="lazy" src="${item.icon || item.avatar || ctx.stellar.config.fallbacks.linkCard}" data-stellar-fallback="${escapeHTML(item.icon || item.avatar || ctx.stellar.config.fallbacks.linkCard)}"/>`
+        el += `<img class="lazy siteinfo-icon" data-src="${item.icon || item.avatar || ctx.stellar.config.fallbacks.linkCard}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${item.icon || item.avatar || ctx.stellar.config.fallbacks.linkCard}&quot;;"/>`
         el += `<div class="lazy-icon"></div>`
         el += `</div>`
         el += `<span class="title">${item.title}</span>`

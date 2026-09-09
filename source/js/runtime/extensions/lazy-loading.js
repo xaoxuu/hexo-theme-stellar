@@ -1,69 +1,71 @@
-const SELECTOR = 'img.lazy[data-src]';
+function queryAll(root, selector) {
+  return Array.from(root.querySelectorAll(selector));
+}
 
 export async function mount(root, context) {
-  let instance;
-  let active = true;
-  const tracked = new Set();
-  // LazyLoad 19.1 destroy() disconnects observers but leaves pending image
-  // listeners installed. Release them without restoring placeholder sources.
-  function releaseListeners(image) {
-    for (const [name, listener] of Object.entries(image.llEvLisnrs || {})) {
-      image.removeEventListener(name, listener);
-    }
-    delete image.llEvLisnrs;
+  const config = context.extension.config;
+  if (root.nodeType !== 9) {
+    throw new TypeError('[stellar runtime] lazy-loading compatibility adapter requires a document root');
   }
-  function update() {
-    if (!active || !instance) return;
-    const pending = Array.from(root.querySelectorAll(SELECTOR)).filter(image =>
-      !image.classList.contains('loaded') && !image.classList.contains('error') &&
-      !image.dataset.stellarFallbackTried
-    );
-    pending.forEach(image => tracked.add(image));
-    instance.update(pending);
-  }
-  const cleanup = window.stellarImages.mount(root, update);
-  const destroy = () => {
-    if (!active) return;
-    active = false;
-    cleanup();
-    for (const image of tracked) {
-      releaseListeners(image);
-      // Preserve visible state for navigation snapshots and BFCache.
-      if (!image.classList.contains('loaded') && !image.classList.contains('error')) image.removeAttribute('data-ll-status');
+  const ownerDocument = root.ownerDocument || root;
+  let instance = null;
+  const wrapLazyloadImages = container => {
+    const target = typeof container === 'string' ? root.querySelector(container) : container;
+    if (!target) return;
+    queryAll(target, 'img').forEach(image => {
+      if (image.classList.contains('lazy')) return;
+      const src = image.getAttribute('src');
+      if (!src) return;
+      const wrapper = ownerDocument.createElement('div');
+      wrapper.className = 'lazy-box';
+      const lazyImage = image.cloneNode();
+      lazyImage.removeAttribute('src');
+      lazyImage.setAttribute('data-src', src);
+      lazyImage.classList.add('lazy');
+      const icon = ownerDocument.createElement('div');
+      icon.className = 'lazy-icon';
+      wrapper.append(lazyImage, icon);
+      image.replaceWith(wrapper);
+    });
+    instance?.update?.();
+  };
+  window.wrapLazyloadImages = wrapLazyloadImages;
+  const onInitialized = event => {
+    instance = event.detail.instance;
+    window.lazyLoadInstance = instance;
+  };
+  const lazyLoadOptions = {
+    elements_selector: '.lazy',
+    callback_loaded(element) {
+      element.classList.add('loaded');
+      const wrapper = element.closest('.lazy-box') || element.parentElement;
+      wrapper?.querySelector('.lazy-icon')?.remove();
     }
+  };
+  window.lazyLoadOptions = lazyLoadOptions;
+  window.addEventListener('LazyLoad::Initialized', onInitialized);
+  const observer = new MutationObserver(mutations => {
+    const found = mutations.some(mutation => Array.from(mutation.addedNodes).some(node =>
+      node.nodeType === 1 && (node.matches?.('.lazy') || node.querySelector?.('.lazy'))
+    ));
+    if (found) instance?.update?.();
+  });
+  observer.observe(root.documentElement || root, { childList: true, subtree: true });
+  const cleanup = () => {
+    observer.disconnect();
+    window.removeEventListener('LazyLoad::Initialized', onInitialized);
+    if (window.wrapLazyloadImages === wrapLazyloadImages) delete window.wrapLazyloadImages;
+    if (window.lazyLoadOptions === lazyLoadOptions) delete window.lazyLoadOptions;
     instance?.destroy?.();
     if (window.lazyLoadInstance === instance) delete window.lazyLoadInstance;
     instance = null;
   };
-  context.onCleanup?.(destroy);
   try {
-    await context.assets.script(context.extension.config.asset);
-    context.signal?.throwIfAborted();
-    if (!active) return destroy;
-    if (typeof window.LazyLoad !== 'function') throw new Error('LazyLoad resource did not provide a constructor');
-    instance = new window.LazyLoad({
-      container: root,
-      elements_selector: SELECTOR,
-      use_native: false,
-      cancel_on_exit: false,
-      unobserve_entered: true,
-      callback_loaded(image) {
-        if (active) image.parentElement?.querySelector('.lazy-icon')?.remove();
-      },
-      callback_error(image) {
-        // Let the vendor finish its one-shot listener cleanup before retrying.
-        queueMicrotask(() => {
-          if (active && !image.hasAttribute('onerror')) window.stellarImageError(image);
-        });
-      }
-    }, []);
-    window.lazyLoadInstance = instance;
-    update();
+    await context.assets.script(config.asset);
+    instance?.update?.();
+    return cleanup;
   } catch (error) {
-    if (active && !context.signal?.aborted) {
-      window.stellarImages.fallback(root);
-      context.reportError(error);
-    }
+    cleanup();
+    throw error;
   }
-  return destroy;
 }

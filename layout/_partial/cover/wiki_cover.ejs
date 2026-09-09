@@ -46,8 +46,8 @@ function layoutWikiCover() {
   el += '<div class="cover-content wiki wiki-hero' + (hasPreview ? '' : ' without-preview') + '">';
   el += '<div class="wiki-cover-background' + (hasEffect ? ' has-effect' : '') + (respectsReducedMotion ? ' respect-reduced-motion' : '') + (isImageBackground ? ' image' : '') + '"' + (hasEffect ? ' style="--hero-effect-background:' + escape_html(effectBackground) + '"' : '') + ' aria-hidden="true">';
   if (isImageBackground) {
-    el += '<img loading="eager" fetchpriority="high" class="wiki-cover-background-image" src="' + escape_html(background) + '" alt="" />';
-    el += '<img loading="eager" fetchpriority="high" class="wiki-cover-background-blur" src="' + escape_html(background) + '" alt="" />';
+    el += '<img class="wiki-cover-background-image" src="' + escape_html(background) + '" alt="" />';
+    el += '<img class="wiki-cover-background-blur" src="' + escape_html(background) + '" alt="" />';
   }
   if (hasEffect) {
     el += '<canvas data-hero-effect="' + escape_html(effect.type) + '" data-effect-resource="' + effectResourceJson + '" data-effect-options="' + effectOptionsJson + '" data-effect-runtime="' + effectRuntimeJson + '"></canvas>';
@@ -88,7 +88,7 @@ function layoutWikiCover() {
   if (hasPreview) {
     el += '<section class="wiki-cover-preview" aria-label="' + escape_html(__('meta.project_preview')) + '">';
     if (preview.type === 'image' && preview.src) {
-      el += '<img loading="eager" fetchpriority="high" src="' + escape_html(preview.src) + '" alt="' + escape_html(preview.alt || '') + '" />';
+      el += '<img src="' + escape_html(preview.src) + '" alt="' + escape_html(preview.alt || '') + '" />';
     } else if (commands.length > 0) {
       el += '<div class="wiki-cover-terminal">';
       el += '<div class="wiki-cover-terminal-toolbar"><div class="wiki-cover-terminal-tabs" role="tablist" aria-label="' + escape_html(__('meta.install_method')) + '">';

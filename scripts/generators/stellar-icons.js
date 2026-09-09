@@ -1,13 +1,11 @@
 /* global hexo */
 'use strict';
-const { IMAGE_PLACEHOLDER } = require('../lib/html-images');
 
 // 构建期生成客户端图标白名单文件：避免把 SVG 图标数据内联进每个页面的 defines。
 // 与 layout/_partial/scripts/defines.ejs 中旧的白名单保持一致（客户端通过 ctx.icons 读取）。
 hexo.extend.generator.register('stellar_icons', function () {
   const icons = this.stellar?.data?.icons || {};
   const keys = [
-    'image:onerror',
     'default:to-comment',
     'default:profile',
     'default:warning',
@@ -24,7 +22,7 @@ hexo.extend.generator.register('stellar_icons', function () {
   const json = JSON.stringify(out).replace(/</g, '\\u003c');
   return {
     path: 'js/stellar-icons.js',
-    data: 'window.stellarImagePlaceholder = ' + JSON.stringify(IMAGE_PLACEHOLDER) + ';\nwindow.stellarIcons = ' + json + ';\nif (typeof ctx !== "undefined" && ctx) { ctx.icons = window.stellarIcons; }\n'
+    data: 'window.stellarIcons = ' + json + ';\nif (typeof ctx !== "undefined" && ctx) { ctx.icons = window.stellarIcons; }\n'
   };
 });
 

@@ -45,7 +45,7 @@ function setSiteCardIcon(nodes) {
           const icon = el.querySelector('.siteinfo-icon');
           if (icon) {
             icon.src = data.icon;
-            icon.setAttribute('src', data.icon);
+            icon.setAttribute('data-src', data.icon);
           }
         }
       });

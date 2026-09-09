@@ -98,7 +98,7 @@
           
           cell += '</div>';
           cell += '</div>';
-          utils.dom(el).append(window.stellarImages.deferHtml(cell));
+          utils.dom(el).append(cell);
         });
         window.wrapLazyloadImages(el);
       });

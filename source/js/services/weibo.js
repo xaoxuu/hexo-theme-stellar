@@ -19,7 +19,7 @@
           var cell = '<div class="timenode" index="' + i + '">';
           cell += '<div class="header">';
           cell += '<div class="user-info">';
-          cell += window.stellarImages.html(data.user.avatar_hd || default_avatar, default_avatar);
+          cell += '<img src="' + (data.user.avatar_hd || default_avatar) + '" onerror="javascript:this.src=\'' + default_avatar + '\';">';
           cell += '<span>' + data.user.nick_name + '</span>';
           cell += '</div>';
           cell += '<span>' + item.created_at + '</span>';

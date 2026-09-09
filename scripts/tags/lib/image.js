@@ -31,10 +31,12 @@ module.exports = ctx => function(args) {
   }
 
   var safeAlt = require('hexo-util').escapeHTML(args.alt || '')
+  // 懒加载占位图（1x1 透明 PNG），真实地址放在 data-src
+  const loadingImg = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGPC/xhBQAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAAaADAAQAAAABAAAAAQAAAADa6r/EAAAAC0lEQVQIHWNgAAIAAAUAAY27m/MAAAAASUVORK5CYII='
   function img(src, alt, style) {
     let a = '<a data-fancybox'
     let img = ''
-    img += `<img class="lazy" src="${src}" loading="lazy"`
+    img += `<img class="lazy" src="${loadingImg}" data-src="${src}"`
     if (safeAlt) {
       img += ` alt="${safeAlt}"`
       a += ` data-caption="${safeAlt}"`
@@ -45,6 +47,7 @@ module.exports = ctx => function(args) {
     if (style.length > 0 && !args.ratio) {
       img += ' style="' + style + '"'
     }
+    img += `onerror="this.src=&quot;${ctx.utils.iconData('image:onerror')}&quot;"`
     img += '/>'
     // loading
     img += `<div class="lazy-icon"></div>`
