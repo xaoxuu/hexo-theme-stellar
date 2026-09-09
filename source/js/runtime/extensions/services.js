@@ -15,6 +15,38 @@ export async function mount(root, context) {
   };
   window.addEventListener('stellar:sites-ready', onSitesReady, { signal: context.signal });
 
+  const onMarkdownRendered = event => {
+    if (context.signal.aborted) return;
+    const mdlinks = [];
+    for (const link of event.detail?.links || []) {
+      if (!root.contains(link)) continue;
+      const href = link.getAttribute('href')?.trim();
+      if (!href || href.startsWith('#') || link.getAttribute('class') || link.getAttribute('role') ||
+          link.matches('[cardlink], [data-md-link], [data-siteinfo-api]') ||
+          link.closest('pre, code, .highlight, .footnotes') ||
+          link.querySelector('img, svg') || !link.textContent.trim()) continue;
+      let url;
+      try { url = new URL(href, link.baseURI); } catch { continue; }
+      if (!['http:', 'https:'].includes(url.protocol)) continue;
+      link.setAttribute('data-md-link', '');
+      const icon = document.createElement('span');
+      icon.className = 'md-link-icon ui-icon';
+      icon.setAttribute('aria-hidden', 'true');
+      icon.innerHTML = context.legacy.ctx.icons['default:link'];
+      link.prepend(icon);
+      if (services.siteinfo.api) {
+        link.setAttribute('data-siteinfo-api', services.siteinfo.api.replace('{href}', encodeURIComponent(url.href)));
+        mdlinks.push(link);
+      }
+    }
+    if (mdlinks.length) {
+      void assets.script(services.siteinfo.js).then(() => {
+        if (!context.signal.aborted) setMdLinkIcon(mdlinks, context.signal);
+      }).catch(error => { if (!context.signal.aborted) context.reportError(error); });
+    }
+  };
+  document.addEventListener('stellar:mdrender', onMarkdownRendered, { signal: context.signal });
+
   const voiceCleanups = [];
   const baseUtils = window.utils;
   const serviceUtils = Object.create(baseUtils);

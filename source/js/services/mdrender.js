@@ -7,8 +7,8 @@
  * - data-replace="true"：占位元素原地替换为渲染结果（最终 DOM 无外部容器）；
  * - data-base：相对图片/链接解析到该基址（GitHub 镜像优先）；
  * - data-heading="true"：标题适配本地文章格式（补 id + headerlink；h1 为页面标题直接隐藏）；
- * - 渲染完成后派发 stellar:mdrender 事件（detail.target 为渲染后的占位元素），
- *   页面层（main.js）监听后重建右栏 TOC。
+ * - 渲染完成后派发 stellar:mdrender 事件（detail.target 为原占位元素，
+ *   detail.links 为已插入页面的链接节点），供 TOC 重建和链接增强使用。
  */
 (function () {
   'use strict';
@@ -97,12 +97,13 @@
         });
         normalizeHeadings(tmp, usedIds);
       }
+      const links = Array.from(tmp.querySelectorAll('a[href]'));
       if (el.getAttribute('data-replace') === 'true') {
         el.replaceWith.apply(el, Array.from(tmp.childNodes));
       } else {
-        el.innerHTML = tmp.innerHTML;
+        el.replaceChildren(...tmp.childNodes);
       }
-      document.dispatchEvent(new CustomEvent('stellar:mdrender', { detail: { target: el } }));
+      document.dispatchEvent(new CustomEvent('stellar:mdrender', { detail: { target: el, links } }));
     });
   }
 
