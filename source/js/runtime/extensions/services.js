@@ -1,3 +1,4 @@
+/* global setMdLinkIcon */
 export async function mount(root, context) {
   if (root.nodeType !== 9) {
     throw new TypeError('[stellar runtime] legacy data-service adapter requires a document root');
@@ -16,10 +17,12 @@ export async function mount(root, context) {
     const js = services[id].js;
     if (id == 'siteinfo') {
       const cardlinks = root.querySelectorAll('a.link-card[cardlink]');
+      const mdlinks = root.querySelectorAll('a[data-md-link][data-siteinfo-api]');
       const siteCards = root.querySelectorAll('.ds-sites, .site-card .card-link[data-siteinfo-api]');
-      if (cardlinks?.length > 0 || siteCards?.length > 0) {
+      if (cardlinks?.length > 0 || siteCards?.length > 0 || mdlinks.length > 0) {
         loads.push(assets.script(js).then(function () {
           context.signal?.throwIfAborted();
+          setMdLinkIcon(mdlinks, context.signal);
           if (cardlinks?.length > 0) {
             setCardLink(cardlinks);
           }

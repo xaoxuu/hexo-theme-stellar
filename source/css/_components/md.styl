@@ -93,5 +93,5 @@ table a:not([class])
   transition: text-decoration-color .2s ease-out
   &:hover, &:focus-visible
     text-decoration-color: var(--link)
-  &:has(img)
+  &:has(img):not([data-md-link])
     text-decoration: none

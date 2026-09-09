@@ -151,7 +151,7 @@ const CONTRIBUTIONS = defineContributions([
     kind: "extension",
     entry: runtimeEntry("/js/runtime/extensions/services.js"),
     resources: ["services"],
-    activation: selector(".data-service, [class*='ds-'], a[cardlink], .site-card [data-siteinfo-api], .voice>audio, .video>video, .chat-file"),
+    activation: selector(".data-service, [class*='ds-'], a[cardlink], a[data-md-link][data-siteinfo-api], .site-card [data-siteinfo-api], .voice>audio, .video>video, .chat-file"),
     schema: "services.site_info.provider",
     i18n: null,
     docs: { category: "Extensions", path: "docs/knowledge/06-数据服务与组件/data-service-apis.md" },

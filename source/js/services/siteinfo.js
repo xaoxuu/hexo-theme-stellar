@@ -33,6 +33,26 @@ function setCardLink(nodes) {
   })
 }
 
+function setMdLinkIcon(nodes, signal) {
+  nodes.forEach((el) => {
+    utils.request(null, el.dataset.siteinfoApi, function(response) {
+      return response.json().then(function(data) {
+        if (signal?.aborted || typeof data.icon !== 'string' || !data.icon) return;
+        let url;
+        try { url = new URL(data.icon, el.href); } catch { return; }
+        if (!['http:', 'https:'].includes(url.protocol)) return;
+        const image = new Image();
+        image.alt = '';
+        image.onload = function() {
+          if (signal?.aborted || !el.isConnected) return;
+          el.querySelector('.md-link-icon')?.replaceChildren(image);
+        };
+        image.src = url.href;
+      });
+    }, undefined, { service: 'siteinfo' }).catch(function() {});
+  });
+}
+
 function setSiteCardIcon(nodes) {
   nodes = 'forEach' in (nodes || {}) ? nodes : document.querySelectorAll('.site-card .card-link[data-siteinfo-api]')
   nodes.forEach((el) => {
