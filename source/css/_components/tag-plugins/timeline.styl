@@ -54,12 +54,12 @@ body[data-article-style='story'] .md-text.content
   margin: 0.25rem 0
   font-size: $fs-13
   a.user-info span
-    font-weight: 600
+    font-weight: $fw-600
   .user-info 
     display: flex
     align-items: center
     font-size: $fs-13
-    font-weight: 500
+    font-weight: $fw-500
     color: var(--text-p1)
     margin-right: 8px
     line-height: 1
@@ -72,7 +72,7 @@ body[data-article-style='story'] .md-text.content
       margin: 0 4px 0 0
       object-fit: contain
   &,span
-    font-weight: 500
+    font-weight: $fw-500
     color: var(--text-p3)
     line-height: 1
   &:before
@@ -125,13 +125,13 @@ body[data-article-style='story'] .md-text.content
 
 .tag-plugin.timeline[data-api] .body
   p.title
-    font-weight: 700
+    font-weight: $fw-700
     margin: 0.5rem 0 0.75rem
     line-height: 1.25
     border-bottom: 1px solid var(--block-border)
     &:only-child 
       margin-bottom: 0.5rem
-      font-weight: 500
+      font-weight: $fw-500
     a 
       color: inherit
       text-decoration: none
@@ -167,7 +167,7 @@ aside .tag-plugin.timeline[data-api] .body .lazy-box
   margin: 0 0 -0.5rem
   padding: 0.5rem 0 1rem
   user-select: none
-  font-weight: 500
+  font-weight: $fw-500
   display: flex
   flex-wrap: wrap
   justify-content: space-between

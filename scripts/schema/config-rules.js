@@ -212,6 +212,7 @@ const CONFIG_RULES = Object.freeze([
   ["appearance.typography.font_size.*", { validator: "css_length" }],
   ["appearance.typography.font_family.*", { validator: "css_font_family" }],
   ["appearance.typography.font_smoothing", { values: ["auto", "none", "antialiased"] }],
+  ["appearance.typography.font_weight.*", { minimum: 1, maximum: 1000 }],
   ["appearance.typography.content_align", { values: ["left", "center", "right", "justify"] }],
   ["appearance.shape.corner", { validator: "corner_shape" }],
   ["appearance.shape.radius.*", { validator: "css_length" }],

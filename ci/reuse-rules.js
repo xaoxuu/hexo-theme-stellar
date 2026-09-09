@@ -84,6 +84,14 @@ module.exports = Object.freeze({
   ],
   PROTECTED_LITERALS: [
     {
+      // 字重映射的消费边界：直接值会绕过用户配置。设计字重可自由调整，使用对应变量即可。
+      id: "configured-font-weight",
+      pattern: /\bfont-weight:\s*(?:\d+(?:\.\d+)?|bold|normal)\b/g,
+      canonical: "$fw-* (source/css/_defines/typography.styl)",
+      excludedFiles: [],
+      exceptions: []
+    },
+    {
       id: "main-article-width",
       pattern: /\b(?:width|max-width):\s*720px\b/g,
       canonical: "--width-main-article",

@@ -502,6 +502,18 @@ appearance:
   typography:
     # 设置全站 -webkit-font-smoothing；可选值为 auto、none 或 antialiased。
     font_smoothing: antialiased
+    # 将设计字重映射到字体实际提供的字重；例如将 500 改为 600。
+    # 映射只执行一次，目标值范围为 1–1000。
+    font_weight:
+      100: 100
+      200: 200
+      300: 300
+      400: 400
+      500: 500
+      600: 600
+      700: 700
+      800: 800
+      900: 900
     # 配置字体族。
     font_family:
       # 设置正文的字体候选列表。
