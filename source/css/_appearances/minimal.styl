@@ -51,6 +51,9 @@ appearance-transparent-leftbar()
 appearance-editorial-interactions()
 appearance-standard-prose()
 
+.tag-plugin > .dropdown-trigger
+  border-color: var(--block)
+
 li:not([class]) a:not([class]),
 p:not([class]) a:not([class]),
 table a:not([class])
@@ -82,6 +85,8 @@ table a:not([class])
 .widget-wrapper.toc .toc-link.active
   background: transparent
   box-shadow: none
+  &:not(:hover)
+    border-color: transparent
 
 // Drawer 的表面跟随布局断点，关闭及进出动画期间也保持不透明。
 @media screen and (max-width: $device-laptop)
@@ -105,6 +110,10 @@ table a:not([class])
     corner-shape: $corner-shape
     &::before
       display: none
+
+@media screen and (max-width: $device-mobile)
+  .post-list .md-text
+    padding: 0.5rem 0
 
 // Listing Nav 只保留文字导航；当前项持续显示下划线，但不保留旧按钮背景。
 .listing-nav
