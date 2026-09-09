@@ -2,7 +2,7 @@ function queryAll(root, selector) { return [...(root.matches?.(selector) ? [root
 
 export async function mount(root, context) {
   const config = context.extension.config;
-  let selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not([atk-emoticon]):not([class*="emo"]), .with-fancybox .tk-content img:not([atk-emoticon]):not([class*="emo"]), .with-fancybox .wl-content img:not([atk-emoticon]):not([class*="emo"])';
+  let selector = '[data-fancybox]:not(.error), .with-fancybox .atk-content img:not(.md-link-icon img):not([atk-emoticon]):not([class*="emo"]), .with-fancybox .tk-content img:not(.md-link-icon img):not([atk-emoticon]):not([class*="emo"]), .with-fancybox .wl-content img:not(.md-link-icon img):not([atk-emoticon]):not([class*="emo"])';
   if (config.selector) selector += `, ${config.selector}`;
   await Promise.all([
     context.assets.style(config.assets.localCss),

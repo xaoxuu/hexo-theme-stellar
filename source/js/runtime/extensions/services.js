@@ -15,10 +15,10 @@ export async function mount(root, context) {
   };
   window.addEventListener('stellar:sites-ready', onSitesReady, { signal: context.signal });
 
-  const onMarkdownRendered = event => {
+  const enhanceLinks = links => {
     if (context.signal.aborted) return;
     const mdlinks = [];
-    for (const link of event.detail?.links || []) {
+    for (const link of links) {
       if (!root.contains(link)) continue;
       const href = link.getAttribute('href')?.trim();
       if (!href || href.startsWith('#') || link.getAttribute('class') || link.getAttribute('role') ||
@@ -45,7 +45,28 @@ export async function mount(root, context) {
       }).catch(error => { if (!context.signal.aborted) context.reportError(error); });
     }
   };
+  const onMarkdownRendered = event => enhanceLinks(event.detail?.links || []);
   document.addEventListener('stellar:mdrender', onMarkdownRendered, { signal: context.signal });
+
+  // Inline comment providers render asynchronously and replace content on edits/pagination.
+  const commentRoots = root.querySelectorAll('#artalk_container, #twikoo_container, #waline_container');
+  const commentLinkSelector = '.atk-content a[href], .tk-content a[href], .wl-content a[href]';
+  let commentObserver = null;
+  if (commentRoots.length) {
+    commentObserver = new MutationObserver(records => {
+      const links = new Set();
+      for (const record of records) {
+        for (const node of record.addedNodes) {
+          if (node.nodeType !== 1) continue;
+          if (node.matches(commentLinkSelector)) links.add(node);
+          node.querySelectorAll(commentLinkSelector).forEach(link => links.add(link));
+        }
+      }
+      enhanceLinks(links);
+    });
+    commentRoots.forEach(element => commentObserver.observe(element, { childList: true, subtree: true }));
+    context.signal.addEventListener('abort', () => commentObserver.disconnect(), { once: true });
+  }
 
   const voiceCleanups = [];
   const baseUtils = window.utils;
@@ -139,6 +160,8 @@ export async function mount(root, context) {
     }
   }
 
+  commentRoots.forEach(element => enhanceLinks(element.querySelectorAll(commentLinkSelector)));
+
   // chat iphone time
   let phoneTimes = root.querySelectorAll('.chat .status-bar .time');
   let firstAdjustInterval = null;
@@ -224,6 +247,7 @@ export async function mount(root, context) {
 
   // 返回清理函数，用于清理定时器和观察器
   const cleanup = () => {
+    commentObserver?.disconnect();
     // 清理所有定时器（包括可能未完成的 firstAdjustInterval）
     intervals.forEach(timer => {
       if (timer) clearInterval(timer);
