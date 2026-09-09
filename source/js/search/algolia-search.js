@@ -61,8 +61,8 @@
         content.className = "search-result-content";
         content.innerHTML = contentSnippet;
 
+        link.appendChild(titleSpan);
         link.appendChild(content);
-        item.appendChild(titleSpan);
         item.appendChild(link);
         resultList.appendChild(item);
       });

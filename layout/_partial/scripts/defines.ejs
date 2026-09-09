@@ -43,7 +43,10 @@
 
   // required plugins (only load if needs)
   if (<%- script_json(searchProvider || '') %>) {
-    ctx.search = { more: <%- script_json(__('btn.more')) %> };
+    ctx.search = {
+      more: <%- script_json(__('meta.more')) %>,
+      no_more: <%- script_json(__('search.no_more')) %>
+    };
     ctx.search.service = <%- script_json(searchProvider || '') %>;
     if (ctx.search.service == 'local_search') {
       let service_obj = <%- script_json({

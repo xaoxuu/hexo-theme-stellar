@@ -84,10 +84,9 @@
     color: var(--text-p1)
     text-align: center
     font-size: $fs-14
-    padding: 2rem
-    margin: 8px 0
-    background: var(--bg-a20)
-    border-radius: $border-card-s
+    height: 100%
+    align-items: center
+    justify-content: center
 
 
   .search-result
@@ -104,6 +103,32 @@
       padding: 0
       margin: 8px 0
       list-style-type: none
+    .search-result-footer
+      margin: 1rem 0 3rem
+      text-align: center
+      font-size: $fs-14
+    .search-result-end
+      margin: 0
+      padding: .5rem 1rem
+      color: var(--text-p3)
+    .search-result-more
+      display: block
+      box-sizing: border-box
+      width: 100%
+      text-align: center
+      margin: 0
+      padding: .75rem 1rem
+      border-radius: $border-bar
+      font-family: $ff-body
+      font-size: $fs-14
+      color: var(--text-p1)
+      &:before
+        content: '> '
+      &:after
+        content: ' <'
+      &:focus-visible
+        outline: 2px solid var(--theme)
+        outline-offset: 2px
     li a
       display: block
       line-height: 1.2
@@ -120,24 +145,24 @@
       display: block
       overflow: hidden
       color: var(--text-p1)
-      font-size: $fs-14
-      padding: 0.5rem 1rem
-      white-space: nowrap
-      text-overflow: ellipsis
-
-    .search-result-section
-      display: block
-      overflow: hidden
-      color: var(--text-p1)
       font-weight: $fw-700
-      font-size: $fs-15
+      font-size: $fsh5
       text-overflow: ellipsis
       white-space: nowrap
       border-bottom: 1px solid var(--block-border)
       padding-bottom: .5rem
       margin-bottom: .5rem
+
+    .search-result-section
+      display: block
+      color: var(--text-p1)
+      font-size: $fs-15
+      font-weight: $fw-500
+      margin: 0.5rem 0
+      white-space: nowrap
+      text-overflow: ellipsis
       &:before
-        content: '>'
+        content: '#'
         margin-right: .5em
         color: var(--theme)
 
@@ -154,16 +179,15 @@
       -webkit-line-clamp: 2
 
     .search-keyword
-      color: $c-yellow
-      border-bottom: 1px dashed $c-yellow
+      color: var(--theme)
+      border-bottom: 1px dashed var(--theme)
       font-weight: $fw-700
       filter grayscale(25%)
 
 
 .search-wrapper.noresult[searching='true']
   .search-no-result
-    display: block
-    margin-bottom: 8px
+    display: flex
 
 .site-region__viewport > .search-wrapper
   width: auto

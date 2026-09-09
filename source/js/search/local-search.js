@@ -190,15 +190,15 @@ var searchFunc = function(path, wrapperId, searchId, contentId, root) {
   function buildResultElement(dataTitle, sectionName, secText, secFirst, pairs, href) {
     const li = ownerDocument.createElement('li');
 
-    // 文章标题位于链接上方，不参与跳转
+    // 文章标题与摘要共用结果链接
     const titleSpan = ownerDocument.createElement('span');
     titleSpan.className = 'search-result-title';
     titleSpan.textContent = dataTitle;
-    li.appendChild(titleSpan);
 
     const a = ownerDocument.createElement('a');
     a.className = ctx.ui.classes.interactiveSpotlight;
     a.href = href;
+    a.appendChild(titleSpan);
 
     if (sectionName) {
       const sectionSpan = ownerDocument.createElement('span');
@@ -328,10 +328,13 @@ var searchFunc = function(path, wrapperId, searchId, contentId, root) {
         var ul = ownerDocument.createElement('ul');
         ul.className = 'search-result-list ui-collection-adapter';
         $resultContent.appendChild(ul);
+        var footer = ownerDocument.createElement('div');
+        footer.className = 'search-result-footer';
+        $resultContent.appendChild(footer);
         var shown = 0;
         var more = ownerDocument.createElement('button');
         more.type = 'button';
-        more.className = ctx.ui.classes.interactive;
+        more.className = 'search-result-more ' + ctx.ui.classes.interactive;
         more.textContent = ctx.search.more;
         var append = function() {
           if (!active()) return;
@@ -347,12 +350,18 @@ var searchFunc = function(path, wrapperId, searchId, contentId, root) {
             mountResultCards(ul);
             if (shown < limit) { timer = setTimeout(renderBatch, 0); return; }
             more.disabled = false;
-            if (shown >= resultList.length) more.remove();
+            if (shown >= resultList.length) {
+              var end = ownerDocument.createElement('p');
+              end.className = 'search-result-end';
+              end.setAttribute('role', 'status');
+              end.textContent = ctx.search.no_more;
+              footer.replaceChildren(end);
+            }
           };
           renderBatch();
         };
         more.addEventListener('click', append);
-        $resultContent.appendChild(more);
+        footer.appendChild(more);
         append();
       };
       batch();

@@ -84,6 +84,7 @@ search:
   scope_all: 全站
   scope_blog: 部落格
   no_results: 沒有找到內容！
+  no_more: 沒有更多了
   close: 關閉搜尋
 
 settings:

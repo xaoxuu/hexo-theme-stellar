@@ -84,6 +84,7 @@ search:
   scope_all: All
   scope_blog: Blog
   no_results: No Results!
+  no_more: No more results
   close: Close search
 
 settings:
