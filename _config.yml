@@ -457,7 +457,7 @@ article:
   footer:
     # 设置文章许可协议；false 表示不显示许可信息。
     license: 本文采用 [署名-非商业性使用-相同方式共享 4.0 国际](https://creativecommons.org/licenses/by-nc-sa/4.0/) 许可协议，转载请注明出处。
-    # 设置文章分享服务；普通博客默认全部启用，Collection 内容页默认关闭，可通过 footer.share 显式开启。
+    # 设置文章分享服务；普通博客与 Topic 专栏博客默认全部启用，Wiki 与 Notebook 默认关闭，可通过 footer.share 显式开启。
     # 支持 wechat、weibo、x、telegram、whatsapp、email、link、system；空数组表示不显示分享入口。
     share:
       - wechat

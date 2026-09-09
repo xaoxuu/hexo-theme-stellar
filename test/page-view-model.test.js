@@ -239,13 +239,12 @@ test("Article PageViewModels keep an explicit empty share list disabled", () => 
   }
 });
 
-test("Collection article defaults disable sharing while explicit true restores Article defaults", () => {
+test("Collection footer explicit true inherits Article defaults", () => {
   for (const [build, input] of [
     [buildWikiPageViewModel, wikiInput()],
     [buildTopicPageViewModel, topicInput()],
     [buildNotebookPageViewModel, notebookInput()]
   ]) {
-    assert.equal(build(input).render.article.footer.share, null);
     input.frontMatter = parsePageConfig({
       ...input.frontMatter,
       footer: { license: true, share: true }

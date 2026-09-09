@@ -3,7 +3,7 @@
 const { CONTENT_MODEL_FIELDS, ContentConfigError, isPlainObject } = require("../content-config");
 const { profilePath, requireLayoutProfiles, toRenderNavigation, toRenderRegions } = require("../layout-config");
 const { normalizeThemeComments } = require("../comments");
-const { articlePresentationDefaults, collectionFooterDefaults, requireContentConfig } = require("../content-defaults");
+const { articlePresentationDefaults, articleFooterDefaults, requireContentConfig } = require("../content-defaults");
 const { cloneValue, deepFreeze, pick, mergeConfig, toContentNavigation, collectionBrand, assertCollectionBrandConfig, assertNormalizedConfig, layoutConfigRequirement, normalizeDate, normalizeCollectionPath, buildPostRenderModel, buildContentItemModel, normalizeCollectionIdentity } = require("./shared");
 
 function buildTopicSeries(collectionId, members, sort) {
@@ -58,7 +58,7 @@ function buildTopicCollectionModel(input, collectionId) {
     layers: [collectionRegions]
   });
   const globalArticle = articlePresentationDefaults(content);
-  const globalFooter = collectionFooterDefaults(content);
+  const globalFooter = articleFooterDefaults(content);
 
   return {
     id: collectionId,
