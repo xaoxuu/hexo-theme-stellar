@@ -51,6 +51,16 @@ appearance-transparent-leftbar()
 appearance-editorial-interactions()
 appearance-standard-prose()
 
+li:not([class]) a:not([class]),
+p:not([class]) a:not([class]),
+table a:not([class])
+  color: inherit
+  trans1 color
+  text-decoration-color: var(--link)
+  &:hover,
+  &:focus-visible
+    color: var(--link)
+
 // Wiki Brand Search 静止态保留轻量虚线边界，交互态与其它复合控件统一。
 .brand-search .search-trigger
   border: 1px dashed var(--block-border)
