@@ -977,7 +977,7 @@ services:
     # 配置 github_readme_stats Provider。
     github_readme_stats:
       # 设置 GitHub 卡片接口地址。
-      endpoint: https://github-readme-stats.vercel.app
+      endpoint: https://github-stats-extended.vercel.app
   # 配置 GitHub 基础服务地址。
   github:
     # 设置 GitHub API 地址。

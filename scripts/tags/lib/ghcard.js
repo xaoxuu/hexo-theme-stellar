@@ -8,7 +8,7 @@
  * {% ghcard xaoxuu %}
  * {% ghcard xaoxuu/hexo-theme-stellar %}
  *
- * API: https://github.com/anuraghazra/github-readme-stats
+ * API: https://github.com/stats-organization/github-stats-extended
  */
 
 'use strict'
