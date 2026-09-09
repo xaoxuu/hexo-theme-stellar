@@ -4,7 +4,7 @@ var brandPlacement = typeof placement !== 'undefined' ? placement : 'leftbar'
 var activeViewModel = typeof viewModel !== 'undefined' ? viewModel : null
 var brandStyle = brandPlacement === 'topbar'
   ? 'topbar'
-  : brand.style === 'compact' ? 'compact' : 'regular'
+  : brandPlacement === 'main' || brand.style === 'compact' ? 'compact' : 'regular'
 
 function layoutBrandNavigation() {
   if (brandPlacement !== 'leftbar' || brand.source !== 'collection' || brand.backButton !== true) return ''
