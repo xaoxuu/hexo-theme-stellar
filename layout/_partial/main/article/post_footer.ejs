@@ -1,7 +1,7 @@
 <%
 function referenceList(items) {
   return items.map(function(ref) {
-    return `<li class="post-title">${markdown(ref)}</li>`
+    return `<li class="post-title">${enhance_md_links(markdown(ref))}</li>`
   }).join('')
 }
 
