@@ -2,6 +2,7 @@
 .article-footer a[data-md-link] > .md-link-icon
   --ui-icon-size: 1.2em
   --ui-icon-opacity: 1
+  color: var(--link)
   vertical-align: middle
   margin-bottom: .2em
   img
@@ -9,6 +10,6 @@
     corner-shape: round
     height: 80%
     width: 80%
-.md-text a[data-md-link]:hover > .md-link-icon,
-.article-footer a[data-md-link]:hover > .md-link-icon
-  color: var(--link)
+.md-text a[data-md-link] > .md-link-icon.is-broken,
+.article-footer a[data-md-link] > .md-link-icon.is-broken
+  color: $c-red

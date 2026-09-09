@@ -7,6 +7,7 @@ hexo.extend.generator.register('stellar_icons', function () {
   const icons = this.stellar?.data?.icons || {};
   const keys = [
     'default:link',
+    'default:link-broken',
     'default:to-comment',
     'default:profile',
     'default:warning',

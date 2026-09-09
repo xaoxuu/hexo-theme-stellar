@@ -39,7 +39,7 @@ function setMdLinkIcon(nodes, signal) {
     utils.request(null, el.dataset.siteinfoApi, function(response) {
       return response.json().then(function(data) {
         if (signal?.aborted) return;
-        if (signal?.aborted || typeof data.icon !== 'string' || !data.icon) return;
+        if (typeof data.icon !== 'string' || !data.icon) return;
         let url;
         try { url = new URL(data.icon, el.href); } catch { return; }
         if (!['http:', 'https:'].includes(url.protocol)) return;
@@ -51,7 +51,13 @@ function setMdLinkIcon(nodes, signal) {
         };
         image.src = url.href;
       });
-    }, undefined, { service: 'siteinfo', signal }).catch(function() {});
+    }, undefined, { service: 'siteinfo', signal }).catch(function() {
+      if (signal?.aborted || !el.isConnected) return;
+      const icon = el.querySelector('.md-link-icon');
+      if (!icon) return;
+      icon.innerHTML = ctx.icons['default:link-broken'];
+      icon.classList.add('is-broken');
+    });
   });
 }
 
