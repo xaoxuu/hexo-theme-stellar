@@ -21,7 +21,7 @@ test("Extension 顶层配置与 provider 参数投影为扁平运行时", () => 
         reveal: { enabled: false },
         link_prefetch: { enabled: false },
         diagrams: { provider: "mermaid", mermaid: { theme: "dark" } },
-        card_hover: { enabled: true },
+        card_hover: { spotlight: true, tilt: false },
         heti: { enabled: true }
       },
       services: {
@@ -39,7 +39,7 @@ test("Extension 顶层配置与 provider 参数投影为扁平运行时", () => 
   assert.equal(config.tags.emoji.defaultSource, "qq");
   assert.equal(config.tags.gallery.aspectRatio, "portrait");
   assert.equal(config.features.diagrams.mermaid.theme, "dark");
-  assert.equal(config.features.cardHover.enabled, true);
+  assert.equal(config.features.cardHover.spotlight, true);
   assert.equal(resolveServiceProvider(config.services.siteInfo).endpoint, "https://example.com/site?url={href}");
   assert.equal(resolveServiceProvider(config.services.contributors).repositories[0].repository, "owner/docs");
   assert.equal(resolveServiceProvider(config.services.githubCard).endpoint, "https://cards.example.com");

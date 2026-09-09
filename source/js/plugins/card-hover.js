@@ -13,6 +13,7 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
   let lifecycleBound = false;
+  let effects = { spotlight: false, tilt: false };
 
   function canAnimate() {
     return !reduceMotion.matches && finePointer.matches;
@@ -94,8 +95,8 @@
 
   function mount(element) {
     if (!element || mounted.has(element) || !canAnimate()) return;
-    const hasSpotlight = element.classList.contains('card-hover--spotlight');
-    const hasTilt = element.classList.contains('card-hover--tilt');
+    const hasSpotlight = effects.spotlight && element.classList.contains('card-hover--spotlight');
+    const hasTilt = effects.tilt && element.classList.contains('card-hover--tilt');
     if (!hasSpotlight && !hasTilt) return;
 
     let spotlight = null;
@@ -153,7 +154,8 @@
     mounted.set(element, state);
   }
 
-  function mountAll(root) {
+  function mountAll(root, options) {
+    if (options) effects = { spotlight: options.spotlight === true, tilt: options.tilt === true };
     bindLifecycle();
     if (!canAnimate()) {
       unmountAll();

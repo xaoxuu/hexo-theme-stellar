@@ -350,14 +350,15 @@ const CONTRIBUTIONS = defineContributions([
     entry: runtimeEntry("/js/runtime/extensions/card-hover.js"),
     resources: ["features.cardHover"],
     activation: selector(".card-hover"),
-    schema: "features.card_hover.enabled",
+    schema: "features.card_hover.spotlight",
     i18n: null,
     docs: { category: "Components", path: PLUGIN_SYSTEM_DOC },
     tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
-    defaultsOwner: CONFIG_OWNER("features.card_hover.enabled"),
+    defaultsOwner: CONFIG_OWNER("features.card_hover.spotlight"),
     project(context) {
-      if (context.features.cardHover?.enabled !== true) return null;
-      return configResult({ assets: context.assets.features?.cardHover || {} });
+      const { spotlight = false, tilt = false } = context.features.cardHover || {};
+      if (!spotlight && !tilt) return null;
+      return configResult({ spotlight, tilt, assets: context.assets.features?.cardHover || {} });
     }
   },
   {

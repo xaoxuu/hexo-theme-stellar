@@ -859,8 +859,10 @@ features:
     enabled: true
   # 配置卡片悬停效果。
   card_hover:
-    # 控制是否启用卡片悬停效果。
-    enabled: false
+    # 控制是否启用鼠标跟随光照。
+    spotlight: false
+    # 控制是否启用 3D 倾斜。
+    tilt: false
   # 配置 Heti 中文排版增强。
   heti:
     # 自定义资源地址；null 使用主题默认资源。

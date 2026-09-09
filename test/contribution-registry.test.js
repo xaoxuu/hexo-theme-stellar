@@ -65,7 +65,7 @@ test("Runtime Manifest 顺序直接来自 descriptor 注册表", () => {
       reveal: { enabled: false },
       math: { provider: null },
       diagrams: { provider: null },
-      cardHover: { enabled: true },
+      cardHover: { spotlight: true, tilt: false },
       heti: { enabled: false }
     },
     messages: { copy: {} },
@@ -108,8 +108,8 @@ test("负向门禁拒绝缺失翻译与 Schema 所有权漂移", () => {
   delete missingLanguage.en.message.copy_denied;
   assert.ok(audit({ languages: missingLanguage }).some(issue => issue.includes("language en is missing message.copy_denied")));
 
-  const driftedSchemaFields = schemaFields().filter(field => field.path !== "features.card_hover.enabled");
-  assert.ok(audit({ schemaFields: driftedSchemaFields }).some(issue => issue.includes("card-hover: schema features.card_hover.enabled appears 0 times")));
+  const driftedSchemaFields = schemaFields().filter(field => field.path !== "features.card_hover.spotlight");
+  assert.ok(audit({ schemaFields: driftedSchemaFields }).some(issue => issue.includes("card-hover: schema features.card_hover.spotlight appears 0 times")));
 });
 
 test("负向门禁拒绝未登记资源与重复资源所有权", () => {
