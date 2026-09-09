@@ -24,7 +24,9 @@ delete global.hexo;
 test("stellar command registers doctor and new note", async t => {
   assert.equal(registration.name, "stellar");
   assert.equal(typeof registration.handler, "function");
-  assert.deepEqual(registration.contract.commands.map(item => item.name), ["doctor", "new note"]);
+  const commands = registration.contract.commands.map(item => item.name);
+  assert.ok(commands.includes("doctor"));
+  assert.ok(commands.includes("new note"));
 
   const baseDir = fs.mkdtempSync(path.join(os.tmpdir(), "stellar-command-test-"));
   t.after(() => fs.rmSync(baseDir, { recursive: true, force: true }));

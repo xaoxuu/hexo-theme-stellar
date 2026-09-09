@@ -4,6 +4,10 @@
 
 require('./lib/config-hot-reload').registerConfigHotReload(hexo);
 
+hexo.on('ready', () => {
+  require('../lib/image-metadata').excludeMetadataFromSource(hexo);
+});
+
 hexo.on('generateBefore', () => {
   // 页面路径归一化：xxx.html → xxx/，必须先于所有读取 page.path 的逻辑
   require('./lib/path_normalize')(hexo);
@@ -47,27 +51,10 @@ hexo.on('ready', () => {
   checkVersion(hexo, { useCache: true });
 });
 
-// 防止重复注册
-let hasRun = false;
-
-hexo.extend.filter.register('before_generate', async () => {
-  const isDev = ['s', 'server', 'serve'].some(arg => process.argv.includes(arg));
-  if (!isDev) {
-    return;
-  }
-
-  if (hasRun) return;
-  hasRun = true;
-  
-  // 读取主题配置开关
-  const enabled = hexo.stellar.config.features.lazyLoading.autoAspectRatio === true;
-
-  const generateImageRatios = require('./lib/get_image_ratios');
-  const fixMarkdownImages = require('./lib/fix_image_tags');
-
-  if (enabled) {
-    // 构建前：生成缓存 + 写回 Markdown
-    await generateImageRatios(hexo);
-    fixMarkdownImages(hexo); // 不用 await，因为是同步的
-  }
+// Complete missing metadata before generate writes routes or server exposes them.
+// The explicit CLI owns its own preprocessing pass and must not recurse here.
+hexo.extend.filter.register('after_generate', async () => {
+  if (!['generate', 'g', 'server', 's', 'serve'].includes(hexo.env?.cmd)) return;
+  if (hexo.stellar?.config?.features?.imageOptimization?.enabled !== true) return;
+  await require('../lib/image-metadata').prepareBuildImages(hexo);
 });

@@ -153,6 +153,8 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 else mountPinSliderWhenReady();
 function initPinSlider() {
   let colorTimer;
+  var colorController = null;
+  var colorRevision = 0;
   var slider = document.getElementById('pin-slider');
   if (!slider) return;
   var track = slider.querySelector('.pin-slider-track');
@@ -211,9 +213,12 @@ function initPinSlider() {
   // 左右箭头颜色随当前幻灯片封面自适应（contrast：深色背景白箭头、浅色背景深箭头）
   var navColorRetries = 0;
   function updateNavColor() {
+    var revision = ++colorRevision;
+    colorController?.abort();
+    colorController = new AbortController();
     var navs = slider.querySelectorAll('.pin-slider-nav');
     if (navs.length === 0) return;
-    if (!window.stellar || !window.stellar.color || !window.resolveAdaptiveBackdrop) {
+    if (!window.stellar || !window.stellar.color?.getAverageColor) {
       // 懒加载的 color.js / 插件尚未就绪时重试
       if (navColorRetries < 25) {
         navColorRetries++;
@@ -224,12 +229,12 @@ function initPinSlider() {
     }
     var slide = slides[index];
     if (!slide) return;
-    var cover = slide.style.getPropertyValue('--pin-cover-url');
-    if (!cover) return;
-    var m = cover.match(/url\((['"]?)(.*?)\1\)/i);
-    if (!m) return;
-    stellar.color.getAverageColor(m[2], { background: window.resolveAdaptiveBackdrop(slide) }).then(function (rgb) {
-      if (!rgb) return;
+    stellar.color.getAverageColor(slide.querySelector('.pin-slide-bg'), { signal: colorController.signal }).then(function (rgb) {
+      if (revision !== colorRevision) return;
+      if (!rgb) {
+        for (var i = 0; i < navs.length; i++) navs[i].style.removeProperty('--text-banner');
+        return;
+      }
       var color = stellar.color.adaptiveTextColor(rgb, { style: 'contrast' });
       for (var i = 0; i < navs.length; i++) {
         navs[i].style.setProperty('--text-banner', color);
@@ -314,6 +319,8 @@ function initPinSlider() {
   slider.style.visibility = 'visible';
   start();
   return function() {
+    colorRevision++;
+    colorController?.abort();
     clearTimeout(colorTimer);
     stop();
     slider.removeEventListener('mouseenter', stop);

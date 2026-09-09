@@ -1,5 +1,6 @@
-// 文字自适应颜色通用能力（挂载 window.stellar.color）
-// 由 layout/_plugins/adaptive-text.ejs 按需懒加载；也可供其他组件直接调用。
+/* global module */
+// 文字自适应颜色通用能力（浏览器挂载 window.stellar.color，Node 复用纯计算）
+// 由 runtime adaptive-text adapter 按需加载；图片取样与缓存由 runtime/image-color.js 负责。
 // 样式1（contrast）：背景深色 → 白色文字，背景浅色 → 深色文字。
 // 样式2（theme）：以背景图平均色为基色，背景偏暗 → lighten 到高亮度，
 //                背景偏亮 → darken 到低亮度（保留色相与饱和度）。
@@ -231,93 +232,28 @@
     return hsl.s > 0.2 ? threshold + 0.05 : threshold;
   };
 
-  // 按平均透明度向背景色混合：透明像素不再把平均色拉向黑色，
-  // 而是按实际渲染背景合成（options.background 为 {r,g,b} 或颜色字符串）。
-  // 不传背景或完全不透明时返回原 RGB。
-  color.blendToBackground = function (rgb, background) {
-    if (rgb == null) {
-      return null;
-    }
-    var alpha = rgb.a == null ? 255 : rgb.a;
-    if (!background || alpha >= 255) {
-      return { r: rgb.r, g: rgb.g, b: rgb.b };
-    }
-    var bgRgb = (background != null && typeof background === 'object') ? background : color.parse(background);
-    if (bgRgb == null) {
-      return { r: rgb.r, g: rgb.g, b: rgb.b };
-    }
-    var k = alpha / 255;
-    var inv = 1 - k;
-    return {
-      r: Math.round(rgb.r * k + bgRgb.r * inv),
-      g: Math.round(rgb.g * k + bgRgb.g * inv),
-      b: Math.round(rgb.b * k + bgRgb.b * inv)
-    };
+  // Storage units: hue degrees, saturation/lightness percent, alpha 0–1.
+  color.toHsla = function (rgba) {
+    var hsl = rgbToHsl(rgba);
+    return [hsl.h * 360, hsl.s * 100, hsl.l * 100, rgba.a / 255]
+      .map(function (value) { return Math.round(value * 10000) / 10000; });
   };
 
-  // 背景图平均色：等比缩至最长边 ≤ size（默认 64px）后 canvas 取 RGB 均值与平均透明度。
-  // 按 URL 缓存原始均值（含透明度）；CORS、解码失败等异常返回 null（由调用方回退 CSS 默认色）。
-  var averageCache = {};
-
-  color.getAverageColor = function (src, options) {
-    var opts = options || {};
-    var size = opts.size || 64;
-    if (averageCache[src]) {
-      return averageCache[src].then(function (raw) {
-        return color.blendToBackground(raw, opts.background);
-      });
-    }
-    var promise = new Promise(function (resolve) {
-      var img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.onload = function () {
-        try {
-          var w = img.naturalWidth || img.width;
-          var h = img.naturalHeight || img.height;
-          if (!w || !h) {
-            resolve(null);
-            return;
-          }
-          var scale = Math.min(1, size / Math.max(w, h));
-          var cw = Math.max(1, Math.round(w * scale));
-          var ch = Math.max(1, Math.round(h * scale));
-          var canvas = document.createElement('canvas');
-          canvas.width = cw;
-          canvas.height = ch;
-          var ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, cw, ch);
-          var data = ctx.getImageData(0, 0, cw, ch).data;
-          var total = cw * ch;
-          var r = 0;
-          var g = 0;
-          var b = 0;
-          var a = 0;
-          for (var i = 0; i < data.length; i += 4) {
-            r += data[i];
-            g += data[i + 1];
-            b += data[i + 2];
-            a += data[i + 3];
-          }
-          resolve({
-            r: Math.round(r / total),
-            g: Math.round(g / total),
-            b: Math.round(b / total),
-            a: Math.round(a / total)
-          });
-        } catch (e) {
-          resolve(null);
-        }
-      };
-      img.onerror = function () {
-        resolve(null);
-      };
-      img.src = src;
-    });
-    averageCache[src] = promise;
-    return promise.then(function (raw) {
-      return color.blendToBackground(raw, opts.background);
+  color.validHsla = function (value) {
+    return Array.isArray(value) && value.length === 4 && value.every(function (channel, index) {
+      return Number.isFinite(channel) && channel >= 0 && channel <= [360, 100, 100, 1][index];
     });
   };
+
+  // Alpha is retained as metadata, but adaptive text does not composite a backdrop.
+  color.fromHsla = function (hsla) {
+    return color.validHsla(hsla) ? hslToRgb(hsla[0] / 360, hsla[1] / 100, hsla[2] / 100) : null;
+  };
+
+  if (typeof module !== 'undefined' && module.exports) {
+    module.exports = color;
+    return;
+  }
 
   var root = typeof window !== 'undefined' ? window : {};
   root.stellar = root.stellar || {};

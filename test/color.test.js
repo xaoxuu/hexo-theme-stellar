@@ -45,17 +45,15 @@ test('parse 支持 hsl/hsla 与 alpha（逗号与空格/斜杠语法）', () => 
   assert.equal(color.parse('rgba(1,2,3,0.25)').a, 0.25);
 });
 
-test('blendToBackground 按平均透明度向背景色混合', () => {
-  // 完全透明 → 背景色
-  assert.deepEqual(toHost(color.blendToBackground({ r: 0, g: 0, b: 0, a: 0 }, { r: 250, g: 250, b: 250 })), { r: 250, g: 250, b: 250 });
-  // 完全不透明 → 原色（背景不参与）
-  assert.deepEqual(toHost(color.blendToBackground({ r: 28, g: 28, b: 28, a: 255 }, { r: 250, g: 250, b: 250 })), { r: 28, g: 28, b: 28 });
-  // 半透明混合：128/255 透明 → 0.502 原色 + 0.498 背景
-  assert.deepEqual(toHost(color.blendToBackground({ r: 0, g: 0, b: 0, a: 128 }, { r: 255, g: 255, b: 255 })), { r: 127, g: 127, b: 127 });
-  // 无背景 → 原色（去掉 alpha）
-  assert.deepEqual(toHost(color.blendToBackground({ r: 28, g: 28, b: 28, a: 16 })), { r: 28, g: 28, b: 28 });
-  // 背景支持颜色字符串
-  assert.deepEqual(toHost(color.blendToBackground({ r: 0, g: 0, b: 0, a: 0 }, '#ffffff')), { r: 255, g: 255, b: 255 });
+test('HSLA storage preserves color and alpha with shared Node/browser conversion', () => {
+  const nodeColor = require('../source/js/color');
+  for (const rgba of [{ r: 255, g: 0, b: 0, a: 0 }, { r: 12, g: 34, b: 56, a: 128 }, { r: 128, g: 128, b: 128, a: 255 }]) {
+    const hsla = color.toHsla(rgba);
+    assert.deepEqual(Array.from(hsla), nodeColor.toHsla(rgba));
+    assert.ok(Math.abs(hsla[3] - rgba.a / 255) < 0.0001);
+    assert.deepEqual(toHost(color.fromHsla(hsla)), { r: rgba.r, g: rgba.g, b: rgba.b });
+  }
+  assert.equal(color.fromHsla([0, 101, 50, 1]), null);
 });
 
 test('luminance 使用 WCAG 相对亮度', () => {

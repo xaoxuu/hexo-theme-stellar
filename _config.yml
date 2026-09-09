@@ -829,13 +829,17 @@ features:
   color_scheme_switch:
     # 控制是否启用配色模式切换。
     enabled: false
+  # 自动优化图片体验：增量提取尺寸与平均色，不压缩或替换原图。
+  image_optimization:
+    # server/generate 自动补齐缺失元数据；关闭后仍复用已有结果，手动 images 命令可用。
+    enabled: true
   # 配置图片懒加载。
   lazy_loading:
     # 自定义资源地址；null 使用主题默认资源。
     js: https://gcore.jsdelivr.net/npm/vanilla-lazyload@19.1/dist/lazyload.min.js
     # 设置懒加载过渡效果；可选值为 blur 或 fade。
     transition: fade
-    # 控制是否自动补全图片宽高比。
+    # 从站点图片元数据补全尺寸与比例；server/generate 自动增量预处理，不修改 Markdown。
     auto_aspect_ratio: true
   # 配置图片灯箱。
   lightbox:

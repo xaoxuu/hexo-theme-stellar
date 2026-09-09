@@ -1,3 +1,4 @@
+const { isImageColorKey, clearImageColorCache } = await import(`../image-color.js${new URL(import.meta.url).search}`);
 const { REQUEST_CACHE_PREFIX, isSearchCacheKey, clearSearchStorage } = await import(`../request-cache.js${new URL(import.meta.url).search}`);
 
 function utf8Bytes(value) {
@@ -23,14 +24,17 @@ export function measureCacheSizes(storage) {
   if (!target) return Object.freeze({ search: 0, dynamic: 0, all: 0, failed: true });
   let search = 0;
   let dynamic = 0;
+  let imageColor = 0;
   try {
     for (let index = 0; index < target.length; index++) {
       const key = target.key(index);
       const isSearch = isSearchCacheKey(key);
-      if (!isSearch && !key?.startsWith(REQUEST_CACHE_PREFIX)) continue;
+      const isImageColor = isImageColorKey(key);
+      if (!isSearch && !isImageColor && !key?.startsWith(REQUEST_CACHE_PREFIX)) continue;
       const value = target.getItem(key);
       if (value !== null) {
         if (isSearch) search += entryBytes(key, value);
+        else if (isImageColor) imageColor += entryBytes(key, value);
         else dynamic += entryBytes(key, value);
       }
     }
@@ -38,7 +42,7 @@ export function measureCacheSizes(storage) {
     void error;
     return Object.freeze({ search: 0, dynamic: 0, all: 0, failed: true });
   }
-  return Object.freeze({ search, dynamic, all: search + dynamic, failed: false });
+  return Object.freeze({ search, dynamic, all: search + dynamic + imageColor, failed: false });
 }
 
 export function formatCacheSize(bytes) {
@@ -203,6 +207,7 @@ export function mount(root, context) {
     const results = [];
     if (action === 'search' || action === 'all') results.push(clearSearch());
     if (action === 'dynamic' || action === 'all') results.push(context.request.clearCache());
+    if (action === 'all') results.push(clearImageColorCache());
     const result = combine(results);
     const cacheStatus = page.querySelector('[data-cache-status]');
     if (result.ok) setStatus(cacheStatus, '', '');

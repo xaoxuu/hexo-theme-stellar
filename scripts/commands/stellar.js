@@ -14,13 +14,16 @@ function hexoVersion(ctx) {
 }
 
 hexo.extend.console.register("stellar", "Diagnose and author a Stellar v2 site.", {
-  usage: "<doctor|new note> [options]",
+  usage: "<doctor|new note|images> [options]",
   commands: [
+    { name: "images", desc: "Incrementally prepare persistent image dimensions and colors without changing Markdown." },
     { name: "doctor", desc: "Validate the environment and v2 configuration." },
     { name: "new note", desc: "Create a Note in a known Notebook." }
   ],
   options: [
-    { name: "--dry-run", desc: "Print the new note plan without writing files." },
+    { name: "--dry-run", desc: "Preview note creation or missing image metadata without writing files or downloading images." },
+    { name: "--page <route>", desc: "Limit image discovery to one generated HTML page." },
+    { name: "--refresh <url>", desc: "Refresh one image even when metadata already exists." },
     { name: "--format <text|json>", desc: "Doctor output format; use Hexo global --silent with JSON." },
     { name: "--notebook <id>", desc: "Notebook id for stellar new note." },
     { name: "--title <title>", desc: "Note title and filename for stellar new note." },
@@ -28,6 +31,15 @@ hexo.extend.console.register("stellar", "Diagnose and author a Stellar v2 site."
   ]
 }, async function (args) {
   const subcommand = args._[0];
+  if (subcommand === "images") {
+    this.log?.info?.("Image metadata: rendering pages for image discovery…");
+    await this.load();
+    const report = await require("../lib/image-metadata").prepareImages(this, {
+      dryRun: args.dryRun, page: args.page, refresh: args.refresh
+    });
+    console.log(JSON.stringify(report, null, 2));
+    return report;
+  }
   if (subcommand === "doctor") {
     const format = args.format || "text";
     if (!["text", "json"].includes(format)) throw new Error("--format 必须是 text 或 json");
@@ -51,5 +63,5 @@ hexo.extend.console.register("stellar", "Diagnose and author a Stellar v2 site."
     }
     return plan;
   }
-  throw new Error("Usage: hexo stellar <doctor|new note>");
+  throw new Error("Usage: hexo stellar <doctor|new note|images>");
 });

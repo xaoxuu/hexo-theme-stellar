@@ -47,7 +47,11 @@ function audit(overrides = {}) {
 test("统一 descriptor 契约登记贡献、Schema 与维护面", () => {
   assert.doesNotThrow(() => validateContributionDefinitions(CONTRIBUTIONS));
   assert.deepEqual(new Set(CONTRIBUTIONS.map(item => item.kind)), new Set(["extension", "feature", "component"]));
-  assert.deepEqual(new Set(contributionSchemaIds("features")), new Set(Object.keys(CONFIG_SCHEMA.properties.features.properties)));
+  // Runtime descriptors reference feature configuration; build-only features
+  // do not need a browser entry or a second registration.
+  for (const id of contributionSchemaIds("features")) {
+    assert.ok(Object.hasOwn(CONFIG_SCHEMA.properties.features.properties, id));
+  }
   assert.deepEqual(audit(), []);
 });
 
