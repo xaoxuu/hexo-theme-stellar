@@ -566,17 +566,26 @@ const init = {
       }
     }
     function scrollTOC() {
-      const e0 = document.querySelector('#data-toc .toc');
-      const e1 = document.querySelector('#data-toc .toc a.toc-link.active');
-      if (e0 == null || e1 == null) {
+      const active = document.querySelector('#data-toc .toc a.toc-link.active');
+      if (!active || !active.getClientRects().length) return;
+      // 桌面 TOC 与抽屉的滚动容器不同，只滚动实际承载目录的容器。
+      for (let container = active.parentElement; container && container !== document.body; container = container.parentElement) {
+        if (!/^(auto|scroll)$/.test(getComputedStyle(container).overflowY)
+          || container.scrollHeight <= container.clientHeight) continue;
+        const bounds = container.getBoundingClientRect();
+        const top = Math.max(0, bounds.top + container.clientTop);
+        const bottom = Math.min(window.innerHeight, bounds.top + container.clientTop + container.clientHeight);
+        if (bottom <= top || bounds.right <= 0 || bounds.left >= window.innerWidth) return;
+        const item = active.getBoundingClientRect();
+        // 小视口按可用空间收窄缓冲，避免上下边界互相触发滚动。
+        const margin = Math.min(100, Math.max(0, (bottom - top - item.height) / 2));
+        const safeTop = top + margin;
+        const safeBottom = bottom - margin;
+        let offset = 0;
+        if (item.top < safeTop) offset = item.top - safeTop;
+        else if (item.bottom > safeBottom) offset = Math.min(item.bottom - safeBottom, item.top - safeTop);
+        if (offset) container.scrollBy({ top: offset, behavior: 'smooth' });
         return;
-      }
-      const offsetBottom = e1.getBoundingClientRect().bottom - e0.getBoundingClientRect().bottom + 100;
-      const offsetTop = e1.getBoundingClientRect().top - e0.getBoundingClientRect().top - 64;
-      if (offsetTop < 0) {
-        e0.scrollBy({ top: offsetTop, behavior: "smooth" });
-      } else if (offsetBottom > 0) {
-        e0.scrollBy({ top: offsetBottom, behavior: "smooth" });
       }
     }
 

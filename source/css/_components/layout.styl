@@ -119,6 +119,31 @@ html[data-leftbar-state='collapsed'] .site-shell[data-regions~='leftbar']
     min-height: 0
     overflow: visible
 
+// 桌面右栏随正文展开，仅 TOC 在完整内容范围内吸顶。
+@media screen and (min-width: $device-laptop + 1px)
+  .site-region--rightbar
+    top: 0
+    padding-top: var(--shell-content-top-gap)
+    display: flex
+    flex-direction: column
+    .site-region__surface,
+    .site-region__viewport,
+    .widget-stack--rightbar
+      display: flex
+      flex-direction: column
+      flex: 1
+      height: auto
+      max-height: none
+      overflow: visible
+    .site-region__surface
+      position: static
+    .widget-instance
+      flex-shrink: 0
+    .widget-instance--toc
+      position: sticky
+      top: var(--rightbar-sticky-offset)
+      z-index: 3
+
 .site-region--topbar
   position: sticky
   top: var(--shell-edge-inset)

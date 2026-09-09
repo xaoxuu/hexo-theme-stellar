@@ -52,7 +52,7 @@
     &:hover
       color: var(--ui-item-title)
     
-// Region Surface 统一负责固定高度与滚动，TOC 不再创建独立 Sticky/Scroll 容器。
+// 桌面 Rightbar 的吸顶由 widget-instance 承载，目录正文独立滚动。
 :is([data-region='leftbar'], [data-region='rightbar']) .widgets .widget-wrapper.toc
   margin-top: 1rem
   position: static
@@ -130,6 +130,27 @@
     opacity: 1
   .widget-body
     grid-template-rows: 0fr
+
+@media screen and (min-width: $device-laptop + 1px)
+  .site-region--rightbar .widgets .widget-wrapper.toc
+    box-sizing: border-box
+    display: flex
+    flex-direction: column
+    max-height: var(--rightbar-panel-height)
+    .widget-header,
+    .widget-footer
+      flex-shrink: 0
+    .widget-body
+      display: block
+      flex: 0 1 auto
+      min-height: 0
+      max-height: 70vh
+      overflow-x: hidden
+      overflow-y: auto
+      overscroll-behavior: contain
+      scrollbar(0, 0)
+    &.collapse .widget-body
+      max-height: 0
 
 // 操作按钮（回到顶部 / 参与讨论）
 .widget-wrapper.toc .widget-footer:before
