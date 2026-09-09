@@ -67,7 +67,7 @@ npm install hexo-theme-stellar
 npm ls hexo-theme-stellar
 ```
 
-`2.0.0-rc.2` 使用 npm 的 `rc` dist-tag；不带版本的安装命令仍读取 `latest`，因此在 v2 稳定版发布前会得到 1.x。体验候选版时使用 `npm install hexo-theme-stellar@rc`，锁定部署或复现问题时使用 `npm install hexo-theme-stellar@2.0.0-rc.2`。公开 v2 Wiki 不应被当作 1.x 配置参考；升级时以实际安装版本、Release、[CHANGELOG](../../../CHANGELOG.md)和迁移说明为准。同一个站点不要同时保留 `themes/stellar` 源码和 npm 主题包。
+`2.0.0-rc.3` 使用 npm 的 `rc` dist-tag；不带版本的安装命令仍读取 `latest`，因此在 v2 稳定版发布前会得到 1.x。体验候选版时使用 `npm install hexo-theme-stellar@rc`，锁定部署或复现问题时使用 `npm install hexo-theme-stellar@2.0.0-rc.3`。公开 v2 Wiki 不应被当作 1.x 配置参考；升级时以实际安装版本、Release、[CHANGELOG](../../../CHANGELOG.md)和迁移说明为准。同一个站点不要同时保留 `themes/stellar` 源码和 npm 主题包。
 
 源码更新后要重新安装依赖：
 
@@ -150,7 +150,7 @@ canonical, open_graph, structured_data, inject
 
 ## 版本管理
 
-`package.json` 是主题版本唯一所有者，`package-lock.json` 与安装知识库由发布流程同步。当前候选版本为 `2.0.0-rc.2`；所有公开版本使用相同的 npm 安装与 Release 流程。
+`package.json` 是主题版本唯一所有者，`package-lock.json` 与安装知识库由发布流程同步。当前候选版本为 `2.0.0-rc.3`；所有公开版本使用相同的 npm 安装与 Release 流程。
 
 主题只在 npm `latest` 按 SemVer 严格新于本地版本时提示升级。内部 v2 候选高于公开 v1 时不会提示用户反向安装 1.x；无法解析版本号时静默跳过。
 
