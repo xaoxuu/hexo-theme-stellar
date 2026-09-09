@@ -32,7 +32,7 @@ module.exports = ctx => function(args) {
     el += '<div class="grid-box">'
     for (let item of (links[args.group] || [])) {
       if (item?.url && item?.title) {
-        const itemSiteinfoApi = !item.icon && !item.avatar && siteinfoApi
+        const itemSiteinfoApi = !item.appicon && !item.icon && !item.avatar && siteinfoApi
           ? siteinfoApi.replace('{href}', item.url)
           : ''
         el += `<div class="grid-cell site-card">`
@@ -43,7 +43,7 @@ module.exports = ctx => function(args) {
         el += `</div>`
         el += `<div class="info">`
         el += `<div class="lazy-box icon">`
-        el += `<img class="lazy siteinfo-icon" data-src="${item.icon || item.avatar || ctx.stellar.config.fallbacks.linkCard}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${item.icon || item.avatar || ctx.stellar.config.fallbacks.linkCard}&quot;;"/>`
+        el += `<img class="lazy siteinfo-icon" data-src="${item.appicon || item.icon || item.avatar || ctx.stellar.config.fallbacks.linkCard}" onerror="javascript:this.removeAttribute(&quot;data-src&quot;);this.src=&quot;${item.appicon || item.icon || item.avatar || ctx.stellar.config.fallbacks.linkCard}&quot;;"/>`
         el += `<div class="lazy-icon"></div>`
         el += `</div>`
         el += `<span class="title">${item.title}</span>`

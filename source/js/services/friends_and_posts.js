@@ -21,7 +21,7 @@ document.currentScript.stellarMount = function (root, context) {
           var cell = `<div class="grid-cell user-post-card">`;
           cell += `<div class="avatar-box">`;
           cell += `<a class="card-link" target="_blank" rel="external nofollow noopener noreferrer" href="${item.html_url || item.url}">`;;
-          cell += `<img src="${item.avatar_url || item.avatar || item.icon || default_avatar}" onerror="javascript:this.removeAttribute(\'data-src\');this.src=\'${default_avatar}\';"/>`;
+          cell += `<img src="${item.avatar_url || item.avatar || item.appicon || item.icon || default_avatar}" onerror="javascript:this.removeAttribute(\'data-src\');this.src=\'${default_avatar}\';"/>`;
           cell += `<span class="title">${item.title || item.login}</span>`;
           cell += `</a>`;
           cell += `<div class="labels">`;

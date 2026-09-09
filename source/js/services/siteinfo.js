@@ -21,9 +21,11 @@ function setCardLink(nodes, signal) {
           el.querySelector('.title').innerHTML = data.title;
           el.title = data.title;
         }
-        if (data.icon && data.icon.length > 0 && autofill.includes('icon')) {
-          el.querySelector('.img').style = 'background-image: url("' + data.icon + '");';
-          el.querySelector('.img').setAttribute('data-bg', data.icon);
+        const preferredIcon = el.classList.contains('rich') ? data.favicon : data.appicon;
+        const icon = typeof preferredIcon === 'string' && preferredIcon ? preferredIcon : data.icon;
+        if (typeof icon === 'string' && icon && autofill.includes('icon')) {
+          el.querySelector('.img').style = 'background-image: url("' + icon + '");';
+          el.querySelector('.img').setAttribute('data-bg', icon);
         }
         let desc = el.querySelector('.desc');
         if (desc && data.desc && data.desc.length > 0 && autofill.includes('desc')) {
@@ -39,9 +41,10 @@ function setMdLinkIcon(nodes, signal) {
     utils.request(null, el.dataset.siteinfoApi, function(response) {
       return response.json().then(function(data) {
         if (signal?.aborted) return;
-        if (typeof data.icon !== 'string' || !data.icon) return;
+        const icon = typeof data.favicon === 'string' && data.favicon ? data.favicon : data.icon;
+        if (typeof icon !== 'string' || !icon) return;
         let url;
-        try { url = new URL(data.icon, el.href); } catch { return; }
+        try { url = new URL(icon, el.href); } catch { return; }
         if (!['http:', 'https:'].includes(url.protocol)) return;
         const image = new Image();
         image.alt = '';
@@ -70,11 +73,12 @@ function setSiteCardIcon(nodes, signal) {
     utils.request(null, api, function(response) {
       return response.json().then(function(data) {
         if (signal?.aborted) return;
-        if (data.icon && data.icon.length > 0) {
+        const iconUrl = typeof data.appicon === 'string' && data.appicon ? data.appicon : data.icon;
+        if (typeof iconUrl === 'string' && iconUrl) {
           const icon = el.querySelector('.siteinfo-icon');
           if (icon) {
-            icon.src = data.icon;
-            icon.setAttribute('data-src', data.icon);
+            icon.src = iconUrl;
+            icon.setAttribute('data-src', iconUrl);
           }
         }
       });
