@@ -66,7 +66,7 @@ appearance-standard-interactions()
     background: var(--block)
 
 // Editorial Minimal 的交互反馈只使用排版和当前文字颜色，不创建填充表面。
-// 文字交互使用逐行主题色粗下划线；复合能力使用同色内描边。
+// 文字交互使用逐行主题色粗下划线；复合能力使用同色边框。
 appearance-editorial-underline-mark()
   text-decoration-line: underline
   text-decoration-style: solid
@@ -93,27 +93,30 @@ appearance-editorial-underline-active()
   text-decoration-color: unquote('color-mix(in srgb, var(--editorial-underline-color, var(--theme)) 50%, transparent)')
 
 appearance-editorial-outline()
+  box-sizing: border-box
+  border: 1px solid transparent
   background: transparent
   box-shadow: none
-  transition: box-shadow .2s ease-out, color .2s ease-out
+  transition: border-color .2s ease-out, color .2s ease-out
 
 appearance-editorial-outline-active()
   background: transparent
-  box-shadow: inset 0 0 0 1px var(--text-p3)
+  border-color: var(--text-p3)
+  box-shadow: none
 
 appearance-editorial-interactions()
-  .ui-interactive
+  :root .ui-interactive
     appearance-editorial-outline()
     &:focus-visible
       outline: 2px solid var(--theme)
       outline-offset: 2px
 
-  .ui-interactive:hover,
-  .ui-interactive:focus-visible,
-  .ui-interactive:active,
-  .ui-interactive.active,
-  .ui-interactive.is-active,
-  details[open] > .ui-interactive
+  :root .ui-interactive:hover,
+  :root .ui-interactive:focus-visible,
+  :root .ui-interactive:active,
+  :root .ui-interactive.active,
+  :root .ui-interactive.is-active,
+  :root details[open] > .ui-interactive
     appearance-editorial-outline-active()
 
   .brand-navigation__back
@@ -136,11 +139,6 @@ appearance-editorial-interactions()
   // Menu 条目优先使用自身主题色；未声明时回退到全局主题色。
   .widget-instance--menu .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__title
     --editorial-underline-color: var(--item-theme, var(--theme))
-
-  // Collection Item 只要声明了通用交互能力，hover 就统一显示 Editorial 内描边。
-  .ui-collection__item.ui-interactive:hover,
-  .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item.ui-interactive:not(.is-icon-only):hover
-    appearance-editorial-outline-active()
 
   .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only):hover .ui-collection__title,
   .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only):focus-visible .ui-collection__title,

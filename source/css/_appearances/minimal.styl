@@ -61,10 +61,13 @@ table a:not([class])
   &:focus-visible
     color: var(--link)
 
-// Wiki Brand Search 静止态保留轻量虚线边界，交互态与其它复合控件统一。
+// Wiki Brand Search 默认保留虚线，交互时复用同一条边框。
 .brand-search .search-trigger
   border: 1px dashed var(--block-border)
-  box-shadow: none
+  &:hover,
+  &:focus-visible,
+  &:active
+    border-style: solid
 
 // Region 内的普通 Widget 去掉填充表面；代码、状态和浮层仍由各自组件负责。
 .widget-wrapper.markdown .widget-body,
@@ -80,18 +83,28 @@ table a:not([class])
   background: transparent
   box-shadow: none
 
-// Drawer 覆盖正文时必须提供不透明遮挡面，桌面常驻侧栏继续保持透明。
-.site-shell[data-drawer='leftbar'] .site-region--leftbar .site-region__surface,
-.site-shell[data-drawer='rightbar'] .site-region--rightbar .site-region__surface
-  background: var(--card)
-  backdrop-filter: none
-  -webkit-backdrop-filter: none
-  &::before
-    display: none
+// Drawer 的表面跟随布局断点，关闭及进出动画期间也保持不透明。
+@media screen and (max-width: $device-laptop)
+  .site-shell .site-region--rightbar .site-region__surface.ui-drawer-surface,
+  .site-shell[data-drawer='leftbar'] .site-region--leftbar .site-region__surface
+    background: var(--card)
+    backdrop-filter: none
+    -webkit-backdrop-filter: none
+    border-radius: $border-card-l
+    corner-shape: $corner-shape
+    &::before
+      display: none
 
-.site-shell[data-drawer='leftbar'] .site-region--leftbar .site-region__surface
-  border-radius: $border-card-l
-  corner-shape: $corner-shape
+// 中间断点的 Leftbar 仍是常驻侧栏；移动端则始终使用 Drawer 表面。
+@media screen and (max-width: $device-tablet)
+  .site-shell .site-region--leftbar .site-region__surface.ui-surface
+    background: var(--card)
+    backdrop-filter: none
+    -webkit-backdrop-filter: none
+    border-radius: $border-card-l
+    corner-shape: $corner-shape
+    &::before
+      display: none
 
 // Listing Nav 只保留文字导航；当前项持续显示下划线，但不保留旧按钮背景。
 .listing-nav
@@ -164,14 +177,17 @@ table a:not([class])
   a.page-number:focus-visible,
   .current
     appearance-editorial-underline-active()
-  .extend
-    border: 0
+  .extend,
+  .extend.prev,
+  .extend.next
     appearance-editorial-outline()
+    width: calc(2.5rem + 2px)
+    height: calc(2.5rem + 2px)
   a.extend:hover,
   a.extend:focus-visible
     appearance-editorial-outline-active()
 
-// 文本列表使用文章标题式下划线；Tag 等复合短控件使用同色内描边。
+// 文本列表使用文章标题式下划线；Tag 等复合短控件使用同色边框。
 .post-list .archive-list a.post,
 .post-list #cats a.cat,
 .page-footer .sitemap .sitemap-group > a,
@@ -200,7 +216,6 @@ table a:not([class])
 .post-list #tags a.tag,
 .article-tags a.tag
   appearance-editorial-outline()
-  // box-shadow: inset 0 0 0 1px var(--block)
 
 .post-list #tags a.tag:hover,
 .post-list #tags a.tag:focus-visible,
@@ -235,7 +250,7 @@ table a:not([class])
     margin: 0
 
 .post-list:not(.topic) .post-card:not(.photo)
-  border: 0
+  border-color: transparent
   background-color: transparent
   background-image: none
   box-shadow: none
@@ -244,7 +259,7 @@ table a:not([class])
   padding: 0
   margin: 0
 
-// 图片卡与复合卡保留内容裁切，只以同色内描边响应，不产生上浮阴影。
+// 图片卡与复合卡保留内容裁切，只以同色边框响应，不产生上浮阴影。
 .post-list .post-card.photo,
 .post-list .post-card.wiki,
 .pin-slider,
@@ -268,7 +283,7 @@ table a:not([class])
   background: transparent
   box-shadow: none
 
-// hoverable-card() 按明暗模式生成高优先级阴影；Minimal 在相同状态层级接管为内描边。
+// hoverable-card() 按明暗模式生成高优先级阴影；Minimal 在相同状态层级接管为真实边框。
 :root[data-theme='light'],
 :root[data-theme='dark'],
 :root:not([data-theme])
@@ -277,7 +292,7 @@ table a:not([class])
   .tag-plugin.grid[bg='card'] > .cell
     appearance-editorial-outline()
     transform: none
-    box-shadow: inset 0 0 0 1px var(--block-border)
+    border-color: var(--block-border)
 
   .md-text .link-card:hover,
   .md-text .link-card:focus-visible,
@@ -292,6 +307,16 @@ table a:not([class])
 .search-wrapper .search-result li a
   background: transparent
   box-shadow: none
+
+// 分享链接与原生按钮统一使用边框，图标层不再填充交互背景。
+.article-share .social-wrap .share-item
+  appearance-editorial-outline()
+  &:hover,
+  &:focus-visible,
+  &:active
+    appearance-editorial-outline-active()
+    .share-item__icon
+      background: transparent
 
 // 页脚是文章元信息而不是独立卡片，内部语义分隔线继续保留。
 .article-footer
@@ -311,11 +336,6 @@ table a:not([class])
 
 .paginator-wrap .extend
   border-radius: $border-button
-
-.paginator-wrap .extend.prev
-  border-right: 0
-.paginator-wrap .extend.next
-  border-left: 0
 
 @media (prefers-reduced-motion: reduce)
   .listing-nav nav a,

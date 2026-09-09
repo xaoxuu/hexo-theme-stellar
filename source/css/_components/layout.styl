@@ -255,6 +255,15 @@ html[data-leftbar-state='collapsed'] .site-shell[data-regions~='leftbar']
 
 leftbar-rail()
   width: var(--leftbar-rail-width)
+  .menu .ui-collection__item,
+  .search-trigger,
+  .brand-navigation__back,
+  .region-actions .social,
+  .settings-widget,
+  .leftbar-state-toggle
+    border-radius: 50%
+    corner-shape: round
+    justify-content: center
   .site-region__zone,
   .site-region__footer,
   .site-region__system
@@ -381,7 +390,7 @@ html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .s
     position: fixed
     transform: translateX(calc(100% + 16px))
     transition: transform .38s ease-out
-    inset-inline-end: 8px
+    inset-inline-end: 16px
     top: var(--rightbar-drawer-top)
     width: var(--rightbar-width)
     height: auto
@@ -424,7 +433,7 @@ html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .s
     position: fixed
     transform: translateX(0)
     transition: transform .38s ease-out
-    inset-inline-start: 8px
+    inset-inline-start: 16px
     top: var(--gap-page)
     bottom: auto
     height: calc(100vh - var(--gap-page) * 2)
@@ -449,7 +458,7 @@ html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .s
     --shell-right-reserve: 0px
     --shell-side-reserve: 0px
     --shell-side-gap: 0px
-    --rightbar-drawer-top: 8px
+    --rightbar-drawer-top: 16px
     --rightbar-drawer-bottom: 64px
     --rightbar-drawer-max-height: calc(100vh - var(--rightbar-drawer-top) - var(--rightbar-drawer-bottom))
     --rightbar-drawer-max-height: calc(100dvh - var(--rightbar-drawer-top) - var(--rightbar-drawer-bottom))
@@ -461,8 +470,8 @@ html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .s
     position: fixed
     transform: translateX(calc(-100% - 16px))
     transition: transform .38s ease-out
-    inset-inline-start: 8px
-    top: 8px
+    inset-inline-start: 16px
+    top: 16px
     bottom: 64px
     height: auto
     z-index: 10
@@ -472,14 +481,14 @@ html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .s
       height: 100%
       overflow: hidden
   .site-shell[data-drawer='leftbar'] .site-region--leftbar
-    top: 8px
+    top: 16px
     bottom: 64px
     height: auto
     transform: translateX(0)
   .site-shell[data-regions~='topbar'] .site-region--leftbar
-    top: calc(var(--shell-topbar-height) + 8px)
+    top: calc(var(--shell-topbar-height) + 16px)
   .site-shell[data-regions~='topbar']
-    --rightbar-drawer-top: calc(var(--shell-topbar-height) + 8px)
+    --rightbar-drawer-top: calc(var(--shell-topbar-height) + 16px)
   .site-region--topbar
     box-sizing: border-box
     padding: var(--shell-topbar-content-inset)
