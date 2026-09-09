@@ -46,6 +46,8 @@ function prepareCollectionPipeline(ctx) {
   capture(() => validateThemeConfig(themeConfig, themeSource));
   for (const [key, value] of Object.entries(data)) {
     if (!key.startsWith("wiki/") && !key.startsWith("topic/") && !key.startsWith("notebooks/")) continue;
+    // Hexo also loads macOS directory metadata into its data registry.
+    if (key.endsWith("/.DS_Store")) continue;
     capture(() => {
       const profile = key.startsWith("notebooks/") ? "notebook" : key.split("/", 1)[0];
       const source = sourcePathForData(key);
