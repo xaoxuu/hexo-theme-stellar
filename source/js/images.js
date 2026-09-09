@@ -30,15 +30,16 @@
     if (typeof root === 'string') root = document.querySelector(root);
     if (!root) return;
     images(root).forEach(function (img) {
-      if (degraded || img.closest('picture') || img.hasAttribute('srcset') || img.hasAttribute('no-lazy') || img.loading === 'eager' || img.getAttribute('fetchpriority') === 'high') {
+      if (degraded || img.closest('picture') || img.hasAttribute('srcset') || img.hasAttribute('no-lazy') || img.getAttribute('loading') === 'eager' || img.getAttribute('fetchpriority') === 'high') {
         native(img);
       } else if (img.hasAttribute('data-src')) {
         img.classList.add('lazy');
       } else {
         img.classList.remove('lazy');
       }
-      // A fallback can settle while the document is suspended in BFCache.
-      if (img.complete && img.currentSrc && !img.hasAttribute('onerror')) {
+      // Inert template images have no settled request to inspect.
+      // A connected fallback can settle while the document is suspended in BFCache.
+      if (img.isConnected && img.complete && img.currentSrc && !img.hasAttribute('onerror')) {
         if (!img.naturalWidth && (!img.hasAttribute('data-src') || img.dataset.stellarFallbackTried)) failed(img);
         else if (img.dataset.stellarFallbackTried && !img.dataset.stellarImageError) {
           img.classList.remove('loading', 'error');
@@ -108,7 +109,7 @@
   }
   function defer(root) {
     images(root).forEach(function (img) {
-      if (degraded || img.closest('picture') || img.hasAttribute('srcset') || img.hasAttribute('no-lazy') || img.loading === 'eager' || img.getAttribute('fetchpriority') === 'high') return;
+      if (degraded || img.closest('picture') || img.hasAttribute('srcset') || img.hasAttribute('no-lazy') || img.getAttribute('loading') === 'eager' || img.getAttribute('fetchpriority') === 'high') return;
       var src = img.getAttribute('src');
       if (!src || /^data:image/i.test(src) || img.hasAttribute('data-src')) return;
       img.setAttribute('data-src', src);
