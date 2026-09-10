@@ -38,6 +38,9 @@
   display: flex
   align-items: center
   gap: 12px
+  font-family: inherit
+  font-size: $fs-14
+  font-weight: inherit
   line-height: 1.2
   position: relative
   &:hover
@@ -54,7 +57,6 @@ details[open] > .ui-collection__item
 button.ui-collection__item
   border: 0
   appearance: none
-  font: inherit
   text-align: start
   cursor: pointer
 
@@ -72,11 +74,18 @@ button.ui-collection__item:not(.is-icon-only)
   gap: 4px
 
 .ui-collection[data-variant='nav'] .ui-collection__content
-  display: block
-  txt-ellipsis()
-  .ui-collection__prefix,
+  flex-direction: row
+  align-items: center
+  gap: 0
+  .ui-collection__prefix
+    display: inline-flex
+    align-items: center
+    flex-shrink: 0
+    &:after
+      flex-shrink: 0
+      margin: 0 4px
   .ui-collection__title
-    display: inline
+    min-width: 0
 
 .ui-collection__prefix
   color: var(--text-p2)
@@ -95,7 +104,6 @@ button.ui-collection__item:not(.is-icon-only)
 
 .ui-collection__title
   color: inherit
-  font-size: $fs-14
   font-weight: $fw-500
   txt-ellipsis()
 
