@@ -7,11 +7,11 @@ function custom_inject() {
 
 
 %>
+<script data-stellar-script="core" src="<%- stellar_client_assets().js.href %>"></script>
 <%- partial('scripts/defines') %>
 
 <!-- core: 迁移期 DOM/资源兼容工具；Extension 注册与生命周期由 ESM runtime 所有 -->
 <script data-stellar-script="core" src="<%- url_for('/js/utils.js') %>?v=<%- stellar_info('version') %>"></script>
-<script data-stellar-script="core" defer src="<%- url_for('/js/stellar-icons.js') %>?v=<%- stellar_info('version') %>"></script>
 <script data-stellar-script="core" src="<%- url_for(`${stellar_info('main_js')}?v=${stellar_info('version')}`) %>" defer></script>
 <script data-stellar-script="core" defer src="<%- url_for('/js/profile.js') %>?v=<%- stellar_info('version') %>"></script>
 

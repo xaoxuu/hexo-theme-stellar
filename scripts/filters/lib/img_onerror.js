@@ -1,6 +1,7 @@
 'use strict';
 
-const { escapeHTML } = require('hexo-util');
+const { escapeHTML, url_for } = require('hexo-util');
+const { imageFallbackAsset } = require('../../lib/image-fallback');
 const { mapImageTags, parseImageAttributes } = require('../../lib/html-images');
 
 function addImageError(imgTag, handler) {
@@ -16,7 +17,9 @@ function addImageError(imgTag, handler) {
 
 function imageErrorHandler(ctx) {
   const fallback = ctx.utils.iconData('image:onerror');
-  return escapeHTML(`this.src=${JSON.stringify(fallback)}`);
+  const asset = imageFallbackAsset(fallback);
+  const source = asset ? url_for.call(ctx, `/${asset.path}`, { relative: false }) : fallback;
+  return escapeHTML(`this.onerror=null;this.src=${JSON.stringify(source)}`);
 }
 
 module.exports.processSite = function(htmlContent) {

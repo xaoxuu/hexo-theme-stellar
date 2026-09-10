@@ -20,3 +20,11 @@ hexo.extend.helper.register("hero_effect_resource", function(id) {
   const definition = require("../lib/hero-effect-registry").getHeroEffectDefinition(id);
   return definition ? { module: definition.module, defaults: definition.defaults } : {};
 });
+
+hexo.extend.helper.register("stellar_client_assets", function() {
+  const assets = require("../lib/client-assets").clientAssets(hexo);
+  return Object.fromEntries(Object.entries(assets).map(([kind, asset]) => [kind, {
+    href: this.url_for(`/${asset.path}`) + `?v=${asset.version}`,
+    inline: asset.inline || ""
+  }]));
+});

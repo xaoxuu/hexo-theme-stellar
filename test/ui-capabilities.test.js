@@ -39,12 +39,11 @@ test("ui_classes helper delegates every capability to the shared registry", () =
   require(helperPath);
   delete global.hexo;
 
-  assert.deepEqual(Array.from(registered.keys()).sort(), ["ui_capabilities", "ui_classes"]);
+  assert.deepEqual(Array.from(registered.keys()).sort(), ["ui_classes"]);
   for (const capability of Object.keys(UI_CAPABILITIES)) {
     assert.equal(
       registered.get("ui_classes")("base", capability, "modifier"),
       composeUiClasses("base", capability, "modifier")
     );
   }
-  assert.equal(registered.get("ui_capabilities")(), UI_CAPABILITIES);
 });

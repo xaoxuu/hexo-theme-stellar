@@ -21,7 +21,6 @@ function layoutDiv() {
     el += ' class="active"';
   }
   el += ' href="' + pretty_url(wikiIndex.path) + '">' + __("btn.all_wiki") + '</a>';
-  el += '</a>';
   // 项目分类
   for (var tag of wikiIndex.tags) {
     var projects = tag.itemIds.filter(id => wikiIndex.allItems.some(item => item.id === id))
@@ -31,7 +30,6 @@ function layoutDiv() {
         el += ' class="active"';
       }
       el += ' href="' + escape_html(pretty_url(tag.path)) + '">' + escape_html(tag.name) + '</a>';
-      el += '</a>';
     }
   }
 

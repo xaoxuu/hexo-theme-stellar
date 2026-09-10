@@ -1,30 +1,12 @@
 /* global hexo */
 'use strict';
 
-// 构建期生成客户端图标白名单文件：避免把 SVG 图标数据内联进每个页面的 defines。
-// 与 layout/_partial/scripts/defines.ejs 中旧的白名单保持一致（客户端通过 ctx.icons 读取）。
+const { clientAssets, resetClientAssets } = require('../lib/client-assets');
+
+hexo.extend.filter.register('before_generate', resetClientAssets, 2);
+// The existing client data request also carries site-wide config; each page keeps only page values.
 hexo.extend.generator.register('stellar_icons', function () {
-  const icons = this.stellar?.data?.icons || {};
-  const keys = [
-    'default:link',
-    'default:to-comment',
-    'default:profile',
-    'default:warning',
-    'default:settings',
-    'copy:copy',
-    'weibo:repeat',
-    'weibo:like'
-  ];
-  const out = {};
-  // 去除 SVG 注释（避免 <!-- / </script> 解析风险），再转义 <
-  for (const k of keys) {
-    out[k] = ((icons[k]) || '').replace(/<!--[\s\S]*?-->/g, '');
-  }
-  const json = JSON.stringify(out).replace(/</g, '\\u003c');
-  return {
-    path: 'js/stellar-icons.js',
-    data: 'window.stellarIcons = ' + json + ';\nif (typeof ctx !== "undefined" && ctx) { ctx.icons = window.stellarIcons; }\n'
-  };
+  return Object.values(clientAssets(this)).map(({ path, data }) => ({ path, data }));
 });
 
 // 构建期生成按命名空间拆分的图标数据文件（js/icons/{ns}.json）：
@@ -53,4 +35,9 @@ hexo.extend.generator.register('stellar_icon_sets', function () {
     path: `js/icons/${ns}.json`,
     data: JSON.stringify({ [ns]: sets[ns] })
   }));
+});
+
+// Preserve the merged image:onerror source, including attribution inside SVG data.
+hexo.extend.generator.register('stellar_image_fallback', function () {
+  return require('../lib/image-fallback').imageFallbackAsset(this.utils.iconData('image:onerror')) || [];
 });

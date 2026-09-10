@@ -32,7 +32,7 @@ test('stellar_icon_sets 生成器：按命名空间输出 JSON、去注释、跳
   const registrations = {};
   const prevHexo = global.hexo;
   global.hexo = {
-    extend: { generator: { register: (name, fn) => { registrations[name] = fn; } } }
+    extend: { generator: { register: (name, fn) => { registrations[name] = fn; } }, filter: { register() {} } }
   };
   try {
     const genPath = require.resolve('../scripts/generators/stellar-icons');
@@ -113,4 +113,44 @@ test('icons.yml 键完整：静态调用、数据访问和 CSS 变量映射引�
 
   const missing = [...found].filter((k) => !iconKeys.has(k));
   assert.deepEqual(missing, []);
+});
+
+test('generated client assets preserve normalized config and invalidate content versions between builds', () => {
+  const vm = require('node:vm');
+  const { parseStellarConfig } = require('../scripts/lib/config-schema');
+  const { clientAssets, resetClientAssets } = require('../scripts/lib/client-assets');
+  const { UI_CAPABILITIES } = require('../scripts/lib/ui-capabilities');
+  const config = parseStellarConfig({ themeConfig: {} });
+  const context = { config: { root: '/docs/' }, stellar: { config, data: { icons: {
+    'default:link': '<svg><!-- remove --><text>"</text></svg>',
+    'default:loading': 'https://example.com/loading.svg?x="quoted"'
+  } } } };
+  const first = clientAssets(context);
+  const sandbox = { window: {} };
+  vm.runInNewContext(first.js.data, sandbox);
+  const data = JSON.parse(JSON.stringify(sandbox.window.stellarClientData));
+  assert.equal(data.ctx.root, '/docs/');
+  assert.deepEqual(data.ctx.ui.classes, UI_CAPABILITIES);
+  assert.equal(data.def.avatar, config.fallbacks.avatar);
+  assert.equal(data.ctx.search.local_search.field, config.search.local.scope);
+  assert.equal(data.ctx.search.local_search.cache_ttl, config.search.local.cacheTtlSeconds);
+  assert.equal(data.ctx.icons['default:link'], '<svg><text>"</text></svg>');
+  assert.equal(sandbox.window.stellarIcons, sandbox.window.stellarClientData.ctx.icons);
+  assert.doesNotMatch(first.js.data, /<\/script|<!--/i);
+  assert.match(first.css.data, /\\"quoted\\"/);
+  assert.equal(clientAssets(context), first);
+  context.stellar.data.icons['default:link'] = '<svg><path/></svg>';
+  context.stellar.data.icons['default:loading'] = '<svg/>';
+  resetClientAssets();
+  const next = clientAssets(context);
+  assert.notEqual(next.js.version, first.js.version);
+  assert.notEqual(next.css.version, first.css.version);
+  const other = { ...context, config: { root: '/' } };
+  assert.notEqual(clientAssets(other).js.version, next.js.version);
+  context.stellar.data.icons['default:loading'] = '../loading.svg';
+  resetClientAssets();
+  const relative = clientAssets(context);
+  assert.match(relative.css.inline, /\.\.\/loading\.svg/);
+  assert.doesNotMatch(relative.css.data, /\.\.\/loading\.svg/);
+  resetClientAssets();
 });

@@ -256,33 +256,8 @@ function generate_canonical() {
   <%- page_meta(json_ld(pageViewModel || undefined)) %>
   <%- custom_inject('headEnd') %>
 
-  <!-- icons.yml 驱动的 CSS 装饰图标 -->
-  <%
-    const iconCssVars = (() => {
-      const map = {
-        '--icon-h3-left': 'default:arrow-left',
-        '--icon-h3-right': 'default:arrow-right',
-        '--icon-quote-left': 'quot:quote-left',
-        '--icon-quote-right': 'quot:quote-right'
-      };
-      let vars = [];
-      for (const [name, key] of Object.entries(map)) {
-        var raw = stellar_data('icons') && stellar_data('icons')[key];
-        if (raw) vars.push(`  ${name}: url("data:image/svg+xml,${encodeURIComponent(raw)}");`);
-      }
-      // 加载占位：由 icons.yml 的 default:loading 提供（内联 SVG 编码为 data URI，URL 直用）
-      var loadingRaw = stellar_data('icons') && stellar_data('icons')['default:loading'];
-      if (loadingRaw) {
-        if (loadingRaw.trim().startsWith('<svg')) {
-          vars.push(`  --icon-loading: url("data:image/svg+xml,${encodeURIComponent(loadingRaw)}");`);
-        } else {
-          vars.push(`  --icon-loading: url("${loadingRaw}");`);
-        }
-      }
-      return vars.length > 0 ? `:root {\n${vars.join('\n')}\n}` : '';
-    })();
-  %>
-  <% if (iconCssVars) { %>
-  <style><%- iconCssVars %></style>
-  <% } %>
+  <link rel="stylesheet" href="<%- stellar_client_assets().css.href %>">
+  <link rel="preload" as="script" href="<%- stellar_client_assets().js.href %>">
+  <% var inlineIconCss = stellar_client_assets().css.inline %>
+  <% if (inlineIconCss) { %><style><%- inlineIconCss %></style><% } %>
 </head>

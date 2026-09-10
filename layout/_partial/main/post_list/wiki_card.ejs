@@ -11,7 +11,7 @@ function layoutDiv() {
   el += '<article class="wiki-card-content">';
   el += '<div class="wiki-card-cover' + (cover ? '' : ' no-cover') + '" position="bottom"';
   if (cover) {
-    el += ' style="--cover-url:url(\'' + escape_html(cover.replace(/'/g, '%27')) + '\')">';
+    el += '>';
     el += '<img src="' + escape_html(cover) + '" alt=""/>';
   } else {
     el += '>';

@@ -10,7 +10,7 @@
   background-image: var(--pin-cover-url)
   background-size: cover
   background-position: center
-  // 无脚本时显示基础内容；内联启动先恢复缓存位置再显示。
+  // 无脚本时显示基础内容；Runtime 挂载时恢复缓存位置。
   visibility: visible
 
 .pin-slider-track
@@ -235,6 +235,3 @@
 .pin-slider:hover .pin-slider-nav,
 .pin-slider:focus-within .pin-slider-nav
   opacity: 1
-
-.stellar-pin-pending .pin-slider
-  visibility: hidden

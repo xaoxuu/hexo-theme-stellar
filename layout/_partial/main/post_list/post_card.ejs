@@ -11,7 +11,7 @@ function divDefault() {
   }
   var title = listing.title || (listing.date ? date(listing.date, config.date_format) : '')
   el += `<h2 class="post-title">${escape_html(title)}</h2>`
-  el += `<div class="excerpt${viewModel.render.article.heti ? ' heti' : ''}"><p>${escape_html(listing.excerpt)}</p></div>`
+  if (listing.excerpt) el += `<div class="excerpt${viewModel.render.article.heti ? ' heti' : ''}"><p>${escape_html(listing.excerpt)}</p></div>`
   el += '<div class="meta cap"><span class="cap" id="post-meta">'
   el += icon('default:calendar')
   if (listing.date) {

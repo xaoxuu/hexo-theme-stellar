@@ -30,6 +30,20 @@ function configResult(config, when) {
 
 const CONTRIBUTIONS = defineContributions([
   {
+    id: "pin-slider",
+    scope: "region",
+    kind: "component",
+    entry: featureEntry("pin-slider"),
+    resources: [],
+    activation: selector(".pin-slider"),
+    schema: null,
+    i18n: null,
+    docs: { category: "Components", path: PLUGIN_SYSTEM_DOC },
+    tests: [RUNTIME_CONSUMPTION_TEST],
+    defaultsOwner: null,
+    project: () => configResult({})
+  },
+  {
     id: "page-controls",
     scope: "region",
     kind: "component",
