@@ -280,6 +280,12 @@ table a:not([class])
 .post-list.topic .post-card.topic .cover:focus-visible
   appearance-editorial-outline-active()
 
+// 文章、专栏列表与置顶轮播卡片在普通与交互状态均不显示边框，键盘焦点仍使用 outline。
+:root .post-list .post-card.post,
+:root .post-list.topic .post-card.topic .cover,
+:root .pin-slider
+  border: 0
+
 .post-list.wiki .wiki-card.no-cover,
 .wiki-card-cover.no-cover,
 .md-text .link-card,
