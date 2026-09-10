@@ -3,11 +3,6 @@
 
 const { replaceConfigTokens, shouldShowMobileBrand } = require("../lib/brand");
 
-hexo.extend.helper.register("brandGithubUsername", function() {
-  const username = hexo.stellar.data?.widgets?.ghuser?.username;
-  return typeof username === "string" ? username.trim() : "";
-});
-
 hexo.extend.helper.register("brandText", function(value) {
   return replaceConfigTokens(value, hexo.config);
 });

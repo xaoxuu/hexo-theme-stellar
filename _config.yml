@@ -40,6 +40,8 @@ leftbar:
   brand:
     # 设置 Leftbar Brand 的视觉样式；可选值为 regular 或 compact。
     style: regular
+    # 设置站点 Brand 数据区的 GitHub 用户名；留空不显示。
+    ghuser: null
     # 配置品牌图片。
     image:
       # 设置品牌图片地址；null 表示隐藏图片。

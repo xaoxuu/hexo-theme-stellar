@@ -82,7 +82,7 @@ function layoutCollectionStats(apiBase) {
 }
 
 function layoutSiteStats(apiBase) {
-  var username = typeof brandGithubUsername === 'function' ? brandGithubUsername() : ''
+  var username = typeof brand.ghuser === 'string' ? brand.ghuser.trim() : ''
   if (!username) return ''
   var encodedUsername = encodeURIComponent(username)
   var githubHref = `https://github.com/${encodedUsername}`
