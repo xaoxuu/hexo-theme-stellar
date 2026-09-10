@@ -46,7 +46,6 @@
   },
   "dependencies": {
     "cheerio": "^1.1.0",
-    "glob": "^10.4.0",
     "hexo-front-matter": "^4.2.1",
     "hexo-pagination": "^3.0.0",
     "hexo-renderer-ejs": "^2.0.0",
@@ -57,7 +56,10 @@
   },
   "homepage": "https://xaoxuu.com/wiki/stellar/",
   "devDependencies": {
+    "@eslint/js": "^9.39.5",
     "eslint": "^9.39.5",
+    "glob": "^10.4.0",
+    "globals": "^14.0.0",
     "hexo-util": "^4.0.0"
   }
 }

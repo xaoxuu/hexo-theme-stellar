@@ -299,9 +299,9 @@ node -e "console.log(require('js-yaml').load(require('fs').readFileSync('_config
 
 ---
 
-## 开发依赖
+## 构建与开发依赖
 
-主题需要以下构建期依赖（安装主题时自动安装，另有 `glob`）：
+主题需要以下构建期依赖（安装主题时自动安装）：
 
 | 包 | 版本 | 用途 |
 |----|------|------|
@@ -309,7 +309,8 @@ node -e "console.log(require('js-yaml').load(require('fs').readFileSync('_config
 | `hexo-renderer-stylus` | ^3.0.1 | Stylus CSS 预处理 |
 | `cheerio` | ^1.1.0 | 生成器 HTML 解析 |
 | `probe-image-size` | ^7.2.3 | 懒加载图片尺寸检测 |
-| `glob` | ^10.4.0 | 文件通配匹配 |
+
+`glob` 属于开发依赖，仅供 `npm run reuse:check` 扫描源码文件；用户生成站点不需要它。
 
 主题要求 Hexo 8 或更高版本、Node.js 22 或更高版本。
 

@@ -137,7 +137,6 @@ canonical, open_graph, structured_data, inject
 | 依赖 | 当前范围 | 用途 |
 | --- | --- | --- |
 | `cheerio` | ^1.1.0 | 构建期 HTML 处理 |
-| `glob` | ^10.4.0 | 文件匹配 |
 | `hexo-renderer-ejs` | ^2.0.0 | EJS 模板渲染 |
 | `hexo-renderer-stylus` | ^3.0.1 | Stylus 编译 |
 | `hexo-pagination` | ^3.0.0 | 列表分页 |
@@ -145,6 +144,8 @@ canonical, open_graph, structured_data, inject
 | `probe-image-size` | ^7.2.3 | 图片尺寸探测 |
 | `sharp` | ^0.34.5 | 图片解码与平均色提取 |
 | `hexo-front-matter` | ^4.2.1 | 源码 Front Matter 解析 |
+
+`glob` 属于开发依赖，仅用于主题仓库的源码复用检查，不随用户安装主题引入。
 
 浏览器端 `source/js/runtime/` 以原生 ESM 分发。消费站点的转译或压缩流程必须保留该目录的模块语义和相对 import，不能把它当作传统脚本转成 CommonJS。
 
