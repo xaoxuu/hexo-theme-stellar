@@ -54,13 +54,7 @@ function setMdLinkIcon(nodes, signal) {
         };
         image.src = url.href;
       });
-    }, undefined, { service: 'siteinfo', signal }).catch(function() {
-      if (signal?.aborted || !el.isConnected) return;
-      const icon = el.querySelector('.md-link-icon');
-      if (!icon) return;
-      icon.innerHTML = ctx.icons['default:link-broken'];
-      icon.classList.add('is-broken');
-    });
+    }, undefined, { service: 'siteinfo', signal }).catch(function() {});
   });
 }
 
