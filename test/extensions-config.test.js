@@ -48,9 +48,6 @@ test("Extension 顶层配置与 provider 参数投影为扁平运行时", () => 
 
 test("自部署服务提供默认值，并保留自定义与显式关闭", () => {
   const defaults = parseStellarConfig({ themeConfig: {} });
-  assert.equal(resolveServiceProvider(defaults.services.siteInfo).endpoint, "https://api.xaox.cc/site_info/v1?url={href}");
-  assert.equal(resolveServiceProvider(defaults.services.rating).endpoint, "https://star-vote.xaox.cc/api/rating");
-  assert.equal(resolveServiceProvider(defaults.services.vote).endpoint, "https://star-vote.xaox.cc/api/vote");
   assert.equal(Object.isFrozen(resolveServiceProvider(defaults.services.contributors).repositories), true);
 
   const configured = parseStellarConfig({
@@ -72,6 +69,27 @@ test("服务 resolver 读取选中 provider 的同级参数袋", () => {
   assert.deepEqual(resolveServiceProvider(selected), { endpoint: "https://second.example" });
   assert.equal(resolveServiceProvider({ ...selected, provider: null }), null);
   assert.equal(resolveServiceProvider({ ...selected, provider: "missing" }), null);
+});
+
+test("可选服务接口允许留空、自定义和关闭，已填写地址仍须合法", () => {
+  for (const [key, runtimeKey, provider] of [
+    ["site_info", "siteInfo", "site_info_api"],
+    ["rating", "rating", "star_vote"],
+    ["vote", "vote", "star_vote"]
+  ]) {
+    for (const endpoint of [null, "https://example.com/api", "http://localhost:3000/api"]) {
+      const service = { provider, [provider]: { endpoint } };
+      const config = parseStellarConfig({ themeConfig: { services: { [key]: service } } });
+      assert.equal(resolveServiceProvider(config.services[runtimeKey]).endpoint, endpoint);
+      const disabled = parseStellarConfig({ themeConfig: { services: { [key]: { ...service, provider: null } } } });
+      assert.equal(resolveServiceProvider(disabled.services[runtimeKey]), null);
+    }
+    for (const endpoint of ["", "example.com", "javascript:alert(1)", 42]) {
+      assert.throws(() => parseStellarConfig({
+        themeConfig: { services: { [key]: { [provider]: { endpoint } } } }
+      }), /endpoint/);
+    }
+  }
 });
 
 test("Extension 规则拒绝非法枚举、URL、Emoji 与 contributor", () => {

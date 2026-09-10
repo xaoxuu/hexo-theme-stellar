@@ -947,7 +947,7 @@ services:
     # 配置 site_info_api Provider。
     site_info_api:
       # 设置站点信息查询接口，{href} 会替换为目标网址。
-      endpoint: https://api.xaox.cc/site_info/v1?url={href}
+      endpoint: # https://api.xaox.cc/site_info/v1?url={href} 需要自行部署服务：https://github.com/xaoxuu/site-info-api
   # 配置评分服务。
   rating:
     # 设置评分 Provider；可选值为 star_vote 或 null。
@@ -955,7 +955,7 @@ services:
     # 配置评分使用的 star_vote Provider。
     star_vote:
       # 设置评分接口地址。
-      endpoint: https://star-vote.xaox.cc/api/rating
+      endpoint: # https://star-vote.xaox.cc/api/rating 需要自行部署服务：https://github.com/xaoxuu/star-vote
   # 配置投票服务。
   vote:
     # 设置投票 Provider；可选值为 star_vote 或 null。
@@ -963,7 +963,7 @@ services:
     # 配置投票使用的 star_vote Provider。
     star_vote:
       # 设置投票接口地址。
-      endpoint: https://star-vote.xaox.cc/api/vote
+      endpoint: # https://star-vote.xaox.cc/api/vote 需要自行部署服务：https://github.com/xaoxuu/star-vote
   # 配置内容贡献者服务。
   contributors:
     # 设置贡献者 Provider。
