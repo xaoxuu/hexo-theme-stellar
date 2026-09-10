@@ -1,3 +1,27 @@
+# Stellar 2.0.0-rc.4 发布候选核查
+
+> 核查日期：2026-09-10
+> 发布基线：`2.0.0-rc.3`
+> 候选版本：`2.0.0-rc.4`
+
+## 净变化与文档覆盖
+
+已核对公开 rc.3 tag 到最终候选的树差异；开始发布时 main 与 origin/main 一致，工作区仅有 CHANGELOG 的 rc.1 比较链接修正，随发布保留。
+
+| 领域 | 当前事实来源与最终行为 | 文档出口 |
+| --- | --- | --- |
+| Brand | 默认配置、配置与内容 Schema、模型、brand.ejs：站点统计显式使用 leftbar.brand.ghuser，不再推断 Widget 用户名 | 配置知识库、CHANGELOG 升级注意 |
+| 导航 | listing_nav/blog.ejs 使用 topicIndex.items 判断专栏入口 | CHANGELOG |
+| 请求失败 | siteinfo.js 保留链接原图标，loading.styl 隐藏错误状态加载指示器 | 数据服务知识库、CHANGELOG |
+| 布局 | minimal、collection、sidebar、okr、list 与根字号样式：卡片边框、控件字体、前缀、移动列表和标签布局修复 | CHANGELOG；具体视觉值不新增长期契约 |
+| 依赖 | package.json/lock：glob 转开发依赖，声明 ESLint 配置依赖 | 安装与高级主题知识库已有同步、CHANGELOG |
+
+## 验证
+
+执行 `npm run release:dry -- 2.0.0-rc.4`，在目标版本状态运行完整 release:check，包含 lint、单元测试、复用、贡献描述符、四场景包集成、性能与知识库核查；预演恢复受管文件后正式发布再次执行同一门禁。正式推送后核实 Actions、npm rc dist-tag、tag 和 GitHub Release。
+
+---
+
 # Stellar 2.0.0-rc.3 发布候选核查
 
 > 核查日期：2026-09-10

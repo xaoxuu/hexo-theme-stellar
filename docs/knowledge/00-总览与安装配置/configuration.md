@@ -204,3 +204,16 @@ footer:
       items:
         - '[近期发布](/)'
 ```
+
+## 站点 Brand GitHub 数据
+
+`leftbar.brand.ghuser` 显式指定站点 Brand 数据区的 GitHub 用户名，默认 `null`；空值不显示统计，不从 ghuser Widget 的 username 推断。例如：
+
+```yaml
+leftbar:
+  brand:
+    style: regular
+    ghuser: xaoxuu
+```
+
+仅左栏 regular 样式显示数据区；站点来源显示 followers、following、repos，Collection 来源仍使用集合仓库统计。配置经 Schema 与页面模型传递至 `layout/_partial/sidebar/brand.ejs`。

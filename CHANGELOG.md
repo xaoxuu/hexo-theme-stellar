@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.0.0-rc.4
+
+> 发布日期：2026-09-10
+
+本节记录从公开候选 `2.0.0-rc.3` 到 `2.0.0-rc.4` 最终文件树的净变化。
+
+### 修复与改进
+
+- 恢复博客列表导航中的专栏入口，使用当前上架专栏索引判断是否显示。
+- 修复移动端专栏文章列表横向溢出，调整 OKR 标签宽度与右对齐；移动端根字号增量由 2px 调整为 1px。
+- 统一集合控件、侧栏菜单与搜索结果字体，修复导航前缀和长标题的布局。
+- minimal 外观下文章、专栏封面与置顶轮播在普通及交互状态均去除边框，保留键盘焦点 outline。
+- Markdown 行内链接的站点信息请求失败时保留原图标，不再显示红色断链图标；数据加载失败时隐藏加载指示器。
+- 将仅用于源码检查的 `glob` 移至开发依赖，并显式声明 ESLint 配置需要的 `@eslint/js` 与 `globals`。
+
+### 升级注意（配置变更与破坏性改动）
+
+- 站点 Brand 的 GitHub 数据区改为显式读取 `leftbar.brand.ghuser`，默认 `null` 不显示；不再从 ghuser Widget 的 username 推断。需要保留统计时设置 `leftbar.brand.ghuser: 你的GitHub用户名`。该数据区仍仅在左栏 regular 样式下显示，Collection Brand 的仓库统计保持原有来源。
+
+Full Changelog: [2.0.0-rc.3...2.0.0-rc.4](https://github.com/xaoxuu/hexo-theme-stellar/compare/2.0.0-rc.3...2.0.0-rc.4)
+
 ## 2.0.0-rc.3
 
 > 发布日期：2026-09-10
@@ -90,7 +111,7 @@ Full Changelog: [2.0.0-rc.1...2.0.0-rc.2](https://github.com/xaoxuu/hexo-theme-s
 - 浏览器后处理必须原样保留 `public/js/runtime/**/*.js` 的 ESM 语义、相对 import 与 JavaScript MIME 类型。
 - v2 当前源码从仓库 `main` 安装并需要执行 `npm install --prefix themes/stellar`；npm 包是否为 v2 以实际公开版本为准。
 
-Full Changelog: [1.44.0...main](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.44.0...main)
+Full Changelog: [1.44.0...2.0.0-rc.1](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.44.0...2.0.0-rc.1)
 
 ## 1.44.0
 

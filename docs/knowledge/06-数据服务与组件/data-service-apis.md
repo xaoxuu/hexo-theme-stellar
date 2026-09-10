@@ -113,4 +113,4 @@ request/cache 是主题运行时实现策略，由 `scripts/lib/internal-constan
 
 ## 行内链接与站点图标
 
-普通 Markdown 文本链接、文章参考链接、远程 Markdown 以及评论正文链接共享站点信息增强。行内链接优先使用响应的 `favicon`，普通链接卡片和站点卡片优先使用 `appicon`，缺失时复用 `icon`；rich 链接卡片优先 favicon。关闭服务时保留默认链接图标，行内请求失败显示断链图标，图标不强制圆形裁剪。相关源码：[md_link.js](../../../scripts/filters/lib/md_link.js)、[siteinfo.js](../../../source/js/services/siteinfo.js)。
+普通 Markdown 文本链接、文章参考链接、远程 Markdown 以及评论正文链接共享站点信息增强。行内链接优先使用响应的 `favicon`，普通链接卡片和站点卡片优先使用 `appicon`，缺失时复用 `icon`；rich 链接卡片优先 favicon。关闭服务时保留默认链接图标，行内请求失败保留原图标，图标不强制圆形裁剪。相关源码：[md_link.js](../../../scripts/filters/lib/md_link.js)、[siteinfo.js](../../../source/js/services/siteinfo.js)。
