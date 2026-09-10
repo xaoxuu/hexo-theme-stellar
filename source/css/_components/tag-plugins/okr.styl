@@ -103,10 +103,12 @@
 
 @media screen and (max-width: $device-mobile-max)
   .tag-plugin.okr .okr-item
-    grid-template-columns: 2.8rem auto 50px
+    grid-template-columns: 2.8rem auto 60px
     grid-column-gap: 0.5rem
     padding: 0.5rem
     .okr-left .title
       padding: 0 0.25rem
+    .labels
+      justify-content: flex-end
     .label
       txt-ellipsis()
