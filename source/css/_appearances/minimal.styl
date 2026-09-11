@@ -93,6 +93,10 @@ table a:not([class])
   &:not(:hover)
     border-color: transparent
 
+.widget-wrapper.toc .toc a.toc-link.active:before
+  // 激活条相对链接的 padding box 定位，需抵消外边距与透明边框。
+  left: calc(0px - var(--padding) - 1px)
+
 // Drawer 的表面跟随布局断点，关闭及进出动画期间也保持不透明。
 @media screen and (max-width: $device-laptop)
   .site-shell .site-region--rightbar .site-region__surface.ui-drawer-surface,
