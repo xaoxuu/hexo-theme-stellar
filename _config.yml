@@ -820,7 +820,7 @@ tags:
   # 配置 mark 标签插件。
   mark:
     # 设置 mark 默认颜色。
-    default_color: yellow
+    default_color: theme
   # 配置 hashtag 标签插件。
   hashtag:
     # 设置 hashtag 默认颜色；null 表示使用主题默认色。

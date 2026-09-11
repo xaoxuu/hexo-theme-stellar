@@ -6,7 +6,7 @@ x-set-theme-colorful($scheme = 'light', $color, $text = true)
   if $scheme == 'dark'
     --theme-border: x-hsla($hue, 40%, 24%)
     --theme-block: x-hsla($hue, 24%, 24%)
-    --theme-mark: x-hsla($hue, 24%, 24%)
+    --theme-mark: x-hsla($hue, 50%, 32%)
     --theme-codeblock: x-hsla($hue, 12%, 24%)
     if text
       --text: x-hsla($hue, 50%, 75%, 1)
@@ -107,6 +107,10 @@ _dark_tags()
     x-set-theme-colorful('dark', $c-blue)
   .colorful[color='purple']
     x-set-theme-colorful('dark', $c-purple)
+  .colorful[color='theme']
+    x-set-theme-colorful('dark', $c-theme)
+  .colorful[color='accent']
+    x-set-theme-colorful('dark', $c-accent)
 
 
 :root[data-theme="dark"]
@@ -114,4 +118,3 @@ _dark_tags()
 :root:not([data-theme])
   @media (prefers-color-scheme: dark)
     _dark_tags()
-
