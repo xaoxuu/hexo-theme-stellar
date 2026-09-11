@@ -63,7 +63,7 @@ leftbar:
 
 | Widget | 业务数据来源 |
 | --- | --- |
-| `menu` | Topbar `menu` 与最终导航状态；搜索入口复用 Menu search item |
+| `menu` | Topbar `menu` 与最终导航状态；搜索入口由 Leftbar Brand 提供 |
 | `settings` | 外观设置入口 |
 | `spacer` | Topbar 弹性占位；多个实例平分剩余空间 |
 
@@ -77,9 +77,9 @@ Widget 类型声明 `topbar`、`leftbar`、`leftbarRail`、`rightbar`、`drawer`
 | --- | :---: | :---: | :---: | :---: | :---: |
 | Menu / Settings | ✓ | ✓ | ✓ |  | ✓ |
 | Spacer | ✓ |  |  |  |  |
-| TOC | ✓ | ✓ | ✓ | ✓ | ✓ |
-| Tree / Tagtree |  | ✓ | ✓ | ✓ | ✓ |
-| Recent / Related / GitHub / Author |  | ✓ |  | ✓ | ✓ |
+| TOC | ✓ | ✓ |  | ✓ | ✓ |
+| Tree / Related / Linklist |  | ✓ | ✓ | ✓ | ✓ |
+| Tagtree / Recent / GitHub / Author |  | ✓ |  | ✓ | ✓ |
 | Timeline / Markdown |  | ✓ |  | ✓ | ✓ |
 
 未声明能力的自定义 Widget 默认只支持 Leftbar、Rightbar 和 Drawer。实例不能用内联 `presentations` 扩大类型能力，也不存在万能 Topbar Popover 回退。
@@ -94,7 +94,7 @@ Leftbar 不公开第二套槽位配置。Brand、Menu、Footer Actions 与 Setti
 
 状态保存在版本化键 `stellar:v2:leftbar-state`，并由 `<head>` 中的首屏脚本在布局计算前恢复。旧 Sidebar 状态键不迁移。Rail 使用实际 64px 宽度；Visitor 只显示头像，折叠/展开按钮位于其下方，临时 Drawer 中恢复头像和昵称。
 
-在 `≤768px` 时 Leftbar 攟为 Drawer，不保留永久 Rail。
+在 `≤768px` 时 Leftbar 改为 Drawer，不保留永久 Rail。
 
 ## Rightbar 与 Drawer
 
@@ -116,3 +116,7 @@ Drawer 复用原 Region 节点并遵守 ARIA、焦点转移、Escape、焦点恢
 Doctor 只为 1.44.0 已发布的主题根字段提供迁移定位，例如 `logo`、`menubar`、`site_tree` 分别指向当前 Brand、Menu 与 Profile 配置。v2 预发布候选中出现过的 Region 包装、固定内容 Widget 名称和其它中间结构不保留别名或专用墓碑；字段作为未知字段拒绝，Widget 则由 Registry 按未知类型或位置能力不匹配警告并跳过。
 
 实现入口：`scripts/lib/regions.js`、`scripts/lib/widget-registry.js`、`scripts/lib/doctor.js`、`layout/_partial/regions/widgets.ejs`、`source/js/main.js`。
+
+## 桌面紧凑 Rightbar
+
+当前开发版在 >1180px、Leftbar 与 Rightbar 都存在且 Leftbar 折叠时收窄右栏，保留网格占位并显示紧凑 TOC；hover 或 focus-within 恢复完整布局。中小屏仍按 Drawer 规则处理。TOC 指示器在当前项之间移动，初始化、滚动与尺寸变化时同步。

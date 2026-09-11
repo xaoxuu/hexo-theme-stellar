@@ -179,129 +179,21 @@ Post/Topic/Wiki/Notebook 的模型先解析 `services.contributors` 选中的 pr
 
 ## 社交分享
 
-### 可见性规则
+当前开发版（rc.4 之后）的完整服务清单来自 `scripts/lib/share-services.js`：
 
-分享按钮可见性与许可一致，采用三级逻辑：
+| 服务 | 行为 |
+| :--- | :--- |
+| `qrcode` | 切换通用二维码面板，二维码内容为当前永久链接 |
+| `weibo` | 分享 URL、标题、图片与摘要到微博 |
+| `x` | 分享标题与 URL 到 X |
+| `telegram` | 分享标题与 URL 到 Telegram |
+| `whatsapp` | 分享标题与 URL 到 WhatsApp |
+| `email` | 打开含标题与永久链接的 mailto 链接 |
 
-| 页面类型 | 是否显示分享 |
-|----------|--------------|
-| Wiki / Topic / Notebook | `render.article.footer.share` 非 null；Wiki、Notebook 默认关闭，Topic 继承全局分享 |
-| `post` | `render.article.footer.share` 非 null；默认继承 `article.footer.share` |
-| 其他布局 | `page.share == true` |
+普通 Post 和 Topic 继承 article.footer.share；Wiki、Notebook 默认关闭。Collection 或 Page 的 footer.share 为 true 时恢复全局列表，数组显式选择，false 或 [] 隐藏；有效服务为空不渲染。分享参数经 URL 编码，属性经 HTML 转义。
 
-模型只保留注册表中的 `wechat/weibo/x/telegram/whatsapp/email/link/system` 八个服务；解析后的 services 非空时才生成 share 对象和按钮。Collection 或 Page 的 `footer.share: true` 恢复全局 Article 服务列表，数组则显式选择服务。
+共享 partial `layout/_partial/main/article/share.ejs` 输出独立 article-share 区域；qrcode 使用 share-qrcode 面板与 api.qrserver.com 生成图片，通过 util.toggle 切换。分享图标由主题 share: 图标命名空间提供。
 
-### 支持的平台
+## CSS 与消费入口
 
-`article.footer.share` 数组支持的值：
-
-| 平台 | 行为 |
-|------|------|
-| `wechat` | 调用 `util.toggle("qrcode-wechat")` 显示/隐藏二维码面板 |
-| `weibo` | 打开 `service.weibo.com/share/share.php`，带 URL、标题、图片、摘要 |
-| `x` | 打开 X 的发帖分享页，带标题与 URL |
-| `telegram` | 打开 Telegram 分享页，带标题与 URL |
-| `whatsapp` | 打开 WhatsApp 分享页，正文包含标题与 URL |
-| `email` | 打开 `mailto:?subject=...&body=...` 链接 |
-| `link` | 调用 `util.copy("copy-link", ...)` 复制永久链接到剪贴板 |
-| `system` | 调用 Web Share；不可用时回退到复制链接 |
-
-分享按钮中的图标由主题图标配置以外部 SVG `<img>` 输出；样式将图片限制为 20×20px，并设为块级元素，使其与分享栏 20px 网格列对齐。
-
-`util.toggle` 与 `util.copy` 是客户端辅助函数，见[标签页组件与工具函数](../05-前端交互/tabs-utils.md)。
-
-### 微博分享参数
-
-| 参数 | 来源 |
-|------|------|
-| `url` | `PageViewModel.footer.share.permalink` |
-| `title` | `PageViewModel.footer.share.title` |
-| `pics` | `PageViewModel.footer.share.image` |
-| `summary` | `PageViewModel.footer.share.summary` |
-
-所有分享参数（URL、标题、图片、摘要）均经 `encodeURIComponent` 编码后拼入 `href`；`copy-link` 输入框的 `value` 与复制提示文案经 HTML 转义输出，标题/摘要含引号、`&`、`<` 等字符时不会破坏 HTML 结构。
-
-### 微信二维码
-
-分享列表含 `wechat` 时，额外渲染 `<div class="qrcode" id="qrcode-wechat">`：
-
-```html
-<img src="https://api.qrserver.com/v1/create-qr-code/?size=256x256&data={encodeURIComponent(footer.share.permalink)}"/>
-```
-
-二维码面板经 CSS 过渡动画。初始 `opacity: 0; height: 0; transform: scale(0.01)`；`util.toggle("qrcode-wechat")` 添加 `display` 类后面板动画到 `height: 128px; transform: scale(1)`。
-
-```mermaid
-flowchart LR
-  shareClick["User clicks\nwechat button"]
-  toggleFn["util.toggle\n('qrcode-wechat')"]
-  cssClass["toggles .display\nclass on #qrcode-wechat"]
-  qrcodeImg["img from\napi.qrserver.com\n?data=footer.share.permalink"]
-  transition["CSS trans1:\nheight 0 -> 128px\nscale 0.01 -> 1"]
-
-  shareClick --> toggleFn --> cssClass --> transition
-  cssClass --> qrcodeImg
-```
-
-**参考源码**：[layout/_partial/main/article/post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs)、[source/css/_components/partial/article-footer.styl](../../../source/css/_components/partial/article-footer.styl)
-
----
-
-## CSS 架构
-
-整个文章页脚在 `article-footer.styl` 中设置样式。
-
-| 选择器 | 用途 |
-|--------|------|
-| `.article-footer` | 外层容器：`var(--block)` 背景、边框、`border-radius: $border-card-l` |
-| `.article-footer .header` | 区块标签：`font-weight: 500`、`font-size: $fsh5` |
-| `.article-footer .body` | 内容区：`--fs-content: $fs-content-2`、隐藏的复制链接输入框 |
-| `.article-footer section+section` | 相邻区块间的顶部边框分隔 |
-| `.article-footer #contributors` | 贡献者网格布局与编辑按钮样式 |
-| `.article-footer .social-wrap` | 20px 社交图标按钮的 CSS grid |
-| `.article-footer .qrcode` | 二维码面板：初始 `height: 0`，切换时过渡 |
-| `.article-footer .qrcode.display` | 二维码面板可见状态：`height: 128px` |
-
-`.body` 内的 `.link` 元素（包裹分享链接按钮的 `#copy-link` 输入框）默认 `height: 0; opacity: 0`，视觉不可见但值仍可被 `util.copy` 访问。
-
-**参考源码**：[source/css/_components/partial/article-footer.styl](../../../source/css/_components/partial/article-footer.styl)
-
----
-
-## 数据流总结
-
-```mermaid
-flowchart TD
-  pageData["Front Matter\nfooter / article.author"]
-  collection["Collection/Profile\nfooter defaults"]
-  themeConfig["theme/runtime\narticle footer, authors, contributors"]
-  model["buildPost/Topic/Wiki/Notebook render\nresolve + freeze"]
-  ejs["post_footer.ejs\nexplicit footer local"]
-
-  secRef["section#references\nmarkdown() each ref"]
-  licResolve["Resolved license"]
-  authorInterp["Author interpolation\n{author.name} {author.url}"]
-  secLic["section#license\nmarkdown(license)"]
-  contribPartial["footer.contributor"]
-  secCon["section#contributors"]
-  shareVis["footer.share or null"]
-  socialBtns["socialButtons()\nwechat weibo email link"]
-  qrcode["qrcode()\n#qrcode-wechat"]
-  secShr["section#share"]
-  output["div.article-footer"]
-
-  pageData --> model
-  collection --> model
-  themeConfig --> model
-  model --> ejs
-  ejs --> secRef
-  model --> licResolve --> authorInterp
-  authorInterp --> ejs
-  ejs --> secLic
-  ejs --> contribPartial --> secCon
-  ejs --> shareVis --> socialBtns --> secShr
-  shareVis --> qrcode --> secShr
-  secRef & secLic & secCon & secShr --> output
-```
-
-**参考源码**：[scripts/lib/models/index.js](../../../scripts/lib/models/index.js)、[layout/_partial/main/article/post_footer.ejs](../../../layout/_partial/main/article/post_footer.ejs)、[source/css/_components/partial/article-footer.styl](../../../source/css/_components/partial/article-footer.styl)
+许可、参考资料和贡献者区域由 `source/css/_components/partial/article-footer.styl` 管理；分享区域由 `source/css/_components/partial/article-share.styl` 管理。Post、Wiki、Notebook 的内容模板复用共享 share partial，服务动作统一由 share-services 注册表生成。

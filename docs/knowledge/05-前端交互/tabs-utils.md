@@ -254,7 +254,7 @@ graph LR
 3. `intersectionRatio > 0` 时执行 `func()` 并断开观察器
 4. 开始观察 `target` 元素
 
-该模式用于懒加载评论系统与数据服务小部件等昂贵组件，见[数据服务 API](../06-数据服务与组件/data-service-apis.md)。
+该模式用于数据服务小部件等组件；评论独立异步加载，不再等待视口，见[数据服务 API](../06-数据服务与组件/data-service-apis.md)。
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)
 

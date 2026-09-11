@@ -29,15 +29,15 @@ services:
   site_info:
     provider: site_info_api
     site_info_api:
-      endpoint: https://api.xaox.cc/site_info/v1?url={href}
+      endpoint: https://site-info.example.com/site_info/v1?url={href}
   rating:
     provider: star_vote
     star_vote:
-      endpoint: https://star-vote.xaox.cc/api/rating
+      endpoint: https://vote.example.com/api/rating
   vote:
     provider: star_vote
     star_vote:
-      endpoint: https://star-vote.xaox.cc/api/vote
+      endpoint: https://vote.example.com/api/vote
   contributors:
     provider: github
     github:
@@ -73,3 +73,5 @@ request/cache policy 由 `scripts/lib/internal-constants.js` 所有，构建期�
 - [小部件系统架构](widget-architecture.md)
 
 旧 `data_services`、`data_cache` 与 `api_host` 根已被 Schema 拒绝，不再是现行接口。
+
+当前开发版（rc.4 之后）Site Info、Rating、Vote 的 endpoint 默认 null，上述 example.com 为自部署地址占位；未配置地址不发请求。GitHub 服务保留默认地址。

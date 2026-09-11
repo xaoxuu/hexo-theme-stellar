@@ -52,7 +52,7 @@ flowchart LR
 - 图表：`features.diagrams` 定义 Mermaid 默认，页面 `render.diagrams` 决定单页启用或覆盖选项。
 - 其它 Feature：统一使用 `enabled`，由 Runtime Manifest adapter 按页面声明与 DOM 条件加载内部资源。
 
-Swiper 是主题内置容器能力，依据页面 DOM 按需加载，不提供公开配置。图片懒加载是主题基础行为，公开配置只保留过渡与比例修正参数。
+Swiper 依据页面 DOM 按需加载，资源可由 features.swiper.js/css 覆盖。图片懒加载是基础行为，features.lazy_loading 提供 js、transition、auto_aspect_ratio；features.image_optimization.enabled 独立控制构建期元数据预处理。
 
 ## 服务与内部缓存
 

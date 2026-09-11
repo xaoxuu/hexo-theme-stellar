@@ -71,7 +71,7 @@ Hexo 自有 Front Matter（如 `title/date/layout/tags/categories/permalink`）�
 
 ## Widget 与业务数据边界
 
-Region 对象的 `widgets` 数组只保存可移动 Widget 引用。Brand 与 Menu 由 Topbar / Leftbar 各自配置，Actions 只属于 `leftbar.footer.actions`。Wiki 与 Notebook 默认把 Collection 的 `name/tagline/icon/route` 投影为 Leftbar Brand；Profile、Collection 或 Page 的显式 `leftbar.brand` 会按级联顺序覆盖，Topic 继续使用站点 Brand。
+Region 对象的 `widgets` 数组只保存可移动 Widget 引用。Brand 与 Menu 由 Topbar / Leftbar 各自配置，Actions 只属于 `leftbar.footer.actions`。Wiki 与 Notebook 默认把 Collection 的 `name/tagline/icon/route` 投影为 Leftbar Brand；Profile、Collection 或 Page 的显式 `leftbar.brand` 会按级联顺序覆盖，Topic 默认使用站点 Brand，可显式选择 collection 来源。
 
 Collection 字段按实际消费者收窄：Wiki 只接受 `listing.priority/order`、`navigation.tree` 与 `hero`；Topic 只接受 `listing.excerpt_length/sort` 和 `route.start`；Notebook 只接受 `listing.order/excerpt_length/per_page/sort`。`route.path` 和 `visibility` 对三类 Collection 都有效。Collection `visibility` 先作为成员 Page 默认，然后由 Page Front Matter 覆盖；它不删除详情路由。Page 的 `listing.priority` 只接受 Post、Topic 与 Notebook，归属可推导的页面会先解析归属再校验。
 
@@ -97,3 +97,7 @@ Doctor 只为 1.44.0 已发布的 Collection 与 Front Matter 字段输出来源
 ## 诊断与恢复
 
 Doctor 与构建对普通字段使用恢复解析，对不适用的表现参数警告并忽略；缺少有效集合显示名时警告并使用 Collection ID。根结构或归属冲突仍属于硬错误。解析与能力验证见 [content-config.js](../../../scripts/lib/content-config.js)，Doctor 把 warning 与 error 分开报告。
+
+## 当前开发版字段边界
+
+Collection 的 name 可省略，解析时使用 Collection ID 并给出 warning；显式配置仍应是非空字符串。页面 banner 只支持 enabled/avatar/headline/tagline，背景读取页面 cover；Collection 不声明 banner。共享 Leftbar Brand 支持 search/ghrepo/ghuser，只有 source/back_button 是 Collection 专属。

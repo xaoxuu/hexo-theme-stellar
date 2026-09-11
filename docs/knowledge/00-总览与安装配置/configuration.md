@@ -217,3 +217,9 @@ leftbar:
 ```
 
 仅左栏 regular 样式显示数据区；站点来源显示 followers、following、repos，Collection 来源仍使用集合仓库统计。配置经 Schema 与页面模型传递至 `layout/_partial/sidebar/brand.ejs`。
+
+## 当前开发版（rc.4 之后）
+
+Leftbar Brand 新增 ghrepo 仓库统计，优先于 ghuser，且只在 regular Leftbar 中显示；两者均须显式配置。search 默认 true，控制 Brand 搜索入口，Menu 只支持 link。
+
+内容横幅与列表共用页面 cover；页面 banner 只保留 enabled/avatar/headline/tagline，Collection 不配置 banner。分享服务为 qrcode/weibo/x/telegram/whatsapp/email。Site Info、Rating、Vote 默认 endpoint 为 null，需自行部署填写。Reveal 的 duration/interval/distance/blur 默认 800ms/200ms/8px/4px。当前标题装饰由样式维护，不再提供 heading_prefixes。

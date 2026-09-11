@@ -57,9 +57,9 @@ comments:
 
 这里的内部 `service` 不是公开 YAML 字段。Wiki、Topic 与 Notebook 也通过统一 Collection/Front Matter Schema 生成相同评论模型。
 
-## 懒加载与线程标识
+## 异步加载与线程标识
 
-评论 partial 只接收显式 `comments` local 并输出容器。Runtime Manifest 声明 `comments` Extension，[source/js/runtime/extensions/comments.js](../../../source/js/runtime/extensions/comments.js) 在容器进入视口时加载第三方库；延迟任务支持取消并把初始化失败交给 Registry 的 `stellar:extension-error` 隔离。Artalk URL 含 `?atk_comment=<id>` 或 `#atk-comment-<id>` 时立即初始化，以完成通知链接定位。
+评论 partial 只接收显式 `comments` local 并输出容器。Runtime Manifest 声明 `comments` Extension，[source/js/runtime/extensions/comments.js](../../../source/js/runtime/extensions/comments.js) 在发现容器后立即异步加载第三方库，不再等待视口。挂载立即返回清理函数，后台加载不阻塞其它 Extension；卸载取消未完成任务，初始化失败通过 `context.reportError` 交给 Registry 隔离。Artalk 保留通知链接定位。
 
 Twikoo、Waline 与 Artalk 的线程键优先取容器 `comment_id`，缺失时使用当前 URL pathname。Beaudar、Utterances 与 Giscus 把参数袋渲染为上游脚本属性。
 
@@ -67,9 +67,9 @@ Twikoo、Waline 与 Artalk 的线程键优先取容器 `comment_id`，缺失时�
 
 | Provider | 主要参数 | 加载方式 |
 |----------|----------|----------|
-| `beaudar` | `repo`、`issue-term`、`theme` 等 | 内部固定脚本，容器属性透传 |
-| `utterances` | `repo`、`issue-term`、`theme` 等 | 内部固定脚本，容器属性透传 |
-| `giscus` | `data-*` 与 `crossorigin` | 内部固定脚本，容器属性透传 |
+| `beaudar` | `repo`、`issue-term`、`theme` 等 | Provider js 资源，容器属性透传 |
+| `utterances` | `repo`、`issue-term`、`theme` 等 | Provider js 资源，容器属性透传 |
+| `giscus` | `data-*` 与 `crossorigin` | Provider js 资源，容器属性透传 |
 | `twikoo` | `envId` 及 Twikoo 原生选项 | 内部资源 + `twikoo.init()` |
 | `waline` | `serverURL` 及 Waline 原生选项 | 内部 ESM/CSS + `init()` |
 | `artalk` | `server/site/darkMode/imageUploader` | 内部 JS/CSS + `Artalk.init()` |

@@ -452,3 +452,7 @@ sequenceDiagram
 ```
 
 **参考源码**：[source/js/main.js](../../../source/js/main.js)
+
+## 当前开发版交互
+
+rc.4 之后，目录当前项使用独立指示器在条目间平滑移动；初始化、滚动和 ResizeObserver 回调同步其位置。桌面 Rightbar 跟随 Leftbar 折叠为紧凑目录，hover 或 focus-within 展开，保留原网格占位。标题保持单行截断；该行为由现有侧栏状态和样式控制，不增加 TOC 配置。

@@ -37,7 +37,7 @@ topbar:
     href: /wiki/stellar/
 ```
 
-`image` 支持 `src` 与 `variant`，`variant` 区分正圆裁剪的头像、完整容纳的图标和不裁剪的透明字标。Brand 可以为 `false` 整体隐藏；对象内字段按层合并，`null` 显式隐藏对应内容。Wiki 与 Notebook 默认从 Collection 的 `name/tagline/icon/route` 生成 Leftbar Brand；显式 Profile、Collection 或 Page Brand 仍按层覆盖。Topic 不生成 Collection Brand，继续继承站点 Brand。
+`image` 支持 `src` 与 `variant`，`variant` 区分正圆裁剪的头像、完整容纳的图标和不裁剪的透明字标。Brand 可以为 `false` 整体隐藏；对象内字段按层合并，`null` 显式隐藏对应内容。Wiki 与 Notebook 默认从 Collection 的 `name/tagline/icon/route` 生成 Leftbar Brand；显式 Profile、Collection 或 Page Brand 仍按层覆盖。Topic 默认继承站点 Brand，也可在 Collection 显式设置 leftbar.brand.source: collection。
 
 ## Menu 数据与激活
 
@@ -96,7 +96,13 @@ leftbar:
 ## 实现边界
 
 - Brand 解析：`scripts/helpers/brand.js`
-- 菜单数据：Region `menu` Schema 与 `layout/_partial/sidebar/menu.ejs`
+- 菜单数据：Region `menu` Schema 与 `layout/_partial/primitives/navigation.ejs`
 - 系统 Widget：`scripts/lib/widget-registry.js`
 - Region 渲染：`layout/_partial/regions/widgets.ejs`
 - 页面模型：`scripts/lib/models/index.js`
+
+## 搜索与 GitHub 统计
+
+当前开发版在 Leftbar Brand 内显示搜索入口，leftbar.brand.search 默认 true，需 Provider 非空且 Brand 本身可见。主题、Profile、Collection、Page 均可覆盖；Menu 只保留 link 项。
+
+regular Leftbar 的统计显式读取 leftbar.brand.ghrepo（owner/repo，Stars/Forks/最新 Tag），未设置仓库时读取 ghuser（Followers/Following/Repos）。两者默认 null，不推断 Widget 或 source.repository；compact、Topbar、移动主内容 Brand 不渲染统计。

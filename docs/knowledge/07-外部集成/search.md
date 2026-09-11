@@ -49,11 +49,11 @@ search:
 
 ## Algolia
 
-Algolia provider 把 `appId/apiKey/indexName` 原样交给上游客户端。Algolia SDK 地址由主题内部 Extension 资源注册表提供，不属于公开配置，站点不能通过 `js` 字段替换。
+Algolia provider 把 `appId/apiKey/indexName` 原样交给上游客户端。Algolia SDK 可通过 search.algolia.js 替换，省略或 null 使用默认资源。
 
 ## 公共交互
 
-两种 provider 共用页面级唯一 `<dialog>`。Search 入口是普通按钮，按钮文字与共享输入框 Placeholder 均固定读取 `btn.search`（中文为“搜索”）；每个入口只保留自己的过滤范围，切换“全站 / 博客 / 当前域”不会改写文字。旧查询和结果会清理，Provider 索引缓存继续复用。同页可以在多个 Region 放置 Search，不会重复输入框、结果区或监听器。
+两种 provider 共用页面级唯一 `<dialog>`。Search 入口是普通按钮，按钮文字与共享输入框 Placeholder 均固定读取 `btn.search`（中文为“搜索”）；每个入口只保留自己的过滤范围，切换“全站 / 博客 / 当前域”不会改写文字。旧查询和结果会清理，Provider 索引缓存继续复用。当前开发版入口位于 Leftbar Brand，由 leftbar.brand.search 控制；Topbar 和 Leftbar Menu 只接受 link 项。Brand 必须有图片或名称且 Provider 已启用，搜索按钮才会渲染。
 
 桌面浮层宽度为 `min(600px, calc(100dvw - 64px))`，结果区独立滚动；`≤768px` 使用安全区适配的全屏模式。所有断点均可用 `Command+K` 或 `Ctrl+K` 打开；关闭按钮、背景点击、Escape、焦点恢复和页面滚动锁定由统一控制器处理。输入法组合、缺少 Search 入口或其它编辑区域保持浏览器原生行为。
 

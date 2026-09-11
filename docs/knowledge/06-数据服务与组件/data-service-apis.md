@@ -18,15 +18,15 @@ services:
   site_info:
     provider: site_info_api
     site_info_api:
-      endpoint: https://api.xaox.cc/site_info/v1?url={href}
+      endpoint: https://site-info.example.com/site_info/v1?url={href}
   rating:
     provider: star_vote
     star_vote:
-      endpoint: https://star-vote.xaox.cc/api/rating
+      endpoint: https://vote.example.com/api/rating
   vote:
     provider: star_vote
     star_vote:
-      endpoint: https://star-vote.xaox.cc/api/vote
+      endpoint: https://vote.example.com/api/vote
   contributors:
     provider: github
     github:
@@ -48,7 +48,7 @@ YAML 解析后字段转为 camelCase。标签、PageViewModel、模板和 Runtim
 
 ### Site Info
 
-`site_info` 默认选择 `site_info_api`，其 `endpoint` 支持 `{href}` 占位符并默认使用 `https://api.xaox.cc/site_info/v1?url={href}`。Link 与 Sites 标签在卡片缺少 icon/avatar 时可请求站点元信息；将 `provider` 显式设为 `null` 时不发请求，公共或自定义服务失败时保留原始标题、图标、描述等静态兜底。
+`site_info` 默认选择 `site_info_api`，其 `endpoint` 支持 `{href}` 占位符，当前开发版默认 null，须填写自部署地址。Link 与 Sites 标签在卡片缺少 icon/avatar 时可请求站点元信息；endpoint 留空或将 `provider` 显式设为 `null` 时不发请求，公共或自定义服务失败时保留原始标题、图标、描述等静态兜底。
 
 ```yaml
 services:
@@ -60,7 +60,7 @@ services:
 
 ### Rating 与 Vote
 
-`rating` 与 `vote` 是两个独立能力，均默认选择 `star_vote`；各自参数袋内的 `endpoint` 分别默认使用 `https://star-vote.xaox.cc/api/rating` 和 `https://star-vote.xaox.cc/api/vote`。站点可覆盖为自己的 [star-vote](https://github.com/xaoxuu/star-vote) 部署地址；将对应 `provider` 设为 `null` 时标签仍可构建，但输出不可交互的静态状态。加载或提交失败时不显示错误、不输出控制台日志；加载保留初始值，失败的提交撤销本地乐观状态。
+`rating` 与 `vote` 是两个独立能力，均默认选择 `star_vote`；各自参数袋内的 `endpoint` 当前开发版默认 null，留空时不请求。站点可覆盖为自己的 [star-vote](https://github.com/xaoxuu/star-vote) 部署地址；将对应 `provider` 设为 `null` 时标签仍可构建，但输出不可交互的静态状态。加载或提交失败时不显示错误、不输出控制台日志；加载保留初始值，失败的提交撤销本地乐观状态。
 
 ### Contributors
 

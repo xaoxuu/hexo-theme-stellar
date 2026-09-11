@@ -155,15 +155,15 @@ services:
   site_info:
     provider: site_info_api
     site_info_api:
-      endpoint: https://api.xaox.cc/site_info/v1?url={href}
+      endpoint: https://site-info.example.com/site_info/v1?url={href}
   rating:
     provider: star_vote
     star_vote:
-      endpoint: https://star-vote.xaox.cc/api/rating
+      endpoint: https://vote.example.com/api/rating
   vote:
     provider: star_vote
     star_vote:
-      endpoint: https://star-vote.xaox.cc/api/vote
+      endpoint: https://vote.example.com/api/vote
   github:
     api_url: https://api.github.com
     raw_url: https://raw.githubusercontent.com
@@ -174,7 +174,7 @@ services:
       endpoint: https://github-stats-extended.vercel.app
 ```
 
-Site Info、Rating 与 Vote 默认选择 xaox.cc 公共实例对应的 provider，可覆盖选中参数袋内的自部署地址或以 `provider: null` 关闭；三者的预期远程失败完全静默并保留静态兜底。统一解析接缝只向消费方提供选中的参数袋。GitHub 地址统一为完整 URL。Runtime Manifest 携带主题内部注入且冻结的 cache/request policy；`createRequestClient()` 提供同 method+URL 并发去重、按 service TTL、超时重试、fresh 命中、stale 失败回退、200 KiB 单条限制和最旧条目淘汰。站点不再调节这些实现常量。客户端调用原生 `fetch` 而不替换 `window.fetch` 或 XHR 原型，并以 `stellar:request-start/end` 通知锚点稳定器。
+Site Info、Rating 与 Vote 默认选择内置 provider，但 endpoint 默认 null，须填写自部署地址，或以 `provider: null` 关闭；三者的预期远程失败完全静默并保留静态兜底。统一解析接缝只向消费方提供选中的参数袋。GitHub 地址统一为完整 URL。Runtime Manifest 携带主题内部注入且冻结的 cache/request policy；`createRequestClient()` 提供同 method+URL 并发去重、按 service TTL、超时重试、fresh 命中、stale 失败回退、200 KiB 单条限制和最旧条目淘汰。站点不再调节这些实现常量。客户端调用原生 `fetch` 而不替换 `window.fetch` 或 XHR 原型，并以 `stellar:request-start/end` 通知锚点稳定器。
 
 相关源码：[_config.yml](../../../_config.yml)、[scripts/schema/config-schema.js](../../../scripts/schema/config-schema.js)、[scripts/lib/contribution-registry.js](../../../scripts/lib/contribution-registry.js)、[ci/lib/contribution-audit.js](../../../ci/lib/contribution-audit.js)、[scripts/lib/internal-constants.js](../../../scripts/lib/internal-constants.js)、[scripts/lib/browser-runtime.js](../../../scripts/lib/browser-runtime.js)、[layout/_partial/scripts/runtime.ejs](../../../layout/_partial/scripts/runtime.ejs)、[source/js/runtime/index.js](../../../source/js/runtime/index.js)、[source/js/runtime/extension-registry.js](../../../source/js/runtime/extension-registry.js)、[source/js/runtime/request-cache.js](../../../source/js/runtime/request-cache.js)、[source/css/_plugins/index.styl](../../../source/css/_plugins/index.styl)。
 
@@ -185,3 +185,9 @@ Site Info、Rating 与 Vote 默认选择 xaox.cc 公共实例对应的 provider�
 配置入口与默认地址以 [_config.yml](../../../_config.yml) 为准。功能的 `project()` 就近提取资源字段；评论由模型合并页面选项后输出独立的 `options` 与 `assets`，参见 [评论系统](comment-systems.md#客户端资源)。共享 Marked 由数据服务 Extension 从 `services.markdown.js` 加载，其他消费者复用加载结果。
 
 KaTeX 的 `css` 与 `css_integrity` 在配置中配对维护。仅覆盖 CSS 地址时清除继承哈希；显式提供哈希时使用新配对，`css_integrity: null` 不附加 SRI。升级库只需修改对应默认配置，无需同步资源登记表。
+
+## 当前开发版补充
+
+rc.4 之后，Reveal 增加 duration（默认 800ms）、interval（默认 200ms）、distance（默认 8px）与 blur（默认 4px）。duration、interval、blur 非负，distance 可为负；interval 为 0 同时播放，distance 为 0 无位移，blur 为 0 无模糊。上述参数位于 features.reveal，首屏可见元素直接显示；卸载或初始化失败恢复可读状态。
+
+Site Info、Rating、Vote 的 endpoint 默认 null，示例地址必须替换为自部署服务。评论发现容器后立即异步加载，不再等待进入视口，且不阻塞其他 Extension。

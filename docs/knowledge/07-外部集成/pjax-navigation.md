@@ -33,3 +33,7 @@ Flying Pages 由独立 Extension 在脚本加载后显式初始化，可通过 `
 局部导航记录历史滚动位置，处理前进、后退和锚点定位。连续导航取消过期请求，并串行提交页面替换。卸载时恢复浏览器原有滚动恢复设置。
 
 相关源码：[构建期导航](../../../scripts/lib/partial-navigation.js)、[浏览器导航](../../../source/js/runtime/extensions/partial-navigation.js)、[链接预取](../../../source/js/runtime/extensions/link-prefetch.js)、[页面初始化](../../../source/js/navigation-init.js)。
+
+## 宿主压缩
+
+主题在 after_init 和 before_generate 为 hexo-minify.exclude 补入 `**/js/runtime/**`，保留已有排除项。其它 Babel／压缩链仍须保留 Runtime 原生 ESM、顶层 await 和相对导入；普通脚本可按宿主策略处理。
