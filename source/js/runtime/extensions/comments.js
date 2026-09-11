@@ -1,25 +1,14 @@
-function viewportLoad(element, callback, enabled = true, onError = () => {}) {
+// Start loading without making the region lifecycle wait for third-party resources.
+function loadComments(callback, onError) {
   let active = true;
-  const run = () => Promise.resolve()
-    .then(() => callback(() => active))
+  void Promise.resolve()
+    .then(() => {
+      if (active) return callback(() => active);
+    })
     .catch(error => {
       if (active) onError(error);
     });
-  if (!enabled || !('IntersectionObserver' in window)) {
-    run();
-    return () => { active = false; };
-  }
-  const observer = new IntersectionObserver(entries => {
-    if (entries.some(entry => entry.isIntersecting)) {
-      observer.disconnect();
-      run();
-    }
-  });
-  observer.observe(element);
-  return () => {
-    active = false;
-    observer.disconnect();
-  };
+  return () => { active = false; };
 }
 
 function copyAttributes(source, target) {
@@ -45,13 +34,13 @@ function uploadImage(options, tokenHeader, tokenValue, fieldName, responseField)
   };
 }
 
-async function mountArtalk(root, context, config) {
+function mountArtalk(root, context, config) {
   const element = root.querySelector('#artalk_container');
   if (!element) return;
   const targeted = /[?&]atk_comment=\d+/.test(window.location.search) || /#atk-comment-\d+/.test(window.location.hash);
   let instance = null;
   let historyTimer = null;
-  const cleanupViewport = viewportLoad(element, async isActive => {
+  const cancelComments = loadComments(async isActive => {
     await Promise.all([
       context.assets.style(config.assets.localCss),
       context.assets.style(config.assets.css),
@@ -82,49 +71,53 @@ async function mountArtalk(root, context, config) {
         }, 0);
       });
     }
-  }, !targeted, error => context.reportError(error));
+  }, error => context.reportError(error));
   return () => {
-    cleanupViewport();
+    cancelComments();
     if (historyTimer !== null) clearTimeout(historyTimer);
     historyTimer = null;
     instance?.destroy?.();
   };
 }
 
-function mountEmbed(root, provider, src, context) {
+function mountEmbed(root, provider, config, context) {
   const element = root.querySelector(`#comments #${provider}`);
   if (!element) return;
   let script = null;
   let cancelLoad = null;
-  const cleanupViewport = viewportLoad(element, isActive => new Promise((resolve, reject) => {
-    element.replaceChildren();
-    script = element.ownerDocument.createElement('script');
-    script.setAttribute('data-stellar-script', 'embed');
-    script.src = src;
-    script.async = true;
-    copyAttributes(element, script);
-    let settled = false;
-    const finish = callback => {
-      if (settled) return;
-      settled = true;
-      script?.removeEventListener('load', onLoad);
-      script?.removeEventListener('error', onError);
-      cancelLoad = null;
-      callback();
-    };
-    const onLoad = () => finish(resolve);
-    const onError = () => finish(() => reject(new Error(`${provider} comment embed failed to load`)));
-    cancelLoad = () => finish(resolve);
-    script.addEventListener('load', onLoad, { once: true });
-    script.addEventListener('error', onError, { once: true });
-    if (!isActive()) {
-      cancelLoad();
-      return;
-    }
-    element.appendChild(script);
-  }), true, error => context.reportError(error));
+  const cancelComments = loadComments(async isActive => {
+    if (config.assets.localCss) await context.assets.style(config.assets.localCss);
+    if (!isActive()) return;
+    return new Promise((resolve, reject) => {
+      element.replaceChildren();
+      script = element.ownerDocument.createElement('script');
+      script.setAttribute('data-stellar-script', 'embed');
+      script.src = config.assets.js;
+      script.async = true;
+      copyAttributes(element, script);
+      let settled = false;
+      const finish = callback => {
+        if (settled) return;
+        settled = true;
+        script?.removeEventListener('load', onLoad);
+        script?.removeEventListener('error', onError);
+        cancelLoad = null;
+        callback();
+      };
+      const onLoad = () => finish(resolve);
+      const onError = () => finish(() => reject(new Error(`${provider} comment embed failed to load`)));
+      cancelLoad = () => finish(resolve);
+      script.addEventListener('load', onLoad, { once: true });
+      script.addEventListener('error', onError, { once: true });
+      if (!isActive()) {
+        cancelLoad();
+        return;
+      }
+      element.appendChild(script);
+    });
+  }, error => context.reportError(error));
   return () => {
-    cleanupViewport();
+    cancelComments();
     cancelLoad?.();
     script?.remove();
   };
@@ -134,7 +127,7 @@ function mountTwikoo(root, context, config) {
   const element = root.querySelector('#twikoo_container');
   if (!element) return;
   let instance = null;
-  const cleanupViewport = viewportLoad(element, async isActive => {
+  const cancelComments = loadComments(async isActive => {
     await context.assets.style(config.assets.localCss);
     await context.assets.script(config.assets.js);
     if (!isActive()) return;
@@ -144,9 +137,9 @@ function mountTwikoo(root, context, config) {
     }));
     if (!isActive()) created?.destroy?.();
     else instance = created;
-  }, true, error => context.reportError(error));
+  }, error => context.reportError(error));
   return () => {
-    cleanupViewport();
+    cancelComments();
     instance?.destroy?.();
   };
 }
@@ -155,7 +148,7 @@ function mountWaline(root, context, config) {
   const element = root.querySelector('#waline_container');
   if (!element) return;
   let instance = null;
-  const cleanupViewport = viewportLoad(element, async isActive => {
+  const cancelComments = loadComments(async isActive => {
     await Promise.all([
       context.assets.style(config.assets.localCss),
       context.assets.style(config.assets.css),
@@ -176,24 +169,22 @@ function mountWaline(root, context, config) {
     );
     if (uploader) options.imageUploader = uploader;
     instance = module.init(options);
-  }, true, error => context.reportError(error));
+  }, error => context.reportError(error));
   return () => {
-    cleanupViewport();
+    cancelComments();
     instance?.destroy?.();
   };
 }
 
-export async function mount(root, context) {
+export function mount(root, context) {
   const config = context.extension.config;
   switch (config.provider) {
     case 'artalk': return mountArtalk(root, context, config);
     case 'beaudar':
-      await context.assets.style(config.assets.localCss);
-      return mountEmbed(root, 'beaudar', config.assets.js, context);
-    case 'giscus': return mountEmbed(root, 'giscus', config.assets.js, context);
+      return mountEmbed(root, 'beaudar', config, context);
+    case 'giscus': return mountEmbed(root, 'giscus', config, context);
     case 'utterances':
-      await context.assets.style(config.assets.localCss);
-      return mountEmbed(root, 'utterances', config.assets.js, context);
+      return mountEmbed(root, 'utterances', config, context);
     case 'twikoo': return mountTwikoo(root, context, config);
     case 'waline': return mountWaline(root, context, config);
     default: throw new TypeError(`unknown comment provider ${config.provider}`);
