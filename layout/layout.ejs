@@ -66,27 +66,9 @@ function shellDocument(options) {
 
 function regionsContainSearch(regions) {
   if (!stellar_config('search.provider')) return false
-  function menuHasSearch(menu) {
-    return Array.isArray(menu) && menu.some(function(item) {
-      return item?.type === 'search'
-    })
-  }
-  function brandHasContent(brand) {
-    return brand && brand !== false && (brand.name || brand.image?.src)
-  }
-  var collectionProfile = renderViewModel?.collection?.profile
-    || (page.notebookIndex?.mode === 'notes' ? 'notebook' : null)
-  return Object.entries(regions || {}).some(function(entry) {
-    var slot = entry[0]
-    var region = entry[1]
-    if (region?.enabled === false) return false
-    if (slot === 'leftbar' && ['wiki', 'notebook', 'topic'].includes(collectionProfile) && brandHasContent(region.brand)) return true
-    if (slot === 'leftbar') return menuHasSearch(region?.menu)
-    if (slot !== 'topbar' || !menuHasSearch(region?.menu)) return false
-    return Array.isArray(region?.widgets) && region.widgets.some(function(widget) {
-      return widget?.id === 'menu' || widget?.layout === 'menu'
-    })
-  })
+  var leftbar = regions?.leftbar
+  var brand = leftbar?.brand
+  return leftbar?.enabled !== false && brand?.search === true && Boolean(brand.name || brand.image?.src)
 }
 
 if (renderViewModel) {

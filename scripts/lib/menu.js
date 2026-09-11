@@ -19,7 +19,7 @@ function resolveMenuActiveByPath(items, pagePath, urlFor = value => value) {
   let match = null;
   let matchLength = -1;
   for (const item of items) {
-    if (item == null || item.type === "search" || typeof item.id !== "string" || typeof item.url !== "string") continue;
+    if (item == null || typeof item.id !== "string" || typeof item.url !== "string") continue;
     const itemPath = localPath(urlFor(item.url));
     if (itemPath == null) continue;
     const active = itemPath === "/"

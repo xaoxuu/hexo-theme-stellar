@@ -309,7 +309,7 @@ test("Content Region schemas enforce fixed field value boundaries", () => {
   ]) {
     assert.throws(() => parseCollectionConfig(config, "collection.yml"), pattern);
   }
-  for (const field of ["source", "back_button", "search"]) {
+  for (const field of ["source", "back_button"]) {
     assert.throws(
       () => parsePageConfig({ leftbar: { brand: { [field]: field === "source" ? "site" : true } } }, "page.md"),
       new RegExp(`leftbar\\.brand\\.${field}`)

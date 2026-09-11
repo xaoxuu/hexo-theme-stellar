@@ -125,6 +125,7 @@ const CONTENT_OVERRIDE_DEFINITIONS = [
   ["leftbar.brand.tagline", ["string", "null"], literal(null)],
   ["leftbar.brand.ghrepo", ["string", "null"], literal(null)],
   ["leftbar.brand.ghuser", ["string", "null"], literal(null)],
+  ["leftbar.brand.search", ["boolean", "null"], literal(null)],
   ["leftbar.brand.href", ["string", "null"], literal(null)],
   ["leftbar.menu", ["array", "null"], literal(null), { items: MENU_ITEMS }],
   ["leftbar.footer", "object", literal({}), { boundary: "sealed" }],
@@ -159,7 +160,6 @@ const CONTENT_OVERRIDE_DEFINITIONS = [
 const COLLECTION_TARGET_DEFINITIONS = [
   ["leftbar.brand.source", ["string", "null"], literal(null), { values: ["site", "collection", null] }],
   ["leftbar.brand.back_button", ["boolean", "null"], literal(null)],
-  ["leftbar.brand.search", ["boolean", "null"], literal(null)],
   ["name", "string", derived("required collection identity")],
   ["headline", ["string", "null"], literal(null)],
   ["tagline", ["string", "null"], literal(null)],

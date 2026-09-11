@@ -93,8 +93,8 @@ test("Theme config rejects unknown, mistyped, and unsafe values with sourced iss
     error => hasIssue(error, "appearance.colors.primary", "invalid_value")
   );
   assert.throws(
-    () => parseStellarConfig({ themeConfig: { leftbar: { menu: [{ type: "search", title: "Find" }] } } }),
-    error => hasIssue(error, "leftbar.menu[0].title", "invalid_value")
+    () => parseStellarConfig({ themeConfig: { leftbar: { menu: [{ type: "unsupported", id: "find", title: "Find", url: "/" }] } } }),
+    error => hasIssue(error, "leftbar.menu[0].type", "invalid_value")
   );
 });
 
@@ -169,8 +169,8 @@ test("Theme config recovery warns, keeps valid list items, and replaces unsafe o
         menu: [
           { id: "home", title: "Home", url: "/" },
           { id: "unsafe", title: "Unsafe", url: "javascript:alert(1)" },
-          { type: "search" },
-          { type: "search" }
+          { type: "unsupported" },
+          { id: "missing-url", title: "Missing URL" }
         ]
       }
     }
@@ -179,7 +179,7 @@ test("Theme config recovery warns, keeps valid list items, and replaces unsafe o
   assert.equal(config.appearance.colors.primary, "hsl(192 98% 55%)");
   assert.equal(config.article.categoryColors.stable, "blue");
   assert.equal(config.article.categoryColors["release.v2"], undefined);
-  assert.deepEqual(config.leftbar.menu.map(item => item.type || item.id), ["home", "search"]);
+  assert.deepEqual(config.leftbar.menu.map(item => item.type || item.id), ["home"]);
   assert.equal(config.profiles.home.activeMenu, null);
   assert.equal(issues.some(item => item.path === "unknown" && item.action === "忽略字段"), true);
   assert.equal(issues.some(item => item.path === "leftbar.menu[1].url" && item.action === "忽略无效列表项"), true);
@@ -247,7 +247,6 @@ test("Brand source and Collection controls are not theme or Profile options", ()
   for (const [themeConfig, path] of [
     [{ leftbar: { brand: { source: "site" } } }, "leftbar.brand.source"],
     [{ leftbar: { brand: { back_button: true } } }, "leftbar.brand.back_button"],
-    [{ leftbar: { brand: { search: true } } }, "leftbar.brand.search"],
     [{ profiles: { wiki: { leftbar: { brand: { source: "collection" } } } } }, "profiles.wiki.leftbar.brand.source"]
   ]) {
     assert.throws(
@@ -276,4 +275,17 @@ test("Build config event logs one grouped warning and exposes recovered config",
   assert.match(warnings[0], /已忽略 2 项不支持的配置/);
   assert.match(warnings[0], /mystery/);
   assert.match(warnings[0], /appearance\.preset/);
+});
+
+test("Leftbar Brand search follows Region configuration types and precedence", () => {
+  const config = parseStellarConfig({ themeConfig: {
+    leftbar: { brand: { search: true } },
+    profiles: { wiki: { leftbar: { brand: { search: false } } } }
+  } });
+  assert.equal(toRenderRegions(config, config.profiles.wiki).leftbar.brand.search, false);
+  assert.equal(toRenderRegions(config, {}).leftbar.brand.search, true);
+  assert.throws(
+    () => parseStellarConfig({ themeConfig: { leftbar: { brand: { search: {} } } } }),
+    error => hasIssue(error, "leftbar.brand.search", "invalid_type")
+  );
 });

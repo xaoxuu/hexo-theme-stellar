@@ -76,7 +76,7 @@ const LEGACY_FRONT_MATTER_ROOTS = Object.freeze({
   banner_info: "banner",
   menu_id: "active_menu",
   header: "topbar.enabled",
-  search: "leftbar.menu search item",
+  search: "leftbar.brand.search",
   menu: "leftbar.menu",
   logo: "topbar.brand | leftbar.brand",
   type: "article.style",

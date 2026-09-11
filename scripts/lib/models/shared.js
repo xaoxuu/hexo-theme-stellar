@@ -88,7 +88,7 @@ function assertCollectionBrandConfig(config, defaultSource, source) {
   if (!isPlainObject(brand)) return;
   const resolvedSource = brand.source || defaultSource;
   if (resolvedSource === "collection") return;
-  const unsupported = ["backButton", "search"].filter(key => brand[key] != null);
+  const unsupported = ["backButton"].filter(key => brand[key] != null);
   if (unsupported.length === 0) return;
   throw new ContentConfigError(unsupported.map(key => (
     `${source}: leftbar.brand.${key === "backButton" ? "back_button" : key} 仅支持 source: collection`

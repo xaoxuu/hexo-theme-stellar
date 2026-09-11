@@ -15,7 +15,7 @@ const menuItem = item("object", {
   normalizer: "menu_item",
   sealed: true,
   properties: {
-    type: item("string", { defaultValue: "link", values: ["link", "search"] }),
+    type: item("string", { defaultValue: "link", values: ["link"] }),
     id: item(["string", "null"], { defaultValue: null, validator: "nullable_kebab_id" }),
     title: item(["string", "null"], { defaultValue: null }),
     icon: item(["string", "null"], { defaultValue: null, validator: "nullable_non_empty_string" }),
@@ -126,6 +126,7 @@ const brandProperties = {
   href: item(["string", "null"], { defaultValue: "/", validator: "nullable_safe_navigation_url" })
 };
 const leftbarBrandProperties = {
+  search: item("boolean", { defaultValue: true }),
   ghrepo: item(["string", "null"], { defaultValue: null }),
   ghuser: item(["string", "null"], { defaultValue: null }),
   style: item("string", { defaultValue: "regular", values: ["regular", "compact"] }),

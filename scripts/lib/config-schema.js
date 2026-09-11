@@ -117,13 +117,6 @@ function normalizeValue(node, value) {
     return value == null ? null : value.trim();
   }
   if (node.normalizer === "menu_item") {
-    if (value.type === "search") {
-      const result = { type: "search" };
-      for (const key of ["icon", "accent"]) {
-        if (value[key] != null) result[key] = value[key];
-      }
-      return result;
-    }
     return { id: value.id, title: value.title, icon: value.icon, url: value.url, accent: value.accent };
   }
   if (node.normalizer === "footer_action") {
@@ -326,6 +319,9 @@ function validateBrand(node, input, source, path, issues) {
       issues.push(issue("invalid_type", source, `${path}.${key}`, valueType(input[key]), "string | null", node.migration));
     }
   }
+  if (node.properties?.search && input.search != null && typeof input.search !== "boolean") {
+    issues.push(issue("invalid_type", source, `${path}.search`, valueType(input.search), "boolean", node.migration));
+  }
   const styleRule = node.properties?.style;
   if (styleRule && input.style != null) {
     if (typeof input.style !== "string") {
@@ -503,21 +499,11 @@ function validateNullableKebabId(node, input, source, path, issues) {
 function validateMenuItems(node, input, source, path, issues) {
   if (!Array.isArray(input)) return;
   const ids = new Set();
-  let searchSeen = false;
   input.forEach((item, index) => {
     if (!isPlainObject(item)) return;
     const itemPath = `${path}[${index}]`;
-    if (item.type === "search") {
-      if (searchSeen) {
-        issues.push(issue("invalid_value", source, itemPath, "object", "at most one search menu item", node.migration));
-      }
-      searchSeen = true;
-      const extra = ["id", "title", "url"].find(key => item[key] != null);
-      if (extra) issues.push(issue("invalid_value", source, `${itemPath}.${extra}`, valueType(item[extra]), "no id, title, or url for search item", node.migration));
-      return;
-    }
     if (item.type != null && item.type !== "link") {
-      issues.push(issue("invalid_value", source, `${itemPath}.type`, valueType(item.type), "link | search", node.migration));
+      issues.push(issue("invalid_value", source, `${itemPath}.type`, valueType(item.type), "link", node.migration));
     }
     if (typeof item.id === "string") {
       if (ids.has(item.id)) {

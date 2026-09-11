@@ -381,6 +381,7 @@ test("Collection Brand source, style, back button, and search resolve independen
     ghrepo: null,
     ghuser: null,
     source: "site",
+    search: true,
     style: "regular",
     image: { src: "/site.webp", variant: "avatar" },
     name: "Site",
@@ -421,7 +422,6 @@ test("Collection Brand source, style, back button, and search resolve independen
   }, invalid.collectionSource);
   assert.throws(() => buildTopicPageViewModel(invalid), error => {
     assert.match(error.message, /leftbar\.brand\.back_button 仅支持 source: collection/);
-    assert.match(error.message, /leftbar\.brand\.search 仅支持 source: collection/);
     return true;
   });
 });

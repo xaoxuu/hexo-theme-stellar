@@ -20,11 +20,11 @@ function layoutBrandNavigation() {
 }
 
 function layoutBrandSearch() {
-  if (brandPlacement !== 'leftbar' || brand.source !== 'collection' || brand.search !== true) return ''
+  if (brandPlacement !== 'leftbar' || brand.search !== true) return ''
   if (!stellar_config('search.provider')) return ''
   var body = partial('_partial/sidebar/search', {
     item: {algoliaFilterPath: 'auto'},
-    instanceId: 'collection-brand-search',
+    instanceId: 'leftbar-brand-search',
     presentation: 'leftbar',
     hoverSurface: true,
     viewModel: activeViewModel

@@ -38,6 +38,8 @@ leftbar:
   default_state: expanded
   # 配置 Leftbar 固定 Brand 内容。
   brand:
+    # 控制 Brand 区域的搜索按钮；需要配置 search.provider。
+    search: true
     # 设置 Leftbar Brand 的视觉样式；可选值为 regular 或 compact。
     style: regular
     # 设置 Brand 数据区的 GitHub 仓库（owner/repo）；留空不显示仓库统计。
@@ -114,8 +116,6 @@ leftbar:
       icon: default:profile
       # 设置菜单链接。
       url: /about/
-    # 声明默认的搜索入口。
-    - type: search
   # 设置 Leftbar 内容 Widget；空数组表示清空内容区。
   widgets: []
   # 配置 Leftbar 固定底部区域。
