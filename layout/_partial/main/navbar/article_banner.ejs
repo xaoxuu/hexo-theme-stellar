@@ -17,7 +17,7 @@ var banner = Object.assign({}, page.author
     ? postViewModel.render.article.banner
     : postViewModel ? postViewModel.item.presentation.banner : pageConfig.banner || {})
 
-var bannerImage = page.author ? page.author.banner : renderViewModel ? renderViewModel.item.cover : pageConfig.cover
+var bannerImage = page.author ? page.author.cover : renderViewModel ? renderViewModel.item.cover : pageConfig.cover
 
 // 标题
 if (banner.headline == null) {
