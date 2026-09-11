@@ -149,25 +149,25 @@ appearance-editorial-interactions()
     padding-left: calc(var(--ui-item-padding-x) + var(--ui-item-depth) * var(--gap-base))
 
   // 点击容器可以包含图标与留白；下划线只跟随内部标题文字。
-  .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only) .ui-collection__title
+  .ui-collection[data-variant='nav'] .ui-collection__item:not(.is-icon-only) .ui-collection__title
     appearance-editorial-underline-mark()
 
   // Menu 条目优先使用自身主题色；未声明时回退到全局主题色。
-  .widget-instance--menu .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__title
+  .widget-instance--menu .ui-collection[data-variant='nav'] .ui-collection__title
     --editorial-underline-color: var(--item-theme, var(--theme))
 
-  .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only):hover .ui-collection__title,
-  .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only):focus-visible .ui-collection__title,
-  .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only):active .ui-collection__title,
-  .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only).active .ui-collection__title,
-  .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only).is-active .ui-collection__title,
-  details[open] > .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only) .ui-collection__title
+  .ui-collection[data-variant='nav'] .ui-collection__item:not(.is-icon-only):hover .ui-collection__title,
+  .ui-collection[data-variant='nav'] .ui-collection__item:not(.is-icon-only):focus-visible .ui-collection__title,
+  .ui-collection[data-variant='nav'] .ui-collection__item:not(.is-icon-only):active .ui-collection__title,
+  .ui-collection[data-variant='nav'] .ui-collection__item:not(.is-icon-only).active .ui-collection__title,
+  .ui-collection[data-variant='nav'] .ui-collection__item:not(.is-icon-only).is-active .ui-collection__title,
+  details[open] > .ui-collection[data-variant='nav'] .ui-collection__item:not(.is-icon-only) .ui-collection__title
     appearance-editorial-underline-active()
 
   @media (prefers-reduced-motion: reduce)
     .ui-interactive
       transition: none
-    .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__title
+    .ui-collection[data-variant='nav'] .ui-collection__title
       transition: none
 
 appearance-glass-interactions-light()
