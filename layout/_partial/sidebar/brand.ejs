@@ -16,7 +16,7 @@ function layoutBrandNavigation() {
       entries: [{href: pretty_url(href), title: __(brand.backLabel), icon: 'default:chevron-left', iconOnly: true, attrs: {'aria-label': __(brand.backLabel)}}]
     })}</div>`
     : ''
-  return `<div class="brand-navigation"><a class="brand-navigation__back cap" href="${pretty_url(href)}"><span class="ui-icon" aria-hidden="true"></span><span>${__(brand.backLabel)}</span></a></div>${railNavigation}`
+  return `<div class="brand-navigation"><a class="brand-navigation__back cap" href="${pretty_url(href)}"><span class="ui-icon" aria-hidden="true">${icon('default:chevron-left', 'no-lazy', true)}</span><span>${__(brand.backLabel)}</span></a></div>${railNavigation}`
 }
 
 function layoutBrandSearch() {

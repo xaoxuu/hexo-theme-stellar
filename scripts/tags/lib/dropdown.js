@@ -45,7 +45,7 @@ module.exports = ctx => function(args, content = '') {
   el += '>'
   el += `<summary class="${composeUiClasses('dropdown-trigger', 'interactive')}" title="${title}" aria-label="${title}">`
   el += `<span>${title}</span>`
-  el += '<svg class="dropdown-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+  el += `<span class="ui-icon dropdown-arrow" aria-hidden="true">${ctx.utils.icon('default:chevron-left', 'no-lazy', true)}</span>`
   el += '</summary>'
   el += '<div class="dropdown-menu ui-collection" data-layout="list" data-variant="nav" data-density="compact">'
   for (const item of items) {
