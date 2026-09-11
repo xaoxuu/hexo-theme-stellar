@@ -596,10 +596,10 @@ function pageViewModelSchema(profile) {
     }, { example: { title: "Related Post", path: "/blog/related/", excerpt: "Related excerpt" } });
     const share = field(["object", "null"], {
       default: computed("由最终 footer.share 与文章分享数据生成；禁用时为 null"),
-      example: { services: ["link"], permalink: "https://example.com/blog/hello/", title: "Hello - Stellar" },
+      example: { services: ["qrcode"], permalink: "https://example.com/blog/hello/", title: "Hello - Stellar" },
       required: true,
       properties: {
-        services: array(stringItem, { default: literal([]), example: ["wechat", "link"], required: true }),
+        services: array(stringItem, { default: literal([]), example: ["qrcode", "email"], required: true }),
         permalink: field("string", { default: inherited("item.route.permalink"), example: "https://example.com/blog/hello/", required: true }),
         title: field("string", { default: computed("由文章标题与站点标题组合"), example: "Hello - Stellar", required: true }),
         image: field("string", { default: inherited("item.cover"), example: "/cover.webp", required: true }),
@@ -714,10 +714,10 @@ function pageViewModelSchema(profile) {
     });
     const share = field(["object", "null"], {
       default: computed("由最终 footer.share 生成；禁用时为 null"),
-      example: { services: ["link"], permalink: "https://example.com/wiki/stellar/", title: "Stellar - Example" },
+      example: { services: ["qrcode"], permalink: "https://example.com/wiki/stellar/", title: "Stellar - Example" },
       required: true,
       properties: {
-        services: array(stringItem, { default: literal([]), example: ["wechat", "link"], required: true }),
+        services: array(stringItem, { default: literal([]), example: ["qrcode", "email"], required: true }),
         permalink: field("string", { default: inherited("item.route.permalink"), example: "https://example.com/wiki/stellar/", required: true }),
         title: field("string", { default: computed("由页面标题与站点标题组合"), example: "Stellar - Example", required: true }),
         image: field("string", { default: inherited("item.cover"), example: "/cover.webp", required: true }),

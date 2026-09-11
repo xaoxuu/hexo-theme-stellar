@@ -1,10 +1,5 @@
 .article-share
   padding: 1rem
-  >.body>.link
-    margin: 0
-    height: 0
-    opacity: 0
-    overflow: hidden
   .social-wrap
     gap: 1rem
     justify-content: center
@@ -18,6 +13,8 @@
       padding: 0
       justify-content: center
       overflow: visible
+      &.share-item.x
+        padding: 2px
       .share-item__icon
         --ui-icon-size: 40px
         flex-shrink: 1
@@ -31,7 +28,7 @@
       &:hover, &:focus-visible, &:active
         .share-item__icon
           background: var(--block-border)
-  .qrcode
+  .share-qrcode
     width: 128px
     padding: 4px
     background: white
@@ -43,8 +40,11 @@
     margin: 0 auto
     transform: scale(0.01)
     img
+      display: block
+      width: 100%
+      height: auto
       object-fit: contain
-  .qrcode.display
+  .share-qrcode.display
     margin: 2rem auto 1rem
     height: 128px !important
     opacity: 1 !important

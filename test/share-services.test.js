@@ -45,13 +45,7 @@ test("external share actions encode text and URLs exactly once", () => {
   assert.equal(weibo.searchParams.get("summary"), share.summary);
 });
 
-test("native and email share actions preserve input data", () => {
-  assert.deepEqual(buildShareAction("system", share).data, {
-    title: share.title,
-    text: share.summary,
-    url: share.permalink
-  });
-
+test("email share actions preserve input data", () => {
   const email = new URL(buildShareAction("email", share).href);
   assert.equal(email.protocol, "mailto:");
   assert.equal(email.searchParams.get("subject"), share.title);

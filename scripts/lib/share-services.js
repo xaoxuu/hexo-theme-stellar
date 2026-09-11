@@ -1,23 +1,19 @@
 "use strict";
 
 const SHARE_SERVICE_IDS = Object.freeze([
-  "wechat",
+  "qrcode",
   "weibo",
   "x",
   "telegram",
   "whatsapp",
-  "email",
-  "link",
-  "system"
+  "email"
 ]);
 
 const SHARE_SERVICE_SET = new Set(SHARE_SERVICE_IDS);
 const SHARE_SERVICE_LABELS = Object.freeze({
-  wechat: "WeChat",
+  qrcode: "QR Code",
   weibo: "Weibo",
   email: "Email",
-  link: "Link",
-  system: "System",
   x: "X",
   telegram: "Telegram",
   whatsapp: "WhatsApp"
@@ -50,9 +46,9 @@ function buildShareAction(service, share = {}) {
     label: SHARE_SERVICE_LABELS[service]
   };
 
-  if (service === "wechat") {
+  if (service === "qrcode") {
     action.kind = "toggle";
-    action.target = "qrcode-wechat";
+    action.target = "share-qrcode";
   } else if (service === "weibo") {
     action.kind = "external";
     action.href = `https://service.weibo.com/share/share.php?${query([
@@ -64,17 +60,6 @@ function buildShareAction(service, share = {}) {
   } else if (service === "email") {
     action.kind = "link";
     action.href = `mailto:?${query([["subject", title], ["body", permalink]])}`;
-  } else if (service === "link") {
-    action.kind = "copy";
-    action.target = "copy-link";
-  } else if (service === "system") {
-    action.kind = "native";
-    action.data = {
-      title,
-      text: summary || title,
-      url: permalink
-    };
-    action.target = "copy-link";
   } else if (service === "x") {
     action.kind = "external";
     action.href = `https://x.com/intent/tweet?${query([["text", title], ["url", permalink]])}`;
