@@ -89,6 +89,7 @@ function brandSchema(factory, options = {}) {
   const { field, object } = factory;
   const properties = {
     ...(options.leftbar ? {
+      ghrepo: field(["string", "null"], { default: literal(null), example: "xaoxuu/hexo-theme-stellar" }),
       ghuser: field(["string", "null"], { default: literal(null), example: "xaoxuu" }),
       source: field("string", { default: computed("由 Site 或 Collection Brand 来源解析"), example: "site" }),
       style: field("string", { default: literal("regular"), example: "regular" }),

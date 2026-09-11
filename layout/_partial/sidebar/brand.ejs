@@ -58,8 +58,8 @@ function layoutBrandImage() {
   return el
 }
 
-function layoutCollectionStats(apiBase) {
-  var repository = brandText(activeViewModel?.collection?.source?.repository)
+function layoutRepositoryStats(apiBase) {
+  var repository = brandText(brand.ghrepo)
   if (!repository) return ''
   var encodedRepository = repository.split('/').map(encodeURIComponent).join('/')
   var githubHref = `https://github.com/${encodedRepository}`
@@ -105,9 +105,7 @@ function layoutBrandGithub() {
   if (brandPlacement !== 'leftbar' || brandStyle !== 'regular') return ''
   var apiBase = brandText(stellar_config('services.github.apiUrl')).replace(/\/+$/, '')
   if (!apiBase) return ''
-  return brand.source === 'collection'
-    ? layoutCollectionStats(apiBase)
-    : layoutSiteStats(apiBase)
+  return layoutRepositoryStats(apiBase) || layoutSiteStats(apiBase)
 }
 
 function layoutBrand() {

@@ -126,6 +126,7 @@ const brandProperties = {
   href: item(["string", "null"], { defaultValue: "/", validator: "nullable_safe_navigation_url" })
 };
 const leftbarBrandProperties = {
+  ghrepo: item(["string", "null"], { defaultValue: null }),
   ghuser: item(["string", "null"], { defaultValue: null }),
   style: item("string", { defaultValue: "regular", values: ["regular", "compact"] }),
   ...brandProperties

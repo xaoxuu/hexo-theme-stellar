@@ -378,6 +378,7 @@ test("Collection Brand source, style, back button, and search resolve independen
     leftbar: { brand: { source: "site", style: "regular" } }
   }, siteInput.collectionSource);
   assert.deepEqual(buildWikiPageViewModel(siteInput).render.layout.leftbar.brand, {
+    ghrepo: null,
     ghuser: null,
     source: "site",
     style: "regular",
