@@ -172,7 +172,8 @@
       margin: 0
       max-height: 13em
       text-align: justify
-      font-size: $fs-13
+      font-size: $fs-14
+      line-height: 1.5
       display: -webkit-box
       -webkit-box-orient: vertical
       overflow: hidden
@@ -180,7 +181,9 @@
 
     .search-keyword
       color: var(--theme)
-      border-bottom: 1px dashed var(--theme)
+      text-decoration: underline dashed
+      text-decoration-thickness: 1px
+      text-underline-offset: 4px
       font-weight: $fw-700
       filter grayscale(25%)
 
@@ -227,6 +230,7 @@
   font-size: $fs-12
   font-weight: $fw-600
   line-height: 1
+  padding-top: .15em
 
 @media screen and (min-width: ($device-tablet + 1px))
   .search-shortcut:not(:empty)
