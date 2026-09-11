@@ -32,7 +32,6 @@ function buildPostCollectionModel(stellarConfig) {
       excerptLength: article.listing.excerptLength
     },
     presentation: {
-      banner: {},
       ...regions,
       article: articlePresentationDefaults(content),
       footer: articleFooterDefaults(content),

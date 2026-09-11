@@ -118,7 +118,6 @@ function buildWikiRenderModel(input, collection, item) {
   const keywords = normalizeStringList(frontMatter.keywords);
   if (keywords.length === 0) keywords.push(...(item.tags.length > 0 ? item.tags : normalizeStringList(siteConfig.keywords)));
   const cardCover = item.cover || "";
-  const bannerImage = item.presentation.banner?.image || "";
   const openGraphConfig = seoConfig.openGraph;
   let openGraph = null;
   if (openGraphConfig.enabled === true) {
@@ -133,10 +132,10 @@ function buildWikiRenderModel(input, collection, item) {
       author: String(siteConfig.author || ""),
       date: false,
       updated: false,
-      image: cardCover || bannerImage || firstContentImage(item.content) || siteConfig.avatar || null
+      image: cardCover || firstContentImage(item.content) || siteConfig.avatar || null
     };
     if (openGraphConfig.twitterId) args.twitter_id = openGraphConfig.twitterId;
-    if (cardCover || bannerImage) args.twitter_card = "summary_large_image";
+    if (cardCover) args.twitter_card = "summary_large_image";
     Object.assign(args, cloneValue(pageOpenGraph));
     openGraph = {
       args,
@@ -329,7 +328,6 @@ function buildWikiCollectionModel(input, collectionId) {
     },
     presentation: {
       hero: cloneValue(collectionConfig.hero || {}),
-      banner: pick(collectionConfig.banner, CONTENT_MODEL_FIELDS.banner),
       ...regions,
       article: mergeConfig(globalArticle, pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)),
       footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),

@@ -232,11 +232,10 @@ function bannerSchema(factory) {
   const { field, object } = factory;
   return object({
     enabled: field("boolean", { example: true }),
-    image: field("string", { example: "/banner.webp" }),
     avatar: field("string", { example: "/avatar.webp" }),
     headline: field("string", { example: "开始使用 Stellar" }),
     tagline: field("string", { example: "十分钟搭好站点" })
-  }, { example: { enabled: true, image: "/banner.webp" } });
+  }, { example: { enabled: true } });
 }
 
 function heroSchema(factory, options = {}) {
@@ -485,7 +484,6 @@ function collectionSchema(profile) {
     listing: object(listingProperties, { default: inherited("profile.listing", "collection.listing"), example: {}, required: true }),
     presentation: presentationSchema(factory, {
       includeHero: profile === "wiki",
-      includeBanner: true,
       cascadeFactory,
       heroConsumers: profile === "wiki" ? wikiHeroConsumers : undefined
     }),

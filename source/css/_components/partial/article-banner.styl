@@ -25,13 +25,15 @@
 
 .article.banner
   .bg+.content
-    min-height: 200px
-    aspect-ratio: hexo-config('article.banner.ratio')
+    min-height: 0
+    height: auto
+    aspect-ratio: 2 / 1
     position: relative
     --text-banner: white
     --button-hover-bg: rgba(white, 0.25)
 
 .article.banner .content
+  min-height: 200px
   .top
     display: flex
     flex-direction: column

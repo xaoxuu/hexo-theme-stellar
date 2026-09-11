@@ -191,7 +191,6 @@ const CONFIG_RULES = Object.freeze([
   ["article.listing.card_layout", { values: ["hero", "classic"] }],
   ["article.listing.cover_ratio", { exclusiveMinimum: 0 }],
   ["article.listing.excerpt_length", { minimum: 0, validator: "non_negative_integer" }],
-  ["article.banner.ratio", { exclusiveMinimum: 0 }],
   ["article.category_colors", stringRecord("css_color")],
   ["article.footer.license", { type: ["boolean", "string"], validator: "license_value" }],
   ["article.footer.share", { items: item("string", { defaultValue: "", values: SHARE_SERVICE_IDS }), normalizer: "trimmed_string_list" }],

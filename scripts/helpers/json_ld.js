@@ -50,7 +50,6 @@ hexo.extend.helper.register('json_ld', function(args) {
   if (this.is_post()) {
     const images = postImages({
       cardCover: pageConfig.cover,
-      bannerImage: pageConfig.banner?.image,
       photos: page.photos,
       content: page.content,
       defaultCover: this.stellar_config("fallbacks.cover")

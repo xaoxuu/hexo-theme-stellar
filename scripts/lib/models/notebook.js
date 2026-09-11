@@ -86,7 +86,6 @@ function buildNotebookCollectionModel(input, collectionId) {
       sort: collectionListing.sort ?? defaultListing.sort
     },
     presentation: {
-      banner: pick(collectionConfig.banner, CONTENT_MODEL_FIELDS.banner),
       ...regions,
       article: mergeConfig(globalArticle, pick(collectionConfig.article, CONTENT_MODEL_FIELDS.article)),
       footer: mergeConfig(globalFooter, pick(collectionConfig.footer, CONTENT_MODEL_FIELDS.footer)),

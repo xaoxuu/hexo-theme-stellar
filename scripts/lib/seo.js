@@ -23,10 +23,9 @@ function firstContentImage(content) {
 }
 
 /**
- * 构建文章图片数组（顺序：cover → banner.image → photos → 正文首图 → 默认封面）。
+ * 构建文章图片数组（顺序：cover → photos → 正文首图 → 默认封面）。
  * @param {Object} opts
  * @param {string} opts.cardCover
- * @param {string} opts.bannerImage
  * @param {Array} opts.photos
  * @param {string} opts.content
  * @param {string} opts.defaultCover 主题默认封面（fallbacks.cover）
@@ -34,14 +33,11 @@ function firstContentImage(content) {
  */
 function postImages(opts) {
   const cardCover = opts.cardCover || '';
-  const bannerImage = opts.bannerImage || '';
   const photos = Array.isArray(opts.photos) ? opts.photos.slice() : [];
   const defaultCover = opts.defaultCover || '';
   const images = photos;
   if (cardCover) {
     images.unshift(cardCover);
-  } else if (bannerImage) {
-    images.unshift(bannerImage);
   }
   if (images.length === 0) {
     const first = firstContentImage(opts.content);

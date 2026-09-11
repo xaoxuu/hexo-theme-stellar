@@ -86,7 +86,6 @@ function buildTopicCollectionModel(input, collectionId) {
       sort
     },
     presentation: {
-      banner: pick(collectionConfig.banner, CONTENT_MODEL_FIELDS.banner),
       ...regions,
       article: mergeConfig(
         globalArticle,
