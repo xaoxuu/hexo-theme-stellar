@@ -31,6 +31,21 @@
   margin: 0
   position relative
   list-style: none
+  &:after
+    content: ''
+    position: absolute
+    pointer-events: none
+    top: 4px
+    left: 0
+    width: 4px
+    height: unquote('max(0px, calc(var(--toc-active-height, 8px) - 8px))')
+    border-radius: 4px
+    background: var(--theme)
+    opacity: var(--toc-active-opacity, 0)
+    transform: translateY(var(--toc-active-y, 0px))
+    transition: transform 0.2s ease, height 0.2s ease
+    @media (prefers-reduced-motion: reduce)
+      transition: none
   li
     margin: 0
     list-style: none
@@ -40,21 +55,14 @@
     padding: 4px var(--padding)
     margin: 0 var(--padding)
     color: var(--ui-item-muted)
+    opacity: 0.5
     display: block
     position relative
     border-radius: $border-bar
     trans1 all
-    &.active:before
-      content: ''
-      position absolute
-      top: 4px
-      bottom: 4px
-      left: -8px
-      width: 4px
-      background: var(--theme)
-      border-radius: 4px
     &:hover
       color: var(--ui-item-title)
+      opacity: 1
     .toc-text
       display: block
       txt-ellipsis()
@@ -96,8 +104,7 @@
 // 高亮样式
 .widget-wrapper.toc .toc a.toc-link.active
   color: var(--text)
-  &:before,&:after
-    content: ''
+  opacity: 1
 
 // 始终折叠
 .widget-wrapper.toc[collapse='true']
@@ -179,6 +186,11 @@
       width: 32px
       margin: 0 auto
       padding: 0
+    .toc:after
+      top: 6px
+      width: 32px
+      height: 4px
+      border-radius: 999px
     .toc ol
       display: block
       padding: 0
@@ -212,17 +224,6 @@
         transition: width 0.2s ease, height 0.2s ease, top 0.2s ease, background-color 0.2s ease, opacity 0.2s ease
       &:after
         display: none
-      &.active:before
-        top: 6px
-        width: 32px
-        height: 4px
-        background: var(--theme)
-        opacity: 1
-
-@media screen and (min-width: $device-laptop + 1px) and (prefers-reduced-motion: reduce)
-  html[data-leftbar-state='collapsed'] .site-shell[data-regions~='leftbar'][data-regions~='rightbar'] .site-region--rightbar:not(:hover):not(:focus-within) .widgets .widget-wrapper.toc .toc a.toc-link:before
-    transition: none
-
 // 操作按钮（回到顶部 / 参与讨论）
 .widget-wrapper.toc .widget-footer:before
   content: ''

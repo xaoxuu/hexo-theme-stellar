@@ -457,6 +457,45 @@ function rebuildToc(scope) {
   bindTocClick(widget);
 }
 
+// 指示条跟随目录自身坐标，目录滚动无需重复测量。
+function bindTocIndicator(widget) {
+  let frame = null;
+  const update = () => {
+    frame = null;
+    const toc = widget.querySelector('.toc');
+    if (!toc) return;
+    const active = toc.querySelector('a.toc-link.active');
+    if (!active || !active.getClientRects().length) {
+      toc.style.removeProperty('--toc-active-height');
+      toc.style.setProperty('--toc-active-opacity', '0');
+      return;
+    }
+    const bounds = active.getBoundingClientRect();
+    toc.style.setProperty('--toc-active-y', (bounds.top - toc.getBoundingClientRect().top) + 'px');
+    toc.style.setProperty('--toc-active-height', bounds.height + 'px');
+    toc.style.setProperty('--toc-active-opacity', '1');
+  };
+  const schedule = () => {
+    if (frame === null) frame = requestAnimationFrame(update);
+  };
+  const mutations = new MutationObserver(schedule);
+  mutations.observe(widget, { subtree: true, childList: true, attributes: true, attributeFilter: ['class', 'collapse'] });
+  mutations.observe(document.documentElement, { attributes: true, attributeFilter: ['data-leftbar-state'] });
+  const resize = new ResizeObserver(schedule);
+  resize.observe(widget);
+  const events = ['mouseenter', 'mouseleave', 'focusin', 'focusout', 'transitionend'];
+  events.forEach(type => widget.addEventListener(type, schedule));
+  window.addEventListener('resize', schedule);
+  schedule();
+  return () => {
+    mutations.disconnect();
+    resize.disconnect();
+    events.forEach(type => widget.removeEventListener(type, schedule));
+    window.removeEventListener('resize', schedule);
+    if (frame !== null) cancelAnimationFrame(frame);
+  };
+}
+
 function bindTocClick(widget) {
   if (tocClickBound.has(widget)) {
     return tocClickBound.get(widget);
@@ -481,7 +520,12 @@ function bindTocClick(widget) {
     }
   };
   widget.addEventListener('click', handler);
-  const cleanup = () => { widget.removeEventListener('click', handler); tocClickBound.delete(widget); };
+  const cleanupIndicator = bindTocIndicator(widget);
+  const cleanup = () => {
+    cleanupIndicator();
+    widget.removeEventListener('click', handler);
+    tocClickBound.delete(widget);
+  };
   tocClickBound.set(widget, cleanup);
   return cleanup;
 }
