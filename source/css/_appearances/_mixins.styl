@@ -42,7 +42,17 @@ appearance-transparent-leftbar()
 
 // ui-interactive 是组件无关的交互能力；Collection、Widget、Dropdown
 // 只负责组合此类，不参与 Appearance 选择器。
+appearance-standard-leftbar-initial()
+  html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .site-region--leftbar .widget-instance[data-leftbar-rail] .ui-collection > .ui-collection__item:has(> .ui-collection__initial)
+    background-color: var(--block)
+    &:hover,
+    &:active,
+    &.active,
+    &.is-active
+      background-color: var(--block-border)
+
 appearance-standard-interactions()
+  appearance-standard-leftbar-initial()
   .ui-interactive
     background: transparent
     box-shadow: none
@@ -64,6 +74,13 @@ appearance-standard-interactions()
 
   .widget-wrapper.markdown .ui-interactive
     background: var(--block)
+
+  .site-region--leftbar .ui-interactive:hover,
+  .site-region--leftbar .ui-interactive:active,
+  .site-region--leftbar .ui-interactive.active,
+  .site-region--leftbar .ui-interactive.is-active,
+  .site-region--leftbar details[open] > .ui-interactive
+    background: var(--block-border)
 
 // Editorial Minimal 的交互反馈只使用排版和当前文字颜色，不创建填充表面。
 // 文字交互使用逐行主题色粗下划线；复合能力使用同色边框。

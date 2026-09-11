@@ -48,6 +48,7 @@ if (entryStyle.length > 0) primaryAttrs += ` style="${escape_html(entryStyle)}"`
 <%- `<${tagName} class="${escape_html(entryClasses)}"${primaryAttrs}${safeAttrs}>` %>
   <%- typeof entry.before === 'string' ? entry.before : '' %>
   <% if (entry.icon) { %><span class="ui-icon"><%- icon(entry.icon, 'no-lazy', true) %></span><% } %>
+  <% if (!entry.icon && showTitle) { %><span class="ui-collection__initial" aria-hidden="true"><%= (Array.from(entryTitle.trim())[0] || '').replace(/[a-z]/, function(letter) { return letter.toUpperCase() }) %></span><% } %>
   <% if (hasContent) { %>
     <span class="ui-collection__content">
       <% if (entryPrefix.length > 0) { %><span class="ui-collection__prefix"><%= entryPrefix %></span><% } %>

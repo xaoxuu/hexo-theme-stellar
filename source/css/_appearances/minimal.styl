@@ -51,6 +51,10 @@ appearance-transparent-leftbar()
 appearance-editorial-interactions()
 appearance-standard-prose()
 
+html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .site-region--leftbar .widget-instance[data-leftbar-rail] .ui-collection > .ui-collection__item:has(> .ui-collection__initial)
+  &:not(:hover):not(:focus-visible):not(.active):not(.is-active):not(:active)
+    border: 1px dashed var(--block-border)
+
 .tag-plugin > .dropdown-trigger
   border-color: var(--block)
 

@@ -280,7 +280,7 @@ html[data-leftbar-state='collapsed'] .site-shell[data-regions~='leftbar']
 
 leftbar-rail()
   width: var(--leftbar-rail-width)
-  .menu .ui-collection__item,
+  .widget-instance[data-leftbar-rail] .ui-collection > .ui-collection__item,
   .search-trigger,
   .brand-navigation__back,
   .region-actions .social,
@@ -339,18 +339,30 @@ leftbar-rail()
       margin: 0
     .brand-stats
       display: none
-  .widget-instance--menu
-    .menu .ui-collection
+  .widget-instance[data-leftbar-rail]
+    .widget-header
+      display: none
+    .ui-collection
       display: block
-    .menu .ui-collection__item
+    .ui-collection > .ui-collection__item
       width: 40px
       min-width: 40px
       height: 40px
       min-height: 40px
       margin: 4px auto
       padding: 8px
+      &:has(> .ui-collection__initial)
+        &:hover,
+        &:active,
+        &.active,
+        &.is-active
+          > .ui-collection__initial
+            color: var(--item-theme, var(--theme))
     .ui-collection__content, .ui-collection__indicator
       display: none
+    .ui-collection__initial
+      display: block
+      font-weight: $fw-600
   .widget-instance--search
     .search-trigger
       width: 40px
