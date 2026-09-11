@@ -2,7 +2,7 @@
   z-index 3
   .widget-body
     position relative
-    &:before
+    .toc:before
       content: ''
       position absolute
       top: 8px
@@ -26,6 +26,7 @@
 // 目录基本样式
 .widget-wrapper.toc .toc
   --fs-content: $fs-content-2
+  min-width: 0
   padding: 0
   margin: 0
   position relative
@@ -54,6 +55,9 @@
       border-radius: 4px
     &:hover
       color: var(--ui-item-title)
+    .toc-text
+      display: block
+      txt-ellipsis()
     
 // 桌面 Rightbar 的吸顶由 widget-instance 承载，目录正文独立滚动。
 :is([data-region='leftbar'], [data-region='rightbar']) .widgets .widget-wrapper.toc
@@ -71,7 +75,7 @@
 // 各级缩进样式
 .widget-wrapper.toc .toc
   .toc-item
-    font-weight: $fw-500
+    font-weight: $fw-600
     --fs-content: $fs-content-1
   .toc-item .toc-item
     font-weight: $fw-400
@@ -79,15 +83,15 @@
   ol
     padding-left: 0
   .toc-child .toc-link
-    padding-left: calc(var(--gap-base) * 1)
+    padding-left: calc(var(--padding) + var(--gap-base) * 1)
   .toc-child .toc-child .toc-link
-    padding-left: calc(var(--gap-base) * 2)
+    padding-left: calc(var(--padding) + var(--gap-base) * 2)
   .toc-child .toc-child .toc-child .toc-link
-    padding-left: calc(var(--gap-base) * 3)
+    padding-left: calc(var(--padding) + var(--gap-base) * 3)
   .toc-child .toc-child .toc-child .toc-child .toc-link
-    padding-left: calc(var(--gap-base) * 4)
+    padding-left: calc(var(--padding) + var(--gap-base) * 4)
   .toc-child .toc-child .toc-child .toc-child .toc-child .toc-link
-    padding-left: calc(var(--gap-base) * 5)
+    padding-left: calc(var(--padding) + var(--gap-base) * 5)
 
 // 高亮样式
 .widget-wrapper.toc .toc a.toc-link.active
@@ -164,7 +168,7 @@
     background: transparent
     .widget-header,
     .widget-footer,
-    .widget-body:before
+    .toc:before
       display: none
     .widget-body
       display: block
