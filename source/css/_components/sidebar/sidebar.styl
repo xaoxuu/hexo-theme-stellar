@@ -61,8 +61,10 @@
     overflow-y: auto
     overscroll-behavior: contain
     scrollbar(0, 0)
-    mask: linear-gradient(white, 90%, transparent)
-    -webkit-mask: linear-gradient(white, 90%, transparent)
+    mask: linear-gradient(transparent, white 5%, white 90%, transparent)
+    -webkit-mask: linear-gradient(transparent, white 5%, white 90%, transparent)
+    .widget-instance:first-child
+        padding-top: 16px
     > .widgets
       padding-bottom: 64px
   .site-region__footer

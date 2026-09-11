@@ -8,9 +8,15 @@ var brandStyle = brandPlacement === 'topbar'
 
 function layoutBrandNavigation() {
   if (brandPlacement !== 'leftbar' || brand.source !== 'collection' || brand.backButton !== true) return ''
-  const href = brand.backHref
+  var href = brand.backHref
   if (!href) return ''
-  return `<div class="brand-navigation"><a class="brand-navigation__back cap" href="${pretty_url(href)}"><span class="ui-icon">${icon('default:back', '', true)}</span><span>${__(brand.backLabel)}</span></a></div>`
+  var railNavigation = activeViewModel?.collection?.profile === 'wiki'
+    ? `<div class="brand-navigation-rail">${partial('_partial/primitives/navigation', {
+      placement: 'leftbar',
+      entries: [{href: pretty_url(href), title: __(brand.backLabel), icon: 'default:chevron-left', iconOnly: true, attrs: {'aria-label': __(brand.backLabel)}}]
+    })}</div>`
+    : ''
+  return `<div class="brand-navigation"><a class="brand-navigation__back cap" href="${pretty_url(href)}"><span class="ui-icon" aria-hidden="true"></span><span>${__(brand.backLabel)}</span></a></div>${railNavigation}`
 }
 
 function layoutBrandSearch() {

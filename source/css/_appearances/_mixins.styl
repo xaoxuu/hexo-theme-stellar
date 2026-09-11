@@ -137,11 +137,10 @@ appearance-editorial-interactions()
     appearance-editorial-outline-active()
 
   .brand-navigation__back
-    padding: 0
+    border: 1px dashed var(--text-meta)
+    trans1 border
     &:hover
-      color: var(--text-p2)
-      background: transparent
-      box-shadow: none
+      border: 1px solid var(--text-p3)
 
   // Leftbar 的下划线已经收敛到标题文字，交互容器恢复组件原有 padding，不再等值迁移为 margin。
   .site-region--leftbar .ui-collection[data-layout='list'][data-variant='nav'] .ui-collection__item:not(.is-icon-only)
@@ -241,9 +240,6 @@ appearance-card-listing-nav()
     box-shadow: $boxshadow-card
 
 appearance-translucent-leftbar-light()
-  .brand-navigation__back
-    background: linear-gradient(180deg, rgba(white, .38), rgba(white, 0) 50%), rgba(white, .5)
-    box-shadow: inset 0 1px 0 rgba(white, .45)
   .search-wrapper > .search-form:before
     background: white
   .widgets .loading-wrap,
@@ -257,9 +253,6 @@ appearance-translucent-leftbar-light()
     background: rgba(white, .2)
 
 appearance-translucent-leftbar-dark()
-  .brand-navigation__back
-    background: linear-gradient(180deg, rgba(white, .08), rgba(white, 0) 50%), rgba(black, .2)
-    box-shadow: inset 0 1px 0 rgba(white, .08)
   .search-wrapper > .search-form:before
     background: rgba(black, .2)
   .widgets .loading-wrap,

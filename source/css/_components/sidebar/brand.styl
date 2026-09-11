@@ -119,6 +119,11 @@
     font-size: 1rem
     white-space: nowrap
 
+.brand-navigation-rail
+  display: none
+  .ui-icon
+    --ui-icon-size: 16px
+
 .brand-navigation__back
   display: flex
   width: fit-content
@@ -127,9 +132,18 @@
   border-radius: 32px
   color: var(--text-p2)
   font-size: $fs-13
+  font-weight: $fw-500
   trans2 color background
   .ui-icon
     --ui-icon-size: 1em
     margin-right: 0.25rem
+    &::before
+      content: ''
+      width: 6px
+      height: 6px
+      border-left: 2px solid currentColor
+      border-bottom: 2px solid currentColor
+      transform: translateX(0.1em) rotate(45deg)
+      opacity: var(--ui-icon-opacity)
   &:hover
     color: var(--text-p1)

@@ -53,7 +53,7 @@ appearance-standard-prose()
 
 html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .site-region--leftbar .widget-instance[data-leftbar-rail] .ui-collection > .ui-collection__item:has(> .ui-collection__initial)
   &:not(:hover):not(:focus-visible):not(.active):not(.is-active):not(:active)
-    border: 1px dashed var(--block-border)
+    border: 1px dashed var(--text-meta)
 
 .tag-plugin > .dropdown-trigger
   border-color: var(--block)
@@ -68,9 +68,10 @@ table a:not([class])
   &:focus-visible
     color: var(--link)
 
-// Wiki Brand Search 默认保留虚线，交互时复用同一条边框。
-.brand-search .search-trigger
-  border: 1px dashed var(--block-border)
+// Wiki Brand 搜索与折叠返回按钮默认保留虚线，交互时复用同一条边框。
+.brand-search .search-trigger,
+.brand-navigation-rail .ui-collection__item
+  border: 1px dashed var(--text-meta)
   &:hover,
   &:focus-visible,
   &:active
