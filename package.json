@@ -1,6 +1,6 @@
 {
   "name": "hexo-theme-stellar",
-  "version": "2.0.0-rc.4",
+  "version": "2.0.0-rc.5",
   "description": "An all-in-one Hexo theme for blogs, project documentation, knowledge bases, series, and notebooks.",
   "main": "package.json",
   "scripts": {
