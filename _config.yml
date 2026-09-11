@@ -555,16 +555,6 @@ appearance:
       code_block: 0.8125rem
     # 设置正文对齐方式；可选值为 left、center、right 或 justify。
     content_align: left
-    # 配置各级标题的前缀字符。
-    heading_prefixes:
-      # 设置二级标题前缀。
-      h2: '#'
-      # 设置三级标题前缀。
-      h3: '='
-      # 设置四级标题前缀。
-      h4: '|'
-      # 设置五级标题前缀。
-      h5: ':'
 
   # 配置组件形状。
   shape:

@@ -33,23 +33,30 @@ body[data-article-style='story'] .md-text.content
 
   h3:not([class])
     position: relative
+    width: fit-content
+    max-width: 80%
+    box-sizing: border-box
+    padding-inline: 1.68em
     &:before,&:after
       position absolute
+      top: 50%
+      transform: translateY(-50%)
       font-size: 1.2em
       background-color: x-theme-alpha(0.5)
       width: 1em
-      height: 1em
+      height: 100%
       content: ''
       opacity 1
-      display: inline-block
       trans1 all
-      vertical-align: middle
     &:before
-      margin-left: -1.2em
+      left: 0
       svg-mask-icon(var(--icon-h3-left))
     &:after
-      margin-left: .2em
+      right: 0
       svg-mask-icon(var(--icon-h3-right))
+    &:before,&:after
+      -webkit-mask-size: 100% 100%
+      mask-size: 100% 100%
 
   h4:not([class])
     position: relative
@@ -78,6 +85,9 @@ body[data-article-style='story'] .md-text.content
     margin: 2em 0 1.5em
     >a:first-child
       display: none
+
+  h2:not([class]),h3:not([class])
+    margin-inline: auto
 
   // 取消缩进效果
   .poetry, .okr, .timeline, li, .article-footer

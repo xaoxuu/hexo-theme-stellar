@@ -18,19 +18,26 @@ h6
 // story 文章段落标题（h2）：居中 + 两侧 accent 斜杠装饰
 // 专栏列表页专栏标题（.topic-title）与 story 文章 h2 共用
 story-title()
+  position: relative
+  width: fit-content
+  max-width: 80%
+  box-sizing: border-box
+  padding-inline: calc(8px + 1em)
   color: var(--text)
   line-height: 1.2
   text-align: center
   &:before,&:after
     content: ''
-    display: inline-block
-    width: 12px
-    height: 1.2em
+    position: absolute
+    top: 50%
+    width: 8px
+    height: 100%
     background: $c-accent
-    transform: skewX(-20deg)
-    margin: 0 0.5em
-    vertical-align: top
-    position: relative
+    transform: translateY(-50%) skewX(-20deg)
+  &:before
+    left: 0.5em
+  &:after
+    right: 0.5em
 
 // 次级段落字号
 .fs15
