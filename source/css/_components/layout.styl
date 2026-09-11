@@ -391,6 +391,42 @@ leftbar-rail()
 html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .site-region--leftbar
   leftbar-rail()
 
+// 保留桌面网格占位，仅收窄右栏本身；悬停或键盘访问时恢复完整布局。
+@media screen and (min-width: $device-laptop + 1px)
+  html[data-leftbar-state='collapsed'] .site-shell[data-regions~='leftbar'][data-regions~='rightbar'] .site-region--rightbar:not(:hover):not(:focus-within)
+    width: var(--leftbar-rail-width)
+    .site-region__surface
+      position: sticky
+      top: var(--rightbar-sticky-offset)
+      flex: none
+      height: var(--rightbar-panel-height)
+      max-height: var(--rightbar-panel-height)
+      justify-content: center
+    .site-region__viewport,
+    .widget-stack--rightbar
+      min-height: 0
+      height: 100%
+      max-height: 100%
+    .site-region__viewport
+      flex: 0 1 auto
+      max-height: 80vh
+    .widgets
+      display: flex
+      flex-direction: column
+      justify-content: center
+      flex: 1
+      min-height: 0
+      margin: 0
+      overflow: hidden
+    .widget-instance
+      display: none
+    .widget-instance--toc:has(.toc-link)
+      display: block
+      position: static
+      min-height: 0
+      max-height: 100%
+      flex-shrink: 1
+
 @media screen and (max-width: $device-laptop)
   .site-workspace
     display: block

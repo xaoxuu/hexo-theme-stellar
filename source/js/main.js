@@ -133,6 +133,7 @@ function setRegionInteractive(region, interactive) {
 }
 
 function syncLeftbarControls() {
+  syncRightbarFocus();
   const drawer = regionUsesDrawer('leftbar');
   const expanded = drawer
     ? siteShell?.dataset.drawer === 'leftbar'
@@ -145,7 +146,17 @@ function syncLeftbarControls() {
   });
 }
 
+function syncRightbarFocus() {
+  const rightbar = regionElement('rightbar');
+  if (!rightbar) return;
+  const compact = !regionUsesDrawer('rightbar') && regionElement('leftbar')
+    && document.documentElement.dataset.leftbarState === 'collapsed';
+  if (compact) rightbar.setAttribute('tabindex', '0');
+  else rightbar.removeAttribute('tabindex');
+}
+
 function syncDrawerControls() {
+  syncRightbarFocus();
   const openRegion = siteShell?.dataset.drawer || '';
   ['leftbar', 'rightbar'].forEach(function (region) {
     const open = openRegion === region && regionUsesDrawer(region);

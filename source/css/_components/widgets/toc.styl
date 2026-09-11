@@ -155,6 +155,70 @@
     &.collapse .widget-body
       max-height: 0
 
+// 联动折叠时，同一份目录链接呈现为居中的横线列表。
+@media screen and (min-width: $device-laptop + 1px)
+  html[data-leftbar-state='collapsed'] .site-shell[data-regions~='leftbar'][data-regions~='rightbar'] .site-region--rightbar:not(:hover):not(:focus-within) .widgets .widget-wrapper.toc
+    margin: 0
+    padding: 0
+    max-height: unquote('min(80vh, var(--rightbar-panel-height))')
+    background: transparent
+    .widget-header,
+    .widget-footer,
+    .widget-body:before
+      display: none
+    .widget-body
+      display: block
+      max-height: unquote('min(80vh, var(--rightbar-panel-height))')
+      overflow-x: hidden
+      overflow-y: auto
+    .toc
+      width: 32px
+      margin: 0 auto
+      padding: 0
+    .toc ol
+      display: block
+      padding: 0
+    .toc a.toc-link
+      box-sizing: border-box
+      display: block
+      width: 32px
+      height: 16px
+      margin: 0
+      padding: 0
+      font-size: 0
+      line-height: 0
+      color: transparent
+      background: transparent
+      border: 0
+      box-shadow: none
+      transition: none
+      > span
+        opacity: 0
+      &:before
+        content: ''
+        position: absolute
+        left: 0
+        top: 7px
+        bottom: auto
+        width: 24px
+        height: 2px
+        border-radius: 999px
+        background: var(--text-p2)
+        opacity: 0.2
+        transition: width 0.2s ease, height 0.2s ease, top 0.2s ease, background-color 0.2s ease, opacity 0.2s ease
+      &:after
+        display: none
+      &.active:before
+        top: 6px
+        width: 32px
+        height: 4px
+        background: var(--theme)
+        opacity: 1
+
+@media screen and (min-width: $device-laptop + 1px) and (prefers-reduced-motion: reduce)
+  html[data-leftbar-state='collapsed'] .site-shell[data-regions~='leftbar'][data-regions~='rightbar'] .site-region--rightbar:not(:hover):not(:focus-within) .widgets .widget-wrapper.toc .toc a.toc-link:before
+    transition: none
+
 // 操作按钮（回到顶部 / 参与讨论）
 .widget-wrapper.toc .widget-footer:before
   content: ''
