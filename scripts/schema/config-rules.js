@@ -180,6 +180,10 @@ const CONFIG_RULES = Object.freeze([
   ["profiles.*.comments.provider", { type: ["string", "null"], values: [null, "beaudar", "utterances", "giscus", "twikoo", "waline", "artalk"] }],
   ["profiles.*.comments.options", parameterBag],
 
+  ["features.reveal.duration", { minimum: 0 }],
+  ["features.reveal.interval", { minimum: 0 }],
+  ["features.reveal.blur", { minimum: 0 }],
+
   ["article.style", { values: ["tech", "story"] }],
   ["article.paragraph_indent", { values: ["auto", "always", "never"] }],
   ["article.listing.pinned_layout", { values: ["carousel", "flat"] }],

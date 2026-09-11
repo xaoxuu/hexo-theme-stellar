@@ -2,9 +2,6 @@ function queryAll(root, selector) {
   return [...(root.matches?.(selector) ? [root] : []), ...root.querySelectorAll(selector)];
 }
 
-const DISTANCE = '8px';
-const DURATION_MS = 1000;
-const INTERVAL_MS = 100;
 const SCALE = 1;
 
 function rootWindow(root) {
@@ -23,7 +20,8 @@ function prefersReducedMotion(windowRef) {
   }
 }
 
-export function mount(root) {
+export function mount(root, context) {
+  const { duration, interval, distance, blur } = context.extension.config;
   const elements = queryAll(root, '.slide-up');
   const windowRef = rootWindow(root);
   if (
@@ -36,6 +34,7 @@ export function mount(root) {
   const hiddenElements = new Map();
   const pendingInitialObservation = new WeakSet(elements);
   let observer = null;
+  let nextStartTime = 0;
 
   function restore(element) {
     const original = hiddenElements.get(element);
@@ -54,7 +53,7 @@ export function mount(root) {
 
   try {
     observer = new windowRef.IntersectionObserver(entries => {
-      let sequenceIndex = 0;
+      const now = windowRef.performance.now();
       entries.forEach(entry => {
         if (pendingInitialObservation.has(entry.target)) {
           pendingInitialObservation.delete(entry.target);
@@ -74,17 +73,22 @@ export function mount(root) {
         restore(entry.target);
         if (typeof entry.target.animate !== 'function') return;
         try {
-          const animation = entry.target.animate([
-            { opacity: 0, transform: `translateY(${DISTANCE}) scale(${SCALE})` },
+          const keyframes = [
+            { opacity: 0, transform: `translateY(${distance}px) scale(${SCALE})` },
             { opacity: 1, transform: 'translateY(0) scale(1)' }
-          ], {
-            delay: sequenceIndex * INTERVAL_MS,
-            duration: DURATION_MS,
+          ];
+          if (blur > 0) {
+            keyframes[0].filter = `blur(${blur}px)`;
+            keyframes[1].filter = 'blur(0px)';
+          }
+          const animation = entry.target.animate(keyframes, {
+            delay: Math.max(0, nextStartTime - now),
+            duration,
             easing: 'ease-out',
             fill: 'backwards'
           });
           animations.add(animation);
-          sequenceIndex += 1;
+          nextStartTime = Math.max(now, nextStartTime) + interval;
         } catch (error) {
           void error;
         }
