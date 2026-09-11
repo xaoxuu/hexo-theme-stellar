@@ -1,3 +1,26 @@
+# Stellar 2.0.0-rc.5 发布候选核查
+
+> 核查日期：2026-09-12
+> 发布基线：`2.0.0-rc.4`
+> 候选版本：`2.0.0-rc.5`
+
+## 净变化与文档覆盖
+
+核对公开 rc.4 tag 到最终候选树；起始工作区干净，fetch 后 main 比 origin/main 领先 10 个已提交改动，无远端新增提交。知识库已在发布前集中同步，以当前配置、Schema、模型、模板和运行时为事实来源。
+
+| 领域 | 最终行为与事实来源 | 文档出口 |
+| --- | --- | --- |
+| Brand 与侧栏 | 配置与内容 Schema、brand.ejs、Widget registry、main.js：Brand 搜索、显式 ghrepo 优先、折叠栏与紧凑目录 | 配置、导航、侧栏、目录、搜索知识库与 CHANGELOG |
+| 横幅与分享 | 内容 Schema、共享模型、article_banner.ejs、SEO、share-services.js：cover 单一图片来源、页面 banner 表现参数、六项分享服务 | 内容 Schema、文章页脚知识库与 CHANGELOG 升级注意 |
+| 资源与生命周期 | client-assets.js、runtime-minify.js、image-fallback.js、pin-slider/comments/reveal：共享外部资源、ESM 排除压缩、评论非阻塞、入场参数 | 前端总览、页面导航、图片、评论、Extension 知识库与 CHANGELOG |
+| 服务与样式 | 默认配置、服务规则、Stylus：可选 endpoint 留空、标题装饰和 mark 默认色、媒体与导航修复 | 配置、数据服务知识库与 CHANGELOG；视觉参数不新增持久断言 |
+
+## 验证
+
+发布使用 `npm run release:dry -- 2.0.0-rc.5` 和 `npm run release -- 2.0.0-rc.5 --yes`，分别在目标版本状态执行 lint、单元测试、复用、Contribution、四场景 npm 包集成、性能和知识库门禁。预演恢复受管版本文件，正式流程提交并推送 main 与 npm；外部结果核对 Actions、npm rc/latest、纯版本 tag 与 GitHub prerelease。实际执行结果在发布对话中报告。
+
+---
+
 # Stellar 2.0.0-rc.4 发布候选核查
 
 > 核查日期：2026-09-10

@@ -1,5 +1,34 @@
 # Changelog
 
+## 2.0.0-rc.5
+
+> 发布日期：2026-09-12
+
+本节记录从公开候选 `2.0.0-rc.4` 到 `2.0.0-rc.5` 最终文件树的净变化。
+
+### 新功能
+
+- Leftbar Brand 支持 `ghrepo: owner/repo` 仓库统计，优先于 `ghuser`；搜索按钮移入 Brand，由 `leftbar.brand.search` 控制，默认开启。
+- 完善侧栏初始折叠状态，Tree、Linklist、Related 支持折叠栏；右栏随左栏收起显示紧凑目录，支持悬停和键盘焦点展开，目录活动指示条平滑跟随当前条目。
+- Reveal 支持 `duration/interval/distance/blur`，默认分别为 800ms、200ms、8px、4px，可配置依次播放、位移和模糊。
+
+### 修复与改进
+
+- 共享客户端配置、图标样式与置顶轮播脚本改为外部资源，集中处理图片失败回退，减少逐页重复 HTML；为 hexo-minify 排除原生 Runtime ESM，保留模块语义。
+- 评论在页面挂载时立即开始加载，第三方资源加载不再阻塞页面初始化；保留页面卸载时取消与清理。
+- 横幅统一使用页面 `cover`，作者页使用作者 `cover`，同步 SEO 图片来源；改进背景文字自适应与头像边框。
+- 调整标题装饰、导航下划线、搜索图标与快捷键提示、侧栏间距、移动正文顶部留白和长目录标题；修复 frame 媒体比例，mark 默认使用主题色并改进暗色配色。
+
+### 升级注意（配置变更与破坏性改动）
+
+- 删除 Menu 中的 `type: search` 项，改用 `leftbar.brand.search`；搜索需要启用 Provider 且 Brand 有图片或名称。该字段支持主题、Profile、Collection 和 Page 覆盖。
+- 分享服务 `wechat` 改为通用 `qrcode`，移除 `link` 与 `system`；检查 `article.footer.share` 及内容 `footer.share`，当前支持 qrcode、weibo、x、telegram、whatsapp、email。
+- 页面 `banner.image` 改用顶层 `cover`；Collection 不再声明 `banner`，页面 `banner` 仅保留 enabled/avatar/headline/tagline。移除 `article.banner.ratio`，横幅不再使用独立比例配置。
+- 移除 `appearance.typography.heading_prefixes`，标题装饰由主题样式维护。
+- Site Info、Rating、Vote 的服务 endpoint 默认留空，需要自行部署并填写地址；升级后如依赖这些服务，请显式配置对应 endpoint。
+
+Full Changelog: [2.0.0-rc.4...2.0.0-rc.5](https://github.com/xaoxuu/hexo-theme-stellar/compare/2.0.0-rc.4...2.0.0-rc.5)
+
 ## 2.0.0-rc.4
 
 > 发布日期：2026-09-10
