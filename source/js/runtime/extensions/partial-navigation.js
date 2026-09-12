@@ -79,6 +79,20 @@ export function mount(root, context) {
   }
   async function navigate(url, { pop = false, position } = {}) {
     const request = queue.begin();
+    const loading = document.createElement('div');
+    loading.className = 'loading-wrap navigation-loading';
+    loading.setAttribute('role', 'status');
+    const icon = document.createElement('div');
+    icon.className = 'lazy-icon';
+    icon.setAttribute('aria-hidden', 'true');
+    loading.append(icon);
+    // Fast navigations should finish without flashing a loading indicator.
+    const loadingTimer = setTimeout(() => document.body.append(loading), 150);
+    const clearLoading = () => {
+      clearTimeout(loadingTimer);
+      loading.remove();
+    };
+    request.signal.addEventListener('abort', clearLoading, { once: true });
     let timedOut = false;
     const timeout = setTimeout(() => { timedOut = true; request.abort(); }, 15000);
     if (!pop) remember();
@@ -134,7 +148,10 @@ export function mount(root, context) {
       });
     } catch (error) {
       if ((!request.signal.aborted || timedOut) && !lifetime.signal.aborted) fallback(url, pop);
-    } finally { clearTimeout(timeout); }
+    } finally {
+      clearTimeout(timeout);
+      clearLoading();
+    }
   }
 
   document.addEventListener('click', event => {
