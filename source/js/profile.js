@@ -2,7 +2,7 @@
   var SUPPORTED_PROVIDERS = ['artalk', 'waline', 'twikoo'];
   var SETTINGS_ICON = 'default:settings';
   var PROFILE_ICON = 'default:profile';
-  var GRAVATAR_BASE_URL = 'https://gravatar.com/avatar/';
+  var GRAVATAR_BASE_URL = 'https://g.dusays.com/avatar/';
   var localStore = null;
   var sessionStore = null;
   var gravatarHashes = new Map();
