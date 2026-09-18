@@ -22,6 +22,7 @@ function clientAssets(hexo) {
     'default:settings', 'copy:copy', 'weibo:repeat', 'weibo:like'];
   const clientIcons = Object.fromEntries(keys.map(key => [key, (icons[key] || '').replace(/<!--[\s\S]*?-->/g, '')]));
   const services = JSON.parse(JSON.stringify(INTERNAL.assets.services));
+  services.gravatar = { baseUrl: config.services.gravatar.baseUrl };
   services.siteinfo.api = resolveServiceProvider(config.services.siteInfo)?.endpoint || null;
   const provider = config.search.provider;
   const search = provider ? { service: provider === 'local' ? 'local_search' : provider } : null;

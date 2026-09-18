@@ -274,6 +274,7 @@ const CONFIG_RULES = Object.freeze([
   ["services.contributors.provider", { values: ["github"] }],
   ["services.contributors.github.repositories", { validator: "contributor_repositories", items: contributorRepository }],
   ["services.github.*", { validator: "absolute_http_url" }],
+  ["services.gravatar.base_url", { validator: "absolute_http_url" }],
   ["services.github_card.provider", { values: ["github_readme_stats"] }],
   ["services.github_card.github_readme_stats", { runtimeKey: "github_readme_stats" }],
   ["services.github_card.github_readme_stats.endpoint", { type: ["string"], validator: "absolute_http_url" }],

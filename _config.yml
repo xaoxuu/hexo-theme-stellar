@@ -930,6 +930,10 @@ features:
 
 # 配置主题使用的数据服务。
 services:
+  # 配置访客身份头像使用的 Gravatar 服务（侧边栏与设置页共享）。
+  gravatar:
+    # 设置兼容 SHA-256 的头像镜像地址，包含 /avatar/ 路径；末尾斜杠可省略。
+    base_url: https://gravatar.com/avatar/
   # 配置所有动态 Markdown 内容共享的 Marked 客户端。
   markdown:
     # 自定义脚本地址；null 使用默认资源。
