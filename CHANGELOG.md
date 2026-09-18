@@ -1,5 +1,31 @@
 # Changelog
 
+## 2.0.0-rc.6
+
+> 发布日期：2026-09-18
+
+本节记录从公开候选 `2.0.0-rc.5` 到 `2.0.0-rc.6` 最终文件树的净变化。
+
+### 新功能
+
+- Wiki Hero 新增视频背景 `hero.background.video`，静音循环自动播放，图片可用作 poster；设置视频时不加载动态效果。
+- Hero 新增滚动视差 `hero.background.parallax`，范围 0–1、默认 0.2，设为 0 关闭位移；图片与视频背景随滚动淡出，减少动态效果偏好下关闭视差位移。
+- 新增 Strands WebGL 背景效果，支持光带配色、形态、发光及玻璃折射参数。
+- Leftbar 新增 `menu_columns`，支持 1–5 列，默认 1；1–2 列显示图标与标题，3–5 列仅显示图标并保留无障碍名称。支持 Profile、Collection、Page 覆盖。
+- 新增 `services.gravatar.base_url`，侧栏与设置页共享访客头像镜像地址，默认 `https://gravatar.com/avatar/`；自定义服务需兼容 SHA-256 并包含 `/avatar/` 路径。
+
+### 修复与改进
+
+- 同集合页面切换等待超过 150ms 时显示加载反馈，完成、失败或取消后清理，快速切换不闪烁。
+- 修复目录活动指示条在 CSS 压缩后高度丢失的问题。
+- 中英文安装说明补充 Windows PowerShell Blueprint 安装命令。
+
+### 升级注意
+
+- 现有 Hero 背景默认启用 0.2 强度视差；如需关闭位移，显式设置 `hero.background.parallax: 0`。
+
+Full Changelog: [2.0.0-rc.5...2.0.0-rc.6](https://github.com/xaoxuu/hexo-theme-stellar/compare/2.0.0-rc.5...2.0.0-rc.6)
+
 ## 2.0.0-rc.5
 
 > 发布日期：2026-09-12

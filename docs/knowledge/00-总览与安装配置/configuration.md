@@ -223,3 +223,7 @@ leftbar:
 Leftbar Brand 新增 ghrepo 仓库统计，优先于 ghuser，且只在 regular Leftbar 中显示；两者均须显式配置。search 默认 true，控制 Brand 搜索入口，Menu 只支持 link。
 
 内容横幅与列表共用页面 cover；页面 banner 只保留 enabled/avatar/headline/tagline，Collection 不配置 banner。分享服务为 qrcode/weibo/x/telegram/whatsapp/email。Site Info、Rating、Vote 默认 endpoint 为 null，需自行部署填写。Reveal 的 duration/interval/distance/blur 默认 800ms/200ms/8px/4px。当前标题装饰由样式维护，不再提供 heading_prefixes。
+
+## 访客头像服务
+
+`services.gravatar.base_url` 默认 `https://gravatar.com/avatar/`，统一供侧栏与设置页访客身份头像使用。自定义地址必须为 HTTP(S) URL，包含 `/avatar/` 路径并兼容 SHA-256；末尾斜杠可省略。该配置不改变文章作者头像或 SEO 图片来源。

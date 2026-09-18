@@ -1,3 +1,27 @@
+# Stellar 2.0.0-rc.6 发布候选核查
+
+> 核查日期：2026-09-18
+> 发布基线：`2.0.0-rc.5`
+> 候选版本：`2.0.0-rc.6`
+
+## 净变化与文档覆盖
+
+起始工作区干净，fetch 后 main 与 origin/main 一致。比较公开 rc.5 与最终候选树，核对配置、Schema、模型、模板与客户端消费链。
+
+| 领域 | 最终行为与事实来源 | 文档出口 |
+| --- | --- | --- |
+| Wiki Hero | 内容 Schema、Wiki 模型、wiki_cover、hero-parallax、效果注册表：视频优先、默认 0.2 视差、Strands 参数与按需 ESM | Wiki 知识库、CHANGELOG |
+| 左栏菜单 | 配置与内容 Schema、Region、navigation/menu：1–5 列与层级覆盖 | 导航知识库、CHANGELOG |
+| 访客头像 | 默认配置、client-assets、profile：共享 Gravatar base URL | 配置知识库、CHANGELOG |
+| 导航与目录 | partial-navigation 的延迟反馈与生命周期清理；TOC 使用压缩后保留的高度表达式 | 页面导航知识库、CHANGELOG；视觉实现不新增长期断言 |
+| 安装与许可 | README 中英文 PowerShell 命令、THIRD-PARTY-NOTICES 的效果归属 | 当前 README 与 NOTICE；无额外运行时迁移 |
+
+## 验证
+
+执行 `npm run knowledge:check`、`npm run release:dry -- 2.0.0-rc.6` 与 `npm run release -- 2.0.0-rc.6 --yes`。预演与正式发布在目标版本状态运行 lint、单元测试、复用、Contribution、四场景 npm 包集成、性能与知识库门禁。发布后核实 Actions、npm rc/latest、纯版本 tag 与 GitHub prerelease，实际结果在发布对话报告。
+
+---
+
 # Stellar 2.0.0-rc.5 发布候选核查
 
 > 核查日期：2026-09-12

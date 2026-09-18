@@ -106,3 +106,7 @@ leftbar:
 当前开发版在 Leftbar Brand 内显示搜索入口，leftbar.brand.search 默认 true，需 Provider 非空且 Brand 本身可见。主题、Profile、Collection、Page 均可覆盖；Menu 只保留 link 项。
 
 regular Leftbar 的统计显式读取 leftbar.brand.ghrepo（owner/repo，Stars/Forks/最新 Tag），未设置仓库时读取 ghuser（Followers/Following/Repos）。两者默认 null，不推断 Widget 或 source.repository；compact、Topbar、移动主内容 Brand 不渲染统计。
+
+## Leftbar 菜单列数
+
+`leftbar.menu_columns` 接受 1–5 的整数，默认 1，按主题 → Profile → Collection → Page 层级覆盖。1–2 列显示图标与标题；3–5 列使用居中图标并保留 `aria-label`。仅影响 Leftbar，Topbar 保持原布局。

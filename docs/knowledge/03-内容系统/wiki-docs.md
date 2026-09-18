@@ -83,13 +83,18 @@ Wiki PageViewModel 固定包含 `collection`、`item` 和 `render`：
 
 `hero` 只在 Wiki 首页且 `hero.enabled: true` 时生成。背景图片与动态效果分别位于 `hero.background.image` 和 `hero.background.effect`，可以叠加；Canvas 不接收指针事件，失败时保留静态图片或效果注册表提供的底色。
 
+`hero.background.video` 支持静音、循环、行内自动播放视频，`image` 同时提供 poster；设置视频时不生成效果 Canvas。`hero.background.parallax` 范围 0–1，默认 0.2，设为 0 关闭位移；减少动态效果偏好也会关闭位移。图片（未叠加效果）与视频背景随滚动淡出。页面卸载会清理视差观察器与事件。
+
 内置效果由 `scripts/lib/hero-effect-registry.js` 单源登记：
 
 | ID | 表现 | 无图片时的底色 |
 | --- | --- | --- |
+| `strands` | WebGL 彩色光带，可选玻璃折射 | 黑色 |
 | `ferrofluid` | WebGL 磁流体轮廓 | `backgroundColor`，默认 `#03010A` |
 | `galaxy` | WebGL 星场、纵深与鼠标排斥 | 黑色；`transparent: false` 时 Canvas 可覆盖图片 |
 | `light-rays` | WebGL 体积光束 | 默认黑色；`lightMode: true` 时白色 |
+
+Strands 参数包括 `colors/count/speed/amplitude/waviness/thickness/glow/taper/spread/hueShift/intensity/saturation/opacity/scale/glass/refraction/dispersion/glassSize`，类型与默认值以注册表为准；`colors` 接受 0–8 个六位十六进制颜色。
 
 每个效果的允许参数、类型和默认值都来自同一注册表；未知效果、未知参数、错误类型、非法方向／颜色、Ferrofluid 超过八种颜色或非正数 DPR 会被 Schema 报告。`pause_when_hidden` 与 `respect_reduced_motion` 默认 true，可在 effect 的 `runtime` 中覆盖。
 
