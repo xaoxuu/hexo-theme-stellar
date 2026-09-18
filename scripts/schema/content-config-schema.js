@@ -166,6 +166,7 @@ function targetNode(target) {
     ...(target.boundary === "sealed" ? { sealed: true } : {}),
     ...(target.values ? { values: clone(target.values) } : {}),
     ...(target.minimum !== undefined ? { minimum: target.minimum } : {}),
+    ...(target.maximum !== undefined ? { maximum: target.maximum } : {}),
     ...(target.exclusiveMinimum !== undefined ? { exclusiveMinimum: target.exclusiveMinimum } : {})
   };
 }

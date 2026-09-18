@@ -172,6 +172,8 @@ const COLLECTION_TARGET_DEFINITIONS = [
   ["hero.enabled", ["boolean", "null"], literal(null)],
   ["hero.background", "object", literal({}), { boundary: "sealed" }],
   ["hero.background.image", ["string", "null"], literal(null)],
+  ["hero.background.video", ["string", "null"], literal(null)],
+  ["hero.background.parallax", "number", literal(0.2), { minimum: 0, maximum: 1 }],
   ["hero.background.effect", ["object", "null"], literal(null), { boundary: "registered_schema" }],
   ["hero.preview", ["object", "null"], literal(null), { boundary: "sealed" }],
   ["hero.preview.type", ["string", "null"], literal(null), { values: ["terminal", "image"] }],

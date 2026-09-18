@@ -140,6 +140,20 @@ const CONTRIBUTIONS = defineContributions([
     }
   },
   {
+    id: "hero-parallax",
+    scope: "region",
+    kind: "feature",
+    entry: runtimeEntry("/js/runtime/extensions/hero-parallax.js"),
+    resources: [],
+    activation: selector(".wiki-hero"),
+    schema: null,
+    i18n: null,
+    docs: { category: "Components", path: "docs/knowledge/03-内容系统/wiki-docs.md" },
+    tests: [RUNTIME_TEST, RUNTIME_CONSUMPTION_TEST],
+    defaultsOwner: null,
+    project: () => configResult({})
+  },
+  {
     id: "hero-effect",
     scope: "region",
     kind: "feature",

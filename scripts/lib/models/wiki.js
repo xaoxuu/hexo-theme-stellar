@@ -7,6 +7,7 @@ const { firstContentImage } = require("../seo");
 const { caption } = require("../caption");
 const { wikiReadmeHtml } = require("../wiki_readme");
 const { filterShareServices } = require("../share-services");
+const { COLLECTION_CONFIG_SCHEMA } = require("../../schema/content-config-schema");
 const { projectHeroEffect } = require("../hero-effect-registry");
 const { normalizeThemeComments } = require("../comments");
 const { articleFooterDefaults, articlePresentationDefaults, collectionFooterDefaults, requireContentConfig } = require("../content-defaults");
@@ -14,6 +15,7 @@ const { cloneValue, deepFreeze, pick, mergeConfig, toContentNavigation, collecti
 
 function heroBackground(value) {
   const background = cloneValue(value || {});
+  background.parallax ??= COLLECTION_CONFIG_SCHEMA.properties.hero.properties.background.properties.parallax.default.value;
   if (background.effect) background.effect = projectHeroEffect(background.effect);
   return background;
 }
