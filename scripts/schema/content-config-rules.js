@@ -127,6 +127,7 @@ const CONTENT_OVERRIDE_DEFINITIONS = [
   ["leftbar.brand.ghuser", ["string", "null"], literal(null)],
   ["leftbar.brand.search", ["boolean", "null"], literal(null)],
   ["leftbar.brand.href", ["string", "null"], literal(null)],
+  ["leftbar.menu_columns", ["number", "null"], literal(null), { minimum: 1, maximum: 5 }],
   ["leftbar.menu", ["array", "null"], literal(null), { items: MENU_ITEMS }],
   ["leftbar.footer", "object", literal({}), { boundary: "sealed" }],
   ["leftbar.footer.actions", ["array", "null"], literal(null), { items: ACTION_ITEMS }],

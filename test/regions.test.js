@@ -26,6 +26,7 @@ test("Region fixed fields cascade independently and enabled false closes renderi
     enabled: true,
     brand: { name: null, image: { src: "/site.png", variant: "icon" } },
     menu: [],
+    menuColumns: 1,
     footer: { actions: [] },
     widgets: ["second"]
   });

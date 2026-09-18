@@ -5,8 +5,9 @@ if (!allowedPlacements.includes(placement)) {
 }
 var navigationItems = Array.isArray(entries) ? entries : []
 var navigationBody = partial('_partial/components/collection', {options: {
-  layout: 'list',
-  variant: 'nav',
+  layout: placement === 'leftbar' && typeof columns !== 'undefined' && columns > 1 ? 'grid' : 'list',
+  columns: typeof columns !== 'undefined' ? columns : 1,
+  variant: placement === 'leftbar' && typeof columns !== 'undefined' && columns > 2 ? 'icon' : 'nav',
   items: navigationItems
 }})
 var html = ''

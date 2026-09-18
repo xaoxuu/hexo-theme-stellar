@@ -61,7 +61,10 @@ function resolveRegion(layers, region, options = {}) {
     result.brand = false;
     result.menu = [];
   }
-  if (region === "leftbar") result.footer = { actions: [] };
+  if (region === "leftbar") {
+    result.menuColumns = 1;
+    result.footer = { actions: [] };
+  }
   for (const layer of layers) {
     const current = regionLayer(layer?.[region]);
     if (!current) continue;
@@ -71,6 +74,9 @@ function resolveRegion(layers, region, options = {}) {
     }
     if (["topbar", "leftbar"].includes(region) && Array.isArray(current.menu)) {
       result.menu = current.menu.map(clone);
+    }
+    if (region === "leftbar" && current.menuColumns != null) {
+      result.menuColumns = current.menuColumns;
     }
     if (region === "leftbar" && Array.isArray(current.footer?.actions)) {
       result.footer.actions = current.footer.actions.map(clone);
@@ -112,6 +118,7 @@ function resolveRegions(options = {}) {
         menu: clone(state.menu)
       } : {}),
       ...(region === "leftbar" ? {
+        menuColumns: state.menuColumns,
         defaultState: options.defaultState || "expanded",
         footer: clone(state.footer)
       } : {})

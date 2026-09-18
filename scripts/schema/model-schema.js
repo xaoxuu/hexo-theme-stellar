@@ -206,6 +206,7 @@ function regionConfigSchemas(factory) {
       schema.type = ["object", "boolean", "null"];
       return schema;
     })(),
+    menuColumns: field("number", { example: 1 }),
     menu: array(menuItem, { example: [] }),
     footer: object({
       actions: array(actionItem, { example: [] })

@@ -58,6 +58,8 @@ leftbar:
     tagline: null
     # 设置品牌链接。
     href: /
+  # 设置 Leftbar 菜单列数（1–5）；1–2 列显示图标与标题，3–5 列仅显示居中的图标。
+  menu_columns: 1
   # 设置 Leftbar 菜单项；数组会整体替换，空数组表示不显示菜单项。
   menu:
     # 声明默认的博客入口。

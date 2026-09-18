@@ -9,3 +9,13 @@
   .menu
     .ui-collection__item
       font-size: $fs-15
+
+.site-region--leftbar .widget-instance--menu .ui-collection[data-layout='grid']
+  --ui-grid-min: 0px
+  &[data-variant='icon']
+    .ui-collection__item
+      padding-inline: 0
+    .ui-collection__content
+      display: none
+    .ui-collection__initial
+      display: block
