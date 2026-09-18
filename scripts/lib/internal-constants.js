@@ -57,6 +57,7 @@ module.exports = deepFreeze({
       settings: "/js/runtime/extensions/settings.js"
     },
     heroEffects: {
+      strands: "/js/runtime/hero-effects/strands.js",
       ferrofluid: "/js/runtime/hero-effects/ferrofluid.js",
       galaxy: "/js/runtime/hero-effects/galaxy.js",
       lightRays: "/js/runtime/hero-effects/light-rays.js"

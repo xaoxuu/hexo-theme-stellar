@@ -32,7 +32,7 @@ function optionMatches(rule, value) {
   if (rule.type === "hex_color") return typeof value === "string" && /^#?[a-f\d]{6}$/i.test(value);
   if (rule.type === "hex_color_array") {
     return Array.isArray(value)
-      && value.length >= 1
+      && value.length >= (rule.minItems ?? 1)
       && value.length <= 8
       && value.every(item => typeof item === "string" && /^#?[a-f\d]{6}$/i.test(item));
   }
@@ -91,6 +91,55 @@ const LIGHT_RAYS_ORIGINS = Object.freeze([
 ]);
 
 const DEFINITIONS = defineHeroEffects([
+  {
+    id: "strands",
+    label: "Strands",
+    module: INTERNAL.assets.heroEffects.strands,
+    options: {
+      colors: { type: "hex_color_array", minItems: 0 },
+      count: { type: "number" },
+      speed: { type: "number" },
+      amplitude: { type: "number" },
+      waviness: { type: "number" },
+      thickness: { type: "number" },
+      glow: { type: "number" },
+      taper: { type: "number" },
+      spread: { type: "number" },
+      hueShift: { type: "number" },
+      intensity: { type: "number" },
+      saturation: { type: "number" },
+      opacity: { type: "number" },
+      scale: { type: "number" },
+      glass: { type: "boolean" },
+      refraction: { type: "number" },
+      dispersion: { type: "number" },
+      glassSize: { type: "number" }
+    },
+    defaults: {
+      colors: ["#F97316", "#7C3AED", "#06B6D4"],
+      count: 3,
+      speed: 0.5,
+      amplitude: 1,
+      waviness: 1,
+      thickness: 0.7,
+      glow: 2.6,
+      taper: 3,
+      spread: 1,
+      hueShift: 0,
+      intensity: 0.6,
+      saturation: 1.5,
+      opacity: 1,
+      scale: 1.5,
+      glass: false,
+      refraction: 1,
+      dispersion: 1,
+      glassSize: 1
+    },
+    presentation() {
+      return { background: "#000000" };
+    }
+  },
+
   {
     id: "galaxy",
     label: "Galaxy",

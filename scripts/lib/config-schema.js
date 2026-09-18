@@ -256,11 +256,11 @@ function validateEffectOptions(node, definition, options, source, path, issues) 
       issues.push(issue("invalid_value", source, optionPath, valueType(value), "six-digit hexadecimal color", node.migration));
     } else if (rule.type === "hex_color_array" && (
       !Array.isArray(value)
-      || value.length < 1
+      || value.length < (rule.minItems ?? 1)
       || value.length > 8
       || value.some(item => typeof item !== "string" || !/^#?[a-f\d]{6}$/i.test(item))
     )) {
-      issues.push(issue("invalid_value", source, optionPath, valueType(value), "one to eight six-digit hexadecimal colors", node.migration));
+      issues.push(issue("invalid_value", source, optionPath, valueType(value), `${rule.minItems ?? 1} to eight six-digit hexadecimal colors`, node.migration));
     }
   }
 }
