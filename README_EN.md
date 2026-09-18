@@ -49,8 +49,16 @@ Your writing preserves ideas while external data stays current. Remote content, 
 
 With Git and npm available, launch the interactive Blueprint installer with one command:
 
+macOS / Linux:
+
 ```bash
 sh -c "$(curl -fsSL https://github.com/xaoxuu/hexo-theme-stellar-examples/raw/main/install.sh)"
+```
+
+Windows PowerShell 7+ (`pwsh`):
+
+```powershell
+& ([scriptblock]::Create((Invoke-RestMethod https://github.com/xaoxuu/hexo-theme-stellar-examples/raw/main/install.ps1)))
 ```
 
 The installer reads the example repository's [`blueprints.json`](https://github.com/xaoxuu/hexo-theme-stellar-examples/blob/main/blueprints.json), presents the available Blueprints, then confirms the Blueprint, project directory, dependency installation, and creation plan.

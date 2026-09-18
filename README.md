@@ -49,8 +49,16 @@
 
 准备好 Git 和 npm 后，一条命令即可启动交互式蓝图安装器：
 
+macOS / Linux：
+
 ```bash
 sh -c "$(curl -fsSL https://github.com/xaoxuu/hexo-theme-stellar-examples/raw/main/install.sh)"
+```
+
+Windows PowerShell 7+（`pwsh`）：
+
+```powershell
+& ([scriptblock]::Create((Invoke-RestMethod https://github.com/xaoxuu/hexo-theme-stellar-examples/raw/main/install.ps1)))
 ```
 
 安装器会读取示例仓库的 [`blueprints.json`](https://github.com/xaoxuu/hexo-theme-stellar-examples/blob/main/blueprints.json)，展示当前可用的蓝图，并依次确认蓝图、项目目录、依赖安装和创建计划。
