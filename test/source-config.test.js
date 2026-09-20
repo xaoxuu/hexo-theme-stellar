@@ -24,3 +24,16 @@ test('Front Matter cache reuses unchanged files and invalidates updates, removal
   fs.unlinkSync(file);
   assert.equal(readFrontMatter(owner, page), null);
 });
+
+test('Front Matter 读取与 Hexo 宿主一致地规范化 BOM 与 CRLF', t => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'stellar-source-eol-'));
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+  const owner = { source_dir: directory };
+  const lf = { source: 'lf.md' };
+  const crlf = { source: 'crlf.md' };
+  fs.writeFileSync(path.join(directory, lf.source), '---\ntitle: Hello\nlayout: wiki\n---\nBody\n');
+  fs.writeFileSync(path.join(directory, crlf.source), '\uFEFF---\r\ntitle: Hello\r\nlayout: wiki\r\n---\r\nBody\r\n');
+  const expected = readFrontMatter(owner, lf);
+  assert.equal(expected.title, 'Hello');
+  assert.deepEqual(readFrontMatter(owner, crlf), expected);
+});

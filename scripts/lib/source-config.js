@@ -7,6 +7,11 @@ const snapshots = new WeakMap();
 
 function sourcePathForData(key) { return `source/_data/${key}.yml`; }
 function sourcePathForPage(page) { return page.source ? `source/${page.source}` : (page.path || "<page>"); }
+// hexo-front-matter 只识别 LF；Hexo 宿主通过 hexo-fs 读取源码时会去除 BOM 并规范化 CRLF，
+// 直接读取源码必须保持一致，否则 Windows 上的 CRLF 内容会丢失全部 Front Matter。
+function readSourceText(file) {
+  return fs.readFileSync(file, "utf8").replace(/^\uFEFF/, "").replace(/\r\n/g, "\n");
+}
 function sourceCache(ctx) {
   if (!snapshots.has(ctx)) snapshots.set(ctx, new Map());
   return snapshots.get(ctx);
@@ -29,7 +34,7 @@ function readFrontMatter(ctx, page) {
   const stamp = [stat.ino, stat.size, stat.mtimeNs, stat.ctimeNs].join(":");
   const previous = cache.get(page.source);
   if (previous?.stamp === stamp) return previous.config;
-  const config = frontMatter.parse(fs.readFileSync(file, "utf8"));
+  const config = frontMatter.parse(readSourceText(file));
   delete config._content;
   cache.set(page.source, { stamp, config });
   return config;
