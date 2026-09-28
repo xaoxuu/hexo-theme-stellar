@@ -460,6 +460,11 @@ article:
   style: tech
   # 设置段落首行缩进策略；可选值为 auto、always 或 never。
   paragraph_indent: auto
+  # 配置文章页顶部横幅。
+  banner:
+    # 控制文章页横幅是否使用页面 cover 作为背景图；false 表示只显示纯色横幅。
+    # 可在文章 Front Matter 用 banner.background 覆盖此默认值。
+    background: true
   # 配置文章列表卡片。
   listing:
     # 设置置顶文章布局；可选值为 carousel 或 flat。

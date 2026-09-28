@@ -212,6 +212,7 @@ const FRONT_MATTER_TARGET_DEFINITIONS = [
   ["tagline", ["string", "null"], literal(null)],
   ["banner", "object", literal({}), { boundary: "sealed" }],
   ["banner.enabled", ["boolean", "null"], literal(null)],
+  ["banner.background", ["boolean", "null"], literal(null)],
   ["banner.avatar", ["string", "null"], literal(null)],
   ["banner.headline", ["string", "null"], literal(null)],
   ["banner.tagline", ["string", "null"], literal(null)],

@@ -18,6 +18,15 @@ var banner = Object.assign({}, page.author
     : postViewModel ? postViewModel.item.presentation.banner : pageConfig.banner || {})
 
 var bannerImage = page.author ? page.author.cover : renderViewModel ? renderViewModel.item.cover : pageConfig.cover
+// 横幅背景图由 Front Matter banner.background 覆盖全局默认值；作者页不受全局开关影响。
+// 关闭时仅影响内容页横幅，列表卡片、SEO 与分享仍使用 cover。
+var bannerBackground = banner.background
+if (bannerBackground == null && !page.author) {
+  bannerBackground = stellar_config('article.banner.background')
+}
+if (bannerBackground === false) {
+  bannerImage = ''
+}
 
 // 标题
 if (banner.headline == null) {

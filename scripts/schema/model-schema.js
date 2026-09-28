@@ -233,6 +233,7 @@ function bannerSchema(factory) {
   const { field, object } = factory;
   return object({
     enabled: field("boolean", { example: true }),
+    background: field("boolean", { example: true }),
     avatar: field("string", { example: "/avatar.webp" }),
     headline: field("string", { example: "开始使用 Stellar" }),
     tagline: field("string", { example: "十分钟搭好站点" })
