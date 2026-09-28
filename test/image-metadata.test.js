@@ -9,7 +9,7 @@ const { Readable } = require('node:stream');
 const { prepareImages, readStore, metadataPath, collectImages } = require('../scripts/lib/image-metadata');
 
 const image = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" width="20" height="10"><path fill="#123456" d="M0 0h20v10H0z"/></svg>');
-function site(t, html = '<img src="https://images.test/photo">') {
+function site(t, html = '<article class="md-text content"><img src="https://images.test/photo"></article>') {
   const base = fs.mkdtempSync(path.join(os.tmpdir(), 'stellar-image-metadata-'));
   t.after(() => fs.rmSync(base, { recursive: true, force: true }));
   const source = path.join(base, 'source');
@@ -23,7 +23,7 @@ function site(t, html = '<img src="https://images.test/photo">') {
 }
 
 test('persistent image metadata deduplicates URLs, fills missing fields and never rewrites content', async t => {
-  const ctx = site(t, '<img src="https://images.test/photo"><img data-src="https://images.test/photo">');
+  const ctx = site(t, '<article class="md-text content"><img src="https://images.test/photo"><img data-src="https://images.test/photo"></article>');
   const original = fs.readFileSync(path.join(ctx.source_dir, 'post.md'));
   let requests = 0;
   const fetchImage = async () => { requests++; return image; };
@@ -81,13 +81,34 @@ test('invalid metadata and concurrent writers cannot overwrite stored data', asy
 });
 
 test('rendered image discovery resolves URLs and ignores script contents and placeholders', () => {
-  const urls = collectImages('<img src="../a.png?a=1&amp;b=2"><img data-src="//cdn.test/x"><script>const x="<img src=bad>"</script><img src="data:image/png;base64,AA">', 'https://site.test/posts/one/');
+  const urls = collectImages('<article class="md-text content"><img src="../a.png?a=1&amp;b=2"><img data-src="//cdn.test/x"><script>const x="<img src=bad>"</script><img src="data:image/png;base64,AA"></article>', 'https://site.test/posts/one/');
   assert.deepEqual([...urls], ['https://site.test/posts/a.png?a=1&b=2', 'https://cdn.test/x']);
+});
+
+test('rendered image discovery keeps content and adaptive-text covers, drops page chrome', () => {
+  const html = '<article class="md-text content"><img src="/article.png"></article>'
+    + '<div class="article-banner-wrap"><div class="article banner"><img class="lazy bg" data-src="/banner.png"></div></div>'
+    + '<div id="site-cover"><div class="cover-content wiki wiki-hero"><img src="/hero.png"></div></div>'
+    + '<div class="cover"><img src="/card.png"></div>'
+    + '<div class="wiki-card-cover"><img src="/wiki-card.png"></div>'
+    + '<div class="pin-slide"><img class="pin-slide-bg" src="/pin.png"></div>'
+    + '<div class="article-share"><img src="/qrcode.png"></div>'
+    + '<aside class="site-region"><img src="/widget.png"></aside>'
+    + '<footer><img src="/footer.png"></footer>';
+  const urls = collectImages(html, 'https://site.test/posts/one/');
+  assert.deepEqual([...urls], [
+    'https://site.test/article.png',
+    'https://site.test/banner.png',
+    'https://site.test/hero.png',
+    'https://site.test/card.png',
+    'https://site.test/wiki-card.png',
+    'https://site.test/pin.png'
+  ]);
 });
 
 test('same-site image preprocessing uses generated assets without a network request', async t => {
   const ctx = site(t);
-  const html = '<img src="/asset.svg">';
+  const html = '<article class="md-text content"><img src="/asset.svg"></article>';
   ctx.route.list = () => ['post/index.html', 'asset.svg'];
   ctx.route.get = route => Readable.from([route === 'asset.svg' ? image : html]);
   const result = await prepareImages(ctx);
@@ -98,7 +119,7 @@ test('same-site image preprocessing uses generated assets without a network requ
 test('automatic preprocessing publishes enriched routes in the same build and skips requests on rebuild', async t => {
   const { prepareBuildImages } = require('../scripts/lib/image-metadata');
   const ctx = site(t);
-  const routes = new Map([['post/index.html', '<!doctype html><html><head></head><body><img src="https://images.test/photo"></body></html>']]);
+  const routes = new Map([['post/index.html', '<!doctype html><html><head></head><body><article class="md-text content"><img src="https://images.test/photo"></article></body></html>']]);
   ctx.route.list = () => [...routes.keys()];
   ctx.route.get = route => Readable.from([routes.get(route)]);
   ctx.route.set = (route, html) => routes.set(route, html);

@@ -13,6 +13,20 @@ const MAX_BYTES = 32 * 1024 * 1024;
 const RETRY_DELAY = 24 * 60 * 60 * 1000;
 const stores = new WeakMap();
 
+// The store serves two runtime consumers: article content images (dimensions
+// for aspect ratio) and average-color backgrounds for adaptive text. Scan the
+// rendered article region plus the adaptive-text owners, matching
+// source/js/plugins/adaptive-text.js, so page chrome (share QR codes, comments,
+// sidebars, footers) never triggers downloads or store entries.
+const METADATA_IMAGE_SELECTOR = [
+  'article.md-text.content img',
+  '.banner img',
+  '.cover img',
+  '.wiki-card-cover img',
+  '.pin-slide img',
+  '.wiki-hero img'
+].join(', ');
+
 function metadataPath(ctx) {
   return path.join(ctx.source_dir || path.join(ctx.base_dir || process.cwd(), 'source'), '_data', 'caches', DATA_FILE);
 }
@@ -91,12 +105,13 @@ function complete(entry) {
   return (dimensionsReady(entry?.dimensions) || entry?.dimensions?.status === 'unsupported') && colorDone;
 }
 
-// Scan rendered img elements, so Markdown, tags, Front Matter and data-driven
-// covers use their actual output without maintaining another source-field list.
+// Scan rendered img elements in scope for the store, so Markdown, tags, Front
+// Matter and data-driven covers use their actual output without maintaining
+// another source-field list, while page chrome stays out of scope.
 function collectImages(html, base) {
   const urls = new Set();
   const $ = load(html, null, false);
-  $('img').each((_, element) => {
+  $(METADATA_IMAGE_SELECTOR).each((_, element) => {
     const img = $(element);
     const url = imageUrl(img.attr('data-src') || img.attr('src'), base);
     if (url) urls.add(url);
@@ -247,7 +262,7 @@ function enrichImages(html, ctx, locals = {}) {
   let changed = false;
   const autoRatio = (ctx.stellar?.config?.features?.lazyLoading?.autoAspectRatio
     ?? ctx.theme?.config?.features?.lazy_loading?.auto_aspect_ratio) !== false;
-  $('img').each((_, image) => {
+  $(METADATA_IMAGE_SELECTOR).each((_, image) => {
     const img = $(image);
     const src = img.attr('data-src') || img.attr('src');
     const entry = store.images[imageUrl(src, base)];
