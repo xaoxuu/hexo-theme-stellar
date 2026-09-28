@@ -9,6 +9,8 @@ input.copy-area
   font-weight: $fw-700
   color: var(--text-p3)
 
+// 圆环与圆点画在同一个背景层上：元素落在非整数像素位置时，border 圆环与内部盒子会被
+// 分别对齐，Firefox 下圆点最多偏离圆心 1 个物理像素，因此不用 border 绘制圆环。
 input.ui-radio
   -webkit-appearance: none
   -moz-appearance: none
@@ -19,25 +21,20 @@ input.ui-radio
   width: 16px
   height: 16px
   margin: 0
-  border: 2px solid var(--text-p3)
+  border: 0
   border-radius: 50%
   corner-shape: round
-  background: none
+  --radio-ring: var(--text-p3)
+  --radio-dot-size: 0
+  // 外环：16px 内取 2px 环宽（半径 8px → 6px）；圆点：8px（半径 4px）
+  background-image: radial-gradient(circle closest-side, transparent 0 5.875px, var(--radio-ring) 6.125px 100%), radial-gradient(circle closest-side, var(--theme) 0 3.875px, transparent 4.125px)
+  background-position: center, center
+  background-repeat: no-repeat, no-repeat
+  background-size: 16px 16px, var(--radio-dot-size) var(--radio-dot-size)
   cursor: pointer
-  &:before
-    content: ""
-    display: block
-    width: 8px
-    height: 8px
-    margin: 2px
-    border-radius: 50%
-    background: var(--theme)
-    transform: scale(0)
   &:checked
-    border-color: var(--theme)
-  &:checked:before
-    background: var(--theme)
-    transform: scale(1)
+    --radio-ring: var(--theme)
+    --radio-dot-size: 8px
   &:focus-visible
     outline: 2px solid var(--theme)
     outline-offset: 2px
