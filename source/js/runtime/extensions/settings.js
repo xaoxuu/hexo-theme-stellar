@@ -90,7 +90,6 @@ export function mount(root, context) {
   const provider = String(page.dataset.provider || '').toLowerCase();
   const api = globalThis.window?.stellarProfile;
   const form = page.querySelector('[data-profile-form]');
-  const note = page.querySelector('[data-provider-note]');
   const status = page.querySelector('[data-profile-status]');
   const avatar = page.querySelector('[data-profile-avatar]');
   const avatarFallback = page.querySelector('[data-profile-avatar-fallback]');
@@ -174,8 +173,8 @@ export function mount(root, context) {
     if (urlInput) urlInput.value = identity.url || '';
     if (form) form.hidden = !supported;
     if (logoutButton) logoutButton.hidden = !supported;
-    if (note) note.hidden = supported;
-    renderAvatar(identity);
+    if (supported) renderAvatar(identity);
+    else if (avatar) avatar.hidden = true;
   }
 
   function onSubmit(event) {

@@ -98,8 +98,6 @@ settings:
     url: URL
     save: Save
     logout: Log out
-    provider_managed: '%s manages comment identity outside the theme. Profile editing and logout are unavailable here.'
-    provider_unknown: The current comment provider
   cache:
     title: Cache
     search: Search cache

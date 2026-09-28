@@ -98,8 +98,6 @@ settings:
     url: URL
     save: 儲存
     logout: 登出
-    provider_managed: '%s 的留言身分不由主題管理，無法在此編輯或登出。'
-    provider_unknown: 目前留言服務
   cache:
     title: 快取
     search: 搜尋快取

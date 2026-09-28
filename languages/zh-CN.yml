@@ -98,8 +98,6 @@ settings:
     url: URL
     save: 保存
     logout: 退出登录
-    provider_managed: '%s 的评论身份不由主题管理，无法在此编辑或退出。'
-    provider_unknown: 当前评论服务
   cache:
     title: 缓存
     search: 搜索缓存

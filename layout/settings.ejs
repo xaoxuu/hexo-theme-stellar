@@ -29,6 +29,7 @@ function linkAttributes(url) {
     <h1><%- escape_html(__('settings.title')) %></h1>
   </header>
 
+  <% if (providerSupported) { %>
   <section class="settings-section" aria-labelledby="settings-profile">
     <h2 id="settings-profile"><%- escape_html(__('settings.profile.title')) %></h2>
     <div class="settings-section__body">
@@ -38,9 +39,6 @@ function linkAttributes(url) {
           <span data-profile-avatar-fallback hidden><%- icon('default:profile', '', true) %></span>
         </div>
         <div class="settings-profile__content">
-          <% if (!providerSupported) { %>
-          <p data-provider-note class="settings-provider-note"><%- escape_html(__('settings.profile.provider_managed', provider || __('settings.profile.provider_unknown'))) %></p>
-          <% } else { %>
           <form data-profile-form class="settings-form" novalidate>
             <label>
               <span><%- escape_html(__('settings.profile.nickname')) %></span>
@@ -60,11 +58,11 @@ function linkAttributes(url) {
             </div>
           </form>
           <p class="settings-result" data-profile-status role="status" aria-live="polite"></p>
-          <% } %>
         </div>
       </div>
     </div>
   </section>
+  <% } %>
 
   <section class="settings-section" aria-labelledby="settings-cache">
     <h2 id="settings-cache"><%- escape_html(__('settings.cache.title')) %></h2>
