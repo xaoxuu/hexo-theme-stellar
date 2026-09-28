@@ -252,10 +252,62 @@ html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .s
   background: var(--card)
   box-shadow: $boxshadow-card-float
   overflow: hidden
+  // 打开动画随 [open] 触发；关闭动画由 main.js 添加 .is-closing 并在动画结束后调用 close()
+  &[open]
+    animation: search-dialog-in 0.24s ease-out backwards
+  &.is-closing
+    animation: search-dialog-out 0.18s ease-in both
   &::backdrop
     background: rgba(black, .38)
     backdrop-filter: blur(8px)
     -webkit-backdrop-filter: blur(8px)
+    animation: search-backdrop-in 0.24s ease-out backwards
+  &.is-closing::backdrop
+    animation: search-backdrop-out 0.18s ease-in both
+
+@keyframes search-dialog-in
+  from
+    opacity: 0
+    transform: translateY(8px) scale(.97)
+  to
+    opacity: 1
+    transform: none
+
+@keyframes search-dialog-out
+  from
+    opacity: 1
+    transform: none
+  to
+    opacity: 0
+    transform: translateY(8px) scale(.97)
+
+@keyframes search-backdrop-in
+  from
+    opacity: 0
+  to
+    opacity: 1
+
+@keyframes search-backdrop-out
+  from
+    opacity: 1
+  to
+    opacity: 0
+
+@keyframes search-dialog-in-fluid
+  from
+    opacity: 0
+    transform: translateY(16px)
+  to
+    opacity: 1
+    transform: none
+
+@keyframes search-dialog-out-fluid
+  from
+    opacity: 1
+    transform: none
+  to
+    opacity: 0
+    transform: translateY(16px)
 
 .search-dialog__panel
   box-sizing: border-box
@@ -359,6 +411,9 @@ html[data-leftbar-state='collapsed'] .site-shell:not([data-drawer='leftbar']) .s
 
 html[data-search-open]
   overflow: hidden
+  // 锁定滚动会移除常驻滚动条槽位，按 main.js 实测宽度补位，避免页面内容宽度变化后重排
+  body
+    padding-right: var(--stellar-scrollbar-gutter, 0px)
 
 @media screen and (max-width: $device-tablet)
   .search-dialog
@@ -367,6 +422,11 @@ html[data-search-open]
     max-height: none
     border: 0
     border-radius: 0
+    // 全屏浮层不做缩放，避免露出被裁切的边缘
+    &[open]
+      animation-name: search-dialog-in-fluid
+    &.is-closing
+      animation-name: search-dialog-out-fluid
   .search-dialog__panel
     height: 100%
     padding: unquote('max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left))')
@@ -375,6 +435,10 @@ html[data-search-open]
 
 @media (prefers-reduced-motion: reduce)
   .search-dialog,
-  .search-dialog::backdrop
+  .search-dialog[open],
+  .search-dialog.is-closing,
+  .search-dialog::backdrop,
+  .search-dialog[open]::backdrop,
+  .search-dialog.is-closing::backdrop
     animation: none
     transition: none
