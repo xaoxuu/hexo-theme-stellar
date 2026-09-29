@@ -210,7 +210,7 @@ profiles:
     # 配置博客列表页的附加导航。
     listing_nav:
       # 控制是否显示附加导航。
-      enabled: false
+      enabled: true
       # 设置附加导航标签；空数组表示不添加标签。
       tabs: []
 
