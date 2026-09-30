@@ -35,7 +35,9 @@ hexo.extend.generator.register("search_json_generator", function(locals) {
       temp_post.title = post.title.trim();
     }
     if (post.path) {
-      const path = normalize_path(root + post.path);
+      // 目录索引页（含站点根 index）的对外地址是所在目录本身，去掉结尾的 index 段。
+      const source = post.path.replace(/(^|\/)index\/?$/, '');
+      const path = normalize_path(root + source);
       temp_post.path = path === "/" ? "/" : path + "/";
     }
     if (cfg.includeContent !== false && post.content) {
