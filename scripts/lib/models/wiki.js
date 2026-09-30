@@ -206,7 +206,7 @@ function buildWikiRenderModel(input, collection, item) {
       robots: input.isBackup === true
         ? "noindex, nofollow"
         : typeof frontMatter.robots === "string" && frontMatter.robots.length > 0 ? frontMatter.robots : null,
-      canonical: canonicalUrl(seoConfig.canonical.host, item.route.path),
+      canonical: canonicalUrl(seoConfig.canonical.host, item.route.path, siteConfig.root),
       openGraph,
       jsonLd: {
         "@context": "https://schema.org",
