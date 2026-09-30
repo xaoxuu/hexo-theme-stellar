@@ -57,6 +57,8 @@ Algolia provider 把 `appId/apiKey/indexName` 原样交给上游客户端。Algo
 
 桌面浮层宽度为 `min(600px, calc(100dvw - 64px))`，结果区独立滚动；`≤768px` 使用安全区适配的全屏模式。所有断点均可用 `Command+K` 或 `Ctrl+K` 打开；关闭按钮、背景点击、Escape、焦点恢复和页面滚动锁定由统一控制器处理。输入法组合、缺少 Search 入口或其它编辑区域保持浏览器原生行为。
 
+浮层打开与关闭各有一段短转场，遮罩同步淡入淡出；关闭动画结束或兜底超时后才真正 `close()` 并恢复焦点，`is-closing` 期间的再次打开会先清理待关闭状态。锁定页面滚动会移除常驻滚动条，控制器把实测槽位宽度写入 `--stellar-scrollbar-gutter` 补位，避免内容横向跳动。`prefers-reduced-motion: reduce` 下不播放转场，直接完成开合。
+
 ## 消费链
 
 ```mermaid

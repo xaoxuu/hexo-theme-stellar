@@ -1,3 +1,28 @@
+# Stellar 2.0.0 发布核查
+
+> 核查日期：2026-09-30
+> 发布基线：`1.44.0`
+> 目标版本：`2.0.0`
+
+## 净变化与文档覆盖
+
+比较最近公开稳定版 1.44.0 与最终候选树，核对配置、Schema、模型、模板、样式与客户端消费链；迁移范围以最终树中的行为为准。
+
+| 领域 | 最终行为与事实来源 | 文档出口 |
+| --- | --- | --- |
+| 配置与内容模型 | 声明式 Schema、默认配置生成、content-config 与 Doctor；Collection/PageViewModel 管线与 listed/searchable 分离 | 配置、内容 Schema 与内容系统知识库；CHANGELOG 升级注意 |
+| 页面外壳 | Region、Brand、Menu、Widget、Footer 与 13 个 Profile 的覆盖语义，含 Leftbar 列数与折叠状态 | 布局系统、导航与侧栏知识库；CHANGELOG |
+| 外观与设置页 | 外观预设、设置页分区、单选框与标题装饰样式 | 样式系统知识库与 CHANGELOG；视觉参数不新增持久断言 |
+| 浏览器运行时 | Runtime Manifest、Extension 生命周期、搜索 provider 与浮层转场、图片元数据采集范围 | 前端交互、搜索、懒加载知识库与 CHANGELOG |
+| 内容呈现 | 横幅 cover 与 `article.banner.background`、Wiki Hero 背景与效果、笔记本总索引卡片复用 Wiki 卡片 | 内容 Schema、文章列表卡片与 Wiki 知识库；CHANGELOG |
+| 工程与发布 | Node 22+/Hexo 8+、独立门禁、Runtime ESM 保真、原子版本同步与工作区门禁 | 安装与性能知识库；CHANGELOG |
+
+## 验证
+
+执行 `npm run knowledge:check`、`npm run release:dry -- 2.0.0` 与 `npm run release -- 2.0.0 --yes`。预演与正式发布在目标版本状态运行 lint、单元测试、复用、Contribution、四场景 npm 包集成、性能与知识库门禁。发布后核实 Actions、npm latest、纯版本 tag 与 GitHub Release，实际结果在发布对话报告。
+
+---
+
 # Stellar 2.0.0-rc.6 发布候选核查
 
 > 核查日期：2026-09-18

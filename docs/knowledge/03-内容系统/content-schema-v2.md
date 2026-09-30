@@ -100,4 +100,4 @@ Doctor 与构建对普通字段使用恢复解析，对不适用的表现参数�
 
 ## 当前开发版字段边界
 
-Collection 的 name 可省略，解析时使用 Collection ID 并给出 warning；显式配置仍应是非空字符串。页面 banner 只支持 enabled/avatar/headline/tagline，背景读取页面 cover；Collection 不声明 banner。共享 Leftbar Brand 支持 search/ghrepo/ghuser，只有 source/back_button 是 Collection 专属。
+Collection 的 name 可省略，解析时使用 Collection ID 并给出 warning；显式配置仍应是非空字符串。页面 banner 支持 enabled/background/avatar/headline/tagline，背景读取页面 cover；`banner.background: false` 改为纯色横幅，省略时继承 `article.banner.background`。Collection 不声明 banner。共享 Leftbar Brand 支持 search/ghrepo/ghuser，只有 source/back_button 是 Collection 专属。

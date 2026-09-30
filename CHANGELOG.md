@@ -1,5 +1,45 @@
 # Changelog
 
+## 2.0.0
+
+> 发布日期：2026-09-30
+
+### 新功能
+
+- 配置、Collection YAML 与页面 Front Matter 采用声明式严格 Schema，字段类型、枚举与未知字段在构建前由 Doctor 报告来源与字段路径。
+- Post、Topic、Wiki、Notebook、Note 与索引页共用同一内容模型与构建管线；`listed/searchable` 分别控制聚合展示与搜索收录，Article 与 Notebook 的列表、横幅、许可、分享、标签和排序默认值收敛到内容模型。
+- 页面外壳统一为 Topbar、Leftbar、Rightbar Region，Brand、Menu、Widget、Footer 和 13 个 Profile 使用结构化配置与明确的覆盖语义；Leftbar 菜单支持 1–5 列，Tree、Linklist、Related 与右栏目录支持折叠，右栏随左栏收起显示紧凑目录。
+- 新增 `card/glass/minimal/flat` 外观预设、明暗模式切换、颜色／渐变／排版／形状／背景设置，以及独立设置页。
+- 浏览器功能改为原生 ES 模块按需加载，搜索、评论、动态效果、数据服务与请求缓存拥有明确的加载、取消与卸载生命周期；共享脚本、样式与图标不再逐页内联。
+- 搜索改为注册式 provider（内置 `local` 与 `algolia`），入口位于 Leftbar Brand；本地搜索按章节组织结果并分批查询、渲染，浮层带开合转场与滚动条槽位补位，支持 `Command+K` / `Ctrl+K`。
+- Wiki Hero 支持图片与视频背景、滚动视差，以及 `galaxy`、`light-rays`、`ferrofluid`、`Strands` 可选效果；标签目录新增 `gist`。
+- 图片在 `hexo server` / `hexo generate` 时增量提取尺寸与 HSLA 平均色并持久缓存，补全生成 HTML 且不修改 Markdown 或原图；新增 `hexo stellar images`（含 `--dry-run/--page/--refresh`）。
+- 新增 `hexo stellar doctor` 与 `hexo stellar new note`；目录驱动的完整 Blueprint 改由 Stellar Examples 仓库维护。
+- 文章横幅背景、访客头像镜像 `services.gravatar.base_url`、Reveal 的 `duration/interval/distance/blur` 与卡片 Spotlight／Tilt 均可独立配置。
+
+### 行为与样式变化
+
+- 内容横幅与列表共用页面 `cover`；`article.banner.background`（默认 `true`）与 Front Matter `banner.background: false` 控制内容页横幅是否使用封面作为背景，关闭时只影响内容页，列表卡片、SEO 与分享仍使用 `cover`。博客列表页附加导航默认开启。
+- 笔记本总索引卡片复用 Wiki 卡片的封面与项目栏视觉：`listing.cover` 作为封面、`listing.headline` 只取显式配置的大标题、`listing.caption` 作为项目副标题，未配置封面时降级为纯色卡片。
+- 正文图片统一 `max-width: 100%` 与 `height: auto`，按原图比例约束高度；图片元数据只采集会被主题消费的图片，分享二维码、评论、侧边栏与页脚等页面框架图片不触发下载或写入缓存。
+- 侧栏集合、Navbar、Dropdown、Grid、文章卡片、下载按钮与 Topbar 对齐改用统一的形状与状态反馈；设置页、单选框、标题装饰、导航下划线、目录指示条与移动端留白一并收敛。
+- 运行环境升级为 Node.js 22+、Hexo 8+；源码读取兼容 Windows CRLF 与 BOM，避免 Front Matter 整体丢失。
+
+### 升级注意（配置变更与破坏性改动）
+
+- v1 的 `logo/menubar/site_tree/style/tag_plugins/plugins/data_services/search.service` 等结构不会被兼容读取；请按[公开迁移说明](https://xaoxuu.com/wiki/stellar/migration/v1-to-v2/)逐项迁移到 `topbar/leftbar/rightbar/footer/profiles/appearance/tags/features/services/search`。
+- Collection 与 Front Matter 需要迁移为 `collection/route/navigation/listing/visibility/banner/article/comments/render/seo` 等分组字段；页面 `banner.image` 改为顶层 `cover`，横幅不再使用独立比例配置。未知字段、错误类型与非法枚举会在构建早期失败。
+- 分享服务由 `[wechat, weibo, email, link]` 改为 `qrcode/weibo/x/telegram/whatsapp/email`，配置位置为 `article.footer.share` 或内容 `footer.share`。
+- `plugins.card_hover.enable` 改为独立的 `features.card_hover.spotlight` 与 `features.card_hover.tilt`，默认均为 `false`；`plugins.adaptive_text` 改为固定开启的内置行为。
+- Site Info、Rating、Vote 的服务 endpoint 默认留空，需要自行部署并填写地址；依赖这些服务的站点升级后请显式配置。
+- `features.partial_navigation.enabled` 与 `features.image_optimization.enabled` 默认开启，首次处理远程图片会增加构建时间；Hero 背景默认启用 0.2 强度视差，设为 0 关闭位移。
+- `about`、`users` 标签以及对应的 `chat_users.yml`、`fcircle` 适配器已移除；`tip` 改为单标签 `{% tip 词句 pop:注解 %}`，`quot` 支持直接图标键与 `color`。
+- 博客列表页附加导航 `profiles.blog_index.listing_nav.enabled` 默认开启；语言文件不再使用 `settings.profile.provider_managed` 与 `settings.profile.provider_unknown`。
+- 浏览器后处理必须原样保留 `public/js/runtime/**/*.js` 的 ESM 语义、相对 import 与 JavaScript MIME 类型。
+- v2 源码从仓库 `main` 安装并需要执行 `npm install --prefix themes/stellar`；npm 安装的版本以实际公开版本为准。
+
+Full Changelog: [1.44.0...2.0.0](https://github.com/xaoxuu/hexo-theme-stellar/compare/1.44.0...2.0.0)
+
 ## 2.0.0-rc.6
 
 > 发布日期：2026-09-18

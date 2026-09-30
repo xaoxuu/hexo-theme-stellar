@@ -585,6 +585,8 @@ Reveal Extension 使用原生 `IntersectionObserver` 独立观察每个元素。
 
 博客文章列表前由 `nav_tabs_blog` partial 渲染筛选/导航 UI。`index.ejs` 在未指定菜单 ID 时默认设置 `page.menu_id = 'post'`，用于高亮激活标签。
 
+附加导航由 `profiles.blog_index.listing_nav.enabled` 控制，默认 `true`；`tabs` 为空数组时只渲染既有导航项，需要隐藏附加导航时把 `enabled` 显式设为 `false`。
+
 **参考源码**：[layout/index.ejs](../../../layout/index.ejs)
 
 ### Wiki 收录标志

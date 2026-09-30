@@ -43,6 +43,8 @@ hexo stellar images --refresh https://example.com/image.png
 
 成功或失败后移除加载指示；错误占位处理保留懒加载时序，避免图片尚未真正加载就提前替换。图片标签、画廊、轮播和媒体卡片保持原始比例。
 
+正文图片统一 `max-width: 100%` 与 `height: auto`：只声明宽度时按原图比例约束高度，显式设置宽高时不按字面值拉伸，尺寸补全写入的 `width/height` 仍优先。
+
 相关源码：[元数据处理](../../../scripts/lib/image-metadata.js)、[命令](../../../scripts/commands/stellar.js)、[懒加载](../../../source/js/runtime/extensions/lazy-loading.js)、[图片颜色](../../../source/js/runtime/image-color.js)、[错误图片](../../../scripts/filters/lib/img_onerror.js)。
 
 错误图片由共享捕获事件处理并读取 data-fallback，不再为每张图片生成内联 onerror。监听在懒加载前安装；回退只处理实际失败的图片，避免 Safari 提前触发替换。
