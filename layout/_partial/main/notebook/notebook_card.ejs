@@ -1,17 +1,37 @@
-<%# 笔记本信息卡片 %>
+<%# 笔记本卡片：复用 Wiki 卡片的 .wiki-card 视觉（cover 同图模糊层、底部信息层与项目栏） %>
 <% var listing = render.listing %>
-<article class="md-text">
-  <div class="preview">
-    <% if (listing.icon) { %>
-      <img src="<%= listing.icon %>" alt="icon"/>
-    <% } else { %>
-      <%- icon('default:documents') %>
+<% var cover = listing.cover || '' %>
+<% var headline = listing.headline || '' %>
+<% var caption = listing.caption || '' %>
+<%# 整个属性必须原样输出：EJS 转义输出会把属性里的引号变成实体，属性值带上一对引号，自适应颜色就失效 %>
+<% var adaptiveAttr = cover ? ' data-text-adaptive="split"' : '' %>
+<article class="wiki-card-content">
+  <div class="wiki-card-cover<%= cover ? '' : ' no-cover' %>" position="bottom">
+    <% if (cover) { %>
+      <img src="<%= cover %>" alt=""/>
     <% } %>
-  </div>
-  <div class="excerpt">
-    <h2 class="post-title"><%= listing.headline || listing.name %></h2>
-    <% if (listing.description) { %>
-      <p><%= listing.description %></p>
-    <% } %>
+    <div class="wiki-card-info" position="bottom"<%- adaptiveAttr %>>
+      <%# headline 是可选的大标题，只在显式配置时渲染；name 固定在底部项目栏 %>
+      <% if (headline) { %>
+      <div class="wiki-card-summary">
+        <h2 class="headline"><%= headline %></h2>
+      </div>
+      <% } %>
+      <div class="wiki-project">
+        <div class="project-icon">
+          <% if (listing.icon) { %>
+            <img src="<%= listing.icon %>" alt=""/>
+          <% } else { %>
+            <%- icon('default:documents') %>
+          <% } %>
+        </div>
+        <div class="project-text">
+          <div class="project-name"><%= listing.name %></div>
+          <% if (caption) { %>
+            <div class="project-subtitle"><%= caption %></div>
+          <% } %>
+        </div>
+      </div>
+    </div>
   </div>
 </article>

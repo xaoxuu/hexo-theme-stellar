@@ -185,7 +185,9 @@
     height: 2.5rem
     app-icon()
     background: var(--block)
-    color: var(--text-p2)
+    // 未配置 icon 时的默认图标：颜色跟随封面平均色自适应（深色封面显示为接近白色）。
+    // --text-banner 只在有封面时由 adaptive-text 写入 .wiki-card-info，无封面时回退到次要文字色。
+    color: var(--text-banner, var(--text-p2))
     img
       width: 100%
       height: 100%

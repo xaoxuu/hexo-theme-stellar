@@ -137,9 +137,13 @@ module.exports = (ctx, pipeline) => {
           id: collectionId,
           href: baseDir,
           name: identity.name,
-          headline: identity.headline,
+          // 大标题只取显式配置的 headline；identity.headline 会回退到 name，
+          // 直接透传会让「删掉 headline」仍然渲染出同名大标题。
+          headline: typeof collectionConfig.headline === "string" ? collectionConfig.headline : "",
+          caption: identity.tagline || identity.description,
           description: identity.description,
           icon: identity.icon || "",
+          cover: collection.cover || "",
           order: collection.listing.order,
           listed: collection.visibility.listed !== false,
           navigation: {
