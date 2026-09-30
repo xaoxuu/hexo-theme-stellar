@@ -195,7 +195,10 @@ export function readImageColor(image, options = {}) {
     function onLoad() {
       if (options.signal?.aborted || source(image) !== url) return finish(null);
       const displayed = normalize(image.currentSrc || image.getAttribute('src'), image);
-      if (displayed !== url) return; // The lazy placeholder finished loading.
+      // 懒加载占位图（src 仍是 1×1 data URI）：显示像素不可用，直接 return 会让本 Promise 永久挂起
+      // （懒加载运行时没执行时，真图永远不会被换进来），自适应文字与 --wiki-border-color 就全都缺失。
+      // 改为按 URL 单独取色，保证颜色不依赖懒加载是否跑通。
+      if (displayed !== url) return finish(waitForSample(sampleWithCors(image, url, size, key), options.signal));
       if (!image.naturalWidth || !image.naturalHeight) return finish(null);
       const existing = read(key);
       const raw = existing || sample(image, size);
