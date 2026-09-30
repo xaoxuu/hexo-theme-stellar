@@ -61,7 +61,7 @@ function layoutWikiCover() {
   el += '<div class="wiki-cover-background-overlay"></div></div>';
   el += '<div class="wiki-cover-layout"' + adaptiveTextAttr + '>';
   el += '<nav class="wiki-navbar" aria-label="' + escape_html(cover.siteName) + '">';
-  el += '<a class="wiki-navbar-home" href="' + escape_html(pretty_url('/')) + '">' + escape_html(cover.siteName) + '</a>';
+  el += '<a class="wiki-navbar-home" href="' + site_home_url() + '">' + escape_html(cover.siteName) + '</a>';
   el += '</nav>';
   el += '<article class="cover-wrap wiki-cover-content">';
   el += '<section class="wiki-cover-intro">';

@@ -46,7 +46,7 @@ function layoutTop() {
   // 2.1 左：面包屑导航
   el += `<div class="left" id="breadcrumb">`
     // 首页
-    el += `<a class="cap breadcrumb" href="${pretty_url(config.root)}">${__("btn.home")}</a>`
+    el += `<a class="cap breadcrumb" href="${site_home_url()}">${__("btn.home")}</a>`
     if (wikiViewModel) {
       el += partial('breadcrumb/wiki', {viewModel: wikiViewModel})
     } else if (notebookViewModel) {
