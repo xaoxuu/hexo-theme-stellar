@@ -2,11 +2,14 @@
 
 hexo.extend.generator.register('page', function (locals) {
   return locals.pages.map(page => {
-    const path = (
-      page.path.endsWith('.html') && !page.path.endsWith('/index.html')
-    )
-      ? page.path.replace(/\.html$/, '/index.html')
-      : page.path;
+    let path = page.path;
+    if (path === 'index.html' || path === 'index/') {
+      // 站点根的 index 页：trailing_index/trailing_html 关闭后 Hexo 给出 "index/"，
+      // 直接落到 index.html，否则会输出成 index/index.html。
+      path = 'index.html';
+    } else if (path.endsWith('.html') && !path.endsWith('/index.html')) {
+      path = path.replace(/\.html$/, '/index.html');
+    }
 
     const layout = (
       page.layout === false ||

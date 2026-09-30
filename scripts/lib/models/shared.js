@@ -179,7 +179,10 @@ function normalizeTerms(value) {
 }
 
 function normalizeCollectionPath(value) {
-  return normalizePath(value).replace(/^\/+/, "");
+  const normalized = normalizePath(value).replace(/^\/+/, "");
+  // 站点根目录的 index 页：关闭 trailing_index 后 Hexo 给出 "index/"，归一化结果是 "index"。
+  // 该页本身就是站点根，空路径才是它的对外地址，否则 canonical 会指向不存在的 .../index/。
+  return normalized === "index" ? "" : normalized;
 }
 
 function normalizeStringList(value) {

@@ -59,7 +59,10 @@ function createCollectionRegistry(collectionConfigs) {
     records.push(record);
     byKey.set(key, record);
     if (identity.profile === "wiki") {
-      const base = normalizePath(config.route?.path || `wiki/${identity.id}`);
+      // route.path 显式配置为站点根（"/"）时归一化结果是空字符串；
+      // 此时不能回退到默认的 wiki/<id>，否则挂在站点根的 Wiki 无法推断成员。
+      const routePath = config.route?.path;
+      const base = normalizePath(routePath == null ? `wiki/${identity.id}` : routePath);
       for (const member of flattenTree(config.navigation?.tree)) {
         addIndex(wikiMembers, `${base}/${member}`, key);
       }
