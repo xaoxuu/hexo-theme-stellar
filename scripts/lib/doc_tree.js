@@ -64,6 +64,14 @@ function getWikiObject(data) {
 }
 
 /**
+ * 没有本地页面的项目：配置了 route.path 即视为外部项目。
+ * 外部项目不渲染页面，只参与 Wiki 索引、标签与关联推荐，入口直接指向配置的地址。
+ */
+function isExternalCollection(item) {
+  return typeof item?.route?.path === "string" && item.route.path.length > 0;
+}
+
+/**
  * 构建 wiki 文档树。
  * @param {Object} options
  * @param {Object} options.data 站点 _data（含 wiki/ 前缀的 YAML 数据）
@@ -94,8 +102,9 @@ function buildWikiTree({ data, pages, pageConfigs, shelf, wikiIndexPath }) {
   // 上架的项目列表
   wiki.shelf = shelf || [];
 
-  // 按 tree 键序过滤出有页面的项目（等价于旧实现 wiki_pages.some 判定）
-  const wiki_list = Object.keys(wiki.tree).filter(id => pagesByWiki.has(id));
+  // 按 tree 键序过滤出有页面的项目（等价于旧实现 wiki_pages.some 判定）；
+  // 没有本地页面但配置了 route.path 的项目是外部项目，同样保留。
+  const wiki_list = Object.keys(wiki.tree).filter(id => pagesByWiki.has(id) || isExternalCollection(wiki.tree[id]));
 
   // 数据整合：项目标签
   var all_tag_name = [];
@@ -160,6 +169,10 @@ function buildWikiTree({ data, pages, pageConfigs, shelf, wikiIndexPath }) {
         }
       }
     }
+    if (homepage == null && isExternalCollection(item)) {
+      // 外部项目没有本地页面，以配置的 route.path 作为入口地址。
+      homepage = { path: item.route.path };
+    }
     if (homepage == null) {
       homepage = projectPages[0];
     }
@@ -172,7 +185,9 @@ function buildWikiTree({ data, pages, pageConfigs, shelf, wikiIndexPath }) {
     // 内页分组
     var sections = [];
     var others = sub_pages;
-    if (item.navigation?.tree) {
+    if (projectPages.length === 0) {
+      // 外部项目没有本地页面，不产生章节。
+    } else if (item.navigation?.tree) {
       // 根据配置设置顺序
       const assignedPathKeys = new Set();
       for (let title of Object.keys(item.navigation.tree)) {

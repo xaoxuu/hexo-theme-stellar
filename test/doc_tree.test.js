@@ -125,3 +125,42 @@ test('项目 id 与标签同名时不丢失其它项目', () => {
   const wiki = buildWikiTree(structuredClone(fixture));
   assert.deepStrictEqual(wiki.all_tags.guide.items, ['guide', 'other']);
 });
+
+test('没有本地页面但配置了 route.path 的项目作为外部项目参与索引与标签', () => {
+  const fixture = {
+    data: {
+      'wiki/local': {
+        name: 'Local',
+        tags: ['shared'],
+        navigation: { tree: { S: ['intro'] } },
+        route: { path: '/wiki/local/' }
+      },
+      'wiki/external': {
+        name: 'External',
+        tags: ['shared'],
+        navigation: { tree: { S: ['whatever'] } },
+        route: { path: '/wiki/external/' }
+      },
+      'wiki/unpublished': { name: 'Unpublished', tags: ['shared'] }
+    },
+    pages: [
+      { _id: 'l1', collection: collection('local'), title: 'Intro', path: 'wiki/local/intro.html' }
+    ],
+    shelf: ['local', 'external', 'unpublished'],
+    wikiIndexPath: '/wiki/'
+  };
+  fixture.pageConfigs = new Map(fixture.pages.map(page => [page, { collection: page.collection }]));
+  fixture.pages.forEach(page => { delete page.collection; });
+  const wiki = buildWikiTree(structuredClone(fixture));
+
+  assert.equal(wiki.tree.external.homepage.path, 'wiki/external/');
+  assert.equal(wiki.tree.external.homepage.is_homepage, true);
+  assert.deepStrictEqual(wiki.tree.external.sections, []);
+  assert.deepStrictEqual(wiki.tree.external.pages, []);
+
+  assert.deepStrictEqual(wiki.all_tags.shared.items, ['local', 'external']);
+  assert.deepStrictEqual(wiki.tree.local.relatedItems, [{ name: 'shared', items: ['external'] }]);
+
+  assert.equal(wiki.all_tags.shared.items.includes('unpublished'), false);
+  assert.equal(wiki.tree.unpublished.homepage, undefined);
+});

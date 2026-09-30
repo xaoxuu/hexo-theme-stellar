@@ -147,6 +147,21 @@ function prepareCollectionPipeline(ctx) {
         page: record.snapshot,
         ...extra
       });
+    },
+    /**
+     * 没有本地页面的 Collection（外部 Wiki 项目）所需的模型输入。
+     */
+    collectionInput(sourceKey, extra = {}) {
+      return Object.freeze({
+        source: sourcePathForData(sourceKey),
+        themeSource,
+        siteConfig: ctx.config,
+        runtimeData,
+        stellarConfig: ctx.stellar?.config,
+        frontMatter: null,
+        page: null,
+        ...extra
+      });
     }
   };
 

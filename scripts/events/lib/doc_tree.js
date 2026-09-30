@@ -80,11 +80,31 @@ module.exports = (ctx, pipeline) => {
     listings.set(collectionId, buildWikiListingRender(entry.input, entry.base.collection));
   }
 
+  // 外部项目：没有本地页面、但配置了 route.path 的 Wiki Collection。
+  // 不渲染页面，只参与索引、标签与关联推荐，入口直接指向配置的地址。
+  const externalCollections = new Map();
+  for (const [collectionId, collectionConfig] of collectionConfigs) {
+    if (collectionModels.has(collectionId)) continue;
+    const collectionState = wiki.tree[collectionId];
+    if (collectionState?.homepage == null) continue;
+    const input = {
+      ...pipeline.collectionInput(`wiki/${collectionId}`),
+      collectionId,
+      collectionConfig,
+      collectionState,
+      collectionListed: wiki.shelf.includes(collectionId)
+    };
+    const model = buildWikiCollectionModel(input, collectionId);
+    collectionModels.set(collectionId, model);
+    externalCollections.set(collectionId, model);
+    listings.set(collectionId, buildWikiListingRender(input, model));
+  }
+
   for (const entry of entries) {
     const relatedCollections = (wiki.tree[entry.collectionId]?.relatedItems || []).map(group => ({
       name: group.name,
       items: (group.items || [])
-        .map(id => homepageEntries.get(id)?.base.collection)
+        .map(id => homepageEntries.get(id)?.base.collection || externalCollections.get(id))
         .filter(Boolean)
     }));
     const related = buildWikiRelated({ relatedCollections });
