@@ -13,7 +13,9 @@ function layoutDiv() {
     el += `<a class="cap breadcrumb" id="menu" href="${pretty_url(render.wikiIndexPath)}">${__("btn.wiki")}</a>`
   }
   for (var breadcrumb of render.breadcrumbs) {
-    if (pretty_url(breadcrumb.path) != pretty_url(render.wikiIndexPath)) {
+    // 仅在 wiki 索引真实存在时做去重比较：wiki 挂在站点根时项目首页路径为空串，
+    // 与“没有 wiki 索引”的空串相等，会连项目名一起被跳过。
+    if (!render.wikiIndexPath || pretty_url(breadcrumb.path) != pretty_url(render.wikiIndexPath)) {
       el += `<span class="sep"></span>`
       el += `<a class="cap breadcrumb" id="proj" href="${pretty_url(breadcrumb.path)}">${escape_html(breadcrumb.name)}</a>`
     }
