@@ -2,6 +2,7 @@
 
 const { test } = require("node:test");
 const assert = require("node:assert/strict");
+const { deepMerge } = require("hexo-util");
 
 const attachConfig = require("../scripts/events/lib/config-schema");
 const { ConfigSchemaError, parseStellarConfig } = require("../scripts/lib/config-schema");
@@ -261,6 +262,52 @@ test("Build config event exposes one frozen runtime config", () => {
   attachConfig(ctx);
   assert.equal(ctx.stellar.config.appearance.preset, "minimal");
   assert.equal(Object.isFrozen(ctx.stellar.config), true);
+});
+
+function mergedBuildContext(themeConfig) {
+  const leftbar = parseStellarConfig().appearance.backgrounds.leftbar;
+  return {
+    config: { theme_config: themeConfig },
+    theme: { config: deepMerge({ appearance: { backgrounds: { leftbar } } }, themeConfig) }
+  };
+}
+
+test("Build config event preserves palette overrides for the Stylus consumer after Hexo merge", () => {
+  const gradient = {
+    light: ["#123456", "#234567", "#345678", "#456789"],
+    dark: ["#102030", "#203040", "#304050", "#405060"]
+  };
+  const ctx = mergedBuildContext({ appearance: { backgrounds: { leftbar: { gradient, opacity: 0.5 } } } });
+  attachConfig(ctx);
+  assert.deepEqual(ctx.theme.config.appearance.backgrounds.leftbar.gradient, gradient);
+  assert.equal(ctx.theme.config.appearance.backgrounds.leftbar.opacity, 0.5);
+  assertDeepFrozen(ctx.stellar.config);
+});
+
+test("Build config event keeps the default palette for an omitted color scheme", () => {
+  const light = ["#123456", "#234567", "#345678", "#456789"];
+  const ctx = mergedBuildContext({ appearance: { backgrounds: { leftbar: { gradient: { light } } } } });
+  attachConfig(ctx);
+  assert.deepEqual(ctx.theme.config.appearance.backgrounds.leftbar.gradient, {
+    light,
+    dark: parseStellarConfig().appearance.backgrounds.leftbar.gradient.dark
+  });
+});
+
+test("Build config event replaces previous palettes when Hexo regenerates", () => {
+  const ctx = mergedBuildContext({ appearance: { backgrounds: { leftbar: { gradient: {
+    light: ["#123456", "#234567", "#345678", "#456789"],
+    dark: ["#102030", "#203040", "#304050", "#405060"]
+  } } } } });
+  attachConfig(ctx);
+  const light = ["#567890", "#678901", "#789012", "#890123"];
+  ctx.config.theme_config = { appearance: { backgrounds: { leftbar: { gradient: { light } } } } };
+  ctx.theme.config = deepMerge(ctx.theme.config, ctx.config.theme_config);
+  attachConfig(ctx);
+  assert.deepEqual(ctx.theme.config.appearance.backgrounds.leftbar.gradient, {
+    light,
+    dark: parseStellarConfig().appearance.backgrounds.leftbar.gradient.dark
+  });
 });
 
 test("Build config event logs one grouped warning and exposes recovered config", () => {
