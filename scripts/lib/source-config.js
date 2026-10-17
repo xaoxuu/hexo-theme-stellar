@@ -3,12 +3,12 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const frontMatter = require("hexo-front-matter");
+const { loadYaml } = require("./yaml");
 const snapshots = new WeakMap();
 
 function sourcePathForData(key) { return `source/_data/${key}.yml`; }
 function sourcePathForPage(page) { return page.source ? `source/${page.source}` : (page.path || "<page>"); }
-// hexo-front-matter 只识别 LF；Hexo 宿主通过 hexo-fs 读取源码时会去除 BOM 并规范化 CRLF，
-// 直接读取源码必须保持一致，否则 Windows 上的 CRLF 内容会丢失全部 Front Matter。
+// 与 Hexo 宿主通过 hexo-fs 读取源码时保持一致：去除 BOM 并规范化 CRLF。
 function readSourceText(file) {
   return fs.readFileSync(file, "utf8").replace(/^\uFEFF/, "").replace(/\r\n/g, "\n");
 }
@@ -34,7 +34,13 @@ function readFrontMatter(ctx, page) {
   const stamp = [stat.ino, stat.size, stat.mtimeNs, stat.ctimeNs].join(":");
   const previous = cache.get(page.source);
   if (previous?.stamp === stamp) return previous.config;
-  const config = frontMatter.parse(readSourceText(file));
+  const text = readSourceText(file);
+  const header = frontMatter.split(text);
+  // 复用上游的分隔符/缩进处理；YAML 与 Doctor 共用解析语义，JSON 仍由上游处理。
+  const parsed = header.data && header.separator.startsWith("-")
+    ? loadYaml(frontMatter.escape(header.data), { filename: file })
+    : frontMatter.parse(text);
+  const config = parsed && typeof parsed === "object" ? parsed : {};
   delete config._content;
   cache.set(page.source, { stamp, config });
   return config;

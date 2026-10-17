@@ -45,21 +45,21 @@
     "url": "https://github.com/xaoxuu/hexo-theme-stellar/issues/"
   },
   "dependencies": {
-    "cheerio": "^1.1.0",
-    "hexo-front-matter": "^4.2.1",
-    "hexo-pagination": "^3.0.0",
+    "cheerio": "^1.2.0",
+    "hexo-front-matter": "^5.0.0",
+    "hexo-pagination": "^4.0.0",
     "hexo-renderer-ejs": "^2.0.0",
     "hexo-renderer-stylus": "^3.0.1",
-    "js-yaml": "^4.1.0",
-    "probe-image-size": "^7.2.3",
-    "sharp": "^0.34.5"
+    "js-yaml": "^5.5.0",
+    "probe-image-size": "^7.4.0",
+    "sharp": "^0.35.5"
   },
   "homepage": "https://xaoxuu.com/wiki/stellar/",
   "devDependencies": {
-    "@eslint/js": "^9.39.5",
-    "eslint": "^9.39.5",
-    "glob": "^10.4.0",
-    "globals": "^14.0.0",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "glob": "^13.0.6",
+    "globals": "^17.13.0",
     "hexo-util": "^4.0.0"
   }
 }

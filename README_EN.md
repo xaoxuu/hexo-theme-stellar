@@ -42,7 +42,7 @@ Your writing preserves ideas while external data stays current. Remote content, 
 
 ### Requirements
 
-- Node.js 22 or newer
+- Node.js 22 or newer (theme development checks require Node.js 22.13+ or 24+)
 - Hexo 8 or newer
 
 ### Create from a Blueprint

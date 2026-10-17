@@ -3,7 +3,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
-const yaml = require("js-yaml");
+const { loadYaml } = require("./yaml");
 
 const { ConfigSchemaError, deepFreeze, formatIssue, parseStellarConfig } = require("./config-schema");
 const {
@@ -37,7 +37,7 @@ function major(version) {
 
 function yamlValue(file, source, issues) {
   try {
-    return yaml.load(fs.readFileSync(file, "utf8"), { filename: source }) || {};
+    return loadYaml(fs.readFileSync(file, "utf8"), { filename: source }) || {};
   } catch (error) {
     issues.push(issue("invalid_yaml", source, "root", "invalid YAML", "valid YAML document", "configuration/v2"));
     return null;
@@ -83,9 +83,9 @@ function collectSchemaIssues(callback, issues) {
 function widgetCatalog(baseDir) {
   const themeFile = path.resolve(__dirname, "../../_data/widgets.yml");
   const siteFile = path.join(baseDir, "source/_data/widgets.yml");
-  const theme = yaml.load(fs.readFileSync(themeFile, "utf8"), { filename: themeFile }) || {};
+  const theme = loadYaml(fs.readFileSync(themeFile, "utf8"), { filename: themeFile }) || {};
   if (!fs.existsSync(siteFile)) return theme;
-  const site = yaml.load(fs.readFileSync(siteFile, "utf8"), { filename: siteFile }) || {};
+  const site = loadYaml(fs.readFileSync(siteFile, "utf8"), { filename: siteFile }) || {};
   const result = { ...theme };
   for (const [id, descriptor] of Object.entries(site)) {
     if (descriptor == null || descriptor.length === 0) delete result[id];

@@ -39,6 +39,10 @@ const CORRECTNESS_RULES = {
   'no-redeclare': 'off',
   'no-useless-escape': 'off',
   'no-inner-declarations': 'off',
+  // 升级 ESLint 不扩大现有工程门禁；这些 v10 新增推荐规则另行按需启用。
+  'no-unassigned-vars': 'off',
+  'no-useless-assignment': 'off',
+  'preserve-caught-error': 'off',
 };
 
 module.exports = [

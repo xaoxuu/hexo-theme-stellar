@@ -37,3 +37,21 @@ test('Front Matter 读取与 Hexo 宿主一致地规范化 BOM 与 CRLF', t => {
   assert.equal(expected.title, 'Hello');
   assert.deepEqual(readFrontMatter(owner, crlf), expected);
 });
+
+
+test('YAML source readers preserve empty input, merge keys and dates across dependency upgrades', t => {
+  const { loadYaml } = require('../scripts/lib/yaml');
+  const { parseFrontMatterYaml } = require('../scripts/lib/front-matter');
+  for (const input of ['', '  \n', '# comment only\n']) assert.equal(loadYaml(input), undefined);
+  assert.throws(() => loadYaml('title: One\n---\ntitle: Two'), /single document/);
+  const yaml = 'base: &base {title: Shared}\n<<: *base\ndate: 2026-01-02\nflag: no';
+  const content = `---\n${yaml}\n---\nBody`;
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'stellar-source-yaml-'));
+  t.after(() => fs.rmSync(directory, { recursive: true, force: true }));
+  fs.writeFileSync(path.join(directory, 'page.md'), content);
+  const metadata = readFrontMatter({ source_dir: directory }, { source: 'page.md' });
+  assert.deepEqual(metadata, parseFrontMatterYaml(content, 'page.md'));
+  assert.equal(metadata.title, 'Shared');
+  assert.equal(metadata.date.toISOString(), '2026-01-02T00:00:00.000Z');
+  assert.equal(metadata.flag, 'no');
+});

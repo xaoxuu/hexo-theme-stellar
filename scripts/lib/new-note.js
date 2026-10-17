@@ -2,7 +2,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
-const yaml = require("js-yaml");
+const { loadYaml } = require("./yaml");
 
 const { resolveInside } = require("./safe-path");
 const {
@@ -95,7 +95,7 @@ function buildNewNotePlan(options = {}) {
   }
   let rawCollection;
   try {
-    rawCollection = yaml.load(fs.readFileSync(configFile, "utf8"), { filename: configFile }) || {};
+    rawCollection = loadYaml(fs.readFileSync(configFile, "utf8"), { filename: configFile }) || {};
   } catch (error) {
     throw new NewNoteError(`${configFile}: Notebook YAML 无效（${error.message}）`);
   }

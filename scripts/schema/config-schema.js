@@ -2,7 +2,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
-const yaml = require("js-yaml");
+const { loadYaml } = require("../lib/yaml");
 
 const { deepFreeze } = require("./schema-utils");
 const { CONFIG_RULES, literal } = require("./config-rules");
@@ -135,7 +135,7 @@ function normalizeRuleDefaults(node) {
 }
 
 function loadDefaultConfig(source = fs.readFileSync(DEFAULT_CONFIG_PATH, "utf8")) {
-  const parsed = yaml.load(source);
+  const parsed = loadYaml(source);
   if (!isPlainObject(parsed)) throw new TypeError("themes/stellar/_config.yml 必须是 YAML 对象");
   return parsed;
 }
