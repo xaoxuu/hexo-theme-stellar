@@ -165,3 +165,30 @@ test("样式地址与完整性配置成对合并", () => {
   assert.equal(parse({ css: "/custom.css", css_integrity: "sha384-custom" }).css_integrity, "sha384-custom");
   assert.equal(parse({ css_integrity: null }).css_integrity, null);
 });
+
+
+test("贡献者映射支持源码根目录、仓库目录与最长前缀", () => {
+  const { buildContributor } = require("../scripts/lib/models/shared");
+  const config = parseStellarConfig({ themeConfig: { services: { contributors: { github: { repositories: [
+    { source_prefix: "", repository_prefix: "source/", repository: "owner/site", branch: "docs/v2" },
+    { source_prefix: "wiki/", repository: "owner/wiki" }
+  ] } } } } });
+  const root = buildContributor({ source: { file: "guide.md" } }, config);
+  assert.equal(root.editUrl, "https://github.com/owner/site/blob/docs/v2/source/guide.md");
+  const api = new URL(root.commitsUrl);
+  assert.equal(api.searchParams.get("path"), "source/guide.md");
+  assert.equal(api.searchParams.get("sha"), "docs/v2");
+  const nested = buildContributor({ source: { file: "wiki/page.md" } }, config);
+  assert.equal(nested.editUrl, "https://github.com/owner/wiki/blob/main/page.md");
+  assert.equal(new URL(nested.commitsUrl).searchParams.get("path"), "page.md");
+});
+
+test("贡献者映射的两端目录均拒绝越界路径", () => {
+  for (const key of ["source_prefix", "repository_prefix"]) {
+    for (const value of ["../private/", "/absolute/", "C:\\private\\", "docs/../../private/"]) {
+      assert.throws(() => parseStellarConfig({ themeConfig: { services: { contributors: { github: { repositories: [
+        { source_prefix: "", repository: "owner/site", [key]: value }
+      ] } } } } }), /safe relative path/);
+    }
+  }
+});

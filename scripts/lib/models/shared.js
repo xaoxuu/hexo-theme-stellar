@@ -266,12 +266,15 @@ function buildContributor(item, stellarConfig) {
     .filter(item => typeof item?.sourcePrefix === "string" && source.startsWith(item.sourcePrefix))
     .sort((left, right) => right.sourcePrefix.length - left.sourcePrefix.length)[0];
   if (!matched) return null;
-  const relativePath = source.slice(matched.sourcePrefix.length).replace(/^\/+/, "");
+  const relativePath = [
+    (matched.repositoryPrefix || "").replace(/\\/g, "/").replace(/\/+$/, ""),
+    source.slice(matched.sourcePrefix.length).replace(/^\/+/, "")
+  ].filter(Boolean).join("/");
   const branch = matched.branch || "main";
   const apiUrl = stellarConfig.services.github.apiUrl.replace(/\/+$/, "");
   return {
     editUrl: `https://github.com/${matched.repository}/blob/${branch}/${relativePath}`,
-    commitsUrl: `${apiUrl}/repos/${matched.repository}/commits?path=${encodeURIComponent(relativePath)}`
+    commitsUrl: `${apiUrl}/repos/${matched.repository}/commits?path=${encodeURIComponent(relativePath)}&sha=${encodeURIComponent(branch)}`
   };
 }
 

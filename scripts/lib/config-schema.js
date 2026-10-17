@@ -655,11 +655,12 @@ function validateDiagramsOverride(node, input, source, path, issues) {
 }
 
 function validateSafeRelativePath(node, input, source, path, issues) {
+  if (input === "") return;
   const unixPath = input.replace(/\\/g, "/");
   const normalized = nodePath.posix.normalize(unixPath);
   const hasDriveRoot = /^[A-Za-z]:/.test(unixPath);
-  if (input.length === 0 || nodePath.isAbsolute(input) || nodePath.posix.isAbsolute(unixPath) || hasDriveRoot || /^\.\/?$/.test(normalized) || unixPath.split("/").includes("..")) {
-    issues.push(issue("invalid_value", source, path, valueType(input), "safe non-empty relative path", node.migration));
+  if (nodePath.isAbsolute(input) || nodePath.posix.isAbsolute(unixPath) || hasDriveRoot || /^\.\/?$/.test(normalized) || unixPath.split("/").includes("..")) {
+    issues.push(issue("invalid_value", source, path, valueType(input), "safe relative path or empty root", node.migration));
   }
 }
 

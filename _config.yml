@@ -975,7 +975,10 @@ services:
     provider: github
     # 配置 GitHub 贡献者 Provider。
     github:
-      # 设置额外的贡献者仓库映射；空数组表示不添加映射。
+      # 设置贡献者仓库映射；空数组表示不添加映射。
+      # source_prefix: 要移除的站点源文件前缀，空字符串匹配所有正文。
+      # repository_prefix: 要补上的仓库目录前缀，默认空字符串（仓库根目录）。
+      # 每项还需 repository: owner/repo；branch 默认为 main。
       repositories: []
   # 配置 GitHub 卡片服务。
   github_card:

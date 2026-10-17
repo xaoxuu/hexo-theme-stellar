@@ -92,6 +92,7 @@ const contributorRepository = item("object", {
   requiredProperties: ["source_prefix", "repository"],
   properties: {
     source_prefix: item("string", { defaultValue: "", runtimeKey: "sourcePrefix", validator: "safe_relative_path" }),
+    repository_prefix: item("string", { defaultValue: "", runtimeKey: "repositoryPrefix", validator: "safe_relative_path" }),
     repository: item("string", { defaultValue: "", validator: "github_repository" }),
     branch: item("string", { defaultValue: "main", validator: "non_empty_string" })
   }
