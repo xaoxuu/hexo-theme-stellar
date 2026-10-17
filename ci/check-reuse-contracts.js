@@ -109,14 +109,14 @@ function checkReuseSources(options) {
 }
 
 function readProjectFiles(root, patterns) {
-  const names = globSync(patterns, { cwd: root, nodir: true, ignore: ["node_modules/**", "test/**", "docs/**"] }).sort();
+  const names = globSync(patterns, { cwd: root, nodir: true, posix: true, ignore: ["node_modules/**", "test/**", "docs/**"] }).sort();
   return Object.fromEntries(names.map(file => [file, fs.readFileSync(path.join(root, file), "utf8")]));
 }
 
 function runProjectCheck(root = path.resolve(__dirname, "..")) {
   const rules = require("./reuse-rules");
   const files = readProjectFiles(root, rules.SOURCE_GLOBS);
-  const controlFiles = globSync(rules.CONTROL_GLOBS, { cwd: root, nodir: true }).sort();
+  const controlFiles = globSync(rules.CONTROL_GLOBS, { cwd: root, nodir: true, posix: true }).sort();
   const errors = checkReuseSources({
     files,
     controlFiles,
