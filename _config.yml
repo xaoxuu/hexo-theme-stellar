@@ -77,7 +77,7 @@ leftbar:
       # 设置菜单图标。
       icon: default:category
       # 设置菜单链接。
-      url: /blog/categories/
+      url: /categories/
     # 声明默认的标签入口。
     - id: tags
       # 设置菜单标题，支持主题 i18n 键。
@@ -85,7 +85,7 @@ leftbar:
       # 设置菜单图标。
       icon: default:hashtag
       # 设置菜单链接。
-      url: /blog/tags/
+      url: /tags/
     # 声明默认的专栏入口。
     - id: topic
       # 设置菜单标题，支持主题 i18n 键。
@@ -101,7 +101,7 @@ leftbar:
       # 设置菜单图标。
       icon: default:calendar
       # 设置菜单链接。
-      url: /blog/archives/
+      url: /archives/
     # 声明默认的友链入口。
     - id: friends
       # 设置菜单标题，支持主题 i18n 键。
